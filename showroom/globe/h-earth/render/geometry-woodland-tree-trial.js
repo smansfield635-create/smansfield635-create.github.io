@@ -53,7 +53,7 @@ export function adaptHEarthWoodlandTreeHierarchy({bark,foliage,p,height,leanX,le
  leader[0]=[x,y,z];
  sweep(bark,leader,[.32+height*.018,.19,.10,.012],6,[98,77,51,255],`${id}:leader`,retained);
  const majorCount=oldVertices>320?6:oldVertices>270?5:oldVertices>230?4:3+Math.floor(hash(id,'major-count')*2);
- const paths=[],forks=[],secondaries=[];
+ const paths=[],forks=[],secondaries=[],majors=[];
  const centerMargin=1.34,boundCenter=Math.max(.70,radius-centerMargin);
  const limit=point=>{const radial=Math.hypot(point[0]-x,point[2]-z);if(radial>boundCenter){point[0]=x+(point[0]-x)*boundCenter/radial;point[2]=z+(point[2]-z)*boundCenter/radial;}point[1]=Math.min(y+height*.91,Math.max(y+height*.26,point[1]));return point;};
  for(let j=0;j<majorCount;j++){
@@ -64,7 +64,7 @@ export function adaptHEarthWoodlandTreeHierarchy({bark,foliage,p,height,leanX,le
   const end=limit(add(base,add(scale(radial,reach),[0,height*(.09+.045*hash(id,`rise-${j}`)),0])));
   const elbow=limit(add(mix(base,end,.48),add(scale(side,.13*(j%2?1:-1)),[0,.12,0])));
   const major=[base,elbow,end],r=.125-j*.010;sweep(bark,major,[r,r*.53,.018],4,[103,81,53,255],`${id}:major-${j}`);
-  forks.push({heightFraction:(base[1]-y)/height,position:base,heading:angle});paths.push(major);
+  forks.push({heightFraction:(base[1]-y)/height,position:base,heading:angle});paths.push(major);majors.push(major);
   const attach=onPath(major,.39+.22*hash(id,`secondary-attach-${j}`)),a=angle+(j%2?-.85:.92);
   const tip=limit(add(attach,[Math.cos(a)*(.42+.23*hash(id,`secondary-reach-${j}`)),.16+.20*hash(id,`secondary-rise-${j}`),Math.sin(a)*(.42+.23*hash(id,`secondary-reach-${j}`))]));
   const secondary=[attach,tip];sweep(bark,secondary,[.036,.005],3,[108,85,54,255],`${id}:secondary-${j}`);paths.push(secondary);secondaries.push(secondary);
@@ -72,13 +72,16 @@ export function adaptHEarthWoodlandTreeHierarchy({bark,foliage,p,height,leanX,le
  const woodVertices=bark.vertices.length-barkVertexStart,woodTriangles=(bark.indices.length-barkIndexStart)/3;
  const leafCount=Math.min(Math.floor((oldVertices-woodVertices)/4),Math.floor((oldTriangles-woodTriangles)/4));
  if(leafCount<24)throw new Error(`WOODLAND_VARIATION_LEAF_BUDGET_INSUFFICIENT:${id}`);
- const leafPaths=secondaries.concat([leader]);
+ // Layer crowns around the actual major limb ends rather than lining short
+ // secondary twigs with isolated blades. The upper leader receives its own
+ // overlapping cluster, using exactly the same leaf and vertex population.
+ const leafPaths=majors.concat([leader]);
  for(let n=0;n<leafCount;n++){
   const pi=n%leafPaths.length,path=leafPaths[pi],ordinal=Math.floor(n/leafPaths.length),count=Math.ceil((leafCount-pi)/leafPaths.length);
-  const t=pi===secondaries.length?.64+.30*(ordinal+.3)/count:.11+.83*(ordinal+.25+.40*hash(id,`leaf-position-${n}`))/count;
+  const t=pi===majors.length?.84+.15*(ordinal+.3)/count:.58+.40*(ordinal+.25+.40*hash(id,`leaf-position-${n}`))/count;
   const root=onPath(path,t),along=unit(sub(path.at(-1),path[0])),across=unit(cross(along,Math.abs(along[1])<.9?[0,1,0]:[1,0,0])),around=unit(cross(along,across));
-  const roll=hash(id,`leaf-roll-${n}`)*Math.PI*2,direction=add(scale(along,.23),add(scale(across,Math.cos(roll)),add(scale(around,Math.sin(roll)),[0,.10,0])));
-  const tint=hash(id,`leaf-tint-${n}`),length=.84+.32*hash(id,`leaf-length-${n}`),width=.27+.11*hash(id,`leaf-width-${n}`);
+  const roll=hash(id,`leaf-roll-${n}`)*Math.PI*2,direction=add(scale(along,.44),add(scale(across,Math.cos(roll)),add(scale(around,Math.sin(roll)),[0,.18,0])));
+  const tint=hash(id,`leaf-tint-${n}`),length=1.58+.52*hash(id,`leaf-length-${n}`),width=.54+.22*hash(id,`leaf-width-${n}`);
   // Scale this blade only if its full extent would escape the old crown/height.
   const horizontalMargin=radius-Math.hypot(root[0]-x,root[2]-z),verticalMargin=y+height-root[1];
   const fit=Math.min(1,horizontalMargin/(length+width+.045),verticalMargin/(length+width+.045));

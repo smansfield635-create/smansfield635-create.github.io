@@ -2,13 +2,13 @@
   "schema": "H_EARTH_ALL_TREE_VARIATION_RECORD_v1",
   "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
   "generation": 2630,
-  "status": "VISUAL_FAILURE_REPAIR_REQUIRED",
+  "status": "REPRESENTATIVE_VISUAL_FAILURE_REPAIR_REQUIRED",
   "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
   "acceptedDesignSource": "c313922b22cb76c64d35297c6bc9dec1b6578188",
-  "candidateRenderSourceCommit": "84591ddf47599de25486996985cfd25578a2b3fd",
-  "candidateRenderSourceTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
-  "localTestCommit": "2b60072f1836278c5a1e71c25af693f4f028998d",
-  "localTestTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
+  "candidateRenderSourceCommit": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+  "candidateRenderSourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+  "localTestCommit": "2a1feaac0027f4014fe18082454feda87c22388c",
+  "localTestTree": "709d52f00ef15a1ae45957e09ee373e988603016",
   "remoteAndTestedWholeTreesIdentical": true,
   "sourceFiles": [
     {
@@ -17,7 +17,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
-      "sha256": "c7580c04fe052ee4af27675b98c433ea1b8171176f659312c3964280592db964"
+      "sha256": "892c8dde6129c4bc25d5baf61b1af1cb595c832e949bbfb052b9ee692a670463"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
@@ -199,7 +199,7 @@
       ".analytics/cloudflare/status.txt",
       "analytics/data/latest.json"
     ],
-    "currentHead": "fd89362f4d4f0d9ed02b5b985ee893de2264b996",
+    "currentHead": "4a41999123e303301f15af9d1ba8fe4081b2ac96",
     "dependencyPaths": [
       ".github",
       "AGENTS.md",
@@ -292,904 +292,19 @@
     "baselineSyntheticTouch": "PASS"
   },
   "canonicalOutput": {
-    "schema": "ONE_TREE_GEOMETRY_AND_NON_TARGET_PARITY_RECEIPT",
-    "subject": "ALL_EXISTING_65_IDENTITIES_PER_ADMITTED_BRIDGE_SCOPE",
-    "result": "PASS",
-    "independentVerification": {
-      "schema": "H_EARTH_ALL_TREE_VARIATION_VERIFICATION_v1",
-      "status": "PASS",
-      "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
-      "generation": 2630,
-      "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
-      "candidateHead": "2b60072f1836278c5a1e71c25af693f4f028998d",
-      "frozenSourceSha256": {
-        "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "15d7c0bea04c7c4677cbae0089ccdafeb0764222a942f7b9b54cd3b158f880d8",
-        "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js": "c7580c04fe052ee4af27675b98c433ea1b8171176f659312c3964280592db964",
-        "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs": "b46312bb873fff7db38cfe18098ec481fe3135878a99665ee95ac77cd9f60333"
-      },
-      "workingTreeClean": true,
-      "changedPaths": [
-        "h-earth-3d/experience-anchor/receipts/h-earth-woodland-tree-trial-20261008.receipt.json",
-        "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
-        "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
-        "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
-        "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs"
-      ],
-      "treeCount": 65,
-      "distinctTreeForms": 65,
-      "grassTuftCount": 1432,
-      "baselineTreeBytes": 1337970,
-      "candidateTreeBytes": 1260564,
-      "perTree": [
-        {
-          "id": "P2_TREE_A_00",
-          "vertices": 264,
-          "baselineVertices": 264,
-          "triangles": 380,
-          "baselineTriangles": 468,
-          "observableBytes": 22776,
-          "baselineObservableBytes": 23832,
-          "horizontalExtent": 2.031473365538367,
-          "signature": "316e76e15953f7defe9237559303984a1b2a991c48645169b05e4f30613d0544"
-        },
-        {
-          "id": "P2_TREE_A_01",
-          "vertices": 312,
-          "baselineVertices": 314,
-          "triangles": 448,
-          "baselineTriangles": 556,
-          "observableBytes": 26904,
-          "baselineObservableBytes": 28338,
-          "horizontalExtent": 3.012460793759073,
-          "signature": "d307e0cd8097a204bde99b481e692abba3eaae84cdce9e4525d2185abde02006"
-        },
-        {
-          "id": "P2_TREE_A_02",
-          "vertices": 360,
-          "baselineVertices": 364,
-          "triangles": 516,
-          "baselineTriangles": 644,
-          "observableBytes": 31032,
-          "baselineObservableBytes": 32844,
-          "horizontalExtent": 2.784692341837946,
-          "signature": "d2b51016a6493eba8ad0eb2ac6f939f4c362312ff7afa5ace699f45f5d3dbcf1"
-        },
-        {
-          "id": "P2_TREE_A_03",
-          "vertices": 264,
-          "baselineVertices": 264,
-          "triangles": 380,
-          "baselineTriangles": 468,
-          "observableBytes": 22776,
-          "baselineObservableBytes": 23832,
-          "horizontalExtent": 2.9281623301397204,
-          "signature": "567a28a5905402b31bc5e1fe90ce6e88413fbcaeba8c7774e599fe381c045e72"
-        },
-        {
-          "id": "P2_TREE_A_04",
-          "vertices": 312,
-          "baselineVertices": 314,
-          "triangles": 448,
-          "baselineTriangles": 556,
-          "observableBytes": 26904,
-          "baselineObservableBytes": 28338,
-          "horizontalExtent": 3.5287463456306263,
-          "signature": "c74739b09392bc1a6fd6f9a20eb1713ea6ffa09b83210a02c8d0a919d38fbc9d"
-        },
-        {
-          "id": "P2_TREE_A_05",
-          "vertices": 360,
-          "baselineVertices": 364,
-          "triangles": 516,
-          "baselineTriangles": 644,
-          "observableBytes": 31032,
-          "baselineObservableBytes": 32844,
-          "horizontalExtent": 2.0988927032970195,
-          "signature": "bdc9565ef9645e3f0f7ecf64f2892450f663893ec8fa72139b6186575dbd322d"
-        },
-        {
-          "id": "P2_TREE_A_06",
-          "vertices": 264,
-          "baselineVertices": 264,
-          "triangles": 380,
-          "baselineTriangles": 468,
-          "observableBytes": 22776,
-          "baselineObservableBytes": 23832,
-          "horizontalExtent": 2.6273610975479453,
-          "signature": "81e5fd63249d693a5196529d31bb5b780070ff20e809e821de1645e4be8ae487"
-        },
-        {
-          "id": "P2_TREE_A_07",
-          "vertices": 312,
-          "baselineVertices": 314,
-          "triangles": 448,
-          "baselineTriangles": 556,
-          "observableBytes": 26904,
-          "baselineObservableBytes": 28338,
-          "horizontalExtent": 2.947607765128818,
-          "signature": "e2d9c7437a3947537821d12622af190fd357325ee1892788d374246f7a398975"
-        },
-        {
-          "id": "P2_TREE_A_08",
-          "vertices": 360,
-          "baselineVertices": 364,
-          "triangles": 516,
-          "baselineTriangles": 644,
-          "observableBytes": 31032,
-          "baselineObservableBytes": 32844,
-          "horizontalExtent": 2.1859988325615016,
-          "signature": "1d6247811a276710031e967ac52de7197a33260c944f2663e6dccce74989e08e"
-        },
-        {
-          "id": "P2_TREE_A_09",
-          "vertices": 264,
-          "baselineVertices": 264,
-          "triangles": 380,
-          "baselineTriangles": 468,
-          "observableBytes": 22776,
-          "baselineObservableBytes": 23832,
-          "horizontalExtent": 3.517198324580681,
-          "signature": "8e1787d483a405ba5c675d1f28646a838edfae89e34f12fa97748c7e4beae5d1"
-        },
-        {
-          "id": "P2_TREE_A_10",
-          "vertices": 312,
-          "baselineVertices": 314,
-          "triangles": 448,
-          "baselineTriangles": 556,
-          "observableBytes": 26904,
-          "baselineObservableBytes": 28338,
-          "horizontalExtent": 2.0209858509380734,
-          "signature": "e58072ed034a5df19bb829329c86b7cf74b86889646e07f07bda4733e21d9bf6"
-        },
-        {
-          "id": "P2_TREE_A_11",
-          "vertices": 360,
-          "baselineVertices": 364,
-          "triangles": 516,
-          "baselineTriangles": 644,
-          "observableBytes": 31032,
-          "baselineObservableBytes": 32844,
-          "horizontalExtent": 2.428691922855285,
-          "signature": "d7575d238a75d24029d383311482f639e2d7805dd52a3409e1eb422daf244668"
-        },
-        {
-          "id": "P2_TREE_A_12",
-          "vertices": 264,
-          "baselineVertices": 264,
-          "triangles": 380,
-          "baselineTriangles": 468,
-          "observableBytes": 22776,
-          "baselineObservableBytes": 23832,
-          "horizontalExtent": 2.6531833162231817,
-          "signature": "de86a67650053263247d95bf62df2d5eb1d3d4753099312be0d4560f81ffd612"
-        },
-        {
-          "id": "P2_TREE_A_13",
-          "vertices": 312,
-          "baselineVertices": 314,
-          "triangles": 448,
-          "baselineTriangles": 556,
-          "observableBytes": 26904,
-          "baselineObservableBytes": 28338,
-          "horizontalExtent": 2.86830032633708,
-          "signature": "4edaf63327631c3233c89be2b9d2083e11b47a5f2152ed8dfb93d1c0947fcc88"
-        },
-        {
-          "id": "P2_TREE_A_14",
-          "vertices": 360,
-          "baselineVertices": 364,
-          "triangles": 516,
-          "baselineTriangles": 644,
-          "observableBytes": 31032,
-          "baselineObservableBytes": 32844,
-          "horizontalExtent": 2.7442218288834312,
-          "signature": "a6e7305f0686c7d7fe05290c3f8d60e9428be13fe4ded2c51df3eb3fc01fb9dd"
-        },
-        {
-          "id": "P2_TREE_B_00",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 1.8442556777109387,
-          "signature": "fe84e210fdc4fbda94d0e5c2d1c967b1bcf7a42774ae2cc3329e4397b81ef1d1"
-        },
-        {
-          "id": "P2_TREE_B_01",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.0960609394081784,
-          "signature": "e3d8607360573632a56e4e0e0361a4a633a8be035bf965563f0681516e6a3426"
-        },
-        {
-          "id": "P2_TREE_B_02",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.798527904380431,
-          "signature": "01d08a56625e4502a8f12d632e0f039fa8200e99e85ea56d43936d44120d2188"
-        },
-        {
-          "id": "P2_TREE_B_03",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.603406505552272,
-          "signature": "b31b92c494248a65f69199a7032a061aa99fbe05f29389272a6709979485d843"
-        },
-        {
-          "id": "P2_TREE_B_04",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 1.8024027973454673,
-          "signature": "ce92e933959603a4b84e37adb3646b69a9dc5f6bb4e491e62c48cacc8a0a45d6"
-        },
-        {
-          "id": "P2_TREE_B_05",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.570622639054598,
-          "signature": "dde03e4618e71edd336c636902666c2477e798d6d890f064017cf073c19da9bc"
-        },
-        {
-          "id": "P2_TREE_B_06",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.410467218975469,
-          "signature": "9c3be84cea61df5340e3c92fdd0aca507b014d95d37d64403447c63c9bb511cf"
-        },
-        {
-          "id": "P2_TREE_B_07",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 3.0924692115303043,
-          "signature": "99e7b2dc1e506183018cb5317ed4df01659329a9a0629b0e3bd65255e733eed4"
-        },
-        {
-          "id": "P2_TREE_B_08",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.19200212311329,
-          "signature": "69739a925c4e40af653c5a29ae0eb2579b77a2f6aeaa97d7e8c84a467677f729"
-        },
-        {
-          "id": "P2_TREE_B_09",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.047309083262236,
-          "signature": "a4a020989f8475a019f466a2584391c4ae3b9f3d097cc2f8465afc4faa8985c3"
-        },
-        {
-          "id": "P2_TREE_B_10",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 3.459220094046568,
-          "signature": "71b8cd9b9699a0ab36a7f8fad26817b8b920b869c36d4b63dbbe2db9385c9866"
-        },
-        {
-          "id": "P2_TREE_B_11",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.758838174103514,
-          "signature": "b2f044f22f150c60c821839d380c53ff1dd2f9f3824f4e6ba52239f6e41a209d"
-        },
-        {
-          "id": "P2_TREE_B_12",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.7619318604957988,
-          "signature": "4e824ef4fe25fc418ada000a91679c0994d03bdc4309000eaf871198fa78f427"
-        },
-        {
-          "id": "P2_TREE_B_13",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.1225038195241064,
-          "signature": "113ba4142b96f076c06c128a04e9f063c86335e925810af0d7912aabd6907ea1"
-        },
-        {
-          "id": "P2_TREE_B_14",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 1.9452846930987613,
-          "signature": "005e058dca9716024af722146b4353240f5f6ba703644eee6483b79a8942eb89"
-        },
-        {
-          "id": "P2_TREE_B_15",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.8743184234349766,
-          "signature": "7715cdac3766147b385d985a06000c0ee916c518325a530f92416ac952e0d5d2"
-        },
-        {
-          "id": "P2_TREE_B_16",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.7527910236493227,
-          "signature": "48d4c05495efd48c1f821a06cb514f429099e9e4bd0b42b24467cc305e6eff6e"
-        },
-        {
-          "id": "P2_TREE_C_00",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 1.8220208614099043,
-          "signature": "556fed7906c9d133e206c572aa262cf2efee2c60db44422c2d422815289e929d"
-        },
-        {
-          "id": "P2_TREE_C_01",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.2104918183041438,
-          "signature": "457d2d94294f57b3315cb715433c1286678d92b5feac0084ff8cfe5418592e64"
-        },
-        {
-          "id": "P2_TREE_C_02",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.783891561936937,
-          "signature": "fa79e4cf94d21fd56e2a5ed571232c78088dccf4a767c5deef922806828e2af8"
-        },
-        {
-          "id": "P2_TREE_C_03",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.263651849828234,
-          "signature": "9fe009301be6f1d0ff19e4458a3a24b7da2f1b493970b2b60b2f39ba12576347"
-        },
-        {
-          "id": "P2_TREE_C_04",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.4976572595487765,
-          "signature": "82a81cda990d3c83c0fa626c417c0e250bbfabc84123de5c2dfc96cbd33607c7"
-        },
-        {
-          "id": "P2_TREE_C_05",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.7897601200048534,
-          "signature": "2cce5bd362301e3e697bc6ebfa29fa13b48ce96bb34085b20e52586462545100"
-        },
-        {
-          "id": "P2_TREE_C_06",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 1.6523370124214527,
-          "signature": "dc4cae01d0dbb14c935d471626c29e6cce980e7be85f4cf653b4d8380f7a2c9a"
-        },
-        {
-          "id": "P2_TREE_C_07",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.60007053904858,
-          "signature": "344f4af7003571121fc8a23d04887303dd338c696a828e70e037b8e139c3467e"
-        },
-        {
-          "id": "P2_TREE_C_08",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 3.2542631012818046,
-          "signature": "a0031599f7c9c385c2fa6c5d8859a1f5fb6d35dd1ff4ffc1507078945e507377"
-        },
-        {
-          "id": "P2_TREE_C_10",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 1.9534479299095422,
-          "signature": "4defed042fd185487bfd509c9c880a22a75981890b143f636c258570adcf7951"
-        },
-        {
-          "id": "P2_TREE_C_11",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.732538606366709,
-          "signature": "0e12ba55d440967c095cbb9ed87b5fab10759facbf2ceee940b68558dbf039ba"
-        },
-        {
-          "id": "P2_TREE_C_13",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 1.7259656266375791,
-          "signature": "f5a0446082a4476f840049a4e2d50025f87d240321a9c8017699700775bafec4"
-        },
-        {
-          "id": "P2_TREE_C_14",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 1.6257026858405568,
-          "signature": "c28b581fd68b3df352fe768ed2b752898db88f20c35be06210d04b430b8d91d7"
-        },
-        {
-          "id": "P2_TREE_REAR_00",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.8678776655226197,
-          "signature": "cbbd301259209b545e71cd5439ae13166f6c1daf90a9d73bd7eb1dbccc5993ce"
-        },
-        {
-          "id": "P2_TREE_REAR_01",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.804572396276168,
-          "signature": "d70af2c620cb27efe7c65148ea33cf760b22ac807cb5001aeab417768d6b8afe"
-        },
-        {
-          "id": "P2_TREE_REAR_02",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.631591738907545,
-          "signature": "7ffad3167ccea73fba4302386193b2e14b2c42ab98998e8ca21c27be5ebf7c99"
-        },
-        {
-          "id": "P2_TREE_REAR_03",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.0622928162863063,
-          "signature": "897de8d0a8c3cbf83d8b815ce9e9290986c79e27bdcef8b438fe6f0bd02355bc"
-        },
-        {
-          "id": "P2_TREE_REAR_04",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.055727904839967,
-          "signature": "f1c9c31731674e614ce3cfe338e77b783d8fa2cdf38092097592c293fb8b0b8d"
-        },
-        {
-          "id": "P2_TREE_REAR_05",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.774883534903869,
-          "signature": "d710c222b92f11769634382d831b0d88f716313ddd2f2a9b078a3e679299e1b5"
-        },
-        {
-          "id": "P2_TREE_REAR_06",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.573077298055994,
-          "signature": "b683333794e0a07ec5de255a03e4c4c5f12d4432b2885774b970dbaf5f327b00"
-        },
-        {
-          "id": "P2_TREE_REAR_07",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 3.414363398544468,
-          "signature": "bea3f3eb85fb6174c209ac539bc82518f05f37b20a2f269684affb0a03c01c9d"
-        },
-        {
-          "id": "P2_TREE_REAR_08",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.618785203492845,
-          "signature": "61407ad35553f6faea77bfb2377ce1217781116136fe71a98e1fc6bd60e0d58a"
-        },
-        {
-          "id": "P2_TREE_REAR_11",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 3.376619796688974,
-          "signature": "793e4425d8c24e9545aa349a881321364eb77d28cfbe96deda8656b485552a0b"
-        },
-        {
-          "id": "P2_TREE_REAR_12",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.9354934384466027,
-          "signature": "8cac1416e4e2cd873fb6d783081d37a73419229f89a9cdbab50009d497ede972"
-        },
-        {
-          "id": "P2_TREE_REAR_13",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 1.5436719048787428,
-          "signature": "e38a3915a32f93bff798d5f1b2c55b8508b4f606a8bbaf78041dbc292380ab53"
-        },
-        {
-          "id": "P2_TREE_REAR_14",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.5363444764183583,
-          "signature": "b20d353d8077cf7f54e591762dffd16df1705561e312edd07bf4eda265850e86"
-        },
-        {
-          "id": "P2_TREE_REAR_15",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.6760325624996812,
-          "signature": "c2db2cc64c9faee7e00e7c7b941c405fd9d08b66143bc0b02f35ff21de367771"
-        },
-        {
-          "id": "P2_TREE_REAR_16",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.064448627483812,
-          "signature": "5d31c5383a5da8395864374c3057fb6abb6c82afca68a61bcd2e52bcc6a7a880"
-        },
-        {
-          "id": "P2_TREE_REAR_18",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.947752826705203,
-          "signature": "6c5329c90c2d187a354ffd0c6ba6ae6da7ef8b99d0af95c0288d1c2a00c6a4fc"
-        },
-        {
-          "id": "P2_TREE_REAR_19",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.9406930646644076,
-          "signature": "325d4ff2e12cbc8496b023cd94e22db0dc480f2415601a83a2e24f1ae3b39e98"
-        },
-        {
-          "id": "P2_TREE_REAR_20",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 292,
-          "baselineTriangles": 360,
-          "observableBytes": 17166,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 3.194346802317096,
-          "signature": "4ef4bcf62d4ef5f4f63bd88c882abfd86296e9dc8cfbd8b9afb952c6d9c81a4e"
-        },
-        {
-          "id": "P2_TREE_REAR_21",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 3.2985722582519275,
-          "signature": "f06895aa386851b5b37d0c9d0e000b6b385c92997b13c43bad9ccd9a957c3a64"
-        },
-        {
-          "id": "P2_TREE_REAR_22",
-          "vertices": 198,
-          "baselineVertices": 202,
-          "triangles": 288,
-          "baselineTriangles": 360,
-          "observableBytes": 17118,
-          "baselineObservableBytes": 18258,
-          "horizontalExtent": 2.4607509123312203,
-          "signature": "dd8898c963c07f6a59991874f235c5c7664f6e87514180c94038eaac76dcd659"
-        }
-      ],
-      "baselineSectorTriangles": 61044,
-      "sectorTriangles": 55916,
-      "sectorCeiling": 64000,
-      "primitiveCount": 4,
-      "checkedTriangles": 21212,
-      "terrainSha256": "5c552a54d90602e4671b6fe4c2cf95081e75caf747b3b7bfcd4425e79b1239fe",
-      "baselineSectorSha256": "b82e2b8aa0827af8a3ea75ed736f9e5d3adc35fd012bf59ed5a1b0ef539c64df",
-      "candidateSectorSha256": "877afad2d12f78de20841df30d43b351c45fd95775e039c5a74db2358ef1e3cf",
-      "generationOrder": "FORWARD_EQUALS_REVERSED_AND_CHUNKED",
-      "timingsMs": {
-        "importAndTerrain": 18715.694256000002,
-        "baselineSector": 38308.316784,
-        "candidateSector": 28952.552675,
-        "reverseSector": 28997.480018000002
-      },
-      "physicalDeviceAcceptance": "NOT_ESTABLISHED_BY_AUTOMATED_VERIFICATION"
-    }
+    "status": "NOT_RUN_FOR_NEW_REPRESENTATIVE_SOURCE",
+    "previousAll65Pass": "Retained under priorFailedCandidates and checkpoint290856; cannot qualify changed helper"
   },
   "actualBrowser": {
-    "sourceCommit": "2b60072f1836278c5a1e71c25af693f4f028998d",
-    "remoteIdenticalTreeCommit": "84591ddf47599de25486996985cfd25578a2b3fd",
-    "sourceTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
+    "status": "FOUR_STATIC_VIEWS_CAPTURED_ONLY",
+    "candidate": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+    "testedLocal": "2a1feaac0027f4014fe18082454feda87c22388c",
+    "sourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+    "readyMs": 118838,
+    "errors": [],
     "physicalAcceptance": false,
-    "gpu": "HEADLESS_SWIFTSHADER",
-    "readyMs": 113415,
-    "fullResidency": {
-      "complete": true,
-      "preparationComplete": true,
-      "totalInstanceCount": 27585,
-      "residentInstanceCount": 27585,
-      "totalBatchCount": 108,
-      "residentBatchCount": 108,
-      "droppedPlacementCount": 0,
-      "worldRebuildCount": 0
-    },
-    "observableBuffers": {
-      "bytes": 34664141,
-      "buffers": 1204
-    },
-    "browserErrors": [],
-    "fixedCameraRoute": "PASS_FOUR_CAMERAS_96_REDRAWS_RESOURCE_GUARDS",
-    "cameraChecks": [
-      {
-        "camera": "walking",
-        "intervals": 95,
-        "redraws": 96,
-        "navigationReturn": "PASS",
-        "worldRebuildOnCamera": false
-      },
-      {
-        "camera": "close",
-        "intervals": 95,
-        "redraws": 96,
-        "navigationReturn": "PASS",
-        "worldRebuildOnCamera": false
-      },
-      {
-        "camera": "side",
-        "intervals": 95,
-        "redraws": 96,
-        "navigationReturn": "PASS",
-        "worldRebuildOnCamera": false
-      },
-      {
-        "camera": "distant",
-        "intervals": 95,
-        "redraws": 96,
-        "navigationReturn": "PASS",
-        "worldRebuildOnCamera": false
-      }
-    ],
-    "resourceAudit": {
-      "beforeAfterResourceCountersUnchanged": {
-        "bufferCreateCount": 16,
-        "bufferUploadCount": 11,
-        "textureCreateCount": 5,
-        "programCreateCount": 3,
-        "framebufferCreateCount": 2,
-        "worldRebuildCount": 0,
-        "vegetationBufferUploadCount": 1188,
-        "vegetationBatchMaterializationCount": 108
-      },
-      "basePackageUploadedBytes": 6632925,
-      "basePackageCeiling": 6710331,
-      "residentBuffers": {
-        "bytes": 34664141,
-        "buffers": 1204
-      },
-      "residentByteCeiling": 34741547,
-      "contextLost": false,
-      "perCameraGuards": "Successful candidate harness asserted each view; independent end-to-end loaded/final resource counters confirmed"
-    },
-    "syntheticTouch": {
-      "status": "PASS_SYNTHETIC_TOUCH_ONLY",
-      "twoFingerDisplacement": 1.4434258524978711,
-      "twoFingerProposalDelta": 7,
-      "releaseCancelIntent": "NONE",
-      "physicalAcceptance": false
-    },
-    "softwareTimingDiagnostic": {
-      "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
-      "baselineTree": "d129d8fc3c849550bbb47958d1e2b0cbc3d30b1b",
-      "baselineArtifactSha256": "ad101e604175972be9361b3d425d8639638d00e11370a84f1cbd29a8ed44bee8",
-      "rows": [
-        {
-          "camera": "walking",
-          "candidateMedianMs": 366.5999999999767,
-          "baselineMedianMs": 350,
-          "candidateP95Ms": 750,
-          "baselineP95Ms": 799.9000000000233,
-          "medianRatio": 1.047428571428505,
-          "p95Ratio": 0.9376172021502415,
-          "limitsPass": true
-        },
-        {
-          "camera": "close",
-          "candidateMedianMs": 383.29999999998836,
-          "baselineMedianMs": 349.8999999999651,
-          "candidateP95Ms": 766.6999999999534,
-          "baselineP95Ms": 1016.5999999999767,
-          "medianRatio": 1.0954558445270839,
-          "p95Ratio": 0.7541806020066605,
-          "limitsPass": true
-        },
-        {
-          "camera": "side",
-          "candidateMedianMs": 266.70000000001164,
-          "baselineMedianMs": 183.39999999996508,
-          "candidateP95Ms": 650.1000000000349,
-          "baselineP95Ms": 633.2999999999884,
-          "medianRatio": 1.454198473282783,
-          "p95Ratio": 1.0265277119849152,
-          "limitsPass": false
-        },
-        {
-          "camera": "distant",
-          "candidateMedianMs": 299.9000000000233,
-          "baselineMedianMs": 266.70000000001164,
-          "candidateP95Ms": 999.9000000000233,
-          "baselineP95Ms": 616.5999999999767,
-          "medianRatio": 1.1244844394451077,
-          "p95Ratio": 1.621634771326729,
-          "limitsPass": false
-        }
-      ],
-      "medianRatioLimit": 1.25,
-      "p95RatioLimit": 1.35,
-      "hardwareAcceptance": false,
-      "quantile": "nearest rank over95savedRAFintervals",
-      "status": "FAIL_DIAGNOSTIC_ONLY"
-    },
-    "diagnosticTimingCreatesPhysicalOrHardwareAcceptance": false,
-    "rawEvidenceSha256": "71ccfe08d4a471a5d63a335677cddc9826ccd630261eea6fbff37d9868926efd"
+    "timingQualification": "NOT_RUN",
+    "fullResidencyReachedForCapture": true
   },
   "internalVisualRepair": {
     "priorRemoteSourceCommit": "002e88d777559c9d1b04156c2f0d81e500b33a9a",
@@ -1203,7 +318,7 @@
   "review": {
     "mode": "EXACT_SOURCE_PRIVATE_READ_ONLY_PREVIEW",
     "url": "https://hearth-clearing-device-measurement.smansfield635.chatgpt.site",
-    "publicationState": "PRIOR_PUBLICATION_PRESERVED_FAILED_VOLUME_REPAIR_NOT_PUBLISHED",
+    "publicationState": "PRIOR_PREVIEW_PRESERVED_REPRESENTATIVE_NOT_PUBLISHED",
     "pairedDeviceMeasurement": "PHONE_AND_TABLET_PENDING",
     "ownerPerceptualDisposition": "NO_NEW_FORMAL_OWNER_DISPOSITION",
     "physicalPerformanceAcceptance": false,
@@ -1211,45 +326,39 @@
     "siteSourceCommit": "5fec78fe47d44fb0e012aa411191670683b72e07",
     "publicationReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6051#issuecomment-6072606342",
     "formalOwnerKeepOrRejectRecorded": false,
-    "assistantVisualDisposition": "FAIL_ALL_FOUR_VIEWS",
-    "failedUnpublishedCandidateCommit": "84591ddf47599de25486996985cfd25578a2b3fd"
+    "assistantVisualDisposition": "FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
+    "failedUnpublishedCandidateCommit": "09bdb1a58f7bede3b085d25dc5d71de227156bfa"
   },
   "releaseEligible": false,
   "mainMerged": false,
   "hEarthProductionDeployment": false,
   "activeScopeRetainedForCandidateFinalization": true,
   "visualFailure": {
-    "observedCandidate": "84591ddf47599de25486996985cfd25578a2b3fd",
-    "testedLocalCandidate": "2b60072f1836278c5a1e71c25af693f4f028998d",
-    "identicalSourceTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
-    "attachmentCandidateIdentityIndependentlyVerified": true,
-    "source": "Exact immutable source read-only renderer four-view captures after full residency; South/East/West assessment",
+    "observedCandidate": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+    "testedLocalCandidate": "2a1feaac0027f4014fe18082454feda87c22388c",
+    "identicalSourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
     "failedCriteria": [
-      "Large angular solid masses replace small layered leaf detail",
-      "Side silhouette becomes solid angular column",
-      "Distant grove repeats stacked crowns"
+      "Large gaps interrupt layered crown coverage",
+      "Isolated leaf sprays and exposed long major limbs",
+      "Bare upper leader loses leafy apex silhouette"
     ],
     "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
-    "causeAssessment": "Low-count six-vertex volumes increase projected foliage area but create large facets and erase leaf-scale edge detail. Budget infeasibility is not established.",
-    "physicalTimingStatus": "UNMEASURED_PENDING_VALID_PAIRED_PHONE_TABLET_EVIDENCE",
-    "loaderStatus": "READY and full residency reached in exact source browser run; software diagnostic does not establish physical device startup performance"
+    "causeAssessment": "Reference leaf shape survives;70leaves and reduced branch distribution fail layered crown coverage. This allocation failed; general budget infeasibility is not established."
   },
   "deterministicContinuation": {
     "workstream": "ALL_65_TREE_VISUAL_ADAPTATION; separate from closed clearing trial",
     "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
     "designSource": "c313922b22cb76c64d35297c6bc9dec1b6578188",
-    "repairBase": "84591ddf47599de25486996985cfd25578a2b3fd",
+    "repairBase": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
     "branch": "h-earth-all-tree-variation-20261008",
     "admissionGeneration": 2630,
     "scope": "Existing five admitted paths only; preserve placements, basal support, ecology, terrain, grass, rocks, navigation, renderer and loading behavior",
-    "nextAction": "Design one economical smaller folded-leaf tuft allocation in the existing helper; retain raised crown origins, secondary coverage and actual-vertex fitting, share only physically coincident tuft roots, then compare all four views before repeating full-residency qualification. Do not reuse six-vertex solid crowns.",
+    "nextAction": "Analyze crown coverage lost by the70leaf representative against acceptedc313, then design one representative allocation with distributed twig foliage and a leafy apex within its unchanged cap. Preserve actual folded blade geometry; do not substitute solid crowns or scale this failed allocation to65trees. Four-view visual comparison must pass before unchanged all65/runtime/device qualification.",
     "sequence": [
-      "Resume the current exact failure checkpoint and original active generation2630; carry forward unchanged baseline and ceilings.",
-      "Freeze leaf-tuft vertex/triangle allocation against each actual tree budget. A tuft of L closed tetra leaves sharing one coincident root can use1+3Lvertices and4Ltriangles; this is a testable hypothesis, not acceptance or proof of feasibility.",
-      "Keep smaller folded leaf silhouettes in three-dimensional overlapping tufts around actual major/secondary limb attachment points; preserve branch visibility and irregular crown edges. Avoid giant planar fans and solid octahedral foliage.",
-      "Run the unchanged all65 geometry/non-target/support/determinism/budget verifier and render walking/close/side/distant against accepted reference and both preserved failures. If visual comparison fails, retain exact failure without advancing acceptance.",
-      "Only after a visual candidate passes, repeat immutable full-residency four-camera96-redraw/resource/touch checks, preserve failures and unchanged timing limits, push/read back exact candidate.",
-      "Only a qualified visual candidate proceeds to exact-source private preview and owner disposition plus same-device paired phone/tablet evidence. No merge or H-Earth production release is inferred."
+      "Keep referencec313 as controlling visual direction; reuse existing admission2630/fivepaths/frozenbudgets.",
+      "Localize missing overlap, distribution and apex in representativefourviews; design deliberate foliage/branch allocation on one actual tree.",
+      "Freeze exact source and compare walking/close/side/distant; stop and preserve on visual or budget failure.",
+      "Only visual pass permits all65adaptation and unchanged geometry/fullresidency/runtime checks, then exactpreview+physicalphone/tabletacceptance."
     ],
     "frozenLimitsUnchanged": true,
     "pageExcellenceSelectedGate": false,
@@ -1302,6 +411,978 @@
         "publicationReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6051#issuecomment-6072606342",
         "formalOwnerKeepOrRejectRecorded": false
       }
+    },
+    {
+      "candidateRenderSourceCommit": "84591ddf47599de25486996985cfd25578a2b3fd",
+      "candidateRenderSourceTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
+      "localTestCommit": "2b60072f1836278c5a1e71c25af693f4f028998d",
+      "canonicalOutput": {
+        "schema": "ONE_TREE_GEOMETRY_AND_NON_TARGET_PARITY_RECEIPT",
+        "subject": "ALL_EXISTING_65_IDENTITIES_PER_ADMITTED_BRIDGE_SCOPE",
+        "result": "PASS",
+        "independentVerification": {
+          "schema": "H_EARTH_ALL_TREE_VARIATION_VERIFICATION_v1",
+          "status": "PASS",
+          "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+          "generation": 2630,
+          "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+          "candidateHead": "2b60072f1836278c5a1e71c25af693f4f028998d",
+          "frozenSourceSha256": {
+            "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "15d7c0bea04c7c4677cbae0089ccdafeb0764222a942f7b9b54cd3b158f880d8",
+            "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js": "c7580c04fe052ee4af27675b98c433ea1b8171176f659312c3964280592db964",
+            "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs": "b46312bb873fff7db38cfe18098ec481fe3135878a99665ee95ac77cd9f60333"
+          },
+          "workingTreeClean": true,
+          "changedPaths": [
+            "h-earth-3d/experience-anchor/receipts/h-earth-woodland-tree-trial-20261008.receipt.json",
+            "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+            "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+            "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
+            "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs"
+          ],
+          "treeCount": 65,
+          "distinctTreeForms": 65,
+          "grassTuftCount": 1432,
+          "baselineTreeBytes": 1337970,
+          "candidateTreeBytes": 1260564,
+          "perTree": [
+            {
+              "id": "P2_TREE_A_00",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 2.031473365538367,
+              "signature": "316e76e15953f7defe9237559303984a1b2a991c48645169b05e4f30613d0544"
+            },
+            {
+              "id": "P2_TREE_A_01",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 3.012460793759073,
+              "signature": "d307e0cd8097a204bde99b481e692abba3eaae84cdce9e4525d2185abde02006"
+            },
+            {
+              "id": "P2_TREE_A_02",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.784692341837946,
+              "signature": "d2b51016a6493eba8ad0eb2ac6f939f4c362312ff7afa5ace699f45f5d3dbcf1"
+            },
+            {
+              "id": "P2_TREE_A_03",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 2.9281623301397204,
+              "signature": "567a28a5905402b31bc5e1fe90ce6e88413fbcaeba8c7774e599fe381c045e72"
+            },
+            {
+              "id": "P2_TREE_A_04",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 3.5287463456306263,
+              "signature": "c74739b09392bc1a6fd6f9a20eb1713ea6ffa09b83210a02c8d0a919d38fbc9d"
+            },
+            {
+              "id": "P2_TREE_A_05",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.0988927032970195,
+              "signature": "bdc9565ef9645e3f0f7ecf64f2892450f663893ec8fa72139b6186575dbd322d"
+            },
+            {
+              "id": "P2_TREE_A_06",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 2.6273610975479453,
+              "signature": "81e5fd63249d693a5196529d31bb5b780070ff20e809e821de1645e4be8ae487"
+            },
+            {
+              "id": "P2_TREE_A_07",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 2.947607765128818,
+              "signature": "e2d9c7437a3947537821d12622af190fd357325ee1892788d374246f7a398975"
+            },
+            {
+              "id": "P2_TREE_A_08",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.1859988325615016,
+              "signature": "1d6247811a276710031e967ac52de7197a33260c944f2663e6dccce74989e08e"
+            },
+            {
+              "id": "P2_TREE_A_09",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 3.517198324580681,
+              "signature": "8e1787d483a405ba5c675d1f28646a838edfae89e34f12fa97748c7e4beae5d1"
+            },
+            {
+              "id": "P2_TREE_A_10",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 2.0209858509380734,
+              "signature": "e58072ed034a5df19bb829329c86b7cf74b86889646e07f07bda4733e21d9bf6"
+            },
+            {
+              "id": "P2_TREE_A_11",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.428691922855285,
+              "signature": "d7575d238a75d24029d383311482f639e2d7805dd52a3409e1eb422daf244668"
+            },
+            {
+              "id": "P2_TREE_A_12",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 2.6531833162231817,
+              "signature": "de86a67650053263247d95bf62df2d5eb1d3d4753099312be0d4560f81ffd612"
+            },
+            {
+              "id": "P2_TREE_A_13",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 2.86830032633708,
+              "signature": "4edaf63327631c3233c89be2b9d2083e11b47a5f2152ed8dfb93d1c0947fcc88"
+            },
+            {
+              "id": "P2_TREE_A_14",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.7442218288834312,
+              "signature": "a6e7305f0686c7d7fe05290c3f8d60e9428be13fe4ded2c51df3eb3fc01fb9dd"
+            },
+            {
+              "id": "P2_TREE_B_00",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.8442556777109387,
+              "signature": "fe84e210fdc4fbda94d0e5c2d1c967b1bcf7a42774ae2cc3329e4397b81ef1d1"
+            },
+            {
+              "id": "P2_TREE_B_01",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.0960609394081784,
+              "signature": "e3d8607360573632a56e4e0e0361a4a633a8be035bf965563f0681516e6a3426"
+            },
+            {
+              "id": "P2_TREE_B_02",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.798527904380431,
+              "signature": "01d08a56625e4502a8f12d632e0f039fa8200e99e85ea56d43936d44120d2188"
+            },
+            {
+              "id": "P2_TREE_B_03",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.603406505552272,
+              "signature": "b31b92c494248a65f69199a7032a061aa99fbe05f29389272a6709979485d843"
+            },
+            {
+              "id": "P2_TREE_B_04",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.8024027973454673,
+              "signature": "ce92e933959603a4b84e37adb3646b69a9dc5f6bb4e491e62c48cacc8a0a45d6"
+            },
+            {
+              "id": "P2_TREE_B_05",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.570622639054598,
+              "signature": "dde03e4618e71edd336c636902666c2477e798d6d890f064017cf073c19da9bc"
+            },
+            {
+              "id": "P2_TREE_B_06",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.410467218975469,
+              "signature": "9c3be84cea61df5340e3c92fdd0aca507b014d95d37d64403447c63c9bb511cf"
+            },
+            {
+              "id": "P2_TREE_B_07",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.0924692115303043,
+              "signature": "99e7b2dc1e506183018cb5317ed4df01659329a9a0629b0e3bd65255e733eed4"
+            },
+            {
+              "id": "P2_TREE_B_08",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.19200212311329,
+              "signature": "69739a925c4e40af653c5a29ae0eb2579b77a2f6aeaa97d7e8c84a467677f729"
+            },
+            {
+              "id": "P2_TREE_B_09",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.047309083262236,
+              "signature": "a4a020989f8475a019f466a2584391c4ae3b9f3d097cc2f8465afc4faa8985c3"
+            },
+            {
+              "id": "P2_TREE_B_10",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.459220094046568,
+              "signature": "71b8cd9b9699a0ab36a7f8fad26817b8b920b869c36d4b63dbbe2db9385c9866"
+            },
+            {
+              "id": "P2_TREE_B_11",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.758838174103514,
+              "signature": "b2f044f22f150c60c821839d380c53ff1dd2f9f3824f4e6ba52239f6e41a209d"
+            },
+            {
+              "id": "P2_TREE_B_12",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.7619318604957988,
+              "signature": "4e824ef4fe25fc418ada000a91679c0994d03bdc4309000eaf871198fa78f427"
+            },
+            {
+              "id": "P2_TREE_B_13",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.1225038195241064,
+              "signature": "113ba4142b96f076c06c128a04e9f063c86335e925810af0d7912aabd6907ea1"
+            },
+            {
+              "id": "P2_TREE_B_14",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.9452846930987613,
+              "signature": "005e058dca9716024af722146b4353240f5f6ba703644eee6483b79a8942eb89"
+            },
+            {
+              "id": "P2_TREE_B_15",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.8743184234349766,
+              "signature": "7715cdac3766147b385d985a06000c0ee916c518325a530f92416ac952e0d5d2"
+            },
+            {
+              "id": "P2_TREE_B_16",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.7527910236493227,
+              "signature": "48d4c05495efd48c1f821a06cb514f429099e9e4bd0b42b24467cc305e6eff6e"
+            },
+            {
+              "id": "P2_TREE_C_00",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.8220208614099043,
+              "signature": "556fed7906c9d133e206c572aa262cf2efee2c60db44422c2d422815289e929d"
+            },
+            {
+              "id": "P2_TREE_C_01",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.2104918183041438,
+              "signature": "457d2d94294f57b3315cb715433c1286678d92b5feac0084ff8cfe5418592e64"
+            },
+            {
+              "id": "P2_TREE_C_02",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.783891561936937,
+              "signature": "fa79e4cf94d21fd56e2a5ed571232c78088dccf4a767c5deef922806828e2af8"
+            },
+            {
+              "id": "P2_TREE_C_03",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.263651849828234,
+              "signature": "9fe009301be6f1d0ff19e4458a3a24b7da2f1b493970b2b60b2f39ba12576347"
+            },
+            {
+              "id": "P2_TREE_C_04",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.4976572595487765,
+              "signature": "82a81cda990d3c83c0fa626c417c0e250bbfabc84123de5c2dfc96cbd33607c7"
+            },
+            {
+              "id": "P2_TREE_C_05",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.7897601200048534,
+              "signature": "2cce5bd362301e3e697bc6ebfa29fa13b48ce96bb34085b20e52586462545100"
+            },
+            {
+              "id": "P2_TREE_C_06",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.6523370124214527,
+              "signature": "dc4cae01d0dbb14c935d471626c29e6cce980e7be85f4cf653b4d8380f7a2c9a"
+            },
+            {
+              "id": "P2_TREE_C_07",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.60007053904858,
+              "signature": "344f4af7003571121fc8a23d04887303dd338c696a828e70e037b8e139c3467e"
+            },
+            {
+              "id": "P2_TREE_C_08",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.2542631012818046,
+              "signature": "a0031599f7c9c385c2fa6c5d8859a1f5fb6d35dd1ff4ffc1507078945e507377"
+            },
+            {
+              "id": "P2_TREE_C_10",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.9534479299095422,
+              "signature": "4defed042fd185487bfd509c9c880a22a75981890b143f636c258570adcf7951"
+            },
+            {
+              "id": "P2_TREE_C_11",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.732538606366709,
+              "signature": "0e12ba55d440967c095cbb9ed87b5fab10759facbf2ceee940b68558dbf039ba"
+            },
+            {
+              "id": "P2_TREE_C_13",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.7259656266375791,
+              "signature": "f5a0446082a4476f840049a4e2d50025f87d240321a9c8017699700775bafec4"
+            },
+            {
+              "id": "P2_TREE_C_14",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.6257026858405568,
+              "signature": "c28b581fd68b3df352fe768ed2b752898db88f20c35be06210d04b430b8d91d7"
+            },
+            {
+              "id": "P2_TREE_REAR_00",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.8678776655226197,
+              "signature": "cbbd301259209b545e71cd5439ae13166f6c1daf90a9d73bd7eb1dbccc5993ce"
+            },
+            {
+              "id": "P2_TREE_REAR_01",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.804572396276168,
+              "signature": "d70af2c620cb27efe7c65148ea33cf760b22ac807cb5001aeab417768d6b8afe"
+            },
+            {
+              "id": "P2_TREE_REAR_02",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.631591738907545,
+              "signature": "7ffad3167ccea73fba4302386193b2e14b2c42ab98998e8ca21c27be5ebf7c99"
+            },
+            {
+              "id": "P2_TREE_REAR_03",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.0622928162863063,
+              "signature": "897de8d0a8c3cbf83d8b815ce9e9290986c79e27bdcef8b438fe6f0bd02355bc"
+            },
+            {
+              "id": "P2_TREE_REAR_04",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.055727904839967,
+              "signature": "f1c9c31731674e614ce3cfe338e77b783d8fa2cdf38092097592c293fb8b0b8d"
+            },
+            {
+              "id": "P2_TREE_REAR_05",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.774883534903869,
+              "signature": "d710c222b92f11769634382d831b0d88f716313ddd2f2a9b078a3e679299e1b5"
+            },
+            {
+              "id": "P2_TREE_REAR_06",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.573077298055994,
+              "signature": "b683333794e0a07ec5de255a03e4c4c5f12d4432b2885774b970dbaf5f327b00"
+            },
+            {
+              "id": "P2_TREE_REAR_07",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.414363398544468,
+              "signature": "bea3f3eb85fb6174c209ac539bc82518f05f37b20a2f269684affb0a03c01c9d"
+            },
+            {
+              "id": "P2_TREE_REAR_08",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.618785203492845,
+              "signature": "61407ad35553f6faea77bfb2377ce1217781116136fe71a98e1fc6bd60e0d58a"
+            },
+            {
+              "id": "P2_TREE_REAR_11",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.376619796688974,
+              "signature": "793e4425d8c24e9545aa349a881321364eb77d28cfbe96deda8656b485552a0b"
+            },
+            {
+              "id": "P2_TREE_REAR_12",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.9354934384466027,
+              "signature": "8cac1416e4e2cd873fb6d783081d37a73419229f89a9cdbab50009d497ede972"
+            },
+            {
+              "id": "P2_TREE_REAR_13",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.5436719048787428,
+              "signature": "e38a3915a32f93bff798d5f1b2c55b8508b4f606a8bbaf78041dbc292380ab53"
+            },
+            {
+              "id": "P2_TREE_REAR_14",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.5363444764183583,
+              "signature": "b20d353d8077cf7f54e591762dffd16df1705561e312edd07bf4eda265850e86"
+            },
+            {
+              "id": "P2_TREE_REAR_15",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.6760325624996812,
+              "signature": "c2db2cc64c9faee7e00e7c7b941c405fd9d08b66143bc0b02f35ff21de367771"
+            },
+            {
+              "id": "P2_TREE_REAR_16",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.064448627483812,
+              "signature": "5d31c5383a5da8395864374c3057fb6abb6c82afca68a61bcd2e52bcc6a7a880"
+            },
+            {
+              "id": "P2_TREE_REAR_18",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.947752826705203,
+              "signature": "6c5329c90c2d187a354ffd0c6ba6ae6da7ef8b99d0af95c0288d1c2a00c6a4fc"
+            },
+            {
+              "id": "P2_TREE_REAR_19",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.9406930646644076,
+              "signature": "325d4ff2e12cbc8496b023cd94e22db0dc480f2415601a83a2e24f1ae3b39e98"
+            },
+            {
+              "id": "P2_TREE_REAR_20",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.194346802317096,
+              "signature": "4ef4bcf62d4ef5f4f63bd88c882abfd86296e9dc8cfbd8b9afb952c6d9c81a4e"
+            },
+            {
+              "id": "P2_TREE_REAR_21",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.2985722582519275,
+              "signature": "f06895aa386851b5b37d0c9d0e000b6b385c92997b13c43bad9ccd9a957c3a64"
+            },
+            {
+              "id": "P2_TREE_REAR_22",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.4607509123312203,
+              "signature": "dd8898c963c07f6a59991874f235c5c7664f6e87514180c94038eaac76dcd659"
+            }
+          ],
+          "baselineSectorTriangles": 61044,
+          "sectorTriangles": 55916,
+          "sectorCeiling": 64000,
+          "primitiveCount": 4,
+          "checkedTriangles": 21212,
+          "terrainSha256": "5c552a54d90602e4671b6fe4c2cf95081e75caf747b3b7bfcd4425e79b1239fe",
+          "baselineSectorSha256": "b82e2b8aa0827af8a3ea75ed736f9e5d3adc35fd012bf59ed5a1b0ef539c64df",
+          "candidateSectorSha256": "877afad2d12f78de20841df30d43b351c45fd95775e039c5a74db2358ef1e3cf",
+          "generationOrder": "FORWARD_EQUALS_REVERSED_AND_CHUNKED",
+          "timingsMs": {
+            "importAndTerrain": 18715.694256000002,
+            "baselineSector": 38308.316784,
+            "candidateSector": 28952.552675,
+            "reverseSector": 28997.480018000002
+          },
+          "physicalDeviceAcceptance": "NOT_ESTABLISHED_BY_AUTOMATED_VERIFICATION"
+        }
+      },
+      "actualBrowser": {
+        "sourceCommit": "2b60072f1836278c5a1e71c25af693f4f028998d",
+        "remoteIdenticalTreeCommit": "84591ddf47599de25486996985cfd25578a2b3fd",
+        "sourceTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
+        "physicalAcceptance": false,
+        "gpu": "HEADLESS_SWIFTSHADER",
+        "readyMs": 113415,
+        "fullResidency": {
+          "complete": true,
+          "preparationComplete": true,
+          "totalInstanceCount": 27585,
+          "residentInstanceCount": 27585,
+          "totalBatchCount": 108,
+          "residentBatchCount": 108,
+          "droppedPlacementCount": 0,
+          "worldRebuildCount": 0
+        },
+        "observableBuffers": {
+          "bytes": 34664141,
+          "buffers": 1204
+        },
+        "browserErrors": [],
+        "fixedCameraRoute": "PASS_FOUR_CAMERAS_96_REDRAWS_RESOURCE_GUARDS",
+        "cameraChecks": [
+          {
+            "camera": "walking",
+            "intervals": 95,
+            "redraws": 96,
+            "navigationReturn": "PASS",
+            "worldRebuildOnCamera": false
+          },
+          {
+            "camera": "close",
+            "intervals": 95,
+            "redraws": 96,
+            "navigationReturn": "PASS",
+            "worldRebuildOnCamera": false
+          },
+          {
+            "camera": "side",
+            "intervals": 95,
+            "redraws": 96,
+            "navigationReturn": "PASS",
+            "worldRebuildOnCamera": false
+          },
+          {
+            "camera": "distant",
+            "intervals": 95,
+            "redraws": 96,
+            "navigationReturn": "PASS",
+            "worldRebuildOnCamera": false
+          }
+        ],
+        "resourceAudit": {
+          "beforeAfterResourceCountersUnchanged": {
+            "bufferCreateCount": 16,
+            "bufferUploadCount": 11,
+            "textureCreateCount": 5,
+            "programCreateCount": 3,
+            "framebufferCreateCount": 2,
+            "worldRebuildCount": 0,
+            "vegetationBufferUploadCount": 1188,
+            "vegetationBatchMaterializationCount": 108
+          },
+          "basePackageUploadedBytes": 6632925,
+          "basePackageCeiling": 6710331,
+          "residentBuffers": {
+            "bytes": 34664141,
+            "buffers": 1204
+          },
+          "residentByteCeiling": 34741547,
+          "contextLost": false,
+          "perCameraGuards": "Successful candidate harness asserted each view; independent end-to-end loaded/final resource counters confirmed"
+        },
+        "syntheticTouch": {
+          "status": "PASS_SYNTHETIC_TOUCH_ONLY",
+          "twoFingerDisplacement": 1.4434258524978711,
+          "twoFingerProposalDelta": 7,
+          "releaseCancelIntent": "NONE",
+          "physicalAcceptance": false
+        },
+        "softwareTimingDiagnostic": {
+          "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+          "baselineTree": "d129d8fc3c849550bbb47958d1e2b0cbc3d30b1b",
+          "baselineArtifactSha256": "ad101e604175972be9361b3d425d8639638d00e11370a84f1cbd29a8ed44bee8",
+          "rows": [
+            {
+              "camera": "walking",
+              "candidateMedianMs": 366.5999999999767,
+              "baselineMedianMs": 350,
+              "candidateP95Ms": 750,
+              "baselineP95Ms": 799.9000000000233,
+              "medianRatio": 1.047428571428505,
+              "p95Ratio": 0.9376172021502415,
+              "limitsPass": true
+            },
+            {
+              "camera": "close",
+              "candidateMedianMs": 383.29999999998836,
+              "baselineMedianMs": 349.8999999999651,
+              "candidateP95Ms": 766.6999999999534,
+              "baselineP95Ms": 1016.5999999999767,
+              "medianRatio": 1.0954558445270839,
+              "p95Ratio": 0.7541806020066605,
+              "limitsPass": true
+            },
+            {
+              "camera": "side",
+              "candidateMedianMs": 266.70000000001164,
+              "baselineMedianMs": 183.39999999996508,
+              "candidateP95Ms": 650.1000000000349,
+              "baselineP95Ms": 633.2999999999884,
+              "medianRatio": 1.454198473282783,
+              "p95Ratio": 1.0265277119849152,
+              "limitsPass": false
+            },
+            {
+              "camera": "distant",
+              "candidateMedianMs": 299.9000000000233,
+              "baselineMedianMs": 266.70000000001164,
+              "candidateP95Ms": 999.9000000000233,
+              "baselineP95Ms": 616.5999999999767,
+              "medianRatio": 1.1244844394451077,
+              "p95Ratio": 1.621634771326729,
+              "limitsPass": false
+            }
+          ],
+          "medianRatioLimit": 1.25,
+          "p95RatioLimit": 1.35,
+          "hardwareAcceptance": false,
+          "quantile": "nearest rank over95savedRAFintervals",
+          "status": "FAIL_DIAGNOSTIC_ONLY"
+        },
+        "diagnosticTimingCreatesPhysicalOrHardwareAcceptance": false,
+        "rawEvidenceSha256": "71ccfe08d4a471a5d63a335677cddc9826ccd630261eea6fbff37d9868926efd"
+      },
+      "visualFailure": {
+        "observedCandidate": "84591ddf47599de25486996985cfd25578a2b3fd",
+        "testedLocalCandidate": "2b60072f1836278c5a1e71c25af693f4f028998d",
+        "identicalSourceTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
+        "attachmentCandidateIdentityIndependentlyVerified": true,
+        "source": "Exact immutable source read-only renderer four-view captures after full residency; South/East/West assessment",
+        "failedCriteria": [
+          "Large angular solid masses replace small layered leaf detail",
+          "Side silhouette becomes solid angular column",
+          "Distant grove repeats stacked crowns"
+        ],
+        "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
+        "causeAssessment": "Low-count six-vertex volumes increase projected foliage area but create large facets and erase leaf-scale edge detail. Budget infeasibility is not established.",
+        "physicalTimingStatus": "UNMEASURED_PENDING_VALID_PAIRED_PHONE_TABLET_EVIDENCE",
+        "loaderStatus": "READY and full residency reached in exact source browser run; software diagnostic does not establish physical device startup performance"
+      },
+      "boundedVisualRepair": {
+        "reason": "Sparse planar fern-like fans at prior checkpoint",
+        "change": "Same helper only: raise crown origins, distribute to secondary limbs, fit actual vertices, replace flat blades with overlapping six-vertex closed volumes",
+        "result": "FAIL_VISUAL",
+        "improved": [
+          "Crown fullness",
+          "Reduced exposed straight limbs and planar fern sprays"
+        ],
+        "failed": [
+          "Large angular solid masses replace small layered leaf detail",
+          "Side silhouette becomes solid angular column",
+          "Distant grove repeats stacked crowns"
+        ],
+        "budgetAndResourceResult": "PASS",
+        "softwareDiagnosticResult": "FAIL_SIDE_MEDIAN_AND_DISTANT_P95_DIAGNOSTIC_ONLY",
+        "physicalResult": "PENDING_NOT_ESTABLISHED",
+        "independentReviews": {
+          "North": "CARRY_FORWARD_APPROVED",
+          "East": "FAIL_ALL_FOUR_VISUAL_VIEWS",
+          "West": "NUMERIC_AND_RESOURCE_PASS_VISUAL_FAIL_SOFTWARE_TIMING_DIAGNOSTIC_FAIL"
+        },
+        "initialVerifierFailure": {
+          "assertion": "CANDIDATE_HEAD_CHANGED_DURING_VERIFICATION",
+          "sourceBytesChanged": false,
+          "cause": "Local source commit frozen before initial working-tree verifier completed",
+          "recovery": "Immutable rerun at2b60072f PASS; initial failure retained",
+          "logSha256": "0984e164cafd2ed23356f7bacc63f8c41bbe440322c41b5e10ae9121ed94bdf0"
+        },
+        "images": [
+          {
+            "camera": "walking",
+            "sha256": "f1edc0aa0722f28a1acb3bc272a2c7333d3d9079f2557390447cc7628713c77b"
+          },
+          {
+            "camera": "close",
+            "sha256": "fd6ede87308d3781d0b23a92506480e81937a95995ad28b070c75c14ce9ce4cb"
+          },
+          {
+            "camera": "side",
+            "sha256": "710664970f087daeb07c00de27afcb2e6ed8678f0c763823f053eddb9f8e207c"
+          },
+          {
+            "camera": "distant",
+            "sha256": "56a59b4021b3200153028eb3090a2772621d72ebf01c454b886fd9a7b067e240"
+          }
+        ],
+        "evidenceArchiveFilename": "H-Earth-all-tree-volume-repair-failed.zip",
+        "archiveContent": "Exact source patch, unchanged verifier, all raw measurements/logs/failures, twelve accepted/prior/repair images, native N/E/W reviews and next action",
+        "historical": true
+      },
+      "preservedAt": "290856749784803c687d6bae54e7971accbcb871"
     }
   ],
   "boundedVisualRepair": {
@@ -1351,6 +1432,103 @@
       }
     ],
     "evidenceArchiveFilename": "H-Earth-all-tree-volume-repair-failed.zip",
-    "archiveContent": "Exact source patch, unchanged verifier, all raw measurements/logs/failures, twelve accepted/prior/repair images, native N/E/W reviews and next action"
+    "archiveContent": "Exact source patch, unchanged verifier, all raw measurements/logs/failures, twelve accepted/prior/repair images, native N/E/W reviews and next action",
+    "historical": true
+  },
+  "representativeExperiment": {
+    "status": "VISUAL_FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
+    "affectedTree": "P2_TREE_A_11",
+    "source": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+    "localTestCommit": "2a1feaac0027f4014fe18082454feda87c22388c",
+    "sourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+    "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+    "geometry": {
+      "status": "PASS_REPRESENTATIVE_GEOMETRY_ONLY",
+      "checked": 476,
+      "minArea": 4.1337968640602983e-05,
+      "minNormal": 0.9999999999999998
+    },
+    "recipe": {
+      "recipe": "OPAQUE_CURVED_HIERARCHY_LIGHT_v1",
+      "seed": "WOODLAND_ALL_TREE_HIERARCHY_20261008",
+      "experiment": "REPRESENTATIVE_C313_RECIPE_SIMPLIFICATION",
+      "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+      "majorForks": [
+        {
+          "heightFraction": 0.31499999999999984,
+          "position": [
+            -139.3512991882438,
+            9.508884032287517,
+            -210.70436110614673
+          ]
+        },
+        {
+          "heightFraction": 0.459,
+          "position": [
+            -139.36830226929283,
+            11.215686636098544,
+            -210.7305553876771
+          ]
+        },
+        {
+          "heightFraction": 0.603,
+          "position": [
+            -139.38724237073913,
+            12.92248923990957,
+            -210.7579940452617
+          ]
+        },
+        {
+          "heightFraction": 0.7469999999999999,
+          "position": [
+            -139.4972224308553,
+            14.629291843720594,
+            -210.84391837739778
+          ]
+        }
+      ],
+      "majorCount": 4,
+      "secondaryCount": 8,
+      "twigCount": 4,
+      "leafCount": 70,
+      "tuftRootCount": 20,
+      "foliageForm": "SMALL_CLOSED_FOLDED_LEAVES",
+      "vertices": 362,
+      "triangles": 476,
+      "baselineVertices": 364,
+      "baselineTriangles": 644
+    },
+    "other64Trees": "UNCHANGED_PRIOR_FAILED_VOLUME_SOURCE",
+    "fourViews": {
+      "walking": {
+        "status": "FAIL",
+        "imageSha256": "3147fa121797cab3c3fcacd539a082b66ebf80c3c69055f2c47f86138048020c"
+      },
+      "close": {
+        "status": "FAIL",
+        "imageSha256": "999be6e45f4799ff28099130953d7f38cc3beb6c94483ab47ea1b7b67bf49c8a"
+      },
+      "side": {
+        "status": "FAIL",
+        "imageSha256": "af4113fcc8ca412134190b978d1f5b3e5e901403cb1910cf536e867dad70ef31"
+      },
+      "distant": {
+        "status": "FAIL",
+        "imageSha256": "c5974ec965596b1c43a9752ece2d840f13ba4b02ddcd57992de12e0814b49934"
+      }
+    },
+    "defects": [
+      "Large gaps interrupt layered crown coverage",
+      "Isolated leaf sprays and exposed long major limbs",
+      "Bare upper leader loses leafy apex silhouette"
+    ],
+    "restored": [
+      "Reference-sized closed folded blade shape",
+      "Layered secondary and twig attachment recipe"
+    ],
+    "all65Verification": "NOT_RUN_REPRESENTATIVE_VISUAL_GATE_FAILED",
+    "renewedRuntimeQualification": "NOT_RUN_VISUAL_GATE_FAILED",
+    "physicalDeviceAcceptance": "PENDING",
+    "noBudgetImpossibilityEstablished": true
   }
 }

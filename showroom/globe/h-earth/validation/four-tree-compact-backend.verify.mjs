@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 const source = resolve('showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js');
-const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers } = await import(pathToFileURL(source).href);
+const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers, validateFourTreeCompactDrawBudget, createFourTreeCompactDrawView } = await import(pathToFileURL(source).href);
 const checks = [];
 function check(name, fn) {
   try { fn(); checks.push({name, result:'PASS'}); }
@@ -34,6 +34,21 @@ check('GPU_ALLOCATION_FAILURE_ROLLBACK',()=>{
     deleteBuffer(){deleted++;}};
   assert.throws(()=>createFourTreeCompactGpuBuffers(gl,{compactRecords:new Uint8Array(172032),contactSidecar:new Uint8Array(229376)}),/SIMULATED_UPLOAD_FAILURE/);
   assert.equal(deleted,2);
+});
+check('DRAW_BUDGET_LIMITS',()=>{
+ const valid={addedGpuBytes:401408,addedMainDraws:4,addedShadowDraws:4,addedPrograms:2,addedBuffers:3,addedVertexArrays:1,addedTextures:0,addedFramebuffers:0};
+ assert.equal(validateFourTreeCompactDrawBudget(valid).eligible,true);
+ for(const key of Object.keys(valid))assert.throws(()=>validateFourTreeCompactDrawBudget({...valid,[key]:valid[key]+1}),/FOUR_TREE_COMPACT_RESOURCE_BUDGET/);
+});
+check('DRAW_VIEW_ALLOCATION_AND_CLEANUP',()=>{
+ let next=0;const deleted=[];const uploads=[];
+ const gl={ELEMENT_ARRAY_BUFFER:34963,STATIC_DRAW:35044,UNSIGNED_SHORT:5123,UNSIGNED_INT:5125,
+ createVertexArray(){return {id:++next};},createBuffer(){return {id:++next};},bindVertexArray(){},bindBuffer(){},
+ bufferData(target,data){uploads.push([target,data.byteLength]);},deleteBuffer(x){deleted.push(['buffer',x.id]);},deleteVertexArray(x){deleted.push(['vao',x.id]);}};
+ const view=createFourTreeCompactDrawView(gl,{compactBuffer:{},contactSidecarBuffer:{},indexData:new Uint32Array([0,1,2]),program:{}});
+ assert.equal(view.indexCount,3);assert.equal(view.allocatedIndexBytes,12);
+ assert.deepEqual(uploads,[[gl.ELEMENT_ARRAY_BUFFER,12]]);
+ view.dispose();view.dispose();assert.equal(deleted.length,2);
 });
 const outstanding=['INTEGRATED_COLOR_PASS','INTEGRATED_STATIC_SHADOW_PASS','FOUR_FIXED_CAMERA_COMPARISONS','ACTUAL_GPU_ALLOCATION','HISTORICAL_AND_PAIRED_TIMING','EXPERIENCE_ANCHOR','PHONE_TABLET_OWNER_ACCEPTANCE'];
 const receipt={schema:'H_EARTH_FOUR_TREE_COMPACT_BACKEND_VERIFICATION_v1',result:'INCOMPLETE_NOT_QUALIFIED',checks,outstanding,qualificationEstablished:false};

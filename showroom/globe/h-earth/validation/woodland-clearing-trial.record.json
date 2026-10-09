@@ -952,7 +952,7 @@
       "reason": "Preserve pre-profile candidate and failures unchanged."
     }
   ],
-  "status": "FAILED_WHOLE_SCENE_VISUAL_COMPARISON_NOT_READY_FOR_ADOPTION",
+  "status": "COMPACT_MASK_REPAIR_PENDING_FULL_SCENE_REVIEW",
   "operationId": "H_EARTH_ENVIRONMENT_RICHNESS_PATCH_20261009",
   "generation": 2631,
   "allowedPaths": [
@@ -2355,7 +2355,39 @@
       "findings": "Foliage and grassFAIL; bark, lighting and soilPARTIAL; atmosphericdepthUNRESOLVED. Atlascoverage diagnostic realized visually; exact mip/orientation causal split unproven."
     }
   },
-  "nextRequired": "Read-only diagnose actual diamond-UV sampler/alpha coverage at four perspective distances, with source-bound orientation/mask controls only through registered admitted execution; cost whole-patch improvements before another repair. Preserve exact failure and all numeric limits. No rollout, merge or production deployment.",
+  "nextRequired": "Freeze exact compact100 mask repair; verify product raster and unchanged geometry/renderer/resource contract; fully load and compare four scene views in all six qualities. Stop on visual failure before runtime or phone/tablet acceptance.",
   "testedCandidate": "ebd800bf038803e4aaa00dea5ad3e1ac37932875",
-  "testedTree": "b88eb524ccd548a4d22f6b110a5d69fd4f3e739e"
+  "testedTree": "b88eb524ccd548a4d22f6b110a5d69fd4f3e739e",
+  "compactMaskRepair": {
+    "base": "f85dca9f74550794f23dd6834bf54ba6679f1ca8",
+    "generation": 2631,
+    "mask": "compact100",
+    "costingArtifact": {
+      "libraryFileId": "libfile_49c85a2b29088191996c34e628b56984",
+      "filename": "H-Earth-compact-leaflet-costing.zip",
+      "sha256": "34bfdc19e22fa09ad84ed966c026f3e78781449eaa8bef8a34b0a567038e0f22"
+    },
+    "nativeSVG_SHA256": "a79e8b937313e1bb393511a9f4cd34141d0c54072459e021c73eb395d6b2d0b0",
+    "productPNG_SHA256": "19d8b5fd24deae3ea04b2affcad70c404bd92b24da4796e5f9d9a8147aa3b03d",
+    "rasterization": "Same Chromium canvas SVG-to-PNG-to-HTMLImage as costing; independent regenerated PNG exact match",
+    "geometry": "UNCHANGED; inherit exact f85 native geometry/parity/determinism proof after source-delta review",
+    "actualA11Cards": 1792,
+    "previous1848": "REPORTING_ARITHMETIC_ERROR_NOT_MESH_CHANGE",
+    "samplerAndCutoff": "UNCHANGED_TRILINEAR_0.45",
+    "texture": [
+      256,
+      256,
+      9,
+      "RGBA8"
+    ],
+    "textureMipBytes": 349524,
+    "addedGeometry": 0,
+    "addedStorage": 0,
+    "timing": "UNPROVEN; newmask changes fragment and static-shadow coverage",
+    "mipBoundary": "Survives through4x4;2x2/1x1 disappear",
+    "fullScene": "PENDING_ALL_FOUR_VIEWS_AND_SIX_QUALITIES",
+    "grass": "UNRESOLVED_UNCHANGED",
+    "physicalAcceptance": false,
+    "releaseEligible": false
+  }
 }

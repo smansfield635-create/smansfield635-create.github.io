@@ -92,15 +92,14 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
  return {bounds:B,treeIds:H_EARTH_WOODLAND_CLEARING_TREE_IDS,removedGrass,addedGrass,addedRocks,addedShrubs,addedLitter,textureAssets:H_EARTH_WOODLAND_CLEARING_ASSETS.map(({id,width,height})=>({id,width,height})),canonicalTerrainModified:false,ecologicalPlanningModified:false};
 }
 
-/** Native, deterministic fine-leaf cluster atlas. Rasterized at the existing
- * 256x256 allocation; transparent gaps carry detail without extra geometry.
- * SVG is generated from shape data so the source and bitmap are reproducible. */
+/** Native, deterministic compact leaflet atlas selected by the preserved
+ * three-mask costing. The browser-rasterized bitmap retains the existing
+ * 256x256 allocation, sampler and cutoff; this factory changes no mesh recipe. */
 export function createHEarthClearingLeafClusterAtlasSVG(){
  const leaves=[];
- for(let j=0;j<3;j++)for(const sign of [-1,1]){
-  const x=64+j*48,cy=128+sign*(25+(j%2)*7),angle=sign*(40+j*7),length=48-j*3;
-  leaves.push(`<g transform="translate(${x} ${cy}) rotate(${angle})"><path d="M ${-length/2} 0 Q -8 -19 ${length/2} 0 Q -8 19 ${-length/2} 0" fill="url(#leaf${j})"/><path d="M ${-length/2} 0 L ${length/2} 0 M -8 0 L -2 -7 M 4 0 L 10 -6 M -8 0 L -2 7 M 4 0 L 10 6" stroke="#4e7738" stroke-width=".8" opacity=".65"/></g>`);
+ for(const [j,x] of [42,85,128,171,214].entries())for(const [row,y] of [110,128,146].entries()){
+  const angle=(row-1)*(22+(j%2)*5);
+  leaves.push(`<g transform="translate(${x} ${y}) rotate(${angle})"><path d="M -50.0 0 Q -8.0 -62 50.0 0 Q -8.0 62 -50.0 0" fill="#719b48"/><path d="M -50.0 0 L 50.0 0" stroke="#41672f" stroke-width="1"/></g>`);
  }
- leaves.push('<path d="M 192 128 Q 215 105 244 128 Q 215 151 192 128" fill="url(#leaf0)"/>');
- return `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><defs>${[0,1,2].map(j=>`<linearGradient id="leaf${j}" x2=".7" y2="1"><stop stop-color="${['#83ad4e','#769c49','#92b759'][j]}"/><stop offset=".48" stop-color="#668d3e"/><stop offset="1" stop-color="#41682e"/></linearGradient>`).join('')}</defs><g><path d="M 7 128 Q 130 123 244 128 M 42 128 L 70 103 M 43 128 L 70 153 M 95 126 L 115 95 M 95 126 L 115 161 M 145 127 L 166 101 M 145 127 L 166 155" fill="none" stroke="#5b7139" stroke-width="2"/>${leaves.join('')}</g></svg>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><defs><clipPath id="d"><path d="M 0 128 L 120.32 0 L 256 128 L 120.32 256 Z"/></clipPath></defs><g clip-path="url(#d)">${leaves.join('')}</g></svg>`;
 }

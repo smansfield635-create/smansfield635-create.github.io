@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-09T08:43:53Z",
+  "generatedAt": "2026-10-09T09:39:05Z",
   "window": {
-    "start": "2026-09-09T08:43:53Z",
-    "end": "2026-10-09T08:43:53Z"
+    "start": "2026-09-09T09:39:05Z",
+    "end": "2026-10-09T09:39:05Z"
   },
   "dimensions": {
     "requestPath": [
@@ -293,6 +293,11 @@
         "visits": 2
       },
       {
+        "value": "/laws/categories/structure/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/site-guide/",
         "pageLoads": 1,
         "visits": 1
@@ -309,11 +314,6 @@
       },
       {
         "value": "/build/index.html",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/laws/categories/structure/",
         "pageLoads": 1,
         "visits": 1
       },

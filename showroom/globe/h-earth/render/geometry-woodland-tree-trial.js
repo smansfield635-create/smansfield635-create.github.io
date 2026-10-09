@@ -31,12 +31,24 @@ function sweep(m,points,radii,sides,color,key,retainedRing=null){
  for(let j=1;j<sides-1;j++)face(m,rings[0][0],rings[0][j+1],rings[0][j]);
  const last=rings.at(-1);for(let j=1;j<sides-1;j++)face(m,last[0],last[j],last[j+1]);
 }
-// Closed shallow folded leaf, using the accepted four-vertex opaque recipe.
-function leaf(m,root,direction,width,length,color){
+// A closed six-vertex foliage volume. Differently oriented, overlapping
+// volumes replace the nearly coplanar fans; no renderer/material change.
+function crownCluster(m,center,direction,width,length,depth,color,fit,key){
  const d=unit(direction),side=unit(cross(d,Math.abs(d[1])<.9?[0,1,0]:[1,0,0])),normal=unit(cross(side,d));
- const middle=add(root,scale(d,length*.47)),start=m.vertices.length;
- for(const p of [root,add(root,scale(d,length)),add(middle,add(scale(side,width),scale(normal,.045))),add(middle,add(scale(side,-width),scale(normal,.045)))])vertex(m,p,color);
- face(m,start,start+1,start+2);face(m,start,start+3,start+1);face(m,start,start+2,start+3);face(m,start+1,start+3,start+2);
+ const offsets=[scale(d,-length*.50),scale(d,length*.58),
+  add(scale(side,width),scale(d,length*.10)),
+  add(scale(normal,depth),scale(d,-length*.09)),
+  add(scale(side,-width*.88),scale(d,-length*.15)),
+  add(scale(normal,-depth*.86),scale(d,length*.13))];
+ const amount=fit(center,offsets),start=m.vertices.length;
+ for(let i=0;i<offsets.length;i++){
+  const tint=.88+.20*hash(key,`cluster-face-${i}`);
+  vertex(m,add(center,scale(offsets[i],amount)),color.map((v,k)=>k===3?v:v*tint));
+ }
+ for(let i=0;i<4;i++){
+  const a=start+2+i,b=start+2+(i+1)%4;
+  face(m,start,a,b);face(m,start+1,b,a);
+ }
 }
 export function adaptHEarthWoodlandTreeHierarchy({bark,foliage,p,height,leanX,leanZ,barkVertexStart,barkIndexStart,canopyVertexStart,canopyIndexStart}){
  const {id,x,z,anchor,radius}=p,y=anchor.y;
@@ -57,11 +69,11 @@ export function adaptHEarthWoodlandTreeHierarchy({bark,foliage,p,height,leanX,le
  const centerMargin=1.34,boundCenter=Math.max(.70,radius-centerMargin);
  const limit=point=>{const radial=Math.hypot(point[0]-x,point[2]-z);if(radial>boundCenter){point[0]=x+(point[0]-x)*boundCenter/radial;point[2]=z+(point[2]-z)*boundCenter/radial;}point[1]=Math.min(y+height*.91,Math.max(y+height*.26,point[1]));return point;};
  for(let j=0;j<majorCount;j++){
-  const t=.25+j*(.46/(majorCount-1))+.025*(hash(id,`fork-${j}`)-.5),base=onPath(leader,t);
+  const t=.38+j*(.45/(majorCount-1))+.025*(hash(id,`fork-${j}`)-.5),base=onPath(leader,t);
   const angle=heading+j*2.399963229728653+(hash(id,`angle-${j}`)-.5)*.34;
   const radial=[Math.cos(angle),0,Math.sin(angle)],side=[-radial[2],0,radial[0]];
   const reach=boundCenter*(.72+.23*hash(id,`reach-${j}`))*(style===2&&j%2?.73:1);
-  const end=limit(add(base,add(scale(radial,reach),[0,height*(.09+.045*hash(id,`rise-${j}`)),0])));
+  const end=limit(add(base,add(scale(radial,reach),[0,height*(.12+.045*hash(id,`rise-${j}`)),0])));
   const elbow=limit(add(mix(base,end,.48),add(scale(side,.13*(j%2?1:-1)),[0,.12,0])));
   const major=[base,elbow,end],r=.125-j*.010;sweep(bark,major,[r,r*.53,.018],4,[103,81,53,255],`${id}:major-${j}`);
   forks.push({heightFraction:(base[1]-y)/height,position:base,heading:angle});paths.push(major);majors.push(major);
@@ -70,24 +82,37 @@ export function adaptHEarthWoodlandTreeHierarchy({bark,foliage,p,height,leanX,le
   const secondary=[attach,tip];sweep(bark,secondary,[.036,.005],3,[108,85,54,255],`${id}:secondary-${j}`);paths.push(secondary);secondaries.push(secondary);
  }
  const woodVertices=bark.vertices.length-barkVertexStart,woodTriangles=(bark.indices.length-barkIndexStart)/3;
- const leafCount=Math.min(Math.floor((oldVertices-woodVertices)/4),Math.floor((oldTriangles-woodTriangles)/4));
- if(leafCount<24)throw new Error(`WOODLAND_VARIATION_LEAF_BUDGET_INSUFFICIENT:${id}`);
- // Layer crowns around the actual major limb ends rather than lining short
- // secondary twigs with isolated blades. The upper leader receives its own
- // overlapping cluster, using exactly the same leaf and vertex population.
+ const clusterCount=Math.min(Math.floor((oldVertices-woodVertices)/6),Math.floor((oldTriangles-woodTriangles)/8));
+ if(clusterCount<16)throw new Error(`WOODLAND_VARIATION_CLUSTER_BUDGET_INSUFFICIENT:${id}`);
+ // Fit the actual six vertices, rather than shrinking every upward or
+ // outward blade by an unrelated worst-case length+width bound.
+ const fit=(center,offsets)=>{
+  let amount=1;
+  for(const q of offsets){
+   const cx=center[0]-x,cz=center[2]-z,a=q[0]*q[0]+q[2]*q[2],b=2*(cx*q[0]+cz*q[2]),c=cx*cx+cz*cz-radius*radius;
+   if(a>1e-12)amount=Math.min(amount,(-b+Math.sqrt(Math.max(0,b*b-4*a*c)))/(2*a));
+   if(q[1]>0)amount=Math.min(amount,(y+height-center[1])/q[1]);
+   if(q[1]<0)amount=Math.min(amount,(y+height*.26-center[1])/q[1]);
+  }
+  if(!(amount>0))throw new Error(`WOODLAND_VARIATION_CLUSTER_FIT:${id}`);
+  return amount;
+ };
  const leafPaths=majors.concat([leader]);
- for(let n=0;n<leafCount;n++){
-  const pi=n%leafPaths.length,path=leafPaths[pi],ordinal=Math.floor(n/leafPaths.length),count=Math.ceil((leafCount-pi)/leafPaths.length);
-  const t=pi===majors.length?.84+.15*(ordinal+.3)/count:.58+.40*(ordinal+.25+.40*hash(id,`leaf-position-${n}`))/count;
-  const root=onPath(path,t),along=unit(sub(path.at(-1),path[0])),across=unit(cross(along,Math.abs(along[1])<.9?[0,1,0]:[1,0,0])),around=unit(cross(along,across));
-  const roll=hash(id,`leaf-roll-${n}`)*Math.PI*2,direction=add(scale(along,.44),add(scale(across,Math.cos(roll)),add(scale(around,Math.sin(roll)),[0,.18,0])));
-  const tint=hash(id,`leaf-tint-${n}`),length=1.58+.52*hash(id,`leaf-length-${n}`),width=.54+.22*hash(id,`leaf-width-${n}`);
-  // Scale this blade only if its full extent would escape the old crown/height.
-  const horizontalMargin=radius-Math.hypot(root[0]-x,root[2]-z),verticalMargin=y+height-root[1];
-  const fit=Math.min(1,horizontalMargin/(length+width+.045),verticalMargin/(length+width+.045));
-  leaf(foliage,root,direction,width*fit,length*fit,[46+tint*29,75+tint*35,24+tint*20,255]);
+ for(let n=0;n<clusterCount;n++){
+  const pi=n%leafPaths.length,path=leafPaths[pi],ordinal=Math.floor(n/leafPaths.length),count=Math.ceil((clusterCount-pi)/leafPaths.length);
+  const t=pi===majors.length?.62+.37*(ordinal+.35)/count:.32+.67*(ordinal+.20+.25*hash(id,`cluster-position-${n}`))/count;
+  const along=unit(sub(path.at(-1),path[0])),across=unit(cross(along,Math.abs(along[1])<.9?[0,1,0]:[1,0,0])),around=unit(cross(along,across));
+  const roll=hash(id,`cluster-roll-${n}`)*Math.PI*2;
+  let center=onPath(path,t);
+  // Alternate between actual secondary forks and major limbs. Centers spread
+  // in three dimensions; the leaf silhouettes no longer share a stem line.
+  if(pi<majors.length&&ordinal%2)center=onPath(secondaries[pi],.45+.45*hash(id,`cluster-secondary-${n}`));
+  center=limit(add(center,add(scale(across,.30*Math.cos(roll)),scale(around,.24*Math.sin(roll)))));
+  const direction=add(scale(along,.58),add(scale(across,.48*Math.cos(roll)),add(scale(around,.48*Math.sin(roll)),[0,.22,0])));
+  const tint=hash(id,`cluster-tint-${n}`),length=1.55+.65*hash(id,`cluster-length-${n}`),width=.76+.28*hash(id,`cluster-width-${n}`),depth=.54+.26*hash(id,`cluster-depth-${n}`);
+  crownCluster(foliage,center,direction,width,length,depth,[46+tint*29,75+tint*35,24+tint*20,255],fit,`${id}:${n}`);
  }
  const vertices=bark.vertices.length-barkVertexStart+foliage.vertices.length-canopyVertexStart,triangles=(bark.indices.length-barkIndexStart+foliage.indices.length-canopyIndexStart)/3;
  if(vertices>oldVertices||triangles>oldTriangles)throw new Error(`WOODLAND_VARIATION_BASELINE_BUDGET_EXCEEDED:${id}`);
- return {recipe:'OPAQUE_CURVED_HIERARCHY_LIGHT_v1',seed:SEED,style:['STAGGERED_UPRIGHT','BENT_LAYERED_LEADER','ASYMMETRIC_OPEN_FORK','SPREAD_LAYERED_CROWN'][style],majorForks:forks,majorCount,secondaryCount:secondaries.length,leafCount,vertices,triangles,baselineVertices:oldVertices,baselineTriangles:oldTriangles};
+ return {recipe:'OPAQUE_CURVED_HIERARCHY_LIGHT_v1',seed:SEED,style:['STAGGERED_UPRIGHT','BENT_LAYERED_LEADER','ASYMMETRIC_OPEN_FORK','SPREAD_LAYERED_CROWN'][style],majorForks:forks,majorCount,secondaryCount:secondaries.length,leafCount:0,clusterCount,foliageForm:'OVERLAPPING_CLOSED_VOLUMES',vertices,triangles,baselineVertices:oldVertices,baselineTriangles:oldTriangles};
 }

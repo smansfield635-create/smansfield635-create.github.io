@@ -75,3 +75,53 @@ export function createFourTreeCompactGpuBuffers(gl, payload) {
     throw error;
   }
 }
+
+/**
+ * WebGL2 reconstruction contract for the qualified 24-byte packed stream.
+ * Packed records are six little-endian uint32 words; the caller supplies
+ * the original quantization scales and origin, not inferred scene constants.
+ * Each leaf occupies four logical vertices in a six-index quad.
+ */
+export const FOUR_TREE_COMPACT_VERTEX_GLSL = `
+precision highp float;
+precision highp int;
+layout(location=10) in uvec4 aCompactWords0;
+layout(location=11) in uvec2 aCompactWords1;
+uniform vec3 uCompactOrigin;
+uniform vec3 uCompactPositionScale;
+uniform vec2 uCompactLeafExtentScale;
+vec3 reconstructCompactCenter(uvec4 words) {
+  ivec3 signedCenter=ivec3(
+    int(words.x<<16)>>16, int(words.x)>>16,
+    int(words.y<<16)>>16);
+  return uCompactOrigin+vec3(signedCenter)*uCompactPositionScale;
+}
+vec3 reconstructCompactCorner(uvec4 words, uvec2 extra, uint corner) {
+  vec3 center=reconstructCompactCenter(words);
+  float yaw=float(words.y>>16)*(6.283185307179586/65535.0);
+  vec2 axis=vec2(cos(yaw),sin(yaw));
+  vec2 orthogonal=vec2(-axis.y,axis.x);
+  vec2 extent=vec2(float(words.z&65535u),float(words.z>>16))*uCompactLeafExtentScale;
+  vec2 signs=vec2((corner&1u)==0u?-1.0:1.0,(corner&2u)==0u?-1.0:1.0);
+  vec2 offset=axis*extent.x*signs.x+orthogonal*extent.y*signs.y;
+  return center+vec3(offset.x,0.0,offset.y);
+}
+`;
+export function validateFourTreeCompactDrawBudget(actual) {
+  const limits = FOUR_TREE_COMPACT_CONTRACT;
+  for (const [name, maximum] of [
+    ['addedGpuBytes', limits.maxAddedGpuBytes],
+    ['addedMainDraws', limits.maxAddedMainDraws],
+    ['addedShadowDraws', limits.maxAddedShadowDraws],
+    ['addedPrograms', limits.maxAddedPrograms],
+    ['addedBuffers', limits.maxAddedBuffers],
+    ['addedVertexArrays', limits.maxAddedVertexArrays],
+    ['addedTextures', limits.maxAddedTextures],
+    ['addedFramebuffers', limits.maxAddedFramebuffers]
+  ]) {
+    if (!Number.isSafeInteger(actual?.[name]) || actual[name] < 0 || actual[name] > maximum) {
+      throw new RangeError('FOUR_TREE_COMPACT_RESOURCE_BUDGET:' + name);
+    }
+  }
+  return Object.freeze({eligible:true, ...actual});
+}

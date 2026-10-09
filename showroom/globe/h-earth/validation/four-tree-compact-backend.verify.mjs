@@ -57,6 +57,12 @@ check('DRAW_VIEW_ALLOCATION_AND_CLEANUP',()=>{
  assert.deepEqual(uploads,[[gl.ELEMENT_ARRAY_BUFFER,24]]);
  view.dispose();view.dispose();assert.equal(deleted.length,2);
 });
+check('INVALID_QUAD_REJECTED_BEFORE_GPU_ALLOCATION',()=>{
+ let allocations=0;
+ const gl={createVertexArray(){allocations++;return {};}};
+ assert.throws(()=>createFourTreeCompactDrawView(gl,{compactBuffer:{},contactSidecarBuffer:{},indexData:new Uint16Array([0,1,2]),program:{}}),/QUAD_INDEX_CONTRACT/);
+ assert.equal(allocations,0);
+});
 check('INSTANCED_DRAW',()=>{
  const draws=[];
  const gl={ELEMENT_ARRAY_BUFFER:34963,ARRAY_BUFFER:34962,STATIC_DRAW:35044,UNSIGNED_INT:5125,TRIANGLES:4,

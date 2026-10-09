@@ -3,6 +3,8 @@ export const H_EARTH_WOODLAND_CLEARING_BOUNDS=Object.freeze({minX:-155.402679870
 export const H_EARTH_WOODLAND_CLEARING_TREE_IDS=Object.freeze(['P2_TREE_A_03','P2_TREE_A_06','P2_TREE_A_08','P2_TREE_A_11']);
 export const H_EARTH_WOODLAND_CLEARING_ASSETS=Object.freeze(['leaf','bark','soil'].map(kind=>Object.freeze({id:kind,kind,url:new URL(`./assets/woodland-clearing-${kind}.png`,import.meta.url).href,width:256,height:256,alphaCutoff:kind==='leaf'?.45:0})));
 export const H_EARTH_WOODLAND_CLEARING_TRIANGLE_LIMIT=105000;
+// One texture, two padded 126x256 leaf recipes; no added sampler or storage.
+export const clearingLeafAtlasUV=(u,style='LIGHTER_COMPACT_SPRAY')=>((style==='FULLER_SINGLE_LEAF'?129:1)+126*u)/256;
 const seed='H_EARTH_CLEARING_2629_20261008';
 const hash=(id,c)=>{let h=2166136261;for(const a of `${seed}:${id}:${c}`)h=Math.imul(h^a.charCodeAt(0),16777619);return(h>>>0)/4294967296;};
 const B=H_EARTH_WOODLAND_CLEARING_BOUNDS;
@@ -15,7 +17,7 @@ const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]]
 function blade(m,root,direction,length,width,fold,color,type=3){
  const d=unit(direction),side=unit(cross(d,Math.abs(d[1])<.9?[0,1,0]:[1,0,0])),n=cross(side,d),ids=[];
  const points=[root,root.map((v,j)=>v+d[j]*length),root.map((v,j)=>v+d[j]*length*.47+side[j]*width+n[j]*fold),root.map((v,j)=>v+d[j]*length*.47-side[j]*width+n[j]*fold)];
- for(let k=0;k<4;k++)ids.push(vertex(m,points[k],color,type,[[0,.5],[1,.5],[.47,0],[.47,1]][k]));
+ for(let k=0;k<4;k++)ids.push(vertex(m,points[k],color,type,[[0,.5],[1,.5],[.47,0],[.47,1]][k].map((q,j)=>type===2&&j===0?clearingLeafAtlasUV(q):q)));
  face(m,ids[0],ids[1],ids[2]);face(m,ids[0],ids[3],ids[1]);
  // Clearing grass uses the same uncullable folded broad faces as the tree
  // foliage. Understory and fallen leaves retain their shallow closed volume.
@@ -95,11 +97,18 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
 /** Native, deterministic compact leaflet atlas selected by the preserved
  * three-mask costing. The browser-rasterized bitmap retains the existing
  * 256x256 allocation, sampler and cutoff; this factory changes no mesh recipe. */
-export function createHEarthClearingLeafClusterAtlasSVG(){
+function createCompactLeafSVG(){
  const leaves=[];
  for(const [j,x] of [42,85,128,171,214].entries())for(const [row,y] of [110,128,146].entries()){
   const angle=(row-1)*(22+(j%2)*5);
   leaves.push(`<g transform="translate(${x} ${y}) rotate(${angle})"><path d="M -50.0 0 Q -8.0 -62 50.0 0 Q -8.0 62 -50.0 0" fill="#719b48"/><path d="M -50.0 0 L 50.0 0" stroke="#41672f" stroke-width="1"/></g>`);
  }
  return `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><defs><clipPath id="d"><path d="M 0 128 L 120.32 0 L 256 128 L 120.32 256 Z"/></clipPath></defs><g clip-path="url(#d)">${leaves.join('')}</g></svg>`;
+}
+
+/** Deterministic two-style atlas. Rasterizer duplicates the one-pixel borders. */
+export function createHEarthClearingLeafClusterAtlasSVG(){
+ const compact=createCompactLeafSVG().replace('<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256">','').replace('</svg>','').replaceAll('id="d"','id="compact"').replaceAll('url(#d)','url(#compact)');
+ const single='<defs><clipPath id="single"><path d="M0 128L120.32 0L256 128L120.32 256Z"/></clipPath></defs><g clip-path="url(#single)"><path fill="#52733a" d="M4 128C30 104 55 40 120 12C185 45 227 102 252 128C220 157 180 220 120 244C55 215 25 148 4 128Z"/><path fill="#668643" d="M4 128C30 104 55 40 120 12C185 45 227 102 252 128Z"/><path fill="none" stroke="#97a85a" stroke-width="1.5" d="M8 128L246 128"/></g>';
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><g transform="translate(1 0) scale(0.4921875 1)">${compact}</g><g transform="translate(129 0) scale(0.4921875 1)">${single}</g></svg>`;
 }

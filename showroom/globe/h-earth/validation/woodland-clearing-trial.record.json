@@ -2426,5 +2426,21 @@
       "west/final-review.json": "1c2005fe2f146db2300f28540db6b520a653f8661b8ce45e67e357ab7c031440"
     },
     "independentDisposition": "FAIL_FULL_SCENE;COVERAGE_IMPROVEMENT_PRESERVED"
+  },
+  "ownerApprovedMixedTrees": {
+    "source": "b89a4c95fa2ca50529ca49d97362aeb3b3d93d3d",
+    "ownerDecision": "Both styles visually approved; fuller preferred and lighter retained for contrast. Grass deferred.",
+    "styles": {
+      "P2_TREE_A_03": "LIGHTER_COMPACT_SPRAY",
+      "P2_TREE_A_06": "FULLER_SINGLE_LEAF",
+      "P2_TREE_A_08": "FULLER_SINGLE_LEAF",
+      "P2_TREE_A_11": "FULLER_SINGLE_LEAF"
+    },
+    "texture": "Two padded126x256 recipes in existing256x256 texture; horizontal sampling changed and requires qualification.",
+    "geometry": "Native wider algorithm; original counts, roots and rolls preserved; other61 trees unchanged.",
+    "runtime": "PENDING",
+    "physicalDeviceAcceptance": "PENDING_NATIVE_EXACT_CANDIDATE",
+    "merge": false,
+    "deployment": false
   }
 }

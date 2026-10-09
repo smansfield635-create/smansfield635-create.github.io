@@ -2,7 +2,7 @@
  * Leaves attach to twigs; no textures, transparency, random stream or extra batch.
  * The caller retains the accepted basal branch and ecological planning envelope.
  */
-import {H_EARTH_WOODLAND_CLEARING_TREE_IDS} from './woodland-clearing-trial.js';
+import {H_EARTH_WOODLAND_CLEARING_TREE_IDS,clearingLeafAtlasUV} from './woodland-clearing-trial.js';
 export const H_EARTH_WOODLAND_TREE_TRIAL_ID='P2_TREE_A_11';
 const SEED='WOODLAND_ONE_TREE_REALISM_20261008';
 const hash=(id,channel)=>{let h=2166136261;for(const c of `${SEED}:${id}:${channel}`)h=Math.imul(h^c.charCodeAt(0),16777619);return(h>>>0)/4294967296;};
@@ -52,6 +52,7 @@ function leaf(m,root,direction,width,length,fold,color,thin=false){
 }
 export function appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ,clearing=false}){
  if(p.id!==H_EARTH_WOODLAND_TREE_TRIAL_ID&&!(clearing&&H_EARTH_WOODLAND_CLEARING_TREE_IDS.includes(p.id)))throw new Error('WOODLAND_TREE_TRIAL_ID_OUT_OF_SCOPE');
+ const leafStart=foliage.vertices.length;
  const before=bark.indices.length+foliage.indices.length,{id,x,z,anchor}=p,y=anchor.y;
  const basalFraction=id===H_EARTH_WOODLAND_TREE_TRIAL_ID?.30:[.38,.54,.30][Number(id.slice(-2))%3];
  const first=[x+leanX*.7,y+height*basalFraction,z+leanZ*.7],trunk=[first];
@@ -115,7 +116,25 @@ export function appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ
    leaf(foliage,root,direction,width,length,clearing?.020:.045,[46+tint*29,75+tint*35,24+tint*20,255],clearing);leafCount++;
   }
  }
+ const leafStyle=clearing&&id!=='P2_TREE_A_03'?'FULLER_SINGLE_LEAF':'LIGHTER_COMPACT_SPRAY';
+ if(clearing){
+  if(leafStyle==='FULLER_SINGLE_LEAF')widenClearingLeaves(foliage,leafStart);
+  for(let i=leafStart;i<foliage.vertices.length;i++){const uv=foliage.clearingAttributes[i];uv[0]=clearingLeafAtlasUV(uv[0],leafStyle);}
+ }
  const triangles=(bark.indices.length+foliage.indices.length-before)/3+16;
  if(triangles>(clearing?9000:3600))throw new Error(`WOODLAND_TREE_TRIAL_BUDGET_EXCEEDED:${triangles}`);
- return {recipe:clearing?'BOUNDED_DISTRIBUTED_LEAF_SPRAYS_CURVED_HIERARCHY_v5':'OPAQUE_CURVED_HIERARCHY_v2',seed:SEED,leafCount,triangleCount:triangles,woodTriangleCount:triangles-16-leafCount*(clearing?2:4),structure:{trunk,majorForks:forks,branchPaths:paths,secondaryCount:14,twigCount:28}};
+ return {leafStyle,recipe:clearing?'BOUNDED_DISTRIBUTED_LEAF_SPRAYS_CURVED_HIERARCHY_v5':'OPAQUE_CURVED_HIERARCHY_v2',seed:SEED,leafCount,triangleCount:triangles,woodTriangleCount:triangles-16-leafCount*(clearing?2:4),structure:{trunk,majorForks:forks,branchPaths:paths,secondaryCount:14,twigCount:28}};
+}
+
+// Reproduce the owner-reviewed folded blade from Float32 upload positions.
+// Uniformly cap each card at its old envelope; roots and attachment rolls stay.
+function widenClearingLeaves(m,start){
+ const before=m.vertices.slice(start).map(v=>[Math.fround(v.x),Math.fround(v.y),Math.fround(v.z)]);
+ const lo=[0,1,2].map(j=>Math.min(...before.map(v=>v[j]))),hi=[0,1,2].map(j=>Math.max(...before.map(v=>v[j])));
+ for(let k=0;k<before.length;k+=4){
+  const r=before[k],a=before[k+1].map((v,j)=>v-r[j]),s=before[k+2].map((v,j)=>(v-before[k+3][j])/2),f=before[k+2].map((v,j)=>(v+before[k+3][j])/2-r[j]-a[j]*.47);
+  const q=[r,r.map((v,j)=>v+a[j]/1.35),r.map((v,j)=>v+a[j]*.47/1.35+f[j]+s[j]*1.35),r.map((v,j)=>v+a[j]*.47/1.35+f[j]-s[j]*1.35)];
+  let factor=1;for(const v of q)for(let j=0;j<3;j++){const d=v[j]-r[j];if(d>0)factor=Math.min(factor,(hi[j]-r[j])/d);if(d<0)factor=Math.min(factor,(lo[j]-r[j])/d);}
+  q.forEach((v,n)=>{const p=v.map((z,j)=>Math.fround(r[j]+(z-r[j])*factor));Object.assign(m.vertices[start+k+n],{x:p[0],y:p[1],z:p[2]});});
+ }
 }

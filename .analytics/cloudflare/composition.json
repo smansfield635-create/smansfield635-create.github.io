@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-09T17:29:58Z",
+  "generatedAt": "2026-10-09T18:39:07Z",
   "window": {
-    "start": "2026-09-09T17:29:58Z",
-    "end": "2026-10-09T17:29:58Z"
+    "start": "2026-09-09T18:39:07Z",
+    "end": "2026-10-09T18:39:07Z"
   },
   "dimensions": {
     "requestPath": [
@@ -14,12 +14,12 @@
       },
       {
         "value": "/mirror-manor-preview/",
-        "pageLoads": 710,
-        "visits": 710
+        "pageLoads": 750,
+        "visits": 750
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
-        "pageLoads": 642,
+        "pageLoads": 712,
         "visits": 22
       },
       {
@@ -28,14 +28,14 @@
         "visits": 279
       },
       {
+        "value": "/showroom/globe/audralia/",
+        "pageLoads": 346,
+        "visits": 286
+      },
+      {
         "value": "/campaigns/consider-the-energy/",
         "pageLoads": 340,
         "visits": 90
-      },
-      {
-        "value": "/showroom/globe/audralia/",
-        "pageLoads": 316,
-        "visits": 256
       },
       {
         "value": "/products/education/",
@@ -44,7 +44,7 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 286,
+        "pageLoads": 276,
         "visits": 262
       },
       {
@@ -66,6 +66,11 @@
         "value": "/prototypes/evan-job-stage/",
         "pageLoads": 70,
         "visits": 70
+      },
+      {
+        "value": "/build/",
+        "pageLoads": 61,
+        "visits": 40
       },
       {
         "value": "/products/on-your-side-ai/native-chat/",
@@ -98,11 +103,6 @@
         "visits": 29
       },
       {
-        "value": "/build/",
-        "pageLoads": 41,
-        "visits": 30
-      },
-      {
         "value": "/analytics-owner-device/",
         "pageLoads": 40,
         "visits": 40
@@ -116,6 +116,11 @@
         "value": "/meet-sean-mansfield/",
         "pageLoads": 39,
         "visits": 21
+      },
+      {
+        "value": "/door/",
+        "pageLoads": 30,
+        "visits": 10
       },
       {
         "value": "/home/",
@@ -163,11 +168,6 @@
         "visits": 10
       },
       {
-        "value": "/door/",
-        "pageLoads": 20,
-        "visits": 10
-      },
-      {
         "value": "/door/canonical-object.html",
         "pageLoads": 20,
         "visits": 0
@@ -179,6 +179,16 @@
       },
       {
         "value": "/characters/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/prelude/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/story/invitation/",
         "pageLoads": 20,
         "visits": 0
       },
@@ -213,7 +223,12 @@
         "visits": 10
       },
       {
-        "value": "/prelude/",
+        "value": "/laws/categories/reality/",
+        "pageLoads": 10,
+        "visits": 0
+      },
+      {
+        "value": "/showroom/story/timeline/",
         "pageLoads": 10,
         "visits": 0
       },
@@ -278,22 +293,22 @@
         "visits": 2
       },
       {
-        "value": "/laws/categories/structure/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/site-guide/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/showroom/globe/audralia/diagnostic/",
+        "value": "/evidence/agentic-frontier/reproduction/can-the-agent-actually-do-the-work/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/evidence/agentic-frontier/reproduction/can-the-agent-actually-do-the-work/",
+        "value": "/laws/categories/structure/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/showroom/globe/audralia/diagnostic/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -311,18 +326,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3192,
-        "visits": 3192
+        "pageLoads": 3172,
+        "visits": 3172
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2449,
+        "pageLoads": 2429,
         "visits": 0
       },
       {
         "value": "www.google.com",
-        "pageLoads": 260,
-        "visits": 260
+        "pageLoads": 250,
+        "visits": 250
       },
       {
         "value": "m.facebook.com",
@@ -353,8 +368,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 5905,
-        "visits": 3456
+        "pageLoads": 5855,
+        "visits": 3426
       },
       {
         "value": "BR",
@@ -390,8 +405,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2594,
-        "visits": 2507
+        "pageLoads": 2574,
+        "visits": 2487
       },
       {
         "value": "tablet",
@@ -400,15 +415,15 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 1559,
-        "visits": 548
+        "pageLoads": 1529,
+        "visits": 538
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2257,
-        "visits": 2194
+        "pageLoads": 2237,
+        "visits": 2174
       },
       {
         "value": "Chrome",
@@ -417,8 +432,8 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1417,
-        "visits": 427
+        "pageLoads": 1387,
+        "visits": 417
       },
       {
         "value": "MobileSafari",
@@ -464,13 +479,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3230,
-        "visits": 889
+        "pageLoads": 3200,
+        "visits": 879
       },
       {
         "value": "Linux",
-        "pageLoads": 2324,
-        "visits": 2261
+        "pageLoads": 2304,
+        "visits": 2241
       },
       {
         "value": "Windows",
@@ -496,20 +511,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 3698,
-        "visits": 1312
+        "pageLoads": 3668,
+        "visits": 1302
       },
       {
         "value": "1",
-        "pageLoads": 2257,
-        "visits": 2194
+        "pageLoads": 2237,
+        "visits": 2174
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 4104,
-        "visits": 3216
+        "pageLoads": 4054,
+        "visits": 3186
       },
       {
         "value": "reload",
@@ -535,8 +550,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 4576,
-        "visits": 3054
+        "pageLoads": 4536,
+        "visits": 3034
       },
       {
         "value": "cache",
@@ -545,22 +560,22 @@
       },
       {
         "value": "navigational-prefetch",
-        "pageLoads": 130,
-        "visits": 130
+        "pageLoads": 120,
+        "visits": 120
       }
     ],
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 5955,
-        "visits": 3506
+        "pageLoads": 5905,
+        "visits": 3476
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 5955,
-        "visits": 3506
+        "pageLoads": 5905,
+        "visits": 3476
       }
     ]
   }

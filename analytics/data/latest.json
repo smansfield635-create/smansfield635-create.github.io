@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-09T16:34:41Z",
+  "generatedAt": "2026-10-09T17:29:58Z",
   "window30d": {
-    "start": "2026-09-09T16:34:41Z",
-    "end": "2026-10-09T16:34:41Z"
+    "start": "2026-09-09T17:29:58Z",
+    "end": "2026-10-09T17:29:58Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-02",
-      "pageLoads": 9
+      "pageLoads": 8
     },
     {
       "date": "2026-10-03",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 21
+      "pageLoads": 23
     }
   ],
   "summary": {
-    "pageLoads": 5964,
-    "botPageLoads": 2267,
-    "nonBotPageLoads": 3697
+    "pageLoads": 5955,
+    "botPageLoads": 2257,
+    "nonBotPageLoads": 3698
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3201,
-      "visits": 3201
+      "pageLoads": 3192,
+      "visits": 3192
     },
     {
       "host": "diamondgatebridge.com",
@@ -177,17 +177,17 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1344,
-      "visits": 1005
+      "pageLoads": 1304,
+      "visits": 975
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 750,
-      "visits": 750
+      "pageLoads": 710,
+      "visits": 710
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 712,
+      "pageLoads": 642,
       "visits": 22
     },
     {
@@ -196,14 +196,14 @@
       "visits": 279
     },
     {
-      "path": "/showroom/globe/audralia/",
-      "pageLoads": 356,
-      "visits": 296
-    },
-    {
       "path": "/campaigns/consider-the-energy/",
       "pageLoads": 340,
       "visits": 90
+    },
+    {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 316,
+      "visits": 256
     },
     {
       "path": "/products/education/",

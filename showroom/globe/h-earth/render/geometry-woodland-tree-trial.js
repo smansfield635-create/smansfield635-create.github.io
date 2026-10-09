@@ -144,16 +144,16 @@ function economicalReferenceTree({bark,foliage,p,height,leanX,leanZ,barkVertexSt
  sweep(bark,leader,[.32+height*.018,.19,.103,.018],6,[99,78,52,255],`${id}:reference-leader`,Array.from({length:6},(_,j)=>barkVertexStart+j));
  const bound=radius-1.05,limit=a=>{const r=Math.hypot(a[0]-x,a[2]-z);if(r>bound){a[0]=x+(a[0]-x)*bound/r;a[2]=z+(a[2]-z)*bound/r;}a[1]=Math.min(y+height*.97,Math.max(y+height*.30,a[1]));return a;};
  const forks=[],attachments=[];
- for(let j=0;j<3;j++){
-  const base=onPath(leader,(.50+j*.13)/.90),heading=j*2.399+hash(id,'branch-heading')*6.28,radial=[Math.cos(heading),0,Math.sin(heading)],side=[-radial[2],0,radial[0]];
-  const end=limit(add(base,add(scale(radial,bound*(j===0?.70:.61)),[0,height*.12,0]))),elbow=limit(add(mix(base,end,.52),add(scale(side,.16*(j%2?1:-1)),[0,.10,0]))),major=[base,elbow,end];
-  taperedReferenceBranch(bark,major,[.12-j*.018,.045],[99,79,52,255],`${id}:allocation-major-${j}`);forks.push({heightFraction:(base[1]-y)/height,position:base});
-  const root=onPath(major,.58),angle=heading+(j%2?-.85:.92),tip=limit(add(root,[Math.cos(angle)*.85,.25,Math.sin(angle)*.85])),secondary=[root,tip];
-  taperedReferenceBranch(bark,secondary,[.030],[106,84,54,255],`${id}:allocation-secondary-${j}`);
-  for(let n=0;n<3;n++)attachments.push({path:secondary,t:.23+n*.31+.04*(hash(id,`allocation-secondary-position-${j}-${n}`)-.5),key:`allocation-secondary-${j}-${n}`});
-  const twigRoot=onPath(secondary,.64),twigTip=limit(add(twigRoot,[Math.cos(angle-.73)*.64,.32,Math.sin(angle-.73)*.64])),twig=[twigRoot,twigTip];
-  taperedReferenceBranch(bark,twig,[.018],[112,89,57,255],`${id}:allocation-twig-${j}`);
-  for(let n=0;n<2;n++)attachments.push({path:twig,t:.32+n*.47,key:`allocation-twig-${j}-${n}`});
+ for(let j=0;j<7;j++){
+  const base=onPath(leader,(.348+j*.0744)/.90),heading=j*2.399+hash(id,'branch-heading')*6.28,radial=[Math.cos(heading),0,Math.sin(heading)],side=[-radial[2],0,radial[0]];
+  const end=limit(add(base,add(scale(radial,bound*(j<4?.78:.60)),[0,height*.16,0]))),elbow=limit(add(mix(base,end,.52),add(scale(side,.16*(j%2?1:-1)),[0,.10,0]))),major=[base,elbow,end],r=.14-j*.011;
+  taperedReferenceBranch(bark,major,[r,r*.37],[99,79,52,255],`${id}:stagger-major-${j}`);forks.push({heightFraction:(base[1]-y)/height,position:base});
+  attachments.push({path:major,t:.40,key:`stagger-inner-${j}`},{path:major,t:.79,key:`stagger-outer-${j}`});
+  if(j===0||j===3||j===5){
+   const root=onPath(major,.55),angle=heading+(j%2?-.85:.92),tip=limit(add(root,[Math.cos(angle)*.65,.25,Math.sin(angle)*.65])),secondary=[root,tip];
+   taperedReferenceBranch(bark,secondary,[.030],[106,84,54,255],`${id}:stagger-secondary-${j}`);
+   attachments.push({path:secondary,t:.65,key:`stagger-secondary-${j}`});
+  }
  }
  const apexRoot=onPath(leader,.82/.90),apexTip=limit([x+leanX*.96+.14,y+height*.97,z+leanZ*.96-.10]),apex=[apexRoot,apexTip];
  taperedReferenceBranch(bark,apex,[.022],[112,89,57,255],`${id}:allocation-apex`);
@@ -161,10 +161,11 @@ function economicalReferenceTree({bark,foliage,p,height,leanX,leanZ,barkVertexSt
  const woodV=bark.vertices.length-barkVertexStart,woodT=(bark.indices.length-barkIndexStart)/3;
  const leafCount=Math.min(Math.floor((capV-woodV-attachments.length)/3),Math.floor((capT-woodT)/4));
  if(leafCount<attachments.length)throw Error('REPRESENTATIVE_FOLDED_LEAF_BUDGET');
- let emitted=0;
+ let emitted=0;const leafAttachments=[];
  for(let i=0;i<attachments.length;i++){
   const {path,t,key}=attachments[i],root=onPath(path,t),twig=unit(sub(path.at(-1),path[0])),across=unit(cross(twig,Math.abs(twig[1])<.9?[0,1,0]:[1,0,0])),around=unit(cross(twig,across));
-  const tint=hash(id,`${key}:tint`),color=[46+tint*29,75+tint*35,24+tint*20,255],rootIndex=vertex(foliage,root,color),count=Math.floor(leafCount/attachments.length)+(i<leafCount%attachments.length?1:0);
+  const tint=hash(id,`${key}:tint`),color=[46+tint*29,75+tint*35,24+tint*20,255],rootIndex=vertex(foliage,root,color),count=i>=attachments.length-5?4:Math.floor((leafCount-20)/(attachments.length-5))+(i<(leafCount-20)%(attachments.length-5)?1:0);
+  leafAttachments.push({key,position:root,heightFraction:(root[1]-y)/height,count});
   for(let n=0;n<count;n++){
    const channel=`${key}:leaf-${n}`,roll=hash(id,`${channel}-roll`)*Math.PI*2,spread=add(scale(across,Math.cos(roll)),scale(around,Math.sin(roll))),d=unit(add(scale(twig,.10+.27*hash(id,`${channel}-forward`)),add(scale(spread,.90),[0,-.22+.45*hash(id,`${channel}-lift`),0]))),side=unit(cross(d,Math.abs(d[1])<.9?[0,1,0]:[1,0,0])),normal=unit(cross(side,d));
    const length=.66+.31*hash(id,`${channel}-length`),width=.24+.10*hash(id,`${channel}-width`),middle=scale(d,length*.47),offsets=[scale(d,length),add(middle,add(scale(side,width),scale(normal,.045))),add(middle,add(scale(side,-width),scale(normal,.045)))];
@@ -177,5 +178,5 @@ function economicalReferenceTree({bark,foliage,p,height,leanX,leanZ,barkVertexSt
  }
  const vertices=woodV+foliage.vertices.length-canopyVertexStart,triangles=woodT+(foliage.indices.length-canopyIndexStart)/3;
  if(vertices>capV||triangles>capT)throw Error('REPRESENTATIVE_BUDGET_EXCEEDED');
- return {recipe:'OPAQUE_CURVED_HIERARCHY_LIGHT_v1',seed:SEED,experiment:'REPRESENTATIVE_VERTEX_REALLOCATION_APEX',reference:'c313922b22cb76c64d35297c6bc9dec1b6578188',majorForks:forks,majorCount:3,secondaryCount:3,twigCount:3,apexTwigCount:1,woodVertices:woodV,woodTriangles:woodT,apexLeafRoots:5,leafCount:emitted,tuftRootCount:attachments.length,foliageForm:'SMALL_CLOSED_FOLDED_LEAVES',vertices,triangles,baselineVertices:capV,baselineTriangles:capT};
+ return {recipe:'OPAQUE_CURVED_HIERARCHY_LIGHT_v1',seed:SEED,experiment:'REPRESENTATIVE_AUDIT_GUIDED_STAGGERED_INNER_FOLIAGE',reference:'c313922b22cb76c64d35297c6bc9dec1b6578188',majorForks:forks,majorCount:7,secondaryCount:3,twigCount:0,apexTwigCount:1,woodVertices:woodV,woodTriangles:woodT,apexLeafRoots:5,leafCount:emitted,leafAttachments,tuftRootCount:attachments.length,foliageForm:'SMALL_CLOSED_FOLDED_LEAVES',vertices,triangles,baselineVertices:capV,baselineTriangles:capT};
 }

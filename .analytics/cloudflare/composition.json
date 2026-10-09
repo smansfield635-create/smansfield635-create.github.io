@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-09T15:32:07Z",
+  "generatedAt": "2026-10-09T16:34:41Z",
   "window": {
-    "start": "2026-09-09T15:32:07Z",
-    "end": "2026-10-09T15:32:07Z"
+    "start": "2026-09-09T16:34:41Z",
+    "end": "2026-10-09T16:34:41Z"
   },
   "dimensions": {
     "requestPath": [
@@ -128,14 +128,14 @@
         "visits": 10
       },
       {
-        "value": "/products/",
-        "pageLoads": 30,
-        "visits": 10
-      },
-      {
         "value": "/products/on-your-side-ai/",
         "pageLoads": 30,
         "visits": 0
+      },
+      {
+        "value": "/products/",
+        "pageLoads": 30,
+        "visits": 10
       },
       {
         "value": "/about/",
@@ -479,13 +479,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3220,
-        "visits": 879
+        "pageLoads": 3230,
+        "visits": 889
       },
       {
         "value": "Linux",
-        "pageLoads": 2314,
-        "visits": 2251
+        "pageLoads": 2334,
+        "visits": 2271
       },
       {
         "value": "Windows",
@@ -498,14 +498,14 @@
         "visits": 107
       },
       {
+        "value": "iOS",
+        "pageLoads": 81,
+        "visits": 60
+      },
+      {
         "value": "Unknown",
         "pageLoads": 54,
         "visits": 54
-      },
-      {
-        "value": "iOS",
-        "pageLoads": 51,
-        "visits": 50
       }
     ],
     "bot": [

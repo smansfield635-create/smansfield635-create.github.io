@@ -8,10 +8,11 @@
   "disposition": "VISUAL_FAILURE_REPAIR_REQUIRED",
   "visualEvidence": [
     "Exact repaired all-tree renderer: walking, close, side and distant comparisons on private review page; source37d83c68c71a47aba8d9f6766658783ccce3702d, treea5d3cb637ebf3242961c55a43cd923314fc6d092",
-    "Owner screenshots28255/28253 compared with reference28243: sparse crowns, exposed straight branches and flat fern-like foliage; assistant assessment FAIL. Screenshot candidate SHA not independently established; no timing/residency claim."
+    "Owner screenshots28255/28253 compared with reference28243: sparse crowns, exposed straight branches and flat fern-like foliage; assistant assessment FAIL. Screenshot candidate SHA not independently established; no timing/residency claim.",
+    "Exact failed volume source84591ddf/local2b60072f identical treef2d5f10c: four full-residency captures; fuller crowns but large angular solids fail accepted foliage direction. East and West independent visual FAIL."
   ],
   "interactionEvidence": [
-    "Actual same-source renderer four-camera96-redraw resource guards and synthetic touch PASS; physical device review pending"
+    "Exact2b60072f/84591ddf immutable same-tree renderer: all four96-redraw resource guards and synthetic two-finger travel/release/cancel PASS. Physical acceptance pending."
   ],
   "continuityEvidence": [
     "showroom/globe/h-earth/validation/woodland-tree-trial.record.json"
@@ -24,7 +25,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
-      "sha256": "618a91737fae108370f2a579b35e093d0382fe35c97f1737d01b3bfc5f1b2d18"
+      "sha256": "c7580c04fe052ee4af27675b98c433ea1b8171176f659312c3964280592db964"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
@@ -32,12 +33,12 @@
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
-      "sha256": "073ed1866c98eeb9a18ddf27260ff2b0d9307171bed3d901693be807f72afd65"
+      "sha256": "58b190876eda3845b28aad8142506d4c15bb6da50fe7354ade3050dc74d5d480"
     }
   ],
   "automatedContinuitySupport": "All65 tree geometry adapted. Exact placements, support, terrain, grass/rocks, ecology, renderer/navigation/loader bytes preserved. Full27585instance108batch residency and buffer ceiling pass. These checks do not establish owner physical/perceptual acceptance.",
   "releaseEligible": false,
-  "candidateGeometryCommit": "37d83c68c71a47aba8d9f6766658783ccce3702d",
+  "candidateGeometryCommit": "84591ddf47599de25486996985cfd25578a2b3fd",
   "physicalReviewRequiredBeforeAdoption": true,
   "failureRecordPath": "showroom/globe/h-earth/validation/woodland-tree-trial.record.json"
 }

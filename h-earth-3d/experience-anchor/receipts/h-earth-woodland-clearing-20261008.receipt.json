@@ -4,7 +4,7 @@
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "operationId": "H_EARTH_ENVIRONMENT_RICHNESS_PATCH_20261009",
   "reviewedAgainstAnchor": false,
-  "disposition": "NOT_READY_FOR_ADOPTION_WHOLE_SCENE_VISUAL_FAILURE",
+  "disposition": "NOT_READY_FOR_ADOPTION_COMPACT_MASK_RECOVERED_COVERAGE_VISUAL_FAILURE",
   "releaseEligible": false,
   "physicalAcceptance": false,
   "mergePerformed": false,
@@ -175,11 +175,11 @@
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
-      "sha256": "73eab54c3478b3fcf20d6167f345eda17f36ad33be4157518f547af3eadce174"
+      "sha256": "c995fc5459097bfc2afa1318cb7ad3136901586f71df5fb3e72a058e0f08f6be"
     },
     {
       "path": "showroom/globe/h-earth/render/assets/woodland-clearing-leaf.png",
-      "sha256": "ff8e15a60079e669bfd1515c0e13fc373efd737eda5c301781475d5cb93153ef"
+      "sha256": "19d8b5fd24deae3ea04b2affcad70c404bd92b24da4796e5f9d9a8147aa3b03d"
     },
     {
       "path": "showroom/globe/h-earth/render/assets/woodland-clearing-bark.png",
@@ -191,11 +191,25 @@
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
-      "sha256": "386db5f2822dc15744c3f4a71f79c27ba1c946d3d319c3ba3887a5286adbc639"
+      "sha256": "b2744b2207ab39288a11fa116accf15f07cccaf777b64de52e693fca75ef639b"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.verify.mjs",
       "sha256": "d9062d654411c100924f0ab0282968bbb967f7a55536855373d50f6a0fcd6f4d"
     }
-  ]
+  ],
+  "compactMaskRepair": {
+    "generation": 2631,
+    "localTestedSource": "41ded2a1083966d5344af266679a54f9170c8110",
+    "remoteEquivalent": "8c2ee9708c095615b1b0627c3e9ec2901741c1ec",
+    "testedTree": "9aa34ed7477fb947ec37b4669607a40547d46020",
+    "mask": "compact100",
+    "fourViews": "EXACT_FULL_RESIDENCY_COMPLETE",
+    "coverage": "IMPROVED_IN_ALL_FOUR_VIEWS",
+    "visual": "FAIL_SPIKY_FERNLIKE_LEAVES_SPARSE_GRASS_INCOMPLETE_SURFACE_LIGHTING_DEPTH",
+    "static": "PASS_INHERITED_UNCHANGED_GEOMETRY",
+    "raster": "PASS_EXACT_COSTING_REPRODUCTION",
+    "physical": "PENDING",
+    "stop": "Preserve improvement and failure; no further repair or acceptance inferred."
+  }
 }

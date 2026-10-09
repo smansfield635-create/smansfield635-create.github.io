@@ -952,7 +952,7 @@
       "reason": "Preserve pre-profile candidate and failures unchanged."
     }
   ],
-  "status": "COMPACT_MASK_REPAIR_PENDING_FULL_SCENE_REVIEW",
+  "status": "COMPACT_MASK_COVERAGE_RECOVERED_FULL_SCENE_VISUAL_FAIL_NOT_ACCEPTED",
   "operationId": "H_EARTH_ENVIRONMENT_RICHNESS_PATCH_20261009",
   "generation": 2631,
   "allowedPaths": [
@@ -2355,9 +2355,9 @@
       "findings": "Foliage and grassFAIL; bark, lighting and soilPARTIAL; atmosphericdepthUNRESOLVED. Atlascoverage diagnostic realized visually; exact mip/orientation causal split unproven."
     }
   },
-  "nextRequired": "Freeze exact compact100 mask repair; verify product raster and unchanged geometry/renderer/resource contract; fully load and compare four scene views in all six qualities. Stop on visual failure before runtime or phone/tablet acceptance.",
-  "testedCandidate": "ebd800bf038803e4aaa00dea5ad3e1ac37932875",
-  "testedTree": "b88eb524ccd548a4d22f6b110a5d69fd4f3e739e",
+  "nextRequired": "Preserve recovered coverage and failed visual appearance. Read-only compare card aspect/projection, mask separation and leaf lighting with the EZTree reference before costing another complete-patch repair; diagnose grass coverage separately. No blind foliage-count increase, relaxed numeric limits, rollout, merge or deployment.",
+  "testedCandidate": "41ded2a1083966d5344af266679a54f9170c8110",
+  "testedTree": "9aa34ed7477fb947ec37b4669607a40547d46020",
   "compactMaskRepair": {
     "base": "f85dca9f74550794f23dd6834bf54ba6679f1ca8",
     "generation": 2631,
@@ -2385,9 +2385,46 @@
     "addedStorage": 0,
     "timing": "UNPROVEN; newmask changes fragment and static-shadow coverage",
     "mipBoundary": "Survives through4x4;2x2/1x1 disappear",
-    "fullScene": "PENDING_ALL_FOUR_VIEWS_AND_SIX_QUALITIES",
+    "fullScene": "FULLY_LOADED_ALL_FOUR_VIEWS;COVERAGE_IMPROVED;VISUAL_TARGET_FAIL",
     "grass": "UNRESOLVED_UNCHANGED",
     "physicalAcceptance": false,
-    "releaseEligible": false
+    "releaseEligible": false,
+    "localTestedSource": "41ded2a1083966d5344af266679a54f9170c8110",
+    "remoteSource": "8c2ee9708c095615b1b0627c3e9ec2901741c1ec",
+    "testedTree": "9aa34ed7477fb947ec37b4669607a40547d46020",
+    "sourceEquivalence": "EXACT_WHOLE_TREE",
+    "productRasterQualification": "PASS_NATIVE_SVG_AND_PNG_EXACT;16SAMPLING_ROWS_AND9MIPS_REPRODUCED",
+    "geometryQualification": "PASS_INHERITED_UNCHANGED_F85_SOURCE;87808SECTOR_TRIANGLES_WITHIN105000",
+    "loaded": {
+      "instances": 27585,
+      "batches": 108,
+      "drops": 0,
+      "rebuilds": 0,
+      "observableBuffersSnapshot": {
+        "bytes": 39118475,
+        "buffers": 1205
+      }
+    },
+    "browserSha256": "d4aa9b74727e0f418b148c007f91f1fc8da8b15c1018a5db628a9c441f1331f8",
+    "sixQualityReview": {
+      "foliageAndGaps": "COVERAGE_IMPROVED;VISUAL_FAIL_BROAD_SPIKY_SPRAYS",
+      "barkAndJoins": "PARTIAL",
+      "lightingAndShadows": "PARTIAL",
+      "grassAndUnderstory": "FAIL",
+      "soilAndRocks": "PARTIAL",
+      "atmosphericDepth": "UNRESOLVED"
+    },
+    "runtimeBoundary": {
+      "fresh96Redraw": "NOT_RUN_AFTER_VISUAL_FAILURE",
+      "finalPerViewGPUInvariance": "PENDING;LOADED_SNAPSHOT_ONLY",
+      "movingTouchRoute": "PENDING",
+      "phoneTablet": "PENDING",
+      "priorFailedTimings": "PRESERVED_NOT_RECLASSIFIED"
+    },
+    "independentReviews": {
+      "east/final-six-quality-review.json": "10da005db63b5ba3a0ae9acef35fe4a175670ca3c5065ac8e499eeeadb1941f0",
+      "west/final-review.json": "1c2005fe2f146db2300f28540db6b520a653f8661b8ce45e67e357ab7c031440"
+    },
+    "independentDisposition": "FAIL_FULL_SCENE;COVERAGE_IMPROVEMENT_PRESERVED"
   }
 }

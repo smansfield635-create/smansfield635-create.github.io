@@ -2,7 +2,7 @@
   "schema": "H_EARTH_ALL_TREE_VARIATION_RECORD_v1",
   "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
   "generation": 2630,
-  "status": "CANDIDATE_READY_FOR_OWNER_REVIEW",
+  "status": "VISUAL_FAILURE_REPAIR_REQUIRED",
   "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
   "acceptedDesignSource": "c313922b22cb76c64d35297c6bc9dec1b6578188",
   "candidateRenderSourceCommit": "37d83c68c71a47aba8d9f6766658783ccce3702d",
@@ -2938,13 +2938,68 @@
   "review": {
     "mode": "EXACT_SOURCE_PRIVATE_READ_ONLY_PREVIEW",
     "url": "https://hearth-clearing-device-measurement.smansfield635.chatgpt.site",
-    "publicationState": "PREPARED_PENDING_PRIVATE_REVIEW_UPDATE",
+    "publicationState": "SUCCEEDED",
     "pairedDeviceMeasurement": "PHONE_AND_TABLET_PENDING",
-    "ownerPerceptualDisposition": "PENDING_KEEP_ONE_REPAIR_REJECT",
-    "physicalPerformanceAcceptance": false
+    "ownerPerceptualDisposition": "VISUAL_FAILURE_IDENTIFIED_REPAIR_PLAN_REQUESTED",
+    "physicalPerformanceAcceptance": false,
+    "publishedCandidateCommit": "13a89d75c7da09b7dc3346db531a6b3e2f89d212",
+    "siteSourceCommit": "5fec78fe47d44fb0e012aa411191670683b72e07",
+    "publicationReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6051#issuecomment-6072606342",
+    "formalOwnerKeepOrRejectRecorded": false
   },
   "releaseEligible": false,
   "mainMerged": false,
   "hEarthProductionDeployment": false,
-  "activeScopeRetainedForCandidateFinalization": true
+  "activeScopeRetainedForCandidateFinalization": true,
+  "visualFailure": {
+    "observedCandidate": "13a89d75c7da09b7dc3346db531a6b3e2f89d212",
+    "source": "Owner-supplied screenshots, followed by assistant visual assessment and owner request for durable failure/continuation record",
+    "screenshots": [
+      "28255.jpg (new distant view)",
+      "28253.jpg (new close view)",
+      "28243.jpg (earlier approved-direction reference)"
+    ],
+    "attachmentCandidateIdentityIndependentlyVerified": false,
+    "observationScope": "Visible appearance only; screenshots do not establish completed residency, timing, or a loading failure",
+    "failedCriteria": [
+      "Crown fullness: excessive sky gaps and exposed branch length relative to accepted design",
+      "Foliage form: broad flat leaves and aligned repeated sprays read as fern fronds",
+      "Branching silhouette: straight exposed leaders and sparse limb-end coverage do not retain the accepted tree direction"
+    ],
+    "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
+    "causeAssessment": "The budget-constrained geometry distribution did not preserve the reference silhouette. Precise implementation cause must be localized by inspecting hierarchy and projected coverage; no profiling claim is made.",
+    "previousRepairOutcome": "Internal leaf widening/repositioning passed automated checks but did not resolve the visible failure",
+    "automatedChecksRemainHistoricalPass": true,
+    "physicalTimingStatus": "UNMEASURED_PENDING_VALID_PAIRED_PHONE_TABLET_EVIDENCE",
+    "loaderStatus": "Preparing plants is visible; a static screenshot cannot establish a stall."
+  },
+  "deterministicContinuation": {
+    "workstream": "ALL_65_TREE_VISUAL_ADAPTATION; separate from closed clearing trial",
+    "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+    "designSource": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+    "repairBase": "13a89d75c7da09b7dc3346db531a6b3e2f89d212",
+    "branch": "h-earth-all-tree-variation-20261008",
+    "admissionGeneration": 2630,
+    "scope": "Existing five admitted paths only; preserve placements, basal support, ecology, terrain, grass, rocks, navigation, renderer and loading behavior",
+    "nextAction": "Inspect exact helper hierarchy and foliage distribution against the accepted design, then make one bounded visual repair within frozen budgets",
+    "sequence": [
+      "Read AI entrypoint, exact branch/ref and existing admission; reuse completed baseline and evidence. If governing main changed, run differential continuity rather than automatically reopening admission.",
+      "Localize sparse crowns and aligned flat-leaf sprays in actual geometry. Reallocate the existing triangle/storage allowance into overlapping, differently oriented foliage clusters and more natural branching; do not duplicate the expensive trial tree 65 times.",
+      "Verify exact admitted-path diff, all65 actual geometry ownership, distinct deterministic forms, root/support and non-target parity, per-tree and full-sector/full-residency storage ceilings.",
+      "Render the exact repaired source at walking, close, side and distant cameras. Compare each with preserved failed candidate and reference. Fail visual review if sparse crowns or fern-like planar sprays remain; do not advance based on numeric checks alone.",
+      "Run full-residency and four-camera96-redraw resource checks for changed geometry, preserve all logs/failures/images, and push the exact qualified candidate with source readback.",
+      "Update the private exact-source preview; obtain owner visual disposition and valid same-device paired phone/tablet evidence under unchanged1.25median/1.35p95limits. Software-render timing remains diagnostic.",
+      "Consider adoption only after required visual/physical checks resolve successfully; merge and H-Earth production release remain separate explicit actions."
+    ],
+    "frozenLimitsUnchanged": true,
+    "pageExcellenceSelectedGate": false,
+    "registryPreflight": "NOT_APPLICABLE",
+    "stopConditions": [
+      "Scope or relevant dependency exceeds existing admission: resolve only that boundary before mutation.",
+      "Any frozen budget/parity/runtime assertion fails: preserve exact failure and repair within scope, without relaxing limits.",
+      "Visual comparison still fails: preserve candidate as failed and do not claim acceptance.",
+      "Missing physical timing or owner acceptance: preserve candidate; no inferred PASS, merge or H-Earth deployment."
+    ],
+    "releaseEligible": false
+  }
 }

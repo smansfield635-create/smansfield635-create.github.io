@@ -1,3 +1,4 @@
+import { createFourTreeCompactGpuBuffers } from './compact-four-tree-foliage.v1.js';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
@@ -1516,6 +1517,21 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const pixels = new Uint8Array(width*height*4); gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels); counters.depthReadbackCount += 1;
     return summarize(pixels,[0,0,0]);
   }
+  // Gen2633: explicitly managed compact leaf residency. Never silently replace
+  // the approved woodland geometry before the color/shadow path is qualified.
+  function installFourTreeCompactPayload(payload) {
+    if (!initialized) throw new Error('FOUR_TREE_COMPACT_RENDERER_NOT_INITIALIZED');
+    if (resources.fourTreeCompact) throw new Error('FOUR_TREE_COMPACT_ALREADY_INSTALLED');
+    const allocated = createFourTreeCompactGpuBuffers(gl, payload);
+    resources.fourTreeCompact = allocated;
+    return allocated.accounting;
+  }
+  function releaseFourTreeCompactPayload() {
+    if (!resources.fourTreeCompact) return false;
+    resources.fourTreeCompact.dispose();
+    resources.fourTreeCompact = null;
+    return true;
+  }
   function getResourceReceipt() {
     const debugRenderer = gl.getExtension('WEBGL_debug_renderer_info');
     return {
@@ -1533,7 +1549,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },
-      initialized, dimensions: { width, height },
+      initialized, fourTreeCompact: resources.fourTreeCompact ? { ...resources.fourTreeCompact.accounting, installed:true, colorShadowIntegrationQualified:false } : { installed:false, actualUploadedBytes:0 }, dimensions: { width, height },
       context: {
         created: true, lost: gl.isContextLost(), vendor: gl.getParameter(gl.VENDOR), renderer: gl.getParameter(gl.RENDERER),
         unmaskedVendor: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_VENDOR_WEBGL) : null,
@@ -1575,7 +1591,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, installFourTreeCompactPayload, releaseFourTreeCompactPayload, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

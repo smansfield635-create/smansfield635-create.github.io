@@ -2,40 +2,148 @@
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
-  "operationId": "H_EARTH_REFERENCE_WOODLAND_CLEARING_20261008",
+  "operationId": "H_EARTH_ENVIRONMENT_RICHNESS_PATCH_20261009",
   "reviewedAgainstAnchor": false,
-  "disposition": "NOT_READY_FOR_ADOPTION_VISUAL_TIMING_AND_PHYSICAL_REVIEW_PENDING",
-  "visualEvidence": [
-    "libfile_371e5ab890b081919b22154bcda3ad7a: four identical-camera fully-loaded pairs and independent six-criterion assessment",
-    "libfile_b3e23c9d6e8c8191ad3cc676f7d29973: recovered candidate3ad884a5; four exact-camera comparisons; independent visual/timing failures preserved.",
-    "libfile_047584d5f70881918d7ed15807474504: four fresh exact-source camera captures, three-camera diagnostic profile, preserved failed limits and independent audits."
-  ],
-  "interactionEvidence": [
-    "libfile_371e5ab890b081919b22154bcda3ad7a: one-finger look, release and cancellation pass; actual two-finger travel unexercised; physical acceptance false",
-    "Recovered candidate: synthetic one-finger look and actual two-finger displacement, release and cancellation verified; physical device acceptance remains false.",
-    "libfile_047584d5f70881918d7ed15807474504: corrected synthetic two-finger travel and release PASS during startup residency loading; separate look/pinch cancellation PASS. Travel-specific cancellation unexercised; physical acceptance false."
-  ],
-  "continuityEvidence": [
-    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
-  ],
-  "invariants": {
-    "canonicalTerrainExact": true,
-    "outsideObjectsPreserved": 1267,
-    "treesPreserved": 65,
-    "targetWoodHierarchyExact": true,
-    "addedGroundSupportChecksPassed": 2360,
-    "fullVegetationInstances": 27585,
-    "fullVegetationBatches": 108,
-    "worldRebuilds": 0,
-    "drops": 0,
-    "gpuResourceQualification": "PASS",
-    "softwarePerformanceQualification": "FAIL_FROZEN_CLOSE_AND_DISTANT_MEDIANS",
-    "testedCandidate": "c5e3f07fd30135316ed60d6d06892b387535d73d"
+  "disposition": "NOT_READY_FOR_ADOPTION_WHOLE_SCENE_VISUAL_FAILURE",
+  "releaseEligible": false,
+  "physicalAcceptance": false,
+  "mergePerformed": false,
+  "deploymentPerformed": false,
+  "previousReceipt": {
+    "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+    "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+    "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+    "operationId": "H_EARTH_REFERENCE_WOODLAND_CLEARING_20261008",
+    "reviewedAgainstAnchor": false,
+    "disposition": "NOT_READY_FOR_ADOPTION_VISUAL_TIMING_AND_PHYSICAL_REVIEW_PENDING",
+    "visualEvidence": [
+      "libfile_371e5ab890b081919b22154bcda3ad7a: four identical-camera fully-loaded pairs and independent six-criterion assessment",
+      "libfile_b3e23c9d6e8c8191ad3cc676f7d29973: recovered candidate3ad884a5; four exact-camera comparisons; independent visual/timing failures preserved.",
+      "libfile_047584d5f70881918d7ed15807474504: four fresh exact-source camera captures, three-camera diagnostic profile, preserved failed limits and independent audits."
+    ],
+    "interactionEvidence": [
+      "libfile_371e5ab890b081919b22154bcda3ad7a: one-finger look, release and cancellation pass; actual two-finger travel unexercised; physical acceptance false",
+      "Recovered candidate: synthetic one-finger look and actual two-finger displacement, release and cancellation verified; physical device acceptance remains false.",
+      "libfile_047584d5f70881918d7ed15807474504: corrected synthetic two-finger travel and release PASS during startup residency loading; separate look/pinch cancellation PASS. Travel-specific cancellation unexercised; physical acceptance false."
+    ],
+    "continuityEvidence": [
+      "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
+    ],
+    "invariants": {
+      "canonicalTerrainExact": true,
+      "outsideObjectsPreserved": 1267,
+      "treesPreserved": 65,
+      "targetWoodHierarchyExact": true,
+      "addedGroundSupportChecksPassed": 2360,
+      "fullVegetationInstances": 27585,
+      "fullVegetationBatches": 108,
+      "worldRebuilds": 0,
+      "drops": 0,
+      "gpuResourceQualification": "PASS",
+      "softwarePerformanceQualification": "FAIL_FROZEN_CLOSE_AND_DISTANT_MEDIANS",
+      "testedCandidate": "c5e3f07fd30135316ed60d6d06892b387535d73d"
+    },
+    "experienceFiles": [
+      {
+        "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+        "sha256": "882cd9e055c5a787786aa39e91db76c398da2fe3c550e61958f2fdabe48f9a5d"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+        "sha256": "7392601290b7189d918e53ebe954f3079ae729a122ad257dfab3be006e159f43"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+        "sha256": "037deb7be0bb23a563a6b4f11743c3280276fd424c7b62fe68b8a0077e7d23a7"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+        "sha256": "038480af060699108a0769e8119b4d2cd03aabe0b609438920ce55ecab255843"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "sha256": "5a047443e7ec6c58b412d24c4c159a1091ef34564515e583c4d4e90d54ef28b7"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+        "sha256": "42f1a68bb398da64952bba35b6adf09424091b491af63e2abe945b320b784191"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+        "sha256": "bca861a5d2d5afd3b90eef6da679709e3110ad19be04fff2842cec6ad2b34bb7"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "sha256": "113e547c9a17444c1832d8d89e72df2b437adb894a744a14619d0d4c4e243775"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
+        "sha256": "f649b0221790c0d96142e93ea17a43709eabf5200b440f603f4eeaeddd1a1c43"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/assets/woodland-clearing-leaf.png",
+        "sha256": "1607d65b31e586cd9d6b0f52a0d66b39a06f5b3bdf5b4ef74ad1bd151457bc26"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/assets/woodland-clearing-bark.png",
+        "sha256": "040590035afd8c929309eb05ef42f4f74c0e1e39d932aebe7ebc8d67edef7e70"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/assets/woodland-clearing-soil.png",
+        "sha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce"
+      },
+      {
+        "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
+        "sha256": "139483367931bd4e11589a99c687e868f58d57e32ea9a782c9884171dff2146b"
+      },
+      {
+        "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.verify.mjs",
+        "sha256": "d9062d654411c100924f0ab0282968bbb967f7a55536855373d50f6a0fcd6f4d"
+      }
+    ],
+    "releaseEligible": false,
+    "physicalAcceptance": false,
+    "mergePerformed": false,
+    "deploymentPerformed": false,
+    "profileRepairCheckpoint": {
+      "operationId": "H_EARTH_REFERENCE_WOODLAND_CLEARING_20261008",
+      "generation": 2629,
+      "branch": "h-earth-reference-clearing-20261008",
+      "testedCandidate": "c5e3f07fd30135316ed60d6d06892b387535d73d",
+      "testedTree": "434c747c85aba503142cb228ef59137c5199424c",
+      "remoteSourceCommit": "925ab3e9e52992190486dde40f007c5810d9a73f",
+      "nextAction": "Measure close and distant render cost on a stable device or with valid GPU timing, paired with the unchanged baseline and this exact candidate, before choosing further repair. Keep frozen limits unchanged; require owner physical phone/tablet review before adoption.",
+      "completedAction": "Three-camera render-cost profile, one bounded shader repair, exact-source four-camera frozen qualification, separate corrected synthetic interaction check.",
+      "stopCondition": "Stop before adoption, merge or deployment. No further repair or budget relaxation without measured diagnosis.",
+      "failedChecks": [
+        "close median ratio1.5650926167493908 >1.25",
+        "distant median ratio1.4209030628351775 >1.25",
+        "Prior visual concerns and owner phone/tablet physical review remain unresolved."
+      ],
+      "phoneTabletPerformance": "UNMEASURED",
+      "evidenceBundle": {
+        "libraryFileId": "libfile_047584d5f70881918d7ed15807474504",
+        "filename": "H-Earth-clearing-profile-and-repair.zip",
+        "sha256": "a1fe04acfed6a149c4563a5c9916789ad80289c9a1c7a673beb345b8a2fe79a0"
+      },
+      "authorityEffect": "NONE_CHECKPOINT_ONLY"
+    }
+  },
+  "environmentPatch": {
+    "generation": 2631,
+    "testedCandidate": "ebd800bf038803e4aaa00dea5ad3e1ac37932875",
+    "remoteEquivalent": "89381004fdc314f0f66b080f5e5cefae872ce435",
+    "testedTree": "b88eb524ccd548a4d22f6b110a5d69fd4f3e739e",
+    "record": "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
+    "static": "PASS",
+    "visual": "FAIL",
+    "physical": "PENDING",
+    "stop": "Preserve failed patch; no adoption or production deployment."
   },
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
-      "sha256": "882cd9e055c5a787786aa39e91db76c398da2fe3c550e61958f2fdabe48f9a5d"
+      "sha256": "24ddbe427692e55198c4fa881dd0291773e3389bf6fada15b71eaf1a95146f36"
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
@@ -67,11 +175,11 @@
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
-      "sha256": "f649b0221790c0d96142e93ea17a43709eabf5200b440f603f4eeaeddd1a1c43"
+      "sha256": "73eab54c3478b3fcf20d6167f345eda17f36ad33be4157518f547af3eadce174"
     },
     {
       "path": "showroom/globe/h-earth/render/assets/woodland-clearing-leaf.png",
-      "sha256": "1607d65b31e586cd9d6b0f52a0d66b39a06f5b3bdf5b4ef74ad1bd151457bc26"
+      "sha256": "ff8e15a60079e669bfd1515c0e13fc373efd737eda5c301781475d5cb93153ef"
     },
     {
       "path": "showroom/globe/h-earth/render/assets/woodland-clearing-bark.png",
@@ -83,38 +191,11 @@
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
-      "sha256": "139483367931bd4e11589a99c687e868f58d57e32ea9a782c9884171dff2146b"
+      "sha256": "386db5f2822dc15744c3f4a71f79c27ba1c946d3d319c3ba3887a5286adbc639"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.verify.mjs",
       "sha256": "d9062d654411c100924f0ab0282968bbb967f7a55536855373d50f6a0fcd6f4d"
     }
-  ],
-  "releaseEligible": false,
-  "physicalAcceptance": false,
-  "mergePerformed": false,
-  "deploymentPerformed": false,
-  "profileRepairCheckpoint": {
-    "operationId": "H_EARTH_REFERENCE_WOODLAND_CLEARING_20261008",
-    "generation": 2629,
-    "branch": "h-earth-reference-clearing-20261008",
-    "testedCandidate": "c5e3f07fd30135316ed60d6d06892b387535d73d",
-    "testedTree": "434c747c85aba503142cb228ef59137c5199424c",
-    "remoteSourceCommit": "925ab3e9e52992190486dde40f007c5810d9a73f",
-    "nextAction": "Measure close and distant render cost on a stable device or with valid GPU timing, paired with the unchanged baseline and this exact candidate, before choosing further repair. Keep frozen limits unchanged; require owner physical phone/tablet review before adoption.",
-    "completedAction": "Three-camera render-cost profile, one bounded shader repair, exact-source four-camera frozen qualification, separate corrected synthetic interaction check.",
-    "stopCondition": "Stop before adoption, merge or deployment. No further repair or budget relaxation without measured diagnosis.",
-    "failedChecks": [
-      "close median ratio1.5650926167493908 >1.25",
-      "distant median ratio1.4209030628351775 >1.25",
-      "Prior visual concerns and owner phone/tablet physical review remain unresolved."
-    ],
-    "phoneTabletPerformance": "UNMEASURED",
-    "evidenceBundle": {
-      "libraryFileId": "libfile_047584d5f70881918d7ed15807474504",
-      "filename": "H-Earth-clearing-profile-and-repair.zip",
-      "sha256": "a1fe04acfed6a149c4563a5c9916789ad80289c9a1c7a673beb345b8a2fe79a0"
-    },
-    "authorityEffect": "NONE_CHECKPOINT_ONLY"
-  }
+  ]
 }

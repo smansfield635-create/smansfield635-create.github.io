@@ -952,7 +952,7 @@
       "reason": "Preserve pre-profile candidate and failures unchanged."
     }
   ],
-  "status": "ENVIRONMENT_PATCH_CANDIDATE_PENDING_QUALIFICATION",
+  "status": "FAILED_WHOLE_SCENE_VISUAL_COMPARISON_NOT_READY_FOR_ADOPTION",
   "operationId": "H_EARTH_ENVIRONMENT_RICHNESS_PATCH_20261009",
   "generation": 2631,
   "allowedPaths": [
@@ -2291,8 +2291,71 @@
       "priorAddedGPUBytes": 6253192,
       "remainingGPUBytes": 38264
     },
-    "qualification": "PENDING_EXACT_SOURCE_FOUR_VIEWS",
-    "physicalAcceptance": false
+    "qualification": "STATIC_PASS;VISUAL_FAIL;DOWNSTREAM_QUALIFICATION_PENDING_NOT_ACCEPTED",
+    "physicalAcceptance": false,
+    "remoteSource": "89381004fdc314f0f66b080f5e5cefae872ce435",
+    "localTestedSource": "ebd800bf038803e4aaa00dea5ad3e1ac37932875",
+    "sourceTree": "b88eb524ccd548a4d22f6b110a5d69fd4f3e739e",
+    "sourceEquivalence": "EXACT_WHOLE_TREE_VERIFIED_BY_WEST",
+    "static": {
+      "status": "PASS",
+      "reportSha256": "c4073fcec930a3dc5ab94132214abd3c153fc12ae0726234408d0db26f48ce43",
+      "sectorTriangles": 87808,
+      "limit": 105000,
+      "trees": 65,
+      "preservedOutsideObjects": 1267,
+      "targetWoodAndTerrain": "EXACT",
+      "generationOrder": "FORWARD_EQUALS_REVERSE_CHUNKED"
+    },
+    "fourViews": {
+      "status": "COMPLETE_EXACT_SOURCE_FULL_RESIDENCY",
+      "browserSha256": "af2f9c63ffd92a4dc7c2d765a938d87e0d3c4a6b103b7d4cc6ed07f7e5d0f802",
+      "errors": [],
+      "views": [
+        "walking",
+        "close",
+        "side",
+        "distant"
+      ],
+      "residentInstances": 27585,
+      "residentBatches": 108,
+      "drops": 0,
+      "worldRebuilds": 0
+    },
+    "diagnosis": {
+      "atlasAlpha45Texels": 4798,
+      "priorDiamondTexelsApprox": 32000,
+      "visibleAreaLossApproxPercent": 85,
+      "finding": "Detailed individual leaf silhouettes reduced coverage and apparent distant scale; exposed crowns in all four views. Grass remains isolated blades. This allocation failed; budget impossibility is not established."
+    },
+    "sixQualityReview": {
+      "foliageAndGaps": "FAIL",
+      "barkAndJoins": "PARTIAL",
+      "lightingAndShadows": "PARTIAL",
+      "grassAndUnderstory": "FAIL",
+      "soilAndRocks": "PARTIAL",
+      "atmosphericDepth": "UNRESOLVED"
+    },
+    "runtimeBoundary": {
+      "textureMipAllocation": "UNCHANGED_SOURCE_PROOF_349524_BYTES_PER256RGBA_MIPCHAIN",
+      "observableBuffersLoaded": {
+        "bytes": 39118475,
+        "buffers": 1205
+      },
+      "finalPerViewResourceLifecycle": "PENDING",
+      "fresh96RedrawComparisons": "NOT_RUN_AFTER_VISUAL_FAILURE",
+      "movingTouchRoute": "NOT_RUN_AFTER_VISUAL_FAILURE",
+      "priorCloseAndDistantMedianFailures": "PRESERVED_NOT_RECLASSIFIED",
+      "phoneTablet": "PENDING"
+    },
+    "independentEastReview": {
+      "path": "east/final-six-quality-review.json",
+      "sha256": "b68e69eb9925084d8bbc03cc2f580800a199817c882df332cc0ea380930c8110",
+      "status": "FAIL_ALL_FOUR_VIEWS_REVIEWED",
+      "findings": "Foliage and grassFAIL; bark, lighting and soilPARTIAL; atmosphericdepthUNRESOLVED. Atlascoverage diagnostic realized visually; exact mip/orientation causal split unproven."
+    }
   },
-  "nextRequired": "Commit immutable candidate; static scope/geometry verification; fully loaded identical four-view comparison of all six qualities; stop and preserve on failure before runtime/device acceptance."
+  "nextRequired": "Read-only diagnose actual diamond-UV sampler/alpha coverage at four perspective distances, with source-bound orientation/mask controls only through registered admitted execution; cost whole-patch improvements before another repair. Preserve exact failure and all numeric limits. No rollout, merge or production deployment.",
+  "testedCandidate": "ebd800bf038803e4aaa00dea5ad3e1ac37932875",
+  "testedTree": "b88eb524ccd548a4d22f6b110a5d69fd4f3e739e"
 }

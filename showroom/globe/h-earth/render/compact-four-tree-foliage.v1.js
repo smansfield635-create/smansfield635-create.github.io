@@ -156,6 +156,13 @@ export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecar
     gl.enableVertexAttribArray(11);
     gl.vertexAttribIPointer(11,2,gl.UNSIGNED_INT,24,16);
     gl.vertexAttribDivisor(11,1);
+    // Eight uint32 contact words per leaf, retained as integer attributes.
+    gl.bindBuffer(gl.ARRAY_BUFFER,contactSidecarBuffer);
+    for (const [location, offset] of [[12,0],[13,16]]) {
+      gl.enableVertexAttribArray(location);
+      gl.vertexAttribIPointer(location,4,gl.UNSIGNED_INT,32,offset);
+      gl.vertexAttribDivisor(location,1);
+    }
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER,null);
     let disposed=false;

@@ -2,13 +2,13 @@
   "schema": "H_EARTH_ALL_TREE_VARIATION_RECORD_v1",
   "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
   "generation": 2630,
-  "status": "REPRESENTATIVE_VISUAL_FAILURE_REPAIR_REQUIRED",
+  "status": "REPRESENTATIVE_VERTEX_ALLOCATION_VISUAL_FAILURE",
   "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
   "acceptedDesignSource": "c313922b22cb76c64d35297c6bc9dec1b6578188",
-  "candidateRenderSourceCommit": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
-  "candidateRenderSourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
-  "localTestCommit": "2a1feaac0027f4014fe18082454feda87c22388c",
-  "localTestTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+  "candidateRenderSourceCommit": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
+  "candidateRenderSourceTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
+  "localTestCommit": "441ac5f289f609e235dc01f7d73be51bd36a67af",
+  "localTestTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
   "remoteAndTestedWholeTreesIdentical": true,
   "sourceFiles": [
     {
@@ -17,7 +17,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
-      "sha256": "892c8dde6129c4bc25d5baf61b1af1cb595c832e949bbfb052b9ee692a670463"
+      "sha256": "78fd33f4d1ded26a14e3bedb4f7cb0720d61b714e94074b7d3af640202fcdffb"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
@@ -297,10 +297,10 @@
   },
   "actualBrowser": {
     "status": "FOUR_STATIC_VIEWS_CAPTURED_ONLY",
-    "candidate": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
-    "testedLocal": "2a1feaac0027f4014fe18082454feda87c22388c",
-    "sourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
-    "readyMs": 118838,
+    "candidate": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
+    "testedLocal": "441ac5f289f609e235dc01f7d73be51bd36a67af",
+    "sourceTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
+    "readyMs": 91759,
     "errors": [],
     "physicalAcceptance": false,
     "timingQualification": "NOT_RUN",
@@ -318,7 +318,7 @@
   "review": {
     "mode": "EXACT_SOURCE_PRIVATE_READ_ONLY_PREVIEW",
     "url": "https://hearth-clearing-device-measurement.smansfield635.chatgpt.site",
-    "publicationState": "PRIOR_PREVIEW_PRESERVED_REPRESENTATIVE_NOT_PUBLISHED",
+    "publicationState": "PRIOR_PREVIEW_PRESERVED_FAILED_ALLOCATION_NOT_PUBLISHED",
     "pairedDeviceMeasurement": "PHONE_AND_TABLET_PENDING",
     "ownerPerceptualDisposition": "NO_NEW_FORMAL_OWNER_DISPOSITION",
     "physicalPerformanceAcceptance": false,
@@ -326,39 +326,39 @@
     "siteSourceCommit": "5fec78fe47d44fb0e012aa411191670683b72e07",
     "publicationReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6051#issuecomment-6072606342",
     "formalOwnerKeepOrRejectRecorded": false,
-    "assistantVisualDisposition": "FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
-    "failedUnpublishedCandidateCommit": "09bdb1a58f7bede3b085d25dc5d71de227156bfa"
+    "assistantVisualDisposition": "VISUAL_FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
+    "failedUnpublishedCandidateCommit": "7f0a0023c036c531046e5b3511d75a25ae1075d8"
   },
   "releaseEligible": false,
   "mainMerged": false,
   "hEarthProductionDeployment": false,
   "activeScopeRetainedForCandidateFinalization": true,
   "visualFailure": {
-    "observedCandidate": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
-    "testedLocalCandidate": "2a1feaac0027f4014fe18082454feda87c22388c",
-    "identicalSourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+    "observedCandidate": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
+    "testedLocalCandidate": "441ac5f289f609e235dc01f7d73be51bd36a67af",
+    "identicalSourceTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
     "failedCriteria": [
-      "Large gaps interrupt layered crown coverage",
-      "Isolated leaf sprays and exposed long major limbs",
-      "Bare upper leader loses leafy apex silhouette"
+      "Three isolated major foliage systems leave long barevertical corridors",
+      "Layeredcrown overlap isnot restored",
+      "Distant silhouette remains a shaft with detached sprays"
     ],
     "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
-    "causeAssessment": "Reference leaf shape survives;70leaves and reduced branch distribution fail layered crown coverage. This allocation failed; general budget infeasibility is not established."
+    "causeAssessment": "Reducingmajorcount4to3 andcompressingbranchorigins removes foliageattachmentlevels;90smallleaves concentrate in fewsystems. Thewood/leafvertex exchange isvalid butthisallocationfailsthevisualdesign."
   },
   "deterministicContinuation": {
     "workstream": "ALL_65_TREE_VISUAL_ADAPTATION; separate from closed clearing trial",
     "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
     "designSource": "c313922b22cb76c64d35297c6bc9dec1b6578188",
-    "repairBase": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+    "repairBase": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
     "branch": "h-earth-all-tree-variation-20261008",
     "admissionGeneration": 2630,
     "scope": "Existing five admitted paths only; preserve placements, basal support, ecology, terrain, grass, rocks, navigation, renderer and loading behavior",
-    "nextAction": "Analyze crown coverage lost by the70leaf representative against acceptedc313, then design one representative allocation with distributed twig foliage and a leafy apex within its unchanged cap. Preserve actual folded blade geometry; do not substitute solid crowns or scale this failed allocation to65trees. Four-view visual comparison must pass before unchanged all65/runtime/device qualification.",
+    "nextAction": "Audit acceptedc313 and current representative leaf-root height/radial distributions and the fourview crown gaps before selecting a new topology. Then design one representative allocation bridging middlemajorlimb/centralleader corridors while retaining the leafyapex andreferencefoldedblade geometry. Cost actualcoincident branchsurfacevertex reuse including any requiredsubdivision; no assumed savings or welding nearbypoints. Frozen364vertex/644trianglecap, originalgen2630/fivepaths. Fourviewvisualpass required beforeall65expansion/runtime/devicequalification. No solidcrowns,limitrelaxation,or infeasibilityclaim.",
     "sequence": [
-      "Keep referencec313 as controlling visual direction; reuse existing admission2630/fivepaths/frozenbudgets.",
-      "Localize missing overlap, distribution and apex in representativefourviews; design deliberate foliage/branch allocation on one actual tree.",
-      "Freeze exact source and compare walking/close/side/distant; stop and preserve on visual or budget failure.",
-      "Only visual pass permits all65adaptation and unchanged geometry/fullresidency/runtime checks, then exactpreview+physicalphone/tabletacceptance."
+      "Preserve currentfailedallocation; originalgen2630/fivepaths/limits unchanged.",
+      "Use acceptedc313 visualhierarchy:cost actualvertex topology for more staggeredlevels andcoincidentbranchvertex reuse while keepingapexcoverage.",
+      "Construct one representative; immutable geometry/budget/normals and4visualviewsfirst,stoponfailure.",
+      "Onlyvisualpass permitsall65adaptation andunchangedfullqualification thenexactpreview/phone/tabletacceptance."
     ],
     "frozenLimitsUnchanged": true,
     "pageExcellenceSelectedGate": false,
@@ -1383,6 +1383,135 @@
         "historical": true
       },
       "preservedAt": "290856749784803c687d6bae54e7971accbcb871"
+    },
+    {
+      "candidateRenderSourceCommit": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+      "candidateRenderSourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+      "localTestCommit": "2a1feaac0027f4014fe18082454feda87c22388c",
+      "canonicalOutput": {
+        "status": "NOT_RUN_FOR_NEW_REPRESENTATIVE_SOURCE",
+        "previousAll65Pass": "Retained under priorFailedCandidates and checkpoint290856; cannot qualify changed helper"
+      },
+      "actualBrowser": {
+        "status": "FOUR_STATIC_VIEWS_CAPTURED_ONLY",
+        "candidate": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+        "testedLocal": "2a1feaac0027f4014fe18082454feda87c22388c",
+        "sourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+        "readyMs": 118838,
+        "errors": [],
+        "physicalAcceptance": false,
+        "timingQualification": "NOT_RUN",
+        "fullResidencyReachedForCapture": true
+      },
+      "visualFailure": {
+        "observedCandidate": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+        "testedLocalCandidate": "2a1feaac0027f4014fe18082454feda87c22388c",
+        "identicalSourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+        "failedCriteria": [
+          "Large gaps interrupt layered crown coverage",
+          "Isolated leaf sprays and exposed long major limbs",
+          "Bare upper leader loses leafy apex silhouette"
+        ],
+        "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
+        "causeAssessment": "Reference leaf shape survives;70leaves and reduced branch distribution fail layered crown coverage. This allocation failed; general budget infeasibility is not established."
+      },
+      "representativeExperiment": {
+        "status": "VISUAL_FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
+        "affectedTree": "P2_TREE_A_11",
+        "source": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+        "localTestCommit": "2a1feaac0027f4014fe18082454feda87c22388c",
+        "sourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+        "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+        "geometry": {
+          "status": "PASS_REPRESENTATIVE_GEOMETRY_ONLY",
+          "checked": 476,
+          "minArea": 4.1337968640602983e-05,
+          "minNormal": 0.9999999999999998
+        },
+        "recipe": {
+          "recipe": "OPAQUE_CURVED_HIERARCHY_LIGHT_v1",
+          "seed": "WOODLAND_ALL_TREE_HIERARCHY_20261008",
+          "experiment": "REPRESENTATIVE_C313_RECIPE_SIMPLIFICATION",
+          "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+          "majorForks": [
+            {
+              "heightFraction": 0.31499999999999984,
+              "position": [
+                -139.3512991882438,
+                9.508884032287517,
+                -210.70436110614673
+              ]
+            },
+            {
+              "heightFraction": 0.459,
+              "position": [
+                -139.36830226929283,
+                11.215686636098544,
+                -210.7305553876771
+              ]
+            },
+            {
+              "heightFraction": 0.603,
+              "position": [
+                -139.38724237073913,
+                12.92248923990957,
+                -210.7579940452617
+              ]
+            },
+            {
+              "heightFraction": 0.7469999999999999,
+              "position": [
+                -139.4972224308553,
+                14.629291843720594,
+                -210.84391837739778
+              ]
+            }
+          ],
+          "majorCount": 4,
+          "secondaryCount": 8,
+          "twigCount": 4,
+          "leafCount": 70,
+          "tuftRootCount": 20,
+          "foliageForm": "SMALL_CLOSED_FOLDED_LEAVES",
+          "vertices": 362,
+          "triangles": 476,
+          "baselineVertices": 364,
+          "baselineTriangles": 644
+        },
+        "other64Trees": "UNCHANGED_PRIOR_FAILED_VOLUME_SOURCE",
+        "fourViews": {
+          "walking": {
+            "status": "FAIL",
+            "imageSha256": "3147fa121797cab3c3fcacd539a082b66ebf80c3c69055f2c47f86138048020c"
+          },
+          "close": {
+            "status": "FAIL",
+            "imageSha256": "999be6e45f4799ff28099130953d7f38cc3beb6c94483ab47ea1b7b67bf49c8a"
+          },
+          "side": {
+            "status": "FAIL",
+            "imageSha256": "af4113fcc8ca412134190b978d1f5b3e5e901403cb1910cf536e867dad70ef31"
+          },
+          "distant": {
+            "status": "FAIL",
+            "imageSha256": "c5974ec965596b1c43a9752ece2d840f13ba4b02ddcd57992de12e0814b49934"
+          }
+        },
+        "defects": [
+          "Large gaps interrupt layered crown coverage",
+          "Isolated leaf sprays and exposed long major limbs",
+          "Bare upper leader loses leafy apex silhouette"
+        ],
+        "restored": [
+          "Reference-sized closed folded blade shape",
+          "Layered secondary and twig attachment recipe"
+        ],
+        "all65Verification": "NOT_RUN_REPRESENTATIVE_VISUAL_GATE_FAILED",
+        "renewedRuntimeQualification": "NOT_RUN_VISUAL_GATE_FAILED",
+        "physicalDeviceAcceptance": "PENDING",
+        "noBudgetImpossibilityEstablished": true
+      },
+      "preservedAt": "f0f91165e94ff8156047a0eb51161e837560e5ba"
     }
   ],
   "boundedVisualRepair": {
@@ -1438,94 +1567,116 @@
   "representativeExperiment": {
     "status": "VISUAL_FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
     "affectedTree": "P2_TREE_A_11",
-    "source": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
-    "localTestCommit": "2a1feaac0027f4014fe18082454feda87c22388c",
-    "sourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+    "source": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
+    "localTestCommit": "441ac5f289f609e235dc01f7d73be51bd36a67af",
+    "sourceTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
     "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
-    "geometry": {
+    "measuredGeometry": {
       "status": "PASS_REPRESENTATIVE_GEOMETRY_ONLY",
-      "checked": 476,
-      "minArea": 4.1337968640602983e-05,
-      "minNormal": 0.9999999999999998
+      "checked": 462,
+      "minArea": 0.00027250468370287477,
+      "minNormal": 0.9999999999999997
     },
     "recipe": {
       "recipe": "OPAQUE_CURVED_HIERARCHY_LIGHT_v1",
       "seed": "WOODLAND_ALL_TREE_HIERARCHY_20261008",
-      "experiment": "REPRESENTATIVE_C313_RECIPE_SIMPLIFICATION",
+      "experiment": "REPRESENTATIVE_VERTEX_REALLOCATION_APEX",
       "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
       "majorForks": [
         {
-          "heightFraction": 0.31499999999999984,
+          "heightFraction": 0.5,
           "position": [
-            -139.3512991882438,
-            9.508884032287517,
-            -210.70436110614673
+            -139.37314342431375,
+            11.701651266350295,
+            -210.73801348172393
           ]
         },
         {
-          "heightFraction": 0.459,
+          "heightFraction": 0.63,
           "position": [
-            -139.36830226929283,
-            11.215686636098544,
-            -210.7305553876771
+            -139.4078636320109,
+            13.242514728124137,
+            -210.77410485753722
           ]
         },
         {
-          "heightFraction": 0.603,
+          "heightFraction": 0.7599999999999999,
           "position": [
-            -139.38724237073913,
-            12.92248923990957,
-            -210.7579940452617
-          ]
-        },
-        {
-          "heightFraction": 0.7469999999999999,
-          "position": [
-            -139.4972224308553,
-            14.629291843720594,
-            -210.84391837739778
+            -139.50715118628244,
+            14.783378189897979,
+            -210.85167543516005
           ]
         }
       ],
-      "majorCount": 4,
-      "secondaryCount": 8,
-      "twigCount": 4,
-      "leafCount": 70,
+      "majorCount": 3,
+      "secondaryCount": 3,
+      "twigCount": 3,
+      "apexTwigCount": 1,
+      "woodVertices": 73,
+      "woodTriangles": 102,
+      "apexLeafRoots": 5,
+      "leafCount": 90,
       "tuftRootCount": 20,
       "foliageForm": "SMALL_CLOSED_FOLDED_LEAVES",
-      "vertices": 362,
-      "triangles": 476,
+      "vertices": 363,
+      "triangles": 462,
       "baselineVertices": 364,
       "baselineTriangles": 644
+    },
+    "allocationChange": {
+      "prior": {
+        "woodVertices": 132,
+        "foliageVertices": 230,
+        "totalVertices": 362,
+        "triangles": 476,
+        "leaves": 70,
+        "apexLeaves": 0
+      },
+      "candidate": {
+        "woodVertices": 73,
+        "foliageVertices": 290,
+        "totalVertices": 363,
+        "triangles": 462,
+        "leaves": 90,
+        "apexLeaves": 20
+      },
+      "ceiling": {
+        "vertices": 364,
+        "triangles": 644
+      },
+      "physicalAcceptance": false,
+      "all65Qualification": false
     },
     "other64Trees": "UNCHANGED_PRIOR_FAILED_VOLUME_SOURCE",
     "fourViews": {
       "walking": {
         "status": "FAIL",
-        "imageSha256": "3147fa121797cab3c3fcacd539a082b66ebf80c3c69055f2c47f86138048020c"
+        "imageSha256": "f06ec8670486ac5adaac09fba1e54c89a7bae924f14e57834c2ac73fb5e322c6"
       },
       "close": {
         "status": "FAIL",
-        "imageSha256": "999be6e45f4799ff28099130953d7f38cc3beb6c94483ab47ea1b7b67bf49c8a"
+        "imageSha256": "5cea28511d97f1857abaa46f60eb4e404f2e14d5c2499b26741e802a4f172671"
       },
       "side": {
         "status": "FAIL",
-        "imageSha256": "af4113fcc8ca412134190b978d1f5b3e5e901403cb1910cf536e867dad70ef31"
+        "imageSha256": "f6ce69c2b2145ebc604e7df05c236f2e619094c152f2b826ecd8d64727acb661"
       },
       "distant": {
         "status": "FAIL",
-        "imageSha256": "c5974ec965596b1c43a9752ece2d840f13ba4b02ddcd57992de12e0814b49934"
+        "imageSha256": "4abb7ba4abf000f604a11b25c67274bf46179227fe23621441ad008ddfe55e55"
       }
     },
-    "defects": [
-      "Large gaps interrupt layered crown coverage",
-      "Isolated leaf sprays and exposed long major limbs",
-      "Bare upper leader loses leafy apex silhouette"
+    "improvements": [
+      "20apex leaves restore formerlybare upperleader",
+      "Referencefoldedblade shape preserved",
+      "59woodvertices reallocated to20additionalleaves"
     ],
-    "restored": [
-      "Reference-sized closed folded blade shape",
-      "Layered secondary and twig attachment recipe"
+    "remainingDefects": [
+      "Three isolated major foliage systems leave long barevertical corridors",
+      "Layeredcrown overlap isnot restored",
+      "Distant silhouette remains a shaft with detached sprays"
     ],
+    "causeAssessment": "Reducingmajorcount4to3 andcompressingbranchorigins removes foliageattachmentlevels;90smallleaves concentrate in fewsystems. Thewood/leafvertex exchange isvalid butthisallocationfailsthevisualdesign.",
     "all65Verification": "NOT_RUN_REPRESENTATIVE_VISUAL_GATE_FAILED",
     "renewedRuntimeQualification": "NOT_RUN_VISUAL_GATE_FAILED",
     "physicalDeviceAcceptance": "PENDING",

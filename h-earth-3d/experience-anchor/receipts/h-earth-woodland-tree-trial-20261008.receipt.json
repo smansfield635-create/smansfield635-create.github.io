@@ -5,12 +5,13 @@
   "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
   "generation": 2630,
   "reviewedAgainstAnchor": false,
-  "disposition": "REPRESENTATIVE_VISUAL_FAILURE_REPAIR_REQUIRED",
+  "disposition": "REPRESENTATIVE_VERTEX_ALLOCATION_VISUAL_FAILURE",
   "visualEvidence": [
     "Exact repaired all-tree renderer: walking, close, side and distant comparisons on private review page; source37d83c68c71a47aba8d9f6766658783ccce3702d, treea5d3cb637ebf3242961c55a43cd923314fc6d092",
     "Owner screenshots28255/28253 compared with reference28243: sparse crowns, exposed straight branches and flat fern-like foliage; assistant assessment FAIL. Screenshot candidate SHA not independently established; no timing/residency claim.",
     "Exact failed volume source84591ddf/local2b60072f identical treef2d5f10c: four full-residency captures; fuller crowns but large angular solids fail accepted foliage direction. East and West independent visual FAIL.",
-    "Exactrepresentative09bdb1a5/local2a1feaac samewhole-tree709d52f: allfourviewsfail sparseisolatedleafsprays andbareapex versusacceptedc313. Referencefoldedbladerecipe restored; crowncoverage notrestored."
+    "Exactrepresentative09bdb1a5/local2a1feaac samewhole-tree709d52f: allfourviewsfail sparseisolatedleafsprays andbareapex versusacceptedc313. Referencefoldedbladerecipe restored; crowncoverage notrestored.",
+    "Exactallocation7f0a0023/local441ac5f samewholetree627cfebb:apex nowcoveredbutall4viewsfailthreeisolatedmajorfoliagesystems andbareverticalcorridors versusacceptedc313. Validwood\u2192leafexchange73woodvertices/90leaves doesnotestablishappearance."
   ],
   "interactionEvidence": [
     "Exact2b60072f/84591ddf immutable same-tree renderer: all four96-redraw resource guards and synthetic two-finger travel/release/cancel PASS. Physical acceptance pending."
@@ -26,12 +27,12 @@
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
-      "sha256": "892c8dde6129c4bc25d5baf61b1af1cb595c832e949bbfb052b9ee692a670463"
+      "sha256": "78fd33f4d1ded26a14e3bedb4f7cb0720d61b714e94074b7d3af640202fcdffb"
     }
   ],
-  "automatedContinuitySupport": "OnlyA11 representative changed; localgeometry362vertices/476triangles fits364/644cap;476nondegenerate triangles andfiniteunitnormals. Fourstaticviews failcoverage. Priorall65runtimepass appliesonlyto priorunchangedsource, retained in record. No newall65/runtime/devicequalification.",
+  "automatedContinuitySupport": "A11only vertexallocation changes. Measured363vertices/462triangles fitsoriginal364/644cap,462nondegeneratefaces andfiniteunitnormals;90smallleaves including20apex. Fourstaticviewsreject separatedfoliagesystems andbarecorridors. No renewedall65/runtime/devicequalification; historicalchecksretaintheiroriginalsourceidentities.",
   "releaseEligible": false,
-  "candidateGeometryCommit": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+  "candidateGeometryCommit": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
   "physicalReviewRequiredBeforeAdoption": true,
   "failureRecordPath": "showroom/globe/h-earth/validation/woodland-tree-trial.record.json"
 }

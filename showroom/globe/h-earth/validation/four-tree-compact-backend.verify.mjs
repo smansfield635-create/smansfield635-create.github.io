@@ -50,11 +50,11 @@ check('DRAW_VIEW_ALLOCATION_AND_CLEANUP',()=>{
  gl.enableVertexAttribArray=location=>attributes.push(['enable',location]);
  gl.vertexAttribIPointer=(...args)=>attributes.push(['pointer',...args]);
  gl.vertexAttribDivisor=(...args)=>divisors.push(args);
- const view=createFourTreeCompactDrawView(gl,{compactBuffer,contactSidecarBuffer:sidecarBuffer,indexData:new Uint32Array([0,1,2]),program:{}});
- assert.deepEqual(attributes,[['enable',10],['pointer',10,4,gl.UNSIGNED_INT,24,0],['enable',11],['pointer',11,2,gl.UNSIGNED_INT,24,16]]);
- assert.deepEqual(divisors,[[10,1],[11,1]]);
- assert.equal(view.indexCount,3);assert.equal(view.allocatedIndexBytes,12);
- assert.deepEqual(uploads,[[gl.ELEMENT_ARRAY_BUFFER,12]]);
+ const view=createFourTreeCompactDrawView(gl,{compactBuffer,contactSidecarBuffer:sidecarBuffer,indexData:new Uint32Array([0,1,2,2,1,3]),program:{}});
+ assert.deepEqual(attributes,[['enable',10],['pointer',10,4,gl.UNSIGNED_INT,24,0],['enable',11],['pointer',11,2,gl.UNSIGNED_INT,24,16],['enable',12],['pointer',12,4,gl.UNSIGNED_INT,32,0],['enable',13],['pointer',13,4,gl.UNSIGNED_INT,32,16]]);
+ assert.deepEqual(divisors,[[10,1],[11,1],[12,1],[13,1]]);
+ assert.equal(view.indexCount,6);assert.equal(view.allocatedIndexBytes,24);
+ assert.deepEqual(uploads,[[gl.ELEMENT_ARRAY_BUFFER,24]]);
  view.dispose();view.dispose();assert.equal(deleted.length,2);
 });
 check('INSTANCED_DRAW',()=>{

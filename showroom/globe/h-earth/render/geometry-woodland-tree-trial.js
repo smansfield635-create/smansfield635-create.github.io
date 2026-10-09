@@ -51,6 +51,7 @@ function crownCluster(m,center,direction,width,length,depth,color,fit,key){
  }
 }
 export function adaptHEarthWoodlandTreeHierarchy({bark,foliage,p,height,leanX,leanZ,barkVertexStart,barkIndexStart,canopyVertexStart,canopyIndexStart}){
+ if(p.id==='P2_TREE_A_11')return economicalReferenceTree({bark,foliage,p,height,leanX,leanZ,barkVertexStart,barkIndexStart,canopyVertexStart,canopyIndexStart});
  const {id,x,z,anchor,radius}=p,y=anchor.y;
  const oldVertices=bark.vertices.length-barkVertexStart+foliage.vertices.length-canopyVertexStart;
  const oldTriangles=(bark.indices.length-barkIndexStart+foliage.indices.length-canopyIndexStart)/3;
@@ -115,4 +116,51 @@ export function adaptHEarthWoodlandTreeHierarchy({bark,foliage,p,height,leanX,le
  const vertices=bark.vertices.length-barkVertexStart+foliage.vertices.length-canopyVertexStart,triangles=(bark.indices.length-barkIndexStart+foliage.indices.length-canopyIndexStart)/3;
  if(vertices>oldVertices||triangles>oldTriangles)throw new Error(`WOODLAND_VARIATION_BASELINE_BUDGET_EXCEEDED:${id}`);
  return {recipe:'OPAQUE_CURVED_HIERARCHY_LIGHT_v1',seed:SEED,style:['STAGGERED_UPRIGHT','BENT_LAYERED_LEADER','ASYMMETRIC_OPEN_FORK','SPREAD_LAYERED_CROWN'][style],majorForks:forks,majorCount,secondaryCount:secondaries.length,leafCount:0,clusterCount,foliageForm:'OVERLAPPING_CLOSED_VOLUMES',vertices,triangles,baselineVertices:oldVertices,baselineTriangles:oldTriangles};
+}
+
+// Representative-only experiment: accepted c313 folded blades and layered
+// branch attachments. Other 64 trees retain checkpoint290856 geometry.
+function economicalReferenceTree({bark,foliage,p,height,leanX,leanZ,barkVertexStart,barkIndexStart,canopyVertexStart,canopyIndexStart}){
+ const {id,x,z,anchor,radius}=p,y=anchor.y;
+ const capV=bark.vertices.length-barkVertexStart+foliage.vertices.length-canopyVertexStart;
+ const capT=(bark.indices.length-barkIndexStart+foliage.indices.length-canopyIndexStart)/3;
+ const basal=bark.vertices.slice(barkVertexStart,barkVertexStart+6),colors=bark.colors.slice(barkVertexStart,barkVertexStart+6);
+ bark.vertices.length=barkVertexStart;bark.colors.length=barkVertexStart;bark.indices.length=barkIndexStart;
+ foliage.vertices.length=canopyVertexStart;foliage.colors.length=canopyVertexStart;foliage.indices.length=canopyIndexStart;
+ bark.vertices.push(...basal);bark.colors.push(...colors);
+ const leader=[0,.30,.60,.90].map(t=>[x+leanX*t+.22*Math.sin(t*4.7)*t,y+height*t,z+leanZ*t+.18*Math.sin(t*5.1)*t]);leader[0]=[x,y,z];
+ sweep(bark,leader,[.32+height*.018,.19,.103,.018],6,[99,78,52,255],`${id}:reference-leader`,Array.from({length:6},(_,j)=>barkVertexStart+j));
+ const bound=radius-1.05,limit=a=>{const r=Math.hypot(a[0]-x,a[2]-z);if(r>bound){a[0]=x+(a[0]-x)*bound/r;a[2]=z+(a[2]-z)*bound/r;}a[1]=Math.min(y+height*.92,Math.max(y+height*.30,a[1]));return a;};
+ const forks=[],attachments=[];
+ for(let j=0;j<4;j++){
+  const base=onPath(leader,.35+j*.16),heading=j*2.399+hash(id,'branch-heading')*6.28,radial=[Math.cos(heading),0,Math.sin(heading)],side=[-radial[2],0,radial[0]];
+  const end=limit(add(base,add(scale(radial,bound*(j<2?.85:.65)),[0,height*.16,0]))),elbow=limit(add(mix(base,end,.52),add(scale(side,.18*(j%2?1:-1)),[0,.16,0]))),major=[base,elbow,end];
+  sweep(bark,major,[.14-j*.018,.055,.014],3,[99,79,52,255],`${id}:reference-major-${j}`);forks.push({heightFraction:(base[1]-y)/height,position:base});
+  for(let k=0;k<2;k++){
+   const root=onPath(major,.34+k*.30),angle=heading+(k?-.85:.92),tip=limit(add(root,[Math.cos(angle)*1.10,.30,Math.sin(angle)*1.10])),secondary=[root,tip];
+   sweep(bark,secondary,[.035,.005],3,[106,84,54,255],`${id}:reference-secondary-${j}-${k}`);
+   attachments.push({path:secondary,t:.40,key:`secondary-${j}-${k}-a`},{path:secondary,t:.79,key:`secondary-${j}-${k}-b`});
+   if(k===1){const twigRoot=onPath(secondary,.70),twigTip=limit(add(twigRoot,[Math.cos(angle-.73)*.64,.32,Math.sin(angle-.73)*.64])),twig=[twigRoot,twigTip];sweep(bark,twig,[.018,.004],3,[112,89,57,255],`${id}:reference-twig-${j}`);attachments.push({path:twig,t:.79,key:`twig-${j}`});}
+  }
+ }
+ const woodV=bark.vertices.length-barkVertexStart,woodT=(bark.indices.length-barkIndexStart)/3;
+ const leafCount=Math.min(Math.floor((capV-woodV-attachments.length)/3),Math.floor((capT-woodT)/4));
+ if(leafCount<attachments.length)throw Error('REPRESENTATIVE_FOLDED_LEAF_BUDGET');
+ let emitted=0;
+ for(let i=0;i<attachments.length;i++){
+  const {path,t,key}=attachments[i],root=onPath(path,t),twig=unit(sub(path.at(-1),path[0])),across=unit(cross(twig,Math.abs(twig[1])<.9?[0,1,0]:[1,0,0])),around=unit(cross(twig,across));
+  const tint=hash(id,`${key}:tint`),color=[46+tint*29,75+tint*35,24+tint*20,255],rootIndex=vertex(foliage,root,color),count=Math.floor(leafCount/attachments.length)+(i<leafCount%attachments.length?1:0);
+  for(let n=0;n<count;n++){
+   const channel=`${key}:leaf-${n}`,roll=(n/count+hash(id,`${key}:roll`))*Math.PI*2,spread=add(scale(across,Math.cos(roll)),scale(around,Math.sin(roll))),d=unit(add(scale(twig,.10+.27*hash(id,`${channel}-forward`)),add(scale(spread,.90),[0,-.22+.45*hash(id,`${channel}-lift`),0]))),side=unit(cross(d,Math.abs(d[1])<.9?[0,1,0]:[1,0,0])),normal=unit(cross(side,d));
+   const length=.66+.31*hash(id,`${channel}-length`),width=.24+.10*hash(id,`${channel}-width`),middle=scale(d,length*.47),offsets=[scale(d,length),add(middle,add(scale(side,width),scale(normal,.045))),add(middle,add(scale(side,-width),scale(normal,.045)))];
+   let fit=1;
+   for(const q of offsets){const cx=root[0]-x,cz=root[2]-z,a=q[0]*q[0]+q[2]*q[2],b=2*(cx*q[0]+cz*q[2]),c=cx*cx+cz*cz-radius*radius;if(a>1e-12)fit=Math.min(fit,(-b+Math.sqrt(Math.max(0,b*b-4*a*c)))/(2*a));if(q[1]>0)fit=Math.min(fit,(y+height-root[1])/q[1]);if(q[1]<0)fit=Math.min(fit,(y+height*.26-root[1])/q[1]);}
+   if(!(fit>0))throw Error('REPRESENTATIVE_FOLDED_LEAF_ENVELOPE');
+   const ids=offsets.map(q=>vertex(foliage,add(root,scale(q,fit)),color));
+   face(foliage,rootIndex,ids[0],ids[1]);face(foliage,rootIndex,ids[2],ids[0]);face(foliage,rootIndex,ids[1],ids[2]);face(foliage,ids[0],ids[2],ids[1]);emitted++;
+  }
+ }
+ const vertices=woodV+foliage.vertices.length-canopyVertexStart,triangles=woodT+(foliage.indices.length-canopyIndexStart)/3;
+ if(vertices>capV||triangles>capT)throw Error('REPRESENTATIVE_BUDGET_EXCEEDED');
+ return {recipe:'OPAQUE_CURVED_HIERARCHY_LIGHT_v1',seed:SEED,experiment:'REPRESENTATIVE_C313_RECIPE_SIMPLIFICATION',reference:'c313922b22cb76c64d35297c6bc9dec1b6578188',majorForks:forks,majorCount:4,secondaryCount:8,twigCount:4,leafCount:emitted,tuftRootCount:attachments.length,foliageForm:'SMALL_CLOSED_FOLDED_LEAVES',vertices,triangles,baselineVertices:capV,baselineTriangles:capT};
 }

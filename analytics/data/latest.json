@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-09T21:31:04Z",
+  "generatedAt": "2026-10-09T22:33:39Z",
   "window30d": {
-    "start": "2026-09-09T21:31:04Z",
-    "end": "2026-10-09T21:31:04Z"
+    "start": "2026-09-09T22:33:39Z",
+    "end": "2026-10-09T22:33:39Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-02",
-      "pageLoads": 5
+      "pageLoads": 4
     },
     {
       "date": "2026-10-03",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 27
+      "pageLoads": 28
     }
   ],
   "summary": {
-    "pageLoads": 5816,
-    "botPageLoads": 2208,
-    "nonBotPageLoads": 3608
+    "pageLoads": 5786,
+    "botPageLoads": 2188,
+    "nonBotPageLoads": 3598
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3113,
-      "visits": 3113
+      "pageLoads": 3093,
+      "visits": 3093
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2399,
+      "pageLoads": 2389,
       "visits": 0
     },
     {
@@ -182,8 +182,8 @@
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 750,
-      "visits": 750
+      "pageLoads": 740,
+      "visits": 740
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 336,
-      "visits": 276
+      "pageLoads": 326,
+      "visits": 266
     },
     {
       "path": "/products/education/",

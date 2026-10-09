@@ -1,0 +1,41 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+  "generation": 2630,
+  "reviewedAgainstAnchor": false,
+  "disposition": "PENDING_EXACT_CANDIDATE_PHYSICAL_REVIEW",
+  "visualEvidence": [
+    "Exact repaired all-tree renderer: walking, close, side and distant comparisons on private review page; source37d83c68c71a47aba8d9f6766658783ccce3702d, treea5d3cb637ebf3242961c55a43cd923314fc6d092"
+  ],
+  "interactionEvidence": [
+    "Actual same-source renderer four-camera96-redraw resource guards and synthetic touch PASS; physical device review pending"
+  ],
+  "continuityEvidence": [
+    "showroom/globe/h-earth/validation/woodland-tree-trial.record.json"
+  ],
+  "invariants": {},
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "15d7c0bea04c7c4677cbae0089ccdafeb0764222a942f7b9b54cd3b158f880d8"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+      "sha256": "618a91737fae108370f2a579b35e093d0382fe35c97f1737d01b3bfc5f1b2d18"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
+      "sha256": "b46312bb873fff7db38cfe18098ec481fe3135878a99665ee95ac77cd9f60333"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
+      "sha256": "237cba2df587ec89e3fa7d87a9840b84e5d21442753fffbd06afa145b7b7490a"
+    }
+  ],
+  "automatedContinuitySupport": "All65 tree geometry adapted. Exact placements, support, terrain, grass/rocks, ecology, renderer/navigation/loader bytes preserved. Full27585instance108batch residency and buffer ceiling pass. These checks do not establish owner physical/perceptual acceptance.",
+  "releaseEligible": false,
+  "candidateGeometryCommit": "37d83c68c71a47aba8d9f6766658783ccce3702d",
+  "physicalReviewRequiredBeforeAdoption": true
+}

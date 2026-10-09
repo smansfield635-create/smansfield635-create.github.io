@@ -38,7 +38,8 @@ check('GPU_ALLOCATION_FAILURE_ROLLBACK',()=>{
 check('DRAW_BUDGET_LIMITS',()=>{
  const valid={addedGpuBytes:401408,addedMainDraws:4,addedShadowDraws:4,addedPrograms:2,addedBuffers:3,addedVertexArrays:1,addedTextures:0,addedFramebuffers:0};
  assert.equal(validateFourTreeCompactDrawBudget(valid).eligible,true);
- for(const key of Object.keys(valid))assert.throws(()=>validateFourTreeCompactDrawBudget({...valid,[key]:valid[key]+1}),/FOUR_TREE_COMPACT_RESOURCE_BUDGET/);
+ const limits={addedGpuBytes:c.maxAddedGpuBytes,addedMainDraws:c.maxAddedMainDraws,addedShadowDraws:c.maxAddedShadowDraws,addedPrograms:c.maxAddedPrograms,addedBuffers:c.maxAddedBuffers,addedVertexArrays:c.maxAddedVertexArrays,addedTextures:c.maxAddedTextures,addedFramebuffers:c.maxAddedFramebuffers};
+ for(const key of Object.keys(valid))assert.throws(()=>validateFourTreeCompactDrawBudget({...valid,[key]:limits[key]+1}),/FOUR_TREE_COMPACT_RESOURCE_BUDGET/);
 });
 check('DRAW_VIEW_ALLOCATION_AND_CLEANUP',()=>{
  let next=0;const deleted=[];const uploads=[];

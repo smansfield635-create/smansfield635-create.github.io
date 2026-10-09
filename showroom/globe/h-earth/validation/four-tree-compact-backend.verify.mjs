@@ -64,6 +64,15 @@ check('INVALID_QUAD_REJECTED_BEFORE_GPU_ALLOCATION',()=>{
  assert.throws(()=>createFourTreeCompactDrawView(gl,{compactBuffer:{},contactSidecarBuffer:{},indexData:new Uint16Array([0,1,2]),program:{}}),/QUAD_INDEX_CONTRACT/);
  assert.equal(allocations,0);
 });
+check('DEGENERATE_QUAD_REJECTED_BEFORE_GPU_ALLOCATION',()=>{
+ let allocations=0;
+ const gl={createVertexArray(){allocations++;return {};}};
+ for(const indices of [[0,1,1,2,1,3],[0,1,2,0,1,2]]) {
+   assert.throws(()=>createFourTreeCompactDrawView(gl,{compactBuffer:{},contactSidecarBuffer:{},
+     indexData:new Uint32Array(indices),program:{}}),/QUAD_TOPOLOGY/);
+ }
+ assert.equal(allocations,0);
+});
 check('INSTANCED_DRAW',()=>{
  const draws=[];
  const gl={ELEMENT_ARRAY_BUFFER:34963,ARRAY_BUFFER:34962,STATIC_DRAW:35044,UNSIGNED_INT:5125,TRIANGLES:4,

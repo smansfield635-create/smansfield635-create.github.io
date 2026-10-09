@@ -137,6 +137,15 @@ export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecar
   if (!program || !compactBuffer || !contactSidecarBuffer) {
     throw new TypeError('FOUR_TREE_COMPACT_DRAW_INPUT_MISSING');
   }
+  // A quad must contain two nondegenerate triangles and cover all four corners.
+  // Reject malformed topology before allocating any GPU resource.
+  if (indexData.length === 6) {
+    const corners = Array.from(indexData);
+    const first = corners.slice(0,3), second = corners.slice(3,6);
+    if (new Set(first).size !== 3 || new Set(second).size !== 3 ||
+        new Set(corners).size !== 4)
+      throw new RangeError('FOUR_TREE_COMPACT_QUAD_TOPOLOGY');
+  }
   if(indexData.length!==6||Array.from(indexData).some(index=>index>3))
     throw new RangeError('FOUR_TREE_COMPACT_QUAD_INDEX_CONTRACT');
   const vao=gl.createVertexArray();

@@ -146,7 +146,18 @@ export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecar
     if(!indexBuffer)throw new Error('FOUR_TREE_COMPACT_INDEX_BUFFER_FAILED');
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indexData,gl.STATIC_DRAW);
+    // One compact record describes one leaf, not one triangle vertex.
+    // The per-instance divisor is essential: the six index corners belong
+    // to the shared four-vertex leaf template and must not advance records.
+    gl.bindBuffer(gl.ARRAY_BUFFER,compactBuffer);
+    gl.enableVertexAttribArray(10);
+    gl.vertexAttribIPointer(10,4,gl.UNSIGNED_INT,24,0);
+    gl.vertexAttribDivisor(10,1);
+    gl.enableVertexAttribArray(11);
+    gl.vertexAttribIPointer(11,2,gl.UNSIGNED_INT,24,16);
+    gl.vertexAttribDivisor(11,1);
     gl.bindVertexArray(null);
+    gl.bindBuffer(gl.ARRAY_BUFFER,null);
     let disposed=false;
     return Object.freeze({
       vao,program,indexBuffer,indexCount:indexData.length,

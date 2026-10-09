@@ -125,3 +125,39 @@ export function validateFourTreeCompactDrawBudget(actual) {
   }
   return Object.freeze({eligible:true, ...actual});
 }
+
+/** Build a separate indexed compact-leaf draw view without touching the world VAO.
+ * The caller must supply qualified per-leaf vertex indices and an exact
+ * reconstruction shader program. No guessed shader is automatically selected.
+ */
+export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecarBuffer, indexData, program}) {
+  if (!(indexData instanceof Uint16Array || indexData instanceof Uint32Array)) {
+    throw new TypeError('FOUR_TREE_COMPACT_INDEX_TYPE_REQUIRED');
+  }
+  if (!program || !compactBuffer || !contactSidecarBuffer) {
+    throw new TypeError('FOUR_TREE_COMPACT_DRAW_INPUT_MISSING');
+  }
+  const vao=gl.createVertexArray();
+  if(!vao)throw new Error('FOUR_TREE_COMPACT_VAO_FAILED');
+  let indexBuffer;
+  try {
+    gl.bindVertexArray(vao);
+    indexBuffer=gl.createBuffer();
+    if(!indexBuffer)throw new Error('FOUR_TREE_COMPACT_INDEX_BUFFER_FAILED');
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indexData,gl.STATIC_DRAW);
+    gl.bindVertexArray(null);
+    let disposed=false;
+    return Object.freeze({
+      vao,program,indexBuffer,indexCount:indexData.length,
+      indexType:indexData instanceof Uint32Array?gl.UNSIGNED_INT:gl.UNSIGNED_SHORT,
+      allocatedIndexBytes:indexData.byteLength,
+      dispose(){if(disposed)return;disposed=true;gl.deleteBuffer(indexBuffer);gl.deleteVertexArray(vao);}
+    });
+  }catch(error){
+    gl.bindVertexArray(null);
+    if(indexBuffer)gl.deleteBuffer(indexBuffer);
+    gl.deleteVertexArray(vao);
+    throw error;
+  }
+}

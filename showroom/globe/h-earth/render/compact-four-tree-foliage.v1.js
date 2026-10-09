@@ -137,6 +137,8 @@ export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecar
   if (!program || !compactBuffer || !contactSidecarBuffer) {
     throw new TypeError('FOUR_TREE_COMPACT_DRAW_INPUT_MISSING');
   }
+  if(indexData.length!==6||Array.from(indexData).some(index=>index>3))
+    throw new RangeError('FOUR_TREE_COMPACT_QUAD_INDEX_CONTRACT');
   const vao=gl.createVertexArray();
   if(!vao)throw new Error('FOUR_TREE_COMPACT_VAO_FAILED');
   let indexBuffer;
@@ -176,8 +178,6 @@ export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecar
         if(disposed)throw new Error('FOUR_TREE_COMPACT_VIEW_DISPOSED');
         if(!Number.isSafeInteger(instanceCount)||instanceCount<0||instanceCount>FOUR_TREE_COMPACT_CONTRACT.leafCount)
           throw new RangeError('FOUR_TREE_COMPACT_INSTANCE_COUNT');
-        if(indexData.length!==6||Array.from(indexData).some(index=>index>3))
-          throw new RangeError('FOUR_TREE_COMPACT_QUAD_INDEX_CONTRACT');
         gl.useProgram(program);
         gl.bindVertexArray(vao);
         try { gl.drawElementsInstanced(gl.TRIANGLES,indexData.length,

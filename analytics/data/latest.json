@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-09T04:41:17Z",
+  "generatedAt": "2026-10-09T05:36:07Z",
   "window30d": {
-    "start": "2026-09-09T04:41:17Z",
-    "end": "2026-10-09T04:41:17Z"
+    "start": "2026-09-09T05:36:07Z",
+    "end": "2026-10-09T05:36:07Z"
   },
   "daily": [
     {
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 6
+      "pageLoads": 7
     }
   ],
   "summary": {
-    "pageLoads": 5970,
-    "botPageLoads": 2266,
-    "nonBotPageLoads": 3704
+    "pageLoads": 5961,
+    "botPageLoads": 2267,
+    "nonBotPageLoads": 3694
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3199,
-      "visits": 3199
+      "pageLoads": 3200,
+      "visits": 3200
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2459,
+      "pageLoads": 2449,
       "visits": 0
     },
     {
@@ -177,7 +177,7 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1351,
+      "pageLoads": 1341,
       "visits": 1002
     },
     {
@@ -192,8 +192,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 399,
-      "visits": 278
+      "pageLoads": 400,
+      "visits": 279
     },
     {
       "path": "/showroom/globe/audralia/",

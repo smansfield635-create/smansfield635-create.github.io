@@ -163,6 +163,22 @@ export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecar
       vao,program,indexBuffer,indexCount:indexData.length,
       indexType:indexData instanceof Uint32Array?gl.UNSIGNED_INT:gl.UNSIGNED_SHORT,
       allocatedIndexBytes:indexData.byteLength,
+      // The six indices address the four corners of a single leaf.
+      // Each instance advances the 24-byte packed record exactly once.
+      draw(instanceCount=FOUR_TREE_COMPACT_CONTRACT.leafCount) {
+        if(disposed)throw new Error('FOUR_TREE_COMPACT_VIEW_DISPOSED');
+        if(!Number.isSafeInteger(instanceCount)||instanceCount<0||instanceCount>FOUR_TREE_COMPACT_CONTRACT.leafCount)
+          throw new RangeError('FOUR_TREE_COMPACT_INSTANCE_COUNT');
+        if(indexData.length!==6||Array.from(indexData).some(index=>index>3))
+          throw new RangeError('FOUR_TREE_COMPACT_QUAD_INDEX_CONTRACT');
+        gl.useProgram(program);
+        gl.bindVertexArray(vao);
+        try { gl.drawElementsInstanced(gl.TRIANGLES,indexData.length,
+          indexData instanceof Uint32Array?gl.UNSIGNED_INT:gl.UNSIGNED_SHORT,0,instanceCount); }
+        finally { gl.bindVertexArray(null); }
+        return Object.freeze({instances:instanceCount,indicesPerInstance:indexData.length,
+          submittedTriangles:instanceCount*2});
+      },
       dispose(){if(disposed)return;disposed=true;gl.deleteBuffer(indexBuffer);gl.deleteVertexArray(vao);}
     });
   }catch(error){

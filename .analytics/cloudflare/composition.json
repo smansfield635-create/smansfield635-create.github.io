@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-09T12:44:29Z",
+  "generatedAt": "2026-10-09T13:37:33Z",
   "window": {
-    "start": "2026-09-09T12:44:29Z",
-    "end": "2026-10-09T12:44:29Z"
+    "start": "2026-09-09T13:37:33Z",
+    "end": "2026-10-09T13:37:33Z"
   },
   "dimensions": {
     "requestPath": [
@@ -567,8 +567,8 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 5964,
-        "visits": 3515
+        "pageLoads": 5834,
+        "visits": 3415
       }
     ],
     "siteTag": [

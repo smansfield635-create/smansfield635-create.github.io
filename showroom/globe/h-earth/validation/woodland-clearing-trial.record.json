@@ -952,7 +952,7 @@
       "reason": "Preserve pre-profile candidate and failures unchanged."
     }
   ],
-  "status": "COMPACT_MASK_COVERAGE_RECOVERED_FULL_SCENE_VISUAL_FAIL_NOT_ACCEPTED",
+  "status": "OWNER_APPROVED_MIXED_STYLES_NATIVE_STATIC_MEMORY_PASS_RUNTIME_FAIL_DEVICE_PENDING",
   "operationId": "H_EARTH_ENVIRONMENT_RICHNESS_PATCH_20261009",
   "generation": 2631,
   "allowedPaths": [
@@ -2355,7 +2355,7 @@
       "findings": "Foliage and grassFAIL; bark, lighting and soilPARTIAL; atmosphericdepthUNRESOLVED. Atlascoverage diagnostic realized visually; exact mip/orientation causal split unproven."
     }
   },
-  "nextRequired": "Preserve recovered coverage and failed visual appearance. Read-only compare card aspect/projection, mask separation and leaf lighting with the EZTree reference before costing another complete-patch repair; diagnose grass coverage separately. No blind foliage-count increase, relaxed numeric limits, rollout, merge or deployment.",
+  "nextRequired": "Read-only localization of exact walking/distant runtime assertions on the native mixed-tree source; preserve owner-approved fuller/lighter appearance and deferred grass. No further geometry repair, 65-tree rollout, merge or deployment before qualification. Exact interactive phone/tablet movement and performance review remains pending.",
   "testedCandidate": "41ded2a1083966d5344af266679a54f9170c8110",
   "testedTree": "9aa34ed7477fb947ec37b4669607a40547d46020",
   "compactMaskRepair": {
@@ -2438,9 +2438,74 @@
     },
     "texture": "Two padded126x256 recipes in existing256x256 texture; horizontal sampling changed and requires qualification.",
     "geometry": "Native wider algorithm; original counts, roots and rolls preserved; other61 trees unchanged.",
-    "runtime": "PENDING",
+    "runtime": "ENGINEERING_TIMING_REVIEW_FAIL_WALKING_AND_DISTANT",
     "physicalDeviceAcceptance": "PENDING_NATIVE_EXACT_CANDIDATE",
     "merge": false,
-    "deployment": false
-  }
+    "deployment": false,
+    "testedNativeCandidate": "4e9a50428c7bc3cab41255822bc521e3668e78c0",
+    "testedNativeTree": "a53338d4c692b45cbb79e28cfe274f7b42f83a86",
+    "ownerApprovalBoundary": "Owner approved shown preview styles, not runtime or exactnative physicalacceptance.",
+    "qualification": {
+      "static": "PASS",
+      "geometryAndUV": "PASS_ALL_FOUR_NATIVE_TREES",
+      "fourViews": "PASS_APPROVED_STYLES_PRESERVED_AT_EXACT_CAMERAS_NO_MATERIAL_ATLAS_ARTIFACT",
+      "fullResidency": {
+        "instances": 27585,
+        "batches": 108,
+        "drops": 0
+      },
+      "gpuStorage": {
+        "baselineObservableBufferBytes": 34962431,
+        "candidateObservableBufferBytes": 39118475,
+        "addedObservableBufferBytes": 4156044,
+        "candidateClearingTextureStorageBytes": 2097148,
+        "addedGpuStorageBytes": 6253192,
+        "ceiling": 6291456,
+        "pass": true,
+        "indexBufferAlreadyIncludedInObservableBuffers": true
+      },
+      "resourceLifecycle": "PASS_FIXED_ALLOCATIONS_UPLOADS_DRAWCALLS_STATIC_SHADOW_ONCE",
+      "runtime": {
+        "status": "ENGINEERING_TIMING_REVIEW_FAIL",
+        "thresholds": {
+          "rafMedianRatio": 1.25,
+          "rafP95Ratio": 1.35,
+          "perCameraSame96RedrawRoute": true,
+          "startupClaim": "NO_COMPARABLE_STARTUP_CLAIM_HOST_VARIATION",
+          "physicalDeviceLimits": "UNKNOWN_REQUIRES_PHONE_TABLET_BASELINE"
+        },
+        "freshRatios": {
+          "walking": {
+            "medianMs": 1.5711225364181307,
+            "p95Ms": 1.8327918020495046
+          },
+          "close": {
+            "medianMs": 1.2106759317751628,
+            "p95Ms": 1.243431722348369
+          },
+          "side": {
+            "medianMs": 0.8463313336410403,
+            "p95Ms": 1.3050626304803177
+          },
+          "distant": {
+            "medianMs": 1.3331999999999535,
+            "p95Ms": 1.1334000000000233
+          }
+        },
+        "method": "Exactbaseline and candidate served from Git; fullresidency; fourexactcameras;96RAF-paced binding.acceptNavigationState calls perview;95RAFgaps and96CPUAPIwalls. Samebinary/settings/viewport/host, separate sequential browserprocesses after preserved harness lifecycle failure. No overlap with other browser runs.",
+        "cause": "UNLOCALIZED; RAF spacing is not GPU duration; API median does not rise in every failed view.",
+        "historicalRatios": "Retained separately; historical passes do not erase fresh failures."
+      },
+      "physicalAcceptance": false,
+      "reports": {
+        "integration/west-static.json": "8a277cfa8b9dcc07dacae2b7cf8029693a71654a2142bf9da2abdb4bad4bf431",
+        "two-recipe-review/east-native-review.json": "66ce72a19d7e8e1a20487532775dea1b76ce2c3aafddf463c3f15cee23f4343a",
+        "integration/west-native-visual.json": "f65ef817c7c65ede7126766629535678bd0b2a24dd3bd2986313c68b77b6006a",
+        "integration/runtime/west-runtime-review.json": "2d8ea30f7878d8ee6e345743f083c02407f6000e8be8349fae88e8e5dd1167f3"
+      }
+    },
+    "remoteSource": "cad34712240e9c7252c4d41ca0af4dc200a57cd9",
+    "sourceEquivalence": "EXACT_WHOLE_TREE_TO_LOCAL_TESTED_4e9a504"
+  },
+  "preservedPreviousStatus": "COMPACT_MASK_COVERAGE_RECOVERED_FULL_SCENE_VISUAL_FAIL_NOT_ACCEPTED"
 }

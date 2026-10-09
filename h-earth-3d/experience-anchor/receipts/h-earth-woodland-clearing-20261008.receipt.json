@@ -4,7 +4,7 @@
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "operationId": "H_EARTH_ENVIRONMENT_RICHNESS_PATCH_20261009",
   "reviewedAgainstAnchor": false,
-  "disposition": "NOT_READY_FOR_ADOPTION_COMPACT_MASK_RECOVERED_COVERAGE_VISUAL_FAILURE",
+  "disposition": "NOT_READY_FOR_ADOPTION_OWNER_APPROVED_STYLES_NATIVE_QUALIFICATION_PENDING",
   "releaseEligible": false,
   "physicalAcceptance": false,
   "mergePerformed": false,
@@ -143,7 +143,7 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
-      "sha256": "24ddbe427692e55198c4fa881dd0291773e3389bf6fada15b71eaf1a95146f36"
+      "sha256": "15ef7838a2c47ad0ef219b57da80373d8ba48ebb3bda271bcf7cdaa0c23a3e36"
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
@@ -175,11 +175,11 @@
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
-      "sha256": "c995fc5459097bfc2afa1318cb7ad3136901586f71df5fb3e72a058e0f08f6be"
+      "sha256": "922111029a884f1a205ccc39db278ae822e76accbd7104d04ccd6e073e310389"
     },
     {
       "path": "showroom/globe/h-earth/render/assets/woodland-clearing-leaf.png",
-      "sha256": "19d8b5fd24deae3ea04b2affcad70c404bd92b24da4796e5f9d9a8147aa3b03d"
+      "sha256": "ac6d40cae1fb958ea375d6c23f4297430eb30b8c1ffebaa93728416fde6b2a98"
     },
     {
       "path": "showroom/globe/h-earth/render/assets/woodland-clearing-bark.png",
@@ -191,7 +191,7 @@
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
-      "sha256": "b2744b2207ab39288a11fa116accf15f07cccaf777b64de52e693fca75ef639b"
+      "sha256": "b1b958db968fa83ce0ae3b0209c5e7a6caf6434f28d0f5adf6f3b1796009d8e2"
     },
     {
       "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.verify.mjs",
@@ -211,5 +211,84 @@
     "raster": "PASS_EXACT_COSTING_REPRODUCTION",
     "physical": "PENDING",
     "stop": "Preserve improvement and failure; no further repair or acceptance inferred."
+  },
+  "ownerApprovedMixedTrees": {
+    "sourceBase": "b89a4c95fa2ca50529ca49d97362aeb3b3d93d3d",
+    "testedNativeCandidate": "4e9a50428c7bc3cab41255822bc521e3668e78c0",
+    "testedNativeTree": "a53338d4c692b45cbb79e28cfe274f7b42f83a86",
+    "ownerStyleDecision": "Both shownstyles approved; fullerpreferred/lightcontrast; grassdeferred. Previewapproval does notestablish exactnative physical/runtime/anchoracceptance.",
+    "styles": {
+      "P2_TREE_A_03": "LIGHTER_COMPACT_SPRAY",
+      "P2_TREE_A_06": "FULLER_SINGLE_LEAF",
+      "P2_TREE_A_08": "FULLER_SINGLE_LEAF",
+      "P2_TREE_A_11": "FULLER_SINGLE_LEAF"
+    },
+    "qualification": {
+      "static": "PASS",
+      "geometryAndUV": "PASS_ALL_FOUR_NATIVE_TREES",
+      "fourViews": "PASS_APPROVED_STYLES_PRESERVED_AT_EXACT_CAMERAS_NO_MATERIAL_ATLAS_ARTIFACT",
+      "fullResidency": {
+        "instances": 27585,
+        "batches": 108,
+        "drops": 0
+      },
+      "gpuStorage": {
+        "baselineObservableBufferBytes": 34962431,
+        "candidateObservableBufferBytes": 39118475,
+        "addedObservableBufferBytes": 4156044,
+        "candidateClearingTextureStorageBytes": 2097148,
+        "addedGpuStorageBytes": 6253192,
+        "ceiling": 6291456,
+        "pass": true,
+        "indexBufferAlreadyIncludedInObservableBuffers": true
+      },
+      "resourceLifecycle": "PASS_FIXED_ALLOCATIONS_UPLOADS_DRAWCALLS_STATIC_SHADOW_ONCE",
+      "runtime": {
+        "status": "ENGINEERING_TIMING_REVIEW_FAIL",
+        "thresholds": {
+          "rafMedianRatio": 1.25,
+          "rafP95Ratio": 1.35,
+          "perCameraSame96RedrawRoute": true,
+          "startupClaim": "NO_COMPARABLE_STARTUP_CLAIM_HOST_VARIATION",
+          "physicalDeviceLimits": "UNKNOWN_REQUIRES_PHONE_TABLET_BASELINE"
+        },
+        "freshRatios": {
+          "walking": {
+            "medianMs": 1.5711225364181307,
+            "p95Ms": 1.8327918020495046
+          },
+          "close": {
+            "medianMs": 1.2106759317751628,
+            "p95Ms": 1.243431722348369
+          },
+          "side": {
+            "medianMs": 0.8463313336410403,
+            "p95Ms": 1.3050626304803177
+          },
+          "distant": {
+            "medianMs": 1.3331999999999535,
+            "p95Ms": 1.1334000000000233
+          }
+        },
+        "method": "Exactbaseline and candidate served from Git; fullresidency; fourexactcameras;96RAF-paced binding.acceptNavigationState calls perview;95RAFgaps and96CPUAPIwalls. Samebinary/settings/viewport/host, separate sequential browserprocesses after preserved harness lifecycle failure. No overlap with other browser runs.",
+        "cause": "UNLOCALIZED; RAF spacing is not GPU duration; API median does not rise in every failed view.",
+        "historicalRatios": "Retained separately; historical passes do not erase fresh failures."
+      },
+      "physicalAcceptance": false,
+      "reports": {
+        "integration/west-static.json": "8a277cfa8b9dcc07dacae2b7cf8029693a71654a2142bf9da2abdb4bad4bf431",
+        "two-recipe-review/east-native-review.json": "66ce72a19d7e8e1a20487532775dea1b76ce2c3aafddf463c3f15cee23f4343a",
+        "integration/west-native-visual.json": "f65ef817c7c65ede7126766629535678bd0b2a24dd3bd2986313c68b77b6006a",
+        "integration/runtime/west-runtime-review.json": "2d8ea30f7878d8ee6e345743f083c02407f6000e8be8349fae88e8e5dd1167f3"
+      }
+    },
+    "runtime": "ENGINEERING_TIMING_REVIEW_FAIL_WALKING_AND_DISTANT",
+    "physical": "PENDING_NATIVE_EXACT_CANDIDATE",
+    "grass": "DEFERRED_OWNER_EXISTING_CONTENT_PRESERVED",
+    "merge": false,
+    "deployment": false,
+    "remoteSource": "cad34712240e9c7252c4d41ca0af4dc200a57cd9",
+    "sourceEquivalence": "EXACT_WHOLE_TREE_TO_LOCAL_TESTED_4e9a504",
+    "physicalDeviceAcceptance": "PENDING_NATIVE_EXACT_CANDIDATE"
   }
 }

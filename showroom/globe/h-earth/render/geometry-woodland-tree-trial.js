@@ -106,9 +106,9 @@ export function appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ
    // Alternate overlapping leaf sprays along the branch, with a small
    // irregular attachment spread; primary limbs now carry intermediate
    // foliage instead of reading as strings between terminal rosettes.
-   const roll=clearing?(n%2?Math.PI:0)+(hash(id,`${channel}-roll`)-.5)*1.8:hash(id,`${channel}-roll`)*Math.PI*2,spread=add(scale(across,Math.cos(roll)),scale(around,Math.sin(roll)));
+   const roll=hash(id,`${channel}-roll`)*Math.PI*2,spread=add(scale(across,Math.cos(roll)),scale(around,Math.sin(roll)));
    if(clearing)root=add(root,scale(spread,.035+.13*hash(id,`${channel}-petiole`)));
-   const direction=add(scale(twig,clearing?.48+.32*hash(id,`${channel}-forward`):.10+.27*hash(id,`${channel}-forward`)),add(scale(spread,clearing?.72:.90),[0,-.22+.45*hash(id,`${channel}-lift`),0]));
+   const direction=add(scale(twig,.10+.27*hash(id,`${channel}-forward`)),add(scale(spread,.90),[0,-.22+.45*hash(id,`${channel}-lift`),0]));
    const tint=hash(id,`${channel}-tint`),length=clearing?.38+.22*hash(id,`${channel}-length`):.66+.31*hash(id,`${channel}-length`),width=clearing?.105+.075*hash(id,`${channel}-width`):.24+.10*hash(id,`${channel}-width`);
    // The centerline margin accommodates each blade's farthest possible
    // vertex, so leaves stay inside the accepted horizontal crown footprint.

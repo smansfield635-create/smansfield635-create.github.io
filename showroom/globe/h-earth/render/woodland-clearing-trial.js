@@ -49,9 +49,9 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
   for(let k=0;k<8;k++){
    const a=hash(id,`angle${k}`)*Math.PI*2,offset=.06+.12*hash(id,`offset${k}`),r=root(x+Math.cos(a)*offset,z+Math.sin(a)*offset);if(!r)throw Error('CLEARING_GRASS_ROOT_MISSING');
    const dry=hash(id,'dry')<.24;const tint=hash(id,`tint${k}`),c=dry?[125+Math.round(tint*24),113+Math.round(tint*21),57+Math.round(tint*15),255]:[61+Math.round(tint*36),84+Math.round(tint*30),35+Math.round(tint*20),255];
-   roots.push({x:r[0],y:r[1],z:r[2],vertexIndex:grass.vertices.length});blade(grass,r,[Math.cos(a)*(.22+.30*hash(id,`lean${k}`)),1,Math.sin(a)*(.22+.30*hash(id,`lean${k}`))],.38+.45*hash(id,`height${k}`),.028+.023*hash(id,`width${k}`),.013,c);
+   roots.push({x:r[0],y:r[1],z:r[2],vertexIndex:grass.vertices.length});blade(grass,r,[Math.cos(a)*(.22+.30*hash(id,`lean${k}`)),1,Math.sin(a)*(.22+.30*hash(id,`lean${k}`))],.38+.45*hash(id,`height${k}`),.060+.040*hash(id,`width${k}`),.013,c);
   }
-  manifest.push({id,kind:'GRASS',x,y:ground(x,z).y,z,grassVertexStart:start,grassVertexCount:grass.vertices.length-start,bladeCount:8,rootPoints:roots,crownRadius:.65,footprintClear:true,recipe:'CLEARING_DENSE_PATCHED_FOLDED_GRASS_v2',habitatPatch:'WOODLAND_CLEARING_2629'});addedGrass.push(id);
+  manifest.push({id,kind:'GRASS',x,y:ground(x,z).y,z,grassVertexStart:start,grassVertexCount:grass.vertices.length-start,bladeCount:8,rootPoints:roots,crownRadius:.65,footprintClear:true,recipe:'CLEARING_BROAD_PATCHED_FOLDED_GRASS_2631_v1',habitatPatch:'WOODLAND_CLEARING_2629'});addedGrass.push(id);
  }
  // Small rock clusters and low broad-leaf plants leave the existing walking
  // capsule open. Their roots are sampled from the same accepted NEAR surface.
@@ -90,4 +90,17 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
   manifest.push({id,kind:'GRASS',x,y:g.y,z,grassVertexStart:start,grassVertexCount:4,bladeCount:1,rootPoints:contacts,crownRadius:.32,footprintClear:true,recipe:'CLEARING_FALLEN_LEAF',habitatPatch:'WOODLAND_CLEARING_2629'});addedLitter.push(id);
  }
  return {bounds:B,treeIds:H_EARTH_WOODLAND_CLEARING_TREE_IDS,removedGrass,addedGrass,addedRocks,addedShrubs,addedLitter,textureAssets:H_EARTH_WOODLAND_CLEARING_ASSETS.map(({id,width,height})=>({id,width,height})),canonicalTerrainModified:false,ecologicalPlanningModified:false};
+}
+
+/** Native, deterministic fine-leaf cluster atlas. Rasterized at the existing
+ * 256x256 allocation; transparent gaps carry detail without extra geometry.
+ * SVG is generated from shape data so the source and bitmap are reproducible. */
+export function createHEarthClearingLeafClusterAtlasSVG(){
+ const leaves=[];
+ for(let j=0;j<3;j++)for(const sign of [-1,1]){
+  const x=64+j*48,cy=128+sign*(25+(j%2)*7),angle=sign*(40+j*7),length=48-j*3;
+  leaves.push(`<g transform="translate(${x} ${cy}) rotate(${angle})"><path d="M ${-length/2} 0 Q -8 -19 ${length/2} 0 Q -8 19 ${-length/2} 0" fill="url(#leaf${j})"/><path d="M ${-length/2} 0 L ${length/2} 0 M -8 0 L -2 -7 M 4 0 L 10 -6 M -8 0 L -2 7 M 4 0 L 10 6" stroke="#4e7738" stroke-width=".8" opacity=".65"/></g>`);
+ }
+ leaves.push('<path d="M 192 128 Q 215 105 244 128 Q 215 151 192 128" fill="url(#leaf0)"/>');
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256"><defs>${[0,1,2].map(j=>`<linearGradient id="leaf${j}" x2=".7" y2="1"><stop stop-color="${['#83ad4e','#769c49','#92b759'][j]}"/><stop offset=".48" stop-color="#668d3e"/><stop offset="1" stop-color="#41682e"/></linearGradient>`).join('')}</defs><g><path d="M 7 128 Q 130 123 244 128 M 42 128 L 70 103 M 43 128 L 70 153 M 95 126 L 115 95 M 95 126 L 115 161 M 145 127 L 166 101 M 145 127 L 166 155" fill="none" stroke="#5b7139" stroke-width="2"/>${leaves.join('')}</g></svg>`;
 }

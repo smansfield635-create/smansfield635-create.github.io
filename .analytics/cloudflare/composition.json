@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-09T19:30:09Z",
+  "generatedAt": "2026-10-09T20:33:18Z",
   "window": {
-    "start": "2026-09-09T19:30:09Z",
-    "end": "2026-10-09T19:30:09Z"
+    "start": "2026-09-09T20:33:18Z",
+    "end": "2026-10-09T20:33:18Z"
   },
   "dimensions": {
     "requestPath": [
@@ -278,17 +278,17 @@
         "visits": 4
       },
       {
+        "value": "/explore/frontier/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
         "value": "/five-flags/",
         "pageLoads": 2,
         "visits": 2
       },
       {
         "value": "/products/ssg/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/explore/frontier/",
         "pageLoads": 2,
         "visits": 2
       },

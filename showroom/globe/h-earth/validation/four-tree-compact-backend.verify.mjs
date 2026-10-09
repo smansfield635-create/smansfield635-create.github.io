@@ -44,7 +44,7 @@ check('DRAW_VIEW_ALLOCATION_AND_CLEANUP',()=>{
  let next=0;const deleted=[];const uploads=[];
  const gl={ELEMENT_ARRAY_BUFFER:34963,STATIC_DRAW:35044,UNSIGNED_SHORT:5123,UNSIGNED_INT:5125,
  createVertexArray(){return {id:++next};},createBuffer(){return {id:++next};},bindVertexArray(){},bindBuffer(){},
- bufferData(target,data){uploads.push([target,data.byteLength]);},deleteBuffer(x){deleted.push(['buffer',x.id]);},deleteVertexArray(x){deleted.push(['vao',x.id]);}};
+ bufferData(target,data){uploads.push([target,data.byteLength]);},enableVertexAttribArray(){},vertexAttribIPointer(){},vertexAttribDivisor(){},deleteBuffer(x){deleted.push(['buffer',x.id]);},deleteVertexArray(x){deleted.push(['vao',x.id]);}};
  const compactBuffer={id:100},sidecarBuffer={id:101},attributes=[],divisors=[];
  gl.ARRAY_BUFFER=34962;gl.UNSIGNED_INT=5125;
  gl.enableVertexAttribArray=location=>attributes.push(['enable',location]);

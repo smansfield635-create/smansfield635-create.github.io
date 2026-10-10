@@ -1,0 +1,42 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "operations-chamber",
+  "description": "Diamond Gate Bridge public, read-only on-demand Operations Chamber integrated with Estate Laboratory; no private ledger visibility or privilege.",
+  "checks": [
+    {
+      "path": "/instruments/operations-chamber/",
+      "includes": [
+        "DGB_OPERATIONS_CHAMBER_PUBLIC_ONDEMAND_GEN2640_v1",
+        "data-page=\"dgb-operations-chamber\"",
+        "data-production-mutation-authorized=\"false\"",
+        "data-live-private-ledger-access=\"false\"",
+        "Run public checks",
+        "Estate Laboratory",
+        "privateLedgerObserved:false"
+      ],
+      "excludes": [
+        "data-production-mutation-authorized=\"true\"",
+        "data-live-private-ledger-access=\"true\"",
+        "api.github.com/repos/smansfield635-create/geodiametrics1"
+      ]
+    },
+    {
+      "path": "/instruments/",
+      "includes": [
+        "Estate Laboratory",
+        "/instruments/operations-chamber/",
+        "Operations Chamber"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/instruments/operations-chamber/",
+    "timeoutMs": 15000,
+    "readySelector": "[data-run]",
+    "binding": {"mode": "direct-document", "path": "/instruments/operations-chamber/"},
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true
+  }
+}

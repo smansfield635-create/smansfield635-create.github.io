@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 const source = resolve('showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js');
-const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers, validateFourTreeCompactDrawBudget, createFourTreeCompactDrawView, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms, createFourTreeCompactPrograms } = await import(pathToFileURL(source).href);
+const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers, validateFourTreeCompactDrawBudget, createFourTreeCompactDrawView, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms, createFourTreeCompactPrograms, FOUR_TREE_AUTHENTIC_PACKED_SHA256, FOUR_TREE_AUTHENTIC_ROLL16_GLSL, extractFourTreeAuthenticCoastContactSidecar } = await import(pathToFileURL(source).href);
 const checks = [];
 function check(name, fn) {
   try { fn(); checks.push({name, result:'PASS'}); }
@@ -173,6 +173,31 @@ check('COMPACT_PROGRAM_LINK_FAILURE_ROLLBACK',()=>{
  assert.throws(()=>createFourTreeCompactPrograms(gl),/PROGRAM_LINK/);
  assert.equal(deleted,6);
 });
+// Source-backed extraction contract tests. These are controlled fixtures;
+// the actual H-Earth upload/contact arrays must be compared separately.
+check('AUTHENTIC_ROLL16_DECODE_CONTRACT_DECLARED',()=>{
+ assert.equal(FOUR_TREE_AUTHENTIC_PACKED_SHA256,'6e5fb2856c16aefbaf77b586edf72e2e20c53cbf199ccf8eb746b214c465744f');
+ for(const token of ['uintBitsToFloat','decodeApprovedOctNormal','reconstructApprovedRoll16Corner','65536.0','65535.0','127.0','uTreeOrigin'])
+  assert.ok(FOUR_TREE_AUTHENTIC_ROLL16_GLSL.includes(token),'AUTHENTIC_SHADER_COMPONENT_MISSING:'+token);
+});
+check('AUTHENTIC_SOURCE_ARRAY_SIDECAR_STRUCTURE_AND_FAILURE_CUSTODY',()=>{
+ const coast=new Float32Array(34000),contact=new Float32Array(34000).fill(64);
+ const canopySpan={primitiveId:'H_EARTH_LANDSCAPE_P2_CANOPY',role:'TREE',vertexStart:100,vertexCount:31000};
+ const capture=()=>extractFourTreeAuthenticCoastContactSidecar({canopySpan,coastDistances:coast,contactDistances:contact});
+ const bytes=capture();assert.equal(bytes.byteLength,229376);
+ for(let pos=0;pos<bytes.byteLength;pos+=32){
+   for(let i=0;i<16;i++)assert.equal(bytes[pos+i],0);
+   const view=new DataView(bytes.buffer,pos,32);
+   for(let c=0;c<4;c++)assert.equal(view.getFloat32(16+c*4,true),64);
+ }
+ coast[canopySpan.vertexStart+546]=1;
+ assert.throws(capture,/FOUR_TREE_CONTACT_ACTUAL_SOURCE_VALUE_DRIFT/);
+ coast[canopySpan.vertexStart+546]=0;
+ contact[canopySpan.vertexStart+8104]=Number.NaN;
+ assert.throws(capture,/FOUR_TREE_SOURCE_CONTACT_NONFINITE/);
+ contact[canopySpan.vertexStart+8104]=64;
+ assert.throws(()=>extractFourTreeAuthenticCoastContactSidecar({canopySpan:{...canopySpan,primitiveId:'INVALID'},coastDistances:coast,contactDistances:contact}),/CANOPY_SPAN_INVALID/);
+});
 // Fail closed if any approved four-tree appearance source changes under compact adoption.
 // Exact Git blob identities independently verified in owner-approved 9cff8bbd
 // and current gen2633 source. This is custody, not integrated visual acceptance.
@@ -187,7 +212,7 @@ check('APPROVED_FOUR_TREE_APPEARANCE_SOURCE_CUSTODY',()=>{
     assert.equal(actual,expected,'APPROVED_APPEARANCE_BLOB_DRIFT:'+file);
   }
 });
-const outstanding=['INTEGRATED_COLOR_PASS','INTEGRATED_STATIC_SHADOW_PASS','FOUR_FIXED_CAMERA_COMPARISONS','ACTUAL_GPU_ALLOCATION','HISTORICAL_AND_PAIRED_TIMING','EXPERIENCE_ANCHOR','PHONE_TABLET_OWNER_ACCEPTANCE'];
+const outstanding=['ACTUAL_SOURCE_ARRAY_SIDECAR_PARITY','ACTUAL_APPROVED_PACKED_GPU_DECODER','INTEGRATED_COLOR_PASS','INTEGRATED_STATIC_SHADOW_PASS','FOUR_FIXED_CAMERA_COMPARISONS','ACTUAL_GPU_ALLOCATION','HISTORICAL_AND_PAIRED_TIMING','EXPERIENCE_ANCHOR','PHONE_TABLET_OWNER_ACCEPTANCE'];
 const receipt={schema:'H_EARTH_FOUR_TREE_COMPACT_BACKEND_VERIFICATION_v1',result:'INCOMPLETE_NOT_QUALIFIED',checks,outstanding,qualificationEstablished:false};
 const index=process.argv.indexOf('--output');
 if(index!==-1&&process.argv[index+1])writeFileSync(process.argv[index+1],JSON.stringify(receipt,null,2)+'\n');

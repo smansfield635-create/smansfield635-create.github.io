@@ -143,7 +143,7 @@ out vec4 compactColor;
 void main() { compactColor = vec4(0.33, 0.40, 0.21, 1.0); }`;
 export const FOUR_TREE_COMPACT_SHADOW_FRAGMENT_GLSL = `#version 300 es
 precision highp float;
-void main() {}
+void main() { gl_FragDepth = gl_FragCoord.z; }
 `;
 
 /**

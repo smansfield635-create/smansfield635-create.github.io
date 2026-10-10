@@ -1595,6 +1595,15 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       values.length !== length || Array.from(values).some(value => !Number.isFinite(value)))) {
       throw new RangeError('FOUR_TREE_COMPACT_RECONSTRUCTION_DESCRIPTOR_INVALID');
     }
+    // A correctly sized buffer alone does not establish the approved leaf
+    // population. Require immutable source identity before allocating GPU data.
+    if (payload.approvedSource !== FOUR_TREE_COMPACT_CONTRACT.approvedSource ||
+        payload.leafCount !== FOUR_TREE_COMPACT_CONTRACT.leafCount ||
+        !Array.isArray(payload.targets) ||
+        payload.targets.length !== FOUR_TREE_COMPACT_CONTRACT.targets.length ||
+        payload.targets.some((id, index) => id !== FOUR_TREE_COMPACT_CONTRACT.targets[index])) {
+      throw new Error('FOUR_TREE_COMPACT_APPROVED_SOURCE_IDENTITY_MISMATCH');
+    }
     const programs=createFourTreeCompactPrograms(gl);
     try {
       const accounting=installFourTreeCompactPayload({

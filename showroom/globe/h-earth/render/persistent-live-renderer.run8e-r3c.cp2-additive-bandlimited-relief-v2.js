@@ -1,4 +1,4 @@
-import { createFourTreeCompactGpuBuffers, createFourTreeCompactResidency } from './compact-four-tree-foliage.v1.js';
+import { FOUR_TREE_COMPACT_CONTRACT, createFourTreeCompactGpuBuffers, createFourTreeCompactResidency } from './compact-four-tree-foliage.v1.js';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
@@ -1601,7 +1601,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     }
     // The renderer controls pass selection. Staging alone does not authorize
     // drawing over the approved existing vegetation.
-    return residency.draw(instanceCount === undefined ? 7168 : instanceCount, pass);
+    return residency.draw(instanceCount === undefined ? FOUR_TREE_COMPACT_CONTRACT.leafCount : instanceCount, pass);
   }
   function releaseFourTreeCompactPayload() {
     if (!resources.fourTreeCompact) return false;

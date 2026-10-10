@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 const source = resolve('showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js');
-const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers, validateFourTreeCompactDrawBudget, createFourTreeCompactDrawView, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms } = await import(pathToFileURL(source).href);
+const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers, validateFourTreeCompactDrawBudget, createFourTreeCompactDrawView, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms, createFourTreeCompactPrograms } = await import(pathToFileURL(source).href);
 const checks = [];
 function check(name, fn) {
   try { fn(); checks.push({name, result:'PASS'}); }
@@ -145,6 +145,32 @@ check('EXACT_RECONSTRUCTION_UNIFORM_BINDING',()=>{
  assert.deepEqual(calls[3][0],'uCompactLeafExtentScale');
  assert.throws(()=>bindFourTreeCompactReconstructionUniforms(gl,program,{...descriptor,origin:[NaN,2,3]}),/UNIFORM_VECTOR_INVALID/);
  assert.throws(()=>bindFourTreeCompactReconstructionUniforms(gl,program,{...descriptor,positionScale:[1,2]}),/UNIFORM_VECTOR_INVALID/);
+});
+check('COMPACT_PROGRAM_COMPILATION_AND_DISPOSAL',()=>{
+ const shaders=[],programs=[],deleted=[];
+ const gl={VERTEX_SHADER:35633,FRAGMENT_SHADER:35632,COMPILE_STATUS:35713,LINK_STATUS:35714,
+ createShader:t=>{const s={type:t};shaders.push(s);return s;},
+ shaderSource:(s,src)=>{s.source=src;},compileShader(){},getShaderParameter:()=>true,
+ createProgram:()=>{const p={};programs.push(p);return p;},attachShader(){},linkProgram(){},
+ getProgramParameter:()=>true,deleteShader:s=>deleted.push(s),deleteProgram:p=>deleted.push(p)};
+ const pair=createFourTreeCompactPrograms(gl);
+ assert.equal(pair.programCount,2);
+ assert.equal(shaders.length,4);
+ assert.equal(programs.length,2);
+ assert.ok(shaders[0].source.includes('reconstructCompactCorner'));
+ assert.ok(shaders[2].source.includes('uCompactLightMatrix'));
+ pair.dispose();pair.dispose();
+ assert.equal(deleted.length,6);
+});
+check('COMPACT_PROGRAM_LINK_FAILURE_ROLLBACK',()=>{
+ let programs=0,deleted=0;
+ const gl={VERTEX_SHADER:35633,FRAGMENT_SHADER:35632,COMPILE_STATUS:35713,LINK_STATUS:35714,
+ createShader:()=>({}),shaderSource(){},compileShader(){},getShaderParameter:()=>true,
+ createProgram:()=>{programs++;return {};},attachShader(){},linkProgram(){},
+ getProgramParameter:()=>programs===1, getProgramInfoLog:()=> 'SIMULATED_LINK_FAILURE',
+ deleteShader(){deleted++;},deleteProgram(){deleted++;}};
+ assert.throws(()=>createFourTreeCompactPrograms(gl),/PROGRAM_LINK/);
+ assert.equal(deleted,6);
 });
 const outstanding=['INTEGRATED_COLOR_PASS','INTEGRATED_STATIC_SHADOW_PASS','FOUR_FIXED_CAMERA_COMPARISONS','ACTUAL_GPU_ALLOCATION','HISTORICAL_AND_PAIRED_TIMING','EXPERIENCE_ANCHOR','PHONE_TABLET_OWNER_ACCEPTANCE'];
 const receipt={schema:'H_EARTH_FOUR_TREE_COMPACT_BACKEND_VERIFICATION_v1',result:'INCOMPLETE_NOT_QUALIFIED',checks,outstanding,qualificationEstablished:false};

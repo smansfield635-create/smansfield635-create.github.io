@@ -1490,6 +1490,12 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(resources.refinement?.created){gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);for(const resident of resources.vegetation.residentBatches){gl.bindVertexArray(resident.vao);gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);counters.vegetationDrawCallCount++;counters.totalDrawnIndexCount+=resident.indexCount;}gl.bindVertexArray(resources.vertexArray);
     drawGlobalCover(packet);
+    // Draw only explicitly installed, qualified compact color residency.
+    // No replacement of existing woodland geometry is inferred by this hook.
+    if (resources.fourTreeCompact?.colorShadowIntegrationQualified === true) {
+      drawFourTreeCompactPayload(undefined, 'color');
+      gl.bindVertexArray(resources.vertexArray);
+    }
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;

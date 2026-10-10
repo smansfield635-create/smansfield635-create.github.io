@@ -19,7 +19,7 @@ jobs:
           set -euo pipefail
           root="showroom/globe/h-earth"
           mkdir -p "$root/render" "$root/validation"
-          base="https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/6eb49013aa02fef7ac93d88f5ba955e39537bb4c"
+          base="https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/7afcf8ace10884fffc1ba0e561bc48028440656b"
           curl -fLsS --retry 3 --max-time 60 "$base/$root/render/compact-four-tree-foliage.v1.js" -o "$root/render/compact-four-tree-foliage.v1.js"
           curl -fLsS --retry 3 --max-time 60 "$base/$root/validation/four-tree-compact-webgl2-browser.verify.mjs" -o "$root/validation/four-tree-compact-webgl2-browser.verify.mjs"
           test "$(git hash-object "$root/render/compact-four-tree-foliage.v1.js")" = 698a439c11fc7b439a6dc32b4bab142a55186745

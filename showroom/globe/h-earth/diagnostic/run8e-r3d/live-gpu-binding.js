@@ -69,7 +69,7 @@ const selectedRendererPath = rendererCustodyRequested
   ? ADDITIVE_VISUAL_RENDERER_PATH
   : cp2LiveDifferentialRequested
     ? CP2_LIVE_DIFFERENTIAL_RENDERER_PATH
-    : ACCEPTED_BASELINE_RENDERER_PATH;
+    : ADDITIVE_VISUAL_RENDERER_PATH;
 // Start the existing deferred owner while the selected renderer imports. Its
 // original pending promise remains authoritative, including sticky failures.
 const publicRouteRoot = globalThis.document?.getElementById?.('h-earth-3d-route-root');

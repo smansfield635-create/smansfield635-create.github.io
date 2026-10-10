@@ -332,6 +332,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   const normals = [];
   const baseColorsLinear = [];
   const materialParameters = [];
+  const clearingAttributes = [];
   const materialModelCodes = [];
   const surfaceClassCodes = [];
   const primitiveIndices = [];
@@ -383,6 +384,9 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
         issues.push(`R2_NORMAL_NONFINITE:${primitive.primitiveId}:${localVertexIndex}`);
         return;
       }
+      const clearing=sectorMaterial?.clearingAttributes?.[localVertexIndex] ?? [0,0,0];
+      if(!Array.isArray(clearing)||clearing.length!==3||!clearing.every(finite)||![0,1,2,3].includes(clearing[2]))issues.push('CLEARING_ATTRIBUTE_INVALID:'+primitive.primitiveId);
+      clearingAttributes.push(...clearing);
       positions.push(vertex.x, vertex.y, vertex.z);
       normals.push(normal.x, normal.y, normal.z);
       primitiveIndices.push(primitiveIndex);
@@ -498,6 +502,8 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
   hash.numbers(immutableBuffers.primitiveIndices);
   hash.numbers(immutableBuffers.roleCodes);
   hash.numbers(immutableBuffers.indices);
+  const clearingHash=createHashWriter();clearingHash.string('BOUNDED_CLEARING_ATTRIBUTES_v1');clearingHash.numbers(clearingAttributes);
+  const clearingContentDigest=`fnv1a32:${clearingHash.digest()}`;
   const contentDigest = `fnv1a32:${hash.digest()}`;
 
   const packageRecord = freezeRecord({
@@ -532,6 +538,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
     landscapeFloorFootprints,
     landscapeCoverFootprints: freezeArray((neutralPackage.landscapeSector?.manifest??[]).filter(p=>p.kind==='TREE'||p.kind==='ROCK').map(p=>freezeRecord({id:p.id,kind:p.kind,x:p.x,z:p.z,radius:p.kind==='TREE'?(p.trunkRadius??.32+p.height*.018)+.5:p.crownRadius}))),
     landscapeFloorContentDigest,
+    clearingAttributes:freezeArray(clearingAttributes),clearingContentDigest,
     buffers: immutableBuffers,
     environmentDefaults: freezeRecord({
       contractId: atmosphere.contractId,

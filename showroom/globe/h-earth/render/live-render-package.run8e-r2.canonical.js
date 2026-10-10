@@ -84,9 +84,12 @@ function buildCanonicalPackage(raw = getRawPackage()) {
   for (const primitiveId of raw.primitiveIds) hash.string(primitiveId);
   for (const name of HASH_BUFFER_ORDER) hash.numbers(buffers[name]);
 
+  const clearingAttributes=freezeArray((raw.clearingAttributes??[]).map(canonicalNumber));
+  const clearingHash=createHashWriter();clearingHash.string('BOUNDED_CLEARING_ATTRIBUTES_v1');clearingHash.numbers(clearingAttributes);
   const digest = hash.digest();
   const packageRecord = freezeRecord({
     ...raw,
+    clearingAttributes,clearingContentDigest:`fnv1a32:${clearingHash.digest()}`,
     packageIdentity: `H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_${digest.toUpperCase()}`,
     contentDigest: `fnv1a32:${digest}`,
     revision: 2,

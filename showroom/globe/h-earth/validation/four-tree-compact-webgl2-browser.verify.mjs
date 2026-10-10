@@ -28,9 +28,15 @@ try{
  bindFourTreeCompactMatrix(gl,pair.color,'uCompactViewProjection',identity);
  bindFourTreeCompactMatrix(gl,pair.shadow,'uCompactLightMatrix',identity);
  const records=new Uint8Array(172032),sidecar=new Uint8Array(229376);
+ const words=new DataView(records.buffer);
+ for(let i=0;i<7168;i++)words.setUint32(i*24+8,(200<<16)|200,true);
  const residency=createFourTreeCompactResidency(gl,{compactRecords:records,contactSidecar:sidecar,indexData:new Uint16Array([0,1,2,2,1,3]),program:pair.color,shadowProgram:pair.shadow});
  gl.viewport(0,0,64,64);gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
- const color=residency.draw(7168,'color'),shadow=residency.draw(7168,'shadow');
+ const color=residency.draw(7168,'color');
+ const pixel=new Uint8Array(4);
+ gl.readPixels(32,32,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);
+ if(pixel[1]<40)throw Error('WEBGL2_VISIBLE_PIXEL_NOT_DRAWN:'+Array.from(pixel));
+ const shadow=residency.draw(7168,'shadow');
  const error=gl.getError();
  residency.dispose();pair.dispose();
  if(error!==gl.NO_ERROR)throw Error('WEBGL2_DRAW_ERROR:'+error);

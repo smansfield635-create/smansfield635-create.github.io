@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 const source = resolve('showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js');
-const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers, validateFourTreeCompactDrawBudget, createFourTreeCompactDrawView, createFourTreeCompactResidency } = await import(pathToFileURL(source).href);
+const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers, validateFourTreeCompactDrawBudget, createFourTreeCompactDrawView, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms } = await import(pathToFileURL(source).href);
 const checks = [];
 function check(name, fn) {
   try { fn(); checks.push({name, result:'PASS'}); }
@@ -131,6 +131,20 @@ check('DUAL_PASS_PROGRAM_SELECTION_AND_FAIL_CLOSED_SHADOW',()=>{
  const noShadow=createFourTreeCompactDrawView(gl,{compactBuffer:{},contactSidecarBuffer:{},indexData:indices,program:color});
  assert.throws(()=>noShadow.draw(1,'shadow'),/SHADOW_PROGRAM_REQUIRED/);
  noShadow.dispose();
+});
+check('EXACT_RECONSTRUCTION_UNIFORM_BINDING',()=>{
+ const calls=[];
+ const gl={getUniformLocation:(_p,n)=>n,useProgram:p=>calls.push(['program',p]),
+ uniform3fv:(n,v)=>calls.push([n,Array.from(v)]),uniform2fv:(n,v)=>calls.push([n,Array.from(v)])};
+ const program={};
+ const descriptor={origin:[1,2,3],positionScale:[0.001,0.002,0.003],leafExtentScale:[0.004,0.005]};
+ assert.equal(bindFourTreeCompactReconstructionUniforms(gl,program,descriptor).uniformCount,3);
+ assert.equal(calls.length,4);
+ assert.deepEqual(calls[1][0],'uCompactOrigin');
+ assert.deepEqual(calls[2][0],'uCompactPositionScale');
+ assert.deepEqual(calls[3][0],'uCompactLeafExtentScale');
+ assert.throws(()=>bindFourTreeCompactReconstructionUniforms(gl,program,{...descriptor,origin:[NaN,2,3]}),/UNIFORM_VECTOR_INVALID/);
+ assert.throws(()=>bindFourTreeCompactReconstructionUniforms(gl,program,{...descriptor,positionScale:[1,2]}),/UNIFORM_VECTOR_INVALID/);
 });
 const outstanding=['INTEGRATED_COLOR_PASS','INTEGRATED_STATIC_SHADOW_PASS','FOUR_FIXED_CAMERA_COMPARISONS','ACTUAL_GPU_ALLOCATION','HISTORICAL_AND_PAIRED_TIMING','EXPERIENCE_ANCHOR','PHONE_TABLET_OWNER_ACCEPTANCE'];
 const receipt={schema:'H_EARTH_FOUR_TREE_COMPACT_BACKEND_VERIFICATION_v1',result:'INCOMPLETE_NOT_QUALIFIED',checks,outstanding,qualificationEstablished:false};

@@ -1583,6 +1583,18 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       throw new RangeError('FOUR_TREE_COMPACT_APPROVED_PAYLOAD_BYTES_INVALID');
     }
     if (resources.fourTreeCompact) throw new Error('FOUR_TREE_COMPACT_ALREADY_INSTALLED');
+    // Fail before creating GPU resources when the approved reconstruction
+    // descriptor is absent or malformed.
+    const vectors = [
+      [payload.reconstruction.origin, 3],
+      [payload.reconstruction.positionScale, 3],
+      [payload.reconstruction.leafExtentScale, 2]
+    ];
+    if (vectors.some(([values, length]) =>
+      (!Array.isArray(values) && !(values instanceof Float32Array)) ||
+      values.length !== length || Array.from(values).some(value => !Number.isFinite(value)))) {
+      throw new RangeError('FOUR_TREE_COMPACT_RECONSTRUCTION_DESCRIPTOR_INVALID');
+    }
     const programs=createFourTreeCompactPrograms(gl);
     try {
       const accounting=installFourTreeCompactPayload({

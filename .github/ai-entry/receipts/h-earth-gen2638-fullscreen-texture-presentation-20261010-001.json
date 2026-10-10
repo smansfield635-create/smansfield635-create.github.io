@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2638-fullscreen-texture-presentation-20261010-001",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6089,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2638-fullscreen-present-20261010",
+  "requestCommit": "1909269c2e4bb04cf5f4d6009e5b1c9cc84821c6",
+  "requestCommitParent": "966a9c42e2f64eec3982a2f5dbcc0f0ded785516",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "966a9c42e2f64eec3982a2f5dbcc0f0ded785516",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "823d26ffc79331c5b6b7a0d5ddf0760f94d6fe78"
+  },
+  "bridgeRunId": "38094713774",
+  "dispatchedRunId": 38094723905,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38094723905",
+  "dispatchedRunHeadSha": "966a9c42e2f64eec3982a2f5dbcc0f0ded785516",
+  "dispatchedAt": "2026-10-10T23:21:09.181Z",
+  "resolvedAt": "2026-10-10T23:21:13.254Z"
+}

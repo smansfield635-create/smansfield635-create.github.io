@@ -65,11 +65,29 @@
       "excludes": [
         "new URLSearchParams(location.search)"
       ]
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "includes": [
+        "const approvedTrees=manifest.filter(p=>p.kind==='TREE'&&H_EARTH_WOODLAND_CLEARING_TREE_IDS.includes(p.id));",
+        "retainApprovedMesh(bark,'bark');",
+        "retainApprovedMesh(foliage,'canopy');",
+        "manifest.splice(i,1);",
+        "treeCount:approvedTrees.length,grassTuftCount:"
+      ]
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "includes": [
+        "const drawablePrimitives=batch.primitives.filter(primitive=>",
+        "primitive?.metadata?.archetypeId!=='HIGHLAND_CONIFER_SAPLING'",
+        "for(let pi=0;pi<drawablePrimitives.length;pi++)"
+      ]
     }
   ],
   "runtime": {
     "enabled": true,
-    "path": "/showroom/globe/h-earth/",
+    "path": "/showroom/globe/h-earth/?arrival=approved-four-trees",
     "timeoutMs": 120000,
     "readyAttribute": {
       "selector": "#h-earth-functional-landscape-route",
@@ -82,6 +100,28 @@
     },
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
-    "ignoreConsoleErrorIncludes": []
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Four-tree woodland camera is reached",
+        "action": {
+          "type": "click",
+          "selector": "#h-earth-b10-world-heading"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#hud-position",
+            "value": "-139.4"
+          },
+          {
+            "type": "textContains",
+            "selector": "#hud-address",
+            "value": "R05:C04"
+          }
+        ],
+        "timeoutMs": 15000
+      }
+    ]
   }
 }

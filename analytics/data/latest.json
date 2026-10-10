@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-10T18:38:24Z",
+  "generatedAt": "2026-10-10T19:27:50Z",
   "window30d": {
-    "start": "2026-09-10T18:38:24Z",
-    "end": "2026-10-10T18:38:24Z"
+    "start": "2026-09-10T19:27:50Z",
+    "end": "2026-10-10T19:27:50Z"
   },
   "daily": [
     {
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 32
+      "pageLoads": 40
     }
   ],
   "summary": {
-    "pageLoads": 5625,
-    "botPageLoads": 2112,
-    "nonBotPageLoads": 3513
+    "pageLoads": 5633,
+    "botPageLoads": 2114,
+    "nonBotPageLoads": 3519
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3002,
-      "visits": 3002
+      "pageLoads": 3009,
+      "visits": 3009
     },
     {
       "host": "diamondgatebridge.com",
@@ -155,8 +155,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 18,
-      "visits": 18
+      "pageLoads": 19,
+      "visits": 19
     },
     {
       "host": "l.instagram.com",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 434,
-      "visits": 313
+      "pageLoads": 435,
+      "visits": 314
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -206,14 +206,14 @@
       "visits": 111
     },
     {
+      "path": "/showroom/globe/h-earth/",
+      "pageLoads": 292,
+      "visits": 278
+    },
+    {
       "path": "/showroom/globe/audralia/",
       "pageLoads": 286,
       "visits": 226
-    },
-    {
-      "path": "/showroom/globe/h-earth/",
-      "pageLoads": 285,
-      "visits": 271
     }
   ],
   "ownerMeasurement": {

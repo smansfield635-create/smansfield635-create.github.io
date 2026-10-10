@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-10T18:38:24Z",
+  "generatedAt": "2026-10-10T19:27:50Z",
   "window": {
-    "start": "2026-07-12T18:38:24Z",
-    "end": "2026-10-10T18:38:24Z"
+    "start": "2026-07-12T19:27:50Z",
+    "end": "2026-10-10T19:27:50Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -202,6 +202,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -210,7 +214,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -224,10 +228,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {

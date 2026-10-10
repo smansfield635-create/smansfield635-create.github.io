@@ -1,4 +1,4 @@
-import { FOUR_TREE_COMPACT_CONTRACT, createFourTreeCompactGpuBuffers, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms, bindFourTreeCompactMatrix } from './compact-four-tree-foliage.v1.js';
+import { FOUR_TREE_COMPACT_CONTRACT, createFourTreeCompactGpuBuffers, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms, bindFourTreeCompactMatrix, createFourTreeCompactPrograms } from './compact-four-tree-foliage.v1.js';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
@@ -1569,6 +1569,24 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       configureClearingProgram(resources.geometryProgram);
     }
   }
+  function installFourTreeCompactCompiledPayload(payload) {
+    if (!initialized) throw new Error('FOUR_TREE_COMPACT_RENDERER_NOT_INITIALIZED');
+    if (resources.fourTreeCompact) throw new Error('FOUR_TREE_COMPACT_ALREADY_INSTALLED');
+    const programs=createFourTreeCompactPrograms(gl);
+    try {
+      const accounting=installFourTreeCompactPayload({
+        ...payload,
+        indexData:payload?.indexData ?? new Uint16Array([0,1,2,2,1,3]),
+        program:programs.color,
+        shadowProgram:programs.shadow
+      });
+      resources.fourTreeCompactOwnedPrograms=programs;
+      return Object.freeze({...accounting,ownedPrograms:programs.programCount});
+    }catch(error){
+      programs.dispose();
+      throw error;
+    }
+  }
   function installFourTreeCompactPayload(payload) {
     if (!initialized) throw new Error('FOUR_TREE_COMPACT_RENDERER_NOT_INITIALIZED');
     if (resources.fourTreeCompact) throw new Error('FOUR_TREE_COMPACT_ALREADY_INSTALLED');
@@ -1623,6 +1641,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   function releaseFourTreeCompactPayload() {
     if (!resources.fourTreeCompact) return false;
     resources.fourTreeCompact.dispose();
+    resources.fourTreeCompactOwnedPrograms?.dispose();
+    resources.fourTreeCompactOwnedPrograms = null;
     resources.fourTreeCompact = null;
     resources.fourTreeCompactPrograms = null;
     resources.fourTreeCompactPassReady = false;
@@ -1687,7 +1707,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, installFourTreeCompactPayload, drawFourTreeCompactPayload, releaseFourTreeCompactPayload, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, installFourTreeCompactPayload, installFourTreeCompactCompiledPayload, drawFourTreeCompactPayload, releaseFourTreeCompactPayload, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-10T21:30:08Z",
+  "generatedAt": "2026-10-10T22:31:08Z",
   "window": {
-    "start": "2026-07-12T21:30:08Z",
-    "end": "2026-10-10T21:30:08Z"
+    "start": "2026-07-12T22:31:08Z",
+    "end": "2026-10-10T22:31:08Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -30,20 +30,20 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/": {
         "pageLoads": 1039,
         "visits": 727
       },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 30,
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
@@ -206,20 +206,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/categories/structure/interfaces.html": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -228,6 +220,14 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/instruments/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {

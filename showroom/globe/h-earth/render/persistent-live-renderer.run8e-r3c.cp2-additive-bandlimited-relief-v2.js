@@ -261,6 +261,21 @@ void main(){
   gl_Position=uViewProjection*vec4(aPosition,1.0);
 }`;
 
+const PRESENT_COLOR_VS = `#version 300 es
+precision highp float;
+out vec2 vUv;
+void main(){
+  vec2 p=vec2(gl_VertexID==1?3.0:-1.0,gl_VertexID==2?3.0:-1.0);
+  vUv=(p+1.0)*0.5;
+  gl_Position=vec4(p,0.0,1.0);
+}`;
+const PRESENT_COLOR_FS = `#version 300 es
+precision highp float;
+uniform sampler2D uPresentedColor;
+in vec2 vUv;
+out vec4 outColor;
+void main(){outColor=vec4(texture(uPresentedColor,vUv).rgb,1.0);}`;
+
 const GLOBAL_COVER_VS = `#version 300 es
 precision highp float;
 precision highp int;
@@ -1165,6 +1180,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     resources.depthVertexShader = createShader(gl.VERTEX_SHADER, DVS, 'DV');
     resources.depthFragmentShader = createShader(gl.FRAGMENT_SHADER, DFS, 'DF');
     resources.depthProgram = createProgram(resources.depthVertexShader, resources.depthFragmentShader, 'DP');
+    // Preallocate one immutable full-screen texture presentation path before READY.
+    // The tested headless GPU rejects the framebuffer-to-default blit.
+    resources.presentVertexShader=createShader(gl.VERTEX_SHADER,PRESENT_COLOR_VS,'PRESENT_COLOR_VS');
+    resources.presentFragmentShader=createShader(gl.FRAGMENT_SHADER,PRESENT_COLOR_FS,'PRESENT_COLOR_FS');
+    resources.presentProgram=createProgram(resources.presentVertexShader,resources.presentFragmentShader,'PRESENT_COLOR_PROGRAM');
+    markPostInitializationCreation();counters.vertexArrayCreateCount+=1;
+    resources.presentVertexArray=gl.createVertexArray();
+    if(!resources.presentVertexArray)throw new Error('R3C_PRESENT_VAO_CREATE_FAILED');
+    resources.presentColorSampler=gl.getUniformLocation(resources.presentProgram,'uPresentedColor');
+    if(resources.presentColorSampler===null)throw new Error('R3C_PRESENT_SAMPLER_MISSING');
     markPostInitializationCreation(); counters.vertexArrayCreateCount += 1;
     resources.vertexArray = gl.createVertexArray();
     if (!resources.vertexArray) throw new Error('R3C_VERTEX_ARRAY_CREATE_FAILED');
@@ -1509,22 +1534,22 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    // Gen2638 first-error detection: presentation is downstream of the
-    // draw-stage GL check and upstream of deferred global-cover preparation.
-    // Never suppress a GL error or count a failed blit as a presented frame.
-    const presentGlCheck=label=>{
-      const code=gl.getError();
-      if(code!==gl.NO_ERROR)throw new Error('R3C_PRESENT_GL_STAGE_'+label+':'+code);
-    };
-    presentGlCheck('PREEXISTING');
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    presentGlCheck('BIND_FRAMEBUFFERS');
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST);
-    presentGlCheck('BLIT_COLOR');
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    presentGlCheck('RESTORE_DEFAULT');
-    counters.visiblePresentationCount += 1;
+    // Present the existing RGBA8 geometry frame using one texture triangle.
+    // This avoids the invalid default-backbuffer blit without touching meshes.
+    const pre=gl.getError();
+    if(pre!==gl.NO_ERROR)throw new Error('R3C_PRESENT_TEXTURE_STAGE_PREEXISTING:'+pre);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+    gl.viewport(0,0,width,height);
+    gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.disable(gl.BLEND);
+    gl.useProgram(resources.presentProgram);gl.bindVertexArray(resources.presentVertexArray);
+    gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,resources.colorTexture);
+    gl.uniform1i(resources.presentColorSampler,0);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    const error=gl.getError();
+    gl.bindTexture(gl.TEXTURE_2D,null);gl.bindVertexArray(resources.vertexArray);
+    gl.useProgram(resources.geometryProgram);gl.depthMask(true);
+    if(error!==gl.NO_ERROR)throw new Error('R3C_PRESENT_TEXTURE_DRAW_ERROR:'+error);
+    counters.visiblePresentationCount+=1;
     return Object.freeze({frameNumber:counters.frameCount,width,height});
   }
   function captureColorFrame(label, { includePng = true } = {}) {

@@ -1,4 +1,4 @@
-import { createFourTreeCompactGpuBuffers } from './compact-four-tree-foliage.v1.js';
+import { createFourTreeCompactGpuBuffers, createFourTreeCompactResidency } from './compact-four-tree-foliage.v1.js';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
@@ -1522,9 +1522,24 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   function installFourTreeCompactPayload(payload) {
     if (!initialized) throw new Error('FOUR_TREE_COMPACT_RENDERER_NOT_INITIALIZED');
     if (resources.fourTreeCompact) throw new Error('FOUR_TREE_COMPACT_ALREADY_INSTALLED');
-    const allocated = createFourTreeCompactGpuBuffers(gl, payload);
+    // A qualified draw program and quad indices opt into transactional residency.
+    // Without them, preserve the previous buffer-only staging contract.
+    const hasDrawInputs = payload?.program != null || payload?.indexData != null;
+    if (hasDrawInputs && (!payload?.program || !payload?.indexData)) {
+      throw new TypeError('FOUR_TREE_COMPACT_DRAW_INPUT_MISSING');
+    }
+    const allocated = hasDrawInputs
+      ? createFourTreeCompactResidency(gl, payload)
+      : createFourTreeCompactGpuBuffers(gl, payload);
     resources.fourTreeCompact = allocated;
     return allocated.accounting;
+  }
+  function drawFourTreeCompactPayload(instanceCount) {
+    const residency = resources.fourTreeCompact;
+    if (!residency || typeof residency.draw !== 'function') {
+      throw new Error('FOUR_TREE_COMPACT_DRAW_RESIDENCY_NOT_INSTALLED');
+    }
+    return instanceCount === undefined ? residency.draw() : residency.draw(instanceCount);
   }
   function releaseFourTreeCompactPayload() {
     if (!resources.fourTreeCompact) return false;
@@ -1591,7 +1606,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, installFourTreeCompactPayload, releaseFourTreeCompactPayload, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, installFourTreeCompactPayload, drawFourTreeCompactPayload, releaseFourTreeCompactPayload, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

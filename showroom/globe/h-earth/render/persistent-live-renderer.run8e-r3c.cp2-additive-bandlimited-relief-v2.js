@@ -1582,13 +1582,18 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       ? createFourTreeCompactResidency(gl, payload)
       : createFourTreeCompactGpuBuffers(gl, payload);
     resources.fourTreeCompact = allocated;
-    resources.fourTreeCompactPassReady = hasDrawInputs;
+    // Commit visibility only after both the GPU residency and the complete
+    // clearing depth-map refresh succeed. A failed shadow refresh must never
+    // leave the color path active with an incomplete shadow map.
+    resources.fourTreeCompactPassReady = false;
     if (hasDrawInputs) {
-      try { refreshFourTreeCompactShadow(); }
-      catch (error) {
+      try {
+        resources.fourTreeCompactPassReady = true;
+        refreshFourTreeCompactShadow();
+      } catch (error) {
+        resources.fourTreeCompactPassReady = false;
         allocated.dispose();
         resources.fourTreeCompact = null;
-        resources.fourTreeCompactPassReady = false;
         throw error;
       }
     }

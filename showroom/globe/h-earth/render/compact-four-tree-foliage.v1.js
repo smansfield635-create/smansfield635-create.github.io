@@ -108,13 +108,13 @@ vec3 reconstructCompactCorner(uvec4 words, uvec2 extra, uint corner) {
 }
 `;
 /** Transactional GPU residency for the approved four-tree compact payload. */
-export function createFourTreeCompactResidency(gl, {compactRecords, contactSidecar, indexData, program}) {
+export function createFourTreeCompactResidency(gl, {compactRecords, contactSidecar, indexData, program, shadowProgram = null}) {
   const buffers = createFourTreeCompactGpuBuffers(gl, {compactRecords, contactSidecar});
   let drawView;
   try {
     drawView = createFourTreeCompactDrawView(gl, {
       compactBuffer: buffers.compactBuffer,
-      contactSidecarBuffer: buffers.contactSidecarBuffer, indexData, program
+      contactSidecarBuffer: buffers.contactSidecarBuffer, indexData, program, shadowProgram
     });
   } catch (error) {
     buffers.dispose();
@@ -129,9 +129,9 @@ export function createFourTreeCompactResidency(gl, {compactRecords, contactSidec
       bufferCount: 3,
       vertexArrayCount: 1
     }),
-    draw(count = FOUR_TREE_COMPACT_CONTRACT.leafCount) {
+    draw(count = FOUR_TREE_COMPACT_CONTRACT.leafCount, pass = 'color') {
       if (disposed) throw new Error('FOUR_TREE_COMPACT_RESIDENCY_DISPOSED');
-      return drawView.draw(count);
+      return drawView.draw(count, pass);
     },
     dispose() {
       if (disposed) return;
@@ -163,7 +163,7 @@ export function validateFourTreeCompactDrawBudget(actual) {
  * The caller must supply qualified per-leaf vertex indices and an exact
  * reconstruction shader program. No guessed shader is automatically selected.
  */
-export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecarBuffer, indexData, program}) {
+export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecarBuffer, indexData, program, shadowProgram = null}) {
   if (!(indexData instanceof Uint16Array || indexData instanceof Uint32Array)) {
     throw new TypeError('FOUR_TREE_COMPACT_INDEX_TYPE_REQUIRED');
   }
@@ -216,11 +216,13 @@ export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecar
       allocatedIndexBytes:indexData.byteLength,
       // The six indices address the four corners of a single leaf.
       // Each instance advances the 24-byte packed record exactly once.
-      draw(instanceCount=FOUR_TREE_COMPACT_CONTRACT.leafCount) {
+      draw(instanceCount=FOUR_TREE_COMPACT_CONTRACT.leafCount, pass='color') {
         if(disposed)throw new Error('FOUR_TREE_COMPACT_VIEW_DISPOSED');
+        if(pass!=='color'&&pass!=='shadow')throw new RangeError('FOUR_TREE_COMPACT_DRAW_PASS_INVALID');
+        if(pass==='shadow'&&!shadowProgram)throw new Error('FOUR_TREE_COMPACT_SHADOW_PROGRAM_REQUIRED');
         if(!Number.isSafeInteger(instanceCount)||instanceCount<0||instanceCount>FOUR_TREE_COMPACT_CONTRACT.leafCount)
           throw new RangeError('FOUR_TREE_COMPACT_INSTANCE_COUNT');
-        gl.useProgram(program);
+        gl.useProgram(pass==='shadow'?shadowProgram:program);
         gl.bindVertexArray(vao);
         try { gl.drawElementsInstanced(gl.TRIANGLES,indexData.length,
           indexData instanceof Uint32Array?gl.UNSIGNED_INT:gl.UNSIGNED_SHORT,0,instanceCount); }

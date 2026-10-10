@@ -19,13 +19,13 @@ jobs:
           set -euo pipefail
           root="showroom/globe/h-earth"
           mkdir -p "$root/render" "$root/validation"
-          base="https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/925b0cf5dab136c4b665fdd44a7da0eb0c970dfe"
+          base="https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/6c83227da2f1e82509919de0c570cd29861d1dd6"
           curl -fLsS --retry 3 --max-time 60 "$base/$root/render/compact-four-tree-foliage.v1.js" -o "$root/render/compact-four-tree-foliage.v1.js"
           curl -fLsS --retry 3 --max-time 60 "$base/$root/validation/four-tree-compact-webgl2-browser.verify.mjs" -o "$root/validation/four-tree-compact-webgl2-browser.verify.mjs"
-          test "$(git hash-object "$root/render/compact-four-tree-foliage.v1.js")" = cc4def22c59795a5327bd475b8ad8db6771e918c
+          test "$(git hash-object "$root/render/compact-four-tree-foliage.v1.js")" = ec71973e3b20788f7ba9bdf057731fa1ccf1ae55
           actual="$(git hash-object "$root/validation/four-tree-compact-webgl2-browser.verify.mjs")"
           echo "WEBGL2_SOURCE_BLOB_ACTUAL:$actual"
-          test "$actual" = 4a8a4c84374da73e846538dfaf8965eb329b3f85
+          test "$actual" = 576e19b04924bc92890cbaee70144e3d10df6a8c
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

@@ -48,12 +48,25 @@ try{
  const readError=gl.getError();
  if(readError!==gl.NO_ERROR)throw Error('WEBGL2_READBACK_ERROR:'+readError);
  if(pixel[1]<40)throw Error('WEBGL2_VISIBLE_PIXEL_NOT_DRAWN:'+Array.from(pixel));
+ // Match the production static-shadow pass: depth-only framebuffer.
+ const depth=gl.createTexture();
+ gl.bindTexture(gl.TEXTURE_2D,depth);
+ gl.texStorage2D(gl.TEXTURE_2D,1,gl.DEPTH_COMPONENT24,64,64);
+ const shadowFbo=gl.createFramebuffer();
+ gl.bindFramebuffer(gl.FRAMEBUFFER,shadowFbo);
+ gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.TEXTURE_2D,depth,0);
+ gl.drawBuffers([gl.NONE]);
+ gl.readBuffer(gl.NONE);
+ if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)throw Error('WEBGL2_SHADOW_FRAMEBUFFER_INCOMPLETE');
+ gl.viewport(0,0,64,64);gl.clearDepth(1);gl.clear(gl.DEPTH_BUFFER_BIT);
  gl.useProgram(pair.shadow);
  const shadowBindError=gl.getError();
  if(shadowBindError!==gl.NO_ERROR)throw Error('WEBGL2_SHADOW_PROGRAM_BIND_ERROR:'+shadowBindError);
  const shadow=residency.draw(7168,'shadow');
  const error=gl.getError();
  if(error!==gl.NO_ERROR)throw Error('WEBGL2_SHADOW_DRAW_ERROR:'+error);
+ gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+ gl.deleteFramebuffer(shadowFbo);gl.deleteTexture(depth);
  residency.dispose();pair.dispose();
  out.textContent=JSON.stringify({status:'PASS',renderer:gl.getParameter(gl.RENDERER),instances:color.instances,shadowInstances:shadow.instances,triangles:color.submittedTriangles});
 }catch(e){out.textContent=JSON.stringify({status:'FAIL',error:String(e)});}

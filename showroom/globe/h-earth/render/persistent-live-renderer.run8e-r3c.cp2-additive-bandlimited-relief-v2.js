@@ -1528,6 +1528,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (hasDrawInputs && (!payload?.program || !payload?.indexData)) {
       throw new TypeError('FOUR_TREE_COMPACT_DRAW_INPUT_MISSING');
     }
+    // Never accept a caller-supplied program as evidence that both passes are
+    // integrated. Keep the staged representation separate from world drawing.
     const allocated = hasDrawInputs
       ? createFourTreeCompactResidency(gl, payload)
       : createFourTreeCompactGpuBuffers(gl, payload);

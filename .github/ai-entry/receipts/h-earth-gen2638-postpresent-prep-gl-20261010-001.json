@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2638-postpresent-prep-gl-20261010-001",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6092,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2638-postpresent-prep-gl-20261010",
+  "requestCommit": "29fd338b631815bd6d6ee8be6343ed1b2727cf3f",
+  "requestCommitParent": "966a9c42e2f64eec3982a2f5dbcc0f0ded785516",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "966a9c42e2f64eec3982a2f5dbcc0f0ded785516",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "eaa31e868e5a5ef641bbcaa4476c3257873004f1"
+  },
+  "bridgeRunId": "38095231724",
+  "dispatchedRunId": 38095244695,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38095244695",
+  "dispatchedRunHeadSha": "966a9c42e2f64eec3982a2f5dbcc0f0ded785516",
+  "dispatchedAt": "2026-10-10T23:30:10.112Z",
+  "resolvedAt": "2026-10-10T23:30:14.013Z"
+}

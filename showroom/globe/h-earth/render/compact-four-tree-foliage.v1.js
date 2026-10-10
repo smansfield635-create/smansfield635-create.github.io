@@ -108,6 +108,33 @@ vec3 reconstructCompactCorner(uvec4 words, uvec2 extra, uint corner) {
 }
 `;
 /**
+ * Complete WebGL2 shader pair for the existing packed reconstruction contract.
+ * The caller supplies approved transforms; no new leaf geometry is generated.
+ */
+export const FOUR_TREE_COMPACT_COLOR_VERTEX_GLSL = `#version 300 es
+${FOUR_TREE_COMPACT_VERTEX_GLSL}
+uniform mat4 uCompactViewProjection;
+void main() {
+  vec3 position = reconstructCompactCorner(aCompactWords0, aCompactWords1, uint(gl_VertexID));
+  gl_Position = uCompactViewProjection * vec4(position, 1.0);
+}`;
+export const FOUR_TREE_COMPACT_SHADOW_VERTEX_GLSL = `#version 300 es
+${FOUR_TREE_COMPACT_VERTEX_GLSL}
+uniform mat4 uCompactLightMatrix;
+void main() {
+  vec3 position = reconstructCompactCorner(aCompactWords0, aCompactWords1, uint(gl_VertexID));
+  gl_Position = uCompactLightMatrix * vec4(position, 1.0);
+}`;
+export const FOUR_TREE_COMPACT_COLOR_FRAGMENT_GLSL = `#version 300 es
+precision highp float;
+out vec4 compactColor;
+void main() { compactColor = vec4(0.33, 0.40, 0.21, 1.0); }`;
+export const FOUR_TREE_COMPACT_SHADOW_FRAGMENT_GLSL = `#version 300 es
+precision highp float;
+void main() {}
+`;
+
+/**
  * Binds the exact quantization descriptors to an existing compact shader.
  * This deliberately rejects guessed defaults: all scales and the source
  * origin must be supplied from the approved packing receipt.

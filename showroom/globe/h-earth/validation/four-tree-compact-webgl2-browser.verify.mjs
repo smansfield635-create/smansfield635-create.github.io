@@ -46,6 +46,7 @@ try{
  const pixel=new Uint8Array(4);
  gl.readPixels(32,32,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);
  if(pixel[1]<40)throw Error('WEBGL2_VISIBLE_PIXEL_NOT_DRAWN:'+Array.from(pixel));
+ gl.useProgram(pair.shadow);
  const shadow=residency.draw(7168,'shadow');
  const error=gl.getError();
  if(error!==gl.NO_ERROR)throw Error('WEBGL2_SHADOW_DRAW_ERROR:'+error);

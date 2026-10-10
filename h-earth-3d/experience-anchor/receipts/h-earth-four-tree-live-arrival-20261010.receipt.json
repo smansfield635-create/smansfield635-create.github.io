@@ -1,0 +1,60 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_FOUR_TREE_OWNER_VISIBLE_ARRIVAL_REMEDIATION_20261010",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/functional-landscape/navigation.js",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "80459966866b8b95784f99b682fccc3a0f758b9dcbd7f45c908a92f5daf60582"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "6b57b514fbeeea633b6f8c9006b58b34bbd87b6a6420c2f32202cf1262cfb9cf"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/four-tree-clearing-arrival.verify.mjs",
+      "sha256": "7579febcd8320a3d7a76ff010fc238ef334a7a049ffe3aaa6e70f5788e682f83"
+    }
+  ],
+  "exactCandidate": "327deb241ae43b2bbcf355f56d759697420bdca2",
+  "continuityReview": "The default COAST state and original interactive landscape remain unchanged. A query-explicit four-tree arrival reuses an already-reviewed terrain-supported walking position; no parallel world, terrain, canopy, camera authority or alternate renderer is introduced. All changed experience paths are independently SHA256-bound. Existing approved native tree-view capture was reviewed against original anchor contact sheet.",
+  "limits": {
+    "notProvenByThisAnchor": [
+      "ACTUAL_CANDIDATE_WOODLAND_BROWSER_SCREENSHOT",
+      "PHONE_PERFORMANCE_IMPROVEMENT",
+      "USER_PHYSICAL_VISUAL_ACCEPTANCE"
+    ],
+    "neutralExactHeadRun": "38078396482:BLOCKED_BEFORE_BROWSER:PRESERVED_BARK_DRIFT",
+    "userObservedPriorLiveVisualFailure": true,
+    "releaseEligible": false,
+    "physicalAcceptance": false
+  }
+}

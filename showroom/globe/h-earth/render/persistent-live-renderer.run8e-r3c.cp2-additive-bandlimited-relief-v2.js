@@ -1509,9 +1509,23 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
   function presentColorFrame() {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
+    // Gen2638 first-error detection: presentation is downstream of the
+    // draw-stage GL check and upstream of deferred global-cover preparation.
+    // Never suppress a GL error or count a failed blit as a presented frame.
+    const presentGlCheck=label=>{
+      const code=gl.getError();
+      if(code!==gl.NO_ERROR)throw new Error('R3C_PRESENT_GL_STAGE_'+label+':'+code);
+    };
+    presentGlCheck('PREEXISTING');
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer);
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+    presentGlCheck('BIND_FRAMEBUFFERS');
+    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST);
+    presentGlCheck('BLIT_COLOR');
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    presentGlCheck('RESTORE_DEFAULT');
+    counters.visiblePresentationCount += 1;
+    return Object.freeze({frameNumber:counters.frameCount,width,height});
   }
   function captureColorFrame(label, { includePng = true } = {}) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');

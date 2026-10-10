@@ -38,6 +38,9 @@ try{
  gl.enable(gl.DEPTH_TEST);
  gl.depthFunc(gl.LEQUAL);
  gl.useProgram(pair.color);
+ // All active integer attributes must be backed by buffers for every instance.
+ const attributes=[10,11,12,13].map(i=>({index:i,enabled:gl.getVertexAttrib(i,gl.VERTEX_ATTRIB_ARRAY_ENABLED),buffer:!!gl.getVertexAttrib(i,gl.VERTEX_ATTRIB_ARRAY_BUFFER_BINDING),divisor:gl.getVertexAttrib(i,gl.VERTEX_ATTRIB_ARRAY_DIVISOR)}));
+ if(attributes.some(a=>!a.enabled||!a.buffer||a.divisor!==1))throw Error('WEBGL2_ATTRIBUTE_RESIDENCY_INVALID:'+JSON.stringify(attributes));
  const color=residency.draw(7168,'color');
  const afterColor=gl.getError();
  if(afterColor!==gl.NO_ERROR)throw Error('WEBGL2_COLOR_DRAW_ERROR:'+afterColor);

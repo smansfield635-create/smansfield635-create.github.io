@@ -360,3 +360,64 @@ export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecar
     throw error;
   }
 }
+
+
+// BEGIN GEN2633 AUTHENTIC ROLL16 RECOVERY
+// Frozen approved source 9cff8bbd6ccca95ccd51da72570f92af4778425a.
+// The legacy test shader above expects synthetic center/yaw/extents records;
+// it is NOT a decoder for the authentic packed24-roll16.bin stream.
+export const FOUR_TREE_AUTHENTIC_PACKED_SHA256 =
+  '6e5fb2856c16aefbaf77b586edf72e2e20c53cbf199ccf8eb746b214c465744f';
+export const FOUR_TREE_APPROVED_CANOPY_VERTEX_RANGES = Object.freeze([
+  Object.freeze({id:'P2_TREE_A_03',start:546,count:7168}),
+  Object.freeze({id:'P2_TREE_A_06',start:8104,count:7168}),
+  Object.freeze({id:'P2_TREE_A_08',start:15454,count:7168}),
+  Object.freeze({id:'P2_TREE_A_11',start:22960,count:7168})
+]);
+// Authentically recorded 24B layout and oct16/roll16 decoder. This is an
+// isolated GPU candidate, not an assertion of GPU or live-scene qualification.
+export const FOUR_TREE_AUTHENTIC_ROLL16_GLSL = "layout(location=10) in uvec4 aPacked0;\nlayout(location=11) in uvec2 aPacked1;\nuniform vec3 uTreeOrigin;\nvec3 decodeApprovedOctNormal(uvec4 packed) {\n  int sx=int((packed.w & 65535u)<<16u)>>16;\n  int sy=int(packed.w)>>16;\n  vec2 oct=vec2(sx,sy)/32767.0;\n  vec3 n=vec3(oct,1.0-abs(oct.x)-abs(oct.y));\n  if(n.z<0.0) n.xy=(1.0-abs(n.yx))*vec2(n.x>=0.0?1.0:-1.0,n.y>=0.0?1.0:-1.0);\n  return normalize(n);\n}\nvec3 reconstructApprovedRoll16Corner(uint corner) {\n  vec3 root=vec3(uintBitsToFloat(aPacked0.x),uintBitsToFloat(aPacked0.y),uintBitsToFloat(aPacked0.z))+uTreeOrigin;\n  vec3 n=decodeApprovedOctNormal(aPacked0);\n  vec3 refAxis=abs(n.y)<0.9?vec3(0.0,1.0,0.0):vec3(1.0,0.0,0.0);\n  vec3 u=normalize(cross(n,refAxis)),w=cross(n,u);\n  float theta=float(aPacked1.y&65535u)*(6.283185307179586/65536.0);\n  vec3 d=u*cos(theta)+w*sin(theta),s=cross(d,n);\n  float width=float(aPacked1.x&65535u)/65535.0*0.4;\n  float length=float(aPacked1.x>>16u)/65535.0;\n  float fold=float(int(aPacked1.y)>>24)/127.0*0.04;\n  if(corner==0u)return root;\n  if(corner==1u)return root+d*length;\n  if(corner==2u)return root+d*(length*0.47)+s*width+n*fold;\n  return root+d*(length*0.47)-s*width+n*fold;\n}";
+
+// Capture exact original Float32 coast/contact arrays after initialization.
+// No guessed constants are written: authentic source data is read and tested.
+// This function does not install compact rendering or modify source arrays.
+export function extractFourTreeAuthenticCoastContactSidecar({canopySpan,coastDistances,contactDistances}) {
+  if(canopySpan?.primitiveId!=='H_EARTH_LANDSCAPE_P2_CANOPY'||
+     canopySpan.role==='TERRAIN'||!Number.isSafeInteger(canopySpan.vertexStart)||
+     !Number.isSafeInteger(canopySpan.vertexCount)||canopySpan.vertexStart<0)
+    throw new Error('FOUR_TREE_APPROVED_CANOPY_SPAN_INVALID');
+  if(!(coastDistances instanceof Float32Array)||
+     !(contactDistances instanceof Float32Array)||
+     coastDistances.length!==contactDistances.length||
+     canopySpan.vertexStart+canopySpan.vertexCount>coastDistances.length)
+    throw new Error('FOUR_TREE_CONTACT_SOURCE_ARRAYS_INVALID');
+  const ranges=FOUR_TREE_APPROVED_CANOPY_VERTEX_RANGES;
+  for(let i=0;i<ranges.length;i++){
+    const x=ranges[i],last=x.start+x.count;
+    if(x.id!==FOUR_TREE_COMPACT_TARGETS[i]||x.count!==1792*4||
+       last>canopySpan.vertexCount||(i>0&&x.start<ranges[i-1].start+ranges[i-1].count))
+      throw new Error('FOUR_TREE_SOURCE_TO_COMPACT_MAPPING_INVALID');
+  }
+  const out=new ArrayBuffer(FOUR_TREE_COMPACT_CONTRACT.sidecarBufferBytes);
+  const view=new DataView(out);
+  let position=0;
+  for(const range of ranges)for(let leaf=0;leaf<1792;leaf++){
+    for(let corner=0;corner<4;corner++){
+      const vertex=canopySpan.vertexStart+range.start+leaf*4+corner;
+      const coast=coastDistances[vertex],contact=contactDistances[vertex];
+      if(!Number.isFinite(coast)||!Number.isFinite(contact))
+        throw new Error('FOUR_TREE_SOURCE_CONTACT_NONFINITE');
+      // The approved legacy renderer initializes untouched canopy fields to
+      // 0 and 64 respectively; actual arrays must agree or construction stops.
+      if(coast!==0||contact!==64)
+        throw new Error('FOUR_TREE_CONTACT_ACTUAL_SOURCE_VALUE_DRIFT');
+      view.setFloat32(position+corner*4,coast,true);
+      view.setFloat32(position+16+corner*4,contact,true);
+    }
+    position+=32;
+  }
+  if(position!==FOUR_TREE_COMPACT_CONTRACT.sidecarBufferBytes)
+    throw new Error('FOUR_TREE_CONTACT_SIDECAR_BYTE_COUNT_INVALID');
+  return new Uint8Array(out);
+}
+// END GEN2633 AUTHENTIC ROLL16 RECOVERY

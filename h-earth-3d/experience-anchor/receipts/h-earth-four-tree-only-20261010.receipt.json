@@ -1,0 +1,58 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_FOUR_APPROVED_TREES_ONLY_20261010_001",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/functional-landscape/navigation.js",
+    "showroom/globe/h-earth/validation/four-tree-only.browser.verify.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "8642da7a506092be993d404bf2461e272275c86fc3445b3e898b739308401df2"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "9a086813b4071dfcddea4f54ceba8646e5421a22aaf18515d973592538107cc0"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/four-tree-only.verify.mjs",
+      "sha256": "00a80bea178d764a61d9693f3059ffd211119c4d89a5e9b01858a61a4d0889ac"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/four-tree-only.browser.verify.mjs",
+      "sha256": "e5cdf8ca2f433747b2c2ebf110878347cbd63d48d9805b7acefaf94d120168c3"
+    }
+  ],
+  "continuityReview": "Existing canonical H-Earth world and four owner-approved geometry sources remain intact. The bounded runtime edits prune only legacy tree faces from the previously mixed woodland buffers and exclude deferred conifer GPU uploads. Actual source comparisons preserve the four approved tree geometry and all non-tree landscape geometry. Browser and phone testing remain separate requirements.",
+  "limits": {
+    "browserVisualNotYetQualified": true,
+    "phonePerformanceNotYetQualified": true,
+    "physicalAcceptance": false,
+    "releaseEligible": false
+  }
+}

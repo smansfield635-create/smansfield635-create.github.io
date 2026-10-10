@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2638-no-diagnostic-blit-20261010-001",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6093,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2638-no-diagnostic-blit-20261010",
+  "requestCommit": "33172a9375efc3fc153d10aeae6b4661689dd921",
+  "requestCommitParent": "e832cbf32f61d241c186a9d024f2e58eec119a38",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e832cbf32f61d241c186a9d024f2e58eec119a38",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "51a9bb7f511b2cb86c46e12b30099c068468b8c9"
+  },
+  "bridgeRunId": "38095583091",
+  "dispatchedRunId": 38095592051,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38095592051",
+  "dispatchedRunHeadSha": "e832cbf32f61d241c186a9d024f2e58eec119a38",
+  "dispatchedAt": "2026-10-10T23:36:03.649Z",
+  "resolvedAt": "2026-10-10T23:36:07.721Z"
+}

@@ -1439,7 +1439,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     for(const id of batch.placementIds){if(state.residentPlacementIds.has(id))throw new Error('R3C_VEGETATION_DUPLICATE_PLACEMENT');state.residentPlacementIds.add(id);}
     const positions=[],normals=[],colors=[],mats=[],models=[],surfaces=[],primitiveIds=[],roles=[],indices=[];let vertexOffset=0;
     const normalize=(x,y,z)=>{const n=Math.hypot(x,y,z)||1;return [x/n,y/n,z/n];};
-    for(let pi=0;pi<batch.primitives.length;pi++){const primitive=batch.primitives[pi],g=primitive.geometry,verts=g?.vertices??[],local=g?.indices??[];if(!verts.length||!local.length)throw new Error('R3C_VEGETATION_PRIMITIVE_GEOMETRY_INVALID');
+    // Preserve the qualified placement ledger and all non-tree vegetation.
+    // Exclude old highland conifers from GPU geometry; mixed batches still
+    // retain grass, reeds and shrubs, and source instance accounting stays put.
+    const drawablePrimitives=batch.primitives.filter(primitive=>
+      primitive?.metadata?.archetypeId!=='HIGHLAND_CONIFER_SAPLING'&&
+      !String(primitive?.materialHint?.materialIntent??'').includes('VEGETATION_CONIFER_TRUNK_AND_CANOPY'));
+    for(let pi=0;pi<drawablePrimitives.length;pi++){const primitive=drawablePrimitives[pi],g=primitive.geometry,verts=g?.vertices??[],local=g?.indices??[];if(!verts.length||!local.length)throw new Error('R3C_VEGETATION_PRIMITIVE_GEOMETRY_INVALID');
       const sums=Array.from({length:verts.length},()=>[0,0,0]);for(let k=0;k<local.length;k+=3){const ia=local[k],ib=local[k+1],ic=local[k+2],a=verts[ia],b=verts[ib],d=verts[ic],ab=[b.x-a.x,b.y-a.y,b.z-a.z],ad=[d.x-a.x,d.y-a.y,d.z-a.z],n=[ab[1]*ad[2]-ab[2]*ad[1],ab[2]*ad[0]-ab[0]*ad[2],ab[0]*ad[1]-ab[1]*ad[0]];for(const id of [ia,ib,ic])for(let q=0;q<3;q++)sums[id][q]+=n[q];}
       const intent=String(primitive?.materialHint?.materialIntent??''),rgba=intent.includes('TRUNK')||intent.includes('WOODY')?[89,63,39,255]:intent.includes('CONIFER')?[38,73,48,255]:intent.includes('SHRUB')?[52,94,52,255]:[78,126,65,255];
       // Bounded oasis assets carry explicit per-vertex sRGB colors; other vegetation keeps its existing palette.

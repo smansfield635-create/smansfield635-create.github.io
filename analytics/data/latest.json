@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-10T09:34:31Z",
+  "generatedAt": "2026-10-10T10:31:02Z",
   "window30d": {
-    "start": "2026-09-10T09:34:31Z",
-    "end": "2026-10-10T09:34:31Z"
+    "start": "2026-09-10T10:31:02Z",
+    "end": "2026-10-10T10:31:02Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 15
+      "pageLoads": 24
     },
     {
       "date": "2026-10-04",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 16
+      "pageLoads": 17
     }
   ],
   "summary": {
-    "pageLoads": 5656,
-    "botPageLoads": 2126,
+    "pageLoads": 5666,
+    "botPageLoads": 2136,
     "nonBotPageLoads": 3530
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3023,
-      "visits": 3023
+      "pageLoads": 3033,
+      "visits": 3033
     },
     {
       "host": "diamondgatebridge.com",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 411,
-      "visits": 290
+      "pageLoads": 421,
+      "visits": 300
     },
     {
       "path": "/campaigns/consider-the-energy/",

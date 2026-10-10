@@ -922,7 +922,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   canvas.width = width;
   canvas.height = height;
   const gl = canvas.getContext('webgl2', {
-    alpha: false, antialias: false, depth: true, stencil: false,
+    alpha: true, antialias: false, depth: true, stencil: false,
     preserveDrawingBuffer: true, powerPreference: 'high-performance'
   });
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');

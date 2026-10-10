@@ -1571,6 +1571,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
   function installFourTreeCompactCompiledPayload(payload) {
     if (!initialized) throw new Error('FOUR_TREE_COMPACT_RENDERER_NOT_INITIALIZED');
+    if (!payload?.reconstruction || !payload?.compactRecords || !payload?.contactSidecar) {
+      throw new TypeError('FOUR_TREE_COMPACT_APPROVED_PAYLOAD_REQUIRED');
+    }
     if (resources.fourTreeCompact) throw new Error('FOUR_TREE_COMPACT_ALREADY_INSTALLED');
     const programs=createFourTreeCompactPrograms(gl);
     try {

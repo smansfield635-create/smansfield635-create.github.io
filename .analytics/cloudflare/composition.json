@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-10T04:38:38Z",
+  "generatedAt": "2026-10-10T05:33:04Z",
   "window": {
-    "start": "2026-09-10T04:38:38Z",
-    "end": "2026-10-10T04:38:38Z"
+    "start": "2026-09-10T05:33:04Z",
+    "end": "2026-10-10T05:33:04Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1234,
-        "visits": 905
-      },
-      {
-        "value": "/mirror-manor-preview/",
-        "pageLoads": 720,
-        "visits": 720
+        "pageLoads": 1223,
+        "visits": 894
       },
       {
         "value": "/showroom/globe/h-earth/awards/",
         "pageLoads": 712,
         "visits": 22
+      },
+      {
+        "value": "/mirror-manor-preview/",
+        "pageLoads": 710,
+        "visits": 710
       },
       {
         "value": "/analytics/",
@@ -263,11 +263,6 @@
         "visits": 4
       },
       {
-        "value": "/products/auren/",
-        "pageLoads": 3,
-        "visits": 2
-      },
-      {
         "value": "/five-flags/",
         "pageLoads": 2,
         "visits": 2
@@ -288,6 +283,11 @@
         "visits": 1
       },
       {
+        "value": "/showroom/globe/audralia/diagnostic/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/evidence/agentic-frontier/reproduction/can-the-agent-actually-do-the-work/",
         "pageLoads": 1,
         "visits": 1
@@ -303,12 +303,12 @@
         "visits": 1
       },
       {
-        "value": "/showroom/globe/audralia/diagnostic/",
+        "value": "/build/intake/",
         "pageLoads": 1,
         "visits": 1
       },
       {
-        "value": "/build/intake/",
+        "value": "/products/auren/",
         "pageLoads": 1,
         "visits": 1
       }
@@ -316,12 +316,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3041,
-        "visits": 3041
+        "pageLoads": 3019,
+        "visits": 3019
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2339,
+        "pageLoads": 2338,
         "visits": 0
       },
       {
@@ -358,8 +358,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 5625,
-        "visits": 3286
+        "pageLoads": 5602,
+        "visits": 3264
       },
       {
         "value": "BR",
@@ -395,13 +395,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2474,
-        "visits": 2387
+        "pageLoads": 2453,
+        "visits": 2366
       },
       {
         "value": "tablet",
-        "pageLoads": 1760,
-        "visits": 449
+        "pageLoads": 1758,
+        "visits": 448
       },
       {
         "value": "mobile",
@@ -412,13 +412,13 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 2147,
-        "visits": 2084
+        "pageLoads": 2126,
+        "visits": 2063
       },
       {
         "value": "Chrome",
-        "pageLoads": 1985,
-        "visits": 650
+        "pageLoads": 1983,
+        "visits": 649
       },
       {
         "value": "ChromeMobile",
@@ -469,13 +469,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 3078,
-        "visits": 847
+        "pageLoads": 3076,
+        "visits": 846
       },
       {
         "value": "Linux",
-        "pageLoads": 2213,
-        "visits": 2150
+        "pageLoads": 2192,
+        "visits": 2129
       },
       {
         "value": "Windows",
@@ -501,20 +501,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 3527,
-        "visits": 1251
+        "pageLoads": 3525,
+        "visits": 1250
       },
       {
         "value": "1",
-        "pageLoads": 2147,
-        "visits": 2084
+        "pageLoads": 2126,
+        "visits": 2063
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3844,
-        "visits": 3046
+        "pageLoads": 3821,
+        "visits": 3024
       },
       {
         "value": "reload",
@@ -540,8 +540,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 4356,
-        "visits": 2914
+        "pageLoads": 4333,
+        "visits": 2892
       },
       {
         "value": "cache",
@@ -557,15 +557,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 5674,
-        "visits": 3335
+        "pageLoads": 5651,
+        "visits": 3313
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 5674,
-        "visits": 3335
+        "pageLoads": 5651,
+        "visits": 3313
       }
     ]
   }

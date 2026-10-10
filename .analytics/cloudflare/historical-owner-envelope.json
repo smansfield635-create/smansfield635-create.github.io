@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-10T04:38:38Z",
+  "generatedAt": "2026-10-10T05:33:04Z",
   "window": {
-    "start": "2026-07-12T04:38:38Z",
-    "end": "2026-10-10T04:38:38Z"
+    "start": "2026-07-12T05:33:04Z",
+    "end": "2026-10-10T05:33:04Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5010,
-    "visits": 1309,
+    "pageLoads": 5008,
+    "visits": 1308,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5010,
-        "visits": 1309
+        "pageLoads": 5008,
+        "visits": 1308
       }
     },
     "byPath": {
@@ -39,8 +39,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1041,
-        "visits": 729
+        "pageLoads": 1040,
+        "visits": 728
       },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 20,
@@ -342,10 +342,6 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/products/auren/": {
-        "pageLoads": 1,
-        "visits": 0
-      },
       "/about-this-underdog/": {
         "pageLoads": 2,
         "visits": 0
@@ -353,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3701,
+        "pageLoads": 3700,
         "visits": 0
       },
       "www.google.com": {
@@ -361,8 +357,8 @@
         "visits": 780
       },
       "(none)": {
-        "pageLoads": 519,
-        "visits": 519
+        "pageLoads": 518,
+        "visits": 518
       },
       "raw.githack.com": {
         "pageLoads": 10,

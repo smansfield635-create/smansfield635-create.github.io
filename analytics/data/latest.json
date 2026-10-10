@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-10T22:31:08Z",
+  "generatedAt": "2026-10-10T23:30:47Z",
   "window30d": {
-    "start": "2026-09-10T22:31:08Z",
-    "end": "2026-10-10T22:31:08Z"
+    "start": "2026-09-10T23:30:47Z",
+    "end": "2026-10-10T23:30:47Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 41
+      "pageLoads": 40
     },
     {
       "date": "2026-10-04",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 50
+      "pageLoads": 51
     }
   ],
   "summary": {
-    "pageLoads": 5612,
-    "botPageLoads": 2145,
-    "nonBotPageLoads": 3467
+    "pageLoads": 5596,
+    "botPageLoads": 2122,
+    "nonBotPageLoads": 3474
   },
   "referrers": [
     {
@@ -140,7 +140,7 @@
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2288,
+      "pageLoads": 2278,
       "visits": 0
     },
     {
@@ -181,14 +181,14 @@
       "visits": 883
     },
     {
-      "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 712,
-      "visits": 22
-    },
-    {
       "path": "/mirror-manor-preview/",
       "pageLoads": 710,
       "visits": 710
+    },
+    {
+      "path": "/showroom/globe/h-earth/awards/",
+      "pageLoads": 702,
+      "visits": 22
     },
     {
       "path": "/analytics/",

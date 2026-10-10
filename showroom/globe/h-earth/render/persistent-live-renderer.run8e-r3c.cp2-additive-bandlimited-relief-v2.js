@@ -1324,13 +1324,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     // Avoid sampling the depth attachment while writing it.
     gl.activeTexture(gl.TEXTURE6);gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
     gl.viewport(0,0,512,512);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);gl.clearDepth(1);gl.clear(gl.DEPTH_BUFFER_BIT);gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_INT,0);resources.clearing.shadowDrawCount++;
-    // Reuse the already allocated clearing depth target. Compact shadow geometry
-    // is drawn only when a fully configured dual-pass residency is installed.
-    if (resources.fourTreeCompactPassReady === true) {
-      drawFourTreeCompactPayload(undefined, 'shadow');
-      resources.clearing.shadowDrawCount++;
-      gl.bindVertexArray(resources.vertexArray);
-    }
+    // The clearing is initialized before external compact residency is installed.
+    // A late compact install must refresh the static depth map separately.
+    // Never mistake the original clearing-only map for compact shadow coverage.
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);gl.viewport(0,0,width,height);configureClearingProgram(resources.geometryProgram);
     const error=gl.getError();if(error!==gl.NO_ERROR)throw new Error('CLEARING_GPU_INITIALIZATION_FAILED:'+error);
   }
@@ -1532,6 +1528,45 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
   // Gen2633: explicitly managed compact leaf residency. Never silently replace
   // the approved woodland geometry before the color/shadow path is qualified.
+  function refreshFourTreeCompactShadow() {
+    if (!initialized || !resources.clearing || resources.fourTreeCompactPassReady !== true) {
+      throw new Error('FOUR_TREE_COMPACT_SHADOW_REFRESH_NOT_READY');
+    }
+    const clearing = resources.clearing;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, clearing.framebuffer);
+    gl.viewport(0, 0, 512, 512);
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LEQUAL);
+    gl.depthMask(true);
+    gl.disable(gl.BLEND);
+    gl.disable(gl.CULL_FACE);
+    try {
+      // Preserve the original clearing casters: rebuild the depth map before
+      // adding the compact instances. This is not a color or visual acceptance.
+      gl.clearDepth(1);
+      gl.clear(gl.DEPTH_BUFFER_BIT);
+      gl.useProgram(clearing.program);
+      gl.uniformMatrix4fv(gl.getUniformLocation(clearing.program,'uLightMatrix'),false,clearing.matrix);
+      gl.uniform1i(gl.getUniformLocation(clearing.program,'uLeaf'),3);
+      bindClearingTextures();
+      gl.activeTexture(gl.TEXTURE6);
+      gl.bindTexture(gl.TEXTURE_2D,null);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindVertexArray(resources.vertexArray);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,clearing.indexBuffer);
+      gl.drawElements(gl.TRIANGLES,clearing.casterIndexCount,gl.UNSIGNED_INT,0);
+      drawFourTreeCompactPayload(undefined,'shadow');
+      const error=gl.getError();
+      if(error!==gl.NO_ERROR)throw new Error('FOUR_TREE_COMPACT_SHADOW_REFRESH_GPU_ERROR:'+error);
+      clearing.shadowDrawCount += 2;
+    } finally {
+      gl.bindVertexArray(resources.vertexArray);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);
+      gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);
+      gl.viewport(0,0,width,height);
+      configureClearingProgram(resources.geometryProgram);
+    }
+  }
   function installFourTreeCompactPayload(payload) {
     if (!initialized) throw new Error('FOUR_TREE_COMPACT_RENDERER_NOT_INITIALIZED');
     if (resources.fourTreeCompact) throw new Error('FOUR_TREE_COMPACT_ALREADY_INSTALLED');
@@ -1548,6 +1583,15 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       : createFourTreeCompactGpuBuffers(gl, payload);
     resources.fourTreeCompact = allocated;
     resources.fourTreeCompactPassReady = hasDrawInputs;
+    if (hasDrawInputs) {
+      try { refreshFourTreeCompactShadow(); }
+      catch (error) {
+        allocated.dispose();
+        resources.fourTreeCompact = null;
+        resources.fourTreeCompactPassReady = false;
+        throw error;
+      }
+    }
     return allocated.accounting;
   }
   function drawFourTreeCompactPayload(instanceCount, pass = 'color') {

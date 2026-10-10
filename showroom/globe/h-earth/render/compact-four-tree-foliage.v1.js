@@ -107,6 +107,38 @@ vec3 reconstructCompactCorner(uvec4 words, uvec2 extra, uint corner) {
   return center+vec3(offset.x,0.0,offset.y);
 }
 `;
+/**
+ * Binds the exact quantization descriptors to an existing compact shader.
+ * This deliberately rejects guessed defaults: all scales and the source
+ * origin must be supplied from the approved packing receipt.
+ */
+export function bindFourTreeCompactReconstructionUniforms(gl, program, descriptor) {
+  if (!gl || !program || !descriptor) throw new TypeError('FOUR_TREE_COMPACT_UNIFORM_INPUT_REQUIRED');
+  const specs = [
+    ['uCompactOrigin', descriptor.origin, 3],
+    ['uCompactPositionScale', descriptor.positionScale, 3],
+    ['uCompactLeafExtentScale', descriptor.leafExtentScale, 2]
+  ];
+  for (const [name, values, count] of specs) {
+    if (!Array.isArray(values) && !(values instanceof Float32Array))
+      throw new TypeError('FOUR_TREE_COMPACT_UNIFORM_VECTOR_REQUIRED:' + name);
+    if (values.length !== count || Array.from(values).some(v => !Number.isFinite(v)))
+      throw new RangeError('FOUR_TREE_COMPACT_UNIFORM_VECTOR_INVALID:' + name);
+  }
+  const locations = specs.map(([name]) => {
+    const location = gl.getUniformLocation(program, name);
+    if (location == null) throw new Error('FOUR_TREE_COMPACT_UNIFORM_NOT_ACTIVE:' + name);
+    return location;
+  });
+  gl.useProgram(program);
+  for (let i = 0; i < specs.length; i++) {
+    const values = new Float32Array(specs[i][1]);
+    if (specs[i][2] === 3) gl.uniform3fv(locations[i], values);
+    else gl.uniform2fv(locations[i], values);
+  }
+  return Object.freeze({bound:true,uniformCount:3});
+}
+
 /** Transactional GPU residency for the approved four-tree compact payload. */
 export function createFourTreeCompactResidency(gl, {compactRecords, contactSidecar, indexData, program, shadowProgram = null}) {
   const buffers = createFourTreeCompactGpuBuffers(gl, {compactRecords, contactSidecar});

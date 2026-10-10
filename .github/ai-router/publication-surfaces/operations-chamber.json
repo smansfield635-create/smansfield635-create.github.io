@@ -4,7 +4,7 @@
   "description": "Diamond Gate Bridge public, read-only on-demand Operations Chamber integrated with Estate Laboratory; no private ledger visibility or privilege.",
   "checks": [
     {
-      "path": "/instruments/operations-chamber/",
+      "path": "/instruments/operations-chamber/index.html",
       "includes": [
         "DGB_OPERATIONS_CHAMBER_PUBLIC_ONDEMAND_GEN2640_v1",
         "data-page=\"dgb-operations-chamber\"",

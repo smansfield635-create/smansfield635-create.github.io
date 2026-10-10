@@ -33,7 +33,10 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
   if (!(surface instanceof HTMLElement)) throw new TypeError('R3D2_SURFACE_REQUIRED');
   if (onProposal !== null && typeof onProposal !== 'function') throw new TypeError('R3D2_PROPOSAL_CALLBACK_INVALID');
 
-  const initial = createHEarthFunctionalLandscapeNavigationState({ waypointId: 'COAST' });
+  // A deliberate owner-facing arrival link may start at the frozen four-tree
+  // walking view. Unknown query values preserve the original COAST state.
+  const explicitFourTreeVisit = new URLSearchParams(globalThis.location?.search ?? '').get('arrival') === 'approved-four-trees';
+  const initial = createHEarthFunctionalLandscapeNavigationState({ waypointId: explicitFourTreeVisit ? 'WOODLAND_CLEARING_FOUR_TREES' : 'COAST' });
   if (initial?.ok !== true) throw new Error(`R3D2_INITIAL_NAVIGATION_REJECTED:${initial?.issues?.join(',')}`);
 
   let navigationState = initial.state;

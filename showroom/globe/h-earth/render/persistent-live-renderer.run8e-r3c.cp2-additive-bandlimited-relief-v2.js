@@ -1536,12 +1536,14 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     resources.fourTreeCompact = allocated;
     return allocated.accounting;
   }
-  function drawFourTreeCompactPayload(instanceCount) {
+  function drawFourTreeCompactPayload(instanceCount, pass = 'color') {
     const residency = resources.fourTreeCompact;
     if (!residency || typeof residency.draw !== 'function') {
       throw new Error('FOUR_TREE_COMPACT_DRAW_RESIDENCY_NOT_INSTALLED');
     }
-    return instanceCount === undefined ? residency.draw() : residency.draw(instanceCount);
+    // The renderer controls pass selection. Staging alone does not authorize
+    // drawing over the approved existing vegetation.
+    return residency.draw(instanceCount === undefined ? 7168 : instanceCount, pass);
   }
   function releaseFourTreeCompactPayload() {
     if (!resources.fourTreeCompact) return false;

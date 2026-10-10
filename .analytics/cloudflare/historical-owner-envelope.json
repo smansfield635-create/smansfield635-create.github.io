@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-10T20:33:13Z",
+  "generatedAt": "2026-10-10T21:30:08Z",
   "window": {
-    "start": "2026-07-12T20:33:13Z",
-    "end": "2026-10-10T20:33:13Z"
+    "start": "2026-07-12T21:30:08Z",
+    "end": "2026-10-10T21:30:08Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5010,
-    "visits": 1310,
+    "pageLoads": 5018,
+    "visits": 1309,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5010,
-        "visits": 1310
+        "pageLoads": 5018,
+        "visits": 1309
       }
     },
     "byPath": {
@@ -39,15 +39,15 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1040,
-        "visits": 728
+        "pageLoads": 1039,
+        "visits": 727
       },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 166,
+        "pageLoads": 175,
         "visits": 2
       },
       "/showroom/": {
@@ -274,19 +274,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -349,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3700,
+        "pageLoads": 3709,
         "visits": 0
       },
       "www.google.com": {
@@ -357,8 +357,8 @@
         "visits": 780
       },
       "(none)": {
-        "pageLoads": 520,
-        "visits": 520
+        "pageLoads": 519,
+        "visits": 519
       },
       "raw.githack.com": {
         "pageLoads": 10,

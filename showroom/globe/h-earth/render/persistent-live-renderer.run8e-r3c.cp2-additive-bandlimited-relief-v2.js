@@ -1058,6 +1058,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     canopySpan:fourTreeCanopySpan,coastDistances,contactDistances:contactField.packageDistances
   });
   const fourTreeActualSourceSidecarBytes=fourTreeActualSourceSidecar.byteLength;
+  // Exact live-array digest; failure rejects the candidate, absence remains unqualified.
+  const fourTreeExpectedSidecarSha256='371fe4546b39f6ad0e32b2eaf3e38177faa0220fdf24679e37ebba9745fbc8d4';
+  let fourTreeActualSourceSidecarSha256=null;
+  if(typeof globalThis.crypto?.subtle?.digest==='function'){
+    const hash=new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',fourTreeActualSourceSidecar));
+    fourTreeActualSourceSidecarSha256=Array.from(hash,b=>b.toString(16).padStart(2,'0')).join('');
+    if(fourTreeActualSourceSidecarSha256!==fourTreeExpectedSidecarSha256)
+      throw new Error('FOUR_TREE_ACTUAL_SOURCE_SIDECAR_SHA256_MISMATCH');
+  }
+
 
 
   let vegetationPreparation=null;
@@ -1706,7 +1716,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },
-      initialized, fourTreeContactSource:{actualOriginalArrayComparison:true,treeCount:4,leafCount:7168,sidecarBytes:fourTreeActualSourceSidecarBytes,referenceValueChecks:'COAST_0_CONTACT_64_PASS',gpuQualification:false}, fourTreeCompact: resources.fourTreeCompact ? { ...resources.fourTreeCompact.accounting, installed:true, colorShadowIntegrationQualified:resources.fourTreeCompactPassReady === true } : { installed:false, actualUploadedBytes:0 }, dimensions: { width, height },
+      initialized, fourTreeContactSource:{actualOriginalArrayComparison:true,treeCount:4,leafCount:7168,sidecarBytes:fourTreeActualSourceSidecarBytes,actualOriginalArraySha256:fourTreeActualSourceSidecarSha256,expectedSidecarSha256:fourTreeExpectedSidecarSha256,sourceArrayDigestQualified:fourTreeActualSourceSidecarSha256===fourTreeExpectedSidecarSha256,referenceValueChecks:'COAST_0_CONTACT_64_PASS',gpuQualification:false}, fourTreeCompact: resources.fourTreeCompact ? { ...resources.fourTreeCompact.accounting, installed:true, colorShadowIntegrationQualified:resources.fourTreeCompactPassReady === true } : { installed:false, actualUploadedBytes:0 }, dimensions: { width, height },
       context: {
         created: true, lost: gl.isContextLost(), vendor: gl.getParameter(gl.VENDOR), renderer: gl.getParameter(gl.RENDERER),
         unmaskedVendor: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_VENDOR_WEBGL) : null,

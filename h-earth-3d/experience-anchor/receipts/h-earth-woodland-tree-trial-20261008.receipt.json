@@ -1,0 +1,132 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_FOUR_APPROVED_NATIVE_TREE_ANCHOR_REVIEW_20261010",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/interaction-acceptance.run8e.js"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
+    "showroom/globe/h-earth/validation/woodland-tree-trial.record.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/assets/woodland-clearing-bark.png",
+      "sha256": "040590035afd8c929309eb05ef42f4f74c0e1e39d932aebe7ebc8d67edef7e70"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/woodland-clearing-leaf.png",
+      "sha256": "ac6d40cae1fb958ea375d6c23f4297430eb30b8c1ffebaa93728416fde6b2a98"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/woodland-clearing-soil.png",
+      "sha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "7392601290b7189d918e53ebe954f3079ae729a122ad257dfab3be006e159f43"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+      "sha256": "15ef7838a2c47ad0ef219b57da80373d8ba48ebb3bda271bcf7cdaa0c23a3e36"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "sha256": "42f1a68bb398da64952bba35b6adf09424091b491af63e2abe945b320b784191"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "5a047443e7ec6c58b412d24c4c159a1091ef34564515e583c4d4e90d54ef28b7"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sha256": "038480af060699108a0769e8119b4d2cd03aabe0b609438920ce55ecab255843"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sha256": "bca861a5d2d5afd3b90eef6da679709e3110ad19be04fff2842cec6ad2b34bb7"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "113e547c9a17444c1832d8d89e72df2b437adb894a744a14619d0d4c4e243775"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
+      "sha256": "922111029a884f1a205ccc39db278ae822e76accbd7104d04ccd6e073e310389"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json",
+      "sha256": "b1b958db968fa83ce0ae3b0209c5e7a6caf6434f28d0f5adf6f3b1796009d8e2"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-clearing-trial.verify.mjs",
+      "sha256": "d9062d654411c100924f0ab0282968bbb967f7a55536855373d50f6a0fcd6f4d"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
+      "sha256": "0fcf03799da86f7e4f99bff1705157d8ef96a3ed23d490de26c2d8b6eb43addd"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
+      "sha256": "da36512c0a4e20767cfeeced0f30f2a378b5971f78c77be0ae7e649df90bdbc4"
+    }
+  ],
+  "exactCandidate": "9feded7b74b1d4931a36ce4943806db9f39070cf",
+  "originalApprovedSource": "9cff8bbd6ccca95ccd51da72570f92af4778425a",
+  "ownerApproval": "Four preselected trees, both styles approved, fuller preferred, grass deferred. Recorded in publication issue #6063; no renewed appearance approval required.",
+  "reviewMethod": "Independent original-experience contact-sheet visual review, exact fifteen changed-file SHA-256 reproduction, approved four-camera native source evidence, unchanged canonical world/terrain/touch/planetary glue paths, registered exact-candidate staged public runtime preflight.",
+  "runtimePreflight": {
+    "runId": 38074415470,
+    "result": "PREFLIGHT_PASS",
+    "targetSha": "9feded7b74b1d4931a36ce4943806db9f39070cf",
+    "surfaceId": "h-earth",
+    "ready": true,
+    "pageErrors": 0,
+    "consoleErrors": 0,
+    "artifactId": 11678302301
+  },
+  "limitations": {
+    "physicalDevicePerformanceMeasured": false,
+    "physicalAcceptance": false,
+    "knownHistoricalSoftwareTimingFailures": [
+      "CLOSE_MEDIAN_RATIO_1.565_OVER_1.25",
+      "DISTANT_MEDIAN_RATIO_1.421_OVER_1.25"
+    ],
+    "cp3dInheritedMismatchPendingClassification": true,
+    "cp2ComparatorTimedOutBeforeCompleteComparison": true,
+    "mergePerformed": false,
+    "deploymentPerformed": false
+  },
+  "releaseEligible": false,
+  "physicalAcceptance": false,
+  "mergePerformed": false,
+  "deploymentPerformed": false,
+  "previousReceipt": {
+    "operationId": "H_EARTH_ONE_TREE_REALISM_COMPARISON_20261008",
+    "reviewedAgainstAnchor": false,
+    "disposition": "PENDING_EXACT_CANDIDATE_PHYSICAL_REVIEW",
+    "originalCandidateGeometryCommit": "a2e7649121a19e255eec6521cc5651f97af96803"
+  }
+}

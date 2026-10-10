@@ -38,6 +38,8 @@ try{
  gl.enable(gl.DEPTH_TEST);
  gl.depthFunc(gl.LEQUAL);
  gl.useProgram(pair.color);
+ const programValid=gl.getProgramParameter(pair.color,gl.LINK_STATUS);
+ if(!programValid)throw Error('WEBGL2_COLOR_PROGRAM_UNLINKED');
  const color=residency.draw(7168,'color');
  const afterColor=gl.getError();
  if(afterColor!==gl.NO_ERROR)throw Error('WEBGL2_COLOR_DRAW_ERROR:'+afterColor);

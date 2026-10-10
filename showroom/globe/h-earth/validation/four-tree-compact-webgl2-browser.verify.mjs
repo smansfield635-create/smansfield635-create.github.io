@@ -45,8 +45,12 @@ try{
  if(afterColor!==gl.NO_ERROR)throw Error('WEBGL2_COLOR_DRAW_ERROR:'+afterColor);
  const pixel=new Uint8Array(4);
  gl.readPixels(32,32,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);
+ const readError=gl.getError();
+ if(readError!==gl.NO_ERROR)throw Error('WEBGL2_READBACK_ERROR:'+readError);
  if(pixel[1]<40)throw Error('WEBGL2_VISIBLE_PIXEL_NOT_DRAWN:'+Array.from(pixel));
  gl.useProgram(pair.shadow);
+ const shadowBindError=gl.getError();
+ if(shadowBindError!==gl.NO_ERROR)throw Error('WEBGL2_SHADOW_PROGRAM_BIND_ERROR:'+shadowBindError);
  const shadow=residency.draw(7168,'shadow');
  const error=gl.getError();
  if(error!==gl.NO_ERROR)throw Error('WEBGL2_SHADOW_DRAW_ERROR:'+error);

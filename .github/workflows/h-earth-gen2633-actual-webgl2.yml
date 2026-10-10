@@ -22,7 +22,7 @@ jobs:
           base="https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/925b0cf5dab136c4b665fdd44a7da0eb0c970dfe"
           curl -fLsS --retry 3 --max-time 60 "$base/$root/render/compact-four-tree-foliage.v1.js" -o "$root/render/compact-four-tree-foliage.v1.js"
           curl -fLsS --retry 3 --max-time 60 "$base/$root/validation/four-tree-compact-webgl2-browser.verify.mjs" -o "$root/validation/four-tree-compact-webgl2-browser.verify.mjs"
-          test "$(git hash-object "$root/render/compact-four-tree-foliage.v1.js")" = 698a439c11fc7b439a6dc32b4bab142a55186745
+          test "$(git hash-object "$root/render/compact-four-tree-foliage.v1.js")" = cc4def22c59795a5327bd475b8ad8db6771e918c
           actual="$(git hash-object "$root/validation/four-tree-compact-webgl2-browser.verify.mjs")"
           echo "WEBGL2_SOURCE_BLOB_ACTUAL:$actual"
           test "$actual" = 4a8a4c84374da73e846538dfaf8965eb329b3f85

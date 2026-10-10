@@ -328,6 +328,8 @@ export function createFourTreeCompactDrawView(gl, {compactBuffer, contactSidecar
     }
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER,null);
+    // WebGL2 retains the index buffer in VAO state. The compact draw must
+    // never depend on the caller's currently bound ELEMENT_ARRAY_BUFFER.
     let disposed=false;
     return Object.freeze({
       vao,program,indexBuffer,indexCount:indexData.length,

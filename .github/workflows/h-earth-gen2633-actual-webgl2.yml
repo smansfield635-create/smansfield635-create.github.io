@@ -1,0 +1,34 @@
+name: H-Earth Gen2633 Actual WebGL2 Qualification
+on:
+  pull_request:
+    paths:
+      - 'showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js'
+      - 'showroom/globe/h-earth/validation/four-tree-compact-webgl2-browser.verify.mjs'
+      - '.github/workflows/h-earth-gen2633-actual-webgl2.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  actual-webgl2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compile and draw compact leaves in real WebGL2
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v google-chrome
+          node showroom/globe/h-earth/validation/four-tree-compact-webgl2-browser.verify.mjs | tee actual-webgl2-receipt.json
+      - name: Preserve browser qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-actual-webgl2-${{ github.run_id }}
+          path: actual-webgl2-receipt.json
+          retention-days: 90

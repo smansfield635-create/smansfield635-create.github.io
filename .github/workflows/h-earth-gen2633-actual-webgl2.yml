@@ -16,6 +16,12 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout: |
+            showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js
+            showroom/globe/h-earth/validation/four-tree-compact-webgl2-browser.verify.mjs
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

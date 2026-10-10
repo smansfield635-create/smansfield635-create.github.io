@@ -88,6 +88,9 @@ if(process.argv.includes('--self-test')){
       canvas:{present:canvas instanceof HTMLCanvasElement,width:canvas?.width||0,height:canvas?.height||0,visible:Boolean(rect&&rect.width>0&&rect.height>0&&style?.visibility!=='hidden'&&style?.display!=='none')},
       webgl2Alive:Boolean(gl&&!gl.isContextLost()),
       gpuPresentations:gpu?.counters?.gpuFramebufferPresentationCount??0,
+      gpuFourTreeFloorCount:gpu?.resources?.landscapeFloor?.treeCount??null,
+      clearingGpuReady:gpu?.resources?.woodlandClearing?.ready===true,
+      clearingCasterIndexCount:gpu?.resources?.woodlandClearing?.casterIndexCount??null,
       firstFailureStage:startup?.firstFailureStage||null,
       position:route?.getIntakeReceipt?.()?.currentNavigationState?.position||null,
       residencyStatus:root?.dataset.vegetationResidency||null,
@@ -106,6 +109,10 @@ if(process.argv.includes('--self-test')){
     entry.readiness={pass:ready,snapshot:snap};
     if(!ready){await page.screenshot({path:out+'/'+v.id+'-loading-or-error.png',fullPage:true});throw Error('ACTUAL_WORLD_NOT_RENDERED_LOADING_SCREEN_REJECTED')}
     if(v.x!==null&&(!snap.position||Math.abs(snap.position.x-v.x)>0.03||Math.abs(snap.position.z-v.z)>0.03))throw Error('GEN2638_ARRIVAL_POSITION_MISMATCH:'+JSON.stringify(snap.position));
+    if(fourOnly){
+     entry.gpuTreeCensus={treeCount:snap.gpuFourTreeFloorCount,clearingReady:snap.clearingGpuReady,casterIndexCount:snap.clearingCasterIndexCount};
+     if(snap.gpuFourTreeFloorCount!==4||snap.clearingGpuReady!==true||!(snap.clearingCasterIndexCount>0))throw Error('GEN2638_ACTUAL_GPU_FLOOR_OR_CLEARING_CENSUS_FAILED');
+    }
     entry.position=snap.position;
     const image=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:out+'/'+v.id+'-ready-canvas.png'});
     if(image.length<1024)throw Error('ACTUAL_GPU_CANVAS_IMAGE_EMPTY');
@@ -123,6 +130,7 @@ if(process.argv.includes('--self-test')){
      entry.residency=snap.residency;
      if(!residencyReady(snap.residency)){await page.screenshot({path:out+'/'+v.id+'-incomplete-residency.png',fullPage:true});throw Error('GEN2638_DEFERRED_RESIDENCY_INCOMPLETE')}
      if(!readiness(snap))throw Error('GEN2638_POST_RESIDENCY_RENDERER_NOT_READY');
+     if(snap.gpuFourTreeFloorCount!==4||snap.clearingGpuReady!==true||!(snap.clearingCasterIndexCount>0))throw Error('GEN2638_POST_RESIDENCY_GPU_TREE_CENSUS_FAILED');
      const post=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:out+'/'+v.id+'-post-residency-canvas.png'});
      if(post.length<1024)throw Error('POST_RESIDENCY_GPU_IMAGE_EMPTY');
      await page.screenshot({path:out+'/'+v.id+'-post-residency-page.png',fullPage:true});

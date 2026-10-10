@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-09T23:31:37Z",
+  "generatedAt": "2026-10-10T01:11:49Z",
   "window": {
-    "start": "2026-07-11T23:31:37Z",
-    "end": "2026-10-09T23:31:37Z"
+    "start": "2026-07-12T01:11:49Z",
+    "end": "2026-10-10T01:11:49Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,19 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5022,
-    "visits": 1311,
+    "pageLoads": 5010,
+    "visits": 1309,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5022,
-        "visits": 1311
+        "pageLoads": 5010,
+        "visits": 1309
       }
     },
     "byPath": {
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 174,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 70,
         "visits": 30
@@ -48,6 +44,10 @@
       },
       "/showroom/globe/hearth/": {
         "pageLoads": 30,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 164,
         "visits": 0
       },
       "/showroom/": {
@@ -126,12 +126,12 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -166,6 +166,10 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -177,10 +181,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/build/": {
         "pageLoads": 20,
@@ -254,16 +254,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -274,19 +274,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -343,8 +343,8 @@
         "visits": 10
       },
       "/products/auren/": {
-        "pageLoads": 3,
-        "visits": 2
+        "pageLoads": 1,
+        "visits": 0
       },
       "/about-this-underdog/": {
         "pageLoads": 2,
@@ -353,7 +353,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3711,
+        "pageLoads": 3701,
         "visits": 0
       },
       "www.google.com": {
@@ -361,8 +361,8 @@
         "visits": 780
       },
       "(none)": {
-        "pageLoads": 521,
-        "visits": 521
+        "pageLoads": 519,
+        "visits": 519
       },
       "raw.githack.com": {
         "pageLoads": 10,

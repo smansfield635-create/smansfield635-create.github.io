@@ -23,7 +23,8 @@ jobs:
           curl -fLsS --retry 3 --max-time 60 "$base/$root/render/compact-four-tree-foliage.v1.js" -o "$root/render/compact-four-tree-foliage.v1.js"
           curl -fLsS --retry 3 --max-time 60 "$base/$root/validation/four-tree-compact-webgl2-browser.verify.mjs" -o "$root/validation/four-tree-compact-webgl2-browser.verify.mjs"
           test "$(git hash-object "$root/render/compact-four-tree-foliage.v1.js")" = 698a439c11fc7b439a6dc32b4bab142a55186745
-          test "$(git hash-object "$root/validation/four-tree-compact-webgl2-browser.verify.mjs")" = 4a8a4c84374da73e846538dfaf8965eb329b3f85
+          actual="$(git hash-object "$root/validation/four-tree-compact-webgl2-browser.verify.mjs")"
+          test "$actual" = 4a8a4c84374da73e846538dfaf8965eb329b3f85
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

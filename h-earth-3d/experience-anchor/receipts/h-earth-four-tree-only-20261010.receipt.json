@@ -37,7 +37,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "74d8aad3e081ce4c32c82fea7c4bacef3e762a632f234ff8fe20f58727f55f17"
+      "sha256": "061f5c36323637be90df96764edda79e080fd7b76cad826f2b434458a5f3723c"
     },
     {
       "path": "showroom/globe/h-earth/validation/four-tree-only.verify.mjs",
@@ -48,7 +48,7 @@
       "sha256": "e5cdf8ca2f433747b2c2ebf110878347cbd63d48d9805b7acefaf94d120168c3"
     }
   ],
-  "continuityReview": "Existing canonical H-Earth world and four owner-approved geometry sources remain intact. The bounded runtime edits prune only legacy tree faces from the previously mixed woodland buffers and exclude deferred conifer GPU uploads. Actual source comparisons preserve the four approved tree geometry and all non-tree landscape geometry. Browser and phone testing remain separate requirements. Gen2638 follow-up instrumentation records the first WebGL global-cover upload error boundary and does not alter accepted trees, terrain, grass, rocks, or GPU payloads. Follow-up detects framebuffer blit errors immediately after the previously verified draw phase; approved tree meshes and GPU payload contents remain unchanged.",
+  "continuityReview": "Existing canonical H-Earth world and four owner-approved geometry sources remain intact. The bounded runtime edits prune only legacy tree faces from the previously mixed woodland buffers and exclude deferred conifer GPU uploads. Actual source comparisons preserve the four approved tree geometry and all non-tree landscape geometry. Browser and phone testing remain separate requirements. Gen2638 follow-up instrumentation records the first WebGL global-cover upload error boundary and does not alter accepted trees, terrain, grass, rocks, or GPU payloads. Follow-up detects framebuffer blit errors immediately after the previously verified draw phase; approved tree meshes and GPU payload contents remain unchanged. Gen2638 blit fix changes only WebGL context alpha:false to alpha:true to align default backbuffer to the existing offscreen RGBA8 color format; all draw geometry and existing opaque RGBA clear remain identical. Requires fresh browser qualification.",
   "limits": {
     "browserVisualNotYetQualified": true,
     "phonePerformanceNotYetQualified": true,

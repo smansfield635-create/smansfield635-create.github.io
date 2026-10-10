@@ -1324,6 +1324,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     // Avoid sampling the depth attachment while writing it.
     gl.activeTexture(gl.TEXTURE6);gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
     gl.viewport(0,0,512,512);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);gl.clearDepth(1);gl.clear(gl.DEPTH_BUFFER_BIT);gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_INT,0);resources.clearing.shadowDrawCount++;
+    // Reuse the already allocated clearing depth target. Compact shadow geometry
+    // is drawn only when a fully configured dual-pass residency is installed.
+    if (resources.fourTreeCompactPassReady === true) {
+      drawFourTreeCompactPayload(undefined, 'shadow');
+      resources.clearing.shadowDrawCount++;
+      gl.bindVertexArray(resources.vertexArray);
+    }
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);gl.viewport(0,0,width,height);configureClearingProgram(resources.geometryProgram);
     const error=gl.getError();if(error!==gl.NO_ERROR)throw new Error('CLEARING_GPU_INITIALIZATION_FAILED:'+error);
   }

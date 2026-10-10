@@ -1,0 +1,39 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_ONE_TREE_REALISM_COMPARISON_20261008",
+  "reviewedAgainstAnchor": false,
+  "disposition": "PENDING_EXACT_CANDIDATE_PHYSICAL_REVIEW",
+  "visualEvidence": [
+    "libfile_686de57ac14c8191bfeda79177f6382a: H-Earth-branch-hierarchy-in-world.png; actual landscape renderer, three candidate views and prior walking comparison; physical acceptance pending"
+  ],
+  "interactionEvidence": [],
+  "continuityEvidence": [
+    "showroom/globe/h-earth/validation/woodland-tree-trial.record.json"
+  ],
+  "invariants": {},
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "08e2d219d8ffffccb6dc7bc348d01dc405ddc7125c93bbc46c20b565d1775e2a"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+      "sha256": "6b0f1e973f7ae10c3d972d28b6072b2b46f8334c7bdc2fbf9ade0bac955ad27c"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
+      "sha256": "da36512c0a4e20767cfeeced0f30f2a378b5971f78c77be0ae7e649df90bdbc4"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
+      "sha256": "2a72fa85fd79cda49b7d7508faed7ad15189fcf41ee15c1ca813bc8c342f8184"
+    }
+  ],
+  "automatedContinuitySupport": "One tree geometry changed. Independent full verification preserves surrounding geometry, ecology, terrain and navigation/renderer source. Actual renderer captures support owner review but do not substitute physical-device acceptance.",
+  "releaseEligible": false,
+  "candidateGeometryCommit": "a2e7649121a19e255eec6521cc5651f97af96803",
+  "priorSparseCandidate": "eac3c453b4d63b5d0faaf4229f104fdbeaf803f3",
+  "ownerDirectedRepair": "Trunk hierarchy rebuilt; real landscape captures available; no owner perceptual or physical-device acceptance inferred"
+}

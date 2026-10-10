@@ -1,0 +1,57 @@
+name: H-Earth Gen2633 Actual WebGL2 Qualification
+on:
+  pull_request:
+    paths:
+      - 'showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js'
+      - 'showroom/globe/h-earth/validation/four-tree-compact-webgl2-browser.verify.mjs'
+      - '.github/workflows/h-earth-gen2633-actual-webgl2.yml'
+  workflow_dispatch:
+concurrency:
+  group: h-earth-gen2633-webgl2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  actual-webgl2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact two-file candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js
+            showroom/globe/h-earth/validation/four-tree-compact-webgl2-browser.verify.mjs
+          sparse-checkout-cone-mode: false
+      - name: Verify exact candidate source blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidate="${{ github.event.pull_request.head.sha || github.sha }}"
+          [[ "$candidate" =~ ^[0-9a-f]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$candidate"
+          for file in showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js showroom/globe/h-earth/validation/four-tree-compact-webgl2-browser.verify.mjs; do
+            test -f "$file"
+            expected="$(git rev-parse "$candidate:$file")"
+            actual="$(git hash-object "$file")"
+            echo "H_EARTH_EXACT_SOURCE:$file:$actual"
+            test "$actual" = "$expected"
+          done
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compile and draw compact leaves in real WebGL2
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v google-chrome
+          node showroom/globe/h-earth/validation/four-tree-compact-webgl2-browser.verify.mjs | tee actual-webgl2-receipt.json
+      - name: Preserve browser qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-actual-webgl2-${{ github.run_id }}
+          path: actual-webgl2-receipt.json
+          retention-days: 90

@@ -1,0 +1,43 @@
+{
+  "schema": "H_EARTH_FOUR_TREE_COMPACT_BACKEND_RECORD_v1",
+  "operationId": "H_EARTH_FOUR_TREE_COMPACT_BACKEND_20261009",
+  "generation": 2633,
+  "sourceCommit": "9cff8bbd6ccca95ccd51da72570f92af4778425a",
+  "observerCheckpoint": "041704754468cbe68ef07bc1abcecdd8fd03089c",
+  "observerPublication": "UNPUBLISHED_PRESERVED_SEPARATELY",
+  "targets": [
+    "P2_TREE_A_03",
+    "P2_TREE_A_06",
+    "P2_TREE_A_08",
+    "P2_TREE_A_11"
+  ],
+  "leafCount": 7168,
+  "packedBytes": 172032,
+  "sidecarBytes": 229376,
+  "sourceBlobs": {
+    "gpu-upload-views.run8e-r2d.js": "ca4b239cfa9332a41b4adb7ccc76530beea10e77",
+    "live-renderer-contract.run8e-r3a.js": "a5fe171593814502ef0a0884b40e56916cd96789",
+    "persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "06437de8c9f91fb6e7b54c56a3493372b4f5a957"
+  },
+  "limits": {
+    "gpuBytes": 6291456,
+    "mainDraws": 4,
+    "shadowDraws": 4,
+    "programs": 2,
+    "buffers": 3,
+    "vertexArrays": 1,
+    "textures": 0,
+    "framebuffers": 0,
+    "medianRatio": 1.25,
+    "p95Ratio": 1.35
+  },
+  "checks": {
+    "packedPayload": "IMPLEMENTED_UNEXECUTED",
+    "rendererIntegration": "NOT_IMPLEMENTED",
+    "gpuAllocation": "NOT_MEASURED",
+    "colorShadow": "NOT_QUALIFIED",
+    "fourCamera": "NOT_QUALIFIED",
+    "deviceAcceptance": "NOT_REQUESTED"
+  },
+  "disposition": "INCOMPLETE_NOT_QUALIFIED"
+}

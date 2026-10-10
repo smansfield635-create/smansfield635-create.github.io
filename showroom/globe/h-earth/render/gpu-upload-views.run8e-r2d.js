@@ -239,7 +239,7 @@ function projectShorelineSandColors(waterProjectedColors, packageRecord){
 }
 
 export function createHEarthRun8ER2DCanonicalGPUUploadViews(
-  packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage()
+  packageRecord = getHEarthRun8ER2ImmutableLiveRenderPackage(), options = {}
 ) {
   const rawViews = createHEarthRun8ER2GPUBufferViews(packageRecord);
   const canonicalNormals = canonicalFloat32(rawViews.normals, 'normals');
@@ -247,6 +247,15 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
     rawViews.materialParameters,
     'materialParameters'
   );
+  let clearingProjectedVertexCount=0;
+  if(options.enableWoodlandClearing===true){
+    const a=packageRecord.clearingAttributes;
+    if(!Array.isArray(a)||a.length!==rawViews.positions.length||!a.every(Number.isFinite)||typeof packageRecord.clearingContentDigest!=='string')throw new Error('CLEARING_GPU_ATTRIBUTES_INVALID');
+    for(let i=0;i<a.length/3;i++)if(a[i*3+2]>0){
+      if(canonicalMaterialParameters.view[i*4+3]!==2||![1,2,3].includes(a[i*3+2]))throw new Error('CLEARING_GPU_PROJECTION_SCOPE_INVALID');
+      canonicalMaterialParameters.view.set(a.slice(i*3,i*3+3),i*4);clearingProjectedVertexCount++;
+    }
+  }
   const projectedRoleCodes = projectGpuRoleCodes(rawViews.roleCodes);
   const projectedWaterColors = projectRecoveredWaterBaseColors(rawViews, packageRecord);
   const projectedSandColors = projectShorelineSandColors(projectedWaterColors.view, packageRecord);
@@ -270,6 +279,7 @@ export function createHEarthRun8ER2DCanonicalGPUUploadViews(
       gpuRoleProjection: projectedRoleCodes.receipt,
       gpuWaterOpticalProjection: projectedWaterColors.receipt,
       gpuShorelineSandProjection: projectedSandColors.receipt,
+      woodlandClearingProjection:freezeRecord({enabled:options.enableWoodlandClearing===true,projectedVertexCount:clearingProjectedVertexCount,contentDigest:packageRecord.clearingContentDigest??null,sourcePackageMutated:false}),
       sourcePackageMutated: false,
       transportEncodingOnly: true
     }),

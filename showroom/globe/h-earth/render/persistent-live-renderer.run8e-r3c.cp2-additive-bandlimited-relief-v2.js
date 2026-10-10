@@ -1590,6 +1590,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         refreshFourTreeCompactShadow(true);
         resources.fourTreeCompactPassReady = true;
       } catch (error) {
+        resources.fourTreeCompactPassReady = false;
         allocated.dispose();
         resources.fourTreeCompact = null;
         throw error;

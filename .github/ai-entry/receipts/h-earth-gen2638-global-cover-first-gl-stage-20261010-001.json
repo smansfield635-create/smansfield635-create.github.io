@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2638-global-cover-first-gl-stage-20261010-001",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6083,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2638-gpu-stage-20261010",
+  "requestCommit": "a5bc85de7648115327c9c8b985b715a4c1a4ac1f",
+  "requestCommitParent": "a6536bd583755f369d227186041d2ae864257834",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a6536bd583755f369d227186041d2ae864257834",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "3db42d8c3029d09b681c64cd4854ec36b5a76a10"
+  },
+  "bridgeRunId": "38092870320",
+  "dispatchedRunId": 38092885952,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38092885952",
+  "dispatchedRunHeadSha": "a6536bd583755f369d227186041d2ae864257834",
+  "dispatchedAt": "2026-10-10T22:50:10.548Z",
+  "resolvedAt": "2026-10-10T22:50:14.924Z"
+}

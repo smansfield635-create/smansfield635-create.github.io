@@ -32,12 +32,17 @@ try{
  for(let i=0;i<7168;i++)words.setUint32(i*24+8,(200<<16)|200,true);
  const residency=createFourTreeCompactResidency(gl,{compactRecords:records,contactSidecar:sidecar,indexData:new Uint16Array([0,1,2,2,1,3]),program:pair.color,shadowProgram:pair.shadow});
  gl.viewport(0,0,64,64);gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+ const before=gl.getError();
+ if(before!==gl.NO_ERROR)throw Error('WEBGL2_PRE_DRAW_ERROR:'+before);
  const color=residency.draw(7168,'color');
+ const afterColor=gl.getError();
+ if(afterColor!==gl.NO_ERROR)throw Error('WEBGL2_COLOR_DRAW_ERROR:'+afterColor);
  const pixel=new Uint8Array(4);
  gl.readPixels(32,32,1,1,gl.RGBA,gl.UNSIGNED_BYTE,pixel);
  if(pixel[1]<40)throw Error('WEBGL2_VISIBLE_PIXEL_NOT_DRAWN:'+Array.from(pixel));
  const shadow=residency.draw(7168,'shadow');
  const error=gl.getError();
+ if(error!==gl.NO_ERROR)throw Error('WEBGL2_SHADOW_DRAW_ERROR:'+error);
  residency.dispose();pair.dispose();
  if(error!==gl.NO_ERROR)throw Error('WEBGL2_DRAW_ERROR:'+error);
  out.textContent=JSON.stringify({status:'PASS',renderer:gl.getParameter(gl.RENDERER),instances:color.instances,shadowInstances:shadow.instances,triangles:color.submittedTriangles});

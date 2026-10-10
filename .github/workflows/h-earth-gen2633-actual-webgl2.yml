@@ -19,11 +19,11 @@ jobs:
           set -euo pipefail
           root="showroom/globe/h-earth"
           mkdir -p "$root/render" "$root/validation"
-          base="https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/c0d714c09617588b39d6bbac75030dc29ea55abe"
+          base="https://raw.githubusercontent.com/smansfield635-create/smansfield635-create.github.io/6eb49013aa02fef7ac93d88f5ba955e39537bb4c"
           curl -fLsS --retry 3 --max-time 60 "$base/$root/render/compact-four-tree-foliage.v1.js" -o "$root/render/compact-four-tree-foliage.v1.js"
           curl -fLsS --retry 3 --max-time 60 "$base/$root/validation/four-tree-compact-webgl2-browser.verify.mjs" -o "$root/validation/four-tree-compact-webgl2-browser.verify.mjs"
           test "$(git hash-object "$root/render/compact-four-tree-foliage.v1.js")" = 698a439c11fc7b439a6dc32b4bab142a55186745
-          test "$(git hash-object "$root/validation/four-tree-compact-webgl2-browser.verify.mjs")" = 98a3223732f14a534439cac4b77ba98f80dcb64a
+          test "$(git hash-object "$root/validation/four-tree-compact-webgl2-browser.verify.mjs")" = 2d213fea77e87f7862628981e71b82ef28f25a4b
       - uses: actions/setup-node@v4
         with:
           node-version: '22'

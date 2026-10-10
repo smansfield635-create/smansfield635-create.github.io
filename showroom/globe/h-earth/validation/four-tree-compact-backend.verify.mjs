@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
@@ -171,6 +172,20 @@ check('COMPACT_PROGRAM_LINK_FAILURE_ROLLBACK',()=>{
  deleteShader(){deleted++;},deleteProgram(){deleted++;}};
  assert.throws(()=>createFourTreeCompactPrograms(gl),/PROGRAM_LINK/);
  assert.equal(deleted,6);
+});
+// Fail closed if any approved four-tree appearance source changes under compact adoption.
+// Exact Git blob identities independently verified in owner-approved 9cff8bbd
+// and current gen2633 source. This is custody, not integrated visual acceptance.
+const approvedAppearanceBlobs = Object.freeze({
+  'showroom/globe/h-earth/render/geometry-woodland-tree-trial.js':'3958513dec53aa27f4216388a190f772e71fb9b0',
+  'showroom/globe/h-earth/render/geometry-landscape-sector.p2.js':'02a2568e8a478fb9153ec29910266671ba349b01',
+  'showroom/globe/h-earth/render/woodland-clearing-trial.js':'db2c7d2e132743e0ced34444dd2272ac5eba24ce'
+});
+check('APPROVED_FOUR_TREE_APPEARANCE_SOURCE_CUSTODY',()=>{
+  for(const [file,expected] of Object.entries(approvedAppearanceBlobs)){
+    const actual=execFileSync('git',['hash-object',file],{encoding:'utf8'}).trim();
+    assert.equal(actual,expected,'APPROVED_APPEARANCE_BLOB_DRIFT:'+file);
+  }
 });
 const outstanding=['INTEGRATED_COLOR_PASS','INTEGRATED_STATIC_SHADOW_PASS','FOUR_FIXED_CAMERA_COMPARISONS','ACTUAL_GPU_ALLOCATION','HISTORICAL_AND_PAIRED_TIMING','EXPERIENCE_ANCHOR','PHONE_TABLET_OWNER_ACCEPTANCE'];
 const receipt={schema:'H_EARTH_FOUR_TREE_COMPACT_BACKEND_VERIFICATION_v1',result:'INCOMPLETE_NOT_QUALIFIED',checks,outstanding,qualificationEstablished:false};

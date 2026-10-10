@@ -1492,7 +1492,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     drawGlobalCover(packet);
     // Draw only explicitly installed, qualified compact color residency.
     // No replacement of existing woodland geometry is inferred by this hook.
-    if (resources.fourTreeCompact?.colorShadowIntegrationQualified === true) {
+    if (resources.fourTreeCompactPassReady === true) {
       drawFourTreeCompactPayload(undefined, 'color');
       gl.bindVertexArray(resources.vertexArray);
     }
@@ -1530,9 +1530,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (resources.fourTreeCompact) throw new Error('FOUR_TREE_COMPACT_ALREADY_INSTALLED');
     // A qualified draw program and quad indices opt into transactional residency.
     // Without them, preserve the previous buffer-only staging contract.
-    const hasDrawInputs = payload?.program != null || payload?.indexData != null;
-    if (hasDrawInputs && (!payload?.program || !payload?.indexData)) {
-      throw new TypeError('FOUR_TREE_COMPACT_DRAW_INPUT_MISSING');
+    const hasDrawInputs = payload?.program != null || payload?.indexData != null || payload?.shadowProgram != null;
+    if (hasDrawInputs && (!payload?.program || !payload?.indexData || !payload?.shadowProgram)) {
+      throw new TypeError('FOUR_TREE_COMPACT_BOTH_PASSES_REQUIRED');
     }
     // Never accept a caller-supplied program as evidence that both passes are
     // integrated. Keep the staged representation separate from world drawing.
@@ -1540,6 +1540,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       ? createFourTreeCompactResidency(gl, payload)
       : createFourTreeCompactGpuBuffers(gl, payload);
     resources.fourTreeCompact = allocated;
+    resources.fourTreeCompactPassReady = hasDrawInputs;
     return allocated.accounting;
   }
   function drawFourTreeCompactPayload(instanceCount, pass = 'color') {
@@ -1555,6 +1556,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (!resources.fourTreeCompact) return false;
     resources.fourTreeCompact.dispose();
     resources.fourTreeCompact = null;
+    resources.fourTreeCompactPassReady = false;
     return true;
   }
   function getResourceReceipt() {
@@ -1574,7 +1576,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },
-      initialized, fourTreeCompact: resources.fourTreeCompact ? { ...resources.fourTreeCompact.accounting, installed:true, colorShadowIntegrationQualified:false } : { installed:false, actualUploadedBytes:0 }, dimensions: { width, height },
+      initialized, fourTreeCompact: resources.fourTreeCompact ? { ...resources.fourTreeCompact.accounting, installed:true, colorShadowIntegrationQualified:resources.fourTreeCompactPassReady === true } : { installed:false, actualUploadedBytes:0 }, dimensions: { width, height },
       context: {
         created: true, lost: gl.isContextLost(), vendor: gl.getParameter(gl.VENDOR), renderer: gl.getParameter(gl.RENDERER),
         unmaskedVendor: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_VENDOR_WEBGL) : null,

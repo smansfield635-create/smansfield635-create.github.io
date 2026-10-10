@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-four-tree-woodland-direct-327deb24",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6069,
+  "requestBranch": "ai-dispatch-request-h-earth-four-tree-woodland-visibility-2636",
+  "requestCommit": "2654376e1dfa23783e8c6711e5b4acc8b70c83ff",
+  "requestCommitParent": "7fbabbfdadd3111f427039317051166a13e176b1",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7fbabbfdadd3111f427039317051166a13e176b1",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "327deb241ae43b2bbcf355f56d759697420bdca2",
+    "route_query": "arrival=approved-four-trees",
+    "route_path": "/showroom/globe/h-earth/"
+  },
+  "bridgeRunId": "38078383681",
+  "dispatchedRunId": 38078396482,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38078396482",
+  "dispatchedRunHeadSha": "7fbabbfdadd3111f427039317051166a13e176b1",
+  "dispatchedAt": "2026-10-10T19:05:17.375Z",
+  "resolvedAt": "2026-10-10T19:05:21.552Z"
+}

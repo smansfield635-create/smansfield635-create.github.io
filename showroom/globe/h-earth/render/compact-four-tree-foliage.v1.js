@@ -125,6 +125,18 @@ void main() {
   vec3 position = reconstructCompactCorner(aCompactWords0, aCompactWords1, uint(gl_VertexID));
   gl_Position = uCompactLightMatrix * vec4(position, 1.0);
 }`;
+export function bindFourTreeCompactMatrix(gl, program, name, matrix) {
+  if (!gl || !program || !['uCompactViewProjection','uCompactLightMatrix'].includes(name))
+    throw new TypeError('FOUR_TREE_COMPACT_MATRIX_BINDING_INVALID');
+  if ((!Array.isArray(matrix) && !(matrix instanceof Float32Array)) ||
+      matrix.length !== 16 || Array.from(matrix).some(v => !Number.isFinite(v)))
+    throw new RangeError('FOUR_TREE_COMPACT_MATRIX_INVALID');
+  const location=gl.getUniformLocation(program,name);
+  if(location==null)throw new Error('FOUR_TREE_COMPACT_MATRIX_UNIFORM_INACTIVE:'+name);
+  gl.useProgram(program);
+  gl.uniformMatrix4fv(location,false,new Float32Array(matrix));
+  return true;
+}
 export const FOUR_TREE_COMPACT_COLOR_FRAGMENT_GLSL = `#version 300 es
 precision highp float;
 out vec4 compactColor;

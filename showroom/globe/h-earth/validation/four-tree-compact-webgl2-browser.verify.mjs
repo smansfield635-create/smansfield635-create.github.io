@@ -23,7 +23,7 @@ try{
  if(!gl)throw Error('WEBGL2_CONTEXT_UNAVAILABLE');
  const pair=createFourTreeCompactPrograms(gl);
  const origin={origin:[0,0,0],positionScale:[0.001,0.001,0.001],leafExtentScale:[0.001,0.001]};
- const identity=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
+ const identity=[1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1];
  for(const program of [pair.color,pair.shadow])bindFourTreeCompactReconstructionUniforms(gl,program,origin);
  bindFourTreeCompactMatrix(gl,pair.color,'uCompactViewProjection',identity);
  bindFourTreeCompactMatrix(gl,pair.shadow,'uCompactLightMatrix',identity);

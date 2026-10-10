@@ -1574,6 +1574,14 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (!payload?.reconstruction || !payload?.compactRecords || !payload?.contactSidecar) {
       throw new TypeError('FOUR_TREE_COMPACT_APPROVED_PAYLOAD_REQUIRED');
     }
+    // The admitted four-tree payload must be exact-sized before allocating
+    // programs; never allow a placeholder or partial upload to activate.
+    if (!ArrayBuffer.isView(payload.compactRecords) ||
+        payload.compactRecords.byteLength !== FOUR_TREE_COMPACT_CONTRACT.compactBufferBytes ||
+        !ArrayBuffer.isView(payload.contactSidecar) ||
+        payload.contactSidecar.byteLength !== FOUR_TREE_COMPACT_CONTRACT.sidecarBufferBytes) {
+      throw new RangeError('FOUR_TREE_COMPACT_APPROVED_PAYLOAD_BYTES_INVALID');
+    }
     if (resources.fourTreeCompact) throw new Error('FOUR_TREE_COMPACT_ALREADY_INSTALLED');
     const programs=createFourTreeCompactPrograms(gl);
     try {

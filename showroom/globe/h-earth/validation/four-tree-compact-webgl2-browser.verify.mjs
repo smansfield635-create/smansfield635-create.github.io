@@ -48,7 +48,6 @@ try{
  const error=gl.getError();
  if(error!==gl.NO_ERROR)throw Error('WEBGL2_SHADOW_DRAW_ERROR:'+error);
  residency.dispose();pair.dispose();
- if(error!==gl.NO_ERROR)throw Error('WEBGL2_DRAW_ERROR:'+error);
  out.textContent=JSON.stringify({status:'PASS',renderer:gl.getParameter(gl.RENDERER),instances:color.instances,shadowInstances:shadow.instances,triangles:color.submittedTriangles});
 }catch(e){out.textContent=JSON.stringify({status:'FAIL',error:String(e)});}
 </script></body></html>`);

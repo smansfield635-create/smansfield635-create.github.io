@@ -1528,8 +1528,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
   // Gen2633: explicitly managed compact leaf residency. Never silently replace
   // the approved woodland geometry before the color/shadow path is qualified.
-  function refreshFourTreeCompactShadow() {
-    if (!initialized || !resources.clearing || resources.fourTreeCompactPassReady !== true) {
+  function refreshFourTreeCompactShadow(duringInstallation = false) {
+    if (!initialized || !resources.clearing || (!duringInstallation && resources.fourTreeCompactPassReady !== true) || !resources.fourTreeCompact) {
       throw new Error('FOUR_TREE_COMPACT_SHADOW_REFRESH_NOT_READY');
     }
     const clearing = resources.clearing;
@@ -1582,16 +1582,14 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       ? createFourTreeCompactResidency(gl, payload)
       : createFourTreeCompactGpuBuffers(gl, payload);
     resources.fourTreeCompact = allocated;
-    // Commit visibility only after both the GPU residency and the complete
-    // clearing depth-map refresh succeed. A failed shadow refresh must never
-    // leave the color path active with an incomplete shadow map.
+    // Transactional activation: visibility is withheld until the static
+    // clearing shadow map has been regenerated successfully.
     resources.fourTreeCompactPassReady = false;
     if (hasDrawInputs) {
       try {
+        refreshFourTreeCompactShadow(true);
         resources.fourTreeCompactPassReady = true;
-        refreshFourTreeCompactShadow();
       } catch (error) {
-        resources.fourTreeCompactPassReady = false;
         allocated.dispose();
         resources.fourTreeCompact = null;
         throw error;

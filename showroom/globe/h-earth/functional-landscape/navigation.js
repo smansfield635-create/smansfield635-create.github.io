@@ -54,7 +54,10 @@ export const H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS=freeze({
   BERM:{waypointId:'BERM',label:'Coastal berm',position:{x:0,z:-132},yawDegrees:0,pitchDegrees:-7},
   LOWLAND:{waypointId:'LOWLAND',label:'Lowland',position:{x:-42,z:-158},yawDegrees:-18,pitchDegrees:-6},
   HILL:{waypointId:'HILL',label:'Navigable hill',position:{x:72,z:-172},yawDegrees:18,pitchDegrees:-8},
-  RIDGE:{waypointId:'RIDGE',label:'Ridge or bluff',position:{x:145,z:-225},yawDegrees:12,pitchDegrees:-10}
+  RIDGE:{waypointId:'RIDGE',label:'Ridge or bluff',position:{x:145,z:-225},yawDegrees:12,pitchDegrees:-10},
+  // Owner-reviewed exact walking camera (woodland-clearing-trial.record.json).
+  // Explicit visit only: the canonical COAST landing remains unchanged.
+  WOODLAND_CLEARING_FOUR_TREES:{waypointId:'WOODLAND_CLEARING_FOUR_TREES',label:'Four approved woodland trees',position:{x:-139.40267987050615,z:-194.5},yawDegrees:0,pitchDegrees:16}
 });
 
 const terrainChunks=()=>H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN.chunks.filter(c=>c.terrainMemberAddressIds.length>0&&c.physicalRole.includes('TERRAIN'));

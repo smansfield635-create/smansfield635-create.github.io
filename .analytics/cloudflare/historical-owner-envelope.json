@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-10T14:31:19Z",
+  "generatedAt": "2026-10-10T15:31:25Z",
   "window": {
-    "start": "2026-07-12T14:31:19Z",
-    "end": "2026-10-10T14:31:19Z"
+    "start": "2026-07-12T15:31:25Z",
+    "end": "2026-10-10T15:31:25Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -254,16 +254,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {

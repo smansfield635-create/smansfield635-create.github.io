@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-10T17:28:33Z",
+  "generatedAt": "2026-10-10T18:38:24Z",
   "window": {
-    "start": "2026-07-12T17:28:33Z",
-    "end": "2026-10-10T17:28:33Z"
+    "start": "2026-07-12T18:38:24Z",
+    "end": "2026-10-10T18:38:24Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -202,16 +202,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -330,12 +330,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 41,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 41,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {

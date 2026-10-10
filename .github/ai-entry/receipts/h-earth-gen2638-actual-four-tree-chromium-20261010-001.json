@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2638-actual-four-tree-chromium-20261010-001",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6082,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2638-four-tree-browser-20261010",
+  "requestCommit": "9f57a97c87d72fa707af44c876f235a7a5707197",
+  "requestCommitParent": "a6536bd583755f369d227186041d2ae864257834",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a6536bd583755f369d227186041d2ae864257834",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "783c6347f768565e794418ff02a0201e69e0730d"
+  },
+  "bridgeRunId": "38092228447",
+  "dispatchedRunId": 38092240145,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38092240145",
+  "dispatchedRunHeadSha": "a6536bd583755f369d227186041d2ae864257834",
+  "dispatchedAt": "2026-10-10T22:39:26.771Z",
+  "resolvedAt": "2026-10-10T22:39:30.880Z"
+}

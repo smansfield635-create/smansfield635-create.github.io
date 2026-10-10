@@ -34,6 +34,9 @@ try{
  gl.viewport(0,0,64,64);gl.clearColor(0,0,0,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
  const before=gl.getError();
  if(before!==gl.NO_ERROR)throw Error('WEBGL2_PRE_DRAW_ERROR:'+before);
+ gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+ gl.enable(gl.DEPTH_TEST);
+ gl.depthFunc(gl.LEQUAL);
  const color=residency.draw(7168,'color');
  const afterColor=gl.getError();
  if(afterColor!==gl.NO_ERROR)throw Error('WEBGL2_COLOR_DRAW_ERROR:'+afterColor);

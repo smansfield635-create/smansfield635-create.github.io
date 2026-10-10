@@ -114,6 +114,24 @@ check('INSTANCED_DRAW',()=>{
  view.dispose();
  assert.throws(()=>view.draw(),/VIEW_DISPOSED/);
 });
+check('DUAL_PASS_PROGRAM_SELECTION_AND_FAIL_CLOSED_SHADOW',()=>{
+ const programs=[],draws=[];
+ const gl={ARRAY_BUFFER:34962,ELEMENT_ARRAY_BUFFER:34963,STATIC_DRAW:35044,UNSIGNED_INT:5125,TRIANGLES:4,
+ createVertexArray:()=>({}),createBuffer:()=>({}),bindVertexArray(){},bindBuffer(){},bufferData(){},
+ enableVertexAttribArray(){},vertexAttribIPointer(){},vertexAttribDivisor(){},
+ useProgram:p=>programs.push(p),drawElementsInstanced:(...args)=>draws.push(args),deleteBuffer(){},deleteVertexArray(){}};
+ const color={name:'color'},shadow={name:'shadow'},indices=new Uint32Array([0,1,2,2,1,3]);
+ const view=createFourTreeCompactDrawView(gl,{compactBuffer:{},contactSidecarBuffer:{},indexData:indices,program:color,shadowProgram:shadow});
+ assert.equal(view.draw(7168,'color').submittedTriangles,14336);
+ assert.equal(view.draw(7168,'shadow').submittedTriangles,14336);
+ assert.deepEqual(programs,[color,shadow]);
+ assert.equal(draws.length,2);
+ assert.throws(()=>view.draw(1,'invalid'),/DRAW_PASS_INVALID/);
+ view.dispose();
+ const noShadow=createFourTreeCompactDrawView(gl,{compactBuffer:{},contactSidecarBuffer:{},indexData:indices,program:color});
+ assert.throws(()=>noShadow.draw(1,'shadow'),/SHADOW_PROGRAM_REQUIRED/);
+ noShadow.dispose();
+});
 const outstanding=['INTEGRATED_COLOR_PASS','INTEGRATED_STATIC_SHADOW_PASS','FOUR_FIXED_CAMERA_COMPARISONS','ACTUAL_GPU_ALLOCATION','HISTORICAL_AND_PAIRED_TIMING','EXPERIENCE_ANCHOR','PHONE_TABLET_OWNER_ACCEPTANCE'];
 const receipt={schema:'H_EARTH_FOUR_TREE_COMPACT_BACKEND_VERIFICATION_v1',result:'INCOMPLETE_NOT_QUALIFIED',checks,outstanding,qualificationEstablished:false};
 const index=process.argv.indexOf('--output');

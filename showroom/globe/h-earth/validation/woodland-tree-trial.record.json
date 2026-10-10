@@ -1,0 +1,2250 @@
+{
+  "schema": "H_EARTH_ALL_TREE_VARIATION_RECORD_v1",
+  "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+  "generation": 2630,
+  "status": "REPRESENTATIVE_STAGGERED_ATTACHMENT_VISUAL_FAILURE",
+  "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+  "acceptedDesignSource": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+  "candidateRenderSourceCommit": "c1dfe13f572542f8e0ed95e0c702ab78437752a5",
+  "candidateRenderSourceTree": "7dcf071b84db4e0634d5ae54d6eff29d9686512e",
+  "localTestCommit": "6fe8b394630c6eb071192b6eaf3987b003d4cb28",
+  "localTestTree": "7dcf071b84db4e0634d5ae54d6eff29d9686512e",
+  "remoteAndTestedWholeTreesIdentical": true,
+  "sourceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "15d7c0bea04c7c4677cbae0089ccdafeb0764222a942f7b9b54cd3b158f880d8"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+      "sha256": "649c08a3a15be42645f51bde3280b733afdcd652ca5e49c0ccdc402dfbc326ca"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs",
+      "sha256": "b46312bb873fff7db38cfe18098ec481fe3135878a99665ee95ac77cd9f60333"
+    }
+  ],
+  "canonicalAdmission": {
+    "acquisitionCommitSha": "555cd01c74f5421cc412cfd94eca9e8b5616b59d",
+    "auditEvents": [
+      {
+        "details": {
+          "expectedMainHead": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+          "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "sourceCommentId": 6071208717
+        },
+        "event": "EXECUTION_INPUT_VALIDATED",
+        "sequence": 1
+      },
+      {
+        "details": {
+          "issueNumber": 6051,
+          "sourceCommentId": 6071208717
+        },
+        "event": "OWNER_SOURCE_AUTHENTICATED",
+        "sequence": 2
+      },
+      {
+        "details": {
+          "ledgerGeneration": 2629,
+          "observedLedgerBlobSha": "485b3f086f22d595fb7f183aa133f8dfb04045a3",
+          "observedLockRefHead": "41d3194704d02d485b05557296a7f6fa6c5b7ab8"
+        },
+        "event": "CANONICAL_STATE_OBSERVED",
+        "sequence": 3
+      },
+      {
+        "details": {
+          "lockGeneration": 2630,
+          "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+          "planIsReceipt": false
+        },
+        "event": "CANONICAL_PLAN_PRODUCED",
+        "sequence": 4
+      },
+      {
+        "details": {
+          "ledgerBlobSha": "485b3f086f22d595fb7f183aa133f8dfb04045a3",
+          "lockRefHead": "41d3194704d02d485b05557296a7f6fa6c5b7ab8",
+          "mainHead": "89df5371e0afb4ae7f53aead80071fae613e1f46"
+        },
+        "event": "WRITE_BOUNDARY_REVALIDATED",
+        "sequence": 5
+      },
+      {
+        "details": {
+          "createdCommitSha": "555cd01c74f5421cc412cfd94eca9e8b5616b59d",
+          "ledgerBlobSha": "778f701d7a02b7faf5ad8b2bd804e74fad0e328f",
+          "message": "Acquire operation lock 2630: H_EARTH_ALL_TREE_VARIATION_20261008",
+          "parent": "41d3194704d02d485b05557296a7f6fa6c5b7ab8"
+        },
+        "event": "CANDIDATE_LEDGER_COMMIT_MATERIALIZED",
+        "sequence": 6
+      },
+      {
+        "details": {
+          "createdCommitSha": "555cd01c74f5421cc412cfd94eca9e8b5616b59d"
+        },
+        "event": "LOCK_REF_CAS_COMMITTED",
+        "sequence": 7
+      },
+      {
+        "details": {
+          "commitVerification": "CANONICAL_LEDGER_COMMIT_VERIFIED",
+          "lineageVerification": "CANONICAL_LOCK_REF_LINEAGE_VERIFIED",
+          "lockGeneration": 2630,
+          "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008"
+        },
+        "event": "READBACK_AND_LINEAGE_VERIFIED",
+        "sequence": 8
+      }
+    ],
+    "canonicalAdmissionReceipt": {
+      "branchCreationAuthorized": true,
+      "errorCode": null,
+      "field": null,
+      "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+      "implementationInferenceAuthorized": false,
+      "lock": {
+        "governingHead": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+        "independentAuthorityProvenance": {
+          "authorityIdentity": {
+            "governingHead": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+            "lockGeneration": 2630,
+            "lockScope": "H_EARTH_ALL_TREE_VARIATION",
+            "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+            "procedureLocatorDigest": "19dea769c1b3a16545dfb0c811c13ae35af2424dece8d96e55dfe78bcc9012ba",
+            "requestDigest": "a2ef24328888d8bc5ed3efefe44f65e8466aba2467dccf63602c5fb9c97a760d",
+            "scopeHash": "fc78bb81401e81f5a0de5b2807f23279f4c37d6777eb8703948a9992b2dd5813"
+          },
+          "bindingDigest": "8ccbbbbfc7250b07f5f38f4cb8fcd706a997c2156a442570b861630067e9f657",
+          "compareAndSwap": {
+            "observedLedgerBlobSha": "485b3f086f22d595fb7f183aa133f8dfb04045a3",
+            "observedLockRefHead": "41d3194704d02d485b05557296a7f6fa6c5b7ab8"
+          },
+          "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+          "source": {
+            "authorAssociation": "OWNER",
+            "authorLogin": "smansfield635-create",
+            "commentBodySha256": "bdf7dd76e75f7aad43cfdad10a669d46a5d897e2dd0c89d7321ed1803cedc385",
+            "commentId": 6071208717,
+            "issueNumber": 6051,
+            "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+            "repository": "smansfield635-create/smansfield635-create.github.io"
+          },
+          "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+        },
+        "lockGeneration": 2630,
+        "lockScope": "H_EARTH_ALL_TREE_VARIATION",
+        "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+        "procedureLocatorDigest": "19dea769c1b3a16545dfb0c811c13ae35af2424dece8d96e55dfe78bcc9012ba",
+        "released": false,
+        "requestDigest": "a2ef24328888d8bc5ed3efefe44f65e8466aba2467dccf63602c5fb9c97a760d",
+        "schema": "REPOSITORY_OPERATION_LOCK_v1",
+        "scopeHash": "fc78bb81401e81f5a0de5b2807f23279f4c37d6777eb8703948a9992b2dd5813",
+        "state": "ADMITTED_LOCKED"
+      },
+      "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+      "operationStarted": true,
+      "procedureLocatorDigest": "19dea769c1b3a16545dfb0c811c13ae35af2424dece8d96e55dfe78bcc9012ba",
+      "repositoryWritesAuthorized": true,
+      "requestDigest": "a2ef24328888d8bc5ed3efefe44f65e8466aba2467dccf63602c5fb9c97a760d",
+      "result": "ADMITTED_AND_LOCKED",
+      "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+      "sourceDocument": null,
+      "workflowExecutionAuthorized": true
+    },
+    "committedLedgerBlobSha": "778f701d7a02b7faf5ad8b2bd804e74fad0e328f",
+    "directUnplannedLedgerMutation": false,
+    "githubActionsAgentTransport": false,
+    "governingHead": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+    "lockGeneration": 2630,
+    "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+    "lockScope": "H_EARTH_ALL_TREE_VARIATION",
+    "observedLedgerBlobSha": "485b3f086f22d595fb7f183aa133f8dfb04045a3",
+    "observedLockRefHead": "41d3194704d02d485b05557296a7f6fa6c5b7ab8",
+    "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+    "planWasReceipt": false,
+    "plannerSemanticsDuplicated": false,
+    "procedureLocatorDigest": "19dea769c1b3a16545dfb0c811c13ae35af2424dece8d96e55dfe78bcc9012ba",
+    "readbackVerified": true,
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "repositoryMutationLimitedToCanonicalLedger": true,
+    "requestDigest": "a2ef24328888d8bc5ed3efefe44f65e8466aba2467dccf63602c5fb9c97a760d",
+    "result": "ADMITTED_AND_LOCKED",
+    "routeId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_EXECUTOR_V1",
+    "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_EXECUTION_RECEIPT_v1",
+    "scopeHash": "fc78bb81401e81f5a0de5b2807f23279f4c37d6777eb8703948a9992b2dd5813",
+    "sourceCommentId": 6071208717,
+    "transportRecovery": {
+      "mode": "READ_ONLY_REPLAY_OF_ORIGINAL_OBSERVATIONS_AND_ACTUAL_COMMITTED_OBJECTS",
+      "originalInterruption": "NORMALIZED_UPDATE_REF_SUCCESS_WITHOUT_REST_OBJECT_SHA",
+      "noAdditionalAcquisition": true,
+      "verifiedAcquisitionCommit": "555cd01c74f5421cc412cfd94eca9e8b5616b59d"
+    }
+  },
+  "differentialContinuity": {
+    "ambiguousEvidenceDisposition": "STRICT_SUCCESSOR_REQUIRED",
+    "authorityExpanded": false,
+    "baseHead": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+    "baseIsAncestor": true,
+    "carryForwardAuthorized": true,
+    "changedPaths": [
+      ".analytics/cloudflare/composition.json",
+      ".analytics/cloudflare/historical-owner-envelope.json",
+      ".analytics/cloudflare/latest.json",
+      ".analytics/cloudflare/owner-heartbeats.json",
+      ".analytics/cloudflare/reporting-methodology.json",
+      ".analytics/cloudflare/status.txt",
+      "analytics/data/latest.json"
+    ],
+    "currentHead": "06ed26ab7aaf3aedf74ac14d3dae05c210f9ea35",
+    "dependencyPaths": [
+      ".github",
+      "AGENTS.md",
+      "AI_ENTRYPOINT.json",
+      "control-plane",
+      "h-earth-3d",
+      "package-lock.json",
+      "package.json",
+      "showroom/globe/h-earth",
+      "tools"
+    ],
+    "dependencySurfaceComplete": true,
+    "mergeAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "overlapsObserved": [],
+    "reason": "COMPLETE_DISJOINT_CHANGE_PROVEN",
+    "result": "CARRY_FORWARD_APPROVED",
+    "schema": "DIFFERENTIAL_CONTINUITY_RECEIPT_v1",
+    "strictSuccessorFallbackPreserved": true
+  },
+  "frozenBaseline": {
+    "schema": "H_EARTH_ALL_TREE_FROZEN_BASELINE_v1",
+    "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+    "generation": 2630,
+    "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+    "tree": "d129d8fc3c849550bbb47958d1e2b0cbc3d30b1b",
+    "sectorTriangles": 61044,
+    "sectorTriangleCeiling": 64000,
+    "treeTriangles": 26340,
+    "treeVertices": 14810,
+    "treeVertexIndexByteCeiling": 1337970,
+    "basePackageAllocatedByteCeiling": 6710331,
+    "fullResidentBufferByteCeiling": 34741547,
+    "residentBufferCount": 1204,
+    "perTreeVertexAndTriangleCeilings": "geometry.json:perTree",
+    "fullResidency": {
+      "complete": true,
+      "preparationComplete": true,
+      "totalInstanceCount": 27585,
+      "residentInstanceCount": 27585,
+      "totalBatchCount": 108,
+      "residentBatchCount": 108,
+      "droppedPlacementCount": 0,
+      "worldRebuildCount": 0
+    },
+    "viewport": {
+      "width": 800,
+      "height": 1280,
+      "deviceScaleFactor": 1
+    },
+    "cameraRoute": [
+      {
+        "id": "walking",
+        "x": -139.40267987050615,
+        "z": -194.5,
+        "yaw": 0,
+        "pitch": 16
+      },
+      {
+        "id": "close",
+        "x": -139.40267987050615,
+        "z": -200,
+        "yaw": 0,
+        "pitch": 26
+      },
+      {
+        "id": "side",
+        "x": -129,
+        "z": -210.74616902099837,
+        "yaw": -90,
+        "pitch": 23
+      },
+      {
+        "id": "distant",
+        "x": -139.40267987050615,
+        "z": -178.5,
+        "yaw": 0,
+        "pitch": 9
+      }
+    ],
+    "redrawsPerView": 96,
+    "maximumMedianRatio": 1.25,
+    "maximumP95Ratio": 1.35,
+    "costObservation": "HEADLESS_SWIFTSHADER_DIAGNOSTIC_ONLY",
+    "physicalDeviceAcceptance": false,
+    "baselineRouteQualification": "PASS_4_CAMERAS_96_REDRAWS_RESOURCE_GUARDS",
+    "noBudgetRelaxation": true,
+    "baselineGeometrySha256": "51fcb1c4c763eb752f6720ccd67d263bfd2ab8134740daeccf31d79af6913b23",
+    "loadedReadbackSha256": "d40f7a7caaad747bceaecc5b6a39fbdefa43888b0815c23b189981af643c7340",
+    "baselineSyntheticTouch": "PASS"
+  },
+  "canonicalOutput": {
+    "status": "NOT_RUN_FOR_NEW_REPRESENTATIVE_SOURCE",
+    "previousAll65Pass": "Retained under priorFailedCandidates and checkpoint290856; cannot qualify changed helper"
+  },
+  "actualBrowser": {
+    "status": "FOUR_STATIC_VIEWS_CAPTURED_ONLY",
+    "candidate": "c1dfe13f572542f8e0ed95e0c702ab78437752a5",
+    "testedLocal": "6fe8b394630c6eb071192b6eaf3987b003d4cb28",
+    "sourceTree": "7dcf071b84db4e0634d5ae54d6eff29d9686512e",
+    "readyMs": 126347,
+    "errors": [],
+    "physicalAcceptance": false,
+    "timingQualification": "NOT_RUN",
+    "fullResidencyReachedForCapture": true
+  },
+  "internalVisualRepair": {
+    "priorRemoteSourceCommit": "002e88d777559c9d1b04156c2f0d81e500b33a9a",
+    "reason": "Actual walking view showed sparse foliage at major limb ends and upper leader.",
+    "change": "Same leaf population clustered around outer major limbs and upper leader, with broader blades and adjusted along/upward direction inside unchanged crown/height fit.",
+    "changedPath": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+    "vertexTriangleAndStorageCountsChanged": false,
+    "priorEvidencePreserved": "issue #6051 continuation record and immutable prior source commit; private review archive retains final comparison.",
+    "historical": true
+  },
+  "review": {
+    "mode": "EXACT_SOURCE_PRIVATE_READ_ONLY_PREVIEW",
+    "url": "https://hearth-clearing-device-measurement.smansfield635.chatgpt.site",
+    "publicationState": "PRIOR_PREVIEW_PRESERVED_FAILED_STAGGERED_REPRESENTATIVE_NOT_PUBLISHED",
+    "pairedDeviceMeasurement": "PHONE_AND_TABLET_PENDING",
+    "ownerPerceptualDisposition": "NO_NEW_FORMAL_OWNER_DISPOSITION",
+    "physicalPerformanceAcceptance": false,
+    "publishedCandidateCommit": "13a89d75c7da09b7dc3346db531a6b3e2f89d212",
+    "siteSourceCommit": "5fec78fe47d44fb0e012aa411191670683b72e07",
+    "publicationReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6051#issuecomment-6072606342",
+    "formalOwnerKeepOrRejectRecorded": false,
+    "assistantVisualDisposition": "VISUAL_FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
+    "failedUnpublishedCandidateCommit": "c1dfe13f572542f8e0ed95e0c702ab78437752a5"
+  },
+  "releaseEligible": false,
+  "mainMerged": false,
+  "hEarthProductionDeployment": false,
+  "activeScopeRetainedForCandidateFinalization": true,
+  "visualFailure": {
+    "observedCandidate": "c1dfe13f572542f8e0ed95e0c702ab78437752a5",
+    "testedLocalCandidate": "6fe8b394630c6eb071192b6eaf3987b003d4cb28",
+    "identicalSourceTree": "7dcf071b84db4e0634d5ae54d6eff29d9686512e",
+    "failedCriteria": [
+      "Small isolated blade sprays leave long inner and outer limbs exposed",
+      "Seven restored branch levels do not restore overlapping dense crown coverage",
+      "Side and distant silhouettes remain thin with separated foliage tufts"
+    ],
+    "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
+    "causeAssessment": "Attachment placement improves, but 84 small blades across 22 roots remain sparse. Restoration of seven major levels corrects the audited topology defect without restoring approved crown density; this allocation fails, and budget infeasibility is not established."
+  },
+  "deterministicContinuation": {
+    "workstream": "ALL_65_TREE_VISUAL_ADAPTATION; separate from closed clearing trial",
+    "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+    "designSource": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+    "repairBase": "c1dfe13f572542f8e0ed95e0c702ab78437752a5",
+    "branch": "h-earth-all-tree-variation-20261008",
+    "admissionGeneration": 2630,
+    "scope": "Existing five admitted paths only; preserve placements, basal support, ecology, terrain, grass, rocks, navigation, renderer and loading behavior",
+    "nextAction": "First prove a genuine shared-edge folded-leaf tuft against the accepted blade: rigidly rotate blades around one exactly coincident root-to-folded-side edge; preserve blade dimensions and closed four-face shape, and verify normals after actual sharing. Proposed allocation:89wood vertices +22tufts x2 shared edge vertices +115leaves x2 unique vertices =363vertices;130wood +115x4leaf faces =590triangles. This is a hypothesis, not a tested result; reject if it produces fan-like whorls, coincident-face defects or normal cancellation. Use accepted versus current projected leaf area/orientation/overlap evidence to distribute the tufts across seven staggered levels and inner limbs, retaining lower attachments and apex. Then one representative actual geometry and four-view comparison within364vertices/644triangles, original generation2630/five paths. Stop on visual failure; only pass permits all65 adaptation, unchanged budget/runtime qualification and exact phone/tablet preview acceptance. No solid crowns, limit relaxation or budget impossibility claim.",
+    "sequence": [
+      "Preserve exact failed staggered representative and attachment diagnostics.",
+      "Cost an overlapping folded-leaf tuft topology against accepted reference.",
+      "One representative: actual geometry budget/normals then four fixed views; stop on failure.",
+      "Only visual pass permits all65, unchanged qualification, exact preview and phone/tablet acceptance."
+    ],
+    "frozenLimitsUnchanged": true,
+    "pageExcellenceSelectedGate": false,
+    "registryPreflight": "NOT_APPLICABLE",
+    "stopConditions": [
+      "Scope or relevant dependency exceeds existing admission: resolve only that boundary before mutation.",
+      "Any frozen budget/parity/runtime assertion fails: preserve exact failure and repair within scope, without relaxing limits.",
+      "Visual comparison still fails: preserve candidate as failed and do not claim acceptance.",
+      "Missing physical timing or owner acceptance: preserve candidate; no inferred PASS, merge or H-Earth deployment."
+    ],
+    "releaseEligible": false
+  },
+  "priorFailedCandidates": [
+    {
+      "checkpoint": "0aef9e473e04085c43b9544ecc787ba8cacb43ae",
+      "sourceCommit": "37d83c68c71a47aba8d9f6766658783ccce3702d",
+      "sourceTree": "a5d3cb637ebf3242961c55a43cd923314fc6d092",
+      "visualFailure": {
+        "observedCandidate": "13a89d75c7da09b7dc3346db531a6b3e2f89d212",
+        "source": "Owner-supplied screenshots, followed by assistant visual assessment and owner request for durable failure/continuation record",
+        "screenshots": [
+          "28255.jpg (new distant view)",
+          "28253.jpg (new close view)",
+          "28243.jpg (earlier approved-direction reference)"
+        ],
+        "attachmentCandidateIdentityIndependentlyVerified": false,
+        "observationScope": "Visible appearance only; screenshots do not establish completed residency, timing, or a loading failure",
+        "failedCriteria": [
+          "Crown fullness: excessive sky gaps and exposed branch length relative to accepted design",
+          "Foliage form: broad flat leaves and aligned repeated sprays read as fern fronds",
+          "Branching silhouette: straight exposed leaders and sparse limb-end coverage do not retain the accepted tree direction"
+        ],
+        "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
+        "causeAssessment": "The budget-constrained geometry distribution did not preserve the reference silhouette. Precise implementation cause must be localized by inspecting hierarchy and projected coverage; no profiling claim is made.",
+        "previousRepairOutcome": "Internal leaf widening/repositioning passed automated checks but did not resolve the visible failure",
+        "automatedChecksRemainHistoricalPass": true,
+        "physicalTimingStatus": "UNMEASURED_PENDING_VALID_PAIRED_PHONE_TABLET_EVIDENCE",
+        "loaderStatus": "Preparing plants is visible; a static screenshot cannot establish a stall."
+      },
+      "automatedChecks": "Historical PASS preserved at checkpoint; visual failure remains",
+      "privatePreview": {
+        "mode": "EXACT_SOURCE_PRIVATE_READ_ONLY_PREVIEW",
+        "url": "https://hearth-clearing-device-measurement.smansfield635.chatgpt.site",
+        "publicationState": "SUCCEEDED",
+        "pairedDeviceMeasurement": "PHONE_AND_TABLET_PENDING",
+        "ownerPerceptualDisposition": "VISUAL_FAILURE_IDENTIFIED_REPAIR_PLAN_REQUESTED",
+        "physicalPerformanceAcceptance": false,
+        "publishedCandidateCommit": "13a89d75c7da09b7dc3346db531a6b3e2f89d212",
+        "siteSourceCommit": "5fec78fe47d44fb0e012aa411191670683b72e07",
+        "publicationReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6051#issuecomment-6072606342",
+        "formalOwnerKeepOrRejectRecorded": false
+      }
+    },
+    {
+      "candidateRenderSourceCommit": "84591ddf47599de25486996985cfd25578a2b3fd",
+      "candidateRenderSourceTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
+      "localTestCommit": "2b60072f1836278c5a1e71c25af693f4f028998d",
+      "canonicalOutput": {
+        "schema": "ONE_TREE_GEOMETRY_AND_NON_TARGET_PARITY_RECEIPT",
+        "subject": "ALL_EXISTING_65_IDENTITIES_PER_ADMITTED_BRIDGE_SCOPE",
+        "result": "PASS",
+        "independentVerification": {
+          "schema": "H_EARTH_ALL_TREE_VARIATION_VERIFICATION_v1",
+          "status": "PASS",
+          "operationId": "H_EARTH_ALL_TREE_VARIATION_20261008",
+          "generation": 2630,
+          "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+          "candidateHead": "2b60072f1836278c5a1e71c25af693f4f028998d",
+          "frozenSourceSha256": {
+            "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "15d7c0bea04c7c4677cbae0089ccdafeb0764222a942f7b9b54cd3b158f880d8",
+            "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js": "c7580c04fe052ee4af27675b98c433ea1b8171176f659312c3964280592db964",
+            "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs": "b46312bb873fff7db38cfe18098ec481fe3135878a99665ee95ac77cd9f60333"
+          },
+          "workingTreeClean": true,
+          "changedPaths": [
+            "h-earth-3d/experience-anchor/receipts/h-earth-woodland-tree-trial-20261008.receipt.json",
+            "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+            "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+            "showroom/globe/h-earth/validation/woodland-tree-trial.record.json",
+            "showroom/globe/h-earth/validation/woodland-tree-trial.verify.mjs"
+          ],
+          "treeCount": 65,
+          "distinctTreeForms": 65,
+          "grassTuftCount": 1432,
+          "baselineTreeBytes": 1337970,
+          "candidateTreeBytes": 1260564,
+          "perTree": [
+            {
+              "id": "P2_TREE_A_00",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 2.031473365538367,
+              "signature": "316e76e15953f7defe9237559303984a1b2a991c48645169b05e4f30613d0544"
+            },
+            {
+              "id": "P2_TREE_A_01",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 3.012460793759073,
+              "signature": "d307e0cd8097a204bde99b481e692abba3eaae84cdce9e4525d2185abde02006"
+            },
+            {
+              "id": "P2_TREE_A_02",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.784692341837946,
+              "signature": "d2b51016a6493eba8ad0eb2ac6f939f4c362312ff7afa5ace699f45f5d3dbcf1"
+            },
+            {
+              "id": "P2_TREE_A_03",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 2.9281623301397204,
+              "signature": "567a28a5905402b31bc5e1fe90ce6e88413fbcaeba8c7774e599fe381c045e72"
+            },
+            {
+              "id": "P2_TREE_A_04",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 3.5287463456306263,
+              "signature": "c74739b09392bc1a6fd6f9a20eb1713ea6ffa09b83210a02c8d0a919d38fbc9d"
+            },
+            {
+              "id": "P2_TREE_A_05",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.0988927032970195,
+              "signature": "bdc9565ef9645e3f0f7ecf64f2892450f663893ec8fa72139b6186575dbd322d"
+            },
+            {
+              "id": "P2_TREE_A_06",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 2.6273610975479453,
+              "signature": "81e5fd63249d693a5196529d31bb5b780070ff20e809e821de1645e4be8ae487"
+            },
+            {
+              "id": "P2_TREE_A_07",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 2.947607765128818,
+              "signature": "e2d9c7437a3947537821d12622af190fd357325ee1892788d374246f7a398975"
+            },
+            {
+              "id": "P2_TREE_A_08",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.1859988325615016,
+              "signature": "1d6247811a276710031e967ac52de7197a33260c944f2663e6dccce74989e08e"
+            },
+            {
+              "id": "P2_TREE_A_09",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 3.517198324580681,
+              "signature": "8e1787d483a405ba5c675d1f28646a838edfae89e34f12fa97748c7e4beae5d1"
+            },
+            {
+              "id": "P2_TREE_A_10",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 2.0209858509380734,
+              "signature": "e58072ed034a5df19bb829329c86b7cf74b86889646e07f07bda4733e21d9bf6"
+            },
+            {
+              "id": "P2_TREE_A_11",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.428691922855285,
+              "signature": "d7575d238a75d24029d383311482f639e2d7805dd52a3409e1eb422daf244668"
+            },
+            {
+              "id": "P2_TREE_A_12",
+              "vertices": 264,
+              "baselineVertices": 264,
+              "triangles": 380,
+              "baselineTriangles": 468,
+              "observableBytes": 22776,
+              "baselineObservableBytes": 23832,
+              "horizontalExtent": 2.6531833162231817,
+              "signature": "de86a67650053263247d95bf62df2d5eb1d3d4753099312be0d4560f81ffd612"
+            },
+            {
+              "id": "P2_TREE_A_13",
+              "vertices": 312,
+              "baselineVertices": 314,
+              "triangles": 448,
+              "baselineTriangles": 556,
+              "observableBytes": 26904,
+              "baselineObservableBytes": 28338,
+              "horizontalExtent": 2.86830032633708,
+              "signature": "4edaf63327631c3233c89be2b9d2083e11b47a5f2152ed8dfb93d1c0947fcc88"
+            },
+            {
+              "id": "P2_TREE_A_14",
+              "vertices": 360,
+              "baselineVertices": 364,
+              "triangles": 516,
+              "baselineTriangles": 644,
+              "observableBytes": 31032,
+              "baselineObservableBytes": 32844,
+              "horizontalExtent": 2.7442218288834312,
+              "signature": "a6e7305f0686c7d7fe05290c3f8d60e9428be13fe4ded2c51df3eb3fc01fb9dd"
+            },
+            {
+              "id": "P2_TREE_B_00",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.8442556777109387,
+              "signature": "fe84e210fdc4fbda94d0e5c2d1c967b1bcf7a42774ae2cc3329e4397b81ef1d1"
+            },
+            {
+              "id": "P2_TREE_B_01",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.0960609394081784,
+              "signature": "e3d8607360573632a56e4e0e0361a4a633a8be035bf965563f0681516e6a3426"
+            },
+            {
+              "id": "P2_TREE_B_02",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.798527904380431,
+              "signature": "01d08a56625e4502a8f12d632e0f039fa8200e99e85ea56d43936d44120d2188"
+            },
+            {
+              "id": "P2_TREE_B_03",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.603406505552272,
+              "signature": "b31b92c494248a65f69199a7032a061aa99fbe05f29389272a6709979485d843"
+            },
+            {
+              "id": "P2_TREE_B_04",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.8024027973454673,
+              "signature": "ce92e933959603a4b84e37adb3646b69a9dc5f6bb4e491e62c48cacc8a0a45d6"
+            },
+            {
+              "id": "P2_TREE_B_05",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.570622639054598,
+              "signature": "dde03e4618e71edd336c636902666c2477e798d6d890f064017cf073c19da9bc"
+            },
+            {
+              "id": "P2_TREE_B_06",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.410467218975469,
+              "signature": "9c3be84cea61df5340e3c92fdd0aca507b014d95d37d64403447c63c9bb511cf"
+            },
+            {
+              "id": "P2_TREE_B_07",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.0924692115303043,
+              "signature": "99e7b2dc1e506183018cb5317ed4df01659329a9a0629b0e3bd65255e733eed4"
+            },
+            {
+              "id": "P2_TREE_B_08",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.19200212311329,
+              "signature": "69739a925c4e40af653c5a29ae0eb2579b77a2f6aeaa97d7e8c84a467677f729"
+            },
+            {
+              "id": "P2_TREE_B_09",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.047309083262236,
+              "signature": "a4a020989f8475a019f466a2584391c4ae3b9f3d097cc2f8465afc4faa8985c3"
+            },
+            {
+              "id": "P2_TREE_B_10",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.459220094046568,
+              "signature": "71b8cd9b9699a0ab36a7f8fad26817b8b920b869c36d4b63dbbe2db9385c9866"
+            },
+            {
+              "id": "P2_TREE_B_11",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.758838174103514,
+              "signature": "b2f044f22f150c60c821839d380c53ff1dd2f9f3824f4e6ba52239f6e41a209d"
+            },
+            {
+              "id": "P2_TREE_B_12",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.7619318604957988,
+              "signature": "4e824ef4fe25fc418ada000a91679c0994d03bdc4309000eaf871198fa78f427"
+            },
+            {
+              "id": "P2_TREE_B_13",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.1225038195241064,
+              "signature": "113ba4142b96f076c06c128a04e9f063c86335e925810af0d7912aabd6907ea1"
+            },
+            {
+              "id": "P2_TREE_B_14",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.9452846930987613,
+              "signature": "005e058dca9716024af722146b4353240f5f6ba703644eee6483b79a8942eb89"
+            },
+            {
+              "id": "P2_TREE_B_15",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.8743184234349766,
+              "signature": "7715cdac3766147b385d985a06000c0ee916c518325a530f92416ac952e0d5d2"
+            },
+            {
+              "id": "P2_TREE_B_16",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.7527910236493227,
+              "signature": "48d4c05495efd48c1f821a06cb514f429099e9e4bd0b42b24467cc305e6eff6e"
+            },
+            {
+              "id": "P2_TREE_C_00",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.8220208614099043,
+              "signature": "556fed7906c9d133e206c572aa262cf2efee2c60db44422c2d422815289e929d"
+            },
+            {
+              "id": "P2_TREE_C_01",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.2104918183041438,
+              "signature": "457d2d94294f57b3315cb715433c1286678d92b5feac0084ff8cfe5418592e64"
+            },
+            {
+              "id": "P2_TREE_C_02",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.783891561936937,
+              "signature": "fa79e4cf94d21fd56e2a5ed571232c78088dccf4a767c5deef922806828e2af8"
+            },
+            {
+              "id": "P2_TREE_C_03",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.263651849828234,
+              "signature": "9fe009301be6f1d0ff19e4458a3a24b7da2f1b493970b2b60b2f39ba12576347"
+            },
+            {
+              "id": "P2_TREE_C_04",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.4976572595487765,
+              "signature": "82a81cda990d3c83c0fa626c417c0e250bbfabc84123de5c2dfc96cbd33607c7"
+            },
+            {
+              "id": "P2_TREE_C_05",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.7897601200048534,
+              "signature": "2cce5bd362301e3e697bc6ebfa29fa13b48ce96bb34085b20e52586462545100"
+            },
+            {
+              "id": "P2_TREE_C_06",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.6523370124214527,
+              "signature": "dc4cae01d0dbb14c935d471626c29e6cce980e7be85f4cf653b4d8380f7a2c9a"
+            },
+            {
+              "id": "P2_TREE_C_07",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.60007053904858,
+              "signature": "344f4af7003571121fc8a23d04887303dd338c696a828e70e037b8e139c3467e"
+            },
+            {
+              "id": "P2_TREE_C_08",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.2542631012818046,
+              "signature": "a0031599f7c9c385c2fa6c5d8859a1f5fb6d35dd1ff4ffc1507078945e507377"
+            },
+            {
+              "id": "P2_TREE_C_10",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.9534479299095422,
+              "signature": "4defed042fd185487bfd509c9c880a22a75981890b143f636c258570adcf7951"
+            },
+            {
+              "id": "P2_TREE_C_11",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.732538606366709,
+              "signature": "0e12ba55d440967c095cbb9ed87b5fab10759facbf2ceee940b68558dbf039ba"
+            },
+            {
+              "id": "P2_TREE_C_13",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.7259656266375791,
+              "signature": "f5a0446082a4476f840049a4e2d50025f87d240321a9c8017699700775bafec4"
+            },
+            {
+              "id": "P2_TREE_C_14",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.6257026858405568,
+              "signature": "c28b581fd68b3df352fe768ed2b752898db88f20c35be06210d04b430b8d91d7"
+            },
+            {
+              "id": "P2_TREE_REAR_00",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.8678776655226197,
+              "signature": "cbbd301259209b545e71cd5439ae13166f6c1daf90a9d73bd7eb1dbccc5993ce"
+            },
+            {
+              "id": "P2_TREE_REAR_01",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.804572396276168,
+              "signature": "d70af2c620cb27efe7c65148ea33cf760b22ac807cb5001aeab417768d6b8afe"
+            },
+            {
+              "id": "P2_TREE_REAR_02",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.631591738907545,
+              "signature": "7ffad3167ccea73fba4302386193b2e14b2c42ab98998e8ca21c27be5ebf7c99"
+            },
+            {
+              "id": "P2_TREE_REAR_03",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.0622928162863063,
+              "signature": "897de8d0a8c3cbf83d8b815ce9e9290986c79e27bdcef8b438fe6f0bd02355bc"
+            },
+            {
+              "id": "P2_TREE_REAR_04",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.055727904839967,
+              "signature": "f1c9c31731674e614ce3cfe338e77b783d8fa2cdf38092097592c293fb8b0b8d"
+            },
+            {
+              "id": "P2_TREE_REAR_05",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.774883534903869,
+              "signature": "d710c222b92f11769634382d831b0d88f716313ddd2f2a9b078a3e679299e1b5"
+            },
+            {
+              "id": "P2_TREE_REAR_06",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.573077298055994,
+              "signature": "b683333794e0a07ec5de255a03e4c4c5f12d4432b2885774b970dbaf5f327b00"
+            },
+            {
+              "id": "P2_TREE_REAR_07",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.414363398544468,
+              "signature": "bea3f3eb85fb6174c209ac539bc82518f05f37b20a2f269684affb0a03c01c9d"
+            },
+            {
+              "id": "P2_TREE_REAR_08",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.618785203492845,
+              "signature": "61407ad35553f6faea77bfb2377ce1217781116136fe71a98e1fc6bd60e0d58a"
+            },
+            {
+              "id": "P2_TREE_REAR_11",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.376619796688974,
+              "signature": "793e4425d8c24e9545aa349a881321364eb77d28cfbe96deda8656b485552a0b"
+            },
+            {
+              "id": "P2_TREE_REAR_12",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.9354934384466027,
+              "signature": "8cac1416e4e2cd873fb6d783081d37a73419229f89a9cdbab50009d497ede972"
+            },
+            {
+              "id": "P2_TREE_REAR_13",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 1.5436719048787428,
+              "signature": "e38a3915a32f93bff798d5f1b2c55b8508b4f606a8bbaf78041dbc292380ab53"
+            },
+            {
+              "id": "P2_TREE_REAR_14",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.5363444764183583,
+              "signature": "b20d353d8077cf7f54e591762dffd16df1705561e312edd07bf4eda265850e86"
+            },
+            {
+              "id": "P2_TREE_REAR_15",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.6760325624996812,
+              "signature": "c2db2cc64c9faee7e00e7c7b941c405fd9d08b66143bc0b02f35ff21de367771"
+            },
+            {
+              "id": "P2_TREE_REAR_16",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.064448627483812,
+              "signature": "5d31c5383a5da8395864374c3057fb6abb6c82afca68a61bcd2e52bcc6a7a880"
+            },
+            {
+              "id": "P2_TREE_REAR_18",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.947752826705203,
+              "signature": "6c5329c90c2d187a354ffd0c6ba6ae6da7ef8b99d0af95c0288d1c2a00c6a4fc"
+            },
+            {
+              "id": "P2_TREE_REAR_19",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.9406930646644076,
+              "signature": "325d4ff2e12cbc8496b023cd94e22db0dc480f2415601a83a2e24f1ae3b39e98"
+            },
+            {
+              "id": "P2_TREE_REAR_20",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 292,
+              "baselineTriangles": 360,
+              "observableBytes": 17166,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.194346802317096,
+              "signature": "4ef4bcf62d4ef5f4f63bd88c882abfd86296e9dc8cfbd8b9afb952c6d9c81a4e"
+            },
+            {
+              "id": "P2_TREE_REAR_21",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 3.2985722582519275,
+              "signature": "f06895aa386851b5b37d0c9d0e000b6b385c92997b13c43bad9ccd9a957c3a64"
+            },
+            {
+              "id": "P2_TREE_REAR_22",
+              "vertices": 198,
+              "baselineVertices": 202,
+              "triangles": 288,
+              "baselineTriangles": 360,
+              "observableBytes": 17118,
+              "baselineObservableBytes": 18258,
+              "horizontalExtent": 2.4607509123312203,
+              "signature": "dd8898c963c07f6a59991874f235c5c7664f6e87514180c94038eaac76dcd659"
+            }
+          ],
+          "baselineSectorTriangles": 61044,
+          "sectorTriangles": 55916,
+          "sectorCeiling": 64000,
+          "primitiveCount": 4,
+          "checkedTriangles": 21212,
+          "terrainSha256": "5c552a54d90602e4671b6fe4c2cf95081e75caf747b3b7bfcd4425e79b1239fe",
+          "baselineSectorSha256": "b82e2b8aa0827af8a3ea75ed736f9e5d3adc35fd012bf59ed5a1b0ef539c64df",
+          "candidateSectorSha256": "877afad2d12f78de20841df30d43b351c45fd95775e039c5a74db2358ef1e3cf",
+          "generationOrder": "FORWARD_EQUALS_REVERSED_AND_CHUNKED",
+          "timingsMs": {
+            "importAndTerrain": 18715.694256000002,
+            "baselineSector": 38308.316784,
+            "candidateSector": 28952.552675,
+            "reverseSector": 28997.480018000002
+          },
+          "physicalDeviceAcceptance": "NOT_ESTABLISHED_BY_AUTOMATED_VERIFICATION"
+        }
+      },
+      "actualBrowser": {
+        "sourceCommit": "2b60072f1836278c5a1e71c25af693f4f028998d",
+        "remoteIdenticalTreeCommit": "84591ddf47599de25486996985cfd25578a2b3fd",
+        "sourceTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
+        "physicalAcceptance": false,
+        "gpu": "HEADLESS_SWIFTSHADER",
+        "readyMs": 113415,
+        "fullResidency": {
+          "complete": true,
+          "preparationComplete": true,
+          "totalInstanceCount": 27585,
+          "residentInstanceCount": 27585,
+          "totalBatchCount": 108,
+          "residentBatchCount": 108,
+          "droppedPlacementCount": 0,
+          "worldRebuildCount": 0
+        },
+        "observableBuffers": {
+          "bytes": 34664141,
+          "buffers": 1204
+        },
+        "browserErrors": [],
+        "fixedCameraRoute": "PASS_FOUR_CAMERAS_96_REDRAWS_RESOURCE_GUARDS",
+        "cameraChecks": [
+          {
+            "camera": "walking",
+            "intervals": 95,
+            "redraws": 96,
+            "navigationReturn": "PASS",
+            "worldRebuildOnCamera": false
+          },
+          {
+            "camera": "close",
+            "intervals": 95,
+            "redraws": 96,
+            "navigationReturn": "PASS",
+            "worldRebuildOnCamera": false
+          },
+          {
+            "camera": "side",
+            "intervals": 95,
+            "redraws": 96,
+            "navigationReturn": "PASS",
+            "worldRebuildOnCamera": false
+          },
+          {
+            "camera": "distant",
+            "intervals": 95,
+            "redraws": 96,
+            "navigationReturn": "PASS",
+            "worldRebuildOnCamera": false
+          }
+        ],
+        "resourceAudit": {
+          "beforeAfterResourceCountersUnchanged": {
+            "bufferCreateCount": 16,
+            "bufferUploadCount": 11,
+            "textureCreateCount": 5,
+            "programCreateCount": 3,
+            "framebufferCreateCount": 2,
+            "worldRebuildCount": 0,
+            "vegetationBufferUploadCount": 1188,
+            "vegetationBatchMaterializationCount": 108
+          },
+          "basePackageUploadedBytes": 6632925,
+          "basePackageCeiling": 6710331,
+          "residentBuffers": {
+            "bytes": 34664141,
+            "buffers": 1204
+          },
+          "residentByteCeiling": 34741547,
+          "contextLost": false,
+          "perCameraGuards": "Successful candidate harness asserted each view; independent end-to-end loaded/final resource counters confirmed"
+        },
+        "syntheticTouch": {
+          "status": "PASS_SYNTHETIC_TOUCH_ONLY",
+          "twoFingerDisplacement": 1.4434258524978711,
+          "twoFingerProposalDelta": 7,
+          "releaseCancelIntent": "NONE",
+          "physicalAcceptance": false
+        },
+        "softwareTimingDiagnostic": {
+          "baseline": "89df5371e0afb4ae7f53aead80071fae613e1f46",
+          "baselineTree": "d129d8fc3c849550bbb47958d1e2b0cbc3d30b1b",
+          "baselineArtifactSha256": "ad101e604175972be9361b3d425d8639638d00e11370a84f1cbd29a8ed44bee8",
+          "rows": [
+            {
+              "camera": "walking",
+              "candidateMedianMs": 366.5999999999767,
+              "baselineMedianMs": 350,
+              "candidateP95Ms": 750,
+              "baselineP95Ms": 799.9000000000233,
+              "medianRatio": 1.047428571428505,
+              "p95Ratio": 0.9376172021502415,
+              "limitsPass": true
+            },
+            {
+              "camera": "close",
+              "candidateMedianMs": 383.29999999998836,
+              "baselineMedianMs": 349.8999999999651,
+              "candidateP95Ms": 766.6999999999534,
+              "baselineP95Ms": 1016.5999999999767,
+              "medianRatio": 1.0954558445270839,
+              "p95Ratio": 0.7541806020066605,
+              "limitsPass": true
+            },
+            {
+              "camera": "side",
+              "candidateMedianMs": 266.70000000001164,
+              "baselineMedianMs": 183.39999999996508,
+              "candidateP95Ms": 650.1000000000349,
+              "baselineP95Ms": 633.2999999999884,
+              "medianRatio": 1.454198473282783,
+              "p95Ratio": 1.0265277119849152,
+              "limitsPass": false
+            },
+            {
+              "camera": "distant",
+              "candidateMedianMs": 299.9000000000233,
+              "baselineMedianMs": 266.70000000001164,
+              "candidateP95Ms": 999.9000000000233,
+              "baselineP95Ms": 616.5999999999767,
+              "medianRatio": 1.1244844394451077,
+              "p95Ratio": 1.621634771326729,
+              "limitsPass": false
+            }
+          ],
+          "medianRatioLimit": 1.25,
+          "p95RatioLimit": 1.35,
+          "hardwareAcceptance": false,
+          "quantile": "nearest rank over95savedRAFintervals",
+          "status": "FAIL_DIAGNOSTIC_ONLY"
+        },
+        "diagnosticTimingCreatesPhysicalOrHardwareAcceptance": false,
+        "rawEvidenceSha256": "71ccfe08d4a471a5d63a335677cddc9826ccd630261eea6fbff37d9868926efd"
+      },
+      "visualFailure": {
+        "observedCandidate": "84591ddf47599de25486996985cfd25578a2b3fd",
+        "testedLocalCandidate": "2b60072f1836278c5a1e71c25af693f4f028998d",
+        "identicalSourceTree": "f2d5f10c25dee16d68394689ac6a23a13aec9ea5",
+        "attachmentCandidateIdentityIndependentlyVerified": true,
+        "source": "Exact immutable source read-only renderer four-view captures after full residency; South/East/West assessment",
+        "failedCriteria": [
+          "Large angular solid masses replace small layered leaf detail",
+          "Side silhouette becomes solid angular column",
+          "Distant grove repeats stacked crowns"
+        ],
+        "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
+        "causeAssessment": "Low-count six-vertex volumes increase projected foliage area but create large facets and erase leaf-scale edge detail. Budget infeasibility is not established.",
+        "physicalTimingStatus": "UNMEASURED_PENDING_VALID_PAIRED_PHONE_TABLET_EVIDENCE",
+        "loaderStatus": "READY and full residency reached in exact source browser run; software diagnostic does not establish physical device startup performance"
+      },
+      "boundedVisualRepair": {
+        "reason": "Sparse planar fern-like fans at prior checkpoint",
+        "change": "Same helper only: raise crown origins, distribute to secondary limbs, fit actual vertices, replace flat blades with overlapping six-vertex closed volumes",
+        "result": "FAIL_VISUAL",
+        "improved": [
+          "Crown fullness",
+          "Reduced exposed straight limbs and planar fern sprays"
+        ],
+        "failed": [
+          "Large angular solid masses replace small layered leaf detail",
+          "Side silhouette becomes solid angular column",
+          "Distant grove repeats stacked crowns"
+        ],
+        "budgetAndResourceResult": "PASS",
+        "softwareDiagnosticResult": "FAIL_SIDE_MEDIAN_AND_DISTANT_P95_DIAGNOSTIC_ONLY",
+        "physicalResult": "PENDING_NOT_ESTABLISHED",
+        "independentReviews": {
+          "North": "CARRY_FORWARD_APPROVED",
+          "East": "FAIL_ALL_FOUR_VISUAL_VIEWS",
+          "West": "NUMERIC_AND_RESOURCE_PASS_VISUAL_FAIL_SOFTWARE_TIMING_DIAGNOSTIC_FAIL"
+        },
+        "initialVerifierFailure": {
+          "assertion": "CANDIDATE_HEAD_CHANGED_DURING_VERIFICATION",
+          "sourceBytesChanged": false,
+          "cause": "Local source commit frozen before initial working-tree verifier completed",
+          "recovery": "Immutable rerun at2b60072f PASS; initial failure retained",
+          "logSha256": "0984e164cafd2ed23356f7bacc63f8c41bbe440322c41b5e10ae9121ed94bdf0"
+        },
+        "images": [
+          {
+            "camera": "walking",
+            "sha256": "f1edc0aa0722f28a1acb3bc272a2c7333d3d9079f2557390447cc7628713c77b"
+          },
+          {
+            "camera": "close",
+            "sha256": "fd6ede87308d3781d0b23a92506480e81937a95995ad28b070c75c14ce9ce4cb"
+          },
+          {
+            "camera": "side",
+            "sha256": "710664970f087daeb07c00de27afcb2e6ed8678f0c763823f053eddb9f8e207c"
+          },
+          {
+            "camera": "distant",
+            "sha256": "56a59b4021b3200153028eb3090a2772621d72ebf01c454b886fd9a7b067e240"
+          }
+        ],
+        "evidenceArchiveFilename": "H-Earth-all-tree-volume-repair-failed.zip",
+        "archiveContent": "Exact source patch, unchanged verifier, all raw measurements/logs/failures, twelve accepted/prior/repair images, native N/E/W reviews and next action",
+        "historical": true
+      },
+      "preservedAt": "290856749784803c687d6bae54e7971accbcb871"
+    },
+    {
+      "candidateRenderSourceCommit": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+      "candidateRenderSourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+      "localTestCommit": "2a1feaac0027f4014fe18082454feda87c22388c",
+      "canonicalOutput": {
+        "status": "NOT_RUN_FOR_NEW_REPRESENTATIVE_SOURCE",
+        "previousAll65Pass": "Retained under priorFailedCandidates and checkpoint290856; cannot qualify changed helper"
+      },
+      "actualBrowser": {
+        "status": "FOUR_STATIC_VIEWS_CAPTURED_ONLY",
+        "candidate": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+        "testedLocal": "2a1feaac0027f4014fe18082454feda87c22388c",
+        "sourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+        "readyMs": 118838,
+        "errors": [],
+        "physicalAcceptance": false,
+        "timingQualification": "NOT_RUN",
+        "fullResidencyReachedForCapture": true
+      },
+      "visualFailure": {
+        "observedCandidate": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+        "testedLocalCandidate": "2a1feaac0027f4014fe18082454feda87c22388c",
+        "identicalSourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+        "failedCriteria": [
+          "Large gaps interrupt layered crown coverage",
+          "Isolated leaf sprays and exposed long major limbs",
+          "Bare upper leader loses leafy apex silhouette"
+        ],
+        "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
+        "causeAssessment": "Reference leaf shape survives;70leaves and reduced branch distribution fail layered crown coverage. This allocation failed; general budget infeasibility is not established."
+      },
+      "representativeExperiment": {
+        "status": "VISUAL_FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
+        "affectedTree": "P2_TREE_A_11",
+        "source": "09bdb1a58f7bede3b085d25dc5d71de227156bfa",
+        "localTestCommit": "2a1feaac0027f4014fe18082454feda87c22388c",
+        "sourceTree": "709d52f00ef15a1ae45957e09ee373e988603016",
+        "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+        "geometry": {
+          "status": "PASS_REPRESENTATIVE_GEOMETRY_ONLY",
+          "checked": 476,
+          "minArea": 4.1337968640602983e-05,
+          "minNormal": 0.9999999999999998
+        },
+        "recipe": {
+          "recipe": "OPAQUE_CURVED_HIERARCHY_LIGHT_v1",
+          "seed": "WOODLAND_ALL_TREE_HIERARCHY_20261008",
+          "experiment": "REPRESENTATIVE_C313_RECIPE_SIMPLIFICATION",
+          "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+          "majorForks": [
+            {
+              "heightFraction": 0.31499999999999984,
+              "position": [
+                -139.3512991882438,
+                9.508884032287517,
+                -210.70436110614673
+              ]
+            },
+            {
+              "heightFraction": 0.459,
+              "position": [
+                -139.36830226929283,
+                11.215686636098544,
+                -210.7305553876771
+              ]
+            },
+            {
+              "heightFraction": 0.603,
+              "position": [
+                -139.38724237073913,
+                12.92248923990957,
+                -210.7579940452617
+              ]
+            },
+            {
+              "heightFraction": 0.7469999999999999,
+              "position": [
+                -139.4972224308553,
+                14.629291843720594,
+                -210.84391837739778
+              ]
+            }
+          ],
+          "majorCount": 4,
+          "secondaryCount": 8,
+          "twigCount": 4,
+          "leafCount": 70,
+          "tuftRootCount": 20,
+          "foliageForm": "SMALL_CLOSED_FOLDED_LEAVES",
+          "vertices": 362,
+          "triangles": 476,
+          "baselineVertices": 364,
+          "baselineTriangles": 644
+        },
+        "other64Trees": "UNCHANGED_PRIOR_FAILED_VOLUME_SOURCE",
+        "fourViews": {
+          "walking": {
+            "status": "FAIL",
+            "imageSha256": "3147fa121797cab3c3fcacd539a082b66ebf80c3c69055f2c47f86138048020c"
+          },
+          "close": {
+            "status": "FAIL",
+            "imageSha256": "999be6e45f4799ff28099130953d7f38cc3beb6c94483ab47ea1b7b67bf49c8a"
+          },
+          "side": {
+            "status": "FAIL",
+            "imageSha256": "af4113fcc8ca412134190b978d1f5b3e5e901403cb1910cf536e867dad70ef31"
+          },
+          "distant": {
+            "status": "FAIL",
+            "imageSha256": "c5974ec965596b1c43a9752ece2d840f13ba4b02ddcd57992de12e0814b49934"
+          }
+        },
+        "defects": [
+          "Large gaps interrupt layered crown coverage",
+          "Isolated leaf sprays and exposed long major limbs",
+          "Bare upper leader loses leafy apex silhouette"
+        ],
+        "restored": [
+          "Reference-sized closed folded blade shape",
+          "Layered secondary and twig attachment recipe"
+        ],
+        "all65Verification": "NOT_RUN_REPRESENTATIVE_VISUAL_GATE_FAILED",
+        "renewedRuntimeQualification": "NOT_RUN_VISUAL_GATE_FAILED",
+        "physicalDeviceAcceptance": "PENDING",
+        "noBudgetImpossibilityEstablished": true
+      },
+      "preservedAt": "f0f91165e94ff8156047a0eb51161e837560e5ba"
+    },
+    {
+      "status": "REPRESENTATIVE_VERTEX_ALLOCATION_VISUAL_FAILURE",
+      "candidateRenderSourceCommit": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
+      "candidateRenderSourceTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
+      "localTestCommit": "441ac5f289f609e235dc01f7d73be51bd36a67af",
+      "localTestTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
+      "actualBrowser": {
+        "status": "FOUR_STATIC_VIEWS_CAPTURED_ONLY",
+        "candidate": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
+        "testedLocal": "441ac5f289f609e235dc01f7d73be51bd36a67af",
+        "sourceTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
+        "readyMs": 91759,
+        "errors": [],
+        "physicalAcceptance": false,
+        "timingQualification": "NOT_RUN",
+        "fullResidencyReachedForCapture": true
+      },
+      "visualFailure": {
+        "observedCandidate": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
+        "testedLocalCandidate": "441ac5f289f609e235dc01f7d73be51bd36a67af",
+        "identicalSourceTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
+        "failedCriteria": [
+          "Three isolated major foliage systems leave long barevertical corridors",
+          "Layeredcrown overlap isnot restored",
+          "Distant silhouette remains a shaft with detached sprays"
+        ],
+        "acceptance": "NOT_ACCEPTABLE_FOR_ADOPTION",
+        "causeAssessment": "Reducingmajorcount4to3 andcompressingbranchorigins removes foliageattachmentlevels;90smallleaves concentrate in fewsystems. Thewood/leafvertex exchange isvalid butthisallocationfailsthevisualdesign."
+      },
+      "representativeExperiment": {
+        "status": "VISUAL_FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
+        "affectedTree": "P2_TREE_A_11",
+        "source": "7f0a0023c036c531046e5b3511d75a25ae1075d8",
+        "localTestCommit": "441ac5f289f609e235dc01f7d73be51bd36a67af",
+        "sourceTree": "627cfebb020d31d7f00508f52d3294b9f61cc448",
+        "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+        "measuredGeometry": {
+          "status": "PASS_REPRESENTATIVE_GEOMETRY_ONLY",
+          "checked": 462,
+          "minArea": 0.00027250468370287477,
+          "minNormal": 0.9999999999999997
+        },
+        "recipe": {
+          "recipe": "OPAQUE_CURVED_HIERARCHY_LIGHT_v1",
+          "seed": "WOODLAND_ALL_TREE_HIERARCHY_20261008",
+          "experiment": "REPRESENTATIVE_VERTEX_REALLOCATION_APEX",
+          "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+          "majorForks": [
+            {
+              "heightFraction": 0.5,
+              "position": [
+                -139.37314342431375,
+                11.701651266350295,
+                -210.73801348172393
+              ]
+            },
+            {
+              "heightFraction": 0.63,
+              "position": [
+                -139.4078636320109,
+                13.242514728124137,
+                -210.77410485753722
+              ]
+            },
+            {
+              "heightFraction": 0.7599999999999999,
+              "position": [
+                -139.50715118628244,
+                14.783378189897979,
+                -210.85167543516005
+              ]
+            }
+          ],
+          "majorCount": 3,
+          "secondaryCount": 3,
+          "twigCount": 3,
+          "apexTwigCount": 1,
+          "woodVertices": 73,
+          "woodTriangles": 102,
+          "apexLeafRoots": 5,
+          "leafCount": 90,
+          "tuftRootCount": 20,
+          "foliageForm": "SMALL_CLOSED_FOLDED_LEAVES",
+          "vertices": 363,
+          "triangles": 462,
+          "baselineVertices": 364,
+          "baselineTriangles": 644
+        },
+        "allocationChange": {
+          "prior": {
+            "woodVertices": 132,
+            "foliageVertices": 230,
+            "totalVertices": 362,
+            "triangles": 476,
+            "leaves": 70,
+            "apexLeaves": 0
+          },
+          "candidate": {
+            "woodVertices": 73,
+            "foliageVertices": 290,
+            "totalVertices": 363,
+            "triangles": 462,
+            "leaves": 90,
+            "apexLeaves": 20
+          },
+          "ceiling": {
+            "vertices": 364,
+            "triangles": 644
+          },
+          "physicalAcceptance": false,
+          "all65Qualification": false
+        },
+        "other64Trees": "UNCHANGED_PRIOR_FAILED_VOLUME_SOURCE",
+        "fourViews": {
+          "walking": {
+            "status": "FAIL",
+            "imageSha256": "f06ec8670486ac5adaac09fba1e54c89a7bae924f14e57834c2ac73fb5e322c6"
+          },
+          "close": {
+            "status": "FAIL",
+            "imageSha256": "5cea28511d97f1857abaa46f60eb4e404f2e14d5c2499b26741e802a4f172671"
+          },
+          "side": {
+            "status": "FAIL",
+            "imageSha256": "f6ce69c2b2145ebc604e7df05c236f2e619094c152f2b826ecd8d64727acb661"
+          },
+          "distant": {
+            "status": "FAIL",
+            "imageSha256": "4abb7ba4abf000f604a11b25c67274bf46179227fe23621441ad008ddfe55e55"
+          }
+        },
+        "improvements": [
+          "20apex leaves restore formerlybare upperleader",
+          "Referencefoldedblade shape preserved",
+          "59woodvertices reallocated to20additionalleaves"
+        ],
+        "remainingDefects": [
+          "Three isolated major foliage systems leave long barevertical corridors",
+          "Layeredcrown overlap isnot restored",
+          "Distant silhouette remains a shaft with detached sprays"
+        ],
+        "causeAssessment": "Reducingmajorcount4to3 andcompressingbranchorigins removes foliageattachmentlevels;90smallleaves concentrate in fewsystems. Thewood/leafvertex exchange isvalid butthisallocationfailsthevisualdesign.",
+        "all65Verification": "NOT_RUN_REPRESENTATIVE_VISUAL_GATE_FAILED",
+        "renewedRuntimeQualification": "NOT_RUN_VISUAL_GATE_FAILED",
+        "physicalDeviceAcceptance": "PENDING",
+        "noBudgetImpossibilityEstablished": true
+      },
+      "checkpoint": "57cb491d1f7d6aad03046da65879ed1f5132ba52"
+    }
+  ],
+  "boundedVisualRepair": {
+    "reason": "Sparse planar fern-like fans at prior checkpoint",
+    "change": "Same helper only: raise crown origins, distribute to secondary limbs, fit actual vertices, replace flat blades with overlapping six-vertex closed volumes",
+    "result": "FAIL_VISUAL",
+    "improved": [
+      "Crown fullness",
+      "Reduced exposed straight limbs and planar fern sprays"
+    ],
+    "failed": [
+      "Large angular solid masses replace small layered leaf detail",
+      "Side silhouette becomes solid angular column",
+      "Distant grove repeats stacked crowns"
+    ],
+    "budgetAndResourceResult": "PASS",
+    "softwareDiagnosticResult": "FAIL_SIDE_MEDIAN_AND_DISTANT_P95_DIAGNOSTIC_ONLY",
+    "physicalResult": "PENDING_NOT_ESTABLISHED",
+    "independentReviews": {
+      "North": "CARRY_FORWARD_APPROVED",
+      "East": "FAIL_ALL_FOUR_VISUAL_VIEWS",
+      "West": "NUMERIC_AND_RESOURCE_PASS_VISUAL_FAIL_SOFTWARE_TIMING_DIAGNOSTIC_FAIL"
+    },
+    "initialVerifierFailure": {
+      "assertion": "CANDIDATE_HEAD_CHANGED_DURING_VERIFICATION",
+      "sourceBytesChanged": false,
+      "cause": "Local source commit frozen before initial working-tree verifier completed",
+      "recovery": "Immutable rerun at2b60072f PASS; initial failure retained",
+      "logSha256": "0984e164cafd2ed23356f7bacc63f8c41bbe440322c41b5e10ae9121ed94bdf0"
+    },
+    "images": [
+      {
+        "camera": "walking",
+        "sha256": "f1edc0aa0722f28a1acb3bc272a2c7333d3d9079f2557390447cc7628713c77b"
+      },
+      {
+        "camera": "close",
+        "sha256": "fd6ede87308d3781d0b23a92506480e81937a95995ad28b070c75c14ce9ce4cb"
+      },
+      {
+        "camera": "side",
+        "sha256": "710664970f087daeb07c00de27afcb2e6ed8678f0c763823f053eddb9f8e207c"
+      },
+      {
+        "camera": "distant",
+        "sha256": "56a59b4021b3200153028eb3090a2772621d72ebf01c454b886fd9a7b067e240"
+      }
+    ],
+    "evidenceArchiveFilename": "H-Earth-all-tree-volume-repair-failed.zip",
+    "archiveContent": "Exact source patch, unchanged verifier, all raw measurements/logs/failures, twelve accepted/prior/repair images, native N/E/W reviews and next action",
+    "historical": true
+  },
+  "representativeExperiment": {
+    "status": "VISUAL_FAIL_ALL_FOUR_REPRESENTATIVE_VIEWS",
+    "affectedTree": "P2_TREE_A_11",
+    "source": "c1dfe13f572542f8e0ed95e0c702ab78437752a5",
+    "localTestCommit": "6fe8b394630c6eb071192b6eaf3987b003d4cb28",
+    "sourceTree": "7dcf071b84db4e0634d5ae54d6eff29d9686512e",
+    "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+    "measuredGeometry": {
+      "status": "PASS_REPRESENTATIVE_GEOMETRY_ONLY",
+      "checked": 466,
+      "minArea": 0.00027250468370287477,
+      "minNormal": 0.9999999999999998
+    },
+    "recipe": {
+      "recipe": "OPAQUE_CURVED_HIERARCHY_LIGHT_v1",
+      "seed": "WOODLAND_ALL_TREE_HIERARCHY_20261008",
+      "experiment": "REPRESENTATIVE_AUDIT_GUIDED_STAGGERED_INNER_FOLIAGE",
+      "reference": "c313922b22cb76c64d35297c6bc9dec1b6578188",
+      "majorForks": [
+        {
+          "heightFraction": 0.3479999999999999,
+          "position": [
+            -139.35519572765085,
+            9.900026295660878,
+            -210.71036396233077
+          ]
+        },
+        {
+          "heightFraction": 0.4223999999999999,
+          "position": [
+            -139.36398065285954,
+            10.781874307629908,
+            -210.7238976744548
+          ]
+        },
+        {
+          "heightFraction": 0.4967999999999999,
+          "position": [
+            -139.37276557806823,
+            11.663722319598937,
+            -210.7374313865788
+          ]
+        },
+        {
+          "heightFraction": 0.5712,
+          "position": [
+            -139.3815505032769,
+            12.54557033156797,
+            -210.7509650987028
+          ]
+        },
+        {
+          "heightFraction": 0.6456,
+          "position": [
+            -139.4197781385235,
+            13.427418343536997,
+            -210.78341332685196
+          ]
+        },
+        {
+          "heightFraction": 0.7199999999999999,
+          "position": [
+            -139.47660116958352,
+            14.309266355506027,
+            -210.82780756512227
+          ]
+        },
+        {
+          "heightFraction": 0.7943999999999999,
+          "position": [
+            -139.5334242006435,
+            15.191114367475057,
+            -210.87220180339256
+          ]
+        }
+      ],
+      "majorCount": 7,
+      "secondaryCount": 3,
+      "twigCount": 0,
+      "apexTwigCount": 1,
+      "woodVertices": 89,
+      "woodTriangles": 130,
+      "apexLeafRoots": 5,
+      "leafCount": 84,
+      "leafAttachments": [
+        {
+          "key": "stagger-inner-0",
+          "position": [
+            -138.92160050698138,
+            10.768948388089084,
+            -211.400151524656
+          ],
+          "heightFraction": 0.421309462400794,
+          "count": 4
+        },
+        {
+          "key": "stagger-outer-0",
+          "position": [
+            -138.3887329130881,
+            11.456149849975015,
+            -211.91669348191607
+          ],
+          "heightFraction": 0.47928746776041686,
+          "count": 4
+        },
+        {
+          "key": "stagger-secondary-0",
+          "position": [
+            -138.31849788817496,
+            11.229708383399391,
+            -211.6031583708366
+          ],
+          "heightFraction": 0.46018299070250623,
+          "count": 4
+        },
+        {
+          "key": "stagger-inner-1",
+          "position": [
+            -139.47291186388736,
+            11.650796400058114,
+            -209.91646613692978
+          ],
+          "heightFraction": 0.49570946240079394,
+          "count": 4
+        },
+        {
+          "key": "stagger-outer-1",
+          "position": [
+            -139.39463318045676,
+            12.337997861944045,
+            -209.17847161530236
+          ],
+          "heightFraction": 0.5536874677604169,
+          "count": 4
+        },
+        {
+          "key": "stagger-inner-2",
+          "position": [
+            -140.0229516710252,
+            12.532644412027144,
+            -211.2284199211205
+          ],
+          "heightFraction": 0.570109462400794,
+          "count": 4
+        },
+        {
+          "key": "stagger-outer-2",
+          "position": [
+            -140.49203821988317,
+            13.219845873913075,
+            -211.80350363321133
+          ],
+          "heightFraction": 0.6280874677604169,
+          "count": 4
+        },
+        {
+          "key": "stagger-inner-3",
+          "position": [
+            -138.58639041589947,
+            13.414492423996176,
+            -210.57339220671778
+          ],
+          "heightFraction": 0.6445094624007941,
+          "count": 4
+        },
+        {
+          "key": "stagger-outer-3",
+          "position": [
+            -137.8444053800899,
+            14.101693885882106,
+            -210.58828088921098
+          ],
+          "heightFraction": 0.702487467760417,
+          "count": 4
+        },
+        {
+          "key": "stagger-secondary-3",
+          "position": [
+            -137.99598542201096,
+            13.875252419306483,
+            -210.8387624788881
+          ],
+          "heightFraction": 0.6833829907025064,
+          "count": 4
+        },
+        {
+          "key": "stagger-inner-4",
+          "position": [
+            -139.82025565151773,
+            14.296340435965204,
+            -210.2944398376526
+          ],
+          "heightFraction": 0.718909462400794,
+          "count": 4
+        },
+        {
+          "key": "stagger-outer-4",
+          "position": [
+            -140.30069081110136,
+            14.983541897851135,
+            -209.9836555416561
+          ],
+          "heightFraction": 0.7768874677604168,
+          "count": 4
+        },
+        {
+          "key": "stagger-inner-5",
+          "position": [
+            -139.25898843167877,
+            15.178188447934234,
+            -211.4212062572808
+          ],
+          "heightFraction": 0.793309462400794,
+          "count": 4
+        },
+        {
+          "key": "stagger-outer-5",
+          "position": [
+            -139.2354741180326,
+            15.865389909820163,
+            -211.99291588485053
+          ],
+          "heightFraction": 0.8512874677604167,
+          "count": 3
+        },
+        {
+          "key": "stagger-secondary-5",
+          "position": [
+            -139.4828787841798,
+            15.63894844324454,
+            -211.9650312613623
+          ],
+          "heightFraction": 0.8321829907025062,
+          "count": 3
+        },
+        {
+          "key": "stagger-inner-6",
+          "position": [
+            -139.08048494360693,
+            16.060036459903266,
+            -210.43138059134733
+          ],
+          "heightFraction": 0.8677094624007942,
+          "count": 3
+        },
+        {
+          "key": "stagger-outer-6",
+          "position": [
+            -138.8119191791835,
+            16.747237921789193,
+            -209.92613089923282
+          ],
+          "heightFraction": 0.9256874677604168,
+          "count": 3
+        },
+        {
+          "key": "allocation-apex-0",
+          "position": [
+            -139.52778554368953,
+            15.672337879382889,
+            -210.88636036491903
+          ],
+          "heightFraction": 0.835,
+          "count": 4
+        },
+        {
+          "key": "allocation-apex-1",
+          "position": [
+            -139.47992327517105,
+            16.010142561387152,
+            -210.88423830185332
+          ],
+          "heightFraction": 0.8634999999999998,
+          "count": 4
+        },
+        {
+          "key": "allocation-apex-2",
+          "position": [
+            -139.43206100665253,
+            16.347947243391417,
+            -210.8821162387876
+          ],
+          "heightFraction": 0.8919999999999997,
+          "count": 4
+        },
+        {
+          "key": "allocation-apex-3",
+          "position": [
+            -139.38419873813405,
+            16.685751925395685,
+            -210.8799941757219
+          ],
+          "heightFraction": 0.9205,
+          "count": 4
+        },
+        {
+          "key": "allocation-apex-4",
+          "position": [
+            -139.33633646961553,
+            17.02355660739995,
+            -210.87787211265618
+          ],
+          "heightFraction": 0.949,
+          "count": 4
+        }
+      ],
+      "tuftRootCount": 22,
+      "foliageForm": "SMALL_CLOSED_FOLDED_LEAVES",
+      "vertices": 363,
+      "triangles": 466,
+      "baselineVertices": 364,
+      "baselineTriangles": 644
+    },
+    "attachmentAudit": {
+      "acceptedLowestRootFraction": 0.42027145788798714,
+      "currentLowestRootFraction": 0.421309462400794,
+      "majorSpacingMeters": 0.881848011969029,
+      "centralStripDiagnostic": {
+        "reference": {
+          "rootCount": 616,
+          "rootHeight": {
+            "min": 0.42027145788798714,
+            "max": 0.994030665803827
+          },
+          "centralGapMaxMeters": {
+            "x": 1.1055359460776195,
+            "z": 1.3878533063297525
+          },
+          "centralStripGaps": {
+            "x": {
+              "projection": "ORTHOGRAPHIC_SOURCE_TRIANGLES",
+              "stripWidthMeters": 0.5,
+              "bareIntervalsAbove40Percent": [
+                {
+                  "fromFraction": 0.39999999999999997,
+                  "toFraction": 0.41372529139262676,
+                  "meters": 0.1626830769930585
+                },
+                {
+                  "fromFraction": 0.4187230397910365,
+                  "toFraction": 0.5119952060507519,
+                  "meters": 1.1055359460776195
+                },
+                {
+                  "fromFraction": 0.7245174101417315,
+                  "toFraction": 0.7283163114505428,
+                  "meters": 0.0450276017048612
+                },
+                {
+                  "fromFraction": 0.7314432448695376,
+                  "toFraction": 0.7339864954519193,
+                  "meters": 0.030144629973284154
+                },
+                {
+                  "fromFraction": 0.7583283609343127,
+                  "toFraction": 0.7767975972160076,
+                  "meters": 0.21891208733332057
+                },
+                {
+                  "fromFraction": 0.7878744217779576,
+                  "toFraction": 0.8214970590143462,
+                  "meters": 0.39852225543098285
+                }
+              ]
+            },
+            "z": {
+              "projection": "ORTHOGRAPHIC_SOURCE_TRIANGLES",
+              "stripWidthMeters": 0.5,
+              "bareIntervalsAbove40Percent": [
+                {
+                  "fromFraction": 0.584348678173027,
+                  "toFraction": 0.6715111008337498,
+                  "meters": 1.033118402443046
+                },
+                {
+                  "fromFraction": 0.8829092036388695,
+                  "toFraction": 1,
+                  "meters": 1.3878533063297525
+                }
+              ]
+            }
+          }
+        },
+        "current": {
+          "rootCount": 22,
+          "rootHeight": {
+            "min": 0.421309462400794,
+            "max": 0.949
+          },
+          "centralGapMaxMeters": {
+            "x": 1.411262619845985,
+            "z": 1.1925849639869988
+          },
+          "centralStripGaps": {
+            "x": {
+              "projection": "ORTHOGRAPHIC_SOURCE_TRIANGLES",
+              "stripWidthMeters": 0.5,
+              "bareIntervalsAbove40Percent": [
+                {
+                  "fromFraction": 0.39999999999999997,
+                  "toFraction": 0.44384415385978493,
+                  "meters": 0.5196758053456403
+                },
+                {
+                  "fromFraction": 0.4783890774648691,
+                  "toFraction": 0.4841688439274078,
+                  "meters": 0.06850639199778286
+                },
+                {
+                  "fromFraction": 0.529439597912108,
+                  "toFraction": 0.5480847383004279,
+                  "meters": 0.22099704280004495
+                },
+                {
+                  "fromFraction": 0.5924286644490426,
+                  "toFraction": 0.7114944643277509,
+                  "meters": 1.411262619845985
+                },
+                {
+                  "fromFraction": 0.7187405238667254,
+                  "toFraction": 0.7242800354110249,
+                  "meters": 0.06565869949758074
+                },
+                {
+                  "fromFraction": 0.741364737840558,
+                  "toFraction": 0.7930772060202826,
+                  "meters": 0.6129373287406175
+                },
+                {
+                  "fromFraction": 0.9692465135269722,
+                  "toFraction": 1,
+                  "meters": 0.36451479714188295
+                }
+              ]
+            },
+            "z": {
+              "projection": "ORTHOGRAPHIC_SOURCE_TRIANGLES",
+              "stripWidthMeters": 0.5,
+              "bareIntervalsAbove40Percent": [
+                {
+                  "fromFraction": 0.39999999999999997,
+                  "toFraction": 0.45380517708842794,
+                  "meters": 0.6377417802294598
+                },
+                {
+                  "fromFraction": 0.47732632021238713,
+                  "toFraction": 0.5040572327234568,
+                  "meters": 0.31683604913984986
+                },
+                {
+                  "fromFraction": 0.50500059369548,
+                  "toFraction": 0.605616935872763,
+                  "meters": 1.1925849639869988
+                },
+                {
+                  "fromFraction": 0.6477033532324175,
+                  "toFraction": 0.6528051639370517,
+                  "meters": 0.060470720797365374
+                },
+                {
+                  "fromFraction": 0.7532017765319555,
+                  "toFraction": 0.8288353784163411,
+                  "meters": 0.8964696432769159
+                },
+                {
+                  "fromFraction": 0.9181300253106621,
+                  "toFraction": 0.9201755476065092,
+                  "meters": 0.024245158199342143
+                },
+                {
+                  "fromFraction": 0.9455337373681552,
+                  "toFraction": 0.9472500395748893,
+                  "meters": 0.02034297969014176
+                },
+                {
+                  "fromFraction": 0.9759339699805127,
+                  "toFraction": 1,
+                  "meters": 0.2852497409767736
+                }
+              ]
+            }
+          }
+        }
+      },
+      "diagnosticQualification": "ORTHOGRAPHIC_SOURCE_TRIANGLES_WITH_SYNTHETIC_BASAL_RING_NOT_VISUAL_SUPPORT_OR_BUDGET_QUALIFICATION",
+      "incomingSourceCustody": {
+        "archiveCurrentBytes": 16318,
+        "gitCurrentBytes": 16317,
+        "archiveCurrentSha256": "55307b6bf0b970c078617aa97728afe5f2a24eb58e77229b3a7c757c8ed7f3d7",
+        "gitCurrentSha256": "78fd33f4d1ded26a14e3bedb4f7cb0720d61b714e94074b7d3af640202fcdffb",
+        "exactBytes": false,
+        "trailingNewlineOnlyDifference": true
+      }
+    },
+    "other64Trees": "UNCHANGED_PRIOR_FAILED_VOLUME_SOURCE",
+    "fourViews": {
+      "walking": {
+        "status": "FAIL",
+        "imageSha256": "ad42ed77b0e9620f7ff869af3a05f5650bb42b97696d440d4f31f2f84c8136bf"
+      },
+      "close": {
+        "status": "FAIL",
+        "imageSha256": "7729814f57306064805fda832f02dfb711e69a213254b1449e60e5383959ff8f"
+      },
+      "side": {
+        "status": "FAIL",
+        "imageSha256": "41d3fa79b3b19bcc5271f715c2141b810acc1330f70c0c3c12fb9941d5d9f3bd"
+      },
+      "distant": {
+        "status": "FAIL",
+        "imageSha256": "2c165f4c482e0e8d98ace4dfd23ef0e32a5220094495387d971199fe2542dd8b"
+      }
+    },
+    "improvements": [
+      "Seven major branch levels and 0.88m spacing restored",
+      "Lowest actual leaf attachment restored to42.13% height versus accepted42.03%",
+      "Inner-limb foliage and20apex leaves retained",
+      "Central-strip diagnostic gaps reduced; not a visual acceptance criterion"
+    ],
+    "remainingDefects": [
+      "Small isolated blade sprays leave long inner and outer limbs exposed",
+      "Seven restored branch levels do not restore overlapping dense crown coverage",
+      "Side and distant silhouettes remain thin with separated foliage tufts"
+    ],
+    "all65Verification": "NOT_RUN_REPRESENTATIVE_VISUAL_GATE_FAILED",
+    "renewedRuntimeQualification": "NOT_RUN_VISUAL_GATE_FAILED",
+    "physicalDeviceAcceptance": "PENDING",
+    "noBudgetImpossibilityEstablished": true,
+    "independentReviews": {
+      "East": "FAIL_ALL_FOUR_VIEWS",
+      "West": "FAIL_ALL_FOUR_VIEWS_GEOMETRY_PASS_REPRESENTATIVE_ONLY",
+      "North": "CARRY_FORWARD_APPROVED"
+    }
+  }
+}

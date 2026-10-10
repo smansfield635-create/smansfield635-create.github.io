@@ -6,6 +6,7 @@ import {constructHEarthTriangleMesh,H_EARTH_3D_GEOMETRY_SOUTH_ENUMS as E} from '
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as policy} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {buildHEarthWoodlandGrassTuft} from './grass-lowland-trial.js?cb=meadow-fan-20261006';
+import {adaptHEarthWoodlandTreeHierarchy} from './geometry-woodland-tree-trial.js';
 const SEED='WEST_WOODLAND_P2_20261006';
 const hash=(id,channel)=>{let h=2166136261;for(const c of `${SEED}:${id}:${channel}`)h=Math.imul(h^c.charCodeAt(0),16777619);return (h>>>0)/4294967296;};
 const bounds={minX:-180,maxX:-24,minZ:-380,maxZ:-190};
@@ -114,14 +115,15 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
  const accepted=[];for(const p of candidates){const radius=2.4+hash(p.id,'crown')*2,anchor=ground(p.x,p.z),material=sampleHEarthRun8CSuccessorSurfaceMaterial(p.x,p.z);const reason=!clearFootprint(p.x,p.z,radius)?'FOOTPRINT_EXCLUDED':!anchor?'GROUND_MISSING':anchor.slope>.72?'STEEP_SLOPE':!['LOWLAND_SOIL','COASTAL_SOIL'].includes(material?.surfaceClass)?'HABITAT_EXCLUDED':accepted.some(q=>Math.hypot(p.x-q.x,p.z-q.z)<(radius+q.radius)*.65)?'TRUNK_SPACING_CONFLICT':null;if(reason){rejections.push({id:p.id,reason});continue;}accepted.push({...p,radius,anchor,material});}
  accepted.sort((a,b)=>a.id.localeCompare(b.id));const bark=mesh(),foliage=mesh(),stone=mesh(),grass=mesh();
  for(const p of accepted){const {id,x,z,radius,anchor}=p,y=anchor.y,height=8+hash(id,'height')*8,leanX=(hash(id,'leanX')-.5)*1.1,leanZ=(hash(id,'leanZ')-.5)*1.1;
- const barkVertexStart=bark.vertices.length,canopyVertexStart=foliage.vertices.length;
+ const barkVertexStart=bark.vertices.length,canopyVertexStart=foliage.vertices.length,barkIndexStart=bark.indices.length,canopyIndexStart=foliage.indices.length;
  let scaffold=null;
  if(id.startsWith('P2_TREE_A_'))scaffold=openWoodlandTree(bark,foliage,p,height,leanX,leanZ);else {
  branch(bark,[x,y,z],[x+leanX,y+height*.72,z+leanZ],.32+height*.018,.10,[93,75,52,255]);
  for(let j=0;j<5;j++){const angle=j*2.399+hash(id,'rotation')*6.28,offset=j===4?.15:radius*.33,dx=Math.cos(angle)*offset,dz=Math.sin(angle)*offset,cy=y+height*(j===4?.81:.62+hash(id,`tier${j}`)*.1);branch(bark,[x+leanX*.35,y+height*.35,z+leanZ*.35],[x+dx,cy,z+dz],.15,.055,[94,76,53,255]);const r=radius*(j===4?.59:.58);lobe(foliage,`${id}:${j}`,[x+dx,cy,z+dz],[r,(y+height-cy)*(j===4?1:.76),r*.92],[72+hash(id,'tint')*22,99+hash(id,'tint')*22,42+hash(id,'tint')*12,255]);}
  }
+ const treeVariation=adaptHEarthWoodlandTreeHierarchy({bark,foliage,p,height,leanX,leanZ,barkVertexStart,barkIndexStart,canopyVertexStart,canopyIndexStart});
  const support=burySupport(bark,barkVertexStart,barkVertexStart,6,ground,false);if(!support){issues.push(`ROOT_SUPPORT_MISSING:${id}`);continue;}
- manifest.push({...(scaffold?{scaffoldStyle:scaffold.style,crownParts:scaffold.crownParts,trunkRadius:scaffold.trunkRadius,refinementCluster:'A'}:{}),support,barkVertexStart,barkVertexCount:bark.vertices.length-barkVertexStart,canopyVertexStart,canopyVertexCount:foliage.vertices.length-canopyVertexStart,id,kind:'TREE',x,y,z,height,crownRadius:radius,groundTriangle:anchor.triangle,groundSlope:anchor.slope,surfaceClass:p.material.surfaceClass,footprintClear:true});
+ manifest.push({...(scaffold?{scaffoldStyle:scaffold.style,crownParts:scaffold.crownParts,trunkRadius:scaffold.trunkRadius,refinementCluster:'A'}:{}),treeVariation,support,barkVertexStart,barkVertexCount:bark.vertices.length-barkVertexStart,canopyVertexStart,canopyVertexCount:foliage.vertices.length-canopyVertexStart,id,kind:'TREE',x,y,z,height,crownRadius:radius,groundTriangle:anchor.triangle,groundSlope:anchor.slope,surfaceClass:p.material.surfaceClass,footprintClear:true});
  }
  for(let i=0;i<14;i++){
   const id=`P2_ROCK_${String(i).padStart(2,'0')}`,x=-79+i*2.65+(hash(id,'x')-.5)*5,z=-239+i*1.9+(hash(id,'z')-.5)*8,r=2+hash(id,'size')*2.7,a=ground(x,z);

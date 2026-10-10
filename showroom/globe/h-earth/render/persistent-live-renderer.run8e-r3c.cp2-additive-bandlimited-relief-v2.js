@@ -1,4 +1,4 @@
-import { FOUR_TREE_COMPACT_CONTRACT, createFourTreeCompactGpuBuffers, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms, bindFourTreeCompactMatrix, createFourTreeCompactPrograms } from './compact-four-tree-foliage.v1.js';
+import { FOUR_TREE_COMPACT_CONTRACT, createFourTreeCompactGpuBuffers, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms, bindFourTreeCompactMatrix, createFourTreeCompactPrograms, extractFourTreeAuthenticCoastContactSidecar } from './compact-four-tree-foliage.v1.js';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
@@ -1050,6 +1050,15 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   resources.vegetation={truth:vegetationTruth,nextBatchIndex:0,residentBatches:[],residentPlacementIds:new Set(),complete:false};
   let contactField=await createExposedWaterContactFieldAsync(uploadViews,renderPackage.primitiveSpans,null,{onProgress:onStartupProgress??(()=>{}),startProgress:35});
   let contactFieldBuildCount=1,contactFieldTotalMilliseconds=contactField.stats.initializationMilliseconds;
+  // Generation 2633 C03: capture ACTUAL original canopy coast/contact streams.
+  // This fails closed on source/range/value mismatch. Source arrays stay intact;
+  // qualification of color, shadow, GPU decoder and publication remains open.
+  const fourTreeCanopySpan=renderPackage.primitiveSpans.find(span=>span.primitiveId==='H_EARTH_LANDSCAPE_P2_CANOPY');
+  const fourTreeActualSourceSidecar=extractFourTreeAuthenticCoastContactSidecar({
+    canopySpan:fourTreeCanopySpan,coastDistances,contactDistances:contactField.packageDistances
+  });
+  const fourTreeActualSourceSidecarBytes=fourTreeActualSourceSidecar.byteLength;
+
 
   let vegetationPreparation=null;
   let vegetationPreparationComplete=!deferVegetation;
@@ -1697,7 +1706,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         geometryMutation: false, terrainMutation: false, placementMutation: false,
         cameraMutation: false, touchMutation: false
       },
-      initialized, fourTreeCompact: resources.fourTreeCompact ? { ...resources.fourTreeCompact.accounting, installed:true, colorShadowIntegrationQualified:resources.fourTreeCompactPassReady === true } : { installed:false, actualUploadedBytes:0 }, dimensions: { width, height },
+      initialized, fourTreeContactSource:{actualOriginalArrayComparison:true,treeCount:4,leafCount:7168,sidecarBytes:fourTreeActualSourceSidecarBytes,referenceValueChecks:'COAST_0_CONTACT_64_PASS',gpuQualification:false}, fourTreeCompact: resources.fourTreeCompact ? { ...resources.fourTreeCompact.accounting, installed:true, colorShadowIntegrationQualified:resources.fourTreeCompactPassReady === true } : { installed:false, actualUploadedBytes:0 }, dimensions: { width, height },
       context: {
         created: true, lost: gl.isContextLost(), vendor: gl.getParameter(gl.VENDOR), renderer: gl.getParameter(gl.RENDERER),
         unmaskedVendor: debugRenderer ? gl.getParameter(debugRenderer.UNMASKED_VENDOR_WEBGL) : null,
@@ -1739,7 +1748,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    initialize, installFourTreeCompactPayload, installFourTreeCompactCompiledPayload, drawFourTreeCompactPayload, releaseFourTreeCompactPayload, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize, getFourTreeActualSourceSidecar:()=>new Uint8Array(fourTreeActualSourceSidecar), installFourTreeCompactPayload, installFourTreeCompactCompiledPayload, drawFourTreeCompactPayload, releaseFourTreeCompactPayload, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

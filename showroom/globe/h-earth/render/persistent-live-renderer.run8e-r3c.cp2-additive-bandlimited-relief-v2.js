@@ -1534,7 +1534,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
   }
-  function presentColorFrame() {
+  function presentColorFrame({countPresentation=true}={}) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     // Present the existing RGBA8 geometry frame using one texture triangle.
     // This avoids the invalid default-backbuffer blit without touching meshes.
@@ -1553,7 +1553,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const restoredError=gl.getError();
     if(restoredError!==gl.NO_ERROR)throw new Error('R3C_PRESENT_TEXTURE_RESTORE_ERROR:'+restoredError);
     if(error!==gl.NO_ERROR)throw new Error('R3C_PRESENT_TEXTURE_DRAW_ERROR:'+error);
-    counters.visiblePresentationCount+=1;
+    if(countPresentation)counters.visiblePresentationCount+=1;
     return Object.freeze({frameNumber:counters.frameCount,width,height});
   }
   function captureColorFrame(label, { includePng = true } = {}) {
@@ -1561,8 +1561,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.finish(); counters.gpuFinishCount += 1;
     const pixels = new Uint8Array(width * height * 4); gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels); counters.colorReadbackCount += 1;
     const summary = summarize(pixels, resources.clearColorBytes);
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    // Diagnostic color capture uses the same verified fullscreen texture path
+    // as normal presentation; never reintroduce WebGL's invalid blit.
+    // This diagnostic repaint is not an additional navigation-frame presentation.
+    presentColorFrame({countPresentation:false});
     const pngDataUrl = includePng ? canvas.toDataURL('image/png') : null; if (includePng) counters.pngEncodingCount += 1;
     return Object.freeze({ label, frameNumber: counters.frameCount, width, height, summary, pngDataUrl });
   }

@@ -1086,19 +1086,27 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
 
   async function uploadGlobalCover(cover){
+    // Gen2638 browser qualification: fail at the first specific GL upload
+    // boundary, rather than reporting the eventual 1282 after all operations.
+    // This is diagnostic only; no geometry, GPU payload, or capability changes.
+    const verifyCoverGlStage=label=>{
+      const code=gl.getError();
+      if(code!==gl.NO_ERROR)throw new Error('GLOBAL_COVER_GL_STAGE_'+label+':'+code);
+    };
+    verifyCoverGlStage('PREEXISTING');
     const state={cover,buffers:[],gpuByteLength:0,uploadCount:0,maximumUploadChunkBytes:0,resourceCount:0,lastDraw:{visibleInstanceCount:0,drawCallCount:0}};
     const before=counters.postInitializationResourceCreationCount;
     counters.globalCoverAuthorizedResourceCreateCount=(counters.globalCoverAuthorizedResourceCreateCount??0)+2;
     state.vertexShader=createShader(gl.VERTEX_SHADER,GLOBAL_COVER_VS,'GLOBAL_COVER_VS');
-    state.program=createProgram(state.vertexShader,resources.geometryFragmentShader,'GLOBAL_COVER_PROGRAM');
+    state.program=createProgram(state.vertexShader,resources.geometryFragmentShader,'GLOBAL_COVER_PROGRAM');verifyCoverGlStage('SHADERS');
     counters.globalCoverAuthorizedResourceCreateCount++;markPostInitializationCreation();counters.vertexArrayCreateCount++;state.vao=gl.createVertexArray();
     if(!state.vao)throw Error('GLOBAL_COVER_VAO_CREATE_FAILED');
     gl.bindVertexArray(state.vao);
     const put=async(target,data)=>{
       counters.globalCoverAuthorizedResourceCreateCount++;markPostInitializationCreation();counters.bufferCreateCount++;const b=gl.createBuffer();if(!b)throw Error('GLOBAL_COVER_BUFFER_CREATE_FAILED');state.buffers.push(b);
-      gl.bindVertexArray(state.vao);gl.bindBuffer(target,b);gl.bufferData(target,data.byteLength,gl.STATIC_DRAW);
+      gl.bindVertexArray(state.vao);gl.bindBuffer(target,b);gl.bufferData(target,data.byteLength,gl.STATIC_DRAW);verifyCoverGlStage('BUFFER_ALLOCATION_'+target);
       const chunk=Math.max(1,Math.floor(262144/data.BYTES_PER_ELEMENT));
-      for(let i=0;i<data.length;i+=chunk){const part=data.subarray(i,Math.min(data.length,i+chunk));gl.bindVertexArray(state.vao);gl.bindBuffer(target,b);gl.bufferSubData(target,i*data.BYTES_PER_ELEMENT,part);state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,part.byteLength);gl.bindVertexArray(resources.vertexArray);await yieldToBrowserPaint();}
+      for(let i=0;i<data.length;i+=chunk){const part=data.subarray(i,Math.min(data.length,i+chunk));gl.bindVertexArray(state.vao);gl.bindBuffer(target,b);gl.bufferSubData(target,i*data.BYTES_PER_ELEMENT,part);verifyCoverGlStage('BUFFER_CHUNK_'+target);state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,part.byteLength);gl.bindVertexArray(resources.vertexArray);await yieldToBrowserPaint();}
       state.gpuByteLength+=data.byteLength;state.uploadCount++;return b;
     };
     for(const [location,data,size] of [[0,cover.template.positions,3],[1,cover.template.normals,3],[2,cover.template.colors,4],[3,cover.template.rootInfo,4]]){
@@ -1111,10 +1119,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     state.textureHeight=Math.max(1,Math.ceil(cover.records.length/4/state.textureWidth));
     const pixels=new Float32Array(state.textureWidth*state.textureHeight*4);pixels.set(cover.records);
     gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);
-    gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA32F,state.textureWidth,state.textureHeight);
+    gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA32F,state.textureWidth,state.textureHeight);verifyCoverGlStage('TEXTURE_STORAGE');
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
     const rowsPerChunk=Math.max(1,Math.floor(262144/(state.textureWidth*16)));
-    for(let row=0;row<state.textureHeight;row+=rowsPerChunk){const rows=Math.min(rowsPerChunk,state.textureHeight-row),part=pixels.subarray(row*state.textureWidth*4,(row+rows)*state.textureWidth*4);gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);gl.texSubImage2D(gl.TEXTURE_2D,0,0,row,state.textureWidth,rows,gl.RGBA,gl.FLOAT,part);state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,part.byteLength);gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);await yieldToBrowserPaint();}
+    for(let row=0;row<state.textureHeight;row+=rowsPerChunk){const rows=Math.min(rowsPerChunk,state.textureHeight-row),part=pixels.subarray(row*state.textureWidth*4,(row+rows)*state.textureWidth*4);gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);gl.texSubImage2D(gl.TEXTURE_2D,0,0,row,state.textureWidth,rows,gl.RGBA,gl.FLOAT,part);verifyCoverGlStage('TEXTURE_ROW_'+row);state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,part.byteLength);gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);await yieldToBrowserPaint();}
     state.gpuByteLength+=pixels.byteLength;state.uploadCount++;gl.activeTexture(gl.TEXTURE0);
     if(state.gpuByteLength>8*1024*1024)throw Error('GLOBAL_COVER_GPU_BUDGET_EXCEEDED');
     state.uniforms={};for(const name of ['uInstanceRecords','uInstanceStart','uInstanceStride','uInstanceTextureWidth','uViewProjection','uCameraPosition','uSunDirection','uSunIntensity','uSunColor','uSkyZenithColor','uSkyHorizonColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor','uDistanceDesaturationStrength','uTerrainPatchClip','uClipBaseTerrain','uGlobalCoverFarPrimitiveIndex','uPlanetRadius','uShorelineSoilCoverage','uLandscapeFloorFootprints[0]','uLandscapeFloorCount'])state.uniforms[name]=gl.getUniformLocation(state.program,name);
@@ -1122,9 +1130,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform3fv(u.uSunColor,color3(e.sunColor));gl.uniform3fv(u.uSkyZenithColor,color3(e.skyZenithColor));gl.uniform3fv(u.uSkyHorizonColor,resources.skyColor);gl.uniform3fv(u.uGroundHazeColor,color3(e.groundHazeColor));
     for(const [name,key] of [['uFogStartDistance','fogStartDistance'],['uFogFalloff','fogFalloff'],['uMaximumFogFactor','maximumFogFactor'],['uDistanceDesaturationStrength','distanceDesaturationStrength']])gl.uniform1f(u[name],e[key]);
     gl.uniform1i(u.uInstanceRecords,2);gl.uniform1i(u.uInstanceTextureWidth,state.textureWidth);
-    gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);
+    gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);verifyCoverGlStage('UNIFORMS');
     state.resourceCount=counters.postInitializationResourceCreationCount-before;
-    configureClearingProgram(state.program);
+    configureClearingProgram(state.program);verifyCoverGlStage('CLEARING_PROGRAM_CONFIG');
     resources.globalCover=state;gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
     const error=gl.getError();if(error!==gl.NO_ERROR)throw Error(`GLOBAL_COVER_UPLOAD_ERROR:${error}`);
   }

@@ -147,6 +147,54 @@ void main() {}
 `;
 
 /**
+ * Compile both compact passes as one owned GPU resource transaction.
+ * The persistent renderer can install these programs with the approved
+ * packed payload, then dispose the pair when the residency is released.
+ */
+export function createFourTreeCompactPrograms(gl) {
+  if (!gl || typeof gl.createShader !== 'function') throw new TypeError('FOUR_TREE_COMPACT_WEBGL2_REQUIRED');
+  const shaders=[], programs=[];
+  const compile=(type,source,label)=>{
+    const shader=gl.createShader(type);
+    if(!shader)throw Error('FOUR_TREE_COMPACT_SHADER_ALLOCATION:'+label);
+    shaders.push(shader);
+    gl.shaderSource(shader,source);
+    gl.compileShader(shader);
+    if(!gl.getShaderParameter(shader,gl.COMPILE_STATUS))
+      throw Error('FOUR_TREE_COMPACT_SHADER_COMPILE:'+label+':'+gl.getShaderInfoLog(shader));
+    return shader;
+  };
+  const link=(vertex,fragment,label)=>{
+    const program=gl.createProgram();
+    if(!program)throw Error('FOUR_TREE_COMPACT_PROGRAM_ALLOCATION:'+label);
+    programs.push(program);
+    gl.attachShader(program,vertex);
+    gl.attachShader(program,fragment);
+    gl.linkProgram(program);
+    if(!gl.getProgramParameter(program,gl.LINK_STATUS))
+      throw Error('FOUR_TREE_COMPACT_PROGRAM_LINK:'+label+':'+gl.getProgramInfoLog(program));
+    return program;
+  };
+  try {
+    const color=link(compile(gl.VERTEX_SHADER,FOUR_TREE_COMPACT_COLOR_VERTEX_GLSL,'COLOR_VS'),
+      compile(gl.FRAGMENT_SHADER,FOUR_TREE_COMPACT_COLOR_FRAGMENT_GLSL,'COLOR_FS'),'COLOR');
+    const shadow=link(compile(gl.VERTEX_SHADER,FOUR_TREE_COMPACT_SHADOW_VERTEX_GLSL,'SHADOW_VS'),
+      compile(gl.FRAGMENT_SHADER,FOUR_TREE_COMPACT_SHADOW_FRAGMENT_GLSL,'SHADOW_FS'),'SHADOW');
+    for(const shader of shaders)gl.deleteShader(shader);
+    let disposed=false;
+    return Object.freeze({color,shadow,programCount:2,dispose(){
+      if(disposed)return;
+      disposed=true;
+      for(const program of programs)gl.deleteProgram(program);
+    }});
+  }catch(error){
+    for(const program of programs)gl.deleteProgram(program);
+    for(const shader of shaders)gl.deleteShader(shader);
+    throw error;
+  }
+}
+
+/**
  * Binds the exact quantization descriptors to an existing compact shader.
  * This deliberately rejects guessed defaults: all scales and the source
  * origin must be supplied from the approved packing receipt.

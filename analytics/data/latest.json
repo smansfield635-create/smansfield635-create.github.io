@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-10T19:27:50Z",
+  "generatedAt": "2026-10-10T20:33:13Z",
   "window30d": {
-    "start": "2026-09-10T19:27:50Z",
-    "end": "2026-10-10T19:27:50Z"
+    "start": "2026-09-10T20:33:13Z",
+    "end": "2026-10-10T20:33:13Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 28
+      "pageLoads": 27
     },
     {
       "date": "2026-10-04",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 40
+      "pageLoads": 47
     }
   ],
   "summary": {
-    "pageLoads": 5633,
+    "pageLoads": 5639,
     "botPageLoads": 2114,
-    "nonBotPageLoads": 3519
+    "nonBotPageLoads": 3525
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3009,
-      "visits": 3009
+      "pageLoads": 3015,
+      "visits": 3015
     },
     {
       "host": "diamondgatebridge.com",
@@ -207,8 +207,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 292,
-      "visits": 278
+      "pageLoads": 298,
+      "visits": 284
     },
     {
       "path": "/showroom/globe/audralia/",

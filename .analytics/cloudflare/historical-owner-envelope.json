@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-10T19:27:50Z",
+  "generatedAt": "2026-10-10T20:33:13Z",
   "window": {
-    "start": "2026-07-12T19:27:50Z",
-    "end": "2026-10-10T19:27:50Z"
+    "start": "2026-07-12T20:33:13Z",
+    "end": "2026-10-10T20:33:13Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5008,
-    "visits": 1308,
+    "pageLoads": 5010,
+    "visits": 1310,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5008,
-        "visits": 1308
+        "pageLoads": 5010,
+        "visits": 1310
       }
     },
     "byPath": {
@@ -47,16 +47,16 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 164,
-        "visits": 0
-      },
-      "/coherence-diagnostic/": {
-        "pageLoads": 30,
-        "visits": 0
+        "pageLoads": 166,
+        "visits": 2
       },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
+      },
+      "/coherence-diagnostic/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
@@ -142,20 +142,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -169,6 +169,10 @@
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
@@ -185,10 +189,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -357,8 +357,8 @@
         "visits": 780
       },
       "(none)": {
-        "pageLoads": 518,
-        "visits": 518
+        "pageLoads": 520,
+        "visits": 520
       },
       "raw.githack.com": {
         "pageLoads": 10,

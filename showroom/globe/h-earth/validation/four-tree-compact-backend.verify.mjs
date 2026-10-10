@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 const source = resolve('showroom/globe/h-earth/render/compact-four-tree-foliage.v1.js');
-const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers, validateFourTreeCompactDrawBudget, createFourTreeCompactDrawView } = await import(pathToFileURL(source).href);
+const { FOUR_TREE_COMPACT_CONTRACT: c, validateFourTreeCompactPayload, createFourTreeCompactGpuBuffers, validateFourTreeCompactDrawBudget, createFourTreeCompactDrawView, createFourTreeCompactResidency } = await import(pathToFileURL(source).href);
 const checks = [];
 function check(name, fn) {
   try { fn(); checks.push({name, result:'PASS'}); }
@@ -72,6 +72,33 @@ check('DEGENERATE_QUAD_REJECTED_BEFORE_GPU_ALLOCATION',()=>{
      indexData:new Uint32Array(indices),program:{}}),/QUAD_TOPOLOGY/);
  }
  assert.equal(allocations,0);
+});
+check('TRANSACTIONAL_RESIDENCY_AND_CLEANUP',()=>{
+  let created=0, deleted=0, draws=0;
+  const gl={ARRAY_BUFFER:34962,ELEMENT_ARRAY_BUFFER:34963,STATIC_DRAW:35044,UNSIGNED_INT:5125,TRIANGLES:4,
+    createBuffer(){return {id:++created};},createVertexArray(){return {};},bindBuffer(){},bindVertexArray(){},
+    bufferData(){},enableVertexAttribArray(){},vertexAttribIPointer(){},vertexAttribDivisor(){},
+    useProgram(){},drawElementsInstanced(){draws++;},deleteBuffer(){deleted++;},deleteVertexArray(){}};
+  const payload={compactRecords:new Uint8Array(172032),contactSidecar:new Uint8Array(229376),
+    indexData:new Uint32Array([0,1,2,2,1,3]),program:{}};
+  const resident=createFourTreeCompactResidency(gl,payload);
+  assert.equal(resident.accounting.totalUploadedBytes,401432);
+  assert.equal(resident.accounting.bufferCount,3);
+  assert.equal(resident.draw().instances,7168);
+  assert.equal(draws,1);
+  resident.dispose();resident.dispose();
+  assert.equal(deleted,3);
+  assert.throws(()=>resident.draw(),/RESIDENCY_DISPOSED/);
+});
+check('TRANSACTIONAL_RESIDENCY_ROLLBACK',()=>{
+  let created=0, deleted=0;
+  const gl={ARRAY_BUFFER:34962,STATIC_DRAW:35044,
+    createBuffer(){created++;return {};},bindBuffer(){},bufferData(){},
+    createVertexArray(){return null;},deleteBuffer(){deleted++;}};
+  assert.throws(()=>createFourTreeCompactResidency(gl,{
+    compactRecords:new Uint8Array(172032),contactSidecar:new Uint8Array(229376),
+    indexData:new Uint32Array([0,1,2,2,1,3]),program:{}}),/VAO_FAILED/);
+  assert.equal(created,2);assert.equal(deleted,2);
 });
 check('INSTANCED_DRAW',()=>{
  const draws=[];

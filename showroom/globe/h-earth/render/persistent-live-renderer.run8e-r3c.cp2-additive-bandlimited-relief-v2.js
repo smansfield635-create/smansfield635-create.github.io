@@ -1070,6 +1070,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   let vegetationPreparationProgress=Object.freeze({phase:'NOT_STARTED',worldTruthValidated:!deferVegetation,oasisComplete:!deferVegetation,grassTuftCount:0,cattailCount:0,primitiveCount:0});
   function prepareVegetationResidency({onProgress=()=>{}}={}){
     if(typeof onProgress!=='function')throw new TypeError('R3C_VEGETATION_PROGRESS_CALLBACK_INVALID');
+    const preparationEntryError=gl.getError();
+    if(preparationEntryError!==gl.NO_ERROR)throw new Error('R3C_PREP_ENTRY_GL_ERROR:'+preparationEntryError);
     if(vegetationPreparation)return vegetationPreparation;
     const progress=update=>{vegetationPreparationProgress=Object.freeze({...vegetationPreparationProgress,...update});onProgress(vegetationPreparationProgress);};
     vegetationPreparation=(async()=>{
@@ -1548,6 +1550,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const error=gl.getError();
     gl.bindTexture(gl.TEXTURE_2D,null);gl.bindVertexArray(resources.vertexArray);
     gl.useProgram(resources.geometryProgram);gl.depthMask(true);
+    const restoredError=gl.getError();
+    if(restoredError!==gl.NO_ERROR)throw new Error('R3C_PRESENT_TEXTURE_RESTORE_ERROR:'+restoredError);
     if(error!==gl.NO_ERROR)throw new Error('R3C_PRESENT_TEXTURE_DRAW_ERROR:'+error);
     counters.visiblePresentationCount+=1;
     return Object.freeze({frameNumber:counters.frameCount,width,height});

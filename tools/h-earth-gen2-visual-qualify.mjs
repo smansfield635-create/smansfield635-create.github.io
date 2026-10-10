@@ -36,6 +36,15 @@ if(process.argv.includes('--self-test')){
  await fs.mkdir(out,{recursive:true});
  try{
   if(fourOnly){
+   // The registered workflow checks out the candidate with fetch-depth:1.
+   // The established independent tree verifier compares against an immutable
+   // production baseline, so materialize only that exact commit when absent.
+   // This changes local git object availability, not the candidate worktree.
+   const baseline='23eb1bb79c13b2d79e7006e2d9bf664ecf31aed2';
+   const baselineObject=baseline+'^{commit}';
+   try{execFileSync('git',['cat-file','-e',baselineObject],{stdio:'ignore'});}
+   catch{execFileSync('git',['fetch','--no-tags','--depth=1','origin',baseline],{stdio:'ignore',timeout:120000});}
+   execFileSync('git',['cat-file','-e',baselineObject],{stdio:'ignore'});
    const proof=JSON.parse(execFileSync(process.execPath,['showroom/globe/h-earth/validation/four-tree-only.verify.mjs'],{encoding:'utf8',timeout:180000,maxBuffer:2*1024*1024}));
    if(proof.result!=='PASS'||proof.approvedCount!==4||proof.oldVisibleTreeCount!==0||proof.approvedGeometryUnchanged!==true||proof.deferredConiferGpuDrawExcluded!==true||approvedIds.some(id=>!proof.approvedTreeIds.includes(id)))throw Error('FOUR_TREE_SOURCE_CENSUS_FAILED');
    receipt.sourceTreeCensus={approvedIds:proof.approvedTreeIds,approvedCount:4,oldVisibleTreeCount:0,approvedGeometryUnchanged:true,legacyConiferDrawFilterPresent:true};

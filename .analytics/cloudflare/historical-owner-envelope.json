@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-10T03:41:24Z",
+  "generatedAt": "2026-10-10T04:38:38Z",
   "window": {
-    "start": "2026-07-12T03:41:24Z",
-    "end": "2026-10-10T03:41:24Z"
+    "start": "2026-07-12T04:38:38Z",
+    "end": "2026-10-10T04:38:38Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -30,20 +30,20 @@
         "pageLoads": 70,
         "visits": 30
       },
-      "/": {
-        "pageLoads": 1041,
-        "visits": 729
-      },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
       },
       "/showroom/globe/hearth/": {
         "pageLoads": 30,
+        "visits": 0
+      },
+      "/": {
+        "pageLoads": 1041,
+        "visits": 729
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
@@ -250,6 +250,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -264,10 +268,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {

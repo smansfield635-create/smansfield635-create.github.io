@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-10T03:41:24Z",
+  "generatedAt": "2026-10-10T04:38:38Z",
   "window": {
-    "start": "2026-09-10T03:41:24Z",
-    "end": "2026-10-10T03:41:24Z"
+    "start": "2026-09-10T04:38:38Z",
+    "end": "2026-10-10T04:38:38Z"
   },
   "dimensions": {
     "requestPath": [
@@ -78,6 +78,11 @@
         "visits": 50
       },
       {
+        "value": "/evidence/agentic-frontier/",
+        "pageLoads": 50,
+        "visits": 30
+      },
+      {
         "value": "/evidence/",
         "pageLoads": 50,
         "visits": 0
@@ -96,11 +101,6 @@
         "value": "/products/archcoin/receivable/",
         "pageLoads": 50,
         "visits": 0
-      },
-      {
-        "value": "/evidence/agentic-frontier/",
-        "pageLoads": 49,
-        "visits": 29
       },
       {
         "value": "/analytics-owner-device/",
@@ -268,17 +268,17 @@
         "visits": 2
       },
       {
-        "value": "/explore/frontier/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
         "value": "/five-flags/",
         "pageLoads": 2,
         "visits": 2
       },
       {
         "value": "/products/ssg/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
+        "value": "/explore/frontier/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -293,17 +293,17 @@
         "visits": 1
       },
       {
+        "value": "/build/index.html",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/laws/categories/structure/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/showroom/globe/audralia/diagnostic/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "/build/index.html",
         "pageLoads": 1,
         "visits": 1
       },
@@ -316,8 +316,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3040,
-        "visits": 3040
+        "pageLoads": 3041,
+        "visits": 3041
       },
       {
         "value": "diamondgatebridge.com",
@@ -358,8 +358,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 5624,
-        "visits": 3285
+        "pageLoads": 5625,
+        "visits": 3286
       },
       {
         "value": "BR",
@@ -395,8 +395,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2473,
-        "visits": 2386
+        "pageLoads": 2474,
+        "visits": 2387
       },
       {
         "value": "tablet",
@@ -417,8 +417,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 1984,
-        "visits": 649
+        "pageLoads": 1985,
+        "visits": 650
       },
       {
         "value": "ChromeMobile",
@@ -479,8 +479,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 135,
-        "visits": 135
+        "pageLoads": 136,
+        "visits": 136
       },
       {
         "value": "MacOSX",
@@ -501,8 +501,8 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 3526,
-        "visits": 1250
+        "pageLoads": 3527,
+        "visits": 1251
       },
       {
         "value": "1",
@@ -513,8 +513,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3843,
-        "visits": 3045
+        "pageLoads": 3844,
+        "visits": 3046
       },
       {
         "value": "reload",
@@ -540,8 +540,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 4355,
-        "visits": 2913
+        "pageLoads": 4356,
+        "visits": 2914
       },
       {
         "value": "cache",
@@ -557,15 +557,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 5673,
-        "visits": 3334
+        "pageLoads": 5674,
+        "visits": 3335
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 5673,
-        "visits": 3334
+        "pageLoads": 5674,
+        "visits": 3335
       }
     ]
   }

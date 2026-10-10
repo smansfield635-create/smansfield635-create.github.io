@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-four-tree-merged-015aa7f3-preflight",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6066,
+  "requestBranch": "ai-dispatch-request-h-earth-four-tree-merged-preflight",
+  "requestCommit": "bad7a624ca4cc5a9afd138fa6e7f60d446600b9b",
+  "requestCommitParent": "015aa7f357c1c7d1c25f730e6eb57705ad604317",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "015aa7f357c1c7d1c25f730e6eb57705ad604317",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "015aa7f357c1c7d1c25f730e6eb57705ad604317",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "38075259516",
+  "dispatchedRunId": 38075270915,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38075270915",
+  "dispatchedRunHeadSha": "015aa7f357c1c7d1c25f730e6eb57705ad604317",
+  "dispatchedAt": "2026-10-10T18:18:49.958Z",
+  "resolvedAt": "2026-10-10T18:18:53.981Z"
+}

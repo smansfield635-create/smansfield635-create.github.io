@@ -107,6 +107,39 @@ vec3 reconstructCompactCorner(uvec4 words, uvec2 extra, uint corner) {
   return center+vec3(offset.x,0.0,offset.y);
 }
 `;
+/** Transactional GPU residency for the approved four-tree compact payload. */
+export function createFourTreeCompactResidency(gl, {compactRecords, contactSidecar, indexData, program}) {
+  const buffers = createFourTreeCompactGpuBuffers(gl, {compactRecords, contactSidecar});
+  let drawView;
+  try {
+    drawView = createFourTreeCompactDrawView(gl, {
+      compactBuffer: buffers.compactBuffer,
+      contactSidecarBuffer: buffers.contactSidecarBuffer, indexData, program
+    });
+  } catch (error) {
+    buffers.dispose();
+    throw error;
+  }
+  let disposed = false;
+  return Object.freeze({
+    accounting: Object.freeze({
+      ...buffers.accounting,
+      indexBytes: drawView.allocatedIndexBytes,
+      totalUploadedBytes: buffers.accounting.actualUploadedBytes + drawView.allocatedIndexBytes,
+      bufferCount: 3,
+      vertexArrayCount: 1
+    }),
+    draw(count = FOUR_TREE_COMPACT_CONTRACT.leafCount) {
+      if (disposed) throw new Error('FOUR_TREE_COMPACT_RESIDENCY_DISPOSED');
+      return drawView.draw(count);
+    },
+    dispose() {
+      if (disposed) return;
+      disposed = true;
+      try { drawView.dispose(); } finally { buffers.dispose(); }
+    }
+  });
+}
 export function validateFourTreeCompactDrawBudget(actual) {
   const limits = FOUR_TREE_COMPACT_CONTRACT;
   for (const [name, maximum] of [

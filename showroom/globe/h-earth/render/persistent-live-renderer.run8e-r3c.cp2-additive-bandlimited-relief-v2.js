@@ -1,4 +1,4 @@
-import { FOUR_TREE_COMPACT_CONTRACT, createFourTreeCompactGpuBuffers, createFourTreeCompactResidency } from './compact-four-tree-foliage.v1.js';
+import { FOUR_TREE_COMPACT_CONTRACT, createFourTreeCompactGpuBuffers, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms } from './compact-four-tree-foliage.v1.js';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
@@ -1581,6 +1581,15 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const allocated = hasDrawInputs
       ? createFourTreeCompactResidency(gl, payload)
       : createFourTreeCompactGpuBuffers(gl, payload);
+    if (hasDrawInputs) {
+      try {
+        bindFourTreeCompactReconstructionUniforms(gl, payload.program, payload.reconstruction);
+        bindFourTreeCompactReconstructionUniforms(gl, payload.shadowProgram, payload.reconstruction);
+      } catch (error) {
+        allocated.dispose();
+        throw error;
+      }
+    }
     resources.fourTreeCompact = allocated;
     // Transactional activation: visibility is withheld until the static
     // clearing shadow map has been regenerated successfully.

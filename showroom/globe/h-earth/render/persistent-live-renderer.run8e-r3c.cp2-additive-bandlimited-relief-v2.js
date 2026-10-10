@@ -1,4 +1,4 @@
-import { FOUR_TREE_COMPACT_CONTRACT, createFourTreeCompactGpuBuffers, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms } from './compact-four-tree-foliage.v1.js';
+import { FOUR_TREE_COMPACT_CONTRACT, createFourTreeCompactGpuBuffers, createFourTreeCompactResidency, bindFourTreeCompactReconstructionUniforms, bindFourTreeCompactMatrix } from './compact-four-tree-foliage.v1.js';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
@@ -1496,6 +1496,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     // Draw only explicitly installed, qualified compact color residency.
     // No replacement of existing woodland geometry is inferred by this hook.
     if (resources.fourTreeCompactPassReady === true) {
+      bindFourTreeCompactMatrix(gl, resources.fourTreeCompactPrograms.color, 'uCompactViewProjection', packet.camera.viewProjectionMatrix);
       drawFourTreeCompactPayload(undefined, 'color');
       gl.bindVertexArray(resources.vertexArray);
     }
@@ -1555,6 +1556,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.bindVertexArray(resources.vertexArray);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,clearing.indexBuffer);
       gl.drawElements(gl.TRIANGLES,clearing.casterIndexCount,gl.UNSIGNED_INT,0);
+      bindFourTreeCompactMatrix(gl, resources.fourTreeCompactPrograms.shadow, 'uCompactLightMatrix', clearing.matrix);
       drawFourTreeCompactPayload(undefined,'shadow');
       const error=gl.getError();
       if(error!==gl.NO_ERROR)throw new Error('FOUR_TREE_COMPACT_SHADOW_REFRESH_GPU_ERROR:'+error);
@@ -1591,6 +1593,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       }
     }
     resources.fourTreeCompact = allocated;
+    resources.fourTreeCompactPrograms = hasDrawInputs ? {color:payload.program,shadow:payload.shadowProgram} : null;
     // Transactional activation: visibility is withheld until the static
     // clearing shadow map has been regenerated successfully.
     resources.fourTreeCompactPassReady = false;
@@ -1602,6 +1605,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         resources.fourTreeCompactPassReady = false;
         allocated.dispose();
         resources.fourTreeCompact = null;
+        resources.fourTreeCompactPrograms = null;
         throw error;
       }
     }
@@ -1620,6 +1624,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (!resources.fourTreeCompact) return false;
     resources.fourTreeCompact.dispose();
     resources.fourTreeCompact = null;
+    resources.fourTreeCompactPrograms = null;
     resources.fourTreeCompactPassReady = false;
     return true;
   }

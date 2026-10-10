@@ -37,7 +37,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "9a086813b4071dfcddea4f54ceba8646e5421a22aaf18515d973592538107cc0"
+      "sha256": "857f7498b0a3e4dd315fc58c765a4af76c08a282571ffa4a4f4b540f771d3167"
     },
     {
       "path": "showroom/globe/h-earth/validation/four-tree-only.verify.mjs",
@@ -48,7 +48,7 @@
       "sha256": "e5cdf8ca2f433747b2c2ebf110878347cbd63d48d9805b7acefaf94d120168c3"
     }
   ],
-  "continuityReview": "Existing canonical H-Earth world and four owner-approved geometry sources remain intact. The bounded runtime edits prune only legacy tree faces from the previously mixed woodland buffers and exclude deferred conifer GPU uploads. Actual source comparisons preserve the four approved tree geometry and all non-tree landscape geometry. Browser and phone testing remain separate requirements.",
+  "continuityReview": "Existing canonical H-Earth world and four owner-approved geometry sources remain intact. The bounded runtime edits prune only legacy tree faces from the previously mixed woodland buffers and exclude deferred conifer GPU uploads. Actual source comparisons preserve the four approved tree geometry and all non-tree landscape geometry. Browser and phone testing remain separate requirements. Gen2638 follow-up instrumentation records the first WebGL global-cover upload error boundary and does not alter accepted trees, terrain, grass, rocks, or GPU payloads.",
   "limits": {
     "browserVisualNotYetQualified": true,
     "phonePerformanceNotYetQualified": true,

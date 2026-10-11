@@ -81,7 +81,14 @@ function buildTopology(){
   const vertices=[],samples=[],zBandVertexCounts=Object.fromEntries(H_EARTH_RUN_8B_Z_BANDS.map(b=>[b.bandId,0]));
   for(const z of zValues)for(const x of xValues){const s=sampleHEarthRun8BSuccessorTerrainField(x,z);if(s.valid!==true||!finite(s.elevation))return freeze({ok:false,issues:[`INVALID_G_WORLD_SAMPLE:${x}:${z}`],vertices:[],indices:[],samples:[],xValues,zValues,zBandVertexCounts});const band=classifyZBand(z);if(band)zBandVertexCounts[band]++;vertices.push(createHEarthVector3(x,s.elevation,z));samples.push(s);}
   const indices=[],cols=xValues.length,rows=zValues.length;
-  for(let r=0;r<rows-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.push(a,e,b,b,e,d);}
+  for(let r=0;r<rows-1;r++)for(let c=0;c<cols-1;c++){
+    const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;
+    const sa=samples[a],sb=samples[b],sd=samples[d],se=samples[e];
+    const primary=Math.abs((sa?.curvature??0)+(sd?.curvature??0));
+    const alternate=Math.abs((sb?.curvature??0)+(se?.curvature??0));
+    if(alternate>primary)indices.push(a,e,d,a,d,b);
+    else indices.push(a,e,b,b,e,d);
+  }
   return freeze({ok:true,issues:[],vertices,indices,samples,xValues,zValues,columnCount:cols,rowCount:rows,zBandVertexCounts});
 }
 

@@ -1,0 +1,23 @@
+{
+  "operation": "EXTERNALLY_SOURCED_MULTI_SYSTEM_IDENTITY_CONDITIONED_REACHABILITY_BRIDGE_v1",
+  "software_systems": [
+    {"id": "SYS_CRYPTOGRAPHIC_VERIFICATION", "package": "cryptography", "external_authorship": true, "source": "https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/"},
+    {"id": "SYS_JSON_SCHEMA_VALIDATION", "package": "jsonschema", "external_authorship": true, "source": "https://python-jsonschema.readthedocs.io/en/stable/"},
+    {"id": "SYS_WEIGHTED_GRAPH_ROUTING", "package": "networkx", "external_authorship": true, "source": "https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.shortest_paths.generic.shortest_path.html"},
+    {"id": "SYS_IMAGE_IDENTITY_ROUNDTRIP", "package": "Pillow", "external_authorship": true, "source": "https://pillow.readthedocs.io/en/stable/handbook/image-file-formats.html"}
+  ],
+  "data_systems": [
+    {"id": "UCI_AI4I_2020", "uci_id": 601, "external_authorship": true, "source": "https://archive.ics.uci.edu/dataset/601/ai4i+2020+predictive+maintenance+dataset"},
+    {"id": "UCI_HYDRAULIC_TEST_RIG", "uci_id": 447, "external_authorship": true, "source": "https://archive.ics.uci.edu/dataset/447/condition+monitoring+of+hydraulic+systems"},
+    {"id": "UCI_NAVAL_PROPULSION_SIMULATOR", "uci_id": 316, "external_authorship": true, "source": "https://archive.ics.uci.edu/dataset/316/condition+based+maintenance+of+naval+propulsion+plants"}
+  ],
+  "theory_team_authorship": {
+    "systems": false,
+    "datasets": false,
+    "wrappers": true,
+    "interventions": true,
+    "feature_partitions": true,
+    "models": true,
+    "scoring": true
+  }
+}

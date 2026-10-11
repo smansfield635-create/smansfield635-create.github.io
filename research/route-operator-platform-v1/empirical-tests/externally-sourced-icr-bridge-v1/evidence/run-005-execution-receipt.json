@@ -1,0 +1,28 @@
+{
+  "artifact": {
+    "id": 8958651915,
+    "name": "externally-sourced-icr-bridge-v1-results",
+    "software_execution_report_sha256": "73f9aede2983f54079840fed742a1ca258ac6283010e4da5e23d612302423b10",
+    "uci_execution_report_sha256": "824490fe96401af8a6e354013c114c0841d92c66887c1202d56f74c2ce7f6663",
+    "zip_sha256": "009fe7e35583a664e8dd4f0e847235a33301ba79881546275c8739205e91eeaa"
+  },
+  "claim_boundary": "Externally sourced bridge using theory-team-authored wrappers and analysis. Not independent replication, causal validation of observational relations, natural-system validation, or proof of a universal law.",
+  "job_id": 92543034382,
+  "operation": "EXTERNALLY_SOURCED_MULTI_SYSTEM_IDENTITY_CONDITIONED_REACHABILITY_BRIDGE_v1",
+  "schema": "EXTERNALLY_SOURCED_ICR_BRIDGE_EXECUTION_RECEIPT_v1",
+  "scientific_execution_head": "2c1e34a60b6270f43709e3104669558b3d6131f9",
+  "scientific_result": {
+    "route_beats_output": "1_OF_3",
+    "route_within_5_percent_of_black_box": "1_OF_3",
+    "software_disposition": "EXTERNAL_SOFTWARE_SYSTEMS_SURVIVED_EXPLORATORY_BRIDGE",
+    "uci_disposition": "BRIDGE_MIXED"
+  },
+  "verification": {
+    "exploratory_software_checks": "PASS_11_OF_11",
+    "external_data_systems": "3_OF_3_EXECUTED",
+    "manifest": "PASS_18_OF_18",
+    "post_result_scientific_repair": "NONE"
+  },
+  "workflow_result": "SUCCESS",
+  "workflow_run_id": 31078927580
+}

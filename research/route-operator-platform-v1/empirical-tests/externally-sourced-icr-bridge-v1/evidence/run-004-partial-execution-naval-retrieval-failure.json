@@ -1,0 +1,34 @@
+{
+  "schema": "EXTERNALLY_SOURCED_ICR_BRIDGE_PARTIAL_EXECUTION_FAILURE_RECEIPT_v1",
+  "operation": "EXTERNALLY_SOURCED_MULTI_SYSTEM_IDENTITY_CONDITIONED_REACHABILITY_BRIDGE_v1",
+  "workflow_run_id": 31078671502,
+  "job_id": 92542232773,
+  "exact_head": "7be114fbfeaa322d69902c5d43410dca8314f7bd",
+  "result": "INVALID_PARTIAL_EXECUTION_NAVAL_RETRIEVAL_FAILURE",
+  "package_verification": "PASS_18_OF_18",
+  "software_bridge_verification": "PASS_11_OF_11",
+  "external_data_execution": {
+    "ai4i_retrieval_and_computation_reached": true,
+    "hydraulic_official_zip_retrieval_and_computation_reached": true,
+    "naval_retrieval": "FAILED_BEFORE_MODEL_EXECUTION",
+    "numeric_results_printed_persisted_or_inspected": false,
+    "uci_execution_report_created": false,
+    "workflow_artifact_created": false
+  },
+  "failure": {
+    "class": "DATASET_CLIENT_IMPORT_UNAVAILABLE",
+    "dataset": "UCI_316_CONDITION_BASED_MAINTENANCE_OF_NAVAL_PROPULSION_PLANTS",
+    "detail": "The dataset exists in UCI but ucimlrepo 0.0.7 refuses import."
+  },
+  "repair_boundary": {
+    "authorized_change": "Replace only UCI 316 client retrieval with the official UCI ZIP and parse the published 16 features plus two decay targets.",
+    "dataset_change": false,
+    "target_change": false,
+    "feature_partition_change": false,
+    "model_family_change": false,
+    "metric_change": false,
+    "threshold_change": false,
+    "terminal_disposition_change": false
+  },
+  "scientific_result": "NONE"
+}

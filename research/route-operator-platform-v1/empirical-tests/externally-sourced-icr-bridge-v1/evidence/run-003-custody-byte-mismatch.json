@@ -1,0 +1,30 @@
+{
+  "schema": "EXTERNALLY_SOURCED_ICR_BRIDGE_CUSTODY_FAILURE_RECEIPT_v1",
+  "operation": "EXTERNALLY_SOURCED_MULTI_SYSTEM_IDENTITY_CONDITIONED_REACHABILITY_BRIDGE_v1",
+  "workflow_run_id": 31078476122,
+  "job_id": 92541616675,
+  "exact_head": "630df94d1214af0d8eee20eccb9b3da50d628f51",
+  "result": "INVALID_CUSTODY_PRE_EXECUTION",
+  "failure": {
+    "class": "REPOSITORY_BYTE_IDENTITY_MISMATCH",
+    "file": "data/hydraulic.py",
+    "expected_sha256": "a04482a62789b4f2a5bd3c67024266c3f17557fdde1439e87eecb1d139540638",
+    "observed_sha256": "0e6a0a609e38ae20837246c77c70779daae0c7497ada72f2a01aa2d1a52fc915"
+  },
+  "execution": {
+    "package_verification": "FAIL_BEFORE_SOFTWARE_OR_UCI_EXECUTION",
+    "external_data_retrieved": false,
+    "numeric_results_exposed_or_persisted": false,
+    "scientific_result": "NONE"
+  },
+  "repair_boundary": {
+    "authorized_change": "Restore the intended official-ZIP hydraulic retrieval source bytes and retain the existing manifest expectation.",
+    "dataset_change": false,
+    "target_change": false,
+    "feature_partition_change": false,
+    "model_family_change": false,
+    "metric_change": false,
+    "threshold_change": false,
+    "terminal_disposition_change": false
+  }
+}

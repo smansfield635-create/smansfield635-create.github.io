@@ -1,0 +1,65 @@
+{
+  "schema": "CP9_GENERATION_43_CANONICAL_TERMINATION_ROUTE_CONTRACT_v1",
+  "contractId": "CP9R3_TERMINATION_ROUTE_CONTRACT_FREEZE_v1",
+  "authorityIssue": 580,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "governingMainHead": "5d6295c6c4a9b94db168e0822e02e36fbee29414",
+  "lockManager": {
+    "path": "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+    "gitBlobSha": "6fc0199c9dc943b8cdf3efe7c789f0e1888774b8",
+    "action": "close"
+  },
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "exactClosure": {
+    "operationId": "H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_001",
+    "lockScope": "H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:TOOLSET_REGISTRATION:A:V1",
+    "lockGeneration": 43,
+    "terminalDisposition": "FAIL_CLOSED"
+  },
+  "tokenPermissions": {
+    "contents": "write",
+    "actions": "read"
+  },
+  "fixedCommand": [
+    "node",
+    "tools/operation-intake/repository-operation-lock-manager.v1.mjs",
+    "--action",
+    "close",
+    "--repository",
+    "smansfield635-create/smansfield635-create.github.io",
+    "--lock-ref",
+    "refs/heads/operation-locks/repository-operation-intake-v1",
+    "--operation-id",
+    "H_EARTH_REGISTRY_TWO_PATH_SUCCESSOR_REPAIR_TOOLSET_REGISTRATION_A_001",
+    "--lock-scope",
+    "H_EARTH:REGISTRY_TWO_PATH_SUCCESSOR_REPAIR:TOOLSET_REGISTRATION:A:V1",
+    "--lock-generation",
+    "43",
+    "--terminal-disposition",
+    "FAIL_CLOSED",
+    "--output",
+    "<RUNNER_TEMP>/generation-43-closure-receipt.json"
+  ],
+  "actualClosureReceiptSchema": "REPOSITORY_OPERATION_CLOSURE_RECEIPT_v1",
+  "requiredResult": "TERMINAL_CLOSURE_COMMITTED",
+  "requiredPostcondition": {
+    "generation43PresentInActiveScopes": false,
+    "generation43PresentInTerminalHistory": true,
+    "generation43TerminalDisposition": "FAIL_CLOSED",
+    "allUnrelatedLedgerRecordsUnchangedByClosureCommit": true
+  },
+  "prohibitedCapabilities": [
+    "LOCK_ACQUISITION",
+    "ARBITRARY_LOCK_SELECTION",
+    "DIRECT_LEDGER_EDITING",
+    "ARBITRARY_SHELL_EXECUTION",
+    "ORDINARY_REPOSITORY_MUTATION",
+    "BRANCH_CREATION_BY_ROUTE",
+    "PR_MUTATION",
+    "MERGE",
+    "RECEIPT_REWRITING",
+    "CP9_RETRY",
+    "CONTINUING_OPERATIONAL_AUTHORITY"
+  ],
+  "status": "EXECUTED_ONE_TIME_AWAITING_INDEPENDENT_VERIFICATION"
+}

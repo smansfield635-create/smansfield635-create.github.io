@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2646-far-coast-distance-52accff7",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6117,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2646-far-coast-soil-20261010",
+  "requestCommit": "d63732cb0c8dec7a31b2b087a751ceca2b1925d2",
+  "requestCommitParent": "c5754bff5509e299a5fb3d6287053309206a46ae",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "c5754bff5509e299a5fb3d6287053309206a46ae",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "52accff774a8e436db8bf11e7c8d38ab596f4bf4"
+  },
+  "bridgeRunId": "38107195253",
+  "dispatchedRunId": 38107202749,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38107202749",
+  "dispatchedRunHeadSha": "c5754bff5509e299a5fb3d6287053309206a46ae",
+  "dispatchedAt": "2026-10-11T03:04:19.845Z",
+  "resolvedAt": "2026-10-11T03:04:24.357Z"
+}

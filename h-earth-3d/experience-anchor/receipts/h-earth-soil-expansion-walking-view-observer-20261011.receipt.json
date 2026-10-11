@@ -8,8 +8,8 @@
   "ownerApprovedSourceMaterialReference": "EXISTING_32_M_WOODLAND_SOIL_AND_FOUR_APPROVED_TREES",
   "sourceBoundVerifier": {
     "path": "tools/h-earth-gen2-visual-qualify.mjs",
-    "gitBlob": "ab848f12c1c94801c5021f713c3cd7da492a4a81",
-    "sha256": "57be09cda0ee0cbe4c4c7848779cd3e5f6adba43456151d6057bc5f54cd0a372"
+    "gitBlob": "5b229203fcdca277c4debc2a369f8c4989c81a5a",
+    "sha256": "f11eb9936ca3c0d1f5ba9acdaff7c7cac702f6b3f892dab1cfe784e324f61652"
   },
   "exactProtectedBlobs": {
     "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "deb0b518a78823677645ec4435b0dd0d3c6ab322",
@@ -48,5 +48,10 @@
   "physicalAndroidQualified": false,
   "observationsPending": true,
   "admissionBoundary": "EXISTING_FIXED_CHROMIUM_TEST_INSTRUMENTATION_AND_ONE_NEW_SOURCE_BOUND_READ_ONLY_RECEIPT",
-  "successCriteria": "REAL_WEBGL2_POST_RESIDENCY_FOUR_CAPTURED_VIEWS_FROM_ACTUAL_NAVIGATION_POSITIONS_WITH_SOURCE_IDENTITIES_NOT_MATERIAL_ACCEPTANCE"
+  "successCriteria": "REAL_WEBGL2_POST_RESIDENCY_FOUR_CAPTURED_VIEWS_FROM_ACTUAL_NAVIGATION_POSITIONS_WITH_SOURCE_IDENTITIES_NOT_MATERIAL_ACCEPTANCE",
+  "observerRepairGeneration": 2654,
+  "observerRepairOperationId": "H_EARTH_GEN2654_WALKING_INPUT_OBSERVER_REPAIR_20261011_001",
+  "failedFirstBrowserRun": 38156657115,
+  "firstFailureCode": "WALKING_OBSERVER_NAVIGATION_REJECTED_OR_DRIFT",
+  "inputObservationRepair": "BOUNDED_NATIVE_WHEEL_PULSES_ACTUAL_CAMERA_POSITION_AND_ACCEPTED_GESTURE"
 }

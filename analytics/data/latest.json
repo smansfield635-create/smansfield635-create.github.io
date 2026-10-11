@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-11T14:32:04Z",
+  "generatedAt": "2026-10-11T15:32:06Z",
   "window30d": {
-    "start": "2026-09-11T14:32:04Z",
-    "end": "2026-10-11T14:32:04Z"
+    "start": "2026-09-11T15:32:06Z",
+    "end": "2026-10-11T15:32:06Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 91
+      "pageLoads": 88
     },
     {
       "date": "2026-10-05",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 45
+      "pageLoads": 47
     }
   ],
   "summary": {
-    "pageLoads": 5538,
-    "botPageLoads": 2076,
-    "nonBotPageLoads": 3462
+    "pageLoads": 5517,
+    "botPageLoads": 2057,
+    "nonBotPageLoads": 3460
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 3001,
-      "visits": 3001
+      "pageLoads": 2980,
+      "visits": 2980
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2237,
+      "pageLoads": 2236,
       "visits": 0
     },
     {
@@ -160,8 +160,8 @@
     },
     {
       "host": "l.instagram.com",
-      "pageLoads": 3,
-      "visits": 3
+      "pageLoads": 4,
+      "visits": 4
     },
     {
       "host": "com.google.android.googlequicksearchbox",
@@ -177,27 +177,27 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1157,
-      "visits": 838
-    },
-    {
-      "path": "/mirror-manor-preview/",
-      "pageLoads": 680,
-      "visits": 680
+      "pageLoads": 1186,
+      "visits": 867
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 492,
-      "visits": 12
+      "pageLoads": 672,
+      "visits": 22
+    },
+    {
+      "path": "/mirror-manor-preview/",
+      "pageLoads": 670,
+      "visits": 670
     },
     {
       "path": "/analytics/",
-      "pageLoads": 443,
-      "visits": 322
+      "pageLoads": 444,
+      "visits": 323
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 342,
+      "pageLoads": 341,
       "visits": 320
     },
     {
@@ -212,8 +212,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 266,
-      "visits": 206
+      "pageLoads": 256,
+      "visits": 196
     }
   ],
   "ownerMeasurement": {

@@ -346,13 +346,25 @@ function showVegetationStatus(text,force=false){
 function showVegetationPreparation(progress){
   if(vegetationLoadingFailed)return;
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:progress}));
+  if(progress.phase==='BATCH_PREREQUISITES_READY'){
+    vegetationPrepared=true;
+    showVegetationStatus('Loading nearby vegetation · You can explore.',true);
+    scheduleVegetationResidency();
+    return;
+  }
+  if(vegetationPrepared)return;
   if(progress.oasisComplete&&!progress.worldTruthValidated){showVegetationStatus('Preparing vegetation locations · You can explore.',true);return;}
   const grass=progress.grassTuftCount??0,cattails=progress.cattailCount??0;
   showVegetationStatus(grass||cattails?`Preparing plants · ${grass} grass tufts · ${cattails} cattails`:'Preparing vegetation · You can explore.');
 }
 function vegetationComplete(){
-  root.dataset.vegetationResidency='complete';
   const residency=binding.getVegetationResidency();
+  if(residency?.preparationComplete!==true){
+    root.dataset.vegetationResidency='loading';
+    showVegetationStatus('Finishing ground cover · You can explore.',true);
+    return;
+  }
+  root.dataset.vegetationResidency='complete';
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{phase:'COMPLETE',residentBatchCount:residency.residentBatchCount,totalBatchCount:residency.totalBatchCount}}));
   showVegetationStatus('Vegetation complete — 100%',true);
   window.setTimeout(()=>{vegetationStatus.hidden=true;},2500);

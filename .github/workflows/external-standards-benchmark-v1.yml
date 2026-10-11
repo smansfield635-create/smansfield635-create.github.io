@@ -1,0 +1,136 @@
+name: L2 External Standards Benchmark v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-router/platform-control-plane/external-standards/**'
+      - '.github/workflows/external-standards-benchmark-v1.yml'
+
+permissions:
+  contents: read
+
+env:
+  L2_ADMISSION_HEAD: dedfdcf8c53207234791193144dc47f3d46caeb0
+  L2_LOCK_GENERATION: '877'
+  EVIDENCE_DIR: artifacts/external-standards-benchmark
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact benchmark candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact five-path construction scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          CANDIDATE_HEAD="$(git rev-parse HEAD^{commit})"
+          test "$CANDIDATE_HEAD" = "${{ github.event.pull_request.head.sha }}"
+          echo "CANDIDATE_HEAD=$CANDIDATE_HEAD" >> "$GITHUB_ENV"
+          git diff --name-only "$L2_ADMISSION_HEAD" "$CANDIDATE_HEAD" | sort > /tmp/observed-paths.txt
+          cat > /tmp/expected-paths.txt <<'PATHS'
+          .github/ai-router/platform-control-plane/external-standards/applicability-gate.v1.mjs
+          .github/ai-router/platform-control-plane/external-standards/benchmark-self-test.v1.mjs
+          .github/ai-router/platform-control-plane/external-standards/evidence-crosswalk.v1.mjs
+          .github/ai-router/platform-control-plane/external-standards/standards-registry.v1.json
+          .github/workflows/external-standards-benchmark-v1.yml
+          PATHS
+          sort -o /tmp/expected-paths.txt /tmp/expected-paths.txt
+          diff -u /tmp/expected-paths.txt /tmp/observed-paths.txt
+          mkdir -p "$EVIDENCE_DIR"
+          cp /tmp/observed-paths.txt "$EVIDENCE_DIR/exact-paths.txt"
+
+      - name: Run applicability, scope-boundary, copyright and overclaim adversarial battery
+        shell: bash
+        run: |
+          set -euo pipefail
+          node .github/ai-router/platform-control-plane/external-standards/benchmark-self-test.v1.mjs \
+            --output /tmp/external-standards-benchmark-self-test.json
+          cp /tmp/external-standards-benchmark-self-test.json "$EVIDENCE_DIR/self-test.json"
+
+      - name: Execute initial estate benchmark crosswalk
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import { evaluateApplicability } from './.github/ai-router/platform-control-plane/external-standards/applicability-gate.v1.mjs';
+          import { evaluateEvidenceCrosswalk } from './.github/ai-router/platform-control-plane/external-standards/evidence-crosswalk.v1.mjs';
+          const app = (standardId, instrumentType, attributes={}) => evaluateApplicability({schema:'L2_EXTERNAL_STANDARD_APPLICABILITY_REQUEST_v1',standardId,instrumentType,attributes});
+          const x = (applicabilityReceipt, requirementThemeId, disposition, evidence=[]) => evaluateEvidenceCrosswalk({schema:'L2_EXTERNAL_STANDARD_EVIDENCE_CROSSWALK_REQUEST_v1',applicabilityReceipt,requirementThemeId,disposition,evidence,claimLanguage:'benchmark evidence only'});
+          const rows = [
+            x(app('ISO_IEC_IEEE_29119_2_2021','SOFTWARE_TEST_HARNESS'),'TEST_PROCESS_TRACEABILITY','PARTIAL',[{id:'HC03_RUN_31337586402',locator:'PR856'}]),
+            x(app('IEEE_1012_2024','VV_SYSTEM',{verificationOrValidationActivity:true}),'INDEPENDENT_VV_AND_INTEGRITY_LEVEL_TREATMENT','PARTIAL',[{id:'FRESH_VERIFIER_SEPARATION',locator:'PR853+PR856'}]),
+            x(app('ISO_IEC_25010_2023','SOFTWARE_PRODUCT'),'WHOLE_PRODUCT_QUALITY_MODEL_COVERAGE','PARTIAL',[{id:'CONTROL_PLANE_ADVERSARIAL_EVIDENCE',locator:'PR853'}]),
+            x(app('ISO_IEC_25023_2016_REVISION_WATCH','SOFTWARE_PRODUCT',{quantitativeQualityEvaluation:true}),'DEFINED_QUALITY_MEASURES_AND_LONGITUDINAL_THRESHOLDS','GAP',[]),
+            x(app('NIST_SP_800_218_V1_1_FINAL','SECURE_SOFTWARE_DEVELOPMENT_SYSTEM'),'COHERENT_SECURE_DEVELOPMENT_EVIDENCE_PROGRAM','PARTIAL',[{id:'EXACT_HEAD_PROVENANCE_AND_BOUNDARY_CONTROLS',locator:'PR853'}]),
+            x(app('ISO_10012_2026','QUANTITATIVE_MEASUREMENT_SYSTEM',{measurementManagementSystem:true}),'IMI_MEASUREMENT_MANAGEMENT_SYSTEM_DISCIPLINE','PARTIAL',[{id:'PRE_EMPIRICAL_RESEARCH_PLATFORM_CONTROLS',locator:'research/route-operator-platform-v1/README.md'}]),
+            x(app('JCGM_100_2008_AMD1_2026','DETERMINISTIC_SCORE',{outputClassification:'DETERMINISTIC_SCORE'}),'MCCI_GESI_UNCERTAINTY_MODEL','NOT_APPLICABLE',[]),
+            x(app('ISO_IEC_17025_2017','SOFTWARE_TEST_HARNESS'),'LABORATORY_COMPETENCE','PARTIAL',[{id:'TEST_METHOD_RIGOR_ONLY_NO_LAB_CLAIM',locator:'PR856'}])
+          ];
+          if (rows.some(row => row.result !== 'PASS')) throw new Error('INITIAL_CROSSWALK_FAILED');
+          const report = {
+            schema:'L2_EXTERNAL_STANDARDS_INITIAL_ESTATE_BENCHMARK_RECEIPT_v1',
+            result:'PASS_CLOSED',
+            benchmarkDate:'2026-08-09',
+            rows,
+            governingRule:'INTERNAL_ADVERSARIAL_PASS_NE_EXTERNAL_STANDARD_CONFORMANCE',
+            complianceDeterminationAuthorized:false,
+            certificationDeterminationAuthorized:false,
+            accreditationDeterminationAuthorized:false,
+            authorityCreated:false
+          };
+          fs.writeFileSync(`${process.env.EVIDENCE_DIR}/initial-estate-crosswalk.json`, JSON.stringify(report,null,2)+'\n');
+          NODE
+
+      - name: Emit terminal benchmark-instrument certification
+        shell: bash
+        run: |
+          set -euo pipefail
+          { sha256sum \
+            .github/ai-router/platform-control-plane/external-standards/standards-registry.v1.json \
+            .github/ai-router/platform-control-plane/external-standards/applicability-gate.v1.mjs \
+            .github/ai-router/platform-control-plane/external-standards/evidence-crosswalk.v1.mjs \
+            .github/ai-router/platform-control-plane/external-standards/benchmark-self-test.v1.mjs \
+            .github/workflows/external-standards-benchmark-v1.yml; } | sha256sum | awk '{print $1}' > "$EVIDENCE_DIR/package-fingerprint.sha256"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const selfTest=JSON.parse(fs.readFileSync(`${process.env.EVIDENCE_DIR}/self-test.json`,'utf8'));
+          const initial=JSON.parse(fs.readFileSync(`${process.env.EVIDENCE_DIR}/initial-estate-crosswalk.json`,'utf8'));
+          if(selfTest.result!=='PASS_CLOSED'||initial.result!=='PASS_CLOSED') process.exit(1);
+          const receipt={
+            schema:'L2_EXTERNAL_STANDARDS_BENCHMARK_TERMINATION_RECEIPT_v1',
+            result:'PASS_CLOSED',terminalDisposition:'PASS_CLOSED',
+            admissionHead:process.env.L2_ADMISSION_HEAD,candidateHead:process.env.CANDIDATE_HEAD,
+            lockGeneration:Number(process.env.L2_LOCK_GENERATION),allowedPathCount:5,
+            packageFingerprint:fs.readFileSync(`${process.env.EVIDENCE_DIR}/package-fingerprint.sha256`,'utf8').trim(),
+            standardsApplicabilityGateExecuted:true,evidenceCrosswalkExecuted:true,adversarialOverclaimBatteryExecuted:true,
+            complianceDeterminationAuthorized:false,certificationDeterminationAuthorized:false,accreditationDeterminationAuthorized:false,
+            copyrightedClauseTextStored:false,l1MutationPerformed:false,l3MutationPerformed:false,mergePerformed:false,authorityCreated:false
+          };
+          fs.writeFileSync(`${process.env.EVIDENCE_DIR}/final-certification.json`,JSON.stringify(receipt,null,2)+'\n');
+          NODE
+
+      - name: Verify repository remained clean
+        shell: bash
+        run: git diff --exit-code && git diff --cached --exit-code
+
+      - name: Upload external standards benchmark evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: l2-external-standards-benchmark-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/external-standards-benchmark
+          if-no-files-found: error
+          retention-days: 90

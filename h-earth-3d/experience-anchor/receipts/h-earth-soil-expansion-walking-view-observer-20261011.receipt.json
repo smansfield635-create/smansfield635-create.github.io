@@ -8,8 +8,8 @@
   "ownerApprovedSourceMaterialReference": "EXISTING_32_M_WOODLAND_SOIL_AND_FOUR_APPROVED_TREES",
   "sourceBoundVerifier": {
     "path": "tools/h-earth-gen2-visual-qualify.mjs",
-    "gitBlob": "5b229203fcdca277c4debc2a369f8c4989c81a5a",
-    "sha256": "f11eb9936ca3c0d1f5ba9acdaff7c7cac702f6b3f892dab1cfe784e324f61652"
+    "gitBlob": "5750add191b0c9eaa7cc8410d52da53d6ea5a754",
+    "sha256": "41959c07f484eba57a6e3f8127089add44b95d3dc8ebcb4e2660244e75e42afc"
   },
   "exactProtectedBlobs": {
     "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "deb0b518a78823677645ec4435b0dd0d3c6ab322",
@@ -53,5 +53,29 @@
   "observerRepairOperationId": "H_EARTH_GEN2654_WALKING_INPUT_OBSERVER_REPAIR_20261011_001",
   "failedFirstBrowserRun": 38156657115,
   "firstFailureCode": "WALKING_OBSERVER_NAVIGATION_REJECTED_OR_DRIFT",
-  "inputObservationRepair": "BOUNDED_NATIVE_WHEEL_PULSES_ACTUAL_CAMERA_POSITION_AND_ACCEPTED_GESTURE"
+  "inputObservationRepair": "BOUNDED_NATIVE_WHEEL_PULSES_ACTUAL_CAMERA_POSITION_AND_ACCEPTED_GESTURE",
+  "performanceCapture": {
+    "schema": "H_EARTH_SOURCE_BOUND_DUAL_VEGETATION_PERFORMANCE_v1",
+    "enabled": true,
+    "operationId": "H_EARTH_SOURCE_BOUND_OASIS_WORLD_COVER_PERFORMANCE_CAPTURE_20261011_001",
+    "canonicalLockGeneration": 2658,
+    "mode": "EXACT_READ_ONLY_CHROMIUM_ON_QUALIFIED_FOUR_TREE_PRODUCT",
+    "query": "performance=1",
+    "deviceClaim": "HEADLESS_CHROMIUM_ONLY_NOT_ANDROID",
+    "firstFrameAndFullResidency": true,
+    "requiredViewIds": [
+      "approved-four-tree-clearing",
+      "coast"
+    ],
+    "requiredComponents": [
+      "CANONICAL_WORKER",
+      "OASIS_FOLIAGE",
+      "GLOBAL_GROUND_COVER",
+      "WORLD_TRUTH_PLAN",
+      "108_BATCH_RESIDENCY"
+    ],
+    "productSourceMutationAuthorized": false
+  },
+  "performanceCaptureGeneration": 2658,
+  "previousVerifierBlob": "5b229203fcdca277c4debc2a369f8c4989c81a5a"
 }

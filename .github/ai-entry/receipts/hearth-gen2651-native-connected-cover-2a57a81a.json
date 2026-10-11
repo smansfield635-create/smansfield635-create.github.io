@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2651-native-connected-cover-2a57a81a",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6133,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2651-native-classes-20261010",
+  "requestCommit": "c0bcbf8a239e1329c1d4d297e9c536293fe8e21f",
+  "requestCommitParent": "137f3ba2db3cfa8f376ace1d7e6a36b448116267",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "137f3ba2db3cfa8f376ace1d7e6a36b448116267",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "2a57a81aa0aae217eb9eaf2414fc389119a6cc3e"
+  },
+  "bridgeRunId": "38112749922",
+  "dispatchedRunId": 38112756404,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38112756404",
+  "dispatchedRunHeadSha": "137f3ba2db3cfa8f376ace1d7e6a36b448116267",
+  "dispatchedAt": "2026-10-11T04:48:37.382Z",
+  "resolvedAt": "2026-10-11T04:48:41.668Z"
+}

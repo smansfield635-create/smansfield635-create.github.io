@@ -1,0 +1,44 @@
+{
+  "object": "EDUCATION_1001_HELDOUT_GENERALIZATION_PROTOCOL",
+  "version": "v1",
+  "status": "FROZEN_BEFORE_SCORING",
+  "owner": "Sean",
+  "operation_id": "EDUCATION_DECISIVE_HELDOUT_GENERALIZATION_20260920_001",
+  "canonical_base": "97e0602a2b6acec6fc2062ae6661daf829442277",
+  "purpose": "Measure prospective generalization of the canonical 1,001-concept English architecture without vocabulary tuning against the test.",
+  "evidence_sequence": [
+    "Freeze protocol.",
+    "Freeze explicit held-out battery in a commit containing no score.",
+    "Record exact battery commit and blob identity.",
+    "Only after freeze, reconstruct the canonical 1,001 set from authority files.",
+    "Score every frozen task under the predeclared A/B/C law.",
+    "Write the result without modifying the battery.",
+    "Verify battery blob is unchanged from freeze commit and canonical vocabulary authorities are unchanged."
+  ],
+  "scoring_classes": {
+    "A": "All direct lexical requirements needed for the task are available under the canonical lexical authority plus productive grammar, morphology, and numeration.",
+    "B": "The direct compressed label is unavailable, but at least one predeclared controlled-paraphrase path is fully constructible and preserves the task-relevant proposition.",
+    "C": "Neither direct expression nor an authorized semantically adequate paraphrase path is available."
+  },
+  "productive_systems": [
+    "grammar",
+    "morphology",
+    "numeration"
+  ],
+  "lexical_leakage_allowed": false,
+  "safety_law": "For safety-critical medical, emergency, legal, financial, identity, or hazard tasks, a paraphrase is creditable only when the frozen task explicitly supplies an equivalence-preserving path. Broader or merely related language does not count.",
+  "heldout_law": {
+    "vocabulary_tuning_during_test": false,
+    "battery_edit_after_scoring": false,
+    "battery_reuse_from_optimized_256": false,
+    "task_total": 384,
+    "domains": 24,
+    "tasks_per_domain": 16,
+    "future_repairs_must_be_separate_operation": true
+  },
+  "interpretation_law": [
+    "This is a prospective internally generated held-out benchmark, stronger than the prior aggregate-constrained reconstruction because the task records are frozen before scoring.",
+    "It is not an independent third-party human trial or external standardized assessment.",
+    "A high result supports generalization across this new battery but does not prove complete coverage of all English communication."
+  ]
+}

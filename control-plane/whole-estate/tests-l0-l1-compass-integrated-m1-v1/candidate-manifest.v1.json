@@ -1,0 +1,78 @@
+{
+  "schema": "TESTS_L0_L1_COMPASS_INTEGRATED_M1_CANDIDATE_v1",
+  "version": "1.0.0",
+  "operation": "M1_COMPASS_INTEGRATED_CONSTRUCTION_v1",
+  "candidateId": "M1_COMPASS_INTEGRATED",
+  "status": "BOUNDED_NONPUBLIC_CONSTRUCTION_CANDIDATE",
+  "constructionAuthorityAnchor": "9eb936918ce063cef6c6f5d800f39ae966f3d3aa",
+  "scientificBaseline": {
+    "candidateHead": "9370bba7841b8a831f7f1c034d0b74fb83dab2e0",
+    "promotionMerge": "391c3543fd048bac90493232f04973911468d3eb",
+    "candidateId": "M1_TESTS_METHODS_OPERATIONAL_FIELD",
+    "objectIdentityPreserved": true,
+    "relationIdentityPreserved": true,
+    "scientificAuthorityPreserved": true
+  },
+  "comparisonBaseline": {
+    "isolatedM1Preserved": true,
+    "m1r2Preserved": true,
+    "m1r2Head": "6840cf0b99914263628e937453497e5af3f16166",
+    "m1r2RewriteAuthorized": false,
+    "m1r2EntryAuthorized": false
+  },
+  "differentialConstraint": {
+    "O_integrated_equals_O_isolated": true,
+    "R_integrated_equals_R_isolated": true,
+    "A_integrated_equals_A_isolated": true,
+    "N_integrated_differs_from_N_isolated": true
+  },
+  "layerBoundary": {
+    "L_MINUS_1_ORIENTATION": "MANIFESTED",
+    "L0": "MANIFESTED",
+    "L1": "MANIFESTED",
+    "L2": "WITHHELD",
+    "L3": "WITHHELD",
+    "L4": "WITHHELD"
+  },
+  "projection": {
+    "id": "METHODS",
+    "projectionCount": 1,
+    "objectCount": 3,
+    "relationCount": 2,
+    "corpusCompletenessClaim": false
+  },
+  "objects": [
+    {"OBJECT_ID":"METHODS","OBJECT_CLASS":"METHOD"},
+    {"OBJECT_ID":"ROUTE_OPERATOR_PLATFORM","OBJECT_CLASS":"METHOD"},
+    {"OBJECT_ID":"PROSPECTIVE_FINAL_REPORT_PORTFOLIO","OBJECT_CLASS":"TEST_INSTANCE"}
+  ],
+  "relations": [
+    {"RELATION_ID":"METHODS__GOVERNS_PROCEDURE_FOR__PROSPECTIVE_FINAL_REPORT_PORTFOLIO","SOURCE_OBJECT":"METHODS","RELATION":"GOVERNS_PROCEDURE_FOR","TARGET_OBJECT":"PROSPECTIVE_FINAL_REPORT_PORTFOLIO"},
+    {"RELATION_ID":"ROUTE_OPERATOR_PLATFORM__EXECUTES__PROSPECTIVE_FINAL_REPORT_PORTFOLIO","SOURCE_OBJECT":"ROUTE_OPERATOR_PLATFORM","RELATION":"EXECUTES","TARGET_OBJECT":"PROSPECTIVE_FINAL_REPORT_PORTFOLIO"}
+  ],
+  "l0Controls": [
+    {"id":"METHODS","enabled":true,"active":true},
+    {"id":"MODELS","enabled":false,"active":false},
+    {"id":"EXPERIMENTS","enabled":false,"active":false},
+    {"id":"EVIDENCE","enabled":false,"active":false}
+  ],
+  "implementedScientificOperations": ["FOCUS"],
+  "navigationCapabilities": ["C01","C02","C03","C04","C05","C06","C07","C08","C09"],
+  "adapterRequirement": "ALL_CAPABILITIES_ADMIT_WITH_REQUIRED_ADAPTER",
+  "donorRuntimeImports": false,
+  "donorSemanticInheritance": false,
+  "researchContentCopied": false,
+  "lawsSemanticInheritance": false,
+  "excludedDonorsPresent": false,
+  "publicOrLiveRouteMutation": false,
+  "scientificClaimUpgrade": false,
+  "presentationGeometrySemanticAuthority": false,
+  "evidenceBoundary": {
+    "structuralVerification": "AUTHORIZED_TO_RUN",
+    "runtimeReview": "NOT_YET_ESTABLISHED",
+    "perceptualReview": "NOT_YET_ESTABLISHED",
+    "baselineRegression": "NOT_YET_ESTABLISHED",
+    "exactHeadCertification": "NOT_YET_ESTABLISHED",
+    "promotion": "WITHHELD"
+  }
+}

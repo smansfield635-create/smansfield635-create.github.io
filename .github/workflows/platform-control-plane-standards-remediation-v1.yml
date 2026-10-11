@@ -1,0 +1,57 @@
+name: L2 External Standards Remediation v1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/ai-router/platform-control-plane/standards-remediation/**'
+      - '.github/workflows/platform-control-plane-standards-remediation-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Prove exact candidate head binding
+        id: head
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          expected="${{ github.event.pull_request.head.sha || github.sha }}"
+          test "$actual" = "$expected"
+          echo "sha=$actual" >> "$GITHUB_OUTPUT"
+      - name: Run standards remediation and fresh retest
+        shell: bash
+        env:
+          L2_EXACT_HEAD_BINDING_PASSED: '1'
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/platform-control-plane-standards-remediation
+          node .github/ai-router/platform-control-plane/standards-remediation/standards-remediation-self-test.v1.mjs \
+            --root . \
+            --expected-head "${{ steps.head.outputs.sha }}" \
+            --output artifacts/platform-control-plane-standards-remediation/final-certification.json
+      - name: Verify no tracked repository mutation from tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain --untracked-files=no)"
+      - name: Upload bounded evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: platform-control-plane-standards-remediation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: artifacts/platform-control-plane-standards-remediation/final-certification.json
+          if-no-files-found: error

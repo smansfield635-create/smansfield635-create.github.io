@@ -1,0 +1,67 @@
+{
+  "schema": "L2_SSDF_EVIDENCE_PROFILE_v1",
+  "benchmark": "NIST_SP_800_218_V1_1",
+  "groups": [
+    {
+      "id": "PO",
+      "name": "Prepare the Organization",
+      "evidenceControls": [
+        "security requirements recorded",
+        "roles and responsibility boundaries",
+        "protected CI/workflow environment expectations",
+        "standards/remediation traceability"
+      ],
+      "concreteReferences": ["issue:859", "traceability-model.v1.json", "vv-integrity-policy.v1.json"]
+    },
+    {
+      "id": "PS",
+      "name": "Protect the Software",
+      "evidenceControls": [
+        "exact-head integrity",
+        "digest-bound evidence",
+        "least-authority workflow permissions",
+        "authority non-propagation"
+      ],
+      "concreteReferences": ["workflow:platform-control-plane-standards-remediation-v1.yml", "runtime:exact-head-binding", "runtime:package-fingerprint"]
+    },
+    {
+      "id": "PW",
+      "name": "Produce Well-Secured Software",
+      "evidenceControls": [
+        "adversarial negative tests",
+        "identity/RBAC validation",
+        "dependency inventory and workflow-reference review",
+        "bounded secret-pattern scan"
+      ],
+      "concreteReferences": ["runtime:component-adversarial-battery", "runtime:dependency-inventory", "runtime:secret-pattern-scan"]
+    },
+    {
+      "id": "RV",
+      "name": "Respond to Vulnerabilities",
+      "evidenceControls": [
+        "fail-closed incident classification",
+        "bounded remediation records",
+        "root-cause-linked repair evidence",
+        "terminal closure history"
+      ],
+      "concreteReferences": ["issue:859", "runtime:terminal-retest-receipt", "operation-intake:terminal-history"]
+    }
+  ],
+  "threatModelThemes": [
+    "identity or authority spoofing",
+    "stale-head or stale-wrapper execution",
+    "credential or secret exposure",
+    "dependency or workflow-reference compromise",
+    "evidence tampering",
+    "unauthorized repository mutation"
+  ],
+  "requiredRuntimeEvidenceClasses": [
+    "DEPENDENCY_INVENTORY",
+    "SECRET_EXPOSURE_PATTERN_SCAN",
+    "EXACT_HEAD_BINDING",
+    "ADVERSARIAL_TEST_RECEIPTS",
+    "TERMINAL_REMEDIATION_RECORD"
+  ],
+  "evidencePolicy": "RUNTIME_EVIDENCE_CLASS_MUST_HAVE_A_CONCRETE_REFERENCE_OR_DIGEST",
+  "claimBoundary": "COHERENT_SSDF_EVIDENCE_PROGRAM_EVIDENCED; FULL_SSDF_CONFORMANCE_AND_IMMUTABLE_DEPENDENCY_PINNING_NOT_INFERRED"
+}

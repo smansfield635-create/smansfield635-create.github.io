@@ -226,7 +226,15 @@ export function evaluateHEarthRun8AMountainContribution(x, z) {
   const secondary = 24 * gaussian(x, -6, 52) * gaussian(z, -250, 20);
   const foothill = 13 * xEnvelope * zEnvelope;
   const valleyCut = 15 * gaussian(x, -48, 26) * gaussian(z, -256, 13);
-  return zEnvelope * Math.max(0, primary + summit + secondary + foothill - valleyCut);
+  // AVQT C3: bounded secondary geological structure inside the admitted mountain
+  // envelope. This changes dimensional terrain truth rather than painting depth
+  // downstream: shoulder ridges add directional mass and narrow drainage cuts
+  // create readable ridge/valley separation while preserving transition bounds.
+  const shoulderA = 13 * gaussian(x, -142, 34) * gaussian(z, ridgeZ - 17, 10);
+  const shoulderB = 11 * gaussian(x, -28, 42) * gaussian(z, ridgeZ + 18, 11);
+  const drainageA = 10 * gaussian(x, -118, 20) * gaussian(z, ridgeZ - 4, 8);
+  const drainageB = 9 * gaussian(x, -8, 24) * gaussian(z, ridgeZ + 5, 9);
+  return zEnvelope * Math.max(0, primary + summit + secondary + foothill + shoulderA + shoulderB - valleyCut - drainageA - drainageB);
 }
 
 export function sampleHEarthRun8ASuccessorTerrainElevation(x, z) {

@@ -1,0 +1,46 @@
+name: BT4 Real Object SUPPORTED PR Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/bt4-real-object-pr-supported-verification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-supported:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/bt4/verify-bt4-real-object-live-browser.v1.mjs
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Verify live SUPPORTED stale-receipt phase
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -x "$CHROME_PATH"
+          phase=''
+          for attempt in $(seq 1 36); do
+            phase="$(curl -fsSL --max-time 20 'https://diamondgatebridge.com/evidence/readiness/governance-gen3-entitlement/binding.v1.json' 2>/dev/null | jq -r '.phase // empty' 2>/dev/null || true)"
+            if [ "$phase" = 'REPAIRED_STALE_RECEIPT' ]; then break; fi
+            echo "Attempt $attempt: phase=${phase:-none}; waiting for REPAIRED_STALE_RECEIPT"
+            sleep 5
+          done
+          test "$phase" = 'REPAIRED_STALE_RECEIPT'
+          export TARGET_SHA="$(curl -fsSL --max-time 20 'https://diamondgatebridge.com/.well-known/dgb-release.json' | jq -r '.commit')"
+          test -n "$TARGET_SHA"
+          node research/bt4/verify-bt4-real-object-live-browser.v1.mjs
+          visible="$(curl -fsSL --max-time 20 'https://diamondgatebridge.com/evidence/readiness/governance-gen3-entitlement/binding.v1.json' | jq -r '.expectedServedState')"
+          test "$visible" = 'SUPPORTED'

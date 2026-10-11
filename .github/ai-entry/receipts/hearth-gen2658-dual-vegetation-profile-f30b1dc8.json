@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2658-dual-vegetation-profile-f30b1dc8",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6154,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2658-dual-vegetation-profile-20261011",
+  "requestCommit": "8e88084174e0ded2929fa802455da066112304b0",
+  "requestCommitParent": "7611ad75473c9a50fae63b8582d9ad84ffeb7917",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7611ad75473c9a50fae63b8582d9ad84ffeb7917",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "f30b1dc8e70bac8619dbc6afea45c00095cfa741"
+  },
+  "bridgeRunId": "38164548570",
+  "dispatchedRunId": 38164558252,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38164558252",
+  "dispatchedRunHeadSha": "7611ad75473c9a50fae63b8582d9ad84ffeb7917",
+  "dispatchedAt": "2026-10-11T18:36:56.956Z",
+  "resolvedAt": "2026-10-11T18:37:01.059Z"
+}

@@ -11,6 +11,14 @@
     {repository:'elliottdehn/open-jobs', ref:'0688696578f7eba23b2978a6d32583e0e18cb653'},
     {repository:'ar-nelson/resume', ref:'b84fcd1549122d921ac141e1f563c424e5779044'}
   ]);
+  const PINNED_PREVIEW = Object.freeze([
+    {id:'gitblob:9c247d6ee85f92a97d6a500e52c5c324bc239cbe',name:'egd-resume.txt',
+      url:'https://github.com/elliottdehn/open-jobs/blob/0688696578f7eba23b2978a6d32583e0e18cb653/egd-resume.txt',
+      host:'github.com',exactBlob:'9c247d6ee85f92a97d6a500e52c5c324bc239cbe',kind:'file'},
+    {id:'gitblob:25d7926c734aabbf528a9b81ff5d281b77bad28b',name:'README.md',
+      url:'https://github.com/ar-nelson/resume/blob/b84fcd1549122d921ac141e1f563c424e5779044/README.md',
+      host:'github.com',exactBlob:'25d7926c734aabbf528a9b81ff5d281b77bad28b',kind:'file'}
+  ]);
   const LABELS = {
     originals: 'First-party public originals',
     repoSearch: 'GitHub résumé repositories',
@@ -268,6 +276,13 @@
   async function initialize(){
     try{
       db=await openDb();await refresh();
+      if(docs.length===0){
+        for(const item of PINNED_PREVIEW)await upsert(item,'originals');
+        await recordScan('originals',{fetched:0,found:PINNED_PREVIEW.length,
+          newCandidates:PINNED_PREVIEW.length,newUrls:PINNED_PREVIEW.length,
+          status:'PINNED_SOURCE_CATALOG',detail:'Pinned source links; no live fetch inferred'});
+        await refresh();
+      }
       const badge=el('storageBadge');badge.className='pill';badge.textContent='Browser-local inventory ready · no installation';
       document.documentElement.dataset.ready='true';
       const boot=await single('settings','firstScanAttempted');

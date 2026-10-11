@@ -27,6 +27,7 @@
   };
   let db = null;
   let docs = [];
+  let allIndexedDocs = [];
   let scans = [];
   let page = 0;
   let running = false;
@@ -36,11 +37,35 @@
   const nowISO = () => new Date().toISOString();
   const safeRepo = s => typeof s==='string' && /^[A-Za-z0-9_.-]{1,100}\/[A-Za-z0-9_.-]{1,100}$/.test(s) && !s.split('/').includes('..');
   const safeSha = s => typeof s==='string' && /^[0-9a-f]{40}$/i.test(s);
-  const pathMatches = p => /\.(pdf|docx?|txt|md|html?)$/i.test(p) && /(^|[\/_.-])(resume|resumes|cv|curriculum[-_. ]?vitae)(?=$|[\/_.-])/i.test(p);
-  const validFile = (repo, path) => {
-    if(typeof path !== 'string' || path.length>350 || path.includes('..') || !/\.(pdf|docx?|txt|md|html?)$/i.test(path)) return false;
-    if(pathMatches(path)) return true;
-    return /(^|\/)resume(s)?$/i.test(repo.split('/')[1]) && /^(README\.md|resume\.pdf|cv\.pdf)$/i.test(path);
+  // High-precision metadata filter. An ancestor folder called "CV" does not
+  // make every HTML/template/build file a person's actual résumé.
+  const excludedSourceDirectory = /(?:^|\/)(?:templates?|tests?|fixtures?|samples?|examples?|node_modules|vendor|venv|src|dist|build|assets|static)(?:\/|$)/i;
+  const excludedFilenameRole = /(?:^|[-_. ])(?:template|builder|generator|editor|gallery|home|base|requirements?|source|schema|license|design|config|settings|stats?|task|inbox|bench|test|sample|example)(?=$|[-_. ])/i;
+  const resumeBasename = /(?:^|[-_. ])(?:resumes?|résumés?|cv|curriculum[-_. ]?vitae)(?=$|[-_. ])/i;
+  const pathMatches = path => {
+    if(typeof path!=='string'||path.length>350||path.includes('..')||excludedSourceDirectory.test(path))return false;
+    if(!/\.(pdf|docx?|txt|md|html?)$/i.test(path))return false;
+    const name=path.split('/').pop()||'';
+    const stem=name.replace(/\.(pdf|docx?|txt|md|html?)$/i,'');
+    return stem.length<=160 && !excludedFilenameRole.test(stem) && resumeBasename.test(stem);
+  };
+  const validFile = (repo,path) => {
+    // One independently pinned original-author README is a known source
+    // location; generic README files in other projects are not résumé files.
+    if(repo==='ar-nelson/resume'&&path==='README.md')return true;
+    return pathMatches(path);
+  };
+  const isActionableCandidate = item => {
+    if(PINNED_PREVIEW.some(p=>p.id===item?.id))return true;
+    return (item?.urls||[]).some(value=>{
+      try{
+        const u=new URL(value);
+        const tokens=decodeURIComponent(u.pathname).split('/');
+        const blob=tokens.indexOf('blob');
+        const path=blob>=0&&tokens.length>blob+2?tokens.slice(blob+2).join('/'):tokens.join('/');
+        return pathMatches(path);
+      }catch{return false;}
+    });
   };
   const filename = p => p.split('/').pop()||p;
   const sourceUrl = (repo, ref, path) => `${'https://github.com/'}${repo}/blob/${encodeURIComponent(ref)}/${path.split('/').map(encodeURIComponent).join('/')}`;
@@ -228,6 +253,8 @@
   function renderMetrics(){
     const uniqueLinks=new Set(docs.flatMap(d=>d.urls||[])).size;
     setText('metricLinks',number(uniqueLinks));setText('metricCandidates',number(docs.length));
+    const held=allIndexedDocs.length-docs.length;
+    setText('heldNote',held?`${number(held)} previously indexed generic code/template files are held out of actionable counts and remain in your private export.`:'Only clearly résumé-named source-file candidates are counted. Document eligibility is still unverified.');
     setText('metricVerified',number(docs.filter(d=>d.review==='VERIFIED').length));
     const active=channelsSummary().filter(c=>c.scans>0||c.observed>0);setText('metricChannels',number(active.length));
     const chan=el('channelRows');chan.replaceChildren();
@@ -249,13 +276,13 @@
     const slice=matches.slice(page*ROWS_PER_PAGE,(page+1)*ROWS_PER_PAGE);
     const target=el('inventoryRows');target.replaceChildren();
     for(const doc of slice){
-      const tr=document.createElement('tr');const first=textCell(tr,'');
+      const tr=document.createElement('tr');const first=textCell(tr,'');first.dataset.label='Original document';
       const strong=document.createElement('strong');strong.className='link';strong.textContent=doc.name||'Original candidate';first.append(strong);
       const size=document.createElement('span');size.className='channel';size.textContent='Exact ID: '+doc.id.slice(0,15)+'…';first.append(document.createElement('br'),size);
-      textCell(tr,`${(doc.hosts||[]).join(', ')}\n${(doc.channels||[]).map(c=>LABELS[c]||c).join(', ')}`);
-      const td=textCell(tr,'Pending · not certified','state');
+      const source=textCell(tr,`${(doc.hosts||[]).join(', ')}\n${(doc.channels||[]).map(c=>LABELS[c]||c).join(', ')}`);source.dataset.label='Source / channel';
+      const td=textCell(tr,'Pending · not certified','state');td.dataset.label='Inventory status';
       if(doc.review==='VERIFIED')td.textContent='Verified';
-      const act=textCell(tr,'');
+      const act=textCell(tr,'');act.dataset.label='Open original';
       const href=(doc.urls||[]).find(u=>normalizeUrl(u)===u);
       if(href){const a=document.createElement('a');a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.className='open';a.textContent='Open original ↗';act.append(a);}
       target.append(tr);
@@ -265,10 +292,10 @@
     setText('pagination',`Page ${page+1} of ${Math.max(1,maxPage+1)}`);
     el('previous').disabled=page===0;el('next').disabled=page>=maxPage;
   }
-  async function refresh(){docs=await all('documents');scans=await all('scans');renderMetrics();renderFilters();renderRows();}
+  async function refresh(){allIndexedDocs=await all('documents');docs=allIndexedDocs.filter(isActionableCandidate);scans=await all('scans');renderMetrics();renderFilters();renderRows();}
   function updateQuery(){const source=el('source').value;el('query').value=source==='commonCrawl'?'cs.stanford.edu':source==='portfolioSearch'?'cv':'resume';el('query').placeholder=source==='commonCrawl'?'cs.stanford.edu':'resume / software / engineer';}
   function saveExport(){
-    const payload={schema:VERSION,exportedAt:nowISO(),documents:docs,scans};
+    const payload={schema:VERSION,exportedAt:nowISO(),documents:allIndexedDocs,scans};
     const a=document.createElement('a');const url=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));
     a.href=url;a.download='lbs-browser-resume-links.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2500);
     setText('storageNote','Inventory exported to your device. The export contains source URLs; keep it private.');
@@ -306,6 +333,6 @@
     if(!confirm('Remove this browser’s local résumé-link inventory and scan history?'))return;
     await clearAll();page=0;await refresh();setStatus('This browser’s inventory has been cleared.','good');
   });
-  window.LBS_BROWSER_LINK_INDEX_V1={schema:VERSION,labels:LABELS,normalizeUrl,pathMatches,validFile,version:DB_VERSION};
+  window.LBS_BROWSER_LINK_INDEX_V1={schema:VERSION,labels:LABELS,normalizeUrl,pathMatches,validFile,isActionableCandidate,version:DB_VERSION};
   initialize();
 })();

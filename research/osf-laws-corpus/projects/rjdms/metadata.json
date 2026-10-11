@@ -1,0 +1,50 @@
+{
+  "id": "rjdms",
+  "type": "nodes",
+  "title": "Methods Appendix: Diagnostic Application and Evaluation Protocol",
+  "description": "Description\nThis methods appendix specifies the standardized protocol for applying and evaluating the diagnostic instruments associated with the Universal Law of Coherence Dynamics. It defines admissible evidence, evaluation windows, observer-invariance requirements, and classification rules used to assess alignment, transparency, fragmentation, internal misalignment, and trajectory across organized systems.\nThe methods are descriptive and non-causal. They do not specify predictive models, optimization strategies, or intervention prescriptions. The appendix establishes consistent application rules for diagnostics in order to support reproducibility, cross-context comparison, and falsifiability of the underlying framework.\nDiagnostic instruments referenced in this appendix are treated as measurement tools, not theoretical claims. While operational details of individual diagnostics may be refined through empirical use, the evidentiary boundaries, admissible observables, and observer-convergence criteria specified here remain fixed.\nThis appendix functions as a shared methodological reference for empirical analysis and preregistered evaluation within the canonical framework.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-01-11T20:39:35.631042",
+  "date_modified": "2026-08-01T06:08:05.235507",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/rjdms/",
+  "api_url": "https://api.osf.io/v2/nodes/rjdms/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:57:26.593545+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "CORE_LAWS_CANDIDATE",
+    "law_relevance_score": 18,
+    "law_term_hits": [
+      "law",
+      "coherence",
+      "trajectory",
+      "diagnostic",
+      "alignment"
+    ],
+    "evidence_signal_score": 14,
+    "evidence_term_hits": [
+      "method",
+      "methods",
+      "empirical",
+      "falsif",
+      "appendix"
+    ],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

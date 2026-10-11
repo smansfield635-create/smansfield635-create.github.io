@@ -1,0 +1,43 @@
+{
+  "id": "6ehrj",
+  "type": "nodes",
+  "title": "Coherence Constraint Instantiation System (CCIS)",
+  "description": "The Coherence Constraint Instantiation System (CCIS) is the platform where coherence is enforced under real conditions and outcomes are observed without narrative protection. It does not argue, persuade, or optimize interpretation. It applies constraint, records behavior, and exposes whether a system holds when explanation is no longer sufficient. What survives here is admissible. What fails is not corrected—it is revealed.",
+  "category": "project",
+  "public": true,
+  "registration": false,
+  "preprint": false,
+  "date_created": "2026-02-08T08:38:19.786276",
+  "date_modified": "2026-08-01T06:03:10.632772",
+  "current_user_permissions": [
+    "read"
+  ],
+  "tags": [],
+  "subjects": [],
+  "node_license": null,
+  "parent_id": null,
+  "is_component": false,
+  "osf_url": "https://osf.io/6ehrj/",
+  "api_url": "https://api.osf.io/v2/nodes/6ehrj/",
+  "source_collection": "user_nodes",
+  "harvested_at": "2026-08-01T07:56:09.360307+00:00",
+  "file_inventory_count": 0,
+  "file_errors": [],
+  "relevance_discovery": {
+    "candidate_band": "STRONG_SUPPORTING_CANDIDATE",
+    "law_relevance_score": 17,
+    "law_term_hits": [
+      "coherence",
+      "constraint",
+      "instantiation",
+      "ccis"
+    ],
+    "evidence_signal_score": 0,
+    "evidence_term_hits": [],
+    "extractable_file_count": 0,
+    "has_data_file": false,
+    "has_code_file": false,
+    "interpretation_boundary": "Heuristic discovery signal only; not a validation, empirical-support, or admission decision."
+  },
+  "claim_boundary": "Corpus inventory only. Presence in this repository does not establish correctness, novelty, validation, replication, or Laws Chamber admission."
+}

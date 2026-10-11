@@ -715,7 +715,30 @@ void main(){
         vec3 integratedSoil=integratedReferenceSoil*
           mix(integratedRegionalTint,vec3(1.0),integratedReferenceLink)*
           mix(integratedEarthVariation,1.0,integratedReferenceLink);
-        palette=mix(palette,integratedSoil,integratedWeight);
+        // Transfer approved reference texture local chroma/value detail
+        // through the existing biome palette, not a uniform brown wash.
+        // The original inner clearing feather converges on the intact
+        // reference soil color with no new rectangular border.
+        float integratedTextureLuma=dot(
+          integratedSoil,vec3(0.2126,0.7152,0.0722)
+        );
+        vec3 integratedTextureChromatic=clamp(
+          integratedSoil/max(integratedTextureLuma,0.04),
+          vec3(0.70),vec3(1.30)
+        );
+        float integratedTextureValue=clamp(
+          0.88+0.14*(integratedTextureLuma/0.12),0.88,1.17
+        );
+        vec3 integratedNativeSoil=palette*
+          mix(vec3(1.0),integratedTextureChromatic,0.16)*
+          mix(vec3(1.0),integratedRegionalTint,0.16)*
+          integratedTextureValue;
+        vec3 integratedHarmonizedSoil=mix(
+          integratedNativeSoil,integratedSoil,integratedReferenceLink
+        );
+        palette=mix(
+          palette,integratedHarmonizedSoil,integratedWeight
+        );
         terrainRoughnessForLighting=mix(
           terrainRoughnessForLighting,0.94,integratedWeight
         );

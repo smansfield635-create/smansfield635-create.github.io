@@ -35,10 +35,10 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "bf85c35bd9dfe426e0d7efb3185ee17f94314067f325a9977cb8032839dc2d5a"
+      "sha256": "006edd38766e10b49cd977e0767422adb7f84eea86b745f053d0d819ec8540cc"
     }
   ],
-  "continuityReview": "Source-reviewed biome-wide terrain soil treatment in existing renderer, reusing the 256x256 reference soil texture and its material light response without a clearing-distance cap. Exact reference 32m interior branch unchanged. Slope, rock exposure, coast and native multi-scale material signals govern eligible terrain; dedicated manor, cavern, ravine, shoreline and under-tree litter overlays preserve regional individuality. No tree, topology, vegetation, rock, ocean, public route, or new texture changes. Real multi-region Chromium and owner visual review pending; no release authority claimed.",
+  "continuityReview": "Gen2644 one bounded material-color repair following WebGL2 functional PASS and original native coastline+woodland before/after screenshots that exposed broad coastal/grassland darkening. Original existing biome color/palette is now retained; reference soil fine chroma/value texture, material roughness, bounded normal relief and organic world-space sampling transfer across eligibility masks. Protected reference clearing shader unchanged and 1.5m interior feather still converges to original approved soil image. No additional texture, geometry, vegetation, four-tree or shoreline changes; no 16m distance gate. Repaired exact browser and owner multi-region perception pending, releaseEligible=false.",
   "referenceMaterial": {
     "ownerIssueNumber": 6100,
     "sourceAuditCommentId": 6103950634,
@@ -64,6 +64,8 @@
     "multiRegionPerceptualReviewPending": true,
     "phonePerformanceNotYetQualified": true,
     "ownerKeepPending": true,
-    "releaseEligible": false
+    "releaseEligible": false,
+    "previousCandidateColorWashObserved": true,
+    "oneRepairSourceBound": true
   }
 }

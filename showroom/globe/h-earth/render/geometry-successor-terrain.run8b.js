@@ -18,6 +18,7 @@ import {
   sampleHEarthRun8BSuccessorTerrainField,
   evaluateHEarthRun8BFormerBoundaryContinuity
 } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
+import {sampleHEarthPhase3BoundedResidual} from '../../../../h-earth-3d/terrain/h-earth.phase3-bounded-residual-geometry.js';
 import {
   H_EARTH_WORLD_MANIFOLD_DOMAIN_CONTRACT_ID,
   H_EARTH_WORLD_MANIFOLD_TOPOLOGY_SOURCE_ID
@@ -57,6 +58,7 @@ export const H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE=freeze({
   topology:'ONE_CONNECTED_INDEXED_XZ_HEIGHT_FIELD_TRIANGLE_MESH_SAMPLED_FROM_G_WORLD',
   baseSpacingWorldUnits:Math.max(8,FULL_DETAIL.baseSpacingWorldUnits),
   refinementSpacingWorldUnits:Math.max(4,FULL_DETAIL.refinementSpacingWorldUnits),
+  activeSamplingSpacingClass:'NEAR_COASTAL_BOUNDED_RESIDUAL_REFINEMENT',
   worldDomain:{...NEAR_TO_MID_DOMAIN},
   atmosphericOverlap:ATMOSPHERIC_OVERLAP,
   independentGeographyAuthority:false,
@@ -73,13 +75,13 @@ export const H_EARTH_RUN_8B_Z_BANDS=freeze([
 
 function axis(min,max,spacing){const out=[];for(let v=min;v<=max+1e-9;v+=spacing)out.push(Math.min(v,max));return [...new Set(out)];}
 export function getHEarthRun8BSuccessorSamplingAxes(){
-  return freeze({xValues:axis(NEAR_TO_MID_DOMAIN.xMinimum,NEAR_TO_MID_DOMAIN.xMaximum,H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits),zValues:axis(NEAR_TO_MID_DOMAIN.zMinimum,NEAR_TO_MID_DOMAIN.zMaximum,H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits)});
+  const base=H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.baseSpacingWorldUnits,refined=H_EARTH_RUN_8B_SUCCESSOR_NEUTRAL_GEOMETRY_PROFILE.refinementSpacingWorldUnits;const xValues=axis(NEAR_TO_MID_DOMAIN.xMinimum,NEAR_TO_MID_DOMAIN.xMaximum,refined),rearZ=axis(NEAR_TO_MID_DOMAIN.zMinimum,-220,base),nearZ=axis(-220,NEAR_TO_MID_DOMAIN.zMaximum,refined);return freeze({xValues,zValues:[...new Set([...rearZ,...nearZ])]});
 }
 function classifyZBand(z){return H_EARTH_RUN_8B_Z_BANDS.find((b,i)=>z>=b.zMinimum&&(i===H_EARTH_RUN_8B_Z_BANDS.length-1?z<=b.zMaximum:z<b.zMaximum))?.bandId??null;}
 function buildTopology(){
   const {xValues,zValues}=getHEarthRun8BSuccessorSamplingAxes();
   const vertices=[],samples=[],zBandVertexCounts=Object.fromEntries(H_EARTH_RUN_8B_Z_BANDS.map(b=>[b.bandId,0]));
-  for(const z of zValues)for(const x of xValues){const s=sampleHEarthRun8BSuccessorTerrainField(x,z);if(s.valid!==true||!finite(s.elevation))return freeze({ok:false,issues:[`INVALID_G_WORLD_SAMPLE:${x}:${z}`],vertices:[],indices:[],samples:[],xValues,zValues,zBandVertexCounts});const band=classifyZBand(z);if(band)zBandVertexCounts[band]++;vertices.push(createHEarthVector3(x,s.elevation,z));samples.push(s);}
+  for(const z of zValues)for(const x of xValues){const s=sampleHEarthRun8BSuccessorTerrainField(x,z);if(s.valid!==true||!finite(s.elevation))return freeze({ok:false,issues:[`INVALID_G_WORLD_SAMPLE:${x}:${z}`],vertices:[],indices:[],samples:[],xValues,zValues,zBandVertexCounts});const band=classifyZBand(z);if(band)zBandVertexCounts[band]++;const refinedVertex=(x%8!==0||z%8!==0)&&z>=-220;const perimeter=x===xValues[0]||x===xValues.at(-1)||z===zValues[0]||z===zValues.at(-1);const residual=refinedVertex?sampleHEarthPhase3BoundedResidual(x,z,{perimeter}):0;vertices.push(createHEarthVector3(x,s.elevation+residual,z));samples.push(freeze({...s,phase3Residual:residual,phase3RefinedVertex:refinedVertex}));}
   const indices=[],cols=xValues.length,rows=zValues.length;
   for(let r=0;r<rows-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.push(a,e,b,b,e,d);}
   return freeze({ok:true,issues:[],vertices,indices,samples,xValues,zValues,columnCount:cols,rowCount:rows,zBandVertexCounts});

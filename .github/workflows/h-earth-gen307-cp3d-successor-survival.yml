@@ -1,0 +1,55 @@
+name: H-Earth Gen307 CP3D Successor Survival
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  cp3d-gen307-successor-survival:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact repaired Gen307 candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 71bafea00748e672cf64320507d346438bf06a75
+          fetch-depth: 1
+      - name: Use Node 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium without apt dependency mutation
+        run: |
+          npm install --no-save --package-lock=false playwright@1.54.1
+          npx playwright install chromium
+      - name: Start exact branch server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/h-earth-cp3d-gen307-server.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl --fail --silent http://127.0.0.1:4173/showroom/globe/h-earth/ > /dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/h-earth-cp3d-gen307-server.log
+          exit 1
+      - name: Record stale predecessor CP3D assertions
+        run: |
+          mkdir -p h-earth-3d/validation/evidence/cp3d
+          node --input-type=module <<'NODE' > h-earth-3d/validation/evidence/cp3d/gen307-stale-predecessor-classification.json
+          const mod=await import('./showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js');
+          const p=mod.getHEarthRun8ER2CanonicalLiveRenderPackage();
+          console.log(JSON.stringify({schema:'H_EARTH_GEN307_CP3D_PREDECESSOR_ASSERTION_CLASSIFICATION_v3',candidateHead:'71bafea00748e672cf64320507d346438bf06a75',qualifiedGen306Head:'dbf2f3ec90faa59c09193e61a0d141481b68d758',gen306PackageDifferentialRun:32090223103,gen306RendererContractBlob:'9ddb4555c2fee40e232f6e9b79c37c240795711d',gen307RendererContractBlob:'9ddb4555c2fee40e232f6e9b79c37c240795711d',packageBoundaryAssertionStale:true,runtimeIdentityImportAssertionStale:true,run8BPredecessorAssertionStale:true,currentPackageStatus:p?.status,currentPackageIssues:p?.issues??[]},null,2));
+          NODE
+          cat h-earth-3d/validation/evidence/cp3d/gen307-stale-predecessor-classification.json
+      - name: Execute CP3D full renderer survival
+        env:
+          CP3D_ORIGIN: http://127.0.0.1:4173
+          CP3D_EVIDENCE_DIR: h-earth-3d/validation/evidence/cp3d
+        run: node h-earth-3d/validation/h-earth.touch-motion-calibration.cp3d-browser-renderer-survival.harness.mjs
+      - name: Upload CP3D successor evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: h-earth-gen307-cp3d-successor-survival
+          path: |
+            h-earth-3d/validation/evidence/cp3d/**
+            /tmp/h-earth-cp3d-gen307-server.log
+          if-no-files-found: error

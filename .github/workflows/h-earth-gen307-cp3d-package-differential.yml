@@ -1,0 +1,32 @@
+name: H-Earth Gen307 CP3D Package Differential
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  compare-live-render-package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact Gen306 parent
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: dbf2f3ec90faa59c09193e61a0d141481b68d758
+          path: gen306
+          fetch-depth: 1
+      - name: Checkout exact repaired Gen307 candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: 71bafea00748e672cf64320507d346438bf06a75
+          path: gen307
+          fetch-depth: 1
+      - name: Probe exact package states
+        run: |
+          node --input-type=module <<'NODE'
+          const refs=[['GEN306','./gen306/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js'],['GEN307','./gen307/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js']];
+          for(const [label,path] of refs){
+            const mod=await import(path);
+            const p=mod.getHEarthRun8ER2CanonicalLiveRenderPackage();
+            console.log(label+'='+JSON.stringify({eligible:p?.eligible,status:p?.status,issues:p?.issues??[],hasBuffers:!!p?.buffers,primitiveCount:p?.primitiveIds?.length??null,packageIdentity:p?.packageIdentity??null}));
+          }
+          NODE

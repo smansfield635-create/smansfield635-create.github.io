@@ -1,0 +1,20 @@
+name: H-Earth Planetary Horizon Legibility Public Private Intake Call
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  canonical-intake:
+    uses: ./.github/workflows/public-private-canonical-execution-carrier-v1.yml
+    with:
+      private_issue: '304'
+      private_comment: '5343805530'
+      expected_request_id: 'H_EARTH_PLANETARY_HORIZON_LEGIBILITY_INTAKE_20260819_001'
+      exact_private_head: '367f9f77c264c2eabe7398bfa1fdd0edcdbbb6ab'
+      callback_issue: '1403'
+    secrets: inherit

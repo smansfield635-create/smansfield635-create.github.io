@@ -1,0 +1,79 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_GEN2659_CAMERA_FIRST_GROUND_COVER_AND_BATCH_RESIDENCY_20261011_001",
+  "canonicalAdmissionGeneration": 2659,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json",
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
+      "sha256": "fc0b140998869afeced7ff990afaa7cc9dd07056a85bda2f7ae5b360ff9d00e1"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "221b1ac6286969de1463a20d95e0fd423861fd24095f8681fb688fa51ffc6094"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "sha256": "8d2266c27123a69ce17dd2b1fe2a5e515d7bf6b74521216ce0281531f3a74d54"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "509c27260fd99809db703c71d823c4bf731b46ce33ba039bcf22451f1b99f084"
+    }
+  ],
+  "candidateNature": "TIMING_AND_TILE_SCHEDULING_ONLY_NO_ALLOWED_WORLD_MODEL_PALETTE_GEOMETRY_OR_POPULATION_MUTATION",
+  "referenceWorld": "APPROVED_GEN2656_FOUR_TREE_SOIL_COAST_AND_FULL_OASIS",
+  "acceptanceBasis": "Source-level same-world anchor review: only deterministic tile construction order and 108-batch startup scheduling change; existing authorized grass template, ecology, ocean, terrain, placement and tree source bytes are not modified. Original 2026-10-08 grounded vegetation visual proxy remains baseline. Final exact-record and real WebGL2 candidate proof are separately mandatory before candidate acceptance. This is not owner perceptual KEEP or permission to publish.",
+  "sourceBaselineHead": "9be9c405accc9431ce932b95cb7dbf7d87db9601",
+  "sourceBlobs": {
+    "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs": "8d467c2f031831265d68224b8e23ad4e955d62a2",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "28d45e6e463924d2e659b977baaabb213cf46ea5",
+    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "4a1d10c2b7b98b016872d4fc50f31f62b3295d12",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "3a137e76f027544149683a5980e74ef820700332"
+  },
+  "sourcePopulation": {
+    "globalGroundCoverExpected": 61235,
+    "worldTruthInstances": 27585,
+    "worldTruthBatches": 108,
+    "canopyTrees": 4,
+    "oasisGrassTufts": 350,
+    "oasisCattails": 72,
+    "allCountsMustRemainExact": true
+  },
+  "runtimeAcceptance": "EXACT_CANDIDATE_WEBGL2_AND_INDEPENDENT_WORLD_DIGEST_PENDING",
+  "physicalDeviceAcceptance": false,
+  "ownerPerceptualDisposition": "PENDING",
+  "releaseEligible": false,
+  "mergeAuthorized": false,
+  "publicationAuthorized": false,
+  "newShaderClasses": 0,
+  "newWorkflowClasses": 0,
+  "existingProductTreeOrOasisGeometryChanged": false,
+  "priorityStageLimitation": "TILE_RECORDS_READY_EARLY_BUT_NOT_YET_GPU_DISPLAYED_INCREMENTALLY"
+}

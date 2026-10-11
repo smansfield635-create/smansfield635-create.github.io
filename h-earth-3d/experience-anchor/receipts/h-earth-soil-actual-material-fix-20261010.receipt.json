@@ -35,10 +35,10 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "030b56480451946686534eca6cac9156a64b58dd32657272fa306a7cd036edf1"
+      "sha256": "9660e2a47503ac9d877ec5f31c07353ec155fa219c6cda8c5e061647bb13be8d"
     }
   ],
-  "continuityReview": "Gen2646 only the exact H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION fragment shading normal is made upward-facing when inherited negative Y. Independently reconstructed production source geometry of that primitive without topology changes and verified 415/415 inward-facing/downward normals, mean Y=-0.999683, min=-0.999938, max=-0.998320. The old shader derives slope=1-clamp(normal.y,0,1), so this nearly level surface was classified slope=1 and had zero soil eligibility. This patch corrects that source-matched classification and its lighting, leaving all mesh geometry, canonical GPU normal buffer, existing coastline attribute upload, 32m reference clearing interior GLSL, approved trees, grass, sand, rock and water unchanged. Native WebGL2 evidence, wider-ground material perception and owner KEEP remain pending. No merge, no deploy.",
+  "continuityReview": "Gen2646 direct owner-approved soil albedo rather than mere textural modulation. The R2 live package shows 10573 near-terrain vertices and the far-land mesh expressly excludes that near footprint; prior far-normal fixes could not fix woodland ground. The previous outside code supplied dominant lighter procedural regional albedo and sampled the actual approved soil image only as scalar value/chroma modulation. This in-scope revision uses the full approved woodland soil texture directly as the principal material on eligible inland terrain, with identical source reference UV sampling, gradated native beach/color retention within 18-78m of coastline, moisture/elevation earth-tone variation and original slope/rock masking. Protected 32m clearing interior GLSL, four approved trees, all geometry, water, vegetation and existing GPU textures remain untouched. Browser and owner visual KEEP pending; no merge or publication.",
   "referenceMaterial": {
     "ownerIssueNumber": 6100,
     "sourceAuditCommentId": 6103950634,
@@ -82,7 +82,21 @@
       "minY": -0.9999384814445146,
       "maxY": -0.998320490003847
     },
-    "sourceNormalGpuBufferUnchanged": true
+    "sourceNormalGpuBufferUnchanged": true,
+    "directReferenceSoilAlbedoOutsideRectangle": true,
+    "soilUvScale": 0.28,
+    "coastBlendMeters": [
+      18,
+      78
+    ],
+    "coastAlbedoMinMax": [
+      0.14,
+      0.98
+    ],
+    "priorOutsideWasBrightnessOnly": true,
+    "nearTerrainVertexCount": 10573,
+    "farLandExplicitlyExcludesNearFootprint": true,
+    "previousCandidateHead": "34282e78b859b6b42c77d7ce8ca4135da7825d19"
   },
   "limits": {
     "candidateBrowserQualificationPending": true,
@@ -92,6 +106,7 @@
     "releaseEligible": false,
     "farLandBrowserQualificationPending": true,
     "farLandCoastAttributeBrowserProofPending": true,
-    "farLandNormalBrowserProofPending": true
+    "farLandNormalBrowserProofPending": true,
+    "realDirectSoilAlbedoBrowserProofPending": true
   }
 }

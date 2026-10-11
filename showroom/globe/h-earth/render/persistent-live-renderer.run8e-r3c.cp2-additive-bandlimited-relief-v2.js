@@ -699,10 +699,10 @@ void main(){
         macroField*0.48+mesoField*0.34+medium*0.18,0.0,1.0
       );
       float worldSoilPatchiness=mix(
-        0.65,0.97,smoothstep(0.10,0.92,worldSoilRegion)
+        0.88,1.0,smoothstep(0.10,0.92,worldSoilRegion)
       );
       float worldSoilCoverage=worldSoilEligibility*
-        worldSoilPatchiness*mix(0.84,1.0,shelteredSoil);
+        worldSoilPatchiness*mix(0.94,1.0,shelteredSoil);
       // Keep the original 1.5m interior blend continuous without a
       // new exterior ring, rectangular shader mask or distance cutoff.
       float worldSoilReferenceLink=clamp(clearingEdge,0.0,1.0);
@@ -710,62 +710,45 @@ void main(){
         worldSoilCoverage,1.0,worldSoilReferenceLink
       );
       if(worldSoilWeight>0.001){
+        // Match the actual reference soil UVs across the former box.
+        // Regional color variation is applied without breaking its grain.
         vec2 worldSoilXZ=clearingLocalXZ(vWorldPosition);
-        vec2 worldSoilWarp=vec2(
-          (macroField-0.5)*0.30+(detailField-0.5)*0.10,
-          (mesoField-0.5)*0.28+(medium-0.5)*0.12
-        )*(1.0-worldSoilReferenceLink);
         vec3 worldSoilTexel=texture(
-          uClearingSoil,worldSoilXZ*0.28+worldSoilWarp
+          uClearingSoil,worldSoilXZ*0.28
         ).rgb;
         vec3 worldSoilReference=pow(worldSoilTexel,vec3(2.2))*0.75;
-        // Calibrated to the measured 256x256 approved texture RGB
-        // median (104,87,62), preserving its actual grain/contrast.
-        // Normalize *value*, not merely 16% of its chroma.
-        vec3 worldSoilMedian=pow(
-          vec3(104.0,87.0,62.0)/255.0,vec3(2.2)
-        )*0.75;
-        float worldSoilLuma=dot(
-          worldSoilReference,vec3(0.2126,0.7152,0.0722)
-        );
-        float worldSoilMedianLuma=dot(
-          worldSoilMedian,vec3(0.2126,0.7152,0.0722)
-        );
-        float worldSoilFineValue=clamp(
-          pow(worldSoilLuma/max(worldSoilMedianLuma,0.001),1.45),
-          0.65,1.43
-        );
-        vec3 worldSoilFineChroma=clamp(
-          worldSoilReference/max(worldSoilMedian,vec3(0.001)),
-          vec3(0.70),vec3(1.32)
-        );
-        // Actual region-dependent earth palette. These are spatial
-        // climate/landform signals, not uniform brown across the world.
+        // Gen2646: actual approved 256x256 soil image is the albedo
+        // authority on eligible inland ground, not just brightness/chroma
+        // modulation of a much lighter procedural terrain palette.
         float worldSoilMoisture=clamp(
           terrainWetness*0.70+(1.0-elevationMix)*0.18+
           (macroField-0.5)*0.12,0.0,1.0
         );
-        vec3 worldSoilDry=vec3(0.295,0.225,0.145);
-        vec3 worldSoilDamp=vec3(0.237,0.241,0.163);
-        vec3 worldSoilUpland=vec3(0.319,0.287,0.203);
-        vec3 worldSoilRegional=mix(
-          worldSoilDry,worldSoilDamp,worldSoilMoisture
+        vec3 worldSoilEarthTint=mix(
+          vec3(1.14,1.06,0.90),
+          vec3(0.85,0.92,1.08),
+          worldSoilMoisture
         );
-        worldSoilRegional=mix(
-          worldSoilRegional,worldSoilUpland,elevationMix*0.40
+        worldSoilEarthTint=mix(
+          worldSoilEarthTint,vec3(1.10,1.12,1.08),
+          elevationMix*0.33
         );
-        worldSoilRegional*=mix(
-          0.91,1.10,worldSoilRegion
+        float worldSoilBroadTonal=mix(0.91,1.09,worldSoilRegion);
+        vec3 worldSoilActualAlbedo=
+          worldSoilReference*worldSoilEarthTint*worldSoilBroadTonal;
+        // Keep the coastal native sand/earth palette as soil gradually
+        // becomes the principal material across eligible inland terrain.
+        // No distance-to-clearing/rectangle tests outside the reference.
+        float worldSoilCoastalAlbedoMix=smoothstep(
+          18.0,78.0,max(0.0,vCoastDistanceMeters)
         );
-        // Retain the canonical native biome palette as one input, not
-        // the 100%-dominant final color that defeated Gen2644.
-        vec3 worldSoilMaterial=mix(
-          palette,worldSoilRegional,0.86
+        float worldSoilAlbedoAuthority=mix(
+          0.14,0.98,worldSoilCoastalAlbedoMix
         );
-        worldSoilMaterial*=worldSoilFineValue*
-          mix(vec3(1.0),worldSoilFineChroma,0.42);
         vec3 worldSoilFinal=mix(
-          worldSoilMaterial,worldSoilReference,worldSoilReferenceLink
+          mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority),
+          worldSoilReference,
+          worldSoilReferenceLink
         );
         palette=mix(palette,worldSoilFinal,worldSoilWeight);
         terrainRoughnessForLighting=mix(
@@ -782,7 +765,7 @@ void main(){
           vec3 worldSoilNormal=limitTerrainNormalDeviation(
             geometricNormal,perturbTerrainNormal(
               geometricNormal,vWorldPosition,
-              dot(worldSoilTexel,vec3(0.3333))*0.052
+              dot(worldSoilTexel,vec3(0.3333))*0.035
             )
           );
           shadingNormal=normalize(mix(

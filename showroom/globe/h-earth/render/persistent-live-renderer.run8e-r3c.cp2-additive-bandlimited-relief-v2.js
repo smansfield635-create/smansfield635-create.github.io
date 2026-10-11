@@ -1110,6 +1110,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     vegetationBufferUploadCount: 0, vegetationDrawCallCount: 0, worldRebuildCount: 0
   };
   const resources = {};
+  let globalCoverInitialCamera=null;
+  let globalCoverPriorityTilesPrepared=0;
+  let firstPriorityTileReadyAtMs=null;
   const markPostInitializationCreation = () => {
     if (initialized) counters.postInitializationResourceCreationCount += 1;
   };
@@ -1222,6 +1225,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
 
   let vegetationPreparation=null;
   let vegetationPreparationComplete=!deferVegetation;
+  let vegetationBatchPrerequisitesReady=!deferVegetation;
   let vegetationPreparationProgress=Object.freeze({phase:'NOT_STARTED',worldTruthValidated:!deferVegetation,oasisComplete:!deferVegetation,grassTuftCount:0,cattailCount:0,primitiveCount:0});
   function prepareVegetationResidency({onProgress=()=>{}}={}){
     if(typeof onProgress!=='function')throw new TypeError('R3C_VEGETATION_PROGRESS_CALLBACK_INVALID');
@@ -1246,9 +1250,29 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       if(!initialized)throw new Error('GLOBAL_COVER_REQUIRES_INITIALIZED_POST_READY_RENDERER');
       const globalCoverPreparation=buildHEarthGlobalGroundCover(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),{
         refinement:resources.refinement?.surface??null,
-        onProgress:update=>progress({...update,phase:`GLOBAL_COVER_${update.phase}`})
+        order:'CAMERA_FIRST',priorityOrigin:globalCoverInitialCamera,
+        onProgress:update=>progress({...update,phase:`GLOBAL_COVER_${update.phase}`}),
+        onTile:tile=>{
+          globalCoverPriorityTilesPrepared++;
+          if(globalCoverPriorityTilesPrepared===1){
+            firstPriorityTileReadyAtMs=performance.now();
+            globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('GLOBAL_COVER_FIRST_PRIORITY_TILE_READY');
+          }
+          if(globalCoverPriorityTilesPrepared<=8||globalCoverPriorityTilesPrepared%64===0){
+            progress({phase:'GLOBAL_COVER_PRIORITY_TILE_READY',priorityTilesPrepared:globalCoverPriorityTilesPrepared,
+              tileX:tile.ix,tileZ:tile.iz,tileInstanceCount:tile.instanceCount,
+              tileRecordBytes:tile.records.byteLength});
+          }
+        }
       }).then(async cover=>{await uploadGlobalCover(cover);progress({phase:'GLOBAL_COVER_RESIDENT',globalCoverComplete:true});});
-      await Promise.all([truthPreparation,oasisPreparation,globalCoverPreparation]);
+      // The source-qualified 108 batches need truth and the authored oasis,
+      // not the entire ground-cover survey. Final cover remains mandatory.
+      const batchPrerequisites=Promise.all([truthPreparation,oasisPreparation]).then(()=>{
+        vegetationBatchPrerequisitesReady=true;
+        globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_BATCH_PREREQUISITES_READY');
+        progress({phase:'BATCH_PREREQUISITES_READY',batchPrerequisitesReady:true});
+      });
+      await Promise.all([batchPrerequisites,globalCoverPreparation]);
       vegetationPreparationComplete=true;
       globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_PREPARATION_COMPLETE');
       progress({phase:'PREPARED'});
@@ -1331,6 +1355,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) {
       throw new Error('R3C_INITIAL_PACKET_PACKAGE_MISMATCH');
     }
+    if(![packet.camera?.position?.x,packet.camera?.position?.z].every(Number.isFinite))
+      throw new Error('R3C_CAMERA_PRIORITY_ORIGIN_INVALID');
+    globalCoverInitialCamera={x:packet.camera.position.x,z:packet.camera.position.z};
     resources.geometryVertexShader = createShader(gl.VERTEX_SHADER, VS, 'GV');
     resources.geometryFragmentShader = createShader(gl.FRAGMENT_SHADER, FS, 'GF');
     resources.geometryProgram = createProgram(resources.geometryVertexShader, resources.geometryFragmentShader, 'GP');
@@ -1588,7 +1615,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
 
   let preparedVegetationBatch=null,vegetationBatchPreparation=null;
   function prepareNextVegetationBatch(){
-    if(!vegetationPreparationComplete)return Promise.reject(new Error('R3C_VEGETATION_PREPARATION_PENDING'));
+    if(!vegetationBatchPrerequisitesReady)return Promise.reject(new Error('R3C_VEGETATION_BATCH_PREREQUISITES_PENDING'));
     const state=resources.vegetation,descriptor=state.truth?.batches[state.nextBatchIndex];
     if(state.complete||!descriptor)return Promise.resolve();
     if(preparedVegetationBatch)return Promise.resolve();
@@ -1604,7 +1631,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
   function materializeNextVegetationBatch(){return startupMeasure('VEGETATION_BATCH_RESIDENCY',()=>materializeNextVegetationBatchObserved());}
   function materializeNextVegetationBatchObserved(){
-    if(!vegetationPreparationComplete)throw new Error('R3C_VEGETATION_PREPARATION_PENDING');
+    if(!vegetationBatchPrerequisitesReady)throw new Error('R3C_VEGETATION_BATCH_PREREQUISITES_PENDING');
     if(!initialized)throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     const state=resources.vegetation;if(!state.truth)throw new Error('R3C_VEGETATION_WORLD_TRUTH_PENDING');if(state.complete)return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});
     const descriptor=state.truth.batches[state.nextBatchIndex];if(!descriptor){state.complete=true;return Object.freeze({complete:true,residentInstanceCount:counters.vegetationResidentInstanceCount});}
@@ -1782,7 +1809,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
       refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
       contactField:{...contactField.stats,buildCount:contactFieldBuildCount,totalBuildMilliseconds:contactFieldTotalMilliseconds},
-      vegetationResidency:{canonicalPreparationTiming:getHEarthRun8ER2CanonicalPreparationTiming(),...(globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getMilestoneTiming?{timing:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getMilestoneTiming()}:{}),preparationComplete:vegetationPreparationComplete,preparationProgress:vegetationPreparationProgress,validationStatus:vegetationTruth?'VALIDATED':'PENDING_POST_READY_VALIDATION',manifestSha256:vegetationTruth?.qualifiedManifestIdentity.manifestSha256??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.manifestSha256,totalInstanceCount:vegetationTruth?.instanceCount??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.instanceCount,totalBatchCount:vegetationTruth?.batches.length??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.batchCount,maxInstancesPerBatch:vegetationTruth?.maxInstancesPerMaterializationBatch??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.maxInstancesPerBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth?.droppedPlacementCount??null,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth?.cameraIndependent??null},
+      vegetationResidency:{canonicalPreparationTiming:getHEarthRun8ER2CanonicalPreparationTiming(),...(globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getMilestoneTiming?{timing:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getMilestoneTiming()}:{}),preparationComplete:vegetationPreparationComplete,batchPrerequisitesReady:vegetationBatchPrerequisitesReady,priorityTilesPrepared:globalCoverPriorityTilesPrepared,firstPriorityTileReadyAtMs,globalCoverComplete:resources.globalCover?.cover?.receipt?.instanceCount>0,preparationProgress:vegetationPreparationProgress,validationStatus:vegetationTruth?'VALIDATED':'PENDING_POST_READY_VALIDATION',manifestSha256:vegetationTruth?.qualifiedManifestIdentity.manifestSha256??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.manifestSha256,totalInstanceCount:vegetationTruth?.instanceCount??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.instanceCount,totalBatchCount:vegetationTruth?.batches.length??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.batchCount,maxInstancesPerBatch:vegetationTruth?.maxInstancesPerMaterializationBatch??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.maxInstancesPerBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth?.droppedPlacementCount??null,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth?.cameraIndependent??null},
       canonicalPackageMutated:false
     };
   }

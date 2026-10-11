@@ -1,0 +1,33 @@
+{
+  "baselines": [
+    {
+      "description": "Predict held-out outcomes from prior visible outputs and outcome history only.",
+      "id": "B1_OUTPUT_HISTORY"
+    },
+    {
+      "description": "Regularized additive model using all public measured features and intervention indicators.",
+      "id": "B2_ADDITIVE_FEATURE"
+    },
+    {
+      "description": "Predict from the weakest observed component or factor.",
+      "id": "B3_WEAKEST_COMPONENT"
+    },
+    {
+      "description": "Infer importance using public dependency graph centrality and connectivity measures.",
+      "id": "B4_GRAPH_CENTRALITY_DEPENDENCY"
+    },
+    {
+      "description": "Preregistered flexible machine-learning model using the same public observations.",
+      "id": "B5_BLACK_BOX"
+    }
+  ],
+  "fairness_rules": [
+    "IDENTICAL_TRAINING_AND_HELDOUT_SPLITS",
+    "IDENTICAL_PUBLIC_INPUTS",
+    "NO_HIDDEN_TRUTH_FOR_ANY_MODEL",
+    "HYPERPARAMETER_SELECTION_LIMITED_TO_TRAINING_DATA",
+    "ALL_MODEL_FAILURES_RETAINED"
+  ],
+  "strongest_baseline_definition": "BEST_HELDOUT_PRIMARY_SCORE_AMONG_B1_TO_B5_WITHOUT_POSTDATA_MODEL_SUBSTITUTION",
+  "version": "1.0.0"
+}

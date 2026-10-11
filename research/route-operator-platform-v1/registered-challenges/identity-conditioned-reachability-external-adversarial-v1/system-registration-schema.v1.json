@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "author_team_id": {
+      "minLength": 3,
+      "type": "string"
+    },
+    "custodian_id": {
+      "minLength": 3,
+      "type": "string"
+    },
+    "domain": {
+      "minLength": 3,
+      "type": "string"
+    },
+    "heldout_plan_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "independence_attestations": {
+      "contains": {
+        "const": "NO_THEORY_TEAM_AUTHORSHIP"
+      },
+      "minItems": 3,
+      "type": "array"
+    },
+    "public_package_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "system_id": {
+      "minLength": 6,
+      "type": "string"
+    },
+    "truth_package_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "system_id",
+    "domain",
+    "author_team_id",
+    "custodian_id",
+    "truth_package_sha256",
+    "public_package_sha256",
+    "heldout_plan_sha256",
+    "independence_attestations"
+  ],
+  "title": "External system registration",
+  "type": "object"
+}

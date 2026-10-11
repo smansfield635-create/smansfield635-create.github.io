@@ -50,8 +50,10 @@ function templateFor(){
 export function transformHEarthGroundCoverRoot(template,root,x,z,angle,width){const i=template.rootVertices[root]*3,dx=f(template.positions[i]*width),dz=f(template.positions[i+2]*width),c=f(Math.cos(angle)),s=f(Math.sin(angle));return{x:f(x+f(f(dx*c)-f(dz*s))),z:f(z+f(f(dx*s)+f(dz*c)))};}
 function eligibleMaterial(m,slope){if(m?.valid!==true||slope>.35)return false;if(m.surfaceClass==='STONE_AND_SPARSE_SOIL')return m.soilDepth>=.035;return ['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20;}
 
-export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD'}={}){
-  if(!['FORWARD','REVERSE','CHUNKED'].includes(order))throw Error('GLOBAL_COVER_ORDER_INVALID');
+export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD',priorityOrigin=null,onTile=null}={}){
+  if(!['FORWARD','REVERSE','CHUNKED','CAMERA_FIRST'].includes(order))throw Error('GLOBAL_COVER_ORDER_INVALID');
+  if(order==='CAMERA_FIRST'&&(!priorityOrigin||![priorityOrigin.x,priorityOrigin.z].every(Number.isFinite)))throw Error('GLOBAL_COVER_CAMERA_FIRST_ORIGIN_REQUIRED');
+  if(onTile!==null&&typeof onTile!=='function')throw Error('GLOBAL_COVER_TILE_CALLBACK_INVALID');
   const started=now(),template=templateFor(),base=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,(pkg.primitiveSpans??[]).filter(p=>p.role==='TERRAIN'));
   if(!base.triangleCount)throw Error('GLOBAL_COVER_TERRAIN_EMPTY');
   const water=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,(pkg.primitiveSpans??[]).filter(p=>String(p.primitiveId).includes('FAR_OCEAN_CONTINUATION')),true);
@@ -63,6 +65,16 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
   const reject=reason=>{rejected[reason]=(rejected[reason]??0)+1;};
   const tiles=[];for(let iz=0;iz<27;iz++)for(let ix=0;ix<24;ix++)tiles.push({ix,iz,minX:bounds.minX+ix*32,minZ:bounds.minZ+iz*32});
   if(order==='REVERSE')tiles.reverse();if(order==='CHUNKED')tiles.sort((a,b)=>(a.ix%3)-(b.ix%3)||b.iz-a.iz);
+  // Reorder construction only. The final pack below still sorts by canonical
+  // (iz,ix), preserving every original Float32 record and tile index.
+  if(order==='CAMERA_FIRST'){
+    const distanceSquared=tile=>{
+      const dx=priorityOrigin.x-Math.max(tile.minX,Math.min(tile.minX+32,priorityOrigin.x));
+      const dz=priorityOrigin.z-Math.max(tile.minZ,Math.min(tile.minZ+32,priorityOrigin.z));
+      return dx*dx+dz*dz;
+    };
+    tiles.sort((a,b)=>distanceSquared(a)-distanceSquared(b)||a.iz-b.iz||a.ix-b.ix);
+  }
   for(const tile of tiles){const entries=[],maxX=tile.minX+32,maxZ=tile.minZ+32;
     for(let iz=Math.ceil((tile.minZ+736)/P.spacing);-736+iz*P.spacing<maxZ;iz++)for(let ix=Math.ceil((tile.minX+384)/P.spacing);-384+ix*P.spacing<maxX;ix++){
       candidates++;if(now()-budgetStart>=8){onProgress({phase:'GLOBAL_COVER_PLANNING',candidateCount:candidates,instanceCount:output.length+patches.reduce((n,t)=>n+t.entries.length,0)+entries.length,rootSampleCount:rootSamples});await yieldControl();yields++;budgetStart=now();}
@@ -105,6 +117,13 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
       }
     }
     entries.sort((a,b)=>a.id.localeCompare(b.id));patches.push({...tile,maxX,maxZ,entries});
+    if(onTile){
+      // Streaming *data-availability* checkpoint, not a second population.
+      // Each accepted record is copied verbatim; no GPU residency is implied.
+      const records=new Float32Array(entries.length*P.recordFloats);
+      for(let i=0;i<entries.length;i++)records.set(entries[i].record,i*P.recordFloats);
+      onTile({ix:tile.ix,iz:tile.iz,minX:tile.minX,maxX,minZ:tile.minZ,maxZ,instanceCount:entries.length,records});
+    }
     if(now()-budgetStart>=8){await yieldControl();yields++;budgetStart=now();}
   }
   patches.sort((a,b)=>a.iz-b.iz||a.ix-b.ix);

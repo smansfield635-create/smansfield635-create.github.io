@@ -1,0 +1,52 @@
+{
+  "schema": "H_EARTH_SOIL_EXPANSION_WALKING_VIEW_OBSERVER_v1",
+  "operationId": "H_EARTH_SOIL_EXPANSION_WALKING_VIEW_OBSERVER_20261011_001",
+  "canonicalAdmissionGeneration": 2652,
+  "ownerIntentIssue": 6100,
+  "ownerMaterialPriorityComment": 6105742630,
+  "productParentHead": "2a57a81aa0aae217eb9eaf2414fc389119a6cc3e",
+  "ownerApprovedSourceMaterialReference": "EXISTING_32_M_WOODLAND_SOIL_AND_FOUR_APPROVED_TREES",
+  "sourceBoundVerifier": {
+    "path": "tools/h-earth-gen2-visual-qualify.mjs",
+    "gitBlob": "ab848f12c1c94801c5021f713c3cd7da492a4a81",
+    "sha256": "57be09cda0ee0cbe4c4c7848779cd3e5f6adba43456151d6057bc5f54cd0a372"
+  },
+  "exactProtectedBlobs": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "deb0b518a78823677645ec4435b0dd0d3c6ab322",
+    "showroom/globe/h-earth/render/woodland-clearing-trial.js": "14c366d2241469fbccd08ee31bbeac0f1b7598f4",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "c26247dcb69cb52c968fcd3ef6c2626eaa577d03",
+    "showroom/globe/h-earth/validation/four-tree-only.verify.mjs": "5919df094524a832bd74a3243b7d116b6a5fe978"
+  },
+  "route": "/showroom/globe/h-earth/?arrival=approved-four-trees",
+  "cameraMethod": "EXISTING_WEBGL2_CANVAS_AND_CANONICAL_NATIVE_MOUSE_WHEEL_AND_ONE_FINGER_PITCH_DOWN",
+  "referenceCamera": {
+    "x": -139.40267987050615,
+    "z": -194.5,
+    "yaw": 0,
+    "pitch": 16
+  },
+  "expectedNorthwardDistanceMeters": [
+    10,
+    20,
+    40,
+    70
+  ],
+  "expectedActualZ": [
+    -184.5,
+    -174.5,
+    -154.5,
+    -124.5
+  ],
+  "nativeNavigationPrecheck": "EIGHT_SWEPT_TERRAIN_SUPPORTED_NAVIGATION_POSITIONS_VALIDATED_WITH_PRODUCTION_NAVIGATION_JS",
+  "existingTestPreserved": true,
+  "additionalAssets": 0,
+  "sourceProductMutationPerformed": false,
+  "mergeAuthorized": false,
+  "publicationAuthorized": false,
+  "ownerVisualKeep": false,
+  "releaseEligible": false,
+  "physicalAndroidQualified": false,
+  "observationsPending": true,
+  "admissionBoundary": "EXISTING_FIXED_CHROMIUM_TEST_INSTRUMENTATION_AND_ONE_NEW_SOURCE_BOUND_READ_ONLY_RECEIPT",
+  "successCriteria": "REAL_WEBGL2_POST_RESIDENCY_FOUR_CAPTURED_VIEWS_FROM_ACTUAL_NAVIGATION_POSITIONS_WITH_SOURCE_IDENTITIES_NOT_MATERIAL_ACCEPTANCE"
+}

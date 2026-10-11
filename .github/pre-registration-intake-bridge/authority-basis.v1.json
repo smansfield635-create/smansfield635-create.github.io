@@ -1,0 +1,59 @@
+{
+  "activationAuthorityIncluded": false,
+  "authorityClass": "EXPLICIT_USER_ORIGIN_GENESIS_AUTHORITY",
+  "authorityDigest": "1cb2e1e32a1d62e4e4c12a86f944c53306ad71a693a5f642ab477fbb0a5a7793",
+  "authorityId": "USER_ORIGIN_PRE_REGISTRATION_BRIDGE_GENESIS_AUTHORITY_2026_08_04_v1",
+  "authoritySource": {
+    "instruction": "Execute the bounded CP0 through CP11 checkpoint chain",
+    "speaker": "REPOSITORY_OWNER_USER_ORIGIN",
+    "timestamp": "2026-08-04T19:58:00-05:00"
+  },
+  "authorizedMutationScope": [
+    ".github/pre-registration-intake-bridge/AGENTS.md",
+    ".github/pre-registration-intake-bridge/failure-baseline.v1.json",
+    ".github/pre-registration-intake-bridge/defect-disposition.v1.json",
+    ".github/pre-registration-intake-bridge/authority-basis.v1.json",
+    ".github/pre-registration-intake-bridge/bridge-contract.v1.json",
+    ".github/pre-registration-intake-bridge/locator.v1.json",
+    ".github/pre-registration-intake-bridge/input.schema.v1.json",
+    ".github/pre-registration-intake-bridge/output.schema.v1.json",
+    ".github/pre-registration-intake-bridge/audit-event.schema.v1.json",
+    ".github/pre-registration-intake-bridge/fixtures.v1.json",
+    ".github/pre-registration-intake-bridge/termination-procedure.v1.json",
+    ".github/pre-registration-intake-bridge/construction-manifest.v1.json",
+    ".github/pre-registration-intake-bridge/activation-record.template.v1.json",
+    ".github/pre-registration-intake-bridge/rollback-and-revocation.v1.json",
+    "tools/pre-registration-intake-bridge/canonical-intake-execution-bridge.v1.mjs",
+    "tools/pre-registration-intake-bridge/conformance-runner.v1.mjs",
+    "tools/pre-registration-intake-bridge/remote-proof-runner.v1.mjs",
+    "tools/pre-registration-intake-bridge/independent-reproducer.v1.mjs",
+    "tools/pre-registration-intake-bridge/package-certifier.v1.mjs",
+    "tools/pre-registration-intake-bridge/authority-terminator.v1.mjs",
+    ".github/workflows/pre-registration-intake-bridge-certification.yml"
+  ],
+  "authorizedOperations": [
+    "MATERIALIZE_INACTIVE_BRIDGE_PACKAGE",
+    "CREATE_ISOLATED_CONSTRUCTION_BRANCH",
+    "OPEN_DRAFT_CERTIFICATION_PR",
+    "RUN_FIXED_CERTIFICATION_WORKFLOW",
+    "WRITE_ONLY_DECLARED_INSTRUMENTATION_PATHS"
+  ],
+  "authorizedProduct": "CANONICAL_INTAKE_EXECUTION_BRIDGE_ONLY",
+  "checkpointId": "CP2_PRE_REGISTRATION_AUTHORITY_BASIS",
+  "generalRepositoryOperationAuthorityIncluded": false,
+  "mergeAuthorityIncluded": false,
+  "prohibitedOperations": [
+    "DIRECT_LOCK_LEDGER_EDITING",
+    "PR_570_MUTATION",
+    "ARBITRARY_REPOSITORY_MUTATION",
+    "GENERAL_REPOSITORY_OPERATION_AUTHORITY",
+    "BRIDGE_SELF_AUTHORIZATION",
+    "MERGE",
+    "DEPLOYMENT",
+    "RELEASE",
+    "BOOTSTRAP_CAPABILITY_ACTIVATION"
+  ],
+  "result": "EXPLICIT_NONCIRCULAR_CONSTRUCTION_AUTHORITY_EXISTS",
+  "schema": "PRE_REGISTRATION_INTAKE_BRIDGE_GENESIS_AUTHORITY_v1",
+  "supersessionBasis": "THIS_AUTHORITY_IS_A_NARROW_HIGHER_ORDER_GENESIS_EXCEPTION_CREATED_SOLELY_BECAUSE_THE_ORDINARY_INTAKE_MECHANISM_CANNOT_AUTHORIZE_CONSTRUCTION_OF_ITS_OWN_PRE_REGISTRATION_EXECUTION_ROUTE"
+}

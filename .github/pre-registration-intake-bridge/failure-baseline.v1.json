@@ -1,0 +1,56 @@
+{
+  "authorizedToolsetRegistry": {
+    "blob": "4c3dc7f96c586c69277274d4110285839f58b092",
+    "closedWorld": true,
+    "path": ".github/ai-toolset-transport/authorized-toolset-registry.v1.json",
+    "status": "ACTIVE_CERTIFIED"
+  },
+  "canonicalBlocker": "THE_EXISTING_CANONICAL_INTAKE_GATE_REQUIRES_TOKEN_BEARING_REMOTE_LOCK_ACQUISITION_BEFORE_ANY_REPOSITORY_WRITE_WHILE_THE_ONLY_ACTIVE_CLOSED_WORLD_EXECUTION_TRANSPORT_REQUIRES_A_PREEXISTING_ADMITTED_AND_LOCKED_RECEIPT_AND_REGISTERED_DESCRIPTOR;A_FRESH_PARTICIPANT_HAS_NO_PRE_REGISTRATION_ROUTE_TO_EXECUTE_THE_GATE",
+  "checkpointId": "CP0_FAILURE_BASELINE_FREEZE",
+  "evidenceDigest": "67b009100e3588c64fae92d0741fc6878fa17e09b279faefea97fd53ecc3ab46",
+  "exactStartingMainHead": "aaa96943d0c817c6a489529250a3e46324324894",
+  "immutablePr570": {
+    "branch": "bootstrap/h-earth-map-wide-terrain-estate-instrument-v1-001",
+    "exactHead": "7c0b8871928b21cd9b2806f058bce34eed11f2ba",
+    "number": 570,
+    "state": {
+      "draft": true,
+      "merged": false,
+      "open": true
+    }
+  },
+  "lockRef": {
+    "observedHead": "39fa8b577992d8f25cce10f3b5e728ddcdabedfb",
+    "ref": "refs/heads/operation-locks/repository-operation-intake-v1"
+  },
+  "prohibitedInterpretations": [
+    "NOT_AN_ADMISSION",
+    "NOT_REPAIR_AUTHORITY",
+    "NOT_MERGE_AUTHORITY"
+  ],
+  "result": "FAILURE_EVIDENCE_FROZEN_AND_HASHED",
+  "schema": "REPOSITORY_OPERATION_INTAKE_BOOTSTRAP_FAILURE_BASELINE_v1",
+  "subject13PathBlobMap": {
+    "AGENTS.md": "2d32770771519986bd3d69fa7cd5b8d63e491d14",
+    "authority-and-lineage.v1.json": "afbf85bfbb5a2d2860d4528e6e03be62fdb36a2f",
+    "bootstrap-seed.v1.json": "e40b2494dcaeae1ef540ce01956eb4125e61e567",
+    "bootstrap-termination-policy.v1.json": "4299903a044d0696b58a434d0e60b10420cece7e",
+    "changed-path-manifest.v1.json": "9b37a2a7875716719c1285efc4e941d1e75df14b",
+    "construction-procedure.v1.json": "7aac442e32dc2a7ebc6f5a048b2346a82d9cab5c",
+    "instrument.locator.v1.json": "4cb9bd0e82ddabf58ecca11614f0c6ed518ca5f3",
+    "negative-fixtures.v1.json": "a5d3c2605d83ec1e2de97050b1ce914defcff45e",
+    "operation-request.v1.json": "fd7af3a74e848a72dc4795bacd626fe6bb0ac203",
+    "operator-family-registry.v1.json": "9f51711f695845e3f64d5c81854099855fad95b6",
+    "progress-ledger.v1.json": "c83ee733c32302f30d99a7cd28d628045b50f065",
+    "schemas.v1.json": "45df11051fb78a7b9df52c9dff532a5c5e7dfdf5",
+    "synthetic-map-fixture.v1.json": "6cba4bfdf12a39dde65ee05674a92e350dc92562"
+  },
+  "zeroRepositoryMutationProof": {
+    "branchCreated": false,
+    "fileWritten": false,
+    "lockAcquired": false,
+    "mergePerformed": false,
+    "pr570Mutated": false,
+    "workflowTriggered": false
+  }
+}

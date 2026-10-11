@@ -1,0 +1,53 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "lbs-resumes",
+  "description": "Browser-accessible LBS public-original-link discovery and browser-local inventory; metadata candidates are not verified unique U.S. resumes.",
+  "checks": [
+    {
+      "path": "/lbs-resumes/index.html",
+      "includes": [
+        "data-lbs-dashboard=\"browser-local-v1\"",
+        "Résumé discovery & inventory",
+        "Original links indexed",
+        "Distinct file candidates",
+        "Verified unique U.S. résumés",
+        "id=\"scan\"",
+        "id=\"inventoryRows\"",
+        "id=\"channelRows\"",
+        "dashboard.js"
+      ],
+      "excludes": ["window.OPENAI_API_KEY", "Resume content archive"]
+    },
+    {
+      "path": "/lbs-resumes/dashboard.js",
+      "includes": [
+        "LBS_BROWSER_LINK_INVENTORY_v1",
+        "indexedDB.open",
+        "https://api.github.com",
+        "https://index.commoncrawl.org",
+        "PENDING_UNVERIFIED",
+        "noopener noreferrer"
+      ],
+      "excludes": ["localStorage.setItem('apiKey'", "contactListExport"]
+    },
+    {
+      "path": "/governance-bridge/collaboration/index.html",
+      "includes": ["/lbs-resumes/", "DGB × LBS"],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/lbs-resumes/",
+    "timeoutMs": 25000,
+    "readyAttribute": {"selector": "html", "name": "data-ready", "contains": "true"},
+    "binding": {"mode": "direct-document", "path": "/lbs-resumes/"},
+    "failOnConsoleErrors": false,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {"name": "source-selection-is-focusable", "action": {"type": "click", "selector": "#source"}, "assertions": [{"type": "exists", "selector": "#scan"}, {"type": "exists", "selector": "#inventoryRows"}]},
+      {"name": "filter-accessible", "action": {"type": "click", "selector": "#filter"}, "assertions": [{"type": "exists", "selector": "#metricLinks"}, {"type": "exists", "selector": "#channelRows"}]}
+    ]
+  }
+}

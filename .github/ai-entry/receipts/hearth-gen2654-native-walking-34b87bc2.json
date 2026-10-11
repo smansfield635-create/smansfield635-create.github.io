@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2654-native-walking-34b87bc2",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6142,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2654-native-walking-20261011",
+  "requestCommit": "b31dcc707f408b9293bae3c1c4434c7226fef659",
+  "requestCommitParent": "9dd43dc74e7135cc9dfb38f66f2d7a890552f246",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "9dd43dc74e7135cc9dfb38f66f2d7a890552f246",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "34b87bc2f04087c87caa179ddda79c5a2b522bb1"
+  },
+  "bridgeRunId": "38158528781",
+  "dispatchedRunId": 38158540655,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38158540655",
+  "dispatchedRunHeadSha": "9dd43dc74e7135cc9dfb38f66f2d7a890552f246",
+  "dispatchedAt": "2026-10-11T17:10:35.730Z",
+  "resolvedAt": "2026-10-11T17:10:39.833Z"
+}

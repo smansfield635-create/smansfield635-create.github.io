@@ -8,8 +8,8 @@
   "ownerApprovedSourceMaterialReference": "EXISTING_32_M_WOODLAND_SOIL_AND_FOUR_APPROVED_TREES",
   "sourceBoundVerifier": {
     "path": "tools/h-earth-gen2-visual-qualify.mjs",
-    "gitBlob": "5750add191b0c9eaa7cc8410d52da53d6ea5a754",
-    "sha256": "41959c07f484eba57a6e3f8127089add44b95d3dc8ebcb4e2660244e75e42afc"
+    "gitBlob": "3985b2a7f090023f1d6595e3997516907e68584c",
+    "sha256": "72f8ccb96ec6b44e5132e2d66ebbdb419debdea5dfe8a595dbf49d6cf346d6a8"
   },
   "exactProtectedBlobs": {
     "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "deb0b518a78823677645ec4435b0dd0d3c6ab322",
@@ -74,8 +74,13 @@
       "WORLD_TRUTH_PLAN",
       "108_BATCH_RESIDENCY"
     ],
-    "productSourceMutationAuthorized": false
+    "productSourceMutationAuthorized": false,
+    "observerRepair": "NO_REPEATED_WEBGL_CONTEXT_REQUEST_DURING_PROFILE",
+    "failureReceiptOnResidencyTimeout": true,
+    "previousFailedRun": 38164558252,
+    "neutralRunnerHistoricalBarkGateNoLongerSelected": true
   },
   "performanceCaptureGeneration": 2658,
-  "previousVerifierBlob": "5b229203fcdca277c4debc2a369f8c4989c81a5a"
+  "previousVerifierBlob": "5b229203fcdca277c4debc2a369f8c4989c81a5a",
+  "performanceCaptureRepairGeneration": 2658
 }

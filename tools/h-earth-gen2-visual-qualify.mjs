@@ -108,7 +108,7 @@ if(process.argv.includes('--self-test')){
      const resources=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.resources??null;
      return {report,globalGroundCover:resources?.globalGroundCover??null,vegetationResidency:resources?.vegetationResidency??null};
     });
-    const observe=()=>page.evaluate(()=>{
+    const observe=()=>page.evaluate((profiled)=>{
      const root=document.getElementById('h-earth-functional-landscape-route');
      const canvas=document.getElementById('h-earth-functional-landscape-canvas');
      const loader=document.querySelector('.h-earth-experience-loader');
@@ -116,7 +116,11 @@ if(process.argv.includes('--self-test')){
      const gpu=route?.getLiveGpuReceipt?.()||null;
      const rect=canvas?.getBoundingClientRect();
      const style=canvas?getComputedStyle(canvas):null;
-     let gl=null;try{gl=canvas?.getContext('webgl2')}catch{}
+     // Existing WebGL observer rewraps GL methods on each getContext call.
+     // Never call it repeatedly while measuring those same methods.
+     let gl=null;
+     if(!profiled){try{gl=canvas?.getContext('webgl2')}catch{}}
+     const rendererContext=gpu?.resources?.context??null;
      const startup=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.()||null;
      return {
       routeReady:root?.dataset.run8eReady==='true',
@@ -125,7 +129,7 @@ if(process.argv.includes('--self-test')){
       loaderProgress:loader?.querySelector('.h-earth-experience-loader__percent')?.textContent||null,
       hasPublicRoute:Boolean(route?.getLiveGpuReceipt&&route?.getIntakeReceipt),
       canvas:{present:canvas instanceof HTMLCanvasElement,width:canvas?.width||0,height:canvas?.height||0,visible:Boolean(rect&&rect.width>0&&rect.height>0&&style?.visibility!=='hidden'&&style?.display!=='none')},
-      webgl2Alive:Boolean(gl&&!gl.isContextLost()),
+      webgl2Alive:profiled?Boolean(rendererContext?.created===true&&rendererContext?.lost===false):Boolean(gl&&!gl.isContextLost()),
       gpuPresentations:gpu?.counters?.gpuFramebufferPresentationCount??0,
       gpuFourTreeFloorCount:gpu?.resources?.landscapeFloor?.treeCount??null,
       clearingGpuReady:gpu?.resources?.woodlandClearing?.ready===true,
@@ -137,7 +141,7 @@ if(process.argv.includes('--self-test')){
       residencyStatus:root?.dataset.vegetationResidency||null,
       residency:route?.getVegetationResidency?.()||null
      };
-    });
+    },performanceCaptureActive);
     let snap,ready=false;
     const startupBegin=Date.now();
     for(let k=0;k<90;k++){
@@ -186,7 +190,11 @@ if(process.argv.includes('--self-test')){
         throw Error('PERFORMANCE_CAPTURE_FULL_RESIDENCY_DIAGNOSTIC_MISSING_OR_FAILED');
       entry.performanceContract={schema:'H_EARTH_SOURCE_BOUND_DUAL_VEGETATION_PERFORMANCE_v1',sourceBound:true,deviceClass:'HEADLESS_CHROMIUM_NOT_PHYSICAL_ANDROID',capturedAtReady:true,capturedAfterFullResidency:true,canonicalWorkerTimings:true,oasisPreparationMilestones:true,globalGroundCoverTimings:true,strictUnchangedFourTreeAndVegetationAssertions:true};
      }
-     if(!residencyReady(snap.residency)){await page.screenshot({path:out+'/'+v.id+'-incomplete-residency.png',fullPage:true});throw Error('GEN2638_DEFERRED_RESIDENCY_INCOMPLETE')}
+     if(!residencyReady(snap.residency)){
+      if(performanceCaptureActive)entry.performanceAtIncompleteResidency=await observePerformance();
+      await page.screenshot({path:out+'/'+v.id+'-incomplete-residency.png',fullPage:true});
+      throw Error('GEN2638_DEFERRED_RESIDENCY_INCOMPLETE');
+     }
      if(!readiness(snap))throw Error('GEN2638_POST_RESIDENCY_RENDERER_NOT_READY');
      if(snap.gpuFourTreeFloorCount!==4||snap.clearingGpuReady!==true||!(snap.clearingCasterIndexCount>0))throw Error('GEN2638_POST_RESIDENCY_GPU_TREE_CENSUS_FAILED');
      const post=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:out+'/'+v.id+'-post-residency-canvas.png'});

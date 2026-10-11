@@ -1,0 +1,48 @@
+name: H-Earth Gen308 Anchor Evidence Routing Carrier
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  route-gen308-evidence-paths:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private read token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+      - name: Checkout exact private governing head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 4c3cb59250fc4b8ed371bda9cad061e3b1e3f41b
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Route exact Gen308 mutation ceiling
+        run: |
+          cat > "$RUNNER_TEMP/gen308-paths.txt" <<'EOF'
+          h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.visual.json
+          h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.interaction.json
+          h-earth-3d/experience-anchor/evidence/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.continuity.json
+          h-earth-3d/experience-anchor/receipts/GEN307_GRATITUDE_AUDRALIA_FINAL_EXPRESSION_20260818_001.json
+          EOF
+          cat > "$RUNNER_TEMP/host.json" <<'EOF'
+          {"schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1","result":"HOST_CAPABILITIES_OBSERVED","evidenceSource":"GITHUB_ACTIONS_GEN308_ROUTING_CARRIER","localAuthenticatedExecutionAvailable":false,"localNodeRuntimeAvailable":true,"connectedGithubReadAvailable":false,"connectedGithubShaGuardedContentsWriteAvailable":false,"githubActionsExecutionAvailable":true}
+          EOF
+          cd private-control-plane
+          node tools/repository-ai-entry-router.mjs \
+            --paths-file "$RUNNER_TEMP/gen308-paths.txt" \
+            --task "GEN308_EXPERIENCE_ANCHOR_EVIDENCE_SUPPLEMENT" \
+            --mutation-intent \
+            --intake-availability-receipt "$RUNNER_TEMP/host.json" \
+            --output "$RUNNER_TEMP/gen308-routing-receipt.json"
+          cat "$RUNNER_TEMP/gen308-routing-receipt.json"
+          node -e "const r=require(process.argv[1]); if(r.disposition!=='PASS') process.exit(1)" "$RUNNER_TEMP/gen308-routing-receipt.json"

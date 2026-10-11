@@ -37,6 +37,7 @@
     "readySelector": "[data-run]",
     "binding": {"mode": "direct-document", "path": "/instruments/operations-chamber/"},
     "failOnConsoleErrors": true,
-    "failOnPageErrors": true
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": ["Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/"]
   }
 }

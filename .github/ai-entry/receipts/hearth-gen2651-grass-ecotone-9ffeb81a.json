@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2651-grass-ecotone-9ffeb81a",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6132,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2651-ecotone-20261010",
+  "requestCommit": "b0e52f29992e2955daa8f53611fea04d8c493a3c",
+  "requestCommitParent": "8a35c7d3be1aec6b73d303ecba1acdd57f132d76",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "8a35c7d3be1aec6b73d303ecba1acdd57f132d76",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9ffeb81af8675273adcfc49ed7a0678760cf563d"
+  },
+  "bridgeRunId": "38112369596",
+  "dispatchedRunId": 38112378871,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38112378871",
+  "dispatchedRunHeadSha": "8a35c7d3be1aec6b73d303ecba1acdd57f132d76",
+  "dispatchedAt": "2026-10-11T04:41:24.091Z",
+  "resolvedAt": "2026-10-11T04:41:28.440Z"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "CHAPTER_02_SUCCESSOR_SOURCE_AUTHORITY_v1",
+  "operationId": "CHAPTER_02_AWARDS_REPLACEABLE_FOOTAGE_CINEMATIC_CONSTRUCTION_20260819_002",
+  "governingPreconstructionIssue": 302,
+  "publicBase": "cfd1924c485893dedeeb2fd1fefcb91c521d7c2a",
+  "protectedPredecessor": {
+    "path": "showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-30s-vivaldi.mp4",
+    "gitBlob": "db0563a1a45811dadc36c48f0cb2356d748e9a07",
+    "sizeBytes": 6219081,
+    "disposition": "PRESERVE_BY_DEFAULT"
+  },
+  "script": [
+    "What makes something real?",
+    "What wasn't before doesn't define what is possible.",
+    "The experience creates reality.",
+    "So where does reality begin?"
+  ],
+  "promotionalSignature": "DiamondGateBridge.com",
+  "cinematicGrammar": "SEE -> FADE OUT -> READ -> FADE IN -> SEE MORE",
+  "sourceSlots": {
+    "A_ORBIT_WORLD_EXISTS": {"replaceable": true, "initialAuthority": "protected predecessor plus already-documented Chapter 02 source pool"},
+    "C_ORBITAL_APPROACH_GEOGRAPHY": {"replaceable": true, "initialAuthority": "protected predecessor plus 23774.mp4 where exact bytes become available"},
+    "E_APPROACH_COAST_ENTRY": {"replaceable": true, "initialAuthority": "23775.mp4 where exact bytes become available; preserve coast-is-the-entrance function"},
+    "G_LIVE_ENVIRONMENT_TRAVERSAL": {"replaceable": true, "initialAuthority": "23775.mp4 where exact bytes become available; strongest experiential traversal only"},
+    "H_WITHDRAWAL_RETURN": {"replaceable": true, "initialAuthority": "protected predecessor plus 23774.mp4 where exact bytes become available"}
+  },
+  "substitutionLaw": "Newness is not replacement authority. Substitute only when exact source inspection demonstrates stronger geometry, behavior evidence, visual quality, continuity, or epistemic clarity while preserving slot function.",
+  "incomingFootageExpected": true,
+  "liveMutationAuthorized": false,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false,
+  "constructionState": "SOURCE_AUTHORITY_BOUND_AWAITING_EXACT_SOURCE_MATERIALIZATION"
+}

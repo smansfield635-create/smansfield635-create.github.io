@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "AUREN_INTEGRATED_PRODUCT_BROWSER_ACCEPTANCE_20260929_004",
+  "capabilityId": "AUREN_INTEGRATED_PRODUCT_BROWSER_ACCEPTANCE",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "candidate_sha": "ce1b7f28e1b715ba96044577ef58c8779b8046fe"
   }
 }

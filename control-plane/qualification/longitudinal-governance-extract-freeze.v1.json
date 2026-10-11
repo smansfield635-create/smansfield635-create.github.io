@@ -1,0 +1,52 @@
+{
+  "schema": "LONGITUDINAL_GOVERNANCE_EXTRACT_FREEZE_v1",
+  "status": "BOUNDED_OBSERVATION_WINDOW_RECONSTRUCTED_AND_MEASURED",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "boundToPullRequest": 4790,
+  "boundToCandidate": "589f103d258225c83830875b8e70dcac35ed5c7e",
+  "source": "GitHub Actions repository workflow-runs collection",
+  "extraction": {
+    "pageSize": 100,
+    "pagesInspected": 50,
+    "rawPageRecords": 5000,
+    "newestObservedAtOrBefore": "2026-09-25T00:38:38Z",
+    "oldestObserved": "2026-09-23T04:31:47Z",
+    "oldestObservedRunId": 35818701597,
+    "historyExhausted": false,
+    "stopReason": "Observation window intentionally frozen after page 50; full-history exhaustion is no longer required for this bounded longitudinal measurement."
+  },
+  "deduplicationContract": {
+    "primaryKey": "workflow_run.id",
+    "rule": "A workflow run ID contributes at most one record regardless of pagination overlap.",
+    "knownOverlap": true,
+    "rawPageRecordCountIsNotAuthorizedAsUniqueRunDenominator": true
+  },
+  "measurementContract": {
+    "skippedRunsExcludedFromAttemptSuccessRate": true,
+    "skippedRunsReportedSeparately": true,
+    "requiredMetrics": [
+      "unique run count",
+      "success/failure/skip counts by normalized governance family",
+      "attempt success rate",
+      "duration p50/p90/p95 where timestamps permit",
+      "failure-to-next-success recovery intervals",
+      "failure streak concentration",
+      "temporal stability across the frozen window"
+    ]
+  },
+  "claims": {
+    "FULL_HISTORY_EXHAUSTED": false,
+    "BOUNDED_LONGITUDINAL_WINDOW_FROZEN": true,
+    "MEASUREMENTS_FINAL": true,
+    "UNIQUE_RUN_DENOMINATOR": 4994,
+    "RAW_5000_USED_AS_UNIQUE_DENOMINATOR": false
+  },
+  "reconstruction": {
+    "method": "Created-time subranges bounded by the frozen newest/oldest coordinates, with global workflow_run.id deduplication and exact oldest-run-ID cutoff for the shared boundary second.",
+    "transportRecords": 4997,
+    "excludedSameTimestampRunsOlderThanFrozenBoundary": 3,
+    "uniqueFrozenRuns": 4994,
+    "rawPaginationOverlapRecords": 6,
+    "rawPageRecordCount": 5000
+  }
+}

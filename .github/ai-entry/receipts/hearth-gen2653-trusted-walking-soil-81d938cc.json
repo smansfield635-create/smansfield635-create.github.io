@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2653-trusted-walking-soil-81d938cc",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6138,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2653-walking-soil-20261011",
+  "requestCommit": "f11e2d5ac5235eeb9197b06daf7c4ad897b27f57",
+  "requestCommitParent": "78144c403a310c0dd6cd4ba0fc00539db69cf1e6",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "78144c403a310c0dd6cd4ba0fc00539db69cf1e6",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "81d938cc81deaf2e6224ae748a90faff44ea62c8"
+  },
+  "bridgeRunId": "38156646444",
+  "dispatchedRunId": 38156657115,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38156657115",
+  "dispatchedRunHeadSha": "78144c403a310c0dd6cd4ba0fc00539db69cf1e6",
+  "dispatchedAt": "2026-10-11T16:43:37.346Z",
+  "resolvedAt": "2026-10-11T16:43:41.192Z"
+}

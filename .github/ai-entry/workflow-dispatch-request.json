@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-gen2665-motion-visual-74e3fa10",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "74e3fa102cd057e5d143eb33a0738157ed5774dc"
   }
 }

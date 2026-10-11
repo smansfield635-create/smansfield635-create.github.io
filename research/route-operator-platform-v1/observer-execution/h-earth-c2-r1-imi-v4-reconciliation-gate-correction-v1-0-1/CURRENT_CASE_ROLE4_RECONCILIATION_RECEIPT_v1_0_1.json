@@ -1,0 +1,109 @@
+{
+  "accepted_unobstructed_fraction": 0.6959409401844713,
+  "all_eleven_factor_results_reconciled": true,
+  "common_evidence_identity_pass": true,
+  "common_instrument_identity_pass": true,
+  "controlling_defect_agreement": true,
+  "controlling_factor": "INLAND_ANCHOR_OCCLUSION_CLEARANCE",
+  "controlling_factor_value": 0.8,
+  "cross_observer_contamination": false,
+  "disagreement_categories": [],
+  "factor_comparisons": [
+    {
+      "exact_agreement": true,
+      "factor_id": "COAST_ENTRY_POSITION_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "SUCCESSOR_TERRAIN_CLEARANCE_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "AUTHORIZED_INLAND_TARGET_ALIGNMENT_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "NEAR_BERM_CENTERLINE_CLEARANCE"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "BEACH_FOREGROUND_PRESERVATION"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "INLAND_ANCHOR_VISIBILITY"
+    },
+    {
+      "accepted_unobstructed_fraction": 0.6959409401844713,
+      "accepted_value_a": 0.8,
+      "accepted_value_b": 0.8,
+      "exact_agreement": true,
+      "factor_id": "INLAND_ANCHOR_OCCLUSION_CLEARANCE"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "DESKTOP_PRESENTATION_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "MOBILE_390_PRESENTATION_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "MOBILE_412_PRESENTATION_AVAILABILITY"
+    },
+    {
+      "exact_agreement": true,
+      "factor_id": "RESET_STATE_REPRODUCIBILITY"
+    }
+  ],
+  "final_imi_result_agreement": true,
+  "hard_collapse_agreement": true,
+  "imi_result": 0.8,
+  "invalid_state": false,
+  "no_automatic_averaging": true,
+  "observer_a_authority_id": "H_EARTH_C2_R1_IMI_V4_INDEPENDENT_OBSERVER_A_001",
+  "observer_a_receipt_sha256": "686a388e46e6f737ed49bf82aeb391ccaf511dcdbb54ae52b80d338225a778d9",
+  "observer_a_receipt_valid": true,
+  "observer_agreement_gate": "PASS_CLOSED",
+  "observer_b_authority_id": "H_EARTH_C2_R1_IMI_V4_INDEPENDENT_OBSERVER_B_001",
+  "observer_b_receipt_sha256": "2085169150fbe077e2dc2ed485095823dcc852a56f347d61d7837c73243f1c26",
+  "observer_b_receipt_valid": true,
+  "observer_independence_pass": true,
+  "observer_receipts_changed": false,
+  "observer_reexecution_performed": false,
+  "partial_occlusion_disagreement": false,
+  "pending_disagreement_route": false,
+  "receipt_sha256": "39a6823f4d6b3880599a84bccaa98dc4dcdb4dcd28f8409db4de7d52d05eb562",
+  "reconciliation_frozen_at": "2026-08-03T02:21:06Z",
+  "reconciliation_id": "H_EARTH_C2_R1_ROLE_4_RECONCILIATION_CURRENT_CASE_CORRECTED_001",
+  "reconciliation_receipt_freezable": true,
+  "reconciliation_result": "VALID_CONCORDANT_CONTROLLING_DEFECT",
+  "reconciliation_schema_version": "1.0.1",
+  "required_agreement_rule_pass": true,
+  "role4_authority_id": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+  "role5_gate": "HOLD",
+  "role5_gate_predicates": {
+    "agreement_pass": true,
+    "cross_observer_contamination_false": true,
+    "identities_valid": true,
+    "independence_valid": true,
+    "invalid_state_false": true,
+    "pending_disagreement_route_false": true,
+    "receipts_valid": true,
+    "reconciliation_receipt_valid_and_freezable": true,
+    "unevaluable_state_false": true,
+    "unresolved_controlling_defect_false": false
+  },
+  "routing_actions": [
+    "ROLE5_HOLD",
+    "PRESERVE_CONCORDANT_CONTROLLING_DEFECT"
+  ],
+  "same_input_identity": true,
+  "source_acceptance_record_id": "H_EARTH_C2_R1_ROLE_4_RECONCILIATION_CURRENT_CASE_001",
+  "terminal_state_agreement": true,
+  "third_observer_required": false,
+  "unevaluable_state": false,
+  "unresolved_controlling_defect": true,
+  "weakest_factor_agreement": true
+}

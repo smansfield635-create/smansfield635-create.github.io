@@ -1,0 +1,137 @@
+{
+  "corrected_role5_gate_rule": "ROLE5_GATE_OPEN=RECEIPTS_VALID AND INDEPENDENCE_VALID AND IDENTITIES_VALID AND AGREEMENT_PASS AND NOT INVALID AND NOT UNEVALUABLE AND NOT CONTAMINATED AND NOT PENDING_DISAGREEMENT AND NOT UNRESOLVED_CONTROLLING_DEFECT AND RECONCILIATION_RECEIPT_VALID_AND_FREEZABLE; OTHERWISE HOLD",
+  "current_case_reconciliation_receipt_freezable": true,
+  "current_case_reconciliation_receipt_sha256": "39a6823f4d6b3880599a84bccaa98dc4dcdb4dcd28f8409db4de7d52d05eb562",
+  "current_case_reconciliation_result": "VALID_CONCORDANT_CONTROLLING_DEFECT",
+  "current_case_role5_gate": "HOLD",
+  "current_case_role5_gate_receipt_sha256": "7853d78a5693ea302a9a9ad749c28a24022ba1b9a7f6346d71a718f332bb82a7",
+  "custody_receipt_sha256": "6425dabf76bfec40e644e8577b05c105f13d90f7c077b391ffbf036fcf9ad128",
+  "durable_custody_address": "GOOGLE_DRIVE_FOLDER_ID=1bkoI2lHPu-kWV0-KNeXLjPmGuS0Q6ye8;MASTER_FILE_ID=1boVLcZaApCrjTOtnAjVy52-1_DVVrKot",
+  "exact_corrected_components": [
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "ae0a44e30f1b94b07a164058282b74b4f92701e0821151c6cfd3fd919e65af5d",
+      "old_sha256": "b1386c6d03543799e0c5a47c1fcfef157dad7e3ca14a8bf2782b75a3f284bac8",
+      "path": "DISAGREEMENT_ROUTING_RULES_v1.json",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "1c28f1733c9a6679af68c26329047cf5688e91f2516eb47d7feaea10139e6567",
+      "old_sha256": "e21a56f79f97add5d2766aade4ebc9a8beefa4b8cc2e7e3300709b450e178a44",
+      "path": "FINAL_ROUND_CLOSURE_RECEIPT_SCHEMA_v1.json",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "d8cde60157dcb0282cd5779b820a03d784e5ec17b01db785d1dc81073cc4c966",
+      "old_sha256": "656569710f9779f8c8b8cb446a8775989bdca7f5369d265a3d14178c6f541987",
+      "path": "INSTRUMENTATION_RESULT_v1.json",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "bf1d3d9f9e0b2028b83b7437ca83e3c6972ad6c1cce6de9880d807f18b24f874",
+      "old_sha256": "1e97abcb319b4d20b0cdb3637d1051a7c0cc4fed8d628ef0c1236129a131b0ae",
+      "path": "OBSERVER_AGREEMENT_RECONCILIATION_SCHEMA_v1.json",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "2db08bd3c37e6af88e42651a585c548578705d53494efa9e2cc8a3282eb600e2",
+      "old_sha256": "dcef9059bfcead0532007a147130d5e648ace6dd92901bf92a7cf4b5f28e57f8",
+      "path": "README.md",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "895114ea892ec50f918a2642e8ba547079fa5aee74bed1713a0c51549b008af5",
+      "old_sha256": "100a4ac1c774004bba6228b0d5360f25dbc7c945d870db67483e68e9bfbf5bf3",
+      "path": "ROLE4_RECONCILIATION_GUIDE_v1.md",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "4f9371de9ecfce0c1a3c87c763250ed8c701ec744799ad57ce79656cc4f8d770",
+      "old_sha256": "d657cd8a0bbeaaa6f36cf4555bca6e4f07bc8c8ebccb0c4ee310523d21dd9cb9",
+      "path": "ROLE5_RATIFICATION_INTAKE_GATE_SCHEMA_v1.json",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "3d7c516443803fdf85bad63687a03d773536fd6e6ba1c3db7f119f0e100996b0",
+      "old_sha256": "f84802865c88088271638b5c522b811ed28bded1fc8c3e4d567871a90397eb1e",
+      "path": "ROUND_STATE_TRANSITION_MATRIX_v1.json",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "d7eb74fa55a5cdb3f31be6789f2fe7869e9c9c36cab5e2b803343d7fd44edd27",
+      "old_sha256": "bacb533c1bd030beb1a962b280ee69a5042a25904a8218a3a1f119c39e922a98",
+      "path": "reconcile_observer_receipts_v1.py",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "MODIFIED",
+      "new_sha256": "a2d9da39f57eb19090e6e1d0a270633a31213a3841da6a769bef9ed8a7ea00e4",
+      "old_sha256": "eec4ef101da87c0ecb615be2fc46a6e151d27327272f943d078213fb8dbc185e",
+      "path": "validate_observer_package_v1.py",
+      "semantic_change_status": "V4_SEMANTICS_UNCHANGED"
+    },
+    {
+      "change_type": "ADDED",
+      "new_sha256": "ea96c3fab8f4c7605363ce5928a1894b5e975bcab7f2a18968c3156ecd41daf7",
+      "old_sha256": null,
+      "path": "CURRENT_CASE_ROLE4_RECONCILIATION_RECEIPT_v1_0_1.json",
+      "semantic_change_status": "NONSEMANTIC_CONTROL_OR_CONFORMANCE_ADDITION"
+    },
+    {
+      "change_type": "ADDED",
+      "new_sha256": "821410f565c43f29a7ea617fead7540bf0223ee53a79b6c3e686f429df9d4d59",
+      "old_sha256": null,
+      "path": "CURRENT_CASE_ROLE5_INTAKE_GATE_v1_0_1.json",
+      "semantic_change_status": "NONSEMANTIC_CONTROL_OR_CONFORMANCE_ADDITION"
+    },
+    {
+      "change_type": "ADDED",
+      "new_sha256": "11644b22f6854dd035de65736397c4ba56c5038d3941aedc8ec58000da2a978f",
+      "old_sha256": null,
+      "path": "FIXTURES/role5_gate_truth_table_v1_0_1.json",
+      "semantic_change_status": "NONSEMANTIC_CONTROL_OR_CONFORMANCE_ADDITION"
+    },
+    {
+      "change_type": "ADDED",
+      "new_sha256": "a5a0c7a1d521ed27bb4129703400500130f3fc58023d60813237253ffa5ff282",
+      "old_sha256": null,
+      "path": "verify_reconciliation_gate_correction_v1.py",
+      "semantic_change_status": "NONSEMANTIC_CONTROL_OR_CONFORMANCE_ADDITION"
+    }
+  ],
+  "fetchback_verified": true,
+  "next_room": "ROLE_4_PROJECT_GOVERNANCE_AND_CROSS_ROOM_COORDINATION_AUTHORITY",
+  "observer_receipts_changed": false,
+  "observer_reexecution_performed": false,
+  "operation_id": "H_EARTH_C2_R1_IMI_V4_RECONCILIATION_GATE_LOGIC_CORRECTION_001",
+  "package_file_count": 44,
+  "package_manifest_sha256": "542b882eb51e6b30cba5266cf5e8781c3585df52292e74e7adf29b7d00621e7b",
+  "package_sha256": "e206ba9999b743525825e3601daabb1c77d6346c77144d462e44f2b5ccf4fe2c",
+  "package_size_bytes": 14831861,
+  "pr_512_mutation_or_merge": false,
+  "product_mutation": false,
+  "receipt_rescoring_performed": false,
+  "receipt_sha256": "32a96c8fd73dc6ac1a67686a81e8ef2d5fc02337d565824ed247e60ad2bae386",
+  "result": "BOUNDED_RECONCILIATION_GATE_CORRECTION_SUCCESSOR_COMPLETE",
+  "role3_reexecution": false,
+  "role5_execution": false,
+  "source_package_sha256": "5193b73129d75ce167ec62ba89115f916ffbcb7b837f0935ef828b2d62d2f6d0",
+  "successor_package_id": "H_EARTH_C2_R1_IMI_V4_ROUND_COMPLETION_INSTRUMENTATION_MASTER_PACKET_v1_0_1",
+  "successor_package_version": "1.0.1",
+  "third_observer_activation": false,
+  "truth_table_fixture_count": 7,
+  "truth_table_fixture_result": "PASS",
+  "user_differential": false,
+  "v4_gap_discovered": false,
+  "v4_semantics_changed": false,
+  "validator_receipt_sha256": "b590cd64198dc50131fb0782b55a73f6aef5224a26aaeeb7e19c522981e92007",
+  "validator_result": "PASS"
+}

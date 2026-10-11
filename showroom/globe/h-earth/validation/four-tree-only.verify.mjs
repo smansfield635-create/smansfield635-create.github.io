@@ -16,6 +16,24 @@ const rendererPath='showroom/globe/h-earth/render/persistent-live-renderer.run8e
 const allowed=new Set(['P2_TREE_A_03','P2_TREE_A_06','P2_TREE_A_08','P2_TREE_A_11']);
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const digest=obj=>hash(JSON.stringify(obj));
+// Gen2651 source-bound optional grass-transition qualification. The original
+// tree-only default continues to require exact non-tree byte identity.
+const grassTransitionReceiptPath='h-earth-3d/experience-anchor/receipts/h-earth-woodland-grass-ecotone-20261010.receipt.json';
+const grassTransitionFile=path.join(root,grassTransitionReceiptPath);
+const scopedReceipt=fs.existsSync(grassTransitionFile)?JSON.parse(fs.readFileSync(grassTransitionFile,'utf8')):null;
+const scopedGrassTransition=scopedReceipt?.operationId==='H_EARTH_WOODLAND_CLEARING_GRASS_ECOTONE_20261010_001'&&
+  scopedReceipt?.referenceMaterial?.intentionalGrassTransition===true;
+if(scopedReceipt&&!scopedGrassTransition)throw new Error('GRASS_TRANSITION_RECEIPT_NOT_AUTHORIZED');
+if(scopedGrassTransition){
+  const sourcePath='showroom/globe/h-earth/render/woodland-clearing-trial.js';
+  const expected=scopedReceipt.experienceFiles?.find(f=>f.path===sourcePath)?.sha256;
+  assert.equal(expected,hash(fs.readFileSync(path.join(root,sourcePath))),'GRASS_TRANSITION_EXACT_SHA_MISMATCH');
+  assert.equal(scopedReceipt.referenceMaterial.originalGrassBlob,'db2c7d2e132743e0ced34444dd2272ac5eba24ce','GRASS_TRANSITION_ORIGINAL_SOURCE_ID_MISMATCH');
+  assert.equal(scopedReceipt.referenceMaterial.parentMaterialHead,'46de47cd86b9215e0ae82f9b8e6e252331fa9bdc','GRASS_TRANSITION_MATERIAL_PARENT_MISMATCH');
+  assert.equal(scopedReceipt.referenceMaterial.approvedFourTreeGeometryBlob,'c26247dcb69cb52c968fcd3ef6c2626eaa577d03','GRASS_TRANSITION_APPROVED_TREE_ID_MISMATCH');
+  assert.equal(scopedReceipt.limits?.releaseEligible,false,'GRASS_TRANSITION_RELEASE_AUTHORITY_FORBIDDEN');
+}
+
 assert.equal(hash(fs.readFileSync(path.join(root,treePath))),'15ef7838a2c47ad0ef219b57da80373d8ba48ebb3bda271bcf7cdaa0c23a3e36','APPROVED_TREE_SOURCE_CHANGED');
 const source=fs.readFileSync(path.join(root,builderPath),'utf8');
 const renderer=fs.readFileSync(path.join(root,rendererPath),'utf8');
@@ -69,19 +87,74 @@ try {
   assert(before&&after,'APPROVED_TREE_MISSING:'+id);
   for(const kind of ['BARK','CANOPY'])assert.equal(digest(objectPart(prior,before,kind)),digest(objectPart(current,after,kind)),'APPROVED_TREE_GEOMETRY_DRIFT:'+id+':'+kind);
  }
- for(const kind of ['GRASS','ROCK']){
+ // Strictly preserve rock vertices, indices, colors and manifest in ALL modes.
+ for(const kind of ['ROCK']){
   const a=primitive(prior,kind),b=primitive(current,kind);
   assert.equal(digest(a.geometry.vertices),digest(b.geometry.vertices),'NON_TREE_VERTEX_DRIFT:'+kind);
   assert.equal(digest(a.geometry.indices),digest(b.geometry.indices),'NON_TREE_INDEX_DRIFT:'+kind);
   assert.equal(digest(a.renderMaterial.vertexRgba),digest(b.renderMaterial.vertexRgba),'NON_TREE_COLOR_DRIFT:'+kind);
  }
- const oldOther=prior.manifest.filter(p=>p.kind!=='TREE');
- const newOther=current.manifest.filter(p=>p.kind!=='TREE');
- assert.equal(digest(oldOther),digest(newOther),'NON_TREE_MANIFEST_DRIFT');
+ let grassTransitionMetrics=null;
+ if(scopedGrassTransition){
+  // The admitted Gen2651 change is ONLY the published clearing's 8m grass
+  // ecotone; all other grass objects remain intact after index rebasing.
+  const grassOld=primitive(prior,'GRASS'),grassNew=primitive(current,'GRASS');
+  const before=prior.manifest.filter(p=>p.kind==='GRASS');
+  const after=current.manifest.filter(p=>p.kind==='GRASS');
+  const oldMap=new Map(before.map(p=>[p.id,p])),newMap=new Map(after.map(p=>[p.id,p]));
+  const B={minX:-155.40267987050615,maxX:-123.40267987050615,minZ:-226.74616902099837,maxZ:-194.74616902099837};
+  const edge=m=>Math.min(m.x-B.minX,B.maxX-m.x,m.z-B.minZ,B.maxZ-m.z);
+  const comparable=m=>{
+   const {grassVertexStart,rootPoints,leafOrigins,...rest}=m;
+   const normalize=arr=>arr?.map(({vertexIndex,...r})=>({vertexIndex:vertexIndex-grassVertexStart,...r}));
+   return {...rest,...(rootPoints?{rootPoints:normalize(rootPoints)}:{}),...(leafOrigins?{leafOrigins:normalize(leafOrigins)}:{})};
+  };
+  let added=0,removed=0,preserved=0,maxChangedDistance=0;
+  for(const [id,entry] of oldMap){
+   const next=newMap.get(id);
+   if(!next){removed++;assert(edge(entry)>=0&&edge(entry)<8.6,'GRASS_OUTSIDE_FEATHER_REMOVED:'+id);continue;}
+   assert.equal(digest(comparable(entry)),digest(comparable(next)),'UNCHANGED_GRASS_METADATA_DRIFT:'+id);
+   for(const [label,beforeData,afterData] of [
+     ['VERTICES',grassOld.geometry.vertices,grassNew.geometry.vertices],
+     ['COLORS',grassOld.renderMaterial.vertexRgba,grassNew.renderMaterial.vertexRgba],
+     ['ATTRIBUTES',grassOld.renderMaterial.clearingAttributes,grassNew.renderMaterial.clearingAttributes]
+   ])assert.equal(
+     digest(beforeData.slice(entry.grassVertexStart,entry.grassVertexStart+entry.grassVertexCount)),
+     digest(afterData.slice(next.grassVertexStart,next.grassVertexStart+next.grassVertexCount)),
+     'UNCHANGED_GRASS_GEOMETRY_DRIFT:'+id+':'+label
+   );
+   preserved++;
+  }
+  for(const [id,entry] of newMap)if(!oldMap.has(id)){
+   added++;
+   assert(edge(entry)>=0&&edge(entry)<8.6,'GRASS_OUTSIDE_FEATHER_ADDED:'+id);
+   assert(id.startsWith('MEADOW_COVER_')||id.startsWith('CONNECTED_COVER_'),'NON_NATIVE_GRASS_INJECTED:'+id);
+  }
+  // Source-measured deterministic limits, not a generalized permission for
+  // arbitrary vegetation changes. All approved tree geometry was checked above.
+  assert.equal(grassNew.geometry.vertices.length,54804,'GRASS_TRANSITION_VERTEX_COUNT_MISMATCH');
+  assert.equal(grassNew.geometry.indices.length/3,41692,'GRASS_TRANSITION_TRIANGLE_COUNT_MISMATCH');
+  assert.equal(current.diagnostics.triangleCount,60652,'SECTOR_TRIANGLE_COUNT_MISMATCH');
+  assert.equal(after.filter(p=>p.id.startsWith('CLEARING_GRASS_')).length,501,'CLEARING_DENSITY_TAPER_MISMATCH');
+  assert(added>0&&removed>0&&grassNew.geometry.indices.length<grassOld.geometry.indices.length,'GRASS_TRANSITION_BUDGET_NOT_BOUNDED');
+  assert.equal(digest(prior.manifest.filter(p=>p.kind==='ROCK')),digest(current.manifest.filter(p=>p.kind==='ROCK')),'NON_GRASS_ROCK_MANIFEST_DRIFT');
+  grassTransitionMetrics={scope:'GEN2651_INTENTIONAL_GRASS_ONLY',removed,added,preserved,vertices:grassNew.geometry.vertices.length,triangles:grassNew.geometry.indices.length/3,sectorTriangles:current.diagnostics.triangleCount,protection:'TREE_BARK_CANOPY_AND_ROCK_IDENTICAL'};
+ }else{
+  // Preserve original four-tree-only invariant exactly when no independently
+  // admitted source-bound grass-transition receipt is provided.
+  const grassA=primitive(prior,'GRASS'),grassB=primitive(current,'GRASS');
+  assert.equal(digest(grassA.geometry.vertices),digest(grassB.geometry.vertices),'NON_TREE_VERTEX_DRIFT:GRASS');
+  assert.equal(digest(grassA.geometry.indices),digest(grassB.geometry.indices),'NON_TREE_INDEX_DRIFT:GRASS');
+  assert.equal(digest(grassA.renderMaterial.vertexRgba),digest(grassB.renderMaterial.vertexRgba),'NON_TREE_COLOR_DRIFT:GRASS');
+  const oldOther=prior.manifest.filter(p=>p.kind!=='TREE');
+  const newOther=current.manifest.filter(p=>p.kind!=='TREE');
+  assert.equal(digest(oldOther),digest(newOther),'NON_TREE_MANIFEST_DRIFT');
+ }
  const report={schema:'H_EARTH_FOUR_TREE_ONLY_VERIFICATION_v1',result:'PASS',
   sourceBaseline:baseline,approvedTreeIds:[...allowed],approvedCount:newTrees.length,
   oldVisibleTreeCount:0,oldConstructedTreeCount:oldTrees.length,
-  approvedGeometryUnchanged:true,grassUnchanged:true,rockUnchanged:true,
+  approvedGeometryUnchanged:true,grassUnchanged:!scopedGrassTransition,rockUnchanged:true,
+  intentionalGrassTransition:scopedGrassTransition,grassTransitionMetrics,
   deferredConiferGpuDrawExcluded:true,
   limits:['ACTUAL_BROWSER_GPU_SCREENSHOT_REQUIRED','PHONE_FRAME_TIMING_REQUIRES_DEVICE'],
   verifiedCandidate:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim()};

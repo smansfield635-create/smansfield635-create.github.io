@@ -15969,6 +15969,50 @@
       "scopeHash": "f39624852814e0295b1d3e222a99042365461eefc86d94ba24e45f834f2ae48b",
       "state": "ADMITTED_LOCKED"
     },
+    "f3969a422f568f9f10d1e8e4a9352cf973a63b269e51b4395fd2afe794fd0bb8": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8a35c7d3be1aec6b73d303ecba1acdd57f132d76",
+          "lockGeneration": 2651,
+          "lockScope": "H_EARTH:WOODLAND_CLEARING_GRASS_ECOTONE:OCT10_2026:V1",
+          "operationId": "H_EARTH_WOODLAND_CLEARING_GRASS_ECOTONE_20261010_001",
+          "procedureLocatorDigest": "b7e3f9198ebb57d7470242da7d02899f572eaf2ddc4333aa6574bdb37d4d8c1f",
+          "requestDigest": "3bb89df0adb3dcaadff46414149a3bb20aa6fa1e6a46c47105d02eebbf4a70ed",
+          "scopeHash": "f3969a422f568f9f10d1e8e4a9352cf973a63b269e51b4395fd2afe794fd0bb8"
+        },
+        "bindingDigest": "31362edc2ca0a1818c940ee727e57f5581754841e16a567cb3fc3014fe8369dd",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "ef256d1b1ee59f5bcb80646a414e2957a663b4ca6f5ccf50067947131f4b052e",
+          "commentId": 6105455335,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6100,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38111864609,
+          "workflowSha": "8a35c7d3be1aec6b73d303ecba1acdd57f132d76"
+        },
+        "lineageAnchorCommitSha": "81cb29613ad265bfe472175c23734ff30de17ea8",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8a35c7d3be1aec6b73d303ecba1acdd57f132d76",
+      "lockGeneration": 2651,
+      "lockScope": "H_EARTH:WOODLAND_CLEARING_GRASS_ECOTONE:OCT10_2026:V1",
+      "operationId": "H_EARTH_WOODLAND_CLEARING_GRASS_ECOTONE_20261010_001",
+      "procedureLocatorDigest": "b7e3f9198ebb57d7470242da7d02899f572eaf2ddc4333aa6574bdb37d4d8c1f",
+      "released": false,
+      "requestDigest": "3bb89df0adb3dcaadff46414149a3bb20aa6fa1e6a46c47105d02eebbf4a70ed",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f3969a422f568f9f10d1e8e4a9352cf973a63b269e51b4395fd2afe794fd0bb8",
+      "state": "ADMITTED_LOCKED"
+    },
     "f3e7d9b79038dc499fcdea2acfe643a64e9a6e372f8a9dddecf4e391eeba8dda": {
       "governingHead": "8fa80e02fd1cd1722a8532aa58357ae8038ab40f",
       "lockGeneration": 260,
@@ -16520,7 +16564,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2650,
+  "lockGeneration": 2651,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

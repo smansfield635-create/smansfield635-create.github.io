@@ -60,9 +60,7 @@ const t4Requested = queryParameters.get(T4_QUERY_KEY) === T4_QUERY_VALUE;
 const cp2LiveDifferentialRequested =
   queryParameters.get(CP2_LIVE_DIFFERENTIAL_QUERY_KEY) ===
   CP2_LIVE_DIFFERENTIAL_QUERY_VALUE;
-const selectedRendererPath = t4Requested
-  ? MICRORELIEF_RENDERER_PATH
-  : rendererCustodyRequested
+const selectedRendererPath = rendererCustodyRequested
   ? RENDERER_CUSTODY_RENDERER_PATH
   : waterIndexSpanRequested
   ? WATER_INDEX_SPAN_RENDERER_PATH

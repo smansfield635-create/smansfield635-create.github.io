@@ -1,0 +1,28 @@
+name: H-Earth Meso M1 Qualification v1
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prove T4 additive-only renderer authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE="preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth"
+          BIND="$BASE/diagnostic/run8e-r3d/live-gpu-binding.js"
+          DRAW="$BASE/render/t4-post-terrain-draw-v1.js"
+          DATA="$BASE/render/t4-frozen-placement-v1.js"
+          grep -q "const t4Requested = queryParameters.get(T4_QUERY_KEY) === T4_QUERY_VALUE" "$BIND"
+          grep -q "const selectedRendererPath = rendererCustodyRequested" "$BIND"
+          ! grep -q "const selectedRendererPath = t4Requested" "$BIND"
+          grep -q "t4Requested ? createHEarthT4PostTerrainDraw" "$BIND"
+          grep -q "postTerrainDraw: t4Extension?.drawAfterTerrain" "$BIND"
+          grep -q '"total":647' "$DATA"
+          grep -q '"TUFT":617' "$DATA"
+          grep -q '"ROCK":30' "$DATA"
+          ! grep -q "bindFramebuffer" "$DRAW"
+          ! grep -q "presentColorFrame" "$DRAW"

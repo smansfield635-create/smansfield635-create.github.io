@@ -1,0 +1,2 @@
+Execution-only callback carrier for H-Earth canonical vegetation playback manifest materialization intake.
+Do not merge.

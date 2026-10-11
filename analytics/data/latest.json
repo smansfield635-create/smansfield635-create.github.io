@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-11T19:28:26Z",
+  "generatedAt": "2026-10-11T20:33:12Z",
   "window30d": {
-    "start": "2026-09-11T19:28:26Z",
-    "end": "2026-10-11T19:28:26Z"
+    "start": "2026-09-11T20:33:12Z",
+    "end": "2026-10-11T20:33:12Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 97
+      "pageLoads": 96
     },
     {
       "date": "2026-10-05",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 65
+      "pageLoads": 66
     }
   ],
   "summary": {
-    "pageLoads": 5374,
+    "pageLoads": 5294,
     "botPageLoads": 2023,
-    "nonBotPageLoads": 3351
+    "nonBotPageLoads": 3271
   },
   "referrers": [
     {
@@ -140,7 +140,7 @@
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2103,
+      "pageLoads": 2023,
       "visits": 0
     },
     {
@@ -187,7 +187,7 @@
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 582,
+      "pageLoads": 502,
       "visits": 22
     },
     {

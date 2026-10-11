@@ -57,11 +57,13 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     pitchDegreesPerSecond: 54,
     travelWorldUnitsPerSecond: 7.5,
     zoomDegreesPerSecond: 30,
-    maximumElapsedSeconds: 0.05
+    maximumElapsedSeconds: 0.05,
+    maximumAccumulatedSeconds: 0.15
   });
 
   const counters = {
     eventListenerCount: 0,
+    visibilityEventListenerCount: 0,
     pointerDownCount: 0,
     pointerMoveCount: 0,
     pointerUpCount: 0,
@@ -114,6 +116,7 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     if (activeIntent !== 'NONE') counters.releaseTerminationCount += 1;
     activeIntent = 'NONE';
     activeStrength = 0;
+    lastFrameTime = null;
     lattice.reset();
   };
 
@@ -152,10 +155,11 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     proposals.push(record);
     if (proposals.length > 128) proposals.shift();
     if (onProposal) {
+      const proposalNavigationState = navigationState;
       counters.deferredCommitCount += 1;
       queueMicrotask(() => {
         counters.deferredCommitCount -= 1;
-        if (!destroyed) onProposal(record, navigationState);
+        if (!destroyed) onProposal(record, proposalNavigationState);
       });
     }
     return record;
@@ -248,16 +252,22 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     if (lastFrameTime === null) lastFrameTime = timestamp;
     const rawElapsed = Math.max(0, (timestamp - lastFrameTime) / 1000);
     lastFrameTime = timestamp;
-    const elapsedSeconds = Math.min(rawElapsed, rates.maximumElapsedSeconds);
-    if (rawElapsed > rates.maximumElapsedSeconds) counters.boundedElapsedClampCount += 1;
-    const intent = intentForFrame(elapsedSeconds);
-    if (intent && elapsedSeconds > 0) {
+    const elapsedSeconds = Math.min(rawElapsed, rates.maximumAccumulatedSeconds);
+    if (rawElapsed > rates.maximumAccumulatedSeconds) counters.boundedElapsedClampCount += 1;
+    if (activeIntent !== 'NONE' && elapsedSeconds > 0 && !globalThis.document?.hidden) {
       counters.activeIntentFrameCount += 1;
-      emitProposal(intent,
-        activeIntent.startsWith('MOVE_') ? 'TWO_FINGER_TRAVEL' :
-          activeIntent.startsWith('ZOOM_') ? 'PINCH_ZOOM' : 'ONE_FINGER_LOOK',
-        { timestamp, rawElapsedSeconds: rawElapsed, appliedElapsedSeconds: elapsedSeconds }
-      );
+      // CP3A bounded substeps retain ordinary elapsed time without exceeding
+      // the existing per-proposal navigation and collision limits.
+      const substepCount = Math.ceil(elapsedSeconds / rates.maximumElapsedSeconds);
+      const substepSeconds = elapsedSeconds / substepCount;
+      for (let substepIndex = 0; substepIndex < substepCount; substepIndex += 1) {
+        emitProposal(intentForFrame(substepSeconds),
+          activeIntent.startsWith('MOVE_') ? 'TWO_FINGER_TRAVEL' :
+            activeIntent.startsWith('ZOOM_') ? 'PINCH_ZOOM' : 'ONE_FINGER_LOOK',
+          { timestamp, rawElapsedSeconds: rawElapsed, appliedElapsedSeconds: substepSeconds,
+            frameAppliedElapsedSeconds: elapsedSeconds, substepIndex, substepCount }
+        );
+      }
     }
     frameHandle = requestAnimationFrame(animationStep);
   };
@@ -281,6 +291,7 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     const previousLock = lattice.getLock();
     const classified = lattice.classify(sample);
     if (lattice.getLock() !== previousLock) counters.gestureLockTransitionCount += 1;
+    if (activeIntent === 'NONE' && classified !== 'NONE') lastFrameTime = performance.now();
     activeIntent = classified;
     activeStrength = classified.startsWith('ZOOM_')
       ? clamp(Math.abs(sample.normalizedDistanceDelta) * 10, 0.2, 1)
@@ -331,6 +342,17 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
       : { action, magnitude: clamp(Math.abs(event.deltaY) / 70, 1, 10) },
     'WHEEL_DIAGNOSTIC_EQUIVALENT');
   };
+
+  const onVisibilityChange = () => {
+    releaseIntent();
+    pointers.clear();
+    resetBaseline();
+  };
+  const visibilityTarget = globalThis.document;
+  if (typeof visibilityTarget?.addEventListener === 'function') {
+    visibilityTarget.addEventListener('visibilitychange', onVisibilityChange);
+    counters.visibilityEventListenerCount = 1;
+  }
 
   const bindings = [
     ['pointerdown', onPointerDown, { passive: false }],
@@ -393,6 +415,7 @@ export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal =
     destroyed = true;
     if (frameHandle !== null) cancelAnimationFrame(frameHandle);
     for (const [type, listener, options] of bindings) surface.removeEventListener(type, listener, options);
+    visibilityTarget?.removeEventListener?.('visibilitychange', onVisibilityChange);
     pointers.clear();
     preparedRestores.clear();
     releaseIntent();

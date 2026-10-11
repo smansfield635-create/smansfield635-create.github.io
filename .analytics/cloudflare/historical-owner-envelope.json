@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-11T04:39:40Z",
+  "generatedAt": "2026-10-11T05:34:28Z",
   "window": {
-    "start": "2026-07-13T04:39:40Z",
-    "end": "2026-10-11T04:39:40Z"
+    "start": "2026-07-13T05:34:28Z",
+    "end": "2026-10-11T05:34:28Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -222,13 +222,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,

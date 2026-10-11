@@ -1,0 +1,13 @@
+{
+  "schema": "METHODS_MINIMUM_REAL_3D_PROOF_FRESH_VERIFIER_RECEIPT_v1",
+  "status": "PASS",
+  "validatedCandidateHead": "fba5239ce97a35cbebd1732c91b086d2a93b9f93",
+  "workflowRun": 31068588197,
+  "workflowJob": 92511620393,
+  "artifactId": 8954772872,
+  "artifactDigest": "sha256:7c1522e303c702dc59c0623a6e885d06d7ab5cd65bae30a0fcb03d6235655dd2",
+  "fingerprint": "51575d2a45db96ae2cfd1f370d09e987fdbbf78bcefec12d0da62d23519efd4c",
+  "requiredEquality": "CANONICAL_FINGERPRINT_EXACT",
+  "result": "PASS",
+  "errors": []
+}

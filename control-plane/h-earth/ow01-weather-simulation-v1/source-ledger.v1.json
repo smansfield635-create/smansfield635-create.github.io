@@ -1,0 +1,95 @@
+{
+  "schema": "H_EARTH_AUDRALIA_WEATHER_SOURCE_LEDGER_v1",
+  "status": "FROZEN_RESEARCH_PROVENANCE",
+  "sources": [
+    {
+      "id": "WMO_CLOUD_GENERA",
+      "authority": "World Meteorological Organization International Cloud Atlas",
+      "url": "https://cloudatlas.wmo.int/en/clouds-genera.html",
+      "use": "ten canonical cloud genera"
+    },
+    {
+      "id": "WMO_CLOUD_LEVELS",
+      "authority": "World Meteorological Organization International Cloud Atlas",
+      "url": "https://cloudatlas.wmo.int/en/clouds-definitions.html",
+      "use": "low/middle/high altitude ranges by latitude and vertical-extent exceptions"
+    },
+    {
+      "id": "WMO_CB_LIFECYCLE",
+      "authority": "World Meteorological Organization International Cloud Atlas",
+      "url": "https://cloudatlas.wmo.int/en/explanatory-remarks-and-special-clouds-cumulonimbus.html",
+      "use": "cumulonimbus ice development, anvil/outflow and derived cloud families"
+    },
+    {
+      "id": "NOAA_GFDL_FV3",
+      "authority": "NOAA Geophysical Fluid Dynamics Laboratory",
+      "url": "https://www.gfdl.noaa.gov/fv3/",
+      "use": "finite-volume cubed-sphere atmospheric-dynamics precedent and computational-efficiency principle"
+    },
+    {
+      "id": "NOAA_GFDL_FV3_GRIDS",
+      "authority": "NOAA Geophysical Fluid Dynamics Laboratory",
+      "url": "https://www.gfdl.noaa.gov/fv3/fv3-grids/",
+      "use": "gnomonic cubed-sphere grid uniformity and cube-edge considerations"
+    },
+    {
+      "id": "WILLIAMSON_1992_SHALLOW_WATER_TESTS",
+      "authority": "Journal of Computational Physics",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0021999105800166",
+      "doi": "10.1016/S0021-9991(05)80016-6",
+      "use": "standard spherical shallow-water numerical validation cases"
+    },
+    {
+      "id": "NOAA_FV3_IDEALIZED_TESTS",
+      "authority": "NOAA Geophysical Fluid Dynamics Laboratory",
+      "url": "https://www.gfdl.noaa.gov/fv3/fv3-idealized-tests/",
+      "use": "orographic, baroclinic and atmospheric-dynamical-core validation precedent"
+    },
+    {
+      "id": "NOAA_AOML_VERTICAL_SHEAR",
+      "authority": "NOAA Atlantic Oceanographic and Meteorological Laboratory",
+      "url": "https://www.aoml.noaa.gov/impact-of-wind-shear-on-tropical-cyclone-intensity/",
+      "use": "tropical-cyclone wind-shear, heat/moisture and intensity-structure interaction"
+    },
+    {
+      "id": "GUERRILLA_NUBIS",
+      "authority": "Guerrilla Games",
+      "url": "https://www.guerrilla-games.com/read/nubis-authoring-real-time-volumetric-cloudscapes-with-the-decima-engine",
+      "use": "production cloud-density authoring, weather-scale control and real-time volumetric strategy"
+    },
+    {
+      "id": "GUERRILLA_NUBIS_EVOLVED",
+      "authority": "Guerrilla Games",
+      "url": "https://www.guerrilla-games.com/read/nubis-evolved",
+      "use": "close-up/cloud-interior volumetric representation precedent"
+    },
+    {
+      "id": "EPIC_VOLUMETRIC_CLOUDS",
+      "authority": "Epic Games",
+      "url": "https://dev.epicgames.com/documentation/unreal-engine/volumetric-cloud-component-in-unreal-engine",
+      "use": "volumetric ray-marching, atmospheric integration, empty-space/performance strategy"
+    },
+    {
+      "id": "PROJECT_TC_RADAR_PROTOCOL",
+      "authority": "Project frozen protocol",
+      "path": "research/route-operator-platform-v1/registered-challenges/ucic-hurricane-mechanistic-early-warning-v1/raw-tc-radar-mechanistic-protocol.v1.json",
+      "ref": "2fe335c165a0de004980e429b60830d76e4ce6bc",
+      "use": "five raw tropical-cyclone structural relations and frozen claim boundary"
+    },
+    {
+      "id": "PROJECT_TC_RADAR_QC_CORRECTED_ADJUDICATION",
+      "authority": "Project canonical scientific-delta adjudication",
+      "path": "control-plane/whole-estate/first-safe-vertical-case-selection-v1/hurricane-scientific-delta-adjudication.v1.json",
+      "ref": "main",
+      "use": "authoritative QC-corrected adverse empirical result and permitted future methods/model reuse boundary"
+    },
+    {
+      "id": "PROJECT_ARCHITECTURE_FREEZE",
+      "authority": "Issue 746",
+      "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/746",
+      "use": "governing weather/cloud architecture and construction gates"
+    }
+  ],
+  "sourceUseLaw": "SCIENTIFIC_SOURCES_CONTROL_PHYSICAL_CONSTRAINTS_PRODUCTION_RENDERING_SOURCES_CONTROL_REPRESENTATION_STRATEGY_PROJECT_EVIDENCE_CONTROLS_INTERNAL_CLAIM_BOUNDARIES",
+  "audraliaSpecificValidationStillRequired": true
+}

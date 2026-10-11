@@ -1,0 +1,94 @@
+name: H-Earth C3C3R5 S26 Page Excellence Baseline Fast
+
+on:
+  push:
+    branches:
+      - handoff/h-earth-c3c3r5-s26-intake-carrier-20260817
+    paths:
+      - '.github/workflows/h-earth-c3c3r5-s26-page-excellence-fast-20260817.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  page-excellence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Mint private qualification token
+        id: token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+      - name: Check out exact private qualification head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 4c19e9ba783767f9324ab10df8a8541479f26c86
+          token: ${{ steps.token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Install exact Playwright and Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          npm install --no-save playwright@1.55.0
+          npx playwright install chromium
+      - name: Execute exact baseline Page Excellence
+        shell: bash
+        run: |
+          set -euo pipefail
+          work="$RUNNER_TEMP/page-excellence"
+          mkdir -p "$work"
+          cd "$GITHUB_WORKSPACE/private-control-plane"
+          test "$(git rev-parse HEAD^{commit})" = '4c19e9ba783767f9324ab10df8a8541479f26c86'
+          cat > "$work/contract.json" <<'JSON'
+          {
+            "schema":"CROSS_REPOSITORY_PAGE_EXCELLENCE_ASSESSMENT_CONTRACT_v1",
+            "projectId":"H_EARTH",
+            "publicRepository":"smansfield635-create/smansfield635-create.github.io",
+            "publicBaseSha":"2e170df314b837c193b7223fc2d6567052905a17",
+            "publicCandidateSha":"2152ad18c1691c4056e9ae39795ad44228dbdc19",
+            "entryPath":"/showroom/globe/h-earth/",
+            "implementationClass":"EXISTING_CONSTRUCT_ADOPTION",
+            "classificationRationale":"Preserve and adapt exact qualified C3C3R5 planetary camera, distant-context, and persistent WebGL renderer architecture; no replacement world or renderer system.",
+            "existingConstructSearchScopes":["showroom/globe/h-earth/render/","h-earth-3d/"],
+            "productPaths":[
+              {"path":"showroom/globe/h-earth/render/functional-landscape-frame.js","gitBlobSha":"1ea05d368d3ee50364b279f0aa95d496906338c4"},
+              {"path":"showroom/globe/h-earth/render/geometry-distant-context.js","gitBlobSha":"11b3fb2bf061fcfe52d10eda14acf53d5af085d2"},
+              {"path":"showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js","gitBlobSha":"78bfcac747a3482185041d2ab416ce881d831a37"},
+              {"path":"showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js","gitBlobSha":"621836a6a3ba505beef58abe5e35cd6787b36c0e"},
+              {"path":"showroom/globe/h-earth/render/run8e-successor-environment.js","gitBlobSha":"796c9f97ee56ef23703e3b997fad7e42d57b7c3e"}
+            ],
+            "sourceConstructs":[
+              {"sourceId":"C3C3R5_PLANET_RELATIVE_FRAME","repository":"smansfield635-create/smansfield635-create.github.io","path":"showroom/globe/h-earth/render/functional-landscape-frame.js","commitSha":"2152ad18c1691c4056e9ae39795ad44228dbdc19","gitBlobSha":"1ea05d368d3ee50364b279f0aa95d496906338c4"},
+              {"sourceId":"C3C3R5_DISTANT_CONTEXT","repository":"smansfield635-create/smansfield635-create.github.io","path":"showroom/globe/h-earth/render/geometry-distant-context.js","commitSha":"2152ad18c1691c4056e9ae39795ad44228dbdc19","gitBlobSha":"11b3fb2bf061fcfe52d10eda14acf53d5af085d2"},
+              {"sourceId":"C3C3R5_PERSISTENT_WEBGL_RENDERER","repository":"smansfield635-create/smansfield635-create.github.io","path":"showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js","commitSha":"2152ad18c1691c4056e9ae39795ad44228dbdc19","gitBlobSha":"78bfcac747a3482185041d2ab416ce881d831a37"},
+              {"sourceId":"C3C3R5_SELECTED_RENDERER_ADAPTER","repository":"smansfield635-create/smansfield635-create.github.io","path":"showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js","commitSha":"2152ad18c1691c4056e9ae39795ad44228dbdc19","gitBlobSha":"621836a6a3ba505beef58abe5e35cd6787b36c0e"}
+            ],
+            "adoptionMatrix":[
+              {"sourceId":"C3C3R5_PLANET_RELATIVE_FRAME","adoptedCapabilities":["PLANET_RELATIVE_CAMERA_AND_LOCAL_TANGENT_PATCH"],"adaptations":["PRESERVE_CAMERA_COMPOSITION_AND_GEOGRAPHY_IDENTITIES"],"exclusions":["NO_NAVIGATION_OR_COLLISION_EXPANSION"]},
+              {"sourceId":"C3C3R5_DISTANT_CONTEXT","adoptedCapabilities":["WORLD_SPACE_DISTANT_CONTINUATION"],"adaptations":["THREE_ZONE_MONOTONIC_COST_LOD","SPARSE_HORIZON_SILHOUETTES_AND_ATMOSPHERIC_OCCLUSION"],"exclusions":["NO_OPPOSING_EAST_NORTHEAST_LANDMASS","NO_HAZE_ONLY_BOUNDARY"]},
+              {"sourceId":"C3C3R5_PERSISTENT_WEBGL_RENDERER","adoptedCapabilities":["PERSISTENT_WEBGL2_RENDERING_AND_TIMING_COUNTERS"],"adaptations":["ACTIVE_DRAG_BOUNDED_CHEAP_TIER","DETERMINISTIC_FULL_QUALITY_RECOVERY"],"exclusions":["NO_PERMANENT_QUALITY_DOWNGRADE"]},
+              {"sourceId":"C3C3R5_SELECTED_RENDERER_ADAPTER","adoptedCapabilities":["SINGLE_WORLD_SPACE_RENDERER_AUTHORITY"],"adaptations":["PRESERVE_NO_PARALLEL_VIEWPORT_HORIZON_AUTHORITY"],"exclusions":["NO_SCREEN_SPACE_FAKE_BOUNDARY"]}
+            ],
+            "prohibitedSubstituteArchitectures":["NEW_PARALLEL_RENDERER","SCREEN_SPACE_HORIZON_OR_FOG_AS_WORLD_AUTHORITY","FULL_COST_DISTANT_16X16_TERRAIN","NAVIGABLE_HORIZON_FIELD","GEOGRAPHY_SHRINK_OR_RELOCATION_FOR_PERFORMANCE"],
+            "requiredRuntimeConditions":["REAL_3D_ENVIRONMENT","PRIMARY_DIRECT_MANIPULATION","IDENTICAL_BASELINE_SUCCESSOR_ONE_FINGER_TRACE","PHONE_TABLET_DESKTOP_EQUIVALENCE","POST_INTERACTION_FULL_QUALITY_RECOVERY","ZERO_HORIZON_INTERACTION_AUTHORITY","OPEN_OCEAN_TOPOLOGY_PRESERVED"]
+          }
+          JSON
+          node .github/ai-router/universal-page-qualification-orchestrator/cross-repository-page-excellence-runner.v1.mjs --contract "$work/contract.json" --output "$work/receipt.json"
+          cat "$work/receipt.json"
+          node --input-type=module - "$work/receipt.json" <<'NODE'
+          import fs from 'node:fs';
+          const r=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          if(r.result!=='PASS_CLOSED') throw new Error(`PAGE_EXCELLENCE_BASELINE_NONPASS:${r.result}:${r.errorCode??''}`);
+          if(r.candidateSha!=='2152ad18c1691c4056e9ae39795ad44228dbdc19') throw new Error('SUBJECT_SHA_MISMATCH');
+          if(!Array.isArray(r.phaseReceipts)||r.phaseReceipts.length!==4||r.phaseReceipts.some(x=>x.result!=='PASS')) throw new Error('PHASE_RECEIPT_NONPASS');
+          if(r.publicBytesMutated!==false||r.privateInstrumentationCopiedToPublic!==false) throw new Error('READ_ONLY_BOUNDARY_VIOLATED');
+          NODE

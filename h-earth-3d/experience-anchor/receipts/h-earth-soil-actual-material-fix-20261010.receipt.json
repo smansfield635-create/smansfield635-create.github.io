@@ -35,10 +35,10 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "f09fa52c9c96be83a7a30cb619a623c4c110ea2b32be93bfcde19e9e4f2191fb"
+      "sha256": "36ebd62c8c7ce3307fb909297d0c1670027fd53680e882b9b82548f1a4cef5d9"
     }
   ],
-  "continuityReview": "Gen2646 source-level H-Earth anchor continuity only. Replace Gen2644 ineffective outside-ground 16% chroma-only mixture with reference-soil 256x256 source image per-fragment fine-value/chroma calibration, region/moisture/elevation earth colors and bounded normal/roughness on all biome-eligible terrain, with no clearing-distance cutoff. Protected original 32m clearing interior GLSL branch, texture bytes, four approved tree geometry, water/rock/grass/topology/shoreline and runtime pipeline are unchanged. Full browser, multi-region visual, and owner KEEP remain pending. The prior published Gen2644 has been visually rejected by the owner for isolation of its soil box; no publication or merge authorized.",
+  "continuityReview": "Gen2646 bounded source extension to the existing exact far-land continuation primitive (vPrimitiveIndex==uGlobalCoverFarPrimitiveIndex, GPU material role 5) as well as native terrain role 1. Previous Gen2646 first screenshot showed coast terrain gained substantial texture but woodland continuation did not, confirming the renderer's exclusive role-1 branch missed the much larger LAND_SURFACE far continuation. One renderer shader now uses exactly the same biome-eligible textured soil/value/chroma/relief methods on both legitimate ground roles, with explicit far-only physically appropriate roughness/reflectance defaults, preserving other land surface, vegetation, water, protected 32m reference, four approved trees, geometry and all source assets. Exact source shader identity as bound; browser visual and mobile owner KEEP pending, releaseEligible=false.",
   "referenceMaterial": {
     "ownerIssueNumber": 6100,
     "sourceAuditCommentId": 6103950634,
@@ -61,13 +61,19 @@
     "priorPublishedSoilCommit": "1751f9cde5e20f9320be2bc2c113cb6193aa562b",
     "newSoilDetailStrength": "MATERIAL_ALBEDO_AND_NORMAL_RELIEF_WITH_WORLD_SPACE_REGION_VARIANCE",
     "ownerRejectionCommentId": 6104642863,
-    "noExteriorRectangleGate": true
+    "noExteriorRectangleGate": true,
+    "firstCandidateShaderSha256": "f09fa52c9c96be83a7a30cb619a623c4c110ea2b32be93bfcde19e9e4f2191fb",
+    "farLandPrimitiveId": "H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION",
+    "farLandRoleCode": 5,
+    "terrainRoleCode": 1,
+    "farLandIncludedInSameMaterialShader": true
   },
   "limits": {
     "candidateBrowserQualificationPending": true,
     "offReferencePerceptualAcceptPending": true,
     "ownerVisualKeepPending": true,
     "physicalAndroidPerformanceNotYetQualified": true,
-    "releaseEligible": false
+    "releaseEligible": false,
+    "farLandBrowserQualificationPending": true
   }
 }

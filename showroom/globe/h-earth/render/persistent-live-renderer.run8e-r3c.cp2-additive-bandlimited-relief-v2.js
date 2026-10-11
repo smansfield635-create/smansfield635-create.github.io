@@ -493,6 +493,10 @@ void main(){
   float terrainWetnessForLighting=0.0;
   vec3 base=max(vBaseColor.rgb,vec3(0.004));
   float outputAlpha=clamp(vBaseColor.a,0.18,1.0);
+  // Gen2646: authored near terrain AND exact far-land continuation share
+  // one biome-aware soil material; never affect vegetation or water roles.
+  bool worldSoilTerrain=vRoleCode==1u||
+    int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;
 
   // FAR continuation is visual context only; invert the spherical projection
   // before sampling its broad landscape palette. No new roots or access rights.
@@ -524,7 +528,7 @@ void main(){
       float contact=1.0-smoothstep(tree.w,tree.w+0.80,distance(localXZ,tree.xy));
       presentationContact=max(presentationContact,contact*0.28);
     }
-  }else if(vRoleCode==1u){
+  }else if(worldSoilTerrain){
     vec2 world=vWorldPosition.xz;
     float broad=noise2(world*0.035);
     float medium=noise2(world*0.13+vec2(17.0,-9.0));
@@ -647,13 +651,17 @@ void main(){
     palette*=mix(0.94,1.06,triMicro*nearMaterial);
     palette=mix(palette,base,0.34);
 
-    float terrainRoughness=clamp(vMaterialParameters.x,0.04,1.0);
+    float terrainRoughness=vRoleCode==1u?
+      clamp(vMaterialParameters.x,0.04,1.0):0.86;
     terrainRoughnessForLighting=terrainRoughness;
-    float terrainReflectance=clamp(vMaterialParameters.y,0.0,1.0);
+    float terrainReflectance=vRoleCode==1u?
+      clamp(vMaterialParameters.y,0.0,1.0):0.045;
     terrainReflectanceForLighting=terrainReflectance;
-    float terrainWetness=clamp(vMaterialParameters.z,0.0,1.0);
+    float terrainWetness=vRoleCode==1u?
+      clamp(vMaterialParameters.z,0.0,1.0):0.06;
     terrainWetnessForLighting=terrainWetness;
-    float terrainCurvature=clamp(vMaterialParameters.w,0.0,1.0);
+    float terrainCurvature=vRoleCode==1u?
+      clamp(vMaterialParameters.w,0.0,1.0):0.0;
     specularScale=mix(0.28,1.24,terrainReflectance);
     specularScale*=mix(0.78,1.38,terrainWetness);
     specularScale*=mix(0.92,1.10,rockExposure);
@@ -928,7 +936,7 @@ void main(){
     1.0-max(dot(shadingNormal,viewDirection),0.0),
     2.2
   );
-  float rim=vRoleCode==1u
+  float rim=worldSoilTerrain
     ?mix(
       geometricRim,
       reliefRim,
@@ -936,7 +944,7 @@ void main(){
     )
     :(vRoleCode==4u?reliefRim:geometricRim);
 
-  float specularExponent=vRoleCode==1u?mix(52.0,9.0,terrainRoughnessForLighting):24.0;
+  float specularExponent=worldSoilTerrain?mix(52.0,9.0,terrainRoughnessForLighting):24.0;
   float specular=0.0;
   float directional=0.0;
   // Full-interior clearing lighting replaces these two values with weight 1.
@@ -947,7 +955,7 @@ void main(){
     float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);
     float reliefDiffuse=max(dot(shadingNormal,lightDirection),0.0);
     float diffuse=vRoleCode==4u?reliefDiffuse:geometricDiffuse;
-    if(vRoleCode==1u){
+    if(worldSoilTerrain){
       diffuse=mix(
         geometricDiffuse,
         reliefDiffuse,
@@ -966,10 +974,10 @@ void main(){
     directional=
       diffuse*
       uSunIntensity*
-      (vRoleCode==1u?0.96:(vRoleCode==4u?0.74:0.82));
+      (worldSoilTerrain?0.96:(vRoleCode==4u?0.74:0.82));
   }
 
-  float specularLightingGain=vRoleCode==1u
+  float specularLightingGain=worldSoilTerrain
     ?mix(0.035,0.22,clamp(terrainReflectanceForLighting*0.72+terrainWetnessForLighting*0.28,0.0,1.0))
     :(vRoleCode==4u?0.22:(vMaterialParameters.w>1.5?0.004:0.07));
 
@@ -1005,7 +1013,7 @@ void main(){
   lit+=uSunColor*specular*specularLightingGain;
 
   float rawFog=clamp((distanceToCamera-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor);
-  float fog=rawFog*(vRoleCode==1u?0.54:0.68);
+  float fog=rawFog*(worldSoilTerrain?0.54:0.68);
   fog=min(uMaximumFogFactor,fog+clearingEdge*clamp(distanceToCamera/2400.0,0.0,0.035));
   float luminance=dot(lit,vec3(0.2126,0.7152,0.0722));
   lit=mix(lit,vec3(luminance),clamp(fog*uDistanceDesaturationStrength*0.48,0.0,0.58));

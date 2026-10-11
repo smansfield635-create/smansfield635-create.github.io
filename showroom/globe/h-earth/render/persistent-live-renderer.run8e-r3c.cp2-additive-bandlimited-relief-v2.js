@@ -261,6 +261,21 @@ void main(){
   gl_Position=uViewProjection*vec4(aPosition,1.0);
 }`;
 
+const PRESENT_COLOR_VS = `#version 300 es
+precision highp float;
+out vec2 vUv;
+void main(){
+  vec2 p=vec2(gl_VertexID==1?3.0:-1.0,gl_VertexID==2?3.0:-1.0);
+  vUv=(p+1.0)*0.5;
+  gl_Position=vec4(p,0.0,1.0);
+}`;
+const PRESENT_COLOR_FS = `#version 300 es
+precision highp float;
+uniform sampler2D uPresentedColor;
+in vec2 vUv;
+out vec4 outColor;
+void main(){outColor=vec4(texture(uPresentedColor,vUv).rgb,1.0);}`;
+
 const GLOBAL_COVER_VS = `#version 300 es
 precision highp float;
 precision highp int;
@@ -922,7 +937,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   canvas.width = width;
   canvas.height = height;
   const gl = canvas.getContext('webgl2', {
-    alpha: false, antialias: false, depth: true, stencil: false,
+    alpha: true, antialias: false, depth: true, stencil: false,
     preserveDrawingBuffer: true, powerPreference: 'high-performance'
   });
   if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');
@@ -1055,6 +1070,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   let vegetationPreparationProgress=Object.freeze({phase:'NOT_STARTED',worldTruthValidated:!deferVegetation,oasisComplete:!deferVegetation,grassTuftCount:0,cattailCount:0,primitiveCount:0});
   function prepareVegetationResidency({onProgress=()=>{}}={}){
     if(typeof onProgress!=='function')throw new TypeError('R3C_VEGETATION_PROGRESS_CALLBACK_INVALID');
+    const preparationEntryError=gl.getError();
+    if(preparationEntryError!==gl.NO_ERROR)throw new Error('R3C_PREP_ENTRY_GL_ERROR:'+preparationEntryError);
     if(vegetationPreparation)return vegetationPreparation;
     const progress=update=>{vegetationPreparationProgress=Object.freeze({...vegetationPreparationProgress,...update});onProgress(vegetationPreparationProgress);};
     vegetationPreparation=(async()=>{
@@ -1086,19 +1103,27 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
 
   async function uploadGlobalCover(cover){
+    // Gen2638 browser qualification: fail at the first specific GL upload
+    // boundary, rather than reporting the eventual 1282 after all operations.
+    // This is diagnostic only; no geometry, GPU payload, or capability changes.
+    const verifyCoverGlStage=label=>{
+      const code=gl.getError();
+      if(code!==gl.NO_ERROR)throw new Error('GLOBAL_COVER_GL_STAGE_'+label+':'+code);
+    };
+    verifyCoverGlStage('PREEXISTING');
     const state={cover,buffers:[],gpuByteLength:0,uploadCount:0,maximumUploadChunkBytes:0,resourceCount:0,lastDraw:{visibleInstanceCount:0,drawCallCount:0}};
     const before=counters.postInitializationResourceCreationCount;
     counters.globalCoverAuthorizedResourceCreateCount=(counters.globalCoverAuthorizedResourceCreateCount??0)+2;
     state.vertexShader=createShader(gl.VERTEX_SHADER,GLOBAL_COVER_VS,'GLOBAL_COVER_VS');
-    state.program=createProgram(state.vertexShader,resources.geometryFragmentShader,'GLOBAL_COVER_PROGRAM');
+    state.program=createProgram(state.vertexShader,resources.geometryFragmentShader,'GLOBAL_COVER_PROGRAM');verifyCoverGlStage('SHADERS');
     counters.globalCoverAuthorizedResourceCreateCount++;markPostInitializationCreation();counters.vertexArrayCreateCount++;state.vao=gl.createVertexArray();
     if(!state.vao)throw Error('GLOBAL_COVER_VAO_CREATE_FAILED');
     gl.bindVertexArray(state.vao);
     const put=async(target,data)=>{
       counters.globalCoverAuthorizedResourceCreateCount++;markPostInitializationCreation();counters.bufferCreateCount++;const b=gl.createBuffer();if(!b)throw Error('GLOBAL_COVER_BUFFER_CREATE_FAILED');state.buffers.push(b);
-      gl.bindVertexArray(state.vao);gl.bindBuffer(target,b);gl.bufferData(target,data.byteLength,gl.STATIC_DRAW);
+      gl.bindVertexArray(state.vao);gl.bindBuffer(target,b);gl.bufferData(target,data.byteLength,gl.STATIC_DRAW);verifyCoverGlStage('BUFFER_ALLOCATION_'+target);
       const chunk=Math.max(1,Math.floor(262144/data.BYTES_PER_ELEMENT));
-      for(let i=0;i<data.length;i+=chunk){const part=data.subarray(i,Math.min(data.length,i+chunk));gl.bindVertexArray(state.vao);gl.bindBuffer(target,b);gl.bufferSubData(target,i*data.BYTES_PER_ELEMENT,part);state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,part.byteLength);gl.bindVertexArray(resources.vertexArray);await yieldToBrowserPaint();}
+      for(let i=0;i<data.length;i+=chunk){const part=data.subarray(i,Math.min(data.length,i+chunk));gl.bindVertexArray(state.vao);gl.bindBuffer(target,b);gl.bufferSubData(target,i*data.BYTES_PER_ELEMENT,part);verifyCoverGlStage('BUFFER_CHUNK_'+target);state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,part.byteLength);gl.bindVertexArray(resources.vertexArray);await yieldToBrowserPaint();}
       state.gpuByteLength+=data.byteLength;state.uploadCount++;return b;
     };
     for(const [location,data,size] of [[0,cover.template.positions,3],[1,cover.template.normals,3],[2,cover.template.colors,4],[3,cover.template.rootInfo,4]]){
@@ -1111,10 +1136,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     state.textureHeight=Math.max(1,Math.ceil(cover.records.length/4/state.textureWidth));
     const pixels=new Float32Array(state.textureWidth*state.textureHeight*4);pixels.set(cover.records);
     gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);
-    gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA32F,state.textureWidth,state.textureHeight);
+    gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA32F,state.textureWidth,state.textureHeight);verifyCoverGlStage('TEXTURE_STORAGE');
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
     const rowsPerChunk=Math.max(1,Math.floor(262144/(state.textureWidth*16)));
-    for(let row=0;row<state.textureHeight;row+=rowsPerChunk){const rows=Math.min(rowsPerChunk,state.textureHeight-row),part=pixels.subarray(row*state.textureWidth*4,(row+rows)*state.textureWidth*4);gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);gl.texSubImage2D(gl.TEXTURE_2D,0,0,row,state.textureWidth,rows,gl.RGBA,gl.FLOAT,part);state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,part.byteLength);gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);await yieldToBrowserPaint();}
+    for(let row=0;row<state.textureHeight;row+=rowsPerChunk){const rows=Math.min(rowsPerChunk,state.textureHeight-row),part=pixels.subarray(row*state.textureWidth*4,(row+rows)*state.textureWidth*4);gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);gl.texSubImage2D(gl.TEXTURE_2D,0,0,row,state.textureWidth,rows,gl.RGBA,gl.FLOAT,part);verifyCoverGlStage('TEXTURE_ROW_'+row);state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,part.byteLength);gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);await yieldToBrowserPaint();}
     state.gpuByteLength+=pixels.byteLength;state.uploadCount++;gl.activeTexture(gl.TEXTURE0);
     if(state.gpuByteLength>8*1024*1024)throw Error('GLOBAL_COVER_GPU_BUDGET_EXCEEDED');
     state.uniforms={};for(const name of ['uInstanceRecords','uInstanceStart','uInstanceStride','uInstanceTextureWidth','uViewProjection','uCameraPosition','uSunDirection','uSunIntensity','uSunColor','uSkyZenithColor','uSkyHorizonColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor','uDistanceDesaturationStrength','uTerrainPatchClip','uClipBaseTerrain','uGlobalCoverFarPrimitiveIndex','uPlanetRadius','uShorelineSoilCoverage','uLandscapeFloorFootprints[0]','uLandscapeFloorCount'])state.uniforms[name]=gl.getUniformLocation(state.program,name);
@@ -1122,9 +1147,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform3fv(u.uSunColor,color3(e.sunColor));gl.uniform3fv(u.uSkyZenithColor,color3(e.skyZenithColor));gl.uniform3fv(u.uSkyHorizonColor,resources.skyColor);gl.uniform3fv(u.uGroundHazeColor,color3(e.groundHazeColor));
     for(const [name,key] of [['uFogStartDistance','fogStartDistance'],['uFogFalloff','fogFalloff'],['uMaximumFogFactor','maximumFogFactor'],['uDistanceDesaturationStrength','distanceDesaturationStrength']])gl.uniform1f(u[name],e[key]);
     gl.uniform1i(u.uInstanceRecords,2);gl.uniform1i(u.uInstanceTextureWidth,state.textureWidth);
-    gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);
+    gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);verifyCoverGlStage('UNIFORMS');
     state.resourceCount=counters.postInitializationResourceCreationCount-before;
-    configureClearingProgram(state.program);
+    configureClearingProgram(state.program);verifyCoverGlStage('CLEARING_PROGRAM_CONFIG');
     resources.globalCover=state;gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
     const error=gl.getError();if(error!==gl.NO_ERROR)throw Error(`GLOBAL_COVER_UPLOAD_ERROR:${error}`);
   }
@@ -1157,6 +1182,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     resources.depthVertexShader = createShader(gl.VERTEX_SHADER, DVS, 'DV');
     resources.depthFragmentShader = createShader(gl.FRAGMENT_SHADER, DFS, 'DF');
     resources.depthProgram = createProgram(resources.depthVertexShader, resources.depthFragmentShader, 'DP');
+    // Preallocate one immutable full-screen texture presentation path before READY.
+    // The tested headless GPU rejects the framebuffer-to-default blit.
+    resources.presentVertexShader=createShader(gl.VERTEX_SHADER,PRESENT_COLOR_VS,'PRESENT_COLOR_VS');
+    resources.presentFragmentShader=createShader(gl.FRAGMENT_SHADER,PRESENT_COLOR_FS,'PRESENT_COLOR_FS');
+    resources.presentProgram=createProgram(resources.presentVertexShader,resources.presentFragmentShader,'PRESENT_COLOR_PROGRAM');
+    markPostInitializationCreation();counters.vertexArrayCreateCount+=1;
+    resources.presentVertexArray=gl.createVertexArray();
+    if(!resources.presentVertexArray)throw new Error('R3C_PRESENT_VAO_CREATE_FAILED');
+    resources.presentColorSampler=gl.getUniformLocation(resources.presentProgram,'uPresentedColor');
+    if(resources.presentColorSampler===null)throw new Error('R3C_PRESENT_SAMPLER_MISSING');
     markPostInitializationCreation(); counters.vertexArrayCreateCount += 1;
     resources.vertexArray = gl.createVertexArray();
     if (!resources.vertexArray) throw new Error('R3C_VERTEX_ARRAY_CREATE_FAILED');
@@ -1439,7 +1474,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     for(const id of batch.placementIds){if(state.residentPlacementIds.has(id))throw new Error('R3C_VEGETATION_DUPLICATE_PLACEMENT');state.residentPlacementIds.add(id);}
     const positions=[],normals=[],colors=[],mats=[],models=[],surfaces=[],primitiveIds=[],roles=[],indices=[];let vertexOffset=0;
     const normalize=(x,y,z)=>{const n=Math.hypot(x,y,z)||1;return [x/n,y/n,z/n];};
-    for(let pi=0;pi<batch.primitives.length;pi++){const primitive=batch.primitives[pi],g=primitive.geometry,verts=g?.vertices??[],local=g?.indices??[];if(!verts.length||!local.length)throw new Error('R3C_VEGETATION_PRIMITIVE_GEOMETRY_INVALID');
+    // Preserve the qualified placement ledger and all non-tree vegetation.
+    // Exclude old highland conifers from GPU geometry; mixed batches still
+    // retain grass, reeds and shrubs, and source instance accounting stays put.
+    const drawablePrimitives=batch.primitives.filter(primitive=>
+      primitive?.metadata?.archetypeId!=='HIGHLAND_CONIFER_SAPLING'&&
+      !String(primitive?.materialHint?.materialIntent??'').includes('VEGETATION_CONIFER_TRUNK_AND_CANOPY'));
+    for(let pi=0;pi<drawablePrimitives.length;pi++){const primitive=drawablePrimitives[pi],g=primitive.geometry,verts=g?.vertices??[],local=g?.indices??[];if(!verts.length||!local.length)throw new Error('R3C_VEGETATION_PRIMITIVE_GEOMETRY_INVALID');
       const sums=Array.from({length:verts.length},()=>[0,0,0]);for(let k=0;k<local.length;k+=3){const ia=local[k],ib=local[k+1],ic=local[k+2],a=verts[ia],b=verts[ib],d=verts[ic],ab=[b.x-a.x,b.y-a.y,b.z-a.z],ad=[d.x-a.x,d.y-a.y,d.z-a.z],n=[ab[1]*ad[2]-ab[2]*ad[1],ab[2]*ad[0]-ab[0]*ad[2],ab[0]*ad[1]-ab[1]*ad[0]];for(const id of [ia,ib,ic])for(let q=0;q<3;q++)sums[id][q]+=n[q];}
       const intent=String(primitive?.materialHint?.materialIntent??''),rgba=intent.includes('TRUNK')||intent.includes('WOODY')?[89,63,39,255]:intent.includes('CONIFER')?[38,73,48,255]:intent.includes('SHRUB')?[52,94,52,255]:[78,126,65,255];
       // Bounded oasis assets carry explicit per-vertex sRGB colors; other vegetation keeps its existing palette.
@@ -1493,19 +1534,37 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
   }
-  function presentColorFrame() {
+  function presentColorFrame({countPresentation=true}={}) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    counters.visiblePresentationCount += 1; return Object.freeze({ frameNumber: counters.frameCount, width, height });
+    // Present the existing RGBA8 geometry frame using one texture triangle.
+    // This avoids the invalid default-backbuffer blit without touching meshes.
+    const pre=gl.getError();
+    if(pre!==gl.NO_ERROR)throw new Error('R3C_PRESENT_TEXTURE_STAGE_PREEXISTING:'+pre);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+    gl.viewport(0,0,width,height);
+    gl.disable(gl.DEPTH_TEST);gl.depthMask(false);gl.disable(gl.BLEND);
+    gl.useProgram(resources.presentProgram);gl.bindVertexArray(resources.presentVertexArray);
+    gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,resources.colorTexture);
+    gl.uniform1i(resources.presentColorSampler,0);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+    const error=gl.getError();
+    gl.bindTexture(gl.TEXTURE_2D,null);gl.bindVertexArray(resources.vertexArray);
+    gl.useProgram(resources.geometryProgram);gl.depthMask(true);
+    const restoredError=gl.getError();
+    if(restoredError!==gl.NO_ERROR)throw new Error('R3C_PRESENT_TEXTURE_RESTORE_ERROR:'+restoredError);
+    if(error!==gl.NO_ERROR)throw new Error('R3C_PRESENT_TEXTURE_DRAW_ERROR:'+error);
+    if(countPresentation)counters.visiblePresentationCount+=1;
+    return Object.freeze({frameNumber:counters.frameCount,width,height});
   }
   function captureColorFrame(label, { includePng = true } = {}) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.finish(); counters.gpuFinishCount += 1;
     const pixels = new Uint8Array(width * height * 4); gl.readPixels(0,0,width,height,gl.RGBA,gl.UNSIGNED_BYTE,pixels); counters.colorReadbackCount += 1;
     const summary = summarize(pixels, resources.clearColorBytes);
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, resources.geometryFramebuffer); gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-    gl.blitFramebuffer(0,0,width,height,0,0,width,height,gl.COLOR_BUFFER_BIT,gl.NEAREST); gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    // Diagnostic color capture uses the same verified fullscreen texture path
+    // as normal presentation; never reintroduce WebGL's invalid blit.
+    // This diagnostic repaint is not an additional navigation-frame presentation.
+    presentColorFrame({countPresentation:false});
     const pngDataUrl = includePng ? canvas.toDataURL('image/png') : null; if (includePng) counters.pngEncodingCount += 1;
     return Object.freeze({ label, frameNumber: counters.frameCount, width, height, summary, pngDataUrl });
   }

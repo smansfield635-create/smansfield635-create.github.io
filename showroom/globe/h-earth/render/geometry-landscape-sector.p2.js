@@ -220,8 +220,41 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
  const grassTrial={schema:'H_EARTH_WOODLAND_MEADOW_TRIAL_v1',seed:trialSeed,extent:{center:[-141,-226],radii:[33,32]},walkingCapsule:{a:[-145,-194],b:[-145,-230],radius:1.5,centerMargin:.8},cellMeters:3,rowStep:3*Math.sqrt(3)/2,oddRowOffset:1.5,childJitterRadius:.90,centerJitterChannels:['center-jitter-angle','center-jitter-radius'],distributionBaseline:'7804b359aa032caa00f8dd526f8e4186df97fac9',densityFieldMeters:9,selectedCenterCount:grassCandidates.length,decisions:grassDecisions,fieldProvenance:{ground:'FINAL_PROJECTED_FLOAT32_NEAR_TRIANGLES',soil:'QUALIFIED_SURFACE_CLASS_PROXY',canopy:'AUTHORED_ACCEPTED_A_CROWN_INFLUENCE_NOT_MEASURED_SHADE',edge:'AUTHORED_8M_EQUIVALENT_FEATHER',palette:'AUTHORED_CANOPY_COLOR_PROXY_NO_MOISTURE_CLAIM'}};
  const clearingTrial=appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,clearFootprint,walkingDistance,groundReason});
  for(const m of [bark,foliage,grass,stone]){if(!m.clearingAttributes)m.clearingAttributes=[];while(m.clearingAttributes.length<m.vertices.length)m.clearingAttributes.push([0,0,0]);}
+ // Gen2638: keep the already-approved four trees without constructing a new
+ // tree recipe. Historical trees still participate in the unchanged grass and
+ // habitat calculations above, then are excluded from the actual GPU package.
+ // This preserves the reviewed geometry and existing non-tree vegetation.
+ const approvedTrees=manifest.filter(p=>p.kind==='TREE'&&H_EARTH_WOODLAND_CLEARING_TREE_IDS.includes(p.id));
+ if(approvedTrees.length!==4||H_EARTH_WOODLAND_CLEARING_TREE_IDS.some(id=>approvedTrees.filter(p=>p.id===id).length!==1))issues.push('FOUR_APPROVED_TREE_CENSUS_INVALID');
+ const retainApprovedMesh=(m,prefix)=>{
+  const original={vertices:m.vertices,indices:m.indices,colors:m.colors,attributes:m.clearingAttributes};
+  const next={vertices:[],indices:[],colors:[],clearingAttributes:[]},remap=new Map();
+  for(const tree of approvedTrees){
+   const start=tree[prefix+'VertexStart'],count=tree[prefix+'VertexCount'];
+   if(!Number.isInteger(start)||!Number.isInteger(count)||count<1||start<0||start+count>original.vertices.length){issues.push('APPROVED_TREE_VERTEX_SPAN_INVALID:'+tree.id+':'+prefix);continue;}
+   tree[prefix+'VertexStart']=next.vertices.length;
+   for(let i=start;i<start+count;i++){
+    remap.set(i,next.vertices.length);
+    next.vertices.push(original.vertices[i]);
+    next.colors.push(original.colors[i]);
+    next.clearingAttributes.push(original.attributes[i]);
+   }
+  }
+  for(let i=0;i<original.indices.length;i+=3){
+   const face=original.indices.slice(i,i+3),retained=face.map(id=>remap.has(id));
+   if(retained.every(Boolean))next.indices.push(...face.map(id=>remap.get(id)));
+   else if(retained.some(Boolean))issues.push('CROSS_TREE_FACE_IN_APPROVED_MESH:'+prefix+':'+i);
+  }
+  if(!next.indices.length)issues.push('APPROVED_TREE_MESH_EMPTY:'+prefix);
+  m.vertices=next.vertices;m.indices=next.indices;m.colors=next.colors;m.clearingAttributes=next.clearingAttributes;
+ };
+ if(issues.length===0){
+  retainApprovedMesh(bark,'bark');
+  retainApprovedMesh(foliage,'canopy');
+  for(let i=manifest.length-1;i>=0;i--)if(manifest[i].kind==='TREE'&&!H_EARTH_WOODLAND_CLEARING_TREE_IDS.includes(manifest[i].id))manifest.splice(i,1);
+ }
  const primitives=[];for(const [name,m,kind,rgba] of [['BARK',bark,'TREE',[81,64,44,255]],['CANOPY',foliage,'TREE',[66,92,38,255]],['ROCK',stone,'ROCK',[121,113,91,255]],['GRASS',grass,'GRASS',[120,117,61,255]]]){if(!m.indices.length)continue;const id=`H_EARTH_LANDSCAPE_P2_${name}`,r=constructHEarthTriangleMesh({primitiveId:id,geometryId:`${id}:GEOMETRY`,vertices:m.vertices,indices:m.indices,normalMode:E.normalMode.FACE_AND_VERTEX,expectedClosure:E.expectedClosure.OPEN_ALLOWED,semanticRole:`LANDSCAPE_SECTOR_${kind}`,metadata:{landscapeSectorKind:kind,landscapeSectorId:'WESTERN_P2',seed:SEED},source:{sourceType:'DETERMINISTIC_BOUNDED_LANDSCAPE_SOUTH'}});if(r.valid!==true){issues.push(`SOUTH_CONSTRUCTION_FAILED:${name}:${JSON.stringify(r.issues)}`);continue;}primitives.push({...r.primitiveRecord,renderMaterial:{rgba,vertexRgba:m.colors,clearingAttributes:m.clearingAttributes,transparencyClass:'OPAQUE'}});}
  const triangles=primitives.reduce((s,p)=>s+p.geometry.indices.length/3,0);if(accepted.length>128||triangles>H_EARTH_WOODLAND_CLEARING_TRIANGLE_LIMIT)issues.push('SECTOR_BUDGET_EXCEEDED');if(!accepted.length)issues.push('NO_ACCEPTED_TREES');
  manifest.sort((a,b)=>a.id.localeCompare(b.id));rejections.sort((a,b)=>a.id.localeCompare(b.id));
- return{eligible:issues.length===0,primitives,manifest,diagnostics:{clearingTrial,grassTrial,connectedCover,seed:SEED,bounds,treeCount:accepted.length,grassTuftCount:manifest.filter(p=>p.kind==='GRASS').length,grassBladeCount:manifest.filter(p=>p.kind==='GRASS').reduce((n,p)=>n+p.bladeCount,0),grassTriangleCount:grass.indices.length/3,rockCount:manifest.filter(p=>p.kind==='ROCK').length,triangleCount:triangles,primitiveCount:primitives.length,rejections,groundSource:'PROJECTED_FLOAT32_NEAR_TRIANGLES',existingGrassModified:true,canonicalVegetationPopulationModified:false,replacedClusterAGrass:true,reservationPolicySha256:policy.reservationSha256},issues};
+ return{eligible:issues.length===0,primitives,manifest,diagnostics:{clearingTrial,grassTrial,connectedCover,seed:SEED,bounds,treeCount:approvedTrees.length,grassTuftCount:manifest.filter(p=>p.kind==='GRASS').length,grassBladeCount:manifest.filter(p=>p.kind==='GRASS').reduce((n,p)=>n+p.bladeCount,0),grassTriangleCount:grass.indices.length/3,rockCount:manifest.filter(p=>p.kind==='ROCK').length,triangleCount:triangles,primitiveCount:primitives.length,rejections,groundSource:'PROJECTED_FLOAT32_NEAR_TRIANGLES',existingGrassModified:true,canonicalVegetationPopulationModified:false,replacedClusterAGrass:true,reservationPolicySha256:policy.reservationSha256},issues};
 }

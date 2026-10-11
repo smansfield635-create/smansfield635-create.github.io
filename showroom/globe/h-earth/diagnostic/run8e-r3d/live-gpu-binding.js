@@ -157,6 +157,8 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
   let animationFrameHandle = null;
   let animationRunning = false;
   let latestColorSummary = null;
+  let pendingNavigationPresentation = null;
+  let navigationPresentationScheduled = false;
   const frameRecords = [];
   const evidenceRecords = [];
   const counters = {
@@ -175,6 +177,8 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     cssTransformPreviewCount: 0,
     deferredRenderCommitCount: 0,
     queuedFrameChainCount: 0,
+    coalescedNavigationPresentationCount: 0,
+    deferredNavigationAcceptanceCount: 0,
     animationFrameCount: 0,
     maximumSynchronousResponseMs: 0,
     maximumPresentationOnlyResponseMs: 0,
@@ -326,6 +330,14 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     return true;
   };
 
+  const flushNavigationPresentation = () => {
+    if (!pendingNavigationPresentation) return null;
+    const pending = pendingNavigationPresentation;
+    pendingNavigationPresentation = null;
+    counters.deferredRenderCommitCount = 0;
+    return presentNavigationState(pending.navigationState, pending.source);
+  };
+
   const acceptNavigationState = (proposalRecord, navigationState) => {
     if (proposalRecord?.accepted !== true) {
       counters.rejectedProposalCount += 1;
@@ -335,13 +347,31 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
       throw new Error('R3D3_PROPOSAL_NAVIGATION_STATE_MISMATCH');
     }
     counters.navigationStateAcceptanceCount += 1;
-    return presentNavigationState(navigationState, {
+    const source = {
       kind: 'ACCEPTED_NAVIGATION_PROPOSAL',
       sequence: proposalRecord.sequence,
       inputClass: proposalRecord.inputClass,
       label: `proposal-${proposalRecord.sequence}`,
       captureEvidence: false
-    });
+    };
+    if (proposalRecord.frameFacts?.substepCount > 1) {
+      // Intake callbacks for one bounded frame precede this microtask. Validate
+      // every proposal, but present only its latest accepted substep before paint.
+      counters.deferredNavigationAcceptanceCount += 1;
+      if (pendingNavigationPresentation) counters.coalescedNavigationPresentationCount += 1;
+      pendingNavigationPresentation = { navigationState, source };
+      counters.deferredRenderCommitCount = 1;
+      if (!navigationPresentationScheduled) {
+        navigationPresentationScheduled = true;
+        queueMicrotask(() => {
+          navigationPresentationScheduled = false;
+          flushNavigationPresentation();
+        });
+      }
+      return null;
+    }
+    flushNavigationPresentation();
+    return presentNavigationState(navigationState, source);
   };
 
   if (oceanPresentationRequested) startPresentationAnimation();
@@ -370,6 +400,7 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
   const getVegetationResidency = () => renderer.getResourceReceipt().vegetationResidency;
 
   const captureLatestEvidence = (label = `explicit-${frameSequence}`) => {
+    flushNavigationPresentation();
     counters.explicitEvidenceCaptureCount += 1;
     return clone(captureEvidence(label));
   };
@@ -426,10 +457,13 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
         worldGeometryRebuiltPerAnimationFrame: false
       },
       correspondence: {
-        acceptedNavigationProposalToR3APacket: true,
+        acceptedNavigationProposalToR3APacket: counters.coalescedNavigationPresentationCount === 0 && !pendingNavigationPresentation,
+        latestAcceptedSubstepToR3APacket: !pendingNavigationPresentation,
         r3APacketToPersistentRenderer: true,
         persistentRendererToGpuFramebufferBlit: true,
-        synchronousProposalToVisibleFrame: true,
+        synchronousProposalToVisibleFrame: counters.deferredNavigationAcceptanceCount === 0,
+        sameTaskSubstepPresentationCoalescing: true,
+        additionalAnimationFrameLatency: false,
         continuousPresentationWithoutReadback:
           counters.navigationFramesPresentedWithoutReadbackCount > 0,
         diagnosticReadbackSeparatedFromPresentation:

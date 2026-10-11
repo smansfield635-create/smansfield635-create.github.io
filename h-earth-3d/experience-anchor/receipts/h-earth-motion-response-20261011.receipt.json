@@ -1,0 +1,682 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_MOTION_ELAPSED_TIME_AND_PRESENTATION_REPAIR_20261011_001",
+  "canonicalAdmissionGeneration": 2665,
+  "admissionCommit": "abfe7de6dadda1ae86eba8c93b060ee5bd210bbe",
+  "sourceBaselineHead": "1b57568afe6d71293c06b18a6b7790f90a7b5284",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "ENGINEERING_QUALIFIED_ANDROID_PENDING",
+  "acceptanceBasis": "Source-level continuity review and actual controller/terrain integration; environmental sources unchanged. Physical Android acceptance is pending and publication is not authorized.",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "sha256": "9de1684ad7636d7fea1d1671a2ec95c23d57720d495dff17cbf22e74c3ccc63a",
+      "gitBlob": "c874d8fcf5067b73cb3af1ceb16065e7c79f83fa"
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "sha256": "f4034567a66b5741ed42285e6a28c9c42795949a4953c221fd9bd83f86b22f51",
+      "gitBlob": "9c5d4d4c97724e37209f98a961a6712d5616deb7"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.touch-motion-calibration.cp3b-integration-contract.harness.mjs",
+      "sha256": "bdb1a5d5da7a5fb79dfd64c7041b1a1543514da90dce8995dad2133cc3b3f077",
+      "gitBlob": "a1e89f1bdbe08a6286c9233a4647a043f3e08c29"
+    }
+  ],
+  "protectedWorldSources": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "blob": "c26247dcb69cb52c968fcd3ef6c2626eaa577d03",
+      "sha256": "8642da7a506092be993d404bf2461e272275c86fc3445b3e898b739308401df2",
+      "matchesCandidate": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
+      "blob": "da90847d9472bcabfc17ea2c0e05afabae382d29",
+      "sha256": "0f75e195c8e1548d8b34910e53d630d4255e88d92c1e4a1c209d53ae3c15444f",
+      "matchesCandidate": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "blob": "41092afa665f715027f54bc6c52898b839911235",
+      "sha256": "5a047443e7ec6c58b412d24c4c159a1091ef34564515e583c4d4e90d54ef28b7",
+      "matchesCandidate": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
+      "blob": "14c366d2241469fbccd08ee31bbeac0f1b7598f4",
+      "sha256": "16a04e317f100c29c80e885cbb37d4acf075473feafefe6d8e71837f62960c56",
+      "matchesCandidate": true
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "blob": "4a1d10c2b7b98b016872d4fc50f31f62b3295d12",
+      "sha256": "8d2266c27123a69ce17dd2b1fe2a5e515d7bf6b74521216ce0281531f3a74d54",
+      "matchesCandidate": true
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
+      "blob": "a69bb5629daf9820ed209e50aaa30ff5b9f4abdd",
+      "sha256": "0442994d149817084f80745b78e0cc09df20dab7c8943ddeb98d5356a4edf06f",
+      "matchesCandidate": true
+    }
+  ],
+  "sourcePopulation": {
+    "approvedTrees": 4,
+    "oldTrees": 0,
+    "worldTiles": 648,
+    "groundCoverInstances": 61235,
+    "independentRoots": 734820,
+    "vegetationBatches": 108,
+    "vegetationPlacements": 27585,
+    "oasisTufts": 350,
+    "cattails": 72
+  },
+  "preservedFullWorldParity": {
+    "candidateHead": "ec8da69b88aaa981689bcff2e30966fcc1e36dc7",
+    "result": "PASS",
+    "receiptSha256": "42df978d5351aa4e067dd126cd5538cab1e72491d2f60392fdf7dd9f7a15d652",
+    "recordsSha256": "c610a5dfe3487778a67d2bcacc6cef5eedd33d5a2c10ca7d2a16d822b34bccf4",
+    "reuseBasis": "All six protected input/verifier Git blobs match exact Gen2659 qualified bytes."
+  },
+  "precedent": {
+    "boundedSubsteps": "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+    "noReadbackMotion": "Existing CP4 presentation-only path",
+    "ratesUnchanged": {
+      "turnDegreesPerSecond": 72,
+      "pitchDegreesPerSecond": 54,
+      "travelWorldUnitsPerSecond": 7.5,
+      "zoomDegreesPerSecond": 30
+    },
+    "declaredDelta": {
+      "maximumElapsedSubstepSeconds": 0.05,
+      "maximumAccumulatedSeconds": 0.15,
+      "proposalStateSnapshots": true,
+      "multiSubstepPresentationCoalescing": true,
+      "visibilityReset": true
+    }
+  },
+  "qualification": {
+    "cp3a": {
+      "result": "PASS",
+      "assertions": 22
+    },
+    "cp3b": {
+      "status": "PASS",
+      "checkpoint": "CP3B_PRODUCT_INTEGRATION_CONTRACT",
+      "runtime": "v22.23.2",
+      "cases": 40,
+      "samples": [
+        {
+          "action": "TURN_LEFT",
+          "frameIntervalMs": 16.7,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": -72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 60
+        },
+        {
+          "action": "TURN_LEFT",
+          "frameIntervalMs": 33,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": -72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 31
+        },
+        {
+          "action": "TURN_LEFT",
+          "frameIntervalMs": 50,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": -72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "TURN_LEFT",
+          "frameIntervalMs": 100,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": -72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "TURN_LEFT",
+          "frameIntervalMs": 150,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": -72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "TURN_RIGHT",
+          "frameIntervalMs": 16.7,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 60
+        },
+        {
+          "action": "TURN_RIGHT",
+          "frameIntervalMs": 33,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 31
+        },
+        {
+          "action": "TURN_RIGHT",
+          "frameIntervalMs": 50,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "TURN_RIGHT",
+          "frameIntervalMs": 100,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "TURN_RIGHT",
+          "frameIntervalMs": 150,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 72,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "PITCH_UP",
+          "frameIntervalMs": 16.7,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 16.2,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 18
+        },
+        {
+          "action": "PITCH_UP",
+          "frameIntervalMs": 33,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 16.200000000000003,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 10
+        },
+        {
+          "action": "PITCH_UP",
+          "frameIntervalMs": 50,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 16.200000000000003,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "PITCH_UP",
+          "frameIntervalMs": 100,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 16.200000000000003,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "PITCH_UP",
+          "frameIntervalMs": 150,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 16.199999999999996,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "PITCH_DOWN",
+          "frameIntervalMs": 16.7,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": -16.19999999999999,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 18
+        },
+        {
+          "action": "PITCH_DOWN",
+          "frameIntervalMs": 33,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": -16.2,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 10
+        },
+        {
+          "action": "PITCH_DOWN",
+          "frameIntervalMs": 50,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": -16.199999999999996,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "PITCH_DOWN",
+          "frameIntervalMs": 100,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": -16.199999999999996,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "PITCH_DOWN",
+          "frameIntervalMs": 150,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": -16.199999999999996,
+            "fov": 0,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "MOVE_FORWARD",
+          "frameIntervalMs": 16.7,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": -7.499999999999645
+          },
+          "acceptedProposals": 60
+        },
+        {
+          "action": "MOVE_FORWARD",
+          "frameIntervalMs": 33,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": -7.500000000000071
+          },
+          "acceptedProposals": 31
+        },
+        {
+          "action": "MOVE_FORWARD",
+          "frameIntervalMs": 50,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": -7.5
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "MOVE_FORWARD",
+          "frameIntervalMs": 100,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": -7.5
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "MOVE_FORWARD",
+          "frameIntervalMs": 150,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": -7.5
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "MOVE_BACKWARD",
+          "frameIntervalMs": 16.7,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 7.499999999999645
+          },
+          "acceptedProposals": 60
+        },
+        {
+          "action": "MOVE_BACKWARD",
+          "frameIntervalMs": 33,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 7.500000000000071
+          },
+          "acceptedProposals": 31
+        },
+        {
+          "action": "MOVE_BACKWARD",
+          "frameIntervalMs": 50,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 7.5
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "MOVE_BACKWARD",
+          "frameIntervalMs": 100,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 7.5
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "MOVE_BACKWARD",
+          "frameIntervalMs": 150,
+          "durationMs": 1000,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 0,
+            "x": 0,
+            "z": 7.5
+          },
+          "acceptedProposals": 20
+        },
+        {
+          "action": "ZOOM_IN",
+          "frameIntervalMs": 16.7,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": -8.999999999999964,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 18
+        },
+        {
+          "action": "ZOOM_IN",
+          "frameIntervalMs": 33,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": -9.000000000000021,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 10
+        },
+        {
+          "action": "ZOOM_IN",
+          "frameIntervalMs": 50,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": -9,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "ZOOM_IN",
+          "frameIntervalMs": 100,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": -9,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "ZOOM_IN",
+          "frameIntervalMs": 150,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": -9,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "ZOOM_OUT",
+          "frameIntervalMs": 16.7,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 8.999999999999972,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 18
+        },
+        {
+          "action": "ZOOM_OUT",
+          "frameIntervalMs": 33,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 9.000000000000014,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 10
+        },
+        {
+          "action": "ZOOM_OUT",
+          "frameIntervalMs": 50,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 9,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "ZOOM_OUT",
+          "frameIntervalMs": 100,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 9,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        },
+        {
+          "action": "ZOOM_OUT",
+          "frameIntervalMs": 150,
+          "durationMs": 300,
+          "delta": {
+            "yaw": 0,
+            "pitch": 0,
+            "fov": 9,
+            "x": 0,
+            "z": 0
+          },
+          "acceptedProposals": 6
+        }
+      ],
+      "actualNavigationAndTerrainValidator": true,
+      "callbackStateIdentity": "PASS",
+      "releaseCancelSuspensionAndStall": "PASS",
+      "integratedPresentation": {
+        "acceptedSubsteps": 3,
+        "gpuDraws": 1,
+        "navigationReadbacks": 0
+      },
+      "androidAcceptance": "PENDING",
+      "productMutationPaths": [
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+        "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
+      ]
+    },
+    "browser": "PENDING_EXACT_COMMIT",
+    "independentReview": {
+      "result": "PASS",
+      "agent": "soren_motion_review",
+      "functionalBearing": "W",
+      "actualNativeInvocation": true,
+      "checks": [
+        "CP3A and CP3B rerun",
+        "late activation timing",
+        "active visibility suspension",
+        "integration nullable return",
+        "exact-state capture and coalescing"
+      ],
+      "scope": "Two product files and CP3B harness; no physical or publication claim"
+    },
+    "physicalAndroid": "PENDING"
+  },
+  "releaseEligible": false,
+  "ownerPerceptualKeep": false,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false
+}

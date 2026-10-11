@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-11T17:29:20Z",
+  "generatedAt": "2026-10-11T18:37:53Z",
   "window": {
-    "start": "2026-07-13T17:29:20Z",
-    "end": "2026-10-11T17:29:20Z"
+    "start": "2026-07-13T18:37:53Z",
+    "end": "2026-10-11T18:37:53Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4989,
-    "visits": 1313,
+    "pageLoads": 5006,
+    "visits": 1322,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4989,
-        "visits": 1313
+        "pageLoads": 5006,
+        "visits": 1322
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1043,
-        "visits": 731
+        "pageLoads": 1052,
+        "visits": 740
       },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 20,
@@ -194,16 +194,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -238,13 +238,13 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -319,7 +319,7 @@
         "visits": 30
       },
       "/meet-sean-mansfield/": {
-        "pageLoads": 11,
+        "pageLoads": 10,
         "visits": 0
       },
       "/home/": {
@@ -330,12 +330,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 41,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 41,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -343,13 +343,13 @@
         "visits": 10
       },
       "/about-this-underdog/": {
-        "pageLoads": 2,
+        "pageLoads": 11,
         "visits": 0
       }
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3676,
+        "pageLoads": 3684,
         "visits": 0
       },
       "www.google.com": {
@@ -357,8 +357,8 @@
         "visits": 780
       },
       "(none)": {
-        "pageLoads": 523,
-        "visits": 523
+        "pageLoads": 532,
+        "visits": 532
       },
       "raw.githack.com": {
         "pageLoads": 10,

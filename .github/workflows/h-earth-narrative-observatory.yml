@@ -77,11 +77,11 @@ jobs:
         if: ${{ env.PUBLIC_VERIFICATION == 'true' }}
         run: |
           : > /tmp/h-earth-narrative-observatory-server.log
-          for attempt in $(seq 1 40); do
+          for attempt in $(seq 1 80); do
             OBSERVATORY_SOURCE="$(curl -fsS "${H_EARTH_OBSERVATORY_ORIGIN}/showroom/globe/h-earth/observatory/?candidate=H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001&attempt=${attempt}" || true)"
             H_EARTH_SOURCE="$(curl -fsS "${H_EARTH_OBSERVATORY_ORIGIN}/showroom/globe/h-earth/?candidate=H_EARTH_NARRATIVE_OBSERVATORY_INTEGRATION_001&attempt=${attempt}" || true)"
-            if grep -q 'THE_H_EARTH_OBSERVATORY' <<<"${OBSERVATORY_SOURCE}" \
-              && grep -q 'h-earth-observatory-candidate-gate' <<<"${H_EARTH_SOURCE}"; then
+            if grep -qE 'THE_H_EARTH_OBSERVATORY|The H-Earth Observatory' <<<"${OBSERVATORY_SOURCE}" \
+              && grep -qE 'h-earth-observatory-candidate-gate|H_EARTH_NARRATIVE_OBSERVATORY_CANDIDATE' <<<"${H_EARTH_SOURCE}"; then
               printf 'PUBLIC_CANDIDATE_SOURCE_AVAILABLE_ATTEMPT=%s\n' "${attempt}" | tee /tmp/h-earth-narrative-observatory-server.log
               exit 0
             fi

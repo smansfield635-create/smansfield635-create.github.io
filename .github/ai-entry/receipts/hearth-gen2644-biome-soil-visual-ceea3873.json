@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2644-biome-soil-visual-ceea3873",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6107,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2644-soil-visual-20261010",
+  "requestCommit": "8210ffe278f8bfc0e1987231a8ac1e02d63c4661",
+  "requestCommitParent": "1895217bfba111bb1343f8799584e5e306c340d1",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "1895217bfba111bb1343f8799584e5e306c340d1",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "ceea38733c1ed54076908886ad5b9d0aa714e218"
+  },
+  "bridgeRunId": "38102999915",
+  "dispatchedRunId": 38103007749,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38103007749",
+  "dispatchedRunHeadSha": "1895217bfba111bb1343f8799584e5e306c340d1",
+  "dispatchedAt": "2026-10-11T01:47:26.680Z",
+  "resolvedAt": "2026-10-11T01:47:30.652Z"
+}

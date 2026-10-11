@@ -1,0 +1,147 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_WOODLAND_CLEARING_GRASS_ECOTONE_20261010_001",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "showroom/globe/h-earth/render/assets/woodland-clearing-soil.png",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/functional-landscape/navigation.js",
+    "showroom/globe/h-earth/validation/four-tree-only.browser.verify.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "showroom/globe/h-earth/render/woodland-clearing-trial.js",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
+      "sha256": "16a04e317f100c29c80e885cbb37d4acf075473feafefe6d8e71837f62960c56"
+    },
+    {
+      "path": "showroom/globe/h-earth/validation/four-tree-only.verify.mjs",
+      "sha256": "4d07744be46c9a69ba906b952796a286b208fdc2805ca13d890427b0cf6e0342"
+    }
+  ],
+  "continuityReview": "Gen2651 tightly scoped intentional clearing grass ecotone: the existing 32m exact native grass removal and 34x34 dense replacement created a rectangular vegetation density discontinuity independently of the now-corrected soil shader. Uses an existing 8m meadow ecotone precedent, retaining native meadow grass with increasing probability toward the reference edge and tapering clearing-only broad grass inversely, with stable seed-based jitter and no new assets or geometry outside the 8.6m boundary band. Independently constructed the original and new actual landscape sector against the same terrain; eligible=true and the approved four tree IDs and rocks unchanged, static grass vertices 62,844->54,804 and triangles 44,732->41,692; clearing broad grass 838->501, native grass 1,192->1,290. A narrowly scoped verifier opt-in tied to this receipt/source hash retains the historical tree-only non-tree equality test as strict default and verifies original four-tree bark/canopy/rock identity plus exact grass deltas. Real native Chromium, full residency, boundary visual and owner KEEP have NOT yet been qualified; no merge or release.",
+  "referenceMaterial": {
+    "ownerIssueNumber": 6100,
+    "sourceAuditCommentId": 6103950634,
+    "referenceBounds": {
+      "minX": -155.40267987050615,
+      "maxX": -123.40267987050615,
+      "minZ": -226.74616902099837,
+      "maxZ": -194.74616902099837
+    },
+    "sourceSoilTextureGitBlob": "23435bfdcf7e44b2fcb7c3937b6408ef5c980be9",
+    "sourceSoilTextureSha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce",
+    "immutableOriginalClearingShaderBranchSha256": "35a4fcb046615cab54b512407a9aa5fd6b6ff5fd1088f00784ba153335abeeb6",
+    "sourceRendererGitBlob": "a5e50ea72eb02f194030e4489ca464c9f91cb0aa",
+    "publishedFourTreeGeometryGitBlob": "c26247dcb69cb52c968fcd3ef6c2626eaa577d03",
+    "newGpuTextureAllocations": 0,
+    "worldEligibleTerrain": true,
+    "clearingDistanceGate": false,
+    "approvedSoilSamplerTextureUnit": 5,
+    "ownerCorrectionCommentId": 6104234312,
+    "priorPublishedSoilCommit": "1751f9cde5e20f9320be2bc2c113cb6193aa562b",
+    "newSoilDetailStrength": "MATERIAL_ALBEDO_AND_NORMAL_RELIEF_WITH_WORLD_SPACE_REGION_VARIANCE",
+    "ownerRejectionCommentId": 6104642863,
+    "noExteriorRectangleGate": true,
+    "firstCandidateShaderSha256": "f09fa52c9c96be83a7a30cb619a623c4c110ea2b32be93bfcde19e9e4f2191fb",
+    "farLandPrimitiveId": "H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION",
+    "farLandRoleCode": 5,
+    "terrainRoleCode": 1,
+    "farLandIncludedInSameMaterialShader": true,
+    "farLandCoastDistanceUploaded": true,
+    "farLandCoastDistanceSource": "CANONICAL_WORLD_SIGNED_COAST_DISTANCE",
+    "farLandExactlyOnePrimitive": true,
+    "priorFarRoleCoastDistanceWasZero": true,
+    "farLandContactDistanceUnmodified": true,
+    "coastDistanceExistingGpuAttributeLocation": 8,
+    "priorCandidateHead": "52accff774a8e436db8bf11e7c8d38ab596f4bf4",
+    "farLandNormalReorientation": "FRAGMENT_ONLY_IF_EXACT_FAR_PRIMITIVE_AND_NEGATIVE_Y",
+    "farLandNormalProof": {
+      "vertexCount": 415,
+      "allNegativeY": true,
+      "meanY": -0.999683286772946,
+      "minY": -0.9999384814445146,
+      "maxY": -0.998320490003847
+    },
+    "sourceNormalGpuBufferUnchanged": true,
+    "directReferenceSoilAlbedoOutsideRectangle": true,
+    "soilUvScale": 0.28,
+    "coastBlendMeters": [
+      18,
+      78
+    ],
+    "coastAlbedoMinMax": [
+      0.14,
+      0.98
+    ],
+    "priorOutsideWasBrightnessOnly": true,
+    "nearTerrainVertexCount": 10573,
+    "farLandExplicitlyExcludesNearFootprint": true,
+    "previousCandidateHead": "460d25307b4089e2360e15aa27f5c448d7056833",
+    "worldSoilLightingDirectionRepair": true,
+    "daylightRootCause": {
+      "timeOfDayHours": 15.25,
+      "sunDirectionY": 0.7369576953525517,
+      "sunIntensity": 0.8263920789326842,
+      "outsidePreviouslyUsedNegativeSunDirection": true,
+      "clearingUsesPositiveSunDirection": true
+    },
+    "sunwardBlendWeight": "worldSoilWeight_times_worldSoilAlbedoAuthority",
+    "noLightDirectionVectorInterpolation": true,
+    "intentionalGrassTransition": true,
+    "operationGeneration": 2651,
+    "originalGrassBlob": "db2c7d2e132743e0ced34444dd2272ac5eba24ce",
+    "newGrassBlob": "14c366d2241469fbccd08ee31bbeac0f1b7598f4",
+    "oldFourTreeVerifierBlob": "c6b1ee5a6a5be1bd4d51c1aedfcea84ec13b7485",
+    "newFourTreeVerifierBlob": "a4a34f9a7d0e547636a3dd3dc4df09b4e5a2845f",
+    "parentMaterialHead": "46de47cd86b9215e0ae82f9b8e6e252331fa9bdc",
+    "approvedFourTreeGeometryBlob": "c26247dcb69cb52c968fcd3ef6c2626eaa577d03",
+    "nativeGrassEdgeFeatherMeters": 8,
+    "selectionJitterMeters": 1.2,
+    "baselineStaticGrassVertices": 62844,
+    "candidateStaticGrassVertices": 54804,
+    "baselineGrassTriangles": 44732,
+    "candidateGrassTriangles": 41692,
+    "baselineSectorTriangles": 63692,
+    "candidateSectorTriangles": 60652,
+    "baselineBroadClearingGrass": 838,
+    "candidateBroadClearingGrass": 501,
+    "baselineRetainedNativeGrass": 1192,
+    "candidateRetainedNativeGrass": 1290,
+    "oldTreeCount": 0,
+    "requiredApprovedTreeCount": 4,
+    "zeroNewGpuTextureAssets": true,
+    "ownerDispositionCommentId": 6105419460
+  },
+  "limits": {
+    "sourceConstructionLocallyQualified": true,
+    "dedicatedExactBrowserPending": true,
+    "ownerVisualKeepPending": true,
+    "physicalAndroidPerformanceNotYetQualified": true,
+    "releaseEligible": false,
+    "staticMeshBudgetChangeMeasured": true
+  }
+}

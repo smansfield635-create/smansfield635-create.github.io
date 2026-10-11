@@ -221,7 +221,7 @@
     const sum=dispositionNames.reduce((total,k)=>total+dispositions[k],0);
     if(!Number.isSafeInteger(sum)||sum!==c.terminalHistoryRecords)throw Error('HOSTLESS_RECEIPT_TERMINAL_SUM_INVALID');
     const instant=x.observedAt;
-    if(typeof instant!=='string'||!/^\\d{4}-\\d\\d-\\d\\dT\\d\\d:\\d\\d:\\d\\d(?:\\.\\d{1,3})?Z$/.test(instant))throw Error('HOSTLESS_RECEIPT_CAPTURE_TIME_INVALID');
+    if(typeof instant!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?Z$/.test(instant))throw Error('HOSTLESS_RECEIPT_CAPTURE_TIME_INVALID');
     const stamp=Date.parse(instant);
     if(!Number.isFinite(stamp)||new Date(stamp).toISOString().slice(0,19)!==instant.slice(0,19)||stamp>Date.now()+120000)throw Error('HOSTLESS_RECEIPT_CAPTURE_TIME_INVALID');
     return {kind:'HOSTLESS_CANONICAL_CONTROL',observedAtUtc:instant,sourceCaptureBounded:true,

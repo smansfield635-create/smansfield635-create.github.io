@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2646-soil-sunward-light-46de47cd",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6127,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2646-sunward-light-20261010",
+  "requestCommit": "c90828737a6f1acac58d122074e095aef53c233d",
+  "requestCommitParent": "caea6f587cd5c6494bfff7cbb35151622e4ff1b7",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "caea6f587cd5c6494bfff7cbb35151622e4ff1b7",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "46de47cd86b9215e0ae82f9b8e6e252331fa9bdc"
+  },
+  "bridgeRunId": "38110275401",
+  "dispatchedRunId": 38110285251,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38110285251",
+  "dispatchedRunHeadSha": "caea6f587cd5c6494bfff7cbb35151622e4ff1b7",
+  "dispatchedAt": "2026-10-11T04:01:57.037Z",
+  "resolvedAt": "2026-10-11T04:02:01.313Z"
+}

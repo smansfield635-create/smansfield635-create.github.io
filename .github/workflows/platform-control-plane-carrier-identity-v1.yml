@@ -1,0 +1,409 @@
+name: L2 HC03 Exact-Candidate Browser Verifier Routing v1
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/ai-router/platform-control-plane/carrier-identity/**'
+      - '.github/workflows/platform-control-plane-carrier-identity-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-hc03-exact-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      L2_ADMISSION_HEAD: dedfdcf8c53207234791193144dc47f3d46caeb0
+      L2_LOCK_GENERATION: '873'
+      HC03_CANDIDATE_SHA: 66351b7d39705e726d5d6a39b396e6711fb2d92a
+      HC03_ADMISSION_BASE: 01da797ff4d46f0b1514dc06a5179818b14b3dfa
+      HC03_LOCAL_URL: http://127.0.0.1:4173/showroom/globe/h-earth/
+      EVIDENCE_DIR: /tmp/hc03-browser-verifier-evidence
+
+    steps:
+      - name: Check out exact L2 verifier candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify exact four-path L2 construction scope
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE_DIR"
+          L2_EXECUTION_HEAD="$(git rev-parse HEAD)"
+          echo "L2_EXECUTION_HEAD=$L2_EXECUTION_HEAD" >> "$GITHUB_ENV"
+          git diff --name-only "$L2_ADMISSION_HEAD" "$L2_EXECUTION_HEAD" | sort > /tmp/observed-l2-paths.txt
+          cat > /tmp/expected-l2-paths.txt <<'EOF'
+          .github/ai-router/platform-control-plane/carrier-identity/carrier-identity-gate.v1.mjs
+          .github/ai-router/platform-control-plane/carrier-identity/carrier-identity-self-test.v1.mjs
+          .github/ai-router/platform-control-plane/carrier-identity/protocol.v1.json
+          .github/workflows/platform-control-plane-carrier-identity-v1.yml
+          EOF
+          sort -o /tmp/expected-l2-paths.txt /tmp/expected-l2-paths.txt
+          diff -u /tmp/expected-l2-paths.txt /tmp/observed-l2-paths.txt
+          cp /tmp/observed-l2-paths.txt "$EVIDENCE_DIR/l2-exact-paths.txt"
+          {
+            sha256sum .github/ai-router/platform-control-plane/carrier-identity/protocol.v1.json
+            sha256sum .github/ai-router/platform-control-plane/carrier-identity/carrier-identity-gate.v1.mjs
+            sha256sum .github/ai-router/platform-control-plane/carrier-identity/carrier-identity-self-test.v1.mjs
+            sha256sum .github/workflows/platform-control-plane-carrier-identity-v1.yml
+          } | sha256sum | awk '{print $1}' > "$EVIDENCE_DIR/package-fingerprint.sha256"
+
+      - name: Run adversarial capability-versus-authority self-test
+        run: |
+          node .github/ai-router/platform-control-plane/carrier-identity/carrier-identity-self-test.v1.mjs \
+            --output "$EVIDENCE_DIR/routing-self-test.json"
+
+      - name: Bind fresh route to exact HC03 candidate
+        run: |
+          node --input-type=module <<'NODE'
+          import {
+            evaluateCarrierIdentity,
+            writeReceipt
+          } from './.github/ai-router/platform-control-plane/carrier-identity/carrier-identity-gate.v1.mjs';
+
+          const executionHead = process.env.L2_EXECUTION_HEAD;
+          const candidateHead = process.env.HC03_CANDIDATE_SHA;
+          const receipt = evaluateCarrierIdentity({
+            candidateHead,
+            expectedCandidateHead: candidateHead,
+            executionHead,
+            evidenceSourceHead: process.env.L2_ADMISSION_HEAD,
+            wrapperDeclaredHead: executionHead,
+            precheckContractIdentity: 'HC03_GENERIC_BROWSER_PRECHECK_v1',
+            verifierCapabilityIdentity: 'RUN8E_PLAYWRIGHT_CHROMIUM_MATRIX_TECHNICAL_CAPABILITY_v1',
+            authorityLineage: ['L2_HC03_EXACT_CANDIDATE_BROWSER_VERIFICATION_REQUEST_v1'],
+            browserCapability: {
+              technicalReuseOnly: true,
+              authorityReuse: false,
+              workflowId: 320949283,
+              workflowPath: '.github/workflows/h-earth-run8e-public-route-validation.yml',
+              browserEngine: 'PLAYWRIGHT_CHROMIUM'
+            },
+            wrapperUsedAsAuthority: false,
+            precheckUsedAsAuthority: false,
+            capabilityReuseAcknowledged: true,
+            authorityReuseAcknowledged: false,
+            freshReceiptRequired: true,
+            receiptIdentity: 'L2_HC03_CANDIDATE_BOUND_BROWSER_RECEIPT_v1'
+          });
+          if (receipt.routeAdmissible !== true || receipt.authorityInherited !== false) {
+            console.error(JSON.stringify(receipt, null, 2));
+            process.exit(1);
+          }
+          writeReceipt(`${process.env.EVIDENCE_DIR}/route-binding-receipt.json`, receipt);
+          NODE
+
+      - name: Check out exact H-Earth HC03 candidate subject
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.HC03_CANDIDATE_SHA }}
+          fetch-depth: 0
+          clean: true
+
+      - name: Verify exact candidate identity and bounded product delta
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$HC03_CANDIDATE_SHA"
+          git diff --name-only "$HC03_ADMISSION_BASE" "$HC03_CANDIDATE_SHA" | sort > "$EVIDENCE_DIR/hc03-candidate-paths.txt"
+          printf '%s\n' 'showroom/globe/h-earth/index.css' > /tmp/expected-hc03-paths.txt
+          diff -u /tmp/expected-hc03-paths.txt "$EVIDENCE_DIR/hc03-candidate-paths.txt"
+          sha256sum showroom/globe/h-earth/index.html > "$EVIDENCE_DIR/index-html.sha256"
+          sha256sum showroom/globe/h-earth/index.css > "$EVIDENCE_DIR/index-css.sha256"
+          grep -q 'HC02 — VIEWPORT AUTHORITY UNBOXING (GENERATION 856)' showroom/globe/h-earth/index.css
+
+      - name: Install isolated Chromium capability
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/hc03-playwright
+          cd /tmp/hc03-playwright
+          npm init -y >/dev/null 2>&1
+          npm install --no-save --package-lock=false playwright
+          npx playwright install --with-deps chromium
+
+      - name: Start bounded exact-candidate server
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 > "$EVIDENCE_DIR/server.log" 2>&1 &
+          echo $! > /tmp/hc03-server.pid
+          for attempt in $(seq 1 40); do
+            if curl --fail --silent "$HC03_LOCAL_URL" >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat "$EVIDENCE_DIR/server.log"
+          exit 1
+
+      - name: Execute current desktop and Samsung browser matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/hc03-playwright/hc03-browser.mjs <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import { chromium } from 'playwright';
+
+          const output = process.env.EVIDENCE_DIR;
+          const url = process.env.HC03_LOCAL_URL;
+          const candidateHead = process.env.HC03_CANDIDATE_SHA;
+          const configs = [
+            { id: 'desktop-landscape', width: 1280, height: 800, isMobile: false, hasTouch: false },
+            { id: 'samsung-mobile-portrait', width: 412, height: 915, isMobile: true, hasTouch: true },
+            { id: 'samsung-mobile-landscape', width: 915, height: 412, isMobile: true, hasTouch: true }
+          ];
+
+          const results = [];
+          const issues = [];
+          await fs.mkdir(output, { recursive: true });
+          const browser = await chromium.launch({ headless: true });
+
+          try {
+            for (const config of configs) {
+              const context = await browser.newContext({
+                viewport: { width: config.width, height: config.height },
+                isMobile: config.isMobile,
+                hasTouch: config.hasTouch,
+                deviceScaleFactor: 1
+              });
+              const page = await context.newPage();
+              const consoleErrors = [];
+              const pageErrors = [];
+              page.on('console', (message) => {
+                if (message.type() === 'error') consoleErrors.push(message.text());
+              });
+              page.on('pageerror', (error) => pageErrors.push(error.message));
+
+              try {
+                await page.goto(`${url}?hc03-verifier=${Date.now()}-${config.id}`, {
+                  waitUntil: 'domcontentloaded',
+                  timeout: 180000
+                });
+
+                await page.waitForFunction(() => {
+                  const receipt = window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.();
+                  if (!receipt) return false;
+                  if (receipt.firstFailureStage) return true;
+                  return (
+                    receipt.stages?.FIRST_FRAME_PRESENTED === 'PASS' &&
+                    receipt.stages?.READY_PUBLISHED === 'PASS'
+                  );
+                }, null, { timeout: 60000 });
+
+                const observation = await page.evaluate(() => {
+                  const startup = window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getReceipt?.() ?? null;
+                  const html = document.documentElement;
+                  const route = document.getElementById('h-earth-functional-landscape-route');
+                  const liveWorld = document.getElementById('h-earth-live-world');
+                  const stage = liveWorld?.querySelector('.h-earth-3d-world-stage');
+                  const canvas = document.getElementById('h-earth-functional-landscape-canvas');
+                  const header = route?.querySelector('.h-earth-3d-public-header');
+                  const nav = route?.querySelector('.h-earth-3d-public-nav');
+                  const hero = document.getElementById('h-earth-b10-hero');
+                  const rect = (node) => node ? {
+                    x: node.getBoundingClientRect().x,
+                    y: node.getBoundingClientRect().y,
+                    width: node.getBoundingClientRect().width,
+                    height: node.getBoundingClientRect().height,
+                    right: node.getBoundingClientRect().right,
+                    bottom: node.getBoundingClientRect().bottom
+                  } : null;
+                  return {
+                    startup,
+                    publicFaceCandidate: html.dataset.hEarthPublicFaceCandidate ?? null,
+                    routePublic: route?.dataset.publicRoute ?? null,
+                    routeRun8eError: route?.dataset.run8eError ?? null,
+                    heroDisplay: hero ? getComputedStyle(hero).display : null,
+                    headerPosition: header ? getComputedStyle(header).position : null,
+                    navDisplay: nav ? getComputedStyle(nav).display : null,
+                    liveWorldPaddingTop: liveWorld ? getComputedStyle(liveWorld).paddingTop : null,
+                    canvas: canvas ? {
+                      width: canvas.width,
+                      height: canvas.height,
+                      rect: rect(canvas),
+                      display: getComputedStyle(canvas).display,
+                      visibility: getComputedStyle(canvas).visibility
+                    } : null,
+                    headerRect: rect(header),
+                    stageRect: rect(stage),
+                    viewport: { width: innerWidth, height: innerHeight },
+                    startupResultText: document.getElementById('h-earth-startup-result')?.textContent ?? null,
+                    firstFailureText: document.getElementById('h-earth-startup-first-failure')?.textContent ?? null
+                  };
+                });
+
+                assert.ok(observation.startup, 'startup receipt missing');
+                assert.equal(observation.startup.firstFailureStage, null);
+                assert.equal(observation.startup.stages.FIRST_FRAME_PRESENTED, 'PASS');
+                assert.equal(observation.startup.stages.READY_PUBLISHED, 'PASS');
+                assert.equal(observation.publicFaceCandidate, 'active');
+                assert.equal(observation.routePublic, 'true');
+                assert.notEqual(observation.routeRun8eError, 'true');
+                assert.equal(observation.heroDisplay, 'none');
+                assert.equal(observation.headerPosition, 'absolute');
+                assert.equal(observation.liveWorldPaddingTop, '0px');
+                assert.ok(observation.canvas);
+                assert.ok(observation.canvas.width > 0 && observation.canvas.height > 0);
+                assert.ok(observation.canvas.rect.width > 0 && observation.canvas.rect.height > 0);
+                assert.equal(observation.canvas.display, 'block');
+                assert.notEqual(observation.canvas.visibility, 'hidden');
+                assert.ok(observation.headerRect.x >= -2);
+                assert.ok(observation.headerRect.right <= observation.viewport.width + 2);
+                assert.ok(observation.stageRect.height >= 500);
+                if (config.id === 'samsung-mobile-portrait') {
+                  assert.equal(observation.navDisplay, 'flex');
+                }
+                assert.deepEqual(pageErrors, []);
+                assert.deepEqual(consoleErrors, []);
+
+                const screenshot = `${config.id}.png`;
+                await page.screenshot({ path: path.join(output, screenshot), fullPage: true });
+                results.push({ ...config, result: 'PASS', observation, consoleErrors, pageErrors, screenshot });
+              } catch (error) {
+                issues.push({ configurationId: config.id, error: error.message, stack: error.stack ?? null, consoleErrors, pageErrors });
+                results.push({ ...config, result: 'FAIL', consoleErrors, pageErrors });
+              } finally {
+                await context.close();
+              }
+            }
+          } finally {
+            await browser.close();
+          }
+
+          const pass = issues.length === 0 && results.every((item) => item.result === 'PASS');
+          const receipt = {
+            schema: 'L2_HC03_CANDIDATE_BOUND_BROWSER_RECEIPT_v1',
+            result: pass ? 'PASS_CLOSED' : 'FAIL_CLOSED',
+            candidateHead,
+            candidateAdmissionBase: process.env.HC03_ADMISSION_BASE,
+            l2VerifierHead: process.env.L2_EXECUTION_HEAD,
+            l2AdmissionHead: process.env.L2_ADMISSION_HEAD,
+            lockGeneration: Number(process.env.L2_LOCK_GENERATION),
+            browserCapability: {
+              capabilityIdentity: 'RUN8E_PLAYWRIGHT_CHROMIUM_MATRIX_TECHNICAL_CAPABILITY_v1',
+              sourceWorkflowId: 320949283,
+              sourceWorkflowPath: '.github/workflows/h-earth-run8e-public-route-validation.yml',
+              technicalCapabilityReused: true,
+              authorityInherited: false
+            },
+            authorityBinding: {
+              freshAuthorityLineage: ['L2_HC03_EXACT_CANDIDATE_BROWSER_VERIFICATION_REQUEST_v1'],
+              importedB10Authority: false,
+              importedRun7IAuthority: false,
+              importedHistorical36933beAuthority: false,
+              legacyRun7IPrecheckExecuted: false
+            },
+            configurationCount: configs.length,
+            actualChromiumExecution: true,
+            desktopLandscape: results.find((item) => item.id === 'desktop-landscape')?.result ?? 'NOT_REACHED',
+            samsungPortrait: results.find((item) => item.id === 'samsung-mobile-portrait')?.result ?? 'NOT_REACHED',
+            samsungLandscape: results.find((item) => item.id === 'samsung-mobile-landscape')?.result ?? 'NOT_REACHED',
+            candidateBoundRuntimeFailureObserved: !pass,
+            candidateDefectCausallyEstablished: false,
+            hEarthMutationPerformed: false,
+            lawsMutationPerformed: false,
+            mergePerformed: false,
+            deploymentPerformed: false,
+            semanticAuthorityCreated: false,
+            productAuthorityCreated: false,
+            results,
+            issues
+          };
+
+          await fs.writeFile(path.join(output, 'hc03-candidate-bound-browser-receipt.json'), `${JSON.stringify(receipt, null, 2)}\n`, 'utf8');
+          console.log(JSON.stringify(receipt, null, 2));
+          if (!pass) process.exit(1);
+          NODE
+
+          cd /tmp/hc03-playwright
+          node hc03-browser.mjs 2>&1 | tee "$EVIDENCE_DIR/browser.log"
+
+      - name: Verify repository remained unmutated
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -z "$(git status --porcelain)"
+
+      - name: Emit terminal candidate-bound certification
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+
+          const dir = process.env.EVIDENCE_DIR;
+          const selfTest = JSON.parse(fs.readFileSync(path.join(dir, 'routing-self-test.json'), 'utf8'));
+          const route = JSON.parse(fs.readFileSync(path.join(dir, 'route-binding-receipt.json'), 'utf8'));
+          const browser = JSON.parse(fs.readFileSync(path.join(dir, 'hc03-candidate-bound-browser-receipt.json'), 'utf8'));
+          const packageFingerprint = fs.readFileSync(path.join(dir, 'package-fingerprint.sha256'), 'utf8').trim();
+
+          if (
+            selfTest.result !== 'PASS_CLOSED' ||
+            route.routeAdmissible !== true ||
+            route.authorityInherited !== false ||
+            browser.result !== 'PASS_CLOSED' ||
+            browser.candidateHead !== process.env.HC03_CANDIDATE_SHA ||
+            browser.browserCapability.authorityInherited !== false ||
+            browser.authorityBinding.importedB10Authority !== false ||
+            browser.authorityBinding.importedRun7IAuthority !== false ||
+            browser.authorityBinding.importedHistorical36933beAuthority !== false ||
+            browser.authorityBinding.legacyRun7IPrecheckExecuted !== false
+          ) process.exit(1);
+
+          const final = {
+            schema: 'L2_HC03_BROWSER_VERIFIER_ROUTING_TERMINATION_RECEIPT_v1',
+            result: 'PASS_CLOSED',
+            terminalDisposition: 'PASS_CLOSED',
+            operationId: 'L2_HC03_EXACT_CANDIDATE_BROWSER_VERIFIER_ROUTING_v1',
+            lockGeneration: Number(process.env.L2_LOCK_GENERATION),
+            l2AdmissionHead: process.env.L2_ADMISSION_HEAD,
+            l2VerifierHead: process.env.L2_EXECUTION_HEAD,
+            hc03CandidateHead: process.env.HC03_CANDIDATE_SHA,
+            hc03AdmissionBase: process.env.HC03_ADMISSION_BASE,
+            packageFingerprint,
+            exactL2PathCount: 4,
+            browserConfigurationCount: browser.configurationCount,
+            actualChromiumExecution: browser.actualChromiumExecution,
+            desktopLandscape: browser.desktopLandscape,
+            samsungPortrait: browser.samsungPortrait,
+            samsungLandscape: browser.samsungLandscape,
+            technicalCapabilityReuseProven: true,
+            supersededAuthorityNoninheritanceProven: true,
+            legacyRun7IPrecheckBypassedByCurrentTypedPrecheck: true,
+            candidateBoundEvidenceEmitted: true,
+            hEarthMutationPerformed: false,
+            lawsMutationPerformed: false,
+            mergePerformed: false,
+            repositorySettingsMutated: false,
+            rulesetActivationPerformed: false,
+            deploymentPerformed: false,
+            authorityCreated: false
+          };
+          fs.writeFileSync(path.join(dir, 'final-certification.json'), `${JSON.stringify(final, null, 2)}\n`, 'utf8');
+          console.log(JSON.stringify(final, null, 2));
+          NODE
+
+      - name: Upload HC03 candidate-bound verifier evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: l2-hc03-candidate-bound-browser-verifier-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/hc03-browser-verifier-evidence
+          if-no-files-found: error
+          retention-days: 30

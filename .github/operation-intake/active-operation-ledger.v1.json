@@ -8676,6 +8676,50 @@
       "scopeHash": "894570fcdbc91d7abe929b502f743ebe878564e5668813d63daad3853fae15b2",
       "state": "ADMITTED_LOCKED"
     },
+    "89492a230fa887f11532751448462c72324222f75edb86f7fd052e5047ec4f9a": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9dd43dc74e7135cc9dfb38f66f2d7a890552f246",
+          "lockGeneration": 2656,
+          "lockScope": "H_EARTH:SOIL_GRASS_EXACT_PRODUCT_PUBLICATION:20261011:V1",
+          "operationId": "H_EARTH_GEN2655_SOIL_GRASS_PRODUCT_RELEASE_20261011_001",
+          "procedureLocatorDigest": "9868754a1c3b04a27d27922b30bc650d5ddb3e824e303372b65ae3a6e04d63d0",
+          "requestDigest": "b733c13f982670639563510c5544f7cd8a8121f9134d9cfd882fa73ef81c2ea5",
+          "scopeHash": "89492a230fa887f11532751448462c72324222f75edb86f7fd052e5047ec4f9a"
+        },
+        "bindingDigest": "7156548b3ee6a49553a91bcb0bbdfcedb39be07b28e6ca518ffc0bc134c97234",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b6c87901938104d14eebc1e4851c830efd07653fb9fdc561e8fc2e73b2592fea",
+          "commentId": 6111744942,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6100,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38160100277,
+          "workflowSha": "9dd43dc74e7135cc9dfb38f66f2d7a890552f246"
+        },
+        "lineageAnchorCommitSha": "ed6a8d23dd31b8a4db57dca0f1416a5b28459ff0",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "9dd43dc74e7135cc9dfb38f66f2d7a890552f246",
+      "lockGeneration": 2656,
+      "lockScope": "H_EARTH:SOIL_GRASS_EXACT_PRODUCT_PUBLICATION:20261011:V1",
+      "operationId": "H_EARTH_GEN2655_SOIL_GRASS_PRODUCT_RELEASE_20261011_001",
+      "procedureLocatorDigest": "9868754a1c3b04a27d27922b30bc650d5ddb3e824e303372b65ae3a6e04d63d0",
+      "released": false,
+      "requestDigest": "b733c13f982670639563510c5544f7cd8a8121f9134d9cfd882fa73ef81c2ea5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "89492a230fa887f11532751448462c72324222f75edb86f7fd052e5047ec4f9a",
+      "state": "ADMITTED_LOCKED"
+    },
     "89661cfa4b8e42d4400a81b617cce9a250473c8dd981156f494bf6e2d0ae0e2e": {
       "governingHead": "f5c4238adee4161cb1f3583cc52ed13eebfffa2b",
       "lockGeneration": 462,
@@ -16740,7 +16784,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2655,
+  "lockGeneration": 2656,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

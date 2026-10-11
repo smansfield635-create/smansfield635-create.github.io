@@ -36,7 +36,7 @@
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "221b1ac6286969de1463a20d95e0fd423861fd24095f8681fb688fa51ffc6094"
+      "sha256": "0cd5d194af980cbf096db67861f506b5f2a6b6110148b73f3788a397bcb98f5c"
     },
     {
       "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
@@ -53,7 +53,7 @@
   "sourceBaselineHead": "9be9c405accc9431ce932b95cb7dbf7d87db9601",
   "sourceBlobs": {
     "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs": "a69bb5629daf9820ed209e50aaa30ff5b9f4abdd",
-    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "28d45e6e463924d2e659b977baaabb213cf46ea5",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "4f00a51c7d2cf6a713271bcfd54421c0d8d488a9",
     "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "4a1d10c2b7b98b016872d4fc50f31f62b3295d12",
     "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "a324215fab199685c8d5cbd05220f6b2bae67942"
   },

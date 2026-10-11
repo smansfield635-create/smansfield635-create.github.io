@@ -352,6 +352,11 @@ function showVegetationPreparation(progress){
     scheduleVegetationResidency();
     return;
   }
+  // Resume the paused deferred lane as soon as final worldwide cover is resident.
+  if(progress.phase==='GLOBAL_COVER_RESIDENT'||progress.phase==='PREPARED'){
+    if(vegetationPrepared)scheduleVegetationResidency();
+    return;
+  }
   if(vegetationPrepared)return;
   if(progress.oasisComplete&&!progress.worldTruthValidated){showVegetationStatus('Preparing vegetation locations · You can explore.',true);return;}
   const grass=progress.grassTuftCount??0,cattails=progress.cattailCount??0;
@@ -377,6 +382,14 @@ function scheduleVegetationResidency() {
   if (!residency || residency.totalBatchCount === 0) return;
   if (residency.complete) {
     vegetationComplete();
+    return;
+  }
+  // Gen2659 ONE_REPAIR: retain four qualified early batches, then give the
+  // existing global-cover survey an uncontended completion window. This
+  // changes neither canonical batch identity nor eventual 108/27,585 truth.
+  // The GLOBAL_COVER_RESIDENT progress callback resumes every remaining batch.
+  if (residency.residentBatchCount >= 4 && residency.globalCoverComplete !== true) {
+    showVegetationStatus('Completing worldwide ground cover · Nearby plants are visible.',true);
     return;
   }
   root.dataset.vegetationResidency = 'loading';

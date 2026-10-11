@@ -9,7 +9,7 @@ import {getHEarthRun8ER2ImmutableLiveRenderPackage,getHEarthRun8ER2VegetationWor
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {sampleHEarthGen311PlacementStructureDisposition,H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis,buildHEarthWoodlandGrassTuft} from '../../showroom/globe/h-earth/render/grass-lowland-trial.js';
-import {buildHEarthGlobalGroundCover,selectHEarthGlobalGroundCoverDraws,H_EARTH_GLOBAL_GROUND_COVER as profile} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js';
+import {buildHEarthGlobalGroundCover,selectHEarthGlobalGroundCoverDraws,H_EARTH_GLOBAL_GROUND_COVER as profile} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js?cb=gen2659-camera-first-20261011';
 
 const digest=v=>createHash('sha256').update(typeof v==='string'||Buffer.isBuffer(v)?v:JSON.stringify(v)).digest('hex');
 const radius=420000;
@@ -63,9 +63,33 @@ export async function verifyHEarthGlobalGroundCover(pkg,{refinement=null,onProgr
  for(const camera of cameras){const selected=selectHEarthGlobalGroundCoverDraws(cover,camera,{maximumInstances:4096,maximumDraws:64});assert.equal(selected.storedInstanceCount,count);assert.equal(selected.populationChanged,false);assert(selected.draws.length<=64&&selected.visibleInstanceCount<=4096);assert.equal(selected.draws.reduce((n,d)=>n+d.count,0),selected.visibleInstanceCount);const seen=new Set();for(const d of selected.draws){assert(Number.isInteger(d.start)&&Number.isInteger(d.count)&&Number.isInteger(d.stride)&&d.stride>=1&&d.count>=1);assert(d.start>=0&&d.start+(d.count-1)*d.stride<count);const tile=cover.tiles.find(t=>t.start===d.start);assert(tile&&d.start+(d.count-1)*d.stride<tile.start+tile.count,'LOD_READS_NEIGHBOR_TILE');for(let i=0;i<d.count;i++){const n=d.start+i*d.stride;assert(!seen.has(n),'LOD_DUPLICATE_INSTANCE');seen.add(n);}}assert.deepEqual(selectHEarthGlobalGroundCoverDraws(cover,camera),selected,'LOD_SELECTION_NONDETERMINISTIC');visibility.push({camera,visibleInstanceCount:selected.visibleInstanceCount,drawCallCount:selected.draws.length});}
  assert.equal(stableDigest(cover),stable,'CAMERA_LOD_MUTATED_WORLD');
  if(orders)for(const order of ['REVERSE','CHUNKED'])assert.equal(stableDigest(await buildHEarthGlobalGroundCover(pkg,{refinement,onProgress,order})),stable,`WORLD_GENERATION_ORDER_DRIFT:${order}`);
+ // Independent final-byte proof for camera-first tile construction.
+ // Neither accepted placements nor canonical packed tile ranges may change.
+ const priorityCamera={x:-139.40267987050615,z:-194.5};
+ const streamed=new Map();let firstPriorityTile=null,priorityTileCount=0;
+ const priority=await buildHEarthGlobalGroundCover(pkg,{refinement,onProgress,order:'CAMERA_FIRST',priorityOrigin:priorityCamera,onTile:tile=>{
+   const id=`${tile.ix}:${tile.iz}`;
+   assert(!streamed.has(id),'CAMERA_FIRST_DUPLICATE_TILE');
+   assert(tile.records instanceof Float32Array,'CAMERA_FIRST_TILE_NOT_FLOAT32');
+   assert.equal(tile.records.length,tile.instanceCount*20,'CAMERA_FIRST_TILE_STRIDE_DRIFT');
+   if(!firstPriorityTile)firstPriorityTile={ix:tile.ix,iz:tile.iz,instanceCount:tile.instanceCount,recordBytes:tile.records.byteLength};
+   streamed.set(id,{count:tile.instanceCount,sha256:arrayDigest(tile.records)});
+   priorityTileCount++;
+ }});
+ assert.equal(priorityTileCount,648,'CAMERA_FIRST_TILE_COUNT_MISMATCH');
+ assert.deepEqual([firstPriorityTile.ix,firstPriorityTile.iz],[7,16],'CAMERA_FIRST_INITIAL_TILE_NOT_NEAREST');
+ assert.equal(stableDigest(priority),stable,'CAMERA_FIRST_WORLD_RECORD_OR_TILE_DRIFT');
+ assert.equal(arrayDigest(priority.records),arrayDigest(cover.records),'CAMERA_FIRST_FLOAT32_RECORD_DRIFT');
+ for(const tile of priority.tiles){
+   const ix=Math.round((tile.minX+384)/32),iz=Math.round((tile.minZ+736)/32),streamedTile=streamed.get(`${ix}:${iz}`);
+   assert(streamedTile,'CAMERA_FIRST_TILE_STREAM_MISSING');
+   assert.equal(tile.count,streamedTile.count,'CAMERA_FIRST_TILE_COUNT_CHANGED');
+   assert.equal(arrayDigest(priority.records.subarray(tile.start*20,(tile.start+tile.count)*20)),streamedTile.sha256,'CAMERA_FIRST_TILE_STREAM_RECORD_MISMATCH');
+ }
+ const cameraFirstProof={camera:priorityCamera,firstPriorityTile,streamedTileCount:priorityTileCount,finalDigest:stable,finalFloat32RecordSha256:arrayDigest(priority.records),fullWorldPopulationsMatch:true,tileDataAvailableBeforeFullWorld:true,earlyGpuTilePresentationClaimed:false};
  let truth=null;if(worldTruth){const value=getHEarthRun8ER2VegetationWorldTruthPlan();assert.equal(value.instanceCount,27585);assert.equal(value.batches.length,108);assert.equal(value.droppedPlacementCount,0);truth={instanceCount:value.instanceCount,batchCount:value.batches.length,droppedPlacementCount:value.droppedPlacementCount};}
  const textureWidth=1024,textureHeight=Math.ceil(cover.records.length/4/textureWidth),paddedGpuBytes=textureWidth*textureHeight*16+templateBytes;assert(paddedGpuBytes<=8*1024*1024,'PADDED_TEXTURE_GPU_BUDGET_EXCEEDED');
- return {schema:'H_EARTH_GLOBAL_GROUND_COVER_INDEPENDENT_QUALIFICATION_v1',result:'PASS',stableWorldSha256:stable,recordsSha256:arrayDigest(cover.records),storedInstances:count,primaryFans,secondaryFans,maximumSecondaryCenterOffset,recordStrideBytes:80,templateVertices:28,templateTriangles:24,totalGpuBytes:cover.receipt.totalGpuBytes,paddedRgba32fTextureGpuBytes:paddedGpuBytes,roots,maxGroundError,maxActualSlope,waterChecked,mountainRoots,refinementRoots,classes,zones,coverage,visibility,generationOrders:orders?3:1,canonicalWorldTruth:truth,preparationReceipt:cover.receipt,elapsedMilliseconds:performance.now()-started,qualificationBoundaries:{actualBrowserInstancing:'SEPARATE_REQUIRED',shaderCompilation:'SEPARATE_REQUIRED',physicalDevicePerformance:'NOT_ESTABLISHED'},productMutationPerformed:false,mergePerformed:false,deploymentPerformed:false};
+ return {schema:'H_EARTH_GLOBAL_GROUND_COVER_INDEPENDENT_QUALIFICATION_v1',result:'PASS',cameraFirstProof,stableWorldSha256:stable,recordsSha256:arrayDigest(cover.records),storedInstances:count,primaryFans,secondaryFans,maximumSecondaryCenterOffset,recordStrideBytes:80,templateVertices:28,templateTriangles:24,totalGpuBytes:cover.receipt.totalGpuBytes,paddedRgba32fTextureGpuBytes:paddedGpuBytes,roots,maxGroundError,maxActualSlope,waterChecked,mountainRoots,refinementRoots,classes,zones,coverage,visibility,generationOrders:orders?3:1,canonicalWorldTruth:truth,preparationReceipt:cover.receipt,elapsedMilliseconds:performance.now()-started,qualificationBoundaries:{actualBrowserInstancing:'SEPARATE_REQUIRED',shaderCompilation:'SEPARATE_REQUIRED',physicalDevicePerformance:'NOT_ESTABLISHED'},productMutationPerformed:false,mergePerformed:false,deploymentPerformed:false};
 }
 
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){

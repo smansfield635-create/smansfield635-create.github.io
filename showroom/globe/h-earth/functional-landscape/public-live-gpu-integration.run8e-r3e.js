@@ -346,13 +346,30 @@ function showVegetationStatus(text,force=false){
 function showVegetationPreparation(progress){
   if(vegetationLoadingFailed)return;
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:progress}));
+  if(progress.phase==='BATCH_PREREQUISITES_READY'){
+    vegetationPrepared=true;
+    showVegetationStatus('Loading nearby vegetation · You can explore.',true);
+    scheduleVegetationResidency();
+    return;
+  }
+  // Resume the paused deferred lane as soon as final worldwide cover is resident.
+  if(progress.phase==='GLOBAL_COVER_RESIDENT'||progress.phase==='PREPARED'){
+    if(vegetationPrepared)scheduleVegetationResidency();
+    return;
+  }
+  if(vegetationPrepared)return;
   if(progress.oasisComplete&&!progress.worldTruthValidated){showVegetationStatus('Preparing vegetation locations · You can explore.',true);return;}
   const grass=progress.grassTuftCount??0,cattails=progress.cattailCount??0;
   showVegetationStatus(grass||cattails?`Preparing plants · ${grass} grass tufts · ${cattails} cattails`:'Preparing vegetation · You can explore.');
 }
 function vegetationComplete(){
-  root.dataset.vegetationResidency='complete';
   const residency=binding.getVegetationResidency();
+  if(residency?.preparationComplete!==true){
+    root.dataset.vegetationResidency='loading';
+    showVegetationStatus('Finishing ground cover · You can explore.',true);
+    return;
+  }
+  root.dataset.vegetationResidency='complete';
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{phase:'COMPLETE',residentBatchCount:residency.residentBatchCount,totalBatchCount:residency.totalBatchCount}}));
   showVegetationStatus('Vegetation complete — 100%',true);
   window.setTimeout(()=>{vegetationStatus.hidden=true;},2500);
@@ -365,6 +382,14 @@ function scheduleVegetationResidency() {
   if (!residency || residency.totalBatchCount === 0) return;
   if (residency.complete) {
     vegetationComplete();
+    return;
+  }
+  // Gen2659 ONE_REPAIR: retain four qualified early batches, then give the
+  // existing global-cover survey an uncontended completion window. This
+  // changes neither canonical batch identity nor eventual 108/27,585 truth.
+  // The GLOBAL_COVER_RESIDENT progress callback resumes every remaining batch.
+  if (residency.residentBatchCount >= 4 && residency.globalCoverComplete !== true) {
+    showVegetationStatus('Completing worldwide ground cover · Nearby plants are visible.',true);
     return;
   }
   root.dataset.vegetationResidency = 'loading';

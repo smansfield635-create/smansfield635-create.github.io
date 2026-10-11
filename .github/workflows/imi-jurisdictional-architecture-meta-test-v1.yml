@@ -1,0 +1,33 @@
+name: IMI jurisdictional architecture meta-test v1
+on:
+  pull_request:
+    paths:
+      - 'research/imi/IMI_JURISDICTIONAL_ARCHITECTURE_PROTOCOL_v1.md'
+      - 'research/imi/imi_jurisdictional_architecture_meta_test_v1.py'
+      - '.github/workflows/imi-jurisdictional-architecture-meta-test-v1.yml'
+  workflow_dispatch:
+jobs:
+  jurisdictional-meta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: pip install numpy pandas scipy requests
+      - name: Execute frozen jurisdictional architecture meta-test
+        run: python research/imi/imi_jurisdictional_architecture_meta_test_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: imi-jurisdictional-architecture-meta-test-v1
+          path: |
+            imi_jurisdictional_architecture_findings_v1.json
+            IMI_JURISDICTIONAL_ARCHITECTURE_VERDICT_v1.txt
+            imi_jurisdictional_architecture_state_table_v1.csv

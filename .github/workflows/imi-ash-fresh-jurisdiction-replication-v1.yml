@@ -1,0 +1,33 @@
+name: IMI A/S/H fresh-jurisdiction replication v1
+on:
+  pull_request:
+    paths:
+      - 'research/imi/IMI_ASH_FRESH_JURISDICTION_REPLICATION_PROTOCOL_v1.md'
+      - 'research/imi/imi_ash_fresh_jurisdiction_replication_v1.py'
+      - '.github/workflows/imi-ash-fresh-jurisdiction-replication-v1.yml'
+  workflow_dispatch:
+jobs:
+  replicate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: pip install numpy pandas scikit-learn lightgbm requests
+      - name: Execute frozen A/S/H fresh-jurisdiction replication
+        run: python research/imi/imi_ash_fresh_jurisdiction_replication_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: imi-ash-fresh-jurisdiction-replication-v1
+          path: |
+            imi_ash_fresh_jurisdiction_findings_v1.json
+            IMI_ASH_FRESH_JURISDICTION_VERDICT_v1.txt
+            imi_ash_fresh_jurisdiction_predictions_v1.csv

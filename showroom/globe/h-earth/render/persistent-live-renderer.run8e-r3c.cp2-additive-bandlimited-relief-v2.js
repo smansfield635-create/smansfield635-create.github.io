@@ -782,6 +782,44 @@ void main(){
       palette=mix(palette,woodlandSoil,litterStrength);
       presentationContact=max(presentationContact,max(existingLitter*0.65,canopyLitter*0.10+trunkContact*0.28));
     }
+    // H_EARTH_SOIL_REFERENCE_PILOT_20261010_V1
+    // Retain the exact accepted clearing-soil shader above. Reuse the
+    // preallocated 256x256 RGBA8 soil atlas only for nearby eligible land,
+    // with zero terrain displacement, new samplers or residency changes.
+    // All coordinates are the canonical inverse-projected authoring X/Z.
+    if(uClearingEnabled==1){
+      vec2 referenceXZ=clearingLocalXZ(vWorldPosition);
+      vec2 closestReference=clamp(referenceXZ,uClearingBounds.xy,uClearingBounds.zw);
+      float outsideReferenceMeters=length(referenceXZ-closestReference);
+      if(outsideReferenceMeters<16.0){
+        float referenceFeather=1.0-smoothstep(0.0,16.0,outsideReferenceMeters);
+        float soilSlopeEligibility=1.0-smoothstep(0.25,0.53,slope);
+        float soilRockEligibility=1.0-smoothstep(0.35,0.65,rockExposure);
+        float soilShoreEligibility=1.0-sandCoverage;
+        float soilBlendWeight=clamp(referenceFeather*soilSlopeEligibility*
+          soilRockEligibility*soilShoreEligibility,0.0,1.0);
+        if(soilBlendWeight>0.00001){
+          vec3 referenceSoilTexel=texture(uClearingSoil,referenceXZ*0.28).rgb;
+          vec3 referenceSoilBase=pow(referenceSoilTexel,vec3(2.2))*0.75;
+          // At the reference edge the exact authored palette is retained.
+          // Small deterministic broader-scale variation grows only outside.
+          float exteriorMeso=clamp(outsideReferenceMeters/16.0,0.0,1.0);
+          float exteriorTonalVariance=1.0+exteriorMeso*
+            ((broad-0.5)*0.10+(medium-0.5)*0.06);
+          referenceSoilBase*=exteriorTonalVariance;
+          palette=mix(palette,referenceSoilBase,soilBlendWeight);
+          terrainRoughnessForLighting=mix(terrainRoughnessForLighting,0.94,soilBlendWeight);
+          terrainReflectanceForLighting=mix(terrainReflectanceForLighting,0.02,soilBlendWeight);
+          specularScale=mix(specularScale,1.0,soilBlendWeight);
+          vec3 referenceNormal=limitTerrainNormalDeviation(geometricNormal,
+            perturbTerrainNormal(geometricNormal,vWorldPosition,
+              dot(referenceSoilTexel,vec3(0.3333))*0.035));
+          shadingNormal=normalize(mix(shadingNormal,referenceNormal,soilBlendWeight));
+          terrainReliefEnvelope=mix(terrainReliefEnvelope,1.0,soilBlendWeight);
+        }
+      }
+    }
+    // H_EARTH_SOIL_REFERENCE_PILOT_20261010_V1_END
     base=palette;
   }else if(vRoleCode==4u){
     // Visible water arrives as GPU role 4. Keep the uploaded coast colors.

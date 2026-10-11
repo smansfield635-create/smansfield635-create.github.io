@@ -26,6 +26,9 @@ const walkingObserverActive=walkingObserverReceipt?.schema==='H_EARTH_SOIL_EXPAN
  walkingObserverReceipt?.operationId==='H_EARTH_SOIL_EXPANSION_WALKING_VIEW_OBSERVER_20261011_001'&&
  walkingObserverReceipt?.releaseEligible===false;
 if(walkingObserverReceipt&&!walkingObserverActive)throw Error('INVALID_SOIL_WALKING_OBSERVER_RECEIPT');
+const performanceCapture=walkingObserverReceipt?.performanceCapture??null;
+const performanceCaptureActive=Boolean(walkingObserverActive&&performanceCapture?.schema==='H_EARTH_SOURCE_BOUND_DUAL_VEGETATION_PERFORMANCE_v1'&&performanceCapture?.enabled===true);
+if(performanceCapture&&!performanceCaptureActive)throw Error('PERFORMANCE_CAPTURE_RECEIPT_INVALID');
 
 const readiness=s=>Boolean(
   s?.routeReady&&s?.hasPublicRoute&&!s?.loadingScreen&&s?.canvas?.present&&
@@ -45,6 +48,12 @@ if(process.argv.includes('--self-test')){
   console.log(JSON.stringify({schema:'H_EARTH_GEN2_VISUAL_QUALIFIER_SELF_TEST_v1',result:'PASS',loadingOverlayRejected:true,missingGpuRejected:true,incompleteResidencyRejected:true}));
 }else{
  const sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+ if(performanceCaptureActive){
+  const executingBlob=execFileSync('git',['hash-object',process.argv[1]],{encoding:'utf8'}).trim();
+  const targetToolBlob=execFileSync('git',['rev-parse','HEAD:tools/h-earth-gen2-visual-qualify.mjs'],{encoding:'utf8'}).trim();
+  if(executingBlob!==walkingObserverReceipt.sourceBoundVerifier?.gitBlob||targetToolBlob!==executingBlob)
+   throw Error('PERFORMANCE_CAPTURE_VERIFIER_SOURCE_IDENTITY_MISMATCH');
+ }
  const geometryBlob=execFileSync('git',['rev-parse','HEAD:showroom/globe/h-earth/render/geometry-landscape-sector.p2.js'],{encoding:'utf8'}).trim();
  const fourOnly=productHeads.has(sha)||isApprovedFourTreeGeometryBlob(geometryBlob);
  if(walkingObserverActive){
@@ -92,7 +101,13 @@ if(process.argv.includes('--self-test')){
    page.on('console',msg=>{if(msg.type()==='error')entry.errors.push('console:'+msg.text())});
    page.on('requestfailed',req=>entry.failedRequests.push({url:req.url(),failure:req.failure()}));
    try{
-    await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/'+v.query,{waitUntil:'domcontentloaded',timeout:90000});
+    const profilingQuery=performanceCaptureActive?(v.query?v.query+'&performance=1':'?performance=1'):v.query;
+    await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/'+profilingQuery,{waitUntil:'domcontentloaded',timeout:90000});
+    const observePerformance=()=>page.evaluate(()=>{
+     const report=window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getPerformanceReport?.()??null;
+     const resources=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.resources??null;
+     return {report,globalGroundCover:resources?.globalGroundCover??null,vegetationResidency:resources?.vegetationResidency??null};
+    });
     const observe=()=>page.evaluate(()=>{
      const root=document.getElementById('h-earth-functional-landscape-route');
      const canvas=document.getElementById('h-earth-functional-landscape-canvas');
@@ -134,6 +149,13 @@ if(process.argv.includes('--self-test')){
     }
     entry.readiness={pass:ready,snapshot:snap};
     if(!ready){await page.screenshot({path:out+'/'+v.id+'-loading-or-error.png',fullPage:true});throw Error('ACTUAL_WORLD_NOT_RENDERED_LOADING_SCREEN_REJECTED')}
+    if(performanceCaptureActive){
+     entry.performanceAtReady=await observePerformance();
+     if(entry.performanceAtReady?.report?.schema!=='H_EARTH_DEVICE_PERFORMANCE_REPORT_v1'||
+        entry.performanceAtReady.report.performanceEnabled!==true||
+        entry.performanceAtReady.report.startup?.firstFailureStage)
+       throw Error('PERFORMANCE_CAPTURE_READY_DIAGNOSTIC_MISSING_OR_FAILED');
+    }
     if(v.x!==null&&(!snap.position||Math.abs(snap.position.x-v.x)>0.03||Math.abs(snap.position.z-v.z)>0.03))throw Error('GEN2638_ARRIVAL_POSITION_MISMATCH:'+JSON.stringify(snap.position));
     if(fourOnly){
      entry.gpuTreeCensus={treeCount:snap.gpuFourTreeFloorCount,clearingReady:snap.clearingGpuReady,casterIndexCount:snap.clearingCasterIndexCount};
@@ -154,6 +176,16 @@ if(process.argv.includes('--self-test')){
       await sleep(2000);
      }
      entry.residency=snap.residency;
+     if(performanceCaptureActive&&residencyReady(snap.residency)){
+      entry.performanceAtFullResidency=await observePerformance();
+      const p=entry.performanceAtFullResidency;
+      if(p?.report?.schema!=='H_EARTH_DEVICE_PERFORMANCE_REPORT_v1'||p.report.performanceEnabled!==true||
+         p.report.startup?.firstFailureStage||p.vegetationResidency?.residentBatchCount!==108||
+         p.vegetationResidency?.residentInstanceCount!==27585||p.globalGroundCover?.prepared!==true||
+         p.vegetationResidency?.canonicalPreparationTiming?.status!=='READY')
+        throw Error('PERFORMANCE_CAPTURE_FULL_RESIDENCY_DIAGNOSTIC_MISSING_OR_FAILED');
+      entry.performanceContract={schema:'H_EARTH_SOURCE_BOUND_DUAL_VEGETATION_PERFORMANCE_v1',sourceBound:true,deviceClass:'HEADLESS_CHROMIUM_NOT_PHYSICAL_ANDROID',capturedAtReady:true,capturedAfterFullResidency:true,canonicalWorkerTimings:true,oasisPreparationMilestones:true,globalGroundCoverTimings:true,strictUnchangedFourTreeAndVegetationAssertions:true};
+     }
      if(!residencyReady(snap.residency)){await page.screenshot({path:out+'/'+v.id+'-incomplete-residency.png',fullPage:true});throw Error('GEN2638_DEFERRED_RESIDENCY_INCOMPLETE')}
      if(!readiness(snap))throw Error('GEN2638_POST_RESIDENCY_RENDERER_NOT_READY');
      if(snap.gpuFourTreeFloorCount!==4||snap.clearingGpuReady!==true||!(snap.clearingCasterIndexCount>0))throw Error('GEN2638_POST_RESIDENCY_GPU_TREE_CENSUS_FAILED');

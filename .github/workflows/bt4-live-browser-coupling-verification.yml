@@ -1,0 +1,39 @@
+name: BT4 Live Browser Coupling Verification
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/bt4/verify-bt4-live-browser.v1.mjs'
+      - '.github/workflows/bt4-live-browser-coupling-verification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-live-browser-coupling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/bt4/verify-bt4-live-browser.v1.mjs
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install browser driver
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+
+      - name: Verify live BT4 served-state coupling
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -x "$CHROME_PATH"
+          node research/bt4/verify-bt4-live-browser.v1.mjs

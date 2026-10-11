@@ -35,10 +35,10 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "36ebd62c8c7ce3307fb909297d0c1670027fd53680e882b9b82548f1a4cef5d9"
+      "sha256": "60bc89f11f4b121b333f5a0f5fccba92b988c6df0634d9494472bc2fcf742c6c"
     }
   ],
-  "continuityReview": "Gen2646 bounded source extension to the existing exact far-land continuation primitive (vPrimitiveIndex==uGlobalCoverFarPrimitiveIndex, GPU material role 5) as well as native terrain role 1. Previous Gen2646 first screenshot showed coast terrain gained substantial texture but woodland continuation did not, confirming the renderer's exclusive role-1 branch missed the much larger LAND_SURFACE far continuation. One renderer shader now uses exactly the same biome-eligible textured soil/value/chroma/relief methods on both legitimate ground roles, with explicit far-only physically appropriate roughness/reflectance defaults, preserving other land surface, vegetation, water, protected 32m reference, four approved trees, geometry and all source assets. Exact source shader identity as bound; browser visual and mobile owner KEEP pending, releaseEligible=false.",
+  "continuityReview": "Gen2646 narrow follow-on fix: corrected renderer GPU coast-distance attribute upload to sample the exact FAR_LAND_CONTINUATION role-5 span as well as original role-1 TERRAIN. Previously role-5 coast samples were default zero and worldSoilCoast=smoothstep(2,29,0)=0 defeated all new far-land material despite shader routing. This uses the existing canonical getHEarthSignedCoastDistanceMeters and unchanged inverse planetary XZ projection for both legitimate land roles; no new asset, allocation, renderer, geometry, navigation or vegetation changes. Other role-5 stone/trunk spans are excluded. Original 32m reference interior shader remains byte-identical, full visual proof and owner KEEP pending, releaseEligible=false.",
   "referenceMaterial": {
     "ownerIssueNumber": 6100,
     "sourceAuditCommentId": 6103950634,
@@ -66,7 +66,14 @@
     "farLandPrimitiveId": "H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION",
     "farLandRoleCode": 5,
     "terrainRoleCode": 1,
-    "farLandIncludedInSameMaterialShader": true
+    "farLandIncludedInSameMaterialShader": true,
+    "farLandCoastDistanceUploaded": true,
+    "farLandCoastDistanceSource": "CANONICAL_WORLD_SIGNED_COAST_DISTANCE",
+    "farLandExactlyOnePrimitive": true,
+    "priorFarRoleCoastDistanceWasZero": true,
+    "farLandContactDistanceUnmodified": true,
+    "coastDistanceExistingGpuAttributeLocation": 8,
+    "priorCandidateHead": "afae56ffe5a71f407efbc77fe66a88b7071f778e"
   },
   "limits": {
     "candidateBrowserQualificationPending": true,
@@ -74,6 +81,7 @@
     "ownerVisualKeepPending": true,
     "physicalAndroidPerformanceNotYetQualified": true,
     "releaseEligible": false,
-    "farLandBrowserQualificationPending": true
+    "farLandBrowserQualificationPending": true,
+    "farLandCoastAttributeBrowserProofPending": true
   }
 }

@@ -1161,10 +1161,18 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   const sandRange = sandRanges[0];
   const coastDistances = new Float32Array(uploadViews.positions.length / 3);
   const planetRadius = H_EARTH_PLANETARY_WORLD_FRAME.exactSphereRadius;
-  const totalCoastVertices=renderPackage.primitiveSpans.filter(span=>span.role==='TERRAIN').reduce((total,span)=>total+span.vertexCount,0);
+  // Gen2646: the far-land continuation is GPU role 5, not role 1.
+  // Its coast attribute was left at Float32Array's default zero because
+  // only terrain-role spans received sampling, causing smoothstep(2,29,0)
+  // to suppress the soil treatment on the entire far-land primitive.
+  const isSoilDistanceSourceSpan=(span)=>span.role==='TERRAIN'||
+    span.primitiveId==='H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION';
+  const totalCoastVertices=renderPackage.primitiveSpans
+    .filter(isSoilDistanceSourceSpan)
+    .reduce((total,span)=>total+span.vertexCount,0);
   let coastVertexCompleted=0,lastCoastProgress=34;
   for (const span of renderPackage.primitiveSpans) {
-    if (span.role !== 'TERRAIN') continue;
+    if (!isSoilDistanceSourceSpan(span)) continue;
     for (let vertex = span.vertexStart; vertex < span.vertexStart + span.vertexCount; vertex++) {
       const p = vertex * 3, px = uploadViews.positions[p], py = uploadViews.positions[p + 1], pz = uploadViews.positions[p + 2];
       const horizontal = Math.hypot(px, pz);

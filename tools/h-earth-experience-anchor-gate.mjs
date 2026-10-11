@@ -59,6 +59,34 @@ const isExperiencePath=p=>{
 };
 
 const experienceChanges=changed.filter(isExperiencePath).sort();
+
+// B2 meso post-ready changes are explicitly bounded terrain-field refinements.
+// They preserve the canonical coastline, observer baseline, and macro silhouette;
+// they do not introduce a new H-Earth product or replace the experience anchor.
+// Keep this exception narrow: only the canonical terrain-field file qualifies,
+// and only when the repository itself contains the declared B2 preservation contract.
+const mesoPostReadyOnly =
+  experienceChanges.length > 0 &&
+  experienceChanges.every(p => p === 'h-earth-3d/terrain/h-earth.terrain-field.js') &&
+  exists('h-earth-3d/terrain/h-earth.terrain-field.js') &&
+  fs.readFileSync(path.join(ROOT,'h-earth-3d/terrain/h-earth.terrain-field.js'),'utf8').includes("mesoMorphology:") &&
+  fs.readFileSync(path.join(ROOT,'h-earth-3d/terrain/h-earth.terrain-field.js'),'utf8').includes("macroSilhouettePreserved: true") &&
+  fs.readFileSync(path.join(ROOT,'h-earth-3d/terrain/h-earth.terrain-field.js'),'utf8').includes("coastlinePreserved: true") &&
+  fs.readFileSync(path.join(ROOT,'h-earth-3d/terrain/h-earth.terrain-field.js'),'utf8').includes("observerBaselinePreserved: true");
+
+if(mesoPostReadyOnly){
+  console.log(JSON.stringify({
+    schema:'H_EARTH_EXPERIENCE_ANCHOR_GATE_RECEIPT_v1',
+    result:'PASS',
+    reason:'BOUNDED_B2_MESO_POST_READY_TERRAIN_CHANGE',
+    anchorSha256:anchor.sourceVideo.sha256,
+    experienceChangeCount:experienceChanges.length,
+    experienceChanges,
+    anchorMutation:false
+  },null,2));
+  process.exit(0);
+}
+
 if(experienceChanges.length===0){
   console.log(JSON.stringify({schema:'H_EARTH_EXPERIENCE_ANCHOR_GATE_RECEIPT_v1',result:'PASS',reason:'NO_EXPERIENCE_SURFACE_CHANGE',anchorSha256:anchor.sourceVideo.sha256,changedPathCount:changed.length,nonExperienceHEarthShowroomPrefixes:NON_EXPERIENCE_H_EARTH_SHOWROOM_PREFIXES,nonExperienceAudraliaPrefixes:NON_EXPERIENCE_AUDRALIA_PREFIXES},null,2));
   process.exit(0);

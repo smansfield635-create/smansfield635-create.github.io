@@ -1,0 +1,189 @@
+{
+  "schemaVersion": "H_EARTH_MIRRORLAND_AUDRALIA_H_EARTH_UMEN_NARRATIVE_CLARIFICATION_AMENDMENT_v1",
+  "artifactIdentity": {
+    "artifactId": "H_EARTH_MIRRORLAND_AUDRALIA_H_EARTH_UMEN_NARRATIVE_CLARIFICATION_AMENDMENT_v1",
+    "artifactClass": "ADDITIVE_INTERNAL_NARRATIVE_CLARIFICATION",
+    "status": "USER_AUTHORIZED_DURABLE_FINDINGS_CANDIDATE",
+    "canonical": false,
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "branch": "agent/h-earth-audralia-umen-narrative-reconciliation-001",
+    "baselineMainHead": "aaa8d55f20198f1ef508c5eb64f76ddb8477db30",
+    "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.mirrorland-audralia-h-earth-umen-narrative-clarification.amendment.v1.json"
+  },
+  "relationshipToExistingAuthority": {
+    "controllingNarrativeManifest": {
+      "path": "h-earth-3d/control-plane/region-001-reconciliation/h-earth.region-001.mirrorland-narrative-character-temporal-reconciliation.manifest.v1.json",
+      "baselineBlob": "1702d62036a6b241fdadddfabc304a5288f38652",
+      "relationship": "ADDITIVE_CLARIFICATION_PENDING_LATER_FOLD_INTO_CONTROLLING_MANIFEST"
+    },
+    "wholeEstateNarrativeInvariantContract": {
+      "path": "control-plane/whole-estate/invariant-contract-package-v1/narrative-invariant-contract.v1.json",
+      "baselineBlob": "de37525d99a2f51ec1b7a522aabd41b7700c54d7",
+      "relationship": "MUST_REMAIN_COMPATIBLE",
+      "publicMutationAuthorized": false,
+      "scientificClaimUpgradeAuthorized": false
+    }
+  },
+  "purpose": {
+    "primary": "Preserve the user-resolved Mirrorland, Audralia, H-Earth, Umen, human-hybrid, Nine Summits, and Gratitude Region narrative hierarchy so later narrative work does not have to reconstruct these facts from conversation.",
+    "doesNotDo": [
+      "SCRIPT_DIALOGUE",
+      "REVEAL_SPOILERS_ON_PUBLIC_PAGES",
+      "DEFINE_THE_HYBRIDIZATION_MECHANISM",
+      "DEFINE_COMPLETE_UMEN_HISTORY",
+      "ASSIGN_FUTURE_REGION_COORDINATES",
+      "AUTHORIZE_FUTURE_REGION_CONSTRUCTION",
+      "MUTATE_LIVE_H_EARTH_RUNTIME",
+      "UPGRADE_SCIENTIFIC_STANDING"
+    ]
+  },
+  "resolvedWorldOntology": {
+    "overarchingExperienceReality": "MIRRORLAND",
+    "planetIdentity": "AUDRALIA",
+    "planetIdentityResolved": true,
+    "hEarthIsPlanetName": false,
+    "hEarthOccursOnAudralia": true,
+    "hEarthClass": [
+      "PLAYER_FACING_EXPERIENCE",
+      "HYBRID_EARTH_CONDITION",
+      "SURVIVAL_LENS",
+      "AUDRALIA_GROUND_VIEW"
+    ],
+    "hEarthExpansion": "HYBRID_EARTH",
+    "hMeaning": "HYBRID",
+    "developmentChambersAreSeparateWorlds": false,
+    "developmentChambersRole": "TECHNICAL_AND_DEVELOPMENTAL_PARTITIONS_WITHIN_ONE_AUDRALIAN_WORLD",
+    "audraliaRemainsWorldAuthority": true
+  },
+  "resolvedSpeciesOrigin": {
+    "originRace": "UMEN",
+    "canonicalSpelling": "U-M-E-N",
+    "prohibitedMisspelling": "YUMEN",
+    "northHeroSpecies": "UMEN",
+    "southHeroSpecies": "UMEN",
+    "eastHeroSpecies": "UMEN",
+    "westHeroSpecies": "UMEN",
+    "humansAreHybrid": true,
+    "humanClassification": "HYBRID_DESCENDANT_OR_HYBRID_FORM",
+    "relationshipToHEarthName": "THE_H_IN_H_EARTH_ENCODES_THE_HYBRID_REVELATION",
+    "exactHybridizationMechanism": "UNRESOLVED",
+    "exactGeneticOrMetaphysicalMechanism": "UNRESOLVED",
+    "completeUmenHistory": "UNRESOLVED",
+    "presentDayUmenPopulationStatus": "UNRESOLVED",
+    "heroChronologyRelativeToHumans": "UNRESOLVED"
+  },
+  "experienceHierarchy": {
+    "sequence": [
+      "MIRRORLAND",
+      "AUDRALIA",
+      "H_EARTH_EXPERIENCE",
+      "NINE_SUMMITS_OF_LOVE_CONTINENTAL_PROGRESSION",
+      "GRATITUDE_REGION"
+    ],
+    "nineSummitsRole": "LARGE_SCALE_GEOGRAPHIC_AND_EXPERIENTIAL_PROGRESSION_WITHIN_H_EARTH_ON_AUDRALIA",
+    "gratitudeRegionRole": "FIRST_CURRENTLY_HIGH_RESOLUTION_DEVELOPED_REGION_WITHIN_THE_LARGER_NINE_SUMMITS_CONTINENTAL_EXPERIENCE",
+    "gratitudeRegionIsEntireWorld": false,
+    "gratitudeRegionIsEntireContinent": false
+  },
+  "revelationBoundary": {
+    "internalTruthMayBeRecordedNow": true,
+    "publicRevealTimingResolved": false,
+    "openingPlayerKnowledge": "WITHHOLD_DEEP_ONTOLOGY",
+    "mustWithholdUntilNarrativelyEarned": [
+      "AUDRALIA_AS_THE_PLANETARY_IDENTITY_BEHIND_THE_H_EARTH_EXPERIENCE_IF_THE_OPENING_PRESENTS_H_EARTH_AS_LOCATION",
+      "H_MEANS_HYBRID",
+      "HUMANS_ARE_HYBRID",
+      "UMEN_ARE_THE_ORIGIN_RACE",
+      "NORTH_SOUTH_EAST_WEST_HEROES_ARE_UMEN",
+      "COMPLETE_HYBRIDIZATION_HISTORY",
+      "COMPLETE_UMEN_HISTORY"
+    ],
+    "permittedEarlyUnderstanding": [
+      "PLAYER_IS_IN_H_EARTH_EXPERIENCE",
+      "WORLD_IS_PHYSICALLY_REAL",
+      "GRATITUDE_REGION_IS_ONLY_PART_OF_A_LARGER_WORLD",
+      "DISTANT_TERRITORY_MAY_EXIST_WITHOUT_COMPLETE_EXPOSITION"
+    ],
+    "revelationPrinciple": "THE_WORLD_NAME_SPECIES_HISTORY_AND_HUMAN_IDENTITY_MAY_RECONTEXTUALIZE_EARLIER_EXPERIENCE_ONLY_AFTER_THE_PLAYER_EARNS_THE_RELEVANT_TRUTH"
+  },
+  "narrativeConsequences": {
+    "hEarthNamingIsNarrativelyFunctional": true,
+    "planetAndExperienceNamesAreNotCompeting": true,
+    "statementPlayerCanUse": "I_AM_PLAYING_H_EARTH",
+    "deeperNarrativeTruth": "THE_PLAYER_IS_ON_AUDRALIA",
+    "worldConstructionConsequence": "TECHNICAL_CHAMBER_NAMES_MUST_NOT_BE_ALLOWED_TO_FRACTURE_AUDRALIA_INTO_SEPARATE_CANONICAL_WORLDS",
+    "nineSummitsConsequence": "THE_PROGRESSION_MAP_MAY_BE_REALIZED_AS_CONTINUOUS_AUDRALIAN_GEOGRAPHY_WITH_DIFFERENT_LEVELS_OF DEVELOPMENT_RESOLUTION"
+  },
+  "compatibilityWithFrozenNarrativeInvariants": {
+    "narrativeMayExplainObjectButMayNotReclassifyObject": "SATISFIED_BY_CLARIFYING_EXISTING_AUDRALIA_H_EARTH_RELATION_AND_USER_RESOLVED_SPECIES_FACTS",
+    "narrativeMayConnectDeclaredRelationsButMayNotInventRelations": "SATISFIED_BY_RECORDING_EXPLICIT_USER_CLARIFICATIONS_ONLY",
+    "narrativeMayUseMetaphorButMayNotUpgradeEmpiricalStanding": "NOT_APPLICABLE_TO_FICTIONAL_WORLD_LORE_AND_NO_SCIENTIFIC_STANDING_IS_CHANGED",
+    "publicMutationAuthorized": false
+  },
+  "unresolvedNarrativeFields": [
+    "EXACT_UMEN_ORIGIN_HISTORY",
+    "EXACT_HUMAN_HYBRIDIZATION_MECHANISM",
+    "EXACT_RELATION_BETWEEN_UMEN_AND_PRESENT_HUMAN_POPULATIONS",
+    "EXACT_REVEAL_SEQUENCE",
+    "EXACT_REVEAL_LOCATION",
+    "EXACT_HERO_CHRONOLOGY",
+    "WHETHER_ALL_NINE_SUMMITS_HAVE_FIXED_REGION_IDENTITIES",
+    "COMPLETE_CONTINENTAL_HISTORY"
+  ],
+  "decisionLedger": [
+    {
+      "decisionId": "AUDRALIA_PLANET_H_EARTH_EXPERIENCE_HIERARCHY",
+      "authorityQuestion": "IS_H_EARTH_A_SEPARATE_PLANET_OR_AN_EXPERIENCE_ON_AUDRALIA?",
+      "status": "RESOLVED_BY_USER",
+      "disposition": "AUDRALIA_IS_THE_PLANET_AND_H_EARTH_IS_THE_PLAYER_FACING_HYBRID_EARTH_EXPERIENCE_ON_AUDRALIA",
+      "basis": [
+        "USER_CLARIFICATION",
+        "EXISTING_AUDRALIA_GROUND_VIEW_MANIFEST_RELATION"
+      ],
+      "placementEffect": "DEVELOPMENT_CHAMBERS_MAY_NOT_CREATE_SEPARATE_WORLD_ONTOLOGIES",
+      "unresolvedFields": [],
+      "supersedes": []
+    },
+    {
+      "decisionId": "UMEN_ORIGIN_RACE_AND_HUMAN_HYBRID_IDENTITY",
+      "authorityQuestion": "WHAT_IS_THE_ORIGIN_RACE_AND_WHAT_DOES_THE_H_IN_H_EARTH_MEAN?",
+      "status": "RESOLVED_BY_USER_WITH_MECHANISM_DEFERRED",
+      "disposition": "UMEN_U_M_E_N_IS_THE_ORIGIN_RACE_THE_FOUR_CARDINAL_HEROES_ARE_UMEN_HUMANS_ARE_HYBRID_AND_H_MEANS_HYBRID",
+      "basis": [
+        "USER_CLARIFICATION"
+      ],
+      "placementEffect": "NARRATIVE_MUST_PRESERVE_THE_REVEAL_WITHOUT_PREMATURE_PUBLIC_EXPOSITION",
+      "unresolvedFields": [
+        "HYBRIDIZATION_MECHANISM",
+        "COMPLETE_UMEN_HISTORY",
+        "REVEAL_TIMING"
+      ],
+      "supersedes": []
+    },
+    {
+      "decisionId": "NINE_SUMMITS_WITHIN_H_EARTH_ON_AUDRALIA",
+      "authorityQuestion": "HOW_DO_THE_NINE_SUMMITS_MAPS_RELATE_TO_H_EARTH_AND_MIRRORLAND?",
+      "status": "RESOLVED_BY_USER_AT_HIERARCHY_LEVEL",
+      "disposition": "NINE_SUMMITS_OF_LOVE_IS_A_LARGE_SCALE_CONTINENTAL_EXPERIENCE_AND_PROGRESSION_SYSTEM_WITHIN_H_EARTH_ON_PLANET_AUDRALIA_INSIDE_MIRRORLAND",
+      "basis": [
+        "USER_CLARIFICATION",
+        "EXISTING_NINE_SUMMITS_HISTORICAL_DESIGN_REFERENCES"
+      ],
+      "placementEffect": "GRATITUDE_REGION_MAY_BE_EMBEDDED_AS_THE_FIRST_HIGH_RESOLUTION_REGION_WITHOUT_DEFINING_ALL_FUTURE_REGIONS",
+      "unresolvedFields": [
+        "FUTURE_REGION_IDENTITIES",
+        "FUTURE_REGION_COORDINATES",
+        "FULL_CONTINENTAL_GEOGRAPHY"
+      ],
+      "supersedes": []
+    }
+  ],
+  "stoppingBoundary": {
+    "publicStoryPagesMutated": false,
+    "controllingManifestReplaced": false,
+    "canonicalizationAuthorized": false,
+    "futureRegionConstructionAuthorized": false,
+    "liveRuntimeMutationAuthorized": false,
+    "mergeAuthorized": false
+  }
+}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-11T22:32:45Z",
+  "generatedAt": "2026-10-11T23:31:26Z",
   "window30d": {
-    "start": "2026-09-11T22:32:45Z",
-    "end": "2026-10-11T22:32:45Z"
+    "start": "2026-09-11T23:31:26Z",
+    "end": "2026-10-11T23:31:26Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 92
+      "pageLoads": 87
     },
     {
       "date": "2026-10-05",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 69
+      "pageLoads": 74
     }
   ],
   "summary": {
-    "pageLoads": 5263,
-    "botPageLoads": 2021,
-    "nonBotPageLoads": 3242
+    "pageLoads": 5173,
+    "botPageLoads": 2008,
+    "nonBotPageLoads": 3165
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2968,
-      "visits": 2968
+      "pageLoads": 2958,
+      "visits": 2958
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1993,
+      "pageLoads": 1913,
       "visits": 0
     },
     {
@@ -182,13 +182,8 @@
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 660,
-      "visits": 660
-    },
-    {
-      "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 492,
-      "visits": 22
+      "pageLoads": 650,
+      "visits": 650
     },
     {
       "path": "/analytics/",
@@ -196,14 +191,19 @@
       "visits": 325
     },
     {
-      "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 340,
-      "visits": 90
+      "path": "/showroom/globe/h-earth/awards/",
+      "pageLoads": 422,
+      "visits": 22
     },
     {
       "path": "/showroom/globe/h-earth/",
+      "pageLoads": 342,
+      "visits": 322
+    },
+    {
+      "path": "/campaigns/consider-the-energy/",
       "pageLoads": 340,
-      "visits": 320
+      "visits": 90
     },
     {
       "path": "/products/education/",
@@ -212,7 +212,7 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 226,
+      "pageLoads": 216,
       "visits": 176
     }
   ],

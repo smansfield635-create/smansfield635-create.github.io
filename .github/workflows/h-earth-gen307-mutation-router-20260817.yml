@@ -1,0 +1,85 @@
+name: H-Earth Gen307 Mutation Router
+
+on:
+  push:
+    branches:
+      - control-plane-carrier/gratitude-audralia-final-expression-intake-20260817
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  route:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Mint private read token
+        id: private-token
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+      - name: Checkout exact Gen307 governing head
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: d6376bffa66fd2df97b731a6423576192d56f5f3
+          token: ${{ steps.private-token.outputs.token }}
+          path: private-control-plane
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Route exact Gen307 mutation ceiling
+        id: route
+        working-directory: private-control-plane
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^{commit})" = "d6376bffa66fd2df97b731a6423576192d56f5f3"
+          cat > "$RUNNER_TEMP/paths.txt" <<'EOF'
+          h-earth-3d/docs/H_EARTH_GRATITUDE_AUDRALIA_FINAL_SUBTROPICAL_CONTINENTAL_EXPRESSION_SUCCESSOR_CONTRACT_v1.md
+          h-earth-3d/validation/h-earth.gratitude-audralia-final-expression.harness.mjs
+          h-earth-3d/environment/h-earth.successor-surface-material.run8c.js
+          h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js
+          h-earth-3d/control-plane/run-8/h-earth.run8d.grounded-vegetation.js
+          showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js
+          showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js
+          showroom/globe/h-earth/render/environment-atmosphere.js
+          showroom/globe/h-earth/render/geometry-distant-context.js
+          showroom/globe/h-earth/render/landscape-preview.js
+          showroom/globe/h-earth/render/run8e-successor-environment.js
+          EOF
+          cat > "$RUNNER_TEMP/availability.json" <<'EOF'
+          {"schema":"REPOSITORY_AI_INTAKE_EXECUTION_AVAILABILITY_RECEIPT_v1","result":"HOST_CAPABILITIES_OBSERVED","evidenceSource":"GITHUB_ACTIONS_HOSTED_GEN307_ROUTER_OCCURRENCE","localAuthenticatedExecutionAvailable":false,"localNodeRuntimeAvailable":false,"connectedGithubReadAvailable":false,"connectedGithubShaGuardedContentsWriteAvailable":false,"githubActionsExecutionAvailable":true}
+          EOF
+          set +e
+          node tools/repository-ai-entry-router.mjs \
+            --paths-file "$RUNNER_TEMP/paths.txt" \
+            --mutation-intent \
+            --intake-availability-receipt "$RUNNER_TEMP/availability.json" \
+            --output "$RUNNER_TEMP/router.json"
+          code=$?
+          set -e
+          jq . "$RUNNER_TEMP/router.json"
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          echo "disposition=$(jq -r '.disposition // .result' "$RUNNER_TEMP/router.json")" >> "$GITHUB_OUTPUT"
+          echo "routes_pass=$(jq '[.routes[]? | select(.disposition=="PASS")] | length' "$RUNNER_TEMP/router.json")" >> "$GITHUB_OUTPUT"
+          echo "routes_total=$(jq '[.routes[]?] | length' "$RUNNER_TEMP/router.json")" >> "$GITHUB_OUTPUT"
+          test "$code" -eq 0
+          test "$(jq -r '.disposition' "$RUNNER_TEMP/router.json")" = "PASS"
+          test "$(jq '[.routes[] | select(.disposition=="PASS")] | length' "$RUNNER_TEMP/router.json")" -eq 11
+      - name: Publish router callback
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DISPOSITION: ${{ steps.route.outputs.disposition }}
+          ROUTES_PASS: ${{ steps.route.outputs.routes_pass }}
+          ROUTES_TOTAL: ${{ steps.route.outputs.routes_total }}
+          EXIT_CODE: ${{ steps.route.outputs.exit_code }}
+        shell: bash
+        run: |
+          body="GEN307_MUTATION_ROUTER_RESULT_V1\ndisposition: $DISPOSITION\nroutesPass: $ROUTES_PASS\nroutesTotal: $ROUTES_TOTAL\nexitCode: $EXIT_CODE\nrunId: $GITHUB_RUN_ID"
+          gh api repos/${GITHUB_REPOSITORY}/issues/1274/comments -f body="$body" >/dev/null

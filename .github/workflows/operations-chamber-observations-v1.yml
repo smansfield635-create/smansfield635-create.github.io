@@ -1,0 +1,103 @@
+name: Operations Chamber observations
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+permissions: {}
+concurrency:
+  group: operations-chamber-observations
+  cancel-in-progress: false
+jobs:
+  collect:
+    if: github.repository == 'smansfield635-create/smansfield635-create.github.io' && vars.OPS_PUBLICATION_APPROVED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+    steps:
+      - name: Require immutable qualified source
+        env:
+          SOURCE_REF: ${{ vars.OPS_SOURCE_REF }}
+        run: '[[ "$SOURCE_REF" =~ ^[0-9a-f]{40}$ ]] || exit 1'
+      - name: Mint private read-only token
+        id: private
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-actions: read
+          permission-pull-requests: read
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: ${{ vars.OPS_SOURCE_REF }}
+          token: ${{ steps.private.outputs.token }}
+          persist-credentials: false
+          path: private-source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build approved display projection
+        env:
+          DGB_GITHUB_TOKEN: ${{ steps.private.outputs.token }}
+          DGB_PUBLIC_GITHUB_TOKEN: ${{ github.token }}
+          SOURCE_REF: ${{ vars.OPS_SOURCE_REF }}
+        run: |
+          set -euo pipefail
+          test "$(git -C private-source rev-parse HEAD)" = "$SOURCE_REF"
+          node private-source/tools/private-public-bridge/standalone/build.mjs --out "$RUNNER_TEMP/chamber-site"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: operations-chamber-display
+          path: |
+            ${{ runner.temp }}/chamber-site/index.html
+            ${{ runner.temp }}/chamber-site/dashboard.mjs
+            ${{ runner.temp }}/chamber-site/data.json
+            ${{ runner.temp }}/chamber-site/.nojekyll
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+  publish:
+    needs: collect
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: operations-chamber-display
+          path: display
+      - name: Atomically publish fixed observations branch
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const allowed = ['.nojekyll','dashboard.mjs','data.json','index.html'];
+            if (JSON.stringify(fs.readdirSync('display').sort()) !== JSON.stringify(allowed)) throw Error('OUTPUT_PATH_ALLOWLIST_MISMATCH');
+            for (const name of allowed) {
+              const stat = fs.lstatSync(`display/${name}`);
+              if (!stat.isFile() || stat.size > 16 * 1024 * 1024) throw Error('OUTPUT_FILE_INVALID');
+            }
+            const data = JSON.parse(fs.readFileSync('display/data.json','utf8'));
+            if (data.schema !== 'DGB_OPERATIONS_CHAMBER_DASHBOARD_DATA_v1' || !Number.isFinite(Date.parse(data.observedAt))) throw Error('DISPLAY_DATA_INVALID');
+            const {owner,repo} = context.repo;
+            if (`${owner}/${repo}` !== 'smansfield635-create/smansfield635-create.github.io') throw Error('REPOSITORY_MISMATCH');
+            const branch = 'operations-chamber-observations';
+            let previous = null;
+            try { previous = (await github.rest.git.getRef({owner,repo,ref:`heads/${branch}`})).data.object.sha; }
+            catch (error) { if (error.status !== 404) throw error; }
+            const tree = (await github.rest.git.createTree({owner,repo,tree:allowed.map(name=>({path:name,mode:'100644',type:'blob',content:fs.readFileSync(`display/${name}`,'utf8')}))})).data.sha;
+            const commit = (await github.rest.git.createCommit({owner,repo,message:`Observe Operations Chamber ${data.observedAt}`,tree,parents:previous?[previous]:[]})).data.sha;
+            if (previous) {
+              const current = (await github.rest.git.getRef({owner,repo,ref:`heads/${branch}`})).data.object.sha;
+              if (current !== previous) throw Error('EXPECTED_OUTPUT_HEAD_MISMATCH');
+              await github.rest.git.updateRef({owner,repo,ref:`heads/${branch}`,sha:commit,force:false});
+            } else await github.rest.git.createRef({owner,repo,ref:`refs/heads/${branch}`,sha:commit});
+            if ((await github.rest.git.getRef({owner,repo,ref:`heads/${branch}`})).data.object.sha !== commit) throw Error('OUTPUT_READBACK_MISMATCH');
+            core.notice(`Published observations ${commit}`);

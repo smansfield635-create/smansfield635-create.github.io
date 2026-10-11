@@ -1,0 +1,123 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_SOIL_ACTUAL_MATERIAL_PROPAGATION_FIX_20261010_001",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "showroom/globe/h-earth/render/assets/woodland-clearing-soil.png",
+    "showroom/globe/h-earth/validation/woodland-clearing-trial.record.json"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/h-earth/functional-landscape/navigation.js",
+    "showroom/globe/h-earth/validation/four-tree-only.browser.verify.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "showroom/globe/h-earth/render/woodland-clearing-trial.js",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "123831c38c924b50035364894f0f09e3fdd86f7cccd34bfa2120171e502f5944"
+    }
+  ],
+  "continuityReview": "Gen2646 sunlight-response continuity correction after real exact-WebGL2 rendering of 460d2530 showed actual soil albedo propagating to woodland beyond the reference but the surrounding ground becoming excessively dark. Independent atmosphere-state replay at 15.25h gives uSunDirection.y=+0.736957695, sunIntensity=0.826392, while the old outside terrain uses lightDirection=-uSunDirection, giving zero direct diffuse for flat positive-Y ground. The 32m approved clearing instead uses +uSunDirection, obtaining substantial daylight. Only world-soil-eligible existing terrain now blends diffuse and specular response between unchanged native light and clearing's sunward light, weighted by the existing soil eligibility*coastal albedo authority; avoids interpolating/normalizing antipodal light vectors. Preserves original clearing interior GLSL, four approved trees, vegetation, shoreline protection, geometric attributes and GPU assets. Exact new WebGL2, perceptual and owner KEEP pending; not published.",
+  "referenceMaterial": {
+    "ownerIssueNumber": 6100,
+    "sourceAuditCommentId": 6103950634,
+    "referenceBounds": {
+      "minX": -155.40267987050615,
+      "maxX": -123.40267987050615,
+      "minZ": -226.74616902099837,
+      "maxZ": -194.74616902099837
+    },
+    "sourceSoilTextureGitBlob": "23435bfdcf7e44b2fcb7c3937b6408ef5c980be9",
+    "sourceSoilTextureSha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce",
+    "immutableOriginalClearingShaderBranchSha256": "35a4fcb046615cab54b512407a9aa5fd6b6ff5fd1088f00784ba153335abeeb6",
+    "sourceRendererGitBlob": "a5e50ea72eb02f194030e4489ca464c9f91cb0aa",
+    "publishedFourTreeGeometryGitBlob": "c26247dcb69cb52c968fcd3ef6c2626eaa577d03",
+    "newGpuTextureAllocations": 0,
+    "worldEligibleTerrain": true,
+    "clearingDistanceGate": false,
+    "approvedSoilSamplerTextureUnit": 5,
+    "ownerCorrectionCommentId": 6104234312,
+    "priorPublishedSoilCommit": "1751f9cde5e20f9320be2bc2c113cb6193aa562b",
+    "newSoilDetailStrength": "MATERIAL_ALBEDO_AND_NORMAL_RELIEF_WITH_WORLD_SPACE_REGION_VARIANCE",
+    "ownerRejectionCommentId": 6104642863,
+    "noExteriorRectangleGate": true,
+    "firstCandidateShaderSha256": "f09fa52c9c96be83a7a30cb619a623c4c110ea2b32be93bfcde19e9e4f2191fb",
+    "farLandPrimitiveId": "H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION",
+    "farLandRoleCode": 5,
+    "terrainRoleCode": 1,
+    "farLandIncludedInSameMaterialShader": true,
+    "farLandCoastDistanceUploaded": true,
+    "farLandCoastDistanceSource": "CANONICAL_WORLD_SIGNED_COAST_DISTANCE",
+    "farLandExactlyOnePrimitive": true,
+    "priorFarRoleCoastDistanceWasZero": true,
+    "farLandContactDistanceUnmodified": true,
+    "coastDistanceExistingGpuAttributeLocation": 8,
+    "priorCandidateHead": "52accff774a8e436db8bf11e7c8d38ab596f4bf4",
+    "farLandNormalReorientation": "FRAGMENT_ONLY_IF_EXACT_FAR_PRIMITIVE_AND_NEGATIVE_Y",
+    "farLandNormalProof": {
+      "vertexCount": 415,
+      "allNegativeY": true,
+      "meanY": -0.999683286772946,
+      "minY": -0.9999384814445146,
+      "maxY": -0.998320490003847
+    },
+    "sourceNormalGpuBufferUnchanged": true,
+    "directReferenceSoilAlbedoOutsideRectangle": true,
+    "soilUvScale": 0.28,
+    "coastBlendMeters": [
+      18,
+      78
+    ],
+    "coastAlbedoMinMax": [
+      0.14,
+      0.98
+    ],
+    "priorOutsideWasBrightnessOnly": true,
+    "nearTerrainVertexCount": 10573,
+    "farLandExplicitlyExcludesNearFootprint": true,
+    "previousCandidateHead": "460d25307b4089e2360e15aa27f5c448d7056833",
+    "worldSoilLightingDirectionRepair": true,
+    "daylightRootCause": {
+      "timeOfDayHours": 15.25,
+      "sunDirectionY": 0.7369576953525517,
+      "sunIntensity": 0.8263920789326842,
+      "outsidePreviouslyUsedNegativeSunDirection": true,
+      "clearingUsesPositiveSunDirection": true
+    },
+    "sunwardBlendWeight": "worldSoilWeight_times_worldSoilAlbedoAuthority",
+    "noLightDirectionVectorInterpolation": true
+  },
+  "limits": {
+    "candidateBrowserQualificationPending": true,
+    "offReferencePerceptualAcceptPending": true,
+    "ownerVisualKeepPending": true,
+    "physicalAndroidPerformanceNotYetQualified": true,
+    "releaseEligible": false,
+    "farLandBrowserQualificationPending": true,
+    "farLandCoastAttributeBrowserProofPending": true,
+    "farLandNormalBrowserProofPending": true,
+    "realDirectSoilAlbedoBrowserProofPending": true,
+    "sunwardLightBrowserProofPending": true
+  }
+}

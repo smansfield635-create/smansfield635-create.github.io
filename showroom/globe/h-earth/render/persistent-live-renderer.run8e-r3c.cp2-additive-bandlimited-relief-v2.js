@@ -477,12 +477,23 @@ void main(){
     // Sweep-authored circumference UV avoids three triplanar texture fetches.
     clearingTexel=texture(uClearingBark,vec2(vMaterialParameters.x*3.0,vWorldPosition.y*0.70));
   }
+  // Gen2646: only the exact far-land continuation has inward-facing
+  // derived vertex normals (all 415 source vertices have negative Y).
+  // Correct fragment shading and soil slope eligibility without editing
+  // the authored geometry, canonical GPU normal buffer or other primitives.
+  bool isExactFarLandSoilPrimitive=
+    int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;
   vec3 geometricNormal=normalize(vNormal);
+  if(isExactFarLandSoilPrimitive && geometricNormal.y<0.0){
+    geometricNormal=-geometricNormal;
+  }
   vec3 shadingNormal=geometricNormal;
   vec3 viewDirection=normalize(uCameraPosition-vWorldPosition);
   float slope=1.0-clamp(geometricNormal.y,0.0,1.0);
   float specularScale=1.0;
   float terrainReliefEnvelope=0.0;
+  // Blend the approved soil's sunward lighting only into eligible ground.
+  float worldSoilLightingWeight=0.0;
   float materialSignal=clearingType>0.5?0.0:clamp(vMaterialParameters.x+vMaterialParameters.y*0.5,0.0,1.0);
   float identitySignal=float((vMaterialModelCode+vSurfaceClassCode+vPrimitiveIndex)%7u)/7.0;
   float distanceToCamera=length(vWorldPosition-uCameraPosition);
@@ -493,6 +504,10 @@ void main(){
   float terrainWetnessForLighting=0.0;
   vec3 base=max(vBaseColor.rgb,vec3(0.004));
   float outputAlpha=clamp(vBaseColor.a,0.18,1.0);
+  // Gen2646: authored near terrain AND exact far-land continuation share
+  // one biome-aware soil material; never affect vegetation or water roles.
+  bool worldSoilTerrain=vRoleCode==1u||
+    int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;
 
   // FAR continuation is visual context only; invert the spherical projection
   // before sampling its broad landscape palette. No new roots or access rights.
@@ -524,7 +539,7 @@ void main(){
       float contact=1.0-smoothstep(tree.w,tree.w+0.80,distance(localXZ,tree.xy));
       presentationContact=max(presentationContact,contact*0.28);
     }
-  }else if(vRoleCode==1u){
+  }else if(worldSoilTerrain){
     vec2 world=vWorldPosition.xz;
     float broad=noise2(world*0.035);
     float medium=noise2(world*0.13+vec2(17.0,-9.0));
@@ -647,13 +662,17 @@ void main(){
     palette*=mix(0.94,1.06,triMicro*nearMaterial);
     palette=mix(palette,base,0.34);
 
-    float terrainRoughness=clamp(vMaterialParameters.x,0.04,1.0);
+    float terrainRoughness=vRoleCode==1u?
+      clamp(vMaterialParameters.x,0.04,1.0):0.86;
     terrainRoughnessForLighting=terrainRoughness;
-    float terrainReflectance=clamp(vMaterialParameters.y,0.0,1.0);
+    float terrainReflectance=vRoleCode==1u?
+      clamp(vMaterialParameters.y,0.0,1.0):0.045;
     terrainReflectanceForLighting=terrainReflectance;
-    float terrainWetness=clamp(vMaterialParameters.z,0.0,1.0);
+    float terrainWetness=vRoleCode==1u?
+      clamp(vMaterialParameters.z,0.0,1.0):0.06;
     terrainWetnessForLighting=terrainWetness;
-    float terrainCurvature=clamp(vMaterialParameters.w,0.0,1.0);
+    float terrainCurvature=vRoleCode==1u?
+      clamp(vMaterialParameters.w,0.0,1.0):0.0;
     specularScale=mix(0.28,1.24,terrainReflectance);
     specularScale*=mix(0.78,1.38,terrainWetness);
     specularScale*=mix(0.92,1.10,rockExposure);
@@ -665,107 +684,108 @@ void main(){
       presentationHighlight,
       (1.0-terrainRoughness)*0.12+terrainWetness*0.06
     );
-    // H_EARTH_BIOME_WIDE_SOIL_MATERIAL_20261010_V1
-    // Reference material is a continuous terrain family across eligible
-    // geography, never an isolated rectangle or a clearing-distance mask.
-    // The immutable reference-clearing interior branch remains above.
-    // Existing biome landmarks, shoreline and woodland floor overlays
-    // below retain their independent regional identities.
+    // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2
+    // Gen2646: propagate the approved reference's ACTUAL textured soil
+    // character across eligible world terrain, not just 16% chroma.
+    // The original protected 32m reference interior remains unchanged.
+    // Coast/sand, rock-exposure and local ecological overlays stay native.
     if(uClearingEnabled==1){
-      float integratedSlopeMask=1.0-smoothstep(0.13,0.58,slope);
-      float integratedRockMask=1.0-smoothstep(0.21,0.72,rockExposure);
-      float integratedCoastMask=smoothstep(4.0,36.0,vCoastDistanceMeters);
-      float integratedEligibility=clamp(
-        integratedSlopeMask*integratedRockMask*integratedCoastMask,
-        0.0,1.0
+      float worldSoilSlope=1.0-smoothstep(0.16,0.59,slope);
+      float worldSoilRock=1.0-smoothstep(0.22,0.66,rockExposure);
+      float worldSoilCoast=smoothstep(2.0,29.0,vCoastDistanceMeters);
+      float worldSoilEligibility=clamp(
+        worldSoilSlope*worldSoilRock*worldSoilCoast,0.0,1.0
       );
-      // Merge the original 1.5m inner reference feather into the same
-      // soil light/texture response; do not impose an exterior boundary.
-      float integratedReferenceLink=clamp(clearingEdge,0.0,1.0);
-      float integratedWeight=mix(
-        integratedEligibility*mix(0.54,0.78,shelteredSoil),
-        1.0,integratedReferenceLink
+      // World-space gradual material variation, never distance to the box.
+      float worldSoilRegion=clamp(
+        macroField*0.48+mesoField*0.34+medium*0.18,0.0,1.0
       );
-      if(integratedWeight>0.001){
-        vec2 integratedXZ=clearingLocalXZ(vWorldPosition);
-        vec2 integratedWarp=vec2(
-          (macroField-0.5)*0.30+(detailField-0.5)*0.10,
-          (mesoField-0.5)*0.28+(medium-0.5)*0.12
-        )*(1.0-integratedReferenceLink);
-        vec3 integratedTexel=texture(
-          uClearingSoil,integratedXZ*0.28+integratedWarp
+      float worldSoilPatchiness=mix(
+        0.88,1.0,smoothstep(0.10,0.92,worldSoilRegion)
+      );
+      float worldSoilCoverage=worldSoilEligibility*
+        worldSoilPatchiness*mix(0.94,1.0,shelteredSoil);
+      // Keep the original 1.5m interior blend continuous without a
+      // new exterior ring, rectangular shader mask or distance cutoff.
+      float worldSoilReferenceLink=clamp(clearingEdge,0.0,1.0);
+      float worldSoilWeight=mix(
+        worldSoilCoverage,1.0,worldSoilReferenceLink
+      );
+      if(worldSoilWeight>0.001){
+        // Match the actual reference soil UVs across the former box.
+        // Regional color variation is applied without breaking its grain.
+        vec2 worldSoilXZ=clearingLocalXZ(vWorldPosition);
+        vec3 worldSoilTexel=texture(
+          uClearingSoil,worldSoilXZ*0.28
         ).rgb;
-        vec3 integratedReferenceSoil=pow(
-          integratedTexel,vec3(2.2)
-        )*0.75;
-        float integratedMoisture=clamp(
-          terrainWetness*0.70+(1.0-elevationMix)*0.16,0.0,1.0
+        vec3 worldSoilReference=pow(worldSoilTexel,vec3(2.2))*0.75;
+        // Gen2646: actual approved 256x256 soil image is the albedo
+        // authority on eligible inland ground, not just brightness/chroma
+        // modulation of a much lighter procedural terrain palette.
+        float worldSoilMoisture=clamp(
+          terrainWetness*0.70+(1.0-elevationMix)*0.18+
+          (macroField-0.5)*0.12,0.0,1.0
         );
-        vec3 integratedRegionalTint=mix(
-          vec3(1.13,1.06,0.93),vec3(0.83,0.91,1.06),
-          integratedMoisture
+        vec3 worldSoilEarthTint=mix(
+          vec3(1.14,1.06,0.90),
+          vec3(0.85,0.92,1.08),
+          worldSoilMoisture
         );
-        integratedRegionalTint=mix(
-          integratedRegionalTint,vec3(1.11,1.09,1.03),
-          elevationMix*0.28
+        worldSoilEarthTint=mix(
+          worldSoilEarthTint,vec3(1.10,1.12,1.08),
+          elevationMix*0.33
         );
-        float integratedEarthVariation=mix(
-          0.86,1.15,macroField*0.55+mesoField*0.45
+        float worldSoilBroadTonal=mix(0.91,1.09,worldSoilRegion);
+        vec3 worldSoilActualAlbedo=
+          worldSoilReference*worldSoilEarthTint*worldSoilBroadTonal;
+        // Keep the coastal native sand/earth palette as soil gradually
+        // becomes the principal material across eligible inland terrain.
+        // No distance-to-clearing/rectangle tests outside the reference.
+        float worldSoilCoastalAlbedoMix=smoothstep(
+          18.0,78.0,max(0.0,vCoastDistanceMeters)
         );
-        vec3 integratedSoil=integratedReferenceSoil*
-          mix(integratedRegionalTint,vec3(1.0),integratedReferenceLink)*
-          mix(integratedEarthVariation,1.0,integratedReferenceLink);
-        // Transfer approved reference texture local chroma/value detail
-        // through the existing biome palette, not a uniform brown wash.
-        // The original inner clearing feather converges on the intact
-        // reference soil color with no new rectangular border.
-        float integratedTextureLuma=dot(
-          integratedSoil,vec3(0.2126,0.7152,0.0722)
+        float worldSoilAlbedoAuthority=mix(
+          0.14,0.98,worldSoilCoastalAlbedoMix
         );
-        vec3 integratedTextureChromatic=clamp(
-          integratedSoil/max(integratedTextureLuma,0.04),
-          vec3(0.70),vec3(1.30)
+        vec3 worldSoilFinal=mix(
+          mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority),
+          worldSoilReference,
+          worldSoilReferenceLink
         );
-        float integratedTextureValue=clamp(
-          0.88+0.14*(integratedTextureLuma/0.12),0.88,1.17
-        );
-        vec3 integratedNativeSoil=palette*
-          mix(vec3(1.0),integratedTextureChromatic,0.16)*
-          mix(vec3(1.0),integratedRegionalTint,0.16)*
-          integratedTextureValue;
-        vec3 integratedHarmonizedSoil=mix(
-          integratedNativeSoil,integratedSoil,integratedReferenceLink
-        );
-        palette=mix(
-          palette,integratedHarmonizedSoil,integratedWeight
+        palette=mix(palette,worldSoilFinal,worldSoilWeight);
+        // The existing clearing directly lights its approved soil toward
+        // the sun. Match that response smoothly over real soil only, with
+        // coast authority and slope/rock eligibility already accounted for.
+        worldSoilLightingWeight=clamp(
+          worldSoilWeight*worldSoilAlbedoAuthority,0.0,1.0
         );
         terrainRoughnessForLighting=mix(
-          terrainRoughnessForLighting,0.94,integratedWeight
+          terrainRoughnessForLighting,0.94,worldSoilWeight
         );
         terrainReflectanceForLighting=mix(
-          terrainReflectanceForLighting,0.02,integratedWeight
+          terrainReflectanceForLighting,0.02,worldSoilWeight
         );
-        specularScale=mix(specularScale,1.0,integratedWeight);
-        float integratedNearRelief=integratedWeight*(
-          1.0-smoothstep(90.0,230.0,distanceToCamera)
+        specularScale=mix(specularScale,1.0,worldSoilWeight);
+        float worldSoilNearRelief=worldSoilWeight*(
+          1.0-smoothstep(92.0,240.0,distanceToCamera)
         );
-        if(integratedNearRelief>0.001){
-          vec3 integratedNormal=limitTerrainNormalDeviation(
+        if(worldSoilNearRelief>0.001){
+          vec3 worldSoilNormal=limitTerrainNormalDeviation(
             geometricNormal,perturbTerrainNormal(
               geometricNormal,vWorldPosition,
-              dot(integratedTexel,vec3(0.3333))*0.035
+              dot(worldSoilTexel,vec3(0.3333))*0.035
             )
           );
           shadingNormal=normalize(mix(
-            shadingNormal,integratedNormal,integratedNearRelief
+            shadingNormal,worldSoilNormal,worldSoilNearRelief
           ));
           terrainReliefEnvelope=max(
-            terrainReliefEnvelope,integratedNearRelief
+            terrainReliefEnvelope,worldSoilNearRelief
           );
         }
       }
     }
-    // H_EARTH_BIOME_WIDE_SOIL_MATERIAL_20261010_V1_END
+    // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2_END
     base=palette;
 
     vec2 manorCenter=vec2(80.0,-172.0);
@@ -916,7 +936,7 @@ void main(){
     1.0-max(dot(shadingNormal,viewDirection),0.0),
     2.2
   );
-  float rim=vRoleCode==1u
+  float rim=worldSoilTerrain
     ?mix(
       geometricRim,
       reliefRim,
@@ -924,7 +944,7 @@ void main(){
     )
     :(vRoleCode==4u?reliefRim:geometricRim);
 
-  float specularExponent=vRoleCode==1u?mix(52.0,9.0,terrainRoughnessForLighting):24.0;
+  float specularExponent=worldSoilTerrain?mix(52.0,9.0,terrainRoughnessForLighting):24.0;
   float specular=0.0;
   float directional=0.0;
   // Full-interior clearing lighting replaces these two values with weight 1.
@@ -934,8 +954,24 @@ void main(){
     vec3 halfDirection=normalize(lightDirection+viewDirection);
     float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);
     float reliefDiffuse=max(dot(shadingNormal,lightDirection),0.0);
+    // Existing global lightDirection is sun-away; the original clearing
+    // uses sunward illumination. Blend their *diffuse responses* directly
+    // to avoid normalizing zero when opposite sun vectors are interpolated.
+    vec3 soilSunwardLight=normalize(uSunDirection);
+    float soilGeometricDiffuse=max(
+      dot(geometricNormal,soilSunwardLight),0.0
+    );
+    float soilReliefDiffuse=max(
+      dot(shadingNormal,soilSunwardLight),0.0
+    );
+    geometricDiffuse=mix(
+      geometricDiffuse,soilGeometricDiffuse,worldSoilLightingWeight
+    );
+    reliefDiffuse=mix(
+      reliefDiffuse,soilReliefDiffuse,worldSoilLightingWeight
+    );
     float diffuse=vRoleCode==4u?reliefDiffuse:geometricDiffuse;
-    if(vRoleCode==1u){
+    if(worldSoilTerrain){
       diffuse=mix(
         geometricDiffuse,
         reliefDiffuse,
@@ -951,13 +987,23 @@ void main(){
       max(dot(shadingNormal,halfDirection),0.0),
       specularExponent
     )*specularScale;
+    vec3 soilHalfDirection=normalize(
+      soilSunwardLight+viewDirection
+    );
+    float soilSunwardSpecular=pow(
+      max(dot(shadingNormal,soilHalfDirection),0.0),
+      specularExponent
+    )*specularScale;
+    specular=mix(
+      specular,soilSunwardSpecular,worldSoilLightingWeight
+    );
     directional=
       diffuse*
       uSunIntensity*
-      (vRoleCode==1u?0.96:(vRoleCode==4u?0.74:0.82));
+      (worldSoilTerrain?0.96:(vRoleCode==4u?0.74:0.82));
   }
 
-  float specularLightingGain=vRoleCode==1u
+  float specularLightingGain=worldSoilTerrain
     ?mix(0.035,0.22,clamp(terrainReflectanceForLighting*0.72+terrainWetnessForLighting*0.28,0.0,1.0))
     :(vRoleCode==4u?0.22:(vMaterialParameters.w>1.5?0.004:0.07));
 
@@ -993,7 +1039,7 @@ void main(){
   lit+=uSunColor*specular*specularLightingGain;
 
   float rawFog=clamp((distanceToCamera-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor);
-  float fog=rawFog*(vRoleCode==1u?0.54:0.68);
+  float fog=rawFog*(worldSoilTerrain?0.54:0.68);
   fog=min(uMaximumFogFactor,fog+clearingEdge*clamp(distanceToCamera/2400.0,0.0,0.035));
   float luminance=dot(lit,vec3(0.2126,0.7152,0.0722));
   lit=mix(lit,vec3(luminance),clamp(fog*uDistanceDesaturationStrength*0.48,0.0,0.58));
@@ -1141,10 +1187,18 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   const sandRange = sandRanges[0];
   const coastDistances = new Float32Array(uploadViews.positions.length / 3);
   const planetRadius = H_EARTH_PLANETARY_WORLD_FRAME.exactSphereRadius;
-  const totalCoastVertices=renderPackage.primitiveSpans.filter(span=>span.role==='TERRAIN').reduce((total,span)=>total+span.vertexCount,0);
+  // Gen2646: the far-land continuation is GPU role 5, not role 1.
+  // Its coast attribute was left at Float32Array's default zero because
+  // only terrain-role spans received sampling, causing smoothstep(2,29,0)
+  // to suppress the soil treatment on the entire far-land primitive.
+  const isSoilDistanceSourceSpan=(span)=>span.role==='TERRAIN'||
+    span.primitiveId==='H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION';
+  const totalCoastVertices=renderPackage.primitiveSpans
+    .filter(isSoilDistanceSourceSpan)
+    .reduce((total,span)=>total+span.vertexCount,0);
   let coastVertexCompleted=0,lastCoastProgress=34;
   for (const span of renderPackage.primitiveSpans) {
-    if (span.role !== 'TERRAIN') continue;
+    if (!isSoilDistanceSourceSpan(span)) continue;
     for (let vertex = span.vertexStart; vertex < span.vertexStart + span.vertexCount; vertex++) {
       const p = vertex * 3, px = uploadViews.positions[p], py = uploadViews.positions[p + 1], pz = uploadViews.positions[p + 2];
       const horizontal = Math.hypot(px, pz);

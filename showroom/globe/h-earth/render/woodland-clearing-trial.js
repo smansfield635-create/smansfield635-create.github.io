@@ -9,6 +9,16 @@ const seed='H_EARTH_CLEARING_2629_20261008';
 const hash=(id,c)=>{let h=2166136261;for(const a of `${seed}:${id}:${c}`)h=Math.imul(h^a.charCodeAt(0),16777619);return(h>>>0)/4294967296;};
 const B=H_EARTH_WOODLAND_CLEARING_BOUNDS;
 export const insideWoodlandClearing=(x,z,margin=0)=>x>=B.minX+margin&&x<=B.maxX-margin&&z>=B.minZ+margin&&z<=B.maxZ-margin;
+// Gen2651 bounded vegetation transition: reuse the existing 8m woodland
+// ecotone principle, without changing the approved tree or ground meshes.
+const nativeBlendEdgeMeters=8;
+const clearingEdgeDistance=(x,z)=>Math.min(x-B.minX,B.maxX-x,z-B.minZ,B.maxZ-z);
+const clearingGrassInteriorWeight=(x,z,id)=>{
+  const d=clearingEdgeDistance(x,z)+(hash(id,'clearing-edge-jitter')-.5)*1.2;
+  const t=Math.max(0,Math.min(1,d/nativeBlendEdgeMeters));
+  return t*t*(3-2*t);
+};
+
 const prepare=m=>{if(!m.clearingAttributes)m.clearingAttributes=[];while(m.clearingAttributes.length<m.vertices.length)m.clearingAttributes.push([0,0,0]);};
 const vertex=(m,p,c,type=0,uv=[0,0])=>{prepare(m);const i=m.vertices.length;m.vertices.push({x:p[0],y:p[1],z:p[2]});m.colors.push(c);m.clearingAttributes.push([...uv,type]);return i;};
 const face=(m,a,b,c)=>m.indices.push(a,b,c);
@@ -30,7 +40,7 @@ function removeContainedGrass(grass,manifest){
  for(const entry of manifest){
   if(entry.kind!=='GRASS'){kept.push(entry);continue;}
   const start=entry.grassVertexStart,end=start+entry.grassVertexCount,vertices=old.vertices.slice(start,end);
-  if(vertices.every(v=>insideWoodlandClearing(v.x,v.z))&&insideWoodlandClearing(entry.x,entry.z,entry.crownRadius??0)){removed.push(entry.id);continue;}
+  if(vertices.every(v=>insideWoodlandClearing(v.x,v.z))&&insideWoodlandClearing(entry.x,entry.z,entry.crownRadius??0)&&hash(entry.id,'remove-native-at-edge')<clearingGrassInteriorWeight(entry.x,entry.z,entry.id)){removed.push(entry.id);continue;}
   const offset=next.vertices.length;next.vertices.push(...vertices);next.colors.push(...old.colors.slice(start,end));next.clearingAttributes.push(...vertices.map((_,j)=>old.attributes[start+j]??[0,0,0]));
   for(const ids of facesByStart.get(start)??[])next.indices.push(...ids.map(v=>v-start+offset));
   kept.push({...entry,grassVertexStart:offset,...(entry.rootPoints?{rootPoints:entry.rootPoints.map(p=>({...p,vertexIndex:p.vertexIndex-start+offset}))}:{})});
@@ -46,7 +56,7 @@ export function appendHEarthWoodlandClearingGround({grass,stone,manifest,ground,
   const id=`CLEARING_GRASS_${ix}_${iz}`,x=B.minX+1+ix*.90+(hash(id,'x')-.5)*.40,z=B.minZ+1+iz*.90+(hash(id,'z')-.5)*.40;
   const canopy=trees.reduce((n,t)=>Math.max(n,Math.max(0,1-Math.hypot(x-t.x,z-t.z)/t.crownRadius)),0);
   const pocket=hash(`FIELD_${Math.floor(x/4)}_${Math.floor(z/4)}`,'density');
-  if(!eligible(x,z,.65)||pocket>.87+.10*canopy)continue;
+  if(!eligible(x,z,.65)||pocket>.87+.10*canopy||hash(id,'clear-grass-edge-selection')>=clearingGrassInteriorWeight(x,z,id))continue;
   const start=grass.vertices.length,roots=[];
   for(let k=0;k<8;k++){
    const a=hash(id,`angle${k}`)*Math.PI*2,offset=.06+.12*hash(id,`offset${k}`),r=root(x+Math.cos(a)*offset,z+Math.sin(a)*offset);if(!r)throw Error('CLEARING_GRASS_ROOT_MISSING');

@@ -13919,6 +13919,50 @@
       "scopeHash": "d8d2e77ef7c4a141b73fde082d9693f4ea7f1686b521402900f884cbd406023f",
       "state": "ADMITTED_LOCKED"
     },
+    "d919a3209e8a56b9d5e73b9f91ba937ef99c4742ac542398e992b6e58c4b8040": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1895217bfba111bb1343f8799584e5e306c340d1",
+          "lockGeneration": 2644,
+          "lockScope": "H_EARTH:BIOME_WIDE_SOIL_MATERIAL:OCT10_2026:V1",
+          "operationId": "H_EARTH_BIOME_WIDE_SOIL_MATERIAL_INTEGRATION_20261010_001",
+          "procedureLocatorDigest": "f15fef5c7b5e8c71531fa3f11b74ec2feb7bb2067d821c970562d4dc0e1ecb02",
+          "requestDigest": "0ad1977d7c073cac6f8c0435bf535df815cd1e831bc15b8d45719ef293feabe0",
+          "scopeHash": "d919a3209e8a56b9d5e73b9f91ba937ef99c4742ac542398e992b6e58c4b8040"
+        },
+        "bindingDigest": "82fdb27750bf97ff8881a82cfa9649741a6545ebbd004492eac5ec423e7ca089",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "322b63d19500baaa51b288ace7334912dee075d2cef7ac6f191e3676588ffeab",
+          "commentId": 6104276382,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6100,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 2,
+          "workflowRunId": 38102585598,
+          "workflowSha": "1895217bfba111bb1343f8799584e5e306c340d1"
+        },
+        "lineageAnchorCommitSha": "a2719dfb6fcd1a09d3c440c5a7e47a2b148fe4b8",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1895217bfba111bb1343f8799584e5e306c340d1",
+      "lockGeneration": 2644,
+      "lockScope": "H_EARTH:BIOME_WIDE_SOIL_MATERIAL:OCT10_2026:V1",
+      "operationId": "H_EARTH_BIOME_WIDE_SOIL_MATERIAL_INTEGRATION_20261010_001",
+      "procedureLocatorDigest": "f15fef5c7b5e8c71531fa3f11b74ec2feb7bb2067d821c970562d4dc0e1ecb02",
+      "released": false,
+      "requestDigest": "0ad1977d7c073cac6f8c0435bf535df815cd1e831bc15b8d45719ef293feabe0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d919a3209e8a56b9d5e73b9f91ba937ef99c4742ac542398e992b6e58c4b8040",
+      "state": "ADMITTED_LOCKED"
+    },
     "d96152de62e5769989753eb23ef9f7878d3483c5cd3d4aa098b2958f1fd59899": {
       "governingHead": "be2617eafe160e463b8202d435b043bde6fa236b",
       "lockGeneration": 1727,
@@ -16256,7 +16300,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2643,
+  "lockGeneration": 2644,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

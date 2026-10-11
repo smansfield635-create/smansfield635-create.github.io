@@ -35,10 +35,10 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "9660e2a47503ac9d877ec5f31c07353ec155fa219c6cda8c5e061647bb13be8d"
+      "sha256": "123831c38c924b50035364894f0f09e3fdd86f7cccd34bfa2120171e502f5944"
     }
   ],
-  "continuityReview": "Gen2646 direct owner-approved soil albedo rather than mere textural modulation. The R2 live package shows 10573 near-terrain vertices and the far-land mesh expressly excludes that near footprint; prior far-normal fixes could not fix woodland ground. The previous outside code supplied dominant lighter procedural regional albedo and sampled the actual approved soil image only as scalar value/chroma modulation. This in-scope revision uses the full approved woodland soil texture directly as the principal material on eligible inland terrain, with identical source reference UV sampling, gradated native beach/color retention within 18-78m of coastline, moisture/elevation earth-tone variation and original slope/rock masking. Protected 32m clearing interior GLSL, four approved trees, all geometry, water, vegetation and existing GPU textures remain untouched. Browser and owner visual KEEP pending; no merge or publication.",
+  "continuityReview": "Gen2646 sunlight-response continuity correction after real exact-WebGL2 rendering of 460d2530 showed actual soil albedo propagating to woodland beyond the reference but the surrounding ground becoming excessively dark. Independent atmosphere-state replay at 15.25h gives uSunDirection.y=+0.736957695, sunIntensity=0.826392, while the old outside terrain uses lightDirection=-uSunDirection, giving zero direct diffuse for flat positive-Y ground. The 32m approved clearing instead uses +uSunDirection, obtaining substantial daylight. Only world-soil-eligible existing terrain now blends diffuse and specular response between unchanged native light and clearing's sunward light, weighted by the existing soil eligibility*coastal albedo authority; avoids interpolating/normalizing antipodal light vectors. Preserves original clearing interior GLSL, four approved trees, vegetation, shoreline protection, geometric attributes and GPU assets. Exact new WebGL2, perceptual and owner KEEP pending; not published.",
   "referenceMaterial": {
     "ownerIssueNumber": 6100,
     "sourceAuditCommentId": 6103950634,
@@ -96,7 +96,17 @@
     "priorOutsideWasBrightnessOnly": true,
     "nearTerrainVertexCount": 10573,
     "farLandExplicitlyExcludesNearFootprint": true,
-    "previousCandidateHead": "34282e78b859b6b42c77d7ce8ca4135da7825d19"
+    "previousCandidateHead": "460d25307b4089e2360e15aa27f5c448d7056833",
+    "worldSoilLightingDirectionRepair": true,
+    "daylightRootCause": {
+      "timeOfDayHours": 15.25,
+      "sunDirectionY": 0.7369576953525517,
+      "sunIntensity": 0.8263920789326842,
+      "outsidePreviouslyUsedNegativeSunDirection": true,
+      "clearingUsesPositiveSunDirection": true
+    },
+    "sunwardBlendWeight": "worldSoilWeight_times_worldSoilAlbedoAuthority",
+    "noLightDirectionVectorInterpolation": true
   },
   "limits": {
     "candidateBrowserQualificationPending": true,
@@ -107,6 +117,7 @@
     "farLandBrowserQualificationPending": true,
     "farLandCoastAttributeBrowserProofPending": true,
     "farLandNormalBrowserProofPending": true,
-    "realDirectSoilAlbedoBrowserProofPending": true
+    "realDirectSoilAlbedoBrowserProofPending": true,
+    "sunwardLightBrowserProofPending": true
   }
 }

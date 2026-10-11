@@ -492,6 +492,8 @@ void main(){
   float slope=1.0-clamp(geometricNormal.y,0.0,1.0);
   float specularScale=1.0;
   float terrainReliefEnvelope=0.0;
+  // Blend the approved soil's sunward lighting only into eligible ground.
+  float worldSoilLightingWeight=0.0;
   float materialSignal=clearingType>0.5?0.0:clamp(vMaterialParameters.x+vMaterialParameters.y*0.5,0.0,1.0);
   float identitySignal=float((vMaterialModelCode+vSurfaceClassCode+vPrimitiveIndex)%7u)/7.0;
   float distanceToCamera=length(vWorldPosition-uCameraPosition);
@@ -751,6 +753,12 @@ void main(){
           worldSoilReferenceLink
         );
         palette=mix(palette,worldSoilFinal,worldSoilWeight);
+        // The existing clearing directly lights its approved soil toward
+        // the sun. Match that response smoothly over real soil only, with
+        // coast authority and slope/rock eligibility already accounted for.
+        worldSoilLightingWeight=clamp(
+          worldSoilWeight*worldSoilAlbedoAuthority,0.0,1.0
+        );
         terrainRoughnessForLighting=mix(
           terrainRoughnessForLighting,0.94,worldSoilWeight
         );
@@ -946,6 +954,22 @@ void main(){
     vec3 halfDirection=normalize(lightDirection+viewDirection);
     float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);
     float reliefDiffuse=max(dot(shadingNormal,lightDirection),0.0);
+    // Existing global lightDirection is sun-away; the original clearing
+    // uses sunward illumination. Blend their *diffuse responses* directly
+    // to avoid normalizing zero when opposite sun vectors are interpolated.
+    vec3 soilSunwardLight=normalize(uSunDirection);
+    float soilGeometricDiffuse=max(
+      dot(geometricNormal,soilSunwardLight),0.0
+    );
+    float soilReliefDiffuse=max(
+      dot(shadingNormal,soilSunwardLight),0.0
+    );
+    geometricDiffuse=mix(
+      geometricDiffuse,soilGeometricDiffuse,worldSoilLightingWeight
+    );
+    reliefDiffuse=mix(
+      reliefDiffuse,soilReliefDiffuse,worldSoilLightingWeight
+    );
     float diffuse=vRoleCode==4u?reliefDiffuse:geometricDiffuse;
     if(worldSoilTerrain){
       diffuse=mix(
@@ -963,6 +987,16 @@ void main(){
       max(dot(shadingNormal,halfDirection),0.0),
       specularExponent
     )*specularScale;
+    vec3 soilHalfDirection=normalize(
+      soilSunwardLight+viewDirection
+    );
+    float soilSunwardSpecular=pow(
+      max(dot(shadingNormal,soilHalfDirection),0.0),
+      specularExponent
+    )*specularScale;
+    specular=mix(
+      specular,soilSunwardSpecular,worldSoilLightingWeight
+    );
     directional=
       diffuse*
       uSunIntensity*

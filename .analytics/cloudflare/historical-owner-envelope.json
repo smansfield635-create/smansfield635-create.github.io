@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-11T03:45:25Z",
+  "generatedAt": "2026-10-11T04:39:40Z",
   "window": {
-    "start": "2026-07-13T03:45:25Z",
-    "end": "2026-10-11T03:45:25Z"
+    "start": "2026-07-13T04:39:40Z",
+    "end": "2026-10-11T04:39:40Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,37 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5018,
-    "visits": 1309,
+    "pageLoads": 4996,
+    "visits": 1318,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5018,
-        "visits": 1309
+        "pageLoads": 4996,
+        "visits": 1318
       }
     },
     "byPath": {
-      "/characters/": {
-        "pageLoads": 70,
-        "visits": 30
-      },
       "/": {
-        "pageLoads": 1039,
-        "visits": 727
+        "pageLoads": 1048,
+        "visits": 736
       },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 175,
+        "pageLoads": 174,
         "visits": 2
       },
       "/showroom/": {
@@ -60,6 +48,10 @@
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/diagnostic/": {
+        "pageLoads": 50,
         "visits": 0
       },
       "/products/": {
@@ -246,8 +238,16 @@
         "pageLoads": 70,
         "visits": 0
       },
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
+      },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -264,10 +264,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {
@@ -288,6 +284,10 @@
       },
       "/showroom/story/timeline/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/rob/": {
@@ -349,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3709,
+        "pageLoads": 3678,
         "visits": 0
       },
       "www.google.com": {
@@ -357,8 +357,8 @@
         "visits": 780
       },
       "(none)": {
-        "pageLoads": 519,
-        "visits": 519
+        "pageLoads": 528,
+        "visits": 528
       },
       "raw.githack.com": {
         "pageLoads": 10,

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-11T03:45:25Z",
+  "generatedAt": "2026-10-11T04:39:40Z",
   "window30d": {
-    "start": "2026-09-11T03:45:25Z",
-    "end": "2026-10-11T03:45:25Z"
+    "start": "2026-09-11T04:39:40Z",
+    "end": "2026-10-11T04:39:40Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 84
+      "pageLoads": 94
     },
     {
       "date": "2026-10-05",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 27
+      "pageLoads": 31
     }
   ],
   "summary": {
-    "pageLoads": 5563,
-    "botPageLoads": 2075,
-    "nonBotPageLoads": 3488
+    "pageLoads": 5537,
+    "botPageLoads": 2074,
+    "nonBotPageLoads": 3463
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2990,
-      "visits": 2990
+      "pageLoads": 2999,
+      "visits": 2999
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 2278,
+      "pageLoads": 2237,
       "visits": 0
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 19,
-      "visits": 19
+      "pageLoads": 25,
+      "visits": 25
     },
     {
       "host": "l.instagram.com",
@@ -177,13 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1179,
-      "visits": 860
-    },
-    {
-      "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 702,
-      "visits": 22
+      "pageLoads": 1188,
+      "visits": 869
     },
     {
       "path": "/mirror-manor-preview/",
@@ -191,9 +186,14 @@
       "visits": 680
     },
     {
+      "path": "/showroom/globe/h-earth/awards/",
+      "pageLoads": 672,
+      "visits": 22
+    },
+    {
       "path": "/analytics/",
-      "pageLoads": 437,
-      "visits": 316
+      "pageLoads": 438,
+      "visits": 317
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 335,
-      "visits": 312
+      "pageLoads": 336,
+      "visits": 314
     },
     {
       "path": "/products/education/",

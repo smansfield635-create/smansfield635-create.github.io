@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-11T13:32:23Z",
+  "generatedAt": "2026-10-11T14:32:04Z",
   "window30d": {
-    "start": "2026-09-11T13:32:23Z",
-    "end": "2026-10-11T13:32:23Z"
+    "start": "2026-09-11T14:32:04Z",
+    "end": "2026-10-11T14:32:04Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 92
+      "pageLoads": 91
     },
     {
       "date": "2026-10-05",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 44
+      "pageLoads": 45
     }
   ],
   "summary": {
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1187,
-      "visits": 868
+      "pageLoads": 1157,
+      "visits": 838
     },
     {
       "path": "/mirror-manor-preview/",
@@ -187,8 +187,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 672,
-      "visits": 22
+      "pageLoads": 492,
+      "visits": 12
     },
     {
       "path": "/analytics/",

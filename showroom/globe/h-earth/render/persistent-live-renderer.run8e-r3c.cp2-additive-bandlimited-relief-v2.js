@@ -665,107 +665,119 @@ void main(){
       presentationHighlight,
       (1.0-terrainRoughness)*0.12+terrainWetness*0.06
     );
-    // H_EARTH_BIOME_WIDE_SOIL_MATERIAL_20261010_V1
-    // Reference material is a continuous terrain family across eligible
-    // geography, never an isolated rectangle or a clearing-distance mask.
-    // The immutable reference-clearing interior branch remains above.
-    // Existing biome landmarks, shoreline and woodland floor overlays
-    // below retain their independent regional identities.
+    // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2
+    // Gen2646: propagate the approved reference's ACTUAL textured soil
+    // character across eligible world terrain, not just 16% chroma.
+    // The original protected 32m reference interior remains unchanged.
+    // Coast/sand, rock-exposure and local ecological overlays stay native.
     if(uClearingEnabled==1){
-      float integratedSlopeMask=1.0-smoothstep(0.13,0.58,slope);
-      float integratedRockMask=1.0-smoothstep(0.21,0.72,rockExposure);
-      float integratedCoastMask=smoothstep(4.0,36.0,vCoastDistanceMeters);
-      float integratedEligibility=clamp(
-        integratedSlopeMask*integratedRockMask*integratedCoastMask,
-        0.0,1.0
+      float worldSoilSlope=1.0-smoothstep(0.16,0.59,slope);
+      float worldSoilRock=1.0-smoothstep(0.22,0.66,rockExposure);
+      float worldSoilCoast=smoothstep(2.0,29.0,vCoastDistanceMeters);
+      float worldSoilEligibility=clamp(
+        worldSoilSlope*worldSoilRock*worldSoilCoast,0.0,1.0
       );
-      // Merge the original 1.5m inner reference feather into the same
-      // soil light/texture response; do not impose an exterior boundary.
-      float integratedReferenceLink=clamp(clearingEdge,0.0,1.0);
-      float integratedWeight=mix(
-        integratedEligibility*mix(0.54,0.78,shelteredSoil),
-        1.0,integratedReferenceLink
+      // World-space gradual material variation, never distance to the box.
+      float worldSoilRegion=clamp(
+        macroField*0.48+mesoField*0.34+medium*0.18,0.0,1.0
       );
-      if(integratedWeight>0.001){
-        vec2 integratedXZ=clearingLocalXZ(vWorldPosition);
-        vec2 integratedWarp=vec2(
+      float worldSoilPatchiness=mix(
+        0.65,0.97,smoothstep(0.10,0.92,worldSoilRegion)
+      );
+      float worldSoilCoverage=worldSoilEligibility*
+        worldSoilPatchiness*mix(0.84,1.0,shelteredSoil);
+      // Keep the original 1.5m interior blend continuous without a
+      // new exterior ring, rectangular shader mask or distance cutoff.
+      float worldSoilReferenceLink=clamp(clearingEdge,0.0,1.0);
+      float worldSoilWeight=mix(
+        worldSoilCoverage,1.0,worldSoilReferenceLink
+      );
+      if(worldSoilWeight>0.001){
+        vec2 worldSoilXZ=clearingLocalXZ(vWorldPosition);
+        vec2 worldSoilWarp=vec2(
           (macroField-0.5)*0.30+(detailField-0.5)*0.10,
           (mesoField-0.5)*0.28+(medium-0.5)*0.12
-        )*(1.0-integratedReferenceLink);
-        vec3 integratedTexel=texture(
-          uClearingSoil,integratedXZ*0.28+integratedWarp
+        )*(1.0-worldSoilReferenceLink);
+        vec3 worldSoilTexel=texture(
+          uClearingSoil,worldSoilXZ*0.28+worldSoilWarp
         ).rgb;
-        vec3 integratedReferenceSoil=pow(
-          integratedTexel,vec3(2.2)
+        vec3 worldSoilReference=pow(worldSoilTexel,vec3(2.2))*0.75;
+        // Calibrated to the measured 256x256 approved texture RGB
+        // median (104,87,62), preserving its actual grain/contrast.
+        // Normalize *value*, not merely 16% of its chroma.
+        vec3 worldSoilMedian=pow(
+          vec3(104.0,87.0,62.0)/255.0,vec3(2.2)
         )*0.75;
-        float integratedMoisture=clamp(
-          terrainWetness*0.70+(1.0-elevationMix)*0.16,0.0,1.0
+        float worldSoilLuma=dot(
+          worldSoilReference,vec3(0.2126,0.7152,0.0722)
         );
-        vec3 integratedRegionalTint=mix(
-          vec3(1.13,1.06,0.93),vec3(0.83,0.91,1.06),
-          integratedMoisture
+        float worldSoilMedianLuma=dot(
+          worldSoilMedian,vec3(0.2126,0.7152,0.0722)
         );
-        integratedRegionalTint=mix(
-          integratedRegionalTint,vec3(1.11,1.09,1.03),
-          elevationMix*0.28
+        float worldSoilFineValue=clamp(
+          pow(worldSoilLuma/max(worldSoilMedianLuma,0.001),1.45),
+          0.65,1.43
         );
-        float integratedEarthVariation=mix(
-          0.86,1.15,macroField*0.55+mesoField*0.45
+        vec3 worldSoilFineChroma=clamp(
+          worldSoilReference/max(worldSoilMedian,vec3(0.001)),
+          vec3(0.70),vec3(1.32)
         );
-        vec3 integratedSoil=integratedReferenceSoil*
-          mix(integratedRegionalTint,vec3(1.0),integratedReferenceLink)*
-          mix(integratedEarthVariation,1.0,integratedReferenceLink);
-        // Transfer approved reference texture local chroma/value detail
-        // through the existing biome palette, not a uniform brown wash.
-        // The original inner clearing feather converges on the intact
-        // reference soil color with no new rectangular border.
-        float integratedTextureLuma=dot(
-          integratedSoil,vec3(0.2126,0.7152,0.0722)
+        // Actual region-dependent earth palette. These are spatial
+        // climate/landform signals, not uniform brown across the world.
+        float worldSoilMoisture=clamp(
+          terrainWetness*0.70+(1.0-elevationMix)*0.18+
+          (macroField-0.5)*0.12,0.0,1.0
         );
-        vec3 integratedTextureChromatic=clamp(
-          integratedSoil/max(integratedTextureLuma,0.04),
-          vec3(0.70),vec3(1.30)
+        vec3 worldSoilDry=vec3(0.295,0.225,0.145);
+        vec3 worldSoilDamp=vec3(0.237,0.241,0.163);
+        vec3 worldSoilUpland=vec3(0.319,0.287,0.203);
+        vec3 worldSoilRegional=mix(
+          worldSoilDry,worldSoilDamp,worldSoilMoisture
         );
-        float integratedTextureValue=clamp(
-          0.88+0.14*(integratedTextureLuma/0.12),0.88,1.17
+        worldSoilRegional=mix(
+          worldSoilRegional,worldSoilUpland,elevationMix*0.40
         );
-        vec3 integratedNativeSoil=palette*
-          mix(vec3(1.0),integratedTextureChromatic,0.16)*
-          mix(vec3(1.0),integratedRegionalTint,0.16)*
-          integratedTextureValue;
-        vec3 integratedHarmonizedSoil=mix(
-          integratedNativeSoil,integratedSoil,integratedReferenceLink
+        worldSoilRegional*=mix(
+          0.91,1.10,worldSoilRegion
         );
-        palette=mix(
-          palette,integratedHarmonizedSoil,integratedWeight
+        // Retain the canonical native biome palette as one input, not
+        // the 100%-dominant final color that defeated Gen2644.
+        vec3 worldSoilMaterial=mix(
+          palette,worldSoilRegional,0.86
         );
+        worldSoilMaterial*=worldSoilFineValue*
+          mix(vec3(1.0),worldSoilFineChroma,0.42);
+        vec3 worldSoilFinal=mix(
+          worldSoilMaterial,worldSoilReference,worldSoilReferenceLink
+        );
+        palette=mix(palette,worldSoilFinal,worldSoilWeight);
         terrainRoughnessForLighting=mix(
-          terrainRoughnessForLighting,0.94,integratedWeight
+          terrainRoughnessForLighting,0.94,worldSoilWeight
         );
         terrainReflectanceForLighting=mix(
-          terrainReflectanceForLighting,0.02,integratedWeight
+          terrainReflectanceForLighting,0.02,worldSoilWeight
         );
-        specularScale=mix(specularScale,1.0,integratedWeight);
-        float integratedNearRelief=integratedWeight*(
-          1.0-smoothstep(90.0,230.0,distanceToCamera)
+        specularScale=mix(specularScale,1.0,worldSoilWeight);
+        float worldSoilNearRelief=worldSoilWeight*(
+          1.0-smoothstep(92.0,240.0,distanceToCamera)
         );
-        if(integratedNearRelief>0.001){
-          vec3 integratedNormal=limitTerrainNormalDeviation(
+        if(worldSoilNearRelief>0.001){
+          vec3 worldSoilNormal=limitTerrainNormalDeviation(
             geometricNormal,perturbTerrainNormal(
               geometricNormal,vWorldPosition,
-              dot(integratedTexel,vec3(0.3333))*0.035
+              dot(worldSoilTexel,vec3(0.3333))*0.052
             )
           );
           shadingNormal=normalize(mix(
-            shadingNormal,integratedNormal,integratedNearRelief
+            shadingNormal,worldSoilNormal,worldSoilNearRelief
           ));
           terrainReliefEnvelope=max(
-            terrainReliefEnvelope,integratedNearRelief
+            terrainReliefEnvelope,worldSoilNearRelief
           );
         }
       }
     }
-    // H_EARTH_BIOME_WIDE_SOIL_MATERIAL_20261010_V1_END
+    // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2_END
     base=palette;
 
     vec2 manorCenter=vec2(80.0,-172.0);

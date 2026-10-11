@@ -1,0 +1,35 @@
+name: IMI corporate collapse threshold discovery v1
+
+on:
+  pull_request:
+    paths:
+      - 'research/imi/imi_corporate_collapse_threshold_discovery_v1.py'
+      - 'research/imi/IMI_CORPORATE_COLLAPSE_THRESHOLD_DISCOVERY_PROTOCOL_v1.md'
+      - '.github/workflows/imi-corporate-collapse-threshold-discovery-v1.yml'
+  workflow_dispatch:
+
+jobs:
+  discovery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            research/imi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install scientific dependencies
+        run: pip install numpy pandas requests
+      - name: Execute frozen corporate collapse threshold discovery
+        run: python research/imi/imi_corporate_collapse_threshold_discovery_v1.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: imi-corporate-collapse-threshold-discovery-v1
+          path: |
+            imi_corporate_collapse_threshold_findings_v1.json
+            IMI_CORPORATE_COLLAPSE_THRESHOLD_DISCOVERY_VERDICT_v1.txt
+            imi_corporate_collapse_discovery_panel_v1.csv
+          if-no-files-found: warn

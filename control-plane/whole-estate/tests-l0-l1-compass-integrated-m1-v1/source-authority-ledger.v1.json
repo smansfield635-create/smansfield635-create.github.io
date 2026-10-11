@@ -1,0 +1,21 @@
+{
+  "schema": "TESTS_L0_L1_COMPASS_INTEGRATED_M1_SOURCE_AUTHORITY_LEDGER_v1",
+  "version": "1.0.0",
+  "constructionAuthorityAnchor": "9eb936918ce063cef6c6f5d800f39ae966f3d3aa",
+  "sources": [
+    {"id":"COMPASS_TESTS_BINDING_CONTRACT","path":"control-plane/whole-estate/compass-tests-architecture-binding-v1/binding-contract.v1.json","blob":"52ce1e12dc2a07c90e7eaae350f97015b2f28179","role":"NAVIGATION_BINDING"},
+    {"id":"COMPASS_TESTS_DONOR_MAP","path":"control-plane/whole-estate/compass-tests-architecture-binding-v1/donor-capability-map.v1.json","blob":"6bd625bd63bc0bbdec4a629e8c5058f65284924f","role":"C01_C09_ADMISSION"},
+    {"id":"COMPASS_TESTS_NONINHERITANCE_LEDGER","path":"control-plane/whole-estate/compass-tests-architecture-binding-v1/donor-noninheritance-ledger.v1.json","blob":"10777cb94ca72e694ab6ab5372f53ddd9441aadc","role":"SEMANTIC_STRIPPING_AUTHORITY"},
+    {"id":"ACCEPTED_M1_MANIFEST","path":"control-plane/whole-estate/tests-l0-l1-bounded-manifestation-m1-v1/candidate-manifest.v1.json","blob":"e18c382c7f82bd3335f69bcf752198c0c10e66a9","role":"SCIENTIFIC_AND_PROCEDURAL_BASELINE"},
+    {"id":"PROMOTED_OBJECT_PROJECTION_REGISTRY","path":"control-plane/whole-estate/tests-l0-l1-object-projection-registry-v1/object-projection-registry.v1.json","blob":"b801a11e342051a6b00e6f7098b1d691685ad0b6","role":"OBJECT_RELATION_AUTHORITY"},
+    {"id":"TESTS_NAVIGATION_AUTHORITY","path":"control-plane/whole-estate/tests-l0-l1-navigation-shell-authority-v1/authority-contract.v1.json","blob":"0bfab791c005ca71cee771a5d14d27f8dfab3177","role":"TESTS_LAYER_AND_OPERATION_BOUNDARY"}
+  ],
+  "donorImplementationPins": [
+    {"donorId":"MAIN_COMPASS_CONTROLLER","commit":"798d3b034ed9814574e5cbe189ef280eb857602e","path":"assets/compass/compass.controller.js","blob":"83ff2b714c9c36a9c096cf5ab2fd7b3875fe3e46","capabilities":["C01","C02","C03","C04","C09"]},
+    {"donorId":"MAIN_COMPASS_CRYSTALS","commit":"798d3b034ed9814574e5cbe189ef280eb857602e","path":"assets/compass/compass.crystals.js","blob":"3d6427cbdb961576468d4aab05c0e4987549cea3","capabilities":["C05","C07"]},
+    {"donorId":"MAIN_COMPASS_UPSTREAM_RENDERER","commit":"798d3b034ed9814574e5cbe189ef280eb857602e","path":"assets/compass/upstream-compass.renderer.js","blob":"965376dd8a92686bc7008d1fea4846b5f8300872","capabilities":["C08"]},
+    {"donorId":"LAWS_COMPASS_CONTROLLER","commit":"798d3b034ed9814574e5cbe189ef280eb857602e","path":"laws/index.controller.js","blob":"e6eef54a8d808c12ea0e5db85539bc521f29f3b2","capabilities":["C06"]}
+  ],
+  "transferRule": "MECHANICS_ONLY_THROUGH_TESTS_ADAPTERS_NO_DONOR_SEMANTIC_INHERITANCE",
+  "destinationSemanticAuthority": "PROMOTED_TESTS_AUTHORITY_AND_OBJECT_PROJECTION_REGISTRY_ONLY"
+}

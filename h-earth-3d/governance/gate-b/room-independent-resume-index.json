@@ -1,0 +1,35 @@
+{
+  "artifactId": "H_EARTH_GATE_B_COMPACT_ROOM_INDEPENDENT_RESUME_INDEX_v1",
+  "sourceDriveFileId": "1qZZd2DtLydHaGEHYIkmDl_Qu2tfA8a0-",
+  "sourceSha256": "7374bbe506613b5b2ab0cc259515d39aa8f925dbcc2fd1b69aee0d401c7078b3",
+  "repositoryReconciliationRequired": true,
+  "preservedSourceRecord": {
+    "artifactId": "H_EARTH_GATE_B_ROOM_INDEPENDENT_RESUME_INDEX_v1",
+    "result": "PASS_ROOM_INDEPENDENT_PACKAGE_STATE_ESTABLISHED",
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "defaultBranch": "main",
+    "activeEngineeringBranch": "agent/h-earth-gate-b-bounded-occurrence-001",
+    "controllingBaseCommit": "43ea853e4ac4cd278ae8d61c40fb2ae7db466e02",
+    "durableSourceFileCount": 3,
+    "fixedGovernedPathCount": 18,
+    "packageStateLedgerRows": 18,
+    "repositoryMutationPerformed": false,
+    "branchRefMoved": false,
+    "mainChanged": false,
+    "liveChanged": false,
+    "validatedSourcePaths": [
+      "h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js",
+      "h-earth-3d/integration/h-earth.post-west-gate-b-occurrence-transfer.js",
+      "showroom/globe/h-earth/admitted-geometry-frame.js"
+    ],
+    "requiredResumeSequence": [
+      "Verify workspace-file-inventory.json",
+      "Read ledgers/H_EARTH_GATE_B_PACKAGE_STATE_LEDGER_v1.json",
+      "Read ledgers/H_EARTH_GATE_B_SOURCE_DIGEST_LEDGER_v1.json",
+      "Continue correlated dependency census",
+      "Reconcile accepted package state against current main",
+      "Construct and validate showroom/globe/h-earth/compositor.js only after separate authority"
+    ],
+    "nextPath": "showroom/globe/h-earth/compositor.js"
+  }
+}

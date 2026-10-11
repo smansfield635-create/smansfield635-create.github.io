@@ -1,0 +1,26 @@
+{
+  "artifactId": "H_EARTH_GATE_B_COMPACT_PACKAGE_PATH_MANIFEST_v1",
+  "status": "FIXED_18_PATH_MANIFEST_COMPLETE",
+  "controllingCommit": "43ea853e4ac4cd278ae8d61c40fb2ae7db466e02",
+  "implementationAuthorized": false,
+  "paths": [
+    {"path":"h-earth-3d/integration/h-earth.ground-view-gate-b-west-admission-adapter.js","change":"CREATE"},
+    {"path":"h-earth-3d/integration/h-earth.post-west-gate-b-occurrence-transfer.js","change":"CREATE"},
+    {"path":"h-earth-3d/tests/h-earth.ground-view-gate-b-west-admission-adapter.contract.js","change":"CREATE"},
+    {"path":"h-earth-3d/tests/h-earth.post-west-gate-b-occurrence-transfer.contract.js","change":"CREATE"},
+    {"path":"h-earth-3d/tests/h-earth.ground-view-gate-b-corridor.contract.js","change":"CREATE"},
+    {"path":"h-earth-3d/tests/h-earth.ground-view-gate-b-audralia-public-route.contract.js","change":"CREATE"},
+    {"path":"h-earth-3d/tests/h-earth.ground-view-gate-b-diagnostic-workspace.contract.js","change":"CREATE"},
+    {"path":"h-earth-3d/tests/h-earth.ground-view-gate-b-public-diagnostic-separation.contract.js","change":"CREATE"},
+    {"path":"showroom/globe/h-earth/diagnostic/gate-b/index.html","change":"CREATE"},
+    {"path":"showroom/globe/h-earth/diagnostic/gate-b/ground-view-gate-b-proof-runtime.js","change":"CREATE"},
+    {"path":"showroom/globe/h-earth/diagnostic/gate-b/ground-view-gate-b-proof-evidence.js","change":"CREATE"},
+    {"path":"showroom/globe/h-earth/diagnostic/gate-b/ground-view-gate-b-proof-workspace.js","change":"CREATE"},
+    {"path":"showroom/globe/h-earth/diagnostic/gate-b/ground-view-gate-b-proof-receipt.js","change":"CREATE"},
+    {"path":"showroom/globe/h-earth/admitted-geometry-frame.js","change":"MODIFY"},
+    {"path":"showroom/globe/h-earth/compositor.js","change":"MODIFY"},
+    {"path":"showroom/globe/h-earth/diagnostic/index.html","change":"MODIFY_ADDITIVE_ONLY"},
+    {"path":"showroom/globe/h-earth/index.js","change":"PHASE_B_HELD_MODIFY"},
+    {"path":"showroom/globe/h-earth/index.html","change":"PHASE_B_HELD_MODIFY"}
+  ]
+}

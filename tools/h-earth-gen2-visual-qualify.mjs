@@ -118,6 +118,7 @@ if(process.argv.includes('--self-test')){
       firstFailureStage:startup?.firstFailureStage||null,
       position:route?.getIntakeReceipt?.()?.currentNavigationState?.position||null,
       navigation:(()=>{const n=route?.getIntakeReceipt?.()?.currentNavigationState;return n?{yawDegrees:n.yawDegrees,pitchDegrees:n.pitchDegrees,position:n.position,sequence:n.sequence}:null})(),
+      navigationProposals:(route?.getIntakeReceipt?.()?.proposals||[]).slice(-16).map(p=>({sequence:p.sequence,inputClass:p.inputClass,action:p.intent?.action,accepted:p.accepted})),
       residencyStatus:root?.dataset.vegetationResidency||null,
       residency:route?.getVegetationResidency?.()||null
      };
@@ -170,31 +171,54 @@ if(process.argv.includes('--self-test')){
        const midX=box.x+box.width*0.53,midY=box.y+box.height*0.53;
        await page.mouse.move(midX,midY);
        const initialZ=v.z;
+       entry.walkingExpansion.nativeWheelPulses=[];
        for(let step=1;step<=7;step++){
-         await page.mouse.wheel(0,700);
-         let current=null;
          const expectedZ=initialZ+10*step;
-         for(let attempt=0;attempt<36;attempt++){
-           current=await observe();
-           if(current.position&&Math.abs(current.position.z-expectedZ)<0.08&&readiness(current)&&residencyReady(current.residency))break;
-           await sleep(250);
+         let current=await observe();
+         let lastAdvanceAt700=null;
+         for(let pulse=0;pulse<4;pulse++){
+           if(!current?.position||!current?.navigation)throw Error('WALKING_OBSERVER_NAVIGATION_RECEIPT_MISSING:'+step);
+           const remaining=expectedZ-current.position.z;
+           if(Math.abs(remaining)<0.08)break;
+           if(remaining<0)throw Error('WALKING_OBSERVER_WHEEL_OVERSHOT:'+JSON.stringify({step,expectedZ,current:current.position}));
+           const requestedWheelDeltaY=pulse===0?700:Math.max(70,Math.min(700,Math.round(700*remaining/lastAdvanceAt700)));
+           const before=current;
+           await page.mouse.wheel(0,requestedWheelDeltaY);
+           for(let attempt=0;attempt<36;attempt++){
+             current=await observe();
+             if(current?.position?.z>before.position.z+0.001&&
+                current?.navigation?.sequence>before.navigation.sequence)break;
+             await sleep(250);
+           }
+           const advance=(current?.position?.z??-Infinity)-before.position.z;
+           if(!(advance>0.001)||current?.navigation?.sequence<=before.navigation.sequence)
+             throw Error('WALKING_OBSERVER_NATIVE_WHEEL_NO_ACCEPTED_PROGRESS:'+JSON.stringify({step,pulse,requestedWheelDeltaY,before:before.position,after:current?.position}));
+           if(current.position.z>expectedZ+0.08)
+             throw Error('WALKING_OBSERVER_NATIVE_WHEEL_OVERSHOOT:'+JSON.stringify({step,pulse,expectedZ,actual:current.position}));
+           lastAdvanceAt700=advance*700/requestedWheelDeltaY;
+           entry.walkingExpansion.nativeWheelPulses.push({step,pulse:pulse+1,requestedWheelDeltaY,actualAdvanceMeters:advance,actualPosition:current.position,actualNavigationSequence:current.navigation.sequence});
+           if(!readiness(current)||!residencyReady(current.residency)||current.gpuFourTreeFloorCount!==4)
+             throw Error('WALKING_OBSERVER_GPU_OR_VEGETATION_RESIDENCY_REGRESSION:'+step);
          }
          if(!current?.position||Math.abs(current.position.z-expectedZ)>=0.08)
            throw Error('WALKING_OBSERVER_NAVIGATION_REJECTED_OR_DRIFT:'+JSON.stringify({step,expectedZ,actual:current?.position}));
          if(!readiness(current)||!residencyReady(current.residency)||current.gpuFourTreeFloorCount!==4)
            throw Error('WALKING_OBSERVER_GPU_OR_VEGETATION_RESIDENCY_REGRESSION:'+step);
-         // Lower the view with the product's actual one-finger PITCH_DOWN
-         // gesture, once beyond the original rectangular edge.
+         // Native one-finger PITCH_DOWN is judged by accepted movement,
+         // not by an unrelated requirement to pass through absolute zero.
          if(step===2){
+           const beforePitch=current.navigation?.pitchDegrees;
+           if(!Number.isFinite(beforePitch))throw Error('WALKING_OBSERVER_PITCH_SOURCE_MISSING');
            await page.mouse.move(midX,midY-110);
            await page.mouse.down();
            await page.mouse.move(midX,midY+100,{steps:10});
-           await sleep(480);
+           await sleep(650);
            await page.mouse.up();
            await page.mouse.move(midX,midY);
            current=await observe();
-           if((current?.navigation?.pitchDegrees??999)>0)
-             throw Error('WALKING_OBSERVER_REAL_PITCH_DOWN_NOT_APPLIED:'+JSON.stringify(current?.navigation));
+           const downAccepted=current.navigationProposals?.some(p=>p.inputClass==='ONE_FINGER_LOOK'&&p.action==='PITCH_DOWN'&&p.accepted===true);
+           if(!downAccepted||!Number.isFinite(current?.navigation?.pitchDegrees)||current.navigation.pitchDegrees>=beforePitch-0.1)
+             throw Error('WALKING_OBSERVER_REAL_PITCH_DOWN_NOT_APPLIED:'+JSON.stringify({beforePitch,after:current?.navigation,pitchProposals:current?.navigationProposals}));
          }
          if([1,2,4,7].includes(step)){
            await sleep(750);

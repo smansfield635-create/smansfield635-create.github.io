@@ -477,7 +477,16 @@ void main(){
     // Sweep-authored circumference UV avoids three triplanar texture fetches.
     clearingTexel=texture(uClearingBark,vec2(vMaterialParameters.x*3.0,vWorldPosition.y*0.70));
   }
+  // Gen2646: only the exact far-land continuation has inward-facing
+  // derived vertex normals (all 415 source vertices have negative Y).
+  // Correct fragment shading and soil slope eligibility without editing
+  // the authored geometry, canonical GPU normal buffer or other primitives.
+  bool isExactFarLandSoilPrimitive=
+    int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;
   vec3 geometricNormal=normalize(vNormal);
+  if(isExactFarLandSoilPrimitive && geometricNormal.y<0.0){
+    geometricNormal=-geometricNormal;
+  }
   vec3 shadingNormal=geometricNormal;
   vec3 viewDirection=normalize(uCameraPosition-vWorldPosition);
   float slope=1.0-clamp(geometricNormal.y,0.0,1.0);

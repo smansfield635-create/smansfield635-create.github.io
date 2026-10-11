@@ -35,10 +35,10 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "60bc89f11f4b121b333f5a0f5fccba92b988c6df0634d9494472bc2fcf742c6c"
+      "sha256": "030b56480451946686534eca6cac9156a64b58dd32657272fa306a7cd036edf1"
     }
   ],
-  "continuityReview": "Gen2646 narrow follow-on fix: corrected renderer GPU coast-distance attribute upload to sample the exact FAR_LAND_CONTINUATION role-5 span as well as original role-1 TERRAIN. Previously role-5 coast samples were default zero and worldSoilCoast=smoothstep(2,29,0)=0 defeated all new far-land material despite shader routing. This uses the existing canonical getHEarthSignedCoastDistanceMeters and unchanged inverse planetary XZ projection for both legitimate land roles; no new asset, allocation, renderer, geometry, navigation or vegetation changes. Other role-5 stone/trunk spans are excluded. Original 32m reference interior shader remains byte-identical, full visual proof and owner KEEP pending, releaseEligible=false.",
+  "continuityReview": "Gen2646 only the exact H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION fragment shading normal is made upward-facing when inherited negative Y. Independently reconstructed production source geometry of that primitive without topology changes and verified 415/415 inward-facing/downward normals, mean Y=-0.999683, min=-0.999938, max=-0.998320. The old shader derives slope=1-clamp(normal.y,0,1), so this nearly level surface was classified slope=1 and had zero soil eligibility. This patch corrects that source-matched classification and its lighting, leaving all mesh geometry, canonical GPU normal buffer, existing coastline attribute upload, 32m reference clearing interior GLSL, approved trees, grass, sand, rock and water unchanged. Native WebGL2 evidence, wider-ground material perception and owner KEEP remain pending. No merge, no deploy.",
   "referenceMaterial": {
     "ownerIssueNumber": 6100,
     "sourceAuditCommentId": 6103950634,
@@ -73,7 +73,16 @@
     "priorFarRoleCoastDistanceWasZero": true,
     "farLandContactDistanceUnmodified": true,
     "coastDistanceExistingGpuAttributeLocation": 8,
-    "priorCandidateHead": "afae56ffe5a71f407efbc77fe66a88b7071f778e"
+    "priorCandidateHead": "52accff774a8e436db8bf11e7c8d38ab596f4bf4",
+    "farLandNormalReorientation": "FRAGMENT_ONLY_IF_EXACT_FAR_PRIMITIVE_AND_NEGATIVE_Y",
+    "farLandNormalProof": {
+      "vertexCount": 415,
+      "allNegativeY": true,
+      "meanY": -0.999683286772946,
+      "minY": -0.9999384814445146,
+      "maxY": -0.998320490003847
+    },
+    "sourceNormalGpuBufferUnchanged": true
   },
   "limits": {
     "candidateBrowserQualificationPending": true,
@@ -82,6 +91,7 @@
     "physicalAndroidPerformanceNotYetQualified": true,
     "releaseEligible": false,
     "farLandBrowserQualificationPending": true,
-    "farLandCoastAttributeBrowserProofPending": true
+    "farLandCoastAttributeBrowserProofPending": true,
+    "farLandNormalBrowserProofPending": true
   }
 }

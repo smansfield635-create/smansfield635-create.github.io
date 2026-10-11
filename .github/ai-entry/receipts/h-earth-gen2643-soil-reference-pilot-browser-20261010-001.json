@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2643-soil-reference-pilot-browser-20261010-001",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6104,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2643-soil-pilot-browser-20261010",
+  "requestCommit": "b5130067006904ca89bfe2f035273c34d6e3bbfd",
+  "requestCommitParent": "c9b307c0eb5ab87150b110615c4b1e80d7684fbe",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "c9b307c0eb5ab87150b110615c4b1e80d7684fbe",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "6455df0e88ec9d226cd2a941f6d82beb948d1030"
+  },
+  "bridgeRunId": "38100506314",
+  "dispatchedRunId": 38100514436,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38100514436",
+  "dispatchedRunHeadSha": "c9b307c0eb5ab87150b110615c4b1e80d7684fbe",
+  "dispatchedAt": "2026-10-11T01:03:12.337Z",
+  "resolvedAt": "2026-10-11T01:03:16.179Z"
+}

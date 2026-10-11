@@ -39,10 +39,10 @@
     },
     {
       "path": "showroom/globe/h-earth/validation/four-tree-only.verify.mjs",
-      "sha256": "4d07744be46c9a69ba906b952796a286b208fdc2805ca13d890427b0cf6e0342"
+      "sha256": "34eab6e70f0a977f384beb624e9322c5c40681252da708fde7e03e7c922aa146"
     }
   ],
-  "continuityReview": "Gen2651 tightly scoped intentional clearing grass ecotone: the existing 32m exact native grass removal and 34x34 dense replacement created a rectangular vegetation density discontinuity independently of the now-corrected soil shader. Uses an existing 8m meadow ecotone precedent, retaining native meadow grass with increasing probability toward the reference edge and tapering clearing-only broad grass inversely, with stable seed-based jitter and no new assets or geometry outside the 8.6m boundary band. Independently constructed the original and new actual landscape sector against the same terrain; eligible=true and the approved four tree IDs and rocks unchanged, static grass vertices 62,844->54,804 and triangles 44,732->41,692; clearing broad grass 838->501, native grass 1,192->1,290. A narrowly scoped verifier opt-in tied to this receipt/source hash retains the historical tree-only non-tree equality test as strict default and verifies original four-tree bark/canopy/rock identity plus exact grass deltas. Real native Chromium, full residency, boundary visual and owner KEEP have NOT yet been qualified; no merge or release.",
+  "continuityReview": "Gen2651 bounded grass ecotone independent local reconstruction PASS: exact four approved tree bark/canopy, rocks, 1764 common grass objects including metadata and geometry unchanged; 98 retained native grass objects, 337 fewer clearing broad-grass objects, every changed object within 8m of original rectangle; 3040 fewer grass triangles. Previous native first-party run 38112378871 stopped before Chromium on verifier assertion NON_NATIVE_GRASS_INJECTED:CONNECTED_COVER_14_25. This was an overly narrow verifier assumption: geometry-landscape-sector.p2.js already produces native MEADOW_COVER_ and CONNECTED_COVER_ grass identities. The only verifier change allows both proven existing native prefix classes under the same strict Gen2651 opt-in source-bound receipt; default legacy no-grass-change assertions remain unchanged. Intentional grass transition/source shader geometry unchanged; qualified WebGL2 and owner visual KEEP still pending. No merge or release.",
   "referenceMaterial": {
     "ownerIssueNumber": 6100,
     "sourceAuditCommentId": 6103950634,
@@ -116,7 +116,7 @@
     "originalGrassBlob": "db2c7d2e132743e0ced34444dd2272ac5eba24ce",
     "newGrassBlob": "14c366d2241469fbccd08ee31bbeac0f1b7598f4",
     "oldFourTreeVerifierBlob": "c6b1ee5a6a5be1bd4d51c1aedfcea84ec13b7485",
-    "newFourTreeVerifierBlob": "a4a34f9a7d0e547636a3dd3dc4df09b4e5a2845f",
+    "newFourTreeVerifierBlob": "5919df094524a832bd74a3243b7d116b6a5fe978",
     "parentMaterialHead": "46de47cd86b9215e0ae82f9b8e6e252331fa9bdc",
     "approvedFourTreeGeometryBlob": "c26247dcb69cb52c968fcd3ef6c2626eaa577d03",
     "nativeGrassEdgeFeatherMeters": 8,
@@ -134,7 +134,11 @@
     "oldTreeCount": 0,
     "requiredApprovedTreeCount": 4,
     "zeroNewGpuTextureAssets": true,
-    "ownerDispositionCommentId": 6105419460
+    "ownerDispositionCommentId": 6105419460,
+    "verifiedNativeGrassClasses": [
+      "MEADOW_COVER_",
+      "CONNECTED_COVER_"
+    ]
   },
   "limits": {
     "sourceConstructionLocallyQualified": true,
@@ -142,6 +146,7 @@
     "ownerVisualKeepPending": true,
     "physicalAndroidPerformanceNotYetQualified": true,
     "releaseEligible": false,
-    "staticMeshBudgetChangeMeasured": true
+    "staticMeshBudgetChangeMeasured": true,
+    "exactCandidateBrowserProofPending": true
   }
 }

@@ -128,7 +128,7 @@ try {
   for(const [id,entry] of newMap)if(!oldMap.has(id)){
    added++;
    assert(edge(entry)>=0&&edge(entry)<8.6,'GRASS_OUTSIDE_FEATHER_ADDED:'+id);
-   assert(id.startsWith('MEADOW_COVER_'),'NON_NATIVE_GRASS_INJECTED:'+id);
+   assert(id.startsWith('MEADOW_COVER_')||id.startsWith('CONNECTED_COVER_'),'NON_NATIVE_GRASS_INJECTED:'+id);
   }
   // Source-measured deterministic limits, not a generalized permission for
   // arbitrary vegetation changes. All approved tree geometry was checked above.

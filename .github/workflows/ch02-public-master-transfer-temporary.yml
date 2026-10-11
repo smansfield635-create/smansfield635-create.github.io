@@ -1,0 +1,78 @@
+name: TEMP Chapter 02 Public Master Transfer Stager
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ch02-public-master-transfer-temporary.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  stage-chunks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact transfer head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Fetch and verify approved Chapter 02 picture master
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --quiet gdown
+          gdown 1wZra2-_Y-ZpUVw6H8-gndnq1qIIy7bgL -O /tmp/chapter02-picture-master.mp4
+          test "$(stat -c%s /tmp/chapter02-picture-master.mp4)" = "1498587"
+          test "$(sha256sum /tmp/chapter02-picture-master.mp4 | awk '{print $1}')" = "4d351ce55d186f9448e9702e2a961083cb53005ca70b4d8f5add5aeb90e309da"
+          test "$(git hash-object /tmp/chapter02-picture-master.mp4)" = "e624773dcf0a2f3d51460e890a28178305b47ee2"
+
+      - name: Create bounded unreferenced Git blobs and manifest
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/ai-room-transport/bounded-binary-file-ingress.v1.mjs \
+            --source /tmp/chapter02-picture-master.mp4 \
+            --repository "${{ github.repository }}" \
+            --target-branch "${{ github.event.pull_request.head.ref }}" \
+            --expected-target-head "${{ github.event.pull_request.head.sha }}" \
+            --destination showroom/globe/h-earth/awards/media/diamond-gate-h-earth-audralia-chapter02-successor.mp4 \
+            --chunk-size 524288 \
+            --output /tmp/ch02-transfer-manifest.json
+
+      - name: Independently verify every created chunk identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, subprocess
+          source='/tmp/chapter02-picture-master.mp4'
+          manifest=json.load(open('/tmp/ch02-transfer-manifest.json'))
+          raw=open(source,'rb').read()
+          assert len(raw)==1498587
+          assert hashlib.sha256(raw).hexdigest()=='4d351ce55d186f9448e9702e2a961083cb53005ca70b4d8f5add5aeb90e309da'
+          assert subprocess.check_output(['git','hash-object',source],text=True).strip()=='e624773dcf0a2f3d51460e890a28178305b47ee2'
+          offset=0
+          for entry in manifest['chunks']:
+              b=raw[offset:offset+entry['bytes']]
+              offset += entry['bytes']
+              assert hashlib.sha256(b).hexdigest()==entry['sha256']
+              p=subprocess.run(['git','hash-object','--stdin'],input=b,stdout=subprocess.PIPE,check=True)
+              assert p.stdout.decode().strip()==entry['blobSha']
+          assert offset==len(raw)
+          assert manifest['totalBytes']==len(raw)
+          assert manifest['sha256']==hashlib.sha256(raw).hexdigest()
+          print(json.dumps({'result':'PASS','chunkCount':len(manifest['chunks']),'totalBytes':len(raw),'sha256':manifest['sha256'],'gitBlob':'e624773dcf0a2f3d51460e890a28178305b47ee2'}))
+          PY
+
+      - name: Upload closed transfer manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: ch02-picture-transfer-manifest-${{ github.run_id }}
+          path: /tmp/ch02-transfer-manifest.json
+          if-no-files-found: error
+          retention-days: 7

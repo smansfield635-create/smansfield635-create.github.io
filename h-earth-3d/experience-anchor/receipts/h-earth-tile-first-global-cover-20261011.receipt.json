@@ -32,7 +32,7 @@
   "experienceFiles": [
     {
       "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
-      "sha256": "fc0b140998869afeced7ff990afaa7cc9dd07056a85bda2f7ae5b360ff9d00e1"
+      "sha256": "0442994d149817084f80745b78e0cc09df20dab7c8943ddeb98d5356a4edf06f"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
@@ -44,7 +44,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "509c27260fd99809db703c71d823c4bf731b46ce33ba039bcf22451f1b99f084"
+      "sha256": "adbaf044bb50be0425c5fb84f946390fd4c7846ac52534695a7b173c50ed145e"
     }
   ],
   "candidateNature": "TIMING_AND_TILE_SCHEDULING_ONLY_NO_ALLOWED_WORLD_MODEL_PALETTE_GEOMETRY_OR_POPULATION_MUTATION",
@@ -52,10 +52,10 @@
   "acceptanceBasis": "Source-level same-world anchor review: only deterministic tile construction order and 108-batch startup scheduling change; existing authorized grass template, ecology, ocean, terrain, placement and tree source bytes are not modified. Original 2026-10-08 grounded vegetation visual proxy remains baseline. Final exact-record and real WebGL2 candidate proof are separately mandatory before candidate acceptance. This is not owner perceptual KEEP or permission to publish.",
   "sourceBaselineHead": "9be9c405accc9431ce932b95cb7dbf7d87db9601",
   "sourceBlobs": {
-    "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs": "8d467c2f031831265d68224b8e23ad4e955d62a2",
+    "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs": "a69bb5629daf9820ed209e50aaa30ff5b9f4abdd",
     "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "28d45e6e463924d2e659b977baaabb213cf46ea5",
     "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "4a1d10c2b7b98b016872d4fc50f31f62b3295d12",
-    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "3a137e76f027544149683a5980e74ef820700332"
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "a324215fab199685c8d5cbd05220f6b2bae67942"
   },
   "sourcePopulation": {
     "globalGroundCoverExpected": 61235,

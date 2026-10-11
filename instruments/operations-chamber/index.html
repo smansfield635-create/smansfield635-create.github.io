@@ -20,6 +20,8 @@
 .notice code{overflow-wrap:anywhere;word-break:break-word;white-space:normal}.panel{min-width:0}.operatorgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:15px 0}.operatorcard{border:1px solid #365567;background:#162a3b;border-radius:11px;padding:14px 15px;min-height:104px}.operatorcard .v{font-size:26px;font-weight:760;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.operatorcard .k{font-size:11px;color:#a8bdca;margin-top:4px}.stackrow{display:grid;grid-template-columns:155px minmax(0,1fr) 48px;gap:12px;align-items:center;margin:13px 0;font-size:12px}.stackrow .stackname{color:#d7e6e9;overflow-wrap:anywhere}.stacktrack{height:12px;border-radius:8px;overflow:hidden;background:#23394a;border:1px solid #37576a}.stackfill{height:100%;background:#64baa9;border-radius:8px;max-width:100%}.stackrow .stackcount{text-align:right;color:#b0c6cf;font-variant-numeric:tabular-nums}.operatorwarn{margin-top:12px;font-size:12px;color:#e6c59a;border-left:3px solid #aa7c45;background:#3b2d232b;border-radius:0 8px 8px 0;padding:10px 14px}.snapshotmeta{font-size:12px;color:#b3c8d0;margin:11px 0 6px;line-height:1.6}.operationtwin{display:grid;grid-template-columns:1fr 1fr;gap:16px}.snapsection{border:1px solid #344f60;border-radius:12px;background:#132636;padding:17px}.snapsection h3{margin:0;font-size:14px}.snapsection p{font-size:12px;color:#adc3ca;margin:8px 0}.fileStatus{min-height:25px;font-size:12px;color:#e2c5a5}.snapshotbank{display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin:15px 0}.snapshotbank button:disabled{opacity:.48;cursor:not-allowed}@media(max-width:950px){.operatorgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.operationtwin{grid-template-columns:1fr}}@media(max-width:470px){.operatorgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.operatorcard .v{font-size:23px}.stackrow{grid-template-columns:112px minmax(0,1fr) 32px;gap:5px;font-size:10px}}
 
 .health-actions{display:flex;align-items:center;gap:11px;flex-wrap:wrap;margin:18px 0}.health-actions .secondary{padding:10px 15px;border:1px solid var(--line);border-radius:9px;background:var(--surface3);color:var(--ink)}.health-actions .secondary:disabled{opacity:.48}.health-summary{display:flex;gap:22px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-bottom:12px}.health-summary strong{font-variant-numeric:tabular-nums;color:var(--ink)}.health-rows{display:grid;gap:8px}.healthrow{min-height:55px;gap:12px}.healthrow .small{font-size:11px;color:var(--muted);overflow-wrap:anywhere}.receipt-expand{margin-top:18px;color:var(--muted);font-size:12px}.receipt-expand summary{cursor:pointer}.receipt-expand pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:360px;overflow-y:auto;background:#091420;padding:16px;border-radius:9px}.contextlinks{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;margin-top:20px}.contextlinks span{color:var(--muted)}.contextlink{color:var(--accent);font-size:12px;margin-right:5px}@media(max-width:410px){.healthrow{align-items:flex-start}.health-actions{align-items:stretch}.health-actions .secondary{flex:1 1 42%}.health-summary{gap:14px}}
+
+.hostlesspaste{margin:13px 0 17px;padding:15px;border:1px solid #365566;border-radius:11px;background:#132638;min-width:0}.hostlesspaste label{display:block;color:#e6f1f1;font-size:13px;font-weight:750;margin-bottom:8px}.hostlesspaste textarea{box-sizing:border-box;display:block;width:100%;max-width:100%;min-width:0;min-height:120px;resize:vertical;padding:12px;border:1px solid #446577;border-radius:9px;background:#0b1a29;color:#f0f5f6;line-height:1.45;font:12px/1.45 ui-monospace,Consolas,monospace;overflow-wrap:anywhere}.hostlesspaste textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}.hostlesspaste .small{margin:8px 0 0;line-height:1.55;overflow-wrap:anywhere}.hostlesspaste .snapshotbank{margin:10px 0}.hostlesspaste button{min-height:40px}@media(max-width:470px){.hostlesspaste{padding:12px}.hostlesspaste .snapshotbank button{flex:1 1 auto}}
 </style>
 </head>
 <body>
@@ -65,8 +67,14 @@
     <div class="sectionintro"><h2>Operational observations</h2><p>Canonical, source-bound aggregates inspected at one recorded instant. This view never presents ledger records as running work or claims that registered instrumentation has passed live runtime verification.</p></div>
     <div class="panel">
       <div class="panelheader"><div><h2>Import owner observation</h2><p class="small">Trusted source-derived aggregate · locally imported · never transmitted</p></div><span id="operatorState" class="pill notconnected">NOT CONNECTED</span></div>
-      <div class="notice"><strong>Inspection only.</strong> Load the separate <code>operations_chamber_operator_aggregate_snapshot_v1.json</code> file. This document is an offline reader: there is no authentication service, no private API call, and no automatic polling. Snapshot age, source, and unverified domains remain visible.</div>
-      <div class="snapshotbank"><button class="primary" type="button" id="loadObservation">Load operation snapshot (local file)</button><input type="file" class="fileinput" id="observationFile" accept=".json,application/json" aria-label="Operator observation snapshot file"><button class="secondary" type="button" id="clearObservation" disabled>Clear operation snapshot</button></div>
+      <div class="notice"><strong>Inspection only.</strong> Paste a sanitized hostless Canonical Control receipt from the private on-demand inspection, or import the existing legacy operator snapshot file. This is a local reader with no private API, authentication service, upload, persistence, or automatic polling. All values describe their recorded capture, not continuous operational health.</div>
+      <div class="hostlesspaste">
+        <label for="hostlessReceiptText">Paste sanitized on-demand inspection receipt</label>
+        <textarea id="hostlessReceiptText" rows="6" maxlength="20000" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="Paste the sanitized receipt JSON or the full receipt comment"></textarea>
+        <div class="snapshotbank"><button class="primary" type="button" id="parseHostlessReceipt">Inspect pasted receipt locally</button><button class="secondary" type="button" id="eraseHostlessReceipt">Erase pasted text</button></div>
+        <p class="small">User-supplied local copy. The browser cannot authenticate its origin. No copied data is sent to any site or saved to device storage; close the tab or clear the observation to remove it.</p>
+      </div>
+      <div class="snapshotbank"><button class="primary" type="button" id="loadObservation">Load legacy operation snapshot (local file)</button><input type="file" class="fileinput" id="observationFile" accept=".json,application/json" aria-label="Operator observation snapshot file"><button class="secondary" type="button" id="clearObservation" disabled>Clear operation snapshot</button></div>
       <div id="observationImportStatus" class="fileStatus" aria-live="polite">No operation snapshot loaded.</div>
       <div id="operatorData" aria-live="polite"><div class="empty">Private operation observation not connected. Load the owner-only aggregate snapshot to inspect admission and closure counts.</div></div>
     </div>
@@ -183,9 +191,90 @@
       instrumentation:{classifiedWorkflowRecords:ins.classifiedWorkflowRecords,workflowLifecycleStates:Object.fromEntries(states.map(k=>[k,ins.workflowLifecycleStates[k]])),recordsWithCurrentAuthority:ins.recordsWithCurrentAuthority,registeredProjectRoutes:ins.registeredProjectRoutes,capabilityCatalogEntries:ins.capabilityCatalogEntries,boundedContinuityGapRecords:ins.boundedContinuityGapRecords,closedBoundedGapRecords:ins.closedBoundedGapRecords},
       epistemic:'UNVERIFIED',admissibility:'REGISTERED_ONLY',l2:'NOT_CONNECTED',authorityEffect:'NONE'};
   }
+  // BEGIN_HOSTLESS_RECEIPT_PURE_V1
+  function validateHostlessReceipt(x){
+    const obj=v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
+    const keys=(v,ks)=>obj(v)&&Object.keys(v).length===ks.length&&ks.every(k=>Object.prototype.hasOwnProperty.call(v,k));
+    const integer=n=>Number.isSafeInteger(n)&&n>=0;
+    const top=['schema','result','visibility','executionClass','observedAt','sourceFreshness','sourceVerification','plane','canonicalControl','otherPlanes','privateOperatorHostCommissioned','publicOperationsChamberConnected','instrumentRuntimeHealth','lockRecordsAreRunningJobs','privateSourceDetailsIncluded','privateCredentialsIncluded','controlCommandsEnabled','authorityEffect'];
+    if(!keys(x,top))throw Error('HOSTLESS_RECEIPT_FIELDS_INVALID');
+    const exact=[
+      ['schema','DGB_OPERATIONS_CHAMBER_PRIVATE_GITHUB_ONDEMAND_RECEIPT_v1'],
+      ['result','SOURCE_OBSERVED_AT_CAPTURE_NOT_LIVE_HEALTH'],
+      ['visibility','PRIVATE_REPOSITORY_READERS_NOT_OWNER_EXCLUSIVE'],
+      ['executionClass','GITHUB_HOSTED_EPHEMERAL_OWNER_INVOKED'],
+      ['sourceFreshness','FRESH_SOURCE_CAPTURE'],
+      ['sourceVerification','CANONICAL_GIT_SOURCE_PINNED_AT_CAPTURE'],
+      ['plane','CANONICAL_CONTROL_ONLY'],
+      ['instrumentRuntimeHealth','UNVERIFIED'],
+      ['authorityEffect','NONE']
+    ];
+    for(const [k,v] of exact)if(x[k]!==v)throw Error('HOSTLESS_RECEIPT_EVIDENCE_BOUNDARY_INVALID');
+    for(const k of ['privateOperatorHostCommissioned','publicOperationsChamberConnected','lockRecordsAreRunningJobs','privateSourceDetailsIncluded','privateCredentialsIncluded','controlCommandsEnabled'])if(x[k]!==false)throw Error('HOSTLESS_RECEIPT_AUTHORITY_OR_DISCLOSURE_INVALID');
+    const other=x.otherPlanes;
+    if(!keys(other,['epistemic','stateBoundAdmissibility','instrumentRuntime','governanceEvidence'])||other.epistemic!=='UNVERIFIED'||other.stateBoundAdmissibility!=='UNVERIFIED'||other.instrumentRuntime!=='UNVERIFIED'||other.governanceEvidence!=='NOT_CONNECTED')throw Error('HOSTLESS_RECEIPT_UNVERIFIED_PLANES_INVALID');
+    const c=x.canonicalControl;
+    if(!keys(c,['ledgerGeneration','activeLockRecords','terminalHistoryRecords','terminalDispositionCounts'])||![c.ledgerGeneration,c.activeLockRecords,c.terminalHistoryRecords].every(integer)||c.ledgerGeneration<1)throw Error('HOSTLESS_RECEIPT_CANONICAL_COUNTS_INVALID');
+    const dispositionNames=['PASS_CLOSED','FAIL_CLOSED','REJECTED_CLOSED','WITHDRAWN','SUPERSEDED','VOIDED','EXPIRED'];
+    const dispositions=c.terminalDispositionCounts;
+    if(!keys(dispositions,dispositionNames)||!dispositionNames.every(k=>integer(dispositions[k])))throw Error('HOSTLESS_RECEIPT_TERMINAL_SHAPE_INVALID');
+    const sum=dispositionNames.reduce((total,k)=>total+dispositions[k],0);
+    if(!Number.isSafeInteger(sum)||sum!==c.terminalHistoryRecords)throw Error('HOSTLESS_RECEIPT_TERMINAL_SUM_INVALID');
+    const instant=x.observedAt;
+    if(typeof instant!=='string'||!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?Z$/.test(instant))throw Error('HOSTLESS_RECEIPT_CAPTURE_TIME_INVALID');
+    const stamp=Date.parse(instant);
+    if(!Number.isFinite(stamp)||new Date(stamp).toISOString().slice(0,19)!==instant.slice(0,19)||stamp>Date.now()+120000)throw Error('HOSTLESS_RECEIPT_CAPTURE_TIME_INVALID');
+    return {kind:'HOSTLESS_CANONICAL_CONTROL',observedAtUtc:instant,sourceCaptureBounded:true,
+      canonicalOperations:{ledgerGeneration:c.ledgerGeneration,activeLockRecords:c.activeLockRecords,terminalRecords:c.terminalHistoryRecords,terminalDispositionCounts:Object.fromEntries(dispositionNames.map(k=>[k,dispositions[k]]))},
+      epistemic:'UNVERIFIED',admissibility:'UNVERIFIED',l2:'NOT_CONNECTED',instrumentRuntime:'UNVERIFIED',governanceEvidence:'NOT_CONNECTED',authorityEffect:'NONE'};
+  }
+  function parseHostlessPaste(raw){
+    if(typeof raw!=='string'||raw.length>20000||raw.trim().length<2)throw Error('HOSTLESS_RECEIPT_INPUT_SIZE_INVALID');
+    const value=raw.trim();
+    let json;
+    if(value.startsWith('{'))json=value;
+    else{
+      if(value.split(/\r?\n/,1)[0]!=='DGB_OPERATIONS_CHAMBER_PRIVATE_SNAPSHOT_RECEIPT_V1')throw Error('HOSTLESS_RECEIPT_COMMENT_MARKER_INVALID');
+      const fence=String.fromCharCode(96).repeat(3);
+      const open=fence+'json';
+      const start=value.indexOf(open);
+      const end=start<0?-1:value.indexOf(fence,start+open.length);
+      if(start<0||end<0||value.indexOf(open,start+open.length)>=0||value.indexOf(fence,end+fence.length)>=0)throw Error('HOSTLESS_RECEIPT_FENCE_INVALID');
+      json=value.slice(start+open.length,end).trim();
+    }
+    let parsed;
+    try{parsed=JSON.parse(json)}catch{throw Error('HOSTLESS_RECEIPT_JSON_INVALID')}
+    return validateHostlessReceipt(parsed);
+  }
+  // END_HOSTLESS_RECEIPT_PURE_V1
   function renderOperator(){
     const root=$('operatorData');root.replaceChildren();$('clearObservation').disabled=!operatorSnapshot;
     if(!operatorSnapshot){$('operatorState').textContent='NOT CONNECTED';$('operatorState').className='pill notconnected';root.append(text('div','No owner observation loaded. Private operation data is not fetched or inferred.','empty'));return;}
+    if(operatorSnapshot.kind==='HOSTLESS_CANONICAL_CONTROL'){
+      const s=operatorSnapshot,a=s.canonicalOperations,age=ageMinute(s.observedAtUtc);
+      $('operatorState').textContent=age>10?'LOCAL HISTORICAL COPY':'LOCAL CAPTURE COPY';
+      $('operatorState').className='pill declared';
+      root.append(text('div','USER-SUPPLIED LOCAL COPY — ORIGIN NOT VERIFIED BY BROWSER. Source freshness applied at capture, not now. The public website remains NOT CONNECTED to private data.','operatorwarn'));
+      root.append(text('p','Captured: '+s.observedAtUtc+' · '+age+' minute(s) old · read-only aggregate at capture · not live telemetry','snapshotmeta'));
+      const cards=text('div','','operatorgrid');
+      for(const [value,label] of [[a.ledgerGeneration,'Ledger generation'],[a.activeLockRecords,'Lock records (not running jobs)'],[a.terminalRecords,'Terminal history records']]){
+        const card=text('div','','operatorcard');card.append(text('div',value,'v'),text('div',label,'k'));cards.append(card);
+      }
+      root.append(cards);
+      const hist=text('div','','snapsection');hist.append(text('h3','Canonical terminal dispositions'));
+      const max=Math.max(...Object.values(a.terminalDispositionCounts),1);
+      for(const [k,value] of Object.entries(a.terminalDispositionCounts)){
+        const row=text('div','','stackrow'),track=text('div','','stacktrack'),fill=text('div','','stackfill');
+        fill.style.width=(100*value/max).toFixed(1)+'%';track.append(fill);
+        row.append(text('span',fmt(k),'stackname'),track,text('span',value,'stackcount'));hist.append(row);
+      }
+      hist.append(text('p','These are ledger terminal-history classifications, not proof of executing instruments or current authority.'));root.append(hist);
+      root.append(text('div','Epistemic entitlement: UNVERIFIED · State-bound admissibility runtime: UNVERIFIED · Instrument runtime: UNVERIFIED · Governance evidence: NOT CONNECTED.','operatorwarn'));
+      const conceptual=text('button','Explore public governance relationships (explanatory)','secondary');
+      conceptual.type='button';conceptual.addEventListener('click',()=>{operation='admit';selectedNode='admission';renderOperations();navigate('governance')});
+      const navigation=text('div','','snapshotbank');navigation.append(conceptual);root.append(navigation);
+      return;
+    }
     const s=operatorSnapshot,a=s.canonicalOperations,i=s.instrumentation,age=ageMinute(s.observedAtUtc);
     $('operatorState').textContent=age>10?'HISTORICAL / STALE':'LOCAL OBSERVATION';$('operatorState').className='pill declared';
     root.append(text('p',`Observed: ${s.observedAtUtc} · ${age} min old · Git SHA-bound source read · not live telemetry`, 'snapshotmeta'));
@@ -202,8 +291,18 @@
     root.append(text('p','Private source identities are discarded during import; this public interface does not authenticate the origin of the local file.','snapshotmeta'));
   }
   function importObservation(file){if(!file)return;const status=$('observationImportStatus');if(file.size>100_000){status.textContent='Import rejected: 100 KB limit.';return}const reader=new FileReader();reader.onload=()=>{try{const validated=validateObservation(JSON.parse(String(reader.result)));operatorSnapshot=validated;status.textContent='Owner-only aggregate imported locally. Data is observed, not live.';renderOperator();notice('Operator observation loaded. Check the snapshot age.')}catch(err){status.textContent=`Import rejected: ${err.message}`;notice('Operator observation rejected; previous view preserved.')}};reader.onerror=()=>{status.textContent='Read error; view unchanged.'};reader.readAsText(file);$('observationFile').value=''}
+  $('parseHostlessReceipt').addEventListener('click',()=>{
+    const status=$('observationImportStatus');
+    try{
+      const observation=parseHostlessPaste($('hostlessReceiptText').value);
+      operatorSnapshot=observation;$('hostlessReceiptText').value='';
+      status.textContent='Sanitized receipt copied locally. The browser has not verified its origin. No live feed is connected.';
+      renderOperator();notice('Local Canonical Control capture loaded. Inspect its observation time.');
+    }catch(err){status.textContent='Receipt rejected: '+err.message;notice('Receipt rejected; previous view preserved.')}
+  });
+  $('eraseHostlessReceipt').addEventListener('click',()=>{$('hostlessReceiptText').value='';notice('Pasted text erased.')});
   $('loadObservation').addEventListener('click',()=>$('observationFile').click());$('observationFile').addEventListener('change',e=>importObservation(e.target.files?.[0]));
-  $('clearObservation').addEventListener('click',()=>{operatorSnapshot=null;renderOperator();$('observationImportStatus').textContent='Local snapshot cleared. No data is persisted.';notice('Operator snapshot cleared.')});
+  $('clearObservation').addEventListener('click',()=>{operatorSnapshot=null;$('hostlessReceiptText').value='';renderOperator();$('observationImportStatus').textContent='Local snapshot cleared. No data is persisted.';notice('Operator snapshot cleared.')});
   renderOperator();
 
   const SCHEMA='DGB_OPERATIONS_CHAMBER_PUBLIC_ONDEMAND_RECEIPT_v1';

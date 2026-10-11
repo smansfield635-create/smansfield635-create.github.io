@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
 const manifest = JSON.parse(fs.readFileSync(path.join(here, "route-card-map.v2.json"), "utf8"));
-const ADMITTED_HEAD = "b14781bc331713bd0869bc6c7fd5f145376788e9";
+const ADMITTED_HEAD = "24c1bca8858499c86262a2534c5a84b54be537f2";
 const baseUrl = (process.argv.find(arg => arg.startsWith("--base-url=")) || "--base-url=http://127.0.0.1:4173").split("=")[1].replace(/\/$/, "");
 const representativesOnly = process.argv.includes("--representatives");
 const staticOnly = process.argv.includes("--static-only");
@@ -20,6 +20,7 @@ const representatives = [
   "/laws/categories/reality/",
   "/laws/categories/structure/",
   "/laws/categories/integrity/",
+  "/laws/research/evidence-and-sources/",
   "/laws/research/",
   "/laws/test/reverse-audit/"
 ].filter(route => manifest.routes[route]);
@@ -30,6 +31,7 @@ const viewports = [
   { name: "desktop", width: 1440, height: 1000 }
 ];
 const screenshotRoutes = new Set(representatives);
+const GEOMETRY_TOLERANCE_PX = 2;
 
 function routeFile(route) {
   return path.join(root, route.slice(1), route.endsWith(".html") ? "" : "index.html");
@@ -39,9 +41,6 @@ function routeRelativeFile(route) {
 }
 function declared(html, name) {
   return html.match(new RegExp(`${name}="([^"]*)"`))?.[1] || "";
-}
-function gitBlob(relativePath) {
-  return execFileSync("git", ["hash-object", relativePath], { cwd: root, encoding: "utf8" }).trim();
 }
 function gitChanged(paths) {
   const output = execFileSync("git", ["diff", "--name-only", `${ADMITTED_HEAD}...HEAD`, "--", ...paths], { cwd: root, encoding: "utf8" }).trim();
@@ -63,35 +62,31 @@ function jaccard(a, b) {
 function readingFingerprint(story) {
   return [story.label, story.readings?.practical, story.readings?.engineering, story.readings?.empirical].join("\n");
 }
+function withinTolerance(actual, expected) {
+  return Math.abs(actual - expected) <= GEOMETRY_TOLERANCE_PX;
+}
 
 assert.equal(manifest.schema, "LAWS_LAYERED_INFORMATION_GRID_ROUTE_CARD_MAP_v3");
 assert.equal(allRoutes.length, 29);
-
-const methodsAllowed = [
-  "laws/research/methods-and-models/carousel-final-polish.css",
-  "laws/research/methods-and-models/index.html"
-].sort();
-assert.deepEqual(gitChanged(["laws/research/methods-and-models/"]), methodsAllowed, "Methods changes are exactly the two admitted continuity exceptions");
-assert.equal(gitBlob("laws/research/methods-and-models/carousel-progressive.js"), "e9e22bc13f8b98dfbe3ea02a63efd0459a599ead", "Methods progressive JS remains byte-identical");
-assert.equal(gitBlob("laws/research/methods-and-models/carousel-progressive.css"), "90e63e37ad67ca96e01650e0ec90c55b2ff3a6c8", "Methods progressive CSS remains byte-identical");
-assert.deepEqual(gitChanged([
-  "laws/research/methods-and-models/carousel.css",
-  "laws/research/methods-and-models/carousel-coherence.css",
-  "laws/research/methods-and-models/carousel-progressive.css",
-  "laws/research/methods-and-models/carousel.js",
-  "laws/research/methods-and-models/carousel-progressive.js",
-  "laws/research/methods-and-models/carousel-data.js"
-]), [], "all protected Methods runtime/data/style assets remain byte-identical to admitted head");
+assert.deepEqual(gitChanged(["laws/research/methods-and-models/"]), [], "Methods & Models is byte-frozen for Gen1843");
 assert.deepEqual(gitChanged(allRoutes.map(routeRelativeFile)), [], "Gen1833 contextual route corpus remains byte-identical");
 assert.deepEqual(gitChanged(["laws/room-carousel/route-card-map.v2.json"]), [], "Gen1833 route/card/story corpus remains byte-identical");
 
-const methodsPolish = fs.readFileSync(path.join(root, "laws/research/methods-and-models/carousel-final-polish.css"), "utf8");
-assert.ok(methodsPolish.includes("top: calc(39% + 3rem)"), "Methods orbit carries the bounded approximately half-inch lower settlement");
-assert.ok(methodsPolish.includes(".mm-story-nav"), "Methods bottom route-continuity styling exists");
-const methodsHtml = fs.readFileSync(path.join(root, "laws/research/methods-and-models/index.html"), "utf8");
-assert.ok(methodsHtml.includes('class="mm-story-nav"'), "Methods bottom Previous/Next route handoff exists");
-assert.ok(methodsHtml.includes('href="/laws/research/evidence-and-sources/"'), "Methods Previous route is Evidence and Sources");
-assert.ok(methodsHtml.includes('href="/laws/research/applied-investigations/"'), "Methods Next route is Applied Investigations");
+const sharedCss = fs.readFileSync(path.join(here, "room-carousel.v1.css"), "utf8");
+for (const token of [
+  "LAWS_LAYERED_INFORMATION_GRID_GEN1843_METHODS_FROZEN_DIMENSIONAL_GRAMMAR",
+  "width:clamp(17rem,30vw,27rem)",
+  "height:clamp(24rem,52vh,34rem)",
+  "width:min(72vw,27rem)",
+  "height:31rem",
+  "@media (max-width: 760px)",
+  "width:min(82vw,21rem)",
+  "height:29rem",
+  "@media (max-width: 440px)",
+  "width:min(86vw,19.5rem)"
+]) assert.ok(sharedCss.includes(token), `shared CSS carries frozen Methods geometry token: ${token}`);
+assert.ok(!sharedCss.includes("width:min(55vw,25rem)"), "obsolete 400px tablet family card cap is removed");
+assert.ok(!sharedCss.includes("height:25rem !important"), "obsolete square tablet family card height is removed");
 
 const runtimeSource = fs.readFileSync(path.join(here, "room-carousel.v1.js"), "utf8");
 for (const token of [
@@ -149,11 +144,7 @@ assert.equal(storyCount, representativesOnly ? storyCount : 551, `chapter invent
 assert.equal(pairCount, representativesOnly ? pairCount : 864, `within-card pair inventory remains ${representativesOnly ? "representative" : "864"}`);
 
 if (staticOnly) {
-  if (!representativesOnly) {
-    assert.equal(storyCount, 551, `chapter inventory remains 551, received ${storyCount}`);
-    assert.equal(pairCount, 864, `within-card pair inventory remains 864, received ${pairCount}`);
-  }
-  console.log(JSON.stringify({ result: "PASS", mode: "static-gen1841-continuity", routes: routes.length, storyCount, pairCount, methodsExceptions: methodsAllowed, gen1833CorpusPreserved: true }));
+  console.log(JSON.stringify({ result: "PASS", mode: "static-gen1843-dimensional-continuity", routes: routes.length, storyCount, pairCount, methodsFrozen: true, gen1833CorpusPreserved: true }));
   process.exit(0);
 }
 
@@ -168,13 +159,23 @@ try {
 }
 
 const browser = await chromium.launch({ headless: true, ...(process.env.LAWS_BROWSER_EXECUTABLE ? { executablePath: process.env.LAWS_BROWSER_EXECUTABLE } : {}) });
-const artifactDir = path.join(root, "artifacts/laws-cp6-final-synchronization/gen1841-continuity");
+const artifactDir = path.join(root, "artifacts/laws-cp6-final-synchronization/gen1843-dimensional-continuity");
 fs.mkdirSync(artifactDir, { recursive: true });
 
 try {
   const evidence = [];
+  const methodsReference = {};
   for (const viewport of viewports) {
     const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height }, reducedMotion: "reduce" });
+
+    const methodsPage = await context.newPage();
+    await methodsPage.goto(`${baseUrl}/laws/research/methods-and-models/`, { waitUntil: "networkidle" });
+    await methodsPage.waitForSelector('.mm-card[data-active="true"]');
+    const methodsRect = await methodsPage.locator('.mm-card[data-active="true"]').boundingBox();
+    assert.ok(methodsRect, `Methods ${viewport.name}: active reference card measurable`);
+    methodsReference[viewport.name] = { width: methodsRect.width, height: methodsRect.height };
+    await methodsPage.close();
+
     for (const route of routes) {
       const page = await context.newPage();
       const errors = [];
@@ -193,7 +194,18 @@ try {
 
       await page.locator("[data-lrc-tab]").nth(targetIndex).click();
       const activeId = await page.locator(rootSelector).getAttribute("data-lrc-id");
+      const orbitRect = await page.locator(activeCard).boundingBox();
+      assert.ok(orbitRect, `${route} ${viewport.name}: active orbit card measurable`);
+      const reference = methodsReference[viewport.name];
+      assert.ok(withinTolerance(orbitRect.width, reference.width), `${route} ${viewport.name}: card width ${orbitRect.width.toFixed(2)} matches frozen Methods ${reference.width.toFixed(2)} ±${GEOMETRY_TOLERANCE_PX}px`);
+      assert.ok(withinTolerance(orbitRect.height, reference.height), `${route} ${viewport.name}: card height ${orbitRect.height.toFixed(2)} matches frozen Methods ${reference.height.toFixed(2)} ±${GEOMETRY_TOLERANCE_PX}px`);
       assert.equal(await page.locator(`${activeCard} [data-lrc-summary-stories] span`).count(), Math.min(3, expected[targetIndex].stories.length), `${route} ${viewport.name}: orbit card carries directed story preview`);
+
+      if (screenshotRoutes.has(route)) {
+        const name = route.replace(/^\/laws\//, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
+        await page.screenshot({ path: path.join(artifactDir, `orbit-${viewport.name}-${name}.png`), fullPage: false });
+      }
+
       await page.locator(`${activeCard} [data-lrc-inspect]`).click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-story"), expected[targetIndex].stories[0].id, `${route} ${viewport.name}: stored first story opens initially`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "practical", `${route} ${viewport.name}: stored practical lens opens initially`);
@@ -251,11 +263,6 @@ try {
       assert.ok(geometry.lensOverflow <= 1, `${route} ${viewport.name}: zero lens-rail horizontal overflow`);
       assert.ok(geometry.returnTop >= -1 && geometry.returnBottom <= viewport.height + 1, `${route} ${viewport.name}: Return to Orbit immediately available`);
 
-      if (screenshotRoutes.has(route)) {
-        const name = route.replace(/^\/laws\//, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "");
-        await page.screenshot({ path: path.join(artifactDir, `continuity-${viewport.name}-${name}.png`), fullPage: false });
-      }
-
       await page.locator(`${activeCard} [data-lrc-return]`).click();
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "orbit", `${route} ${viewport.name}: return to orbit`);
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-id"), activeId, `${route} ${viewport.name}: return lands on same outer card`);
@@ -264,14 +271,14 @@ try {
       assert.equal(await page.locator(rootSelector).getAttribute("data-lrc-layer"), "empirical", `${route} ${viewport.name}: reopen restores same lens`);
       await page.locator(`${activeCard} [data-lrc-return]`).click();
       assert.deepEqual(errors, [], `${route} ${viewport.name}: zero page errors`);
-      evidence.push({ route, viewport: viewport.name, activeId, restoredStory: expected[targetIndex].stories[nextStoryIndex].id, restoredLens: "empirical", storyCount: expected[targetIndex].stories.length });
+      evidence.push({ route, viewport: viewport.name, activeId, orbitWidth: orbitRect.width, orbitHeight: orbitRect.height, methodsWidth: reference.width, methodsHeight: reference.height, restoredStory: expected[targetIndex].stories[nextStoryIndex].id, restoredLens: "empirical", storyCount: expected[targetIndex].stories.length });
       await page.close();
     }
     await context.close();
   }
-  const receipt = { result: "PASS", mode: representativesOnly ? "representative-gen1841-continuity" : "full-gen1841-continuity", routes: routes.length, viewports: viewports.map(v => v.name), storyCount, pairCount, gen1833CorpusPreserved: true, methodsExceptions: methodsAllowed, evidence };
-  fs.writeFileSync(path.join(artifactDir, representativesOnly ? "representative-continuity-runtime.json" : "full-continuity-runtime.json"), JSON.stringify(receipt, null, 2) + "\n");
-  console.log(JSON.stringify({ result: "PASS", mode: receipt.mode, routes: routes.length, viewportCount: viewports.length, storyCount, pairCount, checks: evidence.length }));
+  const receipt = { result: "PASS", mode: representativesOnly ? "representative-gen1843-dimensional-continuity" : "full-gen1843-dimensional-continuity", routes: routes.length, viewports: viewports.map(v => v.name), storyCount, pairCount, gen1833CorpusPreserved: true, methodsFrozen: true, geometryTolerancePx: GEOMETRY_TOLERANCE_PX, methodsReference, evidence };
+  fs.writeFileSync(path.join(artifactDir, representativesOnly ? "representative-dimensional-continuity-runtime.json" : "full-dimensional-continuity-runtime.json"), JSON.stringify(receipt, null, 2) + "\n");
+  console.log(JSON.stringify({ result: "PASS", mode: receipt.mode, routes: routes.length, viewportCount: viewports.length, storyCount, pairCount, checks: evidence.length, methodsFrozen: true, geometryTolerancePx: GEOMETRY_TOLERANCE_PX }));
 } finally {
   await browser.close();
 }

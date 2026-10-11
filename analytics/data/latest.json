@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-11T05:34:28Z",
+  "generatedAt": "2026-10-11T06:48:45Z",
   "window30d": {
-    "start": "2026-09-11T05:34:28Z",
-    "end": "2026-10-11T05:34:28Z"
+    "start": "2026-09-11T06:48:45Z",
+    "end": "2026-10-11T06:48:45Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 97
+      "pageLoads": 95
     },
     {
       "date": "2026-10-05",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 33
+      "pageLoads": 34
     }
   ],
   "summary": {
-    "pageLoads": 5532,
-    "botPageLoads": 2071,
-    "nonBotPageLoads": 3461
+    "pageLoads": 5531,
+    "botPageLoads": 2072,
+    "nonBotPageLoads": 3459
   },
   "referrers": [
     {
@@ -155,8 +155,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 25,
-      "visits": 25
+      "pageLoads": 24,
+      "visits": 24
     },
     {
       "host": "l.instagram.com",
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1188,
-      "visits": 869
+      "pageLoads": 1187,
+      "visits": 868
     },
     {
       "path": "/mirror-manor-preview/",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 438,
-      "visits": 317
+      "pageLoads": 439,
+      "visits": 318
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -202,8 +202,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 340,
-      "visits": 318
+      "pageLoads": 339,
+      "visits": 317
     },
     {
       "path": "/products/education/",

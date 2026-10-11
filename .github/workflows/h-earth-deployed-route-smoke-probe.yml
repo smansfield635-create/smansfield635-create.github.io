@@ -1,0 +1,121 @@
+name: H-Earth Deployed Route Smoke Probe
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/h-earth-deployed-route-smoke-probe.yml"
+      - ".github/workflows/h-earth-renderer-corridor-integration.yml"
+      - "tools/h-earth-deployed-route-smoke-probe.mjs"
+      - "tools/h-earth-deployed-route-probe-contract.mjs"
+      - "tools/h-earth-deployed-route-probe-self-test.mjs"
+      - "tools/h-earth-renderer-corridor-common.mjs"
+      - "tools/h-earth-renderer-corridor-capacity-law.mjs"
+      - "tools/h-earth-renderer-corridor-receipt-custody.mjs"
+      - "h-earth-3d/integration/**"
+      - "h-earth-3d/cells/**"
+      - "h-earth-3d/objects/**"
+      - "h-earth-3d/zones/**"
+      - "h-earth-3d/h-earth.matrix.js"
+      - "showroom/globe/h-earth/**"
+  workflow_dispatch:
+    inputs:
+      deployed_url:
+        description: Public H-Earth route to probe
+        required: false
+        default: "https://diamondgatebridge.com/showroom/globe/h-earth/"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: h-earth-deployed-route-smoke
+  cancel-in-progress: true
+
+jobs:
+  deployed-route-smoke:
+    name: H-Earth Deployed Route Pass
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      H_EARTH_DEPLOYED_URL: ${{ inputs.deployed_url || 'https://diamondgatebridge.com/showroom/globe/h-earth/' }}
+      H_EARTH_DEPLOYED_MAX_ATTEMPTS: "6"
+      H_EARTH_DEPLOYED_RETRY_DELAY_MS: "20000"
+
+    steps:
+      - name: Checkout merged repository occurrence
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install pinned Playwright Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Probe deployed route with fresh browser profiles
+        id: deployed_probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/h-earth-deployed-route-smoke-probe.mjs \
+            | tee h-earth-deployed-route-smoke.log
+
+      - name: Publish deterministic deployed-route summary
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo "## H-Earth Deployed Route Smoke Probe"
+            echo
+            echo '```text'
+            if [[ -f h-earth-deployed-route-smoke.log ]]; then
+              cat h-earth-deployed-route-smoke.log
+            else
+              echo "Smoke-probe log was not created."
+            fi
+            echo '```'
+            echo
+            if [[ -f artifacts/h-earth-deployed-route-smoke/aggregate.receipt.json ]]; then
+              node -e '
+                const fs = require("node:fs");
+                const r = JSON.parse(fs.readFileSync("artifacts/h-earth-deployed-route-smoke/aggregate.receipt.json", "utf8"));
+                console.log(`- Deployed route pass: ${r.deployedRoutePassEstablished}`);
+                console.log(`- Required profiles: ${r.requiredProfileCount}`);
+                console.log(`- Source identity required: ${r.sourceIdentityRequired}`);
+                console.log(`- Source identity paths: ${r.sourceIdentityPathCount}`);
+                console.log(`- Attempts: ${r.attemptCount}`);
+                console.log(`- Successful attempt: ${r.successfulAttemptNumber ?? "none"}`);
+                console.log(`- Target: ${r.targetUrl}`);
+                console.log(`- Receipt SHA-256: ${r.deterministicReceiptSha256}`);
+              '
+            else
+              echo "- Aggregate receipt: missing"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Verify deployed-route receipt custody
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools/h-earth-renderer-corridor-receipt-custody.mjs deployed
+
+      - name: Upload deployed-route receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-deployed-route-smoke-receipts-${{ github.sha }}
+          path: |
+            artifacts/h-earth-deployed-route-smoke/*.json
+            h-earth-deployed-route-smoke.log
+          if-no-files-found: error
+          retention-days: 30

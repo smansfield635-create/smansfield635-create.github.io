@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "hearth-gen2646-far-normal-soil-34282e78",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6119,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2646-far-normal-20261010",
+  "requestCommit": "0f341c813fb1a4b1ba8ef5c5b2df37519933f427",
+  "requestCommitParent": "c5754bff5509e299a5fb3d6287053309206a46ae",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "c5754bff5509e299a5fb3d6287053309206a46ae",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "34282e78b859b6b42c77d7ce8ca4135da7825d19"
+  },
+  "bridgeRunId": "38108280977",
+  "dispatchedRunId": 38108289304,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38108289304",
+  "dispatchedRunHeadSha": "c5754bff5509e299a5fb3d6287053309206a46ae",
+  "dispatchedAt": "2026-10-11T03:24:43.725Z",
+  "resolvedAt": "2026-10-11T03:24:47.810Z"
+}

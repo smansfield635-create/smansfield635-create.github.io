@@ -1,0 +1,283 @@
+{
+  "schema": "H_EARTH_P1_LIGHTING_SHADER_QUALIFICATION_v1",
+  "result": "PASS_ISOLATED_SHADER_CHECKS",
+  "backend": "gles3",
+  "baselineHead": "d7b762bcca1c595b78fd1339c8d0fd38ede0ae98",
+  "baselinePath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+  "candidatePath": "showroom/globe/h-earth/render/persistent-live-renderer.p1-lighting-20261006.js",
+  "baselineSHA256": "9140a941cfd48e6d66af093cf54855a6b368449f6fb830beda33b8d2955e3f03",
+  "candidateSHA256": "dcbca197be88cf919fb8ff7ff25844cee2e4ae1677a3a046c4e1e366109b8470",
+  "sourceProof": {
+    "onlyBoundedLightingInsertion": true,
+    "productionVertexShaderUnchanged": true,
+    "uniformInterfaceUnchanged": true,
+    "allOtherSourceBytesUnchanged": true
+  },
+  "rows": [
+    {
+      "name": "terrain-upward",
+      "role": 1,
+      "environment": "warm-sun",
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "baselineSHA256": "17ba742975f17b4c086f8849f50e7ddeda5d08bb58a6b866539a42a0af0c1c51",
+      "candidateSHA256": "669fbaa282982104faede878d3cdb42ea4ca5b4a90c0b86b919be5affa20a52f",
+      "repeatExact": true,
+      "changedChannels": 27648,
+      "meanAbsoluteChannelDelta": 5.0380859375,
+      "maxChannelDelta": 10
+    },
+    {
+      "name": "terrain-sunward-slope",
+      "role": 1,
+      "environment": "warm-sun",
+      "normal": [
+        0.75,
+        0.65,
+        0
+      ],
+      "baselineSHA256": "24bdfa8c904bc09dd83051be2b1f410a76e6c13adc1476782ff0376a1b03205b",
+      "candidateSHA256": "b5fbe0ae9082d75b1bbc2c2e77e993ac6a0f634f5adb7963376cc70abde0498a",
+      "repeatExact": true,
+      "changedChannels": 27648,
+      "meanAbsoluteChannelDelta": 3.7941984953703702,
+      "maxChannelDelta": 8
+    },
+    {
+      "name": "terrain-away-slope",
+      "role": 1,
+      "environment": "warm-sun",
+      "normal": [
+        -0.85,
+        0.35,
+        -0.4
+      ],
+      "baselineSHA256": "60c68db24092b635d1631da17c1d67575157ec6013c77ef97b7c016ab1c866f4",
+      "candidateSHA256": "e2fe65804f1eadaa09b1ef8d27049f5a4da8eac7e940feb2c2a970deb8d4d18c",
+      "repeatExact": true,
+      "changedChannels": 27648,
+      "meanAbsoluteChannelDelta": 5.070276331018518,
+      "maxChannelDelta": 11
+    },
+    {
+      "name": "foliage-upward",
+      "role": 3,
+      "environment": "warm-sun",
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "baselineSHA256": "831d9316b2f8d86eb5c6c1b6442142802bee319c6cc70b9437a45084d2dc122d",
+      "candidateSHA256": "91e61841ad2b972bea53eaa4893ff0071b87b2e17f1c15d52c1c78ac407672e3",
+      "repeatExact": true,
+      "changedChannels": 27648,
+      "meanAbsoluteChannelDelta": 5.4135561342592595,
+      "maxChannelDelta": 10
+    },
+    {
+      "name": "foliage-side",
+      "role": 3,
+      "environment": "warm-sun",
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "baselineSHA256": "63bad54cb04b8e7a7707469f32dd08cef48530bea5a248d11a34b03963c3d253",
+      "candidateSHA256": "2220fd293308e66f861ba05d772ecb9e50190d337d45f161eb0d7b3478ea274c",
+      "repeatExact": true,
+      "changedChannels": 25438,
+      "meanAbsoluteChannelDelta": 3.8269675925925926,
+      "maxChannelDelta": 7
+    },
+    {
+      "name": "foliage-downward",
+      "role": 3,
+      "environment": "warm-sun",
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "baselineSHA256": "b8ba9ad16890ef2e3d53858b4cd376d3a2122fcb134034d759bee70a6753a78e",
+      "candidateSHA256": "02ccbe18e5e77f79e922ec4766bd372512f523111de436b516b03312f427c384",
+      "repeatExact": true,
+      "changedChannels": 27648,
+      "meanAbsoluteChannelDelta": 3.3333333333333335,
+      "maxChannelDelta": 5
+    },
+    {
+      "name": "shoreline-control",
+      "role": 2,
+      "environment": "warm-sun",
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "baselineSHA256": "f40883c5b151ecded83c923ff2367e19c8d7c6b725f1a73fda2011528d1c05a8",
+      "candidateSHA256": "f40883c5b151ecded83c923ff2367e19c8d7c6b725f1a73fda2011528d1c05a8",
+      "repeatExact": true,
+      "changedChannels": 0,
+      "meanAbsoluteChannelDelta": 0,
+      "maxChannelDelta": 0
+    },
+    {
+      "name": "water-control",
+      "role": 4,
+      "environment": "warm-sun",
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "baselineSHA256": "61a519c9228288cd75f8320a778b3c718ed070e0037a6c4f640ac6a6e12dd2c6",
+      "candidateSHA256": "61a519c9228288cd75f8320a778b3c718ed070e0037a6c4f640ac6a6e12dd2c6",
+      "repeatExact": true,
+      "changedChannels": 0,
+      "meanAbsoluteChannelDelta": 0,
+      "maxChannelDelta": 0
+    },
+    {
+      "name": "terrain-upward",
+      "role": 1,
+      "environment": "neutral-sun",
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "baselineSHA256": "7e9a8c1249bbead7d27d5a77255bcadc3a2e15adadb8cae5107c9f9b48695e50",
+      "candidateSHA256": "736dda66d632833a5fdd3b1f3ff18d798df3b8b08370bbe6a825d0f9833b9d57",
+      "repeatExact": true,
+      "changedChannels": 21117,
+      "meanAbsoluteChannelDelta": 1.3364438657407407,
+      "maxChannelDelta": 3
+    },
+    {
+      "name": "terrain-sunward-slope",
+      "role": 1,
+      "environment": "neutral-sun",
+      "normal": [
+        0.75,
+        0.65,
+        0
+      ],
+      "baselineSHA256": "3093c41dbf257e9fbd878a8fbee188f53a81655360d2c64a80ef603db03afb73",
+      "candidateSHA256": "a67b50fac35b29c39fdf654ccdbe704d47bc20ceda9ad1bc225a98c743554369",
+      "repeatExact": true,
+      "changedChannels": 19597,
+      "meanAbsoluteChannelDelta": 0.7652271412037037,
+      "maxChannelDelta": 2
+    },
+    {
+      "name": "terrain-away-slope",
+      "role": 1,
+      "environment": "neutral-sun",
+      "normal": [
+        -0.85,
+        0.35,
+        -0.4
+      ],
+      "baselineSHA256": "9321b471b1c8255585f6bf1bf9b749d8dd886de99f113faf34a8ca15776ea90b",
+      "candidateSHA256": "e2fe65804f1eadaa09b1ef8d27049f5a4da8eac7e940feb2c2a970deb8d4d18c",
+      "repeatExact": true,
+      "changedChannels": 18676,
+      "meanAbsoluteChannelDelta": 0.7373046875,
+      "maxChannelDelta": 2
+    },
+    {
+      "name": "foliage-upward",
+      "role": 3,
+      "environment": "neutral-sun",
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "baselineSHA256": "5286676b12172d143eaf08ba9a45523fb63362e9447dffa897d025f1daafd853",
+      "candidateSHA256": "a9249ca7734bee658277a0f2e9de5e8340b56c7b7060cc808d56f9044e51758e",
+      "repeatExact": true,
+      "changedChannels": 27004,
+      "meanAbsoluteChannelDelta": 1.6663411458333333,
+      "maxChannelDelta": 3
+    },
+    {
+      "name": "foliage-side",
+      "role": 3,
+      "environment": "neutral-sun",
+      "normal": [
+        -1,
+        0,
+        0
+      ],
+      "baselineSHA256": "c5cd52413dbe90fcbe9e668113d2c3fdf3977a60498bf15b5f6e6d5c7558636b",
+      "candidateSHA256": "2220fd293308e66f861ba05d772ecb9e50190d337d45f161eb0d7b3478ea274c",
+      "repeatExact": true,
+      "changedChannels": 7620,
+      "meanAbsoluteChannelDelta": 0.2756076388888889,
+      "maxChannelDelta": 1
+    },
+    {
+      "name": "foliage-downward",
+      "role": 3,
+      "environment": "neutral-sun",
+      "normal": [
+        0,
+        -1,
+        0
+      ],
+      "baselineSHA256": "b6f18fd6e42edb6edcdbab8fb5f87eec60c78168870179ba47487c14d3f590b0",
+      "candidateSHA256": "02ccbe18e5e77f79e922ec4766bd372512f523111de436b516b03312f427c384",
+      "repeatExact": true,
+      "changedChannels": 18432,
+      "meanAbsoluteChannelDelta": 0.6666666666666666,
+      "maxChannelDelta": 1
+    },
+    {
+      "name": "shoreline-control",
+      "role": 2,
+      "environment": "neutral-sun",
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "baselineSHA256": "4abcac065dcd559b803216d129ab720519a54c052aaeb5806273ce834f174d27",
+      "candidateSHA256": "4abcac065dcd559b803216d129ab720519a54c052aaeb5806273ce834f174d27",
+      "repeatExact": true,
+      "changedChannels": 0,
+      "meanAbsoluteChannelDelta": 0,
+      "maxChannelDelta": 0
+    },
+    {
+      "name": "water-control",
+      "role": 4,
+      "environment": "neutral-sun",
+      "normal": [
+        0,
+        1,
+        0
+      ],
+      "baselineSHA256": "688aced653effa47017855b3983fe6cd7f7aa3d5e9be198be2e3c9d42b798b64",
+      "candidateSHA256": "688aced653effa47017855b3983fe6cd7f7aa3d5e9be198be2e3c9d42b798b64",
+      "repeatExact": true,
+      "changedChannels": 0,
+      "meanAbsoluteChannelDelta": 0,
+      "maxChannelDelta": 0
+    }
+  ],
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "version": "OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+  "limits": [
+    "Synthetic matched patches using exact production shaders; not canonical whole-world views.",
+    "The reported graphics backend proves compile/link and bounded role behavior only; GLES is not browser WebGL acceptance. Physical phone/tablet cost and visual acceptance remain pending.",
+    "No added occlusion, cast shadows, geometry, foliage instances, or motion.",
+    "Candidate not bound to default renderer; integration and navigation unchanged by source identity, not exercised here."
+  ],
+  "nextGate": "Canonical whole-world six-view comparison and physical phone/tablet acceptance before default adoption."
+}

@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-11T23:31:26Z",
+  "generatedAt": "2026-10-12T01:20:44Z",
   "window30d": {
-    "start": "2026-09-11T23:31:26Z",
-    "end": "2026-10-11T23:31:26Z"
+    "start": "2026-09-12T01:20:44Z",
+    "end": "2026-10-12T01:20:44Z"
   },
   "daily": [
-    {
-      "date": "2026-09-12",
-      "pageLoads": 260
-    },
     {
       "date": "2026-09-13",
       "pageLoads": 330
@@ -96,11 +92,11 @@
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 87
+      "pageLoads": 90
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 169
+      "pageLoads": 176
     },
     {
       "date": "2026-10-06",
@@ -124,23 +120,27 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 74
+      "pageLoads": 86
+    },
+    {
+      "date": "2026-10-12",
+      "pageLoads": 2
     }
   ],
   "summary": {
-    "pageLoads": 5173,
-    "botPageLoads": 2008,
-    "nonBotPageLoads": 3165
+    "pageLoads": 5177,
+    "botPageLoads": 2003,
+    "nonBotPageLoads": 3174
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2958,
-      "visits": 2958
+      "pageLoads": 2962,
+      "visits": 2962
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1913,
+      "pageLoads": 1909,
       "visits": 0
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 25,
-      "visits": 25
+      "pageLoads": 29,
+      "visits": 29
     },
     {
       "host": "l.instagram.com",
@@ -177,7 +177,7 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1160,
+      "pageLoads": 1158,
       "visits": 871
     },
     {
@@ -187,8 +187,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 446,
-      "visits": 325
+      "pageLoads": 444,
+      "visits": 324
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
@@ -197,8 +197,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 342,
-      "visits": 322
+      "pageLoads": 352,
+      "visits": 332
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -212,8 +212,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 216,
-      "visits": 176
+      "pageLoads": 196,
+      "visits": 156
     }
   ],
   "ownerMeasurement": {

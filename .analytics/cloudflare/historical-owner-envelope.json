@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-11T23:31:26Z",
+  "generatedAt": "2026-10-12T01:20:44Z",
   "window": {
-    "start": "2026-07-13T23:31:26Z",
-    "end": "2026-10-11T23:31:26Z"
+    "start": "2026-07-14T01:20:44Z",
+    "end": "2026-10-12T01:20:44Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4986,
+    "pageLoads": 4982,
     "visits": 1322,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4986,
+        "pageLoads": 4982,
         "visits": 1322
       }
     },
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1042,
+        "pageLoads": 1040,
         "visits": 740
       },
       "/showroom/globe/h-earth/diagnostic/": {
@@ -62,6 +62,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/products/": {
+        "pageLoads": 80,
+        "visits": 10
+      },
       "/laws/battery-heldout-study/": {
         "pageLoads": 10,
         "visits": 0
@@ -69,10 +73,6 @@
       "/laws/categories/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 80,
-        "visits": 10
       },
       "/products/archcoin/": {
         "pageLoads": 40,
@@ -114,12 +114,12 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -154,6 +154,14 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -165,14 +173,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -250,16 +250,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -270,19 +270,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -335,7 +335,7 @@
         "visits": 0
       },
       "/analytics/": {
-        "pageLoads": 41,
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -343,13 +343,13 @@
         "visits": 10
       },
       "/about-this-underdog/": {
-        "pageLoads": 11,
+        "pageLoads": 10,
         "visits": 0
       }
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3664,
+        "pageLoads": 3660,
         "visits": 0
       },
       "www.google.com": {

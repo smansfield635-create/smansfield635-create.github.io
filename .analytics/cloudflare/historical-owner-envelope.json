@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-12T14:45:12Z",
+  "generatedAt": "2026-10-12T15:36:12Z",
   "window": {
-    "start": "2026-07-14T14:45:12Z",
-    "end": "2026-10-12T14:45:12Z"
+    "start": "2026-07-14T15:36:12Z",
+    "end": "2026-10-12T15:36:12Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4982,
+    "pageLoads": 5122,
     "visits": 1322,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4982,
+        "pageLoads": 5122,
         "visits": 1322
       }
     },
@@ -63,19 +63,11 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 80,
+        "pageLoads": 160,
         "visits": 10
       },
-      "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/products/archcoin/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
-      "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
+        "pageLoads": 130,
         "visits": 0
       },
       "/laws/": {
@@ -250,16 +242,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -349,7 +341,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3660,
+        "pageLoads": 3800,
         "visits": 0
       },
       "www.google.com": {

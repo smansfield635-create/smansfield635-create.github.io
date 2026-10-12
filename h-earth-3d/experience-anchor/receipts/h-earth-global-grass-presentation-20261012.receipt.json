@@ -1,0 +1,86 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_GLOBAL_GPU_GRASS_PRESENTATION_REFINEMENT_20261012_001",
+  "canonicalAdmissionGeneration": 2669,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/receipts/h-earth-loading-motion-integration-20261012.receipt.json"
+  ],
+  "continuityEvidence": [
+    "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+      "sha256": "93fd9287fa82acf1704fcf2b47c9fb82cfdb5c0f26282ad823f9f76adebab4e8"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
+      "sha256": "cf6d45b50b9c07e340ed73be511784608882181334eea4ed4260f6249980b31d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+      "sha256": "7e565b6f3486022775499c102933255b9fa7ad1696732356f88964d4db7586fd"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "sha256": "6112fc28c1722acb45d630b92afed374951eff943090d2b78e939e374ea42073"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "40f35771b9761c8f03f1b0b83e584168075572840b8efdf352f9ec129bc4f94c"
+    }
+  ],
+  "candidateLineage": {
+    "sourceParent": "626d907fdddf59775590a923fc515cab28f34485",
+    "governingMain": "71de25425bc7e783fc45b83328503132b6e345cf",
+    "protectedPublishedHead": "37f9e9206a9a199b4ea11c4b06c6727704652114"
+  },
+  "acceptanceBasis": "GEN2669 ONE_REPAIR source-bound SAME-WORLD architectural review. The initial GPU grass morphology looked twiglike: moderate blade shoulder width and deterministic four-blade tip differences now restore tapered grass silhouettes, while every terrain-sampled root, GPU record, tile/instance population, original approved clearing, four trees, terrain/water and movement/worker source remain unchanged. Only the global grass palette receives a bounded natural sage/straw adjustment. The Gen2666 precomputed world binary remains byte-identical and its only changed metadata are original source-identity references. This is NOT owner visual KEEP, independently executed Gen2669 --verify-source, or new browser qualification: those remain pending for the exact one-repair head.",
+  "protectedAssets": {
+    "precomputedBaseWorldBinary": {
+      "byteLength": 11736235,
+      "sha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "mutationAllowed": false
+    },
+    "approvedFourTrees": 4,
+    "legacyTreeCount": 0,
+    "worldwideGrassInstancePopulation": 61235,
+    "globalGrassTileCount": 648,
+    "canonicalVegetationInstanceCount": 27585,
+    "canonicalVegetationBatchCount": 108
+  },
+  "runtimeAcceptance": "ONE_REPAIR_EXACT_CANDIDATE_BROWSER_QUALIFICATION_PENDING",
+  "physicalDeviceAcceptance": false,
+  "ownerPerceptualDisposition": "PENDING",
+  "releaseEligible": false,
+  "mergeAuthorized": false,
+  "publicationAuthorized": false,
+  "oneRepairDecision": {
+    "previousCandidate": "626d907fdddf59775590a923fc515cab28f34485",
+    "disposition": "ONE_REPAIR",
+    "decisionBasis": "Owner delegated keep versus one-repair decision after enlarged actual browser coast image revealed twiglike sparse grass",
+    "publicationAuthorized": false
+  }
+}

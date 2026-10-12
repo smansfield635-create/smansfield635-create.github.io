@@ -36,12 +36,45 @@ function triangleIndex(positions,indices,spans=null,bounded=false){
   }
   return {triangleCount:triangles.length,sample(x,z){for(const t of bins.get(`${Math.floor(x/size)}:${Math.floor(z/size)}`)??[]){const[a,b,c]=t.a,u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/t.det,v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/t.det,w=1-u-v;if(Math.min(u,v,w)<-1e-8)continue;return{y:f(u*a.y+v*b.y+w*c.y),slope:t.slope,triangleId:t.triangleId};}return null;}};
 }
+/** World-cover presentation morph only. All 12 root vertices and accepted fan indices remain unchanged. */
 function templateFor(){
   const tuft=buildHEarthWoodlandGrassTuft({id:`${P.id}:ACCEPTED_FAN_TEMPLATE`,x:0,z:0,bladeCount:4,pocket:'OLIVE',sample:(x,z)=>({x,y:0,z,triangleId:0,terrainPrimitiveId:'FLAT_TEMPLATE'}),eligible:()=>true,inside:()=>true});
   const g=tuft.geometry;if(g.vertices.length!==28||g.indices.length!==72)throw Error('GLOBAL_COVER_TEMPLATE_RECIPE_DRIFT');
+  const vertices=g.vertices.map(v=>({x:v.x,y:v.y,z:v.z}));
+  // Gen2669 ONE_REPAIR: middle-width and staggered tip lean recover soft
+  // grass silhouettes from the first candidate's thin, identical twig shapes.
+  // The first three vertices of each blade remain precisely terrain-rooted.
+  const shoulderWidth=[.44,.48,.42,.46],middleReach=[.74,.81,.77,.83];
+  const middleRise=[.80,.77,.83,.79],tipReach=[1.00,.91,1.04,.96],tipRise=[.75,.69,.77,.72];
+  for(let blade=0;blade<4;blade++){
+    const start=blade*7,root=vertices[start+1],mid=vertices[start+4];
+    for(let local=3;local<=5;local++){
+      const v=vertices[start+local];
+      vertices[start+local]={
+        x:f(root.x+(mid.x-root.x)*middleReach[blade]+(v.x-mid.x)*shoulderWidth[blade]),
+        y:f(v.y*middleRise[blade]),
+        z:f(root.z+(mid.z-root.z)*middleReach[blade]+(v.z-mid.z)*shoulderWidth[blade])
+      };
+    }
+    const tip=vertices[start+6];
+    vertices[start+6]={x:f(root.x+(tip.x-root.x)*tipReach[blade]),y:f(tip.y*tipRise[blade]),z:f(root.z+(tip.z-root.z)*tipReach[blade])};
+  }
+  // Recompute the shared mesh's surface normals after bending its upper blades.
+  const accumulated=Array.from({length:28},()=>[0,0,0]);
+  for(let k=0;k<g.indices.length;k+=3){
+    const ids=g.indices.slice(k,k+3),a=vertices[ids[0]],b=vertices[ids[1]],c=vertices[ids[2]];
+    const ux=b.x-a.x,uy=b.y-a.y,uz=b.z-a.z,vx=c.x-a.x,vy=c.y-a.y,vz=c.z-a.z;
+    const n=[uy*vz-uz*vy,uz*vx-ux*vz,ux*vy-uy*vx];
+    if(Math.hypot(...n)<1e-10)throw Error('GLOBAL_COVER_UPPER_BLADE_DEGENERATE');
+    for(const id of ids)for(let axis=0;axis<3;axis++)accumulated[id][axis]+=n[axis];
+  }
   const positions=new Float32Array(84),normals=new Float32Array(84),colors=new Float32Array(112),rootInfo=new Float32Array(112),rootVertices=new Uint8Array(12);
-  for(let i=0;i<28;i++){const v=g.vertices[i],n=g.normals[i],blade=Math.floor(i/7),local=i%7,root=blade*3+(local<3?local:local<6?local-3:1);positions.set([v.x,v.y,v.z],i*3);normals.set([n.x,n.y,n.z],i*3);rootInfo[i*4]=root;
-    const srgb=tuft.metadata.oasisFoliage.vertexColorsSrgb[i];colors.set([...srgb.map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4)),1],i*4);
+  for(let i=0;i<28;i++){
+    const v=vertices[i],sum=accumulated[i],len=Math.hypot(...sum),fallback=g.normals[i],n=len>1e-10?sum.map(q=>q/len):[fallback.x,fallback.y,fallback.z];
+    const blade=Math.floor(i/7),local=i%7,root=blade*3+(local<3?local:local<6?local-3:1);
+    positions.set([v.x,v.y,v.z],i*3);normals.set(n,i*3);rootInfo[i*4]=root;
+    const srgb=tuft.metadata.oasisFoliage.vertexColorsSrgb[i];
+    colors.set([...srgb.map(c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4)),1],i*4);
     if(local<3)rootVertices[blade*3+local]=i;
   }
   return{positions,normals,colors,indices:new Uint32Array(g.indices),rootInfo,rootVertices,rootMapping:'PER_VERTEX_ROOT_INDEX_AT_ROOTINFO_X_HEIGHT_ABOVE_FLAT_ROOT',recipe:'ACCEPTED_FOUR_BLADE_28_VERTEX_24_TRIANGLE_FAN'};

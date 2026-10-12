@@ -1,5 +1,5 @@
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js?cb=gen2659-camera-first-20261011';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js?cb=gen2669-fine-grass-20261012';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -309,8 +309,11 @@ void main(){
   vWorldPosition=vec3(xz.x,rootY(instance,int(aRootInfo.x))+aPosition.y*aParameters.x,xz.y);
   vec3 n=vec3(aNormal.x/aTransform.w,aNormal.y/aParameters.x,aNormal.z/aTransform.w);
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
-  vec3 palette=aParameters.y<0.333333?vec3(0.18,0.115,0.045):aParameters.y<0.666667?vec3(0.31,0.245,0.065):vec3(0.095,0.145,0.04);
-  vBaseColor=vec4(mix(aColor.rgb,palette,0.55)*(0.92+0.16*aParameters.z),1.0);
+  // Continuous coastal-meadow tones avoid discrete brown/gold/green bands.
+  vec3 dryGrass=vec3(0.192,0.164,0.102),meadowGrass=vec3(0.109,0.159,0.092);
+  float habitatTint=smoothstep(0.13,0.87,aParameters.y);
+  vec3 palette=mix(dryGrass,meadowGrass,habitatTint);
+  vBaseColor=vec4(mix(aColor.rgb,palette,0.72)*(0.95+0.10*aParameters.z),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;

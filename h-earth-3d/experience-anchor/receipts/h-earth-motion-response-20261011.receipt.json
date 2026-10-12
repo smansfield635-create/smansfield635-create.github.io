@@ -1,14 +1,23 @@
 {
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
-  "operationId": "H_EARTH_MOTION_ELAPSED_TIME_AND_PRESENTATION_REPAIR_20261011_001",
-  "canonicalAdmissionGeneration": 2665,
-  "admissionCommit": "abfe7de6dadda1ae86eba8c93b060ee5bd210bbe",
-  "sourceBaselineHead": "1b57568afe6d71293c06b18a6b7790f90a7b5284",
+  "operationId": "H_EARTH_QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION_20261012_001",
+  "authorityGeneration": 2668,
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "reviewedAgainstAnchor": true,
-  "disposition": "ENGINEERING_QUALIFIED_ANDROID_PENDING",
-  "acceptanceBasis": "Source-level continuity review and actual controller/terrain integration; environmental sources unchanged. Physical Android acceptance is pending and publication is not authorized.",
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/receipts/h-earth-loading-motion-integration-20261012.receipt.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.touch-motion-calibration.cp3b-integration-contract.harness.mjs",
+    "h-earth-3d/experience-anchor/receipts/h-earth-loading-motion-integration-20261012.receipt.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+    "h-earth-3d/experience-anchor/receipts/h-earth-loading-motion-integration-20261012.receipt.json"
+  ],
   "invariants": {
     "SAME_CANONICAL_WORLD_IDENTITY": true,
     "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
@@ -24,103 +33,71 @@
   },
   "experienceFiles": [
     {
-      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
-      "sha256": "9de1684ad7636d7fea1d1671a2ec95c23d57720d495dff17cbf22e74c3ccc63a",
-      "gitBlob": "c874d8fcf5067b73cb3af1ceb16065e7c79f83fa"
-    },
-    {
-      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
-      "sha256": "f4034567a66b5741ed42285e6a28c9c42795949a4953c221fd9bd83f86b22f51",
-      "gitBlob": "9c5d4d4c97724e37209f98a961a6712d5616deb7"
+      "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+      "sha256": "ca02ab006ba860ce52ca36a37fb28ee86435e72357248c039ac87ad462076a27"
     },
     {
       "path": "h-earth-3d/validation/h-earth.touch-motion-calibration.cp3b-integration-contract.harness.mjs",
-      "sha256": "bdb1a5d5da7a5fb79dfd64c7041b1a1543514da90dce8995dad2133cc3b3f077",
-      "gitBlob": "a1e89f1bdbe08a6286c9233a4647a043f3e08c29"
-    }
-  ],
-  "protectedWorldSources": [
-    {
-      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
-      "blob": "c26247dcb69cb52c968fcd3ef6c2626eaa577d03",
-      "sha256": "8642da7a506092be993d404bf2461e272275c86fc3445b3e898b739308401df2",
-      "matchesCandidate": true
+      "sha256": "bdb1a5d5da7a5fb79dfd64c7041b1a1543514da90dce8995dad2133cc3b3f077"
     },
     {
-      "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
-      "blob": "da90847d9472bcabfc17ea2c0e05afabae382d29",
-      "sha256": "0f75e195c8e1548d8b34910e53d630d4255e88d92c1e4a1c209d53ae3c15444f",
-      "matchesCandidate": true
+      "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz",
+      "sha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+      "sha256": "b574feb80503c76adea6c0f42cac4f3b173e0035165d1b4a25d2e077bae00834"
     },
     {
       "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
-      "blob": "41092afa665f715027f54bc6c52898b839911235",
-      "sha256": "5a047443e7ec6c58b412d24c4c159a1091ef34564515e583c4d4e90d54ef28b7",
-      "matchesCandidate": true
-    },
-    {
-      "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
-      "blob": "14c366d2241469fbccd08ee31bbeac0f1b7598f4",
-      "sha256": "16a04e317f100c29c80e885cbb37d4acf075473feafefe6d8e71837f62960c56",
-      "matchesCandidate": true
-    },
-    {
-      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
-      "blob": "4a1d10c2b7b98b016872d4fc50f31f62b3295d12",
-      "sha256": "8d2266c27123a69ce17dd2b1fe2a5e515d7bf6b74521216ce0281531f3a74d54",
-      "matchesCandidate": true
-    },
-    {
-      "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
-      "blob": "a69bb5629daf9820ed209e50aaa30ff5b9f4abdd",
-      "sha256": "0442994d149817084f80745b78e0cc09df20dab7c8943ddeb98d5356a4edf06f",
-      "matchesCandidate": true
+      "sha256": "8ebf5c18e0045e84787ce36e476f6427827b6d406b433e489f0dabb7febd8537"
     }
   ],
-  "sourcePopulation": {
-    "approvedTrees": 4,
-    "oldTrees": 0,
-    "worldTiles": 648,
-    "groundCoverInstances": 61235,
-    "independentRoots": 734820,
-    "vegetationBatches": 108,
-    "vegetationPlacements": 27585,
-    "oasisTufts": 350,
-    "cattails": 72
-  },
-  "preservedFullWorldParity": {
-    "candidateHead": "ec8da69b88aaa981689bcff2e30966fcc1e36dc7",
-    "result": "PASS",
-    "receiptSha256": "42df978d5351aa4e067dd126cd5538cab1e72491d2f60392fdf7dd9f7a15d652",
-    "recordsSha256": "c610a5dfe3487778a67d2bcacc6cef5eedd33d5a2c10ca7d2a16d822b34bccf4",
-    "reuseBasis": "All six protected input/verifier Git blobs match exact Gen2659 qualified bytes."
-  },
-  "precedent": {
-    "boundedSubsteps": "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
-    "noReadbackMotion": "Existing CP4 presentation-only path",
-    "ratesUnchanged": {
-      "turnDegreesPerSecond": 72,
-      "pitchDegreesPerSecond": 54,
-      "travelWorldUnitsPerSecond": 7.5,
-      "zoomDegreesPerSecond": 30
-    },
-    "declaredDelta": {
-      "maximumElapsedSubstepSeconds": 0.05,
-      "maximumAccumulatedSeconds": 0.15,
-      "proposalStateSnapshots": true,
-      "multiSubstepPresentationCoalescing": true,
-      "visibilityReset": true
-    }
+  "physicalAndroidQualified": false,
+  "releaseAuthorized": true,
+  "acceptanceBoundary": "Owner KEEP based on existing measured performance and preserved experience, explicitly waiving another screenshot/physical Android preview, and authorizing publication 2026-10-11 22:03:41 America/Chicago. No Android measurement claimed.",
+  "binaryTransport": {
+    "bytes": 11736235,
+    "sha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "gitBlob": "3d11947ad94f98736035cbdf0e021e5f324659fb"
   },
   "qualification": {
-    "cp3a": {
+    "sourceParity": {
+      "schema": "H_EARTH_GEN2666_PRECOMPUTE_PARITY_RECEIPT_v1",
       "result": "PASS",
-      "assertions": 22
+      "exactSourceBound": true,
+      "fullRawAndCanonicalRecords": true,
+      "nineCanonicalAndRawBuffers": true,
+      "originalPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2",
+      "transportSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "transportBytes": 11736235,
+      "hydrationMilliseconds": 1078,
+      "freshSourceCompared": true,
+      "environmentalIdentityPreserved": true,
+      "physicalAndroidQualified": false,
+      "releaseAuthorized": false
+    },
+    "cp3a": {
+      "status": "PASS",
+      "assertionCount": 22,
+      "forwardTravel": 5.999999999999987,
+      "backwardTravel": -5.999999999999987,
+      "frameRateTravel": {
+        "travel30": 6.000000000000003,
+        "travel60": 5.999999999999987,
+        "travel120": 5.999999999999987
+      },
+      "gestureOwnershipLock": "PASS",
+      "pinchTravelStability": "PASS",
+      "directionalSymmetry": "PASS",
+      "frameTimeNormalization": "PASS",
+      "boundedInputAccumulation": "PASS",
+      "releaseTermination": "PASS"
     },
     "cp3b": {
       "status": "PASS",
       "checkpoint": "CP3B_PRODUCT_INTEGRATION_CONTRACT",
-      "runtime": "v22.23.2",
+      "runtime": "v22.23.3",
       "cases": 40,
       "samples": [
         {
@@ -658,25 +635,1101 @@
         "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js"
       ]
     },
-    "browser": "PENDING_EXACT_COMMIT",
-    "independentReview": {
-      "result": "PASS",
-      "agent": "soren_motion_review",
-      "functionalBearing": "W",
-      "actualNativeInvocation": true,
-      "checks": [
-        "CP3A and CP3B rerun",
-        "late activation timing",
-        "active visibility suspension",
-        "integration nullable return",
-        "exact-state capture and coalescing"
+    "browser": {
+      "schema": "H_EARTH_GEN2_VISUAL_QUALIFICATION_v1",
+      "candidateHead": "fa1a91c0ef0e7ef1129503337ac4946ed8cead55",
+      "actualBrowserExecution": true,
+      "productMode": "GEN2638_FOUR_TREES",
+      "views": [
+        {
+          "id": "approved-four-tree-clearing",
+          "result": "PASS",
+          "progress": [
+            {
+              "phase": "STARTUP",
+              "elapsedMs": 56,
+              "loader": "34%",
+              "ready": false,
+              "frames": 0
+            },
+            {
+              "phase": "STARTUP",
+              "elapsedMs": 18161,
+              "loader": null,
+              "ready": true,
+              "frames": 1
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 26,
+              "completedBatches": 0,
+              "totalBatches": 108,
+              "instances": 0
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 32324,
+              "completedBatches": 1,
+              "totalBatches": 108,
+              "instances": 256
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 34879,
+              "completedBatches": 4,
+              "totalBatches": 108,
+              "instances": 1024
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 84075,
+              "completedBatches": 6,
+              "totalBatches": 108,
+              "instances": 1536
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 86928,
+              "completedBatches": 9,
+              "totalBatches": 108,
+              "instances": 2304
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 89756,
+              "completedBatches": 12,
+              "totalBatches": 108,
+              "instances": 3072
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 92662,
+              "completedBatches": 15,
+              "totalBatches": 108,
+              "instances": 3840
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 94688,
+              "completedBatches": 17,
+              "totalBatches": 108,
+              "instances": 4352
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 97586,
+              "completedBatches": 20,
+              "totalBatches": 108,
+              "instances": 5120
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 100425,
+              "completedBatches": 23,
+              "totalBatches": 108,
+              "instances": 5888
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 102436,
+              "completedBatches": 25,
+              "totalBatches": 108,
+              "instances": 6400
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 104847,
+              "completedBatches": 27,
+              "totalBatches": 108,
+              "instances": 6912
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 106946,
+              "completedBatches": 29,
+              "totalBatches": 108,
+              "instances": 7424
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 108964,
+              "completedBatches": 31,
+              "totalBatches": 108,
+              "instances": 7936
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 111854,
+              "completedBatches": 34,
+              "totalBatches": 108,
+              "instances": 8704
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 113922,
+              "completedBatches": 36,
+              "totalBatches": 108,
+              "instances": 9216
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 115932,
+              "completedBatches": 38,
+              "totalBatches": 108,
+              "instances": 9728
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 118754,
+              "completedBatches": 41,
+              "totalBatches": 108,
+              "instances": 10496
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 120776,
+              "completedBatches": 43,
+              "totalBatches": 108,
+              "instances": 11008
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 122788,
+              "completedBatches": 45,
+              "totalBatches": 108,
+              "instances": 11520
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 125827,
+              "completedBatches": 48,
+              "totalBatches": 108,
+              "instances": 12288
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 127901,
+              "completedBatches": 50,
+              "totalBatches": 108,
+              "instances": 12800
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 129927,
+              "completedBatches": 52,
+              "totalBatches": 108,
+              "instances": 13312
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 132053,
+              "completedBatches": 54,
+              "totalBatches": 108,
+              "instances": 13824
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 134111,
+              "completedBatches": 56,
+              "totalBatches": 108,
+              "instances": 14336
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 136179,
+              "completedBatches": 58,
+              "totalBatches": 108,
+              "instances": 14848
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 138240,
+              "completedBatches": 60,
+              "totalBatches": 108,
+              "instances": 15360
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 140452,
+              "completedBatches": 62,
+              "totalBatches": 108,
+              "instances": 15872
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 142496,
+              "completedBatches": 64,
+              "totalBatches": 108,
+              "instances": 16384
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 144539,
+              "completedBatches": 66,
+              "totalBatches": 108,
+              "instances": 16896
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 146586,
+              "completedBatches": 68,
+              "totalBatches": 108,
+              "instances": 17408
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 148673,
+              "completedBatches": 70,
+              "totalBatches": 108,
+              "instances": 17920
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 150788,
+              "completedBatches": 72,
+              "totalBatches": 108,
+              "instances": 18432
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 152892,
+              "completedBatches": 74,
+              "totalBatches": 108,
+              "instances": 18944
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 155034,
+              "completedBatches": 76,
+              "totalBatches": 108,
+              "instances": 19456
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 157196,
+              "completedBatches": 78,
+              "totalBatches": 108,
+              "instances": 19968
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 159261,
+              "completedBatches": 80,
+              "totalBatches": 108,
+              "instances": 20480
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 161390,
+              "completedBatches": 82,
+              "totalBatches": 108,
+              "instances": 20992
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 163508,
+              "completedBatches": 84,
+              "totalBatches": 108,
+              "instances": 21504
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 165629,
+              "completedBatches": 86,
+              "totalBatches": 108,
+              "instances": 22016
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 168191,
+              "completedBatches": 88,
+              "totalBatches": 108,
+              "instances": 22528
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 170282,
+              "completedBatches": 90,
+              "totalBatches": 108,
+              "instances": 23040
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 172467,
+              "completedBatches": 92,
+              "totalBatches": 108,
+              "instances": 23552
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 174611,
+              "completedBatches": 94,
+              "totalBatches": 108,
+              "instances": 24064
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 176752,
+              "completedBatches": 96,
+              "totalBatches": 108,
+              "instances": 24576
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 178938,
+              "completedBatches": 98,
+              "totalBatches": 108,
+              "instances": 25088
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 181113,
+              "completedBatches": 100,
+              "totalBatches": 108,
+              "instances": 25600
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 183303,
+              "completedBatches": 102,
+              "totalBatches": 108,
+              "instances": 26112
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 185548,
+              "completedBatches": 104,
+              "totalBatches": 108,
+              "instances": 26624
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 187737,
+              "completedBatches": 106,
+              "totalBatches": 108,
+              "instances": 27136
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 189757,
+              "completedBatches": 108,
+              "totalBatches": 108,
+              "instances": 27585
+            }
+          ],
+          "errors": [],
+          "failedRequests": [],
+          "readiness": {
+            "pass": true,
+            "snapshot": {
+              "routeReady": true,
+              "routeError": false,
+              "loadingScreen": false,
+              "loaderProgress": null,
+              "hasPublicRoute": true,
+              "canvas": {
+                "present": true,
+                "width": 402,
+                "height": 905,
+                "visible": true
+              },
+              "webgl2Alive": true,
+              "gpuPresentations": 1,
+              "gpuFourTreeFloorCount": 4,
+              "clearingGpuReady": true,
+              "clearingCasterIndexCount": 88068,
+              "firstFailureStage": null,
+              "position": {
+                "x": -139.40267987050615,
+                "y": 8.044800570064606,
+                "z": -194.5
+              },
+              "navigation": {
+                "yawDegrees": 0,
+                "pitchDegrees": 16,
+                "position": {
+                  "x": -139.40267987050615,
+                  "y": 8.044800570064606,
+                  "z": -194.5
+                },
+                "sequence": 1
+              },
+              "navigationProposals": [],
+              "residencyStatus": "preparing",
+              "residency": {
+                "canonicalPreparationTiming": null,
+                "timing": {
+                  "firstVegetationFrameAtMs": null,
+                  "planValidatedAtMs": null,
+                  "oasisPreparationStartAtMs": 15782.100000000006,
+                  "oasisPreparationCompleteAtMs": null,
+                  "preparationStartAtMs": 15781.600000000006,
+                  "preparationCompleteAtMs": null,
+                  "firstFrameAtMs": 15777.699999999983,
+                  "readyAtMs": 15780.600000000006,
+                  "vegetationStartAtMs": null,
+                  "vegetationCompleteAtMs": null
+                },
+                "preparationComplete": false,
+                "batchPrerequisitesReady": false,
+                "priorityTilesPrepared": 12,
+                "firstPriorityTileReadyAtMs": 16033.799999999988,
+                "globalCoverComplete": false,
+                "preparationProgress": {
+                  "phase": "GLOBAL_COVER_GLOBAL_COVER_PLANNING",
+                  "worldTruthValidated": false,
+                  "oasisComplete": false,
+                  "grassTuftCount": 7,
+                  "cattailCount": 0,
+                  "primitiveCount": 7,
+                  "priorityTilesPrepared": 8,
+                  "tileX": 8,
+                  "tileZ": 15,
+                  "tileInstanceCount": 38,
+                  "tileRecordBytes": 3040,
+                  "candidateCount": 2058,
+                  "instanceCount": 647,
+                  "rootSampleCount": 6478
+                },
+                "validationStatus": "PENDING_POST_READY_VALIDATION",
+                "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+                "totalInstanceCount": 27585,
+                "totalBatchCount": 108,
+                "maxInstancesPerBatch": 256,
+                "residentInstanceCount": 0,
+                "residentBatchCount": 0,
+                "residentPrimitiveCount": 0,
+                "complete": false,
+                "droppedPlacementCount": null,
+                "worldRebuildCount": 0,
+                "cameraIndependent": null
+              }
+            }
+          },
+          "gpuTreeCensus": {
+            "treeCount": 4,
+            "clearingReady": true,
+            "casterIndexCount": 88068
+          },
+          "position": {
+            "x": -139.40267987050615,
+            "y": 8.044800570064606,
+            "z": -194.5
+          },
+          "residency": {
+            "canonicalPreparationTiming": null,
+            "timing": {
+              "firstVegetationFrameAtMs": 51824.79999999999,
+              "planValidatedAtMs": 45657.19999999998,
+              "oasisPreparationStartAtMs": 15782.100000000006,
+              "oasisPreparationCompleteAtMs": 49988.79999999999,
+              "preparationStartAtMs": 15781.600000000006,
+              "preparationCompleteAtMs": 101686.19999999998,
+              "firstFrameAtMs": 15777.699999999983,
+              "readyAtMs": 15780.600000000006,
+              "vegetationStartAtMs": 49991.69999999998,
+              "vegetationCompleteAtMs": 209348.80000000002
+            },
+            "preparationComplete": true,
+            "batchPrerequisitesReady": true,
+            "priorityTilesPrepared": 648,
+            "firstPriorityTileReadyAtMs": 16033.799999999988,
+            "globalCoverComplete": true,
+            "preparationProgress": {
+              "phase": "PREPARED",
+              "worldTruthValidated": true,
+              "oasisComplete": true,
+              "grassTuftCount": 350,
+              "cattailCount": 72,
+              "primitiveCount": 494,
+              "priorityTilesPrepared": 640,
+              "tileX": 21,
+              "tileZ": 1,
+              "tileInstanceCount": 134,
+              "tileRecordBytes": 10720,
+              "candidateCount": 106566,
+              "instanceCount": 61235,
+              "rootSampleCount": 612404,
+              "batchPrerequisitesReady": true,
+              "totalGpuBytes": 4900656,
+              "globalCoverComplete": true
+            },
+            "validationStatus": "VALIDATED",
+            "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+            "totalInstanceCount": 27585,
+            "totalBatchCount": 108,
+            "maxInstancesPerBatch": 256,
+            "residentInstanceCount": 27585,
+            "residentBatchCount": 108,
+            "residentPrimitiveCount": 2395,
+            "complete": true,
+            "droppedPlacementCount": 0,
+            "worldRebuildCount": 0,
+            "cameraIndependent": true
+          }
+        },
+        {
+          "id": "coast",
+          "result": "PASS",
+          "progress": [
+            {
+              "phase": "STARTUP",
+              "elapsedMs": 23,
+              "loader": "34%",
+              "ready": false,
+              "frames": 0
+            },
+            {
+              "phase": "STARTUP",
+              "elapsedMs": 16045,
+              "loader": null,
+              "ready": true,
+              "frames": 1
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 25,
+              "completedBatches": 0,
+              "totalBatches": 108,
+              "instances": 0
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 33162,
+              "completedBatches": 1,
+              "totalBatches": 108,
+              "instances": 256
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 35435,
+              "completedBatches": 4,
+              "totalBatches": 108,
+              "instances": 1024
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 83786,
+              "completedBatches": 5,
+              "totalBatches": 108,
+              "instances": 1280
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 86467,
+              "completedBatches": 8,
+              "totalBatches": 108,
+              "instances": 2048
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 89056,
+              "completedBatches": 11,
+              "totalBatches": 108,
+              "instances": 2816
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 91695,
+              "completedBatches": 14,
+              "totalBatches": 108,
+              "instances": 3584
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 94259,
+              "completedBatches": 17,
+              "totalBatches": 108,
+              "instances": 4352
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 96534,
+              "completedBatches": 19,
+              "totalBatches": 108,
+              "instances": 4864
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 99202,
+              "completedBatches": 22,
+              "totalBatches": 108,
+              "instances": 5632
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 101803,
+              "completedBatches": 25,
+              "totalBatches": 108,
+              "instances": 6400
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 104437,
+              "completedBatches": 28,
+              "totalBatches": 108,
+              "instances": 7168
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 106500,
+              "completedBatches": 30,
+              "totalBatches": 108,
+              "instances": 7680
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 109107,
+              "completedBatches": 33,
+              "totalBatches": 108,
+              "instances": 8448
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 111896,
+              "completedBatches": 36,
+              "totalBatches": 108,
+              "instances": 9216
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 114588,
+              "completedBatches": 39,
+              "totalBatches": 108,
+              "instances": 9984
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 117284,
+              "completedBatches": 42,
+              "totalBatches": 108,
+              "instances": 10752
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 119994,
+              "completedBatches": 45,
+              "totalBatches": 108,
+              "instances": 11520
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 122853,
+              "completedBatches": 48,
+              "totalBatches": 108,
+              "instances": 12288
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 124899,
+              "completedBatches": 50,
+              "totalBatches": 108,
+              "instances": 12800
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 127590,
+              "completedBatches": 53,
+              "totalBatches": 108,
+              "instances": 13568
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 130473,
+              "completedBatches": 56,
+              "totalBatches": 108,
+              "instances": 14336
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 132487,
+              "completedBatches": 58,
+              "totalBatches": 108,
+              "instances": 14848
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 135199,
+              "completedBatches": 61,
+              "totalBatches": 108,
+              "instances": 15616
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 138053,
+              "completedBatches": 64,
+              "totalBatches": 108,
+              "instances": 16384
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 140083,
+              "completedBatches": 66,
+              "totalBatches": 108,
+              "instances": 16896
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 142873,
+              "completedBatches": 69,
+              "totalBatches": 108,
+              "instances": 17664
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 144883,
+              "completedBatches": 71,
+              "totalBatches": 108,
+              "instances": 18176
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 147729,
+              "completedBatches": 74,
+              "totalBatches": 108,
+              "instances": 18944
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 149787,
+              "completedBatches": 76,
+              "totalBatches": 108,
+              "instances": 19456
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 152598,
+              "completedBatches": 79,
+              "totalBatches": 108,
+              "instances": 20224
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 154607,
+              "completedBatches": 81,
+              "totalBatches": 108,
+              "instances": 20736
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 157048,
+              "completedBatches": 83,
+              "totalBatches": 108,
+              "instances": 21248
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 159857,
+              "completedBatches": 86,
+              "totalBatches": 108,
+              "instances": 22016
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 161870,
+              "completedBatches": 88,
+              "totalBatches": 108,
+              "instances": 22528
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 164724,
+              "completedBatches": 91,
+              "totalBatches": 108,
+              "instances": 23296
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 166735,
+              "completedBatches": 93,
+              "totalBatches": 108,
+              "instances": 23808
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 169601,
+              "completedBatches": 96,
+              "totalBatches": 108,
+              "instances": 24576
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 171615,
+              "completedBatches": 98,
+              "totalBatches": 108,
+              "instances": 25088
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 174435,
+              "completedBatches": 101,
+              "totalBatches": 108,
+              "instances": 25856
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 176485,
+              "completedBatches": 103,
+              "totalBatches": 108,
+              "instances": 26368
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 178497,
+              "completedBatches": 105,
+              "totalBatches": 108,
+              "instances": 26880
+            },
+            {
+              "phase": "RESIDENCY",
+              "elapsedMs": 181141,
+              "completedBatches": 108,
+              "totalBatches": 108,
+              "instances": 27585
+            }
+          ],
+          "errors": [],
+          "failedRequests": [],
+          "readiness": {
+            "pass": true,
+            "snapshot": {
+              "routeReady": true,
+              "routeError": false,
+              "loadingScreen": false,
+              "loaderProgress": null,
+              "hasPublicRoute": true,
+              "canvas": {
+                "present": true,
+                "width": 402,
+                "height": 905,
+                "visible": true
+              },
+              "webgl2Alive": true,
+              "gpuPresentations": 1,
+              "gpuFourTreeFloorCount": 4,
+              "clearingGpuReady": true,
+              "clearingCasterIndexCount": 88068,
+              "firstFailureStage": null,
+              "position": {
+                "x": 0,
+                "y": 11.068021387629678,
+                "z": -96
+              },
+              "navigation": {
+                "yawDegrees": 0,
+                "pitchDegrees": -8,
+                "position": {
+                  "x": 0,
+                  "y": 11.068021387629678,
+                  "z": -96
+                },
+                "sequence": 1
+              },
+              "navigationProposals": [],
+              "residencyStatus": "preparing",
+              "residency": {
+                "canonicalPreparationTiming": null,
+                "timing": {
+                  "firstVegetationFrameAtMs": null,
+                  "planValidatedAtMs": null,
+                  "oasisPreparationStartAtMs": 13658.5,
+                  "oasisPreparationCompleteAtMs": null,
+                  "preparationStartAtMs": 13657.900000000023,
+                  "preparationCompleteAtMs": null,
+                  "firstFrameAtMs": 13652.700000000012,
+                  "readyAtMs": 13656.799999999988,
+                  "vegetationStartAtMs": null,
+                  "vegetationCompleteAtMs": null
+                },
+                "preparationComplete": false,
+                "batchPrerequisitesReady": false,
+                "priorityTilesPrepared": 32,
+                "firstPriorityTileReadyAtMs": 14286.700000000012,
+                "globalCoverComplete": false,
+                "preparationProgress": {
+                  "phase": "OASIS_GRASS_SCAN",
+                  "worldTruthValidated": false,
+                  "oasisComplete": false,
+                  "grassTuftCount": 6,
+                  "cattailCount": 0,
+                  "primitiveCount": 6,
+                  "candidateCount": 5305,
+                  "instanceCount": 425,
+                  "rootSampleCount": 4262,
+                  "priorityTilesPrepared": 8,
+                  "tileX": 13,
+                  "tileZ": 19,
+                  "tileInstanceCount": 36,
+                  "tileRecordBytes": 2880
+                },
+                "validationStatus": "PENDING_POST_READY_VALIDATION",
+                "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+                "totalInstanceCount": 27585,
+                "totalBatchCount": 108,
+                "maxInstancesPerBatch": 256,
+                "residentInstanceCount": 0,
+                "residentBatchCount": 0,
+                "residentPrimitiveCount": 0,
+                "complete": false,
+                "droppedPlacementCount": null,
+                "worldRebuildCount": 0,
+                "cameraIndependent": null
+              }
+            }
+          },
+          "gpuTreeCensus": {
+            "treeCount": 4,
+            "clearingReady": true,
+            "casterIndexCount": 88068
+          },
+          "position": {
+            "x": 0,
+            "y": 11.068021387629678,
+            "z": -96
+          },
+          "residency": {
+            "canonicalPreparationTiming": null,
+            "timing": {
+              "firstVegetationFrameAtMs": 50257.59999999998,
+              "planValidatedAtMs": 43497.79999999999,
+              "oasisPreparationStartAtMs": 13658.5,
+              "oasisPreparationCompleteAtMs": 48464.09999999998,
+              "preparationStartAtMs": 13657.900000000023,
+              "preparationCompleteAtMs": 99797.90000000002,
+              "firstFrameAtMs": 13652.700000000012,
+              "readyAtMs": 13656.799999999988,
+              "vegetationStartAtMs": 48466.79999999999,
+              "vegetationCompleteAtMs": 198334
+            },
+            "preparationComplete": true,
+            "batchPrerequisitesReady": true,
+            "priorityTilesPrepared": 648,
+            "firstPriorityTileReadyAtMs": 14286.700000000012,
+            "globalCoverComplete": true,
+            "preparationProgress": {
+              "phase": "PREPARED",
+              "worldTruthValidated": true,
+              "oasisComplete": true,
+              "grassTuftCount": 350,
+              "cattailCount": 72,
+              "primitiveCount": 494,
+              "candidateCount": 106566,
+              "instanceCount": 61235,
+              "rootSampleCount": 612404,
+              "priorityTilesPrepared": 640,
+              "tileX": 20,
+              "tileZ": 0,
+              "tileInstanceCount": 106,
+              "tileRecordBytes": 8480,
+              "batchPrerequisitesReady": true,
+              "totalGpuBytes": 4900656,
+              "globalCoverComplete": true
+            },
+            "validationStatus": "VALIDATED",
+            "manifestSha256": "9055c817cac9db1de48f1b7ee814bfda954255429564e44e7a664dab66616b4e",
+            "totalInstanceCount": 27585,
+            "totalBatchCount": 108,
+            "maxInstancesPerBatch": 256,
+            "residentInstanceCount": 27585,
+            "residentBatchCount": 108,
+            "residentPrimitiveCount": 2395,
+            "complete": true,
+            "droppedPlacementCount": 0,
+            "worldRebuildCount": 0,
+            "cameraIndependent": true
+          }
+        }
       ],
-      "scope": "Two product files and CP3B harness; no physical or publication claim"
+      "result": "PASS",
+      "physicalAndroidQualified": false,
+      "sourceTreeCensus": {
+        "approvedIds": [
+          "P2_TREE_A_03",
+          "P2_TREE_A_06",
+          "P2_TREE_A_08",
+          "P2_TREE_A_11"
+        ],
+        "approvedCount": 4,
+        "oldVisibleTreeCount": 0,
+        "approvedGeometryUnchanged": true,
+        "legacyConiferDrawFilterPresent": true
+      },
+      "limitations": [
+        "Actual screenshots require perceptual inspection for individual tree silhouettes",
+        "Headless Chromium is not physical Android performance"
+      ]
     },
-    "physicalAndroid": "PENDING"
+    "physicalAndroidAcceptance": "OWNER_WAIVED_ADDITIONAL_REVIEW_NOT_TESTED"
   },
-  "releaseEligible": false,
-  "ownerPerceptualKeep": false,
-  "mergeAuthorized": false,
-  "deploymentAuthorized": false
+  "preservedWorld": {
+    "approvedTrees": 4,
+    "legacyTrees": 0,
+    "groundCoverTiles": 648,
+    "groundCoverInstances": 61235,
+    "vegetationBatches": 108,
+    "vegetationPlacements": 27585
+  },
+  "sourceComposition": {
+    "governingMainHead": "0b45c220cd812e3016382a110535258a4c6fbae5",
+    "loadingCandidateHead": "4f572c4ff87a6aea496aa60fea810991d3ba536d",
+    "motionCandidateHead": "74e3fa102cd057e5d143eb33a0738157ed5774dc",
+    "exactReusedBlobs": {
+      "h-earth-3d/experience-anchor/receipts/h-earth-motion-response-20261011.receipt.json": "f1a03c5b19d99bd31783bdd6f8e9a2be1d84a268",
+      "h-earth-3d/validation/h-earth.touch-motion-calibration.cp3b-integration-contract.harness.mjs": "a1e89f1bdbe08a6286c9233a4647a043f3e08c29",
+      "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "9c5d4d4c97724e37209f98a961a6712d5616deb7",
+      "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js": "c874d8fcf5067b73cb3af1ceb16065e7c79f83fa",
+      "h-earth-3d/experience-anchor/receipts/h-earth-canonical-base-world-preparation-20261011.receipt.json": "af0d2f781b8d7e547da384ad961d14e656796c27",
+      "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs": "5c3467e975dc45a1f474595a6213b5af2c384c09",
+      "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz": "3d11947ad94f98736035cbdf0e021e5f324659fb",
+      "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json": "a66303b82babd40c303044db82cb72609ea29282",
+      "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js": "482534d8cb6c0b316b2ae4b2cb7dc389163e15c3"
+    },
+    "approvedTrees": 4,
+    "legacyTrees": 0,
+    "groundcoverTiles": 648,
+    "groundcoverInstances": 61235,
+    "vegetationBatches": 108,
+    "vegetationPlacements": 27585,
+    "sourceCandidatesUnchanged": true,
+    "ownerAndroidReviewRequired": false,
+    "mergeAuthorized": true,
+    "deploymentAuthorized": true
+  },
+  "canonicalAdmission": {
+    "commit": "cecb2c66e4dd1aec3c950655eec0ace0c5bb6fed",
+    "sourceComment": 6117021548,
+    "exactReadback": true,
+    "lineage": "CANONICAL_LEDGER_COMMIT_VERIFIED"
+  },
+  "separateScopeClosure": {
+    "2665": {
+      "disposition": "WITHDRAWN",
+      "commit": "c575d9fbe6f8a74401d7547d7182614a7e612db6"
+    },
+    "2666": {
+      "disposition": "WITHDRAWN",
+      "commit": "4fbacc454004fa1dca5b73b793c024e33717a101"
+    }
+  },
+  "evidenceCustody": {
+    "qualifiedRuntimeHead": "fa1a91c0ef0e7ef1129503337ac4946ed8cead55",
+    "browserRun": 38195858171,
+    "artifact": 11723607594,
+    "artifactZipSha256": "85673194b17c65b2ad9177e5f1df7f0fc2da456e465234553fecbf861bc93634",
+    "visualInspection": [
+      "approved-four-tree-clearing-post-residency-page.png: trees, terrain and vegetation visible; no loader",
+      "coast-post-residency-page.png: coast, water, terrain and vegetation visible; no loader"
+    ],
+    "anchorReview": "Compared repository visual proxy and original invariant contract with existing qualified source and both current screenshots. Same canonical ground world and navigation retained; no product, globe/region routing or UI substitution. Unchanged scale/region architecture inherited, not newly device-tested.",
+    "runtimeBytesUnchangedByFinalization": true,
+    "ownerDisposition": "KEEP",
+    "ownerPublicationAuthorization": "2026-10-11T22:03:41-05:00",
+    "physicalAndroidTestPerformed": false
+  },
+  "supersedesPendingIntegrationReceiptAt": "fa1a91c0ef0e7ef1129503337ac4946ed8cead55",
+  "historicalMotionReceipt": {
+    "head": "74e3fa102cd057e5d143eb33a0738157ed5774dc",
+    "gitBlob": "f1a03c5b19d99bd31783bdd6f8e9a2be1d84a268",
+    "note": "Preserved immutable original motion-only receipt; this path now records combined release acceptance. Original loading source changed in qualified Gen2666, not claimed identical to pre-loading baseline."
+  }
 }

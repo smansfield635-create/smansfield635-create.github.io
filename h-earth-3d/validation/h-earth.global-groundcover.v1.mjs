@@ -40,8 +40,31 @@ function stableDigest(cover){return digest({records:arrayDigest(cover.records),t
 function shaderRoot(template,root,record){const f=Math.fround,i=template.rootVertices[root]*3,dx=f(template.positions[i]*record[15]),dz=f(template.positions[i+2]*record[15]),c=f(Math.cos(record[14])),s=f(Math.sin(record[14]));return {x:f(record[12]+f(f(dx*c)-f(dz*s))),z:f(record[13]+f(f(dx*s)+f(dz*c)))};}
 function habitat(material,slope){return material?.valid===true&&slope<=.35&&(material.surfaceClass==='STONE_AND_SPARSE_SOIL'?material.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(material.surfaceClass)&&material.soilDepth>=.20);}
 function zone(z){return z< -420?'INLAND':z< -220?'WOODLAND_AND_FOOTHILL':'COASTAL';}
-function acceptedTemplate(template){const tuft=buildHEarthWoodlandGrassTuft({id:`${profile.id}:ACCEPTED_FAN_TEMPLATE`,x:0,z:0,bladeCount:4,pocket:'OLIVE',sample:(x,z)=>({x,y:0,z,triangleId:0,terrainPrimitiveId:'FLAT_TEMPLATE'}),eligible:()=>true,inside:()=>true});assert.equal(template.positions.length,84);assert.equal(template.normals.length,84);assert.equal(template.colors.length,112);assert.equal(template.rootInfo.length,112);assert.equal(template.rootVertices.length,12);assert.equal(template.indices.length,72);assert.deepEqual(Array.from(template.indices),tuft.geometry.indices,'ACCEPTED_TEMPLATE_INDEX_DRIFT');for(let i=0;i<28;i++){const p=tuft.geometry.vertices[i];assert.deepEqual(Array.from(template.positions.subarray(i*3,i*3+3)),[Math.fround(p.x),Math.fround(p.y),Math.fround(p.z)],'ACCEPTED_TEMPLATE_POSITION_DRIFT');const blade=Math.floor(i/7),local=i%7,root=blade*3+(local<3?local:local<6?local-3:1);assert.equal(template.rootInfo[i*4],root,'GPU_ROOT_MAPPING_DRIFT');}for(let root=0;root<12;root++){const v=template.rootVertices[root];assert.equal(v,Math.floor(root/3)*7+root%3);assert.equal(template.positions[v*3+1],0);}}
-
+function acceptedTemplate(template){
+ const tuft=buildHEarthWoodlandGrassTuft({id:`${profile.id}:ACCEPTED_FAN_TEMPLATE`,x:0,z:0,bladeCount:4,pocket:'OLIVE',sample:(x,z)=>({x,y:0,z,triangleId:0,terrainPrimitiveId:'FLAT_TEMPLATE'}),eligible:()=>true,inside:()=>true});
+ const expected=tuft.geometry;
+ for(const [k,length] of [['positions',84],['normals',84],['colors',112],['rootInfo',112],['rootVertices',12],['indices',72]])assert.equal(template[k].length,length,'GLOBAL_COVER_TEMPLATE_SIZE:'+k);
+ assert.deepEqual(Array.from(template.indices),expected.indices,'ACCEPTED_TEMPLATE_INDEX_DRIFT');
+ for(let i=0;i<28;i++){
+  const original=expected.vertices[i],blade=Math.floor(i/7),local=i%7,root=expected.vertices[blade*7+1],mid=expected.vertices[blade*7+4];
+  const expectedPosition=local<3?[Math.fround(original.x),Math.fround(original.y),Math.fround(original.z)]
+   :local===6?[Math.fround(root.x+(original.x-root.x)*.87),Math.fround(original.y*.63),Math.fround(root.z+(original.z-root.z)*.87)]
+   :[Math.fround(root.x+(mid.x-root.x)*.76+(original.x-mid.x)*.29),Math.fround(original.y*.70),Math.fround(root.z+(mid.z-root.z)*.76+(original.z-mid.z)*.29)];
+  assert.deepEqual(Array.from(template.positions.subarray(i*3,i*3+3)),expectedPosition,local<3?'ACCEPTED_ROOT_POSITION_DRIFT':'GLOBAL_COVER_UPPER_BLADE_MORPH_DRIFT');
+  const normal=Array.from(template.normals.subarray(i*3,i*3+3));
+  assert(normal.every(Number.isFinite)&&Math.abs(Math.hypot(...normal)-1)<1e-4,'GLOBAL_COVER_BLADE_NORMAL_INVALID');
+  const sourceRoot=blade*3+(local<3?local:local<6?local-3:1);
+  assert.equal(template.rootInfo[i*4],sourceRoot,'GPU_ROOT_MAPPING_DRIFT');
+  if(local<3){assert.equal(template.rootVertices[blade*3+local],i);assert.equal(template.positions[i*3+1],0);}
+ }
+ for(let tri=0;tri<template.indices.length;tri+=3){
+  const ids=Array.from(template.indices.subarray(tri,tri+3));
+  const v=ids.map(id=>Array.from(template.positions.subarray(id*3,id*3+3)));
+  const u=v[1].map((q,i)=>q-v[0][i]),w=v[2].map((q,i)=>q-v[0][i]);
+  const area=Math.hypot(u[1]*w[2]-u[2]*w[1],u[2]*w[0]-u[0]*w[2],u[0]*w[1]-u[1]*w[0]);
+  assert(area>1e-9,'GLOBAL_COVER_BLADE_TRIANGLE_DEGENERATE');
+ }
+}
 export async function verifyHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},orders=true,worldTruth=true}={}){
  const started=performance.now(),cover=await buildHEarthGlobalGroundCover(pkg,{refinement,onProgress}),source=independentSurface(pkg,refinement),stable=stableDigest(cover);
  assert(cover.records instanceof Float32Array);assert.equal(cover.records.length%20,0);const count=cover.records.length/20;assert.equal(count,cover.receipt.instanceCount);assert(count>0&&count<=65536);assert.equal(cover.records.byteLength,count*80);acceptedTemplate(cover.template);

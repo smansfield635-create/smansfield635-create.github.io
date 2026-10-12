@@ -309,8 +309,11 @@ void main(){
   vWorldPosition=vec3(xz.x,rootY(instance,int(aRootInfo.x))+aPosition.y*aParameters.x,xz.y);
   vec3 n=vec3(aNormal.x/aTransform.w,aNormal.y/aParameters.x,aNormal.z/aTransform.w);
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
-  vec3 palette=aParameters.y<0.333333?vec3(0.18,0.115,0.045):aParameters.y<0.666667?vec3(0.31,0.245,0.065):vec3(0.095,0.145,0.04);
-  vBaseColor=vec4(mix(aColor.rgb,palette,0.55)*(0.92+0.16*aParameters.z),1.0);
+  // Continuous coastal-meadow tones avoid discrete brown/gold/green bands.
+  vec3 dryGrass=vec3(0.158,0.139,0.081),meadowGrass=vec3(0.092,0.133,0.078);
+  float habitatTint=smoothstep(0.13,0.87,aParameters.y);
+  vec3 palette=mix(dryGrass,meadowGrass,habitatTint);
+  vBaseColor=vec4(mix(aColor.rgb,palette,0.77)*(0.94+0.10*aParameters.z),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;

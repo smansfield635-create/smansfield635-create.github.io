@@ -37,9 +37,22 @@ async function captureGen2671Meadow(page,observe,entry,head){
   const before=await read();
   await page.mouse.move(cx,cy);await page.mouse.down();
   await page.mouse.move(cx+direction*box.width*.08,cy,{steps:2});
-  await sleep(45);await page.mouse.up();await sleep(160);
+  // Exact browser run 38317421605 measured only 0.7695 degrees at 45ms.
+  // Keep the *same native gesture* active and measure until the existing
+  // bounded turn reaches its saturated ~7.68 degree step before release.
+  let observed=0,stalled=0,previous=0;
+  for(let tick=0;tick<24;tick++){
+   await sleep(90);
+   const sample=await read();
+   observed=wrappedMeadowYaw(sample.navigation.yawDegrees-before.navigation.yawDegrees)*direction;
+   if(observed>12.0)break;
+   stalled=Math.abs(observed-previous)<.025?stalled+1:0;
+   previous=observed;
+   if(observed>=7.40&&stalled>=2)break;
+  }
+  await page.mouse.up();await sleep(150);
   const after=await read(),degrees=wrappedMeadowYaw(after.navigation.yawDegrees-before.navigation.yawDegrees);
-  if(degrees*direction<3||degrees*direction>13||after.navigation.sequence<=before.navigation.sequence)
+  if(degrees*direction<7.3||degrees*direction>9.2||after.navigation.sequence<=before.navigation.sequence)
    throw Error('GEN2671_MEADOW_NATIVE_TURN_STEP_INVALID:'+JSON.stringify({direction,degrees,before:before.navigation,after:after.navigation}));
   turns.push({direction,degrees,from:before.navigation.yawDegrees,to:after.navigation.yawDegrees,sequence:after.navigation.sequence});
   return after.navigation.yawDegrees;

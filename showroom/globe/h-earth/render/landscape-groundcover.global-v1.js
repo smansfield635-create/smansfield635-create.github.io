@@ -41,14 +41,23 @@ function templateFor(){
   const tuft=buildHEarthWoodlandGrassTuft({id:`${P.id}:ACCEPTED_FAN_TEMPLATE`,x:0,z:0,bladeCount:4,pocket:'OLIVE',sample:(x,z)=>({x,y:0,z,triangleId:0,terrainPrimitiveId:'FLAT_TEMPLATE'}),eligible:()=>true,inside:()=>true});
   const g=tuft.geometry;if(g.vertices.length!==28||g.indices.length!==72)throw Error('GLOBAL_COVER_TEMPLATE_RECIPE_DRIFT');
   const vertices=g.vertices.map(v=>({x:v.x,y:v.y,z:v.z}));
+  // Gen2669 ONE_REPAIR: middle-width and staggered tip lean recover soft
+  // grass silhouettes from the first candidate's thin, identical twig shapes.
+  // The first three vertices of each blade remain precisely terrain-rooted.
+  const shoulderWidth=[.44,.48,.42,.46],middleReach=[.74,.81,.77,.83];
+  const middleRise=[.80,.77,.83,.79],tipReach=[1.00,.91,1.04,.96],tipRise=[.75,.69,.77,.72];
   for(let blade=0;blade<4;blade++){
     const start=blade*7,root=vertices[start+1],mid=vertices[start+4];
     for(let local=3;local<=5;local++){
       const v=vertices[start+local];
-      vertices[start+local]={x:f(root.x+(mid.x-root.x)*.76+(v.x-mid.x)*.29),y:f(v.y*.70),z:f(root.z+(mid.z-root.z)*.76+(v.z-mid.z)*.29)};
+      vertices[start+local]={
+        x:f(root.x+(mid.x-root.x)*middleReach[blade]+(v.x-mid.x)*shoulderWidth[blade]),
+        y:f(v.y*middleRise[blade]),
+        z:f(root.z+(mid.z-root.z)*middleReach[blade]+(v.z-mid.z)*shoulderWidth[blade])
+      };
     }
     const tip=vertices[start+6];
-    vertices[start+6]={x:f(root.x+(tip.x-root.x)*.87),y:f(tip.y*.63),z:f(root.z+(tip.z-root.z)*.87)};
+    vertices[start+6]={x:f(root.x+(tip.x-root.x)*tipReach[blade]),y:f(tip.y*tipRise[blade]),z:f(root.z+(tip.z-root.z)*tipReach[blade])};
   }
   // Recompute the shared mesh's surface normals after bending its upper blades.
   const accumulated=Array.from({length:28},()=>[0,0,0]);

@@ -47,9 +47,11 @@ function acceptedTemplate(template){
  assert.deepEqual(Array.from(template.indices),expected.indices,'ACCEPTED_TEMPLATE_INDEX_DRIFT');
  for(let i=0;i<28;i++){
   const original=expected.vertices[i],blade=Math.floor(i/7),local=i%7,root=expected.vertices[blade*7+1],mid=expected.vertices[blade*7+4];
+  const shoulderWidth=[.44,.48,.42,.46],middleReach=[.74,.81,.77,.83];
+  const middleRise=[.80,.77,.83,.79],tipReach=[1.00,.91,1.04,.96],tipRise=[.75,.69,.77,.72];
   const expectedPosition=local<3?[Math.fround(original.x),Math.fround(original.y),Math.fround(original.z)]
-   :local===6?[Math.fround(root.x+(original.x-root.x)*.87),Math.fround(original.y*.63),Math.fround(root.z+(original.z-root.z)*.87)]
-   :[Math.fround(root.x+(mid.x-root.x)*.76+(original.x-mid.x)*.29),Math.fround(original.y*.70),Math.fround(root.z+(mid.z-root.z)*.76+(original.z-mid.z)*.29)];
+   :local===6?[Math.fround(root.x+(original.x-root.x)*tipReach[blade]),Math.fround(original.y*tipRise[blade]),Math.fround(root.z+(original.z-root.z)*tipReach[blade])]
+   :[Math.fround(root.x+(mid.x-root.x)*middleReach[blade]+(original.x-mid.x)*shoulderWidth[blade]),Math.fround(original.y*middleRise[blade]),Math.fround(root.z+(mid.z-root.z)*middleReach[blade]+(original.z-mid.z)*shoulderWidth[blade])];
   assert.deepEqual(Array.from(template.positions.subarray(i*3,i*3+3)),expectedPosition,local<3?'ACCEPTED_ROOT_POSITION_DRIFT':'GLOBAL_COVER_UPPER_BLADE_MORPH_DRIFT');
   const normal=Array.from(template.normals.subarray(i*3,i*3+3));
   assert(normal.every(Number.isFinite)&&Math.abs(Math.hypot(...normal)-1)<1e-4,'GLOBAL_COVER_BLADE_NORMAL_INVALID');

@@ -310,10 +310,10 @@ void main(){
   vec3 n=vec3(aNormal.x/aTransform.w,aNormal.y/aParameters.x,aNormal.z/aTransform.w);
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
   // Continuous coastal-meadow tones avoid discrete brown/gold/green bands.
-  vec3 dryGrass=vec3(0.158,0.139,0.081),meadowGrass=vec3(0.092,0.133,0.078);
+  vec3 dryGrass=vec3(0.192,0.164,0.102),meadowGrass=vec3(0.109,0.159,0.092);
   float habitatTint=smoothstep(0.13,0.87,aParameters.y);
   vec3 palette=mix(dryGrass,meadowGrass,habitatTint);
-  vBaseColor=vec4(mix(aColor.rgb,palette,0.77)*(0.94+0.10*aParameters.z),1.0);
+  vBaseColor=vec4(mix(aColor.rgb,palette,0.72)*(0.95+0.10*aParameters.z),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;

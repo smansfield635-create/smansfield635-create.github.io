@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-12T08:58:07Z",
+  "generatedAt": "2026-10-12T09:52:22Z",
   "window": {
-    "start": "2026-09-12T08:58:07Z",
-    "end": "2026-10-12T08:58:07Z"
+    "start": "2026-09-12T09:52:22Z",
+    "end": "2026-10-12T09:52:22Z"
   },
   "dimensions": {
     "requestPath": [
@@ -19,8 +19,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 452,
-        "visits": 332
+        "pageLoads": 453,
+        "visits": 333
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -243,11 +243,6 @@
         "visits": 2
       },
       {
-        "value": "/laws/categories/structure/",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
         "value": "/build/intake/",
         "pageLoads": 1,
         "visits": 1
@@ -313,13 +308,13 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 4973,
-        "visits": 3158
+        "pageLoads": 4974,
+        "visits": 3159
       },
       {
         "value": "BR",
-        "pageLoads": 21,
-        "visits": 21
+        "pageLoads": 20,
+        "visits": 20
       },
       {
         "value": "CN",
@@ -372,13 +367,13 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 1952,
-        "visits": 1889
+        "pageLoads": 1953,
+        "visits": 1890
       },
       {
         "value": "Chrome",
-        "pageLoads": 1699,
-        "visits": 698
+        "pageLoads": 1698,
+        "visits": 697
       },
       {
         "value": "ChromeMobile",
@@ -429,45 +424,45 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 2519,
-        "visits": 829
+        "pageLoads": 2562,
+        "visits": 872
       },
       {
         "value": "Linux",
-        "pageLoads": 2040,
-        "visits": 1987
+        "pageLoads": 2041,
+        "visits": 1978
       },
       {
         "value": "Windows",
-        "pageLoads": 113,
-        "visits": 113
+        "pageLoads": 153,
+        "visits": 152
       },
       {
         "value": "MacOSX",
-        "pageLoads": 112,
-        "visits": 72
+        "pageLoads": 147,
+        "visits": 107
       },
       {
         "value": "iOS",
-        "pageLoads": 79,
-        "visits": 58
+        "pageLoads": 92,
+        "visits": 71
       },
       {
         "value": "Unknown",
-        "pageLoads": 11,
-        "visits": 11
+        "pageLoads": 33,
+        "visits": 33
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 2714,
-        "visits": 1103
+        "pageLoads": 3075,
+        "visits": 1323
       },
       {
         "value": "1",
-        "pageLoads": 1946,
-        "visits": 1836
+        "pageLoads": 1953,
+        "visits": 1890
       }
     ],
     "navigationType": [

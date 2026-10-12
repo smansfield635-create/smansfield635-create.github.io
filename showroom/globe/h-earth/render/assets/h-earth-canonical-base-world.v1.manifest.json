@@ -1,0 +1,62 @@
+{
+  "schema": "H_EARTH_GEN2666_PRECOMPUTED_BASE_WORLD_MANIFEST_v1",
+  "operationId": "H_EARTH_CANONICAL_COLD_START_PRECOMPUTED_BASE_WORLD_20261011_001",
+  "provenance": "QUALIFIED_GEN2659_SAME_SOURCE_CLOSURE",
+  "sourceBlobs": {
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js": "41092afa665f715027f54bc6c52898b839911235",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js": "d362035f091a7fd997553239c048e87e8b46e4c7",
+    "showroom/globe/h-earth/render/run8e-successor-environment.js": "92d5cb9523619fed34382986232c3d8c261e2a8d",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "a324215fab199685c8d5cbd05220f6b2bae67942",
+    "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js": "c26247dcb69cb52c968fcd3ef6c2626eaa577d03",
+    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "4a1d10c2b7b98b016872d4fc50f31f62b3295d12",
+    "showroom/globe/h-earth/render/woodland-clearing-trial.js": "14c366d2241469fbccd08ee31bbeac0f1b7598f4",
+    "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js": "3958513dec53aa27f4216388a190f772e71fb9b0"
+  },
+  "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2",
+  "canonicalDigest": "fnv1a32:2f3d0eb2",
+  "rawPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0C47F685",
+  "rawDigest": "fnv1a32:0c47f685",
+  "packageOccurrenceId": "H_EARTH_RUN_8E_R2_CURRENT_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+  "binary": {
+    "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz",
+    "format": "gzip",
+    "encoding": "UTF8_JSON_RAW_AND_CANONICAL_v1",
+    "bytes": 11736235,
+    "uncompressedBytes": 51163475,
+    "sha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a"
+  },
+  "bufferNames": [
+    "positions",
+    "normals",
+    "baseColorsLinear",
+    "materialParameters",
+    "materialModelCodes",
+    "surfaceClassCodes",
+    "primitiveIndices",
+    "roleCodes",
+    "indices"
+  ],
+  "bufferLengths": {
+    "positions": 330807,
+    "normals": 330807,
+    "baseColorsLinear": 441076,
+    "materialParameters": 441076,
+    "materialModelCodes": 110269,
+    "surfaceClassCodes": 110269,
+    "primitiveIndices": 110269,
+    "roleCodes": 110269,
+    "indices": 311466
+  },
+  "protectedWorld": {
+    "approvedTrees": 4,
+    "legacyTrees": 0,
+    "groundCoverTiles": 648,
+    "groundCoverInstances": 61235,
+    "vegetationBatches": 108,
+    "vegetationPlacements": 27585
+  },
+  "runtimeConstructionMillisecondsStored": false,
+  "packageReuseAuthority": "NONE_SELF_VERIFIED_BYTE_PARITY_ONLY",
+  "releaseAuthorized": false,
+  "physicalAndroidQualified": false
+}

@@ -1,0 +1,110 @@
+name: Gen653 private history collector read-only qualification
+
+on:
+  push:
+    branches:
+      - gen653-readonly-qualification-20261012
+    paths:
+      - .github/workflows/gen653-readonly-qualification-20261012.yml
+
+permissions: {}
+
+concurrency:
+  group: gen653-readonly-qualification-20261012
+  cancel-in-progress: false
+
+jobs:
+  qualify:
+    if: github.repository == 'smansfield635-create/smansfield635-create.github.io' && github.ref == 'refs/heads/gen653-readonly-qualification-20261012' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions: {}
+    steps:
+      - name: Mint short-lived private read-only GitHub App token
+        id: private
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+
+      - name: Check out exact immutable private Gen653 candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 8578824669d41f542f375741c5fec4a5a08d4329
+          token: ${{ steps.private.outputs.token }}
+          persist-credentials: false
+          path: private-source
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify Git identity and execute exact installed collector tests
+        env:
+          EXPECTED_COMMIT: 8578824669d41f542f375741c5fec4a5a08d4329
+          EXPECTED_TREE: 4d52bea08e2ff6616fec4a225afce8f8dfe78e66
+          EXPECTED_COLLECTOR_BLOB: 286dc1f96340cfbf9df68569fabeb7810183cb5a
+          EXPECTED_TEST_BLOB: 88f051af0db304f717f9484adadeb3ce1744c3f0
+        run: |
+          set -euo pipefail
+          test "$(git -C private-source rev-parse HEAD)" = "$EXPECTED_COMMIT"
+          test "$(git -C private-source rev-parse 'HEAD^{tree}')" = "$EXPECTED_TREE"
+          test "$(git -C private-source rev-parse HEAD:tools/private-public-bridge/operations-chamber-run-history.v1.mjs)" = "$EXPECTED_COLLECTOR_BLOB"
+          test "$(git -C private-source rev-parse HEAD:tools/private-public-bridge/operations-chamber-run-history.test.mjs)" = "$EXPECTED_TEST_BLOB"
+          test -z "$(git -C private-source status --porcelain)"
+          set +e
+          node --test --test-reporter=tap private-source/tools/private-public-bridge/operations-chamber-run-history.test.mjs > "$RUNNER_TEMP/gen653-private.tap" 2>&1
+          status=$?
+          set -e
+          export TEST_EXIT_CODE="$status"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const tap=fs.readFileSync(process.env.RUNNER_TEMP+'/gen653-private.tap','utf8');
+          const lines=tap.split(String.fromCharCode(10)).map(x=>x.trim());
+          const counts={};
+          for(const key of ['tests','pass','fail','cancelled','skipped']){
+            const hits=lines.filter(x=>x.startsWith('# '+key+' '));
+            counts[key]=hits.length===1?Number(hits[0].slice(('# '+key+' ').length)):null;
+          }
+          const passed=process.env.TEST_EXIT_CODE==='0'&&counts.tests===12&&counts.pass===12&&counts.fail===0&&counts.cancelled===0&&counts.skipped===0;
+          const receipt={
+            schema:'DGB_GEN653_PUBLIC_READONLY_COLLECTOR_TEST_RECEIPT_v1',
+            result:passed?'PASS':'FAIL_CLOSED',
+            operation:'DGB_CHAMBER_OPERATIONAL_HISTORY_COMPLETION_20261012_001_S1',
+            candidateCommit:'8578824669d41f542f375741c5fec4a5a08d4329',
+            candidateTree:'4d52bea08e2ff6616fec4a225afce8f8dfe78e66',
+            collectorBlob:'286dc1f96340cfbf9df68569fabeb7810183cb5a',
+            testBlob:'88f051af0db304f717f9484adadeb3ce1744c3f0',
+            executionPlane:'PUBLIC_GITHUB_HOSTED_RUNNER',
+            testedWith:'NODE22_BUILTIN_TEST_RUNNER',
+            counts,
+            testExitCode:Number(process.env.TEST_EXIT_CODE),
+            evidenceDigestSha256:crypto.createHash('sha256').update(tap).digest('hex'),
+            privateSourcePublished:false,
+            privateTestLogPublished:false,
+            privateArchivePublished:false,
+            privateRepositoryWriteAuthorized:false,
+            archivePersistencePerformed:false,
+            collectorPilotExecuted:false,
+            mergeAuthorized:false,
+            publicationAuthorized:false
+          };
+          fs.writeFileSync(process.env.RUNNER_TEMP+'/gen653-qualification-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY,'## Gen653 fixed-source collector test\n\nResult: **'+receipt.result+'**\n\nCommit: '+receipt.candidateCommit+'\n\nTests: '+counts.pass+'/'+counts.tests+'; failed: '+counts.fail+'\n\nPrivate TAP SHA-256: '+receipt.evidenceDigestSha256+'\n\nNo history collection, private write or activation authority.\n');
+          console.log(JSON.stringify(receipt));
+          if(!passed) process.exit(1);
+          NODE
+
+      - name: Retain sanitized test receipt only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: gen653-public-readonly-collector-test-receipt
+          path: ${{ runner.temp }}/gen653-qualification-receipt.json
+          if-no-files-found: ignore
+          retention-days: 1

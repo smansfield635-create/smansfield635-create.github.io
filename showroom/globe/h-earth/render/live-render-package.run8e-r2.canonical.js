@@ -222,6 +222,13 @@ export function prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation=
             if(canonicalPreparationTiming&&data.timing)canonicalPreparationTiming.worker=data.timing;
             stage='RAW';moduleResolve(data);resultWait=measurePreparationStage('CANONICAL_WORKER_RESULT_WAIT',()=>resultPromise);resultWait.catch(()=>{});return;
           }
+          // GEN2666_FALLBACK_NOTIFICATION_BEGIN
+          if(data?.phase==='PRECOMPUTED_BASE_WORLD_FALLBACK'&&stage==='RAW'){
+            publishPreparationProgress({phase:data.phase,failure:data.failure,completed:0,total:1,unit:'packages'});
+            console.warn('H-Earth precomputed base world unavailable; using original source generation',data.failure);
+            return;
+          }
+          // GEN2666_FALLBACK_NOTIFICATION_END
           if(data?.phase==='RAW_PACKAGE_COMPLETE'&&!receiving&&stage==='RAW'){stage='CANONICAL';publishPreparationProgress({phase:data.phase,completed:1,total:1,unit:'packages'});return;}
           if(receiving||stage!=='CANONICAL'||data?.phase!=='CANONICAL_PACKAGE_COMPLETE'||!data.raw||!data.canonical)throw new Error('R2_CANONICAL_WORKER_RESULT_INVALID');
           receiving=true;receiveTiming(data);resultResolve(data);await moduleWait;await resultWait;await rawPackageModulePromise;if(settled)return;
@@ -256,6 +263,26 @@ rawPackageModulePromise=import('./live-render-package.run8e-r2.js?cb=meadow-dist
     isHEarthRun8ER2VegetationWorldTruthPrepared,
     createHEarthRun8ER2VegetationPresentationBatch}=namespace);
 });
+// GEN2666_HYDRATION_BEGIN
+async function hydratePrecomputedBaseWorld(){
+  if(typeof fetch!=='function'||typeof DecompressionStream!=='function'||!globalThis.crypto?.subtle)
+    throw new Error('GEN2666_HYDRATION_CAPABILITY_UNAVAILABLE');
+  const response=await fetch(new URL('./assets/h-earth-canonical-base-world.v1.json.gz',import.meta.url));
+  if(!response.ok)throw new Error(`GEN2666_ASSET_HTTP_${response.status}`);
+  const packed=await response.arrayBuffer();
+  if(packed.byteLength!==11736235)throw new Error('GEN2666_COMPRESSED_LENGTH_MISMATCH');
+  const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',packed)),byte=>byte.toString(16).padStart(2,'0')).join('');
+  if(digest!=='48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a')throw new Error('GEN2666_SHA256_MISMATCH');
+  const unpacked=await new Response(new Blob([packed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+  if(unpacked.byteLength!==51163475)throw new Error('GEN2666_UNCOMPRESSED_LENGTH_MISMATCH');
+  const value=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(unpacked));
+  if(value?.raw?.packageIdentity!=='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0C47F685'||
+     value?.canonical?.packageIdentity!=='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2'||
+     value.raw.revision!==1||value.canonical.revision!==2)
+    throw new Error('GEN2666_PACKAGE_IDENTITY_MISMATCH');
+  return value;
+}
+// GEN2666_HYDRATION_END
 let workerRawReadyPromise=null;
 if(startupWorkerMode&&typeof document==='undefined'&&typeof globalThis.postMessage==='function'){
   const timing=preparationPerformanceEnabled?{schema:'H_EARTH_CANONICAL_PREPARATION_TIMING_v1',version:1,sourceModuleUrl:import.meta.url,clock:'performance.now',timeOrigin:preparationTimeOrigin(),status:'MODULE_READY',rawBuildDurationMs:null,canonicalBuildDurationMs:null,resultPostStartAtMs:null}:null;
@@ -265,11 +292,28 @@ if(startupWorkerMode&&typeof document==='undefined'&&typeof globalThis.postMessa
   globalThis.onmessage=async()=>{
     try{
       await workerRawReadyPromise;
-      const rawStart=timing?preparationNow():null;let raw;
-      try{raw=getRawPackage({deferVegetation:true});}finally{if(timing)timing.rawBuildDurationMs=durationBetween(rawStart,preparationNow());}
-      globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});
-      const canonicalStart=timing?preparationNow():null;let canonical;
-      try{canonical=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});}finally{if(timing)timing.canonicalBuildDurationMs=durationBetween(canonicalStart,preparationNow());}
+      // GEN2666_WORKER_HYDRATION_BEGIN
+      let raw,canonical,precomputed=null;
+      const hydrationStart=preparationNow();
+      try{precomputed=await hydratePrecomputedBaseWorld();}
+      catch(error){
+        const failure={name:error?.name??'Error',message:error?.message??String(error)};
+        globalThis.postMessage({phase:'PRECOMPUTED_BASE_WORLD_FALLBACK',failure});
+        if(timing)timing.precomputedFailure=failure;
+      }
+      if(timing){timing.hydrationDurationMs=durationBetween(hydrationStart,preparationNow());timing.baseWorldSource=precomputed?'PRECOMPUTED_SHA256_VERIFIED':'ORIGINAL_SOURCE_FALLBACK';}
+      if(precomputed){
+        ({raw,canonical}=precomputed);
+        if(timing){timing.rawBuildDurationMs=0;timing.canonicalBuildDurationMs=0;}
+        globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});
+      }else{
+        const rawStart=timing?preparationNow():null;
+        try{raw=getRawPackage({deferVegetation:true});}finally{if(timing)timing.rawBuildDurationMs=durationBetween(rawStart,preparationNow());}
+        globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});
+        const canonicalStart=timing?preparationNow():null;
+        try{canonical=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});}finally{if(timing)timing.canonicalBuildDurationMs=durationBetween(canonicalStart,preparationNow());}
+      }
+      // GEN2666_WORKER_HYDRATION_END
       if(timing){timing.status='RESULT_POSTING';timing.resultPostStartAtMs=preparationNow();}
       globalThis.postMessage({phase:'CANONICAL_PACKAGE_COMPLETE',raw,canonical,...(timing?{timing}: {})});
     }catch(error){if(timing){timing.status='FAILED';timing.resultPostStartAtMs=preparationNow();}globalThis.postMessage({error:{message:error?.message??String(error)},...(timing?{timing}: {})});}

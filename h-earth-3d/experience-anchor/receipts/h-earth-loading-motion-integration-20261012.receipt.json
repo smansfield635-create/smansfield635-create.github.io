@@ -1,0 +1,106 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_QUALIFIED_LOADING_MOTION_CANDIDATE_INTEGRATION_20261012_001",
+  "authorityGeneration": 2667,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": false,
+  "disposition": "PENDING",
+  "visualEvidence": [],
+  "interactionEvidence": [],
+  "continuityEvidence": [
+    "Nine component Git blobs reused exactly from separately qualified immutable candidates.",
+    "Gen2665/Gen2666 construction authorities WITHDRAWN for owner-selected combined scope; no source acceptance or failure inferred."
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": null,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": null,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": null,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": null,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": null,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": null,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": null,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": null,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": null,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": null,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": null
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "sha256": "f4034567a66b5741ed42285e6a28c9c42795949a4953c221fd9bd83f86b22f51"
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "sha256": "9de1684ad7636d7fea1d1671a2ec95c23d57720d495dff17cbf22e74c3ccc63a"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "8ebf5c18e0045e84787ce36e476f6427827b6d406b433e489f0dabb7febd8537"
+    }
+  ],
+  "physicalAndroidQualified": false,
+  "releaseAuthorized": false,
+  "acceptanceBoundary": "Exact combined candidate requires joint source/controller/browser qualification and owner Android KEEP plus experience-anchor evidence before separate release. No production publication authorized.",
+  "binaryTransport": {
+    "bytes": 11736235,
+    "sha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "gitBlob": "3d11947ad94f98736035cbdf0e021e5f324659fb"
+  },
+  "qualification": {
+    "componentEvidenceInherited": true,
+    "combinedControllerQualification": "PENDING",
+    "combinedBrowserQualification": "PENDING",
+    "physicalAndroidAcceptance": "PENDING"
+  },
+  "preservedWorld": {
+    "approvedTrees": 4,
+    "legacyTrees": 0,
+    "groundCoverTiles": 648,
+    "groundCoverInstances": 61235,
+    "vegetationBatches": 108,
+    "vegetationPlacements": 27585
+  },
+  "sourceComposition": {
+    "governingMainHead": "0b45c220cd812e3016382a110535258a4c6fbae5",
+    "loadingCandidateHead": "4f572c4ff87a6aea496aa60fea810991d3ba536d",
+    "motionCandidateHead": "74e3fa102cd057e5d143eb33a0738157ed5774dc",
+    "exactReusedBlobs": {
+      "h-earth-3d/experience-anchor/receipts/h-earth-motion-response-20261011.receipt.json": "f1a03c5b19d99bd31783bdd6f8e9a2be1d84a268",
+      "h-earth-3d/validation/h-earth.touch-motion-calibration.cp3b-integration-contract.harness.mjs": "a1e89f1bdbe08a6286c9233a4647a043f3e08c29",
+      "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "9c5d4d4c97724e37209f98a961a6712d5616deb7",
+      "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js": "c874d8fcf5067b73cb3af1ceb16065e7c79f83fa",
+      "h-earth-3d/experience-anchor/receipts/h-earth-canonical-base-world-preparation-20261011.receipt.json": "af0d2f781b8d7e547da384ad961d14e656796c27",
+      "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs": "5c3467e975dc45a1f474595a6213b5af2c384c09",
+      "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz": "3d11947ad94f98736035cbdf0e021e5f324659fb",
+      "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json": "a66303b82babd40c303044db82cb72609ea29282",
+      "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js": "482534d8cb6c0b316b2ae4b2cb7dc389163e15c3"
+    },
+    "approvedTrees": 4,
+    "legacyTrees": 0,
+    "groundcoverTiles": 648,
+    "groundcoverInstances": 61235,
+    "vegetationBatches": 108,
+    "vegetationPlacements": 27585,
+    "sourceCandidatesUnchanged": true,
+    "ownerAndroidReviewRequired": true,
+    "mergeAuthorized": false,
+    "deploymentAuthorized": false
+  },
+  "canonicalAdmission": {
+    "commit": "1b9191f154a96c068267f8665a038384d04d41a1",
+    "sourceComment": 6116630154,
+    "exactReadback": true,
+    "lineage": "CANONICAL_LEDGER_COMMIT_VERIFIED"
+  },
+  "separateScopeClosure": {
+    "2665": {
+      "disposition": "WITHDRAWN",
+      "commit": "c575d9fbe6f8a74401d7547d7182614a7e612db6"
+    },
+    "2666": {
+      "disposition": "WITHDRAWN",
+      "commit": "4fbacc454004fa1dca5b73b793c024e33717a101"
+    }
+  }
+}

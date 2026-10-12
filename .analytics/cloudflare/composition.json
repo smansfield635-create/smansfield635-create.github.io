@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-12T09:52:22Z",
+  "generatedAt": "2026-10-12T10:42:03Z",
   "window": {
-    "start": "2026-09-12T09:52:22Z",
-    "end": "2026-10-12T09:52:22Z"
+    "start": "2026-09-12T10:42:03Z",
+    "end": "2026-10-12T10:42:03Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1120,
-        "visits": 830
+        "pageLoads": 1118,
+        "visits": 828
       },
       {
         "value": "/mirror-manor-preview/",
@@ -19,13 +19,13 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 453,
-        "visits": 333
+        "pageLoads": 452,
+        "visits": 332
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 362,
-        "visits": 342
+        "pageLoads": 357,
+        "visits": 337
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -49,8 +49,8 @@
       },
       {
         "value": "/governance-bridge/",
-        "pageLoads": 180,
-        "visits": 130
+        "pageLoads": 110,
+        "visits": 60
       },
       {
         "value": "/governance-bridge/governance/",
@@ -114,8 +114,8 @@
       },
       {
         "value": "/meet-sean-mansfield/",
-        "pageLoads": 39,
-        "visits": 22
+        "pageLoads": 38,
+        "visits": 21
       },
       {
         "value": "/about-this-underdog/",
@@ -138,19 +138,19 @@
         "visits": 0
       },
       {
-        "value": "/nine-summits-of-love/",
-        "pageLoads": 27,
-        "visits": 24
-      },
-      {
         "value": "/about/",
         "pageLoads": 26,
         "visits": 6
       },
       {
+        "value": "/nine-summits-of-love/",
+        "pageLoads": 26,
+        "visits": 23
+      },
+      {
         "value": "/nine-summits/universe/",
-        "pageLoads": 24,
-        "visits": 24
+        "pageLoads": 22,
+        "visits": 22
       },
       {
         "value": "/campaigns/rob/",
@@ -179,8 +179,8 @@
       },
       {
         "value": "/instruments/operations-chamber/",
-        "pageLoads": 13,
-        "visits": 13
+        "pageLoads": 11,
+        "visits": 11
       },
       {
         "value": "/showroom/globe/earth/",
@@ -208,11 +208,6 @@
         "visits": 10
       },
       {
-        "value": "/inspection/h-earth-t4-3-d8fca316/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/governance/",
         "pageLoads": 10,
         "visits": 0
@@ -226,11 +221,6 @@
         "value": "/prototypes/abc-roofing/",
         "pageLoads": 10,
         "visits": 10
-      },
-      {
-        "value": "/showroom/globe/h-earth/**",
-        "pageLoads": 8,
-        "visits": 8
       },
       {
         "value": "/lbs-resumes/",
@@ -266,18 +256,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2907,
-        "visits": 2907
+        "pageLoads": 2527,
+        "visits": 2527
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1815,
+        "pageLoads": 1395,
         "visits": 0
       },
       {
         "value": "www.google.com",
-        "pageLoads": 240,
-        "visits": 240
+        "pageLoads": 120,
+        "visits": 120
       },
       {
         "value": "m.facebook.com",

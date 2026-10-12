@@ -7,6 +7,8 @@ on:
       - 'tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs'
       - 'tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs'
       - '.github/ai-toolset-transport/bounded-binary-object-transfer.v1.json'
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: read
@@ -34,10 +36,12 @@ jobs:
       github.event_name == 'issue_comment' &&
       github.event.issue.number == 1323 &&
       github.event.comment.user.login == 'smansfield635-create' &&
-      startsWith(github.event.comment.body, 'BOUNDED_BINARY_OBJECT_TRANSFER_REQUEST_V1')
+      (startsWith(github.event.comment.body, 'BOUNDED_BINARY_OBJECT_TRANSFER_REQUEST_V1') ||
+       startsWith(github.event.comment.body, 'BOUNDED_BINARY_PACKET_INGRESS_REQUEST_V1'))
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: read
     steps:
       - name: Checkout installed carrier from immutable event repository default branch
         uses: actions/checkout@v4

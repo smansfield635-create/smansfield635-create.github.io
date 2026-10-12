@@ -1,0 +1,75 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_CANONICAL_COLD_START_PRECOMPUTED_BASE_WORLD_20261011_001",
+  "authorityGeneration": 2666,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": false,
+  "disposition": "PENDING",
+  "visualEvidence": [],
+  "interactionEvidence": [],
+  "continuityEvidence": [
+    "Exact original gzip Git blob 3d11947ad94f98736035cbdf0e021e5f324659fb committed at 5ac87e31a543473040a18b6ea00b62b6f0690553",
+    "Node 22.23.3 source-bound raw/canonical nine-buffer number parity PASS; original canonical source reconstructed from exact bounded hydration delta and original Git blob verified."
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": null,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": null,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": null,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": null,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": null,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": null,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": null,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": null,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": null,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": null,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": null
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "8ebf5c18e0045e84787ce36e476f6427827b6d406b433e489f0dabb7febd8537"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+      "sha256": "ca02ab006ba860ce52ca36a37fb28ee86435e72357248c039ac87ad462076a27"
+    }
+  ],
+  "physicalAndroidQualified": false,
+  "releaseAuthorized": false,
+  "acceptanceBoundary": "Candidate construction only. Actual two-camera WebGL2 cold/warm loading, residency, memory and owner Android acceptance required before release. Node24 raw color numeric drift observed; original source parity qualification uses original Node22 runtime.",
+  "binaryTransport": {
+    "bytes": 11736235,
+    "sha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "gitBlob": "3d11947ad94f98736035cbdf0e021e5f324659fb"
+  },
+  "qualification": {
+    "sourceRuntime": "Node 22.23.3",
+    "precomputeVerification": {
+      "schema": "H_EARTH_GEN2666_PRECOMPUTE_PARITY_RECEIPT_v1",
+      "result": "PASS",
+      "exactSourceBound": true,
+      "fullRawAndCanonicalRecords": true,
+      "nineCanonicalAndRawBuffers": true,
+      "originalPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2",
+      "transportSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "transportBytes": 11736235,
+      "hydrationMilliseconds": 1004,
+      "freshSourceCompared": true,
+      "environmentalIdentityPreserved": true,
+      "physicalAndroidQualified": false,
+      "releaseAuthorized": false
+    },
+    "isolatedHydrationChecks": "PASS_7_CHECKS",
+    "browserQualification": "PENDING_REGISTERED_FIRST_PARTY_RUN",
+    "localBrowser": "NOT_EXECUTED_OS_SOCKET_RESTRICTION"
+  },
+  "preservedWorld": {
+    "approvedTrees": 4,
+    "legacyTrees": 0,
+    "groundCoverTiles": 648,
+    "groundCoverInstances": 61235,
+    "vegetationBatches": 108,
+    "vegetationPlacements": 27585
+  }
+}

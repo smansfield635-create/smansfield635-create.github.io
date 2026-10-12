@@ -26,9 +26,20 @@ const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 const gitBlob = bytes => createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
 const fatal = (code, detail='') => { throw new Error(`${code}${detail?`:${detail}`:''}`); };
 const read = name => fs.readFileSync(path.join(ROOT,name));
+function sourceConstructionBytes(filename,bytes){
+  if(!filename.endsWith('/live-render-package.run8e-r2.canonical.js'))return bytes;
+  let text=bytes.toString('utf8');
+  if(!text.includes('// GEN2666_HYDRATION_BEGIN'))return bytes;
+  const replacements=[["// GEN2666_HYDRATION_BEGIN\nasync function hydratePrecomputedBaseWorld(){\n  if(typeof fetch!=='function'||typeof DecompressionStream!=='function'||!globalThis.crypto?.subtle)\n    throw new Error('GEN2666_HYDRATION_CAPABILITY_UNAVAILABLE');\n  const response=await fetch(new URL('./assets/h-earth-canonical-base-world.v1.json.gz',import.meta.url));\n  if(!response.ok)throw new Error(`GEN2666_ASSET_HTTP_${response.status}`);\n  const packed=await response.arrayBuffer();\n  if(packed.byteLength!==11736235)throw new Error('GEN2666_COMPRESSED_LENGTH_MISMATCH');\n  const digest=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',packed)),byte=>byte.toString(16).padStart(2,'0')).join('');\n  if(digest!=='48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a')throw new Error('GEN2666_SHA256_MISMATCH');\n  const unpacked=await new Response(new Blob([packed]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();\n  if(unpacked.byteLength!==51163475)throw new Error('GEN2666_UNCOMPRESSED_LENGTH_MISMATCH');\n  const value=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(unpacked));\n  if(value?.raw?.packageIdentity!=='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0C47F685'||\n     value?.canonical?.packageIdentity!=='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2'||\n     value.raw.revision!==1||value.canonical.revision!==2)\n    throw new Error('GEN2666_PACKAGE_IDENTITY_MISMATCH');\n  return value;\n}\n// GEN2666_HYDRATION_END\n", ""], ["      // GEN2666_WORKER_HYDRATION_BEGIN\n      let raw,canonical,precomputed=null;\n      const hydrationStart=preparationNow();\n      try{precomputed=await hydratePrecomputedBaseWorld();}\n      catch(error){\n        const failure={name:error?.name??'Error',message:error?.message??String(error)};\n        globalThis.postMessage({phase:'PRECOMPUTED_BASE_WORLD_FALLBACK',failure});\n        if(timing)timing.precomputedFailure=failure;\n      }\n      if(timing){timing.hydrationDurationMs=durationBetween(hydrationStart,preparationNow());timing.baseWorldSource=precomputed?'PRECOMPUTED_SHA256_VERIFIED':'ORIGINAL_SOURCE_FALLBACK';}\n      if(precomputed){\n        ({raw,canonical}=precomputed);\n        if(timing){timing.rawBuildDurationMs=0;timing.canonicalBuildDurationMs=0;}\n        globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});\n      }else{\n        const rawStart=timing?preparationNow():null;\n        try{raw=getRawPackage({deferVegetation:true});}finally{if(timing)timing.rawBuildDurationMs=durationBetween(rawStart,preparationNow());}\n        globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});\n        const canonicalStart=timing?preparationNow():null;\n        try{canonical=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});}finally{if(timing)timing.canonicalBuildDurationMs=durationBetween(canonicalStart,preparationNow());}\n      }\n      // GEN2666_WORKER_HYDRATION_END\n", "      const rawStart=timing?preparationNow():null;let raw;\n      try{raw=getRawPackage({deferVegetation:true});}finally{if(timing)timing.rawBuildDurationMs=durationBetween(rawStart,preparationNow());}\n      globalThis.postMessage({phase:'RAW_PACKAGE_COMPLETE'});\n      const canonicalStart=timing?preparationNow():null;let canonical;\n      try{canonical=getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});}finally{if(timing)timing.canonicalBuildDurationMs=durationBetween(canonicalStart,preparationNow());}\n"], ["          // GEN2666_FALLBACK_NOTIFICATION_BEGIN\n          if(data?.phase==='PRECOMPUTED_BASE_WORLD_FALLBACK'&&stage==='RAW'){\n            publishPreparationProgress({phase:data.phase,failure:data.failure,completed:0,total:1,unit:'packages'});\n            console.warn('H-Earth precomputed base world unavailable; using original source generation',data.failure);\n            return;\n          }\n          // GEN2666_FALLBACK_NOTIFICATION_END\n", ""]];
+  for(const [candidate,baseline] of replacements){
+    assert.equal(text.split(candidate).length,2,'GEN2666_HYDRATION_DELTA_DRIFT');
+    text=text.replace(candidate,baseline);
+  }
+  return Buffer.from(text);
+}
 function requireSourceIdentity() {
   for (const [filename, expected] of Object.entries(SOURCE_BLOBS)) {
-    const actual = gitBlob(read(filename));
+    const actual = gitBlob(sourceConstructionBytes(filename,read(filename)));
     if (actual !== expected) fatal('GEN2666_SOURCE_CLOSURE_DRIFT', `${filename}:${actual}`);
   }
 }
@@ -88,6 +99,7 @@ function examine(value, manifest, {actualSourceRecords=null}={}) {
       }
     }
   }
+  if(actualSourceRecords)assert.deepStrictEqual(value,JSON.parse(JSON.stringify(actualSourceRecords)),'GEN2666_FULL_RECORD_MISMATCH');
   assert.equal(value.canonical.sourceAuthorities.numericCanonicalizationLaw,'ROUND_TO_BINARY_GRID_2^-24_AND_NORMALIZE_NEGATIVE_ZERO');
   return true;
 }

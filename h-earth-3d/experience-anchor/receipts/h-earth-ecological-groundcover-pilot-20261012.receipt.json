@@ -33,23 +33,23 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
-      "sha256": "f6434dc260cf9bd8dce9149419169304513c9446c16fc58a86526c631d01a40f"
+      "sha256": "5b1ea6b2f5db3f014c266a52761e1ef6c26a24378a3bed97c3a6141594bffd60"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "3b944a04b18b1e10199bbf35afe50ddf9583b4bbb7bc9f203c2a4ff5c287c7a0"
+      "sha256": "48d11892f27249ed6aefa82f68fc0301a2a3500ff3d3b972ddbb03e3528966a5"
     },
     {
       "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
-      "sha256": "6ba562007b3b031f2d5023fd7192b058fdc9fded565d3fa8c6e8ce92b52da998"
+      "sha256": "db480f85f4c6eb950ec92ddb44c7f7470ddd7ad931447f525d42deafb23d63e1"
     },
     {
       "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
-      "sha256": "4a49e02c41550ef7ec40c2894d6a06934a00a57898bf9690d7c70100d4acf519"
+      "sha256": "eece24bebcd29888f0d0b718076c9d0751237c5e76629750b124cbda482b7d83"
     },
     {
       "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
-      "sha256": "08cd21a3829b84ef24555f334f7df62df0a584c40a938aa167a93d07884c8d61"
+      "sha256": "2159092ead89b35731a491a01759bbe0fb3bf301c2096a73b7ebca0462ee4c66"
     }
   ],
   "candidateLineage": {
@@ -58,7 +58,7 @@
     "protectedPublishedHead": "37f9e9206a9a199b4ea11c4b06c6727704652114",
     "visuallyRejectedGen2669NotReused": true
   },
-  "acceptanceBasis": "EXACT_SOURCE_BLOB_ARCHITECTURAL_SAME_WORLD_PROOF_ONLY. The single canonical globe-to-ground environment, terrain, existing published tall woodland grass fan, four approved trees, oasis, water and movement/navigation bytes are preserved. Additive pilot-only low/middle companion fan records reuse twelve existing terrain-verified Float32 rooted columns per parent and remain within three bounded windows. Dune pioneer eligibility requires actual dry above-water soil/slope/root support. No new independent world, terrain, hydrology, species, camera, audio, canonical placement, shader program or render pass is created. Precomputed base-world binary remains exact byte-identical. This source-level same-world PASS is not independent genomic/ecological standing, candidate visual KEEP, a device test, first-party WebGL2 qualification or a release.",
+  "acceptanceBasis": "EXACT_SOURCE_BLOB_ARCHITECTURAL_SAME_WORLD_PROOF_ONLY. The single canonical globe-to-ground environment, terrain, existing published tall woodland grass fan, four approved trees, oasis, water and movement/navigation bytes are preserved. Additive pilot-only low/middle companion fan records reuse twelve existing terrain-verified Float32 rooted columns per parent and remain within three bounded windows. Dune pioneer eligibility requires actual dry above-water soil/slope/root support. No new independent world, terrain, hydrology, species, camera, audio, canonical placement, shader program or render pass is created. Precomputed base-world binary remains exact byte-identical. This source-level same-world PASS is not independent genomic/ecological standing, candidate visual KEEP, a device test, first-party WebGL2 qualification or a release. BOUNDED_ONE_REPAIR_20261012: Site-limited low/middle presentation thresholds, visual width/color and near-camera pilot-tile draw selection revised; all published primary/bushy tall records and world-asset bytes remain untouched. Final owner perceptual acceptance and exact repaired-candidate browser/Node qualification are pending.",
   "protectedAssets": {
     "canonicalVegetationInstances": 27585,
     "canonicalBatches": 108,
@@ -71,7 +71,7 @@
     "maximumGpuBytes": 8388608,
     "drawLimit": 64
   },
-  "runtimeAcceptance": "PENDING_EXACT_CANDIDATE_TWO_CAMERA_WEBGL2_AND_INDEPENDENT_ECOLOGY_VALIDATOR",
+  "runtimeAcceptance": "PENDING_ONE_REPAIR_EXACT_CANDIDATE_WEBGL2_AND_INDEPENDENT_ECOLOGY_VERIFICATION",
   "physicalDeviceAcceptance": false,
   "ownerPerceptualDisposition": "PENDING",
   "scientificEcologyClaimAuthority": false,

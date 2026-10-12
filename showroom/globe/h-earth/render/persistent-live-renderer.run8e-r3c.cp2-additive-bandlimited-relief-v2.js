@@ -307,9 +307,11 @@ void main(){
   // Layer tags 2/3/4 are additive short/mid/dune stems on actual terrain-root columns.
   // Tags 0/1 keep the published broad-blade geometry exactly.
   float lowStratum=step(1.5,aParameters.w);
+  float midStratum=step(2.5,aParameters.w)*(1.0-step(3.5,aParameters.w));
   float duneStratum=step(3.5,aParameters.w);
   float upper=step(0.001,aPosition.y);
-  float narrow=1.0-lowStratum*upper*mix(.52,.65,duneStratum);
+  // Preserve tagged 0/1 published blades; spread only pilot stems above grounded roots.
+  float narrow=1.0-upper*(lowStratum*.23+midStratum*.15+duneStratum*.32);
   vec2 local=mix(aRootInfo.yz,aPosition.xz,narrow);
   vec2 q=local*aTransform.w;
   vec2 xz=aTransform.xy+vec2(q.x*c-q.y*s,q.x*s+q.y*c);
@@ -317,7 +319,9 @@ void main(){
   vec3 n=vec3(aNormal.x/(aTransform.w*narrow),aNormal.y/aParameters.x,aNormal.z/(aTransform.w*narrow));
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
   vec3 palette=aParameters.y<0.333333?vec3(0.18,0.115,0.045):aParameters.y<0.666667?vec3(0.31,0.245,0.065):vec3(0.095,0.145,0.04);
-  vec3 undergrowth=mix(vec3(.19,.148,.075),vec3(.068,.126,.060),smoothstep(.18,.83,aParameters.y));
+  vec3 undergrowth=mix(vec3(.18,.14,.075),vec3(.083,.155,.063),smoothstep(.16,.84,aParameters.y));
+  vec3 midColor=mix(vec3(.23,.173,.074),vec3(.105,.16,.06),smoothstep(.22,.82,aParameters.y));
+  undergrowth=mix(undergrowth,midColor,midStratum);
   undergrowth=mix(undergrowth,vec3(.22,.173,.086),duneStratum);
   vec3 primaryColor=mix(aColor.rgb,palette,0.55);
   vec3 groundColor=mix(aColor.rgb,undergrowth,.82);

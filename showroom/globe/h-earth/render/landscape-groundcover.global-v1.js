@@ -32,7 +32,7 @@ function pilotEcologicalSuitability(m,slope,site,x,z){
   const capacity=clamp(.50+moisture*.26+(m.passMoistureCorridor??0)*.18+(m.valleyMoistureRetention??0)*.12-(m.ridgePressure??0)*.12);
   const suitability=clamp(capacity*(1-(m.rockExposure??0)*.32)*(1-(m.orographicExposure??0)*.21)*(1-slope*.38));
   const patch=field(x,z,15,'PILOT_ECO_PATCH_'+site);
-  if(patch<.36||suitability<.25)return null;
+  if(patch<.31||suitability<.25)return null;
   return{site,moisture,patch,suitability};
 }
 export function inverseHEarthGroundCoverPoint(x,y,z){const h=Math.hypot(x,z),r=Math.atan2(h,y+P.planetRadius)*P.planetRadius,k=h? r/h:0;return{x:x*k,z:z*k,elevation:Math.hypot(h,y+P.planetRadius)-P.planetRadius};}
@@ -126,9 +126,9 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
       // reusing all twelve verified Float32 root elevations for nearby short/medium foliage.
       const ecological= !dune?pilotEcologicalSuitability(m,support.slope,site,authored.x,authored.z):null;
       if(ecological&&pilotExtrasInTile<PILOT_EXTRA_PER_TILE
-          &&hash(id,'PILOT_LOW')<ecological.suitability*.79*(.35+ecological.patch*.65)){
+          &&hash(id,'PILOT_LOW')<ecological.suitability*.99*(.42+ecological.patch*.58)){
         const low=new Float32Array(record);
-        low[16]=f(.27+hash(id,'PILOT_LOW_HEIGHT')*.17);
+        low[16]=f(.32+hash(id,'PILOT_LOW_HEIGHT')*.18);
         low[17]=f(.19+ecological.moisture*.62);
         low[18]=f(hash(id,'PILOT_LOW_COLOR'));
         low[19]=2;
@@ -136,9 +136,9 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
         lowLayerCount++;pilotExtrasInTile++;
       }
       if(ecological&&pilotExtrasInTile<PILOT_EXTRA_PER_TILE
-          &&ecological.patch>.53&&hash(id,'PILOT_MID')<ecological.suitability*.32){
+          &&ecological.patch>.49&&hash(id,'PILOT_MID')<ecological.suitability*.67){
         const mid=new Float32Array(record);
-        mid[16]=f(.61+hash(id,'PILOT_MID_HEIGHT')*.22);
+        mid[16]=f(.65+hash(id,'PILOT_MID_HEIGHT')*.23);
         mid[17]=f(.27+ecological.moisture*.52);
         mid[18]=f(hash(id,'PILOT_MID_COLOR'));
         mid[19]=3;
@@ -167,7 +167,7 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
         entries.push({id:secondId,record:secondRecord,mountain:sm.surfaceClass==='STONE_AND_SPARSE_SOIL'});secondaryFanCount++;
       }
     }
-    entries.sort((a,b)=>a.id.localeCompare(b.id));patches.push({...tile,maxX,maxZ,entries});
+    entries.sort((a,b)=>a.id.localeCompare(b.id));patches.push({...tile,maxX,maxZ,entries,pilotExtraCount:pilotExtrasInTile});
     if(onTile){
       // Streaming *data-availability* checkpoint, not a second population.
       // Each accepted record is copied verbatim; no GPU residency is implied.
@@ -178,7 +178,7 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
     if(now()-budgetStart>=8){await yieldControl();yields++;budgetStart=now();}
   }
   patches.sort((a,b)=>a.iz-b.iz||a.ix-b.ix);
-  const packedTiles=[];for(const tile of patches){const start=output.length;for(const p of tile.entries){output.push(p.record);if(p.mountain)mountainInstances++;}if(tile.entries.length)packedTiles.push({start,count:tile.entries.length,minX:tile.minX-1.8,maxX:tile.maxX+1.8,minZ:tile.minZ-1.8,maxZ:tile.maxZ+1.8});}
+  const packedTiles=[];for(const tile of patches){const start=output.length;for(const p of tile.entries){output.push(p.record);if(p.mountain)mountainInstances++;}if(tile.entries.length)packedTiles.push({start,count:tile.entries.length,minX:tile.minX-1.8,maxX:tile.maxX+1.8,minZ:tile.minZ-1.8,maxZ:tile.maxZ+1.8,pilotExtraCount:tile.pilotExtraCount});}
   if(output.length>P.maximumInstances)throw Error(`GLOBAL_COVER_POPULATION_BUDGET_EXCEEDED:${output.length}`);
   const records=new Float32Array(output.length*20);output.forEach((r,i)=>records.set(r,i*20));
   const templateGpuBytes=template.positions.byteLength+template.normals.byteLength+template.colors.byteLength+template.indices.byteLength+template.rootInfo.byteLength,totalGpuBytes=records.byteLength+templateGpuBytes;
@@ -193,6 +193,6 @@ export function selectHEarthGlobalGroundCoverDraws(cover,camera,{maximumInstance
   const p=camera?.position??camera;if(!p||![p.x,p.z].every(Number.isFinite))throw Error('GLOBAL_COVER_CAMERA_INVALID');
   const ranked=cover.tiles.map(t=>{const dx=p.x-Math.max(t.minX,Math.min(t.maxX,p.x)),dz=p.z-Math.max(t.minZ,Math.min(t.maxZ,p.z));return{tile:t,distance:Math.hypot(dx,dz)};}).filter(t=>t.distance<=128).sort((a,b)=>a.distance-b.distance||a.tile.start-b.tile.start);
   const draws=[];let visibleInstanceCount=0;
-  for(const {tile,distance} of ranked){if(draws.length>=maximumDraws||visibleInstanceCount>=maximumInstances)break;let stride=distance<32?1:distance<64?2:distance<96?4:8;const available=maximumInstances-visibleInstanceCount;stride=Math.max(stride,Math.ceil(tile.count/available));const count=Math.min(available,Math.ceil(tile.count/stride));if(count){draws.push({start:tile.start,count,stride});visibleInstanceCount+=count;}}
+  for(const {tile,distance} of ranked){if(draws.length>=maximumDraws||visibleInstanceCount>=maximumInstances)break;let stride=distance<32?1:distance<64?(tile.pilotExtraCount>0&&distance<56?1:2):distance<96?4:8;const available=maximumInstances-visibleInstanceCount;stride=Math.max(stride,Math.ceil(tile.count/available));const count=Math.min(available,Math.ceil(tile.count/stride));if(count){draws.push({start:tile.start,count,stride});visibleInstanceCount+=count;}}
   return{draws,visibleInstanceCount,storedInstanceCount:cover.receipt.instanceCount,populationChanged:false};
 }

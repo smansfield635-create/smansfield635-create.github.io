@@ -21,66 +21,81 @@ const gen2671MeadowHeads=Object.freeze({
  published:'37f9e9206a9a199b4ea11c4b06c6727704652114'
 });
 const gen2671MeadowHead=head=>Object.values(gen2671MeadowHeads).includes(head);
-const gen2671MeadowTarget=Object.freeze({x:-45,z:-326,yawDegrees:Math.atan2(-45,230)*180/Math.PI,pitchDegrees:-8,verticalFovDegrees:56});
+const gen2671MeadowTarget=Object.freeze({x:-45,z:-326,pitchDegrees:-8,verticalFovDegrees:56,headingMode:'TWO_MEASURED_NATIVE_TURN_HEADINGS'});
 const wrappedMeadowYaw=x=>((x+180)%360+360)%360-180;
-// Trusted same-world navigation: only browser pointer/wheel input, never injected
-// renderer state, synthetic canvas content, or an alternative product runtime.
+// Native pointer-turn quantization is measured rather than assumed. Headless
+// Chrome actually advances ~7.68 deg per touch-equivalent mouse drag here;
+// do NOT oscillate toward an unattainable fixed ~11 degree azimuth.
 async function captureGen2671Meadow(page,observe,entry,head){
  const canvas=page.locator('#h-earth-functional-landscape-canvas'),box=await canvas.boundingBox();
  if(!box||box.width<250||box.height<300)throw Error('GEN2671_MEADOW_CANVAS_INVALID');
  const cx=box.x+box.width/2,cy=box.y+box.height/2;
  const read=async()=>{const r=await observe();if(!r.navigation||!r.position)throw Error('GEN2671_MEADOW_NAVIGATION_MISSING');return r;};
- const turns=[],pulses=[];
- const setYaw=async(target)=>{
-  for(let k=0;k<24;k++){
-   const from=await read(),error=wrappedMeadowYaw(target-from.navigation.yawDegrees);
-   if(Math.abs(error)<.20)break;
-   const dir=error>0?1:-1;
-   await page.mouse.move(cx,cy);await page.mouse.down();
-   await page.mouse.move(cx+dir*box.width*.08,cy,{steps:2});
-   const started=Date.now();let latest=from;
-   while(Date.now()-started<Math.min(1200,Math.max(24,Math.abs(error)*17))){
-    await sleep(24);latest=await read();
-    if(wrappedMeadowYaw(target-latest.navigation.yawDegrees)*dir<=.12)break;
-   }
-   await page.mouse.up();await sleep(120);
-   const after=await read();
-   turns.push({from:from.navigation.yawDegrees,to:after.navigation.yawDegrees,target});
-  }
-  const last=await read();
-  if(Math.abs(wrappedMeadowYaw(last.navigation.yawDegrees-target))>.45)
-   throw Error('GEN2671_MEADOW_NATIVE_TURN_FAILED:'+JSON.stringify({actual:last.navigation.yawDegrees,target,turns}));
+ const turns=[],pulses=[],origin=await read();
+ if(Math.hypot(origin.position.x,origin.position.z+96)>.05)throw Error('GEN2671_MEADOW_WRONG_NATIVE_ORIGIN');
+ const turnOnce=async(direction)=>{
+  const before=await read();
+  await page.mouse.move(cx,cy);await page.mouse.down();
+  await page.mouse.move(cx+direction*box.width*.08,cy,{steps:2});
+  await sleep(45);await page.mouse.up();await sleep(160);
+  const after=await read(),degrees=wrappedMeadowYaw(after.navigation.yawDegrees-before.navigation.yawDegrees);
+  if(degrees*direction<3||degrees*direction>13||after.navigation.sequence<=before.navigation.sequence)
+   throw Error('GEN2671_MEADOW_NATIVE_TURN_STEP_INVALID:'+JSON.stringify({direction,degrees,before:before.navigation,after:after.navigation}));
+  turns.push({direction,degrees,from:before.navigation.yawDegrees,to:after.navigation.yawDegrees,sequence:after.navigation.sequence});
+  return after.navigation.yawDegrees;
  };
- const initial=await read();
- if(Math.hypot(initial.position.x,initial.position.z+96)>.05)throw Error('GEN2671_MEADOW_WRONG_NATIVE_ORIGIN');
- await setYaw(gen2671MeadowTarget.yawDegrees);
- for(let step=0;step<120;step++){
-  let before=await read();
-  const remaining=Math.hypot(before.position.x-gen2671MeadowTarget.x,before.position.z-gen2671MeadowTarget.z);
-  if(remaining<=.90)break;
-  const bearing=Math.atan2(gen2671MeadowTarget.x-before.position.x,-(gen2671MeadowTarget.z-before.position.z))*180/Math.PI;
-  if(Math.abs(wrappedMeadowYaw(bearing-before.navigation.yawDegrees))>.35){
-   await setYaw(bearing);before=await read();
+ const aYaw=await turnOnce(-1);
+ const bYaw=await turnOnce(-1);
+ const a=aYaw*Math.PI/180,b=bYaw*Math.PI/180,det=Math.sin(a-b);
+ const dx=gen2671MeadowTarget.x-origin.position.x,dz=origin.position.z-gen2671MeadowTarget.z;
+ const distanceA=(dx*Math.cos(b)-dz*Math.sin(b))/det;
+ const distanceB=(dz*Math.sin(a)-dx*Math.cos(a))/det;
+ if(!(det>.06&&distanceA>10&&distanceB>10&&distanceA<300&&distanceB<300))
+  throw Error('GEN2671_MEADOW_NATIVE_HEADING_BRACKET_INVALID:'+JSON.stringify({aYaw,bYaw,det,distanceA,distanceB,dx,dz}));
+ const restored=await turnOnce(1);
+ if(Math.abs(wrappedMeadowYaw(restored-aYaw))>.5)
+  throw Error('GEN2671_MEADOW_NATIVE_FIRST_HEADING_NOT_RESTORED');
+ const travel=async(leg,meters,heading)=>{
+  let traversed=0,scale=.5;
+  for(let step=0;step<150;step++){
+   let before=await read();
+   const remain=meters-traversed;
+   if(remain<=.24)break;
+   if(Math.abs(wrappedMeadowYaw(before.navigation.yawDegrees-heading))>.5)
+    throw Error('GEN2671_MEADOW_NATIVE_HEADING_DRIFT:'+leg);
+   const requested=Math.max(1,Math.min(10,remain/scale));
+   await page.mouse.move(cx,cy);await page.mouse.wheel(0,-requested*70);
+   let after=await read();
+   for(let j=0;j<25&&after.navigation.sequence<=before.navigation.sequence;j++){await sleep(90);after=await read();}
+   const ddx=after.position.x-before.position.x,ddz=after.position.z-before.position.z;
+   const forward=ddx*Math.sin(heading*Math.PI/180)-ddz*Math.cos(heading*Math.PI/180);
+   const lateral=Math.abs(ddx*Math.cos(heading*Math.PI/180)+ddz*Math.sin(heading*Math.PI/180));
+   if(!(forward>.05)||lateral>.12||after.navigation.sequence<=before.navigation.sequence)
+    throw Error('GEN2671_MEADOW_NATIVE_WHEEL_PROGRESS_INVALID:'+JSON.stringify({leg,requested,forward,lateral,before:before.position,after:after.position}));
+   traversed+=forward;
+   if(traversed>meters+.8)throw Error('GEN2671_MEADOW_NATIVE_WHEEL_OVERSHOT:'+leg);
+   scale=Math.max(.2,Math.min(1.1,forward/requested));
+   if(!readiness(after)||!residencyReady(after.residency)||after.gpuFourTreeFloorCount!==4)
+    throw Error('GEN2671_MEADOW_RENDER_OR_RESIDENCY_REGRESSION');
+   pulses.push({leg,requested,forward,traversed,targetMeters:meters,position:after.position,sequence:after.navigation.sequence});
   }
-  const requested=Math.max(1,Math.min(10,remaining));
-  await page.mouse.move(cx,cy);await page.mouse.wheel(0,-requested*70);
-  let after=await read();
-  for(let j=0;j<25&&after.navigation.sequence<=before.navigation.sequence;j++){await sleep(90);after=await read();}
-  const advance=Math.hypot(after.position.x-before.position.x,after.position.z-before.position.z);
-  if(advance<.05||after.navigation.sequence<=before.navigation.sequence)
-   throw Error('GEN2671_MEADOW_NATIVE_WHEEL_NO_PROGRESS:'+JSON.stringify({requested,before:before.position,after:after.position}));
-  if(!readiness(after)||!residencyReady(after.residency)||after.gpuFourTreeFloorCount!==4)
-   throw Error('GEN2671_MEADOW_RENDER_OR_RESIDENCY_REGRESSION');
-  pulses.push({requested,actual:advance,position:after.position,sequence:after.navigation.sequence});
- }
- await setYaw(gen2671MeadowTarget.yawDegrees);await sleep(800);
- const last=await read();
- const nav=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState);
+  if(Math.abs(traversed-meters)>.8)
+   throw Error('GEN2671_MEADOW_NATIVE_TRAVEL_NOT_COMPLETE:'+JSON.stringify({leg,meters,traversed}));
+  return traversed;
+ };
+ const actualA=await travel('A',distanceA,aYaw);
+ const restoredB=await turnOnce(-1);
+ if(Math.abs(wrappedMeadowYaw(restoredB-bYaw))>.5)
+  throw Error('GEN2671_MEADOW_SECOND_HEADING_NOT_RESTORED');
+ const actualB=await travel('B',distanceB,bYaw);
+ const finalHeading=await turnOnce(1);
+ await sleep(800);
+ const last=await read(),nav=await page.evaluate(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState);
  const error=Math.hypot(last.position.x-gen2671MeadowTarget.x,last.position.z-gen2671MeadowTarget.z);
- if(error>.90||Math.abs(wrappedMeadowYaw(nav.yawDegrees-gen2671MeadowTarget.yawDegrees))>.45||
+ if(error>.9||Math.abs(wrappedMeadowYaw(nav.yawDegrees-aYaw))>.6||
     Math.abs(nav.pitchDegrees-gen2671MeadowTarget.pitchDegrees)>.05||
     Math.abs(nav.verticalFovDegrees-gen2671MeadowTarget.verticalFovDegrees)>.01)
-  throw Error('GEN2671_MEADOW_CAMERA_MISMATCH:'+JSON.stringify({error,nav,target:gen2671MeadowTarget}));
+  throw Error('GEN2671_MEADOW_CAMERA_MISMATCH:'+JSON.stringify({error,nav,aYaw,bYaw,actualA,actualB,finalHeading}));
  if(!readiness(last)||!residencyReady(last.residency)||last.gpuFourTreeFloorCount!==4)
   throw Error('GEN2671_MEADOW_FINAL_GPU_RESIDENCY_INVALID');
  const name='gen2671-meadow-'+(head===gen2671MeadowHeads.candidate?'candidate':'published')+'-post-residency-canvas.png';
@@ -89,7 +104,7 @@ async function captureGen2671Meadow(page,observe,entry,head){
  entry.gen2671Meadow={schema:'H_EARTH_GEN2671_MEADOW_CAMERA_OBSERVATION_v1',head,filename:name,
   sha256:crypto.createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length,
   viewport:{width:412,height:915,deviceScaleFactor:2},canvasBox:await canvas.boundingBox(),
-  target:gen2671MeadowTarget,camera:nav,positionError:error,
+  target:gen2671MeadowTarget,camera:nav,positionError:error,measuredNativeHeadings:{aYaw,bYaw,finalHeading,distanceA,distanceB,actualA,actualB},
   residentBatchCount:last.residency.residentBatchCount,
   residentInstanceCount:last.residency.residentInstanceCount,
   droppedPlacementCount:last.residency.droppedPlacementCount,
@@ -97,7 +112,6 @@ async function captureGen2671Meadow(page,observe,entry,head){
   nativeTurns:turns,nativeWheels:pulses,ownerPerceptualDisposition:'PENDING'};
  await fs.writeFile(out+'/'+name.replace('.png','.json'),JSON.stringify(entry.gen2671Meadow,null,2)+'\n');
 }
-
 // Gen2652 scoped read-only observation of already qualified product bytes.
 // With no source-bound observer receipt, the registered legacy verifier is unchanged.
 const walkingObserverReceiptPath='h-earth-3d/experience-anchor/receipts/h-earth-soil-expansion-walking-view-observer-20261011.receipt.json';

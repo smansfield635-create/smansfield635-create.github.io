@@ -1,0 +1,81 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_ECOLOGICAL_GROUNDCOVER_THREE_HABITAT_PILOT_20261012_001",
+  "canonicalAdmissionGeneration": 2670,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/receipts/h-earth-loading-motion-integration-20261012.receipt.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "sha256": "f6434dc260cf9bd8dce9149419169304513c9446c16fc58a86526c631d01a40f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "3b944a04b18b1e10199bbf35afe50ddf9583b4bbb7bc9f203c2a4ff5c287c7a0"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
+      "sha256": "6ba562007b3b031f2d5023fd7192b058fdc9fded565d3fa8c6e8ce92b52da998"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+      "sha256": "4a49e02c41550ef7ec40c2894d6a06934a00a57898bf9690d7c70100d4acf519"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+      "sha256": "08cd21a3829b84ef24555f334f7df62df0a584c40a938aa167a93d07884c8d61"
+    }
+  ],
+  "candidateLineage": {
+    "sourceParent": "be071eaca6ce89aa15d107e678eba7c7fdc9840b",
+    "admittedMain": "91b328d58520a40452e68349594fa1fcaf47acdb",
+    "protectedPublishedHead": "37f9e9206a9a199b4ea11c4b06c6727704652114",
+    "visuallyRejectedGen2669NotReused": true
+  },
+  "acceptanceBasis": "EXACT_SOURCE_BLOB_ARCHITECTURAL_SAME_WORLD_PROOF_ONLY. The single canonical globe-to-ground environment, terrain, existing published tall woodland grass fan, four approved trees, oasis, water and movement/navigation bytes are preserved. Additive pilot-only low/middle companion fan records reuse twelve existing terrain-verified Float32 rooted columns per parent and remain within three bounded windows. Dune pioneer eligibility requires actual dry above-water soil/slope/root support. No new independent world, terrain, hydrology, species, camera, audio, canonical placement, shader program or render pass is created. Precomputed base-world binary remains exact byte-identical. This source-level same-world PASS is not independent genomic/ecological standing, candidate visual KEEP, a device test, first-party WebGL2 qualification or a release.",
+  "protectedAssets": {
+    "canonicalVegetationInstances": 27585,
+    "canonicalBatches": 108,
+    "approvedTreeCount": 4,
+    "legacyVisibleTreeCount": 0,
+    "precomputedWorldBinaryGitBlob": "3d11947ad94f98736035cbdf0e021e5f324659fb",
+    "precomputedWorldBinaryBytes": 11736235,
+    "precomputedWorldBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "maximumGrassInstanceCount": 65536,
+    "maximumGpuBytes": 8388608,
+    "drawLimit": 64
+  },
+  "runtimeAcceptance": "PENDING_EXACT_CANDIDATE_TWO_CAMERA_WEBGL2_AND_INDEPENDENT_ECOLOGY_VALIDATOR",
+  "physicalDeviceAcceptance": false,
+  "ownerPerceptualDisposition": "PENDING",
+  "scientificEcologyClaimAuthority": false,
+  "releaseEligible": false,
+  "mergeAuthorized": false,
+  "publicationAuthorized": false
+}

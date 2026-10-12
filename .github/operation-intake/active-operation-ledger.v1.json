@@ -8908,45 +8908,6 @@
       "scopeHash": "8aa83ef0f77c262e81d2ded245c9ddccf3d87ea40a908b5fc0b7ac7424fea036",
       "state": "ADMITTED_LOCKED"
     },
-    "8c0eb64503568856c5f1bdc192e66b7a1a422cccc4c206cf035f67aff6862f8a": {
-      "governingHead": "b76df13bd92e3725ae04555980951ea30f5fa71f",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "b76df13bd92e3725ae04555980951ea30f5fa71f",
-          "lockGeneration": 2668,
-          "lockScope": "H_EARTH:QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION:V1",
-          "operationId": "H_EARTH_QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION_20261012_001",
-          "procedureLocatorDigest": "12872623f9cd70f6a837a43f4198d7a651e5049d3a3c6db169efc19529eefddb",
-          "requestDigest": "2b5ee059c736dddff549dc3f469ead99118bed62bcb8dbbd8bb265932ff5a361",
-          "scopeHash": "8c0eb64503568856c5f1bdc192e66b7a1a422cccc4c206cf035f67aff6862f8a"
-        },
-        "bindingDigest": "11484d9b491da39321a6817f3d66e79f9915f4ed2049f140ec7e1511df34eefd",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "9a473a86b128c94791c82239b9bad8a946c1872b",
-          "observedLockRefHead": "df801dd0446110fd13aa785dced925f3ae99d5c7"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "99d6a7f2fb18bc7741b853ba6a0416294c18d880bb493dcb465bef6aa66b0eae",
-          "commentId": 6117021548,
-          "issueNumber": 6171,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2668,
-      "lockScope": "H_EARTH:QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION:V1",
-      "operationId": "H_EARTH_QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION_20261012_001",
-      "procedureLocatorDigest": "12872623f9cd70f6a837a43f4198d7a651e5049d3a3c6db169efc19529eefddb",
-      "released": false,
-      "requestDigest": "2b5ee059c736dddff549dc3f469ead99118bed62bcb8dbbd8bb265932ff5a361",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "8c0eb64503568856c5f1bdc192e66b7a1a422cccc4c206cf035f67aff6862f8a",
-      "state": "ADMITTED_LOCKED"
-    },
     "8c386db10f9f487dbf27ea03a0fe8421f9353abd25e5f2d3a4e491a89dfff147": {
       "governingHead": "47c6b01c03d575a935027a0410317d02479cfce4",
       "lockGeneration": 1558,
@@ -75881,6 +75842,83 @@
       "requestDigest": "4aa2099fc891c14b91b467d7c8301d69975d3515ffdfae40eca641e660893829",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "dd0811fc511fec448ea78081a6de698e3c9eaf58f02cee881bd6cb0aa6635f41",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "b76df13bd92e3725ae04555980951ea30f5fa71f",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b76df13bd92e3725ae04555980951ea30f5fa71f",
+          "lockGeneration": 2668,
+          "lockScope": "H_EARTH:QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION:V1",
+          "operationId": "H_EARTH_QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION_20261012_001",
+          "procedureLocatorDigest": "12872623f9cd70f6a837a43f4198d7a651e5049d3a3c6db169efc19529eefddb",
+          "requestDigest": "2b5ee059c736dddff549dc3f469ead99118bed62bcb8dbbd8bb265932ff5a361",
+          "scopeHash": "8c0eb64503568856c5f1bdc192e66b7a1a422cccc4c206cf035f67aff6862f8a"
+        },
+        "bindingDigest": "11484d9b491da39321a6817f3d66e79f9915f4ed2049f140ec7e1511df34eefd",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "9a473a86b128c94791c82239b9bad8a946c1872b",
+          "observedLockRefHead": "df801dd0446110fd13aa785dced925f3ae99d5c7"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "99d6a7f2fb18bc7741b853ba6a0416294c18d880bb493dcb465bef6aa66b0eae",
+          "commentId": 6117021548,
+          "issueNumber": 6171,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b76df13bd92e3725ae04555980951ea30f5fa71f",
+          "lockGeneration": 2668,
+          "lockScope": "H_EARTH:QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION:V1",
+          "operationId": "H_EARTH_QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION_20261012_001",
+          "procedureLocatorDigest": "12872623f9cd70f6a837a43f4198d7a651e5049d3a3c6db169efc19529eefddb",
+          "requestDigest": "2b5ee059c736dddff549dc3f469ead99118bed62bcb8dbbd8bb265932ff5a361",
+          "scopeHash": "8c0eb64503568856c5f1bdc192e66b7a1a422cccc4c206cf035f67aff6862f8a"
+        },
+        "bindingDigest": "6a5ff0ccf9e9d68c44dfb760170479157eb3dc63e22ce715a61465783e732f7c",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "2a242a96fd243f0eaeb4a2937bb431d7d9381b83",
+          "observedLockRefHead": "cecb2c66e4dd1aec3c950655eec0ace0c5bb6fed"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "dac1bb16a9e84679e81d29f863361cb8523c79cac9e1230549dda8bbfc8a8115",
+          "commentId": 6117098757,
+          "issueNumber": 6171,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "b76df13bd92e3725ae04555980951ea30f5fa71f",
+          "lockGeneration": 2668,
+          "lockScope": "H_EARTH:QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION:V1",
+          "operationId": "H_EARTH_QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION_20261012_001",
+          "released": true,
+          "scopeHash": "8c0eb64503568856c5f1bdc192e66b7a1a422cccc4c206cf035f67aff6862f8a",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2668,
+      "lockScope": "H_EARTH:QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION:V1",
+      "operationId": "H_EARTH_QUALIFIED_PERFORMANCE_REPAIR_ACCEPTANCE_PUBLICATION_20261012_001",
+      "procedureLocatorDigest": "12872623f9cd70f6a837a43f4198d7a651e5049d3a3c6db169efc19529eefddb",
+      "released": true,
+      "requestDigest": "2b5ee059c736dddff549dc3f469ead99118bed62bcb8dbbd8bb265932ff5a361",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8c0eb64503568856c5f1bdc192e66b7a1a422cccc4c206cf035f67aff6862f8a",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

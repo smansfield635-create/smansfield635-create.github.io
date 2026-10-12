@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-12T18:40:40Z",
+  "generatedAt": "2026-10-12T19:31:07Z",
   "window": {
-    "start": "2026-07-14T18:40:40Z",
-    "end": "2026-10-12T18:40:40Z"
+    "start": "2026-07-14T19:31:07Z",
+    "end": "2026-10-12T19:31:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,19 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4982,
+    "pageLoads": 4972,
     "visits": 1322,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4982,
+        "pageLoads": 4972,
         "visits": 1322
       }
     },
     "byPath": {
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 172,
-        "visits": 2
-      },
       "/coherence-diagnostic/": {
         "pageLoads": 30,
         "visits": 0
@@ -49,6 +45,10 @@
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 50,
         "visits": 0
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 162,
+        "visits": 2
       },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
@@ -158,6 +158,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -173,10 +177,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -194,6 +194,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -202,7 +206,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -216,10 +220,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -349,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3660,
+        "pageLoads": 3650,
         "visits": 0
       },
       "www.google.com": {

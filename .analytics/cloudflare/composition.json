@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-12T10:42:03Z",
+  "generatedAt": "2026-10-12T11:35:38Z",
   "window": {
-    "start": "2026-09-12T10:42:03Z",
-    "end": "2026-10-12T10:42:03Z"
+    "start": "2026-09-12T11:35:38Z",
+    "end": "2026-10-12T11:35:38Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 1118,
-        "visits": 828
+        "pageLoads": 1120,
+        "visits": 830
       },
       {
         "value": "/mirror-manor-preview/",
@@ -19,13 +19,13 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 452,
-        "visits": 332
+        "pageLoads": 453,
+        "visits": 333
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 357,
-        "visits": 337
+        "pageLoads": 362,
+        "visits": 342
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -49,8 +49,8 @@
       },
       {
         "value": "/governance-bridge/",
-        "pageLoads": 110,
-        "visits": 60
+        "pageLoads": 180,
+        "visits": 130
       },
       {
         "value": "/governance-bridge/governance/",
@@ -114,8 +114,8 @@
       },
       {
         "value": "/meet-sean-mansfield/",
-        "pageLoads": 38,
-        "visits": 21
+        "pageLoads": 39,
+        "visits": 22
       },
       {
         "value": "/about-this-underdog/",
@@ -138,19 +138,19 @@
         "visits": 0
       },
       {
+        "value": "/nine-summits-of-love/",
+        "pageLoads": 27,
+        "visits": 24
+      },
+      {
         "value": "/about/",
         "pageLoads": 26,
         "visits": 6
       },
       {
-        "value": "/nine-summits-of-love/",
-        "pageLoads": 26,
-        "visits": 23
-      },
-      {
         "value": "/nine-summits/universe/",
-        "pageLoads": 22,
-        "visits": 22
+        "pageLoads": 24,
+        "visits": 24
       },
       {
         "value": "/campaigns/rob/",
@@ -179,8 +179,8 @@
       },
       {
         "value": "/instruments/operations-chamber/",
-        "pageLoads": 11,
-        "visits": 11
+        "pageLoads": 13,
+        "visits": 13
       },
       {
         "value": "/showroom/globe/earth/",
@@ -208,6 +208,11 @@
         "visits": 10
       },
       {
+        "value": "/inspection/h-earth-t4-3-d8fca316/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
         "value": "/governance/",
         "pageLoads": 10,
         "visits": 0
@@ -221,6 +226,11 @@
         "value": "/prototypes/abc-roofing/",
         "pageLoads": 10,
         "visits": 10
+      },
+      {
+        "value": "/showroom/globe/h-earth/**",
+        "pageLoads": 8,
+        "visits": 8
       },
       {
         "value": "/lbs-resumes/",
@@ -256,18 +266,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2527,
-        "visits": 2527
+        "pageLoads": 2887,
+        "visits": 2887
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1395,
+        "pageLoads": 1815,
         "visits": 0
       },
       {
         "value": "www.google.com",
-        "pageLoads": 120,
-        "visits": 120
+        "pageLoads": 240,
+        "visits": 240
       },
       {
         "value": "m.facebook.com",
@@ -339,31 +349,31 @@
     ],
     "deviceType": [
       {
-        "value": "desktop",
-        "pageLoads": 2344,
-        "visits": 2240
+        "value": "tablet",
+        "pageLoads": 2352,
+        "visits": 432
       },
       {
-        "value": "tablet",
-        "pageLoads": 1422,
-        "visits": 462
+        "value": "desktop",
+        "pageLoads": 2314,
+        "visits": 2210
       },
       {
         "value": "mobile",
-        "pageLoads": 1262,
-        "visits": 511
+        "pageLoads": 1142,
+        "visits": 491
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 1953,
-        "visits": 1890
+        "pageLoads": 1969,
+        "visits": 1906
       },
       {
         "value": "Chrome",
-        "pageLoads": 1698,
-        "visits": 697
+        "pageLoads": 1692,
+        "visits": 692
       },
       {
         "value": "ChromeMobile",
@@ -372,13 +382,13 @@
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 82,
-        "visits": 61
+        "pageLoads": 81,
+        "visits": 60
       },
       {
         "value": "Edge",
-        "pageLoads": 53,
-        "visits": 53
+        "pageLoads": 52,
+        "visits": 52
       },
       {
         "value": "Unknown",
@@ -414,13 +424,13 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 2562,
-        "visits": 872
+        "pageLoads": 2422,
+        "visits": 802
       },
       {
         "value": "Linux",
-        "pageLoads": 2041,
-        "visits": 1978
+        "pageLoads": 1901,
+        "visits": 1838
       },
       {
         "value": "Windows",

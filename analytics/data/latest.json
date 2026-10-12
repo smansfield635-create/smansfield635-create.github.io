@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-12T19:31:07Z",
+  "generatedAt": "2026-10-12T20:36:12Z",
   "window30d": {
-    "start": "2026-09-12T19:31:07Z",
-    "end": "2026-10-12T19:31:07Z"
+    "start": "2026-09-12T20:36:12Z",
+    "end": "2026-10-12T20:36:12Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 186
+      "pageLoads": 172
     },
     {
       "date": "2026-10-06",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 22
+      "pageLoads": 24
     }
   ],
   "summary": {
-    "pageLoads": 5007,
-    "botPageLoads": 1930,
-    "nonBotPageLoads": 3077
+    "pageLoads": 4975,
+    "botPageLoads": 1921,
+    "nonBotPageLoads": 3054
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2898,
-      "visits": 2898
+      "pageLoads": 2876,
+      "visits": 2876
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1805,
+      "pageLoads": 1795,
       "visits": 0
     },
     {
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1108,
-      "visits": 818
+      "pageLoads": 1094,
+      "visits": 804
     },
     {
       "path": "/mirror-manor-preview/",
@@ -187,13 +187,13 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 462,
-      "visits": 342
+      "pageLoads": 463,
+      "visits": 343
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 362,
-      "visits": 342
+      "pageLoads": 359,
+      "visits": 339
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -201,14 +201,14 @@
       "visits": 90
     },
     {
-      "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 302,
-      "visits": 12
-    },
-    {
       "path": "/products/education/",
       "pageLoads": 301,
       "visits": 111
+    },
+    {
+      "path": "/showroom/globe/h-earth/awards/",
+      "pageLoads": 292,
+      "visits": 12
     },
     {
       "path": "/showroom/globe/audralia/",

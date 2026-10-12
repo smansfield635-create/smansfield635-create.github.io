@@ -1,0 +1,153 @@
+#!/usr/bin/env node
+/** Gen2666: source-bound, deterministic, complete raw+canonical base-world precomputation. */
+import fs from 'node:fs';
+import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { gzipSync, gunzipSync } from 'node:zlib';
+import { performance } from 'node:perf_hooks';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import assert from 'node:assert/strict';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const RENDER = 'showroom/globe/h-earth/render/';
+const ASSET = `${RENDER}assets/h-earth-canonical-base-world.v1.json.gz`;
+const MANIFEST = `${RENDER}assets/h-earth-canonical-base-world.v1.manifest.json`;
+const SOURCE_BLOBS = Object.freeze({
+  [`${RENDER}live-render-package.run8e-r2.canonical.js`]: '41092afa665f715027f54bc6c52898b839911235',
+  [`${RENDER}live-render-package.run8e-r2.js`]: 'd362035f091a7fd997553239c048e87e8b46e4c7',
+  [`${RENDER}run8e-successor-environment.js`]: '92d5cb9523619fed34382986232c3d8c261e2a8d',
+  [`${RENDER}persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js`]: 'a324215fab199685c8d5cbd05220f6b2bae67942',
+  [`${RENDER}geometry-landscape-sector.p2.js`]: 'c26247dcb69cb52c968fcd3ef6c2626eaa577d03',
+  [`${RENDER}landscape-groundcover.global-v1.js`]: '4a1d10c2b7b98b016872d4fc50f31f62b3295d12',
+  [`${RENDER}woodland-clearing-trial.js`]: '14c366d2241469fbccd08ee31bbeac0f1b7598f4',
+  [`${RENDER}geometry-woodland-tree-trial.js`]: '3958513dec53aa27f4216388a190f772e71fb9b0'
+});
+const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
+const gitBlob = bytes => createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
+const fatal = (code, detail='') => { throw new Error(`${code}${detail?`:${detail}`:''}`); };
+const read = name => fs.readFileSync(path.join(ROOT,name));
+function requireSourceIdentity() {
+  for (const [filename, expected] of Object.entries(SOURCE_BLOBS)) {
+    const actual = gitBlob(read(filename));
+    if (actual !== expected) fatal('GEN2666_SOURCE_CLOSURE_DRIFT', `${filename}:${actual}`);
+  }
+}
+const format = value => JSON.stringify(value, null, 2) + '\n';
+function stableMetadata(value) {
+  if (value.eligible !== true) fatal('GEN2666_INVALID_SOURCE_PACKAGE');
+  // Construction timing is diagnostic metadata, explicitly outside world identity.
+  // The compiled asset carries no benchmark from the builder's machine.
+  return { ...value, constructionMilliseconds: 0 };
+}
+const record = ({raw,canonical}) => ({raw:stableMetadata(raw),canonical:stableMetadata(canonical)});
+async function modules() {
+  const mod = await import(pathToFileURL(path.join(ROOT,`${RENDER}live-render-package.run8e-r2.canonical.js`)).href);
+  // Reuse the exact original raw-module instance selected by the canonical owner.
+  const raw = await import(pathToFileURL(path.join(ROOT,`${RENDER}live-render-package.run8e-r2.js`)).href+'?cb=meadow-distribution-20261006');
+  return {mod,raw};
+}
+function freezePackageRecords(value) {
+  const buffers = new WeakSet([...Object.values(value.raw.buffers), ...Object.values(value.canonical.buffers)]);
+  const seen = new WeakSet(), stack = [value];
+  while (stack.length) {
+    const item = stack.pop();
+    if (!item || typeof item !== 'object' || seen.has(item)) continue;
+    seen.add(item);
+    if (!buffers.has(item)) for (const child of Object.values(item)) if (child && typeof child === 'object') stack.push(child);
+    Object.freeze(item);
+  }
+  return value;
+}
+function examine(value, manifest, {actualSourceRecords=null}={}) {
+  assert.equal(value?.raw?.eligible, true);
+  assert.equal(value?.canonical?.eligible, true);
+  assert.equal(value.raw.packageIdentity, manifest.rawPackageIdentity);
+  assert.equal(value.canonical.packageIdentity, manifest.packageIdentity);
+  assert.equal(value.raw.contentDigest, manifest.rawDigest);
+  assert.equal(value.canonical.contentDigest, manifest.canonicalDigest);
+  assert.equal(value.raw.revision,1);
+  assert.equal(value.canonical.revision,2);
+  assert.equal(value.raw.packageOccurrenceId,value.canonical.packageOccurrenceId);
+  assert.deepEqual([value.raw.vertexCount,value.raw.indexCount,value.raw.primitiveCount], [110269,311466,14]);
+  assert.deepEqual(value.raw.primitiveIds, value.canonical.primitiveIds);
+  assert.deepEqual(value.raw.drawRanges,value.canonical.drawRanges);
+  assert.deepEqual(value.raw.primitiveSpans,value.canonical.primitiveSpans);
+  // Canonical clearing attributes are deliberately rounded onto a 2^-24 grid.
+  // Compare each to its own exact source below, not raw against canonical.
+  assert.equal(value.raw.clearingAttributes.length, value.canonical.clearingAttributes.length);
+  for (const [label,pkg] of Object.entries(value)) {
+    assert.deepEqual(Object.keys(pkg.buffers).sort(), manifest.bufferNames.slice().sort());
+    for (const name of manifest.bufferNames) {
+      const buffer = pkg.buffers[name];
+      assert.equal(buffer.length,manifest.bufferLengths[name]);
+      if (actualSourceRecords) {
+        const source = actualSourceRecords[label].buffers[name];
+        assert.equal(buffer.length,source.length);
+        // Preserve primitive number representation, not just rounded Float32 output.
+        for(let i=0;i<buffer.length;i++)if(!Object.is(buffer[i],source[i]))fatal('GEN2666_BUFFER_VALUE_MISMATCH',`${label}.${name}[${i}]`);
+      }
+    }
+  }
+  assert.equal(value.canonical.sourceAuthorities.numericCanonicalizationLaw,'ROUND_TO_BINARY_GRID_2^-24_AND_NORMALIZE_NEGATIVE_ZERO');
+  return true;
+}
+async function build() {
+  requireSourceIdentity();
+  const {mod,raw:rawModule} = await modules();
+  const buildStart=performance.now();
+  const canonical=mod.getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});
+  const raw=rawModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true});
+  const sourceBuildMs=performance.now()-buildStart;
+  const data=record({raw,canonical});
+  const bufferNames=Object.keys(raw.buffers);
+  const text=JSON.stringify(data);
+  const packed=gzipSync(Buffer.from(text),{level:4,mtime:0});
+  const manifest={
+    schema:'H_EARTH_GEN2666_PRECOMPUTED_BASE_WORLD_MANIFEST_v1',
+    operationId:'H_EARTH_CANONICAL_COLD_START_PRECOMPUTED_BASE_WORLD_20261011_001',
+    provenance:'QUALIFIED_GEN2659_SAME_SOURCE_CLOSURE',
+    sourceBlobs:SOURCE_BLOBS,
+    packageIdentity:canonical.packageIdentity,canonicalDigest:canonical.contentDigest,
+    rawPackageIdentity:raw.packageIdentity,rawDigest:raw.contentDigest,
+    packageOccurrenceId:raw.packageOccurrenceId,
+    binary:{path:ASSET,format:'gzip',encoding:'UTF8_JSON_RAW_AND_CANONICAL_v1',bytes:packed.length,uncompressedBytes:Buffer.byteLength(text),sha256:sha256(packed)},
+    bufferNames,
+    bufferLengths:Object.fromEntries(bufferNames.map(name=>[name,raw.buffers[name].length])),
+    protectedWorld:{approvedTrees:4,legacyTrees:0,groundCoverTiles:648,groundCoverInstances:61235,vegetationBatches:108,vegetationPlacements:27585},
+    runtimeConstructionMillisecondsStored:false,
+    sourceBuildMilliseconds:Math.round(sourceBuildMs),
+    packageReuseAuthority:'NONE_SELF_VERIFIED_BYTE_PARITY_ONLY',
+    releaseAuthorized:false,physicalAndroidQualified:false
+  };
+  // The build-machine duration must not affect the asset identity or manifest contract.
+  delete manifest.sourceBuildMilliseconds;
+  fs.mkdirSync(path.dirname(path.join(ROOT,ASSET)),{recursive:true});
+  fs.writeFileSync(path.join(ROOT,ASSET),packed);
+  fs.writeFileSync(path.join(ROOT,MANIFEST),format(manifest));
+  console.log(format({schema:'H_EARTH_GEN2666_PRECOMPUTE_BUILD_RECEIPT_v1',result:'BUILT_NOT_ADMITTED_FOR_RELEASE',sourceBuildMilliseconds:Math.round(sourceBuildMs),binary:manifest.binary,identity:manifest.packageIdentity}));
+}
+async function verify({withSource=false}={}) {
+  requireSourceIdentity();
+  const manifest=JSON.parse(read(MANIFEST).toString('utf8'));
+  assert.equal(manifest.schema,'H_EARTH_GEN2666_PRECOMPUTED_BASE_WORLD_MANIFEST_v1');
+  assert.deepEqual(manifest.sourceBlobs,SOURCE_BLOBS);
+  assert.equal(manifest.binary.path,ASSET);
+  const packed=read(ASSET);
+  assert.equal(packed.length,manifest.binary.bytes);
+  assert.equal(sha256(packed),manifest.binary.sha256);
+  const start=performance.now();
+  const unpacked=gunzipSync(packed);
+  assert.equal(unpacked.length,manifest.binary.uncompressedBytes);
+  const value=JSON.parse(unpacked.toString('utf8'));
+  const hydrationMs=performance.now()-start;
+  freezePackageRecords(value);
+  const {mod,raw:rawModule}=await modules();
+  assert.equal(rawModule.evaluateHEarthRun8ER2ImmutableLiveRenderPackage(value.raw).eligible,true);
+  assert.equal(rawModule.evaluateHEarthRun8ER2ImmutableLiveRenderPackage(value.canonical).eligible,true);
+  let actualSourceRecords=null;
+  if(withSource){const canonical=mod.getHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true});const raw=rawModule.getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true});actualSourceRecords=record({raw,canonical});}
+  examine(value,manifest,{actualSourceRecords});
+  console.log(format({schema:'H_EARTH_GEN2666_PRECOMPUTE_PARITY_RECEIPT_v1',result:'PASS',exactSourceBound:true,fullRawAndCanonicalRecords:true,nineCanonicalAndRawBuffers:true,originalPackageIdentity:manifest.packageIdentity,transportSha256:manifest.binary.sha256,transportBytes:packed.length,hydrationMilliseconds:Math.round(hydrationMs),freshSourceCompared:withSource,environmentalIdentityPreserved:true,physicalAndroidQualified:false,releaseAuthorized:false}));
+}
+async function main(){const args=process.argv.slice(2);assert.equal(args.length,1,'Exactly one mode required');if(args[0]==='--build')await build();else if(args[0]==='--verify')await verify();else if(args[0]==='--verify-source')await verify({withSource:true});else fatal('GEN2666_UNKNOWN_MODE',args[0]);}
+main().catch(error=>{console.error(JSON.stringify({schema:'H_EARTH_GEN2666_PRECOMPUTE_PARITY_RECEIPT_v1',result:'FAIL_CLOSED',error:error.stack??String(error)}));process.exitCode=1;});

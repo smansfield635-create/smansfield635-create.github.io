@@ -16,9 +16,9 @@ const SOURCE_BLOBS = Object.freeze({
   [`${RENDER}live-render-package.run8e-r2.canonical.js`]: '41092afa665f715027f54bc6c52898b839911235',
   [`${RENDER}live-render-package.run8e-r2.js`]: 'd362035f091a7fd997553239c048e87e8b46e4c7',
   [`${RENDER}run8e-successor-environment.js`]: '92d5cb9523619fed34382986232c3d8c261e2a8d',
-  [`${RENDER}persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js`]: 'a324215fab199685c8d5cbd05220f6b2bae67942',
+  [`${RENDER}persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js`]: 'cca84c6702f571f3e38ff8348b6d5bffe5a5d11b',
   [`${RENDER}geometry-landscape-sector.p2.js`]: 'c26247dcb69cb52c968fcd3ef6c2626eaa577d03',
-  [`${RENDER}landscape-groundcover.global-v1.js`]: '4a1d10c2b7b98b016872d4fc50f31f62b3295d12',
+  [`${RENDER}landscape-groundcover.global-v1.js`]: '9665a468a676bb9649bbd86b1acec9a904a18183',
   [`${RENDER}woodland-clearing-trial.js`]: '14c366d2241469fbccd08ee31bbeac0f1b7598f4',
   [`${RENDER}geometry-woodland-tree-trial.js`]: '3958513dec53aa27f4216388a190f772e71fb9b0'
 });

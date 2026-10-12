@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-12T11:35:38Z",
+  "generatedAt": "2026-10-12T13:05:22Z",
   "window": {
-    "start": "2026-07-14T11:35:38Z",
-    "end": "2026-10-12T11:35:38Z"
+    "start": "2026-07-14T13:05:22Z",
+    "end": "2026-10-12T13:05:22Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5292,
-    "visits": 1382,
+    "pageLoads": 4982,
+    "visits": 1322,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5292,
-        "visits": 1382
+        "pageLoads": 4982,
+        "visits": 1322
       }
     },
     "byPath": {
       "/showroom/globe/h-earth/": {
-        "pageLoads": 262,
+        "pageLoads": 172,
         "visits": 2
       },
       "/showroom/": {
@@ -91,11 +91,11 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 310,
+        "pageLoads": 230,
         "visits": 20
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 490,
+        "pageLoads": 500,
         "visits": 0
       },
       "/gauges/h-earth/": {
@@ -290,13 +290,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 100,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 120,
-        "visits": 110
+        "pageLoads": 40,
+        "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -327,8 +327,8 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 140,
-        "visits": 110
+        "pageLoads": 150,
+        "visits": 120
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -338,6 +338,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/prototypes/abc-roofing/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/about-this-underdog/": {
         "pageLoads": 10,
         "visits": 0
@@ -345,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3910,
+        "pageLoads": 3660,
         "visits": 0
       },
       "www.google.com": {
@@ -353,8 +357,8 @@
         "visits": 780
       },
       "(none)": {
-        "pageLoads": 592,
-        "visits": 592
+        "pageLoads": 532,
+        "visits": 532
       },
       "raw.githack.com": {
         "pageLoads": 10,

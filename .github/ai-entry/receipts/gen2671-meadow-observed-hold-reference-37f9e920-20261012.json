@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "gen2671-meadow-observed-hold-reference-37f9e920-20261012",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6192,
+  "requestBranch": "ai-dispatch-request-gen2671-meadow-observed-hold-reference-20261012",
+  "requestCommit": "c7f28200991b57c3bce225a6c132427743a5c572",
+  "requestCommitParent": "aa3bcf9827842a15bfab0e640bd0ad2d08393daf",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "aa3bcf9827842a15bfab0e640bd0ad2d08393daf",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "37f9e9206a9a199b4ea11c4b06c6727704652114"
+  },
+  "bridgeRunId": "38318579744",
+  "dispatchedRunId": 38318596505,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38318596505",
+  "dispatchedRunHeadSha": "aa3bcf9827842a15bfab0e640bd0ad2d08393daf",
+  "dispatchedAt": "2026-10-12T22:46:55.525Z",
+  "resolvedAt": "2026-10-12T22:46:59.527Z"
+}

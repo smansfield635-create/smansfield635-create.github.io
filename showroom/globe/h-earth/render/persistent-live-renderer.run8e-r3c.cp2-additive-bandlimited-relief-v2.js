@@ -1,5 +1,5 @@
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js?cb=gen2659-camera-first-20261011';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -304,13 +304,33 @@ void main(){
   int instance=uInstanceStart+gl_InstanceID*uInstanceStride;
   vec4 aTransform=recordPart(instance,3),aParameters=recordPart(instance,4);
   float c=cos(aTransform.z),s=sin(aTransform.z);
-  vec2 q=aPosition.xz*aTransform.w;
+  // Tags 0 and 1 remain the exact published broad-blade presentation.
+  // Pilot tags 2/3/4 flatten/spread above the individually grounded roots.
+  float lowStratum=step(1.5,aParameters.w)*(1.0-step(2.5,aParameters.w));
+  float midStratum=step(2.5,aParameters.w)*(1.0-step(3.5,aParameters.w));
+  float duneStratum=step(3.5,aParameters.w);
+  float ecoStratum=max(lowStratum,max(midStratum,duneStratum));
+  float emergence=clamp(aPosition.y,0.0,1.0);
+  vec2 rootXZ=aRootInfo.yz;
+  vec2 bladeOffset=aPosition.xz-rootXZ;
+  vec2 outward=bladeOffset*(1.0+.65*lowStratum+.24*midStratum+.08*duneStratum);
+  vec2 lean=vec2(-bladeOffset.y,bladeOffset.x)*emergence*(.18*lowStratum+.12*midStratum+.22*duneStratum);
+  vec2 ecoXZ=rootXZ+outward+lean;
+  vec2 localXZ=mix(aPosition.xz,ecoXZ,ecoStratum);
+  vec2 q=localXZ*aTransform.w;
   vec2 xz=aTransform.xy+vec2(q.x*c-q.y*s,q.x*s+q.y*c);
   vWorldPosition=vec3(xz.x,rootY(instance,int(aRootInfo.x))+aPosition.y*aParameters.x,xz.y);
-  vec3 n=vec3(aNormal.x/aTransform.w,aNormal.y/aParameters.x,aNormal.z/aTransform.w);
+  float widthScale=1.0+.65*lowStratum+.24*midStratum+.08*duneStratum;
+  vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/aParameters.x,aNormal.z/(aTransform.w*widthScale));
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
   vec3 palette=aParameters.y<0.333333?vec3(0.18,0.115,0.045):aParameters.y<0.666667?vec3(0.31,0.245,0.065):vec3(0.095,0.145,0.04);
-  vBaseColor=vec4(mix(aColor.rgb,palette,0.55)*(0.92+0.16*aParameters.z),1.0);
+  vec3 lowPalette=mix(vec3(.177,.146,.068),vec3(.075,.152,.064),smoothstep(.20,.86,aParameters.y));
+  vec3 midPalette=mix(vec3(.25,.196,.078),vec3(.103,.19,.063),smoothstep(.25,.84,aParameters.y));
+  vec3 dunePalette=vec3(.215,.172,.078);
+  vec3 ecologicalPalette=lowPalette*lowStratum+midPalette*midStratum+dunePalette*duneStratum;
+  vec3 publishedColor=mix(aColor.rgb,palette,0.55);
+  vec3 ecoColor=mix(aColor.rgb,ecologicalPalette,.84);
+  vBaseColor=vec4(mix(publishedColor,ecoColor,ecoStratum)*(0.92+0.16*aParameters.z),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-12T03:52:53Z",
+  "generatedAt": "2026-10-12T04:48:34Z",
   "window30d": {
-    "start": "2026-09-12T03:52:53Z",
-    "end": "2026-10-12T03:52:53Z"
+    "start": "2026-09-12T04:48:34Z",
+    "end": "2026-10-12T04:48:34Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 178
+      "pageLoads": 182
     },
     {
       "date": "2026-10-06",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 8
+      "pageLoads": 9
     }
   ],
   "summary": {
-    "pageLoads": 5155,
-    "botPageLoads": 1974,
-    "nonBotPageLoads": 3181
+    "pageLoads": 5150,
+    "botPageLoads": 1964,
+    "nonBotPageLoads": 3186
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2940,
-      "visits": 2940
+      "pageLoads": 2919,
+      "visits": 2919
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1909,
+      "pageLoads": 1925,
       "visits": 0
     },
     {
@@ -177,8 +177,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 1137,
-      "visits": 850
+      "pageLoads": 1129,
+      "visits": 839
     },
     {
       "path": "/mirror-manor-preview/",
@@ -187,8 +187,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 443,
-      "visits": 323
+      "pageLoads": 444,
+      "visits": 324
     },
     {
       "path": "/showroom/globe/h-earth/awards/",

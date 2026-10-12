@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-12T03:52:53Z",
+  "generatedAt": "2026-10-12T04:48:34Z",
   "window": {
-    "start": "2026-07-14T03:52:53Z",
-    "end": "2026-10-12T03:52:53Z"
+    "start": "2026-07-14T04:48:34Z",
+    "end": "2026-10-12T04:48:34Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -246,6 +246,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -260,10 +264,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass/holographic-orientation-v1/full/": {

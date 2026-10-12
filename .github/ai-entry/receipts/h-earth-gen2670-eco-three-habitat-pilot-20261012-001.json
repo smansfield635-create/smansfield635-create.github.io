@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2670-eco-three-habitat-pilot-20261012-001",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6179,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2670-eco-20261012-001",
+  "requestCommit": "74e5acd7e9a962d43952918a98d50f0aed390e5d",
+  "requestCommitParent": "91b328d58520a40452e68349594fa1fcaf47acdb",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "91b328d58520a40452e68349594fa1fcaf47acdb",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "a5807ebc1b158e52784e9fc9cee1e18c511dc88b"
+  },
+  "bridgeRunId": "38295817648",
+  "dispatchedRunId": 38295846539,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38295846539",
+  "dispatchedRunHeadSha": "91b328d58520a40452e68349594fa1fcaf47acdb",
+  "dispatchedAt": "2026-10-12T19:10:14.656Z",
+  "resolvedAt": "2026-10-12T19:10:19.014Z"
+}

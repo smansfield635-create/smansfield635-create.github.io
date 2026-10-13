@@ -4943,50 +4943,6 @@
       "scopeHash": "51d43e76f9fcaff01fdb601a1edcb375e79f0a5ec03d5332295296336fbbe7a0",
       "state": "ADMITTED_LOCKED"
     },
-    "53a4f716f1e2a043de61c7b2db3541dab335e9aad0cb61421b539d92704bb529": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "1e100a041725f545b802ea9221ce20fe5c92d74a",
-          "lockGeneration": 2671,
-          "lockScope": "H_EARTH:VISIBLE_ECOLOGICAL_STRATA:THREE_HABITAT_COMPOSITION:20261012:V1",
-          "operationId": "H_EARTH_VISIBLE_ECOLOGICAL_THREE_STRATUM_COMPOSITION_20261012_001",
-          "procedureLocatorDigest": "8de86bba433b4645ff2212741f77f524482b8cbc719b46a046d2f625fdd14662",
-          "requestDigest": "41bc7c9ba9d775c1d8304bbbcbbeea7bd3e8422583a234960ff37e57ffdd4208",
-          "scopeHash": "53a4f716f1e2a043de61c7b2db3541dab335e9aad0cb61421b539d92704bb529"
-        },
-        "bindingDigest": "7127fbf77ee019e8dcec84df8dca9dd9c47fe345abc0e1f06635aa56a33c8d17",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "8c60ee38baaa48e7d6385361e0706331a8998351ba2996dc7b3a62f6ee0a16b3",
-          "commentId": 6132340196,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6100,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 38306515781,
-          "workflowSha": "4215b0e4cff25e1d3647e488fa7f1a7fe66ea3fe"
-        },
-        "lineageAnchorCommitSha": "8e5617fdc09995da97b45c344d83345257a01ca5",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "1e100a041725f545b802ea9221ce20fe5c92d74a",
-      "lockGeneration": 2671,
-      "lockScope": "H_EARTH:VISIBLE_ECOLOGICAL_STRATA:THREE_HABITAT_COMPOSITION:20261012:V1",
-      "operationId": "H_EARTH_VISIBLE_ECOLOGICAL_THREE_STRATUM_COMPOSITION_20261012_001",
-      "procedureLocatorDigest": "8de86bba433b4645ff2212741f77f524482b8cbc719b46a046d2f625fdd14662",
-      "released": false,
-      "requestDigest": "41bc7c9ba9d775c1d8304bbbcbbeea7bd3e8422583a234960ff37e57ffdd4208",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "53a4f716f1e2a043de61c7b2db3541dab335e9aad0cb61421b539d92704bb529",
-      "state": "ADMITTED_LOCKED"
-    },
     "53d1142305ccef65f5b62268c2e24c51f77f69c6708a714ac6899a29ebd2f403": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -76098,6 +76054,51 @@
       "scopeHash": "cf32540f80115e6228f39cd5cdad030073cf4f9c6b23c260c07982bc92c3f604",
       "state": "TERMINAL",
       "terminalDisposition": "REJECTED_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1e100a041725f545b802ea9221ce20fe5c92d74a",
+          "lockGeneration": 2671,
+          "lockScope": "H_EARTH:VISIBLE_ECOLOGICAL_STRATA:THREE_HABITAT_COMPOSITION:20261012:V1",
+          "operationId": "H_EARTH_VISIBLE_ECOLOGICAL_THREE_STRATUM_COMPOSITION_20261012_001",
+          "procedureLocatorDigest": "8de86bba433b4645ff2212741f77f524482b8cbc719b46a046d2f625fdd14662",
+          "requestDigest": "41bc7c9ba9d775c1d8304bbbcbbeea7bd3e8422583a234960ff37e57ffdd4208",
+          "scopeHash": "53a4f716f1e2a043de61c7b2db3541dab335e9aad0cb61421b539d92704bb529"
+        },
+        "bindingDigest": "7127fbf77ee019e8dcec84df8dca9dd9c47fe345abc0e1f06635aa56a33c8d17",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "8c60ee38baaa48e7d6385361e0706331a8998351ba2996dc7b3a62f6ee0a16b3",
+          "commentId": 6132340196,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6100,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38306515781,
+          "workflowSha": "4215b0e4cff25e1d3647e488fa7f1a7fe66ea3fe"
+        },
+        "lineageAnchorCommitSha": "8e5617fdc09995da97b45c344d83345257a01ca5",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1e100a041725f545b802ea9221ce20fe5c92d74a",
+      "lockGeneration": 2671,
+      "lockScope": "H_EARTH:VISIBLE_ECOLOGICAL_STRATA:THREE_HABITAT_COMPOSITION:20261012:V1",
+      "operationId": "H_EARTH_VISIBLE_ECOLOGICAL_THREE_STRATUM_COMPOSITION_20261012_001",
+      "procedureLocatorDigest": "8de86bba433b4645ff2212741f77f524482b8cbc719b46a046d2f625fdd14662",
+      "released": true,
+      "requestDigest": "41bc7c9ba9d775c1d8304bbbcbbeea7bd3e8422583a234960ff37e57ffdd4208",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "53a4f716f1e2a043de61c7b2db3541dab335e9aad0cb61421b539d92704bb529",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

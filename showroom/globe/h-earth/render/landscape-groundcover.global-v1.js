@@ -336,17 +336,25 @@ export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null}={
  for(const c of clumps){const offset=pixels[c.instance]+c.slot*12;pixels.set([...c.roots.flatMap(r=>[r.x,r.y,r.z]),c.angle,c.halfWidth,c.height],offset);}
  if(clumps.length!==eligible.length*12)throw Error('MEADOW_PRESENTATION_INCOMPLETE_ROOT_LAYOUT');
  const template=cover.template;
- return {pixels,clumps,template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,cameraIndependent:true,eligibleInstances:eligible.length,clumpCount:clumps.length,contactCount:clumps.length*3,sidecarBytes:pixels.byteLength,templateVertices:28,templateTriangles:24,meadowTemplateVertices:1728,meadowTemplateTriangles:1152,leavesPerClump:24,atlasBytes:0,pilotRadius:18}};
+ return {pixels,clumps,template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,cameraIndependent:true,eligibleInstances:eligible.length,clumpCount:clumps.length,contactCount:clumps.length*3,sidecarBytes:pixels.byteLength,templateVertices:28,templateTriangles:24,meadowTemplateVertices:12096,meadowTemplateTriangles:6336,leavesPerClump:24,lowLeavesPerContactNear:72,lowLeavesPerContactMid:40,globalFineVertices:48,globalFineTriangles:24,atlasBytes:0,pilotRadius:18}};
 }
 
-/** Stable partition only; original selected IDs and within-class order survive. */
-export function partitionHEarthMeadowSelectedInstances(cover,selected){
- const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),original=[],meadow=[];
+/** Fixed near-density class depends only on immutable presentation contacts. */
+const meadowNearCache=new WeakMap();
+export function getHEarthMeadowNearInstances(presentation){
+ if(!presentation)return new Set();
+ if(!meadowNearCache.has(presentation))meadowNearCache.set(presentation,new Set(presentation.clumps.filter(c=>c.roots.some(r=>Math.hypot(r.x+45,r.z+326)<6)).map(c=>c.instance)));
+ return meadowNearCache.get(presentation);
+}
+/** Stable submission partition; roots, original selection and class order survive. */
+export function partitionHEarthMeadowSelectedInstances(cover,selected,presentation=null){
+ const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),nearIds=getHEarthMeadowNearInstances(presentation),original=[],near=[],mid=[];
  for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
   const id=draw.start+i*draw.stride,o=id*20;
-  (Math.hypot(cover.records[o+12]+45,cover.records[o+13]+326)<=18&&!boundary.has(id)?meadow:original).push(id);
+  (Math.hypot(cover.records[o+12]+45,cover.records[o+13]+326)<=18&&!boundary.has(id)?nearIds.has(id)?near:mid:original).push(id);
  }
- const ids=Float32Array.from([...original,...meadow]);
- return{ids,originalCount:original.length,meadowCount:meadow.length,drawCount:Number(original.length>0)+Number(meadow.length>0),vertices:original.length*28+meadow.length*1728,triangles:original.length*24+meadow.length*1152};
+ const ids=Float32Array.from([...original,...near,...mid]),meadowCount=near.length+mid.length;
+ const meadowLeaves=near.length*12*(24+3*72)+mid.length*12*(24+3*40);
+ return{ids,originalCount:original.length,meadowCount,nearCount:near.length,midCount:mid.length,meadowLeaves,drawCount:Number(original.length>0)+Number(near.length>0)+Number(mid.length>0),vertices:original.length*48+meadowCount*12*24*6+(meadowLeaves-meadowCount*12*24)*4,triangles:original.length*24+meadowCount*12*24*4+(meadowLeaves-meadowCount*12*24)*2};
 }
 export function sameHEarthMeadowSelectedIds(previous,current){return !!previous&&previous.length===current.length&&current.every((id,i)=>previous[i]===id);}

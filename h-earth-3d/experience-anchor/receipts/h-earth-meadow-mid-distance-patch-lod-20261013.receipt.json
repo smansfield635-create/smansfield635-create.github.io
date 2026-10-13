@@ -1,325 +1,91 @@
 {
-  "schema": "H_EARTH_MEADOW_PRESENTATION_ROOT_EXPERIMENT_RECEIPT_v1",
-  "operationId": "H_EARTH_MEADOW_PRESENTATION_ROOT_GAP_COVERAGE_20261013_001",
-  "authorityGeneration": 2682,
-  "admissionCommit": "0d1b092e6fe55a999153d04be3206c5858feb7c9",
-  "predecessorCandidate": "594fc2d8162e198d11f52c6967fe984734022109",
-  "result": "CHEAP_VISUAL_GATE_REJECTED_AFTER_GEOMETRY_REPAIR",
-  "pilot": {
-    "x": -45,
-    "z": -326,
-    "radiusMeters": 18
+  "schema": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_RECEIPT_v1",
+  "operationId": "H_EARTH_GLOBAL_FINE_GRASS_AND_DENSER_MEADOW_20261013_001",
+  "authorityGeneration": 2684,
+  "admissionCommit": "d4dac13c9a8f1d5689fced9df3b5a91bb6800487",
+  "admissionLedgerBlob": "86f454c83220845ea79e82e0fd0ea92aecd4ac49",
+  "governingHead": "708e1ba556e316e88790a2aefdf176d0d33fd8b2",
+  "predecessorCandidate": "5ed1095c29d4db512c39f9375d02d379159f5e61",
+  "result": "PENDING_CHEAP_PREVIEW",
+  "scope": {
+    "globalLegacyFans": "REPLACED_AT_ORIGINAL_TWELVE_CONTACTS",
+    "meadowDensityAdditionRadiusMeters": 18,
+    "centerX": -45,
+    "centerZ": -326,
+    "newRootContacts": 0,
+    "soilShaderChanged": false,
+    "worldRecordsChanged": false
   },
   "sourceBlobs": {
-    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "a7b5cb0ebbe17a72de7cd5a305d5ae393f617d73",
-    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "df77d71382d0916081f89fda2c06ae40d31aa276"
+    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "e0393ebacfa98fc465f7b15fc13e6b2c8a92c4ec",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "15827d0d9453d25633205b51eb9b60cd1df88c03",
+    "h-earth-3d/validation/h-earth.meadow-mid-distance-patch-lod.v1.mjs": "039f32eac7106318f000ab75a8899d588dc86125"
   },
   "structuralVerification": {
-    "schema": "H_EARTH_GEOMETRY_REPAIR_INDEPENDENT_SUBMISSION_v1",
-    "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
-    "sourceHashes": {
-      "generator": "94c21afc9777a13c93f13d18593378aa4e9d0be6129eca35e30873590620b7ef",
-      "renderer": "abdec62a8a8b8df1af254df386ffcfe515d1a1e9b20beaa8da477a0b2e611281"
-    },
-    "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
-    "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "result": "LOCAL_CACHE_AND_TOPOLOGY_TEST_PASS",
+    "originalRecordsSha256": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
     "clumps": 1464,
     "contacts": 4392,
     "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-    "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-    "originalRecordIdsPreserved": true,
-    "withinClassOrderPreserved": true,
+    "selectedIdsAndWithinClassOrderPreserved": true,
     "logicalInstances": 3978,
-    "originalInstances": 3856,
-    "meadowInstances": 122,
-    "draws": 2,
-    "selectedVertices": 318784,
-    "selectedTriangles": 233088,
-    "baselineVertices": 334152,
-    "baselineTriangles": 286416,
-    "originalFanVertices": 111384,
-    "originalFanTriangles": 95472,
-    "gpu": {
-      "templateBytes": 1856,
-      "paddedRecordsBytes": 4947968,
-      "paddedSidecarBytes": 327680,
-      "leafIndexBytes": 13824,
-      "selectionTextureBytes": 16384,
-      "atlasBytes": 0,
-      "totalBytes": 5307712
-    },
+    "globalFineInstances": 3856,
+    "meadowNearDensityInstances": 41,
+    "meadowMidDensityInstances": 81,
+    "draws": 3,
+    "selectedVertices": 1287552,
+    "selectedTriangles": 678912,
+    "approvedMeadowLeavesPerClump": 24,
+    "lowLeavesPerContactNear": 72,
+    "lowLeavesPerContactMid": 40,
+    "visibleMeadowLeaves": 258048,
+    "visibleGlobalFineLeaves": 46272,
+    "globalVerticesPerLeaf": 4,
+    "globalTrianglesPerLeaf": 2,
+    "lowVerticesPerLeaf": 4,
+    "lowTrianglesPerLeaf": 2,
+    "approvedVerticesPerLeaf": 6,
+    "approvedTrianglesPerLeaf": 4,
+    "gpuBytes": 5418592,
     "selectionUploadBytesOnChange": 16384,
-    "selectionUploadBytesWhenUnchanged": 0,
-    "browserQualification": "NOT_EXECUTED",
-    "visualDisposition": "PENDING"
+    "stationarySelectionUploadBytes": 0,
+    "sharedSoilFragmentShaderSha256": "5468a720408019c3bb1c9ec747abb74c3436c02fd3d695e9865e4731b2b2c469"
   },
-  "projectedCoverage": {
-    "baseline": {
-      "pilot": {
-        "fixedGroundPixels": 724879,
-        "occupiedPixels": 292295,
-        "occupiedFraction": 0.4032328154078129,
-        "largestEmptyCircleRadiusPixels": 88.2779700718135,
-        "largestConnectedEmptyPixels": 342000
-      },
-      "near0to6m": {
-        "fixedGroundPixels": 385757,
-        "occupiedPixels": 79102,
-        "occupiedFraction": 0.20505655114489174,
-        "largestEmptyCircleRadiusPixels": 83.38465086573187,
-        "largestConnectedEmptyPixels": 299982
-      },
-      "middle6to18m": {
-        "fixedGroundPixels": 339122,
-        "occupiedPixels": 213193,
-        "occupiedFraction": 0.6286616615849163,
-        "largestEmptyCircleRadiusPixels": 38.0,
-        "largestConnectedEmptyPixels": 31953
-      }
-    },
-    "repaired": {
-      "pilot": {
-        "fixedGroundPixels": 724879,
-        "occupiedPixels": 98841,
-        "occupiedFraction": 0.13635517100095326,
-        "largestEmptyCircleRadiusPixels": 93.98404119849285,
-        "largestConnectedEmptyPixels": 578446
-      },
-      "near0to6m": {
-        "fixedGroundPixels": 385757,
-        "occupiedPixels": 29334,
-        "occupiedFraction": 0.07604269008728293,
-        "largestEmptyCircleRadiusPixels": 93.98404119849285,
-        "largestConnectedEmptyPixels": 333787
-      },
-      "middle6to18m": {
-        "fixedGroundPixels": 339122,
-        "occupiedPixels": 69507,
-        "occupiedFraction": 0.20496163622531124,
-        "largestEmptyCircleRadiusPixels": 34.40930106817051,
-        "largestConnectedEmptyPixels": 158373
-      }
-    },
-    "schema": "H_EARTH_GEN2682_GEOMETRY_REPAIR_FIXED_ROI_CPU_PREVISUAL_v1",
-    "camera": [
-      -45.0,
-      8.088257606279512,
-      -326.0
-    ],
-    "yaw": 0,
-    "pitch": -8,
-    "verticalFov": 56,
-    "canvas": [
-      804,
-      1810
-    ],
-    "roiDefinition": "Base-terrain ray intersection within pilot radius18; near distance<6, middle6to18. Same fixed screen region all modes. All grass visible over region counts; categories do not depend on source root origin.",
-    "gapDefinition": "Euclidean distance transform of unoccupied pixels within fixed ROI; largest circle cannot extend outside ROI. Largest connected gap also reported.",
-    "geometry": {
-      "schema": "H_EARTH_MEADOW_PRESENTATION_ROOTS_v1",
-      "sourcePopulationChanged": false,
-      "cameraIndependent": true,
-      "eligibleInstances": 122,
-      "clumpCount": 1464,
-      "contactCount": 4392,
-      "sidecarBytes": 317308,
-      "templateVertices": 28,
-      "templateTriangles": 24,
-      "meadowTemplateVertices": 1728,
-      "meadowTemplateTriangles": 1152,
-      "leavesPerClump": 24,
-      "atlasBytes": 0,
-      "pilotRadius": 18
-    },
-    "sourceHashes": {
-      "generator": "94c21afc9777a13c93f13d18593378aa4e9d0be6129eca35e30873590620b7ef",
-      "renderer": "abdec62a8a8b8df1af254df386ffcfe515d1a1e9b20beaa8da477a0b2e611281"
-    },
-    "limitations": [
-      "CPU shader mirror, no executed GLSL",
-      "Simplified light; no trees/canonical vegetation occlusion/atmosphere",
-      "Base terrain only; no streamed refinement",
-      "Near-plane triangles clipped; grass limited42m",
-      "Diagnostic occupancy is not owner perceptual acceptance"
-    ],
-    "nearPlaneCrossingTrianglesSkipped": 0,
-    "behindCameraTrianglesSkipped": 90784,
-    "nearPlaneCrossingTrianglesClipped": 669,
-    "independentDisposition": "FLAT_CARD_ARTIFACT_REMOVED_COHESIVE_COVERAGE_REGRESSED",
-    "expensiveQualificationRecommended": false,
-    "visualAssessment": "Curved geometric blades remove rectangular fences and improve local morphology, but leave broad visible bare ground; this does not establish the requested cohesive carpet.",
-    "baselineParity": "EXACT_FIXED_ROI_AND_OCCUPANCY_REPRODUCTION_OF_SAVED_594FC2D_EVIDENCE",
-    "geometryProof": {
-      "leafRootAttachments": 35136,
-      "unchangedDistinctContacts": 4392,
-      "maximumUnclippedLeafVertexRadius": 17.699604248249848,
-      "maximumNormalTangentDotAbsolute": 9.074586690378118e-17,
-      "clumpLayoutUnchanged": true
-    },
-    "submission": {
-      "schema": "H_EARTH_GEOMETRY_REPAIR_INDEPENDENT_SUBMISSION_v1",
-      "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
-      "sourceHashes": {
-        "generator": "94c21afc9777a13c93f13d18593378aa4e9d0be6129eca35e30873590620b7ef",
-        "renderer": "abdec62a8a8b8df1af254df386ffcfe515d1a1e9b20beaa8da477a0b2e611281"
-      },
-      "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
-      "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
-      "clumps": 1464,
-      "contacts": 4392,
-      "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-      "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-      "originalRecordIdsPreserved": true,
-      "withinClassOrderPreserved": true,
-      "logicalInstances": 3978,
-      "originalInstances": 3856,
-      "meadowInstances": 122,
-      "draws": 2,
-      "selectedVertices": 318784,
-      "selectedTriangles": 233088,
-      "baselineVertices": 334152,
-      "baselineTriangles": 286416,
-      "originalFanVertices": 111384,
-      "originalFanTriangles": 95472,
-      "gpu": {
-        "templateBytes": 1856,
-        "paddedRecordsBytes": 4947968,
-        "paddedSidecarBytes": 327680,
-        "leafIndexBytes": 13824,
-        "selectionTextureBytes": 16384,
-        "atlasBytes": 0,
-        "totalBytes": 5307712
-      },
-      "selectionUploadBytesOnChange": 16384,
-      "selectionUploadBytesWhenUnchanged": 0,
-      "browserQualification": "NOT_EXECUTED",
-      "visualDisposition": "PENDING"
-    },
-    "artifactSha256": {
-      "previsual-input.json": "08140e6eb9fb7a94c675d82dc979a8903b0f74f89fb47f04120845706220c9e2",
-      "fixed-ground-roi-baseline.npz": "cebd65040e41a39975d66e6f34ec959040f1afea1811c16109c40c9da49a1af1",
-      "repair-clumps.json": "f9094ff0103c6234094a2f197663ba2a3cf7f30398b5fa165f15aacd60f4a101",
-      "baseline-fixed-ground-roi.npz": "cebd65040e41a39975d66e6f34ec959040f1afea1811c16109c40c9da49a1af1",
-      "baseline-gen2682-previsual.py": "19075f6b7d48ecb4d8baf95e656eb881fb3c5bcab6c78024c1afc58a4b4bffce",
-      "baseline-clumps.json": "9c049f59669e030f79a5b466965b06e0a552a97fd1604f30b26e3334564ba3e4",
-      "extract-repair.mjs": "61cdc21e88a6902852c2fda1f04dcb7ff2dead59577577447ee8f7aca42f573f",
-      "baseline-gen2682-clumps.json": "9c049f59669e030f79a5b466965b06e0a552a97fd1604f30b26e3334564ba3e4",
-      "baseline-gen2682-previsual-receipt.json": "963d2f153b90fcdff7ff12e94cedb5effff29ed0736821f914b396b7d204ef96",
-      "geometry-repair-previsual-repaired.png": "cca97d86f8053a42d73eb715d45aa7d362e6554bb4290cf13a7b178f25be4d15",
-      "geometry-repair-previsual.py": "6efc120478e4d22e367ef2a7735ea664da385e6f12c956f124c8a46bcdf88d3b",
-      "geometry-repair-mask-baseline.png": "bcdcbeea58788bbd32faa38c72d86e4a3d49fdaa76cb031b58944f17e9d0743e",
-      "geometry-repair-mask-repaired.png": "352e2510616f482ec632820d5bd92bc382001f6b0fbc5d8012da7a2f55c671b0",
-      "geometry-repair-previsual-baseline.png": "981257b57ceb3e2262bd3f4dd89da44c377dd18aba81b512f21fafd2e001e33a",
-      "independent-submission-receipt.json": "40754eb28fb8730ffeff0ff0e1ce0d991ea91acec9d2fce030458c3745fe1d5d",
-      "geometry-repair-previsual-comparison.png": "e7fc43a540b36244a7513b65b343baa58f7ad89666fa2ceb81f5a0bf72c78a01",
-      "baseline-previsual-input.json": "08140e6eb9fb7a94c675d82dc979a8903b0f74f89fb47f04120845706220c9e2"
-    },
-    "admittedPredecessor84561": {
-      "identity": "84561 predecessor before Gen2682 operation",
-      "metrics": {
-        "pilot": {
-          "fixedGroundPixels": 724879,
-          "occupiedPixels": 37107,
-          "occupiedFraction": 0.05119061250222451,
-          "largestEmptyCircleRadiusPixels": 294.1054232753963,
-          "largestConnectedEmptyPixels": 683360
-        },
-        "near0to6m": {
-          "fixedGroundPixels": 385757,
-          "occupiedPixels": 6891,
-          "occupiedFraction": 0.017863577329769776,
-          "largestEmptyCircleRadiusPixels": 244.0,
-          "largestConnectedEmptyPixels": 378469
-        },
-        "middle6to18m": {
-          "fixedGroundPixels": 339122,
-          "occupiedPixels": 30216,
-          "occupiedFraction": 0.08910067763223854,
-          "largestEmptyCircleRadiusPixels": 159.00314462299164,
-          "largestConnectedEmptyPixels": 304382
-        }
-      },
-      "evidencePath": "gen2682-evidence/extracted/previsual/gen2682-previsual-receipt.json",
-      "evidenceSha256": "963d2f153b90fcdff7ff12e94cedb5effff29ed0736821f914b396b7d204ef96",
-      "comparisonMethod": "Previously saved exact same fixed-ROI diagnostic; no additional projection"
-    },
-    "comparisonRatios": {
-      "pilot": {
-        "versusFailed594fcFenceBaseline": 0.33815494620161135,
-        "versusAdmitted84561Predecessor": 2.663675317325572
-      },
-      "near0to6m": {
-        "versusFailed594fcFenceBaseline": 0.37083765265100754,
-        "versusAdmitted84561Predecessor": 4.256856769699609
-      },
-      "middle6to18m": {
-        "versusFailed594fcFenceBaseline": 0.3260285281411679,
-        "versusAdmitted84561Predecessor": 2.300337569499603
-      }
-    },
-    "specificRejection": "The repair removes the near-field flat fence/card artifact and materially exceeds the pre-operation predecessor coverage, but the inspected matched-camera software preview still shows broad, visually dominant bare ground between thin rooted tufts. Near occupancy is 7.60% and middle occupancy 20.50%; the largest near empty-circle radius is 93.98 pixels and the largest connected near empty region is 333787 pixels. Thus the cohesive meadow/carpet visual gate remains unmet; no full qualification run is recommended.",
-    "fullQualificationRunPermittedByVisualGate": false,
-    "additionalTuningOrProjectionPerformed": false
-  },
-  "worldAssetVerification": {
-    "schema": "H_EARTH_GEN2666_PRECOMPUTE_PARITY_RECEIPT_v1",
+  "immutableAssetVerification": {
     "result": "PASS",
-    "exactSourceBound": true,
-    "fullRawAndCanonicalRecords": true,
-    "nineCanonicalAndRawBuffers": true,
-    "originalPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2",
-    "transportSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
-    "transportBytes": 11736235,
-    "hydrationMilliseconds": 507,
+    "mode": "--verify",
     "freshSourceCompared": false,
-    "environmentalIdentityPreserved": true,
-    "physicalAndroidQualified": false,
-    "releaseAuthorized": false
+    "transportBytes": 11736235,
+    "transportSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a"
   },
+  "freshSourceVerification": {
+    "result": "FAIL_CLOSED",
+    "mode": "--verify-source",
+    "error": "GEN2666_BUFFER_VALUE_MISMATCH:raw.baseColorsLinear[95988]",
+    "sourceBuildRepeated": false,
+    "worldFilesWritten": false,
+    "note": "Invoked before recognizing this mode reconstructs source; no further source build is authorized in this bounded checkpoint.",
+    "command": "node h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs --verify-source",
+    "workingDirectory": "global-grass-repair",
+    "nodeVersion": "v24.19.0",
+    "executionSessionId": 62348,
+    "startTime": null,
+    "endTime": null,
+    "durationMilliseconds": null,
+    "timingLimitation": "Exact start/end and total duration were not instrumented; do not infer them from individual tool wait durations.",
+    "exitCode": 1,
+    "errorLog": "Error: GEN2666_BUFFER_VALUE_MISMATCH:raw.baseColorsLinear[95988]\n    at fatal (h-earth.canonical-base-world-precompute.v1.mjs:27:44)\n    at examine (h-earth.canonical-base-world-precompute.v1.mjs:98:76)\n    at verify (h-earth.canonical-base-world-precompute.v1.mjs:161:3)\n    at async main (h-earth.canonical-base-world-precompute.v1.mjs:164:229)"
+  },
+  "cheapVisualGate": "PENDING_INDEPENDENT_MATCHED_ROI_PROJECTION",
   "newBrowserExecution": false,
   "expensiveQualificationRecommended": false,
   "ownerPerceptualDisposition": "PENDING",
   "publicationAuthorized": false,
-  "worldBinaryChanged": false,
-  "originalRecordsChanged": false,
-  "diagnosis": "Flat panels removed using24 actual curved leaves perclump;1464clumps4392contacts unchanged. Local morphology improved but broad bare ground remains. FixedROI near7.6043% middle20.4962% versus fencebaseline20.5057%/62.8662%; original admitted sparsepredecessor1.79%/8.91%. Do not confuse morphology gain with cohesivecoverage acceptance.",
-  "nextAction": "Owner review preserved cheap comparison and dispose KEEP/ONE_REPAIR/REJECT; no expensive run on failed coverage evidence. Any next repair must preserve rootlayout and fine morphology, and address low-layer occupiedcoverage rather than another density-only or oversized-card change.",
   "limitations": [
-    "CPU shader-equation projection; actual GLSL not executed.",
-    "Base-terrain contact qualification only; streamed-refinement path unexecuted.",
-    "Outside-pilot first28 GPU template vertices and original records retained; no browser visual equivalence claim.",
-    "Fresh source construction not rerun; immutable world binary and existing source-bound identity verified.",
-    "3x submitted geometry; no GPU frame-time or Android performance claim."
+    "Software projection pending; no density or carpet acceptance claimed.",
+    "Actual WebGL2 compilation and frame timing not executed.",
+    "Fresh source parity is blocked by the recorded baseColorsLinear mismatch.",
+    "Global fine replacement appearance outside the meadow requires independent visual review."
   ],
-  "completedCheckpoints": [
-    "USER_SCOPE_APPROVED",
-    "GEN2681_CANONICALLY_REJECTED_CLOSED",
-    "GEN2682_COMPILED_ADMITTED_AND_READ_BACK",
-    "ORIGINAL_WORLD_AND_RECORD_HASHES_PRESERVED",
-    "ADDITIONAL_PRESENTATION_CONTACTS_INDEPENDENTLY_VALIDATED",
-    "CHEAP_FIXED_ROI_METRICS_AND_TWO_VISUAL_REJECTIONS_PRESERVED",
-    "Exact original selected-ID partition preserved3856+122;2draws",
-    "Actual geometric leaves replace alpha fences; unchanged rootlayout hash",
-    "Frozen cheap geometry test and source-bound immutable asset verification PASS; freshSourceCompared=false",
-    "Independent cheap visual gate failed; no costly qualification launched"
-  ],
-  "evidenceSha256": {
-    "previsual-input.json": "08140e6eb9fb7a94c675d82dc979a8903b0f74f89fb47f04120845706220c9e2",
-    "fixed-ground-roi-baseline.npz": "cebd65040e41a39975d66e6f34ec959040f1afea1811c16109c40c9da49a1af1",
-    "repair-clumps.json": "f9094ff0103c6234094a2f197663ba2a3cf7f30398b5fa165f15aacd60f4a101",
-    "baseline-fixed-ground-roi.npz": "cebd65040e41a39975d66e6f34ec959040f1afea1811c16109c40c9da49a1af1",
-    "baseline-gen2682-previsual.py": "19075f6b7d48ecb4d8baf95e656eb881fb3c5bcab6c78024c1afc58a4b4bffce",
-    "baseline-clumps.json": "9c049f59669e030f79a5b466965b06e0a552a97fd1604f30b26e3334564ba3e4",
-    "extract-repair.mjs": "61cdc21e88a6902852c2fda1f04dcb7ff2dead59577577447ee8f7aca42f573f",
-    "baseline-gen2682-clumps.json": "9c049f59669e030f79a5b466965b06e0a552a97fd1604f30b26e3334564ba3e4",
-    "baseline-gen2682-previsual-receipt.json": "963d2f153b90fcdff7ff12e94cedb5effff29ed0736821f914b396b7d204ef96",
-    "geometry-repair-previsual-repaired.png": "cca97d86f8053a42d73eb715d45aa7d362e6554bb4290cf13a7b178f25be4d15",
-    "geometry-repair-previsual.py": "6efc120478e4d22e367ef2a7735ea664da385e6f12c956f124c8a46bcdf88d3b",
-    "geometry-repair-mask-baseline.png": "bcdcbeea58788bbd32faa38c72d86e4a3d49fdaa76cb031b58944f17e9d0743e",
-    "geometry-repair-mask-repaired.png": "352e2510616f482ec632820d5bd92bc382001f6b0fbc5d8012da7a2f55c671b0",
-    "geometry-repair-previsual-baseline.png": "981257b57ceb3e2262bd3f4dd89da44c377dd18aba81b512f21fafd2e001e33a",
-    "independent-submission-receipt.json": "40754eb28fb8730ffeff0ff0e1ce0d991ea91acec9d2fce030458c3745fe1d5d",
-    "geometry-repair-previsual-comparison.png": "e7fc43a540b36244a7513b65b343baa58f7ad89666fa2ceb81f5a0bf72c78a01",
-    "baseline-previsual-input.json": "08140e6eb9fb7a94c675d82dc979a8903b0f74f89fb47f04120845706220c9e2"
-  }
+  "nextAction": "Independent cheap matched-camera comparison and outside-view review; preserve results before deciding whether qualification is justified."
 }

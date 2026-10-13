@@ -503,6 +503,16 @@
       ],
       "entrypoint": ".github/ai-router/projects/book-page/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "RELEASE_PROOF",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "release-proof/index.html"
+      ],
+      "entrypoint": ".github/ai-router/projects/release-proof/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

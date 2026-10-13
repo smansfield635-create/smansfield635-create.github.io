@@ -22,7 +22,7 @@ jobs:
       group: private-study-checkpoint-proof
       cancel-in-progress: false
     env:
-      DGB_STUDY_SOURCE_HEAD: 2325e220298e434b5b07b4e9fffe42867a4f2504
+      DGB_STUDY_SOURCE_HEAD: 9a2e5727ecb264defb0cd944d55d8570ffc0403f
     steps:
       - name: Require independently admitted public binding
         uses: actions/github-script@v7

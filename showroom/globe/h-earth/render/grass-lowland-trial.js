@@ -598,3 +598,45 @@ if(typeof DedicatedWorkerGlobalScope!=='undefined'&&globalThis instanceof Dedica
     }catch(error){globalThis.postMessage({type:'OASIS_WORKER_FAILED',sequence:sequence++,error:{name:error?.name,message:error?.message}});}
   },{once:true});
 }
+
+/**
+ * Meadow pilot: retain the accepted shoreline's folded, bending narrow-leaf
+ * morphology without copying wetland habitats or creating per-plant CPU meshes.
+ * Each of twelve leaves starts at a single surveyable terrain root (zero-width
+ * collar). The GPU's existing 20-float record therefore holds twelve truly
+ * sampled heights; no fabricated root elevations or world population edits.
+ */
+export function buildHEarthMeadowFineGrassTemplate(){
+  const f=Math.fround,positions=new Float32Array(12*7*3),normals=new Float32Array(12*7*3);
+  const colors=new Float32Array(12*7*4),rootInfo=new Float32Array(12*7*4);
+  const rootVertices=new Uint8Array(12),indices=new Uint32Array(12*18);
+  const palettes=[[.073,.156,.059],[.105,.181,.067],[.183,.183,.080],[.144,.148,.061]];
+  for(let blade=0;blade<12;blade++){
+    const heading=blade*2.399963229728653+Math.sin(blade*5.37)*.23;
+    const radius=.035+.24*Math.sqrt((blade+.5)/12),rootX=f(Math.cos(heading)*radius),rootZ=f(Math.sin(heading)*radius);
+    const angle=heading+.37*Math.sin(blade*3.19),dx=Math.cos(angle),dz=Math.sin(angle),sx=-dz,sz=dx;
+    const length=.145+.31*((blade*7%13)/12),bend=.06+.23*((blade*5%11)/10),half=.004+.008*((blade*3%7)/6);
+    const palette=palettes[blade%palettes.length];
+    rootVertices[blade]=blade*7+1;
+    const vertices=[];
+    for(let column=-1;column<=1;column++)vertices.push([rootX,0,rootZ]);
+    for(let column=-1;column<=1;column++){
+      const spread=column*half*.80;
+      vertices.push([rootX+dx*bend*.31+sx*spread,length*.58+(column===0?half*.16:0),rootZ+dz*bend*.31+sz*spread]);
+    }
+    vertices.push([rootX+dx*bend,length*.91,rootZ+dz*bend]);
+    for(let local=0;local<7;local++){
+      const id=blade*7+local,point=vertices[local],base=local===6?1:local<3?0:.58;
+      positions.set(point.map(f),id*3);
+      normals.set([f(sx*.90),f(.24),f(sz*.90)],id*3);
+      const age=blade%9===0?.78:1,tip=1-.18*base;
+      colors.set([f(palette[0]*age*tip),f(palette[1]*age*tip),f(palette[2]*age*tip),1],id*4);
+      rootInfo.set([blade,rootX,rootZ,0],id*4);
+    }
+    const a=blade*7,j=blade*18;
+    indices.set([0,1,3,1,4,3,1,2,4,2,5,4,3,4,6,4,5,6].map(n=>a+n),j);
+  }
+  return {positions,normals,colors,rootInfo,rootVertices,indices,
+    recipe:'SHORELINE_DERIVED_TWELVE_FINE_FOLDED_LEAVES_84_VERTICES_72_TRIANGLES_v1',
+    bladesPerTuft:12,rootCount:12,worldPopulationMutated:false};
+}

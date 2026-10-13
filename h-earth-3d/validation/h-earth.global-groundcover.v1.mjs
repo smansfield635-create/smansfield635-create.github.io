@@ -8,8 +8,8 @@ import {createHash} from 'node:crypto';
 import {getHEarthRun8ER2ImmutableLiveRenderPackage,getHEarthRun8ER2VegetationWorldTruthPlan} from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {sampleHEarthGen311PlacementStructureDisposition,H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../environment/h-earth.gen2514-qualified-placement-authority.js';
-import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis,buildHEarthWoodlandGrassTuft,buildHEarthMeadowFineGrassTemplate} from '../../showroom/globe/h-earth/render/grass-lowland-trial.js';
-import {buildHEarthGlobalGroundCover,selectHEarthGlobalGroundCoverDraws,selectHEarthMeadowFineDraw,H_EARTH_MEADOW_CARPET_PILOT as meadow,H_EARTH_GLOBAL_GROUND_COVER as profile} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
+import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis,buildHEarthWoodlandGrassTuft,buildHEarthMeadowFineGrassTemplate} from '../../showroom/globe/h-earth/render/grass-lowland-trial.js?cb=gen2674-meadow-fine-20261012';
+import {buildHEarthGlobalGroundCover,selectHEarthGlobalGroundCoverDraws,selectHEarthMeadowFineDraw,H_EARTH_MEADOW_CARPET_PILOT as meadow,H_EARTH_GLOBAL_GROUND_COVER as profile} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js?cb=gen2674-meadow-fine-20261012';
 
 const digest=v=>createHash('sha256').update(typeof v==='string'||Buffer.isBuffer(v)?v:JSON.stringify(v)).digest('hex');
 const radius=420000;

@@ -1107,28 +1107,29 @@ out vec3 vWorldPosition;`)
     vec3 tip=leaf%11==0?vec3(.36,.23,.076):leaf%5==0?vec3(.32,.35,.103):vec3(.17,.29,.079);
     vBaseColor=vec4(mix(base,tip,pow(t,.72))*(.88+.20*r0),1.0);
   }else{
-    int lowCount=uMeadowGeometryPass==1?72:40,perClump=24*6+3*lowCount*4;
+    int shortLeaves=uMeadowGeometryPass==1?4:3,perClump=(24+64*shortLeaves)*6;
     int clump=gl_VertexID/perClump,localVertex=gl_VertexID%perClump;
-    bool low=localVertex>=144;
-    int leaf=low?24+(localVertex-144)/4:localVertex/6,vertex=low?(localVertex-144)%4:localVertex%6;
-    int contact=low?(leaf-24)/lowCount:leaf/8;
+    int leaf=localVertex/6,vertex=localVertex%6;
+    bool low=leaf>=24;
+    int contact=low?(leaf-24)/shortLeaves:leaf/8;
     int meadowOffset=int(meadowPart(instance)),start=meadowOffset+clump*12;
-    vec3 root=meadowRoot(start+contact*3);
+    int shortStart=meadowOffset+144+(clump*64+contact)*4;
+    vec3 root=low?meadowRoot(shortStart):meadowRoot(start+contact*3);
     uint seed=uint(instance)*1664525u+uint(clump)*1013904223u+uint(leaf)*747796405u;
     float r0=float(seed&1023u)/1023.0,r1=float((seed>>10u)&1023u)/1023.0,r2=float((seed>>20u)&1023u)/1023.0;
-    float angle=meadowPart(start+9)+float(low?(leaf-24)%lowCount:leaf%8)*2.399963+float(contact)*.73+r0*.8;
+    float angle=low?meadowPart(shortStart+3)+float((leaf-24)%shortLeaves)*2.399963+r0*.8:meadowPart(start+9)+float(leaf%8)*2.399963+float(contact)*.73+r0*.8;
     vec2 direction=vec2(cos(angle),sin(angle)),sideways=vec2(-direction.y,direction.x);
-    float h=low?.22+.16*r1:meadowPart(start+11)*(leaf%4==0?.66+.27*r1:.24+.40*r1);
-    float halfWidth=low?.009+.005*r2:.007+.008*r2,bend=low?.35+.25*r2:.07+.18*r2;
-    float t=low?(vertex==0?0.0:vertex==3?1.0:.48):(vertex==0?0.0:vertex<3?.34:vertex<5?.72:1.0);
-    float side=low?(vertex==1?-1.0:vertex==2?1.0:0.0):((vertex==1||vertex==3)?-1.0:(vertex==2||vertex==4)?1.0:0.0);
+    float h=low?.22+.18*r1:meadowPart(start+11)*(leaf%4==0?.66+.27*r1:.24+.40*r1);
+    float halfWidth=low?.010+.006*r2:.007+.008*r2,bend=low?.06+.09*r2:.07+.18*r2;
+    float t=vertex==0?0.0:vertex<3?.34:vertex<5?.72:1.0;
+    float side=(vertex==1||vertex==3)?-1.0:(vertex==2||vertex==4)?1.0:0.0;
     vec2 xz=root.xz+direction*bend*t*t+sideways*side*halfWidth*(1.0-t);
     vec2 radial=xz-vec2(-45.0,-326.0);
     if(length(radial)>18.0)xz=vec2(-45.0,-326.0)+normalize(radial)*18.0;
     vWorldPosition=vec3(xz.x,root.y+h*(t-.13*t*t),xz.y);
     vNormal=normalize(vec3(direction.x*h*(1.0-.26*t),-2.0*bend*t,direction.y*h*(1.0-.26*t)));
-    vec3 base=leaf%11==0?vec3(.105,.071,.025):leaf%5==0?vec3(.100,.112,.031):vec3(.032,.081,.025);
-    vec3 tip=leaf%11==0?vec3(.36,.23,.076):leaf%5==0?vec3(.32,.35,.103):vec3(.17,.29,.079);
+    vec3 base=leaf%11==0?vec3(.030,.090,.024):leaf%5==0?vec3(.041,.125,.030):vec3(.022,.112,.027);
+    vec3 tip=leaf%11==0?vec3(.145,.295,.059):leaf%5==0?vec3(.125,.335,.062):vec3(.088,.300,.054);
     vBaseColor=vec4(mix(base,tip,pow(t,.72))*(.88+.20*r0),1.0);
   }
   gl_Position=uViewProjection*vec4(vWorldPosition,1.0);`);
@@ -1141,10 +1142,9 @@ function buildHEarthMeadowLeafIndices(){
  // Global leaves, then separate near/mid topology; no collapsed surplus work.
  const result=[];
  for(let leaf=0;leaf<12;leaf++){const v=leaf*4;result.push(v,v+1,v+2,v+1,v+3,v+2);}
- for(const lowCount of [72,40])for(let clump=0;clump<12;clump++){
-  const start=clump*(144+3*lowCount*4);
-  for(let leaf=0;leaf<24;leaf++){const v=start+leaf*6;result.push(v,v+1,v+2,v+1,v+3,v+2,v+2,v+3,v+4,v+3,v+5,v+4);}
-  for(let leaf=0;leaf<3*lowCount;leaf++){const v=start+144+leaf*4;result.push(v,v+1,v+2,v+1,v+3,v+2);}
+ for(const shortLeaves of [4,3])for(let clump=0;clump<12;clump++){
+  const start=clump*(24+64*shortLeaves)*6;
+  for(let leaf=0;leaf<24+64*shortLeaves;leaf++){const v=start+leaf*6;result.push(v,v+1,v+2,v+1,v+3,v+2,v+2,v+3,v+4,v+3,v+5,v+4);}
  }
  return new Uint32Array(result);
 }
@@ -1455,6 +1455,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(!state.meadowVao||!state.meadowIndexBuffer)throw Error('MEADOW_LEAF_GEOMETRY_CREATE_FAILED');
     gl.bindVertexArray(state.meadowVao);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,state.meadowIndexBuffer);
     const leafIndices=buildHEarthMeadowLeafIndices();gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,leafIndices,gl.STATIC_DRAW);
+    state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,leafIndices.byteLength);
     state.meadowIndexCount=leafIndices.length;state.gpuByteLength+=leafIndices.byteLength;state.uploadCount++;
     counters.globalCoverAuthorizedResourceCreateCount++;state.selectionTexture=createTexture();
     gl.activeTexture(gl.TEXTURE8);gl.bindTexture(gl.TEXTURE_2D,state.selectionTexture);
@@ -1508,18 +1509,18 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     }
     if(partition.nearCount){
       gl.uniform1i(state.uniforms.uSelectionStart,partition.originalCount);gl.uniform1i(state.uniforms.uMeadowGeometryPass,1);
-      gl.drawElementsInstanced(gl.TRIANGLES,12*(24*12+3*72*6),gl.UNSIGNED_INT,72*4,partition.nearCount);
+      gl.drawElementsInstanced(gl.TRIANGLES,12*(24+64*4)*12,gl.UNSIGNED_INT,72*4,partition.nearCount);
     }
     if(partition.midCount){
       gl.uniform1i(state.uniforms.uSelectionStart,partition.originalCount+partition.nearCount);gl.uniform1i(state.uniforms.uMeadowGeometryPass,2);
-      gl.drawElementsInstanced(gl.TRIANGLES,12*(24*12+3*40*6),gl.UNSIGNED_INT,(72+12*(24*12+3*72*6))*4,partition.midCount);
+      gl.drawElementsInstanced(gl.TRIANGLES,12*(24+64*3)*12,gl.UNSIGNED_INT,(72+12*(24+64*4)*12)*4,partition.midCount);
     }
     state.lastDraw={visibleInstanceCount:partition.ids.length,drawCallCount:partition.drawCount,
       meadowCandidateSelectedCount:selected.meadowCandidateSelectedCount,meadowBoundaryPreservedCount:selected.meadowBoundaryPreservedCount,meadowEligibleSelectedCount:partition.meadowCount,meadowReplacementInstanceCount:partition.meadowCount,
       meadowReplacementFraction:selected.meadowEligibleSelectedCount?partition.meadowCount/selected.meadowEligibleSelectedCount:0,meadowReplacementRadiusMeters:18,
       meadowReplacementInnerRadiusMeters:0,meadowPresentation:state.presentation.receipt,submittedCoverVertices:partition.vertices,submittedCoverTriangles:partition.triangles,patchLodTextureBytes:0,
-      visiblePresentationClumps:partition.meadowCount*12,visiblePresentationContacts:partition.meadowCount*36,visibleMeadowLeaves:partition.meadowLeaves,visibleGlobalFineLeaves:partition.originalCount*12,nearDensityInstances:partition.nearCount,midDensityInstances:partition.midCount,
-      representation:'GLOBAL_FINE_CURVED_LEAVES_AND_FIXED_CONTACT_MEADOW_LOW_STRATUM',originalDrawInstances:partition.originalCount,meadowDrawInstances:partition.meadowCount,storedPopulationChanged:false,perFrameUploadBytes:selectionUploadBytes};
+      visiblePresentationClumps:partition.meadowCount*12,visiblePresentationContacts:partition.meadowCount*36,visibleShortContacts:partition.meadowCount*768,visibleMeadowLeaves:partition.meadowLeaves,visibleGlobalFineLeaves:partition.originalCount*12,nearDensityInstances:partition.nearCount,midDensityInstances:partition.midCount,
+      representation:'GLOBAL_FINE_CURVED_LEAVES_AND_DISTRIBUTED_SHORT_MEADOW_STRATUM',originalDrawInstances:partition.originalCount,meadowDrawInstances:partition.meadowCount,storedPopulationChanged:false,perFrameUploadBytes:selectionUploadBytes};
     if(partition.ids.length!==selected.visibleInstanceCount||partition.ids.length>4096||partition.drawCount>64)throw Error('GLOBAL_COVER_DRAW_BUDGET_EXCEEDED');
     counters.totalDrawnIndexCount+=partition.triangles*3;
     gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);

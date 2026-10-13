@@ -242,5 +242,177 @@
     }
   },
   "independentEvidenceReceiptSha256": "9af5d60ecc55b789e8189696f0145c49438c4ec747e26c3bde7aa74107c6b963",
-  "runtimeQualificationReadiness": "MORPHOLOGY_SUPPORTS_RUNTIME_REVIEW_BUT_FRESH_SOURCE_PARITY_FAILURE_REMAINS_UNRESOLVED"
+  "runtimeQualificationReadiness": "MORPHOLOGY_SUPPORTS_RUNTIME_REVIEW_BUT_FRESH_SOURCE_PARITY_FAILURE_REMAINS_UNRESOLVED",
+  "ownerOneRepair20261013": {
+    "status": "CHEAP_PREFLIGHT_COMPLETE_BROWSER_PENDING",
+    "baseCandidate": "158d72eecedf9197df194d997cb3b10250197265",
+    "ownerDisposition": "ONE_REPAIR",
+    "geometry": "Preserve all tall curved grass and existing contacts; replace radial low rosettes with independently sampled short curved grass contacts. Meadow grass palette richer green; original global palette and soil unchanged.",
+    "shortContactCount": 93696,
+    "contactsPerParent": 768,
+    "nearShortLeavesPerContact": 4,
+    "middleShortLeavesPerContact": 3,
+    "shortLeafHeightMeters": [
+      0.22,
+      0.4
+    ],
+    "shortLeafBendMeters": [
+      0.06,
+      0.15
+    ],
+    "shortLeafHalfWidthMeters": [
+      0.01,
+      0.016
+    ],
+    "preservedTallClumps": 1464,
+    "preservedTallContacts": 4392,
+    "preservedTallLayoutSha256": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+    "submission": {
+      "schema": "H_EARTH_GLOBAL_GRASS_INDEPENDENT_SUBMISSION_v1",
+      "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
+      "sourceHashes": {
+        "generator": "c58726ec683bddc9278a281b09956d4fb6c07e3aee05ced1807c85964cf44ced",
+        "renderer": "3b5fc09122e06ef55e28a10e3712cae3af31d38ccada29948963592029a9a191"
+      },
+      "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
+      "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "clumps": 1464,
+      "contacts": 4392,
+      "shortContactCount": 93696,
+      "shortReceipt": {
+        "schema": "H_EARTH_MEADOW_PRESENTATION_ROOTS_v1",
+        "sourcePopulationChanged": false,
+        "cameraIndependent": true,
+        "eligibleInstances": 122,
+        "clumpCount": 1464,
+        "contactCount": 4392,
+        "sidecarBytes": 1816444,
+        "templateVertices": 28,
+        "templateTriangles": 24,
+        "meadowTemplateVertices": 20160,
+        "meadowTemplateTriangles": 13440,
+        "leavesPerClump": 24,
+        "shortContactCount": 93696,
+        "shortContactsPerInstance": 768,
+        "shortLeavesPerContactNear": 4,
+        "shortLeavesPerContactMid": 3,
+        "shortCandidateCount": 111278,
+        "shortValidatedCount": 111278,
+        "shortRejections": {},
+        "globalFineVertices": 48,
+        "globalFineTriangles": 24,
+        "atlasBytes": 0,
+        "pilotRadius": 18
+      },
+      "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+      "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+      "originalRecordIdsPreserved": true,
+      "withinClassOrderPreserved": true,
+      "logicalInstances": 3978,
+      "originalInstances": 3856,
+      "meadowInstances": 122,
+      "nearInstances": 41,
+      "middleInstances": 81,
+      "draws": 3,
+      "selectedVertices": 2271360,
+      "selectedTriangles": 1483392,
+      "approvedBaselineVertices": 318784,
+      "approvedBaselineTriangles": 233088,
+      "originalFanVertices": 111384,
+      "originalFanTriangles": 95472,
+      "gpu": {
+        "templateBytes": 1856,
+        "paddedRecordsBytes": 4947968,
+        "paddedSidecarBytes": 1818624,
+        "leafIndexBytes": 285984,
+        "selectionTextureBytes": 16384,
+        "atlasBytes": 0,
+        "totalBytes": 7070816
+      },
+      "selectionUploadBytesOnChange": 16384,
+      "selectionUploadBytesWhenUnchanged": 0,
+      "browserQualification": "NOT_EXECUTED",
+      "visualDisposition": "PENDING"
+    },
+    "cheapPreview": {
+      "candidate": {
+        "pilot": {
+          "fixedGroundPixels": 724879,
+          "occupiedPixels": 545563,
+          "occupiedFraction": 0.7526263003894443,
+          "largestEmptyCircleRadiusPixels": 14.035668847618199,
+          "largestConnectedEmptyPixels": 4608
+        },
+        "near0to6m": {
+          "fixedGroundPixels": 385757,
+          "occupiedPixels": 250397,
+          "occupiedFraction": 0.6491055249807521,
+          "largestEmptyCircleRadiusPixels": 14.035668847618199,
+          "largestConnectedEmptyPixels": 4608
+        },
+        "middle6to18m": {
+          "fixedGroundPixels": 339122,
+          "occupiedPixels": 295166,
+          "occupiedFraction": 0.8703829300369779,
+          "largestEmptyCircleRadiusPixels": 4.47213595499958,
+          "largestConnectedEmptyPixels": 295
+        }
+      },
+      "baseline": {
+        "pilot": {
+          "fixedGroundPixels": 724879,
+          "occupiedPixels": 470208,
+          "occupiedFraction": 0.6486710195770604,
+          "largestEmptyCircleRadiusPixels": 15.652475842498529,
+          "largestConnectedEmptyPixels": 24470
+        },
+        "near0to6m": {
+          "fixedGroundPixels": 385757,
+          "occupiedPixels": 226062,
+          "occupiedFraction": 0.5860217701817465,
+          "largestEmptyCircleRadiusPixels": 15.652475842498529,
+          "largestConnectedEmptyPixels": 23616
+        },
+        "middle6to18m": {
+          "fixedGroundPixels": 339122,
+          "occupiedPixels": 244146,
+          "occupiedFraction": 0.7199355983982165,
+          "largestEmptyCircleRadiusPixels": 11.180339887498949,
+          "largestConnectedEmptyPixels": 5819
+        }
+      },
+      "elapsedSeconds": 25.926240921020508,
+      "nearParents": 41,
+      "vertices": 2271360,
+      "triangles": 1483392,
+      "draws": 3,
+      "limitations": [
+        "CPU mirror; no GLSL execution",
+        "Simplified lighting, no trees/vegetation occlusion or atmosphere",
+        "Cached base terrain; no world rebuild",
+        "804x1810 fixed ROI, near-plane clipping, grass limited42m"
+      ],
+      "nearPlaneCrossingTrianglesSkipped": 0,
+      "behindCameraTrianglesSkipped": 109381,
+      "nearPlaneCrossingTrianglesClipped": 1750
+    },
+    "indexSegments": {
+      "global": 72,
+      "near": 40320,
+      "middle": 31104
+    },
+    "budgetInterpretation": "262144 bytes is additional patch/atlas texture budget; atlas remains zero bytes. Root-data sidecar is separately authorized and explicitly charged to total8MiB. Padded root texture1818624bytes versus327680 before; delta1490944bytes.",
+    "costCaveat": "1483392 triangles versus678912 prior candidate, ~2.18x; browser performance is unproven.",
+    "initialCheapProbe": "Rejected before browser:46848 short contacts yielded32.58% near55.62% middle occupancy. Final density and modest blade footprint revised in this one bounded candidate.",
+    "verificationLimits": [
+      "Cached immutable-world asset verification and targeted test passed; no fresh full source regeneration locally.",
+      "Software projection mirrors geometry with simplified lighting; not browser proof.",
+      "Independent contact review and exact candidate browser performance required before release."
+    ],
+    "maximumUploadChunkBytes": 285984,
+    "localReviewCorrections": [
+      "Independent review caught broad numeric replacement affecting original generator bounds; entire pre-presentation generator prefix restored exactly and now SHA256-guarded in targeted validator. No changed world was generated.",
+      "Independent review caught upload maximum omitting larger leaf index buffer; metric now includes actual285984-byte upload."
+    ]
+  }
 }

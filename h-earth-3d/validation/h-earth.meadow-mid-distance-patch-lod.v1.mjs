@@ -6,6 +6,8 @@ import {createHash} from 'node:crypto';
 import vm from 'node:vm';
 import {selectHEarthMeadowMidDistanceRepresentations,selectHEarthGlobalGroundCoverDraws,partitionHEarthMeadowSelectedInstances,sameHEarthMeadowSelectedIds,getHEarthMeadowBoundaryPreservedInstances} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
+const immutableGeneratorPrefix=readFileSync(new URL('../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js',import.meta.url),'utf8').split('export function buildHEarthMeadowPresentationRoots')[0];
+assert.equal(digest(immutableGeneratorPrefix),'b7f5b245e526560142745435062a6b4e188a596db0414b08cba880ae8baa0ada','CANONICAL_GENERATOR_PREFIX_CHANGED');
 const records=new Float32Array(4096*20);
 for(let i=0;i<4096;i++){records[i*20+12]=-45;records[i*20+13]=-326+(i%2?12:40);records[i*20+15]=1;}
 const cover={records,receipt:{instanceCount:4096},tiles:[{start:0,count:4096,minX:-46,maxX:-44,minZ:-326,maxZ:-286}]},camera={x:-45,z:-326};
@@ -23,23 +25,25 @@ assert.equal(digest(records),before);
 const renderer=readFileSync(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
 const begin=renderer.indexOf('const GLOBAL_COVER_VS ='),end=renderer.indexOf('const CLEARING_SHADOW_VS=',begin);
 const shaders=vm.runInNewContext(renderer.slice(begin,end)+'\n({vs:GLOBAL_COVER_PATCH_LOD_VS,fs:GLOBAL_COVER_PATCH_SUPPRESSION_FS,indices:buildHEarthMeadowLeafIndices()})');
+assert.ok(renderer.includes('state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,leafIndices.byteLength)'));
 assert.ok(shaders.vs.includes('uSelectedIds'));
 assert.ok(shaders.vs.includes('meadowRoot(start+contact*3)'));
 assert.ok(shaders.vs.includes('vBaseColor=vec4(mix(base,tip'));
 assert.ok(!shaders.fs.includes('uMeadowAtlas'),'geometric leaves do not use alpha panels');
-assert.equal(shaders.indices.length,31176);assert.equal(Math.max(...shaders.indices),12095);
-const globalIndices=shaders.indices.slice(0,72),nearIndices=shaders.indices.slice(72,19080),midIndices=shaders.indices.slice(19080);
-assert.equal(new Set(globalIndices).size,48);assert.equal(new Set(nearIndices).size,12096);assert.equal(new Set(midIndices).size,7488);
+assert.equal(shaders.indices.length,71496);assert.equal(Math.max(...shaders.indices),20159);
+const globalIndices=shaders.indices.slice(0,72),nearIndices=shaders.indices.slice(72,40392),midIndices=shaders.indices.slice(40392);
+assert.equal(new Set(globalIndices).size,48);assert.equal(new Set(nearIndices).size,20160);assert.equal(new Set(midIndices).size,15552);
 for(let leaf=0;leaf<12;leaf++)assert.deepEqual(Array.from(globalIndices.slice(leaf*6,leaf*6+6)),[0,1,2,1,3,2].map(i=>leaf*4+i));
-for(const [indices,lowCount] of [[nearIndices,72],[midIndices,40]]){
- assert.equal(indices.length,12*(24*12+3*lowCount*6));
+for(const [indices,shortLeaves] of [[nearIndices,4],[midIndices,3]]){
+ assert.equal(indices.length,12*(24+64*shortLeaves)*12);
  for(let clump=0;clump<12;clump++){
-  const base=clump*(144+3*lowCount*4),offset=clump*(288+3*lowCount*6);
-  // Original 24 approved curved leaves retain every original triangle.
-  for(let leaf=0;leaf<24;leaf++)assert.deepEqual(Array.from(indices.slice(offset+leaf*12,offset+leaf*12+12)),[0,1,2,1,3,2,2,3,4,3,5,4].map(i=>base+leaf*6+i));
-  for(let leaf=0;leaf<3*lowCount;leaf++)assert.deepEqual(Array.from(indices.slice(offset+288+leaf*6,offset+288+leaf*6+6)),[0,1,2,1,3,2].map(i=>base+144+leaf*4+i));
+  const base=clump*(24+64*shortLeaves)*6,offset=clump*(24+64*shortLeaves)*12;
+  // Tall and short layers use exactly the same accepted curved topology.
+  for(let leaf=0;leaf<24+64*shortLeaves;leaf++)assert.deepEqual(Array.from(indices.slice(offset+leaf*12,offset+leaf*12+12)),[0,1,2,1,3,2,2,3,4,3,5,4].map(i=>base+leaf*6+i));
  }
 }
+assert.ok(shaders.vs.includes('meadowRoot(shortStart)'));
+assert.ok(shaders.vs.includes('meadowOffset+144+(clump*64+contact)*4'));
 assert.ok(shaders.vs.includes('uOriginalRoots[leaf]*aTransform.w'));
 assert.ok(shaders.vs.includes('rootY(instance,leaf)'));
 assert.ok(renderer.includes("gl.uniform2fv(u['uOriginalRoots[0]'],originalRoots)"));
@@ -53,6 +57,8 @@ if(cacheArg>=0){
  assert.equal(digest(cached.records),'045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6');
  const rootsArg=process.argv.indexOf('--clumps');assert.ok(rootsArg>=0,'actual-cache verification requires preserved contact sidecar');
  const actualPresentation=JSON.parse(readFileSync(process.argv[rootsArg+1]));const contactsBefore=digest(JSON.stringify(actualPresentation.clumps));
+ assert.equal(actualPresentation.lowRoots.length,93696);
+ const shortKeys=new Set();for(const r of actualPresentation.lowRoots){assert.ok(Math.hypot(r.x+45,r.z+326)<=17.88);assert.ok(Number.isFinite(r.y));assert.ok(r.slot>=0&&r.slot<768);shortKeys.add(`${r.instance}:${r.slot}`);}assert.equal(shortKeys.size,93696);
  assert.equal(actualPresentation.clumps.length,1464);assert.equal(actualPresentation.clumps.reduce((n,c)=>n+c.roots.length,0),4392);
  const plan=selectHEarthMeadowMidDistanceRepresentations(cached,camera),partition=partitionHEarthMeadowSelectedInstances(cached,plan,actualPresentation);
  const original=plan.draws.flatMap(d=>Array.from({length:d.count},(_,i)=>d.start+i*d.stride));
@@ -62,8 +68,8 @@ if(cacheArg>=0){
  assert.equal(boundary.length,9);for(const id of boundary)assert.ok(oldClass.has(id));
  assert.equal(partition.originalCount,3856);assert.equal(partition.meadowCount,122);
  assert.equal(partition.nearCount,41);assert.equal(partition.midCount,81);
- assert.equal(partition.vertices,1287552);assert.equal(partition.triangles,678912);
- assert.equal(partition.meadowLeaves,258048);
+ assert.equal(partition.vertices,2271360);assert.equal(partition.triangles,1483392);
+ assert.equal(partition.meadowLeaves,347712);
  assert.equal(digest(JSON.stringify(actualPresentation.clumps)),contactsBefore);
  const classes=[partition.ids.slice(0,3856),partition.ids.slice(3856,3897),partition.ids.slice(3897)];
  for(const ids of classes){const wanted=new Set(ids);assert.deepEqual([...ids],original.filter(id=>wanted.has(id)));}
@@ -71,4 +77,4 @@ if(cacheArg>=0){
  assert.equal(partition.drawCount,3);
  actualCache={originalRecordsSha256:digest(cached.records),logicalInstances:partition.ids.length,originalInstances:partition.originalCount,meadowInstances:partition.meadowCount,draws:partition.drawCount,submittedVertices:partition.vertices,submittedTriangles:partition.triangles,previousSubmittedVertices:318784,previousSubmittedTriangles:233088,nearDensityInstances:partition.nearCount,midDensityInstances:partition.midCount,meadowLeaves:partition.meadowLeaves,selectionUploadBytesOnChange:16384,stationarySelectionUploadBytes:0};
 }
-console.log(JSON.stringify({schema:'H_EARTH_GLOBAL_FINE_GRASS_LOW_STRATUM_PREVISUAL_TEST_v1',result:'PASS',actualCache,leavesPerClump:24,approvedVerticesPerLeaf:6,approvedTrianglesPerLeaf:4,lowVerticesPerLeaf:4,lowTrianglesPerLeaf:2,globalVerticesPerLeaf:4,globalTrianglesPerLeaf:2,atlasGpuBytes:0,originalSelectionPreserved:true,browserQualification:'NOT_TESTED',perceptualAcceptance:'PENDING'}));
+console.log(JSON.stringify({schema:'H_EARTH_GLOBAL_FINE_GRASS_LOW_STRATUM_PREVISUAL_TEST_v1',result:'PASS',actualCache,leavesPerClump:24,approvedVerticesPerLeaf:6,approvedTrianglesPerLeaf:4,lowVerticesPerLeaf:6,lowTrianglesPerLeaf:4,globalVerticesPerLeaf:4,globalTrianglesPerLeaf:2,atlasGpuBytes:0,originalSelectionPreserved:true,browserQualification:'NOT_TESTED',perceptualAcceptance:'PENDING'}));

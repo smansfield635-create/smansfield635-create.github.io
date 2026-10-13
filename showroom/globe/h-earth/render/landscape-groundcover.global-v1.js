@@ -331,12 +331,43 @@ export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null}={
   const slot=counts.get(instance);counts.set(instance,slot+1);
   clumps.push({instance,slot,roots,angle,halfWidth,height,cell:(Math.floor(cover.records[instance*20+18]*13)+slot)%4});
  }
- const mapLength=cover.records.length/20,pixels=new Float32Array(mapLength+eligible.length*12*12);pixels.fill(-1,0,mapLength);
- eligible.forEach((id,i)=>{pixels[id]=mapLength+i*144;});
+ // Independent short-blade contacts fill space between preserved tall clumps.
+ // Each contact is sampled against the same actual terrain, water and obstacle
+ // rules as the retained layout; no above-ground root interpolation is used.
+ const lowRoots=[],lowCounts=new Map(eligible.map(id=>[id,0])),lowRejections={};
+ let lowCandidates=0;
+ const rejectLow=reason=>{lowRejections[reason]=(lowRejections[reason]??0)+1;};
+ for(let iz=-188;iz<=188;iz++)for(let ix=-188;ix<=188;ix++){
+  const key=`MEADOW_SHORT_CONTACT:${ix}:${iz}`,x=f(-45+(ix+(hash(key,'x')-.5)*.72)*.095),z=f(-326+(iz+(hash(key,'z')-.5)*.72)*.095);
+  if(Math.hypot(x+45,z+326)>17.88)continue;
+  lowCandidates++;
+  const q=sample(x,z),w=water.sample(x,z);
+  if(!q){rejectLow('NO_TERRAIN');continue;}
+  if(w&&q.y<=w.y+.01){rejectLow('WATER');continue;}
+  const a=inverseHEarthGroundCoverPoint(x,q.y,z),m=materialAt(a.x,a.z);
+  if(!eligibleMaterial(m,q.slope)){rejectLow('MATERIAL_OR_SLOPE');continue;}
+  if(!clear(a.x,a.z,.05)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.05)){rejectLow('OBSTACLE');continue;}
+  lowRoots.push({key,x,y:q.y,z,triangleId:q.triangleId,slope:q.slope,angle:f(hash(key,'angle')*Math.PI*2),priority:hash(key,'priority')});
+ }
+ // Priority shuffling prevents capacity limits from clipping one side of the
+ // meadow. Nearest eligible parent ownership does not move any contact.
+ lowRoots.sort((a,b)=>a.priority-b.priority);
+ const assigned=[];
+ for(const q of lowRoots){
+  let instance=-1,best=Infinity;
+  for(const id of eligible)if(lowCounts.get(id)<768){const d=Math.hypot(q.x-cover.records[id*20+12],q.z-cover.records[id*20+13]);if(d<best){best=d;instance=id;}}
+  if(instance<0)break;
+  const slot=lowCounts.get(instance);lowCounts.set(instance,slot+1);
+  assigned.push({...q,instance,slot});
+ }
+ if(assigned.length!==eligible.length*768)throw Error('MEADOW_SHORT_CONTACT_LAYOUT_INCOMPLETE');
+ const mapLength=cover.records.length/20,stride=144+768*4,pixels=new Float32Array(mapLength+eligible.length*stride);pixels.fill(-1,0,mapLength);
+ eligible.forEach((id,i)=>{pixels[id]=mapLength+i*stride;});
  for(const c of clumps){const offset=pixels[c.instance]+c.slot*12;pixels.set([...c.roots.flatMap(r=>[r.x,r.y,r.z]),c.angle,c.halfWidth,c.height],offset);}
+ for(const q of assigned)pixels.set([q.x,q.y,q.z,q.angle],pixels[q.instance]+144+q.slot*4);
  if(clumps.length!==eligible.length*12)throw Error('MEADOW_PRESENTATION_INCOMPLETE_ROOT_LAYOUT');
  const template=cover.template;
- return {pixels,clumps,template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,cameraIndependent:true,eligibleInstances:eligible.length,clumpCount:clumps.length,contactCount:clumps.length*3,sidecarBytes:pixels.byteLength,templateVertices:28,templateTriangles:24,meadowTemplateVertices:12096,meadowTemplateTriangles:6336,leavesPerClump:24,lowLeavesPerContactNear:72,lowLeavesPerContactMid:40,globalFineVertices:48,globalFineTriangles:24,atlasBytes:0,pilotRadius:18}};
+ return {pixels,clumps,lowRoots:assigned,template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,cameraIndependent:true,eligibleInstances:eligible.length,clumpCount:clumps.length,contactCount:clumps.length*3,sidecarBytes:pixels.byteLength,templateVertices:28,templateTriangles:24,meadowTemplateVertices:20160,meadowTemplateTriangles:13440,leavesPerClump:24,shortContactCount:assigned.length,shortContactsPerInstance:768,shortLeavesPerContactNear:4,shortLeavesPerContactMid:3,shortCandidateCount:lowCandidates,shortValidatedCount:lowRoots.length,shortRejections:lowRejections,globalFineVertices:48,globalFineTriangles:24,atlasBytes:0,pilotRadius:18}};
 }
 
 /** Fixed near-density class depends only on immutable presentation contacts. */
@@ -354,7 +385,7 @@ export function partitionHEarthMeadowSelectedInstances(cover,selected,presentati
   (Math.hypot(cover.records[o+12]+45,cover.records[o+13]+326)<=18&&!boundary.has(id)?nearIds.has(id)?near:mid:original).push(id);
  }
  const ids=Float32Array.from([...original,...near,...mid]),meadowCount=near.length+mid.length;
- const meadowLeaves=near.length*12*(24+3*72)+mid.length*12*(24+3*40);
- return{ids,originalCount:original.length,meadowCount,nearCount:near.length,midCount:mid.length,meadowLeaves,drawCount:Number(original.length>0)+Number(near.length>0)+Number(mid.length>0),vertices:original.length*48+meadowCount*12*24*6+(meadowLeaves-meadowCount*12*24)*4,triangles:original.length*24+meadowCount*12*24*4+(meadowLeaves-meadowCount*12*24)*2};
+ const meadowLeaves=near.length*12*(24+64*4)+mid.length*12*(24+64*3);
+ return{ids,originalCount:original.length,meadowCount,nearCount:near.length,midCount:mid.length,meadowLeaves,drawCount:Number(original.length>0)+Number(near.length>0)+Number(mid.length>0),vertices:original.length*48+meadowLeaves*6,triangles:original.length*24+meadowLeaves*4};
 }
 export function sameHEarthMeadowSelectedIds(previous,current){return !!previous&&previous.length===current.length&&current.every((id,i)=>previous[i]===id);}

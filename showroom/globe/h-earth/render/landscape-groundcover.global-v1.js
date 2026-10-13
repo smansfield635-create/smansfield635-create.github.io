@@ -219,3 +219,173 @@ export function selectHEarthGlobalGroundCoverDraws(cover,camera,{maximumInstance
   for(const {tile,distance} of ranked){if(draws.length>=maximumDraws||visibleInstanceCount>=maximumInstances)break;let stride=distance<32?1:distance<64?(tile.ecoInstances>0&&distance<56?1:2):distance<96?4:8;const available=maximumInstances-visibleInstanceCount;stride=Math.max(stride,Math.ceil(tile.count/available));const count=Math.min(available,Math.ceil(tile.count/stride));if(count){draws.push({start:tile.start,count,stride});visibleInstanceCount+=count;}}
   return{draws,visibleInstanceCount,storedInstanceCount:cover.receipt.instanceCount,populationChanged:false};
 }
+
+/**
+ * Select the existing cover records used by the bounded meadow patch impostor.
+ * No instances or roots are added: this is a second representation of a small
+ * subset of the same tile ranges selected for the ordinary grass pass.
+ */
+export function selectHEarthMeadowMidDistancePatchDraws(cover,camera,{
+  centerX=-45,centerZ=-326,pilotRadius=18,innerDistance=6,outerDistance=18,
+  maximumInstances=1024,maximumDraws=16,sourceDraws=null
+}={}){
+  if(!Number.isFinite(centerX)||!Number.isFinite(centerZ)||!Number.isFinite(pilotRadius)||pilotRadius<=0||
+     !Number.isFinite(innerDistance)||!Number.isFinite(outerDistance)||innerDistance<0||outerDistance<=innerDistance||
+     !Number.isInteger(maximumInstances)||maximumInstances<1||!Number.isInteger(maximumDraws)||maximumDraws<1){
+    throw Error('MEADOW_PATCH_LOD_SELECTION_BUDGET_INVALID');
+  }
+  const p=camera?.position??camera;
+  if(!p||![p.x,p.z].every(Number.isFinite))throw Error('GLOBAL_COVER_CAMERA_INVALID');
+  const selected=sourceDraws?{draws:sourceDraws}:selectHEarthGlobalGroundCoverDraws(cover,p,{maximumInstances,maximumDraws});
+  const byStart=new Map(cover.tiles.map(tile=>[tile.start,tile]));
+  const draws=selected.draws.filter(draw=>{
+    const tile=byStart.get(draw.start);if(!tile)return false;
+    const pilotDx=centerX-Math.max(tile.minX,Math.min(tile.maxX,centerX));
+    const pilotDz=centerZ-Math.max(tile.minZ,Math.min(tile.maxZ,centerZ));
+    const cameraDx=p.x-Math.max(tile.minX,Math.min(tile.maxX,p.x));
+    const cameraDz=p.z-Math.max(tile.minZ,Math.min(tile.maxZ,p.z));
+    return Math.hypot(pilotDx,pilotDz)<=pilotRadius+2.0&&
+      Math.hypot(cameraDx,cameraDz)<=outerDistance+2.0;
+  });
+  let remaining=maximumInstances;
+  const bounded=[];
+  for(const draw of draws){
+    if(remaining<=0||bounded.length>=maximumDraws)break;
+    const count=Math.min(draw.count,remaining);
+    if(count>0){bounded.push(Object.freeze({...draw,count,patchLod:true}));remaining-=count;}
+  }
+  return Object.freeze({
+    draws:Object.freeze(bounded),
+    visibleInstanceCount:bounded.reduce((sum,draw)=>sum+draw.count,0),
+    maximumInstances,maximumDraws,
+    centerX,centerZ,pilotRadius,innerDistance,outerDistance,
+    representation:'TERRAIN_ALIGNED_ALPHA_TEXTURED_PATCH_IMPOSTOR',
+    sourcePopulationChanged:false
+  });
+}
+
+const meadowBoundaryCache=new WeakMap();
+/** Protect complete old silhouettes that cross the admitted pilot boundary. */
+export function getHEarthMeadowBoundaryPreservedInstances(cover){
+ if(meadowBoundaryCache.has(cover))return meadowBoundaryCache.get(cover);
+ const ids=[],positions=cover.template?.positions,info=cover.template?.rootInfo;
+ if(positions&&info)for(let id=0;id<cover.records.length/20;id++){
+  const r=cover.records.subarray(id*20,id*20+20);
+  if(Math.hypot(r[12]+45,r[13]+326)>18)continue;
+  const low=r[19]===2?1:0,mid=r[19]===3?1:0,dune=r[19]>=4?1:0,eco=Math.max(low,mid,dune),c=Math.cos(r[14]),sn=Math.sin(r[14]);
+  for(let vertex=0;vertex<positions.length/3;vertex++){
+   const x=positions[vertex*3],y=positions[vertex*3+1],z=positions[vertex*3+2],rx=info[vertex*4+1],rz=info[vertex*4+2];
+   const emergence=Math.max(0,Math.min(1,y)),dx=x-rx,dz=z-rz;
+   const spread=1+.65*low+.24*mid+.08*dune,lean=emergence*(.18*low+.12*mid+.22*dune);
+   const qx=(eco?rx+dx*spread-dz*lean:x)*r[15],qz=(eco?rz+dz*spread+dx*lean:z)*r[15];
+   if(Math.hypot(r[12]+qx*c-qz*sn+45,r[13]+qx*sn+qz*c+326)>18){ids.push(id);break;}
+  }
+ }
+ if(ids.length>32)throw Error('MEADOW_BOUNDARY_UNIFORM_CAP_EXCEEDED');
+ const result=Object.freeze(ids);meadowBoundaryCache.set(cover,result);return result;
+}
+/** Exactly the original selection; boundary-crossing silhouettes are preserved. */
+export function selectHEarthMeadowMidDistanceRepresentations(cover,camera){
+ const selected=selectHEarthGlobalGroundCoverDraws(cover,camera),boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover));
+ let candidates=0,eligible=0;
+ for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
+  const id=draw.start+i*draw.stride,offset=id*20;
+  if(Math.hypot(cover.records[offset+12]+45,cover.records[offset+13]+326)<=18){candidates++;if(!boundary.has(id))eligible++;}
+ }
+ return{...selected,meadowCandidateSelectedCount:candidates,meadowBoundaryPreservedCount:candidates-eligible,meadowEligibleSelectedCount:eligible,meadowReplacementInstanceCount:eligible,sourcePopulationChanged:false};
+}
+
+/** Gen2682: camera-independent presentation sidecar; never mutates cover records. */
+export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null}={}){
+ const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),eligible=[];
+ for(let i=0;i<cover.records.length/20;i++)if(Math.hypot(cover.records[i*20+12]+45,cover.records[i*20+13]+326)<=18&&!boundary.has(i))eligible.push(i);
+ const base=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(p=>p.role==='TERRAIN'));
+ const water=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(p=>String(p.primitiveId).includes('FAR_OCEAN_CONTINUATION')),true);
+ const refined=refinement?triangleIndex(refinement.positions,refinement.indices):null,clip=refinement?.clip;
+ if(refined&&(!Array.isArray(clip)||clip.length!==4||!clip.every(Number.isFinite)))throw Error('MEADOW_PRESENTATION_REFINEMENT_CLIP_INVALID');
+ const sample=(x,z)=>refined&&x>clip[0]&&x<clip[2]&&z>clip[1]&&z<clip[3]?refined.sample(x,z):base.sample(x,z);
+ const clumps=[],counts=new Map(eligible.map(id=>[id,0])),obstacles=pkg.landscapeCoverFootprints??[];
+ // Stratification prevents empty swathes; strong independent jitter and a
+ // coherent height/width field avoid a lattice or a single clipped carpet.
+ const candidates=[];
+ for(let iz=-24;iz<=24;iz++)for(let ix=-24;ix<=24;ix++){
+  const key=`MEADOW_PRESENTATION:${ix}:${iz}`,x=f(-45+(ix+(hash(key,'x')-.5)*.94)*.73),z=f(-326+(iz+(hash(key,'z')-.5)*.94)*.73);
+  if(Math.hypot(x+45,z+326)>16.9)continue;
+  candidates.push({key,x,z,priority:hash(key,'priority')});
+ }
+ candidates.sort((a,b)=>a.priority-b.priority);
+ for(const q of candidates){
+  const {key,x,z}=q,angle=f(hash(key,'angle')*Math.PI*2),halfWidth=f(.45+.24*hash(key,'width')),height=f(.48+.46*field(x,z,4,'MEADOW_HEIGHT')+.18*hash(key,'height'));
+  const roots=[];let valid=true;
+  for(let k=-1;k<=1;k++){
+   const xx=f(x+Math.cos(angle)*halfWidth*k),zz=f(z+Math.sin(angle)*halfWidth*k),s=sample(xx,zz),w=water.sample(xx,zz);
+   if(!s||(w&&s.y<=w.y+.01)||Math.hypot(xx+45,zz+326)>17.95){valid=false;break;}
+   const a=inverseHEarthGroundCoverPoint(xx,s.y,zz),m=materialAt(a.x,a.z);
+   if(!eligibleMaterial(m,s.slope)||!clear(a.x,a.z,.05)||obstacles.some(t=>Math.hypot(xx-t.x,zz-t.z)<t.radius+.05)){valid=false;break;}
+   roots.push({x:xx,y:s.y,z:zz,triangleId:s.triangleId,slope:s.slope});
+  }
+  if(!valid)continue;
+  let instance=-1,best=Infinity;
+  for(const id of eligible)if(counts.get(id)<12){const d=Math.hypot(x-cover.records[id*20+12],z-cover.records[id*20+13]);if(d<best){best=d;instance=id;}}
+  if(instance<0)break;
+  const slot=counts.get(instance);counts.set(instance,slot+1);
+  clumps.push({instance,slot,roots,angle,halfWidth,height,cell:(Math.floor(cover.records[instance*20+18]*13)+slot)%4});
+ }
+ // Independent short-blade contacts fill space between preserved tall clumps.
+ // Each contact is sampled against the same actual terrain, water and obstacle
+ // rules as the retained layout; no above-ground root interpolation is used.
+ const lowRoots=[],lowCounts=new Map(eligible.map(id=>[id,0])),lowRejections={};
+ let lowCandidates=0;
+ const rejectLow=reason=>{lowRejections[reason]=(lowRejections[reason]??0)+1;};
+ for(let iz=-188;iz<=188;iz++)for(let ix=-188;ix<=188;ix++){
+  const key=`MEADOW_SHORT_CONTACT:${ix}:${iz}`,x=f(-45+(ix+(hash(key,'x')-.5)*.72)*.095),z=f(-326+(iz+(hash(key,'z')-.5)*.72)*.095);
+  if(Math.hypot(x+45,z+326)>17.88)continue;
+  lowCandidates++;
+  const q=sample(x,z),w=water.sample(x,z);
+  if(!q){rejectLow('NO_TERRAIN');continue;}
+  if(w&&q.y<=w.y+.01){rejectLow('WATER');continue;}
+  const a=inverseHEarthGroundCoverPoint(x,q.y,z),m=materialAt(a.x,a.z);
+  if(!eligibleMaterial(m,q.slope)){rejectLow('MATERIAL_OR_SLOPE');continue;}
+  if(!clear(a.x,a.z,.05)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.05)){rejectLow('OBSTACLE');continue;}
+  lowRoots.push({key,x,y:q.y,z,triangleId:q.triangleId,slope:q.slope,angle:f(hash(key,'angle')*Math.PI*2),priority:hash(key,'priority')});
+ }
+ // Priority shuffling prevents capacity limits from clipping one side of the
+ // meadow. Nearest eligible parent ownership does not move any contact.
+ lowRoots.sort((a,b)=>a.priority-b.priority);
+ const assigned=[];
+ for(const q of lowRoots){
+  let instance=-1,best=Infinity;
+  for(const id of eligible)if(lowCounts.get(id)<768){const d=Math.hypot(q.x-cover.records[id*20+12],q.z-cover.records[id*20+13]);if(d<best){best=d;instance=id;}}
+  if(instance<0)break;
+  const slot=lowCounts.get(instance);lowCounts.set(instance,slot+1);
+  assigned.push({...q,instance,slot});
+ }
+ if(assigned.length!==eligible.length*768)throw Error('MEADOW_SHORT_CONTACT_LAYOUT_INCOMPLETE');
+ const mapLength=cover.records.length/20,stride=144+768*4,pixels=new Float32Array(mapLength+eligible.length*stride);pixels.fill(-1,0,mapLength);
+ eligible.forEach((id,i)=>{pixels[id]=mapLength+i*stride;});
+ for(const c of clumps){const offset=pixels[c.instance]+c.slot*12;pixels.set([...c.roots.flatMap(r=>[r.x,r.y,r.z]),c.angle,c.halfWidth,c.height],offset);}
+ for(const q of assigned)pixels.set([q.x,q.y,q.z,q.angle],pixels[q.instance]+144+q.slot*4);
+ if(clumps.length!==eligible.length*12)throw Error('MEADOW_PRESENTATION_INCOMPLETE_ROOT_LAYOUT');
+ const template=cover.template;
+ return {pixels,clumps,lowRoots:assigned,template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,cameraIndependent:true,eligibleInstances:eligible.length,clumpCount:clumps.length,contactCount:clumps.length*3,sidecarBytes:pixels.byteLength,templateVertices:28,templateTriangles:24,meadowTemplateVertices:20160,meadowTemplateTriangles:13440,leavesPerClump:24,shortContactCount:assigned.length,shortContactsPerInstance:768,shortLeavesPerContactNear:4,shortLeavesPerContactMid:3,shortCandidateCount:lowCandidates,shortValidatedCount:lowRoots.length,shortRejections:lowRejections,globalFineVertices:48,globalFineTriangles:24,atlasBytes:0,pilotRadius:18}};
+}
+
+/** Fixed near-density class depends only on immutable presentation contacts. */
+const meadowNearCache=new WeakMap();
+export function getHEarthMeadowNearInstances(presentation){
+ if(!presentation)return new Set();
+ if(!meadowNearCache.has(presentation))meadowNearCache.set(presentation,new Set(presentation.clumps.filter(c=>c.roots.some(r=>Math.hypot(r.x+45,r.z+326)<6)).map(c=>c.instance)));
+ return meadowNearCache.get(presentation);
+}
+/** Stable submission partition; roots, original selection and class order survive. */
+export function partitionHEarthMeadowSelectedInstances(cover,selected,presentation=null){
+ const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),nearIds=getHEarthMeadowNearInstances(presentation),original=[],near=[],mid=[];
+ for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
+  const id=draw.start+i*draw.stride,o=id*20;
+  (Math.hypot(cover.records[o+12]+45,cover.records[o+13]+326)<=18&&!boundary.has(id)?nearIds.has(id)?near:mid:original).push(id);
+ }
+ const ids=Float32Array.from([...original,...near,...mid]),meadowCount=near.length+mid.length;
+ const meadowLeaves=near.length*12*(24+64*4)+mid.length*12*(24+64*3);
+ return{ids,originalCount:original.length,meadowCount,nearCount:near.length,midCount:mid.length,meadowLeaves,drawCount:Number(original.length>0)+Number(near.length>0)+Number(mid.length>0),vertices:original.length*48+meadowLeaves*6,triangles:original.length*24+meadowLeaves*4};
+}
+export function sameHEarthMeadowSelectedIds(previous,current){return !!previous&&previous.length===current.length&&current.every((id,i)=>previous[i]===id);}

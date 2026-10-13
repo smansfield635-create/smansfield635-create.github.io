@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-13T17:32:16Z",
+  "generatedAt": "2026-10-13T18:42:51Z",
   "window": {
-    "start": "2026-07-15T17:32:16Z",
-    "end": "2026-10-13T17:32:16Z"
+    "start": "2026-07-15T18:42:51Z",
+    "end": "2026-10-13T18:42:51Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -34,13 +34,13 @@
         "pageLoads": 140,
         "visits": 10
       },
-      "/showroom/globe/hearth/jeeves/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/": {
         "pageLoads": 1040,
         "visits": 740
+      },
+      "/showroom/globe/hearth/jeeves/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 50,
@@ -194,16 +194,16 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -330,12 +330,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {

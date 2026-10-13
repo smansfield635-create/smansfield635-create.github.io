@@ -16,12 +16,37 @@ const isApprovedFourTreeGeometryBlob=blob=>blob===approvedFourTreeGeometryBlob;
 const out='/tmp/gen2-evidence';
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const gen2674QualificationHeads=new Set(['9a63c4571d95abf925ba22f2fcd7aaaa8c578cac','b23839dc8a473b52dbac080f71bde38dd99cda0f','870a995a7012312ac25569c0dc6673822a126ae2','158d72eecedf9197df194d997cb3b10250197265','e9b86b1af4a5c1ec66a5f39c3e7e1baa91757dce']);
+const woodlandQualificationHead='4abd1016336482373caf1c5bfb90245fc188e806';
+const woodlandViews=[['north',-139.403,-194.5],['south',-139.403,-236],['east',-119,-216],['west',-164,-216],['interior',-141,-214]].map(([id,x,z])=>({id,x,z,yawDegrees:id==='interior'?0:Math.atan2(-141-x,z+216)*180/Math.PI,pitchDegrees:-8}));
+const woodlandReady=s=>Boolean(s?.gpuResidency?.woodlandFineGrassReady===true&&s?.woodland?.ready===true&&s.woodland.visibleContacts>0&&s.woodland.visibleInstanceCount>0&&s.woodland.drawCallCount===3&&/0:[1-9]\d*,1:[1-9]\d*,2:[1-9]\d*$/.test(s.woodland.selectionSignature??'')&&s.woodland.submittedTriangles>0&&s.woodland.combinedGrassGpuBytes>0&&s.woodland.combinedGrassGpuBytes<=8388608&&(s.globalCover?.visibleInstanceCount??Infinity)+s.woodland.visibleInstanceCount<=4096&&(s.globalCover?.drawCallCount??Infinity)+s.woodland.drawCallCount<=64);
+const woodlandCameraMatches=(s,t)=>Boolean(s?.navigation?.accepted===true&&s.navigation.action==='GOTO_WAYPOINT'&&s.navigation.terrainSupported===true&&[s.position?.x,s.position?.y,s.position?.z,s.navigation.visibleTerrainElevation,s.navigation.minimumCameraY,s.navigation.targetCameraY,s.navigation.clearance].every(Number.isFinite)&&s.navigation.clearance>0&&s.position.y>=s.navigation.minimumCameraY&&Math.abs(s.position.y-s.navigation.targetCameraY)<.001&&Math.hypot(s.position.x-t.x,s.position.z-t.z)<.03&&Math.abs(wrappedMeadowYaw(s.navigation.yawDegrees-t.yawDegrees))<.02&&Math.abs(s.navigation.pitchDegrees-t.pitchDegrees)<.02&&Math.abs(s.navigation.verticalFovDegrees-56)<.02);
+async function captureWoodlandViews(page,observe,entry){
+ await fs.mkdir(out+'/four-tree-views',{recursive:true});
+ entry.woodlandViews=[];
+ for(const target of woodlandViews){
+  const before=await observe();
+  await page.evaluate(id=>{globalThis.__hEarthQualifierWaypoint='QUALIFIER_'+id;},target.id);
+  const canvas=page.locator('#h-earth-functional-landscape-canvas');await canvas.hover();await page.mouse.wheel(0,1);
+  let actual;const started=Date.now();
+  while(Date.now()-started<30000){if(entry.errors.length||entry.failedRequests.length)throw Error('WOODLAND_BROWSER_ERROR');actual=await observe();if(actual.navigation?.sequence>before.navigation.sequence&&Math.hypot(actual.position.x-target.x,actual.position.z-target.z)<.03&&woodlandReady(actual)&&actual.woodland.perFrameUploadBytes===0)break;await sleep(200);}
+  if(!woodlandCameraMatches(actual,target)||!readiness(actual)||!residencyReady(actual.residency)||!woodlandReady(actual)||actual.navigation?.sequence<=before.navigation.sequence||Math.hypot(actual.position.x-target.x,actual.position.z-target.z)>.03||Math.abs(wrappedMeadowYaw(actual.navigation.yawDegrees-target.yawDegrees))>.02||Math.abs(actual.navigation.pitchDegrees-target.pitchDegrees)>.02||Math.abs(actual.navigation.verticalFovDegrees-56)>.02||actual.navigation.terrainSupported!==true||!Number.isFinite(actual.navigation.visibleTerrainElevation)||actual.position.y<actual.navigation.minimumCameraY||actual.gpuFourTreeFloorCount!==4||actual.clearingGpuReady!==true||actual.woodland.perFrameUploadBytes!==0)throw Error('WOODLAND_ACTUAL_VIEW_INVALID:'+target.id+':'+JSON.stringify(actual));
+  const samples=await page.evaluate(()=>new Promise((resolve,reject)=>{const intervals=[];let last=null;const timer=setTimeout(()=>reject(Error('WOODLAND_FRAME_TIMING_TIMEOUT')),30000);function tick(now){if(last!==null)intervals.push(now-last);last=now;if(intervals.length===60){clearTimeout(timer);resolve({intervalsMs:intervals,jsHeap:performance.memory?{usedJSHeapSize:performance.memory.usedJSHeapSize,totalJSHeapSize:performance.memory.totalJSHeapSize,jsHeapSizeLimit:performance.memory.jsHeapSizeLimit}:null});}else requestAnimationFrame(tick);}requestAnimationFrame(tick);}));
+  const after=await observe();if(entry.errors.length||entry.failedRequests.length||!woodlandCameraMatches(after,target)||!readiness(after)||!residencyReady(after.residency)||!woodlandReady(after)||after.woodland.perFrameUploadBytes!==0||after.woodland.totalUploadedBytes!==actual.woodland.totalUploadedBytes||after.woodland.selectionSignature!==actual.woodland.selectionSignature||after.gpuPresentations<=actual.gpuPresentations)throw Error('WOODLAND_STATIONARY_RENDER_INVALID:'+target.id);
+  const filename='four-tree-views/'+target.id+'-post-residency-canvas.png',bytes=await canvas.screenshot({path:out+'/'+filename});if(bytes.length<1024)throw Error('WOODLAND_CANVAS_EMPTY');
+  const sorted=[...samples.intervalsMs].sort((a,b)=>a-b);
+  entry.woodlandViews.push({target,actualCamera:after.navigation,filename,canvasBytes:bytes.length,canvasSha256:crypto.createHash('sha256').update(bytes).digest('hex'),woodland:after.woodland,globalCover:after.globalCover,vegetationResidency:after.gpuResidency,timing:{...samples,medianMs:sorted[30],p95Ms:sorted[57],measurement:'requestAnimationFrame intervals; not GPU timer queries'},navigationElapsedMs:Date.now()-started,canonicalTerrainSupportedCamera:true,cameraHeightNote:'CPU diagnostic used 1.7m; browser preserves canonical terrain-supported camera, without height override',measuredHeightAboveVisibleTerrain:after.position.y-after.navigation.visibleTerrainElevation,productionNavigationUnchanged:true,testOnlyWaypointFixture:true});
+ }
+ if(entry.woodlandViews.length!==5)throw Error('WOODLAND_FIVE_VIEWS_MISSING');
+ await fs.writeFile(out+'/four-tree-views/receipt.json',JSON.stringify(entry.woodlandViews,null,2)+'\n');
+}
 const gen2674MeadowTarget=Object.freeze({x:-45,z:-326,yawDegrees:0,pitchDegrees:-8,verticalFovDegrees:56});
 async function runGen2674IndependentRootQualification(exactCandidateHead){
+ if(exactCandidateHead===woodlandQualificationHead&&Number(process.versions.node.split('.')[0])!==22)throw Error('WOODLAND_REQUIRES_ACTUAL_NODE22:'+process.version);
  const receipt={schema:'H_EARTH_GEN2674_INDEPENDENT_WORLD_ROOT_QUALIFICATION_v1',candidateHead:exactCandidateHead,
-  actualNode22Execution:true,worldBinaryMustRemainUnchanged:true,steps:[],result:'PENDING'};
+  actualNode22Execution:true,nodeVersion:process.version,worldBinaryMustRemainUnchanged:true,steps:[],result:'PENDING'};
  const plans=[['SOURCE_PARITY','h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs','--verify-source'],
   ['IMMUTABLE_WORLD_ROOT','h-earth-3d/validation/h-earth.global-groundcover.v1.mjs','--single-order']];
+ if(exactCandidateHead===woodlandQualificationHead)plans.push(['FOUR_TREE_ROOT','h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs','--verify']);
  try{
   for(const [id,script,arg] of plans){
    const completed=spawnSync(process.execPath,[script,arg],{encoding:'utf8',timeout:11*60*1000,maxBuffer:16*1024*1024});
@@ -31,6 +56,7 @@ async function runGen2674IndependentRootQualification(exactCandidateHead){
     stdoutTail:stdout.slice(-12000),stderrTail:stderr.slice(-5000),
     result:completed.status===0&&!completed.error?'PASS':'FAIL'};
    receipt.steps.push(evidence);
+   if(id==='FOUR_TREE_ROOT')await fs.writeFile(out+'/four-tree-independent-root-receipt.json',JSON.stringify(evidence,null,2)+'\n');
    if(evidence.result!=='PASS')throw Error('GEN2674_INDEPENDENT_'+id+'_FAILED:'+String(completed.error||stderr.slice(-1400)));
   }
   receipt.result='PASS';
@@ -164,10 +190,13 @@ if(process.argv.includes('--self-test')){
   const example={routeReady:true,hasPublicRoute:true,loadingScreen:false,canvas:{present:true,visible:true,width:320,height:180},webgl2Alive:true,gpuPresentations:2,firstFailureStage:null};
   const complete={preparationComplete:true,validationStatus:'VALIDATED',totalBatchCount:108,residentBatchCount:108,totalInstanceCount:27585,residentInstanceCount:27585,complete:true,droppedPlacementCount:0,worldRebuildCount:0};
   if(!readiness(example)||readiness({...example,loadingScreen:true})||readiness({...example,canvas:{present:false}})||readiness({...example,gpuPresentations:0})||!residencyReady(complete)||residencyReady({...complete,residentBatchCount:2})||!isApprovedFourTreeGeometryBlob('c26247dcb69cb52c968fcd3ef6c2626eaa577d03')||isApprovedFourTreeGeometryBlob('02a2568e8a478fb9153ec29910266671ba349b01'))throw Error('GEN2638_QUALIFIER_SELF_TEST_FAILED');
+  const w={gpuResidency:{woodlandFineGrassReady:true},woodland:{ready:true,visibleContacts:1,visibleInstanceCount:1,drawCallCount:3,selectionSignature:'0:0:1024:0:500,1:200,2:100',submittedTriangles:4,combinedGrassGpuBytes:8131680},globalCover:{visibleInstanceCount:3072,drawCallCount:3}};
+  if(!woodlandReady(w)||woodlandReady({...w,gpuResidency:{woodlandFineGrassReady:false}})||woodlandReady({...w,woodland:{...w.woodland,visibleContacts:0}})||woodlandReady({...w,woodland:{...w.woodland,combinedGrassGpuBytes:8388609}})||new Set(woodlandViews.map(v=>v.id)).size!==5)throw Error('WOODLAND_SELF_TEST_FAILED');
   console.log(JSON.stringify({schema:'H_EARTH_GEN2_VISUAL_QUALIFIER_SELF_TEST_v1',result:'PASS',loadingOverlayRejected:true,missingGpuRejected:true,incompleteResidencyRejected:true}));
 }else{
  const sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
- const gen2674QualificationActive=gen2674QualificationHeads.has(sha);
+ const woodlandQualificationActive=sha===woodlandQualificationHead;
+ const gen2674QualificationActive=gen2674QualificationHeads.has(sha)||woodlandQualificationActive;
  if(performanceCaptureActive){
   const executingBlob=execFileSync('git',['hash-object',process.argv[1]],{encoding:'utf8'}).trim();
   const targetToolBlob=execFileSync('git',['rev-parse','HEAD:tools/h-earth-gen2-visual-qualify.mjs'],{encoding:'utf8'}).trim();
@@ -231,7 +260,15 @@ if(process.argv.includes('--self-test')){
       const meadow="COAST:{waypointId:'COAST',label:'Coastal entry',position:{x:-45,z:-326},yawDegrees:0,pitchDegrees:-8}";
       if(source.split(original).length!==2)throw Error('GEN2674_TEST_CAMERA_SOURCE_BINDING_MISSING');
       gen2674TestCameraOverrides++;
-      await route.fulfill({response,body:source.replace(original,meadow)});
+      let body=source.replace(original,meadow);
+      if(woodlandQualificationActive){
+       const marker='export function proposeHEarthFunctionalLandscapeNavigation(current,intent={}){';
+       if(body.split(marker).length!==2)throw Error('WOODLAND_NAVIGATION_FIXTURE_BINDING_MISSING');
+       const waypoints=woodlandViews.map(v=>`QUALIFIER_${v.id}:{waypointId:'QUALIFIER_${v.id}',position:{x:${v.x},z:${v.z}},yawDegrees:${v.yawDegrees},pitchDegrees:${v.pitchDegrees}}`).join(',');
+       body=body.replace(meadow,meadow+','+waypoints).replace(marker,marker+"if(globalThis.__hEarthQualifierWaypoint){intent={action:'GOTO_WAYPOINT',waypointId:globalThis.__hEarthQualifierWaypoint};delete globalThis.__hEarthQualifierWaypoint;}");
+      }
+      if(woodlandQualificationActive){entry.navigationFixtures??=[];entry.navigationFixtures.push({url:route.request().url(),beforeSha256:crypto.createHash('sha256').update(source).digest('hex'),afterSha256:crypto.createHash('sha256').update(body).digest('hex'),waypointCount:5,canonicalGotoImplementationUnchanged:true});}
+      await route.fulfill({response,body});
      });
     }
     const profilingQuery=performanceCaptureActive?(v.query?v.query+'&performance=1':'?performance=1'):v.query;
@@ -269,8 +306,9 @@ if(process.argv.includes('--self-test')){
       clearingCasterIndexCount:gpu?.resources?.woodlandClearing?.casterIndexCount??null,
       firstFailureStage:startup?.firstFailureStage||null,
       position:route?.getIntakeReceipt?.()?.currentNavigationState?.position||null,
-      navigation:(()=>{const n=route?.getIntakeReceipt?.()?.currentNavigationState;return n?{yawDegrees:n.yawDegrees,pitchDegrees:n.pitchDegrees,verticalFovDegrees:n.verticalFovDegrees,position:n.position,sequence:n.sequence}:null})(),
+      navigation:(()=>{const n=route?.getIntakeReceipt?.()?.currentNavigationState;return n?{yawDegrees:n.yawDegrees,pitchDegrees:n.pitchDegrees,verticalFovDegrees:n.verticalFovDegrees,position:n.position,sequence:n.sequence,accepted:n.accepted,action:n.action,targetCameraY:n.targetCameraY,terrainSupported:n.terrainSupported,visibleTerrainElevation:n.visibleTerrainElevation,minimumCameraY:n.minimumCameraY,clearance:n.clearance}:null})(),
       navigationProposals:(route?.getIntakeReceipt?.()?.proposals||[]).slice(-16).map(p=>({sequence:p.sequence,inputClass:p.inputClass,action:p.intent?.action,accepted:p.accepted})),
+      woodland:gpu?.resources?.woodlandFineGrass??null,globalCover:gpu?.resources?.globalGroundCover??null,gpuResidency:gpu?.resources?.vegetationResidency??null,
       residencyStatus:root?.dataset.vegetationResidency||null,
       residency:route?.getVegetationResidency?.()||null
      };
@@ -318,7 +356,7 @@ if(process.argv.includes('--self-test')){
       const n=snap.residency?.residentBatchCount??0;
       if(n!==previous){entry.progress.push({phase:'RESIDENCY',elapsedMs:Date.now()-started,completedBatches:n,totalBatches:snap.residency?.totalBatchCount||null,instances:snap.residency?.residentInstanceCount||0});previous=n;}
       if(snap.residencyStatus==='failed'||snap.firstFailureStage)throw Error('GEN2638_VEGETATION_FAILED');
-      if(residencyReady(snap.residency))break;
+      if(residencyReady(snap.residency)&&(!woodlandQualificationActive||snap.gpuResidency?.woodlandFineGrassReady===true))break;
       await sleep(2000);
      }
      entry.residency=snap.residency;
@@ -332,7 +370,7 @@ if(process.argv.includes('--self-test')){
         throw Error('PERFORMANCE_CAPTURE_FULL_RESIDENCY_DIAGNOSTIC_MISSING_OR_FAILED');
       entry.performanceContract={schema:'H_EARTH_SOURCE_BOUND_DUAL_VEGETATION_PERFORMANCE_v1',sourceBound:true,deviceClass:'HEADLESS_CHROMIUM_NOT_PHYSICAL_ANDROID',capturedAtReady:true,capturedAfterFullResidency:true,canonicalWorkerTimings:true,oasisPreparationMilestones:true,globalGroundCoverTimings:true,strictUnchangedFourTreeAndVegetationAssertions:true};
      }
-     if(!residencyReady(snap.residency)){
+     if(!residencyReady(snap.residency)||(woodlandQualificationActive&&snap.gpuResidency?.woodlandFineGrassReady!==true)){
       if(performanceCaptureActive)entry.performanceAtIncompleteResidency=await observePerformance();
       await page.screenshot({path:out+'/'+v.id+'-incomplete-residency.png',fullPage:true});
       throw Error('GEN2638_DEFERRED_RESIDENCY_INCOMPLETE');
@@ -357,6 +395,7 @@ if(process.argv.includes('--self-test')){
        testOnlyNavigationModuleResponseIntercepted:true,productionNavigationUnchanged:true,
        ownerPerceptualDisposition:'PENDING'};
       await fs.writeFile(out+'/gen2674-meadow-camera-receipt.json',JSON.stringify(entry.gen2674Meadow,null,2)+'\n');
+      if(woodlandQualificationActive){if(entry.navigationFixtures?.length!==1)throw Error('WOODLAND_FIXTURE_BINDING_COUNT:'+entry.navigationFixtures?.length);await captureWoodlandViews(page,observe,entry);}
      }
      if(v.id==='coast'&&gen2671MeadowHead(sha))await captureGen2671Meadow(page,observe,entry,sha);
      // The owner-requested question is soil quality OUTSIDE the reference,

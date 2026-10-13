@@ -38,7 +38,7 @@ jobs:
           owner: smansfield635-create
           repositories: geodiametrics1
           permission-contents: read
-          permission-issues: write
+          permission-pull-requests: write
       - name: Check out exact private Gen653 source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -54,8 +54,8 @@ jobs:
           PRIVATE_APP_ID: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
           PRIVATE_APP_TOKEN: ${{ steps.private.outputs.token }}
           PUBLIC_ACTIONS_TOKEN: ${{ github.token }}
-          MAX_SOURCE_REQUESTS: '3000'
-          MAX_RUNTIME_MINUTES: '155'
+          MAX_SOURCE_REQUESTS: '4'
+          MAX_RUNTIME_MINUTES: '8'
         shell: bash
         run: |
           set -euo pipefail

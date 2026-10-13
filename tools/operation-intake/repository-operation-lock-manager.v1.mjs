@@ -89,6 +89,47 @@ export const EXACT_POST_1894_LEDGER_MATERIALIZATION_RECOVERIES = [
   stable({corruptCommitSha:'3f70dc2bdf1f943cc35c9eb43f61226f4a96af89',corruptParentSha:'5bcdf83310bd501e61344342bc172fb34e1d60f3',parentLedgerBlobSha:'4bcd01272a9f91038d150dc7cf8dc55c15ab3973',corruptLedgerBlobSha:'dc7ec0004cc7e3022577fe17e09c41d8c4edae91',restorationCommitSha:'f122f528a95276b992ace2d751148caca7ed7f3f',restorationLedgerBlobSha:'58626cb84d0ad298e6400fec5b65e0cd30a9ca9f',restorationMessage:'Acquire operation lock 2051: COMPASS_AUDRALIA_IMMERSION_HOLD_FINAL_TOUCH_20260910_001',scopeHash:'694704e90da4e85004e5b450a5af786e66f1d6bd565e0529f831d02e558d6d6a',restoredRowSha256:'b44193d5326d40c162a4116ead9886bb0692dc4e2954da4c03b6dc3e6c3ef370',sourceCommentId:5611432187,sourceIssueNumber:2955,sourceBodySha256:'16ce26496c9ac8dbe977a2e23e4d5f64e486bccef62f8149ce710ee8e2ac9557'})
 ];
 
+export const EXACT_GEN2681_GEN2682_LEDGER_RECOVERY = stable({
+  "chain": [
+    {
+      "sha": "d730db6f1aca551eec454fd3caad08a99e03e316",
+      "parent": "d1a229125142dd90ea00df5f972b7d9fa13c26f1",
+      "blob": "f6dbcd2fd1382e8b3cf791cc4051a86762d381f1",
+      "message": "Supersede operation 2677 with successor 2681: H_EARTH_MEADOW_SHORELINE_REPRESENTATION_REPLACEMENT_20261013_001"
+    },
+    {
+      "sha": "b0fd682418271490009ddc4909e487d51fc4a633",
+      "parent": "d730db6f1aca551eec454fd3caad08a99e03e316",
+      "blob": "ac07e4549ea87da32296135321f497e04eb521f5",
+      "message": "Close operation lock 2681: H_EARTH_MEADOW_SHORELINE_REPRESENTATION_REPLACEMENT_20261013_001 REJECTED_CLOSED"
+    },
+    {
+      "sha": "0d1b092e6fe55a999153d04be3206c5858feb7c9",
+      "parent": "b0fd682418271490009ddc4909e487d51fc4a633",
+      "blob": "1dcc9f6e5e89ac38470e88926dea53227f6c83a4",
+      "message": "Acquire operation lock 2682: H_EARTH_MEADOW_PRESENTATION_ROOT_GAP_COVERAGE_20261013_001"
+    },
+    {
+      "sha": "8158294454f8f1c5ddd249f192594f02b8e8edbf",
+      "parent": "0d1b092e6fe55a999153d04be3206c5858feb7c9",
+      "blob": "a9fff98ab73b05eca691f3609ae8e7ab354c771a",
+      "message": "Restore exact Gen2681 closure and Gen2682 admission ledger after transport truncation"
+    }
+  ],
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "owner": "smansfield635-create",
+  "issueNumber": 6100,
+  "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
+  "closureCommentId": 6152147411,
+  "closureBodySha256": "7e351532e6b7be66231f171921439f10e921763b759c19899443ed1b7513fac5",
+  "admissionCommentId": 6152200694,
+  "admissionBodySha256": "83036ca7e49ea93f8ee0b4a12bca8fd8f4f6c1680500d3136818ab1ef0a619f5",
+  "closedScopeHash": "482b4ab87a2d079f91ef6d3559217bc62d3f30d2661dc7b4454ae9a14b9d25ca",
+  "admittedScopeHash": "89d5521ec0e79acf8d93cc0cd451c8fb0968465d7ade111d1e1e56827cec7659",
+  "terminalRowSha256": "c9ae8bb3f988f7cf84a47d5538bd70be693cf9a5ebf091e9cf5eb8f4a8ddbcca",
+  "admittedRowSha256": "6c1593e4ab22b611b53dd6a9af362c0d0369b57e633364f7e044c54c372f0dc0"
+});
+
 export const EXACT_LEDGER_RESTORATION_RECOVERY = stable({
   commitSha: 'eaec93ba84a747e4710f6c65e49c5163e5f68f4f',
   parentSha: '38fade1c33e705497f2984072dece377ad480aa0',
@@ -447,6 +488,55 @@ async function verifyExactGen2055Gen2062Recovery({repository,token,summary,branc
   return true;
 }
 
+// The two malformed historical blobs are never reinterpreted. Their exact Git
+// identities remain the historical CAS. Production supplies hash-verified good
+// and restored ledgers plus authenticated GitHub commit/comment readbacks.
+export function verifyExactGen2681Gen2682HistoricalState({commits,parentLedger,restoredLedger,closureComment,admissionComment,branchHead,lineageCommitShas}) {
+ const r=EXACT_GEN2681_GEN2682_LEDGER_RECOVERY;
+ const fail=detail=>{throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','gen2681-gen2682-materialization','authority-lineage',detail)};
+ if(!Array.isArray(commits)||commits.length!==r.chain.length)fail('COMMIT_SET_MISMATCH');
+ for(let i=0;i<r.chain.length;i++){
+  const c=commits[i],p=r.chain[i];
+  if(c?.sha!==p.sha||c?.author?.login!==r.owner||c?.committer?.login!==r.owner||c?.commit?.message!==p.message||c?.parents?.length!==1||c.parents[0]?.sha!==p.parent||c?.files?.length!==1||c.files[0]?.filename!==LEDGER_PATH||c.files[0]?.sha!==p.blob)fail('COMMIT_IDENTITY_MISMATCH:'+i);
+ }
+ if(!Array.isArray(lineageCommitShas)||new Set(lineageCommitShas).size!==lineageCommitShas.length||lineageCommitShas.at(-1)!==branchHead)fail('TARGET_LINEAGE_INVALID');
+ const positions=r.chain.map(c=>lineageCommitShas.indexOf(c.sha));
+ if(positions.some(i=>i<0)||positions.some((p,i)=>i>0&&p!==positions[i-1]+1)||positions.at(-1)>lineageCommitShas.indexOf(branchHead))fail('RESTORATION_NOT_IN_ORDERED_TARGET_LINEAGE');
+ const sources=[[closureComment,r.closureCommentId,r.closureBodySha256,'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1'],[admissionComment,r.admissionCommentId,r.admissionBodySha256,CANONICAL_MARKER]];
+ for(const [c,id,digest,marker] of sources){
+  if(c?.id!==id||c?.issue_url!==`https://api.github.com/repos/${r.repository}/issues/${r.issueNumber}`||c?.user?.login!==r.owner||c?.author_association!=='OWNER'||typeof c?.body!=='string'||sha(c.body)!==digest||markerFromBody(c.body)!==marker)fail('AUTHENTICATED_SOURCE_MISMATCH:'+id);
+ }
+ if(parentLedger?.lockGeneration!==2681||Object.keys(parentLedger.activeScopes??{}).length!==586||parentLedger.terminalHistory?.length!==2094||restoredLedger?.lockGeneration!==2682)fail('LEDGER_GENERATION_OR_POPULATION_MISMATCH');
+ const closure=parseMarkedJson(closureComment.body,sources[0][3]),intake=parseMarkedJson(admissionComment.body,CANONICAL_MARKER),request=intake.operationRequest;
+ const prior=parentLedger.activeScopes[r.closedScopeHash];
+ if(!prior||prior.lockGeneration!==2681||closure.repository!==r.repository||closure.expectedMainHead!==r.governingHead||closure.closureRequest?.repository!==r.repository||closure.closureRequest?.terminalDisposition!=='REJECTED_CLOSED')fail('CLOSURE_REQUEST_BINDING_MISMATCH');
+ const closed=closeLocal(parentLedger,closure.closureRequest);
+ const terminal=closed.ledger.terminalHistory.at(-1);
+ const source=(c,marker)=>stable({repository:r.repository,issueNumber:r.issueNumber,commentId:c.id,commentBodySha256:sha(c.body),authorLogin:r.owner,authorAssociation:'OWNER',marker});
+ const bind=core=>stable({...core,bindingDigest:sha(canonical(core))});
+ terminal.independentClosureProvenance=bind({schema:'OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1',transportId:'OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1',authorityIdentity:authorityIdentity(prior),terminalIdentity:{governingHead:prior.governingHead,lockGeneration:2681,lockScope:prior.lockScope,operationId:prior.operationId,released:true,scopeHash:r.closedScopeHash,state:'TERMINAL',terminalDisposition:'REJECTED_CLOSED'},source:source(closureComment,sources[0][3]),compareAndSwap:{observedLockRefHead:r.chain[0].sha,observedLedgerBlobSha:r.chain[0].blob}});
+ if(sha(canonical(terminal))!==r.terminalRowSha256)fail('TERMINAL_CANONICAL_REPLAY_MISMATCH');
+ const acquired=acquireLocal(closed.ledger,{operationId:request?.operationId,lockScope:request?.lockScope,governingHead:request?.exactGoverningHead,requestDigest:sha(canonical(request)),procedureLocatorDigest:sha(canonical(intake.constructionProcedure))});
+ if(!acquired.acquired||acquired.lock.lockGeneration!==2682||acquired.lock.scopeHash!==r.admittedScopeHash)fail('ADMISSION_CANONICAL_REPLAY_MISMATCH');
+ const row=acquired.ledger.activeScopes[r.admittedScopeHash];
+ row.independentAuthorityProvenance=bind({schema:'OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1',transportId:'OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1',authorityIdentity:authorityIdentity(row),source:source(admissionComment,CANONICAL_MARKER),compareAndSwap:{observedLockRefHead:r.chain[1].sha,observedLedgerBlobSha:r.chain[1].blob}});
+ if(sha(canonical(row))!==r.admittedRowSha256)fail('ADMISSION_PROVENANCE_OR_HISTORICAL_CAS_MISMATCH');
+ if(canonical(restoredLedger)!==canonical(acquired.ledger))fail('FULL_CANONICAL_LEDGER_REPLAY_MISMATCH');
+ return stable({result:'EXACT_GEN2681_GEN2682_MATERIALIZATION_RECOVERED',restorationCommitSha:r.chain[3].sha,restorationLedgerBlobSha:r.chain[3].blob,closureSourceCommentId:r.closureCommentId,admissionSourceCommentId:r.admissionCommentId,unrelatedActiveRowsPreserved:585,priorTerminalRowsPreserved:2094,historicalAdmissionCASPreserved:true});
+}
+async function verifyExactGen2681Gen2682Recovery({repository,token,summary,branchHead,seen,anchor}){
+ const r=EXACT_GEN2681_GEN2682_LEDGER_RECOVERY;
+ if(!r.chain.slice(1).some(c=>c.sha===summary?.sha))return false;
+ if(repository!==r.repository)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','exact-ledger-recovery','authority-lineage','REPOSITORY_MISMATCH');
+ const commits=[];
+ for(const c of r.chain)commits.push(await req(`${base(repository)}/commits/${c.sha}`,{headers:H(token)},[200],'GEN2681_GEN2682_EXACT_COMMIT'));
+ const parentLedger=await readGitLedgerBlob({repository,token,blobSha:r.chain[0].blob,commitSha:r.chain[0].sha,source:'gen2681-good-parent'});
+ const restoredLedger=await readGitLedgerBlob({repository,token,blobSha:r.chain[3].blob,commitSha:r.chain[3].sha,source:'gen2682-exact-restoration'});
+ const closureComment=await fetchComment(repository,token,r.closureCommentId),admissionComment=await fetchComment(repository,token,r.admissionCommentId);
+ verifyExactGen2681Gen2682HistoricalState({commits,parentLedger,restoredLedger,closureComment,admissionComment,branchHead,lineageCommitShas:[anchor,...seen.map(c=>c.sha)]});
+ return true;
+}
+
 async function verifyExactGen1915LedgerRecovery({repository,token,summary}) {
   const r=EXACT_GEN1915_HISTORICAL_MATERIALIZATION_RECOVERY;if(summary?.sha!==r.commitSha)return false;
   if(process.env.REPOSITORY_OPERATION_LOCAL_GIT_LINEAGE!=='1')return false;
@@ -578,6 +668,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
   const spanRecovery=await verifyExactCorruptedLedgerSpanRecovery({repository,token,anchor,seen,checkpointVerification});
   const verificationSet=spanRecovery?seen.slice(spanRecovery.nextIndex):seen;
   for(const c of verificationSet){
+    if(await verifyExactGen2681Gen2682Recovery({repository,token,summary:c,branchHead:head,seen,anchor}))continue;
     if(await verifyExactGen2021LedgerCounterRecovery({repository,token,summary:c}))continue;
     if(await verifyExactGen1915LedgerRecovery({repository,token,summary:c}))continue;
     if(await verifyExactLedgerRestorationRecovery({repository,token,summary:c}))continue;

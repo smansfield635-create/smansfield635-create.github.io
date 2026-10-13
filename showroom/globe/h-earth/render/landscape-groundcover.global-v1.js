@@ -1,5 +1,5 @@
 /** Global presentation density; no canonical placement or terrain mutation. */
-import {buildHEarthWoodlandGrassTuft,H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from './grass-lowland-trial.js';
+import {buildHEarthWoodlandGrassTuft,buildHEarthMeadowFineGrassTemplate,H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from './grass-lowland-trial.js?cb=gen2674-meadow-fine-20261012';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_PLANETARY_WORLD_FRAME} from './planetary-world-frame.js';
@@ -67,6 +67,115 @@ function templateFor(){
   }
   return{positions,normals,colors,indices:new Uint32Array(g.indices),rootInfo,rootVertices,rootMapping:'PER_VERTEX_ROOT_INDEX_AT_ROOTINFO_X_HEIGHT_ABOVE_FLAT_ROOT',recipe:'ACCEPTED_FOUR_BLADE_28_VERTEX_24_TRIANGLE_FAN'};
 }
+
+/** One bounded landscape study. The original 61,235 Float32 fans are never edited. */
+export const H_EARTH_MEADOW_CARPET_PILOT=Object.freeze({id:'GEN2674_FINE_MEADOW_CARPET_V1',centerX:-45,centerZ:-326,radius:18,cell:.65,maxTufts:800,maskMeters:40,maskCell:.5,maskSize:80});
+const MEADOW=H_EARTH_MEADOW_CARPET_PILOT;
+const meadowDistance=(x,z)=>Math.hypot(x-MEADOW.centerX,z-MEADOW.centerZ);
+function buildMeadowSoilMask(acceptedRoots){
+  const n=MEADOW.maskSize,cell=MEADOW.maskCell,occupied=new Float32Array(n*n);
+  const x0=MEADOW.centerX-MEADOW.maskMeters/2,z0=MEADOW.centerZ-MEADOW.maskMeters/2;
+  let occupiedCount=0;
+  for(const root of acceptedRoots){
+    const x=Math.floor((root.x-x0)/cell),z=Math.floor((root.z-z0)/cell);
+    if(x<0||x>=n||z<0||z>=n)continue;
+    for(let dz=-2;dz<=2;dz++)for(let dx=-2;dx<=2;dx++){
+      if(dx*dx+dz*dz>4||x+dx<0||x+dx>=n||z+dz<0||z+dz>=n)continue;
+      occupied[(z+dz)*n+x+dx]=1;
+    }
+  }
+  for(const p of occupied)if(p>0)occupiedCount++;
+  const blur=input=>{
+    const tmp=new Float32Array(n*n),out=new Float32Array(n*n);
+    for(let z=0;z<n;z++)for(let x=0;x<n;x++){
+      let total=0,weight=0;for(let dx=-2;dx<=2;dx++)if(x+dx>=0&&x+dx<n){total+=input[z*n+x+dx];weight++;}
+      tmp[z*n+x]=total/weight;
+    }
+    for(let z=0;z<n;z++)for(let x=0;x<n;x++){
+      let total=0,weight=0;for(let dz=-2;dz<=2;dz++)if(z+dz>=0&&z+dz<n){total+=tmp[(z+dz)*n+x];weight++;}
+      out[z*n+x]=total/weight;
+    }
+    return out;
+  };
+  const smooth=blur(blur(occupied)),pixels=new Uint8Array(n*n);let nonzero=0,covered=0;
+  for(let z=0;z<n;z++)for(let x=0;x<n;x++){
+    const wx=x0+(x+.5)*cell,wz=z0+(z+.5)*cell,radial=clamp((MEADOW.radius-meadowDistance(wx,wz))/2);
+    const v=Math.max(0,Math.min(1,(smooth[z*n+x]-.09)/.62))*radial;
+    pixels[z*n+x]=Math.round(v*255);if(pixels[z*n+x]>0)nonzero++;if(pixels[z*n+x]>=128)covered++;
+  }
+  return {width:n,height:n,pixels,bounds:{minX:x0,maxX:x0+MEADOW.maskMeters,minZ:z0,maxZ:z0+MEADOW.maskMeters},
+    occupiedCellCount:occupiedCount,nonzeroTexelCount:nonzero,coveredTexelCount:covered,rootCount:acceptedRoots.length,maskBytes:pixels.byteLength,geometryMutated:false};
+}
+async function buildHEarthMeadowFineCover({sample,water,obstacles,onProgress}){
+  const template=buildHEarthMeadowFineGrassTemplate(),candidates=[],acceptedRoots=[],records=[];
+  const side=MEADOW.maskMeters,cell=MEADOW.cell,steps=Math.ceil(side/cell);
+  for(let iz=0;iz<steps;iz++)for(let ix=0;ix<steps;ix++){
+    const id=`MEADOW:FINE:${ix}:${iz}`;
+    const x=f(MEADOW.centerX-side/2+(ix+.5+(hash(id,'dx')-.5)*.55)*cell+(iz%2)*cell*.29);
+    const z=f(MEADOW.centerZ-side/2+(iz+.5+(hash(id,'dz')-.5)*.55)*cell);
+    const d=meadowDistance(x,z);if(d>MEADOW.radius-.55)continue;
+    // Connected low-growth colonies share smooth broad and fine suitability;
+    // neither row priority nor rectangular tile membership sets boundaries.
+    const colony=.55*field(x,z,5.5,'GEN2674_COLONY_FINE')+.45*field(x,z,13,'GEN2674_COLONY_REGION');
+    if(colony<.31||hash(id,'soil-hole')<.095)continue;
+    candidates.push({id,x,z,rank:hash(id,'selection'),colony,d});
+  }
+  candidates.sort((a,b)=>a.rank-b.rank||a.id.localeCompare(b.id));
+  let rejectedHabitat=0,rejectedRoots=0,low=0,middle=0,tall=0;
+  for(let i=0;i<candidates.length&&records.length<MEADOW.maxTufts;i++){
+    if(i>0&&i%96===0){onProgress({phase:'MEADOW_FINE_ROOT_SURVEY',tested:i,accepted:records.length});await yieldControl();}
+    const {x,z,id,colony,d}=candidates[i],support=sample(x,z);
+    if(!support||support.slope>.32||!clear(x,z,.34)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.34)){rejectedHabitat++;continue;}
+    const w=water.sample(x,z);if(w&&support.y<=w.y+.01){rejectedHabitat++;continue;}
+    const a=inverseHEarthGroundCoverPoint(x,support.y,z),m=materialAt(a.x,a.z);
+    if(!m?.valid||!['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)||m.soilDepth<.20||(m.rockExposure??0)>.48){rejectedHabitat++;continue;}
+    const moisture=clamp(.45*(m.shelterMoisture??0)+.35*(m.drainageRetention??0)+.20*(m.valleyMoistureRetention??0));
+    const suitability=clamp(.78+moisture*.18-(m.rockExposure??0)*.22-support.slope*.17);
+    if(hash(id,'habitat-admit')>suitability*(.57+.43*colony)){rejectedHabitat++;continue;}
+    const role=hash(id,'stratum')<.69?0:hash(id,'stratum')<.95?1:2;
+    const angle=f(6.28318530718*hash(id,'angle')),width=f(.82+.31*hash(id,'width'));
+    const height=f(role===0?.55+.34*hash(id,'height'):role===1?1.20+.57*hash(id,'height'):2.04+.42*hash(id,'height'));
+    const record=new Float32Array(P.recordFloats),roots=[];let valid=true;
+    for(let root=0;root<12;root++){
+      const point=transformHEarthGroundCoverRoot(template,root,x,z,angle,width);
+      if(meadowDistance(point.x,point.z)>=MEADOW.radius-.12){valid=false;break;}
+      const ground=sample(point.x,point.z),waterHit=water.sample(point.x,point.z);
+      if(!ground||ground.slope>.32||(waterHit&&ground.y<=waterHit.y+.01)){valid=false;break;}
+      const q=inverseHEarthGroundCoverPoint(point.x,ground.y,point.z),material=materialAt(q.x,q.z);
+      if(!material?.valid||!['LOWLAND_SOIL','COASTAL_SOIL'].includes(material.surfaceClass)||material.soilDepth<.20||(material.rockExposure??0)>.48
+          ||!clear(q.x,q.z,.06)||obstacles.some(t=>Math.hypot(point.x-t.x,point.z-t.z)<t.radius+.06)){valid=false;break;}
+      record[root]=ground.y;roots.push(point);
+    }
+    if(!valid){rejectedRoots++;continue;}
+    record.set([x,z,angle,width,height,field(x,z,9,'GEN2674_FINE_PALETTE'),hash(id,'variation'),role],12);
+    records.push(record);acceptedRoots.push(...roots);
+    if(role===0)low++;else if(role===1)middle++;else tall++;
+  }
+  const packed=new Float32Array(records.length*P.recordFloats);for(let i=0;i<records.length;i++)packed.set(records[i],i*P.recordFloats);
+  const soilCoverage=buildMeadowSoilMask(acceptedRoots);
+  const templateBytes=template.positions.byteLength+template.normals.byteLength+template.colors.byteLength+template.indices.byteLength+template.rootInfo.byteLength;
+  const receipt=Object.freeze({id:MEADOW.id,center:{x:MEADOW.centerX,z:MEADOW.centerZ},radiusMeters:MEADOW.radius,
+    fineInstanceCount:records.length,lowCount:low,middleCount:middle,tallCount:tall,rootCount:acceptedRoots.length,
+    candidates:candidates.length,rejectedHabitat,rejectedRoots,
+    templateVertices:template.positions.length/3,templateTriangles:template.indices.length/3,
+    additionalTriangles:records.length*template.indices.length/3,
+    instanceBytes:packed.byteLength,templateBytes,maskBytes:soilCoverage.maskBytes,
+    rootOccupancyTexels:soilCoverage.occupiedCellCount,coveredSoilTexels:soilCoverage.coveredTexelCount,
+    soilNonzeroTexels:soilCoverage.nonzeroTexelCount,originalFloat32RecordsUntouched:true,
+    noWetlandSpecies:true,worldwidePropagation:false});
+  if(records.length<320||low<180||middle<50||soilCoverage.coveredTexelCount<150)
+    throw Error(`MEADOW_CARPET_DESIGN_INSUFFICIENT:${JSON.stringify(receipt)}`);
+  return {template,records:packed,soilCoverage,receipt};
+}
+export function selectHEarthMeadowFineDraw(cover,camera,{maximumInstances=4096}={}){
+  const fine=cover.meadowFine;
+  if(!fine||maximumInstances<=0)return {start:0,count:0,stride:1};
+  const p=camera?.position??camera;
+  const distance=Math.max(0,Math.hypot(p.x-MEADOW.centerX,p.z-MEADOW.centerZ)-MEADOW.radius);
+  const stride=distance<32?1:distance<64?2:distance<96?4:8;
+  return {start:0,count:distance>128?0:Math.min(maximumInstances,Math.ceil(fine.receipt.fineInstanceCount/stride)),stride};
+}
+
 /** Match the shader float operations; no fused multiply/add is assumed. */
 export function transformHEarthGroundCoverRoot(template,root,x,z,angle,width){const i=template.rootVertices[root]*3,dx=f(template.positions[i]*width),dz=f(template.positions[i+2]*width),c=f(Math.cos(angle)),s=f(Math.sin(angle));return{x:f(x+f(f(dx*c)-f(dz*s))),z:f(z+f(f(dx*s)+f(dz*c)))};}
 function eligibleMaterial(m,slope){if(m?.valid!==true||slope>.35)return false;if(m.surfaceClass==='STONE_AND_SPARSE_SOIL')return m.soilDepth>=.035;return ['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20;}
@@ -204,11 +313,13 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
   const packedTiles=[];for(const tile of patches){const start=output.length;for(const p of tile.entries){output.push(p.record);if(p.mountain)mountainInstances++;}if(tile.entries.length)packedTiles.push({start,count:tile.entries.length,minX:tile.minX-1.8,maxX:tile.maxX+1.8,minZ:tile.minZ-1.8,maxZ:tile.maxZ+1.8,ecoInstances:tile.ecoInstances});}
   if(output.length>P.maximumInstances)throw Error(`GLOBAL_COVER_POPULATION_BUDGET_EXCEEDED:${output.length}`);
   const records=new Float32Array(output.length*20);output.forEach((r,i)=>records.set(r,i*20));
-  const templateGpuBytes=template.positions.byteLength+template.normals.byteLength+template.colors.byteLength+template.indices.byteLength+template.rootInfo.byteLength,totalGpuBytes=records.byteLength+templateGpuBytes;
+  const meadowFine=compositionEnabled?await buildHEarthMeadowFineCover({sample,water,obstacles,onProgress}):null;
+  const templateGpuBytes=template.positions.byteLength+template.normals.byteLength+template.colors.byteLength+template.indices.byteLength+template.rootInfo.byteLength;
+   const totalGpuBytes=records.byteLength+templateGpuBytes+(meadowFine?meadowFine.receipt.instanceBytes+meadowFine.receipt.templateBytes+meadowFine.receipt.maskBytes:0);
   if(totalGpuBytes>P.maximumGpuBytes)throw Error('GLOBAL_COVER_GPU_BUDGET_EXCEEDED');
-  const receipt=Object.freeze({schema:P.id,instanceCount:output.length,primaryFanCount:output.length-secondaryFanCount-pilotExtraCount,secondaryFanCount,bushyClumpCount:secondaryFanCount,ecologicalLowCount:lowCount,ecologicalMidCount:midCount,ecologicalDuneCount:duneCount,ecologicalPilotCount:pilotExtraCount,ecologicalCandidateCount:ecoCandidates,mountainInstanceCount:mountainInstances,candidateCount:candidates,rootSampleCount:rootSamples,materialSampleCount:materialSamples,recordBytes:records.byteLength,templateGpuBytes,totalGpuBytes,maximumInstances:P.maximumInstances,baseTerrainTriangleCount:base.triangleCount,refinementTriangleCount:refined?.triangleCount??0,elapsedMilliseconds:now()-started,yieldCount:yields,rejections:Object.freeze(Object.fromEntries(Object.entries(rejected).sort())),canonicalPopulationChanged:false,cameraIndependent:true,rootEncoding:'TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS',sparseSoilPresentationRule:'SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35',bushyPocketRule:'BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED'});
+  const receipt=Object.freeze({schema:P.id,instanceCount:output.length,primaryFanCount:output.length-secondaryFanCount-pilotExtraCount,secondaryFanCount,bushyClumpCount:secondaryFanCount,ecologicalLowCount:lowCount,ecologicalMidCount:midCount,ecologicalDuneCount:duneCount,ecologicalPilotCount:pilotExtraCount,ecologicalCandidateCount:ecoCandidates,mountainInstanceCount:mountainInstances,candidateCount:candidates,rootSampleCount:rootSamples,materialSampleCount:materialSamples,recordBytes:records.byteLength,templateGpuBytes,totalGpuBytes,maximumInstances:P.maximumInstances,baseTerrainTriangleCount:base.triangleCount,refinementTriangleCount:refined?.triangleCount??0,elapsedMilliseconds:now()-started,yieldCount:yields,rejections:Object.freeze(Object.fromEntries(Object.entries(rejected).sort())),canonicalPopulationChanged:false,cameraIndependent:true,meadowFine:meadowFine?.receipt??null,rootEncoding:'TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS',sparseSoilPresentationRule:'SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35',bushyPocketRule:'BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED'});
   onProgress({phase:'GLOBAL_COVER_COMPLETE',instanceCount:output.length,totalGpuBytes});
-  return{records,tiles:packedTiles,template,receipt};
+  return{records,tiles:packedTiles,template,receipt,meadowFine};
 }
 
 export function selectHEarthGlobalGroundCoverDraws(cover,camera,{maximumInstances=4096,maximumDraws=64}={}){

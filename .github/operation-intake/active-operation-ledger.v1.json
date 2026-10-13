@@ -4283,6 +4283,76 @@
       "scopeHash": "482589c65fe8f4a99b73e608834d60a11148762f0bbf2dc1c4dba6daaa2e01be",
       "state": "ADMITTED_LOCKED"
     },
+    "482b4ab87a2d079f91ef6d3559217bc62d3f30d2661dc7b4454ae9a14b9d25ca": {
+      "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
+          "lockGeneration": 2681,
+          "lockScope": "H_EARTH:MEADOW_REPRESENTATION_REPLACEMENT:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+          "operationId": "H_EARTH_MEADOW_SHORELINE_REPRESENTATION_REPLACEMENT_20261013_001",
+          "procedureLocatorDigest": "8be1545a6283d4e866035a78706e562dc558dd2f1b7e15899755cb7bcccb8a7e",
+          "requestDigest": "a40ed5b0a08ff143b729d7d20b9fe6dff72923ff22c9eb7851df2d5192161396",
+          "scopeHash": "482b4ab87a2d079f91ef6d3559217bc62d3f30d2661dc7b4454ae9a14b9d25ca"
+        },
+        "bindingDigest": "ac7fab23df654272fb168eca071a17a49433b49b071d6865aa73b6507e26f7d0",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "3668f2d9bb8f37f5c59d3342fe0d9e726cd9febe",
+          "observedLockRefHead": "d1a229125142dd90ea00df5f972b7d9fa13c26f1"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "ad5085ba701aaa4dceb66b5380ffde3b84b842e557d31bbf69eb7c08ae7c6874",
+          "commentId": 6151758636,
+          "issueNumber": 6100,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "14c5c4734861e6b690d9ed46720b20fe74319206",
+            "lockGeneration": 2677,
+            "lockScope": "H_EARTH:MEADOW_MIDDISTANCE_PATCH_LOD:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+            "operationId": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_20261013_001"
+          },
+          "successor": {
+            "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
+            "lockGeneration": 2681,
+            "lockScope": "H_EARTH:MEADOW_REPRESENTATION_REPLACEMENT:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+            "operationId": "H_EARTH_MEADOW_SHORELINE_REPRESENTATION_REPLACEMENT_20261013_001"
+          },
+          "transitionId": "H_EARTH_GEN2677_MEADOW_REPRESENTATION_SCOPE_SUCCESSOR_20261013_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "lockGeneration": 2681,
+      "lockScope": "H_EARTH:MEADOW_REPRESENTATION_REPLACEMENT:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+      "operationId": "H_EARTH_MEADOW_SHORELINE_REPRESENTATION_REPLACEMENT_20261013_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "14c5c4734861e6b690d9ed46720b20fe74319206",
+        "lockGeneration": 2677,
+        "lockScope": "H_EARTH:MEADOW_MIDDISTANCE_PATCH_LOD:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+        "operationId": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_20261013_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6220",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6220#issuecomment-6151540599",
+          "git:870a995a7012312ac25569c0dc6673822a126ae2"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_GEN2677_MEADOW_REPRESENTATION_SCOPE_SUCCESSOR_20261013_001"
+      },
+      "procedureLocatorDigest": "8be1545a6283d4e866035a78706e562dc558dd2f1b7e15899755cb7bcccb8a7e",
+      "released": false,
+      "requestDigest": "a40ed5b0a08ff143b729d7d20b9fe6dff72923ff22c9eb7851df2d5192161396",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "482b4ab87a2d079f91ef6d3559217bc62d3f30d2661dc7b4454ae9a14b9d25ca",
+      "state": "ADMITTED_LOCKED"
+    },
     "485111548de32e81c8795054a084e2abc0d0f7f335a84a378ea5139b4a501609": {
       "governingHead": "61f466ea8b01d49078e27c210038ce01948e56d1",
       "independentAuthorityProvenance": {
@@ -9715,45 +9785,6 @@
       "requestDigest": "99db198d66b1f6909ced870e2a0bfa566ffda295af01b7ae9b9c7f0b9d4625fe",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "9712e989ecb4bec72350132dabef6e62ee76e50f10badfc9fddd1ddadf3eb889",
-      "state": "ADMITTED_LOCKED"
-    },
-    "987786b7b0fc32a66be770d9d18b49882750e6549f26dcf28db23ec9d542ad18": {
-      "governingHead": "14c5c4734861e6b690d9ed46720b20fe74319206",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "14c5c4734861e6b690d9ed46720b20fe74319206",
-          "lockGeneration": 2677,
-          "lockScope": "H_EARTH:MEADOW_MIDDISTANCE_PATCH_LOD:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
-          "operationId": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_20261013_001",
-          "procedureLocatorDigest": "b2045dcf55a7e3df7211b9557b2392f28df32d0bb742bc3c255b7ce5e89edf46",
-          "requestDigest": "cda07d212b95e6f0d88a188444bb461deaef9e8db1dcfa8aae0d73aa428e033b",
-          "scopeHash": "987786b7b0fc32a66be770d9d18b49882750e6549f26dcf28db23ec9d542ad18"
-        },
-        "bindingDigest": "aae156de5e4719f18b4ff0f7797bfd71cd6cfc64d2cf7af56527f512a7fb43a5",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "271fc15c2cfa889416c592dfbe8c59e893986932",
-          "observedLockRefHead": "aea347c134e57a533c50400ce6e746daf98fc724"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "c06aefe51e839ce9de13849894eb13bf4abfdf72cf1f74142f07e5414e08d03f",
-          "commentId": 6149399361,
-          "issueNumber": 6100,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2677,
-      "lockScope": "H_EARTH:MEADOW_MIDDISTANCE_PATCH_LOD:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
-      "operationId": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_20261013_001",
-      "procedureLocatorDigest": "b2045dcf55a7e3df7211b9557b2392f28df32d0bb742bc3c255b7ce5e89edf46",
-      "released": false,
-      "requestDigest": "cda07d212b95e6f0d88a188444bb461deaef9e8db1dcfa8aae0d73aa428e033b",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "987786b7b0fc32a66be770d9d18b49882750e6549f26dcf28db23ec9d542ad18",
       "state": "ADMITTED_LOCKED"
     },
     "98ca34a3383689d38ded240c08b80c222a076c36cd85ae06afb97c0e30a6163e": {
@@ -16950,7 +16981,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2680,
+  "lockGeneration": 2681,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -76521,6 +76552,62 @@
       "scopeHash": "4460f600887e92d2223a913b9a4c94b0a4f808bf0657710f5264a11368bd123f",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "14c5c4734861e6b690d9ed46720b20fe74319206",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "14c5c4734861e6b690d9ed46720b20fe74319206",
+          "lockGeneration": 2677,
+          "lockScope": "H_EARTH:MEADOW_MIDDISTANCE_PATCH_LOD:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+          "operationId": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_20261013_001",
+          "procedureLocatorDigest": "b2045dcf55a7e3df7211b9557b2392f28df32d0bb742bc3c255b7ce5e89edf46",
+          "requestDigest": "cda07d212b95e6f0d88a188444bb461deaef9e8db1dcfa8aae0d73aa428e033b",
+          "scopeHash": "987786b7b0fc32a66be770d9d18b49882750e6549f26dcf28db23ec9d542ad18"
+        },
+        "bindingDigest": "aae156de5e4719f18b4ff0f7797bfd71cd6cfc64d2cf7af56527f512a7fb43a5",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "271fc15c2cfa889416c592dfbe8c59e893986932",
+          "observedLockRefHead": "aea347c134e57a533c50400ce6e746daf98fc724"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "c06aefe51e839ce9de13849894eb13bf4abfdf72cf1f74142f07e5414e08d03f",
+          "commentId": 6149399361,
+          "issueNumber": 6100,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2677,
+      "lockScope": "H_EARTH:MEADOW_MIDDISTANCE_PATCH_LOD:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+      "operationId": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_20261013_001",
+      "procedureLocatorDigest": "b2045dcf55a7e3df7211b9557b2392f28df32d0bb742bc3c255b7ce5e89edf46",
+      "released": true,
+      "requestDigest": "cda07d212b95e6f0d88a188444bb461deaef9e8db1dcfa8aae0d73aa428e033b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "987786b7b0fc32a66be770d9d18b49882750e6549f26dcf28db23ec9d542ad18",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6220",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6220#issuecomment-6151540599",
+          "git:870a995a7012312ac25569c0dc6673822a126ae2"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
+        "successorLockGeneration": 2681,
+        "successorLockScope": "H_EARTH:MEADOW_REPRESENTATION_REPLACEMENT:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+        "successorOperationId": "H_EARTH_MEADOW_SHORELINE_REPRESENTATION_REPLACEMENT_20261013_001",
+        "transitionId": "H_EARTH_GEN2677_MEADOW_REPRESENTATION_SCOPE_SUCCESSOR_20261013_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

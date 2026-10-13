@@ -6,7 +6,7 @@
   "admissionLedgerBlob": "86f454c83220845ea79e82e0fd0ea92aecd4ac49",
   "governingHead": "708e1ba556e316e88790a2aefdf176d0d33fd8b2",
   "predecessorCandidate": "5ed1095c29d4db512c39f9375d02d379159f5e61",
-  "result": "PENDING_CHEAP_PREVIEW",
+  "result": "CHEAP_PREFLIGHT_PASS_RUNTIME_AND_OWNER_PENDING",
   "scope": {
     "globalLegacyFans": "REPLACED_AT_ORIGINAL_TWELVE_CONTACTS",
     "meadowDensityAdditionRadiusMeters": 18,
@@ -76,16 +76,171 @@
     "exitCode": 1,
     "errorLog": "Error: GEN2666_BUFFER_VALUE_MISMATCH:raw.baseColorsLinear[95988]\n    at fatal (h-earth.canonical-base-world-precompute.v1.mjs:27:44)\n    at examine (h-earth.canonical-base-world-precompute.v1.mjs:98:76)\n    at verify (h-earth.canonical-base-world-precompute.v1.mjs:161:3)\n    at async main (h-earth.canonical-base-world-precompute.v1.mjs:164:229)"
   },
-  "cheapVisualGate": "PENDING_INDEPENDENT_MATCHED_ROI_PROJECTION",
+  "cheapVisualGate": "PASS_CPU_PREFLIGHT_ONLY",
   "newBrowserExecution": false,
   "expensiveQualificationRecommended": false,
   "ownerPerceptualDisposition": "PENDING",
   "publicationAuthorized": false,
   "limitations": [
-    "Software projection pending; no density or carpet acceptance claimed.",
-    "Actual WebGL2 compilation and frame timing not executed.",
-    "Fresh source parity is blocked by the recorded baseColorsLinear mismatch.",
-    "Global fine replacement appearance outside the meadow requires independent visual review."
+    "CPU mirror only; no executed GLSL, GPU frame-time, residency, or browser qualification.",
+    "Repeated radial spiky rosettes remain visible; this is not owner acceptance of a meadow carpet or uniform sod.",
+    "Cached base-terrain projection uses simplified lighting without canonical trees, vegetation occlusion, atmosphere, or streamed refinement.",
+    "Exterior giant fans are absent in the matched diagnostic view; global outside-view runtime appearance remains unqualified.",
+    "Fresh source parity failed at raw.baseColorsLinear[95988] on Node v24.19.0; immutable-asset verification passed.",
+    "Submitted vertices are 4.04 times and triangles 2.91 times the approved fine-grass baseline; no performance acceptance claimed."
   ],
-  "nextAction": "Independent cheap matched-camera comparison and outside-view review; preserve results before deciding whether qualification is justified."
+  "nextAction": "Persist this exact preflight candidate and evidence; resolve recorded fresh-source parity/runtime prerequisites before any costly qualification. Owner visual disposition and release authorization remain pending.",
+  "prototypeCheckpoint": "5653f979bc4a166aa1a937804eb02481e9bc7fe3",
+  "projectedCoverage": {
+    "candidate": {
+      "pilot": {
+        "fixedGroundPixels": 724879,
+        "occupiedPixels": 470208,
+        "occupiedFraction": 0.6486710195770604,
+        "largestEmptyCircleRadiusPixels": 15.652475842498529,
+        "largestConnectedEmptyPixels": 24470
+      },
+      "near0to6m": {
+        "fixedGroundPixels": 385757,
+        "occupiedPixels": 226062,
+        "occupiedFraction": 0.5860217701817465,
+        "largestEmptyCircleRadiusPixels": 15.652475842498529,
+        "largestConnectedEmptyPixels": 23616
+      },
+      "middle6to18m": {
+        "fixedGroundPixels": 339122,
+        "occupiedPixels": 244146,
+        "occupiedFraction": 0.7199355983982165,
+        "largestEmptyCircleRadiusPixels": 11.180339887498949,
+        "largestConnectedEmptyPixels": 5819
+      }
+    },
+    "baseline": {
+      "pilot": {
+        "fixedGroundPixels": 724879,
+        "occupiedPixels": 98841,
+        "occupiedFraction": 0.13635517100095326,
+        "largestEmptyCircleRadiusPixels": 93.98404119849285,
+        "largestConnectedEmptyPixels": 578446
+      },
+      "near0to6m": {
+        "fixedGroundPixels": 385757,
+        "occupiedPixels": 29334,
+        "occupiedFraction": 0.07604269008728293,
+        "largestEmptyCircleRadiusPixels": 93.98404119849285,
+        "largestConnectedEmptyPixels": 333787
+      },
+      "middle6to18m": {
+        "fixedGroundPixels": 339122,
+        "occupiedPixels": 69507,
+        "occupiedFraction": 0.20496163622531124,
+        "largestEmptyCircleRadiusPixels": 34.40930106817051,
+        "largestConnectedEmptyPixels": 158373
+      }
+    },
+    "elapsedSeconds": 43.03554964065552,
+    "nearParents": 41,
+    "vertices": 1287552,
+    "triangles": 678912,
+    "draws": 3,
+    "limitations": [
+      "CPU mirror; no GLSL execution",
+      "Simplified lighting, no trees/vegetation occlusion or atmosphere",
+      "Cached base terrain; no world rebuild",
+      "804x1810 fixed ROI, near-plane clipping, grass limited42m"
+    ],
+    "nearPlaneCrossingTrianglesSkipped": 0,
+    "behindCameraTrianglesSkipped": 291018,
+    "nearPlaneCrossingTrianglesClipped": 3474,
+    "schema": "H_EARTH_GEN2684_FIXED_CONTACT_GLOBAL_GRASS_CPU_PREVISUAL_v1",
+    "baselineHead": "5ed1095c29d4db512c39f9375d02d379159f5e61",
+    "sourceGitBlobs": {
+      "helper": "e0393ebacfa98fc465f7b15fc13e6b2c8a92c4ec",
+      "renderer": "15827d0d9453d25633205b51eb9b60cd1df88c03"
+    },
+    "camera": {
+      "position": [
+        -45,
+        8.088257606279512,
+        -326
+      ],
+      "yaw": 0,
+      "pitch": -8,
+      "fov": 56,
+      "canvas": [
+        804,
+        1810
+      ]
+    },
+    "independentSubmission": {
+      "schema": "H_EARTH_GLOBAL_GRASS_INDEPENDENT_SUBMISSION_v1",
+      "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
+      "sourceHashes": {
+        "generator": "e1fb860e63efef4ad3c45473c83fdab0047faf00afb872d9fded0502e9d39313",
+        "renderer": "a1df2a34805888c84553044a976d010ba2286dc623fe71c841fdc11c3ff32ed4"
+      },
+      "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
+      "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "clumps": 1464,
+      "contacts": 4392,
+      "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+      "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+      "originalRecordIdsPreserved": true,
+      "withinClassOrderPreserved": true,
+      "logicalInstances": 3978,
+      "originalInstances": 3856,
+      "meadowInstances": 122,
+      "nearInstances": 41,
+      "middleInstances": 81,
+      "draws": 3,
+      "selectedVertices": 1287552,
+      "selectedTriangles": 678912,
+      "originalFanVertices": 111384,
+      "originalFanTriangles": 95472,
+      "gpu": {
+        "templateBytes": 1856,
+        "paddedRecordsBytes": 4947968,
+        "paddedSidecarBytes": 327680,
+        "leafIndexBytes": 124704,
+        "selectionTextureBytes": 16384,
+        "atlasBytes": 0,
+        "totalBytes": 5418592
+      },
+      "selectionUploadBytesOnChange": 16384,
+      "selectionUploadBytesWhenUnchanged": 0,
+      "browserQualification": "NOT_EXECUTED",
+      "visualDisposition": "PENDING",
+      "approvedBaselineVertices": 318784,
+      "approvedBaselineTriangles": 233088,
+      "soilShaderSha256": "5468a720408019c3bb1c9ec747abb74c3436c02fd3d695e9865e4731b2b2c469"
+    },
+    "engineeringTargets": {
+      "nearCoverageMinimum": 0.5,
+      "middleCoverageMinimum": 0.7,
+      "largestGapRadiusMaximumBaselineRatio": 0.5,
+      "result": "PASS_CPU_PREFLIGHT_ONLY"
+    },
+    "morphologyReview": {
+      "result": "MATERIAL_IMPROVEMENT_SUPPORTS_RUNTIME_QUALIFICATION",
+      "observations": [
+        "Exterior giant fans absent in matched diagnostic view",
+        "Fine upright strips retained and low curved leaves visibly fill formerly broad gaps",
+        "Repeated radial spiky rosettes remain visible; not uniform sod",
+        "Soil shader and original contact/world data unchanged"
+      ],
+      "ownerVisualAcceptance": "PENDING",
+      "executedGLSLQualification": "NOT_RUN"
+    },
+    "artifactHashes": {
+      "project.py": "3eecc6e3e9636a1d34488784a181dfc29aadd779a67b5d3f953d2c741c4967d1",
+      "previsual-common.py": "75752b291550975a4b6815289651ff30c4cc6839ba1604f852bc570b77957ff7",
+      "extract.mjs": "8eb5c1d65c34a2a247f3e2b7da1283037bf6728a7caaa3e31b3d5d4de7c40a82",
+      "candidate.png": "8ebb8fa95ebcbfde20a680c1f6142b101a6e020af6d948420c237d34cada1250",
+      "candidate-mask.png": "c90a3296301415eb5c906c219709087583f0f5f76c9bf12f2e80066f6ad06767",
+      "comparison.png": "b2c270b29b10d8e23873bf281ad90869b248fe17bf5d1ceb1c1ac75181012ccd",
+      "independent-submission-receipt.json": "ad8e51113e05e926f2739ed6578dd760f3626f66c25219f1f95fda54042d3f1b"
+    }
+  },
+  "independentEvidenceReceiptSha256": "9af5d60ecc55b789e8189696f0145c49438c4ec747e26c3bde7aa74107c6b963",
+  "runtimeQualificationReadiness": "MORPHOLOGY_SUPPORTS_RUNTIME_REVIEW_BUT_FRESH_SOURCE_PARITY_FAILURE_REMAINS_UNRESOLVED"
 }

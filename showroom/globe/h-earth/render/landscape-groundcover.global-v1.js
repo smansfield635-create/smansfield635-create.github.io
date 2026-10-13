@@ -1,5 +1,5 @@
 /** Global presentation density; no canonical placement or terrain mutation. */
-import {buildHEarthWoodlandGrassTuft,buildHEarthMeadowFineGrassTemplate,H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from './grass-lowland-trial.js';
+import {buildHEarthWoodlandGrassTuft,buildHEarthMeadowFineGrassTemplate,H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from './grass-lowland-trial.js?cb=gen2674-meadow-fine-20261012';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_PLANETARY_WORLD_FRAME} from './planetary-world-frame.js';

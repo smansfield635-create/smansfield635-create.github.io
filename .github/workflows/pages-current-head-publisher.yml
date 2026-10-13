@@ -22,6 +22,8 @@ on:
     paths:
       - '.github/workflows/pages-current-head-publisher.yml'
       - 'governance-bridge/index.html'
+      - 'release-proof/index.html'
+      - '.github/ai-router/publication-surfaces/release-proof.json'
       - 'governance-bridge/governance/index.html'
       - 'governance-bridge/portability/index.html'
       - 'governance-bridge/collaboration/index.html'

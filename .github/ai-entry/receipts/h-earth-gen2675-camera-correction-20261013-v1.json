@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2675-camera-correction-20261013-v1",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6214,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2675-meadow-camera-recheck-20261013-v1",
+  "requestCommit": "daf58727e77ffba28aabd3b731d2f532a12ebc83",
+  "requestCommitParent": "bf7849aec5ac635e0394dd6836722f653d4eac48",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "bf7849aec5ac635e0394dd6836722f653d4eac48",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9a63c4571d95abf925ba22f2fcd7aaaa8c578cac"
+  },
+  "bridgeRunId": "38412789273",
+  "dispatchedRunId": 38412819670,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38412819670",
+  "dispatchedRunHeadSha": "bf7849aec5ac635e0394dd6836722f653d4eac48",
+  "dispatchedAt": "2026-10-13T14:22:40.054Z",
+  "resolvedAt": "2026-10-13T14:22:46.254Z"
+}

@@ -14,7 +14,11 @@
         "id=\"inspection-canvas\"",
         "id=\"outcome-spotlight\"",
         "HISTORICAL REPLAY · GUIDED DEMONSTRATION",
-        "id=\"toggle-orders\""
+        "id=\"toggle-orders\"",
+        "id=\"creation-mode\"",
+        "WHAT IS THE PART?",
+        "OPEN THIS ORDER",
+        "Markers 8 and 11"
       ],
       "excludes": []
     }
@@ -266,6 +270,108 @@
           {
             "type": "exists",
             "selector": "#inspection-canvas"
+          }
+        ],
+        "timeoutMs": 8000
+      },
+      {
+        "name": "Open held example independently",
+        "action": {
+          "type": "click",
+          "selector": "[data-open='revision-hold']"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#order-title",
+            "value": "held order"
+          },
+          {
+            "type": "textContains",
+            "selector": "#step-counter",
+            "value": "3 / 7"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "[data-open='revision-hold']",
+            "name": "aria-current",
+            "value": "true"
+          }
+        ],
+        "timeoutMs": 8000
+      },
+      {
+        "name": "Expand order selection again",
+        "action": {
+          "type": "click",
+          "selector": "#toggle-orders"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#toggle-orders",
+            "name": "aria-expanded",
+            "value": "true"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Reopen full example with separate saved progress",
+        "action": {
+          "type": "click",
+          "selector": "[data-open='nist-plate']"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#step-counter",
+            "value": "7 / 7"
+          },
+          {
+            "type": "textContains",
+            "selector": "#order-title",
+            "value": "full journey"
+          }
+        ],
+        "timeoutMs": 8000
+      },
+      {
+        "name": "Open orders for guided creation",
+        "action": {
+          "type": "click",
+          "selector": "#toggle-orders"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#toggle-orders",
+            "name": "aria-expanded",
+            "value": "true"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Guided order creation options visible",
+        "action": {
+          "type": "click",
+          "selector": "#create-button"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#create-dialog[open]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#create-dialog",
+            "value": "Guided: full inspection-to-recovery journey"
+          },
+          {
+            "type": "textContains",
+            "selector": "#create-dialog",
+            "value": "Blank order: import my own inspection"
           }
         ],
         "timeoutMs": 8000

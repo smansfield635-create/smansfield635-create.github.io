@@ -1410,7 +1410,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.uniform4fv(v['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);
       gl.uniform3f(v.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);
       gl.uniform1f(v.uSunIntensity,e.sunIntensity);gl.uniform3fv(v.uSunColor,color3(e.sunColor));
-      gl.uniform3fv(v.uSkyZenithColor,resources.skyColor);
+      gl.uniform3fv(v.uSkyZenithColor,color3(e.skyZenithColor));
       gl.uniform3fv(v.uSkyHorizonColor,resources.skyColor);
       gl.uniform3fv(v.uGroundHazeColor,color3(e.groundHazeColor));
       for(const [name,key] of [['uFogStartDistance','fogStartDistance'],['uFogFalloff','fogFalloff'],

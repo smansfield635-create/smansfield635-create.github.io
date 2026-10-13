@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-13T19:30:29Z",
+  "generatedAt": "2026-10-13T20:33:49Z",
   "window": {
-    "start": "2026-07-15T19:30:29Z",
-    "end": "2026-10-13T19:30:29Z"
+    "start": "2026-07-15T20:33:49Z",
+    "end": "2026-10-13T20:33:49Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,21 +26,21 @@
       }
     },
     "byPath": {
-      "/coherence-diagnostic/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/": {
         "pageLoads": 140,
         "visits": 10
       },
-      "/": {
-        "pageLoads": 1040,
-        "visits": 740
+      "/coherence-diagnostic/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 1040,
+        "visits": 740
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 50,
@@ -130,20 +130,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {

@@ -227,7 +227,7 @@ export function selectHEarthGlobalGroundCoverDraws(cover,camera,{maximumInstance
  */
 export function selectHEarthMeadowMidDistancePatchDraws(cover,camera,{
   centerX=-45,centerZ=-326,pilotRadius=18,innerDistance=6,outerDistance=18,
-  maximumInstances=1024,maximumDraws=16
+  maximumInstances=1024,maximumDraws=16,sourceDraws=null
 }={}){
   if(!Number.isFinite(centerX)||!Number.isFinite(centerZ)||!Number.isFinite(pilotRadius)||pilotRadius<=0||
      !Number.isFinite(innerDistance)||!Number.isFinite(outerDistance)||innerDistance<0||outerDistance<=innerDistance||
@@ -236,7 +236,7 @@ export function selectHEarthMeadowMidDistancePatchDraws(cover,camera,{
   }
   const p=camera?.position??camera;
   if(!p||![p.x,p.z].every(Number.isFinite))throw Error('GLOBAL_COVER_CAMERA_INVALID');
-  const selected=selectHEarthGlobalGroundCoverDraws(cover,p,{maximumInstances,maximumDraws});
+  const selected=sourceDraws?{draws:sourceDraws}:selectHEarthGlobalGroundCoverDraws(cover,p,{maximumInstances,maximumDraws});
   const byStart=new Map(cover.tiles.map(tile=>[tile.start,tile]));
   const draws=selected.draws.filter(draw=>{
     const tile=byStart.get(draw.start);if(!tile)return false;
@@ -246,13 +246,60 @@ export function selectHEarthMeadowMidDistancePatchDraws(cover,camera,{
     const cameraDz=p.z-Math.max(tile.minZ,Math.min(tile.maxZ,p.z));
     return Math.hypot(pilotDx,pilotDz)<=pilotRadius+2.0&&
       Math.hypot(cameraDx,cameraDz)<=outerDistance+2.0;
-  }).map(draw=>({...draw,patchLod:true}));
+  });
+  let remaining=maximumInstances;
+  const bounded=[];
+  for(const draw of draws){
+    if(remaining<=0||bounded.length>=maximumDraws)break;
+    const count=Math.min(draw.count,remaining);
+    if(count>0){bounded.push(Object.freeze({...draw,count,patchLod:true}));remaining-=count;}
+  }
   return Object.freeze({
-    draws:Object.freeze(draws),
-    visibleInstanceCount:draws.reduce((sum,draw)=>sum+draw.count,0),
+    draws:Object.freeze(bounded),
+    visibleInstanceCount:bounded.reduce((sum,draw)=>sum+draw.count,0),
     maximumInstances,maximumDraws,
     centerX,centerZ,pilotRadius,innerDistance,outerDistance,
     representation:'TERRAIN_ALIGNED_ALPHA_TEXTURED_PATCH_IMPOSTOR',
     sourcePopulationChanged:false
   });
+}
+
+/** Partition the original visibility selection; never evict a selected record
+ * to make room for its alternate representation. Split pressure falls back to
+ * the original whole fan draw. Partial fades duplicate only spare capacity. */
+export function selectHEarthMeadowMidDistanceRepresentations(cover,camera){
+  const p=camera?.position??camera;
+  const original=selectHEarthGlobalGroundCoverDraws(cover,p);
+  const fanDraws=[],patchDraws=[];
+  let totalDraws=original.draws.length,totalInstances=original.visibleInstanceCount,patchInstances=0;
+  const smooth=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
+  let templateRadius=0;
+  for(let i=0;i<(cover.template?.positions?.length??0);i+=3)templateRadius=Math.max(templateRadius,Math.hypot(cover.template.positions[i],cover.template.positions[i+2]));
+  for(const draw of original.draws){
+    const runs=[];let duplicates=0;
+    for(let i=0;i<draw.count;i++){
+      const id=draw.start+i*draw.stride,offset=id*20;
+      const x=cover.records?.[offset+12],z=cover.records?.[offset+13];
+      const radius=Math.hypot(x+45,z+326),distance=Math.hypot(x-p.x,z-p.z);
+      const fade=smooth(6,8,distance)*(1-smooth(16.5,18,distance))*(1-smooth(16.5,18,radius));
+      const margin=Math.max(1.42*Math.SQRT2,templateRadius*Math.abs(cover.records?.[offset+15]??1));
+      const fullyContained=radius+margin<=18&&distance-margin>=6&&distance+margin<=18;
+      let mode='fan';
+      if(Number.isFinite(fade)&&fade===1&&fullyContained)mode='patch';
+      else if(Number.isFinite(fade)&&fade>=0.015&&totalInstances+duplicates<4096){mode='dual';duplicates++;}
+      const last=runs.at(-1);
+      if(last?.mode===mode)last.count++;
+      else runs.push({start:id,count:1,stride:draw.stride,mode});
+    }
+    const addedPatches=runs.filter(r=>r.mode!=='fan').length;
+    const addedPatchInstances=runs.filter(r=>r.mode!=='fan').reduce((n,r)=>n+r.count,0);
+    const runDraws=runs.reduce((n,r)=>n+(r.mode==='dual'?2:1),0);
+    if(!addedPatches||patchInstances+addedPatchInstances>1024||patchDraws.length+addedPatches>16||totalDraws-1+runDraws>64){fanDraws.push({...draw});continue;}
+    totalDraws+=runDraws-1;totalInstances+=duplicates;patchInstances+=addedPatchInstances;
+    for(const {mode,...run} of runs){
+      if(mode!=='patch')fanDraws.push({...run,patchLod:mode==='dual'});
+      if(mode!=='fan')patchDraws.push({...run,patchLod:true});
+    }
+  }
+  return{fanDraws,patchDraws,visibleInstanceCount:totalInstances,drawCallCount:totalDraws,sourcePopulationChanged:false};
 }

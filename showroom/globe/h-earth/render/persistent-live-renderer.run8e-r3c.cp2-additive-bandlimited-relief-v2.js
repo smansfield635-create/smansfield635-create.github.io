@@ -1,5 +1,5 @@
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistancePatchDraws } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -1073,12 +1073,23 @@ void main(){
   lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));
   outColor=vec4(lit,outputAlpha);
 }`;
+// Both representations use the same accepted-record anchor and distance fade.
+const MEADOW_PATCH_FADE_GLSL=`
+float meadowPatchFade(vec2 anchor,vec3 camera,vec4 band){
+  float radius=distance(anchor,band.xy);
+  float d=distance(anchor,camera.xz);
+  return smoothstep(band.z,band.z+2.0,d)*
+    (1.0-smoothstep(band.w-1.5,band.w,d))*
+    (1.0-smoothstep(band.w-1.5,band.w,radius));
+}`;
+const GLOBAL_COVER_PATCH_LOD_VS=GLOBAL_COVER_VS
+  .replace('out vec3 vWorldPosition;', 'uniform ivec3 uMeadowPatchSelection;\nflat out vec2 vMeadowPatchAnchor;\nflat out float vMeadowPatchEnabled;\nout vec3 vWorldPosition;')
+  .replace('vec4 aTransform=recordPart(instance,3),aParameters=recordPart(instance,4);',
+    'vec4 aTransform=recordPart(instance,3),aParameters=recordPart(instance,4);\n  vMeadowPatchAnchor=aTransform.xy;\n  int relative=instance-uMeadowPatchSelection.x;\n  vMeadowPatchEnabled=(relative>=0&&uMeadowPatchSelection.z>0&&relative%max(1,uMeadowPatchSelection.z)==0&&relative/max(1,uMeadowPatchSelection.z)<uMeadowPatchSelection.y)?1.0:0.0;');
 const GLOBAL_COVER_PATCH_SUPPRESSION_FS=FS
-  .replace('out vec4 outColor;','uniform vec4 uMeadowPatchBand;\nout vec4 outColor;')
-  .replace(
-    'float distanceToCamera=length(vWorldPosition-uCameraPosition);',
-    'float distanceToCamera=length(vWorldPosition-uCameraPosition);\n  float meadowRadius=distance(vWorldPosition.xz,uMeadowPatchBand.xy);\n  float meadowInterior=1.0-smoothstep(uMeadowPatchBand.w-1.5,uMeadowPatchBand.w,meadowRadius);\n  float fanFade=smoothstep(7.0,9.0,distanceToCamera)*meadowInterior;\n  if(meadowRadius>=uMeadowPatchBand.z&&meadowRadius<=uMeadowPatchBand.w&&hash21(floor(vWorldPosition.xz*48.0))<fanFade)discard;'
-  );
+  .replace('out vec4 outColor;','uniform vec4 uMeadowPatchBand;\nflat in vec2 vMeadowPatchAnchor;\nflat in float vMeadowPatchEnabled;\n'+MEADOW_PATCH_FADE_GLSL+'\nout vec4 outColor;')
+  .replace('float distanceToCamera=length(vWorldPosition-uCameraPosition);',
+    'float distanceToCamera=length(vWorldPosition-uCameraPosition);\n  float fanFade=vMeadowPatchEnabled*meadowPatchFade(vMeadowPatchAnchor,uCameraPosition,uMeadowPatchBand);\n  float fragmentDistance=distance(vWorldPosition.xz,uCameraPosition.xz);\n  bool patchRegion=distance(vWorldPosition.xz,uMeadowPatchBand.xy)<=uMeadowPatchBand.w&&fragmentDistance>=uMeadowPatchBand.z&&fragmentDistance<=uMeadowPatchBand.w;\n  if(patchRegion&&hash21(floor(vWorldPosition.xz*48.0))<fanFade)discard;');
 
 const MEADOW_PATCH_LOD_VS=`#version 300 es
 precision highp float;
@@ -1100,6 +1111,7 @@ vec2 rootWorldXZ(vec4 transform,vec2 local){
   vec2 q=local*transform.w;
   return transform.xy+vec2(q.x*c-q.y*s,q.x*s+q.y*c);
 }
+flat out vec2 vPatchAnchor;
 out vec2 vPatchUv;
 out vec3 vPatchWorldPosition;
 out vec3 vPatchNormal;
@@ -1112,15 +1124,15 @@ void main(){
   vec2 xz0=rootWorldXZ(transform,uRootOffsets[0]);
   vec2 xz1=rootWorldXZ(transform,uRootOffsets[3]);
   vec2 xz2=rootWorldXZ(transform,uRootOffsets[6]);
-  vec3 p0=vec3(xz0,rootY(instance,0));
-  vec3 p1=vec3(xz1,rootY(instance,3));
-  vec3 p2=vec3(xz2,rootY(instance,6));
+  vec3 p0=vec3(xz0.x,rootY(instance,0),xz0.y);
+  vec3 p1=vec3(xz1.x,rootY(instance,3),xz1.y);
+  vec3 p2=vec3(xz2.x,rootY(instance,6),xz2.y);
   vec3 normalRaw=cross(p1-p0,p2-p0);
   vec3 normal=dot(normalRaw,normalRaw)>0.000001?normalize(normalRaw):vec3(0.0,1.0,0.0);
   if(normal.y<0.0)normal=-normal;
   vec3 tangent=p1-p0;
-  tangent=normalize(tangent-normal*dot(tangent,normal));
-  if(dot(tangent,tangent)<0.5)tangent=vec3(1.0,0.0,0.0);
+  tangent=tangent-normal*dot(tangent,normal);
+  tangent=dot(tangent,tangent)>0.000001?normalize(tangent):normalize(cross(vec3(0.0,0.0,1.0),normal));
   vec3 bitangent=normalize(cross(normal,tangent));
   int vertex=gl_VertexID%6;
   vec2 corner=vertex==0?vec2(0.0,0.0):
@@ -1129,10 +1141,11 @@ void main(){
     vertex==3?vec2(0.0,0.0):
     vertex==4?vec2(1.0,1.0):vec2(0.0,1.0);
   vec2 local=(corner-0.5)*2.0*uPatchHalfSize;
-  vec3 center=vec3(transform.xy,centerY);
+  vec3 center=vec3(transform.x,centerY,transform.y);
   vPatchWorldPosition=center+tangent*local.x+bitangent*local.y+normal*0.025;
   vPatchNormal=normal;
   vPatchUv=corner;
+  vPatchAnchor=transform.xy;
   float seed=fract(sin(dot(transform.xy,vec2(12.9898,78.233)))*43758.5453);
   vPatchAtlasCell=floor(seed*16.0);
   gl_Position=uViewProjection*vec4(vPatchWorldPosition,1.0);
@@ -1143,19 +1156,17 @@ precision highp float;
 uniform sampler2D uPatchAtlas;
 uniform vec3 uCameraPosition;
 uniform vec4 uMeadowPatchBand;
+flat in vec2 vPatchAnchor;
 in vec2 vPatchUv;
 in vec3 vPatchWorldPosition;
 in vec3 vPatchNormal;
 flat in float vPatchAtlasCell;
+${MEADOW_PATCH_FADE_GLSL}
 out vec4 outColor;
 void main(){
-  float radius=distance(vPatchWorldPosition.xz,uMeadowPatchBand.xy);
-  if(radius>uMeadowPatchBand.w)discard;
-  float cameraDistance=distance(vPatchWorldPosition,uCameraPosition);
-  float nearFade=smoothstep(uMeadowPatchBand.z,uMeadowPatchBand.z+2.0,cameraDistance);
-  float farFade=1.0-smoothstep(uMeadowPatchBand.w-1.5,uMeadowPatchBand.w,cameraDistance);
-  float edgeFade=1.0-smoothstep(uMeadowPatchBand.w-1.5,uMeadowPatchBand.w,radius);
-  float fade=nearFade*farFade*edgeFade;
+  float fragmentDistance=distance(vPatchWorldPosition.xz,uCameraPosition.xz);
+  if(distance(vPatchWorldPosition.xz,uMeadowPatchBand.xy)>uMeadowPatchBand.w||fragmentDistance<uMeadowPatchBand.z||fragmentDistance>uMeadowPatchBand.w)discard;
+  float fade=meadowPatchFade(vPatchAnchor,uCameraPosition,uMeadowPatchBand);
   if(fade<0.015)discard;
   vec2 cell=vec2(mod(vPatchAtlasCell,4.0),floor(vPatchAtlasCell/4.0));
   vec2 atlasUv=cell*0.25+vec2(1.0/256.0)+vPatchUv*(62.0/256.0);
@@ -1169,8 +1180,10 @@ function buildMeadowPatchLodAtlas(){
   const size=256,tileSize=64,pixels=new Uint8Array(size*size*4);
   const randomFrom=seed=>{let x=(seed|0)+0x6d2b79f5;x=Math.imul(x^(x>>>15),x|1);x^=x+Math.imul(x^(x>>>7),x|61);return((x^(x>>>14))>>>0)/4294967296;};
   const write=(cell,x,y,r,g,b,a)=>{
-    const px=cell%4*tileSize+Math.max(0,Math.min(tileSize-1,Math.round(x)));
-    const py=Math.floor(cell/4)*tileSize+Math.max(0,Math.min(tileSize-1,Math.round(y)));
+    x=Math.round(x);y=Math.round(y);
+    if(x<2||x>tileSize-3||y<2||y>tileSize-3)return;
+    const px=cell%4*tileSize+x;
+    const py=Math.floor(cell/4)*tileSize+y;
     const i=(py*size+px)*4;
     if(a>pixels[i+3]){pixels[i]=r;pixels[i+1]=g;pixels[i+2]=b;pixels[i+3]=a;}
   };
@@ -1440,9 +1453,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     verifyCoverGlStage('PREEXISTING');
     const state={cover,buffers:[],gpuByteLength:0,uploadCount:0,maximumUploadChunkBytes:0,resourceCount:0,lastDraw:{visibleInstanceCount:0,drawCallCount:0}};
     const before=counters.postInitializationResourceCreationCount;
-    counters.globalCoverAuthorizedResourceCreateCount=(counters.globalCoverAuthorizedResourceCreateCount??0)+2;
-    state.vertexShader=createShader(gl.VERTEX_SHADER,GLOBAL_COVER_VS,'GLOBAL_COVER_VS');
-    state.program=createProgram(state.vertexShader,GLOBAL_COVER_PATCH_SUPPRESSION_FS,'GLOBAL_COVER_PROGRAM');verifyCoverGlStage('SHADERS');
+    counters.globalCoverAuthorizedResourceCreateCount=(counters.globalCoverAuthorizedResourceCreateCount??0)+3;
+    state.vertexShader=createShader(gl.VERTEX_SHADER,GLOBAL_COVER_PATCH_LOD_VS,'GLOBAL_COVER_VS');
+    state.fragmentShader=createShader(gl.FRAGMENT_SHADER,GLOBAL_COVER_PATCH_SUPPRESSION_FS,'GLOBAL_COVER_FS');
+    state.program=createProgram(state.vertexShader,state.fragmentShader,'GLOBAL_COVER_PROGRAM');verifyCoverGlStage('SHADERS');
     counters.globalCoverAuthorizedResourceCreateCount++;markPostInitializationCreation();counters.vertexArrayCreateCount++;state.vao=gl.createVertexArray();
     if(!state.vao)throw Error('GLOBAL_COVER_VAO_CREATE_FAILED');
     gl.bindVertexArray(state.vao);
@@ -1490,7 +1504,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     state.patchUniforms={};for(const name of ['uInstanceRecords','uInstanceStart','uInstanceStride','uInstanceTextureWidth','uViewProjection','uCameraPosition','uMeadowPatchBand','uPatchAtlas','uPatchHalfSize','uRootOffsets[0]'])state.patchUniforms[name]=gl.getUniformLocation(state.patchProgram,name);
     gl.useProgram(state.patchProgram);gl.uniform1i(state.patchUniforms.uInstanceRecords,2);gl.uniform1i(state.patchUniforms.uPatchAtlas,3);gl.uniform1i(state.patchUniforms.uInstanceTextureWidth,state.textureWidth);gl.uniform1f(state.patchUniforms.uPatchHalfSize,1.42);gl.uniform2fv(state.patchUniforms['uRootOffsets[0]'],state.patchRootOffsets);gl.useProgram(state.program);
     if(state.gpuByteLength>8*1024*1024)throw Error('GLOBAL_COVER_GPU_BUDGET_EXCEEDED');
-    state.uniforms={};for(const name of ['uInstanceRecords','uInstanceStart','uInstanceStride','uInstanceTextureWidth','uViewProjection','uCameraPosition','uMeadowPatchBand','uSunDirection','uSunIntensity','uSunColor','uSkyZenithColor','uSkyHorizonColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor','uDistanceDesaturationStrength','uTerrainPatchClip','uClipBaseTerrain','uGlobalCoverFarPrimitiveIndex','uPlanetRadius','uShorelineSoilCoverage','uLandscapeFloorFootprints[0]','uLandscapeFloorCount'])state.uniforms[name]=gl.getUniformLocation(state.program,name);
+    state.uniforms={};for(const name of ['uInstanceRecords','uInstanceStart','uInstanceStride','uInstanceTextureWidth','uViewProjection','uCameraPosition','uMeadowPatchBand','uMeadowPatchSelection','uSunDirection','uSunIntensity','uSunColor','uSkyZenithColor','uSkyHorizonColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor','uDistanceDesaturationStrength','uTerrainPatchClip','uClipBaseTerrain','uGlobalCoverFarPrimitiveIndex','uPlanetRadius','uShorelineSoilCoverage','uLandscapeFloorFootprints[0]','uLandscapeFloorCount'])state.uniforms[name]=gl.getUniformLocation(state.program,name);
     gl.useProgram(state.program);const u=state.uniforms,e=resources.environment;
     gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform3fv(u.uSunColor,color3(e.sunColor));gl.uniform3fv(u.uSkyZenithColor,color3(e.skyZenithColor));gl.uniform3fv(u.uSkyHorizonColor,resources.skyColor);gl.uniform3fv(u.uGroundHazeColor,color3(e.groundHazeColor));
     for(const [name,key] of [['uFogStartDistance','fogStartDistance'],['uFogFalloff','fogFalloff'],['uMaximumFogFactor','maximumFogFactor'],['uDistanceDesaturationStrength','distanceDesaturationStrength']])gl.uniform1f(u[name],e[key]);
@@ -1503,12 +1517,17 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
   function drawGlobalCover(packet){
     const state=resources.globalCover;if(!state)return;
-    const selected=selectHEarthGlobalGroundCoverDraws(state.cover,packet.camera.position,{maximumInstances:4096,maximumDraws:48});\n    const patches=selectHEarthMeadowMidDistancePatchDraws(state.cover,packet.camera.position,{maximumInstances:1024,maximumDraws:16});
+    const allocation=selectHEarthMeadowMidDistanceRepresentations(state.cover,packet.camera.position);
+    const selected={draws:allocation.fanDraws},patches={draws:allocation.patchDraws};
+    const patchByStart=new Map(patches.draws.map(draw=>[draw.start,draw]));
     gl.useProgram(state.program);gl.bindVertexArray(state.vao);gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);gl.activeTexture(gl.TEXTURE0);gl.disable(gl.BLEND);gl.depthMask(true);
-    gl.uniformMatrix4fv(state.uniforms.uViewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));gl.uniform3f(state.uniforms.uCameraPosition,packet.camera.position.x,packet.camera.position.y,packet.camera.position.z);\n    gl.uniform4f(state.uniforms.uMeadowPatchBand,-45,-326,6,18);
+    gl.uniformMatrix4fv(state.uniforms.uViewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));gl.uniform3f(state.uniforms.uCameraPosition,packet.camera.position.x,packet.camera.position.y,packet.camera.position.z);
+    gl.uniform4f(state.uniforms.uMeadowPatchBand,-45,-326,6,18);
     let visible=0;
     for(const draw of selected.draws){
       if(draw.count<=0)continue;
+      const patch=patchByStart.get(draw.start);
+      gl.uniform3i(state.uniforms.uMeadowPatchSelection,patch?.start??0,patch?.count??0,patch?.stride??1);
       gl.uniform1i(state.uniforms.uInstanceStart,draw.start);gl.uniform1i(state.uniforms.uInstanceStride,draw.stride);
       gl.drawElementsInstanced(gl.TRIANGLES,state.cover.template.indices.length,gl.UNSIGNED_INT,0,draw.count);visible+=draw.count;
     }
@@ -1532,8 +1551,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.disable(gl.BLEND);gl.depthMask(true);
     }
     const fanDrawCalls=selected.draws.filter(d=>d.count>0).length;
-    state.lastDraw={visibleInstanceCount:visible,drawCallCount:fanDrawCalls,patchLodInstanceCount:patchVisible,patchLodDrawCallCount:patchDrawCalls,patchLodTextureBytes:state.patchAtlasByteLength,patchLodRadiusMeters:18,patchLodInnerDistanceMeters:6,storedPopulationChanged:false,perFrameUploadBytes:0};
-    if(visible>4096||fanDrawCalls+patchDrawCalls>64||patchVisible>1024)throw Error('GLOBAL_COVER_DRAW_BUDGET_EXCEEDED');
+    state.lastDraw={visibleInstanceCount:visible+patchVisible,drawCallCount:fanDrawCalls+patchDrawCalls,fanInstanceCount:visible,fanDrawCallCount:fanDrawCalls,patchLodInstanceCount:patchVisible,patchLodDrawCallCount:patchDrawCalls,patchLodTextureBytes:state.patchAtlasByteLength,patchLodRadiusMeters:18,patchLodInnerDistanceMeters:6,storedPopulationChanged:false,perFrameUploadBytes:0};
+    if(visible+patchVisible>4096||fanDrawCalls+patchDrawCalls>64||patchVisible>1024)throw Error('GLOBAL_COVER_DRAW_BUDGET_EXCEEDED');
     counters.totalDrawnIndexCount+=visible*state.cover.template.indices.length+patchVisible*6;
     gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
   }

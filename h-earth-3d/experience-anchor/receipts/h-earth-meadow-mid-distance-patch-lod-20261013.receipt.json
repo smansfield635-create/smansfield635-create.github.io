@@ -1,0 +1,44 @@
+{
+  "schema": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_RECEIPT_v1",
+  "operationId": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_20261013_001",
+  "generation": 2677,
+  "status": "RUNTIME_REPAIR_CHECKPOINT_UNQUALIFIED",
+  "governingHead": "14c5c4734861e6b690d9ed46720b20fe74319206",
+  "recoveryParent": "8dbfe2c1d35672676cf96164adc07d3df78ed0fb",
+  "sourceBlobs": {
+    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "e41e81392efeade6f0bb3f263e3e99ba1d92667c",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "754daeead45a70e2a2a332f14776a8898cc80088",
+    "h-earth-3d/validation/h-earth.meadow-mid-distance-patch-lod.v1.mjs": "c7dc586e5a5bd66c9302eae758cd00016116b565",
+    "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs": "1aee54271c320229ccc4e490b867621422fab935",
+    "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json": "a181e851e865d710d75e8b2557f4f312c806ebd8"
+  },
+  "failedRun": 38431821376,
+  "failureAssertion": "CP3D_GEN329_RENDERER_OW01_PACKAGE_IMPORT_MISMATCH",
+  "failureClassification": "ADVISORY_NONBLOCKING_PREEXISTING_UNSELECTED_ASSERTION",
+  "checks": {
+    "strictModuleSyntax": "PASS",
+    "focusedPatchContract": "PASS",
+    "immutableBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "fullSourceParity": "PENDING",
+    "independentActualRoots": "PENDING",
+    "webgl2Runtime": "PENDING",
+    "matchedMeadowVisual": "PENDING",
+    "ownerDisposition": "PENDING"
+  },
+  "functionalReview": {
+    "N": "Parent routing and custody",
+    "E": "/root/elara_renderer",
+    "S": "/root/tarian_route",
+    "W": "/root/soren_review",
+    "verdict": "SAFE_FOR_UNQUALIFIED_RUNTIME_DIAGNOSTIC_ONLY"
+  },
+  "unresolved": [
+    "At saturated instance capacity duplicate crossfade is unavailable and mode switches may pop",
+    "Ecological widened or leaning blade footprint containment requires further verification",
+    "Actual patch plane terrain alignment and meadow appearance unverified",
+    "Trusted qualifier meadow/root routing remains restricted to older Gen2674 heads"
+  ],
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false,
+  "publicationAuthorized": false
+}

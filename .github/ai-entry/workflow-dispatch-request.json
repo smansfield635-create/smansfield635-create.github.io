@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "release-proof-gen2679-preflight-20261013-1721",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "4c7bbdb34c8ba56fc3efe0a925a4beb47c012a5a",
+    "surface_id": "release-proof"
   }
 }

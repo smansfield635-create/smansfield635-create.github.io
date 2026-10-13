@@ -11,7 +11,10 @@
         "id=\"next-action\"",
         "READY_UNDER_SUPPLIED_RECORDS",
         "NOT_ESTABLISHED",
-        "id=\"inspection-canvas\""
+        "id=\"inspection-canvas\"",
+        "id=\"outcome-spotlight\"",
+        "HISTORICAL REPLAY · GUIDED DEMONSTRATION",
+        "id=\"toggle-orders\""
       ],
       "excludes": []
     }
@@ -29,6 +32,22 @@
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
+        "name": "Tablet order switcher expands",
+        "action": {
+          "type": "click",
+          "selector": "#toggle-orders"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#toggle-orders",
+            "name": "aria-expanded",
+            "value": "true"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
         "name": "Guided order advances",
         "action": {
           "type": "click",
@@ -39,6 +58,200 @@
             "type": "textContains",
             "selector": "#step-counter",
             "value": "1 / 7"
+          }
+        ],
+        "timeoutMs": 10000
+      },
+      {
+        "name": "Historical journey checkpoint 2",
+        "action": {
+          "type": "click",
+          "selector": "#next-action"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#step-counter",
+            "value": "2 / 7"
+          },
+          {
+            "type": "textContains",
+            "selector": "#shipping-status",
+            "value": "NOT AUTHORIZED"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Historical journey checkpoint 3",
+        "action": {
+          "type": "click",
+          "selector": "#next-action"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#step-counter",
+            "value": "3 / 7"
+          },
+          {
+            "type": "textContains",
+            "selector": "#shipping-status",
+            "value": "NOT AUTHORIZED"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Historical journey checkpoint 4",
+        "action": {
+          "type": "click",
+          "selector": "#next-action"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#step-counter",
+            "value": "4 / 7"
+          },
+          {
+            "type": "textContains",
+            "selector": "#shipping-status",
+            "value": "NOT AUTHORIZED"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Historical journey checkpoint 5",
+        "action": {
+          "type": "click",
+          "selector": "#next-action"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#step-counter",
+            "value": "5 / 7"
+          },
+          {
+            "type": "textContains",
+            "selector": "#shipping-status",
+            "value": "NOT AUTHORIZED"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Historical journey checkpoint 6",
+        "action": {
+          "type": "click",
+          "selector": "#next-action"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#step-counter",
+            "value": "6 / 7"
+          },
+          {
+            "type": "textContains",
+            "selector": "#shipping-status",
+            "value": "NOT AUTHORIZED"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Historical journey checkpoint 7",
+        "action": {
+          "type": "click",
+          "selector": "#next-action"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#step-counter",
+            "value": "7 / 7"
+          },
+          {
+            "type": "textContains",
+            "selector": "#shipping-status",
+            "value": "NOT AUTHORIZED"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Completed replay shows 36 2 38",
+        "action": {
+          "type": "click",
+          "selector": "[data-tab='decision']"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#outcome-retained",
+            "value": "36"
+          },
+          {
+            "type": "textContains",
+            "selector": "#outcome-renewed",
+            "value": "2"
+          },
+          {
+            "type": "textContains",
+            "selector": "#outcome-total",
+            "value": "38/38"
+          },
+          {
+            "type": "textContains",
+            "selector": "#outcome-spotlight",
+            "value": "Historical scenario replay"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Live local planning workbench opens",
+        "action": {
+          "type": "click",
+          "selector": "[data-tab='plan']"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#planner-details",
+            "value": "Live schedule calculation"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Planner details expand",
+        "action": {
+          "type": "click",
+          "selector": "#planner-details summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#run-planner"
+          }
+        ],
+        "timeoutMs": 5000
+      },
+      {
+        "name": "Live schedule calculation checks",
+        "action": {
+          "type": "click",
+          "selector": "#run-planner"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#planner-result",
+            "value": "PASS"
           }
         ],
         "timeoutMs": 10000

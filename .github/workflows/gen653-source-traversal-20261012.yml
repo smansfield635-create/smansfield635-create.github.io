@@ -1,0 +1,66 @@
+name: Gen653 bounded historical source escrow
+on:
+  push:
+    branches:
+      - gen653-source-traversal-20261012
+    paths:
+      - .github/workflows/gen653-source-traversal-20261012.yml
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: gen653-source-traversal-20261012
+  cancel-in-progress: true
+jobs:
+  collect:
+    if: github.repository == 'smansfield635-create/smansfield635-create.github.io' && github.ref == 'refs/heads/gen653-source-traversal-20261012' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 165
+    steps:
+      - name: Verify branch-local source script
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            tools/gen653
+          sparse-checkout-cone-mode: true
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Mint bounded private GitHub App token for source escrow
+        id: private
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+          permission-pull-requests: write
+      - name: Check out exact private Gen653 source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 8578824669d41f542f375741c5fec4a5a08d4329
+          token: ${{ steps.private.outputs.token }}
+          persist-credentials: false
+          path: private-source
+      - name: Verify exact source identities and execute preserved traversal
+        env:
+          EXPECTED_PRIVATE_HEAD: 8578824669d41f542f375741c5fec4a5a08d4329
+          EXPECTED_COLLECTOR_BLOB: 286dc1f96340cfbf9df68569fabeb7810183cb5a
+          PRIVATE_APP_ID: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          PRIVATE_APP_TOKEN: ${{ steps.private.outputs.token }}
+          PUBLIC_ACTIONS_TOKEN: ${{ github.token }}
+          MAX_SOURCE_REQUESTS: '4'
+          MAX_RUNTIME_MINUTES: '8'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C private-source rev-parse HEAD)" = "$EXPECTED_PRIVATE_HEAD"
+          test "$(git -C private-source rev-parse HEAD:tools/private-public-bridge/operations-chamber-run-history.v1.mjs)" = "$EXPECTED_COLLECTOR_BLOB"
+          test -z "$(git -C private-source status --porcelain)"
+          test "$GITHUB_REF" = 'refs/heads/gen653-source-traversal-20261012'
+          node tools/gen653/source-escrow-traversal.mjs

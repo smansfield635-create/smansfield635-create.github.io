@@ -909,9 +909,32 @@ void main(){
     if(all(greaterThanEqual(meadowUv,vec2(0.0)))&&all(lessThanEqual(meadowUv,vec2(1.0)))){
       float rooted=texture(uMeadowSoilCoverage,meadowUv).r;
       float radial=1.0-smoothstep(15.0,18.0,length(world-vec2(-45.0,-326.0)));
+      // Gen2674 bounded carpet correction: actual accepted roots own all pigment.
+      // Fine, slightly rotated microleaf marks avoid a uniform green coating.
+      // Pixel-footprint attenuation prevents a repeated distant speckle field.
       float leafLitter=noise2(world*1.9+vec2(13.0,7.0));
-      vec3 carpetSoil=mix(vec3(.113,.125,.052),vec3(.180,.160,.073),leafLitter);
-      palette=mix(palette,carpetSoil,rooted*radial*.48);
+      float colonyTone=noise2(world*3.7+vec2(4.2,19.5));
+      float rootedWeight=clamp(rooted*radial,0.0,1.0);
+      vec3 livingUnderstory=mix(vec3(.071,.139,.046),vec3(.164,.180,.077),
+        clamp(leafLitter*.58+colonyTone*.42,0.0,1.0));
+      float walkingDetail=1.0-smoothstep(.018,.105,length(fwidth(world)));
+      float microleaf=0.0;
+      if(rootedWeight>.015&&walkingDetail>.015){
+        // World-anchored, jittered leaf-stroke cells; never an instance lattice.
+        vec2 fineCell=world*19.0+vec2(noise2(world*2.1),noise2(world*2.1+vec2(31.0,17.0)))*.45;
+        vec2 cell=floor(fineCell),fraction=fract(fineCell)-.5;
+        vec2 jitter=vec2(hash21(cell+vec2(13.1,5.3)),hash21(cell+vec2(2.7,19.2)))-.5;
+        float direction=hash21(cell+vec2(29.4,7.1))*6.28318530718;
+        vec2 axis=vec2(cos(direction),sin(direction));
+        vec2 localLeaf=fraction-jitter*.32;
+        float along=abs(dot(localLeaf,axis)),across=abs(dot(localLeaf,vec2(-axis.y,axis.x)));
+        float tapered=1.0-smoothstep(.04,.115+.12*(1.0-along),across);
+        microleaf=tapered*(1.0-smoothstep(.16,.52,along));
+      }
+      vec3 leafTint=mix(livingUnderstory,vec3(.192,.245,.082),microleaf*.65);
+      palette=mix(palette,leafTint,rootedWeight*(.65+.20*walkingDetail*microleaf));
+      // The same physical root mask preserves broken soil and spatially varied gaps.
+      presentationContact=max(presentationContact,rootedWeight*.07*walkingDetail*microleaf);
     }
     // A floor follows accepted tree footprints, not a filled cluster ellipse.
     // B/C retain their existing treatment. This is static material/contact

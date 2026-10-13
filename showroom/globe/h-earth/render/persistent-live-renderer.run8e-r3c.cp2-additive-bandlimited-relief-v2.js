@@ -1,5 +1,5 @@
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowFineDraw } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowFineDraw } from './landscape-groundcover.global-v1.js?cb=gen2674-meadow-fine-20261012';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -10,7 +10,7 @@ import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorl
 import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js?cb=meadow-distribution-20261006';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006';
 // SHORELINE_SOIL_BEGIN import
-import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=meadow-distribution-20261006';
+import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=gen2674-meadow-fine-20261012';
 // SHORELINE_SOIL_END import
 
 // The CPU contour is derived from uploaded Float32 triangle planes in world x/z.

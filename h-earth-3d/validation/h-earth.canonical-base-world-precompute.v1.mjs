@@ -16,7 +16,7 @@ const SOURCE_BLOBS = Object.freeze({
   [`${RENDER}live-render-package.run8e-r2.canonical.js`]: '41092afa665f715027f54bc6c52898b839911235',
   [`${RENDER}live-render-package.run8e-r2.js`]: 'd362035f091a7fd997553239c048e87e8b46e4c7',
   [`${RENDER}run8e-successor-environment.js`]: '92d5cb9523619fed34382986232c3d8c261e2a8d',
-  [`${RENDER}persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js`]: 'e332c48026ea866ed009c37b05ec3e8d8233aec0',
+  [`${RENDER}persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js`]: '7c60ec5631a522f9c7f646393077484b7ddc1939',
   [`${RENDER}geometry-landscape-sector.p2.js`]: 'c26247dcb69cb52c968fcd3ef6c2626eaa577d03',
   [`${RENDER}landscape-groundcover.global-v1.js`]: 'fa0ff6a8eca576f3ed3708ef969b50e5e684c5e0',
   [`${RENDER}woodland-clearing-trial.js`]: '14c366d2241469fbccd08ee31bbeac0f1b7598f4',

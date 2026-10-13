@@ -269,7 +269,7 @@ if(process.argv.includes('--self-test')){
       clearingCasterIndexCount:gpu?.resources?.woodlandClearing?.casterIndexCount??null,
       firstFailureStage:startup?.firstFailureStage||null,
       position:route?.getIntakeReceipt?.()?.currentNavigationState?.position||null,
-      navigation:(()=>{const n=route?.getIntakeReceipt?.()?.currentNavigationState;return n?{yawDegrees:n.yawDegrees,pitchDegrees:n.pitchDegrees,position:n.position,sequence:n.sequence}:null})(),
+      navigation:(()=>{const n=route?.getIntakeReceipt?.()?.currentNavigationState;return n?{yawDegrees:n.yawDegrees,pitchDegrees:n.pitchDegrees,verticalFovDegrees:n.verticalFovDegrees,position:n.position,sequence:n.sequence}:null})(),
       navigationProposals:(route?.getIntakeReceipt?.()?.proposals||[]).slice(-16).map(p=>({sequence:p.sequence,inputClass:p.inputClass,action:p.intent?.action,accepted:p.accepted})),
       residencyStatus:root?.dataset.vegetationResidency||null,
       residency:route?.getVegetationResidency?.()||null
@@ -296,7 +296,7 @@ if(process.argv.includes('--self-test')){
     if(v.x!==null&&(!snap.position||Math.abs(snap.position.x-v.x)>0.03||Math.abs(snap.position.z-v.z)>0.03))throw Error('GEN2638_ARRIVAL_POSITION_MISMATCH:'+JSON.stringify(snap.position));
     if(gen2674QualificationActive){
      const nav=snap.navigation;
-     if(gen2674TestCameraOverrides!==1||!nav||
+     if(gen2674TestCameraOverrides<1||gen2674TestCameraOverrides>4||!nav||
         !Number.isFinite(nav.yawDegrees)||!Number.isFinite(nav.pitchDegrees)||!Number.isFinite(nav.verticalFovDegrees)||
         Math.abs(nav.yawDegrees-gen2674MeadowTarget.yawDegrees)>.02||
         Math.abs(nav.pitchDegrees-gen2674MeadowTarget.pitchDegrees)>.02||

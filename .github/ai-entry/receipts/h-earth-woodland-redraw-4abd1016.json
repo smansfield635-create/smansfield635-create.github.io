@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-woodland-redraw-4abd1016",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6245,
+  "requestBranch": "ai-dispatch-request-h-earth-woodland-redraw-4abd1016",
+  "requestCommit": "7774756cf55746e516ab02083497e02f2356cec3",
+  "requestCommitParent": "e5bc591e80904ae9becf0fa939e9af77fa9714df",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e5bc591e80904ae9becf0fa939e9af77fa9714df",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "4abd1016336482373caf1c5bfb90245fc188e806"
+  },
+  "bridgeRunId": "38484096679",
+  "dispatchedRunId": 38484113163,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38484113163",
+  "dispatchedRunHeadSha": "e5bc591e80904ae9becf0fa939e9af77fa9714df",
+  "dispatchedAt": "2026-10-13T23:25:07.447Z",
+  "resolvedAt": "2026-10-13T23:25:11.025Z"
+}

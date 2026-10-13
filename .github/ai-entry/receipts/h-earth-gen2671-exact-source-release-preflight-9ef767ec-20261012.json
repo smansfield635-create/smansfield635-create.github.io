@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-gen2671-exact-source-release-preflight-9ef767ec-20261012",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6200,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2671-early-preflight-20261012",
+  "requestCommit": "48584c0e1428c66c7ed4cd1ec84260fafeea740a",
+  "currentMainSha": "df8a49dd18afe756cebc5abc816a16fc19f33a79",
+  "bridgeRunId": "38331637295",
+  "error": "Stale dispatch request: parent 710c1f1bfcf022a89a444cc1f73fb8bce16921da != current main df8a49dd18afe756cebc5abc816a16fc19f33a79",
+  "failedAt": "2026-10-13T01:20:20.099Z"
+}

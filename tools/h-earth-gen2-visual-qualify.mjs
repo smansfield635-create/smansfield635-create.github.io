@@ -15,7 +15,7 @@ const approvedFourTreeGeometryBlob='c26247dcb69cb52c968fcd3ef6c2626eaa577d03';
 const isApprovedFourTreeGeometryBlob=blob=>blob===approvedFourTreeGeometryBlob;
 const out='/tmp/gen2-evidence';
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-const gen2674QualificationHeads=new Set(['9a63c4571d95abf925ba22f2fcd7aaaa8c578cac','b23839dc8a473b52dbac080f71bde38dd99cda0f']);
+const gen2674QualificationHeads=new Set(['9a63c4571d95abf925ba22f2fcd7aaaa8c578cac','b23839dc8a473b52dbac080f71bde38dd99cda0f','870a995a7012312ac25569c0dc6673822a126ae2']);
 const gen2674MeadowTarget=Object.freeze({x:-45,z:-326,yawDegrees:0,pitchDegrees:-8,verticalFovDegrees:56});
 async function runGen2674IndependentRootQualification(exactCandidateHead){
  const receipt={schema:'H_EARTH_GEN2674_INDEPENDENT_WORLD_ROOT_QUALIFICATION_v1',candidateHead:exactCandidateHead,

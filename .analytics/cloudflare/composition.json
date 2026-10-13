@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-13T09:40:47Z",
+  "generatedAt": "2026-10-13T10:36:55Z",
   "window": {
-    "start": "2026-09-13T09:40:47Z",
-    "end": "2026-10-13T09:40:47Z"
+    "start": "2026-09-13T10:36:55Z",
+    "end": "2026-10-13T10:36:55Z"
   },
   "dimensions": {
     "requestPath": [

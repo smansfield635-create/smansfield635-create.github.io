@@ -77,7 +77,8 @@ function resetDemo(s,id){if(!TEMPLATE_IDS.includes(id))return false;s.steps[id]=
 function demoSnapshot(archive,step){return step<0?null:archive.stages[DEMO_INDEX[step]];}
 function demoDecision(archive,step){
  if(step<0)return {result:'NOT_EVALUATED',reason:'No inspection has been imported yet.',next:DEMO_ACTIONS[0],retain:0,renew:0,approved:false,authorized:false};
- const snap=demoSnapshot(archive,step);let reason='',next=step<6?DEMO_ACTIONS[step+1]:'Review evidence and record the decision'; if(step===0)reason='Revision A source inspection contains 38 passing characteristics. This is a frozen supplied-record review, not shipment authorization.';
+ const snap=demoSnapshot(archive,step);let reason='',next=step<6?DEMO_ACTIONS[step+1]:'Review evidence and record the decision';
+ if(step===0)reason='Revision A source inspection contains 38 passing characteristics. This is a frozen supplied-record review, not shipment authorization.';
  if(step===1)reason='Revision B invalidates the earlier approval and requires a human-approved change impact assessment.';
  if(step>=2&&step<=3)reason='36 characteristics are retained under the fictional impact map; checks 8 and 11 require renewed revision B evidence.';
  if(step===4)reason='Synthetic revision B measurements cover checks 8 and 11. A fresh approval is still required.';
@@ -156,7 +157,8 @@ function verifySchedule(orders,rows,resources={}){
  *  dimensional-reference holes and independently selectable characteristic hotspots. */
 function mountInspection(canvas,{onSelect,selected='8',needs=[]}={}){
  if(!canvas)return ()=>{};
- let rx=-0.45,ry=0.5,zoom=1,drag=null,points=[],raf=0; const host=canvas.parentElement;
+ let rx=-0.45,ry=0.5,zoom=1,drag=null,points=[],raf=0;
+ const host=canvas.parentElement;
  const V=(x,y,z)=>[x,y,z];
  function projection(v){let [x,y,z]=v;let co=Math.cos(ry),si=Math.sin(ry);[x,z]=[x*co+z*si,-x*si+z*co];co=Math.cos(rx);si=Math.sin(rx);[y,z]=[y*co-z*si,y*si+z*co];const s=zoom* Math.min(canvas.clientWidth/5.9,canvas.clientHeight/3.4);const persp=5.8/(5.8+z*.17);return [canvas.clientWidth/2+x*s*persp,canvas.clientHeight/2+y*s*persp,z];}
  function face(ctx,verts,fill,stroke='#abd4e9'){const p=verts.map(projection);ctx.beginPath();p.forEach((v,i)=>i?ctx.lineTo(v[0],v[1]):ctx.moveTo(v[0],v[1]));ctx.closePath();ctx.fillStyle=fill;ctx.fill();ctx.lineWidth=1.5;ctx.strokeStyle=stroke;ctx.stroke();}

@@ -1,19 +1,19 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "release-proof",
-  "description": "Single NIST plate case with alternate HOLD entry, selectable 38-characteristic evidence matrix and preserved shipping boundary.",
+  "description": "Integrated Release Proof workspace with readiness matrix, historical recovery deadline, evidence lineage and persistent consequences; existing NIST replay and shipping boundary preserved.",
   "checks": [
     {
       "path": "/release-proof/index.html",
       "includes": [
-        "Release Proof — Mission Control",
+        "Release Proof \u2014 Mission Control",
         "id=\"create-button\"",
         "id=\"next-action\"",
         "READY_UNDER_SUPPLIED_RECORDS",
         "NOT_ESTABLISHED",
         "id=\"inspection-canvas\"",
         "id=\"outcome-spotlight\"",
-        "HISTORICAL REPLAY · GUIDED DEMONSTRATION",
+        "HISTORICAL REPLAY \u00b7 GUIDED DEMONSTRATION",
         "id=\"toggle-orders\"",
         "id=\"creation-mode\"",
         "WHAT IS THE PART?",
@@ -23,7 +23,15 @@
         "38-check matrix",
         "class=\"evidence-matrix\"",
         "data-check-id",
-        "DEMO_SHORTCUT_TO_HOLD"
+        "DEMO_SHORTCUT_TO_HOLD",
+        "id=\"readiness-matrix\"",
+        "id=\"decision-consequence\"",
+        "id=\"consequence-content\"",
+        "id=\"recovery-overview\"",
+        "id=\"lineage-overview\"",
+        "data-ready-order",
+        "data-workspace-check",
+        "min late"
       ],
       "excludes": []
     }
@@ -40,6 +48,33 @@
     "failOnPageErrors": true,
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
+      {
+        "name": "Integrated workspace shows all decision views",
+        "action": {
+          "type": "click",
+          "selector": "[data-tab='decision']"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#readiness-matrix"
+          },
+          {
+            "type": "exists",
+            "selector": "#recovery-overview"
+          },
+          {
+            "type": "exists",
+            "selector": "#lineage-overview"
+          },
+          {
+            "type": "textContains",
+            "selector": "#decision-consequence",
+            "value": "Shipping: NOT AUTHORIZED"
+          }
+        ],
+        "timeoutMs": 5000
+      },
       {
         "name": "Tablet order switcher expands",
         "action": {
@@ -127,6 +162,21 @@
             "type": "textContains",
             "selector": "#shipping-status",
             "value": "NOT AUTHORIZED"
+          },
+          {
+            "type": "textContains",
+            "selector": "#recovery-overview",
+            "value": "30 min late"
+          },
+          {
+            "type": "textContains",
+            "selector": "#recovery-overview",
+            "value": "Recorded constraints: PASS"
+          },
+          {
+            "type": "textContains",
+            "selector": "#decision-consequence",
+            "value": "30 min late"
           }
         ],
         "timeoutMs": 5000
@@ -327,6 +377,16 @@
             "selector": "[data-check-id='11']",
             "name": "aria-pressed",
             "value": "true"
+          },
+          {
+            "type": "textContains",
+            "selector": "#evidence-detail",
+            "value": "Original public NIST reading"
+          },
+          {
+            "type": "textContains",
+            "selector": "#evidence-detail",
+            "value": "Synthetic demonstration renewal"
           }
         ],
         "timeoutMs": 5000
@@ -423,6 +483,11 @@
           {
             "type": "exists",
             "selector": ".technical-records"
+          },
+          {
+            "type": "textContains",
+            "selector": "#decision-consequence",
+            "value": "Renew checks 8 and 11"
           }
         ],
         "timeoutMs": 5000

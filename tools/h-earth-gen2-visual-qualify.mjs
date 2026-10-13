@@ -15,10 +15,10 @@ const approvedFourTreeGeometryBlob='c26247dcb69cb52c968fcd3ef6c2626eaa577d03';
 const isApprovedFourTreeGeometryBlob=blob=>blob===approvedFourTreeGeometryBlob;
 const out='/tmp/gen2-evidence';
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-const gen2674QualificationHead='9a63c4571d95abf925ba22f2fcd7aaaa8c578cac';
+const gen2674QualificationHeads=new Set(['9a63c4571d95abf925ba22f2fcd7aaaa8c578cac','b23839dc8a473b52dbac080f71bde38dd99cda0f']);
 const gen2674MeadowTarget=Object.freeze({x:-45,z:-326,yawDegrees:0,pitchDegrees:-8,verticalFovDegrees:56});
-async function runGen2674IndependentRootQualification(){
- const receipt={schema:'H_EARTH_GEN2674_INDEPENDENT_WORLD_ROOT_QUALIFICATION_v1',candidateHead:gen2674QualificationHead,
+async function runGen2674IndependentRootQualification(exactCandidateHead){
+ const receipt={schema:'H_EARTH_GEN2674_INDEPENDENT_WORLD_ROOT_QUALIFICATION_v1',candidateHead:exactCandidateHead,
   actualNode22Execution:true,worldBinaryMustRemainUnchanged:true,steps:[],result:'PENDING'};
  const plans=[['SOURCE_PARITY','h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs','--verify-source'],
   ['IMMUTABLE_WORLD_ROOT','h-earth-3d/validation/h-earth.global-groundcover.v1.mjs','--single-order']];
@@ -167,7 +167,7 @@ if(process.argv.includes('--self-test')){
   console.log(JSON.stringify({schema:'H_EARTH_GEN2_VISUAL_QUALIFIER_SELF_TEST_v1',result:'PASS',loadingOverlayRejected:true,missingGpuRejected:true,incompleteResidencyRejected:true}));
 }else{
  const sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
- const gen2674QualificationActive=sha===gen2674QualificationHead;
+ const gen2674QualificationActive=gen2674QualificationHeads.has(sha);
  if(performanceCaptureActive){
   const executingBlob=execFileSync('git',['hash-object',process.argv[1]],{encoding:'utf8'}).trim();
   const targetToolBlob=execFileSync('git',['rev-parse','HEAD:tools/h-earth-gen2-visual-qualify.mjs'],{encoding:'utf8'}).trim();
@@ -188,7 +188,7 @@ if(process.argv.includes('--self-test')){
  let server=null,browser=null;
  await fs.mkdir(out,{recursive:true});
  try{
-  if(gen2674QualificationActive)receipt.independentRoot=await runGen2674IndependentRootQualification();
+  if(gen2674QualificationActive)receipt.independentRoot=await runGen2674IndependentRootQualification(sha);
   if(fourOnly){
    // The registered workflow checks out the candidate with fetch-depth:1.
    // The established independent tree verifier compares against an immutable

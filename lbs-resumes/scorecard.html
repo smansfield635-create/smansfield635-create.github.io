@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="robots" content="noindex,nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'none'; connect-src 'none'; style-src 'unsafe-inline'; img-src 'none'; font-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="LBS executive results scorecard — software delivered, acquisition bottleneck, and recommended disposition.">
+  <title>LBS — Project scorecard</title>
+  <style>
+    :root { color-scheme:dark; --bg:#0b1019; --surface:#151e2b; --surface2:#1b2635; --border:#324155; --text:#f2f5f8; --muted:#adbccc; --accent:#e5c08c; --green:#92c9b4; --link:#b4cfff; }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(circle at 83% -3%,#243148 0%,#0b1019 35%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;font-size:15px;line-height:1.5}
+    .wrap{max-width:1120px;padding:0 30px;margin:0 auto}
+    .mast{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:32px 0 24px;border-bottom:1px solid var(--border)}
+    .wordmark{font-size:21px;letter-spacing:.15em;font-weight:790;line-height:1;}
+    .wordmark span{color:var(--accent)}
+    .mast-right{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+    .lozenge{display:inline-flex;align-items:center;gap:8px;padding:5px 11px;border:1px solid #6b5c48;border-radius:999px;background:#302b24;color:#f0d8b6;font-weight:650}
+    .dot{width:6px;height:6px;background:var(--accent);border-radius:50%}
+    main{padding-top:43px;padding-bottom:24px}
+    .kicker{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.19em;text-transform:uppercase}
+    h1{font-size:clamp(38px,5.6vw,60px);line-height:1.095;letter-spacing:-.046em;margin:12px 0 15px;max-width:880px;font-weight:780}
+    .sub{max-width:780px;margin:0;color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.5}
+    .accent{color:var(--accent)}
+    .topline{margin:34px 0 13px;display:flex;align-items:center;gap:14px}
+    .topline h2,.section-label{margin:0;text-transform:uppercase;letter-spacing:.145em;color:#ccd7e3;font-weight:760;font-size:11px}
+    .rule{border:0;border-top:1px solid var(--border);flex:1;margin:0}
+    .metrics{display:grid;grid-template-columns:1.46fr 1fr 1fr;gap:13px}
+    .metric{border:1px solid var(--border);background:linear-gradient(150deg,#1c2a3d,#151e2b 78%);border-radius:14px;padding:23px 24px;min-height:172px;display:flex;flex-direction:column;justify-content:space-between}
+    .metric.primary{border-color:#645942;background:linear-gradient(135deg,#2e302f,#202c32 65%,#172331)}
+    .metric-number{font-size:clamp(35px,4.4vw,53px);font-weight:790;letter-spacing:-.04em;line-height:1.09;font-variant-numeric:tabular-nums}
+    .metric.primary .metric-number{color:#f5d3a0;font-size:clamp(43px,5.5vw,66px)}
+    .slash{color:#9b9383;font-size:.58em;letter-spacing:0;font-weight:530}
+    .metric-title{font-size:14px;font-weight:700;line-height:1.35;margin:14px 0 2px}
+    .metric-foot{font-size:12px;color:var(--muted);line-height:1.4}
+    .lower{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:13px}
+    .panel{border:1px solid var(--border);background:rgba(21,30,43,.95);border-radius:14px;padding:24px 24px 23px}
+    h2{margin:8px 0 17px;line-height:1.22;font-size:clamp(22px,2.9vw,28px);letter-spacing:-.025em}
+    .checklist{list-style:none;padding:0;margin:0}
+    .checklist li{display:flex;gap:13px;align-items:start;padding:10px 0;border-top:1px solid #2b3949;font-weight:590}
+    .tick{flex:none;color:var(--green);font-weight:900;font-size:16px;line-height:1.35}
+    .punchline{color:#edf0f4;font-size:16px;margin:0 0 17px;max-width:440px;line-height:1.48}
+    .run{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:15px}
+    .runitem{padding:12px 11px;border-radius:9px;border:1px solid #394252;background:#202a37;min-width:0}
+    .runitem .amount{font-size:22px;letter-spacing:-.04em;font-weight:780;line-height:1.1;font-variant-numeric:tabular-nums}
+    .runitem .amount span{color:#b7c3ce;font-size:14px}
+    .runitem .label{margin-top:6px;color:var(--muted);font-size:12px}
+    .conclusion{margin:13px 0 0;background:#1c292e;border:1px solid #456454;border-radius:14px;padding:22px 25px;display:flex;align-items:center;justify-content:space-between;gap:22px}
+    .conclusion h2{margin:5px 0 5px;font-size:23px}
+    .conclusion p{margin:0;color:#c7d5d4;font-size:14px;line-height:1.45;max-width:830px}
+    .conclusion-tag{font-size:11px;letter-spacing:.11em;text-transform:uppercase;color:#c3e5d5;border:1px solid #648b78;white-space:nowrap;border-radius:99px;padding:7px 12px}
+    .evidence{border-top:1px solid var(--border);margin:28px 0 0;padding-top:15px;color:var(--muted);font-size:12px}
+    details summary{cursor:pointer;display:inline-block;color:#c8d8e9;font-weight:700;padding:7px 0;list-style:none}
+    details summary::-webkit-details-marker{display:none}
+    details summary:after{content:" +";color:var(--accent)}
+    details[open] summary:after{content:" −"}
+    .evidence-body{max-width:850px;padding:6px 0 12px;font-size:12px;line-height:1.6}
+    .evidence-body p{margin:6px 0 10px}
+    a{color:var(--link)}a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    footer{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:11px;padding:11px 0 30px}
+    @media(max-width:850px){.metrics{grid-template-columns:1.1fr 1fr 1fr}.metric{padding:18px;min-height:160px}.lower{grid-template-columns:1fr}.panel{padding:21px}.run{max-width:540px}}
+    @media(max-width:620px){.wrap{padding:0 17px}.mast{padding:24px 0 18px}.mast-right{gap:7px;justify-content:flex-end}.wordmark{font-size:18px}main{padding-top:31px}h1{font-size:39px}.sub{font-size:16px}.topline{margin-top:27px}.metrics{grid-template-columns:1fr 1fr;gap:9px}.metric{min-height:150px;padding:16px;border-radius:12px}.metric.primary{grid-column:span 2;min-height:145px}.metric.primary .metric-number{font-size:54px}.metric-number{font-size:38px}.metric-title{font-size:13px}.metric-foot{font-size:11px}.lower{margin-top:9px;gap:9px}.panel{padding:20px 18px}.run{gap:6px}.runitem{padding:10px 8px}.runitem .amount{font-size:20px}.runitem .label{font-size:10px}.conclusion{padding:20px 18px;align-items:start;flex-direction:column;gap:10px}.conclusion h2{font-size:21px}footer{flex-direction:column;gap:2px}}
+    @media print{ :root{color-scheme:light;--bg:#fff;--surface:#fff;--surface2:#fff;--border:#c5cbd1;--text:#151a20;--muted:#3f4853;--accent:#714e20;--green:#376955;--link:#174970}body{background:#fff;color:#151a20}.metric,.metric.primary,.panel,.conclusion,.runitem{background:#fff;border-color:#c5cbd1}.metric.primary .metric-number{color:#714e20}.punchline{color:#111}.conclusion p{color:#333}.conclusion-tag{color:#376955;border-color:#376955}.lozenge{background:#fff;color:#714e20;border-color:#714e20}.dot{background:#714e20}.kicker{color:#714e20}.wordmark span{color:#714e20}.checklist li{border-color:#ddd}.conclusion,.panel,.metric{break-inside:avoid}footer{padding:10px 0}.evidence{margin-top:10px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="mast">
+      <div class="wordmark">LB<span>S</span><span style="font-size:11px;letter-spacing:.1em;color:#aebdcd;font-weight:620;margin-left:15px">PROJECT SCORECARD</span></div>
+      <div class="mast-right"><span>Oct 12, 2026 · Verified snapshot</span><span class="lozenge"><span class="dot"></span>Acquisition paused</span></div>
+    </header>
+    <main>
+      <div class="kicker">The outcome</div>
+      <h1>We built the engine.<br><span class="accent">The supply didn't scale.</span></h1>
+      <p class="sub">Document processing worked at limited scale. We could not establish a repeatable source of qualifying résumés for the original goal.</p>
+
+      <div class="topline"><h2>Production results</h2><hr class="rule"></div>
+      <div class="metrics" aria-label="Historical production results">
+        <div class="metric primary">
+          <div class="metric-number">91 <span class="slash">/ 1M</span></div>
+          <div><div class="metric-title">Recent résumés, duplicate-adjusted</div><div class="metric-foot">Documents, not unique people · target not reached</div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-number">100</div>
+          <div><div class="metric-title">Recent résumés retained</div><div class="metric-foot">9 flagged as possible duplicates</div></div>
+        </div>
+        <div class="metric">
+          <div class="metric-number">920</div>
+          <div><div class="metric-title">Candidate links recorded</div><div class="metric-foot">A link is not an acquired résumé</div></div>
+        </div>
+      </div>
+
+      <div class="lower">
+        <section class="panel" aria-labelledby="delivered-title">
+          <div class="section-label">01 / Delivered</div>
+          <h2 id="delivered-title">Working software</h2>
+          <ul class="checklist">
+            <li><span class="tick" aria-hidden="true">✓</span>Discover &amp; inventory sources</li>
+            <li><span class="tick" aria-hidden="true">✓</span>Extract &amp; verify résumé content</li>
+            <li><span class="tick" aria-hidden="true">✓</span>Deduplicate &amp; privately retain</li>
+            <li><span class="tick" aria-hidden="true">✓</span>Report results in dashboards</li>
+          </ul>
+        </section>
+        <section class="panel" aria-labelledby="bottleneck-title">
+          <div class="section-label">02 / Bottleneck</div>
+          <h2 id="bottleneck-title">Qualifying supply</h2>
+          <p class="punchline">Finding links was possible. Finding enough <strong>recent, U.S.-relevant résumés with usable source rights</strong> was not proven.</p>
+          <div class="section-label" style="margin-top:7px">Last verified acquisition run</div>
+          <div class="run" aria-label="Last verified run evidence">
+            <div class="runitem"><div class="amount">48 <span>→ 0</span></div><div class="label">Archive candidates → supported</div></div>
+            <div class="runitem"><div class="amount">67 <span>→ 1</span></div><div class="label">GitHub repositories → new résumé</div></div>
+            <div class="runitem"><div class="amount">4 <span>→ 0</span></div><div class="label">Public-web streams → new résumés</div></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="conclusion" aria-labelledby="decision-title">
+        <div><div class="section-label">03 / Recommendation</div><h2 id="decision-title">Preserve the software. Pause the acquisition project.</h2><p>Reopen only after a repeatable, permitted résumé source demonstrates meaningful new-document yield.</p></div>
+        <span class="conclusion-tag">No-go at current evidence</span>
+      </section>
+
+      <div class="evidence">
+        <details>
+          <summary>Evidence, definitions &amp; limitations</summary>
+          <div class="evidence-body">
+            <p><strong>Checkpoint:</strong> October 12, 2026 at 10:08:23 UTC. From the retained production receipt, not a live Cloudflare D1 readback. The receipt reports 103 verified document records across cohorts, 100 recent retained, 91 recent after duplicate adjustment, 9 possible duplicates, and 816 unresolved links among 920 candidates. Recent means document-update evidence within a rolling 24 months.</p>
+            <p><strong>Last observed run:</strong> The archive channel examined 48 candidates and supported none (32 lacked established source-use grants; 14 were unavailable at the original publisher). GitHub produced one new document; four public-web streams produced none. These are observed batch results, not permanent limits of the underlying sources.</p>
+            <p><strong>Operating state:</strong> The owner previously reported disabling scheduled LBS GitHub Actions. Current status is not independently rechecked. The independent local prototype is separate, not reconciled with production, and not an end-to-end hosted ingestion product. This scorecard is static: no remote calls, résumé bodies, personal contacts, collection, or database writes.</p>
+            <p><strong>Evidence files:</strong> <code>lbs-verified-aggregate-20261012.zip</code>, <code>public-status.json</code>. The longer technical record and original evidence are preserved in the project archive.</p>
+          </div>
+        </details>
+      </div>
+    </main>
+    <footer><span>LBS · Executive project outcome</span><span>Historical results, not a live monitor · October 12, 2026</span></footer>
+  </div>
+</body>
+</html>

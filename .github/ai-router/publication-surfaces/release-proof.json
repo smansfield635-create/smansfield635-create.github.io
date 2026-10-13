@@ -38,7 +38,7 @@
           {
             "type": "textContains",
             "selector": "#step-counter",
-            "value": "2 / 7"
+            "value": "1 / 7"
           }
         ],
         "timeoutMs": 10000

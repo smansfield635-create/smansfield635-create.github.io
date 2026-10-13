@@ -219,3 +219,40 @@ export function selectHEarthGlobalGroundCoverDraws(cover,camera,{maximumInstance
   for(const {tile,distance} of ranked){if(draws.length>=maximumDraws||visibleInstanceCount>=maximumInstances)break;let stride=distance<32?1:distance<64?(tile.ecoInstances>0&&distance<56?1:2):distance<96?4:8;const available=maximumInstances-visibleInstanceCount;stride=Math.max(stride,Math.ceil(tile.count/available));const count=Math.min(available,Math.ceil(tile.count/stride));if(count){draws.push({start:tile.start,count,stride});visibleInstanceCount+=count;}}
   return{draws,visibleInstanceCount,storedInstanceCount:cover.receipt.instanceCount,populationChanged:false};
 }
+
+/**
+ * Select the existing cover records used by the bounded meadow patch impostor.
+ * No instances or roots are added: this is a second representation of a small
+ * subset of the same tile ranges selected for the ordinary grass pass.
+ */
+export function selectHEarthMeadowMidDistancePatchDraws(cover,camera,{
+  centerX=-45,centerZ=-326,pilotRadius=18,innerDistance=6,outerDistance=18,
+  maximumInstances=1024,maximumDraws=16
+}={}){
+  if(!Number.isFinite(centerX)||!Number.isFinite(centerZ)||!Number.isFinite(pilotRadius)||pilotRadius<=0||
+     !Number.isFinite(innerDistance)||!Number.isFinite(outerDistance)||innerDistance<0||outerDistance<=innerDistance||
+     !Number.isInteger(maximumInstances)||maximumInstances<1||!Number.isInteger(maximumDraws)||maximumDraws<1){
+    throw Error('MEADOW_PATCH_LOD_SELECTION_BUDGET_INVALID');
+  }
+  const p=camera?.position??camera;
+  if(!p||![p.x,p.z].every(Number.isFinite))throw Error('GLOBAL_COVER_CAMERA_INVALID');
+  const selected=selectHEarthGlobalGroundCoverDraws(cover,p,{maximumInstances,maximumDraws});
+  const byStart=new Map(cover.tiles.map(tile=>[tile.start,tile]));
+  const draws=selected.draws.filter(draw=>{
+    const tile=byStart.get(draw.start);if(!tile)return false;
+    const pilotDx=centerX-Math.max(tile.minX,Math.min(tile.maxX,centerX));
+    const pilotDz=centerZ-Math.max(tile.minZ,Math.min(tile.maxZ,centerZ));
+    const cameraDx=p.x-Math.max(tile.minX,Math.min(tile.maxX,p.x));
+    const cameraDz=p.z-Math.max(tile.minZ,Math.min(tile.maxZ,p.z));
+    return Math.hypot(pilotDx,pilotDz)<=pilotRadius+2.0&&
+      Math.hypot(cameraDx,cameraDz)<=outerDistance+2.0;
+  }).map(draw=>({...draw,patchLod:true}));
+  return Object.freeze({
+    draws:Object.freeze(draws),
+    visibleInstanceCount:draws.reduce((sum,draw)=>sum+draw.count,0),
+    maximumInstances,maximumDraws,
+    centerX,centerZ,pilotRadius,innerDistance,outerDistance,
+    representation:'TERRAIN_ALIGNED_ALPHA_TEXTURED_PATCH_IMPOSTOR',
+    sourcePopulationChanged:false
+  });
+}

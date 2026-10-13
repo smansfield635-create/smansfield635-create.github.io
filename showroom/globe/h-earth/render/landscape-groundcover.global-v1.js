@@ -264,14 +264,33 @@ export function selectHEarthMeadowMidDistancePatchDraws(cover,camera,{
   });
 }
 
-/** The shader replaces eligible surfaces within existing draws. Selection is
- * exactly the original policy: no additional pass, duplicate or fallback. */
-export function selectHEarthMeadowMidDistanceRepresentations(cover,camera){
- const selected=selectHEarthGlobalGroundCoverDraws(cover,camera);
- let eligible=0;
- for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
-  const offset=(draw.start+i*draw.stride)*20;
-  if(Math.hypot(cover.records[offset+12]+45,cover.records[offset+13]+326)<=18)eligible++;
+const meadowBoundaryCache=new WeakMap();
+/** Protect complete old silhouettes that cross the admitted pilot boundary. */
+export function getHEarthMeadowBoundaryPreservedInstances(cover){
+ if(meadowBoundaryCache.has(cover))return meadowBoundaryCache.get(cover);
+ const ids=[],positions=cover.template?.positions,info=cover.template?.rootInfo;
+ if(positions&&info)for(let id=0;id<cover.records.length/20;id++){
+  const r=cover.records.subarray(id*20,id*20+20);
+  if(Math.hypot(r[12]+45,r[13]+326)>18)continue;
+  const low=r[19]===2?1:0,mid=r[19]===3?1:0,dune=r[19]>=4?1:0,eco=Math.max(low,mid,dune),c=Math.cos(r[14]),sn=Math.sin(r[14]);
+  for(let vertex=0;vertex<positions.length/3;vertex++){
+   const x=positions[vertex*3],y=positions[vertex*3+1],z=positions[vertex*3+2],rx=info[vertex*4+1],rz=info[vertex*4+2];
+   const emergence=Math.max(0,Math.min(1,y)),dx=x-rx,dz=z-rz;
+   const spread=1+.65*low+.24*mid+.08*dune,lean=emergence*(.18*low+.12*mid+.22*dune);
+   const qx=(eco?rx+dx*spread-dz*lean:x)*r[15],qz=(eco?rz+dz*spread+dx*lean:z)*r[15];
+   if(Math.hypot(r[12]+qx*c-qz*sn+45,r[13]+qx*sn+qz*c+326)>18){ids.push(id);break;}
+  }
  }
- return{...selected,meadowEligibleSelectedCount:eligible,meadowReplacementInstanceCount:eligible,sourcePopulationChanged:false};
+ if(ids.length>32)throw Error('MEADOW_BOUNDARY_UNIFORM_CAP_EXCEEDED');
+ const result=Object.freeze(ids);meadowBoundaryCache.set(cover,result);return result;
+}
+/** Exactly the original selection; boundary-crossing silhouettes are preserved. */
+export function selectHEarthMeadowMidDistanceRepresentations(cover,camera){
+ const selected=selectHEarthGlobalGroundCoverDraws(cover,camera),boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover));
+ let candidates=0,eligible=0;
+ for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
+  const id=draw.start+i*draw.stride,offset=id*20;
+  if(Math.hypot(cover.records[offset+12]+45,cover.records[offset+13]+326)<=18){candidates++;if(!boundary.has(id))eligible++;}
+ }
+ return{...selected,meadowCandidateSelectedCount:candidates,meadowBoundaryPreservedCount:candidates-eligible,meadowEligibleSelectedCount:eligible,meadowReplacementInstanceCount:eligible,sourcePopulationChanged:false};
 }

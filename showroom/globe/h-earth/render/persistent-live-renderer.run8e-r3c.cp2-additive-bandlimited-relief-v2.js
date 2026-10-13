@@ -1,5 +1,5 @@
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -1077,6 +1077,8 @@ void main(){
 // surface with a rooted, upright multi-blade clump throughout the pilot.
 const GLOBAL_COVER_PATCH_LOD_VS=GLOBAL_COVER_VS
  .replace('out vec3 vWorldPosition;',`uniform vec2 uRootOffsets[12];
+uniform int uMeadowBoundaryIds[32];
+uniform int uMeadowBoundaryCount;
 flat out float vMeadowMode;
 flat out float vMeadowCell;
 out vec2 vMeadowUv;
@@ -1084,8 +1086,11 @@ out vec3 vWorldPosition;`)
  .replace('float c=cos(aTransform.z),s=sin(aTransform.z);',`float c=cos(aTransform.z),s=sin(aTransform.z);
   int local=gl_VertexID%7,blade=gl_VertexID/7;
   vMeadowMode=distance(aTransform.xy,vec2(-45.0,-326.0))<=18.0?1.0:0.0;
-  vMeadowCell=mod(floor(aParameters.z*13.0)+float(blade)*3.0,16.0);
-  vMeadowUv=local<3?vec2(float(local)*0.5,0.0):local<6?vec2(float(local-3)*0.5,0.5):vec2(0.5,1.0);`)
+  for(int j=0;j<32;j++){if(j<uMeadowBoundaryCount&&instance==uMeadowBoundaryIds[j])vMeadowMode=0.0;}
+  vMeadowCell=mod(floor(aParameters.z*13.0)+float(blade),4.0);
+  float cardHalfWidth=1.12*(0.90+0.20*aParameters.z);
+  float rootU=0.5+(float(local)-1.0)*length(uRootOffsets[blade*3+2]-uRootOffsets[blade*3])*aTransform.w/(4.0*cardHalfWidth);
+  vMeadowUv=local<3?vec2(rootU,0.0):local<6?vec2(float(local-3)*0.5,0.5):vec2(0.5,1.0);`)
  .replace('float widthScale=1.0+.65*lowStratum+.24*midStratum+.08*duneStratum;',`if(vMeadowMode>0.5&&local>=3){
     vec2 root=uRootOffsets[blade*3+1];
     vec2 across=normalize(uRootOffsets[blade*3+2]-uRootOffsets[blade*3]);
@@ -1094,7 +1099,7 @@ out vec3 vWorldPosition;`)
     float side=local<6?float(local-4):0.0;
     // Broad clump envelopes overlap existing 2.5m-spaced sites; individual
     // texture blades remain narrow. Short and tall layers share surveyed roots.
-    float halfWidth=1.35*(0.90+0.20*aParameters.z);
+    float halfWidth=1.12*(0.90+0.20*aParameters.z);
     float height=(blade%2==0?0.72:1.03)*(0.90+0.20*aParameters.z);
     vec2 q=root*aTransform.w+across*side*halfWidth+forward*(0.16*t*t);
     vec2 xz=aTransform.xy+vec2(q.x*c-q.y*s,q.x*s+q.y*c);
@@ -1112,35 +1117,36 @@ out vec4 outColor;`)
  .replace('vec3 base=max(vBaseColor.rgb,vec3(0.004));',`vec3 base=max(vBaseColor.rgb,vec3(0.004));
   if(vMeadowMode>0.5){
     if(distance(vWorldPosition.xz,vec2(-45.0,-326.0))>18.001)discard;
-    vec2 cell=vec2(mod(vMeadowCell,4.0),floor(vMeadowCell/4.0));
-    vec4 blades=texture(uMeadowAtlas,(cell*64.0+vec2(2.0)+vMeadowUv*60.0)/256.0);
+    vec2 cell=vec2(mod(vMeadowCell,2.0),floor(vMeadowCell/2.0));
+    vec4 blades=texture(uMeadowAtlas,(cell*128.0+vec2(2.0)+vMeadowUv*124.0)/256.0);
     if(blades.a<0.38)discard;
     base=max(blades.rgb,vec3(0.004));
   }`);
 
 function buildMeadowPatchLodAtlas(){
- const size=256,tile=64,pixels=new Uint8Array(size*size*4);
+ const size=256,tile=128,pixels=new Uint8Array(size*size*4);
  const randomFrom=seed=>{let x=(seed|0)+0x6d2b79f5;x=Math.imul(x^(x>>>15),x|1);x^=x+Math.imul(x^(x>>>7),x|61);return((x^(x>>>14))>>>0)/4294967296;};
  const palettes=[[[37,52,25],[138,155,76]],[[66,57,26],[211,177,91]],[[58,39,23],[181,128,68]]];
  const linear=v=>Math.round(255*(v/255<=.04045?v/255/12.92:Math.pow((v/255+.055)/1.055,2.4)));
- for(let cell=0;cell<16;cell++){
+ for(let cell=0;cell<4;cell++){
   let seed=37+cell*7919;const rand=()=>randomFrom(++seed);
-  for(let blade=0;blade<12;blade++){
-   const short=blade%3!==0,height=short?.24+rand()*.36:.66+rand()*.32;
-   const root=.43+rand()*.14,bend=(rand()-.5)*.58,width=.006+rand()*.010;
-   const palette=palettes[(cell+Math.floor(rand()*3))%3];
-   for(let step=0;step<=64;step++){
-    const t=step/64,v=height*(t-.13*t*t),u=root+bend*t*t;
-    // Curved, tapering shoreline-informed blades; fold highlight is narrow.
-    const half=width*Math.pow(1-t,.8),y=Math.round(2+v*60);
-    for(let x=Math.floor(2+(u-half)*60);x<=Math.ceil(2+(u+half)*60);x++){
-     if(x<2||x>61||y<2||y>61)continue;
-     const envelope=.5-Math.max(0,v-.5);
-     if(Math.abs((x-2)/60-.5)>envelope-.012)continue;
-     const shade=.89+.11*(1-Math.min(1,Math.abs((x-2)/60-u)/Math.max(half,.001)));
-     const i=((Math.floor(cell/4)*tile+y)*size+(cell%4*tile+x))*4;
-     for(let channel=0;channel<3;channel++)pixels[i+channel]=linear((palette[0][channel]+(palette[1][channel]-palette[0][channel])*Math.pow(t,.72))*shade);
-     pixels[i+3]=255;
+  for(let blade=0;blade<24;blade++){
+   const short=blade%3!==0,height=short?.28+rand()*.38:.68+rand()*.30;
+   const root=.28+rand()*.44,bend=(rand()-.5)*.16,width=.003+rand()*.003;
+   const palette=palettes[rand()<.12?2:rand()<.20?1:0];
+   for(let y=2;y<126;y++){
+    const v=(y+.5-2)/124;if(v>height*.87)continue;
+    const t=(1-Math.sqrt(1-.52*v/height))/.26,u=root+bend*t*t;
+    const half=width*Math.pow(1-t,.8),center=2+u*124;
+    for(let x=Math.floor(center-half*124-.5);x<=Math.ceil(center+half*124+.5);x++){
+     if(x<2||x>125)continue;
+     const coverage=Math.max(0,Math.min(1,half*124+.5-Math.abs(x+.5-center)));
+     if(coverage===0)continue;
+     const envelope=.5-Math.max(0,v-.5);if(Math.abs((x+.5-2)/124-.5)>envelope-.006)continue;
+     const i=((Math.floor(cell/2)*tile+y)*size+(cell%2*tile+x))*4,alpha=Math.round(255*coverage);
+     if(alpha<=pixels[i+3])continue;
+     for(let channel=0;channel<3;channel++)pixels[i+channel]=linear(palette[0][channel]+(palette[1][channel]-palette[0][channel])*Math.pow(t,.72));
+     pixels[i+3]=alpha;
     }
    }
   }
@@ -1429,12 +1435,12 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     state.patchRootOffsets=new Float32Array(24);
     for(let i=0;i<12;i++){const v=cover.template.rootVertices[i]*3;state.patchRootOffsets[i*2]=cover.template.positions[v];state.patchRootOffsets[i*2+1]=cover.template.positions[v+2];}
     if(state.gpuByteLength>8*1024*1024)throw Error('GLOBAL_COVER_GPU_BUDGET_EXCEEDED');
-    state.uniforms={};for(const name of ['uInstanceRecords','uInstanceStart','uInstanceStride','uInstanceTextureWidth','uViewProjection','uCameraPosition','uMeadowAtlas','uRootOffsets[0]','uSunDirection','uSunIntensity','uSunColor','uSkyZenithColor','uSkyHorizonColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor','uDistanceDesaturationStrength','uTerrainPatchClip','uClipBaseTerrain','uGlobalCoverFarPrimitiveIndex','uPlanetRadius','uShorelineSoilCoverage','uLandscapeFloorFootprints[0]','uLandscapeFloorCount'])state.uniforms[name]=gl.getUniformLocation(state.program,name);
+    state.uniforms={};for(const name of ['uInstanceRecords','uInstanceStart','uInstanceStride','uInstanceTextureWidth','uViewProjection','uCameraPosition','uMeadowAtlas','uRootOffsets[0]','uMeadowBoundaryIds[0]','uMeadowBoundaryCount','uSunDirection','uSunIntensity','uSunColor','uSkyZenithColor','uSkyHorizonColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor','uDistanceDesaturationStrength','uTerrainPatchClip','uClipBaseTerrain','uGlobalCoverFarPrimitiveIndex','uPlanetRadius','uShorelineSoilCoverage','uLandscapeFloorFootprints[0]','uLandscapeFloorCount'])state.uniforms[name]=gl.getUniformLocation(state.program,name);
     gl.useProgram(state.program);const u=state.uniforms,e=resources.environment;
     gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform3fv(u.uSunColor,color3(e.sunColor));gl.uniform3fv(u.uSkyZenithColor,color3(e.skyZenithColor));gl.uniform3fv(u.uSkyHorizonColor,resources.skyColor);gl.uniform3fv(u.uGroundHazeColor,color3(e.groundHazeColor));
     for(const [name,key] of [['uFogStartDistance','fogStartDistance'],['uFogFalloff','fogFalloff'],['uMaximumFogFactor','maximumFogFactor'],['uDistanceDesaturationStrength','distanceDesaturationStrength']])gl.uniform1f(u[name],e[key]);
     gl.uniform1i(u.uInstanceRecords,2);gl.uniform1i(u.uInstanceTextureWidth,state.textureWidth);
-    gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1i(u.uMeadowAtlas,3);gl.uniform2fv(u['uRootOffsets[0]'],state.patchRootOffsets);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);verifyCoverGlStage('UNIFORMS');
+    gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1i(u.uMeadowAtlas,3);gl.uniform2fv(u['uRootOffsets[0]'],state.patchRootOffsets);const boundary=getHEarthMeadowBoundaryPreservedInstances(cover);gl.uniform1i(u.uMeadowBoundaryCount,boundary.length);gl.uniform1iv(u['uMeadowBoundaryIds[0]'],Int32Array.from([...boundary,...Array(32-boundary.length).fill(-1)]));gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);verifyCoverGlStage('UNIFORMS');
     state.resourceCount=counters.postInitializationResourceCreationCount-before;
     configureClearingProgram(state.program);verifyCoverGlStage('CLEARING_PROGRAM_CONFIG');
     resources.globalCover=state;gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
@@ -1454,7 +1460,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.drawElementsInstanced(gl.TRIANGLES,state.cover.template.indices.length,gl.UNSIGNED_INT,0,draw.count);
     }
     state.lastDraw={visibleInstanceCount:selected.visibleInstanceCount,drawCallCount:selected.draws.length,
-      meadowEligibleSelectedCount:selected.meadowEligibleSelectedCount,meadowReplacementInstanceCount:selected.meadowReplacementInstanceCount,
+      meadowCandidateSelectedCount:selected.meadowCandidateSelectedCount,meadowBoundaryPreservedCount:selected.meadowBoundaryPreservedCount,meadowEligibleSelectedCount:selected.meadowEligibleSelectedCount,meadowReplacementInstanceCount:selected.meadowReplacementInstanceCount,
       meadowReplacementFraction:selected.meadowEligibleSelectedCount?1:0,meadowReplacementRadiusMeters:18,
       meadowReplacementInnerRadiusMeters:0,patchLodTextureBytes:state.patchAtlasByteLength,
       representation:'ROOTED_UPRIGHT_MULTIBLADE_ALPHA_CLUMPS',additionalDrawCalls:0,storedPopulationChanged:false,perFrameUploadBytes:0};

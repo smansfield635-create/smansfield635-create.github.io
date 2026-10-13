@@ -30,14 +30,14 @@ assert.ok(actual.fs.includes('distance(vWorldPosition.xz,vec2(-45.0,-326.0))>18.
 assert.equal(actual.atlas.byteLength,262144);
 assert.deepEqual([...actual.atlas],[...actual.again]);
 const cells=[];
-for(let cell=0;cell<16;cell++){
+for(let cell=0;cell<4;cell++){
  let occupied=0,low=0,tall=0;
- for(let y=0;y<64;y++)for(let x=0;x<64;x++){
-  const alpha=actual.atlas[((Math.floor(cell/4)*64+y)*256+cell%4*64+x)*4+3];
-  if(x<2||x>61||y<2||y>61)assert.equal(alpha,0);
-  if(alpha){occupied++;if(y<32)low++;else tall++;}
+ for(let y=0;y<128;y++)for(let x=0;x<128;x++){
+  const alpha=actual.atlas[((Math.floor(cell/2)*128+y)*256+cell%2*128+x)*4+3];
+  if(x<2||x>125||y<2||y>125)assert.equal(alpha,0);
+  if(alpha){occupied++;if(y<64)low++;else tall++;}
  }
- assert.ok(occupied>100&&occupied<1600,'clump must contain blades and substantial transparent gaps');
+ assert.ok(occupied>100&&occupied<6400,'clump must contain blades and substantial transparent gaps');
  assert.ok(low>0&&tall>0,'each cell must contain short and tall structure');
  cells.push({cell,occupied,low,tall});
 }
@@ -52,6 +52,6 @@ if(cacheArg>=0){
  assert.deepEqual(selected.draws,selectHEarthGlobalGroundCoverDraws(cached,camera).draws);
  assert.ok(selected.meadowEligibleSelectedCount>0);
  assert.equal(selected.meadowReplacementInstanceCount,selected.meadowEligibleSelectedCount);
- actualCache={recordDigest,selectedInstances:selected.visibleInstanceCount,selectedDraws:selected.draws.length,eligibleSelected:selected.meadowEligibleSelectedCount,replacementInstances:selected.meadowReplacementInstanceCount};
+ actualCache={recordDigest,selectedInstances:selected.visibleInstanceCount,selectedDraws:selected.draws.length,candidateSelected:selected.meadowCandidateSelectedCount,boundaryPreserved:selected.meadowBoundaryPreservedCount,eligibleSelected:selected.meadowEligibleSelectedCount,replacementInstances:selected.meadowReplacementInstanceCount};
 }
 console.log(JSON.stringify({schema:'H_EARTH_MEADOW_REPLACEMENT_PREVISUAL_TEST_v1',result:'PASS',syntheticBudgetSaturationReplacement:true,atlasBytes:actual.atlas.byteLength,cells,actualCache,browserQualification:'NOT_TESTED',perceptualAcceptance:'PENDING'}));

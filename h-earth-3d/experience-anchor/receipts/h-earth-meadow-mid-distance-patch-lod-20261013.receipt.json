@@ -2,7 +2,7 @@
   "schema": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_RECEIPT_v1",
   "operationId": "H_EARTH_MEADOW_SHORELINE_REPRESENTATION_REPLACEMENT_20261013_001",
   "generation": 2681,
-  "result": "UNQUALIFIED_IMPLEMENTATION_CHECKPOINT",
+  "result": "CHEAP_PREFLIGHT_COVERAGE_NOT_ACCEPTED",
   "predecessorCandidate": "870a995a7012312ac25569c0dc6673822a126ae2",
   "admissionCommit": "d730db6f1aca551eec454fd3caad08a99e03e316",
   "representation": "UPRIGHT_MULTI_BLADE_ALPHA_CLUMPS_WITHIN_EXISTING_DRAWS",
@@ -16,23 +16,112 @@
     "recordsSha256": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
     "selectedInstances": 3978,
     "draws": 64,
-    "eligibleReplacementRecords": 131,
-    "replacementActiveRecords": 131,
+    "eligibleReplacementRecords": 122,
+    "replacementActiveRecords": 122,
     "additionalDraws": 0,
-    "execution": "CACHED_AUTHENTIC_WORLD_CPU_SELECTION_NOT_BROWSER"
+    "execution": "CACHED_AUTHENTIC_WORLD_CPU_SELECTION_NOT_BROWSER",
+    "candidateRecords": 131,
+    "boundaryPreservedRecords": 9
   },
   "sourceBlobs": {
-    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "7790245f9760c258dac891d327879cb66b0a1182",
-    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "0c94dcf8da4af469c292f2b1cb1367d814bd95a7"
+    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "15840269f77e2bbc2538f2e4b2c9ecd7747bb02a",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "948dd19e8e8246664ec2f07282aec255d6cfeace"
   },
   "worldBinaryChanged": false,
   "sourceParityRerun": false,
   "newBrowserExecution": false,
-  "projectedCoverage": "PENDING_INDEPENDENT_PREFLIGHT",
+  "projectedCoverage": {
+    "before": {
+      "pilotProjectedRecords": 131,
+      "occupiedPilotPixels": 50595,
+      "occupiedNearPixels0to6m": 30835,
+      "occupiedMiddlePixels6to18m": 19760,
+      "viewportFraction": 0.03476746103735466
+    },
+    "after": {
+      "pilotProjectedRecords": 131,
+      "occupiedPilotPixels": 41461,
+      "occupiedNearPixels0to6m": 16273,
+      "occupiedMiddlePixels6to18m": 25188,
+      "viewportFraction": 0.028490833127181772
+    },
+    "schema": "H_EARTH_BOUNDED_SOFTWARE_PREVISUAL_v1",
+    "sourceRendererSha256": "b424f5b1c29ee056395971c9bb1b2003c5dedff01662c469b4659e80b7ca3bbe",
+    "recordsSha256": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
+    "camera": [
+      -45.0,
+      8.088257606279512,
+      -326.0
+    ],
+    "yaw": 0,
+    "pitch": -8,
+    "verticalFov": 56,
+    "canvas": [
+      804,
+      1810
+    ],
+    "selectedInstances": 3978,
+    "draws": 64,
+    "eligibleInstances": 122,
+    "replacementInstances": 122,
+    "atlasOpaquePixels": 4384,
+    "atlasOpaqueFraction": 0.06689453125,
+    "occupiedPixelRatioAfterBefore": 0.8194683269097737,
+    "limitations": [
+      "CPU mirror of shader equations, not executed GLSL",
+      "Simplified lighting; no trees, atmosphere shader, or canonical vegetation occlusion",
+      "Base terrain only; no streamed terrain-refinement pass",
+      "Grass limited to42m; partial near-plane triangles omitted",
+      "Pixel occupancy is projected diagnostic, not perceptual acceptance"
+    ],
+    "nearPlaneCrossingTrianglesSkipped": 332,
+    "behindCameraTrianglesSkipped": 20931,
+    "boundaryPreservation": {
+      "rootCoordinateComponentsChanged": 0,
+      "outsideAnchorVertexComponentsChanged": 0,
+      "preservedBoundaryVertexComponentsChanged": 0,
+      "unpreservedCrossingOriginalFootprints": 0,
+      "nearPilotRecords": 11,
+      "midPilotRecords": 120,
+      "nearReplacementRecords": 11,
+      "midReplacementRecords": 111,
+      "preservedBoundaryIds": [
+        42742,
+        42786,
+        42809,
+        46721,
+        46746,
+        46785,
+        46811,
+        46839,
+        46853
+      ],
+      "rendererSha256": "b424f5b1c29ee056395971c9bb1b2003c5dedff01662c469b4659e80b7ca3bbe",
+      "recordsSha256": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6"
+    },
+    "independentDisposition": "MATERIAL_SILHOUETTE_CHANGE_PROVEN_COHESIVE_COVERAGE_NOT_PROVEN",
+    "expensiveQualificationRecommended": false,
+    "visualAssessment": "Thin upright grass replaces angular fans, but broad bare gaps remain, near-field occupied silhouette is reduced, and cutout fragments and rectangular clump bases remain visible in simplified software preview.",
+    "comparison": "REVISION_2_VERSUS_ORIGINAL_ACCEPTED_FAN_PRESENTATION",
+    "priorRevisionEvidence": "previsual-v1",
+    "artifactSha256": {
+      "projected-previsual.py": "b40832bfa072fcf3d5ca6a284afe1838dad7e9ba921780c3cde5e6ae08b6f306",
+      "previsual-input.json": "08140e6eb9fb7a94c675d82dc979a8903b0f74f89fb47f04120845706220c9e2",
+      "replacement-atlas.rgba": "d7a58cf83d940f743b50130b9bb451c565363c715cebf7e76912277db069c325",
+      "bounded-previsual-before.png": "720e7f129dc2761efef17f37e0c4b48334317dd47618106c5b17a6dac32e662e",
+      "bounded-previsual-after.png": "ba2cddd1a99c4aee087e0291ddd0c5cde6b02a78bf1f2bbcc86ce7038dec292e",
+      "bounded-previsual-comparison.png": "05dc56b3d7d4c19dfda87d3139e5688fe4464116b32eca72a466a9d96dc6e4a7",
+      "bounded-mask-before.png": "6a3d32eb59ee79926959e632f3370c8ec57de359b864eb45c881646cae1c4f30",
+      "bounded-mask-after.png": "e3e769a63e99611f6b339b65a31b862f1a8e592b3a2aef64e53a8885b8eab166",
+      "boundary-preservation-receipt.json": "b9b9e9fd212cc560efb3bac0637babc9fadc8a3b2cff55535546c44d91761bd1"
+    }
+  },
   "ownerPerceptualDisposition": "PENDING",
   "publicationAuthorized": false,
   "limitations": [
     "Nonzero selection proves activation only; occupied alpha silhouettes and coverage must pass independent previsual gate.",
     "No runtime compilation, actual screenshot or physical Android performance claim."
-  ]
+  ],
+  "expensiveQualificationRecommended": false,
+  "nextDecision": "Resolve protected grass placement versus cohesive colony coverage before further implementation or expensive qualification."
 }

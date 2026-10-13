@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-12T23:32:04Z",
+  "generatedAt": "2026-10-13T01:15:16Z",
   "window30d": {
-    "start": "2026-09-12T23:32:04Z",
-    "end": "2026-10-12T23:32:04Z"
+    "start": "2026-09-13T01:15:16Z",
+    "end": "2026-10-13T01:15:16Z"
   },
   "daily": [
-    {
-      "date": "2026-09-13",
-      "pageLoads": 330
-    },
     {
       "date": "2026-09-14",
       "pageLoads": 230
@@ -96,11 +92,11 @@
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 151
+      "pageLoads": 140
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 155
+      "pageLoads": 208
     },
     {
       "date": "2026-10-07",
@@ -124,23 +120,27 @@
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 31
+      "pageLoads": 32
+    },
+    {
+      "date": "2026-10-13",
+      "pageLoads": 0
     }
   ],
   "summary": {
-    "pageLoads": 4951,
-    "botPageLoads": 1906,
-    "nonBotPageLoads": 3045
+    "pageLoads": 4954,
+    "botPageLoads": 1903,
+    "nonBotPageLoads": 3051
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2861,
-      "visits": 2861
+      "pageLoads": 2906,
+      "visits": 2906
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1785,
+      "pageLoads": 1745,
       "visits": 0
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 28,
-      "visits": 28
+      "pageLoads": 26,
+      "visits": 26
     },
     {
       "host": "l.instagram.com",
@@ -187,13 +187,13 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 464,
-      "visits": 344
+      "pageLoads": 463,
+      "visits": 343
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 352,
-      "visits": 332
+      "pageLoads": 396,
+      "visits": 376
     },
     {
       "path": "/campaigns/consider-the-energy/",
@@ -207,7 +207,7 @@
     },
     {
       "path": "/showroom/globe/h-earth/awards/",
-      "pageLoads": 282,
+      "pageLoads": 242,
       "visits": 12
     },
     {

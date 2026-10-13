@@ -1,364 +1,194 @@
 {
-  "schema": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_RECEIPT_v1",
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
   "operationId": "H_EARTH_GLOBAL_FINE_GRASS_AND_DENSER_MEADOW_20261013_001",
-  "authorityGeneration": 2684,
-  "admissionCommit": "d4dac13c9a8f1d5689fced9df3b5a91bb6800487",
-  "admissionLedgerBlob": "86f454c83220845ea79e82e0fd0ea92aecd4ac49",
-  "governingHead": "708e1ba556e316e88790a2aefdf176d0d33fd8b2",
-  "predecessorCandidate": "5ed1095c29d4db512c39f9375d02d379159f5e61",
-  "result": "CHEAP_PREFLIGHT_PASS_RUNTIME_AND_OWNER_PENDING",
-  "scope": {
-    "globalLegacyFans": "REPLACED_AT_ORIGINAL_TWELVE_CONTACTS",
-    "meadowDensityAdditionRadiusMeters": 18,
-    "centerX": -45,
-    "centerZ": -326,
-    "newRootContacts": 0,
-    "soilShaderChanged": false,
-    "worldRecordsChanged": false
-  },
-  "sourceBlobs": {
-    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "e0393ebacfa98fc465f7b15fc13e6b2c8a92c4ec",
-    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "15827d0d9453d25633205b51eb9b60cd1df88c03",
-    "h-earth-3d/validation/h-earth.meadow-mid-distance-patch-lod.v1.mjs": "039f32eac7106318f000ab75a8899d588dc86125"
-  },
-  "structuralVerification": {
-    "result": "LOCAL_CACHE_AND_TOPOLOGY_TEST_PASS",
-    "originalRecordsSha256": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
-    "clumps": 1464,
-    "contacts": 4392,
-    "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-    "selectedIdsAndWithinClassOrderPreserved": true,
-    "logicalInstances": 3978,
-    "globalFineInstances": 3856,
-    "meadowNearDensityInstances": 41,
-    "meadowMidDensityInstances": 81,
-    "draws": 3,
-    "selectedVertices": 1287552,
-    "selectedTriangles": 678912,
-    "approvedMeadowLeavesPerClump": 24,
-    "lowLeavesPerContactNear": 72,
-    "lowLeavesPerContactMid": 40,
-    "visibleMeadowLeaves": 258048,
-    "visibleGlobalFineLeaves": 46272,
-    "globalVerticesPerLeaf": 4,
-    "globalTrianglesPerLeaf": 2,
-    "lowVerticesPerLeaf": 4,
-    "lowTrianglesPerLeaf": 2,
-    "approvedVerticesPerLeaf": 6,
-    "approvedTrianglesPerLeaf": 4,
-    "gpuBytes": 5418592,
-    "selectionUploadBytesOnChange": 16384,
-    "stationarySelectionUploadBytes": 0,
-    "sharedSoilFragmentShaderSha256": "5468a720408019c3bb1c9ec747abb74c3436c02fd3d695e9865e4731b2b2c469"
-  },
-  "immutableAssetVerification": {
-    "result": "PASS",
-    "mode": "--verify",
-    "freshSourceCompared": false,
-    "transportBytes": 11736235,
-    "transportSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a"
-  },
-  "freshSourceVerification": {
-    "result": "FAIL_CLOSED",
-    "mode": "--verify-source",
-    "error": "GEN2666_BUFFER_VALUE_MISMATCH:raw.baseColorsLinear[95988]",
-    "sourceBuildRepeated": false,
-    "worldFilesWritten": false,
-    "note": "Invoked before recognizing this mode reconstructs source; no further source build is authorized in this bounded checkpoint.",
-    "command": "node h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs --verify-source",
-    "workingDirectory": "global-grass-repair",
-    "nodeVersion": "v24.19.0",
-    "executionSessionId": 62348,
-    "startTime": null,
-    "endTime": null,
-    "durationMilliseconds": null,
-    "timingLimitation": "Exact start/end and total duration were not instrumented; do not infer them from individual tool wait durations.",
-    "exitCode": 1,
-    "errorLog": "Error: GEN2666_BUFFER_VALUE_MISMATCH:raw.baseColorsLinear[95988]\n    at fatal (h-earth.canonical-base-world-precompute.v1.mjs:27:44)\n    at examine (h-earth.canonical-base-world-precompute.v1.mjs:98:76)\n    at verify (h-earth.canonical-base-world-precompute.v1.mjs:161:3)\n    at async main (h-earth.canonical-base-world-precompute.v1.mjs:164:229)"
-  },
-  "cheapVisualGate": "PASS_CPU_PREFLIGHT_ONLY",
-  "newBrowserExecution": false,
-  "expensiveQualificationRecommended": false,
-  "ownerPerceptualDisposition": "PENDING",
-  "publicationAuthorized": false,
-  "limitations": [
-    "CPU mirror only; no executed GLSL, GPU frame-time, residency, or browser qualification.",
-    "Repeated radial spiky rosettes remain visible; this is not owner acceptance of a meadow carpet or uniform sod.",
-    "Cached base-terrain projection uses simplified lighting without canonical trees, vegetation occlusion, atmosphere, or streamed refinement.",
-    "Exterior giant fans are absent in the matched diagnostic view; global outside-view runtime appearance remains unqualified.",
-    "Fresh source parity failed at raw.baseColorsLinear[95988] on Node v24.19.0; immutable-asset verification passed.",
-    "Submitted vertices are 4.04 times and triangles 2.91 times the approved fine-grass baseline; no performance acceptance claimed."
+  "canonicalAdmissionGeneration": 2684,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json"
   ],
-  "nextAction": "Persist this exact preflight candidate and evidence; resolve recorded fresh-source parity/runtime prerequisites before any costly qualification. Owner visual disposition and release authorization remain pending.",
-  "prototypeCheckpoint": "5653f979bc4a166aa1a937804eb02481e9bc7fe3",
-  "projectedCoverage": {
-    "candidate": {
-      "pilot": {
-        "fixedGroundPixels": 724879,
-        "occupiedPixels": 470208,
-        "occupiedFraction": 0.6486710195770604,
-        "largestEmptyCircleRadiusPixels": 15.652475842498529,
-        "largestConnectedEmptyPixels": 24470
-      },
-      "near0to6m": {
-        "fixedGroundPixels": 385757,
-        "occupiedPixels": 226062,
-        "occupiedFraction": 0.5860217701817465,
-        "largestEmptyCircleRadiusPixels": 15.652475842498529,
-        "largestConnectedEmptyPixels": 23616
-      },
-      "middle6to18m": {
-        "fixedGroundPixels": 339122,
-        "occupiedPixels": 244146,
-        "occupiedFraction": 0.7199355983982165,
-        "largestEmptyCircleRadiusPixels": 11.180339887498949,
-        "largestConnectedEmptyPixels": 5819
-      }
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/receipts/h-earth-loading-motion-integration-20261012.receipt.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "invariantRationale": {
+    "SAME_CANONICAL_WORLD_IDENTITY": "Original canonical world gzip SHA25648f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a and61759 original grass records retained. Exact-candidate source/root checks and108batches/27585vegetation instances passed.",
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": "No globe, region routing, world frame or navigation source changed. Existing scale continuity is inherited; the meadow-only browser observation did not newly exercise all scale transitions.",
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": "Terrain and world bytes unchanged; all added meadow presentation contacts independently sampled against actual terrain and bounded within18meters. Source and root qualification passed.",
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": "Inspected the hash-verified repository visual proxy and qualified meadow screenshot: both present ground-level navigable terrain and horizon. Denser fine grass remains within the same ground scene.",
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": "Navigation, touch and camera implementation unchanged; prior loading-motion acceptance remains evidence. Current browser confirms exact camera position/orientation, but does not claim a fresh physical touch or walking trial.",
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": "No UI source changed. Current screenshot retains existing title/navigation/status overlays over the world; this acceptance does not assert those overlays were removed or redesigned.",
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": "The anchor proxy presents continuous terrain/elevation/horizon; current meadow retains continuous terrain/horizon. Coastal/shoreline and terrain sources are unchanged; coast was not newly captured in this meadow-specific run.",
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": "Changes replace/add grass presentation in the existing renderer only; no second world, route or application introduced.",
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": "Actual screenshot remains the rendered ground world with grass, soil and horizon; no dashboard, map app or card interface substitutes for it.",
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": "Planetary frame and scale-view implementations unchanged with same canonical world; inherited structural continuity rather than a new globe observation.",
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": "Region entry and interaction implementation unchanged; modified grass belongs to the existing local scene. No parallel product or entry flow introduced."
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "sha256": "c58726ec683bddc9278a281b09956d4fb6c07e3aee05ced1807c85964cf44ced"
     },
-    "baseline": {
-      "pilot": {
-        "fixedGroundPixels": 724879,
-        "occupiedPixels": 98841,
-        "occupiedFraction": 0.13635517100095326,
-        "largestEmptyCircleRadiusPixels": 93.98404119849285,
-        "largestConnectedEmptyPixels": 578446
-      },
-      "near0to6m": {
-        "fixedGroundPixels": 385757,
-        "occupiedPixels": 29334,
-        "occupiedFraction": 0.07604269008728293,
-        "largestEmptyCircleRadiusPixels": 93.98404119849285,
-        "largestConnectedEmptyPixels": 333787
-      },
-      "middle6to18m": {
-        "fixedGroundPixels": 339122,
-        "occupiedPixels": 69507,
-        "occupiedFraction": 0.20496163622531124,
-        "largestEmptyCircleRadiusPixels": 34.40930106817051,
-        "largestConnectedEmptyPixels": 158373
-      }
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "3b5fc09122e06ef55e28a10e3712cae3af31d38ccada29948963592029a9a191"
     },
-    "elapsedSeconds": 43.03554964065552,
-    "nearParents": 41,
-    "vertices": 1287552,
-    "triangles": 678912,
-    "draws": 3,
-    "limitations": [
-      "CPU mirror; no GLSL execution",
-      "Simplified lighting, no trees/vegetation occlusion or atmosphere",
-      "Cached base terrain; no world rebuild",
-      "804x1810 fixed ROI, near-plane clipping, grass limited42m"
-    ],
-    "nearPlaneCrossingTrianglesSkipped": 0,
-    "behindCameraTrianglesSkipped": 291018,
-    "nearPlaneCrossingTrianglesClipped": 3474,
-    "schema": "H_EARTH_GEN2684_FIXED_CONTACT_GLOBAL_GRASS_CPU_PREVISUAL_v1",
-    "baselineHead": "5ed1095c29d4db512c39f9375d02d379159f5e61",
-    "sourceGitBlobs": {
-      "helper": "e0393ebacfa98fc465f7b15fc13e6b2c8a92c4ec",
-      "renderer": "15827d0d9453d25633205b51eb9b60cd1df88c03"
+    {
+      "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+      "sha256": "ef8609762c0398d9a119d919d41c4a8a8497efa57ac92888bffd65a639522b0b"
     },
-    "camera": {
-      "position": [
-        -45,
-        8.088257606279512,
-        -326
-      ],
-      "yaw": 0,
-      "pitch": -8,
-      "fov": 56,
-      "canvas": [
-        804,
-        1810
-      ]
+    {
+      "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+      "sha256": "cf1168cb803c49f3ae300fcde1aacf985951061f4ca6de53adf93cb10c93bd4a"
     },
-    "independentSubmission": {
-      "schema": "H_EARTH_GLOBAL_GRASS_INDEPENDENT_SUBMISSION_v1",
-      "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
-      "sourceHashes": {
-        "generator": "e1fb860e63efef4ad3c45473c83fdab0047faf00afb872d9fded0502e9d39313",
-        "renderer": "a1df2a34805888c84553044a976d010ba2286dc623fe71c841fdc11c3ff32ed4"
-      },
-      "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
-      "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    {
+      "path": "h-earth-3d/validation/h-earth.meadow-mid-distance-patch-lod.v1.mjs",
+      "sha256": "d7aac488b28144c6e6ae8bc73c082497e9539ed845a51f432f16ca4c2b85f323"
+    }
+  ],
+  "acceptanceBasis": "Metadata-only anchor envelope around the exact original specialized grass receipt. Actual qualified meadow screenshot reviewed against hash-verified anchor proxy; world, terrain, soil, UI, routing and interaction sources remain preserved. This does not claim new globe transitions, physical Android performance, or seamless turf.",
+  "evidenceCustody": {
+    "qualifiedRuntimeHead": "e9b86b1af4a5c1ec66a5f39c3e7e1baa91757dce",
+    "browserRun": 38469497232,
+    "browserRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38469497232",
+    "artifact": 11852905438,
+    "artifactZipSha256": "43415f97a9d2f15ec06147f6cbc57632cabf3a7b1ba9c6bcebf755652bf2ec9d",
+    "canvasFilename": "gen2674-meadow-post-residency-canvas.png",
+    "canvasSha256": "7e229ec50ad476db84510b05b17fefc5e0fb8da0296e0122af08abf50d4d3d2f",
+    "canvasBytes": 1192031,
+    "exactCandidateBrowserResult": "PASS",
+    "independentRootResult": "PASS",
+    "postResidencyBatches": 108,
+    "postResidencyInstances": 27585,
+    "runtimeBytesUnchangedByAnchorFinalization": true,
+    "anchorVisualProxySha256": "1b63b7f83ab5bd399f1210051474179182d2c10dedf1f4d4860198e1c6d7b07b",
+    "ownerDisposition": "KEEP",
+    "ownerPublicationAuthorized": true,
+    "ownerAuthorizationUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6231#issuecomment-6155736248",
+    "physicalAndroidTestPerformed": false
+  },
+  "physicalAndroidQualified": false,
+  "ownerPerceptualDisposition": "KEEP",
+  "mergeAuthorized": true,
+  "publicationAuthorized": true,
+  "releaseAuthorized": true,
+  "historicalGrassEvidenceNote": "grassEvidence preserves the exact original specialized receipt object, including historical PENDING flags. Current qualification and owner disposition are recorded in the outer evidenceCustody fields; the nested historical record is not rewritten.",
+  "originalGrassReceiptGitBlob": "35578c3ad131287f2b868265bd2cd84eeba07dae",
+  "originalGrassReceiptSha256": "ae92e6a7a3fab926a3ea45441ea063a2aff2077cd4c1f98e64266ac26fea48ac",
+  "grassEvidence": {
+    "schema": "H_EARTH_MEADOW_MIDDISTANCE_PATCH_LOD_RECEIPT_v1",
+    "operationId": "H_EARTH_GLOBAL_FINE_GRASS_AND_DENSER_MEADOW_20261013_001",
+    "authorityGeneration": 2684,
+    "admissionCommit": "d4dac13c9a8f1d5689fced9df3b5a91bb6800487",
+    "admissionLedgerBlob": "86f454c83220845ea79e82e0fd0ea92aecd4ac49",
+    "governingHead": "708e1ba556e316e88790a2aefdf176d0d33fd8b2",
+    "predecessorCandidate": "5ed1095c29d4db512c39f9375d02d379159f5e61",
+    "result": "CHEAP_PREFLIGHT_PASS_RUNTIME_AND_OWNER_PENDING",
+    "scope": {
+      "globalLegacyFans": "REPLACED_AT_ORIGINAL_TWELVE_CONTACTS",
+      "meadowDensityAdditionRadiusMeters": 18,
+      "centerX": -45,
+      "centerZ": -326,
+      "newRootContacts": 0,
+      "soilShaderChanged": false,
+      "worldRecordsChanged": false
+    },
+    "sourceBlobs": {
+      "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "e0393ebacfa98fc465f7b15fc13e6b2c8a92c4ec",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "15827d0d9453d25633205b51eb9b60cd1df88c03",
+      "h-earth-3d/validation/h-earth.meadow-mid-distance-patch-lod.v1.mjs": "039f32eac7106318f000ab75a8899d588dc86125"
+    },
+    "structuralVerification": {
+      "result": "LOCAL_CACHE_AND_TOPOLOGY_TEST_PASS",
+      "originalRecordsSha256": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
       "clumps": 1464,
       "contacts": 4392,
       "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-      "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-      "originalRecordIdsPreserved": true,
-      "withinClassOrderPreserved": true,
+      "selectedIdsAndWithinClassOrderPreserved": true,
       "logicalInstances": 3978,
-      "originalInstances": 3856,
-      "meadowInstances": 122,
-      "nearInstances": 41,
-      "middleInstances": 81,
+      "globalFineInstances": 3856,
+      "meadowNearDensityInstances": 41,
+      "meadowMidDensityInstances": 81,
       "draws": 3,
       "selectedVertices": 1287552,
       "selectedTriangles": 678912,
-      "originalFanVertices": 111384,
-      "originalFanTriangles": 95472,
-      "gpu": {
-        "templateBytes": 1856,
-        "paddedRecordsBytes": 4947968,
-        "paddedSidecarBytes": 327680,
-        "leafIndexBytes": 124704,
-        "selectionTextureBytes": 16384,
-        "atlasBytes": 0,
-        "totalBytes": 5418592
-      },
+      "approvedMeadowLeavesPerClump": 24,
+      "lowLeavesPerContactNear": 72,
+      "lowLeavesPerContactMid": 40,
+      "visibleMeadowLeaves": 258048,
+      "visibleGlobalFineLeaves": 46272,
+      "globalVerticesPerLeaf": 4,
+      "globalTrianglesPerLeaf": 2,
+      "lowVerticesPerLeaf": 4,
+      "lowTrianglesPerLeaf": 2,
+      "approvedVerticesPerLeaf": 6,
+      "approvedTrianglesPerLeaf": 4,
+      "gpuBytes": 5418592,
       "selectionUploadBytesOnChange": 16384,
-      "selectionUploadBytesWhenUnchanged": 0,
-      "browserQualification": "NOT_EXECUTED",
-      "visualDisposition": "PENDING",
-      "approvedBaselineVertices": 318784,
-      "approvedBaselineTriangles": 233088,
-      "soilShaderSha256": "5468a720408019c3bb1c9ec747abb74c3436c02fd3d695e9865e4731b2b2c469"
+      "stationarySelectionUploadBytes": 0,
+      "sharedSoilFragmentShaderSha256": "5468a720408019c3bb1c9ec747abb74c3436c02fd3d695e9865e4731b2b2c469"
     },
-    "engineeringTargets": {
-      "nearCoverageMinimum": 0.5,
-      "middleCoverageMinimum": 0.7,
-      "largestGapRadiusMaximumBaselineRatio": 0.5,
-      "result": "PASS_CPU_PREFLIGHT_ONLY"
+    "immutableAssetVerification": {
+      "result": "PASS",
+      "mode": "--verify",
+      "freshSourceCompared": false,
+      "transportBytes": 11736235,
+      "transportSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a"
     },
-    "morphologyReview": {
-      "result": "MATERIAL_IMPROVEMENT_SUPPORTS_RUNTIME_QUALIFICATION",
-      "observations": [
-        "Exterior giant fans absent in matched diagnostic view",
-        "Fine upright strips retained and low curved leaves visibly fill formerly broad gaps",
-        "Repeated radial spiky rosettes remain visible; not uniform sod",
-        "Soil shader and original contact/world data unchanged"
-      ],
-      "ownerVisualAcceptance": "PENDING",
-      "executedGLSLQualification": "NOT_RUN"
+    "freshSourceVerification": {
+      "result": "FAIL_CLOSED",
+      "mode": "--verify-source",
+      "error": "GEN2666_BUFFER_VALUE_MISMATCH:raw.baseColorsLinear[95988]",
+      "sourceBuildRepeated": false,
+      "worldFilesWritten": false,
+      "note": "Invoked before recognizing this mode reconstructs source; no further source build is authorized in this bounded checkpoint.",
+      "command": "node h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs --verify-source",
+      "workingDirectory": "global-grass-repair",
+      "nodeVersion": "v24.19.0",
+      "executionSessionId": 62348,
+      "startTime": null,
+      "endTime": null,
+      "durationMilliseconds": null,
+      "timingLimitation": "Exact start/end and total duration were not instrumented; do not infer them from individual tool wait durations.",
+      "exitCode": 1,
+      "errorLog": "Error: GEN2666_BUFFER_VALUE_MISMATCH:raw.baseColorsLinear[95988]\n    at fatal (h-earth.canonical-base-world-precompute.v1.mjs:27:44)\n    at examine (h-earth.canonical-base-world-precompute.v1.mjs:98:76)\n    at verify (h-earth.canonical-base-world-precompute.v1.mjs:161:3)\n    at async main (h-earth.canonical-base-world-precompute.v1.mjs:164:229)"
     },
-    "artifactHashes": {
-      "project.py": "3eecc6e3e9636a1d34488784a181dfc29aadd779a67b5d3f953d2c741c4967d1",
-      "previsual-common.py": "75752b291550975a4b6815289651ff30c4cc6839ba1604f852bc570b77957ff7",
-      "extract.mjs": "8eb5c1d65c34a2a247f3e2b7da1283037bf6728a7caaa3e31b3d5d4de7c40a82",
-      "candidate.png": "8ebb8fa95ebcbfde20a680c1f6142b101a6e020af6d948420c237d34cada1250",
-      "candidate-mask.png": "c90a3296301415eb5c906c219709087583f0f5f76c9bf12f2e80066f6ad06767",
-      "comparison.png": "b2c270b29b10d8e23873bf281ad90869b248fe17bf5d1ceb1c1ac75181012ccd",
-      "independent-submission-receipt.json": "ad8e51113e05e926f2739ed6578dd760f3626f66c25219f1f95fda54042d3f1b"
-    }
-  },
-  "independentEvidenceReceiptSha256": "9af5d60ecc55b789e8189696f0145c49438c4ec747e26c3bde7aa74107c6b963",
-  "runtimeQualificationReadiness": "MORPHOLOGY_SUPPORTS_RUNTIME_REVIEW_BUT_FRESH_SOURCE_PARITY_FAILURE_REMAINS_UNRESOLVED",
-  "ownerOneRepair20261013": {
-    "status": "CHEAP_PREFLIGHT_COMPLETE_BROWSER_PENDING",
-    "baseCandidate": "158d72eecedf9197df194d997cb3b10250197265",
-    "ownerDisposition": "ONE_REPAIR",
-    "geometry": "Preserve all tall curved grass and existing contacts; replace radial low rosettes with independently sampled short curved grass contacts. Meadow grass palette richer green; original global palette and soil unchanged.",
-    "shortContactCount": 93696,
-    "contactsPerParent": 768,
-    "nearShortLeavesPerContact": 4,
-    "middleShortLeavesPerContact": 3,
-    "shortLeafHeightMeters": [
-      0.22,
-      0.4
+    "cheapVisualGate": "PASS_CPU_PREFLIGHT_ONLY",
+    "newBrowserExecution": false,
+    "expensiveQualificationRecommended": false,
+    "ownerPerceptualDisposition": "PENDING",
+    "publicationAuthorized": false,
+    "limitations": [
+      "CPU mirror only; no executed GLSL, GPU frame-time, residency, or browser qualification.",
+      "Repeated radial spiky rosettes remain visible; this is not owner acceptance of a meadow carpet or uniform sod.",
+      "Cached base-terrain projection uses simplified lighting without canonical trees, vegetation occlusion, atmosphere, or streamed refinement.",
+      "Exterior giant fans are absent in the matched diagnostic view; global outside-view runtime appearance remains unqualified.",
+      "Fresh source parity failed at raw.baseColorsLinear[95988] on Node v24.19.0; immutable-asset verification passed.",
+      "Submitted vertices are 4.04 times and triangles 2.91 times the approved fine-grass baseline; no performance acceptance claimed."
     ],
-    "shortLeafBendMeters": [
-      0.06,
-      0.15
-    ],
-    "shortLeafHalfWidthMeters": [
-      0.01,
-      0.016
-    ],
-    "preservedTallClumps": 1464,
-    "preservedTallContacts": 4392,
-    "preservedTallLayoutSha256": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-    "submission": {
-      "schema": "H_EARTH_GLOBAL_GRASS_INDEPENDENT_SUBMISSION_v1",
-      "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
-      "sourceHashes": {
-        "generator": "c58726ec683bddc9278a281b09956d4fb6c07e3aee05ced1807c85964cf44ced",
-        "renderer": "3b5fc09122e06ef55e28a10e3712cae3af31d38ccada29948963592029a9a191"
-      },
-      "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
-      "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
-      "clumps": 1464,
-      "contacts": 4392,
-      "shortContactCount": 93696,
-      "shortReceipt": {
-        "schema": "H_EARTH_MEADOW_PRESENTATION_ROOTS_v1",
-        "sourcePopulationChanged": false,
-        "cameraIndependent": true,
-        "eligibleInstances": 122,
-        "clumpCount": 1464,
-        "contactCount": 4392,
-        "sidecarBytes": 1816444,
-        "templateVertices": 28,
-        "templateTriangles": 24,
-        "meadowTemplateVertices": 20160,
-        "meadowTemplateTriangles": 13440,
-        "leavesPerClump": 24,
-        "shortContactCount": 93696,
-        "shortContactsPerInstance": 768,
-        "shortLeavesPerContactNear": 4,
-        "shortLeavesPerContactMid": 3,
-        "shortCandidateCount": 111278,
-        "shortValidatedCount": 111278,
-        "shortRejections": {},
-        "globalFineVertices": 48,
-        "globalFineTriangles": 24,
-        "atlasBytes": 0,
-        "pilotRadius": 18
-      },
-      "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-      "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
-      "originalRecordIdsPreserved": true,
-      "withinClassOrderPreserved": true,
-      "logicalInstances": 3978,
-      "originalInstances": 3856,
-      "meadowInstances": 122,
-      "nearInstances": 41,
-      "middleInstances": 81,
-      "draws": 3,
-      "selectedVertices": 2271360,
-      "selectedTriangles": 1483392,
-      "approvedBaselineVertices": 318784,
-      "approvedBaselineTriangles": 233088,
-      "originalFanVertices": 111384,
-      "originalFanTriangles": 95472,
-      "gpu": {
-        "templateBytes": 1856,
-        "paddedRecordsBytes": 4947968,
-        "paddedSidecarBytes": 1818624,
-        "leafIndexBytes": 285984,
-        "selectionTextureBytes": 16384,
-        "atlasBytes": 0,
-        "totalBytes": 7070816
-      },
-      "selectionUploadBytesOnChange": 16384,
-      "selectionUploadBytesWhenUnchanged": 0,
-      "browserQualification": "NOT_EXECUTED",
-      "visualDisposition": "PENDING"
-    },
-    "cheapPreview": {
+    "nextAction": "Persist this exact preflight candidate and evidence; resolve recorded fresh-source parity/runtime prerequisites before any costly qualification. Owner visual disposition and release authorization remain pending.",
+    "prototypeCheckpoint": "5653f979bc4a166aa1a937804eb02481e9bc7fe3",
+    "projectedCoverage": {
       "candidate": {
-        "pilot": {
-          "fixedGroundPixels": 724879,
-          "occupiedPixels": 545563,
-          "occupiedFraction": 0.7526263003894443,
-          "largestEmptyCircleRadiusPixels": 14.035668847618199,
-          "largestConnectedEmptyPixels": 4608
-        },
-        "near0to6m": {
-          "fixedGroundPixels": 385757,
-          "occupiedPixels": 250397,
-          "occupiedFraction": 0.6491055249807521,
-          "largestEmptyCircleRadiusPixels": 14.035668847618199,
-          "largestConnectedEmptyPixels": 4608
-        },
-        "middle6to18m": {
-          "fixedGroundPixels": 339122,
-          "occupiedPixels": 295166,
-          "occupiedFraction": 0.8703829300369779,
-          "largestEmptyCircleRadiusPixels": 4.47213595499958,
-          "largestConnectedEmptyPixels": 295
-        }
-      },
-      "baseline": {
         "pilot": {
           "fixedGroundPixels": 724879,
           "occupiedPixels": 470208,
@@ -381,10 +211,33 @@
           "largestConnectedEmptyPixels": 5819
         }
       },
-      "elapsedSeconds": 25.926240921020508,
+      "baseline": {
+        "pilot": {
+          "fixedGroundPixels": 724879,
+          "occupiedPixels": 98841,
+          "occupiedFraction": 0.13635517100095326,
+          "largestEmptyCircleRadiusPixels": 93.98404119849285,
+          "largestConnectedEmptyPixels": 578446
+        },
+        "near0to6m": {
+          "fixedGroundPixels": 385757,
+          "occupiedPixels": 29334,
+          "occupiedFraction": 0.07604269008728293,
+          "largestEmptyCircleRadiusPixels": 93.98404119849285,
+          "largestConnectedEmptyPixels": 333787
+        },
+        "middle6to18m": {
+          "fixedGroundPixels": 339122,
+          "occupiedPixels": 69507,
+          "occupiedFraction": 0.20496163622531124,
+          "largestEmptyCircleRadiusPixels": 34.40930106817051,
+          "largestConnectedEmptyPixels": 158373
+        }
+      },
+      "elapsedSeconds": 43.03554964065552,
       "nearParents": 41,
-      "vertices": 2271360,
-      "triangles": 1483392,
+      "vertices": 1287552,
+      "triangles": 678912,
       "draws": 3,
       "limitations": [
         "CPU mirror; no GLSL execution",
@@ -393,26 +246,270 @@
         "804x1810 fixed ROI, near-plane clipping, grass limited42m"
       ],
       "nearPlaneCrossingTrianglesSkipped": 0,
-      "behindCameraTrianglesSkipped": 109381,
-      "nearPlaneCrossingTrianglesClipped": 1750
+      "behindCameraTrianglesSkipped": 291018,
+      "nearPlaneCrossingTrianglesClipped": 3474,
+      "schema": "H_EARTH_GEN2684_FIXED_CONTACT_GLOBAL_GRASS_CPU_PREVISUAL_v1",
+      "baselineHead": "5ed1095c29d4db512c39f9375d02d379159f5e61",
+      "sourceGitBlobs": {
+        "helper": "e0393ebacfa98fc465f7b15fc13e6b2c8a92c4ec",
+        "renderer": "15827d0d9453d25633205b51eb9b60cd1df88c03"
+      },
+      "camera": {
+        "position": [
+          -45,
+          8.088257606279512,
+          -326
+        ],
+        "yaw": 0,
+        "pitch": -8,
+        "fov": 56,
+        "canvas": [
+          804,
+          1810
+        ]
+      },
+      "independentSubmission": {
+        "schema": "H_EARTH_GLOBAL_GRASS_INDEPENDENT_SUBMISSION_v1",
+        "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
+        "sourceHashes": {
+          "generator": "e1fb860e63efef4ad3c45473c83fdab0047faf00afb872d9fded0502e9d39313",
+          "renderer": "a1df2a34805888c84553044a976d010ba2286dc623fe71c841fdc11c3ff32ed4"
+        },
+        "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
+        "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+        "clumps": 1464,
+        "contacts": 4392,
+        "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+        "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+        "originalRecordIdsPreserved": true,
+        "withinClassOrderPreserved": true,
+        "logicalInstances": 3978,
+        "originalInstances": 3856,
+        "meadowInstances": 122,
+        "nearInstances": 41,
+        "middleInstances": 81,
+        "draws": 3,
+        "selectedVertices": 1287552,
+        "selectedTriangles": 678912,
+        "originalFanVertices": 111384,
+        "originalFanTriangles": 95472,
+        "gpu": {
+          "templateBytes": 1856,
+          "paddedRecordsBytes": 4947968,
+          "paddedSidecarBytes": 327680,
+          "leafIndexBytes": 124704,
+          "selectionTextureBytes": 16384,
+          "atlasBytes": 0,
+          "totalBytes": 5418592
+        },
+        "selectionUploadBytesOnChange": 16384,
+        "selectionUploadBytesWhenUnchanged": 0,
+        "browserQualification": "NOT_EXECUTED",
+        "visualDisposition": "PENDING",
+        "approvedBaselineVertices": 318784,
+        "approvedBaselineTriangles": 233088,
+        "soilShaderSha256": "5468a720408019c3bb1c9ec747abb74c3436c02fd3d695e9865e4731b2b2c469"
+      },
+      "engineeringTargets": {
+        "nearCoverageMinimum": 0.5,
+        "middleCoverageMinimum": 0.7,
+        "largestGapRadiusMaximumBaselineRatio": 0.5,
+        "result": "PASS_CPU_PREFLIGHT_ONLY"
+      },
+      "morphologyReview": {
+        "result": "MATERIAL_IMPROVEMENT_SUPPORTS_RUNTIME_QUALIFICATION",
+        "observations": [
+          "Exterior giant fans absent in matched diagnostic view",
+          "Fine upright strips retained and low curved leaves visibly fill formerly broad gaps",
+          "Repeated radial spiky rosettes remain visible; not uniform sod",
+          "Soil shader and original contact/world data unchanged"
+        ],
+        "ownerVisualAcceptance": "PENDING",
+        "executedGLSLQualification": "NOT_RUN"
+      },
+      "artifactHashes": {
+        "project.py": "3eecc6e3e9636a1d34488784a181dfc29aadd779a67b5d3f953d2c741c4967d1",
+        "previsual-common.py": "75752b291550975a4b6815289651ff30c4cc6839ba1604f852bc570b77957ff7",
+        "extract.mjs": "8eb5c1d65c34a2a247f3e2b7da1283037bf6728a7caaa3e31b3d5d4de7c40a82",
+        "candidate.png": "8ebb8fa95ebcbfde20a680c1f6142b101a6e020af6d948420c237d34cada1250",
+        "candidate-mask.png": "c90a3296301415eb5c906c219709087583f0f5f76c9bf12f2e80066f6ad06767",
+        "comparison.png": "b2c270b29b10d8e23873bf281ad90869b248fe17bf5d1ceb1c1ac75181012ccd",
+        "independent-submission-receipt.json": "ad8e51113e05e926f2739ed6578dd760f3626f66c25219f1f95fda54042d3f1b"
+      }
     },
-    "indexSegments": {
-      "global": 72,
-      "near": 40320,
-      "middle": 31104
-    },
-    "budgetInterpretation": "262144 bytes is additional patch/atlas texture budget; atlas remains zero bytes. Root-data sidecar is separately authorized and explicitly charged to total8MiB. Padded root texture1818624bytes versus327680 before; delta1490944bytes.",
-    "costCaveat": "1483392 triangles versus678912 prior candidate, ~2.18x; browser performance is unproven.",
-    "initialCheapProbe": "Rejected before browser:46848 short contacts yielded32.58% near55.62% middle occupancy. Final density and modest blade footprint revised in this one bounded candidate.",
-    "verificationLimits": [
-      "Cached immutable-world asset verification and targeted test passed; no fresh full source regeneration locally.",
-      "Software projection mirrors geometry with simplified lighting; not browser proof.",
-      "Independent contact review and exact candidate browser performance required before release."
-    ],
-    "maximumUploadChunkBytes": 285984,
-    "localReviewCorrections": [
-      "Independent review caught broad numeric replacement affecting original generator bounds; entire pre-presentation generator prefix restored exactly and now SHA256-guarded in targeted validator. No changed world was generated.",
-      "Independent review caught upload maximum omitting larger leaf index buffer; metric now includes actual285984-byte upload."
-    ]
+    "independentEvidenceReceiptSha256": "9af5d60ecc55b789e8189696f0145c49438c4ec747e26c3bde7aa74107c6b963",
+    "runtimeQualificationReadiness": "MORPHOLOGY_SUPPORTS_RUNTIME_REVIEW_BUT_FRESH_SOURCE_PARITY_FAILURE_REMAINS_UNRESOLVED",
+    "ownerOneRepair20261013": {
+      "status": "CHEAP_PREFLIGHT_COMPLETE_BROWSER_PENDING",
+      "baseCandidate": "158d72eecedf9197df194d997cb3b10250197265",
+      "ownerDisposition": "ONE_REPAIR",
+      "geometry": "Preserve all tall curved grass and existing contacts; replace radial low rosettes with independently sampled short curved grass contacts. Meadow grass palette richer green; original global palette and soil unchanged.",
+      "shortContactCount": 93696,
+      "contactsPerParent": 768,
+      "nearShortLeavesPerContact": 4,
+      "middleShortLeavesPerContact": 3,
+      "shortLeafHeightMeters": [
+        0.22,
+        0.4
+      ],
+      "shortLeafBendMeters": [
+        0.06,
+        0.15
+      ],
+      "shortLeafHalfWidthMeters": [
+        0.01,
+        0.016
+      ],
+      "preservedTallClumps": 1464,
+      "preservedTallContacts": 4392,
+      "preservedTallLayoutSha256": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+      "submission": {
+        "schema": "H_EARTH_GLOBAL_GRASS_INDEPENDENT_SUBMISSION_v1",
+        "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
+        "sourceHashes": {
+          "generator": "c58726ec683bddc9278a281b09956d4fb6c07e3aee05ced1807c85964cf44ced",
+          "renderer": "3b5fc09122e06ef55e28a10e3712cae3af31d38ccada29948963592029a9a191"
+        },
+        "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
+        "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+        "clumps": 1464,
+        "contacts": 4392,
+        "shortContactCount": 93696,
+        "shortReceipt": {
+          "schema": "H_EARTH_MEADOW_PRESENTATION_ROOTS_v1",
+          "sourcePopulationChanged": false,
+          "cameraIndependent": true,
+          "eligibleInstances": 122,
+          "clumpCount": 1464,
+          "contactCount": 4392,
+          "sidecarBytes": 1816444,
+          "templateVertices": 28,
+          "templateTriangles": 24,
+          "meadowTemplateVertices": 20160,
+          "meadowTemplateTriangles": 13440,
+          "leavesPerClump": 24,
+          "shortContactCount": 93696,
+          "shortContactsPerInstance": 768,
+          "shortLeavesPerContactNear": 4,
+          "shortLeavesPerContactMid": 3,
+          "shortCandidateCount": 111278,
+          "shortValidatedCount": 111278,
+          "shortRejections": {},
+          "globalFineVertices": 48,
+          "globalFineTriangles": 24,
+          "atlasBytes": 0,
+          "pilotRadius": 18
+        },
+        "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+        "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+        "originalRecordIdsPreserved": true,
+        "withinClassOrderPreserved": true,
+        "logicalInstances": 3978,
+        "originalInstances": 3856,
+        "meadowInstances": 122,
+        "nearInstances": 41,
+        "middleInstances": 81,
+        "draws": 3,
+        "selectedVertices": 2271360,
+        "selectedTriangles": 1483392,
+        "approvedBaselineVertices": 318784,
+        "approvedBaselineTriangles": 233088,
+        "originalFanVertices": 111384,
+        "originalFanTriangles": 95472,
+        "gpu": {
+          "templateBytes": 1856,
+          "paddedRecordsBytes": 4947968,
+          "paddedSidecarBytes": 1818624,
+          "leafIndexBytes": 285984,
+          "selectionTextureBytes": 16384,
+          "atlasBytes": 0,
+          "totalBytes": 7070816
+        },
+        "selectionUploadBytesOnChange": 16384,
+        "selectionUploadBytesWhenUnchanged": 0,
+        "browserQualification": "NOT_EXECUTED",
+        "visualDisposition": "PENDING"
+      },
+      "cheapPreview": {
+        "candidate": {
+          "pilot": {
+            "fixedGroundPixels": 724879,
+            "occupiedPixels": 545563,
+            "occupiedFraction": 0.7526263003894443,
+            "largestEmptyCircleRadiusPixels": 14.035668847618199,
+            "largestConnectedEmptyPixels": 4608
+          },
+          "near0to6m": {
+            "fixedGroundPixels": 385757,
+            "occupiedPixels": 250397,
+            "occupiedFraction": 0.6491055249807521,
+            "largestEmptyCircleRadiusPixels": 14.035668847618199,
+            "largestConnectedEmptyPixels": 4608
+          },
+          "middle6to18m": {
+            "fixedGroundPixels": 339122,
+            "occupiedPixels": 295166,
+            "occupiedFraction": 0.8703829300369779,
+            "largestEmptyCircleRadiusPixels": 4.47213595499958,
+            "largestConnectedEmptyPixels": 295
+          }
+        },
+        "baseline": {
+          "pilot": {
+            "fixedGroundPixels": 724879,
+            "occupiedPixels": 470208,
+            "occupiedFraction": 0.6486710195770604,
+            "largestEmptyCircleRadiusPixels": 15.652475842498529,
+            "largestConnectedEmptyPixels": 24470
+          },
+          "near0to6m": {
+            "fixedGroundPixels": 385757,
+            "occupiedPixels": 226062,
+            "occupiedFraction": 0.5860217701817465,
+            "largestEmptyCircleRadiusPixels": 15.652475842498529,
+            "largestConnectedEmptyPixels": 23616
+          },
+          "middle6to18m": {
+            "fixedGroundPixels": 339122,
+            "occupiedPixels": 244146,
+            "occupiedFraction": 0.7199355983982165,
+            "largestEmptyCircleRadiusPixels": 11.180339887498949,
+            "largestConnectedEmptyPixels": 5819
+          }
+        },
+        "elapsedSeconds": 25.926240921020508,
+        "nearParents": 41,
+        "vertices": 2271360,
+        "triangles": 1483392,
+        "draws": 3,
+        "limitations": [
+          "CPU mirror; no GLSL execution",
+          "Simplified lighting, no trees/vegetation occlusion or atmosphere",
+          "Cached base terrain; no world rebuild",
+          "804x1810 fixed ROI, near-plane clipping, grass limited42m"
+        ],
+        "nearPlaneCrossingTrianglesSkipped": 0,
+        "behindCameraTrianglesSkipped": 109381,
+        "nearPlaneCrossingTrianglesClipped": 1750
+      },
+      "indexSegments": {
+        "global": 72,
+        "near": 40320,
+        "middle": 31104
+      },
+      "budgetInterpretation": "262144 bytes is additional patch/atlas texture budget; atlas remains zero bytes. Root-data sidecar is separately authorized and explicitly charged to total8MiB. Padded root texture1818624bytes versus327680 before; delta1490944bytes.",
+      "costCaveat": "1483392 triangles versus678912 prior candidate, ~2.18x; browser performance is unproven.",
+      "initialCheapProbe": "Rejected before browser:46848 short contacts yielded32.58% near55.62% middle occupancy. Final density and modest blade footprint revised in this one bounded candidate.",
+      "verificationLimits": [
+        "Cached immutable-world asset verification and targeted test passed; no fresh full source regeneration locally.",
+        "Software projection mirrors geometry with simplified lighting; not browser proof.",
+        "Independent contact review and exact candidate browser performance required before release."
+      ],
+      "maximumUploadChunkBytes": 285984,
+      "localReviewCorrections": [
+        "Independent review caught broad numeric replacement affecting original generator bounds; entire pre-presentation generator prefix restored exactly and now SHA256-guarded in targeted validator. No changed world was generated.",
+        "Independent review caught upload maximum omitting larger leaf index buffer; metric now includes actual285984-byte upload."
+      ]
+    }
   }
 }

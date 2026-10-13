@@ -1,6 +1,10 @@
 name: Operations Chamber observations
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/operations-chamber-observations-v1.yml'
   schedule:
     - cron: '7,22,37,52 * * * *'
 permissions: {}
@@ -9,7 +13,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   collect:
-    if: github.repository == 'smansfield635-create/smansfield635-create.github.io' && vars.OPS_PUBLICATION_APPROVED == 'true'
+    if: github.repository == 'smansfield635-create/smansfield635-create.github.io' && vars.OPS_PUBLICATION_APPROVED == 'true' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 12
     permissions:
@@ -64,6 +68,7 @@ jobs:
           retention-days: 1
   publish:
     needs: collect
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -101,3 +106,98 @@ jobs:
             } else await github.rest.git.createRef({owner,repo,ref:`refs/heads/${branch}`,sha:commit});
             if ((await github.rest.git.getRef({owner,repo,ref:`heads/${branch}`})).data.object.sha !== commit) throw Error('OUTPUT_READBACK_MISMATCH');
             core.notice(`Published observations ${commit}`);
+
+  gen656-native-qualification:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'gen656-private-study-qualification-20261013'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions: {}
+    steps:
+      - name: Mint read-only private checkout token
+        id: private
+        uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
+        with:
+          app-id: ${{ vars.PRIVATE_EXECUTION_APP_ID }}
+          private-key: ${{ secrets.PRIVATE_EXECUTION_APP_PRIVATE_KEY }}
+          owner: smansfield635-create
+          repositories: geodiametrics1
+          permission-contents: read
+      - name: Checkout frozen private Generation 656 candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/geodiametrics1
+          ref: 3be10f4e67d97572224140d8f3819382cdc579a1
+          token: ${{ steps.private.outputs.token }}
+          persist-credentials: false
+          path: private-source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify the exact frozen private candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C private-source rev-parse HEAD)" = '3be10f4e67d97572224140d8f3819382cdc579a1'
+      - name: Execute exact registered Node suite with private logs withheld
+        shell: bash
+        env:
+          EXPECTED_PRIVATE_HEAD: 3be10f4e67d97572224140d8f3819382cdc579a1
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/gen656-qualified"
+          pushd private-source >/dev/null
+          set +e
+          node --test tools/private-public-bridge/material-work-study.test.mjs tools/private-public-bridge/standalone/dashboard.test.mjs tools/private-public-bridge/operations-chamber-results.test.mjs > "$RUNNER_TEMP/gen656-qualified/private-test-output.log" 2>&1
+          test_exit=$?
+          set -e
+          popd >/dev/null
+          export TEST_EXIT="$test_exit"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          const dir=process.env.RUNNER_TEMP+'/gen656-qualified';
+          const log=fs.readFileSync(dir+'/private-test-output.log','utf8');
+          const count=k=>Number(log.match(new RegExp('^# '+k+' (\\d+)$','m'))?.[1]??NaN);
+          const tests=count('tests'), passed=count('pass'), failed=count('fail'), skipped=count('skipped');
+          const exitCode=Number(process.env.TEST_EXIT);
+          const valid=Number.isInteger(tests)&&Number.isInteger(passed)&&Number.isInteger(failed)&&Number.isInteger(skipped)&&tests>=40&&passed+failed+skipped<=tests;
+          const receipt={
+            schema:'DGB_GEN656_NATIVE_NODE_QUALIFICATION_REDACTED_RECEIPT_v1',
+            result:exitCode===0&&valid&&failed===0&&passed===tests?'PASS':'FAIL',
+            testHost:'GITHUB_PUBLIC_RUNNER_NODE22',
+            privateRepository:'smansfield635-create/geodiametrics1',
+            privateCandidateHead:process.env.EXPECTED_PRIVATE_HEAD,
+            exactTestSuite:'MATERIAL_WORK_STUDY_DASHBOARD_RESULTS',
+            tests:Number.isFinite(tests)?tests:null,
+            passed:Number.isFinite(passed)?passed:null,
+            failed:Number.isFinite(failed)?failed:null,
+            skipped:Number.isFinite(skipped)?skipped:null,
+            testExitCode:exitCode,
+            privateTestLogSha256:crypto.createHash('sha256').update(log).digest('hex'),
+            rawPrivateLogExported:false,
+            privateSourceExported:false,
+            publicRepositoryMutationPerformed:false,
+            mergePerformed:false,
+            publicationPerformed:false,
+            runId:process.env.GITHUB_RUN_ID,
+            runAttempt:Number(process.env.GITHUB_RUN_ATTEMPT)
+          };
+          fs.writeFileSync(dir+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
+          NODE
+          rm -f "$RUNNER_TEMP/gen656-qualified/private-test-output.log"
+      - name: Preserve only redacted qualification receipt
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: gen656-private-node-redacted-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen656-qualified/receipt.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Require genuine native PASS
+        shell: bash
+        run: |
+          set -euo pipefail
+          jq -e '.schema == "DGB_GEN656_NATIVE_NODE_QUALIFICATION_REDACTED_RECEIPT_v1" and .result == "PASS" and .failed == 0 and .testExitCode == 0 and .privateSourceExported == false and .rawPrivateLogExported == false' "$RUNNER_TEMP/gen656-qualified/receipt.json" >/dev/null

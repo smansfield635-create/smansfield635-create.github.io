@@ -8927,45 +8927,6 @@
       "scopeHash": "89c8c0a2bad73ffd3db0d334efb7c2c4c8c4be046f945db8b1207a753ec1f4e4",
       "state": "ADMITTED_LOCKED"
     },
-    "89d5521ec0e79acf8d93cc0cd451c8fb0968465d7ade111d1e1e56827cec7659": {
-      "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
-          "lockGeneration": 2682,
-          "lockScope": "H_EARTH:MEADOW_PRESENTATION_ROOT_GAP_COVERAGE:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
-          "operationId": "H_EARTH_MEADOW_PRESENTATION_ROOT_GAP_COVERAGE_20261013_001",
-          "procedureLocatorDigest": "095aac14c63a505a83d552915402cc7cc6da073bdf19137898e1ad3cf38dc5dc",
-          "requestDigest": "00f454a611855be64880895a365a8fabdc4a37052bd9236656898d722883cce7",
-          "scopeHash": "89d5521ec0e79acf8d93cc0cd451c8fb0968465d7ade111d1e1e56827cec7659"
-        },
-        "bindingDigest": "a2fc0599939217a930d9b87c642d433d653d9f9a4d1320188482fe024a6bb50b",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "ac07e4549ea87da32296135321f497e04eb521f5",
-          "observedLockRefHead": "b0fd682418271490009ddc4909e487d51fc4a633"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "83036ca7e49ea93f8ee0b4a12bca8fd8f4f6c1680500d3136818ab1ef0a619f5",
-          "commentId": 6152200694,
-          "issueNumber": 6100,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2682,
-      "lockScope": "H_EARTH:MEADOW_PRESENTATION_ROOT_GAP_COVERAGE:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
-      "operationId": "H_EARTH_MEADOW_PRESENTATION_ROOT_GAP_COVERAGE_20261013_001",
-      "procedureLocatorDigest": "095aac14c63a505a83d552915402cc7cc6da073bdf19137898e1ad3cf38dc5dc",
-      "released": false,
-      "requestDigest": "00f454a611855be64880895a365a8fabdc4a37052bd9236656898d722883cce7",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "89d5521ec0e79acf8d93cc0cd451c8fb0968465d7ade111d1e1e56827cec7659",
-      "state": "ADMITTED_LOCKED"
-    },
     "89dd85077d021635eebc6e3a710b3cfcb6cd896c80a9ecdb5579ccbc42f3142f": {
       "governingHead": "b58e43b8f71c97e95b357058e6f41f01293b1cf8",
       "lockGeneration": 218,
@@ -16509,6 +16470,76 @@
       "scopeHash": "f43aeb80ba517e89fb2b584cf6fca85893a731a60af2f12f99ad726bba79e3d5",
       "state": "ADMITTED_LOCKED"
     },
+    "f47216015eb32ecfea4e9004606420d04786f17ab1a711e941973623ec45eaec": {
+      "governingHead": "708e1ba556e316e88790a2aefdf176d0d33fd8b2",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "708e1ba556e316e88790a2aefdf176d0d33fd8b2",
+          "lockGeneration": 2684,
+          "lockScope": "H_EARTH:GLOBAL_LEGACY_GRASS_PRESENTATION_AND_MEADOW_DENSITY:20261013:V1",
+          "operationId": "H_EARTH_GLOBAL_FINE_GRASS_AND_DENSER_MEADOW_20261013_001",
+          "procedureLocatorDigest": "a6088ccce2a6e3a4bc35b3b46d86f288e8c0bc5b2fe4be69e55f502ba91cfd46",
+          "requestDigest": "7a1474e2b487387a954321f22c600016a24ccea3a6a9f3eaed3480ec0b6838ba",
+          "scopeHash": "f47216015eb32ecfea4e9004606420d04786f17ab1a711e941973623ec45eaec"
+        },
+        "bindingDigest": "8308ede421b5f025fa466453cf43c64e2b2649708db704f166bfc1f5804c7947",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "b8d4a50be7ecea563051b81dfe3c39790a0d019b",
+          "observedLockRefHead": "3d5e615295a0bb1d3dd44ed24bcea313d58c41cf"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "5c714f0630a302443129f55f9c19fa0c6efa54c9a71392b57d97dbd613df2336",
+          "commentId": 6153511999,
+          "issueNumber": 6100,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
+            "lockGeneration": 2682,
+            "lockScope": "H_EARTH:MEADOW_PRESENTATION_ROOT_GAP_COVERAGE:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+            "operationId": "H_EARTH_MEADOW_PRESENTATION_ROOT_GAP_COVERAGE_20261013_001"
+          },
+          "successor": {
+            "governingHead": "708e1ba556e316e88790a2aefdf176d0d33fd8b2",
+            "lockGeneration": 2684,
+            "lockScope": "H_EARTH:GLOBAL_LEGACY_GRASS_PRESENTATION_AND_MEADOW_DENSITY:20261013:V1",
+            "operationId": "H_EARTH_GLOBAL_FINE_GRASS_AND_DENSER_MEADOW_20261013_001"
+          },
+          "transitionId": "H_EARTH_GEN2682_GLOBAL_FINE_GRASS_SCOPE_SUCCESSOR_20261013_001"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "lockGeneration": 2684,
+      "lockScope": "H_EARTH:GLOBAL_LEGACY_GRASS_PRESENTATION_AND_MEADOW_DENSITY:20261013:V1",
+      "operationId": "H_EARTH_GLOBAL_FINE_GRASS_AND_DENSER_MEADOW_20261013_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
+        "lockGeneration": 2682,
+        "lockScope": "H_EARTH:MEADOW_PRESENTATION_ROOT_GAP_COVERAGE:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+        "operationId": "H_EARTH_MEADOW_PRESENTATION_ROOT_GAP_COVERAGE_20261013_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6100#issuecomment-6152200694",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6231",
+          "git:5ed1095c29d4db512c39f9375d02d379159f5e61"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_GEN2682_GLOBAL_FINE_GRASS_SCOPE_SUCCESSOR_20261013_001"
+      },
+      "procedureLocatorDigest": "a6088ccce2a6e3a4bc35b3b46d86f288e8c0bc5b2fe4be69e55f502ba91cfd46",
+      "released": false,
+      "requestDigest": "7a1474e2b487387a954321f22c600016a24ccea3a6a9f3eaed3480ec0b6838ba",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f47216015eb32ecfea4e9004606420d04786f17ab1a711e941973623ec45eaec",
+      "state": "ADMITTED_LOCKED"
+    },
     "f4eb02d248292f4f1df6fb9a426d64ae248e0e7294db6a0334528e998b1a6df4": {
       "governingHead": "7804b359aa032caa00f8dd526f8e4186df97fac9",
       "independentAuthorityProvenance": {
@@ -16950,7 +16981,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2683,
+  "lockGeneration": 2684,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -76762,6 +76793,62 @@
       "scopeHash": "87155b337e42a705e93f9f4e6147026e1a741fade0434c198782eeb69b633866",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "61fdb64021fe5623824c3cd620ed2fea8f85af8b",
+          "lockGeneration": 2682,
+          "lockScope": "H_EARTH:MEADOW_PRESENTATION_ROOT_GAP_COVERAGE:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+          "operationId": "H_EARTH_MEADOW_PRESENTATION_ROOT_GAP_COVERAGE_20261013_001",
+          "procedureLocatorDigest": "095aac14c63a505a83d552915402cc7cc6da073bdf19137898e1ad3cf38dc5dc",
+          "requestDigest": "00f454a611855be64880895a365a8fabdc4a37052bd9236656898d722883cce7",
+          "scopeHash": "89d5521ec0e79acf8d93cc0cd451c8fb0968465d7ade111d1e1e56827cec7659"
+        },
+        "bindingDigest": "a2fc0599939217a930d9b87c642d433d653d9f9a4d1320188482fe024a6bb50b",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "ac07e4549ea87da32296135321f497e04eb521f5",
+          "observedLockRefHead": "b0fd682418271490009ddc4909e487d51fc4a633"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "83036ca7e49ea93f8ee0b4a12bca8fd8f4f6c1680500d3136818ab1ef0a619f5",
+          "commentId": 6152200694,
+          "issueNumber": 6100,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2682,
+      "lockScope": "H_EARTH:MEADOW_PRESENTATION_ROOT_GAP_COVERAGE:BOUNDED_PILOT_X-45_Z-326_R18:20261013:V1",
+      "operationId": "H_EARTH_MEADOW_PRESENTATION_ROOT_GAP_COVERAGE_20261013_001",
+      "procedureLocatorDigest": "095aac14c63a505a83d552915402cc7cc6da073bdf19137898e1ad3cf38dc5dc",
+      "released": true,
+      "requestDigest": "00f454a611855be64880895a365a8fabdc4a37052bd9236656898d722883cce7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "89d5521ec0e79acf8d93cc0cd451c8fb0968465d7ade111d1e1e56827cec7659",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6100#issuecomment-6152200694",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6231",
+          "git:5ed1095c29d4db512c39f9375d02d379159f5e61"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "708e1ba556e316e88790a2aefdf176d0d33fd8b2",
+        "successorLockGeneration": 2684,
+        "successorLockScope": "H_EARTH:GLOBAL_LEGACY_GRASS_PRESENTATION_AND_MEADOW_DENSITY:20261013:V1",
+        "successorOperationId": "H_EARTH_GLOBAL_FINE_GRASS_AND_DENSER_MEADOW_20261013_001",
+        "transitionId": "H_EARTH_GEN2682_GLOBAL_FINE_GRASS_SCOPE_SUCCESSOR_20261013_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

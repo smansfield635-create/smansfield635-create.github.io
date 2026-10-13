@@ -1,0 +1,82 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_VISIBLE_ECOLOGICAL_THREE_STRATUM_COMPOSITION_20261012_001",
+  "canonicalAdmissionGeneration": 2671,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/global-groundcover-20261008/review.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/receipts/h-earth-loading-motion-integration-20261012.receipt.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.json",
+    "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "sha256": "b1b0c90d4c4e28a04639d2c6c0a6169f936c25c034d269b3729bdd6fb7e9e5f4"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "45efd2fced8bcc03724f23f27fa87d2c21a801d80a3f08096ce970d8595c2165"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
+      "sha256": "93efe4aea0610c84bec323351b1fdd9d94c7ce931d7a4a0d6d5584fbde1da6c1"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+      "sha256": "bf3d0ede87eb48cca74c1834a74091f905e88edff2a208adb84544af93fdcf38"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+      "sha256": "fc1d515da978119ea06d3a4112139b41dcba04375eac85d4ff5ccc0d03413e30"
+    }
+  ],
+  "candidateLineage": {
+    "admittedMain": "1e100a041725f545b802ea9221ce20fe5c92d74a",
+    "protectedPublishedHead": "37f9e9206a9a199b4ea11c4b06c6727704652114",
+    "rejectedGen2669NotReused": true,
+    "rejectedGen2670NotReused": true,
+    "newOperation": true
+  },
+  "acceptanceBasis": "EXACT_SOURCE_STRUCTURE_AND_PRESERVED_WORLD_IDENTITY_ONLY. Gen2671 creates independently terrain-rooted short ground-mat and middle clump distributions within three Run8C-backed habitat windows, retaining original published tall four-blade placement records and protected four tree clearing, oasis, ocean and camera/navigation/world identities. 12 separate float32 terrain root heights per new instance, water and estate foot exclusion, hard 65,536 grass / 8MiB GPU / 4,096 visible / 64 draw ceilings; same precomputed canonical world gzip bytes. This structural architecture proof does not assert visual KEEP, full browser or Android acceptance, ecological scientific standing, deployment or release.",
+  "protectedAssets": {
+    "canonicalVegetationInstances": 27585,
+    "canonicalBatches": 108,
+    "approvedTreeCount": 4,
+    "legacyVisibleTreeCount": 0,
+    "precomputedWorldBinaryGitBlob": "3d11947ad94f98736035cbdf0e021e5f324659fb",
+    "precomputedWorldBinaryBytes": 11736235,
+    "precomputedWorldBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "maximumGrassInstanceCount": 65536,
+    "maximumGpuBytes": 8388608,
+    "drawLimit": 64
+  },
+  "runtimeAcceptance": "PENDING_GEN2671_EXACT_WEBGL2_AND_INDEPENDENT_ROOT_PARITY",
+  "physicalDeviceAcceptance": false,
+  "ownerPerceptualDisposition": "PENDING",
+  "scientificEcologyClaimAuthority": false,
+  "releaseEligible": false,
+  "mergeAuthorized": false,
+  "publicationAuthorized": false
+}

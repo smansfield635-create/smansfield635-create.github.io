@@ -10,7 +10,7 @@ permissions:
   actions: read
 concurrency:
   group: gen653-source-traversal-20261012
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   collect:
     if: github.repository == 'smansfield635-create/smansfield635-create.github.io' && github.ref == 'refs/heads/gen653-source-traversal-20261012' && github.event_name == 'push'
@@ -22,6 +22,10 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
+          sparse-checkout: |
+            tools/gen653
+          sparse-checkout-cone-mode: true
+          fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
           node-version: 22

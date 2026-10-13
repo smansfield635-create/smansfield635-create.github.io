@@ -3317,6 +3317,50 @@
       "scopeHash": "389aea3c4dd3ec52b20285a531b8d741e6685fb70a356a1284408148526a74d9",
       "state": "ADMITTED_LOCKED"
     },
+    "38f34d52fa74125e9ab40b51a0907024c1a0bd8dd6f703bb8b8946efb1043d17": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "90db5a4f8588274c61801aea6796efe4c3b735c9",
+          "lockGeneration": 2674,
+          "lockScope": "H_EARTH:MEADOW_CARPET_RECOVERY:BOUNDED_PILOT_X-45_Z-326_R18:20261012:V1",
+          "operationId": "H_EARTH_MEADOW_CARPET_RECOVERY_20261012_001",
+          "procedureLocatorDigest": "c5c8874c7e9b3cb95ec3ba361fafaf1f703470939738caa719107d63a213a247",
+          "requestDigest": "1bd08c602a4772062f8940f7f676178df55116551112c09df4cdb0f357f777ca",
+          "scopeHash": "38f34d52fa74125e9ab40b51a0907024c1a0bd8dd6f703bb8b8946efb1043d17"
+        },
+        "bindingDigest": "ece76f71e6d14b4802d26612d35a0f3dc5888cdace84e4a8f1d4591d7a5b467d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "08a734a98e71466394bd07341783c826d22579aec0ef88b0439f1970ae2b5ce3",
+          "commentId": 6136916317,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6100,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38337339959,
+          "workflowSha": "90db5a4f8588274c61801aea6796efe4c3b735c9"
+        },
+        "lineageAnchorCommitSha": "37692e359140185b7e1969fb1db7e78441db8ff9",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "90db5a4f8588274c61801aea6796efe4c3b735c9",
+      "lockGeneration": 2674,
+      "lockScope": "H_EARTH:MEADOW_CARPET_RECOVERY:BOUNDED_PILOT_X-45_Z-326_R18:20261012:V1",
+      "operationId": "H_EARTH_MEADOW_CARPET_RECOVERY_20261012_001",
+      "procedureLocatorDigest": "c5c8874c7e9b3cb95ec3ba361fafaf1f703470939738caa719107d63a213a247",
+      "released": false,
+      "requestDigest": "1bd08c602a4772062f8940f7f676178df55116551112c09df4cdb0f357f777ca",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "38f34d52fa74125e9ab40b51a0907024c1a0bd8dd6f703bb8b8946efb1043d17",
+      "state": "ADMITTED_LOCKED"
+    },
     "39b8cda8da7bcab01fb74a75942cb630d02fcbe61aeff3e349b9c0120ee95b65": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -16872,7 +16916,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2673,
+  "lockGeneration": 2674,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

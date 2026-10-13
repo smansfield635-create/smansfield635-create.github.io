@@ -58,5 +58,5 @@ jobs:
           test "$(git -C private-source rev-parse HEAD)" = "$EXPECTED_PRIVATE_HEAD"
           test "$(git -C private-source rev-parse HEAD:tools/private-public-bridge/operations-chamber-run-history.v1.mjs)" = "$EXPECTED_COLLECTOR_BLOB"
           test -z "$(git -C private-source status --porcelain)"
-          test "$(git rev-parse --abbrev-ref HEAD)" = 'gen653-source-traversal-20261012'
+          test "$GITHUB_REF" = 'refs/heads/gen653-source-traversal-20261012'
           node tools/gen653/source-escrow-traversal.mjs

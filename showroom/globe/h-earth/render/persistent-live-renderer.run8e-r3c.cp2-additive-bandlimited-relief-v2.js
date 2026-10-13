@@ -317,15 +317,25 @@ void main(){
   vec2 outward=bladeOffset*(1.0+.65*lowStratum+.24*midStratum+.08*duneStratum);
   vec2 lean=vec2(-bladeOffset.y,bladeOffset.x)*emergence*(.18*lowStratum+.12*midStratum+.22*duneStratum);
   vec2 ecoXZ=rootXZ+outward+lean;
-  vec2 localXZ=mix(aPosition.xz,ecoXZ,ecoStratum);
+  // Gen2674 ONE_REPAIR: keep all twelve surveyed roots fixed while
+  // spreading the upper folded leaves into a low, irregular understory.
+  float fineCover=uFineCover==1?1.0:0.0;
+  float midFine=step(.5,aParameters.w)*(1.0-step(1.5,aParameters.w));
+  float tallFine=step(1.5,aParameters.w);
+  float waviness=.22*sin(aRootInfo.x*2.71+aTransform.x*1.37+aTransform.y*.78);
+  vec2 fineXZ=rootXZ+bladeOffset*(1.48+.14*midFine+.25*tallFine)
+    +vec2(-bladeOffset.y,bladeOffset.x)*emergence*waviness;
+  vec2 localXZ=mix(mix(aPosition.xz,ecoXZ,ecoStratum),fineXZ,fineCover);
   // The exact 61,235 published records remain resident and unmodified.
   // Their broad geometry is suppressed only inside the authorized pilot.
-  float meadowMask=uFineCover==1?1.0:smoothstep(12.5,18.0,length(aTransform.xy-vec2(-45.0,-326.0)));
+  float meadowMask=uFineCover==1?1.0:smoothstep(14.0,18.0,length(aTransform.xy-vec2(-45.0,-326.0)));
   vec2 q=localXZ*aTransform.w*meadowMask;
   vec2 xz=aTransform.xy+vec2(q.x*c-q.y*s,q.x*s+q.y*c);
-  vWorldPosition=vec3(xz.x,rootY(instance,int(aRootInfo.x))+aPosition.y*aParameters.x*meadowMask,xz.y);
+  float fineVerticalScale=.54+.05*midFine-.10*tallFine;
+  float presentationHeight=mix(meadowMask,fineVerticalScale,fineCover);
+  vWorldPosition=vec3(xz.x,rootY(instance,int(aRootInfo.x))+aPosition.y*aParameters.x*presentationHeight,xz.y);
   float widthScale=1.0+.65*lowStratum+.24*midStratum+.08*duneStratum;
-  vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/aParameters.x,aNormal.z/(aTransform.w*widthScale));
+  vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/aParameters.x+.42*fineCover,aNormal.z/(aTransform.w*widthScale));
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
   vec3 palette=aParameters.y<0.333333?vec3(0.18,0.115,0.045):aParameters.y<0.666667?vec3(0.31,0.245,0.065):vec3(0.095,0.145,0.04);
   vec3 lowPalette=mix(vec3(.177,.146,.068),vec3(.075,.152,.064),smoothstep(.20,.86,aParameters.y));
@@ -334,7 +344,9 @@ void main(){
   vec3 ecologicalPalette=lowPalette*lowStratum+midPalette*midStratum+dunePalette*duneStratum;
   vec3 publishedColor=mix(aColor.rgb,palette,0.55);
   vec3 ecoColor=mix(aColor.rgb,ecologicalPalette,.84);
-  vBaseColor=vec4(mix(publishedColor,ecoColor,ecoStratum)*(0.92+0.16*aParameters.z),1.0);
+  vec3 fineColor=mix(vec3(.209,.242,.097),vec3(.139,.207,.077),clamp(aParameters.y,0.0,1.0))*(1.0-.09*tallFine);
+  vec3 plantColor=mix(mix(publishedColor,ecoColor,ecoStratum),fineColor,.78*fineCover);
+  vBaseColor=vec4(plantColor*(.92+.16*aParameters.z),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;
@@ -903,38 +915,28 @@ void main(){
       palette=mix(palette,soil,soilBlend);
     }
 // SHORELINE_SOIL_END shade
-    // Locally connected ground pigmentation follows ONLY rooted fine plants.
-    // No painted rectangular patch or change to canonical soil geometry.
+    // Gen2674 ONE_REPAIR: world-anchored organic colony grain.
+    // Actual surveyed roots still own every pigment and exposed soil hole.
     vec2 meadowUv=(world-vec2(-65.0,-346.0))/40.0;
     if(all(greaterThanEqual(meadowUv,vec2(0.0)))&&all(lessThanEqual(meadowUv,vec2(1.0)))){
       float rooted=texture(uMeadowSoilCoverage,meadowUv).r;
-      float radial=1.0-smoothstep(15.0,18.0,length(world-vec2(-45.0,-326.0)));
-      // Gen2674 bounded carpet correction: actual accepted roots own all pigment.
-      // Fine, slightly rotated microleaf marks avoid a uniform green coating.
-      // Pixel-footprint attenuation prevents a repeated distant speckle field.
-      float leafLitter=noise2(world*1.9+vec2(13.0,7.0));
-      float colonyTone=noise2(world*3.7+vec2(4.2,19.5));
+      float radial=1.0-smoothstep(14.0,18.0,length(world-vec2(-45.0,-326.0)));
       float rootedWeight=clamp(rooted*radial,0.0,1.0);
-      vec3 livingUnderstory=mix(vec3(.071,.139,.046),vec3(.164,.180,.077),
-        clamp(leafLitter*.58+colonyTone*.42,0.0,1.0));
-      float walkingDetail=1.0-smoothstep(.018,.105,length(fwidth(world)));
-      float microleaf=0.0;
-      if(rootedWeight>.015&&walkingDetail>.015){
-        // World-anchored, jittered leaf-stroke cells; never an instance lattice.
-        vec2 fineCell=world*19.0+vec2(noise2(world*2.1),noise2(world*2.1+vec2(31.0,17.0)))*.45;
-        vec2 cell=floor(fineCell),fraction=fract(fineCell)-.5;
-        vec2 jitter=vec2(hash21(cell+vec2(13.1,5.3)),hash21(cell+vec2(2.7,19.2)))-.5;
-        float direction=hash21(cell+vec2(29.4,7.1))*6.28318530718;
-        vec2 axis=vec2(cos(direction),sin(direction));
-        vec2 localLeaf=fraction-jitter*.32;
-        float along=abs(dot(localLeaf,axis)),across=abs(dot(localLeaf,vec2(-axis.y,axis.x)));
-        float tapered=1.0-smoothstep(.04,.115+.12*(1.0-along),across);
-        microleaf=tapered*(1.0-smoothstep(.16,.52,along));
-      }
-      vec3 leafTint=mix(livingUnderstory,vec3(.192,.245,.082),microleaf*.65);
-      palette=mix(palette,leafTint,rootedWeight*(.65+.20*walkingDetail*microleaf));
-      // The same physical root mask preserves broken soil and spatially varied gaps.
-      presentationContact=max(presentationContact,rootedWeight*.07*walkingDetail*microleaf);
+      float colonyTone=noise2(world*.42+vec2(12.7,4.3));
+      float soilMottle=noise2(world*1.87+vec2(3.2,19.7));
+      float groundFleck=noise2(world*5.8+vec2(21.4,8.7));
+      vec3 livingUnderstory=mix(vec3(.115,.161,.061),vec3(.185,.204,.089),
+        clamp(.43*colonyTone+.38*soilMottle+.19*groundFleck,0.0,1.0));
+      float walkingDetail=1.0-smoothstep(.035,.15,length(fwidth(world)));
+      vec2 windWarp=world+vec2(colonyTone-.5,soilMottle-.5)*.28;
+      vec2 leafFlow=vec2(windWarp.x*6.3+windWarp.y*.74,windWarp.y*2.25-windWarp.x*.17);
+      float softFiber=smoothstep(.33,.72,noise2(leafFlow+vec2(6.0,17.0)));
+      float brokenFiber=noise2(windWarp*3.8+vec2(17.2,4.9));
+      float leafGrain=walkingDetail*softFiber*smoothstep(.23,.74,brokenFiber);
+      vec3 leafTint=mix(livingUnderstory,vec3(.185,.235,.101),leafGrain*.32);
+      float colonyBlend=rootedWeight*(.77+.12*colonyTone);
+      palette=mix(palette,leafTint,colonyBlend);
+      presentationContact=max(presentationContact,rootedWeight*.035*leafGrain);
     }
     // A floor follows accepted tree footprints, not a filled cluster ellipse.
     // B/C retain their existing treatment. This is static material/contact

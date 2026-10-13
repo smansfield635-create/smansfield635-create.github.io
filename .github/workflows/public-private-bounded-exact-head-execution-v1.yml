@@ -8,6 +8,7 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: read
 
 jobs:
   study-private-save-proof:
@@ -21,7 +22,7 @@ jobs:
       group: private-study-checkpoint-proof
       cancel-in-progress: false
     env:
-      DGB_STUDY_SOURCE_HEAD: eba8d6cb70789ecb134b6c5a10a8812e35f2dc6d
+      DGB_STUDY_SOURCE_HEAD: 0ee1403145492efabef5cc1f87e3a2aa43575ed3
     steps:
       - name: Require independently admitted public binding
         uses: actions/github-script@v7

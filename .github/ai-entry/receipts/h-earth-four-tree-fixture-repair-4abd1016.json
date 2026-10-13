@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-four-tree-fixture-repair-4abd1016",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6243,
+  "requestBranch": "ai-dispatch-request-h-earth-four-tree-fixture-repair-4abd1016",
+  "requestCommit": "2014a55fd1268bf9162395fc3c89b3f103370e0b",
+  "requestCommitParent": "f14abbde0c4618d175de2cdf9ebe70179b862abb",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "f14abbde0c4618d175de2cdf9ebe70179b862abb",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "4abd1016336482373caf1c5bfb90245fc188e806"
+  },
+  "bridgeRunId": "38482025494",
+  "dispatchedRunId": 38482045351,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38482045351",
+  "dispatchedRunHeadSha": "f14abbde0c4618d175de2cdf9ebe70179b862abb",
+  "dispatchedAt": "2026-10-13T23:05:18.803Z",
+  "resolvedAt": "2026-10-13T23:05:23.078Z"
+}

@@ -1,14 +1,24 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
-  "result": "WORKFLOW_DISPATCH_FAILED",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
   "requestId": "h-earth-gen2677-runtime-repair-20261013-001",
   "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 6222,
   "requestBranch": "ai-dispatch-request-h-earth-gen2677-runtime-repair-20261013-001",
-  "requestCommit": "6f1bc4e7f3bcbbdbe39eb994909fcc38ddefb073",
+  "requestCommit": "0b2fa0bd4fa29237da0cfab54aada518beef4429",
+  "requestCommitParent": "0a6226b9bbcc4b1d60a954cdf1c4685023d7fdcc",
+  "requestParentWasCurrent": true,
   "currentMainSha": "0a6226b9bbcc4b1d60a954cdf1c4685023d7fdcc",
-  "bridgeRunId": "38434010113",
-  "error": "Stale dispatch request: parent 26c9e8c048e950c5cc7f103960620c70958a6ea1 != current main 0a6226b9bbcc4b1d60a954cdf1c4685023d7fdcc",
-  "failedAt": "2026-10-13T16:52:21.166Z"
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "870a995a7012312ac25569c0dc6673822a126ae2"
+  },
+  "bridgeRunId": "38434215807",
+  "dispatchedRunId": 38434239505,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38434239505",
+  "dispatchedRunHeadSha": "0a6226b9bbcc4b1d60a954cdf1c4685023d7fdcc",
+  "dispatchedAt": "2026-10-13T16:53:53.284Z",
+  "resolvedAt": "2026-10-13T16:53:57.806Z"
 }

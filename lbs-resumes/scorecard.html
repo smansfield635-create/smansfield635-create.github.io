@@ -74,8 +74,8 @@
     </header>
     <main>
       <div class="kicker">The outcome</div>
-      <h1>We built the engine.<br><span class="accent">The supply didn't scale.</span></h1>
-      <p class="sub">Document processing worked at limited scale. We could not establish a repeatable source of qualifying résumés for the original goal.</p>
+      <h1>We built the engine.<br><span class="accent">Acquisition at scale remains unproven.</span></h1>
+      <p class="sub">We delivered working résumé software. A repeatable supply of qualifying résumés at scale remains unproven.</p>
 
       <div class="topline"><h2>Production results</h2><hr class="rule"></div>
       <div class="metrics" aria-label="Historical production results">
@@ -124,12 +124,11 @@
 
       <div class="evidence">
         <details>
-          <summary>Evidence, definitions &amp; limitations</summary>
+          <summary>Evidence &amp; limitations</summary>
           <div class="evidence-body">
-            <p><strong>Checkpoint:</strong> October 12, 2026 at 10:08:23 UTC. From the retained production receipt, not a live Cloudflare D1 readback. The receipt reports 103 verified document records across cohorts, 100 recent retained, 91 recent after duplicate adjustment, 9 possible duplicates, and 816 unresolved links among 920 candidates. Recent means document-update evidence within a rolling 24 months.</p>
-            <p><strong>Last observed run:</strong> The archive channel examined 48 candidates and supported none (32 lacked established source-use grants; 14 were unavailable at the original publisher). GitHub produced one new document; four public-web streams produced none. These are observed batch results, not permanent limits of the underlying sources.</p>
-            <p><strong>Operating state:</strong> The owner previously reported disabling scheduled LBS GitHub Actions. Current status is not independently rechecked. The independent local prototype is separate, not reconciled with production, and not an end-to-end hosted ingestion product. This scorecard is static: no remote calls, résumé bodies, personal contacts, collection, or database writes.</p>
-            <p><strong>Evidence files:</strong> <code>lbs-verified-aggregate-20261012.zip</code>, <code>public-status.json</code>. The longer technical record and original evidence are preserved in the project archive.</p>
+            <p><strong>Verified October 12, 2026, 10:08 UTC:</strong> 103 total verified document records, 100 recent retained, 91 duplicate-adjusted and 9 possible duplicates. Of 920 candidate links, 816 remained unresolved. The 24-month recency rule is based on document-update evidence.</p>
+            <p><strong>Last observed batch:</strong> Archive 48 → 0 (32 permission holds; 14 original files unavailable). GitHub 67 repositories → 1 new résumé. Four public-web streams → 0. These results do not establish a universal source ceiling.</p>
+            <p><strong>Limits:</strong> Historical receipt, not live Cloudflare D1 totals. The owner disabled scheduled collection; its current status was not independently rechecked. The local prototype is separate and unmerged with production. This page performs no tracking, collection or writes.</p>
           </div>
         </details>
       </div>

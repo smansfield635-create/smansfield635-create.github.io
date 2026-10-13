@@ -1,0 +1,62 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "release-proof",
+  "description": "Isolated Release Proof hackathon reconstruction; does not replace original Sites publication or grant shipping authority.",
+  "checks": [
+    {
+      "path": "/release-proof/index.html",
+      "includes": [
+        "Release Proof — Mission Control",
+        "id=\"create-button\"",
+        "id=\"next-action\"",
+        "READY_UNDER_SUPPLIED_RECORDS",
+        "NOT_ESTABLISHED",
+        "id=\"inspection-canvas\""
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/release-proof/",
+    "timeoutMs": 15000,
+    "binding": {
+      "mode": "direct-document",
+      "path": "/release-proof/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Guided order advances",
+        "action": {
+          "type": "click",
+          "selector": "#next-action"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#step-counter",
+            "value": "1 / 7"
+          }
+        ],
+        "timeoutMs": 10000
+      },
+      {
+        "name": "3D inspection is accessible",
+        "action": {
+          "type": "click",
+          "selector": "[data-tab='inspection']"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#inspection-canvas"
+          }
+        ],
+        "timeoutMs": 8000
+      }
+    ]
+  }
+}

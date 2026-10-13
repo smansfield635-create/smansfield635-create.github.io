@@ -43,6 +43,7 @@ jobs:
           repositories: geodiametrics1
           permission-contents: write
           permission-issues: read
+          permission-pull-requests: read
       - name: Check out fixed registered private study command
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -66,7 +67,12 @@ jobs:
           cd "$GITHUB_WORKSPACE/private-control-plane"
           test "$(git rev-parse HEAD^{commit})" = "$DGB_STUDY_SOURCE_HEAD"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
+          set +e
           node tools/private-public-bridge/material-work-runtime-carrier.v1.mjs --proof > "$RUNNER_TEMP/study-redacted.json"
+          status=$?
+          set -e
+          cat "$RUNNER_TEMP/study-redacted.json"
+          test "$status" = 0
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
           const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/study-redacted.json','utf8'));

@@ -1,0 +1,24 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-meadow-2674-fine-carpet-shader-verify-20261012",
+  "capabilityId": "H_EARTH_GEN2_VISUAL_QUALIFY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6206,
+  "requestBranch": "ai-dispatch-request-h-earth-meadow-2674-shader-verify-20261012",
+  "requestCommit": "b2cc4ed90cbaf5a66b9db884846c1e06fb4778ce",
+  "requestCommitParent": "36c82a07f552291611eb65d3f0a2efb1ab2148a9",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "36c82a07f552291611eb65d3f0a2efb1ab2148a9",
+  "workflow": "h-earth-gen2-visual-qualification.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9a63c4571d95abf925ba22f2fcd7aaaa8c578cac"
+  },
+  "bridgeRunId": "38341539806",
+  "dispatchedRunId": 38341554121,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38341554121",
+  "dispatchedRunHeadSha": "36c82a07f552291611eb65d3f0a2efb1ab2148a9",
+  "dispatchedAt": "2026-10-13T03:24:25.433Z",
+  "resolvedAt": "2026-10-13T03:24:29.797Z"
+}

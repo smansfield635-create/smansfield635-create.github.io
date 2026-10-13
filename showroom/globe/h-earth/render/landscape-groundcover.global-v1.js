@@ -294,3 +294,49 @@ export function selectHEarthMeadowMidDistanceRepresentations(cover,camera){
  }
  return{...selected,meadowCandidateSelectedCount:candidates,meadowBoundaryPreservedCount:candidates-eligible,meadowEligibleSelectedCount:eligible,meadowReplacementInstanceCount:eligible,sourcePopulationChanged:false};
 }
+
+/** Gen2682: camera-independent presentation sidecar; never mutates cover records. */
+export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null}={}){
+ const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),eligible=[];
+ for(let i=0;i<cover.records.length/20;i++)if(Math.hypot(cover.records[i*20+12]+45,cover.records[i*20+13]+326)<=18&&!boundary.has(i))eligible.push(i);
+ const base=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(p=>p.role==='TERRAIN'));
+ const water=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(p=>String(p.primitiveId).includes('FAR_OCEAN_CONTINUATION')),true);
+ const refined=refinement?triangleIndex(refinement.positions,refinement.indices):null,clip=refinement?.clip;
+ if(refined&&(!Array.isArray(clip)||clip.length!==4||!clip.every(Number.isFinite)))throw Error('MEADOW_PRESENTATION_REFINEMENT_CLIP_INVALID');
+ const sample=(x,z)=>refined&&x>clip[0]&&x<clip[2]&&z>clip[1]&&z<clip[3]?refined.sample(x,z):base.sample(x,z);
+ const clumps=[],counts=new Map(eligible.map(id=>[id,0])),obstacles=pkg.landscapeCoverFootprints??[];
+ // Stratification prevents empty swathes; strong independent jitter and a
+ // coherent height/width field avoid a lattice or a single clipped carpet.
+ const candidates=[];
+ for(let iz=-24;iz<=24;iz++)for(let ix=-24;ix<=24;ix++){
+  const key=`MEADOW_PRESENTATION:${ix}:${iz}`,x=f(-45+(ix+(hash(key,'x')-.5)*.94)*.73),z=f(-326+(iz+(hash(key,'z')-.5)*.94)*.73);
+  if(Math.hypot(x+45,z+326)>16.9)continue;
+  candidates.push({key,x,z,priority:hash(key,'priority')});
+ }
+ candidates.sort((a,b)=>a.priority-b.priority);
+ for(const q of candidates){
+  const {key,x,z}=q,angle=f(hash(key,'angle')*Math.PI*2),halfWidth=f(.45+.24*hash(key,'width')),height=f(.48+.46*field(x,z,4,'MEADOW_HEIGHT')+.18*hash(key,'height'));
+  const roots=[];let valid=true;
+  for(let k=-1;k<=1;k++){
+   const xx=f(x+Math.cos(angle)*halfWidth*k),zz=f(z+Math.sin(angle)*halfWidth*k),s=sample(xx,zz),w=water.sample(xx,zz);
+   if(!s||(w&&s.y<=w.y+.01)||Math.hypot(xx+45,zz+326)>17.95){valid=false;break;}
+   const a=inverseHEarthGroundCoverPoint(xx,s.y,zz),m=materialAt(a.x,a.z);
+   if(!eligibleMaterial(m,s.slope)||!clear(a.x,a.z,.05)||obstacles.some(t=>Math.hypot(xx-t.x,zz-t.z)<t.radius+.05)){valid=false;break;}
+   roots.push({x:xx,y:s.y,z:zz,triangleId:s.triangleId,slope:s.slope});
+  }
+  if(!valid)continue;
+  let instance=-1,best=Infinity;
+  for(const id of eligible)if(counts.get(id)<12){const d=Math.hypot(x-cover.records[id*20+12],z-cover.records[id*20+13]);if(d<best){best=d;instance=id;}}
+  if(instance<0)break;
+  const slot=counts.get(instance);counts.set(instance,slot+1);
+  clumps.push({instance,slot,roots,angle,halfWidth,height,cell:(Math.floor(cover.records[instance*20+18]*13)+slot)%4});
+ }
+ const mapLength=cover.records.length/20,pixels=new Float32Array(mapLength+eligible.length*12*12);pixels.fill(-1,0,mapLength);
+ eligible.forEach((id,i)=>{pixels[id]=mapLength+i*144;});
+ for(const c of clumps){const offset=pixels[c.instance]+c.slot*12;pixels.set([...c.roots.flatMap(r=>[r.x,r.y,r.z]),c.angle,c.halfWidth,c.height],offset);}
+ if(clumps.length!==eligible.length*12)throw Error('MEADOW_PRESENTATION_INCOMPLETE_ROOT_LAYOUT');
+ const template={...cover.template};
+ for(const key of ['positions','normals','colors','rootInfo']){const old=cover.template[key],out=new Float32Array(old.length*3);for(let i=0;i<3;i++)out.set(old,i*old.length);template[key]=out;}
+ template.indices=new Uint32Array(cover.template.indices.length*3);for(let i=0;i<3;i++)template.indices.set(Array.from(cover.template.indices,v=>v+i*28),i*cover.template.indices.length);
+ return {pixels,clumps,template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,cameraIndependent:true,eligibleInstances:eligible.length,clumpCount:clumps.length,contactCount:clumps.length*3,sidecarBytes:pixels.byteLength,templateVertices:84,templateTriangles:72,additionalDraws:0,atlasBytes:262144,pilotRadius:18}};
+}

@@ -264,42 +264,14 @@ export function selectHEarthMeadowMidDistancePatchDraws(cover,camera,{
   });
 }
 
-/** Partition the original visibility selection; never evict a selected record
- * to make room for its alternate representation. Split pressure falls back to
- * the original whole fan draw. Partial fades duplicate only spare capacity. */
+/** The shader replaces eligible surfaces within existing draws. Selection is
+ * exactly the original policy: no additional pass, duplicate or fallback. */
 export function selectHEarthMeadowMidDistanceRepresentations(cover,camera){
-  const p=camera?.position??camera;
-  const original=selectHEarthGlobalGroundCoverDraws(cover,p);
-  const fanDraws=[],patchDraws=[];
-  let totalDraws=original.draws.length,totalInstances=original.visibleInstanceCount,patchInstances=0;
-  const smooth=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
-  let templateRadius=0;
-  for(let i=0;i<(cover.template?.positions?.length??0);i+=3)templateRadius=Math.max(templateRadius,Math.hypot(cover.template.positions[i],cover.template.positions[i+2]));
-  for(const draw of original.draws){
-    const runs=[];let duplicates=0;
-    for(let i=0;i<draw.count;i++){
-      const id=draw.start+i*draw.stride,offset=id*20;
-      const x=cover.records?.[offset+12],z=cover.records?.[offset+13];
-      const radius=Math.hypot(x+45,z+326),distance=Math.hypot(x-p.x,z-p.z);
-      const fade=smooth(6,8,distance)*(1-smooth(16.5,18,distance))*(1-smooth(16.5,18,radius));
-      const margin=Math.max(1.42*Math.SQRT2,templateRadius*Math.abs(cover.records?.[offset+15]??1));
-      const fullyContained=radius+margin<=18&&distance-margin>=6&&distance+margin<=18;
-      let mode='fan';
-      if(Number.isFinite(fade)&&fade===1&&fullyContained)mode='patch';
-      else if(Number.isFinite(fade)&&fade>=0.015&&totalInstances+duplicates<4096){mode='dual';duplicates++;}
-      const last=runs.at(-1);
-      if(last?.mode===mode)last.count++;
-      else runs.push({start:id,count:1,stride:draw.stride,mode});
-    }
-    const addedPatches=runs.filter(r=>r.mode!=='fan').length;
-    const addedPatchInstances=runs.filter(r=>r.mode!=='fan').reduce((n,r)=>n+r.count,0);
-    const runDraws=runs.reduce((n,r)=>n+(r.mode==='dual'?2:1),0);
-    if(!addedPatches||patchInstances+addedPatchInstances>1024||patchDraws.length+addedPatches>16||totalDraws-1+runDraws>64){fanDraws.push({...draw});continue;}
-    totalDraws+=runDraws-1;totalInstances+=duplicates;patchInstances+=addedPatchInstances;
-    for(const {mode,...run} of runs){
-      if(mode!=='patch')fanDraws.push({...run,patchLod:mode==='dual'});
-      if(mode!=='fan')patchDraws.push({...run,patchLod:true});
-    }
-  }
-  return{fanDraws,patchDraws,visibleInstanceCount:totalInstances,drawCallCount:totalDraws,sourcePopulationChanged:false};
+ const selected=selectHEarthGlobalGroundCoverDraws(cover,camera);
+ let eligible=0;
+ for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
+  const offset=(draw.start+i*draw.stride)*20;
+  if(Math.hypot(cover.records[offset+12]+45,cover.records[offset+13]+326)<=18)eligible++;
+ }
+ return{...selected,meadowEligibleSelectedCount:eligible,meadowReplacementInstanceCount:eligible,sourcePopulationChanged:false};
 }

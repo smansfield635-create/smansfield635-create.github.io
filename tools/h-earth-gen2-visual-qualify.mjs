@@ -3,7 +3,7 @@
 // the four approved trees; a loading-screen canvas cannot qualify as a render.
 import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
-import {spawn,execFileSync} from 'node:child_process';
+import {spawn,spawnSync,execFileSync} from 'node:child_process';
 import {chromium} from 'playwright';
 
 const productHeads=new Set([
@@ -15,6 +15,29 @@ const approvedFourTreeGeometryBlob='c26247dcb69cb52c968fcd3ef6c2626eaa577d03';
 const isApprovedFourTreeGeometryBlob=blob=>blob===approvedFourTreeGeometryBlob;
 const out='/tmp/gen2-evidence';
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+const gen2674QualificationHead='9a63c4571d95abf925ba22f2fcd7aaaa8c578cac';
+const gen2674MeadowTarget=Object.freeze({x:-45,z:-326,yawDegrees:0,pitchDegrees:-8,verticalFovDegrees:56});
+async function runGen2674IndependentRootQualification(){
+ const receipt={schema:'H_EARTH_GEN2674_INDEPENDENT_WORLD_ROOT_QUALIFICATION_v1',candidateHead:gen2674QualificationHead,
+  actualNode22Execution:true,worldBinaryMustRemainUnchanged:true,steps:[],result:'PENDING'};
+ const plans=[['SOURCE_PARITY','h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs','--verify-source'],
+  ['IMMUTABLE_WORLD_ROOT','h-earth-3d/validation/h-earth.global-groundcover.v1.mjs','--single-order']];
+ try{
+  for(const [id,script,arg] of plans){
+   const completed=spawnSync(process.execPath,[script,arg],{encoding:'utf8',timeout:11*60*1000,maxBuffer:16*1024*1024});
+   const stdout=completed.stdout||'',stderr=completed.stderr||'';
+   const evidence={id,script,argument:arg,exitCode:completed.status,signal:completed.signal||null,
+    stdoutSha256:crypto.createHash('sha256').update(stdout).digest('hex'),
+    stdoutTail:stdout.slice(-12000),stderrTail:stderr.slice(-5000),
+    result:completed.status===0&&!completed.error?'PASS':'FAIL'};
+   receipt.steps.push(evidence);
+   if(evidence.result!=='PASS')throw Error('GEN2674_INDEPENDENT_'+id+'_FAILED:'+String(completed.error||stderr.slice(-1400)));
+  }
+  receipt.result='PASS';
+ }catch(error){receipt.result='FAIL';receipt.error=String(error?.stack||error);throw error;}
+ finally{await fs.writeFile(out+'/gen2674-independent-root-receipt.json',JSON.stringify(receipt,null,2)+'\n');}
+ return receipt;
+}
 
 const gen2671MeadowHeads=Object.freeze({
  candidate:'9ef767ec30adce9004efe44b903cb68c426d4344',
@@ -144,6 +167,7 @@ if(process.argv.includes('--self-test')){
   console.log(JSON.stringify({schema:'H_EARTH_GEN2_VISUAL_QUALIFIER_SELF_TEST_v1',result:'PASS',loadingOverlayRejected:true,missingGpuRejected:true,incompleteResidencyRejected:true}));
 }else{
  const sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+ const gen2674QualificationActive=sha===gen2674QualificationHead;
  if(performanceCaptureActive){
   const executingBlob=execFileSync('git',['hash-object',process.argv[1]],{encoding:'utf8'}).trim();
   const targetToolBlob=execFileSync('git',['rev-parse','HEAD:tools/h-earth-gen2-visual-qualify.mjs'],{encoding:'utf8'}).trim();
@@ -164,6 +188,7 @@ if(process.argv.includes('--self-test')){
  let server=null,browser=null;
  await fs.mkdir(out,{recursive:true});
  try{
+  if(gen2674QualificationActive)receipt.independentRoot=await runGen2674IndependentRootQualification();
   if(fourOnly){
    // The registered workflow checks out the candidate with fetch-depth:1.
    // The established independent tree verifier compares against an immutable
@@ -184,7 +209,7 @@ if(process.argv.includes('--self-test')){
   if(!serving)throw Error('GEN2638_STAGE_NOT_SERVING');
   browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-webgl','--use-gl=swiftshader','--enable-unsafe-swiftshader']});
   receipt.actualBrowserExecution=true;
-  const views=fourOnly?[
+  const views=gen2674QualificationActive?[{id:'gen2674-meadow',query:'',x:-45,z:-326}]:fourOnly?[
    {id:'approved-four-tree-clearing',query:'?arrival=approved-four-trees',x:-139.40267987050615,z:-194.5},
    {id:'coast',query:'',x:0,z:-96}
   ]:[{id:'coast',query:'',x:null,z:null}];
@@ -197,6 +222,18 @@ if(process.argv.includes('--self-test')){
    page.on('console',msg=>{if(msg.type()==='error')entry.errors.push('console:'+msg.text())});
    page.on('requestfailed',req=>entry.failedRequests.push({url:req.url(),failure:req.failure()}));
    try{
+    let gen2674TestCameraOverrides=0;
+    if(gen2674QualificationActive){
+     await page.route('**/functional-landscape/navigation.js*',async route=>{
+      const response=await route.fetch();
+      const source=await response.text();
+      const original="COAST:{waypointId:'COAST',label:'Coastal entry',position:{x:0,z:-96},yawDegrees:0,pitchDegrees:-8}";
+      const meadow="COAST:{waypointId:'COAST',label:'Coastal entry',position:{x:-45,z:-326},yawDegrees:0,pitchDegrees:-8}";
+      if(source.split(original).length!==2)throw Error('GEN2674_TEST_CAMERA_SOURCE_BINDING_MISSING');
+      gen2674TestCameraOverrides++;
+      await route.fulfill({response,body:source.replace(original,meadow)});
+     });
+    }
     const profilingQuery=performanceCaptureActive?(v.query?v.query+'&performance=1':'?performance=1'):v.query;
     await page.goto('http://127.0.0.1:4173/showroom/globe/h-earth/'+profilingQuery,{waitUntil:'domcontentloaded',timeout:90000});
     const observePerformance=()=>page.evaluate(()=>{
@@ -257,6 +294,15 @@ if(process.argv.includes('--self-test')){
        throw Error('PERFORMANCE_CAPTURE_READY_DIAGNOSTIC_MISSING_OR_FAILED');
     }
     if(v.x!==null&&(!snap.position||Math.abs(snap.position.x-v.x)>0.03||Math.abs(snap.position.z-v.z)>0.03))throw Error('GEN2638_ARRIVAL_POSITION_MISMATCH:'+JSON.stringify(snap.position));
+    if(gen2674QualificationActive){
+     const nav=snap.navigation;
+     if(gen2674TestCameraOverrides!==1||!nav||
+        !Number.isFinite(nav.yawDegrees)||!Number.isFinite(nav.pitchDegrees)||!Number.isFinite(nav.verticalFovDegrees)||
+        Math.abs(nav.yawDegrees-gen2674MeadowTarget.yawDegrees)>.02||
+        Math.abs(nav.pitchDegrees-gen2674MeadowTarget.pitchDegrees)>.02||
+        Math.abs(nav.verticalFovDegrees-gen2674MeadowTarget.verticalFovDegrees)>.02)
+      throw Error('GEN2674_BOUNDED_TEST_CAMERA_NOT_ACTUAL:'+JSON.stringify({gen2674TestCameraOverrides,nav}));
+    }
     if(fourOnly){
      entry.gpuTreeCensus={treeCount:snap.gpuFourTreeFloorCount,clearingReady:snap.clearingGpuReady,casterIndexCount:snap.clearingCasterIndexCount};
      if(snap.gpuFourTreeFloorCount!==4||snap.clearingGpuReady!==true||!(snap.clearingCasterIndexCount>0))throw Error('GEN2638_ACTUAL_GPU_FLOOR_OR_CLEARING_CENSUS_FAILED');
@@ -296,6 +342,22 @@ if(process.argv.includes('--self-test')){
      const post=await page.locator('#h-earth-functional-landscape-canvas').screenshot({path:out+'/'+v.id+'-post-residency-canvas.png'});
      if(post.length<1024)throw Error('POST_RESIDENCY_GPU_IMAGE_EMPTY');
      await page.screenshot({path:out+'/'+v.id+'-post-residency-page.png',fullPage:true});
+     if(gen2674QualificationActive){
+      const actual=await observe();
+      if(!readiness(actual)||!residencyReady(actual.residency)||
+         actual.residency?.residentBatchCount!==108||actual.residency?.residentInstanceCount!==27585)
+       throw Error('GEN2674_MEADOW_POST_RESIDENCY_OR_WEBGL2_INCOMPLETE');
+      entry.gen2674Meadow={schema:'H_EARTH_GEN2674_MEADOW_CAMERA_OBSERVATION_v1',candidateHead:sha,
+       target:gen2674MeadowTarget,actualPosition:actual.position,actualCamera:actual.navigation,
+       viewport:{width:412,height:915,deviceScaleFactor:2},
+       canvasFilename:'gen2674-meadow-post-residency-canvas.png',
+       canvasSha256:crypto.createHash('sha256').update(post).digest('hex'),canvasBytes:post.length,
+       postResidencyBatchCount:actual.residency.residentBatchCount,
+       postResidencyInstanceCount:actual.residency.residentInstanceCount,
+       testOnlyNavigationModuleResponseIntercepted:true,productionNavigationUnchanged:true,
+       ownerPerceptualDisposition:'PENDING'};
+      await fs.writeFile(out+'/gen2674-meadow-camera-receipt.json',JSON.stringify(entry.gen2674Meadow,null,2)+'\n');
+     }
      if(v.id==='coast'&&gen2671MeadowHead(sha))await captureGen2671Meadow(page,observe,entry,sha);
      // The owner-requested question is soil quality OUTSIDE the reference,
      // not whether the 32m border is merely concealed. The existing

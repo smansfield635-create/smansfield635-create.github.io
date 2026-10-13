@@ -3,141 +3,58 @@
   "operationId": "H_EARTH_MEADOW_PRESENTATION_ROOT_GAP_COVERAGE_20261013_001",
   "authorityGeneration": 2682,
   "admissionCommit": "0d1b092e6fe55a999153d04be3206c5858feb7c9",
-  "predecessorCandidate": "84561e1f5e1d5b09436b87e3d5caa2a62b3e1f7c",
-  "result": "CHEAP_VISUAL_GATE_REJECTED",
+  "predecessorCandidate": "594fc2d8162e198d11f52c6967fe984734022109",
+  "result": "CHEAP_VISUAL_GATE_REJECTED_AFTER_GEOMETRY_REPAIR",
   "pilot": {
     "x": -45,
     "z": -326,
     "radiusMeters": 18
   },
   "sourceBlobs": {
-    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "095598c8fb2ad2c746531c71305fcf8a45b0e301",
-    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "af431adf8efabc23773e8cbfe5de9388f56fd913"
+    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "a7b5cb0ebbe17a72de7cd5a305d5ae393f617d73",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "df77d71382d0916081f89fda2c06ae40d31aa276"
   },
   "structuralVerification": {
-    "schema": "H_EARTH_MEADOW_REPLACEMENT_PREVISUAL_TEST_v1",
-    "result": "PASS",
-    "presentation": {
-      "geometryCost": {
-        "templateBytes": 5568,
-        "paddedRecordsBytes": 4947968,
-        "paddedSidecarBytes": 327680,
-        "totalGpuBytes": 5543360,
-        "selectedVertexInvocations": 334152,
-        "selectedSubmittedTriangles": 286416,
-        "priorSelectedVertexInvocations": 111384,
-        "priorSelectedSubmittedTriangles": 95472,
-        "geometryInvocationMultiplier": 3,
-        "drawsAdded": 0
-      },
-      "receipt": {
-        "schema": "H_EARTH_MEADOW_PRESENTATION_ROOTS_v1",
-        "sourcePopulationChanged": false,
-        "cameraIndependent": true,
-        "eligibleInstances": 122,
-        "clumpCount": 1464,
-        "contactCount": 4392,
-        "sidecarBytes": 317308,
-        "templateVertices": 84,
-        "templateTriangles": 72,
-        "additionalDraws": 0,
-        "atlasBytes": 262144,
-        "pilotRadius": 18
-      },
-      "clumps": 1464,
-      "independentContacts": 4392,
-      "maxTerrainContactError": 5.361914876544915e-07,
-      "maxRootRadius": 17.522986314077652,
-      "originalRecordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6"
+    "schema": "H_EARTH_GEOMETRY_REPAIR_INDEPENDENT_SUBMISSION_v1",
+    "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
+    "sourceHashes": {
+      "generator": "94c21afc9777a13c93f13d18593378aa4e9d0be6129eca35e30873590620b7ef",
+      "renderer": "abdec62a8a8b8df1af254df386ffcfe515d1a1e9b20beaa8da477a0b2e611281"
     },
-    "syntheticBudgetSaturationReplacement": true,
-    "atlasBytes": 262144,
-    "cells": [
-      {
-        "cell": 0,
-        "occupied": 5308,
-        "low": 4520,
-        "tall": 788
-      },
-      {
-        "cell": 1,
-        "occupied": 5516,
-        "low": 4670,
-        "tall": 846
-      },
-      {
-        "cell": 2,
-        "occupied": 5445,
-        "low": 4740,
-        "tall": 705
-      },
-      {
-        "cell": 3,
-        "occupied": 5474,
-        "low": 4649,
-        "tall": 825
-      }
-    ],
-    "actualCache": {
-      "recordDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
-      "selectedInstances": 3978,
-      "selectedDraws": 64,
-      "candidateSelected": 131,
-      "boundaryPreserved": 9,
-      "eligibleSelected": 122,
-      "replacementInstances": 122
+    "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
+    "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "clumps": 1464,
+    "contacts": 4392,
+    "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+    "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+    "originalRecordIdsPreserved": true,
+    "withinClassOrderPreserved": true,
+    "logicalInstances": 3978,
+    "originalInstances": 3856,
+    "meadowInstances": 122,
+    "draws": 2,
+    "selectedVertices": 318784,
+    "selectedTriangles": 233088,
+    "baselineVertices": 334152,
+    "baselineTriangles": 286416,
+    "originalFanVertices": 111384,
+    "originalFanTriangles": 95472,
+    "gpu": {
+      "templateBytes": 1856,
+      "paddedRecordsBytes": 4947968,
+      "paddedSidecarBytes": 327680,
+      "leafIndexBytes": 13824,
+      "selectionTextureBytes": 16384,
+      "atlasBytes": 0,
+      "totalBytes": 5307712
     },
-    "browserQualification": "NOT_TESTED",
-    "perceptualAcceptance": "PENDING"
+    "selectionUploadBytesOnChange": 16384,
+    "selectionUploadBytesWhenUnchanged": 0,
+    "browserQualification": "NOT_EXECUTED",
+    "visualDisposition": "PENDING"
   },
   "projectedCoverage": {
-    "original": {
-      "pilot": {
-        "fixedGroundPixels": 724879,
-        "occupiedPixels": 46107,
-        "occupiedFraction": 0.06360647777077277,
-        "largestEmptyCircleRadiusPixels": 288.25162618795406,
-        "largestConnectedEmptyPixels": 678387
-      },
-      "near0to6m": {
-        "fixedGroundPixels": 385757,
-        "occupiedPixels": 13718,
-        "occupiedFraction": 0.03556124710633896,
-        "largestEmptyCircleRadiusPixels": 240.29981273400944,
-        "largestConnectedEmptyPixels": 371831
-      },
-      "middle6to18m": {
-        "fixedGroundPixels": 339122,
-        "occupiedPixels": 32389,
-        "occupiedFraction": 0.09550840110638649,
-        "largestEmptyCircleRadiusPixels": 154.7804897265802,
-        "largestConnectedEmptyPixels": 300925
-      }
-    },
-    "predecessor": {
-      "pilot": {
-        "fixedGroundPixels": 724879,
-        "occupiedPixels": 37107,
-        "occupiedFraction": 0.05119061250222451,
-        "largestEmptyCircleRadiusPixels": 294.1054232753963,
-        "largestConnectedEmptyPixels": 683360
-      },
-      "near0to6m": {
-        "fixedGroundPixels": 385757,
-        "occupiedPixels": 6891,
-        "occupiedFraction": 0.017863577329769776,
-        "largestEmptyCircleRadiusPixels": 244.0,
-        "largestConnectedEmptyPixels": 378469
-      },
-      "middle6to18m": {
-        "fixedGroundPixels": 339122,
-        "occupiedPixels": 30216,
-        "occupiedFraction": 0.08910067763223854,
-        "largestEmptyCircleRadiusPixels": 159.00314462299164,
-        "largestConnectedEmptyPixels": 304382
-      }
-    },
-    "candidate": {
+    "baseline": {
       "pilot": {
         "fixedGroundPixels": 724879,
         "occupiedPixels": 292295,
@@ -160,7 +77,30 @@
         "largestConnectedEmptyPixels": 31953
       }
     },
-    "schema": "H_EARTH_GEN2682_FIXED_ROI_CPU_PREVISUAL_v1",
+    "repaired": {
+      "pilot": {
+        "fixedGroundPixels": 724879,
+        "occupiedPixels": 98841,
+        "occupiedFraction": 0.13635517100095326,
+        "largestEmptyCircleRadiusPixels": 93.98404119849285,
+        "largestConnectedEmptyPixels": 578446
+      },
+      "near0to6m": {
+        "fixedGroundPixels": 385757,
+        "occupiedPixels": 29334,
+        "occupiedFraction": 0.07604269008728293,
+        "largestEmptyCircleRadiusPixels": 93.98404119849285,
+        "largestConnectedEmptyPixels": 333787
+      },
+      "middle6to18m": {
+        "fixedGroundPixels": 339122,
+        "occupiedPixels": 69507,
+        "occupiedFraction": 0.20496163622531124,
+        "largestEmptyCircleRadiusPixels": 34.40930106817051,
+        "largestConnectedEmptyPixels": 158373
+      }
+    },
+    "schema": "H_EARTH_GEN2682_GEOMETRY_REPAIR_FIXED_ROI_CPU_PREVISUAL_v1",
     "camera": [
       -45.0,
       8.088257606279512,
@@ -183,15 +123,17 @@
       "clumpCount": 1464,
       "contactCount": 4392,
       "sidecarBytes": 317308,
-      "templateVertices": 84,
-      "templateTriangles": 72,
-      "additionalDraws": 0,
-      "atlasBytes": 262144,
+      "templateVertices": 28,
+      "templateTriangles": 24,
+      "meadowTemplateVertices": 1728,
+      "meadowTemplateTriangles": 1152,
+      "leavesPerClump": 24,
+      "atlasBytes": 0,
       "pilotRadius": 18
     },
     "sourceHashes": {
-      "generator": "10afbca62da2e6e4017e78f2f605fcbc0a4cfd2e48dcca16e8d65e9d4e2ebd9b",
-      "renderer": "1a618cab51fc693a6ce5e94577a4e8a0cc0ac55f1f17b03e86ac802444b25e2b"
+      "generator": "94c21afc9777a13c93f13d18593378aa4e9d0be6129eca35e30873590620b7ef",
+      "renderer": "abdec62a8a8b8df1af254df386ffcfe515d1a1e9b20beaa8da477a0b2e611281"
     },
     "limitations": [
       "CPU shader mirror, no executed GLSL",
@@ -201,14 +143,123 @@
       "Diagnostic occupancy is not owner perceptual acceptance"
     ],
     "nearPlaneCrossingTrianglesSkipped": 0,
-    "behindCameraTrianglesSkipped": 33978,
-    "nearPlaneCrossingTrianglesClipped": 559,
-    "independentDisposition": "CHEAP_VISUAL_GATE_REJECTED",
+    "behindCameraTrianglesSkipped": 90784,
+    "nearPlaneCrossingTrianglesClipped": 669,
+    "independentDisposition": "FLAT_CARD_ARTIFACT_REMOVED_COHESIVE_COVERAGE_REGRESSED",
     "expensiveQualificationRecommended": false,
-    "visualAssessment": "Near-camera vegetation resolves into planar fence-like strips with straight rectangular bases and angular bare corridors. Middle coverage materially improves but natural cohesive grass appearance is not established. No full run recommended.",
-    "originalRecordsSha256": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
-    "atlasSha256": "1f0e080260ef1fb6eaa6c8c9e3fefbd09a971fca78badf08984d43a1d38d74a1",
-    "diagnosticCodeSha256": "19075f6b7d48ecb4d8baf95e656eb881fb3c5bcab6c78024c1afc58a4b4bffce"
+    "visualAssessment": "Curved geometric blades remove rectangular fences and improve local morphology, but leave broad visible bare ground; this does not establish the requested cohesive carpet.",
+    "baselineParity": "EXACT_FIXED_ROI_AND_OCCUPANCY_REPRODUCTION_OF_SAVED_594FC2D_EVIDENCE",
+    "geometryProof": {
+      "leafRootAttachments": 35136,
+      "unchangedDistinctContacts": 4392,
+      "maximumUnclippedLeafVertexRadius": 17.699604248249848,
+      "maximumNormalTangentDotAbsolute": 9.074586690378118e-17,
+      "clumpLayoutUnchanged": true
+    },
+    "submission": {
+      "schema": "H_EARTH_GEOMETRY_REPAIR_INDEPENDENT_SUBMISSION_v1",
+      "result": "BOUNDED_LAYOUT_AND_SUBMISSION_CHECKS_PASS",
+      "sourceHashes": {
+        "generator": "94c21afc9777a13c93f13d18593378aa4e9d0be6129eca35e30873590620b7ef",
+        "renderer": "abdec62a8a8b8df1af254df386ffcfe515d1a1e9b20beaa8da477a0b2e611281"
+      },
+      "recordsDigest": "045c775aedf39086daec21980365474e43cbd472d803c16097b4b8392de307a6",
+      "worldDigest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "clumps": 1464,
+      "contacts": 4392,
+      "clumpLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+      "baselineLayoutDigest": "d8392e587ef0d58ae7f2115a1b0428764972e34e2e71be776f3c74da82c28de1",
+      "originalRecordIdsPreserved": true,
+      "withinClassOrderPreserved": true,
+      "logicalInstances": 3978,
+      "originalInstances": 3856,
+      "meadowInstances": 122,
+      "draws": 2,
+      "selectedVertices": 318784,
+      "selectedTriangles": 233088,
+      "baselineVertices": 334152,
+      "baselineTriangles": 286416,
+      "originalFanVertices": 111384,
+      "originalFanTriangles": 95472,
+      "gpu": {
+        "templateBytes": 1856,
+        "paddedRecordsBytes": 4947968,
+        "paddedSidecarBytes": 327680,
+        "leafIndexBytes": 13824,
+        "selectionTextureBytes": 16384,
+        "atlasBytes": 0,
+        "totalBytes": 5307712
+      },
+      "selectionUploadBytesOnChange": 16384,
+      "selectionUploadBytesWhenUnchanged": 0,
+      "browserQualification": "NOT_EXECUTED",
+      "visualDisposition": "PENDING"
+    },
+    "artifactSha256": {
+      "previsual-input.json": "08140e6eb9fb7a94c675d82dc979a8903b0f74f89fb47f04120845706220c9e2",
+      "fixed-ground-roi-baseline.npz": "cebd65040e41a39975d66e6f34ec959040f1afea1811c16109c40c9da49a1af1",
+      "repair-clumps.json": "f9094ff0103c6234094a2f197663ba2a3cf7f30398b5fa165f15aacd60f4a101",
+      "baseline-fixed-ground-roi.npz": "cebd65040e41a39975d66e6f34ec959040f1afea1811c16109c40c9da49a1af1",
+      "baseline-gen2682-previsual.py": "19075f6b7d48ecb4d8baf95e656eb881fb3c5bcab6c78024c1afc58a4b4bffce",
+      "baseline-clumps.json": "9c049f59669e030f79a5b466965b06e0a552a97fd1604f30b26e3334564ba3e4",
+      "extract-repair.mjs": "61cdc21e88a6902852c2fda1f04dcb7ff2dead59577577447ee8f7aca42f573f",
+      "baseline-gen2682-clumps.json": "9c049f59669e030f79a5b466965b06e0a552a97fd1604f30b26e3334564ba3e4",
+      "baseline-gen2682-previsual-receipt.json": "963d2f153b90fcdff7ff12e94cedb5effff29ed0736821f914b396b7d204ef96",
+      "geometry-repair-previsual-repaired.png": "cca97d86f8053a42d73eb715d45aa7d362e6554bb4290cf13a7b178f25be4d15",
+      "geometry-repair-previsual.py": "6efc120478e4d22e367ef2a7735ea664da385e6f12c956f124c8a46bcdf88d3b",
+      "geometry-repair-mask-baseline.png": "bcdcbeea58788bbd32faa38c72d86e4a3d49fdaa76cb031b58944f17e9d0743e",
+      "geometry-repair-mask-repaired.png": "352e2510616f482ec632820d5bd92bc382001f6b0fbc5d8012da7a2f55c671b0",
+      "geometry-repair-previsual-baseline.png": "981257b57ceb3e2262bd3f4dd89da44c377dd18aba81b512f21fafd2e001e33a",
+      "independent-submission-receipt.json": "40754eb28fb8730ffeff0ff0e1ce0d991ea91acec9d2fce030458c3745fe1d5d",
+      "geometry-repair-previsual-comparison.png": "e7fc43a540b36244a7513b65b343baa58f7ad89666fa2ceb81f5a0bf72c78a01",
+      "baseline-previsual-input.json": "08140e6eb9fb7a94c675d82dc979a8903b0f74f89fb47f04120845706220c9e2"
+    },
+    "admittedPredecessor84561": {
+      "identity": "84561 predecessor before Gen2682 operation",
+      "metrics": {
+        "pilot": {
+          "fixedGroundPixels": 724879,
+          "occupiedPixels": 37107,
+          "occupiedFraction": 0.05119061250222451,
+          "largestEmptyCircleRadiusPixels": 294.1054232753963,
+          "largestConnectedEmptyPixels": 683360
+        },
+        "near0to6m": {
+          "fixedGroundPixels": 385757,
+          "occupiedPixels": 6891,
+          "occupiedFraction": 0.017863577329769776,
+          "largestEmptyCircleRadiusPixels": 244.0,
+          "largestConnectedEmptyPixels": 378469
+        },
+        "middle6to18m": {
+          "fixedGroundPixels": 339122,
+          "occupiedPixels": 30216,
+          "occupiedFraction": 0.08910067763223854,
+          "largestEmptyCircleRadiusPixels": 159.00314462299164,
+          "largestConnectedEmptyPixels": 304382
+        }
+      },
+      "evidencePath": "gen2682-evidence/extracted/previsual/gen2682-previsual-receipt.json",
+      "evidenceSha256": "963d2f153b90fcdff7ff12e94cedb5effff29ed0736821f914b396b7d204ef96",
+      "comparisonMethod": "Previously saved exact same fixed-ROI diagnostic; no additional projection"
+    },
+    "comparisonRatios": {
+      "pilot": {
+        "versusFailed594fcFenceBaseline": 0.33815494620161135,
+        "versusAdmitted84561Predecessor": 2.663675317325572
+      },
+      "near0to6m": {
+        "versusFailed594fcFenceBaseline": 0.37083765265100754,
+        "versusAdmitted84561Predecessor": 4.256856769699609
+      },
+      "middle6to18m": {
+        "versusFailed594fcFenceBaseline": 0.3260285281411679,
+        "versusAdmitted84561Predecessor": 2.300337569499603
+      }
+    },
+    "specificRejection": "The repair removes the near-field flat fence/card artifact and materially exceeds the pre-operation predecessor coverage, but the inspected matched-camera software preview still shows broad, visually dominant bare ground between thin rooted tufts. Near occupancy is 7.60% and middle occupancy 20.50%; the largest near empty-circle radius is 93.98 pixels and the largest connected near empty region is 333787 pixels. Thus the cohesive meadow/carpet visual gate remains unmet; no full qualification run is recommended.",
+    "fullQualificationRunPermittedByVisualGate": false,
+    "additionalTuningOrProjectionPerformed": false
   },
   "worldAssetVerification": {
     "schema": "H_EARTH_GEN2666_PRECOMPUTE_PARITY_RECEIPT_v1",
@@ -227,12 +278,12 @@
   },
   "newBrowserExecution": false,
   "expensiveQualificationRecommended": false,
-  "ownerPerceptualDisposition": "NOT_REQUESTED_CHEAP_GATE_FAILED",
+  "ownerPerceptualDisposition": "PENDING",
   "publicationAuthorized": false,
   "worldBinaryChanged": false,
   "originalRecordsChanged": false,
-  "diagnosis": "Placement sparsity is addressable: distributed terrain-rooted presentation clumps improve fixed-ground coverage materially. Dense broad coplanar cutouts expose fence-like strips, so alpha-card representation is unsuitable in the near field. Geometry cost also triples across all selected instances. Neither density nor budget compliance establishes naturalness.",
-  "nextAction": "Repair near-field representation using actual shoreline-informed fine geometry or noncoplanar small clumps over the already qualified presentation-root layout. Avoid another density-only revision. Repeat cheap matched ground ROI and visual gates; do not dispatch full qualification before visual acceptance.",
+  "diagnosis": "Flat panels removed using24 actual curved leaves perclump;1464clumps4392contacts unchanged. Local morphology improved but broad bare ground remains. FixedROI near7.6043% middle20.4962% versus fencebaseline20.5057%/62.8662%; original admitted sparsepredecessor1.79%/8.91%. Do not confuse morphology gain with cohesivecoverage acceptance.",
+  "nextAction": "Owner review preserved cheap comparison and dispose KEEP/ONE_REPAIR/REJECT; no expensive run on failed coverage evidence. Any next repair must preserve rootlayout and fine morphology, and address low-layer occupiedcoverage rather than another density-only or oversized-card change.",
   "limitations": [
     "CPU shader-equation projection; actual GLSL not executed.",
     "Base-terrain contact qualification only; streamed-refinement path unexecuted.",
@@ -246,23 +297,29 @@
     "GEN2682_COMPILED_ADMITTED_AND_READ_BACK",
     "ORIGINAL_WORLD_AND_RECORD_HASHES_PRESERVED",
     "ADDITIONAL_PRESENTATION_CONTACTS_INDEPENDENTLY_VALIDATED",
-    "CHEAP_FIXED_ROI_METRICS_AND_TWO_VISUAL_REJECTIONS_PRESERVED"
+    "CHEAP_FIXED_ROI_METRICS_AND_TWO_VISUAL_REJECTIONS_PRESERVED",
+    "Exact original selected-ID partition preserved3856+122;2draws",
+    "Actual geometric leaves replace alpha fences; unchanged rootlayout hash",
+    "Frozen cheap geometry test and source-bound immutable asset verification PASS; freshSourceCompared=false",
+    "Independent cheap visual gate failed; no costly qualification launched"
   ],
   "evidenceSha256": {
-    "gen2682-clumps.json": "9c049f59669e030f79a5b466965b06e0a552a97fd1604f30b26e3334564ba3e4",
-    "gen2682-first-clumps.json": "06f7b23ea4f87f5d7762db800089b37ff08807daa2434a9e90443dc8a35eba0a",
-    "gen2682-first-generator.js": "2bd6305d2cdcdfc82814045cf94372aa0d9a0399a46ab8d7388908139f8322f8",
-    "gen2682-first-renderer.js": "bac91d52a520d0b71a7f7832eb458b7d4aac14f29d211d71bc63271486f2bd9a",
-    "gen2682-independent-validation.json": "332097308020c98fe42770835da26782811b20a3607e3633d36ef8d54517f223",
-    "gen2682-mask-candidate.png": "bcdcbeea58788bbd32faa38c72d86e4a3d49fdaa76cb031b58944f17e9d0743e",
-    "gen2682-mask-original.png": "1852bb9c35245eec0e430671f51c0121f40eb7da2c88359b7ef27223b3d79d62",
-    "gen2682-mask-predecessor.png": "6092e56182614cbc8078dd8ec6d75024d508a66bef7fa61278cd7c4585a8727b",
-    "gen2682-previsual-candidate.png": "981257b57ceb3e2262bd3f4dd89da44c377dd18aba81b512f21fafd2e001e33a",
-    "gen2682-previsual-comparison.png": "04fef935e246b20d7074020ed2944fec22b623d176bb9ba039ab609010ecece7",
-    "gen2682-previsual-original.png": "720e7f129dc2761efef17f37e0c4b48334317dd47618106c5b17a6dac32e662e",
-    "gen2682-previsual-predecessor.png": "ba2cddd1a99c4aee087e0291ddd0c5cde6b02a78bf1f2bbcc86ce7038dec292e",
-    "gen2682-previsual-receipt.json": "963d2f153b90fcdff7ff12e94cedb5effff29ed0736821f914b396b7d204ef96",
-    "gen2682-previsual.log": "9ca24a854c033ffc9256c5cfedb20ad3ee46340269a5086bbb3e0ca23867d162",
-    "gen2682-previsual.py": "19075f6b7d48ecb4d8baf95e656eb881fb3c5bcab6c78024c1afc58a4b4bffce"
+    "previsual-input.json": "08140e6eb9fb7a94c675d82dc979a8903b0f74f89fb47f04120845706220c9e2",
+    "fixed-ground-roi-baseline.npz": "cebd65040e41a39975d66e6f34ec959040f1afea1811c16109c40c9da49a1af1",
+    "repair-clumps.json": "f9094ff0103c6234094a2f197663ba2a3cf7f30398b5fa165f15aacd60f4a101",
+    "baseline-fixed-ground-roi.npz": "cebd65040e41a39975d66e6f34ec959040f1afea1811c16109c40c9da49a1af1",
+    "baseline-gen2682-previsual.py": "19075f6b7d48ecb4d8baf95e656eb881fb3c5bcab6c78024c1afc58a4b4bffce",
+    "baseline-clumps.json": "9c049f59669e030f79a5b466965b06e0a552a97fd1604f30b26e3334564ba3e4",
+    "extract-repair.mjs": "61cdc21e88a6902852c2fda1f04dcb7ff2dead59577577447ee8f7aca42f573f",
+    "baseline-gen2682-clumps.json": "9c049f59669e030f79a5b466965b06e0a552a97fd1604f30b26e3334564ba3e4",
+    "baseline-gen2682-previsual-receipt.json": "963d2f153b90fcdff7ff12e94cedb5effff29ed0736821f914b396b7d204ef96",
+    "geometry-repair-previsual-repaired.png": "cca97d86f8053a42d73eb715d45aa7d362e6554bb4290cf13a7b178f25be4d15",
+    "geometry-repair-previsual.py": "6efc120478e4d22e367ef2a7735ea664da385e6f12c956f124c8a46bcdf88d3b",
+    "geometry-repair-mask-baseline.png": "bcdcbeea58788bbd32faa38c72d86e4a3d49fdaa76cb031b58944f17e9d0743e",
+    "geometry-repair-mask-repaired.png": "352e2510616f482ec632820d5bd92bc382001f6b0fbc5d8012da7a2f55c671b0",
+    "geometry-repair-previsual-baseline.png": "981257b57ceb3e2262bd3f4dd89da44c377dd18aba81b512f21fafd2e001e33a",
+    "independent-submission-receipt.json": "40754eb28fb8730ffeff0ff0e1ce0d991ea91acec9d2fce030458c3745fe1d5d",
+    "geometry-repair-previsual-comparison.png": "e7fc43a540b36244a7513b65b343baa58f7ad89666fa2ceb81f5a0bf72c78a01",
+    "baseline-previsual-input.json": "08140e6eb9fb7a94c675d82dc979a8903b0f74f89fb47f04120845706220c9e2"
   }
 }

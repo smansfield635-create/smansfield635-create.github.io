@@ -1,5 +1,5 @@
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -1073,47 +1073,54 @@ void main(){
   lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));
   outColor=vec4(lit,outputAlpha);
 }`;
-// One accepted record, one existing indexed draw: replace the opaque leaf
-// surface with a rooted, upright multi-blade clump throughout the pilot.
+// Original records and the exact Gen2682 contact sidecar remain immutable.
+// A selected-ID texture partitions only submission: old geometry and true leaves.
 const GLOBAL_COVER_PATCH_LOD_VS=GLOBAL_COVER_VS
  .replace('out vec3 vWorldPosition;',`uniform highp sampler2D uMeadowRoots;
 uniform int uMeadowRootsWidth;
+uniform highp sampler2D uSelectedIds;
+uniform int uSelectionStart;
+uniform int uMeadowGeometryPass;
 float meadowPart(int i){int t=i/4;return texelFetch(uMeadowRoots,ivec2(t%uMeadowRootsWidth,t/uMeadowRootsWidth),0)[i%4];}
 vec3 meadowRoot(int i){return vec3(meadowPart(i),meadowPart(i+1),meadowPart(i+2));}
 flat out float vMeadowMode;
-flat out float vMeadowCell;
-out vec2 vMeadowUv;
 out vec3 vWorldPosition;`)
- .replace('float c=cos(aTransform.z),s=sin(aTransform.z);',`float c=cos(aTransform.z),s=sin(aTransform.z);
-  int local=gl_VertexID%7,blade=gl_VertexID/7;
-  int meadowOffset=int(meadowPart(instance));
-  vMeadowMode=meadowOffset>=0?1.0:0.0;
-  vMeadowCell=mod(floor(aParameters.z*13.0)+float(blade),4.0);
-  vMeadowUv=local<3?vec2(float(local)*.5,0.0):local<6?vec2(float(local-3)*.5,.5):vec2(.5,1.0);`)
- .replace('gl_Position=uViewProjection*vec4(vWorldPosition,1.0);',`if(vMeadowMode>.5){
-    int start=meadowOffset+blade*12;
-    int root=local<3?local:local<6?local-3:1;
-    float h=meadowPart(start+11);
-    vWorldPosition=meadowRoot(start+root*3)+vec3(0.0,h*(local<3?0.0:local<6?.5:1.0),0.0);
-    float angle=meadowPart(start+9);
-    vNormal=normalize(vec3(-sin(angle),.28,cos(angle)));
-    if(h<=0.0)vWorldPosition=meadowRoot(meadowOffset+3);
-  }else if(blade>=4){vWorldPosition=vec3(aTransform.x,rootY(instance,0),aTransform.y);}
+ .replace('int instance=uInstanceStart+gl_InstanceID*uInstanceStride;',`int selectedIndex=uSelectionStart+gl_InstanceID;
+  int instance=int(texelFetch(uSelectedIds,ivec2(selectedIndex/4,0),0)[selectedIndex%4]);`)
+ .replace('gl_Position=uViewProjection*vec4(vWorldPosition,1.0);',`vMeadowMode=float(uMeadowGeometryPass);
+  if(uMeadowGeometryPass==1){
+    int leafIndex=gl_VertexID/6,vertex=gl_VertexID%6;
+    int clump=leafIndex/24,leaf=leafIndex%24,contact=leaf/8;
+    int meadowOffset=int(meadowPart(instance)),start=meadowOffset+clump*12;
+    vec3 root=meadowRoot(start+contact*3);
+    uint seed=uint(instance)*1664525u+uint(clump)*1013904223u+uint(leaf)*747796405u;
+    float r0=float(seed&1023u)/1023.0,r1=float((seed>>10u)&1023u)/1023.0,r2=float((seed>>20u)&1023u)/1023.0;
+    float angle=meadowPart(start+9)+float(leaf%8)*2.399963+float(contact)*.73+r0*.8;
+    vec2 direction=vec2(cos(angle),sin(angle)),sideways=vec2(-direction.y,direction.x);
+    float h=meadowPart(start+11)*(leaf%4==0?.66+.27*r1:.24+.40*r1);
+    float halfWidth=.007+.008*r2,bend=.07+.18*r2;
+    float t=vertex==0?0.0:vertex<3?.34:vertex<5?.72:1.0;
+    float side=(vertex==1||vertex==3)?-1.0:(vertex==2||vertex==4)?1.0:0.0;
+    vec2 xz=root.xz+direction*bend*t*t+sideways*side*halfWidth*(1.0-t);
+    vec2 radial=xz-vec2(-45.0,-326.0);
+    if(length(radial)>18.0)xz=vec2(-45.0,-326.0)+normalize(radial)*18.0;
+    vWorldPosition=vec3(xz.x,root.y+h*(t-.13*t*t),xz.y);
+    vNormal=normalize(vec3(direction.x*h*(1.0-.26*t),-2.0*bend*t,direction.y*h*(1.0-.26*t)));
+    vec3 base=leaf%11==0?vec3(.105,.071,.025):leaf%5==0?vec3(.100,.112,.031):vec3(.032,.081,.025);
+    vec3 tip=leaf%11==0?vec3(.36,.23,.076):leaf%5==0?vec3(.32,.35,.103):vec3(.17,.29,.079);
+    vBaseColor=vec4(mix(base,tip,pow(t,.72))*(.88+.20*r0),1.0);
+  }
   gl_Position=uViewProjection*vec4(vWorldPosition,1.0);`);
 const GLOBAL_COVER_PATCH_SUPPRESSION_FS=FS
- .replace('out vec4 outColor;',`uniform sampler2D uMeadowAtlas;
-flat in float vMeadowMode;
-flat in float vMeadowCell;
-in vec2 vMeadowUv;
+ .replace('out vec4 outColor;',`flat in float vMeadowMode;
 out vec4 outColor;`)
  .replace('vec3 base=max(vBaseColor.rgb,vec3(0.004));',`vec3 base=max(vBaseColor.rgb,vec3(0.004));
-  if(vMeadowMode>0.5){
-    if(distance(vWorldPosition.xz,vec2(-45.0,-326.0))>18.001)discard;
-    vec2 cell=vec2(mod(vMeadowCell,2.0),floor(vMeadowCell/2.0));
-    vec4 blades=texture(uMeadowAtlas,(cell*128.0+vec2(2.0)+vMeadowUv*124.0)/256.0);
-    if(blades.a<0.38)discard;
-    base=max(blades.rgb,vec3(0.004));
-  }`);
+  if(vMeadowMode>.5&&distance(vWorldPosition.xz,vec2(-45.0,-326.0))>18.001)discard;`);
+function buildHEarthMeadowLeafIndices(){
+ const indices=new Uint32Array(12*24*12);
+ for(let leaf=0;leaf<12*24;leaf++){const v=leaf*6;indices.set([v,v+1,v+2,v+1,v+3,v+2,v+2,v+3,v+4,v+3,v+5,v+4],leaf*12);}
+ return indices;
+}
 
 function buildMeadowPatchLodAtlas(){
  const size=256,tile=128,pixels=new Uint8Array(size*size*4);
@@ -1414,17 +1421,20 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const rowsPerChunk=Math.max(1,Math.floor(262144/(state.textureWidth*16)));
     for(let row=0;row<state.textureHeight;row+=rowsPerChunk){const rows=Math.min(rowsPerChunk,state.textureHeight-row),part=pixels.subarray(row*state.textureWidth*4,(row+rows)*state.textureWidth*4);gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);gl.texSubImage2D(gl.TEXTURE_2D,0,0,row,state.textureWidth,rows,gl.RGBA,gl.FLOAT,part);verifyCoverGlStage('TEXTURE_ROW_'+row);state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,part.byteLength);gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);await yieldToBrowserPaint();}
     state.gpuByteLength+=pixels.byteLength;state.uploadCount++;gl.activeTexture(gl.TEXTURE0);
-    // The patch atlas is a deterministic 4x4 array of irregular grass-clump
-    // impostors. It is the only added texture; no placement/root records change.
-    counters.globalCoverAuthorizedResourceCreateCount++;
-    state.patchAtlasPixels=buildMeadowPatchLodAtlas();state.patchAtlas=createTexture();
-    gl.activeTexture(gl.TEXTURE3);gl.bindTexture(gl.TEXTURE_2D,state.patchAtlas);
-    gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA8,256,256);verifyCoverGlStage('PATCH_LOD_TEXTURE_STORAGE');
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-    gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,256,256,gl.RGBA,gl.UNSIGNED_BYTE,state.patchAtlasPixels);verifyCoverGlStage('PATCH_LOD_TEXTURE_UPLOAD');
-    state.patchAtlasByteLength=state.patchAtlasPixels.byteLength;state.gpuByteLength+=state.patchAtlasByteLength;state.uploadCount++;
-    state.maximumUploadChunkBytes=Math.max(state.maximumUploadChunkBytes,state.patchAtlasByteLength);gl.activeTexture(gl.TEXTURE0);
+    // Static procedural leaf topology; attributes are unused in geometry mode.
+    counters.globalCoverAuthorizedResourceCreateCount+=2;
+    markPostInitializationCreation();counters.vertexArrayCreateCount++;state.meadowVao=gl.createVertexArray();
+    markPostInitializationCreation();counters.bufferCreateCount++;state.meadowIndexBuffer=gl.createBuffer();
+    if(!state.meadowVao||!state.meadowIndexBuffer)throw Error('MEADOW_LEAF_GEOMETRY_CREATE_FAILED');
+    gl.bindVertexArray(state.meadowVao);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,state.meadowIndexBuffer);
+    const leafIndices=buildHEarthMeadowLeafIndices();gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,leafIndices,gl.STATIC_DRAW);
+    state.meadowIndexCount=leafIndices.length;state.gpuByteLength+=leafIndices.byteLength;state.uploadCount++;
+    counters.globalCoverAuthorizedResourceCreateCount++;state.selectionTexture=createTexture();
+    gl.activeTexture(gl.TEXTURE8);gl.bindTexture(gl.TEXTURE_2D,state.selectionTexture);
+    gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA32F,1024,1);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+    state.selectionPixels=new Float32Array(4096);state.previousSelectedIds=null;state.gpuByteLength+=16384;
+    state.patchAtlasByteLength=0;
     counters.globalCoverAuthorizedResourceCreateCount++;state.meadowRootsTexture=createTexture();
     state.meadowRootsWidth=Math.min(1024,gl.getParameter(gl.MAX_TEXTURE_SIZE));
     const rootRows=Math.ceil(presentation.pixels.length/(4*state.meadowRootsWidth)),rootPixels=new Float32Array(rootRows*state.meadowRootsWidth*4);rootPixels.set(presentation.pixels);
@@ -1435,12 +1445,12 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     verifyCoverGlStage('MEADOW_ROOTS_UPLOAD');state.gpuByteLength+=rootPixels.byteLength;state.uploadCount++;
     if(state.gpuByteLength>8388608)throw Error('GLOBAL_COVER_GPU_BUDGET_EXCEEDED');
     gl.activeTexture(gl.TEXTURE0);
-    state.uniforms={};for(const name of ['uInstanceRecords','uInstanceStart','uInstanceStride','uInstanceTextureWidth','uViewProjection','uCameraPosition','uMeadowAtlas','uMeadowRoots','uMeadowRootsWidth','uSunDirection','uSunIntensity','uSunColor','uSkyZenithColor','uSkyHorizonColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor','uDistanceDesaturationStrength','uTerrainPatchClip','uClipBaseTerrain','uGlobalCoverFarPrimitiveIndex','uPlanetRadius','uShorelineSoilCoverage','uLandscapeFloorFootprints[0]','uLandscapeFloorCount'])state.uniforms[name]=gl.getUniformLocation(state.program,name);
+    state.uniforms={};for(const name of ['uInstanceRecords','uInstanceStart','uInstanceStride','uInstanceTextureWidth','uViewProjection','uCameraPosition','uSelectedIds','uSelectionStart','uMeadowGeometryPass','uMeadowRoots','uMeadowRootsWidth','uSunDirection','uSunIntensity','uSunColor','uSkyZenithColor','uSkyHorizonColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor','uDistanceDesaturationStrength','uTerrainPatchClip','uClipBaseTerrain','uGlobalCoverFarPrimitiveIndex','uPlanetRadius','uShorelineSoilCoverage','uLandscapeFloorFootprints[0]','uLandscapeFloorCount'])state.uniforms[name]=gl.getUniformLocation(state.program,name);
     gl.useProgram(state.program);const u=state.uniforms,e=resources.environment;
     gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform3fv(u.uSunColor,color3(e.sunColor));gl.uniform3fv(u.uSkyZenithColor,color3(e.skyZenithColor));gl.uniform3fv(u.uSkyHorizonColor,resources.skyColor);gl.uniform3fv(u.uGroundHazeColor,color3(e.groundHazeColor));
     for(const [name,key] of [['uFogStartDistance','fogStartDistance'],['uFogFalloff','fogFalloff'],['uMaximumFogFactor','maximumFogFactor'],['uDistanceDesaturationStrength','distanceDesaturationStrength']])gl.uniform1f(u[name],e[key]);
     gl.uniform1i(u.uInstanceRecords,2);gl.uniform1i(u.uInstanceTextureWidth,state.textureWidth);
-    gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1i(u.uMeadowAtlas,3);gl.uniform1i(u.uMeadowRoots,7);gl.uniform1i(u.uMeadowRootsWidth,state.meadowRootsWidth);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);verifyCoverGlStage('UNIFORMS');
+    gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1i(u.uSelectedIds,8);gl.uniform1i(u.uMeadowRoots,7);gl.uniform1i(u.uMeadowRootsWidth,state.meadowRootsWidth);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);verifyCoverGlStage('UNIFORMS');
     state.resourceCount=counters.postInitializationResourceCreationCount-before;
     configureClearingProgram(state.program);verifyCoverGlStage('CLEARING_PROGRAM_CONFIG');
     resources.globalCover=state;gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
@@ -1449,24 +1459,36 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   function drawGlobalCover(packet){
     const state=resources.globalCover;if(!state)return;
     const selected=selectHEarthMeadowMidDistanceRepresentations(state.cover,packet.camera.position);
-    gl.useProgram(state.program);gl.bindVertexArray(state.vao);
+    const partition=partitionHEarthMeadowSelectedInstances(state.cover,selected);
+    gl.useProgram(state.program);
     gl.activeTexture(gl.TEXTURE2);gl.bindTexture(gl.TEXTURE_2D,state.instanceTexture);
-    gl.activeTexture(gl.TEXTURE3);gl.bindTexture(gl.TEXTURE_2D,state.patchAtlas);gl.activeTexture(gl.TEXTURE7);gl.bindTexture(gl.TEXTURE_2D,state.meadowRootsTexture);gl.activeTexture(gl.TEXTURE0);
-    gl.disable(gl.BLEND);gl.depthMask(true);
+    gl.activeTexture(gl.TEXTURE7);gl.bindTexture(gl.TEXTURE_2D,state.meadowRootsTexture);
+    gl.activeTexture(gl.TEXTURE8);gl.bindTexture(gl.TEXTURE_2D,state.selectionTexture);
+    let selectionUploadBytes=0;
+    if(!sameHEarthMeadowSelectedIds(state.previousSelectedIds,partition.ids)){
+      state.selectionPixels.fill(0);state.selectionPixels.set(partition.ids);
+      gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,1024,1,gl.RGBA,gl.FLOAT,state.selectionPixels);
+      state.previousSelectedIds=partition.ids;selectionUploadBytes=state.selectionPixels.byteLength;state.uploadCount++;
+    }
+    gl.activeTexture(gl.TEXTURE0);gl.disable(gl.BLEND);gl.depthMask(true);
     gl.uniformMatrix4fv(state.uniforms.uViewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(state.uniforms.uCameraPosition,packet.camera.position.x,packet.camera.position.y,packet.camera.position.z);
-    for(const draw of selected.draws){
-      gl.uniform1i(state.uniforms.uInstanceStart,draw.start);gl.uniform1i(state.uniforms.uInstanceStride,draw.stride);
-      gl.drawElementsInstanced(gl.TRIANGLES,state.presentation.template.indices.length,gl.UNSIGNED_INT,0,draw.count);
+    if(partition.originalCount){
+      gl.bindVertexArray(state.vao);gl.uniform1i(state.uniforms.uSelectionStart,0);gl.uniform1i(state.uniforms.uMeadowGeometryPass,0);
+      gl.drawElementsInstanced(gl.TRIANGLES,state.cover.template.indices.length,gl.UNSIGNED_INT,0,partition.originalCount);
     }
-    state.lastDraw={visibleInstanceCount:selected.visibleInstanceCount,drawCallCount:selected.draws.length,
-      meadowCandidateSelectedCount:selected.meadowCandidateSelectedCount,meadowBoundaryPreservedCount:selected.meadowBoundaryPreservedCount,meadowEligibleSelectedCount:selected.meadowEligibleSelectedCount,meadowReplacementInstanceCount:selected.meadowReplacementInstanceCount,
-      meadowReplacementFraction:selected.meadowEligibleSelectedCount?1:0,meadowReplacementRadiusMeters:18,
-      meadowReplacementInnerRadiusMeters:0,meadowPresentation:state.presentation.receipt,submittedCoverVertices:selected.visibleInstanceCount*84,submittedCoverTriangles:selected.visibleInstanceCount*72,patchLodTextureBytes:state.patchAtlasByteLength,
-      visiblePresentationClumps:selected.meadowEligibleSelectedCount*12,visiblePresentationContacts:selected.meadowEligibleSelectedCount*36,
-      representation:'ROOTED_UPRIGHT_MULTIBLADE_ALPHA_CLUMPS',additionalDrawCalls:0,storedPopulationChanged:false,perFrameUploadBytes:0};
-    if(selected.visibleInstanceCount>4096||selected.draws.length>64)throw Error('GLOBAL_COVER_DRAW_BUDGET_EXCEEDED');
-    counters.totalDrawnIndexCount+=selected.visibleInstanceCount*state.presentation.template.indices.length;
+    if(partition.meadowCount){
+      gl.bindVertexArray(state.meadowVao);gl.uniform1i(state.uniforms.uSelectionStart,partition.originalCount);gl.uniform1i(state.uniforms.uMeadowGeometryPass,1);
+      gl.drawElementsInstanced(gl.TRIANGLES,state.meadowIndexCount,gl.UNSIGNED_INT,0,partition.meadowCount);
+    }
+    state.lastDraw={visibleInstanceCount:partition.ids.length,drawCallCount:partition.drawCount,
+      meadowCandidateSelectedCount:selected.meadowCandidateSelectedCount,meadowBoundaryPreservedCount:selected.meadowBoundaryPreservedCount,meadowEligibleSelectedCount:partition.meadowCount,meadowReplacementInstanceCount:partition.meadowCount,
+      meadowReplacementFraction:selected.meadowEligibleSelectedCount?partition.meadowCount/selected.meadowEligibleSelectedCount:0,meadowReplacementRadiusMeters:18,
+      meadowReplacementInnerRadiusMeters:0,meadowPresentation:state.presentation.receipt,submittedCoverVertices:partition.vertices,submittedCoverTriangles:partition.triangles,patchLodTextureBytes:0,
+      visiblePresentationClumps:partition.meadowCount*12,visiblePresentationContacts:partition.meadowCount*36,visibleMeadowLeaves:partition.meadowCount*12*24,
+      representation:'CONTACT_ROOTED_CURVED_GEOMETRIC_GRASS_BLADES',originalDrawInstances:partition.originalCount,meadowDrawInstances:partition.meadowCount,storedPopulationChanged:false,perFrameUploadBytes:selectionUploadBytes};
+    if(partition.ids.length!==selected.visibleInstanceCount||partition.ids.length>4096||partition.drawCount>64)throw Error('GLOBAL_COVER_DRAW_BUDGET_EXCEEDED');
+    counters.totalDrawnIndexCount+=partition.triangles*3;
     gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
   }
 

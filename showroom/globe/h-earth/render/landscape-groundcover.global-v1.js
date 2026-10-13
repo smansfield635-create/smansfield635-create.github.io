@@ -335,8 +335,18 @@ export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null}={
  eligible.forEach((id,i)=>{pixels[id]=mapLength+i*144;});
  for(const c of clumps){const offset=pixels[c.instance]+c.slot*12;pixels.set([...c.roots.flatMap(r=>[r.x,r.y,r.z]),c.angle,c.halfWidth,c.height],offset);}
  if(clumps.length!==eligible.length*12)throw Error('MEADOW_PRESENTATION_INCOMPLETE_ROOT_LAYOUT');
- const template={...cover.template};
- for(const key of ['positions','normals','colors','rootInfo']){const old=cover.template[key],out=new Float32Array(old.length*3);for(let i=0;i<3;i++)out.set(old,i*old.length);template[key]=out;}
- template.indices=new Uint32Array(cover.template.indices.length*3);for(let i=0;i<3;i++)template.indices.set(Array.from(cover.template.indices,v=>v+i*28),i*cover.template.indices.length);
- return {pixels,clumps,template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,cameraIndependent:true,eligibleInstances:eligible.length,clumpCount:clumps.length,contactCount:clumps.length*3,sidecarBytes:pixels.byteLength,templateVertices:84,templateTriangles:72,additionalDraws:0,atlasBytes:262144,pilotRadius:18}};
+ const template=cover.template;
+ return {pixels,clumps,template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,cameraIndependent:true,eligibleInstances:eligible.length,clumpCount:clumps.length,contactCount:clumps.length*3,sidecarBytes:pixels.byteLength,templateVertices:28,templateTriangles:24,meadowTemplateVertices:1728,meadowTemplateTriangles:1152,leavesPerClump:24,atlasBytes:0,pilotRadius:18}};
 }
+
+/** Stable partition only; original selected IDs and within-class order survive. */
+export function partitionHEarthMeadowSelectedInstances(cover,selected){
+ const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),original=[],meadow=[];
+ for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
+  const id=draw.start+i*draw.stride,o=id*20;
+  (Math.hypot(cover.records[o+12]+45,cover.records[o+13]+326)<=18&&!boundary.has(id)?meadow:original).push(id);
+ }
+ const ids=Float32Array.from([...original,...meadow]);
+ return{ids,originalCount:original.length,meadowCount:meadow.length,drawCount:Number(original.length>0)+Number(meadow.length>0),vertices:original.length*28+meadow.length*1728,triangles:original.length*24+meadow.length*1152};
+}
+export function sameHEarthMeadowSelectedIds(previous,current){return !!previous&&previous.length===current.length&&current.every((id,i)=>previous[i]===id);}

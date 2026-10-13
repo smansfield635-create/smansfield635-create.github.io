@@ -54,9 +54,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
-          SURFACE_ID: ${{ github.event_name == 'push' && 'governance-bridge' || inputs.surface_id || 'analytics' }}
+          SURFACE_ID: ${{ inputs.surface_id || 'analytics' }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
+          if [ "$EVENT_NAME" = "push" ]; then
+            changed="$(gh api "/repos/$REPO/commits/$EVENT_SHA" --jq '.files[].filename')"
+            if printf '%s\n' "$changed" | grep -Eq '^(release-proof/|\.github/ai-router/publication-surfaces/release-proof\.json$)'; then
+              SURFACE_ID="release-proof"
+            else
+              SURFACE_ID="governance-bridge"
+            fi
+          fi
+          echo "CURRENT_HEAD_PUBLICATION_SURFACE_SELECTED=$SURFACE_ID event=$EVENT_NAME"
           head="$(gh api "/repos/$REPO/commits/main" --jq .sha)"
           runs="$(gh api "/repos/$REPO/actions/workflows/pages-exact-head-deploy-v3.yml/runs?event=workflow_dispatch&per_page=100")"
           equivalent="$(printf '%s' "$runs" | jq -r --arg sha "$head" '[.workflow_runs[] | select(.head_sha==$sha and (.status=="queued" or .status=="in_progress" or (.status=="completed" and .conclusion=="success")))] | length')"

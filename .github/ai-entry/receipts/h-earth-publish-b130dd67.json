@@ -1,14 +1,25 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
-  "result": "WORKFLOW_DISPATCH_FAILED",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
   "requestId": "h-earth-publish-b130dd67",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 6237,
   "requestBranch": "ai-dispatch-request-h-earth-publish-b130dd67",
-  "requestCommit": "2d2690213c6f55bf0c757513a7413846eb0621fe",
+  "requestCommit": "dafb90bdd65b08720bfa7ef7ef0613240e9824ad",
+  "requestCommitParent": "b130dd67488860214ef949fa558447e055a9730f",
+  "requestParentWasCurrent": true,
   "currentMainSha": "b130dd67488860214ef949fa558447e055a9730f",
-  "bridgeRunId": "38473075770",
-  "error": "Input may not be user supplied: target_sha",
-  "failedAt": "2026-10-13T21:46:31.555Z"
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b130dd67488860214ef949fa558447e055a9730f",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "38473455075",
+  "dispatchedRunId": 38473473365,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38473473365",
+  "dispatchedRunHeadSha": "b130dd67488860214ef949fa558447e055a9730f",
+  "dispatchedAt": "2026-10-13T21:49:41.648Z",
+  "resolvedAt": "2026-10-13T21:49:45.264Z"
 }

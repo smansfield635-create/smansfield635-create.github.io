@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2702-corrected-mature-meadow-boulder-20261014-01",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6277,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2702-integrated-qualify-20261014-001",
+  "requestCommit": "a932f78ed7cafd7a75a05c3d01f802ab3b1d48c6",
+  "requestCommitParent": "113c0f3a0462376e448111ce96d5220c7c17169f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "113c0f3a0462376e448111ce96d5220c7c17169f",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "638b083b34d0c77908229614c57355a9a15f75d9",
+    "route_query": "arrival=approved-four-trees",
+    "exercise_vegetation_residency": "false"
+  },
+  "bridgeRunId": "38638319573",
+  "dispatchedRunId": 38638343202,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38638343202",
+  "dispatchedRunHeadSha": "113c0f3a0462376e448111ce96d5220c7c17169f",
+  "dispatchedAt": "2026-10-14T21:11:47.391Z",
+  "resolvedAt": "2026-10-14T21:11:51.735Z"
+}

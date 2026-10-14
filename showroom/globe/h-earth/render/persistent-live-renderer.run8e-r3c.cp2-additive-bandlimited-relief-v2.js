@@ -1282,7 +1282,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
   function makeLocalPreview(template){
     if(resources.localCoverPreview)return resources.localCoverPreview;
-    if(!initialized||!resources.woodlandFineGrass?.ready)throw Error('LOCAL_PREVIEW_NOT_INITIALIZED');
+    if(!initialized)throw Error('LOCAL_PREVIEW_NOT_INITIALIZED');
     const s={ready:true,records:new Float32Array(LOCAL_PREVIEW_MAX_RECORDS*20),
       pixels:new Float32Array(1024*15*4),ids:new Float32Array(4096),
       count:0,tileCount:0,tileIds:new Set(),uploadCount:0,
@@ -1331,7 +1331,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     return s;
   }
   function flushLocalPreviewTiles(progress){
-    if(!resources.woodlandFineGrass?.ready||resources.globalCover)return;
+    if(!initialized||resources.globalCover)return;
     while(localTileQueue.length){
       const t=localTileQueue.shift();if(!t.instanceCount)continue;
       if(t.records.length!==t.instanceCount*20)throw Error('LOCAL_PREVIEW_RECORD_LENGTH_DRIFT');
@@ -1499,7 +1499,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
           globalCoverPriorityTilesPrepared++;
           if(localQueuedTiles<LOCAL_PREVIEW_MAX_TILES){
             localQueuedTiles++;localTileQueue.push(tile);
-            if(resources.woodlandFineGrass?.ready)flushLocalPreviewTiles(progress);
+            flushLocalPreviewTiles(progress);
           }
           if(globalCoverPriorityTilesPrepared===1){
             firstPriorityTileReadyAtMs=performance.now();

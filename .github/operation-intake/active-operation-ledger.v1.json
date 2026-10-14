@@ -11926,6 +11926,50 @@
       "scopeHash": "b14929352e9f36b3c0bca200c19a1d5e6a7765960f8f451b1e7c00ad83aef6a9",
       "state": "ADMITTED_LOCKED"
     },
+    "b14b885270b900889c6bdb33d22661ded504e912f9a3a205a0f3f6cbd5c50868": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "4909ae3c78b4a65ea757ab1171b2b879024e9a6d",
+          "lockGeneration": 2698,
+          "lockScope": "H_EARTH:GEN2694:P2_ORIGINAL_LARGE_BOULDER_SIDECAR_ONLY:20261014:V1",
+          "operationId": "H_EARTH_LARGE_P2_BOULDER_PRESENTATION_NATURALIZATION_20261014_001",
+          "procedureLocatorDigest": "fc99c0dd9836a2d93b894eb2751e812885cbaf9d07b183c14939d84a41aa7395",
+          "requestDigest": "ab386800090bd13d785ba0d24b364dba353fac5b265fbf26622d3147d51e18b7",
+          "scopeHash": "b14b885270b900889c6bdb33d22661ded504e912f9a3a205a0f3f6cbd5c50868"
+        },
+        "bindingDigest": "2fb964f04837fe45733337e9e538895c568e252875aceb6d89571b2fc3476fef",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "f25bbc8f2c79281c2263d2c2e7ed346201adcd8ac44d94430cd79ea4af424461",
+          "commentId": 6176184806,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6258,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38621264269,
+          "workflowSha": "4909ae3c78b4a65ea757ab1171b2b879024e9a6d"
+        },
+        "lineageAnchorCommitSha": "2947e026b06e8d29b00437bc2be3b30bc5438cb7",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "4909ae3c78b4a65ea757ab1171b2b879024e9a6d",
+      "lockGeneration": 2698,
+      "lockScope": "H_EARTH:GEN2694:P2_ORIGINAL_LARGE_BOULDER_SIDECAR_ONLY:20261014:V1",
+      "operationId": "H_EARTH_LARGE_P2_BOULDER_PRESENTATION_NATURALIZATION_20261014_001",
+      "procedureLocatorDigest": "fc99c0dd9836a2d93b894eb2751e812885cbaf9d07b183c14939d84a41aa7395",
+      "released": false,
+      "requestDigest": "ab386800090bd13d785ba0d24b364dba353fac5b265fbf26622d3147d51e18b7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b14b885270b900889c6bdb33d22661ded504e912f9a3a205a0f3f6cbd5c50868",
+      "state": "ADMITTED_LOCKED"
+    },
     "b15e164d53f8c4b06169de1a8fec61ba016c22a3adabc35fe7f833a5b332eaea": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -17144,7 +17188,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2697,
+  "lockGeneration": 2698,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

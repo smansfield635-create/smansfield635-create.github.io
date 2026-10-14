@@ -1,67 +1,71 @@
 {
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
-  "operationId": "H_EARTH_FOUR_TREE_GRASS_GAP_FILL_RELEASE_20261014_001",
-  "canonicalAdmissionGeneration": 2693,
+  "operationId": "H_EARTH_LEGACY_FAN_PRESENTATION_RECOVERY_20261014_001",
+  "canonicalAdmissionGeneration": 2694,
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
-  "reviewedAgainstAnchor": true,
-  "disposition": "PASS",
-  "acceptanceBasis": "Owner explicitly accepts already reviewed H-Earth woodland/rock appearance and authorizes immediate release-and-live-test of the small grass-strip patch without a new 20-minute browser screenshot. Prior exact browser test on parent be9dfbf9798ccf0b54813a1664f7d42f80925f0b (run 38488555019) passed 5 woodland views and 14 rock checks; it is not claimed as a browser proof for this new head. The newly changed grass source removes only a standalone 3.06m-wide visual no-growth strip; source differential checked with all terrain/material/water/trunk/estate protections preserved, parent source blob and hard terrain/world unchanged. Paired source execution on synthetic terrain increased corridor contacts and retained root-clearance negative control. Owner accepts limited real-world rendering uncertainty for a controlled live-production acceptance test. Canonical world and navigation invariant inheritance from verified unchanged bytes and historical interactive run, not new independent browser or real-world root qualification. Exact-head mandatory publication preflight and live verification remain separate.",
+  "reviewedAgainstAnchor": false,
+  "disposition": "PENDING",
+  "acceptanceBasis": "Gen2694 bounded engineering branch. Owner rejects Gen2693 live grass presentation. Source inspection disproved initial inference that global originalDrawInstances means wide fan rendering: actual GLOBAL_COVER_PATCH_LOD_VS mode0 renders 12 procedural thin leaves per original source record, while P2 1/2 are ground litter and leafy understory. New candidate currently stages exact Gen2694 module cache identity across page/wrapper/integration/binding/renderer/grass plus accurate GPU original-source fine-leaf census; no broad-geometry retirement, no new five-view acceptance, no main merge or live deployment. Source and immutable base-world identity pins rebound, original world binary untouched. New owner acceptance is required before any release.",
   "experienceFiles": [
     {
-      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
-      "sha256": "1355c32bc96ace61564480809a1ae2e9ea8e17d740f7710fee6b87964899c50a"
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "55c1b4404c1d274bf535d02e04ec089c33fa54835a4f1290e929fb39ed343b6e"
     },
     {
-      "path": "showroom/globe/h-earth/render/woodland-rock-presentation.v1.js",
-      "sha256": "c70b892ce1c9fc0cccded1a7d37071baf6a1cf3fe38b064f7f71102ff9536474"
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "e4955faf3a363d0fef032e332d171fb0c1103ae5d0276713c338bd66a146609d"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "cc428ce3f0f93b89039677e60892479142923f7bb62ea8e92f50aae59354f7a6"
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "sha256": "53fd7d45164f1929a1ba521e9e1da216d0b2846b9fec68529fed59e876388e46"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "0b9d4e5144a7888f083c5f32eb20601c88097d7a89258bb3b07ccc1eb2bba06e"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "38641b5fa177af38d14ef7069d79c13e085e0ef5e12a123ddc3bd38bbbe6e9ed"
-    },
-    {
-      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
-      "sha256": "53d6fc96e62154b2f58ed5a83eaece071042d224714cbe333cbc616051ad237d"
-    },
-    {
-      "path": "h-earth-3d/validation/h-earth.four-tree-rock-presentation.v1.mjs",
-      "sha256": "2af5f2fff2006f4520debe65c0ef237949b16c9bd69ed93d7743b39c55fad287"
+      "sha256": "405be7bd9168930190d76c247a0930e93b67b802ef5188fa022fe126f4725121"
     },
     {
       "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
-      "sha256": "4f4e66825455ef0465a0a7bd92eb37c0ba6b1a06397423efc347315d37b72312"
+      "sha256": "e43735e80d96539de61512b35fa9f56fdd213dde66230d2e79d0b51edd98405f"
     },
     {
       "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
-      "sha256": "14afc3516df4f92509a65d63ccc1af8989b087839147fca6bb7e6577fc9ad3b3"
+      "sha256": "d536f2aa4e8a125a349174c3423fa4c4be8c55c70076e6e22fa0662d2455a919"
     }
   ],
   "invariants": {
-    "SAME_CANONICAL_WORLD_IDENTITY": true,
-    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
-    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
-    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
-    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
-    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
-    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
-    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
-    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
-    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
-    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+    "SAME_CANONICAL_WORLD_IDENTITY": false,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": false,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": false,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": false,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": false,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": false,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": false,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": false,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": false,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": false,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": false
   },
   "invariantRationale": {
-    "SAME_CANONICAL_WORLD_IDENTITY": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "EMBODIED_LOCAL_GROUND_EXPERIENCE": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof.",
-    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": "Owner acceptance and prior browser/anchor visual evidence retained. Canonical planetary world, terrain, camera, navigation, tree, soil, rock and renderer bytes are unchanged by Gen2693; new source change only removes a presentation-only grass strip exclusion while preserving terrain/material/water/footpath/trunk safeguards. This is inheritance/differential review, not a fresh exact-head browser or independently measured root/visual proof."
+    "SAME_CANONICAL_WORLD_IDENTITY": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks.",
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": "Not reviewed or accepted for Gen2694 yet; prior accepted world identity and tree/rock preservation are inherited from exact unchanged sources, while changed versioned module graph and visible presentation remain pending targeted checks."
   },
   "visualEvidence": [
     "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
@@ -472,10 +476,10 @@
     "worldGzipSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a"
   },
   "physicalAndroidQualified": false,
-  "ownerPerceptualDisposition": "OWNER_KEEP_PRIOR_VISUALS_APPROVES_FINAL_STRIP_PATCH_FOR_LIVE_TEST",
-  "mergeAuthorized": true,
-  "publicationAuthorized": true,
-  "releaseAuthorized": true,
+  "ownerPerceptualDisposition": "OWNER_REJECTS_GEN2693_VISIBLE_PRESENTATION",
+  "mergeAuthorized": false,
+  "publicationAuthorized": false,
+  "releaseAuthorized": false,
   "historicalAcceptedMeadowReceipt": {
     "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
     "operationId": "H_EARTH_GLOBAL_FINE_GRASS_AND_DENSER_MEADOW_20261013_001",
@@ -1738,89 +1742,38 @@
     }
   },
   "deltaQualification": {
-    "schema": "H_EARTH_GEN2693_GRASS_GAP_FILL_DIFFERENTIAL_v1",
-    "status": "OWNER_ACCEPTED_BOUNDED_SOURCE_DELTA_FOR_LIVE_RELEASE_TEST",
-    "admittedOperation": "H_EARTH_FOUR_TREE_GRASS_GAP_FILL_RELEASE_20261014_001",
-    "generation": 2693,
-    "sourceAuthority": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6100#issuecomment-6158251411",
-    "preservedBrowserProof": {
-      "testedCommit": "be9dfbf9798ccf0b54813a1664f7d42f80925f0b",
-      "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38488555019",
-      "scope": "UNCHANGED_RENDERER_ROCK_TERRAIN_AND_PREVIOUS_GRASS_ROOTS",
-      "newCandidateBrowserExecuted": false
-    },
-    "changedPaths": [
-      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
-      "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
-      "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
-      "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json"
+    "schema": "H_EARTH_GEN2694_POST_RELEASE_LEGACY_GRASS_PRESENTATION_RECOVERY_v1",
+    "status": "ENGINEERING_IN_PROGRESS_NOT_QUALIFIED",
+    "publishedBaselineHead": "8e503d6b1ef0eb62e9a88a08dd26cf9f56021c42",
+    "governingHead": "440f609f67df03dc70cd0ffc578e9d4b6c2a27cc",
+    "canonicalGeneration": 2694,
+    "cacheRevision": "gen2694-legacy-fan-recovery-v1",
+    "versionedModuleChain": [
+      "index.html",
+      "public-live-gpu-integration.run8e-r3e.receipt.js",
+      "public-live-gpu-integration.run8e-r3e.js",
+      "run8e-r3d/live-gpu-binding.js",
+      "cp2-additive-bandlimited-relief-v2.js",
+      "woodland-fine-grass.v1.js",
+      "landscape-groundcover.global-v1.js"
     ],
-    "presentationOnlyExclusionRemoved": "segmentDistance(x,z,{x:-145,z:-194},{x:-145,z:-230})<=1.5+r",
+    "legacyGeometryAudit": {
+      "globalOriginalSourceInstancesPresentedAs": "12_FINE_PROCEDURAL_BLADES_PER_INSTANCE_VIA_GLOBAL_COVER_PATCH_LOD_VS",
+      "globalWideFanRenderedClaim": false,
+      "p2Type1": "FALLEN_LEAF",
+      "p2Type2": "LOW_LEAFY_UNDERSTORY",
+      "p2Type0And3": "SUPPRESSED_ONLY_INSIDE_APPROVED_WOODLAND",
+      "legacyActualOnDeviceSource": "UNRESOLVED_STALE_CACHE_LOADING_OR_PERIMETER_GEOMETRY"
+    },
     "worldBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
-    "newGrassGitBlob": "ec420d1866938d878a71de0457106462ce3a97b2",
-    "unchangedProtectedScope": [
-      "canonical estate footRoute",
-      "hard structure exclusions",
-      "planning holds",
-      "manor/gardens/outbuilding/envelope",
-      "oasis",
-      "tree and landscape-cover footprints",
-      "water",
-      "terrain slope and material",
-      "original world data",
-      "all fourteen approved rocks",
-      "renderer and camera navigation"
-    ],
-    "requiredUnfinished": [
-      "SAME_PAYLOAD_PUBLICATION_PREFLIGHT",
-      "LIVE_EXACT_HEAD_AND_H_EARTH_RUNTIME_VERIFICATION",
-      "POST_RELEASE_OWNER_VISUAL_TEST"
-    ],
-    "staticGeometryProbe": {
-      "classification": "INDEPENDENT_ANALYTIC_AUTHORED_PLANE_ONLY",
-      "gridStepMeters": 0.25,
-      "previouslyVisuallyExcludedGridPoints": 1973,
-      "insideOriginalEllipseNotInCanonicalEstateRouteOrOasis": 1973,
-      "approxCandidateMaskSquareMeters": 123.3125,
-      "canonicalEstateRouteAndOasisOverlaps": 0,
-      "fixedCameraDistancesToStripMeters": {
-        "north": 5.6,
-        "south": 8.21,
-        "east": 26,
-        "west": 19,
-        "interior": 4
-      },
-      "allFiveWithin62mGrassSelectorRange": true,
-      "notTested": [
-        "ACTUAL_TERRAIN_MATERIAL_OR_WATER_ELIGIBILITY",
-        "PRESENTATION_ROOT_ACTUAL_NEW_COUNT",
-        "GPU_SUBMITTED_GRASS_COVERAGE",
-        "FIVE_VIEW_PROJECTED_PIXEL_COVERAGE",
-        "BROWSER_VISUAL_READBACK"
-      ],
-      "result": "PASS_STATIC_GEOMETRY_ONLY"
-    },
-    "ownerLatestInstruction": "The user explicitly directs publish and test the small patch, declining another roughly 20-minute image qualification after multiple prior visual approvals.",
-    "independentSourceReview": {
-      "result": "PASS_BOUNDED_SOURCE_DIFF_AND_SYNTHETIC_CONTACT_TEST",
-      "exactSourceCompare": true,
-      "guardPredicatesRetained": 11,
-      "rocksAndRendererUnchanged": true,
-      "syntheticContactsBefore": 10720,
-      "syntheticContactsAfter": 20403,
-      "syntheticNewContacts": 9683,
-      "rootTreeObstacleNegativeControlPassed": true,
-      "testClass": "SYNTHETIC_FLAT_TERRAIN_AND_STATIC_PROTECTION_NOT_ACTUAL_WORLD"
-    },
-    "acceptanceEvidence": {
-      "priorBrowserTestedCommit": "be9dfbf9798ccf0b54813a1664f7d42f80925f0b",
-      "priorRun": 38488555019,
-      "priorFiveViews": "PASS",
-      "ownerCurrentDisposition": "ACCEPT_FOR_CONTROLLED_LIVE_RELEASE_TEST",
-      "newHeadBrowserQualified": false,
-      "newHeadActualWorldRootValidated": false,
-      "newHeadFiveViewActualScreenshotCaptured": false,
-      "physicalAndroidQualified": false
-    }
+    "oldReleaseProofRun": 38494993441,
+    "oldFiveViewBrowserRun": 38488555019,
+    "protectedRocks": 14,
+    "protectedTrees": 4,
+    "fullBrowserRerunPerformed": false,
+    "newOwnerVisualAcceptance": false,
+    "readyToMerge": false,
+    "readyToDeploy": false,
+    "nextStep": "INDEPENDENT_STATIC_MODULE_SOURCE_CHAIN_VERIFIER_AND_COMPLETED_RESIDENCY_PERIMETER_GEOMETRY_PROOF"
   }
 }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-14T19:30:04Z",
+  "generatedAt": "2026-10-14T20:31:10Z",
   "window": {
-    "start": "2026-09-14T19:30:04Z",
-    "end": "2026-10-14T19:30:04Z"
+    "start": "2026-09-14T20:31:10Z",
+    "end": "2026-10-14T20:31:10Z"
   },
   "dimensions": {
     "requestPath": [
@@ -208,14 +208,14 @@
         "visits": 10
       },
       {
-        "value": "/inspection/h-earth-t4-3-d8fca316/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/governance/",
         "pageLoads": 10,
         "visits": 0
+      },
+      {
+        "value": "/inspection/h-earth-t4-3-d8fca316/",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "/governance-bridge/collaboration/",
@@ -256,18 +256,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2225,
-        "visits": 2225
+        "pageLoads": 2825,
+        "visits": 2825
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1263,
+        "pageLoads": 1433,
         "visits": 0
       },
       {
         "value": "www.google.com",
-        "pageLoads": 163,
-        "visits": 163
+        "pageLoads": 173,
+        "visits": 173
       },
       {
         "value": "bing.com",

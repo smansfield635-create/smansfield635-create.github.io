@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-14T19:30:04Z",
+  "generatedAt": "2026-10-14T20:31:10Z",
   "window": {
-    "start": "2026-07-16T19:30:04Z",
-    "end": "2026-10-14T19:30:04Z"
+    "start": "2026-07-16T20:31:10Z",
+    "end": "2026-10-14T20:31:10Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,23 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4948,
+    "pageLoads": 4928,
     "visits": 1324,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4948,
+        "pageLoads": 4928,
         "visits": 1324
       }
     },
     "byPath": {
-      "/showroom/": {
-        "pageLoads": 130,
-        "visits": 10
-      },
-      "/showroom/globe/hearth/jeeves/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 50,
         "visits": 0
@@ -41,6 +33,10 @@
       "/showroom/globe/h-earth/": {
         "pageLoads": 166,
         "visits": 2
+      },
+      "/showroom/": {
+        "pageLoads": 120,
+        "visits": 10
       },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
@@ -126,20 +122,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -266,6 +262,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/showroom/globe/hearth/jeeves/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/preview/compass/holographic-orientation-v1/full/": {
         "pageLoads": 10,
         "visits": 0
@@ -349,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3624,
+        "pageLoads": 3604,
         "visits": 0
       },
       "www.google.com": {

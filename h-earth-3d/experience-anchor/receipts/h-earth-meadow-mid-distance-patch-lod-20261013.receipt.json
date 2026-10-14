@@ -6,11 +6,11 @@
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "reviewedAgainstAnchor": false,
   "disposition": "PENDING",
-  "acceptanceBasis": "Gen2694 bounded engineering branch. Owner rejects Gen2693 live grass presentation. Source inspection disproved initial inference that global originalDrawInstances means wide fan rendering: actual GLOBAL_COVER_PATCH_LOD_VS mode0 renders 12 procedural thin leaves per original source record, while P2 1/2 are ground litter and leafy understory. New candidate currently stages exact Gen2694 module cache identity across page/wrapper/integration/binding/renderer/grass plus accurate GPU original-source fine-leaf census; no broad-geometry retirement, no new five-view acceptance, no main merge or live deployment. Source and immutable base-world identity pins rebound, original world binary untouched. New owner acceptance is required before any release. This bounded continuation adds explicit current-camera GPU re-presentation immediately after the final worldwide cover upload and truthful separate first-frame, woodland draw-submission, global-cover GPU, and canonical vegetation-batch status. Priority tile CPU preparation still does not provide incremental GPU residency, and no visible-pixel coverage has been verified. Published appearance, yellow-blade retirement, and large-boulder improvement remain unaccepted. A bounded presentation-only P2_GRASS correction now masks the retired large folded blade classes 0/3 across that primitive, not only at the woodland ellipse; P2 1/2 understory and litter remain untouched. The independent source validator's expected mask matches this exact classification, but measured rendered pixel acceptance is still PENDING. Other vegetation sources, grass generation, terrain, trees, fourteen approved small rocks and immutable world bytes are unchanged. Further global origin verification, early local tile residency, large-boulder form and owner acceptance are outstanding.",
+  "acceptanceBasis": "Gen2694 bounded engineering branch. Owner rejects Gen2693 live grass presentation. Source inspection disproved initial inference that global originalDrawInstances means wide fan rendering: actual GLOBAL_COVER_PATCH_LOD_VS mode0 renders 12 procedural thin leaves per original source record, while P2 1/2 are ground litter and leafy understory. New candidate currently stages exact Gen2694 module cache identity across page/wrapper/integration/binding/renderer/grass plus accurate GPU original-source fine-leaf census; no broad-geometry retirement, no new five-view acceptance, no main merge or live deployment. Source and immutable base-world identity pins rebound, original world binary untouched. New owner acceptance is required before any release. This bounded continuation adds explicit current-camera GPU re-presentation immediately after the final worldwide cover upload and truthful separate first-frame, woodland draw-submission, global-cover GPU, and canonical vegetation-batch status. Priority tile CPU preparation still does not provide incremental GPU residency, and no visible-pixel coverage has been verified. Published appearance, yellow-blade retirement, and large-boulder improvement remain unaccepted. A bounded presentation-only P2_GRASS correction now masks the retired large folded blade classes 0/3 across that primitive, not only at the woodland ellipse; P2 1/2 understory and litter remain untouched. The independent source validator's expected mask matches this exact classification, but measured rendered pixel acceptance is still PENDING. Other vegetation sources, grass generation, terrain, trees, fourteen approved small rocks and immutable world bytes are unchanged. Further global origin verification, early local tile residency, large-boulder form and owner acceptance are outstanding. Gen2694 candidate now stages up to 24 priority tiles/3072 exact worldwide-cover records on a transient 262432-byte GPU preview before full world cover survey completion, with current-camera presentation and separate truthful phase events; it uses the approved thin-leaf shader and releases temporary resources before final cover GPU allocation. Source-level work only: live canvas pixel evidence, actual latency gain and accepted after-residency views remain pending. Retired yellow blades and large boulder remediation require further visible acceptance.",
   "experienceFiles": [
     {
       "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
-      "sha256": "a47965e2edf05c620a22f6ae7f0f28632983d290d2b0d6790acb3c81d48cdfa3"
+      "sha256": "f01e5ff3f6064552c79f046ec1ce004aee9b67ff6a680a39f5aa1f4628a2c83c"
     },
     {
       "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
@@ -18,11 +18,11 @@
     },
     {
       "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
-      "sha256": "a78397b38492ee7615430c8fa859b4a1086d7a6a52bab1b294ce53ebd9a7da33"
+      "sha256": "7909a24628b5a81200d903a319d95ddc38a9b464df54b97bf32ca25b946b529c"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "5c22be2f98df90e70279196f21652fa377651991df8f9117552ee875ac71e024"
+      "sha256": "d3bc27b4784561c7e77d88fc08707ff03c9fd670aa8f25e3d5b664df24818a54"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
@@ -34,11 +34,11 @@
     },
     {
       "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
-      "sha256": "3cb984f46dd32425e39dee9370ed9a088ec40b28ba988ae2d83d2825c154d6df"
+      "sha256": "42345350695ff58c4e453cd69d47313e298036d0c7659d78c48bbdfcca145195"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "d954a68728818d3de978096aca180b2273eab99c7fed59f8ded8a7fc8e5880da"
+      "sha256": "43d6849299cc0e92d96e70c3e4ed79066162997f940aecab17ed58937065f95e"
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",

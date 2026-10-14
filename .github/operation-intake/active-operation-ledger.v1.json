@@ -4042,6 +4042,50 @@
       "scopeHash": "400c8d96cbd9198eb07bf06ba6c102ab41f3827be4d1847d004b536132454764",
       "state": "ADMITTED_LOCKED"
     },
+    "40e439a5fed8b06b19dce51a9edca53617a65fbae8ba6521d66fcf1bf47de741": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2d2abaaf2bfdfe088075ef8d5857c72b52bbbee7",
+          "lockGeneration": 2718,
+          "lockScope": "ABOUT_PAGE:CALENDAR:2026_OCTOBER_RENEWAL",
+          "operationId": "ABOUT_OCTOBER_2026_NAVIGABLE_HISTORY_RENEWAL_20261014_001",
+          "procedureLocatorDigest": "bfe4a5732c0c326514dfe101979ea353096163a688f232165515b1653fcda580",
+          "requestDigest": "0028181e951b19809ff800c8b7a4fb3dee03aa8b7e301bd76978531c47a0cc1c",
+          "scopeHash": "40e439a5fed8b06b19dce51a9edca53617a65fbae8ba6521d66fcf1bf47de741"
+        },
+        "bindingDigest": "ff6ea6b9454150c2cc52e955ae803359249b88f8a6bd60f2b134134fe1bffa91",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "efcd1761028f51beaa6e9cf160696fd2ca248621a9415975d39cf42cbc02ad84",
+          "commentId": 6181063731,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6298,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38656669516,
+          "workflowSha": "e586a647f4b57d36d6447ee55658f71fa73c5bfa"
+        },
+        "lineageAnchorCommitSha": "4439325bb2106e4a95aa2d956ee3d4b4cc7e34ce",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "2d2abaaf2bfdfe088075ef8d5857c72b52bbbee7",
+      "lockGeneration": 2718,
+      "lockScope": "ABOUT_PAGE:CALENDAR:2026_OCTOBER_RENEWAL",
+      "operationId": "ABOUT_OCTOBER_2026_NAVIGABLE_HISTORY_RENEWAL_20261014_001",
+      "procedureLocatorDigest": "bfe4a5732c0c326514dfe101979ea353096163a688f232165515b1653fcda580",
+      "released": false,
+      "requestDigest": "0028181e951b19809ff800c8b7a4fb3dee03aa8b7e301bd76978531c47a0cc1c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "40e439a5fed8b06b19dce51a9edca53617a65fbae8ba6521d66fcf1bf47de741",
+      "state": "ADMITTED_LOCKED"
+    },
     "4108c909a9b8952f198bf6aa7220b5798b1bdc8f8d7e31241fc769616a15ecb9": {
       "governingHead": "3c1f3800b8120a8d673cd9c59f89ecbcb7c049ca",
       "lockGeneration": 395,
@@ -17892,7 +17936,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2717,
+  "lockGeneration": 2718,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

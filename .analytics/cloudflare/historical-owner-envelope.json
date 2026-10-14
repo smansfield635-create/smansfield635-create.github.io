@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-14T13:30:50Z",
+  "generatedAt": "2026-10-14T14:32:36Z",
   "window": {
-    "start": "2026-07-16T13:30:50Z",
-    "end": "2026-10-14T13:30:50Z"
+    "start": "2026-07-16T14:32:36Z",
+    "end": "2026-10-14T14:32:36Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4977,
-    "visits": 1324,
+    "pageLoads": 4727,
+    "visits": 1264,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4977,
-        "visits": 1324
+        "pageLoads": 4727,
+        "visits": 1264
       }
     },
     "byPath": {
@@ -39,15 +39,15 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1042,
-        "visits": 742
+        "pageLoads": 1022,
+        "visits": 722
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 50,
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 165,
+        "pageLoads": 155,
         "visits": 2
       },
       "/laws/categories/reality/battery-heldout-study/": {
@@ -63,8 +63,8 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 80,
-        "visits": 10
+        "pageLoads": 50,
+        "visits": 0
       },
       "/frontier/energy/battery-coherence-study/": {
         "pageLoads": 20,
@@ -103,8 +103,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 270,
-        "visits": 70
+        "pageLoads": 250,
+        "visits": 60
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -127,8 +127,8 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 160,
-        "visits": 10
+        "pageLoads": 150,
+        "visits": 0
       },
       "/governance/": {
         "pageLoads": 60,
@@ -143,7 +143,7 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 90,
+        "pageLoads": 80,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -246,6 +246,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -259,10 +263,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -291,26 +291,10 @@
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 40,
-        "visits": 30
+        "pageLoads": 20,
+        "visits": 20
       },
       "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/products/on-your-side-ai/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/products/archcoin/receivable/": {
-        "pageLoads": 50,
-        "visits": 0
-      },
-      "/products/archcoin/contract/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
-      "/products/archcoin/allocation/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -349,16 +333,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3653,
+        "pageLoads": 3463,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 782,
-        "visits": 782
+        "pageLoads": 762,
+        "visits": 762
       },
       "(none)": {
-        "pageLoads": 532,
-        "visits": 532
+        "pageLoads": 492,
+        "visits": 492
       },
       "raw.githack.com": {
         "pageLoads": 10,

@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "about",
-  "description": "Qualified cinematic About estate with Audralia WORLD, authoritative Mirrorland STORY, Play/Skip threshold, user-gesture soundtrack start, navigable January–September history calendar, human/community layer, Skip convergence, and reduced-motion equivalent.",
+  "description": "Qualified cinematic About estate with Audralia WORLD, authoritative Mirrorland STORY, Play/Skip threshold, user-gesture soundtrack start, navigable January–October history calendar, human/community layer, Skip convergence, and reduced-motion equivalent.",
   "checks": [
     {
       "path": "/about/index.html",
@@ -12,7 +12,7 @@
         "Chronology · navigable history",
         "data-prev",
         "data-calendar-reader",
-        "September 2026",
+        "October 2026",
         "AI RULES",
         "CLAIM RULES",
         "AGENT RESULT",
@@ -82,7 +82,7 @@
           {
             "type": "textContains",
             "selector": "[data-title]",
-            "value": "August 2026"
+            "value": "September 2026"
           }
         ],
         "timeoutMs": 5000
@@ -97,7 +97,7 @@
           {
             "type": "textContains",
             "selector": "[data-title]",
-            "value": "September 2026"
+            "value": "October 2026"
           }
         ],
         "timeoutMs": 5000
@@ -116,7 +116,7 @@
           {
             "type": "textContains",
             "selector": "[data-reader-title]",
-            "value": "Agentic result"
+            "value": "Character encounters"
           }
         ],
         "timeoutMs": 5000

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2694-actual-visible-ground-first-grass-20261014-02",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6268,
+  "requestBranch": "ai-dispatch-request-h-earth-visible-meadow-20261014-02",
+  "requestCommit": "2ade226b3fc321c7e08aeff1a09f458f5d7b6471",
+  "requestCommitParent": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "247db9cdbf0335c19db0337f6ad2b6e555b5964b",
+    "route_query": "arrival=approved-four-trees"
+  },
+  "bridgeRunId": "38605702744",
+  "dispatchedRunId": 38605970895,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38605970895",
+  "dispatchedRunHeadSha": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "dispatchedAt": "2026-10-14T17:21:28.861Z",
+  "resolvedAt": "2026-10-14T17:21:33.246Z"
+}

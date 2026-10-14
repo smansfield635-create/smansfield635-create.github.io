@@ -438,8 +438,8 @@ jobs:
                   if(!bounds||bounds.width<300||bounds.height<150)throw Error('BOULDER_VIEW_SURFACE_UNAVAILABLE');
                   const x=Math.min(1090,Math.max(165,bounds.x+bounds.width*.5));
                   const y=Math.min(680,Math.max(235,bounds.y+bounds.height*.5));
-                  await page.mouse.move(x-115,y);await page.mouse.down();
-                  await page.mouse.move(x+115,y,{steps:18});
+                  await page.mouse.move(x+115,y);await page.mouse.down();
+                  await page.mouse.move(x-115,y,{steps:18});
                   await page.waitForTimeout(730);await page.mouse.up();
                   for(let step=0;step<9;step++){await page.mouse.wheel(0,-560);await page.waitForTimeout(110);}
                   await page.waitForTimeout(1300);

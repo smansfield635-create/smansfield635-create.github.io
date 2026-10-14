@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2694-early-meadow-organic-edge-20261014-01",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6269,
+  "requestBranch": "ai-dispatch-request-h-earth-organic-first-meadow-20261014-01",
+  "requestCommit": "31a702be5aa81ce8687d6f678cf3db00b6629ce1",
+  "requestCommitParent": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "5e243182788e55cbcf9a77532f8b682beb531e16",
+    "route_query": "arrival=approved-four-trees"
+  },
+  "bridgeRunId": "38607207813",
+  "dispatchedRunId": 38607555039,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38607555039",
+  "dispatchedRunHeadSha": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "dispatchedAt": "2026-10-14T17:32:46.411Z",
+  "resolvedAt": "2026-10-14T17:32:51.397Z"
+}

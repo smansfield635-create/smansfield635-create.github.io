@@ -17,6 +17,9 @@ const out='/tmp/gen2-evidence';
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 const gen2674QualificationHeads=new Set(['9a63c4571d95abf925ba22f2fcd7aaaa8c578cac','b23839dc8a473b52dbac080f71bde38dd99cda0f','870a995a7012312ac25569c0dc6673822a126ae2','158d72eecedf9197df194d997cb3b10250197265','e9b86b1af4a5c1ec66a5f39c3e7e1baa91757dce']);
 const woodlandQualificationHead='4abd1016336482373caf1c5bfb90245fc188e806';
+const sceneQualificationHead='be9dfbf9798ccf0b54813a1664f7d42f80925f0b';
+const woodlandQualificationHeads=new Set([woodlandQualificationHead,sceneQualificationHead]);
+const woodlandRocksReady=s=>Boolean(s?.rocks?.rockCount===14&&s.rocks.vertices===868&&s.rocks.triangles===1680&&s.rocks.suppressedTriangles===224&&s.rocks.preservedOriginalRockTriangles===336&&s.rocks.originalWorldChanged===false&&s.rocks.gpuByteLength===80052&&s.rocks.combinedSceneGpuBytes===8211732&&s.rocks.combinedSceneGpuBytes<=8388608&&s.rocks.mainDrawCount>0&&s.rocks.shadowDrawCount===1&&s.rocks.drawsPerFrame===1);
 const woodlandViews=[['north',-139.403,-194.5],['south',-139.403,-236],['east',-119,-216],['west',-164,-216],['interior',-141,-214]].map(([id,x,z])=>({id,x,z,yawDegrees:id==='interior'?0:Math.atan2(-141-x,z+216)*180/Math.PI,pitchDegrees:-8}));
 const woodlandReady=s=>Boolean(s?.gpuResidency?.woodlandFineGrassReady===true&&s?.woodland?.ready===true&&s.woodland.visibleContacts>0&&s.woodland.visibleInstanceCount>0&&s.woodland.drawCallCount===3&&/0:[1-9]\d*,1:[1-9]\d*,2:[1-9]\d*$/.test(s.woodland.selectionSignature??'')&&s.woodland.submittedTriangles>0&&s.woodland.combinedGrassGpuBytes>0&&s.woodland.combinedGrassGpuBytes<=8388608&&(s.globalCover?.visibleInstanceCount??Infinity)+s.woodland.visibleInstanceCount<=4096&&(s.globalCover?.drawCallCount??Infinity)+s.woodland.drawCallCount<=64);
 const woodlandFixturesMatch=fixtures=>Array.isArray(fixtures)&&fixtures.length>=1&&fixtures.length<=4&&fixtures.every(f=>f.beforeSha256==='6b57b514fbeeea633b6f8c9006b58b34bbd87b6a6420c2f32202cf1262cfb9cf'&&f.afterSha256==='e78adffbb354de9173e2c2de343d3aea4b25d46dc57ee0d546da45dc1236a08c'&&f.waypointCount===5&&f.canonicalGotoImplementationUnchanged===true);
@@ -32,17 +35,20 @@ async function captureWoodlandViews(page,observe,entry){
   while(Date.now()-started<30000){if(entry.errors.length||entry.failedRequests.length)throw Error('WOODLAND_BROWSER_ERROR');actual=await observe();if(actual.navigation?.sequence>before.navigation.sequence&&Math.hypot(actual.position.x-target.x,actual.position.z-target.z)<.03&&woodlandReady(actual)&&actual.gpuPresentations>before.gpuPresentations&&actual.lastFrame?.navigationSequence===actual.navigation.sequence&&Number.isFinite(actual.lastFrame?.responseMs))break;await sleep(200);}
   await canvas.screenshot({path:out+'/four-tree-views/'+target.id+'-arrival-diagnostic.png'});
   if(actual.gpuPresentations<=before.gpuPresentations||actual.lastFrame?.navigationSequence!==actual.navigation.sequence||!Number.isFinite(actual.lastFrame?.responseMs)||actual.lastFrame.responseMs<0||!woodlandCameraMatches(actual,target)||!readiness(actual)||!residencyReady(actual.residency)||!woodlandReady(actual)||actual.navigation?.sequence<=before.navigation.sequence||Math.hypot(actual.position.x-target.x,actual.position.z-target.z)>.03||Math.abs(wrappedMeadowYaw(actual.navigation.yawDegrees-target.yawDegrees))>.02||Math.abs(actual.navigation.pitchDegrees-target.pitchDegrees)>.02||Math.abs(actual.navigation.verticalFovDegrees-56)>.02||actual.navigation.terrainSupported!==true||!Number.isFinite(actual.navigation.visibleTerrainElevation)||actual.position.y<actual.navigation.minimumCameraY||actual.gpuFourTreeFloorCount!==4||actual.clearingGpuReady!==true)throw Error('WOODLAND_ACTUAL_VIEW_INVALID:'+target.id+':'+JSON.stringify(actual));
+  if(entry.sceneRefinement&&!woodlandRocksReady(actual))throw Error('WOODLAND_ROCK_ARRIVAL_INVALID:'+target.id+':'+JSON.stringify(actual.rocks));
   const arrival=actual;
   await page.evaluate(id=>{globalThis.__hEarthQualifierWaypoint='QUALIFIER_'+id;},target.id);await page.mouse.wheel(0,1);
   const redrawStarted=Date.now();let redraw;
   while(Date.now()-redrawStarted<30000){if(entry.errors.length||entry.failedRequests.length)throw Error('WOODLAND_REDRAW_BROWSER_ERROR');redraw=await observe();if(redraw.navigation?.sequence>arrival.navigation.sequence&&redraw.gpuPresentations>arrival.gpuPresentations)break;await sleep(100);}
   if(!woodlandCameraMatches(redraw,target)||!readiness(redraw)||!residencyReady(redraw.residency)||!woodlandReady(redraw)||redraw.navigation.sequence<=arrival.navigation.sequence||redraw.gpuPresentations<=arrival.gpuPresentations||redraw.woodland.totalUploadedBytes!==arrival.woodland.totalUploadedBytes||redraw.woodland.perFrameUploadBytes!==0||redraw.woodland.selectionSignature!==arrival.woodland.selectionSignature||['x','y','z'].some(k=>redraw.position[k]!==arrival.position[k])||redraw.lastFrame?.navigationSequence!==redraw.navigation.sequence||!Number.isFinite(redraw.lastFrame?.responseMs)||redraw.lastFrame.responseMs<0)throw Error('WOODLAND_EXPLICIT_STATIONARY_REDRAW_INVALID:'+target.id+':'+JSON.stringify({arrival,redraw}));
+  if(entry.sceneRefinement&&(!woodlandRocksReady(redraw)||redraw.rocks.mainDrawCount<=arrival.rocks.mainDrawCount||redraw.rocks.shadowDrawCount!==arrival.rocks.shadowDrawCount))throw Error('WOODLAND_ROCK_REDRAW_INVALID:'+target.id+':'+JSON.stringify({arrival:arrival.rocks,redraw:redraw.rocks}));
   actual=redraw;
   const samples=await page.evaluate(()=>new Promise((resolve,reject)=>{const intervals=[];let last=null;const timer=setTimeout(()=>reject(Error('WOODLAND_FRAME_TIMING_TIMEOUT')),30000);function tick(now){if(last!==null)intervals.push(now-last);last=now;if(intervals.length===60){clearTimeout(timer);resolve({intervalsMs:intervals,jsHeap:performance.memory?{usedJSHeapSize:performance.memory.usedJSHeapSize,totalJSHeapSize:performance.memory.totalJSHeapSize,jsHeapSizeLimit:performance.memory.jsHeapSizeLimit}:null});}else requestAnimationFrame(tick);}requestAnimationFrame(tick);}));
   const after=await observe();if(entry.errors.length||entry.failedRequests.length||!woodlandCameraMatches(after,target)||!readiness(after)||!residencyReady(after.residency)||!woodlandReady(after)||after.woodland.perFrameUploadBytes!==0||after.woodland.totalUploadedBytes!==actual.woodland.totalUploadedBytes||after.woodland.selectionSignature!==actual.woodland.selectionSignature||after.gpuPresentations<actual.gpuPresentations)throw Error('WOODLAND_STATIONARY_RENDER_INVALID:'+target.id);
+  if(entry.sceneRefinement&&!woodlandRocksReady(after))throw Error('WOODLAND_ROCK_FINAL_INVALID:'+target.id);
   const filename='four-tree-views/'+target.id+'-post-residency-canvas.png',bytes=await canvas.screenshot({path:out+'/'+filename});if(bytes.length<1024)throw Error('WOODLAND_CANVAS_EMPTY');
   const sorted=[...samples.intervalsMs].sort((a,b)=>a-b);
-  entry.woodlandViews.push({target,actualCamera:after.navigation,filename,canvasBytes:bytes.length,canvasSha256:crypto.createHash('sha256').update(bytes).digest('hex'),woodland:after.woodland,globalCover:after.globalCover,vegetationResidency:after.gpuResidency,stationaryRedraw:{arrivalPresentationCount:arrival.gpuPresentations,redrawPresentationCount:redraw.gpuPresentations,arrivalNavigationSequence:arrival.navigation.sequence,redrawNavigationSequence:redraw.navigation.sequence,cumulativeUploadDeltaBytes:redraw.woodland.totalUploadedBytes-arrival.woodland.totalUploadedBytes,actualFrame:redraw.lastFrame},timing:{actualArrivalFrame:arrival.lastFrame,actualStationaryRedrawFrame:redraw.lastFrame,idleCadence:{...samples,medianMs:sorted[30],p95Ms:sorted[57],measurement:'Idle requestAnimationFrame cadence; not renderer frame time or GPU timer queries'},idlePresentationDelta:after.gpuPresentations-redraw.gpuPresentations,idleUploadDeltaBytes:after.woodland.totalUploadedBytes-redraw.woodland.totalUploadedBytes},navigationElapsedMs:Date.now()-started,canonicalTerrainSupportedCamera:true,cameraHeightNote:'CPU diagnostic used 1.7m; browser preserves canonical terrain-supported camera, without height override',measuredHeightAboveVisibleTerrain:after.position.y-after.navigation.visibleTerrainElevation,productionNavigationUnchanged:true,testOnlyWaypointFixture:true});
+  entry.woodlandViews.push({target,actualCamera:after.navigation,filename,canvasBytes:bytes.length,canvasSha256:crypto.createHash('sha256').update(bytes).digest('hex'),woodland:after.woodland,rocks:after.rocks,globalCover:after.globalCover,vegetationResidency:after.gpuResidency,stationaryRedraw:{arrivalPresentationCount:arrival.gpuPresentations,redrawPresentationCount:redraw.gpuPresentations,arrivalNavigationSequence:arrival.navigation.sequence,redrawNavigationSequence:redraw.navigation.sequence,cumulativeUploadDeltaBytes:redraw.woodland.totalUploadedBytes-arrival.woodland.totalUploadedBytes,actualFrame:redraw.lastFrame},timing:{actualArrivalFrame:arrival.lastFrame,actualStationaryRedrawFrame:redraw.lastFrame,idleCadence:{...samples,medianMs:sorted[30],p95Ms:sorted[57],measurement:'Idle requestAnimationFrame cadence; not renderer frame time or GPU timer queries'},idlePresentationDelta:after.gpuPresentations-redraw.gpuPresentations,idleUploadDeltaBytes:after.woodland.totalUploadedBytes-redraw.woodland.totalUploadedBytes},navigationElapsedMs:Date.now()-started,canonicalTerrainSupportedCamera:true,cameraHeightNote:'CPU diagnostic used 1.7m; browser preserves canonical terrain-supported camera, without height override',measuredHeightAboveVisibleTerrain:after.position.y-after.navigation.visibleTerrainElevation,productionNavigationUnchanged:true,testOnlyWaypointFixture:true});
  }
  if(entry.woodlandViews.length!==5)throw Error('WOODLAND_FIVE_VIEWS_MISSING');
  await fs.writeFile(out+'/four-tree-views/receipt.json',JSON.stringify(entry.woodlandViews,null,2)+'\n');
@@ -69,12 +75,13 @@ async function reuseWoodlandCheckpoint(head){
 }
 async function runGen2674IndependentRootQualification(exactCandidateHead){
  if(exactCandidateHead===woodlandQualificationHead)return reuseWoodlandCheckpoint(exactCandidateHead);
- if(exactCandidateHead===woodlandQualificationHead&&Number(process.versions.node.split('.')[0])!==22)throw Error('WOODLAND_REQUIRES_ACTUAL_NODE22:'+process.version);
+ if(woodlandQualificationHeads.has(exactCandidateHead)&&Number(process.versions.node.split('.')[0])!==22)throw Error('WOODLAND_REQUIRES_ACTUAL_NODE22:'+process.version);
  const receipt={schema:'H_EARTH_GEN2674_INDEPENDENT_WORLD_ROOT_QUALIFICATION_v1',candidateHead:exactCandidateHead,
   actualNode22Execution:true,nodeVersion:process.version,worldBinaryMustRemainUnchanged:true,steps:[],result:'PENDING'};
  const plans=[['SOURCE_PARITY','h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs','--verify-source'],
   ['IMMUTABLE_WORLD_ROOT','h-earth-3d/validation/h-earth.global-groundcover.v1.mjs','--single-order']];
- if(exactCandidateHead===woodlandQualificationHead)plans.push(['FOUR_TREE_ROOT','h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs','--verify']);
+ if(woodlandQualificationHeads.has(exactCandidateHead))plans.push(['FOUR_TREE_ROOT','h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs','--verify']);
+ if(exactCandidateHead===sceneQualificationHead)plans.push(['FOUR_TREE_ROCK','h-earth-3d/validation/h-earth.four-tree-rock-presentation.v1.mjs','--verify']);
  try{
   for(const [id,script,arg] of plans){
    const completed=spawnSync(process.execPath,[script,arg],{encoding:'utf8',timeout:11*60*1000,maxBuffer:16*1024*1024});
@@ -84,6 +91,7 @@ async function runGen2674IndependentRootQualification(exactCandidateHead){
     stdoutTail:stdout.slice(-12000),stderrTail:stderr.slice(-5000),
     result:completed.status===0&&!completed.error?'PASS':'FAIL'};
    receipt.steps.push(evidence);
+   if(id==='FOUR_TREE_ROCK')await fs.writeFile(out+'/four-tree-independent-rock-receipt.json',JSON.stringify(evidence,null,2)+'\n');
    if(id==='FOUR_TREE_ROOT')await fs.writeFile(out+'/four-tree-independent-root-receipt.json',JSON.stringify(evidence,null,2)+'\n');
    if(evidence.result!=='PASS')throw Error('GEN2674_INDEPENDENT_'+id+'_FAILED:'+String(completed.error||stderr.slice(-1400)));
   }
@@ -224,10 +232,12 @@ if(process.argv.includes('--self-test')){
   if(!woodlandFixturesMatch([fixture])||!woodlandFixturesMatch([fixture,fixture])||!woodlandFixturesMatch(Array(4).fill(fixture))||woodlandFixturesMatch([])||woodlandFixturesMatch(Array(5).fill(fixture))||woodlandFixturesMatch([fixture,{...fixture,afterSha256:'mismatch'}]))throw Error('WOODLAND_MULTI_REQUEST_FIXTURE_SELF_TEST_FAILED');
   const w={gpuResidency:{woodlandFineGrassReady:true},woodland:{ready:true,visibleContacts:1,visibleInstanceCount:1,drawCallCount:3,selectionSignature:'0:0:1024:0:500,1:200,2:100',submittedTriangles:4,combinedGrassGpuBytes:8131680},globalCover:{visibleInstanceCount:3072,drawCallCount:3}};
   if(!woodlandReady(w)||woodlandReady({...w,gpuResidency:{woodlandFineGrassReady:false}})||woodlandReady({...w,woodland:{...w.woodland,visibleContacts:0}})||woodlandReady({...w,woodland:{...w.woodland,combinedGrassGpuBytes:8388609}})||new Set(woodlandViews.map(v=>v.id)).size!==5)throw Error('WOODLAND_SELF_TEST_FAILED');
+  const rockExample={rocks:{rockCount:14,vertices:868,triangles:1680,suppressedTriangles:224,preservedOriginalRockTriangles:336,originalWorldChanged:false,gpuByteLength:80052,combinedSceneGpuBytes:8211732,mainDrawCount:2,shadowDrawCount:1,drawsPerFrame:1}};
+  if(!woodlandRocksReady(rockExample)||woodlandRocksReady({})||[...['rockCount','vertices','triangles','suppressedTriangles','preservedOriginalRockTriangles','gpuByteLength','combinedSceneGpuBytes','mainDrawCount','shadowDrawCount','drawsPerFrame'].map(k=>({...rockExample,rocks:{...rockExample.rocks,[k]:0}})),{rocks:{...rockExample.rocks,originalWorldChanged:true}}].some(woodlandRocksReady))throw Error('WOODLAND_ROCK_RECEIPT_SELF_TEST_FAILED');
   console.log(JSON.stringify({schema:'H_EARTH_GEN2_VISUAL_QUALIFIER_SELF_TEST_v1',result:'PASS',loadingOverlayRejected:true,missingGpuRejected:true,incompleteResidencyRejected:true}));
 }else{
  const sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
- const woodlandQualificationActive=sha===woodlandQualificationHead;
+ const woodlandQualificationActive=woodlandQualificationHeads.has(sha);
  const gen2674QualificationActive=gen2674QualificationHeads.has(sha)||woodlandQualificationActive;
  if(performanceCaptureActive){
   const executingBlob=execFileSync('git',['hash-object',process.argv[1]],{encoding:'utf8'}).trim();
@@ -340,7 +350,7 @@ if(process.argv.includes('--self-test')){
       position:route?.getIntakeReceipt?.()?.currentNavigationState?.position||null,
       navigation:(()=>{const n=route?.getIntakeReceipt?.()?.currentNavigationState;return n?{yawDegrees:n.yawDegrees,pitchDegrees:n.pitchDegrees,verticalFovDegrees:n.verticalFovDegrees,position:n.position,sequence:n.sequence,accepted:n.accepted,action:n.action,targetCameraY:n.targetCameraY,terrainSupported:n.terrainSupported,visibleTerrainElevation:n.visibleTerrainElevation,minimumCameraY:n.minimumCameraY,clearance:n.clearance}:null})(),
       navigationProposals:(route?.getIntakeReceipt?.()?.proposals||[]).slice(-16).map(p=>({sequence:p.sequence,inputClass:p.inputClass,action:p.intent?.action,accepted:p.accepted})),
-      woodland:gpu?.resources?.woodlandFineGrass??null,globalCover:gpu?.resources?.globalGroundCover??null,gpuResidency:gpu?.resources?.vegetationResidency??null,
+      woodland:gpu?.resources?.woodlandFineGrass??null,rocks:gpu?.resources?.woodlandRocks??null,globalCover:gpu?.resources?.globalGroundCover??null,gpuResidency:gpu?.resources?.vegetationResidency??null,
       residencyStatus:root?.dataset.vegetationResidency||null,
       residency:route?.getVegetationResidency?.()||null
      };
@@ -427,7 +437,7 @@ if(process.argv.includes('--self-test')){
        testOnlyNavigationModuleResponseIntercepted:true,productionNavigationUnchanged:true,
        ownerPerceptualDisposition:'PENDING'};
       await fs.writeFile(out+'/gen2674-meadow-camera-receipt.json',JSON.stringify(entry.gen2674Meadow,null,2)+'\n');
-      if(woodlandQualificationActive){if(!woodlandFixturesMatch(entry.navigationFixtures))throw Error('WOODLAND_FIXTURE_SOURCE_BINDING:'+JSON.stringify(entry.navigationFixtures));await captureWoodlandViews(page,observe,entry);}
+      if(woodlandQualificationActive){if(!woodlandFixturesMatch(entry.navigationFixtures))throw Error('WOODLAND_FIXTURE_SOURCE_BINDING:'+JSON.stringify(entry.navigationFixtures));entry.sceneRefinement=sha===sceneQualificationHead;await captureWoodlandViews(page,observe,entry);}
      }
      if(v.id==='coast'&&gen2671MeadowHead(sha))await captureGen2671Meadow(page,observe,entry,sha);
      // The owner-requested question is soil quality OUTSIDE the reference,

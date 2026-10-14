@@ -367,7 +367,9 @@ function showVegetationPreparation(progress){
     root.dataset.woodlandGrassPreviewDrawSubmitted=draw.drawCallCount>0?'true':'false';
     window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{
       phase:'WOODLAND_FINE_GRASS_PRIORITY_FRAME_PRESENTED',...draw,
-      priorityRowsPrepared:progress.priorityRowsPrepared
+      priorityRowsPrepared:progress.priorityRowsPrepared,
+      priorityRadiusMeters:progress.priorityRadiusMeters,
+      priorityCellsPrepared:progress.priorityCellsPrepared
     }}));
     showVegetationStatus(draw.drawCallCount>0
       ?'Woodland grass drawing · '+draw.submittedContacts+' nearby contacts submitted.'

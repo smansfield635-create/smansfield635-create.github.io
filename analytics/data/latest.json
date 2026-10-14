@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-14T01:01:05Z",
+  "generatedAt": "2026-10-14T01:37:24Z",
   "window30d": {
-    "start": "2026-09-14T01:01:05Z",
-    "end": "2026-10-14T01:01:05Z"
+    "start": "2026-09-14T01:37:24Z",
+    "end": "2026-10-14T01:37:24Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-07",
-      "pageLoads": 107
+      "pageLoads": 92
     },
     {
       "date": "2026-10-08",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-14",
-      "pageLoads": 0
+      "pageLoads": 2
     }
   ],
   "summary": {
-    "pageLoads": 4712,
+    "pageLoads": 4689,
     "botPageLoads": 1836,
-    "nonBotPageLoads": 2876
+    "nonBotPageLoads": 2853
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2893,
-      "visits": 2893
+      "pageLoads": 2881,
+      "visits": 2881
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1541,
+      "pageLoads": 1531,
       "visits": 0
     },
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 41,
-      "visits": 41
+      "pageLoads": 40,
+      "visits": 40
     },
     {
       "host": "m.facebook.com",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 423,
-      "visits": 403
+      "pageLoads": 411,
+      "visits": 391
     },
     {
       "path": "/campaigns/consider-the-energy/",

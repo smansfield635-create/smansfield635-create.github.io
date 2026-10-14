@@ -13,10 +13,12 @@ const RENDER = 'showroom/globe/h-earth/render/';
 const ASSET = `${RENDER}assets/h-earth-canonical-base-world.v1.json.gz`;
 const MANIFEST = `${RENDER}assets/h-earth-canonical-base-world.v1.manifest.json`;
 const SOURCE_BLOBS = Object.freeze({
+  [`${RENDER}woodland-rock-presentation.v1.js`]: '77e7038d27862a39c31676d1d9a1ee9a84d5f267',
+  [`${RENDER}woodland-fine-grass.v1.js`]: 'ec420d1866938d878a71de0457106462ce3a97b2',
   [`${RENDER}live-render-package.run8e-r2.canonical.js`]: '41092afa665f715027f54bc6c52898b839911235',
   [`${RENDER}live-render-package.run8e-r2.js`]: 'd362035f091a7fd997553239c048e87e8b46e4c7',
   [`${RENDER}run8e-successor-environment.js`]: '92d5cb9523619fed34382986232c3d8c261e2a8d',
-  [`${RENDER}persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js`]: 'f98a1935f1c9bd0f4416f665fb618a520de26df8',
+  [`${RENDER}persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js`]: '3ea4c09ddfc777ba21f8756b2d37e258fde5c805',
   [`${RENDER}geometry-landscape-sector.p2.js`]: 'c26247dcb69cb52c968fcd3ef6c2626eaa577d03',
   [`${RENDER}landscape-groundcover.global-v1.js`]: 'e02c8f751dbb2011b5611f19136e7f2fea33397a',
   [`${RENDER}woodland-clearing-trial.js`]: '14c366d2241469fbccd08ee31bbeac0f1b7598f4',

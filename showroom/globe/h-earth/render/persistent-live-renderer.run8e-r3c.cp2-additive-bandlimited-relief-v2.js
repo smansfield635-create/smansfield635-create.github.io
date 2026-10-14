@@ -1420,7 +1420,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
               tileRecordBytes:tile.records.byteLength});
           }
         }
-      }).then(async cover=>{await uploadGlobalCover(cover);progress({phase:'GLOBAL_COVER_RESIDENT',globalCoverComplete:true});});
+      }).then(async cover=>{await woodlandPreparation;await uploadGlobalCover(cover);progress({phase:'GLOBAL_COVER_RESIDENT',globalCoverComplete:true});});
       // The source-qualified 108 batches need truth, the oasis, and resident woodland grass,
       // not the entire ground-cover survey. Final cover remains mandatory.
       const batchPrerequisites=Promise.all([truthPreparation,oasisPreparation,woodlandPreparation]).then(()=>{

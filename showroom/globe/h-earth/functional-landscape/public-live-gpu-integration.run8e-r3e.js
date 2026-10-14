@@ -346,6 +346,11 @@ function showVegetationStatus(text,force=false){
 function showVegetationPreparation(progress){
   if(vegetationLoadingFailed)return;
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:progress}));
+  if(progress.phase==='WOODLAND_FINE_GRASS_RESIDENT'){
+    binding.presentWoodlandFineGrassReadyFrame();
+    showVegetationStatus('Woodland grass ready · continuing landscape preparation.',true);
+    return;
+  }
   if(progress.phase==='BATCH_PREREQUISITES_READY'){
     vegetationPrepared=true;
     showVegetationStatus('Loading nearby vegetation · You can explore.',true);

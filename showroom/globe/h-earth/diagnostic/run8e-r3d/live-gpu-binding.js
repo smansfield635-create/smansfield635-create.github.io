@@ -397,6 +397,15 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     return result;
   };
 
+  const presentWoodlandFineGrassReadyFrame = () => {
+    const state = renderer.getResourceReceipt().woodlandFineGrass;
+    if(state?.ready!==true)throw new Error('R3D3_WOODLAND_FINE_GRASS_NOT_READY');
+    return presentNavigationState(latestNavigationState,{
+      kind:'WOODLAND_FINE_GRASS_RESIDENT',
+      sequence:state.contactCount,
+      captureEvidence:false
+    });
+  };
   const getVegetationResidency = () => renderer.getResourceReceipt().vegetationResidency;
 
   const captureLatestEvidence = (label = `explicit-${frameSequence}`) => {
@@ -511,6 +520,7 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     captureLatestEvidence,
     prepareVegetationResidency: options => deferredVegetationActive?renderer.prepareVegetationResidency(options):Promise.resolve(getVegetationResidency()),
     materializeNextVegetationBatch,
+    presentWoodlandFineGrassReadyFrame,
     getVegetationResidency,
     startPresentationAnimation,
     stopPresentationAnimation,

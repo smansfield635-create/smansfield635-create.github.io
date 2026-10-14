@@ -10,7 +10,7 @@
   "experienceFiles": [
     {
       "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
-      "sha256": "a6a6012548acb490cafd16b6fee46fc0274a9f3562a582e89c71512d351067ea"
+      "sha256": "661c3b90679d6ea75c4d99fcaae3a00b2efd6e5086bccc5b63e40cbed73532e0"
     },
     {
       "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
@@ -18,11 +18,11 @@
     },
     {
       "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
-      "sha256": "53fd7d45164f1929a1ba521e9e1da216d0b2846b9fec68529fed59e876388e46"
+      "sha256": "3a2cc7c41488fda61f45de5c76ace8caecfe152e5341f1baa0c8f15ac6709ebe"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "cc428ce3f0f93b89039677e60892479142923f7bb62ea8e92f50aae59354f7a6"
+      "sha256": "e433942e10c445678f65910fdf3670eeece1a9c418f2d7bbbe7b70d147494645"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
@@ -34,11 +34,11 @@
     },
     {
       "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
-      "sha256": "1db93e5ba16bfe66952f5325eb13b88d9f29e889241c61f23ef0b480f34a1b4a"
+      "sha256": "18da2a99661062b5f3f06351c5ce6bbc6cdd579a16f351911d9abb2ce290c01a"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "9142e6d2f41c260d2c20f1d2993bfadc7a719083ae23d313ea736a97ee193b9d"
+      "sha256": "d954a68728818d3de978096aca180b2273eab99c7fed59f8ded8a7fc8e5880da"
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",

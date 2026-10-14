@@ -344,7 +344,8 @@ void main(){
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;
   // Dune tag 4 was explicitly grown on dry sand. Preserve its immutable source
   // record but submit no beach vegetation pixels (land and water remain untouched).
-  gl_Position=duneStratum>.5?vec4(2.0,2.0,2.0,1.0):uViewProjection*vec4(vWorldPosition,1.0);
+  gl_Position=uViewProjection*vec4(vWorldPosition,1.0);
+  if(duneStratum>.5)gl_Position=vec4(2.0,2.0,2.0,1.0);
 }`;
 
 // Same approved six-vertex curved grass; independent presentation roots only.

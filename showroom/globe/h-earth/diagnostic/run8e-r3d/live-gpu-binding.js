@@ -406,6 +406,27 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
       captureEvidence:false
     });
   };
+  // A prepared GPU texture is not a presented frame. Redraw the current
+  // unchanged navigation state as soon as final groundcover upload lands.
+  const presentResidentGlobalCoverFrame = () => {
+    const before=renderer.getResourceReceipt();
+    if(before.globalGroundCover?.prepared!==true||before.vegetationResidency?.globalCoverComplete!==true)
+      throw new Error('R3D3_GLOBAL_GROUNDCOVER_NOT_GPU_RESIDENT');
+    const frame=presentNavigationState(latestNavigationState,{
+      kind:'GLOBAL_GROUNDCOVER_GPU_RESIDENT',
+      sequence:before.globalGroundCover.storedInstanceCount,
+      captureEvidence:false
+    });
+    const after=renderer.getResourceReceipt().globalGroundCover;
+    return Object.freeze({
+      frameSequence:frame.frameSequence,
+      residentInstanceCount:before.globalGroundCover.storedInstanceCount,
+      submittedInstances:after.visibleInstanceCount??0,
+      submittedDrawCalls:after.drawCallCount??0,
+      gpuPresented:true,
+      visiblePixelCoverageVerified:false
+    });
+  };
   const getVegetationResidency = () => renderer.getResourceReceipt().vegetationResidency;
 
   const captureLatestEvidence = (label = `explicit-${frameSequence}`) => {
@@ -521,6 +542,7 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     prepareVegetationResidency: options => deferredVegetationActive?renderer.prepareVegetationResidency(options):Promise.resolve(getVegetationResidency()),
     materializeNextVegetationBatch,
     presentWoodlandFineGrassReadyFrame,
+    presentResidentGlobalCoverFrame,
     getVegetationResidency,
     startPresentationAnimation,
     stopPresentationAnimation,

@@ -307,8 +307,8 @@ void main(){
   int instance=uInstanceStart+gl_InstanceID*uInstanceStride;
   vec4 aTransform=recordPart(instance,3),aParameters=recordPart(instance,4);
   float c=cos(aTransform.z),s=sin(aTransform.z);
-  // Tags 0 and 1 remain the exact published broad-blade presentation.
-  // Pilot tags 2/3/4 flatten/spread above the individually grounded roots.
+  // Existing population records remain immutable. Legacy 0/1 fans are rendered
+  // as fine, low leaves at their original grounded roots; beach dune tag 4 is not drawn.
   float lowStratum=step(1.5,aParameters.w)*(1.0-step(2.5,aParameters.w));
   float midStratum=step(2.5,aParameters.w)*(1.0-step(3.5,aParameters.w));
   float duneStratum=step(3.5,aParameters.w);
@@ -320,11 +320,15 @@ void main(){
   vec2 lean=vec2(-bladeOffset.y,bladeOffset.x)*emergence*(.18*lowStratum+.12*midStratum+.22*duneStratum);
   vec2 ecoXZ=rootXZ+outward+lean;
   vec2 localXZ=mix(aPosition.xz,ecoXZ,ecoStratum);
-  vec2 q=localXZ*aTransform.w;
+  float legacyFine=1.0-step(1.5,aParameters.w);
+  // Constrain only the blade above each exact root; grounded root positions stay fixed.
+  vec2 narrowLocalXZ=mix(localXZ,rootXZ+(localXZ-rootXZ)*.23,legacyFine);
+  vec2 q=narrowLocalXZ*aTransform.w;
   vec2 xz=aTransform.xy+vec2(q.x*c-q.y*s,q.x*s+q.y*c);
-  vWorldPosition=vec3(xz.x,rootY(instance,int(aRootInfo.x))+aPosition.y*aParameters.x,xz.y);
-  float widthScale=1.0+.65*lowStratum+.24*midStratum+.08*duneStratum;
-  vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/aParameters.x,aNormal.z/(aTransform.w*widthScale));
+  float leafHeight=aParameters.x*mix(1.0,.34,legacyFine);
+  vWorldPosition=vec3(xz.x,rootY(instance,int(aRootInfo.x))+aPosition.y*leafHeight,xz.y);
+  float widthScale=(1.0+.65*lowStratum+.24*midStratum+.08*duneStratum)*mix(1.0,.23,legacyFine);
+  vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/leafHeight,aNormal.z/(aTransform.w*widthScale));
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
   vec3 palette=aParameters.y<0.333333?vec3(0.18,0.115,0.045):aParameters.y<0.666667?vec3(0.31,0.245,0.065):vec3(0.095,0.145,0.04);
   vec3 lowPalette=mix(vec3(.177,.146,.068),vec3(.075,.152,.064),smoothstep(.20,.86,aParameters.y));
@@ -333,11 +337,14 @@ void main(){
   vec3 ecologicalPalette=lowPalette*lowStratum+midPalette*midStratum+dunePalette*duneStratum;
   vec3 publishedColor=mix(aColor.rgb,palette,0.55);
   vec3 ecoColor=mix(aColor.rgb,ecologicalPalette,.84);
-  vBaseColor=vec4(mix(publishedColor,ecoColor,ecoStratum)*(0.92+0.16*aParameters.z),1.0);
+  vec3 finePalette=mix(vec3(.039,.125,.028),vec3(.076,.202,.052),smoothstep(.16,.88,aParameters.y));
+  vBaseColor=vec4(mix(mix(publishedColor,ecoColor,ecoStratum),finePalette,legacyFine)*(0.92+0.16*aParameters.z),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;
-  gl_Position=uViewProjection*vec4(vWorldPosition,1.0);
+  // Dune tag 4 was explicitly grown on dry sand. Preserve its immutable source
+  // record but submit no beach vegetation pixels (land and water remain untouched).
+  gl_Position=duneStratum>.5?vec4(2.0,2.0,2.0,1.0):uViewProjection*vec4(vWorldPosition,1.0);
 }`;
 
 // Same approved six-vertex curved grass; independent presentation roots only.

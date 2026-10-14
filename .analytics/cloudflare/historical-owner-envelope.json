@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-14T01:37:24Z",
+  "generatedAt": "2026-10-14T02:38:28Z",
   "window": {
-    "start": "2026-07-16T01:37:24Z",
-    "end": "2026-10-14T01:37:24Z"
+    "start": "2026-07-16T02:38:28Z",
+    "end": "2026-10-14T02:38:28Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -170,13 +170,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,

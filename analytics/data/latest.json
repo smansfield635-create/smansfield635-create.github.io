@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-14T01:37:24Z",
+  "generatedAt": "2026-10-14T02:38:28Z",
   "window30d": {
-    "start": "2026-09-14T01:37:24Z",
-    "end": "2026-10-14T01:37:24Z"
+    "start": "2026-09-14T02:38:28Z",
+    "end": "2026-10-14T02:38:28Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-07",
-      "pageLoads": 92
+      "pageLoads": 86
     },
     {
       "date": "2026-10-08",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-14",
-      "pageLoads": 2
+      "pageLoads": 3
     }
   ],
   "summary": {
-    "pageLoads": 4689,
-    "botPageLoads": 1836,
-    "nonBotPageLoads": 2853
+    "pageLoads": 4664,
+    "botPageLoads": 1833,
+    "nonBotPageLoads": 2831
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2881,
-      "visits": 2881
+      "pageLoads": 2877,
+      "visits": 2877
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1531,
+      "pageLoads": 1511,
       "visits": 0
     },
     {
@@ -167,11 +167,6 @@
       "host": "com.google.android.googlequicksearchbox",
       "pageLoads": 2,
       "visits": 2
-    },
-    {
-      "host": "l.facebook.com",
-      "pageLoads": 1,
-      "visits": 1
     }
   ],
   "topPages": [
@@ -202,8 +197,8 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 301,
-      "visits": 111
+      "pageLoads": 300,
+      "visits": 110
     },
     {
       "path": "/governance-bridge/",

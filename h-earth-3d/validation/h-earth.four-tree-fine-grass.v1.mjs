@@ -51,7 +51,7 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
  const combinedGrassGpuBytes=7070816+WOODLAND_FINE_GRASS.rootTextureBytes+indicesTemplate.byteLength;assert(combinedGrassGpuBytes<=8388608,'SHARED_GPU_BUDGET');
  const earlyPrioritySnapshots=[];
  const built=presentation??await buildWoodlandFineGrass(raw,{
-   priorityOrigin:{x:-139.40267987050615,z:-194.5},
+   priorityOrigin:{x:-139.40667724609375,z:-208.5037078857422},
    onPriorityPreview:snapshot=>{
      assert.equal(snapshot.receipt.schema,'H_EARTH_WOODLAND_FINE_GRASS_PRIORITY_PREVIEW_v1');
      assert.equal(snapshot.receipt.originalRecordsChanged,false);
@@ -60,6 +60,8 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
      earlyPrioritySnapshots.push({radius:snapshot.receipt.priorityRadiusMeters,
        processedCells:snapshot.receipt.processedCells,
        contacts:snapshot.receipt.contactCount,
+       sourceAccepted:snapshot.receipt.sourceAcceptedCount,
+       featherRule:snapshot.receipt.featherRule,
        roots:snapshot.tiles.flatMap(t=>t.roots.map(r=>r.x+':'+r.y+':'+r.z))});
    }
  });onPresentation(built);
@@ -82,12 +84,16 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
    assert(earlyPrioritySnapshots[0].processedCells<10000,
      'PRIORITY_WOODLAND_FIRST_FRAME_TOO_MUCH_SURVEY_WORK');
    const full=new Set(built.tiles.flatMap(t=>t.roots.map(r=>r.x+':'+r.y+':'+r.z)));
+   assert(earlyPrioritySnapshots.some(s=>s.contacts<s.sourceAccepted),
+     'WOODLAND_PREVIEW_IRREGULAR_FEATHER_NOT_EXERCISED');
    let lastCount=0,lastCells=0,lastRadius=0;
    for(const snapshot of earlyPrioritySnapshots){
      assert(snapshot.radius>lastRadius,'WOODLAND_PRIORITY_RADIUS_NOT_EXPANDING');
      assert(snapshot.processedCells>lastCells,'WOODLAND_PRIORITY_GRID_NOT_EXPANDING');
      lastRadius=snapshot.radius;lastCells=snapshot.processedCells;
      assert(snapshot.contacts>lastCount,'PRIORITY_WOODLAND_SNAPSHOT_NOT_GROWING');
+     assert(snapshot.contacts<=snapshot.sourceAccepted,'PREVIEW_HAS_NEW_UNACCEPTED_CONTACTS');
+     assert.equal(snapshot.featherRule,'SOURCE_ONLY_DETERMINISTIC_IRREGULAR_RADIAL_TAPER_NO_NEW_ROOTS');
      assert.equal(snapshot.contacts,snapshot.roots.length,'PRIORITY_WOODLAND_SNAPSHOT_ROOT_CENSUS_DRIFT');
      assert(snapshot.roots.every(key=>full.has(key)),'PRIORITY_WOODLAND_PREVIEW_ROOT_NOT_FINAL');
      lastCount=snapshot.contacts;

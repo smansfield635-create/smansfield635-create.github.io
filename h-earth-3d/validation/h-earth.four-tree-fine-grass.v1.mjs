@@ -57,7 +57,8 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
      assert.equal(snapshot.receipt.originalRecordsChanged,false);
      assert.equal(snapshot.receipt.terrainChanged,false);
      assert.equal(snapshot.receipt.actualPixelsVerified,false);
-     earlyPrioritySnapshots.push({rowsPrepared:snapshot.receipt.rowsPrepared,
+     earlyPrioritySnapshots.push({radius:snapshot.receipt.priorityRadiusMeters,
+       processedCells:snapshot.receipt.processedCells,
        contacts:snapshot.receipt.contactCount,
        roots:snapshot.tiles.flatMap(t=>t.roots.map(r=>r.x+':'+r.y+':'+r.z))});
    }
@@ -75,11 +76,17 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
  }
  assert(contacts>0,'NO_WOODLAND_ROOTS');
  if(presentation===null){
-   assert.deepEqual(earlyPrioritySnapshots.map(s=>s.rowsPrepared),[64,128,256],
-     'PRIORITY_WOODLAND_ROW_MILESTONE_DRIFT');
+   assert(earlyPrioritySnapshots.length>=2,'PRIORITY_WOODLAND_EARLY_PREVIEW_MISSING');
+   assert(earlyPrioritySnapshots.every(s=>[4,9,17].includes(s.radius)),
+     'PRIORITY_WOODLAND_CAMERA_PATCH_RADIUS_DRIFT');
+   assert(earlyPrioritySnapshots[0].processedCells<10000,
+     'PRIORITY_WOODLAND_FIRST_FRAME_TOO_MUCH_SURVEY_WORK');
    const full=new Set(built.tiles.flatMap(t=>t.roots.map(r=>r.x+':'+r.y+':'+r.z)));
-   let lastCount=0;
+   let lastCount=0,lastCells=0,lastRadius=0;
    for(const snapshot of earlyPrioritySnapshots){
+     assert(snapshot.radius>lastRadius,'WOODLAND_PRIORITY_RADIUS_NOT_EXPANDING');
+     assert(snapshot.processedCells>lastCells,'WOODLAND_PRIORITY_GRID_NOT_EXPANDING');
+     lastRadius=snapshot.radius;lastCells=snapshot.processedCells;
      assert(snapshot.contacts>lastCount,'PRIORITY_WOODLAND_SNAPSHOT_NOT_GROWING');
      assert.equal(snapshot.contacts,snapshot.roots.length,'PRIORITY_WOODLAND_SNAPSHOT_ROOT_CENSUS_DRIFT');
      assert(snapshot.roots.every(key=>full.has(key)),'PRIORITY_WOODLAND_PREVIEW_ROOT_NOT_FINAL');

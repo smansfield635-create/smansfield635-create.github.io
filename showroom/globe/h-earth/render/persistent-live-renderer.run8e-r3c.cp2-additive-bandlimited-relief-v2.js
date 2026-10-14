@@ -1141,8 +1141,9 @@ out vec3 vWorldPosition;`)
     vec2 xz=root.xz+direction*bend*t*t+sideways*side*halfWidth*(1.0-t);
     vWorldPosition=vec3(xz.x,root.y+h*(t-.13*t*t),xz.y);
     vNormal=normalize(vec3(direction.x*h*(1.0-.26*t),-2.0*bend*t,direction.y*h*(1.0-.26*t)));
-    vec3 base=leaf%11==0?vec3(.105,.071,.025):leaf%5==0?vec3(.100,.112,.031):vec3(.032,.081,.025);
-    vec3 tip=leaf%11==0?vec3(.36,.23,.076):leaf%5==0?vec3(.32,.35,.103):vec3(.17,.29,.079);
+    // Retire the gold/brown lowland-blade appearance without changing any root.
+    vec3 base=leaf%11==0?vec3(.043,.111,.027):leaf%5==0?vec3(.047,.136,.031):vec3(.029,.114,.027);
+    vec3 tip=leaf%11==0?vec3(.094,.245,.063):leaf%5==0?vec3(.105,.278,.065):vec3(.084,.238,.055);
     vBaseColor=vec4(mix(base,tip,pow(t,.72))*(.88+.20*r0),1.0);
   }else{
     int shortLeaves=uMeadowGeometryPass==1?4:3,perClump=(24+64*shortLeaves)*6;

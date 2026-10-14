@@ -111,6 +111,16 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Generation 2699 independent full-world boulder validator
+        if: ${{ inputs.target_sha == 'cc17782b099b5238cfe679f259b66b3b5f947600' }}
+        shell: bash
+        run: |
+          set -uo pipefail
+          mkdir -p /tmp/h-earth-exact-evidence
+          timeout 240s node h-earth-3d/validation/h-earth.large-p2-boulder-presentation.v1.mjs --verify > /tmp/h-earth-exact-evidence/gen2699-large-p2-validator.stdout 2>&1
+          status=$?
+          printf '{"schema":"H_EARTH_GEN2699_FULL_WORLD_VALIDATOR_EXECUTION_v1","candidate":"cc17782b099b5238cfe679f259b66b3b5f947600","exitCode":%s,"attempted":true,"timeoutSeconds":240}\n' "$status" > /tmp/h-earth-exact-evidence/gen2699-large-p2-validator.status.json
+          exit 0
       - name: Install bounded Chromium
         shell: bash
         run: |
@@ -308,6 +318,9 @@ jobs:
           let readiness='TIMEOUT';
           let initial=null;
           let later=null;
+          let woodlandAfter=null;
+          let boulderView=null;
+          let integratedQualification=null;
           let residencySamples=[];
           let vegetationExercise=null;
           try {
@@ -401,6 +414,62 @@ jobs:
               });
               residencySamples.push(live);
             }
+              // Gen2699: after-priority woodland pixels and owner-facing boulder navigation.
+              // No world, camera authority, navigation module, or release state mutation.
+              if(targetSha==='cc17782b099b5238cfe679f259b66b3b5f947600' && query.includes('arrival=approved-four-trees')){
+                let matureGrassReached=false;
+                try{
+                  matureGrassReached=Boolean(await page.waitForFunction(() => {
+                    const windows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
+                    const r=windows.find(w=>w?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()?.resources?.vegetationResidency??null;
+                    return r?.woodlandFineGrassReady===true&&r?.globalCoverComplete===true;
+                  },null,{timeout:45000,polling:500}).then(h=>h.jsonValue()));
+                }catch{matureGrassReached=false;}
+                woodlandAfter=await sample('woodland-after-residency');
+                const post=woodlandAfter?.liveGpuReceipt?.resources?.vegetationResidency??null;
+                let navigationAttempt={performed:false,method:'OWNER_FACING_POINTER_DRAG_AND_WHEEL',error:null};
+                let boulderNavigationState=null;
+                try{
+                  const surface=page.locator('#h-earth-functional-landscape-mount');
+                  await surface.scrollIntoViewIfNeeded();
+                  const bounds=await surface.boundingBox();
+                  if(!bounds||bounds.width<300||bounds.height<150)throw Error('BOULDER_VIEW_SURFACE_UNAVAILABLE');
+                  const x=Math.min(1090,Math.max(165,bounds.x+bounds.width*.5));
+                  const y=Math.min(680,Math.max(235,bounds.y+bounds.height*.5));
+                  await page.mouse.move(x-115,y);await page.mouse.down();
+                  await page.mouse.move(x+115,y,{steps:18});
+                  await page.waitForTimeout(730);await page.mouse.up();
+                  for(let step=0;step<9;step++){await page.mouse.wheel(0,-560);await page.waitForTimeout(110);}
+                  await page.waitForTimeout(1300);
+                  navigationAttempt={performed:true,method:'OWNER_FACING_POINTER_DRAG_AND_WHEEL',error:null};
+                }catch(error){navigationAttempt={performed:false,method:'OWNER_FACING_POINTER_DRAG_AND_WHEEL',error:error?.message??String(error)};}
+                boulderNavigationState=await page.evaluate(() => {
+                  const windows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
+                  return windows.find(w=>w?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt)?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt?.()?.currentNavigationState??null;
+                });
+                boulderView=await sample('boulder-native-navigation');
+                const bx=boulderNavigationState?.position?.x,bz=boulderNavigationState?.position?.z;
+                const boulderCameraDistance=Number.isFinite(bx)&&Number.isFinite(bz)?Math.hypot(bx+76,bz+242):null;
+                integratedQualification={
+                  schema:'H_EARTH_GEN2699_INTEGRATED_VIEWPORT_QUALIFICATION_v1',
+                  exactProductSha:targetSha,
+                  existingSourceAndNavigationUnchanged:true,
+                  woodlandAfterFrameCaptured:Boolean(woodlandAfter?.canvasScreenshotSha256),
+                  woodlandFullReadyAtCapture:post?.woodlandFineGrassReady===true&&post?.globalCoverComplete===true,
+                  woodlandFullReadyWithin45s:matureGrassReached,
+                  woodlandPriorityReadyAtCapture:post?.woodlandFineGrassPreviewReady===true,
+                  woodlandResidentBatchCount:post?.residentBatchCount??null,
+                  woodlandTotalBatchCount:post?.totalBatchCount??null,
+                  woodlandAfterCanvasSha256:woodlandAfter?.canvasScreenshotSha256??null,
+                  boulderNavigationAttempt:navigationAttempt,
+                  boulderNavigationState,
+                  boulderCameraDistanceMeters:boulderCameraDistance,
+                  boulderRegionReached:boulderCameraDistance!==null&&boulderCameraDistance<=55,
+                  boulderViewCanvasSha256:boulderView?.canvasScreenshotSha256??null,
+                  boulderViewPixelsAccepted:false,ownerPerceptualAcceptance:false,productionDeploymentAuthorized:false,
+                  qualificationDisposition:'EVIDENCE_CAPTURE_ONLY_OWNER_REVIEW_PENDING'
+                };
+              }
           } finally {
             await context.close();
             await browser.close();
@@ -435,6 +504,9 @@ jobs:
             animationFrameAdvanced:Number.isFinite(initial?.animationFrame)&&Number.isFinite(later?.animationFrame)?later.animationFrame>initial.animationFrame:null,
             worldRebuildStayedZero:initial?.worldRebuildCount===0&&later?.worldRebuildCount===0?true:(initial?.worldRebuildCount==null&&later?.worldRebuildCount==null?null:false),
             residencySamples,
+            woodlandAfter,
+            boulderView,
+            integratedQualification,
             vegetationExercise,
             vegetationResidencyMonotonic:residencySamples.every((sample,index,array)=>index===0||!sample?.residency||!array[index-1]?.residency||(sample.residency.residentBatchCount>=array[index-1].residency.residentBatchCount&&sample.residency.residentInstanceCount>=array[index-1].residency.residentInstanceCount)),
             residencyWorldRebuildStayedZero:residencySamples.every(sample=>sample?.worldRebuildCount===0)
@@ -445,10 +517,14 @@ jobs:
           const fatalPageErrors=authoritativeResidencyPass?pageErrors.filter(message=>message!=='R3C_VEGETATION_BATCH_PREPARATION_PENDING'):pageErrors;
           receipt.fatalPageErrors=fatalPageErrors;
           receipt.expectedTransientPreparationPendingCount=authoritativeResidencyPass?pageErrors.length-fatalPageErrors.length:0;
+          const integratedValidatorExecution=integratedQualification
+            ?JSON.parse(await fs.readFile(out+'/gen2699-large-p2-validator.status.json','utf8')):null;
+          if(integratedValidatorExecution)receipt.gen2699LargeBoulderValidatorExecution=integratedValidatorExecution;
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(!receipt.materialized||fatalPageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
           if(exerciseVegetation&&!authoritativeResidencyPass) process.exitCode=1;
+          if(integratedQualification&&(integratedValidatorExecution?.exitCode!==0||!integratedQualification.boulderRegionReached))process.exitCode=1;
           NODE
           node h-earth-exact-run.mjs
 

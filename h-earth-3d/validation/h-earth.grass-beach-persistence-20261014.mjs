@@ -30,6 +30,7 @@ const pins={[rendererPath]:'0b083da10ea36a18547faf19cc06dad4f9e6b4c6',[woodlandP
 for(const [p,pin] of Object.entries(pins))assert.equal(manifest.sourceBlobs[p],pin,'HISTORIC_WORLD_SOURCE_PIN_CHANGED:'+p);
 assert(global.includes("m.surfaceClass==='DRY_SAND'"),'DRY_SAND_SOURCE_ROLE_MISSING');
 assert(renderer.includes('if(duneStratum>.5)gl_Position=vec4(2.0,2.0,2.0,1.0)'),'DRY_SAND_DUNE_NOT_VISUALLY_EXCLUDED');
+assert(renderer.includes('const rootedOnSand=primitive=>')&&renderer.includes('oasisRoots.some(sandRoot)')&&renderer.includes('!rootedOnSand(primitive)'),'COASTAL_VEGETATION_BATCH_SAND_EXCLUSION_MISSING');
 assert(renderer.includes(".replace('gl_Position=uViewProjection*vec4(vWorldPosition,1.0);'"),'MEADOW_SHADER_REPLACEMENT_BROKEN');
 assert(renderer.includes("if(uMeadowGeometryPass==0)"),'MEADOW_FINE_LOD_MISSING');
 assert(renderer.includes('float legacyFine=1.0-step(1.5,aParameters.w)')&&renderer.includes('vec2 narrowLocalXZ='),'GIANT_LEGACY_FAN_NOT_RETIRED');
@@ -63,5 +64,5 @@ for(const x of [A,B,C]){assert(x.parentCount<=16,'WOODLAND_PARENT_BUDGET');asser
 const page=JSON.parse(read('.github/ai-router/publication-surfaces/h-earth.json'));
 const receipt=page.checks.find(t=>t.path==='/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js');
 assert(receipt?.includes?.some(t=>t.includes('&rev='+rev)),'PUBLICATION_MANIFEST_CACHE_DRIFT');
-const report={schema:'H_EARTH_GEN2710_GRASS_SAND_BEACH_PERSISTENCE_TEST_v1',result:'PASS_SOURCE_AND_SYNTHETIC_SELECTION_ONLY',revision:rev,moduleLinks:moduleChain.length,worldBinarySha256:manifest.binary.sha256,historicalWorldSourcePinsPreserved:true,syntheticRootCount:tiles.reduce((n,t)=>n+t.roots.length,0),cameraAContacts:A.contactCount,cameraBContacts:B.contactCount,persistentContacts:A.persistentContactCount,boundaryRetainedFraction:retained/ka.size,awayContacts:C.contactCount,abaSameRootIds:true,abaSameGpuPixelPayload:true,legacyGiantFanSourceRetired:true,drySandDuneTag4HiddenInShader:true,canonicalDrySandSourceRecordsPreserved:true,renderedPixelsVerified:false,ownerVisualAcceptance:'PENDING',publicationAuthorized:false};
+const report={schema:'H_EARTH_GEN2710_GRASS_SAND_BEACH_PERSISTENCE_TEST_v1',result:'PASS_SOURCE_AND_SYNTHETIC_SELECTION_ONLY',revision:rev,moduleLinks:moduleChain.length,worldBinarySha256:manifest.binary.sha256,historicalWorldSourcePinsPreserved:true,syntheticRootCount:tiles.reduce((n,t)=>n+t.roots.length,0),cameraAContacts:A.contactCount,cameraBContacts:B.contactCount,persistentContacts:A.persistentContactCount,boundaryRetainedFraction:retained/ka.size,awayContacts:C.contactCount,abaSameRootIds:true,abaSameGpuPixelPayload:true,legacyGiantFanSourceRetired:true,drySandDuneTag4HiddenInShader:true,coastalVegetationBatchSandExclusionPresent:true,canonicalDrySandSourceRecordsPreserved:true,renderedPixelsVerified:false,ownerVisualAcceptance:'PENDING',publicationAuthorized:false};
 console.log(JSON.stringify(report,null,2));

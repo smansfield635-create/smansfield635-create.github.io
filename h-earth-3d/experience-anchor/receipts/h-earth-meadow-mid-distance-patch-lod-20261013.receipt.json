@@ -9,36 +9,40 @@
   "acceptanceBasis": "Gen2694 bounded engineering branch. Owner rejects Gen2693 live grass presentation. Source inspection disproved initial inference that global originalDrawInstances means wide fan rendering: actual GLOBAL_COVER_PATCH_LOD_VS mode0 renders 12 procedural thin leaves per original source record, while P2 1/2 are ground litter and leafy understory. New candidate currently stages exact Gen2694 module cache identity across page/wrapper/integration/binding/renderer/grass plus accurate GPU original-source fine-leaf census; no broad-geometry retirement, no new five-view acceptance, no main merge or live deployment. Source and immutable base-world identity pins rebound, original world binary untouched. New owner acceptance is required before any release.",
   "experienceFiles": [
     {
-      "path": "showroom/globe/h-earth/index.html",
-      "sha256": "55c1b4404c1d274bf535d02e04ec089c33fa54835a4f1290e929fb39ed343b6e"
+      "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+      "sha256": "e43735e80d96539de61512b35fa9f56fdd213dde66230d2e79d0b51edd98405f"
     },
     {
-      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
-      "sha256": "e4955faf3a363d0fef032e332d171fb0c1103ae5d0276713c338bd66a146609d"
-    },
-    {
-      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "cc428ce3f0f93b89039677e60892479142923f7bb62ea8e92f50aae59354f7a6"
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "b482cd56f72ff0ced5a71627cf074179219d9b6ae59eb92fc5a5ba12d4c9d622"
     },
     {
       "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
       "sha256": "53fd7d45164f1929a1ba521e9e1da216d0b2846b9fec68529fed59e876388e46"
     },
     {
-      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
-      "sha256": "0b9d4e5144a7888f083c5f32eb20601c88097d7a89258bb3b07ccc1eb2bba06e"
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "cc428ce3f0f93b89039677e60892479142923f7bb62ea8e92f50aae59354f7a6"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "e4955faf3a363d0fef032e332d171fb0c1103ae5d0276713c338bd66a146609d"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "55c1b4404c1d274bf535d02e04ec089c33fa54835a4f1290e929fb39ed343b6e"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+      "sha256": "d536f2aa4e8a125a349174c3423fa4c4be8c55c70076e6e22fa0662d2455a919"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
       "sha256": "405be7bd9168930190d76c247a0930e93b67b802ef5188fa022fe126f4725121"
     },
     {
-      "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
-      "sha256": "e43735e80d96539de61512b35fa9f56fdd213dde66230d2e79d0b51edd98405f"
-    },
-    {
-      "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
-      "sha256": "d536f2aa4e8a125a349174c3423fa4c4be8c55c70076e6e22fa0662d2455a919"
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "0b9d4e5144a7888f083c5f32eb20601c88097d7a89258bb3b07ccc1eb2bba06e"
     }
   ],
   "invariants": {
@@ -1774,6 +1778,15 @@
     "newOwnerVisualAcceptance": false,
     "readyToMerge": false,
     "readyToDeploy": false,
-    "nextStep": "INDEPENDENT_STATIC_MODULE_SOURCE_CHAIN_VERIFIER_AND_COMPLETED_RESIDENCY_PERIMETER_GEOMETRY_PROOF"
+    "nextStep": "RUN_GEN2694_SOURCE_BINDING_ONLY_VALIDATOR_THEN_DIAGNOSE_ACTUAL_POST_RESIDENCY_P2_AND_GLOBAL_PRESENTATION_WITHOUT_OWNER_SCREENSHOTS",
+    "sourceOnlyVerifier": {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "flag": "--source-binding-only",
+      "command": "node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only",
+      "assertedContract": "CACHE_AND_EXACT_SOURCE_PATHS_PLUS_ACTUAL_FINE_SHADER_NOT_BROWSER",
+      "node22Execution": "NOT_PERFORMED_IN_CURRENT_CONNECTOR_SESSION",
+      "sourceBlob": "8158bb0f9174648b219e9ceca925859db4025f0f",
+      "sourceSha256": "b482cd56f72ff0ced5a71627cf074179219d9b6ae59eb92fc5a5ba12d4c9d622"
+    }
   }
 }

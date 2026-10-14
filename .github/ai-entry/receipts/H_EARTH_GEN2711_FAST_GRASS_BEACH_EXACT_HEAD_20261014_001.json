@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_GEN2711_FAST_GRASS_BEACH_EXACT_HEAD_20261014_001",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6294,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2711-fast-grass-beach-20261014-001",
+  "requestCommit": "727e82285a04aed414347fb2426d89292e08df73",
+  "requestCommitParent": "3c627dfe782e6a30914cb2b962421710f85d914a",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "3c627dfe782e6a30914cb2b962421710f85d914a",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "8c6bd026e3a1b0e49cf7c14ea0293067fa864d4a",
+    "route_query": "qualification=gen2711-grass-beach-fast-v1"
+  },
+  "bridgeRunId": "38653974925",
+  "dispatchedRunId": 38653988838,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38653988838",
+  "dispatchedRunHeadSha": "3c627dfe782e6a30914cb2b962421710f85d914a",
+  "dispatchedAt": "2026-10-14T23:25:29.441Z",
+  "resolvedAt": "2026-10-14T23:25:36.284Z"
+}

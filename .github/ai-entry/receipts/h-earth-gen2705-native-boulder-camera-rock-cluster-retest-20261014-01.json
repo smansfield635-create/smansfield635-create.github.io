@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2705-native-boulder-camera-rock-cluster-retest-20261014-01",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6283,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2705-boulder-camera-retest-20261014-01",
+  "requestCommit": "bf94db0dfa734e31587bc42c0f280be6cf9a925e",
+  "requestCommitParent": "00977161453a367cc6b1e773718a7dd136ca7073",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "00977161453a367cc6b1e773718a7dd136ca7073",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "638b083b34d0c77908229614c57355a9a15f75d9",
+    "route_query": "arrival=approved-four-trees"
+  },
+  "bridgeRunId": "38642147681",
+  "dispatchedRunId": 38642169932,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38642169932",
+  "dispatchedRunHeadSha": "00977161453a367cc6b1e773718a7dd136ca7073",
+  "dispatchedAt": "2026-10-14T21:41:23.202Z",
+  "resolvedAt": "2026-10-14T21:41:27.965Z"
+}

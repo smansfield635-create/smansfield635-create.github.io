@@ -6,7 +6,7 @@
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "reviewedAgainstAnchor": false,
   "disposition": "PENDING",
-  "acceptanceBasis": "Gen2694 bounded engineering branch. Owner rejects Gen2693 live grass presentation. Source inspection disproved initial inference that global originalDrawInstances means wide fan rendering: actual GLOBAL_COVER_PATCH_LOD_VS mode0 renders 12 procedural thin leaves per original source record, while P2 1/2 are ground litter and leafy understory. New candidate currently stages exact Gen2694 module cache identity across page/wrapper/integration/binding/renderer/grass plus accurate GPU original-source fine-leaf census; no broad-geometry retirement, no new five-view acceptance, no main merge or live deployment. Source and immutable base-world identity pins rebound, original world binary untouched. New owner acceptance is required before any release.",
+  "acceptanceBasis": "Gen2694 bounded engineering branch. Owner rejects Gen2693 live grass presentation. Source inspection disproved initial inference that global originalDrawInstances means wide fan rendering: actual GLOBAL_COVER_PATCH_LOD_VS mode0 renders 12 procedural thin leaves per original source record, while P2 1/2 are ground litter and leafy understory. New candidate currently stages exact Gen2694 module cache identity across page/wrapper/integration/binding/renderer/grass plus accurate GPU original-source fine-leaf census; no broad-geometry retirement, no new five-view acceptance, no main merge or live deployment. Source and immutable base-world identity pins rebound, original world binary untouched. New owner acceptance is required before any release. This bounded continuation adds explicit current-camera GPU re-presentation immediately after the final worldwide cover upload and truthful separate first-frame, woodland draw-submission, global-cover GPU, and canonical vegetation-batch status. Priority tile CPU preparation still does not provide incremental GPU residency, and no visible-pixel coverage has been verified. Published appearance, yellow-blade retirement, and large-boulder improvement remain unaccepted.",
   "experienceFiles": [
     {
       "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
@@ -18,11 +18,11 @@
     },
     {
       "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
-      "sha256": "3a2cc7c41488fda61f45de5c76ace8caecfe152e5341f1baa0c8f15ac6709ebe"
+      "sha256": "a78397b38492ee7615430c8fa859b4a1086d7a6a52bab1b294ce53ebd9a7da33"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "e433942e10c445678f65910fdf3670eeece1a9c418f2d7bbbe7b70d147494645"
+      "sha256": "5c22be2f98df90e70279196f21652fa377651991df8f9117552ee875ac71e024"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",

@@ -1,16 +1,16 @@
 {
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
-  "operationId": "H_EARTH_FOUR_TREE_GRASS_ROCK_REFINEMENT_20261013_001",
-  "canonicalAdmissionGeneration": 2691,
+  "operationId": "H_EARTH_FOUR_TREE_GRASS_GAP_FILL_RELEASE_20261014_001",
+  "canonicalAdmissionGeneration": 2693,
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "reviewedAgainstAnchor": false,
   "disposition": "PENDING",
-  "acceptanceBasis": "Five-view projected coverage and bounded rock geometry preflight; exact-candidate browser qualification and owner perceptual review remain pending.",
+  "acceptanceBasis": "Gen2693 owner-authorized one-exclusion grass-strip fill. Four changed product/verification/metadata file identities recorded; all rock, renderer, canonical terrain and world binaries preserved. Run84 is browser proof of parent be9dfbf9 only. New delta independent root, cheap five-view coverage, and publication preflight pending; do not infer a new browser pass.",
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
-      "sha256": "d50bc16c2ed74e169876e068fcab39da932abccf03857d6edfa5a5e663922e3f"
+      "sha256": "1355c32bc96ace61564480809a1ae2e9ea8e17d740f7710fee6b87964899c50a"
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-rock-presentation.v1.js",
@@ -22,7 +22,7 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
-      "sha256": "8001d2e181a4349ce4c7c46e6f3f7cfcae950cd0a4188dac71ef7ae14818afc1"
+      "sha256": "53d6fc96e62154b2f58ed5a83eaece071042d224714cbe333cbc616051ad237d"
     },
     {
       "path": "h-earth-3d/validation/h-earth.four-tree-rock-presentation.v1.mjs",
@@ -30,11 +30,11 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
-      "sha256": "07ea694a1e4e8b892af81c88468891e6bd4e7da4092d7db952e6ddfc537dc085"
+      "sha256": "4f4e66825455ef0465a0a7bd92eb37c0ba6b1a06397423efc347315d37b72312"
     },
     {
       "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
-      "sha256": "2ff621417b78f32a16bcb3380bbe58125ec507e89e50fca72f44da35ce1bd92f"
+      "sha256": "14afc3516df4f92509a65d63ccc1af8989b087839147fca6bb7e6577fc9ad3b3"
     }
   ],
   "invariants": {
@@ -466,9 +466,9 @@
     "worldGzipSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a"
   },
   "physicalAndroidQualified": false,
-  "ownerPerceptualDisposition": "PENDING",
-  "mergeAuthorized": false,
-  "publicationAuthorized": false,
+  "ownerPerceptualDisposition": "OWNER_DIRECTED_GAP_FILL_AND_PUBLISH_SUBJECT_TO_DELTA_CHECKS",
+  "mergeAuthorized": true,
+  "publicationAuthorized": true,
   "releaseAuthorized": false,
   "historicalAcceptedMeadowReceipt": {
     "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
@@ -1077,7 +1077,7 @@
           "Far LOD is visibly sparse and density transitions remain discernible; not a seamless turf acceptance claim."
         ],
         "runtimeReview": [
-          "Shared GPU allocation8131680 bytes; woodland selections753\u2013900 parents/3draws, shared4096/64 guards.",
+          "Shared GPU allocation8131680 bytes; woodland selections753–900 parents/3draws, shared4096/64 guards.",
           "globalCoverComplete now waits for woodland.ready, with separate woodlandFineGrassReady. Exact browser gate must assert positive woodland contact/draw counts in each five-view capture.",
           "Six additional authorized resource creations accounted; soilFS hash preserved.",
           "Canonical deferred COASTAL_GRASS_TUFT suppressed outside disjoint lowland rectangle; added deferred landscape-cover tufts exclude woodland footprint."
@@ -1730,5 +1730,47 @@
         }
       }
     }
+  },
+  "deltaQualification": {
+    "schema": "H_EARTH_GEN2693_GRASS_GAP_FILL_DIFFERENTIAL_v1",
+    "status": "PENDING_TARGETED_TEST_AND_INDEPENDENT_REVIEW",
+    "admittedOperation": "H_EARTH_FOUR_TREE_GRASS_GAP_FILL_RELEASE_20261014_001",
+    "generation": 2693,
+    "sourceAuthority": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6100#issuecomment-6158251411",
+    "preservedBrowserProof": {
+      "testedCommit": "be9dfbf9798ccf0b54813a1664f7d42f80925f0b",
+      "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38488555019",
+      "scope": "UNCHANGED_RENDERER_ROCK_TERRAIN_AND_PREVIOUS_GRASS_ROOTS",
+      "newCandidateBrowserExecuted": false
+    },
+    "changedPaths": [
+      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+      "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json"
+    ],
+    "presentationOnlyExclusionRemoved": "segmentDistance(x,z,{x:-145,z:-194},{x:-145,z:-230})<=1.5+r",
+    "worldBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "newGrassGitBlob": "ec420d1866938d878a71de0457106462ce3a97b2",
+    "unchangedProtectedScope": [
+      "canonical estate footRoute",
+      "hard structure exclusions",
+      "planning holds",
+      "manor/gardens/outbuilding/envelope",
+      "oasis",
+      "tree and landscape-cover footprints",
+      "water",
+      "terrain slope and material",
+      "original world data",
+      "all fourteen approved rocks",
+      "renderer and camera navigation"
+    ],
+    "requiredUnfinished": [
+      "ACTUAL_WORLD_INDEPENDENT_ROOT_VALIDATOR",
+      "FIVE_VIEW_CHEAP_VISUAL_COVERAGE",
+      "INDEPENDENT_W_DELTA_REVIEW",
+      "SAME_PAYLOAD_PUBLICATION_PREFLIGHT",
+      "LIVE_EXACT_HEAD_VERIFICATION"
+    ]
   }
 }

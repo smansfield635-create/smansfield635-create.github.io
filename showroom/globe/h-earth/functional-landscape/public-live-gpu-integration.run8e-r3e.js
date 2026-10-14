@@ -1,5 +1,5 @@
 import { installHEarthRun8ER3D2PointerTouchIntake, resolveHEarthNavigationBoundaryFeedback } from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=mountain-traversal-20261006';
-import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006';
+import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2694-legacy-fan-recovery-v1';
 import { createHEarthRepresentationTransitionSurface } from './representation-transition-surface.v1.js';
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =
@@ -290,6 +290,10 @@ const publishExistingReadyFromFirstPresentedFrame = () => {
   readyPublished = true;
 
   root.dataset.run8eReady = 'true';
+  root.dataset.worldFirstFrameReady = 'true';
+  root.dataset.globalGroundcoverGpuResident = 'false';
+  root.dataset.globalGroundcoverFramePresented = 'false';
+  root.dataset.localGroundcoverDrawSubmitted = 'unknown';
   root.dataset.run8ePublicRoute = 'true';
   root.dataset.r3e2PublicGpuComposition = 'true';
   root.dataset.publicRoute = 'true';
@@ -346,14 +350,69 @@ function showVegetationStatus(text,force=false){
 function showVegetationPreparation(progress){
   if(vegetationLoadingFailed)return;
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:progress}));
+  if(progress.phase==='LOCAL_GROUNDCOVER_GPU_RESIDENT'){
+    const draw=binding.presentLocalGroundcoverFrame();
+    root.dataset.localGroundcoverGpuResident='true';
+    root.dataset.localGroundcoverDrawSubmitted=draw.submittedDrawCalls>0?'true':'false';
+    window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{
+      phase:'LOCAL_GROUNDCOVER_GPU_FRAME_PRESENTED',...draw}}));
+    showVegetationStatus(draw.submittedDrawCalls>0
+      ?'Fine-grass draw submitted · '+draw.residentPriorityTiles+' nearby tiles resident.'
+      :'Fine-grass tiles resident · current view still developing.',true);
+    return;
+  }
+  if(progress.phase==='WOODLAND_FINE_GRASS_PRIORITY_GPU_READY'){
+    const draw=binding.presentWoodlandFineGrassPreviewFrame();
+    root.dataset.woodlandGrassPreviewGpuResident='true';
+    root.dataset.woodlandGrassPreviewDrawSubmitted=draw.drawCallCount>0?'true':'false';
+    window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{
+      phase:'WOODLAND_FINE_GRASS_PRIORITY_FRAME_PRESENTED',...draw,
+      priorityRowsPrepared:progress.priorityRowsPrepared,
+      priorityRadiusMeters:progress.priorityRadiusMeters,
+      priorityCellsPrepared:progress.priorityCellsPrepared
+    }}));
+    showVegetationStatus(draw.drawCallCount>0
+      ?'Woodland grass drawing · '+draw.submittedContacts+' nearby contacts submitted.'
+      :'Woodland grass roots preparing · final meadow still loading.',true);
+    return;
+  }
+  if(progress.phase==='WOODLAND_FINE_GRASS_RESIDENT'){
+    const frame=binding.presentWoodlandFineGrassReadyFrame();
+    const draw=binding.getReceipt().resources.woodlandFineGrass;
+    root.dataset.woodlandGrassGpuResident = 'true';
+    root.dataset.woodlandGrassDrawSubmitted = (draw?.visibleContacts??0)>0?'true':'false';
+    window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{
+      phase:'WOODLAND_FINE_GRASS_FRAME_PRESENTED',frameSequence:frame.frameSequence,
+      submittedContacts:draw?.visibleContacts??0,visiblePixelCoverageVerified:false
+    }}));
+    showVegetationStatus((draw?.visibleContacts??0)>0
+      ?'Woodland grass submitted to GPU · worldwide ground cover loading.'
+      :'Woodland grass prepared · current entrance ground cover still loading.',true);
+    return;
+  }
   if(progress.phase==='BATCH_PREREQUISITES_READY'){
     vegetationPrepared=true;
     showVegetationStatus('Loading nearby vegetation · You can explore.',true);
     scheduleVegetationResidency();
     return;
   }
-  // Resume the paused deferred lane as soon as final worldwide cover is resident.
-  if(progress.phase==='GLOBAL_COVER_RESIDENT'||progress.phase==='PREPARED'){
+  // Upload completion is not a visual frame. Force a current-camera GPU
+  // submission before resuming batches; CPU priority tiles do not count.
+  if(progress.phase==='GLOBAL_COVER_RESIDENT'){
+    const draw=binding.presentResidentGlobalCoverFrame();
+    root.dataset.globalGroundcoverGpuResident='true';
+    root.dataset.globalGroundcoverFramePresented='true';
+    root.dataset.localGroundcoverDrawSubmitted=draw.submittedDrawCalls>0?'true':'false';
+    window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{
+      phase:'GLOBAL_GROUNDCOVER_GPU_FRAME_PRESENTED',...draw
+    }}));
+    showVegetationStatus(draw.submittedDrawCalls>0
+      ?'Nearby ground cover submitted · vegetation batches still loading.'
+      :'Ground cover GPU-resident · current view has no selected patches.',true);
+    if(vegetationPrepared)scheduleVegetationResidency();
+    return;
+  }
+  if(progress.phase==='PREPARED'){
     if(vegetationPrepared)scheduleVegetationResidency();
     return;
   }
@@ -364,14 +423,17 @@ function showVegetationPreparation(progress){
 }
 function vegetationComplete(){
   const residency=binding.getVegetationResidency();
-  if(residency?.preparationComplete!==true){
+  if(residency?.preparationComplete!==true||residency.globalCoverComplete!==true||
+     residency.woodlandFineGrassReady!==true||
+     residency.residentBatchCount!==residency.totalBatchCount||
+     root.dataset.globalGroundcoverFramePresented!=='true'){
     root.dataset.vegetationResidency='loading';
-    showVegetationStatus('Finishing ground cover · You can explore.',true);
+    showVegetationStatus('Finishing ground-cover frame and vegetation batches.',true);
     return;
   }
   root.dataset.vegetationResidency='complete';
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{phase:'COMPLETE',residentBatchCount:residency.residentBatchCount,totalBatchCount:residency.totalBatchCount}}));
-  showVegetationStatus('Vegetation complete — 100%',true);
+  showVegetationStatus('Ground cover GPU-resident · vegetation batches complete.',true);
   window.setTimeout(()=>{vegetationStatus.hidden=true;},2500);
 }
 
@@ -389,7 +451,7 @@ function scheduleVegetationResidency() {
   // changes neither canonical batch identity nor eventual 108/27,585 truth.
   // The GLOBAL_COVER_RESIDENT progress callback resumes every remaining batch.
   if (residency.residentBatchCount >= 4 && residency.globalCoverComplete !== true) {
-    showVegetationStatus('Completing worldwide ground cover · Nearby plants are visible.',true);
+    showVegetationStatus('Preparing worldwide ground cover · nearby patches not yet verified.',true);
     return;
   }
   root.dataset.vegetationResidency = 'loading';
@@ -409,7 +471,7 @@ function scheduleVegetationResidency() {
       try{await binding.materializeNextVegetationBatch();}finally{vegetationBatchInFlight=false;}
       const after = binding.getVegetationResidency();
       window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{phase:'RESIDENCY',residentBatchCount:after.residentBatchCount,totalBatchCount:after.totalBatchCount,residentPrimitiveCount:after.residentPrimitiveCount}}));
-      showVegetationStatus(`Loading vegetation — ${Math.floor(100*after.residentBatchCount/after.totalBatchCount)}% · Visible plants may appear sooner.`);
+      showVegetationStatus(`Vegetation batches ${after.residentBatchCount}/${after.totalBatchCount} · ${after.globalCoverComplete?'ground cover GPU-resident':'ground cover still preparing'}.`);
       if (!after.complete && after.residentBatchCount <= before.residentBatchCount) {
         throw new Error('R3E2_VEGETATION_RESIDENCY_STALLED');
       }

@@ -9,7 +9,7 @@ import {createHash} from 'node:crypto';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {sampleHEarthGen311PlacementStructureDisposition,H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from '../../showroom/globe/h-earth/render/grass-lowland-trial.js';
-import {buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices,WOODLAND_FINE_GRASS} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js';
+import {buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices,WOODLAND_FINE_GRASS} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2694-legacy-fan-recovery-v1';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const ROOT=new URL('../../',import.meta.url);
 export const FOUR_TREE_VIEWS=Object.freeze([[-139.403,-194.5],[-139.403,-236],[-119,-216],[-164,-216],[-141,-214]]);
@@ -49,7 +49,22 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
  const indicesTemplate=buildWoodlandFineGrassIndices();assert.equal(indicesTemplate.byteLength,12288);assert.equal(WOODLAND_FINE_GRASS.rootTextureBytes,1024*64*16);
  for(let leaf=0;leaf<256;leaf++)assert.deepEqual(Array.from(indicesTemplate.slice(leaf*12,leaf*12+12)),[0,1,2,1,3,2,2,3,4,3,5,4].map(i=>leaf*6+i),'ACCEPTED_CURVED_LEAF_TOPOLOGY_CHANGED');
  const combinedGrassGpuBytes=7070816+WOODLAND_FINE_GRASS.rootTextureBytes+indicesTemplate.byteLength;assert(combinedGrassGpuBytes<=8388608,'SHARED_GPU_BUDGET');
- const built=presentation??await buildWoodlandFineGrass(raw);onPresentation(built);
+ const earlyPrioritySnapshots=[];
+ const built=presentation??await buildWoodlandFineGrass(raw,{
+   priorityOrigin:{x:-139.40667724609375,z:-208.5037078857422},
+   onPriorityPreview:snapshot=>{
+     assert.equal(snapshot.receipt.schema,'H_EARTH_WOODLAND_FINE_GRASS_PRIORITY_PREVIEW_v1');
+     assert.equal(snapshot.receipt.originalRecordsChanged,false);
+     assert.equal(snapshot.receipt.terrainChanged,false);
+     assert.equal(snapshot.receipt.actualPixelsVerified,false);
+     earlyPrioritySnapshots.push({radius:snapshot.receipt.priorityRadiusMeters,
+       processedCells:snapshot.receipt.processedCells,
+       contacts:snapshot.receipt.contactCount,
+       sourceAccepted:snapshot.receipt.sourceAcceptedCount,
+       featherRule:snapshot.receipt.featherRule,
+       roots:snapshot.tiles.flatMap(t=>t.roots.map(r=>r.x+':'+r.y+':'+r.z))});
+   }
+ });onPresentation(built);
  let contacts=0,maxGroundError=0;const occupied=new Set(),positions=new Set(),classes={},rootBins=new Map();
  for(const tile of built.tiles)for(const q of tile.roots){
   const x=Math.fround(q.x),y=Math.fround(q.y),z=Math.fround(q.z),hit=surface.land(x,z);
@@ -62,6 +77,29 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
   const key=x+':'+z;assert(!positions.has(key),'DUPLICATE_ROOT');positions.add(key);occupied.add(Math.floor(a.x/4)+':'+Math.floor(a.z/4));classes[m.surfaceClass]=(classes[m.surfaceClass]??0)+1;contacts++;const bin=Math.floor(x)+':'+Math.floor(z);if(!rootBins.has(bin))rootBins.set(bin,[]);rootBins.get(bin).push({x,z});
  }
  assert(contacts>0,'NO_WOODLAND_ROOTS');
+ if(presentation===null){
+   assert(earlyPrioritySnapshots.length>=2,'PRIORITY_WOODLAND_EARLY_PREVIEW_MISSING');
+   assert(earlyPrioritySnapshots.every(s=>[4,9,17].includes(s.radius)),
+     'PRIORITY_WOODLAND_CAMERA_PATCH_RADIUS_DRIFT');
+   assert(earlyPrioritySnapshots[0].processedCells<10000,
+     'PRIORITY_WOODLAND_FIRST_FRAME_TOO_MUCH_SURVEY_WORK');
+   const full=new Set(built.tiles.flatMap(t=>t.roots.map(r=>r.x+':'+r.y+':'+r.z)));
+   assert(earlyPrioritySnapshots.some(s=>s.contacts<s.sourceAccepted),
+     'WOODLAND_PREVIEW_IRREGULAR_FEATHER_NOT_EXERCISED');
+   let lastCount=0,lastCells=0,lastRadius=0;
+   for(const snapshot of earlyPrioritySnapshots){
+     assert(snapshot.radius>lastRadius,'WOODLAND_PRIORITY_RADIUS_NOT_EXPANDING');
+     assert(snapshot.processedCells>lastCells,'WOODLAND_PRIORITY_GRID_NOT_EXPANDING');
+     lastRadius=snapshot.radius;lastCells=snapshot.processedCells;
+     assert(snapshot.contacts>lastCount,'PRIORITY_WOODLAND_SNAPSHOT_NOT_GROWING');
+     assert(snapshot.contacts<=snapshot.sourceAccepted,'PREVIEW_HAS_NEW_UNACCEPTED_CONTACTS');
+     assert.equal(snapshot.featherRule,'SOURCE_ONLY_DETERMINISTIC_IRREGULAR_RADIAL_TAPER_NO_NEW_ROOTS');
+     assert.equal(snapshot.contacts,snapshot.roots.length,'PRIORITY_WOODLAND_SNAPSHOT_ROOT_CENSUS_DRIFT');
+     assert(snapshot.roots.every(key=>full.has(key)),'PRIORITY_WOODLAND_PREVIEW_ROOT_NOT_FINAL');
+     lastCount=snapshot.contacts;
+   }
+   assert(lastCount<contacts,'PRIORITY_WOODLAND_PREVIEW_CLAIMS_FULL_POPULATION');
+ }
  let eligibleCoverageProbes=0,coveredProbes=0;
  for(let z=-264;z<=-188;z+=4)for(let x=-180;x<=-100;x+=4){
   const hit=surface.land(x,z);if(!hit||!inside(x,hit.y,z))continue;const a=inverse(x,hit.y,z);
@@ -80,8 +118,8 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
   const old=raw.buffers.indices.slice(i,i+3),now=Array.from(indices.slice(i,i+3));
   const inGrass=i>=span.indexStart&&i<span.indexStart+span.indexCount;
   const types=old.map(v=>raw.clearingAttributes[v*3+2]);
-  const target=inGrass&&types.every(t=>t===0||t===3)&&old.some(v=>inside(...raw.buffers.positions.slice(v*3,v*3+3)));
-  if(target){assert(now[0]===now[1]&&now[1]===now[2],'OLD_ANGULAR_GRASS_STILL_DRAWN');suppressed++;}
+  const target=inGrass&&types.every(t=>t===types[0])&&(types[0]===0||types[0]===3);
+  if(target){assert(now[0]===now[1]&&now[1]===now[2],'RETIRED_P2_BROAD_GRASS_STILL_DRAWN');suppressed++;}
   else{assert.deepEqual(now,old,'PROTECTED_TRIANGLE_CHANGED');preserved++;if(inGrass)for(const t of new Set(types))preservedTypes[t]=(preservedTypes[t]??0)+1;}
  }
  assert(suppressed>0);assert(preservedTypes[1]>0&&preservedTypes[2]>0,'UNDERSTORY_NOT_PRESERVED');
@@ -108,7 +146,46 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
  assert.equal(digest(JSON.stringify(raw)),original,'IMMUTABLE_WORLD_MUTATED');
  return {schema:'H_EARTH_FOUR_TREE_FINE_GRASS_INDEPENDENT_v1',result:'PASS',constructionExecuted:presentation===null,contacts,maxGroundError,combinedGrassGpuBytes,eligibleCoverageProbes,coveredProbes,occupiedFourMetreCells:occupied.size,classes,suppressed,preserved,preservedTypes,views,transitionObservations,qualificationBoundaries:{cheapTreeTerrainViews:'SEPARATE_REQUIRED',sharedRendererBudgets:'ALLOCATION_AND_RESERVATION_AUDITED_BROWSER_PENDING',actualBrowser:'SEPARATE_REQUIRED',ownerAcceptance:'PENDING'}};
 }
+/** Gen2694: fast read-only source-chain qualification; no world construction or browser. */
+export function verifyGen2694CandidateSourceChain(){
+ const rev='gen2694-legacy-fan-recovery-v1';
+ const paths=[
+  ['showroom/globe/h-earth/index.html','public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
+  ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
+  ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js','live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
+  ['showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js','cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev='+rev],
+  ['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js','woodland-fine-grass.v1.js?rev='+rev],
+  ['showroom/globe/h-earth/render/woodland-fine-grass.v1.js','landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev='+rev]
+ ];
+ const sources=new Map();
+ for(const [file,needle] of paths){
+  const bytes=fs.readFileSync(new URL(file,ROOT)),source=bytes.toString('utf8');
+  assert(source.includes(needle),'GEN2694_CACHE_CHAIN_MISSING:'+file);
+  sources.set(file,{source,sha256:digest(bytes),gitBlob:createHash('sha1').update('blob '+bytes.length).update(Buffer.from([0])).update(bytes).digest('hex')});
+ }
+ const renderer=sources.get(paths[4][0]).source,grass=sources.get(paths[5][0]).source;
+ assert(renderer.includes("from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev="+rev+"'"),'GEN2694_GLOBAL_IMPORT_REVISION_DRIFT');
+ assert(renderer.includes('const GLOBAL_COVER_PATCH_LOD_VS=GLOBAL_COVER_VS')&&renderer.includes('if(uMeadowGeometryPass==0)')&&renderer.includes('int leaf=gl_VertexID/4,vertex=gl_VertexID%4;')&&renderer.includes('float h=.22+.36*r1,halfWidth=.007+.006*r2'),'GEN2694_ACTUAL_THIN_SOURCE_SHADER_NOT_PROVEN');
+ assert(renderer.includes('originalSourceBroadFanMeshDrawCount:0'),'GEN2694_GPU_CENSUS_MISSING');
+ assert(grass.includes("(types[0]===0||types[0]===3)"),'GEN2694_WOODLAND_LEGACY_TYPE_SUPPRESSION_CHANGED');
+ const manifest=JSON.parse(fs.readFileSync(new URL('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json',ROOT),'utf8'));
+ assert.equal(manifest.binary.sha256,'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a','GEN2694_CANONICAL_WORLD_BINARY_IDENTITY_DRIFT');
+ const closure=fs.readFileSync(new URL('h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs',ROOT),'utf8');
+ for(const file of [paths[4][0],paths[5][0]]){
+  const observed=sources.get(file).gitBlob;
+  assert.equal(manifest.sourceBlobs[file],observed,'GEN2694_SOURCE_MANIFEST_BLOB_DRIFT:'+file);
+  assert(closure.includes(observed),'GEN2694_SOURCE_CLOSURE_PIN_DRIFT:'+file);
+ }
+ const prior=JSON.parse(fs.readFileSync(new URL('h-earth-3d/experience-anchor/receipts/h-earth-meadow-mid-distance-patch-lod-20261013.receipt.json',ROOT),'utf8'));
+ assert.equal(prior.canonicalAdmissionGeneration,2694);
+ assert.equal(prior.disposition,'PENDING');assert.equal(prior.releaseAuthorized,false);
+ const publicManifest=JSON.parse(fs.readFileSync(new URL('.github/ai-router/publication-surfaces/h-earth.json',ROOT),'utf8'));
+ const html=publicManifest.checks.find(entry=>entry.path==='/showroom/globe/h-earth/index.html');
+ assert(html&&html.includes.every(fragment=>sources.get(paths[0][0]).source.includes(fragment)),'GEN2694_PUBLIC_RELEASE_MANIFEST_INCOMPATIBLE');
+ return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
+}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ if(process.argv.includes('--source-binding-only')){console.log(JSON.stringify(verifyGen2694CandidateSourceChain(),null,2));process.exit(0);}
  const args=process.argv.slice(2),arg=k=>{const i=args.indexOf(k);return i<0?null:args[i+1];};
  const world=fs.readFileSync(arg('--world')??new URL('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',ROOT));
  assert.equal(digest(world),'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a','IMMUTABLE_WORLD_BYTES_CHANGED');

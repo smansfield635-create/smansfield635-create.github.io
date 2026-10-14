@@ -1,5 +1,5 @@
 /** Presentation-only woodland grass. Canonical world and records stay immutable. */
-import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.js';
+import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2694-legacy-fan-recovery-v1';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate,sampleHEarthGen311PlacementStructureDisposition} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from './grass-lowland-trial.js';
@@ -27,29 +27,99 @@ function surface(positions,indices,spans){
  }
  return{count,sample(x,z){for(const t of bins.get(`${Math.floor(x/4)}:${Math.floor(z/4)}`)??[]){const[a,b,c]=t.a,u=((b[2]-c[2])*(x-c[0])+(c[0]-b[0])*(z-c[2]))/t.det,v=((c[2]-a[2])*(x-c[0])+(a[0]-c[0])*(z-c[2]))/t.det,w=1-u-v;if(Math.min(u,v,w)>=-1e-8)return{y:f(u*a[1]+v*b[1]+w*c[1]),slope:t.slope,triangleId:t.triangleId};}return null;}};
 }
-export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=async()=>{},onProgress=()=>{}}={}){
+export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=async()=>{},onProgress=()=>{},priorityOrigin=null,onPriorityPreview=null}={}){
+ if(priorityOrigin!==null&&(![priorityOrigin.x,priorityOrigin.z].every(Number.isFinite)))throw Error('WOODLAND_PRIORITY_ORIGIN_INVALID');
+ if(onPriorityPreview!==null&&typeof onPriorityPreview!=='function')throw Error('WOODLAND_PRIORITY_CALLBACK_INVALID');
  const started=performance.now();let sliceStart=started,yieldCount=0;
  const base=surface(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(s=>s.role==='TERRAIN')),water=surface(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(s=>String(s.primitiveId).includes('FAR_OCEAN_CONTINUATION')));
  const refined=refinement?surface(refinement.positions,refinement.indices,[{indexStart:0,indexCount:refinement.indices.length}]):null,clip=refinement?.clip;
  if(refined&&(!Array.isArray(clip)||clip.length!==4))throw Error('WOODLAND_REFINEMENT_CLIP_INVALID');
  const sample=(x,z)=>refined&&x>clip[0]&&x<clip[2]&&z>clip[1]&&z<clip[3]?refined.sample(x,z):base.sample(x,z),tiles=new Map(),rejections={};let candidates=0,accepted=0;
  const reject=k=>rejections[k]=(rejections[k]??0)+1,obstacles=pkg.landscapeCoverFootprints??[],trees=pkg.landscapeFloorFootprints??[];
- for(let iz=0;iz<756;iz++){
-  for(let ix=0;ix<780;ix++){
-   if(ix%32===0&&performance.now()-sliceStart>=8){onProgress({phase:'WOODLAND_FINE_GRASS_CONTACTS',completedRows:iz,totalRows:756,acceptedContacts:accepted});await yieldControl();yieldCount++;sliceStart=performance.now();}
+ // Camera-nearest rows first: every candidate is tested once, and final tiles
+ // and individual roots retain the identical canonical deterministic sort.
+ // Exact accepted-root rules are unchanged. Sample a useful camera-near
+ // ground patch first, then expand outward. Every grid cell is visited once.
+ const visit=(ix,iz)=>{
    const x=f(-183.5+(ix+(hash(ix,iz,0)/4294967296-.5)*.76)*.11),z=f(-267.5+(iz+(hash(ix,iz,1)/4294967296-.5)*.76)*.11);
-   if(Math.hypot((x+141)/41.25,(z+226)/40)>1.001)continue;candidates++;
-   const s=sample(x,z);if(!s){reject('NO_TERRAIN');continue;}if(!isWoodlandFineGrassPoint(x,s.y,z)){reject('BOUNDARY');continue;}
+   if(Math.hypot((x+141)/41.25,(z+226)/40)>1.001)return;candidates++;
+   const s=sample(x,z);if(!s){reject('NO_TERRAIN');return;}if(!isWoodlandFineGrassPoint(x,s.y,z)){reject('BOUNDARY');return;}
    const a=inverseHEarthGroundCoverPoint(x,s.y,z),m=materialAt(a.x,a.z),w=water.sample(x,z);
-   if(w&&s.y<=w.y+.01){reject('WATER');continue;}
-   if(m?.valid!==true||s.slope>.35||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)){reject('MATERIAL_OR_SLOPE');continue;}
-   if(!woodlandGrassClear(a.x,a.z)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.03)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.10)){reject('PROTECTED_FOOTPRINT');continue;}
+   if(w&&s.y<=w.y+.01){reject('WATER');return;}
+   if(m?.valid!==true||s.slope>.35||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)){reject('MATERIAL_OR_SLOPE');return;}
+   if(!woodlandGrassClear(a.x,a.z)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.03)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.10)){reject('PROTECTED_FOOTPRINT');return;}
    const edge=1-Math.hypot((a.x+141)/41.25,(a.z+226)/40),weight=Math.min(1,edge*40),priority=hash(ix,iz,2)/4294967296;
-   if(priority>weight){reject('BOUNDARY_FEATHER');continue;}
+   if(priority>weight){reject('BOUNDARY_FEATHER');return;}
    const tx=Math.floor(x/4),tz=Math.floor(z/4),id=`${tx}:${tz}`;if(!tiles.has(id))tiles.set(id,{id,minX:tx*4,minZ:tz*4,roots:[]});
    tiles.get(id).roots.push({x,y:s.y,z,angle:f(hash(ix,iz,3)/4294967296*Math.PI*2),seed:hash(ix,iz,4),triangleId:s.triangleId,slope:s.slope});accepted++;
-  }
-  if(performance.now()-sliceStart>=8){await yieldControl();yieldCount++;sliceStart=performance.now();}
+ };
+ const scanned=priorityOrigin&&onPriorityPreview?new Uint8Array(756*780):null;
+ const cameraInWoodland=!!(scanned&&Math.hypot((priorityOrigin.x+141)/41.25,(priorityOrigin.z+226)/40)<1.35);
+ let scannedCells=0,completedRows=0;
+ const yieldWhenNeeded=async()=>{
+   if(performance.now()-sliceStart>=8){await yieldControl();yieldCount++;sliceStart=performance.now();}
+ };
+ const publishPreview=radius=>{
+   if(!onPriorityPreview||accepted===0)return;
+   // The source visit grid is rectangular for cheap deterministic sampling;
+   // never show that temporary rectangle as a hard-edged meadow carpet.
+   // Only the *preview submission* is irregularly feathered; every accepted
+   // record survives untouched into the canonical full woodland presentation.
+   const previewContactVisible=root=>{
+     const dx=root.x-priorityOrigin.x,dz=root.z-priorityOrigin.z;
+     const theta=Math.atan2(dz,dx);
+     const envelope=radius*(.84+.06*Math.sin(3*theta+.7)+.04*Math.sin(5*theta-1.4));
+     const feather=Math.max(0,Math.min(1,(envelope-Math.hypot(dx,dz))/(radius*.12)+.5));
+     return hash(Math.floor(root.x*2),Math.floor(root.z*2),9)/4294967296<feather;
+   };
+   const snapshotTiles=[...tiles.values()]
+     .map(t=>({...t,roots:t.roots.filter(previewContactVisible).sort((a,b)=>a.seed-b.seed)}))
+     .filter(t=>t.roots.length>0)
+     .sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);
+   const stagedContacts=snapshotTiles.reduce((n,t)=>n+t.roots.length,0);
+   if(stagedContacts===0)return;
+   onPriorityPreview({tiles:snapshotTiles,receipt:{
+     schema:'H_EARTH_WOODLAND_FINE_GRASS_PRIORITY_PREVIEW_v1',
+     contactCount:stagedContacts,sourceAcceptedCount:accepted,processedCells:scannedCells,
+     featherRule:'SOURCE_ONLY_DETERMINISTIC_IRREGULAR_RADIAL_TAPER_NO_NEW_ROOTS',
+     priorityRadiusMeters:radius,rowsPrepared:completedRows,totalRows:756,
+     originalRecordsChanged:false,terrainChanged:false,
+     actualPixelsVerified:false
+   }});
+ };
+ if(cameraInWoodland){
+   const cx=Math.max(0,Math.min(779,Math.round((priorityOrigin.x+183.5)/.11)));
+   const cz=Math.max(0,Math.min(755,Math.round((priorityOrigin.z+267.5)/.11)));
+   for(const radius of [4,9,17]){
+     const half=Math.ceil(radius/.11);
+     for(let iz=Math.max(0,cz-half);iz<=Math.min(755,cz+half);iz++){
+       for(let ix=Math.max(0,cx-half);ix<=Math.min(779,cx+half);ix++){
+         const index=iz*780+ix;if(scanned[index])continue;
+         scanned[index]=1;scannedCells++;visit(ix,iz);
+         if((ix&31)===0)await yieldWhenNeeded();
+       }
+       await yieldWhenNeeded();
+     }
+     publishPreview(radius);
+   }
+ }
+ const rows=Array.from({length:756},(_,i)=>i);
+ if(priorityOrigin)rows.sort((a,b)=>{
+   const da=Math.abs(-267.5+(a+.5)*.11-priorityOrigin.z);
+   const db=Math.abs(-267.5+(b+.5)*.11-priorityOrigin.z);
+   return da-db||a-b;
+ });
+ for(const iz of rows){
+   for(let ix=0;ix<780;ix++){
+     const index=iz*780+ix;if(scanned?.[index])continue;
+     scannedCells++;visit(ix,iz);
+     if((ix&31)===0){
+       onProgress({phase:'WOODLAND_FINE_GRASS_CONTACTS',completedRows,totalRows:756,
+         acceptedContacts:accepted,processedCells:scannedCells});
+       await yieldWhenNeeded();
+     }
+   }
+   completedRows++;await yieldWhenNeeded();
  }
  const ordered=[...tiles.values()].sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);for(const t of ordered)t.roots.sort((a,b)=>a.seed-b.seed);
  const presentation={tiles:ordered};await prepareWoodlandSelectionCache(presentation,yieldControl);
@@ -80,10 +150,14 @@ export function selectWoodlandFineGrass(presentation,camera,{maximumParents=1024
 export function filterWoodlandLegacyGrass(pkg){
  const original=pkg.buffers.indices,indices=Uint32Array.from(original),positions=pkg.buffers.positions,attributes=pkg.clearingAttributes,span=pkg.primitiveSpans.find(s=>s.primitiveId==='H_EARTH_LANDSCAPE_P2_GRASS');let suppressedTriangles=0;const suppressedTypeCounts={},preservedTypeCounts={};
  if(!span)throw Error('WOODLAND_LEGACY_GRASS_SPAN_MISSING');
- for(let j=span.indexStart;j<span.indexStart+span.indexCount;j+=3){const ids=[original[j],original[j+1],original[j+2]],types=ids.map(i=>attributes[i*3+2]),centroid=[0,1,2].map(k=>ids.reduce((n,i)=>n+positions[i*3+k]/3,0)),target=types.every(t=>t===types[0])&&(types[0]===0||types[0]===3)&&ids.some(i=>isWoodlandFineGrassPoint(positions[i*3],positions[i*3+1],positions[i*3+2]));
+ for(let j=span.indexStart;j<span.indexStart+span.indexCount;j+=3){const ids=[original[j],original[j+1],original[j+2]],types=ids.map(i=>attributes[i*3+2]);
+  // Retire only the original broad folded grass (types 0/3) everywhere it
+  // occurs in this one bounded P2_GRASS primitive. Keep real understory (1)
+  // and fallen leaf/litter (2), plus every other geometry span, unchanged.
+  const target=types.every(t=>t===types[0])&&(types[0]===0||types[0]===3);
   if(target){indices[j+1]=indices[j];indices[j+2]=indices[j];suppressedTriangles++;suppressedTypeCounts[types[0]]=(suppressedTypeCounts[types[0]]??0)+1;}else preservedTypeCounts[types[0]]=(preservedTypeCounts[types[0]]??0)+1;
  }
- return{indices,receipt:{suppressedTriangles,suppressedTypeCounts,preservedTypeCounts,scope:'P2_GRASS_TYPE_0_OR_3_TRIANGLE_INTERSECTS_AUTHORED_ELLIPSE_AT_VERTEX',originalWorldChanged:false,indexBufferBytes:indices.byteLength,submittedDegenerateTriangles:suppressedTriangles}};
+ return{indices,receipt:{suppressedTriangles,suppressedTypeCounts,preservedTypeCounts,scope:'P2_GRASS_TYPE_0_OR_3_RETIRED_THROUGHOUT_BOUNDED_P2_PRIMITIVE',originalWorldChanged:false,indexBufferBytes:indices.byteLength,submittedDegenerateTriangles:suppressedTriangles}};
 }
 export function buildWoodlandFineGrassIndices(){const out=[];for(let leaf=0;leaf<64*4;leaf++){const v=leaf*6;out.push(v,v+1,v+2,v+1,v+3,v+2,v+2,v+3,v+4,v+3,v+5,v+4);}return Uint32Array.from(out);}
 export function woodlandFineGrassVertex(root,leaf,leafCount=4){

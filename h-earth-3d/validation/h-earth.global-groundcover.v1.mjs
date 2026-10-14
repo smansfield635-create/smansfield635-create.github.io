@@ -9,7 +9,7 @@ import {getHEarthRun8ER2ImmutableLiveRenderPackage,getHEarthRun8ER2VegetationWor
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {sampleHEarthGen311PlacementStructureDisposition,H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis,buildHEarthWoodlandGrassTuft} from '../../showroom/globe/h-earth/render/grass-lowland-trial.js';
-import {buildHEarthGlobalGroundCover,selectHEarthGlobalGroundCoverDraws,H_EARTH_GLOBAL_GROUND_COVER as profile} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
+import {buildHEarthGlobalGroundCover,selectHEarthGlobalGroundCoverDraws,H_EARTH_GLOBAL_GROUND_COVER as profile} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2694-legacy-fan-recovery-v1';
 
 const digest=v=>createHash('sha256').update(typeof v==='string'||Buffer.isBuffer(v)?v:JSON.stringify(v)).digest('hex');
 const radius=420000;
@@ -130,16 +130,32 @@ const id=`${record[12]}:${record[13]}:${record[14]}:${record[15]}:${record[16]}`
  // Neither accepted placements nor canonical packed tile ranges may change.
  const priorityCamera={x:-139.40267987050615,z:-194.5};
  const streamed=new Map();let firstPriorityTile=null,priorityTileCount=0;
+ const previewTileLimit=24,previewRecordLimit=3072,previewIds=new Set();let previewRecordCount=0,previewTileCount=0,sharedTemplate=null;
  const priority=await buildHEarthGlobalGroundCover(pkg,{refinement,onProgress,order:'CAMERA_FIRST',priorityOrigin:priorityCamera,onTile:tile=>{
    const id=`${tile.ix}:${tile.iz}`;
    assert(!streamed.has(id),'CAMERA_FIRST_DUPLICATE_TILE');
    assert(tile.records instanceof Float32Array,'CAMERA_FIRST_TILE_NOT_FLOAT32');
    assert.equal(tile.records.length,tile.instanceCount*20,'CAMERA_FIRST_TILE_STRIDE_DRIFT');
+   // The early GPU preview must consume the exact source template and original
+   // ordered Float32 tile records, never a second grass generation.
+   if(!sharedTemplate)sharedTemplate=tile.template;
+   assert.strictEqual(tile.template,sharedTemplate,'PREVIEW_STREAM_TEMPLATE_IDENTITY_DRIFT');
+   assert.equal(tile.template?.recipe,'ACCEPTED_FOUR_BLADE_28_VERTEX_24_TRIANGLE_FAN','PREVIEW_STREAM_TEMPLATE_RECIPE_DRIFT');
+   if(priorityTileCount<previewTileLimit&&tile.instanceCount&&previewRecordCount<previewRecordLimit){
+     const n=Math.min(tile.instanceCount,previewRecordLimit-previewRecordCount);
+     assert(n>0&&n<=tile.instanceCount,'PREVIEW_TILE_CAPACITY_INCONSISTENT');
+     previewTileCount++;previewRecordCount+=n;previewIds.add(id);
+   }
    if(!firstPriorityTile)firstPriorityTile={ix:tile.ix,iz:tile.iz,instanceCount:tile.instanceCount,recordBytes:tile.records.byteLength};
    streamed.set(id,{count:tile.instanceCount,sha256:arrayDigest(tile.records)});
    priorityTileCount++;
  }});
  assert.equal(priorityTileCount,648,'CAMERA_FIRST_TILE_COUNT_MISMATCH');
+ assert.strictEqual(sharedTemplate,priority.template,'PREVIEW_TEMPLATE_NOT_FINAL_SOURCE');
+ assert(previewTileCount>0&&previewTileCount<=previewTileLimit,'PREVIEW_PRIORITY_TILE_BUDGET');
+ assert(previewRecordCount>0&&previewRecordCount<=previewRecordLimit,'PREVIEW_RECORD_BUDGET');
+ const previewGpuBytes=previewRecordLimit*80+1024*16+72*4;
+ assert.equal(previewGpuBytes,262432,'PREVIEW_GPU_BUDGET_DRIFT');
  assert.deepEqual([firstPriorityTile.ix,firstPriorityTile.iz],[7,16],'CAMERA_FIRST_INITIAL_TILE_NOT_NEAREST');
  assert.equal(stableDigest(priority),stable,'CAMERA_FIRST_WORLD_RECORD_OR_TILE_DRIFT');
  assert.equal(arrayDigest(priority.records),arrayDigest(cover.records),'CAMERA_FIRST_FLOAT32_RECORD_DRIFT');
@@ -149,7 +165,20 @@ const id=`${record[12]}:${record[13]}:${record[14]}:${record[15]}:${record[16]}`
    assert.equal(tile.count,streamedTile.count,'CAMERA_FIRST_TILE_COUNT_CHANGED');
    assert.equal(arrayDigest(priority.records.subarray(tile.start*20,(tile.start+tile.count)*20)),streamedTile.sha256,'CAMERA_FIRST_TILE_STREAM_RECORD_MISMATCH');
  }
- const cameraFirstProof={camera:priorityCamera,firstPriorityTile,streamedTileCount:priorityTileCount,finalDigest:stable,finalFloat32RecordSha256:arrayDigest(priority.records),fullWorldPopulationsMatch:true,tileDataAvailableBeforeFullWorld:true,earlyGpuTilePresentationClaimed:false};
+ for(const key of previewIds)assert(streamed.has(key),'PREVIEW_TILE_MISSING_FROM_FINAL_STREAM');
+ const rendererSource=fs.readFileSync(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ for(const [signature,label] of [
+   ["const LOCAL_PREVIEW_MAX_TILES=24,LOCAL_PREVIEW_MAX_RECORDS=3072;",'PREVIEW_CAP_DECLARATION_MISSING'],
+   ["flushLocalPreviewTiles(progress);",'CAMERA_PRIORITY_GPU_UPLOAD_NOT_CONNECTED'],
+   ["gl.drawElementsInstanced(gl.TRIANGLES,72,gl.UNSIGNED_INT,0,count);",'PREVIEW_GPU_DRAW_SUBMISSION_MISSING'],
+   ["retireLocalPreview(); // No duplicate GPU population at final allocation.",'FINAL_COVER_PREVIEW_HANDOFF_MISSING']
+ ])assert(rendererSource.includes(signature),label);
+ const cameraFirstProof={camera:priorityCamera,firstPriorityTile,streamedTileCount:priorityTileCount,
+   previewTileCount,previewRecordCount,previewGpuBytes,sharedSourceTemplate:true,
+   finalDigest:stable,finalFloat32RecordSha256:arrayDigest(priority.records),
+   fullWorldPopulationsMatch:true,tileDataAvailableBeforeFullWorld:true,
+   earlyGpuStagingSourceBound:true,earlyGpuTilePresentationClaimed:false,
+   actualWebglPixelCoverage:'SEPARATE_REQUIRED'};
  let truth=null;if(worldTruth){const value=getHEarthRun8ER2VegetationWorldTruthPlan();assert.equal(value.instanceCount,27585);assert.equal(value.batches.length,108);assert.equal(value.droppedPlacementCount,0);truth={instanceCount:value.instanceCount,batchCount:value.batches.length,droppedPlacementCount:value.droppedPlacementCount};}
  const textureWidth=1024,textureHeight=Math.ceil(cover.records.length/4/textureWidth),paddedGpuBytes=textureWidth*textureHeight*16+templateBytes;assert(paddedGpuBytes<=8*1024*1024,'PADDED_TEXTURE_GPU_BUDGET_EXCEEDED');
  return {schema:'H_EARTH_GLOBAL_GROUND_COVER_INDEPENDENT_QUALIFICATION_v1',result:'PASS',cameraFirstProof,stableWorldSha256:stable,recordsSha256:arrayDigest(cover.records),storedInstances:count,primaryFans,secondaryFans,lowFans,midFans,duneFans,siteCensus,publishedTallSha256,maximumSecondaryCenterOffset,recordStrideBytes:80,templateVertices:28,templateTriangles:24,totalGpuBytes:cover.receipt.totalGpuBytes,paddedRgba32fTextureGpuBytes:paddedGpuBytes,roots,maxGroundError,maxActualSlope,waterChecked,mountainRoots,refinementRoots,classes,zones,coverage,visibility,generationOrders:orders?3:1,canonicalWorldTruth:truth,preparationReceipt:cover.receipt,elapsedMilliseconds:performance.now()-started,qualificationBoundaries:{actualBrowserInstancing:'SEPARATE_REQUIRED',shaderCompilation:'SEPARATE_REQUIRED',physicalDevicePerformance:'NOT_ESTABLISHED'},productMutationPerformed:false,mergePerformed:false,deploymentPerformed:false};

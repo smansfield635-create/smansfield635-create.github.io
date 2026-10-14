@@ -196,7 +196,7 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
       // Each accepted record is copied verbatim; no GPU residency is implied.
       const records=new Float32Array(entries.length*P.recordFloats);
       for(let i=0;i<entries.length;i++)records.set(entries[i].record,i*P.recordFloats);
-      onTile({ix:tile.ix,iz:tile.iz,minX:tile.minX,maxX,minZ:tile.minZ,maxZ,instanceCount:entries.length,records});
+      onTile({ix:tile.ix,iz:tile.iz,minX:tile.minX,maxX,minZ:tile.minZ,maxZ,instanceCount:entries.length,records,template});
     }
     if(now()-budgetStart>=8){await yieldControl();yields++;budgetStart=now();}
   }

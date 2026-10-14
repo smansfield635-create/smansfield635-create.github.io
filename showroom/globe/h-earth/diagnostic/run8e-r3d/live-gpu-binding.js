@@ -24,7 +24,7 @@ const OCEAN_PROOF_RENDERER_PATH =
 const ADDITIVE_VISUAL_QUERY_KEY = 'visual';
 const ADDITIVE_VISUAL_QUERY_VALUE = 'terrain-relief-v2';
 const ADDITIVE_VISUAL_RENDERER_PATH =
-  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006';
+  '../../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2694-legacy-fan-recovery-v1';
 const CP2_LIVE_DIFFERENTIAL_QUERY_KEY = 'cp2';
 const CP2_LIVE_DIFFERENTIAL_QUERY_VALUE = 'round1-1f520809';
 const CP2_LIVE_DIFFERENTIAL_ENGINEERING_HEAD =
@@ -397,6 +397,73 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     return result;
   };
 
+  let firstWoodlandFineGrassPreviewPresentedFrame=null;
+  const presentWoodlandFineGrassPreviewFrame = () => {
+    const before=renderer.getResourceReceipt().woodlandFineGrass;
+    if(before?.previewReady!==true)throw Error('R3D3_WOODLAND_FINE_PREVIEW_NOT_READY');
+    const frame=presentNavigationState(latestNavigationState,{
+      kind:'WOODLAND_FINE_GRASS_PRIORITY_GPU_RESIDENT',
+      sequence:before.contactCount,captureEvidence:false
+    });
+    const after=renderer.getResourceReceipt().woodlandFineGrass;
+    const result=Object.freeze({frameSequence:frame.frameSequence,
+      submittedContacts:after?.visibleContacts??0,
+      submittedInstances:after?.visibleInstanceCount??0,
+      drawCallCount:after?.drawCallCount??0,
+      contactCountPrepared:after?.contactCount??0,
+      visiblePixelCoverageVerified:false});
+    if(firstWoodlandFineGrassPreviewPresentedFrame===null)
+      firstWoodlandFineGrassPreviewPresentedFrame=result;
+    return result;
+  };
+  const presentWoodlandFineGrassReadyFrame = () => {
+    const state = renderer.getResourceReceipt().woodlandFineGrass;
+    if(state?.ready!==true)throw new Error('R3D3_WOODLAND_FINE_GRASS_NOT_READY');
+    return presentNavigationState(latestNavigationState,{
+      kind:'WOODLAND_FINE_GRASS_RESIDENT',
+      sequence:state.contactCount,
+      captureEvidence:false
+    });
+  };
+  // A prepared GPU texture is not a presented frame. Redraw the current
+  // unchanged navigation state as soon as final groundcover upload lands.
+  let firstLocalGrassGpuFrame=null;
+  const presentLocalGroundcoverFrame = () => {
+    const preview=renderer.getResourceReceipt().localGroundcoverPreview;
+    if(preview?.ready!==true||preview.residentPriorityTiles<1)throw Error('R3D3_LOCAL_GROUNDCOVER_NOT_GPU_RESIDENT');
+    const frame=presentNavigationState(latestNavigationState,{
+      kind:'LOCAL_GROUNDCOVER_GPU_RESIDENT',sequence:preview.residentPriorityTiles,captureEvidence:false});
+    const after=renderer.getResourceReceipt().localGroundcoverPreview;
+    if(!firstLocalGrassGpuFrame&&(after?.drawCallCount??0)>0){
+      firstLocalGrassGpuFrame=Object.freeze({
+        frameSequence:frame.frameSequence,sourceKind:'LOCAL_GROUNDCOVER_GPU_RESIDENT',
+        residentPriorityTiles:after.residentPriorityTiles,submittedInstances:after.visibleInstanceCount,
+        framePresented:true,visiblePixelCoverageVerified:false
+      });
+    }
+    return Object.freeze({frameSequence:frame.frameSequence,residentPriorityTiles:after?.residentPriorityTiles??0,
+      stagedRecordCount:after?.stagedRecordCount??0,submittedInstances:after?.visibleInstanceCount??0,
+      submittedDrawCalls:after?.drawCallCount??0,visiblePixelCoverageVerified:false});
+  };
+  const presentResidentGlobalCoverFrame = () => {
+    const before=renderer.getResourceReceipt();
+    if(before.globalGroundCover?.prepared!==true||before.vegetationResidency?.globalCoverComplete!==true)
+      throw new Error('R3D3_GLOBAL_GROUNDCOVER_NOT_GPU_RESIDENT');
+    const frame=presentNavigationState(latestNavigationState,{
+      kind:'GLOBAL_GROUNDCOVER_GPU_RESIDENT',
+      sequence:before.globalGroundCover.storedInstanceCount,
+      captureEvidence:false
+    });
+    const after=renderer.getResourceReceipt().globalGroundCover;
+    return Object.freeze({
+      frameSequence:frame.frameSequence,
+      residentInstanceCount:before.globalGroundCover.storedInstanceCount,
+      submittedInstances:after.visibleInstanceCount??0,
+      submittedDrawCalls:after.drawCallCount??0,
+      gpuPresented:true,
+      visiblePixelCoverageVerified:false
+    });
+  };
   const getVegetationResidency = () => renderer.getResourceReceipt().vegetationResidency;
 
   const captureLatestEvidence = (label = `explicit-${frameSequence}`) => {
@@ -417,6 +484,8 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
       eligible: true,
       status: 'RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE',
       bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,
+      firstLocalGroundcoverGpuPresentedFrame:firstLocalGrassGpuFrame,
+      firstWoodlandFineGrassPreviewPresentedFrame,
       rendererCustodyRequested,
       rendererCustodyQueryKey: RENDERER_CUSTODY_QUERY_KEY,
       rendererCustodyQueryValue: RENDERER_CUSTODY_QUERY_VALUE,
@@ -511,6 +580,10 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     captureLatestEvidence,
     prepareVegetationResidency: options => deferredVegetationActive?renderer.prepareVegetationResidency(options):Promise.resolve(getVegetationResidency()),
     materializeNextVegetationBatch,
+    presentWoodlandFineGrassReadyFrame,
+    presentWoodlandFineGrassPreviewFrame,
+    presentResidentGlobalCoverFrame,
+    presentLocalGroundcoverFrame,
     getVegetationResidency,
     startPresentationAnimation,
     stopPresentationAnimation,

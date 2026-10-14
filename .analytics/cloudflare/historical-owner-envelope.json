@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-14T10:32:39Z",
+  "generatedAt": "2026-10-14T11:32:27Z",
   "window": {
-    "start": "2026-07-16T10:32:39Z",
-    "end": "2026-10-14T10:32:39Z"
+    "start": "2026-07-16T11:32:27Z",
+    "end": "2026-10-14T11:32:27Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4977,
-    "visits": 1324,
+    "pageLoads": 4917,
+    "visits": 1294,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4977,
-        "visits": 1324
+        "pageLoads": 4917,
+        "visits": 1294
       }
     },
     "byPath": {
@@ -39,8 +39,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1042,
-        "visits": 742
+        "pageLoads": 1022,
+        "visits": 722
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 50,
@@ -83,7 +83,7 @@
         "visits": 90
       },
       "/index.html": {
-        "pageLoads": 140,
+        "pageLoads": 130,
         "visits": 0
       },
       "/showroom/story/welcome/": {
@@ -127,7 +127,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 160,
+        "pageLoads": 150,
         "visits": 10
       },
       "/governance/": {
@@ -239,8 +239,8 @@
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+        "pageLoads": 40,
+        "visits": 20
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -349,16 +349,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3653,
+        "pageLoads": 3623,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 782,
-        "visits": 782
+        "pageLoads": 762,
+        "visits": 762
       },
       "(none)": {
-        "pageLoads": 532,
-        "visits": 532
+        "pageLoads": 522,
+        "visits": 522
       },
       "raw.githack.com": {
         "pageLoads": 10,

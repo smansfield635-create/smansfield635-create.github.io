@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2699-integrated-mature-grass-boulder-20261014-01",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6275,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2699-integrated-viewport-20261014",
+  "requestCommit": "6a175c2fd0eea6530ca405871d72fe2089109ef5",
+  "requestCommitParent": "e1a88365703cadbac813a0f689cffb9503bc22e0",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e1a88365703cadbac813a0f689cffb9503bc22e0",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "cc17782b099b5238cfe679f259b66b3b5f947600",
+    "route_query": "arrival=approved-four-trees",
+    "exercise_vegetation_residency": "false"
+  },
+  "bridgeRunId": "38629991302",
+  "dispatchedRunId": 38630016880,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38630016880",
+  "dispatchedRunHeadSha": "e1a88365703cadbac813a0f689cffb9503bc22e0",
+  "dispatchedAt": "2026-10-14T20:11:56.192Z",
+  "resolvedAt": "2026-10-14T20:12:00.415Z"
+}

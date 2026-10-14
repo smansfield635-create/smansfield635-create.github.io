@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2694-woodland-priority-fourtree-chromium-20261014-01",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6266,
+  "requestBranch": "ai-dispatch-request-h-earth-woodland-priority-20261014-01",
+  "requestCommit": "ac8e3a9f109c491c59361b6cf06ef4b6cb2d58a6",
+  "requestCommitParent": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "68a321843ecd65dd52b3c8deb8f681d8f2f47c1d",
+    "route_query": "arrival=approved-four-trees"
+  },
+  "bridgeRunId": "38601148314",
+  "dispatchedRunId": 38601173500,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38601173500",
+  "dispatchedRunHeadSha": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "dispatchedAt": "2026-10-14T16:48:14.091Z",
+  "resolvedAt": "2026-10-14T16:48:18.207Z"
+}

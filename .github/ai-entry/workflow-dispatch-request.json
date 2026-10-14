@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-gen2695-combined-grass-preflight-13b6b6-20261014",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "13b6b61958ff7e30adc312d6a7d642b97fc3da4e",
+    "surface_id": "h-earth"
   }
 }

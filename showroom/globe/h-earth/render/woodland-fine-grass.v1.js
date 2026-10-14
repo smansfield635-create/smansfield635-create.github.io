@@ -38,43 +38,73 @@ export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=a
  const reject=k=>rejections[k]=(rejections[k]??0)+1,obstacles=pkg.landscapeCoverFootprints??[],trees=pkg.landscapeFloorFootprints??[];
  // Camera-nearest rows first: every candidate is tested once, and final tiles
  // and individual roots retain the identical canonical deterministic sort.
- const rows=Array.from({length:756},(_,i)=>i);
- if(priorityOrigin)rows.sort((a,b)=>{
-   const da=Math.abs(-267.5+(a+.5)*.11-priorityOrigin.z),db=Math.abs(-267.5+(b+.5)*.11-priorityOrigin.z);
-   return da-db||a-b;
- });
- let completedRows=0;
- for(const iz of rows){
-  for(let ix=0;ix<780;ix++){
-   if(ix%32===0&&performance.now()-sliceStart>=8){onProgress({phase:'WOODLAND_FINE_GRASS_CONTACTS',completedRows,totalRows:756,acceptedContacts:accepted});await yieldControl();yieldCount++;sliceStart=performance.now();}
+ // Exact accepted-root rules are unchanged. Sample a useful camera-near
+ // ground patch first, then expand outward. Every grid cell is visited once.
+ const visit=(ix,iz)=>{
    const x=f(-183.5+(ix+(hash(ix,iz,0)/4294967296-.5)*.76)*.11),z=f(-267.5+(iz+(hash(ix,iz,1)/4294967296-.5)*.76)*.11);
-   if(Math.hypot((x+141)/41.25,(z+226)/40)>1.001)continue;candidates++;
-   const s=sample(x,z);if(!s){reject('NO_TERRAIN');continue;}if(!isWoodlandFineGrassPoint(x,s.y,z)){reject('BOUNDARY');continue;}
+   if(Math.hypot((x+141)/41.25,(z+226)/40)>1.001)return;candidates++;
+   const s=sample(x,z);if(!s){reject('NO_TERRAIN');return;}if(!isWoodlandFineGrassPoint(x,s.y,z)){reject('BOUNDARY');return;}
    const a=inverseHEarthGroundCoverPoint(x,s.y,z),m=materialAt(a.x,a.z),w=water.sample(x,z);
-   if(w&&s.y<=w.y+.01){reject('WATER');continue;}
-   if(m?.valid!==true||s.slope>.35||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)){reject('MATERIAL_OR_SLOPE');continue;}
-   if(!woodlandGrassClear(a.x,a.z)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.03)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.10)){reject('PROTECTED_FOOTPRINT');continue;}
+   if(w&&s.y<=w.y+.01){reject('WATER');return;}
+   if(m?.valid!==true||s.slope>.35||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)){reject('MATERIAL_OR_SLOPE');return;}
+   if(!woodlandGrassClear(a.x,a.z)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.03)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.10)){reject('PROTECTED_FOOTPRINT');return;}
    const edge=1-Math.hypot((a.x+141)/41.25,(a.z+226)/40),weight=Math.min(1,edge*40),priority=hash(ix,iz,2)/4294967296;
-   if(priority>weight){reject('BOUNDARY_FEATHER');continue;}
+   if(priority>weight){reject('BOUNDARY_FEATHER');return;}
    const tx=Math.floor(x/4),tz=Math.floor(z/4),id=`${tx}:${tz}`;if(!tiles.has(id))tiles.set(id,{id,minX:tx*4,minZ:tz*4,roots:[]});
    tiles.get(id).roots.push({x,y:s.y,z,angle:f(hash(ix,iz,3)/4294967296*Math.PI*2),seed:hash(ix,iz,4),triangleId:s.triangleId,slope:s.slope});accepted++;
-  }
-  completedRows++;
-  if(onPriorityPreview&&priorityOrigin&&[64,128,256].includes(completedRows)&&accepted>0){
-    // Read-only snapshot of the same terrain-contact records; no new roots.
-    // Sort copied tile/root arrays so source generation order cannot affect
-    // the preview's identity or the eventual final presentation.
-    const snapshot=[...tiles.values()]
-      .map(tile=>({...tile,roots:[...tile.roots].sort((a,b)=>a.seed-b.seed)}))
-      .sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);
-    onPriorityPreview({tiles:snapshot,receipt:{
-      schema:'H_EARTH_WOODLAND_FINE_GRASS_PRIORITY_PREVIEW_v1',
-      contactCount:accepted,rowsPrepared:completedRows,totalRows:756,
-      originalRecordsChanged:false,terrainChanged:false,
-      actualPixelsVerified:false
-    }});
-  }
-  if(performance.now()-sliceStart>=8){await yieldControl();yieldCount++;sliceStart=performance.now();}
+ };
+ const scanned=priorityOrigin&&onPriorityPreview?new Uint8Array(756*780):null;
+ const cameraInWoodland=!!(scanned&&Math.hypot((priorityOrigin.x+141)/41.25,(priorityOrigin.z+226)/40)<1.35);
+ let scannedCells=0,completedRows=0;
+ const yieldWhenNeeded=async()=>{
+   if(performance.now()-sliceStart>=8){await yieldControl();yieldCount++;sliceStart=performance.now();}
+ };
+ const publishPreview=radius=>{
+   if(!onPriorityPreview||accepted===0)return;
+   const snapshotTiles=[...tiles.values()]
+     .map(t=>({...t,roots:[...t.roots].sort((a,b)=>a.seed-b.seed)}))
+     .sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);
+   onPriorityPreview({tiles:snapshotTiles,receipt:{
+     schema:'H_EARTH_WOODLAND_FINE_GRASS_PRIORITY_PREVIEW_v1',
+     contactCount:accepted,processedCells:scannedCells,
+     priorityRadiusMeters:radius,rowsPrepared:completedRows,totalRows:756,
+     originalRecordsChanged:false,terrainChanged:false,
+     actualPixelsVerified:false
+   }});
+ };
+ if(cameraInWoodland){
+   const cx=Math.max(0,Math.min(779,Math.round((priorityOrigin.x+183.5)/.11)));
+   const cz=Math.max(0,Math.min(755,Math.round((priorityOrigin.z+267.5)/.11)));
+   for(const radius of [4,9,17]){
+     const half=Math.ceil(radius/.11);
+     for(let iz=Math.max(0,cz-half);iz<=Math.min(755,cz+half);iz++){
+       for(let ix=Math.max(0,cx-half);ix<=Math.min(779,cx+half);ix++){
+         const index=iz*780+ix;if(scanned[index])continue;
+         scanned[index]=1;scannedCells++;visit(ix,iz);
+         if((ix&31)===0)await yieldWhenNeeded();
+       }
+       await yieldWhenNeeded();
+     }
+     publishPreview(radius);
+   }
+ }
+ const rows=Array.from({length:756},(_,i)=>i);
+ if(priorityOrigin)rows.sort((a,b)=>{
+   const da=Math.abs(-267.5+(a+.5)*.11-priorityOrigin.z);
+   const db=Math.abs(-267.5+(b+.5)*.11-priorityOrigin.z);
+   return da-db||a-b;
+ });
+ for(const iz of rows){
+   for(let ix=0;ix<780;ix++){
+     const index=iz*780+ix;if(scanned?.[index])continue;
+     scannedCells++;visit(ix,iz);
+     if((ix&31)===0){
+       onProgress({phase:'WOODLAND_FINE_GRASS_CONTACTS',completedRows,totalRows:756,
+         acceptedContacts:accepted,processedCells:scannedCells});
+       await yieldWhenNeeded();
+     }
+   }
+   completedRows++;await yieldWhenNeeded();
  }
  const ordered=[...tiles.values()].sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);for(const t of ordered)t.roots.sort((a,b)=>a.seed-b.seed);
  const presentation={tiles:ordered};await prepareWoodlandSelectionCache(presentation,yieldControl);

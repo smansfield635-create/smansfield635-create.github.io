@@ -1,7 +1,7 @@
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
-import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js';
+import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2694-legacy-fan-recovery-v1';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2694-legacy-fan-recovery-v1';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -1579,7 +1579,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       meadowReplacementFraction:selected.meadowEligibleSelectedCount?partition.meadowCount/selected.meadowEligibleSelectedCount:0,meadowReplacementRadiusMeters:18,
       meadowReplacementInnerRadiusMeters:0,meadowPresentation:state.presentation.receipt,submittedCoverVertices:partition.vertices,submittedCoverTriangles:partition.triangles,patchLodTextureBytes:0,
       visiblePresentationClumps:partition.meadowCount*12,visiblePresentationContacts:partition.meadowCount*36,visibleShortContacts:partition.meadowCount*768,visibleMeadowLeaves:partition.meadowLeaves,visibleGlobalFineLeaves:partition.originalCount*12,nearDensityInstances:partition.nearCount,midDensityInstances:partition.midCount,
-      representation:'GLOBAL_FINE_CURVED_LEAVES_AND_DISTRIBUTED_SHORT_MEADOW_STRATUM',originalDrawInstances:partition.originalCount,meadowDrawInstances:partition.meadowCount,storedPopulationChanged:false,perFrameUploadBytes:selectionUploadBytes};
+      representation:'GLOBAL_FINE_CURVED_LEAVES_AND_DISTRIBUTED_SHORT_MEADOW_STRATUM',originalDrawInstances:partition.originalCount,legacyWideFanSubmittedInstanceCount:partition.originalCount,legacyFanPresentationUnresolved:partition.originalCount>0,meadowDrawInstances:partition.meadowCount,storedPopulationChanged:false,perFrameUploadBytes:selectionUploadBytes};
     if(partition.ids.length!==selected.visibleInstanceCount||partition.ids.length>4096||partition.drawCount>64)throw Error('GLOBAL_COVER_DRAW_BUDGET_EXCEEDED');
     counters.totalDrawnIndexCount+=partition.triangles*3;
     drawWoodlandFineGrass(packet,woodlandNear?Math.min(1024,4096-partition.ids.length):0);

@@ -61,12 +61,27 @@ export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=a
  };
  const publishPreview=radius=>{
    if(!onPriorityPreview||accepted===0)return;
+   // The source visit grid is rectangular for cheap deterministic sampling;
+   // never show that temporary rectangle as a hard-edged meadow carpet.
+   // Only the *preview submission* is irregularly feathered; every accepted
+   // record survives untouched into the canonical full woodland presentation.
+   const previewContactVisible=root=>{
+     const dx=root.x-priorityOrigin.x,dz=root.z-priorityOrigin.z;
+     const theta=Math.atan2(dz,dx);
+     const envelope=radius*(.84+.06*Math.sin(3*theta+.7)+.04*Math.sin(5*theta-1.4));
+     const feather=Math.max(0,Math.min(1,(envelope-Math.hypot(dx,dz))/(radius*.12)+.5));
+     return hash(Math.floor(root.x*2),Math.floor(root.z*2),9)/4294967296<feather;
+   };
    const snapshotTiles=[...tiles.values()]
-     .map(t=>({...t,roots:[...t.roots].sort((a,b)=>a.seed-b.seed)}))
+     .map(t=>({...t,roots:t.roots.filter(previewContactVisible).sort((a,b)=>a.seed-b.seed)}))
+     .filter(t=>t.roots.length>0)
      .sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);
+   const stagedContacts=snapshotTiles.reduce((n,t)=>n+t.roots.length,0);
+   if(stagedContacts===0)return;
    onPriorityPreview({tiles:snapshotTiles,receipt:{
      schema:'H_EARTH_WOODLAND_FINE_GRASS_PRIORITY_PREVIEW_v1',
-     contactCount:accepted,processedCells:scannedCells,
+     contactCount:stagedContacts,sourceAcceptedCount:accepted,processedCells:scannedCells,
+     featherRule:'SOURCE_ONLY_DETERMINISTIC_IRREGULAR_RADIAL_TAPER_NO_NEW_ROOTS',
      priorityRadiusMeters:radius,rowsPrepared:completedRows,totalRows:756,
      originalRecordsChanged:false,terrainChanged:false,
      actualPixelsVerified:false

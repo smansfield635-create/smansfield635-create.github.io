@@ -27,16 +27,26 @@ function surface(positions,indices,spans){
  }
  return{count,sample(x,z){for(const t of bins.get(`${Math.floor(x/4)}:${Math.floor(z/4)}`)??[]){const[a,b,c]=t.a,u=((b[2]-c[2])*(x-c[0])+(c[0]-b[0])*(z-c[2]))/t.det,v=((c[2]-a[2])*(x-c[0])+(a[0]-c[0])*(z-c[2]))/t.det,w=1-u-v;if(Math.min(u,v,w)>=-1e-8)return{y:f(u*a[1]+v*b[1]+w*c[1]),slope:t.slope,triangleId:t.triangleId};}return null;}};
 }
-export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=async()=>{},onProgress=()=>{}}={}){
+export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=async()=>{},onProgress=()=>{},priorityOrigin=null,onPriorityPreview=null}={}){
+ if(priorityOrigin!==null&&(![priorityOrigin.x,priorityOrigin.z].every(Number.isFinite)))throw Error('WOODLAND_PRIORITY_ORIGIN_INVALID');
+ if(onPriorityPreview!==null&&typeof onPriorityPreview!=='function')throw Error('WOODLAND_PRIORITY_CALLBACK_INVALID');
  const started=performance.now();let sliceStart=started,yieldCount=0;
  const base=surface(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(s=>s.role==='TERRAIN')),water=surface(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(s=>String(s.primitiveId).includes('FAR_OCEAN_CONTINUATION')));
  const refined=refinement?surface(refinement.positions,refinement.indices,[{indexStart:0,indexCount:refinement.indices.length}]):null,clip=refinement?.clip;
  if(refined&&(!Array.isArray(clip)||clip.length!==4))throw Error('WOODLAND_REFINEMENT_CLIP_INVALID');
  const sample=(x,z)=>refined&&x>clip[0]&&x<clip[2]&&z>clip[1]&&z<clip[3]?refined.sample(x,z):base.sample(x,z),tiles=new Map(),rejections={};let candidates=0,accepted=0;
  const reject=k=>rejections[k]=(rejections[k]??0)+1,obstacles=pkg.landscapeCoverFootprints??[],trees=pkg.landscapeFloorFootprints??[];
- for(let iz=0;iz<756;iz++){
+ // Camera-nearest rows first: every candidate is tested once, and final tiles
+ // and individual roots retain the identical canonical deterministic sort.
+ const rows=Array.from({length:756},(_,i)=>i);
+ if(priorityOrigin)rows.sort((a,b)=>{
+   const da=Math.abs(-267.5+(a+.5)*.11-priorityOrigin.z),db=Math.abs(-267.5+(b+.5)*.11-priorityOrigin.z);
+   return da-db||a-b;
+ });
+ let completedRows=0;
+ for(const iz of rows){
   for(let ix=0;ix<780;ix++){
-   if(ix%32===0&&performance.now()-sliceStart>=8){onProgress({phase:'WOODLAND_FINE_GRASS_CONTACTS',completedRows:iz,totalRows:756,acceptedContacts:accepted});await yieldControl();yieldCount++;sliceStart=performance.now();}
+   if(ix%32===0&&performance.now()-sliceStart>=8){onProgress({phase:'WOODLAND_FINE_GRASS_CONTACTS',completedRows,totalRows:756,acceptedContacts:accepted});await yieldControl();yieldCount++;sliceStart=performance.now();}
    const x=f(-183.5+(ix+(hash(ix,iz,0)/4294967296-.5)*.76)*.11),z=f(-267.5+(iz+(hash(ix,iz,1)/4294967296-.5)*.76)*.11);
    if(Math.hypot((x+141)/41.25,(z+226)/40)>1.001)continue;candidates++;
    const s=sample(x,z);if(!s){reject('NO_TERRAIN');continue;}if(!isWoodlandFineGrassPoint(x,s.y,z)){reject('BOUNDARY');continue;}
@@ -48,6 +58,21 @@ export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=a
    if(priority>weight){reject('BOUNDARY_FEATHER');continue;}
    const tx=Math.floor(x/4),tz=Math.floor(z/4),id=`${tx}:${tz}`;if(!tiles.has(id))tiles.set(id,{id,minX:tx*4,minZ:tz*4,roots:[]});
    tiles.get(id).roots.push({x,y:s.y,z,angle:f(hash(ix,iz,3)/4294967296*Math.PI*2),seed:hash(ix,iz,4),triangleId:s.triangleId,slope:s.slope});accepted++;
+  }
+  completedRows++;
+  if(onPriorityPreview&&priorityOrigin&&[64,128,256].includes(completedRows)&&accepted>0){
+    // Read-only snapshot of the same terrain-contact records; no new roots.
+    // Sort copied tile/root arrays so source generation order cannot affect
+    // the preview's identity or the eventual final presentation.
+    const snapshot=[...tiles.values()]
+      .map(tile=>({...tile,roots:[...tile.roots].sort((a,b)=>a.seed-b.seed)}))
+      .sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);
+    onPriorityPreview({tiles:snapshot,receipt:{
+      schema:'H_EARTH_WOODLAND_FINE_GRASS_PRIORITY_PREVIEW_v1',
+      contactCount:accepted,rowsPrepared:completedRows,totalRows:756,
+      originalRecordsChanged:false,terrainChanged:false,
+      actualPixelsVerified:false
+    }});
   }
   if(performance.now()-sliceStart>=8){await yieldControl();yieldCount++;sliceStart=performance.now();}
  }

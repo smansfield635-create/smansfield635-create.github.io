@@ -1649,6 +1649,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
          progress({phase:'WOODLAND_FINE_GRASS_PRIORITY_GPU_READY',
            priorityContactCount:preview.receipt.contactCount,
            priorityRowsPrepared:preview.receipt.rowsPrepared,
+           priorityRadiusMeters:preview.receipt.priorityRadiusMeters,
+           priorityCellsPrepared:preview.receipt.processedCells,
            woodlandPreviewGpuResident:true});
        }});
     const state=installPresentation(complete);

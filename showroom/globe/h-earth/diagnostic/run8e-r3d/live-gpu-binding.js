@@ -408,12 +408,20 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
   };
   // A prepared GPU texture is not a presented frame. Redraw the current
   // unchanged navigation state as soon as final groundcover upload lands.
+  let firstLocalGrassGpuFrame=null;
   const presentLocalGroundcoverFrame = () => {
     const preview=renderer.getResourceReceipt().localGroundcoverPreview;
     if(preview?.ready!==true||preview.residentPriorityTiles<1)throw Error('R3D3_LOCAL_GROUNDCOVER_NOT_GPU_RESIDENT');
     const frame=presentNavigationState(latestNavigationState,{
       kind:'LOCAL_GROUNDCOVER_GPU_RESIDENT',sequence:preview.residentPriorityTiles,captureEvidence:false});
     const after=renderer.getResourceReceipt().localGroundcoverPreview;
+    if(!firstLocalGrassGpuFrame&&(after?.drawCallCount??0)>0){
+      firstLocalGrassGpuFrame=Object.freeze({
+        frameSequence:frame.frameSequence,sourceKind:'LOCAL_GROUNDCOVER_GPU_RESIDENT',
+        residentPriorityTiles:after.residentPriorityTiles,submittedInstances:after.visibleInstanceCount,
+        framePresented:true,visiblePixelCoverageVerified:false
+      });
+    }
     return Object.freeze({frameSequence:frame.frameSequence,residentPriorityTiles:after?.residentPriorityTiles??0,
       stagedRecordCount:after?.stagedRecordCount??0,submittedInstances:after?.visibleInstanceCount??0,
       submittedDrawCalls:after?.drawCallCount??0,visiblePixelCoverageVerified:false});
@@ -457,6 +465,7 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
       eligible: true,
       status: 'RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE',
       bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,
+      firstLocalGroundcoverGpuPresentedFrame:firstLocalGrassGpuFrame,
       rendererCustodyRequested,
       rendererCustodyQueryKey: RENDERER_CUSTODY_QUERY_KEY,
       rendererCustodyQueryValue: RENDERER_CUSTODY_QUERY_VALUE,

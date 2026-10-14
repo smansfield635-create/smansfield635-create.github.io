@@ -80,10 +80,14 @@ export function selectWoodlandFineGrass(presentation,camera,{maximumParents=1024
 export function filterWoodlandLegacyGrass(pkg){
  const original=pkg.buffers.indices,indices=Uint32Array.from(original),positions=pkg.buffers.positions,attributes=pkg.clearingAttributes,span=pkg.primitiveSpans.find(s=>s.primitiveId==='H_EARTH_LANDSCAPE_P2_GRASS');let suppressedTriangles=0;const suppressedTypeCounts={},preservedTypeCounts={};
  if(!span)throw Error('WOODLAND_LEGACY_GRASS_SPAN_MISSING');
- for(let j=span.indexStart;j<span.indexStart+span.indexCount;j+=3){const ids=[original[j],original[j+1],original[j+2]],types=ids.map(i=>attributes[i*3+2]),centroid=[0,1,2].map(k=>ids.reduce((n,i)=>n+positions[i*3+k]/3,0)),target=types.every(t=>t===types[0])&&(types[0]===0||types[0]===3)&&ids.some(i=>isWoodlandFineGrassPoint(positions[i*3],positions[i*3+1],positions[i*3+2]));
+ for(let j=span.indexStart;j<span.indexStart+span.indexCount;j+=3){const ids=[original[j],original[j+1],original[j+2]],types=ids.map(i=>attributes[i*3+2]);
+  // Retire only the original broad folded grass (types 0/3) everywhere it
+  // occurs in this one bounded P2_GRASS primitive. Keep real understory (1)
+  // and fallen leaf/litter (2), plus every other geometry span, unchanged.
+  const target=types.every(t=>t===types[0])&&(types[0]===0||types[0]===3);
   if(target){indices[j+1]=indices[j];indices[j+2]=indices[j];suppressedTriangles++;suppressedTypeCounts[types[0]]=(suppressedTypeCounts[types[0]]??0)+1;}else preservedTypeCounts[types[0]]=(preservedTypeCounts[types[0]]??0)+1;
  }
- return{indices,receipt:{suppressedTriangles,suppressedTypeCounts,preservedTypeCounts,scope:'P2_GRASS_TYPE_0_OR_3_TRIANGLE_INTERSECTS_AUTHORED_ELLIPSE_AT_VERTEX',originalWorldChanged:false,indexBufferBytes:indices.byteLength,submittedDegenerateTriangles:suppressedTriangles}};
+ return{indices,receipt:{suppressedTriangles,suppressedTypeCounts,preservedTypeCounts,scope:'P2_GRASS_TYPE_0_OR_3_RETIRED_THROUGHOUT_BOUNDED_P2_PRIMITIVE',originalWorldChanged:false,indexBufferBytes:indices.byteLength,submittedDegenerateTriangles:suppressedTriangles}};
 }
 export function buildWoodlandFineGrassIndices(){const out=[];for(let leaf=0;leaf<64*4;leaf++){const v=leaf*6;out.push(v,v+1,v+2,v+1,v+3,v+2,v+2,v+3,v+4,v+3,v+5,v+4);}return Uint32Array.from(out);}
 export function woodlandFineGrassVertex(root,leaf,leafCount=4){

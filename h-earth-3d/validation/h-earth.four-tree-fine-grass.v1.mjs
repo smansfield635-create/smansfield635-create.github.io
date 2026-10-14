@@ -123,7 +123,7 @@ export function verifyGen2694CandidateSourceChain(){
  for(const [file,needle] of paths){
   const bytes=fs.readFileSync(new URL(file,ROOT)),source=bytes.toString('utf8');
   assert(source.includes(needle),'GEN2694_CACHE_CHAIN_MISSING:'+file);
-  sources.set(file,{source,sha256:digest(bytes),gitBlob:createHash('sha1').update('blob '+bytes.length+'\\0').update(bytes).digest('hex')});
+  sources.set(file,{source,sha256:digest(bytes),gitBlob:createHash('sha1').update('blob '+bytes.length).update(Buffer.from([0])).update(bytes).digest('hex')});
  }
  const renderer=sources.get(paths[4][0]).source,grass=sources.get(paths[5][0]).source;
  assert(renderer.includes("from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev="+rev+"'"),'GEN2694_GLOBAL_IMPORT_REVISION_DRIFT');

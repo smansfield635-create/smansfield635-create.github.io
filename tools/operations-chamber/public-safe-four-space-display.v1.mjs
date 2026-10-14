@@ -10,7 +10,7 @@ export const SCHEMA = 'DGB_OPERATIONS_CHAMBER_DASHBOARD_DATA_v1';
 export const AGGREGATE = 'DGB_CHAMBER_PUBLIC_SAFE_AGGREGATE_v1';
 export const QUALIFIED_FILES = Object.freeze({
   'index.html': '6ffa858e712b1e68285a3c270f4b317e9a491d7c86aac1053f987733f48bf275',
-  'dashboard.mjs': '5ef85ee634a9f896977fbaaa1e71e6ab21f1dc4889bc456467b0f015617195e7'
+  'dashboard.mjs': 'a7ad30f5413d697963b931b35b775acc447c974cdf0c77fb5e15b775531df8c4'
 });
 const fail=(code)=>{const e=new Error(code);e.code=code;throw e};
 const digest=s=>crypto.createHash('sha256').update(s).digest('hex');

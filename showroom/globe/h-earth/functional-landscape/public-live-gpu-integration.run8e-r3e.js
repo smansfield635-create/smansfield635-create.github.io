@@ -361,6 +361,19 @@ function showVegetationPreparation(progress){
       :'Fine-grass tiles resident · current view still developing.',true);
     return;
   }
+  if(progress.phase==='WOODLAND_FINE_GRASS_PRIORITY_GPU_READY'){
+    const draw=binding.presentWoodlandFineGrassPreviewFrame();
+    root.dataset.woodlandGrassPreviewGpuResident='true';
+    root.dataset.woodlandGrassPreviewDrawSubmitted=draw.drawCallCount>0?'true':'false';
+    window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{
+      phase:'WOODLAND_FINE_GRASS_PRIORITY_FRAME_PRESENTED',...draw,
+      priorityRowsPrepared:progress.priorityRowsPrepared
+    }}));
+    showVegetationStatus(draw.drawCallCount>0
+      ?'Woodland grass drawing · '+draw.submittedContacts+' nearby contacts submitted.'
+      :'Woodland grass roots preparing · final meadow still loading.',true);
+    return;
+  }
   if(progress.phase==='WOODLAND_FINE_GRASS_RESIDENT'){
     const frame=binding.presentWoodlandFineGrassReadyFrame();
     const draw=binding.getReceipt().resources.woodlandFineGrass;

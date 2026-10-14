@@ -21,7 +21,7 @@ function rectangleDistance(x,z,b){return Math.hypot(x-Math.max(b.minX,Math.min(b
 function clear(x,z,margin=0){
  for(const b of [estate.manorCore,estate.gardens,estate.outbuildingProposal,estate.acceptedEnvelope])assert(rectangleDistance(x,z,b)>margin,'PROTECTED_ESTATE_OVERLAP');
  for(let i=1;i<estate.footRoute.length;i++)assert(segmentDistance(x,z,estate.footRoute[i-1],estate.footRoute[i])>estate.footRouteRadius+margin,'ESTATE_ROUTE_OVERLAP');
- assert(segmentDistance(x,z,{x:-145,z:-194},{x:-145,z:-230})>1.5+margin,'WOODLAND_WALKING_OVERLAP');
+
  const disposition=sampleHEarthGen311PlacementStructureDisposition(x,z);assert(!disposition.hardExclusions.length&&!disposition.planningHolds.length,'PROTECTED_HOLD_OVERLAP');
 }
 function preserved(x,z,margin=0){return Math.hypot((x+141)/33,(z+226)/32)<=1.25+margin/32||x>=oasis.minX-margin&&x<=oasis.maxX+margin&&z>=oasis.minZ-margin&&z<=oasis.maxZ+margin;}

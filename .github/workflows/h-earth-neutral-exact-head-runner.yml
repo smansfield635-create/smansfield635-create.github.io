@@ -517,15 +517,14 @@ jobs:
           const fatalPageErrors=authoritativeResidencyPass?pageErrors.filter(message=>message!=='R3C_VEGETATION_BATCH_PREPARATION_PENDING'):pageErrors;
           receipt.fatalPageErrors=fatalPageErrors;
           receipt.expectedTransientPreparationPendingCount=authoritativeResidencyPass?pageErrors.length-fatalPageErrors.length:0;
+          const integratedValidatorExecution=integratedQualification
+            ?JSON.parse(await fs.readFile(out+'/gen2699-large-p2-validator.status.json','utf8')):null;
+          if(integratedValidatorExecution)receipt.gen2699LargeBoulderValidatorExecution=integratedValidatorExecution;
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(!receipt.materialized||fatalPageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
           if(exerciseVegetation&&!authoritativeResidencyPass) process.exitCode=1;
-          if(integratedQualification){
-            const execution=JSON.parse(await fs.readFile(out+'/gen2699-large-p2-validator.status.json','utf8'));
-            receipt.gen2699LargeBoulderValidatorExecution=execution;
-            if(execution.exitCode!==0||!integratedQualification.boulderRegionReached)process.exitCode=1;
-          }
+          if(integratedQualification&&(integratedValidatorExecution?.exitCode!==0||!integratedQualification.boulderRegionReached))process.exitCode=1;
           NODE
           node h-earth-exact-run.mjs
 

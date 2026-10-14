@@ -18,7 +18,7 @@ const hex64=/^[0-9a-f]{64}$/;
 const fail=code=>{const error=new Error(code);error.code=code;throw error};
 const stable=x=>Array.isArray(x)?x.map(stable):x&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(k=>[k,stable(x[k])])):x;
 const digest=x=>crypto.createHash('sha256').update(JSON.stringify(stable(x))).digest('hex');
-const blobSha=s=>{const b=Buffer.from(s,'utf8');return crypto.createHash('sha1').update(Buffer.concat([Buffer.from(`blob ${b.length}\0`),b])).digest('hex')};
+const gitObjectId=s=>{const b=Buffer.from(s,'utf8');return crypto.createHash('sha1').update(Buffer.concat([Buffer.from(`blob ${b.length}\0`),b])).digest('hex')};
 const exact=(x,names)=>x&&typeof x==='object'&&!Array.isArray(x)&&Object.keys(x).sort().join('|')===names.slice().sort().join('|');
 const utc=s=>typeof s==='string'&&/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,3})?Z$/.test(s)&&Number.isFinite(Date.parse(s))&&new Date(s).toISOString()===new Date(Date.parse(s)).toISOString();
 const qty=n=>Number.isSafeInteger(n)&&n>=0&&n<=10_000_000;
@@ -48,7 +48,7 @@ export function validatePublicSummary(s){
 const STUDY_CARD=`const rolling=current.rollingStudySummary;const box=$('rolling-summary');if(box){const valid=rolling&&rolling.schema==='DGB_CHAMBER_PUBLIC_SAFE_AGGREGATE_v1'&&rolling.metrics&&['classified','unresolved','reviews','auditFlags'].every(k=>Number.isSafeInteger(rolling.metrics[k])&&rolling.metrics[k]>=0&&rolling.metrics[k]<=10000000)&&Number.isFinite(Date.parse(rolling.savedThrough))&&Number.isFinite(Date.parse(rolling.capturedAt))&&rolling.metrics.unresolved<=rolling.metrics.classified&&rolling.metrics.reviews<=rolling.metrics.classified&&rolling.metrics.auditFlags<=rolling.metrics.classified;const age=valid?Date.now()-Date.parse(rolling.savedThrough):Infinity;const status=valid?(age>=-120000&&age<35*60000?'Recent saved checkpoint':'Older saved checkpoint'):'Source unavailable';box.innerHTML=valid?'<span class="badge '+(status.startsWith('Recent')?'good':'warning')+'">'+status+'</span><h3 class="study-total">'+rolling.metrics.classified.toLocaleString()+' classified PRs</h3><p>Saved through '+esc(new Date(rolling.savedThrough).toLocaleString())+'. These are automated classifications with preserved review corrections; not a productivity or operational-health certification.</p><div class="statrow"><div class="stat"><div class="value">'+rolling.metrics.unresolved+'</div><div class="label">Unresolved</div></div><div class="stat"><div class="value">'+rolling.metrics.reviews+'</div><div class="label">Source reviews</div></div><div class="stat"><div class="value">'+rolling.metrics.auditFlags+'</div><div class="label">Audit flags</div></div></div>':'<p>Current verified rolling study unavailable. Historical study remains below.</p>';}`;
 
 export function integratePublicDisplay({index,module,publicData,summary}){
-  if(blobSha(index)!==PINNED_UI_INDEX||blobSha(module)!==PINNED_UI_MODULE)fail('UNQUALIFIED_UI_SOURCE');
+  if(gitObjectId(index)!==PINNED_UI_INDEX||gitObjectId(module)!==PINNED_UI_MODULE)fail('UNQUALIFIED_UI_SOURCE');
   if(!validatePublicSummary(summary))fail('PUBLIC_SUMMARY_INVALID');
   if(publicData?.schema!=='DGB_OPERATIONS_CHAMBER_DASHBOARD_DATA_v1'||publicData?.commandsEnabled!==false||!Array.isArray(publicData.projects)||!publicData.study||!utc(publicData.observedAt))fail('EXISTING_DISPLAY_INVALID');
   const anchor='<div class="panel" id="study"></div>';
@@ -75,7 +75,7 @@ export async function authenticatedSnapshot(token){
     const x=await github(`contents/${relative}?ref=${head}`,token);
     if(x?.encoding!=='base64'||!hex40.test(x.sha)||typeof x.content!=='string')fail('SOURCE_BLOB_INVALID');
     const decoded=Buffer.from(x.content.replace(/\s/g,''),'base64').toString('utf8');
-    if(blobSha(decoded)!==x.sha)fail('SOURCE_BLOB_IDENTITY_MISMATCH');
+    if(gitObjectId(decoded)!==x.sha)fail('SOURCE_BLOB_IDENTITY_MISMATCH');
     try{return JSON.parse(decoded)}catch{fail('SOURCE_JSON_INVALID')}
   }
   const [data,receipt]=await Promise.all([file(DATA_PATH),file(RECEIPT_PATH)]);

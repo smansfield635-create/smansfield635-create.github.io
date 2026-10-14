@@ -7423,6 +7423,50 @@
       "scopeHash": "72258889edde8bc7e3b0fc272d34a3c067cf9a80d2d925323982309def876c6d",
       "state": "ADMITTED_LOCKED"
     },
+    "7272e66206e0b3c71bbebff7fc02bc2343c5db633bd9681aecff283982166f5b": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "113c0f3a0462376e448111ce96d5220c7c17169f",
+          "lockGeneration": 2704,
+          "lockScope": "H_EARTH:GEN2703:ONE_WORKFLOW_NATIVE_BOULDER_CAMERA_DRAG_REPAIR:20261014:V1",
+          "operationId": "H_EARTH_GEN2703_BOULDER_CAMERA_STEERING_TOOLING_REPAIR_20261014_001",
+          "procedureLocatorDigest": "eb8762a1254540ebc83bf1dd5f273df66312688bbaa7cd449c81685ff837afb8",
+          "requestDigest": "8e1a78ad2b1251507ea6deb30bdda009975ed863f8d9122da6b9ee8f6e01d7b5",
+          "scopeHash": "7272e66206e0b3c71bbebff7fc02bc2343c5db633bd9681aecff283982166f5b"
+        },
+        "bindingDigest": "f35dda4f074ed5c851931771e77f7ca357b23029397423974257887d710dc2c9",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a212f508f977038d784259061583ac96b2faefe247687ae5512af7071359540f",
+          "commentId": 6178973076,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6278,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38641165614,
+          "workflowSha": "113c0f3a0462376e448111ce96d5220c7c17169f"
+        },
+        "lineageAnchorCommitSha": "71c59c46dc9d6b08ff68044a6ea5fb9f2b5118e7",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "113c0f3a0462376e448111ce96d5220c7c17169f",
+      "lockGeneration": 2704,
+      "lockScope": "H_EARTH:GEN2703:ONE_WORKFLOW_NATIVE_BOULDER_CAMERA_DRAG_REPAIR:20261014:V1",
+      "operationId": "H_EARTH_GEN2703_BOULDER_CAMERA_STEERING_TOOLING_REPAIR_20261014_001",
+      "procedureLocatorDigest": "eb8762a1254540ebc83bf1dd5f273df66312688bbaa7cd449c81685ff837afb8",
+      "released": false,
+      "requestDigest": "8e1a78ad2b1251507ea6deb30bdda009975ed863f8d9122da6b9ee8f6e01d7b5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7272e66206e0b3c71bbebff7fc02bc2343c5db633bd9681aecff283982166f5b",
+      "state": "ADMITTED_LOCKED"
+    },
     "72da0be52cdf8b3b3c90ad57a361328dd63db947205f0072f7bad48efb835410": {
       "governingHead": "dd227d1365f88045be59ce764155a7c1675c0249",
       "lockGeneration": 1594,
@@ -17408,7 +17452,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2703,
+  "lockGeneration": 2704,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

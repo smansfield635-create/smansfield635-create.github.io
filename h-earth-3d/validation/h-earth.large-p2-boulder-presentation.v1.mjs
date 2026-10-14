@@ -12,7 +12,7 @@ import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const digest=b=>createHash('sha256').update(b).digest('hex');
-const sha=v=>digest(Buffer.from(v.buffer,v.byteOffset,v.byteLength));
+const sha=v=>digest(ArrayBuffer.isView(v)?Buffer.from(v.buffer,v.byteOffset,v.byteLength):Buffer.from(JSON.stringify(v)));
 function independentCensus(raw){
  const old=raw.buffers.indices,tags=raw.clearingAttributes,span=raw.primitiveSpans.find(x=>x.primitiveId==='H_EARTH_LANDSCAPE_P2_ROCK');
  assert(span,'SOURCE_ROCK_SPAN_MISSING');

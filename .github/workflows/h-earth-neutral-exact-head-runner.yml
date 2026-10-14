@@ -112,14 +112,16 @@ jobs:
           retention-days: 30
 
       - name: Generation 2699 independent full-world boulder validator
-        if: ${{ inputs.target_sha == 'cc17782b099b5238cfe679f259b66b3b5f947600' }}
+        if: ${{ inputs.target_sha == '638b083b34d0c77908229614c57355a9a15f75d9' }}
         shell: bash
         run: |
           set -uo pipefail
           mkdir -p /tmp/h-earth-exact-evidence
+          set +e
           timeout 240s node h-earth-3d/validation/h-earth.large-p2-boulder-presentation.v1.mjs --verify > /tmp/h-earth-exact-evidence/gen2699-large-p2-validator.stdout 2>&1
           status=$?
-          printf '{"schema":"H_EARTH_GEN2699_FULL_WORLD_VALIDATOR_EXECUTION_v1","candidate":"cc17782b099b5238cfe679f259b66b3b5f947600","exitCode":%s,"attempted":true,"timeoutSeconds":240}\n' "$status" > /tmp/h-earth-exact-evidence/gen2699-large-p2-validator.status.json
+          set -e
+          printf '{"schema":"H_EARTH_GEN2699_FULL_WORLD_VALIDATOR_EXECUTION_v1","candidate":"638b083b34d0c77908229614c57355a9a15f75d9","exitCode":%s,"attempted":true,"timeoutSeconds":240}\n' "$status" > /tmp/h-earth-exact-evidence/gen2699-large-p2-validator.status.json
           exit 0
       - name: Install bounded Chromium
         shell: bash
@@ -416,7 +418,7 @@ jobs:
             }
               // Gen2699: after-priority woodland pixels and owner-facing boulder navigation.
               // No world, camera authority, navigation module, or release state mutation.
-              if(targetSha==='cc17782b099b5238cfe679f259b66b3b5f947600' && query.includes('arrival=approved-four-trees')){
+              if(targetSha==='638b083b34d0c77908229614c57355a9a15f75d9' && query.includes('arrival=approved-four-trees')){
                 let matureGrassReached=false;
                 try{
                   matureGrassReached=Boolean(await page.waitForFunction(() => {

@@ -1403,6 +1403,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         progress({phase:'OASIS_READY',oasisComplete:true});
       });
       if(!initialized)throw new Error('GLOBAL_COVER_REQUIRES_INITIALIZED_POST_READY_RENDERER');
+      const woodlandPreparation=uploadWoodlandFineGrass().then(()=>progress({phase:'WOODLAND_FINE_GRASS_RESIDENT',woodlandFineGrassReady:true}));
       const globalCoverPreparation=buildHEarthGlobalGroundCover(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),{
         refinement:resources.refinement?.surface??null,
         order:'CAMERA_FIRST',priorityOrigin:globalCoverInitialCamera,
@@ -1420,9 +1421,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
           }
         }
       }).then(async cover=>{await uploadGlobalCover(cover);progress({phase:'GLOBAL_COVER_RESIDENT',globalCoverComplete:true});});
-      // The source-qualified 108 batches need truth and the authored oasis,
+      // The source-qualified 108 batches need truth, the oasis, and resident woodland grass,
       // not the entire ground-cover survey. Final cover remains mandatory.
-      const batchPrerequisites=Promise.all([truthPreparation,oasisPreparation]).then(()=>{
+      const batchPrerequisites=Promise.all([truthPreparation,oasisPreparation,woodlandPreparation]).then(()=>{
         vegetationBatchPrerequisitesReady=true;
         globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.timingMark?.('VEGETATION_BATCH_PREREQUISITES_READY');
         progress({phase:'BATCH_PREREQUISITES_READY',batchPrerequisitesReady:true});
@@ -1511,7 +1512,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1i(u.uSelectedIds,8);gl.uniform1i(u.uMeadowRoots,7);gl.uniform1i(u.uMeadowRootsWidth,state.meadowRootsWidth);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);verifyCoverGlStage('UNIFORMS');
     state.resourceCount=counters.postInitializationResourceCreationCount-before;
     configureClearingProgram(state.program);verifyCoverGlStage('CLEARING_PROGRAM_CONFIG');
-    resources.globalCover=state;await uploadWoodlandFineGrass();gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
+    resources.globalCover=state;if(state.gpuByteLength+(resources.woodlandFineGrass?.gpuByteLength??0)+(resources.woodlandRocks?.gpuByteLength??0)>8388608)throw Error('SHARED_GRASS_GPU_BUDGET_EXCEEDED');gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
     const error=gl.getError();if(error!==gl.NO_ERROR)throw Error(`GLOBAL_COVER_UPLOAD_ERROR:${error}`);
   }
   async function uploadWoodlandFineGrass(){
@@ -1527,7 +1528,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1i(u.uWoodlandRoots,9);gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);
     gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform3fv(u.uSunColor,color3(e.sunColor));gl.uniform3fv(u.uSkyZenithColor,resources.skyColor);gl.uniform3fv(u.uSkyHorizonColor,color3(e.skyHorizonColor));gl.uniform3fv(u.uGroundHazeColor,color3(e.groundHazeColor));gl.uniform1f(u.uFogStartDistance,e.fogStartDistance);gl.uniform1f(u.uFogFalloff,e.fogFalloff);gl.uniform1f(u.uMaximumFogFactor,e.maximumFogFactor);gl.uniform1f(u.uDistanceDesaturationStrength,e.distanceDesaturationStrength);
     configureClearingProgram(state.program);state.ready=true;resources.woodlandFineGrass=state;
-    if(resources.globalCover.gpuByteLength+state.gpuByteLength+(resources.woodlandRocks?.gpuByteLength??0)>8388608)throw Error('SHARED_GRASS_GPU_BUDGET_EXCEEDED');
+    if(resources.globalCover&&resources.globalCover.gpuByteLength+state.gpuByteLength+(resources.woodlandRocks?.gpuByteLength??0)>8388608)throw Error('SHARED_GRASS_GPU_BUDGET_EXCEEDED');
     gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
   }
   function drawWoodlandFineGrass(packet,maximumParents){
@@ -1543,7 +1544,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
 
   function drawGlobalCover(packet){
-    const state=resources.globalCover;if(!state)return;
+    const state=resources.globalCover;if(!state){if(resources.woodlandFineGrass&&Math.hypot(packet.camera.position.x+141,packet.camera.position.z+226)<110)drawWoodlandFineGrass(packet,1024);return;}
     let selected=selectHEarthMeadowMidDistanceRepresentations(state.cover,packet.camera.position);
     const woodlandNear=resources.woodlandFineGrass&&Math.hypot(packet.camera.position.x+141,packet.camera.position.z+226)<110;
     if(woodlandNear){const limit=3072,draws=[];let count=0;for(const draw of selected.draws){const n=Math.min(draw.count,limit-count);if(n>0){draws.push({...draw,count:n});count+=n;}if(count===limit)break;}selected={...selected,draws,visibleInstanceCount:count};}
@@ -2054,7 +2055,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       persistentObjectCounts: { contexts: 1, programs: counters.programCreateCount, shaders: counters.shaderCreateCount, vertexArrays: counters.vertexArrayCreateCount+(resources.refinement?.created?1:0)+resources.vegetation.residentBatches.length, gpuBuffers: counters.bufferCreateCount+(resources.refinement?.buffers.length??0)+(resources.refinement?.indexBuffer?1:0)+resources.vegetation.residentBatches.reduce((n,b)=>n+(b.buffers?.length??0)+(b.indexBuffer?1:0),0), textures: counters.textureCreateCount, framebuffers: counters.framebufferCreateCount },
       globalGroundCover: resources.globalCover?{...resources.globalCover.cover.receipt,prepared:true,storedInstanceCount:resources.globalCover.cover.receipt.instanceCount,gpuByteLength:resources.globalCover.gpuByteLength,uploadCount:resources.globalCover.uploadCount,maximumUploadChunkBytes:resources.globalCover.maximumUploadChunkBytes,authorizedPostReadyResourceCount:resources.globalCover.resourceCount,...resources.globalCover.lastDraw}: {prepared:false,storedInstanceCount:0},
       woodlandRocks:resources.woodlandRocks?{...resources.woodlandRocks.geometry.receipt,gpuByteLength:resources.woodlandRocks.gpuByteLength,mainDrawCount:resources.woodlandRocks.mainDrawCount,shadowDrawCount:resources.woodlandRocks.shadowDrawCount,drawsPerFrame:1,combinedSceneGpuBytes:(resources.globalCover?.gpuByteLength??0)+(resources.woodlandFineGrass?.gpuByteLength??0)+resources.woodlandRocks.gpuByteLength}:null,
-      woodlandFineGrass:resources.woodlandFineGrass?{ready:resources.woodlandFineGrass.ready===true,...resources.woodlandFineGrass.presentation.receipt,...resources.woodlandFineGrass.lastDraw,gpuByteLength:resources.woodlandFineGrass.gpuByteLength,totalUploadedBytes:resources.woodlandFineGrass.uploadBytes,combinedGrassGpuBytes:resources.globalCover.gpuByteLength+resources.woodlandFineGrass.gpuByteLength,legacySuppression:resources.woodlandLegacySuppression}:null,
+      woodlandFineGrass:resources.woodlandFineGrass?{ready:resources.woodlandFineGrass.ready===true,...resources.woodlandFineGrass.presentation.receipt,...resources.woodlandFineGrass.lastDraw,gpuByteLength:resources.woodlandFineGrass.gpuByteLength,totalUploadedBytes:resources.woodlandFineGrass.uploadBytes,combinedGrassGpuBytes:(resources.globalCover?.gpuByteLength??0)+resources.woodlandFineGrass.gpuByteLength,legacySuppression:resources.woodlandLegacySuppression}:null,
       woodlandClearing:resources.clearing?{ready:true,textureCount:4,colorTextureDimensions:[256,256],shadowDimensions:[512,512],shadowFormat:'DEPTH_COMPONENT24',programsAdded:1,shadersAdded:2,framebuffersAdded:1,indexBuffersAdded:1,indexUploadCount:counters.clearingIndexBufferUploadCount,vertexArraysAdded:0,vertexAttributesAdded:0,colorTextureMipLevels:9,textureStorageBytes:resources.clearing.textureStorageBytes,indexStorageBytes:resources.clearing.indexStorageBytes,gpuByteLength:resources.clearing.gpuByteLength,casterIndexCount:resources.clearing.casterIndexCount,shadowDrawCount:resources.clearing.shadowDrawCount,staticShadowRefresh:resources.clearing.staticShadowRefresh,mainDrawCallsAdded:0,perCameraResourceCreation:0,attributeProjection:uploadViews.canonicalizationReceipt.woodlandClearingProjection}: {ready:false},
       resourceIdentityStable: initialized && Boolean(resources.clearing?.program&&resources.clearing?.framebuffer&&resources.clearing?.indexBuffer&&resources.clearing?.textures.length===4) && resources.buffers?.length === 11 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),
       packageUploadedOnce: counters.packageBufferUploadCount === 11 && counters.clearingIndexBufferUploadCount === (resources.clearing?1:0) && counters.bufferUploadCount === counters.packageBufferUploadCount+counters.clearingIndexBufferUploadCount && counters.postInitializationBufferUploadCount === 0,

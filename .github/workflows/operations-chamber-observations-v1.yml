@@ -69,6 +69,14 @@ jobs:
         run: |
           set -euo pipefail
           node public-source/tools/operations-chamber/public-safe-rolling-study.v1.mjs
+      - name: Restore bounded, qualified four-space presentation
+        env:
+          CHAMBER_SITE_DIR: ${{ runner.temp }}/chamber-site
+        run: |
+          set -euo pipefail
+          node --check public-source/tools/operations-chamber/public-safe-four-space-display.v1.mjs
+          node --test public-source/tools/operations-chamber/public-safe-four-space-display.test.mjs
+          node public-source/tools/operations-chamber/public-safe-four-space-display.v1.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: operations-chamber-display

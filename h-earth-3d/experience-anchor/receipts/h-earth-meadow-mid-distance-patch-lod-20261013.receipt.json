@@ -6,15 +6,15 @@
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
   "reviewedAgainstAnchor": false,
   "disposition": "PENDING",
-  "acceptanceBasis": "Gen2694 bounded engineering branch. Owner rejects Gen2693 live grass presentation. Source inspection disproved initial inference that global originalDrawInstances means wide fan rendering: actual GLOBAL_COVER_PATCH_LOD_VS mode0 renders 12 procedural thin leaves per original source record, while P2 1/2 are ground litter and leafy understory. New candidate currently stages exact Gen2694 module cache identity across page/wrapper/integration/binding/renderer/grass plus accurate GPU original-source fine-leaf census; no broad-geometry retirement, no new five-view acceptance, no main merge or live deployment. Source and immutable base-world identity pins rebound, original world binary untouched. New owner acceptance is required before any release. This bounded continuation adds explicit current-camera GPU re-presentation immediately after the final worldwide cover upload and truthful separate first-frame, woodland draw-submission, global-cover GPU, and canonical vegetation-batch status. Priority tile CPU preparation still does not provide incremental GPU residency, and no visible-pixel coverage has been verified. Published appearance, yellow-blade retirement, and large-boulder improvement remain unaccepted.",
+  "acceptanceBasis": "Gen2694 bounded engineering branch. Owner rejects Gen2693 live grass presentation. Source inspection disproved initial inference that global originalDrawInstances means wide fan rendering: actual GLOBAL_COVER_PATCH_LOD_VS mode0 renders 12 procedural thin leaves per original source record, while P2 1/2 are ground litter and leafy understory. New candidate currently stages exact Gen2694 module cache identity across page/wrapper/integration/binding/renderer/grass plus accurate GPU original-source fine-leaf census; no broad-geometry retirement, no new five-view acceptance, no main merge or live deployment. Source and immutable base-world identity pins rebound, original world binary untouched. New owner acceptance is required before any release. This bounded continuation adds explicit current-camera GPU re-presentation immediately after the final worldwide cover upload and truthful separate first-frame, woodland draw-submission, global-cover GPU, and canonical vegetation-batch status. Priority tile CPU preparation still does not provide incremental GPU residency, and no visible-pixel coverage has been verified. Published appearance, yellow-blade retirement, and large-boulder improvement remain unaccepted. A bounded presentation-only P2_GRASS correction now masks the retired large folded blade classes 0/3 across that primitive, not only at the woodland ellipse; P2 1/2 understory and litter remain untouched. The independent source validator's expected mask matches this exact classification, but measured rendered pixel acceptance is still PENDING. Other vegetation sources, grass generation, terrain, trees, fourteen approved small rocks and immutable world bytes are unchanged. Further global origin verification, early local tile residency, large-boulder form and owner acceptance are outstanding.",
   "experienceFiles": [
     {
       "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
-      "sha256": "661c3b90679d6ea75c4d99fcaae3a00b2efd6e5086bccc5b63e40cbed73532e0"
+      "sha256": "a47965e2edf05c620a22f6ae7f0f28632983d290d2b0d6790acb3c81d48cdfa3"
     },
     {
       "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
-      "sha256": "b482cd56f72ff0ced5a71627cf074179219d9b6ae59eb92fc5a5ba12d4c9d622"
+      "sha256": "e960bfca34ed6a25255e8a561b8d2464df85dda584db4ce00a50afd02b6ccae2"
     },
     {
       "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
@@ -34,7 +34,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
-      "sha256": "18da2a99661062b5f3f06351c5ce6bbc6cdd579a16f351911d9abb2ce290c01a"
+      "sha256": "3cb984f46dd32425e39dee9370ed9a088ec40b28ba988ae2d83d2825c154d6df"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
@@ -42,7 +42,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
-      "sha256": "0b9d4e5144a7888f083c5f32eb20601c88097d7a89258bb3b07ccc1eb2bba06e"
+      "sha256": "c3828b7268e06db9cd95d7c1a82cd8d28c69c06084cc0ddfac67551c025bba78"
     }
   ],
   "invariants": {

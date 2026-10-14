@@ -12,7 +12,7 @@ export function woodlandGrassClear(x,z,r=.03){
  const structure=sampleHEarthGen311PlacementStructureDisposition(x,z);if(structure.hardExclusions.length||structure.planningHolds.length)return false;
  for(const b of [estate.manorCore,estate.gardens,estate.outbuildingProposal,estate.acceptedEnvelope])if(Math.hypot(x-Math.max(b.minX,Math.min(b.maxX,x)),z-Math.max(b.minZ,Math.min(b.maxZ,z)))<=r)return false;
  if(estate.footRoute.slice(1).some((b,i)=>segmentDistance(x,z,estate.footRoute[i],b)<=estate.footRouteRadius+r))return false;
- if(segmentDistance(x,z,{x:-145,z:-194},{x:-145,z:-230})<=1.5+r)return false;
+
  return !(x>=oasis.minX-r&&x<=oasis.maxX+r&&z>=oasis.minZ-r&&z<=oasis.maxZ+r);
 }
 function surface(positions,indices,spans){

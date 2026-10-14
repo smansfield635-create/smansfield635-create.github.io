@@ -11384,6 +11384,50 @@
       "scopeHash": "a609f85e1a8d0b60f0b56ba6ce2b0c4a0a7a64e7be0db2f50c0468e3322db29f",
       "state": "ADMITTED_LOCKED"
     },
+    "a63f6d7c325358b61f4a8732d9e454a02b6c8479e93ccb4278870dfa655bca89": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "cc923f631674fe3c603c1cf9069fc32b593207f8",
+          "lockGeneration": 2714,
+          "lockScope": "H_EARTH:GEN2714:TOOLING_ONLY_MERGE_PR6293_20261014",
+          "operationId": "H_EARTH_GEN2714_FAST_GRASS_BEACH_TOOLING_MERGE_ONLY_20261014_001",
+          "procedureLocatorDigest": "8afc1322093f346f198da0bdc6757a44c9f7286a9ba15281dcf39aeb2fb5c75e",
+          "requestDigest": "ae5f4ce64a0facb94ab959b1b2c234d21ba72d96b3e8fc728953005a518b1452",
+          "scopeHash": "a63f6d7c325358b61f4a8732d9e454a02b6c8479e93ccb4278870dfa655bca89"
+        },
+        "bindingDigest": "ca0e6578c0a460e8a052232e16ab0b5554f418857c2b2f82cb896825c9eb49c6",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "91a9217a931fbfaf869d0e11fec1d5d9a3d6bd107ac5a111c46c4b9f82f328fd",
+          "commentId": 6180692025,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6292,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38653802528,
+          "workflowSha": "cc923f631674fe3c603c1cf9069fc32b593207f8"
+        },
+        "lineageAnchorCommitSha": "d8dfcd59610c2542f247c4ed55ef6b19ace0c5b4",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "cc923f631674fe3c603c1cf9069fc32b593207f8",
+      "lockGeneration": 2714,
+      "lockScope": "H_EARTH:GEN2714:TOOLING_ONLY_MERGE_PR6293_20261014",
+      "operationId": "H_EARTH_GEN2714_FAST_GRASS_BEACH_TOOLING_MERGE_ONLY_20261014_001",
+      "procedureLocatorDigest": "8afc1322093f346f198da0bdc6757a44c9f7286a9ba15281dcf39aeb2fb5c75e",
+      "released": false,
+      "requestDigest": "ae5f4ce64a0facb94ab959b1b2c234d21ba72d96b3e8fc728953005a518b1452",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a63f6d7c325358b61f4a8732d9e454a02b6c8479e93ccb4278870dfa655bca89",
+      "state": "ADMITTED_LOCKED"
+    },
     "a746eff833311b24e633dfed78711b6521e946e9d3b47596ef22a4e535f84a43": {
       "governingHead": "f34e0b7d172d37a3facff875d05c0c13edfacf07",
       "lockGeneration": 1734,
@@ -17716,7 +17760,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2713,
+  "lockGeneration": 2714,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

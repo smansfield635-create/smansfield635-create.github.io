@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-14T20:31:10Z",
+  "generatedAt": "2026-10-14T21:28:52Z",
   "window": {
-    "start": "2026-07-16T20:31:10Z",
-    "end": "2026-10-14T20:31:10Z"
+    "start": "2026-07-16T21:28:52Z",
+    "end": "2026-10-14T21:28:52Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -30,13 +30,13 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 166,
-        "visits": 2
-      },
       "/showroom/": {
         "pageLoads": 120,
         "visits": 10
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 166,
+        "visits": 2
       },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
@@ -234,13 +234,13 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -270,19 +270,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },

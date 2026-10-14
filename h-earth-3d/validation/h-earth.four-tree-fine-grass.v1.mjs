@@ -192,7 +192,7 @@ export function verifyGen2694CandidateSourceChain(){
  const publicManifest=JSON.parse(fs.readFileSync(new URL('.github/ai-router/publication-surfaces/h-earth.json',ROOT),'utf8'));
  const html=publicManifest.checks.find(entry=>entry.path==='/showroom/globe/h-earth/index.html');
  assert(html&&html.includes.every(fragment=>sources.get(paths[0][0]).source.includes(fragment)),'GEN2694_PUBLIC_RELEASE_MANIFEST_INCOMPATIBLE');
- return {schema:'H_EARTH_GEN2710_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
+ return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',qualifiedPresentationGeneration:2710,result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  if(process.argv.includes('--source-binding-only')){console.log(JSON.stringify(verifyGen2694CandidateSourceChain(),null,2));process.exit(0);}

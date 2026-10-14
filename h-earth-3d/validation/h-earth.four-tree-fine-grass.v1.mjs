@@ -80,8 +80,8 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
   const old=raw.buffers.indices.slice(i,i+3),now=Array.from(indices.slice(i,i+3));
   const inGrass=i>=span.indexStart&&i<span.indexStart+span.indexCount;
   const types=old.map(v=>raw.clearingAttributes[v*3+2]);
-  const target=inGrass&&types.every(t=>t===0||t===3)&&old.some(v=>inside(...raw.buffers.positions.slice(v*3,v*3+3)));
-  if(target){assert(now[0]===now[1]&&now[1]===now[2],'OLD_ANGULAR_GRASS_STILL_DRAWN');suppressed++;}
+  const target=inGrass&&types.every(t=>t===types[0])&&(types[0]===0||types[0]===3);
+  if(target){assert(now[0]===now[1]&&now[1]===now[2],'RETIRED_P2_BROAD_GRASS_STILL_DRAWN');suppressed++;}
   else{assert.deepEqual(now,old,'PROTECTED_TRIANGLE_CHANGED');preserved++;if(inGrass)for(const t of new Set(types))preservedTypes[t]=(preservedTypes[t]??0)+1;}
  }
  assert(suppressed>0);assert(preservedTypes[1]>0&&preservedTypes[2]>0,'UNDERSTORY_NOT_PRESERVED');

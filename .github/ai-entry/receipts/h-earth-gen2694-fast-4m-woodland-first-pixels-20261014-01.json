@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2694-fast-4m-woodland-first-pixels-20261014-01",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6267,
+  "requestBranch": "ai-dispatch-request-h-earth-fast-meadow-patch-20261014-01",
+  "requestCommit": "35f6afce549be655a04317cce9593b374c435727",
+  "requestCommitParent": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "a3a68ab6523eb38fad26e82303df9aa92dd36790",
+    "route_query": "arrival=approved-four-trees"
+  },
+  "bridgeRunId": "38603746018",
+  "dispatchedRunId": 38603890563,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38603890563",
+  "dispatchedRunHeadSha": "62c94a12babb3e9dad473ac4e2a752adc554fe5f",
+  "dispatchedAt": "2026-10-14T17:07:01.774Z",
+  "resolvedAt": "2026-10-14T17:07:06.043Z"
+}

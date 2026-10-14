@@ -166,7 +166,9 @@ const id=`${record[12]}:${record[13]}:${record[14]}:${record[15]}:${record[16]}`
    assert.equal(arrayDigest(priority.records.subarray(tile.start*20,(tile.start+tile.count)*20)),streamedTile.sha256,'CAMERA_FIRST_TILE_STREAM_RECORD_MISMATCH');
  }
  for(const key of previewIds)assert(streamed.has(key),'PREVIEW_TILE_MISSING_FROM_FINAL_STREAM');
- const rendererSource=fs.readFileSync(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const rendererSourceUrl=new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?rev=gen2710-stable-grass-beach-v1',import.meta.url);
+ rendererSourceUrl.search='';
+ const rendererSource=fs.readFileSync(rendererSourceUrl,'utf8');
  for(const [signature,label] of [
    ["const LOCAL_PREVIEW_MAX_TILES=24,LOCAL_PREVIEW_MAX_RECORDS=3072;",'PREVIEW_CAP_DECLARATION_MISSING'],
    ["flushLocalPreviewTiles(progress);",'CAMERA_PRIORITY_GPU_UPLOAD_NOT_CONNECTED'],

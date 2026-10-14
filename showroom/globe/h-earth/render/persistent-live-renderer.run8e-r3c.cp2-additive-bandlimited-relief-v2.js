@@ -1266,6 +1266,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   };
   const resources = {};
   let globalCoverInitialCamera=null;
+  let woodlandVisibleGroundPriority=null;
   let globalCoverPriorityTilesPrepared=0;
   let firstPriorityTileReadyAtMs=null;
   // Gen2694: bounded, GPU-resident camera-priority preview of canonical grass
@@ -1643,7 +1644,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),
       {refinement:resources.refinement?.surface??null,
        yieldControl:yieldToBrowserPaint,
-       priorityOrigin:globalCoverInitialCamera,
+       priorityOrigin:woodlandVisibleGroundPriority,
        onPriorityPreview:preview=>{
          installPresentation(preview);
          progress({phase:'WOODLAND_FINE_GRASS_PRIORITY_GPU_READY',
@@ -1754,6 +1755,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(![packet.camera?.position?.x,packet.camera?.position?.z].every(Number.isFinite))
       throw new Error('R3C_CAMERA_PRIORITY_ORIGIN_INVALID');
     globalCoverInitialCamera={x:packet.camera.position.x,z:packet.camera.position.z};
+    // The grass first visible on this upward-pitched camera is ahead, not underfoot.
+    const view=packet.camera.viewProjectionMatrix;
+    const fx=view[3],fz=view[11],norm=Math.hypot(fx,fz);
+    if(!Number.isFinite(norm)||norm<0.0001)throw Error('WOODLAND_PRIORITY_VIEW_INVALID');
+    const ahead=14;
+    woodlandVisibleGroundPriority=Object.freeze({
+      x:Math.fround(globalCoverInitialCamera.x+ahead*fx/norm),
+      z:Math.fround(globalCoverInitialCamera.z+ahead*fz/norm),
+      aheadMeters:ahead,source:'VIEW_PROJECTION_FORWARD_GROUND'
+    });
     resources.geometryVertexShader = createShader(gl.VERTEX_SHADER, VS, 'GV');
     resources.geometryFragmentShader = createShader(gl.FRAGMENT_SHADER, FS, 'GF');
     resources.geometryProgram = createProgram(resources.geometryVertexShader, resources.geometryFragmentShader, 'GP');
@@ -2228,7 +2239,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
       refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
       contactField:{...contactField.stats,buildCount:contactFieldBuildCount,totalBuildMilliseconds:contactFieldTotalMilliseconds},
-      vegetationResidency:{canonicalPreparationTiming:getHEarthRun8ER2CanonicalPreparationTiming(),...(globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getMilestoneTiming?{timing:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getMilestoneTiming()}:{}),preparationComplete:vegetationPreparationComplete,batchPrerequisitesReady:vegetationBatchPrerequisitesReady,priorityTilesPrepared:globalCoverPriorityTilesPrepared,firstPriorityTileReadyAtMs,localPriorityTilesGpuResident:resources.localCoverPreview?.tileCount??0,localPreviewDrawInstances:resources.localCoverPreview?.lastDraw?.visibleInstanceCount??0,globalCoverComplete:resources.globalCover?.cover?.receipt?.instanceCount>0&&resources.woodlandFineGrass?.ready===true,woodlandFineGrassReady:resources.woodlandFineGrass?.ready===true,woodlandFineGrassPreviewReady:resources.woodlandFineGrass?.previewReady===true,preparationProgress:vegetationPreparationProgress,validationStatus:vegetationTruth?'VALIDATED':'PENDING_POST_READY_VALIDATION',manifestSha256:vegetationTruth?.qualifiedManifestIdentity.manifestSha256??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.manifestSha256,totalInstanceCount:vegetationTruth?.instanceCount??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.instanceCount,totalBatchCount:vegetationTruth?.batches.length??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.batchCount,maxInstancesPerBatch:vegetationTruth?.maxInstancesPerMaterializationBatch??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.maxInstancesPerBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth?.droppedPlacementCount??null,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth?.cameraIndependent??null},
+      vegetationResidency:{canonicalPreparationTiming:getHEarthRun8ER2CanonicalPreparationTiming(),...(globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getMilestoneTiming?{timing:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getMilestoneTiming()}:{}),preparationComplete:vegetationPreparationComplete,batchPrerequisitesReady:vegetationBatchPrerequisitesReady,priorityTilesPrepared:globalCoverPriorityTilesPrepared,firstPriorityTileReadyAtMs,woodlandVisibleGroundPriority,localPriorityTilesGpuResident:resources.localCoverPreview?.tileCount??0,localPreviewDrawInstances:resources.localCoverPreview?.lastDraw?.visibleInstanceCount??0,globalCoverComplete:resources.globalCover?.cover?.receipt?.instanceCount>0&&resources.woodlandFineGrass?.ready===true,woodlandFineGrassReady:resources.woodlandFineGrass?.ready===true,woodlandFineGrassPreviewReady:resources.woodlandFineGrass?.previewReady===true,preparationProgress:vegetationPreparationProgress,validationStatus:vegetationTruth?'VALIDATED':'PENDING_POST_READY_VALIDATION',manifestSha256:vegetationTruth?.qualifiedManifestIdentity.manifestSha256??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.manifestSha256,totalInstanceCount:vegetationTruth?.instanceCount??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.instanceCount,totalBatchCount:vegetationTruth?.batches.length??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.batchCount,maxInstancesPerBatch:vegetationTruth?.maxInstancesPerMaterializationBatch??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.maxInstancesPerBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth?.droppedPlacementCount??null,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth?.cameraIndependent??null},
       canonicalPackageMutated:false
     };
   }

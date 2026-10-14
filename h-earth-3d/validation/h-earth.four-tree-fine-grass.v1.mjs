@@ -49,7 +49,19 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
  const indicesTemplate=buildWoodlandFineGrassIndices();assert.equal(indicesTemplate.byteLength,12288);assert.equal(WOODLAND_FINE_GRASS.rootTextureBytes,1024*64*16);
  for(let leaf=0;leaf<256;leaf++)assert.deepEqual(Array.from(indicesTemplate.slice(leaf*12,leaf*12+12)),[0,1,2,1,3,2,2,3,4,3,5,4].map(i=>leaf*6+i),'ACCEPTED_CURVED_LEAF_TOPOLOGY_CHANGED');
  const combinedGrassGpuBytes=7070816+WOODLAND_FINE_GRASS.rootTextureBytes+indicesTemplate.byteLength;assert(combinedGrassGpuBytes<=8388608,'SHARED_GPU_BUDGET');
- const built=presentation??await buildWoodlandFineGrass(raw);onPresentation(built);
+ const earlyPrioritySnapshots=[];
+ const built=presentation??await buildWoodlandFineGrass(raw,{
+   priorityOrigin:{x:-139.40267987050615,z:-194.5},
+   onPriorityPreview:snapshot=>{
+     assert.equal(snapshot.receipt.schema,'H_EARTH_WOODLAND_FINE_GRASS_PRIORITY_PREVIEW_v1');
+     assert.equal(snapshot.receipt.originalRecordsChanged,false);
+     assert.equal(snapshot.receipt.terrainChanged,false);
+     assert.equal(snapshot.receipt.actualPixelsVerified,false);
+     earlyPrioritySnapshots.push({rowsPrepared:snapshot.receipt.rowsPrepared,
+       contacts:snapshot.receipt.contactCount,
+       roots:snapshot.tiles.flatMap(t=>t.roots.map(r=>r.x+':'+r.y+':'+r.z))});
+   }
+ });onPresentation(built);
  let contacts=0,maxGroundError=0;const occupied=new Set(),positions=new Set(),classes={},rootBins=new Map();
  for(const tile of built.tiles)for(const q of tile.roots){
   const x=Math.fround(q.x),y=Math.fround(q.y),z=Math.fround(q.z),hit=surface.land(x,z);
@@ -62,6 +74,19 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
   const key=x+':'+z;assert(!positions.has(key),'DUPLICATE_ROOT');positions.add(key);occupied.add(Math.floor(a.x/4)+':'+Math.floor(a.z/4));classes[m.surfaceClass]=(classes[m.surfaceClass]??0)+1;contacts++;const bin=Math.floor(x)+':'+Math.floor(z);if(!rootBins.has(bin))rootBins.set(bin,[]);rootBins.get(bin).push({x,z});
  }
  assert(contacts>0,'NO_WOODLAND_ROOTS');
+ if(presentation===null){
+   assert.deepEqual(earlyPrioritySnapshots.map(s=>s.rowsPrepared),[64,128,256],
+     'PRIORITY_WOODLAND_ROW_MILESTONE_DRIFT');
+   const full=new Set(built.tiles.flatMap(t=>t.roots.map(r=>r.x+':'+r.y+':'+r.z)));
+   let lastCount=0;
+   for(const snapshot of earlyPrioritySnapshots){
+     assert(snapshot.contacts>lastCount,'PRIORITY_WOODLAND_SNAPSHOT_NOT_GROWING');
+     assert.equal(snapshot.contacts,snapshot.roots.length,'PRIORITY_WOODLAND_SNAPSHOT_ROOT_CENSUS_DRIFT');
+     assert(snapshot.roots.every(key=>full.has(key)),'PRIORITY_WOODLAND_PREVIEW_ROOT_NOT_FINAL');
+     lastCount=snapshot.contacts;
+   }
+   assert(lastCount<contacts,'PRIORITY_WOODLAND_PREVIEW_CLAIMS_FULL_POPULATION');
+ }
  let eligibleCoverageProbes=0,coveredProbes=0;
  for(let z=-264;z<=-188;z+=4)for(let x=-180;x<=-100;x+=4){
   const hit=surface.land(x,z);if(!hit||!inside(x,hit.y,z))continue;const a=inverse(x,hit.y,z);

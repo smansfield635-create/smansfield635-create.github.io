@@ -397,6 +397,25 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     return result;
   };
 
+  let firstWoodlandFineGrassPreviewPresentedFrame=null;
+  const presentWoodlandFineGrassPreviewFrame = () => {
+    const before=renderer.getResourceReceipt().woodlandFineGrass;
+    if(before?.previewReady!==true)throw Error('R3D3_WOODLAND_FINE_PREVIEW_NOT_READY');
+    const frame=presentNavigationState(latestNavigationState,{
+      kind:'WOODLAND_FINE_GRASS_PRIORITY_GPU_RESIDENT',
+      sequence:before.contactCount,captureEvidence:false
+    });
+    const after=renderer.getResourceReceipt().woodlandFineGrass;
+    const result=Object.freeze({frameSequence:frame.frameSequence,
+      submittedContacts:after?.visibleContacts??0,
+      submittedInstances:after?.visibleInstanceCount??0,
+      drawCallCount:after?.drawCallCount??0,
+      contactCountPrepared:after?.contactCount??0,
+      visiblePixelCoverageVerified:false});
+    if(firstWoodlandFineGrassPreviewPresentedFrame===null)
+      firstWoodlandFineGrassPreviewPresentedFrame=result;
+    return result;
+  };
   const presentWoodlandFineGrassReadyFrame = () => {
     const state = renderer.getResourceReceipt().woodlandFineGrass;
     if(state?.ready!==true)throw new Error('R3D3_WOODLAND_FINE_GRASS_NOT_READY');
@@ -466,6 +485,7 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
       status: 'RUN_8E_R3D3_LIVE_GPU_CAMERA_RESPONSE_ACTIVE',
       bindingId: H_EARTH_RUN_8E_R3D3_LIVE_GPU_BINDING_ID,
       firstLocalGroundcoverGpuPresentedFrame:firstLocalGrassGpuFrame,
+      firstWoodlandFineGrassPreviewPresentedFrame,
       rendererCustodyRequested,
       rendererCustodyQueryKey: RENDERER_CUSTODY_QUERY_KEY,
       rendererCustodyQueryValue: RENDERER_CUSTODY_QUERY_VALUE,
@@ -561,6 +581,7 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     prepareVegetationResidency: options => deferredVegetationActive?renderer.prepareVegetationResidency(options):Promise.resolve(getVegetationResidency()),
     materializeNextVegetationBatch,
     presentWoodlandFineGrassReadyFrame,
+    presentWoodlandFineGrassPreviewFrame,
     presentResidentGlobalCoverFrame,
     presentLocalGroundcoverFrame,
     getVegetationResidency,

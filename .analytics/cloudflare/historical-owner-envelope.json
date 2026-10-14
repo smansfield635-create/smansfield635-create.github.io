@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-14T08:39:45Z",
+  "generatedAt": "2026-10-14T09:34:30Z",
   "window": {
-    "start": "2026-07-16T08:39:45Z",
-    "end": "2026-10-14T08:39:45Z"
+    "start": "2026-07-16T09:34:30Z",
+    "end": "2026-10-14T09:34:30Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4977,
-    "visits": 1324,
+    "pageLoads": 5027,
+    "visits": 1274,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4977,
-        "visits": 1324
+        "pageLoads": 5027,
+        "visits": 1274
       }
     },
     "byPath": {
@@ -31,7 +31,7 @@
         "visits": 10
       },
       "/coherence-diagnostic/": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -39,8 +39,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1042,
-        "visits": 742
+        "pageLoads": 1002,
+        "visits": 712
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 50,
@@ -79,7 +79,7 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 300,
+        "pageLoads": 290,
         "visits": 90
       },
       "/index.html": {
@@ -95,7 +95,7 @@
         "visits": 20
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
+        "pageLoads": 490,
         "visits": 0
       },
       "/gauges/h-earth/": {
@@ -131,7 +131,7 @@
         "visits": 10
       },
       "/governance/": {
-        "pageLoads": 60,
+        "pageLoads": 150,
         "visits": 10
       },
       "/evidence/readiness/": {
@@ -143,16 +143,12 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 90,
+        "pageLoads": 160,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/developer/": {
-        "pageLoads": 50,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -219,6 +215,10 @@
         "visits": 0
       },
       "/instruments/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/developer/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -349,16 +349,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3653,
+        "pageLoads": 3753,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 782,
-        "visits": 782
+        "pageLoads": 752,
+        "visits": 752
       },
       "(none)": {
-        "pageLoads": 532,
-        "visits": 532
+        "pageLoads": 512,
+        "visits": 512
       },
       "raw.githack.com": {
         "pageLoads": 10,

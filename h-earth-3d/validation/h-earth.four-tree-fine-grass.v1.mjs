@@ -108,7 +108,46 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
  assert.equal(digest(JSON.stringify(raw)),original,'IMMUTABLE_WORLD_MUTATED');
  return {schema:'H_EARTH_FOUR_TREE_FINE_GRASS_INDEPENDENT_v1',result:'PASS',constructionExecuted:presentation===null,contacts,maxGroundError,combinedGrassGpuBytes,eligibleCoverageProbes,coveredProbes,occupiedFourMetreCells:occupied.size,classes,suppressed,preserved,preservedTypes,views,transitionObservations,qualificationBoundaries:{cheapTreeTerrainViews:'SEPARATE_REQUIRED',sharedRendererBudgets:'ALLOCATION_AND_RESERVATION_AUDITED_BROWSER_PENDING',actualBrowser:'SEPARATE_REQUIRED',ownerAcceptance:'PENDING'}};
 }
+/** Gen2694: fast read-only source-chain qualification; no world construction or browser. */
+export function verifyGen2694CandidateSourceChain(){
+ const rev='gen2694-legacy-fan-recovery-v1';
+ const paths=[
+  ['showroom/globe/h-earth/index.html','public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
+  ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
+  ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js','live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
+  ['showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js','cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev='+rev],
+  ['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js','woodland-fine-grass.v1.js?rev='+rev],
+  ['showroom/globe/h-earth/render/woodland-fine-grass.v1.js','landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev='+rev]
+ ];
+ const sources=new Map();
+ for(const [file,needle] of paths){
+  const bytes=fs.readFileSync(new URL(file,ROOT)),source=bytes.toString('utf8');
+  assert(source.includes(needle),'GEN2694_CACHE_CHAIN_MISSING:'+file);
+  sources.set(file,{source,sha256:digest(bytes),gitBlob:createHash('sha1').update('blob '+bytes.length+'\\0').update(bytes).digest('hex')});
+ }
+ const renderer=sources.get(paths[4][0]).source,grass=sources.get(paths[5][0]).source;
+ assert(renderer.includes("from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev="+rev+"'"),'GEN2694_GLOBAL_IMPORT_REVISION_DRIFT');
+ assert(renderer.includes('const GLOBAL_COVER_PATCH_LOD_VS=GLOBAL_COVER_VS')&&renderer.includes('if(uMeadowGeometryPass==0)')&&renderer.includes('int leaf=gl_VertexID/4,vertex=gl_VertexID%4;')&&renderer.includes('float h=.22+.36*r1,halfWidth=.007+.006*r2'),'GEN2694_ACTUAL_THIN_SOURCE_SHADER_NOT_PROVEN');
+ assert(renderer.includes('originalSourceBroadFanMeshDrawCount:0'),'GEN2694_GPU_CENSUS_MISSING');
+ assert(grass.includes("(types[0]===0||types[0]===3)"),'GEN2694_WOODLAND_LEGACY_TYPE_SUPPRESSION_CHANGED');
+ const manifest=JSON.parse(fs.readFileSync(new URL('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json',ROOT),'utf8'));
+ assert.equal(manifest.binary.sha256,'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a','GEN2694_CANONICAL_WORLD_BINARY_IDENTITY_DRIFT');
+ const closure=fs.readFileSync(new URL('h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs',ROOT),'utf8');
+ for(const file of [paths[4][0],paths[5][0]]){
+  const observed=sources.get(file).gitBlob;
+  assert.equal(manifest.sourceBlobs[file],observed,'GEN2694_SOURCE_MANIFEST_BLOB_DRIFT:'+file);
+  assert(closure.includes(observed),'GEN2694_SOURCE_CLOSURE_PIN_DRIFT:'+file);
+ }
+ const prior=JSON.parse(fs.readFileSync(new URL('h-earth-3d/experience-anchor/receipts/h-earth-meadow-mid-distance-patch-lod-20261013.receipt.json',ROOT),'utf8'));
+ assert.equal(prior.canonicalAdmissionGeneration,2694);
+ assert.equal(prior.disposition,'PENDING');assert.equal(prior.releaseAuthorized,false);
+ const publicManifest=JSON.parse(fs.readFileSync(new URL('.github/ai-router/publication-surfaces/h-earth.json',ROOT),'utf8'));
+ const html=publicManifest.checks.find(entry=>entry.path==='/showroom/globe/h-earth/index.html');
+ assert(html&&html.includes.every(fragment=>sources.get(paths[0][0]).source.includes(fragment)),'GEN2694_PUBLIC_RELEASE_MANIFEST_INCOMPATIBLE');
+ return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
+}
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ if(process.argv.includes('--source-binding-only')){console.log(JSON.stringify(verifyGen2694CandidateSourceChain(),null,2));process.exit(0);}
  const args=process.argv.slice(2),arg=k=>{const i=args.indexOf(k);return i<0?null:args[i+1];};
  const world=fs.readFileSync(arg('--world')??new URL('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',ROOT));
  assert.equal(digest(world),'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a','IMMUTABLE_WORLD_BYTES_CHANGED');

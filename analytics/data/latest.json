@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-14T17:31:24Z",
+  "generatedAt": "2026-10-14T19:30:04Z",
   "window30d": {
-    "start": "2026-09-14T17:31:24Z",
-    "end": "2026-10-14T17:31:24Z"
+    "start": "2026-09-14T19:30:04Z",
+    "end": "2026-10-14T19:30:04Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-07",
-      "pageLoads": 74
+      "pageLoads": 80
     },
     {
       "date": "2026-10-08",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-10-14",
-      "pageLoads": 25
+      "pageLoads": 28
     }
   ],
   "summary": {
-    "pageLoads": 4544,
-    "botPageLoads": 1802,
-    "nonBotPageLoads": 2742
+    "pageLoads": 4503,
+    "botPageLoads": 1781,
+    "nonBotPageLoads": 2722
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2844,
-      "visits": 2844
+      "pageLoads": 2225,
+      "visits": 2225
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1453,
+      "pageLoads": 1263,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 173,
-      "visits": 173
+      "pageLoads": 163,
+      "visits": 163
     },
     {
       "host": "bing.com",
@@ -162,28 +162,23 @@
       "host": "l.instagram.com",
       "pageLoads": 3,
       "visits": 3
-    },
-    {
-      "host": "com.google.android.googlequicksearchbox",
-      "pageLoads": 2,
-      "visits": 2
     }
   ],
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 983,
-      "visits": 703
+      "pageLoads": 961,
+      "visits": 681
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 580,
-      "visits": 580
+      "pageLoads": 570,
+      "visits": 570
     },
     {
       "path": "/analytics/",
-      "pageLoads": 501,
-      "visits": 381
+      "pageLoads": 510,
+      "visits": 390
     },
     {
       "path": "/showroom/globe/h-earth/",
@@ -192,7 +187,7 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 320,
+      "pageLoads": 310,
       "visits": 90
     },
     {

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-14T17:31:24Z",
+  "generatedAt": "2026-10-14T19:30:04Z",
   "window": {
-    "start": "2026-07-16T17:31:24Z",
-    "end": "2026-10-14T17:31:24Z"
+    "start": "2026-07-16T19:30:04Z",
+    "end": "2026-10-14T19:30:04Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4958,
+    "pageLoads": 4948,
     "visits": 1324,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4958,
+        "pageLoads": 4948,
         "visits": 1324
       }
     },
@@ -33,10 +33,6 @@
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/": {
-        "pageLoads": 1042,
-        "visits": 742
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 50,
@@ -81,6 +77,10 @@
       "/index.html": {
         "pageLoads": 140,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 1032,
+        "visits": 742
       },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
@@ -158,6 +158,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -173,10 +177,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -194,16 +194,20 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/gauges/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/reality/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/instruments/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -216,10 +220,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -330,12 +330,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -349,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3634,
+        "pageLoads": 3624,
         "visits": 0
       },
       "www.google.com": {

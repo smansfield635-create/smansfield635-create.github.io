@@ -17,6 +17,13 @@ jobs:
       actions: read
       pull-requests: read
     steps:
+      - name: Check out pinned public source for the bounded, public-safe adapter
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: smansfield635-create/smansfield635-create.github.io
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          path: public-source
       - name: Require immutable qualified source
         env:
           SOURCE_REF: ${{ vars.OPS_SOURCE_REF }}
@@ -42,6 +49,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Qualify public-safe rolling adapter (local, no network)
+        run: |
+          node --check public-source/tools/operations-chamber/public-safe-rolling-study.v1.mjs
+          node --test public-source/tools/operations-chamber/public-safe-rolling-study.test.mjs
       - name: Build approved display projection
         env:
           DGB_GITHUB_TOKEN: ${{ steps.private.outputs.token }}
@@ -51,6 +62,13 @@ jobs:
           set -euo pipefail
           test "$(git -C private-source rev-parse HEAD)" = "$SOURCE_REF"
           node private-source/tools/private-public-bridge/standalone/build.mjs --out "$RUNNER_TEMP/chamber-site"
+      - name: Add only verified rolling aggregates to the existing four display files
+        env:
+          PRIVATE_GITHUB_TOKEN: ${{ steps.private.outputs.token }}
+          CHAMBER_SITE_DIR: ${{ runner.temp }}/chamber-site
+        run: |
+          set -euo pipefail
+          node public-source/tools/operations-chamber/public-safe-rolling-study.v1.mjs
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: operations-chamber-display

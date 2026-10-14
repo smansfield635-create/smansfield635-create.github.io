@@ -1,4 +1,5 @@
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
+import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
 import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2694-legacy-fan-recovery-v1';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2694-legacy-fan-recovery-v1';
@@ -1613,7 +1614,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1i(u.uSelectedIds,8);gl.uniform1i(u.uMeadowRoots,7);gl.uniform1i(u.uMeadowRootsWidth,state.meadowRootsWidth);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);verifyCoverGlStage('UNIFORMS');
     state.resourceCount=counters.postInitializationResourceCreationCount-before;
     configureClearingProgram(state.program);verifyCoverGlStage('CLEARING_PROGRAM_CONFIG');
-    resources.globalCover=state;if(state.gpuByteLength+(resources.woodlandFineGrass?.gpuByteLength??0)+(resources.woodlandRocks?.gpuByteLength??0)>8388608)throw Error('SHARED_GRASS_GPU_BUDGET_EXCEEDED');gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
+    resources.globalCover=state;if(state.gpuByteLength+(resources.woodlandFineGrass?.gpuByteLength??0)+(resources.woodlandRocks?.gpuByteLength??0)+(resources.largeBoulders?.gpuByteLength??0)>8388608)throw Error('SHARED_GRASS_GPU_BUDGET_EXCEEDED');gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
     const error=gl.getError();if(error!==gl.NO_ERROR)throw Error(`GLOBAL_COVER_UPLOAD_ERROR:${error}`);
   }
   async function uploadWoodlandFineGrass(progress=()=>{}){
@@ -1636,7 +1637,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1i(u.uWoodlandRoots,9);gl.uniform1i(u.uClipBaseTerrain,0);gl.uniform1i(u.uGlobalCoverFarPrimitiveIndex,-1);gl.uniform1f(u.uPlanetRadius,planetRadius);gl.uniform1i(u.uShorelineSoilCoverage,1);gl.uniform1i(u.uLandscapeFloorCount,landscapeFloorFootprints.length);gl.uniform4fv(u['uLandscapeFloorFootprints[0]'],landscapeFloorUniforms);
     gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform3fv(u.uSunColor,color3(e.sunColor));gl.uniform3fv(u.uSkyZenithColor,resources.skyColor);gl.uniform3fv(u.uSkyHorizonColor,color3(e.skyHorizonColor));gl.uniform3fv(u.uGroundHazeColor,color3(e.groundHazeColor));gl.uniform1f(u.uFogStartDistance,e.fogStartDistance);gl.uniform1f(u.uFogFalloff,e.fogFalloff);gl.uniform1f(u.uMaximumFogFactor,e.maximumFogFactor);gl.uniform1f(u.uDistanceDesaturationStrength,e.distanceDesaturationStrength);
     configureClearingProgram(state.program);resources.woodlandFineGrass=state;
-    if(resources.globalCover&&resources.globalCover.gpuByteLength+state.gpuByteLength+(resources.woodlandRocks?.gpuByteLength??0)>8388608)throw Error('SHARED_GRASS_GPU_BUDGET_EXCEEDED');
+    if(resources.globalCover&&resources.globalCover.gpuByteLength+state.gpuByteLength+(resources.woodlandRocks?.gpuByteLength??0)+(resources.largeBoulders?.gpuByteLength??0)>8388608)throw Error('SHARED_GRASS_GPU_BUDGET_EXCEEDED');
     gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
     return state;
     };
@@ -1825,8 +1826,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const woodlandSuppression=filterWoodlandLegacyGrass(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}));
     if(woodlandSuppression.indices.length!==uploadViews.indices.length)throw Error('WOODLAND_INDEX_SOURCE_LENGTH_DRIFT');
     resources.woodlandLegacySuppression=woodlandSuppression.receipt;resources.woodlandRocks={geometry:buildWoodlandRockPresentation(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation})),mainDrawCount:0,shadowDrawCount:0};resources.woodlandSuppressedIndices=suppressWoodlandRockTriangles(woodlandSuppression.indices,resources.woodlandRocks.geometry);
+    resources.largeBoulders={geometry:buildLargeP2BoulderPresentation(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation})),mainDrawCount:0,shadowDrawCount:0};
+    resources.woodlandSuppressedIndices=suppressLargeP2SourceRockTriangles(resources.woodlandSuppressedIndices,resources.largeBoulders.geometry);
+    if(resources.largeBoulders.geometry.protectedSmallTriangleOffsets.length!==224||resources.woodlandRocks.geometry.suppressedTriangleOffsets.length!==224)
+      throw Error('LARGE_P2_PROTECTED_SMALL_ROCK_CENSUS_MISMATCH');
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices);
     initializeWoodlandRocks();
+    initializeLargeP2Boulders();
     resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -1920,6 +1926,42 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     state.indexBuffer=createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,state.indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,rock.indices,gl.STATIC_DRAW);state.gpuByteLength+=rock.indices.byteLength;counters.bufferUploadCount++;counters.uploadedByteLength+=rock.indices.byteLength;
     if(state.gpuByteLength>256928||rock.indices.length/3>5000)throw Error('WOODLAND_ROCK_BUDGET_EXCEEDED');gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);
   }
+  function initializeLargeP2Boulders(){
+    const state=resources.largeBoulders,rock=state.geometry,n=rock.positions.length/3;
+    const copy=(key,size,Type)=>{const out=new Type(n*size);for(let i=0;i<n;i++)for(let k=0;k<size;k++)out[i*size+k]=uploadViews[key][rock.sourceVertexIndices[i]*size+k];return out;};
+    state.vao=gl.createVertexArray();if(!state.vao)throw Error('LARGE_P2_VAO_FAILED');
+    counters.vertexArrayCreateCount++;gl.bindVertexArray(state.vao);state.buffers=[];state.gpuByteLength=0;
+    const bind=(location,data,size,type,integer=false)=>{
+      const buffer=createBuffer();state.buffers.push(buffer);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
+      gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(location);
+      if(integer)gl.vertexAttribIPointer(location,size,type,0,0);
+      else gl.vertexAttribPointer(location,size,type,false,0,0);
+      state.gpuByteLength+=data.byteLength;counters.bufferUploadCount++;counters.uploadedByteLength+=data.byteLength;
+    };
+    bind(0,rock.positions,3,gl.FLOAT);bind(1,rock.normals,3,gl.FLOAT);
+    bind(2,rock.baseColorsLinear,4,gl.FLOAT);
+    bind(3,copy('materialParameters',4,Float32Array),4,gl.FLOAT);
+    bind(4,copy('materialModelCodes',1,Uint8Array),1,gl.UNSIGNED_BYTE,true);
+    bind(5,copy('surfaceClassCodes',1,Uint8Array),1,gl.UNSIGNED_BYTE,true);
+    bind(6,copy('primitiveIndices',1,Uint16Array),1,gl.UNSIGNED_SHORT,true);
+    bind(7,copy('roleCodes',1,Uint8Array),1,gl.UNSIGNED_BYTE,true);
+    const coast=new Float32Array(n),contact=new Float32Array(n);
+    for(let i=0;i<n;i++){const source=rock.sourceVertexIndices[i];coast[i]=coastDistances[source];contact[i]=contactField.packageDistances[source];}
+    bind(8,coast,1,gl.FLOAT);bind(9,contact,1,gl.FLOAT);
+    state.indexBuffer=createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,state.indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,rock.indices,gl.STATIC_DRAW);
+    state.gpuByteLength+=rock.indices.byteLength;counters.bufferUploadCount++;counters.uploadedByteLength+=rock.indices.byteLength;
+    if(state.gpuByteLength>LARGE_P2_BOULDER_PRESENTATION.maximumGpuBytes||rock.indices.length/3!==1680)
+      throw Error('LARGE_P2_GPU_GEOMETRY_BUDGET_EXCEEDED');
+    gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);
+  }
+  function drawLargeP2Boulders(shadow=false){
+    const state=resources.largeBoulders;if(!state)return;
+    gl.bindVertexArray(state.vao);
+    gl.drawElements(gl.TRIANGLES,state.geometry.indices.length,gl.UNSIGNED_INT,0);
+    if(shadow)state.shadowDrawCount++;else{state.mainDrawCount++;counters.totalDrawnIndexCount+=state.geometry.indices.length;}
+    gl.bindVertexArray(resources.vertexArray);
+  }
   function drawWoodlandRocks(shadow=false){const state=resources.woodlandRocks;if(!state)return;gl.bindVertexArray(state.vao);gl.drawElements(gl.TRIANGLES,state.geometry.indices.length,gl.UNSIGNED_INT,0);if(shadow)state.shadowDrawCount++;else{state.mainDrawCount++;counters.totalDrawnIndexCount+=state.geometry.indices.length;}gl.bindVertexArray(resources.vertexArray);}
 
   async function initializeClearing(packet){
@@ -1962,7 +2004,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.useProgram(program);gl.uniformMatrix4fv(gl.getUniformLocation(program,'uLightMatrix'),false,matrix);gl.uniform1i(gl.getUniformLocation(program,'uLeaf'),3);bindClearingTextures();
     // Avoid sampling the depth attachment while writing it.
     gl.activeTexture(gl.TEXTURE6);gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
-    gl.viewport(0,0,512,512);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);gl.clearDepth(1);gl.clear(gl.DEPTH_BUFFER_BIT);gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_INT,0);resources.clearing.shadowDrawCount++;drawWoodlandRocks(true);
+    gl.viewport(0,0,512,512);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);gl.clearDepth(1);gl.clear(gl.DEPTH_BUFFER_BIT);gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_INT,0);resources.clearing.shadowDrawCount++;drawWoodlandRocks(true);drawLargeP2Boulders(true);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);gl.viewport(0,0,width,height);configureClearingProgram(resources.geometryProgram);
     const error=gl.getError();if(error!==gl.NO_ERROR)throw new Error('CLEARING_GPU_INITIALIZATION_FAILED:'+error);
   }
@@ -2135,6 +2177,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(resources.refinement?.created){gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);for(const resident of resources.vegetation.residentBatches){gl.bindVertexArray(resident.vao);gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);counters.vegetationDrawCallCount++;counters.totalDrawnIndexCount+=resident.indexCount;}gl.bindVertexArray(resources.vertexArray);
     drawWoodlandRocks(false);
+    drawLargeP2Boulders(false);
     drawGlobalCover(packet);
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
@@ -2226,7 +2269,12 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         stagedRecordCount:resources.localCoverPreview.count,gpuByteLength:resources.localCoverPreview.gpuByteLength,
         uploadCount:resources.localCoverPreview.uploadCount,...resources.localCoverPreview.lastDraw}:null,
       globalGroundCover: resources.globalCover?{...resources.globalCover.cover.receipt,prepared:true,storedInstanceCount:resources.globalCover.cover.receipt.instanceCount,gpuByteLength:resources.globalCover.gpuByteLength,uploadCount:resources.globalCover.uploadCount,maximumUploadChunkBytes:resources.globalCover.maximumUploadChunkBytes,authorizedPostReadyResourceCount:resources.globalCover.resourceCount,...resources.globalCover.lastDraw}: {prepared:false,storedInstanceCount:0},
-      woodlandRocks:resources.woodlandRocks?{...resources.woodlandRocks.geometry.receipt,gpuByteLength:resources.woodlandRocks.gpuByteLength,mainDrawCount:resources.woodlandRocks.mainDrawCount,shadowDrawCount:resources.woodlandRocks.shadowDrawCount,drawsPerFrame:1,combinedSceneGpuBytes:(resources.globalCover?.gpuByteLength??0)+(resources.woodlandFineGrass?.gpuByteLength??0)+resources.woodlandRocks.gpuByteLength}:null,
+      largeP2Boulders:resources.largeBoulders?{...resources.largeBoulders.geometry.receipt,
+        gpuByteLength:resources.largeBoulders.gpuByteLength,mainDrawCount:resources.largeBoulders.mainDrawCount,
+        shadowDrawCount:resources.largeBoulders.shadowDrawCount,
+        combinedSceneGpuBytes:(resources.globalCover?.gpuByteLength??0)+(resources.woodlandFineGrass?.gpuByteLength??0)+(resources.woodlandRocks?.gpuByteLength??0)+resources.largeBoulders.gpuByteLength,
+        finalImageOwnerAccepted:false}:null,
+      woodlandRocks:resources.woodlandRocks?{...resources.woodlandRocks.geometry.receipt,gpuByteLength:resources.woodlandRocks.gpuByteLength,mainDrawCount:resources.woodlandRocks.mainDrawCount,shadowDrawCount:resources.woodlandRocks.shadowDrawCount,drawsPerFrame:1,combinedSceneGpuBytes:(resources.globalCover?.gpuByteLength??0)+(resources.woodlandFineGrass?.gpuByteLength??0)+resources.woodlandRocks.gpuByteLength+(resources.largeBoulders?.gpuByteLength??0)}:null,
       woodlandFineGrass:resources.woodlandFineGrass?{ready:resources.woodlandFineGrass.ready===true,previewReady:resources.woodlandFineGrass.previewReady===true,...resources.woodlandFineGrass.presentation.receipt,...resources.woodlandFineGrass.lastDraw,gpuByteLength:resources.woodlandFineGrass.gpuByteLength,totalUploadedBytes:resources.woodlandFineGrass.uploadBytes,combinedGrassGpuBytes:(resources.globalCover?.gpuByteLength??0)+resources.woodlandFineGrass.gpuByteLength,legacySuppression:resources.woodlandLegacySuppression}:null,
       woodlandClearing:resources.clearing?{ready:true,textureCount:4,colorTextureDimensions:[256,256],shadowDimensions:[512,512],shadowFormat:'DEPTH_COMPONENT24',programsAdded:1,shadersAdded:2,framebuffersAdded:1,indexBuffersAdded:1,indexUploadCount:counters.clearingIndexBufferUploadCount,vertexArraysAdded:0,vertexAttributesAdded:0,colorTextureMipLevels:9,textureStorageBytes:resources.clearing.textureStorageBytes,indexStorageBytes:resources.clearing.indexStorageBytes,gpuByteLength:resources.clearing.gpuByteLength,casterIndexCount:resources.clearing.casterIndexCount,shadowDrawCount:resources.clearing.shadowDrawCount,staticShadowRefresh:resources.clearing.staticShadowRefresh,mainDrawCallsAdded:0,perCameraResourceCreation:0,attributeProjection:uploadViews.canonicalizationReceipt.woodlandClearingProjection}: {ready:false},
       resourceIdentityStable: initialized && Boolean(resources.clearing?.program&&resources.clearing?.framebuffer&&resources.clearing?.indexBuffer&&resources.clearing?.textures.length===4) && resources.buffers?.length === 11 && Boolean(resources.geometryProgram && resources.depthProgram && resources.vertexArray && resources.geometryFramebuffer && resources.depthFramebuffer),

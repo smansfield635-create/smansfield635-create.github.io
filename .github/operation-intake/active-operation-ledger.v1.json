@@ -4390,6 +4390,50 @@
       "scopeHash": "472d12bd025e239e381f81ae30d9019352e289a175d69e52956266f087ac1491",
       "state": "ADMITTED_LOCKED"
     },
+    "47f9386eeba14428c94e83e20927fcaf8f179b445f98953d19a81596cd3cb2ca": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "cc923f631674fe3c603c1cf9069fc32b593207f8",
+          "lockGeneration": 2713,
+          "lockScope": "H_EARTH:GEN2711:FAST_GRASS_BEACH_EXISTING_WORKFLOW_20261014",
+          "operationId": "H_EARTH_GEN2711_FOCUSED_GRASS_BEACH_VIEW_20261014_001",
+          "procedureLocatorDigest": "467c534a1982bff5560791b487b75d1ea3449354376e9d3c17a48430ad1ed134",
+          "requestDigest": "0ee286a45e728b048d32de002553c4d5573e7ae279653e09b76504274a4d964f",
+          "scopeHash": "47f9386eeba14428c94e83e20927fcaf8f179b445f98953d19a81596cd3cb2ca"
+        },
+        "bindingDigest": "ec3c22113ae39ba3578ab87cbdfb9c34c88e14377e4b47ad9bbfd33a12b365cf",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "cd6d5fc7667d5bd0b548e2d5e147202b5ec4038e2022c221aa7d6571ff209b70",
+          "commentId": 6180594732,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6292,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38653045306,
+          "workflowSha": "cc923f631674fe3c603c1cf9069fc32b593207f8"
+        },
+        "lineageAnchorCommitSha": "f7a4b67e6a5c666b7c424ffd1b26f1dc7d087f98",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "cc923f631674fe3c603c1cf9069fc32b593207f8",
+      "lockGeneration": 2713,
+      "lockScope": "H_EARTH:GEN2711:FAST_GRASS_BEACH_EXISTING_WORKFLOW_20261014",
+      "operationId": "H_EARTH_GEN2711_FOCUSED_GRASS_BEACH_VIEW_20261014_001",
+      "procedureLocatorDigest": "467c534a1982bff5560791b487b75d1ea3449354376e9d3c17a48430ad1ed134",
+      "released": false,
+      "requestDigest": "0ee286a45e728b048d32de002553c4d5573e7ae279653e09b76504274a4d964f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "47f9386eeba14428c94e83e20927fcaf8f179b445f98953d19a81596cd3cb2ca",
+      "state": "ADMITTED_LOCKED"
+    },
     "482589c65fe8f4a99b73e608834d60a11148762f0bbf2dc1c4dba6daaa2e01be": {
       "governingHead": "22377f38b733c674a8858ca95163a66923308167",
       "lockGeneration": 434,
@@ -17672,7 +17716,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2712,
+  "lockGeneration": 2713,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1272,12 +1272,17 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   // source records. Never mutates the final world or duplicates population.
   const localTileQueue=[];let localQueuedTiles=0;
   const LOCAL_PREVIEW_MAX_TILES=24,LOCAL_PREVIEW_MAX_RECORDS=3072;
+  // Retain early-residency evidence after transient GPU resources retire.
+  const localPreviewHistory={firstGpuResidentAtMs:null,firstDrawSubmittedAtMs:null,
+    maximumResidentPriorityTiles:0,maximumStagedRecordCount:0,maximumSubmittedInstances:0,
+    retiredAtMs:null,visiblePixelCoverageVerified:false};
   function retireLocalPreview(){
     const s=resources.localCoverPreview;if(!s)return;
     gl.deleteTexture(s.recordsTexture);gl.deleteTexture(s.selectedTexture);
     gl.deleteBuffer(s.indexBuffer);gl.deleteVertexArray(s.vao);
     gl.deleteProgram(s.program);gl.deleteShader(s.vertexShader);gl.deleteShader(s.fragmentShader);
     resources.localCoverPreview=null;
+    localPreviewHistory.retiredAtMs=performance.now();
     gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
   }
   function makeLocalPreview(template){
@@ -1346,6 +1351,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,1024,rows,gl.RGBA,gl.FLOAT,s.pixels.subarray(0,rows*4096));
       s.uploadCount++;
       if(gl.getError()!==gl.NO_ERROR)throw Error('LOCAL_PREVIEW_UPLOAD_GL_ERROR');
+      if(localPreviewHistory.firstGpuResidentAtMs===null)localPreviewHistory.firstGpuResidentAtMs=performance.now();
+      localPreviewHistory.maximumResidentPriorityTiles=Math.max(localPreviewHistory.maximumResidentPriorityTiles,s.tileCount);
+      localPreviewHistory.maximumStagedRecordCount=Math.max(localPreviewHistory.maximumStagedRecordCount,s.count);
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
       if(s.tileCount===1||s.tileCount===2||s.tileCount===4||s.tileCount%8===0)
         progress({phase:'LOCAL_GROUNDCOVER_GPU_RESIDENT',residentPriorityTiles:s.tileCount,stagedRecordCount:s.count});
@@ -1654,6 +1662,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.drawElementsInstanced(gl.TRIANGLES,72,gl.UNSIGNED_INT,0,count);
       counters.totalDrawnIndexCount+=72*count;
       if(gl.getError()!==gl.NO_ERROR)throw Error('LOCAL_PREVIEW_DRAW_GL_ERROR');
+      if(localPreviewHistory.firstDrawSubmittedAtMs===null)localPreviewHistory.firstDrawSubmittedAtMs=performance.now();
+      localPreviewHistory.maximumSubmittedInstances=Math.max(localPreviewHistory.maximumSubmittedInstances,count);
     }
     s.lastDraw={visibleInstanceCount:count,drawCallCount:Number(count>0),visibleFineLeaves:count*12,
       residentPriorityTiles:s.tileCount,stagedRecordCount:s.count,visiblePixelCoverageVerified:false};
@@ -2175,6 +2185,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       landscapeFloor:{treeCount:landscapeFloorFootprints.length,floorContentDigest:renderPackage.landscapeFloorContentDigest,source:'ACCEPTED_CLUSTER_A_MANIFEST',worldSpace:'PROJECTED_WORLD_XZ',terrainGeometryChanged:false,castShadowClaim:false},
 // SHORELINE_SOIL_END receipt
       persistentObjectCounts: { contexts: 1, programs: counters.programCreateCount, shaders: counters.shaderCreateCount, vertexArrays: counters.vertexArrayCreateCount+(resources.refinement?.created?1:0)+resources.vegetation.residentBatches.length, gpuBuffers: counters.bufferCreateCount+(resources.refinement?.buffers.length??0)+(resources.refinement?.indexBuffer?1:0)+resources.vegetation.residentBatches.reduce((n,b)=>n+(b.buffers?.length??0)+(b.indexBuffer?1:0),0), textures: counters.textureCreateCount, framebuffers: counters.framebufferCreateCount },
+      localGroundcoverPreviewHistory:{...localPreviewHistory,transientPreviewByteCeiling:262432},
       localGroundcoverPreview:resources.localCoverPreview?{ready:true,residentPriorityTiles:resources.localCoverPreview.tileCount,
         stagedRecordCount:resources.localCoverPreview.count,gpuByteLength:resources.localCoverPreview.gpuByteLength,
         uploadCount:resources.localCoverPreview.uploadCount,...resources.localCoverPreview.lastDraw}:null,

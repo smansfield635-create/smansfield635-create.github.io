@@ -357,7 +357,7 @@ function showVegetationPreparation(progress){
     window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{
       phase:'LOCAL_GROUNDCOVER_GPU_FRAME_PRESENTED',...draw}}));
     showVegetationStatus(draw.submittedDrawCalls>0
-      ?'Nearby fine grass drawing · '+draw.residentPriorityTiles+' priority tiles resident.'
+      ?'Fine-grass draw submitted · '+draw.residentPriorityTiles+' nearby tiles resident.'
       :'Fine-grass tiles resident · current view still developing.',true);
     return;
   }

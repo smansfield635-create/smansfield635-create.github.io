@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2698-large-p2-boulders-canonical-browser-smoke-20261014-01",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6272,
+  "requestBranch": "ai-dispatch-request-gen2698-rocks-source-smoke-20261014-01",
+  "requestCommit": "f6ac5742fbc2e7d91d4307f98cbbbc5f99f7eee2",
+  "requestCommitParent": "4909ae3c78b4a65ea757ab1171b2b879024e9a6d",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "4909ae3c78b4a65ea757ab1171b2b879024e9a6d",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "cc17782b099b5238cfe679f259b66b3b5f947600",
+    "route_query": "arrival=approved-four-trees"
+  },
+  "bridgeRunId": "38623941940",
+  "dispatchedRunId": 38623967251,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38623967251",
+  "dispatchedRunHeadSha": "4909ae3c78b4a65ea757ab1171b2b879024e9a6d",
+  "dispatchedAt": "2026-10-14T19:28:28.920Z",
+  "resolvedAt": "2026-10-14T19:28:33.377Z"
+}

@@ -10,7 +10,7 @@
   "experienceFiles": [
     {
       "path": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
-      "sha256": "e43735e80d96539de61512b35fa9f56fdd213dde66230d2e79d0b51edd98405f"
+      "sha256": "a6a6012548acb490cafd16b6fee46fc0274a9f3562a582e89c71512d351067ea"
     },
     {
       "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
@@ -34,11 +34,11 @@
     },
     {
       "path": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
-      "sha256": "d536f2aa4e8a125a349174c3423fa4c4be8c55c70076e6e22fa0662d2455a919"
+      "sha256": "1db93e5ba16bfe66952f5325eb13b88d9f29e889241c61f23ef0b480f34a1b4a"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "405be7bd9168930190d76c247a0930e93b67b802ef5188fa022fe126f4725121"
+      "sha256": "9142e6d2f41c260d2c20f1d2993bfadc7a719083ae23d313ea736a97ee193b9d"
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",

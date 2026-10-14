@@ -445,6 +445,35 @@ jobs:
                   await page.waitForTimeout(1300);
                   navigationAttempt={performed:true,method:'OWNER_FACING_POINTER_DRAG_AND_WHEEL',error:null};
                 }catch(error){navigationAttempt={performed:false,method:'OWNER_FACING_POINTER_DRAG_AND_WHEEL',error:error?.message??String(error)};}
+
+                // Gen2706: preserve the verified approach, then aim using only real pointer gestures.
+                // A proximity PASS by itself never establishes that rock pixels entered the camera.
+                const boulderPreAimNavigationState=await page.evaluate(() => {
+                  const windows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
+                  return windows.find(w=>w?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt)?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt?.()?.currentNavigationState??null;
+                });
+                const preAimX=boulderPreAimNavigationState?.position?.x,preAimZ=boulderPreAimNavigationState?.position?.z;
+                const boulderPreAimDistanceMeters=Number.isFinite(preAimX)&&Number.isFinite(preAimZ)?Math.hypot(preAimX+76,preAimZ+242):null;
+                let boulderAimAttempt={performed:false,method:'OWNER_FACING_NATIVE_POINTER_LOOK_TWICE',error:null};
+                if(navigationAttempt.performed&&boulderPreAimDistanceMeters!==null&&boulderPreAimDistanceMeters<=55){
+                  try{
+                    const surface=page.locator('#h-earth-functional-landscape-mount');
+                    const bounds=await surface.boundingBox();
+                    if(!bounds||bounds.width<300||bounds.height<150)throw Error('BOULDER_AIM_SURFACE_UNAVAILABLE');
+                    const x=Math.min(1090,Math.max(165,bounds.x+bounds.width*.5));
+                    const y=Math.min(680,Math.max(235,bounds.y+bounds.height*.5));
+                    for(let turn=0;turn<2;turn++){
+                      await page.mouse.move(x+115,y);await page.mouse.down();
+                      await page.mouse.move(x-115,y,{steps:18});
+                      await page.waitForTimeout(730);await page.mouse.up();
+                    }
+                    await page.waitForTimeout(1300);
+                    boulderAimAttempt={performed:true,method:'OWNER_FACING_NATIVE_POINTER_LOOK_TWICE',nativeTurnCount:2,error:null};
+                  }catch(error){
+                    await page.mouse.up().catch(()=>{});
+                    boulderAimAttempt={performed:false,method:'OWNER_FACING_NATIVE_POINTER_LOOK_TWICE',error:error?.message??String(error)};
+                  }
+                }
                 boulderNavigationState=await page.evaluate(() => {
                   const windows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
                   return windows.find(w=>w?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt)?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt?.()?.currentNavigationState??null;
@@ -452,6 +481,9 @@ jobs:
                 boulderView=await sample('boulder-native-navigation');
                 const bx=boulderNavigationState?.position?.x,bz=boulderNavigationState?.position?.z;
                 const boulderCameraDistance=Number.isFinite(bx)&&Number.isFinite(bz)?Math.hypot(bx+76,bz+242):null;
+
+                const boulderPostAimYawDegrees=boulderNavigationState?.yawDegrees??null;
+                const boulderAimReached=Number.isFinite(boulderPostAimYawDegrees)&&boulderPostAimYawDegrees>=95&&boulderPostAimYawDegrees<=115;
                 integratedQualification={
                   schema:'H_EARTH_GEN2699_INTEGRATED_VIEWPORT_QUALIFICATION_v1',
                   exactProductSha:targetSha,
@@ -464,6 +496,10 @@ jobs:
                   woodlandTotalBatchCount:post?.totalBatchCount??null,
                   woodlandAfterCanvasSha256:woodlandAfter?.canvasScreenshotSha256??null,
                   boulderNavigationAttempt:navigationAttempt,
+                  boulderPreAimDistanceMeters,
+                  boulderAimAttempt,
+                  boulderPostAimYawDegrees,
+                  boulderAimReached,
                   boulderNavigationState,
                   boulderCameraDistanceMeters:boulderCameraDistance,
                   boulderRegionReached:boulderCameraDistance!==null&&boulderCameraDistance<=55,
@@ -526,7 +562,7 @@ jobs:
           console.log(JSON.stringify(receipt,null,2));
           if(!receipt.materialized||fatalPageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
           if(exerciseVegetation&&!authoritativeResidencyPass) process.exitCode=1;
-          if(integratedQualification&&(integratedValidatorExecution?.exitCode!==0||!integratedQualification.boulderRegionReached))process.exitCode=1;
+          if(integratedQualification&&(integratedValidatorExecution?.exitCode!==0||!integratedQualification.boulderRegionReached||!integratedQualification.boulderAimReached||!integratedQualification.boulderViewCanvasSha256))process.exitCode=1;
           NODE
           node h-earth-exact-run.mjs
 

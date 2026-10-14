@@ -8275,6 +8275,50 @@
       "scopeHash": "7cbd5a80182415411b3bfff613a405772690633e0af56d691695161bb8342229",
       "state": "ADMITTED_LOCKED"
     },
+    "7dabd6efa2e6ab9ebbbf1ea6bc2e3a9ec4c7ef4124aeddb62a2f35d9753bf33d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "000c6d4a25416b8f17ae63b3fa5adc1c682b3b52",
+          "lockGeneration": 2710,
+          "lockScope": "H_EARTH:STABLE_GRASS_BEACH_LEGACY_PRESENTATION:20261014:V1",
+          "operationId": "H_EARTH_STABLE_GRASS_LEGACY_BLADE_AND_SANDY_BEACH_20261014_001",
+          "procedureLocatorDigest": "07c6e877fae6322e26bc49c4a96a8fa78f0e1f272905454a603fe3699274ba50",
+          "requestDigest": "e861bfafc94421f80b305c7dca5485315174f9b95c0a5d73a1dce5bacaa8b93b",
+          "scopeHash": "7dabd6efa2e6ab9ebbbf1ea6bc2e3a9ec4c7ef4124aeddb62a2f35d9753bf33d"
+        },
+        "bindingDigest": "9ce1347ced197ceeeb597c6d1c86bdcf42234d4b7b2465ba5c4aba97c66a0dd5",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "f85fa87e231131e73fa03be90c83fefefae509b1cb6a7b25082166ef803c264a",
+          "commentId": 6180198195,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6289,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38650004561,
+          "workflowSha": "000c6d4a25416b8f17ae63b3fa5adc1c682b3b52"
+        },
+        "lineageAnchorCommitSha": "091591d8a28dc0aca35f9d914497041a6f8d74ea",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "000c6d4a25416b8f17ae63b3fa5adc1c682b3b52",
+      "lockGeneration": 2710,
+      "lockScope": "H_EARTH:STABLE_GRASS_BEACH_LEGACY_PRESENTATION:20261014:V1",
+      "operationId": "H_EARTH_STABLE_GRASS_LEGACY_BLADE_AND_SANDY_BEACH_20261014_001",
+      "procedureLocatorDigest": "07c6e877fae6322e26bc49c4a96a8fa78f0e1f272905454a603fe3699274ba50",
+      "released": false,
+      "requestDigest": "e861bfafc94421f80b305c7dca5485315174f9b95c0a5d73a1dce5bacaa8b93b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7dabd6efa2e6ab9ebbbf1ea6bc2e3a9ec4c7ef4124aeddb62a2f35d9753bf33d",
+      "state": "ADMITTED_LOCKED"
+    },
     "7ea206d40ec86e7fdf6df84f2b93093d476a4c0d25be93c481ab1f8f7feeb234": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -17584,7 +17628,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2709,
+  "lockGeneration": 2710,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

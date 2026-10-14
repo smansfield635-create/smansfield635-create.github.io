@@ -14,7 +14,7 @@ const ASSET = `${RENDER}assets/h-earth-canonical-base-world.v1.json.gz`;
 const MANIFEST = `${RENDER}assets/h-earth-canonical-base-world.v1.manifest.json`;
 const SOURCE_BLOBS = Object.freeze({
   [`${RENDER}woodland-rock-presentation.v1.js`]: '77e7038d27862a39c31676d1d9a1ee9a84d5f267',
-  [`${RENDER}woodland-fine-grass.v1.js`]: 'ff410e8dada17a2b3a5cc30c43bf296a2c20b5cd',
+  [`${RENDER}woodland-fine-grass.v1.js`]: '1f9bb61c244a162d3e52507b9e94da3d7efcf37b',
   [`${RENDER}live-render-package.run8e-r2.canonical.js`]: '41092afa665f715027f54bc6c52898b839911235',
   [`${RENDER}live-render-package.run8e-r2.js`]: 'd362035f091a7fd997553239c048e87e8b46e4c7',
   [`${RENDER}run8e-successor-environment.js`]: '92d5cb9523619fed34382986232c3d8c261e2a8d',

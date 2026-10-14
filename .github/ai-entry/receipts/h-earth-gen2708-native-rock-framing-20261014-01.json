@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2708-native-rock-framing-20261014-01",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6285,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2708-rock-view-20261014-01",
+  "requestCommit": "ddfc8851217258c840d28fd01093f106d3882e76",
+  "requestCommitParent": "921e27e68390445252165277a9018e1dcec9da5e",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "921e27e68390445252165277a9018e1dcec9da5e",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "638b083b34d0c77908229614c57355a9a15f75d9",
+    "route_query": "arrival=approved-four-trees"
+  },
+  "bridgeRunId": "38645871963",
+  "dispatchedRunId": 38645894465,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38645894465",
+  "dispatchedRunHeadSha": "921e27e68390445252165277a9018e1dcec9da5e",
+  "dispatchedAt": "2026-10-14T22:11:32.538Z",
+  "resolvedAt": "2026-10-14T22:11:37.201Z"
+}

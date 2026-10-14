@@ -1771,6 +1771,30 @@
       "INDEPENDENT_W_DELTA_REVIEW",
       "SAME_PAYLOAD_PUBLICATION_PREFLIGHT",
       "LIVE_EXACT_HEAD_VERIFICATION"
-    ]
+    ],
+    "staticGeometryProbe": {
+      "classification": "INDEPENDENT_ANALYTIC_AUTHORED_PLANE_ONLY",
+      "gridStepMeters": 0.25,
+      "previouslyVisuallyExcludedGridPoints": 1973,
+      "insideOriginalEllipseNotInCanonicalEstateRouteOrOasis": 1973,
+      "approxCandidateMaskSquareMeters": 123.3125,
+      "canonicalEstateRouteAndOasisOverlaps": 0,
+      "fixedCameraDistancesToStripMeters": {
+        "north": 5.6,
+        "south": 8.21,
+        "east": 26,
+        "west": 19,
+        "interior": 4
+      },
+      "allFiveWithin62mGrassSelectorRange": true,
+      "notTested": [
+        "ACTUAL_TERRAIN_MATERIAL_OR_WATER_ELIGIBILITY",
+        "PRESENTATION_ROOT_ACTUAL_NEW_COUNT",
+        "GPU_SUBMITTED_GRASS_COVERAGE",
+        "FIVE_VIEW_PROJECTED_PIXEL_COVERAGE",
+        "BROWSER_VISUAL_READBACK"
+      ],
+      "result": "PASS_STATIC_GEOMETRY_ONLY"
+    }
   }
 }

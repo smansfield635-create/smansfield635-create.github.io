@@ -1,0 +1,138 @@
+{
+  "schema": "H_EARTH_REAR_CAVERN_GEN2730_ANCHOR_SOURCE_BOUND_CONTINUITY_EVIDENCE_v1",
+  "assessment": "PASS_SOURCE_BOUND_CONTINUITY_ONLY_NOT_RUNTIME_OR_OWNER_PIXEL_ACCEPTANCE",
+  "operation": {
+    "priorConstructionGeneration": 2730,
+    "currentEvidenceGeneration": 2731,
+    "currentOperationId": "H_EARTH_REAR_CAVERN_ANCHOR_EVIDENCE_20261014_001",
+    "admissionRun": 38671113571,
+    "scope": "EVIDENCE_ONLY_TWO_FILES"
+  },
+  "candidate": {
+    "frozenProductCommit": "e5de6be2631cc5796fc5c8067934fcfa9d404204",
+    "currentMainAtEvidenceAdmission": "0a9113b4d68f9fc9cbb96bdf8b01b4a056f566da",
+    "unrelatedMainDrift": [
+      "about/index.html",
+      "assets/about/about-hero-cinematic-20261014.webp"
+    ],
+    "changedExperienceFileSha256": [
+      {
+        "path": "h-earth-3d/validation/h-earth.rear-cavern-20261014.v1.mjs",
+        "sha256": "04e0ae9263a413be3511e54d7bbc85af110ee1973f31ed6401ffdd8fc9b68f08"
+      },
+      {
+        "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+        "sha256": "8e04019bcc48d32371a74f8eb6786e266a7a5cb0038fdf27753fedeedf871011"
+      },
+      {
+        "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+        "sha256": "c58f7eaf787f12762c4a08448cb175238e3d38957a56da1077d23dbb185370a6"
+      },
+      {
+        "path": "showroom/globe/h-earth/index.html",
+        "sha256": "25fa956dd11fe9807f2cc0daf41fe7806fa45a12ca7e14ab543cb559585c544d"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "sha256": "ef9d28448946634ed9dec5e1ee6cd81195f4e89370556db2a9a538f9da4f95f0"
+      }
+    ]
+  },
+  "anchor": {
+    "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+    "sourceVideoSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+    "visualProxyPath": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "visualProxySha256": "1b63b7f83ab5bd399f1210051474179182d2c10dedf1f4d4860198e1c6d7b07b",
+    "comparisonMethod": "REPOSITORY_ANCHOR_PROXY_AND_SOURCE_DIFF_CONTINUITY_REVIEW; NO NEW CAVERN PIXELS OR OWNER DEVICE SCREENSHOTS"
+  },
+  "sources": {
+    "originalCandidateCheckpoint": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6330#issuecomment-6182814839",
+    "priorAdmittedConstructionRun": 38668402560,
+    "sourceValidatorPath": "h-earth-3d/validation/h-earth.rear-cavern-20261014.v1.mjs",
+    "priorQualifiedExperiencePath": "h-earth-3d/evidence/woodland-delivery-20261006/qualification.json",
+    "rendererPath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "existingCanonicalManifestPath": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json"
+  },
+  "sourceDelta": {
+    "geometry": "Additive terrain-sampled rearward stone arch with a dark recessed backing; no excavation or world-binary mutation",
+    "portal": {
+      "x": 40,
+      "z": -268,
+      "facing": "REAR_NEGATIVE_Z",
+      "enterable": false
+    },
+    "geometryVertices": 252,
+    "geometryTriangles": 84,
+    "expectedAdditionalMainPassDrawCalls": 1,
+    "gpuBudgetUpperBoundBytes": 32768,
+    "sourceAndSyntheticAssertionsPreviouslyObserved": 33,
+    "sourceAndSyntheticAssertionsSource": "ISSUE_6330_EXACT_CANDIDATE_SOURCE_REVIEW",
+    "canonicalWorldBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "alteredWorldGeometry": false,
+    "alteredTerrainTopology": false,
+    "alteredOcean": false,
+    "alteredNavigation": false,
+    "alteredTrees": false,
+    "alteredExistingVegetation": false,
+    "alteredRocks": false
+  },
+  "anchorInvariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    },
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": {
+      "sourceBoundContinuityReview": "PASS",
+      "basis": "EXISTING_CANONICAL_WORLD_AND_NAVIGATION_UNCHANGED; ONLY_LOCALIZED_ADD_ON_RENDER_GEOMETRY_AND_CACHE_URL_REVISIONS"
+    }
+  },
+  "limitations": {
+    "newScreenshotCapture": false,
+    "newCavernRenderedPixelsObserved": false,
+    "newAndroidAcceptance": false,
+    "newOwnerPixelStyleAcceptance": false,
+    "enterableCavernProven": false,
+    "riverConnectionPresent": false,
+    "mirrorManorConnectionPresent": false,
+    "node22ExactCandidateRuntimeRunClaimed": false,
+    "hardwareWebGLRunClaimed": false,
+    "livePagesPublicationClaimed": false
+  },
+  "conclusion": "The bounded pilot is an additive part of the established H-Earth world rather than a new world, interface, route, or globe. This is comparative repository/source evidence against the controlling anchor, not proof of rendered-pixel quality or owner-device inspection."
+}

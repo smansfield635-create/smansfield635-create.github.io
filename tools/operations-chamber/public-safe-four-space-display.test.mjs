@@ -19,3 +19,13 @@ test('future saved study versus captured time is rejected',()=>{const d=fixture(
 test('unexpected output file blocks publication integration',async()=>{const dir=await setup();try{await fs.writeFile(path.join(dir,'secret.key'),'private');await assert.rejects(()=>integrateFourSpaceDisplay({siteDir:dir}),/EXISTING_PUBLISHER_FILE_ALLOWLIST_MISMATCH/)}finally{await cleanup(dir)}});
 test('requires the previously qualified rolling adapter before replacing UI',async()=>{const dir=await setup();try{await fs.writeFile(path.join(dir,'dashboard.mjs'),'old source');await assert.rejects(()=>integrateFourSpaceDisplay({siteDir:dir}),/QUALIFIED_PRIOR_ADAPTER_NOT_PRESENT/)}finally{await cleanup(dir)}});
 test('refuses tampered new presentation identity before output mutation',async()=>{const dir=await setup(),temp=await fs.mkdtemp(path.join(os.tmpdir(),'chamber-tampered-'));try{for(const name of Object.keys(QUALIFIED_FILES))await fs.copyFile(path.join(root,'four-space',name),path.join(temp,name));await fs.appendFile(path.join(temp,'dashboard.mjs'),'// tamper');await assert.rejects(()=>integrateFourSpaceDisplay({siteDir:dir,templateDir:temp}),/QUALIFIED_FOUR_SPACE_TEMPLATE_MISMATCH/);assert.equal(await fs.readFile(path.join(dir,'dashboard.mjs'),'utf8'),'const rollingStudySummary=true;')}finally{await cleanup(dir);await cleanup(temp)}});
+
+test('continuous classification stays current while historical records remain accessible',async()=>{
+ const html=await fs.readFile(path.join(root,'four-space','index.html'),'utf8');
+ assert.match(html,/Current classification/);
+ assert.match(html,/Classification continues/);
+ assert.match(html,/id="rolling-summary"/);
+ assert.match(html,/id="archive-dialog"/);
+ assert.doesNotMatch(html,/The production study ends August 25/);
+ assert.doesNotMatch(html,/September and October are not measured here/);
+});

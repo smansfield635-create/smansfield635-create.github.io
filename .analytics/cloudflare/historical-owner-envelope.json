@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-15T13:33:45Z",
+  "generatedAt": "2026-10-15T14:33:56Z",
   "window": {
-    "start": "2026-07-17T13:33:45Z",
-    "end": "2026-10-15T13:33:45Z"
+    "start": "2026-07-17T14:33:56Z",
+    "end": "2026-10-15T14:33:56Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 167,
+        "pageLoads": 147,
         "visits": 2
       },
       "/showroom/": {
@@ -118,12 +118,12 @@
         "pageLoads": 30,
         "visits": 0
       },
-      "/governance/": {
-        "pageLoads": 60,
+      "/showroom/globe/audralia/": {
+        "pageLoads": 160,
         "visits": 10
       },
-      "/showroom/globe/audralia/": {
-        "pageLoads": 140,
+      "/governance/": {
+        "pageLoads": 60,
         "visits": 10
       },
       "/evidence/readiness/": {
@@ -242,6 +242,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -255,10 +259,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },

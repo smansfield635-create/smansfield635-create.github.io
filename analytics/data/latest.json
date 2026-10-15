@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-15T13:33:45Z",
+  "generatedAt": "2026-10-15T14:33:56Z",
   "window30d": {
-    "start": "2026-09-15T13:33:45Z",
-    "end": "2026-10-15T13:33:45Z"
+    "start": "2026-09-15T14:33:56Z",
+    "end": "2026-10-15T14:33:56Z"
   },
   "daily": [
     {
@@ -32,11 +32,11 @@
     },
     {
       "date": "2026-09-22",
-      "pageLoads": 90
+      "pageLoads": 250
     },
     {
       "date": "2026-09-23",
-      "pageLoads": 1080
+      "pageLoads": 110
     },
     {
       "date": "2026-09-24",
@@ -44,11 +44,11 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 60
+      "pageLoads": 640
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 20
+      "pageLoads": 50
     },
     {
       "date": "2026-09-27",
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-08",
-      "pageLoads": 82
+      "pageLoads": 81
     },
     {
       "date": "2026-10-09",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 61
+      "pageLoads": 63
     }
   ],
   "summary": {
-    "pageLoads": 4441,
-    "botPageLoads": 1802,
-    "nonBotPageLoads": 2639
+    "pageLoads": 4551,
+    "botPageLoads": 1812,
+    "nonBotPageLoads": 2739
   },
   "referrers": [
     {
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 471,
-      "visits": 446
+      "pageLoads": 472,
+      "visits": 447
     },
     {
       "path": "/products/education/",

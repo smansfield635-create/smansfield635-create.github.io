@@ -9,8 +9,8 @@ import { fileURLToPath } from 'node:url';
 export const SCHEMA = 'DGB_OPERATIONS_CHAMBER_DASHBOARD_DATA_v1';
 export const AGGREGATE = 'DGB_CHAMBER_PUBLIC_SAFE_AGGREGATE_v1';
 export const QUALIFIED_FILES = Object.freeze({
-  'index.html': 'c8a367173ebe17234089d56a8bc9057cb4600f26c41c4250ced101dd26a8a36c',
-  'dashboard.mjs': 'a7ad30f5413d697963b931b35b775acc447c974cdf0c77fb5e15b775531df8c4'
+  'index.html': 'f58faf1c2c4440f5085ff29ee497753cf7c647b376db60935d4b5cca48d759ad',
+  'dashboard.mjs': '0988329f8adb5fa6916c1dc70335854e422caf6fd23841110441d0bad9222eeb'
 });
 const fail=(code)=>{const e=new Error(code);e.code=code;throw e};
 const digest=s=>crypto.createHash('sha256').update(s).digest('hex');

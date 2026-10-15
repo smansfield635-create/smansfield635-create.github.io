@@ -29,3 +29,16 @@ test('continuous classification stays current while historical records remain ac
  assert.doesNotMatch(html,/The production study ends August 25/);
  assert.doesNotMatch(html,/September and October are not measured here/);
 });
+
+test('research archive foregrounds verified current classification and preserves older studies behind disclosure',async()=>{
+ const html=await fs.readFile(path.join(root,'four-space','index.html'),'utf8');
+ const runtime=await fs.readFile(path.join(root,'four-space','dashboard.mjs'),'utf8');
+ assert.match(html,/id="archive-current-summary"/);
+ assert.match(html,/<details id="archived-study" class="archived">/);
+ assert.match(html,/Current classification/);
+ assert.match(html,/Earlier study · August 25, 2026 \(historical\)/);
+ assert.match(runtime,/archiveSummary\.innerHTML=renderedSummary/);
+ assert.match(runtime,/const renderedSummary=valid\?/);
+ assert.match(runtime,/const study=current\.study/);
+ assert.doesNotMatch(html,/id="archive-dialog" aria-label="Historical production study"/);
+});

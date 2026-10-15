@@ -5142,45 +5142,6 @@
       "scopeHash": "4f452f63f9e07948dd86396c9e2acad4e55744c872aaa064e49abd2bf21693dd",
       "state": "ADMITTED_LOCKED"
     },
-    "4f8403319fa9029f5e32204f96d37c9c4838ecf640b829c00139404b43347fdb": {
-      "governingHead": "e15bb3dae4ee32e9492dc53e7c1fa6f4232668f6",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "e15bb3dae4ee32e9492dc53e7c1fa6f4232668f6",
-          "lockGeneration": 2738,
-          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:OPERATIONS_CHAMBER:STUDY_RATIFICATION_BINDING_20261015",
-          "operationId": "DGB_STUDY_RATIFICATION_POINTER_REPAIR_20261015_001",
-          "procedureLocatorDigest": "2e713eba3783f001c139c989df8ae2cd667e0c007fff7d297ef95926af5a689a",
-          "requestDigest": "23bc10b753ebd1f9e9bd7d0373466db3b2f1bfc9ef35353a4f9a018449183fe5",
-          "scopeHash": "4f8403319fa9029f5e32204f96d37c9c4838ecf640b829c00139404b43347fdb"
-        },
-        "bindingDigest": "ee62365c632151bb57905e2f2edecd19461aa9a65bb80f9b63faa2e34e0df249",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "e2af588e037a2620f8ca07fe16a3adc54abdfe47",
-          "observedLockRefHead": "a4650241cdafb610ef56c7dfab222f2d8537ddd2"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "c630448c5c0073df4045f5b0d9af64d832477b5d777c332a99504e4055ab7235",
-          "commentId": 6196236577,
-          "issueNumber": 6241,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2738,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:OPERATIONS_CHAMBER:STUDY_RATIFICATION_BINDING_20261015",
-      "operationId": "DGB_STUDY_RATIFICATION_POINTER_REPAIR_20261015_001",
-      "procedureLocatorDigest": "2e713eba3783f001c139c989df8ae2cd667e0c007fff7d297ef95926af5a689a",
-      "released": false,
-      "requestDigest": "23bc10b753ebd1f9e9bd7d0373466db3b2f1bfc9ef35353a4f9a018449183fe5",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "4f8403319fa9029f5e32204f96d37c9c4838ecf640b829c00139404b43347fdb",
-      "state": "ADMITTED_LOCKED"
-    },
     "50a03ce7d4831bf70929c7c99ec03ee8aa2ff151d643182c2b1158d2ef28ac41": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -79623,6 +79584,83 @@
       "scopeHash": "91c40733c85491029050a2663730999371fa3acf4aef2813769ed665e3395e02",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "e15bb3dae4ee32e9492dc53e7c1fa6f4232668f6",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e15bb3dae4ee32e9492dc53e7c1fa6f4232668f6",
+          "lockGeneration": 2738,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:OPERATIONS_CHAMBER:STUDY_RATIFICATION_BINDING_20261015",
+          "operationId": "DGB_STUDY_RATIFICATION_POINTER_REPAIR_20261015_001",
+          "procedureLocatorDigest": "2e713eba3783f001c139c989df8ae2cd667e0c007fff7d297ef95926af5a689a",
+          "requestDigest": "23bc10b753ebd1f9e9bd7d0373466db3b2f1bfc9ef35353a4f9a018449183fe5",
+          "scopeHash": "4f8403319fa9029f5e32204f96d37c9c4838ecf640b829c00139404b43347fdb"
+        },
+        "bindingDigest": "ee62365c632151bb57905e2f2edecd19461aa9a65bb80f9b63faa2e34e0df249",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "e2af588e037a2620f8ca07fe16a3adc54abdfe47",
+          "observedLockRefHead": "a4650241cdafb610ef56c7dfab222f2d8537ddd2"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "c630448c5c0073df4045f5b0d9af64d832477b5d777c332a99504e4055ab7235",
+          "commentId": 6196236577,
+          "issueNumber": 6241,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e15bb3dae4ee32e9492dc53e7c1fa6f4232668f6",
+          "lockGeneration": 2738,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:OPERATIONS_CHAMBER:STUDY_RATIFICATION_BINDING_20261015",
+          "operationId": "DGB_STUDY_RATIFICATION_POINTER_REPAIR_20261015_001",
+          "procedureLocatorDigest": "2e713eba3783f001c139c989df8ae2cd667e0c007fff7d297ef95926af5a689a",
+          "requestDigest": "23bc10b753ebd1f9e9bd7d0373466db3b2f1bfc9ef35353a4f9a018449183fe5",
+          "scopeHash": "4f8403319fa9029f5e32204f96d37c9c4838ecf640b829c00139404b43347fdb"
+        },
+        "bindingDigest": "4d56e2b8a00f4f8d3f893c7f98921da259b4f23445d8455a6cc55073b6aa7917",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "292063545171bf5640f34708917cb6f1f54eb413",
+          "observedLockRefHead": "8c044d1bbfd0d85789ed85085432a3c8eacd3a74"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "9c16cf42acb3c3e4ba5bb6e3d0204671d9a4fbdfdaf494f70fcd4483224f4efc",
+          "commentId": 6196329178,
+          "issueNumber": 6360,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "e15bb3dae4ee32e9492dc53e7c1fa6f4232668f6",
+          "lockGeneration": 2738,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:OPERATIONS_CHAMBER:STUDY_RATIFICATION_BINDING_20261015",
+          "operationId": "DGB_STUDY_RATIFICATION_POINTER_REPAIR_20261015_001",
+          "released": true,
+          "scopeHash": "4f8403319fa9029f5e32204f96d37c9c4838ecf640b829c00139404b43347fdb",
+          "state": "TERMINAL",
+          "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2738,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:OPERATIONS_CHAMBER:STUDY_RATIFICATION_BINDING_20261015",
+      "operationId": "DGB_STUDY_RATIFICATION_POINTER_REPAIR_20261015_001",
+      "procedureLocatorDigest": "2e713eba3783f001c139c989df8ae2cd667e0c007fff7d297ef95926af5a689a",
+      "released": true,
+      "requestDigest": "23bc10b753ebd1f9e9bd7d0373466db3b2f1bfc9ef35353a4f9a018449183fe5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4f8403319fa9029f5e32204f96d37c9c4838ecf640b829c00139404b43347fdb",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

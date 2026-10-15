@@ -1343,6 +1343,50 @@
       "scopeHash": "119d9d71c14b4434b7b0b862bbed2f93ae4693e36beec89c92d1ab65297ec2ad",
       "state": "ADMITTED_LOCKED"
     },
+    "12cc0ebc35541251cfa96fe93f6748f797399064eaf1c9ebc9079453cc19008d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "fa92369066969412ac367abc7478c84ce3a98b8b",
+          "lockGeneration": 2727,
+          "lockScope": "H_EARTH:URGENT_REMOVE_GEN2719_GREEN_GEOMETRIC_OVERLAY_ROLLBACK_20261014",
+          "operationId": "H_EARTH_REMOVE_UNREQUESTED_GREEN_GEOMETRIC_TERRAIN_OVERLAY_20261014_001",
+          "procedureLocatorDigest": "6ca6c7c5113b0ce0ec2e489139162f0d39bf15a1d4f9bd8b9ec6f113f788ca90",
+          "requestDigest": "f73843242246872fb9033194e791135995cee47472ec17429ee724cbe1da0be2",
+          "scopeHash": "12cc0ebc35541251cfa96fe93f6748f797399064eaf1c9ebc9079453cc19008d"
+        },
+        "bindingDigest": "a4f69657d1a110021c6df0247f9fa99f80620588b3e6d508112abcfb9822f7cb",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a8d98338c6737f1df8c2e81984ebd80e5d61b928fea9ab00717829198efbffc0",
+          "commentId": 6181564554,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6320,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38660504679,
+          "workflowSha": "fa92369066969412ac367abc7478c84ce3a98b8b"
+        },
+        "lineageAnchorCommitSha": "0f35473b98251b9461b68f74fc28e872ba836932",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "fa92369066969412ac367abc7478c84ce3a98b8b",
+      "lockGeneration": 2727,
+      "lockScope": "H_EARTH:URGENT_REMOVE_GEN2719_GREEN_GEOMETRIC_OVERLAY_ROLLBACK_20261014",
+      "operationId": "H_EARTH_REMOVE_UNREQUESTED_GREEN_GEOMETRIC_TERRAIN_OVERLAY_20261014_001",
+      "procedureLocatorDigest": "6ca6c7c5113b0ce0ec2e489139162f0d39bf15a1d4f9bd8b9ec6f113f788ca90",
+      "released": false,
+      "requestDigest": "f73843242246872fb9033194e791135995cee47472ec17429ee724cbe1da0be2",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "12cc0ebc35541251cfa96fe93f6748f797399064eaf1c9ebc9079453cc19008d",
+      "state": "ADMITTED_LOCKED"
+    },
     "130b91450800662195c41e6efddd8931e868979b4ed76bae359a9cfe88de00e9": {
       "governingHead": "df733992456ca523338f87d545be6a9320330e03",
       "lockGeneration": 1449,
@@ -18200,7 +18244,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2726,
+  "lockGeneration": 2727,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

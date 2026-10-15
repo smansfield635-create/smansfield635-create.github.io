@@ -1,6 +1,0 @@
-{
-  "schema": "DGB_EDUCATION_DEPLOY_REQUEST_v1",
-  "surface": "education",
-  "repair": "carousel-initialization-order",
-  "target": "current-main"
-}

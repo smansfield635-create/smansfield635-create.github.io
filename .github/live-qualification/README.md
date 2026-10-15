@@ -1,1 +1,0 @@
-Repository-wide live qualification manifests and adapters live here. See docs/REPOSITORY_LIVE_QUALIFICATION_ENGINE.md.

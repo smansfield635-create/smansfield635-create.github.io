@@ -1,1 +1,0 @@
-Bounded inspection surface for the Mirror Manor carousel culling correction. No geometry, camera, or carousel interaction changes are included.

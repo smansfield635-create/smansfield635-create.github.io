@@ -1,6 +1,0 @@
-{
-  "schema": "DGB_EDUCATION_DEPLOY_REQUEST_v1",
-  "surface": "education",
-  "repair": "authoritative-orbit-geometry",
-  "target": "current-main"
-}

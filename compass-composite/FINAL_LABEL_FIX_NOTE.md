@@ -1,1 +1,0 @@
-The only visual change intended after Gen1596 is suppression of the stale Mirrorland text shell and non-readable cardinal label shells. Active labels, star geometry, interactions, and Mirrorland portal behavior remain unchanged.

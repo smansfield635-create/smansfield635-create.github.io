@@ -1,8 +1,8 @@
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
-import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2694-legacy-fan-recovery-v1';
+import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2710-stable-grass-beach-v1';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2694-legacy-fan-recovery-v1';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2710-stable-grass-beach-v1';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -307,8 +307,8 @@ void main(){
   int instance=uInstanceStart+gl_InstanceID*uInstanceStride;
   vec4 aTransform=recordPart(instance,3),aParameters=recordPart(instance,4);
   float c=cos(aTransform.z),s=sin(aTransform.z);
-  // Tags 0 and 1 remain the exact published broad-blade presentation.
-  // Pilot tags 2/3/4 flatten/spread above the individually grounded roots.
+  // Existing population records remain immutable. Legacy 0/1 fans are rendered
+  // as fine, low leaves at their original grounded roots; beach dune tag 4 is not drawn.
   float lowStratum=step(1.5,aParameters.w)*(1.0-step(2.5,aParameters.w));
   float midStratum=step(2.5,aParameters.w)*(1.0-step(3.5,aParameters.w));
   float duneStratum=step(3.5,aParameters.w);
@@ -320,11 +320,15 @@ void main(){
   vec2 lean=vec2(-bladeOffset.y,bladeOffset.x)*emergence*(.18*lowStratum+.12*midStratum+.22*duneStratum);
   vec2 ecoXZ=rootXZ+outward+lean;
   vec2 localXZ=mix(aPosition.xz,ecoXZ,ecoStratum);
-  vec2 q=localXZ*aTransform.w;
+  float legacyFine=1.0-step(1.5,aParameters.w);
+  // Constrain only the blade above each exact root; grounded root positions stay fixed.
+  vec2 narrowLocalXZ=mix(localXZ,rootXZ+(localXZ-rootXZ)*.23,legacyFine);
+  vec2 q=narrowLocalXZ*aTransform.w;
   vec2 xz=aTransform.xy+vec2(q.x*c-q.y*s,q.x*s+q.y*c);
-  vWorldPosition=vec3(xz.x,rootY(instance,int(aRootInfo.x))+aPosition.y*aParameters.x,xz.y);
-  float widthScale=1.0+.65*lowStratum+.24*midStratum+.08*duneStratum;
-  vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/aParameters.x,aNormal.z/(aTransform.w*widthScale));
+  float leafHeight=aParameters.x*mix(1.0,.34,legacyFine);
+  vWorldPosition=vec3(xz.x,rootY(instance,int(aRootInfo.x))+aPosition.y*leafHeight,xz.y);
+  float widthScale=(1.0+.65*lowStratum+.24*midStratum+.08*duneStratum)*mix(1.0,.23,legacyFine);
+  vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/leafHeight,aNormal.z/(aTransform.w*widthScale));
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
   vec3 palette=aParameters.y<0.333333?vec3(0.18,0.115,0.045):aParameters.y<0.666667?vec3(0.31,0.245,0.065):vec3(0.095,0.145,0.04);
   vec3 lowPalette=mix(vec3(.177,.146,.068),vec3(.075,.152,.064),smoothstep(.20,.86,aParameters.y));
@@ -333,11 +337,15 @@ void main(){
   vec3 ecologicalPalette=lowPalette*lowStratum+midPalette*midStratum+dunePalette*duneStratum;
   vec3 publishedColor=mix(aColor.rgb,palette,0.55);
   vec3 ecoColor=mix(aColor.rgb,ecologicalPalette,.84);
-  vBaseColor=vec4(mix(publishedColor,ecoColor,ecoStratum)*(0.92+0.16*aParameters.z),1.0);
+  vec3 finePalette=mix(vec3(.039,.125,.028),vec3(.076,.202,.052),smoothstep(.16,.88,aParameters.y));
+  vBaseColor=vec4(mix(mix(publishedColor,ecoColor,ecoStratum),finePalette,legacyFine)*(0.92+0.16*aParameters.z),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;
+  // Dune tag 4 was explicitly grown on dry sand. Preserve its immutable source
+  // record but submit no beach vegetation pixels (land and water remain untouched).
   gl_Position=uViewProjection*vec4(vWorldPosition,1.0);
+  if(duneStratum>.5)gl_Position=vec4(2.0,2.0,2.0,1.0);
 }`;
 
 // Same approved six-vertex curved grass; independent presentation roots only.
@@ -1133,8 +1141,9 @@ out vec3 vWorldPosition;`)
     vec2 xz=root.xz+direction*bend*t*t+sideways*side*halfWidth*(1.0-t);
     vWorldPosition=vec3(xz.x,root.y+h*(t-.13*t*t),xz.y);
     vNormal=normalize(vec3(direction.x*h*(1.0-.26*t),-2.0*bend*t,direction.y*h*(1.0-.26*t)));
-    vec3 base=leaf%11==0?vec3(.105,.071,.025):leaf%5==0?vec3(.100,.112,.031):vec3(.032,.081,.025);
-    vec3 tip=leaf%11==0?vec3(.36,.23,.076):leaf%5==0?vec3(.32,.35,.103):vec3(.17,.29,.079);
+    // Retire the gold/brown lowland-blade appearance without changing any root.
+    vec3 base=leaf%11==0?vec3(.043,.111,.027):leaf%5==0?vec3(.047,.136,.031):vec3(.029,.114,.027);
+    vec3 tip=leaf%11==0?vec3(.094,.245,.063):leaf%5==0?vec3(.105,.278,.065):vec3(.084,.238,.055);
     vBaseColor=vec4(mix(base,tip,pow(t,.72))*(.88+.20*r0),1.0);
   }else{
     int shortLeaves=uMeadowGeometryPass==1?4:3,perClump=(24+64*shortLeaves)*6;
@@ -2121,12 +2130,27 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     for(const id of batch.placementIds){if(state.residentPlacementIds.has(id))throw new Error('R3C_VEGETATION_DUPLICATE_PLACEMENT');state.residentPlacementIds.add(id);}
     const positions=[],normals=[],colors=[],mats=[],models=[],surfaces=[],primitiveIds=[],roles=[],indices=[];let vertexOffset=0;
     const normalize=(x,y,z)=>{const n=Math.hypot(x,y,z)||1;return [x/n,y/n,z/n];};
-    // Preserve the qualified placement ledger and all non-tree vegetation.
-    // Exclude old highland conifers from GPU geometry; mixed batches still
-    // retain grass, reeds and shrubs, and source instance accounting stays put.
+    // Keep every canonical placement and GPU-residency count unchanged. Only
+    // prevent beach-rooted vegetation geometry from entering the draw buffers.
+    // The same immutable signed coastline already drives H-Earth sand materials.
+    const sandRoot=(p)=>{
+      if(!p||!Number.isFinite(p.x)||!Number.isFinite(p.z))return false;
+      const distance=getHEarthSignedCoastDistanceMeters(p.x,p.z);
+      return Number.isFinite(distance)&&distance>=0&&distance<34;
+    };
+    const rootedOnSand=primitive=>{
+      const anchor=primitive?.metadata?.worldAnchor;
+      if(sandRoot(anchor))return true;
+      const oasisRoots=primitive?.metadata?.oasisFoliage?.rootPoints;
+      return Array.isArray(oasisRoots)&&oasisRoots.some(sandRoot);
+    };
+    // Exclude old highland conifers and sand-rooted presentation grass.
+    // Inland grasses, shrubs, wet-edge plants outside the sand strip, trees,
+    // rocks, source identities, and the 108-batch ledger all remain intact.
     const drawablePrimitives=batch.primitives.filter(primitive=>
       primitive?.metadata?.archetypeId!=='HIGHLAND_CONIFER_SAPLING'&&
-      !String(primitive?.materialHint?.materialIntent??'').includes('VEGETATION_CONIFER_TRUNK_AND_CANOPY'));
+      !String(primitive?.materialHint?.materialIntent??'').includes('VEGETATION_CONIFER_TRUNK_AND_CANOPY')&&
+      !rootedOnSand(primitive));
     for(let pi=0;pi<drawablePrimitives.length;pi++){const primitive=drawablePrimitives[pi],g=primitive.geometry,verts=g?.vertices??[],local=g?.indices??[];if(!verts.length||!local.length)throw new Error('R3C_VEGETATION_PRIMITIVE_GEOMETRY_INVALID');
       const sums=Array.from({length:verts.length},()=>[0,0,0]);for(let k=0;k<local.length;k+=3){const ia=local[k],ib=local[k+1],ic=local[k+2],a=verts[ia],b=verts[ib],d=verts[ic],ab=[b.x-a.x,b.y-a.y,b.z-a.z],ad=[d.x-a.x,d.y-a.y,d.z-a.z],n=[ab[1]*ad[2]-ab[2]*ad[1],ab[2]*ad[0]-ab[0]*ad[2],ab[0]*ad[1]-ab[1]*ad[0]];for(const id of [ia,ib,ic])for(let q=0;q<3;q++)sums[id][q]+=n[q];}
       const intent=String(primitive?.materialHint?.materialIntent??''),rgba=intent.includes('TRUNK')||intent.includes('WOODY')?[89,63,39,255]:intent.includes('CONIFER')?[38,73,48,255]:intent.includes('SHRUB')?[52,94,52,255]:[78,126,65,255];

@@ -1,5 +1,5 @@
 /** Presentation-only woodland grass. Canonical world and records stay immutable. */
-import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2694-legacy-fan-recovery-v1';
+import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2710-stable-grass-beach-v1';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate,sampleHEarthGen311PlacementStructureDisposition} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from './grass-lowland-trial.js';
@@ -136,16 +136,23 @@ export function selectWoodlandFineGrass(presentation,camera,{maximumParents=1024
  const capacity=Math.min(1024,Math.max(0,maximumParents|0)),qx=Math.floor(camera.x/4)*4+2,qz=Math.floor(camera.z/4)*4+2;
  let c=woodlandSelectionCache.get(presentation);
  if(!c){const roots=presentation.tiles.flatMap(t=>t.roots),n=roots.length;c={roots,tiles:[],tileIds:[],x:new Float64Array(n),z:new Float64Array(n),u:new Float64Array(n),ranks:new Float64Array(n),distances:new Float64Array(n),eligible:new Uint32Array(n)};let i=0;for(const tile of presentation.tiles){const start=i;for(const root of tile.roots){let h=Math.imul(root.seed^(root.seed>>>16),2246822519);h=Math.imul(h^(h>>>13),3266489917);c.x[i]=root.x;c.z[i]=root.z;c.u[i]=((h^(h>>>16))>>>0)/4294967296;c.tileIds[i++]=tile.id;}c.tiles.push({x:tile.minX+2,z:tile.minZ+2,start,end:i});}woodlandSelectionCache.set(presentation,c);}
+ // Fixed world-root underlay: selection is independent of camera position and yaw.
+ // Once accepted, these same root IDs survive 4m cell transitions and A-B-A walks.
+ if(!c.persistentIndices){const fixed=[];for(let i=0;i<c.u.length;i++)if(c.u[i]<.16)fixed.push(i);fixed.sort((a,b)=>c.u[a]-c.u[b]||a-b);c.persistentIndices=fixed;}
  let count=0;const {x,z,u,ranks,distances,eligible}=c;
- for(const tile of c.tiles){const tx=tile.x-qx,tz=tile.z-qz;if(tx*tx+tz*tz>65*65)continue;const nearest=Math.max(0,Math.sqrt(tx*tx+tz*tz)-Math.SQRT2*2),tmax=Math.max(0,nearest-8)/7,upperP=.065+.935*Math.exp(-tmax*tmax);for(let i=tile.start;i<tile.end;i++){if(u[i]>=upperP)continue;const dx=x[i]-qx,dz=z[i]-qz,d2=dx*dx+dz*dz;if(d2>3844)continue;const d=Math.sqrt(d2),t=Math.max(0,d-8)/7,p=.065+.935*Math.exp(-t*t),rank=u[i]/p;if(rank<1){ranks[i]=rank;distances[i]=d2;eligible[count++]=i;}}}
+ for(const tile of c.tiles){const tx=tile.x-qx,tz=tile.z-qz;if(tx*tx+tz*tz>65*65)continue;const nearest=Math.max(0,Math.sqrt(tx*tx+tz*tz)-Math.SQRT2*2),tmax=Math.max(0,nearest-8)/7,upperP=.065+.935*Math.exp(-tmax*tmax);for(let i=tile.start;i<tile.end;i++){if(u[i]<.16||u[i]>=upperP)continue;const dx=x[i]-qx,dz=z[i]-qz,d2=dx*dx+dz*dz;if(d2>3844)continue;const d=Math.sqrt(d2),t=Math.max(0,d-8)/7,p=.065+.935*Math.exp(-t*t),rank=u[i]/p;if(rank<1){ranks[i]=rank;distances[i]=d2;eligible[count++]=i;}}}
  const limit=Math.max(0,capacity*64-128);
- if(count>limit&&limit>0){let lo=0,hi=count-1;while(lo<hi){const pivot=ranks[eligible[(lo+hi)>>>1]];let i=lo,j=hi;while(i<=j){while(ranks[eligible[i]]<pivot)i++;while(ranks[eligible[j]]>pivot)j--;if(i<=j){const tmp=eligible[i];eligible[i++]=eligible[j];eligible[j--]=tmp;}}if(limit-1<=j)hi=j;else if(limit-1>=i)lo=i;else break;}}
- const packed=[[],[],[]];for(let j=0;j<Math.min(limit,count);j++){const i=eligible[j],d2=distances[i];packed[d2<100?0:d2<576?1:2].push({root:c.roots[i],tileId:c.tileIds[i]});}
+ const fixedCount=Math.min(c.persistentIndices.length,Math.floor(limit*.45));
+ const dynamicLimit=Math.max(0,limit-fixedCount);
+ if(count>dynamicLimit&&dynamicLimit>0){let lo=0,hi=count-1;while(lo<hi){const pivot=ranks[eligible[(lo+hi)>>>1]];let i=lo,j=hi;while(i<=j){while(ranks[eligible[i]]<pivot)i++;while(ranks[eligible[j]]>pivot)j--;if(i<=j){const tmp=eligible[i];eligible[i++]=eligible[j];eligible[j--]=tmp;}}if(dynamicLimit-1<=j)hi=j;else if(dynamicLimit-1>=i)lo=i;else break;}}
+ const packed=[[],[],[]];
+ for(let j=0;j<fixedCount;j++){const i=c.persistentIndices[j],dx=x[i]-qx,dz=z[i]-qz,d2=dx*dx+dz*dz;packed[d2<100?0:d2<576?1:2].push({root:c.roots[i],tileId:c.tileIds[i]});}
+ for(let j=0;j<Math.min(dynamicLimit,count);j++){const i=eligible[j],d2=distances[i];packed[d2<100?0:d2<576?1:2].push({root:c.roots[i],tileId:c.tileIds[i]});}
  const pixels=new Float32Array(capacity*64*4);for(let i=1;i<pixels.length;i+=4)pixels[i]=-100000;
  const groups=[],chunks=[];let parentCount=0,contactCount=0,vertices=0,triangles=0;
  for(let level=0;level<3;level++){const firstParent=parentCount,leafCount=4,list=packed[level];for(let i=0;i<list.length;i+=64){const group=list.slice(i,i+64),chunk={tileId:'PACKED_'+level,first:i,roots:group.map(x=>x.root),sourceTileIds:[...new Set(group.map(x=>x.tileId))],parent:parentCount,level};chunks.push(chunk);chunk.roots.forEach((r,k)=>pixels.set([r.x,r.y,r.z,r.angle],(parentCount*64+k)*4));parentCount++;contactCount+=chunk.roots.length;}const count=parentCount-firstParent;if(count){groups.push({level,leafCount,firstParent,parentCount:count});vertices+=count*64*leafCount*6;triangles+=count*64*leafCount*4;}}
- const signature=`${qx}:${qz}:${capacity}:`+groups.map(g=>`${g.level}:${g.parentCount}`).join(',');
- return{pixels:pixels.subarray(0,parentCount*256),groups,chunks,signature,parentCount,contactCount,vertices,triangles,draws:groups.length};
+ const signature=`${qx}:${qz}:${capacity}:${fixedCount}:`+groups.map(g=>`${g.level}:${g.parentCount}`).join(',');
+ return{pixels:pixels.subarray(0,parentCount*256),groups,chunks,signature,parentCount,contactCount,persistentContactCount:fixedCount,dynamicContactCount:contactCount-fixedCount,vertices,triangles,draws:groups.length};
 }
 export function filterWoodlandLegacyGrass(pkg){
  const original=pkg.buffers.indices,indices=Uint32Array.from(original),positions=pkg.buffers.positions,attributes=pkg.clearingAttributes,span=pkg.primitiveSpans.find(s=>s.primitiveId==='H_EARTH_LANDSCAPE_P2_GRASS');let suppressedTriangles=0;const suppressedTypeCounts={},preservedTypeCounts={};

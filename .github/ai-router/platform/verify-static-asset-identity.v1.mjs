@@ -4,15 +4,20 @@ import fs from 'node:fs';
 const base=process.env.STATIC_IDENTITY_BASE||process.argv[2];
 const head=process.env.STATIC_IDENTITY_HEAD||process.argv[3]||'HEAD';
 if(!base) throw new Error('STATIC_IDENTITY_BASE_REQUIRED');
-const git=(args)=>execFileSync('git',args,{encoding:'utf8'}).trim();
+const git=(args)=>execFileSync('git',args,{encoding:'utf8',maxBuffer:128*1024*1024}).trim();
+const deleted=new Set(git(['diff','--diff-filter=D','--name-only',`${base}...${head}`]).split('\n').filter(Boolean));
+const headDirectories=deleted.size?new Set(git(['ls-tree','-r','-d','--name-only',head]).split('\n').filter(Boolean)):new Set();
+const absentDeleted=new Set([...deleted].filter(p=>!headDirectories.has(p)));
 const changed=git(['diff','--name-only',`${base}...${head}`]).split('\n').filter(Boolean);
 const assetRe=/\.(?:js|mjs|css|json|webmanifest|svg|png|jpe?g|webp|avif|gif|woff2?|mp4|webm)$/i;
 const pageRe=/\.(?:html|htm|js|mjs|css)$/i;
 const changedAssets=changed.filter(p=>assetRe.test(p)&&!p.startsWith('.github/')&&!p.startsWith('docs/')&&!p.startsWith('preview/'));
-const candidatePages=changed.filter(p=>pageRe.test(p)&&!p.startsWith('.github/')&&!p.startsWith('docs/')&&!p.startsWith('preview/'));
+const candidatePages=changed.filter(p=>!absentDeleted.has(p)&&pageRe.test(p)&&!p.startsWith('.github/')&&!p.startsWith('docs/')&&!p.startsWith('preview/'));
 
-const show=(ref,path)=>{try{return git(['show',`${ref}:${path}`]);}catch{return '';}};
-const exists=(ref,path)=>{try{git(['cat-file','-e',`${ref}:${path}`]);return true;}catch{return false;}};
+const showCache=new Map();
+const show=(ref,path)=>{const key=JSON.stringify([ref,path]);if(showCache.has(key))return showCache.get(key);let value;try{value=git(['show',`${ref}:${path}`]);}catch{value='';}showCache.set(key,value);return value;};
+const existsCache=new Map();
+const exists=(ref,path)=>{if(ref===head&&absentDeleted.has(path))return false;const key=JSON.stringify([ref,path]);if(existsCache.has(key))return existsCache.get(key);let value;try{git(['cat-file','-e',`${ref}:${path}`]);value=true;}catch{value=false;}existsCache.set(key,value);return value;};
 const esc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
 const refs=(text,path)=>{
   const target='/'+path.replace(/^\.\//,'');

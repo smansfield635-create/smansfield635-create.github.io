@@ -9,7 +9,7 @@ import {createHash} from 'node:crypto';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {sampleHEarthGen311PlacementStructureDisposition,H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from '../../showroom/globe/h-earth/render/grass-lowland-trial.js';
-import {buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices,WOODLAND_FINE_GRASS} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2710-stable-grass-beach-v1';
+import {buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices,WOODLAND_FINE_GRASS} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2720-world-fixed-mid-distance-ground-v1';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const ROOT=new URL('../../',import.meta.url);
 export const FOUR_TREE_VIEWS=Object.freeze([[-139.403,-194.5],[-139.403,-236],[-119,-216],[-164,-216],[-141,-214]]);
@@ -151,7 +151,7 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
 }
 /** Gen2694: fast read-only source-chain qualification; no world construction or browser. */
 export function verifyGen2694CandidateSourceChain(){
- const rev='gen2710-stable-grass-beach-v1';
+ const rev='gen2720-world-fixed-mid-distance-ground-v1';
  const paths=[
   ['showroom/globe/h-earth/index.html','public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
   ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],

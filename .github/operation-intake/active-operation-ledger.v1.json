@@ -5009,6 +5009,50 @@
       "scopeHash": "50a03ce7d4831bf70929c7c99ec03ee8aa2ff151d643182c2b1158d2ef28ac41",
       "state": "ADMITTED_LOCKED"
     },
+    "50d00de3be6c02e2ce552c75cf0077218d931102ed4817ef2c702780cd8e7eec": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e1fd058669a3a96c1cb82aede9fa1c8e778aeb00",
+          "lockGeneration": 2719,
+          "lockScope": "H_EARTH:GEN2720:WORLD_FIXED_MID_DISTANCE_CARPET_SAND_SHADER_ONLY:20261014",
+          "operationId": "H_EARTH_GREEN_DISTANT_GROUND_SAND_PROTECTION_20261014_001",
+          "procedureLocatorDigest": "d47eb8f9eaff9e1419f442f6d2a701549198c38535d69bb4f4dc6f109c48cb83",
+          "requestDigest": "a8088feae05a075d9443bd4f5ec460e980a93d4c0ead8b7275fc2a08b0db61be",
+          "scopeHash": "50d00de3be6c02e2ce552c75cf0077218d931102ed4817ef2c702780cd8e7eec"
+        },
+        "bindingDigest": "6afab4f8f5ffe20ef8c6a359759386fff33b1e915a683162dcfb835ef6315f8e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "089e0b50fd9a940c91f06236fb796d9e298d50ce8a744a9305a3cda93f1c4998",
+          "commentId": 6181170117,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6305,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38657496345,
+          "workflowSha": "e1fd058669a3a96c1cb82aede9fa1c8e778aeb00"
+        },
+        "lineageAnchorCommitSha": "24808391b4ba34f6421767f7e4b1b25ccdf961c9",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e1fd058669a3a96c1cb82aede9fa1c8e778aeb00",
+      "lockGeneration": 2719,
+      "lockScope": "H_EARTH:GEN2720:WORLD_FIXED_MID_DISTANCE_CARPET_SAND_SHADER_ONLY:20261014",
+      "operationId": "H_EARTH_GREEN_DISTANT_GROUND_SAND_PROTECTION_20261014_001",
+      "procedureLocatorDigest": "d47eb8f9eaff9e1419f442f6d2a701549198c38535d69bb4f4dc6f109c48cb83",
+      "released": false,
+      "requestDigest": "a8088feae05a075d9443bd4f5ec460e980a93d4c0ead8b7275fc2a08b0db61be",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "50d00de3be6c02e2ce552c75cf0077218d931102ed4817ef2c702780cd8e7eec",
+      "state": "ADMITTED_LOCKED"
+    },
     "511c7eadbeb82f058825b668a4864e160d63c698c38d56a13054524816900167": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -17892,7 +17936,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2718,
+  "lockGeneration": 2719,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -8,12 +8,12 @@ import {createHash} from 'node:crypto';
 import {selectWoodlandFineGrass} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2720-world-fixed-mid-distance-ground-v1';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
-const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const read=p=>fs.readFileSync(path.join(root,p.split('?')[0]),'utf8');
 const sha=v=>createHash('sha256').update(v).digest('hex');
 const rev='gen2720-world-fixed-mid-distance-ground-v1';
 const moduleChain=[
  ['showroom/globe/h-earth/index.html','public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
- ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
+ ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?rev='+rev,'public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
  ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js','live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
  ['showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js','cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev='+rev],
  ['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js','woodland-fine-grass.v1.js?rev='+rev],
@@ -34,6 +34,16 @@ assert(renderer.includes('float bankSoilLandward=smoothstep(30.0,42.0,vCoastDist
 assert(renderer.includes('float carpetInland=smoothstep(36.0,72.0,vCoastDistanceMeters)'),'SIGNED_COAST_CARPET_EXCLUSION_MISSING');
 assert(renderer.includes('float carpetWeight=carpetHabitat*mix(0.18,0.72,carpetFar)'),'WORLD_FIXED_DISTANT_CARPET_MISSING');
 assert(renderer.includes('float carpetSlope=1.0-smoothstep(0.13,0.38,slope)')&&renderer.includes('float carpetRock=1.0-smoothstep(0.10,0.42,rockExposure)'),'SLOPE_OR_ROCK_HABITAT_GATES_MISSING');
+const clamp01=x=>Math.max(0,Math.min(1,x));
+const smoothCarpet=(a,b,x)=>{const t=clamp01((x-a)/(b-a));return t*t*(3-2*t)};
+const independentCarpetWeight=(coast,slope,rock,range)=>smoothCarpet(36,72,coast)*
+ (1-smoothCarpet(.13,.38,slope))*(1-smoothCarpet(.10,.42,rock))*
+ (.18+.54*smoothCarpet(8,75,range))*.90;
+for(const d of [-30,0,16,34,36])assert.equal(independentCarpetWeight(d,.02,.01,130),0,'SAND_HAS_GREEN_CARPET');
+assert.equal(independentCarpetWeight(125,.48,.01,130),0,'STEEP_ROCK_GROUND_GREEN');
+assert.equal(independentCarpetWeight(125,.03,.58,130),0,'EXPOSED_ROCK_GROUND_GREEN');
+const nearCarpet=independentCarpetWeight(125,.03,.02,18),farCarpet=independentCarpetWeight(125,.03,.02,118);
+assert(nearCarpet>0&&farCarpet>nearCarpet&&farCarpet<.72,'MID_DISTANCE_CARPET_STRENGTH_OR_DISTANCE_BLEND_INVALID');
 assert(renderer.includes('const rootedOnSand=primitive=>')&&renderer.includes('oasisRoots.some(sandRoot)')&&renderer.includes('!rootedOnSand(primitive)'),'COASTAL_VEGETATION_BATCH_SAND_EXCLUSION_MISSING');
 assert(renderer.includes(".replace('gl_Position=uViewProjection*vec4(vWorldPosition,1.0);'"),'MEADOW_SHADER_REPLACEMENT_BROKEN');
 assert(renderer.includes("if(uMeadowGeometryPass==0)"),'MEADOW_FINE_LOD_MISSING');

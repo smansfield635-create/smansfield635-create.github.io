@@ -1,0 +1,125 @@
+{
+  "schema": "H_EARTH_PORTAL_APERTURE_AND_SWEEP_CANDIDATE_EVIDENCE_v1",
+  "result": "EXACT_WORLD_SOURCE_BOUND_GEOMETRY_AND_NAVIGATION_INTERFACE_CANDIDATE_NOT_RUNTIME",
+  "source": {
+    "baselineMain": "7a723c29f9bc2b96f2933bc2baaa41bfc2b65b1f",
+    "priorGeologicalCandidateCommit": "345a8a81cc49140464c7d71bc77942dc9d2f7a25",
+    "priorDraftPr": 6342,
+    "canonicalWorldBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "canonicalWorldCompressedBytes": 11736235,
+    "packetLineage": [
+      "PACKET_001_SOURCE_IDENTITY",
+      "PACKET_002_POST_WEST_TRANSFER",
+      "RUN8A_RUN8B_G_WORLD",
+      "GEN2733_SPHERICAL_INVERSE_FORMATION"
+    ]
+  },
+  "execution": {
+    "runtime": "Node22",
+    "syntheticTests": 13,
+    "passed": 13,
+    "exactWorldBinaryRead": true,
+    "webglBrowserExecuted": false,
+    "ownerPixelsObserved": false,
+    "liveWorldChanged": false,
+    "oldCavernPropRemoved": false,
+    "predecessorAndCurrentCombinedNode22Tests": 23
+  },
+  "sites": [
+    {
+      "id": "A_EASTERN_REAR_ESCARPMENT",
+      "roofCoverMinimumMeters": 5.689363,
+      "aperture": {
+        "xMin": 72,
+        "xMax": 88,
+        "zMin": -264,
+        "zMax": -256
+      },
+      "retired2mTerrainTriangles": 64,
+      "replacementTerrainTriangles": 9728,
+      "upperMantleTriangles": 64,
+      "exposedCliffFaceTriangles": 32,
+      "galleryTriangles": 1148,
+      "sideRimMaximumErrorMeters": 0,
+      "backRimMaximumErrorMeters": 0,
+      "entrySweepAcceptedInCandidate": true,
+      "entrySweepSamples": 149,
+      "lateralRockSweepRejectedInCandidate": true,
+      "lateralRockSweepReason": "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+    },
+    {
+      "id": "B_REAR_RAVINE",
+      "roofCoverMinimumMeters": 2.124413,
+      "aperture": {
+        "xMin": 32,
+        "xMax": 48,
+        "zMin": -260,
+        "zMax": -252
+      },
+      "retired2mTerrainTriangles": 64,
+      "replacementTerrainTriangles": 9728,
+      "upperMantleTriangles": 64,
+      "exposedCliffFaceTriangles": 32,
+      "galleryTriangles": 924,
+      "sideRimMaximumErrorMeters": 0,
+      "backRimMaximumErrorMeters": 0,
+      "entrySweepAcceptedInCandidate": true,
+      "entrySweepSamples": 125,
+      "lateralRockSweepRejectedInCandidate": true,
+      "lateralRockSweepReason": "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+    }
+  ],
+  "limitations": {
+    "notActualRendererGeometry": true,
+    "notVerifiedPortalToExternalRockStitchManifold": true,
+    "oldGlobalBaseTriangleRetirementNotActivated": true,
+    "runtime4mRefinementNotIntegrated": true,
+    "threeDimensionalNavigationNotBoundToLiveController": true,
+    "actualWebGLPixelsNotInspected": true,
+    "rockMaterialsAndVegetationNotReprojected": true,
+    "dryBedOnlyNoFreshwaterSource": true,
+    "userPerceptualAcceptance": false,
+    "notPublished": true
+  },
+  "next": "Admit exact-site WebGL preview and navigation controller integration as separate scoped operation after candidate is verified; ensure site visually recesses into rock and old Gen2730 arch replaced, preserving world and accepted ecology.",
+  "rayGeometryInspection": {
+    "source": "REAL_GEN2666_CANONICAL_WORLD_A_SITE_GEOMETRY_IN_LOCAL_AUTHORING_COORDINATES",
+    "method": "ARRAY_TRIANGLE_MOLLER_TRUMBORE_NEAREST_HIT_TWO_SIDED_NOT_WEBGL",
+    "approachCamera": {
+      "x": 80,
+      "y": 10.739920283502816,
+      "z": -304
+    },
+    "insideTarget": {
+      "x": 80,
+      "y": 13.6,
+      "z": -257
+    },
+    "approachRaysTested": 5,
+    "approachRayOffsetsX": [
+      0,
+      -1,
+      1,
+      -2.5,
+      2.5
+    ],
+    "blockedApproachRays": 0,
+    "testedMeshGroups": [
+      "terrainWithoutAperture",
+      "upperMantle",
+      "exposedCliffFace",
+      "cave"
+    ],
+    "cliffFaceBlocksHighLineOfSightAtY20": true,
+    "upperMantleBlocksHighLineOfSightAtY25": true,
+    "overburdenRayFromAboveAtX80ZMinus260": {
+      "firstHit": "upperMantle",
+      "distanceMeters": 15.577,
+      "secondHit": "cave",
+      "secondDistanceMeters": 25.2267
+    },
+    "notFullBaseWorldDepthRendered": true,
+    "notRasterizerOrScreenPixels": true,
+    "interpretation": "LOCAL_APERTURE_VISIBILITY_AND_UPPER_MOUNTAIN_ROOF_GEOMETRY_EXIST; WORLD_RENDERER_STILL_UNBOUND"
+  }
+}

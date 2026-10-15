@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "about-living-gen2737-pages-release-001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6357,
+  "requestBranch": "ai-dispatch-request-about-living-gen2737-pages-release",
+  "requestCommit": "1d12142712bcffb97d97e955234d168c83edfa97",
+  "requestCommitParent": "e4bb7ef1eca574c74ab9d51f01104c4cad3b39a9",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e4bb7ef1eca574c74ab9d51f01104c4cad3b39a9",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "e4bb7ef1eca574c74ab9d51f01104c4cad3b39a9",
+    "surface_id": "about"
+  },
+  "bridgeRunId": "38683174655",
+  "dispatchedRunId": 38683190082,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38683190082",
+  "dispatchedRunHeadSha": "e4bb7ef1eca574c74ab9d51f01104c4cad3b39a9",
+  "dispatchedAt": "2026-10-15T04:46:00.619Z",
+  "resolvedAt": "2026-10-15T04:46:04.481Z"
+}

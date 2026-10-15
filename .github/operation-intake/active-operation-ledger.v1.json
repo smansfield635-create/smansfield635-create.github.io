@@ -15369,6 +15369,50 @@
       "scopeHash": "d3903cf8965d319d071b3033a1fe01d57b246a34a6f8ffe03b2a5b152ddb371d",
       "state": "ADMITTED_LOCKED"
     },
+    "d3e998dd64d3d17e59fc4d3460f8e5462aab665d55e555db1a24cf91a5121e7e": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "7a723c29f9bc2b96f2933bc2baaa41bfc2b65b1f",
+          "lockGeneration": 2733,
+          "lockScope": "H_EARTH:INTEGRATED_GEOLOGICAL_FORMATION_CANDIDATE:20261014",
+          "operationId": "H_EARTH_GEN2733_GEOLOGICAL_FORMATION_CANDIDATE_20261014_001",
+          "procedureLocatorDigest": "60fbe389936afb2b121246fe530cd0a6a6271160e1f4b5db9c98f2da369ad7f7",
+          "requestDigest": "f788a90ef84bfc2c56ff5860559b4cb8f2de0acf8461f4dd13a7c7b8ab47f17c",
+          "scopeHash": "d3e998dd64d3d17e59fc4d3460f8e5462aab665d55e555db1a24cf91a5121e7e"
+        },
+        "bindingDigest": "ec6af8eed5ddafe35d1fc0f469ab1be7c1ef9a8608678e75e6763b4cda2c9c72",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b95bc2ddde61e6c1fab70f210106279b38055ebe692c26e65dc704bf6c533662",
+          "commentId": 6183704454,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6341,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38676302274,
+          "workflowSha": "7a723c29f9bc2b96f2933bc2baaa41bfc2b65b1f"
+        },
+        "lineageAnchorCommitSha": "fc763f7aaa55380d1fcab701e659516f300b75a6",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "7a723c29f9bc2b96f2933bc2baaa41bfc2b65b1f",
+      "lockGeneration": 2733,
+      "lockScope": "H_EARTH:INTEGRATED_GEOLOGICAL_FORMATION_CANDIDATE:20261014",
+      "operationId": "H_EARTH_GEN2733_GEOLOGICAL_FORMATION_CANDIDATE_20261014_001",
+      "procedureLocatorDigest": "60fbe389936afb2b121246fe530cd0a6a6271160e1f4b5db9c98f2da369ad7f7",
+      "released": false,
+      "requestDigest": "f788a90ef84bfc2c56ff5860559b4cb8f2de0acf8461f4dd13a7c7b8ab47f17c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d3e998dd64d3d17e59fc4d3460f8e5462aab665d55e555db1a24cf91a5121e7e",
+      "state": "ADMITTED_LOCKED"
+    },
     "d3ff8ca71d24832c4dea35db241fe8ac50de6156ecdf4ac798364aea8b8bef20": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -18376,7 +18420,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2732,
+  "lockGeneration": 2733,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

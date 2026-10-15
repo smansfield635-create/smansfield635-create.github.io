@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
 import {join,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHEarthFunctionalLandscapeNavigationState,proposeHEarthFunctionalLandscapeNavigation} from '../../showroom/globe/h-earth/functional-landscape/navigation.js';
+import {unprojectPlanetVertex} from '../terrain/h-earth.geological-formation-successor.v1.mjs';
 import {constructGeologicalRuntimeBridge,installGeologicalRuntimeBridge,
   resolveGeologicalRuntimeFootSupport,retireGeologicalBaseIndices,traceGeologicalRuntimeDrainage}
   from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js';
@@ -88,4 +89,17 @@ test('real Gen324 locomotion enters roofed cavern through 15 accepted actions',(
 test('original coastal navigation remains original and never reports cave support',()=>{
   const n=createHEarthFunctionalLandscapeNavigationState({waypointId:'COAST'});assert(n.ok);
   assert.equal(n.state.geologicalPhysicalSupport,false);assert.equal(n.state.position.x,0);
+});
+
+test('every projected cavern and patch vertex has original-world albedo contact',()=>{
+ const model=geology();let count=0;
+ for(const {mesh} of model.meshes){
+  for(let i=0;i<mesh.positions.length;i+=3){
+   const region=unprojectPlanetVertex(mesh.positions[i],mesh.positions[i+1],mesh.positions[i+2]);
+   const base=model.originalTerrainColorAt(region.x,region.z);
+   assert(base?.length===3,'MISSING_CANONICAL_COLOR:'+i);
+   assert(base.every(x=>Number.isFinite(x)&&x>=0&&x<=1));count++;
+  }
+ }
+ assert.equal(count,5705);
 });

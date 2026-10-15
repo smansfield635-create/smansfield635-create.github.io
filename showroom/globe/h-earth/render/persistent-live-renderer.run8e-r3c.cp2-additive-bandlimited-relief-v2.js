@@ -1,4 +1,4 @@
-import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js';
+import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2753-weathered-cavern-material-blend-v2';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
@@ -2030,8 +2030,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
           continue;
         }
         const exposure=sampleGeologicalMaterialExposure(model,role,local.x,local.z);
-        const layer=.5+.5*Math.sin(local.y*1.55+.34*Math.sin(local.x*.43)+
-          .27*Math.sin(local.z*.61+local.x*.17)+.18*Math.sin(local.y*.37-local.z*.22));
+        const strataA=Math.sin(local.y*.78+.28*Math.sin(local.x*.31+local.z*.13)+.17*Math.sin(local.z*.24-local.x*.29));
+        const strataB=Math.sin(local.y*.29+local.x*.16-local.z*.12+.24*Math.sin(local.z*.18));
+        const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);
+        const layer=.5+.5*(.62*strataA+.24*strataB+.14*patchNoise);
         const grain=.94+.06*Math.sin(local.x*.31+local.z*.17+local.y*.29);
         const rock=role==='CAVERN_PHYSICAL_SHELL'?
           [.092+.072*layer,.081+.061*layer,.067+.047*layer]:
@@ -2041,9 +2043,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         // Incision exposes visibly warm stratified soil and gravel along the dry channel.
         // The blend still fades to the exact indexed-world albedo at the patch edge.
         const soil=role==='ERODED_TERRAIN'?Math.min(.94,exposure.incisionDepth*.58):0;
-        const band=.5+.5*Math.sin(local.y*1.35+.47*Math.sin(local.x*.33)+.29*Math.sin(local.z*.41));
-        const alluvium=[.55+.16*band,.36+.11*band,.18+.07*band];
-        const oasisShore=[.31+.07*band,.35+.07*band,.16+.035*band];
+        const band=.5+.5*(.68*Math.sin(local.y*.72+.19*Math.sin(local.x*.22+local.z*.17))+
+          .20*Math.sin(local.y*.29+local.x*.14-local.z*.11)+.12*Math.sin(local.x*.53+local.z*.37));
+        const alluvium=[.39+.08*band,.31+.065*band,.22+.045*band];
+        const oasisShore=[.35+.04*band,.35+.04*band,.23+.025*band];
         const layered=rock.map((v,c)=>v*(1-soil)+alluvium[c]*soil);
         const moist=layered.map((v,c)=>v*(1-exposure.oasisInfluence*.82)+oasisShore[c]*(exposure.oasisInfluence*.82));
         colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+moist[c]*exposure.rockWeight)*grain).concat(1),i*4);

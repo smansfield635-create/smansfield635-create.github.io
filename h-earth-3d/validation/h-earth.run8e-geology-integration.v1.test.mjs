@@ -198,9 +198,27 @@ test('excavated channel shows geologically grounded material exposure while exte
  assert(renderer.includes('sampleGeologicalMaterialExposure(model,role,local.x,local.z)'));
  assert(renderer.includes("role==='FRESHWATER_RIVER'||role==='OASIS_WATER'"));
  assert(renderer.includes('designedFreshwaterRendered'));
- assert(renderer.includes('const alluvium=[.55+.16*band,.36+.11*band,.18+.07*band];'));
+ assert(renderer.includes('const alluvium=[.39+.08*band,.31+.065*band,.22+.045*band];'));
  assert(renderer.includes('const shoreDepth=Math.max(0,Math.min(1,(waterline-Math.hypot(dx,dz))/0.22));'));
  assert(!renderer.includes('local.y-originalTop'));
+});
+
+
+test('cavern portal relief and rock strata remain irregular without periodic tunnel bands',()=>{
+ const face=geology().portal.diagnostics.exposedFaceReliefMeters;
+ assert(face>2,'PORTAL_FACE_REMAINS_PLANAR:'+face);
+ const renderer=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
+ assert(renderer.includes('const strataA=Math.sin(local.y*.78+'));
+ assert(renderer.includes('const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);'));
+ assert(!renderer.includes('local.y*1.55+.34*Math.sin(local.x*.43)'));
+ const revision='gen2753-weathered-cavern-material-blend-v2';
+ for(const path of [
+  '../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',
+  '../../showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js',
+  '../../showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js',
+  '../../showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js',
+  '../../showroom/globe/h-earth/index.html'
+ ]) assert(readFileSync(join(home,path),'utf8').includes(revision),'CAVERN_CACHE_REVISION_NOT_CLOSED:'+path);
 });
 
 test('bounded rear-cavern arrival query targets the real existing waypoint without changing coast or four trees',()=>{

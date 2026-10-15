@@ -112,10 +112,14 @@ function buildReliefCliffFace(formation,terrainAt,aperture){
   const positions=[],indices=[];
   for(let j=0;j<=rows;j++)for(let i=0;i<=count;i++){
     const x=left+(right-left)*i/count,t=j/rows,y=tops[i]+(bottoms[i]-tops[i])*t;
-    const edgeFade=fade(Math.min((x-left)/2.5,(right-x)/2.5))*Math.sin(Math.PI*t);
-    const strata=.42*Math.sin(y*1.9+.36*Math.sin(x*.57)-.28*Math.sin(y*.63+x*.19));
-    const macro=.7*Math.sin(x*.27+y*.13+.8*Math.sin(y*.09-x*.11));
-    const relief=edgeFade*(1.2*Math.sin(x*.82+y*.31)+.72*Math.sin(x*1.73-y*.91+1.2)+strata+macro);
+    const verticalBreak=.28+.72*Math.sin(Math.PI*t);
+    const edgeFade=fade(Math.min((x-left)/3.5,(right-x)/3.5))*verticalBreak;
+    const strata=.24*Math.sin(y*.78+.31*Math.sin(x*.41)-.22*Math.sin(y*.29+x*.17))+
+      .18*Math.sin(y*.37+x*.23+Math.sin(start*.11));
+    const macro=.82*Math.sin(x*.21+y*.08+.72*Math.sin(y*.07-x*.13));
+    const fracture=.58*Math.sin(x*.47+y*.17+.5*Math.sin(x*.19-z*.14))+
+      .36*Math.sin(x*1.13-y*.24+1.1*Math.sin(y*.09+x*.12));
+    const relief=edgeFade*(1.48*Math.sin(x*.61+y*.22)+.54*Math.sin(x*1.29-y*.47+1.2)+strata+macro+fracture);
     reliefMin=Math.min(reliefMin,relief);reliefMax=Math.max(reliefMax,relief);positions.push(x,y,start+relief);
   }
   for(let j=0;j<rows;j++)for(let i=0;i<count;i++){
@@ -175,7 +179,7 @@ export function constructGeologicalRuntimeBridge(canonical){
     const awayFromPortal=smooth((SITE.portalZ-8-z)/12);
     return oasisInfluenceAt(x,z)*(portalSide?awayFromPortal:1);
   };
-  const drainagePoints=Object.freeze(baseFormation.drainage.points.map(p=>Object.freeze({...p,bedY:p.bedY-1.25})));
+  const drainagePoints=Object.freeze(baseFormation.drainage.points.map(p=>Object.freeze({...p,bedY:p.bedY-1.65})));
   const channelInfluenceAt=(x,z)=>{
     const nearest=nearestRouteSegment(drainagePoints,x,z);if(!nearest)return 0;
     const approachFade=1-smooth((z-SITE.drainageHeadZ)/(SITE.portalZ-SITE.drainageHeadZ));
@@ -183,7 +187,7 @@ export function constructGeologicalRuntimeBridge(canonical){
     return smooth(1-nearest.distance/12)*approachFade*smooth(edge/12);
   };
   const excavatedOutdoorTerrain=(x,z)=>baseFormation.excavatedOutdoorTerrain(x,z)-
-    1.25*channelInfluenceAt(x,z)-3.05*oasisCarveInfluenceAt(x,z);
+    1.65*channelInfluenceAt(x,z)-3.05*oasisCarveInfluenceAt(x,z);
   const oasisNearest=drainagePoints.reduce((best,p)=>
     !best||Math.hypot(p.x-oasis.centerX,p.z-oasis.centerZ)<best.distance?
       {distance:Math.hypot(p.x-oasis.centerX,p.z-oasis.centerZ),point:p}:best,null);

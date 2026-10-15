@@ -3382,6 +3382,50 @@
       "scopeHash": "3604afb2c90275381cbf8af3f3e04d1cebd307d037b5b6b2417cb3054cc5aeca",
       "state": "ADMITTED_LOCKED"
     },
+    "36fe7957e891530470ec9e55000999a47938b2eeb11372d7bd9b5fba1fd8e033": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "82e6fe5be08e2714f8920e89acf210ce42496c56",
+          "lockGeneration": 2737,
+          "lockScope": "ABOUT_PAGE:LIVING_HERO:20261015",
+          "operationId": "ABOUT_LIVING_HERO_WATER_FOG_SKY_20261015_001",
+          "procedureLocatorDigest": "6ca6ddebbede21231f1492d76ec077cb372ec30e9322cc9772ac293313450c65",
+          "requestDigest": "98511f4c9ce999a50a1ff91f04dc69fa0ad6e3fe1ab84d52b92f4317016afd61",
+          "scopeHash": "36fe7957e891530470ec9e55000999a47938b2eeb11372d7bd9b5fba1fd8e033"
+        },
+        "bindingDigest": "1075d7c84798dc30867f76a9bf516c9fa71c201f6222735c250159f542aa6ce1",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "9b6c762fe23043cf67e1bc753a2fc7b1c1a671b74f5bf4c9fa9c1174c76d21f1",
+          "commentId": 6184551791,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6347,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38682634139,
+          "workflowSha": "c08f5426cd858fadb9b7ef46362d945186dbe715"
+        },
+        "lineageAnchorCommitSha": "fbe979f31303900ddf7c7f20d8055a63c6e534ee",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "82e6fe5be08e2714f8920e89acf210ce42496c56",
+      "lockGeneration": 2737,
+      "lockScope": "ABOUT_PAGE:LIVING_HERO:20261015",
+      "operationId": "ABOUT_LIVING_HERO_WATER_FOG_SKY_20261015_001",
+      "procedureLocatorDigest": "6ca6ddebbede21231f1492d76ec077cb372ec30e9322cc9772ac293313450c65",
+      "released": false,
+      "requestDigest": "98511f4c9ce999a50a1ff91f04dc69fa0ad6e3fe1ab84d52b92f4317016afd61",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "36fe7957e891530470ec9e55000999a47938b2eeb11372d7bd9b5fba1fd8e033",
+      "state": "ADMITTED_LOCKED"
+    },
     "3774dc0ae012f09ec1f5bf4311aaf1235b5688fb85a4515e235c644c454bea8e": {
       "governingHead": "6b927d74913391041153f6cb3acdba8924bad8a4",
       "lockGeneration": 199,
@@ -18552,7 +18596,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2736,
+  "lockGeneration": 2737,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

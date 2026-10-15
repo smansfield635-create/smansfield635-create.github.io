@@ -204,4 +204,8 @@ test('excavated channel shows geologically grounded material exposure while exte
 });
 
 test('bounded rear-cavern arrival query targets the real existing waypoint without changing coast or four trees',()=>{
-  assert.equal(resolveHEarthArrivalWaypoint('?arrival
+  assert.equal(resolveHEarthArrivalWaypoint('?arrival=geological-cavern'),'GEOLOGICAL_CAVERN_REAR_APPROACH');
+  assert.equal(resolveHEarthArrivalWaypoint('?arrival=approved-four-trees'),'WOODLAND_CLEARING_FOUR_TREES');
+  assert.equal(resolveHEarthArrivalWaypoint(''),'COAST');
+  assert.equal(resolveHEarthArrivalWaypoint('?arrival=unregistered-destination'),'COAST');
+});

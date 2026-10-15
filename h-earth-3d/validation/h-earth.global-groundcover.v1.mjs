@@ -9,7 +9,7 @@ import {getHEarthRun8ER2ImmutableLiveRenderPackage,getHEarthRun8ER2VegetationWor
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {sampleHEarthGen311PlacementStructureDisposition,H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis,buildHEarthWoodlandGrassTuft} from '../../showroom/globe/h-earth/render/grass-lowland-trial.js';
-import {buildHEarthGlobalGroundCover,selectHEarthGlobalGroundCoverDraws,H_EARTH_GLOBAL_GROUND_COVER as profile} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2720-world-fixed-mid-distance-ground-v1';
+import {buildHEarthGlobalGroundCover,selectHEarthGlobalGroundCoverDraws,H_EARTH_GLOBAL_GROUND_COVER as profile} from '../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2710-stable-grass-beach-v1';
 
 const digest=v=>createHash('sha256').update(typeof v==='string'||Buffer.isBuffer(v)?v:JSON.stringify(v)).digest('hex');
 const radius=420000;
@@ -166,7 +166,7 @@ const id=`${record[12]}:${record[13]}:${record[14]}:${record[15]}:${record[16]}`
    assert.equal(arrayDigest(priority.records.subarray(tile.start*20,(tile.start+tile.count)*20)),streamedTile.sha256,'CAMERA_FIRST_TILE_STREAM_RECORD_MISMATCH');
  }
  for(const key of previewIds)assert(streamed.has(key),'PREVIEW_TILE_MISSING_FROM_FINAL_STREAM');
- const rendererSourceUrl=new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?rev=gen2720-world-fixed-mid-distance-ground-v1',import.meta.url);
+ const rendererSourceUrl=new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?rev=gen2710-stable-grass-beach-v1',import.meta.url);
  rendererSourceUrl.search='';
  const rendererSource=fs.readFileSync(rendererSourceUrl,'utf8');
  for(const [signature,label] of [
@@ -188,7 +188,7 @@ const id=`${record[12]}:${record[13]}:${record[14]}:${record[15]}:${record[16]}`
 
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const args=process.argv.slice(2),arg=k=>{const i=args.indexOf(k);return i<0?null:args[i+1];},root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
- const paths=['showroom/globe/h-earth/render/landscape-groundcover.global-v1.js','showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?rev=gen2720-world-fixed-mid-distance-ground-v1','h-earth-3d/validation/h-earth.global-groundcover.v1.mjs'];const sourceDigests=Object.fromEntries(paths.map(url=>{const p=url.split('?')[0];return[p,digest(fs.readFileSync(path.join(root,p)))];}));
+ const paths=['showroom/globe/h-earth/render/landscape-groundcover.global-v1.js','showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?rev=gen2710-stable-grass-beach-v1','h-earth-3d/validation/h-earth.global-groundcover.v1.mjs'];const sourceDigests=Object.fromEntries(paths.map(url=>{const p=url.split('?')[0];return[p,digest(fs.readFileSync(path.join(root,p)))];}));
  if(arg('--candidate-head')){assert(/^[a-f0-9]{40}$/.test(arg('--candidate-head')));assert(arg('--git-repository'));for(const [p,sha] of Object.entries(sourceDigests))assert.equal(sha,digest(execFileSync('git',['-C',arg('--git-repository'),'show',`${arg('--candidate-head')}:${p}`],{maxBuffer:32*1024*1024})),`EXACT_CANDIDATE_SOURCE_MISMATCH:${p}`);}
  const accepted=['showroom/globe/h-earth/render/grass-lowland-trial.js','showroom/globe/h-earth/render/geometry-landscape-sector.p2.js','showroom/globe/h-earth/render/geometry-landscape-cover.js'];if(arg('--baseline')){assert(arg('--git-repository'));for(const p of accepted)assert.equal(digest(fs.readFileSync(path.join(root,p))),digest(execFileSync('git',['-C',arg('--git-repository'),'show',`${arg('--baseline')}:${p}`],{maxBuffer:32*1024*1024})),`ACCEPTED_OVERLAY_SOURCE_DRIFT:${p}`);}
  const start=performance.now(),pkg=getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation:true}),rawPackageMilliseconds=performance.now()-start;

@@ -59,6 +59,9 @@ test('active interior uses cave floor/roof, wall collision correctly rejects',()
 });
 test('weathered portal relief is shared by the visible shell and walk clearance',()=>{
  const f=geology().formation,z=f.site.portalZ+1;
+  assert(Math.abs(f.caveCenterX(f.site.portalZ+5)-f.site.x)>1.2,'CAVERN_CENTERLINE_REMAINS_STRAIGHT');
+  assert(Math.abs(f.caveCenterX(f.site.portalZ+5)-f.site.x)<f.caveRadius(f.site.portalZ+5)*.5,'CAVERN_CENTERLINE_EXCEEDS_WALKABLE_WIDTH');
+  assert(Math.abs(f.caveRadius(f.site.portalZ+5)-f.caveRadius(f.site.portalZ+10))>.25,'CAVERN_CROSS_SECTION_REMAINS_REPETITIVE');
  const left=f.roofAt(f.site.x-2,z),right=f.roofAt(f.site.x+2,z);
  assert(Math.abs(left-right)>.08,'PORTAL_ROOF_REMAINS_UNNATURALLY_SYMMETRIC');
  const floor=f.floorAt(f.site.x,z),roof=f.roofAt(f.site.x,z);
@@ -76,6 +79,14 @@ test('2m replacement terrain has a true aperture and cliff with upper mantle',()
  assert.equal(p.rimCorrespondence.frontCliffBottomOpen,true);
  assert(part('MOUNTAIN_OVERBURDEN').triangleCount>0);
  assert(part('NATURAL_CLIFF_FACE').triangleCount>0);
+  assert(p.diagnostics.exposedFaceReliefMeters>0.45,'CLIFF_FACE_REMAINS_PLANAR');
+  const face=p.exposedCliffFace;
+  for(let i=0;i<face.indices.length;i+=3){
+    const ids=[face.indices[i],face.indices[i+1],face.indices[i+2]];
+    const x=ids.reduce((v,id)=>v+face.positions[id*3],0)/3;
+    const y=ids.reduce((v,id)=>v+face.positions[id*3+1],0)/3;
+    assert.equal(geology().formation.insideVoid(x,y,geology().formation.site.portalZ+0.25),false,'CLIFF_FACE_COVERS_CAVERN_APERTURE');
+  }
 });
 test('runtime renderer/nav source contains actual bridge calls and no Gen2730 arch draw',()=>{
  const r=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
@@ -121,13 +132,13 @@ test('every projected cavern and patch vertex has original-world albedo contact'
    assert(base.every(x=>Number.isFinite(x)&&x>=0&&x<=1));count++;
   }
  }
- assert.equal(count,5705);
+ assert.equal(count,7288);
 });
 
 test('excavated channel shows geologically grounded material exposure while exterior rim stays intact',()=>{
  const g=geology(),x=g.site.x,z=g.site.drainageHeadZ;
  const deep=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',x,z);
- assert(deep.incisionDepth>3,'CHANNEL_INCISION_UNDETECTED:'+deep.incisionDepth);
+ assert(deep.incisionDepth>4,'CHANNEL_INCIDISION_TOO_SHALLOW:'+deep.incisionDepth);
  assert(deep.rockWeight>0.5,'ROCK_EXPOSURE_ZERO:'+deep.rockWeight);
  const boundary=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',g.localBounds.xMin,z);
  assert.equal(boundary.rockWeight,0,'PATCH_BOUNDARY_MATERIAL_DISCONTINUITY');

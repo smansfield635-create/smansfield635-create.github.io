@@ -46,23 +46,46 @@ export function constructGeologicalPortalAssembly(formation,terrainAt,{bounds=nu
   // along the portal plane, while the lower lip follows physical cave-void
   // clearance or the excavated external banks.
   const facePos=[],faceIdx=[];
-  const facadeStep=spacing/2;
-  const count=Math.round((right-left)/facadeStep);
-  let lowestRockFaceClearance=Infinity,facadeAddedTopHeight=0;
+  // Build the exposed mountain skin as a deformed, stratified surface around
+  // the true cave aperture. A single two-vertex strip made a broad flat panel.
+  const facadeStep=0.5,count=Math.ceil((right-left)/facadeStep),columns=count+1,facadeRows=48;
+  const fade=(v)=>{v=clamp(v,0,1);return v*v*(3-2*v)};
+  let lowestRockFaceClearance=Infinity,facadeAddedTopHeight=0,faceReliefMin=Infinity,faceReliefMax=-Infinity;
+  const topLine=[],bottomLine=[];
   for(let i=0;i<=count;i++){
     const x=left+(right-left)*i/count;
-    const top=terrainAt(x,start);
-    const outside=formation.excavatedOutdoorTerrain(x,start);
-    const r=formation.caveRadius(start),rNorm=Math.abs(x-site.x)/r;
+    const top=terrainAt(x,start),outside=formation.excavatedOutdoorTerrain(x,start);
+    const centerX=formation.caveCenterX?.(start)??site.x;
+    const radius=formation.caveRadius(start),rNorm=Math.abs(x-centerX)/radius;
     const floor=formation.floorAt(x,start),roof=formation.roofAt(x,start);
-    const chamberRoof=floor+(roof-floor)*Math.pow(Math.max(0,1-rNorm*rNorm),0.375);
-    const opening=Math.abs(x-site.x)<r;
-    const bottom=opening?Math.max(outside,chamberRoof):outside;
+    const arch=floor+(roof-floor)*Math.pow(Math.max(0,1-rNorm*rNorm),0.375);
+    const bottom=Math.abs(x-centerX)<radius?Math.max(outside,arch):outside;
     assert(finite(top)&&finite(bottom)&&top>=bottom-1e-4,'FRONTAL_ROCK_FACE_BELOW_FLOOR');
-    lowestRockFaceClearance=Math.min(lowestRockFaceClearance,top-bottom);facadeAddedTopHeight=Math.max(facadeAddedTopHeight,top-outside);
-    facePos.push(x,top,start,x,bottom,start);
-    if(i<count){let t=i*2,b=t+1,nt=t+2,nb=t+3;faceIdx.push(t,b,nt,nt,b,nb)}
+    lowestRockFaceClearance=Math.min(lowestRockFaceClearance,top-bottom);
+    facadeAddedTopHeight=Math.max(facadeAddedTopHeight,top-outside);
+    topLine.push(top);bottomLine.push(bottom);
   }
+  for(let j=0;j<=facadeRows;j++)for(let i=0;i<=count;i++){
+    const x=left+(right-left)*i/count,t=j/facadeRows,top=topLine[i],bottom=bottomLine[i];
+    const y=top+(bottom-top)*t;
+    const edgeFade=fade(Math.min((x-left)/2.5,(right-x)/2.5))*Math.sin(Math.PI*t);
+    const strata=.42*Math.sin(y*1.9+.36*Math.sin(x*.57)-.28*Math.sin(y*.63+x*.19));
+    const macro=.7*Math.sin(x*.27+y*.13+.8*Math.sin(y*.09-x*.11));
+    const relief=edgeFade*(1.2*Math.sin(x*.82+y*.31)+.72*Math.sin(x*1.73-y*.91+1.2)+strata+macro);
+    faceReliefMin=Math.min(faceReliefMin,relief);faceReliefMax=Math.max(faceReliefMax,relief);
+    facePos.push(x,y,start+relief);
+  }
+  for(let j=0;j<facadeRows;j++)for(let i=0;i<count;i++){
+    const a=j*columns+i,b=a+1,c=a+columns,d=c+1;
+    // Test each triangle, not only its parent quad, so no diagonal can cap
+    // the physically walkable aperture at the edge of the arch.
+    for(const tri of [[a,c,b],[b,c,d]]){
+      const cx=(facePos[tri[0]*3]+facePos[tri[1]*3]+facePos[tri[2]*3])/3;
+      const cy=(facePos[tri[0]*3+1]+facePos[tri[1]*3+1]+facePos[tri[2]*3+1])/3;
+      if(!formation.insideVoid(cx,cy,start+0.25))faceIdx.push(...tri);
+    }
+  }
+  assert(faceReliefMax-faceReliefMin>0.45,'CLIFF_FACE_REMAINS_PLANAR');
   const rim={sideMaxError:0,backMaxError:0,frontCliffBottomOpen:false,roofTopIsUncutMountain:true};
   for(const z of zValues)for(const x of [left,right]){
     const base=formation.excavatedOutdoorTerrain(x,z),top=terrainAt(x,z);
@@ -73,7 +96,7 @@ export function constructGeologicalPortalAssembly(formation,terrainAt,{bounds=nu
   assert(rim.sideMaxError<1e-3&&rim.backMaxError<1e-3,'UNSTITCHED_UPPER_MANTLE');
   assert(rim.frontCliffBottomOpen,'ENTRANCE_VOID_CLOSED');
   const cave=constructCavernBoundary(formation);
-  return Object.freeze({schema:H_EARTH_GEOLOGICAL_PORTAL_INTERFACE_ID,formationId:formation.contractId,siteId:site.id,coordinateFrame:'LOCAL_AUTHORING_XYZ',aperture:Object.freeze(aperture),upperMantle:Object.freeze({positions:new Float32Array(topPos),indices:new Uint32Array(topIndex),vertexCount:topPos.length/3,triangleCount:topIndex.length/3}),exposedCliffFace:Object.freeze({positions:new Float32Array(facePos),indices:new Uint32Array(faceIdx),vertexCount:facePos.length/3,triangleCount:faceIdx.length/3}),terrainWithoutAperture:Object.freeze({...surface,indices:new Uint32Array(kept),triangleCount:kept.length/3}),cave,retiredReplacementTriangleCount:retired.length/3,rimCorrespondence:Object.freeze(rim),diagnostics:Object.freeze({frontMaximumExteriorCut:facadeAddedTopHeight,minimumRockFaceThickness:lowestRockFaceClearance,pairedSideAndBackRim:true,mainWorldPackageMutated:false,rendererActivation:false,physicalNavigationActivation:false,enterableCandidateByDesign:true,visuallyQualified:false})});
+  return Object.freeze({schema:H_EARTH_GEOLOGICAL_PORTAL_INTERFACE_ID,formationId:formation.contractId,siteId:site.id,coordinateFrame:'LOCAL_AUTHORING_XYZ',aperture:Object.freeze(aperture),upperMantle:Object.freeze({positions:new Float32Array(topPos),indices:new Uint32Array(topIndex),vertexCount:topPos.length/3,triangleCount:topIndex.length/3}),exposedCliffFace:Object.freeze({positions:new Float32Array(facePos),indices:new Uint32Array(faceIdx),vertexCount:facePos.length/3,triangleCount:faceIdx.length/3}),terrainWithoutAperture:Object.freeze({...surface,indices:new Uint32Array(kept),triangleCount:kept.length/3}),cave,retiredReplacementTriangleCount:retired.length/3,rimCorrespondence:Object.freeze(rim),diagnostics:Object.freeze({frontMaximumExteriorCut:facadeAddedTopHeight,minimumRockFaceThickness:lowestRockFaceClearance,exposedFaceReliefMeters:faceReliefMax-faceReliefMin,openCaveApertureCells:true,pairedSideAndBackRim:true,mainWorldPackageMutated:false,rendererActivation:false,physicalNavigationActivation:false,enterableCandidateByDesign:true,visuallyQualified:false})});
 }
 /** Query physical supported floor, wall occupancy and roof clearance from the SAME
  * geological formation. Outside-site authoritative navigation remains separate.
@@ -83,7 +106,7 @@ export function sampleFormationWalkable(formation,{x,z,eyeHeight=2.25,headCleara
   assert(eyeHeight>1.4&&eyeHeight<=2.75&&headClearance>=0,'WALK_EYE_BOUNDS');
   const {site}=formation;
   if(z>=site.portalZ&&z<=site.portalZ+site.galleryLength){
-    const side=Math.abs(x-site.x),radius=formation.caveRadius(z),floor=formation.floorAt(x,z);
+    const side=Math.abs(x-(formation.caveCenterX?.(z)??site.x)),radius=formation.caveRadius(z),floor=formation.floorAt(x,z);
     const nominalCeiling=formation.roofAt(x,z),ratio=side/radius;
     const ceiling=floor+(nominalCeiling-floor)*Math.pow(Math.max(0,1-ratio*ratio),0.375);
     const remaining=ceiling-floor;

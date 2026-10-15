@@ -61,23 +61,27 @@ export function constructGeologicalRuntimeBridge(canonical){
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const smooth=(v)=>{v=clamp(v,0,1);return v*v*(3-2*v)};
   const entranceFade=(z)=>1-smooth((z-SITE.portalZ)/11);
+  const caveCenterX=(z)=>{
+    const d=Math.max(0,z-SITE.portalZ);
+    return SITE.x+1.8*Math.sin(d*.31)*smooth(d/1.5);
+  };
   const roofAt=(x,z)=>{
-    const s=(x-SITE.x)/SITE.width,t=(z-SITE.portalZ)/SITE.galleryLength,e=entranceFade(z);
-    const weathering=e*(.24*Math.sin(1.55*x+.73*z)+.13*Math.sin(.91*x-1.21*z+1.7));
-    const shoulder=e*(s<0?.22:-.08)*Math.exp(-Math.pow((Math.abs(s)-.72)/.34,2));
-    const inner=.075*Math.sin(.62*x+.37*z)*Math.sin(Math.PI*clamp(t,0,1));
+    const s=(x-caveCenterX(z))/SITE.width,t=(z-SITE.portalZ)/SITE.galleryLength,e=entranceFade(z);
+    const weathering=e*(.88*Math.sin(1.13*x+.83*z)+.58*Math.sin(.67*x-1.17*z+1.7)+.32*Math.sin(2.31*x+.47*z));
+    const shoulder=e*(s<0?.62:-.28)*Math.exp(-Math.pow((Math.abs(s)-.64)/.4,2));
+    const inner=.22*Math.sin(.62*x+.37*z)*Math.sin(Math.PI*clamp(t,0,1));
     return baseFormation.roofAt(x,z)+weathering+shoulder+inner;
   };
   const floorAt=(x,z)=>{
-    const s=(x-SITE.x)/SITE.width,t=(z-SITE.portalZ)/SITE.galleryLength;
+    const s=(x-caveCenterX(z))/SITE.width,t=(z-SITE.portalZ)/SITE.galleryLength;
     const mouth=entranceFade(z);
     return baseFormation.floorAt(x,z)+mouth*(.035*Math.sin(1.1*x-.8*z)+.025*Math.sin(.57*x+1.3*z))+
       .035*Math.sin(.8*x+.5*z)*Math.sin(Math.PI*clamp(t,0,1))*(1-Math.abs(s)*.35);
   };
-  const caveRadius=(z)=>baseFormation.caveRadius(z)*(1+.035*Math.sin((z-SITE.portalZ)*.23+.8));
+  const caveRadius=(z)=>baseFormation.caveRadius(z)*(1+.14*Math.sin((z-SITE.portalZ)*.24+.45)+.07*Math.sin((z-SITE.portalZ)*.67+.9));
   const insideVoid=(x,y,z)=>{
     if(z<SITE.portalZ||z>SITE.portalZ+SITE.galleryLength)return false;
-    const radius=caveRadius(z),ratio=Math.abs(x-SITE.x)/radius;
+    const radius=caveRadius(z),ratio=Math.abs(x-caveCenterX(z))/radius;
     if(ratio>=1)return false;
     const floor=floorAt(x,z),roof=roofAt(x,z);
     return y>=floor&&y<floor+(roof-floor)*Math.pow(Math.max(0,1-ratio*ratio),.375);
@@ -89,7 +93,7 @@ export function constructGeologicalRuntimeBridge(canonical){
     if(!(rockCover>0))fail('WEATHERED_ROOF_BREACH');
     coverSamples.push(Object.freeze({z,terrainY,ceilingY,rockCover}));
   }
-  const formation=Object.freeze({...baseFormation,roofAt,floorAt,caveRadius,insideVoid,
+  const formation=Object.freeze({...baseFormation,roofAt,floorAt,caveRadius,caveCenterX,insideVoid,
     coverSamples:Object.freeze(coverSamples),minimumRoofCover:Math.min(...coverSamples.map(v=>v.rockCover)),
     excavatedOutdoorTerrain,rockSolidAt:(x,y,z)=>y<=excavatedOutdoorTerrain(x,z)&&!insideVoid(x,y,z)});
   const portal=constructGeologicalPortalAssembly(formation,terrainAt,{bounds:BOUNDS});

@@ -84,10 +84,11 @@ export function deriveDryDrainage(site,surveyRoute){
   let previous=first;
   const profile=route.map((v,i)=>{
     const d=Math.hypot(v.x-head.x,v.z-head.z);
-    // A localized headcut tapers to ordinary ~0.6 m incision beyond 28 m.
-    const design= v.originalY-(0.45+0.25*smoother(1-d/28));
-    const approach=first-0.085*d;
-    const mix=smoother(d/28);
+    // Keep a readable dry thalweg from the portal into the surveyed valley.
+    // The grade stays gentle enough for the same walking support surface.
+    const design= v.originalY-(1.25+0.75*smoother(1-d/36));
+    const approach=first-0.13*d;
+    const mix=smoother(d/36);
     // the upstream excavated bed must connect continuously and monotonically
     const raw=(1-mix)*approach+mix*design;
     const bed=Math.min(previous-0.008,raw,v.originalY-0.25);
@@ -129,7 +130,8 @@ export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_S
     // Behind the portal, preserve the mountain roof rather than lowering terrain.
     const forwardDistance=Math.max(0,z-site.portalZ);
     const backFade=1-smoother(forwardDistance/4);
-    const radius=7.2+1.25*Math.sin(nearest.segment*.28);
+    const distanceFromPortal=Math.hypot(nearest.x-site.x,nearest.z-site.portalZ);
+    const radius=7.1+8*smoother(distanceFromPortal/22)+0.45*Math.sin(nearest.segment*.28);
     const r=nearest.distance/radius;if(r>=1||backFade<=0)return base;
     const w=smoother(1-r)*backFade;
     return base-Math.max(0,base-nearest.bedY)*w;
@@ -156,12 +158,12 @@ export function constructCavernBoundary(f,{step=1.5,slices=20,floorSegments=8}={
     const z=s.portalZ+j*step,r=f.caveRadius(z),ring=[];
     // Portal arch is an irregular excavated rock cavity, NOT an added decorative arch.
     for(let i=0;i<=slices;i++){
-      const theta=Math.PI*i/slices,off=-Math.cos(theta)*r,x=s.x+off,fy=f.floorAt(x,z),h=f.roofAt(x,z)-fy;
+      const theta=Math.PI*i/slices,centerX=f.caveCenterX?.(z)??s.x,off=-Math.cos(theta)*r,x=centerX+off,fy=f.floorAt(x,z),h=f.roofAt(x,z)-fy;
       ring.push(add(as3(x,fy+h*Math.pow(Math.max(0,Math.sin(theta)),0.75),z)));
     }
     // The lower chord is real walkable cave floor, back to the first arch vertex.
     for(let k=1;k<floorSegments;k++){
-      const off=r*(1-2*k/floorSegments),x=s.x+off;
+      const centerX=f.caveCenterX?.(z)??s.x,off=r*(1-2*k/floorSegments),x=centerX+off;
       ring.push(add(as3(x,f.floorAt(x,z),z)));
     }
     assert(ring.length===ringCount,'CAVE_LOOP_SIZE');rings.push(ring);
@@ -174,7 +176,7 @@ export function constructCavernBoundary(f,{step=1.5,slices=20,floorSegments=8}={
       emit(a,c,b,role);emit(b,c,d,role);
     }
   }
-  const terminal=rings.at(-1),center=add(as3(s.x,f.floorAt(s.x,s.portalZ+s.galleryLength)+s.roofClearance*.39,s.portalZ+s.galleryLength));
+  const terminal=rings.at(-1),endZ=s.portalZ+s.galleryLength,endX=f.caveCenterX?.(endZ)??s.x,center=add(as3(endX,f.floorAt(endX,endZ)+s.roofClearance*.39,endZ));
   for(let i=0;i<ringCount;i++)emit(terminal[i],terminal[(i+1)%ringCount],center,3);
   const normals=new Float64Array(positions.length);
   for(let i=0;i<indices.length;i+=3){const ia=indices[i]*3,ib=indices[i+1]*3,ic=indices[i+2]*3;

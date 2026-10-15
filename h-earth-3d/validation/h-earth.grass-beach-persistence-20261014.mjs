@@ -8,12 +8,12 @@ import {createHash} from 'node:crypto';
 import {selectWoodlandFineGrass} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2720-world-fixed-mid-distance-ground-v1';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
-const read=p=>fs.readFileSync(path.join(root,p.split('?')[0]),'utf8');
+const read=p=>fs.readFileSync(path.join(root,p.split('?')[0].replace(/^\//,'')),'utf8');
 const sha=v=>createHash('sha256').update(v).digest('hex');
 const rev='gen2720-world-fixed-mid-distance-ground-v1';
 const moduleChain=[
  ['showroom/globe/h-earth/index.html','public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
- ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?rev='+rev,'public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
+ ['/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?rev='+rev,'public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
  ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js','live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
  ['showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js','cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev='+rev],
  ['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js','woodland-fine-grass.v1.js?rev='+rev],

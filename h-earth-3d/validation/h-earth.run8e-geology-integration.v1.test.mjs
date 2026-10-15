@@ -156,6 +156,7 @@ test('excavated channel shows geologically grounded material exposure while exte
  assert.equal(deep.originalWorldMutated,false);
  const renderer=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
  assert(renderer.includes('sampleGeologicalMaterialExposure(model,role,local.x,local.z)'));
+ assert(renderer.includes('const alluvium=[.55+.16*band,.36+.11*band,.18+.07*band];'));
  assert(!renderer.includes('local.y-originalTop'));
 });
 

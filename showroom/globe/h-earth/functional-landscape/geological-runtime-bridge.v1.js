@@ -117,7 +117,7 @@ function buildReliefCliffFace(formation,terrainAt,aperture){
     const strata=.24*Math.sin(y*.78+.31*Math.sin(x*.41)-.22*Math.sin(y*.29+x*.17))+
       .18*Math.sin(y*.37+x*.23+Math.sin(start*.11));
     const macro=.82*Math.sin(x*.21+y*.08+.72*Math.sin(y*.07-x*.13));
-    const fracture=.58*Math.sin(x*.47+y*.17+.5*Math.sin(x*.19-z*.14))+
+    const fracture=.58*Math.sin(x*.47+y*.17+.5*Math.sin(x*.19-start*.14))+
       .36*Math.sin(x*1.13-y*.24+1.1*Math.sin(y*.09+x*.12));
     const relief=edgeFade*(1.48*Math.sin(x*.61+y*.22)+.54*Math.sin(x*1.29-y*.47+1.2)+strata+macro+fracture);
     reliefMin=Math.min(reliefMin,relief);reliefMax=Math.max(reliefMax,relief);positions.push(x,y,start+relief);

@@ -8,7 +8,7 @@ import {fileURLToPath} from 'node:url';
 import {createHEarthFunctionalLandscapeNavigationState,proposeHEarthFunctionalLandscapeNavigation} from '../../showroom/globe/h-earth/functional-landscape/navigation.js';
 import {unprojectPlanetVertex} from '../terrain/h-earth.geological-formation-successor.v1.mjs';
 import {constructGeologicalRuntimeBridge,installGeologicalRuntimeBridge,
-  resolveGeologicalRuntimeFootSupport,retireGeologicalBaseIndices,traceGeologicalRuntimeDrainage}
+  resolveGeologicalRuntimeFootSupport,retireGeologicalBaseIndices,traceGeologicalRuntimeDrainage,sampleGeologicalMaterialExposure}
   from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js';
 const home=dirname(fileURLToPath(import.meta.url));
 const file=process.env.H_EARTH_EXACT_WORLD_BINARY||join(home,'../../showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');
@@ -102,4 +102,17 @@ test('every projected cavern and patch vertex has original-world albedo contact'
   }
  }
  assert.equal(count,5705);
+});
+
+test('excavated channel shows geologically grounded material exposure while exterior rim stays intact',()=>{
+ const g=geology(),x=g.site.x,z=g.site.drainageHeadZ;
+ const deep=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',x,z);
+ assert(deep.incisionDepth>3,'CHANNEL_INCISION_UNDETECTED:'+deep.incisionDepth);
+ assert(deep.rockWeight>0.5,'ROCK_EXPOSURE_ZERO:'+deep.rockWeight);
+ const boundary=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',g.localBounds.xMin,z);
+ assert.equal(boundary.rockWeight,0,'PATCH_BOUNDARY_MATERIAL_DISCONTINUITY');
+ assert.equal(deep.originalWorldMutated,false);
+ const renderer=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
+ assert(renderer.includes('sampleGeologicalMaterialExposure(model,role,local.x,local.z)'));
+ assert(!renderer.includes('local.y-originalTop'));
 });

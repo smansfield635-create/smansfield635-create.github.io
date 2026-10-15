@@ -1,4 +1,4 @@
-import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge} from '../functional-landscape/geological-runtime-bridge.v1.js';
+import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
@@ -2013,18 +2013,11 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         const local=unprojectPlanetVertex(positions[i*3],positions[i*3+1],positions[i*3+2]);
         const natural=model.originalTerrainColorAt(local.x,local.z);
         if(!natural)throw Error('GEOLOGICAL_CANONICAL_COLOR_CONTACT_MISSING:'+role);
-        const edge=Math.min(local.x-model.localBounds.xMin,model.localBounds.xMax-local.x,
-          local.z-model.localBounds.zMin,model.localBounds.zMax-local.z);
-        const feather=Math.min(1,Math.max(0,edge/12)),fade=feather*feather*(3-2*feather);
-        const originalTop=model.formation.excavatedOutdoorTerrain(local.x,local.z);
-        const erosion=role==='ERODED_TERRAIN'?Math.max(0,
-          local.y-originalTop):0;
+        const exposure=sampleGeologicalMaterialExposure(model,role,local.x,local.z);
         const rock=role==='CAVERN_PHYSICAL_SHELL'?[.125,.141,.131]:
           role==='NATURAL_CLIFF_FACE'?[.215,.231,.213]:[.237,.253,.222];
-        const weather=(role==='ERODED_TERRAIN'?Math.min(.8,erosion*.5):
-          role==='MOUNTAIN_OVERBURDEN'?.06:1)*fade;
-        const grain=1+.045*fade*Math.sin(i*.219+local.y*.33);
-        colors.set([0,1,2].map(c=>(natural[c]*(1-weather)+rock[c]*weather)*grain).concat(1),i*4);
+        const grain=1+.045*exposure.edgeFade*Math.sin(i*.219+local.y*.33);
+        colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+rock[c]*exposure.rockWeight)*grain).concat(1),i*4);
         mats.set([.89,.025,.035,.13],i*4);
       }
       const state={role,mesh,vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};

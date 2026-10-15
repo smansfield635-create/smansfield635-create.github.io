@@ -67,6 +67,7 @@ export function constructGeologicalRuntimeBridge(canonical){
   const meshes=parts.map(([role,mesh])=>Object.freeze({role,mesh:projectGeologicalMeshForRenderer(mesh)}));
   const output=Object.freeze({contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
     formation,portal,retirement,meshes,route:trace,originalTerrainColorAt,
+    originalTerrainElevationAt:terrainAt,
     sourceWorldUnchanged:true,originalBaseTrianglesToRetire:retirement.triangleCount,
     refinedGeometryClipRequired:true,sourcePass:'CANONICAL_PACKAGE_RUNTIME_DERIVATION'});
   return output;
@@ -91,4 +92,27 @@ export function retireGeologicalBaseIndices(source,retirement){
   for(const offset of retirement.triangleOffsets){if(offset<0||offset+2>=source.length||offset%3!==0)fail('RETIREMENT_OFFSET');
     result[offset+1]=result[offset];result[offset+2]=result[offset];}
   return result;
+}
+
+/** Derived visual exposure, referenced to ORIGINAL indexed mountain elevation.
+ * Comparing a displaced vertex to the already-excavated surface gives zero
+ * incision and incorrectly leaves the riverbed painted as undisturbed terrain.
+ * This bounded blend is zero at the patch boundary; all accepted base colors
+ * remain authoritative outside the carved landform.
+ */
+export function sampleGeologicalMaterialExposure(model,role,x,z){
+  if(model?.contractId!==GEOLOGICAL_RUNTIME_BRIDGE_ID||
+      !Number.isFinite(x)||!Number.isFinite(z))fail('MATERIAL_SAMPLE_INVALID');
+  const b=model.localBounds;
+  const edge=Math.min(x-b.xMin,b.xMax-x,z-b.zMin,b.zMax-z);
+  const f=Math.max(0,Math.min(1,edge/12)),fade=f*f*(3-2*f);
+  const before=model.originalTerrainElevationAt(x,z);
+  const after=model.formation.excavatedOutdoorTerrain(x,z);
+  if(!Number.isFinite(before)||!Number.isFinite(after))fail('MATERIAL_TERRAIN_NONFINITE');
+  const incisionDepth=Math.max(0,before-after);
+  const materialWeight=(role==='ERODED_TERRAIN'?Math.min(.8,incisionDepth*.5):
+    role==='MOUNTAIN_OVERBURDEN'?.06:1)*fade;
+  return Object.freeze({sourceOriginalHeight:before,excavatedHeight:after,
+    incisionDepth,edgeFade:fade,rockWeight:materialWeight,
+    originalWorldMutated:false});
 }

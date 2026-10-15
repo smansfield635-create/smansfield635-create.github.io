@@ -5,12 +5,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
-import {selectWoodlandFineGrass} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2710-stable-grass-beach-v1';
+import {selectWoodlandFineGrass} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2720-world-fixed-mid-distance-ground-v1';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const sha=v=>createHash('sha256').update(v).digest('hex');
-const rev='gen2710-stable-grass-beach-v1';
+const rev='gen2720-world-fixed-mid-distance-ground-v1';
 const moduleChain=[
  ['showroom/globe/h-earth/index.html','public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
  ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
@@ -30,6 +30,10 @@ const pins={[rendererPath]:'0b083da10ea36a18547faf19cc06dad4f9e6b4c6',[woodlandP
 for(const [p,pin] of Object.entries(pins))assert.equal(manifest.sourceBlobs[p],pin,'HISTORIC_WORLD_SOURCE_PIN_CHANGED:'+p);
 assert(global.includes("m.surfaceClass==='DRY_SAND'"),'DRY_SAND_SOURCE_ROLE_MISSING');
 assert(renderer.includes('if(duneStratum>.5)gl_Position=vec4(2.0,2.0,2.0,1.0)'),'DRY_SAND_DUNE_NOT_VISUALLY_EXCLUDED');
+assert(renderer.includes('float bankSoilLandward=smoothstep(30.0,42.0,vCoastDistanceMeters)'),'SAND_OASIS_SOIL_COLOR_PROTECTION_MISSING');
+assert(renderer.includes('float carpetInland=smoothstep(36.0,72.0,vCoastDistanceMeters)'),'SIGNED_COAST_CARPET_EXCLUSION_MISSING');
+assert(renderer.includes('float carpetWeight=carpetHabitat*mix(0.18,0.72,carpetFar)'),'WORLD_FIXED_DISTANT_CARPET_MISSING');
+assert(renderer.includes('float carpetSlope=1.0-smoothstep(0.13,0.38,slope)')&&renderer.includes('float carpetRock=1.0-smoothstep(0.10,0.42,rockExposure)'),'SLOPE_OR_ROCK_HABITAT_GATES_MISSING');
 assert(renderer.includes('const rootedOnSand=primitive=>')&&renderer.includes('oasisRoots.some(sandRoot)')&&renderer.includes('!rootedOnSand(primitive)'),'COASTAL_VEGETATION_BATCH_SAND_EXCLUSION_MISSING');
 assert(renderer.includes(".replace('gl_Position=uViewProjection*vec4(vWorldPosition,1.0);'"),'MEADOW_SHADER_REPLACEMENT_BROKEN');
 assert(renderer.includes("if(uMeadowGeometryPass==0)"),'MEADOW_FINE_LOD_MISSING');
@@ -64,5 +68,5 @@ for(const x of [A,B,C]){assert(x.parentCount<=16,'WOODLAND_PARENT_BUDGET');asser
 const page=JSON.parse(read('.github/ai-router/publication-surfaces/h-earth.json'));
 const receipt=page.checks.find(t=>t.path==='/showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js');
 assert(receipt?.includes?.some(t=>t.includes('&rev='+rev)),'PUBLICATION_MANIFEST_CACHE_DRIFT');
-const report={schema:'H_EARTH_GEN2710_GRASS_SAND_BEACH_PERSISTENCE_TEST_v1',result:'PASS_SOURCE_AND_SYNTHETIC_SELECTION_ONLY',revision:rev,moduleLinks:moduleChain.length,worldBinarySha256:manifest.binary.sha256,historicalWorldSourcePinsPreserved:true,syntheticRootCount:tiles.reduce((n,t)=>n+t.roots.length,0),cameraAContacts:A.contactCount,cameraBContacts:B.contactCount,persistentContacts:A.persistentContactCount,boundaryRetainedFraction:retained/ka.size,awayContacts:C.contactCount,abaSameRootIds:true,abaSameGpuPixelPayload:true,legacyGiantFanSourceRetired:true,drySandDuneTag4HiddenInShader:true,coastalVegetationBatchSandExclusionPresent:true,canonicalDrySandSourceRecordsPreserved:true,renderedPixelsVerified:false,ownerVisualAcceptance:'PENDING',publicationAuthorized:false};
+const report={schema:'H_EARTH_GEN2710_GRASS_SAND_BEACH_PERSISTENCE_TEST_v1',result:'PASS_SOURCE_AND_SYNTHETIC_SELECTION_ONLY',revision:rev,moduleLinks:moduleChain.length,worldBinarySha256:manifest.binary.sha256,historicalWorldSourcePinsPreserved:true,syntheticRootCount:tiles.reduce((n,t)=>n+t.roots.length,0),cameraAContacts:A.contactCount,cameraBContacts:B.contactCount,persistentContacts:A.persistentContactCount,boundaryRetainedFraction:retained/ka.size,awayContacts:C.contactCount,abaSameRootIds:true,abaSameGpuPixelPayload:true,legacyGiantFanSourceRetired:true,signedCoastUnderlayExcluded:true,distantCarpetWorldFixed:true,nearFieldGrassRootsPreserved:true,postSandOasisColorGuard:true,drySandDuneTag4HiddenInShader:true,coastalVegetationBatchSandExclusionPresent:true,canonicalDrySandSourceRecordsPreserved:true,renderedPixelsVerified:false,ownerVisualAcceptance:'PENDING',publicationAuthorized:false};
 console.log(JSON.stringify(report,null,2));

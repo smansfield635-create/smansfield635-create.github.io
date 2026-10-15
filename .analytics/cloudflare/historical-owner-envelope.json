@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-15T12:43:17Z",
+  "generatedAt": "2026-10-15T13:33:45Z",
   "window": {
-    "start": "2026-07-17T12:43:17Z",
-    "end": "2026-10-15T12:43:17Z"
+    "start": "2026-07-17T13:33:45Z",
+    "end": "2026-10-15T13:33:45Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4932,
-    "visits": 1325,
+    "pageLoads": 4892,
+    "visits": 1305,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4932,
-        "visits": 1325
+        "pageLoads": 4892,
+        "visits": 1305
       }
     },
     "byPath": {
@@ -75,8 +75,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1033,
-        "visits": 743
+        "pageLoads": 1013,
+        "visits": 723
       },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
@@ -118,12 +118,12 @@
         "pageLoads": 30,
         "visits": 0
       },
-      "/showroom/globe/audralia/": {
-        "pageLoads": 160,
-        "visits": 10
-      },
       "/governance/": {
         "pageLoads": 60,
+        "visits": 10
+      },
+      "/showroom/globe/audralia/": {
+        "pageLoads": 140,
         "visits": 10
       },
       "/evidence/readiness/": {
@@ -349,12 +349,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3607,
+        "pageLoads": 3587,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 782,
-        "visits": 782
+        "pageLoads": 762,
+        "visits": 762
       },
       "(none)": {
         "pageLoads": 533,

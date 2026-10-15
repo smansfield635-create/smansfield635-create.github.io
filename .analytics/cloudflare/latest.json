@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_BRIDGE_V3",
-  "generatedAt": "2026-10-15T09:35:06Z",
+  "generatedAt": "2026-10-15T10:32:10Z",
   "window": {
-    "start": "2026-07-17T09:35:06Z",
-    "end": "2026-10-15T09:35:06Z"
+    "start": "2026-07-17T10:32:10Z",
+    "end": "2026-10-15T10:32:10Z"
   },
   "chunkDays": 1,
   "accounts": [
@@ -866,24 +866,6 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-08-03T13:00:00Z"
-          }
-        },
-        {
-          "count": 60,
-          "dimensions": {
-            "datetimeHour": "2026-08-03T17:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-08-04T00:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
             "datetimeHour": "2026-08-04T18:00:00Z"
           }
         },
@@ -903,30 +885,6 @@
           "count": 10,
           "dimensions": {
             "datetimeHour": "2026-08-07T07:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-08-08T16:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-08-08T17:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-08-08T19:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-08-08T22:00:00Z"
           }
         },
         {
@@ -3690,12 +3648,6 @@
           }
         },
         {
-          "count": 1,
-          "dimensions": {
-            "datetimeHour": "2026-10-08T09:00:00Z"
-          }
-        },
-        {
           "count": 2,
           "dimensions": {
             "datetimeHour": "2026-10-08T10:00:00Z"
@@ -4623,6 +4575,12 @@
           "count": 1,
           "dimensions": {
             "datetimeHour": "2026-10-15T08:00:00Z"
+          }
+        },
+        {
+          "count": 1,
+          "dimensions": {
+            "datetimeHour": "2026-10-15T09:00:00Z"
           }
         }
       ]

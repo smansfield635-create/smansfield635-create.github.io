@@ -142,6 +142,8 @@ test('excavated channel shows geologically grounded material exposure while exte
  assert(deep.rockWeight>0.5,'ROCK_EXPOSURE_ZERO:'+deep.rockWeight);
  const arrival=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',82,-290);
  assert(arrival.incisionDepth>=2.75,'ARRIVAL_CREEKBED_NOT_READABLE:'+arrival.incisionDepth);
+ const arrivalWaypoint=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',80,-304);
+ assert(arrivalWaypoint.incisionDepth>=1.75,'ARRIVAL_WAYPOINT_MISSES_DRY_OUTWASH_APRON:'+arrivalWaypoint.incisionDepth);
  const profile=g.formation.drainage.points;
  const maxGrade=Math.max(...profile.slice(1).map((point,i)=>{
    const previous=profile[i],distance=Math.hypot(point.x-previous.x,point.z-previous.z);

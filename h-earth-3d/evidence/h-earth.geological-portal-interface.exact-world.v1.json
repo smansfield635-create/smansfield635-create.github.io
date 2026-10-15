@@ -16,13 +16,14 @@
   },
   "execution": {
     "runtime": "Node22",
-    "syntheticTests": 12,
-    "passed": 12,
+    "syntheticTests": 13,
+    "passed": 13,
     "exactWorldBinaryRead": true,
     "webglBrowserExecuted": false,
     "ownerPixelsObserved": false,
     "liveWorldChanged": false,
-    "oldCavernPropRemoved": false
+    "oldCavernPropRemoved": false,
+    "predecessorAndCurrentCombinedNode22Tests": 23
   },
   "sites": [
     {
@@ -80,5 +81,45 @@
     "userPerceptualAcceptance": false,
     "notPublished": true
   },
-  "next": "Admit exact-site WebGL preview and navigation controller integration as separate scoped operation after candidate is verified; ensure site visually recesses into rock and old Gen2730 arch replaced, preserving world and accepted ecology."
+  "next": "Admit exact-site WebGL preview and navigation controller integration as separate scoped operation after candidate is verified; ensure site visually recesses into rock and old Gen2730 arch replaced, preserving world and accepted ecology.",
+  "rayGeometryInspection": {
+    "source": "REAL_GEN2666_CANONICAL_WORLD_A_SITE_GEOMETRY_IN_LOCAL_AUTHORING_COORDINATES",
+    "method": "ARRAY_TRIANGLE_MOLLER_TRUMBORE_NEAREST_HIT_TWO_SIDED_NOT_WEBGL",
+    "approachCamera": {
+      "x": 80,
+      "y": 10.739920283502816,
+      "z": -304
+    },
+    "insideTarget": {
+      "x": 80,
+      "y": 13.6,
+      "z": -257
+    },
+    "approachRaysTested": 5,
+    "approachRayOffsetsX": [
+      0,
+      -1,
+      1,
+      -2.5,
+      2.5
+    ],
+    "blockedApproachRays": 0,
+    "testedMeshGroups": [
+      "terrainWithoutAperture",
+      "upperMantle",
+      "exposedCliffFace",
+      "cave"
+    ],
+    "cliffFaceBlocksHighLineOfSightAtY20": true,
+    "upperMantleBlocksHighLineOfSightAtY25": true,
+    "overburdenRayFromAboveAtX80ZMinus260": {
+      "firstHit": "upperMantle",
+      "distanceMeters": 15.577,
+      "secondHit": "cave",
+      "secondDistanceMeters": 25.2267
+    },
+    "notFullBaseWorldDepthRendered": true,
+    "notRasterizerOrScreenPixels": true,
+    "interpretation": "LOCAL_APERTURE_VISIBILITY_AND_UPPER_MOUNTAIN_ROOF_GEOMETRY_EXIST; WORLD_RENDERER_STILL_UNBOUND"
+  }
 }

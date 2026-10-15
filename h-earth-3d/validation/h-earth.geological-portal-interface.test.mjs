@@ -20,3 +20,17 @@ test('sweep rejects excessive cliff step under independent grade ceiling',()=>{c
 test('projection returns spherical GPU-ready positions and leaves local source untouched',()=>{const {f,terrain}=fixture(),m=constructGeologicalPortalAssembly(f,terrain);const first=m.cave.positions.slice(0,3),projected=projectGeologicalMeshForRenderer(m.cave);assert.equal(projected.triangleCount,m.cave.triangleCount);const back=unprojectPlanetVertex(...projected.positions.slice(0,3));assert(Math.hypot(back.x-first[0],back.y-first[1],back.z-first[2])<0.002);assert.deepEqual(Array.from(m.cave.positions.slice(0,3)),Array.from(first))});
 test('B site uses B-local terrain patch, not an A-only region',()=>{const s=GEOLOGICAL_FORMATION_SITES.B_REAR_RAVINE,{f,terrain}=fixture(s),m=constructGeologicalPortalAssembly(f,terrain);assert(m.aperture.xMin<s.x&&m.aperture.xMax>s.x);assert.equal(m.terrainWithoutAperture.triangleCount,9728)});
 test('invalid configuration fails closed and does not touch input geometry',()=>{const {f,terrain}=fixture();assert.throws(()=>constructGeologicalPortalAssembly(f,terrain,{apertureDepth:7}),/FIXED_LOCAL_MESH_QUANTUM/);assert.throws(()=>constructGeologicalPortalAssembly(f,terrain,{bounds:{xMin:76,xMax:92,zMin:-268,zMax:-252}}),/APERTURE_TOUCHES_PATCH_PERIMETER/)});
+// Synthetic line-of-sight proof is geometrical, not a WebGL or Android pixel claim.
+function rayHits(origin,target,mesh){
+  const p=mesh.positions,ids=mesh.indices,d=target.map((v,i)=>v-origin[i]),len=Math.hypot(...d),dir=d.map(v=>v/len);let nearest=Infinity;
+  const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],dot=(a,b)=>a.reduce((q,v,i)=>q+v*b[i],0);
+  for(let i=0;i<ids.length;i+=3){const vertex=n=>Array.from(p.slice(ids[n]*3,ids[n]*3+3)),a=vertex(i),b=vertex(i+1),c=vertex(i+2),e1=b.map((v,j)=>v-a[j]),e2=c.map((v,j)=>v-a[j]);const h=cross(dir,e2),det=dot(e1,h);if(Math.abs(det)<1e-9)continue;const inv=1/det,s=origin.map((v,j)=>v-a[j]),u=inv*dot(s,h);if(u<0||u>1)continue;const q=cross(s,e1),v=inv*dot(dir,q);if(v<0||u+v>1)continue;const t=inv*dot(e2,q);if(t>0.0001&&t<len-0.0001)nearest=Math.min(nearest,t)}return nearest;
+}
+test('rear valley sight line crosses real rock aperture into gallery; roof blocks downward sky ray',()=>{
+  const {f,terrain}=fixture(),g=constructGeologicalPortalAssembly(f,terrain),s=f.site;
+  const eye=sampleFormationWalkable(f,{x:s.x,z:s.portalZ-10});const inside=sampleFormationWalkable(f,{x:s.x,z:s.portalZ+7});
+  const origin=[s.x,eye.eyeY,s.portalZ-10],target=[s.x,inside.eyeY,s.portalZ+7];
+  for(const key of ['terrainWithoutAperture','upperMantle','exposedCliffFace','cave'])assert.equal(rayHits(origin,target,g[key]),Infinity,`OCCLUDED_BY_${key}`);
+  const above=[s.x,terrain(s.x,s.portalZ+4)+12,s.portalZ+4],below=[s.x,s.entranceFloorY,s.portalZ+4];
+  assert(Number.isFinite(rayHits(above,below,g.upperMantle)));
+});

@@ -86,8 +86,8 @@ export function deriveDryDrainage(site,surveyRoute){
     const d=Math.hypot(v.x-head.x,v.z-head.z);
     // Keep a readable dry thalweg from the portal into the surveyed valley.
     // The grade stays gentle enough for the same walking support surface.
-    const design= v.originalY-(1.25+0.75*smoother(1-d/36));
-    const approach=first-0.13*d;
+    const design= v.originalY-(4.25+0.75*smoother(1-d/36));
+    const approach=first-0.20*d;
     const mix=smoother(d/36);
     // the upstream excavated bed must connect continuously and monotonically
     const raw=(1-mix)*approach+mix*design;
@@ -131,7 +131,8 @@ export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_S
     const forwardDistance=Math.max(0,z-site.portalZ);
     const backFade=1-smoother(forwardDistance/4);
     const distanceFromPortal=Math.hypot(nearest.x-site.x,nearest.z-site.portalZ);
-    const radius=7.1+8*smoother(distanceFromPortal/22)+0.45*Math.sin(nearest.segment*.28);
+    const radius=7.1+8*smoother(distanceFromPortal/22)+
+      18*smoother((distanceFromPortal-25)/18)+0.45*Math.sin(nearest.segment*.28);
     const r=nearest.distance/radius;if(r>=1||backFade<=0)return base;
     const w=smoother(1-r)*backFade;
     return base-Math.max(0,base-nearest.bedY)*w;

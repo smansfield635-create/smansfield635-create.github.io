@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-15T01:39:09Z",
+  "generatedAt": "2026-10-15T02:39:12Z",
   "window": {
-    "start": "2026-07-17T01:39:09Z",
-    "end": "2026-10-15T01:39:09Z"
+    "start": "2026-07-17T02:39:12Z",
+    "end": "2026-10-15T02:39:12Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4928,
-    "visits": 1324,
+    "pageLoads": 4932,
+    "visits": 1325,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4928,
-        "visits": 1324
+        "pageLoads": 4932,
+        "visits": 1325
       }
     },
     "byPath": {
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 166,
+        "pageLoads": 167,
         "visits": 2
       },
       "/showroom/": {
@@ -75,8 +75,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1032,
-        "visits": 742
+        "pageLoads": 1033,
+        "visits": 743
       },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
@@ -166,13 +166,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -247,7 +247,7 @@
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 40,
+        "pageLoads": 42,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -349,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3604,
+        "pageLoads": 3607,
         "visits": 0
       },
       "www.google.com": {
@@ -357,8 +357,8 @@
         "visits": 782
       },
       "(none)": {
-        "pageLoads": 532,
-        "visits": 532
+        "pageLoads": 533,
+        "visits": 533
       },
       "raw.githack.com": {
         "pageLoads": 10,

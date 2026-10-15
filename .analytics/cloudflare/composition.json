@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-15T01:39:09Z",
+  "generatedAt": "2026-10-15T02:39:12Z",
   "window": {
-    "start": "2026-09-15T01:39:09Z",
-    "end": "2026-10-15T01:39:09Z"
+    "start": "2026-09-15T02:39:12Z",
+    "end": "2026-10-15T02:39:12Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 961,
-        "visits": 681
+        "pageLoads": 962,
+        "visits": 682
       },
       {
         "value": "/mirror-manor-preview/",
@@ -24,8 +24,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 444,
-        "visits": 420
+        "pageLoads": 461,
+        "visits": 436
       },
       {
         "value": "/campaigns/consider-the-energy/",
@@ -104,7 +104,7 @@
       },
       {
         "value": "/meet-sean-mansfield/",
-        "pageLoads": 33,
+        "pageLoads": 32,
         "visits": 22
       },
       {
@@ -134,8 +134,8 @@
       },
       {
         "value": "/about/",
-        "pageLoads": 23,
-        "visits": 13
+        "pageLoads": 28,
+        "visits": 16
       },
       {
         "value": "/nine-summits/universe/",
@@ -143,19 +143,9 @@
         "visits": 23
       },
       {
-        "value": "/about-this-underdog/",
-        "pageLoads": 22,
-        "visits": 1
-      },
-      {
         "value": "/release-proof/",
         "pageLoads": 22,
         "visits": 22
-      },
-      {
-        "value": "/nine-summits-of-love/",
-        "pageLoads": 21,
-        "visits": 20
       },
       {
         "value": "/showroom/globe/hearth/",
@@ -181,6 +171,16 @@
         "value": "/evidence/readiness/",
         "pageLoads": 20,
         "visits": 0
+      },
+      {
+        "value": "/about-this-underdog/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/nine-summits-of-love/",
+        "pageLoads": 17,
+        "visits": 17
       },
       {
         "value": "/instruments/operations-chamber/",
@@ -256,8 +256,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2853,
-        "visits": 2853
+        "pageLoads": 2869,
+        "visits": 2869
       },
       {
         "value": "diamondgatebridge.com",
@@ -288,8 +288,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 4471,
-        "visits": 3043
+        "pageLoads": 4487,
+        "visits": 3059
       },
       {
         "value": "BR",
@@ -330,13 +330,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2236,
-        "visits": 2192
+        "pageLoads": 2248,
+        "visits": 2207
       },
       {
         "value": "tablet",
-        "pageLoads": 1158,
-        "visits": 424
+        "pageLoads": 1162,
+        "visits": 425
       },
       {
         "value": "mobile",
@@ -347,18 +347,18 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 1793,
-        "visits": 1790
+        "pageLoads": 1801,
+        "visits": 1801
       },
       {
         "value": "Chrome",
-        "pageLoads": 1498,
+        "pageLoads": 1501,
         "visits": 723
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 1004,
-        "visits": 374
+        "pageLoads": 1005,
+        "visits": 375
       },
       {
         "value": "MobileSafari",
@@ -367,18 +367,18 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 56,
-        "visits": 56
-      },
-      {
-        "value": "Unknown",
-        "pageLoads": 27,
-        "visits": 27
+        "pageLoads": 55,
+        "visits": 55
       },
       {
         "value": "Firefox",
-        "pageLoads": 26,
-        "visits": 26
+        "pageLoads": 35,
+        "visits": 35
+      },
+      {
+        "value": "Unknown",
+        "pageLoads": 23,
+        "visits": 23
       },
       {
         "value": "Facebook",
@@ -394,18 +394,18 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 2162,
-        "visits": 798
+        "pageLoads": 2167,
+        "visits": 800
       },
       {
         "value": "Linux",
-        "pageLoads": 1944,
-        "visits": 1941
+        "pageLoads": 1953,
+        "visits": 1953
       },
       {
         "value": "Windows",
-        "pageLoads": 156,
-        "visits": 155
+        "pageLoads": 162,
+        "visits": 161
       },
       {
         "value": "MacOSX",
@@ -419,36 +419,36 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 27,
-        "visits": 27
+        "pageLoads": 23,
+        "visits": 23
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 2734,
-        "visits": 1309
+        "pageLoads": 2742,
+        "visits": 1314
       },
       {
         "value": "1",
-        "pageLoads": 1793,
-        "visits": 1790
+        "pageLoads": 1801,
+        "visits": 1801
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3404,
-        "visits": 2828
+        "pageLoads": 3418,
+        "visits": 2844
       },
       {
         "value": "reload",
-        "pageLoads": 771,
+        "pageLoads": 772,
         "visits": 191
       },
       {
         "value": "back-forward",
-        "pageLoads": 262,
+        "pageLoads": 263,
         "visits": 80
       },
       {
@@ -465,12 +465,12 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 3335,
-        "visits": 2738
+        "pageLoads": 3349,
+        "visits": 2754
       },
       {
         "value": "cache",
-        "pageLoads": 1132,
+        "pageLoads": 1134,
         "visits": 301
       },
       {
@@ -482,15 +482,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 4527,
-        "visits": 3099
+        "pageLoads": 4543,
+        "visits": 3115
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 4527,
-        "visits": 3099
+        "pageLoads": 4543,
+        "visits": 3115
       }
     ]
   }

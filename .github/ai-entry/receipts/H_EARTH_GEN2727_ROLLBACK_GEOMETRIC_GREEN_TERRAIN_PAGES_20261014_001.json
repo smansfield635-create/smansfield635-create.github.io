@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_GEN2727_ROLLBACK_GEOMETRIC_GREEN_TERRAIN_PAGES_20261014_001",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6323,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2727-remove-green-mosaic-pages-20261014",
+  "requestCommit": "ecacdf7a00d565dd7b80706629ad2a543c0078e0",
+  "requestCommitParent": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "38661580918",
+  "dispatchedRunId": 38661596935,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38661596935",
+  "dispatchedRunHeadSha": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de",
+  "dispatchedAt": "2026-10-15T00:42:53.785Z",
+  "resolvedAt": "2026-10-15T00:42:57.931Z"
+}

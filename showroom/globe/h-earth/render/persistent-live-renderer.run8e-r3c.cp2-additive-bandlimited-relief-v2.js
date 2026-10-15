@@ -2014,10 +2014,19 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         const natural=model.originalTerrainColorAt(local.x,local.z);
         if(!natural)throw Error('GEOLOGICAL_CANONICAL_COLOR_CONTACT_MISSING:'+role);
         const exposure=sampleGeologicalMaterialExposure(model,role,local.x,local.z);
-        const rock=role==='CAVERN_PHYSICAL_SHELL'?[.125,.141,.131]:
-          role==='NATURAL_CLIFF_FACE'?[.215,.231,.213]:[.237,.253,.222];
-        const grain=1+.045*exposure.edgeFade*Math.sin(i*.219+local.y*.33);
-        colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+rock[c]*exposure.rockWeight)*grain).concat(1),i*4);
+        const layer=.5+.5*Math.sin(local.y*1.17+local.x*.19+local.z*.075+
+          .31*Math.sin(local.x*.23-local.z*.13));
+        const grain=.965+.035*Math.sin(local.x*.31+local.z*.17+local.y*.29);
+        const rock=role==='CAVERN_PHYSICAL_SHELL'?
+          [.105+.032*layer,.094+.027*layer,.078+.021*layer]:
+          role==='NATURAL_CLIFF_FACE'?
+            [.188+.075*layer,.157+.061*layer,.119+.043*layer]:
+            [.226+.071*layer,.186+.061*layer,.137+.046*layer];
+        // Incision exposes warm, layered soil and gravel along the dry channel.
+        // The blend still fades to the exact indexed-world albedo at the patch edge.
+        const soil=role==='ERODED_TERRAIN'?Math.min(.72,exposure.incisionDepth*.46):0;
+        const layered=rock.map((v,c)=>v*(1-soil)+[.31,.255,.183][c]*soil);
+        colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+layered[c]*exposure.rockWeight)*grain).concat(1),i*4);
         mats.set([.89,.025,.035,.13],i*4);
       }
       const state={role,mesh,vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};

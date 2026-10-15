@@ -57,6 +57,17 @@ test('active interior uses cave floor/roof, wall collision correctly rejects',()
  assert(inside?.eligible);assert(inside.ceilingY>inside.eyeY+0.3);
  assert(solid&&!solid.eligible);assert.equal(coast,null);
 });
+test('weathered portal relief is shared by the visible shell and walk clearance',()=>{
+ const f=geology().formation,z=f.site.portalZ+1;
+ const left=f.roofAt(f.site.x-2,z),right=f.roofAt(f.site.x+2,z);
+ assert(Math.abs(left-right)>.08,'PORTAL_ROOF_REMAINS_UNNATURALLY_SYMMETRIC');
+ const floor=f.floorAt(f.site.x,z),roof=f.roofAt(f.site.x,z);
+ assert(roof>floor+5,'PORTAL_CLEARANCE_COLLAPSED');
+ assert.equal(f.insideVoid(f.site.x,floor+1,z),true);
+ assert.equal(f.insideVoid(f.site.x,roof,z),false);
+ const a=f.roofAt(f.site.x,z),b=f.roofAt(f.site.x,z+.25);
+ assert(Math.abs(a-b)<.25,'ROOF_RELIEF_DISCONTINUITY');
+});
 test('2m replacement terrain has a true aperture and cliff with upper mantle',()=>{
  const p=geology().portal;
  assert(p.retiredReplacementTriangleCount>=32);
@@ -90,6 +101,14 @@ test('real Gen324 locomotion enters roofed cavern through 15 accepted actions',(
 test('original coastal navigation remains original and never reports cave support',()=>{
   const n=createHEarthFunctionalLandscapeNavigationState({waypointId:'COAST'});assert(n.ok);
   assert.equal(n.state.geologicalPhysicalSupport,false);assert.equal(n.state.position.x,0);
+});
+test('cavern arrival copy is query-bound and coast copy remains the default',()=>{
+ assert.equal(resolveHEarthArrivalWaypoint('?arrival=geological-cavern'),'GEOLOGICAL_CAVERN_REAR_APPROACH');
+ assert.equal(resolveHEarthArrivalWaypoint(''),'COAST');
+ const html=readFileSync(join(home,'../../showroom/globe/h-earth/index.html'),'utf8');
+ assert(html.includes("parameters.get('arrival') === 'geological-cavern'"));
+ assert(html.includes('Eroded into the mountain.'));
+ assert(html.includes('The coast is the entrance.'));
 });
 
 test('every projected cavern and patch vertex has original-world albedo contact',()=>{

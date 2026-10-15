@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "h-earth-gen2731-cavern-pages-c6e7fbab",
+  "requestId": "h-earth-gen2731-cavern-pages-c6e7fbab-v2",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "inputs": {
-    "target_sha": "c6e7fbaba91300590fa31e8b16acb530fc87ae7a",
     "surface_id": "h-earth"
   }
 }

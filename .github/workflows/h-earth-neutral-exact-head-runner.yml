@@ -150,6 +150,8 @@ jobs:
                 browserDrawExecuted:false,ownerVisualAcceptance:false,
                 releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+            else
+            node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             fi
             jq -n --arg target "$EXACT_TARGET_SHA" --arg sector "$sector_blob" --arg rock "$rock_blob" --arg tree "$tree_blob" '{

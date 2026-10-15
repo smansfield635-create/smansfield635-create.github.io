@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-15T10:32:10Z",
+  "generatedAt": "2026-10-15T11:30:06Z",
   "window": {
-    "start": "2026-07-17T10:32:10Z",
-    "end": "2026-10-15T10:32:10Z"
+    "start": "2026-07-17T11:30:06Z",
+    "end": "2026-10-15T11:30:06Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4932,
+    "pageLoads": 4892,
     "visits": 1325,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4932,
+        "pageLoads": 4892,
         "visits": 1325
       }
     },
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 167,
+        "pageLoads": 157,
         "visits": 2
       },
       "/showroom/": {
@@ -51,7 +51,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 80,
+        "pageLoads": 70,
         "visits": 10
       },
       "/frontier/energy/battery-coherence-study/": {
@@ -71,7 +71,7 @@
         "visits": 90
       },
       "/index.html": {
-        "pageLoads": 140,
+        "pageLoads": 130,
         "visits": 0
       },
       "/": {
@@ -81,10 +81,6 @@
       "/showroom/story/welcome/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 230,
-        "visits": 20
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
@@ -242,6 +238,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -349,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3607,
+        "pageLoads": 3567,
         "visits": 0
       },
       "www.google.com": {

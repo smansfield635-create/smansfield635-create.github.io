@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-15T20:29:50Z",
+  "generatedAt": "2026-10-15T21:30:39Z",
   "window": {
-    "start": "2026-07-17T20:29:50Z",
-    "end": "2026-10-15T20:29:50Z"
+    "start": "2026-07-17T21:30:39Z",
+    "end": "2026-10-15T21:30:39Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -30,13 +30,13 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 167,
-        "visits": 2
-      },
       "/showroom/": {
         "pageLoads": 120,
         "visits": 10
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 167,
+        "visits": 2
       },
       "/laws/categories/reality/battery-heldout-study/": {
         "pageLoads": 20,
@@ -270,19 +270,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },

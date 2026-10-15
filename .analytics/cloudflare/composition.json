@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-15T20:29:50Z",
+  "generatedAt": "2026-10-15T21:30:39Z",
   "window": {
-    "start": "2026-09-15T20:29:50Z",
-    "end": "2026-10-15T20:29:50Z"
+    "start": "2026-09-15T21:30:39Z",
+    "end": "2026-10-15T21:30:39Z"
   },
   "dimensions": {
     "requestPath": [
@@ -13,19 +13,19 @@
         "visits": 671
       },
       {
-        "value": "/analytics/",
-        "pageLoads": 667,
-        "visits": 547
-      },
-      {
         "value": "/mirror-manor-preview/",
         "pageLoads": 560,
         "visits": 560
       },
       {
+        "value": "/analytics/",
+        "pageLoads": 547,
+        "visits": 427
+      },
+      {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 433,
-        "visits": 408
+        "pageLoads": 463,
+        "visits": 438
       },
       {
         "value": "/products/education/",
@@ -68,6 +68,11 @@
         "visits": 50
       },
       {
+        "value": "/build/",
+        "pageLoads": 52,
+        "visits": 52
+      },
+      {
         "value": "/showroom/globe/h-earth/diagnostic/",
         "pageLoads": 50,
         "visits": 0
@@ -98,24 +103,24 @@
         "visits": 40
       },
       {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 32,
+        "visits": 22
+      },
+      {
         "value": "/evidence/agentic-frontier/",
         "pageLoads": 32,
         "visits": 22
       },
       {
-        "value": "/build/",
-        "pageLoads": 32,
-        "visits": 32
+        "value": "/showroom/globe/h-earth/awards/",
+        "pageLoads": 30,
+        "visits": 10
       },
       {
         "value": "/about/",
         "pageLoads": 30,
         "visits": 18
-      },
-      {
-        "value": "/showroom/globe/h-earth/awards/",
-        "pageLoads": 30,
-        "visits": 10
       },
       {
         "value": "/products/",
@@ -133,9 +138,9 @@
         "visits": 0
       },
       {
-        "value": "/meet-sean-mansfield/",
-        "pageLoads": 22,
-        "visits": 12
+        "value": "/nine-summits/universe/",
+        "pageLoads": 23,
+        "visits": 23
       },
       {
         "value": "/release-proof/",
@@ -171,11 +176,6 @@
         "value": "/about-this-underdog/",
         "pageLoads": 20,
         "visits": 0
-      },
-      {
-        "value": "/nine-summits/universe/",
-        "pageLoads": 13,
-        "visits": 13
       },
       {
         "value": "/instruments/operations-chamber/",
@@ -256,12 +256,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2805,
-        "visits": 2805
+        "pageLoads": 2875,
+        "visits": 2875
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1388,
+        "pageLoads": 1428,
         "visits": 0
       },
       {
@@ -494,8 +494,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 4549,
-        "visits": 3121
+        "pageLoads": 4538,
+        "visits": 3110
       }
     ]
   }

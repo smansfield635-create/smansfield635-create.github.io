@@ -1,30 +1,30 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-15T20:29:50Z",
+  "generatedAt": "2026-10-15T21:30:39Z",
   "window30d": {
-    "start": "2026-09-15T20:29:50Z",
-    "end": "2026-10-15T20:29:50Z"
+    "start": "2026-09-15T21:30:39Z",
+    "end": "2026-10-15T21:30:39Z"
   },
   "daily": [
     {
       "date": "2026-09-16",
-      "pageLoads": 210
+      "pageLoads": 190
     },
     {
       "date": "2026-09-17",
-      "pageLoads": 200
+      "pageLoads": 250
     },
     {
       "date": "2026-09-18",
-      "pageLoads": 150
+      "pageLoads": 250
     },
     {
       "date": "2026-09-19",
-      "pageLoads": 240
+      "pageLoads": 330
     },
     {
       "date": "2026-09-20",
-      "pageLoads": 10
+      "pageLoads": 370
     },
     {
       "date": "2026-09-21",
@@ -88,15 +88,15 @@
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 170
-    },
-    {
-      "date": "2026-10-07",
       "pageLoads": 210
     },
     {
+      "date": "2026-10-07",
+      "pageLoads": 80
+    },
+    {
       "date": "2026-10-08",
-      "pageLoads": 76
+      "pageLoads": 74
     },
     {
       "date": "2026-10-09",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 66
+      "pageLoads": 68
     }
   ],
   "summary": {
@@ -135,12 +135,12 @@
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2805,
-      "visits": 2805
+      "pageLoads": 2875,
+      "visits": 2875
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1388,
+      "pageLoads": 1428,
       "visits": 0
     },
     {
@@ -171,19 +171,19 @@
       "visits": 671
     },
     {
-      "path": "/analytics/",
-      "pageLoads": 667,
-      "visits": 547
-    },
-    {
       "path": "/mirror-manor-preview/",
       "pageLoads": 560,
       "visits": 560
     },
     {
+      "path": "/analytics/",
+      "pageLoads": 547,
+      "visits": 427
+    },
+    {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 433,
-      "visits": 408
+      "pageLoads": 463,
+      "visits": 438
     },
     {
       "path": "/products/education/",

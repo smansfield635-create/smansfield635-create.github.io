@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-creekbed-arrival-apron-60b90280-20261015",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6370,
+  "requestBranch": "ai-dispatch-request-h-earth-creekbed-arrival-apron-60b90280-20261015",
+  "requestCommit": "c525573133d5da4e55679fab3211bf58f7372d87",
+  "requestCommitParent": "9adfe2c818313969405ae7e57c48c912db48b4b3",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "9adfe2c818313969405ae7e57c48c912db48b4b3",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "60b90280d2a89e218c098c92d3b9ca740c81fd29",
+    "route_query": "arrival=geological-cavern",
+    "route_path": "/showroom/globe/h-earth/"
+  },
+  "bridgeRunId": "38772362749",
+  "dispatchedRunId": 38772386850,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38772386850",
+  "dispatchedRunHeadSha": "9adfe2c818313969405ae7e57c48c912db48b4b3",
+  "dispatchedAt": "2026-10-15T16:50:50.910Z",
+  "resolvedAt": "2026-10-15T16:50:55.969Z"
+}

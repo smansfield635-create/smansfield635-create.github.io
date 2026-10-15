@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "ABOUT_GEN2728_CINEMATIC_ART_PREFLIGHT_20261014_001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6326,
+  "requestBranch": "ai-dispatch-request-about-visual-gen2728-preflight",
+  "requestCommit": "2954d30b0a607f91709d68686cd15091350d2a8c",
+  "requestCommitParent": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "7cdde5d38d0275a9869dcd1f0da36042039beda0",
+    "surface_id": "about"
+  },
+  "bridgeRunId": "38662253828",
+  "dispatchedRunId": 38662270103,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38662270103",
+  "dispatchedRunHeadSha": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de",
+  "dispatchedAt": "2026-10-15T00:50:07.802Z",
+  "resolvedAt": "2026-10-15T00:50:11.631Z"
+}

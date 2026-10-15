@@ -12,9 +12,7 @@ const BOUNDS=Object.freeze({xMin:40,xMax:176,zMin:-368,zMax:-224});
 const DIRS=Object.freeze([[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]]);
 let active=null;
 function fail(s){throw Error('GEOLOGICAL_RUNTIME_BRIDGE_INVALID:'+s)}
-/** Reconstruct strict downhill flow from actual indexed canonical authoring heights.
- * The experiment remains a dry, seasonally plausible riverbed; no claimed water source.
- */
+/** Reconstruct strict downhill flow from actual indexed canonical authoring heights. */
 export function traceGeologicalRuntimeDrainage(sampler,site=SITE){
   let x=site.x,z=site.drainageHeadZ;let original=sampler(x,z);
   if(!Number.isFinite(original))fail('SOURCE_START');
@@ -34,6 +32,37 @@ export function traceGeologicalRuntimeDrainage(sampler,site=SITE){
   }
   if(path.length<10)fail('INSUFFICIENT_ROUTE');
   return Object.freeze({path,result,surveyMethod:'ACTUAL_G_WORLD_CANONICAL_INDEXED_TRIANGLES_INVERSE_SPHERE_D8',waterPresent:false});
+}
+function buildWaterRibbon(route,kind){
+  const points=route.points;if(points.length<2)fail('WATER_ROUTE_TOO_SHORT');
+  const positions=[],indices=[];
+  for(let i=0;i<points.length;i++){
+    const p=points[i],a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)];
+    const dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz)||1,nx=-dz/length,nz=dx/length;
+    const t=i/(points.length-1),half=(kind==='MAIN'?1.15+2.25*t:0.85+0.75*t)*(0.9+0.1*Math.sin(i*.17+0.4));
+    const y=p.bedY+0.24;
+    positions.push(p.x+nx*half,y,p.z+nz*half,p.x-nx*half,y,p.z-nz*half);
+    if(i){const q=2*i,r=q-2;indices.push(r,q,r+1,r+1,q,q+1)}
+  }
+  return Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(indices),vertexCount:positions.length/3,triangleCount:indices.length/3,routeId:route.id});
+}
+function buildOasisWater(formation,terrainAt){
+  const basin=formation.oasis,step=1.5,positions=[],indices=[];
+  const x0=basin.centerX-basin.radiusX,x1=basin.centerX+basin.radiusX,z0=basin.centerZ-basin.radiusZ,z1=basin.centerZ+basin.radiusZ;
+  const cols=Math.ceil((x1-x0)/step),rows=Math.ceil((z1-z0)/step),valid=(x,z)=>{
+    const dx=(x-basin.centerX)/basin.radiusX,dz=(z-basin.centerZ)/basin.radiusZ,angle=Math.atan2(dz,dx);
+    const edge=1+basin.edgeHarmonics[0]*Math.sin(3*angle)+basin.edgeHarmonics[1]*Math.sin(5*angle+0.7)+basin.edgeHarmonics[2]*Math.cos(2*angle-0.4);
+    return Math.hypot(dx,dz)/edge<0.98&&formation.excavatedOutdoorTerrain(x,z)<=basin.waterLevel;
+  };
+  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
+    const x=x0+i*step,z=z0+j*step,xn=x+step,zn=z+step;
+    if(!valid(x,z)||!valid(xn,z)||!valid(x,zn)||!valid(xn,zn))continue;
+    const base=positions.length/3;
+    positions.push(x,basin.waterLevel,z,xn,basin.waterLevel,z,x,basin.waterLevel,zn,xn,basin.waterLevel,zn);
+    indices.push(base,base+2,base+1,base+1,base+2,base+3);
+  }
+  if(!indices.length)fail('OASIS_WATER_SURFACE_EMPTY');
+  return Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(indices),vertexCount:positions.length/3,triangleCount:indices.length/3,waterLevel:basin.waterLevel});
 }
 /** Build only once when the canonical package is resident, never on a frame update. */
 export function constructGeologicalRuntimeBridge(canonical){
@@ -55,7 +84,15 @@ export function constructGeologicalRuntimeBridge(canonical){
   };
   const terrainAt=(x,z)=>field.elevation(x,z);
   const trace=traceGeologicalRuntimeDrainage(terrainAt);
-  const baseFormation=createGeologicalFormation({terrainAt,site:SITE,surveyRoute:trace});
+  // Two independently sampled highland branches converge with the main D8
+  // corridor at the irregular basin. The water geometry inherits their real
+  // terrain descent; the seep is an authored scenic feature, not a surveyed
+  // hydrology claim.
+  const tributaryTraces=[
+    traceGeologicalRuntimeDrainage(terrainAt,{x:SITE.x-20,drainageHeadZ:SITE.drainageHeadZ}),
+    traceGeologicalRuntimeDrainage(terrainAt,{x:SITE.x+14,drainageHeadZ:SITE.drainageHeadZ})
+  ];
+  const baseFormation=createGeologicalFormation({terrainAt,site:SITE,surveyRoute:trace,tributaryRoutes:tributaryTraces});
   // Erosion is deliberately irregular at the mouth and quieter deeper inside.
   // These same surfaces feed the cave mesh, walk support, and solid occupancy.
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -102,13 +139,19 @@ export function constructGeologicalRuntimeBridge(canonical){
     ['ERODED_TERRAIN',portal.terrainWithoutAperture],
     ['MOUNTAIN_OVERBURDEN',portal.upperMantle],
     ['NATURAL_CLIFF_FACE',portal.exposedCliffFace],
-    ['CAVERN_PHYSICAL_SHELL',portal.cave]
+    ['CAVERN_PHYSICAL_SHELL',portal.cave],
+    ...formation.drainage.waterRoutes.map(route=>['FRESHWATER_RIVER',buildWaterRibbon(route,route.kind)]),
+    ['OASIS_WATER',buildOasisWater(formation,terrainAt)]
   ];
   const meshes=parts.map(([role,mesh])=>Object.freeze({role,mesh:projectGeologicalMeshForRenderer(mesh)}));
   const output=Object.freeze({contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
     formation,portal,retirement,meshes,route:trace,originalTerrainColorAt,
     originalTerrainElevationAt:terrainAt,
     sourceWorldUnchanged:true,originalBaseTrianglesToRetire:retirement.triangleCount,
+    hydrology:Object.freeze({waterPresent:true,waterSourceProven:false,sourceType:formation.drainage.sourceType,
+      mainRouteResult:trace.result,mainRouteSteps:trace.path.length,tributaryCount:tributaryTraces.length,
+      downhillTerrainSurvey:'ACTUAL_G_WORLD_CANONICAL_INDEXED_TRIANGLES_INVERSE_SPHERE_D8',
+      oasisWaterLevel:formation.oasis.waterLevel,connectedOutletProven:false}),
     refinedGeometryClipRequired:true,sourcePass:'CANONICAL_PACKAGE_RUNTIME_DERIVATION'});
   return output;
 }
@@ -150,9 +193,11 @@ export function sampleGeologicalMaterialExposure(model,role,x,z){
   const after=model.formation.excavatedOutdoorTerrain(x,z);
   if(!Number.isFinite(before)||!Number.isFinite(after))fail('MATERIAL_TERRAIN_NONFINITE');
   const incisionDepth=Math.max(0,before-after);
-  const materialWeight=(role==='ERODED_TERRAIN'?Math.min(.8,incisionDepth*.5):
+  const oasisCore=role==='ERODED_TERRAIN'?(model.formation.oasisInfluenceAt?.(x,z)??0):0;
+  const materialWeight=(role==='ERODED_TERRAIN'?Math.max(Math.min(.8,incisionDepth*.5),oasisCore*.72):
     role==='MOUNTAIN_OVERBURDEN'?.06:1)*fade;
+  const oasisInfluence=oasisCore*fade;
   return Object.freeze({sourceOriginalHeight:before,excavatedHeight:after,
-    incisionDepth,edgeFade:fade,rockWeight:materialWeight,
+    incisionDepth,edgeFade:fade,rockWeight:materialWeight,oasisInfluence,
     originalWorldMutated:false});
 }

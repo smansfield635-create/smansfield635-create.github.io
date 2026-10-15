@@ -106,9 +106,34 @@ function nearestSegment(points,x,z){
   }return best;
 }
 /** The landform owns terrain modifiers; all derivatives use one shared function. */
-export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_SITES.A_EASTERN_REAR_ESCARPMENT,surveyRoute}){
+export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_SITES.A_EASTERN_REAR_ESCARPMENT,surveyRoute,tributaryRoutes=[]}){
   assert(typeof terrainAt==='function','TERRAIN_SAMPLER_REQUIRED');
-  const drainage=deriveDryDrainage(site,surveyRoute);
+  const dryDrainage=deriveDryDrainage(site,surveyRoute);
+  // The photographed discoloration sits on the first low reach after the
+  // portal. Shape it as an asymmetric pool basin joined to the surveyed
+  // downhill corridor; it is deliberately not a circular decal or halo.
+  const oasis=F({id:'SECOND_OASIS',centerX:site.x+28,centerZ:site.drainageHeadZ-26,
+    radiusX:32,radiusZ:23,edgeHarmonics:F([0.10,-0.055,0.035])});
+  const tributaries=tributaryRoutes.map((survey,index)=>{
+    assert(Array.isArray(survey?.path)&&survey.path.length>=10,'TRIBUTARY_ROUTE_REQUIRED_'+index);
+    const raw=survey.path.map((p,i)=>{assert(finite(p.x)&&finite(p.z)&&finite(p.height),'TRIBUTARY_SAMPLE_'+i);return {x:p.x,z:p.z,originalY:p.height}});
+    for(let i=1;i<raw.length;i++)assert(distance(raw[i],raw[i-1])>0&&raw[i].originalY<raw[i-1].originalY,'TRIBUTARY_NOT_DOWNHILL_'+index);
+    let mergeIndex=raw.length-1,merge=null;
+    for(let i=4;i<raw.length;i++){const n=nearestSegment(dryDrainage.points,raw[i].x,raw[i].z);if(n&&n.distance<=3){mergeIndex=i;merge=n;break}}
+    if(!merge){for(let i=4;i<raw.length;i++){const n=nearestSegment(dryDrainage.points,raw[i].x,raw[i].z);if(n&&(!merge||n.distance<merge.distance)){mergeIndex=i;merge=n}}}
+    assert(merge&&mergeIndex>=4,'TRIBUTARY_DOES_NOT_JOIN_MAIN_FLOW_'+index);
+    const points=raw.slice(0,mergeIndex),firstBed=points[0].originalY-1.5,lastBed=merge.bedY;
+    assert(firstBed>lastBed,'TRIBUTARY_SOURCE_NOT_ABOVE_JOIN_'+index);
+    let total=distance(points.at(-1),merge);const lengths=[0];for(let i=1;i<points.length;i++){total+=distance(points[i],points[i-1]);lengths.push(lengths.at(-1)+distance(points[i],points[i-1]))}
+    let previous=Infinity;
+    const profiled=points.map((p,i)=>{const t=total?lengths[i]/total:1,rawBed=firstBed+(lastBed-firstBed)*t,bedY=Math.min(previous-0.008,rawBed);previous=bedY;return F({...p,bedY:quant(bedY)})});
+    const join=F({x:merge.x,z:merge.z,originalY:quant(gSafe(terrainAt,merge.x,merge.z)),bedY:quant(merge.bedY)});
+    profiled.push(join);
+    for(let i=1;i<profiled.length;i++)assert(profiled[i].bedY<profiled[i-1].bedY,'TRIBUTARY_BED_NOT_DESCENDING_'+index+'_'+i+'_'+profiled[i-1].bedY+'_'+profiled[i].bedY);
+    return F({id:'HIGHLAND_TRIBUTARY_'+(index+1),source:{x:profiled[0].x,z:profiled[0].z,sourceType:'DESIGNED_SEEP_VISUAL'},join,points:F(profiled)});
+  });
+  const waterRoutes=F([F({id:'MAIN_RIVER',kind:'MAIN',points:dryDrainage.points}),...tributaries.map(t=>F({id:t.id,kind:'TRIBUTARY',points:t.points}))]);
+  const drainage=F({...dryDrainage,waterPresent:true,waterSourceProven:false,sourceType:'OWNER_AUTHORIZED_DESIGNED_SEEPS_NOT_HYDROLOGICAL_CLAIMS',tributaries:F(tributaries),waterRoutes,downhillRouteToStudyEdge:dryDrainage.studyEdgeUnresolved});
   const samples=[site.portalZ,site.portalZ+4,site.portalZ+12,site.portalZ+site.galleryLength];
   for(const z of samples)gSafe(terrainAt,site.x,z);
   const roofAt=(x,z)=>{
@@ -125,6 +150,11 @@ export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_S
     const archCeiling=fy+(cy-fy)*Math.pow(Math.max(0,1-normX*normX),0.375);
     return y>=fy&&y<archCeiling;
   }
+  function oasisInfluenceAt(x,z){const dx=(x-oasis.centerX)/oasis.radiusX,dz=(z-oasis.centerZ)/oasis.radiusZ;
+    const angle=Math.atan2(dz,dx),edge=1+oasis.edgeHarmonics[0]*Math.sin(3*angle)+
+      oasis.edgeHarmonics[1]*Math.sin(5*angle+0.7)+oasis.edgeHarmonics[2]*Math.cos(2*angle-0.4);
+    return smoother(1-Math.hypot(dx,dz)/edge);
+  }
   function excavatedOutdoorTerrain(x,z){const base=gSafe(terrainAt,x,z),nearest=nearestSegment(drainage.points,x,z);if(!nearest)return base;
     // Outside the portal, rounded valley banks emerge without rectangular edges.
     // Behind the portal, preserve the mountain roof rather than lowering terrain.
@@ -133,9 +163,16 @@ export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_S
     const distanceFromPortal=Math.hypot(nearest.x-site.x,nearest.z-site.portalZ);
     const radius=7.1+8*smoother(distanceFromPortal/22)+
       18*smoother((distanceFromPortal-25)/18)+0.45*Math.sin(nearest.segment*.28);
-    const r=nearest.distance/radius;if(r>=1||backFade<=0)return base;
-    const w=smoother(1-r)*backFade;
-    return base-Math.max(0,base-nearest.bedY)*w;
+    const r=nearest.distance/radius;
+    const w=(r>=1||backFade<=0)?0:smoother(1-r)*backFade;
+    let channel=base-Math.max(0,base-nearest.bedY)*w;
+    for(const tributary of tributaries){const n=nearestSegment(tributary.points,x,z);if(!n)continue;
+      const t=n.segment/Math.max(1,tributary.points.length-1),branchRadius=3.2+1.5*smoother(t),branchWeight=smoother(1-n.distance/branchRadius);
+      channel=Math.min(channel,base-Math.max(0,base-n.bedY)*branchWeight);
+    }
+    if(oasisInfluenceAt(x,z)<=0||forwardDistance>0&&backFade<=0)return channel;
+    const bowl=2.5*oasisInfluenceAt(x,z);
+    return channel-bowl;
   }
   function rockSolidAt(x,y,z){const outdoor=excavatedOutdoorTerrain(x,z);return y<=outdoor&&!insideVoid(x,y,z)}
   // Hard contract: roof must lie under terrain at all centerline stations.
@@ -143,7 +180,9 @@ export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_S
   for(let z=site.portalZ;z<=site.portalZ+site.galleryLength;z+=2){const cover=gSafe(terrainAt,site.x,z)-roofAt(site.x,z);
     coverSamples.push(F({z:quant(z),terrainY:quant(gSafe(terrainAt,site.x,z)),ceilingY:quant(roofAt(site.x,z)),rockCover:quant(cover)}));
   }
-  return F({contractId:H_EARTH_GEOLOGICAL_FORMATION_CONTRACT_ID,site,drainage,insideVoid,rockSolidAt,excavatedOutdoorTerrain,floorAt,roofAt,caveRadius,coverSamples:F(coverSamples),minimumRoofCover:Math.min(...coverSamples.map(x=>x.rockCover)),waterPresent:false,canonicalWorldMutated:false,rendererActivated:false});
+  const oasisMain=nearestSegment(dryDrainage.points,oasis.centerX,oasis.centerZ);
+  const waterLevel=Math.min(gSafe(terrainAt,oasis.centerX,oasis.centerZ)-1.2,oasisMain.bedY+2.2);
+  return F({contractId:H_EARTH_GEOLOGICAL_FORMATION_CONTRACT_ID,site,drainage,oasis:F({...oasis,waterLevel:quant(waterLevel)}),oasisInfluenceAt,insideVoid,rockSolidAt,excavatedOutdoorTerrain,floorAt,roofAt,caveRadius,coverSamples:F(coverSamples),minimumRoofCover:Math.min(...coverSamples.map(x=>x.rockCover)),waterPresent:true,canonicalWorldMutated:false,rendererActivated:false});
 }
 /** Shared-vertex cave boundary for a physical floor, irregular wall/roof and back face.
  * Every interior edge is paired; only the public-facing entrance remains open.

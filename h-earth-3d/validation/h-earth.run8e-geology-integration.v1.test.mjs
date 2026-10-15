@@ -30,10 +30,23 @@ test('exact Gen2666 compressed source and spherical terrain correspond',()=>{
  assert.equal(p.buffers.indices.length,311466);
  assert.equal(geology().formation.minimumRoofCover>0,true);
 });
-test('upstream real terrain D8 route descends, does not invent freshwater',()=>{
+test('real terrain D8 survey supplies a descending scenic river network without a hydrology claim',()=>{
  const route=geology().route;assert(route.path.length>=15);
  assert(route.path.every((v,i)=>i===0||v.height<route.path[i-1].height));
- assert.equal(geology().formation.drainage.waterPresent,false);
+ const drainage=geology().formation.drainage;
+ assert.equal(route.waterPresent,false);
+ assert.equal(drainage.waterPresent,true);
+ assert.equal(drainage.waterSourceProven,false);
+ assert.equal(drainage.tributaries.length,2);
+ for(const tributary of drainage.tributaries){
+  assert(tributary.points.length>=10);
+  assert(tributary.points.every((p,i)=>i===0||p.bedY<tributary.points[i-1].bedY));
+  assert(Math.hypot(tributary.join.x-tributary.points.at(-1).x,tributary.join.z-tributary.points.at(-1).z)<1e-6);
+ }
+ const water=geology().meshes.filter(x=>x.role==='FRESHWATER_RIVER'||x.role==='OASIS_WATER');
+ assert.equal(water.filter(x=>x.role==='FRESHWATER_RIVER').length,3);
+ assert(water.find(x=>x.role==='OASIS_WATER').mesh.triangleCount>100);
+ assert.equal(geology().hydrology.connectedOutletProven,false);
 });
 test('original terrain indices are retired by degeneracy only within declared mask',()=>{
  const c=canonical(),g=geology(),indices=Uint32Array.from(c.buffers.indices),old=indices.slice();
@@ -44,9 +57,11 @@ test('original terrain indices are retired by degeneracy only within declared ma
  assert(g.retirement.triangleCount>=100);
 });
 test('four real manifold elements are projected to shared spherical world',()=>{
- assert.deepEqual(geology().meshes.map(x=>x.role),['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN','NATURAL_CLIFF_FACE','CAVERN_PHYSICAL_SHELL']);
- for(const {mesh} of geology().meshes){assert(mesh.positions instanceof Float32Array);
+ assert.deepEqual(geology().meshes.slice(0,4).map(x=>x.role),['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN','NATURAL_CLIFF_FACE','CAVERN_PHYSICAL_SHELL']);
+ for(const {mesh} of geology().meshes.slice(0,4)){assert(mesh.positions instanceof Float32Array);
  assert(mesh.indices instanceof Uint32Array);assert(mesh.positions.length>0);assert(mesh.indices.length>0);}
+ assert.equal(geology().meshes.filter(x=>x.role==='FRESHWATER_RIVER').length,3);
+ assert(geology().meshes.some(x=>x.role==='OASIS_WATER'));
 });
 test('uninstalled physical cave is invisible to normal Gen324 navigation',()=>{
  assert.equal(resolveGeologicalRuntimeFootSupport(80,-261),null);
@@ -132,7 +147,7 @@ test('every projected cavern and patch vertex has original-world albedo contact'
    assert(base.every(x=>Number.isFinite(x)&&x>=0&&x<=1));count++;
   }
  }
- assert.equal(count,7288);
+ assert(count>7288,'WATER_MESHES_MISSING_CANONICAL_COORDINATE_CONTACT');
 });
 
 test('excavated channel shows geologically grounded material exposure while exterior rim stays intact',()=>{
@@ -150,12 +165,17 @@ test('excavated channel shows geologically grounded material exposure while exte
    return Math.abs(point.bedY-previous.bedY)/distance;
  }));
  assert(maxGrade<=0.65,'CREEKBED_WALKING_GRADE_EXCEEDED:'+maxGrade);
- assert.equal(g.formation.drainage.waterPresent,false);
+ assert.equal(g.formation.drainage.waterPresent,true);
+ assert.equal(g.hydrology.waterSourceProven,false);
+ assert(g.formation.oasis.centerX>g.site.x+20,'OASIS_NOT_POSITIONED_ACROSS_APPROACH');
+ assert(g.formation.oasis.radiusX>g.formation.oasis.radiusZ,'OASIS_NOT_AN_IRREGULAR_BASIN');
  const boundary=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',g.localBounds.xMin,z);
  assert.equal(boundary.rockWeight,0,'PATCH_BOUNDARY_MATERIAL_DISCONTINUITY');
  assert.equal(deep.originalWorldMutated,false);
  const renderer=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
  assert(renderer.includes('sampleGeologicalMaterialExposure(model,role,local.x,local.z)'));
+ assert(renderer.includes("role==='FRESHWATER_RIVER'||role==='OASIS_WATER'"));
+ assert(renderer.includes('designedFreshwaterRendered'));
  assert(renderer.includes('const alluvium=[.55+.16*band,.36+.11*band,.18+.07*band];'));
  assert(!renderer.includes('local.y-originalTop'));
 });

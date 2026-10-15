@@ -58,17 +58,27 @@ function buildWaterRibbon(route,kind){
 function buildOasisWater(formation,terrainAt){
   const basin=formation.oasis,step=1.5,positions=[],indices=[];
   const x0=basin.centerX-basin.radiusX,x1=basin.centerX+basin.radiusX,z0=basin.centerZ-basin.radiusZ,z1=basin.centerZ+basin.radiusZ;
-  const cols=Math.ceil((x1-x0)/step),rows=Math.ceil((z1-z0)/step),valid=(x,z)=>{
+  const cols=Math.ceil((x1-x0)/step),rows=Math.ceil((z1-z0)/step),shoreMargin=(x,z)=>{
     const dx=(x-basin.centerX)/basin.radiusX,dz=(z-basin.centerZ)/basin.radiusZ,angle=Math.atan2(dz,dx);
     const edge=1+basin.edgeHarmonics[0]*Math.sin(3*angle)+basin.edgeHarmonics[1]*Math.sin(5*angle+0.7)+basin.edgeHarmonics[2]*Math.cos(2*angle-0.4);
-    return Math.hypot(dx,dz)/edge<0.98&&formation.excavatedOutdoorTerrain(x,z)<=basin.waterLevel;
+    const shore=0.98-Math.hypot(dx,dz)/edge;
+    const basinFloor=(basin.waterLevel-formation.excavatedOutdoorTerrain(x,z))*.5;
+    return Math.min(shore,basinFloor);
   };
   for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
-    const x=x0+i*step,z=z0+j*step,xn=x+step,zn=z+step;
-    if(!valid(x,z)||!valid(xn,z)||!valid(x,zn)||!valid(xn,zn))continue;
+    const x=x0+i*step,z=z0+j*step,xn=Math.min(x1,x+step),zn=Math.min(z1,z+step);
+    let polygon=[{x,z,margin:shoreMargin(x,z)},{x:xn,z,margin:shoreMargin(xn,z)},
+      {x:xn,z:zn,margin:shoreMargin(xn,zn)},{x,z:zn,margin:shoreMargin(x,zn)}];
+    const clipped=[];
+    for(let k=0;k<polygon.length;k++){
+      const a=polygon[k],b=polygon[(k+1)%polygon.length],insideA=a.margin>=0,insideB=b.margin>=0;
+      if(insideA)clipped.push(a);
+      if(insideA!==insideB){const t=a.margin/(a.margin-b.margin);clipped.push({x:a.x+(b.x-a.x)*t,z:a.z+(b.z-a.z)*t,margin:0});}
+    }
+    if(clipped.length<3)continue;
     const base=positions.length/3;
-    positions.push(x,basin.waterLevel,z,xn,basin.waterLevel,z,x,basin.waterLevel,zn,xn,basin.waterLevel,zn);
-    indices.push(base,base+2,base+1,base+1,base+2,base+3);
+    for(const p of clipped)positions.push(p.x,basin.waterLevel,p.z);
+    for(let k=1;k<clipped.length-1;k++)indices.push(base,base+k,base+k+1);
   }
   if(!indices.length)fail('OASIS_WATER_SURFACE_EMPTY');
   return Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(indices),vertexCount:positions.length/3,triangleCount:indices.length/3,waterLevel:basin.waterLevel});

@@ -112,8 +112,8 @@ export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_S
   // The photographed discoloration sits on the first low reach after the
   // portal. Shape it as an asymmetric pool basin joined to the surveyed
   // downhill corridor; it is deliberately not a circular decal or halo.
-  const oasis=F({id:'SECOND_OASIS',centerX:site.x+15,centerZ:site.drainageHeadZ-26,
-    radiusX:32,radiusZ:23,edgeHarmonics:F([0.15,-0.085,0.055])});
+  const oasis=F({id:'SECOND_OASIS',centerX:site.x+15,centerZ:site.drainageHeadZ-16,
+    radiusX:26,radiusZ:15,edgeHarmonics:F([0.15,-0.085,0.055])});
   const tributaries=tributaryRoutes.map((survey,index)=>{
     assert(Array.isArray(survey?.path)&&survey.path.length>=10,'TRIBUTARY_ROUTE_REQUIRED_'+index);
     const raw=survey.path.map((p,i)=>{assert(finite(p.x)&&finite(p.z)&&finite(p.height),'TRIBUTARY_SAMPLE_'+i);return {x:p.x,z:p.z,originalY:p.height}});

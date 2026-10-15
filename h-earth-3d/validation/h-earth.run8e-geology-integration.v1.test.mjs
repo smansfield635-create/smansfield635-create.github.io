@@ -46,10 +46,10 @@ test('real terrain D8 survey supplies a descending scenic river network without 
  const water=geology().meshes.filter(x=>x.role==='FRESHWATER_RIVER'||x.role==='OASIS_WATER');
  assert.equal(water.filter(x=>x.role==='FRESHWATER_RIVER').length,3);
  const oasis=water.find(x=>x.role==='OASIS_WATER'),basin=geology().formation.oasis;
- assert(oasis.mesh.triangleCount>900,'SECOND_OASIS_RENDERED_FOOTPRINT_TOO_SMALL');
+ assert(oasis.mesh.triangleCount>450,'SECOND_OASIS_RENDERED_FOOTPRINT_TOO_SMALL');
  const oasisLocal=Array.from({length:oasis.mesh.positions.length/3},(_,i)=>unprojectPlanetVertex(...oasis.mesh.positions.slice(i*3,i*3+3)));
- assert(Math.max(...oasisLocal.map(p=>p.x))-Math.min(...oasisLocal.map(p=>p.x))>45,'SECOND_OASIS_TOO_NARROW');
- assert(Math.max(...oasisLocal.map(p=>p.z))-Math.min(...oasisLocal.map(p=>p.z))>30,'SECOND_OASIS_TOO_SHORT');
+ assert(Math.max(...oasisLocal.map(p=>p.x))-Math.min(...oasisLocal.map(p=>p.x))>35,'SECOND_OASIS_TOO_NARROW');
+ assert(Math.max(...oasisLocal.map(p=>p.z))-Math.min(...oasisLocal.map(p=>p.z))>20,'SECOND_OASIS_TOO_SHORT');
  assert(Math.abs(basin.centerX-geology().formation.site.x)<18,'SECOND_OASIS_OUTSIDE_ARRIVAL_VIEW');
  const main=water.find(x=>x.role==='FRESHWATER_RIVER').mesh,mainRoute=geology().formation.drainage.waterRoutes[0].points;
  const lateral=mainRoute.map((p,i)=>{const a=unprojectPlanetVertex(...main.positions.slice(i*6,i*6+3)),b=unprojectPlanetVertex(...main.positions.slice(i*6+3,i*6+6));return Math.hypot((a.x+b.x)/2-p.x,(a.z+b.z)/2-p.z)});

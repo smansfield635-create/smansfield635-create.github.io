@@ -7,6 +7,7 @@ import {join,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHEarthFunctionalLandscapeNavigationState,proposeHEarthFunctionalLandscapeNavigation} from '../../showroom/globe/h-earth/functional-landscape/navigation.js';
 import {unprojectPlanetVertex} from '../terrain/h-earth.geological-formation-successor.v1.mjs';
+import {resolveHEarthArrivalWaypoint} from '../../showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js';
 import {constructGeologicalRuntimeBridge,installGeologicalRuntimeBridge,
   resolveGeologicalRuntimeFootSupport,retireGeologicalBaseIndices,traceGeologicalRuntimeDrainage,sampleGeologicalMaterialExposure}
   from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js';
@@ -115,4 +116,11 @@ test('excavated channel shows geologically grounded material exposure while exte
  const renderer=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
  assert(renderer.includes('sampleGeologicalMaterialExposure(model,role,local.x,local.z)'));
  assert(!renderer.includes('local.y-originalTop'));
+});
+
+test('bounded rear-cavern arrival query targets the real existing waypoint without changing coast or four trees',()=>{
+  assert.equal(resolveHEarthArrivalWaypoint('?arrival=geological-cavern'),'GEOLOGICAL_CAVERN_REAR_APPROACH');
+  assert.equal(resolveHEarthArrivalWaypoint('?arrival=approved-four-trees'),'WOODLAND_CLEARING_FOUR_TREES');
+  for(const query of ['','?arrival=unknown','?arrival=geological-cavern-unknown'])
+    assert.equal(resolveHEarthArrivalWaypoint(query),'COAST');
 });

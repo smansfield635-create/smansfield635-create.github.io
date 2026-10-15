@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-15T19:27:28Z",
+  "generatedAt": "2026-10-15T20:29:50Z",
   "window": {
-    "start": "2026-09-15T19:27:28Z",
-    "end": "2026-10-15T19:27:28Z"
+    "start": "2026-09-15T20:29:50Z",
+    "end": "2026-10-15T20:29:50Z"
   },
   "dimensions": {
     "requestPath": [
@@ -13,19 +13,19 @@
         "visits": 671
       },
       {
+        "value": "/analytics/",
+        "pageLoads": 667,
+        "visits": 547
+      },
+      {
         "value": "/mirror-manor-preview/",
         "pageLoads": 560,
         "visits": 560
       },
       {
-        "value": "/analytics/",
-        "pageLoads": 547,
-        "visits": 427
-      },
-      {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 463,
-        "visits": 438
+        "pageLoads": 433,
+        "visits": 408
       },
       {
         "value": "/products/education/",
@@ -68,11 +68,6 @@
         "visits": 50
       },
       {
-        "value": "/build/",
-        "pageLoads": 52,
-        "visits": 52
-      },
-      {
         "value": "/showroom/globe/h-earth/diagnostic/",
         "pageLoads": 50,
         "visits": 0
@@ -103,14 +98,14 @@
         "visits": 40
       },
       {
-        "value": "/meet-sean-mansfield/",
+        "value": "/evidence/agentic-frontier/",
         "pageLoads": 32,
         "visits": 22
       },
       {
-        "value": "/evidence/agentic-frontier/",
+        "value": "/build/",
         "pageLoads": 32,
-        "visits": 22
+        "visits": 32
       },
       {
         "value": "/about/",
@@ -138,9 +133,9 @@
         "visits": 0
       },
       {
-        "value": "/nine-summits/universe/",
-        "pageLoads": 23,
-        "visits": 23
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 22,
+        "visits": 12
       },
       {
         "value": "/release-proof/",
@@ -178,6 +173,11 @@
         "visits": 0
       },
       {
+        "value": "/nine-summits/universe/",
+        "pageLoads": 13,
+        "visits": 13
+      },
+      {
         "value": "/instruments/operations-chamber/",
         "pageLoads": 13,
         "visits": 13
@@ -208,14 +208,14 @@
         "visits": 10
       },
       {
-        "value": "/inspection/h-earth-t4-3-d8fca316/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/governance/",
         "pageLoads": 10,
         "visits": 0
+      },
+      {
+        "value": "/inspection/h-earth-t4-3-d8fca316/",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "/governance-bridge/collaboration/",
@@ -256,12 +256,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2875,
-        "visits": 2875
+        "pageLoads": 2805,
+        "visits": 2805
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1428,
+        "pageLoads": 1388,
         "visits": 0
       },
       {
@@ -288,8 +288,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 4447,
-        "visits": 3019
+        "pageLoads": 4490,
+        "visits": 3062
       },
       {
         "value": "BR",
@@ -443,8 +443,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3334,
-        "visits": 2780
+        "pageLoads": 3424,
+        "visits": 2850
       },
       {
         "value": "reload",
@@ -453,8 +453,8 @@
       },
       {
         "value": "back-forward",
-        "pageLoads": 253,
-        "visits": 70
+        "pageLoads": 263,
+        "visits": 80
       },
       {
         "value": "soft-navigation",
@@ -487,8 +487,8 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 4496,
-        "visits": 3068
+        "pageLoads": 4549,
+        "visits": 3121
       }
     ],
     "siteTag": [

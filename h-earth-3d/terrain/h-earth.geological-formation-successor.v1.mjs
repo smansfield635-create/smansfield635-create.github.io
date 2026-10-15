@@ -86,8 +86,8 @@ export function deriveDryDrainage(site,surveyRoute){
     const d=Math.hypot(v.x-head.x,v.z-head.z);
     // Keep a readable dry thalweg from the portal into the surveyed valley.
     // The grade stays gentle enough for the same walking support surface.
-    const design= v.originalY-(1.25+0.75*smoother(1-d/36));
-    const approach=first-0.13*d;
+    const design= v.originalY-(3.25+0.75*smoother(1-d/36));
+    const approach=first-0.20*d;
     const mix=smoother(d/36);
     // the upstream excavated bed must connect continuously and monotonically
     const raw=(1-mix)*approach+mix*design;

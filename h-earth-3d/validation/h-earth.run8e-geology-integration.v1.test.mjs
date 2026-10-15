@@ -140,6 +140,15 @@ test('excavated channel shows geologically grounded material exposure while exte
  const deep=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',x,z);
  assert(deep.incisionDepth>4,'CHANNEL_INCIDISION_TOO_SHALLOW:'+deep.incisionDepth);
  assert(deep.rockWeight>0.5,'ROCK_EXPOSURE_ZERO:'+deep.rockWeight);
+ const arrival=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',82,-290);
+ assert(arrival.incisionDepth>=2.75,'ARRIVAL_CREEKBED_NOT_READABLE:'+arrival.incisionDepth);
+ const profile=g.formation.drainage.points;
+ const maxGrade=Math.max(...profile.slice(1).map((point,i)=>{
+   const previous=profile[i],distance=Math.hypot(point.x-previous.x,point.z-previous.z);
+   return Math.abs(point.bedY-previous.bedY)/distance;
+ }));
+ assert(maxGrade<=0.65,'CREEKBED_WALKING_GRADE_EXCEEDED:'+maxGrade);
+ assert.equal(g.formation.drainage.waterPresent,false);
  const boundary=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',g.localBounds.xMin,z);
  assert.equal(boundary.rockWeight,0,'PATCH_BOUNDARY_MATERIAL_DISCONTINUITY');
  assert.equal(deep.originalWorldMutated,false);

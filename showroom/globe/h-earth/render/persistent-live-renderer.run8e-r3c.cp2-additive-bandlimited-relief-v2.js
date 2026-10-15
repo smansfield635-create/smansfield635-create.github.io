@@ -2026,7 +2026,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         // The blend still fades to the exact indexed-world albedo at the patch edge.
         const soil=role==='ERODED_TERRAIN'?Math.min(.94,exposure.incisionDepth*.58):0;
         const band=.5+.5*Math.sin(local.y*1.35+.47*Math.sin(local.x*.33)+.29*Math.sin(local.z*.41));
-        const alluvium=[.36+.055*band,.265+.05*band,.166+.035*band];
+        const alluvium=[.40+.11*band,.27+.08*band,.13+.05*band];
         const layered=rock.map((v,c)=>v*(1-soil)+alluvium[c]*soil);
         colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+layered[c]*exposure.rockWeight)*grain).concat(1),i*4);
         mats.set([.89,.025,.035,.13],i*4);

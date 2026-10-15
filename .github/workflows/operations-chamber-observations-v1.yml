@@ -1,15 +1,13 @@
 name: Operations Chamber observations
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '7,22,37,52 * * * *'
 permissions: {}
 concurrency:
   group: operations-chamber-observations
   cancel-in-progress: false
 jobs:
   collect:
-    if: github.repository == 'smansfield635-create/smansfield635-create.github.io' && vars.OPS_PUBLICATION_APPROVED == 'true'
+    if: ${{ false }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     permissions:
@@ -89,6 +87,7 @@ jobs:
           if-no-files-found: error
           retention-days: 1
   publish:
+    if: ${{ false }}
     needs: collect
     runs-on: ubuntu-latest
     timeout-minutes: 5

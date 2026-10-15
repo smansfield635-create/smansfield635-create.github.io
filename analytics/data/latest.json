@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-15T04:34:46Z",
+  "generatedAt": "2026-10-15T05:32:39Z",
   "window30d": {
-    "start": "2026-09-15T04:34:46Z",
-    "end": "2026-10-15T04:34:46Z"
+    "start": "2026-09-15T05:32:39Z",
+    "end": "2026-10-15T05:32:39Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-08",
-      "pageLoads": 84
+      "pageLoads": 81
     },
     {
       "date": "2026-10-09",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 45
+      "pageLoads": 47
     }
   ],
   "summary": {
-    "pageLoads": 4536,
-    "botPageLoads": 1801,
-    "nonBotPageLoads": 2735
+    "pageLoads": 4535,
+    "botPageLoads": 1802,
+    "nonBotPageLoads": 2733
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2862,
-      "visits": 2862
+      "pageLoads": 2861,
+      "visits": 2861
     },
     {
       "host": "diamondgatebridge.com",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 469,
-      "visits": 444
+      "pageLoads": 467,
+      "visits": 442
     },
     {
       "path": "/products/education/",

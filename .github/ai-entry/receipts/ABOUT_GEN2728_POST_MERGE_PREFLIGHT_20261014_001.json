@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "ABOUT_GEN2728_POST_MERGE_PREFLIGHT_20261014_001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6327,
+  "requestBranch": "ai-dispatch-request-about-gen2728-main-preflight",
+  "requestCommit": "5f97204a50817a2b58272182333e43ad35d1361a",
+  "requestCommitParent": "33602b1575e7d08b975ea964cceca84a29ed3c64",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "33602b1575e7d08b975ea964cceca84a29ed3c64",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "33602b1575e7d08b975ea964cceca84a29ed3c64",
+    "surface_id": "about"
+  },
+  "bridgeRunId": "38662453264",
+  "dispatchedRunId": 38662469225,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38662469225",
+  "dispatchedRunHeadSha": "33602b1575e7d08b975ea964cceca84a29ed3c64",
+  "dispatchedAt": "2026-10-15T00:52:14.491Z",
+  "resolvedAt": "2026-10-15T00:52:18.128Z"
+}

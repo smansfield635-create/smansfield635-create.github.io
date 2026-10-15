@@ -1,8 +1,8 @@
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
-import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2720-world-fixed-mid-distance-ground-v1';
+import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2710-stable-grass-beach-v1';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2720-world-fixed-mid-distance-ground-v1';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2710-stable-grass-beach-v1';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -932,10 +932,7 @@ void main(){
       vec3 dampSoil=vec3(0.125,0.082,0.043);
       vec3 soil=mix(drySoil,dampSoil,moist*0.82);
       soil*=0.88+0.19*broadSoil+0.07*brokenSoil;
-      // Roots may occur on wet bank soil, but the visually classified actual
-      // 0–38 m sandy shoreline always retains its sand material presentation.
-      float bankSoilLandward=smoothstep(30.0,42.0,vCoastDistanceMeters);
-      float soilBlend=coverage*(0.70+0.23*broadSoil)*bankSoilLandward;
+      float soilBlend=coverage*(0.70+0.23*broadSoil);
       palette=mix(palette,soil,soilBlend);
     }
 // SHORELINE_SOIL_END shade
@@ -964,24 +961,6 @@ void main(){
       palette=mix(palette,woodlandSoil,litterStrength);
       presentationContact=max(presentationContact,max(existingLitter*0.65,canopyLitter*0.10+trunkContact*0.28));
     }
-    // Gen2719 world-fixed micro-ground carpet: continuous apparent fine cover
-    // behind actual rooted blades, not enlarged source grass or added geometry.
-    // Smooth shading distance is independent of 4 m grass-selection cells.
-    // Signed coast (sand through 38 m), rock and steep slopes are excluded.
-    float carpetInland=smoothstep(36.0,72.0,vCoastDistanceMeters);
-    float carpetSlope=1.0-smoothstep(0.13,0.38,slope);
-    float carpetRock=1.0-smoothstep(0.10,0.42,rockExposure);
-    float carpetHabitat=clamp(carpetInland*carpetSlope*carpetRock,0.0,1.0);
-    float carpetBroad=noise2(world*0.028+vec2(31.0,17.0));
-    float carpetFine=noise2(world*0.27+vec2(9.0,27.0));
-    float carpetColony=smoothstep(0.20,0.72,carpetBroad*0.72+carpetFine*0.28);
-    float carpetFar=smoothstep(8.0,75.0,distanceToCamera);
-    float carpetWeight=carpetHabitat*mix(0.18,0.72,carpetFar)*
-      (0.74+0.26*carpetColony);
-    vec3 rootedGroundGreen=mix(vec3(0.034,0.111,0.027),
-      vec3(0.070,0.184,0.044),smoothstep(0.20,0.82,carpetFine));
-    rootedGroundGreen*=0.94+0.12*noise2(world*1.32+vec2(3.0,11.0));
-    palette=mix(palette,rootedGroundGreen,carpetWeight);
     base=palette;
   }else if(vRoleCode==4u){
     // Visible water arrives as GPU role 4. Keep the uploaded coast colors.

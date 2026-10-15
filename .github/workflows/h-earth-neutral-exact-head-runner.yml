@@ -131,6 +131,25 @@ jobs:
                 browserDrawExecuted:false,ownerVisualAcceptance:false,
                 releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+            elif [ "$EXACT_TARGET_SHA" = '1cc3c27d7aaa20b084ad1cf0f2e3495136de377c' ]; then
+              node --check showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js
+              node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+              node --check h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs
+              node --test \
+                h-earth-3d/validation/h-earth.geological-formation-successor.test.mjs \
+                h-earth-3d/validation/h-earth.geological-portal-interface.test.mjs \
+                h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs \
+                > /tmp/h-earth-exact-evidence/gen2735-geology-node38.tap
+              grep -Fqx -- '# pass 38' /tmp/h-earth-exact-evidence/gen2735-geology-node38.tap
+              jq -n --arg target "$EXACT_TARGET_SHA" '{
+                schema:"H_EARTH_GEN2735_GEOLOGICAL_BROWSER_PREFLIGHT_v1",
+                result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",
+                candidateHead:$target,sourceSuitePassed:38,
+                historicalGen2694CacheChain:"NOT_APPLICABLE_CHANGED_MODULE_URLS",
+                protectedWorldIdentityCheckedSeparately:true,
+                browserDrawExecuted:false,ownerVisualAcceptance:false,
+                releaseAuthorized:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
@@ -140,7 +159,7 @@ jobs:
               result:"MODERN_PROTECTED_IDENTITIES_VERIFIED",
               exactCandidateSha:$target,
               historicalValidator:{candidateHead:"35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba",disposition:"HISTORICAL_WOODLAND_20261006_NOT_APPLICABLE",executed:false},
-              modernSource:{sectorGitBlob:$sector,rockSidecarGitBlob:$rock,treeTrialGitBlob:$tree,worldBinarySha256:"48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",sourceBindingResult:(if $target=="05200380887d06d841a3e8e4c627a6eb3dc24e2e" then "GEN2735_SOURCE_TESTS_36_OF_36_PASS_NO_VISUAL_CLAIM" elif $target=="828b25664903ee0723846f133012abc3d5fd7db6" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" else "PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" end)},
+              modernSource:{sectorGitBlob:$sector,rockSidecarGitBlob:$rock,treeTrialGitBlob:$tree,worldBinarySha256:"48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",sourceBindingResult:(if $target=="05200380887d06d841a3e8e4c627a6eb3dc24e2e" then "GEN2735_SOURCE_TESTS_36_OF_36_PASS_NO_VISUAL_CLAIM" elif $target=="828b25664903ee0723846f133012abc3d5fd7db6" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="1cc3c27d7aaa20b084ad1cf0f2e3495136de377c" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" else "PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" end)},
               actualBrowserExecution:false,visualPixelAcceptance:false,productionMutation:false
             }' > /tmp/h-earth-exact-evidence/woodland-meadow-distribution-mechanical.json
           fi

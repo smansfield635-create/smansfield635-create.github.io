@@ -1462,6 +1462,50 @@
       "scopeHash": "136363e523be76aebe0d41ac04fecf7dc7386fe5ae0a879c874cb354cd024d81",
       "state": "ADMITTED_LOCKED"
     },
+    "137abbc5e34f041024f06bee3f15e50e83ad0f7c689efe3ad2856e4c6a02e6a7": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de",
+          "lockGeneration": 2728,
+          "lockScope": "ABOUT_PAGE:OCTOBER_CINEMATIC_BACKGROUND:20261014",
+          "operationId": "ABOUT_EXISTING_CINEMATIC_ART_BACKGROUND_RELEASE_20261014_001",
+          "procedureLocatorDigest": "2bc6540ee69a5bcba5eb3c0e3713d3083bcbbe8d1d5af583902f6b35795d2290",
+          "requestDigest": "fa612bae6dfc3fd8fd48a4fcdbfdfd352868d9c55cede5bd9780224253dc51f9",
+          "scopeHash": "137abbc5e34f041024f06bee3f15e50e83ad0f7c689efe3ad2856e4c6a02e6a7"
+        },
+        "bindingDigest": "c1be45e22fb5aa7edc0b43cdab6b9d3218d11e1c3404e877d52ea07cda134429",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fe3ccc1e4376163f2bb4fda8a89b3900325454946caa7e6312f3791f3bd88db9",
+          "commentId": 6181750296,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6324,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38661901124,
+          "workflowSha": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de"
+        },
+        "lineageAnchorCommitSha": "233fc6b9ae9c7565fc438bc9c8539e03012e9700",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "3bd739bf4a34cd3fd3e01c47a6c6754ed880c7de",
+      "lockGeneration": 2728,
+      "lockScope": "ABOUT_PAGE:OCTOBER_CINEMATIC_BACKGROUND:20261014",
+      "operationId": "ABOUT_EXISTING_CINEMATIC_ART_BACKGROUND_RELEASE_20261014_001",
+      "procedureLocatorDigest": "2bc6540ee69a5bcba5eb3c0e3713d3083bcbbe8d1d5af583902f6b35795d2290",
+      "released": false,
+      "requestDigest": "fa612bae6dfc3fd8fd48a4fcdbfdfd352868d9c55cede5bd9780224253dc51f9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "137abbc5e34f041024f06bee3f15e50e83ad0f7c689efe3ad2856e4c6a02e6a7",
+      "state": "ADMITTED_LOCKED"
+    },
     "1397301660e51f2f55e5076b4ebc1d84cf3e077f9c9956191dc62ba90fe92eb4": {
       "governingHead": "3d034773e189d5c8f8fa72bb53457518c1e876de",
       "independentAuthorityProvenance": {
@@ -18200,7 +18244,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2727,
+  "lockGeneration": 2728,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

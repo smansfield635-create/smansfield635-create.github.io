@@ -3,7 +3,7 @@ import {
   proposeHEarthFunctionalLandscapeNavigation,
   evaluateHEarthFunctionalLandscapeNavigationState,
   resolveHEarthNavigationBoundaryFeedback
-} from '../../functional-landscape/navigation.js?cb=mountain-traversal-20261006';
+} from '../../functional-landscape/navigation.js?cb=gen2735-geological-navigation-v1';
 import {
   createGestureControlLattice
 } from '../touch-motion-cp3a/touch-control-lattice.js';

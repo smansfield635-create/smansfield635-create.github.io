@@ -1,3 +1,5 @@
+import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge} from '../functional-landscape/geological-runtime-bridge.v1.js';
+import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
 import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2710-stable-grass-beach-v1';
@@ -1839,10 +1841,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     resources.woodlandSuppressedIndices=suppressLargeP2SourceRockTriangles(resources.woodlandSuppressedIndices,resources.largeBoulders.geometry);
     if(resources.largeBoulders.geometry.protectedSmallTriangleOffsets.length!==224||resources.woodlandRocks.geometry.suppressedTriangleOffsets.length!==224)
       throw Error('LARGE_P2_PROTECTED_SMALL_ROCK_CENSUS_MISMATCH');
+    // Gen2735: derive the approved candidate landform from the actual canonical package.
+    // Retire ONLY triangles wholly inside its bounded local patch. The canonical
+    // package, original vertex buffers and existing draw-range lengths stay frozen.
+    resources.geologicalRuntime=constructGeologicalRuntimeBridge(renderPackage);
+    resources.woodlandSuppressedIndices=retireGeologicalBaseIndices(
+      resources.woodlandSuppressedIndices,resources.geologicalRuntime.retirement);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices);
     initializeWoodlandRocks();
     initializeLargeP2Boulders();
-    initializeRearCavernPilot();
+    initializeGeologicalRendering();
     resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -1973,80 +1981,84 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.bindVertexArray(resources.vertexArray);
   }
 
-  // H_EARTH_REAR_CAVERN_BOUNDED_PILOT_GEN2730. Additive rear-facing mouth; no world or navigation mutation.
-  function buildRearCavernPilotGeometry(){
-    const x0=40,front=-269.52,mouth=-269.35,back=-268.90,segments=16;
-    const terrain=(x,z)=>{
-      const v=sampleHEarthRun8BSuccessorTerrainField(x,z);
-      if(v?.valid!==true||!Number.isFinite(v.elevation))throw Error('REAR_CAVERN_INVALID_TERRAIN');
-      return v.elevation;
-    };
-    const positions=[],normals=[],colors=[],indices=[];
-    const triangle=(v0,v1,v2,color)=>{
-      const v=[v0,v1,v2].map(p=>regionToHEarthPlanetPoint({x:p[0],y:p[1],z:p[2]}));
-      const a=[v[1].x-v[0].x,v[1].y-v[0].y,v[1].z-v[0].z],b=[v[2].x-v[0].x,v[2].y-v[0].y,v[2].z-v[0].z];
-      let nx=a[1]*b[2]-a[2]*b[1],ny=a[2]*b[0]-a[0]*b[2],nz=a[0]*b[1]-a[1]*b[0];
-      const length=Math.hypot(nx,ny,nz)||1,flip=nz>0?-1:1;
-      nx*=flip/length;ny*=flip/length;nz*=flip/length;
-      for(const p of v){positions.push(p.x,p.y,p.z);normals.push(nx,ny,nz);colors.push(...color,1);indices.push(indices.length);}
-    };
-    const points=[];
-    for(let i=0;i<=segments;i++){
-      const a=Math.PI*i/segments,s=Math.pow(Math.sin(a),0.76),c=-Math.cos(a);
-      const ix=x0+c*(1.88+0.055*Math.sin(i*2.63));
-      const ox=x0+c*(3.35+0.15*Math.sin(i*1.39));
-      points.push({
-        inner:[ix,terrain(ix,mouth)+0.17+3.16*s,mouth],
-        outer:[ox,terrain(ox,front)+0.20+4.32*s+0.30*Math.sin(a*2.1),front]
-      });
+  // Gen2735: an actual locally excavated landform, mountain overburden and
+  // physical gallery. Reuses the selected persistent WebGL2 shader and depth.
+  // The deprecated Gen2730 decorative arch is not allocated or drawn.
+  function initializeGeologicalRendering(){
+    const model=resources.geologicalRuntime;
+    if(!model?.meshes?.length||model.retirement.triangleCount<100)
+      throw Error('GEOLOGICAL_RUNTIME_MODEL_NOT_CONSTRUCTED');
+    let totalBytes=0;
+    const instances=[];
+    for(const {role,mesh} of model.meshes){
+      const n=mesh.vertexCount,positions=mesh.positions,indices=mesh.indices;
+      if(!(positions instanceof Float32Array)||!(indices instanceof Uint32Array)||n<=0||indices.length%3!==0)
+        throw Error('GEOLOGICAL_MESH_NOT_TRIANGULATED:'+role);
+      const normals=new Float32Array(n*3);
+      for(let i=0;i<indices.length;i+=3){
+        const a=indices[i]*3,b=indices[i+1]*3,c=indices[i+2]*3;
+        if(c+2>=positions.length||b+2>=positions.length||a+2>=positions.length)
+          throw Error('GEOLOGICAL_MESH_VERTEX_INDEX_INVALID:'+role);
+        const ux=positions[b]-positions[a],uy=positions[b+1]-positions[a+1],uz=positions[b+2]-positions[a+2];
+        const vx=positions[c]-positions[a],vy=positions[c+1]-positions[a+1],vz=positions[c+2]-positions[a+2];
+        const nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;
+        for(const k of [a,b,c]){normals[k]+=nx;normals[k+1]+=ny;normals[k+2]+=nz;}
+      }
+      for(let i=0;i<normals.length;i+=3){const l=Math.hypot(normals[i],normals[i+1],normals[i+2])||1;
+        normals[i]/=l;normals[i+1]/=l;normals[i+2]/=l;}
+      const colors=new Float32Array(n*4),mats=new Float32Array(n*4);
+      // Source-color continuity: never paint a new rectangle over accepted land.
+      // Exact base-triangle linear albedo drives the entire replacement rim.
+      for(let i=0;i<n;i++){
+        const local=unprojectPlanetVertex(positions[i*3],positions[i*3+1],positions[i*3+2]);
+        const natural=model.originalTerrainColorAt(local.x,local.z);
+        if(!natural)throw Error('GEOLOGICAL_CANONICAL_COLOR_CONTACT_MISSING:'+role);
+        const edge=Math.min(local.x-model.localBounds.xMin,model.localBounds.xMax-local.x,
+          local.z-model.localBounds.zMin,model.localBounds.zMax-local.z);
+        const feather=Math.min(1,Math.max(0,edge/12)),fade=feather*feather*(3-2*feather);
+        const originalTop=model.formation.excavatedOutdoorTerrain(local.x,local.z);
+        const erosion=role==='ERODED_TERRAIN'?Math.max(0,
+          local.y-originalTop):0;
+        const rock=role==='CAVERN_PHYSICAL_SHELL'?[.125,.141,.131]:
+          role==='NATURAL_CLIFF_FACE'?[.215,.231,.213]:[.237,.253,.222];
+        const weather=(role==='ERODED_TERRAIN'?Math.min(.8,erosion*.5):
+          role==='MOUNTAIN_OVERBURDEN'?.06:1)*fade;
+        const grain=1+.045*fade*Math.sin(i*.219+local.y*.33);
+        colors.set([0,1,2].map(c=>(natural[c]*(1-weather)+rock[c]*weather)*grain).concat(1),i*4);
+        mats.set([.89,.025,.035,.13],i*4);
+      }
+      const state={role,mesh,vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};
+      if(!state.vao)throw Error('GEOLOGICAL_VAO_FAILED:'+role);
+      counters.vertexArrayCreateCount++;gl.bindVertexArray(state.vao);
+      const put=(loc,data,size,type=gl.FLOAT,integer=false)=>{
+        const b=createBuffer();state.buffers.push(b);gl.bindBuffer(gl.ARRAY_BUFFER,b);
+        gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);
+        if(integer)gl.vertexAttribIPointer(loc,size,type,0,0);else gl.vertexAttribPointer(loc,size,type,false,0,0);
+        state.gpuByteLength+=data.byteLength;counters.uploadedByteLength+=data.byteLength;counters.bufferUploadCount++;
+      };
+      put(0,positions,3);put(1,normals,3);put(2,colors,4);put(3,mats,4);
+      const models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n),coast=new Float32Array(n),contact=new Float32Array(n);
+      surfaces.fill(255);ids.fill(62000);roles.fill(role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'?1:5);coast.fill(140);contact.fill(140);
+      put(4,models,1,gl.UNSIGNED_BYTE,true);put(5,surfaces,1,gl.UNSIGNED_BYTE,true);
+      put(6,ids,1,gl.UNSIGNED_SHORT,true);put(7,roles,1,gl.UNSIGNED_BYTE,true);
+      put(8,coast,1);put(9,contact,1);
+      state.indexBuffer=createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,state.indexBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);
+      state.gpuByteLength+=indices.byteLength;totalBytes+=state.gpuByteLength;
+      counters.uploadedByteLength+=indices.byteLength;counters.bufferUploadCount++;
+      instances.push(state);
     }
-    for(let i=0;i<segments;i++){
-      const a=points[i],b=points[i+1],shade=0.81+0.18*(0.5+0.5*Math.sin(i*3.27));
-      const color=[0.208*shade,0.237*shade,0.230*shade];
-      triangle(a.outer,a.inner,b.outer,color);
-      triangle(b.outer,a.inner,b.inner,color.map(v=>v*0.92));
-      const ia=[a.inner[0],a.inner[1],back],ib=[b.inner[0],b.inner[1],back];
-      triangle(a.inner,ia,b.inner,[0.055,0.069,0.071]);
-      triangle(b.inner,ia,ib,[0.047,0.060,0.062]);
-      triangle([x0,terrain(x0,back)+0.27,back+0.02],ia,ib,[0.008,0.016,0.019]);
-    }
-    for(const side of [-1,1]){
-      const x=x0+side*3.38,z=front-0.13,y=terrain(x,z);
-      const foot=[x+side*0.48,y+0.08,z-0.12],shoulder=[x,y+2.24,z],ridge=[x-side*0.76,y+3.18,z+0.13];
-      triangle(foot,shoulder,ridge,[0.141,0.157,0.149]);
-      triangle(foot,ridge,[x-side*0.25,y+0.07,z+0.12],[0.166,0.185,0.173]);
-    }
-    const vertexCount=positions.length/3,triangleCount=indices.length/3;
-    if(vertexCount<160||vertexCount>600||triangleCount<50||triangleCount>200)throw Error('REAR_CAVERN_GEOMETRY_BUDGET_INVALID');
-    return Object.freeze({positions:new Float32Array(positions),normals:new Float32Array(normals),colors:new Float32Array(colors),indices:new Uint32Array(indices),vertexCount,triangleCount,portal:{x:40,z:-268,facing:'REAR_NEGATIVE_Z',enterable:false},canonicalWorldMutated:false});
-  }
-  function initializeRearCavernPilot(){
-    const geometry=buildRearCavernPilotGeometry(),n=geometry.vertexCount;
-    const state={geometry,mainDrawCount:0,gpuByteLength:0,bufferUploadCount:0,buffers:[]};
-    state.vao=gl.createVertexArray();if(!state.vao)throw Error('REAR_CAVERN_VAO_FAILED');
-    counters.vertexArrayCreateCount++;gl.bindVertexArray(state.vao);
-    const bind=(location,data,size,type,integer=false)=>{
-      const buffer=createBuffer();state.buffers.push(buffer);
-      gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(location);
-      if(integer)gl.vertexAttribIPointer(location,size,type,0,0);else gl.vertexAttribPointer(location,size,type,false,0,0);
-      state.gpuByteLength+=data.byteLength;state.bufferUploadCount++;counters.bufferUploadCount++;counters.uploadedByteLength+=data.byteLength;
-    };
-    const mats=new Float32Array(n*4),models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n),coast=new Float32Array(n),contact=new Float32Array(n);
-    for(let i=0;i<n;i++){mats.set([0.94,0.025,0.015,0.12],i*4);surfaces[i]=255;ids[i]=60000;roles[i]=5;coast[i]=140;contact[i]=140;}
-    bind(0,geometry.positions,3,gl.FLOAT);bind(1,geometry.normals,3,gl.FLOAT);bind(2,geometry.colors,4,gl.FLOAT);bind(3,mats,4,gl.FLOAT);
-    bind(4,models,1,gl.UNSIGNED_BYTE,true);bind(5,surfaces,1,gl.UNSIGNED_BYTE,true);bind(6,ids,1,gl.UNSIGNED_SHORT,true);
-    bind(7,roles,1,gl.UNSIGNED_BYTE,true);bind(8,coast,1,gl.FLOAT);bind(9,contact,1,gl.FLOAT);
-    state.indexBuffer=createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,state.indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,geometry.indices,gl.STATIC_DRAW);
-    state.gpuByteLength+=geometry.indices.byteLength;state.bufferUploadCount++;counters.bufferUploadCount++;counters.uploadedByteLength+=geometry.indices.byteLength;
-    if(state.gpuByteLength>32768)throw Error('REAR_CAVERN_GPU_BUDGET_EXCEEDED');
-    resources.rearCavern=state;
+    if(totalBytes>4*1024*1024)throw Error('GEOLOGICAL_GPU_MEMORY_BUDGET_EXCEEDED');
+    resources.geologicalMeshes=instances;resources.geologicalGPUBytes=totalBytes;
     gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);
+    // Navigation shares the exact same formation object, never a copied height map.
+    resources.geologicalNavigationInstallation=installGeologicalRuntimeBridge(model);
   }
-  function drawRearCavernPilot(){
-    const state=resources.rearCavern;if(!state)return;
-    gl.bindVertexArray(state.vao);gl.drawElements(gl.TRIANGLES,state.geometry.indices.length,gl.UNSIGNED_INT,0);
-    state.mainDrawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=state.geometry.indices.length;
+  function drawGeologicalRendering(){
+    gl.uniform1i(resources.uniforms.clipBaseTerrain,0);
+    const parts=resources.geologicalMeshes||[];
+    for(const part of parts){gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.mesh.indices.length,gl.UNSIGNED_INT,0);
+      part.drawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=part.mesh.indices.length;}
     gl.bindVertexArray(resources.vertexArray);
   }
 
@@ -2151,6 +2163,19 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       normals.set([t.normal.x,t.normal.y,t.normal.z],vi*3);patchCoastDistances[vi]=getHEarthSignedCoastDistanceMeters(x,z);vi++;
     }
     const indices=new Uint32Array(triangleCount*3);let ii=0,cols=xs.length;for(let r=0;r<zs.length-1;r++)for(let c=0;c<cols-1;c++){const a=r*cols+c,b=a+1,d=(r+1)*cols+c+1,e=(r+1)*cols+c;indices.set([a,e,b,b,e,d],ii);ii+=6;}
+    // No overlapping old refinement triangles may obscure the true cave opening.
+    // Index cardinality stays unchanged for downstream residency contracts.
+    if(resources.geologicalRuntime){
+      const box=resources.geologicalRuntime.localBounds;
+      for(let r=0;r<zs.length-1;r++)for(let c=0;c<xs.length-1;c++){
+        const xx=(xs[c]+xs[c+1])*.5,zz=(zs[r]+zs[r+1])*.5;
+        if(xx>box.xMin&&xx<box.xMax&&zz>box.zMin&&zz<box.zMax){
+          const start=(r*(xs.length-1)+c)*6;
+          indices[start+1]=indices[start];indices[start+2]=indices[start];
+          indices[start+4]=indices[start+3];indices[start+5]=indices[start+3];
+        }
+      }
+    }
     contactField=createExposedWaterContactField(uploadViews,renderPackage.primitiveSpans,{positions,indices,x:x0,z:z0});
     contactFieldBuildCount++;contactFieldTotalMilliseconds+=contactField.stats.initializationMilliseconds;
     const contactBuffer=resources.buffers.find(entry=>entry.name==='contactDistances').buffer;
@@ -2281,7 +2306,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);for(const resident of resources.vegetation.residentBatches){gl.bindVertexArray(resident.vao);gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);counters.vegetationDrawCallCount++;counters.totalDrawnIndexCount+=resident.indexCount;}gl.bindVertexArray(resources.vertexArray);
     drawWoodlandRocks(false);
     drawLargeP2Boulders(false);
-    drawRearCavernPilot();
+    drawGeologicalRendering();
     drawGlobalCover(packet);
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
@@ -2387,6 +2412,11 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       noUnauthorizedPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === (counters.globalCoverAuthorizedResourceCreateCount??0),
       noUnauthorizedPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0 && (counters.contactOwnershipBufferUpdateCount??0) === 0,
       authorizedVegetationPostReadyResidency: true,
+      geologicalFormation:resources.geologicalRuntime?{siteId:resources.geologicalRuntime.site.id,
+        originalBaseTrianglesRetired:resources.geologicalRuntime.retirement.triangleCount,
+        attachedMeshCount:resources.geologicalMeshes?.length??0,gpuByteLength:resources.geologicalGPUBytes,
+        physicalNavigationInstalled:resources.geologicalNavigationInstallation?.installed===true,
+        oldDecorativeArchDrawn:false,realWorldPackagePreserved:true,freshwaterClaimed:false}:null,
       refinementResourceAuthorized:true, refinementResourceCreated:resources.refinement?.created===true,
       refinementResourceBufferUploadCount:counters.refinementBufferUploadCount,
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,

@@ -87,7 +87,7 @@ export function traceD8(field,start,{study=STUDY,step=2,maxSteps=1500,entry=OASI
   }
   if(status.length===0)status.push('MAX_STEPS');
   const last=trail.at(-1);
-  return {result:status[0],start:{x:snap(start.x),z:snap(start.z),height:round(headHeight)},steps:trail.length,final:last,netElevationFall:round(headHeight-last.height),pathLengthMeters:round(trail.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-trail[i].x,p.z-trail[i].z),0)),firstSamples:trail.slice(0,12),lastSamples:trail.slice(-12),entersOasis:status[0]==='ENTERS_OASIS_STUDY_FOOTPRINT'};
+  return {result:status[0],start:{x:snap(start.x),z:snap(start.z),height:round(headHeight)},steps:trail.length,final:last,netElevationFall:round(headHeight-last.height),pathLengthMeters:round(trail.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-trail[i].x,p.z-trail[i].z),0)),path:trail,firstSamples:trail.slice(0,12),lastSamples:trail.slice(-12),entersOasis:status[0]==='ENTERS_OASIS_STUDY_FOOTPRINT'};
 }
 export function analyzeCanonicalWorld(value,manifest,{surveyHead=null}={}){
   invariant(value?.canonical?.packageIdentity===manifest.packageIdentity,'PACKAGE_IDENTITY');

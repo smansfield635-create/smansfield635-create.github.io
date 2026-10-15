@@ -15,7 +15,8 @@ const PUBLIC_PAYLOAD_EXCLUDES=[
   '.github',
   'node_modules',
   'h-earth-live-6d18e158',
-  'inspection/audralia-24057-exact'
+  'inspection/audralia-24057-exact',
+  'tools/operations-chamber'
 ];
 const AUTHORIZED_EXCLUDED_RUNTIME_DEPENDENCIES=Object.freeze({
   audralia:Object.freeze({

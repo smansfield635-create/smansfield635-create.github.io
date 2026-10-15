@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-15T17:29:56Z",
+  "generatedAt": "2026-10-15T19:27:28Z",
   "window": {
-    "start": "2026-07-17T17:29:56Z",
-    "end": "2026-10-15T17:29:56Z"
+    "start": "2026-07-17T19:27:28Z",
+    "end": "2026-10-15T19:27:28Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4892,
-    "visits": 1315,
+    "pageLoads": 4932,
+    "visits": 1325,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4892,
-        "visits": 1315
+        "pageLoads": 4932,
+        "visits": 1325
       }
     },
     "byPath": {
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 157,
+        "pageLoads": 167,
         "visits": 2
       },
       "/showroom/": {
@@ -67,8 +67,8 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 280,
-        "visits": 80
+        "pageLoads": 300,
+        "visits": 90
       },
       "/index.html": {
         "pageLoads": 140,
@@ -93,6 +93,10 @@
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
         "visits": 0
+      },
+      "/products/education/": {
+        "pageLoads": 270,
+        "visits": 70
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -178,16 +182,12 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
         "visits": 0
       },
       "/gauges/": {
@@ -196,6 +196,14 @@
       },
       "/laws/categories/reality/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/instruments/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -208,10 +216,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -230,13 +234,13 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -310,10 +314,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
-      },
       "/analytics-owner-device/": {
         "pageLoads": 30,
         "visits": 30
@@ -330,12 +330,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -349,12 +349,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3577,
+        "pageLoads": 3607,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 772,
-        "visits": 772
+        "pageLoads": 782,
+        "visits": 782
       },
       "(none)": {
         "pageLoads": 533,

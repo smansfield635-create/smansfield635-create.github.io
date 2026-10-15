@@ -89,14 +89,38 @@ jobs:
             node --check "$sector"
             node --check "$rock"
             node --check "$tree"
+            # Exact later geology changes only its module cache identity; the
+            # historical Gen2694 cache chain is not a universal future invariant.
+            # Every other exact SHA keeps the original fail-closed source check.
+            if [ "$EXACT_TARGET_SHA" = '05200380887d06d841a3e8e4c627a6eb3dc24e2e' ]; then
+              node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+              node --check showroom/globe/h-earth/functional-landscape/navigation.js
+              node --check showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js
+              node --test \
+                h-earth-3d/validation/h-earth.geological-formation-successor.test.mjs \
+                h-earth-3d/validation/h-earth.geological-portal-interface.test.mjs \
+                h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs \
+                > /tmp/h-earth-exact-evidence/gen2735-geology-node36.tap
+              grep -Eq '^# pass 36$' /tmp/h-earth-exact-evidence/gen2735-geology-node36.tap
+              jq -n --arg target "$EXACT_TARGET_SHA" '{
+                schema:"H_EARTH_GEN2735_GEOLOGICAL_BROWSER_PREFLIGHT_v1",
+                result:"SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE",
+                candidateHead:$target,sourceSuitePassed:36,
+                historicalGen2694CacheChain:"NOT_APPLICABLE_CHANGED_MODULE_URLS",
+                protectedWorldIdentityCheckedSeparately:true,
+                browserDrawExecuted:false,ownerVisualAcceptance:false,
+                releaseAuthorized:false
+              }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+            else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
+            fi
             jq -n --arg target "$EXACT_TARGET_SHA" --arg sector "$sector_blob" --arg rock "$rock_blob" --arg tree "$tree_blob" '{
               schema:"H_EARTH_NEUTRAL_MECHANICAL_APPLICABILITY_v1",
               result:"MODERN_PROTECTED_IDENTITIES_VERIFIED",
               exactCandidateSha:$target,
               historicalValidator:{candidateHead:"35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba",disposition:"HISTORICAL_WOODLAND_20261006_NOT_APPLICABLE",executed:false},
-              modernSource:{sectorGitBlob:$sector,rockSidecarGitBlob:$rock,treeTrialGitBlob:$tree,worldBinarySha256:"48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",sourceBindingResult:"PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE"},
+              modernSource:{sectorGitBlob:$sector,rockSidecarGitBlob:$rock,treeTrialGitBlob:$tree,worldBinarySha256:"48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",sourceBindingResult:(if $target=="05200380887d06d841a3e8e4c627a6eb3dc24e2e" then "GEN2735_SOURCE_TESTS_36_OF_36_PASS_NO_VISUAL_CLAIM" else "PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" end)},
               actualBrowserExecution:false,visualPixelAcceptance:false,productionMutation:false
             }' > /tmp/h-earth-exact-evidence/woodland-meadow-distribution-mechanical.json
           fi

@@ -63,9 +63,9 @@ export function constructGeologicalRuntimeBridge(canonical){
   const entranceFade=(z)=>1-smooth((z-SITE.portalZ)/11);
   const roofAt=(x,z)=>{
     const s=(x-SITE.x)/SITE.width,t=(z-SITE.portalZ)/SITE.galleryLength,e=entranceFade(z);
-    const weathering=e*(.24*Math.sin(1.55*x+.73*z)+.13*Math.sin(.91*x-1.21*z+1.7));
-    const shoulder=e*(s<0?.22:-.08)*Math.exp(-Math.pow((Math.abs(s)-.72)/.34,2));
-    const inner=.075*Math.sin(.62*x+.37*z)*Math.sin(Math.PI*clamp(t,0,1));
+    const weathering=e*(.62*Math.sin(1.37*x+.61*z)+.34*Math.sin(.77*x-1.03*z+1.7)+.18*Math.sin(2.11*x+.29*z));
+    const shoulder=e*(s<0?.38:-.16)*Math.exp(-Math.pow((Math.abs(s)-.68)/.38,2));
+    const inner=.16*Math.sin(.62*x+.37*z)*Math.sin(Math.PI*clamp(t,0,1));
     return baseFormation.roofAt(x,z)+weathering+shoulder+inner;
   };
   const floorAt=(x,z)=>{
@@ -74,7 +74,7 @@ export function constructGeologicalRuntimeBridge(canonical){
     return baseFormation.floorAt(x,z)+mouth*(.035*Math.sin(1.1*x-.8*z)+.025*Math.sin(.57*x+1.3*z))+
       .035*Math.sin(.8*x+.5*z)*Math.sin(Math.PI*clamp(t,0,1))*(1-Math.abs(s)*.35);
   };
-  const caveRadius=(z)=>baseFormation.caveRadius(z)*(1+.035*Math.sin((z-SITE.portalZ)*.23+.8));
+  const caveRadius=(z)=>baseFormation.caveRadius(z)*(1+.075*Math.sin((z-SITE.portalZ)*.23+.8)+.032*Math.sin((z-SITE.portalZ)*.61+1.4));
   const insideVoid=(x,y,z)=>{
     if(z<SITE.portalZ||z>SITE.portalZ+SITE.galleryLength)return false;
     const radius=caveRadius(z),ratio=Math.abs(x-SITE.x)/radius;

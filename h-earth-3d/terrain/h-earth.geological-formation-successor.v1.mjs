@@ -84,10 +84,11 @@ export function deriveDryDrainage(site,surveyRoute){
   let previous=first;
   const profile=route.map((v,i)=>{
     const d=Math.hypot(v.x-head.x,v.z-head.z);
-    // A localized headcut tapers to ordinary ~0.6 m incision beyond 28 m.
-    const design= v.originalY-(0.45+0.25*smoother(1-d/28));
-    const approach=first-0.085*d;
-    const mix=smoother(d/28);
+    // Keep a readable dry thalweg from the portal into the surveyed valley.
+    // The grade stays gentle enough for the same walking support surface.
+    const design= v.originalY-(1.25+0.75*smoother(1-d/36));
+    const approach=first-0.13*d;
+    const mix=smoother(d/36);
     // the upstream excavated bed must connect continuously and monotonically
     const raw=(1-mix)*approach+mix*design;
     const bed=Math.min(previous-0.008,raw,v.originalY-0.25);
@@ -129,7 +130,8 @@ export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_S
     // Behind the portal, preserve the mountain roof rather than lowering terrain.
     const forwardDistance=Math.max(0,z-site.portalZ);
     const backFade=1-smoother(forwardDistance/4);
-    const radius=7.2+1.25*Math.sin(nearest.segment*.28);
+    const distanceFromPortal=Math.hypot(nearest.x-site.x,nearest.z-site.portalZ);
+    const radius=7.1+3.8*smoother(distanceFromPortal/36)+0.45*Math.sin(nearest.segment*.28);
     const r=nearest.distance/radius;if(r>=1||backFade<=0)return base;
     const w=smoother(1-r)*backFade;
     return base-Math.max(0,base-nearest.bedY)*w;

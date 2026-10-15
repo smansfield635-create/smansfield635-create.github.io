@@ -2014,18 +2014,20 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         const natural=model.originalTerrainColorAt(local.x,local.z);
         if(!natural)throw Error('GEOLOGICAL_CANONICAL_COLOR_CONTACT_MISSING:'+role);
         const exposure=sampleGeologicalMaterialExposure(model,role,local.x,local.z);
-        const layer=.5+.5*Math.sin(local.y*1.17+local.x*.19+local.z*.075+
-          .31*Math.sin(local.x*.23-local.z*.13));
-        const grain=.965+.035*Math.sin(local.x*.31+local.z*.17+local.y*.29);
+        const layer=.5+.5*Math.sin(local.y*1.55+.34*Math.sin(local.x*.43)+
+          .27*Math.sin(local.z*.61+local.x*.17)+.18*Math.sin(local.y*.37-local.z*.22));
+        const grain=.94+.06*Math.sin(local.x*.31+local.z*.17+local.y*.29);
         const rock=role==='CAVERN_PHYSICAL_SHELL'?
-          [.105+.032*layer,.094+.027*layer,.078+.021*layer]:
+          [.092+.072*layer,.081+.061*layer,.067+.047*layer]:
           role==='NATURAL_CLIFF_FACE'?
-            [.188+.075*layer,.157+.061*layer,.119+.043*layer]:
-            [.226+.071*layer,.186+.061*layer,.137+.046*layer];
-        // Incision exposes warm, layered soil and gravel along the dry channel.
+            [.168+.16*layer,.141+.13*layer,.105+.09*layer]:
+            [.206+.105*layer,.168+.09*layer,.122+.068*layer];
+        // Incision exposes visibly warm stratified soil and gravel along the dry channel.
         // The blend still fades to the exact indexed-world albedo at the patch edge.
-        const soil=role==='ERODED_TERRAIN'?Math.min(.72,exposure.incisionDepth*.46):0;
-        const layered=rock.map((v,c)=>v*(1-soil)+[.31,.255,.183][c]*soil);
+        const soil=role==='ERODED_TERRAIN'?Math.min(.94,exposure.incisionDepth*.58):0;
+        const band=.5+.5*Math.sin(local.y*1.35+.47*Math.sin(local.x*.33)+.29*Math.sin(local.z*.41));
+        const alluvium=[.36+.055*band,.265+.05*band,.166+.035*band];
+        const layered=rock.map((v,c)=>v*(1-soil)+alluvium[c]*soil);
         colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+layered[c]*exposure.rockWeight)*grain).concat(1),i*4);
         mats.set([.89,.025,.035,.13],i*4);
       }

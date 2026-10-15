@@ -1842,6 +1842,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices);
     initializeWoodlandRocks();
     initializeLargeP2Boulders();
+    initializeRearCavernPilot();
     resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -1971,6 +1972,84 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(shadow)state.shadowDrawCount++;else{state.mainDrawCount++;counters.totalDrawnIndexCount+=state.geometry.indices.length;}
     gl.bindVertexArray(resources.vertexArray);
   }
+
+  // H_EARTH_REAR_CAVERN_BOUNDED_PILOT_GEN2730. Additive rear-facing mouth; no world or navigation mutation.
+  function buildRearCavernPilotGeometry(){
+    const x0=40,front=-269.52,mouth=-269.35,back=-268.90,segments=16;
+    const terrain=(x,z)=>{
+      const v=sampleHEarthRun8BSuccessorTerrainField(x,z);
+      if(v?.valid!==true||!Number.isFinite(v.elevation))throw Error('REAR_CAVERN_INVALID_TERRAIN');
+      return v.elevation;
+    };
+    const positions=[],normals=[],colors=[],indices=[];
+    const triangle=(v0,v1,v2,color)=>{
+      const v=[v0,v1,v2].map(p=>regionToHEarthPlanetPoint({x:p[0],y:p[1],z:p[2]}));
+      const a=[v[1].x-v[0].x,v[1].y-v[0].y,v[1].z-v[0].z],b=[v[2].x-v[0].x,v[2].y-v[0].y,v[2].z-v[0].z];
+      let nx=a[1]*b[2]-a[2]*b[1],ny=a[2]*b[0]-a[0]*b[2],nz=a[0]*b[1]-a[1]*b[0];
+      const length=Math.hypot(nx,ny,nz)||1,flip=nz>0?-1:1;
+      nx*=flip/length;ny*=flip/length;nz*=flip/length;
+      for(const p of v){positions.push(p.x,p.y,p.z);normals.push(nx,ny,nz);colors.push(...color,1);indices.push(indices.length);}
+    };
+    const points=[];
+    for(let i=0;i<=segments;i++){
+      const a=Math.PI*i/segments,s=Math.pow(Math.sin(a),0.76),c=-Math.cos(a);
+      const ix=x0+c*(1.88+0.055*Math.sin(i*2.63));
+      const ox=x0+c*(3.35+0.15*Math.sin(i*1.39));
+      points.push({
+        inner:[ix,terrain(ix,mouth)+0.17+3.16*s,mouth],
+        outer:[ox,terrain(ox,front)+0.20+4.32*s+0.30*Math.sin(a*2.1),front]
+      });
+    }
+    for(let i=0;i<segments;i++){
+      const a=points[i],b=points[i+1],shade=0.81+0.18*(0.5+0.5*Math.sin(i*3.27));
+      const color=[0.208*shade,0.237*shade,0.230*shade];
+      triangle(a.outer,a.inner,b.outer,color);
+      triangle(b.outer,a.inner,b.inner,color.map(v=>v*0.92));
+      const ia=[a.inner[0],a.inner[1],back],ib=[b.inner[0],b.inner[1],back];
+      triangle(a.inner,ia,b.inner,[0.055,0.069,0.071]);
+      triangle(b.inner,ia,ib,[0.047,0.060,0.062]);
+      triangle([x0,terrain(x0,back)+0.27,back+0.02],ia,ib,[0.008,0.016,0.019]);
+    }
+    for(const side of [-1,1]){
+      const x=x0+side*3.38,z=front-0.13,y=terrain(x,z);
+      const foot=[x+side*0.48,y+0.08,z-0.12],shoulder=[x,y+2.24,z],ridge=[x-side*0.76,y+3.18,z+0.13];
+      triangle(foot,shoulder,ridge,[0.141,0.157,0.149]);
+      triangle(foot,ridge,[x-side*0.25,y+0.07,z+0.12],[0.166,0.185,0.173]);
+    }
+    const vertexCount=positions.length/3,triangleCount=indices.length/3;
+    if(vertexCount<160||vertexCount>600||triangleCount<50||triangleCount>200)throw Error('REAR_CAVERN_GEOMETRY_BUDGET_INVALID');
+    return Object.freeze({positions:new Float32Array(positions),normals:new Float32Array(normals),colors:new Float32Array(colors),indices:new Uint32Array(indices),vertexCount,triangleCount,portal:{x:40,z:-268,facing:'REAR_NEGATIVE_Z',enterable:false},canonicalWorldMutated:false});
+  }
+  function initializeRearCavernPilot(){
+    const geometry=buildRearCavernPilotGeometry(),n=geometry.vertexCount;
+    const state={geometry,mainDrawCount:0,gpuByteLength:0,bufferUploadCount:0,buffers:[]};
+    state.vao=gl.createVertexArray();if(!state.vao)throw Error('REAR_CAVERN_VAO_FAILED');
+    counters.vertexArrayCreateCount++;gl.bindVertexArray(state.vao);
+    const bind=(location,data,size,type,integer=false)=>{
+      const buffer=createBuffer();state.buffers.push(buffer);
+      gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,data,gl.STATIC_DRAW);gl.enableVertexAttribArray(location);
+      if(integer)gl.vertexAttribIPointer(location,size,type,0,0);else gl.vertexAttribPointer(location,size,type,false,0,0);
+      state.gpuByteLength+=data.byteLength;state.bufferUploadCount++;counters.bufferUploadCount++;counters.uploadedByteLength+=data.byteLength;
+    };
+    const mats=new Float32Array(n*4),models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n),coast=new Float32Array(n),contact=new Float32Array(n);
+    for(let i=0;i<n;i++){mats.set([0.94,0.025,0.015,0.12],i*4);surfaces[i]=255;ids[i]=60000;roles[i]=5;coast[i]=140;contact[i]=140;}
+    bind(0,geometry.positions,3,gl.FLOAT);bind(1,geometry.normals,3,gl.FLOAT);bind(2,geometry.colors,4,gl.FLOAT);bind(3,mats,4,gl.FLOAT);
+    bind(4,models,1,gl.UNSIGNED_BYTE,true);bind(5,surfaces,1,gl.UNSIGNED_BYTE,true);bind(6,ids,1,gl.UNSIGNED_SHORT,true);
+    bind(7,roles,1,gl.UNSIGNED_BYTE,true);bind(8,coast,1,gl.FLOAT);bind(9,contact,1,gl.FLOAT);
+    state.indexBuffer=createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,state.indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,geometry.indices,gl.STATIC_DRAW);
+    state.gpuByteLength+=geometry.indices.byteLength;state.bufferUploadCount++;counters.bufferUploadCount++;counters.uploadedByteLength+=geometry.indices.byteLength;
+    if(state.gpuByteLength>32768)throw Error('REAR_CAVERN_GPU_BUDGET_EXCEEDED');
+    resources.rearCavern=state;
+    gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);
+  }
+  function drawRearCavernPilot(){
+    const state=resources.rearCavern;if(!state)return;
+    gl.bindVertexArray(state.vao);gl.drawElements(gl.TRIANGLES,state.geometry.indices.length,gl.UNSIGNED_INT,0);
+    state.mainDrawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=state.geometry.indices.length;
+    gl.bindVertexArray(resources.vertexArray);
+  }
+
   function drawWoodlandRocks(shadow=false){const state=resources.woodlandRocks;if(!state)return;gl.bindVertexArray(state.vao);gl.drawElements(gl.TRIANGLES,state.geometry.indices.length,gl.UNSIGNED_INT,0);if(shadow)state.shadowDrawCount++;else{state.mainDrawCount++;counters.totalDrawnIndexCount+=state.geometry.indices.length;}gl.bindVertexArray(resources.vertexArray);}
 
   async function initializeClearing(packet){
@@ -2202,6 +2281,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);for(const resident of resources.vegetation.residentBatches){gl.bindVertexArray(resident.vao);gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);counters.vegetationDrawCallCount++;counters.totalDrawnIndexCount+=resident.indexCount;}gl.bindVertexArray(resources.vertexArray);
     drawWoodlandRocks(false);
     drawLargeP2Boulders(false);
+    drawRearCavernPilot();
     drawGlobalCover(packet);
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
@@ -2293,6 +2373,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         stagedRecordCount:resources.localCoverPreview.count,gpuByteLength:resources.localCoverPreview.gpuByteLength,
         uploadCount:resources.localCoverPreview.uploadCount,...resources.localCoverPreview.lastDraw}:null,
       globalGroundCover: resources.globalCover?{...resources.globalCover.cover.receipt,prepared:true,storedInstanceCount:resources.globalCover.cover.receipt.instanceCount,gpuByteLength:resources.globalCover.gpuByteLength,uploadCount:resources.globalCover.uploadCount,maximumUploadChunkBytes:resources.globalCover.maximumUploadChunkBytes,authorizedPostReadyResourceCount:resources.globalCover.resourceCount,...resources.globalCover.lastDraw}: {prepared:false,storedInstanceCount:0},
+      rearCavern:resources.rearCavern?{...resources.rearCavern.geometry.portal,vertexCount:resources.rearCavern.geometry.vertexCount,triangleCount:resources.rearCavern.geometry.triangleCount,gpuByteLength:resources.rearCavern.gpuByteLength,mainDrawCount:resources.rearCavern.mainDrawCount,canonicalWorldPreserved:true,actualGeometryDrawn:true}:null,
       largeP2Boulders:resources.largeBoulders?{...resources.largeBoulders.geometry.receipt,
         gpuByteLength:resources.largeBoulders.gpuByteLength,mainDrawCount:resources.largeBoulders.mainDrawCount,
         shadowDrawCount:resources.largeBoulders.shadowDrawCount,

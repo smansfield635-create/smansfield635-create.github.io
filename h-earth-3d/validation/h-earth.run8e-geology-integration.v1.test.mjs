@@ -45,14 +45,25 @@ test('real terrain D8 survey supplies a descending scenic river network without 
  assert.equal(water.filter(x=>x.role==='FRESHWATER_RIVER').length,1);
  const oasis=water.find(x=>x.role==='OASIS_WATER'),basin=geology().formation.oasis;
  assert(oasis.mesh.triangleCount>450,'SECOND_OASIS_RENDERED_FOOTPRINT_TOO_SMALL');
+ assert(basin.waterEdgeScale>=.5&&basin.waterEdgeScale<.6,'OASIS_WATER_DOES_NOT_RETAIN_AN_IRREGULAR_INNER_POOL');
+ assert(basin.edgeHarmonics.length>=5,'OASIS_SHORELINE_REMAINS_OVAL');
  const oasisLocal=Array.from({length:oasis.mesh.positions.length/3},(_,i)=>unprojectPlanetVertex(...oasis.mesh.positions.slice(i*3,i*3+3)));
- assert(Math.max(...oasisLocal.map(p=>p.x))-Math.min(...oasisLocal.map(p=>p.x))>35,'SECOND_OASIS_TOO_NARROW');
- assert(Math.max(...oasisLocal.map(p=>p.z))-Math.min(...oasisLocal.map(p=>p.z))>20,'SECOND_OASIS_TOO_SHORT');
+ const oasisWidth=Math.max(...oasisLocal.map(p=>p.x))-Math.min(...oasisLocal.map(p=>p.x));
+ const oasisLength=Math.max(...oasisLocal.map(p=>p.z))-Math.min(...oasisLocal.map(p=>p.z));
+ assert(oasisWidth>35&&oasisWidth<basin.radiusX*1.8,'SECOND_OASIS_WIDTH_NOT_A_BOUNDED_INNER_POOL:'+oasisWidth);
+ assert(oasisLength>20&&oasisLength<basin.radiusZ*1.8,'SECOND_OASIS_LENGTH_NOT_A_BOUNDED_INNER_POOL:'+oasisLength);
  assert.equal(basin.centerX,40,'SECOND_OASIS_MISSES_PHOTOGRAPHED_LANDMARK');
  const main=water.find(x=>x.role==='FRESHWATER_RIVER').mesh,mainRoute=geology().formation.drainage.waterRoutes[0].points;
  const lateral=mainRoute.map((p,i)=>{const a=unprojectPlanetVertex(...main.positions.slice(i*6,i*6+3)),b=unprojectPlanetVertex(...main.positions.slice(i*6+3,i*6+6));return Math.hypot((a.x+b.x)/2-p.x,(a.z+b.z)/2-p.z)});
  assert(Math.max(...lateral)>4,'MAIN_RIVER_REMAINS_STRAIGHT');
  assert(lateral.filter(v=>v>2).length>10,'MAIN_RIVER_MEANDER_TOO_SHORT');
+ const riverWidths=mainRoute.map((_,i)=>{
+   const a=unprojectPlanetVertex(...main.positions.slice(i*6,i*6+3)),b=unprojectPlanetVertex(...main.positions.slice(i*6+3,i*6+6));
+   return Math.hypot(a.x-b.x,a.z-b.z);
+ });
+ const confluence=mainRoute.reduce((best,p,i)=>Math.hypot(p.x-basin.centerX,p.z-basin.centerZ)<best.distance?
+   {distance:Math.hypot(p.x-basin.centerX,p.z-basin.centerZ),index:i}:best,{distance:Infinity,index:0});
+ assert(riverWidths[confluence.index]>riverWidths[0]*1.3,'CHANNEL_DOES_NOT_BROADEN_INTO_OASIS');
  assert.equal(geology().hydrology.connectedOutletProven,false);
 });
 test('original terrain indices are retired by degeneracy only within declared mask',()=>{
@@ -174,6 +185,8 @@ test('excavated channel shows geologically grounded material exposure while exte
  assert(maxGrade<=0.65,'CREEKBED_WALKING_GRADE_EXCEEDED:'+maxGrade);
  assert.equal(g.formation.drainage.waterPresent,true);
  assert.equal(g.hydrology.waterSourceProven,false);
+ const cliff=sampleGeologicalMaterialExposure(g,'NATURAL_CLIFF_FACE',g.site.x,g.site.portalZ+1);
+ assert(cliff.rockWeight>.5&&cliff.rockWeight<1,'EXPOSED_CLIFF_FACE_COLOR_DOES_NOT_BLEND_WITH_LOCAL_TERRAIN');
  assert.equal(g.formation.oasis.centerX,40,'OASIS_MISSES_PHOTOGRAPHED_LANDMARK');
  assert.equal(g.formation.oasis.centerZ,-284,'OASIS_MISSES_LEGACY_DISCOLORATION_CENTER');
  assert(g.formation.oasis.radiusX>=38&&g.formation.oasis.radiusZ>=34,'OASIS_DOES_NOT_COVER_DISCOLORATION_FOOTPRINT');
@@ -186,12 +199,9 @@ test('excavated channel shows geologically grounded material exposure while exte
  assert(renderer.includes("role==='FRESHWATER_RIVER'||role==='OASIS_WATER'"));
  assert(renderer.includes('designedFreshwaterRendered'));
  assert(renderer.includes('const alluvium=[.55+.16*band,.36+.11*band,.18+.07*band];'));
+ assert(renderer.includes('const shoreDepth=Math.max(0,Math.min(1,(waterline-Math.hypot(dx,dz))/0.22));'));
  assert(!renderer.includes('local.y-originalTop'));
 });
 
 test('bounded rear-cavern arrival query targets the real existing waypoint without changing coast or four trees',()=>{
-  assert.equal(resolveHEarthArrivalWaypoint('?arrival=geological-cavern'),'GEOLOGICAL_CAVERN_REAR_APPROACH');
-  assert.equal(resolveHEarthArrivalWaypoint('?arrival=approved-four-trees'),'WOODLAND_CLEARING_FOUR_TREES');
-  for(const query of ['','?arrival=unknown','?arrival=geological-cavern-unknown'])
-    assert.equal(resolveHEarthArrivalWaypoint(query),'COAST');
-});
+  assert.equal(resolveHEarthArrivalWaypoint('?arrival

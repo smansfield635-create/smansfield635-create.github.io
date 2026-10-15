@@ -33,7 +33,7 @@ export function traceGeologicalRuntimeDrainage(sampler,site=SITE){
   if(path.length<10)fail('INSUFFICIENT_ROUTE');
   return Object.freeze({path,result,surveyMethod:'ACTUAL_G_WORLD_CANONICAL_INDEXED_TRIANGLES_INVERSE_SPHERE_D8',waterPresent:false});
 }
-function buildWaterRibbon(route,kind){
+function buildWaterRibbon(route,kind,formation){
   const points=route.points;if(points.length<2)fail('WATER_ROUTE_TOO_SHORT');
   // Let the visible channel wander inside its broad excavated valley. The
   // surveyed bed elevations remain authoritative; this small lateral bend
@@ -48,7 +48,10 @@ function buildWaterRibbon(route,kind){
   for(let i=0;i<centers.length;i++){
     const p=centers[i],a=centers[Math.max(0,i-1)],b=centers[Math.min(centers.length-1,i+1)];
     const dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz)||1,nx=-dz/length,nz=dx/length;
-    const t=i/(points.length-1),half=(kind==='MAIN'?1.15+2.25*t:0.85+0.75*t)*(0.9+0.1*Math.sin(i*.17+0.4));
+    const t=i/(points.length-1),basin=formation?.oasis;
+    const basinDistance=basin?Math.hypot(p.x-basin.centerX,p.z-basin.centerZ):Infinity;
+    const confluence=Number.isFinite(basinDistance)?Math.exp(-basinDistance/18):0;
+    const half=(kind==='MAIN'?1.15+2.25*t:0.85+0.75*t)*(0.9+0.1*Math.sin(i*.17+0.4))+2.15*confluence;
     const y=p.bedY+0.24;
     positions.push(p.x+nx*half,y,p.z+nz*half,p.x-nx*half,y,p.z-nz*half);
     if(i){const q=2*i,r=q-2;indices.push(r,q,r+1,r+1,q,q+1)}
@@ -60,8 +63,10 @@ function buildOasisWater(formation,terrainAt){
   const x0=basin.centerX-basin.radiusX,x1=basin.centerX+basin.radiusX,z0=basin.centerZ-basin.radiusZ,z1=basin.centerZ+basin.radiusZ;
   const cols=Math.ceil((x1-x0)/step),rows=Math.ceil((z1-z0)/step),shoreMargin=(x,z)=>{
     const dx=(x-basin.centerX)/basin.radiusX,dz=(z-basin.centerZ)/basin.radiusZ,angle=Math.atan2(dz,dx);
-    const edge=1+basin.edgeHarmonics[0]*Math.sin(3*angle)+basin.edgeHarmonics[1]*Math.sin(5*angle+0.7)+basin.edgeHarmonics[2]*Math.cos(2*angle-0.4);
-    const shore=0.98-Math.hypot(dx,dz)/edge;
+    const edge=1+basin.edgeHarmonics[0]*Math.sin(3*angle)+basin.edgeHarmonics[1]*Math.sin(5*angle+0.7)+
+      basin.edgeHarmonics[2]*Math.cos(2*angle-0.4)+basin.edgeHarmonics[3]*Math.sin(7*angle+1.1)+
+      basin.edgeHarmonics[4]*Math.cos(9*angle-.6)+.025*Math.sin(x*.31+z*.23)*Math.cos(z*.27-x*.19);
+    const shore=0.98-Math.hypot(dx,dz)/(edge*(basin.waterEdgeScale??0.72));
     const basinFloor=(basin.waterLevel-formation.excavatedOutdoorTerrain(x,z))*.5;
     return Math.min(shore,basinFloor);
   };
@@ -154,11 +159,15 @@ export function constructGeologicalRuntimeBridge(canonical){
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const smooth=(v)=>{v=clamp(v,0,1);return v*v*(3-2*v)};
   const oasis=Object.freeze({id:'SECOND_OASIS',centerX:SITE.x,centerZ:SITE.portalZ-24,
-    radiusX:38,radiusZ:34,edgeHarmonics:Object.freeze([.15,-.085,.055])});
+    radiusX:38,radiusZ:34,waterEdgeScale:.56,
+    edgeHarmonics:Object.freeze([.22,-.13,.085,.045,-.032])});
+  const oasisEdgeAt=(angle,x,z)=>1+oasis.edgeHarmonics[0]*Math.sin(3*angle)+
+    oasis.edgeHarmonics[1]*Math.sin(5*angle+.7)+oasis.edgeHarmonics[2]*Math.cos(2*angle-.4)+
+    oasis.edgeHarmonics[3]*Math.sin(7*angle+1.1)+oasis.edgeHarmonics[4]*Math.cos(9*angle-.6)+
+    .025*Math.sin(x*.31+z*.23)*Math.cos(z*.27-x*.19);
   const oasisInfluenceAt=(x,z)=>{
     const dx=(x-oasis.centerX)/oasis.radiusX,dz=(z-oasis.centerZ)/oasis.radiusZ;
-    const angle=Math.atan2(dz,dx),edge=1+oasis.edgeHarmonics[0]*Math.sin(3*angle)+
-      oasis.edgeHarmonics[1]*Math.sin(5*angle+.7)+oasis.edgeHarmonics[2]*Math.cos(2*angle-.4);
+    const angle=Math.atan2(dz,dx),edge=oasisEdgeAt(angle,x,z);
     return smooth(1-Math.hypot(dx,dz)/edge);
   };
   const oasisCarveInfluenceAt=(x,z)=>{
@@ -174,7 +183,7 @@ export function constructGeologicalRuntimeBridge(canonical){
     return smooth(1-nearest.distance/12)*approachFade*smooth(edge/12);
   };
   const excavatedOutdoorTerrain=(x,z)=>baseFormation.excavatedOutdoorTerrain(x,z)-
-    1.25*channelInfluenceAt(x,z)-2.75*oasisCarveInfluenceAt(x,z);
+    1.25*channelInfluenceAt(x,z)-3.05*oasisCarveInfluenceAt(x,z);
   const oasisNearest=drainagePoints.reduce((best,p)=>
     !best||Math.hypot(p.x-oasis.centerX,p.z-oasis.centerZ)<best.distance?
       {distance:Math.hypot(p.x-oasis.centerX,p.z-oasis.centerZ),point:p}:best,null);
@@ -228,7 +237,7 @@ export function constructGeologicalRuntimeBridge(canonical){
     ['MOUNTAIN_OVERBURDEN',portal.upperMantle],
     ['NATURAL_CLIFF_FACE',portal.exposedCliffFace],
     ['CAVERN_PHYSICAL_SHELL',portal.cave],
-    ...formation.drainage.waterRoutes.map(route=>['FRESHWATER_RIVER',buildWaterRibbon(route,route.kind)]),
+    ...formation.drainage.waterRoutes.map(route=>['FRESHWATER_RIVER',buildWaterRibbon(route,route.kind,formation)]),
     ['OASIS_WATER',buildOasisWater(formation,terrainAt)]
   ];
   const meshes=parts.map(([role,mesh])=>Object.freeze({role,mesh:projectGeologicalMeshForRenderer(mesh)}));
@@ -283,7 +292,7 @@ export function sampleGeologicalMaterialExposure(model,role,x,z){
   const incisionDepth=Math.max(0,before-after);
   const oasisCore=role==='ERODED_TERRAIN'?(model.formation.oasisInfluenceAt?.(x,z)??0):0;
   const materialWeight=(role==='ERODED_TERRAIN'?Math.max(Math.min(.8,incisionDepth*.5),oasisCore*.72):
-    role==='MOUNTAIN_OVERBURDEN'?.06:1)*fade;
+    role==='MOUNTAIN_OVERBURDEN'?.06:role==='NATURAL_CLIFF_FACE'?.72:1)*fade;
   const oasisInfluence=oasisCore*fade;
   return Object.freeze({sourceOriginalHeight:before,excavatedHeight:after,
     incisionDepth,edgeFade:fade,rockWeight:materialWeight,oasisInfluence,

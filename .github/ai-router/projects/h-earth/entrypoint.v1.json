@@ -4,7 +4,8 @@
   "status": "ACTIVE_REGISTERED_PROJECT",
   "ownedPathPrefixes": [
     "h-earth-3d/",
-    "showroom/globe/h-earth/"
+    "showroom/globe/h-earth/",
+    "h-earth-live-6d18e158/preview/"
   ],
   "ownedExactPaths": [
     ".github/workflows/h-earth-repository-registry-preflight.yml",

@@ -81,7 +81,8 @@
       "ownedPathPrefixes": [
         "h-earth-3d/",
         "showroom/globe/h-earth/",
-        "showroom/globe/audralia/audio/"
+        "showroom/globe/audralia/audio/",
+        "h-earth-live-6d18e158/preview/"
       ],
       "ownedExactPaths": [
         "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/run8e-successor-environment.js",

@@ -55,10 +55,11 @@ export function constructGeologicalPortalAssembly(formation,terrainAt,{bounds=nu
   for(let i=0;i<=count;i++){
     const x=left+(right-left)*i/count;
     const top=terrainAt(x,start),outside=formation.excavatedOutdoorTerrain(x,start);
-    const radius=formation.caveRadius(start),rNorm=Math.abs(x-site.x)/radius;
+    const centerX=formation.caveCenterX?.(start)??site.x;
+    const radius=formation.caveRadius(start),rNorm=Math.abs(x-centerX)/radius;
     const floor=formation.floorAt(x,start),roof=formation.roofAt(x,start);
     const arch=floor+(roof-floor)*Math.pow(Math.max(0,1-rNorm*rNorm),0.375);
-    const bottom=Math.abs(x-site.x)<radius?Math.max(outside,arch):outside;
+    const bottom=Math.abs(x-centerX)<radius?Math.max(outside,arch):outside;
     assert(finite(top)&&finite(bottom)&&top>=bottom-1e-4,'FRONTAL_ROCK_FACE_BELOW_FLOOR');
     lowestRockFaceClearance=Math.min(lowestRockFaceClearance,top-bottom);
     facadeAddedTopHeight=Math.max(facadeAddedTopHeight,top-outside);
@@ -68,8 +69,9 @@ export function constructGeologicalPortalAssembly(formation,terrainAt,{bounds=nu
     const x=left+(right-left)*i/count,t=j/facadeRows,top=topLine[i],bottom=bottomLine[i];
     const y=top+(bottom-top)*t;
     const edgeFade=fade(Math.min((x-left)/2.5,(right-x)/2.5))*Math.sin(Math.PI*t);
-    const strata=.22*Math.sin(y*1.9+.36*Math.sin(x*.57)-.28*Math.sin(y*.63+x*.19));
-    const relief=edgeFade*(.48*Math.sin(x*.82+y*.31)+.27*Math.sin(x*1.73-y*.91+1.2)+strata);
+    const strata=.42*Math.sin(y*1.9+.36*Math.sin(x*.57)-.28*Math.sin(y*.63+x*.19));
+    const macro=.7*Math.sin(x*.27+y*.13+.8*Math.sin(y*.09-x*.11));
+    const relief=edgeFade*(1.2*Math.sin(x*.82+y*.31)+.72*Math.sin(x*1.73-y*.91+1.2)+strata+macro);
     faceReliefMin=Math.min(faceReliefMin,relief);faceReliefMax=Math.max(faceReliefMax,relief);
     facePos.push(x,y,start+relief);
   }
@@ -104,7 +106,7 @@ export function sampleFormationWalkable(formation,{x,z,eyeHeight=2.25,headCleara
   assert(eyeHeight>1.4&&eyeHeight<=2.75&&headClearance>=0,'WALK_EYE_BOUNDS');
   const {site}=formation;
   if(z>=site.portalZ&&z<=site.portalZ+site.galleryLength){
-    const side=Math.abs(x-site.x),radius=formation.caveRadius(z),floor=formation.floorAt(x,z);
+    const side=Math.abs(x-(formation.caveCenterX?.(z)??site.x)),radius=formation.caveRadius(z),floor=formation.floorAt(x,z);
     const nominalCeiling=formation.roofAt(x,z),ratio=side/radius;
     const ceiling=floor+(nominalCeiling-floor)*Math.pow(Math.max(0,1-ratio*ratio),0.375);
     const remaining=ceiling-floor;

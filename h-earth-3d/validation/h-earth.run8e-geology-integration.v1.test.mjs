@@ -59,6 +59,9 @@ test('active interior uses cave floor/roof, wall collision correctly rejects',()
 });
 test('weathered portal relief is shared by the visible shell and walk clearance',()=>{
  const f=geology().formation,z=f.site.portalZ+1;
+  assert(Math.abs(f.caveCenterX(f.site.portalZ+5)-f.site.x)>1.2,'CAVERN_CENTERLINE_REMAINS_STRAIGHT');
+  assert(Math.abs(f.caveCenterX(f.site.portalZ+5)-f.site.x)<f.caveRadius(f.site.portalZ+5)*.5,'CAVERN_CENTERLINE_EXCEEDS_WALKABLE_WIDTH');
+  assert(Math.abs(f.caveRadius(f.site.portalZ+5)-f.caveRadius(f.site.portalZ+10))>.25,'CAVERN_CROSS_SECTION_REMAINS_REPETITIVE');
  const left=f.roofAt(f.site.x-2,z),right=f.roofAt(f.site.x+2,z);
  assert(Math.abs(left-right)>.08,'PORTAL_ROOF_REMAINS_UNNATURALLY_SYMMETRIC');
  const floor=f.floorAt(f.site.x,z),roof=f.roofAt(f.site.x,z);

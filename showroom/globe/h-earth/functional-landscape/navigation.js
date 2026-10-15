@@ -59,7 +59,7 @@ export const H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS=freeze({
   // Owner-reviewed exact walking camera (woodland-clearing-trial.record.json).
   // Explicit visit only: the canonical COAST landing remains unchanged.
   // Explicit candidate-only visit; default H-Earth coastal entry is unchanged.
-  GEOLOGICAL_CAVERN_REAR_APPROACH:{waypointId:'GEOLOGICAL_CAVERN_REAR_APPROACH',label:'Rear-valley natural cavern',position:{x:80,z:-304},yawDegrees:180,pitchDegrees:4},
+  GEOLOGICAL_CAVERN_REAR_APPROACH:{waypointId:'GEOLOGICAL_CAVERN_REAR_APPROACH',label:'Rear-valley natural cavern',position:{x:40,z:-300},yawDegrees:180,pitchDegrees:4},
   WOODLAND_CLEARING_FOUR_TREES:{waypointId:'WOODLAND_CLEARING_FOUR_TREES',label:'Four approved woodland trees',position:{x:-139.40267987050615,z:-194.5},yawDegrees:0,pitchDegrees:16}
 });
 

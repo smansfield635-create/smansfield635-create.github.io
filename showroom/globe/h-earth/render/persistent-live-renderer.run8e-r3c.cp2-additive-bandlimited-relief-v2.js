@@ -2013,20 +2013,31 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         const local=unprojectPlanetVertex(positions[i*3],positions[i*3+1],positions[i*3+2]);
         const natural=model.originalTerrainColorAt(local.x,local.z);
         if(!natural)throw Error('GEOLOGICAL_CANONICAL_COLOR_CONTACT_MISSING:'+role);
+        if(role==='FRESHWATER_RIVER'||role==='OASIS_WATER'){
+          const ripple=.5+.5*Math.sin(local.x*.23+local.z*.17);
+          colors.set(role==='OASIS_WATER'?[.025+.018*ripple,.24+.035*ripple,.25+.035*ripple,1]:
+            [.025+.018*ripple,.17+.04*ripple,.22+.05*ripple,1],i*4);
+          mats.set([.12,.015,.025,.13],i*4);
+          continue;
+        }
         const exposure=sampleGeologicalMaterialExposure(model,role,local.x,local.z);
-        const layer=.5+.5*Math.sin(local.y*1.17+local.x*.19+local.z*.075+
-          .31*Math.sin(local.x*.23-local.z*.13));
-        const grain=.965+.035*Math.sin(local.x*.31+local.z*.17+local.y*.29);
+        const layer=.5+.5*Math.sin(local.y*1.55+.34*Math.sin(local.x*.43)+
+          .27*Math.sin(local.z*.61+local.x*.17)+.18*Math.sin(local.y*.37-local.z*.22));
+        const grain=.94+.06*Math.sin(local.x*.31+local.z*.17+local.y*.29);
         const rock=role==='CAVERN_PHYSICAL_SHELL'?
-          [.105+.032*layer,.094+.027*layer,.078+.021*layer]:
+          [.092+.072*layer,.081+.061*layer,.067+.047*layer]:
           role==='NATURAL_CLIFF_FACE'?
-            [.188+.075*layer,.157+.061*layer,.119+.043*layer]:
-            [.226+.071*layer,.186+.061*layer,.137+.046*layer];
-        // Incision exposes warm, layered soil and gravel along the dry channel.
+            [.168+.16*layer,.141+.13*layer,.105+.09*layer]:
+            [.206+.105*layer,.168+.09*layer,.122+.068*layer];
+        // Incision exposes visibly warm stratified soil and gravel along the dry channel.
         // The blend still fades to the exact indexed-world albedo at the patch edge.
-        const soil=role==='ERODED_TERRAIN'?Math.min(.72,exposure.incisionDepth*.46):0;
-        const layered=rock.map((v,c)=>v*(1-soil)+[.31,.255,.183][c]*soil);
-        colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+layered[c]*exposure.rockWeight)*grain).concat(1),i*4);
+        const soil=role==='ERODED_TERRAIN'?Math.min(.94,exposure.incisionDepth*.58):0;
+        const band=.5+.5*Math.sin(local.y*1.35+.47*Math.sin(local.x*.33)+.29*Math.sin(local.z*.41));
+        const alluvium=[.55+.16*band,.36+.11*band,.18+.07*band];
+        const oasisShore=[.31+.07*band,.35+.07*band,.16+.035*band];
+        const layered=rock.map((v,c)=>v*(1-soil)+alluvium[c]*soil);
+        const moist=layered.map((v,c)=>v*(1-exposure.oasisInfluence*.82)+oasisShore[c]*(exposure.oasisInfluence*.82));
+        colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+moist[c]*exposure.rockWeight)*grain).concat(1),i*4);
         mats.set([.89,.025,.035,.13],i*4);
       }
       const state={role,mesh,vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};
@@ -2040,7 +2051,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       };
       put(0,positions,3);put(1,normals,3);put(2,colors,4);put(3,mats,4);
       const models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n),coast=new Float32Array(n),contact=new Float32Array(n);
-      surfaces.fill(255);ids.fill(62000);roles.fill(role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'?1:5);coast.fill(140);contact.fill(140);
+      surfaces.fill(255);ids.fill(62000);roles.fill(role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'?1:
+        role==='FRESHWATER_RIVER'||role==='OASIS_WATER'?4:5);coast.fill(140);contact.fill(140);
       put(4,models,1,gl.UNSIGNED_BYTE,true);put(5,surfaces,1,gl.UNSIGNED_BYTE,true);
       put(6,ids,1,gl.UNSIGNED_SHORT,true);put(7,roles,1,gl.UNSIGNED_BYTE,true);
       put(8,coast,1);put(9,contact,1);
@@ -2418,7 +2430,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         originalBaseTrianglesRetired:resources.geologicalRuntime.retirement.triangleCount,
         attachedMeshCount:resources.geologicalMeshes?.length??0,gpuByteLength:resources.geologicalGPUBytes,
         physicalNavigationInstalled:resources.geologicalNavigationInstallation?.installed===true,
-        oldDecorativeArchDrawn:false,realWorldPackagePreserved:true,freshwaterClaimed:false}:null,
+        oldDecorativeArchDrawn:false,realWorldPackagePreserved:true,freshwaterClaimed:false,
+        designedFreshwaterRendered:(resources.geologicalMeshes||[]).some(part=>part.role==='FRESHWATER_RIVER'||part.role==='OASIS_WATER'),
+        waterSourceHydrologyProven:false}:null,
       refinementResourceAuthorized:true, refinementResourceCreated:resources.refinement?.created===true,
       refinementResourceBufferUploadCount:counters.refinementBufferUploadCount,
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,

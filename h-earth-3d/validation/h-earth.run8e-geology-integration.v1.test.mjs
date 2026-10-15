@@ -29,11 +29,31 @@ test('exact Gen2666 compressed source and spherical terrain correspond',()=>{
  const p=canonical();assert.equal(p.buffers.positions.length,330807);
  assert.equal(p.buffers.indices.length,311466);
  assert.equal(geology().formation.minimumRoofCover>0,true);
+ assert.equal(geology().formation.site.id,'B_REAR_RAVINE');
+ assert.deepEqual({x:geology().formation.site.x,z:geology().formation.site.portalZ},{x:40,z:-260});
+ assert.deepEqual({x:geology().formation.oasis.centerX,z:geology().formation.oasis.centerZ},{x:40,z:-284});
 });
-test('upstream real terrain D8 route descends, does not invent freshwater',()=>{
+test('real terrain D8 survey supplies a descending scenic river network without a hydrology claim',()=>{
  const route=geology().route;assert(route.path.length>=15);
  assert(route.path.every((v,i)=>i===0||v.height<route.path[i-1].height));
- assert.equal(geology().formation.drainage.waterPresent,false);
+ const drainage=geology().formation.drainage;
+ assert.equal(route.waterPresent,false);
+ assert.equal(drainage.waterPresent,true);
+ assert.equal(drainage.waterSourceProven,false);
+ assert.equal(drainage.waterRoutes.length,1);
+ const water=geology().meshes.filter(x=>x.role==='FRESHWATER_RIVER'||x.role==='OASIS_WATER');
+ assert.equal(water.filter(x=>x.role==='FRESHWATER_RIVER').length,1);
+ const oasis=water.find(x=>x.role==='OASIS_WATER'),basin=geology().formation.oasis;
+ assert(oasis.mesh.triangleCount>450,'SECOND_OASIS_RENDERED_FOOTPRINT_TOO_SMALL');
+ const oasisLocal=Array.from({length:oasis.mesh.positions.length/3},(_,i)=>unprojectPlanetVertex(...oasis.mesh.positions.slice(i*3,i*3+3)));
+ assert(Math.max(...oasisLocal.map(p=>p.x))-Math.min(...oasisLocal.map(p=>p.x))>35,'SECOND_OASIS_TOO_NARROW');
+ assert(Math.max(...oasisLocal.map(p=>p.z))-Math.min(...oasisLocal.map(p=>p.z))>20,'SECOND_OASIS_TOO_SHORT');
+ assert.equal(basin.centerX,40,'SECOND_OASIS_MISSES_PHOTOGRAPHED_LANDMARK');
+ const main=water.find(x=>x.role==='FRESHWATER_RIVER').mesh,mainRoute=geology().formation.drainage.waterRoutes[0].points;
+ const lateral=mainRoute.map((p,i)=>{const a=unprojectPlanetVertex(...main.positions.slice(i*6,i*6+3)),b=unprojectPlanetVertex(...main.positions.slice(i*6+3,i*6+6));return Math.hypot((a.x+b.x)/2-p.x,(a.z+b.z)/2-p.z)});
+ assert(Math.max(...lateral)>4,'MAIN_RIVER_REMAINS_STRAIGHT');
+ assert(lateral.filter(v=>v>2).length>10,'MAIN_RIVER_MEANDER_TOO_SHORT');
+ assert.equal(geology().hydrology.connectedOutletProven,false);
 });
 test('original terrain indices are retired by degeneracy only within declared mask',()=>{
  const c=canonical(),g=geology(),indices=Uint32Array.from(c.buffers.indices),old=indices.slice();
@@ -44,21 +64,26 @@ test('original terrain indices are retired by degeneracy only within declared ma
  assert(g.retirement.triangleCount>=100);
 });
 test('four real manifold elements are projected to shared spherical world',()=>{
- assert.deepEqual(geology().meshes.map(x=>x.role),['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN','NATURAL_CLIFF_FACE','CAVERN_PHYSICAL_SHELL']);
- for(const {mesh} of geology().meshes){assert(mesh.positions instanceof Float32Array);
+ assert.deepEqual(geology().meshes.slice(0,4).map(x=>x.role),['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN','NATURAL_CLIFF_FACE','CAVERN_PHYSICAL_SHELL']);
+ for(const {mesh} of geology().meshes.slice(0,4)){assert(mesh.positions instanceof Float32Array);
  assert(mesh.indices instanceof Uint32Array);assert(mesh.positions.length>0);assert(mesh.indices.length>0);}
+ assert.equal(geology().meshes.filter(x=>x.role==='FRESHWATER_RIVER').length,1);
+ assert(geology().meshes.some(x=>x.role==='OASIS_WATER'));
 });
 test('uninstalled physical cave is invisible to normal Gen324 navigation',()=>{
- assert.equal(resolveGeologicalRuntimeFootSupport(80,-261),null);
+ assert.equal(resolveGeologicalRuntimeFootSupport(40,-257),null);
 });
 test('active interior uses cave floor/roof, wall collision correctly rejects',()=>{
  installGeologicalRuntimeBridge(geology());
- const inside=resolveGeologicalRuntimeFootSupport(80,-252),solid=resolveGeologicalRuntimeFootSupport(90,-251),coast=resolveGeologicalRuntimeFootSupport(0,-96);
+ const inside=resolveGeologicalRuntimeFootSupport(40,-252),solid=resolveGeologicalRuntimeFootSupport(50,-251),coast=resolveGeologicalRuntimeFootSupport(0,-96);
  assert(inside?.eligible);assert(inside.ceilingY>inside.eyeY+0.3);
  assert(solid&&!solid.eligible);assert.equal(coast,null);
 });
 test('weathered portal relief is shared by the visible shell and walk clearance',()=>{
  const f=geology().formation,z=f.site.portalZ+1;
+  assert(Math.abs(f.caveCenterX(f.site.portalZ+5)-f.site.x)>1.2,'CAVERN_CENTERLINE_REMAINS_STRAIGHT');
+  assert(Math.abs(f.caveCenterX(f.site.portalZ+5)-f.site.x)<f.caveRadius(f.site.portalZ+5)*.5,'CAVERN_CENTERLINE_EXCEEDS_WALKABLE_WIDTH');
+  assert(Math.abs(f.caveRadius(f.site.portalZ+5)-f.caveRadius(f.site.portalZ+10))>.25,'CAVERN_CROSS_SECTION_REMAINS_REPETITIVE');
  const left=f.roofAt(f.site.x-2,z),right=f.roofAt(f.site.x+2,z);
  assert(Math.abs(left-right)>.08,'PORTAL_ROOF_REMAINS_UNNATURALLY_SYMMETRIC');
  const floor=f.floorAt(f.site.x,z),roof=f.roofAt(f.site.x,z);
@@ -76,6 +101,14 @@ test('2m replacement terrain has a true aperture and cliff with upper mantle',()
  assert.equal(p.rimCorrespondence.frontCliffBottomOpen,true);
  assert(part('MOUNTAIN_OVERBURDEN').triangleCount>0);
  assert(part('NATURAL_CLIFF_FACE').triangleCount>0);
+  assert(p.diagnostics.exposedFaceReliefMeters>0.45,'CLIFF_FACE_REMAINS_PLANAR');
+  const face=p.exposedCliffFace;
+  for(let i=0;i<face.indices.length;i+=3){
+    const ids=[face.indices[i],face.indices[i+1],face.indices[i+2]];
+    const x=ids.reduce((v,id)=>v+face.positions[id*3],0)/3;
+    const y=ids.reduce((v,id)=>v+face.positions[id*3+1],0)/3;
+    assert.equal(geology().formation.insideVoid(x,y,geology().formation.site.portalZ+0.25),false,'CLIFF_FACE_COVERS_CAVERN_APERTURE');
+  }
 });
 test('runtime renderer/nav source contains actual bridge calls and no Gen2730 arch draw',()=>{
  const r=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
@@ -121,19 +154,38 @@ test('every projected cavern and patch vertex has original-world albedo contact'
    assert(base.every(x=>Number.isFinite(x)&&x>=0&&x<=1));count++;
   }
  }
- assert.equal(count,5705);
+ assert(count>7288,'WATER_MESHES_MISSING_CANONICAL_COORDINATE_CONTACT');
 });
 
 test('excavated channel shows geologically grounded material exposure while exterior rim stays intact',()=>{
  const g=geology(),x=g.site.x,z=g.site.drainageHeadZ;
  const deep=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',x,z);
- assert(deep.incisionDepth>3,'CHANNEL_INCISION_UNDETECTED:'+deep.incisionDepth);
+ assert(deep.incisionDepth>4,'CHANNEL_INCIDISION_TOO_SHALLOW:'+deep.incisionDepth);
  assert(deep.rockWeight>0.5,'ROCK_EXPOSURE_ZERO:'+deep.rockWeight);
+ const arrival=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',42,-290);
+ assert(arrival.incisionDepth>=2.75,'ARRIVAL_CREEKBED_NOT_READABLE:'+arrival.incisionDepth);
+ const arrivalWaypoint=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',40,-300);
+ assert(arrivalWaypoint.incisionDepth>=1.75,'ARRIVAL_WAYPOINT_MISSES_DRY_OUTWASH_APRON:'+arrivalWaypoint.incisionDepth);
+ const profile=g.formation.drainage.points;
+ const maxGrade=Math.max(...profile.slice(1).map((point,i)=>{
+   const previous=profile[i],distance=Math.hypot(point.x-previous.x,point.z-previous.z);
+   return Math.abs(point.bedY-previous.bedY)/distance;
+ }));
+ assert(maxGrade<=0.65,'CREEKBED_WALKING_GRADE_EXCEEDED:'+maxGrade);
+ assert.equal(g.formation.drainage.waterPresent,true);
+ assert.equal(g.hydrology.waterSourceProven,false);
+ assert.equal(g.formation.oasis.centerX,40,'OASIS_MISSES_PHOTOGRAPHED_LANDMARK');
+ assert.equal(g.formation.oasis.centerZ,-284,'OASIS_MISSES_LEGACY_DISCOLORATION_CENTER');
+ assert(g.formation.oasis.radiusX>=38&&g.formation.oasis.radiusZ>=34,'OASIS_DOES_NOT_COVER_DISCOLORATION_FOOTPRINT');
+ assert(g.formation.oasis.radiusX>g.formation.oasis.radiusZ,'OASIS_NOT_AN_IRREGULAR_BASIN');
  const boundary=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',g.localBounds.xMin,z);
  assert.equal(boundary.rockWeight,0,'PATCH_BOUNDARY_MATERIAL_DISCONTINUITY');
  assert.equal(deep.originalWorldMutated,false);
  const renderer=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
  assert(renderer.includes('sampleGeologicalMaterialExposure(model,role,local.x,local.z)'));
+ assert(renderer.includes("role==='FRESHWATER_RIVER'||role==='OASIS_WATER'"));
+ assert(renderer.includes('designedFreshwaterRendered'));
+ assert(renderer.includes('const alluvium=[.55+.16*band,.36+.11*band,.18+.07*band];'));
  assert(!renderer.includes('local.y-originalTop'));
 });
 

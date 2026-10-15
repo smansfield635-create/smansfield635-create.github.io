@@ -45,7 +45,16 @@ test('real terrain D8 survey supplies a descending scenic river network without 
  }
  const water=geology().meshes.filter(x=>x.role==='FRESHWATER_RIVER'||x.role==='OASIS_WATER');
  assert.equal(water.filter(x=>x.role==='FRESHWATER_RIVER').length,3);
- assert(water.find(x=>x.role==='OASIS_WATER').mesh.triangleCount>100);
+ const oasis=water.find(x=>x.role==='OASIS_WATER'),basin=geology().formation.oasis;
+ assert(oasis.mesh.triangleCount>900,'SECOND_OASIS_RENDERED_FOOTPRINT_TOO_SMALL');
+ const oasisLocal=Array.from({length:oasis.mesh.positions.length/3},(_,i)=>unprojectPlanetVertex(...oasis.mesh.positions.slice(i*3,i*3+3)));
+ assert(Math.max(...oasisLocal.map(p=>p.x))-Math.min(...oasisLocal.map(p=>p.x))>45,'SECOND_OASIS_TOO_NARROW');
+ assert(Math.max(...oasisLocal.map(p=>p.z))-Math.min(...oasisLocal.map(p=>p.z))>30,'SECOND_OASIS_TOO_SHORT');
+ assert(Math.abs(basin.centerX-geology().formation.site.x)<18,'SECOND_OASIS_OUTSIDE_ARRIVAL_VIEW');
+ const main=water.find(x=>x.role==='FRESHWATER_RIVER').mesh,mainRoute=geology().formation.drainage.waterRoutes[0].points;
+ const lateral=mainRoute.map((p,i)=>{const a=unprojectPlanetVertex(...main.positions.slice(i*6,i*6+3)),b=unprojectPlanetVertex(...main.positions.slice(i*6+3,i*6+6));return Math.hypot((a.x+b.x)/2-p.x,(a.z+b.z)/2-p.z)});
+ assert(Math.max(...lateral)>4,'MAIN_RIVER_REMAINS_STRAIGHT');
+ assert(lateral.filter(v=>v>2).length>10,'MAIN_RIVER_MEANDER_TOO_SHORT');
  assert.equal(geology().hydrology.connectedOutletProven,false);
 });
 test('original terrain indices are retired by degeneracy only within declared mask',()=>{
@@ -167,7 +176,7 @@ test('excavated channel shows geologically grounded material exposure while exte
  assert(maxGrade<=0.65,'CREEKBED_WALKING_GRADE_EXCEEDED:'+maxGrade);
  assert.equal(g.formation.drainage.waterPresent,true);
  assert.equal(g.hydrology.waterSourceProven,false);
- assert(g.formation.oasis.centerX>g.site.x+20,'OASIS_NOT_POSITIONED_ACROSS_APPROACH');
+ assert(g.formation.oasis.centerX>g.site.x+12,'OASIS_NOT_POSITIONED_ACROSS_APPROACH');
  assert(g.formation.oasis.radiusX>g.formation.oasis.radiusZ,'OASIS_NOT_AN_IRREGULAR_BASIN');
  const boundary=sampleGeologicalMaterialExposure(g,'ERODED_TERRAIN',g.localBounds.xMin,z);
  assert.equal(boundary.rockWeight,0,'PATCH_BOUNDARY_MATERIAL_DISCONTINUITY');

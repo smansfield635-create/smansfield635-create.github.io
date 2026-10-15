@@ -35,9 +35,18 @@ export function traceGeologicalRuntimeDrainage(sampler,site=SITE){
 }
 function buildWaterRibbon(route,kind){
   const points=route.points;if(points.length<2)fail('WATER_ROUTE_TOO_SHORT');
+  // Let the visible channel wander inside its broad excavated valley. The
+  // surveyed bed elevations remain authoritative; this small lateral bend
+  // keeps the approach from reading as a straight blue strip at arrival scale.
+  const centers=points.map((p,i)=>{
+    const a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz)||1;
+    const t=i/(points.length-1),wave=Math.sin(t*Math.PI*3+0.35*Math.sin(t*Math.PI*4));
+    const offset=(kind==='MAIN'?5.5:1.4)*Math.sin(Math.PI*t)*wave;
+    return {...p,x:p.x-dz/length*offset,z:p.z+dx/length*offset};
+  });
   const positions=[],indices=[];
-  for(let i=0;i<points.length;i++){
-    const p=points[i],a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)];
+  for(let i=0;i<centers.length;i++){
+    const p=centers[i],a=centers[Math.max(0,i-1)],b=centers[Math.min(centers.length-1,i+1)];
     const dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz)||1,nx=-dz/length,nz=dx/length;
     const t=i/(points.length-1),half=(kind==='MAIN'?1.15+2.25*t:0.85+0.75*t)*(0.9+0.1*Math.sin(i*.17+0.4));
     const y=p.bedY+0.24;

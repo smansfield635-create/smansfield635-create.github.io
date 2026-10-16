@@ -1,0 +1,28 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "geometry-kernel",
+  "description": "Opt-in reusable sweep and bounded convex passage consumer assets. Static source delivery only; no live H-Earth adoption or GPU qualification claim.",
+  "checks": [
+    {
+      "path": "/showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js",
+      "includes": [
+        "export function constructHEarthSweptPassageMesh",
+        "geometry-kernel.south.js"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/geometry-kernel.passage-consumer.v1.js",
+      "includes": [
+        "export function buildHEarthPassageConsumer",
+        "export function evaluateHEarthPassageSphereMove",
+        "productIntegrated:false"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": false,
+    "path": "/showroom/globe/h-earth/render/geometry-kernel.passage-consumer.v1.js"
+  }
+}

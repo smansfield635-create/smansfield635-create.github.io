@@ -90,6 +90,12 @@ test('verifies owner-connected intake provenance for terminal closure', async ()
   assert.equal(result.authorityIdentity.operationId, lock.operationId);
 });
 
+test('records checkpoint-bounded owner commit evidence without claiming source-comment readback', async () => {
+  const result = await verifyOwnerConnectedAuthorityProvenance(ownerAdmissionFixture(), { checkpointBound: true });
+  assert.equal(result.result, 'OWNER_CONNECTOR_PROVENANCE_VERIFIED');
+  assert.equal(result.sourceCommentReadback, 'CHECKPOINT_BOUNDED_CANONICAL_OWNER_COMMIT');
+});
+
 test('rejects tampered owner-connected intake provenance for terminal closure', async () => {
   const lock = ownerAdmissionFixture();
   lock.independentAuthorityProvenance.source.commentId++;

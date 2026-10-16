@@ -1,0 +1,253 @@
+{
+  "schema": "GEOMETRY_KERNEL_PASSAGE_OPERATION_PACKET_v1",
+  "admission": {
+    "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_EXECUTION_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
+    "lockGeneration": 2766,
+    "lockScope": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_V1",
+    "governingHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+    "acquisitionCommitSha": "7dd69d6b5693dff1cda8e1298a1f8bc213383591",
+    "committedLedgerBlobSha": "6d6364aa9b5e90a80baff0dce56ef9d425585ce4",
+    "canonicalCommitVerification": {
+      "lockGeneration": 2766,
+      "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
+      "principal": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+      "provenance": {
+        "authorityIdentity": {
+          "governingHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+          "lockGeneration": 2766,
+          "lockScope": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_V1",
+          "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
+          "procedureLocatorDigest": "2f4b53a691f4d6519d11dc77eb07c3c7f0e0842640d34e6c8f015c9ff3994240",
+          "requestDigest": "933741f36a2761bd79bcb9d0bd5f38aab1b2097c18920f96957ce75737eab46b",
+          "scopeHash": "13d534473c7884e09f53e1aca2172bb121bad10974c4322ffc3f29f412260061"
+        },
+        "result": "OWNER_CONNECTOR_PROVENANCE_VERIFIED"
+      },
+      "result": "CANONICAL_LEDGER_COMMIT_VERIFIED"
+    },
+    "readbackVerified": true,
+    "remoteBlobExactTextEqualityVerified": true,
+    "planWasReceipt": false
+  },
+  "request": {
+    "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+    "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
+    "projectId": "H_EARTH",
+    "lockScope": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_V1",
+    "exactGoverningHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+    "subjectIdentity": {
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "capability": "opt-in straight convex passage consumer with explicit finite-radius sphere motion certificate",
+      "frozenSweepCandidate": "32912f86f3d6c54cdb405c7856a01d81d7f6f50f"
+    },
+    "requestingAuthority": {
+      "source": "owner Proceed accordingly 2026-10-16T15:09:36Z",
+      "issue": 6402,
+      "scope": "bounded consumer qualification; no live cavern, renderer or navigation adoption"
+    },
+    "executingRole": {
+      "identity": "Alaric",
+      "bearing": "N",
+      "function": "Navigation: bound capability and construction route"
+    },
+    "independentVerifier": {
+      "identity": "Soren",
+      "bearing": "W",
+      "function": "Boundary",
+      "mode": "separate native agent source and test review"
+    },
+    "constructionProcedureLocator": "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/operation-packet.json#constructionProcedure",
+    "requiredInputs": [
+      {
+        "id": "AI_ENTRYPOINT.json",
+        "resolved": true
+      },
+      {
+        "id": "AGENTS.md",
+        "resolved": true
+      },
+      {
+        "id": "issue:6402 terminal continuation",
+        "resolved": true
+      },
+      {
+        "id": "PR6404 exact candidate32912f86f3d6c54cdb405c7856a01d81d7f6f50f",
+        "resolved": true
+      },
+      {
+        "id": "existing cave PR6345 preserved without edits",
+        "resolved": true
+      },
+      {
+        "id": "Soren convex halfspace proof boundary",
+        "resolved": true
+      }
+    ],
+    "allowedPaths": [
+      "showroom/globe/h-earth/render/geometry-kernel.passage-consumer.v1.js",
+      "h-earth-3d/validation/geometry-kernel-passage-consumer.v1.test.mjs",
+      "h-earth-3d/validation/geometry-kernel-passage-consumer.webgl.v1.mjs",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/README.md",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/operation-packet.json",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/qualification.json",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/review.json",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/resume.json"
+    ],
+    "prohibitedPaths": [
+      "showroom/globe/h-earth/render/geometry-kernel.js",
+      "showroom/globe/h-earth/render/geometry-kernel.north.js",
+      "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "laws/**",
+      "renderer/**",
+      "terrain binaries",
+      "navigation",
+      "production deployment",
+      "main direct writes",
+      "showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js",
+      "h-earth-3d/terrain/**",
+      "existing geological runtime/navigation branch #6345"
+    ],
+    "requiredOutputs": [
+      "West-admitted bounded passage consumer",
+      "inward render buffers",
+      "private convex-prism sphere movement certificate",
+      "analytic and adversarial tests",
+      "actual WebGL buffer smoke or exact observed execution boundary",
+      "independent Soren review",
+      "saved exact candidate and terminal closure"
+    ],
+    "exactTestCommand": "node --test h-earth-3d/validation/geometry-kernel-passage-consumer.v1.test.mjs",
+    "workflowPath": ".github/workflows/h-earth-repository-registry-preflight.yml",
+    "artifactPaths": [
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/qualification.json"
+    ],
+    "fingerprintDomain": {
+      "algorithm": "SHA256",
+      "scope": "consumer source, tests, unchanged frozen sweep/kernel sources and qualification evidence"
+    },
+    "errorPrecedence": [
+      "HEAD_MISMATCH",
+      "SCOPE_MISMATCH",
+      "INVALID_INPUT",
+      "GEOMETRY_REJECTED",
+      "REGRESSION",
+      "REVIEW_FAILURE"
+    ],
+    "stopConditions": [
+      "active same-scope operation",
+      "governing-state conflict without differential continuity",
+      "unresolved selected direct dependency",
+      "geometry or regression failure",
+      "independent review unresolved",
+      "no product integration, merge or publication in this scope"
+    ],
+    "terminalDispositions": [
+      "PASS_CLOSED",
+      "FAIL_CLOSED",
+      "WITHDRAWN",
+      "SUPERSEDED"
+    ],
+    "intakeCompletenessReceipt": {
+      "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+      "receiptId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_COMPLETENESS_20261016",
+      "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+      "unresolvedMaterialQuestions": [],
+      "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+      "receiptDigest": "bd5608f75e39ab0fb5f99764b9f1530f3d34353f50f3ea97c7985be4798a881d"
+    },
+    "functionalCoordination": {
+      "schema": "FUNCTIONAL_BEARING_COORDINATION_v1",
+      "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+      "functionalBearing": {
+        "mode": "ROUTE",
+        "bearings": [
+          "N",
+          "E",
+          "S",
+          "W"
+        ],
+        "exemptionReason": null
+      },
+      "primitiveRequirements": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "authorityEffect": "NONE"
+    }
+  },
+  "procedure": {
+    "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "procedureId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_PROCEDURE_20261016_001",
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "exactGoverningHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+    "exactAllowedRepositoryPaths": [
+      "showroom/globe/h-earth/render/geometry-kernel.passage-consumer.v1.js",
+      "h-earth-3d/validation/geometry-kernel-passage-consumer.v1.test.mjs",
+      "h-earth-3d/validation/geometry-kernel-passage-consumer.webgl.v1.mjs",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/README.md",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/operation-packet.json",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/qualification.json",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/review.json",
+      "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/resume.json"
+    ],
+    "exactBranchAndCommitSequence": [
+      {
+        "branch": "geometry-kernel-passage-consumer-v1-20261016",
+        "base": "32912f86f3d6c54cdb405c7856a01d81d7f6f50f",
+        "sequence": [
+          "fresh canonical admission at current main",
+          "create stacked candidate only",
+          "consumer and tests",
+          "actual GPU buffer smoke",
+          "independent review",
+          "exact saved candidate and canonical closure"
+        ]
+      }
+    ],
+    "evaluationToolingHeadBindingRule": "Use exact governing head kernel dependencies; preserve their Git blobs; candidate tests execute candidate source. No product consumer edits.",
+    "canonicalInputSchemas": [
+      "Two-station finite centerline, strictly convex CCW profile, constant positive station scales; sphere-only linear movement requests"
+    ],
+    "canonicalOutputSchemas": [
+      "Existing West admission result",
+      "Copied inward GPU buffers",
+      "Conservative convex closed-prism finite-radius sphere movement certificate or explicit unsupported/invalid/obstructed HOLD"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "HEAD_MISMATCH",
+      "SCOPE_MISMATCH",
+      "INVALID_INPUT",
+      "GEOMETRY_REJECTED",
+      "REGRESSION",
+      "REVIEW_FAILURE"
+    ],
+    "exactTestRunnerCommand": "node --test h-earth-3d/validation/geometry-kernel-passage-consumer.v1.test.mjs",
+    "independentVerifierDefinition": {
+      "identity": "Soren",
+      "bearing": "W",
+      "function": "Boundary",
+      "mode": "separate native agent source and test review"
+    },
+    "workflowAndArtifactPackagingPaths": {
+      "workflowPath": ".github/workflows/h-earth-repository-registry-preflight.yml",
+      "artifactPaths": [
+        "h-earth-3d/evidence/geometry-kernel-passage-consumer-v1/qualification.json"
+      ],
+      "execution": "local native Node and native Playwright; no Actions general agent dispatch"
+    },
+    "bridgeOutputFingerprintDomain": {
+      "algorithm": "SHA256",
+      "scope": "consumer source, tests, unchanged frozen sweep/kernel sources and qualification evidence"
+    },
+    "priorAttemptInspectionLimits": {
+      "reuse": "frozen qualified sweep from PR6404; existing West admission",
+      "excluded": "no mutation to geological candidate PR6345; no natural cavern claim; no character capsule or rotating motion support"
+    }
+  }
+}

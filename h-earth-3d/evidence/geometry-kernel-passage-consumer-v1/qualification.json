@@ -1,0 +1,76 @@
+{
+  "schema": "GEOMETRY_KERNEL_PASSAGE_QUALIFICATION_v1",
+  "result": "COMPONENT_CHECKS_PASS_BROWSER_QUALIFICATION_HELD",
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/geometry-kernel.passage-consumer.v1.js": "12b2bef7fe714e4dbdc7491b84182787b1ed8a301dbae871987766c5754c4d60",
+    "h-earth-3d/validation/geometry-kernel-passage-consumer.v1.test.mjs": "18704a364ed5d9fb2d47bfc46ccc80892d066458642ea3a3683b1db539e2d55d",
+    "h-earth-3d/validation/geometry-kernel-passage-consumer.webgl.v1.mjs": "3ac0d6ffb2fa7e2b8b7ca8af8fffc2ba77ad511a89ef635d039d1c89311a7381"
+  },
+  "node": {
+    "command": "node --test h-earth-3d/validation/geometry-kernel-passage-consumer.v1.test.mjs h-earth-3d/validation/geometry-kernel-sweep.v1.test.mjs",
+    "passed": 40,
+    "failed": 0,
+    "newConsumerTests": 17,
+    "sweepRegressionTests": 23,
+    "independentAnalyticSphereQueries": 450
+  },
+  "webgl": {
+    "schema": "GEOMETRY_KERNEL_PASSAGE_WEBGL_BUFFER_SMOKE_v1",
+    "result": "NOT_EXECUTED_BROWSER_UNAVAILABLE",
+    "actualBrowserExecution": false,
+    "firstBoundary": "Playwright chromium_headless_shell-1234 executable missing",
+    "recoveryAttempt": "Standard Playwright Chromium installation attempted; supplied archive could not be read as ZIP (end-of-central-directory signature absent); installer exhausted its internal download attempts",
+    "glError": null,
+    "inwardPixels": null,
+    "outwardNegativeControlPixels": null,
+    "productFailureEstablished": false,
+    "physicalDeviceAcceptance": false,
+    "visualQualityAcceptance": false,
+    "productIntegrated": false
+  },
+  "executionFailureClassification": {
+    "facts": {
+      "schema": "FAILURE_DISPOSITION_NORMALIZED_FACTS_v1",
+      "failureClass": "EXECUTION_CAPABILITY_UNAVAILABLE",
+      "observationSource": "ROOM_LOCAL_EXECUTION",
+      "dependencyRelationship": "DECLARED_DIRECT_DEPENDENCY",
+      "authorityState": "VALID_UNCHANGED",
+      "selectedForOperation": true,
+      "candidatePresent": true,
+      "candidateBytesStable": true,
+      "scopeStable": true,
+      "negativeProductAssertion": false,
+      "completedEvidenceValid": true,
+      "sameAuthorityRepairMechanicallyProvable": false,
+      "canonicalDurableEvidenceConfirmed": false,
+      "uniqueUnresolvedInformation": true
+    },
+    "receipt": {
+      "schema": "FAILURE_DISPOSITION_RECEIPT_v1",
+      "result": "CLASSIFIED",
+      "failureClass": "EXECUTION_CAPABILITY_UNAVAILABLE",
+      "observationSource": "ROOM_LOCAL_EXECUTION",
+      "dependencyRelationship": "DECLARED_DIRECT_DEPENDENCY",
+      "authorityState": "VALID_UNCHANGED",
+      "selectedForOperation": true,
+      "candidateEffect": "PRESERVE",
+      "blockingScope": "CURRENT_EXECUTION_SURFACE_ONLY",
+      "blockingDisposition": "BLOCKED_LOCAL_NONPROPAGATING",
+      "recoveryDisposition": "NONE",
+      "retryBudget": 0,
+      "preserveCompletedEvidence": true,
+      "resumeFromCheckpoint": null,
+      "propagationAllowed": false,
+      "propagationScope": "NONE",
+      "notificationDisposition": "NOT_APPLICABLE",
+      "authorityCreated": false,
+      "dependencyEdgeCreated": false,
+      "classificationReason": "EXECUTION_SURFACE_FAILURE_DOES_NOT_INVALIDATE_CANDIDATE"
+    }
+  },
+  "syntaxChecks": "PASS",
+  "whitespaceCheck": "PASS",
+  "productIntegrated": false,
+  "physicalDeviceAcceptance": false,
+  "visualQualityAcceptance": false
+}

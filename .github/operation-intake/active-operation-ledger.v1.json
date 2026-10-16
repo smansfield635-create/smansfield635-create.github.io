@@ -1382,6 +1382,45 @@
       "scopeHash": "119d9d71c14b4434b7b0b862bbed2f93ae4693e36beec89c92d1ab65297ec2ad",
       "state": "ADMITTED_LOCKED"
     },
+    "12ca92598e70921462033a5de99b0bebaa56a33afa0a09f7da663cd5c01a640a": {
+      "governingHead": "1c3694de13413e3c096aa74dea220867a67b3dff",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1c3694de13413e3c096aa74dea220867a67b3dff",
+          "lockGeneration": 2762,
+          "lockScope": "H_EARTH:GEN2735:CAVERN_PORTAL_DRY_CREEKBED_GEOMETRY_MATERIAL_REPAIR:20261016",
+          "operationId": "H_EARTH_GEN2735_CAVERN_DRY_CREEKBED_GEOMETRY_MATERIAL_REPAIR_20261016_001",
+          "procedureLocatorDigest": "4051a0bf1c52e585cb13c5f8d378fdb6dd83d301b6b61d37c95768f052bfde57",
+          "requestDigest": "400203fb8cd0488acabfffbaf2eef3ad81126d02929b089f9626ca378f793d8d",
+          "scopeHash": "12ca92598e70921462033a5de99b0bebaa56a33afa0a09f7da663cd5c01a640a"
+        },
+        "bindingDigest": "67f4dbcd64cf0a2c7232d1e0f6cf62fb82b01eb04d0e83571eef2a29a0ba09e8",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "deca9d6f885d01232f4f33c42d3a4a796d0ccf33",
+          "observedLockRefHead": "5a1584c4408acc0f063fa7a82319417b26f3df89"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "a119f34f040aa33ae1380feb164986de3ebe8b96d1ca53f759697bbf3c148de7",
+          "commentId": 6207573969,
+          "issueNumber": 6371,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2762,
+      "lockScope": "H_EARTH:GEN2735:CAVERN_PORTAL_DRY_CREEKBED_GEOMETRY_MATERIAL_REPAIR:20261016",
+      "operationId": "H_EARTH_GEN2735_CAVERN_DRY_CREEKBED_GEOMETRY_MATERIAL_REPAIR_20261016_001",
+      "procedureLocatorDigest": "4051a0bf1c52e585cb13c5f8d378fdb6dd83d301b6b61d37c95768f052bfde57",
+      "released": false,
+      "requestDigest": "400203fb8cd0488acabfffbaf2eef3ad81126d02929b089f9626ca378f793d8d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "12ca92598e70921462033a5de99b0bebaa56a33afa0a09f7da663cd5c01a640a",
+      "state": "ADMITTED_LOCKED"
+    },
     "12cc0ebc35541251cfa96fe93f6748f797399064eaf1c9ebc9079453cc19008d": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -19011,7 +19050,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2761,
+  "lockGeneration": 2762,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

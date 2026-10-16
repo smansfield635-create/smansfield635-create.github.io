@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-16T11:30:07Z",
+  "generatedAt": "2026-10-16T12:43:07Z",
   "window": {
-    "start": "2026-09-16T11:30:07Z",
-    "end": "2026-10-16T11:30:07Z"
+    "start": "2026-09-16T12:43:07Z",
+    "end": "2026-10-16T12:43:07Z"
   },
   "dimensions": {
     "requestPath": [
@@ -246,18 +246,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2803,
-        "visits": 2803
+        "pageLoads": 2693,
+        "visits": 2693
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1368,
+        "pageLoads": 908,
         "visits": 0
       },
       {
         "value": "www.google.com",
-        "pageLoads": 173,
-        "visits": 173
+        "pageLoads": 143,
+        "visits": 143
       },
       {
         "value": "bing.com",
@@ -266,8 +266,8 @@
       },
       {
         "value": "m.facebook.com",
-        "pageLoads": 30,
-        "visits": 30
+        "pageLoads": 20,
+        "visits": 20
       },
       {
         "value": "l.instagram.com",
@@ -416,34 +416,34 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 2647,
-        "visits": 1279
+        "pageLoads": 2589,
+        "visits": 1228
       },
       {
         "value": "1",
-        "pageLoads": 1768,
-        "visits": 1768
+        "pageLoads": 1654,
+        "visits": 1654
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3310,
-        "visits": 2786
+        "pageLoads": 2335,
+        "visits": 2063
       },
       {
         "value": "reload",
-        "pageLoads": 752,
-        "visits": 181
+        "pageLoads": 402,
+        "visits": 111
       },
       {
         "value": "back-forward",
-        "pageLoads": 263,
-        "visits": 80
+        "pageLoads": 142,
+        "visits": 60
       },
       {
         "value": "soft-navigation",
-        "pageLoads": 80,
+        "pageLoads": 30,
         "visits": 0
       },
       {

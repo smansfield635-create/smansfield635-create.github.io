@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-16T11:30:07Z",
+  "generatedAt": "2026-10-16T12:43:07Z",
   "window": {
-    "start": "2026-07-18T11:30:07Z",
-    "end": "2026-10-16T11:30:07Z"
+    "start": "2026-07-18T12:43:07Z",
+    "end": "2026-10-16T12:43:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4982,
-    "visits": 1395,
+    "pageLoads": 4912,
+    "visits": 1325,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4982,
-        "visits": 1395
+        "pageLoads": 4912,
+        "visits": 1325
       }
     },
     "byPath": {
@@ -71,8 +71,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1123,
-        "visits": 833
+        "pageLoads": 1033,
+        "visits": 743
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
@@ -95,8 +95,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
-        "visits": 60
+        "pageLoads": 270,
+        "visits": 70
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -322,6 +322,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/home/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/governance-bridge/": {
         "pageLoads": 150,
         "visits": 120
@@ -349,12 +353,12 @@
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 762,
-        "visits": 762
+        "pageLoads": 782,
+        "visits": 782
       },
       "(none)": {
-        "pageLoads": 623,
-        "visits": 623
+        "pageLoads": 533,
+        "visits": 533
       },
       "raw.githack.com": {
         "pageLoads": 10,

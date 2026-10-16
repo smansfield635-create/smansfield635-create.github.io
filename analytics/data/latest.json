@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-16T21:28:11Z",
+  "generatedAt": "2026-10-16T22:29:14Z",
   "window30d": {
-    "start": "2026-09-16T21:28:11Z",
-    "end": "2026-10-16T21:28:11Z"
+    "start": "2026-09-16T22:29:14Z",
+    "end": "2026-10-16T22:29:14Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 23
+      "pageLoads": 32
     },
     {
       "date": "2026-10-10",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 29
+      "pageLoads": 62
     }
   ],
   "summary": {
-    "pageLoads": 4330,
-    "botPageLoads": 1739,
-    "nonBotPageLoads": 2591
+    "pageLoads": 4352,
+    "botPageLoads": 1738,
+    "nonBotPageLoads": 2614
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2786,
-      "visits": 2786
+      "pageLoads": 2796,
+      "visits": 2796
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1318,
+      "pageLoads": 1308,
       "visits": 0
     },
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 40,
-      "visits": 40
+      "pageLoads": 42,
+      "visits": 42
     },
     {
       "host": "m.facebook.com",
@@ -172,23 +172,23 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 941,
-      "visits": 661
+      "pageLoads": 921,
+      "visits": 641
     },
     {
       "path": "/analytics/",
-      "pageLoads": 556,
-      "visits": 436
-    },
-    {
-      "path": "/mirror-manor-preview/",
-      "pageLoads": 500,
-      "visits": 500
+      "pageLoads": 566,
+      "visits": 446
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 465,
-      "visits": 440
+      "pageLoads": 497,
+      "visits": 472
+    },
+    {
+      "path": "/mirror-manor-preview/",
+      "pageLoads": 490,
+      "visits": 490
     },
     {
       "path": "/products/education/",
@@ -197,7 +197,7 @@
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 200,
+      "pageLoads": 190,
       "visits": 40
     },
     {

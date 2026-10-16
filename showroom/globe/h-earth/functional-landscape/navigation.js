@@ -2,7 +2,7 @@
  * H-Earth terrain-supported navigation successor.
  * Ordinary ground traversal derives camera Y from the exact presented terrain.
  */
-import {resolveGeologicalRuntimeFootSupport} from './geological-runtime-bridge.v1.js?rev=gen2779-front-water-exit-v1';
+import {resolveGeologicalRuntimeFootSupport} from './geological-runtime-bridge.v1.js?rev=gen2780-stable-planting-v1';
 import { H_EARTH_3D_CAMERA_CAPACITY } from '../capacity.js';
 import { sampleHEarthTerrainField } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 import { H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN } from '../../../../h-earth-3d/integration/h-earth.landscape-realization-planner.js';

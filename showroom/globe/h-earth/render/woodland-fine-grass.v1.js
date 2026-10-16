@@ -1,5 +1,5 @@
 /** Presentation-only woodland grass. Canonical world and records stay immutable. */
-import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2779-front-water-exit-v1';
+import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2780-stable-planting-v1';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate,sampleHEarthGen311PlacementStructureDisposition} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from './grass-lowland-trial.js';
@@ -133,8 +133,9 @@ export async function prepareWoodlandSelectionCache(presentation,yieldControl=as
 }
 
 /** A world-anchored nearby presentation, rather than another whole-world survey. */
-export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=async()=>{},onProgress=()=>{}}={}){
+export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=async()=>{},onProgress=()=>{},placementExclusion=null}={}){
  if(typeof visibleSurface?.ground?.sample!=='function'||typeof visibleSurface?.water?.sample!=='function')throw Error('NEARBY_FINE_GRASS_VISIBLE_SURFACE_REQUIRED');
+ if(placementExclusion!==null&&typeof placementExclusion!=='function')throw Error('NEARBY_FINE_GRASS_EXCLUSION_INVALID');
  const spacing=.22,tileMeters=4,maximumRoots=65536;
  const tiles=new Map(),obstacles=pkg.landscapeCoverFootprints??[],trees=pkg.landscapeFloorFootprints??[];
  let lastKey=null,lastPresentation=null,latestRequest=null,worker=null,requestRevision=0;
@@ -149,6 +150,7 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
    for(let ix=Math.floor(tx*4/spacing)-1;ix<=Math.ceil((tx*4+4)/spacing)+1;ix++){
     const x=f((ix+(hash(ix,iz,10)/4294967296-.5)*.76)*spacing),z=f((iz+(hash(ix,iz,11)/4294967296-.5)*.76)*spacing);
     if(Math.floor(x/4)!==tx||Math.floor(z/4)!==tz)continue;candidates++;
+    if(placementExclusion?.(x,z)){reject('SHARED_PILOT_OWNER');continue;}
     const s=visibleSurface.ground.sample(x,z);
     if(!s){reject('NO_VISIBLE_TERRAIN');continue;}
     if(isWoodlandFineGrassPoint(x,s.y,z)){reject('APPROVED_WOODLAND_OWNER');continue;}

@@ -72,14 +72,15 @@ function templateFor(){
 export function transformHEarthGroundCoverRoot(template,root,x,z,angle,width){const i=template.rootVertices[root]*3,dx=f(template.positions[i]*width),dz=f(template.positions[i+2]*width),c=f(Math.cos(angle)),s=f(Math.sin(angle));return{x:f(x+f(f(dx*c)-f(dz*s))),z:f(z+f(f(dx*s)+f(dz*c)))};}
 function eligibleMaterial(m,slope){if(m?.valid!==true||slope>.35)return false;if(m.surfaceClass==='STONE_AND_SPARSE_SOIL')return m.soilDepth>=.035;return ['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20;}
 
-export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD',priorityOrigin=null,onTile=null,compositionEnabled=true,visibleSurface=null}={}){
+export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD',priorityOrigin=null,onTile=null,compositionEnabled=true,visibleSurface=null,placementExclusion=null}={}){
   if(!['FORWARD','REVERSE','CHUNKED','CAMERA_FIRST'].includes(order))throw Error('GLOBAL_COVER_ORDER_INVALID');
   if(order==='CAMERA_FIRST'&&(!priorityOrigin||![priorityOrigin.x,priorityOrigin.z].every(Number.isFinite)))throw Error('GLOBAL_COVER_CAMERA_FIRST_ORIGIN_REQUIRED');
   if(onTile!==null&&typeof onTile!=='function')throw Error('GLOBAL_COVER_TILE_CALLBACK_INVALID');
   const started=now(),template=templateFor(),surface=visibleSurface??buildVegetationVisibleSurface(pkg,{refinement}),base=surface.ground;
   if(!base.triangleCount)throw Error('GLOBAL_COVER_TERRAIN_EMPTY');
   const water=surface.water,refined=refinement?{triangleCount:surface.receipt.refinementTriangles}:null;
-  const sample=surface.sample;
+  if(placementExclusion!==null&&typeof placementExclusion!=='function')throw Error('GLOBAL_COVER_EXCLUSION_INVALID');
+  const sample=(x,z)=>placementExclusion?.(x,z)?null:surface.sample(x,z);
   const obstacles=pkg.landscapeCoverFootprints??[];
   const output=[],rejected={},patches=[],bounds=P.bounds;let candidates=0,rootSamples=0,mountainInstances=0,materialSamples=0,yields=0,budgetStart=now(),secondaryFanCount=0,lowCount=0,midCount=0,duneCount=0,pilotExtraCount=0,ecoCandidates=0;
   const reject=reason=>{rejected[reason]=(rejected[reason]??0)+1;};

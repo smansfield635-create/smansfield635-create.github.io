@@ -1,4 +1,4 @@
-import {H_EARTH_WATER_PRESENTATION_ENABLED,H_EARTH_REAR_WATER_PRESENTATION_ENABLED} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2779-front-water-exit-v1';
+import {H_EARTH_WATER_PRESENTATION_ENABLED,H_EARTH_REAR_WATER_PRESENTATION_ENABLED} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2780-stable-planting-v1';
 /** Presentation roots belong to the indexed surfaces actually submitted to WebGL. */
 const f=Math.fround,EPS=1e-8;
 const invalid=reason=>{throw Error('VEGETATION_VISIBLE_SURFACE_INVALID:'+reason);};

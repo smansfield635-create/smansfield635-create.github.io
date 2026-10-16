@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /** Independent four-tree presentation audit. Reads the immutable cached world; never rebuilds it. */
 import assert from 'node:assert/strict';
+import {spawnSync} from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -9,7 +10,7 @@ import {createHash} from 'node:crypto';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {sampleHEarthGen311PlacementStructureDisposition,H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from '../../showroom/globe/h-earth/render/grass-lowland-trial.js';
-import {buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices,WOODLAND_FINE_GRASS} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2710-stable-grass-beach-v1';
+import {buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices,WOODLAND_FINE_GRASS} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2780-stable-planting-v1';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const ROOT=new URL('../../',import.meta.url);
 export const FOUR_TREE_VIEWS=Object.freeze([[-139.403,-194.5],[-139.403,-236],[-119,-216],[-164,-216],[-141,-214]]);
@@ -152,8 +153,9 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
 /** Gen2694: fast read-only source-chain qualification; no world construction or browser. */
 export function verifyGen2694CandidateSourceChain(){
  const entry=fs.readFileSync(new URL('showroom/globe/h-earth/index.html',ROOT),'utf8');
- const modern=entry.includes('gen2779-front-water-exit-v1')||entry.includes('gen2774-cavern-vegetation-repair-v1');
- const rev=entry.includes('gen2779-front-water-exit-v1')?'gen2779-front-water-exit-v1':modern?'gen2774-cavern-vegetation-repair-v1':'gen2710-stable-grass-beach-v1';
+ const pilot=entry.includes('gen2780-stable-planting-v1');
+ const modern=pilot||entry.includes('gen2779-front-water-exit-v1')||entry.includes('gen2774-cavern-vegetation-repair-v1');
+ const rev=pilot?'gen2780-stable-planting-v1':entry.includes('gen2779-front-water-exit-v1')?'gen2779-front-water-exit-v1':modern?'gen2774-cavern-vegetation-repair-v1':'gen2710-stable-grass-beach-v1';
  const paths=[
   ['showroom/globe/h-earth/index.html','public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
   ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
@@ -195,17 +197,26 @@ export function verifyGen2694CandidateSourceChain(){
  const html=publicManifest.checks.find(entry=>entry.path==='/showroom/globe/h-earth/index.html');
  if(!modern)assert(html&&html.includes.every(fragment=>sources.get(paths[0][0]).source.includes(fragment)),'GEN2694_PUBLIC_RELEASE_MANIFEST_INCOMPATIBLE');
  if(modern){
-  assert(renderer.includes("from '../functional-landscape/geological-runtime-bridge.v1.js"+(rev==='gen2779-front-water-exit-v1'?'?rev='+rev:'')+"'"),'REPAIR_CAVE_MODULE_IDENTITY_DRIFT');
+  assert(renderer.includes("from '../functional-landscape/geological-runtime-bridge.v1.js"+(pilot||rev==='gen2779-front-water-exit-v1'?'?rev='+rev:'')+"'"),'REPAIR_CAVE_MODULE_IDENTITY_DRIFT');
   assert(renderer.includes('visibleSurface:resources.vegetationVisibleSurface')&&renderer.includes('enabled:false'),'REPAIR_SHARED_SURFACE_OR_PILOT_RETIREMENT_MISSING');
   assert(grass.includes('createNearbyFineGrassCache')&&grass.includes('NEARBY_FINE_GRASS_CACHE_v1'),'REPAIR_NEARBY_COVER_MISSING');
   const late=fs.readFileSync(new URL('showroom/globe/h-earth/render/geometry-landscape-cover.js',ROOT),'utf8');
   assert(late.includes('legacyFanPresentationRetired:true'),'REPAIR_LATE_FAN_RETIREMENT_MISSING');
   assert.equal(digest(fs.readFileSync(new URL('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',ROOT))),manifest.binary.sha256,'REPAIR_BINARY_BYTES_DRIFT');
  }
- return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',qualifiedPresentationGeneration:rev==='gen2779-front-water-exit-v1'?2779:modern?2774:2710,publicationManifestCompatibility:modern?'SEPARATE_PUBLICATION_REBIND_REQUIRED':'PASS',result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
+ return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',qualifiedPresentationGeneration:pilot?2780:rev==='gen2779-front-water-exit-v1'?2779:modern?2774:2710,publicationManifestCompatibility:modern?'SEPARATE_PUBLICATION_REBIND_REQUIRED':'PASS',result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
- if(process.argv.includes('--source-binding-only')){console.log(JSON.stringify(verifyGen2694CandidateSourceChain(),null,2));process.exit(0);}
+ if(process.argv.includes('--source-binding-only')){
+  const report=verifyGen2694CandidateSourceChain();
+  if(report.qualifiedPresentationGeneration===2780){
+   const result=spawnSync(process.execPath,['--test',fileURLToPath(new URL('h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs',ROOT))],{cwd:fileURLToPath(ROOT),encoding:'utf8'});
+   process.stderr.write(result.stdout||'');process.stderr.write(result.stderr||'');
+   assert.equal(result.status,0,'GEN2780_PILOT_SOURCE_TESTS_FAILED');
+   report.plantingPilotSourceTests='PASS_CPU_AND_MOCK_GL_ONLY';
+  }
+  console.log(JSON.stringify(report,null,2));process.exit(0);
+ }
  const args=process.argv.slice(2),arg=k=>{const i=args.indexOf(k);return i<0?null:args[i+1];};
  const world=fs.readFileSync(arg('--world')??new URL('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',ROOT));
  assert.equal(digest(world),'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a','IMMUTABLE_WORLD_BYTES_CHANGED');

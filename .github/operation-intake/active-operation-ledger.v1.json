@@ -1623,45 +1623,6 @@
       "scopeHash": "1397301660e51f2f55e5076b4ebc1d84cf3e077f9c9956191dc62ba90fe92eb4",
       "state": "ADMITTED_LOCKED"
     },
-    "13d534473c7884e09f53e1aca2172bb121bad10974c4322ffc3f29f412260061": {
-      "governingHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
-          "lockGeneration": 2766,
-          "lockScope": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_V1",
-          "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
-          "procedureLocatorDigest": "2f4b53a691f4d6519d11dc77eb07c3c7f0e0842640d34e6c8f015c9ff3994240",
-          "requestDigest": "933741f36a2761bd79bcb9d0bd5f38aab1b2097c18920f96957ce75737eab46b",
-          "scopeHash": "13d534473c7884e09f53e1aca2172bb121bad10974c4322ffc3f29f412260061"
-        },
-        "bindingDigest": "2ca990be8831685807917c435e362c3a227782a005dd2a2e71e5b36a8fd9e0fb",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "05107908c72f8b0de2b3807c067101b0708d0429",
-          "observedLockRefHead": "7c7ff86ccbd908f4c74e677bdf01c8e2148fddb3"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "c9060a4fbea03447f9ec744411b12e8af1e4c33116d1da3a4e5fed8881c3cf49",
-          "commentId": 6218584650,
-          "issueNumber": 6402,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2766,
-      "lockScope": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_V1",
-      "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
-      "procedureLocatorDigest": "2f4b53a691f4d6519d11dc77eb07c3c7f0e0842640d34e6c8f015c9ff3994240",
-      "released": false,
-      "requestDigest": "933741f36a2761bd79bcb9d0bd5f38aab1b2097c18920f96957ce75737eab46b",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "13d534473c7884e09f53e1aca2172bb121bad10974c4322ffc3f29f412260061",
-      "state": "ADMITTED_LOCKED"
-    },
     "147dc7c04b0ab95c257cf99e988904dac93874d34af5d35be4a69b8cfe1dcf2b": {
       "governingHead": "3e91d0f94a762d99c5a614e528612db40827fa19",
       "lockGeneration": 247,
@@ -81140,6 +81101,83 @@
       "requestDigest": "095e17f141dc10a76dd72aceea95e937afa294cd1aa57428f60128c9aa16fcab",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "ca077c084cae2ff4b7b9146bae4ec8ddc6902bcf473fc617f1876d05de3642e4",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+          "lockGeneration": 2766,
+          "lockScope": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_V1",
+          "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
+          "procedureLocatorDigest": "2f4b53a691f4d6519d11dc77eb07c3c7f0e0842640d34e6c8f015c9ff3994240",
+          "requestDigest": "933741f36a2761bd79bcb9d0bd5f38aab1b2097c18920f96957ce75737eab46b",
+          "scopeHash": "13d534473c7884e09f53e1aca2172bb121bad10974c4322ffc3f29f412260061"
+        },
+        "bindingDigest": "2ca990be8831685807917c435e362c3a227782a005dd2a2e71e5b36a8fd9e0fb",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "05107908c72f8b0de2b3807c067101b0708d0429",
+          "observedLockRefHead": "7c7ff86ccbd908f4c74e677bdf01c8e2148fddb3"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "c9060a4fbea03447f9ec744411b12e8af1e4c33116d1da3a4e5fed8881c3cf49",
+          "commentId": 6218584650,
+          "issueNumber": 6402,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+          "lockGeneration": 2766,
+          "lockScope": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_V1",
+          "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
+          "procedureLocatorDigest": "2f4b53a691f4d6519d11dc77eb07c3c7f0e0842640d34e6c8f015c9ff3994240",
+          "requestDigest": "933741f36a2761bd79bcb9d0bd5f38aab1b2097c18920f96957ce75737eab46b",
+          "scopeHash": "13d534473c7884e09f53e1aca2172bb121bad10974c4322ffc3f29f412260061"
+        },
+        "bindingDigest": "8c41f20e821216dc373fbbb54df16d30666f852b2cbe553d4f2c781be974ec98",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "0948e217b368b02b3f7d835f2ac2e75115364ca0",
+          "observedLockRefHead": "b25ee9f2c0ff86a447c96c3ff4ef9b2876657358"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "04188b9e76998269d76ac2fedba42a81777bdcfc6c87db05ae3559c8bccb8358",
+          "commentId": 6218780876,
+          "issueNumber": 6402,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+          "lockGeneration": 2766,
+          "lockScope": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_V1",
+          "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
+          "released": true,
+          "scopeHash": "13d534473c7884e09f53e1aca2172bb121bad10974c4322ffc3f29f412260061",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2766,
+      "lockScope": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_V1",
+      "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
+      "procedureLocatorDigest": "2f4b53a691f4d6519d11dc77eb07c3c7f0e0842640d34e6c8f015c9ff3994240",
+      "released": true,
+      "requestDigest": "933741f36a2761bd79bcb9d0bd5f38aab1b2097c18920f96957ce75737eab46b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "13d534473c7884e09f53e1aca2172bb121bad10974c4322ffc3f29f412260061",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

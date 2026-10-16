@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-16T09:33:26Z",
+  "generatedAt": "2026-10-16T10:31:33Z",
   "window": {
-    "start": "2026-09-16T09:33:26Z",
-    "end": "2026-10-16T09:33:26Z"
+    "start": "2026-09-16T10:31:33Z",
+    "end": "2026-10-16T10:31:33Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 939,
-        "visits": 659
+        "pageLoads": 938,
+        "visits": 658
       },
       {
         "value": "/analytics/",
@@ -144,8 +144,8 @@
       },
       {
         "value": "/release-proof/",
-        "pageLoads": 22,
-        "visits": 22
+        "pageLoads": 23,
+        "visits": 23
       },
       {
         "value": "/campaigns/rob/",
@@ -246,8 +246,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2801,
-        "visits": 2801
+        "pageLoads": 2803,
+        "visits": 2803
       },
       {
         "value": "diamondgatebridge.com",
@@ -271,15 +271,15 @@
       },
       {
         "value": "l.instagram.com",
-        "pageLoads": 3,
-        "visits": 3
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 4357,
-        "visits": 2989
+        "pageLoads": 4356,
+        "visits": 2988
       },
       {
         "value": "BR",
@@ -288,8 +288,8 @@
       },
       {
         "value": "CA",
-        "pageLoads": 14,
-        "visits": 14
+        "pageLoads": 15,
+        "visits": 15
       },
       {
         "value": "IN",
@@ -320,8 +320,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2215,
-        "visits": 2174
+        "pageLoads": 2216,
+        "visits": 2175
       },
       {
         "value": "tablet",
@@ -330,8 +330,8 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 1088,
-        "visits": 458
+        "pageLoads": 1087,
+        "visits": 457
       }
     ],
     "userAgentBrowser": [
@@ -347,8 +347,8 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 960,
-        "visits": 350
+        "pageLoads": 961,
+        "visits": 351
       },
       {
         "value": "MobileSafari",
@@ -357,8 +357,8 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 55,
-        "visits": 55
+        "pageLoads": 56,
+        "visits": 56
       },
       {
         "value": "Firefox",
@@ -367,8 +367,8 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 23,
-        "visits": 23
+        "pageLoads": 21,
+        "visits": 21
       },
       {
         "value": "Facebook",
@@ -384,8 +384,8 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 2072,
-        "visits": 765
+        "pageLoads": 2073,
+        "visits": 766
       },
       {
         "value": "Linux",
@@ -394,8 +394,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 174,
-        "visits": 173
+        "pageLoads": 175,
+        "visits": 174
       },
       {
         "value": "MacOSX",
@@ -409,8 +409,8 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 23,
-        "visits": 23
+        "pageLoads": 21,
+        "visits": 21
       }
     ],
     "bot": [

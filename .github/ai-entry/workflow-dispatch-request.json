@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "H_EARTH_GEN2735_TERMINAL_CLOSURE_20261016_002",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\n  \"schema\": \"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\n  \"repository\": \"smansfield635-create/smansfield635-create.github.io\",\n  \"operationId\": \"H_EARTH_GEN2735_EXACT_HEAD_RUNNER_GATE_REPAIR_20261016_001\",\n  \"lockScope\": \"H_EARTH:GEN2735:EXACT_HEAD_RUNNER_APPLICABILITY:89F9344:20261016\",\n  \"lockGeneration\": 2764,\n  \"terminalDisposition\": \"PASS_CLOSED\"\n}"
   }
 }

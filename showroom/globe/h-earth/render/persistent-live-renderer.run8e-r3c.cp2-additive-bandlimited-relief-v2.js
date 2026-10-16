@@ -1,11 +1,11 @@
 import {buildVegetationVisibleSurface} from './vegetation-visible-surface.v1.js';
-import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js';
+import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2777-water-entry-coherence-v1';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
-import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,createNearbyFineGrassCache,prepareWoodlandSelectionCache,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2774-cavern-vegetation-repair-v1';
+import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,createNearbyFineGrassCache,prepareWoodlandSelectionCache,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2777-water-entry-coherence-v1';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2774-cavern-vegetation-repair-v1';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2777-water-entry-coherence-v1';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -16,7 +16,7 @@ import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorl
 import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js?cb=meadow-distribution-20261006';
 import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006';
 // SHORELINE_SOIL_BEGIN import
-import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=meadow-distribution-20261006&rev=gen2774-cavern-vegetation-repair-v1';
+import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=meadow-distribution-20261006&rev=gen2777-water-entry-coherence-v1';
 // SHORELINE_SOIL_END import
 
 // The CPU contour is derived from uploaded Float32 triangle planes in world x/z.

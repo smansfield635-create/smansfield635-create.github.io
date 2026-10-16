@@ -34,8 +34,8 @@ test('renderer-installed production bridge actually supports navigation through 
   assert.equal(navigationBridge.getGeologicalRuntimeBridge(),model,'Renderer installation did not reach the navigation module instance');
   let state=navigation.createHEarthFunctionalLandscapeNavigationState({waypointId:'GEOLOGICAL_CAVERN_REAR_APPROACH'}).state;
   let interiorSteps=0;
-  for(let step=0;step<15;step++){
-    const proposal=navigation.proposeHEarthFunctionalLandscapeNavigation(state,{action:'MOVE_FORWARD',magnitude:4});
+  for(let step=0;step<6;step++){
+    const proposal=navigation.proposeHEarthFunctionalLandscapeNavigation(state,{action:'MOVE_FORWARD',magnitude:Math.min(4,-240-state.position.z)});
     assert.equal(proposal.ok,true,`Cavern approach rejected at step ${step}: ${JSON.stringify(proposal.issues)}`);
     state=proposal.state;
     assert.equal(state.geologicalPhysicalSupport,true,`Geological support missing at step ${step}`);

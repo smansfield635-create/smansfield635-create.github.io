@@ -33,6 +33,34 @@ assert(pagesCapability?.inputPolicy?.surface_id?.required === true, 'Pages deplo
 assert(fs.existsSync(`.github/workflows/${pagesCapability.workflow}`), 'Pages deploy capability workflow file missing');
 assert(/^\s*workflow_dispatch\s*:/m.test(readText(`.github/workflows/${pagesCapability.workflow}`)), 'Pages deploy capability workflow is not dispatchable');
 
+const closureCapability = registry.capabilities?.REMOTE_OPERATION_TERMINAL_CLOSURE;
+assert(closureCapability?.workflow === 'remote-operation-terminal-closure-v1.yml', 'terminal closure capability workflow drifted');
+assert(closureCapability?.ref === 'main', 'terminal closure capability must dispatch from main');
+assert(closureCapability?.workflowDispatchRegistrationRequired === true, 'terminal closure workflow registration must be required');
+assert(closureCapability?.operationLedgerMutationAuthority === true, 'terminal closure ledger effect must be explicit');
+assert(closureCapability?.deploymentAuthority === false, 'terminal closure must not create deployment authority');
+assert(closureCapability?.productMutationAuthority === false, 'terminal closure must not create product mutation authority');
+assert(closureCapability?.controlPlaneSemanticAuthority === false, 'terminal closure must not create control-plane semantic authority');
+assert(closureCapability?.inputPolicy?.request_json?.source === 'REQUEST', 'closure request must be supplied explicitly');
+assert(closureCapability?.inputPolicy?.request_json?.required === true, 'closure request must be required');
+assert(closureCapability?.inputPolicy?.request_json?.requiredPrefix === 'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n', 'closure request marker must be exact');
+assert(closureCapability?.inputPolicy?.router_callback_issue?.source === 'TRANSPORT_PULL_REQUEST_NUMBER', 'callback issue must bind to transport PR');
+assert(closureCapability?.inputPolicy?.router_callback_issue?.userOverrideAllowed === false, 'callback issue may not be selected by request');
+assert(closureCapability?.inputPolicy?.router_callback_repository?.source === 'CURRENT_REPOSITORY', 'callback repository must bind to current repo');
+assert(closureCapability?.inputPolicy?.router_callback_repository?.userOverrideAllowed === false, 'callback repository may not be selected by request');
+const closureWorkflow = readText(`.github/workflows/${closureCapability.workflow}`);
+assert(/^\s*workflow_dispatch\s*:/m.test(closureWorkflow), 'terminal closure workflow is not dispatchable');
+for (const token of ['request_json:', 'router_callback_issue:', 'router_callback_repository:']) {
+  assert(closureWorkflow.includes(token), `terminal closure workflow is missing ${token}`);
+}
+for (const token of [
+  'policy.requiredPrefix',
+  "policy.source === 'TRANSPORT_PULL_REQUEST_NUMBER'",
+  'String(pullRequestNumber)',
+  "policy.source === 'CURRENT_REPOSITORY'",
+  'inputs[key] = repo'
+]) assert(runtime.includes(token), `bridge runtime is missing ${token}`);
+
 const procedure = shared.procedures?.find(p => p.procedureId === 'AI_ENTRY_NATIVE_WORKFLOW_DISPATCH');
 assert(procedure, 'shared AI entry dispatch procedure missing');
 assert(procedure.capabilityRegistry === '.github/ai-router/workflow-dispatch-capability.v1.json', 'shared procedure registry binding drifted');

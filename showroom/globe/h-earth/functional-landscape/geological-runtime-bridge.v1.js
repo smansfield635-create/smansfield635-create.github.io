@@ -7,6 +7,16 @@ import {GEOLOGICAL_FORMATION_SITES,makeCanonicalAuthoringTerrainSampler,unprojec
 import {constructGeologicalPortalAssembly,sampleFormationWalkable,projectGeologicalMeshForRenderer}
   from '../../../../h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs';
 import {constructHEarthSweptPassageMesh} from '../render/geometry-kernel.sweep.v1.js';
+// Owner-directed temporary land development mode. Source water meshes remain intact.
+export const H_EARTH_WATER_PRESENTATION_ENABLED=false;
+export const isHEarthWaterPresentationPart=id=>/(?:^|:)(?:FOAM_CONTACT|SHALLOW_WATER|NEARSHORE_WATER|OPEN_WATER|FAR_OCEAN_CONTINUATION|FRESHWATER_RIVER|OASIS_WATER)$/.test(String(id));
+export function shouldPresentHEarthDrawRange(range){
+  if(H_EARTH_WATER_PRESENTATION_ENABLED)return true;
+  const ids=range.primitiveIds??[];
+  if(!ids.some(isHEarthWaterPresentationPart))return true;
+  if(!ids.every(isHEarthWaterPresentationPart))throw Error('H_EARTH_MIXED_WATER_LAND_DRAW_RANGE');
+  return false;
+}
 export const GEOLOGICAL_RUNTIME_BRIDGE_ID='H_EARTH_GEN2735_RUNTIME_GEOLOGICAL_BRIDGE_v1';
 const SITE=GEOLOGICAL_FORMATION_SITES.B_REAR_RAVINE;
 const BOUNDS=Object.freeze({xMin:-120,xMax:96,zMin:-376,zMax:-224});
@@ -510,7 +520,7 @@ export function resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight=2.25}={}){
     if(!ground)return Object.freeze({class:'EXTERIOR_DRY_CHANNEL',eligible:false,x,z,issues:['GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING']});
     const support={class:'EXTERIOR_DRY_CHANNEL',eligible:true,x,z,footY:ground.y,eyeY:ground.y+eyeHeight,
       ceilingY:null,headroom:null,issues:[],worldManifoldUnchanged:true,boundarySource:'ACTUAL_EMITTED_TERRAIN_TRIANGLES'};
-    const water=active.sampleWaterAt(x,z);
+    const water=H_EARTH_WATER_PRESENTATION_ENABLED?active.sampleWaterAt(x,z):null;
     if(water&&water.y>support.footY+.05)return Object.freeze({...support,eligible:false,waterY:water.y,waterDepth:water.y-support.footY,issues:['GEOLOGICAL_SUBMERGED_OUTDOOR_SUPPORT']});
     return Object.freeze(support);
   }

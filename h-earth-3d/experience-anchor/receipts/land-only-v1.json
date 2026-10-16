@@ -1,0 +1,95 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/land-only-v1/source-evidence.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/land-only-v1/source-evidence.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/land-only-v1/source-evidence.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs",
+      "sha256": "b4302146de9d79c2ea9eecce8e2326bed5a37076d58b24840d995906f8f01cce"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-repair.v1.test.mjs",
+      "sha256": "66db54442fb9c790fea031dcc3d87dd780075352a4f4a5022f95bbe03e2fbccf"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "ce5c98fa5c9b1b64a3d6d754b2a9a27c550ebb4bb04ca7154ee9bebb400b4529"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.land-only.v1.test.mjs",
+      "sha256": "b40b7fdcacdee78b5e3fad705921a49676f5319eaaac0d2db14994ba5de86518"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
+      "sha256": "fff7f64cb666da05dd3edc1a403addd1e18f97243a96abe4788fda93b3e05182"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
+      "sha256": "436471ffadb3a3bcbb9e8372d3ce228f65eb5ccb6a47d1976cd00ecdaa4c7d66"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "22214a69de3bb0279d667fe82d08bad75fb85fd456d10b004b0a09a60000b37a"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "0189dcde198fedaf7630aa424179b7bc13a74f60fd27dbc468561379231949d2"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "91074c9817c94467e75bf732d152e602e5c0836d61bb76f608ba14782bbb3d7a"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "e02f721ef570e2b4590731630c1af83c940a29e39ced6e34888345822906a1f2"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "3ef73c7a70cee508f19177b88420023a37d9955d76cb92d19a9e2ae00c718cb5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sha256": "8f7984e208a64fa8f28c35c99f38d90c6508fb1b7ec49cc3a59ec516acfef0c0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "571871cdc79b0561255951993d5684a3847fe1a5ae1858c48bd9be9fb99b33dc"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js",
+      "sha256": "dbec18d7f5bc7dfc81e1184ede290d76aff7f0c2a47ab92d055f1b50704db028"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "76b89eb44290a39e44c35196297de2bcb11014f4d7a867bf0358af8ea1aff08b"
+    }
+  ],
+  "acceptanceBasis": "Owner-directed temporary water presentation pause. Existing terrain, channels, basin, shell, controls and same canonical world retained. Final-packet checks confirm supported embodied floor camera. Prior anchor visual proxy retained; this receipt accepts world continuity, not aesthetics or physical-device acceptance.",
+  "ownerPerceptualAcceptance": false,
+  "newIntegratedBrowserRunPerformed": false,
+  "canonicalAdmissionGeneration": 2778
+}

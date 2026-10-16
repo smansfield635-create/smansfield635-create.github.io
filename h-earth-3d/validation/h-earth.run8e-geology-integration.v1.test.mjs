@@ -10,7 +10,7 @@ import {unprojectPlanetVertex} from '../terrain/h-earth.geological-formation-suc
 import {resolveHEarthArrivalWaypoint} from '../../showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js';
 import {constructGeologicalRuntimeBridge,installGeologicalRuntimeBridge,
   resolveGeologicalRuntimeFootSupport,retireGeologicalBaseIndices,traceGeologicalRuntimeDrainage,sampleGeologicalMaterialExposure}
-  from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js?rev=gen2777-water-entry-coherence-v1';
+  from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js?rev=gen2778-land-only-v1';
 const home=dirname(fileURLToPath(import.meta.url));
 const file=process.env.H_EARTH_EXACT_WORLD_BINARY||join(home,'../../showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');
 let payload;
@@ -211,8 +211,8 @@ test('cavern portal relief and rock strata remain irregular without periodic tun
  assert(renderer.includes('const strataA=Math.sin(local.y*.78+'));
  assert(renderer.includes('const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);'));
  assert(!renderer.includes('local.y*1.55+.34*Math.sin(local.x*.43)'));
- const revision='gen2777-water-entry-coherence-v1';
- assert(renderer.includes("from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2777-water-entry-coherence-v1'"),'CAVE_SUPPORT_MUST_SHARE_NAVIGATION_MODULE_URL');
+ const revision='gen2778-land-only-v1';
+ assert(renderer.includes("from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2778-land-only-v1'"),'CAVE_SUPPORT_MUST_SHARE_NAVIGATION_MODULE_URL');
  for(const path of [
   '../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',
   '../../showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js',

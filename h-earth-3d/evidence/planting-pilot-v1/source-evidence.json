@@ -1,0 +1,37 @@
+{
+  "schema": "H_EARTH_PLANTING_PILOT_SOURCE_EVIDENCE_v1",
+  "operationId": "H_EARTH_PLANTING_PILOT_20261016_001",
+  "generation": 2780,
+  "baseline": "29bb1df5400bee2d0e90fcc5007fb4a466bad3b7",
+  "admissionCommit": "5041778858d30796c736f2b33f507da007322b49",
+  "sourceCommentId": 6226392054,
+  "scope": {
+    "bounds": [
+      -105,
+      -345,
+      -25,
+      -275
+    ],
+    "newTrees": false,
+    "canonicalWorldMutation": false,
+    "terrainCameraWaterGeometryMutation": false
+  },
+  "checks": {
+    "localTests": 8,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 1,
+    "skip": "Canonical world gzip absent locally; full-checkout actual-scene CPU test must execute remotely",
+    "north": "LAYOUT_INVARIANTS_REVIEWED",
+    "east": "NATIVE_STATIC_INSTANCE_RENDERER_REVIEWED",
+    "west": "SYNTHETIC_CPU_AND_MOCK_GL_REVIEWED_NOT_ACTUAL_WEBGL"
+  },
+  "qualification": {
+    "actualSceneCPU": "PENDING_FULL_CHECKOUT",
+    "actualWebGL": "PENDING",
+    "phonePerformance": "UNMEASURED",
+    "ownerVisualAcceptance": false,
+    "publication": false
+  },
+  "nextAction": "Existing exact-head runner with complete vegetation residency; inspect first failed assertion before any repair"
+}

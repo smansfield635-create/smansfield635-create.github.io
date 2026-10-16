@@ -1,5 +1,5 @@
-import { installHEarthRun8ER3D2PointerTouchIntake, resolveHEarthNavigationBoundaryFeedback } from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2779-front-water-exit-v1';
-import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2779-front-water-exit-v1';
+import { installHEarthRun8ER3D2PointerTouchIntake, resolveHEarthNavigationBoundaryFeedback } from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2780-stable-planting-v1';
+import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
 import { createHEarthRepresentationTransitionSurface } from './representation-transition-surface.v1.js';
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =
@@ -515,7 +515,8 @@ function scheduleVegetationResidency() {
   });
 }
 
-window.addEventListener('pagehide', () => {
+window.addEventListener('pagehide', event => {
+  if(!event.persisted)binding?.disposePlantingPilot?.();
   vegetationLoadingStopped = true;
   if (vegetationFrameRequest !== null) {
     window.cancelAnimationFrame(vegetationFrameRequest);

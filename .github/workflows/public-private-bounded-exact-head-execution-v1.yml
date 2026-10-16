@@ -24,8 +24,8 @@ jobs:
       group: private-study-checkpoint-v1
       cancel-in-progress: false
     env:
-      DGB_STUDY_SOURCE_HEAD: 7523b24db75ce636c4e05d5d47a6d3cede8c7850
-      DGB_STUDY_RATIFICATION_COMMIT: ebd28e321384c092954bdcab1e0c39749cbf37a0
+      DGB_STUDY_SOURCE_HEAD: 535b563069e10934c5b5c4c14b59cfb9fb15dfc9
+      DGB_STUDY_RATIFICATION_COMMIT: 87365476f7c1e37cda4a2528187b370aeb876f0a
     steps:
       - name: Require independently admitted public binding
         uses: actions/github-script@v7
@@ -35,11 +35,11 @@ jobs:
             const f=(await github.rest.repos.getContent({owner:context.repo.owner,repo:context.repo.repo,path,ref:'operation-locks/repository-operation-intake-v1'})).data;
             const blob=f.encoding==='base64'?f:(await github.rest.git.getBlob({owner:context.repo.owner,repo:context.repo.repo,file_sha:f.sha})).data;
             const ledger=JSON.parse(Buffer.from(blob.content.replace(/\s/g,''),'base64').toString('utf8'));
-            const id='DGB_PUBLIC_PRIVATE_CHECKPOINT_DIAGNOSTIC_COMMISSION_20261016_001';
+            const id='DGB_PUBLIC_PRIVATE_NATIVE_GIT_CHECKPOINT_ACTIVATION_20261016_001';
             const active=Object.values(ledger.activeScopes).filter(x=>x.operationId===id);
-            const terminal=ledger.terminalHistory.filter(x=>x.operationId===id&&x.lockGeneration===2760);
+            const terminal=ledger.terminalHistory.filter(x=>x.operationId===id&&x.lockGeneration===2761);
             const row=active.length===1&&terminal.length===0?active[0]:active.length===0&&terminal.length===1&&terminal[0].released===true&&terminal[0].terminalDisposition==='PASS_CLOSED'?terminal[0]:null;
-            if(!row||row.lockGeneration!==2760||row.requestDigest!=='37582a376b84b04187caae16b86a82b72a41e43fea271654385bd52dc4d57646'||row.procedureLocatorDigest!=='fc9807a81556488d03bbb862e15f3dca09be7054b26be671f0d664f69c778c06'||!(row.state==='ADMITTED_LOCKED'&&row.released===false||row.state==='TERMINAL'&&row.released===true&&row.terminalDisposition==='PASS_CLOSED'))throw Error('PUBLIC_RECURRING_AUTHORITY_REFUSED');
+            if(!row||row.lockGeneration!==2761||row.requestDigest!=='e2e4e4b2eb57852a33f65139f4f407646bfd5a49fa5e9865694e394b19010139'||row.procedureLocatorDigest!=='d01a4b394d17c46bc136eff5c768e071cebd89d28f430cd445fb829e5cebda05'||!(row.state==='ADMITTED_LOCKED'&&row.released===false||row.state==='TERMINAL'&&row.released===true&&row.terminalDisposition==='PASS_CLOSED'))throw Error('PUBLIC_RECURRING_AUTHORITY_REFUSED');
       - name: Mint existing private installation write credential
         id: private
         uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349

@@ -80,7 +80,7 @@
 
       <section id="h-earth-live-world" class="h-earth-3d-world-shell" aria-label="H-Earth functional landscape">
         <div id="h-earth-b10-world-heading" class="h-earth-b10-world-heading">
-          <div><p class="h-earth-b10-eyebrow">Live world arrival</p><h2>The coast is the entrance.</h2><p>Directly manipulate the live environment below. Look, travel, and zoom on desktop or touch devices.</p></div>
+          <div><p class="h-earth-b10-eyebrow">Live world arrival</p><h2 id="h-earth-world-heading-title">The coast is the entrance.</h2><p id="h-earth-world-heading-copy">Directly manipulate the live environment below. Look, travel, and zoom on desktop or touch devices.</p></div>
           <span class="h-earth-b10-live-mark">Live environment</span>
         </div>
         <div class="h-earth-3d-world-stage"><div id="h-earth-functional-landscape-mount" class="h-earth-3d-renderer-mount render-mount" tabindex="0" aria-label="Navigable H-Earth landscape. Drag one finger to look. Slide two fingers to move. Pinch to zoom." aria-describedby="h-earth-gesture-instructions"><canvas id="h-earth-functional-landscape-canvas" width="320" height="180" aria-hidden="true"></canvas><div class="reticle" aria-hidden="true"></div><div class="semantic-readout" aria-live="polite"><span id="hud-waypoint">Coastal entry</span><span id="hud-address">Address pending</span></div><div id="h-earth-gesture-instructions" class="h-earth-live-gesture-hint" aria-hidden="true">Drag to look · Two-finger slide to move · Pinch to zoom</div></div></div>
@@ -142,6 +142,7 @@
       if (!publicFaceActive) return;
 
       const oceanPresentationActive = parameters.get('ocean-presentation') === 'v1';
+      const cavernArrivalActive = parameters.get('arrival') === 'geological-cavern';
       document.getElementById('h-earth-brand-context').textContent = 'Live interactive game platform';
       document.getElementById('h-earth-b10-hero').hidden = oceanPresentationActive;
       document.getElementById('h-earth-b10-world-heading').hidden = oceanPresentationActive;
@@ -149,6 +150,11 @@
       document.getElementById('h-earth-baseline-arrival').hidden = true;
       if (oceanPresentationActive) {
         document.documentElement.dataset.hEarthOceanWorldFirst = 'active';
+      }
+      if (cavernArrivalActive) {
+        document.documentElement.dataset.hEarthGeologicalCavernArrival = 'active';
+        document.getElementById('h-earth-world-heading-title').textContent = 'Eroded into the mountain.';
+        document.getElementById('h-earth-world-heading-copy').textContent = 'Follow the dry, descending creekbed into the mountain’s naturally weathered passage.';
       }
 
       const runtimeDiagnostics = document.querySelector('.h-earth-runtime-diagnostics');
@@ -228,7 +234,7 @@
       }
     })();
   </script>
-  <script id="h-earth-current-run8e-module" type="module" src="./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2730-rear-cavern-pilot-v1"></script>
+  <script id="h-earth-current-run8e-module" type="module" src="./functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2735-deep-cavern-run8e-v1"></script>
   <script>document.getElementById('h-earth-current-run8e-module').addEventListener('error',()=>{window.H_EARTH_RUNTIME_DIAGNOSTICS?.mark('BOOT_STARTED','FAIL','Current Run 8E module graph failed to load.');});</script>
 </body>
 </html>

@@ -1,0 +1,97 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/cavern-vegetation-repair-v1/source-evidence.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/cavern-vegetation-repair-v1/source-evidence.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/cavern-vegetation-repair-v1/source-evidence.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs",
+      "sha256": "d97aa9b88caa01d48b8d8e39a52db7c4c138574db4b119e8c1b38f05f482bd78"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-repair.v1.test.mjs",
+      "sha256": "a4a3072b1ee0c60a934e13c9330c85d637604140ac4df006304bc7457113f223"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "75d8cb08cf3808565a3e37be0d57fd7cb7e59fb19b0d4f38e2db12d894c753e6"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs",
+      "sha256": "82933e8201a5ede8adfabed33ef5a6fa11adf495f83860a6f966007f773af9c5"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
+      "sha256": "dae6ba07a51a323ceb70e69c0ef48c7f963041ab1a31b7a62631d3bc427ade23"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "8f5a8f27c2b1e61edd65cea58b73d0ead5a206846febe85d2a4e318d599f18ea"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "3bf3f68f4b7ae906298b9de1c7513adc8c8f80c9bd6076567cd4a8829f7b0465"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "e27a6338d73c9e83dfa956ac7493a9ae14e5199f2f2ba2eeaccc782d97820081"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-cover.js",
+      "sha256": "1b3ad42c42170399b7d4850171743d9db009ebb8a0e3bab779b721a4ef374adc"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
+      "sha256": "b0b91165d6e5804c390ccae6121b58b02780b4208f93ba6b07d3e17675151e19"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "sha256": "da355053a0df673f617ca56eeff29ea76f736c16a85a234379edabcd9de9a699"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sha256": "e57371ecac361e1a4d4efc02576d167dd3f1c5b5b0cc4566040263357543476f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "eb8e45228f3df7a5ffa3dbf73b4772644c42b21e1ede15ec3e142a68597d4bfe"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js",
+      "sha256": "6d42d006ade9ea3ce8579204ccc43cd718e83fda49ed7e51300acbd173c2a861"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "7b4aecfdd06a8857a341a4b894dc02c297c44e9b22b82806eb559f7da4eaf64e"
+    }
+  ],
+  "candidateRuntimeCommit": "abc8a472c0bb822afe770ad6cb811b679f3e3079",
+  "acceptanceBasis": "North reviewed the immutable visual proxy and all11 preserved world/interaction invariants; West reviewed exact repair scope. Completed browser38968708159 shows real floor-supported cavern travel, the same embodied terrain/camera/UI, GPU grass submission and final residency. Canonical world hash, approved trees, geology/water geometry and globe/regional world identity preserved. This accepts anchor continuity only, not aesthetic or physical-device approval. Owner explicitly directs publication before live perceptual judgment.",
+  "ownerPerceptualAcceptance": false,
+  "ownerLiveReviewPending": true,
+  "browserFinalCombinedReceiptCaptured": false,
+  "noPhonePerformanceClaim": true
+}

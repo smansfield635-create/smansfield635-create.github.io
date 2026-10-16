@@ -211,7 +211,8 @@ test('cavern portal relief and rock strata remain irregular without periodic tun
  assert(renderer.includes('const strataA=Math.sin(local.y*.78+'));
  assert(renderer.includes('const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);'));
  assert(!renderer.includes('local.y*1.55+.34*Math.sin(local.x*.43)'));
- const revision='gen2771-site-b-local-rock-repair-v2';
+ const revision='gen2774-cavern-vegetation-repair-v1';
+ assert(renderer.includes("from '../functional-landscape/geological-runtime-bridge.v1.js'"),'CAVE_SUPPORT_MUST_SHARE_NAVIGATION_MODULE_URL');
  for(const path of [
   '../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',
   '../../showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js',

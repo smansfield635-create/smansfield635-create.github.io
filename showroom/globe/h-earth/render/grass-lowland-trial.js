@@ -110,24 +110,11 @@ function replaceTuft(primitive,index) {
 }
 /** Owner-directed presentation suppression; canonical population truth stays intact. */
 export function applyHEarthLowlandGrassTrialBatch(batch,renderPackage) {
-  const needsReplacement=batch.primitives.some(primitive=>eligiblePrimitive(primitive)&&!primitive.metadata?.lowlandGrassTrial);
-  let index;
-  if(needsReplacement){
-    index=cache.get(renderPackage);
-    if(!index){index=buildHEarthGrassTrialTerrainIndex(renderPackage);cache.set(renderPackage,index);}
-  }
-  let replacedPrimitiveCount=0,suppressedLegacyGrassCount=0;
-  const primitives=[];
-  for(const primitive of batch.primitives){
-    let presented=primitive;
-    if(eligiblePrimitive(primitive)&&!primitive.metadata?.lowlandGrassTrial){
-      presented=replaceTuft(primitive,index);replacedPrimitiveCount++;
-    }
-    if(presented.materialHint?.archetypeId==='COASTAL_GRASS_TUFT'&&!presented.metadata?.lowlandGrassTrial){
-      suppressedLegacyGrassCount++;continue;
-    }
-    primitives.push(presented);
-  }
+  // The bounded lowland replacement was another isolated grass patch. Fine
+  // grass now has one terrain-rooted near presentation, across eligible land.
+  const replacedPrimitiveCount=0;
+  const primitives=batch.primitives.filter(p=>p.materialHint?.archetypeId!=='COASTAL_GRASS_TUFT');
+  const suppressedLegacyGrassCount=batch.primitives.length-primitives.length;
   const oasis=batch.batchId===O.batchId?buildHEarthOasisFoliagePresentation(renderPackage):null;
   if(oasis)primitives.push(...oasis.primitives);
   return freeze({...batch,primitives,oasisFoliage:oasis?{id:O.id,grassTuftCount:oasis.grassTuftCount,cattailCount:oasis.cattailCount,addedPresentationPrimitiveCount:oasis.primitives.length,worldPlacementCountChanged:false,waterPrimitive:O.waterPrimitive}:null,lowlandGrassTrial:{

@@ -1,3 +1,4 @@
+import {buildVegetationVisibleSurface} from './vegetation-visible-surface.v1.js';
 /** Global presentation density; no canonical placement or terrain mutation. */
 import {buildHEarthWoodlandGrassTuft,H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from './grass-lowland-trial.js';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
@@ -71,16 +72,14 @@ function templateFor(){
 export function transformHEarthGroundCoverRoot(template,root,x,z,angle,width){const i=template.rootVertices[root]*3,dx=f(template.positions[i]*width),dz=f(template.positions[i+2]*width),c=f(Math.cos(angle)),s=f(Math.sin(angle));return{x:f(x+f(f(dx*c)-f(dz*s))),z:f(z+f(f(dx*s)+f(dz*c)))};}
 function eligibleMaterial(m,slope){if(m?.valid!==true||slope>.35)return false;if(m.surfaceClass==='STONE_AND_SPARSE_SOIL')return m.soilDepth>=.035;return ['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20;}
 
-export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD',priorityOrigin=null,onTile=null,compositionEnabled=true}={}){
+export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD',priorityOrigin=null,onTile=null,compositionEnabled=true,visibleSurface=null}={}){
   if(!['FORWARD','REVERSE','CHUNKED','CAMERA_FIRST'].includes(order))throw Error('GLOBAL_COVER_ORDER_INVALID');
   if(order==='CAMERA_FIRST'&&(!priorityOrigin||![priorityOrigin.x,priorityOrigin.z].every(Number.isFinite)))throw Error('GLOBAL_COVER_CAMERA_FIRST_ORIGIN_REQUIRED');
   if(onTile!==null&&typeof onTile!=='function')throw Error('GLOBAL_COVER_TILE_CALLBACK_INVALID');
-  const started=now(),template=templateFor(),base=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,(pkg.primitiveSpans??[]).filter(p=>p.role==='TERRAIN'));
+  const started=now(),template=templateFor(),surface=visibleSurface??buildVegetationVisibleSurface(pkg,{refinement}),base=surface.ground;
   if(!base.triangleCount)throw Error('GLOBAL_COVER_TERRAIN_EMPTY');
-  const water=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,(pkg.primitiveSpans??[]).filter(p=>String(p.primitiveId).includes('FAR_OCEAN_CONTINUATION')),true);
-  const refined=refinement?triangleIndex(refinement.positions,refinement.indices):null,clip=refinement?.clip;
-  if(refined&&(!Array.isArray(clip)||clip.length!==4||!clip.every(Number.isFinite)))throw Error('GLOBAL_COVER_REFINEMENT_CLIP_INVALID');
-  const sample=(x,z)=>refined&&x>clip[0]&&x<clip[1]&&z>clip[2]&&z<clip[3]?refined.sample(x,z):base.sample(x,z);
+  const water=surface.water,refined=refinement?{triangleCount:surface.receipt.refinementTriangles}:null;
+  const sample=surface.sample;
   const obstacles=pkg.landscapeCoverFootprints??[];
   const output=[],rejected={},patches=[],bounds=P.bounds;let candidates=0,rootSamples=0,mountainInstances=0,materialSamples=0,yields=0,budgetStart=now(),secondaryFanCount=0,lowCount=0,midCount=0,duneCount=0,pilotExtraCount=0,ecoCandidates=0;
   const reject=reason=>{rejected[reason]=(rejected[reason]??0)+1;};
@@ -296,14 +295,11 @@ export function selectHEarthMeadowMidDistanceRepresentations(cover,camera){
 }
 
 /** Gen2682: camera-independent presentation sidecar; never mutates cover records. */
-export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null}={}){
+export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null,visibleSurface=null,enabled=true}={}){
+ if(!enabled)return {disabled:true,pixels:new Float32Array(Math.max(4,cover.records.length/20)).fill(-1),clumps:[],lowRoots:[],template:cover.template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,eligibleInstances:0,clumpCount:0,contactCount:0,shortContactCount:0,sidecarBytes:0,replacement:'SHARED_CAMERA_NEAR_FINE_GRASS'}};
  const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),eligible=[];
  for(let i=0;i<cover.records.length/20;i++)if(Math.hypot(cover.records[i*20+12]+45,cover.records[i*20+13]+326)<=18&&!boundary.has(i))eligible.push(i);
- const base=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(p=>p.role==='TERRAIN'));
- const water=triangleIndex(pkg.buffers.positions,pkg.buffers.indices,pkg.primitiveSpans.filter(p=>String(p.primitiveId).includes('FAR_OCEAN_CONTINUATION')),true);
- const refined=refinement?triangleIndex(refinement.positions,refinement.indices):null,clip=refinement?.clip;
- if(refined&&(!Array.isArray(clip)||clip.length!==4||!clip.every(Number.isFinite)))throw Error('MEADOW_PRESENTATION_REFINEMENT_CLIP_INVALID');
- const sample=(x,z)=>refined&&x>clip[0]&&x<clip[2]&&z>clip[1]&&z<clip[3]?refined.sample(x,z):base.sample(x,z);
+ const surface=visibleSurface??buildVegetationVisibleSurface(pkg,{refinement}),water=surface.water,sample=surface.sample;
  const clumps=[],counts=new Map(eligible.map(id=>[id,0])),obstacles=pkg.landscapeCoverFootprints??[];
  // Stratification prevents empty swathes; strong independent jitter and a
  // coherent height/width field avoid a lattice or a single clipped carpet.
@@ -382,7 +378,7 @@ export function partitionHEarthMeadowSelectedInstances(cover,selected,presentati
  const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),nearIds=getHEarthMeadowNearInstances(presentation),original=[],near=[],mid=[];
  for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
   const id=draw.start+i*draw.stride,o=id*20;
-  (Math.hypot(cover.records[o+12]+45,cover.records[o+13]+326)<=18&&!boundary.has(id)?nearIds.has(id)?near:mid:original).push(id);
+  (!presentation?.disabled&&Math.hypot(cover.records[o+12]+45,cover.records[o+13]+326)<=18&&!boundary.has(id)?nearIds.has(id)?near:mid:original).push(id);
  }
  const ids=Float32Array.from([...original,...near,...mid]),meadowCount=near.length+mid.length;
  const meadowLeaves=near.length*12*(24+64*4)+mid.length*12*(24+64*3);

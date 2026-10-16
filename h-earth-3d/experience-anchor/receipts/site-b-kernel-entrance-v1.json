@@ -6,7 +6,7 @@
   "disposition": "PASS",
   "visualEvidence": [
     "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
-    "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38951609747"
+    "h-earth-3d/evidence/site-b-kernel-entrance-v1/README.md"
   ],
   "interactionEvidence": [
     "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs"
@@ -16,12 +16,8 @@
   ],
   "experienceFiles": [
     {
-      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
-      "sha256": "37d5584d1a78710164b341fe19a95ff892a8a4375f1c9af22a0e6d0b7caea831"
-    },
-    {
-      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "155dde08a4808d50e79c621be8f48abd9397289b1ca150b48eca7e5e3949a986"
+      "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "sha256": "e9b963b98708d62b7031378a2d85b1b88de921265bde267bbc2fc15d8e051eab"
     },
     {
       "path": "h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs",
@@ -32,16 +28,24 @@
       "sha256": "3e2433367453ec929be41c45ba76fdac0525af9f43233a185de4a6dfe206269c"
     },
     {
+      "path": "h-earth-3d/validation/h-earth.geological-formation-successor.test.mjs",
+      "sha256": "ca349ea913267594e414414254d173ad97768302f8379f484cbf857354d1b79b"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.geological-portal-interface.test.mjs",
+      "sha256": "5416977991c3904446d440ebc66ecb18adbbbd3895f170039260b19702fd7437"
+    },
+    {
       "path": "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
       "sha256": "b2bbe04705476967db3f59711e27ae5e7fb1f79a8e699c16f5c18e77a367d4e0"
     },
     {
-      "path": "showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js",
-      "sha256": "fc4e100a1b687942f4feef4e32f95e81dfdf445a6550f275b064597ef60c791b"
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "37d5584d1a78710164b341fe19a95ff892a8a4375f1c9af22a0e6d0b7caea831"
     },
     {
-      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
-      "sha256": "db642b23b8615090b3b3bdc6c0b7af5c6c2ba0b5e811c9911737b649d51bd051"
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "bddc242f1264fdd6b75a3ac41831aa659f870304e21bfc80ee642340b6f81859"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
@@ -54,6 +58,14 @@
     {
       "path": "showroom/globe/h-earth/index.html",
       "sha256": "2bf4b67f6e48b7fcfe1789d4aa24825bb3e8464884c28ffb5ba1c77365233b1b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "155dde08a4808d50e79c621be8f48abd9397289b1ca150b48eca7e5e3949a986"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "sha256": "8cc3013886bd8b6ec8c9a9a8469840a030f1a07922091209bef4f68f93a3b59b"
     }
   ],
   "invariants": {
@@ -70,7 +82,7 @@
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
   "reviewMethod": "SOURCE_BOUND_CONTINUITY_ONLY_NOT_CURRENT_PIXEL_OR_DEVICE_ACCEPTANCE",
-  "notes": "Same-world continuity preserved by bounded source diff, unchanged binary, Site B location, water meshes and actual 15-action navigation checks. Current candidate visual quality remains pending browser capture and owner disposition. Local native GPU comparison resolves large material discontinuity; no hosted browser or target-device qualification of this successor is claimed.",
+  "notes": "Owner explicitly confirmed visual approval (KEEP) of d51c5bea651255302826b75079ef7220c9ce74d5 and directed publication in the current conversation. This metadata repair binds all experience files changed against governing main c00854b457a28fd24415fd7146f052569421e002 and uses repository evidence paths as required by the unchanged anchor gate. Approved runtime bytes are unchanged. 44 source/geometry checks pass. Local native GPU rendering and owner visual approval are preserved; no exact-successor browser/device qualification is claimed.",
   "sourceEvidencePath": "h-earth-3d/evidence/site-b-kernel-entrance-v1/README.md",
   "priorProductCommit": "1f5b40c81d52fc78de68ee51cbe0c2e52f8cf69b",
   "evidenceOnlyOperationGeneration": 2771

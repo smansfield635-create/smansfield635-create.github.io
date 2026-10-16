@@ -1,0 +1,171 @@
+{
+  "schema": "H_EARTH_GEOLOGICAL_FORMATION_EXACT_WORLD_CANDIDATE_PROOF_v1",
+  "result": "SOURCE_BOUND_CANDIDATE_GEOMETRY_ONLY_NOT_RUNTIME_OR_VISUAL_ACCEPTANCE",
+  "source": {
+    "worldBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "bytes": 11736235,
+    "releaseCommit": "c6e7fbaba91300590fa31e8b16acb530fc87ae7a",
+    "manifoldProjection": "INVERSE_OF_EXACT_SPHERICAL_RADIUS_420000",
+    "canonicalPackageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2",
+    "surveyId": "H_EARTH_REAR_GEOLOGICAL_EXACT_PACKAGE_SURVEY_v1"
+  },
+  "candidates": [
+    {
+      "site": "A_EASTERN_REAR_ESCARPMENT",
+      "formation": {
+        "contractId": "H_EARTH_GEOLOGICAL_FORMATION_SUCCESSOR_v1",
+        "result": "SOURCE_BOUND_CANDIDATE_GEOMETRY_ONLY",
+        "errors": [],
+        "minimumRoofCover": 5.689363,
+        "entranceOpen": true,
+        "drainagePoints": 63,
+        "waterPresent": false,
+        "threeDimensionalCavityModel": true,
+        "actualRuntimeCollisionIntegration": false,
+        "actualAndroidPixels": false,
+        "liveWorldUnchanged": true
+      },
+      "roofSamples": [
+        {
+          "z": -264,
+          "terrainY": 23.089363,
+          "ceilingY": 17.4,
+          "rockCover": 5.689363
+        },
+        {
+          "z": -262,
+          "terrainY": 25.256198,
+          "ceilingY": 17.587489,
+          "rockCover": 7.668709
+        },
+        {
+          "z": -260,
+          "terrainY": 27.423033,
+          "ceilingY": 17.77371,
+          "rockCover": 9.649323
+        },
+        {
+          "z": -258,
+          "terrainY": 29.589868,
+          "ceilingY": 17.95285,
+          "rockCover": 11.637019
+        }
+      ],
+      "drainage": {
+        "length": 63,
+        "end": {
+          "x": 160,
+          "z": -352,
+          "originalY": 4.676262492468784,
+          "bedY": 4.226262
+        },
+        "result": "NO_STRICT_LOWER_NEIGHBOR_IN_STUDY",
+        "fall": 6.5737380000000005
+      },
+      "cave": {
+        "vertices": 589,
+        "triangles": 1148,
+        "boundaryEdges": 28,
+        "nonmanifold": 0
+      },
+      "surface": {
+        "vertices": 5037,
+        "triangles": 9792
+      },
+      "baseIndexRetirement": {
+        "triangles": 612,
+        "partial": 146
+      }
+    },
+    {
+      "site": "B_REAR_RAVINE",
+      "formation": {
+        "contractId": "H_EARTH_GEOLOGICAL_FORMATION_SUCCESSOR_v1",
+        "result": "SOURCE_BOUND_CANDIDATE_GEOMETRY_ONLY",
+        "errors": [],
+        "minimumRoofCover": 2.124413,
+        "entranceOpen": true,
+        "drainagePoints": 79,
+        "waterPresent": false,
+        "threeDimensionalCavityModel": true,
+        "actualRuntimeCollisionIntegration": false,
+        "actualAndroidPixels": false,
+        "liveWorldUnchanged": true
+      },
+      "roofSamples": [
+        {
+          "z": -260,
+          "terrainY": 18.524413,
+          "ceilingY": 16.4,
+          "rockCover": 2.124413
+        },
+        {
+          "z": -258,
+          "terrainY": 19.609694,
+          "ceilingY": 16.621895,
+          "rockCover": 2.987799
+        },
+        {
+          "z": -256,
+          "terrainY": 20.694974,
+          "ceilingY": 16.839515,
+          "rockCover": 3.855459
+        },
+        {
+          "z": -254,
+          "terrainY": 21.546335,
+          "ceilingY": 17.041781,
+          "rockCover": 4.504554
+        }
+      ],
+      "drainage": {
+        "length": 79,
+        "end": {
+          "x": -80,
+          "z": -352,
+          "originalY": 3.9522029431547656,
+          "bedY": 3.485374
+        },
+        "result": "NO_STRICT_LOWER_NEIGHBOR_IN_STUDY",
+        "fall": 7.8146260000000005
+      },
+      "cave": {
+        "vertices": 477,
+        "triangles": 924,
+        "boundaryEdges": 28,
+        "nonmanifold": 0
+      },
+      "surface": {
+        "vertices": 5037,
+        "triangles": 9792
+      },
+      "baseIndexRetirement": {
+        "triangles": 612,
+        "partial": 146
+      }
+    }
+  ],
+  "conclusions": {
+    "A": "STRONGER_ROOF_AND_CLIFF_FACE_FEASIBILITY_NOT_YET_ACCEPTED",
+    "B": "LESS_ROOF_MASS_AND_MORE_GENTLE_APPROACH_NOT_YET_ACCEPTED",
+    "chosenSite": "UNDECIDED_PENDING_VISUAL_AND_INTERFACE_REVIEW",
+    "hydrology": "DRY_SEASONAL_GRADED_CORRIDOR_SOURCE_NOT_PROVEN",
+    "terrainPatchOnly": "NEITHER_SOURCE_MODEL_NOR_PATCH_OCCLUDER_REMOVAL_IS_LIVE",
+    "nextPrerequisite": "BOUND_SOURCE_MESH_APERTURE_AND_GALLERY_GEOMETRY_CONNECTOR,REFINEMENT_LOD_AND_NAVI_COLLISION"
+  },
+  "checks": {
+    "syntheticNode22TestsPassed": 10,
+    "actualWorldPackageUsed": true,
+    "actualSourceSampled": true,
+    "exactPlanetaryInverseUsed": true,
+    "sourceWorldMutated": false,
+    "renderModuleMutated": false,
+    "terrainIndexRetirementActivated": false,
+    "portalFaciesJoinedToTerrain": false,
+    "collisionSystemIntegrated": false,
+    "freshwaterSourceProven": false,
+    "webglPixelsMeasured": false,
+    "androidAccepted": false,
+    "pagesPublished": false
+  }
+}

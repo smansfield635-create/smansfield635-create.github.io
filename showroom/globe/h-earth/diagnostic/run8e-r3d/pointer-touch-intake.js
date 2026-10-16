@@ -3,7 +3,7 @@ import {
   proposeHEarthFunctionalLandscapeNavigation,
   evaluateHEarthFunctionalLandscapeNavigationState,
   resolveHEarthNavigationBoundaryFeedback
-} from '../../functional-landscape/navigation.js?cb=mountain-traversal-20261006';
+} from '../../functional-landscape/navigation.js?cb=gen2735-geological-navigation-v1';
 import {
   createGestureControlLattice
 } from '../touch-motion-cp3a/touch-control-lattice.js';
@@ -29,14 +29,24 @@ const distance = (left, right) => Math.hypot(right.x - left.x, right.y - left.y)
 const centroid = (left, right) => ({ x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 });
 const clone = (value) => JSON.parse(JSON.stringify(value));
 
+/** Explicit, bounded H-Earth arrival options for exact-candidate viewport proofs.
+ * Unknown and absent route queries MUST preserve the original COAST arrival.
+ */
+export function resolveHEarthArrivalWaypoint(search='') {
+  const requested = new URLSearchParams(search).get('arrival');
+  if(requested==='approved-four-trees')return 'WOODLAND_CLEARING_FOUR_TREES';
+  if(requested==='geological-cavern')return 'GEOLOGICAL_CAVERN_REAR_APPROACH';
+  return 'COAST';
+}
+
 export function installHEarthRun8ER3D2PointerTouchIntake({ surface, onProposal = null } = {}) {
   if (!(surface instanceof HTMLElement)) throw new TypeError('R3D2_SURFACE_REQUIRED');
   if (onProposal !== null && typeof onProposal !== 'function') throw new TypeError('R3D2_PROPOSAL_CALLBACK_INVALID');
 
-  // A deliberate owner-facing arrival link may start at the frozen four-tree
-  // walking view. Unknown query values preserve the original COAST state.
-  const explicitFourTreeVisit = new URLSearchParams(globalThis.location?.search ?? '').get('arrival') === 'approved-four-trees';
-  const initial = createHEarthFunctionalLandscapeNavigationState({ waypointId: explicitFourTreeVisit ? 'WOODLAND_CLEARING_FOUR_TREES' : 'COAST' });
+  // Explicit preview-only destination: the default coast and approved four
+  // trees keep their established route identities and the same world.
+  const waypointId = resolveHEarthArrivalWaypoint(globalThis.location?.search ?? '');
+  const initial = createHEarthFunctionalLandscapeNavigationState({ waypointId });
   if (initial?.ok !== true) throw new Error(`R3D2_INITIAL_NAVIGATION_REJECTED:${initial?.issues?.join(',')}`);
 
   let navigationState = initial.state;

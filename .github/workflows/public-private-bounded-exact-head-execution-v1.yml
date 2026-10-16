@@ -24,8 +24,8 @@ jobs:
       group: private-study-checkpoint-v1
       cancel-in-progress: false
     env:
-      DGB_STUDY_SOURCE_HEAD: 2cf0b55ee127199ec839481080d08991b1348571
-      DGB_STUDY_RATIFICATION_COMMIT: 61f85b779910c17a2fd084f60feb1c12418d8931
+      DGB_STUDY_SOURCE_HEAD: 7523b24db75ce636c4e05d5d47a6d3cede8c7850
+      DGB_STUDY_RATIFICATION_COMMIT: ebd28e321384c092954bdcab1e0c39749cbf37a0
     steps:
       - name: Require independently admitted public binding
         uses: actions/github-script@v7
@@ -35,11 +35,11 @@ jobs:
             const f=(await github.rest.repos.getContent({owner:context.repo.owner,repo:context.repo.repo,path,ref:'operation-locks/repository-operation-intake-v1'})).data;
             const blob=f.encoding==='base64'?f:(await github.rest.git.getBlob({owner:context.repo.owner,repo:context.repo.repo,file_sha:f.sha})).data;
             const ledger=JSON.parse(Buffer.from(blob.content.replace(/\s/g,''),'base64').toString('utf8'));
-            const id='DGB_PUBLIC_PRIVATE_COMPLETE_TREE_OBSERVABLE_QUALIFICATION_20261016_001';
+            const id='DGB_PUBLIC_PRIVATE_CHECKPOINT_DIAGNOSTIC_COMMISSION_20261016_001';
             const active=Object.values(ledger.activeScopes).filter(x=>x.operationId===id);
-            const terminal=ledger.terminalHistory.filter(x=>x.operationId===id&&x.lockGeneration===2759);
+            const terminal=ledger.terminalHistory.filter(x=>x.operationId===id&&x.lockGeneration===2760);
             const row=active.length===1&&terminal.length===0?active[0]:active.length===0&&terminal.length===1&&terminal[0].released===true&&terminal[0].terminalDisposition==='PASS_CLOSED'?terminal[0]:null;
-            if(!row||row.lockGeneration!==2759||row.requestDigest!=='989797f50e99a73f9652a90dc9f8432559a6240e89d6e80ed709300dab75095a'||row.procedureLocatorDigest!=='7a8d9e0987e3db88b172f979dd4007623bce4e2caf7a2ce68e2783ad7bc263d9'||!(row.state==='ADMITTED_LOCKED'&&row.released===false||row.state==='TERMINAL'&&row.released===true&&row.terminalDisposition==='PASS_CLOSED'))throw Error('PUBLIC_RECURRING_AUTHORITY_REFUSED');
+            if(!row||row.lockGeneration!==2760||row.requestDigest!=='37582a376b84b04187caae16b86a82b72a41e43fea271654385bd52dc4d57646'||row.procedureLocatorDigest!=='fc9807a81556488d03bbb862e15f3dca09be7054b26be671f0d664f69c778c06'||!(row.state==='ADMITTED_LOCKED'&&row.released===false||row.state==='TERMINAL'&&row.released===true&&row.terminalDisposition==='PASS_CLOSED'))throw Error('PUBLIC_RECURRING_AUTHORITY_REFUSED');
       - name: Mint existing private installation write credential
         id: private
         uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
@@ -120,6 +120,72 @@ jobs:
           NODE
           echo 'redaction_valid=true' >> "$GITHUB_OUTPUT"
           cat "$RUNNER_TEMP/study-redacted.json"
+      - name: Retain failed blob diagnostic privately
+        if: always() && steps.private.outputs.token != ''
+        env:
+          DGB_GITHUB_TOKEN: ${{ steps.private.outputs.token }}
+          DGB_PUBLIC_GITHUB_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          const root='https://api.github.com/repos/smansfield635-create/geodiametrics1';
+          const branch='ops-chamber-study-checkpoint-v1';
+          const destination='tools/private-public-bridge/standalone/study/runtime/checkpoint-upload-diagnostic.v1.json';
+          const hex=x=>typeof x==='string'&&/^[0-9a-f]{40}$/.test(x);
+          const refuse=()=>{throw Error('PRIVATE_DIAGNOSTIC_RETENTION_REFUSED');};
+          const blobSha=bytes=>crypto.createHash('sha1').update(Buffer.concat([Buffer.from(`blob ${bytes.length}\0`),bytes])).digest('hex');
+          function validateDiagnostic(bytes,secrets=[]){
+            if(!Buffer.isBuffer(bytes)||bytes.length>2097152)refuse();
+            let d;try{d=JSON.parse(bytes.toString('utf8'));}catch{refuse();}
+            const keys=['body','httpStatus','method','readError','retainedBytes','schema','stage','truncated','validation'];
+            if(!d||typeof d!=='object'||Array.isArray(d)||JSON.stringify(Object.keys(d).sort())!==JSON.stringify(keys)||d.schema!=='DGB_PRIVATE_GITHUB_FAILURE_v1'||d.httpStatus!==422||d.method!=='POST'||d.stage!=='GIT_BLOB_WRITE'||typeof d.body!=='string'||Buffer.byteLength(d.body)>1048576||typeof d.truncated!=='boolean'||typeof d.readError!=='boolean'||!Number.isSafeInteger(d.retainedBytes)||d.retainedBytes<0||d.retainedBytes>65536)refuse();
+            let expected=null;if(!d.truncated&&!d.readError){try{expected=JSON.parse(d.body);}catch{}}
+            if(JSON.stringify(d.validation)!==JSON.stringify(expected))refuse();
+            // Source has already redacted credentials; reject unexpected secret survival.
+            const serialized=JSON.stringify(d);if(secrets.some(s=>typeof s==='string'&&s&&serialized.includes(s)))refuse();
+            return d;
+          }
+          async function retainDiagnostic({env=process.env,request=fetch,readFile=fs.readFileSync,lstat=fs.lstatSync}={}){
+            if(env.GITHUB_ACTIONS!=='true'||!path.isAbsolute(env.RUNNER_TEMP??''))refuse();
+            const source=path.join(env.RUNNER_TEMP,'private-study-proof/github-failure.json');
+            let stat;try{stat=lstat(source);}catch(e){if(e.code==='ENOENT')return 'ABSENT';throw e;}
+            if(!stat.isFile()||stat.isSymbolicLink()||stat.size>2097152)refuse();
+            const bytes=readFile(source),token=env.DGB_GITHUB_TOKEN;
+            if(typeof token!=='string'||!token)refuse();
+            validateDiagnostic(bytes,[token,env.DGB_PUBLIC_GITHUB_TOKEN]);
+            const sha=blobSha(bytes),contentUrl=root+'/contents/'+destination;
+            async function call(url,{method='GET',body,ok=[200]}={}){
+              const r=await request(url,{method,redirect:'error',signal:AbortSignal.timeout(30000),headers:{Accept:'application/vnd.github+json',Authorization:`Bearer ${token}`,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});
+              if(!ok.includes(r.status))refuse();
+              // Do not read or surface any rejected API response body.
+              return {status:r.status,value:r.status===404?null:await r.json()};
+            }
+            const head=(await call(root+'/git/ref/heads/'+branch)).value.object?.sha;if(!hex(head))refuse();
+            const previous=await call(contentUrl+'?ref='+head,{ok:[200,404]});
+            if(previous.status===200&&(!hex(previous.value.sha)||previous.value.type!=='file'))refuse();
+            // An existing file uses its observed blob SHA; initial creation guards absence
+            // by omitting SHA. A concurrent creation is rejected by the Contents API.
+            const expectedSha=previous.status===200?previous.value.sha:null;
+            const current=(await call(root+'/git/ref/heads/'+branch)).value.object?.sha;if(current!==head)refuse();
+            const saved=(await call(contentUrl,{method:'PUT',ok:expectedSha?[200]:[201],body:{message:'Retain private checkpoint upload diagnostic',branch,content:bytes.toString('base64'),...(expectedSha?{sha:expectedSha}:{})}})).value;
+            if(saved.content?.sha!==sha||!hex(saved.commit?.sha))refuse();
+            const readback=(await call(contentUrl+'?ref='+saved.commit.sha)).value;
+            if(readback.sha!==sha||readback.encoding!=='base64'||typeof readback.content!=='string'||!Buffer.from(readback.content.replace(/\s/g,''),'base64').equals(bytes))refuse();
+            const detail=(await call(root+'/commits/'+saved.commit.sha)).value;
+            if(detail.parents?.length!==1||detail.parents[0].sha!==head||detail.files?.length!==1||detail.files[0].filename!==destination||detail.files[0].sha!==sha)refuse();
+            return 'SAVED_AND_VERIFIED';
+          }
+          async function runRetentionWithSafeReceipt(options={},log=console.log){
+            try{const result=await retainDiagnostic(options);log(JSON.stringify({schema:'DGB_SAFE_PRIVATE_DIAGNOSTIC_RETENTION_v1',result}));return 0;}
+            catch{log(JSON.stringify({schema:'DGB_SAFE_PRIVATE_DIAGNOSTIC_RETENTION_v1',result:'FAIL_CLOSED'}));return 1;}
+          }
+          process.exitCode=await runRetentionWithSafeReceipt();
+          NODE
+
       - name: Upload only allowlisted redacted result
         if: always() && steps.proof.outputs.redaction_valid == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02

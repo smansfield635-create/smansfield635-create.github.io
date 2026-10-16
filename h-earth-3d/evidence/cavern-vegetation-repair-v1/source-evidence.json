@@ -302,8 +302,85 @@
     "east": "Bounds and support qualified; found and corrected obsolete-work cancellation, synchronous merged-cache preparation, and distant persistent-root selection",
     "west": "Production import, 108 batch retirement, preserved world and root audit reviewed; integrated GPU/browser evidence pending"
   },
-  "browserRunStarted": false,
+  "browserRunStarted": true,
   "physicalDeviceAcceptance": false,
   "mergeAuthorized": false,
-  "publicationAuthorized": false
+  "publicationAuthorized": false,
+  "completedBrowserReconciliation": {
+    "schema": "H_EARTH_CAVERN_VEGETATION_BROWSER_EVIDENCE_RECONCILIATION_v1",
+    "candidateHead": "abc8a472c0bb822afe770ad6cb811b679f3e3079",
+    "runId": 38968708159,
+    "artifactId": 12076755689,
+    "artifactDigest": "sha256:4e9a409de6c35c0bed8727e9e6780ba77faadca3083beb8f70a3364e7538c299",
+    "receiptSha256": "eec921b8f21bac9c98daef5237f263b7b5b08769f66b62532bfc3d575343ccf0",
+    "actualBrowserExecution": true,
+    "readiness": "READY",
+    "cavernTraversal": {
+      "capturedResult": "TRAVERSAL_PASS_RESIDENCY_PENDING",
+      "initial": {
+        "x": 40,
+        "y": 12.171561327125527,
+        "z": -300
+      },
+      "interior": {
+        "x": 40,
+        "y": 13.999558697658308,
+        "z": -240
+      },
+      "steps": 15,
+      "interiorSteps": 6,
+      "allSupported": true,
+      "eyeClearanceMeters": 2.25
+    },
+    "arrivalFineGrass": {
+      "visibleContacts": 2485,
+      "visibleInstanceCount": 40,
+      "drawCallCount": 2
+    },
+    "finalResidency": {
+      "residentInstanceCount": 27585,
+      "residentBatchCount": 108,
+      "complete": true,
+      "preparationComplete": true,
+      "globalCoverComplete": true,
+      "nearbyFineGrassReady": true,
+      "nearbyFineGrassError": null,
+      "droppedPlacementCount": 0,
+      "worldRebuildCount": 0
+    },
+    "timingMilliseconds": {
+      "firstVegetationFrameAtMs": 74295.5,
+      "planValidatedAtMs": 68646.09999999998,
+      "oasisPreparationStartAtMs": 25373.099999999977,
+      "oasisPreparationCompleteAtMs": 73449.5,
+      "preparationStartAtMs": 22274.199999999983,
+      "preparationCompleteAtMs": 152157.5,
+      "firstFrameAtMs": 22271.399999999994,
+      "readyAtMs": 25335.399999999994,
+      "vegetationStartAtMs": 73479,
+      "vegetationCompleteAtMs": 190761.2
+    },
+    "fatalPageErrors": [],
+    "consoleErrors": [],
+    "requestsFailed": [],
+    "expectedTransientPreparationPendingCount": 5,
+    "legacyP2SuppressedTriangles": 38976,
+    "finalCombinedRepairReceiptCaptured": false,
+    "reason": "Runner samples full GPU receipt only before final residency; later samples retain residency alone. Cannot directly read final repairQualification or final late-fan census from retained artifact.",
+    "phonePerformanceEstablished": false,
+    "ownerPerceptualAcceptance": false,
+    "publicationAuthorized": false
+  },
+  "ownerPublicationDirective": {
+    "text": "Publish the repair so I can approve it or not; live production needs serious help; do not delay",
+    "observedAt": "2026-10-16T21:39:59Z",
+    "physicalDeviceAcceptance": false,
+    "acceptanceOrder": "PUBLICATION_THEN_OWNER_LIVE_REVIEW",
+    "mergeAuthorized": true,
+    "publicationAuthorized": true
+  },
+  "visualArtifactEvidence": {
+    "initial-canvas.png": "cba394bea1faab4c74754e55f1563ddbcf6c4b69806d55016ae1ac8bbd474120",
+    "later-canvas.png": "f4196ba3f610d6a97032bfe438d594f72531aa5876af58d070b0f8f1ee11f42b"
+  }
 }

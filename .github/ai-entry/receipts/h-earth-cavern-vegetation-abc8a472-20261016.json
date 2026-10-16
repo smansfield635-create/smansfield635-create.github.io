@@ -1,0 +1,27 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-cavern-vegetation-abc8a472-20261016",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6428,
+  "requestBranch": "ai-dispatch-request-h-earth-cavern-vegetation-abc8a472",
+  "requestCommit": "19af703056a78df218ab02950e81707ca2c20dcf",
+  "requestCommitParent": "7d7cb67d342e62fcfb3ca6f0009164c90b20d2fc",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7d7cb67d342e62fcfb3ca6f0009164c90b20d2fc",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "abc8a472c0bb822afe770ad6cb811b679f3e3079",
+    "route_query": "arrival=geological-cavern&qualification=cavern-vegetation-repair-v1",
+    "route_path": "/showroom/globe/h-earth/",
+    "exercise_vegetation_residency": "true"
+  },
+  "bridgeRunId": "38968688164",
+  "dispatchedRunId": 38968708159,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38968708159",
+  "dispatchedRunHeadSha": "7d7cb67d342e62fcfb3ca6f0009164c90b20d2fc",
+  "dispatchedAt": "2026-10-16T21:20:40.268Z",
+  "resolvedAt": "2026-10-16T21:20:44.168Z"
+}

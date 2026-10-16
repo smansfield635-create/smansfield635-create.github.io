@@ -17,8 +17,8 @@
     "terrainCameraWaterGeometryMutation": false
   },
   "checks": {
-    "localTests": 8,
-    "passed": 7,
+    "localTests": 9,
+    "passed": 8,
     "failed": 0,
     "skipped": 1,
     "skip": "Canonical world gzip absent locally; full-checkout actual-scene CPU test must execute remotely",
@@ -31,7 +31,20 @@
     "actualWebGL": "PENDING",
     "phonePerformance": "UNMEASURED",
     "ownerVisualAcceptance": false,
-    "publication": false
+    "publication": false,
+    "firstAttempt": {
+      "candidate": "4d23e5c0fae46662808b86c566a1f1ec9f7ad443",
+      "runId": 38981089519,
+      "jobId": 117241875775,
+      "result": "SOURCE_QUALIFIER_FAILED_BEFORE_BROWSER",
+      "assertion": "REPAIR_CAVE_MODULE_IDENTITY_DRIFT",
+      "repair": "Exact selected gen2780 revision added to existing bridge identity predicate; no identity guard removed"
+    }
   },
-  "nextAction": "Existing exact-head runner with complete vegetation residency; inspect first failed assertion before any repair"
+  "nextAction": "Existing exact-head runner with complete vegetation residency; inspect first failed assertion before any repair",
+  "repairs": [
+    "Coarse/fine dominant blade heights identical",
+    "Shared sun and haze inputs with parent scene output transfer",
+    "Correct source-qualifier revision predicate"
+  ]
 }

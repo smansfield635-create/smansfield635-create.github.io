@@ -18,8 +18,7 @@ void main(){
  float t=aLeaf.y, angle=aRootAngle.w+aLeaf.z;
  vec2 forward=vec2(cos(angle),sin(angle)), side=vec2(-forward.y,forward.x);
  // Both passes retain these dimensions for every camera position.
- float scale=uDetail==1?1.0:0.38;
- float height=aShape.x*scale;
+ float height=aShape.x;
  float width=aShape.y*(uDetail==1?1.0:1.35);
  float bladeWidth=sin(t*3.14159265359)*width;
  vec2 displacement=forward*(height*0.24*t*t)+side*(aLeaf.x*bladeWidth);
@@ -37,15 +36,26 @@ flat in float vPalette;
 flat in float vSeed;
 flat in float vDistance;
 flat in int vDetail;
+uniform vec3 uSunDirection;
+uniform float uSunIntensity;
+uniform vec3 uSunColor;
+uniform vec3 uGroundHazeColor;
+uniform float uFogStartDistance;
+uniform float uFogFalloff;
+uniform float uMaximumFogFactor;
 out vec4 outColor;
 vec3 linearColor(vec3 c){return mix(c/12.92,pow((c+0.055)/1.055,vec3(2.4)),step(vec3(0.04045),c));}
 void main(){
  // Stable per-root choice: no screen noise and no geometry height growth.
  if(vDetail==1 && vSeed>=1.0-smoothstep(12.0,24.0,vDistance))discard;
  vec3 olive=mix(vec3(0.30,0.35,0.15),vec3(0.43,0.44,0.20),clamp(vPalette,0.0,1.0));
- float diffuse=0.67+0.33*abs(dot(normalize(vNormal),normalize(vec3(-0.4,0.8,0.3))));
- vec3 srgb=olive*mix(0.64,1.06,vHeight)*diffuse;
- outColor=vec4(linearColor(srgb),1.0);
+ float diffuse=0.67+0.33*abs(dot(normalize(vNormal),normalize(uSunDirection)));
+ vec3 albedo=linearColor(olive*mix(0.64,1.06,vHeight));
+ vec3 lit=albedo*(0.12+diffuse*max(uSunIntensity,0.0))*linearColor(uSunColor);
+ float fog=clamp((vDistance-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor)*0.68;
+ lit=mix(lit,uGroundHazeColor,fog*0.48);
+ // Match the scene RGBA8 output transfer rather than writing linear dark grass.
+ outColor=vec4(pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2)),1.0);
 }`;
 
 export function createPlantingPilotRenderer(gl,layout,{createBuffer,createShader,createProgram,createVertexArray,onUpload}={}){
@@ -85,6 +95,7 @@ export function createPlantingPilotRenderer(gl,layout,{createBuffer,createShader
   for(let loc=1;loc<=2;loc++){gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,4,gl.FLOAT,false,32,(loc-1)*16);gl.vertexAttribDivisor(loc,1);}
   upload(gl.ELEMENT_ARRAY_BUFFER,indices);
   uniforms={matrix:gl.getUniformLocation(owned.program,'uViewProjection'),camera:gl.getUniformLocation(owned.program,'uCamera'),detail:gl.getUniformLocation(owned.program,'uDetail')};
+  for(const name of ['uSunDirection','uSunIntensity','uSunColor','uGroundHazeColor','uFogStartDistance','uFogFalloff','uMaximumFogFactor'])uniforms[name]=gl.getUniformLocation(owned.program,name);
   const error=gl.getError();if(error!==gl.NO_ERROR)throw Error('PLANTING_PILOT_UPLOAD_GL_ERROR:'+error);
  }catch(error){dispose();throw error;}
  function draw(packet){
@@ -93,6 +104,14 @@ export function createPlantingPilotRenderer(gl,layout,{createBuffer,createShader
   if(!matrix||matrix.length!==16||!p||![p.x,p.y,p.z,...matrix].every(Number.isFinite))throw Error('PLANTING_PILOT_CAMERA_INVALID');
   gl.useProgram(owned.program);gl.bindVertexArray(owned.vao);gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);
   gl.uniformMatrix4fv(uniforms.matrix,false,matrix);gl.uniform3f(uniforms.camera,p.x,p.y,p.z);
+  const e=packet.environmentUniforms??{},sun=e.sunDirection??{x:-.4,y:.8,z:.3};
+  const component=(value,fallback)=>Number.isFinite(value)?value:fallback;
+  const color=(value,fallback)=>{const a=Array.isArray(value)||ArrayBuffer.isView(value)?Array.from(value).slice(0,3):value&&typeof value==='object'?[value.r,value.g,value.b]:fallback;const scale=a.some(v=>v>1)?255:1;return a.map((v,i)=>Math.max(0,Math.min(1,component(v,fallback[i])/scale)));};
+  let direction=[component(sun.x??sun[0],-.4),component(sun.y??sun[1],.8),component(sun.z??sun[2],.3)];
+  if(Math.hypot(...direction)<1e-8)direction=[-.4,.8,.3];
+  gl.uniform3f(uniforms.uSunDirection,...direction);gl.uniform1f(uniforms.uSunIntensity,Math.max(0,component(e.sunIntensity,.88)));
+  gl.uniform3f(uniforms.uSunColor,...color(e.sunColor,[1,1,1]));gl.uniform3f(uniforms.uGroundHazeColor,...color(e.groundHazeColor,[.54,.59,.62]));
+  gl.uniform1f(uniforms.uFogStartDistance,component(e.fogStartDistance,160));gl.uniform1f(uniforms.uFogFalloff,Math.max(0,component(e.fogFalloff,.001)));gl.uniform1f(uniforms.uMaximumFogFactor,Math.max(0,Math.min(1,component(e.maximumFogFactor,.65))));
   gl.uniform1i(uniforms.detail,0);gl.drawElementsInstanced(gl.TRIANGLES,24,gl.UNSIGNED_SHORT,0,count);
   gl.uniform1i(uniforms.detail,1);gl.drawElementsInstanced(gl.TRIANGLES,48,gl.UNSIGNED_SHORT,0,count);
   frames++;draws+=2;

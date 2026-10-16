@@ -197,7 +197,7 @@ export function verifyGen2694CandidateSourceChain(){
  const html=publicManifest.checks.find(entry=>entry.path==='/showroom/globe/h-earth/index.html');
  if(!modern)assert(html&&html.includes.every(fragment=>sources.get(paths[0][0]).source.includes(fragment)),'GEN2694_PUBLIC_RELEASE_MANIFEST_INCOMPATIBLE');
  if(modern){
-  assert(renderer.includes("from '../functional-landscape/geological-runtime-bridge.v1.js"+(rev==='gen2779-front-water-exit-v1'?'?rev='+rev:'')+"'"),'REPAIR_CAVE_MODULE_IDENTITY_DRIFT');
+  assert(renderer.includes("from '../functional-landscape/geological-runtime-bridge.v1.js"+(pilot||rev==='gen2779-front-water-exit-v1'?'?rev='+rev:'')+"'"),'REPAIR_CAVE_MODULE_IDENTITY_DRIFT');
   assert(renderer.includes('visibleSurface:resources.vegetationVisibleSurface')&&renderer.includes('enabled:false'),'REPAIR_SHARED_SURFACE_OR_PILOT_RETIREMENT_MISSING');
   assert(grass.includes('createNearbyFineGrassCache')&&grass.includes('NEARBY_FINE_GRASS_CACHE_v1'),'REPAIR_NEARBY_COVER_MISSING');
   const late=fs.readFileSync(new URL('showroom/globe/h-earth/render/geometry-landscape-cover.js',ROOT),'utf8');

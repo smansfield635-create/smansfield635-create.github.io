@@ -878,11 +878,11 @@ void main(){
     float ravineDepth=1.0-smoothstep(-292.0,-210.0,world.y);
     float siteBEdge=min(min(world.x+120.0,96.0-world.x),min(world.y+376.0,-224.0-world.y));
     float siteBEnvelope=smoothstep(0.0,12.0,siteBEdge);
-    float rockExposure=ravineAxis*ravineDepth*smoothstep(0.10,0.58,slope)*siteBEnvelope;
+    float siteBRockExposure=ravineAxis*ravineDepth*smoothstep(0.10,0.58,slope)*siteBEnvelope;
     float earthVariation=noise2(world*0.12+vec2(8.0,-19.0));
     vec3 localEarth=palette*mix(vec3(0.93,0.91,0.88),vec3(1.04,1.02,0.98),earthVariation);
-    palette=mix(palette,localEarth,rockExposure*0.38);
-    terrainRoughnessForLighting=mix(terrainRoughnessForLighting,0.90,rockExposure*0.28);
+    palette=mix(palette,localEarth,siteBRockExposure*0.38);
+    terrainRoughnessForLighting=mix(terrainRoughnessForLighting,0.90,siteBRockExposure*0.28);
     // Actual exposed mesh contacts drive proximity; canonical coast distance
     // retains the existing transition to slope/elevation suitability inland.
     float inlandMeters=vContactDistanceMeters;

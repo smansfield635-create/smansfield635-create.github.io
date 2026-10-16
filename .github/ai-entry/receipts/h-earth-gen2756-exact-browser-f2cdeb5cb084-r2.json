@@ -1,0 +1,27 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2756-exact-browser-f2cdeb5cb084-r2",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6398,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2756-f2cdeb5c-2",
+  "requestCommit": "811244d527339c44f42778ecd96c4f10fb4a7fe3",
+  "requestCommitParent": "c80fa6dfcb2f776928452b706d5ec697e6ea5ec0",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "c80fa6dfcb2f776928452b706d5ec697e6ea5ec0",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "f2cdeb5cb0846a6daf1c11851dbacf7577ec6fa2",
+    "route_query": "arrival=geological-cavern",
+    "route_path": "/showroom/globe/h-earth/",
+    "exercise_vegetation_residency": "false"
+  },
+  "bridgeRunId": "38836953976",
+  "dispatchedRunId": 38836970768,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38836970768",
+  "dispatchedRunHeadSha": "c80fa6dfcb2f776928452b706d5ec697e6ea5ec0",
+  "dispatchedAt": "2026-10-16T01:47:04.519Z",
+  "resolvedAt": "2026-10-16T01:47:08.417Z"
+}

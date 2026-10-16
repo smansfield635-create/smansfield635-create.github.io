@@ -701,9 +701,22 @@ function verifyCanonicalSourceComment(lock,body){const envelope=parseMarkedJson(
 function parseSuccessorReceiptComment(body){if(typeof body!=='string'||!body.startsWith('REMOTE_OPERATION_SUCCESSOR_RECEIPT_V1'))return null;const match=body.match(/```json\s*([\s\S]*?)\s*```/);if(!match)return null;try{return JSON.parse(match[1])}catch{return null}}
 function botReceiptMatches(lock,comments,origin,runId){if(origin==='CANONICAL_INTAKE'){const op=`operationId = ${lock.operationId}`,gen=`lockGeneration = ${lock.lockGeneration}`,run=`workflowRun = ${runId}`;return comments.some(c=>c?.user?.login==='github-actions[bot]'&&typeof c.body==='string'&&c.body.includes('CANONICAL_OPERATION_INTAKE_RETURN_V1')&&c.body.includes('canonicalResult = ADMITTED_AND_LOCKED')&&c.body.includes(op)&&c.body.includes(gen)&&c.body.includes(run))}return comments.some(c=>{if(c?.user?.login!=='github-actions[bot]')return false;const r=parseSuccessorReceiptComment(c.body);if(!r||r.result!=='SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED')return false;const s=r.successor||{};return s.operationId===lock.operationId&&canonScope(s.lockScope)===canonScope(lock.lockScope)&&s.lockGeneration===lock.lockGeneration&&s.governingHead===lock.governingHead&&s.requestDigest===lock.requestDigest&&s.procedureLocatorDigest===lock.procedureLocatorDigest})}
 
+export async function verifyOwnerConnectedAuthorityProvenance(lock) {
+  const { verifyOwnerProvenance } = await import('./repository-operation-lock-lineage.v2.mjs');
+  return verifyOwnerProvenance(lock);
+}
+
 export async function verifyRemoteAuthorityProvenance({repository,token,lock,branchHead,lineageCheckpoint=null}) {
   validateActiveLock(lock,lock.scopeHash);
   const anchor=lineageCheckpoint?.status==='ACTIVE_VERIFIED' ? lineageCheckpoint.checkpoint?.checkpointCommitSha : (lock.authorityProvenance?.lineageAnchorCommitSha||LEGACY_AUTHORITY_CUTOVER_COMMIT),lineage=await verifyCanonicalLockRefLineage({repository,token,branchHead,anchorCommitSha:anchor,...(lineageCheckpoint?{lineageCheckpoint}:{})});
+  if(!lock.authorityProvenance&&lock.independentAuthorityProvenance){
+    const owner=await verifyOwnerConnectedAuthorityProvenance(lock),p=lock.independentAuthorityProvenance,s=p.source;
+    if(s?.repository!==repository||!Number.isInteger(s?.issueNumber)||!Number.isInteger(s?.commentId))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','independentAuthorityProvenance.source','authority-provenance','SOURCE_IDENTITY_INVALID');
+    const comment=await fetchComment(repository,token,s.commentId);
+    if(comment?.id!==s.commentId||comment?.issue_url!==`https://api.github.com/repos/${repository}/issues/${s.issueNumber}`||comment?.user?.login!==s.authorLogin||comment?.author_association!==s.authorAssociation||sha(comment?.body||'')!==s.commentBodySha256||markerFromBody(comment?.body)!==s.marker||s.marker!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','authority-provenance','OWNER_CONNECTOR_SOURCE_COMMENT_MISMATCH');
+    verifyCanonicalSourceComment(lock,comment.body);
+    return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:p.transportId,authorityIdentity:owner.authorityIdentity,issueNumber:s.issueNumber,commentId:s.commentId,checkpointBound:!!lineage.checkpointVerification,lineage});
+  }
   if(!lock.authorityProvenance){const legacy=await verifyLegacyAuthority({repository,token,lock});return stable({...legacy,lineage})}
   const bound=verifyAuthorityProvenanceBinding(lock),p=lock.authorityProvenance,inv=p.invocation;
   if(inv.repository!==repository||!['issue_comment','workflow_dispatch'].includes(inv.eventName)||!TRUSTED_ASSOCIATIONS.has(inv.commentAuthorAssociation))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','invocation','authority-provenance');

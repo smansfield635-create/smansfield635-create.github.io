@@ -1,0 +1,59 @@
+{
+  "schema": "GEOMETRY_KERNEL_SWEEP_QUALIFICATION_v1",
+  "result": "PASS",
+  "operationId": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_20261016_001",
+  "lockGeneration": 2765,
+  "governingHead": "9392951ced7dc466f6c9fe5f1ec4ff5c0ca7b15a",
+  "sourceHashes": {
+    "showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js": "fc4e100a1b687942f4feef4e32f95e81dfdf445a6550f275b064597ef60c791b",
+    "h-earth-3d/validation/geometry-kernel-sweep.v1.test.mjs": "4964e5e2036ac8212cc25a2d83478e400ce6a2ff8abcbd70d6179981d0a3d6bf"
+  },
+  "checks": {
+    "sweepSuite": {
+      "command": "node --test h-earth-3d/validation/geometry-kernel-sweep.v1.test.mjs",
+      "passed": 23,
+      "failed": 0,
+      "rawOutput": "\u2714 analytic asymmetric straight sweep has exact coordinates and dimensions (15.354379ms)\n\u2714 cap policy false/false: independent edge, winding and Euler checks (3.986449ms)\n\u2714 cap policy true/false: independent edge, winding and Euler checks (3.843939ms)\n\u2714 cap policy false/true: independent edge, winding and Euler checks (2.05676ms)\n\u2714 cap policy true/true: independent edge, winding and Euler checks (3.643039ms)\n\u2714 explicit scales produce independently computed station dimensions (5.567445ms)\n\u2714 bent and spatial paths retain orthonormal right-handed transported frames (12.720505ms)\n\u2714 straight sweeps work along all signed world axes with explicit initial up (14.847019ms)\n\u2714 translation preserves geometry differences, normals and topology (2.403377ms)\n\u2714 regular convex profiles across supported sizes produce expected mesh counts (51.407557ms)\n\u2714 input bytes remain unchanged and repeated construction is identical (6.314023ms)\n\u2714 West alone can admit the neutral sweep and construct an admitted primitive (5.972744ms)\n\u2714 contract and output make collision and self-intersection limits explicit (1.573303ms)\n\u2714 invalid structure, unknown options, nonfinite values and sparse arrays reject (0.503549ms)\n\u2714 nonpositive, mismatched, nonfinite and sparse scales reject (0.42158ms)\n\u2714 clockwise, concave, collinear, repeated and self-crossing profiles reject (9.004389ms)\n\u2714 repeated stations, closed paths, reversals and excessive turns reject (0.740224ms)\n\u2714 ambiguous frames and malformed tolerance contexts reject deterministically (1.099291ms)\n\u2714 resource ceilings reject before generating oversized geometry (0.419491ms)\n\u2714 tiny collapsed sections cannot escape as valid geometry (0.423658ms)\n\u2714 a tight bend with a wide section rejects locally folded side faces (0.328847ms)\n\u2714 caller-owned tolerance context remains mutable and independent of result (4.673149ms)\n\u2714 existing Laws consumer output and protected dependency bytes match baseline (195.283103ms)\n\u2139 tests 23\n\u2139 suites 0\n\u2139 pass 23\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 484.692647\n"
+    },
+    "syntaxCheck": "PASS",
+    "existingMeshShellParity": {
+      "passed": true,
+      "cases": 140,
+      "rawOutput": "{\n  \"passed\": true,\n  \"cases\": 136,\n  \"referenceMs\": 137.97114800000048,\n  \"candidateMs\": 16.47548400000005,\n  \"oracle\": \"frozen scan oracle\"\n}\n{\"customPassed\":true,\"customCases\":4,\"totalCases\":140}\n"
+    },
+    "lawsBaseline": {
+      "receipt": {
+        "contractId": "LAWS_CP6_SPACECRAFT_GEOMETRY_KERNEL_ADMITTED_v1",
+        "designId": "DGB_SCOUTCRAFT_01",
+        "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+        "primitiveCount": 8,
+        "vertexCount": 454,
+        "triangleCount": 876,
+        "componentCount": 8,
+        "boundingRadius": 0.9475758544834288,
+        "westAdmitted": true,
+        "aggregateFrameValid": true,
+        "blockingIssueCount": 0,
+        "visualPassClaimed": false,
+        "productionAuthorized": false,
+        "deploymentAuthorized": false
+      },
+      "outputSha256": "7b48812c85fc05055e77927f039a4ed53ff64f7239b99effb730e010b89b2305"
+    },
+    "protectedDependencyBytes": "UNCHANGED",
+    "independentSourceAndExecutionReview": "PASS; review.json"
+  },
+  "runtime": {
+    "engine": "Node",
+    "version": "v24.19.0",
+    "browserExecuted": false,
+    "physicalDeviceExecuted": false
+  },
+  "capabilityAdded": "Opt-in finite open-route sweep with strictly convex local profile, per-station scales, minimal-rotation frames and explicit end caps; existing South/East construction and existing West admission",
+  "performanceClaim": null,
+  "selfIntersectionCertified": false,
+  "collisionCertified": false,
+  "productIntegrated": false,
+  "merged": false,
+  "deployed": false
+}

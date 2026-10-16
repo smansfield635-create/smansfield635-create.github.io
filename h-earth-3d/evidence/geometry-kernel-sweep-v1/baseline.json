@@ -1,0 +1,67 @@
+{
+  "schema": "GEOMETRY_KERNEL_SWEEP_BASELINE_v1",
+  "governingHead": "9392951ced7dc466f6c9fe5f1ec4ff5c0ca7b15a",
+  "node": "v24.19.0",
+  "protectedSources": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "gitBlob": "91eabcc240b54ef01a52d59a237dff629d90a722",
+      "sha256": "dca2673d76c46358d4e66b8392f24457c6caf4f07128f653250ee26768824817"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.north.js",
+      "gitBlob": "b5289094db8648800197a03226d6322902960b48",
+      "sha256": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "gitBlob": "5de01fd65474abf677e797c6291cc986d0f8a1ea",
+      "sha256": "9a04f56868cf875894b75915c4ce99d710c46afb40a1448f32ac27d5a93bd9a7"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "gitBlob": "af1c78e2fe336678f9f477256a619b1a25c0d7b1",
+      "sha256": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "gitBlob": "26f1b41c6a25bc7324082465b70cb6b68c2a457d",
+      "sha256": "bd95314b232086d3a410ddc643557f54c161c24d3134be7ba356d47203b3d970"
+    },
+    {
+      "path": "laws/index.spacecraft.geometry.js",
+      "gitBlob": "f336a5ba06dc3155009a0f3c3256d5a36a0a2de0",
+      "sha256": "b331e82028b526e773f8e2d06f44e684a5dd6e2e49509223f78d1e73c18f931a"
+    },
+    {
+      "path": "laws/index.spacecraft.js",
+      "gitBlob": "bf73de5fc7ef6989708179ed87fafb96bce3bad7",
+      "sha256": "af58cbbfdbd591890cdf881cee5ef09219770dd43064159ec1789339958ec885"
+    }
+  ],
+  "laws": {
+    "receipt": {
+      "contractId": "LAWS_CP6_SPACECRAFT_GEOMETRY_KERNEL_ADMITTED_v1",
+      "designId": "DGB_SCOUTCRAFT_01",
+      "coordinateFrame": "H_EARTH_REGION_SPACE_XYZ_WORLD_UNITS",
+      "primitiveCount": 8,
+      "vertexCount": 454,
+      "triangleCount": 876,
+      "componentCount": 8,
+      "boundingRadius": 0.9475758544834288,
+      "westAdmitted": true,
+      "aggregateFrameValid": true,
+      "blockingIssueCount": 0,
+      "visualPassClaimed": false,
+      "productionAuthorized": false,
+      "deploymentAuthorized": false
+    },
+    "outputSha256": "7b48812c85fc05055e77927f039a4ed53ff64f7239b99effb730e010b89b2305"
+  },
+  "shellParity": {
+    "passed": true,
+    "totalCases": 140,
+    "rawEvidence": "{\n  \"passed\": true,\n  \"cases\": 136,\n  \"referenceMs\": 137.97114800000048,\n  \"candidateMs\": 16.47548400000005,\n  \"oracle\": \"frozen scan oracle\"\n}\n{\"customPassed\":true,\"customCases\":4,\"totalCases\":140}\n",
+    "timings": "observational single local CPU samples; no speedup claim"
+  }
+}

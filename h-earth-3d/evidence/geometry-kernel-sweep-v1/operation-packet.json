@@ -1,0 +1,293 @@
+{
+  "schema": "GEOMETRY_KERNEL_SWEEP_OPERATION_PACKET_v1",
+  "operationRequest": {
+    "allowedPaths": [
+      "showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js",
+      "h-earth-3d/validation/geometry-kernel-sweep.v1.test.mjs",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/README.md",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/baseline.json",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/qualification.json",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/operation-packet.json",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/review.json",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/resume.json"
+    ],
+    "artifactPaths": [
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/qualification.json"
+    ],
+    "constructionProcedureLocator": "h-earth-3d/evidence/geometry-kernel-sweep-v1/operation-packet.json#constructionProcedure",
+    "errorPrecedence": [
+      "HEAD_MISMATCH",
+      "SCOPE_MISMATCH",
+      "INVALID_INPUT",
+      "GEOMETRY_REJECTED",
+      "REGRESSION",
+      "REVIEW_FAILURE"
+    ],
+    "exactGoverningHead": "9392951ced7dc466f6c9fe5f1ec4ff5c0ca7b15a",
+    "exactTestCommand": "node --test h-earth-3d/validation/geometry-kernel-sweep.v1.test.mjs",
+    "executingRole": {
+      "bearing": "N",
+      "function": "Navigation: bound capability and construction route",
+      "identity": "Alaric"
+    },
+    "fingerprintDomain": {
+      "algorithm": "SHA256",
+      "scope": "new candidate source, baseline dependency blobs, deterministic geometry outputs and test evidence"
+    },
+    "functionalCoordination": {
+      "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+      "authorityEffect": "NONE",
+      "functionalBearing": {
+        "bearings": [
+          "N",
+          "E",
+          "S",
+          "W"
+        ],
+        "exemptionReason": null,
+        "mode": "ROUTE"
+      },
+      "primitiveRequirements": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+    },
+    "independentVerifier": {
+      "bearing": "W",
+      "function": "Boundary",
+      "identity": "Soren",
+      "mode": "separate native agent source and test review"
+    },
+    "intakeCompletenessReceipt": {
+      "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+      "receiptDigest": "4bf494e09da606d2a40f63bf72cd1b8f61e78df773979daab2ec93d86896d5a8",
+      "receiptId": "GEOMETRY_KERNEL_SWEEP_20261016_COMPLETENESS",
+      "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+      "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+      "unresolvedMaterialQuestions": []
+    },
+    "lockScope": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_V1",
+    "operationId": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_20261016_001",
+    "prohibitedPaths": [
+      "showroom/globe/h-earth/render/geometry-kernel.js",
+      "showroom/globe/h-earth/render/geometry-kernel.north.js",
+      "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "laws/**",
+      "renderer/**",
+      "terrain binaries",
+      "navigation",
+      "production deployment",
+      "main direct writes"
+    ],
+    "projectId": "H_EARTH",
+    "requestingAuthority": {
+      "issue": 6402,
+      "scope": "candidate construction and qualification only",
+      "source": "owner conversation 2026-10-16T04:39Z; proceed as recommended"
+    },
+    "requiredInputs": [
+      {
+        "id": "AI_ENTRYPOINT.json",
+        "resolved": true
+      },
+      {
+        "id": "AGENTS.md",
+        "resolved": true
+      },
+      {
+        "id": ".github/ai-router/projects/h-earth/entrypoint.v1.json",
+        "resolved": true
+      },
+      {
+        "id": "issue:6402",
+        "resolved": true
+      },
+      {
+        "id": "existing geometry-kernel North/East/South/West source at exact governing head",
+        "resolved": true
+      },
+      {
+        "id": "Soren frozen read-only preconstruction memo",
+        "resolved": true
+      }
+    ],
+    "requiredOutputs": [
+      "opt-in swept-passage module",
+      "meaningful deterministic geometry tests",
+      "baseline and qualification evidence",
+      "independent boundary review",
+      "immutable candidate and continuation"
+    ],
+    "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+    "stopConditions": [
+      "active same-scope operation",
+      "governing-state conflict without differential continuity",
+      "unresolved selected direct dependency",
+      "geometry or regression failure",
+      "independent review unresolved",
+      "no product integration, merge or publication in this scope"
+    ],
+    "subjectIdentity": {
+      "capability": "reusable opt-in swept passage construction candidate",
+      "repository": "smansfield635-create/smansfield635-create.github.io"
+    },
+    "terminalDispositions": [
+      "PASS_CLOSED",
+      "FAIL_CLOSED",
+      "WITHDRAWN",
+      "SUPERSEDED"
+    ],
+    "workflowPath": ".github/workflows/h-earth-repository-registry-preflight.yml"
+  },
+  "constructionProcedure": {
+    "bridgeOutputFingerprintDomain": {
+      "algorithm": "SHA256",
+      "scope": "new candidate source, baseline dependency blobs, deterministic geometry outputs and test evidence"
+    },
+    "canonicalInputSchemas": [
+      "explicit finite open centerline; strictly convex CCW local profile; positive per-ring scales; explicit caps and up axis; bounded resource counts"
+    ],
+    "canonicalOutputSchemas": [
+      "existing South neutral primitive/geometry record; existing West admission result only on explicit caller request; deterministic failure issues"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "HEAD_MISMATCH",
+      "SCOPE_MISMATCH",
+      "INVALID_INPUT",
+      "GEOMETRY_REJECTED",
+      "REGRESSION",
+      "REVIEW_FAILURE"
+    ],
+    "evaluationToolingHeadBindingRule": "Use exact governing head kernel dependencies; preserve their Git blobs; candidate tests execute candidate source. No product consumer edits.",
+    "exactAllowedRepositoryPaths": [
+      "showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js",
+      "h-earth-3d/validation/geometry-kernel-sweep.v1.test.mjs",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/README.md",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/baseline.json",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/qualification.json",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/operation-packet.json",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/review.json",
+      "h-earth-3d/evidence/geometry-kernel-sweep-v1/resume.json"
+    ],
+    "exactBranchAndCommitSequence": [
+      {
+        "base": "9392951ced7dc466f6c9fe5f1ec4ff5c0ca7b15a",
+        "branch": "geometry-kernel-sweep-v1-20261016",
+        "sequence": [
+          "baseline custody",
+          "constructor and tests",
+          "independent review and qualified candidate"
+        ]
+      }
+    ],
+    "exactGoverningHead": "9392951ced7dc466f6c9fe5f1ec4ff5c0ca7b15a",
+    "exactTestRunnerCommand": "node --test h-earth-3d/validation/geometry-kernel-sweep.v1.test.mjs",
+    "independentVerifierDefinition": {
+      "bearing": "W",
+      "function": "Boundary",
+      "identity": "Soren",
+      "mode": "separate native agent source and test review"
+    },
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "priorAttemptInspectionLimits": {
+      "excluded": "no world redesign or previous cave operation takeover",
+      "reuse": "October 8 mesh-shell parity and existing South triangle constructor"
+    },
+    "procedureId": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_PROCEDURE_20261016_001",
+    "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "workflowAndArtifactPackagingPaths": {
+      "artifactPaths": [
+        "h-earth-3d/evidence/geometry-kernel-sweep-v1/qualification.json"
+      ],
+      "execution": "native local Node; passive CI only, no workflow dispatch required",
+      "workflowPath": ".github/workflows/h-earth-repository-registry-preflight.yml"
+    }
+  },
+  "compiledPacketReceipt": {
+    "admissionAuthorityCreated": false,
+    "artifactDigests": {
+      "canonicalConstructionProcedure": "0a6956e6821bee921ebc487928645f7b53482052db581562f8dcad251e93000f",
+      "canonicalIntakeComment": "3cb0ad1f0c3ffa114952b78943549e55ca2c6eae4e1032568cba838bc655b5ae",
+      "canonicalIntakeEnvelope": "a89d59637d24ba917ee7544664b721e7035dca6119163f909614988a0c1f8454",
+      "canonicalOperationRequest": "3c6e122be28dad98c4077222ed95423d6406db6f2c2a8dfc66429e28af292e48"
+    },
+    "authorityEffect": "NONE_PACKET_COMPILATION_ONLY",
+    "claimAuthorityCreated": false,
+    "commentDigest": "3cb0ad1f0c3ffa114952b78943549e55ca2c6eae4e1032568cba838bc655b5ae",
+    "deploymentAuthorityCreated": false,
+    "envelopeDigest": "d957c58549b64b93f1e09a5fedcf4e70bbaec3471d870ab70551ae575d3d221b",
+    "governingHead": "9392951ced7dc466f6c9fe5f1ec4ff5c0ca7b15a",
+    "lockScope": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_V1",
+    "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+    "mergeAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "operationId": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_20261016_001",
+    "procedureDigest": "6cdf6457092e918d84bccbdb8c16a4ce41908b9d5a8bf53abf122f7af91833c1",
+    "publicationAuthorityCreated": false,
+    "releaseAuthorityCreated": false,
+    "requestDigest": "5eb93302d5c982b296b7b710c03c702ac8853980483c74efc81dedf574976445",
+    "result": "PACKET_READY",
+    "schema": "CANONICAL_PACKET_READY_RECEIPT_v1",
+    "scientificAuthorityCreated": false,
+    "semanticValidator": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
+    "submissionReady": true,
+    "transportSchema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1"
+  },
+  "admissionReceipt": {
+    "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_EXECUTION_RECEIPT_v1",
+    "result": "ADMITTED_AND_LOCKED",
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+    "profile": "CONNECTED_GITHUB_NATIVE_PRIMITIVES_V1",
+    "operationId": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_20261016_001",
+    "lockScope": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_V1",
+    "lockGeneration": 2765,
+    "governingHead": "9392951ced7dc466f6c9fe5f1ec4ff5c0ca7b15a",
+    "scopeHash": "83fb43a6153c836c1db78e925be6a066b20f79451beb6cfdd5fd9dc47bed647f",
+    "requestDigest": "5eb93302d5c982b296b7b710c03c702ac8853980483c74efc81dedf574976445",
+    "procedureLocatorDigest": "6cdf6457092e918d84bccbdb8c16a4ce41908b9d5a8bf53abf122f7af91833c1",
+    "acquisitionCommitSha": "454cff22cba12f1a3cc4ce755f1f431a3ca9aff7",
+    "committedLedgerBlobSha": "5a4d1e350c5bc3cb77769453ed52e88535eb35e9",
+    "sourceCommentId": 6208304726,
+    "readbackVerified": true,
+    "remoteBlobExactTextEqualityVerified": true,
+    "canonicalCommitVerification": {
+      "lockGeneration": 2765,
+      "operationId": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_20261016_001",
+      "principal": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+      "provenance": {
+        "authorityIdentity": {
+          "governingHead": "9392951ced7dc466f6c9fe5f1ec4ff5c0ca7b15a",
+          "lockGeneration": 2765,
+          "lockScope": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_V1",
+          "operationId": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_20261016_001",
+          "procedureLocatorDigest": "6cdf6457092e918d84bccbdb8c16a4ce41908b9d5a8bf53abf122f7af91833c1",
+          "requestDigest": "5eb93302d5c982b296b7b710c03c702ac8853980483c74efc81dedf574976445",
+          "scopeHash": "83fb43a6153c836c1db78e925be6a066b20f79451beb6cfdd5fd9dc47bed647f"
+        },
+        "result": "OWNER_CONNECTOR_PROVENANCE_VERIFIED"
+      },
+      "result": "CANONICAL_LEDGER_COMMIT_VERIFIED"
+    },
+    "planWasReceipt": false,
+    "authorityEffect": "BOUNDED_ADMISSION_ONLY"
+  },
+  "sourceIssue": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6402",
+  "registryDiscovery": {
+    "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+    "version": "1.0.0-candidate.1",
+    "candidateBlob": "10ab7b203e03fde419e526d0cce2c0af42860911",
+    "kernelReadOnlyDiscovery": "PASS",
+    "newCompanionPath": "Exact admitted candidate paths recognized by whole-estate execution policy; no durable registry or authority boundary changed",
+    "authority": "No member authority transferred or collapsed; existing North/East/South/West reused"
+  },
+  "experienceSurfaceChanged": false,
+  "productIntegrationAuthorized": false,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false
+}

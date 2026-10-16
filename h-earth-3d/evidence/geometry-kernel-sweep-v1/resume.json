@@ -1,0 +1,25 @@
+{
+  "schema": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_HANDOFF_v1",
+  "operationId": "GEOMETRY_KERNEL_SWEEP_CANDIDATE_20261016_001",
+  "authorityGeneration": 2765,
+  "projectId": "H_EARTH",
+  "candidateSourceCommit": "83bc172f1827790d2ab93d081df0a41873df298f",
+  "branch": "geometry-kernel-sweep-v1-20261016",
+  "completed": [
+    "canonical admission and independent readback",
+    "baseline custody",
+    "sweep construction",
+    "23 tests",
+    "140 existing shell parity cases",
+    "protected kernel and Laws equality",
+    "independent Soren review"
+  ],
+  "remaining": "Publish complete candidate evidence and draft PR; close candidate construction operation canonically. Later product adoption requires a separately admitted operation.",
+  "canonicalContinuationLocation": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6402",
+  "limits": [
+    "No product integration",
+    "No merge or live deployment",
+    "No collision/self-intersection certification"
+  ],
+  "authorityEffect": "NONE_HANDOFF_EVIDENCE_ONLY"
+}

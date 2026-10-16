@@ -1,9 +1,11 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-gen2780-planting-pilot-20261016-001",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "4d23e5c0fae46662808b86c566a1f1ec9f7ad443",
+    "route_path": "/showroom/globe/h-earth/",
+    "route_query": "arrival=geological-cavern",
+    "exercise_vegetation_residency": "true"
   }
 }

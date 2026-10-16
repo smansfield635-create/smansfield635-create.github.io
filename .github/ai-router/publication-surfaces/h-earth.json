@@ -23,7 +23,7 @@
       "includes": [
         "import '../diagnostic/renderer-startup-observer.v1.js?cb=meadow-distribution-20261006';",
         "await import('../arrival-loader.js?cb=h-earth-bounded-progress-v1');",
-        "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2730-rear-cavern-pilot-v1');",
+        "await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2771-site-b-local-rock-repair-v2');",
         "window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();"
       ],
       "excludes": [

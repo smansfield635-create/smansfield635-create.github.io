@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-16T15:29:51Z",
+  "generatedAt": "2026-10-16T16:31:56Z",
   "window": {
-    "start": "2026-09-16T15:29:51Z",
-    "end": "2026-10-16T15:29:51Z"
+    "start": "2026-09-16T16:31:56Z",
+    "end": "2026-10-16T16:31:56Z"
   },
   "dimensions": {
     "requestPath": [
@@ -123,14 +123,14 @@
         "visits": 0
       },
       {
-        "value": "/products/",
-        "pageLoads": 30,
-        "visits": 10
-      },
-      {
         "value": "/products/on-your-side-ai/",
         "pageLoads": 30,
         "visits": 0
+      },
+      {
+        "value": "/products/",
+        "pageLoads": 30,
+        "visits": 10
       },
       {
         "value": "/gauges/",
@@ -416,13 +416,13 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 2087,
-        "visits": 1179
+        "pageLoads": 2647,
+        "visits": 1279
       },
       {
         "value": "1",
-        "pageLoads": 1688,
-        "visits": 1688
+        "pageLoads": 1748,
+        "visits": 1748
       }
     ],
     "navigationType": [

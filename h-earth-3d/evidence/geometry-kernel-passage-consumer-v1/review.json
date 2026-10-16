@@ -1,0 +1,30 @@
+{
+  "schema": "GEOMETRY_KERNEL_PASSAGE_INDEPENDENT_REVIEW_v1",
+  "reviewer": {
+    "task": "/root/soren_review",
+    "identity": "Soren",
+    "bearing": "West",
+    "responsibility": "Boundary",
+    "mode": "native independent read-only agent"
+  },
+  "result": "PASS",
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/geometry-kernel.passage-consumer.v1.js": "12b2bef7fe714e4dbdc7491b84182787b1ed8a301dbae871987766c5754c4d60",
+    "h-earth-3d/validation/geometry-kernel-passage-consumer.v1.test.mjs": "18704a364ed5d9fb2d47bfc46ccc80892d066458642ea3a3683b1db539e2d55d",
+    "h-earth-3d/validation/geometry-kernel-passage-consumer.webgl.v1.mjs": "3ac0d6ffb2fa7e2b8b7ca8af8fffc2ba77ad511a89ef635d039d1c89311a7381"
+  },
+  "independentlyExecutedTests": 40,
+  "analyticQueries": 450,
+  "blockingFindings": [],
+  "findings": [
+    "West admits immutable shell; separate convex support planes and positive volume validate certificate assumptions.",
+    "Private planes, finite end boundaries and positive margins preserve conservative clearance.",
+    "Forged consumers fail; mutable buffers cannot influence certificates.",
+    "Origin-relative buffers reverse winding and normals for interior rendering.",
+    "Bent passages, changing sections, capsules and rotation remain explicitly unsupported."
+  ],
+  "limits": [
+    "Browser GPU smoke remains unexecuted.",
+    "No phone performance, natural cavern integration or visual quality acceptance."
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_GEN2735_TERMINAL_CLOSURE_20261016_002",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6408,
+  "requestBranch": "ai-dispatch-request-hearth-gen2735-close-20261016-002",
+  "requestCommit": "b9dd5ee1f88ab0609857adb3c7052ff098713ead",
+  "requestCommitParent": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+  "workflow": "remote-operation-terminal-closure-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\n  \"schema\": \"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\n  \"repository\": \"smansfield635-create/smansfield635-create.github.io\",\n  \"operationId\": \"H_EARTH_GEN2735_EXACT_HEAD_RUNNER_GATE_REPAIR_20261016_001\",\n  \"lockScope\": \"H_EARTH:GEN2735:EXACT_HEAD_RUNNER_APPLICABILITY:89F9344:20261016\",\n  \"lockGeneration\": 2764,\n  \"terminalDisposition\": \"PASS_CLOSED\"\n}",
+    "router_callback_issue": "6408",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "38921921497",
+  "dispatchedRunId": 38921941127,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38921941127",
+  "dispatchedRunHeadSha": "fbc2de4d485aca36e87f6bc8a53b09e2024811d4",
+  "dispatchedAt": "2026-10-16T15:11:49.973Z",
+  "resolvedAt": "2026-10-16T15:11:54.798Z"
+}

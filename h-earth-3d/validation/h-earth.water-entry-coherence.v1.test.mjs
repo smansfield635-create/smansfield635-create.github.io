@@ -39,5 +39,5 @@ test('published arrival through cavern mouth stays above actual water and inside
 });
 
 test('basin support follows the active water presentation mode',()=>{
- setup();for(const[x,z]of [[40,-284],[40,-280],[40,-288],[30,-288]]){const water=wetAt(x,z),floor=model.formation.excavatedOutdoorTerrain(x,z);assert(water.some(w=>w.y>floor+.5),'Regression fixture no longer submerged');const support=bridge.resolveGeologicalRuntimeFootSupport(x,z);assert(support);if(bridge.H_EARTH_WATER_PRESENTATION_ENABLED===false)assert(support.eligible,'Hidden water creates an invisible barrier');else{assert(!support.eligible,`Submerged floor allowed at ${x},${z}`);assert(support.issues.some(s=>/WATER|SUBMERG|WET/.test(s)));}}
+ setup();for(const[x,z]of [[40,-284],[40,-280],[40,-288],[30,-288]]){const water=wetAt(x,z),floor=model.formation.excavatedOutdoorTerrain(x,z);assert(water.some(w=>w.y>floor+.5),'Regression fixture no longer submerged');const support=bridge.resolveGeologicalRuntimeFootSupport(x,z);assert(support);if(bridge.H_EARTH_REAR_WATER_PRESENTATION_ENABLED===false)assert(support.eligible,'Hidden water creates an invisible barrier');else{assert(!support.eligible,`Submerged floor allowed at ${x},${z}`);assert(support.issues.some(s=>/WATER|SUBMERG|WET/.test(s)));}}
 });

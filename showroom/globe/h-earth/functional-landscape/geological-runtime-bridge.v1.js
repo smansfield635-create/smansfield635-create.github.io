@@ -8,7 +8,8 @@ import {constructGeologicalPortalAssembly,sampleFormationWalkable,projectGeologi
   from '../../../../h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs';
 import {constructHEarthSweptPassageMesh} from '../render/geometry-kernel.sweep.v1.js';
 // Owner-directed temporary land development mode. Source water meshes remain intact.
-export const H_EARTH_WATER_PRESENTATION_ENABLED=false;
+export const H_EARTH_WATER_PRESENTATION_ENABLED=true;
+export const H_EARTH_REAR_WATER_PRESENTATION_ENABLED=false;
 export const isHEarthWaterPresentationPart=id=>/(?:^|:)(?:FOAM_CONTACT|SHALLOW_WATER|NEARSHORE_WATER|OPEN_WATER|FAR_OCEAN_CONTINUATION|FRESHWATER_RIVER|OASIS_WATER)$/.test(String(id));
 export function shouldPresentHEarthDrawRange(range){
   if(H_EARTH_WATER_PRESENTATION_ENABLED)return true;
@@ -273,7 +274,7 @@ function buildKernelCavern(site,{floorAt,roofAt,caveRadius,caveCenterX}){
   };
   return Object.freeze({mesh,caveSectionAt,constructed});
 }
-function buildReliefCliffFace(formation,terrainAt,aperture){
+function buildReliefCliffFace(formation,terrainAt,aperture,exteriorMesh){
   const {site}=formation,left=aperture.xMin,right=aperture.xMax,start=aperture.zMin,step=.5;
   const regularCount=Math.ceil((right-left)/step);
   const lip=formation.kernelCaveBoundary;
@@ -323,7 +324,47 @@ function buildReliefCliffFace(formation,terrainAt,aperture){
       if(!probes.some(([x,y,z])=>formation.insideVoid(x,y,z)))indices.push(...tri);
     }
   }
-  const mesh=Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(indices),vertexCount:positions.length/3,triangleCount:indices.length/3});
+  // Close only the lower threshold between the open kernel ring and the
+  // ACTUAL emitted exterior edge. The accepted shell and land stay immutable.
+  const facadeVertexCount=positions.length/3,seamIndexStart=indices.length;
+  const ring=Array.from({length:lip.profileVertexCount},(_,i)=>({x:lip.positions[i*3],y:lip.positions[i*3+1]}));
+  const exterior=waterTriangles(exteriorMesh),minLipX=Math.min(...ring.map(p=>p.x)),maxLipX=Math.max(...ring.map(p=>p.x));
+  const cuts=new Set(ring.map(p=>p.x));
+  // The external 2m edge and every kernel edge both retain exact breakpoints.
+  for(let i=0;i<exteriorMesh.positions.length;i+=3){
+    const x=exteriorMesh.positions[i],z=exteriorMesh.positions[i+2];
+    if(Math.abs(z-start)<1e-6&&x>minLipX&&x<maxLipX)cuts.add(x);
+  }
+  const lowerRingAt=x=>{
+    const hits=[];
+    for(let i=0;i<ring.length;i++){
+      const a=ring[i],b=ring[(i+1)%ring.length];
+      if(x<Math.min(a.x,b.x)-1e-7||x>Math.max(a.x,b.x)+1e-7)continue;
+      if(Math.abs(b.x-a.x)<1e-9){hits.push(a.y,b.y);continue;}
+      const t=(x-a.x)/(b.x-a.x);hits.push(a.y+(b.y-a.y)*t);
+    }
+    if(!hits.length)fail('LOWER_ENTRANCE_RING_CONTACT_MISSING');
+    return Math.min(...hits);
+  };
+  let lowerEntranceSeamMaximumContactError=0;
+  const seamColumns=[...cuts].sort((a,b)=>a-b).map(x=>{
+    const ground=sampleWaterTriangles(exterior,x,start);
+    if(!ground)fail('LOWER_ENTRANCE_EXTERIOR_CONTACT_MISSING');
+    const floor=lowerRingAt(x),top=Math.max(floor,ground.y);
+    const encodedFloor=Math.fround(floor),encodedTop=Math.fround(top);
+    lowerEntranceSeamMaximumContactError=Math.max(lowerEntranceSeamMaximumContactError,
+      Math.abs(encodedFloor-floor),Math.abs(encodedTop-top));
+    return {x,floor:encodedFloor,top:encodedTop};
+  });
+  for(let i=0;i<seamColumns.length-1;i++){
+    const a=seamColumns[i],b=seamColumns[i+1],base=positions.length/3;
+    positions.push(a.x,a.floor,start,a.x,a.top,start,b.x,b.floor,start,b.x,b.top,start);
+    if(a.top-a.floor>1e-8)indices.push(base,base+1,base+2);
+    if(b.top-b.floor>1e-8)indices.push(base+2,base+1,base+3);
+  }
+  const lowerEntranceSeamTriangleCount=(indices.length-seamIndexStart)/3;
+  const mesh=Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(indices),vertexCount:positions.length/3,triangleCount:indices.length/3,
+    facadeVertexCount,facadeIndexCount:seamIndexStart,lowerEntranceSeamIndexStart:seamIndexStart,lowerEntranceSeamTriangleCount});
   // Exact front-depth lookup from the retained physical face, not a second
   // procedural field. It changes point occupancy only inside the recession slab.
   const bins=new Map(),frontTriangles=[],binSize=2;
@@ -331,13 +372,16 @@ function buildReliefCliffFace(formation,terrainAt,aperture){
     const [a,b,c]=[0,1,2].map(k=>Array.from(mesh.positions.slice(mesh.indices[i+k]*3,mesh.indices[i+k]*3+3)));
     const den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]);
     if(Math.abs(den)<1e-10)continue;
-    const id=frontTriangles.length;frontTriangles.push({a,b,c,den});
+    const id=frontTriangles.length;frontTriangles.push({a,b,c,den,lowerEntranceSeam:i>=seamIndexStart});
     for(let x=Math.floor(Math.min(a[0],b[0],c[0])/binSize);x<=Math.floor(Math.max(a[0],b[0],c[0])/binSize);x++)
       for(let y=Math.floor(Math.min(a[1],b[1],c[1])/binSize);y<=Math.floor(Math.max(a[1],b[1],c[1])/binSize);y++){
         const key=x+':'+y,list=bins.get(key)??[];list.push(id);bins.set(key,list);
       }
   }
   const rockFaceFrontAt=(x,y)=>{
+    // The actual threshold is the frontmost boundary where it occludes a
+    // recessed shoulder; unrelated multiple intersections still fail closed.
+    if(lowerEntranceSeamAt(x,y))return start;
     const hits=[];
     for(const id of bins.get(Math.floor(x/binSize)+':'+Math.floor(y/binSize))??[]){
       const {a,b,c,den}=frontTriangles[id];
@@ -348,8 +392,14 @@ function buildReliefCliffFace(formation,terrainAt,aperture){
     }
     return hits.length===1?hits[0]:null;
   };
-  return Object.freeze({mesh,rockFaceFrontAt,maximumRecession:reliefMax,
-    diagnostics:Object.freeze({exposedFaceReliefMeters:reliefMax-reliefMin,minimumRockFaceClearance})});
+  const lowerEntranceSeamAt=(x,y)=>frontTriangles.some(t=>{
+    if(!t.lowerEntranceSeam)return false;
+    const {a,b,c,den}=t,u=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den,
+      v=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den;
+    return Math.min(u,v,1-u-v)>=-1e-7;
+  });
+  return Object.freeze({mesh,rockFaceFrontAt,lowerEntranceSeamAt,maximumRecession:reliefMax,
+    diagnostics:Object.freeze({exposedFaceReliefMeters:reliefMax-reliefMin,minimumRockFaceClearance,lowerEntranceSeamTriangleCount,lowerEntranceSeamMaximumContactError})});
 }
 /** Build only once when the canonical package is resident, never on a frame update. */
 export function constructGeologicalRuntimeBridge(canonical){
@@ -465,9 +515,11 @@ export function constructGeologicalRuntimeBridge(canonical){
     coverSamples:Object.freeze(coverSamples),minimumRoofCover:minimumKernelRoofCover,
     excavatedOutdoorTerrain,rockSolidAt:(x,y,z)=>y<=excavatedOutdoorTerrain(x,z)&&!physicalInsideVoid(x,y,z)});
   const rawPortal=constructGeologicalPortalAssembly(formation,terrainAt,{bounds:BOUNDS});
-  const cliff=buildReliefCliffFace(formation,terrainAt,rawPortal.aperture);
-  const physicalFormation=Object.freeze({...formation,rockFaceFrontAt:cliff.rockFaceFrontAt,
+  const cliff=buildReliefCliffFace(formation,terrainAt,rawPortal.aperture,rawPortal.terrainWithoutAperture);
+  const physicalFormation=Object.freeze({...formation,rockFaceFrontAt:cliff.rockFaceFrontAt,lowerEntranceSeamAt:cliff.lowerEntranceSeamAt,
     rockSolidAt:(x,y,z)=>{
+      // A threshold is a boundary surface only; it never fills the gallery.
+      if(Math.abs(z-SITE.portalZ)<=1e-6&&cliff.lowerEntranceSeamAt(x,y))return true;
       if(physicalInsideVoid(x,y,z))return false;
       if(z>=SITE.portalZ&&z<=SITE.portalZ+cliff.maximumRecession){
         const front=cliff.rockFaceFrontAt(x,y);
@@ -520,7 +572,7 @@ export function resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight=2.25}={}){
     if(!ground)return Object.freeze({class:'EXTERIOR_DRY_CHANNEL',eligible:false,x,z,issues:['GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING']});
     const support={class:'EXTERIOR_DRY_CHANNEL',eligible:true,x,z,footY:ground.y,eyeY:ground.y+eyeHeight,
       ceilingY:null,headroom:null,issues:[],worldManifoldUnchanged:true,boundarySource:'ACTUAL_EMITTED_TERRAIN_TRIANGLES'};
-    const water=H_EARTH_WATER_PRESENTATION_ENABLED?active.sampleWaterAt(x,z):null;
+    const water=H_EARTH_REAR_WATER_PRESENTATION_ENABLED?active.sampleWaterAt(x,z):null;
     if(water&&water.y>support.footY+.05)return Object.freeze({...support,eligible:false,waterY:water.y,waterDepth:water.y-support.footY,issues:['GEOLOGICAL_SUBMERGED_OUTDOOR_SUPPORT']});
     return Object.freeze(support);
   }

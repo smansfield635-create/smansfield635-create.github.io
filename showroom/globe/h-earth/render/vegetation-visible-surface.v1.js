@@ -1,4 +1,4 @@
-import {H_EARTH_WATER_PRESENTATION_ENABLED} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2778-land-only-v1';
+import {H_EARTH_WATER_PRESENTATION_ENABLED,H_EARTH_REAR_WATER_PRESENTATION_ENABLED} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2779-front-water-exit-v1';
 /** Presentation roots belong to the indexed surfaces actually submitted to WebGL. */
 const f=Math.fround,EPS=1e-8;
 const invalid=reason=>{throw Error('VEGETATION_VISIBLE_SURFACE_INVALID:'+reason);};
@@ -65,7 +65,7 @@ function triangleSurface(parts){
 }
 
 /** No analytic height fields, canonical placement mutation, or module-local bridge state. */
-export function buildVegetationVisibleSurface(pkg,{refinement=null,geology=null,waterPresentationEnabled=H_EARTH_WATER_PRESENTATION_ENABLED}={}){
+export function buildVegetationVisibleSurface(pkg,{refinement=null,geology=null,waterPresentationEnabled=H_EARTH_WATER_PRESENTATION_ENABLED,rearWaterPresentationEnabled=H_EARTH_REAR_WATER_PRESENTATION_ENABLED}={}){
   if(!pkg?.buffers?.positions||!pkg.buffers.indices||!Array.isArray(pkg.primitiveSpans))invalid('PACKAGE');
   const retired=new Set(geology?.retirement?.triangleOffsets??[]);
   for(const offset of retired)if(!Number.isSafeInteger(offset)||offset<0||offset%3||offset+2>=pkg.buffers.indices.length)invalid('RETIREMENT_OFFSET');
@@ -81,7 +81,7 @@ export function buildVegetationVisibleSurface(pkg,{refinement=null,geology=null,
   for(const part of geology?.meshes??[]){
     const entry={positions:part.mesh.positions,indices:part.mesh.indices,spans:[{indexStart:0,indexCount:part.mesh.indices.length,primitiveId:part.role}],owner:part.role};
     if(['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN'].includes(part.role))exteriorParts.push(entry);
-    if(waterPresentationEnabled&&['FRESHWATER_RIVER','OASIS_WATER'].includes(part.role))waterParts.push(entry);
+    if(rearWaterPresentationEnabled&&['FRESHWATER_RIVER','OASIS_WATER'].includes(part.role))waterParts.push(entry);
     // A vertical cliff or underground shell is never outdoor plant support.
   }
   const exterior=triangleSurface(exteriorParts),water=triangleSurface(waterParts);

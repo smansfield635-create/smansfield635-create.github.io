@@ -1,0 +1,71 @@
+{
+  "schema": "H_EARTH_FRONT_WATER_EXIT_BOUNDARY_SOURCE_EVIDENCE_v1",
+  "baseline": "b7d3b25c92da8ca872915d6b7a862b7585520bc7",
+  "canonicalAdmissionGeneration": 2779,
+  "admissionCommit": "bec67892f9507d29a0b4ac320ce4f52a5a7d1385",
+  "ownerRecording": {
+    "filename": "29068.mp4",
+    "sha256": "ba68f4173788c94e7960d8a94d51eb362e3b54d6d25bca4ccfe14c92f603f726",
+    "observedExitGapSeconds": [
+      20,
+      24
+    ],
+    "ownerDisposition": "Cavern successful; fix exit boundaries; restore refined front water, remove rear water only"
+  },
+  "changes": [
+    "Restore all original canonical frontwater/foam draw ranges; keep only derived rearwater meshes paused",
+    "Split canonical/rearwater presentation, vegetation exclusions and rear navigation coherently",
+    "Append40lowerentrance seamtriangles between exact kernel lip and actual2m exterior terrain edge; preserve existing shell and land",
+    "Actual mesh-derived seam plane owns frontmost point query only when present; keep previous ambiguity behavior otherwise"
+  ],
+  "checks": {
+    "tests": {
+      "passed": 35,
+      "failed": 0,
+      "command": "node --test h-earth-3d/validation/h-earth.land-only.v1.test.mjs h-earth-3d/validation/h-earth.cavern-vegetation-repair.v1.test.mjs h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
+      "reportSha256": "bbeb1ebe8b95ce38bfeb96027e92141bd5df0cd9c37e358b57861490bd2ee0ce"
+    },
+    "lowerSeam": {
+      "triangleCount": 40,
+      "independentRayColumns": [
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        43.5
+      ],
+      "intervalFractions": [
+        0.1,
+        0.5,
+        0.9
+      ],
+      "maximumContactErrorMeters": 4.68e-07,
+      "centralEyeHeightOpeningPreserved": true,
+      "physicalPlaneCorrespondence": true,
+      "galleryVolumeChanged": false
+    },
+    "reverseExit": {
+      "quarterMeterSteps": 104,
+      "endZ": -266,
+      "renderReconciliationYDelta": 0
+    },
+    "acceptedKernelConstructionSha256": "ca699c99f64bae82c7b92a511c409b74c45adb2929c8176c92830abc32a35dca",
+    "acceptedFinalCameraBytesUnchanged": true,
+    "canonicalWorldBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "sourceBinding": "PASS2779 six links"
+  },
+  "failureLocalization": "Initial34checks found one old front query ambiguity where new sill occludes recessed rock. Query now chooses actual seam plane only at mesh-confirmed seam XY. Existing facade checks retain full original surface checks, with explicit actual sill occlusion allowance. Final35checks pass.",
+  "differentialContinuity": {
+    "newMain": "bb583335d7697686a93e72ed49eafdfc6701f43c",
+    "changedPathsOnlyAnalytics": true,
+    "count": 7,
+    "affectedDependenciesChanged": false
+  },
+  "ownerAcceptance": {
+    "cavernOnPriorB7d3": true,
+    "newExitRepairPhysicalAcceptance": false
+  },
+  "newFullVegetationBrowserRun": false
+}

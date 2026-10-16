@@ -99,13 +99,21 @@ jobs:
             for(const line of trace.split('\n')){
               const m=line.match(/^UNDICI [0-9]+: received response to (GET|POST|PATCH) https:\/\/api\.github\.com(\/\S+) - HTTP 422$/);
               if(!m)continue;
-              const method=m[1],p=m[2];stage='OTHER';
+              const method=m[1],p=m[2].replace(/^\/+/, '/');stage='OTHER';
               if(method==='POST'&&/^\/repos\/[^/]+\/[^/]+\/git\/blobs$/.test(p))stage='GIT_BLOB_WRITE';
               else if(method==='POST'&&/^\/repos\/[^/]+\/[^/]+\/git\/trees$/.test(p))stage='GIT_TREE_WRITE';
               else if(method==='POST'&&/^\/repos\/[^/]+\/[^/]+\/git\/commits$/.test(p))stage='GIT_COMMIT_WRITE';
               else if(method==='PATCH'&&/^\/repos\/[^/]+\/[^/]+\/git\/refs\/heads\//.test(p))stage='CHECKPOINT_REF_UPDATE';
               else if(method==='GET'&&/^\/search\/issues\?/.test(p))stage='SEARCH_READ';
               else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/pulls\/[0-9]+$/.test(p))stage='PULL_METADATA_READ';
+              else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/pulls\?/.test(p))stage='PULL_LIST_READ';
+              else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/pulls\/[0-9]+\/files\?/.test(p))stage='PULL_FILES_READ';
+              else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/compare\//.test(p))stage='COMPARISON_READ';
+              else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/contents\//.test(p))stage='CONTENTS_READ';
+              else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/git\/blobs\//.test(p))stage='GIT_BLOB_READ';
+              else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/git\/trees\//.test(p))stage='GIT_TREE_READ';
+              else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/(git\/)?commits\//.test(p))stage='GIT_COMMIT_READ';
+              else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/git\/refs?\/heads\//.test(p))stage='REF_READ';
             }
             console.log(JSON.stringify({schema:'DGB_SAFE_HTTP_FAILURE_STAGE_v1',httpStatus:stage==='TRACE_UNAVAILABLE'?null:422,stage}));
           }

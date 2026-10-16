@@ -8,8 +8,11 @@ import {
   validateClosureRequest
 } from './remote-operation-terminal-closure-bridge.v1.mjs';
 import {
+  canonical,
   closeLocal,
-  scopeHash
+  scopeHash,
+  sha,
+  verifyOwnerConnectedAuthorityProvenance
 } from './repository-operation-lock-manager.v1.mjs';
 
 const valid = () => ({
@@ -37,6 +40,64 @@ function rejectsInvocation(mutator, code) {
   mutator(value);
   assert.throws(() => normalizeClosureInput(value), error => error?.code === code);
 }
+
+const ownerAdmissionFixture = () => {
+  const lock = {
+    schema: 'REPOSITORY_OPERATION_LOCK_v1',
+    operationId: 'TEST_OWNER_CONNECTOR_OPERATION_001',
+    lockScope: 'TEST:OWNER_CONNECTOR_AUTHORITY:V1',
+    scopeHash: scopeHash('TEST:OWNER_CONNECTOR_AUTHORITY:V1'),
+    state: 'ADMITTED_LOCKED',
+    governingHead: 'a'.repeat(40),
+    requestDigest: 'b'.repeat(64),
+    procedureLocatorDigest: 'c'.repeat(64),
+    lockGeneration: 12,
+    released: false
+  };
+  const source = {
+    repository: REPOSITORY,
+    issueNumber: 42,
+    commentId: 4201,
+    commentBodySha256: 'd'.repeat(64),
+    authorLogin: 'smansfield635-create',
+    authorAssociation: 'OWNER',
+    marker: 'CANONICAL_OPERATION_INTAKE_REQUEST_V1'
+  };
+  const authorityIdentity = {
+    operationId: lock.operationId,
+    lockScope: lock.lockScope,
+    scopeHash: lock.scopeHash,
+    governingHead: lock.governingHead,
+    requestDigest: lock.requestDigest,
+    procedureLocatorDigest: lock.procedureLocatorDigest,
+    lockGeneration: lock.lockGeneration
+  };
+  const core = {
+    schema: 'OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1',
+    transportId: 'OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1',
+    source,
+    authorityIdentity,
+    compareAndSwap: { observedLedgerBlobSha: 'e'.repeat(40), observedLockRefHead: 'f'.repeat(40) }
+  };
+  lock.independentAuthorityProvenance = { ...core, bindingDigest: sha(canonical(core)) };
+  return lock;
+};
+
+test('verifies owner-connected intake provenance for terminal closure', async () => {
+  const lock = ownerAdmissionFixture();
+  const result = await verifyOwnerConnectedAuthorityProvenance(lock);
+  assert.equal(result.result, 'OWNER_CONNECTOR_PROVENANCE_VERIFIED');
+  assert.equal(result.authorityIdentity.operationId, lock.operationId);
+});
+
+test('rejects tampered owner-connected intake provenance for terminal closure', async () => {
+  const lock = ownerAdmissionFixture();
+  lock.independentAuthorityProvenance.source.commentId++;
+  await assert.rejects(
+    () => verifyOwnerConnectedAuthorityProvenance(lock),
+    error => error?.code === 'OWNER_CONNECTOR_PROVENANCE_BINDING_MISMATCH'
+  );
+});
 
 test('accepts the exact closed request schema', () => {
   assert.deepEqual(validateClosureRequest(valid()), valid());

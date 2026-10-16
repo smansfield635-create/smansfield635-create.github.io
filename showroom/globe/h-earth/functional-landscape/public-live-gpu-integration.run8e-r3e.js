@@ -1,5 +1,5 @@
 import { installHEarthRun8ER3D2PointerTouchIntake, resolveHEarthNavigationBoundaryFeedback } from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2735-geological-navigation-v1';
-import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2771-site-b-local-rock-repair-v2';
+import { createHEarthRun8ER3D3LiveGpuBinding } from '../diagnostic/run8e-r3d/live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2774-cavern-vegetation-repair-v1';
 import { createHEarthRepresentationTransitionSurface } from './representation-transition-surface.v1.js';
 
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID =
@@ -278,22 +278,23 @@ export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
   getReceipt: buildPublicReceipt,
   getSnapshot: () => buildPublicReceipt(),
   getIntakeReceipt: () => intake.getReceipt(),
-  getLiveGpuReceipt: () => binding.getReceipt(),
+  getLiveGpuReceipt: () => ({...binding.getReceipt(),repairQualification:window.H_EARTH_RENDERER_REPAIR_QUALIFICATION??null}),
   materializeNextVegetationBatch: () => binding.materializeNextVegetationBatch(),
   getVegetationResidency: () => binding.getVegetationResidency(),
   getRepresentationTransitionSurface: () => representationTransitionSurface
 });
 
 let readyPublished = false;
+let nearbyGroundReady = false;
 const publishExistingReadyFromFirstPresentedFrame = () => {
-  if (readyPublished || !firstFramePublished) return false;
+  if (readyPublished || !firstFramePublished || !nearbyGroundReady) return false;
   readyPublished = true;
 
   root.dataset.run8eReady = 'true';
   root.dataset.worldFirstFrameReady = 'true';
-  root.dataset.globalGroundcoverGpuResident = 'false';
-  root.dataset.globalGroundcoverFramePresented = 'false';
-  root.dataset.localGroundcoverDrawSubmitted = 'unknown';
+  root.dataset.globalGroundcoverGpuResident ??= 'false';
+  root.dataset.globalGroundcoverFramePresented ??= 'false';
+  root.dataset.localGroundcoverDrawSubmitted ??= 'unknown';
   root.dataset.run8ePublicRoute = 'true';
   root.dataset.r3e2PublicGpuComposition = 'true';
   root.dataset.publicRoute = 'true';
@@ -310,6 +311,13 @@ const publishExistingReadyFromFirstPresentedFrame = () => {
   };
   window.dispatchEvent(new CustomEvent('h-earth-run8e-ready', { detail: readyDetail }));
   emitDiagnosticStage('READY_EVENT_EMITTED', 'PASS', readyDetail);
+  if(new URLSearchParams(location.search).get('qualification')==='cavern-vegetation-repair-v1'){
+    import('../../../../h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs').then(({qualifyCavernVegetation})=>qualifyCavernVegetation({canvas,intake,binding,root})).catch(error=>{
+      window.H_EARTH_RENDERER_REPAIR_QUALIFICATION={result:'FAIL',message:error.message};
+      setTimeout(()=>{throw error;},0);
+    });
+  }
+
 
   if (window.parent === window) {
     emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');
@@ -325,9 +333,10 @@ const publishExistingReadyFromFirstPresentedFrame = () => {
   return true;
 };
 
-if (!publishExistingReadyFromFirstPresentedFrame()) {
-  throw new Error('R3E_FIRST_PRESENTED_FRAME_REQUIRED_BEFORE_READY');
-}
+if (!firstFramePublished) throw new Error('R3E_FIRST_PRESENTED_FRAME_REQUIRED_BEFORE_READY');
+root.dataset.worldFirstFrameReady = 'true';
+// Enter the world only after nearby fine cover has actually been submitted.
+// Distant vegetation residency continues independently.
 
 
 let vegetationFrameRequest = null;
@@ -350,6 +359,15 @@ function showVegetationStatus(text,force=false){
 function showVegetationPreparation(progress){
   if(vegetationLoadingFailed)return;
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:progress}));
+  if(progress.phase==='NEARBY_FINE_GRASS_FAILED')throw Error(progress.message);
+  if(progress.phase==='NEARBY_FINE_GRASS_GPU_READY'){
+    const draw=binding.presentWoodlandFineGrassPreviewFrame();
+    root.dataset.nearbyFineGrassReady='true';
+    root.dataset.nearbyFineGrassDrawSubmitted=draw.drawCallCount>0?'true':'false';
+    nearbyGroundReady=draw.submittedContacts>0||!progress.woodlandExpected;
+    publishExistingReadyFromFirstPresentedFrame();
+    return;
+  }
   if(progress.phase==='LOCAL_GROUNDCOVER_GPU_RESIDENT'){
     const draw=binding.presentLocalGroundcoverFrame();
     root.dataset.localGroundcoverGpuResident='true';
@@ -363,6 +381,7 @@ function showVegetationPreparation(progress){
   }
   if(progress.phase==='WOODLAND_FINE_GRASS_PRIORITY_GPU_READY'){
     const draw=binding.presentWoodlandFineGrassPreviewFrame();
+    if(draw.submittedContacts>0){nearbyGroundReady=true;publishExistingReadyFromFirstPresentedFrame();}
     root.dataset.woodlandGrassPreviewGpuResident='true';
     root.dataset.woodlandGrassPreviewDrawSubmitted=draw.drawCallCount>0?'true':'false';
     window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:{
@@ -419,7 +438,7 @@ function showVegetationPreparation(progress){
   if(vegetationPrepared)return;
   if(progress.oasisComplete&&!progress.worldTruthValidated){showVegetationStatus('Preparing vegetation locations · You can explore.',true);return;}
   const grass=progress.grassTuftCount??0,cattails=progress.cattailCount??0;
-  showVegetationStatus(grass||cattails?`Preparing plants · ${grass} grass tufts · ${cattails} cattails`:'Preparing vegetation · You can explore.');
+  showVegetationStatus(grass||cattails?`Preparing plants · ${grass} grass tufts · ${cattails} cattails`:'Preparing nearby vegetation…');
 }
 function vegetationComplete(){
   const residency=binding.getVegetationResidency();
@@ -508,7 +527,7 @@ window.addEventListener('pageshow', () => {
   scheduleVegetationResidency();
 });
 root.dataset.vegetationResidency = 'preparing';
-showVegetationStatus('Preparing vegetation · You can explore.',true);
+showVegetationStatus('Preparing nearby vegetation…',true);
 binding.prepareVegetationResidency({onProgress:showVegetationPreparation}).then(() => {
   vegetationPrepared = true;
   scheduleVegetationResidency();

@@ -1,0 +1,309 @@
+{
+  "schema": "H_EARTH_CAVERN_VEGETATION_REPAIR_SOURCE_EVIDENCE_v1",
+  "governingHead": "7d7cb67d342e62fcfb3ca6f0009164c90b20d2fc",
+  "admissions": [
+    {
+      "result": "ADMITTED_AND_LOCKED",
+      "acquisitionCommitSha": "6d7d873175327790d1736f9e656165a97c8b3c0b",
+      "readbackVerified": true,
+      "verification": {
+        "lockGeneration": 2774,
+        "operationId": "H_EARTH_CAVERN_VEGETATION_REPAIR_20261016_001",
+        "principal": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+        "provenance": {
+          "authorityIdentity": {
+            "governingHead": "7d7cb67d342e62fcfb3ca6f0009164c90b20d2fc",
+            "lockGeneration": 2774,
+            "lockScope": "H_EARTH:CAVERN_VEGETATION_PRESENTATION_REPAIR:20261016",
+            "operationId": "H_EARTH_CAVERN_VEGETATION_REPAIR_20261016_001",
+            "procedureLocatorDigest": "64c117c5d1df5b9e945db1cd9e629fe1003d4a5867bcbed885c96433d064b495",
+            "requestDigest": "a73dab12bc410a8132067da31ffcfd2f5734ec8afee808a5db9452801fffe88a",
+            "scopeHash": "6bbd49fad01a066c944e1ac8b3fb40b47176e1f39f720dfa078072d9a8cfc8aa"
+          },
+          "result": "OWNER_CONNECTOR_PROVENANCE_VERIFIED"
+        },
+        "result": "CANONICAL_LEDGER_COMMIT_VERIFIED"
+      }
+    },
+    {
+      "result": "ADMITTED_AND_LOCKED",
+      "acquisitionCommitSha": "f42c9ed0223d94f0ede2f019a53c1473395598f9",
+      "readbackVerified": true,
+      "verification": {
+        "lockGeneration": 2775,
+        "operationId": "H_EARTH_CAVERN_REPAIR_TEST_REVISION_ALIGNMENT_20261016_001",
+        "principal": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+        "provenance": {
+          "authorityIdentity": {
+            "governingHead": "7d7cb67d342e62fcfb3ca6f0009164c90b20d2fc",
+            "lockGeneration": 2775,
+            "lockScope": "H_EARTH:QUALIFICATION:CAVERN_REPAIR_CACHE_REVISION_ALIGNMENT:20261016",
+            "operationId": "H_EARTH_CAVERN_REPAIR_TEST_REVISION_ALIGNMENT_20261016_001",
+            "procedureLocatorDigest": "86901ece80bc592db370894f461ce364389334a14ecd3dc797b3c9bae705bb19",
+            "requestDigest": "bea41acdc8d09396f37025d0ccdc9337bcf62988b6e1933632f137a14e0790ef",
+            "scopeHash": "f2b285537bdf3cde109a8b64f33ee0fe988da9259584352076e1337a4d3342a4"
+          },
+          "result": "OWNER_CONNECTOR_PROVENANCE_VERIFIED"
+        },
+        "result": "CANONICAL_LEDGER_COMMIT_VERIFIED"
+      }
+    }
+  ],
+  "sourceChecks": {
+    "passed": 50,
+    "failed": 0,
+    "command": "node --test h-earth-3d/validation/h-earth.cavern-vegetation-repair.v1.test.mjs h-earth-3d/validation/h-earth.geological-formation-successor.test.mjs h-earth-3d/validation/h-earth.geological-portal-interface.test.mjs h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
+    "output": "\u2714 renderer-installed production bridge actually supports navigation through the cavern (11939.793378ms)\n\u2714 asymmetric renderer clip grounds every collar on refinement rather than obsolete base (753.944782ms)\n\u2714 all 108 late batch compositions retire old fan geometry and preserve other plants (12.884079ms)\n\u2714 visible root surface respects retired ground, exterior overlap, water and shell exclusions (1.163122ms)\n\u2714 nearby fine grass keeps grounded unique roots byte-identical after an A-B-A walk (1284.595282ms)\n\u2714 shared fine-grass selection excludes distant fixed roots while preserving nearby identities (9.386307ms)\n\u2714 true cave void has walkable floor and enclosing solid overhead rock (2.042468ms)\n\u2714 excavation lowers ground near portal and leaves distant base unchanged (0.218519ms)\n\u2714 downstream channel bed is strictly descending and does not claim water (0.317764ms)\n\u2714 cave is triangulated into physical roof, sidewalls without black plane or cap (7.673926ms)\n\u2714 replacement surface is indexed, bounded and immutable across repeated calls (17.709422ms)\n\u2714 invalid uphill source cannot become watercourse (0.869147ms)\n\u2714 formation evaluation explicitly excludes live collision and visual acceptance (0.396336ms)\n\u2714 exact spherical region/presentation inverse does not relocate site (0.707791ms)\n\u2714 retirement mask uses authored coordinates rather than spherical XZ (2.146327ms)\n\u2714 surface patch exterior perimeter exactly matches untouched terrain (6.517523ms)\n\u2714 upper mantle derives from same actual topographic sampler, not a fake mouth cap (44.803186ms)\n\u2714 32 grid cells retired in source terrain, replaced by 64 mantle triangles (28.169161ms)\n\u2714 replacement top grid has actual hole, not an overpainted black cave (23.226453ms)\n\u2714 mantle is crack-free to unchanged terrain on both flanks and behind (14.139549ms)\n\u2714 real front cliff faces bind original surface to cave ceiling, not decorative stand-alone arch (13.509466ms)\n\u2714 interior foot plane shares physical cavity occupancy and roof (0.48518ms)\n\u2714 wall and ceiling collision rejects displacement without lifting camera onto mountain roof (0.838245ms)\n\u2714 swept passage outside into interior succeeds, lateral wall sweep fails (4.045482ms)\n\u2714 sweep rejects excessive cliff step under independent grade ceiling (0.712755ms)\n\u2714 projection returns spherical GPU-ready positions and leaves local source untouched (16.310547ms)\n\u2714 B site uses B-local terrain patch, not an A-only region (15.488545ms)\n\u2714 invalid configuration fails closed and does not touch input geometry (0.657162ms)\n\u2714 rear valley sight line crosses real rock aperture into gallery; roof blocks downward sky ray (71.714142ms)\n\u2714 exact Gen2666 compressed source and spherical terrain correspond (809.681818ms)\n\u2714 real terrain D8 survey supplies a descending scenic river network without a hydrology claim (2.823778ms)\n\u2714 original terrain indices are retired by degeneracy only within declared mask (162.928615ms)\n\u2714 four real manifold elements are projected to shared spherical world (0.496118ms)\n\u2714 uninstalled physical cave is invisible to normal Gen324 navigation (0.331698ms)\n\u2714 active interior uses cave floor/roof, wall collision correctly rejects (0.468521ms)\n\u2714 weathered portal relief is shared by the visible shell and walk clearance (0.287486ms)\n\u2714 2m replacement terrain has a true aperture and cliff with upper mantle (3.76034ms)\n\u2714 runtime renderer/nav source contains actual bridge calls and no Gen2730 arch draw (1.538703ms)\n\u2714 real Gen324 locomotion enters roofed cavern through 15 accepted actions (17.832417ms)\n\u2714 original coastal navigation remains original and never reports cave support (7.124926ms)\n\u2714 cavern arrival copy is query-bound and coast copy remains the default (0.662358ms)\n\u2714 every projected cavern and patch vertex has original-world albedo contact (25.283235ms)\n\u2714 excavated channel shows geologically grounded material exposure while exterior rim stays intact (1.034162ms)\n\u2714 cavern portal relief and rock strata remain irregular without periodic tunnel bands (0.970541ms)\n\u2714 bounded rear-cavern arrival query targets the real existing waypoint without changing coast or four trees (0.291937ms)\n\u2714 weathered face rejoins the terrain and aperture plane at every perimeter vertex (0.4859ms)\n\u2714 active Site B shader treatment is bounded and cannot restore the cyan stain (1.061641ms)\n\u2714 kernel boundary is the shared rendered, occupied and walkable cavity (4.926773ms)\n\u2714 recessed exterior face has outward normals and actual displaced solid correspondence (148.755524ms)\n\u2714 retained rock triangles block interior sunlight while the real entrance stays open (4.119253ms)\n\u2139 tests 50\n\u2139 suites 0\n\u2139 pass 50\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 14194.811501\n"
+  },
+  "actualGeologyContactAudit": {
+    "schema": "H_EARTH_ACTUAL_GEOLOGY_ROOT_CONTACT_PROOF_v1",
+    "sourceBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "sourceWorldBeforeSha256": "9d325ee2a85be8c3b8102396810545281e825af0cd069ce72c485dfd6eb22935",
+    "sourceWorldAfterSha256": "9d325ee2a85be8c3b8102396810545281e825af0cd069ce72c485dfd6eb22935",
+    "sourceWorldUnchanged": true,
+    "scope": "ALL_GLOBAL_LATTICE_AND_ECOLOGY_COLLARS_WITHIN_ACTUAL_PROJECTED_GEOLOGY_BOUNDS; COMPLETE_INTERSECTING_TILES_PLUS_ROOT_APRON; NEARBY_INITIAL_8M_CORE_12M_OUTER",
+    "geometry": "ACTUAL_PROJECTED_FLOAT32_INDEXED_EXTERIOR_AND_WATER_MESHES",
+    "regionBox": [
+      -120.0025863647461,
+      -376.0085754394531,
+      96.01061248779297,
+      -224.0048370361328
+    ],
+    "generationTileBox": [
+      -128,
+      -384,
+      128,
+      -192
+    ],
+    "eligibleEcologyTilesWorldWide": 90,
+    "globalEcologyUpperBound": 2160,
+    "globalEcologyCap": 4301,
+    "independentExteriorTriangles": 16416,
+    "independentWaterTriangles": 1116,
+    "global": {
+      "roots": 43530,
+      "rootsWithExteriorIntersection": 43520,
+      "retainedVisibleBaseBoundaryRoots": 10,
+      "missingVisibleSupport": 0,
+      "floatingOver1cm": 0,
+      "buriedOver1cm": 0,
+      "waterOverlap": 0,
+      "insideCavernVoid": 0,
+      "maxAbsoluteContactError": 1.8721416665812285e-06,
+      "maxFloat": 1.8721416665812285e-06,
+      "maxBurial": 1.8192713753251155e-06,
+      "boundaryExamples": [
+        {
+          "x": -73.5335693359375,
+          "z": -376.0079650878906,
+          "y": 4.4750800132751465,
+          "record": 313,
+          "collar": 0,
+          "retainedBaseY": 4.4750801900122115,
+          "error": -1.7673706498300135e-07,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        },
+        {
+          "x": -43.66082763671875,
+          "z": -376.00689697265625,
+          "y": 5.929476261138916,
+          "record": 425,
+          "collar": 11,
+          "retainedBaseY": 5.929476050098924,
+          "error": 2.1103999170435372e-07,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        },
+        {
+          "x": -36.25937271118164,
+          "z": -376.00714111328125,
+          "y": 6.2655134201049805,
+          "record": 455,
+          "collar": 4,
+          "retainedBaseY": 6.26551324290096,
+          "error": 1.772040203462666e-07,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        },
+        {
+          "x": -36.25937271118164,
+          "z": -376.00714111328125,
+          "y": 6.2655134201049805,
+          "record": 455,
+          "collar": 10,
+          "retainedBaseY": 6.26551324290096,
+          "error": 1.772040203462666e-07,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        },
+        {
+          "x": 96.00773620605469,
+          "z": -336.4198303222656,
+          "y": 6.936974048614502,
+          "record": 2228,
+          "collar": 5,
+          "retainedBaseY": 6.9369740002367,
+          "error": 4.837780220867671e-08,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        },
+        {
+          "x": 96.00540924072266,
+          "z": -333.28985595703125,
+          "y": 6.988971710205078,
+          "record": 2230,
+          "collar": 3,
+          "retainedBaseY": 6.988971493196835,
+          "error": 2.1700824337500535e-07,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        },
+        {
+          "x": 96.00902557373047,
+          "z": -326.082275390625,
+          "y": 7.120605945587158,
+          "record": 2236,
+          "collar": 3,
+          "retainedBaseY": 7.120605754579143,
+          "error": 1.910080156264371e-07,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        },
+        {
+          "x": 96.00192260742188,
+          "z": -295.7700500488281,
+          "y": 7.807656288146973,
+          "record": 3527,
+          "collar": 1,
+          "retainedBaseY": 7.807656190117393,
+          "error": 9.802958000904027e-08,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        },
+        {
+          "x": 96.00192260742188,
+          "z": -295.7700500488281,
+          "y": 7.807656288146973,
+          "record": 3527,
+          "collar": 7,
+          "retainedBaseY": 7.807656190117393,
+          "error": 9.802958000904027e-08,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        },
+        {
+          "x": 96.01034545898438,
+          "z": -296.0585021972656,
+          "y": 7.792619705200195,
+          "record": 3527,
+          "collar": 11,
+          "retainedBaseY": 7.792619873240138,
+          "error": -1.6803994284941837e-07,
+          "reason": "PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT"
+        }
+      ],
+      "failures": [],
+      "generatedRegionalAndApronInstances": 4738,
+      "buildReceipt": {
+        "schema": "H_EARTH_GLOBAL_GROUND_COVER_v1",
+        "instanceCount": 4738,
+        "primaryFanCount": 3676,
+        "secondaryFanCount": 735,
+        "bushyClumpCount": 735,
+        "ecologicalLowCount": 230,
+        "ecologicalMidCount": 97,
+        "ecologicalDuneCount": 0,
+        "ecologicalPilotCount": 327,
+        "ecologicalCandidateCount": 5750,
+        "mountainInstanceCount": 63,
+        "candidateCount": 106568,
+        "rootSampleCount": 47463,
+        "materialSampleCount": 56835,
+        "recordBytes": 379040,
+        "templateGpuBytes": 1856,
+        "totalGpuBytes": 380896,
+        "maximumInstances": 65536,
+        "baseTerrainTriangleCount": 36126,
+        "refinementTriangleCount": 0,
+        "elapsedMilliseconds": 9008.794194,
+        "yieldCount": 749,
+        "rejections": {
+          "BOUNDARY_COLLAR": 1304,
+          "BUSH_HABITAT": 1,
+          "BUSH_ROOT_COLLAR": 2,
+          "BUSH_SURFACE_OR_WATER": 1,
+          "DENSITY": 1396,
+          "HABITAT": 2294,
+          "PRESERVED_OR_RESERVED": 511,
+          "RENDERED_WATER": 244,
+          "ROOT_COLLAR": 46,
+          "SURFACE_MISSING": 97097
+        },
+        "canonicalPopulationChanged": false,
+        "cameraIndependent": true,
+        "rootEncoding": "TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS",
+        "sparseSoilPresentationRule": "SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35",
+        "bushyPocketRule": "BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED"
+      }
+    },
+    "nearby": {
+      "roots": 1364,
+      "rootsWithExteriorIntersection": 1364,
+      "retainedVisibleBaseBoundaryRoots": 0,
+      "missingVisibleSupport": 0,
+      "floatingOver1cm": 0,
+      "buriedOver1cm": 0,
+      "waterOverlap": 0,
+      "insideCavernVoid": 0,
+      "maxAbsoluteContactError": 4.76356534662159e-07,
+      "maxFloat": 4.76356534662159e-07,
+      "maxBurial": 4.749797994918481e-07,
+      "boundaryExamples": [],
+      "failures": [],
+      "buildMilliseconds": 784.6198640000002,
+      "buildReceipt": {
+        "schema": "H_EARTH_NEARBY_FINE_GRASS_CACHE_v1",
+        "contactCount": 1364,
+        "tileCount": 16,
+        "builtTiles": 45,
+        "reusedTiles": 0,
+        "cachedTiles": 45,
+        "cachedRoots": 5512,
+        "maximumRoots": 65536,
+        "centerX": 42,
+        "centerZ": -298,
+        "spacing": 0.22,
+        "coreRadiusMeters": 8,
+        "outerRadiusMeters": 12,
+        "elapsedMilliseconds": 541.2328779999989,
+        "rootEncoding": "ACTUAL_FLOAT32_VISIBLE_TRIANGLE_CONTACTS",
+        "originalRecordsChanged": false,
+        "terrainChanged": false,
+        "approvedWoodlandOwnerPreserved": true
+      }
+    },
+    "totalMilliseconds": 11682.803724,
+    "passed": true
+  },
+  "auditScript": "import fs from 'node:fs';\nimport {gunzipSync} from 'node:zlib';\nimport {createHash} from 'node:crypto';\nimport {pathToFileURL} from 'node:url';\nconst root=process.env.H_EARTH_REPO_ROOT||'/workspace/scratch/50f4948b4973/repo';\nconst imp=p=>import(pathToFileURL(root+'/'+p));\nconst hash=s=>createHash('sha256').update(s).digest('hex');\nconst start=performance.now(),canonicalBytes=fs.readFileSync(root+'/showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');\nconst pkg=JSON.parse(gunzipSync(canonicalBytes)).canonical;\nconst before=hash(JSON.stringify(pkg));\nconst bridge=await imp('showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js');\nconst {unprojectPlanetVertex}=await imp('h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs');\nconst {buildVegetationVisibleSurface}=await imp('showroom/globe/h-earth/render/vegetation-visible-surface.v1.js');\nconst {buildHEarthGlobalGroundCover,transformHEarthGroundCoverRoot}=await imp('showroom/globe/h-earth/render/landscape-groundcover.global-v1.js');\nconst {createNearbyFineGrassCache}=await imp('showroom/globe/h-earth/render/woodland-fine-grass.v1.js');\nconst model=bridge.constructGeologicalRuntimeBridge(pkg);\nconsole.log('ACTUAL_MODEL_READY',Math.round(performance.now()-start));\nconst visible=buildVegetationVisibleSurface(pkg,{geology:model});\n// Independent diagnostic index: direct barycentric intersection of the actual\n// projected indexed upload geometry, not the product surface sampler.\nfunction rays(parts){\n const bins=new Map(),size=8;let triangles=0;\n for(const {mesh} of parts){const p=mesh.positions,ind=mesh.indices;\n  for(let k=0;k<ind.length;k+=3){\n   const a=ind[k]*3,b=ind[k+1]*3,c=ind[k+2]*3;\n   const det=(p[b+2]-p[c+2])*(p[a]-p[c])+(p[c]-p[b])*(p[a+2]-p[c+2]);\n   if(Math.abs(det)<1e-12)continue;\n   const xmin=Math.min(p[a],p[b],p[c]),xmax=Math.max(p[a],p[b],p[c]),zmin=Math.min(p[a+2],p[b+2],p[c+2]),zmax=Math.max(p[a+2],p[b+2],p[c+2]);\n   const t={p,a,b,c,det};triangles++;\n   for(let iz=Math.floor(zmin/size);iz<=Math.floor(zmax/size);iz++)for(let ix=Math.floor(xmin/size);ix<=Math.floor(xmax/size);ix++){\n    const key=ix+':'+iz;if(!bins.has(key))bins.set(key,[]);bins.get(key).push(t);\n   }\n  }\n }\n return {triangles,at(x,z){let top=null;\n  for(const {p,a,b,c,det} of bins.get(Math.floor(x/size)+':'+Math.floor(z/size))??[]){\n   const u=((p[b+2]-p[c+2])*(x-p[c])+(p[c]-p[b])*(z-p[c+2]))/det,v=((p[c+2]-p[a+2])*(x-p[c])+(p[a]-p[c])*(z-p[c+2]))/det,w=1-u-v;\n   if(Math.min(u,v,w)<-1e-7)continue;const y=u*p[a+1]+v*p[b+1]+w*p[c+1];if(top===null||y>top)top=y;\n  }return top;\n }};\n}\nconst exterior=rays(model.meshes.filter(p=>['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN'].includes(p.role)));\nconst water=rays(model.meshes.filter(p=>['FRESHWATER_RIVER','OASIS_WATER'].includes(p.role)));\nconst retired=new Set(model.retirement.triangleOffsets),retainedTerrainIndices=[];\nfor(const span of pkg.primitiveSpans.filter(s=>s.role==='TERRAIN'))for(let i=span.indexStart;i<span.indexStart+span.indexCount;i+=3)if(!retired.has(i))retainedTerrainIndices.push(...pkg.buffers.indices.slice(i,i+3));\nconst retainedBase=rays([{mesh:{positions:Float32Array.from(pkg.buffers.positions),indices:Uint32Array.from(retainedTerrainIndices)}}]);\nconst p=model.meshes.filter(p=>['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN'].includes(p.role)).flatMap(p=>Array.from(p.mesh.positions));\nconst box=[Infinity,Infinity,-Infinity,-Infinity];for(let i=0;i<p.length;i+=3){box[0]=Math.min(box[0],p[i]);box[1]=Math.min(box[1],p[i+2]);box[2]=Math.max(box[2],p[i]);box[3]=Math.max(box[3],p[i+2]);}\nconst inBox=(x,z)=>x>=box[0]&&x<=box[2]&&z>=box[1]&&z<=box[3];\n// Construct complete tiles around the geology bounds, including root collars\n// crossing their centers' tile edges. This preserves per-tile ecology ranking.\nconst tileBox=[Math.floor((box[0]-2)/32)*32,Math.floor((box[1]-2)/32)*32,Math.ceil((box[2]+2)/32)*32,Math.ceil((box[3]+2)/32)*32];\nconst scoped={...visible,sample:(x,z)=>x>=tileBox[0]-2&&x<=tileBox[2]+2&&z>=tileBox[1]-2&&z<=tileBox[3]+2?visible.sample(x,z):null};\n// The global ecological cap cannot affect selection: count every eligible tile\n// in all three unchanged ecological windows, then bound each by its 24 records.\nconst ecoWindows=[[-213,-296,-69,-156],[-90,-168,90,-24],[-127,-394,37,-258]];\nlet eligibleEcoTiles=0;for(let iz=0;iz<27;iz++)for(let ix=0;ix<24;ix++){const x=-384+ix*32,z=-736+iz*32;if(ecoWindows.some(w=>x<=w[2]&&x+32>=w[0]&&z<=w[3]&&z+32>=w[1]))eligibleEcoTiles++;}\nif(eligibleEcoTiles*24>=4301)throw Error('GLOBAL_ECOLOGY_CAP_SELECTION_INDEPENDENCE_UNPROVEN');\nconst cover=await buildHEarthGlobalGroundCover(pkg,{visibleSurface:scoped,compositionEnabled:true});\nconsole.log('ACTUAL_GLOBAL_GEOLOGY_READY',cover.receipt.instanceCount,Math.round(performance.now()-start));\nfunction metrics(points){\n const output={roots:points.length,rootsWithExteriorIntersection:0,retainedVisibleBaseBoundaryRoots:0,missingVisibleSupport:0,floatingOver1cm:0,buriedOver1cm:0,waterOverlap:0,insideCavernVoid:0,maxAbsoluteContactError:0,maxFloat:0,maxBurial:0,boundaryExamples:[],failures:[]};\n for(const q of points){const exteriorY=exterior.at(q.x,q.z),w=water.at(q.x,q.z);let y=exteriorY;\n  if(y===null){y=retainedBase.at(q.x,q.z);if(y===null){output.missingVisibleSupport++;if(output.failures.length<10)output.failures.push({...q,reason:'NO_VISIBLE_SUPPORT'});continue;}\n   output.retainedVisibleBaseBoundaryRoots++;if(output.boundaryExamples.length<10)output.boundaryExamples.push({...q,retainedBaseY:y,error:q.y-y,reason:'PROJECTED_GEOLOGY_BOUNDS_BOX_EXCEEDS_ACTUAL_CURVED_EXTERIOR_FOOTPRINT'});\n  }else output.rootsWithExteriorIntersection++;\n  const error=q.y-y;output.maxAbsoluteContactError=Math.max(output.maxAbsoluteContactError,Math.abs(error));output.maxFloat=Math.max(output.maxFloat,error);output.maxBurial=Math.max(output.maxBurial,-error);\n  if(error>.01)output.floatingOver1cm++;if(error<-.01)output.buriedOver1cm++;\n  if(w!==null&&q.y<=w+.009)output.waterOverlap++;\n  const a=unprojectPlanetVertex(q.x,q.y,q.z);if(model.formation.insideVoid(a.x,a.y,a.z))output.insideCavernVoid++;\n  if((Math.abs(error)>.01||(w!==null&&q.y<=w+.009))&&output.failures.length<10)output.failures.push({...q,exteriorY:y,waterY:w,error});\n }return output;\n}\nconst globalPoints=[];\nfor(let i=0;i<cover.records.length;i+=20){const r=cover.records.subarray(i,i+20);\n for(let collar=0;collar<12;collar++){const xz=transformHEarthGroundCoverRoot(cover.template,collar,r[12],r[13],r[14],r[15]);if(inBox(xz.x,xz.z))globalPoints.push({...xz,y:r[collar],record:i/20,collar});}\n}\nconst global=metrics(globalPoints),nearbyCache=createNearbyFineGrassCache(pkg,{visibleSurface:visible});\nconst nearStart=performance.now(),nearby=await nearbyCache.update({x:40,z:-300},{coreRadiusMeters:8,outerRadiusMeters:12});\nconst nearPoints=nearby.tiles.flatMap(t=>t.roots),near=metrics(nearPoints);\nconst after=hash(JSON.stringify(pkg));\nconst report={schema:'H_EARTH_ACTUAL_GEOLOGY_ROOT_CONTACT_PROOF_v1',sourceBinarySha256:hash(canonicalBytes),sourceWorldBeforeSha256:before,sourceWorldAfterSha256:after,sourceWorldUnchanged:before===after,scope:'ALL_GLOBAL_LATTICE_AND_ECOLOGY_COLLARS_WITHIN_ACTUAL_PROJECTED_GEOLOGY_BOUNDS; COMPLETE_INTERSECTING_TILES_PLUS_ROOT_APRON; NEARBY_INITIAL_8M_CORE_12M_OUTER',geometry:'ACTUAL_PROJECTED_FLOAT32_INDEXED_EXTERIOR_AND_WATER_MESHES',regionBox:box,generationTileBox:tileBox,eligibleEcologyTilesWorldWide:eligibleEcoTiles,globalEcologyUpperBound:eligibleEcoTiles*24,globalEcologyCap:4301,independentExteriorTriangles:exterior.triangles,independentWaterTriangles:water.triangles,global:{...global,generatedRegionalAndApronInstances:cover.receipt.instanceCount,buildReceipt:cover.receipt},nearby:{...near,buildMilliseconds:performance.now()-nearStart,buildReceipt:nearby.receipt},totalMilliseconds:performance.now()-start};\nreport.passed=report.sourceWorldUnchanged&&[global,near].every(r=>r.roots>0&&r.missingVisibleSupport===0&&r.floatingOver1cm===0&&r.buriedOver1cm===0&&r.waterOverlap===0&&r.insideCavernVoid===0);\nfs.writeFileSync('/tmp/h-earth-investigation/repaired-actual-root-proof.json',JSON.stringify(report,null,2));\nconsole.log(JSON.stringify(report,null,2));\nif(!report.passed)process.exitCode=1;\n",
+  "auditReuse": "Existing actual-geology root proof retained; recovered source changes after that audit affect cache scheduling, prepared selection, and distant-root selection only; support geometry and root contact generation unchanged.",
+  "files": {
+    "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs": "75d8cb08cf3808565a3e37be0d57fd7cb7e59fb19b0d4f38e2db12d894c753e6",
+    "h-earth-3d/validation/h-earth.global-groundcover.v1.mjs": "82933e8201a5ede8adfabed33ef5a6fa11adf495f83860a6f966007f773af9c5",
+    "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs": "dae6ba07a51a323ceb70e69c0ef48c7f963041ab1a31b7a62631d3bc427ade23",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "a0f4aee64d1f7c88a3251f4c7e7b5916b4c03898602ed2fb9f056a2cb7bac275",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "8f5a8f27c2b1e61edd65cea58b73d0ead5a206846febe85d2a4e318d599f18ea",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "3bf3f68f4b7ae906298b9de1c7513adc8c8f80c9bd6076567cd4a8829f7b0465",
+    "showroom/globe/h-earth/index.html": "e27a6338d73c9e83dfa956ac7493a9ae14e5199f2f2ba2eeaccc782d97820081",
+    "showroom/globe/h-earth/render/geometry-landscape-cover.js": "1b3ad42c42170399b7d4850171743d9db009ebb8a0e3bab779b721a4ef374adc",
+    "showroom/globe/h-earth/render/grass-lowland-trial.js": "b0b91165d6e5804c390ccae6121b58b02780b4208f93ba6b07d3e17675151e19",
+    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "da355053a0df673f617ca56eeff29ea76f736c16a85a234379edabcd9de9a699",
+    "showroom/globe/h-earth/render/live-render-package.run8e-r2.js": "e57371ecac361e1a4d4efc02576d167dd3f1c5b5b0cc4566040263357543476f",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "eb8e45228f3df7a5ffa3dbf73b4772644c42b21e1ede15ec3e142a68597d4bfe",
+    "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "7b4aecfdd06a8857a341a4b894dc02c297c44e9b22b82806eb559f7da4eaf64e",
+    "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs": "d97aa9b88caa01d48b8d8e39a52db7c4c138574db4b119e8c1b38f05f482bd78",
+    "h-earth-3d/validation/h-earth.cavern-vegetation-repair.v1.test.mjs": "a4a3072b1ee0c60a934e13c9330c85d637604140ac4df006304bc7457113f223",
+    "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js": "6d42d006ade9ea3ce8579204ccc43cd718e83fda49ed7e51300acbd173c2a861"
+  },
+  "independentReview": {
+    "north": "No startup deadlock or preservation defect found",
+    "east": "Bounds and support qualified; found and corrected obsolete-work cancellation, synchronous merged-cache preparation, and distant persistent-root selection",
+    "west": "Production import, 108 batch retirement, preserved world and root audit reviewed; integrated GPU/browser evidence pending"
+  },
+  "browserRunStarted": false,
+  "physicalDeviceAcceptance": false,
+  "mergeAuthorized": false,
+  "publicationAuthorized": false
+}

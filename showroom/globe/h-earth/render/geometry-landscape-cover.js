@@ -91,6 +91,8 @@ export function buildHEarthLandscapeCoverBatch(pkg,batchIndex,{plan=null}={}){
   return Object.freeze({id:P.id,batchIndex,primitives:Object.freeze(primitives),rejections:Object.freeze(rejections),tuftCount:primitives.length,triangleCount:primitives.length*24,vertexCount:primitives.length*28,canonicalPopulationChanged:false});
 }
 export function applyHEarthLandscapeCoverBatch(batch,pkg,batchIndex){
-  const added=buildHEarthLandscapeCoverBatch(pkg,batchIndex);
-  return Object.freeze({...batch,primitives:Object.freeze([...batch.primitives,...added.primitives]),landscapeIdentity:Object.freeze({id:P.id,addedTuftCount:added.tuftCount,addedTriangleCount:added.triangleCount,rootRejectionCount:added.rejections.length,canonicalPopulationChanged:false})});
+  // These four-blade presentation fans duplicated the terrain-rooted fine
+  // cover and were appended after the legacy-grass filter. Keep canonical
+  // batch records and intended foliage; no late broad fan may enter residency.
+  return Object.freeze({...batch,landscapeIdentity:Object.freeze({id:P.id,addedTuftCount:0,addedTriangleCount:0,rootRejectionCount:0,legacyFanPresentationRetired:true,canonicalPopulationChanged:false})});
 }

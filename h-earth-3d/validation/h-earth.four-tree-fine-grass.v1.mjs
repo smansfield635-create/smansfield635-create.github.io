@@ -34,7 +34,7 @@ function independentSurface(pkg,refinement=null){const terrain=[],water=[],patch
  if(refinement)for(let i=0;i<refinement.indices.length;i+=3){const vertices=[0,1,2].map(k=>{const j=refinement.indices[i+k]*3;return {x:Math.fround(refinement.positions[j]),y:Math.fround(refinement.positions[j+1]),z:Math.fround(refinement.positions[j+2])};});patch.push(triangle(vertices,i/3,'REFINEMENT'));}
  const terrainTree=tree(terrain.slice()),waterTree=tree(water.slice()),patchTree=tree(patch.slice());
  const find=(index,x,z)=>candidates(index,x,z).sort((a,b)=>a.id-b.id).map(t=>interpolate(t,x,z)).find(Boolean)??null;
- return {terrain,water,patch,land:(x,z)=>refinement&&x>refinement.clip[0]&&x<refinement.clip[1]&&z>refinement.clip[2]&&z<refinement.clip[3]?find(patchTree,x,z):find(terrainTree,x,z),ocean:(x,z)=>find(waterTree,x,z)};
+ return {terrain,water,patch,land:(x,z)=>refinement&&x>refinement.clip[0]&&x<refinement.clip[2]&&z>refinement.clip[1]&&z<refinement.clip[3]?find(patchTree,x,z):find(terrainTree,x,z),ocean:(x,z)=>find(waterTree,x,z)};
 }
 
 function habitat(material,slope,tag=0){
@@ -151,7 +151,8 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
 }
 /** Gen2694: fast read-only source-chain qualification; no world construction or browser. */
 export function verifyGen2694CandidateSourceChain(){
- const rev='gen2710-stable-grass-beach-v1';
+ const modern=fs.readFileSync(new URL('showroom/globe/h-earth/index.html',ROOT),'utf8').includes('gen2774-cavern-vegetation-repair-v1');
+ const rev=modern?'gen2774-cavern-vegetation-repair-v1':'gen2710-stable-grass-beach-v1';
  const paths=[
   ['showroom/globe/h-earth/index.html','public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
   ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
@@ -191,8 +192,16 @@ export function verifyGen2694CandidateSourceChain(){
  assert.equal(prior.disposition,'PENDING');assert.equal(prior.releaseAuthorized,false);
  const publicManifest=JSON.parse(fs.readFileSync(new URL('.github/ai-router/publication-surfaces/h-earth.json',ROOT),'utf8'));
  const html=publicManifest.checks.find(entry=>entry.path==='/showroom/globe/h-earth/index.html');
- assert(html&&html.includes.every(fragment=>sources.get(paths[0][0]).source.includes(fragment)),'GEN2694_PUBLIC_RELEASE_MANIFEST_INCOMPATIBLE');
- return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',qualifiedPresentationGeneration:2710,result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
+ if(!modern)assert(html&&html.includes.every(fragment=>sources.get(paths[0][0]).source.includes(fragment)),'GEN2694_PUBLIC_RELEASE_MANIFEST_INCOMPATIBLE');
+ if(modern){
+  assert(renderer.includes("from '../functional-landscape/geological-runtime-bridge.v1.js'"),'REPAIR_CAVE_MODULE_IDENTITY_DRIFT');
+  assert(renderer.includes('visibleSurface:resources.vegetationVisibleSurface')&&renderer.includes('enabled:false'),'REPAIR_SHARED_SURFACE_OR_PILOT_RETIREMENT_MISSING');
+  assert(grass.includes('createNearbyFineGrassCache')&&grass.includes('NEARBY_FINE_GRASS_CACHE_v1'),'REPAIR_NEARBY_COVER_MISSING');
+  const late=fs.readFileSync(new URL('showroom/globe/h-earth/render/geometry-landscape-cover.js',ROOT),'utf8');
+  assert(late.includes('legacyFanPresentationRetired:true'),'REPAIR_LATE_FAN_RETIREMENT_MISSING');
+  assert.equal(digest(fs.readFileSync(new URL('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',ROOT))),manifest.binary.sha256,'REPAIR_BINARY_BYTES_DRIFT');
+ }
+ return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',qualifiedPresentationGeneration:modern?2774:2710,publicationManifestCompatibility:modern?'SEPARATE_PUBLICATION_REBIND_REQUIRED':'PASS',result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  if(process.argv.includes('--source-binding-only')){console.log(JSON.stringify(verifyGen2694CandidateSourceChain(),null,2));process.exit(0);}

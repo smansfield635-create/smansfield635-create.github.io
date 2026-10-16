@@ -4,8 +4,8 @@ import {
   evaluateHEarthRun8ER2Control
 } from '../../../../h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js';
 import { buildHEarthRun8ENeutralPackage, getHEarthGen2515VegetationWorldTruthPlan, constructHEarthGen2515VegetationPresentationBatch,constructHEarthGen2515VegetationPresentationBatchAsync, prepareHEarthGen2515VegetationWorldTruthPlan, isHEarthGen2515VegetationWorldTruthPrepared } from './run8e-successor-environment.js?cb=meadow-distribution-20261006';
-import { landscapeSoilColor, applyHEarthLandscapeCoverBatch } from './geometry-landscape-cover.js';
-import { applyHEarthLowlandGrassTrialBatch } from './grass-lowland-trial.js?cb=meadow-distribution-20261006';
+import { landscapeSoilColor, applyHEarthLandscapeCoverBatch } from './geometry-landscape-cover.js?rev=gen2774-cavern-vegetation-repair-v1';
+import { applyHEarthLowlandGrassTrialBatch } from './grass-lowland-trial.js?cb=meadow-distribution-20261006&rev=gen2774-cavern-vegetation-repair-v1';
 import { admitHEarthPrimitiveBatch } from './geometry-kernel.js';
 import {
   H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,

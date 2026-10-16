@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-16T00:59:12Z",
+  "generatedAt": "2026-10-16T01:38:19Z",
   "window": {
-    "start": "2026-09-16T00:59:12Z",
-    "end": "2026-10-16T00:59:12Z"
+    "start": "2026-09-16T01:38:19Z",
+    "end": "2026-10-16T01:38:19Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 942,
-        "visits": 662
+        "pageLoads": 931,
+        "visits": 651
       },
       {
         "value": "/analytics/",
-        "pageLoads": 541,
-        "visits": 421
+        "pageLoads": 547,
+        "visits": 427
       },
       {
         "value": "/mirror-manor-preview/",
@@ -24,8 +24,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 460,
-        "visits": 435
+        "pageLoads": 462,
+        "visits": 437
       },
       {
         "value": "/products/education/",
@@ -104,7 +104,7 @@
       },
       {
         "value": "/meet-sean-mansfield/",
-        "pageLoads": 33,
+        "pageLoads": 32,
         "visits": 22
       },
       {
@@ -143,16 +143,6 @@
         "visits": 23
       },
       {
-        "value": "/nine-summits-of-love/",
-        "pageLoads": 23,
-        "visits": 22
-      },
-      {
-        "value": "/about-this-underdog/",
-        "pageLoads": 22,
-        "visits": 1
-      },
-      {
         "value": "/release-proof/",
         "pageLoads": 22,
         "visits": 22
@@ -183,9 +173,19 @@
         "visits": 0
       },
       {
+        "value": "/about-this-underdog/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
         "value": "/instruments/operations-chamber/",
         "pageLoads": 13,
         "visits": 13
+      },
+      {
+        "value": "/nine-summits-of-love/",
+        "pageLoads": 12,
+        "visits": 12
       },
       {
         "value": "/showroom/globe/hearth/diagnostic/",
@@ -256,12 +256,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2817,
-        "visits": 2817
+        "pageLoads": 2804,
+        "visits": 2804
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1421,
+        "pageLoads": 1418,
         "visits": 0
       },
       {
@@ -271,8 +271,8 @@
       },
       {
         "value": "bing.com",
-        "pageLoads": 41,
-        "visits": 41
+        "pageLoads": 40,
+        "visits": 40
       },
       {
         "value": "m.facebook.com",
@@ -288,8 +288,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 4412,
-        "visits": 2995
+        "pageLoads": 4409,
+        "visits": 2991
       },
       {
         "value": "BR",
@@ -297,9 +297,9 @@
         "visits": 20
       },
       {
-        "value": "CN",
-        "pageLoads": 10,
-        "visits": 10
+        "value": "CA",
+        "pageLoads": 14,
+        "visits": 14
       },
       {
         "value": "IN",
@@ -307,7 +307,7 @@
         "visits": 10
       },
       {
-        "value": "CA",
+        "value": "CN",
         "pageLoads": 10,
         "visits": 10
       },
@@ -315,6 +315,11 @@
         "value": "MX",
         "pageLoads": 2,
         "visits": 2
+      },
+      {
+        "value": "CL",
+        "pageLoads": 1,
+        "visits": 1
       },
       {
         "value": "JP",
@@ -330,8 +335,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2228,
-        "visits": 2187
+        "pageLoads": 2218,
+        "visits": 2177
       },
       {
         "value": "tablet",
@@ -347,8 +352,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 1788,
-        "visits": 1788
+        "pageLoads": 1778,
+        "visits": 1778
       },
       {
         "value": "Chrome",
@@ -399,8 +404,8 @@
       },
       {
         "value": "Linux",
-        "pageLoads": 1941,
-        "visits": 1941
+        "pageLoads": 1931,
+        "visits": 1931
       },
       {
         "value": "Windows",
@@ -431,15 +436,15 @@
       },
       {
         "value": "1",
-        "pageLoads": 1788,
-        "visits": 1788
+        "pageLoads": 1778,
+        "visits": 1778
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3373,
-        "visits": 2799
+        "pageLoads": 3363,
+        "visits": 2789
       },
       {
         "value": "reload",
@@ -465,8 +470,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 3294,
-        "visits": 2709
+        "pageLoads": 3284,
+        "visits": 2699
       },
       {
         "value": "cache",
@@ -482,15 +487,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 4478,
-        "visits": 3060
+        "pageLoads": 4468,
+        "visits": 3050
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 4478,
-        "visits": 3060
+        "pageLoads": 4468,
+        "visits": 3050
       }
     ]
   }

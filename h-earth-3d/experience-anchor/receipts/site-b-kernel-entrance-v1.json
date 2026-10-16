@@ -17,11 +17,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
-      "sha256": "e23dbce7cdb721801d294b97070f7cfa105adcfba596d691f4083ede08715231"
+      "sha256": "37d5584d1a78710164b341fe19a95ff892a8a4375f1c9af22a0e6d0b7caea831"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "a2b7661621fa739aa9cd373bd4bdf58b4561a61f5de1b767070ef52a8e73189b"
+      "sha256": "155dde08a4808d50e79c621be8f48abd9397289b1ca150b48eca7e5e3949a986"
     },
     {
       "path": "h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
-      "sha256": "d24fa3737ae4d2e9f59336105a0503ed1ee291ac10c96f651e329486c309428d"
+      "sha256": "b2bbe04705476967db3f59711e27ae5e7fb1f79a8e699c16f5c18e77a367d4e0"
     },
     {
       "path": "showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js",
@@ -41,19 +41,19 @@
     },
     {
       "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
-      "sha256": "c8392da924c0a53af8e4c9d8462c8991d53e89b04f3dc8852aa2ac6085a7883c"
+      "sha256": "db642b23b8615090b3b3bdc6c0b7af5c6c2ba0b5e811c9911737b649d51bd051"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "7ff3a2e06e1f3d7a6d1e743445d9492f18f93707b1c9c6a409a6a420280277a1"
+      "sha256": "245f6d012a4e10b315bb88831ebd7fb877658fcba7d69f4be0cfa86eec54188e"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
-      "sha256": "86bdb8b02c784d4261edde5b653d0e5a6ae9d5d99c0cd28930623042f0afac59"
+      "sha256": "a7a9b721ea79645711033d420a8f277e2e326dc55e2082683ac0e98c5a80afc5"
     },
     {
       "path": "showroom/globe/h-earth/index.html",
-      "sha256": "50109939f2af890838cb00432448f928dc99a6c3ff43321c9ef4ecffc2a7d9ef"
+      "sha256": "2bf4b67f6e48b7fcfe1789d4aa24825bb3e8464884c28ffb5ba1c77365233b1b"
     }
   ],
   "invariants": {
@@ -70,7 +70,7 @@
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
   "reviewMethod": "SOURCE_BOUND_CONTINUITY_ONLY_NOT_CURRENT_PIXEL_OR_DEVICE_ACCEPTANCE",
-  "notes": "Same-world continuity preserved by bounded source diff, unchanged binary, Site B location, water meshes and actual 15-action navigation checks. Current candidate visual quality remains pending browser capture and owner disposition.",
+  "notes": "Same-world continuity preserved by bounded source diff, unchanged binary, Site B location, water meshes and actual 15-action navigation checks. Current candidate visual quality remains pending browser capture and owner disposition. Local native GPU comparison resolves large material discontinuity; no hosted browser or target-device qualification of this successor is claimed.",
   "sourceEvidencePath": "h-earth-3d/evidence/site-b-kernel-entrance-v1/README.md",
   "priorProductCommit": "1f5b40c81d52fc78de68ee51cbe0c2e52f8cf69b",
   "evidenceOnlyOperationGeneration": 2771

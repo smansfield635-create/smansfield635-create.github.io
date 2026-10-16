@@ -124,7 +124,7 @@ test('2m replacement terrain has a true aperture and cliff with upper mantle',()
 test('runtime renderer/nav source contains actual bridge calls and no Gen2730 arch draw',()=>{
  const r=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
  const n=readFileSync(join(home,'../../showroom/globe/h-earth/functional-landscape/navigation.js'),'utf8');
- assert(r.includes('initializeGeologicalRendering();'));
+ assert(r.includes('initializeGeologicalRendering(packet.environmentUniforms);'));
  assert(r.includes('drawGeologicalRendering();'));
  assert(!r.includes('drawRearCavernPilot();'));
  assert(r.includes('retireGeologicalBaseIndices('));
@@ -211,7 +211,7 @@ test('cavern portal relief and rock strata remain irregular without periodic tun
  assert(renderer.includes('const strataA=Math.sin(local.y*.78+'));
  assert(renderer.includes('const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);'));
  assert(!renderer.includes('local.y*1.55+.34*Math.sin(local.x*.43)'));
- const revision='gen2771-site-b-kernel-entrance-v1';
+ const revision='gen2771-site-b-local-rock-repair-v2';
  for(const path of [
   '../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',
   '../../showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js',
@@ -287,4 +287,30 @@ test('kernel boundary is the shared rendered, occupied and walkable cavity',()=>
   const n=(48*columns+column)*3;
   assert(Math.abs(face.positions[n+1]-Math.max(y,f.excavatedOutdoorTerrain(x,z)))<1e-4,'MOUTH_LIP_MISMATCH');
  }
+});
+
+test('recessed exterior face has outward normals and actual displaced solid correspondence',()=>{
+ const g=geology(),m=g.portal.exposedCliffFace,f=g.formation;let witnesses=0;
+ for(let i=0;i<m.indices.length;i+=3){
+  const [a,b,c]=Array.from(m.indices.slice(i,i+3),id=>Array.from(m.positions.slice(id*3,id*3+3)));
+  const xy=(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
+  assert(xy< -1e-9,'EXTERIOR_ROCK_NORMAL_POINTS_INTO_MOUNTAIN');
+  const probes=[a,b,c,...[a,b,c].map((p,k)=>p.map((v,j)=>(v+[a,b,c][(k+1)%3][j])/2)),[0,1,2].map(j=>(a[j]+b[j]+c[j])/3)];
+  for(const [x,y,z]of probes)assert(!f.insideVoid(x,y,z),'DISPLACED_FACE_INTRUDES_INTO_KERNEL_VOID');
+  const [x,y,z]=probes.at(-1),front=f.rockFaceFrontAt(x,y);
+  assert(front!==null&&Math.abs(front-z)<1e-4,'ROCK_FRONT_QUERY_DIFFERS_FROM_RENDERED_TRIANGLE');
+  if(z>g.site.portalZ+.02&&y<g.originalTerrainElevationAt(x,z)-.05){
+   assert(!f.rockSolidAt(x,y,z-.01),'RECESS_NOT_EXCAVATED');
+   assert(f.rockSolidAt(x,y,z+.01),'ROCK_MISSING_BEHIND_FACE');witnesses++;
+  }
+ }
+ assert(witnesses>100);
+});
+test('retained rock triangles block interior sunlight while the real entrance stays open',()=>{
+ const g=geology(),f=g.formation,x=g.site.x,z=g.site.portalZ+1,q=f.caveSectionAt(x,z);
+ const p=[x,(q.floorY+q.ceilingY)*.5,z];
+ assert.equal(g.cavernLightVisibility(p,[0,1,0]),0,'SUNLIGHT_LEAKS_THROUGH_PHYSICAL_ROOF');
+ assert.equal(g.cavernLightVisibility(p,[0,0,-1]),1,'ENTRANCE_LIGHT_RAY_BLOCKED_BY_INVENTED_CAP');
+ const end=g.site.portalZ+g.site.galleryLength-1,at=f.caveSectionAt(f.caveCenterX(end),end);
+ assert(at);assert.equal(g.cavernLightVisibility([f.caveCenterX(end),(at.floorY+at.ceilingY)*.5,end],[0,0,1]),0,'FAR_CAP_NOT_OPAQUE');
 });

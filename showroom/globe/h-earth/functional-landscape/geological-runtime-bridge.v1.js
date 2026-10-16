@@ -99,14 +99,42 @@ function nearestRouteSegment(points,x,z){
   }
   return best;
 }
+/** Static light visibility against the actual cave and exposed rock triangles.
+ * Rendering-only point rays; this is not a navigation clearance certificate.
+ */
+function makeCavernLightVisibility(meshes){
+  const triangles=[];
+  for(const mesh of meshes)for(let i=0;i<mesh.indices.length;i+=3){
+    const [a,b,c]=[0,1,2].map(k=>Array.from(mesh.positions.slice(mesh.indices[i+k]*3,mesh.indices[i+k]*3+3)));
+    triangles.push({a,e1:b.map((v,j)=>v-a[j]),e2:c.map((v,j)=>v-a[j])});
+  }
+  const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+  const dot=(a,b)=>a.reduce((n,v,j)=>n+v*b[j],0);
+  return (origin,direction)=>{
+    for(const {a,e1,e2} of triangles){
+      const h=cross(direction,e2),det=dot(e1,h);if(Math.abs(det)<1e-10)continue;
+      const s=origin.map((v,j)=>v-a[j]),u=dot(s,h)/det;if(u< -1e-7||u>1+1e-7)continue;
+      const q=cross(s,e1),v=dot(direction,q)/det;if(v< -1e-7||u+v>1+1e-7)continue;
+      const distance=dot(e2,q)/det;if(distance>1e-4)return 0;
+    }
+    return 1;
+  };
+}
 /** Consumer-owned cave semantics. The frozen kernel constructs the boundary;
  * vertical ray/triangle intersections, rather than a second arch formula,
  * supply visible lip, supported floor, ceiling and solid occupancy together.
  * This is NOT the straight-prism consumer's sphere-clearance certificate.
  */
 function buildKernelCavern(site,{floorAt,roofAt,caveRadius,caveCenterX}){
-  const profile=[[-.74,0],[.38,-.012],[.85,.07],[1,.36],[.70,.78],
+  const corners=[[-.74,0],[.38,-.012],[.85,.07],[1,.36],[.70,.78],
     [.18,1],[-.32,.93],[-.86,.62],[-1,.26]].map(([x,y])=>({x,y:y-.5}));
+  // Clip the sharp construction corners while retaining the unequal shoulders
+  // and offset crown. The result stays strictly convex for the frozen sweep.
+  const profile=corners.flatMap((a,i)=>{
+    const b=corners[(i+1)%corners.length];
+    return [{x:a.x*.8+b.x*.2,y:a.y*.8+b.y*.2},
+      {x:a.x*.2+b.x*.8,y:a.y*.2+b.y*.8}];
+  });
   const stationCount=17,centerline=[],scales=[];
   const firstFloor=floorAt(site.x,site.portalZ);
   const firstHeight=roofAt(site.x,site.portalZ)-firstFloor;
@@ -182,25 +210,62 @@ function buildReliefCliffFace(formation,terrainAt,aperture){
     const x=xs[i],t=j/rows,y=tops[i]+(bottoms[i]-tops[i])*t;
     // Shared upper and aperture edges stay on their original planes.
     const verticalBreak=j===0||j===rows?0:Math.sin(Math.PI*t);
-    const edgeFade=fade(Math.min((x-left)/3.5,(right-x)/3.5))*verticalBreak;
-    const strata=.24*Math.sin(y*.78+.31*Math.sin(x*.41)-.22*Math.sin(y*.29+x*.17))+
-      .18*Math.sin(y*.37+x*.23+Math.sin(start*.11));
-    const macro=.82*Math.sin(x*.21+y*.08+.72*Math.sin(y*.07-x*.13));
-    const fracture=.58*Math.sin(x*.47+y*.17+.5*Math.sin(x*.19-start*.14))+
-      .36*Math.sin(x*1.13-y*.24+1.1*Math.sin(y*.09+x*.12));
-    const relief=edgeFade*(1.48*Math.sin(x*.61+y*.22)+.54*Math.sin(x*1.29-y*.47+1.2)+strata+macro+fracture);
-    reliefMin=Math.min(reliefMin,relief);reliefMax=Math.max(reliefMax,relief);positions.push(x,y,start+relief);
+    const edgeFade=fade(Math.min((x-left)/3.5,(right-x)/3.5))*verticalBreak*
+      fade((tops[i]-bottoms[i])/2);
+    // Recessed, fractured strata leave an uneven rock overhang below the
+    // unchanged mountain contact. No smooth alternating cloth-like bulges.
+    const triangleWave=v=>1-Math.abs(2*(v-Math.floor(v))-1);
+    const bedding=triangleWave(y*.23+x*.055+.10*Math.sin(x*.17));
+    const joint=triangleWave(x*.18-y*.035+.12*Math.sin(y*.11));
+    const shelf=Math.max(0,1-Math.abs(y-(19.2+.14*(x-site.x)+.5*Math.sin(x*.33)))/.9);
+    const relief=edgeFade*(.9+.85*bedding+.7*joint+1.15*shelf);
+    reliefMin=Math.min(reliefMin,relief);reliefMax=Math.max(reliefMax,relief);
+    positions.push(Math.fround(x),Math.fround(y),Math.fround(start+relief));
   }
   for(let j=0;j<rows;j++)for(let i=0;i<count;i++){
     const a=j*columns+i,b=a+1,c=a+columns,d=c+1;
-    for(const tri of [[a,c,b],[b,c,d]]){
+    // Exterior rock faces the approach at lower Z, rather than the interior.
+    for(const tri of [[a,b,c],[b,d,c]]){
       const x=(positions[tri[0]*3]+positions[tri[1]*3]+positions[tri[2]*3])/3;
-      const y=(positions[tri[0]*3+1]+positions[tri[1]*3+1]+positions[tri[2]*3+1])/3;
-      if(!formation.insideVoid(x,y,start+.25))indices.push(...tri);
+      const points=tri.map(id=>positions.slice(id*3,id*3+3)),[p,q,r]=points;
+      const cross=[(q[1]-p[1])*(r[2]-p[2])-(q[2]-p[2])*(r[1]-p[1]),
+        (q[2]-p[2])*(r[0]-p[0])-(q[0]-p[0])*(r[2]-p[2]),
+        (q[0]-p[0])*(r[1]-p[1])-(q[1]-p[1])*(r[0]-p[0])];
+      // A collapsed column must not leave a horizontal floating sliver.
+      // Test the actual Float32 submission, including its XY graph orientation.
+      if(Math.hypot(...cross)<1e-8||cross[2]>=-1e-9)continue;
+      const probes=[...points,...points.map((p,k)=>p.map((v,j)=>(v+points[(k+1)%3][j])/2)),
+        [0,1,2].map(j=>(p[j]+q[j]+r[j])/3)];
+      if(!probes.some(([x,y,z])=>formation.insideVoid(x,y,z)))indices.push(...tri);
     }
   }
   const mesh=Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(indices),vertexCount:positions.length/3,triangleCount:indices.length/3});
-  return Object.freeze({mesh,diagnostics:Object.freeze({exposedFaceReliefMeters:reliefMax-reliefMin,minimumRockFaceClearance})});
+  // Exact front-depth lookup from the retained physical face, not a second
+  // procedural field. It changes point occupancy only inside the recession slab.
+  const bins=new Map(),frontTriangles=[],binSize=2;
+  for(let i=0;i<mesh.indices.length;i+=3){
+    const [a,b,c]=[0,1,2].map(k=>Array.from(mesh.positions.slice(mesh.indices[i+k]*3,mesh.indices[i+k]*3+3)));
+    const den=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1]);
+    if(Math.abs(den)<1e-10)continue;
+    const id=frontTriangles.length;frontTriangles.push({a,b,c,den});
+    for(let x=Math.floor(Math.min(a[0],b[0],c[0])/binSize);x<=Math.floor(Math.max(a[0],b[0],c[0])/binSize);x++)
+      for(let y=Math.floor(Math.min(a[1],b[1],c[1])/binSize);y<=Math.floor(Math.max(a[1],b[1],c[1])/binSize);y++){
+        const key=x+':'+y,list=bins.get(key)??[];list.push(id);bins.set(key,list);
+      }
+  }
+  const rockFaceFrontAt=(x,y)=>{
+    const hits=[];
+    for(const id of bins.get(Math.floor(x/binSize)+':'+Math.floor(y/binSize))??[]){
+      const {a,b,c,den}=frontTriangles[id];
+      const u=((b[1]-c[1])*(x-c[0])+(c[0]-b[0])*(y-c[1]))/den;
+      const v=((c[1]-a[1])*(x-c[0])+(a[0]-c[0])*(y-c[1]))/den,w=1-u-v;
+      if(Math.min(u,v,w)<-1e-7)continue;
+      const z=u*a[2]+v*b[2]+w*c[2];if(!hits.some(h=>Math.abs(h-z)<1e-4))hits.push(z);
+    }
+    return hits.length===1?hits[0]:null;
+  };
+  return Object.freeze({mesh,rockFaceFrontAt,maximumRecession:reliefMax,
+    diagnostics:Object.freeze({exposedFaceReliefMeters:reliefMax-reliefMin,minimumRockFaceClearance})});
 }
 /** Build only once when the canonical package is resident, never on a frame update. */
 export function constructGeologicalRuntimeBridge(canonical){
@@ -317,6 +382,15 @@ export function constructGeologicalRuntimeBridge(canonical){
     excavatedOutdoorTerrain,rockSolidAt:(x,y,z)=>y<=excavatedOutdoorTerrain(x,z)&&!physicalInsideVoid(x,y,z)});
   const rawPortal=constructGeologicalPortalAssembly(formation,terrainAt,{bounds:BOUNDS});
   const cliff=buildReliefCliffFace(formation,terrainAt,rawPortal.aperture);
+  const physicalFormation=Object.freeze({...formation,rockFaceFrontAt:cliff.rockFaceFrontAt,
+    rockSolidAt:(x,y,z)=>{
+      if(physicalInsideVoid(x,y,z))return false;
+      if(z>=SITE.portalZ&&z<=SITE.portalZ+cliff.maximumRecession){
+        const front=cliff.rockFaceFrontAt(x,y);
+        if(front!==null)return z>=front&&y<=terrainAt(x,z);
+      }
+      return formation.rockSolidAt(x,y,z);
+    }});
   const portal=Object.freeze({...rawPortal,exposedCliffFace:cliff.mesh,diagnostics:Object.freeze({
     ...rawPortal.diagnostics,...cliff.diagnostics,openCaveApertureCells:true})});
   const retirement=deriveBaseTriangleRetirement(canonical,BOUNDS);
@@ -330,7 +404,8 @@ export function constructGeologicalRuntimeBridge(canonical){
   ];
   const meshes=parts.map(([role,mesh])=>Object.freeze({role,mesh:projectGeologicalMeshForRenderer(mesh)}));
   const output=Object.freeze({contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
-    formation,portal,retirement,meshes,route:trace,originalTerrainColorAt,
+    formation:physicalFormation,portal,retirement,meshes,route:trace,originalTerrainColorAt,
+    cavernLightVisibility:makeCavernLightVisibility([kernel.mesh,cliff.mesh]),
     originalTerrainElevationAt:terrainAt,
     sourceWorldUnchanged:true,originalBaseTrianglesToRetire:retirement.triangleCount,
     hydrology:Object.freeze({waterPresent:true,waterSourceProven:false,sourceType:formation.drainage.sourceType,

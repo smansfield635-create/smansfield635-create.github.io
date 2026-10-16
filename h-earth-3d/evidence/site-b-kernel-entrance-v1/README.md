@@ -31,3 +31,22 @@ Compared with successful 1f5b: Site B identity, base triangle retirement, river 
 ## Next boundary
 
 Independent review and exact-candidate browser rendering precede visual disposition. Geometry/source tests do not establish natural appearance or target-device acceptance. Preserve the candidate and report back as soon as an expensive browser run starts. No automatic wait/retry loop, product merge, deployment or publication is authorized by this evidence. The PR body carries the exact immutable continuation identity after saving.
+
+
+## Locally isolated repair after run38956453915
+
+Owner judged the successful run visually insufficient and directed a deterministic local diagnosis before another hosted run. The successful2a8950 source was preserved and reproduced locally using the actual ES3 shader, exact generated geological attributes and retired terrain, saved camera matrix, original approved soil texture and mipmap sampler. Native Mesa ES3 is available; local Chromium is absent. The diagnostic omits UI, vegetation, far-terrain refinement, coastline-distance variation outside the geological patch and clearing tree shadows. It reproduces the large pale-face/collar defect, not browser/device parity.
+
+Isolated variants established two source causes: slope/rock eligibility prevented the cliff from using the neighboring mountain's approved brown texture; exterior cliff winding faced into the mountain. Matching canonical vertex colors did not match the mountain's final textured material. Normal-only correction changed lighting but retained the pale material. Material-only correction removed the gray/green discontinuity. The combined repair keeps the existing sun/gamma and global terrain behavior.
+
+The selected cliff and shell use private presentation tag62001 and a triplanar projection of the same earth texture. The cliff faces outward. Smooth alternating bulges are replaced with bounded recessed fractured bedding/ledges, pinned at top/side/lip contacts. Actual retained face triangles supply an XY-to-Z point-solid boundary in the bounded recession slab; kernel void precedence is retained. Collapsed columns fade relief by actual rock thickness and projected degenerates are rejected AFTER Float32 quantization. This removes the192 horizontal slivers independently found during review.
+
+The original nine asymmetrical profile corners now receive one strictly convex corner-clipping pass, yielding18 profile vertices. Kernel source remains byte-identical; the same generated triangles still drive rendering, occupancy, floor/ceiling and lip. Unequal shoulders and offset crown remain; no regular semicircle is introduced.
+
+The old interior was illuminated through opaque roof/walls. A rendering-only point-ray query now tests the actual kernel and retained cliff triangles toward the existing sun and five fixed sky probes once at initialization. Shell direct/specular light and ambient/rim access use those geometric visibility results. There is no global sunlight/gamma change, animation-frame tracing, painted distance-darkness band, navigation sphere/capsule certificate or physical-device claim.
+
+44/44 combined source/geometry/navigation checks pass, including actual displaced-face occupancy, outward XY graph correspondence and roof/back blocking with an open entrance ray. Actual ES3 shaders compile and link. Independent review confirmed the sliver correction; final18-profile review is recorded in the PR. SiteB identity, river/oasis mesh bytes, canonical binary and base retirement remain unchanged from the successful predecessor. Cache revision: gen2771-site-b-local-rock-repair-v2.
+
+Local reproducible evidence bundle: H-Earth-Site-B-Local-Repair-Evidence.zip, Library identity libfile_10abb037c8608191882f0fa376df699b. It retains exact before/after buffers, shaders, camera/environment, native capture/export scripts and unaltered full renders plus a labeled same-camera crop. Code repository remains the source of product authority.
+
+No hosted run was launched for this repair. Local images show the pale mismatch resolved and a darker cavity under brown rock ledges. Natural appearance remains owner-assessed; a local native reproduction is not a browser/device acceptance result. Review the local comparison before spending another hosted run.

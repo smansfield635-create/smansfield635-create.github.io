@@ -1,4 +1,4 @@
-import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2771-site-b-kernel-entrance-v1';
+import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2771-site-b-local-rock-repair-v2';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
@@ -566,7 +566,8 @@ void main(){
   float outputAlpha=clamp(vBaseColor.a,0.18,1.0);
   // Gen2646: authored near terrain AND exact far-land continuation share
   // one biome-aware soil material; never affect vegetation or water roles.
-  bool worldSoilTerrain=vRoleCode==1u||
+  bool geologicalEarthRock=vPrimitiveIndex==62001u;
+  bool worldSoilTerrain=geologicalEarthRock||vRoleCode==1u||
     int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;
 
   // FAR continuation is visual context only; invert the spherical projection
@@ -755,8 +756,10 @@ void main(){
     // The original protected 32m reference interior remains unchanged.
     // Coast/sand, rock-exposure and local ecological overlays stay native.
     if(uClearingEnabled==1){
-      float worldSoilSlope=1.0-smoothstep(0.16,0.59,slope);
-      float worldSoilRock=1.0-smoothstep(0.22,0.66,rockExposure);
+      // The approved earth texture also owns the local exposed rock's hue.
+      // Steep rock needs a different projection, not a different color family.
+      float worldSoilSlope=geologicalEarthRock?1.0:1.0-smoothstep(0.16,0.59,slope);
+      float worldSoilRock=geologicalEarthRock?1.0:1.0-smoothstep(0.22,0.66,rockExposure);
       float worldSoilCoast=smoothstep(2.0,29.0,vCoastDistanceMeters);
       float worldSoilEligibility=clamp(
         worldSoilSlope*worldSoilRock*worldSoilCoast,0.0,1.0
@@ -783,6 +786,13 @@ void main(){
         vec3 worldSoilTexel=texture(
           uClearingSoil,worldSoilXZ*0.28
         ).rgb;
+        if(geologicalEarthRock){
+          vec3 rockProjection=pow(abs(geometricNormal),vec3(4.0));
+          rockProjection/=max(rockProjection.x+rockProjection.y+rockProjection.z,0.0001);
+          worldSoilTexel=texture(uClearingSoil,vWorldPosition.zy*0.28).rgb*rockProjection.x+
+            texture(uClearingSoil,vWorldPosition.xz*0.28).rgb*rockProjection.y+
+            texture(uClearingSoil,vWorldPosition.xy*0.28).rgb*rockProjection.z;
+        }
         vec3 worldSoilReference=pow(worldSoilTexel,vec3(2.2))*0.75;
         // Gen2646: actual approved 256x256 soil image is the albedo
         // authority on eligible inland ground, not just brightness/chroma
@@ -1076,8 +1086,15 @@ void main(){
   }
   directional*=clearingShadowFactor;
   specular*=clearingShadowFactor;
+  float cavernSky=1.0;
+  if(geologicalEarthRock&&vRoleCode==5u){
+    directional*=clamp(vMaterialParameters.z,0.0,1.0);
+    specular*=clamp(vMaterialParameters.z,0.0,1.0);
+    cavernSky=mix(0.08,1.0,clamp(vMaterialParameters.w,0.0,1.0));
+    ambient*=cavernSky;
+  }
   vec3 lit=base*(ambient+directional)*uSunColor;
-  lit+=base*rim*(vRoleCode==1u?0.14:0.10);
+  lit+=base*rim*(vRoleCode==1u?0.14:0.10)*cavernSky;
   lit+=uSunColor*specular*specularLightingGain;
 
   float rawFog=clamp((distanceToCamera-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor);
@@ -1832,7 +1849,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices);
     initializeWoodlandRocks();
     initializeLargeP2Boulders();
-    initializeGeologicalRendering();
+    initializeGeologicalRendering(packet.environmentUniforms);
     resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -1966,7 +1983,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   // Gen2735: an actual locally excavated landform, mountain overburden and
   // physical gallery. Reuses the selected persistent WebGL2 shader and depth.
   // The deprecated Gen2730 decorative arch is not allocated or drawn.
-  function initializeGeologicalRendering(){
+  function initializeGeologicalRendering(environment){
     const model=resources.geologicalRuntime;
     if(!model?.meshes?.length||model.retirement.triangleCount<100)
       throw Error('GEOLOGICAL_RUNTIME_MODEL_NOT_CONSTRUCTED');
@@ -2029,7 +2046,17 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         const layered=rock.map((v,c)=>v*(1-soil)+alluvium[c]*soil);
         const moist=layered.map((v,c)=>v*(1-exposure.oasisInfluence*.82)+oasisShore[c]*(exposure.oasisInfluence*.82));
         colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+moist[c]*exposure.rockWeight)*grain).concat(1),i*4);
-        mats.set([.89,.025,.035,.13],i*4);
+        if(role==='CAVERN_PHYSICAL_SHELL'){
+          // The existing sun and five fixed sky probes are tested against the
+          // actual retained rock triangles once, never in the animation loop.
+          const n=[normals[i*3],normals[i*3+1],normals[i*3+2]];
+          const origin=[local.x+n[0]*.03,local.y+n[1]*.03,local.z+n[2]*.03];
+          const sun=environment.sunDirection;
+          const direct=model.cavernLightVisibility(origin,[sun.x,sun.y,sun.z]);
+          const sky=[[0,1,0],[.707,.707,0],[-.707,.707,0],[0,.707,.707],[0,.707,-.707]];
+          const access=sky.reduce((sum,d)=>sum+model.cavernLightVisibility(origin,d),0)/sky.length;
+          mats.set([.89,.025,direct,access],i*4);
+        }else mats.set([.89,.025,.035,.13],i*4);
       }
       const state={role,mesh,vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};
       if(!state.vao)throw Error('GEOLOGICAL_VAO_FAILED:'+role);
@@ -2042,7 +2069,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       };
       put(0,positions,3);put(1,normals,3);put(2,colors,4);put(3,mats,4);
       const models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n),coast=new Float32Array(n),contact=new Float32Array(n);
-      surfaces.fill(255);ids.fill(62000);roles.fill(role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'||role==='NATURAL_CLIFF_FACE'?1:
+      surfaces.fill(255);ids.fill(role==='NATURAL_CLIFF_FACE'||role==='CAVERN_PHYSICAL_SHELL'?62001:62000);roles.fill(role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'||role==='NATURAL_CLIFF_FACE'?1:
         role==='FRESHWATER_RIVER'||role==='OASIS_WATER'?4:5);coast.fill(140);contact.fill(140);
       put(4,models,1,gl.UNSIGNED_BYTE,true);put(5,surfaces,1,gl.UNSIGNED_BYTE,true);
       put(6,ids,1,gl.UNSIGNED_SHORT,true);put(7,roles,1,gl.UNSIGNED_BYTE,true);

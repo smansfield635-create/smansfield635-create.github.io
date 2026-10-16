@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-16T13:32:34Z",
+  "generatedAt": "2026-10-16T14:34:05Z",
   "window": {
-    "start": "2026-07-18T13:32:34Z",
-    "end": "2026-10-16T13:32:34Z"
+    "start": "2026-07-18T14:34:05Z",
+    "end": "2026-10-16T14:34:05Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4902,
-    "visits": 1315,
+    "pageLoads": 4912,
+    "visits": 1325,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4902,
-        "visits": 1315
+        "pageLoads": 4912,
+        "visits": 1325
       }
     },
     "byPath": {
@@ -242,6 +242,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -255,10 +259,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -327,8 +327,8 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 140,
-        "visits": 110
+        "pageLoads": 150,
+        "visits": 120
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -357,8 +357,8 @@
         "visits": 782
       },
       "(none)": {
-        "pageLoads": 523,
-        "visits": 523
+        "pageLoads": 533,
+        "visits": 533
       },
       "raw.githack.com": {
         "pageLoads": 10,

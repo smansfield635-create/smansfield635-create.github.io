@@ -72,6 +72,7 @@ jobs:
       - name: Execute fixed private recurring cycle and redact public output
         id: proof
         env:
+          NODE_DEBUG: undici
           DGB_GITHUB_TOKEN: ${{ steps.private.outputs.token }}
           DGB_PUBLIC_GITHUB_TOKEN: ${{ github.token }}
         shell: bash
@@ -92,6 +93,22 @@ jobs:
           const results=["PASS","FAIL_CLOSED","FAIL_CLOSED_FIXED_COMMAND_REQUIRED","FAIL_CLOSED_EXACT_SOURCE_MISMATCH","FAIL_CLOSED_GOVERNING_HEAD_DRIFT","FAIL_CLOSED_AUTHORITY_BLOB_MISMATCH","FAIL_CLOSED_RUNTIME_DESCRIPTOR_REFUSED","FAIL_CLOSED_SOURCE_OUTSIDE_ADMISSION","FAIL_CLOSED_RUNTIME_ADMISSION_NOT_ACTIVE","FAIL_CLOSED_RUNTIME_DESTINATION_SUBSTITUTION","FAIL_CLOSED_REAL_CHANGED_SAVE_REQUIRED","FAIL_CLOSED_INTERRUPTION_RECOVERY_STATE_MISMATCH","FAIL_CLOSED_REVIEW_CUSTODY_CHANGED","FAIL_CLOSED_RECOVERY_OR_NO_CHANGE_NOT_PROVEN","FAIL_CLOSED_SEARCH_INCOMPLETE","FAIL_CLOSED_SEARCH_DRIFT","FAIL_CLOSED_SEARCH_PAGE_COUNT_MISMATCH","FAIL_CLOSED_PR_DISAPPEARED_OR_MERGE_TIME_CHANGED","FAIL_CLOSED_POPULATION_ROW_INVALID","FAIL_CLOSED_CHECKPOINT_INVALID","FAIL_CLOSED_BLOB_CONTENT_IDENTITY_MISMATCH","FAIL_CLOSED_UPDATED_SCAN_DRIFT","FAIL_CLOSED_UPDATED_SCAN_INCOMPLETE","FAIL_CLOSED_RATE_LIMIT_DEFER_CHECKPOINT_UNCHANGED","FAIL_CLOSED_GITHUB_API_403","FAIL_CLOSED_GITHUB_API_404","FAIL_CLOSED_GITHUB_API_401"];
           if(!r||typeof r!=='object'||Array.isArray(r)||JSON.stringify(Object.keys(r).sort())!==JSON.stringify(keys)||r.schema!=='PUBLIC_PRIVATE_STUDY_REDACTED_RECEIPT_v1'||r.descriptorId!=='DGB_PRIVATE_STUDY_FIXED_CHECKPOINT_SAVE_V1'||!results.includes(r.result)||r.rawPrivateDataExported!==false||typeof r.nativeReceiptSha256!=='string'||!/^[0-9a-f]{64}$/.test(r.nativeReceiptSha256))throw Error('REDACTION_OR_RESULT_INVALID');
           fs.appendFileSync(process.env.GITHUB_OUTPUT,'collector_result='+r.result+'\n');
+          if(r.result!=='PASS'){
+            let trace='';try{trace=fs.readFileSync(process.env.RUNNER_TEMP+'/study-private-stderr.log','utf8');}catch{}
+            let stage='TRACE_UNAVAILABLE';
+            for(const line of trace.split('\n')){
+              const m=line.match(/^UNDICI [0-9]+: received response to (GET|POST|PATCH) https:\/\/api\.github\.com(\/\S+) - HTTP 422$/);
+              if(!m)continue;
+              const method=m[1],p=m[2];stage='OTHER';
+              if(method==='POST'&&/^\/repos\/[^/]+\/[^/]+\/git\/blobs$/.test(p))stage='GIT_BLOB_WRITE';
+              else if(method==='POST'&&/^\/repos\/[^/]+\/[^/]+\/git\/trees$/.test(p))stage='GIT_TREE_WRITE';
+              else if(method==='POST'&&/^\/repos\/[^/]+\/[^/]+\/git\/commits$/.test(p))stage='GIT_COMMIT_WRITE';
+              else if(method==='PATCH'&&/^\/repos\/[^/]+\/[^/]+\/git\/refs\/heads\//.test(p))stage='CHECKPOINT_REF_UPDATE';
+              else if(method==='GET'&&/^\/search\/issues\?/.test(p))stage='SEARCH_READ';
+              else if(method==='GET'&&/^\/repos\/[^/]+\/[^/]+\/pulls\/[0-9]+$/.test(p))stage='PULL_METADATA_READ';
+            }
+            console.log(JSON.stringify({schema:'DGB_SAFE_HTTP_FAILURE_STAGE_v1',httpStatus:stage==='TRACE_UNAVAILABLE'?null:422,stage}));
+          }
           NODE
           echo 'redaction_valid=true' >> "$GITHUB_OUTPUT"
           cat "$RUNNER_TEMP/study-redacted.json"

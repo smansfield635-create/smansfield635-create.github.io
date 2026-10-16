@@ -1,0 +1,301 @@
+{
+  "schema": "H_EARTH_WATER_ENTRY_COHERENCE_SOURCE_EVIDENCE_v1",
+  "baseline": "90bf48d87551449fe906a495a491870a9ddf5895",
+  "ownerRecording": {
+    "filename": "29059.mp4",
+    "sha256": "ce9e04c0f76c574649b0c9c6d89d67ce2146c01dd98eab84fb0cf2b06e5526c6",
+    "durationSeconds": 62.014313,
+    "observedFailure": "Competing water planes and submerged camera on the nominal cavern approach; owner rejects coherence of prior release"
+  },
+  "admissionProof": {
+    "lockGeneration": 2777,
+    "operationId": "H_EARTH_WATER_ENTRY_COHERENCE_20261016_001",
+    "principal": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1",
+    "provenance": {
+      "authorityIdentity": {
+        "governingHead": "90bf48d87551449fe906a495a491870a9ddf5895",
+        "lockGeneration": 2777,
+        "lockScope": "H_EARTH:WATER_ENTRY_COHERENCE:OWNER_29059:20261016",
+        "operationId": "H_EARTH_WATER_ENTRY_COHERENCE_20261016_001",
+        "procedureLocatorDigest": "0cdeeae7fbed5ae1724c9948724d8ae7492e664d4074e65488ddecad05b768bd",
+        "requestDigest": "5d4fee499dabe4ca8197ad6c717a0c15027131ac8e1b9e1b59f890f438aee0f8",
+        "scopeHash": "a85a7127248dd9158d27f0ddb4980ea9652bf316ed2c0fec6cd08870dac5ba47"
+      },
+      "result": "OWNER_CONNECTOR_PROVENANCE_VERIFIED"
+    },
+    "result": "CANONICAL_LEDGER_COMMIT_VERIFIED"
+  },
+  "baselineActualWaterProbe": {
+    "oasis": {
+      "id": "SECOND_OASIS",
+      "centerX": 40,
+      "centerZ": -284,
+      "radiusX": 38,
+      "radiusZ": 34,
+      "waterEdgeScale": 0.56,
+      "edgeHarmonics": [
+        0.22,
+        -0.13,
+        0.085,
+        0.045,
+        -0.032
+      ],
+      "waterLevel": 9.27185948285313
+    },
+    "samples": [
+      {
+        "x": 40,
+        "z": -310,
+        "section": null,
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.10147618934560376
+          }
+        ],
+        "derived": []
+      },
+      {
+        "x": 40,
+        "z": -300,
+        "section": null,
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.09414285626703608
+          }
+        ],
+        "derived": [
+          {
+            "role": "OASIS_WATER",
+            "y": 9.16281321477647
+          }
+        ]
+      },
+      {
+        "x": 40,
+        "z": -290,
+        "section": null,
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.08715238465446082
+          }
+        ],
+        "derived": [
+          {
+            "role": "OASIS_WATER",
+            "y": 9.169836427044503
+          }
+        ]
+      },
+      {
+        "x": 40,
+        "z": -284,
+        "section": null,
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.08309524566349173
+          }
+        ],
+        "derived": [
+          {
+            "role": "FRESHWATER_RIVER",
+            "y": 8.51131130747558
+          },
+          {
+            "role": "OASIS_WATER",
+            "y": 9.17393639343961
+          }
+        ]
+      },
+      {
+        "x": 40,
+        "z": -280,
+        "section": null,
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.08039048631428285
+          }
+        ],
+        "derived": [
+          {
+            "role": "FRESHWATER_RIVER",
+            "y": 8.823399868193436
+          },
+          {
+            "role": "OASIS_WATER",
+            "y": 9.176621821822428
+          }
+        ]
+      },
+      {
+        "x": 40,
+        "z": -272,
+        "section": null,
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.0749809681191971
+          }
+        ],
+        "derived": [
+          {
+            "role": "FRESHWATER_RIVER",
+            "y": 9.51001205115267
+          }
+        ]
+      },
+      {
+        "x": 40,
+        "z": -264,
+        "section": null,
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.07002857735929895
+          }
+        ],
+        "derived": [
+          {
+            "role": "FRESHWATER_RIVER",
+            "y": 9.705764081752429
+          }
+        ]
+      },
+      {
+        "x": 40,
+        "z": -260,
+        "section": {
+          "floorY": 11.261603930855028,
+          "ceilingY": 16.04995859734669
+        },
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.067552381956916
+          }
+        ],
+        "derived": []
+      },
+      {
+        "x": 40,
+        "z": -256,
+        "section": {
+          "floorY": 11.3520536727174,
+          "ceilingY": 16.67740355928759
+        },
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.06507618653987657
+          }
+        ],
+        "derived": []
+      },
+      {
+        "x": 40,
+        "z": -252,
+        "section": {
+          "floorY": 11.555486700183287,
+          "ceilingY": 16.80615836511103
+        },
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.06259999110840526
+          }
+        ],
+        "derived": []
+      },
+      {
+        "x": 40,
+        "z": -248,
+        "section": {
+          "floorY": 11.63219955005334,
+          "ceilingY": 16.47316803233759
+        },
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.06012379617047029
+          }
+        ],
+        "derived": []
+      },
+      {
+        "x": 40,
+        "z": -244,
+        "section": {
+          "floorY": 11.669420940181638,
+          "ceilingY": 16.915399447372835
+        },
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.05787617467039568
+          }
+        ],
+        "derived": []
+      },
+      {
+        "x": 40,
+        "z": -240,
+        "section": {
+          "floorY": 11.749558697658308,
+          "ceilingY": 17.249854989485936
+        },
+        "source": [
+          {
+            "id": "H_EARTH_WORLD_MANIFOLD:FAR_OCEAN_CONTINUATION",
+            "y": -0.05562855315782764
+          }
+        ],
+        "derived": []
+      }
+    ]
+  },
+  "repair": {
+    "basinOwnsEmittedOverlap": true,
+    "riverJoinMatchesBasinLevel": true,
+    "waterAndExteriorSupportFromEmittedTriangles": true,
+    "submergedOutdoorSupportRejected": true,
+    "dryArrival": {
+      "x": 40,
+      "z": -264,
+      "distanceBeforeMouthMeters": 4
+    },
+    "canonicalWorldTreesVegetationTerrainCavernGeometryUnchanged": true,
+    "moduleGraphRevision": "gen2777-water-entry-coherence-v1"
+  },
+  "qualification": {
+    "testsPassed": 53,
+    "testsFailed": 0,
+    "output": "\u2714 renderer-installed production bridge actually supports navigation through the cavern (11118.115215ms)\n\u2714 asymmetric renderer clip grounds every collar on refinement rather than obsolete base (814.420522ms)\n\u2714 all 108 late batch compositions retire old fan geometry and preserve other plants (7.250176ms)\n\u2714 visible root surface respects retired ground, exterior overlap, water and shell exclusions (1.162981ms)\n\u2714 nearby fine grass keeps grounded unique roots byte-identical after an A-B-A walk (1425.643028ms)\n\u2714 shared fine-grass selection excludes distant fixed roots while preserving nearby identities (8.32935ms)\n\u2714 true cave void has walkable floor and enclosing solid overhead rock (2.074797ms)\n\u2714 excavation lowers ground near portal and leaves distant base unchanged (0.334237ms)\n\u2714 downstream channel bed is strictly descending and does not claim water (0.500262ms)\n\u2714 cave is triangulated into physical roof, sidewalls without black plane or cap (11.137317ms)\n\u2714 replacement surface is indexed, bounded and immutable across repeated calls (20.64723ms)\n\u2714 invalid uphill source cannot become watercourse (0.914162ms)\n\u2714 formation evaluation explicitly excludes live collision and visual acceptance (0.472312ms)\n\u2714 exact spherical region/presentation inverse does not relocate site (0.429074ms)\n\u2714 retirement mask uses authored coordinates rather than spherical XZ (1.949299ms)\n\u2714 surface patch exterior perimeter exactly matches untouched terrain (13.08875ms)\n\u2714 upper mantle derives from same actual topographic sampler, not a fake mouth cap (46.905389ms)\n\u2714 32 grid cells retired in source terrain, replaced by 64 mantle triangles (32.165323ms)\n\u2714 replacement top grid has actual hole, not an overpainted black cave (25.941669ms)\n\u2714 mantle is crack-free to unchanged terrain on both flanks and behind (16.459521ms)\n\u2714 real front cliff faces bind original surface to cave ceiling, not decorative stand-alone arch (18.130277ms)\n\u2714 interior foot plane shares physical cavity occupancy and roof (0.562073ms)\n\u2714 wall and ceiling collision rejects displacement without lifting camera onto mountain roof (0.715479ms)\n\u2714 swept passage outside into interior succeeds, lateral wall sweep fails (4.959885ms)\n\u2714 sweep rejects excessive cliff step under independent grade ceiling (4.622459ms)\n\u2714 projection returns spherical GPU-ready positions and leaves local source untouched (22.302361ms)\n\u2714 B site uses B-local terrain patch, not an A-only region (18.732772ms)\n\u2714 invalid configuration fails closed and does not touch input geometry (0.864947ms)\n\u2714 rear valley sight line crosses real rock aperture into gallery; roof blocks downward sky ray (75.697269ms)\n\u2714 exact Gen2666 compressed source and spherical terrain correspond (977.935662ms)\n\u2714 real terrain D8 survey supplies a descending scenic river network without a hydrology claim (3.646183ms)\n\u2714 original terrain indices are retired by degeneracy only within declared mask (194.429723ms)\n\u2714 four real manifold elements are projected to shared spherical world (0.665019ms)\n\u2714 uninstalled physical cave is invisible to normal Gen324 navigation (0.296815ms)\n\u2714 active interior uses cave floor/roof, wall collision correctly rejects (0.508864ms)\n\u2714 weathered portal relief is shared by the visible shell and walk clearance (0.258763ms)\n\u2714 2m replacement terrain has a true aperture and cliff with upper mantle (3.53825ms)\n\u2714 runtime renderer/nav source contains actual bridge calls and no Gen2730 arch draw (1.217023ms)\n\u2714 real Gen324 locomotion enters roofed cavern through a dry mouth approach (18.268677ms)\n\u2714 original coastal navigation remains original and never reports cave support (3.889787ms)\n\u2714 cavern arrival copy is query-bound and coast copy remains the default (0.494617ms)\n\u2714 every projected cavern and patch vertex has original-world albedo contact (24.261921ms)\n\u2714 excavated channel shows geologically grounded material exposure while exterior rim stays intact (2.118322ms)\n\u2714 cavern portal relief and rock strata remain irregular without periodic tunnel bands (1.316343ms)\n\u2714 bounded rear-cavern arrival query targets the real existing waypoint without changing coast or four trees (0.390666ms)\n\u2714 weathered face rejoins the terrain and aperture plane at every perimeter vertex (0.432367ms)\n\u2714 active Site B shader treatment is bounded and cannot restore the cyan stain (1.201706ms)\n\u2714 kernel boundary is the shared rendered, occupied and walkable cavity (4.732028ms)\n\u2714 recessed exterior face has outward normals and actual displaced solid correspondence (154.37316ms)\n\u2714 retained rock triangles block interior sunlight while the real entrance stays open (3.546627ms)\n\u2714 actual emitted basin and river have no competing elevated water surfaces (1681.400132ms)\n\u2714 published arrival through cavern mouth stays above actual water and inside shell (24.721528ms)\n\u2714 deep basin floor is rejected rather than treated as dry support (2.032554ms)\n\u2139 tests 53\n\u2139 suites 0\n\u2139 pass 53\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 14064.285916\n",
+    "independentVerifier": "WEST_SOURCE_REVIEW_PASS",
+    "scope": "Actual indexed water ownership, quarter-meter dry route through mouth, deep-water rejection, prior vegetation/cavern preservation suites",
+    "newIntegratedBrowserRunPerformed": false,
+    "publicationPreflightRequired": true,
+    "ownerPerceptualAcceptance": false,
+    "phonePerformanceClaimed": false
+  },
+  "sourceDigests": {
+    ".github/ai-router/publication-surfaces/h-earth.json": "1f695aa4705321af7ab140336229fd78db4766b6fe6f995574ab5f660ccc8144",
+    "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs": "6e515c4de86aa41c164bcc0584a5d01a271a5b28c46981de76e80d64a159d0eb",
+    "h-earth-3d/validation/h-earth.cavern-vegetation-repair.v1.test.mjs": "d07c3be3fb351772d6b2fb378dbebe0c3f6cf7ad7a497f7e99491553d4d2376b",
+    "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs": "c9c4054bb7f50b5eea0ce86e33c42c0fa164ae9e8f0da5629ac4699187aec343",
+    "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs": "5bed8c9acbe1c1400e63dc5e7d671f27bfbe8957263c909cdaa12284a73bfa3b",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "c3c2cd17f7499f80dee131eccdf5c8f49922f8373fe7a545cb00878068557821",
+    "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js": "9eebe63459ec6ecebc0b91f9a7c5e6fe21403e5348a7c78791e51b3b34517abb",
+    "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js": "a2bbc46d3fd329b51ce812a78316fddbace0c628a063be8cf7d565e7a4fdc843",
+    "showroom/globe/h-earth/functional-landscape/navigation.js": "7b1b9452cac2d49aed1fc3bed7a496ccd41c1b46ae0de9b80bb5396789fd9eb3",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "87891c6ca7b0782bf49f669f62e0c69b3bdefaa7f4e67c8a27ae2011ea688517",
+    "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js": "ed2b9f7a193b3a7cf2bae3c24ef15d3c79b73637181f441278e3f59cfa816b38",
+    "showroom/globe/h-earth/index.html": "857d555dae6e64824bb4c1874e6ed4efff76f2acb87982a10d82f84490ec067a",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "2aa2acf936dbfd634f9ece4923166358b0889f4f3aa869f876b5cb5d84bf5e71",
+    "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "19e93b7d77d602977e64d096138b1456c617576decb4dec76c333259ab987b26",
+    "h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs": "bcdb015a03f4a272de934ce9eb6e67360872c29dd765e83110dbbbc0bc3be369"
+  }
+}

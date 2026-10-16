@@ -34,7 +34,7 @@ export function traceGeologicalRuntimeDrainage(sampler,site=SITE){
   if(path.length<10)fail('INSUFFICIENT_ROUTE');
   return Object.freeze({path,result,surveyMethod:'ACTUAL_G_WORLD_CANONICAL_INDEXED_TRIANGLES_INVERSE_SPHERE_D8',waterPresent:false});
 }
-function buildWaterRibbon(route,kind,formation){
+function buildWaterRibbon(route,kind,formation,basinMesh){
   const points=route.points;if(points.length<2)fail('WATER_ROUTE_TOO_SHORT');
   // Let the visible channel wander inside its broad excavated valley. The
   // surveyed bed elevations remain authoritative; this small lateral bend
@@ -57,20 +57,94 @@ function buildWaterRibbon(route,kind,formation){
     positions.push(p.x+nx*half,y,p.z+nz*half,p.x-nx*half,y,p.z-nz*half);
     if(i){const q=2*i,r=q-2;indices.push(r,q,r+1,r+1,q,q+1)}
   }
-  return Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(indices),vertexCount:positions.length/3,triangleCount:indices.length/3,routeId:route.id});
+  // Preserve the source bank rows for drainage witnesses, but emit only the
+  // river outside the actual triangulated basin. The basin owns every overlap.
+  const footprint=waterTriangles(basinMesh),emitted=[];
+  for(let i=0;i<indices.length;i+=3){
+    let pieces=[indices.slice(i,i+3).map(id=>({x:positions[id*3],y:positions[id*3+1],z:positions[id*3+2]}))];
+    for(const triangle of footprint){
+      const next=[];
+      for(const polygon of pieces){
+        const box=polygonBounds(polygon);
+        if(box[2]<triangle.box[0]||box[0]>triangle.box[2]||box[3]<triangle.box[1]||box[1]>triangle.box[3])next.push(polygon);
+        else next.push(...subtractWaterTriangle(polygon,triangle.points));
+      }
+      pieces=next;if(!pieces.length)break;
+    }
+    for(const polygon of pieces){
+      const base=positions.length/3;
+      for(const p of polygon){
+        // Boundary vertices share exactly the basin water elevation. Points
+        // introduced by infinite edge extensions outside the basin retain the
+        // original interpolated river grade.
+        const atBasin=sampleWaterTriangles(footprint,p.x,p.z);
+        positions.push(p.x,atBasin?formation.oasis.waterLevel:p.y,p.z);
+      }
+      for(let k=1;k<polygon.length-1;k++)emitted.push(base,base+k,base+k+1);
+    }
+  }
+  return Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(emitted),vertexCount:positions.length/3,triangleCount:emitted.length/3,routeId:route.id,basinOwnsOverlap:true});
+}
+/** One wet-margin definition constructs the basin's actual clipped polygons. */
+function oasisWetMargin(formation,x,z){
+  const basin=formation.oasis,dx=(x-basin.centerX)/basin.radiusX,dz=(z-basin.centerZ)/basin.radiusZ,angle=Math.atan2(dz,dx);
+  const edge=1+basin.edgeHarmonics[0]*Math.sin(3*angle)+basin.edgeHarmonics[1]*Math.sin(5*angle+0.7)+
+    basin.edgeHarmonics[2]*Math.cos(2*angle-0.4)+basin.edgeHarmonics[3]*Math.sin(7*angle+1.1)+
+    basin.edgeHarmonics[4]*Math.cos(9*angle-.6)+.025*Math.sin(x*.31+z*.23)*Math.cos(z*.27-x*.19);
+  return Math.min(0.98-Math.hypot(dx,dz)/(edge*(basin.waterEdgeScale??0.72)),
+    (basin.waterLevel-formation.excavatedOutdoorTerrain(x,z))*.5);
+}
+const polygonBounds=points=>[Math.min(...points.map(p=>p.x)),Math.min(...points.map(p=>p.z)),Math.max(...points.map(p=>p.x)),Math.max(...points.map(p=>p.z))];
+function waterTriangles(mesh,{projected=false,role=null}={}){
+  const result=[];
+  for(let i=0;i<mesh.indices.length;i+=3){
+    const points=Array.from(mesh.indices.slice(i,i+3),id=>{
+      const xyz=mesh.positions.slice(id*3,id*3+3);
+      return projected?unprojectPlanetVertex(...xyz):{x:xyz[0],y:xyz[1],z:xyz[2]};
+    });
+    const [a,b,c]=points,det=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);
+    if(Math.abs(det)>1e-10)result.push({points,det,box:polygonBounds(points),role});
+  }
+  return result;
+}
+function sampleWaterTriangles(triangles,x,z){
+  let top=null;
+  for(const t of triangles){
+    if(x<t.box[0]-1e-6||x>t.box[2]+1e-6||z<t.box[1]-1e-6||z>t.box[3]+1e-6)continue;
+    const [a,b,c]=t.points,u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/t.det,
+      v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/t.det,w=1-u-v;
+    if(Math.min(u,v,w)<-1e-7)continue;
+    const y=u*a.y+v*b.y+w*c.y;
+    if(!top||y>top.y)top={y,role:t.role};
+  }
+  return top;
+}
+/** Convex subtraction retains the outside fragments and discards the overlap.
+ * It clips against emitted basin triangles, not an approximate ellipse. */
+function subtractWaterTriangle(polygon,triangle){
+  const [a,b,c]=triangle,orientation=Math.sign((b.x-a.x)*(c.z-a.z)-(b.z-a.z)*(c.x-a.x));
+  let inside=polygon;const outside=[];
+  for(let edge=0;edge<3&&inside.length;edge++){
+    const a=triangle[edge],b=triangle[(edge+1)%3],distance=p=>orientation*((b.x-a.x)*(p.z-a.z)-(b.z-a.z)*(p.x-a.x));
+    const keep=[],discard=[];
+    for(let i=0;i<inside.length;i++){
+      const p=inside[i],q=inside[(i+1)%inside.length],dp=distance(p),dq=distance(q);
+      (dp>=0?keep:discard).push(p);
+      if((dp>=0)!==(dq>=0)){
+        const t=dp/(dp-dq),intersection={x:p.x+(q.x-p.x)*t,y:p.y+(q.y-p.y)*t,z:p.z+(q.z-p.z)*t};
+        keep.push(intersection);discard.push(intersection);
+      }
+    }
+    const area=discard.reduce((sum,p,i)=>{const q=discard[(i+1)%discard.length];return sum+p.x*q.z-q.x*p.z;},0);
+    if(discard.length>=3&&Math.abs(area)>1e-9)outside.push(discard);
+    inside=keep;
+  }
+  return outside;
 }
 function buildOasisWater(formation,terrainAt){
   const basin=formation.oasis,step=1.5,positions=[],indices=[];
   const x0=basin.centerX-basin.radiusX,x1=basin.centerX+basin.radiusX,z0=basin.centerZ-basin.radiusZ,z1=basin.centerZ+basin.radiusZ;
-  const cols=Math.ceil((x1-x0)/step),rows=Math.ceil((z1-z0)/step),shoreMargin=(x,z)=>{
-    const dx=(x-basin.centerX)/basin.radiusX,dz=(z-basin.centerZ)/basin.radiusZ,angle=Math.atan2(dz,dx);
-    const edge=1+basin.edgeHarmonics[0]*Math.sin(3*angle)+basin.edgeHarmonics[1]*Math.sin(5*angle+0.7)+
-      basin.edgeHarmonics[2]*Math.cos(2*angle-0.4)+basin.edgeHarmonics[3]*Math.sin(7*angle+1.1)+
-      basin.edgeHarmonics[4]*Math.cos(9*angle-.6)+.025*Math.sin(x*.31+z*.23)*Math.cos(z*.27-x*.19);
-    const shore=0.98-Math.hypot(dx,dz)/(edge*(basin.waterEdgeScale??0.72));
-    const basinFloor=(basin.waterLevel-formation.excavatedOutdoorTerrain(x,z))*.5;
-    return Math.min(shore,basinFloor);
-  };
+  const cols=Math.ceil((x1-x0)/step),rows=Math.ceil((z1-z0)/step),shoreMargin=(x,z)=>oasisWetMargin(formation,x,z);
   for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
     const x=x0+i*step,z=z0+j*step,xn=Math.min(x1,x+step),zn=Math.min(z1,z+step);
     let polygon=[{x,z,margin:shoreMargin(x,z)},{x:xn,z,margin:shoreMargin(xn,z)},
@@ -394,16 +468,21 @@ export function constructGeologicalRuntimeBridge(canonical){
   const portal=Object.freeze({...rawPortal,exposedCliffFace:cliff.mesh,diagnostics:Object.freeze({
     ...rawPortal.diagnostics,...cliff.diagnostics,openCaveApertureCells:true})});
   const retirement=deriveBaseTriangleRetirement(canonical,BOUNDS);
+  const basinWater=buildOasisWater(formation,terrainAt);
   const parts=[
     ['ERODED_TERRAIN',portal.terrainWithoutAperture],
     ['MOUNTAIN_OVERBURDEN',portal.upperMantle],
     ['NATURAL_CLIFF_FACE',portal.exposedCliffFace],
     ['CAVERN_PHYSICAL_SHELL',portal.cave],
-    ...formation.drainage.waterRoutes.map(route=>['FRESHWATER_RIVER',buildWaterRibbon(route,route.kind,formation)]),
-    ['OASIS_WATER',buildOasisWater(formation,terrainAt)]
+    ...formation.drainage.waterRoutes.map(route=>['FRESHWATER_RIVER',buildWaterRibbon(route,route.kind,formation,basinWater)]),
+    ['OASIS_WATER',basinWater]
   ];
   const meshes=parts.map(([role,mesh])=>Object.freeze({role,mesh:projectGeologicalMeshForRenderer(mesh)}));
-  const output=Object.freeze({contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
+  const emittedWater=meshes.filter(p=>['FRESHWATER_RIVER','OASIS_WATER'].includes(p.role)).flatMap(p=>waterTriangles(p.mesh,{projected:true,role:p.role}));
+  const sampleWaterAt=(x,z)=>{if(!Number.isFinite(x)||!Number.isFinite(z))fail('WATER_SAMPLE_NONFINITE');return sampleWaterTriangles(emittedWater,x,z);};
+  const emittedOutdoor=meshes.filter(p=>p.role==='ERODED_TERRAIN').flatMap(p=>waterTriangles(p.mesh,{projected:true,role:'OUTDOOR_TERRAIN'}));
+  const sampleOutdoorAt=(x,z)=>{if(!Number.isFinite(x)||!Number.isFinite(z))fail('OUTDOOR_SAMPLE_NONFINITE');return sampleWaterTriangles(emittedOutdoor,x,z);};
+  const output=Object.freeze({sampleWaterAt,sampleOutdoorAt,contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
     formation:physicalFormation,portal,retirement,meshes,route:trace,originalTerrainColorAt,
     cavernLightVisibility:makeCavernLightVisibility([kernel.mesh,cliff.mesh]),
     originalTerrainElevationAt:terrainAt,
@@ -424,8 +503,19 @@ export function getGeologicalRuntimeBridge(){return active}
 /** null => preserve existing Gen324 behavior without touching canonical navigation. */
 export function resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight=2.25}={}){
   if(!active)return null;
-  const {site,formation}=active;
-  if(x<site.x-site.width-7||x>site.x+site.width+7||z<site.portalZ-42||z>site.portalZ+site.galleryLength)return null;
+  const {site,formation,localBounds:bounds}=active;
+  if(z<site.portalZ){
+    if(x<bounds.xMin||x>bounds.xMax||z<bounds.zMin||z>bounds.zMax)return null;
+    const ground=active.sampleOutdoorAt(x,z);
+    if(!ground)return Object.freeze({class:'EXTERIOR_DRY_CHANNEL',eligible:false,x,z,issues:['GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING']});
+    const support={class:'EXTERIOR_DRY_CHANNEL',eligible:true,x,z,footY:ground.y,eyeY:ground.y+eyeHeight,
+      ceilingY:null,headroom:null,issues:[],worldManifoldUnchanged:true,boundarySource:'ACTUAL_EMITTED_TERRAIN_TRIANGLES'};
+    const water=active.sampleWaterAt(x,z);
+    if(water&&water.y>support.footY+.05)return Object.freeze({...support,eligible:false,waterY:water.y,waterDepth:water.y-support.footY,issues:['GEOLOGICAL_SUBMERGED_OUTDOOR_SUPPORT']});
+    return Object.freeze(support);
+  }
+  // The cave keeps its existing narrow physical domain and kernel collision.
+  if(x<site.x-site.width-7||x>site.x+site.width+7||z>site.portalZ+site.galleryLength)return null;
   return sampleFormationWalkable(formation,{x,z,eyeHeight});
 }
 /** Strict counterpart to the Run8E source index degeneracy technique. */

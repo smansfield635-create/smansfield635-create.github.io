@@ -3,9 +3,12 @@ export async function qualifyCavernVegetation({canvas,intake,binding,root}){
   const started=performance.now(),assert=(value,message)=>{if(!value)throw Error('CAVERN_VEGETATION_BROWSER:'+message);};
   const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const initial=intake.getNavigationState();
+  const {getGeologicalRuntimeBridge}=await import('../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js?rev=gen2777-water-entry-coherence-v1');
+  const dry=state=>{const w=getGeologicalRuntimeBridge().sampleWaterAt(state.position.x,state.position.z);assert(!w||w.y<=state.position.y-2.25+.05,'CAMERA_WALKED_UNDER_VISIBLE_WATER');};
+  dry(initial);
   assert(root.dataset.run8eReady==='true','NEARBY_READY_NOT_PUBLISHED');
   assert(root.dataset.nearbyFineGrassReady==='true','NEARBY_SURVEY_NOT_COMPLETE');
-  assert(Math.hypot(initial.position.x-40,initial.position.z+300)<.1,'WRONG_REAR_APPROACH');
+  assert(Math.hypot(initial.position.x-40,initial.position.z+264)<.1,'WRONG_REAR_APPROACH');
   await delay(100);
   const arrivalResources=binding.getReceipt().resources;
   assert(arrivalResources.woodlandFineGrass?.visibleContacts>0,'NEARBY_CONTACTS_NOT_DRAWN');
@@ -13,10 +16,10 @@ export async function qualifyCavernVegetation({canvas,intake,binding,root}){
   const steps=[];
   // Exercise the installed wheel intake and its real proposal-to-GPU path.
   // Synthetic browser events are diagnostic equivalents, not physical touch proof.
-  for(let i=0;i<15;i++){
+  for(let i=0;i<6;i++){
     canvas.dispatchEvent(new WheelEvent('wheel',{deltaY:-280,bubbles:true,cancelable:true}));
     await delay(70);
-    const state=intake.getNavigationState();
+    const state=intake.getNavigationState();dry(state);
     steps.push({x:state.position.x,y:state.position.y,z:state.position.z,support:state.geologicalPhysicalSupport,floorClass:state.geologicalFloorClass});
   }
   const interior=intake.getNavigationState();

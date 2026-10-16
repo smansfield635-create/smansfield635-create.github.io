@@ -1,0 +1,82 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/water-entry-coherence-v1/source-evidence.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/water-entry-coherence-v1/source-evidence.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/water-entry-coherence-v1/source-evidence.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs",
+      "sha256": "6e515c4de86aa41c164bcc0584a5d01a271a5b28c46981de76e80d64a159d0eb"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-repair.v1.test.mjs",
+      "sha256": "d07c3be3fb351772d6b2fb378dbebe0c3f6cf7ad7a497f7e99491553d4d2376b"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "c9c4054bb7f50b5eea0ce86e33c42c0fa164ae9e8f0da5629ac4699187aec343"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
+      "sha256": "5bed8c9acbe1c1400e63dc5e7d671f27bfbe8957263c909cdaa12284a73bfa3b"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
+      "sha256": "bcdb015a03f4a272de934ce9eb6e67360872c29dd765e83110dbbbc0bc3be369"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "a2bbc46d3fd329b51ce812a78316fddbace0c628a063be8cf7d565e7a4fdc843"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "7b1b9452cac2d49aed1fc3bed7a496ccd41c1b46ae0de9b80bb5396789fd9eb3"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "87891c6ca7b0782bf49f669f62e0c69b3bdefaa7f4e67c8a27ae2011ea688517"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "ed2b9f7a193b3a7cf2bae3c24ef15d3c79b73637181f441278e3f59cfa816b38"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "857d555dae6e64824bb4c1874e6ed4efff76f2acb87982a10d82f84490ec067a"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "2aa2acf936dbfd634f9ece4923166358b0889f4f3aa869f876b5cb5d84bf5e71"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "19e93b7d77d602977e64d096138b1456c617576decb4dec76c333259ab987b26"
+    }
+  ],
+  "acceptanceBasis": "Prior visual proxy/world-continuity review retained; correction changes existing water confluence, wet eligibility and existing arrival position only. Same world, terrain, cavern, direct controls and minimal UI; actual indexed mesh regressions and independent West source review support unchanged anchor invariants. Owner directs publication for live judgment after prior failed perception. This accepts anchored world continuity, not aesthetics or physical-device acceptance.",
+  "ownerPerceptualAcceptance": false,
+  "newIntegratedBrowserRunPerformed": false
+}

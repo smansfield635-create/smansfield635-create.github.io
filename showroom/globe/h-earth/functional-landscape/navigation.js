@@ -2,7 +2,7 @@
  * H-Earth terrain-supported navigation successor.
  * Ordinary ground traversal derives camera Y from the exact presented terrain.
  */
-import {resolveGeologicalRuntimeFootSupport} from './geological-runtime-bridge.v1.js';
+import {resolveGeologicalRuntimeFootSupport} from './geological-runtime-bridge.v1.js?rev=gen2777-water-entry-coherence-v1';
 import { H_EARTH_3D_CAMERA_CAPACITY } from '../capacity.js';
 import { sampleHEarthTerrainField } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 import { H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN } from '../../../../h-earth-3d/integration/h-earth.landscape-realization-planner.js';
@@ -59,7 +59,7 @@ export const H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS=freeze({
   // Owner-reviewed exact walking camera (woodland-clearing-trial.record.json).
   // Explicit visit only: the canonical COAST landing remains unchanged.
   // Explicit candidate-only visit; default H-Earth coastal entry is unchanged.
-  GEOLOGICAL_CAVERN_REAR_APPROACH:{waypointId:'GEOLOGICAL_CAVERN_REAR_APPROACH',label:'Rear-valley natural cavern',position:{x:40,z:-300},yawDegrees:180,pitchDegrees:4},
+  GEOLOGICAL_CAVERN_REAR_APPROACH:{waypointId:'GEOLOGICAL_CAVERN_REAR_APPROACH',label:'Rear-valley natural cavern',position:{x:40,z:-264},yawDegrees:180,pitchDegrees:4},
   WOODLAND_CLEARING_FOUR_TREES:{waypointId:'WOODLAND_CLEARING_FOUR_TREES',label:'Four approved woodland trees',position:{x:-139.40267987050615,z:-194.5},yawDegrees:0,pitchDegrees:16}
 });
 

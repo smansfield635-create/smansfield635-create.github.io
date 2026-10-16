@@ -3,7 +3,7 @@ import {
   proposeHEarthFunctionalLandscapeNavigation,
   evaluateHEarthFunctionalLandscapeNavigationState,
   resolveHEarthNavigationBoundaryFeedback
-} from '../../functional-landscape/navigation.js?cb=gen2735-geological-navigation-v1';
+} from '../../functional-landscape/navigation.js?cb=gen2777-water-entry-coherence-v1';
 import {
   createGestureControlLattice
 } from '../touch-motion-cp3a/touch-control-lattice.js';

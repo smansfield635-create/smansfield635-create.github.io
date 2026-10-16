@@ -113,7 +113,17 @@ const main = async () => {
     else if (policy.source === 'REQUEST') {
       const value = declaredInputs[key];
       if (policy.required && (value === undefined || value === null || value === '')) throw new Error(`Missing required input: ${key}`);
-      if (value !== undefined) inputs[key] = String(value);
+      if (value !== undefined) {
+        const textValue = String(value);
+        if (policy.requiredPrefix && !textValue.startsWith(policy.requiredPrefix)) throw new Error(`Request input prefix mismatch: ${key}`);
+        inputs[key] = textValue;
+      }
+    } else if (policy.source === 'TRANSPORT_PULL_REQUEST_NUMBER') {
+      if (policy.userOverrideAllowed !== false || !/^\d+$/.test(String(pullRequestNumber))) throw new Error(`Transport issue input is not fixed: ${key}`);
+      inputs[key] = String(pullRequestNumber);
+    } else if (policy.source === 'CURRENT_REPOSITORY') {
+      if (policy.userOverrideAllowed !== false || !repo) throw new Error(`Transport repository input is not fixed: ${key}`);
+      inputs[key] = repo;
     } else throw new Error(`Unsupported input source for ${key}`);
   }
 

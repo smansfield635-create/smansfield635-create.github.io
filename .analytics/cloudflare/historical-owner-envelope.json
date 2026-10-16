@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-16T12:43:07Z",
+  "generatedAt": "2026-10-16T13:32:34Z",
   "window": {
-    "start": "2026-07-18T12:43:07Z",
-    "end": "2026-10-16T12:43:07Z"
+    "start": "2026-07-18T13:32:34Z",
+    "end": "2026-10-16T13:32:34Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4912,
-    "visits": 1325,
+    "pageLoads": 4902,
+    "visits": 1315,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4912,
-        "visits": 1325
+        "pageLoads": 4902,
+        "visits": 1315
       }
     },
     "byPath": {
@@ -327,8 +327,8 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
+        "pageLoads": 140,
+        "visits": 110
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -357,8 +357,8 @@
         "visits": 782
       },
       "(none)": {
-        "pageLoads": 533,
-        "visits": 533
+        "pageLoads": 523,
+        "visits": 523
       },
       "raw.githack.com": {
         "pageLoads": 10,

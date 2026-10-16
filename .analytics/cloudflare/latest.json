@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_BRIDGE_V3",
-  "generatedAt": "2026-10-16T12:43:07Z",
+  "generatedAt": "2026-10-16T13:32:34Z",
   "window": {
-    "start": "2026-07-18T12:43:07Z",
-    "end": "2026-10-16T12:43:07Z"
+    "start": "2026-07-18T13:32:34Z",
+    "end": "2026-10-16T13:32:34Z"
   },
   "chunkDays": 1,
   "accounts": [
@@ -345,48 +345,6 @@
           "count": 10,
           "dimensions": {
             "datetimeHour": "2026-07-27T04:00:00Z"
-          }
-        },
-        {
-          "count": 20,
-          "dimensions": {
-            "datetimeHour": "2026-07-27T16:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-07-27T17:00:00Z"
-          }
-        },
-        {
-          "count": 20,
-          "dimensions": {
-            "datetimeHour": "2026-07-27T18:00:00Z"
-          }
-        },
-        {
-          "count": 60,
-          "dimensions": {
-            "datetimeHour": "2026-07-27T20:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-07-28T00:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-07-28T02:00:00Z"
-          }
-        },
-        {
-          "count": 30,
-          "dimensions": {
-            "datetimeHour": "2026-07-28T03:00:00Z"
           }
         },
         {
@@ -3698,12 +3656,6 @@
         {
           "count": 1,
           "dimensions": {
-            "datetimeHour": "2026-10-09T12:00:00Z"
-          }
-        },
-        {
-          "count": 1,
-          "dimensions": {
             "datetimeHour": "2026-10-09T13:00:00Z"
           }
         },
@@ -4611,6 +4563,12 @@
           "count": 1,
           "dimensions": {
             "datetimeHour": "2026-10-16T11:00:00Z"
+          }
+        },
+        {
+          "count": 1,
+          "dimensions": {
+            "datetimeHour": "2026-10-16T12:00:00Z"
           }
         }
       ]

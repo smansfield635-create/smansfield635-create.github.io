@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-16T12:43:07Z",
+  "generatedAt": "2026-10-16T13:32:34Z",
   "window30d": {
-    "start": "2026-09-16T12:43:07Z",
-    "end": "2026-10-16T12:43:07Z"
+    "start": "2026-09-16T13:32:34Z",
+    "end": "2026-10-16T13:32:34Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 23
+      "pageLoads": 22
     },
     {
       "date": "2026-10-10",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 14
+      "pageLoads": 15
     }
   ],
   "summary": {
-    "pageLoads": 4243,
-    "botPageLoads": 1654,
-    "nonBotPageLoads": 2589
+    "pageLoads": 4415,
+    "botPageLoads": 1768,
+    "nonBotPageLoads": 2647
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2693,
-      "visits": 2693
+      "pageLoads": 2953,
+      "visits": 2953
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 908,
+      "pageLoads": 1338,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 143,
-      "visits": 143
+      "pageLoads": 263,
+      "visits": 263
     },
     {
       "host": "bing.com",
@@ -155,8 +155,8 @@
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 20,
-      "visits": 20
+      "pageLoads": 30,
+      "visits": 30
     },
     {
       "host": "l.instagram.com",

@@ -1,11 +1,11 @@
-import {buildVegetationVisibleSurface} from './vegetation-visible-surface.v1.js?rev=gen2778-land-only-v1';
-import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure,H_EARTH_WATER_PRESENTATION_ENABLED,isHEarthWaterPresentationPart,shouldPresentHEarthDrawRange} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2778-land-only-v1';
+import {buildVegetationVisibleSurface} from './vegetation-visible-surface.v1.js?rev=gen2779-front-water-exit-v1';
+import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure,H_EARTH_WATER_PRESENTATION_ENABLED,H_EARTH_REAR_WATER_PRESENTATION_ENABLED,isHEarthWaterPresentationPart,shouldPresentHEarthDrawRange} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2779-front-water-exit-v1';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
-import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,createNearbyFineGrassCache,prepareWoodlandSelectionCache,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2778-land-only-v1';
+import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,createNearbyFineGrassCache,prepareWoodlandSelectionCache,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2779-front-water-exit-v1';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
-import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2778-land-only-v1';
+import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2779-front-water-exit-v1';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
 const startupMeasure=(name,operation)=>globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.measure?globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.measure(name,operation):operation();
 import { sampleHEarthRun8BSuccessorTerrainField } from '../../../../h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js';
@@ -14,9 +14,9 @@ import { regionToHEarthPlanetPoint, H_EARTH_PLANETARY_WORLD_FRAME } from './plan
 import { getHEarthRun8ER2CanonicalLiveRenderPackage, prepareHEarthRun8ER2CanonicalLiveRenderPackage, getHEarthRun8ER2CanonicalPreparationTiming } from './live-render-package.run8e-r2.canonical.js?cb=meadow-distribution-20261006';
 import { H_EARTH_RUN_8E_R2_CURRENT_OCCURRENCE_ID, getHEarthRun8ER2VegetationWorldTruthPlan, createHEarthRun8ER2VegetationPresentationBatch, createHEarthRun8ER2VegetationPresentationBatchAsync, prepareHEarthRun8ER2VegetationWorldTruthPlan, getHEarthRun8ER2ImmutableLiveRenderPackage, H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY } from './live-render-package.run8e-r2.js?cb=meadow-distribution-20261006';
 import { createHEarthRun8ER2DCanonicalGPUUploadViews, getHEarthSignedCoastDistanceMeters } from './gpu-upload-views.run8e-r2d.js?cb=meadow-distribution-20261006';
-import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006&rev=gen2778-land-only-v1';
+import { getHEarthRun8ER3ALiveRendererInterface } from './live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006&rev=gen2779-front-water-exit-v1';
 // SHORELINE_SOIL_BEGIN import
-import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=meadow-distribution-20261006&rev=gen2778-land-only-v1';
+import { buildHEarthOasisGrassSoilCoverage, prepareHEarthOasisFoliagePresentation } from './grass-lowland-trial.js?cb=meadow-distribution-20261006&rev=gen2779-front-water-exit-v1';
 // SHORELINE_SOIL_END import
 
 // The CPU contour is derived from uploaded Float32 triangle planes in world x/z.
@@ -2137,7 +2137,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   function drawGeologicalRendering(){
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);
     const parts=resources.geologicalMeshes||[];
-    for(const part of parts){if(!H_EARTH_WATER_PRESENTATION_ENABLED&&isHEarthWaterPresentationPart(part.role))continue;gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.mesh.indices.length,gl.UNSIGNED_INT,0);
+    for(const part of parts){if(!H_EARTH_REAR_WATER_PRESENTATION_ENABLED&&isHEarthWaterPresentationPart(part.role))continue;gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.mesh.indices.length,gl.UNSIGNED_INT,0);
       part.drawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=part.mesh.indices.length;}
     gl.bindVertexArray(resources.vertexArray);
   }
@@ -2501,8 +2501,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         attachedMeshCount:resources.geologicalMeshes?.length??0,gpuByteLength:resources.geologicalGPUBytes,
         physicalNavigationInstalled:resources.geologicalNavigationInstallation?.installed===true,
         oldDecorativeArchDrawn:false,realWorldPackagePreserved:true,freshwaterClaimed:false,
-        waterPresentationEnabled:H_EARTH_WATER_PRESENTATION_ENABLED,
-        designedFreshwaterRendered:H_EARTH_WATER_PRESENTATION_ENABLED&&(resources.geologicalMeshes||[]).some(part=>part.role==='FRESHWATER_RIVER'||part.role==='OASIS_WATER'),
+        waterPresentationEnabled:H_EARTH_WATER_PRESENTATION_ENABLED,rearWaterPresentationEnabled:H_EARTH_REAR_WATER_PRESENTATION_ENABLED,
+        designedFreshwaterRendered:H_EARTH_REAR_WATER_PRESENTATION_ENABLED&&(resources.geologicalMeshes||[]).some(part=>part.role==='FRESHWATER_RIVER'||part.role==='OASIS_WATER'),
         waterSourceHydrologyProven:false}:null,
       refinementResourceAuthorized:true, refinementResourceCreated:resources.refinement?.created===true,
       refinementResourceBufferUploadCount:counters.refinementBufferUploadCount,

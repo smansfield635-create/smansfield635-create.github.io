@@ -3,7 +3,7 @@ export async function qualifyCavernVegetation({canvas,intake,binding,root}){
   const started=performance.now(),assert=(value,message)=>{if(!value)throw Error('CAVERN_VEGETATION_BROWSER:'+message);};
   const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const initial=intake.getNavigationState();
-  const {getGeologicalRuntimeBridge}=await import('../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js?rev=gen2778-land-only-v1');
+  const {getGeologicalRuntimeBridge}=await import('../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js?rev=gen2779-front-water-exit-v1');
   const dry=state=>{const w=getGeologicalRuntimeBridge().sampleWaterAt(state.position.x,state.position.z);assert(!w||w.y<=state.position.y-2.25+.05,'CAMERA_WALKED_UNDER_VISIBLE_WATER');};
   dry(initial);
   assert(root.dataset.run8eReady==='true','NEARBY_READY_NOT_PUBLISHED');

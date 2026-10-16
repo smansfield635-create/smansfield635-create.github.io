@@ -1,0 +1,91 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/front-water-exit-boundary-v1/source-evidence.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/front-water-exit-boundary-v1/source-evidence.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/front-water-exit-boundary-v1/source-evidence.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs",
+      "sha256": "822a3f074e52fa345720d4dbaa90799b3098a006d0a7f5a1651ee0537afca2a8"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-repair.v1.test.mjs",
+      "sha256": "b045f2962ca8fc5b49593cac7342b191d543874621d6625c940e8d715d43c6af"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "0003a870d184367f8d4d7bf257eaeb687ee200a3c3bbad7bcf1a85be3163e220"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.land-only.v1.test.mjs",
+      "sha256": "327ff420d3202f4d4b1b8d4208566188bb49047758eb5cca96e2d0bb91683d80"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
+      "sha256": "dee60b098f60236b80fda12ff2c23ec83dd006c53d459d214ed011444e70d919"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
+      "sha256": "c01277affbaa07e7cd9d63483a64a0eab5011abf36872f0480ce40d3656fe3bb"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "417a7039945302c8ba629fe353b8ea87d83573249f162bcccf1f2399be9ddffc"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "15846f8df6efb7c7631cb2aaefbd5f97edfe0b7f44dba45cd1ebdd877b5b771a"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "85230b9ac46e494563a999d39bc36aa0153ef71833c145feabcf6e312be09757"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "79bc423610870467df0bc03d23b1481169c216deacee6eda35e02fb98914defb"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "9ec496aa85b9bd5888a33c1b2fe4b3a87734d8eaa1f9ab7baf104b254435643e"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "89026ea6eb29e0c2e1e4b152219afcacd610aad077ef3d1efcada9d50565c47b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js",
+      "sha256": "e860f312beb629849a6e69d079b05ba3577b7889e7a5eabf654226e4157849d8"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "eba488829c9afeacbfe6c1b29b12785c2199ff4e2f2af843e5bcb4a4d0329f63"
+    }
+  ],
+  "acceptanceBasis": "Owner29068 accepts cavern. Retain same canonical world, controls, accepted shell and final camera. Restore originalfrontwater presentation and add only missing lowerentrance boundary seam. Independent source/ray checks preserve anchored embodiedworld continuity; new physical exit acceptance remains pending after owner-directed publication.",
+  "ownerPerceptualAcceptance": false,
+  "newIntegratedBrowserRunPerformed": false,
+  "canonicalAdmissionGeneration": 2779
+}

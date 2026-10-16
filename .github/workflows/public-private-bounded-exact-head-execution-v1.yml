@@ -26,6 +26,7 @@ jobs:
     env:
       DGB_STUDY_SOURCE_HEAD: 535b563069e10934c5b5c4c14b59cfb9fb15dfc9
       DGB_STUDY_RATIFICATION_COMMIT: 87365476f7c1e37cda4a2528187b370aeb876f0a
+      DGB_READBACK_QUALIFICATION_ONLY: ${{ github.event_name == 'push' && github.event.head_commit.message == 'Qualify independently saved checkpoint readback only' }}
     steps:
       - name: Require independently admitted public binding
         uses: actions/github-script@v7
@@ -71,6 +72,7 @@ jobs:
           node-version: 22
       - name: Execute fixed private recurring cycle and redact public output
         id: proof
+        if: env.DGB_READBACK_QUALIFICATION_ONLY != 'true'
         env:
           NODE_DEBUG: undici
           DGB_GITHUB_TOKEN: ${{ steps.private.outputs.token }}
@@ -186,6 +188,120 @@ jobs:
           process.exitCode=await runRetentionWithSafeReceipt();
           NODE
 
+      - name: Independently verify saved private study and persist hosted capture
+        if: steps.proof.outputs.collector_result == 'PASS' || env.DGB_READBACK_QUALIFICATION_ONLY == 'true'
+        env:
+          DGB_GITHUB_TOKEN: ${{ steps.private.outputs.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import crypto from 'node:crypto';
+          const REPO='smansfield635-create/geodiametrics1',ROOT='https://api.github.com/repos/'+REPO,BRANCH='ops-chamber-study-checkpoint-v1';
+          const PREFIX='tools/private-public-bridge/standalone/study/runtime/';
+          const PRIOR='6e1f4fc90408f05139461bfd61508e1e4d66f24a';
+          const QUALIFICATION='d2d8c97547d13d2aafd0957153a13c3562caf871';
+          const hex=x=>typeof x==='string'&&/^[0-9a-f]{40}$/.test(x);
+          const stop=()=>{throw Error('PRIVATE_READBACK_REFUSED');};
+          const blobSha=bytes=>crypto.createHash('sha1').update(Buffer.concat([Buffer.from(`blob ${bytes.length}\0`),bytes])).digest('hex');
+          function createPrivateReadbackApi({token,request=fetch}){
+           if(typeof token!=='string'||!token)stop();
+           return {async call(url,{method='GET',body,ok=[200]}={}){
+            const u=new URL(url);if(u.origin!=='https://api.github.com'||u.username||u.password||!u.pathname.startsWith('/repos/'+REPO+'/'))stop();
+            if(method!=='GET'&&!(method==='PUT'&&u.pathname==='/repos/'+REPO+'/contents/'+PREFIX+'study-readback-verification.v1.json'&&!u.search))stop();
+            const r=await request(url,{method,redirect:'error',signal:AbortSignal.timeout(30000),headers:{Accept:'application/vnd.github+json',Authorization:'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28','Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});
+            if(!ok.includes(r.status))stop();return {status:r.status,value:r.status===404?null:await r.json()};
+           },async read(url){return (await this.call(url)).value;}};
+          }
+          async function readJsonFile(github,p,ref){
+           if(!hex(ref)||typeof p!=='string'||!p||p.startsWith('/')||/[?#]/.test(p)||p.split('/').some(x=>x==='..'||x==='.'))stop();
+           const f=await github.read(ROOT+'/contents/'+p+'?ref='+ref);if(!hex(f.sha))stop();let raw;
+           if(f.encoding==='base64'&&typeof f.content==='string')raw=Buffer.from(f.content.replace(/\s/g,''),'base64');
+           else{const b=await github.read(ROOT+'/git/blobs/'+f.sha);if(b.encoding!=='base64'||typeof b.content!=='string')stop();raw=Buffer.from(b.content.replace(/\s/g,''),'base64');}
+           if(blobSha(raw)!==f.sha)stop();return {raw,value:JSON.parse(raw.toString('utf8')),blob:f.sha};
+          }
+          async function verifyAndSave({github,native,authority=async()=>false,now=()=>new Date().toISOString(),sourceHead,qualificationOnly=false}){
+           if(!hex(sourceHead))stop();
+           const {createCheckpointStore,projectSavedBaseline,projectRollingStudy,validateDashboard,digest}=native;
+           if(await authority({github,jsonAt:async(p,ref)=>(await readJsonFile(github,p,ref)).value,digest})!==true)stop();
+           const head=async()=>{const h=(await github.read(ROOT+'/git/ref/heads/'+BRANCH)).object?.sha;if(!hex(h))stop();return h;};
+           const expectedHead=await head(),snapshotHead=qualificationOnly?QUALIFICATION:expectedHead;
+           const evidence=new Map();
+           async function file(name,ref){
+            const p=PREFIX+name,result=await readJsonFile(github,p,ref);evidence.set(ref+':'+p,{path:p,blob:result.blob});return result;
+           }
+           const store=createCheckpointStore({github}),saved=await store.readback(snapshotHead);
+           if(!hex(saved.blob))stop();
+           evidence.set(snapshotHead+':'+PREFIX+'checkpoint.v1.json',{path:PREFIX+'checkpoint.v1.json',blob:saved.blob});
+           const prior=await store.readback(PRIOR),state=saved.state;
+           const data=(await file('dashboard-data.v1.json',snapshotHead)).value,receipt=(await file('dashboard-projection-receipt.v1.json',snapshotHead)).value;
+           validateDashboard(data);
+           if(receipt.schema!=='DGB_PRIVATE_STUDY_DASHBOARD_PROJECTION_RECEIPT_v1'||receipt.result!=='PRIVATE_PROJECTION_PREPARED_NOT_HOSTED'||!hex(receipt.checkpointHead)||receipt.sourceHead!==sourceHead||receipt.savedThrough!==state.population.through||!Number.isFinite(Date.parse(receipt.projectionObservedAt))||receipt.projectionDigest!==digest(data)||receipt.displayedThrough!==null||receipt.hostedPublicationVerified!==false||receipt.publicRawDataExported!==false)stop();
+           // The projection may be a later single-file commit; bind its referenced checkpoint.
+           const referenced=await github.read(ROOT+'/contents/'+PREFIX+'checkpoint.v1.json?ref='+receipt.checkpointHead);
+           if(referenced.sha!==saved.blob)stop();
+           const rolling=projectRollingStudy(projectSavedBaseline(state,{commit:receipt.checkpointHead,lastSuccessfulUpdate:receipt.projectionObservedAt}));
+           if(digest(data.rollingStudy)!==digest(rolling)||Date.parse(rolling.through)<=Date.parse('2026-10-15T18:49:41Z'))stop();
+           const custody=s=>({reviewDigest:s.baseline.reviewDigest,corrections:s.baseline.corrections,rows:s.baseline.rows.filter(r=>r.reviewDigest)});
+           if(digest(custody(state))!==digest(custody(prior.state))||state.baseline.reviewedCount!==390||state.baseline.corrections.length!==47||state.baseline.inputAuditCount!==5)stop();
+           const auditFlags=state.baseline.rows.filter(r=>r.inputAuditReason).map(r=>({repository:r.repository,number:r.number,reason:r.inputAuditReason}));
+           if(auditFlags.length!==5||rolling.reviewedCount!==390||rolling.correctionCount!==47||rolling.auditFlagCount!==5+state.auditFlags.length||rolling.cohorts.reduce((n,c)=>n+c.total,0)!==state.population.records.length)stop();
+           const inputs=state.inputs.filter(x=>x.metadata.repository==='smansfield635-create/smansfield635-create.github.io'&&x.metadata.number===6377);if(inputs.length!==1)stop();
+           const c=inputs[0].capture,t=c.treeProof;
+           if(c.complete!==true||c.expectedChangedFiles!==59367||c.files?.length!==59367||new Set(c.files.map(f=>f.filename)).size!==59367||t?.schema!=='DGB_IMMUTABLE_COMPLETE_PATH_DIFF_v1'||t.complete!==true||t.treeObjectsHashVerified!==true||t.changedPathEntries!==59367||!c.inputAuditReason)stop();
+           const tree6377summary={repository:c.repository,number:c.number,changedPaths:59367,captureDigest:c.captureDigest,complete:true,treeObjectsHashVerified:true,baseTree:t.baseTree,headTree:t.headTree,renamePolicy:t.renamePolicy,lineStatistics:t.lineStatistics,inputAuditReason:c.inputAuditReason};
+           const capturedAt=now();if(!Number.isFinite(Date.parse(capturedAt))||Date.parse(capturedAt)<Date.parse(receipt.projectionObservedAt))stop();
+           const capture={schema:'DGB_HOSTED_STUDY_CAPTURE_v1',capturedAt,projectionHead:snapshotHead,sourceProjectionDigest:receipt.projectionDigest,rollingStudy:rolling,auditFlags};
+           const proof={schema:'DGB_PRIVATE_STUDY_READBACK_VERIFICATION_v1',result:'INDEPENDENT_READBACK_VERIFIED',snapshotHead,checkpointHead:receipt.checkpointHead,files:[...evidence.values()],sourceHead,custodyDigest:digest(custody(state)),tree6377summary,capture};
+           const bytes=Buffer.from(JSON.stringify(proof,null,2)+'\n'),sha=blobSha(bytes),url=ROOT+'/contents/'+PREFIX+'study-readback-verification.v1.json';
+           const priorProof=await github.call(url+'?ref='+expectedHead,{ok:[200,404]});if(priorProof.status===200&&!hex(priorProof.value.sha))stop();
+           if(await head()!==expectedHead)stop();
+           const response=await github.call(url,{method:'PUT',ok:priorProof.status===200?[200]:[201],body:{message:'Save independent private study readback verification',branch:BRANCH,content:bytes.toString('base64'),...(priorProof.status===200?{sha:priorProof.value.sha}:{})}});
+           const committed=response.value;if(committed.content?.sha!==sha||!hex(committed.commit?.sha))stop();
+           const readback=await file('study-readback-verification.v1.json',committed.commit.sha);if(!readback.raw.equals(bytes))stop();
+           const detail=await github.read(ROOT+'/commits/'+committed.commit.sha);if(detail.parents?.length!==1||detail.parents[0].sha!==expectedHead||detail.files?.length!==1||detail.files[0].filename!==PREFIX+'study-readback-verification.v1.json'||detail.files[0].sha!==sha)stop();
+           return proof;
+          }
+          async function runSafe(options,log=console.log){try{await verifyAndSave(options);log('{"schema":"DGB_SAFE_PRIVATE_STUDY_READBACK_v1","result":"PASS"}');return 0;}catch{log('{"schema":"DGB_SAFE_PRIVATE_STUDY_READBACK_v1","result":"FAIL_CLOSED"}');return 1;}}
+          
+          async function verifyReadbackGrant({github,jsonAt,digest}){
+           const root='https://api.github.com/repos/smansfield635-create/geodiametrics1';
+           const packetPath='tools/private-public-bridge/standalone/study/bounded-readback-evidence-20261016/operation-packet.v1.json';
+           const closure='a1e6853c37f6d792018be2f6897df7229c37c4eb';
+           const packet=await jsonAt(packetPath,'444537f3c803105ea11f8a5eaf875f6f572da9ad');
+           const r=packet?.operationRequest,p=packet?.constructionProcedure,s=r?.subjectIdentity;
+           const req='f882d7403481a1e139206a9e476d6da895a0f9452217f0003be035f5bd12564c',proc='21317b8ee6e4301545d89c7cc87c4e7f83320bcb69daf4f5ffe96b44e8ec662c';
+           const id='DGB_STUDY_BOUNDED_READBACK_EVIDENCE_20261016_001',scope='PRIVATE_PUBLIC_BRIDGE:OPERATIONS_CHAMBER:FIXED_STUDY_READBACK_EVIDENCE_V1';
+           const proof='tools/private-public-bridge/standalone/study/runtime/study-readback-verification.v1.json';
+           const refuse=()=>{throw Error('READBACK_AUTHORITY_REFUSED');};
+           if(!r||!p||digest(r)!==req||digest(p)!==proc||r.operationId!==id||r.lockScope!==scope||s?.sourceHead!=='535b563069e10934c5b5c4c14b59cfb9fb15dfc9'||s?.sourceRatification!=='87365476f7c1e37cda4a2528187b370aeb876f0a'||s?.runtimeBranch!=='ops-chamber-study-checkpoint-v1'||s?.proofPath!==proof||s?.priorCustodyCheckpoint!=='6e1f4fc90408f05139461bfd61508e1e4d66f24a'||s?.standingFixedReadbackEvidenceAuthorityAfterVerifiedClosure!==true||s?.publicRawDataExport!==false||s?.collectorAndCheckpointMutation!==false||!r.allowedPaths.includes(proof))refuse();
+           const ledgerPath='.github/operation-intake/active-operation-ledger.v1.json';
+           const closed=await jsonAt(ledgerPath,closure);
+           const liveHead=(await github.read(root+'/git/ref/heads/operation-locks/repository-operation-intake-v1')).object?.sha;
+           const live=await jsonAt(ledgerPath,liveHead);
+           const check=ledger=>{
+            const terminal=(ledger?.terminalHistory??[]).filter(x=>x.operationId===id&&x.lockGeneration===678);
+            if(Object.values(ledger?.activeScopes??{}).some(x=>x.operationId===id)||terminal.length!==1)refuse();
+            const x=terminal[0];if(x.state!=='TERMINAL'||x.released!==true||x.terminalDisposition!=='PASS_CLOSED'||x.requestDigest!==req||x.procedureLocatorDigest!==proc||x.lockScope!==scope||x.governingHead!==r.exactGoverningHead)refuse();return x;
+           };
+           if(digest(check(closed))!==digest(check(live)))refuse();
+           const commit=await github.read(root+'/commits/'+closure);
+           if(commit.sha!==closure||commit.parents?.length!==1||commit.files?.length!==1||commit.files[0].filename!==ledgerPath||commit.files[0].sha!=='a5a492b05639b1fb141f5cce266ff83e5b104953')refuse();
+           return {operationId:id,generation:678,requestDigest:req,procedureDigest:proc,packetHead:'444537f3c803105ea11f8a5eaf875f6f572da9ad',closureHead:closure,proofPath:proof};
+          }
+          
+          try {
+           const base='file://'+process.env.GITHUB_WORKSPACE+'/private-control-plane/tools/private-public-bridge/';
+           const {createCheckpointStore}=await import(base+'material-work-checkpoint-host.v1.mjs');
+           const {projectSavedBaseline}=await import(base+'material-work-incremental.v1.mjs');
+           const {projectRollingStudy,validateDashboard}=await import(base+'standalone/dashboard.mjs');
+           const {digest}=await import(base+'material-work-study.v1.mjs');
+           const github=createPrivateReadbackApi({token:process.env.DGB_GITHUB_TOKEN});
+           const authority=async args=>{await verifyReadbackGrant(args);return true;};
+           process.exitCode=await runSafe({github,native:{createCheckpointStore,projectSavedBaseline,projectRollingStudy,validateDashboard,digest},authority,sourceHead:'535b563069e10934c5b5c4c14b59cfb9fb15dfc9',qualificationOnly:process.env.DGB_READBACK_QUALIFICATION_ONLY==='true'});
+          } catch { console.log('{"schema":"DGB_SAFE_PRIVATE_STUDY_READBACK_v1","result":"FAIL_CLOSED"}'); process.exitCode=1; }
+          NODE
+
       - name: Upload only allowlisted redacted result
         if: always() && steps.proof.outputs.redaction_valid == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -196,7 +312,7 @@ jobs:
           retention-days: 90
 
       - name: Enforce collector status after preserving redacted evidence
-        if: always()
+        if: always() && env.DGB_READBACK_QUALIFICATION_ONLY != 'true'
         env:
           COLLECTOR_STATUS: ${{ steps.proof.outputs.collector_status }}
           COLLECTOR_RESULT: ${{ steps.proof.outputs.collector_result }}

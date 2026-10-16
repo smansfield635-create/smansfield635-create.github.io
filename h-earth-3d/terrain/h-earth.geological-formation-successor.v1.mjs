@@ -147,6 +147,9 @@ export function createGeologicalFormation({terrainAt,site=GEOLOGICAL_FORMATION_S
  * Ambient/accessibility lighting is a downstream renderer responsibility.
  */
 export function constructCavernBoundary(f,{step=1.5,slices=20,floorSegments=8}={}){
+  // An opted-in kernel consumer supplies the SAME immutable physical boundary
+  // used by its occupancy and walk-support queries. Legacy studies stay intact.
+  if(f.kernelCaveBoundary)return f.kernelCaveBoundary;
   const s=f.site;
   assert(Number.isInteger(slices)&&slices>=12&&slices<=64&&Number.isInteger(floorSegments)&&floorSegments>=4&&floorSegments<=32,'CAVE_RING_RESOLUTION');
   assert(finite(step)&&step>0&&s.galleryLength/step===Math.round(s.galleryLength/step),'CAVE_LONGITUDINAL_GRID');

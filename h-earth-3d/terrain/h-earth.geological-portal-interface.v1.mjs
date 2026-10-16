@@ -55,8 +55,9 @@ export function constructGeologicalPortalAssembly(formation,terrainAt,{bounds=nu
     const outside=formation.excavatedOutdoorTerrain(x,start);
     const r=formation.caveRadius(start),rNorm=Math.abs(x-site.x)/r;
     const floor=formation.floorAt(x,start),roof=formation.roofAt(x,start);
-    const chamberRoof=floor+(roof-floor)*Math.pow(Math.max(0,1-rNorm*rNorm),0.375);
-    const opening=Math.abs(x-site.x)<r;
+    const section=formation.caveSectionAt?.(x,start);
+    const chamberRoof=section?.ceilingY??(floor+(roof-floor)*Math.pow(Math.max(0,1-rNorm*rNorm),0.375));
+    const opening=formation.caveSectionAt?!!section:Math.abs(x-site.x)<r;
     const bottom=opening?Math.max(outside,chamberRoof):outside;
     assert(finite(top)&&finite(bottom)&&top>=bottom-1e-4,'FRONTAL_ROCK_FACE_BELOW_FLOOR');
     lowestRockFaceClearance=Math.min(lowestRockFaceClearance,top-bottom);facadeAddedTopHeight=Math.max(facadeAddedTopHeight,top-outside);
@@ -83,6 +84,17 @@ export function sampleFormationWalkable(formation,{x,z,eyeHeight=2.25,headCleara
   assert(eyeHeight>1.4&&eyeHeight<=2.75&&headClearance>=0,'WALK_EYE_BOUNDS');
   const {site}=formation;
   if(z>=site.portalZ&&z<=site.portalZ+site.galleryLength){
+    if(formation.caveSectionAt){
+      const section=formation.caveSectionAt(x,z);
+      const neighbors=[formation.caveSectionAt(x-wallClearance,z),formation.caveSectionAt(x+wallClearance,z)];
+      const floor=section?.floorY??formation.floorAt(x,z),ceiling=section?.ceilingY??floor;
+      const eligible=!!section&&neighbors.every(q=>q&&q.ceilingY>=floor+eyeHeight+headClearance&&q.floorY<=floor+0.25)&&
+        ceiling-floor>=eyeHeight+headClearance&&z<=site.portalZ+site.galleryLength-wallClearance;
+      return Object.freeze({class:'INTERIOR',eligible,x,z,footY:floor,eyeY:floor+eyeHeight,ceilingY:ceiling,
+        headroom:ceiling-floor,wallClearanceMeters:eligible?wallClearance:0,
+        issues:eligible?[]:['CAVERN_SOLID_OR_HEADROOM_COLLISION'],worldManifoldUnchanged:true,
+        boundarySource:'ACTUAL_KERNEL_TRIANGLES',sphereClearanceCertified:false});
+    }
     const side=Math.abs(x-site.x),radius=formation.caveRadius(z),floor=formation.floorAt(x,z);
     const nominalCeiling=formation.roofAt(x,z),ratio=side/radius;
     const ceiling=floor+(nominalCeiling-floor)*Math.pow(Math.max(0,1-ratio*ratio),0.375);

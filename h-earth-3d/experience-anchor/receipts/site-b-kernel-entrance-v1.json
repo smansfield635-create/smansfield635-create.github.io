@@ -1,0 +1,77 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38951609747"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/site-b-kernel-entrance-v1/README.md"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "e23dbce7cdb721801d294b97070f7cfa105adcfba596d691f4083ede08715231"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "a2b7661621fa739aa9cd373bd4bdf58b4561a61f5de1b767070ef52a8e73189b"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs",
+      "sha256": "dbe490ca0aa7c0861dac8b1f4c9dd557220075ddb7a09652a40238ab778ebfdf"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs",
+      "sha256": "3e2433367453ec929be41c45ba76fdac0525af9f43233a185de4a6dfe206269c"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
+      "sha256": "d24fa3737ae4d2e9f59336105a0503ed1ee291ac10c96f651e329486c309428d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js",
+      "sha256": "fc4e100a1b687942f4feef4e32f95e81dfdf445a6550f275b064597ef60c791b"
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js",
+      "sha256": "c8392da924c0a53af8e4c9d8462c8991d53e89b04f3dc8852aa2ac6085a7883c"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "7ff3a2e06e1f3d7a6d1e743445d9492f18f93707b1c9c6a409a6a420280277a1"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "86bdb8b02c784d4261edde5b653d0e5a6ae9d5d99c0cd28930623042f0afac59"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "50109939f2af890838cb00432448f928dc99a6c3ff43321c9ef4ecffc2a7d9ef"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewMethod": "SOURCE_BOUND_CONTINUITY_ONLY_NOT_CURRENT_PIXEL_OR_DEVICE_ACCEPTANCE",
+  "notes": "Same-world continuity preserved by bounded source diff, unchanged binary, Site B location, water meshes and actual 15-action navigation checks. Current candidate visual quality remains pending browser capture and owner disposition.",
+  "sourceEvidencePath": "h-earth-3d/evidence/site-b-kernel-entrance-v1/README.md",
+  "priorProductCommit": "1f5b40c81d52fc78de68ee51cbe0c2e52f8cf69b",
+  "evidenceOnlyOperationGeneration": 2771
+}

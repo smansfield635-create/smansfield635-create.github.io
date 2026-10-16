@@ -6,6 +6,7 @@ import {GEOLOGICAL_FORMATION_SITES,makeCanonicalAuthoringTerrainSampler,unprojec
         deriveBaseTriangleRetirement} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {constructGeologicalPortalAssembly,sampleFormationWalkable,projectGeologicalMeshForRenderer}
   from '../../../../h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs';
+import {constructHEarthSweptPassageMesh} from '../render/geometry-kernel.sweep.v1.js';
 export const GEOLOGICAL_RUNTIME_BRIDGE_ID='H_EARTH_GEN2735_RUNTIME_GEOLOGICAL_BRIDGE_v1';
 const SITE=GEOLOGICAL_FORMATION_SITES.B_REAR_RAVINE;
 const BOUNDS=Object.freeze({xMin:-120,xMax:96,zMin:-376,zMax:-224});
@@ -98,20 +99,87 @@ function nearestRouteSegment(points,x,z){
   }
   return best;
 }
+/** Consumer-owned cave semantics. The frozen kernel constructs the boundary;
+ * vertical ray/triangle intersections, rather than a second arch formula,
+ * supply visible lip, supported floor, ceiling and solid occupancy together.
+ * This is NOT the straight-prism consumer's sphere-clearance certificate.
+ */
+function buildKernelCavern(site,{floorAt,roofAt,caveRadius,caveCenterX}){
+  const profile=[[-.74,0],[.38,-.012],[.85,.07],[1,.36],[.70,.78],
+    [.18,1],[-.32,.93],[-.86,.62],[-1,.26]].map(([x,y])=>({x,y:y-.5}));
+  const stationCount=17,centerline=[],scales=[];
+  const firstFloor=floorAt(site.x,site.portalZ);
+  const firstHeight=roofAt(site.x,site.portalZ)-firstFloor;
+  for(let i=0;i<stationCount;i++){
+    const z=site.portalZ+site.galleryLength*i/(stationCount-1);
+    // Two level entrance stations keep the first ring exactly on the existing
+    // portal plane; transported inner rings may bend with the saved route.
+    const x=i<2?site.x:caveCenterX(z),floor=i<2?firstFloor:floorAt(x,z);
+    const height=i<2?firstHeight:roofAt(x,z)-floor;
+    centerline.push({x,y:i<2?firstFloor+firstHeight*.5:floor+height*.5,z});
+    scales.push({x:i<2?caveRadius(site.portalZ):caveRadius(z),y:height});
+  }
+  const constructed=constructHEarthSweptPassageMesh({primitiveId:'SITE_B_KERNEL_CAVERN',
+    centerline,profile,scales,initialUp:{x:0,y:1,z:0},capStart:false,capEnd:true});
+  if(!constructed.valid)fail('KERNEL_SWEEP:'+JSON.stringify(constructed.issues));
+  const geometry=constructed.geometry,positions=new Float32Array(geometry.vertices.flatMap(p=>[p.x,p.y,p.z]));
+  // Interior-facing disposable rendering copy; neutral kernel bytes stay frozen.
+  const indices=new Uint32Array(geometry.indices.length);
+  for(let i=0;i<indices.length;i+=3)indices.set([geometry.indices[i],geometry.indices[i+2],geometry.indices[i+1]],i);
+  const mesh=Object.freeze({positions,indices,vertexCount:positions.length/3,triangleCount:indices.length/3,
+    entranceClosed:false,farEndClosed:true,boundaryEdgeCount:profile.length,nonmanifoldEdgeCount:0,
+    containsPhysicalFloor:true,ceilingNotSurfaceSkin:true,navSurface:'ACTUAL_KERNEL_TRIANGLES',
+    kernelContract:constructed.sweep.contractId,profileVertexCount:profile.length,stationCount,
+    sphereClearanceCertified:false});
+  const triangles=[],buckets=new Map(),binSize=2;
+  for(let i=0;i<indices.length;i+=3){
+    const [a,b,c]=[0,1,2].map(k=>{const n=indices[i+k]*3;return {x:positions[n],y:positions[n+1],z:positions[n+2]}});
+    const den=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);
+    if(Math.abs(den)<1e-10)continue; // A vertical wall has no vertical-ray area.
+    const minX=Math.min(a.x,b.x,c.x),maxX=Math.max(a.x,b.x,c.x),minZ=Math.min(a.z,b.z,c.z),maxZ=Math.max(a.z,b.z,c.z);
+    const id=triangles.length;triangles.push({a,b,c,den,minX,maxX,minZ,maxZ});
+    for(let x=Math.floor(minX/binSize);x<=Math.floor(maxX/binSize);x++)for(let z=Math.floor(minZ/binSize);z<=Math.floor(maxZ/binSize);z++){
+      const key=x+':'+z,list=buckets.get(key)??[];list.push(id);buckets.set(key,list);
+    }
+  }
+  const caveSectionAt=(x,z)=>{
+    if(z<site.portalZ||z>site.portalZ+site.galleryLength)return null;
+    const hits=[];
+    for(const id of buckets.get(Math.floor(x/binSize)+':'+Math.floor(z/binSize))??[]){
+      const {a,b,c,den,minX,maxX,minZ,maxZ}=triangles[id];
+      if(x<minX-1e-7||x>maxX+1e-7||z<minZ-1e-7||z>maxZ+1e-7)continue;
+      const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/den;
+      const v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/den,w=1-u-v;
+      if(Math.min(u,v,w)<-1e-7)continue;
+      const y=u*a.y+v*b.y+w*c.y;
+      if(!hits.some(h=>Math.abs(h-y)<1e-4))hits.push(y);
+    }
+    // Multiple disjoint intervals cannot silently become one traversable void.
+    if(hits.length!==2)return null;
+    const floorY=Math.min(...hits),ceilingY=Math.max(...hits);
+    return ceilingY-floorY>1e-5?Object.freeze({floorY,ceilingY}):null;
+  };
+  return Object.freeze({mesh,caveSectionAt,constructed});
+}
 function buildReliefCliffFace(formation,terrainAt,aperture){
   const {site}=formation,left=aperture.xMin,right=aperture.xMax,start=aperture.zMin,step=.5;
-  const count=Math.ceil((right-left)/step),columns=count+1,rows=48,fade=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)};
+  const regularCount=Math.ceil((right-left)/step);
+  const lip=formation.kernelCaveBoundary;
+  const lipXs=lip?Array.from({length:lip.profileVertexCount},(_,i)=>lip.positions[i*3]):[];
+  const xs=[...new Set([...Array.from({length:regularCount+1},(_,i)=>left+(right-left)*i/regularCount),...lipXs])].sort((a,b)=>a-b);
+  const count=xs.length-1,columns=xs.length,rows=48,fade=v=>{v=Math.max(0,Math.min(1,v));return v*v*(3-2*v)};
   const tops=[],bottoms=[];let reliefMin=Infinity,reliefMax=-Infinity,minimumRockFaceClearance=Infinity;
   for(let i=0;i<=count;i++){
-    const x=left+(right-left)*i/count,top=terrainAt(x,start),outside=formation.excavatedOutdoorTerrain(x,start);
+    const x=xs[i],top=terrainAt(x,start),outside=formation.excavatedOutdoorTerrain(x,start);
     const centerX=formation.caveCenterX?.(start)??site.x,radius=formation.caveRadius(start),ratio=Math.abs(x-centerX)/radius;
-    const floor=formation.floorAt(x,start),roof=formation.roofAt(x,start),arch=floor+(roof-floor)*Math.pow(Math.max(0,1-ratio*ratio),.375);
-    const bottom=Math.abs(x-centerX)<radius?Math.max(outside,arch):outside;
+    const section=formation.caveSectionAt?.(x,start);
+    const floor=formation.floorAt(x,start),roof=formation.roofAt(x,start),arch=section?.ceilingY??(floor+(roof-floor)*Math.pow(Math.max(0,1-ratio*ratio),.375));
+    const bottom=(formation.caveSectionAt?!!section:Math.abs(x-centerX)<radius)?Math.max(outside,arch):outside;
     tops.push(top);bottoms.push(bottom);minimumRockFaceClearance=Math.min(minimumRockFaceClearance,top-bottom);
   }
   const positions=[],indices=[];
   for(let j=0;j<=rows;j++)for(let i=0;i<=count;i++){
-    const x=left+(right-left)*i/count,t=j/rows,y=tops[i]+(bottoms[i]-tops[i])*t;
+    const x=xs[i],t=j/rows,y=tops[i]+(bottoms[i]-tops[i])*t;
     // Shared upper and aperture edges stay on their original planes.
     const verticalBreak=j===0||j===rows?0:Math.sin(Math.PI*t);
     const edgeFade=fade(Math.min((x-left)/3.5,(right-x)/3.5))*verticalBreak;
@@ -199,7 +267,7 @@ export function constructGeologicalRuntimeBridge(canonical){
   const entranceFade=(z)=>1-smooth((z-SITE.portalZ)/11);
   const caveCenterX=(z)=>{
     const d=Math.max(0,z-SITE.portalZ);
-    return SITE.x+1.8*Math.sin(d*.31)*smooth(d/1.5);
+    return SITE.x+1.8*Math.sin(d*.16)*smooth((d-1.5)/5);
   };
   const roofAt=(x,z)=>{
     const s=(x-caveCenterX(z))/SITE.width,t=(z-SITE.portalZ)/SITE.galleryLength,e=entranceFade(z);
@@ -228,10 +296,25 @@ export function constructGeologicalRuntimeBridge(canonical){
     if(!(rockCover>0))fail('WEATHERED_ROOF_BREACH');
     coverSamples.push(Object.freeze({z,terrainY,ceilingY,rockCover}));
   }
+  const kernel=buildKernelCavern(SITE,{floorAt,roofAt,caveRadius,caveCenterX});
+  const caveSectionAt=kernel.caveSectionAt;
+  const physicalFloorAt=(x,z)=>caveSectionAt(x,z)?.floorY??floorAt(x,z);
+  const physicalRoofAt=(x,z)=>caveSectionAt(x,z)?.ceilingY??roofAt(x,z);
+  const physicalInsideVoid=(x,y,z)=>{const q=caveSectionAt(x,z);return !!q&&y>=q.floorY&&y<q.ceilingY};
+  // Check the whole generated shell against the uncut mountain, including
+  // asymmetric shoulders; centerline-only samples cannot detect a side breach.
+  let minimumKernelRoofCover=Infinity;
+  for(let i=0;i<kernel.mesh.positions.length;i+=3){
+    const [x,y,z]=kernel.mesh.positions.slice(i,i+3),cover=terrainAt(x,z)-y;
+    if(!(cover>0))fail('KERNEL_SHELL_BREACHES_MOUNTAIN');
+    minimumKernelRoofCover=Math.min(minimumKernelRoofCover,cover);
+  }
   const formation=Object.freeze({...baseFormation,oasis:Object.freeze({...oasis,waterLevel:oasisWaterLevel}),
     oasisInfluenceAt,drainage,waterPresent:true,roofAt,floorAt,caveRadius,caveCenterX,insideVoid,excavatedOutdoorTerrain,
-    coverSamples:Object.freeze(coverSamples),minimumRoofCover:Math.min(...coverSamples.map(v=>v.rockCover)),
-    excavatedOutdoorTerrain,rockSolidAt:(x,y,z)=>y<=excavatedOutdoorTerrain(x,z)&&!insideVoid(x,y,z)});
+    caveSectionAt,kernelCaveBoundary:kernel.mesh,kernelConstruction:kernel.constructed,
+    floorAt:physicalFloorAt,roofAt:physicalRoofAt,insideVoid:physicalInsideVoid,
+    coverSamples:Object.freeze(coverSamples),minimumRoofCover:minimumKernelRoofCover,
+    excavatedOutdoorTerrain,rockSolidAt:(x,y,z)=>y<=excavatedOutdoorTerrain(x,z)&&!physicalInsideVoid(x,y,z)});
   const rawPortal=constructGeologicalPortalAssembly(formation,terrainAt,{bounds:BOUNDS});
   const cliff=buildReliefCliffFace(formation,terrainAt,rawPortal.aperture);
   const portal=Object.freeze({...rawPortal,exposedCliffFace:cliff.mesh,diagnostics:Object.freeze({

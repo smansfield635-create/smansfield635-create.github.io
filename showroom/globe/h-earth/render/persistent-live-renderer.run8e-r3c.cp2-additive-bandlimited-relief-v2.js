@@ -1,4 +1,4 @@
-import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2753-site-b-earth-color-seam-recovery-v3';
+import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2771-site-b-kernel-entrance-v1';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
@@ -713,6 +713,11 @@ void main(){
     );
     float fracture=clamp(abs(triFine-triCoarse)*1.75+abs(triMicro-0.5)*0.38*nearMaterial,0.0,1.0);
     vec3 exposedRock=mix(vec3(0.175,0.185,0.178),vec3(0.355,0.335,0.285),weathering);
+    // Site B rock inherits the mountain's indexed earth hue. Steep faces and
+    // adjacent slopes share this treatment instead of introducing a gray panel.
+    float mountainContactEdge=min(min(world.x+120.0,96.0-world.x),min(world.y+376.0,-224.0-world.y));
+    float mountainContact=smoothstep(0.0,12.0,mountainContactEdge);
+    exposedRock=mix(exposedRock,base*mix(0.86,1.06,weathering),mountainContact);
     exposedRock*=mix(0.82,1.13,fracture);
     vec3 groundedSoil=mix(soilTone,vec3(0.285,0.255,0.165),triCoarse*0.30);
     groundedSoil=mix(groundedSoil,vec3(0.205,0.235,0.135),shelteredSoil*(1.0-weathering)*0.22);
@@ -2012,7 +2017,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);
         const layer=.5+.5*(.62*strataA+.24*strataB+.14*patchNoise);
         const grain=1+exposure.edgeFade*.035*Math.sin(local.x*.31+local.z*.17+local.y*.29);
-        const earthRock=[.17+.075*layer,.145+.064*layer,.11+.05*layer];
+        const earthRock=natural.map(v=>v*(.90+.12*layer));
         const rock=earthRock;
         // Incision exposes visibly warm stratified soil and gravel along the dry channel.
         // The blend still fades to the exact indexed-world albedo at the patch edge.
@@ -2037,7 +2042,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       };
       put(0,positions,3);put(1,normals,3);put(2,colors,4);put(3,mats,4);
       const models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n),coast=new Float32Array(n),contact=new Float32Array(n);
-      surfaces.fill(255);ids.fill(62000);roles.fill(role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'?1:
+      surfaces.fill(255);ids.fill(62000);roles.fill(role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'||role==='NATURAL_CLIFF_FACE'?1:
         role==='FRESHWATER_RIVER'||role==='OASIS_WATER'?4:5);coast.fill(140);contact.fill(140);
       put(4,models,1,gl.UNSIGNED_BYTE,true);put(5,surfaces,1,gl.UNSIGNED_BYTE,true);
       put(6,ids,1,gl.UNSIGNED_SHORT,true);put(7,roles,1,gl.UNSIGNED_BYTE,true);

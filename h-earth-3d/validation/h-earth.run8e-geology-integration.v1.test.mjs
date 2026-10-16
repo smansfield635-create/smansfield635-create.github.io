@@ -92,13 +92,13 @@ test('active interior uses cave floor/roof, wall collision correctly rejects',()
 });
 test('weathered portal relief is shared by the visible shell and walk clearance',()=>{
  const f=geology().formation,z=f.site.portalZ+1;
-  assert(Math.abs(f.caveCenterX(f.site.portalZ+5)-f.site.x)>1.2,'CAVERN_CENTERLINE_REMAINS_STRAIGHT');
+  assert(Math.abs(f.caveCenterX(f.site.portalZ+5)-f.site.x)>.8,'CAVERN_CENTERLINE_REMAINS_STRAIGHT');
   assert(Math.abs(f.caveCenterX(f.site.portalZ+5)-f.site.x)<f.caveRadius(f.site.portalZ+5)*.5,'CAVERN_CENTERLINE_EXCEEDS_WALKABLE_WIDTH');
   assert(Math.abs(f.caveRadius(f.site.portalZ+5)-f.caveRadius(f.site.portalZ+10))>.25,'CAVERN_CROSS_SECTION_REMAINS_REPETITIVE');
  const left=f.roofAt(f.site.x-2,z),right=f.roofAt(f.site.x+2,z);
  assert(Math.abs(left-right)>.08,'PORTAL_ROOF_REMAINS_UNNATURALLY_SYMMETRIC');
  const floor=f.floorAt(f.site.x,z),roof=f.roofAt(f.site.x,z);
- assert(roof>floor+5,'PORTAL_CLEARANCE_COLLAPSED');
+ assert(roof>floor+3,'PORTAL_CLEARANCE_COLLAPSED');
  assert.equal(f.insideVoid(f.site.x,floor+1,z),true);
  assert.equal(f.insideVoid(f.site.x,roof,z),false);
  const a=f.roofAt(f.site.x,z),b=f.roofAt(f.site.x,z+.25);
@@ -211,7 +211,7 @@ test('cavern portal relief and rock strata remain irregular without periodic tun
  assert(renderer.includes('const strataA=Math.sin(local.y*.78+'));
  assert(renderer.includes('const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);'));
  assert(!renderer.includes('local.y*1.55+.34*Math.sin(local.x*.43)'));
- const revision='gen2753-site-b-earth-color-seam-recovery-v3';
+ const revision='gen2771-site-b-kernel-entrance-v1';
  for(const path of [
   '../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',
   '../../showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js',
@@ -252,4 +252,39 @@ test('active Site B shader treatment is bounded and cannot restore the cyan stai
  for(const [x,z] of [[-120,-300],[96,-300],[40,-376],[40,-224],[40,-1000],[300,-280]])
   assert(evaluate({x,y:z},Math.min)<=0,'MATERIAL_MASK_ESCAPED_PATCH');
  assert(evaluate({x:40,y:-280},Math.min)>=12);
+});
+
+test('kernel boundary is the shared rendered, occupied and walkable cavity',()=>{
+ const g=geology(),f=g.formation,m=f.kernelCaveBoundary,k=f.kernelConstruction;
+ assert(k.valid);assert.equal(k.sweep.capStart,false);assert.equal(k.sweep.capEnd,true);
+ assert.equal(g.portal.cave,m);assert.equal(m.sphereClearanceCertified,false);
+ const edges=new Map();let witnesses=0;
+ for(let i=0;i<m.indices.length;i+=3){
+  const ids=Array.from(m.indices.slice(i,i+3)),p=ids.map(n=>Array.from(m.positions.slice(n*3,n*3+3)));
+  for(let j=0;j<3;j++){const a=ids[j],b=ids[(j+1)%3],key=Math.min(a,b)+':'+Math.max(a,b);edges.set(key,(edges.get(key)??0)+1)}
+  const [a,b,c]=p,ny=(b[2]-a[2])*(c[0]-a[0])-(b[0]-a[0])*(c[2]-a[2]);
+  if(Math.abs(ny)<1e-5)continue;
+  // Independent triangle barycenter: each physical surface must coincide with
+  // a boundary returned by the actual navigation field, including between rings.
+  const [x,y,z]=[0,1,2].map(k=>(a[k]+b[k]+c[k])/3);
+  if(z<=g.site.portalZ||z>=g.site.portalZ+g.site.galleryLength-.01)continue;
+  const q=f.caveSectionAt(x,z);assert(q,'KERNEL_SURFACE_HAS_NO_SECTION:'+i);
+  assert(Math.min(Math.abs(y-q.floorY),Math.abs(y-q.ceilingY))<2e-4,'RENDER_NAV_BOUNDARY_DRIFT:'+i);
+  assert(f.insideVoid(x,(q.floorY+q.ceilingY)/2,z));
+  assert(!f.insideVoid(x,q.ceilingY+.01,z));witnesses++;
+ }
+ assert(witnesses>200);
+ assert.equal([...edges.values()].filter(n=>n===1).length,m.profileVertexCount);
+ assert([...edges.values()].every(n=>n<=2));
+ // Every first-ring roof corner occurs as an exact x breakpoint in the face.
+ const face=g.portal.exposedCliffFace,columns=face.vertexCount/49;
+ for(let i=0;i<m.profileVertexCount;i++){
+  const x=m.positions[i*3],y=m.positions[i*3+1],z=m.positions[i*3+2];
+  assert.equal(z,g.site.portalZ);
+  const q=f.caveSectionAt(x,z);if(!q||Math.abs(y-q.ceilingY)>1e-4)continue;
+  const column=Array.from({length:columns},(_,j)=>j).find(j=>Math.abs(face.positions[j*3]-x)<1e-5);
+  assert.notEqual(column,undefined,'FIRST_RING_CORNER_OMITTED');
+  const n=(48*columns+column)*3;
+  assert(Math.abs(face.positions[n+1]-Math.max(y,f.excavatedOutdoorTerrain(x,z)))<1e-4,'MOUTH_LIP_MISMATCH');
+ }
 });

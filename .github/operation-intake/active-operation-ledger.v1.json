@@ -2571,50 +2571,6 @@
       "scopeHash": "26a170fff6651c3fdfe56ca2d95114a3f0b168dfd8cf361da6f856f5032b72d2",
       "state": "ADMITTED_LOCKED"
     },
-    "288d9a68d8bb0c0f2fc3c3cbdb3f8b993e05e29da1212360bec417c00274caa0": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "f6b3075dececa5527098b8c4c5fd1beaee3ef850",
-          "lockGeneration": 2753,
-          "lockScope": "H_EARTH:SITE_B_NATURAL_CAVERN_TERRAIN_MATERIAL_CONTINUITY:3ED7790:20261015",
-          "operationId": "H_EARTH_GEN2753_SITE_B_NATURAL_CAVERN_TERRAIN_BLEND_SUCCESSOR_20261015_004",
-          "procedureLocatorDigest": "08b74c1b3ba297c015148dcb400e9c7eb9959330121189b87d4674e433475ce5",
-          "requestDigest": "6da6cfa123dd8f2c75101e46e2189b1b5ed81c562ae48e6f9f932002492f4b87",
-          "scopeHash": "288d9a68d8bb0c0f2fc3c3cbdb3f8b993e05e29da1212360bec417c00274caa0"
-        },
-        "bindingDigest": "e07a42e30784ec4be01535c9e5bddf716ecf4c4808928aa0a6bf721127a54ce0",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "fa261dc8ba21bc244aad826988fe13156dd583a65cd3c92c76323d9f26c61ad8",
-          "commentId": 6203619303,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6348,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 38817658545,
-          "workflowSha": "f6b3075dececa5527098b8c4c5fd1beaee3ef850"
-        },
-        "lineageAnchorCommitSha": "ca6916dfba6510a180b483358e97c9a3acd3bddc",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "f6b3075dececa5527098b8c4c5fd1beaee3ef850",
-      "lockGeneration": 2753,
-      "lockScope": "H_EARTH:SITE_B_NATURAL_CAVERN_TERRAIN_MATERIAL_CONTINUITY:3ED7790:20261015",
-      "operationId": "H_EARTH_GEN2753_SITE_B_NATURAL_CAVERN_TERRAIN_BLEND_SUCCESSOR_20261015_004",
-      "procedureLocatorDigest": "08b74c1b3ba297c015148dcb400e9c7eb9959330121189b87d4674e433475ce5",
-      "released": false,
-      "requestDigest": "6da6cfa123dd8f2c75101e46e2189b1b5ed81c562ae48e6f9f932002492f4b87",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "288d9a68d8bb0c0f2fc3c3cbdb3f8b993e05e29da1212360bec417c00274caa0",
-      "state": "ADMITTED_LOCKED"
-    },
     "297d84dc3c4b5e2e9b3d9bb1feeb246e78d141f73363939bf45b7dd7a742a5ca": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -13058,6 +13014,68 @@
       "scopeHash": "ae3a228ec6626ba8b7f3d5a77f8fa559334c7bf152521a19bc38c749798df358",
       "state": "ADMITTED_LOCKED"
     },
+    "ae4516929eaee11464d8e1d04fc5b0a550a8555daf29cebe5bb9629b14c15725": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e46d3022ad76675cc221816444b2a4891b4977c1",
+          "lockGeneration": 2771,
+          "lockScope": "H_EARTH:SITE_B:KERNEL_ENTRANCE_AND_MOUNTAIN_CONTINUITY:1F5B40C:20261016",
+          "operationId": "H_EARTH_SITE_B_KERNEL_ENTRANCE_INTEGRATION_20261016_001",
+          "procedureLocatorDigest": "164f8bc07143f82c7b43992d7b14be82608d51b325d5c3609ab51de41bee84af",
+          "requestDigest": "f150bcfff7d5b76160bb445b991f51b24fda33096bb2de0df86446f544b07b71",
+          "scopeHash": "ae4516929eaee11464d8e1d04fc5b0a550a8555daf29cebe5bb9629b14c15725"
+        },
+        "bindingDigest": "0b57548a3a9f40c48074ca57633914e82ebae22d851d726e557e10ebf3783ebc",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "390ac1ef1c4a6f0c65f6fb33d9fefefbdef5269ac8a65a9c4c58cbebe5a4bd16",
+          "commentId": 6223022531,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 6415,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38954570406,
+          "workflowSha": "e46d3022ad76675cc221816444b2a4891b4977c1"
+        },
+        "lineageAnchorCommitSha": "f53e702fdb05e8e1ebf455b82d9c2a2f5e6e57a2",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e46d3022ad76675cc221816444b2a4891b4977c1",
+      "lockGeneration": 2771,
+      "lockScope": "H_EARTH:SITE_B:KERNEL_ENTRANCE_AND_MOUNTAIN_CONTINUITY:1F5B40C:20261016",
+      "operationId": "H_EARTH_SITE_B_KERNEL_ENTRANCE_INTEGRATION_20261016_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "f6b3075dececa5527098b8c4c5fd1beaee3ef850",
+        "lockGeneration": 2753,
+        "lockScope": "H_EARTH:SITE_B_NATURAL_CAVERN_TERRAIN_MATERIAL_CONTINUITY:3ED7790:20261015",
+        "operationId": "H_EARTH_GEN2753_SITE_B_NATURAL_CAVERN_TERRAIN_BLEND_SUCCESSOR_20261015_004",
+        "preservedEvidenceRefs": [
+          "PR6415",
+          "SUCCESSFUL_BROWSER_RUN_38951609747",
+          "CANDIDATE_1f5b40c81d52fc78de68ee51cbe0c2e52f8cf69b",
+          "MERGED_KERNEL_PR6404",
+          "MERGED_KERNEL_PR6411",
+          "OWNER_SCREENSHOT_29040_UNNATURAL_UPPER_FACE_AND_ARCH"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_SITE_B_KERNEL_ENTRANCE_INTEGRATION_20261016_001:SUCCESSOR"
+      },
+      "procedureLocatorDigest": "164f8bc07143f82c7b43992d7b14be82608d51b325d5c3609ab51de41bee84af",
+      "released": false,
+      "requestDigest": "f150bcfff7d5b76160bb445b991f51b24fda33096bb2de0df86446f544b07b71",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ae4516929eaee11464d8e1d04fc5b0a550a8555daf29cebe5bb9629b14c15725",
+      "state": "ADMITTED_LOCKED"
+    },
     "ae709787d9a8279a8cc3070bc67d22bab9cf1b3551fbc0f2f14056593f333a29": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -19239,7 +19257,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2770,
+  "lockGeneration": 2771,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -81386,6 +81404,70 @@
         "successorLockScope": "H_EARTH:GEN2735:EXACT_HEAD_RUNNER_APPLICABILITY:1F5B573:20261016",
         "successorOperationId": "H_EARTH_SITE_B_1F5B_EXACT_HEAD_RUNNER_APPLICABILITY_20261016_001",
         "transitionId": "SITE_B_SHADER_FIX_RUNNER_SUCCESSOR_20261016_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f6b3075dececa5527098b8c4c5fd1beaee3ef850",
+          "lockGeneration": 2753,
+          "lockScope": "H_EARTH:SITE_B_NATURAL_CAVERN_TERRAIN_MATERIAL_CONTINUITY:3ED7790:20261015",
+          "operationId": "H_EARTH_GEN2753_SITE_B_NATURAL_CAVERN_TERRAIN_BLEND_SUCCESSOR_20261015_004",
+          "procedureLocatorDigest": "08b74c1b3ba297c015148dcb400e9c7eb9959330121189b87d4674e433475ce5",
+          "requestDigest": "6da6cfa123dd8f2c75101e46e2189b1b5ed81c562ae48e6f9f932002492f4b87",
+          "scopeHash": "288d9a68d8bb0c0f2fc3c3cbdb3f8b993e05e29da1212360bec417c00274caa0"
+        },
+        "bindingDigest": "e07a42e30784ec4be01535c9e5bddf716ecf4c4808928aa0a6bf721127a54ce0",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fa261dc8ba21bc244aad826988fe13156dd583a65cd3c92c76323d9f26c61ad8",
+          "commentId": 6203619303,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6348,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 38817658545,
+          "workflowSha": "f6b3075dececa5527098b8c4c5fd1beaee3ef850"
+        },
+        "lineageAnchorCommitSha": "ca6916dfba6510a180b483358e97c9a3acd3bddc",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "f6b3075dececa5527098b8c4c5fd1beaee3ef850",
+      "lockGeneration": 2753,
+      "lockScope": "H_EARTH:SITE_B_NATURAL_CAVERN_TERRAIN_MATERIAL_CONTINUITY:3ED7790:20261015",
+      "operationId": "H_EARTH_GEN2753_SITE_B_NATURAL_CAVERN_TERRAIN_BLEND_SUCCESSOR_20261015_004",
+      "procedureLocatorDigest": "08b74c1b3ba297c015148dcb400e9c7eb9959330121189b87d4674e433475ce5",
+      "released": true,
+      "requestDigest": "6da6cfa123dd8f2c75101e46e2189b1b5ed81c562ae48e6f9f932002492f4b87",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "288d9a68d8bb0c0f2fc3c3cbdb3f8b993e05e29da1212360bec417c00274caa0",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "PR6415",
+          "SUCCESSFUL_BROWSER_RUN_38951609747",
+          "CANDIDATE_1f5b40c81d52fc78de68ee51cbe0c2e52f8cf69b",
+          "MERGED_KERNEL_PR6404",
+          "MERGED_KERNEL_PR6411",
+          "OWNER_SCREENSHOT_29040_UNNATURAL_UPPER_FACE_AND_ARCH"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "e46d3022ad76675cc221816444b2a4891b4977c1",
+        "successorLockGeneration": 2771,
+        "successorLockScope": "H_EARTH:SITE_B:KERNEL_ENTRANCE_AND_MOUNTAIN_CONTINUITY:1F5B40C:20261016",
+        "successorOperationId": "H_EARTH_SITE_B_KERNEL_ENTRANCE_INTEGRATION_20261016_001",
+        "transitionId": "H_EARTH_SITE_B_KERNEL_ENTRANCE_INTEGRATION_20261016_001:SUCCESSOR"
       },
       "terminalDisposition": "SUPERSEDED"
     }

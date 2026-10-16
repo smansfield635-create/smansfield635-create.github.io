@@ -112,7 +112,8 @@ function buildReliefCliffFace(formation,terrainAt,aperture){
   const positions=[],indices=[];
   for(let j=0;j<=rows;j++)for(let i=0;i<=count;i++){
     const x=left+(right-left)*i/count,t=j/rows,y=tops[i]+(bottoms[i]-tops[i])*t;
-    const verticalBreak=.28+.72*Math.sin(Math.PI*t);
+    // Shared upper and aperture edges stay on their original planes.
+    const verticalBreak=j===0||j===rows?0:Math.sin(Math.PI*t);
     const edgeFade=fade(Math.min((x-left)/3.5,(right-x)/3.5))*verticalBreak;
     const strata=.24*Math.sin(y*.78+.31*Math.sin(x*.41)-.22*Math.sin(y*.29+x*.17))+
       .18*Math.sin(y*.37+x*.23+Math.sin(start*.11));

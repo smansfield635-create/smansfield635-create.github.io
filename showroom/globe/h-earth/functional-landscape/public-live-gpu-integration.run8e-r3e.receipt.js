@@ -11,7 +11,7 @@ if(earlyPreparationQuery.get('visual')==='terrain-relief-v2' &&
 }
 await import('../arrival-loader.js?cb=h-earth-bounded-progress-v1');
 try {
-  await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2753-weathered-cavern-material-blend-v2');
+  await import('./public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev=gen2753-site-b-earth-color-seam-recovery-v3');
   window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.constructorReturned();
 } catch (error) {
   window.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.fail('RENDERER_CONSTRUCTOR_RETURNED', error);

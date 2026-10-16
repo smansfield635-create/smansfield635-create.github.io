@@ -198,7 +198,7 @@ test('excavated channel shows geologically grounded material exposure while exte
  assert(renderer.includes('sampleGeologicalMaterialExposure(model,role,local.x,local.z)'));
  assert(renderer.includes("role==='FRESHWATER_RIVER'||role==='OASIS_WATER'"));
  assert(renderer.includes('designedFreshwaterRendered'));
- assert(renderer.includes('const alluvium=[.39+.08*band,.31+.065*band,.22+.045*band];'));
+ assert(renderer.includes('const alluvium=[.24+.055*band,.20+.046*band,.15+.035*band];'));
  assert(renderer.includes('const shoreDepth=Math.max(0,Math.min(1,(waterline-Math.hypot(dx,dz))/0.22));'));
  assert(!renderer.includes('local.y-originalTop'));
 });
@@ -211,7 +211,7 @@ test('cavern portal relief and rock strata remain irregular without periodic tun
  assert(renderer.includes('const strataA=Math.sin(local.y*.78+'));
  assert(renderer.includes('const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);'));
  assert(!renderer.includes('local.y*1.55+.34*Math.sin(local.x*.43)'));
- const revision='gen2753-weathered-cavern-material-blend-v2';
+ const revision='gen2753-site-b-earth-color-seam-recovery-v3';
  for(const path of [
   '../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',
   '../../showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js',
@@ -226,4 +226,30 @@ test('bounded rear-cavern arrival query targets the real existing waypoint witho
   assert.equal(resolveHEarthArrivalWaypoint('?arrival=approved-four-trees'),'WOODLAND_CLEARING_FOUR_TREES');
   assert.equal(resolveHEarthArrivalWaypoint(''),'COAST');
   assert.equal(resolveHEarthArrivalWaypoint('?arrival=unregistered-destination'),'COAST');
+});
+
+// Inspect generated vertices, not just the constructor's diagnostic labels.
+test('weathered face rejoins the terrain and aperture plane at every perimeter vertex',()=>{
+ const g=geology(),mesh=g.portal.exposedCliffFace,rows=48;
+ const columns=mesh.vertexCount/(rows+1);assert(Number.isInteger(columns));
+ for(let j=0;j<=rows;j++)for(let i=0;i<columns;i++){
+  if(j!==0&&j!==rows&&i!==0&&i!==columns-1)continue;
+  const n=(j*columns+i)*3,x=mesh.positions[n],y=mesh.positions[n+1],z=mesh.positions[n+2];
+  assert(Math.abs(z-g.site.portalZ)<1e-5,'CLIFF_EDGE_DETACHED_FROM_SHARED_APERTURE');
+  if(j===0)assert(Math.abs(y-g.originalTerrainElevationAt(x,z))<1e-4,'CLIFF_TOP_DETACHED_FROM_MOUNTAIN');
+ }
+ assert(g.portal.diagnostics.exposedFaceReliefMeters>2,'INTERIOR_ROCK_RELIEF_LOST');
+});
+test('active Site B shader treatment is bounded and cannot restore the cyan stain',()=>{
+ const renderer=readFileSync(join(home,'../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
+ assert(!renderer.includes('vec3 cavernStone='));
+ assert(!renderer.includes('vec3(0.060,0.125,0.14)'));
+ assert(renderer.includes('float siteBEnvelope=smoothstep(0.0,12.0,siteBEdge);'));
+ assert(renderer.includes('smoothstep(0.10,0.58,slope)*siteBEnvelope'));
+ // Execute the shader envelope's actual expression at boundary/outside/interior samples.
+ const edge=renderer.match(/float siteBEdge=([^;]+);/)[1];
+ const evaluate=new Function('world','min','return '+edge.replaceAll('world.x','world.x').replaceAll('world.y','world.y'));
+ for(const [x,z] of [[-120,-300],[96,-300],[40,-376],[40,-224],[40,-1000],[300,-280]])
+  assert(evaluate({x,y:z},Math.min)<=0,'MATERIAL_MASK_ESCAPED_PATCH');
+ assert(evaluate({x:40,y:-280},Math.min)>=12);
 });

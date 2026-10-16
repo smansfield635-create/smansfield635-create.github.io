@@ -1,4 +1,4 @@
-import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2753-weathered-cavern-material-blend-v2';
+import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2753-site-b-earth-color-seam-recovery-v3';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
@@ -872,40 +872,17 @@ void main(){
     presentationContact=max(presentationContact,manorContact*0.72);
     presentationHighlight=max(presentationHighlight,manorOuterContact*0.44+manorTerraceContact*0.24);
 
-    vec2 cavernCenter=vec2(40.0,-284.0);
-    float cavernRadius=distance(world,cavernCenter);
-    float cavernRelation=radial(world,cavernCenter,5.0,28.0);
-    float cavernApproach=radial(world,vec2(48.0,-284.0),10.0,44.0);
-    float cavernContact=ring(world,cavernCenter,8.0,24.0,2.8);
-    float cavernOuterContact=ring(world,cavernCenter,23.0,39.0,3.6);
-    float cavernStrata=stableWave(cavernRadius*0.71+vWorldPosition.y*0.92+noise2(world*0.15)*4.6);
-    float cavernFracture=stableWave(world.x*0.93-world.y*0.67+vWorldPosition.y*0.44);
-    float cavernRelationSignal=stableWave(cavernRadius*0.43+(world.y+284.0)*0.31+vWorldPosition.y*0.83+noise2(world*0.12)*2.0);
-    float cavernRelationContact=transitionBand(cavernRelationSignal,0.082)*cavernApproach;
-    float cavernGroundContact=max(
-      cavernContact,
-      max(cavernOuterContact*0.82,cavernRelationContact*0.72)
-    );
-    vec3 cavernStone=mix(vec3(0.028,0.052,0.060),vec3(0.27,0.39,0.42),cavernStrata*0.70+cavernFracture*0.30);
-    palette=mix(palette,cavernStone,cavernRelation*(0.68+0.20*cavernStrata));
-    palette*=mix(1.0,0.50,cavernGroundContact*(0.36+0.48*cavernFracture));
-    palette*=mix(0.90,1.10,cavernRelationSignal*cavernApproach*0.30);
-    palette=mix(palette,palette*vec3(0.60,0.84,0.96),cavernApproach*0.32);
-    palette+=vec3(0.032,0.060,0.070)*cavernGroundContact*(0.35+0.65*cavernStrata);
-    presentationContact=max(presentationContact,cavernGroundContact*0.82);
-    presentationHighlight=max(presentationHighlight,cavernOuterContact*0.34+cavernRelationContact*0.26);
-
-    float ravineAxis=exp(-pow((vWorldPosition.x-40.0)/18.0,2.0));
-    float ravineShoulder=ring(world,vec2(40.0,-252.0),18.0,46.0,5.0);
-    float ravineDepth=1.0-smoothstep(-292.0,-210.0,vWorldPosition.z);
-    float routePulse=stableWave(vWorldPosition.z*0.56+vWorldPosition.y*0.31+mesoField*3.0);
-    float ravineWallSignal=stableWave(abs(vWorldPosition.x-40.0)*0.32+(-vWorldPosition.z-210.0)*0.09+vWorldPosition.y*0.51);
-    float ravineWallContact=transitionBand(ravineWallSignal,0.080)*ravineDepth*ravineAxis;
-    float routeSignal=ravineAxis*ravineDepth*(0.36+0.64*slopeResponse);
-    palette=mix(palette,vec3(0.060,0.125,0.14),routeSignal*(0.42+0.40*routePulse));
-    palette*=mix(1.0,0.70,max(ravineShoulder*ravineDepth*(0.18+0.32*slopeResponse),ravineWallContact*0.62));
-    palette+=vec3(0.026,0.050,0.058)*(routeSignal*routePulse+ravineWallContact*0.45);
-    presentationContact=max(presentationContact,ravineWallContact*0.52+routeSignal*0.20);
+    // Site B uses the same earth palette as its surroundings. Exposure changes
+    // value and roughness, without a separate cyan radial stain or ring bands.
+    float ravineAxis=exp(-pow((world.x-40.0)/18.0,2.0));
+    float ravineDepth=1.0-smoothstep(-292.0,-210.0,world.y);
+    float siteBEdge=min(min(world.x+120.0,96.0-world.x),min(world.y+376.0,-224.0-world.y));
+    float siteBEnvelope=smoothstep(0.0,12.0,siteBEdge);
+    float rockExposure=ravineAxis*ravineDepth*smoothstep(0.10,0.58,slope)*siteBEnvelope;
+    float earthVariation=noise2(world*0.12+vec2(8.0,-19.0));
+    vec3 localEarth=palette*mix(vec3(0.93,0.91,0.88),vec3(1.04,1.02,0.98),earthVariation);
+    palette=mix(palette,localEarth,rockExposure*0.38);
+    terrainRoughnessForLighting=mix(terrainRoughnessForLighting,0.90,rockExposure*0.28);
     // Actual exposed mesh contacts drive proximity; canonical coast distance
     // retains the existing transition to slope/elevation suitability inland.
     float inlandMeters=vContactDistanceMeters;
@@ -2034,19 +2011,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         const strataB=Math.sin(local.y*.29+local.x*.16-local.z*.12+.24*Math.sin(local.z*.18));
         const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);
         const layer=.5+.5*(.62*strataA+.24*strataB+.14*patchNoise);
-        const grain=.94+.06*Math.sin(local.x*.31+local.z*.17+local.y*.29);
-        const rock=role==='CAVERN_PHYSICAL_SHELL'?
-          [.092+.072*layer,.081+.061*layer,.067+.047*layer]:
-          role==='NATURAL_CLIFF_FACE'?
-            [.168+.16*layer,.141+.13*layer,.105+.09*layer]:
-            [.206+.105*layer,.168+.09*layer,.122+.068*layer];
+        const grain=1+exposure.edgeFade*.035*Math.sin(local.x*.31+local.z*.17+local.y*.29);
+        const earthRock=[.17+.075*layer,.145+.064*layer,.11+.05*layer];
+        const rock=earthRock;
         // Incision exposes visibly warm stratified soil and gravel along the dry channel.
         // The blend still fades to the exact indexed-world albedo at the patch edge.
         const soil=role==='ERODED_TERRAIN'?Math.min(.94,exposure.incisionDepth*.58):0;
         const band=.5+.5*(.68*Math.sin(local.y*.72+.19*Math.sin(local.x*.22+local.z*.17))+
           .20*Math.sin(local.y*.29+local.x*.14-local.z*.11)+.12*Math.sin(local.x*.53+local.z*.37));
-        const alluvium=[.39+.08*band,.31+.065*band,.22+.045*band];
-        const oasisShore=[.35+.04*band,.35+.04*band,.23+.025*band];
+        const alluvium=[.24+.055*band,.20+.046*band,.15+.035*band];
+        const oasisShore=[.21+.04*band,.18+.034*band,.13+.025*band];
         const layered=rock.map((v,c)=>v*(1-soil)+alluvium[c]*soil);
         const moist=layered.map((v,c)=>v*(1-exposure.oasisInfluence*.82)+oasisShore[c]*(exposure.oasisInfluence*.82));
         colors.set([0,1,2].map(c=>(natural[c]*(1-exposure.rockWeight)+moist[c]*exposure.rockWeight)*grain).concat(1),i*4);

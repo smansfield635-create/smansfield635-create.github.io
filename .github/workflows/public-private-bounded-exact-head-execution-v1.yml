@@ -35,11 +35,11 @@ jobs:
             const f=(await github.rest.repos.getContent({owner:context.repo.owner,repo:context.repo.repo,path,ref:'operation-locks/repository-operation-intake-v1'})).data;
             const blob=f.encoding==='base64'?f:(await github.rest.git.getBlob({owner:context.repo.owner,repo:context.repo.repo,file_sha:f.sha})).data;
             const ledger=JSON.parse(Buffer.from(blob.content.replace(/\s/g,''),'base64').toString('utf8'));
-            const id='DGB_PUBLIC_PRIVATE_COMPLETE_TREE_COLLECTOR_PIN_ADOPTION_20261016_001';
+            const id='DGB_PUBLIC_PRIVATE_COMPLETE_TREE_OBSERVABLE_QUALIFICATION_20261016_001';
             const active=Object.values(ledger.activeScopes).filter(x=>x.operationId===id);
-            const terminal=ledger.terminalHistory.filter(x=>x.operationId===id&&x.lockGeneration===2758);
+            const terminal=ledger.terminalHistory.filter(x=>x.operationId===id&&x.lockGeneration===2759);
             const row=active.length===1&&terminal.length===0?active[0]:active.length===0&&terminal.length===1&&terminal[0].released===true&&terminal[0].terminalDisposition==='PASS_CLOSED'?terminal[0]:null;
-            if(!row||row.lockGeneration!==2758||row.requestDigest!=='e11fc062fb229775a7b359bbec4dde5a903b3dbc9e8ca3ad15ea8389c332007a'||row.procedureLocatorDigest!=='4aa1e38e3b95a9f0f06428ce010ed9fd6d1a45b35cd3cf45710acb5899cbe51b'||!(row.state==='ADMITTED_LOCKED'&&row.released===false||row.state==='TERMINAL'&&row.released===true&&row.terminalDisposition==='PASS_CLOSED'))throw Error('PUBLIC_RECURRING_AUTHORITY_REFUSED');
+            if(!row||row.lockGeneration!==2759||row.requestDigest!=='989797f50e99a73f9652a90dc9f8432559a6240e89d6e80ed709300dab75095a'||row.procedureLocatorDigest!=='7a8d9e0987e3db88b172f979dd4007623bce4e2caf7a2ce68e2783ad7bc263d9'||!(row.state==='ADMITTED_LOCKED'&&row.released===false||row.state==='TERMINAL'&&row.released===true&&row.terminalDisposition==='PASS_CLOSED'))throw Error('PUBLIC_RECURRING_AUTHORITY_REFUSED');
       - name: Mint existing private installation write credential
         id: private
         uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
@@ -60,6 +60,12 @@ jobs:
           path: private-control-plane
           fetch-depth: 0
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/private-public-bridge/
+            /tools/operation-intake/
+            /.github/ai-router/
+            /control-plane/whole-estate/characters-reconstruction-v1/compass-functional-coordinate-constitution.v1.json
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -75,15 +81,17 @@ jobs:
           test "$(git rev-parse HEAD^{commit})" = "$DGB_STUDY_SOURCE_HEAD"
           test -z "$(git status --porcelain=v1 --untracked-files=all)"
           set +e
-          node tools/private-public-bridge/material-work-runtime-carrier.v1.mjs --cycle > "$RUNNER_TEMP/study-redacted.json"
+          node tools/private-public-bridge/material-work-runtime-carrier.v1.mjs --cycle > "$RUNNER_TEMP/study-redacted.json" 2> "$RUNNER_TEMP/study-private-stderr.log"
           status=$?
           set -e
-          test "$status" = 0
+          echo "collector_status=$status" >> "$GITHUB_OUTPUT"
           node --input-type=module <<'NODE'
           import fs from 'node:fs';
-          const r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/study-redacted.json','utf8'));
+          let r;try{r=JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/study-redacted.json','utf8'));}catch{throw Error('REDACTION_OR_RESULT_INVALID');}
           const keys=['descriptorId','nativeReceiptSha256','rawPrivateDataExported','result','schema'];
-          if(JSON.stringify(Object.keys(r).sort())!==JSON.stringify(keys)||r.schema!=='PUBLIC_PRIVATE_STUDY_REDACTED_RECEIPT_v1'||r.result!=='PASS'||r.rawPrivateDataExported!==false||!/^[0-9a-f]{64}$/.test(r.nativeReceiptSha256))throw Error('REDACTION_OR_RESULT_INVALID');
+          const results=["PASS","FAIL_CLOSED","FAIL_CLOSED_FIXED_COMMAND_REQUIRED","FAIL_CLOSED_EXACT_SOURCE_MISMATCH","FAIL_CLOSED_GOVERNING_HEAD_DRIFT","FAIL_CLOSED_AUTHORITY_BLOB_MISMATCH","FAIL_CLOSED_RUNTIME_DESCRIPTOR_REFUSED","FAIL_CLOSED_SOURCE_OUTSIDE_ADMISSION","FAIL_CLOSED_RUNTIME_ADMISSION_NOT_ACTIVE","FAIL_CLOSED_RUNTIME_DESTINATION_SUBSTITUTION","FAIL_CLOSED_REAL_CHANGED_SAVE_REQUIRED","FAIL_CLOSED_INTERRUPTION_RECOVERY_STATE_MISMATCH","FAIL_CLOSED_REVIEW_CUSTODY_CHANGED","FAIL_CLOSED_RECOVERY_OR_NO_CHANGE_NOT_PROVEN","FAIL_CLOSED_SEARCH_INCOMPLETE","FAIL_CLOSED_SEARCH_DRIFT","FAIL_CLOSED_SEARCH_PAGE_COUNT_MISMATCH","FAIL_CLOSED_PR_DISAPPEARED_OR_MERGE_TIME_CHANGED","FAIL_CLOSED_POPULATION_ROW_INVALID","FAIL_CLOSED_CHECKPOINT_INVALID","FAIL_CLOSED_BLOB_CONTENT_IDENTITY_MISMATCH","FAIL_CLOSED_UPDATED_SCAN_DRIFT","FAIL_CLOSED_UPDATED_SCAN_INCOMPLETE","FAIL_CLOSED_RATE_LIMIT_DEFER_CHECKPOINT_UNCHANGED","FAIL_CLOSED_GITHUB_API_403","FAIL_CLOSED_GITHUB_API_404","FAIL_CLOSED_GITHUB_API_401"];
+          if(!r||typeof r!=='object'||Array.isArray(r)||JSON.stringify(Object.keys(r).sort())!==JSON.stringify(keys)||r.schema!=='PUBLIC_PRIVATE_STUDY_REDACTED_RECEIPT_v1'||r.descriptorId!=='DGB_PRIVATE_STUDY_FIXED_CHECKPOINT_SAVE_V1'||!results.includes(r.result)||r.rawPrivateDataExported!==false||typeof r.nativeReceiptSha256!=='string'||!/^[0-9a-f]{64}$/.test(r.nativeReceiptSha256))throw Error('REDACTION_OR_RESULT_INVALID');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,'collector_result='+r.result+'\n');
           NODE
           echo 'redaction_valid=true' >> "$GITHUB_OUTPUT"
           cat "$RUNNER_TEMP/study-redacted.json"
@@ -95,6 +103,19 @@ jobs:
           path: ${{ runner.temp }}/study-redacted.json
           if-no-files-found: warn
           retention-days: 90
+
+      - name: Enforce collector status after preserving redacted evidence
+        if: always()
+        env:
+          COLLECTOR_STATUS: ${{ steps.proof.outputs.collector_status }}
+          COLLECTOR_RESULT: ${{ steps.proof.outputs.collector_result }}
+          REDACTION_VALID: ${{ steps.proof.outputs.redaction_valid }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$REDACTION_VALID" = 'true'
+          test "$COLLECTOR_STATUS" = '0'
+          test "$COLLECTOR_RESULT" = 'PASS'
 
   execute:
     if: >-

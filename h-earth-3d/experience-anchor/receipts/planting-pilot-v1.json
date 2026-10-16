@@ -1,0 +1,91 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/planting-pilot-v1/source-evidence.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/planting-pilot-v1/source-evidence.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/planting-pilot-v1/source-evidence.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "4c11d2bf165f473cdbedc648cbb34c013cdcb5932c00e39e152d05664c4c83c4"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs",
+      "sha256": "dc607cf2d9ed77ed1fe75fc8fe8fc8dbdd6767769c45d667e495623f04f019c4"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "b514a299398bb4d6929cdf5481f548570b35bf8c20f12a5505b693da757ad4cf"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "ad3b95cb7fae9355793831e8f368410e3f8f7dc6871fecc379224229e4e4dfd0"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
+      "sha256": "dbfad117525eeeb9f5b64935b8ff7435542e5302f9ced08ba8d4494817e466f6"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "3e4ca67444387a71a65ca7fab7a610a074389467df8f653e96f79eb2ecf1f050"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "sha256": "d34d909fd387e4dfdaa057516f3f1ca2141f28b2593cb8bb2fab8e5da853d960"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-planting-pilot.v1.js",
+      "sha256": "2b4c8999bcbdf4b5aabf4596f0bf2c2a7ac6cbd34fddd116e741a5269da06c7b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "sha256": "5a02863fdc85fd0a8bfba7ed712eb54057b1f73779eb4d42b2ea27aee2d83589"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "4db3df2226503a4db07ba074cc5d7f13c9ecde2d691854a0e3b398b7049c8e1f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/planting-pilot-renderer.v1.js",
+      "sha256": "9c2397ccdcd818c79e4e681351351a61688b88440c7bf8f80b3b3e2b78d96ce6"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js",
+      "sha256": "ced15a2e8a8664e6b7e6907c0d919fa4fbcf10a965b78081084fec9aaa03a7a6"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "67a5f31e8b2b01a3b911adf7569d2530708d66bc208820d3769bbaba1fe24050"
+    }
+  ],
+  "acceptanceBasis": "Preservation-only: qualified exact same canonical entered world with existing terrain, navigation, cavern/camera and protected trees. Actual prior/current scene screenshots and exact source review retain anchored product identity. Native pilot is presentation-only, bounded, world-fixed and no new UI. Independent West confirms technical preservation; no pilot visual or physical-device acceptance is claimed.",
+  "canonicalAdmissionGeneration": 2780,
+  "qualifiedProductHead": "8736283377901c63f281a70a1afb73c5cbd17a0f",
+  "qualificationRunId": 38981413428,
+  "ownerPerceptualAcceptance": false,
+  "pilotPixelVisibilityVerified": false,
+  "pilotMovementAppearanceVerified": false,
+  "phonePerformanceMeasured": false
+}

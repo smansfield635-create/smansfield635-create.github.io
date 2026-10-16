@@ -27,24 +27,71 @@
     "west": "SYNTHETIC_CPU_AND_MOCK_GL_REVIEWED_NOT_ACTUAL_WEBGL"
   },
   "qualification": {
-    "actualSceneCPU": "PENDING_FULL_CHECKOUT",
-    "actualWebGL": "PENDING",
+    "exactQualifiedProductHead": "8736283377901c63f281a70a1afb73c5cbd17a0f",
+    "runId": 38981413428,
+    "jobId": 117242895282,
+    "actualSourceTests": {
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "worldSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "rootCount": 5313,
+      "contactChecks": 5313,
+      "hiddenWaterChecks": 5313,
+      "boundsChecks": 5313,
+      "layoutDigest": "FNV1A32_NONCRYPTOGRAPHIC:2ce04494"
+    },
+    "actualBrowser": {
+      "materialized": true,
+      "rootCount": 5313,
+      "gpuBytes": 170400,
+      "staticUploads": 3,
+      "drawCallsPerFrame": 2,
+      "initialPilotFrames": 2,
+      "laterPilotFrames": 5,
+      "perFrameUploadBytes": 0,
+      "worldRebuildCount": 0,
+      "consoleErrors": [],
+      "requestsFailed": [],
+      "fatalPageErrors": [],
+      "expectedPreparationPendingEvents": 4,
+      "route": "/showroom/globe/h-earth/?arrival=geological-cavern",
+      "cameraInsidePilot": false
+    },
+    "artifactId": 12081996472,
+    "artifactDigest": "sha256:6e697099383039385442760aa4ebfb473af304fd35e6833a7afc5cfd7470a504",
+    "independentWest": "BOUNDED_TECHNICAL_AND_PRESERVATION_PASS",
+    "pilotPixelVisibility": "NOT_ESTABLISHED",
+    "pilotMovementAppearance": "NOT_ESTABLISHED",
     "phonePerformance": "UNMEASURED",
     "ownerVisualAcceptance": false,
-    "publication": false,
-    "firstAttempt": {
-      "candidate": "4d23e5c0fae46662808b86c566a1f1ec9f7ad443",
-      "runId": 38981089519,
-      "jobId": 117241875775,
-      "result": "SOURCE_QUALIFIER_FAILED_BEFORE_BROWSER",
-      "assertion": "REPAIR_CAVE_MODULE_IDENTITY_DRIFT",
-      "repair": "Exact selected gen2780 revision added to existing bridge identity predicate; no identity guard removed"
-    }
+    "publication": "PENDING_EXACT_HEAD_RELEASE"
   },
   "nextAction": "Existing exact-head runner with complete vegetation residency; inspect first failed assertion before any repair",
   "repairs": [
     "Coarse/fine dominant blade heights identical",
     "Shared sun and haze inputs with parent scene output transfer",
     "Correct source-qualifier revision predicate"
-  ]
+  ],
+  "finalizationDelta": {
+    "runtimeSourceChanged": false,
+    "layoutOrShaderChanged": false,
+    "changes": [
+      "Record observed source and browser evidence",
+      "Preservation-only anchor receipt with exact source digests",
+      "Publication manifest current revision",
+      "Source test import URL uses current woodland revision; imported bytes unchanged"
+    ],
+    "qualificationInheritance": "Qualified product bytes preserved; only release metadata and validation import identity change.",
+    "mainContinuity": {
+      "from": "29bb1df5400bee2d0e90fcc5007fb4a466bad3b7",
+      "to": "ddcad471045bef0355dfb2b075ccfaaa80ddbf9c",
+      "changedPaths": 7,
+      "classification": "ANALYTICS_ONLY_DISJOINT"
+    }
+  },
+  "advisoryChecks": {
+    "registryUnknownCandidatePath": "Exact candidate paths are admitted under2780; no durable authority boundary added. Existing root whole-estate candidate-scope recognition applies; historical registry graph is not source mutation authority.",
+    "staticAssetIdentity": "Stale validator-only woodland import revision corrected; product import graph already qualified."
+  }
 }

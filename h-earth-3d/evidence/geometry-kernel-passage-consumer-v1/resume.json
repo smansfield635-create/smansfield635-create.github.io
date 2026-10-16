@@ -1,0 +1,24 @@
+{
+  "schema": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_RESUME_v1",
+  "operationId": "GEOMETRY_KERNEL_PASSAGE_CONSUMER_20261016_001",
+  "lockGeneration": 2766,
+  "sourceCommit": "da5a69752e7abf18636b193c440523dacf9f39dc",
+  "branch": "geometry-kernel-passage-consumer-v1-20261016",
+  "baseCommit": "32912f86f3d6c54cdb405c7856a01d81d7f6f50f",
+  "candidateState": "COMPONENT_QUALIFIED_GPU_HELD",
+  "tests": {
+    "passed": 40,
+    "failed": 0,
+    "analyticQueries": 450
+  },
+  "independentReview": "PASS",
+  "nextCheckpoint": {
+    "command": "node h-earth-3d/validation/geometry-kernel-passage-consumer.webgl.v1.mjs",
+    "requires": "Available Playwright Chromium, unchanged saved candidate bytes",
+    "boundary": "NOT_EXECUTED_BROWSER_UNAVAILABLE"
+  },
+  "productIntegrated": false,
+  "merged": false,
+  "deployed": false,
+  "authorityCreated": false
+}

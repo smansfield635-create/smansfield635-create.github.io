@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-16T03:36:19Z",
+  "generatedAt": "2026-10-16T04:34:48Z",
   "window30d": {
-    "start": "2026-09-16T03:36:19Z",
-    "end": "2026-10-16T03:36:19Z"
+    "start": "2026-09-16T04:34:48Z",
+    "end": "2026-10-16T04:34:48Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 27
+      "pageLoads": 24
     },
     {
       "date": "2026-10-10",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 3
+      "pageLoads": 4
     }
   ],
   "summary": {
-    "pageLoads": 4448,
+    "pageLoads": 4416,
     "botPageLoads": 1778,
-    "nonBotPageLoads": 2670
+    "nonBotPageLoads": 2638
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2804,
-      "visits": 2804
+      "pageLoads": 2802,
+      "visits": 2802
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1398,
+      "pageLoads": 1368,
       "visits": 0
     },
     {
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 931,
-      "visits": 651
+      "pageLoads": 930,
+      "visits": 650
     },
     {
       "path": "/analytics/",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 462,
-      "visits": 437
+      "pageLoads": 461,
+      "visits": 436
     },
     {
       "path": "/products/education/",

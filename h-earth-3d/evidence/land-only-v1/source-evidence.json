@@ -1,0 +1,36 @@
+{
+  "schema": "H_EARTH_TEMPORARY_LAND_ONLY_SOURCE_EVIDENCE_v1",
+  "baseline": "565f215cce2063d57162b5cc0b3b301eb4534f93",
+  "canonicalAdmissionGeneration": 2778,
+  "admissionCommit": "87a399089df3ac4b78beb62e9d9bd6151b1a71dd",
+  "ownerDirection": "Temporarily remove all water until land and navigation are coherent; publish for live owner judgment.",
+  "changes": [
+    "All canonical water and foam ranges skipped by exact IDs; geological freshwater and basin draws skipped. Original records/meshes remain.",
+    "Shared water switch removes invisible basin navigation barriers and rendered-water vegetation exclusion.",
+    "Final render camera retains accepted geological floor height; ordinary terrain fallback preserved.",
+    "Terrain, cavern, riverbed, basin geometry and vegetation density unchanged."
+  ],
+  "checks": {
+    "combinedTests": {
+      "passed": 30,
+      "failed": 0
+    },
+    "retainedWaterGeometryTests": {
+      "passed": 3,
+      "failed": 0
+    },
+    "sourceBinding": "PASS generation2778 six module links",
+    "finalPacket": "14 camera packets, seven points entrance to z=-240, two look orientations, zero Y delta, round-trip position error<1e-7, all12 interior packets below ceiling",
+    "waterDrawCensus": {
+      "baseRangesSkipped": 2,
+      "baseIndicesSkipped": 59232,
+      "derivedWaterMeshesSkipped": 2,
+      "renderedWaterSamplerTriangles": 0
+    },
+    "canonicalBinarySha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a"
+  },
+  "registryBoundary": "Legacy candidate registry reports REQUESTED_PATH_UNRESOLVED for newer implementation paths; canonical2778 exact allowed paths and root candidate-path rule govern. No authority inferred from registry.",
+  "ownerVisualAcceptance": false,
+  "phonePerformanceMeasured": false,
+  "newFullVegetationBrowserRun": false
+}

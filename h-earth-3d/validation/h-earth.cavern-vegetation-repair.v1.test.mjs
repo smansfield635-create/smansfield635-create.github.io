@@ -103,7 +103,7 @@ test('visible root surface respects retired ground, exterior overlap, water and 
     {role:'FRESHWATER_RIVER',mesh:mesh(4)},
     {role:'OASIS_WATER',mesh:mesh(5)}
   ]};
-  const surface=buildVegetationVisibleSurface(pkg,{geology});
+  const surface=buildVegetationVisibleSurface(pkg,{geology,waterPresentationEnabled:true});
   assert.equal(surface.ground.sample(50,-320).y,3,'Retired base or shell incorrectly became outdoor root support');
   assert.equal(surface.ground.sample(50,-320).owner,'MOUNTAIN_OVERBURDEN');
   assert.equal(surface.water.sample(50,-320).y,5,'New geological water footprint was omitted');
@@ -123,7 +123,7 @@ test('nearby fine grass keeps grounded unique roots byte-identical after an A-B-
   const quad=(x0,z0,x1,z1,y)=>({positions:new Float32Array([x0,y,z0,x1,y,z0,x0,y,z1,x1,y,z1]),indices:new Uint32Array([0,2,1,1,2,3])});
   const ground=quad(54,-322,78,-298,2),water=quad(60,-320,72,-300,3);
   const pkg={buffers:ground,primitiveSpans:[{role:'TERRAIN',primitiveId:'NEARBY_VISIBLE_GROUND',indexStart:0,indexCount:6}],landscapeCoverFootprints:[],landscapeFloorFootprints:[]};
-  const visibleSurface=buildVegetationVisibleSurface(pkg,{geology:{meshes:[{role:'FRESHWATER_RIVER',mesh:water}]}});
+  const visibleSurface=buildVegetationVisibleSurface(pkg,{waterPresentationEnabled:true,geology:{meshes:[{role:'FRESHWATER_RIVER',mesh:water}]}});
   const cache=createNearbyFineGrassCache(pkg,{visibleSurface});
   const rootsOf=p=>p.tiles.flatMap(tile=>tile.roots);
   const bytesOf=roots=>{

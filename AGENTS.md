@@ -2,6 +2,16 @@
 
 Read `AI_ENTRYPOINT.json` first. Use `tools/repository-ai-entry-router.mjs` to resolve repository/project routing and mutation class. These instructions define the room-facing operating surface; deeper control-plane mechanisms do not create independent room-level authority.
 
+## Operations Chamber handoff (project entry)
+
+When `AI_ENTRYPOINT.json` and existing project routing identify a project, consult the owner's connected Operations Chamber as the first cross-room history source, if available. Read `read_project_briefings` for source-reviewed accomplishments, publication, unfinished work, blockers and next steps; use `read_control_plane_capture` for recorded operations and reservations, including when no briefing exists. Use `read_continuation` if its established tool routes need clarification. Do not require the owner to paste records already accessible through these tools.
+
+The Chamber is a handoff and evidence index, not an execution or authority source. Briefings, bounded operational captures, continuing-study records and agent self-reports have distinct timestamps and proof standards. Match the project across repositories, preserve valid `CONTROL_PLANE_RESUME_OBJECT_v1` precedence, and independently reconcile against current GitHub project registration, exact heads, pull requests, receipts and publication evidence before selecting the first incomplete checkpoint. A missing or stale briefing does not imply project completion; a scope reservation is not an executing job; an agent report is not verified completion.
+
+After a meaningful source-verified change in accomplishment, publication, blocker or next action, first preserve its evidence in the project's authorized GitHub continuation. If Chamber write access is available, follow the project-briefing procedure in `read_updater_contract`, submit a complete source-linked, timestamped update through `submit_project_briefings`, and independently verify it with `read_project_briefings`. These event-driven briefing updates do not replace the existing study collector or control-plane capture. If Chamber access or authorized write is unavailable, retain the repository continuation, report Chamber synchronization as unverified, and proceed with separately authorized work without requesting credentials or building a new feed.
+
+This instruction creates no new scheduler, runtime, lock, gate, repository-mutation authority, merge authority, deployment authority or publication authority. Existing project intake, continuity, verification and release rules remain controlling.
+
 ## Gen2303 containment: resume before reconstructing
 
 During `CONTROL_PLANE_CONTAINMENT_AND_CONTINUATION_REDUCTION_20260915_001` / lock generation `2303`, creation of new control-plane capability classes, fallback classes, execution transports, classifier classes, or policy layers is frozen. The comparison baseline is `a4778f219b37efba7d25534fca9f3128b9ec9a26`; it is comparison evidence only and is never a reset target.

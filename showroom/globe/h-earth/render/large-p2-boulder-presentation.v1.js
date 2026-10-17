@@ -1,4 +1,4 @@
-/** Gen2793: immutable paired-wedge identities move to the connected front bank in presentation.
+/** Gen2794: immutable paired-wedge identities become submerged mountain-foot rockfall.
  * The 14 accepted type-3 small clearing rocks are not modified.
  */
 import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2694-legacy-fan-recovery-v1';
@@ -65,54 +65,61 @@ function terrainField(raw){
    return null;
  };
 }
-/** Connected, already-rendered front water only. No rear river is enabled. */
+/** Survey the existing connected water and its independently measured uphill source. */
 function bankSurvey(raw,sample){
  const basin=buildHEarthOasisConnectedBasinIndex(raw),bounds={minX:oasis.minX-12,maxX:oasis.maxX+12,minZ:oasis.minZ-12,maxZ:oasis.maxZ+12},
    water=buildHEarthGrassTrialTerrainIndex(raw,bounds,true),wet=new Set(basin.wetCells.map(p=>p.x+':'+p.z));
- const edge=basin.wetCells.filter(p=>[[1,0],[-1,0],[0,1],[0,-1]].some(([dx,dz])=>{
-   const x=p.x+dx,z=p.z+dz,t=sample(x,z),w=sampleHEarthGrassTrialTerrain(water,x,z);
-   return !wet.has(x+':'+z)&&t&&w&&t.y>w.y+.035;
- }));
+ const edge=basin.wetCells.filter(p=>[[1,0],[-1,0],[0,1],[0,-1]].some(([dx,dz])=>!wet.has((p.x+dx)+':'+(p.z+dz))));
  if(!edge.length)throw Error('LARGE_P2_CONNECTED_BANK_PERIMETER_MISSING');
  const nearest=(x,z)=>edge.reduce((best,p)=>{const distance=Math.hypot(x-p.x,z-p.z);return distance<best.distance?{x:p.x,z:p.z,distance}:best;},{distance:Infinity});
- const dry=(x,z)=>{const t=sample(x,z),w=sampleHEarthGrassTrialTerrain(water,x,z);return t&&w&&t.y>w.y+.035?{terrainY:t.y,waterY:w.y,triangleId:t.triangleId,clearance:t.y-w.y}:null;};
+ const submerged=(x,z)=>{const t=sample(x,z),w=sampleHEarthGrassTrialTerrain(water,x,z);return t&&w&&t.y<w.y-.05?{terrainY:t.y,waterY:w.y,triangleId:t.triangleId,depth:w.y-t.y}:null;};
  const candidates=[];
- for(let z=bounds.minZ;z<=bounds.maxZ;z+=.5)for(let x=bounds.minX;x<=bounds.maxX;x+=.5){const shoreline=nearest(x,z);if(shoreline.distance>=2.15&&shoreline.distance<=7&&dry(x,z))candidates.push({x,z,shoreline});}
- return{basin,edge,nearest,dry,bounds,candidates};
+ for(let z=bounds.minZ;z<=-172;z+=.5)for(let x=bounds.minX;x<=bounds.maxX;x+=.5){
+   const bed=submerged(x,z);if(!bed||bed.depth>6)continue;
+   const shoreline=nearest(x,z);if(shoreline.distance>12)continue;
+   let uphill=null;
+   for(let k=0;k<16;k++){const a=k*pi/8,px=x+12*Math.cos(a),pz=z+12*Math.sin(a),t=sample(px,pz);
+     if(t&&(!uphill||t.y>uphill.terrainY))uphill={x:px,z:pz,terrainY:t.y,triangleId:t.triangleId};}
+   if(!uphill||uphill.z>=z-4||uphill.terrainY-bed.terrainY<3)continue;
+   candidates.push({x,z,shoreline,bed,uphill});
+ }
+ return{basin,edge,nearest,submerged,bounds,candidates};
 }
 function footDistance(x,z,a,b){const dx=b.x-a.x,dz=b.z-a.z,q=dx*dx+dz*dz,t=q?clamp(((x-a.x)*dx+(z-a.z)*dz)/q,0,1):0;return Math.hypot(x-a.x-t*dx,z-a.z-t*dz);}
-function site(raw,sample,bank,x,z,r,selected){
- const ground=sample(x,z);if(!ground||ground.slope>.53)return null;
+function site(raw,sample,bank,candidate,r,selected){
+ const {x,z,shoreline,uphill}=candidate;
+ const ground=sample(x,z);if(!ground||ground.slope>3)return null;
  const authored=inverseHEarthGroundCoverPoint(x,ground.y,z),m=materialAt(authored.x,authored.z);
- if(m?.valid!==true||['OPEN_WATER','NEARSHORE_WATER','WET_SAND','DRY_SAND'].includes(m.surfaceClass))return null;
+ if(m?.valid!==true)return null;
  const context=Math.max(m.foothillTransition??0,m.drainageRetention??0,m.rockExposure??0);
- const shoreline=bank.nearest(x,z);if(shoreline.distance<r+.5||shoreline.distance>r+4||!bank.dry(x,z))return null;
+ if(shoreline.distance>r+8||!bank.submerged(x,z))return null;
  const structure=structureAt(authored.x,authored.z);if(structure.hardExclusions.length||structure.planningHolds.length)return null;
  for(const box of [estate.manorCore,estate.gardens,estate.outbuildingProposal,estate.acceptedEnvelope])if(Math.hypot(authored.x-clamp(authored.x,box.minX,box.maxX),authored.z-clamp(authored.z,box.minZ,box.maxZ))<r+1)return null;
  if(estate.footRoute.slice(1).some((b,i)=>footDistance(authored.x,authored.z,estate.footRoute[i],b)<estate.footRouteRadius+r+1))return null;
  if((raw.landscapeCoverFootprints??[]).some(o=>Math.hypot(x-o.x,z-o.z)<o.radius+r+.6))return null;
  if((raw.landscapeFloorFootprints??[]).some(o=>Math.hypot(x-o.x,z-o.z)<o.trunkRadius+r+1))return null;
- if(selected.some(o=>Math.hypot(x-o.x,z-o.z)<o.radius+r+1.15))return null;
- // Independently sampled support around the future buried lower ring.
- const perimeter=[];for(let k=0;k<12;k++){const a=k*pi/6,px=x+r*1.25*Math.cos(a),pz=z+r*1.25*Math.sin(a),dry=bank.dry(px,pz);if(!dry)return null;perimeter.push({x:px,z:pz,...dry});}
- return{x:f(x),z:f(z),ground,authored,m,context,shoreline,perimeter};
+ if(selected.some(o=>Math.hypot(x-o.x,z-o.z)<o.radius+r+.35))return null;
+ // Independently sampled underwater bed around the buried lower ring.
+ const perimeter=[];for(let k=0;k<12;k++){const a=k*pi/6,px=x+r*1.08*Math.cos(a),pz=z+r*1.08*Math.sin(a),wet=bank.submerged(px,pz);if(!wet)return null;perimeter.push({x:px,z:pz,...wet});}
+ return{x:f(x),z:f(z),ground,authored,m,context,shoreline,perimeter,uphill,bed:candidate.bed};
 }
 export function buildLargeP2BoulderPresentation(raw){
  const source=identifyLargeP2RockSource(raw),ground=terrainField(raw),bank=bankSurvey(raw,ground),positions=[],colors=[],indices=[],sourceVertexIndices=[],records=[],selected=[];
  const vertex=(x,y,z,col,sourceId)=>{const v=positions.length/3;positions.push(f(x),f(y),f(z));colors.push(...col.map(f),1);sourceVertexIndices.push(sourceId);return v;};
  for(const id of source.rocks.map((_,i)=>i).sort((a,b)=>source.rocks[b].radius-source.rocks[a].radius||a-b)){
-   const original=source.rocks[id],radius=original.radius;let best=null,score=-Infinity;
-   // Global deterministic bank grid. Three spatial preference pockets leave gaps;
-   // eligibility is actual terrain/water, never distance to the moving camera.
-   for(const {x,z,shoreline:shore} of bank.candidates){if(shore.distance<radius+.5||shore.distance>radius+4)continue;
-     const trial=site(raw,ground,bank,x,z,radius,selected);if(!trial)continue;
-     const pocket=Math.max(...[[-14,-167],[-4,-200],[29,-183]].map(([px,pz])=>Math.exp(-((x-px)**2+(z-pz)**2)/180)));
-     const group=selected.length?Math.max(...selected.map(p=>Math.exp(-((x-p.x)**2+(z-p.z)**2)/180))):0;
-     const value=pocket*1.5+group*.5-trial.ground.slope*.3-(shore.distance-radius)*.06+noise(x,z,id)*.035;
+   const original=source.rocks[id],radius=original.radius*.82;let best=null,score=-Infinity;
+   // Deterministic connected-water grid: eligibility follows actual submerged
+   // terrain and mountain ascent, never distance to the moving camera.
+   for(const candidate of bank.candidates){
+     const trial=site(raw,ground,bank,candidate,radius,selected);if(!trial)continue;
+     // Mountain-foot pockets derive from measured uphill relief, with hashed
+     // variation and breathing room rather than a continuous perimeter ring.
+     const relief=trial.uphill.terrainY-trial.ground.y;
+     const value=relief*.12-trial.bed.depth*.2-trial.shoreline.distance*.08+noise(trial.x,trial.z,id)*.65;
      if(value>score){score=value;best=trial;}
    }
-   if(!best)throw Error('LARGE_P2_NO_ELIGIBLE_GROUNDED_BOULDER:'+id);
-   const {x,z,m}=best,baseY=best.ground.y,h=1.5+1.7*noise(id,29),direction=2*pi*noise(id,31),
+   if(!best)throw Error('LARGE_P2_NO_ELIGIBLE_GROUNDED_BOULDER:'+id+':'+selected.length+':'+bank.candidates.length);
+   const {x,z,m}=best,baseY=best.ground.y,h=Math.max(1.5+1.7*noise(id,29),best.bed.depth+.65+.8*noise(id,28)),direction=2*pi*noise(id,31),
      rx=radius*(.85+.2*noise(id,32)),rz=radius*(.73+.24*noise(id,33));
    const sourceId=original.sourceVertexIndices[0],start=positions.length/3,indexStart=indices.length,contacts=[],rings=[];
    const baseColor=[0,1,2].map(ch=>original.sourceVertexIndices.reduce((sum,i)=>sum+raw.buffers.baseColorsLinear[i*4+ch],0)/16);
@@ -126,7 +133,7 @@ export function buildLargeP2BoulderPresentation(raw){
        const scale=[.72,.96,.88,.63,.28][layer]*(.96+.04*noise(id,k+layer*17));
        const px=f(x+rx*Math.cos(phi)*scale*irregular),pz=f(z+rz*Math.sin(phi)*scale*irregular);
        const contact=ground(px,pz);if(!contact)throw Error('LARGE_P2_UNGROUNDED_RING:'+id+':'+layer+':'+k);
-       if(layer<2&&!bank.dry(px,pz))throw Error('LARGE_P2_WET_FOOTPRINT:'+id+':'+layer+':'+k);
+       if(layer<2&&!bank.submerged(px,pz))throw Error('LARGE_P2_BASE_NOT_SUBMERGED:'+id+':'+layer+':'+k);
        const y=f(layer<2?contact.y-(layer===0?.18:.023):baseY+h*([0,0,.36,.70,.94][layer]+.06*(noise(id,k+layer*37)-.5)));
        ring.push(vertex(px,y,pz,color(layer,k),sourceId));
        if(layer<2)contacts.push({x:px,z:pz,terrainY:contact.y,meshY:y,burial:f(contact.y-y),triangleId:contact.triangleId,layer});
@@ -138,10 +145,10 @@ export function buildLargeP2BoulderPresentation(raw){
    for(let k=0;k<12;k++){const n=(k+1)%12;indices.push(low,rings[0][k],rings[0][n],top,rings[4][n],rings[4][k]);}
    selected.push({x,z,radius});
    records.push({originalRockId:original.originalRockId,originalForm:'PAIRED_FRACTURE_WEDGES',
-     newForm:'ASYMMETRIC_SCULPTED_BURIED_STONE',sourceTriangleOffsets:original.sourceTriangleOffsets,
+     newForm:'MOUNTAIN_DERIVED_SUBMERGED_ROCKFALL',sourceTriangleOffsets:original.sourceTriangleOffsets,
      sourceVertexIndices:original.sourceVertexIndices,sourceCenter:original.sourceCenter,
      presentationCenter:{x,y:baseY,z},authoredCenter:best.authored,terrainContactWitnesses:contacts,
-     bankWitness:{waterPrimitive:bank.basin.waterPrimitive,connectedSeed:bank.basin.seed,nearestWetCell:best.shoreline,centerDry:bank.dry(x,z),dryPerimeter:best.perimeter},
+     bankWitness:{waterPrimitive:bank.basin.waterPrimitive,connectedSeed:bank.basin.seed,nearestWetCell:best.shoreline,centerSubmerged:bank.submerged(x,z),submergedPerimeter:best.perimeter,uphillSource:best.uphill},
      radius,height:h,vertexStart:start,vertexCount:positions.length/3-start,indexStart,indexCount:indices.length-indexStart,
      context:{surfaceClass:m.surfaceClass,landformClass:m.landformClass,rockExposure:m.rockExposure,drainageRetention:m.drainageRetention,foothillTransition:m.foothillTransition}});
  }
@@ -157,8 +164,8 @@ export function buildLargeP2BoulderPresentation(raw){
  return{positions:Float32Array.from(positions),normals,baseColorsLinear:Float32Array.from(colors),
    indices:Uint32Array.from(indices),sourceVertexIndices:Uint32Array.from(sourceVertexIndices),
    suppressedTriangleOffsets:source.largeOffsets,protectedSmallTriangleOffsets:source.smallOffsets,
-   records,receipt:{schema:'H_EARTH_GEN2793_CONNECTED_BANK_BOULDERS_v1',rockCount:14,
-     placement:'CONNECTED_FRONT_WATER_DRY_BANK_SHOULDERS',connectedWetCells:bank.basin.wetCellCount,oldOpenGroundClustersSuppressed:true,waterGeometryChanged:false,
+   records,receipt:{schema:'H_EARTH_GEN2794_MOUNTAIN_FOOT_SUBMERGED_BOULDERS_v1',rockCount:14,
+     placement:'CONNECTED_WATER_MOUNTAIN_BACKED_SUBMERGED_ROCKFALL',connectedWetCells:bank.basin.wetCellCount,oldOpenGroundClustersSuppressed:true,waterGeometryChanged:false,
      suppressedTriangles:336,protectedSmallTriangles:224,vertices:868,triangles:1680,
      originalWorldChanged:false,sourceRecipeChanged:false,terrainChanged:false,meadowChanged:false,
      ownerVisualAcceptance:false,releaseAuthorized:false}};

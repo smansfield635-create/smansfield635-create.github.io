@@ -24,20 +24,33 @@ test('real SHA-verified uploaded world preserves 14 source identities and every 
  assert.equal(digest(raw),before);
 });
 
-test('all replacement centers and actual lower-ring vertices sit on dry connected front banks',()=>{
+test('all rocks occupy mountain-backed submerged beds and cross the actual waterline',()=>{
  assert.equal(basin.wetCellCount,1638);assert.equal(out.receipt.waterGeometryChanged,false);
+ const exposures=[];
  for(const r of out.records){
   const p=r.presentationCenter,w=r.bankWitness;assert.equal(w.waterPrimitive,'FAR_OCEAN_CONTINUATION');assert.deepEqual(w.connectedSeed,{x:-6,z:-164});
   assert(basin.wetCells.some(q=>q.x===w.nearestWetCell.x&&q.z===w.nearestWetCell.z));
-  const distance=Math.min(...basin.wetCells.map(q=>Math.hypot(p.x-q.x,p.z-q.z)));
-  assert(distance>=r.radius+.5-1e-6);assert(distance<=r.radius+4+1e-6);
-  for(const q of [p,...r.terrainContactWitnesses]){const t=sample(terrain,q.x,q.z),v=sample(water,q.x,q.z);assert(t&&v);assert(t.y>v.y+.035,'Actual lower ring overlaps wet ground');if('meshY'in q){assert(Math.abs(t.y-q.terrainY)<1e-6);assert(q.meshY<t.y);assert(q.burial>0&&q.burial<.181);}}
-  assert.equal(w.dryPerimeter.length,12);assert(w.dryPerimeter.every(q=>q.clearance>.035));
-  assert(p.z>-210,'Old open-ground/mountain cluster retained');assert(Math.hypot(p.x-r.sourceCenter.x,p.z-r.sourceCenter.z)>10);
+  assert(p.z<=-172,'Beach-facing basin left clear');
+  const t=sample(terrain,p.x,p.z),v=sample(water,p.x,p.z);assert(t&&v);assert(t.y<v.y-.05);
+  assert(Math.abs(t.y-p.y)<1e-6);assert(Math.abs(w.centerSubmerged.depth-(v.y-t.y))<1e-6);
+  const uphill=sample(terrain,w.uphillSource.x,w.uphillSource.z);assert(uphill);
+  assert(Math.abs(uphill.y-w.uphillSource.terrainY)<1e-6);
+  assert(w.uphillSource.z<p.z-4,'Source relief faces inland mountain');
+  assert(uphill.y-t.y>=3);assert(Math.abs(Math.hypot(w.uphillSource.x-p.x,w.uphillSource.z-p.z)-12)<1e-5);
+  assert.equal(w.submergedPerimeter.length,12);
+  for(const q of [...r.terrainContactWitnesses,...w.submergedPerimeter]){
+   const bed=sample(terrain,q.x,q.z),waterline=sample(water,q.x,q.z);assert(bed&&waterline);
+   assert(bed.y<waterline.y-.05,'Submerged bed footprint required');
+   assert(Math.abs(bed.y-q.terrainY)<1e-6);
+   if('meshY'in q){assert(q.meshY<bed.y);assert(q.meshY<waterline.y);assert(q.burial>0&&q.burial<.181);}
+  }
+  const start=r.vertexStart,end=start+r.vertexCount;let above=0,below=0;
+  for(let i=start;i<end;i++){const x=out.positions[i*3],y=out.positions[i*3+1],z=out.positions[i*3+2],waterline=sample(water,x,z);assert(waterline);if(y>waterline.y)above++;else below++;}
+  assert(above>0&&below>0,'Stone must intersect water surface');
+  const top=out.positions[(end-1)*3+1];assert(top>v.y+.5);exposures.push(top-v.y);
+  assert(Math.hypot(p.x-r.sourceCenter.x,p.z-r.sourceCenter.z)>10);
  }
- // Preserve an open gap between southern cluster and the western/northern banks.
- const south=out.records.filter(r=>r.presentationCenter.z<-190),north=out.records.filter(r=>r.presentationCenter.z>=-190);assert(south.length>=2&&north.length>=2);
- assert(Math.min(...south.flatMap(a=>north.map(b=>Math.hypot(a.presentationCenter.x-b.presentationCenter.x,a.presentationCenter.z-b.presentationCenter.z))))>12);
+ assert(Math.max(...exposures)-Math.min(...exposures)>.25,'Visible exposures must vary');
 });
 
 test('source geometry census, pair separation, tree/estate holds, and foot route remain respected',()=>{
@@ -47,7 +60,7 @@ test('source geometry census, pair separation, tree/estate holds, and foot route
   for(let k=1;k<estate.footRoute.length;k++)assert(distanceToSegment(a,estate.footRoute[k-1],estate.footRoute[k])>=estate.footRouteRadius+r.radius+1);
   for(const q of raw.landscapeCoverFootprints??[])assert(Math.hypot(p.x-q.x,p.z-q.z)>=q.radius+r.radius+.6);
   for(const q of raw.landscapeFloorFootprints??[])assert(Math.hypot(p.x-q.x,p.z-q.z)>=q.trunkRadius+r.radius+1);
-  for(const q of out.records.slice(i+1))assert(Math.hypot(p.x-q.presentationCenter.x,p.z-q.presentationCenter.z)>=r.radius+q.radius+1.15-1e-6);
+  for(const q of out.records.slice(i+1))assert(Math.hypot(p.x-q.presentationCenter.x,p.z-q.presentationCenter.z)>=r.radius+q.radius+.35-1e-6);
   assert.equal(r.vertexCount,62);assert.equal(r.indexCount/3,120);
  }
  assert.equal(out.positions.length/3,868);assert.equal(out.indices.length/3,1680);

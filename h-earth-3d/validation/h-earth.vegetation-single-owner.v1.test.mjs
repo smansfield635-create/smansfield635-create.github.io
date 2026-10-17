@@ -169,7 +169,7 @@ async function executeEntrance({pathname='/showroom/globe/h-earth/',search='',fa
  }};
  const window={dispatchEvent:event=>events.push(event)};
  let initialized=false;
- const renderer={getResourceReceipt:()=>({singleOwnerVegetation:vegetation,counters:{woodlandHabitatTextureUploadCount:1,woodlandHabitatUploadedBytes:36864}}),renderFrame:()=>{assert.equal(initialized,true,'never render before initialization');},presentColorFrame:()=>presents++,initialize:async()=>{initialized=true;},prepareReplacementVegetation:async()=>{if(failPreparation)throw Error('SIMULATED_PREPARATION_FAILURE');return {installed:true};}};
+ const renderer={getResourceReceipt:()=>({singleOwnerVegetation:vegetation,counters:{woodlandHabitatTextureUploadCount:1,woodlandHabitatUploadedBytes:73728}}),renderFrame:()=>{assert.equal(initialized,true,'never render before initialization');},presentColorFrame:()=>presents++,initialize:async()=>{initialized=true;},prepareReplacementVegetation:async()=>{if(failPreparation)throw Error('SIMULATED_PREPARATION_FAILURE');return {installed:true};}};
  const context={window,location,URLSearchParams,document:{getElementById:id=>id==='prototype-status'?statusNode:id==='h-earth-functional-landscape-canvas'?canvas:rootNode},
   performance:{now:()=>0},history:{state:{existing:true},replaceState(_state,_title,url){historyChanges.push(url);location.search=new URL(url,'https://example.test').search;}},
   setTimeout:callback=>{callback();},WheelEvent:class{constructor(type,options){Object.assign(this,{type},options);}},CustomEvent:class{constructor(type,options){Object.assign(this,{type},options);}},
@@ -215,13 +215,13 @@ test('failed public preparation does not announce readiness or initiate movement
 test('canonical HTML starts only single-owner entrance and preserves import identity map',()=>{
  const html=readFileSync(new URL('../../showroom/globe/h-earth/index.html',import.meta.url),'utf8');
  const scripts=[...html.matchAll(/<script[^>]+type="module"[^>]+src="([^"]+)"/g)].map(match=>match[1]);
- assert.deepEqual(scripts,['./vegetation-prototype/route.js?rev=gen2793-woodland-riverbank-v1']);
+ assert.deepEqual(scripts,['./vegetation-prototype/route.js?rev=gen2794-causal-landscape-v1']);
  assert.ok(html.includes('type="importmap"'));assert.ok(!html.includes('data-h-earth-public-route'));
  assert.ok(!html.includes('public-live-gpu-integration.run8e-r3e'));
  const imports=JSON.parse(html.match(/<script type="importmap">([\s\S]*?)<\/script>/)[1]).imports;
  for(const suffix of ['persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=','woodland-fine-grass.v1.js?rev=']){
   const module='/showroom/globe/h-earth/render/'+suffix;
-  assert.equal(imports[module+'gen2780-stable-planting-v1'],module+'gen2793-woodland-riverbank-v1','changed owner modules bypass prior public cache identities');
+  assert.equal(imports[module+'gen2780-stable-planting-v1'],module+'gen2794-causal-landscape-v1','changed owner modules bypass prior public cache identities');
  }
 });
 
@@ -306,4 +306,21 @@ test('actual single-owner palette shaders compile and link with software GLES',a
   assert.equal(result.status,0,'ACTUAL_OWNER_GLES_COMPILE_LINK_FAILED: '+result.stderr);
   const evidence=JSON.parse(result.stdout);assert.ok(evidence.vertex.pass&&evidence.fragment.pass&&evidence.link.pass);
  }finally{await rm(directory,{recursive:true,force:true});}
+});
+
+test('terrain material cannot use the authored tree rectangle as soil authority',()=>{
+ const source=readFileSync(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ assert.doesNotMatch(source,/clearingSoilInterior|worldSoilReferenceLink|referenceWeight/);
+ const soil=source.slice(source.indexOf('if(worldSoilTerrain){'),source.indexOf('}else if(vRoleCode==4u)'));
+ assert.doesNotMatch(soil,/clearingEdge|uClearingBounds/,'albedo, normal, roughness and wetness share geographic authority');
+ assert.match(source,/if\(clearingType>0\.5&&uClearingEnabled==1&&clearingScale/,'only frozen tree assets evaluate clearing bounds');
+ assert.match(source,/worldSoilTerrain&&uClearingEnabled==1\?clearingVisibility\(vWorldPosition\):1\.0/,'terrain shadows follow actual shadow visibility');
+ assert.match(source,/fog\+clearingEdge\*/,'authored asset fog preserved; terrain clearingEdge remains zero');
+});
+test('global and fine grass colors do not inherit tile-level palette or brightness bands',()=>{
+ const source=readFileSync(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const global=source.slice(source.indexOf('vec2 colorField=coverPaletteField(ownershipRoot)'),source.indexOf('vMaterialParameters=vec4',source.indexOf('vec2 colorField=coverPaletteField(ownershipRoot)')));
+ assert.ok(global.length>0);assert.doesNotMatch(global,/aParameters\.[yz]|aColor/);
+ assert.match(source,/vec2 colorField=coverPaletteField\(root\.xz\)/,'fine grass samples the same world color field');
+ assert.match(source,/mat2\(\.8,\.6,-\.6,\.8\)\*root/,'color lattice rotates away from tile axes');
 });

@@ -165,7 +165,7 @@ async function executeEntrance({pathname='/showroom/globe/h-earth/',search='',fa
  }};
  const window={dispatchEvent:event=>events.push(event)};
  let initialized=false;
- const renderer={getResourceReceipt:()=>({singleOwnerVegetation:vegetation,counters:{}}),renderFrame:()=>{assert.equal(initialized,true,'never render before initialization');},presentColorFrame:()=>presents++,initialize:async()=>{initialized=true;},prepareReplacementVegetation:async()=>{if(failPreparation)throw Error('SIMULATED_PREPARATION_FAILURE');return {installed:true};}};
+ const renderer={getResourceReceipt:()=>({singleOwnerVegetation:vegetation,counters:{woodlandHabitatTextureUploadCount:1,woodlandHabitatUploadedBytes:36864}}),renderFrame:()=>{assert.equal(initialized,true,'never render before initialization');},presentColorFrame:()=>presents++,initialize:async()=>{initialized=true;},prepareReplacementVegetation:async()=>{if(failPreparation)throw Error('SIMULATED_PREPARATION_FAILURE');return {installed:true};}};
  const context={window,location,URLSearchParams,document:{getElementById:id=>id==='prototype-status'?statusNode:id==='h-earth-functional-landscape-canvas'?canvas:rootNode},
   performance:{now:()=>0},history:{state:{existing:true},replaceState(_state,_title,url){historyChanges.push(url);location.search=new URL(url,'https://example.test').search;}},
   setTimeout:callback=>{callback();},WheelEvent:class{constructor(type,options){Object.assign(this,{type},options);}},CustomEvent:class{constructor(type,options){Object.assign(this,{type},options);}},
@@ -211,17 +211,23 @@ test('failed public preparation does not announce readiness or initiate movement
 test('canonical HTML starts only single-owner entrance and preserves import identity map',()=>{
  const html=readFileSync(new URL('../../showroom/globe/h-earth/index.html',import.meta.url),'utf8');
  const scripts=[...html.matchAll(/<script[^>]+type="module"[^>]+src="([^"]+)"/g)].map(match=>match[1]);
- assert.deepEqual(scripts,['./vegetation-prototype/route.js?rev=gen2791-single-owner-public-v1']);
+ assert.deepEqual(scripts,['./vegetation-prototype/route.js?rev=gen2793-woodland-riverbank-v1']);
  assert.ok(html.includes('type="importmap"'));assert.ok(!html.includes('data-h-earth-public-route'));
  assert.ok(!html.includes('public-live-gpu-integration.run8e-r3e'));
  const imports=JSON.parse(html.match(/<script type="importmap">([\s\S]*?)<\/script>/)[1]).imports;
  for(const suffix of ['persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=','woodland-fine-grass.v1.js?rev=']){
   const module='/showroom/globe/h-earth/render/'+suffix;
-  assert.equal(imports[module+'gen2780-stable-planting-v1'],module+'gen2791-single-owner-public-v1','changed owner modules bypass prior public cache identities');
+  assert.equal(imports[module+'gen2780-stable-planting-v1'],module+'gen2793-woodland-riverbank-v1','changed owner modules bypass prior public cache identities');
  }
 });
 
 test('manual public intake proposals cannot render before initialization',async()=>{
  const result=await executeEntrance({earlyProposal:true});
  assert.equal(result.rootNode.dataset.run8eReady,'true');assert.equal(result.presents,2);assert.equal(result.wheelEvents.length,0);
+});
+
+test('diagnostic view selectors cannot automate the public entrance',async()=>{
+ const result=await executeEntrance({search:'?qualification=bank-view-v1'});
+ assert.equal(result.rootNode.dataset.run8eReady,'true');assert.equal(result.wheelEvents.length,0);
+ assert.equal(result.window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().automaticNavigation,false);
 });

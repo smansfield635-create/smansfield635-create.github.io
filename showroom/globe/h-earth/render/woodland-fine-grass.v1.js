@@ -1,3 +1,4 @@
+import {WOODLAND_HABITAT,habitatHash,planWoodlandHabitatCandidates} from './woodland-habitat-field.v1.js';
 /** Presentation-only woodland grass. Canonical world and records stay immutable. */
 import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2780-stable-planting-v1';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
@@ -74,8 +75,9 @@ function surface(positions,indices,spans){
  }
  return{count,sample(x,z){for(const t of bins.get(`${Math.floor(x/4)}:${Math.floor(z/4)}`)??[]){const[a,b,c]=t.a,u=((b[2]-c[2])*(x-c[0])+(c[0]-b[0])*(z-c[2]))/t.det,v=((c[2]-a[2])*(x-c[0])+(a[0]-c[0])*(z-c[2]))/t.det,w=1-u-v;if(Math.min(u,v,w)>=-1e-8)return{y:f(u*a[1]+v*b[1]+w*c[1]),slope:t.slope,triangleId:t.triangleId};}return null;}};
 }
-export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=async()=>{},onProgress=()=>{},priorityOrigin=null,onPriorityPreview=null,visibleSurface=null,admitGround=visibleSurface?.admitGround}={}){
+export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=async()=>{},onProgress=()=>{},priorityOrigin=null,onPriorityPreview=null,visibleSurface=null,admitGround=visibleSurface?.admitGround,habitat=null}={}){
  if(typeof admitGround!=='function')throw Error('WOODLAND_RENDERED_BEACH_PROVIDER_REQUIRED');
+ if(habitat)return buildHabitatWoodland(pkg,{visibleSurface,admitGround,habitat,yieldControl,onProgress});
  if(priorityOrigin!==null&&(![priorityOrigin.x,priorityOrigin.z].every(Number.isFinite)))throw Error('WOODLAND_PRIORITY_ORIGIN_INVALID');
  if(onPriorityPreview!==null&&typeof onPriorityPreview!=='function')throw Error('WOODLAND_PRIORITY_CALLBACK_INVALID');
  const started=performance.now();let sliceStart=started,yieldCount=0;
@@ -430,4 +432,27 @@ export function buildWoodlandFineGrassIndices(){const out=[];for(let leaf=0;leaf
 export function woodlandFineGrassVertex(root,leaf,leafCount=4){
  const seed=(Math.imul(Math.trunc(Math.fround(root.angle*1000)),1664525)+Math.imul(leaf,747796405))>>>0,r0=(seed&1023)/1023,r1=((seed>>>10)&1023)/1023,r2=((seed>>>20)&1023)/1023,angle=root.angle+leaf*2.399963+r0*.8,h=.22+.18*r1,halfWidth=.010+.006*r2,bend=.06+.09*r2;
  return{angle,h,halfWidth,bend,r0,leaf,leafCount};
+}
+
+/** Replacement-only region; legacy ellipse helpers and selection caches stay unchanged. */
+async function buildHabitatWoodland(pkg,{visibleSurface,admitGround,habitat,yieldControl,onProgress}){
+ if(typeof visibleSurface?.sample!=='function')throw Error('WOODLAND_HABITAT_RENDERED_SURFACE_REQUIRED');
+ const started=performance.now(),candidates=planWoodlandHabitatCandidates(habitat),tiles=new Map(),rejections={};let accepted=0;
+ const reject=k=>rejections[k]=(rejections[k]??0)+1;
+ const obstacles=pkg.landscapeCoverFootprints??[],trees=pkg.landscapeFloorFootprints??[];
+ for(let i=0;i<candidates.length;i++){
+  const {x,z,ix,iz}=candidates[i],support=visibleSurface.sample(x,z);
+  if(!support){reject('NO_TERRAIN');continue;}
+  if(!admitGround(x,z,support)){reject('SHARED_GROUND_ADMISSION');continue;}
+  const a=inverseHEarthGroundCoverPoint(x,support.y,z),m=materialAt(a.x,a.z),w=visibleSurface.water.sample(x,z);
+  if(w&&support.y<=w.y+.03){reject('WATER');continue;}
+  if(m?.valid!==true||support.slope>.35||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)){reject('MATERIAL_OR_SLOPE');continue;}
+  if(!woodlandGrassClear(a.x,a.z)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.03)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.10)){reject('PROTECTED_FOOTPRINT');continue;}
+  const tx=Math.floor(x/4),tz=Math.floor(z/4),id=`${tx}:${tz}`;if(!tiles.has(id))tiles.set(id,{id,minX:tx*4,minZ:tz*4,roots:[]});
+  const tile=tiles.get(id);if(tile.roots.length>=WOODLAND_HABITAT.maximumTileRoots)throw Error('WOODLAND_HABITAT_TILE_BUDGET_EXCEEDED');
+  tile.roots.push({x,y:Math.fround(support.y),z,angle:Math.fround(habitatHash(ix,iz,3)/4294967296*Math.PI*2),seed:habitatHash(ix,iz,4),triangleId:support.triangleId,slope:support.slope});accepted++;
+  if((i&1023)===0){onProgress({phase:'WOODLAND_HABITAT_CONTACTS',acceptedContacts:accepted,processedCandidates:i,totalCandidates:candidates.length});await yieldControl();}
+ }
+ const ordered=[...tiles.values()].sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);for(const tile of ordered)tile.roots.sort((a,b)=>a.seed-b.seed);
+ return {tiles:ordered,receipt:{schema:'H_EARTH_WOODLAND_FINE_GRASS_PRESENTATION_v1',candidateCount:candidates.length,contactCount:accepted,tileCount:ordered.length,rejections,elapsedMilliseconds:performance.now()-started,footprint:WOODLAND_HABITAT,habitat:habitat.receipt,selectionCacheTypedArrayBytes:0,cameraIndependent:true,originalRecordsChanged:false,terrainChanged:false,rootEncoding:'ACTUAL_FLOAT32_TRIANGLE_CONTACTS'}};
 }

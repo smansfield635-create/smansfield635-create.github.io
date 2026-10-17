@@ -1,4 +1,4 @@
-/** Gen2791 single-owner public entrance; Gen2790 replay stays on its diagnostic page. */
+/** Gen2793 woodland and bank refinement; manual public entrance, isolated diagnostic replay. */
 import {prepareHEarthRun8ER2CanonicalLiveRenderPackage} from '../render/live-render-package.run8e-r2.canonical.js?cb=meadow-distribution-20261006';
 import {createHEarthRun8ER3AFrameUniformPacket} from '../render/live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
 import {createHEarthRun8ER3CPersistentRenderer} from '../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
@@ -10,6 +10,7 @@ const canvas=document.getElementById('h-earth-functional-landscape-canvas');
 const status=document.getElementById('prototype-status');
 const query=new URLSearchParams(location.search),started=performance.now();
 const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');
+const qualificationView=diagnosticReplay&&['bank-view-v1','habitat-edge-view-v1'].includes(query.get('qualification'))?query.get('qualification'):null;
 const copy=value=>JSON.parse(JSON.stringify(value));
 const assert=(condition,reason)=>{if(!condition)throw Error('SINGLE_OWNER_PROTOTYPE:'+reason);};
 const delay=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
@@ -43,11 +44,45 @@ function present(state){
   if(timing.firstFrameMilliseconds===null)timing.firstFrameMilliseconds=performance.now()-started;
   return frame;
 }
+function assertStableObservation(observation,expectedIds){
+  assert(JSON.stringify(ids(observation.vegetation))===JSON.stringify(expectedIds),'INSTALLED_CONTROL_IDENTITY_CHANGED');
+  assert(observation.vegetation.coarseRootCount>0&&observation.vegetation.coarseTiles>0&&observation.vegetation.drawCallCount>0,'COARSE_COVERAGE_OR_DRAW_LOST');
+  assert(observation.vegetation.perFrameUploadBytes===0,'UNEXPECTED_FRAME_UPLOAD');
+  assert(observation.rendererCounters.woodlandHabitatTextureUploadCount===1&&observation.rendererCounters.woodlandHabitatUploadedBytes===36864,'HABITAT_TEXTURE_UPLOAD_COUNT_CHANGED');
+}
+// Diagnostic-only tours use the unchanged pointer/wheel intake. No public query
+// can select automatic travel; every final view records its actual supported pose.
+async function diagnosticAim(targetYaw){
+  const difference=()=>((targetYaw-intake.getNavigationState().yawDegrees+540)%360)-180;
+  for(let attempt=0;attempt<8&&Math.abs(difference())>1.5;attempt++){
+    const sign=Math.sign(difference()),x=canvas.clientWidth*.5,y=canvas.clientHeight*.5;
+    canvas.dispatchEvent(new PointerEvent('pointerdown',{pointerId:93,pointerType:'mouse',clientX:x,clientY:y,bubbles:true,cancelable:true}));
+    canvas.dispatchEvent(new PointerEvent('pointermove',{pointerId:93,pointerType:'mouse',clientX:x+sign*canvas.clientWidth*.15,clientY:y,bubbles:true,cancelable:true}));
+    const began=performance.now();
+    while(Math.sign(difference())===sign&&Math.abs(difference())>1.5&&performance.now()-began<3500)await delay(20);
+    canvas.dispatchEvent(new PointerEvent('pointerup',{pointerId:93,pointerType:'mouse',clientX:x,clientY:y,bubbles:true,cancelable:true}));
+    await delay(20);
+  }
+  assert(Math.abs(difference())<=6,'DIAGNOSTIC_VIEW_AIM_NOT_REACHED');
+}
+async function diagnosticTravel(x,z,expectedIds){
+  for(let step=0;step<32;step++){
+    const p=intake.getNavigationState().position,distance=Math.hypot(x-p.x,z-p.z);
+    if(distance<2)return;
+    await diagnosticAim((Math.atan2(x-p.x,p.z-z)*180/Math.PI+360)%360);
+    canvas.dispatchEvent(new WheelEvent('wheel',{deltaY:-70*Math.min(10,Math.max(1,distance-1)),bubbles:true,cancelable:true}));
+    await delay(60);
+    assertStableObservation(snapshot('VIEW_TRAVEL_'+observations.length),expectedIds);
+    const after=intake.getNavigationState().position;
+    assert(Math.hypot(after.x-p.x,after.z-p.z)>.1,'DIAGNOSTIC_VIEW_TRAVEL_BLOCKED');
+  }
+  assert(false,'DIAGNOSTIC_VIEW_DESTINATION_NOT_REACHED');
+}
 function liveReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_VEGETATION_LIVE_GPU_v1',sourceBaseline,resources:resources(),
   counters:{renderFrameCallCount,gpuFramebufferPresentationCount,rendererInitializationCount:renderer?1:0,worldRebuildCount:0},
   frameRecords:copy(frames),singleOwnerVegetationQualification:replay,timing:{...timing},preparation,
   canonicalPackageMutated:false,physicalDeviceAcceptance:false,publicationAuthorized:false};}
-function publicReceipt(){return {receiptType:diagnosticReplay?'H_EARTH_SINGLE_OWNER_VEGETATION_PROTOTYPE_v1':'H_EARTH_SINGLE_OWNER_VEGETATION_PUBLIC_v1',eligible:diagnosticReplay?replay?.result==='CAPTURED_POPULATED_CONTINUITY':root.dataset.run8eReady==='true',sourceBaseline,
+function publicReceipt(){return {receiptType:diagnosticReplay?'H_EARTH_SINGLE_OWNER_VEGETATION_PROTOTYPE_v1':'H_EARTH_SINGLE_OWNER_VEGETATION_PUBLIC_v1',eligible:diagnosticReplay?['CAPTURED_POPULATED_CONTINUITY','CAPTURED_STABLE_VIEW'].includes(replay?.result):root.dataset.run8eReady==='true',sourceBaseline,
   mode:diagnosticReplay?'diagnostic-replay':'manual-public',automaticNavigation:diagnosticReplay,
   intake:intake?.getReceipt()??null,liveGpu:liveReceipt(),singleOwnerVegetationQualification:replay,physicalDeviceAcceptance:false,publicationAuthorized:false};}
 window.H_EARTH_RUN8E_PUBLIC_ROUTE=Object.freeze({getReceipt:publicReceipt,getSnapshot:publicReceipt,getLiveGpuReceipt:liveReceipt,getIntakeReceipt:()=>intake?.getReceipt()??null});
@@ -84,23 +119,36 @@ try{
   assert(entryOwner.selectedFineRoots>0&&entryOwner.drawCallCount>0,'EMPTY_FINE_SUBMISSION');
   assert(entryOwner.coarseRootCount>0&&entryOwner.coarseTiles>0,'COARSE_COVERAGE_MISSING');
   assert(entryOwner.perFrameUploadBytes===0,'UNEXPECTED_FRAME_UPLOAD');
+  assertStableObservation(entry,controlIds);
   timing.populatedMilliseconds=performance.now()-started;
   if(diagnosticReplay){
   status.textContent='Comparing the same ground through the forward and return walk…';
-  for(const direction of ['FORWARD','RETURN'])for(let step=1;step<=8;step++){
+  if(!qualificationView)for(const direction of ['FORWARD','RETURN'])for(let step=1;step<=8;step++){
     canvas.dispatchEvent(new WheelEvent('wheel',{deltaY:direction==='FORWARD'?-280:280,bubbles:true,cancelable:true}));
     await delay(700);
     const observation=snapshot(`${direction}_${step}`),expectedZ=control.z-4*(direction==='FORWARD'?step:8-step);
     assert(Math.abs(observation.position.x-control.x)<.01&&Math.abs(observation.position.z-expectedZ)<.01,'EXACT_WALK_POSITION_MISMATCH');
-    assert(JSON.stringify(ids(observation.vegetation))===JSON.stringify(controlIds),'INSTALLED_CONTROL_IDENTITY_CHANGED');
+    assertStableObservation(observation,controlIds);
     assert(observation.vegetation.coarseRootCount>0&&observation.vegetation.coarseTiles>0&&observation.vegetation.drawCallCount>0,'COARSE_COVERAGE_OR_DRAW_LOST');
     assert(observation.vegetation.perFrameUploadBytes===0,'UNEXPECTED_FRAME_UPLOAD');
   }
+  if(qualificationView){
+    status.textContent='Capturing the bounded landscape comparison…';
+    if(qualificationView==='bank-view-v1'){
+      await diagnosticTravel(-70,-170,controlIds);await diagnosticTravel(-27,-164,controlIds);await diagnosticAim(95);
+    }else{
+      await diagnosticTravel(-193,-218,controlIds);await diagnosticAim(86);
+    }
+    present(intake.getNavigationState());await delay(100);
+    const view=snapshot(qualificationView);
+    assertStableObservation(view,controlIds);
+    assert(view.vegetation.perFrameUploadBytes===0,'VIEW_MOVEMENT_UPLOAD');
+  }
   const final=snapshot('FINAL'),returnDistanceMeters=Math.hypot(final.position.x-entry.position.x,final.position.z-entry.position.z);
-  assert(returnDistanceMeters<.01,'EXACT_RETURN_MISSING');
+  if(!qualificationView)assert(returnDistanceMeters<.01,'EXACT_RETURN_MISSING');
   timing.replayCompleteMilliseconds=performance.now()-started;
-  replay={schema:'H_EARTH_SINGLE_OWNER_VEGETATION_REPLAY_v1',result:'CAPTURED_POPULATED_CONTINUITY',sourceBaseline,input:'SYNTHETIC_WHEEL_THROUGH_REAL_INTAKE',
-    control,controlRoots:controlIds,observations:copy(observations),requestedStepsPerDirection:8,requestedMagnitudePerStep:4,returnDistanceMeters,
+  replay={schema:'H_EARTH_SINGLE_OWNER_VEGETATION_REPLAY_v1',result:qualificationView?'CAPTURED_STABLE_VIEW':'CAPTURED_POPULATED_CONTINUITY',qualificationView,sourceBaseline,input:'SYNTHETIC_WHEEL_THROUGH_REAL_INTAKE',
+    control,controlRoots:controlIds,observations:copy(observations),requestedStepsPerDirection:qualificationView?0:8,requestedMagnitudePerStep:4,returnDistanceMeters,
     installedControlIdentityStable:true,coarseCoverageSubmittedThroughout:true,visiblePixelsVerified:false,physicalDeviceAcceptance:false,publicationAuthorized:false,
     cpuSubmissionScope:'CPU_RENDER_AND_PRESENT_CALL_DURATION_NOT_GPU_EXECUTION_TIME',timing:{...timing}};
   }

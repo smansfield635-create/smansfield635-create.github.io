@@ -32,6 +32,7 @@ uniform vec3 uCamera;
 uniform float uRadius;
 uniform int uFine;
 out vec3 vNormal;out vec3 vColor;out float vDistance;
+float woodlandPaletteNoise(vec2 p){vec2 cell=floor(p),f=fract(p);f=f*f*(3.-2.*f);float a=fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453),b=fract(sin(dot(cell+vec2(1.,0.),vec2(127.1,311.7)))*43758.5453),c=fract(sin(dot(cell+vec2(0.,1.),vec2(127.1,311.7)))*43758.5453),d=fract(sin(dot(cell+vec2(1.,1.),vec2(127.1,311.7)))*43758.5453);return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
 void main(){
  float d=length(aRoot.xz-uCamera.xz),t=clamp((d-14.)/10.,0.,1.);
  float detail=1.-t*t*(3.-2.*t),h=fract(sin(dot(aRoot.xz,vec2(12.9898,78.233)))*43758.5453);
@@ -47,7 +48,12 @@ void main(){
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.86));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*.025*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;
- vColor=mix(vec3(.065,.115,.027),vec3(.16,.22,.055),h)*(0.8+level*.4);vDistance=length(p-uCamera);
+ float patch=woodlandPaletteNoise(aRoot.xz/13.),dry=woodlandPaletteNoise(aRoot.xz/29.+vec2(7.,-11.));
+ vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),patch);
+ vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),patch);
+ vec3 palette=mix(forest,olive,smoothstep(.35,.8,dry));
+ palette=mix(palette,vec3(.29,.255,.12),smoothstep(.78,.99,h)*.34);
+ vColor=palette*(.78+level*.40)*(.88+.24*h);vDistance=length(p-uCamera);
 }`;
 const FS=`#version 300 es
 precision highp float;

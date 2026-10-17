@@ -1,0 +1,90 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewedAgainstAnchor": false,
+  "disposition": "PENDING",
+  "operationId": "H_EARTH_WOODLAND_RIVERBANK_REFINEMENT_20261017_001",
+  "canonicalAdmissionGeneration": 2793,
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/woodland-riverbank-refinement-v1/README.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.woodland-habitat.v1.test.mjs",
+    "h-earth-3d/validation/h-earth.riverbank-boulders.v1.test.mjs"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/woodland-habitat-field.v1.js",
+      "sha256": "d225af43611f923b0a89cea3c35076d0015e3763f86455ef36911f37cafc9e91"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "7b507f838ef81d34137d7702a39c74e2aa04fb5ea4766991b83a5f75c4f3eca8"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "5850b8fe9bc38ec944058dfcde53a5dffb7c2e09d5f69d7b1240a721718abf00"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "a11e9039540b6450c2343d66100d1214d2aad2abd5091efa574227953cde14d7"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-planting-pilot.v1.js",
+      "sha256": "9f515d7ada9b164c511af4f14dbc3bc477ad5476f4a91ea7820f17dc3d390ca8"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/large-p2-boulder-presentation.v1.js",
+      "sha256": "9e501c585d64b94372a8e361a56a8c7be8343e187d594ca8cc7355bd4af7c0f9"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "7985e6644225b7dbf4b9a2960758edd16f4b39c09267cb5d9b82ba5aa33a952b"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype.html",
+      "sha256": "a41678cd9428f7a8fd13e973ee3acf9372f81458c618b12fa2da4eb9c78d1d6a"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "a1cdd4318f49b2eb491b1a087c09e1dde6ff127c65d98bd2dba9ff8025edaaca"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.woodland-habitat.v1.test.mjs",
+      "sha256": "6071d24bbd7059f2476e18cced119eb633180ea29f12460a35e498622c1dd852"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.riverbank-boulders.v1.test.mjs",
+      "sha256": "01923478ca61961e4e1fa6e2c80514812e85da9f5114cb1007c9f9b7207eebeb"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+      "sha256": "53e42fb6b9ca371898a40375d3f8dd816a17003bce3bc29150e5d9e348fe146e"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "cef55c9fdbd4cd9bc5f706090a773a9e18987863fbd3bc3768d747895152303b"
+    }
+  ],
+  "limitations": [
+    "Changed-candidate browser and visual acceptance pending; no physical-device acceptance or phone-performance claim."
+  ]
+}

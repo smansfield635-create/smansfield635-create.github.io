@@ -31,14 +31,15 @@ function policyClear(x,z,estate,oasis){
  return !(x>=oasis.minX-.1&&x<=oasis.maxX+.1&&z>=oasis.minZ-.1&&z<=oasis.maxZ+.1);
 }
 /** Geographic replacement admission, independent of the former rectangle. */
-export async function createUniformGroundAdmission({visibleSurface,geology,toLocal,estate,obstacles=[],trees=[],oasis,sampleStructure,yieldControl=async()=>{}}={}){
+export async function createUniformGroundAdmission({visibleSurface,geology,toLocal,estate,obstacles=[],trees=[],oasis,sampleStructure,yieldControl=async()=>{},maximumSandCoverage=0}={}){
  if(typeof visibleSurface?.beach?.sample!=='function'||typeof geology?.sampleWaterAt!=='function'||typeof toLocal!=='function'||typeof sampleStructure!=='function')throw Error('UNIFORM_GROUND_PROVIDER_REQUIRED');
+ if(!Number.isFinite(maximumSandCoverage)||maximumSandCoverage<0||maximumSandCoverage>.12)throw Error('UNIFORM_GROUND_SAND_LIMIT_INVALID');
  const boundary=await boundaryIndex(geology,yieldControl),rejections={};let tested=0;
  const reject=reason=>{rejections[reason]=(rejections[reason]??0)+1;return false;};
  const admit=(x,z,support)=>{
   tested++;const beach=visibleSurface.beach.sample({x,z,support});
   if(beach?.valid!==true){reject('RENDERED_BEACH_EVIDENCE_UNAVAILABLE');throw Error('UNIFORM_GROUND_RENDERED_BEACH_EVIDENCE_UNAVAILABLE');}
-  if(beach.rawSandCoverage>0)return reject('RENDERED_BEACH');
+  if(!Number.isFinite(beach.rawSandCoverage)||beach.rawSandCoverage<0||beach.rawSandCoverage>maximumSandCoverage)return reject('RENDERED_BEACH');
   const water=visibleSurface.water.sample(x,z),future=geology.sampleWaterAt(x,z);
   if(water&&support.y<=water.y+.03)return reject('RENDERED_WATER');
   if(future&&support.y<=future.y+.03)return reject('FUTURE_WATER');
@@ -48,7 +49,7 @@ export async function createUniformGroundAdmission({visibleSurface,geology,toLoc
   if(!policyClear(local.x,local.z,estate,oasis)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.10)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.15))return reject('PROTECTED_FOOTPRINT');
   return true;
  };
- admit.getReceipt=()=>({schema:'H_EARTH_UNIFORM_GROUND_ADMISSION_v1',tested,rejections:{...rejections},waterBoundaryEdges:boundary.count,geographicWaterPolicy:true,rectangleMask:false});
+ admit.getReceipt=()=>({schema:'H_EARTH_UNIFORM_GROUND_ADMISSION_v1',tested,rejections:{...rejections},waterBoundaryEdges:boundary.count,maximumSandCoverage,geographicWaterPolicy:true,rectangleMask:false});
  return admit;
 }
 /** Accepted roots are shared by every pilot representation. */

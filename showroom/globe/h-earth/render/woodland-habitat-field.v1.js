@@ -36,7 +36,7 @@ async function buildHabitatRaster({suitability,yieldControl,bounds,size,regional
  return Object.freeze({pixels,size,bounds,sample,receipt:{schema:'H_EARTH_WOODLAND_HABITAT_FIELD_v1',coordinateSpace:'RENDERED_WORLD_XZ_METERS',size,byteLength:pixels.byteLength,admittedCells,uploadPolicy:'ONCE_BEFORE_READY',cameraIndependent:true,coverageSource:'SHARED_RENDERED_SUPPORT_AND_GRADED_PROTECTED_BOUNDARIES'}});
 }
 /** Rear habitat follows the measured canonical drainage; no river or terrain is invented. */
-export const RAVINE_HABITAT=Object.freeze({bounds:Object.freeze([-110,-376,68,-248]),size:192,spacing:.14,maximumRoots:64000});
+export const RAVINE_HABITAT=Object.freeze({bounds:Object.freeze([-110,-376,96,-248]),size:192,spacing:.14,maximumRoots:64000});
 function segmentDistance(x,z,a,b){const dx=b.x-a.x,dz=b.z-a.z,den=dx*dx+dz*dz,t=den?clamp(((x-a.x)*dx+(z-a.z)*dz)/den):0;return Math.hypot(x-a.x-t*dx,z-a.z-t*dz);}
 export function ravineHabitatWeight(points,x,z){
  if(!Array.isArray(points)||points.length<2)return 0;
@@ -45,7 +45,9 @@ export function ravineHabitatWeight(points,x,z){
  let distance=Infinity;for(let i=1;i<points.length;i++)distance=Math.min(distance,segmentDistance(x,z,points[i-1],points[i]));
  // Rotated, warped broad fields give irregular shoulders, independently of atlas bounds.
  const xx=.819*x+.574*z,zz=-.574*x+.819*z,noise=habitatNoise(xx,zz,19,71),warp=(habitatNoise(xx,zz,31,72)-.5)*7;
- const shoulders=1-habitatSmooth(6+warp,20+warp,distance),boundary=habitatSmooth(0,9,Math.min(x-x0,x1-x,z-z0,z1-z));
+ // Supported shoulders extend beyond the dry channel's protected corridor;
+ // the old 20m reach stopped before the actual cavern-approach soil.
+ const shoulders=1-habitatSmooth(10+warp,42+warp,distance),boundary=habitatSmooth(0,9,Math.min(x-x0,x1-x,z-z0,z1-z));
  return shoulders*boundary*(.34+.22*noise);
 }
 export async function buildWoodlandHabitatField({suitability,yieldControl=async()=>{},ravinePoints=null}={}){

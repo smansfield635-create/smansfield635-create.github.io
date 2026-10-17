@@ -95,13 +95,17 @@ test('exact archived world builds finite protected habitat roots with populated 
  const field=await Function('buildWoodlandHabitatField','habitatSmooth','yieldToBrowserPaint','visibleSurface','admitGround','unprojectPlanetVertex','pilotMaterialAt','woodlandGrassClear','pilotPackage','WOODLAND_HABITAT','resources',`return(async()=>{${fieldCode};return habitat;})()`)(buildWoodlandHabitatField,habitatSmooth,async()=>{},visibleSurface,admitGround,terrain.unprojectPlanetVertex,materials.sampleHEarthRun8CSuccessorSurfaceMaterial,woodland.woodlandGrassClear,pilotPackage,WOODLAND_HABITAT,{geologicalRuntime:geology});
  const presentation=await woodland.buildWoodlandFineGrass(pilotPackage,{visibleSurface,admitGround,habitat:field});
  const tiles=owner.planImmutableTiles(presentation);let roots=0,control=0,expanded=0,ravine=0,maximumTile=0;
+ const approachControls=[{x:50,z:-300,roots:0},{x:60,z:-300,roots:0}];
  for(const tile of presentation.tiles){maximumTile=Math.max(maximumTile,tile.roots.length);for(const root of tile.roots){
   roots++;if(root.z< -298&&root.x> -110)ravine++;assert.ok([root.x,root.y,root.z,root.angle,root.seed,root.slope].every(Number.isFinite));assert.ok(admitGround(root.x,root.z,visibleSurface.sample(root.x,root.z)));assert.ok(field.sample(root.x,root.z)>0);
+  assert.ok(root.slope<=.35,'ravine expansion preserves the existing steep-surface exclusion');
+  for(const point of approachControls)if(Math.hypot(root.x-point.x,root.z-point.z)<5)point.roots++;
   assert.ok(woodland.woodlandGrassClear(terrain.unprojectPlanetVertex(root.x,root.y,root.z).x,terrain.unprojectPlanetVertex(root.x,root.y,root.z).z));
   if(Math.hypot(root.x+139.40267987050615,root.z+194.5)<=2)control++;
   if(Math.hypot((root.x+141)/41.25,(root.z+226)/40)>1.05)expanded++;
  }}
  assert.ok(roots>0&&roots<=450000);assert.ok(ravine>100,'real ravine receives admitted vegetation');assert.equal(field.receipt.woodlandGridPreserved,true);assert.equal(field.pixels.byteLength,73728);assert.ok(control>0,'qualified owner requires populated fixed control');assert.ok(expanded>0,'real rendered admission allows coverage beyond former ellipse');assert.ok(maximumTile<=1600);assert.equal(tiles.reduce((n,t)=>n+t.count,0),roots);
  assert.equal(createHash('sha256').update(JSON.stringify(payload.raw.buffers)).digest('hex'),before);
- console.log('EXACT_HABITAT_CENSUS',JSON.stringify({roots,control,expanded,ravine,maximumTile,tiles:tiles.length,field:field.receipt}));
+ for(const point of approachControls){const support=visibleSurface.sample(point.x,point.z);assert.ok(admitGround(point.x,point.z,support),'approach control is supported admissible soil');assert.ok(field.sample(point.x,point.z)>0,'supported approach is inside graded habitat');assert.ok(point.roots>50,'previously empty approach now has actual supported nearby roots');}
+ console.log('EXACT_HABITAT_CENSUS',JSON.stringify({roots,control,expanded,ravine,maximumTile,tiles:tiles.length,approachControls,field:field.receipt}));
 });

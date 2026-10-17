@@ -72,7 +72,8 @@ function templateFor(){
 export function transformHEarthGroundCoverRoot(template,root,x,z,angle,width){const i=template.rootVertices[root]*3,dx=f(template.positions[i]*width),dz=f(template.positions[i+2]*width),c=f(Math.cos(angle)),s=f(Math.sin(angle));return{x:f(x+f(f(dx*c)-f(dz*s))),z:f(z+f(f(dx*s)+f(dz*c)))};}
 function eligibleMaterial(m,slope){if(m?.valid!==true||slope>.35)return false;if(m.surfaceClass==='STONE_AND_SPARSE_SOIL')return m.soilDepth>=.035;return ['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20;}
 
-export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD',priorityOrigin=null,onTile=null,compositionEnabled=true,visibleSurface=null,placementExclusion=null}={}){
+export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgress=()=>{},order='FORWARD',priorityOrigin=null,onTile=null,compositionEnabled=true,visibleSurface=null,placementExclusion=null,admitGround=visibleSurface?.admitGround,baselineExclusion=null}={}){
+  if(typeof admitGround!=='function')throw Error('GLOBAL_COVER_RENDERED_BEACH_PROVIDER_REQUIRED');
   if(!['FORWARD','REVERSE','CHUNKED','CAMERA_FIRST'].includes(order))throw Error('GLOBAL_COVER_ORDER_INVALID');
   if(order==='CAMERA_FIRST'&&(!priorityOrigin||![priorityOrigin.x,priorityOrigin.z].every(Number.isFinite)))throw Error('GLOBAL_COVER_CAMERA_FIRST_ORIGIN_REQUIRED');
   if(onTile!==null&&typeof onTile!=='function')throw Error('GLOBAL_COVER_TILE_CALLBACK_INVALID');
@@ -81,6 +82,8 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
   const water=surface.water,refined=refinement?{triangleCount:surface.receipt.refinementTriangles}:null;
   if(placementExclusion!==null&&typeof placementExclusion!=='function')throw Error('GLOBAL_COVER_EXCLUSION_INVALID');
   const sample=(x,z)=>placementExclusion?.(x,z)?null:surface.sample(x,z);
+  if(baselineExclusion!==null&&typeof baselineExclusion!=='function')throw Error('GLOBAL_COVER_BASELINE_EXCLUSION_INVALID');
+  const historicalPoint=(x,z)=>!baselineExclusion?.(x,z);
   const obstacles=pkg.landscapeCoverFootprints??[];
   const output=[],rejected={},patches=[],bounds=P.bounds;let candidates=0,rootSamples=0,mountainInstances=0,materialSamples=0,yields=0,budgetStart=now(),secondaryFanCount=0,lowCount=0,midCount=0,duneCount=0,pilotExtraCount=0,ecoCandidates=0;
   const reject=reason=>{rejected[reason]=(rejected[reason]??0)+1;};
@@ -96,12 +99,12 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
     };
     tiles.sort((a,b)=>distanceSquared(a)-distanceSquared(b)||a.iz-b.iz||a.ix-b.ix);
   }
-  for(const tile of tiles){const entries=[],maxX=tile.minX+32,maxZ=tile.minZ+32;let extrasInTile=0;
+  for(const tile of tiles){const entries=[],deferredExtras=[],maxX=tile.minX+32,maxZ=tile.minZ+32;let extrasInTile=0;
     for(let iz=Math.ceil((tile.minZ+736)/P.spacing);-736+iz*P.spacing<maxZ;iz++)for(let ix=Math.ceil((tile.minX+384)/P.spacing);-384+ix*P.spacing<maxX;ix++){
       candidates++;if(now()-budgetStart>=8){onProgress({phase:'GLOBAL_COVER_PLANNING',candidateCount:candidates,instanceCount:output.length+patches.reduce((n,t)=>n+t.entries.length,0)+entries.length,rootSampleCount:rootSamples});await yieldControl();yields++;budgetStart=now();}
       const id=`${ix}:${iz}`,x=f(-384+ix*P.spacing+(hash(id,'x')-.5)*.65),z=f(-736+iz*P.spacing+(hash(id,'z')-.5)*.65);
       if(x<bounds.minX+2||x>bounds.maxX-2||z<bounds.minZ+2||z>bounds.maxZ-2){reject('BOUNDARY_COLLAR');continue;}
-      const support=sample(x,z);if(!support){reject('SURFACE_MISSING');continue;}const centerWater=water.sample(x,z);if(centerWater&&support.y<=centerWater.y+.01){reject('RENDERED_WATER');continue;}
+      const support=sample(x,z);if(!support){reject('SURFACE_MISSING');continue;}let presentationAllowed=admitGround(x,z,support),baselineCompatible=historicalPoint(x,z);const centerWater=water.sample(x,z);if(centerWater&&support.y<=centerWater.y+.01){reject('RENDERED_WATER');continue;}
       const authored=inverseHEarthGroundCoverPoint(x,support.y,z);if(!clear(authored.x,authored.z,1.4)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+1.4)){reject('PRESERVED_OR_RESERVED');continue;}
       const m=materialAt(authored.x,authored.z);materialSamples++;if(!eligibleMaterial(m,support.slope)){reject('HABITAT');continue;}
       const mountain=m.surfaceClass==='STONE_AND_SPARSE_SOIL',broad=field(authored.x,authored.z,36,'broad'),local=field(authored.x,authored.z,9,'local'),density=clamp((mountain?.57:.76)+.20*(broad-.5)+.16*(local-.5)-.13*(m.rockExposure??0));
@@ -109,12 +112,12 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
       const angle=f(hash(id,'angle')*Math.PI*2),width=f(1.35+hash(id,'width')*.65),height=f(.92+hash(id,'height')*.42),record=new Float32Array(20),seen=new Map();let valid=true;
       for(let root=0;root<12;root++){
         const p=transformHEarthGroundCoverRoot(template,root,x,z,angle,width),key=`${p.x}:${p.z}`;let result=seen.get(key);
-        if(!result){const s=sample(p.x,p.z);rootSamples++;if(!s){valid=false;break;}const w=water.sample(p.x,p.z);if(w&&s.y<=w.y+.01){valid=false;break;}const a=inverseHEarthGroundCoverPoint(p.x,s.y,p.z),mm=materialAt(a.x,a.z);materialSamples++;result={s,a,m:mm};seen.set(key,result);}
+        if(!result){const s=sample(p.x,p.z);rootSamples++;if(!s){valid=false;break;}presentationAllowed=admitGround(p.x,p.z,s)&&presentationAllowed;baselineCompatible=historicalPoint(p.x,p.z)&&baselineCompatible;const w=water.sample(p.x,p.z);if(w&&s.y<=w.y+.01){valid=false;break;}const a=inverseHEarthGroundCoverPoint(p.x,s.y,p.z),mm=materialAt(a.x,a.z);materialSamples++;result={s,a,m:mm};seen.set(key,result);}
         if(!eligibleMaterial(result.m,result.s.slope)||!clear(result.a.x,result.a.z)||obstacles.some(t=>Math.hypot(p.x-t.x,p.z-t.z)<t.radius)){valid=false;break;}
         record[root]=result.s.y;
       }
       if(!valid){reject('ROOT_COLLAR');continue;}
-      const palette=field(authored.x,authored.z,12,'palette');record.set([x,z,angle,width,height,palette,hash(id,'variation'),0],12);entries.push({id,record,mountain});
+      const palette=field(authored.x,authored.z,12,'palette');record.set([x,z,angle,width,height,palette,hash(id,'variation'),0],12);entries.push({id,record,mountain,presentationAllowed,baselineCompatible});
       // Overlapping accepted fans make selected continuous pockets bushier.
       // The existing primary fan and its random channels remain unchanged.
       if(broad>.54&&local>.40&&hash(id,'bushy')<.70){
@@ -123,18 +126,19 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
         if(sx<bounds.minX+2||sx>bounds.maxX-2||sz<bounds.minZ+2||sz>bounds.maxZ-2||!secondSupport||(secondWater&&secondSupport.y<=secondWater.y+.01)){reject('BUSH_SURFACE_OR_WATER');continue;}
         const sa=inverseHEarthGroundCoverPoint(sx,secondSupport.y,sz);
         if(!clear(sa.x,sa.z,1.4)||obstacles.some(t=>Math.hypot(sx-t.x,sz-t.z)<t.radius+1.4)){reject('BUSH_PRESERVED_OR_RESERVED');continue;}
+        let secondAllowed=admitGround(sx,sz,secondSupport),secondBaseline=baselineCompatible&&historicalPoint(sx,sz);
         const sm=materialAt(sa.x,sa.z);materialSamples++;
         if(!eligibleMaterial(sm,secondSupport.slope)){reject('BUSH_HABITAT');continue;}
         const secondAngle=f((angle+2.399963229728653+(hash(secondId,'angle')-.5)*.35)%(Math.PI*2)),secondWidth=f(1.25+hash(secondId,'width')*.55),secondHeight=f(1.08+hash(secondId,'height')*.37),secondRecord=new Float32Array(20),secondSeen=new Map();let secondValid=true;
         for(let root=0;root<12;root++){
           const p=transformHEarthGroundCoverRoot(template,root,sx,sz,secondAngle,secondWidth),key=`${p.x}:${p.z}`;let result=secondSeen.get(key);
-          if(!result){const s=sample(p.x,p.z);rootSamples++;if(!s){secondValid=false;break;}const w=water.sample(p.x,p.z);if(w&&s.y<=w.y+.01){secondValid=false;break;}const a=inverseHEarthGroundCoverPoint(p.x,s.y,p.z),mm=materialAt(a.x,a.z);materialSamples++;result={s,a,m:mm};secondSeen.set(key,result);}
+          if(!result){const s=sample(p.x,p.z);rootSamples++;if(!s){secondValid=false;break;}secondAllowed=admitGround(p.x,p.z,s)&&secondAllowed;secondBaseline=historicalPoint(p.x,p.z)&&secondBaseline;const w=water.sample(p.x,p.z);if(w&&s.y<=w.y+.01){secondValid=false;break;}const a=inverseHEarthGroundCoverPoint(p.x,s.y,p.z),mm=materialAt(a.x,a.z);materialSamples++;result={s,a,m:mm};secondSeen.set(key,result);}
           if(!eligibleMaterial(result.m,result.s.slope)||!clear(result.a.x,result.a.z)||obstacles.some(t=>Math.hypot(p.x-t.x,p.z-t.z)<t.radius)){secondValid=false;break;}
           secondRecord[root]=result.s.y;
         }
         if(!secondValid){reject('BUSH_ROOT_COLLAR');continue;}
         secondRecord.set([sx,sz,secondAngle,secondWidth,secondHeight,field(sa.x,sa.z,12,'palette'),hash(secondId,'variation'),1],12);
-        entries.push({id:secondId,record:secondRecord,mountain:sm.surfaceClass==='STONE_AND_SPARSE_SOIL'});secondaryFanCount++;
+        entries.push({id:secondId,record:secondRecord,mountain:sm.surfaceClass==='STONE_AND_SPARSE_SOIL',presentationAllowed:secondAllowed,baselineCompatible:secondBaseline});secondaryFanCount++;
       }
     }
 
@@ -158,10 +162,11 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
         const authored=inverseHEarthGroundCoverPoint(x,support.y,z),site=ecoSite(authored.x,authored.z);
         if(!site||!clear(authored.x,authored.z,1.4)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+1.4))continue;
         // Seed separation proves these instances are not cloned tall-root companions.
-        if(entries.some(entry=>entry.record[19]<2&&Math.hypot(entry.record[12]-x,entry.record[13]-z)<.58))continue;
+        if(entries.some(entry=>entry.baselineCompatible&&entry.record[19]<2&&Math.hypot(entry.record[12]-x,entry.record[13]-z)<.58))continue;
         const m=materialAt(authored.x,authored.z);materialSamples++;
         const fit=ecoHabitat(m,support.slope,site,authored.x,authored.z);if(!fit)continue;
         const pick=hash(id,'role'),role=fit.tag===4?4:(pick<.37?3:2);
+        let ecoAllowed=role===4||admitGround(x,z,support),ecoBaseline=historicalPoint(x,z);
         const admit=role===4?fit.capacity*.21:fit.capacity*(role===3?.79:.98)*(.40+fit.pocket*.60);
         if(hash(id,'admission')>=admit)continue;
         const angle=f(hash(id,'angle')*Math.PI*2);
@@ -173,7 +178,7 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
           let result=seen.get(key);
           if(!result){
             const ground=sample(p.x,p.z);rootSamples++;
-            if(!ground){accepted=false;break;}
+            if(!ground){accepted=false;break;}ecoAllowed=(role===4||admitGround(p.x,p.z,ground))&&ecoAllowed;ecoBaseline=historicalPoint(p.x,p.z)&&ecoBaseline;
             const waterHit=water.sample(p.x,p.z);
             if(waterHit&&ground.y<=waterHit.y+.01){accepted=false;break;}
             const a=inverseHEarthGroundCoverPoint(p.x,ground.y,p.z),material=materialAt(a.x,a.z);materialSamples++;
@@ -185,30 +190,47 @@ export async function buildHEarthGlobalGroundCover(pkg,{refinement=null,onProgre
         }
         if(!accepted)continue;
         record.set([x,z,angle,width,height,field(authored.x,authored.z,12,'GEN2671_COLOR_'+site),hash(id,'variation'),role],12);
-        entries.push({id:`ECO:${id}`,record,mountain:false});
-        extrasInTile++;pilotExtraCount++;
+        const entry={id:`ECO:${id}`,record,mountain:false,presentationAllowed:ecoAllowed,baselineCompatible:ecoBaseline};
+        if(!ecoBaseline){deferredExtras.push(entry);continue;}
+        entries.push(entry);extrasInTile++;pilotExtraCount++;
         if(role===2)lowCount++;else if(role===3)midCount++;else duneCount++;
       }
     }
-    entries.sort((a,b)=>a.id.localeCompare(b.id));patches.push({...tile,maxX,maxZ,entries,ecoInstances:extrasInTile});
+    entries.sort((a,b)=>a.id.localeCompare(b.id));patches.push({...tile,maxX,maxZ,entries,deferredExtras,ecoInstances:extrasInTile});
     if(onTile){
       // Streaming *data-availability* checkpoint, not a second population.
       // Each accepted record is copied verbatim; no GPU residency is implied.
-      const records=new Float32Array(entries.length*P.recordFloats);
-      for(let i=0;i<entries.length;i++)records.set(entries[i].record,i*P.recordFloats);
-      onTile({ix:tile.ix,iz:tile.iz,minX:tile.minX,maxX,minZ:tile.minZ,maxZ,instanceCount:entries.length,records,template});
+      const submitted=entries.filter(entry=>entry.presentationAllowed),records=new Float32Array(submitted.length*P.recordFloats);
+      for(let i=0;i<submitted.length;i++)records.set(submitted[i].record,i*P.recordFloats);
+      onTile({ix:tile.ix,iz:tile.iz,minX:tile.minX,maxX,minZ:tile.minZ,maxZ,instanceCount:submitted.length,records,template});
     }
     if(now()-budgetStart>=8){await yieldControl();yields++;budgetStart=now();}
   }
+  // Baseline quotas and nearest-old-fan checks finish before replacement extras
+  // can consume any quota. No second world construction or random reseeding.
+  for(const tile of patches)for(const entry of tile.deferredExtras){
+    if(tile.ecoInstances>=ECO_TILE_LIMIT||pilotExtraCount>=ECO_TOTAL_LIMIT)break;
+    if(tile.entries.some(other=>other.record[19]<2&&Math.hypot(other.record[12]-entry.record[12],other.record[13]-entry.record[13])<.58))continue;
+    tile.entries.push(entry);tile.ecoInstances++;pilotExtraCount++;
+    if(entry.record[19]===2)lowCount++;else if(entry.record[19]===3)midCount++;else duneCount++;
+  }
   patches.sort((a,b)=>a.iz-b.iz||a.ix-b.ix);
-  const packedTiles=[];for(const tile of patches){const start=output.length;for(const p of tile.entries){output.push(p.record);if(p.mountain)mountainInstances++;}if(tile.entries.length)packedTiles.push({start,count:tile.entries.length,minX:tile.minX-1.8,maxX:tile.maxX+1.8,minZ:tile.minZ-1.8,maxZ:tile.maxZ+1.8,ecoInstances:tile.ecoInstances});}
+  const packedTiles=[],admitted=[],recordIds=[];let historicalArchiveCount=0;
+  for(const historical of [true,false]){
+    for(const tile of patches){
+      const entries=tile.entries.filter(entry=>entry.baselineCompatible===historical).sort((a,b)=>a.id.localeCompare(b.id)),start=output.length;
+      for(const entry of entries){output.push(entry.record);admitted.push(entry.presentationAllowed?1:0);recordIds.push(entry.id);if(entry.mountain)mountainInstances++;}
+      if(entries.length)packedTiles.push({start,count:entries.length,minX:tile.minX-1.8,maxX:tile.maxX+1.8,minZ:tile.minZ-1.8,maxZ:tile.maxZ+1.8,ecoInstances:tile.ecoInstances,historicalArchive:historical});
+    }
+    if(historical)historicalArchiveCount=output.length;
+  }
   if(output.length>P.maximumInstances)throw Error(`GLOBAL_COVER_POPULATION_BUDGET_EXCEEDED:${output.length}`);
   const records=new Float32Array(output.length*20);output.forEach((r,i)=>records.set(r,i*20));
   const templateGpuBytes=template.positions.byteLength+template.normals.byteLength+template.colors.byteLength+template.indices.byteLength+template.rootInfo.byteLength,totalGpuBytes=records.byteLength+templateGpuBytes;
   if(totalGpuBytes>P.maximumGpuBytes)throw Error('GLOBAL_COVER_GPU_BUDGET_EXCEEDED');
-  const receipt=Object.freeze({schema:P.id,instanceCount:output.length,primaryFanCount:output.length-secondaryFanCount-pilotExtraCount,secondaryFanCount,bushyClumpCount:secondaryFanCount,ecologicalLowCount:lowCount,ecologicalMidCount:midCount,ecologicalDuneCount:duneCount,ecologicalPilotCount:pilotExtraCount,ecologicalCandidateCount:ecoCandidates,mountainInstanceCount:mountainInstances,candidateCount:candidates,rootSampleCount:rootSamples,materialSampleCount:materialSamples,recordBytes:records.byteLength,templateGpuBytes,totalGpuBytes,maximumInstances:P.maximumInstances,baseTerrainTriangleCount:base.triangleCount,refinementTriangleCount:refined?.triangleCount??0,elapsedMilliseconds:now()-started,yieldCount:yields,rejections:Object.freeze(Object.fromEntries(Object.entries(rejected).sort())),canonicalPopulationChanged:false,cameraIndependent:true,rootEncoding:'TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS',sparseSoilPresentationRule:'SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35',bushyPocketRule:'BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED'});
+  const receipt=Object.freeze({schema:P.id,historicalArchiveCount,appendedReplacementCount:output.length-historicalArchiveCount,admittedPresentationCount:admitted.reduce((a,b)=>a+b,0),suppressedArchiveCount:admitted.slice(0,historicalArchiveCount).filter(x=>!x).length,surveyedTiles:patches.length,expectedTiles:tiles.length,habitatCoverageValidated:patches.length===tiles.length,instanceCount:output.length,primaryFanCount:output.length-secondaryFanCount-pilotExtraCount,secondaryFanCount,bushyClumpCount:secondaryFanCount,ecologicalLowCount:lowCount,ecologicalMidCount:midCount,ecologicalDuneCount:duneCount,ecologicalPilotCount:pilotExtraCount,ecologicalCandidateCount:ecoCandidates,mountainInstanceCount:mountainInstances,candidateCount:candidates,rootSampleCount:rootSamples,materialSampleCount:materialSamples,recordBytes:records.byteLength,templateGpuBytes,totalGpuBytes,maximumInstances:P.maximumInstances,baseTerrainTriangleCount:base.triangleCount,refinementTriangleCount:refined?.triangleCount??0,elapsedMilliseconds:now()-started,yieldCount:yields,rejections:Object.freeze(Object.fromEntries(Object.entries(rejected).sort())),canonicalPopulationChanged:false,cameraIndependent:true,rootEncoding:'TWELVE_ACTUAL_FLOAT32_RENDERED_TRIANGLE_ROOT_HEIGHTS',sparseSoilPresentationRule:'SOURCE_CLASS_UNCHANGED_SOIL_GTE_0.035_ACTUAL_SLOPE_LTE_0.35',bushyPocketRule:'BROAD_GT_0.54_LOCAL_GT_0.40_HASH_LT_0.70_SECOND_ACCEPTED_FAN_SEPARATELY_QUALIFIED'});
   onProgress({phase:'GLOBAL_COVER_COMPLETE',instanceCount:output.length,totalGpuBytes});
-  return{records,tiles:packedTiles,template,receipt};
+  return{records,tiles:packedTiles,template,receipt,recordIds:Object.freeze(recordIds),admittedRecords:Uint8Array.from(admitted)};
 }
 
 export function selectHEarthGlobalGroundCoverDraws(cover,camera,{maximumInstances=4096,maximumDraws=64}={}){
@@ -216,7 +238,16 @@ export function selectHEarthGlobalGroundCoverDraws(cover,camera,{maximumInstance
   const p=camera?.position??camera;if(!p||![p.x,p.z].every(Number.isFinite))throw Error('GLOBAL_COVER_CAMERA_INVALID');
   const ranked=cover.tiles.map(t=>{const dx=p.x-Math.max(t.minX,Math.min(t.maxX,p.x)),dz=p.z-Math.max(t.minZ,Math.min(t.maxZ,p.z));return{tile:t,distance:Math.hypot(dx,dz)};}).filter(t=>t.distance<=128).sort((a,b)=>a.distance-b.distance||a.tile.start-b.tile.start);
   const draws=[];let visibleInstanceCount=0;
-  for(const {tile,distance} of ranked){if(draws.length>=maximumDraws||visibleInstanceCount>=maximumInstances)break;let stride=distance<32?1:distance<64?(tile.ecoInstances>0&&distance<56?1:2):distance<96?4:8;const available=maximumInstances-visibleInstanceCount;stride=Math.max(stride,Math.ceil(tile.count/available));const count=Math.min(available,Math.ceil(tile.count/stride));if(count){draws.push({start:tile.start,count,stride});visibleInstanceCount+=count;}}
+  for(const {tile,distance} of ranked){
+    if(draws.length>=maximumDraws||visibleInstanceCount>=maximumInstances)break;
+    let stride=distance<32?1:distance<64?(tile.ecoInstances>0&&distance<56?1:2):distance<96?4:8;
+    const available=maximumInstances-visibleInstanceCount;
+    if(cover.admittedRecords){
+      const eligible=[];for(let i=0;i<tile.count;i++){const id=tile.start+i;if(cover.admittedRecords[id])eligible.push(id);}
+      stride=Math.max(stride,Math.ceil(eligible.length/available));const ids=[];for(let i=0;i<eligible.length&&ids.length<available;i+=stride)ids.push(eligible[i]);
+      if(ids.length){draws.push({start:ids[0],sourceTileStart:tile.start,count:ids.length,stride,ids});visibleInstanceCount+=ids.length;}
+    }else{stride=Math.max(stride,Math.ceil(tile.count/available));const count=Math.min(available,Math.ceil(tile.count/stride));if(count){draws.push({start:tile.start,count,stride});visibleInstanceCount+=count;}}
+  }
   return{draws,visibleInstanceCount,storedInstanceCount:cover.receipt.instanceCount,populationChanged:false};
 }
 
@@ -239,7 +270,7 @@ export function selectHEarthMeadowMidDistancePatchDraws(cover,camera,{
   const selected=sourceDraws?{draws:sourceDraws}:selectHEarthGlobalGroundCoverDraws(cover,p,{maximumInstances,maximumDraws});
   const byStart=new Map(cover.tiles.map(tile=>[tile.start,tile]));
   const draws=selected.draws.filter(draw=>{
-    const tile=byStart.get(draw.start);if(!tile)return false;
+    const tile=byStart.get(draw.sourceTileStart??draw.start);if(!tile)return false;
     const pilotDx=centerX-Math.max(tile.minX,Math.min(tile.maxX,centerX));
     const pilotDz=centerZ-Math.max(tile.minZ,Math.min(tile.maxZ,centerZ));
     const cameraDx=p.x-Math.max(tile.minX,Math.min(tile.maxX,p.x));
@@ -252,7 +283,7 @@ export function selectHEarthMeadowMidDistancePatchDraws(cover,camera,{
   for(const draw of draws){
     if(remaining<=0||bounded.length>=maximumDraws)break;
     const count=Math.min(draw.count,remaining);
-    if(count>0){bounded.push(Object.freeze({...draw,count,patchLod:true}));remaining-=count;}
+    if(count>0){bounded.push(Object.freeze({...draw,count,...(draw.ids?{ids:draw.ids.slice(0,count)}:{}),patchLod:true}));remaining-=count;}
   }
   return Object.freeze({
     draws:Object.freeze(bounded),
@@ -286,17 +317,18 @@ export function getHEarthMeadowBoundaryPreservedInstances(cover){
 }
 /** Exactly the original selection; boundary-crossing silhouettes are preserved. */
 export function selectHEarthMeadowMidDistanceRepresentations(cover,camera){
- const selected=selectHEarthGlobalGroundCoverDraws(cover,camera),boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover));
+ const selected=selectHEarthGlobalGroundCoverDraws(cover,camera),boundary=cover.admittedRecords?new Set():new Set(getHEarthMeadowBoundaryPreservedInstances(cover));
  let candidates=0,eligible=0;
  for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
-  const id=draw.start+i*draw.stride,offset=id*20;
+  const id=draw.ids?.[i]??(draw.start+i*draw.stride),offset=id*20;
   if(Math.hypot(cover.records[offset+12]+45,cover.records[offset+13]+326)<=18){candidates++;if(!boundary.has(id))eligible++;}
  }
  return{...selected,meadowCandidateSelectedCount:candidates,meadowBoundaryPreservedCount:candidates-eligible,meadowEligibleSelectedCount:eligible,meadowReplacementInstanceCount:eligible,sourcePopulationChanged:false};
 }
 
 /** Gen2682: camera-independent presentation sidecar; never mutates cover records. */
-export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null,visibleSurface=null,enabled=true}={}){
+export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null,visibleSurface=null,enabled=true,admitGround=visibleSurface?.admitGround}={}){
+ if(enabled&&typeof admitGround!=='function')throw Error('MEADOW_RENDERED_BEACH_PROVIDER_REQUIRED');
  if(!enabled)return {disabled:true,pixels:new Float32Array(Math.max(4,cover.records.length/20)).fill(-1),clumps:[],lowRoots:[],template:cover.template,receipt:{schema:'H_EARTH_MEADOW_PRESENTATION_ROOTS_v1',sourcePopulationChanged:false,eligibleInstances:0,clumpCount:0,contactCount:0,shortContactCount:0,sidecarBytes:0,replacement:'SHARED_CAMERA_NEAR_FINE_GRASS'}};
  const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),eligible=[];
  for(let i=0;i<cover.records.length/20;i++)if(Math.hypot(cover.records[i*20+12]+45,cover.records[i*20+13]+326)<=18&&!boundary.has(i))eligible.push(i);
@@ -316,6 +348,7 @@ export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null,vi
   const roots=[];let valid=true;
   for(let k=-1;k<=1;k++){
    const xx=f(x+Math.cos(angle)*halfWidth*k),zz=f(z+Math.sin(angle)*halfWidth*k),s=sample(xx,zz),w=water.sample(xx,zz);
+   if(s&&!admitGround(xx,zz,s)){valid=false;break;}
    if(!s||(w&&s.y<=w.y+.01)||Math.hypot(xx+45,zz+326)>17.95){valid=false;break;}
    const a=inverseHEarthGroundCoverPoint(xx,s.y,zz),m=materialAt(a.x,a.z);
    if(!eligibleMaterial(m,s.slope)||!clear(a.x,a.z,.05)||obstacles.some(t=>Math.hypot(xx-t.x,zz-t.z)<t.radius+.05)){valid=false;break;}
@@ -339,6 +372,7 @@ export function buildHEarthMeadowPresentationRoots(cover,pkg,{refinement=null,vi
   if(Math.hypot(x+45,z+326)>17.88)continue;
   lowCandidates++;
   const q=sample(x,z),w=water.sample(x,z);
+  if(q&&!admitGround(x,z,q)){rejectLow('SHARED_GROUND_ADMISSION');continue;}
   if(!q){rejectLow('NO_TERRAIN');continue;}
   if(w&&q.y<=w.y+.01){rejectLow('WATER');continue;}
   const a=inverseHEarthGroundCoverPoint(x,q.y,z),m=materialAt(a.x,a.z);
@@ -376,9 +410,10 @@ export function getHEarthMeadowNearInstances(presentation){
 }
 /** Stable submission partition; roots, original selection and class order survive. */
 export function partitionHEarthMeadowSelectedInstances(cover,selected,presentation=null){
- const boundary=new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),nearIds=getHEarthMeadowNearInstances(presentation),original=[],near=[],mid=[];
+ const boundary=presentation?.disabled?new Set():new Set(getHEarthMeadowBoundaryPreservedInstances(cover)),nearIds=getHEarthMeadowNearInstances(presentation),original=[],near=[],mid=[];
  for(const draw of selected.draws)for(let i=0;i<draw.count;i++){
-  const id=draw.start+i*draw.stride,o=id*20;
+  const id=draw.ids?.[i]??(draw.start+i*draw.stride),o=id*20;
+  if(cover.admittedRecords&&!cover.admittedRecords[id])continue;
   (!presentation?.disabled&&Math.hypot(cover.records[o+12]+45,cover.records[o+13]+326)<=18&&!boundary.has(id)?nearIds.has(id)?near:mid:original).push(id);
  }
  const ids=Float32Array.from([...original,...near,...mid]),meadowCount=near.length+mid.length;

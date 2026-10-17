@@ -325,5 +325,82 @@
       "runtimeQualification": "PENDING_CHANGED_CANDIDATE_REGISTERED_BROWSER_RUN",
       "published": false
     }
+  },
+  "currentCheckpointInterpretation": "Earlier qualification and pending-status sections are retained historical evidence for their explicitly named origins. The renderedBeachZoneContinuity section describes this unqualified Gen2782 candidate; historical browser evidence does not qualify changed runtime bytes.",
+  "renderedBeachZoneContinuity": {
+    "schema": "H_EARTH_GEN2782_RENDERED_BEACH_ZONE_CONTINUITY_SOURCE_CHECKPOINT_v1",
+    "operationId": "H_EARTH_RENDERED_BEACH_AND_ZONE_CONTINUITY_20261017_001",
+    "generation": 2782,
+    "admissionCommit": "0752344d61b349c6785f44e18ced822a34b6e5e9",
+    "productBranch": "refs/heads/h-earth-rendered-beach-zone-continuity-20261017",
+    "qualifiedPredecessor": "a7a8a75f2778ebc2cae1311d5aa8c8fb43cb4db9",
+    "observedAt": "2026-10-17T02:17:34.644889+00:00",
+    "changes": [
+      "Shared support-identity-bound indexed uploaded contact/coast/normal beach evidence for existing presentation vegetation, rejecting missing or contradictory provider evidence",
+      "Full soil material tuple reconciled after regional overlays with protected clearing reference preserved",
+      "One-way pilot owner switch only after complete validated coverage and successful final GPU upload; retain fallback while pending or failed; permit validated empty habitat",
+      "Existing woodland feather-band complementary presentation and immutable archived global plant ordinal/seed identities with submission-time admission mask"
+    ],
+    "checks": {
+      "selectedFiveSourceTestFiles": {
+        "passed": 70,
+        "failed": 0,
+        "skipped": 0,
+        "durationMilliseconds": 54862.14768,
+        "scope": "Actual source and canonical CPU with corrected two direct proof fixture bindings; not WebGL/browser"
+      },
+      "independentNorthEastTests": {
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0,
+        "includes": "Independent 1440-case emitted shader/CPU oracle; indexed owner identity; full soil endpoint; upload/handoff; woodland band"
+      },
+      "proofBindings": {
+        "generation": 2783,
+        "admissionCommit": "5c73e6ee4ba59f6332947d7ef7a37841ad06baac",
+        "twoCorrectedTestFilesPassed": 27,
+        "assertionsWeakened": false,
+        "staleDescriptiveBranchBinding": "NATIVE_SOURCE_VERIFIED_NONOPERATIVE_METADATA; original request retained unchanged; exact governing head, allowed paths, fingerprintDomain parallel Gen2782 operation and qualified immutable runtime SHA control. Historical subjectIdentity.productBranch names old cache-repair branch."
+      },
+      "independentCanonicalArchive": {
+        "baselineRecords": 60857,
+        "preservedByteExactAtOriginalOrdinals": true,
+        "baselineFloat32Sha256": "d70547c977300cff9177705aca5c728cf827574fbe7d6396749679238892659c",
+        "firstMismatch": -1,
+        "replacementRecordsAppended": 832,
+        "historicalRecordsMasked": 1719,
+        "totalRecords": 61689,
+        "maximumRecords": 65536,
+        "gpuBytes": 4936976,
+        "maximumGpuBytes": 8388608,
+        "completedTiles": 648,
+        "cameraSelectors": 168,
+        "selectedIdsChecked": 332264,
+        "maskedIdsSelected": 0,
+        "maximumSelectedInstances": 4096,
+        "maximumDraws": 64,
+        "hostilePartitionMask": "PASS",
+        "scope": "Actual canonical CPU/provider; no current-camera refinement or WebGL pixels"
+      }
+    },
+    "sourceSha256": {
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "25cb117dd187ef64300355e8e0029bf2f7509b8f714271f4d416872fd3050b7f",
+      "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js": "7581000b9a462c57f45ed9ed9172355ef6f9e03d15b808080aff06859ad2b868",
+      "showroom/globe/h-earth/render/rendered-beach-signal.v1.js": "e51cbf64b6cc9feeaf699d1f68871bbea055522bf623ef2b24c3c6e1b182ef34",
+      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "c42634f6efc42b59894643bc3d9919989d8cc2840c021ac110a9645b7bcad6bf",
+      "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "4054ce023cfc01c451c26c0211ef1d9e630c8de3d12e9db90666c60d86b87471",
+      "showroom/globe/h-earth/render/landscape-planting-pilot.v1.js": "206a9ef198195ee455c50e4e5adac84f3830997fd0f007c8eda62d2c620b15f2",
+      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "22ea1763b8dd2206f6f1d1a3558a56c224ac6dc7dbe449ff624da741f2fd1c2e"
+    },
+    "browserQualification": "NOT_EXECUTED_FOR_CHANGED_GEN2782_CANDIDATE",
+    "shaderCompilation": "NOT_ESTABLISHED_BY_CPU_ORACLE",
+    "visualQuality": "NOT_ESTABLISHED",
+    "physicalDeviceAcceptance": false,
+    "publication": {
+      "merged": false,
+      "deployed": false,
+      "published": false
+    },
+    "nextAction": "Freeze exact candidate after independent archival identity and custody review, then execute one unchanged registered Gen2 generic visual qualifier on that immutable product origin. Never relabel predecessor browser results."
   }
 }

@@ -30,8 +30,30 @@ function policyClear(x,z,estate,oasis){
  for(let i=1;i<estate.footRoute.length;i++)if(distance(x,z,estate.footRoute[i-1],estate.footRoute[i])<=estate.footRouteRadius+.1)return false;
  return !(x>=oasis.minX-.1&&x<=oasis.maxX+.1&&z>=oasis.minZ-.1&&z<=oasis.maxZ+.1);
 }
+/** Geographic replacement admission, independent of the former rectangle. */
+export async function createUniformGroundAdmission({visibleSurface,geology,toLocal,estate,obstacles=[],trees=[],oasis,sampleStructure,yieldControl=async()=>{}}={}){
+ if(typeof visibleSurface?.beach?.sample!=='function'||typeof geology?.sampleWaterAt!=='function'||typeof toLocal!=='function'||typeof sampleStructure!=='function')throw Error('UNIFORM_GROUND_PROVIDER_REQUIRED');
+ const boundary=await boundaryIndex(geology,yieldControl),rejections={};let tested=0;
+ const reject=reason=>{rejections[reason]=(rejections[reason]??0)+1;return false;};
+ const admit=(x,z,support)=>{
+  tested++;const beach=visibleSurface.beach.sample({x,z,support});
+  if(beach?.valid!==true){reject('RENDERED_BEACH_EVIDENCE_UNAVAILABLE');throw Error('UNIFORM_GROUND_RENDERED_BEACH_EVIDENCE_UNAVAILABLE');}
+  if(beach.rawSandCoverage>0)return reject('RENDERED_BEACH');
+  const water=visibleSurface.water.sample(x,z),future=geology.sampleWaterAt(x,z);
+  if(water&&support.y<=water.y+.03)return reject('RENDERED_WATER');
+  if(future&&support.y<=future.y+.03)return reject('FUTURE_WATER');
+  if(boundary.distance(x,z)<=2)return reject('BARE_CHANNEL_MARGIN');
+  const local=toLocal(x,support.y,z),structure=sampleStructure(local.x,local.z);
+  if(structure?.hardExclusions?.length||structure?.planningHolds?.length)return reject('STRUCTURE');
+  if(!policyClear(local.x,local.z,estate,oasis)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.10)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.15))return reject('PROTECTED_FOOTPRINT');
+  return true;
+ };
+ admit.getReceipt=()=>({schema:'H_EARTH_UNIFORM_GROUND_ADMISSION_v1',tested,rejections:{...rejections},waterBoundaryEdges:boundary.count,geographicWaterPolicy:true,rectangleMask:false});
+ return admit;
+}
 /** Accepted roots are shared by every pilot representation. */
-export async function buildPlantingPilotLayout({visibleSurface,geology,sampleMaterial,toLocal,estate,obstacles=[],trees=[],oasis,yieldControl=async()=>{},sampleStructure}={}){
+export async function buildPlantingPilotLayout({visibleSurface,geology,sampleMaterial,toLocal,estate,obstacles=[],trees=[],oasis,yieldControl=async()=>{},sampleStructure,admitGround=visibleSurface?.admitGround}={}){
+ if(typeof admitGround!=='function')throw Error('PLANTING_PILOT_CALLBACK_REQUIRED_RENDERED_BEACH_PROVIDER');
  if(typeof visibleSurface?.ground?.sample!=='function'||typeof visibleSurface?.water?.sample!=='function'||typeof geology?.sampleWaterAt!=='function'||!Array.isArray(geology?.meshes)||typeof sampleMaterial!=='function'||typeof toLocal!=='function'||typeof yieldControl!=='function')throw Error('PLANTING_PILOT_CALLBACK_REQUIRED');
  if(!estate||!Array.isArray(estate.footRoute)||!Number.isFinite(estate.footRouteRadius)||!oasis||![oasis.minX,oasis.maxX,oasis.minZ,oasis.maxZ].every(Number.isFinite)||!Array.isArray(obstacles)||!Array.isArray(trees))throw Error('PLANTING_PILOT_POLICY_REQUIRED');
  for(const obstacle of obstacles)if(!obstacle||![obstacle.x,obstacle.z,obstacle.radius].every(Number.isFinite)||obstacle.radius<0)throw Error('PLANTING_PILOT_OBSTACLE_INVALID');
@@ -48,6 +70,7 @@ export async function buildPlantingPilotLayout({visibleSurface,geology,sampleMat
    const support=visibleSurface.ground.sample(x,z);
    if(!support||!Number.isFinite(support.y)||!Number.isFinite(support.slope)){reject('NO_VISIBLE_TERRAIN');continue;}
    if(!['CANONICAL_VISIBLE_TERRAIN','VISIBLE_REFINEMENT','ERODED_TERRAIN','MOUNTAIN_OVERBURDEN'].includes(support.owner)){reject('UNSUPPORTED_SURFACE_OWNER');continue;}
+   if(!admitGround(x,z,support)){reject('SHARED_GROUND_ADMISSION');continue;}
    const y=f(support.y),renderedWater=visibleSurface.water.sample(x,z),futureWater=geology.sampleWaterAt(x,z);
    if(renderedWater&&y<=renderedWater.y+PLANTING_PILOT.waterClearance){reject('RENDERED_WATER');continue;}
    if(futureWater&&y<=futureWater.y+PLANTING_PILOT.waterClearance){reject('FUTURE_WATER');continue;}

@@ -23,7 +23,7 @@ const obstacles=[{x:-55,z:-330,radius:3}],trees=[{x:-56,z:-310,trunkRadius:1.5}]
 const vertices=[[-85,-345],[-75,-345],[-65,-275],[-95,-275]];
 function segmentDistance(x,z,a,b){const dx=b[0]-a[0],dz=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/(dx*dx+dz*dz)));return Math.hypot(x-a[0]-t*dx,z-a[1]-t*dz);}
 const bankDistance=(x,z)=>Math.min(...vertices.map((a,i)=>segmentDistance(x,z,a,vertices[(i+1)%4])));
-function config(reverse=false){return {visibleSurface:{ground:{sample:sampleGround},water:{sample:(x,z)=>inBox(x,z,rendered)?{y:20}:null}},geology:{meshes:[{role:'FRESHWATER_RIVER',mesh:{positions:riverPositions,indices:new Uint16Array(reverse?[0,2,3,0,1,2]:[0,1,2,0,2,3])}}],sampleWaterAt:(x,z)=>{const half=5+(z+345)/7;return inBox(x,z,hidden)||Math.abs(x+80)<=half?{y:20}:null;}},sampleMaterial:(x)=>({valid:true,surfaceClass:x<-100?'STONE_AND_SPARSE_SOIL':'LOWLAND_SOIL',soilDepth:.3}),toLocal:(x,y,z)=>({x,y,z}),estate,obstacles,trees,oasis,sampleStructure:(x,z)=>inBox(x,z,structure)?{hardExclusions:['building']}:null};}
+function config(reverse=false){return {visibleSurface:{admitGround:()=>true,ground:{sample:sampleGround},water:{sample:(x,z)=>inBox(x,z,rendered)?{y:20}:null}},geology:{meshes:[{role:'FRESHWATER_RIVER',mesh:{positions:riverPositions,indices:new Uint16Array(reverse?[0,2,3,0,1,2]:[0,1,2,0,2,3])}}],sampleWaterAt:(x,z)=>{const half=5+(z+345)/7;return inBox(x,z,hidden)||Math.abs(x+80)<=half?{y:20}:null;}},sampleMaterial:(x)=>({valid:true,surfaceClass:x<-100?'STONE_AND_SPARSE_SOIL':'LOWLAND_SOIL',soilDepth:.3}),toLocal:(x,y,z)=>({x,y,z}),estate,obstacles,trees,oasis,sampleStructure:(x,z)=>inBox(x,z,structure)?{hardExclusions:['building']}:null};}
 let layout;
 test('deterministic indexed support, reverse traversal and A-B-A camera independence',async()=>{
  const a=await buildPlantingPilotLayout({...config(),camera:{x:0,z:0}}),b=await buildPlantingPilotLayout({...config(true),camera:{x:999,z:999}}),again=await buildPlantingPilotLayout({...config(),camera:{x:0,z:0}});layout=a;
@@ -63,11 +63,13 @@ test('source integration retains shared ownership, versioned bridge and render/d
   read('render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),read('render/vegetation-visible-surface.v1.js'),read('functional-landscape/navigation.js'),read('render/landscape-groundcover.global-v1.js'),read('render/woodland-fine-grass.v1.js'),read('diagnostic/run8e-r3d/live-gpu-binding.js'),read('functional-landscape/public-live-gpu-integration.run8e-r3e.js')]);
  const bridgeQuery=source=>source.match(/from\s+['"][^'"]*geological-runtime-bridge\.v1\.js(\?[^'"]+)['"]/)[1];
  assert.equal(bridgeQuery(parent),bridgeQuery(visible));assert.equal(bridgeQuery(parent),bridgeQuery(nav));
- assert.match(parent,/import\s*\{buildPlantingPilotLayout,isPlantingPilotPoint\}/);assert.match(parent,/import\s*\{createPlantingPilotRenderer\}/);
+ assert.match(parent,/import\s*\{buildPlantingPilotLayout,isPlantingPilotPoint,createUniformGroundAdmission\}/);assert.match(parent,/import\s*\{createPlantingPilotRenderer\}/);
  for(const alias of ['pilotMaterialAt','pilotEstate','pilotStructureAt'])assert.match(parent,new RegExp('import[^;]*\\b'+alias+'\\b'));
  assert.match(parent,/sampleMaterial:pilotMaterialAt,toLocal:unprojectPlanetVertex,estate:pilotEstate/);
  assert.match(parent,/sampleStructure:pilotStructureAt/);assert.match(parent,/visibleSurface:resources\.vegetationVisibleSurface,geology:resources\.geologicalRuntime/);
- assert.equal([...parent.matchAll(/placementExclusion:isPlantingPilotPoint/g)].length,2);
+ assert.equal([...parent.matchAll(/placementExclusion:isPlantingPilotPoint/g)].length,0);
+ assert.match(parent,/pilotCoverageOwner\.commit\(\{uploadComplete:state\.uploadComplete,coverageValidated:state\.coverageValidated,glError:error\}\)/);
+ assert.match(parent,/resources\.plantingPilot&&pilotCoverageOwner\.shouldDrawPilot\(\)/);
  assert.match(globalCover,/placementExclusion\?\.\(x,z\)\?null:surface\.sample\(x,z\)/);
  assert.match(fine,/placementExclusion\?\.\(x,z\).*SHARED_PILOT_OWNER/);
  assert.match(parent,/resources\.plantingPilot\.draw\(packet\)/);assert.match(parent,/disposePlantingPilot:.*resources\.plantingPilot\?\.dispose\(\)/);
@@ -93,7 +95,7 @@ test('exact hash-bound canonical scene CPU layout: every accepted root contacts 
   import(new URL('../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs',base))]);
  const sourceDigests=()=>[payload.raw,payload.canonical].map(pkg=>createHash('sha256').update(JSON.stringify(pkg.buffers)).digest('hex'));
  const before=sourceDigests(),geology=constructGeologicalRuntimeBridge(payload.canonical),visibleSurface=buildVegetationVisibleSurface(payload.raw,{geology});
- const actual=await buildPlantingPilotLayout({visibleSurface,geology,sampleMaterial:material.sampleHEarthRun8CSuccessorSurfaceMaterial,toLocal:terrain.unprojectPlanetVertex,estate:placement.H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY,sampleStructure:placement.sampleHEarthGen311PlacementStructureDisposition,obstacles:payload.raw.landscapeCoverFootprints??[],trees:payload.raw.landscapeFloorFootprints??[],oasis:grass.H_EARTH_OASIS_FOLIAGE_SAMPLE});
+ const actual=await buildPlantingPilotLayout({admitGround:()=>true,visibleSurface,geology,sampleMaterial:material.sampleHEarthRun8CSuccessorSurfaceMaterial,toLocal:terrain.unprojectPlanetVertex,estate:placement.H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY,sampleStructure:placement.sampleHEarthGen311PlacementStructureDisposition,obstacles:payload.raw.landscapeCoverFootprints??[],trees:payload.raw.landscapeFloorFootprints??[],oasis:grass.H_EARTH_OASIS_FOLIAGE_SAMPLE});
  assert.ok(actual.roots.length>0,'Exact current canonical scene must admit planting');
  let contactChecks=0,hiddenWaterChecks=0,boundsChecks=0;
  for(const root of actual.roots){
@@ -102,9 +104,19 @@ test('exact hash-bound canonical scene CPU layout: every accepted root contacts 
   assert.ok(!hiddenWet||root.y>hiddenWet.y+PLANTING_PILOT.waterClearance);assert.ok(!renderedWet||root.y>renderedWet.y+PLANTING_PILOT.waterClearance);hiddenWaterChecks++;
   assert.ok(root.x>=-105&&root.x<=-25&&root.z>=-345&&root.z<=-275);boundsChecks++;
  }
+ const uploadSource=await readFile(new URL('gpu-upload-views.run8e-r2d.js',base),'utf8');
+ const beachFixture=await buildCanonicalBeachFixture({baseDirectory:new URL('../../',import.meta.url).pathname,pkg:payload.raw,geology,uploadSource,
+  protectedReferenceAt:(x,y,z)=>{const q=terrain.unprojectPlanetVertex(x,y,z);assert.ok(q.z< -260||q.z> -150||q.x> -24,'Pilot/fixed-root fixture must stay outside protected reference clearing');return false;}});
+ const {createUniformGroundAdmission}=await load('../../showroom/globe/h-earth/render/landscape-planting-pilot.v1.js');
+ const actualAdmission=await createUniformGroundAdmission({visibleSurface:beachFixture.visibleSurface,geology,toLocal:terrain.unprojectPlanetVertex,estate:placement.H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY,sampleStructure:placement.sampleHEarthGen311PlacementStructureDisposition,obstacles:payload.raw.landscapeCoverFootprints??[],trees:payload.raw.landscapeFloorFootprints??[],oasis:grass.H_EARTH_OASIS_FOLIAGE_SAMPLE});
+ const qualified=await buildPlantingPilotLayout({admitGround:actualAdmission,visibleSurface:beachFixture.visibleSurface,geology,sampleMaterial:material.sampleHEarthRun8CSuccessorSurfaceMaterial,toLocal:terrain.unprojectPlanetVertex,estate:placement.H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY,sampleStructure:placement.sampleHEarthGen311PlacementStructureDisposition,obstacles:payload.raw.landscapeCoverFootprints??[],trees:payload.raw.landscapeFloorFootprints??[],oasis:grass.H_EARTH_OASIS_FOLIAGE_SAMPLE});
+ assert.equal(qualified.receipt.rootCount,5313);assert.equal(qualified.receipt.layoutDigest,'FNV1A32_NONCRYPTOGRAPHIC:2ce04494');assert.deepEqual(qualified.records,actual.records,'Actual shared renderer signal preserves all historical inland pilot records');
+ const x=3.7832353115081787,z=-127.66645812988281,support=beachFixture.visibleSurface.ground.sample(x,z),beach=beachFixture.visibleSurface.beach.sample({x,z,support});
+ assert.equal(support.triangleId,14688);assert.ok(Math.abs(beach.rawSandCoverage-.9175581216095148)<1e-12);assert.equal(actualAdmission(x,z,support),false,'Actual admitted >90% rendered-sand root now rejected');
+ t.diagnostic(JSON.stringify({scope:'ACTUAL_INDEXED_GPU_ATTRIBUTE_PROVIDER_CPU_NOT_BROWSER',pilotRoots:qualified.receipt.rootCount,pilotDigest:qualified.receipt.layoutDigest,knownBeachRootSandCoverage:beach.rawSandCoverage,admission:actualAdmission.getReceipt()}));
  assert.deepEqual(sourceDigests(),before,'Raw and canonical source buffers remain byte-for-byte equivalent');
  assert.equal(contactChecks,actual.receipt.rootCount);assert.equal(hiddenWaterChecks,actual.receipt.rootCount);assert.equal(boundsChecks,actual.receipt.rootCount);
- t.diagnostic(JSON.stringify({scope:'EXACT_CANONICAL_SOURCE_CPU_ONLY_NOT_GPU',worldSha256:createHash('sha256').update(bytes).digest('hex'),rootCount:actual.roots.length,contactChecks,hiddenWaterChecks,boundsChecks,layout:actual.receipt}));
+ t.diagnostic(JSON.stringify({scope:'HISTORICAL_PILOT_CANONICAL_CPU_WITH_EXPLICIT_PRE_BEACH_ADMISSION_FIXTURE_NOT_GPU_OR_NEW_BEACH_ACCEPTANCE',worldSha256:createHash('sha256').update(bytes).digest('hex'),rootCount:actual.roots.length,contactChecks,hiddenWaterChecks,boundsChecks,layout:actual.receipt}));
 });
 
 
@@ -153,7 +165,7 @@ test('diagnostic identities distinguish presentation from support and membership
 });
 test('actual cache and selector give identical settled roots/pixels with diagnostics OFF and ON',async()=>{
  const {createNearbyFineGrassCache,selectWoodlandFineGrass,createVegetationContinuityTrace}=await loadDiagnosticWoodlandFixture();
- const visibleSurface={ground:{sample:()=>({y:0,slope:0,triangleId:0,owner:'CANONICAL_VISIBLE_TERRAIN'})},water:{sample:()=>null}};
+ const visibleSurface={admitGround:()=>true,ground:{sample:()=>({y:0,slope:0,triangleId:0,owner:'CANONICAL_VISIBLE_TERRAIN'})},water:{sample:()=>null}};
  const pkg={landscapeCoverFootprints:[],landscapeFloorFootprints:[]},trace=createVegetationContinuityTrace(),off=createNearbyFineGrassCache(pkg,{visibleSurface}),on=createNearbyFineGrassCache(pkg,{visibleSurface,onDiagnostic:(type,details)=>trace.record(type,details)});
  const positions=[{x:200,z:-200},{x:204,z:-200},{x:200,z:-200}],sets=[];
  for(const camera of positions){
@@ -200,7 +212,7 @@ async function loadProgressiveCacheFixture(legacy=false){
 }
 const pkg={landscapeCoverFootprints:[],landscapeFloorFootprints:[]};
 const a={x:200,z:-200},b={x:204,z:-200},options={coreRadiusMeters:8,outerRadiusMeters:12};
-function progressiveSurface(onSample=()=>{}){return{ground:{sample(x,z){onSample(x,z);return{y:0,slope:0,triangleId:7,owner:'CANONICAL_VISIBLE_TERRAIN'};}},water:{sample:()=>null}};}
+function progressiveSurface(onSample=()=>{}){return{admitGround:()=>true,ground:{sample(x,z){onSample(x,z);return{y:0,slope:0,triangleId:7,owner:'CANONICAL_VISIBLE_TERRAIN'};}},water:{sample:()=>null}};}
 function progressiveRoots(p){return p.tiles.flatMap(t=>t.roots);}
 function progressiveSignature(p){return p.tiles.map(t=>[t.id,t.roots.map(r=>[r.x,r.y,r.z,r.angle,r.seed,r.triangleId,r.slope,r.owner])]);}
 function checkProgressiveSnapshot(p,meta){
@@ -319,7 +331,7 @@ test('actual merge worker rejects stale key but allows useful older same-key par
 
 test('populated first tile followed by empty tiles suppresses partial publication churn but completes',async()=>{
  const {createNearbyFineGrassCache}=await loadProgressiveCacheFixture(),seen=[],progress=[];
- const visibleSurface={ground:{sample(x,z){return Math.floor(x/4)===50&&Math.floor(z/4)===-50?{y:0,slope:0,triangleId:7,owner:'CANONICAL_VISIBLE_TERRAIN'}:null;}},water:{sample:()=>null}};
+ const visibleSurface={admitGround:()=>true,ground:{sample(x,z){return Math.floor(x/4)===50&&Math.floor(z/4)===-50?{y:0,slope:0,triangleId:7,owner:'CANONICAL_VISIBLE_TERRAIN'}:null;}},water:{sample:()=>null}};
  const cache=createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl:async()=>{},onProgress:p=>progress.push(p),onPresentation(p,m){seen.push({p,m});}});
  const final=await cache.update(a,{coreRadiusMeters:2,outerRadiusMeters:4});
  assert.ok(final.receipt.contactCount>0);assert.ok(progress.length>2);
@@ -454,4 +466,98 @@ test('trace rejections retain bounded fixed reasons without copying error string
  assert.deepEqual(summary.rejectionReasonCounts,{TYPE_INVALID:1,TIME_INVALID:0,EVENT_TOO_LARGE:1,COPY_OR_RECORD_FAILED:1});
  summary.rejectionReasonCounts.EVENT_TOO_LARGE=999;assert.equal(trace.summary().rejectionReasonCounts.EVENT_TOO_LARGE,1);
  const invalidClock=createVegetationContinuityTrace({now:()=>NaN});assert.equal(invalidClock.record('INVALID_CLOCK'),false);assert.equal(invalidClock.summary().rejectionReasonCounts.TIME_INVALID,1);
+});
+
+
+test('shared rendered beach formula and provider retain exact indexed attributes and fail closed',async()=>{
+ const {renderedBeachCoverage,createRenderedBeachProvider}=await load('../../showroom/globe/h-earth/render/rendered-beach-signal.v1.js');
+ const part={partId:'BASE',owner:'CANONICAL_VISIBLE_TERRAIN',positions:new Float32Array([0,0,0,4,2,0,0,4,4]),indices:new Uint32Array([0,1,2]),normals:new Float32Array([0,1,0,.8660254,.5,0,0,.6,.8]),coastDistances:new Float32Array([4,20,60]),contactDistances:new Float32Array([2,16,40])};
+ const support={partId:'BASE',surfaceRevision:1,owner:part.owner,y:1.5,triangleOffset:0,vertexIndices:[0,1,2],barycentricWeights:[.5,.25,.25]};
+ const provider=createRenderedBeachProvider({surfaceRevision:1,parts:[part]}),actual=provider.sample({x:1,z:1,support});
+ assert.equal(actual.valid,true);assert.equal(actual.worldY,1.5);assert.equal(actual.interpolatedCanonicalCoastDistance,22);assert.equal(actual.interpolatedExposedContactDistance,15);
+ assert.equal(actual.rawSandCoverage,renderedBeachCoverage({contactDistance:15,coastDistance:22,worldY:1.5,normal:[part.normals[0]*.5+part.normals[3]*.25+part.normals[6]*.25,part.normals[1]*.5+part.normals[4]*.25+part.normals[7]*.25,part.normals[2]*.5+part.normals[5]*.25+part.normals[8]*.25]}));
+ assert.equal(provider.sample({x:1,z:1,support:{...support,surfaceRevision:2}}).valid,false);
+ assert.equal(createRenderedBeachProvider({surfaceRevision:1,parts:[{...part,normals:null}]}).sample({x:1,z:1,support}).valid,false);
+ assert.equal(renderedBeachCoverage({contactDistance:140,coastDistance:140,worldY:1,normal:[0,1,0]}),0);
+});
+test('pilot owner commits once only after complete validated upload and final GL success, including empty habitat',async()=>{
+ const {createPilotCoverageOwner}=await load('../../showroom/globe/h-earth/render/rendered-beach-signal.v1.js');
+ const owner=createPilotCoverageOwner({contains:isPoint=>isPoint===0});
+ for(const proof of [{},{uploadComplete:true,coverageValidated:true},{uploadComplete:false,coverageValidated:true,glError:0},{uploadComplete:true,coverageValidated:true,glError:1282}]){assert.equal(owner.commit(proof),false);assert.equal(owner.shouldDrawPilot(),true);assert.equal(owner.suppressUniform(0,0),true);}
+ assert.equal(owner.commit({uploadComplete:true,coverageValidated:true,glError:0}),true);
+ assert.equal(owner.shouldDrawPilot(),false);assert.equal(owner.suppressUniform(0,0),false);assert.equal(owner.commit({uploadComplete:true,coverageValidated:true,glError:0}),false);assert.equal(owner.getReceipt().transitionCount,1);
+});
+test('shared replacement admission rejects beach, missing evidence, future water and bare banks without a rectangle mask',async()=>{
+ const {createUniformGroundAdmission}=await load('../../showroom/globe/h-earth/render/landscape-planting-pilot.v1.js');
+ const cfg=config();let signal={valid:true,rawSandCoverage:0};cfg.visibleSurface.beach={sample:()=>signal};
+ const admit=await createUniformGroundAdmission(cfg),x=-55,z=-315,s=sampleGround(x,z);
+ assert.equal(admit(x,z,s),true);signal={valid:true,rawSandCoverage:.9175581216095148};assert.equal(admit(x,z,s),false);
+ signal={valid:false,reason:'SOURCE_MISSING'};assert.throws(()=>admit(x,z,s),/EVIDENCE_UNAVAILABLE/);
+ signal={valid:true,rawSandCoverage:0};cfg.geology.sampleWaterAt=()=>({y:s.y-.03});assert.equal(admit(x,z,s),false);
+ assert.equal(admit.getReceipt().rectangleMask,false);assert.ok(admit.getReceipt().rejections.FUTURE_WATER>0);
+});
+
+async function buildCanonicalBeachFixture({baseDirectory,pkg,geology,uploadSource,protectedReferenceAt}){
+ assert.equal(typeof protectedReferenceAt,'function','Declare the protected reference policy for this fixture');
+ const render=baseDirectory+'showroom/globe/h-earth/render/';
+ const source=await readFile(render+'persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js','utf8');
+ const {createRenderedBeachProvider}=await import('file://'+render+'rendered-beach-signal.v1.js');
+ const {buildVegetationVisibleSurface}=await import('file://'+render+'vegetation-visible-surface.v1.js');
+ const terrain=await import('file://'+baseDirectory+'h-earth-3d/terrain/h-earth.terrain-field.js');
+ const contactCode=source.slice(source.indexOf('function* createExposedWaterContactFieldSteps'),source.indexOf('async function createExposedWaterContactFieldAsync'));
+ assert.ok(contactCode.startsWith('function* createExposedWaterContactFieldSteps'));
+ const makeContact=Function(contactCode+';return createExposedWaterContactField;')();
+ const coastCode=uploadSource.slice(uploadSource.indexOf('const COAST_MIN_X'),uploadSource.indexOf('const freezeRecord')).replace('export function','function');
+ const coastAt=Function('getHEarthCanonicalShorelineZ',coastCode+';return getHEarthSignedCoastDistanceMeters;')(terrain.getHEarthCanonicalShorelineZ);
+ const decimalCode=uploadSource.slice(uploadSource.indexOf('function canonicalDecimal'),uploadSource.indexOf('function canonicalFloat32'));
+ const decimal=Function('finite','H_EARTH_RUN_8E_R2D_GPU_FLOAT_CANONICALIZATION',decimalCode+';return canonicalDecimal;')(Number.isFinite,{decimalPlaces:6});
+ const positions=Float32Array.from(pkg.buffers.positions),indices=Uint32Array.from(pkg.buffers.indices);
+ const normals=Float32Array.from(Float32Array.from(pkg.buffers.normals),decimal);
+ const field=makeContact({positions,indices},pkg.primitiveSpans),coastDistances=new Float32Array(positions.length/3);
+ for(const span of pkg.primitiveSpans){
+  if(span.role!=='TERRAIN'&&span.primitiveId!=='H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION')continue;
+  for(let id=span.vertexStart;id<span.vertexStart+span.vertexCount;id++){
+   const x=positions[id*3],y=positions[id*3+1],z=positions[id*3+2],h=Math.hypot(x,z),scale=h>Number.EPSILON?Math.atan2(h,y+420000)*420000/h:0;
+   coastDistances[id]=coastAt(x*scale,z*scale);
+  }
+ }
+ const normalStart=source.indexOf('const normals=new Float32Array(n*3);');
+ const normalEnd=source.indexOf('const colors=new Float32Array(n*4)',normalStart);
+ assert.ok(normalStart>=0&&normalEnd>normalStart);
+ const makeGeoNormals=Function('positions','indices','n','role',source.slice(normalStart,normalEnd)+';return normals;');
+ const geologyAttributes=geology.meshes.map(({role,mesh})=>{
+  const n=mesh.vertexCount??mesh.positions.length/3,coastDistances=new Float32Array(n),contactDistances=new Float32Array(n);
+  coastDistances.fill(140);contactDistances.fill(140);
+  return {positions:mesh.positions,indices:mesh.indices,normals:makeGeoNormals(mesh.positions,mesh.indices,n,role),coastDistances,contactDistances};
+ });
+ assert.ok(source.includes('coast.fill(140);contact.fill(140);'));
+ const base={positions,indices,normals,coastDistances,contactDistances:field.packageDistances};
+ const visibleSurface=buildVegetationVisibleSurface(pkg,{geology,renderedAttributes:{base,geology:geologyAttributes},beachProviderFactory:createRenderedBeachProvider,protectedReferenceAt,surfaceRevision:1});
+ return {visibleSurface,field,baseAttributes:base,geologyAttributes,limits:['Canonical base and geological exterior only; no current camera refinement','CPU source evaluation; not GPU raster acceptance']};
+}
+
+
+test('actual protected reference admission uses the same uploaded Float32 clearing bounds',async()=>{
+ const source=await readFile(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const start=source.indexOf('const protectedReferenceAt=(x,y,z)=>{'),end=source.indexOf('const visibleSurface=buildVegetationVisibleSurface',start);assert.ok(start>=0&&end>start);
+ const uploaded=new Float32Array([-156.1234567,-242.1234567,-124.1234567,-210.1234567]);
+ const actual=Function('resources','planetRadius','unprojectPlanetVertex',source.slice(start,end)+';return protectedReferenceAt;')({clearing:{bounds:uploaded}},420000,(x,y,z)=>({x,z}));
+ let lo=0,hi=1;for(let i=0;i<60;i++){const mid=(lo+hi)/2;if(mid*mid*(3-2*mid)<.99999)lo=mid;else hi=mid;}
+ const threshold=hi*1.5,z=(uploaded[1]+uploaded[3])/2;
+ assert.equal(actual(uploaded[0]+threshold+1e-8,0,z),true);
+ assert.equal(actual(uploaded[0]+threshold-1e-8,0,z),false);
+ assert.equal(actual(uploaded[0],0,z),false);
+});
+
+
+test('global archive submission mask precedes visibility budgets and cannot leak through partition IDs',async()=>{
+ const source=await readFile(new URL('../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js',import.meta.url),'utf8');
+ const fixture='const H_EARTH_PLANETARY_WORLD_FRAME={exactSphereRadius:420000};\n'+source.replace(/^import[^\n]+\n/gm,'');
+ const {selectHEarthGlobalGroundCoverDraws,partitionHEarthMeadowSelectedInstances,selectHEarthMeadowMidDistancePatchDraws}=await import('data:text/javascript;base64,'+Buffer.from(fixture).toString('base64'));
+ const cover={records:new Float32Array(5*20),admittedRecords:new Uint8Array([0,1,0,1,1]),tiles:[{start:0,count:5,minX:-1,maxX:1,minZ:-1,maxZ:1,ecoInstances:0}],receipt:{instanceCount:5}};
+ const selected=selectHEarthGlobalGroundCoverDraws(cover,{x:0,z:0},{maximumInstances:2,maximumDraws:1});
+ assert.equal(selected.visibleInstanceCount,2);assert.deepEqual(selected.draws[0].ids,[1,4],'Rejected archive slots do not consume the budget or renumber remaining records');
+ const partition=partitionHEarthMeadowSelectedInstances(cover,selected,{disabled:true,clumps:[]});assert.deepEqual(Array.from(partition.ids),[1,4]);
+ const lod=selectHEarthMeadowMidDistancePatchDraws(cover,{x:0,z:0},{sourceDraws:selected.draws,centerX:0,centerZ:0,maximumInstances:1});assert.equal(lod.draws.length,1);assert.deepEqual(lod.draws[0].ids,[1]);
+ const untrusted=partitionHEarthMeadowSelectedInstances(cover,{draws:[{start:0,count:5,stride:1}]},{disabled:true,clumps:[]});assert.deepEqual(Array.from(untrusted.ids),[1,3,4],'Submission mask is rechecked at final partition');
 });

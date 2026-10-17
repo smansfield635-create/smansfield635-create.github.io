@@ -52,6 +52,8 @@ export const WOODLAND_FINE_GRASS=Object.freeze({center:Object.freeze([-141,-226]
 const f=Math.fround,clamp=v=>Math.max(0,Math.min(1,v));
 function hash(x,z,k=0){let h=Math.imul(x^0x51ed270b,1597334677)^Math.imul(z^0x68bc21eb,3812015801)^Math.imul(k+1,747796405);h=Math.imul(h^(h>>>16),2246822519);h=Math.imul(h^(h>>>13),3266489917);return(h^(h>>>16))>>>0;}
 export function isWoodlandFineGrassPoint(x,y,z){const a=inverseHEarthGroundCoverPoint(x,y,z);return Math.hypot((a.x+141)/41.25,(a.z+226)/40)<=1;}
+export function woodlandEdgeWeight(x,y,z){const a=inverseHEarthGroundCoverPoint(x,y,z);return clamp(40*(1-Math.hypot((a.x+141)/41.25,(a.z+226)/40)));}
+export function nearbyWoodlandComplement(x,y,z){return 1-woodlandEdgeWeight(x,y,z);}
 function segmentDistance(x,z,a,b){const dx=b.x-a.x,dz=b.z-a.z,q=dx*dx+dz*dz,t=q?clamp(((x-a.x)*dx+(z-a.z)*dz)/q):0;return Math.hypot(x-a.x-t*dx,z-a.z-t*dz);}
 export function woodlandGrassClear(x,z,r=.03){
  const structure=sampleHEarthGen311PlacementStructureDisposition(x,z);if(structure.hardExclusions.length||structure.planningHolds.length)return false;
@@ -72,7 +74,8 @@ function surface(positions,indices,spans){
  }
  return{count,sample(x,z){for(const t of bins.get(`${Math.floor(x/4)}:${Math.floor(z/4)}`)??[]){const[a,b,c]=t.a,u=((b[2]-c[2])*(x-c[0])+(c[0]-b[0])*(z-c[2]))/t.det,v=((c[2]-a[2])*(x-c[0])+(a[0]-c[0])*(z-c[2]))/t.det,w=1-u-v;if(Math.min(u,v,w)>=-1e-8)return{y:f(u*a[1]+v*b[1]+w*c[1]),slope:t.slope,triangleId:t.triangleId};}return null;}};
 }
-export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=async()=>{},onProgress=()=>{},priorityOrigin=null,onPriorityPreview=null,visibleSurface=null}={}){
+export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=async()=>{},onProgress=()=>{},priorityOrigin=null,onPriorityPreview=null,visibleSurface=null,admitGround=visibleSurface?.admitGround}={}){
+ if(typeof admitGround!=='function')throw Error('WOODLAND_RENDERED_BEACH_PROVIDER_REQUIRED');
  if(priorityOrigin!==null&&(![priorityOrigin.x,priorityOrigin.z].every(Number.isFinite)))throw Error('WOODLAND_PRIORITY_ORIGIN_INVALID');
  if(onPriorityPreview!==null&&typeof onPriorityPreview!=='function')throw Error('WOODLAND_PRIORITY_CALLBACK_INVALID');
  const started=performance.now();let sliceStart=started,yieldCount=0;
@@ -89,6 +92,7 @@ export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=a
    const x=f(-183.5+(ix+(hash(ix,iz,0)/4294967296-.5)*.76)*.11),z=f(-267.5+(iz+(hash(ix,iz,1)/4294967296-.5)*.76)*.11);
    if(Math.hypot((x+141)/41.25,(z+226)/40)>1.001)return;candidates++;
    const s=sample(x,z);if(!s){reject('NO_TERRAIN');return;}if(!isWoodlandFineGrassPoint(x,s.y,z)){reject('BOUNDARY');return;}
+   if(!admitGround(x,z,s)){reject('SHARED_GROUND_ADMISSION');return;}
    const a=inverseHEarthGroundCoverPoint(x,s.y,z),m=materialAt(a.x,a.z),w=(visibleSurface?.water??water).sample(x,z);
    if(w&&s.y<=w.y+.01){reject('WATER');return;}
    if(m?.valid!==true||s.slope>.35||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)){reject('MATERIAL_OR_SLOPE');return;}
@@ -178,7 +182,8 @@ export async function prepareWoodlandSelectionCache(presentation,yieldControl=as
 }
 
 /** A world-anchored nearby presentation, rather than another whole-world survey. */
-export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=async()=>{},onProgress=()=>{},placementExclusion=null,onDiagnostic=null,onPresentation=null}={}){
+export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=async()=>{},onProgress=()=>{},placementExclusion=null,onDiagnostic=null,onPresentation=null,admitGround=visibleSurface?.admitGround}={}){
+ if(typeof admitGround!=='function')throw Error('NEARBY_RENDERED_BEACH_PROVIDER_REQUIRED');
  if(typeof visibleSurface?.ground?.sample!=='function'||typeof visibleSurface?.water?.sample!=='function')throw Error('NEARBY_FINE_GRASS_VISIBLE_SURFACE_REQUIRED');
  if(placementExclusion!==null&&typeof placementExclusion!=='function')throw Error('NEARBY_FINE_GRASS_EXCLUSION_INVALID');
  if(onDiagnostic!==null&&typeof onDiagnostic!=='function')throw Error('NEARBY_FINE_GRASS_DIAGNOSTIC_INVALID');
@@ -276,7 +281,9 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
     if(placementExclusion?.(x,z)){reject('SHARED_PILOT_OWNER');continue;}
     const s=visibleSurface.ground.sample(x,z);
     if(!s){reject('NO_VISIBLE_TERRAIN');continue;}
-    if(isWoodlandFineGrassPoint(x,s.y,z)){reject('APPROVED_WOODLAND_OWNER');continue;}
+    if(!admitGround(x,z,s)){reject('SHARED_GROUND_ADMISSION');continue;}
+    const nearbyWeight=nearbyWoodlandComplement(x,s.y,z);
+    if(nearbyWeight<=0||hash(ix,iz,15)/4294967296>=nearbyWeight){reject('APPROVED_WOODLAND_OWNER');continue;}
     const water=visibleSurface.water.sample(x,z);
     if(water&&s.y<=water.y+.01){reject('RENDERED_WATER');continue;}
     const a=inverseHEarthGroundCoverPoint(x,s.y,z),m=materialAt(a.x,a.z);

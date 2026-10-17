@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-gen2793-release-725b85a2-20261017",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6484,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2793-release-725b85a2-20261017",
+  "requestCommit": "871e28692770220c8f6d4f8d93225d0c620ceefe",
+  "currentMainSha": "725b85a2e3898650d0cd99c5854570a6e31073e3",
+  "bridgeRunId": "39060573310",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-10-17T19:00:40.128Z"
+}

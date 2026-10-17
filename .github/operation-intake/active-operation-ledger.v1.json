@@ -5687,45 +5687,6 @@
       "scopeHash": "51d43e76f9fcaff01fdb601a1edcb375e79f0a5ec03d5332295296336fbbe7a0",
       "state": "ADMITTED_LOCKED"
     },
-    "5274ac96c4aa8b83beab9fcf484219ba9e988b28685297185fd351c99e0baa16": {
-      "governingHead": "f761f76b568132b3d452925f660b42e1d1285c8a",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "f761f76b568132b3d452925f660b42e1d1285c8a",
-          "lockGeneration": 2793,
-          "lockScope": "H_EARTH:WOODLAND_RIVERBANK_REFINEMENT:20261017",
-          "operationId": "H_EARTH_WOODLAND_RIVERBANK_REFINEMENT_20261017_001",
-          "procedureLocatorDigest": "0f7b9c3e750783671e3a1d93449ad76896ccc56713fe1b1e92ff1e107bc32761",
-          "requestDigest": "5b9fa1a0184eadba7998cce48d67d1b09100378f2fdf4902917c5801a2ae1a50",
-          "scopeHash": "5274ac96c4aa8b83beab9fcf484219ba9e988b28685297185fd351c99e0baa16"
-        },
-        "bindingDigest": "3048e92e05e73c099f538842924e32e413b408d30e8d5cec7708c279b0378100",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "be13efc1aed56d33cf6b13dd33c9104ef0900d2f",
-          "observedLockRefHead": "cae657a9c4516e6ddd272792f4bd3801207f84f4"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "53bc3060d3a228cfe25d9d928b10ee4bed601233934564709ed665002806fbdc",
-          "commentId": 6238169433,
-          "issueNumber": 6426,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2793,
-      "lockScope": "H_EARTH:WOODLAND_RIVERBANK_REFINEMENT:20261017",
-      "operationId": "H_EARTH_WOODLAND_RIVERBANK_REFINEMENT_20261017_001",
-      "procedureLocatorDigest": "0f7b9c3e750783671e3a1d93449ad76896ccc56713fe1b1e92ff1e107bc32761",
-      "released": false,
-      "requestDigest": "5b9fa1a0184eadba7998cce48d67d1b09100378f2fdf4902917c5801a2ae1a50",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "5274ac96c4aa8b83beab9fcf484219ba9e988b28685297185fd351c99e0baa16",
-      "state": "ADMITTED_LOCKED"
-    },
     "53d1142305ccef65f5b62268c2e24c51f77f69c6708a714ac6899a29ebd2f403": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -82744,6 +82705,46 @@
       "requestDigest": "c45ce961aa76070a18d4bd9b31c4c3d3fab30eab1d83987d759b827fabe59739",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "36e4e6b2b00fd60d860e09b181370b7a156d5438a11305cc653226365ff29f32",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "f761f76b568132b3d452925f660b42e1d1285c8a",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "f761f76b568132b3d452925f660b42e1d1285c8a",
+          "lockGeneration": 2793,
+          "lockScope": "H_EARTH:WOODLAND_RIVERBANK_REFINEMENT:20261017",
+          "operationId": "H_EARTH_WOODLAND_RIVERBANK_REFINEMENT_20261017_001",
+          "procedureLocatorDigest": "0f7b9c3e750783671e3a1d93449ad76896ccc56713fe1b1e92ff1e107bc32761",
+          "requestDigest": "5b9fa1a0184eadba7998cce48d67d1b09100378f2fdf4902917c5801a2ae1a50",
+          "scopeHash": "5274ac96c4aa8b83beab9fcf484219ba9e988b28685297185fd351c99e0baa16"
+        },
+        "bindingDigest": "3048e92e05e73c099f538842924e32e413b408d30e8d5cec7708c279b0378100",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "be13efc1aed56d33cf6b13dd33c9104ef0900d2f",
+          "observedLockRefHead": "cae657a9c4516e6ddd272792f4bd3801207f84f4"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "53bc3060d3a228cfe25d9d928b10ee4bed601233934564709ed665002806fbdc",
+          "commentId": 6238169433,
+          "issueNumber": 6426,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2793,
+      "lockScope": "H_EARTH:WOODLAND_RIVERBANK_REFINEMENT:20261017",
+      "operationId": "H_EARTH_WOODLAND_RIVERBANK_REFINEMENT_20261017_001",
+      "procedureLocatorDigest": "0f7b9c3e750783671e3a1d93449ad76896ccc56713fe1b1e92ff1e107bc32761",
+      "released": true,
+      "requestDigest": "5b9fa1a0184eadba7998cce48d67d1b09100378f2fdf4902917c5801a2ae1a50",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "5274ac96c4aa8b83beab9fcf484219ba9e988b28685297185fd351c99e0baa16",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

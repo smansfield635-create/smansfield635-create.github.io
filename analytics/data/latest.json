@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-17T02:37:09Z",
+  "generatedAt": "2026-10-17T03:33:37Z",
   "window30d": {
-    "start": "2026-09-17T02:37:09Z",
-    "end": "2026-10-17T02:37:09Z"
+    "start": "2026-09-17T03:33:37Z",
+    "end": "2026-10-17T03:33:37Z"
   },
   "daily": [
     {
@@ -68,11 +68,11 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 40
+      "pageLoads": 0
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 90
+      "pageLoads": 70
     },
     {
       "date": "2026-10-05",
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 51
+      "pageLoads": 50
     },
     {
       "date": "2026-10-11",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 5
+      "pageLoads": 14
     }
   ],
   "summary": {
-    "pageLoads": 4309,
-    "botPageLoads": 1684,
-    "nonBotPageLoads": 2625
+    "pageLoads": 4267,
+    "botPageLoads": 1677,
+    "nonBotPageLoads": 2590
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2771,
-      "visits": 2771
+      "pageLoads": 2759,
+      "visits": 2759
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1308,
+      "pageLoads": 1298,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 153,
-      "visits": 153
+      "pageLoads": 133,
+      "visits": 133
     },
     {
       "host": "bing.com",
@@ -172,8 +172,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 890,
-      "visits": 610
+      "pageLoads": 850,
+      "visits": 570
     },
     {
       "path": "/analytics/",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 532,
-      "visits": 507
+      "pageLoads": 538,
+      "visits": 513
     },
     {
       "path": "/mirror-manor-preview/",
@@ -192,12 +192,12 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 301,
-      "visits": 111
+      "pageLoads": 303,
+      "visits": 113
     },
     {
       "path": "/campaigns/consider-the-energy/",
-      "pageLoads": 190,
+      "pageLoads": 180,
       "visits": 40
     },
     {

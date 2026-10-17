@@ -1,21 +1,25 @@
-/** Gen2794 causal landscape correction; manual public entrance, isolated diagnostic replay. */
+/** Gen2795 measured preparation and input-confirmed public entry; isolated diagnostic replay. */
 import {prepareHEarthRun8ER2CanonicalLiveRenderPackage} from '../render/live-render-package.run8e-r2.canonical.js?cb=meadow-distribution-20261006';
 import {createHEarthRun8ER3AFrameUniformPacket} from '../render/live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
 import {createHEarthRun8ER3CPersistentRenderer} from '../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
 import {installHEarthRun8ER3D2PointerTouchIntake} from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2780-stable-planting-v1';
 
-const sourceBaseline='725b85a2e3898650d0cd99c5854570a6e31073e3';
+import {createFramePresenter} from '../render/performance-scheduling.v1.js?rev=gen2795-performance-v1';
+import {createHEarthLoadingScreen} from './loading-screen.v1.js?rev=gen2795-performance-v1';
+
+const sourceBaseline='f64ce197d6bd54cd3627458fc138295e9913f761';
 const root=document.getElementById('h-earth-functional-landscape-route');
 const canvas=document.getElementById('h-earth-functional-landscape-canvas');
 const status=document.getElementById('prototype-status');
 const query=new URLSearchParams(location.search),started=performance.now();
 const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');
 const qualificationView=diagnosticReplay&&['bank-view-v1','habitat-edge-view-v1','ravine-view-v1'].includes(query.get('qualification'))?query.get('qualification'):null;
+const loader=diagnosticReplay?null:createHEarthLoadingScreen({onEnter:markReady});
 const copy=value=>JSON.parse(JSON.stringify(value));
 const assert=(condition,reason)=>{if(!condition)throw Error('SINGLE_OWNER_PROTOTYPE:'+reason);};
 const delay=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
 const control=Object.freeze({x:-139.40267987050615,z:-194.5,radius:2});
-let renderer=null,intake=null,sequence=0,replay=null,preparation=null,interactiveReady=false;
+let renderer=null,intake=null,presenter=null,sequence=0,replay=null,preparation=null,interactiveReady=false;
 let diagnosticTourMoving=false;
 if(!diagnosticReplay)canvas.style.pointerEvents='none';
 const frames=[],observations=[],timing={firstFrameMilliseconds:null,populatedMilliseconds:null,replayCompleteMilliseconds:null};
@@ -29,6 +33,7 @@ function ids(record){
   return result;
 }
 function snapshot(label){
+  presenter?.flush();
   const state=intake.getNavigationState(),r=resources();
   const observation={label,elapsedMilliseconds:performance.now()-started,position:{...state.position},yawDegrees:state.yawDegrees,pitchDegrees:state.pitchDegrees,
     navigationSequence:state.sequence,cacheCell:{x:Math.floor(state.position.x/4),z:Math.floor(state.position.z/4)},fixedControl:control,
@@ -37,6 +42,9 @@ function snapshot(label){
 }
 function packetFor(state){return createHEarthRun8ER3AFrameUniformPacket({deferVegetation:true,navigationState:state,viewport,frameSequence:++sequence});}
 function present(state){
+  try{return presentObserved(state);}catch(error){failRoute(error);throw error;}
+}
+function presentObserved(state){
   const packet=packetFor(state),start=performance.now();
   renderer.renderFrame(packet);renderFrameCallCount++;
   renderer.presentColorFrame();gpuFramebufferPresentationCount++;
@@ -99,6 +107,7 @@ async function diagnosticTravel(x,z,expectedIds){
 function liveReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_VEGETATION_LIVE_GPU_v1',sourceBaseline,resources:resources(),
   counters:{renderFrameCallCount,gpuFramebufferPresentationCount,rendererInitializationCount:renderer?1:0,worldRebuildCount:0},
   frameRecords:copy(frames),singleOwnerVegetationQualification:replay,timing:{...timing},preparation,
+  inputPresentationReadiness:loader?.getReceipt()??null,frameScheduling:presenter?.getReceipt()??null,
   canonicalPackageMutated:false,physicalDeviceAcceptance:false,publicationAuthorized:false};}
 function publicReceipt(){return {receiptType:diagnosticReplay?'H_EARTH_SINGLE_OWNER_VEGETATION_PROTOTYPE_v1':'H_EARTH_SINGLE_OWNER_VEGETATION_PUBLIC_v1',eligible:diagnosticReplay?['CAPTURED_POPULATED_CONTINUITY','CAPTURED_STABLE_VIEW'].includes(replay?.result):root.dataset.run8eReady==='true',sourceBaseline,
   mode:diagnosticReplay?'diagnostic-replay':'manual-public',automaticNavigation:diagnosticReplay,
@@ -108,6 +117,14 @@ window.H_EARTH_RUN8E_R3E2_PUBLIC_INTEGRATION=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
 const cssWidth=Math.max(320,Math.round(canvas.clientWidth||918)),cssHeight=Math.max(180,Math.round(canvas.clientHeight||565));
 const scale=Math.min(1,Math.sqrt(960*540/(cssWidth*cssHeight)));
 const viewport=Object.freeze({width:Math.max(320,Math.round(cssWidth*scale)),height:Math.max(180,Math.round(cssHeight*scale)),pixelRatio:1});
+
+function progress(stage,label){loader?.beginStage(stage,label);status.textContent=label;return update=>{loader?.update(update);status.textContent=update.status??update.phase?.toLowerCase().replaceAll('_',' ')??label;};}
+function markReady(){
+  root.dataset.run8eReady='true';root.dataset.worldFirstFrameReady='true';root.dataset.singleOwnerPrototype=diagnosticReplay?'captured':'manual-ready';
+  status.textContent=diagnosticReplay?'Isolated comparison captured · physical-device review remains separate.':'Ready · Drag to look · Two-finger slide or mouse wheel to move · Pinch to zoom';
+  window.dispatchEvent(new CustomEvent('h-earth-run8e-ready',{detail:{type:'H_EARTH_RUN8E_READY',prototype:'single-owner-v1',mode:diagnosticReplay?'diagnostic-replay':'manual-public',timestamp:new Date().toISOString()}}));
+}
+function failRoute(error){interactiveReady=false;presenter?.cancel();canvas.style.pointerEvents='none';loader?.fail(error);root.dataset.run8eReady='false';root.dataset.run8eError='true';root.dataset.singleOwnerPrototype='failed';status.textContent=error.message;}
 
 try{
   if(diagnosticReplay){
@@ -120,17 +137,18 @@ try{
     query.set('arrival','approved-four-trees');
     history.replaceState(history.state,'',`${location.pathname}?${query.toString()}${location.hash}`);
   }
-  await prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:update=>{status.textContent=update.status??'Loading the preserved environment…';}});
-  intake=installHEarthRun8ER3D2PointerTouchIntake({surface:canvas,onProposal:(_proposal,state)=>{if(renderer&&(diagnosticReplay||interactiveReady)&&!diagnosticTourMoving)present(state);}});
+  await prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:progress('world','Preparing the preserved landscape…')});
+  presenter=createFramePresenter({present,onPresented:(state,frame)=>loader?.observePresentation(state,frame)});
+  intake=installHEarthRun8ER3D2PointerTouchIntake({surface:canvas,onProposal:(proposal,state)=>{if(renderer&&(diagnosticReplay||interactiveReady)&&!diagnosticTourMoving){loader?.observeInput(proposal,state);presenter.request(state);}}});
   const initial=intake.getNavigationState();
   assert(Math.hypot(initial.position.x-control.x,initial.position.z-control.z)<.01,'INITIAL_CAMERA_MISMATCH');
   assert(Math.abs(initial.yawDegrees)<.01,'INITIAL_YAW_MISMATCH');
   renderer=await createHEarthRun8ER3CPersistentRenderer({canvas,width:viewport.width,height:viewport.height,deferVegetation:true,vegetationStrategy:'SINGLE_OWNER_WOODLAND_V1',
-    onStartupProgress:update=>{status.textContent=update.status??'Loading the preserved environment…';}});
+    onStartupProgress:progress('renderer','Preparing terrain and renderer…')});
   await renderer.initialize(packetFor(initial));
   present(intake.getNavigationState());
   assert(typeof renderer.prepareReplacementVegetation==='function','REPLACEMENT_OWNER_MISSING');
-  preparation=await renderer.prepareReplacementVegetation({onProgress:update=>{status.textContent=update.status??'Preparing the shared vegetation records…';}});
+  preparation=await renderer.prepareReplacementVegetation({onProgress:progress('vegetation','Preparing the shared vegetation records…')});
   present(intake.getNavigationState());
   const entry=snapshot('BEFORE_MOVE'),entryOwner=entry.vegetation,controlIds=ids(entryOwner);
   assert(entryOwner.installedRootCount>0&&controlIds.length>0,'EMPTY_INSTALLED_CONTROL');
@@ -177,13 +195,10 @@ try{
     installedControlIdentityStable:true,coarseCoverageSubmittedThroughout:qualificationView?null:true,presentationScope:qualificationView?'FINAL_SUPPORTED_VIEW_ONLY':'EVERY_RECORDED_WALK_STEP',visiblePixelsVerified:false,physicalDeviceAcceptance:false,publicationAuthorized:false,
     cpuSubmissionScope:'CPU_RENDER_AND_PRESENT_CALL_DURATION_NOT_GPU_EXECUTION_TIME',timing:{...timing}};
   }
-  if(!diagnosticReplay){interactiveReady=true;canvas.style.pointerEvents='auto';}
-  root.dataset.run8eReady='true';root.dataset.worldFirstFrameReady='true';root.dataset.singleOwnerPrototype=diagnosticReplay?'captured':'manual-ready';
-  status.textContent=diagnosticReplay?'Isolated comparison captured · physical-device review remains separate.':'Ready · Drag to look · Two-finger slide or mouse wheel to move · Pinch to zoom';
-  window.dispatchEvent(new CustomEvent('h-earth-run8e-ready',{detail:{type:'H_EARTH_RUN8E_READY',prototype:'single-owner-v1',mode:diagnosticReplay?'diagnostic-replay':'manual-public',timestamp:new Date().toISOString()}}));
+  if(diagnosticReplay){markReady();}else{interactiveReady=true;canvas.style.pointerEvents='auto';root.dataset.worldFirstFrameReady='true';root.dataset.singleOwnerPrototype='controls-test';loader.enableControls(intake.getNavigationState());status.textContent='Test controls on the landscape to unlock Enter H-Earth';}
 }catch(error){
   replay={schema:'H_EARTH_SINGLE_OWNER_VEGETATION_REPLAY_v1',result:'FAILED',message:error.message,sourceBaseline,observations:copy(observations),timing:{...timing},physicalDeviceAcceptance:false,publicationAuthorized:false};
-  root.dataset.run8eError='true';root.dataset.singleOwnerPrototype='failed';status.textContent=error.message;
+  failRoute(error);
   console.error(error);
 }
 

@@ -1,0 +1,85 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_BOUNDED_PERFORMANCE_REPAIR_20261017_001",
+  "canonicalAdmissionGeneration": 2795,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/performance-repair-v1/README.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.performance-scheduling.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.terrain-memoization.v1.test.mjs",
+    "h-earth-3d/evidence/performance-repair-v1/README.md"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/terrain/h-earth.gen2514-qualified-terrain-field.js",
+      "sha256": "684bd8db1fbae1938cccb9eeb5a4b31b8901f8301ee149441319e3c1f03f2ada"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "6b8c5261e71aae32774a757b1f6f5c7d6504efacad7cc5f3c74c1455d242eb67"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "72ba320923455ab8bb9d28bc6e8d57b05216390f09f4a0ab479f4ae68ba2c0ce"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/performance-scheduling.v1.js",
+      "sha256": "02ec1c2361c27a138d4e5782f2c8c965106d3e12d8c2b6c806071450ccdfd321"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "51daa1fb1bf9b12d49063adb36759fe8478b0fce4c913a6c4bf68cd816935d43"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "sha256": "d2c8a855f545dd0c49151770f4c7fb0318fda771e06e61f577354f7fee1edb2f"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "b1839375b0d54ceb1d6a3f430378902a989df87de28bffbaf02ec68a473fad91"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype.html",
+      "sha256": "a9cc21c93620d537d53c04ef31cb7c8300a7f2b645ee479b21910419c3b57dbb"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.performance-scheduling.v1.test.mjs",
+      "sha256": "8b08d65bad9c25c903cef91f5cbb537afa995ffa4b225e1a0e16011a904cd24b"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.terrain-memoization.v1.test.mjs",
+      "sha256": "55678eb2faf423765a0444ec71eb1982ad89b54f766ad7d151fe97a976de3c92"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "f64ce197d6bd54cd3627458fc138295e9913f761",
+    "basis": "Unchanged embodied canonical world, geometry, shader palette and navigation authority. Full CPU root identity equal; loading/scheduling changes only."
+  },
+  "limitations": [
+    "Source continuity and CPU fixture acceptance only; no exact-candidate browser pixels or GPU execution claim.",
+    "Loader/presentation tested with actual route body and browser/renderer fixtures; real input code tested separately.",
+    "Physical tablet/phone loading and sustained traversal acceptance pending.",
+    "No merge/deployment/publication authority."
+  ]
+}

@@ -1,3 +1,4 @@
+import {uploadInSlices} from './performance-scheduling.v1.js';
 /** Isolated woodland prototype. One immutable population; detail adds lobes, never removes cover. */
 export function detailWeight(distance){
  if(!Number.isFinite(distance)||distance<0)throw Error('DETAIL_DISTANCE_INVALID');
@@ -65,7 +66,7 @@ uniform vec3 uSunDirection;uniform vec3 uSunColor;uniform vec3 uHaze;
 uniform float uSunIntensity;uniform float uFogStart;uniform float uFogFalloff;uniform float uMaxFog;
 out vec4 outColor;
 void main(){float lit=.48+.52*max(0.,dot(normalize(vNormal),normalize(uSunDirection)));vec3 color=vColor*(vec3(.5)+uSunColor*lit*uSunIntensity*.5);float fog=min(uMaxFog,1.-exp(-max(0.,vDistance-uFogStart)*uFogFalloff));color=mix(color,uHaze,fog);outColor=vec4(pow(max(color,vec3(0.)),vec3(1./2.2)),1.);}`;
-export async function createSingleOwnerVegetation(gl,presentation,{environment,planetRadius,yieldControl=async()=>{}}={}){
+export async function createSingleOwnerVegetation(gl,presentation,{environment,planetRadius,yieldControl=async()=>{},onProgress=()=>{},uploadBudget={}}={}){
  if(!environment||!Number.isFinite(planetRadius))throw Error('OWNER_ENVIRONMENT_REQUIRED');
  const started=performance.now(),tiles=planImmutableTiles(presentation),rootCount=tiles.reduce((n,t)=>n+t.count,0);
  const controlRoots=[];for(const tile of tiles)tile.rootIds.forEach((id,i)=>{if(Math.hypot(tile.packed[i*4]+139.40267987050615,tile.packed[i*4+2]+194.5)<=2)controlRoots.push(id);});
@@ -77,7 +78,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  function shader(type,source){const s=gl.createShader(type);ownedShaders.push(s);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error('OWNER_SHADER:'+gl.getShaderInfoLog(s));return s;}
  program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('OWNER_LINK:'+gl.getProgramInfoLog(program));
  vao=gl.createVertexArray();buffer=gl.createBuffer();gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,rootCount*16,gl.STATIC_DRAW);let gpuUploadCount=1,gpuUploadedBytes=0;
- for(const tile of tiles){gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);gpuUploadCount++;gpuUploadedBytes+=tile.packed.byteLength;await yieldControl();}
+ const uploadScheduling=await uploadInSlices(tiles,{...uploadBudget,yieldControl,onProgress,upload:tile=>{gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);gpuUploadCount++;gpuUploadedBytes+=tile.packed.byteLength;}});
  gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);
  const u=Object.fromEntries(['uViewProjection','uCamera','uRadius','uFine','uSunDirection','uSunColor','uHaze','uSunIntensity','uFogStart','uFogFalloff','uMaxFog'].map(n=>[n,gl.getUniformLocation(program,n)]));
  const rgb=value=>{const a=Array.isArray(value)?value.slice(0,3):[value.r,value.g,value.b],scale=a.some(v=>v>1)?255:1;return a.map(v=>v/scale);};
@@ -92,7 +93,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   for(const range of ranges){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;}
   lastDraw={selectedFineRoots,drawCallCount,submittedTriangles:(rootCount+selectedFineRoots)*2,perFrameUploadBytes:0,coarseTiles:tiles.length,fineTiles:fine.length};return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:450000,maximumTileRoots:1600,tileCount:tiles.length,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:450000,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose});
  }catch(error){cleanup();throw error;}

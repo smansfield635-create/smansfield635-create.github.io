@@ -414,6 +414,68 @@ jobs:
           if(!requestedPath.startsWith('/')||requestedPath.includes('..')||requestedPath.includes('?')||requestedPath.includes('#')) throw new Error('Invalid governed route path');
           const route=requestedPath+(query?'?'+query:'');
           const url='http://127.0.0.1:4173'+route;
+          // BEGIN CONTINUITY_CAPTURE_HELPERS
+          function continuityCaptureRequested(query){
+            return new URLSearchParams(query).get('qualification')==='vegetation-continuity-v1';
+          }
+          function validateContinuityCapture(capture){
+            const q=capture?.qualification,points=q?.observations;
+            const position=p=>p&&['x','y','z'].every(k=>Number.isFinite(p[k]));
+            const steps=q?.requestedStepsPerDirection;
+            const routeLabels=Array.isArray(points)?points.filter(p=>/^(FORWARD|RETURN)_/.test(p.label)).map(p=>p.label):[];
+            const expectedLabels=Number.isInteger(steps)&&steps>0&&steps<=8?['FORWARD','RETURN'].flatMap(direction=>Array.from({length:steps},(_,i)=>`${direction}_${i+1}`)):[];
+            return capture?.waitCompleted===true&&Array.isArray(capture.errors)&&capture.errors.length===0&&capture.replayMarker==='captured'&&
+              q?.schema==='H_EARTH_VEGETATION_CONTINUITY_REPLAY_v1'&&q.result==='TRACE_CAPTURED_VISUAL_VERDICT_NOT_ESTABLISHED'&&
+              Number.isFinite(q.elapsedMilliseconds)&&q.elapsedMilliseconds>=0&&q.movementObserved===true&&q.cacheCellTransitions>0&&
+              expectedLabels.length>0&&JSON.stringify(routeLabels)===JSON.stringify(expectedLabels)&&
+              Array.isArray(points)&&points.filter(p=>/^FORWARD_\d+$/.test(p.label)).length===q.requestedStepsPerDirection&&
+              points.filter(p=>/^RETURN_\d+$/.test(p.label)).length===q.requestedStepsPerDirection&&points.at(-1)?.label==='FINAL'&&
+              points.every(p=>position(p.position)&&p.traceSummary?.enabled===true)&&
+              JSON.stringify(points.at(-1))===JSON.stringify(q.final)&&position(q.initial?.position)&&
+              Number.isFinite(q.returnDistanceMeters)&&q.returnDistanceMeters>=0&&
+              Number.isFinite(q.initial?.renderFrameCallCount)&&Number.isFinite(q.final?.renderFrameCallCount)&&q.final.renderFrameCallCount>q.initial.renderFrameCallCount&&
+              capture.final?.canvasPresent===true&&Boolean(capture.final?.canvasScreenshotSha256)&&
+              capture.final?.liveGpuReceipt?.counters?.renderFrameCallCount>=q.final.renderFrameCallCount&&
+              JSON.stringify(capture.final?.liveGpuReceipt?.vegetationContinuityQualification)===JSON.stringify(q);
+          }
+          async function captureContinuityReplay(page,sample,query,exerciseVegetation=false){
+            if(!continuityCaptureRequested(query))return null;
+            const capture={requested:true,waitCompleted:false,qualification:null,replayMarker:null,final:null,performance:null,errors:[],passed:false};
+            if(new URLSearchParams(query).get('vegetation-trace')!=='v1')capture.errors.push('CONTINUITY_TRACE_QUERY_REQUIRED');
+            if(exerciseVegetation)capture.errors.push('CONTINUITY_AND_MANUAL_RESIDENCY_CANNOT_SHARE_OBSERVATION');
+            if(!capture.errors.length){
+              try{
+                await page.evaluate(()=>{
+                  const timing={samples:[],totalFrames:0,totalMilliseconds:0,maximumMilliseconds:0,last:performance.now(),frameRequest:null};
+                  const tick=now=>{const delta=now-timing.last;timing.last=now;timing.totalFrames++;timing.totalMilliseconds+=delta;timing.maximumMilliseconds=Math.max(timing.maximumMilliseconds,delta);if(timing.samples.length<2048)timing.samples.push(delta);timing.frameRequest=requestAnimationFrame(tick);};
+                  window.__H_EARTH_CONTINUITY_CAPTURE_TIMING=timing;timing.frameRequest=requestAnimationFrame(tick);
+                });
+                await page.waitForFunction(()=>{
+                  const windows=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
+                  return windows.some(w=>Boolean(w.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION?.result));
+                },null,{timeout:600000});
+                capture.waitCompleted=true;
+              }catch(error){capture.errors.push('CONTINUITY_WAIT_FAILED:'+String(error?.message??error));}
+            }
+            try{
+              const terminal=await page.evaluate(()=>{
+                const windows=[window,...Array.from(document.querySelectorAll('iframe')).map(f=>{try{return f.contentWindow}catch{return null}}).filter(Boolean)];
+                const owner=windows.find(w=>w.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION)||window;
+                const timing=window.__H_EARTH_CONTINUITY_CAPTURE_TIMING;
+                if(timing?.frameRequest!=null)cancelAnimationFrame(timing.frameRequest);
+                const samples=timing?.samples?.slice().sort((a,b)=>a-b)??[];
+                const frameTiming=timing?{totalFrames:timing.totalFrames,retainedSampleCount:samples.length,discardedSampleCount:Math.max(0,timing.totalFrames-samples.length),meanMilliseconds:timing.totalFrames?timing.totalMilliseconds/timing.totalFrames:null,maximumMilliseconds:timing.maximumMilliseconds,medianMilliseconds:samples.length?samples[Math.floor(samples.length/2)]:null,p95Milliseconds:samples.length?samples[Math.floor((samples.length-1)*.95)]:null,samplePolicy:'FIRST_2048_RAF_INTERVALS_WITH_WHOLE_WAIT_AGGREGATES',measurement:'BROWSER_RAF_INTERVAL_NOT_GPU_DURATION'}:null;
+                delete window.__H_EARTH_CONTINUITY_CAPTURE_TIMING;
+                return {qualification:owner.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION??null,replayMarker:owner.document.getElementById('h-earth-functional-landscape-route')?.dataset.vegetationContinuityReplay??null,
+                  performance:{observedAtMilliseconds:performance.now(),frameTiming,navigation:performance.getEntriesByType('navigation').map(e=>e.toJSON()),timingPerturbed:true,physicalDeviceAcceptance:false}};
+              });
+              Object.assign(capture,terminal);
+              capture.final=await sample('continuity-final');
+            }catch(error){capture.errors.push('CONTINUITY_FINAL_CAPTURE_FAILED:'+String(error?.message??error));}
+            capture.passed=validateContinuityCapture(capture);
+            return capture;
+          }
+          // END CONTINUITY_CAPTURE_HELPERS
           const browser=await chromium.launch({headless:true});
           const context=await browser.newContext({viewport:{width:1280,height:800},deviceScaleFactor:1});
           const page=await context.newPage();
@@ -531,6 +593,7 @@ jobs:
           let integratedQualification=null;
           let residencySamples=[];
           let vegetationExercise=null;
+          let continuityCapture=null;
           try {
             await page.goto(url,{waitUntil:'networkidle',timeout:180000});
             readiness=await page.waitForFunction(() => {
@@ -556,7 +619,8 @@ jobs:
             await page.waitForTimeout(3000);
             later=await sample('later');
             const exerciseVegetation=String(process.env.EXERCISE_VEGETATION_RESIDENCY||'false')==='true';
-            if(exerciseVegetation){
+            continuityCapture=await captureContinuityReplay(page,sample,query,exerciseVegetation);
+            if(exerciseVegetation&&!continuityCaptureRequested(query)){
               await page.waitForFunction(() => {
                 const routeWindows=[window,...Array.from(document.querySelectorAll('iframe')).map(frame=>{try{return frame.contentWindow}catch{return null}}).filter(Boolean)];
                 const receipt=routeWindows.find(candidate=>candidate?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt)?.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.()??null;
@@ -752,6 +816,7 @@ jobs:
             boulderView,
             integratedQualification,
             vegetationExercise,
+            continuityCapture,
             vegetationResidencyMonotonic:residencySamples.every((sample,index,array)=>index===0||!sample?.residency||!array[index-1]?.residency||(sample.residency.residentBatchCount>=array[index-1].residency.residentBatchCount&&sample.residency.residentInstanceCount>=array[index-1].residency.residentInstanceCount)),
             residencyWorldRebuildStayedZero:residencySamples.every(sample=>sample?.worldRebuildCount===0)
           };
@@ -767,6 +832,7 @@ jobs:
           await fs.writeFile(out+'/receipt.json',JSON.stringify(receipt,null,2)+'\n');
           console.log(JSON.stringify(receipt,null,2));
           if(!receipt.materialized||fatalPageErrors.length||consoleErrors.length||requestsFailed.length) process.exitCode=1;
+          if(continuityCaptureRequested(query)&&continuityCapture?.passed!==true)process.exitCode=1;
           if(exerciseVegetation&&!authoritativeResidencyPass) process.exitCode=1;
           if(integratedQualification&&(integratedValidatorExecution?.exitCode!==0||!integratedQualification.boulderRegionReached||!integratedQualification.boulderAimReached||!integratedQualification.boulderViewCanvasSha256))process.exitCode=1;
           NODE
@@ -1016,3 +1082,4 @@ jobs:
           path: /tmp/h-earth-gen2711-fast
           if-no-files-found: error
           retention-days: 30
+

@@ -48,12 +48,71 @@ export async function qualifyCavernVegetation({canvas,intake,binding,root}){
 }
 
 
+/** Populated qualification consumes actual receipt fields, never elapsed-time readiness. */
+export function populatedContinuityEntryState(receipt,probe){
+  const r=receipt?.resources,v=r?.vegetationResidency,f=r?.woodlandFineGrass,c=v?.nearbyFineCache,p=c?.lastPresentation;
+  const counts={residentBatchCount:v?.residentBatchCount??null,totalBatchCount:v?.totalBatchCount??null,residentInstanceCount:v?.residentInstanceCount??null,totalInstanceCount:v?.totalInstanceCount??null,
+    installedRoots:probe?.installedFine?.rootCount??null,selectedRoots:probe?.selectedFine?.rootCount??null,visibleContacts:f?.visibleContacts??null,drawCallCount:f?.drawCallCount??null,
+    cacheKey:c?.key??null,presentationKey:p?.key??null,requestRevision:c?.requestRevision??null,presentationRequestRevision:p?.requestRevision??null};
+  const conditions={PREPARATION_COMPLETE:v?.preparationComplete===true,GLOBAL_COVER_COMPLETE:v?.globalCoverComplete===true,WOODLAND_COMPLETE:v?.woodlandFineGrassReady===true,
+    CANONICAL_RESIDENCY_COMPLETE:v?.complete===true&&Number.isInteger(v?.totalBatchCount)&&v.totalBatchCount>0&&v.residentBatchCount===v.totalBatchCount&&Number.isInteger(v?.totalInstanceCount)&&v.totalInstanceCount>0&&v.residentInstanceCount===v.totalInstanceCount,
+    CURRENT_NEARBY_INSTALL_COMPLETE:p?.complete===true&&typeof c?.key==='string'&&c.key.length>0&&p.key===c.key&&Number.isInteger(c.requestRevision)&&c.requestRevision>0&&p.requestRevision===c.requestRevision,
+    NO_NEARBY_ERROR:!v?.nearbyFineGrassError&&!c?.stickyError&&!p?.stickyError,
+    ACTUAL_FINE_DRAW:f?.ready===true&&f.visibleContacts>0&&f.drawCallCount>0,
+    FIXED_CONTROL_POPULATED:probe?.enabled===true&&probe?.installedFine?.rootCount>0&&probe?.selectedFine?.rootCount>0};
+  const unmet=Object.keys(conditions).filter(k=>!conditions[k]);
+  return {passed:unmet.length===0,unmet,counts};
+}
+export async function waitForPopulatedContinuity({binding,intake,timeoutMilliseconds=540000,pollMilliseconds=500,now=()=>performance.now(),delay=ms=>new Promise(resolve=>setTimeout(resolve,ms))}={}){
+  if(!Number.isFinite(timeoutMilliseconds)||timeoutMilliseconds<0||timeoutMilliseconds>540000||!Number.isFinite(pollMilliseconds)||pollMilliseconds<=0||pollMilliseconds>1000)throw Error('POPULATED_ENTRY_OPTIONS_INVALID');
+  const initial=intake.getNavigationState(),control={x:initial.position.x,z:initial.position.z,radius:2},started=now();let state=null,lastProbe=null,admissionSummary=null,residency=null;
+  for(;;){
+    const receipt=binding.getReceipt();lastProbe=binding.getVegetationProbe(control);state=populatedContinuityEntryState(receipt,lastProbe);admissionSummary=receipt.resources?.uniformGroundAdmission??null;
+    const v=receipt.resources?.vegetationResidency;residency={preparationComplete:v?.preparationComplete??null,globalCoverComplete:v?.globalCoverComplete??null,woodlandFineGrassReady:v?.woodlandFineGrassReady??null,complete:v?.complete??null,nearbyFineGrassError:v?.nearbyFineGrassError??null,nearbyFineCache:v?.nearbyFineCache??null};
+    const nav=intake.getNavigationState();
+    if(Math.hypot(nav.position.x-control.x,nav.position.z-control.z)>.01)state={...state,passed:false,unmet:[...state.unmet,'ENTRY_CAMERA_CHANGED']};
+    if(state.passed||now()-started>=timeoutMilliseconds||state.unmet.includes('ENTRY_CAMERA_CHANGED'))break;
+    await delay(Math.min(pollMilliseconds,timeoutMilliseconds-(now()-started)));
+  }
+  return {...state,schema:'H_EARTH_POPULATED_CONTINUITY_ENTRY_v1',control,elapsedMilliseconds:now()-started,lastProbe,admissionSummary,residency,
+    failureBoundary:state.passed?null:state.unmet.includes('FIXED_CONTROL_POPULATED')?'FIXED_CONTROL_EMPTY_OR_UNSELECTED':'RESIDENCY_OR_DRAW_INCOMPLETE',
+    admissionDetailsAvailable:false,worldPopulationChanged:false,physicalDeviceAcceptance:false};
+}
+export function reconcilePopulatedContinuity(observations){
+  const comparable=observations.filter(p=>p.label==='BEFORE_MOVE'||/^(FORWARD|RETURN)_/.test(p.label)),pairs=[];
+  const sampleKey=s=>JSON.stringify((s??[]).map(r=>JSON.stringify(r)).sort());
+  const equal=(a,b)=>Boolean(a&&b&&a.rootCount===b.rootCount&&a.membershipDigest===b.membershipDigest&&sampleKey(a.sample)===sampleKey(b.sample));
+  const sampleAmbiguous=(a,b)=>Boolean(a&&b&&a.rootCount===b.rootCount&&a.membershipDigest===b.membershipDigest&&!equal(a,b)&&(a.rootCount>(a.sample?.length??0)||b.rootCount>(b.sample?.length??0)));
+  for(const back of comparable.filter(p=>p.label.startsWith('RETURN_'))){
+    const before=comparable.find(p=>!p.label.startsWith('RETURN_')&&Math.hypot(p.position.x-back.position.x,p.position.z-back.position.z)<.01&&Math.abs(p.position.y-back.position.y)<.01&&Math.abs(p.yawDegrees-back.yawDegrees)<.01&&Math.abs(p.pitchDegrees-back.pitchDegrees)<.01);
+    if(!before)continue;
+    const a=before.fixedControl,b=back.fixedControl;
+    const controlMatches=Boolean(a&&b&&a.x===b.x&&a.z===b.z&&a.radius===b.radius);
+    const installedEqual=controlMatches&&equal(a.installedFine,b.installedFine),selectedEqual=controlMatches&&equal(a.selectedFine,b.selectedFine);
+    pairs.push({approach:before.label,returned:back.label,position:back.position,controlMatches,installedEqual,selectedEqual,
+      classification:!controlMatches?'CONTROL_BINDING_MISMATCH':sampleAmbiguous(a.installedFine,b.installedFine)?'INSTALLED_SUMMARY_OR_SAMPLE_CHANGED_UNRESOLVED':!installedEqual?'INSTALLED_MEMBERSHIP_CHANGED':sampleAmbiguous(a.selectedFine,b.selectedFine)?'SELECTION_SUMMARY_OR_SAMPLE_CHANGED_UNRESOLVED':!selectedEqual?'SELECTION_CHANGED_AT_MATCHING_POSE':!(back.fineDraw?.visibleContacts>0&&back.fineDraw?.drawCallCount>0)?'NO_FINE_DRAW_SUBMISSION':'INSTALLED_AND_SELECTED_MATCH_DRAW_SUBMITTED'});
+  }
+  const installed=observations.filter(p=>p.fixedControl).map(p=>p.fixedControl.installedFine);
+  return {pairs,matchingPosePairCount:pairs.length,installedMembershipStable:installed.length>0&&installed.every(x=>equal(installed[0],x)),
+    comparisonBasis:'NONCRYPTOGRAPHIC_MEMBERSHIP_DIGEST_AND_BOUNDED_ROOT_SAMPLES',selectedMembershipMayChangeDuringTravel:true,perRootShaderVisibilityVerified:false,visiblePixelsVerified:false,physicalDeviceAcceptance:false};
+}
 /** Explicitly selected replay; navigation still goes through the installed wheel intake. */
-export async function qualifyVegetationContinuity({canvas,intake,binding,root,stationaryMilliseconds=15000,steps=8,stepDelayMilliseconds=700}={}){
+export async function qualifyVegetationContinuity({canvas,intake,binding,root,stationaryMilliseconds=15000,steps=8,stepDelayMilliseconds=700,requirePopulated=false,entryTimeoutMilliseconds=540000}={}){
   if(!Number.isInteger(stationaryMilliseconds)||stationaryMilliseconds<0||stationaryMilliseconds>15000||!Number.isInteger(steps)||steps<1||steps>8||!Number.isInteger(stepDelayMilliseconds)||stepDelayMilliseconds<100||stepDelayMilliseconds>2000)throw Error('VEGETATION_CONTINUITY_REPLAY_OPTIONS_INVALID');
   if(!binding?.getVegetationTrace||binding.getVegetationTrace().enabled===false)throw Error('VEGETATION_CONTINUITY_TRACE_NOT_ENABLED');
+  let entryQualification=null;
+  if(requirePopulated){
+    entryQualification=await waitForPopulatedContinuity({binding,intake,timeoutMilliseconds:entryTimeoutMilliseconds});
+    if(!entryQualification.passed){
+      const failure={schema:'H_EARTH_VEGETATION_CONTINUITY_REPLAY_v1',result:'POPULATED_ENTRY_FAILED',entryQualification,movementAttempted:false,visiblePixelsVerified:false,physicalDeviceAcceptance:false,publicationAuthorized:false};
+      window.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION=failure;
+      if(root)root.dataset.vegetationContinuityReplay='entry-failed';
+      return failure;
+    }
+  }
   const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms)),started=performance.now();
-  const observations=[],events=[];let cursor=0,eventsDroppedByCollector=0;
+  const entryTrace=requirePopulated?binding.getVegetationTrace():null;
+  const observations=[],events=[];let cursor=entryTrace?.lastSequence??0,eventsDroppedByCollector=0;
   function collect(label){
     const trace=binding.getVegetationTrace({sinceSequence:cursor});cursor=trace.lastSequence;
     for(const event of trace.events){events.push(event);if(events.length>2048){events.shift();eventsDroppedByCollector++;}}
@@ -61,6 +120,7 @@ export async function qualifyVegetationContinuity({canvas,intake,binding,root,st
     const point={label,elapsedMilliseconds:performance.now()-started,position:{...state.position},yawDegrees:state.yawDegrees,pitchDegrees:state.pitchDegrees,navigationSequence:state.sequence,
       cacheCell:{x:Math.floor(state.position.x/4),z:Math.floor(state.position.z/4)},traceSummary:{...trace,events:undefined},
       renderFrameCallCount:r.counters?.renderFrameCallCount??null,probe:binding.getVegetationProbe({x:state.position.x,z:state.position.z,radius:2})};
+    if(requirePopulated){point.fixedControl=binding.getVegetationProbe(entryQualification.control);point.fineDraw={visibleContacts:r.resources?.woodlandFineGrass?.visibleContacts??null,drawCallCount:r.resources?.woodlandFineGrass?.drawCallCount??null};}
     observations.push(point);return point;
   }
   const initial=collect('INITIAL');
@@ -80,6 +140,7 @@ export async function qualifyVegetationContinuity({canvas,intake,binding,root,st
     movementObserved:observations.some(p=>Math.hypot(p.position.x-initial.position.x,p.position.z-initial.position.z)>.05),observations,events,eventsDroppedByCollector,
     traceMayLoseEvents:true,timingPerturbed:true,physicalDeviceAcceptance:false,visiblePixelsVerified:false,exactOwnerVideoRouteReproduced:false,
     pilotBoundaryTraversalVerified:false,shorelineAgreementVerified:false,publicationAuthorized:false,elapsedMilliseconds:performance.now()-started};
+  if(requirePopulated){result.entryQualification=entryQualification;result.fixedControlReconciliation=reconcilePopulatedContinuity(observations);result.movementTraceStartsAfterSequence=entryTrace.lastSequence;result.entryTraceSummary={...entryTrace,events:undefined};result.woodlandOwnerBoundaryTraversed=false;}
   window.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION=result;
   if(root)root.dataset.vegetationContinuityReplay='captured';
   return result;

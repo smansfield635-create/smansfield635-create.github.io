@@ -291,13 +291,16 @@ let nearbyGroundReady = false;
 // Only this explicitly selected qualification waits for its replay before READY.
 // The unchanged exact-head runner otherwise closes three seconds after READY.
 const continuityReplayRequested=continuityTraceRequested&&new URLSearchParams(location.search).get('qualification')==='vegetation-continuity-v1';
+const populatedContinuityReplayRequested=continuityReplayRequested&&new URLSearchParams(location.search).get('continuity-entry')==='populated-v1';
 let continuityReplayStarted=false,continuityReplayFinished=false;
 const publishExistingReadyFromFirstPresentedFrame = () => {
-  if (readyPublished || !firstFramePublished || !nearbyGroundReady) return false;
+  // The opt-in populated diagnostic must also record an empty-entry failure.
+  // Its terminal capture readiness does not assert vegetation readiness.
+  if (readyPublished || !firstFramePublished || (!nearbyGroundReady&&!populatedContinuityReplayRequested)) return false;
   if(continuityReplayRequested&&!continuityReplayFinished){
     if(!continuityReplayStarted){
       continuityReplayStarted=true;
-      import('../../../../h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs').then(({qualifyVegetationContinuity})=>qualifyVegetationContinuity({canvas,intake,binding,root})).catch(error=>{
+      import('../../../../h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs').then(({qualifyVegetationContinuity})=>qualifyVegetationContinuity({canvas,intake,binding,root,requirePopulated:populatedContinuityReplayRequested})).catch(error=>{
         window.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION={schema:'H_EARTH_VEGETATION_CONTINUITY_REPLAY_v1',result:'DIAGNOSTIC_EXECUTION_FAILED',message:error.message,physicalDeviceAcceptance:false,publicationAuthorized:false};
       }).finally(()=>{continuityReplayFinished=true;publishExistingReadyFromFirstPresentedFrame();});
     }

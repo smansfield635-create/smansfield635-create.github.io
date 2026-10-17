@@ -70,6 +70,19 @@ async function diagnosticAim(targetYaw){
   }
   assert(Math.abs(difference())<=6,'DIAGNOSTIC_VIEW_AIM_NOT_REACHED');
 }
+async function diagnosticPitch(targetPitch){
+  for(let pulse=0;pulse<256&&Math.abs(intake.getNavigationState().pitchDegrees-targetPitch)>2.2;pulse++){
+    const sign=Math.sign(targetPitch-intake.getNavigationState().pitchDegrees),x=canvas.clientWidth*.5,y=canvas.clientHeight*.5;
+    canvas.dispatchEvent(new PointerEvent('pointerdown',{pointerId:94,pointerType:'mouse',clientX:x,clientY:y,bubbles:true,cancelable:true}));
+    try{
+      canvas.dispatchEvent(new PointerEvent('pointermove',{pointerId:94,pointerType:'mouse',clientX:x,clientY:y-sign*canvas.clientHeight*.065,bubbles:true,cancelable:true}));
+      await new Promise(resolve=>requestAnimationFrame(resolve));
+    }finally{
+      canvas.dispatchEvent(new PointerEvent('pointerup',{pointerId:94,pointerType:'mouse',clientX:x,clientY:y,bubbles:true,cancelable:true}));
+    }
+  }
+  assert(Math.abs(intake.getNavigationState().pitchDegrees-targetPitch)<=2.2,'DIAGNOSTIC_VIEW_PITCH_NOT_REACHED');
+}
 async function diagnosticTravel(x,z,expectedIds){
   for(let step=0;step<32;step++){
     const p=intake.getNavigationState().position,distance=Math.hypot(x-p.x,z-p.z);
@@ -146,7 +159,7 @@ try{
       if(qualificationView==='bank-view-v1'){
         await diagnosticTravel(-70,-170,controlIds);await diagnosticTravel(-27,-164,controlIds);await diagnosticAim(95);
       }else if(qualificationView==='ravine-view-v1'){
-        await diagnosticTravel(-145,-280,controlIds);await diagnosticTravel(-60,-310,controlIds);await diagnosticAim(55);
+        await diagnosticTravel(-145,-280,controlIds);await diagnosticTravel(-60,-310,controlIds);await diagnosticTravel(40,-300,controlIds);await diagnosticAim(180);await diagnosticPitch(4);
       }else{
         await diagnosticTravel(-193,-218,controlIds);await diagnosticAim(86);
       }

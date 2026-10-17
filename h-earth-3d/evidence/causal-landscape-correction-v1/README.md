@@ -14,7 +14,7 @@ Operation `H_EARTH_CAUSAL_LANDSCAPE_CORRECTION_20261017_001`, governing head `72
 
 Independent West review identified a CPU beach exception tied to the old rectangular material branch. It was removed from replacement preparation and the real-world test fixture. With actual shader-equivalent beach eligibility,124former woodland roots are excluded once, including10former control roots. This is a candidate baseline correction, not movement-driven regeneration; do not claim the old54controls or entire old population were preserved.
 
-Actual archived-world census after correction:408208roots,44fixed controls,1117tiles,maximum816roots/tile. Of these,16414roots lie beyond the old rear boundary; total rear-region addition22264. Original woodland membership after eligibility reconciliation385944. No approved tree, small rock, canonical terrain/water buffer, input or navigation authority is changed. SHA-verified archived world remains `48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a`.
+Initial candidate archived-world census after correction:408208roots,44fixed controls,1117tiles,maximum816roots/tile. Of these,16414roots lie beyond the old rear boundary; total rear-region addition22264. Original woodland membership after eligibility reconciliation385944. No approved tree, small rock, canonical terrain/water buffer, input or navigation authority is changed. SHA-verified archived world remains `48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a`.
 
 ## Context and preserved boundaries
 
@@ -27,3 +27,16 @@ Native functional assignments: Alaric/N `/root/north_route`; Elara/E measurement
 Owner/material suite38tests and fine-grass continuity13tests pass, including actual software GLES compile/link and512CPU/GPU coverage comparisons. Boulder suite4tests pass. Targeted actual-world habitat test passes the corrected census above; atlas/preserved-lattice tests pass. Complete final source-chain and exact-candidate browser qualification are separate evidence checkpoints and must be recorded below before claiming completion. Historical Gen2699 dry-bank validator applies only its frozen old candidate; its rejected placement semantics are superseded by the current independent mountain/submersion assertions.
 
 Candidate is not live. Owner visual/physical acceptance, phone performance and aesthetic excellence remain unclaimed. Preserve Gen2794 for any bounded repair until required review is resolved; no main/live promotion is authorized by this evidence file.
+
+
+## Bounded visual repair after actual browser review
+
+The first exact candidate `cca232af6bb658e950e7373522bfc5d4ac795515` reachedREADY in all three actual-browser runs. Replay39063421699/artifact12111909989 (ZIP SHA256713ba68cad2ae1d3dc26f8c94a6f55ff7715b59acdc8f6d23955e2d12daf96ac) proves44identical controls through8out+8return steps/32m/exactreturn0, one73728Bhabitat upload, zero movement uploads/world rebuilds/errors. Bank39063529958/artifact12111978089 (ZIP SHA25602c7b428b9d5dab9b205f7eb05f9318f4cfd48b73a2cfb3e5e71ada7f2ade764) shows irregular emerging rocks at the mountain-side left margin and a clear beach at right. Independent W reviewed source, actual frames and receipts. Woodland frame shows coherent grass tones and no plainly discernible soil rectangle in its visible area; this is bounded view evidence, not every-angle aesthetic acceptance.
+
+Ravine39063442043/artifact12112412824 (ZIP SHA256592ccb4f00bb5c785640f5f54fb824f487f52b84f444cfc100fd00ae756aa677) reachedREADY with no errors but failed visual sufficiency: it looked away from the cavern and grass was too sparse. It is preserved as limitation evidence, not accepted ravine appearance.
+
+The bounded repair changes rear spacing0.20→0.14m, matching the woodland lattice density while preserving field weight, exclusions, fade,64k rear and450k total caps. Diagnostic ravine travel now reaches(40,−300), facesyaw180toward the existing portal(40,−260), and lowers pitch through the real pointer intake toapproximately4degrees. Four additional deterministic real-intake slow-frame pitch cases pass; diagnostic regression now35cases, with balanced releases and bounded cleanup.
+
+Final local source-chain qualification passes again, including all97selected suite checks. Repaired actual-world census:431662roots,44fixed controls,1130tiles,maximum816roots/tile. Total rear addition45718;33790roots lie beyond the old rear boundary. One73728Batlas upload remains the contract. Existing four trees/woodland palette/soil/rock geometry/water/navigation code is unchanged by this bounded repair. New exact runtime qualification must bind the repaired source identity; earlier bank evidence applies only to its unchanged material/rock component.
+
+Main moved from725b85a2 to2075045ad8c072d28b57dee387f5ddc778729e64 only in seven analytics paths. The existing differential-continuity gate returnedCARRY_FORWARD_APPROVED for the complete declared dependency surface, with no overlapping paths and no authority expansion. Existing admission remainsGen2794.

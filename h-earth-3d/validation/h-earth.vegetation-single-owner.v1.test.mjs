@@ -253,15 +253,15 @@ const source=fs.readFileSync(routePath,'utf8');
 const a=source.indexOf('async function diagnosticAim('),b=source.indexOf('\\nfunction liveReceipt()',a);
 assert(a>=0&&b>a,'Cannot extract actual route tour functions');
 const functions=source.slice(a,b);
-async function runCase({dt,target,travel,tour,aimSequence,stalled=false}){
+async function runCase({dt,target,travel,tour,aimSequence,pitchTarget,stalled=false}){
  queue.clear();now=0;const canvas=new Surface();let proposals=0;
  if(stalled){const dispatch=canvas.dispatchEvent.bind(canvas);canvas.dispatchEvent=event=>event.type==='pointermove'?true:dispatch(event);}
  const intake=installHEarthRun8ER3D2PointerTouchIntake({surface:canvas,onProposal(){proposals++;}});
  const context={canvas,intake,PointerEvent,WheelEvent,performance,requestAnimationFrame,Math,Promise,Error,
  assert:(ok,reason)=>assert(ok,reason),delay:()=>new Promise(resolve=>requestAnimationFrame(resolve)),
  assertStableObservation(){},snapshot:label=>({label}),observations:[]};
- vm.createContext(context);vm.runInContext(functions+'\\nthis.aim=diagnosticAim;this.travel=diagnosticTravel;',context);
- let done=false,error;const operation=async()=>{if(aimSequence){for(const next of aimSequence){await context.aim(next);assert(Math.abs(((next-intake.getNavigationState().yawDegrees+540)%360)-180)<=6);}}else if(tour){for(const point of tour)await context.travel(...point,[]);await context.aim(target);}else if(travel)await context.travel(...travel,[]);else await context.aim(target);};const promise=operation().then(()=>{done=true},e=>{done=true;error=e;});
+ vm.createContext(context);vm.runInContext(functions+'\\nthis.aim=diagnosticAim;this.travel=diagnosticTravel;this.pitch=diagnosticPitch;',context);
+ let done=false,error;const operation=async()=>{if(pitchTarget!==undefined){await context.pitch(pitchTarget);}else if(aimSequence){for(const next of aimSequence){await context.aim(next);assert(Math.abs(((next-intake.getNavigationState().yawDegrees+540)%360)-180)<=6);}}else if(tour){for(const point of tour)await context.travel(...point,[]);await context.aim(target);}else if(travel)await context.travel(...travel,[]);else await context.aim(target);};const promise=operation().then(()=>{done=true},e=>{done=true;error=e;});
  for(let n=0;n<4000&&!done;n++){now+=dt;const batch=[...queue.values()];queue.clear();for(const fn of batch)fn(now);await immediate();}
  await Promise.race([promise,immediate()]);
  const receipt=intake.getReceipt(),state=intake.getNavigationState();intake.destroy();
@@ -270,6 +270,7 @@ async function runCase({dt,target,travel,tour,aimSequence,stalled=false}){
  assert(receipt.counters.pointerDownCount===receipt.counters.pointerUpCount,'Pointer presses must release');
  assert(receipt.counters.rejectedNavigationProposalCount===0,'No navigation rejection expected');
  if(target!==undefined)assert(Math.abs(((target-state.yawDegrees+540)%360)-180)<=6,\`Aim error \${state.yawDegrees}/\${target}\`);
+ if(pitchTarget!==undefined)assert(Math.abs(state.pitchDegrees-pitchTarget)<=2.2,'Pitch target');
  if(travel)assert(Math.hypot(state.position.x-travel[0],state.position.z-travel[1])<2,'Travel destination');
  return {dt,target,travel,pose:state.position,yaw:state.yawDegrees,proposals,frames:receipt.counters.activeIntentFrameCount};
 }
@@ -278,6 +279,7 @@ for(const dt of [16,150,500])for(const travel of [[-70,-170],[-193,-218]])result
 for(const dt of [16,150,500])results.push(await runCase({dt,tour:[[-70,-170],[-27,-164]],target:95}));
 results.push(await runCase({dt:500,travel:[-70,-170],stalled:true}));
 results.push(await runCase({dt:150,aimSequence:[170,-170,170]}));
+for(const dt of [16,50,150,500])results.push(await runCase({dt,pitchTarget:4}));
 console.log(JSON.stringify({status:'PASS',scope:'Actual pointer intake and navigation, deterministic fake RAF. Procedural/default terrain support; canonical runtime package not initialized. GPU and physical acceptance not established.',cases:results},null,2));
 `;
 
@@ -287,7 +289,7 @@ test('diagnostic view selectors cannot automate the public entrance',async()=>{
  assert.equal(result.window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().automaticNavigation,false);
  const regression=spawnSync(process.execPath,['--input-type=module','-e',actualIntakeTourRegressionSource],{encoding:'utf8',timeout:60000});
  assert.equal(regression.status,0,regression.stderr||regression.error?.message);
- const tour=JSON.parse(regression.stdout);assert.equal(tour.status,'PASS');assert.equal(tour.cases.length,31);
+ const tour=JSON.parse(regression.stdout);assert.equal(tour.status,'PASS');assert.equal(tour.cases.length,35);
 });
 
 // Reuse the established surfaceless GLES compiler setup; owner shaders have no

@@ -36,7 +36,7 @@ async function buildHabitatRaster({suitability,yieldControl,bounds,size,regional
  return Object.freeze({pixels,size,bounds,sample,receipt:{schema:'H_EARTH_WOODLAND_HABITAT_FIELD_v1',coordinateSpace:'RENDERED_WORLD_XZ_METERS',size,byteLength:pixels.byteLength,admittedCells,uploadPolicy:'ONCE_BEFORE_READY',cameraIndependent:true,coverageSource:'SHARED_RENDERED_SUPPORT_AND_GRADED_PROTECTED_BOUNDARIES'}});
 }
 /** Rear habitat follows the measured canonical drainage; no river or terrain is invented. */
-export const RAVINE_HABITAT=Object.freeze({bounds:Object.freeze([-110,-376,68,-248]),size:192,spacing:.20,maximumRoots:64000});
+export const RAVINE_HABITAT=Object.freeze({bounds:Object.freeze([-110,-376,68,-248]),size:192,spacing:.14,maximumRoots:64000});
 function segmentDistance(x,z,a,b){const dx=b.x-a.x,dz=b.z-a.z,den=dx*dx+dz*dz,t=den?clamp(((x-a.x)*dx+(z-a.z)*dz)/den):0;return Math.hypot(x-a.x-t*dx,z-a.z-t*dz);}
 export function ravineHabitatWeight(points,x,z){
  if(!Array.isArray(points)||points.length<2)return 0;

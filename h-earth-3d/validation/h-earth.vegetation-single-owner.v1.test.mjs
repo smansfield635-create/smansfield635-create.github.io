@@ -57,7 +57,7 @@ function ownerPresentation(){return {tiles:[
  {id:'remote',minX:100,minZ:100,roots:[root(101,101,.75)]},
 ],receipt:{contactCount:3}};}
 function fakeGL(){
- let next=0,buffer=null,offset=0,fine=0;const uploads=[],draws=[],deletions=[];
+ let next=0,buffer=null,offset=0,fine=0;const uploads=[],draws=[],deletions=[],colors=[];
  const gl=new Proxy({ARRAY_BUFFER:1,STATIC_DRAW:2,FLOAT:3,TRIANGLES:4,VERTEX_SHADER:5,FRAGMENT_SHADER:6,COMPILE_STATUS:7,LINK_STATUS:8,
   createShader:()=>({kind:'shader',id:++next}),createProgram:()=>({kind:'program',id:++next}),createVertexArray:()=>({kind:'vao',id:++next}),createBuffer:()=>({kind:'buffer',id:++next}),
   getShaderParameter:()=>true,getProgramParameter:()=>true,getUniformLocation:(_p,name)=>name,
@@ -65,12 +65,25 @@ function fakeGL(){
   bufferSubData:(_target,start,data)=>{uploads.push({kind:'upload',buffer,start,data:Array.from(data),bytes:data.byteLength});},
   vertexAttribPointer:(_loc,_size,_type,_normalized,_stride,start)=>{offset=start;},
   uniform1i:(name,value)=>{if(name==='uFine')fine=value;},drawArraysInstanced:(_mode,_first,vertices,count)=>{draws.push({buffer,offset,fine,vertices,count});},
+  uniform3fv:(name,value)=>{assert.equal(value.length,3,'vec3 requires exactly RGB');assert.ok(Array.from(value).every(Number.isFinite));colors.push({name,value:Array.from(value)});},
   deleteBuffer:value=>deletions.push(value),deleteShader:value=>deletions.push(value),deleteProgram:value=>deletions.push(value),deleteVertexArray:value=>deletions.push(value),
  },{get:(target,name)=>name in target?target[name]:(()=>{})});
- return {gl,uploads,draws,deletions};
+ return {gl,uploads,draws,deletions,colors};
 }
 const environment={sunDirection:{x:0,y:1,z:0},sunColor:[1,1,1],groundHazeColor:[.5,.6,.7],sunIntensity:1,fogStartDistance:100,fogFalloff:.001,maximumFogFactor:.6};
 const packet=(x,z)=>({camera:{position:{x,y:4,z},viewProjectionMatrix:[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]}});
+test('actual RGBA environment uploads only normalized RGB to vec3 uniforms',async()=>{
+ const f=fakeGL();const owner=await createSingleOwnerVegetation(f.gl,ownerPresentation(),{environment:{...environment,sunColor:[255,244,230,255],groundHazeColor:[174,200,208,255]},planetRadius:6200000});
+ assert.deepEqual(f.colors,[{name:'uSunColor',value:[1,244/255,230/255]},{name:'uHaze',value:[174/255,200/255,208/255]}]);owner.dispose();
+});
+test('RGBA alpha does not alter normalized RGB channel scale',async()=>{
+ const f=fakeGL();const owner=await createSingleOwnerVegetation(f.gl,ownerPresentation(),{environment:{...environment,sunColor:[.5,.6,.7,255],groundHazeColor:[.2,.3,.4,255]},planetRadius:6200000});
+ assert.deepEqual(f.colors,[{name:'uSunColor',value:[.5,.6,.7]},{name:'uHaze',value:[.2,.3,.4]}]);owner.dispose();
+});
+test('object RGB environment retains its three channel contract',async()=>{
+ const f=fakeGL();const owner=await createSingleOwnerVegetation(f.gl,ownerPresentation(),{environment:{...environment,sunColor:{r:255,g:128,b:0},groundHazeColor:{r:.2,g:.3,b:.4}},planetRadius:6200000});
+ assert.deepEqual(f.colors,[{name:'uSunColor',value:[1,128/255,0]},{name:'uHaze',value:[.2,.3,.4]}]);owner.dispose();
+});
 test('owner uploads exactly once, retains all coarse roots, and returns same fine roots',async()=>{
  const f=fakeGL(),p=ownerPresentation(),before=structuredClone(p),owner=await createSingleOwnerVegetation(f.gl,p,{environment,planetRadius:6200000});
  const uploadCount=f.uploads.length,receipt=owner.getReceipt(),coarse=[];
@@ -138,3 +151,4 @@ test('program link failure frees program and both compiled shaders',async()=>{
  await assert.rejects(createSingleOwnerVegetation(f.gl,ownerPresentation(),{environment,planetRadius:6200000}),/OWNER_LINK/);
  assert.equal(f.deletions.length,3);
 });
+

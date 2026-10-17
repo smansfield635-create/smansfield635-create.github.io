@@ -1,4 +1,4 @@
-# Gen2797 cavern threshold — bounded construction checkpoint
+# Gen2797 cavern threshold and full terrain perimeter — construction checkpoint
 
 Operation: `H_EARTH_TERRAIN_CAVERN_SEAM_REPAIR_20261017_001`, generation2797.
 Governing base: `18743dc582bfa0186e3b0ea19ddf5d1f8f53025a`.
@@ -21,8 +21,8 @@ gallery, upper mantle and kernels remain unchanged. Navigation samples the
 same final projected exterior triangles and unchanged kernel floor/roof.
 
 This is not an aesthetic acceptance result or a repair of all dark interior
-appearance. Terrain perimeter/material continuity is the next separate step
-inside the existing operation. River-corridor expansion remains separately
+appearance. Terrain perimeter/material continuity now has the additional
+source correction below. River-corridor expansion remains separately
 queued per owner evidence comment6242535155; no density expansion is included.
 
 ## Executed source/geometry qualification
@@ -33,7 +33,7 @@ Command:
 node --test h-earth-3d/validation/h-earth.terrain-cavern-seam-repair.v1.test.mjs h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs
 ```
 
-Actual combined result24/25: new geometry tests4/4PASS, existing integration
+Initial cavern checkpoint combined result24/25: geometry tests4/4PASS, existing integration
 20/21PASS. One pre-existing assertion fails at integration test line161:
 `assert(html.includes("parameters.get('arrival') === 'geological-cavern'"))`.
 That historical coast-default copy assertion inspects unchanged published
@@ -69,6 +69,60 @@ explicitly allowed; no new full-population benchmark is claimed.
 
 Same-camera browser/pixel review from outside and inside, genuine traversal
 presentation, and experience-anchor acceptance remain pending. No visual/device
-PASS, completed terrain-border repair, merge, deployment or live release claimed.
-Do not repeat admission or performance implementation. Preserve this candidate
-before proceeding with the next terrain-border delta under the existing scope.
+PASS, visually completed terrain-border repair, merge, deployment or live release claimed.
+Do not repeat admission or performance implementation.
+
+## Full-perimeter attribute correction
+
+The prior renderer faded only linear RGB toward original land at the patch
+boundary. It still uploaded independently recomputed normals, constant material
+parameters and coast/contact distances of140. The land's shared fragment shader
+uses these other fields for slope, lighting and coastal presentation, explaining
+why a color blend alone did not reconcile the long border and its corners.
+
+The bridge now exposes its indexed original-terrain contact (source vertex IDs
+and barycentric weights). Startup reconciliation takes the ACTUAL upload views,
+including projected/canonicalized material and normal buffers and the actual
+coast/contact buffers. It blends raw normals, all RGBA, all four material
+channels, coast distance and contact distance through the existing12m rim.
+Normals are not normalized before upload: fragment normalization remains in its
+original place. All four edges and corners use the same rule. Interior vertices
+at least12m inside and cavern/cliff/water attributes remain untouched. Terrain
+role1 and sentinel IDs remain unchanged; W confirmed the categorical identity
+signal is not consumed by that terrain shading path. No shader, geometry,
+navigation, world, population, density, loader, cache or scheduler delta.
+
+New measured qualification:6/6 testsPASS; existing integration20/21PASS;
+combined26/27, retaining the same unchanged line161 historical copy assertion.
+All368 emitted perimeter vertices across4sides/4corners match independently
+located canonical triangle attributes within3.763978e-6 maximum absolute error.
+Coast/contact interpolation is exercised with distinct synthetic stress fields;
+those fields do not claim observed shoreline or actual GPU contact accuracy.
+5520between-vertex diagnostic samples additionally compare emitted linear
+interpolation to source contact interpolation: maximum raw-normal2.781622e-7,
+RGBA6.165715e-8, material1.402681e-7, stress coast1.930229e-5,
+stress contact8.039419e-5. This diagnostic reuses the source contact sampler;
+the vertex oracle independently searches indexed terrain triangles.
+
+These are CPU attribute/geometry proofs, not pixel or normal-derivative proofs.
+Inverse authoring-space interpolation follows the existing terrain sampler;
+exact GPU raster correspondence and derivative-sensitive material presentation
+still require real same-camera browser review around all sides/corners and the
+cavern approach/interior. Full gallery/upper-mantle hashes remain identical.
+Independent W source review found no wiring/scope blocker and explicitly retained
+these visual limitations. Source syntax and whitespace checks pass.
+
+Local browser boundary: Playwright is installed, Chromium is absent. Its current
+browser installer returned an invalid/truncated archive (reported0MiB), so no
+local WebGL or screenshot execution occurred. Preserve this source candidate;
+do not call that execution-surface failure a product failure, retry the same
+download, or deploy production as a preview workaround. The registered neutral
+runner exists but its existing root captures are not a full-perimeter/same-camera
+acceptance harness; no irrelevant or duplicate run was launched.
+
+One next action: execute bounded exact-candidate browser qualification for the
+cavern and full perimeter using a lawful Chromium/WebGL-capable substrate, then
+finish source-bound experience-anchor acceptance and the authorized release
+sequence only on the required evidence. Keep Gen2797 active for bounded repair.
+River-corridor extension remains separately queued, per owner comment6242535155;
+the endpoint/horizon intent must be reconciled before any expansion writes.

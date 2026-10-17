@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
-import {constructGeologicalRuntimeBridge,installGeologicalRuntimeBridge,resolveGeologicalRuntimeFootSupport} from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js';
+import {constructGeologicalRuntimeBridge,installGeologicalRuntimeBridge,resolveGeologicalRuntimeFootSupport,reconcileGeologicalTerrainRim} from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js';
+import {unprojectPlanetVertex} from '../terrain/h-earth.geological-formation-successor.v1.mjs';
 
 const world=readFileSync(new URL('../../showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',import.meta.url));
 assert.equal(createHash('sha256').update(world).digest('hex'),'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a');
@@ -79,4 +80,88 @@ test('approach correction leaves surrounding land and terrain patch limits uncha
     const upward=(p[b+2]-p[a+2])*(p[c]-p[a])-(p[b]-p[a])*(p[c+2]-p[a+2]);
     assert(upward>1e-9,'reversed or collapsed exterior triangle');
   }
+});
+
+test('all emitted land perimeter vertices inherit full indexed source attributes, including corners',()=>{
+  const channels=[['normals',3],['baseColorsLinear',4],['materialParameters',4],['coastDistances',1],['contactDistances',1]];
+  const source={...canonical.buffers};
+  // Distinct finite scalar fields exercise coastal/contact interpolation without
+  // claiming this CPU fixture is a rendered shoreline or GPU qualification.
+  const n=canonical.buffers.positions.length/3;
+  source.coastDistances=Float32Array.from({length:n},(_,i)=>i%91-45);
+  source.contactDistances=Float32Array.from({length:n},(_,i)=>i%67+.25);
+  const b=model.localBounds;let samples=0,maxError=0;
+  const sides=new Set(),corners=new Set();
+  const betweenErrors=Object.fromEntries(channels.map(([key])=>[key,0]));let betweenSamples=0;
+  for(const {role,mesh} of model.meshes){
+    if(!['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN'].includes(role))continue;
+    const attrs=Object.fromEntries(channels.map(([key,size])=>[key,new Float32Array(mesh.vertexCount*size).fill(.321)]));
+    reconcileGeologicalTerrainRim(model,role,mesh,attrs,source);
+    for(let i=0;i<mesh.vertexCount;i++){
+      const p=unprojectPlanetVertex(...mesh.positions.slice(i*3,i*3+3));
+      const distances=[p.x-b.xMin,b.xMax-p.x,p.z-b.zMin,b.zMax-p.z];
+      const edge=Math.min(...distances);
+      if(edge>=12){for(const [key,size] of channels)for(let c=0;c<size;c++)assert.equal(attrs[key][i*size+c],Math.fround(.321));continue;}
+      if(Math.abs(edge)>.001)continue;
+      distances.forEach((d,k)=>{if(Math.abs(d)<.001)sides.add(k)});
+      if(distances.filter(d=>Math.abs(d)<.001).length===2)corners.add(Math.round(p.x)+','+Math.round(p.z));
+      // Independent vertical triangle intersections in the original indexed
+      // package, not the bridge's contact/attribute sampler.
+      let found=null;
+      outer:for(const span of canonical.primitiveSpans.filter(s=>s.role==='TERRAIN'))for(let j=span.indexStart;j<span.indexStart+span.indexCount;j+=3){
+        const ids=canonical.buffers.indices.slice(j,j+3);
+        const points=ids.map(id=>unprojectPlanetVertex(...canonical.buffers.positions.slice(id*3,id*3+3).map(Math.fround)));
+        if(p.x<Math.min(...points.map(q=>q.x))-1e-6||p.x>Math.max(...points.map(q=>q.x))+1e-6||p.z<Math.min(...points.map(q=>q.z))-1e-6||p.z>Math.max(...points.map(q=>q.z))+1e-6)continue;
+        const [a,c,d]=points,det=(c.z-d.z)*(a.x-d.x)+(d.x-c.x)*(a.z-d.z);
+        if(Math.abs(det)<1e-10)continue;
+        const u=((c.z-d.z)*(p.x-d.x)+(d.x-c.x)*(p.z-d.z))/det;
+        const v=((d.z-a.z)*(p.x-d.x)+(a.x-d.x)*(p.z-d.z))/det,w=1-u-v;
+        if(Math.min(u,v,w)<-1e-6)continue;
+        found={ids,weights:[u,v,w]};break outer;
+      }
+      assert(found,'perimeter source triangle missing');
+      for(const [key,size] of channels)for(let c=0;c<size;c++){
+        const expected=found.ids.reduce((sum,id,k)=>sum+found.weights[k]*source[key][id*size+c],0);
+        const error=Math.abs(attrs[key][i*size+c]-expected);maxError=Math.max(maxError,error);
+        assert(error<2e-5,`${role} ${key} at ${p.x},${p.z}: ${error}`);
+      }
+      samples++;
+    }
+    const edgeCounts=new Map();
+    for(let j=0;j<mesh.indices.length;j+=3)for(let k=0;k<3;k++){
+      const a=mesh.indices[j+k],c=mesh.indices[j+(k+1)%3],key=[Math.min(a,c),Math.max(a,c)].join(',');
+      edgeCounts.set(key,(edgeCounts.get(key)??0)+1);
+    }
+    for(const [key,count] of edgeCounts){
+      if(count!==1)continue;
+      const [a,c]=key.split(',').map(Number);
+      const p=unprojectPlanetVertex(...mesh.positions.slice(a*3,a*3+3));
+      const q=unprojectPlanetVertex(...mesh.positions.slice(c*3,c*3+3));
+      const onSide=(r,k)=>Math.abs([r.x-b.xMin,b.xMax-r.x,r.z-b.zMin,b.zMax-r.z][k])<.001;
+      if(![0,1,2,3].some(k=>onSide(p,k)&&onSide(q,k)))continue;
+      for(let k=1;k<16;k++){
+        const t=k/16,x=p.x+(q.x-p.x)*t,z=p.z+(q.z-p.z)*t;
+        const hit=model.originalTerrainContactAt(x,z);assert(hit);
+        for(const [channel,size] of channels)for(let component=0;component<size;component++){
+          const expected=hit.ids.reduce((sum,id,j)=>sum+hit.weights[j]*source[channel][id*size+component],0);
+          const emitted=attrs[channel][a*size+component]*(1-t)+attrs[channel][c*size+component]*t;
+          const error=Math.abs(expected-emitted);assert(Number.isFinite(error));
+          betweenErrors[channel]=Math.max(betweenErrors[channel],error);
+        }
+        betweenSamples++;
+      }
+    }
+  }
+  assert.equal(sides.size,4);assert.equal(corners.size,4);assert(samples>300);
+  console.log(JSON.stringify({check:'FULL_PERIMETER_VERTEX_ATTRIBUTES',samples,sides:sides.size,corners:corners.size,maximumError:maxError}));
+  console.log(JSON.stringify({check:'BETWEEN_VERTEX_DIAGNOSTIC_NOT_PIXEL_ACCEPTANCE',samples:betweenSamples,maximumErrors:betweenErrors,coastContactFields:'DISTINCT_SYNTHETIC_INTERPOLATION_STRESS_FIELDS'}));
+});
+
+test('rim reconciliation leaves cavern, cliffs and water attributes untouched and rejects missing source channels',()=>{
+  const mesh=model.meshes.find(p=>p.role==='ERODED_TERRAIN').mesh;
+  const attrs={normals:new Float32Array(mesh.vertexCount*3).fill(.123)};
+  for(const role of ['CAVERN_PHYSICAL_SHELL','NATURAL_CLIFF_FACE','FRESHWATER_RIVER','OASIS_WATER'])
+    reconcileGeologicalTerrainRim(model,role,mesh,attrs,{});
+  assert(attrs.normals.every(v=>v===Math.fround(.123)));
+  assert.throws(()=>reconcileGeologicalTerrainRim(model,'ERODED_TERRAIN',mesh,attrs,canonical.buffers),/RIM_ATTRIBUTE_MISSING/);
 });

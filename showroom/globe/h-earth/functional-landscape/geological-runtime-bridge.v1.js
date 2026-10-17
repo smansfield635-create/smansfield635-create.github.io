@@ -444,9 +444,9 @@ export function constructGeologicalRuntimeBridge(canonical){
   const field=makeCanonicalAuthoringTerrainSampler(canonical);
   // Pull the original canonical terrain's actual linear-color boundary values.
   // The replacement terrain must not create a giant hard-edged material rectangle.
-  const originalTerrainColorAt=(x,z)=>{
+  const originalTerrainContactAt=(x,z)=>{
     const sample=field.sample(x,z);if(!sample)return null;
-    const offset=sample.triangleOffset,idx=canonical.buffers.indices,pos=canonical.buffers.positions,colors=canonical.buffers.baseColorsLinear;
+    const offset=sample.triangleOffset,idx=canonical.buffers.indices,pos=canonical.buffers.positions;
     const ids=[idx[offset],idx[offset+1],idx[offset+2]];
     const p=ids.map(id=>unprojectPlanetVertex(Math.fround(pos[id*3]),Math.fround(pos[id*3+1]),Math.fround(pos[id*3+2])));
     const [a,b,c]=p,den=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);
@@ -454,7 +454,11 @@ export function constructGeologicalRuntimeBridge(canonical){
     const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/den;
     const v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/den;
     const w=1-u-v;
-    return [0,1,2].map(k=>Math.max(0,Math.min(1,u*colors[ids[0]*4+k]+v*colors[ids[1]*4+k]+w*colors[ids[2]*4+k])));
+    return {ids,weights:[u,v,w],triangleOffset:offset};
+  };
+  const originalTerrainColorAt=(x,z)=>{
+    const q=originalTerrainContactAt(x,z);if(!q)return null;
+    return [0,1,2].map(k=>Math.max(0,Math.min(1,q.ids.reduce((sum,id,i)=>sum+q.weights[i]*canonical.buffers.baseColorsLinear[id*4+k],0))));
   };
   const terrainAt=(x,z)=>field.elevation(x,z);
   const trace=traceGeologicalRuntimeDrainage(terrainAt);
@@ -596,7 +600,7 @@ export function constructGeologicalRuntimeBridge(canonical){
   const emittedOutdoor=meshes.filter(p=>p.role==='ERODED_TERRAIN').flatMap(p=>waterTriangles(p.mesh,{projected:true,role:'OUTDOOR_TERRAIN'}));
   const sampleOutdoorAt=(x,z)=>{if(!Number.isFinite(x)||!Number.isFinite(z))fail('OUTDOOR_SAMPLE_NONFINITE');return sampleWaterTriangles(emittedOutdoor,x,z);};
   const output=Object.freeze({sampleWaterAt,sampleOutdoorAt,contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
-    formation:physicalFormation,portal,retirement,meshes,route:trace,originalTerrainColorAt,
+    formation:physicalFormation,portal,retirement,meshes,route:trace,originalTerrainColorAt,originalTerrainContactAt,
     cavernLightVisibility:makeCavernLightVisibility([kernel.mesh,cliff.mesh]),
     originalTerrainElevationAt:terrainAt,
     sourceWorldUnchanged:true,originalBaseTrianglesToRetire:retirement.triangleCount,
@@ -663,4 +667,32 @@ export function sampleGeologicalMaterialExposure(model,role,x,z){
   return Object.freeze({sourceOriginalHeight:before,excavatedHeight:after,
     incisionDepth,edgeFade:fade,rockWeight:materialWeight,oasisInfluence,
     originalWorldMutated:false});
+}
+
+/** Startup-only rim reconciliation against the actual uploaded indexed land.
+ * Keep raw normal interpolation: the fragment shader normalizes after raster
+ * interpolation. Geometry, navigation and the retained geological interior do
+ * not change. All four edges/corners use the same bounded 12m transition. */
+export function reconcileGeologicalTerrainRim(model,role,mesh,attributes,source){
+  if(role!=='ERODED_TERRAIN'&&role!=='MOUNTAIN_OVERBURDEN')return;
+  const channels=[['normals',3],['baseColorsLinear',4],['materialParameters',4],['coastDistances',1],['contactDistances',1]];
+  const b=model.localBounds;
+  for(let i=0;i<mesh.vertexCount;i++){
+    const p=unprojectPlanetVertex(mesh.positions[i*3],mesh.positions[i*3+1],mesh.positions[i*3+2]);
+    const edge=Math.min(p.x-b.xMin,b.xMax-p.x,p.z-b.zMin,b.zMax-p.z);
+    if(edge>=12)continue;
+    const f=Math.max(0,Math.min(1,edge/12)),weight=1-f*f*(3-2*f);
+    const q=model.originalTerrainContactAt(p.x,p.z);
+    if(!q)fail('RIM_SOURCE_CONTACT_MISSING');
+    if(q.ids.some(id=>source.roleCodes[id]!==1))fail('RIM_SOURCE_NOT_TERRAIN');
+    for(const [key,size] of channels){
+      const src=source[key],out=attributes[key];
+      if(!src||!out)fail('RIM_ATTRIBUTE_MISSING:'+key);
+      for(let c=0;c<size;c++){
+        const v=q.ids.reduce((sum,id,j)=>sum+q.weights[j]*src[id*size+c],0);
+        if(!Number.isFinite(v))fail('RIM_ATTRIBUTE_NONFINITE:'+key);
+        out[i*size+c]=out[i*size+c]*(1-weight)+v*weight;
+      }
+    }
+  }
 }

@@ -6,7 +6,7 @@ import {createPlantingPilotRenderer} from './planting-pilot-renderer.v1.js?rev=g
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as pilotMaterialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as pilotEstate,sampleHEarthGen311PlacementStructureDisposition as pilotStructureAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {buildVegetationVisibleSurface} from './vegetation-visible-surface.v1.js?rev=gen2780-stable-planting-v1';
-import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure,H_EARTH_WATER_PRESENTATION_ENABLED,H_EARTH_REAR_WATER_PRESENTATION_ENABLED,isHEarthWaterPresentationPart,shouldPresentHEarthDrawRange} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2780-stable-planting-v1';
+import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeologicalRuntimeBridge,sampleGeologicalMaterialExposure,reconcileGeologicalTerrainRim,H_EARTH_WATER_PRESENTATION_ENABLED,H_EARTH_REAR_WATER_PRESENTATION_ENABLED,isHEarthWaterPresentationPart,shouldPresentHEarthDrawRange} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2780-stable-planting-v1';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
@@ -2327,7 +2327,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
           mats.set([.89,.025,direct,access],i*4);
         }else mats.set([.89,.025,.035,.13],i*4);
       }
-      const state={role,mesh,renderedAttributes:{positions,indices,normals},vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};
+      const coast=new Float32Array(n),contact=new Float32Array(n);coast.fill(140);contact.fill(140);
+      const renderedAttributes={positions,indices,normals,baseColorsLinear:colors,materialParameters:mats,coastDistances:coast,contactDistances:contact};
+      reconcileGeologicalTerrainRim(model,role,mesh,renderedAttributes,{...uploadViews,coastDistances,contactDistances:contactField.packageDistances});
+      const state={role,mesh,renderedAttributes,vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};
       if(!state.vao)throw Error('GEOLOGICAL_VAO_FAILED:'+role);
       counters.vertexArrayCreateCount++;gl.bindVertexArray(state.vao);
       const put=(loc,data,size,type=gl.FLOAT,integer=false)=>{
@@ -2337,9 +2340,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         state.gpuByteLength+=data.byteLength;counters.uploadedByteLength+=data.byteLength;counters.bufferUploadCount++;
       };
       put(0,positions,3);put(1,normals,3);put(2,colors,4);put(3,mats,4);
-      const models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n),coast=new Float32Array(n),contact=new Float32Array(n);
+      const models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n);
       surfaces.fill(255);ids.fill(role==='NATURAL_CLIFF_FACE'||role==='CAVERN_PHYSICAL_SHELL'?62001:62000);roles.fill(role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'||role==='NATURAL_CLIFF_FACE'?1:
-        role==='FRESHWATER_RIVER'||role==='OASIS_WATER'?4:5);coast.fill(140);contact.fill(140);
+        role==='FRESHWATER_RIVER'||role==='OASIS_WATER'?4:5);
       state.renderedAttributes.coastDistances=coast;state.renderedAttributes.contactDistances=contact;
       put(4,models,1,gl.UNSIGNED_BYTE,true);put(5,surfaces,1,gl.UNSIGNED_BYTE,true);
       put(6,ids,1,gl.UNSIGNED_SHORT,true);put(7,roles,1,gl.UNSIGNED_BYTE,true);

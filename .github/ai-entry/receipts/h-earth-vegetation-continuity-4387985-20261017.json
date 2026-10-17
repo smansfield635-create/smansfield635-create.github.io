@@ -1,0 +1,27 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-vegetation-continuity-4387985-20261017",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6442,
+  "requestBranch": "ai-dispatch-request-h-earth-vegetation-continuity-20261017",
+  "requestCommit": "9224271f16e0159791b2f78cc119621871275e79",
+  "requestCommitParent": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "43879859581391b6d1def1a4c1f8fd288f715980",
+    "route_query": "vegetation-trace=v1&qualification=vegetation-continuity-v1",
+    "route_path": "/showroom/globe/h-earth/",
+    "exercise_vegetation_residency": "false"
+  },
+  "bridgeRunId": "38986449537",
+  "dispatchedRunId": 38986460499,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38986460499",
+  "dispatchedRunHeadSha": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+  "dispatchedAt": "2026-10-17T00:27:35.438Z",
+  "resolvedAt": "2026-10-17T00:27:39.583Z"
+}

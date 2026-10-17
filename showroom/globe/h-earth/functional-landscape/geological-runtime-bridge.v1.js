@@ -274,6 +274,43 @@ function buildKernelCavern(site,{floorAt,roofAt,caveRadius,caveCenterX}){
   };
   return Object.freeze({mesh,caveSectionAt,constructed});
 }
+/** Exact first-ring lower chain, including the side endpoints where a vertical
+ * section has only one hit. This is derived from the frozen emitted shell. */
+function kernelEntranceFloor(boundary,x){
+  const hits=[];
+  for(let i=0;i<boundary.profileVertexCount;i++){
+    const j=(i+1)%boundary.profileVertexCount,a=i*3,b=j*3;
+    const ax=boundary.positions[a],bx=boundary.positions[b];
+    if(x<Math.min(ax,bx)-1e-7||x>Math.max(ax,bx)+1e-7)continue;
+    if(Math.abs(bx-ax)<1e-9){hits.push(boundary.positions[a+1],boundary.positions[b+1]);continue;}
+    hits.push(boundary.positions[a+1]+(boundary.positions[b+1]-boundary.positions[a+1])*(x-ax)/(bx-ax));
+  }
+  return hits.length?Math.min(...hits):null;
+}
+/** Split only front-row boundary edges at the actual ring breakpoints. A field
+ * sampled on the 2m grid alone would interpolate over the unequal cave floor.
+ * The other triangle edges, aperture, mantle and gallery remain unchanged. */
+function conformEntranceTerrain(mesh,boundary,terrainAt,portalZ){
+  const positions=Array.from(mesh.positions),indices=[];
+  const cuts=[...new Set(Array.from({length:boundary.profileVertexCount},(_,i)=>boundary.positions[i*3]))].sort((a,b)=>a-b);
+  for(let i=0;i<mesh.indices.length;i+=3){
+    const tri=Array.from(mesh.indices.slice(i,i+3));let split=false;
+    for(let edge=0;edge<3;edge++){
+      const a=tri[edge],b=tri[(edge+1)%3],opposite=tri[(edge+2)%3];
+      if(Math.abs(positions[a*3+2]-portalZ)>1e-7||Math.abs(positions[b*3+2]-portalZ)>1e-7||positions[opposite*3+2]>=portalZ)continue;
+      const ax=positions[a*3],bx=positions[b*3];
+      const interior=cuts.filter(x=>x>Math.min(ax,bx)+1e-7&&x<Math.max(ax,bx)-1e-7);
+      if(!interior.length)break;
+      if(bx<ax)interior.reverse();
+      const chain=[a,...interior.map(x=>{const id=positions.length/3;positions.push(x,Math.fround(terrainAt(x,portalZ)),portalZ);return id;}),b];
+      for(let k=0;k<chain.length-1;k++)indices.push(chain[k],chain[k+1],opposite);
+      split=true;break;
+    }
+    if(!split)indices.push(...tri);
+  }
+  return Object.freeze({...mesh,positions:new Float32Array(positions),indices:new Uint32Array(indices),
+    vertexCount:positions.length/3,triangleCount:indices.length/3,entranceBoundaryConformed:true});
+}
 function buildReliefCliffFace(formation,terrainAt,aperture,exteriorMesh){
   const {site}=formation,left=aperture.xMin,right=aperture.xMax,start=aperture.zMin,step=.5;
   const regularCount=Math.ceil((right-left)/step);
@@ -324,8 +361,8 @@ function buildReliefCliffFace(formation,terrainAt,aperture,exteriorMesh){
       if(!probes.some(([x,y,z])=>formation.insideVoid(x,y,z)))indices.push(...tri);
     }
   }
-  // Close only the lower threshold between the open kernel ring and the
-  // ACTUAL emitted exterior edge. The accepted shell and land stay immutable.
+  // Close only any residual threshold between the unchanged open kernel ring
+  // and the actual conformed approach edge; do not build a raised entrance cap.
   const facadeVertexCount=positions.length/3,seamIndexStart=indices.length;
   const ring=Array.from({length:lip.profileVertexCount},(_,i)=>({x:lip.positions[i*3],y:lip.positions[i*3+1]}));
   const exterior=waterTriangles(exteriorMesh),minLipX=Math.min(...ring.map(p=>p.x)),maxLipX=Math.max(...ring.map(p=>p.x));
@@ -407,9 +444,9 @@ export function constructGeologicalRuntimeBridge(canonical){
   const field=makeCanonicalAuthoringTerrainSampler(canonical);
   // Pull the original canonical terrain's actual linear-color boundary values.
   // The replacement terrain must not create a giant hard-edged material rectangle.
-  const originalTerrainColorAt=(x,z)=>{
+  const originalTerrainContactAt=(x,z)=>{
     const sample=field.sample(x,z);if(!sample)return null;
-    const offset=sample.triangleOffset,idx=canonical.buffers.indices,pos=canonical.buffers.positions,colors=canonical.buffers.baseColorsLinear;
+    const offset=sample.triangleOffset,idx=canonical.buffers.indices,pos=canonical.buffers.positions;
     const ids=[idx[offset],idx[offset+1],idx[offset+2]];
     const p=ids.map(id=>unprojectPlanetVertex(Math.fround(pos[id*3]),Math.fround(pos[id*3+1]),Math.fround(pos[id*3+2])));
     const [a,b,c]=p,den=(b.z-c.z)*(a.x-c.x)+(c.x-b.x)*(a.z-c.z);
@@ -417,7 +454,11 @@ export function constructGeologicalRuntimeBridge(canonical){
     const u=((b.z-c.z)*(x-c.x)+(c.x-b.x)*(z-c.z))/den;
     const v=((c.z-a.z)*(x-c.x)+(a.x-c.x)*(z-c.z))/den;
     const w=1-u-v;
-    return [0,1,2].map(k=>Math.max(0,Math.min(1,u*colors[ids[0]*4+k]+v*colors[ids[1]*4+k]+w*colors[ids[2]*4+k])));
+    return {ids,weights:[u,v,w],triangleOffset:offset};
+  };
+  const originalTerrainColorAt=(x,z)=>{
+    const q=originalTerrainContactAt(x,z);if(!q)return null;
+    return [0,1,2].map(k=>Math.max(0,Math.min(1,q.ids.reduce((sum,id,i)=>sum+q.weights[i]*canonical.buffers.baseColorsLinear[id*4+k],0))));
   };
   const terrainAt=(x,z)=>field.elevation(x,z);
   const trace=traceGeologicalRuntimeDrainage(terrainAt);
@@ -454,7 +495,7 @@ export function constructGeologicalRuntimeBridge(canonical){
     const edge=Math.min(x-BOUNDS.xMin,BOUNDS.xMax-x,z-BOUNDS.zMin,BOUNDS.zMax-z);
     return smooth(1-nearest.distance/12)*approachFade*smooth(edge/12);
   };
-  const excavatedOutdoorTerrain=(x,z)=>baseFormation.excavatedOutdoorTerrain(x,z)-
+  const authoredOutdoorTerrain=(x,z)=>baseFormation.excavatedOutdoorTerrain(x,z)-
     1.65*channelInfluenceAt(x,z)-3.05*oasisCarveInfluenceAt(x,z);
   const oasisNearest=drainagePoints.reduce((best,p)=>
     !best||Math.hypot(p.x-oasis.centerX,p.z-oasis.centerZ)<best.distance?
@@ -500,6 +541,18 @@ export function constructGeologicalRuntimeBridge(canonical){
   const physicalFloorAt=(x,z)=>caveSectionAt(x,z)?.floorY??floorAt(x,z);
   const physicalRoofAt=(x,z)=>caveSectionAt(x,z)?.ceilingY??roofAt(x,z);
   const physicalInsideVoid=(x,y,z)=>{const q=caveSectionAt(x,z);return !!q&&y>=q.floorY&&y<q.ceilingY};
+  const entranceXs=Array.from({length:kernel.mesh.profileVertexCount},(_,i)=>kernel.mesh.positions[i*3]);
+  const entranceMinX=Math.min(...entranceXs),entranceMaxX=Math.max(...entranceXs);
+  const excavatedOutdoorTerrain=(x,z)=>{
+    const original=authoredOutdoorTerrain(x,z),distance=SITE.portalZ-z;
+    // Only the exterior 12m approach changes. Behind the mouth, original
+    // mountain, gallery and upper-mantle side/back contacts remain authoritative.
+    if(distance<0||distance>=12||x<=entranceMinX-3||x>=entranceMaxX+3)return original;
+    const ringX=clamp(x,entranceMinX,entranceMaxX),floor=kernelEntranceFloor(kernel.mesh,ringX);
+    const lateral=x<entranceMinX?smooth((x-entranceMinX+3)/3):x>entranceMaxX?1-smooth((x-entranceMaxX)/3):1;
+    const weight=(1-smooth(distance/12))*lateral;
+    return original+(floor-original)*weight;
+  };
   // Check the whole generated shell against the uncut mountain, including
   // asymmetric shoulders; centerline-only samples cannot detect a side breach.
   let minimumKernelRoofCover=Infinity;
@@ -514,7 +567,9 @@ export function constructGeologicalRuntimeBridge(canonical){
     floorAt:physicalFloorAt,roofAt:physicalRoofAt,insideVoid:physicalInsideVoid,
     coverSamples:Object.freeze(coverSamples),minimumRoofCover:minimumKernelRoofCover,
     excavatedOutdoorTerrain,rockSolidAt:(x,y,z)=>y<=excavatedOutdoorTerrain(x,z)&&!physicalInsideVoid(x,y,z)});
-  const rawPortal=constructGeologicalPortalAssembly(formation,terrainAt,{bounds:BOUNDS});
+  const assembledPortal=constructGeologicalPortalAssembly(formation,terrainAt,{bounds:BOUNDS});
+  const rawPortal=Object.freeze({...assembledPortal,terrainWithoutAperture:
+    conformEntranceTerrain(assembledPortal.terrainWithoutAperture,kernel.mesh,excavatedOutdoorTerrain,SITE.portalZ)});
   const cliff=buildReliefCliffFace(formation,terrainAt,rawPortal.aperture,rawPortal.terrainWithoutAperture);
   const physicalFormation=Object.freeze({...formation,rockFaceFrontAt:cliff.rockFaceFrontAt,lowerEntranceSeamAt:cliff.lowerEntranceSeamAt,
     rockSolidAt:(x,y,z)=>{
@@ -545,7 +600,7 @@ export function constructGeologicalRuntimeBridge(canonical){
   const emittedOutdoor=meshes.filter(p=>p.role==='ERODED_TERRAIN').flatMap(p=>waterTriangles(p.mesh,{projected:true,role:'OUTDOOR_TERRAIN'}));
   const sampleOutdoorAt=(x,z)=>{if(!Number.isFinite(x)||!Number.isFinite(z))fail('OUTDOOR_SAMPLE_NONFINITE');return sampleWaterTriangles(emittedOutdoor,x,z);};
   const output=Object.freeze({sampleWaterAt,sampleOutdoorAt,contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
-    formation:physicalFormation,portal,retirement,meshes,route:trace,originalTerrainColorAt,
+    formation:physicalFormation,portal,retirement,meshes,route:trace,originalTerrainColorAt,originalTerrainContactAt,
     cavernLightVisibility:makeCavernLightVisibility([kernel.mesh,cliff.mesh]),
     originalTerrainElevationAt:terrainAt,
     sourceWorldUnchanged:true,originalBaseTrianglesToRetire:retirement.triangleCount,
@@ -612,4 +667,32 @@ export function sampleGeologicalMaterialExposure(model,role,x,z){
   return Object.freeze({sourceOriginalHeight:before,excavatedHeight:after,
     incisionDepth,edgeFade:fade,rockWeight:materialWeight,oasisInfluence,
     originalWorldMutated:false});
+}
+
+/** Startup-only rim reconciliation against the actual uploaded indexed land.
+ * Keep raw normal interpolation: the fragment shader normalizes after raster
+ * interpolation. Geometry, navigation and the retained geological interior do
+ * not change. All four edges/corners use the same bounded 12m transition. */
+export function reconcileGeologicalTerrainRim(model,role,mesh,attributes,source){
+  if(role!=='ERODED_TERRAIN'&&role!=='MOUNTAIN_OVERBURDEN')return;
+  const channels=[['normals',3],['baseColorsLinear',4],['materialParameters',4],['coastDistances',1],['contactDistances',1]];
+  const b=model.localBounds;
+  for(let i=0;i<mesh.vertexCount;i++){
+    const p=unprojectPlanetVertex(mesh.positions[i*3],mesh.positions[i*3+1],mesh.positions[i*3+2]);
+    const edge=Math.min(p.x-b.xMin,b.xMax-p.x,p.z-b.zMin,b.zMax-p.z);
+    if(edge>=12)continue;
+    const f=Math.max(0,Math.min(1,edge/12)),weight=1-f*f*(3-2*f);
+    const q=model.originalTerrainContactAt(p.x,p.z);
+    if(!q)fail('RIM_SOURCE_CONTACT_MISSING');
+    if(q.ids.some(id=>source.roleCodes[id]!==1))fail('RIM_SOURCE_NOT_TERRAIN');
+    for(const [key,size] of channels){
+      const src=source[key],out=attributes[key];
+      if(!src||!out)fail('RIM_ATTRIBUTE_MISSING:'+key);
+      for(let c=0;c<size;c++){
+        const v=q.ids.reduce((sum,id,j)=>sum+q.weights[j]*src[id*size+c],0);
+        if(!Number.isFinite(v))fail('RIM_ATTRIBUTE_NONFINITE:'+key);
+        out[i*size+c]=out[i*size+c]*(1-weight)+v*weight;
+      }
+    }
+  }
 }

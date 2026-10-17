@@ -2,6 +2,11 @@
 export const WOODLAND_HABITAT=Object.freeze({bounds:Object.freeze([-213,-298,-69,-154]),size:192,spacing:.14,maximumRoots:450000,maximumTileRoots:1600,maximumSandCoverage:.12});
 const clamp=v=>Math.max(0,Math.min(1,v));
 export const habitatSmooth=(a,b,x)=>{const t=clamp((x-a)/(b-a));return t*t*(3-2*t);};
+/** Slope is height/run gradient. Keep the old woodland rule; rear shoulders taper. */
+export function habitatSlopeWeight(slope,region='WOODLAND'){
+ if(!Number.isFinite(slope)||slope<0)return 0;
+ return region==='RAVINE'?1-habitatSmooth(.30,.65,slope):slope<=.35?1:0;
+}
 export function habitatHash(x,z,k=0){let h=Math.imul(x^0x51ed270b,1597334677)^Math.imul(z^0x68bc21eb,3812015801)^Math.imul(k+1,747796405);h=Math.imul(h^(h>>>16),2246822519);h=Math.imul(h^(h>>>13),3266489917);return(h^(h>>>16))>>>0;}
 export function habitatNoise(x,z,scale,k=0){const xx=x/scale,zz=z/scale,ix=Math.floor(xx),iz=Math.floor(zz),u=habitatSmooth(0,1,xx-ix),v=habitatSmooth(0,1,zz-iz),n=(a,b)=>habitatHash(a,b,k)/4294967296;return(n(ix,iz)*(1-u)+n(ix+1,iz)*u)*(1-v)+(n(ix,iz+1)*(1-u)+n(ix+1,iz+1)*u)*v;}
 export function regionalWoodlandWeight(x,z){
@@ -14,7 +19,7 @@ export function regionalWoodlandWeight(x,z){
  return clamp(extent*boundary*(.72+.28*habitatNoise(x,z,18,33)));
 }
 /** suitability must use rendered support plus the same exact hard admission as roots. */
-async function buildHabitatRaster({suitability,yieldControl,bounds,size,regionalWeight}){
+async function buildHabitatRaster({suitability,yieldControl,bounds,size,regionalWeight,region='WOODLAND'}){
  if(typeof suitability!=='function')throw Error('WOODLAND_HABITAT_SUITABILITY_REQUIRED');
  const [x0,z0,x1,z1]=bounds,stepX=(x1-x0)/size,stepZ=(z1-z0)/size,step=Math.min(stepX,stepZ),diagonal=Math.hypot(stepX,stepZ);
  const weights=new Float32Array(size*size),distance=new Float32Array(size*size),pixels=new Uint8Array(size*size);
@@ -22,7 +27,7 @@ async function buildHabitatRaster({suitability,yieldControl,bounds,size,regional
  for(let iz=0;iz<size;iz++){
   for(let ix=0;ix<size;ix++){
    const i=iz*size+ix,x=x0+(ix+.5)*stepX,z=z0+(iz+.5)*stepZ,regional=regionalWeight(x,z);
-   const support=regional>0?Number(suitability(x,z)):0;
+   const support=regional>0?Number(suitability(x,z,region)):0;
    if(!Number.isFinite(support)||support<0||support>1)throw Error('WOODLAND_HABITAT_SUITABILITY_INVALID');
    weights[i]=regional*support;distance[i]=weights[i]>0?10000:0;if(weights[i]>0)admittedCells++;
   }
@@ -54,7 +59,7 @@ export async function buildWoodlandHabitatField({suitability,yieldControl=async(
  const woodland=await buildHabitatRaster({suitability,yieldControl,...WOODLAND_HABITAT,regionalWeight:regionalWoodlandWeight});
  if(ravinePoints===null)return woodland;
  if(!Array.isArray(ravinePoints)||ravinePoints.length<2||ravinePoints.some(p=>![p.x,p.z].every(Number.isFinite)))throw Error('RAVINE_DRAINAGE_POINTS_INVALID');
- const ravine=await buildHabitatRaster({suitability,yieldControl,...RAVINE_HABITAT,regionalWeight:(x,z)=>ravineHabitatWeight(ravinePoints,x,z)});
+ const ravine=await buildHabitatRaster({suitability,yieldControl,...RAVINE_HABITAT,region:'RAVINE',regionalWeight:(x,z)=>ravineHabitatWeight(ravinePoints,x,z)});
  // Side-by-side exact texels keep the accepted woodland sample grid unchanged.
  const size=woodland.size,width=size*2,height=size,pixels=new Uint8Array(width*height);
  for(let row=0;row<size;row++){pixels.set(woodland.pixels.subarray(row*size,(row+1)*size),row*width);pixels.set(ravine.pixels.subarray(row*size,(row+1)*size),row*width+size);}

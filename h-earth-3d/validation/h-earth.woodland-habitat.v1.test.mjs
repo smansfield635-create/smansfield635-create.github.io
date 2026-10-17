@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {WOODLAND_HABITAT,regionalWoodlandWeight,buildWoodlandHabitatField,sampleWoodlandHabitat,planWoodlandHabitatCandidates,habitatSmooth,RAVINE_HABITAT,ravineHabitatWeight} from '../../showroom/globe/h-earth/render/woodland-habitat-field.v1.js';
+import {WOODLAND_HABITAT,regionalWoodlandWeight,buildWoodlandHabitatField,sampleWoodlandHabitat,planWoodlandHabitatCandidates,habitatSmooth,habitatSlopeWeight,RAVINE_HABITAT,ravineHabitatWeight} from '../../showroom/globe/h-earth/render/woodland-habitat-field.v1.js';
+import {regionToHEarthPlanetPoint,getHEarthPlanetRelativeUp} from '../../showroom/globe/h-earth/render/planetary-world-frame.js';
 import {createUniformGroundAdmission} from '../../showroom/globe/h-earth/render/landscape-planting-pilot.v1.js';
 
 test('regional field tapers continuously beyond old ellipse and is zero at every rectangular boundary',()=>{
@@ -31,6 +32,13 @@ test('static candidate layout is deterministic and bounded before exact contact 
  assert.ok([...tiles.values()].every(n=>n<=1600));
  // Even an adversarial field cannot exceed the global limit.
  const capped=planWoodlandHabitatCandidates({sample:()=>1});assert.equal(capped.length,450000);
+});
+test('ravine-only slope taper preserves woodland cutoff and excludes steep/nonfinite ground',async()=>{
+ assert.equal(habitatSlopeWeight(.35),1);assert.equal(habitatSlopeWeight(.3501),0);
+ assert.equal(habitatSlopeWeight(.30,'RAVINE'),1);assert.ok(habitatSlopeWeight(.5,'RAVINE')>0);
+ for(const slope of [.65,.9,Infinity,NaN,-1])assert.equal(habitatSlopeWeight(slope,'RAVINE'),0);
+ const seen=new Set(),field=await buildWoodlandHabitatField({ravinePoints:[{x:40,z:-268},{x:20,z:-300}],suitability:(x,z,region)=>{seen.add(region);return habitatSlopeWeight(.5,region);}});
+ assert.deepEqual([...seen].sort(),['RAVINE','WOODLAND']);assert.ok(field.woodland.pixels.every(v=>v===0));assert.ok(field.ravine.pixels.some(v=>v>0));
 });
 const box={minX:100,maxX:110,minZ:100,maxZ:110};
 test('ravine atlas preserves exact woodland texels and root identities while adding irregular drainage shoulders',async()=>{
@@ -92,13 +100,13 @@ test('exact archived world builds finite protected habitat roots with populated 
  const pilotPackage=payload.raw,admitGround=await createUniformGroundAdmission({visibleSurface,geology,toLocal:terrain.unprojectPlanetVertex,estate:placement.H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY,obstacles:pilotPackage.landscapeCoverFootprints??[],trees:pilotPackage.landscapeFloorFootprints??[],oasis:grass.H_EARTH_OASIS_FOLIAGE_SAMPLE,sampleStructure:placement.sampleHEarthGen311PlacementStructureDisposition,maximumSandCoverage:.12});
  const replacement=renderer.slice(renderer.indexOf('  function prepareReplacementVegetation'));
  const fieldCode=replacement.slice(replacement.indexOf('      const habitat=await buildWoodlandHabitatField'),replacement.indexOf('      const presentation=await buildWoodlandFineGrass'));
- const field=await Function('buildWoodlandHabitatField','habitatSmooth','yieldToBrowserPaint','visibleSurface','admitGround','unprojectPlanetVertex','pilotMaterialAt','woodlandGrassClear','pilotPackage','WOODLAND_HABITAT','resources',`return(async()=>{${fieldCode};return habitat;})()`)(buildWoodlandHabitatField,habitatSmooth,async()=>{},visibleSurface,admitGround,terrain.unprojectPlanetVertex,materials.sampleHEarthRun8CSuccessorSurfaceMaterial,woodland.woodlandGrassClear,pilotPackage,WOODLAND_HABITAT,{geologicalRuntime:geology});
+ const field=await Function('buildWoodlandHabitatField','habitatSmooth','yieldToBrowserPaint','visibleSurface','admitGround','unprojectPlanetVertex','pilotMaterialAt','woodlandGrassClear','pilotPackage','WOODLAND_HABITAT','resources','habitatSlopeWeight',`return(async()=>{${fieldCode};return habitat;})()`)(buildWoodlandHabitatField,habitatSmooth,async()=>{},visibleSurface,admitGround,terrain.unprojectPlanetVertex,materials.sampleHEarthRun8CSuccessorSurfaceMaterial,woodland.woodlandGrassClear,pilotPackage,WOODLAND_HABITAT,{geologicalRuntime:geology},habitatSlopeWeight);
  const presentation=await woodland.buildWoodlandFineGrass(pilotPackage,{visibleSurface,admitGround,habitat:field});
  const tiles=owner.planImmutableTiles(presentation);let roots=0,control=0,expanded=0,ravine=0,maximumTile=0;
- const approachControls=[{x:50,z:-300,roots:0},{x:60,z:-300,roots:0}];
+ const approachControls=[{x:50,z:-300,roots:0},{x:60,z:-300,roots:0},{x:58,z:-280,roots:0},{x:21,z:-270,roots:0},{x:25,z:-268,roots:0}];
  for(const tile of presentation.tiles){maximumTile=Math.max(maximumTile,tile.roots.length);for(const root of tile.roots){
   roots++;if(root.z< -298&&root.x> -110)ravine++;assert.ok([root.x,root.y,root.z,root.angle,root.seed,root.slope].every(Number.isFinite));assert.ok(admitGround(root.x,root.z,visibleSurface.sample(root.x,root.z)));assert.ok(field.sample(root.x,root.z)>0);
-  assert.ok(root.slope<=.35,'ravine expansion preserves the existing steep-surface exclusion');
+  assert.ok(habitatSlopeWeight(root.slope,field.woodland.sample(root.x,root.z)>0?'WOODLAND':'RAVINE')>0,'every actual root satisfies its regional slope rule');
   for(const point of approachControls)if(Math.hypot(root.x-point.x,root.z-point.z)<5)point.roots++;
   assert.ok(woodland.woodlandGrassClear(terrain.unprojectPlanetVertex(root.x,root.y,root.z).x,terrain.unprojectPlanetVertex(root.x,root.y,root.z).z));
   if(Math.hypot(root.x+139.40267987050615,root.z+194.5)<=2)control++;
@@ -106,6 +114,23 @@ test('exact archived world builds finite protected habitat roots with populated 
  }}
  assert.ok(roots>0&&roots<=450000);assert.ok(ravine>100,'real ravine receives admitted vegetation');assert.equal(field.receipt.woodlandGridPreserved,true);assert.equal(field.pixels.byteLength,73728);assert.ok(control>0,'qualified owner requires populated fixed control');assert.ok(expanded>0,'real rendered admission allows coverage beyond former ellipse');assert.ok(maximumTile<=1600);assert.equal(tiles.reduce((n,t)=>n+t.count,0),roots);
  assert.equal(createHash('sha256').update(JSON.stringify(payload.raw.buffers)).digest('hex'),before);
- for(const point of approachControls){const support=visibleSurface.sample(point.x,point.z);assert.ok(admitGround(point.x,point.z,support),'approach control is supported admissible soil');assert.ok(field.sample(point.x,point.z)>0,'supported approach is inside graded habitat');assert.ok(point.roots>50,'previously empty approach now has actual supported nearby roots');}
- console.log('EXACT_HABITAT_CENSUS',JSON.stringify({roots,control,expanded,ravine,maximumTile,tiles:tiles.length,approachControls,field:field.receipt}));
+ for(const point of approachControls){const support=visibleSurface.sample(point.x,point.z);assert.ok(admitGround(point.x,point.z,support),'approach control is supported admissible soil');assert.ok(field.sample(point.x,point.z)>0,'supported approach is inside graded habitat');assert.ok(point.roots>20,'previously empty approach/visible shoulder now has actual supported nearby roots');}
+
+ const cameraLocal={x:39.37145607469933,y:9.864322729047974,z:-300.801459935172},yaw=174.46896000015818*Math.PI/180,pitch=6.160767999992402*Math.PI/180;
+ const camera=regionToHEarthPlanetPoint(cameraLocal),target=regionToHEarthPlanetPoint({x:cameraLocal.x+18*Math.sin(yaw)*Math.cos(pitch),y:cameraLocal.y+18*Math.sin(pitch),z:cameraLocal.z-18*Math.cos(yaw)*Math.cos(pitch)});
+ const vec=p=>[p.x,p.y,p.z],dot=(a,b)=>a.reduce((n,x,i)=>n+x*b[i],0),sub=(a,b)=>a.map((v,i)=>v-b[i]),unit=a=>a.map(v=>v/Math.hypot(...a)),cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+ const c=vec(camera),forward=unit(sub(vec(target),c)),right=unit(cross(forward,vec(getHEarthPlanetRelativeUp(cameraLocal)))),up=cross(right,forward),tan=Math.tan(28*Math.PI/180);
+ let projectedShoulderRoots=0,unoccludedShoulderRoots=0;
+ for(const tile of presentation.tiles)for(const r of tile.roots){
+  if(r.slope<=.35||r.slope>=.65)continue;
+  const tip=[r.x,r.y+.15,r.z],v=sub(tip,c),depth=dot(v,forward);
+  if(depth<=.1||depth>65||Math.abs(dot(v,right)/depth)>tan*1.6||Math.abs(dot(v,up)/depth)>tan)continue;
+  projectedShoulderRoots++;
+  const steps=Math.ceil(Math.hypot(...v)/.5);let clear=true;
+  for(let i=1;i<steps-1;i++){const t=i/steps,x=c[0]+v[0]*t,y=c[1]+v[1]*t,z=c[2]+v[2]*t,support=visibleSurface.sample(x,z);if(support&&support.y>y+.02){clear=false;break;}}
+  if(clear)unoccludedShoulderRoots++;
+ }
+ assert.ok(projectedShoulderRoots>100,'repair covers the actual failed camera cone, not just offscreen controls');
+ assert.ok(unoccludedShoulderRoots>50,'admitted shoulder blade tips have terrain-clear lines of sight in the failed view');
+ console.log('EXACT_HABITAT_CENSUS',JSON.stringify({roots,control,expanded,ravine,maximumTile,tiles:tiles.length,approachControls,projectedShoulderRoots,unoccludedShoulderRoots,field:field.receipt}));
 });

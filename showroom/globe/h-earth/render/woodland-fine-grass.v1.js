@@ -1,4 +1,4 @@
-import {WOODLAND_HABITAT,habitatHash,planWoodlandHabitatCandidates} from './woodland-habitat-field.v1.js';
+import {WOODLAND_HABITAT,habitatHash,planWoodlandHabitatCandidates,habitatSlopeWeight} from './woodland-habitat-field.v1.js';
 /** Presentation-only woodland grass. Canonical world and records stay immutable. */
 import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2780-stable-planting-v1';
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
@@ -441,12 +441,12 @@ async function buildHabitatWoodland(pkg,{visibleSurface,admitGround,habitat,yiel
  const reject=k=>rejections[k]=(rejections[k]??0)+1;
  const obstacles=pkg.landscapeCoverFootprints??[],trees=pkg.landscapeFloorFootprints??[];
  for(let i=0;i<candidates.length;i++){
-  const {x,z,ix,iz}=candidates[i],support=visibleSurface.sample(x,z);
+  const {x,z,ix,iz,region}=candidates[i],support=visibleSurface.sample(x,z);
   if(!support){reject('NO_TERRAIN');continue;}
   if(!admitGround(x,z,support)){reject('SHARED_GROUND_ADMISSION');continue;}
   const a=inverseHEarthGroundCoverPoint(x,support.y,z),m=materialAt(a.x,a.z),w=visibleSurface.water.sample(x,z);
   if(w&&support.y<=w.y+.03){reject('WATER');continue;}
-  if(m?.valid!==true||support.slope>.35||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)){reject('MATERIAL_OR_SLOPE');continue;}
+  if(m?.valid!==true||habitatSlopeWeight(support.slope,region)<=0||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)){reject('MATERIAL_OR_SLOPE');continue;}
   if(!woodlandGrassClear(a.x,a.z)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.03)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.10)){reject('PROTECTED_FOOTPRINT');continue;}
   const tx=Math.floor(x/4),tz=Math.floor(z/4),id=`${tx}:${tz}`;if(!tiles.has(id))tiles.set(id,{id,minX:tx*4,minZ:tz*4,roots:[]});
   const tile=tiles.get(id);if(tile.roots.length>=WOODLAND_HABITAT.maximumTileRoots)throw Error('WOODLAND_HABITAT_TILE_BUDGET_EXCEEDED');

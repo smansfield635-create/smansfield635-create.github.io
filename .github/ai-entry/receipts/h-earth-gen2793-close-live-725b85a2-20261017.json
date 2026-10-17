@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2793-close-live-725b85a2-20261017",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6485,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2793-close-live-725b85a2-20261017",
+  "requestCommit": "f7f0bf84c0741cc9d69e6006e665889b14a235aa",
+  "requestCommitParent": "725b85a2e3898650d0cd99c5854570a6e31073e3",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "725b85a2e3898650d0cd99c5854570a6e31073e3",
+  "workflow": "remote-operation-terminal-closure-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"expectedMainHead\":\"725b85a2e3898650d0cd99c5854570a6e31073e3\",\"closureRequest\":{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"H_EARTH_WOODLAND_RIVERBANK_REFINEMENT_20261017_001\",\"lockScope\":\"H_EARTH:WOODLAND_RIVERBANK_REFINEMENT:20261017\",\"lockGeneration\":2793,\"terminalDisposition\":\"PASS_CLOSED\"}}",
+    "router_callback_issue": "6485",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "39060987973",
+  "dispatchedRunId": 39060999425,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39060999425",
+  "dispatchedRunHeadSha": "725b85a2e3898650d0cd99c5854570a6e31073e3",
+  "dispatchedAt": "2026-10-17T19:06:17.033Z",
+  "resolvedAt": "2026-10-17T19:06:20.853Z"
+}

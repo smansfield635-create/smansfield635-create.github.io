@@ -20,10 +20,19 @@ export function shouldPresentHEarthDrawRange(range){
 }
 export const GEOLOGICAL_RUNTIME_BRIDGE_ID='H_EARTH_GEN2735_RUNTIME_GEOLOGICAL_BRIDGE_v1';
 const SITE=GEOLOGICAL_FORMATION_SITES.B_REAR_RAVINE;
-const BOUNDS=Object.freeze({xMin:-120,xMax:96,zMin:-376,zMax:-224});
+const BOUNDS=Object.freeze({xMin:-120,xMax:96,zMin:-440,zMax:-224});
+const SAMPLER_BOUNDS=Object.freeze({xMin:-160,xMax:192,zMin:-448,zMax:-120});
 const DIRS=Object.freeze([[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]]);
 let active=null;
 function fail(s){throw Error('GEOLOGICAL_RUNTIME_BRIDGE_INVALID:'+s)}
+/** Shared authored corridor coordinates; no added survey or water authority. */
+export function expandVegetationCorridorPoints(points){
+  const end=points?.[points.length-1];
+  // The portal head precedes the 78 original D8 survey stations.
+  if(points?.length!==79||end?.x!==-80||end?.z!==-352)fail('DRY_EXTENSION_SOURCE_ENDPOINT');
+  return Object.freeze([...points,...Array.from({length:32},(_,i)=>
+    Object.freeze({x:end.x,z:end.z-2*(i+1)}))]);
+}
 /** Reconstruct strict downhill flow from actual indexed canonical authoring heights. */
 export function traceGeologicalRuntimeDrainage(sampler,site=SITE){
   let x=site.x,z=site.drainageHeadZ;let original=sampler(x,z);
@@ -441,7 +450,7 @@ function buildReliefCliffFace(formation,terrainAt,aperture,exteriorMesh){
 /** Build only once when the canonical package is resident, never on a frame update. */
 export function constructGeologicalRuntimeBridge(canonical){
   if(!canonical?.buffers?.positions||!canonical?.primitiveSpans)fail('NO_CANONICAL_PACKAGE');
-  const field=makeCanonicalAuthoringTerrainSampler(canonical);
+  const field=makeCanonicalAuthoringTerrainSampler(canonical,{bounds:SAMPLER_BOUNDS});
   // Pull the original canonical terrain's actual linear-color boundary values.
   // The replacement terrain must not create a giant hard-edged material rectangle.
   const originalTerrainContactAt=(x,z)=>{
@@ -489,13 +498,36 @@ export function constructGeologicalRuntimeBridge(canonical){
     return oasisInfluenceAt(x,z)*(portalSide?awayFromPortal:1);
   };
   const drainagePoints=Object.freeze(baseFormation.drainage.points.map(p=>Object.freeze({...p,bedY:p.bedY-1.65})));
+  // An authored DRY landform continuation, never an extension of the D8 survey
+  // or of its paused water meshes. Preserve every accepted survey/bed point.
+  const extensionStart=drainagePoints[drainagePoints.length-1];
+  const authoredCorridor=expandVegetationCorridorPoints(drainagePoints);
+  const dryExtension=[extensionStart];
+  for(const {x,z} of authoredCorridor.slice(drainagePoints.length)){
+    const originalY=terrainAt(x,z);
+    if(!Number.isFinite(originalY))fail('DRY_EXTENSION_TERRAIN_SAMPLE');
+    const bedY=Math.min(dryExtension[dryExtension.length-1].bedY-.008,originalY-1.9);
+    dryExtension.push(Object.freeze({x,z,originalY,bedY}));
+  }
+  const vegetationCorridorPoints=Object.freeze([...drainagePoints,...dryExtension.slice(1)]);
+  const smoother=v=>{v=clamp(v,0,1);return v*v*v*(v*(v*6-15)+10)};
+  const extendedOutdoorTerrain=(x,z)=>{
+    const original=baseFormation.excavatedOutdoorTerrain(x,z);
+    if(Math.abs(x-extensionStart.x)>=8.45||z>extensionStart.z+8.45||z<extensionStart.z-64-8.45)return original;
+    const nearest=nearestRouteSegment(dryExtension,x,z);
+    // Match the accepted rounded-bank excavation at the source endpoint. The
+    // original landform remains authoritative wherever this dry cut is higher.
+    const radius=7.2+1.25*Math.sin((drainagePoints.length-1+nearest.segment)*.28);
+    const base=terrainAt(x,z),weight=smoother(1-nearest.distance/radius);
+    return Math.min(original,base-Math.max(0,base-nearest.bedY-1.65)*weight);
+  };
   const channelInfluenceAt=(x,z)=>{
-    const nearest=nearestRouteSegment(drainagePoints,x,z);if(!nearest)return 0;
+    const nearest=nearestRouteSegment(vegetationCorridorPoints,x,z);if(!nearest)return 0;
     const approachFade=1-smooth((z-SITE.drainageHeadZ)/(SITE.portalZ-SITE.drainageHeadZ));
     const edge=Math.min(x-BOUNDS.xMin,BOUNDS.xMax-x,z-BOUNDS.zMin,BOUNDS.zMax-z);
     return smooth(1-nearest.distance/12)*approachFade*smooth(edge/12);
   };
-  const authoredOutdoorTerrain=(x,z)=>baseFormation.excavatedOutdoorTerrain(x,z)-
+  const authoredOutdoorTerrain=(x,z)=>extendedOutdoorTerrain(x,z)-
     1.65*channelInfluenceAt(x,z)-3.05*oasisCarveInfluenceAt(x,z);
   const oasisNearest=drainagePoints.reduce((best,p)=>
     !best||Math.hypot(p.x-oasis.centerX,p.z-oasis.centerZ)<best.distance?
@@ -562,7 +594,7 @@ export function constructGeologicalRuntimeBridge(canonical){
     minimumKernelRoofCover=Math.min(minimumKernelRoofCover,cover);
   }
   const formation=Object.freeze({...baseFormation,oasis:Object.freeze({...oasis,waterLevel:oasisWaterLevel}),
-    oasisInfluenceAt,drainage,waterPresent:true,roofAt,floorAt,caveRadius,caveCenterX,insideVoid,excavatedOutdoorTerrain,
+    oasisInfluenceAt,drainage,vegetationCorridorPoints,waterPresent:true,roofAt,floorAt,caveRadius,caveCenterX,insideVoid,excavatedOutdoorTerrain,
     caveSectionAt,kernelCaveBoundary:kernel.mesh,kernelConstruction:kernel.constructed,
     floorAt:physicalFloorAt,roofAt:physicalRoofAt,insideVoid:physicalInsideVoid,
     coverSamples:Object.freeze(coverSamples),minimumRoofCover:minimumKernelRoofCover,

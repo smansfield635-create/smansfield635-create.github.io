@@ -450,7 +450,7 @@ async function buildHabitatWoodland(pkg,{visibleSurface,admitGround,habitat,yiel
   if(!woodlandGrassClear(a.x,a.z)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.03)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.10)){reject('PROTECTED_FOOTPRINT');continue;}
   const tx=Math.floor(x/4),tz=Math.floor(z/4),id=`${tx}:${tz}`;if(!tiles.has(id))tiles.set(id,{id,minX:tx*4,minZ:tz*4,roots:[]});
   const tile=tiles.get(id);if(tile.roots.length>=WOODLAND_HABITAT.maximumTileRoots)throw Error('WOODLAND_HABITAT_TILE_BUDGET_EXCEEDED');
-  tile.roots.push({x,y:Math.fround(support.y),z,angle:Math.fround(habitatHash(ix,iz,3)/4294967296*Math.PI*2),seed:habitatHash(ix,iz,4),triangleId:support.triangleId,slope:support.slope});accepted++;
+  tile.roots.push({x,y:Math.fround(support.y),z,angle:Math.fround(habitatHash(ix,iz,3)/4294967296*Math.PI*2),seed:habitatHash(ix,iz,4),triangleId:support.triangleId,slope:support.slope,...(region==='RAVINE'?{region}: {})});accepted++;
   if((i&1023)===0){onProgress({phase:'WOODLAND_HABITAT_CONTACTS',acceptedContacts:accepted,processedCandidates:i,totalCandidates:candidates.length});await yieldControl();}
  }
  const ordered=[...tiles.values()].sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);for(const tile of ordered)tile.roots.sort((a,b)=>a.seed-b.seed);

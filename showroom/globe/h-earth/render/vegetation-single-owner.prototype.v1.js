@@ -6,7 +6,7 @@ export function detailWeight(distance){
 }
 export function planImmutableTiles(presentation){
  if(!Array.isArray(presentation?.tiles))throw Error('POPULATION_INVALID');
- const ids=new Set(),tileIds=new Set();let first=0;
+ const ids=new Set(),tileIds=new Set();let first=0,woodlandRoots=0,ravineRoots=0;
  const tiles=presentation.tiles.map(tile=>{
   if(typeof tile.id!=='string'||tileIds.has(tile.id)||![tile.minX,tile.minZ].every(Number.isFinite)||!Array.isArray(tile.roots))throw Error('TILE_INVALID');
   if(tile.roots.length>1600)throw Error('TILE_ROOT_BUDGET_EXCEEDED');
@@ -15,9 +15,13 @@ export function planImmutableTiles(presentation){
    if(![root.x,root.y,root.z,root.angle,root.seed,root.slope].every(Number.isFinite)||![root.x,root.y,root.z,root.angle].every(v=>Number.isFinite(Math.fround(v))))throw Error('ROOT_NONFINITE');
    if(root.x<tile.minX||root.x>=tile.minX+4||root.z<tile.minZ||root.z>=tile.minZ+4)throw Error('ROOT_OUTSIDE_TILE');
    const id=`${Math.fround(root.x)}:${Math.fround(root.y)}:${Math.fround(root.z)}:${root.seed}`;
-   if(ids.has(id))throw Error('ROOT_DUPLICATE');ids.add(id);rootIds.push(id);packed.set([root.x,root.y,root.z,root.angle],i*4);
+   if(ids.has(id))throw Error('ROOT_DUPLICATE');ids.add(id);rootIds.push(id);
+   if(root.region==='RAVINE')ravineRoots++;else woodlandRoots++;
+   if(woodlandRoots>450000)throw Error('POPULATION_GPU_BUDGET_EXCEEDED');
+   if(ravineRoots>150000)throw Error('RAVINE_ROOT_BUDGET_EXCEEDED');
+   packed.set([root.x,root.y,root.z,root.angle],i*4);
   });
-  const result=Object.freeze({id:tile.id,minX:tile.minX,minZ:tile.minZ,rootIds:Object.freeze(rootIds),packed,count:rootIds.length,first});first+=result.count;if(first>450000)throw Error('POPULATION_GPU_BUDGET_EXCEEDED');return result;
+  const result=Object.freeze({id:tile.id,minX:tile.minX,minZ:tile.minZ,rootIds:Object.freeze(rootIds),packed,count:rootIds.length,first});first+=result.count;if(first>600000||first*16>9600000)throw Error('POPULATION_GPU_BUDGET_EXCEEDED');return result;
  });
  if(!first)throw Error('EMPTY_WOODLAND_POPULATION');if(presentation.receipt?.contactCount!==first)throw Error('POPULATION_COUNT_MISMATCH');return Object.freeze(tiles);
 }
@@ -93,7 +97,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   for(const range of ranges){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;}
   lastDraw={selectedFineRoots,drawCallCount,submittedTriangles:(rootCount+selectedFineRoots)*2,perFrameUploadBytes:0,coarseTiles:tiles.length,fineTiles:fine.length};return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:450000,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:600000,maximumWoodlandRoots:450000,maximumRavineRoots:150000,maximumPackedBytes:9600000,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose});
  }catch(error){cleanup();throw error;}

@@ -1,0 +1,64 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_CORRIDOR_BANK_COVERAGE_EXPANSION_20261017_001",
+  "canonicalAdmissionGeneration": 2798,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/corridor-bank-expansion-v1/README.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.corridor-bank-expansion.v1.test.mjs",
+    "h-earth-3d/validation/h-earth.terrain-cavern-seam-repair.v1.test.mjs"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "7035e605aecc5f3fdd6853353b0e9867c45b4efa1c93a9c7c65254d4f582f464"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-habitat-field.v1.js",
+      "sha256": "fa139eca86f07ec46401a7d7ec2f239d558774780da85f9e9c31efe7a53e3c05"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "e1c28729757f1f2b28f04d05192241306f84c9f4c109d162afe0ab8155b0e5c4"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "746cd933989a4311b64c4a006e23639beb98aea53523d12b42423d660fff84fb"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.corridor-bank-expansion.v1.test.mjs",
+      "sha256": "096935dc04d263f4e66886621a9cf6ff5272894b902d6eeb9b74a6bea4c671c4"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "eb024844b1dbd2ceaaea1f822cc18b8a1913b252",
+    "basis": "Unchanged world, entry/navigation/camera, woodland root identity, four trees, water meshes, cavern, perimeter reconciliation and performance contracts; scoped dry-channel and regional bank delta only."
+  },
+  "limitations": [
+    "Source-bound invariant preservation and CPU root-contact proof; no new visual pixel, GPU timing, tablet or full-world acceptance claim.",
+    "Publication preflight, qualified release and live exact-head verification remain separate.",
+    "Authored dry channel does not establish surveyed flow or connected outlet."
+  ]
+}

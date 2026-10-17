@@ -12,7 +12,7 @@ vm.runInContext(source+'\nthis.helpers={continuityCaptureRequested,validateConti
 const {continuityCaptureRequested,validateContinuityCapture,captureContinuityReplay}=context.helpers;
 const query='qualification=vegetation-continuity-v1&vegetation-trace=v1';
 function fixture(){
-  const point=(label,frame,x)=>({label,elapsedMilliseconds:frame*100,position:{x,y:2.25,z:0},cacheCell:{x:Math.floor(x/4),z:0},renderFrameCallCount:frame,traceSummary:{enabled:true}});
+  const point=(label,frame,x)=>({label,elapsedMilliseconds:frame*100,position:{x,y:2.25,z:0},cacheCell:{x:Math.floor(x/4),z:0},renderFrameCallCount:frame,traceSummary:{schema:'H_EARTH_VEGETATION_CONTINUITY_TRACE_v1',maximumEvents:512,maximumRoots:128,eventCount:55,lastSequence:55,droppedCount:0,observerErrorCount:0,timingPerturbed:true,disposed:false},probe:{enabled:true}});
   const observations=[point('INITIAL',10,0),point('BEFORE_MOVE',11,0),point('FORWARD_1',12,4),point('FORWARD_2',13,8),point('RETURN_1',14,4),point('RETURN_2',15,0),point('FINAL',16,0)];
   const qualification={schema:'H_EARTH_VEGETATION_CONTINUITY_REPLAY_v1',result:'TRACE_CAPTURED_VISUAL_VERDICT_NOT_ESTABLISHED',elapsedMilliseconds:1600,movementObserved:true,cacheCellTransitions:4,requestedStepsPerDirection:2,returnDistanceMeters:0,initial:observations[0],final:observations.at(-1),observations,physicalDeviceAcceptance:false,visiblePixelsVerified:false,publicationAuthorized:false};
   return {requested:true,waitCompleted:true,replayMarker:'captured',qualification,final:{canvasPresent:true,routeReady:'true',canvasScreenshotSha256:'a'.repeat(64),renderFrameCallCount:17,liveGpuReceipt:{counters:{renderFrameCallCount:17},vegetationContinuityQualification:structuredClone(qualification)}},performance:{observedAtMilliseconds:2000,navigation:[],timingPerturbed:true,physicalDeviceAcceptance:false},errors:[]};
@@ -21,6 +21,8 @@ test('selector reads the exact qualification value among URL parameters',()=>{
   assert.equal(continuityCaptureRequested(query),true);
   for(const q of ['', 'qualification=other', 'x=vegetation-continuity-v1','qualification=vegetation-continuity-v10'])assert.equal(continuityCaptureRequested(q),false);
 });
+// Trace summary fields above follow the actual hosted run 39003037819 receipt.
+// Enabled belongs to the point probe; trace summaries expose schema and disposed.
 test('complete actual trace and post-replay canvas are admissible capture evidence',()=>assert.equal(validateContinuityCapture(fixture()),true));
 const invalidCases={
   'wait never completed': c=>{c.waitCompleted=false;},
@@ -34,10 +36,13 @@ const invalidCases={
   'missing return observation': c=>{c.qualification.observations.splice(4,1);},
   'duplicate requested step masquerading as a complete walk': c=>{c.qualification.observations[3].label='FORWARD_1';},
   'missing FINAL observation': c=>{c.qualification.observations.pop();},
-  'trace flag missing in an actual observation': c=>{delete c.qualification.observations[3].traceSummary.enabled;},
+  'probe flag missing in an actual observation': c=>{delete c.qualification.observations[3].probe.enabled;},
   'FINAL summary disagrees with the observation': c=>{c.qualification.final={...c.qualification.final,elapsedMilliseconds:9999};},
   'route observations are out of order': c=>{[c.qualification.observations[2],c.qualification.observations[4]]=[c.qualification.observations[4],c.qualification.observations[2]];},
-  'trace disabled in actual observations': c=>{c.qualification.observations[3].traceSummary.enabled=false;},
+  'probe disabled in actual observations': c=>{c.qualification.observations[3].probe.enabled=false;},
+  'trace schema absent': c=>{delete c.qualification.observations[3].traceSummary.schema;},
+  'trace schema wrong': c=>{c.qualification.observations[3].traceSummary.schema='OTHER';},
+  'trace collector disposed': c=>{c.qualification.observations[3].traceSummary.disposed=true;},
   'no observed movement': c=>{c.qualification.movementObserved=false;},
   'no crossed cache cells': c=>{c.qualification.cacheCellTransitions=0;},
   'no render advancement': c=>{c.qualification.final.renderFrameCallCount=10;},

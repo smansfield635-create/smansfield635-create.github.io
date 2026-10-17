@@ -430,7 +430,7 @@ jobs:
               expectedLabels.length>0&&JSON.stringify(routeLabels)===JSON.stringify(expectedLabels)&&
               Array.isArray(points)&&points.filter(p=>/^FORWARD_\d+$/.test(p.label)).length===q.requestedStepsPerDirection&&
               points.filter(p=>/^RETURN_\d+$/.test(p.label)).length===q.requestedStepsPerDirection&&points.at(-1)?.label==='FINAL'&&
-              points.every(p=>position(p.position)&&p.traceSummary?.enabled===true)&&
+              points.every(p=>position(p.position)&&p.traceSummary?.schema==='H_EARTH_VEGETATION_CONTINUITY_TRACE_v1'&&p.traceSummary.disposed===false&&p.probe?.enabled===true)&&
               JSON.stringify(points.at(-1))===JSON.stringify(q.final)&&position(q.initial?.position)&&
               Number.isFinite(q.returnDistanceMeters)&&q.returnDistanceMeters>=0&&
               Number.isFinite(q.initial?.renderFrameCallCount)&&Number.isFinite(q.final?.renderFrameCallCount)&&q.final.renderFrameCallCount>q.initial.renderFrameCallCount&&
@@ -467,7 +467,7 @@ jobs:
                 const frameTiming=timing?{totalFrames:timing.totalFrames,retainedSampleCount:samples.length,discardedSampleCount:Math.max(0,timing.totalFrames-samples.length),meanMilliseconds:timing.totalFrames?timing.totalMilliseconds/timing.totalFrames:null,maximumMilliseconds:timing.maximumMilliseconds,medianMilliseconds:samples.length?samples[Math.floor(samples.length/2)]:null,p95Milliseconds:samples.length?samples[Math.floor((samples.length-1)*.95)]:null,samplePolicy:'FIRST_2048_RAF_INTERVALS_WITH_WHOLE_WAIT_AGGREGATES',measurement:'BROWSER_RAF_INTERVAL_NOT_GPU_DURATION'}:null;
                 delete window.__H_EARTH_CONTINUITY_CAPTURE_TIMING;
                 return {qualification:owner.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION??null,replayMarker:owner.document.getElementById('h-earth-functional-landscape-route')?.dataset.vegetationContinuityReplay??null,
-                  performance:{observedAtMilliseconds:performance.now(),frameTiming,navigation:performance.getEntriesByType('navigation').map(e=>e.toJSON()),timingPerturbed:true,physicalDeviceAcceptance:false}};
+                  performance:{observedAtMilliseconds:performance.now(),observationWindow:'AFTER_INITIAL_AND_LATER_SAMPLES_MAY_FOLLOW_REPLAY',walkingFrameTimingEstablished:false,frameTiming,navigation:performance.getEntriesByType('navigation').map(e=>e.toJSON()),timingPerturbed:true,physicalDeviceAcceptance:false}};
               });
               Object.assign(capture,terminal);
               capture.final=await sample('continuity-final');

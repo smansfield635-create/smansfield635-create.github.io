@@ -2,6 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import {mkdtemp,writeFile,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {spawnSync} from 'node:child_process';
 import {
   planImmutableTiles, detailWeight, selectFineTiles, createSingleOwnerVegetation,
 } from '../../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js';
@@ -230,4 +234,22 @@ test('diagnostic view selectors cannot automate the public entrance',async()=>{
  const result=await executeEntrance({search:'?qualification=bank-view-v1'});
  assert.equal(result.rootNode.dataset.run8eReady,'true');assert.equal(result.wheelEvents.length,0);
  assert.equal(result.window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().automaticNavigation,false);
+});
+
+// Reuse the established surfaceless GLES compiler setup; owner shaders have no
+// transform-feedback varying and require their own actual compile/link proof.
+test('actual single-owner palette shaders compile and link with software GLES',async t=>{
+ const owner=readFileSync(new URL('../../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js',import.meta.url),'utf8');
+ const declarations=owner.match(/const VS=([\s\S]*?);\nconst FS=([\s\S]*?);\nexport async/);assert.ok(declarations);
+ const shaders={vertex:vm.runInNewContext(declarations[1]),fragment:vm.runInNewContext(declarations[2])};
+ const established=readFileSync(new URL('./h-earth.fine-grass-continuity.v1.test.mjs',import.meta.url),'utf8');
+ const probe=established.split('const SOFTWARE_GLES_PROBE=String.raw`')[1].split("getstr=F(")[0].replace(/^names=.*\n/m,'')+'\nprint(json.dumps(results))\n';
+ const directory=await mkdtemp(join(tmpdir(),'h-earth-owner-gles-'));
+ try{
+  await Promise.all([writeFile(join(directory,'compile_shader.py'),probe),writeFile(join(directory,'vertex.glsl'),shaders.vertex),writeFile(join(directory,'fragment.glsl'),shaders.fragment)]);
+  const result=spawnSync(process.env.CODEX_PRIMARY_RUNTIME_PYTHON||'python3',[join(directory,'compile_shader.py')],{encoding:'utf8',timeout:30000,env:{...process.env,EGL_PLATFORM:'surfaceless',LIBGL_ALWAYS_SOFTWARE:'1'}});
+  if(result.error?.code==='ENOENT'||/EGL_UNAVAILABLE_|libEGL.so.1: cannot open shared object file/.test(result.stderr)){t.skip('Optional software GLES unavailable');return;}
+  assert.equal(result.status,0,'ACTUAL_OWNER_GLES_COMPILE_LINK_FAILED: '+result.stderr);
+  const evidence=JSON.parse(result.stdout);assert.ok(evidence.vertex.pass&&evidence.fragment.pass&&evidence.link.pass);
+ }finally{await rm(directory,{recursive:true,force:true});}
 });

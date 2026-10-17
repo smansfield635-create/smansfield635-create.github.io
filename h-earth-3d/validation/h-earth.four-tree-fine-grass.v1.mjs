@@ -188,12 +188,12 @@ export function verifyGen2694CandidateSourceChain(){
   }
   const suite=spawnSync(process.execPath,['--test','--test-reporter=tap',fileURLToPath(new URL('h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs',ROOT))],{cwd:fileURLToPath(ROOT),encoding:'utf8',env:Object.fromEntries(Object.entries(process.env).filter(([key])=>key!=='NODE_TEST_CONTEXT'))});
   assert.equal(suite.status,0,'GEN2791_SINGLE_OWNER_SOURCE_TESTS_FAILED');
-  assert(/^# tests 35\s*$/m.test(suite.stdout??'')&&/^# pass 35\s*$/m.test(suite.stdout??'')&&/^# fail 0\s*$/m.test(suite.stdout??''),'GEN2791_SINGLE_OWNER_SOURCE_EVIDENCE_MISSING');
+  assert(/^# tests 36\s*$/m.test(suite.stdout??'')&&/^# pass 36\s*$/m.test(suite.stdout??'')&&/^# fail 0\s*$/m.test(suite.stdout??''),'GEN2791_SINGLE_OWNER_SOURCE_EVIDENCE_MISSING');
   const refinementSuites=['h-earth.woodland-habitat.v1.test.mjs','h-earth.riverbank-boulders.v1.test.mjs'];
   const refinement=spawnSync(process.execPath,['--test','--test-reporter=tap',...refinementSuites.map(name=>fileURLToPath(new URL('h-earth-3d/validation/'+name,ROOT)))],{cwd:fileURLToPath(ROOT),encoding:'utf8',env:Object.fromEntries(Object.entries(process.env).filter(([key])=>key!=='NODE_TEST_CONTEXT'))});
   process.stderr.write(refinement.stdout??'');process.stderr.write(refinement.stderr??'');
   assert.equal(refinement.status,0,'GEN2793_ACTUAL_WORLD_HABITAT_AND_BANK_TESTS_FAILED');
-  singleOwnerSourceQualification={publicEntrySha256:digest(entry),routeSha256:digest(route),sourceTests:35,sourceTestScope:'CPU_AND_MOCK_GL_MANUAL_BOOT_NOT_BROWSER_ACCEPTANCE',legacyChainScope:'RETAINED_SOURCE_ONLY_NOT_SELECTED_PUBLIC_PIPELINE'};
+  singleOwnerSourceQualification={publicEntrySha256:digest(entry),routeSha256:digest(route),sourceTests:36,sourceTestScope:'CPU_AND_MOCK_GL_MANUAL_BOOT_NOT_BROWSER_ACCEPTANCE',legacyChainScope:'RETAINED_SOURCE_ONLY_NOT_SELECTED_PUBLIC_PIPELINE'};
  }
  const pilot=entry.includes('gen2780-stable-planting-v1');
  const modern=pilot||entry.includes('gen2779-front-water-exit-v1')||entry.includes('gen2774-cavern-vegetation-repair-v1');

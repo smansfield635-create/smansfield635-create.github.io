@@ -41,7 +41,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
-      "sha256": "5850b8fe9bc38ec944058dfcde53a5dffb7c2e09d5f69d7b1240a721718abf00"
+      "sha256": "c754099c223f26a0d2518dafef9d9e597ea4265b25c24da8f2b581a48ebe20c0"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
@@ -77,11 +77,11 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
-      "sha256": "53e42fb6b9ca371898a40375d3f8dd816a17003bce3bc29150e5d9e348fe146e"
+      "sha256": "b224e775e3ecb83a1adaa87cb406a90be5e38aadf19dded44c338c76e058c121"
     },
     {
       "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
-      "sha256": "cef55c9fdbd4cd9bc5f706090a773a9e18987863fbd3bc3768d747895152303b"
+      "sha256": "0767b358f7e416c2dd2d518767d8d73c8b404d115b7161a5ead7c3018b8cf9a4"
     }
   ],
   "limitations": [

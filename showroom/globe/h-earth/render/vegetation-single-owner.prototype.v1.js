@@ -48,9 +48,9 @@ void main(){
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.86));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*.025*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;
- float patch=woodlandPaletteNoise(aRoot.xz/13.),dry=woodlandPaletteNoise(aRoot.xz/29.+vec2(7.,-11.));
- vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),patch);
- vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),patch);
+ float palettePatch=woodlandPaletteNoise(aRoot.xz/13.),dry=woodlandPaletteNoise(aRoot.xz/29.+vec2(7.,-11.));
+ vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),palettePatch);
+ vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),palettePatch);
  vec3 palette=mix(forest,olive,smoothstep(.35,.8,dry));
  palette=mix(palette,vec3(.29,.255,.12),smoothstep(.78,.99,h)*.34);
  vColor=palette*(.78+level*.40)*(.88+.24*h);vDistance=length(p-uCamera);

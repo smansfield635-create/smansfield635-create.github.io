@@ -1,9 +1,11 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-gen2790-rgb-repair-20261017-1650",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "3851ad17c4ffa2060c1f3035fe84bb272a112888",
+    "route_path": "/showroom/globe/h-earth/vegetation-prototype.html",
+    "route_query": "arrival=approved-four-trees&prototype=single-owner-v1&performance=1",
+    "exercise_vegetation_residency": false
   }
 }

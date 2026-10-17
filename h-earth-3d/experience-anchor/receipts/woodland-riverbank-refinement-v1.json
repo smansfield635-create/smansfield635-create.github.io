@@ -1,0 +1,124 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "operationId": "H_EARTH_WOODLAND_RIVERBANK_REFINEMENT_20261017_001",
+  "canonicalAdmissionGeneration": 2793,
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/woodland-riverbank-refinement-v1/README.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.woodland-habitat.v1.test.mjs",
+    "h-earth-3d/validation/h-earth.riverbank-boulders.v1.test.mjs",
+    "h-earth-3d/evidence/woodland-riverbank-refinement-v1/README.md"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/woodland-habitat-field.v1.js",
+      "sha256": "d225af43611f923b0a89cea3c35076d0015e3763f86455ef36911f37cafc9e91"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "7b507f838ef81d34137d7702a39c74e2aa04fb5ea4766991b83a5f75c4f3eca8"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "c754099c223f26a0d2518dafef9d9e597ea4265b25c24da8f2b581a48ebe20c0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "a11e9039540b6450c2343d66100d1214d2aad2abd5091efa574227953cde14d7"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-planting-pilot.v1.js",
+      "sha256": "9f515d7ada9b164c511af4f14dbc3bc477ad5476f4a91ea7820f17dc3d390ca8"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/large-p2-boulder-presentation.v1.js",
+      "sha256": "9e501c585d64b94372a8e361a56a8c7be8343e187d594ca8cc7355bd4af7c0f9"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "7985e6644225b7dbf4b9a2960758edd16f4b39c09267cb5d9b82ba5aa33a952b"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype.html",
+      "sha256": "a41678cd9428f7a8fd13e973ee3acf9372f81458c618b12fa2da4eb9c78d1d6a"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "b30eb81d36d7b0dea81ae5f04289030ceda69e71d69ee6e3cfccf52c95002130"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.woodland-habitat.v1.test.mjs",
+      "sha256": "6071d24bbd7059f2476e18cced119eb633180ea29f12460a35e498622c1dd852"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.riverbank-boulders.v1.test.mjs",
+      "sha256": "01923478ca61961e4e1fa6e2c80514812e85da9f5114cb1007c9f9b7207eebeb"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+      "sha256": "91c7250fbe262c467e0fcb7a37defd031237e5533a3a6ccc11feb168aa2e4bfa"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "e5825ec68e18d83f90f48fb3a3aacb2290e142fe85d51be16e307246cf1084f8"
+    }
+  ],
+  "limitations": [
+    "No physical-device acceptance or phone-performance claim.",
+    "Final-view evidence only; all-step pixel continuity and full-world vegetation coverage remain unverified.",
+    "Final commit changes evidence only after runtime qualification; exact merged payload preflight, deployment and live verification remain required."
+  ],
+  "acceptedPrecedent": {
+    "head": "1f3d6983db36c2626d9bcd156f971d18d12d5a24",
+    "basis": "Unchanged canonical world, planetary/regional routes, four trees, small-rock identities, water and manual input/navigation authority; bounded presentation refinement only."
+  },
+  "runtimeCandidate": "286d7f2c25d5c25179840b1014da858bf28fc591",
+  "runtimeViews": [
+    {
+      "view": "bank-view-v1",
+      "run": 39059755378,
+      "job": 117475108841,
+      "artifact": 12110709221,
+      "sha256": "70b0272c1d1f5d78cf482ee485e6a44f550ffade6a2476e1037536aa1011d1df",
+      "result": "READY_CAPTURED_STABLE_VIEW",
+      "canvasSha256": "4a9d8bb9c15a558eae49c4ff7751d8ac60e932228b5768cb02a5aeb1bc59017c"
+    },
+    {
+      "view": "habitat-edge-view-v1",
+      "run": 39059780472,
+      "job": 117475178824,
+      "artifact": 12111122052,
+      "sha256": "91181e3850b20a5ef0b0e5c62992a90aa96bc9d5b197d4d1d4f4f3bd6456fff8",
+      "result": "READY_CAPTURED_STABLE_VIEW",
+      "canvasSha256": "1623d4164fed454a676cbba1a66c7da3dfd31516e570dcd6d478596921648d8c"
+    }
+  ],
+  "independentReview": {
+    "function": "Soren/West",
+    "nativeTask": "/root/west_diagnostic_review",
+    "result": "KEEP_PASS_BOUNDED_VIEWS",
+    "basis": "Independent receipt assertions, exact remote source custody, actual bank/edge image review and anchor-proxy comparison; final native gate and production custody still required."
+  }
+}

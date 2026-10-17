@@ -1,0 +1,80 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "h-earth-simple",
+  "description": "Canonical H-Earth manual woodland entrance with persistent single-owner vegetation and preserved landscape.",
+  "checks": [
+    {
+      "path": "/showroom/globe/h-earth/index.html",
+      "includes": [
+        "<title>H-Earth \u00b7 Live Interactive World</title>",
+        "id=\"h-earth-functional-landscape-route\"",
+        "data-run8e-ready=\"false\"",
+        "./vegetation-prototype/route.js?rev=gen2791-single-owner-public-v1",
+        "type=\"importmap\""
+      ],
+      "excludes": [
+        "public-live-gpu-integration.run8e-r3e.receipt.js",
+        "raw.githack.com"
+      ]
+    },
+    {
+      "path": "/showroom/globe/h-earth/vegetation-prototype/route.js",
+      "includes": [
+        "const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');",
+        "if(diagnosticReplay){",
+        "vegetationStrategy:'SINGLE_OWNER_WOODLAND_V1'",
+        "mode:diagnosticReplay?'diagnostic-replay':'manual-public'",
+        "if(!diagnosticReplay){interactiveReady=true;canvas.style.pointerEvents='auto';}"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "includes": [
+        "createSingleOwnerVegetation",
+        "planImmutableTiles"
+      ],
+      "excludes": []
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/h-earth/",
+    "timeoutMs": 120000,
+    "readyAttribute": {
+      "selector": "#h-earth-functional-landscape-route",
+      "name": "data-run8e-ready",
+      "contains": "true"
+    },
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/h-earth/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Manual woodland is ready for direct navigation",
+        "action": {
+          "type": "click",
+          "selector": "#h-earth-functional-landscape-canvas"
+        },
+        "assertions": [
+          {
+            "type": "attributeEquals",
+            "selector": "#h-earth-functional-landscape-route",
+            "name": "data-single-owner-prototype",
+            "value": "manual-ready"
+          },
+          {
+            "type": "textContains",
+            "selector": "#prototype-status",
+            "value": "Drag to look"
+          }
+        ],
+        "timeoutMs": 15000
+      }
+    ]
+  }
+}

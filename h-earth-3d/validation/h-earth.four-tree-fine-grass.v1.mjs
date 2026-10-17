@@ -13,6 +13,23 @@ import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from '../../showroom/globe/h-eart
 import {buildWoodlandFineGrass,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices,WOODLAND_FINE_GRASS} from '../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2780-stable-planting-v1';
 const digest=bytes=>createHash('sha256').update(bytes).digest('hex');
 const ROOT=new URL('../../',import.meta.url);
+/** Selector-generation contract; historical spelling is retained only for its original implementation. */
+export function verifyFineGrassSelectorContract({grass,renderer,runContinuitySuite=()=>spawnSync(process.execPath,['--test','--test-reporter=tap',fileURLToPath(new URL('h-earth-3d/validation/h-earth.fine-grass-continuity.v1.test.mjs',ROOT))],{cwd:fileURLToPath(ROOT),encoding:'utf8',env:Object.fromEntries(Object.entries(process.env).filter(([key])=>key!=='NODE_TEST_CONTEXT'))})}){
+ const continuous=grass.includes('export const FINE_GRASS_CONTINUITY=');
+ if(!continuous){
+  assert(!renderer.includes('WOODLAND_FINE_GRASS_FS'),'CONTINUITY_SELECTOR_MARKER_MISSING');
+  assert(grass.includes('c.persistentIndices')&&grass.includes('fixedCount'),'GEN2710_WORLD_FIXED_GRASS_UNDERLAY_MISSING');
+  return {generation:null};
+ }
+ assert(grass.includes('export function fineGrassVisibility(')&&grass.includes('export function fineGrassImportance('),'CONTINUITY_VISIBILITY_CONTRACT_MISSING');
+ assert(renderer.includes('uniform3f(state.uniforms.uWoodlandCameraPosition')&&renderer.includes('uniform1f(state.uniforms.uWoodlandSelectionCutoff,selection.cutoff)'),'CONTINUITY_UNIFORM_WIRING_MISSING');
+ assert(renderer.includes('createShader(gl.FRAGMENT_SHADER,WOODLAND_FINE_GRASS_FS)'),'CONTINUITY_COVERAGE_SHADER_MISSING');
+ const result=runContinuitySuite();
+ assert.equal(result?.status,0,'CONTINUITY_BEHAVIORAL_TESTS_FAILED');
+ const output=result.stdout??'';
+ assert(/^# tests 13\s*$/m.test(output)&&/^# fail 0\s*$/m.test(output)&&/^# pass (12|13)\s*$/m.test(output),'CONTINUITY_BEHAVIORAL_EVIDENCE_MISSING');
+ return {generation:2785,continuitySourceTests:'PASS_CPU_SOURCE_SOFTWARE_GLES_WHEN_AVAILABLE'};
+}
 export const FOUR_TREE_VIEWS=Object.freeze([[-139.403,-194.5],[-139.403,-236],[-119,-216],[-164,-216],[-141,-214]]);
 // Independent copied geometry predicates: these do not call the presentation builder's sampler.
 const radius=420000;
@@ -153,6 +170,27 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
 /** Gen2694: fast read-only source-chain qualification; no world construction or browser. */
 export function verifyGen2694CandidateSourceChain(){
  const entry=fs.readFileSync(new URL('showroom/globe/h-earth/index.html',ROOT),'utf8');
+ const singleOwnerPublic=entry.includes('./vegetation-prototype/route.js?rev=gen2791-single-owner-public-v1');
+ let singleOwnerSourceQualification=null;
+ if(singleOwnerPublic){
+  const modules=[...entry.matchAll(/<script[^>]+type="module"[^>]+src="([^"]+)"/g)].map(match=>match[1]);
+  assert.deepEqual(modules,['./vegetation-prototype/route.js?rev=gen2791-single-owner-public-v1'],'GEN2791_PUBLIC_ENTRY_MODULE_DRIFT');
+  assert(entry.includes('type="importmap"')&&entry.includes('id="h-earth-functional-landscape-route"')&&entry.includes('data-run8e-ready="false"'),'GEN2791_PUBLIC_ENTRY_BINDING_MISSING');
+  const imports=JSON.parse(entry.match(/<script type="importmap">([\s\S]*?)<\/script>/)?.[1]??'{}').imports;
+  for(const suffix of ['persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=','woodland-fine-grass.v1.js?rev=']){
+   const module='/showroom/globe/h-earth/render/'+suffix;
+   assert.equal(imports?.[module+'gen2780-stable-planting-v1'],module+'gen2791-single-owner-public-v1','GEN2791_CHANGED_MODULE_CACHE_IDENTITY_MISSING:'+suffix);
+  }
+  assert(!entry.includes('public-live-gpu-integration.run8e-r3e.receipt.js'),'GEN2791_SECOND_PUBLIC_OWNER');
+  const route=fs.readFileSync(new URL('showroom/globe/h-earth/vegetation-prototype/route.js',ROOT),'utf8');
+  for(const needle of ["const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');","query.set('arrival','approved-four-trees');","vegetationStrategy:'SINGLE_OWNER_WOODLAND_V1'","if(diagnosticReplay){","if(!diagnosticReplay){interactiveReady=true;canvas.style.pointerEvents='auto';}","mode:diagnosticReplay?'diagnostic-replay':'manual-public'"]){
+   assert(route.includes(needle),'GEN2791_MANUAL_ROUTE_CONTRACT_MISSING:'+needle);
+  }
+  const suite=spawnSync(process.execPath,['--test','--test-reporter=tap',fileURLToPath(new URL('h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs',ROOT))],{cwd:fileURLToPath(ROOT),encoding:'utf8',env:Object.fromEntries(Object.entries(process.env).filter(([key])=>key!=='NODE_TEST_CONTEXT'))});
+  assert.equal(suite.status,0,'GEN2791_SINGLE_OWNER_SOURCE_TESTS_FAILED');
+  assert(/^# tests 34\s*$/m.test(suite.stdout??'')&&/^# pass 34\s*$/m.test(suite.stdout??'')&&/^# fail 0\s*$/m.test(suite.stdout??''),'GEN2791_SINGLE_OWNER_SOURCE_EVIDENCE_MISSING');
+  singleOwnerSourceQualification={publicEntrySha256:digest(entry),routeSha256:digest(route),sourceTests:34,sourceTestScope:'CPU_AND_MOCK_GL_MANUAL_BOOT_NOT_BROWSER_ACCEPTANCE',legacyChainScope:'RETAINED_SOURCE_ONLY_NOT_SELECTED_PUBLIC_PIPELINE'};
+ }
  const pilot=entry.includes('gen2780-stable-planting-v1');
  const modern=pilot||entry.includes('gen2779-front-water-exit-v1')||entry.includes('gen2774-cavern-vegetation-repair-v1');
  const rev=pilot?'gen2780-stable-planting-v1':entry.includes('gen2779-front-water-exit-v1')?'gen2779-front-water-exit-v1':modern?'gen2774-cavern-vegetation-repair-v1':'gen2710-stable-grass-beach-v1';
@@ -167,7 +205,9 @@ export function verifyGen2694CandidateSourceChain(){
  const sources=new Map();
  for(const [file,needle] of paths){
   const bytes=fs.readFileSync(new URL(file,ROOT)),source=bytes.toString('utf8');
-  assert(source.includes(needle),'GEN2694_CACHE_CHAIN_MISSING:'+file);
+  // Gen2791 replaces only the root owner. Keep auditing the retained historical
+  // integration chain, without claiming that chain is selected by this entrance.
+  if(!(singleOwnerPublic&&file===paths[0][0]))assert(source.includes(needle),'GEN2694_CACHE_CHAIN_MISSING:'+file);
   sources.set(file,{source,sha256:digest(bytes),gitBlob:createHash('sha1').update('blob '+bytes.length).update(Buffer.from([0])).update(bytes).digest('hex')});
  }
  const renderer=sources.get(paths[4][0]).source,grass=sources.get(paths[5][0]).source;
@@ -187,7 +227,7 @@ export function verifyGen2694CandidateSourceChain(){
   assert(closure.includes(historical),'HISTORICAL_SOURCE_CLOSURE_PIN_DRIFT:'+file);
   assert.notEqual(sources.get(file).gitBlob,historical,'GEN2710_PRESENTATION_SOURCE_UNCHANGED:'+file);
  }
- assert(grass.includes('c.persistentIndices')&&grass.includes('fixedCount'),'GEN2710_WORLD_FIXED_GRASS_UNDERLAY_MISSING');
+ const selectorContract=verifyFineGrassSelectorContract({grass,renderer});
  assert(renderer.includes('float legacyFine=1.0-step(1.5,aParameters.w)')&&renderer.includes('vec2 narrowLocalXZ='),'GEN2710_LEGACY_LARGE_FAN_PRESENTATION_NOT_RETIRED');
  assert(renderer.includes('if(duneStratum>.5)gl_Position=vec4(2.0,2.0,2.0,1.0)'),'GEN2710_BEACH_DUNE_PRESENTATION_NOT_HIDDEN');
  const prior=JSON.parse(fs.readFileSync(new URL('h-earth-3d/experience-anchor/receipts/h-earth-meadow-mid-distance-patch-lod-20261013.receipt.json',ROOT),'utf8'));
@@ -204,15 +244,16 @@ export function verifyGen2694CandidateSourceChain(){
   assert(late.includes('legacyFanPresentationRetired:true'),'REPAIR_LATE_FAN_RETIREMENT_MISSING');
   assert.equal(digest(fs.readFileSync(new URL('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',ROOT))),manifest.binary.sha256,'REPAIR_BINARY_BYTES_DRIFT');
  }
- return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',qualifiedPresentationGeneration:pilot?2780:rev==='gen2779-front-water-exit-v1'?2779:modern?2774:2710,publicationManifestCompatibility:modern?'SEPARATE_PUBLICATION_REBIND_REQUIRED':'PASS',result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
+ return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',...selectorContract,qualifiedPresentationGeneration:singleOwnerPublic?2791:selectorContract.generation??(pilot?2780:rev==='gen2779-front-water-exit-v1'?2779:modern?2774:2710),publicationManifestCompatibility:modern?'SEPARATE_PUBLICATION_REBIND_REQUIRED':'PASS',result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:singleOwnerPublic?paths.length-1:paths.length,sourceBlobsChecked:2,activeShader:singleOwnerPublic?'SINGLE_OWNER_WOODLAND_V1_SOURCE_ONLY':'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',...(singleOwnerPublic?{singleOwnerSourceQualification}:{}),oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  if(process.argv.includes('--source-binding-only')){
   const report=verifyGen2694CandidateSourceChain();
-  if(report.qualifiedPresentationGeneration===2780){
-   const result=spawnSync(process.execPath,['--test',fileURLToPath(new URL('h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs',ROOT))],{cwd:fileURLToPath(ROOT),encoding:'utf8'});
+  if(report.qualifiedPresentationGeneration===2780||report.qualifiedPresentationGeneration===2785||report.qualifiedPresentationGeneration===2791){
+   const result=spawnSync(process.execPath,['--test','--test-reporter=tap',fileURLToPath(new URL('h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs',ROOT))],{cwd:fileURLToPath(ROOT),encoding:'utf8',env:Object.fromEntries(Object.entries(process.env).filter(([key])=>key!=='NODE_TEST_CONTEXT'))});
    process.stderr.write(result.stdout||'');process.stderr.write(result.stderr||'');
    assert.equal(result.status,0,'GEN2780_PILOT_SOURCE_TESTS_FAILED');
+   assert(/^# tests 35\s*$/m.test(result.stdout??'')&&/^# pass 35\s*$/m.test(result.stdout??'')&&/^# fail 0\s*$/m.test(result.stdout??''),'GEN2780_PILOT_SOURCE_EVIDENCE_MISSING');
    report.plantingPilotSourceTests='PASS_CPU_AND_MOCK_GL_ONLY';
   }
   console.log(JSON.stringify(report,null,2));process.exit(0);

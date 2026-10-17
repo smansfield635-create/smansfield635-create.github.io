@@ -272,13 +272,15 @@ root.dataset.run7hError = 'false';
 root.dataset.run8eReady = 'false';
 root.dataset.run8eError = 'false';
 
+const continuityTraceRequested=new URLSearchParams(location.search).get('vegetation-trace')==='v1';
+
 export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
   integrationId: H_EARTH_RUN_8E_R3E2_PUBLIC_INTEGRATION_ID,
   ready: true,
   getReceipt: buildPublicReceipt,
   getSnapshot: () => buildPublicReceipt(),
   getIntakeReceipt: () => intake.getReceipt(),
-  getLiveGpuReceipt: () => ({...binding.getReceipt(),repairQualification:window.H_EARTH_RENDERER_REPAIR_QUALIFICATION??null}),
+  getLiveGpuReceipt: () => ({...binding.getReceipt(),repairQualification:window.H_EARTH_RENDERER_REPAIR_QUALIFICATION??null,...(continuityTraceRequested?{vegetationContinuityTrace:binding.getVegetationTrace(),vegetationContinuityQualification:window.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION??null}:{})}),
   materializeNextVegetationBatch: () => binding.materializeNextVegetationBatch(),
   getVegetationResidency: () => binding.getVegetationResidency(),
   getRepresentationTransitionSurface: () => representationTransitionSurface
@@ -286,8 +288,21 @@ export const H_EARTH_RUN_8E_R3E2_PUBLIC_ROUTE_API = Object.freeze({
 
 let readyPublished = false;
 let nearbyGroundReady = false;
+// Only this explicitly selected qualification waits for its replay before READY.
+// The unchanged exact-head runner otherwise closes three seconds after READY.
+const continuityReplayRequested=continuityTraceRequested&&new URLSearchParams(location.search).get('qualification')==='vegetation-continuity-v1';
+let continuityReplayStarted=false,continuityReplayFinished=false;
 const publishExistingReadyFromFirstPresentedFrame = () => {
   if (readyPublished || !firstFramePublished || !nearbyGroundReady) return false;
+  if(continuityReplayRequested&&!continuityReplayFinished){
+    if(!continuityReplayStarted){
+      continuityReplayStarted=true;
+      import('../../../../h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs').then(({qualifyVegetationContinuity})=>qualifyVegetationContinuity({canvas,intake,binding,root})).catch(error=>{
+        window.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION={schema:'H_EARTH_VEGETATION_CONTINUITY_REPLAY_v1',result:'DIAGNOSTIC_EXECUTION_FAILED',message:error.message,physicalDeviceAcceptance:false,publicationAuthorized:false};
+      }).finally(()=>{continuityReplayFinished=true;publishExistingReadyFromFirstPresentedFrame();});
+    }
+    return false;
+  }
   readyPublished = true;
 
   root.dataset.run8eReady = 'true';
@@ -317,7 +332,6 @@ const publishExistingReadyFromFirstPresentedFrame = () => {
       setTimeout(()=>{throw error;},0);
     });
   }
-
 
   if (window.parent === window) {
     emitDiagnosticStage('PARENT_READY_STATE_OBSERVED', 'NOT_APPLICABLE', 'Top-level route has no parent host.');
@@ -360,6 +374,12 @@ function showVegetationPreparation(progress){
   if(vegetationLoadingFailed)return;
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:progress}));
   if(progress.phase==='NEARBY_FINE_GRASS_FAILED')throw Error(progress.message);
+  if(progress.phase==='NEARBY_FINE_GRASS_PARTIAL_GPU_READY'){
+    // Completed tiles must reach a frame even while navigation is stationary.
+    // Startup readiness still waits for its existing completed-request gate.
+    binding.presentWoodlandFineGrassPreviewFrame();
+    return;
+  }
   if(progress.phase==='NEARBY_FINE_GRASS_GPU_READY'){
     const draw=binding.presentWoodlandFineGrassPreviewFrame();
     root.dataset.nearbyFineGrassReady='true';

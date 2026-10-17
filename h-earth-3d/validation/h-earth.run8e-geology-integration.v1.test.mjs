@@ -8,9 +8,17 @@ import {fileURLToPath} from 'node:url';
 import {createHEarthFunctionalLandscapeNavigationState,proposeHEarthFunctionalLandscapeNavigation} from '../../showroom/globe/h-earth/functional-landscape/navigation.js';
 import {unprojectPlanetVertex} from '../terrain/h-earth.geological-formation-successor.v1.mjs';
 import {resolveHEarthArrivalWaypoint} from '../../showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js';
-import {constructGeologicalRuntimeBridge,installGeologicalRuntimeBridge,
-  resolveGeologicalRuntimeFootSupport,retireGeologicalBaseIndices,traceGeologicalRuntimeDrainage,sampleGeologicalMaterialExposure}
-  from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js?rev=gen2779-front-water-exit-v1';
+const rendererURL=new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
+const navigationURL=new URL('../../showroom/globe/h-earth/functional-landscape/navigation.js',import.meta.url);
+function bridgeDependency(parent){
+ const matches=[...readFileSync(parent,'utf8').matchAll(/\bfrom\s*['"]([^'"]*geological-runtime-bridge\.v1\.js[^'"]*)['"]/g)];
+ assert.equal(matches.length,1,'Expected one production geological bridge edge');
+ return new URL(matches[0][1],parent);
+}
+const activeBridgeURL=bridgeDependency(rendererURL);
+assert.equal(activeBridgeURL.href,bridgeDependency(navigationURL).href,'CAVE_SUPPORT_MUST_SHARE_NAVIGATION_MODULE_URL');
+const {constructGeologicalRuntimeBridge,installGeologicalRuntimeBridge,
+  resolveGeologicalRuntimeFootSupport,retireGeologicalBaseIndices,traceGeologicalRuntimeDrainage,sampleGeologicalMaterialExposure}=await import(activeBridgeURL);
 const home=dirname(fileURLToPath(import.meta.url));
 const file=process.env.H_EARTH_EXACT_WORLD_BINARY||join(home,'../../showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz');
 let payload;
@@ -211,8 +219,9 @@ test('cavern portal relief and rock strata remain irregular without periodic tun
  assert(renderer.includes('const strataA=Math.sin(local.y*.78+'));
  assert(renderer.includes('const patchNoise=Math.sin(local.x*.47+local.z*.27+local.y*.11);'));
  assert(!renderer.includes('local.y*1.55+.34*Math.sin(local.x*.43)'));
- const revision='gen2779-front-water-exit-v1';
- assert(renderer.includes("from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2779-front-water-exit-v1'"),'CAVE_SUPPORT_MUST_SHARE_NAVIGATION_MODULE_URL');
+ const revision=activeBridgeURL.searchParams.get('rev');
+ assert(revision,'CAVE_SUPPORT_REVISION_MISSING');
+ assert.equal(bridgeDependency(rendererURL).href,bridgeDependency(navigationURL).href,'CAVE_SUPPORT_MUST_SHARE_NAVIGATION_MODULE_URL');
  for(const path of [
   '../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',
   '../../showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js',

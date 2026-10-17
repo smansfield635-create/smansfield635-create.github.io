@@ -46,3 +46,41 @@ export async function qualifyCavernVegetation({canvas,intake,binding,root}){
   }
   throw Error('CAVERN_VEGETATION_BROWSER:FINAL_RESIDENCY_TIMEOUT');
 }
+
+
+/** Explicitly selected replay; navigation still goes through the installed wheel intake. */
+export async function qualifyVegetationContinuity({canvas,intake,binding,root,stationaryMilliseconds=15000,steps=8,stepDelayMilliseconds=700}={}){
+  if(!Number.isInteger(stationaryMilliseconds)||stationaryMilliseconds<0||stationaryMilliseconds>15000||!Number.isInteger(steps)||steps<1||steps>8||!Number.isInteger(stepDelayMilliseconds)||stepDelayMilliseconds<100||stepDelayMilliseconds>2000)throw Error('VEGETATION_CONTINUITY_REPLAY_OPTIONS_INVALID');
+  if(!binding?.getVegetationTrace||binding.getVegetationTrace().enabled===false)throw Error('VEGETATION_CONTINUITY_TRACE_NOT_ENABLED');
+  const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms)),started=performance.now();
+  const observations=[],events=[];let cursor=0,eventsDroppedByCollector=0;
+  function collect(label){
+    const trace=binding.getVegetationTrace({sinceSequence:cursor});cursor=trace.lastSequence;
+    for(const event of trace.events){events.push(event);if(events.length>2048){events.shift();eventsDroppedByCollector++;}}
+    const state=intake.getNavigationState(),r=binding.getReceipt();
+    const point={label,elapsedMilliseconds:performance.now()-started,position:{...state.position},yawDegrees:state.yawDegrees,pitchDegrees:state.pitchDegrees,navigationSequence:state.sequence,
+      cacheCell:{x:Math.floor(state.position.x/4),z:Math.floor(state.position.z/4)},traceSummary:{...trace,events:undefined},
+      renderFrameCallCount:r.counters?.renderFrameCallCount??null,probe:binding.getVegetationProbe({x:state.position.x,z:state.position.z,radius:2})};
+    observations.push(point);return point;
+  }
+  const initial=collect('INITIAL');
+  // Drain the bounded ring during waiting; no screenshots or synchronous GPU reads.
+  let remaining=stationaryMilliseconds;
+  while(remaining>0){const interval=Math.min(500,remaining);await delay(interval);remaining-=interval;collect('STATIONARY');}
+  const beforeMove=collect('BEFORE_MOVE');
+  for(const direction of ['FORWARD','RETURN'])for(let step=0;step<steps;step++){
+    canvas.dispatchEvent(new WheelEvent('wheel',{deltaY:direction==='FORWARD'?-280:280,bubbles:true,cancelable:true}));
+    await delay(stepDelayMilliseconds);collect(`${direction}_${step+1}`);
+  }
+  // A requested return is not an asserted arrival: terrain may reject travel.
+  await delay(1000);const final=collect('FINAL');
+  const transitions=observations.filter((p,i)=>i&& (p.cacheCell.x!==observations[i-1].cacheCell.x||p.cacheCell.z!==observations[i-1].cacheCell.z)).length;
+  const result={schema:'H_EARTH_VEGETATION_CONTINUITY_REPLAY_v1',result:'TRACE_CAPTURED_VISUAL_VERDICT_NOT_ESTABLISHED',sourceBaseline:'fac9d64c29cfc8c55637a15905d89ca0977293e0',candidateIdentityBinding:'EXTERNAL_EXACT_HEAD_REQUIRED',input:'SYNTHETIC_WHEEL_THROUGH_REAL_INTAKE',
+    requestedStepsPerDirection:steps,requestedMagnitudePerStep:4,initial,preparedObservation:beforeMove,final,cacheCellTransitions:transitions,returnDistanceMeters:Math.hypot(final.position.x-initial.position.x,final.position.z-initial.position.z),
+    movementObserved:observations.some(p=>Math.hypot(p.position.x-initial.position.x,p.position.z-initial.position.z)>.05),observations,events,eventsDroppedByCollector,
+    traceMayLoseEvents:true,timingPerturbed:true,physicalDeviceAcceptance:false,visiblePixelsVerified:false,exactOwnerVideoRouteReproduced:false,
+    pilotBoundaryTraversalVerified:false,shorelineAgreementVerified:false,publicationAuthorized:false,elapsedMilliseconds:performance.now()-started};
+  window.H_EARTH_VEGETATION_CONTINUITY_QUALIFICATION=result;
+  if(root)root.dataset.vegetationContinuityReplay='captured';
+  return result;
+}

@@ -13,6 +13,17 @@ function dependencyURL(parent,file){
   assert.equal(matches.length,1,`Expected one production import of ${file}`);
   return new URL(matches[0][1],parent);
 }
+// These synthetic geometry fixtures represent submitted inland attributes.
+// Their admission still exercises the actual indexed beach provider; geographic
+// water and canonical material policy are covered by the separate world tests.
+async function fixtureSurface(pkg,options={}){
+  const {buildVegetationVisibleSurface}=await import('../../showroom/globe/h-earth/render/vegetation-visible-surface.v1.js');
+  const {createRenderedBeachProvider}=await import(dependencyURL(rendererURL,'rendered-beach-signal.v1.js'));
+  const attributes=mesh=>({positions:mesh.positions,normals:Float32Array.from(mesh.positions,(_,i)=>i%3===1?1:0),coastDistances:new Float32Array(mesh.positions.length/3).fill(140),contactDistances:new Float32Array(mesh.positions.length/3).fill(140)});
+  const surface=buildVegetationVisibleSurface(pkg,{...options,renderedAttributes:{base:attributes(pkg.buffers),...(options.refinement?{refinement:attributes(options.refinement)}:{})},beachProviderFactory:createRenderedBeachProvider});
+  const admitGround=(x,z,support)=>{const signal=surface.beach.sample({x,z,support});return signal.valid&&signal.rawSandCoverage===0;};
+  return Object.freeze({...surface,admitGround});
+}
 let cachedCanonical;
 function canonical(){
   if(!cachedCanonical){
@@ -59,7 +70,8 @@ test('asymmetric renderer clip grounds every collar on refinement rather than ob
   // The renderer contract is minX,minZ,maxX,maxZ. Asymmetry ensures a copied
   // minX,maxX,minZ,maxZ predicate cannot accidentally pass this fixture.
   const refinement={positions:positions(2),indices,clip:[40,-330,80,-290]};
-  const cover=await buildHEarthGlobalGroundCover(pkg,{refinement,compositionEnabled:false});
+  const visibleSurface=await fixtureSurface(pkg,{refinement});
+  const cover=await buildHEarthGlobalGroundCover(pkg,{refinement,visibleSurface,compositionEnabled:false});
   assert(cover.records.length>0,'Fixture selected no roots');
   for(let offset=0;offset<cover.records.length;offset+=20)
     for(let collar=0;collar<12;collar++)assert.equal(cover.records[offset+collar],2,`Root ${offset/20}:${collar} used retired base height`);
@@ -123,7 +135,7 @@ test('nearby fine grass keeps grounded unique roots byte-identical after an A-B-
   const quad=(x0,z0,x1,z1,y)=>({positions:new Float32Array([x0,y,z0,x1,y,z0,x0,y,z1,x1,y,z1]),indices:new Uint32Array([0,2,1,1,2,3])});
   const ground=quad(54,-322,78,-298,2),water=quad(60,-320,72,-300,3);
   const pkg={buffers:ground,primitiveSpans:[{role:'TERRAIN',primitiveId:'NEARBY_VISIBLE_GROUND',indexStart:0,indexCount:6}],landscapeCoverFootprints:[],landscapeFloorFootprints:[]};
-  const visibleSurface=buildVegetationVisibleSurface(pkg,{waterPresentationEnabled:true,rearWaterPresentationEnabled:true,geology:{meshes:[{role:'FRESHWATER_RIVER',mesh:water}]}});
+  const visibleSurface=await fixtureSurface(pkg,{waterPresentationEnabled:true,rearWaterPresentationEnabled:true,geology:{meshes:[{role:'FRESHWATER_RIVER',mesh:water}]}});
   const cache=createNearbyFineGrassCache(pkg,{visibleSurface});
   const rootsOf=p=>p.tiles.flatMap(tile=>tile.roots);
   const bytesOf=roots=>{

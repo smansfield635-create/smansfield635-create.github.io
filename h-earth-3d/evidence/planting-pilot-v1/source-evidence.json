@@ -93,5 +93,314 @@
   "advisoryChecks": {
     "registryUnknownCandidatePath": "Exact candidate paths are admitted under2780; no durable authority boundary added. Existing root whole-estate candidate-scope recognition applies; historical registry graph is not source mutation authority.",
     "staticAssetIdentity": "Stale validator-only woodland import revision corrected; product import graph already qualified."
+  },
+  "diagnosticContinuation": {
+    "schema": "H_EARTH_VEGETATION_CONTINUITY_DIAGNOSTIC_CANDIDATE_v1",
+    "baseline": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+    "operationId": "H_EARTH_PLANTING_PILOT_20261016_001",
+    "generation": 2780,
+    "ownerEvidence": "29074.mp4 shows broader landscape continuity and beach/zone defects; exact pilot traversal not established",
+    "ownerDirection": "Proceed with bounded diagnostic candidate before another repair; no production publication",
+    "defaultEnabled": false,
+    "optInQuery": "vegetation-trace=v1&qualification=vegetation-continuity-v1",
+    "limits": {
+      "maximumEvents": 512,
+      "maximumRootsPerSample": 128,
+      "maximumReplayEvents": 2048,
+      "maximumFrameSampleHz": 4,
+      "timingPerturbed": true,
+      "nonCryptographicMembershipDigest": true
+    },
+    "localChecks": {
+      "passed": 13,
+      "failed": 0,
+      "skipped": 1,
+      "skip": "Canonical world gzip absent from sparse local source staging; actual-scene CPU check not rerun",
+      "settledCacheAndSelectionOffOnEquivalence": "PASS_EXPLICIT_SYNTHETIC_EXTERNAL_DEPENDENCIES",
+      "replay": "PASS_SYNTHETIC_NAVIGATION_FIXTURE_NOT_ACTUAL_SCENE"
+    },
+    "independentReview": {
+      "north": "SOURCE_DIAGNOSTIC_INVARIANTS_REVIEWED",
+      "east": "BOUNDED_TRACE_AND_CACHE_OBSERVER_IMPLEMENTED",
+      "west": "SOURCE_SCOPE_DEFAULT_OFF_AND_FIXTURE_REVIEW_PASS"
+    },
+    "runtimeQualification": "NOT_YET_EXECUTED",
+    "visiblePixelsVerified": false,
+    "shorelineAgreementVerified": false,
+    "physicalDeviceAcceptance": false,
+    "exactOwnerVideoRouteReproduced": false,
+    "candidateMerged": false,
+    "published": false,
+    "ordinaryRouteReadinessChanged": false,
+    "diagnosticRouteReadiness": "ONLY_BOTH_FLAGS_WAIT_REPLAY_TERMINAL_BEFORE_READY; runner_READY_or_SUCCESS_is_not_diagnostic_PASS",
+    "sourceSha256": {
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "dc5a08f749f81a6d5739d1308c64e2b3b485e81b47d5552f806ac0b3f9099dba",
+      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "5e9b9b99a14b87e43f0223b8d0fb8f438e18022c148fc69bdfbd882d6336e6bf",
+      "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "18550bca8fe1dde67819793511a543486866ef633374d1442d60a42dbfa6ba61",
+      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "5b143098a13b1fe231217cf3cd1b4e9cc4cf25bc22ae8093b9852a59adad3d78",
+      "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs": "2b626aabb6c3a6d725eeebf1b0eee6b85de1cafded724b11f65e5600e6f031fd",
+      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "81289cc2efbb4bf8e63f89003b50fd2d082e8f4b5be4060998d142a9711a5fd0"
+    },
+    "nextAction": "Execute unchanged registered H_EARTH_NEUTRAL_EXACT_HEAD_RUN against immutable candidate; inspect nested replay result and trace, not generic READY alone."
+  },
+  "cachePublicationRepair": {
+    "schema": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_CANDIDATE_v1",
+    "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001",
+    "generation": 2781,
+    "admissionCommit": "415442f6c1a61bebcae2e828d1aa2f063da5075b",
+    "sourceCommentId": 6227502647,
+    "productionBaseline": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+    "diagnosticBaseline": "43879859581391b6d1def1a4c1f8fd288f715980",
+    "diagnosticObservation": {
+      "runId": 38986460499,
+      "artifactId": 12083308060,
+      "artifactZipSha256": "47a807b012ed7eebde4742806281b54254542f3fb55d2fda0c2ee5a33071d85d",
+      "finding": "Instrumented startup replay: completed nonempty world tiles did not reach installation while requests were canceled by camera movement",
+      "distinctCanceledRequests": 16,
+      "nonemptyTileBuildEvents": 56,
+      "nonemptyFineInstallations": 0,
+      "visiblePixelsVerified": false
+    },
+    "changes": [
+      "Complete and cache one world tile independently of moving camera requests; reprioritize between tiles",
+      "Serialize and coalesce immutable partial presentations independently of tile construction; complete update waits for final callback",
+      "Seed cached overlap plus exact-density-filtered provisional previous presentation roots; replace each tile atomically",
+      "Serialize renderer merging, reject obsolete request keys immediately before installation, retain empty-pending coverage",
+      "Submit incremental progress frames while stationary without advancing existing initial-completion readiness gate",
+      "Hold initial 8/12m radius centrally across partial preview draws, movement-superseded initial awaits and default refresh calls until a current initial cache update and merge completes successfully; then permit existing 24/32m refresh",
+      "Fence every nearby refresh request by monotonically increasing revision before and after the yielding merge so obsolete same-key A-B-A work cannot complete current startup."
+    ],
+    "unchanged": [
+      "Placement eligibility, absolute .22m lattice, seeds, root dimensions, slope/material/water/structure/tree exclusions",
+      "Core/outer radius defaults24/32 and initial8/12;65536root cap; existing selector/GPU budgets",
+      "World, terrain, water, trees, shaders, pilot layout and global coarse representation"
+    ],
+    "checks": {
+      "fixtures": "Actual source with explicit synthetic external terrain/material dependencies; targeted scheduler/identity/race tests. Exact canonical CPU check skips if sparse world gzip absent.",
+      "runtimeQualification": "PENDING_EXACT_HEAD_REGISTERED_REPLAY",
+      "runtimeReceiptLocation": "Issue6426 continuation will bind immutable candidate, actual run, artifact and measured comparison"
+    },
+    "limits": {
+      "visiblePixelsVerified": false,
+      "shorelineAgreementVerified": false,
+      "zoneSeamsRepaired": false,
+      "permanentGlobalCoverageEstablished": false,
+      "physicalDeviceAcceptance": false,
+      "timingPerturbedByDiagnostics": true
+    },
+    "publication": {
+      "merged": false,
+      "deployed": false,
+      "published": false,
+      "authorized": false
+    },
+    "sourceSha256": {
+      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "77dd60f298a267c327fa961efaecb5bb5368d0707a161f48518626bdfedc18dc",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "af40f78088fb270d7f0365f6551630a689b8970c885cbdd3d6ab2043393b394c",
+      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "684e5bb14dc6da31d8104be3ac7b2e8547341fe401091104ac45a5523515bce5",
+      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "eaadcf49bfebad7dcbfa40cd47d5cf29538a41b238a0ab1dbb8c33b2818da335"
+    },
+    "originalIntakeCommit": "8deba4015bef3a5f8d4a685d881b5326422cce6a",
+    "startupRepair": {
+      "preRepairCandidate": "35c429aef5d73dff0b83b5f687f297164b026845",
+      "preRepairBrowser": {
+        "readinessDiagnostic": "TIMEOUT",
+        "progressPercent": 97,
+        "runtimeArtifactId": 12084087560,
+        "artifactZipSha256": "995a3832d20514ddb2b89f747286bdbc8447e390d5af733dd74a2bc11552e17f",
+        "observedPhase": "NEARBY_FINE_GRASS_PARTIAL_GPU_READY",
+        "observedRadiusMeters": [
+          24,
+          32
+        ],
+        "routeReady": false
+      },
+      "cause": "Partial preview draw requested full 24/32m detail before the initial 8/12m request and merge completed. Movement can also supersede an initial await before its caller invokes a default refresh.",
+      "guard": "A shared initial-completion flag becomes true only after the current initial cache request and merge succeed; every refresh retains initial radius until then. A monotonically increasing request revision rejects obsolete work before and after the yielding merge, including same-key A-B-A requests.",
+      "localChecks": {
+        "total": 26,
+        "passed": 25,
+        "failed": 0,
+        "skipped": 1,
+        "skip": "Canonical world gzip absent from sparse local snapshot; exact canonical-scene CPU qualification did not run.",
+        "actualSourceRegressions": [
+          "Incremental preview draws retain 8/12m until successful initial closure, then allow 24/32m",
+          "Failed initial closure contains full-radius draws; retry recovery is not established",
+          "Movement superseding an initial await cannot bypass initial radius through a resumed default refresh",
+          "Obsolete A1 merge after A-B-A does not unlock startup; only latest A2 successful merge permits full radius"
+        ],
+        "fixtureLimits": "Extracted actual renderer refresh and draw intake with controlled cache and merge dependencies; no WebGL or browser readiness proof.",
+        "unmodifiedPreRepairNegativeControl": {
+          "tests": 4,
+          "passed": 0,
+          "failed": 4,
+          "result": "All four new regressions fail against the unmodified pre-repair renderer at the intended startup radius or stale-completion assertions."
+        }
+      },
+      "runtimeQualification": "PENDING_REGISTERED_EXACT_HEAD_REPLAY",
+      "browserStartupRecoveryVerified": false,
+      "sameKeyFailureRetryRecoveryVerified": false,
+      "retainedCaveats": [
+        "Beach placement unresolved",
+        "Zone seams unresolved",
+        "Visible vegetation pixels not verified",
+        "Physical device acceptance not established",
+        "No publication authorized by this evidence"
+      ]
+    },
+    "emptyTileAndProbeRepair": {
+      "baselineCandidate": "1b309e7a1416227f0fac5f6c65f3b2ac85513502",
+      "demonstratedDefects": {
+        "stationaryEmptyTileCompletions": 23,
+        "identicalRootInstallations": 24,
+        "identicalSelectionUploads": 23,
+        "selectionUploadBytesEach": 376832,
+        "capturedProbes": 49,
+        "oversizedProbeEvents": 5,
+        "oversizedProbeCharacters": [
+          39677,
+          39865
+        ]
+      },
+      "changes": [
+        "Track per-request exact rendered root content changes independently of empty tile construction progress; suppress unchanged partial publication markers while retaining mandatory final complete callback and failure propagation.",
+        "Skip selection preparation and installation for exact identical tile/root content within the same nearby request identity and woodland input; update final receipt metadata in place while preserving selection cache identity and stationary GPU selection.",
+        "Limit each installed/selected probe sample to64 roots while preserving whole-stream root counts, digests and accurate truncation.",
+        "Expose fixed rejection reason counters TYPE_INVALID, TIME_INVALID, EVENT_TOO_LARGE and COPY_OR_RECORD_FAILED without retaining arbitrary error strings."
+      ],
+      "exactContentFields": [
+        "tile.id",
+        "tile.minX",
+        "tile.minZ",
+        "root.x",
+        "root.y",
+        "root.z",
+        "root.angle",
+        "root.seed",
+        "root.triangleId",
+        "root.slope",
+        "root.owner"
+      ],
+      "localChecks": {
+        "total": 30,
+        "passed": 30,
+        "failed": 0,
+        "skipped": 0,
+        "canonicalRootContactWaterBoundsChecks": 5313,
+        "canonicalWorldSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+        "canonicalLayoutDigest": "FNV1A32_NONCRYPTOGRAPHIC:2ce04494",
+        "includes": [
+          "Sparse populated first tile followed by empty tiles emits first content and mandatory final metadata only",
+          "Final callback failure rejects and preserves sticky error after suppressed partials",
+          "Exact identical final content retains state selection and updates completion metadata",
+          "Equal count changed root seed delivers a new installation; new request revision remains distinct",
+          "All four startup radius/request revision regressions retained",
+          "A-B-A settled root records and selector pixels remain equivalent",
+          "Probe count/digest/truncation and fixed rejection reasons verified"
+        ]
+      },
+      "capturedProbeReplay": {
+        "source": "WEST_CANDIDATE_ACTUAL_CAPTURED_PROBE_BUDGET_VERIFICATION_v1",
+        "actualCapturedProbes": 49,
+        "recordedEvents": 49,
+        "observerErrors": 0,
+        "droppedEvents": 0,
+        "recoveredOversizedEvents": 5,
+        "maximumEncodedCharacters": 20786,
+        "limitCharacters": 32768,
+        "limitation": "Captured original whole root streams unavailable; full metadata retained from captures while actual candidate summarizer count/digest invariance checked on captured samples. No new browser or pixel acceptance."
+      },
+      "preserved": [
+        "Eligibility, lattice, seeds, root geometry, placement and canonical world",
+        "Initial8/12m and normal24/32m radii and65536root budgets",
+        "Global survey scheduling, density, batch count and intentional materialization pause",
+        "Startup request revision fences and successful current initial closure requirement"
+      ],
+      "limits": [
+        "Suppresses demonstrated redundant empty-tile work; does not claim all possible duplicates under lagging callbacks are eliminated",
+        "Global4/108 materialization is an intentional pause while survey progresses, not a proven stall",
+        "Beach placement and zone seams remain unresolved",
+        "Visible pixels and physical device acceptance not established"
+      ],
+      "runtimeQualification": "PENDING_CHANGED_CANDIDATE_REGISTERED_BROWSER_RUN",
+      "published": false
+    }
+  },
+  "currentCheckpointInterpretation": "Earlier qualification and pending-status sections are retained historical evidence for their explicitly named origins. The renderedBeachZoneContinuity section describes this unqualified Gen2782 candidate; historical browser evidence does not qualify changed runtime bytes.",
+  "renderedBeachZoneContinuity": {
+    "schema": "H_EARTH_GEN2782_RENDERED_BEACH_ZONE_CONTINUITY_SOURCE_CHECKPOINT_v1",
+    "operationId": "H_EARTH_RENDERED_BEACH_AND_ZONE_CONTINUITY_20261017_001",
+    "generation": 2782,
+    "admissionCommit": "0752344d61b349c6785f44e18ced822a34b6e5e9",
+    "productBranch": "refs/heads/h-earth-rendered-beach-zone-continuity-20261017",
+    "qualifiedPredecessor": "a7a8a75f2778ebc2cae1311d5aa8c8fb43cb4db9",
+    "observedAt": "2026-10-17T02:17:34.644889+00:00",
+    "changes": [
+      "Shared support-identity-bound indexed uploaded contact/coast/normal beach evidence for existing presentation vegetation, rejecting missing or contradictory provider evidence",
+      "Full soil material tuple reconciled after regional overlays with protected clearing reference preserved",
+      "One-way pilot owner switch only after complete validated coverage and successful final GPU upload; retain fallback while pending or failed; permit validated empty habitat",
+      "Existing woodland feather-band complementary presentation and immutable archived global plant ordinal/seed identities with submission-time admission mask"
+    ],
+    "checks": {
+      "selectedFiveSourceTestFiles": {
+        "passed": 70,
+        "failed": 0,
+        "skipped": 0,
+        "durationMilliseconds": 54862.14768,
+        "scope": "Actual source and canonical CPU with corrected two direct proof fixture bindings; not WebGL/browser"
+      },
+      "independentNorthEastTests": {
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0,
+        "includes": "Independent 1440-case emitted shader/CPU oracle; indexed owner identity; full soil endpoint; upload/handoff; woodland band"
+      },
+      "proofBindings": {
+        "generation": 2783,
+        "admissionCommit": "5c73e6ee4ba59f6332947d7ef7a37841ad06baac",
+        "twoCorrectedTestFilesPassed": 27,
+        "assertionsWeakened": false,
+        "staleDescriptiveBranchBinding": "NATIVE_SOURCE_VERIFIED_NONOPERATIVE_METADATA; original request retained unchanged; exact governing head, allowed paths, fingerprintDomain parallel Gen2782 operation and qualified immutable runtime SHA control. Historical subjectIdentity.productBranch names old cache-repair branch."
+      },
+      "independentCanonicalArchive": {
+        "baselineRecords": 60857,
+        "preservedByteExactAtOriginalOrdinals": true,
+        "baselineFloat32Sha256": "d70547c977300cff9177705aca5c728cf827574fbe7d6396749679238892659c",
+        "firstMismatch": -1,
+        "replacementRecordsAppended": 832,
+        "historicalRecordsMasked": 1719,
+        "totalRecords": 61689,
+        "maximumRecords": 65536,
+        "gpuBytes": 4936976,
+        "maximumGpuBytes": 8388608,
+        "completedTiles": 648,
+        "cameraSelectors": 168,
+        "selectedIdsChecked": 332264,
+        "maskedIdsSelected": 0,
+        "maximumSelectedInstances": 4096,
+        "maximumDraws": 64,
+        "hostilePartitionMask": "PASS",
+        "scope": "Actual canonical CPU/provider; no current-camera refinement or WebGL pixels"
+      }
+    },
+    "sourceSha256": {
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "25cb117dd187ef64300355e8e0029bf2f7509b8f714271f4d416872fd3050b7f",
+      "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js": "7581000b9a462c57f45ed9ed9172355ef6f9e03d15b808080aff06859ad2b868",
+      "showroom/globe/h-earth/render/rendered-beach-signal.v1.js": "e51cbf64b6cc9feeaf699d1f68871bbea055522bf623ef2b24c3c6e1b182ef34",
+      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "c42634f6efc42b59894643bc3d9919989d8cc2840c021ac110a9645b7bcad6bf",
+      "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "4054ce023cfc01c451c26c0211ef1d9e630c8de3d12e9db90666c60d86b87471",
+      "showroom/globe/h-earth/render/landscape-planting-pilot.v1.js": "206a9ef198195ee455c50e4e5adac84f3830997fd0f007c8eda62d2c620b15f2",
+      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "22ea1763b8dd2206f6f1d1a3558a56c224ac6dc7dbe449ff624da741f2fd1c2e"
+    },
+    "browserQualification": "NOT_EXECUTED_FOR_CHANGED_GEN2782_CANDIDATE",
+    "shaderCompilation": "NOT_ESTABLISHED_BY_CPU_ORACLE",
+    "visualQuality": "NOT_ESTABLISHED",
+    "physicalDeviceAcceptance": false,
+    "publication": {
+      "merged": false,
+      "deployed": false,
+      "published": false
+    },
+    "nextAction": "Freeze exact candidate after independent archival identity and custody review, then execute one unchanged registered Gen2 generic visual qualifier on that immutable product origin. Never relabel predecessor browser results."
   }
 }

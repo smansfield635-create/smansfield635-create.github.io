@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-17T19:24:49Z",
+  "generatedAt": "2026-10-17T20:29:26Z",
   "window": {
-    "start": "2026-07-19T19:24:49Z",
-    "end": "2026-10-17T19:24:49Z"
+    "start": "2026-07-19T20:29:26Z",
+    "end": "2026-10-17T20:29:26Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4882,
-    "visits": 1325,
+    "pageLoads": 4890,
+    "visits": 1333,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4882,
-        "visits": 1325
+        "pageLoads": 4890,
+        "visits": 1333
       }
     },
     "byPath": {
@@ -67,8 +67,8 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 147,
-        "visits": 2
+        "pageLoads": 155,
+        "visits": 10
       },
       "/": {
         "pageLoads": 1033,
@@ -122,20 +122,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -154,6 +154,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -170,10 +174,6 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
@@ -186,12 +186,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/gauges/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/reality/": {
@@ -357,8 +357,8 @@
         "visits": 782
       },
       "(none)": {
-        "pageLoads": 533,
-        "visits": 533
+        "pageLoads": 541,
+        "visits": 541
       },
       "raw.githack.com": {
         "pageLoads": 10,

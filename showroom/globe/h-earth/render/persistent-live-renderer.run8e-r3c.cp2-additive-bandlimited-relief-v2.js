@@ -1520,7 +1520,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
 
   let vegetationPreparation=null;
   let nearbyFineCache=null,nearbyFinePresentation=null,woodlandFinePresentation=null;
-  let nearbyFineDesiredKey=null,nearbyFineReady=false,fineGrassProgress=()=>{};
+  let nearbyFineInitialComplete=false,nearbyFineDesiredKey=null,nearbyFineReady=false,fineGrassProgress=()=>{};
   let installFinePresentation=null;
   let vegetationPreparationComplete=!deferVegetation;
   let vegetationBatchPrerequisitesReady=!deferVegetation;
@@ -1772,21 +1772,24 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const state=await mergeFinePresentation();
     state.ready=true;state.previewReady=true;
   }
-  let nearbyFineUpdateInFlight=null;
+  let nearbyFineUpdateInFlight=null,nearbyFineRequestRevision=0;
   async function refreshNearbyFineGrass(camera,{initial=false}={}){
     if(!nearbyFineCache)return;
+    initial=initial||!nearbyFineInitialComplete;
     const coreRadiusMeters=initial?8:24,outerRadiusMeters=initial?12:32;
     const key=`${Math.floor(camera.x/4)*4+2}:${Math.floor(camera.z/4)*4+2}:${coreRadiusMeters}:${outerRadiusMeters}`;
     if(key===nearbyFineDesiredKey)return nearbyFineUpdateInFlight;
     nearbyFineDesiredKey=key;
+    const requestRevision=++nearbyFineRequestRevision;
     observeVegetation('PRESENTATION_REQUESTED',()=>({key,camera:{x:camera.x,y:camera.y??null,z:camera.z},initial}));
     // Movement reprioritizes the next tile; completed work publishes independently.
     const update=(async()=>{
       const presentation=await nearbyFineCache.update(camera,{coreRadiusMeters,outerRadiusMeters});
-      if(key!==nearbyFineDesiredKey){observeVegetation('PRESENTATION_STALE',()=>({key,desiredKey:nearbyFineDesiredKey,stage:'BEFORE_MERGE'}));return;}
+      if(requestRevision!==nearbyFineRequestRevision||key!==nearbyFineDesiredKey){observeVegetation('PRESENTATION_STALE',()=>({key,desiredKey:nearbyFineDesiredKey,stage:'BEFORE_MERGE'}));return;}
       // The cache callback installs incremental and final snapshots.
       await resources.mergeFinePresentation();
-      if(key!==nearbyFineDesiredKey){observeVegetation('PRESENTATION_STALE',()=>({key,desiredKey:nearbyFineDesiredKey,stage:'AFTER_MERGE'}));return;}
+      if(requestRevision!==nearbyFineRequestRevision||key!==nearbyFineDesiredKey){observeVegetation('PRESENTATION_STALE',()=>({key,desiredKey:nearbyFineDesiredKey,stage:'AFTER_MERGE'}));return;}
+      if(initial)nearbyFineInitialComplete=true;
       nearbyFineReady=true;
       fineGrassProgress({phase:'NEARBY_FINE_GRASS_GPU_READY',nearbyContactCount:presentation.receipt.contactCount,nearby:presentation.receipt,
         woodlandExpected:Math.hypot((camera.x+141)/41.25,(camera.z+226)/40)<1});
@@ -1797,7 +1800,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   }
   function drawWoodlandFineGrass(packet,maximumParents){
     // Latest camera cells reprioritize world-tile work without changing root IDs.
-    refreshNearbyFineGrass(packet.camera.position).catch(error=>{resources.nearbyFineError=error.message;});
+    refreshNearbyFineGrass(packet.camera.position,{initial:!nearbyFineInitialComplete}).catch(error=>{resources.nearbyFineError=error.message;});
     const state=resources.woodlandFineGrass;if(!state)return;
     const camera=packet.camera.position,key=`${Math.floor(camera.x/4)}:${Math.floor(camera.z/4)}:${maximumParents}`;let uploadBytes=0;
     if(state.selectionKey!==key){state.selection=selectWoodlandFineGrass(state.presentation,camera,{maximumParents});state.selectionKey=key;const pixels=state.selection.pixels;

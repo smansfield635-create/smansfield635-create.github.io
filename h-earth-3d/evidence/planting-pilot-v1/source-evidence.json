@@ -147,7 +147,7 @@
     "schema": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_CANDIDATE_v1",
     "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001",
     "generation": 2781,
-    "admissionCommit": "8deba4015bef3a5f8d4a685d881b5326422cce6a",
+    "admissionCommit": "415442f6c1a61bebcae2e828d1aa2f063da5075b",
     "sourceCommentId": 6227502647,
     "productionBaseline": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
     "diagnosticBaseline": "43879859581391b6d1def1a4c1f8fd288f715980",
@@ -166,7 +166,9 @@
       "Serialize and coalesce immutable partial presentations independently of tile construction; complete update waits for final callback",
       "Seed cached overlap plus exact-density-filtered provisional previous presentation roots; replace each tile atomically",
       "Serialize renderer merging, reject obsolete request keys immediately before installation, retain empty-pending coverage",
-      "Submit incremental progress frames while stationary without advancing existing initial-completion readiness gate"
+      "Submit incremental progress frames while stationary without advancing existing initial-completion readiness gate",
+      "Hold initial 8/12m radius centrally across partial preview draws, movement-superseded initial awaits and default refresh calls until a current initial cache update and merge completes successfully; then permit existing 24/32m refresh",
+      "Fence every nearby refresh request by monotonically increasing revision before and after the yielding merge so obsolete same-key A-B-A work cannot complete current startup."
     ],
     "unchanged": [
       "Placement eligibility, absolute .22m lattice, seeds, root dimensions, slope/material/water/structure/tree exclusions",
@@ -194,9 +196,57 @@
     },
     "sourceSha256": {
       "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "fd5522767e2424ac38ea4623be46fe6eda841acbf3167f152e1aff54499ad746",
-      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "5955a6b272869c056dde707eadc3bbcffcb3646542ad179eeb966ab20a3f82b3",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "07ba290bddffb3fb30c6bf3d6895332b20a88e5a59009f2b237f28d6a140ec5b",
       "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "684e5bb14dc6da31d8104be3ac7b2e8547341fe401091104ac45a5523515bce5",
-      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "c722547c088b4312db0f65be7bf7ba1b202e2706d5145b08aa9b24395c8176e7"
+      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "a80c89900b77895ac130985c55503f4e92287a339df06a2a7ffbc964c0031825"
+    },
+    "originalIntakeCommit": "8deba4015bef3a5f8d4a685d881b5326422cce6a",
+    "startupRepair": {
+      "preRepairCandidate": "35c429aef5d73dff0b83b5f687f297164b026845",
+      "preRepairBrowser": {
+        "readinessDiagnostic": "TIMEOUT",
+        "progressPercent": 97,
+        "runtimeArtifactId": 12084087560,
+        "artifactZipSha256": "995a3832d20514ddb2b89f747286bdbc8447e390d5af733dd74a2bc11552e17f",
+        "observedPhase": "NEARBY_FINE_GRASS_PARTIAL_GPU_READY",
+        "observedRadiusMeters": [
+          24,
+          32
+        ],
+        "routeReady": false
+      },
+      "cause": "Partial preview draw requested full 24/32m detail before the initial 8/12m request and merge completed. Movement can also supersede an initial await before its caller invokes a default refresh.",
+      "guard": "A shared initial-completion flag becomes true only after the current initial cache request and merge succeed; every refresh retains initial radius until then. A monotonically increasing request revision rejects obsolete work before and after the yielding merge, including same-key A-B-A requests.",
+      "localChecks": {
+        "total": 26,
+        "passed": 25,
+        "failed": 0,
+        "skipped": 1,
+        "skip": "Canonical world gzip absent from sparse local snapshot; exact canonical-scene CPU qualification did not run.",
+        "actualSourceRegressions": [
+          "Incremental preview draws retain 8/12m until successful initial closure, then allow 24/32m",
+          "Failed initial closure contains full-radius draws; retry recovery is not established",
+          "Movement superseding an initial await cannot bypass initial radius through a resumed default refresh",
+          "Obsolete A1 merge after A-B-A does not unlock startup; only latest A2 successful merge permits full radius"
+        ],
+        "fixtureLimits": "Extracted actual renderer refresh and draw intake with controlled cache and merge dependencies; no WebGL or browser readiness proof.",
+        "unmodifiedPreRepairNegativeControl": {
+          "tests": 4,
+          "passed": 0,
+          "failed": 4,
+          "result": "All four new regressions fail against the unmodified pre-repair renderer at the intended startup radius or stale-completion assertions."
+        }
+      },
+      "runtimeQualification": "PENDING_REGISTERED_EXACT_HEAD_REPLAY",
+      "browserStartupRecoveryVerified": false,
+      "sameKeyFailureRetryRecoveryVerified": false,
+      "retainedCaveats": [
+        "Beach placement unresolved",
+        "Zone seams unresolved",
+        "Visible vegetation pixels not verified",
+        "Physical device acceptance not established",
+        "No publication authorized by this evidence"
+      ]
     }
   }
 }

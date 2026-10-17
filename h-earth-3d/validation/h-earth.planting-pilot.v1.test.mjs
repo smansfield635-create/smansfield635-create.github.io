@@ -317,3 +317,74 @@ test('actual merge worker rejects stale key but allows useful older same-key par
 });
 
 }
+
+// Exercise actual renderer refresh and draw intake with controlled async cache dependencies.
+async function createActualStartupRadiusFixture({holdMerges=false}={}){
+ const path='../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+ const source=await readFile(new URL(path,import.meta.url),'utf8');
+ const first=source.indexOf('let nearbyFineUpdateInFlight=null'),draw=source.indexOf('function drawWoodlandFineGrass(packet,maximumParents){',first);
+ assert.ok(first>=0&&draw>first);
+ const bodyEnd=source.indexOf('const state=resources.woodlandFineGrass;if(!state)return;',draw);
+ assert.ok(bodyEnd>draw);
+ const actual=source.slice(first,draw)+source.slice(draw,bodyEnd+'const state=resources.woodlandFineGrass;if(!state)return;'.length)+'\n}';
+ return Function(`let nearbyFineInitialComplete=false,nearbyFineDesiredKey=null,nearbyFineReady=false;const calls=[],pending=[],progress=[],merges=[];
+ const observeVegetation=()=>{};
+ const resources={mergeFinePresentation:()=>${holdMerges}?new Promise(resolve=>merges.push(resolve)):Promise.resolve()};
+ const nearbyFineCache={update(camera,options){calls.push({camera:{...camera},options:{...options}});return new Promise((resolve,reject)=>pending.push({resolve,reject}));}};
+ const fineGrassProgress=p=>{progress.push(p);if(p.phase==='NEARBY_FINE_GRASS_GPU_READY')drawWoodlandFineGrass({camera:{position:{x:200,z:-200}}},1024);};
+ ${actual}
+ return{calls,pending,progress,merges,resources,refresh:refreshNearbyFineGrass,draw:()=>drawWoodlandFineGrass({camera:{position:{x:200,z:-200}}},1024)};`)();
+}
+async function startupRadiusMicrotasks(){for(let i=0;i<20;i++)await Promise.resolve();}
+test('actual incremental preview draw keeps initial radius until successful initial closure then expands normally',async()=>{
+ const f=await createActualStartupRadiusFixture(),initial=f.refresh({x:200,z:-200},{initial:true});
+ assert.deepEqual(f.calls.map(c=>c.options),[{coreRadiusMeters:8,outerRadiusMeters:12}]);
+ // The public PARTIAL_GPU_READY handler calls the installed preview draw;
+ // exercise its actual refresh intake before the initial cache await resolves.
+ f.draw();f.draw();await startupRadiusMicrotasks();
+ assert.equal(f.calls.length,1,'Partial preview must not supersede initial 8/12m with full 24/32m');
+ f.pending[0].resolve({receipt:{contactCount:100}});await initial;await startupRadiusMicrotasks();
+ assert.equal(f.progress.filter(p=>p.phase==='NEARBY_FINE_GRASS_GPU_READY').length,1);
+ assert.deepEqual(f.calls.map(c=>c.options),[{coreRadiusMeters:8,outerRadiusMeters:12},{coreRadiusMeters:24,outerRadiusMeters:32}], 'Existing ready preview may request full detail only after initial succeeds');
+});
+test('failed initial closure contains full-radius draw refresh without establishing retry recovery',async()=>{
+ const f=await createActualStartupRadiusFixture(),initial=f.refresh({x:200,z:-200},{initial:true});
+ const rejected=assert.rejects(initial,/CONTROLLED_INITIAL_FAILURE/);f.pending[0].reject(Error('CONTROLLED_INITIAL_FAILURE'));await rejected;
+ f.draw();await startupRadiusMicrotasks();
+ assert.equal(f.calls.length,1,'Failed initial request retains initial-radius mode');
+ assert.equal(f.progress.filter(p=>p.phase==='NEARBY_FINE_GRASS_GPU_READY').length,0);
+});
+
+test('movement-superseded initial await cannot bypass initial radius through default refresh',async()=>{
+ const f=await createActualStartupRadiusFixture();
+ const original=f.refresh({x:196,z:-200},{initial:true});
+ f.draw();assert.equal(f.calls.length,2,'Preview movement starts a new initial camera cell');
+ f.pending[0].resolve({receipt:{contactCount:100}});await original;
+ assert.equal(f.progress.filter(p=>p.phase==='NEARBY_FINE_GRASS_GPU_READY').length,0,'Stale original closure does not complete initialization');
+ // The upload caller resumes after its original await and calls the default refresh.
+ const resumed=f.refresh({x:196,z:-200});
+ assert.deepEqual(f.calls.map(c=>c.options),Array.from({length:3},()=>({coreRadiusMeters:8,outerRadiusMeters:12})), 'Default refresh remains initial while no current initial closure succeeded');
+ f.pending[1].resolve({receipt:{contactCount:100}});await startupRadiusMicrotasks();
+ assert.equal(f.progress.filter(p=>p.phase==='NEARBY_FINE_GRASS_GPU_READY').length,0);
+ f.pending[2].resolve({receipt:{contactCount:100}});await resumed;await startupRadiusMicrotasks();
+ assert.equal(f.progress.filter(p=>p.phase==='NEARBY_FINE_GRASS_GPU_READY').length,1);
+ assert.deepEqual(f.calls[3].options,{coreRadiusMeters:24,outerRadiusMeters:32},'Full radius unlocks after current initial merge succeeds');
+});
+
+test('same-key A-B-A request cannot unlock startup through an obsolete yielding merge',async()=>{
+ const f=await createActualStartupRadiusFixture({holdMerges:true});
+ const first=f.refresh({x:200,z:-200},{initial:true});
+ f.pending[0].resolve({receipt:{contactCount:100}});await startupRadiusMicrotasks();
+ assert.equal(f.merges.length,1,'First A is waiting in merge');
+ const middle=f.refresh({x:204,z:-200},{initial:true});
+ const latest=f.refresh({x:200,z:-200},{initial:true});
+ f.pending[1].resolve({receipt:{contactCount:100}});await middle;
+ f.pending[2].resolve({receipt:{contactCount:100}});await startupRadiusMicrotasks();
+ assert.equal(f.merges.length,2,'Latest A is independently waiting in merge');
+ f.merges[0]();await first;await startupRadiusMicrotasks();
+ assert.equal(f.progress.filter(p=>p.phase==='NEARBY_FINE_GRASS_GPU_READY').length,0,'Obsolete first A cannot unlock initialization despite the matching latest key');
+ f.draw();assert.equal(f.calls.length,3,'Draw remains coalesced with current initial A');
+ f.merges[1]();await latest;await startupRadiusMicrotasks();
+ assert.equal(f.progress.filter(p=>p.phase==='NEARBY_FINE_GRASS_GPU_READY').length,1);
+ assert.deepEqual(f.calls[3].options,{coreRadiusMeters:24,outerRadiusMeters:32},'Only latest successful A unlocks full radius');
+});

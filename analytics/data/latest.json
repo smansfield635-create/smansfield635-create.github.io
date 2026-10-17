@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-17T04:33:47Z",
+  "generatedAt": "2026-10-17T05:30:32Z",
   "window30d": {
-    "start": "2026-09-17T04:33:47Z",
-    "end": "2026-10-17T04:33:47Z"
+    "start": "2026-09-17T05:30:32Z",
+    "end": "2026-10-17T05:30:32Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 48
+      "pageLoads": 47
     },
     {
       "date": "2026-10-11",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 22
+      "pageLoads": 25
     }
   ],
   "summary": {
-    "pageLoads": 4243,
+    "pageLoads": 4245,
     "botPageLoads": 1668,
-    "nonBotPageLoads": 2575
+    "nonBotPageLoads": 2577
   },
   "referrers": [
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 44,
-      "visits": 44
+      "pageLoads": 46,
+      "visits": 46
     },
     {
       "host": "m.facebook.com",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 544,
-      "visits": 519
+      "pageLoads": 546,
+      "visits": 521
     },
     {
       "path": "/mirror-manor-preview/",

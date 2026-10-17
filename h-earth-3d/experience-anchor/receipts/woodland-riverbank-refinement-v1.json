@@ -15,8 +15,8 @@
     "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
     "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
   },
-  "reviewedAgainstAnchor": false,
-  "disposition": "PENDING",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
   "operationId": "H_EARTH_WOODLAND_RIVERBANK_REFINEMENT_20261017_001",
   "canonicalAdmissionGeneration": 2793,
   "visualEvidence": [
@@ -28,7 +28,8 @@
   ],
   "continuityEvidence": [
     "h-earth-3d/validation/h-earth.woodland-habitat.v1.test.mjs",
-    "h-earth-3d/validation/h-earth.riverbank-boulders.v1.test.mjs"
+    "h-earth-3d/validation/h-earth.riverbank-boulders.v1.test.mjs",
+    "h-earth-3d/evidence/woodland-riverbank-refinement-v1/README.md"
   ],
   "experienceFiles": [
     {
@@ -85,6 +86,39 @@
     }
   ],
   "limitations": [
-    "Changed-candidate browser and visual acceptance pending; no physical-device acceptance or phone-performance claim."
-  ]
+    "No physical-device acceptance or phone-performance claim.",
+    "Final-view evidence only; all-step pixel continuity and full-world vegetation coverage remain unverified.",
+    "Final commit changes evidence only after runtime qualification; exact merged payload preflight, deployment and live verification remain required."
+  ],
+  "acceptedPrecedent": {
+    "head": "1f3d6983db36c2626d9bcd156f971d18d12d5a24",
+    "basis": "Unchanged canonical world, planetary/regional routes, four trees, small-rock identities, water and manual input/navigation authority; bounded presentation refinement only."
+  },
+  "runtimeCandidate": "286d7f2c25d5c25179840b1014da858bf28fc591",
+  "runtimeViews": [
+    {
+      "view": "bank-view-v1",
+      "run": 39059755378,
+      "job": 117475108841,
+      "artifact": 12110709221,
+      "sha256": "70b0272c1d1f5d78cf482ee485e6a44f550ffade6a2476e1037536aa1011d1df",
+      "result": "READY_CAPTURED_STABLE_VIEW",
+      "canvasSha256": "4a9d8bb9c15a558eae49c4ff7751d8ac60e932228b5768cb02a5aeb1bc59017c"
+    },
+    {
+      "view": "habitat-edge-view-v1",
+      "run": 39059780472,
+      "job": 117475178824,
+      "artifact": 12111122052,
+      "sha256": "91181e3850b20a5ef0b0e5c62992a90aa96bc9d5b197d4d1d4f4f3bd6456fff8",
+      "result": "READY_CAPTURED_STABLE_VIEW",
+      "canvasSha256": "1623d4164fed454a676cbba1a66c7da3dfd31516e570dcd6d478596921648d8c"
+    }
+  ],
+  "independentReview": {
+    "function": "Soren/West",
+    "nativeTask": "/root/west_diagnostic_review",
+    "result": "KEEP_PASS_BOUNDED_VIEWS",
+    "basis": "Independent receipt assertions, exact remote source custody, actual bank/edge image review and anchor-proxy comparison; final native gate and production custody still required."
+  }
 }

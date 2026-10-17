@@ -71,7 +71,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  for(const tile of tiles){gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);gpuUploadCount++;gpuUploadedBytes+=tile.packed.byteLength;await yieldControl();}
  gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);
  const u=Object.fromEntries(['uViewProjection','uCamera','uRadius','uFine','uSunDirection','uSunColor','uHaze','uSunIntensity','uFogStart','uFogFalloff','uMaxFog'].map(n=>[n,gl.getUniformLocation(program,n)]));
- const rgb=value=>{const a=Array.isArray(value)?value:[value.r,value.g,value.b],scale=a.some(v=>v>1)?255:1;return a.map(v=>v/scale);};
+ const rgb=value=>{const a=Array.isArray(value)?value.slice(0,3):[value.r,value.g,value.b],scale=a.some(v=>v>1)?255:1;return a.map(v=>v/scale);};
  gl.useProgram(program);const e=environment;gl.uniform1f(u.uRadius,planetRadius);gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform3fv(u.uSunColor,rgb(e.sunColor));gl.uniform3fv(u.uHaze,rgb(e.groundHazeColor));gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform1f(u.uFogStart,e.fogStartDistance);gl.uniform1f(u.uFogFalloff,e.fogFalloff);gl.uniform1f(u.uMaxFog,e.maximumFogFactor);
  let disposed=false,lastDraw={selectedFineRoots:0,drawCallCount:0,submittedTriangles:0,perFrameUploadBytes:0};const preparationMs=performance.now()-started;
  function draw(packet){
@@ -88,3 +88,4 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  return Object.freeze({draw,getReceipt,dispose});
  }catch(error){cleanup();throw error;}
 }
+

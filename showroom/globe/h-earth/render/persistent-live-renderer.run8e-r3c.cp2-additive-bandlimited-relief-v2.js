@@ -1290,7 +1290,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     try{vegetationTrace.record(type,{frameNumber:counters.frameCount,...details()});}catch{/* Diagnostics cannot change product execution. */}
   }
   function* diagnosticFineRoots(tiles){for(const tile of tiles??[])yield* tile.roots;}
-  const summarizeDiagnosticRoots=roots=>summarizeVegetationRoots(roots,{ownerForRoot:root=>diagnosticRootOwners.get(root)??'UNATTRIBUTED_FINE'});
+  const summarizeDiagnosticRoots=(roots,maximumRoots=128)=>summarizeVegetationRoots(roots,{maximumRoots,ownerForRoot:root=>diagnosticRootOwners.get(root)??'UNATTRIBUTED_FINE'});
   const diagnosticDraw=state=>({lastKnownDraw:state?.lastDraw??null,lastDrawFrameNumber:state?.diagnosticLastDrawFrame??null,calledThisFrame:state?.diagnosticLastDrawFrame===counters.frameCount});
   function diagnosticIds(ids){let hash=2166136261;for(const id of ids){hash=Math.imul(hash^(id>>>0),16777619)>>>0;}return{count:ids.length,orderedIdsDigest:'fnv1a32:'+hash.toString(16).padStart(8,'0'),idsSample:Array.from(ids.slice(0,128)),sampleLimit:128};}
   function getVegetationTrace(options){return vegetationTrace?vegetationTrace.getSnapshot(options):{schema:'H_EARTH_VEGETATION_CONTINUITY_TRACE_v1',enabled:false};}
@@ -1305,8 +1305,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const result={enabled:true,coordinateSpace:'UPLOADED_FLOAT32_WORLD_XZ',x,z,radius,support,water,
       material:material?{valid:material.valid,surfaceClass:material.surfaceClass,authoredShorelineDistanceMeters:material.shorelineDistance,soilDepth:material.soilDepth}:null,
       hiddenFutureWater:resources.geologicalRuntime?.sampleWaterAt(x,z)??null,renderedContactDistanceMeters:null,visibleSandWeight:null,shorelineComparison:'NOT_MEASURED_BY_THIS_TRACE',
-      pilotOwnsPoint:isPlantingPilotPoint(x,z),installedFine:summarizeDiagnosticRoots(nearby(resources.woodlandFineGrass?.presentation?.tiles)),
-      selectedFine:summarizeDiagnosticRoots(selectedNearby()),visiblePixelsVerified:false};
+      pilotOwnsPoint:isPlantingPilotPoint(x,z),installedFine:summarizeDiagnosticRoots(nearby(resources.woodlandFineGrass?.presentation?.tiles),64),
+      selectedFine:summarizeDiagnosticRoots(selectedNearby(),64),visiblePixelsVerified:false};
     observeVegetation('EXPLICIT_GROUND_PROBE',()=>result);return result;
   }
   observeVegetation('TRACE_STARTED',()=>({enabled:true,moduleRevision:'gen2780-vegetation-continuity-trace-v1',sourceBaseline:'fac9d64c29cfc8c55637a15905d89ca0977293e0',candidateIdentityBinding:'EXTERNAL_EXACT_HEAD_REQUIRED',maximumFrameSampleHz:4,mayMissBetweenSampleEvents:true,timingPerturbed:true,visiblePixelsVerified:false}));
@@ -1712,7 +1712,11 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
     return state;
     };
-    let mergeWorker=null,mergePending=false;
+    let mergeWorker=null,mergePending=false,installedWoodland=null;
+    function sameFinePresentationContent(a,b){
+      if(!a||a.tiles.length!==b.tiles.length)return false;
+      return a.tiles.every((tile,i)=>{const other=b.tiles[i];return tile.id===other.id&&Object.is(tile.minX,other.minX)&&Object.is(tile.minZ,other.minZ)&&tile.roots.length===other.roots.length&&tile.roots.every((root,j)=>root===other.roots[j]||['x','y','z','angle','seed','triangleId','slope','owner'].every(key=>Object.is(root[key],other.roots[j][key])));});
+    }
     const mergeFinePresentation=()=>{
       mergePending=true;
       if(mergeWorker)return mergeWorker;
@@ -1725,12 +1729,18 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         schema:'H_EARTH_SHARED_FINE_GRASS_PRESENTATION_v1',contactCount:(woodland?.receipt.contactCount??0)+(nearby?.receipt.contactCount??0),
         woodlandContactCount:woodland?.receipt.contactCount??0,nearbyContactCount:nearby?.receipt.contactCount??0,
         nearby:nearby?.receipt??null,rootEncoding:'ACTUAL_FLOAT32_VISIBLE_TRIANGLE_CONTACTS',originalRecordsChanged:false,terrainChanged:false}};
+      if(nearby&&nearby.receipt.key!==nearbyFineDesiredKey)continue;
+      if(installedWoodland===woodland&&installed?.presentation?.receipt.nearby?.key===nearby?.receipt?.key&&installed?.presentation?.receipt.nearby?.requestRevision===nearby?.receipt?.requestRevision&&sameFinePresentationContent(installed?.presentation,presentation)){
+        installed.presentation.receipt=presentation.receipt;
+        if(nearby!==nearbyFinePresentation)mergePending=true;
+        continue;
+      }
       await prepareWoodlandSelectionCache(presentation,yieldToBrowserPaint);
       if(woodland!==woodlandFinePresentation){mergePending=true;continue;}
       // A newer partial in the same request may follow this one. It must not
       // invalidate useful completed work while selection preparation yields.
       if(nearby&&nearby.receipt.key!==nearbyFineDesiredKey)continue;
-      installed=installFinePresentation(presentation);
+      installed=installFinePresentation(presentation);installedWoodland=woodland;
       if(vegetationTrace){vegetationInstallRevision++;for(const tile of presentation.tiles)for(const root of tile.roots)diagnosticRootOwners.set(root,tile.id.startsWith('NEARBY:')?'NEARBY':'APPROVED_WOODLAND');observeVegetation('PRESENTATION_INSTALLED',()=>({installationRevision:vegetationInstallRevision,sourceRequestRevision:nearby?.receipt?.requestRevision??null,nearbyKey:nearby?.receipt?.key??null,presentationSequence:nearby?.receipt?.presentationSequence??null,complete:nearby?.receipt?.complete??null,woodlandReady:installed.ready===true,roots:summarizeDiagnosticRoots(diagnosticFineRoots(presentation.tiles))}));}
       if(nearby!==nearbyFinePresentation)mergePending=true;
       }

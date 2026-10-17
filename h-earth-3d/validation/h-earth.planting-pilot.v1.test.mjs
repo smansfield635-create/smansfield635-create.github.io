@@ -293,15 +293,15 @@ test('evicted raw tiles retain every still-eligible installed root in progressiv
 
 async function createActualMergeWorkerFixture(){
  const source=await readFile(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
- const start=source.indexOf('let mergeWorker=null,mergePending=false;'),end=source.indexOf('resources.mergeFinePresentation=mergeFinePresentation;',start);
+ const start=source.indexOf('let mergeWorker=null,mergePending=false'),end=source.indexOf('resources.mergeFinePresentation=mergeFinePresentation;',start);
  assert.ok(start>=0&&end>start,'Actual production merge worker must be extracted');
  const worker=source.slice(start,end);
  return Function(`const resources={woodlandFineGrass:{id:'PRIOR'}},vegetationTrace=null;let woodlandFinePresentation=null,nearbyFinePresentation=null,nearbyFineDesiredKey=null;const pending=[],installed=[];
  const yieldToBrowserPaint=async()=>{};
  const prepareWoodlandSelectionCache=p=>new Promise((resolve,reject)=>pending.push({p,resolve,reject}));
- const installFinePresentation=p=>{installed.push(p);resources.woodlandFineGrass=p;return p;};
+ const installFinePresentation=p=>{installed.push(p);resources.woodlandFineGrass={presentation:p,selection:{retained:true},selectionKey:'STATIONARY'};return resources.woodlandFineGrass;};
  ${worker}
- return {merge:mergeFinePresentation,pending,installed,resources,set(key,sequence){nearbyFineDesiredKey=key;nearbyFinePresentation={tiles:[],receipt:{key,presentationSequence:sequence,contactCount:0}};},setDesired(key){nearbyFineDesiredKey=key;}};`)();
+ return {merge:mergeFinePresentation,pending,installed,resources,set(key,sequence){nearbyFineDesiredKey=key;nearbyFinePresentation={tiles:[{id:'NEARBY:FIXTURE',minX:0,minZ:0,roots:[{x:sequence,y:0,z:0,angle:0,seed:sequence,triangleId:0,slope:0,owner:'CANONICAL_VISIBLE_TERRAIN'}]}],receipt:{key,presentationSequence:sequence,contactCount:1}};},setDesired(key){nearbyFineDesiredKey=key;},setPresentation(key,sequence,tiles,complete=false,requestRevision=1){nearbyFineDesiredKey=key;nearbyFinePresentation={tiles,receipt:{key,presentationSequence:sequence,contactCount:tiles.reduce((n,t)=>n+t.roots.length,0),complete,requestRevision}};}};`)();
 }
 async function progressiveMicrotasksUntil(predicate){for(let i=0;i<1000&&!predicate();i++)await Promise.resolve();assert.ok(predicate(),'Expected controlled merge checkpoint');}
 test('actual merge worker rejects stale key but allows useful older same-key partial before its successor',async()=>{
@@ -314,6 +314,41 @@ test('actual merge worker rejects stale key but allows useful older same-key par
  same.pending[1].resolve();await older;assert.deepEqual(same.installed.map(p=>p.receipt.nearby.presentationSequence),[1,2]);
  const failed=await createActualMergeWorkerFixture();failed.set('A',1);const work=failed.merge();const rejection=assert.rejects(work,/CONTROLLED_PREPARE_FAILURE/);failed.pending[0].reject(Error('CONTROLLED_PREPARE_FAILURE'));await rejection;
  assert.deepEqual(failed.installed,[]);assert.equal(failed.resources.woodlandFineGrass.id,'PRIOR','Failed preparation retains prior installed state');
+});
+
+
+test('populated first tile followed by empty tiles suppresses partial publication churn but completes',async()=>{
+ const {createNearbyFineGrassCache}=await loadProgressiveCacheFixture(),seen=[],progress=[];
+ const visibleSurface={ground:{sample(x,z){return Math.floor(x/4)===50&&Math.floor(z/4)===-50?{y:0,slope:0,triangleId:7,owner:'CANONICAL_VISIBLE_TERRAIN'}:null;}},water:{sample:()=>null}};
+ const cache=createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl:async()=>{},onProgress:p=>progress.push(p),onPresentation(p,m){seen.push({p,m});}});
+ const final=await cache.update(a,{coreRadiusMeters:2,outerRadiusMeters:4});
+ assert.ok(final.receipt.contactCount>0);assert.ok(progress.length>2);
+ assert.equal(seen.length,2,'Only first content and mandatory final metadata are published');
+ assert.deepEqual(progressiveSignature(seen[0].p),progressiveSignature(final));
+ assert.equal(seen[0].m.complete,false);assert.equal(seen[1].m.complete,true);
+ assert.equal(final.receipt.completedTileCount,final.receipt.requestedTileCount);
+ const failing=createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl:async()=>{},onPresentation(p,m){if(m.complete)throw Error('FINAL_AFTER_EMPTY_TILES');}});
+ await assert.rejects(failing.update(a,{coreRadiusMeters:2,outerRadiusMeters:4}),/FINAL_AFTER_EMPTY_TILES/);
+ assert.match(failing.getReceipt().stickyError,/FINAL_AFTER_EMPTY_TILES/);
+});
+test('actual merge retains selection for exact same final content but delivers equal-count changed identities',async()=>{
+ const f=await createActualMergeWorkerFixture();
+ const root={x:200,y:0,z:-200,angle:.1,seed:1,triangleId:7,slope:0,owner:'CANONICAL_VISIBLE_TERRAIN'};
+ const tiles=[{id:'NEARBY:50:-50',minX:200,minZ:-200,roots:[root]}];
+ f.setPresentation('A',1,tiles);const first=f.merge();f.pending[0].resolve();await first;
+ const installed=f.resources.woodlandFineGrass,selection=installed.selection;
+ f.setPresentation('A',2,[{...tiles[0],roots:[{...root}]}],true);await f.merge();
+ assert.equal(f.pending.length,1,'Identical final content skips selection preparation');
+ assert.equal(f.installed.length,1);assert.equal(f.resources.woodlandFineGrass,installed);
+ assert.equal(installed.selection,selection);assert.equal(installed.selectionKey,'STATIONARY');
+ assert.equal(installed.presentation.receipt.nearby.complete,true);
+ assert.equal(installed.presentation.receipt.nearby.presentationSequence,2);
+ f.setPresentation('A',3,[{...tiles[0],roots:[{...root,seed:2}]}],true);
+ const changed=f.merge();assert.equal(f.pending.length,2,'Equal count changed seed must prepare');f.pending[1].resolve();await changed;
+ assert.equal(f.installed.length,2);assert.equal(f.installed[1].tiles[0].roots[0].seed,2);
+ f.setPresentation('A',4,[{...tiles[0],roots:[{...root,seed:2}]}],true,2);
+ const revision=f.merge();assert.equal(f.pending.length,3,'New request revision is not suppressed');f.pending[2].resolve();await revision;
+ assert.equal(f.installed.length,3);
 });
 
 }
@@ -387,4 +422,36 @@ test('same-key A-B-A request cannot unlock startup through an obsolete yielding 
  f.merges[1]();await latest;await startupRadiusMicrotasks();
  assert.equal(f.progress.filter(p=>p.phase==='NEARBY_FINE_GRASS_GPU_READY').length,1);
  assert.deepEqual(f.calls[3].options,{coreRadiusMeters:24,outerRadiusMeters:32},'Only latest successful A unlocks full radius');
+});
+
+
+test('actual probe summaries preserve full identities while two bounded samples fit trace event budget',async()=>{
+ const {summarizeVegetationRoots,createVegetationContinuityTrace}=await loadDiagnosticWoodlandFixture();
+ const source=await readFile(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const helper=source.split('\n').find(line=>line.includes('const summarizeDiagnosticRoots='));
+ const diagnosticRootOwners=new WeakMap();
+ const summarize=Function('summarizeVegetationRoots','diagnosticRootOwners',helper+';return summarizeDiagnosticRoots;')(summarizeVegetationRoots,diagnosticRootOwners);
+ assert.match(source,/installedFine:summarizeDiagnosticRoots\(nearby\([^\n]*\),64\)/);
+ assert.match(source,/selectedFine:summarizeDiagnosticRoots\(selectedNearby\(\),64\)/);
+ const roots=Array.from({length:180},(_,i)=>({x:200.123456789+i*.22,y:12.123456789,z:-200.123456789+i*.013,seed:(4294967295-i)>>>0,owner:'CANONICAL_VISIBLE_TERRAIN'}));
+ for(const root of roots)diagnosticRootOwners.set(root,'APPROVED_WOODLAND');
+ const full=summarize(roots),bounded=summarize(roots,64);
+ for(const key of ['rootCount','digest','membershipDigest'])assert.equal(bounded[key],full[key]);
+ assert.equal(bounded.sample.length,64);assert.equal(bounded.truncatedRootCount,roots.length-64);
+ const details={enabled:true,x:200,z:-200,radius:8,installedFine:bounded,selectedFine:bounded,visiblePixelsVerified:false};
+ assert.ok(JSON.stringify(details).length<=32768);
+ const trace=createVegetationContinuityTrace();assert.equal(trace.record('EXPLICIT_GROUND_PROBE',details),true);assert.equal(trace.summary().observerErrorCount,0);
+});
+
+
+test('trace rejections retain bounded fixed reasons without copying error strings',async()=>{
+ const {createVegetationContinuityTrace}=await loadDiagnosticWoodlandFixture();
+ const trace=createVegetationContinuityTrace();
+ assert.equal(trace.record('OVERSIZED',{payload:'x'.repeat(32769)}),false);
+ assert.equal(trace.record('',{}),false);
+ const circular={};circular.self=circular;assert.equal(trace.record('CIRCULAR',circular),false);
+ const summary=trace.summary();assert.equal(summary.observerErrorCount,3);assert.equal(summary.droppedCount,3);
+ assert.deepEqual(summary.rejectionReasonCounts,{TYPE_INVALID:1,TIME_INVALID:0,EVENT_TOO_LARGE:1,COPY_OR_RECORD_FAILED:1});
+ summary.rejectionReasonCounts.EVENT_TOO_LARGE=999;assert.equal(trace.summary().rejectionReasonCounts.EVENT_TOO_LARGE,1);
+ const invalidClock=createVegetationContinuityTrace({now:()=>NaN});assert.equal(invalidClock.record('INVALID_CLOCK'),false);assert.equal(invalidClock.summary().rejectionReasonCounts.TIME_INVALID,1);
 });

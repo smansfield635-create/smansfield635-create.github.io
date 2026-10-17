@@ -195,10 +195,10 @@
       "authorized": false
     },
     "sourceSha256": {
-      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "fd5522767e2424ac38ea4623be46fe6eda841acbf3167f152e1aff54499ad746",
-      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "07ba290bddffb3fb30c6bf3d6895332b20a88e5a59009f2b237f28d6a140ec5b",
+      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "77dd60f298a267c327fa961efaecb5bb5368d0707a161f48518626bdfedc18dc",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "af40f78088fb270d7f0365f6551630a689b8970c885cbdd3d6ab2043393b394c",
       "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "684e5bb14dc6da31d8104be3ac7b2e8547341fe401091104ac45a5523515bce5",
-      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "a80c89900b77895ac130985c55503f4e92287a339df06a2a7ffbc964c0031825"
+      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "eaadcf49bfebad7dcbfa40cd47d5cf29538a41b238a0ab1dbb8c33b2818da335"
     },
     "originalIntakeCommit": "8deba4015bef3a5f8d4a685d881b5326422cce6a",
     "startupRepair": {
@@ -247,6 +247,83 @@
         "Physical device acceptance not established",
         "No publication authorized by this evidence"
       ]
+    },
+    "emptyTileAndProbeRepair": {
+      "baselineCandidate": "1b309e7a1416227f0fac5f6c65f3b2ac85513502",
+      "demonstratedDefects": {
+        "stationaryEmptyTileCompletions": 23,
+        "identicalRootInstallations": 24,
+        "identicalSelectionUploads": 23,
+        "selectionUploadBytesEach": 376832,
+        "capturedProbes": 49,
+        "oversizedProbeEvents": 5,
+        "oversizedProbeCharacters": [
+          39677,
+          39865
+        ]
+      },
+      "changes": [
+        "Track per-request exact rendered root content changes independently of empty tile construction progress; suppress unchanged partial publication markers while retaining mandatory final complete callback and failure propagation.",
+        "Skip selection preparation and installation for exact identical tile/root content within the same nearby request identity and woodland input; update final receipt metadata in place while preserving selection cache identity and stationary GPU selection.",
+        "Limit each installed/selected probe sample to64 roots while preserving whole-stream root counts, digests and accurate truncation.",
+        "Expose fixed rejection reason counters TYPE_INVALID, TIME_INVALID, EVENT_TOO_LARGE and COPY_OR_RECORD_FAILED without retaining arbitrary error strings."
+      ],
+      "exactContentFields": [
+        "tile.id",
+        "tile.minX",
+        "tile.minZ",
+        "root.x",
+        "root.y",
+        "root.z",
+        "root.angle",
+        "root.seed",
+        "root.triangleId",
+        "root.slope",
+        "root.owner"
+      ],
+      "localChecks": {
+        "total": 30,
+        "passed": 30,
+        "failed": 0,
+        "skipped": 0,
+        "canonicalRootContactWaterBoundsChecks": 5313,
+        "canonicalWorldSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+        "canonicalLayoutDigest": "FNV1A32_NONCRYPTOGRAPHIC:2ce04494",
+        "includes": [
+          "Sparse populated first tile followed by empty tiles emits first content and mandatory final metadata only",
+          "Final callback failure rejects and preserves sticky error after suppressed partials",
+          "Exact identical final content retains state selection and updates completion metadata",
+          "Equal count changed root seed delivers a new installation; new request revision remains distinct",
+          "All four startup radius/request revision regressions retained",
+          "A-B-A settled root records and selector pixels remain equivalent",
+          "Probe count/digest/truncation and fixed rejection reasons verified"
+        ]
+      },
+      "capturedProbeReplay": {
+        "source": "WEST_CANDIDATE_ACTUAL_CAPTURED_PROBE_BUDGET_VERIFICATION_v1",
+        "actualCapturedProbes": 49,
+        "recordedEvents": 49,
+        "observerErrors": 0,
+        "droppedEvents": 0,
+        "recoveredOversizedEvents": 5,
+        "maximumEncodedCharacters": 20786,
+        "limitCharacters": 32768,
+        "limitation": "Captured original whole root streams unavailable; full metadata retained from captures while actual candidate summarizer count/digest invariance checked on captured samples. No new browser or pixel acceptance."
+      },
+      "preserved": [
+        "Eligibility, lattice, seeds, root geometry, placement and canonical world",
+        "Initial8/12m and normal24/32m radii and65536root budgets",
+        "Global survey scheduling, density, batch count and intentional materialization pause",
+        "Startup request revision fences and successful current initial closure requirement"
+      ],
+      "limits": [
+        "Suppresses demonstrated redundant empty-tile work; does not claim all possible duplicates under lagging callbacks are eliminated",
+        "Global4/108 materialization is an intentional pause while survey progresses, not a proven stall",
+        "Beach placement and zone seams remain unresolved",
+        "Visible pixels and physical device acceptance not established"
+      ],
+      "runtimeQualification": "PENDING_CHANGED_CANDIDATE_REGISTERED_BROWSER_RUN",
+      "published": false
     }
   }
 }

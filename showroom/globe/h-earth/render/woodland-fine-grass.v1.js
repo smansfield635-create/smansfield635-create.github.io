@@ -27,6 +27,7 @@ export function createVegetationContinuityTrace({maximumEvents=512,maximumRoots=
  diagnosticCap(maximumEvents,'MAXIMUM_EVENTS',512);diagnosticCap(maximumRoots,'MAXIMUM_ROOTS',128);
  if(typeof now!=='function')throw Error('VEGETATION_TRACE_CLOCK_INVALID');
  const events=new Array(maximumEvents);let sequence=0,size=0,droppedCount=0,observerErrorCount=0,disposed=false;
+ const rejectionReasonCounts={TYPE_INVALID:0,TIME_INVALID:0,EVENT_TOO_LARGE:0,COPY_OR_RECORD_FAILED:0};
  const copy=value=>JSON.parse(JSON.stringify(value,(_key,item)=>Array.isArray(item)?item.slice(0,maximumRoots):item));
  function record(type,details={}){
   if(disposed)return false;
@@ -36,9 +37,9 @@ export function createVegetationContinuityTrace({maximumEvents=512,maximumRoots=
    const safe=copy(details),encoded=JSON.stringify(safe);if(encoded.length>32768)throw Error('VEGETATION_TRACE_EVENT_TOO_LARGE');
    const event={sequence:sequence+1,type,timestamp,details:safe};events[sequence%maximumEvents]=event;sequence++;
    if(size===maximumEvents)droppedCount++;else size++;return true;
-  }catch{observerErrorCount++;droppedCount++;return false;}
+  }catch(error){const reason=error?.message==='VEGETATION_TRACE_TYPE_INVALID'?'TYPE_INVALID':error?.message==='VEGETATION_TRACE_TIME_INVALID'?'TIME_INVALID':error?.message==='VEGETATION_TRACE_EVENT_TOO_LARGE'?'EVENT_TOO_LARGE':'COPY_OR_RECORD_FAILED';rejectionReasonCounts[reason]++;observerErrorCount++;droppedCount++;return false;}
  }
- function summary(){return{schema:'H_EARTH_VEGETATION_CONTINUITY_TRACE_v1',maximumEvents,maximumRoots,eventCount:size,lastSequence:sequence,droppedCount,observerErrorCount,timingPerturbed:true,disposed};}
+ function summary(){return{schema:'H_EARTH_VEGETATION_CONTINUITY_TRACE_v1',maximumEvents,maximumRoots,eventCount:size,lastSequence:sequence,droppedCount,observerErrorCount,rejectionReasonCounts:{...rejectionReasonCounts},timingPerturbed:true,disposed};}
  function getSnapshot({sinceSequence=0}={}){
   if(!Number.isSafeInteger(sinceSequence)||sinceSequence<0)throw Error('VEGETATION_TRACE_SEQUENCE_INVALID');
   const selected=[];for(let seq=sequence-size+1;seq<=sequence;seq++){if(seq>sinceSequence)selected.push(JSON.parse(JSON.stringify(events[(seq-1)%maximumEvents])));}
@@ -200,11 +201,16 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
   const roots=tile.roots.filter(root=>{const distance=Math.hypot(root.x-request.cx,root.z-request.cz);if(distance<=request.coreRadius)return true;if(distance>=request.outerRadius)return false;const t=(request.outerRadius-distance)/(request.outerRadius-request.coreRadius),weight=t*t*(3-2*t);return hash(Math.round(root.x/spacing),Math.round(root.z/spacing),14)/4294967296<weight;});
   return Object.freeze({id:tile.id,minX:tile.minX,minZ:tile.minZ,roots:Object.freeze(roots)});
  }
+ function sameRoots(a,b){
+  if(a===b)return true;if(a.length!==b.length)return false;
+  return a.every((root,i)=>root===b[i]||['x','y','z','angle','seed','triangleId','slope','owner'].every(key=>Object.is(root[key],b[i][key])));
+ }
  function retainSelected(request,tile){
   const id=`${tile.minX/4}:${tile.minZ/4}`;if(request.selected.has(id))return;
   const selected=filteredTile(request,tile),previous=request.provisional.get(id);
   const count=request.contactCount+selected.roots.length-(previous?.roots.length??0);
   if(count>maximumRoots)throw Error('NEARBY_FINE_GRASS_ROOT_BUDGET_EXCEEDED:'+count);
+  if(!sameRoots(selected.roots,previous?.roots??[]))request.contentRevision++;
   request.contactCount=count;request.provisional.delete(id);request.selected.set(id,selected);
   peakRequestRoots=Math.max(peakRequestRoots,request.contactCount);
  }
@@ -218,7 +224,7 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
    // request density. They are continuity support, not a completed raw tile.
    const selected=filteredTile(request,tile);if(!selected.roots.length)continue;
    const count=request.contactCount+selected.roots.length;if(count>maximumRoots)throw Error('NEARBY_FINE_GRASS_ROOT_BUDGET_EXCEEDED:'+count);
-   request.provisional.set(id,selected);request.contactCount=count;
+   request.provisional.set(id,selected);request.contactCount=count;request.contentRevision++;
   }
   peakRequestRoots=Math.max(peakRequestRoots,request.contactCount);
  }
@@ -234,7 +240,7 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
   if(request!==latestRequest||request.revision===failedRevision)return;
   const complete=request.selected.size===request.requested.length;
   if((!onPresentation&&!complete)||(!complete&&request.contactCount===0))return;
-  const publicationVersion=`${request.selected.size}:${request.provisional.size}`;
+  const publicationVersion=`${request.contentRevision}:${complete}`;
   if(request.lastQueuedSize===publicationVersion)return;
   request.lastQueuedSize=publicationVersion;
   // One newest marker, not an accumulating queue of whole-world snapshots.
@@ -319,7 +325,7 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
   if(observe)observe('CACHE_REQUEST',{previousRequestRevision:requestRevision,requestRevision:requestRevision+1,camera:{x:point.x,z:point.z},coreRadiusMeters,outerRadiusMeters,pendingWorker:!!builder});
   const requested=[];for(let tz=Math.floor((cz-outerRadiusMeters)/4);tz<=Math.floor((cz+outerRadiusMeters)/4);tz++)for(let tx=Math.floor((cx-outerRadiusMeters)/4);tx<=Math.floor((cx+outerRadiusMeters)/4);tx++){const distance=tileDistance(tx,tz,cx,cz);if(distance<=outerRadiusMeters)requested.push({tx,tz,distance});}requested.sort((a,b)=>a.distance-b.distance||a.tz-b.tz||a.tx-b.tx);
   if(latestRequest){latestRequest.selected.clear();latestRequest.provisional.clear();}
-  latestRequest={revision:++requestRevision,key,cx,cz,coreRadius:coreRadiusMeters,outerRadius:outerRadiusMeters,requested,selected:new Map(),provisional:new Map(),contactCount:0,builtTiles:0,reusedTiles:0,evictedTiles:0,evictedRoots:0,started:performance.now()};
+  latestRequest={revision:++requestRevision,key,cx,cz,coreRadius:coreRadiusMeters,outerRadius:outerRadiusMeters,requested,selected:new Map(),provisional:new Map(),contentRevision:0,contactCount:0,builtTiles:0,reusedTiles:0,evictedTiles:0,evictedRoots:0,started:performance.now()};
   try{seedRequest(latestRequest,lastPresentation);evict();queuePublication(latestRequest);startBuilder();}catch(error){fail(error,latestRequest.revision);}
   return result;
  },getReceipt(){return{requestRevision,key:latestRequest?.key??null,cachedTiles:tiles.size,cachedRoots,maximumRoots,peakCachedRoots,peakRequestRoots,stickyError,errorCount,building:!!builder,publishing:!!publisher,lastPresentation:lastPresentation?.receipt??null};}});

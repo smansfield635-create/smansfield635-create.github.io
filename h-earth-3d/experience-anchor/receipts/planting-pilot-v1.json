@@ -28,64 +28,114 @@
   },
   "experienceFiles": [
     {
-      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
-      "sha256": "4c11d2bf165f473cdbedc648cbb34c013cdcb5932c00e39e152d05664c4c83c4"
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs",
+      "sha256": "2b626aabb6c3a6d725eeebf1b0eee6b85de1cafded724b11f65e5600e6f031fd"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-repair.v1.test.mjs",
+      "sha256": "97148d878fbb7f79a7e598ed968bdfec2932e3ac2d6907848f85997e17f3312f"
     },
     {
       "path": "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs",
-      "sha256": "dc607cf2d9ed77ed1fe75fc8fe8fc8dbdd6767769c45d667e495623f04f019c4"
+      "sha256": "22ea1763b8dd2206f6f1d1a3558a56c224ac6dc7dbe449ff624da741f2fd1c2e"
     },
     {
-      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
-      "sha256": "b514a299398bb4d6929cdf5481f548570b35bf8c20f12a5505b693da757ad4cf"
+      "path": "h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
+      "sha256": "0136ea4ecdc9613adef737139696349b86a01bbefa2cdae2b6c9b24b0c1af778"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
-      "sha256": "ad3b95cb7fae9355793831e8f368410e3f8f7dc6871fecc379224229e4e4dfd0"
-    },
-    {
-      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js",
-      "sha256": "dbfad117525eeeb9f5b64935b8ff7435542e5302f9ced08ba8d4494817e466f6"
-    },
-    {
-      "path": "showroom/globe/h-earth/index.html",
-      "sha256": "3e4ca67444387a71a65ca7fab7a610a074389467df8f653e96f79eb2ecf1f050"
+      "sha256": "684e5bb14dc6da31d8104be3ac7b2e8547341fe401091104ac45a5523515bce5"
     },
     {
       "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
-      "sha256": "d34d909fd387e4dfdaa057516f3f1ca2141f28b2593cb8bb2fab8e5da853d960"
+      "sha256": "4054ce023cfc01c451c26c0211ef1d9e630c8de3d12e9db90666c60d86b87471"
     },
     {
       "path": "showroom/globe/h-earth/render/landscape-planting-pilot.v1.js",
-      "sha256": "2b4c8999bcbdf4b5aabf4596f0bf2c2a7ac6cbd34fddd116e741a5269da06c7b"
-    },
-    {
-      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
-      "sha256": "5a02863fdc85fd0a8bfba7ed712eb54057b1f73779eb4d42b2ea27aee2d83589"
+      "sha256": "206a9ef198195ee455c50e4e5adac84f3830997fd0f007c8eda62d2c620b15f2"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "4db3df2226503a4db07ba074cc5d7f13c9ecde2d691854a0e3b398b7049c8e1f"
+      "sha256": "25cb117dd187ef64300355e8e0029bf2f7509b8f714271f4d416872fd3050b7f"
     },
     {
-      "path": "showroom/globe/h-earth/render/planting-pilot-renderer.v1.js",
-      "sha256": "9c2397ccdcd818c79e4e681351351a61688b88440c7bf8f80b3b3e2b78d96ce6"
+      "path": "showroom/globe/h-earth/render/rendered-beach-signal.v1.js",
+      "sha256": "e51cbf64b6cc9feeaf699d1f68871bbea055522bf623ef2b24c3c6e1b182ef34"
     },
     {
       "path": "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js",
-      "sha256": "ced15a2e8a8664e6b7e6907c0d919fa4fbcf10a965b78081084fec9aaa03a7a6"
+      "sha256": "7581000b9a462c57f45ed9ed9172355ef6f9e03d15b808080aff06859ad2b868"
     },
     {
       "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
-      "sha256": "67a5f31e8b2b01a3b911adf7569d2530708d66bc208820d3769bbaba1fe24050"
+      "sha256": "c42634f6efc42b59894643bc3d9919989d8cc2840c021ac110a9645b7bcad6bf"
     }
   ],
-  "acceptanceBasis": "Preservation-only: qualified exact same canonical entered world with existing terrain, navigation, cavern/camera and protected trees. Actual prior/current scene screenshots and exact source review retain anchored product identity. Native pilot is presentation-only, bounded, world-fixed and no new UI. Independent West confirms technical preservation; no pilot visual or physical-device acceptance is claimed.",
-  "canonicalAdmissionGeneration": 2780,
-  "qualifiedProductHead": "8736283377901c63f281a70a1afb73c5cbd17a0f",
-  "qualificationRunId": 38981413428,
+  "acceptanceBasis": "Preservation-only: exact changed candidate actual browser and post-residency clearing/coast images preserve the same canonical embodied world and approved four-tree geometry. Source/CPU checks preserve unchanged world, terrain, camera, navigation and direct interaction. This receipt does not establish all zone seam removal, all beach setbacks, movement stability, aquatic placement quality, owner perceptual acceptance or physical Android performance.",
+  "canonicalAdmissionGeneration": 2782,
+  "qualifiedProductHead": "6729cabe9c4b41e138cc4256b34aafa92f87bc78",
+  "qualificationRunId": 38994443270,
   "ownerPerceptualAcceptance": false,
   "pilotPixelVisibilityVerified": false,
   "pilotMovementAppearanceVerified": false,
-  "phonePerformanceMeasured": false
+  "phonePerformanceMeasured": false,
+  "evidenceFinalizationGeneration": 2783,
+  "qualificationArtifactId": 12087041440,
+  "qualificationArtifactSha256": "ebbd318e1766a09e36992b3abbe2b4893e316e9c1921e356bf1c93091a767d16",
+  "qualificationReceiptSha256": "26fb60dce5ba23f499465e2190875a9ccb1e232358ea501ec10891a75def0afa",
+  "qualificationArtifactUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38994443270/artifacts/12087041440",
+  "actualRuntimeEvidence": {
+    "scope": "ACTUAL_CHANGED_CANDIDATE_HEADLESS_CHROMIUM_PRESERVATION_NOT_ALL_LANDSCAPE_ACCEPTANCE",
+    "actualBrowserExecution": true,
+    "result": "PASS",
+    "verifierControlPlaneHead": "c03d0cf2572e652b9c3874825c2238e72da53d47",
+    "verifierGitBlob": "8c0c43bb06d54aa58c8eec5aaa7b04121a103df4",
+    "views": [
+      "approved-four-tree-clearing",
+      "coast"
+    ],
+    "eachView": {
+      "residentBatchCount": 108,
+      "residentInstanceCount": 27585,
+      "priorityTilesPrepared": 648,
+      "nearbyTilesComplete": 241,
+      "droppedPlacementCount": 0,
+      "worldRebuildCount": 0,
+      "errors": [],
+      "failedRequests": []
+    },
+    "approvedTreeGeometryUnchanged": true,
+    "postResidencyImages": [
+      {
+        "artifactEntry": "approved-four-tree-clearing-post-residency-canvas.png",
+        "sha256": "15796e27fc7f1ef7475b009af4685cab6c90d3b0ae4e6105029ba1e4a7b7a6e0"
+      },
+      {
+        "artifactEntry": "coast-post-residency-canvas.png",
+        "sha256": "8199aa2d1c21a1423a5461c08d8b23eaa89273bbab8df32331245d1a38d3803c"
+      }
+    ],
+    "finalResidencySource": "views[].residency; readiness.snapshot is early startup evidence",
+    "visualEvidenceCustody": "Runtime ZIP and receipt hashes independently verified by root and West; root/East/West inspected actual post-residency images. Existing source-evidence path is immutable source/CPU-stage evidence; this receipt supplies the later actual runtime artifact binding."
+  },
+  "qualificationInheritance": "A later finalization commit changes only this nonruntime receipt from the qualified origin; every runtime/direct dependency blob must remain byte-identical. Do not relabel the actual run as executed on the later receipt-only commit.",
+  "preservedInteractionEvidence": {
+    "sourceTests": {
+      "passed": 70,
+      "failed": 0,
+      "skipped": 0
+    },
+    "priorQualifiedReplay": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38991523515",
+    "currentWalkingReplayExecuted": false,
+    "sameWorldTerrainNavigationCameraUnchanged": true
+  },
+  "unestablishedClaims": [
+    "All-zone seam elimination",
+    "All beach setbacks or aquatic placement quality",
+    "Movement repopulation/disappearance eliminated",
+    "Actual owner handoff transition timing or final draw owner telemetry",
+    "Physical Android performance",
+    "Owner perceptual acceptance"
+  ]
 }

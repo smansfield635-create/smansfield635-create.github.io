@@ -351,6 +351,37 @@ function resolveMaterialProfile(shorelineDistance, elevation, slope) {
   return 'LOWLAND_SOIL';
 }
 
+// Keep a bounded working set of exact field results. Fixed slots avoid per-miss
+// coordinate-index allocations. The hash selects a slot only: both original
+// IEEE coordinates (including signed zero) must match before any result reuse.
+// A collision replaces a result and changes cost only, never the terrain law.
+function createTerrainCoordinateCache(limit) {
+  const xs = new Float64Array(limit), zs = new Float64Array(limit);
+  const values = new Array(limit);
+  const view = new DataView(new ArrayBuffer(16));
+  function slot(x, z) {
+    view.setFloat64(0, x);
+    view.setFloat64(8, z);
+    let hash = Math.imul(view.getUint32(0) ^ view.getUint32(4), 0x9e3779b1)
+      ^ Math.imul(view.getUint32(8) ^ view.getUint32(12), 0x85ebca6b);
+    hash ^= hash >>> 16;
+    return hash & (limit - 1);
+  }
+  return {
+    get(x, z) {
+      const index = slot(x, z);
+      if (values[index] !== undefined && Object.is(xs[index], x) && Object.is(zs[index], z)) return values[index];
+    },
+    set(x, z, value) {
+      const index = slot(x, z);
+      xs[index] = x;
+      zs[index] = z;
+      values[index] = value;
+    }
+  };
+}
+const terrainFieldCache = createTerrainCoordinateCache(16384);
+
 export function sampleHEarthTerrainElevation(worldX, worldZ) {
   if (!finite(worldX) || !finite(worldZ)) return Number.NaN;
   return evaluateRawElevation(worldX, worldZ);
@@ -358,6 +389,8 @@ export function sampleHEarthTerrainElevation(worldX, worldZ) {
 
 export function sampleHEarthTerrainField(worldX, worldZ) {
   if (!finite(worldX) || !finite(worldZ)) return deepFreeze({ valid: false, status: 'TERRAIN_SAMPLE_REJECTED_NONFINITE', worldX, worldZ });
+  const cached = terrainFieldCache.get(worldX, worldZ);
+  if (cached !== undefined) return cached;
   const step = H_EARTH_TERRAIN_FIELD.sampling.derivativeStep;
   const elevation = sampleHEarthTerrainElevation(worldX, worldZ);
   const left = sampleHEarthTerrainElevation(worldX - step, worldZ);
@@ -371,25 +404,29 @@ export function sampleHEarthTerrainField(worldX, worldZ) {
   const curvature = (left - 2 * elevation + right) / (step * step) + (back - 2 * elevation + front) / (step * step);
   const shorelineZ = getHEarthCanonicalShorelineZ(worldX);
   const shorelineDistance = shorelineZ - worldZ;
-  return deepFreeze({
+  // The result has exactly three object children; freeze those and the root
+  // once instead of recursively traversing every scalar for each new sample.
+  const result = Object.freeze({
     valid: true,
     status: 'TERRAIN_SAMPLE_COMPLETE',
     contractId: H_EARTH_TERRAIN_FIELD_CONTRACT_ID,
     generationRevision: H_EARTH_TERRAIN_FIELD.generationRevision,
-    world: { x: worldX, y: elevation, z: worldZ },
+    world: Object.freeze({ x: worldX, y: elevation, z: worldZ }),
     elevation,
     shorelineZ,
     shorelineDistance,
     coastalSystemId: H_EARTH_GRATITUDE_COASTAL_SYSTEM.systemId,
     inlandMountainWatershedSystemId: H_EARTH_INLAND_MOUNTAIN_WATERSHED_SYSTEM.systemId,
-    gradient: { x: dx, z: dz },
-    normal: { x: -dx / normalLength, y: 1 / normalLength, z: -dz / normalLength },
+    gradient: Object.freeze({ x: dx, z: dz }),
+    normal: Object.freeze({ x: -dx / normalLength, y: 1 / normalLength, z: -dz / normalLength }),
     slope,
     slopeClass: classifySlope(slope),
     curvature,
     curvatureClass: classifyCurvature(curvature),
     materialProfile: resolveMaterialProfile(shorelineDistance, elevation, slope)
   });
+  terrainFieldCache.set(worldX, worldZ, result);
+  return result;
 }
 
 export function evaluateHEarthTerrainSharedEdge({ edgeA, edgeB, tolerance = H_EARTH_TERRAIN_FIELD.sampling.numericTolerance }) {

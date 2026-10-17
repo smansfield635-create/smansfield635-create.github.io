@@ -1,15 +1,15 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "h-earth-simple",
-  "description": "Canonical H-Earth manual woodland entrance with persistent single-owner vegetation and preserved landscape.",
+  "description": "Canonical H-Earth prepared woodland scene and available controls; input-confirmed entry and physical-device smoothness remain separate acceptance.",
   "checks": [
     {
       "path": "/showroom/globe/h-earth/index.html",
       "includes": [
-        "<title>H-Earth \u00b7 Live Interactive World</title>",
+        "<title>H-Earth · Live Interactive World</title>",
         "id=\"h-earth-functional-landscape-route\"",
         "data-run8e-ready=\"false\"",
-        "./vegetation-prototype/route.js?rev=gen2794-causal-landscape-v1",
+        "./vegetation-prototype/route.js?rev=gen2795-performance-v1",
         "type=\"importmap\""
       ],
       "excludes": [
@@ -24,7 +24,12 @@
         "if(diagnosticReplay){",
         "vegetationStrategy:'SINGLE_OWNER_WOODLAND_V1'",
         "mode:diagnosticReplay?'diagnostic-replay':'manual-public'",
-        "if(!diagnosticReplay){interactiveReady=true;canvas.style.pointerEvents='auto';}"
+        "root.dataset.singleOwnerPrototype='controls-test';loader.enableControls(intake.getNavigationState());",
+        "assert(entryOwner.installedRootCount>0&&controlIds.length>0,'EMPTY_INSTALLED_CONTROL');",
+        "assert(entryOwner.selectedFineRoots>0&&entryOwner.drawCallCount>0,'EMPTY_FINE_SUBMISSION');",
+        "assert(entryOwner.coarseRootCount>0&&entryOwner.coarseTiles>0,'COARSE_COVERAGE_MISSING');",
+        "assertStableObservation(entry,controlIds);",
+        "root.dataset.run8eError='true';"
       ],
       "excludes": []
     },
@@ -35,6 +40,19 @@
         "planImmutableTiles"
       ],
       "excludes": []
+    },
+    {
+      "path": "/showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "includes": [
+        "proposal?.accepted!==true",
+        "firstInput.sequence!==state.sequence",
+        "firstInput.pose!==pose(state)",
+        "frame?.navigationSequence!==state.sequence",
+        "receipt.nextAnimationFrameOpportunityMilliseconds=elapsed();mode='ready';",
+        "if(mode!=='ready'||button.disabled)return;",
+        "onEnter();"
+      ],
+      "excludes": []
     }
   ],
   "runtime": {
@@ -43,8 +61,8 @@
     "timeoutMs": 120000,
     "readyAttribute": {
       "selector": "#h-earth-functional-landscape-route",
-      "name": "data-run8e-ready",
-      "contains": "true"
+      "name": "data-single-owner-prototype",
+      "contains": "controls-test"
     },
     "binding": {
       "mode": "direct-document",
@@ -55,7 +73,7 @@
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "Manual woodland is ready for direct navigation",
+        "name": "Prepared woodland controls await genuine input before entry",
         "action": {
           "type": "click",
           "selector": "#h-earth-functional-landscape-canvas"
@@ -65,12 +83,38 @@
             "type": "attributeEquals",
             "selector": "#h-earth-functional-landscape-route",
             "name": "data-single-owner-prototype",
-            "value": "manual-ready"
+            "value": "controls-test"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "#h-earth-functional-landscape-route",
+            "name": "data-world-first-frame-ready",
+            "value": "true"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "#h-earth-functional-landscape-route",
+            "name": "data-run8e-ready",
+            "value": "false"
+          },
+          {
+            "type": "attributeEquals",
+            "selector": "#h-earth-loading-screen",
+            "name": "data-mode",
+            "value": "test"
+          },
+          {
+            "type": "exists",
+            "selector": "#h-earth-loading-screen button[disabled]"
+          },
+          {
+            "type": "exists",
+            "selector": "#h-earth-functional-landscape-route:not([data-run8e-error=\"true\"])"
           },
           {
             "type": "textContains",
             "selector": "#prototype-status",
-            "value": "Drag to look"
+            "value": "Test controls on the landscape to unlock Enter H-Earth"
           }
         ],
         "timeoutMs": 15000

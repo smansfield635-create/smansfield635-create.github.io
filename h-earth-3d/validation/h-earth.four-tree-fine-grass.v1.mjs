@@ -176,6 +176,11 @@ export function verifyGen2694CandidateSourceChain(){
   const modules=[...entry.matchAll(/<script[^>]+type="module"[^>]+src="([^"]+)"/g)].map(match=>match[1]);
   assert.deepEqual(modules,['./vegetation-prototype/route.js?rev=gen2791-single-owner-public-v1'],'GEN2791_PUBLIC_ENTRY_MODULE_DRIFT');
   assert(entry.includes('type="importmap"')&&entry.includes('id="h-earth-functional-landscape-route"')&&entry.includes('data-run8e-ready="false"'),'GEN2791_PUBLIC_ENTRY_BINDING_MISSING');
+  const imports=JSON.parse(entry.match(/<script type="importmap">([\s\S]*?)<\/script>/)?.[1]??'{}').imports;
+  for(const suffix of ['persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=','woodland-fine-grass.v1.js?rev=']){
+   const module='/showroom/globe/h-earth/render/'+suffix;
+   assert.equal(imports?.[module+'gen2780-stable-planting-v1'],module+'gen2791-single-owner-public-v1','GEN2791_CHANGED_MODULE_CACHE_IDENTITY_MISSING:'+suffix);
+  }
   assert(!entry.includes('public-live-gpu-integration.run8e-r3e.receipt.js'),'GEN2791_SECOND_PUBLIC_OWNER');
   const route=fs.readFileSync(new URL('showroom/globe/h-earth/vegetation-prototype/route.js',ROOT),'utf8');
   for(const needle of ["const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');","query.set('arrival','approved-four-trees');","vegetationStrategy:'SINGLE_OWNER_WOODLAND_V1'","if(diagnosticReplay){","if(!diagnosticReplay){interactiveReady=true;canvas.style.pointerEvents='auto';}","mode:diagnosticReplay?'diagnostic-replay':'manual-public'"]){

@@ -1,0 +1,118 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "operationId": "H_EARTH_SINGLE_OWNER_PUBLIC_ADOPTION_20261017_001",
+  "canonicalAdmissionGeneration": 2791,
+  "evidenceOperationId": "H_EARTH_SINGLE_OWNER_PUBLIC_ANCHOR_EVIDENCE_20261017_001",
+  "evidenceAdmissionGeneration": 2792,
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/vegetation-single-owner-v1/README.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/vegetation-single-owner-v1/README.md",
+    "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs",
+      "sha256": "92f4799b4f96db175ac3edc76b77408916d94f6f752aecdab0dfe89e2b67cf0d"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.fine-grass-continuity.v1.test.mjs",
+      "sha256": "4f9beeafaebd3fd2510fcdd78769fbb809a3ee01b023523520fb116f1d9a50b6"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.fine-grass-preflight.v1.test.mjs",
+      "sha256": "9d9830747a209eb5e9f98421181256b4fb8717a6e24c7c4f7b3257ee02563a22"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "e06d0091f6d2285b3d79c0a67285eb4f1061470a954471bff406f06fe325024b"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.populated-continuity.v1.test.mjs",
+      "sha256": "9bbbafbb2ebb599bebcd58c6b0a36eb88732befb1ba4562c0c6224f1c938a3d8"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+      "sha256": "429078b184bf63002c2bead5bbfe31ea8b4dd4de83b7ec2b8239f011f69fa204"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js",
+      "sha256": "9a837630526b8dfbe027e3fb665ec24ed704220b319c55117c1f586941a76933"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "7e0f725790747f0373757fd958c84b7e70705aaf5f09dd46d4bb1415fdd04640"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "c2d382efb4ce002a51192031312005de714d9c6b035b8b2d63e44915c252b9cf"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "70ffab96bda51d5fb287097b03c088c1fd9aae8c348006aaf351f3a879766ed4"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype.html",
+      "sha256": "134b089972890b0af48840ac86a7de7efd328f65e89bf0899ddf465f991c3163"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "1994f716721a83734b411501986e2d1fffb7fae99785ac24f70203118d871ccd"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "1ab424df9ddc6cc658b92a4e45807807cdb396f6bc48481f5194bdc014909f9f"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "3851ad17c4ffa2060c1f3035fe84bb272a112888",
+    "runtimeRun": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39050919121",
+    "ownerDisposition": "Owner accepted displayed woodland, explicitly accepted absent vegetation elsewhere, and directed simpler environment publication.",
+    "preserved": "Identical canonical world assets, renderer, four approved trees, rocks, boulders, geological/water presentation, woodland generation and single immutable GPU root owner."
+  },
+  "declaredDelta": [
+    "Canonical root selects same tested woodland with manual navigation and no diagnostic walk.",
+    "Gate input until prepared; preserve diagnostic replay.",
+    "Fresh importmap identities for changed renderer/woodland module prevent cached old implementations.",
+    "Static source binding and public release manifest describe actual new root."
+  ],
+  "limitations": [
+    "No phone performance or physical-device acceptance claimed.",
+    "No all-step pixel continuity or full-world vegetation coverage claimed.",
+    "No measured full-world startup speedup claimed."
+  ],
+  "publicRootRuntime": {
+    "targetHead": "298349ea0a8c5aa9dacf24ca209d304a82734b57",
+    "run": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39053371091",
+    "artifactId": 12108646559,
+    "artifactSha256": "f5fbbfc2b977baa77673b2862305fdf1bce735912ca00af56255818028aa779c",
+    "result": "READY_NO_PAGE_CONSOLE_NETWORK_ERRORS",
+    "stationaryRenderCount": 2,
+    "automaticReplay": false,
+    "populatedMilliseconds": 94204.7,
+    "canvasSha256": "2f1b72f211de2dca3353f45425072cf3bfb219ac274d23640af31fc564547e18",
+    "finalizationDelta": "Root importmap cache URL identities and exact mapping tests/source binding only; referenced renderer, woodland generator and owner bytes unchanged. Final exact payload still requires publication preflight."
+  }
+}

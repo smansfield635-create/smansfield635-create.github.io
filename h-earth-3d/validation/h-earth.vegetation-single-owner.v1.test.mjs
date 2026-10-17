@@ -214,6 +214,11 @@ test('canonical HTML starts only single-owner entrance and preserves import iden
  assert.deepEqual(scripts,['./vegetation-prototype/route.js?rev=gen2791-single-owner-public-v1']);
  assert.ok(html.includes('type="importmap"'));assert.ok(!html.includes('data-h-earth-public-route'));
  assert.ok(!html.includes('public-live-gpu-integration.run8e-r3e'));
+ const imports=JSON.parse(html.match(/<script type="importmap">([\s\S]*?)<\/script>/)[1]).imports;
+ for(const suffix of ['persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=','woodland-fine-grass.v1.js?rev=']){
+  const module='/showroom/globe/h-earth/render/'+suffix;
+  assert.equal(imports[module+'gen2780-stable-planting-v1'],module+'gen2791-single-owner-public-v1','changed owner modules bypass prior public cache identities');
+ }
 });
 
 test('manual public intake proposals cannot render before initialization',async()=>{

@@ -185,7 +185,7 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     maximumEvidenceCaptureResponseMs: 0
   };
 
-  const renderer = await createHEarthRun8ER3CPersistentRenderer({ canvas, width, height, deferVegetation:deferredVegetationActive, onStartupProgress });
+  const renderer = await createHEarthRun8ER3CPersistentRenderer({ canvas, width, height, deferVegetation:deferredVegetationActive, onStartupProgress,vegetationTraceEnabled:queryParameters.get('vegetation-trace')==='v1' });
 
   const captureEvidence = (label, sourceKind = 'EXPLICIT_DIAGNOSTIC_CAPTURE') => {
     const startedAt = performance.now();
@@ -580,6 +580,8 @@ export async function createHEarthRun8ER3D3LiveGpuBinding({
     liveDifferential: H_EARTH_CP2_LIVE_DIFFERENTIAL_ADMISSION,
     acceptNavigationState,
     captureLatestEvidence,
+    getVegetationTrace:options=>renderer.getVegetationTrace?.(options)??{enabled:false},
+    getVegetationProbe:options=>renderer.getVegetationProbe?.(options)??{enabled:false},
     prepareVegetationResidency: options => deferredVegetationActive?renderer.prepareVegetationResidency(options):Promise.resolve(getVegetationResidency()),
     materializeNextVegetationBatch,
     presentWoodlandFineGrassReadyFrame,

@@ -93,5 +93,54 @@
   "advisoryChecks": {
     "registryUnknownCandidatePath": "Exact candidate paths are admitted under2780; no durable authority boundary added. Existing root whole-estate candidate-scope recognition applies; historical registry graph is not source mutation authority.",
     "staticAssetIdentity": "Stale validator-only woodland import revision corrected; product import graph already qualified."
+  },
+  "diagnosticContinuation": {
+    "schema": "H_EARTH_VEGETATION_CONTINUITY_DIAGNOSTIC_CANDIDATE_v1",
+    "baseline": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+    "operationId": "H_EARTH_PLANTING_PILOT_20261016_001",
+    "generation": 2780,
+    "ownerEvidence": "29074.mp4 shows broader landscape continuity and beach/zone defects; exact pilot traversal not established",
+    "ownerDirection": "Proceed with bounded diagnostic candidate before another repair; no production publication",
+    "defaultEnabled": false,
+    "optInQuery": "vegetation-trace=v1&qualification=vegetation-continuity-v1",
+    "limits": {
+      "maximumEvents": 512,
+      "maximumRootsPerSample": 128,
+      "maximumReplayEvents": 2048,
+      "maximumFrameSampleHz": 4,
+      "timingPerturbed": true,
+      "nonCryptographicMembershipDigest": true
+    },
+    "localChecks": {
+      "passed": 13,
+      "failed": 0,
+      "skipped": 1,
+      "skip": "Canonical world gzip absent from sparse local source staging; actual-scene CPU check not rerun",
+      "settledCacheAndSelectionOffOnEquivalence": "PASS_EXPLICIT_SYNTHETIC_EXTERNAL_DEPENDENCIES",
+      "replay": "PASS_SYNTHETIC_NAVIGATION_FIXTURE_NOT_ACTUAL_SCENE"
+    },
+    "independentReview": {
+      "north": "SOURCE_DIAGNOSTIC_INVARIANTS_REVIEWED",
+      "east": "BOUNDED_TRACE_AND_CACHE_OBSERVER_IMPLEMENTED",
+      "west": "SOURCE_SCOPE_DEFAULT_OFF_AND_FIXTURE_REVIEW_PASS"
+    },
+    "runtimeQualification": "NOT_YET_EXECUTED",
+    "visiblePixelsVerified": false,
+    "shorelineAgreementVerified": false,
+    "physicalDeviceAcceptance": false,
+    "exactOwnerVideoRouteReproduced": false,
+    "candidateMerged": false,
+    "published": false,
+    "ordinaryRouteReadinessChanged": false,
+    "diagnosticRouteReadiness": "ONLY_BOTH_FLAGS_WAIT_REPLAY_TERMINAL_BEFORE_READY; runner_READY_or_SUCCESS_is_not_diagnostic_PASS",
+    "sourceSha256": {
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "dc5a08f749f81a6d5739d1308c64e2b3b485e81b47d5552f806ac0b3f9099dba",
+      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "5e9b9b99a14b87e43f0223b8d0fb8f438e18022c148fc69bdfbd882d6336e6bf",
+      "showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js": "18550bca8fe1dde67819793511a543486866ef633374d1442d60a42dbfa6ba61",
+      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "5b143098a13b1fe231217cf3cd1b4e9cc4cf25bc22ae8093b9852a59adad3d78",
+      "h-earth-3d/validation/h-earth.cavern-vegetation-browser.v1.mjs": "2b626aabb6c3a6d725eeebf1b0eee6b85de1cafded724b11f65e5600e6f031fd",
+      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "81289cc2efbb4bf8e63f89003b50fd2d082e8f4b5be4060998d142a9711a5fd0"
+    },
+    "nextAction": "Execute unchanged registered H_EARTH_NEUTRAL_EXACT_HEAD_RUN against immutable candidate; inspect nested replay result and trace, not generic READY alone."
   }
 }

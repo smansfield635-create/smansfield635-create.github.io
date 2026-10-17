@@ -3,6 +3,50 @@ import {inverseHEarthGroundCoverPoint} from './landscape-groundcover.global-v1.j
 import {sampleHEarthRun8CSuccessorSurfaceMaterial as materialAt} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate,sampleHEarthGen311PlacementStructureDisposition} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
 import {H_EARTH_OASIS_FOLIAGE_SAMPLE as oasis} from './grass-lowland-trial.js';
+/** Optional observations describe actual calls; fixtures must identify themselves externally. */
+function diagnosticCap(value,name,limit){if(!Number.isSafeInteger(value)||value<1||value>limit)throw Error('VEGETATION_TRACE_'+name+'_INVALID');return value;}
+export function summarizeVegetationRoots(roots,{maximumRoots=128,presentationOwner=null,ownerForRoot=null}={}){
+ diagnosticCap(maximumRoots,'MAXIMUM_ROOTS',128);
+ if(ownerForRoot!==null&&typeof ownerForRoot!=='function')throw Error('VEGETATION_TRACE_OWNER_CALLBACK_INVALID');
+ if(!roots||typeof roots[Symbol.iterator]!=='function')throw Error('VEGETATION_TRACE_ROOTS_INVALID');
+ const bytes=new DataView(new ArrayBuffer(8)),sample=[];let ordered=2166136261,count=0,sum=0,xor=0;
+ const feed=(h,byte)=>Math.imul(h^byte,16777619)>>>0;
+ const number=(h,value)=>{if(value===null||value===undefined)return feed(h,0);h=feed(h,1);bytes.setFloat64(0,Number(value),true);for(let j=0;j<8;j++)h=feed(h,bytes.getUint8(j));return h;};
+ const string=(h,value)=>{if(value===null||value===undefined)return feed(h,0);h=feed(h,1);const text=String(value);h=number(h,text.length);for(let j=0;j<text.length;j++){const code=text.charCodeAt(j);h=feed(feed(h,code&255),code>>>8);}return h;};
+ for(const root of roots){
+  const owner=ownerForRoot?.(root)??presentationOwner??root.presentationOwner??root.owner??null;
+  let h=2166136261;h=number(h,root.x);h=number(h,root.y);h=number(h,root.z);h=number(h,root.seed??null);h=string(h,owner);
+  bytes.setUint32(0,h,true);for(let j=0;j<4;j++)ordered=feed(ordered,bytes.getUint8(j));
+  sum=(sum+h)>>>0;xor=(xor^h)>>>0;count++;
+  if(sample.length<maximumRoots)sample.push({x:root.x,y:root.y,z:root.z,seed:root.seed??null,owner,supportOwner:root.support?.owner??root.owner??null});
+ }
+ const hex=value=>value.toString(16).padStart(8,'0');
+ return{rootCount:count,digest:'fnv1a32-ordered:'+hex(ordered),membershipDigest:'fnv1a32-sum-xor:'+hex(sum)+':'+hex(xor)+':'+count,sample,truncatedRootCount:Math.max(0,count-sample.length),identityFields:['x','y','z','seed','owner'],orderSensitive:true,membershipOrderIndependent:true,digestCollisionCaveat:'Noncryptographic digests can collide; compare sampled identities or exact records when adjudicating a mismatch.'};
+}
+export function createVegetationContinuityTrace({maximumEvents=512,maximumRoots=128,now=()=>performance.now()}={}){
+ diagnosticCap(maximumEvents,'MAXIMUM_EVENTS',512);diagnosticCap(maximumRoots,'MAXIMUM_ROOTS',128);
+ if(typeof now!=='function')throw Error('VEGETATION_TRACE_CLOCK_INVALID');
+ const events=new Array(maximumEvents);let sequence=0,size=0,droppedCount=0,observerErrorCount=0,disposed=false;
+ const copy=value=>JSON.parse(JSON.stringify(value,(_key,item)=>Array.isArray(item)?item.slice(0,maximumRoots):item));
+ function record(type,details={}){
+  if(disposed)return false;
+  try{
+   if(typeof type!=='string'||!type||type.length>128)throw Error('VEGETATION_TRACE_TYPE_INVALID');
+   const timestamp=now();if(!Number.isFinite(timestamp))throw Error('VEGETATION_TRACE_TIME_INVALID');
+   const safe=copy(details),encoded=JSON.stringify(safe);if(encoded.length>32768)throw Error('VEGETATION_TRACE_EVENT_TOO_LARGE');
+   const event={sequence:sequence+1,type,timestamp,details:safe};events[sequence%maximumEvents]=event;sequence++;
+   if(size===maximumEvents)droppedCount++;else size++;return true;
+  }catch{observerErrorCount++;droppedCount++;return false;}
+ }
+ function summary(){return{schema:'H_EARTH_VEGETATION_CONTINUITY_TRACE_v1',maximumEvents,maximumRoots,eventCount:size,lastSequence:sequence,droppedCount,observerErrorCount,timingPerturbed:true,disposed};}
+ function getSnapshot({sinceSequence=0}={}){
+  if(!Number.isSafeInteger(sinceSequence)||sinceSequence<0)throw Error('VEGETATION_TRACE_SEQUENCE_INVALID');
+  const selected=[];for(let seq=sequence-size+1;seq<=sequence;seq++){if(seq>sinceSequence)selected.push(JSON.parse(JSON.stringify(events[(seq-1)%maximumEvents])));}
+  return{...summary(),events:selected};
+ }
+ function dispose(){if(disposed)return;disposed=true;events.fill(undefined);size=0;}
+ return Object.freeze({record,getSnapshot,summary,dispose});
+}
 export const WOODLAND_FINE_GRASS=Object.freeze({center:Object.freeze([-141,-226]),radii:Object.freeze([41.25,40]),tileMeters:4,spacing:.11,contactsPerParent:64,maxParents:1024,rootTextureBytes:1048576,indexBytes:12288});
 const f=Math.fround,clamp=v=>Math.max(0,Math.min(1,v));
 function hash(x,z,k=0){let h=Math.imul(x^0x51ed270b,1597334677)^Math.imul(z^0x68bc21eb,3812015801)^Math.imul(k+1,747796405);h=Math.imul(h^(h>>>16),2246822519);h=Math.imul(h^(h>>>13),3266489917);return(h^(h>>>16))>>>0;}
@@ -133,9 +177,11 @@ export async function prepareWoodlandSelectionCache(presentation,yieldControl=as
 }
 
 /** A world-anchored nearby presentation, rather than another whole-world survey. */
-export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=async()=>{},onProgress=()=>{},placementExclusion=null}={}){
+export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=async()=>{},onProgress=()=>{},placementExclusion=null,onDiagnostic=null}={}){
  if(typeof visibleSurface?.ground?.sample!=='function'||typeof visibleSurface?.water?.sample!=='function')throw Error('NEARBY_FINE_GRASS_VISIBLE_SURFACE_REQUIRED');
  if(placementExclusion!==null&&typeof placementExclusion!=='function')throw Error('NEARBY_FINE_GRASS_EXCLUSION_INVALID');
+ if(onDiagnostic!==null&&typeof onDiagnostic!=='function')throw Error('NEARBY_FINE_GRASS_DIAGNOSTIC_INVALID');
+ const observe=onDiagnostic?(type,details)=>{try{onDiagnostic(type,JSON.parse(JSON.stringify(typeof details==='function'?details():details)));}catch{/* Observers cannot change the cache result. */}}:null;
  const spacing=.22,tileMeters=4,maximumRoots=65536;
  const tiles=new Map(),obstacles=pkg.landscapeCoverFootprints??[],trees=pkg.landscapeFloorFootprints??[];
  let lastKey=null,lastPresentation=null,latestRequest=null,worker=null,requestRevision=0;
@@ -146,7 +192,7 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
   // Neighboring cells may jitter across a tile boundary. Both tiles examine the
   // apron, but only the world-position owner retains that root, exactly once.
   for(let iz=Math.floor(tz*4/spacing)-1;iz<=Math.ceil((tz*4+4)/spacing)+1;iz++){
-   if(revision!==requestRevision)return null;
+   if(revision!==requestRevision){if(observe)observe('CACHE_CANCEL',{requestRevision:revision,currentRequestRevision:requestRevision,stage:'CONSTRUCT_TILE',tileId:`NEARBY:${tx}:${tz}`});return null;}
    for(let ix=Math.floor(tx*4/spacing)-1;ix<=Math.ceil((tx*4+4)/spacing)+1;ix++){
     const x=f((ix+(hash(ix,iz,10)/4294967296-.5)*.76)*spacing),z=f((iz+(hash(ix,iz,11)/4294967296-.5)*.76)*spacing);
     if(Math.floor(x/4)!==tx||Math.floor(z/4)!==tz)continue;candidates++;
@@ -165,6 +211,7 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
    if(performance.now()-slice>=8){await yieldControl();slice=performance.now();}
   }
   roots.sort((a,b)=>a.seed-b.seed||a.z-b.z||a.x-b.x);
+  if(observe)observe('TILE_BUILD_COMPLETE',()=>({requestRevision:revision,tileId:`NEARBY:${tx}:${tz}`,candidates,rejections,roots:summarizeVegetationRoots(roots,{presentationOwner:'NEARBY'})}));
   return {id:`NEARBY:${tx}:${tz}`,minX:tx*4,minZ:tz*4,roots,candidates,rejections};
  }
  async function updateNow(camera,{coreRadiusMeters:coreRadius,outerRadiusMeters:outerRadius},revision){
@@ -172,18 +219,18 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
   if(!point||![point.x,point.z].every(Number.isFinite))throw Error('NEARBY_FINE_GRASS_CAMERA_INVALID');
   const cx=Math.floor(point.x/4)*4+2,cz=Math.floor(point.z/4)*4+2,key=`${cx}:${cz}:${coreRadius}:${outerRadius}`;
   if(key===lastKey)return lastPresentation;
-  const started=performance.now(),requested=[];let builtTiles=0,reusedTiles=0,slice=started;
-  for(const [id,tile] of tiles)if(tileDistance(tile.minX/4,tile.minZ/4,cx,cz)>outerRadius+8)tiles.delete(id);
+  const started=performance.now(),requested=[];let builtTiles=0,reusedTiles=0,evictedTiles=0,evictedRoots=0,slice=started;
+  for(const [id,tile] of tiles)if(tileDistance(tile.minX/4,tile.minZ/4,cx,cz)>outerRadius+8){tiles.delete(id);if(observe){evictedTiles++;evictedRoots+=tile.roots.length;}}
   for(let tz=Math.floor((cz-outerRadius)/4);tz<=Math.floor((cz+outerRadius)/4);tz++)for(let tx=Math.floor((cx-outerRadius)/4);tx<=Math.floor((cx+outerRadius)/4);tx++){
    const distance=tileDistance(tx,tz,cx,cz);if(distance<=outerRadius)requested.push({tx,tz,distance});
   }
   requested.sort((a,b)=>a.distance-b.distance||a.tz-b.tz||a.tx-b.tx);
   for(const {tx,tz} of requested){
-   if(revision!==requestRevision)return null;
+   if(revision!==requestRevision){if(observe)observe('CACHE_CANCEL',{requestRevision:revision,currentRequestRevision:requestRevision,stage:'REQUESTED_TILES'});return null;}
    const id=`${tx}:${tz}`;
    if(tiles.has(id)){reusedTiles++;continue;}
    const tile=await constructTile(tx,tz,revision);
-   if(!tile||revision!==requestRevision)return null;
+   if(!tile||revision!==requestRevision){if(observe)observe('CACHE_CANCEL',{requestRevision:revision,currentRequestRevision:requestRevision,stage:'AFTER_TILE_BUILD'});return null;}
    tiles.set(id,tile);builtTiles++;
    onProgress({phase:'NEARBY_FINE_GRASS_TILES',completedTiles:builtTiles+reusedTiles,totalTiles:requested.length,centerX:cx,centerZ:cz});
    if(performance.now()-slice>=8){await yieldControl();slice=performance.now();}
@@ -203,15 +250,16 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
   if(contacts>maximumRoots)throw Error('NEARBY_FINE_GRASS_ROOT_BUDGET_EXCEEDED:'+contacts);
   output.sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);
   const presentation={tiles:output};await prepareWoodlandSelectionCache(presentation,yieldControl);
-  if(revision!==requestRevision)return null;
+  if(revision!==requestRevision){if(observe)observe('CACHE_CANCEL',{requestRevision:revision,currentRequestRevision:requestRevision,stage:'AFTER_SELECTION_CACHE'});return null;}
   // Bound retained tile data too. Eviction changes work cost only; regenerated
   // absolute-grid roots are byte-identical on an A-B-A walk.
   let cachedRoots=[...tiles.values()].reduce((n,t)=>n+t.roots.length,0);
   if(cachedRoots>maximumRoots){
    const eviction=[...tiles.entries()].sort((a,b)=>tileDistance(b[1].minX/4,b[1].minZ/4,cx,cz)-tileDistance(a[1].minX/4,a[1].minZ/4,cx,cz)||b[1].minZ-a[1].minZ||b[1].minX-a[1].minX);
-   for(const [id,tile] of eviction){if(cachedRoots<=maximumRoots)break;tiles.delete(id);cachedRoots-=tile.roots.length;}
+   for(const [id,tile] of eviction){if(cachedRoots<=maximumRoots)break;tiles.delete(id);cachedRoots-=tile.roots.length;if(observe){evictedTiles++;evictedRoots+=tile.roots.length;}}
   }
   presentation.receipt={schema:'H_EARTH_NEARBY_FINE_GRASS_CACHE_v1',contactCount:contacts,tileCount:output.length,builtTiles,reusedTiles,cachedTiles:tiles.size,cachedRoots,maximumRoots,centerX:cx,centerZ:cz,spacing,coreRadiusMeters:coreRadius,outerRadiusMeters:outerRadius,elapsedMilliseconds:performance.now()-started,rootEncoding:'ACTUAL_FLOAT32_VISIBLE_TRIANGLE_CONTACTS',originalRecordsChanged:false,terrainChanged:false,approvedWoodlandOwnerPreserved:true};
+  if(observe){presentation.receipt.diagnostic={requestRevision:revision,key,evictedTiles,evictedRoots};observe('BUILD_COMPLETE',()=>({...presentation.receipt,requestRevision:revision,key,evictedTiles,evictedRoots,roots:summarizeVegetationRoots((function*(){for(const tile of output)yield* tile.roots;})(),{presentationOwner:'NEARBY'})}));}
   lastKey=key;lastPresentation=presentation;return presentation;
  }
  return Object.freeze({update(camera,{coreRadiusMeters=24,outerRadiusMeters=32}={}){
@@ -219,13 +267,14 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
   const point=camera?.position??camera;
   if(!point||![point.x,point.z].every(Number.isFinite))throw Error('NEARBY_FINE_GRASS_CAMERA_INVALID');
   if(worker&&latestRequest.options.coreRadiusMeters===coreRadiusMeters&&latestRequest.options.outerRadiusMeters===outerRadiusMeters&&Math.floor(latestRequest.camera.x/4)===Math.floor(point.x/4)&&Math.floor(latestRequest.camera.z/4)===Math.floor(point.z/4))return worker;
+  if(observe)observe('CACHE_REQUEST',{previousRequestRevision:requestRevision,requestRevision:requestRevision+1,camera:{x:point.x,z:point.z},coreRadiusMeters,outerRadiusMeters,pendingWorker:!!worker});
   latestRequest={camera:{x:point.x,z:point.z},options:{coreRadiusMeters,outerRadiusMeters},revision:++requestRevision};
   if(!worker)worker=(async()=>{
    try{
     // All pending callers receive the newest completed presentation. A newer
     // camera request cancels obsolete work at the next bounded tile/row yield.
     while(true){const request=latestRequest,result=await updateNow(request.camera,request.options,request.revision);if(request.revision===requestRevision)return result;}
-   }finally{worker=null;}
+   }catch(error){if(observe)observe('CACHE_ERROR',{requestRevision,message:String(error?.message??error)});throw error;}finally{worker=null;}
   })();
   return worker;
  }});

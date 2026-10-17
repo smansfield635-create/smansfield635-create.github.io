@@ -7,7 +7,7 @@ import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeol
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
-import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,createNearbyFineGrassCache,prepareWoodlandSelectionCache,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2780-stable-planting-v1';
+import {WOODLAND_FINE_GRASS,buildWoodlandFineGrass,createVegetationContinuityTrace,summarizeVegetationRoots,createNearbyFineGrassCache,prepareWoodlandSelectionCache,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2780-stable-planting-v1';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2780-stable-planting-v1';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
@@ -1250,7 +1250,7 @@ uniform sampler2D uDepth;
 out vec4 outColor;
 void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec4(vec3(v),1.);}`;
 
-export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, deferVegetation = false, onStartupProgress = null } = {}) {
+export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, deferVegetation = false, onStartupProgress = null, vegetationTraceEnabled = false } = {}) {
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3C_CANVAS_REQUIRED');
   canvas.width = width;
   canvas.height = height;
@@ -1281,6 +1281,35 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     vegetationBufferUploadCount: 0, vegetationDrawCallCount: 0, worldRebuildCount: 0
   };
   const resources = {};
+  // Observer only: no trace storage, hashes, readbacks or GPU work when disabled.
+  const vegetationTrace=vegetationTraceEnabled===true?createVegetationContinuityTrace():null;
+  const diagnosticRootOwners=vegetationTrace?new WeakMap():null;
+  let vegetationInstallRevision=0,vegetationSelectionRevision=0,lastVegetationTraceFrameAt=-Infinity;
+  function observeVegetation(type,details){
+    if(!vegetationTrace)return;
+    try{vegetationTrace.record(type,{frameNumber:counters.frameCount,...details()});}catch{/* Diagnostics cannot change product execution. */}
+  }
+  function* diagnosticFineRoots(tiles){for(const tile of tiles??[])yield* tile.roots;}
+  const summarizeDiagnosticRoots=roots=>summarizeVegetationRoots(roots,{ownerForRoot:root=>diagnosticRootOwners.get(root)??'UNATTRIBUTED_FINE'});
+  const diagnosticDraw=state=>({lastKnownDraw:state?.lastDraw??null,lastDrawFrameNumber:state?.diagnosticLastDrawFrame??null,calledThisFrame:state?.diagnosticLastDrawFrame===counters.frameCount});
+  function diagnosticIds(ids){let hash=2166136261;for(const id of ids){hash=Math.imul(hash^(id>>>0),16777619)>>>0;}return{count:ids.length,orderedIdsDigest:'fnv1a32:'+hash.toString(16).padStart(8,'0'),idsSample:Array.from(ids.slice(0,128)),sampleLimit:128};}
+  function getVegetationTrace(options){return vegetationTrace?vegetationTrace.getSnapshot(options):{schema:'H_EARTH_VEGETATION_CONTINUITY_TRACE_v1',enabled:false};}
+  function getVegetationProbe({x,z,radius=2}={}){
+    if(!vegetationTrace)return {enabled:false};
+    if(![x,z,radius].every(Number.isFinite)||radius<=0||radius>8)throw Error('VEGETATION_TRACE_PROBE_INVALID');
+    const support=resources.vegetationVisibleSurface?.ground.sample(x,z)??null,water=resources.vegetationVisibleSurface?.water.sample(x,z)??null;
+    const local=support?unprojectPlanetVertex(x,support.y,z):null,material=local?pilotMaterialAt(local.x,local.z):null;
+    function* nearby(tiles){for(const root of diagnosticFineRoots(tiles))if(Math.hypot(root.x-x,root.z-z)<=radius)yield root;}
+    const selected=resources.woodlandFineGrass?.selection?.chunks??[];
+    function* selectedNearby(){for(const chunk of selected)for(const root of chunk.roots)if(Math.hypot(root.x-x,root.z-z)<=radius)yield root;}
+    const result={enabled:true,coordinateSpace:'UPLOADED_FLOAT32_WORLD_XZ',x,z,radius,support,water,
+      material:material?{valid:material.valid,surfaceClass:material.surfaceClass,authoredShorelineDistanceMeters:material.shorelineDistance,soilDepth:material.soilDepth}:null,
+      hiddenFutureWater:resources.geologicalRuntime?.sampleWaterAt(x,z)??null,renderedContactDistanceMeters:null,visibleSandWeight:null,shorelineComparison:'NOT_MEASURED_BY_THIS_TRACE',
+      pilotOwnsPoint:isPlantingPilotPoint(x,z),installedFine:summarizeDiagnosticRoots(nearby(resources.woodlandFineGrass?.presentation?.tiles)),
+      selectedFine:summarizeDiagnosticRoots(selectedNearby()),visiblePixelsVerified:false};
+    observeVegetation('EXPLICIT_GROUND_PROBE',()=>result);return result;
+  }
+  observeVegetation('TRACE_STARTED',()=>({enabled:true,moduleRevision:'gen2780-vegetation-continuity-trace-v1',sourceBaseline:'fac9d64c29cfc8c55637a15905d89ca0977293e0',candidateIdentityBinding:'EXTERNAL_EXACT_HEAD_REQUIRED',maximumFrameSampleHz:4,mayMissBetweenSampleEvents:true,timingPerturbed:true,visiblePixelsVerified:false}));
   let globalCoverInitialCamera=null;
   let woodlandVisibleGroundPriority=null;
   let globalCoverPriorityTilesPrepared=0;
@@ -1692,11 +1721,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         nearby:nearby?.receipt??null,rootEncoding:'ACTUAL_FLOAT32_VISIBLE_TRIANGLE_CONTACTS',originalRecordsChanged:false,terrainChanged:false}};
       await prepareWoodlandSelectionCache(presentation,yieldToBrowserPaint);
       if(woodland!==woodlandFinePresentation||nearby!==nearbyFinePresentation)continue;
-      return installFinePresentation(presentation);
+      const installed=installFinePresentation(presentation);
+      if(vegetationTrace){vegetationInstallRevision++;for(const tile of presentation.tiles)for(const root of tile.roots)diagnosticRootOwners.set(root,tile.id.startsWith('NEARBY:')?'NEARBY':'APPROVED_WOODLAND');observeVegetation('PRESENTATION_INSTALLED',()=>({installationRevision:vegetationInstallRevision,sourceRequestRevision:nearby?.receipt?.diagnostic?.requestRevision??null,nearbyKey:nearby?.receipt?.diagnostic?.key??null,woodlandReady:installed.ready===true,roots:summarizeDiagnosticRoots(diagnosticFineRoots(presentation.tiles))}));}
+      return installed;
       }
     };
     resources.mergeFinePresentation=mergeFinePresentation;
-    nearbyFineCache=createNearbyFineGrassCache(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),{visibleSurface:resources.vegetationVisibleSurface,placementExclusion:isPlantingPilotPoint,yieldControl:yieldToBrowserPaint});
+    nearbyFineCache=createNearbyFineGrassCache(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),{visibleSurface:resources.vegetationVisibleSurface,placementExclusion:isPlantingPilotPoint,yieldControl:yieldToBrowserPaint,...(vegetationTrace?{onDiagnostic:(type,details)=>observeVegetation(type,()=>details)}:{})});
     resources.nearbyFineInitialPromise=refreshNearbyFineGrass(globalCoverInitialCamera,{initial:true});
     await resources.nearbyFineInitialPromise;
     refreshNearbyFineGrass(globalCoverInitialCamera).catch(error=>{resources.nearbyFineError=error.message;});
@@ -1724,19 +1755,20 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const key=`${Math.floor(camera.x/4)}:${Math.floor(camera.z/4)}:${initial?'INITIAL':'FULL'}`;
     if(key===nearbyFineDesiredKey)return nearbyFineUpdateInFlight;
     nearbyFineDesiredKey=key;
+    observeVegetation('PRESENTATION_REQUESTED',()=>({key,camera:{x:camera.x,y:camera.y??null,z:camera.z},initial}));
     // Forward changed cells immediately: the cache cancels obsolete tile work.
     const update=(async()=>{
       const presentation=await nearbyFineCache.update(camera,initial?{coreRadiusMeters:8,outerRadiusMeters:12}:{});
-      if(key!==nearbyFineDesiredKey)return;
+      if(key!==nearbyFineDesiredKey){observeVegetation('PRESENTATION_STALE',()=>({key,desiredKey:nearbyFineDesiredKey,stage:'BEFORE_MERGE'}));return;}
       nearbyFinePresentation=presentation;
       await resources.mergeFinePresentation();
-      if(key!==nearbyFineDesiredKey)return;
+      if(key!==nearbyFineDesiredKey){observeVegetation('PRESENTATION_STALE',()=>({key,desiredKey:nearbyFineDesiredKey,stage:'AFTER_MERGE'}));return;}
       nearbyFineReady=true;
       fineGrassProgress({phase:'NEARBY_FINE_GRASS_GPU_READY',nearbyContactCount:presentation.receipt.contactCount,nearby:presentation.receipt,
         woodlandExpected:Math.hypot((camera.x+141)/41.25,(camera.z+226)/40)<1});
     })();
     nearbyFineUpdateInFlight=update;
-    try{await update;}catch(error){fineGrassProgress({phase:'NEARBY_FINE_GRASS_FAILED',message:error.message});throw error;}
+    try{await update;}catch(error){observeVegetation('PRESENTATION_ERROR',()=>({key,message:error.message}));fineGrassProgress({phase:'NEARBY_FINE_GRASS_FAILED',message:error.message});throw error;}
     finally{if(nearbyFineUpdateInFlight===update)nearbyFineUpdateInFlight=null;}
   }
   function drawWoodlandFineGrass(packet,maximumParents){
@@ -1747,9 +1779,11 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(state.selectionKey!==key){state.selection=selectWoodlandFineGrass(state.presentation,camera,{maximumParents});state.selectionKey=key;const pixels=state.selection.pixels;
       if(pixels.length){const rows=Math.ceil(pixels.length/4096),padded=new Float32Array(rows*4096);padded.set(pixels);gl.activeTexture(gl.TEXTURE9);gl.bindTexture(gl.TEXTURE_2D,state.rootsTexture);for(let row=0;row<rows;row+=16){const count=Math.min(16,rows-row),part=padded.subarray(row*4096,(row+count)*4096);gl.texSubImage2D(gl.TEXTURE_2D,0,0,row,1024,count,gl.RGBA,gl.FLOAT,part);uploadBytes+=part.byteLength;}}
     }
+    if(vegetationTrace&&(state.diagnosticSelectionKey!==key||state.diagnosticSelectionInstallRevision!==vegetationInstallRevision)){state.diagnosticSelectionKey=key;state.diagnosticSelectionInstallRevision=vegetationInstallRevision;vegetationSelectionRevision++;observeVegetation('FINE_SELECTION_UPLOADED',()=>({installationRevision:vegetationInstallRevision,selectionRevision:vegetationSelectionRevision,key,uploadBytes,camera,capacity:maximumParents,persistentContacts:state.selection.persistentContactCount,dynamicContacts:state.selection.dynamicContactCount,roots:summarizeDiagnosticRoots((function*(){for(const chunk of state.selection.chunks)for(const root of chunk.roots)yield root;})())}));}
     const selection=state.selection;gl.useProgram(state.program);gl.bindVertexArray(state.vao);gl.activeTexture(gl.TEXTURE9);gl.bindTexture(gl.TEXTURE_2D,state.rootsTexture);gl.uniformMatrix4fv(state.uniforms.uViewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));gl.uniform3f(state.uniforms.uCameraPosition,camera.x,camera.y,camera.z);
     for(const g of selection.groups){gl.uniform1i(state.uniforms.uWoodlandFirstParent,g.firstParent);gl.uniform1i(state.uniforms.uWoodlandLeaves,g.leafCount);gl.drawElementsInstanced(gl.TRIANGLES,64*g.leafCount*12,gl.UNSIGNED_INT,0,g.parentCount);}
     state.uploadBytes+=uploadBytes;state.lastDraw={visibleInstanceCount:selection.parentCount,visibleContacts:selection.contactCount,drawCallCount:selection.draws,submittedVertices:selection.vertices,submittedTriangles:selection.triangles,perFrameUploadBytes:uploadBytes,stationaryUploadBytes:uploadBytes,selectionSignature:selection.signature};counters.totalDrawnIndexCount+=selection.triangles*3;
+    if(vegetationTrace)state.diagnosticLastDrawFrame=counters.frameCount+1;
     gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
   }
 
@@ -1777,6 +1811,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     }
     s.lastDraw={visibleInstanceCount:count,drawCallCount:Number(count>0),visibleFineLeaves:count*12,
       residentPriorityTiles:s.tileCount,stagedRecordCount:s.count,visiblePixelCoverageVerified:false};
+    if(vegetationTrace)s.diagnosticLastDrawFrame=counters.frameCount+1;
     if(woodlandNear)drawWoodlandFineGrass(packet,1024);
     gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
   }
@@ -1796,11 +1831,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.activeTexture(gl.TEXTURE7);gl.bindTexture(gl.TEXTURE_2D,state.meadowRootsTexture);
     gl.activeTexture(gl.TEXTURE8);gl.bindTexture(gl.TEXTURE_2D,state.selectionTexture);
     let selectionUploadBytes=0;
+    const diagnosticSelectionChanged=vegetationTrace&&!sameHEarthMeadowSelectedIds(state.previousSelectedIds,partition.ids);
     if(!sameHEarthMeadowSelectedIds(state.previousSelectedIds,partition.ids)){
       state.selectionPixels.fill(0);state.selectionPixels.set(partition.ids);
       gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,1024,1,gl.RGBA,gl.FLOAT,state.selectionPixels);
       state.previousSelectedIds=partition.ids;selectionUploadBytes=state.selectionPixels.byteLength;state.uploadCount++;
     }
+    if(diagnosticSelectionChanged)observeVegetation('GLOBAL_SELECTION_UPLOADED',()=>({camera:packet.camera.position,instances:diagnosticIds(partition.ids),drawRanges:selected.draws,originalCount:partition.originalCount,nearCount:partition.nearCount,midCount:partition.midCount,uploadBytes:selectionUploadBytes,units:'GLOBAL_COVER_INSTANCES_NOT_INDIVIDUAL_ROOTS'}));
     gl.activeTexture(gl.TEXTURE0);gl.disable(gl.BLEND);gl.depthMask(true);
     gl.uniformMatrix4fv(state.uniforms.uViewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(state.uniforms.uCameraPosition,packet.camera.position.x,packet.camera.position.y,packet.camera.position.z);
@@ -1825,6 +1862,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       representation:'GLOBAL_FINE_CURVED_LEAVES_AND_DISTRIBUTED_SHORT_MEADOW_STRATUM',originalDrawInstances:partition.originalCount,originalSourceFineLeafInstanceCount:partition.originalCount,originalSourceFineLeafCount:partition.originalCount*12,originalSourceBroadFanMeshDrawCount:0,meadowDrawInstances:partition.meadowCount,storedPopulationChanged:false,perFrameUploadBytes:selectionUploadBytes};
     if(partition.ids.length!==selected.visibleInstanceCount||partition.ids.length>4096||partition.drawCount>64)throw Error('GLOBAL_COVER_DRAW_BUDGET_EXCEEDED');
     counters.totalDrawnIndexCount+=partition.triangles*3;
+    if(vegetationTrace)state.diagnosticLastDrawFrame=counters.frameCount+1;
     drawWoodlandFineGrass(packet,woodlandNear?Math.min(1024,4096-partition.ids.length):0);
     if(partition.ids.length+(resources.woodlandFineGrass?.lastDraw.visibleInstanceCount??0)>4096||partition.drawCount+(resources.woodlandFineGrass?.lastDraw.drawCallCount??0)>64)throw Error('SHARED_GRASS_DRAW_BUDGET_EXCEEDED');
     gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);
@@ -2421,6 +2459,12 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.depthMask(true); gl.disable(gl.BLEND);
     const error = gl.getError(); if (error !== gl.NO_ERROR) throw new Error(`R3C_DRAW_ERROR:${error}`);
     counters.frameCount += 1;
+    if(vegetationTrace){const observedAt=performance.now();if(observedAt-lastVegetationTraceFrameAt>=250){lastVegetationTraceFrameAt=observedAt;
+      observeVegetation('FRAME_SUBMITTED',()=>({camera:{position:packet.camera.position,viewProjectionMatrix:packet.camera.viewProjectionMatrix,verticalFovDegrees:packet.camera.verticalFovDegrees},viewport:{width,height},installationRevision:vegetationInstallRevision,selectionRevision:vegetationSelectionRevision,
+        fine:diagnosticDraw(resources.woodlandFineGrass),global:diagnosticDraw(resources.globalCover),preview:diagnosticDraw(resources.localCoverPreview),
+        pilot:resources.plantingPilot?{layoutDigest:resources.plantingPilotLayout.receipt.layoutDigest,...resources.plantingPilot.getReceipt(),detailEligibility:'SEE_EXISTING_12_TO_24_METRE_SHADER_PREDICATE_NOT_A_PIXEL_MEASUREMENT'}:null,
+        glError:error,worldRebuildCount:counters.worldRebuildCount,visiblePixelsVerified:false}));
+    }}
   }
   function presentColorFrame({countPresentation=true}={}) {
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
@@ -2539,13 +2583,15 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       plantingPilot:resources.plantingPilot?{layout:resources.plantingPilotLayout.receipt,gpu:resources.plantingPilot.getReceipt()}:null,
       vegetationVisibleSurface:resources.vegetationVisibleSurface?.receipt??null,
       legacyGrassDrawCensus:resources.legacyGrassDrawCensus??null,
+      ...(vegetationTrace?{vegetationContinuityTrace:vegetationTrace.summary()}:{}),
       canonicalPackageMutated:false
     };
   }
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    disposePlantingPilot:()=>resources.plantingPilot?.dispose(),
+    disposePlantingPilot:()=>{try{resources.plantingPilot?.dispose();}finally{vegetationTrace?.dispose();}},
+    getVegetationTrace,getVegetationProbe,
     initialize, activateInitialRefinement, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }

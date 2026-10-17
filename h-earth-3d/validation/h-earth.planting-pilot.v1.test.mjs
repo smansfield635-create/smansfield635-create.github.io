@@ -119,3 +119,66 @@ test('mock GL propagates supplied and default scene light/haze uniforms without 
  assert.match(calls.sources[0],/float height=aShape\.x\s*;/);assert.match(calls.sources[1],/pow\(clamp\(lit\*1\.12,0\.0,1\.0\),vec3\(1\.0\/2\.2\)\)/);assert.match(calls.sources[1],/fog\*0\.48/);assert.match(calls.sources[1],/uMaximumFogFactor\)\*0\.68/);
  renderer.dispose();
 });
+
+// Execute the actual woodland module with explicit synthetic external dependencies.
+// This fixture verifies observer equivalence, not canonical-scene or phone appearance.
+async function loadDiagnosticWoodlandFixture(){
+ const source=await readFile(new URL('../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js',import.meta.url),'utf8');
+ const dependencies=`const inverseHEarthGroundCoverPoint=(x,y,z)=>({x,z});
+ const materialAt=()=>({valid:true,surfaceClass:'COASTAL_SOIL',soilDepth:1,shorelineDistance:40});
+ const far={minX:10000,maxX:10001,minZ:10000,maxZ:10001};
+ const estate={manorCore:far,gardens:far,outbuildingProposal:far,acceptedEnvelope:far,footRoute:[],footRouteRadius:1};
+ const oasis=far;const sampleHEarthGen311PlacementStructureDisposition=()=>({hardExclusions:[],planningHolds:[]});`;
+ return import('data:text/javascript;base64,'+Buffer.from(dependencies+source.replace(/^import[^\n]+\n/gm,'')).toString('base64'));
+}
+test('diagnostic ring bounds, defensive copies and observer failure isolation',async()=>{
+ const {createVegetationContinuityTrace}=await loadDiagnosticWoodlandFixture();let clock=0;
+ const trace=createVegetationContinuityTrace({maximumEvents:2,maximumRoots:2,now:()=>++clock});
+ const input={roots:[{x:1},{x:2},{x:3}]};assert.equal(trace.record('ONE',input),true);input.roots[0].x=99;
+ assert.equal(trace.getSnapshot().events[0].details.roots[0].x,1);assert.equal(trace.getSnapshot().events[0].details.roots.length,2);
+ const snapshot=trace.getSnapshot();snapshot.events[0].details.roots[0].x=100;assert.equal(trace.getSnapshot().events[0].details.roots[0].x,1);
+ trace.record('TWO');trace.record('THREE');assert.deepEqual(trace.getSnapshot().events.map(e=>e.type),['TWO','THREE']);assert.equal(trace.summary().droppedCount,1);
+ const cycle={};cycle.self=cycle;assert.equal(trace.record('CYCLE',cycle),false);assert.equal(trace.record('LARGE',{value:'x'.repeat(33000)}),false);assert.equal(trace.summary().observerErrorCount,2);
+ assert.deepEqual(trace.getSnapshot({sinceSequence:2}).events.map(e=>e.sequence),[3]);trace.dispose();trace.dispose();assert.equal(trace.summary().eventCount,0);assert.equal(trace.record('AFTER'),false);
+ assert.throws(()=>createVegetationContinuityTrace({maximumEvents:513}),/MAXIMUM_EVENTS/);
+});
+test('diagnostic identities distinguish presentation from support and membership from order',async()=>{
+ const {summarizeVegetationRoots}=await loadDiagnosticWoodlandFixture();
+ const roots=[{x:1,y:2,z:3,seed:4,owner:'ERODED_TERRAIN'},{x:5,y:6,z:7,seed:8,owner:'VISIBLE_REFINEMENT'}];
+ const built=summarizeVegetationRoots(roots,{presentationOwner:'NEARBY',maximumRoots:1});
+ const installed=summarizeVegetationRoots(roots,{ownerForRoot:()=> 'NEARBY',maximumRoots:1});
+ assert.equal(built.digest,installed.digest);assert.equal(built.membershipDigest,installed.membershipDigest);assert.equal(built.sample[0].owner,'NEARBY');assert.equal(built.sample[0].supportOwner,'ERODED_TERRAIN');assert.equal(built.truncatedRootCount,1);
+ const reversed=summarizeVegetationRoots([...roots].reverse(),{presentationOwner:'NEARBY'});assert.notEqual(built.digest,reversed.digest);assert.equal(built.membershipDigest,reversed.membershipDigest);
+ const moved=summarizeVegetationRoots([{...roots[0],x:1.01},roots[1]],{presentationOwner:'NEARBY'});assert.notEqual(moved.membershipDigest,built.membershipDigest);
+});
+test('actual cache and selector give identical settled roots/pixels with diagnostics OFF and ON',async()=>{
+ const {createNearbyFineGrassCache,selectWoodlandFineGrass,createVegetationContinuityTrace}=await loadDiagnosticWoodlandFixture();
+ const visibleSurface={ground:{sample:()=>({y:0,slope:0,triangleId:0,owner:'CANONICAL_VISIBLE_TERRAIN'})},water:{sample:()=>null}};
+ const pkg={landscapeCoverFootprints:[],landscapeFloorFootprints:[]},trace=createVegetationContinuityTrace(),off=createNearbyFineGrassCache(pkg,{visibleSurface}),on=createNearbyFineGrassCache(pkg,{visibleSurface,onDiagnostic:(type,details)=>trace.record(type,details)});
+ const positions=[{x:200,z:-200},{x:204,z:-200},{x:200,z:-200}],sets=[];
+ for(const camera of positions){
+  const options={coreRadiusMeters:8,outerRadiusMeters:12};const [a,b]=await Promise.all([off.update(camera,options),on.update(camera,options)]);
+  assert.deepEqual(a.tiles,b.tiles);assert.equal(a.receipt.diagnostic,undefined);assert.ok(b.receipt.diagnostic.requestRevision>0);
+  const sa=selectWoodlandFineGrass(a,camera),sb=selectWoodlandFineGrass(b,camera);assert.deepEqual(sa.pixels,sb.pixels);assert.deepEqual(sa.groups,sb.groups);assert.equal(sa.contactCount,sb.contactCount);
+  sets.push(a.tiles.flatMap(t=>t.roots).map(r=>`${r.x}:${r.z}`));
+ }
+ assert.deepEqual(sets[0],sets[2]);assert.notDeepEqual(sets[0],sets[1]);assert.ok(trace.getSnapshot().events.some(e=>e.type==='BUILD_COMPLETE'));
+ const throwing=createNearbyFineGrassCache(pkg,{visibleSurface,onDiagnostic:()=>{throw Error('observer');}});assert.deepEqual((await throwing.update(positions[0],{coreRadiusMeters:8,outerRadiusMeters:12})).tiles,(await off.update(positions[0],{coreRadiusMeters:8,outerRadiusMeters:12})).tiles);
+});
+test('observer-only integration is explicitly opt-in and labels pixel/shoreline limits',async()=>{
+ const base=new URL('../../showroom/globe/h-earth/',import.meta.url);
+ const [parent,binding,entry,browser]=await Promise.all([readFile(new URL('render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',base),'utf8'),readFile(new URL('diagnostic/run8e-r3d/live-gpu-binding.js',base),'utf8'),readFile(new URL('functional-landscape/public-live-gpu-integration.run8e-r3e.js',base),'utf8'),readFile(new URL('./h-earth.cavern-vegetation-browser.v1.mjs',import.meta.url),'utf8')]);
+ assert.match(parent,/vegetationTraceEnabled = false/);assert.match(parent,/vegetationTraceEnabled===true\?createVegetationContinuityTrace\(\):null/);
+ assert.match(binding,/vegetationTraceEnabled:queryParameters.get\('vegetation-trace'\)==='v1'/);assert.match(entry,/get\('qualification'\)==='vegetation-continuity-v1'/);
+ assert.match(parent,/renderedContactDistanceMeters:null,visibleSandWeight:null/);assert.match(parent,/visiblePixelsVerified:false/);assert.match(parent,/calledThisFrame/);
+ assert.match(browser,/TRACE_CAPTURED_VISUAL_VERDICT_NOT_ESTABLISHED/);assert.match(browser,/exactOwnerVideoRouteReproduced:false/);assert.match(browser,/SYNTHETIC_WHEEL_THROUGH_REAL_INTAKE/);
+});
+test('diagnostic replay records actual achieved positions and never infers visual acceptance',async()=>{
+ const {qualifyVegetationContinuity}=await load('./h-earth.cavern-vegetation-browser.v1.mjs');
+ const oldWindow=globalThis.window,oldWheel=globalThis.WheelEvent;let z=-96,sequence=0;
+ globalThis.window={};globalThis.WheelEvent=class{constructor(type,options){this.type=type;Object.assign(this,options);}};
+ try{
+  const result=await qualifyVegetationContinuity({canvas:{dispatchEvent:event=>{z+=event.deltaY<0?-4:4;sequence++;}},intake:{getNavigationState:()=>({position:{x:0,y:2.25,z},yawDegrees:0,pitchDegrees:-8,sequence})},binding:{getVegetationTrace:()=>({enabled:true,lastSequence:0,events:[],droppedCount:0}),getReceipt:()=>({counters:{renderFrameCallCount:sequence+1}}),getVegetationProbe:()=>({enabled:true,visiblePixelsVerified:false})},root:{dataset:{}},stationaryMilliseconds:0,steps:1,stepDelayMilliseconds:100});
+  assert.equal(result.initial.renderFrameCallCount,1);assert.equal(result.final.renderFrameCallCount,3);assert.equal(result.cacheCellTransitions,2);assert.equal(result.returnDistanceMeters,0);assert.equal(result.movementObserved,true);assert.equal(result.visiblePixelsVerified,false);assert.equal(result.physicalDeviceAcceptance,false);assert.equal(result.exactOwnerVideoRouteReproduced,false);
+ }finally{if(oldWindow===undefined)delete globalThis.window;else globalThis.window=oldWindow;if(oldWheel===undefined)delete globalThis.WheelEvent;else globalThis.WheelEvent=oldWheel;}
+});

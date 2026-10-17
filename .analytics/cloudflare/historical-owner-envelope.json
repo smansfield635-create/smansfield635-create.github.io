@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-17T03:33:37Z",
+  "generatedAt": "2026-10-17T04:33:47Z",
   "window": {
-    "start": "2026-07-19T03:33:37Z",
-    "end": "2026-10-17T03:33:37Z"
+    "start": "2026-07-19T04:33:47Z",
+    "end": "2026-10-17T04:33:47Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -122,6 +122,10 @@
         "pageLoads": 160,
         "visits": 10
       },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
       "/evidence/readiness/": {
         "pageLoads": 20,
         "visits": 0
@@ -133,10 +137,6 @@
       "/evidence/": {
         "pageLoads": 90,
         "visits": 0
-      },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
@@ -242,6 +242,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -256,10 +260,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {

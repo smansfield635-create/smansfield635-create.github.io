@@ -12870,6 +12870,77 @@
       "scopeHash": "ab86d1d5550ceac4ba6c51c2d7d145fe3cb72af11263381dcef963c5727d583b",
       "state": "ADMITTED_LOCKED"
     },
+    "ab8998274c364c353ec3c3ee1d99a2910f4219403e7a71d3258f9ff7e93e45ed": {
+      "governingHead": "c03d0cf2572e652b9c3874825c2238e72da53d47",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c03d0cf2572e652b9c3874825c2238e72da53d47",
+          "lockGeneration": 2782,
+          "lockScope": "H_EARTH:VEGETATION:RENDERED_BEACH_AND_ZONE_CONTINUITY:20261017",
+          "operationId": "H_EARTH_RENDERED_BEACH_AND_ZONE_CONTINUITY_20261017_001",
+          "procedureLocatorDigest": "1b99ca67884f746066c2c34333737515c49a5d0672b158c9c173d33731a8d3c7",
+          "requestDigest": "33162ade3914a7f8ea702cd39c2d5fe273f921666d48d33fb5e75fdb3d41e86c",
+          "scopeHash": "ab8998274c364c353ec3c3ee1d99a2910f4219403e7a71d3258f9ff7e93e45ed"
+        },
+        "bindingDigest": "1134133d2dbda39b5aca381ac92a20be8345480f7df530c8b915602cac0b7349",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "1ec56cff6ff4928e02b0cf4a8c0c49d8f375e018",
+          "observedLockRefHead": "415442f6c1a61bebcae2e828d1aa2f063da5075b"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "c8ac5d33682de2b41d3d383035440afa8ab704b78d0de5d632a05158ee1609b9",
+          "commentId": 6228215103,
+          "issueNumber": 6426,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+            "lockGeneration": 2781,
+            "lockScope": "H_EARTH:VEGETATION:CACHE_PUBLICATION:20261017",
+            "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001"
+          },
+          "successor": {
+            "governingHead": "c03d0cf2572e652b9c3874825c2238e72da53d47",
+            "lockGeneration": 2782,
+            "lockScope": "H_EARTH:VEGETATION:RENDERED_BEACH_AND_ZONE_CONTINUITY:20261017",
+            "operationId": "H_EARTH_RENDERED_BEACH_AND_ZONE_CONTINUITY_20261017_001"
+          },
+          "transitionId": "H_EARTH_RENDERED_BEACH_AND_ZONE_CONTINUITY_20261017_001:ATOMIC_SUCCESSOR_FROM_2781"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "lockGeneration": 2782,
+      "lockScope": "H_EARTH:VEGETATION:RENDERED_BEACH_AND_ZONE_CONTINUITY:20261017",
+      "operationId": "H_EARTH_RENDERED_BEACH_AND_ZONE_CONTINUITY_20261017_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+        "lockGeneration": 2781,
+        "lockScope": "H_EARTH:VEGETATION:CACHE_PUBLICATION:20261017",
+        "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6228193389",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6443",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38991523515",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38991523515/artifacts/12085886065"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_RENDERED_BEACH_AND_ZONE_CONTINUITY_20261017_001:ATOMIC_SUCCESSOR_FROM_2781"
+      },
+      "procedureLocatorDigest": "1b99ca67884f746066c2c34333737515c49a5d0672b158c9c173d33731a8d3c7",
+      "released": false,
+      "requestDigest": "33162ade3914a7f8ea702cd39c2d5fe273f921666d48d33fb5e75fdb3d41e86c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "ab8998274c364c353ec3c3ee1d99a2910f4219403e7a71d3258f9ff7e93e45ed",
+      "state": "ADMITTED_LOCKED"
+    },
     "abe1bbea45186f434c0e75459ebbdee92c7f14d183c6294078688029ff703d54": {
       "governingHead": "adfebb0ac443dca6d18c4568a9faa95d38995bae",
       "lockGeneration": 1642,
@@ -16062,77 +16133,6 @@
       "requestDigest": "727980bdd39dfa063a97d1b1ac16ef186bb642a8156cec55bac22718a82cc9b8",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "d33df8943d856a2d72ec0aa3c7e3f2f7f03abe5486f64f5ad3d10b84f26e4f3c",
-      "state": "ADMITTED_LOCKED"
-    },
-    "d34a174f77ee14f315bf17e959eafd5496a30ed4bd005e26fc2b6fda36258114": {
-      "governingHead": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
-          "lockGeneration": 2781,
-          "lockScope": "H_EARTH:VEGETATION:CACHE_PUBLICATION:20261017",
-          "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001",
-          "procedureLocatorDigest": "d8d94f36873268fd389797ed82704e8e983c9150dae43df83cd13e2e968a82c6",
-          "requestDigest": "c0b111188330854f4c7523a9952771ebdbf70a02d9419077ce37e8de031da818",
-          "scopeHash": "d34a174f77ee14f315bf17e959eafd5496a30ed4bd005e26fc2b6fda36258114"
-        },
-        "bindingDigest": "b463c88f08d67292e4c88922c611d753cf709d621f3415c8f5dbf06ab6320cd7",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "fa5b721d23d73e62016910088071c4ca6c1911fc",
-          "observedLockRefHead": "5041778858d30796c736f2b33f507da007322b49"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "e52fe88b4e66d17a00a6612c883017449a5626dcd201091228df4bc9aba01021",
-          "commentId": 6227502647,
-          "issueNumber": 6426,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transitionIdentity": {
-          "predecessor": {
-            "governingHead": "29bb1df5400bee2d0e90fcc5007fb4a466bad3b7",
-            "lockGeneration": 2780,
-            "lockScope": "H_EARTH:PLANTING_PILOT:20261016",
-            "operationId": "H_EARTH_PLANTING_PILOT_20261016_001"
-          },
-          "successor": {
-            "governingHead": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
-            "lockGeneration": 2781,
-            "lockScope": "H_EARTH:VEGETATION:CACHE_PUBLICATION:20261017",
-            "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001"
-          },
-          "transitionId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001:SUCCESSOR_FROM_2780"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
-      },
-      "lockGeneration": 2781,
-      "lockScope": "H_EARTH:VEGETATION:CACHE_PUBLICATION:20261017",
-      "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "29bb1df5400bee2d0e90fcc5007fb4a466bad3b7",
-        "lockGeneration": 2780,
-        "lockScope": "H_EARTH:PLANTING_PILOT:20261016",
-        "operationId": "H_EARTH_PLANTING_PILOT_20261016_001",
-        "preservedEvidenceRefs": [
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6227414006",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6226900968",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6441",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38986460499"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001:SUCCESSOR_FROM_2780"
-      },
-      "procedureLocatorDigest": "d8d94f36873268fd389797ed82704e8e983c9150dae43df83cd13e2e968a82c6",
-      "released": false,
-      "requestDigest": "c0b111188330854f4c7523a9952771ebdbf70a02d9419077ce37e8de031da818",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "d34a174f77ee14f315bf17e959eafd5496a30ed4bd005e26fc2b6fda36258114",
       "state": "ADMITTED_LOCKED"
     },
     "d3713cfb790f3d6b56d22862f66fe154a86f8320a592bffa9fe1292cd9aca6ff": {
@@ -19562,7 +19562,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2781,
+  "lockGeneration": 2782,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -81998,6 +81998,95 @@
         "successorLockScope": "H_EARTH:VEGETATION:CACHE_PUBLICATION:20261017",
         "successorOperationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001",
         "transitionId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001:SUCCESSOR_FROM_2780"
+      },
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "governingHead": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+          "lockGeneration": 2781,
+          "lockScope": "H_EARTH:VEGETATION:CACHE_PUBLICATION:20261017",
+          "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001",
+          "procedureLocatorDigest": "d8d94f36873268fd389797ed82704e8e983c9150dae43df83cd13e2e968a82c6",
+          "requestDigest": "c0b111188330854f4c7523a9952771ebdbf70a02d9419077ce37e8de031da818",
+          "scopeHash": "d34a174f77ee14f315bf17e959eafd5496a30ed4bd005e26fc2b6fda36258114"
+        },
+        "bindingDigest": "b463c88f08d67292e4c88922c611d753cf709d621f3415c8f5dbf06ab6320cd7",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "fa5b721d23d73e62016910088071c4ca6c1911fc",
+          "observedLockRefHead": "5041778858d30796c736f2b33f507da007322b49"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "e52fe88b4e66d17a00a6612c883017449a5626dcd201091228df4bc9aba01021",
+          "commentId": 6227502647,
+          "issueNumber": 6426,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "29bb1df5400bee2d0e90fcc5007fb4a466bad3b7",
+            "lockGeneration": 2780,
+            "lockScope": "H_EARTH:PLANTING_PILOT:20261016",
+            "operationId": "H_EARTH_PLANTING_PILOT_20261016_001"
+          },
+          "successor": {
+            "governingHead": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+            "lockGeneration": 2781,
+            "lockScope": "H_EARTH:VEGETATION:CACHE_PUBLICATION:20261017",
+            "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001"
+          },
+          "transitionId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001:SUCCESSOR_FROM_2780"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
+      },
+      "lockGeneration": 2781,
+      "lockScope": "H_EARTH:VEGETATION:CACHE_PUBLICATION:20261017",
+      "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "29bb1df5400bee2d0e90fcc5007fb4a466bad3b7",
+        "lockGeneration": 2780,
+        "lockScope": "H_EARTH:PLANTING_PILOT:20261016",
+        "operationId": "H_EARTH_PLANTING_PILOT_20261016_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6227414006",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6226900968",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6441",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38986460499"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001:SUCCESSOR_FROM_2780"
+      },
+      "procedureLocatorDigest": "d8d94f36873268fd389797ed82704e8e983c9150dae43df83cd13e2e968a82c6",
+      "released": true,
+      "requestDigest": "c0b111188330854f4c7523a9952771ebdbf70a02d9419077ce37e8de031da818",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d34a174f77ee14f315bf17e959eafd5496a30ed4bd005e26fc2b6fda36258114",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6228193389",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6443",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38991523515",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/38991523515/artifacts/12085886065"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "c03d0cf2572e652b9c3874825c2238e72da53d47",
+        "successorLockGeneration": 2782,
+        "successorLockScope": "H_EARTH:VEGETATION:RENDERED_BEACH_AND_ZONE_CONTINUITY:20261017",
+        "successorOperationId": "H_EARTH_RENDERED_BEACH_AND_ZONE_CONTINUITY_20261017_001",
+        "transitionId": "H_EARTH_RENDERED_BEACH_AND_ZONE_CONTINUITY_20261017_001:ATOMIC_SUCCESSOR_FROM_2781"
       },
       "terminalDisposition": "SUPERSEDED"
     }

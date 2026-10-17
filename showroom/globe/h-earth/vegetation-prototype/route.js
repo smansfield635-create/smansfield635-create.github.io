@@ -1,16 +1,16 @@
-/** Gen2793 woodland and bank refinement; manual public entrance, isolated diagnostic replay. */
+/** Gen2794 causal landscape correction; manual public entrance, isolated diagnostic replay. */
 import {prepareHEarthRun8ER2CanonicalLiveRenderPackage} from '../render/live-render-package.run8e-r2.canonical.js?cb=meadow-distribution-20261006';
 import {createHEarthRun8ER3AFrameUniformPacket} from '../render/live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
 import {createHEarthRun8ER3CPersistentRenderer} from '../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
 import {installHEarthRun8ER3D2PointerTouchIntake} from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2780-stable-planting-v1';
 
-const sourceBaseline='3ca258e1e67fe16ed5eb73b4cd883c66af6b4909';
+const sourceBaseline='725b85a2e3898650d0cd99c5854570a6e31073e3';
 const root=document.getElementById('h-earth-functional-landscape-route');
 const canvas=document.getElementById('h-earth-functional-landscape-canvas');
 const status=document.getElementById('prototype-status');
 const query=new URLSearchParams(location.search),started=performance.now();
 const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');
-const qualificationView=diagnosticReplay&&['bank-view-v1','habitat-edge-view-v1'].includes(query.get('qualification'))?query.get('qualification'):null;
+const qualificationView=diagnosticReplay&&['bank-view-v1','habitat-edge-view-v1','ravine-view-v1'].includes(query.get('qualification'))?query.get('qualification'):null;
 const copy=value=>JSON.parse(JSON.stringify(value));
 const assert=(condition,reason)=>{if(!condition)throw Error('SINGLE_OWNER_PROTOTYPE:'+reason);};
 const delay=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
@@ -49,7 +49,7 @@ function assertStableObservation(observation,expectedIds){
   assert(JSON.stringify(ids(observation.vegetation))===JSON.stringify(expectedIds),'INSTALLED_CONTROL_IDENTITY_CHANGED');
   assert(observation.vegetation.coarseRootCount>0&&observation.vegetation.coarseTiles>0&&observation.vegetation.drawCallCount>0,'COARSE_COVERAGE_OR_DRAW_LOST');
   assert(observation.vegetation.perFrameUploadBytes===0,'UNEXPECTED_FRAME_UPLOAD');
-  assert(observation.rendererCounters.woodlandHabitatTextureUploadCount===1&&observation.rendererCounters.woodlandHabitatUploadedBytes===36864,'HABITAT_TEXTURE_UPLOAD_COUNT_CHANGED');
+  assert(observation.rendererCounters.woodlandHabitatTextureUploadCount===1&&observation.rendererCounters.woodlandHabitatUploadedBytes===73728,'HABITAT_TEXTURE_UPLOAD_COUNT_CHANGED');
 }
 // Diagnostic-only tours use the unchanged pointer/wheel intake. No public query
 // can select automatic travel; every final view records its actual supported pose.
@@ -69,6 +69,19 @@ async function diagnosticAim(targetYaw){
     }
   }
   assert(Math.abs(difference())<=6,'DIAGNOSTIC_VIEW_AIM_NOT_REACHED');
+}
+async function diagnosticPitch(targetPitch){
+  for(let pulse=0;pulse<256&&Math.abs(intake.getNavigationState().pitchDegrees-targetPitch)>2.2;pulse++){
+    const sign=Math.sign(targetPitch-intake.getNavigationState().pitchDegrees),x=canvas.clientWidth*.5,y=canvas.clientHeight*.5;
+    canvas.dispatchEvent(new PointerEvent('pointerdown',{pointerId:94,pointerType:'mouse',clientX:x,clientY:y,bubbles:true,cancelable:true}));
+    try{
+      canvas.dispatchEvent(new PointerEvent('pointermove',{pointerId:94,pointerType:'mouse',clientX:x,clientY:y-sign*canvas.clientHeight*.065,bubbles:true,cancelable:true}));
+      await new Promise(resolve=>requestAnimationFrame(resolve));
+    }finally{
+      canvas.dispatchEvent(new PointerEvent('pointerup',{pointerId:94,pointerType:'mouse',clientX:x,clientY:y,bubbles:true,cancelable:true}));
+    }
+  }
+  assert(Math.abs(intake.getNavigationState().pitchDegrees-targetPitch)<=2.2,'DIAGNOSTIC_VIEW_PITCH_NOT_REACHED');
 }
 async function diagnosticTravel(x,z,expectedIds){
   for(let step=0;step<32;step++){
@@ -145,6 +158,8 @@ try{
     try{
       if(qualificationView==='bank-view-v1'){
         await diagnosticTravel(-70,-170,controlIds);await diagnosticTravel(-27,-164,controlIds);await diagnosticAim(95);
+      }else if(qualificationView==='ravine-view-v1'){
+        await diagnosticTravel(-145,-280,controlIds);await diagnosticTravel(-60,-310,controlIds);await diagnosticTravel(40,-300,controlIds);await diagnosticAim(180);await diagnosticPitch(4);
       }else{
         await diagnosticTravel(-193,-218,controlIds);await diagnosticAim(86);
       }

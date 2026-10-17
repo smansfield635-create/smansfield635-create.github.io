@@ -1,0 +1,132 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "operationId": "H_EARTH_CAUSAL_LANDSCAPE_CORRECTION_20261017_001",
+  "canonicalAdmissionGeneration": 2794,
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/causal-landscape-correction-v1/README.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.woodland-habitat.v1.test.mjs",
+    "h-earth-3d/validation/h-earth.riverbank-boulders.v1.test.mjs",
+    "h-earth-3d/evidence/causal-landscape-correction-v1/README.md"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",
+      "sha256": "64cf904045fd0c7acced39d8dfb666377ff2327e19bdcd944b49f721624ece87"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.riverbank-boulders.v1.test.mjs",
+      "sha256": "f11808310c980f6df288971d460112353bd6709f373c22216d13d1f9e8f8c235"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+      "sha256": "130dec2e6f49ef9179a92f4f338bfb33765551002d975cc273ae4869b18ae97a"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.woodland-habitat.v1.test.mjs",
+      "sha256": "23e215a7c0b113ff6ac3f7bf2590041df8c3c54ffb330016b21fd64e7a98e813"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "e3128f90dfe32c8b47613f36b7048d7afda15b5081cd6dbbe8fe6ea4a16ea92b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/large-p2-boulder-presentation.v1.js",
+      "sha256": "76be6f2f4d266c5dd0b512c34ee1d0228a14196493ff3a7ac6f1859f8512d8c3"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "5d2514289c3bebe8b1f552a5b61ecf67a4e6c67183d2f242803ee01e6b57cde4"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "4b86d8db7a4010f0ce810c8be782098b1afc0708d0e6acc4bc60085a37dc2cc3"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "52d4804663bdfc357dcfc61f5cecb84de63251c2f9c6485ee06abd8f04e05a23"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-habitat-field.v1.js",
+      "sha256": "eb1100b1b6fbbbe0944d3eec183830e89e2befab43fc834d1e2e7ac93dbca4ad"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype.html",
+      "sha256": "a7d104e22061887c6fd2a7dd83ac3d5d4ec70f7178953e6b0e5958512b561d1e"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "d8bb5ce92e654e15478bfe0b6868a4cf883dd50b143729112f8eeae5a9636843"
+    }
+  ],
+  "limitations": [
+    "Sparse grass now visible on both shoulders and above portal; woodland-density ravine coverage and owner aesthetic acceptance remain unestablished.",
+    "No phone-performance or physical-device acceptance claim.",
+    "Previous technical-success/bare-view failures are retained; CPU cone/ray checks are geometric proxies only.",
+    "Prior bank and woodland evidence reused only for confirmed unchanged components; new exact ravine receipt binds final population449944 and stable controls44 with zero movement uploads/rebuilds.",
+    "Evidence-only finalization commit follows runtime source749589fb; exact merged-payload preflight and authoritative live verification remain required."
+  ],
+  "acceptedPrecedent": {
+    "head": "725b85a2e3898650d0cd99c5854570a6e31073e3",
+    "basis": "Accepted published Gen2793 world, tree/rock geometry, water, direct navigation, planetary/regional routes and single-owner rendering retained. Bounded soil, palette, placement and supported ravine planting delta only."
+  },
+  "runtimeCandidate": "749589fb4e3d6807bc96d9b95adb462f315775f7",
+  "runtimeViews": [
+    {
+      "view": "ravine-view-v1",
+      "run": 39067064166,
+      "job": 117496822675,
+      "artifact": 12113837558,
+      "sha256": "98b01bb5d3e9e00b485c5861bb318c9814662b7f715aaf314983c8be5324b3e9",
+      "result": "READY_CAPTURED_STABLE_VIEW_VISIBLE_SHOULDER_PRESENCE",
+      "canvasSha256": "d90ea808d4a3254cd3a392d43df51559c44d3db2c368e32604c3b1972102128b"
+    },
+    {
+      "view": "bank-view-v1",
+      "run": 39063529958,
+      "artifact": 12111978089,
+      "sha256": "02c7b428b9d5dab9b205f7eb05f9318f4cfd48b73a2cfb3e5e71ada7f2ade764",
+      "result": "REUSED_UNCHANGED_ROCK_MATERIAL_COMPONENT_ONLY"
+    },
+    {
+      "view": "woodland-roundtrip",
+      "run": 39064346615,
+      "artifact": 12113076220,
+      "sha256": "43daa272a70dd9f2b0ba3e464fa4e3ba29ace644104b220bc8525080ecca6842",
+      "result": "UNCHANGED_OWNER_INPUT_WOODLAND_COMPONENT_REPLAY_ONLY_NEW_REAR_MEMBERSHIP_SEPARATE"
+    }
+  ],
+  "independentReview": {
+    "function": "Soren/West",
+    "nativeTask": "/root/west_release_review",
+    "result": "PASS_BOUNDED_VISIBLE_PRESENCE",
+    "basis": "Actual exact final ravine image/receipt and unchanged bank/woodland components reviewed; parent native remote blob readback binds source-reviewed four changed files to749589fb. Sparse visible grass only; no excellence or device claim."
+  },
+  "ownerPublicationDirection": {
+    "source": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6489#issuecomment-6240080063",
+    "publicationAuthorizedInConversation": true,
+    "physicalDeviceAcceptance": false
+  }
+}

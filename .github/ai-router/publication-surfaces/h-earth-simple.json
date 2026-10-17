@@ -9,7 +9,7 @@
         "<title>H-Earth \u00b7 Live Interactive World</title>",
         "id=\"h-earth-functional-landscape-route\"",
         "data-run8e-ready=\"false\"",
-        "./vegetation-prototype/route.js?rev=gen2793-woodland-riverbank-v1",
+        "./vegetation-prototype/route.js?rev=gen2794-causal-landscape-v1",
         "type=\"importmap\""
       ],
       "excludes": [

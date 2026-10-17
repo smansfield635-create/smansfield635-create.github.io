@@ -48,7 +48,10 @@ void main(){
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.86));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*.025*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;
- float palettePatch=woodlandPaletteNoise(aRoot.xz/13.),dry=woodlandPaletteNoise(aRoot.xz/29.+vec2(7.,-11.));
+ // Rotate and warp only color coordinates; every immutable root stays fixed.
+ vec2 colorWorld=mat2(.8,.6,-.6,.8)*aRoot.xz;
+ vec2 colorWarp=vec2(woodlandPaletteNoise(colorWorld/37.),woodlandPaletteNoise(colorWorld/41.+vec2(19.,-7.)))-.5;
+ float palettePatch=woodlandPaletteNoise(colorWorld/13.+colorWarp*1.4),dry=woodlandPaletteNoise(colorWorld/29.+colorWarp+vec2(7.,-11.));
  vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),palettePatch);
  vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),palettePatch);
  vec3 palette=mix(forest,olive,smoothstep(.35,.8,dry));
@@ -89,7 +92,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   for(const range of ranges){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;}
   lastDraw={selectedFineRoots,drawCallCount,submittedTriangles:(rootCount+selectedFineRoots)*2,perFrameUploadBytes:0,coarseTiles:tiles.length,fineTiles:fine.length};return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_ONLY_NOT_WHOLE_WORLD',installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:450000,maximumTileRoots:1600,tileCount:tiles.length,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:450000,maximumTileRoots:1600,tileCount:tiles.length,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose});
  }catch(error){cleanup();throw error;}

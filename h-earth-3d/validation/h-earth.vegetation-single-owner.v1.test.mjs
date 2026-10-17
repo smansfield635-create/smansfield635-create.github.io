@@ -169,7 +169,7 @@ async function executeEntrance({pathname='/showroom/globe/h-earth/',search='',fa
  }};
  const window={dispatchEvent:event=>events.push(event)};
  let initialized=false;
- const renderer={getResourceReceipt:()=>({singleOwnerVegetation:vegetation,counters:{woodlandHabitatTextureUploadCount:1,woodlandHabitatUploadedBytes:36864}}),renderFrame:()=>{assert.equal(initialized,true,'never render before initialization');},presentColorFrame:()=>presents++,initialize:async()=>{initialized=true;},prepareReplacementVegetation:async()=>{if(failPreparation)throw Error('SIMULATED_PREPARATION_FAILURE');return {installed:true};}};
+ const renderer={getResourceReceipt:()=>({singleOwnerVegetation:vegetation,counters:{woodlandHabitatTextureUploadCount:1,woodlandHabitatUploadedBytes:73728}}),renderFrame:()=>{assert.equal(initialized,true,'never render before initialization');},presentColorFrame:()=>presents++,initialize:async()=>{initialized=true;},prepareReplacementVegetation:async()=>{if(failPreparation)throw Error('SIMULATED_PREPARATION_FAILURE');return {installed:true};}};
  const context={window,location,URLSearchParams,document:{getElementById:id=>id==='prototype-status'?statusNode:id==='h-earth-functional-landscape-canvas'?canvas:rootNode},
   performance:{now:()=>0},history:{state:{existing:true},replaceState(_state,_title,url){historyChanges.push(url);location.search=new URL(url,'https://example.test').search;}},
   setTimeout:callback=>{callback();},WheelEvent:class{constructor(type,options){Object.assign(this,{type},options);}},CustomEvent:class{constructor(type,options){Object.assign(this,{type},options);}},
@@ -215,13 +215,13 @@ test('failed public preparation does not announce readiness or initiate movement
 test('canonical HTML starts only single-owner entrance and preserves import identity map',()=>{
  const html=readFileSync(new URL('../../showroom/globe/h-earth/index.html',import.meta.url),'utf8');
  const scripts=[...html.matchAll(/<script[^>]+type="module"[^>]+src="([^"]+)"/g)].map(match=>match[1]);
- assert.deepEqual(scripts,['./vegetation-prototype/route.js?rev=gen2793-woodland-riverbank-v1']);
+ assert.deepEqual(scripts,['./vegetation-prototype/route.js?rev=gen2794-causal-landscape-v1']);
  assert.ok(html.includes('type="importmap"'));assert.ok(!html.includes('data-h-earth-public-route'));
  assert.ok(!html.includes('public-live-gpu-integration.run8e-r3e'));
  const imports=JSON.parse(html.match(/<script type="importmap">([\s\S]*?)<\/script>/)[1]).imports;
  for(const suffix of ['persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=','woodland-fine-grass.v1.js?rev=']){
   const module='/showroom/globe/h-earth/render/'+suffix;
-  assert.equal(imports[module+'gen2780-stable-planting-v1'],module+'gen2793-woodland-riverbank-v1','changed owner modules bypass prior public cache identities');
+  assert.equal(imports[module+'gen2780-stable-planting-v1'],module+'gen2794-causal-landscape-v1','changed owner modules bypass prior public cache identities');
  }
 });
 
@@ -253,15 +253,15 @@ const source=fs.readFileSync(routePath,'utf8');
 const a=source.indexOf('async function diagnosticAim('),b=source.indexOf('\\nfunction liveReceipt()',a);
 assert(a>=0&&b>a,'Cannot extract actual route tour functions');
 const functions=source.slice(a,b);
-async function runCase({dt,target,travel,tour,aimSequence,stalled=false}){
+async function runCase({dt,target,travel,tour,aimSequence,pitchTarget,stalled=false}){
  queue.clear();now=0;const canvas=new Surface();let proposals=0;
  if(stalled){const dispatch=canvas.dispatchEvent.bind(canvas);canvas.dispatchEvent=event=>event.type==='pointermove'?true:dispatch(event);}
  const intake=installHEarthRun8ER3D2PointerTouchIntake({surface:canvas,onProposal(){proposals++;}});
  const context={canvas,intake,PointerEvent,WheelEvent,performance,requestAnimationFrame,Math,Promise,Error,
  assert:(ok,reason)=>assert(ok,reason),delay:()=>new Promise(resolve=>requestAnimationFrame(resolve)),
  assertStableObservation(){},snapshot:label=>({label}),observations:[]};
- vm.createContext(context);vm.runInContext(functions+'\\nthis.aim=diagnosticAim;this.travel=diagnosticTravel;',context);
- let done=false,error;const operation=async()=>{if(aimSequence){for(const next of aimSequence){await context.aim(next);assert(Math.abs(((next-intake.getNavigationState().yawDegrees+540)%360)-180)<=6);}}else if(tour){for(const point of tour)await context.travel(...point,[]);await context.aim(target);}else if(travel)await context.travel(...travel,[]);else await context.aim(target);};const promise=operation().then(()=>{done=true},e=>{done=true;error=e;});
+ vm.createContext(context);vm.runInContext(functions+'\\nthis.aim=diagnosticAim;this.travel=diagnosticTravel;this.pitch=diagnosticPitch;',context);
+ let done=false,error;const operation=async()=>{if(pitchTarget!==undefined){await context.pitch(pitchTarget);}else if(aimSequence){for(const next of aimSequence){await context.aim(next);assert(Math.abs(((next-intake.getNavigationState().yawDegrees+540)%360)-180)<=6);}}else if(tour){for(const point of tour)await context.travel(...point,[]);await context.aim(target);}else if(travel)await context.travel(...travel,[]);else await context.aim(target);};const promise=operation().then(()=>{done=true},e=>{done=true;error=e;});
  for(let n=0;n<4000&&!done;n++){now+=dt;const batch=[...queue.values()];queue.clear();for(const fn of batch)fn(now);await immediate();}
  await Promise.race([promise,immediate()]);
  const receipt=intake.getReceipt(),state=intake.getNavigationState();intake.destroy();
@@ -270,6 +270,7 @@ async function runCase({dt,target,travel,tour,aimSequence,stalled=false}){
  assert(receipt.counters.pointerDownCount===receipt.counters.pointerUpCount,'Pointer presses must release');
  assert(receipt.counters.rejectedNavigationProposalCount===0,'No navigation rejection expected');
  if(target!==undefined)assert(Math.abs(((target-state.yawDegrees+540)%360)-180)<=6,\`Aim error \${state.yawDegrees}/\${target}\`);
+ if(pitchTarget!==undefined)assert(Math.abs(state.pitchDegrees-pitchTarget)<=2.2,'Pitch target');
  if(travel)assert(Math.hypot(state.position.x-travel[0],state.position.z-travel[1])<2,'Travel destination');
  return {dt,target,travel,pose:state.position,yaw:state.yawDegrees,proposals,frames:receipt.counters.activeIntentFrameCount};
 }
@@ -278,6 +279,7 @@ for(const dt of [16,150,500])for(const travel of [[-70,-170],[-193,-218]])result
 for(const dt of [16,150,500])results.push(await runCase({dt,tour:[[-70,-170],[-27,-164]],target:95}));
 results.push(await runCase({dt:500,travel:[-70,-170],stalled:true}));
 results.push(await runCase({dt:150,aimSequence:[170,-170,170]}));
+for(const dt of [16,50,150,500])results.push(await runCase({dt,pitchTarget:4}));
 console.log(JSON.stringify({status:'PASS',scope:'Actual pointer intake and navigation, deterministic fake RAF. Procedural/default terrain support; canonical runtime package not initialized. GPU and physical acceptance not established.',cases:results},null,2));
 `;
 
@@ -287,7 +289,7 @@ test('diagnostic view selectors cannot automate the public entrance',async()=>{
  assert.equal(result.window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().automaticNavigation,false);
  const regression=spawnSync(process.execPath,['--input-type=module','-e',actualIntakeTourRegressionSource],{encoding:'utf8',timeout:60000});
  assert.equal(regression.status,0,regression.stderr||regression.error?.message);
- const tour=JSON.parse(regression.stdout);assert.equal(tour.status,'PASS');assert.equal(tour.cases.length,31);
+ const tour=JSON.parse(regression.stdout);assert.equal(tour.status,'PASS');assert.equal(tour.cases.length,35);
 });
 
 // Reuse the established surfaceless GLES compiler setup; owner shaders have no
@@ -306,4 +308,21 @@ test('actual single-owner palette shaders compile and link with software GLES',a
   assert.equal(result.status,0,'ACTUAL_OWNER_GLES_COMPILE_LINK_FAILED: '+result.stderr);
   const evidence=JSON.parse(result.stdout);assert.ok(evidence.vertex.pass&&evidence.fragment.pass&&evidence.link.pass);
  }finally{await rm(directory,{recursive:true,force:true});}
+});
+
+test('terrain material cannot use the authored tree rectangle as soil authority',()=>{
+ const source=readFileSync(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ assert.doesNotMatch(source,/clearingSoilInterior|worldSoilReferenceLink|referenceWeight/);
+ const soil=source.slice(source.indexOf('if(worldSoilTerrain){'),source.indexOf('}else if(vRoleCode==4u)'));
+ assert.doesNotMatch(soil,/clearingEdge|uClearingBounds/,'albedo, normal, roughness and wetness share geographic authority');
+ assert.match(source,/if\(clearingType>0\.5&&uClearingEnabled==1&&clearingScale/,'only frozen tree assets evaluate clearing bounds');
+ assert.match(source,/worldSoilTerrain&&uClearingEnabled==1\?clearingVisibility\(vWorldPosition\):1\.0/,'terrain shadows follow actual shadow visibility');
+ assert.match(source,/fog\+clearingEdge\*/,'authored asset fog preserved; terrain clearingEdge remains zero');
+});
+test('global and fine grass colors do not inherit tile-level palette or brightness bands',()=>{
+ const source=readFileSync(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const global=source.slice(source.indexOf('vec2 colorField=coverPaletteField(ownershipRoot)'),source.indexOf('vMaterialParameters=vec4',source.indexOf('vec2 colorField=coverPaletteField(ownershipRoot)')));
+ assert.ok(global.length>0);assert.doesNotMatch(global,/aParameters\.[yz]|aColor/);
+ assert.match(source,/vec2 colorField=coverPaletteField\(root\.xz\)/,'fine grass samples the same world color field');
+ assert.match(source,/mat2\(\.8,\.6,-\.6,\.8\)\*root/,'color lattice rotates away from tile axes');
 });

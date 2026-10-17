@@ -1,4 +1,4 @@
-import {WOODLAND_HABITAT,buildWoodlandHabitatField,habitatSmooth} from './woodland-habitat-field.v1.js';
+import {WOODLAND_HABITAT,buildWoodlandHabitatField,habitatSmooth,habitatSlopeWeight} from './woodland-habitat-field.v1.js';
 import {createSingleOwnerVegetation} from './vegetation-single-owner.prototype.v1.js';
 import {RENDERED_BEACH_GLSL,createRenderedBeachProvider,createPilotCoverageOwner} from './rendered-beach-signal.v1.js?rev=gen2782-rendered-landscape-v1';
 import {buildPlantingPilotLayout,isPlantingPilotPoint,createUniformGroundAdmission} from './landscape-planting-pilot.v1.js?rev=gen2780-stable-planting-v1';
@@ -315,6 +315,17 @@ flat out uint vRoleCode;
 out float vCoastDistanceMeters;
 out float vContactDistanceMeters;
 float rootY(int instance,int i){return recordPart(instance,i/4)[i%4];}
+// Continuous root-space color: instance/tile parameters never select a palette zone.
+float coverPaletteNoise(vec2 p){
+ vec2 cell=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
+ vec2 k=vec2(127.1,311.7);
+ return mix(mix(fract(sin(dot(cell,k))*43758.5453),fract(sin(dot(cell+vec2(1.0,0.0),k))*43758.5453),f.x),mix(fract(sin(dot(cell+vec2(0.0,1.0),k))*43758.5453),fract(sin(dot(cell+vec2(1.0),k))*43758.5453),f.x),f.y);
+}
+vec2 coverPaletteField(vec2 root){
+ vec2 world=mat2(.8,.6,-.6,.8)*root;
+ vec2 warp=vec2(coverPaletteNoise(world/37.0),coverPaletteNoise(world/41.0+vec2(19.0,-7.0)))-.5;
+ return vec2(coverPaletteNoise(world/13.0+warp*1.4),coverPaletteNoise(world/29.0+warp+vec2(7.0,-11.0)));
+}
 void main(){
   int instance=uInstanceStart+gl_InstanceID*uInstanceStride;
   vec4 aTransform=recordPart(instance,3),aParameters=recordPart(instance,4);
@@ -344,15 +355,20 @@ void main(){
   float widthScale=(1.0+.65*lowStratum+.24*midStratum+.08*duneStratum)*mix(1.0,.23,legacyFine);
   vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/leafHeight,aNormal.z/(aTransform.w*widthScale));
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
-  vec3 palette=aParameters.y<0.333333?vec3(0.18,0.115,0.045):aParameters.y<0.666667?vec3(0.31,0.245,0.065):vec3(0.095,0.145,0.04);
-  vec3 lowPalette=mix(vec3(.177,.146,.068),vec3(.075,.152,.064),smoothstep(.20,.86,aParameters.y));
-  vec3 midPalette=mix(vec3(.25,.196,.078),vec3(.103,.19,.063),smoothstep(.25,.84,aParameters.y));
+  vec2 colorField=coverPaletteField(ownershipRoot);
+  float patch=colorField.x,dry=smoothstep(.35,.8,colorField.y);
+  vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),patch);
+  vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),patch);
+  vec3 palette=mix(forest,olive,dry);
+  vec3 lowPalette=mix(vec3(.075,.152,.064),vec3(.177,.146,.068),dry);
+  vec3 midPalette=mix(vec3(.103,.19,.063),vec3(.25,.196,.078),dry);
   vec3 dunePalette=vec3(.215,.172,.078);
   vec3 ecologicalPalette=lowPalette*lowStratum+midPalette*midStratum+dunePalette*duneStratum;
-  vec3 publishedColor=mix(aColor.rgb,palette,0.55);
-  vec3 ecoColor=mix(aColor.rgb,ecologicalPalette,.84);
-  vec3 finePalette=mix(vec3(.039,.125,.028),vec3(.076,.202,.052),smoothstep(.16,.88,aParameters.y));
-  vBaseColor=vec4(mix(mix(publishedColor,ecoColor,ecoStratum),finePalette,legacyFine)*(0.92+0.16*aParameters.z),1.0);
+  vec3 publishedColor=palette;
+  vec3 ecoColor=mix(palette,ecologicalPalette,.84);
+  vec3 finePalette=mix(vec3(.039,.125,.028),vec3(.076,.202,.052),patch);
+  finePalette=mix(finePalette,vec3(.16,.175,.05),dry*.42);
+  vBaseColor=vec4(mix(mix(publishedColor,ecoColor,ecoStratum),finePalette,legacyFine)*(0.92+0.16*patch)*(.88+.24*emergence),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;
@@ -393,8 +409,12 @@ void main(){
  vec2 xz=root.xz+direction*bend*t*t+sideways*side*halfWidth*(1.0-t);
  vWorldPosition=vec3(xz.x,root.y+h*(t-.13*t*t),xz.y);
  vNormal=normalize(vec3(direction.x*h*(1.0-.26*t),-2.0*bend*t,direction.y*h*(1.0-.26*t)));
- vec3 base=leaf%11==0?vec3(.030,.090,.024):leaf%5==0?vec3(.041,.125,.030):vec3(.022,.112,.027);
- vec3 tip=leaf%11==0?vec3(.145,.295,.059):leaf%5==0?vec3(.125,.335,.062):vec3(.088,.300,.054);
+ vec2 colorField=coverPaletteField(root.xz);
+ float dry=smoothstep(.35,.8,colorField.y);
+ vec3 base=mix(vec3(.022,.112,.027),vec3(.041,.125,.030),colorField.x);
+ vec3 tip=mix(vec3(.088,.300,.054),vec3(.125,.335,.062),colorField.x);
+ base=mix(base,vec3(.065,.10,.025),dry*.55);
+ tip=mix(tip,vec3(.225,.255,.072),dry*.55);
  vBaseColor=vec4(mix(base,tip,pow(t,.72))*(.88+.20*r0),1.0);
  vMaterialParameters=vec4(0.0,0.0,0.0,1.0);vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
  vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;
@@ -440,6 +460,9 @@ uniform int uClearingEnabled;
 uniform sampler2D uShorelineSoilCoverage;
 uniform sampler2D uWoodlandHabitat;
 uniform vec4 uWoodlandHabitatBounds;
+uniform vec4 uRavineHabitatBounds;
+uniform vec2 uHabitatAtlasScale;
+uniform float uHabitatHalfTexel;
 uniform int uWoodlandHabitatEnabled;
 uniform vec4 uLandscapeFloorFootprints[15];
 uniform int uLandscapeFloorCount;
@@ -545,19 +568,19 @@ float clearingVisibility(vec3 p){
 ${RENDERED_BEACH_GLSL}
 void main(){
   vec2 localXZ=vec2(0.0);
+  float clearingType=vMaterialModelCode==0u&&vMaterialParameters.w>1.5?vMaterialParameters.z:0.0;
   float clearingEdge=0.0;
   // At this clearing radius tan(a)/a expands projected XZ by under 0.000033m.
   // The 0.01m coarse margin includes that expansion; the exact inverse and
   // strict original bounds still determine every affected fragment.
   float clearingScale=(vWorldPosition.y+uPlanetRadius)/uPlanetRadius;
-  if(uClearingEnabled==1&&clearingScale>0.0&&all(greaterThan(vWorldPosition.xz,(uClearingBounds.xy-vec2(0.01))*clearingScale))&&all(lessThan(vWorldPosition.xz,(uClearingBounds.zw+vec2(0.01))*clearingScale))){
+  if(clearingType>0.5&&uClearingEnabled==1&&clearingScale>0.0&&all(greaterThan(vWorldPosition.xz,(uClearingBounds.xy-vec2(0.01))*clearingScale))&&all(lessThan(vWorldPosition.xz,(uClearingBounds.zw+vec2(0.01))*clearingScale))){
     localXZ=clearingLocalXZ(vWorldPosition);
     if(localXZ.x>uClearingBounds.x&&localXZ.y>uClearingBounds.y&&localXZ.x<uClearingBounds.z&&localXZ.y<uClearingBounds.w){
       vec2 edge=min(localXZ-uClearingBounds.xy,uClearingBounds.zw-localXZ);
       clearingEdge=smoothstep(0.0,1.5,min(edge.x,edge.y));
     }
   }
-  float clearingType=vMaterialModelCode==0u&&vMaterialParameters.w>1.5?vMaterialParameters.z:0.0;
   if(clearingType>0.5&&clearingEdge<=0.0)clearingType=0.0;
   vec4 clearingTexel=vec4(1.0);
   if(clearingType>1.5&&clearingType<2.5){clearingTexel=texture(uClearingLeaf,vMaterialParameters.xy);if(clearingTexel.a<0.45)discard;}
@@ -611,24 +634,8 @@ void main(){
   if(vRoleCode==1u && uClipBaseTerrain==1 &&
      vWorldPosition.x>uTerrainPatchClip.x && vWorldPosition.x<uTerrainPatchClip.z &&
      vWorldPosition.z>uTerrainPatchClip.y && vWorldPosition.z<uTerrainPatchClip.w) discard;
-  bool clearingSoilInterior=vRoleCode==1u&&clearingEdge>=0.99999;
-  if(clearingSoilInterior){
-    // The explicit clearing soil replaces unrelated regional palette work.
-    // The transition band still evaluates the original terrain treatment.
-    vec3 soilTexel=texture(uClearingSoil,localXZ*0.28).rgb;
-    base=pow(soilTexel,vec3(2.2))*0.75;
-    terrainRoughnessForLighting=0.94;
-    terrainReflectanceForLighting=0.02;
-    terrainReliefEnvelope=1.0;
-    shadingNormal=limitTerrainNormalDeviation(geometricNormal,
-      perturbTerrainNormal(geometricNormal,vWorldPosition,dot(soilTexel,vec3(0.3333))*0.035));
-    for(int i=0;i<15;i++){
-      if(i>=uLandscapeFloorCount)break;
-      vec4 tree=uLandscapeFloorFootprints[i];
-      float contact=1.0-smoothstep(tree.w,tree.w+0.80,distance(localXZ,tree.xy));
-      presentationContact=max(presentationContact,contact*0.28);
-    }
-  }else if(worldSoilTerrain){
+  // One material path across the former reference rectangle.
+  if(worldSoilTerrain){
     vec2 world=vWorldPosition.xz;
     float broad=noise2(world*0.035);
     float medium=noise2(world*0.13+vec2(17.0,-9.0));
@@ -781,7 +788,7 @@ void main(){
     // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2
     // Gen2646: propagate the approved reference's ACTUAL textured soil
     // character across eligible world terrain, not just 16% chroma.
-    // The original protected 32m reference interior remains unchanged.
+    // The approved texture is continuous across the former reference interior.
     // Coast/sand, rock-exposure and local ecological overlays stay native.
     if(uClearingEnabled==1){
       // The approved earth texture also owns the local exposed rock's hue.
@@ -801,12 +808,7 @@ void main(){
       );
       float worldSoilCoverage=worldSoilEligibility*
         worldSoilPatchiness*mix(0.94,1.0,shelteredSoil);
-      // Keep the original 1.5m interior blend continuous without a
-      // new exterior ring, rectangular shader mask or distance cutoff.
-      float worldSoilReferenceLink=clamp(clearingEdge,0.0,1.0);
-      float worldSoilWeight=mix(
-        worldSoilCoverage,1.0,worldSoilReferenceLink
-      );
+      float worldSoilWeight=worldSoilCoverage;
       if(worldSoilWeight>0.001){
         // Match the actual reference soil UVs across the former box.
         // Regional color variation is applied without breaking its grain.
@@ -850,11 +852,7 @@ void main(){
         float worldSoilAlbedoAuthority=mix(
           0.14,0.98,worldSoilCoastalAlbedoMix
         );
-        vec3 worldSoilFinal=mix(
-          mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority),
-          worldSoilReference,
-          worldSoilReferenceLink
-        );
+        vec3 worldSoilFinal=mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority);
         palette=mix(palette,worldSoilFinal,worldSoilWeight);
         // The existing clearing directly lights its approved soil toward
         // the sun. Match that response smoothly over real soil only, with
@@ -999,32 +997,21 @@ void main(){
     base*=0.78+0.34*clamp(geometricNormal.y,0.0,1.0);
   }
 
-  if(worldSoilTerrain&&!clearingSoilInterior&&clearingEdge>0.0){
-    // Reconcile the FULL reference tuple after every unrelated regional overlay.
-    float referenceWeight=clamp(clearingEdge/0.99999,0.0,1.0);
-    vec3 soilTexel=texture(uClearingSoil,localXZ*0.28).rgb;
-    base=mix(base,pow(soilTexel,vec3(2.2))*0.75,referenceWeight);
-    terrainRoughnessForLighting=mix(terrainRoughnessForLighting,0.94,referenceWeight);
-    terrainReflectanceForLighting=mix(terrainReflectanceForLighting,0.02,referenceWeight);
-    terrainReliefEnvelope=mix(terrainReliefEnvelope,1.0,referenceWeight);
-    terrainWetnessForLighting=mix(terrainWetnessForLighting,0.0,referenceWeight);
-    specularScale=mix(specularScale,1.0,referenceWeight);
-    vec3 referenceNormal=limitTerrainNormalDeviation(geometricNormal,perturbTerrainNormal(geometricNormal,vWorldPosition,dot(soilTexel,vec3(0.3333))*0.035));
-    shadingNormal=normalize(mix(shadingNormal,referenceNormal,referenceWeight));
-    float referenceContact=0.0;
-    for(int i=0;i<15;i++){if(i>=uLandscapeFloorCount)break;vec4 tree=uLandscapeFloorFootprints[i];referenceContact=max(referenceContact,(1.0-smoothstep(tree.w,tree.w+0.80,distance(localXZ,tree.xy)))*0.28);}
-    presentationContact=mix(presentationContact,referenceContact,referenceWeight);
-    presentationHighlight=mix(presentationHighlight,0.0,referenceWeight);
-  }
-
   if(worldSoilTerrain&&uWoodlandHabitatEnabled==1){
     vec2 habitatUv=(vWorldPosition.xz-uWoodlandHabitatBounds.xy)/(uWoodlandHabitatBounds.zw-uWoodlandHabitatBounds.xy);
+    float habitatCoverage=0.0;
     if(all(greaterThan(habitatUv,vec2(0.0)))&&all(lessThan(habitatUv,vec2(1.0)))){
-      float habitatCoverage=texture(uWoodlandHabitat,habitatUv).r;
-      vec3 habitatSoil=vec3(0.145,0.116,0.067)*(0.90+0.18*noise2(vWorldPosition.xz*.29));
-      base=mix(base,habitatSoil,habitatCoverage*.34);
-      terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
+      habitatUv=clamp(habitatUv,vec2(uHabitatHalfTexel),vec2(1.0-uHabitatHalfTexel))*uHabitatAtlasScale;
+      habitatCoverage=texture(uWoodlandHabitat,habitatUv).r;
     }
+    vec2 ravineUv=(vWorldPosition.xz-uRavineHabitatBounds.xy)/(uRavineHabitatBounds.zw-uRavineHabitatBounds.xy);
+    if(all(greaterThan(ravineUv,vec2(0.0)))&&all(lessThan(ravineUv,vec2(1.0)))){
+      ravineUv=clamp(ravineUv,vec2(uHabitatHalfTexel),vec2(1.0-uHabitatHalfTexel))*uHabitatAtlasScale+vec2(uHabitatAtlasScale.x,0.0);
+      habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,ravineUv).r);
+    }
+    vec3 habitatSoil=vec3(0.145,0.116,0.067)*(0.90+0.18*noise2(vWorldPosition.xz*.29));
+    base=mix(base,habitatSoil,habitatCoverage*.34);
+    terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
     // the geographic window fades well before the existing oasis bounds.
     float bankWindow=smoothstep(-22.0,-14.0,vWorldPosition.x)*(1.0-smoothstep(30.0,38.0,vWorldPosition.x))*smoothstep(-208.0,-200.0,vWorldPosition.z)*(1.0-smoothstep(-135.0,-127.0,vWorldPosition.z));
@@ -1057,8 +1044,8 @@ void main(){
   float specularExponent=worldSoilTerrain?mix(52.0,9.0,terrainRoughnessForLighting):24.0;
   float specular=0.0;
   float directional=0.0;
-  // Full-interior clearing lighting replaces these two values with weight 1.
-  // Keep every original expression for the transition band and outside world.
+  // Terrain always evaluates the continuous soil-light response; tree assets
+  // retain their existing authored treatment.
   if(clearingEdge!=1.0){
     vec3 lightDirection=normalize(-uSunDirection);
     vec3 halfDirection=normalize(lightDirection+viewDirection);
@@ -1126,7 +1113,9 @@ void main(){
     vec3 detail=clamp(pow(clearingTexel.rgb/max(reference,vec3(0.01)),vec3(2.2)),vec3(0.45),vec3(1.55));
     base*=mix(vec3(1.0),detail,clearingEdge*0.78);
   }
-  float clearingShadowFactor=1.0;
+  // Shadow-map visibility already returns full light outside its actual frustum.
+  // Do not gate ground shadows with the former soil rectangle.
+  float clearingShadowFactor=worldSoilTerrain&&uClearingEnabled==1?clearingVisibility(vWorldPosition):1.0;
   if(clearingEdge>0.0){
     // atmosphere-state supplies a direction TOWARD the sun. Preserve the old
     // lighting outside this trial, and blend the corrected illumination at its edge.
@@ -1689,13 +1678,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(replacementPreparation)return replacementPreparation;
     replacementPreparation=(async()=>{
       const started=performance.now();
-      const protectedReferenceAt=(x,y,z)=>{
-        if(!resources.clearing)return false;
-        const bounds=resources.clearing.bounds,b={minX:bounds[0],minZ:bounds[1],maxX:bounds[2],maxZ:bounds[3]},scale=(y+planetRadius)/planetRadius;
-        if(scale<=0||x<=(b.minX-.01)*scale||x>=(b.maxX+.01)*scale||z<=(b.minZ-.01)*scale||z>=(b.maxZ+.01)*scale)return false;
-        const q=unprojectPlanetVertex(x,y,z),edge=Math.min(q.x-b.minX,b.maxX-q.x,q.z-b.minZ,b.maxZ-q.z),t=Math.max(0,Math.min(1,edge/1.5));
-        return t*t*(3-2*t)>=.99999;
-      };
+      // Terrain no longer has a rectangular protected-material branch.
+      const protectedReferenceAt=()=>false;
       const visibleSurface=buildVegetationVisibleSurface(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),{
         refinement:resources.refinement?.surface??null,geology:resources.geologicalRuntime,
         renderedAttributes:{base:{positions:uploadViews.positions,normals:uploadViews.normals,coastDistances,contactDistances:contactField.packageDistances},refinement:resources.refinement?.surface??null,geology:resources.geologicalMeshes?.map(part=>part.renderedAttributes)},
@@ -1715,19 +1699,21 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const {pixels,...summary}=mask;resources.shorelineSoilCoverage={...summary,ready:true,derivedFrom:'EXISTING_OASIS_GRASS_ROOTS',terrainGeometryMutated:false};
       onProgress({phase:'SINGLE_POPULATION_PREPARING'});
       const generationStarted=performance.now();
-      const habitat=await buildWoodlandHabitatField({yieldControl:yieldToBrowserPaint,suitability:(x,z)=>{
-        const support=visibleSurface.sample(x,z);if(!support||!admitGround(x,z,support)||support.slope>.35)return 0;
+      const habitat=await buildWoodlandHabitatField({yieldControl:yieldToBrowserPaint,ravinePoints:resources.geologicalRuntime.formation.drainage.points,suitability:(x,z,region)=>{
+        const support=visibleSurface.sample(x,z);if(!support||!admitGround(x,z,support))return 0;
+        const slopeWeight=habitatSlopeWeight(support.slope,region);if(slopeWeight<=0)return 0;
         const local=unprojectPlanetVertex(x,support.y,z),material=pilotMaterialAt(local.x,local.z);
         if(material?.valid!==true||!(material.surfaceClass==='STONE_AND_SPARSE_SOIL'?material.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(material.surfaceClass)&&material.soilDepth>=.20))return 0;
         if(!woodlandGrassClear(local.x,local.z,1.5)||(pilotPackage.landscapeCoverFootprints??[]).some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+1.5)||(pilotPackage.landscapeFloorFootprints??[]).some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+1.5))return 0;
-        const beach=visibleSurface.beach.sample({x,z,support});return 1-habitatSmooth(0,WOODLAND_HABITAT.maximumSandCoverage,beach.rawSandCoverage);
+        const beach=visibleSurface.beach.sample({x,z,support});return slopeWeight*(1-habitatSmooth(0,WOODLAND_HABITAT.maximumSandCoverage,beach.rawSandCoverage));
       }});
       const presentation=await buildWoodlandFineGrass(pilotPackage,{visibleSurface:resources.vegetationVisibleSurface,habitat,yieldControl:yieldToBrowserPaint,onProgress});
       const habitatTexture=createTexture();gl.activeTexture(gl.TEXTURE0+10);gl.bindTexture(gl.TEXTURE_2D,habitatTexture);
-      gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,habitat.size,habitat.size,0,gl.RED,gl.UNSIGNED_BYTE,habitat.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,habitat.width,habitat.height,0,gl.RED,gl.UNSIGNED_BYTE,habitat.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
       resources.woodlandHabitat={texture:habitatTexture,receipt:habitat.receipt};counters.woodlandHabitatTextureUploadCount++;counters.woodlandHabitatUploadedBytes+=habitat.pixels.byteLength;
       gl.useProgram(resources.geometryProgram);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitat'),10);gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatBounds'),habitat.bounds);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatEnabled'),1);
+      gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uRavineHabitatBounds'),habitat.ravine.bounds);gl.uniform2f(gl.getUniformLocation(resources.geometryProgram,'uHabitatAtlasScale'),.5,1);gl.uniform1f(gl.getUniformLocation(resources.geometryProgram,'uHabitatHalfTexel'),.5/habitat.size);
 
       const generationMs=performance.now()-generationStarted;
       resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint});

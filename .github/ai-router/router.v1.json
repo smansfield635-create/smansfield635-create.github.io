@@ -61,7 +61,9 @@
       ".github/workflows/showroom-four-compass-exact-head-regression.yml",
       ".github/workflows/bt4-world-diagnostic-entitlement-v1.yml",
       ".github/workflows/public-private-boundary-gate.yml",
-      ".github/workflows/operations-chamber-observations-v1.yml"
+      ".github/workflows/operations-chamber-observations-v1.yml",
+      ".github/workflows/pages-exact-head-deploy-v3.yml",
+      "tools/publication-duplicate-verification.v1.test.mjs"
     ],
     "ownedPathPrefixes": [
       ".github/ai-router/",

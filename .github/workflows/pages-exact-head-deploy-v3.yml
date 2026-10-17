@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deploy_final.outputs.page_url }}
+      url: ${{ steps.deploy_final.outputs.page_url || steps.deploy.outputs.page_url || steps.duplicate_verify.outputs.page_url }}
     steps:
       - name: Suppress duplicate exact-head production mutation
         id: dedupe
@@ -41,9 +41,10 @@ jobs:
           set -euo pipefail
           api="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs?event=workflow_dispatch&per_page=100"
           runs="$(curl --fail-with-body --silent --show-error -L -H "Accept: application/vnd.github+json" -H "Authorization: Bearer ${GH_TOKEN}" -H "X-GitHub-Api-Version: 2022-11-28" "$api")"
-          prior="$(printf '%s' "$runs" | jq -r --arg sha "$REQUESTED_SHA" --argjson current "$CURRENT_RUN_ID" '[.workflow_runs[] | select(.name=="Exact Head Pages Deploy v3" and .head_sha==$sha and .id < $current and (.status=="queued" or .status=="pending" or .status=="in_progress" or (.status=="completed" and .conclusion=="success")))] | sort_by(.id) | last // empty | @base64')"
+          prior="$(printf '%s' "$runs" | jq -r --arg sha "$REQUESTED_SHA" --argjson current "$CURRENT_RUN_ID" '[.workflow_runs[] | select(.name=="Exact Head Pages Deploy v3" and .head_sha==$sha and .id < $current)] as $prior | (($prior | map(select(.status=="completed" and .conclusion=="success")) | sort_by(.id) | first) // ($prior | map(select(.status=="queued" or .status=="pending" or .status=="in_progress")) | sort_by(.id) | last)) // empty | @base64')"
           if [ -n "$prior" ]; then
             decoded="$(printf '%s' "$prior" | base64 -d)"
+            printf '%s\n' "$decoded" > "$RUNNER_TEMP/publication-prior-run.json"
             echo "duplicate=true" >> "$GITHUB_OUTPUT"
             echo "prior_run_id=$(printf '%s' "$decoded" | jq -r '.id')" >> "$GITHUB_OUTPUT"
             echo "EXACT_HEAD_PRODUCTION_MUTATION_SUPPRESSED sha=$REQUESTED_SHA prior=$(printf '%s' "$decoded" | jq -r '.id')"
@@ -55,7 +56,8 @@ jobs:
       - name: Stop duplicate before expensive work
         if: steps.dedupe.outputs.duplicate == 'true'
         run: |
-          echo "No Pages mutation required. Equivalent exact-head publication already exists as run ${{ steps.dedupe.outputs.prior_run_id }}."
+          echo "Pages mutation suppressed. Requested surface still requires verification against prior run ${{ steps.dedupe.outputs.prior_run_id }}."
+          jq -e ' .status=="completed" and .conclusion=="success" ' "$RUNNER_TEMP/publication-prior-run.json" >/dev/null || { echo "PRIOR_PUBLICATION_NOT_COMPLETED" >&2; exit 1; }
 
       - name: Require exact dispatched head
         id: resolve
@@ -77,7 +79,6 @@ jobs:
           echo "EXACT_DISPATCH_HEAD_VERIFIED=$requested"
 
       - name: Materialize bounded publication sparse index
-        if: steps.dedupe.outputs.duplicate != 'true'
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
         shell: bash
@@ -124,7 +125,6 @@ jobs:
           echo "PUBLICATION_MATERIALIZED_FILES=$materialized_files"
 
       - name: Validate registered surface
-        if: steps.dedupe.outputs.duplicate != 'true'
         id: surface
         env:
           SURFACE_ID: ${{ inputs.surface_id }}
@@ -141,7 +141,6 @@ jobs:
           echo "runtime=$(jq -r 'if .runtime?.enabled == true then "true" else "false" end' "$manifest")" >> "$GITHUB_OUTPUT"
 
       - name: Build and size-check exact Pages payload
-        if: steps.dedupe.outputs.duplicate != 'true'
         env:
           TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
           SURFACE_ID: ${{ inputs.surface_id }}
@@ -160,13 +159,11 @@ jobs:
           echo "PROTECTED_AUDRALIA_DEPENDENCY_FILES=$(jq -r '.authorizedExcludedRuntimeDependencies.fileCount' "$RECEIPT")"
 
       - name: Set up Chrome for preflight
-        if: steps.dedupe.outputs.duplicate != 'true'
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
 
       - name: Install runtime verifier for preflight
-        if: steps.dedupe.outputs.duplicate != 'true'
         run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
 
       - name: Require local exact-payload preflight pass
@@ -200,8 +197,124 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
+      - name: Verify already-published requested surface
+        if: steps.dedupe.outputs.duplicate == 'true'
+        id: duplicate_verify
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+          SURFACE_ID: ${{ inputs.surface_id }}
+          STAGE: ${{ runner.temp }}/pages-site
+          MANIFEST: ${{ steps.surface.outputs.manifest }}
+          PRIOR_RUN: ${{ runner.temp }}/publication-prior-run.json
+          PRIOR_DEPLOYMENT_RECEIPT: ${{ runner.temp }}/publication-prior-deployment.json
+          RECEIPT: /tmp/publication-duplicate-verification-receipt.json
+        shell: bash
+        run: |
+          set -euo pipefail
+          prior_id="$(jq -er '.id' "$PRIOR_RUN")"
+          artifacts="$(curl --fail-with-body --silent --show-error -L -H "Authorization: Bearer ${GH_TOKEN}" -H 'Accept: application/vnd.github+json' "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${prior_id}/artifacts?per_page=100")"
+          archive="$(printf '%s' "$artifacts" | jq -er '[.artifacts[] | select(.name=="publication-surface-receipt" and .expired==false)] | sort_by(.id) | last | .archive_download_url')"
+          [[ "$archive" =~ ^https://api\.github\.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/[0-9]+/zip$ ]]
+          curl --fail-with-body --silent --show-error -L -H "Authorization: Bearer ${GH_TOKEN}" "$archive" -o "$RUNNER_TEMP/publication-prior-receipt.zip"
+          unzip -p "$RUNNER_TEMP/publication-prior-receipt.zip" publication-surface-receipt.json > "$PRIOR_DEPLOYMENT_RECEIPT"
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
+          unset GH_TOKEN
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import {createHash} from 'node:crypto';
+          import {spawnSync} from 'node:child_process';
+          const base='https://diamondgatebridge.com';
+          const {TARGET_SHA:target,SURFACE_ID:surface,STAGE:stage,MANIFEST:manifestPath,PRIOR_RUN:priorPath,PRIOR_DEPLOYMENT_RECEIPT:priorReceiptPath,RECEIPT:receiptPath}=process.env;
+          const hash=b=>createHash('sha256').update(b).digest('hex');
+          const json=p=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const requireProof=(ok,code)=>{if(!ok)throw new Error(code);};
+          const receipt={schema:'PAGES_PUBLIC_SURFACE_CONVERGENCE_RECEIPT_v2',result:'FAIL',targetSha:target,surfaceId:surface,customDomain:'diamondgatebridge.com',deploymentPerformed:false,productMutationPerformed:false};
+          const fetchBytes=async url=>{
+            const response=await fetch(url,{redirect:'follow',signal:AbortSignal.timeout(30000),headers:{'Cache-Control':'no-cache','Pragma':'no-cache'}});
+            requireProof(response.ok,`PUBLIC_FETCH_FAILED:${response.status}:${url}`);
+            requireProof(new URL(response.url||url).origin===base,'PUBLIC_ORIGIN_MISMATCH');
+            return Buffer.from(await response.arrayBuffer());
+          };
+          const verifyCli=(mode,file)=>{
+            const spec=json(file);
+            if(mode==='runtime'&&spec.runtime?.enabled!==true)return {result:'NOT_REQUIRED'};
+            const env={...process.env};delete env.GH_TOKEN;delete env.GITHUB_TOKEN;
+            const run=spawnSync(process.execPath,['tools/publication-live-verify.mjs',mode,base,file],{env,encoding:'utf8',timeout:(spec.runtime?.timeoutMs||120000)+180000,maxBuffer:8*1024*1024});
+            fs.writeFileSync(`${receiptPath}.${spec.surfaceId}.${mode}.log`,`${run.stdout||''}\n${run.stderr||''}`);
+            requireProof(run.status===0,`PUBLIC_${mode.toUpperCase()}_VERIFICATION_FAILED:${spec.surfaceId}:${run.error?.message||run.stderr||run.status}`);
+            const value=JSON.parse(run.stdout);
+            requireProof(value.schema===`PUBLICATION_SURFACE_${mode.toUpperCase()}_RECEIPT_v1`&&value.surfaceId===spec.surfaceId&&value.result==='PASS',`PUBLIC_${mode.toUpperCase()}_RECEIPT_INVALID`);
+            return value;
+          };
+          try{
+            requireProof(/^[0-9a-f]{40}$/.test(target||''),'TARGET_SHA_INVALID');
+            requireProof(/^[a-z0-9][a-z0-9._-]{0,79}$/.test(surface||''),'REQUESTED_SURFACE_INVALID');
+            const prior=json(priorPath),deployed=json(priorReceiptPath);
+            requireProof(prior.name==='Exact Head Pages Deploy v3'&&prior.head_sha===target&&prior.status==='completed'&&prior.conclusion==='success','PRIOR_DEPLOYMENT_NOT_PROVEN');
+            requireProof(deployed.schema==='PUBLICATION_SURFACE_DISPATCH_RECEIPT_v1'&&deployed.targetSha===target&&String(deployed.runId)===String(prior.id),'PRIOR_DEPLOYMENT_RECEIPT_MISMATCH');
+            const manifest=json(manifestPath);
+            requireProof(manifest.schema==='PUBLICATION_SURFACE_VERIFICATION_v1'&&manifest.surfaceId===surface,'REQUESTED_MANIFEST_MISMATCH');
+            const markerUrl=`${base}/.well-known/dgb-release.json`;
+            const markerBytes=await fetchBytes(markerUrl),marker=JSON.parse(markerBytes);
+            requireProof(marker.schema==='DGB_PUBLIC_RELEASE_MARKER_v3'&&marker.commit===target,'LIVE_MARKER_HEAD_MISMATCH');
+            requireProof(/^[a-z0-9][a-z0-9._-]{0,79}$/.test(marker.surface||'')&&marker.surface===deployed.surfaceId,'LIVE_MARKER_SURFACE_MISMATCH');
+            const publishedManifest=`.github/ai-router/publication-surfaces/${marker.surface}.json`;
+            requireProof(marker.verificationManifest===publishedManifest&&hash(fs.readFileSync(publishedManifest))===marker.verificationManifestSha256,'LIVE_MARKER_MANIFEST_MISMATCH');
+            requireProof(json(publishedManifest).surfaceId===marker.surface,'PUBLISHED_MANIFEST_SURFACE_MISMATCH');
+            receipt.publishedSurfaceId=marker.surface;receipt.priorDeploymentRunId=prior.id;receipt.marker=marker;
+            receipt.sourceBytes=[];
+            const verifyPath=async(publicPath)=>{
+              requireProof(typeof publicPath==='string'&&publicPath.startsWith('/')&&!publicPath.startsWith('//'),'PUBLIC_PATH_INVALID');
+              const url=new URL(publicPath,base);
+              requireProof(url.origin===base,'PUBLIC_ORIGIN_MISMATCH');
+              const relative=url.pathname.slice(1)+(url.pathname.endsWith('/')?'index.html':'');
+              const expectedPath=path.resolve(stage,relative);
+              requireProof(expectedPath.startsWith(path.resolve(stage)+path.sep),'STAGED_PATH_ESCAPE');
+              const expected=hash(fs.readFileSync(expectedPath));
+              const body=await fetchBytes(base+publicPath),observed=hash(body);
+              requireProof(observed===expected,`PUBLIC_SOURCE_BYTE_MISMATCH:${publicPath}`);
+              receipt.sourceBytes.push({path:publicPath,expectedSha256:expected,observedSha256:observed});
+              return body;
+            };
+            for(const check of manifest.checks)await verifyPath(check.path);
+            if(manifest.runtime?.path)await verifyPath(manifest.runtime.path);
+            const protectedHtml=(await verifyPath('/showroom/globe/audralia/')).toString('utf8');
+            requireProof(protectedHtml.includes(`data-audralia-build-sha="${target}"`)&&protectedHtml.includes(`BUILD ${target.slice(0,8).toUpperCase()}`),'PROTECTED_PUBLIC_BUILD_FINGERPRINT_MISMATCH');
+            if(surface==='brain-gen1-hra'){
+              const brain=await fetchBytes(`${base}/inspection/compass/brain-gen1-hra/Allen_M_Brain.glb`);
+              requireProof(brain.length===11977312&&hash(brain)==='2b9ad5b53e40e9f0936da74f7be38d2eed15604e26358c3870a0ea13499b9a35','BRAIN_GEN1_HRA_PUBLIC_ASSET_IDENTITY_MISMATCH');
+            }
+            receipt.staticVerification=verifyCli('static',manifestPath);
+            if(surface!=='audralia')receipt.protectedStaticVerification=verifyCli('static','.github/ai-router/publication-surfaces/audralia.json');
+            receipt.runtimeVerification=verifyCli('runtime',manifestPath);
+            if(surface==='audralia'){
+              const value=JSON.parse(await fetchBytes(`${base}/.well-known/publication-surfaces/audralia-runtime.json`));
+              requireProof(value.schema==='DGB_PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1'&&value.surfaceId==='audralia'&&value.targetSha===target&&value.result==='PASS_CLOSED'&&value.runtimeVerification?.surfaceId==='audralia'&&value.runtimeVerification?.result==='PASS','AUDRALIA_PUBLISHED_RUNTIME_RECEIPT_MISMATCH');
+            }
+            requireProof(hash(await fetchBytes(markerUrl))===hash(markerBytes),'LIVE_MARKER_CHANGED_DURING_VERIFICATION');
+            receipt.result='PASS_CLOSED';receipt.ordinarySurfaceBytesConverged=true;
+            fs.appendFileSync(process.env.GITHUB_OUTPUT,`page_url=${base}/\n`);
+            console.log(`LIVE_EXACT_SURFACE_VERIFIED=${target}:${surface}`);
+          }catch(error){receipt.error=String(error?.stack||error);process.exitCode=1;}
+          finally{fs.writeFileSync(receiptPath,JSON.stringify(receipt,null,2)+'\n');console.log(JSON.stringify(receipt,null,2));}
+          NODE
+
+      - name: Upload duplicate verification evidence
+        if: ${{ always() && steps.dedupe.outputs.duplicate == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: publication-duplicate-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/publication-duplicate-verification-receipt.json*
+          if-no-files-found: warn
+          retention-days: 90
+
       - uses: actions/configure-pages@v5
+        if: steps.dedupe.outputs.duplicate != 'true'
       - uses: actions/upload-pages-artifact@v3
+        if: steps.dedupe.outputs.duplicate != 'true'
         with:
           path: ${{ runner.temp }}/pages-site
       - name: Deploy exact-head artifact

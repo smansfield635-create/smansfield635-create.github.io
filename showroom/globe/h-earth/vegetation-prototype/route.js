@@ -16,6 +16,7 @@ const assert=(condition,reason)=>{if(!condition)throw Error('SINGLE_OWNER_PROTOT
 const delay=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));
 const control=Object.freeze({x:-139.40267987050615,z:-194.5,radius:2});
 let renderer=null,intake=null,sequence=0,replay=null,preparation=null,interactiveReady=false;
+let diagnosticTourMoving=false;
 if(!diagnosticReplay)canvas.style.pointerEvents='none';
 const frames=[],observations=[],timing={firstFrameMilliseconds:null,populatedMilliseconds:null,replayCompleteMilliseconds:null};
 let renderFrameCallCount=0,gpuFramebufferPresentationCount=0;
@@ -54,14 +55,18 @@ function assertStableObservation(observation,expectedIds){
 // can select automatic travel; every final view records its actual supported pose.
 async function diagnosticAim(targetYaw){
   const difference=()=>((targetYaw-intake.getNavigationState().yawDegrees+540)%360)-180;
-  for(let attempt=0;attempt<8&&Math.abs(difference())>1.5;attempt++){
+  // One observed intake frame per pulse: held wall-clock gestures can overshoot
+  // when software-GPU presentations stall the animation-frame queue.
+  for(let pulse=0;pulse<512&&Math.abs(difference())>6;pulse++){
     const sign=Math.sign(difference()),x=canvas.clientWidth*.5,y=canvas.clientHeight*.5;
+    const displacement=Math.abs(difference())>20?.15:.065;
     canvas.dispatchEvent(new PointerEvent('pointerdown',{pointerId:93,pointerType:'mouse',clientX:x,clientY:y,bubbles:true,cancelable:true}));
-    canvas.dispatchEvent(new PointerEvent('pointermove',{pointerId:93,pointerType:'mouse',clientX:x+sign*canvas.clientWidth*.15,clientY:y,bubbles:true,cancelable:true}));
-    const began=performance.now();
-    while(Math.sign(difference())===sign&&Math.abs(difference())>1.5&&performance.now()-began<3500)await delay(20);
-    canvas.dispatchEvent(new PointerEvent('pointerup',{pointerId:93,pointerType:'mouse',clientX:x,clientY:y,bubbles:true,cancelable:true}));
-    await delay(20);
+    try{
+      canvas.dispatchEvent(new PointerEvent('pointermove',{pointerId:93,pointerType:'mouse',clientX:x+sign*canvas.clientWidth*displacement,clientY:y,bubbles:true,cancelable:true}));
+      await new Promise(resolve=>requestAnimationFrame(resolve));
+    }finally{
+      canvas.dispatchEvent(new PointerEvent('pointerup',{pointerId:93,pointerType:'mouse',clientX:x,clientY:y,bubbles:true,cancelable:true}));
+    }
   }
   assert(Math.abs(difference())<=6,'DIAGNOSTIC_VIEW_AIM_NOT_REACHED');
 }
@@ -103,7 +108,7 @@ try{
     history.replaceState(history.state,'',`${location.pathname}?${query.toString()}${location.hash}`);
   }
   await prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:update=>{status.textContent=update.status??'Loading the preserved environment…';}});
-  intake=installHEarthRun8ER3D2PointerTouchIntake({surface:canvas,onProposal:(_proposal,state)=>{if(renderer&&(diagnosticReplay||interactiveReady))present(state);}});
+  intake=installHEarthRun8ER3D2PointerTouchIntake({surface:canvas,onProposal:(_proposal,state)=>{if(renderer&&(diagnosticReplay||interactiveReady)&&!diagnosticTourMoving)present(state);}});
   const initial=intake.getNavigationState();
   assert(Math.hypot(initial.position.x-control.x,initial.position.z-control.z)<.01,'INITIAL_CAMERA_MISMATCH');
   assert(Math.abs(initial.yawDegrees)<.01,'INITIAL_YAW_MISMATCH');
@@ -134,11 +139,16 @@ try{
   }
   if(qualificationView){
     status.textContent='Capturing the bounded landscape comparison…';
-    if(qualificationView==='bank-view-v1'){
-      await diagnosticTravel(-70,-170,controlIds);await diagnosticTravel(-27,-164,controlIds);await diagnosticAim(95);
-    }else{
-      await diagnosticTravel(-193,-218,controlIds);await diagnosticAim(86);
-    }
+    // These are final-view proofs, not frame-by-frame walking proofs. Navigate
+    // through the real unchanged intake, then present the reached pose once.
+    diagnosticTourMoving=true;
+    try{
+      if(qualificationView==='bank-view-v1'){
+        await diagnosticTravel(-70,-170,controlIds);await diagnosticTravel(-27,-164,controlIds);await diagnosticAim(95);
+      }else{
+        await diagnosticTravel(-193,-218,controlIds);await diagnosticAim(86);
+      }
+    }finally{diagnosticTourMoving=false;}
     present(intake.getNavigationState());await delay(100);
     const view=snapshot(qualificationView);
     assertStableObservation(view,controlIds);
@@ -147,9 +157,9 @@ try{
   const final=snapshot('FINAL'),returnDistanceMeters=Math.hypot(final.position.x-entry.position.x,final.position.z-entry.position.z);
   if(!qualificationView)assert(returnDistanceMeters<.01,'EXACT_RETURN_MISSING');
   timing.replayCompleteMilliseconds=performance.now()-started;
-  replay={schema:'H_EARTH_SINGLE_OWNER_VEGETATION_REPLAY_v1',result:qualificationView?'CAPTURED_STABLE_VIEW':'CAPTURED_POPULATED_CONTINUITY',qualificationView,sourceBaseline,input:'SYNTHETIC_WHEEL_THROUGH_REAL_INTAKE',
+  replay={schema:'H_EARTH_SINGLE_OWNER_VEGETATION_REPLAY_v1',result:qualificationView?'CAPTURED_STABLE_VIEW':'CAPTURED_POPULATED_CONTINUITY',qualificationView,sourceBaseline,input:qualificationView?'SYNTHETIC_POINTER_AND_WHEEL_THROUGH_REAL_INTAKE':'SYNTHETIC_WHEEL_THROUGH_REAL_INTAKE',
     control,controlRoots:controlIds,observations:copy(observations),requestedStepsPerDirection:qualificationView?0:8,requestedMagnitudePerStep:4,returnDistanceMeters,
-    installedControlIdentityStable:true,coarseCoverageSubmittedThroughout:true,visiblePixelsVerified:false,physicalDeviceAcceptance:false,publicationAuthorized:false,
+    installedControlIdentityStable:true,coarseCoverageSubmittedThroughout:qualificationView?null:true,presentationScope:qualificationView?'FINAL_SUPPORTED_VIEW_ONLY':'EVERY_RECORDED_WALK_STEP',visiblePixelsVerified:false,physicalDeviceAcceptance:false,publicationAuthorized:false,
     cpuSubmissionScope:'CPU_RENDER_AND_PRESENT_CALL_DURATION_NOT_GPU_EXECUTION_TIME',timing:{...timing}};
   }
   if(!diagnosticReplay){interactiveReady=true;canvas.style.pointerEvents='auto';}

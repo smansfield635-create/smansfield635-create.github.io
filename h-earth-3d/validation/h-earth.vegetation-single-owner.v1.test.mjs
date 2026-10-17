@@ -230,10 +230,64 @@ test('manual public intake proposals cannot render before initialization',async(
  assert.equal(result.rootNode.dataset.run8eReady,'true');assert.equal(result.presents,2);assert.equal(result.wheelEvents.length,0);
 });
 
+// Independent West regression: real intake/navigation, fake DOM and frame clock only.
+const actualIntakeTourRegressionSource=`import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+import {pathToFileURL} from 'node:url';
+import {setImmediate as immediate} from 'node:timers/promises';
+const repo=process.cwd();
+const routePath=repo+'/showroom/globe/h-earth/vegetation-prototype/route.js';
+let now=0,rafId=0,queue=new Map();
+Object.defineProperty(globalThis,'performance',{value:{now:()=>now},configurable:true});
+globalThis.requestAnimationFrame=fn=>{queue.set(++rafId,fn);return rafId;};
+globalThis.cancelAnimationFrame=id=>queue.delete(id);
+globalThis.location={search:'?arrival=approved-four-trees'};
+globalThis.document={hidden:false,addEventListener(){},removeEventListener(){}};
+class Surface {constructor(){this.style={};this.clientWidth=918;this.clientHeight=565;this.listeners=new Map();}addEventListener(t,fn){this.listeners.set(t,fn);}removeEventListener(t){this.listeners.delete(t);}dispatchEvent(event){event.preventDefault=()=>{};this.listeners.get(event.type)?.(event);return true;}setPointerCapture(){}}
+globalThis.HTMLElement=Surface;
+class SyntheticEvent {constructor(type,options){Object.assign(this,{type},options);}}
+globalThis.PointerEvent=SyntheticEvent;globalThis.WheelEvent=SyntheticEvent;
+const {installHEarthRun8ER3D2PointerTouchIntake}=await import(pathToFileURL(repo+'/showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js'));
+const source=fs.readFileSync(routePath,'utf8');
+const a=source.indexOf('async function diagnosticAim('),b=source.indexOf('\\nfunction liveReceipt()',a);
+assert(a>=0&&b>a,'Cannot extract actual route tour functions');
+const functions=source.slice(a,b);
+async function runCase({dt,target,travel,tour,aimSequence,stalled=false}){
+ queue.clear();now=0;const canvas=new Surface();let proposals=0;
+ if(stalled){const dispatch=canvas.dispatchEvent.bind(canvas);canvas.dispatchEvent=event=>event.type==='pointermove'?true:dispatch(event);}
+ const intake=installHEarthRun8ER3D2PointerTouchIntake({surface:canvas,onProposal(){proposals++;}});
+ const context={canvas,intake,PointerEvent,WheelEvent,performance,requestAnimationFrame,Math,Promise,Error,
+ assert:(ok,reason)=>assert(ok,reason),delay:()=>new Promise(resolve=>requestAnimationFrame(resolve)),
+ assertStableObservation(){},snapshot:label=>({label}),observations:[]};
+ vm.createContext(context);vm.runInContext(functions+'\\nthis.aim=diagnosticAim;this.travel=diagnosticTravel;',context);
+ let done=false,error;const operation=async()=>{if(aimSequence){for(const next of aimSequence){await context.aim(next);assert(Math.abs(((next-intake.getNavigationState().yawDegrees+540)%360)-180)<=6);}}else if(tour){for(const point of tour)await context.travel(...point,[]);await context.aim(target);}else if(travel)await context.travel(...travel,[]);else await context.aim(target);};const promise=operation().then(()=>{done=true},e=>{done=true;error=e;});
+ for(let n=0;n<4000&&!done;n++){now+=dt;const batch=[...queue.values()];queue.clear();for(const fn of batch)fn(now);await immediate();}
+ await Promise.race([promise,immediate()]);
+ const receipt=intake.getReceipt(),state=intake.getNavigationState();intake.destroy();
+ assert(done,\`Did not terminate dt=\${dt}\`);if(stalled){assert(error?.message.includes('DIAGNOSTIC_VIEW_AIM_NOT_REACHED'));assert.equal(receipt.counters.wheelEventCount,0,'Failed aiming must not dispatch travel');assert.equal(receipt.activeIntent,'NONE');assert.equal(receipt.counters.pointerDownCount,receipt.counters.pointerUpCount);return {dt,stalled:true,expectedFailure:error.message,pressed:receipt.counters.pointerDownCount,released:receipt.counters.pointerUpCount};}if(error)throw error;
+ assert.equal(receipt.activeIntent,'NONE','Pointer intent must release');
+ assert(receipt.counters.pointerDownCount===receipt.counters.pointerUpCount,'Pointer presses must release');
+ assert(receipt.counters.rejectedNavigationProposalCount===0,'No navigation rejection expected');
+ if(target!==undefined)assert(Math.abs(((target-state.yawDegrees+540)%360)-180)<=6,\`Aim error \${state.yawDegrees}/\${target}\`);
+ if(travel)assert(Math.hypot(state.position.x-travel[0],state.position.z-travel[1])<2,'Travel destination');
+ return {dt,target,travel,pose:state.position,yaw:state.yawDegrees,proposals,frames:receipt.counters.activeIntentFrameCount};
+}
+const results=[];for(const dt of [16,50,150,500])for(const target of [0,95,-95,179,-179])results.push(await runCase({dt,target}));
+for(const dt of [16,150,500])for(const travel of [[-70,-170],[-193,-218]])results.push(await runCase({dt,travel}));
+for(const dt of [16,150,500])results.push(await runCase({dt,tour:[[-70,-170],[-27,-164]],target:95}));
+results.push(await runCase({dt:500,travel:[-70,-170],stalled:true}));
+results.push(await runCase({dt:150,aimSequence:[170,-170,170]}));
+console.log(JSON.stringify({status:'PASS',scope:'Actual pointer intake and navigation, deterministic fake RAF. Procedural/default terrain support; canonical runtime package not initialized. GPU and physical acceptance not established.',cases:results},null,2));
+`;
+
 test('diagnostic view selectors cannot automate the public entrance',async()=>{
  const result=await executeEntrance({search:'?qualification=bank-view-v1'});
  assert.equal(result.rootNode.dataset.run8eReady,'true');assert.equal(result.wheelEvents.length,0);
  assert.equal(result.window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().automaticNavigation,false);
+ const regression=spawnSync(process.execPath,['--input-type=module','-e',actualIntakeTourRegressionSource],{encoding:'utf8',timeout:60000});
+ assert.equal(regression.status,0,regression.stderr||regression.error?.message);
+ const tour=JSON.parse(regression.stdout);assert.equal(tour.status,'PASS');assert.equal(tour.cases.length,31);
 });
 
 // Reuse the established surfaceless GLES compiler setup; owner shaders have no

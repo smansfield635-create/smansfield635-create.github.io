@@ -65,7 +65,7 @@
     },
     {
       "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
-      "sha256": "a1cdd4318f49b2eb491b1a087c09e1dde6ff127c65d98bd2dba9ff8025edaaca"
+      "sha256": "b30eb81d36d7b0dea81ae5f04289030ceda69e71d69ee6e3cfccf52c95002130"
     },
     {
       "path": "h-earth-3d/validation/h-earth.woodland-habitat.v1.test.mjs",
@@ -77,7 +77,7 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
-      "sha256": "b224e775e3ecb83a1adaa87cb406a90be5e38aadf19dded44c338c76e058c121"
+      "sha256": "91c7250fbe262c467e0fcb7a37defd031237e5533a3a6ccc11feb168aa2e4bfa"
     },
     {
       "path": "h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs",

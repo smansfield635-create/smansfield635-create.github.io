@@ -177,22 +177,93 @@ export async function prepareWoodlandSelectionCache(presentation,yieldControl=as
 }
 
 /** A world-anchored nearby presentation, rather than another whole-world survey. */
-export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=async()=>{},onProgress=()=>{},placementExclusion=null,onDiagnostic=null}={}){
+export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=async()=>{},onProgress=()=>{},placementExclusion=null,onDiagnostic=null,onPresentation=null}={}){
  if(typeof visibleSurface?.ground?.sample!=='function'||typeof visibleSurface?.water?.sample!=='function')throw Error('NEARBY_FINE_GRASS_VISIBLE_SURFACE_REQUIRED');
  if(placementExclusion!==null&&typeof placementExclusion!=='function')throw Error('NEARBY_FINE_GRASS_EXCLUSION_INVALID');
  if(onDiagnostic!==null&&typeof onDiagnostic!=='function')throw Error('NEARBY_FINE_GRASS_DIAGNOSTIC_INVALID');
- const observe=onDiagnostic?(type,details)=>{try{onDiagnostic(type,JSON.parse(JSON.stringify(typeof details==='function'?details():details)));}catch{/* Observers cannot change the cache result. */}}:null;
+ if(onPresentation!==null&&typeof onPresentation!=='function')throw Error('NEARBY_FINE_GRASS_PRESENTATION_INVALID');
+ const observe=onDiagnostic?(type,details)=>{try{onDiagnostic(type,JSON.parse(JSON.stringify(typeof details==='function'?details():details)));}catch{/* Diagnostic observers cannot affect construction. */}}:null;
  const spacing=.22,tileMeters=4,maximumRoots=65536;
  const tiles=new Map(),obstacles=pkg.landscapeCoverFootprints??[],trees=pkg.landscapeFloorFootprints??[];
- let lastKey=null,lastPresentation=null,latestRequest=null,worker=null,requestRevision=0;
+ let latestRequest=null,builder=null,publisher=null,pendingPublication=null,requestRevision=0,presentationSequence=0;
+ let cachedRoots=0,peakCachedRoots=0,peakRequestRoots=0,lastPresentation=null,stickyError=null,errorCount=0,failedRevision=null;
+ let completion=null,resolveCompletion=null,rejectCompletion=null,activePublicationRevision=null;
  const tileDistance=(tx,tz,cx,cz)=>Math.hypot(cx-Math.max(tx*4,Math.min(tx*4+4,cx)),cz-Math.max(tz*4,Math.min(tz*4+4,cz)));
+ const fail=(error,revision)=>{stickyError=String(error?.message??error);errorCount++;failedRevision=revision;if(observe)observe('CACHE_ERROR',{requestRevision:revision,message:stickyError,errorCount});if(rejectCompletion&&revision===latestRequest?.revision){rejectCompletion(error);completion=null;resolveCompletion=null;rejectCompletion=null;}};
+ function evict(){
+  const request=latestRequest;if(!request)return;
+  for(const [id,tile] of tiles)if(tileDistance(tile.minX/4,tile.minZ/4,request.cx,request.cz)>request.outerRadius+8){tiles.delete(id);cachedRoots-=tile.roots.length;request.evictedTiles++;request.evictedRoots+=tile.roots.length;}
+  if(cachedRoots>maximumRoots){const ranked=[...tiles.entries()].sort((a,b)=>tileDistance(b[1].minX/4,b[1].minZ/4,request.cx,request.cz)-tileDistance(a[1].minX/4,a[1].minZ/4,request.cx,request.cz)||b[1].minZ-a[1].minZ||b[1].minX-a[1].minX);for(const [id,tile] of ranked){if(cachedRoots<=maximumRoots)break;tiles.delete(id);cachedRoots-=tile.roots.length;request.evictedTiles++;request.evictedRoots+=tile.roots.length;}}
+  peakCachedRoots=Math.max(peakCachedRoots,cachedRoots);
+ }
+ function filteredTile(request,tile){
+  const roots=tile.roots.filter(root=>{const distance=Math.hypot(root.x-request.cx,root.z-request.cz);if(distance<=request.coreRadius)return true;if(distance>=request.outerRadius)return false;const t=(request.outerRadius-distance)/(request.outerRadius-request.coreRadius),weight=t*t*(3-2*t);return hash(Math.round(root.x/spacing),Math.round(root.z/spacing),14)/4294967296<weight;});
+  return Object.freeze({id:tile.id,minX:tile.minX,minZ:tile.minZ,roots:Object.freeze(roots)});
+ }
+ function retainSelected(request,tile){
+  const id=`${tile.minX/4}:${tile.minZ/4}`;if(request.selected.has(id))return;
+  const selected=filteredTile(request,tile),previous=request.provisional.get(id);
+  const count=request.contactCount+selected.roots.length-(previous?.roots.length??0);
+  if(count>maximumRoots)throw Error('NEARBY_FINE_GRASS_ROOT_BUDGET_EXCEEDED:'+count);
+  request.contactCount=count;request.provisional.delete(id);request.selected.set(id,selected);
+  peakRequestRoots=Math.max(peakRequestRoots,request.contactCount);
+ }
+ function seedRequest(request,previous){
+  for(const descriptor of request.requested){const id=`${descriptor.tx}:${descriptor.tz}`;if(tiles.has(id)){retainSelected(request,tiles.get(id));request.reusedTiles++;}}
+  if(!previous)return;
+  const required=new Set(request.requested.map(item=>`${item.tx}:${item.tz}`));
+  for(const tile of previous.tiles){
+   const id=`${tile.minX/4}:${tile.minZ/4}`;if(!required.has(id)||request.selected.has(id))continue;
+   // These are only previously accepted roots, refiltered using the exact new
+   // request density. They are continuity support, not a completed raw tile.
+   const selected=filteredTile(request,tile);if(!selected.roots.length)continue;
+   const count=request.contactCount+selected.roots.length;if(count>maximumRoots)throw Error('NEARBY_FINE_GRASS_ROOT_BUDGET_EXCEEDED:'+count);
+   request.provisional.set(id,selected);request.contactCount=count;
+  }
+  peakRequestRoots=Math.max(peakRequestRoots,request.contactCount);
+ }
+ function snapshot(request){
+  const output=[...request.selected.values(),...request.provisional.values()].filter(tile=>tile.roots.length).sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);
+  const sequence=++presentationSequence,complete=request.selected.size===request.requested.length;
+  const receipt={schema:'H_EARTH_NEARBY_FINE_GRASS_CACHE_v1',key:request.key,requestRevision:request.revision,presentationSequence:sequence,complete,contactCount:request.contactCount,tileCount:output.length,builtTiles:request.builtTiles,reusedTiles:request.reusedTiles,cachedTiles:tiles.size,cachedRoots,maximumRoots,centerX:request.cx,centerZ:request.cz,spacing,coreRadiusMeters:request.coreRadius,outerRadiusMeters:request.outerRadius,elapsedMilliseconds:performance.now()-request.started,rootEncoding:'ACTUAL_FLOAT32_VISIBLE_TRIANGLE_CONTACTS',originalRecordsChanged:false,terrainChanged:false,approvedWoodlandOwnerPreserved:true,evictedTiles:request.evictedTiles,evictedRoots:request.evictedRoots,requestedTileCount:request.requested.length,completedTileCount:request.selected.size,provisionalTileCount:request.provisional.size,stickyError,errorCount,retainedRootBounds:{cache:maximumRoots,currentRequest:maximumRoots,preparingSnapshot:maximumRoots,lastPresentation:maximumRoots,rendererInstalledNearby:maximumRoots,additionalInFlightTiles:1,maximumInFlightTileRoots:484},peakCachedRoots,peakRequestRoots};
+  if(observe)receipt.diagnostic={requestRevision:request.revision,key:request.key,evictedTiles:request.evictedTiles,evictedRoots:request.evictedRoots};
+  Object.freeze(receipt.retainedRootBounds);if(receipt.diagnostic)Object.freeze(receipt.diagnostic);
+  return Object.freeze({tiles:Object.freeze(output),receipt:Object.freeze(receipt)});
+ }
+ function queuePublication(request){
+  if(request!==latestRequest||request.revision===failedRevision)return;
+  const complete=request.selected.size===request.requested.length;
+  if((!onPresentation&&!complete)||(!complete&&request.contactCount===0))return;
+  const publicationVersion=`${request.selected.size}:${request.provisional.size}`;
+  if(request.lastQueuedSize===publicationVersion)return;
+  request.lastQueuedSize=publicationVersion;
+  // One newest marker, not an accumulating queue of whole-world snapshots.
+  pendingPublication=request;
+  if(publisher)return;
+  publisher=(async()=>{
+   while(pendingPublication){
+    const selectedRequest=pendingPublication;pendingPublication=null;
+    if(selectedRequest!==latestRequest||selectedRequest.revision===failedRevision)continue;
+    activePublicationRevision=selectedRequest.revision;
+    const presentation=snapshot(selectedRequest);
+    await prepareWoodlandSelectionCache(presentation,yieldControl);
+    if(selectedRequest!==latestRequest||selectedRequest.revision===failedRevision){if(observe)observe('CACHE_CANCEL',{requestRevision:selectedRequest.revision,currentRequestRevision:requestRevision,stage:'PRESENTATION_PREPARED'});continue;}
+    // New tiles in this SAME revision do not invalidate an already prepared
+    // partial. This serial callback gives the renderer monotonic commits.
+    if(onPresentation)await onPresentation(presentation,Object.freeze({requestRevision:selectedRequest.revision,key:selectedRequest.key,presentationSequence:presentation.receipt.presentationSequence,complete:presentation.receipt.complete}));
+    lastPresentation=presentation;
+    if(selectedRequest!==latestRequest)continue;
+    if(observe)observe(presentation.receipt.complete?'BUILD_COMPLETE':'PARTIAL_BUILD_COMPLETE',()=>({...presentation.receipt,roots:summarizeVegetationRoots((function*(){for(const tile of presentation.tiles)yield* tile.roots;})(),{presentationOwner:'NEARBY'})}));
+    if(presentation.receipt.complete&&resolveCompletion){const resolve=resolveCompletion;completion=null;resolveCompletion=null;rejectCompletion=null;resolve(presentation);}
+   }
+  })().catch(error=>fail(error,activePublicationRevision??requestRevision)).finally(()=>{publisher=null;const next=pendingPublication;pendingPublication=null;if(next&&next.revision!==failedRevision){next.lastQueuedSize=-1;queuePublication(next);}});
+ }
  async function constructTile(tx,tz,revision){
   const roots=[],rejections={};let candidates=0,slice=performance.now();
   const reject=reason=>rejections[reason]=(rejections[reason]??0)+1;
   // Neighboring cells may jitter across a tile boundary. Both tiles examine the
   // apron, but only the world-position owner retains that root, exactly once.
   for(let iz=Math.floor(tz*4/spacing)-1;iz<=Math.ceil((tz*4+4)/spacing)+1;iz++){
-   if(revision!==requestRevision){if(observe)observe('CACHE_CANCEL',{requestRevision:revision,currentRequestRevision:requestRevision,stage:'CONSTRUCT_TILE',tileId:`NEARBY:${tx}:${tz}`});return null;}
    for(let ix=Math.floor(tx*4/spacing)-1;ix<=Math.ceil((tx*4+4)/spacing)+1;ix++){
     const x=f((ix+(hash(ix,iz,10)/4294967296-.5)*.76)*spacing),z=f((iz+(hash(ix,iz,11)/4294967296-.5)*.76)*spacing);
     if(Math.floor(x/4)!==tx||Math.floor(z/4)!==tz)continue;candidates++;
@@ -211,73 +282,47 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
    if(performance.now()-slice>=8){await yieldControl();slice=performance.now();}
   }
   roots.sort((a,b)=>a.seed-b.seed||a.z-b.z||a.x-b.x);
+  for(const root of roots)Object.freeze(root);Object.freeze(roots);
   if(observe)observe('TILE_BUILD_COMPLETE',()=>({requestRevision:revision,tileId:`NEARBY:${tx}:${tz}`,candidates,rejections,roots:summarizeVegetationRoots(roots,{presentationOwner:'NEARBY'})}));
   return {id:`NEARBY:${tx}:${tz}`,minX:tx*4,minZ:tz*4,roots,candidates,rejections};
  }
- async function updateNow(camera,{coreRadiusMeters:coreRadius,outerRadiusMeters:outerRadius},revision){
-  const point=camera?.position??camera;
-  if(!point||![point.x,point.z].every(Number.isFinite))throw Error('NEARBY_FINE_GRASS_CAMERA_INVALID');
-  const cx=Math.floor(point.x/4)*4+2,cz=Math.floor(point.z/4)*4+2,key=`${cx}:${cz}:${coreRadius}:${outerRadius}`;
-  if(key===lastKey)return lastPresentation;
-  const started=performance.now(),requested=[];let builtTiles=0,reusedTiles=0,evictedTiles=0,evictedRoots=0,slice=started;
-  for(const [id,tile] of tiles)if(tileDistance(tile.minX/4,tile.minZ/4,cx,cz)>outerRadius+8){tiles.delete(id);if(observe){evictedTiles++;evictedRoots+=tile.roots.length;}}
-  for(let tz=Math.floor((cz-outerRadius)/4);tz<=Math.floor((cz+outerRadius)/4);tz++)for(let tx=Math.floor((cx-outerRadius)/4);tx<=Math.floor((cx+outerRadius)/4);tx++){
-   const distance=tileDistance(tx,tz,cx,cz);if(distance<=outerRadius)requested.push({tx,tz,distance});
-  }
-  requested.sort((a,b)=>a.distance-b.distance||a.tz-b.tz||a.tx-b.tx);
-  for(const {tx,tz} of requested){
-   if(revision!==requestRevision){if(observe)observe('CACHE_CANCEL',{requestRevision:revision,currentRequestRevision:requestRevision,stage:'REQUESTED_TILES'});return null;}
-   const id=`${tx}:${tz}`;
-   if(tiles.has(id)){reusedTiles++;continue;}
-   const tile=await constructTile(tx,tz,revision);
-   if(!tile||revision!==requestRevision){if(observe)observe('CACHE_CANCEL',{requestRevision:revision,currentRequestRevision:requestRevision,stage:'AFTER_TILE_BUILD'});return null;}
-   tiles.set(id,tile);builtTiles++;
-   onProgress({phase:'NEARBY_FINE_GRASS_TILES',completedTiles:builtTiles+reusedTiles,totalTiles:requested.length,centerX:cx,centerZ:cz});
-   if(performance.now()-slice>=8){await yieldControl();slice=performance.now();}
-  }
-  const output=[];let contacts=0;
-  for(const {tx,tz} of requested){
-   const tile=tiles.get(`${tx}:${tz}`),roots=tile.roots.filter(root=>{
-    const distance=Math.hypot(root.x-cx,root.z-cz);
-    if(distance<=coreRadius)return true;if(distance>=outerRadius)return false;
-    const t=(outerRadius-distance)/(outerRadius-coreRadius),weight=t*t*(3-2*t);
-    return hash(Math.round(root.x/spacing),Math.round(root.z/spacing),14)/4294967296<weight;
-   });
-   if(roots.length){output.push({id:tile.id,minX:tile.minX,minZ:tile.minZ,roots});contacts+=roots.length;}
-  }
-  // The supported circular lattice normally fits without truncation. The cap
-  // is a deterministic fail-closed budget, never a tile-order clipping rule.
-  if(contacts>maximumRoots)throw Error('NEARBY_FINE_GRASS_ROOT_BUDGET_EXCEEDED:'+contacts);
-  output.sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);
-  const presentation={tiles:output};await prepareWoodlandSelectionCache(presentation,yieldControl);
-  if(revision!==requestRevision){if(observe)observe('CACHE_CANCEL',{requestRevision:revision,currentRequestRevision:requestRevision,stage:'AFTER_SELECTION_CACHE'});return null;}
-  // Bound retained tile data too. Eviction changes work cost only; regenerated
-  // absolute-grid roots are byte-identical on an A-B-A walk.
-  let cachedRoots=[...tiles.values()].reduce((n,t)=>n+t.roots.length,0);
-  if(cachedRoots>maximumRoots){
-   const eviction=[...tiles.entries()].sort((a,b)=>tileDistance(b[1].minX/4,b[1].minZ/4,cx,cz)-tileDistance(a[1].minX/4,a[1].minZ/4,cx,cz)||b[1].minZ-a[1].minZ||b[1].minX-a[1].minX);
-   for(const [id,tile] of eviction){if(cachedRoots<=maximumRoots)break;tiles.delete(id);cachedRoots-=tile.roots.length;if(observe){evictedTiles++;evictedRoots+=tile.roots.length;}}
-  }
-  presentation.receipt={schema:'H_EARTH_NEARBY_FINE_GRASS_CACHE_v1',contactCount:contacts,tileCount:output.length,builtTiles,reusedTiles,cachedTiles:tiles.size,cachedRoots,maximumRoots,centerX:cx,centerZ:cz,spacing,coreRadiusMeters:coreRadius,outerRadiusMeters:outerRadius,elapsedMilliseconds:performance.now()-started,rootEncoding:'ACTUAL_FLOAT32_VISIBLE_TRIANGLE_CONTACTS',originalRecordsChanged:false,terrainChanged:false,approvedWoodlandOwnerPreserved:true};
-  if(observe){presentation.receipt.diagnostic={requestRevision:revision,key,evictedTiles,evictedRoots};observe('BUILD_COMPLETE',()=>({...presentation.receipt,requestRevision:revision,key,evictedTiles,evictedRoots,roots:summarizeVegetationRoots((function*(){for(const tile of output)yield* tile.roots;})(),{presentationOwner:'NEARBY'})}));}
-  lastKey=key;lastPresentation=presentation;return presentation;
+ function startBuilder(){
+  if(builder)return;
+  builder=(async()=>{
+   while(latestRequest&&latestRequest.revision!==failedRevision){
+    const request=latestRequest;
+    // Reuse all completed world tiles immediately. Each request records its
+    // own filtered subset, so raw cache eviction cannot cause a rebuild loop.
+    for(const descriptor of request.requested){const id=`${descriptor.tx}:${descriptor.tz}`;if(!request.selected.has(id)&&tiles.has(id)){retainSelected(request,tiles.get(id));request.reusedTiles++;}}
+    queuePublication(request);
+    const next=request.requested.find(tile=>!request.selected.has(`${tile.tx}:${tile.tz}`));
+    if(!next)return;
+    const tile=await constructTile(next.tx,next.tz,request.revision);
+    const id=`${next.tx}:${next.tz}`;tiles.set(id,tile);cachedRoots+=tile.roots.length;
+    // Tile construction is absolute-world work, independent of old camera
+    // revision. Preserve it, then prioritize the next tile from latest input.
+    const current=latestRequest;evict();
+    if(current.requested.some(item=>item.tx===next.tx&&item.tz===next.tz)){retainSelected(current,tile);current.builtTiles++;}
+    queuePublication(current);
+    onProgress({phase:'NEARBY_FINE_GRASS_TILES',completedTiles:current.selected.size,totalTiles:current.requested.length,centerX:current.cx,centerZ:current.cz});
+    await yieldControl();
+   }
+  })().catch(error=>fail(error,latestRequest?.revision??requestRevision)).finally(()=>{builder=null;const request=latestRequest;if(request&&request.revision!==failedRevision&&request.selected.size<request.requested.length)startBuilder();});
  }
  return Object.freeze({update(camera,{coreRadiusMeters=24,outerRadiusMeters=32}={}){
   if(![coreRadiusMeters,outerRadiusMeters].every(Number.isFinite)||coreRadiusMeters<=0||coreRadiusMeters>=outerRadiusMeters||outerRadiusMeters>32)throw Error('NEARBY_FINE_GRASS_RADIUS_INVALID');
-  const point=camera?.position??camera;
-  if(!point||![point.x,point.z].every(Number.isFinite))throw Error('NEARBY_FINE_GRASS_CAMERA_INVALID');
-  if(worker&&latestRequest.options.coreRadiusMeters===coreRadiusMeters&&latestRequest.options.outerRadiusMeters===outerRadiusMeters&&Math.floor(latestRequest.camera.x/4)===Math.floor(point.x/4)&&Math.floor(latestRequest.camera.z/4)===Math.floor(point.z/4))return worker;
-  if(observe)observe('CACHE_REQUEST',{previousRequestRevision:requestRevision,requestRevision:requestRevision+1,camera:{x:point.x,z:point.z},coreRadiusMeters,outerRadiusMeters,pendingWorker:!!worker});
-  latestRequest={camera:{x:point.x,z:point.z},options:{coreRadiusMeters,outerRadiusMeters},revision:++requestRevision};
-  if(!worker)worker=(async()=>{
-   try{
-    // All pending callers receive the newest completed presentation. A newer
-    // camera request cancels obsolete work at the next bounded tile/row yield.
-    while(true){const request=latestRequest,result=await updateNow(request.camera,request.options,request.revision);if(request.revision===requestRevision)return result;}
-   }catch(error){if(observe)observe('CACHE_ERROR',{requestRevision,message:String(error?.message??error)});throw error;}finally{worker=null;}
-  })();
-  return worker;
- }});
+  const point=camera?.position??camera;if(!point||![point.x,point.z].every(Number.isFinite))throw Error('NEARBY_FINE_GRASS_CAMERA_INVALID');
+  const cx=Math.floor(point.x/4)*4+2,cz=Math.floor(point.z/4)*4+2,key=`${cx}:${cz}:${coreRadiusMeters}:${outerRadiusMeters}`;
+  if(latestRequest?.key===key&&latestRequest.revision!==failedRevision){if(completion)return completion;if(lastPresentation?.receipt.key===key&&lastPresentation.receipt.complete)return Promise.resolve(lastPresentation);}
+  if(!completion)completion=new Promise((resolve,reject)=>{resolveCompletion=resolve;rejectCompletion=reject;});
+  const result=completion;
+  if(observe)observe('CACHE_REQUEST',{previousRequestRevision:requestRevision,requestRevision:requestRevision+1,camera:{x:point.x,z:point.z},coreRadiusMeters,outerRadiusMeters,pendingWorker:!!builder});
+  const requested=[];for(let tz=Math.floor((cz-outerRadiusMeters)/4);tz<=Math.floor((cz+outerRadiusMeters)/4);tz++)for(let tx=Math.floor((cx-outerRadiusMeters)/4);tx<=Math.floor((cx+outerRadiusMeters)/4);tx++){const distance=tileDistance(tx,tz,cx,cz);if(distance<=outerRadiusMeters)requested.push({tx,tz,distance});}requested.sort((a,b)=>a.distance-b.distance||a.tz-b.tz||a.tx-b.tx);
+  if(latestRequest){latestRequest.selected.clear();latestRequest.provisional.clear();}
+  latestRequest={revision:++requestRevision,key,cx,cz,coreRadius:coreRadiusMeters,outerRadius:outerRadiusMeters,requested,selected:new Map(),provisional:new Map(),contactCount:0,builtTiles:0,reusedTiles:0,evictedTiles:0,evictedRoots:0,started:performance.now()};
+  try{seedRequest(latestRequest,lastPresentation);evict();queuePublication(latestRequest);startBuilder();}catch(error){fail(error,latestRequest.revision);}
+  return result;
+ },getReceipt(){return{requestRevision,key:latestRequest?.key??null,cachedTiles:tiles.size,cachedRoots,maximumRoots,peakCachedRoots,peakRequestRoots,stickyError,errorCount,building:!!builder,publishing:!!publisher,lastPresentation:lastPresentation?.receipt??null};}});
 }
 
 export function selectWoodlandFineGrass(presentation,camera,{maximumParents=1024}={}){

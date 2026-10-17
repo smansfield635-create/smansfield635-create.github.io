@@ -374,6 +374,12 @@ function showVegetationPreparation(progress){
   if(vegetationLoadingFailed)return;
   window.dispatchEvent(new CustomEvent('h-earth-vegetation-progress',{detail:progress}));
   if(progress.phase==='NEARBY_FINE_GRASS_FAILED')throw Error(progress.message);
+  if(progress.phase==='NEARBY_FINE_GRASS_PARTIAL_GPU_READY'){
+    // Completed tiles must reach a frame even while navigation is stationary.
+    // Startup readiness still waits for its existing completed-request gate.
+    binding.presentWoodlandFineGrassPreviewFrame();
+    return;
+  }
   if(progress.phase==='NEARBY_FINE_GRASS_GPU_READY'){
     const draw=binding.presentWoodlandFineGrassPreviewFrame();
     root.dataset.nearbyFineGrassReady='true';

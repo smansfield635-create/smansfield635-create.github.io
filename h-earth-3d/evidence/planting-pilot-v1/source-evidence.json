@@ -142,5 +142,61 @@
       "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "81289cc2efbb4bf8e63f89003b50fd2d082e8f4b5be4060998d142a9711a5fd0"
     },
     "nextAction": "Execute unchanged registered H_EARTH_NEUTRAL_EXACT_HEAD_RUN against immutable candidate; inspect nested replay result and trace, not generic READY alone."
+  },
+  "cachePublicationRepair": {
+    "schema": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_CANDIDATE_v1",
+    "operationId": "H_EARTH_NEARBY_CACHE_PUBLICATION_REPAIR_20261017_001",
+    "generation": 2781,
+    "admissionCommit": "8deba4015bef3a5f8d4a685d881b5326422cce6a",
+    "sourceCommentId": 6227502647,
+    "productionBaseline": "fac9d64c29cfc8c55637a15905d89ca0977293e0",
+    "diagnosticBaseline": "43879859581391b6d1def1a4c1f8fd288f715980",
+    "diagnosticObservation": {
+      "runId": 38986460499,
+      "artifactId": 12083308060,
+      "artifactZipSha256": "47a807b012ed7eebde4742806281b54254542f3fb55d2fda0c2ee5a33071d85d",
+      "finding": "Instrumented startup replay: completed nonempty world tiles did not reach installation while requests were canceled by camera movement",
+      "distinctCanceledRequests": 16,
+      "nonemptyTileBuildEvents": 56,
+      "nonemptyFineInstallations": 0,
+      "visiblePixelsVerified": false
+    },
+    "changes": [
+      "Complete and cache one world tile independently of moving camera requests; reprioritize between tiles",
+      "Serialize and coalesce immutable partial presentations independently of tile construction; complete update waits for final callback",
+      "Seed cached overlap plus exact-density-filtered provisional previous presentation roots; replace each tile atomically",
+      "Serialize renderer merging, reject obsolete request keys immediately before installation, retain empty-pending coverage",
+      "Submit incremental progress frames while stationary without advancing existing initial-completion readiness gate"
+    ],
+    "unchanged": [
+      "Placement eligibility, absolute .22m lattice, seeds, root dimensions, slope/material/water/structure/tree exclusions",
+      "Core/outer radius defaults24/32 and initial8/12;65536root cap; existing selector/GPU budgets",
+      "World, terrain, water, trees, shaders, pilot layout and global coarse representation"
+    ],
+    "checks": {
+      "fixtures": "Actual source with explicit synthetic external terrain/material dependencies; targeted scheduler/identity/race tests. Exact canonical CPU check skips if sparse world gzip absent.",
+      "runtimeQualification": "PENDING_EXACT_HEAD_REGISTERED_REPLAY",
+      "runtimeReceiptLocation": "Issue6426 continuation will bind immutable candidate, actual run, artifact and measured comparison"
+    },
+    "limits": {
+      "visiblePixelsVerified": false,
+      "shorelineAgreementVerified": false,
+      "zoneSeamsRepaired": false,
+      "permanentGlobalCoverageEstablished": false,
+      "physicalDeviceAcceptance": false,
+      "timingPerturbedByDiagnostics": true
+    },
+    "publication": {
+      "merged": false,
+      "deployed": false,
+      "published": false,
+      "authorized": false
+    },
+    "sourceSha256": {
+      "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "fd5522767e2424ac38ea4623be46fe6eda841acbf3167f152e1aff54499ad746",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "5955a6b272869c056dde707eadc3bbcffcb3646542ad179eeb966ab20a3f82b3",
+      "showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js": "684e5bb14dc6da31d8104be3ac7b2e8547341fe401091104ac45a5523515bce5",
+      "h-earth-3d/validation/h-earth.planting-pilot.v1.test.mjs": "c722547c088b4312db0f65be7bf7ba1b202e2706d5145b08aa9b24395c8176e7"
+    }
   }
 }

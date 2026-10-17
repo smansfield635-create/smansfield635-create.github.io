@@ -182,3 +182,138 @@ test('diagnostic replay records actual achieved positions and never infers visua
   assert.equal(result.initial.renderFrameCallCount,1);assert.equal(result.final.renderFrameCallCount,3);assert.equal(result.cacheCellTransitions,2);assert.equal(result.returnDistanceMeters,0);assert.equal(result.movementObserved,true);assert.equal(result.visiblePixelsVerified,false);assert.equal(result.physicalDeviceAcceptance,false);assert.equal(result.exactOwnerVideoRouteReproduced,false);
  }finally{if(oldWindow===undefined)delete globalThis.window;else globalThis.window=oldWindow;if(oldWheel===undefined)delete globalThis.WheelEvent;else globalThis.WheelEvent=oldWheel;}
 });
+
+
+// Proposed cache scheduler regressions: synthetic dependencies, not pixel proof.
+{
+const progressiveLegacyCacheSource = "export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=async()=>{},onProgress=()=>{},placementExclusion=null}={}){\n if(typeof visibleSurface?.ground?.sample!=='function'||typeof visibleSurface?.water?.sample!=='function')throw Error('NEARBY_FINE_GRASS_VISIBLE_SURFACE_REQUIRED');\n if(placementExclusion!==null&&typeof placementExclusion!=='function')throw Error('NEARBY_FINE_GRASS_EXCLUSION_INVALID');\n const spacing=.22,tileMeters=4,maximumRoots=65536;\n const tiles=new Map(),obstacles=pkg.landscapeCoverFootprints??[],trees=pkg.landscapeFloorFootprints??[];\n let lastKey=null,lastPresentation=null,latestRequest=null,worker=null,requestRevision=0;\n const tileDistance=(tx,tz,cx,cz)=>Math.hypot(cx-Math.max(tx*4,Math.min(tx*4+4,cx)),cz-Math.max(tz*4,Math.min(tz*4+4,cz)));\n async function constructTile(tx,tz,revision){\n  const roots=[],rejections={};let candidates=0,slice=performance.now();\n  const reject=reason=>rejections[reason]=(rejections[reason]??0)+1;\n  // Neighboring cells may jitter across a tile boundary. Both tiles examine the\n  // apron, but only the world-position owner retains that root, exactly once.\n  for(let iz=Math.floor(tz*4/spacing)-1;iz<=Math.ceil((tz*4+4)/spacing)+1;iz++){\n   if(revision!==requestRevision)return null;\n   for(let ix=Math.floor(tx*4/spacing)-1;ix<=Math.ceil((tx*4+4)/spacing)+1;ix++){\n    const x=f((ix+(hash(ix,iz,10)/4294967296-.5)*.76)*spacing),z=f((iz+(hash(ix,iz,11)/4294967296-.5)*.76)*spacing);\n    if(Math.floor(x/4)!==tx||Math.floor(z/4)!==tz)continue;candidates++;\n    if(placementExclusion?.(x,z)){reject('SHARED_PILOT_OWNER');continue;}\n    const s=visibleSurface.ground.sample(x,z);\n    if(!s){reject('NO_VISIBLE_TERRAIN');continue;}\n    if(isWoodlandFineGrassPoint(x,s.y,z)){reject('APPROVED_WOODLAND_OWNER');continue;}\n    const water=visibleSurface.water.sample(x,z);\n    if(water&&s.y<=water.y+.01){reject('RENDERED_WATER');continue;}\n    const a=inverseHEarthGroundCoverPoint(x,s.y,z),m=materialAt(a.x,a.z);\n    if(m?.valid!==true||s.slope>.35||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)){reject('MATERIAL_OR_SLOPE');continue;}\n    if(!woodlandGrassClear(a.x,a.z)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.03)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.10)){reject('PROTECTED_FOOTPRINT');continue;}\n    roots.push({x,y:s.y,z,angle:f(hash(ix,iz,12)/4294967296*Math.PI*2),seed:hash(ix,iz,13),triangleId:s.triangleId,slope:s.slope,owner:s.owner});\n    if((candidates&63)===0&&performance.now()-slice>=8){await yieldControl();slice=performance.now();}\n   }\n   if(performance.now()-slice>=8){await yieldControl();slice=performance.now();}\n  }\n  roots.sort((a,b)=>a.seed-b.seed||a.z-b.z||a.x-b.x);\n  return {id:`NEARBY:${tx}:${tz}`,minX:tx*4,minZ:tz*4,roots,candidates,rejections};\n }\n async function updateNow(camera,{coreRadiusMeters:coreRadius,outerRadiusMeters:outerRadius},revision){\n  const point=camera?.position??camera;\n  if(!point||![point.x,point.z].every(Number.isFinite))throw Error('NEARBY_FINE_GRASS_CAMERA_INVALID');\n  const cx=Math.floor(point.x/4)*4+2,cz=Math.floor(point.z/4)*4+2,key=`${cx}:${cz}:${coreRadius}:${outerRadius}`;\n  if(key===lastKey)return lastPresentation;\n  const started=performance.now(),requested=[];let builtTiles=0,reusedTiles=0,slice=started;\n  for(const [id,tile] of tiles)if(tileDistance(tile.minX/4,tile.minZ/4,cx,cz)>outerRadius+8)tiles.delete(id);\n  for(let tz=Math.floor((cz-outerRadius)/4);tz<=Math.floor((cz+outerRadius)/4);tz++)for(let tx=Math.floor((cx-outerRadius)/4);tx<=Math.floor((cx+outerRadius)/4);tx++){\n   const distance=tileDistance(tx,tz,cx,cz);if(distance<=outerRadius)requested.push({tx,tz,distance});\n  }\n  requested.sort((a,b)=>a.distance-b.distance||a.tz-b.tz||a.tx-b.tx);\n  for(const {tx,tz} of requested){\n   if(revision!==requestRevision)return null;\n   const id=`${tx}:${tz}`;\n   if(tiles.has(id)){reusedTiles++;continue;}\n   const tile=await constructTile(tx,tz,revision);\n   if(!tile||revision!==requestRevision)return null;\n   tiles.set(id,tile);builtTiles++;\n   onProgress({phase:'NEARBY_FINE_GRASS_TILES',completedTiles:builtTiles+reusedTiles,totalTiles:requested.length,centerX:cx,centerZ:cz});\n   if(performance.now()-slice>=8){await yieldControl();slice=performance.now();}\n  }\n  const output=[];let contacts=0;\n  for(const {tx,tz} of requested){\n   const tile=tiles.get(`${tx}:${tz}`),roots=tile.roots.filter(root=>{\n    const distance=Math.hypot(root.x-cx,root.z-cz);\n    if(distance<=coreRadius)return true;if(distance>=outerRadius)return false;\n    const t=(outerRadius-distance)/(outerRadius-coreRadius),weight=t*t*(3-2*t);\n    return hash(Math.round(root.x/spacing),Math.round(root.z/spacing),14)/4294967296<weight;\n   });\n   if(roots.length){output.push({id:tile.id,minX:tile.minX,minZ:tile.minZ,roots});contacts+=roots.length;}\n  }\n  // The supported circular lattice normally fits without truncation. The cap\n  // is a deterministic fail-closed budget, never a tile-order clipping rule.\n  if(contacts>maximumRoots)throw Error('NEARBY_FINE_GRASS_ROOT_BUDGET_EXCEEDED:'+contacts);\n  output.sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);\n  const presentation={tiles:output};await prepareWoodlandSelectionCache(presentation,yieldControl);\n  if(revision!==requestRevision)return null;\n  // Bound retained tile data too. Eviction changes work cost only; regenerated\n  // absolute-grid roots are byte-identical on an A-B-A walk.\n  let cachedRoots=[...tiles.values()].reduce((n,t)=>n+t.roots.length,0);\n  if(cachedRoots>maximumRoots){\n   const eviction=[...tiles.entries()].sort((a,b)=>tileDistance(b[1].minX/4,b[1].minZ/4,cx,cz)-tileDistance(a[1].minX/4,a[1].minZ/4,cx,cz)||b[1].minZ-a[1].minZ||b[1].minX-a[1].minX);\n   for(const [id,tile] of eviction){if(cachedRoots<=maximumRoots)break;tiles.delete(id);cachedRoots-=tile.roots.length;}\n  }\n  presentation.receipt={schema:'H_EARTH_NEARBY_FINE_GRASS_CACHE_v1',contactCount:contacts,tileCount:output.length,builtTiles,reusedTiles,cachedTiles:tiles.size,cachedRoots,maximumRoots,centerX:cx,centerZ:cz,spacing,coreRadiusMeters:coreRadius,outerRadiusMeters:outerRadius,elapsedMilliseconds:performance.now()-started,rootEncoding:'ACTUAL_FLOAT32_VISIBLE_TRIANGLE_CONTACTS',originalRecordsChanged:false,terrainChanged:false,approvedWoodlandOwnerPreserved:true};\n  lastKey=key;lastPresentation=presentation;return presentation;\n }\n return Object.freeze({update(camera,{coreRadiusMeters=24,outerRadiusMeters=32}={}){\n  if(![coreRadiusMeters,outerRadiusMeters].every(Number.isFinite)||coreRadiusMeters<=0||coreRadiusMeters>=outerRadiusMeters||outerRadiusMeters>32)throw Error('NEARBY_FINE_GRASS_RADIUS_INVALID');\n  const point=camera?.position??camera;\n  if(!point||![point.x,point.z].every(Number.isFinite))throw Error('NEARBY_FINE_GRASS_CAMERA_INVALID');\n  if(worker&&latestRequest.options.coreRadiusMeters===coreRadiusMeters&&latestRequest.options.outerRadiusMeters===outerRadiusMeters&&Math.floor(latestRequest.camera.x/4)===Math.floor(point.x/4)&&Math.floor(latestRequest.camera.z/4)===Math.floor(point.z/4))return worker;\n  latestRequest={camera:{x:point.x,z:point.z},options:{coreRadiusMeters,outerRadiusMeters},revision:++requestRevision};\n  if(!worker)worker=(async()=>{\n   try{\n    // All pending callers receive the newest completed presentation. A newer\n    // camera request cancels obsolete work at the next bounded tile/row yield.\n    while(true){const request=latestRequest,result=await updateNow(request.camera,request.options,request.revision);if(request.revision===requestRevision)return result;}\n   }finally{worker=null;}\n  })();\n  return worker;\n }});\n}\n\n";
+async function loadProgressiveCacheFixture(legacy=false){
+ let source=await readFile(new URL('../../showroom/globe/h-earth/render/woodland-fine-grass.v1.js',import.meta.url),'utf8');
+ if(legacy){const first=source.indexOf('export function createNearbyFineGrassCache('),last=source.indexOf('export function selectWoodlandFineGrass(');assert.ok(first>=0&&last>first);source=source.slice(0,first)+progressiveLegacyCacheSource+source.slice(last);}
+ const dependencies=`let fixtureClock=0;const performance={now:()=>++fixtureClock};
+ const inverseHEarthGroundCoverPoint=(x,y,z)=>({x,z});
+ const materialAt=()=>({valid:true,surfaceClass:'COASTAL_SOIL',soilDepth:1,shorelineDistance:40});
+ const far={minX:10000,maxX:10001,minZ:10000,maxZ:10001};
+ const estate={manorCore:far,gardens:far,outbuildingProposal:far,acceptedEnvelope:far,footRoute:[],footRouteRadius:1};
+ const oasis=far;const sampleHEarthGen311PlacementStructureDisposition=()=>({hardExclusions:[],planningHolds:[]});\n`;
+ return import('data:text/javascript;base64,'+Buffer.from(dependencies+source.replace(/^import[^\n]+\n/gm,'')).toString('base64'));
+}
+const pkg={landscapeCoverFootprints:[],landscapeFloorFootprints:[]};
+const a={x:200,z:-200},b={x:204,z:-200},options={coreRadiusMeters:8,outerRadiusMeters:12};
+function progressiveSurface(onSample=()=>{}){return{ground:{sample(x,z){onSample(x,z);return{y:0,slope:0,triangleId:7,owner:'CANONICAL_VISIBLE_TERRAIN'};}},water:{sample:()=>null}};}
+function progressiveRoots(p){return p.tiles.flatMap(t=>t.roots);}
+function progressiveSignature(p){return p.tiles.map(t=>[t.id,t.roots.map(r=>[r.x,r.y,r.z,r.angle,r.seed,r.triangleId,r.slope,r.owner])]);}
+function checkProgressiveSnapshot(p,meta){
+ assert.ok(progressiveRoots(p).length>0,'Never publish an empty progressive replacement');
+ for(const key of ['requestRevision','key','presentationSequence','complete'])assert.equal(p.receipt[key],meta[key],key+' receipt/callback mismatch');
+ assert.equal(typeof meta.complete,'boolean');assert.ok(Number.isSafeInteger(meta.presentationSequence)&&meta.presentationSequence>0);
+ const seen=new Set();for(const root of progressiveRoots(p)){const id=root.x+':'+root.z;assert.equal(seen.has(id),false,'Duplicate world root');seen.add(id);}
+}
+test('publishes coherent nonempty partial data before settled completion',async()=>{
+ const {createNearbyFineGrassCache}=await loadProgressiveCacheFixture(),seen=[];let finished=false;
+ const cache=createNearbyFineGrassCache(pkg,{visibleSurface:progressiveSurface(),onPresentation(p,m){checkProgressiveSnapshot(p,m);assert.equal(finished,false);seen.push({p,m,progressiveSignature:progressiveSignature(p)});}});
+ const final=await cache.update(a,options);finished=true;
+ assert.ok(seen.some(s=>s.m.complete===false),'At least one bounded partial snapshot must precede completion');
+ assert.equal(seen.at(-1).m.complete,true);assert.deepEqual(progressiveSignature(seen.at(-1).p),progressiveSignature(final));
+ for(let i=1;i<seen.length;i++)assert.ok(seen[i].m.presentationSequence>seen[i-1].m.presentationSequence);
+ for(const old of seen)assert.deepEqual(progressiveSignature(old.p),old.progressiveSignature,'Published root arrays remain unchanged after later work');
+});
+test('camera movement preserves in-flight tile work and publishes while moving',async()=>{
+ const {createNearbyFineGrassCache}=await loadProgressiveCacheFixture(),calls=new Map(),published=[];let moved=false,second,cache;
+ cache=createNearbyFineGrassCache(pkg,{visibleSurface:progressiveSurface((x,z)=>{const id=x+':'+z;calls.set(id,(calls.get(id)??0)+1);}),yieldControl:async()=>{if(!moved){moved=true;second=cache.update(b,options);}},onPresentation(p,m){checkProgressiveSnapshot(p,m);published.push({p,m});}});
+ const first=cache.update(a,options),final=await first;await second;
+ assert.equal(moved,true);assert.ok(published.some(s=>s.m.requestRevision>=2),'Latest moving request publishes');
+ // A and B overlap the camera-nearest started tile. Completing tiles independently
+ // of request revision avoids resampling any contact in that retained tile.
+ const retained=progressiveRoots(final).filter(r=>Math.floor(r.x/4)===50&&Math.floor(r.z/4)===-50);
+ assert.ok(retained.length>0);for(const r of retained)assert.equal(calls.get(r.x+':'+r.z),1,'Camera revision must not restart a retained tile');
+ const sequences=published.map(s=>s.m.presentationSequence);assert.equal(new Set(sequences).size,sequences.length);
+});
+test('settled roots and selected GPU pixels match pre-repair algorithm A-B-A',async()=>{
+ const current=await loadProgressiveCacheFixture(),prior=await loadProgressiveCacheFixture(true),seen=[];
+ const fixed=current.createNearbyFineGrassCache(pkg,{visibleSurface:progressiveSurface(),onPresentation(p,m){checkProgressiveSnapshot(p,m);}}),old=prior.createNearbyFineGrassCache(pkg,{visibleSurface:progressiveSurface()});
+ for(const camera of [a,b,a]){
+  const [actual,expected]=await Promise.all([fixed.update(camera,options),old.update(camera,options)]);
+  assert.deepEqual(progressiveSignature(actual),progressiveSignature(expected),'Settled eligibility, root IDs and geometry remain equivalent');
+  const sa=current.selectWoodlandFineGrass(actual,camera),sb=prior.selectWoodlandFineGrass(expected,camera);
+  assert.deepEqual(sa.pixels,sb.pixels);assert.deepEqual(sa.groups,sb.groups);assert.equal(sa.contactCount,sb.contactCount);
+  assert.equal(actual.receipt.complete,true);seen.push(progressiveSignature(actual));
+ }
+ assert.deepEqual(seen[0],seen[2]);
+});
+
+test('async partial callback never blocks tile construction and final callback precedes settlement',async()=>{
+ const {createNearbyFineGrassCache}=await loadProgressiveCacheFixture();
+ let release,first=true,callbacks=0,settled=false;
+ const held=new Promise(resolve=>{release=resolve;});
+ const cache=createNearbyFineGrassCache(pkg,{visibleSurface:progressiveSurface(),yieldControl:async()=>{},async onPresentation(p,m){
+  checkProgressiveSnapshot(p,m);assert.equal(Object.isFrozen(p),true);assert.equal(Object.isFrozen(p.tiles),true);assert.equal(Object.isFrozen(p.receipt),true);
+  assert.equal(settled,false,'update resolves after the final callback');callbacks++;
+  if(first){first=false;await held;}
+ }});
+ const done=cache.update(a,{coreRadiusMeters:2,outerRadiusMeters:4}).then(value=>{settled=true;return value;});
+ for(let i=0;i<25000;i++)await Promise.resolve();
+ assert.equal(first,false,'A ready partial callback started');assert.equal(cache.getReceipt().building,false,'The builder finishes while the first callback remains blocked');assert.equal(settled,false);
+ release();const final=await done;assert.equal(final.receipt.complete,true);assert.ok(callbacks>=2);
+});
+test('presentation callback failures reject completion and remain sticky without destroying cached tiles',async()=>{
+ const {createNearbyFineGrassCache}=await loadProgressiveCacheFixture();
+ let shouldThrow=true;
+ const cache=createNearbyFineGrassCache(pkg,{visibleSurface:progressiveSurface(),yieldControl:async()=>{},onPresentation(){if(shouldThrow)throw Error('FIXTURE_PRESENTATION_CALLBACK_FAILURE');}});
+ await assert.rejects(cache.update(a,{coreRadiusMeters:2,outerRadiusMeters:4}),/FIXTURE_PRESENTATION_CALLBACK_FAILURE/);
+ const failed=cache.getReceipt();assert.match(failed.stickyError,/FIXTURE_PRESENTATION_CALLBACK_FAILURE/);assert.ok(failed.errorCount>=1);assert.ok(failed.cachedRoots>0);assert.ok(failed.cachedRoots<=65536);
+ shouldThrow=false;const recovered=await cache.update(b,{coreRadiusMeters:2,outerRadiusMeters:4});
+ assert.equal(recovered.receipt.complete,true);assert.match(cache.getReceipt().stickyError,/FIXTURE_PRESENTATION_CALLBACK_FAILURE/,'Later success must preserve the earlier error');
+});
+test('world tile cache stays bounded at each publication and completion while traversing full radius',async()=>{
+ const {createNearbyFineGrassCache}=await loadProgressiveCacheFixture();let cache,progressChecks=0;
+ cache=createNearbyFineGrassCache(pkg,{visibleSurface:progressiveSurface(),yieldControl:async()=>{},onProgress(){progressChecks++;assert.ok(cache.getReceipt().cachedRoots<=65536,'Cache bound holds immediately after tile insertion');}});
+ for(const camera of [a,{x:260,z:-200},a]){
+  const p=await cache.update(camera);assert.equal(p.receipt.complete,true);assert.ok(p.receipt.contactCount<=65536);assert.ok(p.receipt.cachedRoots<=65536);assert.ok(p.receipt.peakCachedRoots<=65536);assert.ok(p.receipt.peakRequestRoots<=65536);
+  assert.deepEqual(p.receipt.retainedRootBounds,{cache:65536,currentRequest:65536,preparingSnapshot:65536,lastPresentation:65536,rendererInstalledNearby:65536,additionalInFlightTiles:1,maximumInFlightTileRoots:484});
+ }
+ assert.ok(progressChecks>0);
+});
+
+test('evicted raw tiles retain every still-eligible installed root in progressive overlap',async()=>{
+ const current=await loadProgressiveCacheFixture(),prior=await loadProgressiveCacheFixture(true);
+ let observe=false,partialCount=0,provisionalSeen=false,required;
+ const identity=r=>`${r.x}:${r.z}`;
+ const cache=current.createNearbyFineGrassCache(pkg,{visibleSurface:progressiveSurface(),yieldControl:async()=>{},onPresentation(p,m){
+  if(!observe||m.complete)return;partialCount++;provisionalSeen ||= p.receipt.provisionalTileCount>0;
+  const present=new Set(progressiveRoots(p).map(identity));for(const id of required)assert.ok(present.has(id),'Still-eligible installed root lost during partial replacement: '+id);
+ }});
+ const initial=await cache.update(a),legacy=prior.createNearbyFineGrassCache(pkg,{visibleSurface:progressiveSurface()});
+ const expected=await legacy.update(b),eligible=new Set(progressiveRoots(expected).map(identity));
+ required=new Set(progressiveRoots(initial).map(identity).filter(id=>eligible.has(id)));assert.ok(required.size>10000);
+ observe=true;const final=await cache.update(b);
+ assert.ok(partialCount>0);assert.ok(provisionalSeen,'Full-radius raw-cache eviction must exercise provisional retained support');
+ assert.deepEqual(progressiveSignature(final),progressiveSignature(expected));assert.equal(final.receipt.provisionalTileCount,0);
+});
+
+async function createActualMergeWorkerFixture(){
+ const source=await readFile(new URL('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const start=source.indexOf('let mergeWorker=null,mergePending=false;'),end=source.indexOf('resources.mergeFinePresentation=mergeFinePresentation;',start);
+ assert.ok(start>=0&&end>start,'Actual production merge worker must be extracted');
+ const worker=source.slice(start,end);
+ return Function(`const resources={woodlandFineGrass:{id:'PRIOR'}},vegetationTrace=null;let woodlandFinePresentation=null,nearbyFinePresentation=null,nearbyFineDesiredKey=null;const pending=[],installed=[];
+ const yieldToBrowserPaint=async()=>{};
+ const prepareWoodlandSelectionCache=p=>new Promise((resolve,reject)=>pending.push({p,resolve,reject}));
+ const installFinePresentation=p=>{installed.push(p);resources.woodlandFineGrass=p;return p;};
+ ${worker}
+ return {merge:mergeFinePresentation,pending,installed,resources,set(key,sequence){nearbyFineDesiredKey=key;nearbyFinePresentation={tiles:[],receipt:{key,presentationSequence:sequence,contactCount:0}};},setDesired(key){nearbyFineDesiredKey=key;}};`)();
+}
+async function progressiveMicrotasksUntil(predicate){for(let i=0;i<1000&&!predicate();i++)await Promise.resolve();assert.ok(predicate(),'Expected controlled merge checkpoint');}
+test('actual merge worker rejects stale key but allows useful older same-key partial before its successor',async()=>{
+ const stale=await createActualMergeWorkerFixture();stale.set('A',1);const first=stale.merge();assert.equal(stale.pending.length,1);
+ stale.set('B',2);const second=stale.merge();assert.equal(first,second);stale.pending[0].resolve();
+ await progressiveMicrotasksUntil(()=>stale.pending.length===2);assert.equal(stale.installed.length,0,'Old-key prepared snapshot must not install');
+ stale.pending[1].resolve();await second;assert.deepEqual(stale.installed.map(p=>p.receipt.nearby.key),['B']);
+ const same=await createActualMergeWorkerFixture();same.set('A',1);const older=same.merge();same.set('A',2);same.merge();same.pending[0].resolve();
+ await progressiveMicrotasksUntil(()=>same.pending.length===2);assert.deepEqual(same.installed.map(p=>p.receipt.nearby.presentationSequence),[1],'Completed useful same-key partial must not starve');
+ same.pending[1].resolve();await older;assert.deepEqual(same.installed.map(p=>p.receipt.nearby.presentationSequence),[1,2]);
+ const failed=await createActualMergeWorkerFixture();failed.set('A',1);const work=failed.merge();const rejection=assert.rejects(work,/CONTROLLED_PREPARE_FAILURE/);failed.pending[0].reject(Error('CONTROLLED_PREPARE_FAILURE'));await rejection;
+ assert.deepEqual(failed.installed,[]);assert.equal(failed.resources.woodlandFineGrass.id,'PRIOR','Failed preparation retains prior installed state');
+});
+
+}

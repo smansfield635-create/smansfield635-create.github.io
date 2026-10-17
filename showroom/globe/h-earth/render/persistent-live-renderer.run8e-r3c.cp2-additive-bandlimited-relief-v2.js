@@ -1712,22 +1712,45 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
     return state;
     };
-    const mergeFinePresentation=async()=>{
-      while(true){
+    let mergeWorker=null,mergePending=false;
+    const mergeFinePresentation=()=>{
+      mergePending=true;
+      if(mergeWorker)return mergeWorker;
+      mergeWorker=(async()=>{
+      let installed=resources.woodlandFineGrass;
+      while(mergePending){
+      mergePending=false;
       const woodland=woodlandFinePresentation,nearby=nearbyFinePresentation;
       const presentation={tiles:[...(woodland?.tiles??[]),...(nearby?.tiles??[])],receipt:{
         schema:'H_EARTH_SHARED_FINE_GRASS_PRESENTATION_v1',contactCount:(woodland?.receipt.contactCount??0)+(nearby?.receipt.contactCount??0),
         woodlandContactCount:woodland?.receipt.contactCount??0,nearbyContactCount:nearby?.receipt.contactCount??0,
         nearby:nearby?.receipt??null,rootEncoding:'ACTUAL_FLOAT32_VISIBLE_TRIANGLE_CONTACTS',originalRecordsChanged:false,terrainChanged:false}};
       await prepareWoodlandSelectionCache(presentation,yieldToBrowserPaint);
-      if(woodland!==woodlandFinePresentation||nearby!==nearbyFinePresentation)continue;
-      const installed=installFinePresentation(presentation);
-      if(vegetationTrace){vegetationInstallRevision++;for(const tile of presentation.tiles)for(const root of tile.roots)diagnosticRootOwners.set(root,tile.id.startsWith('NEARBY:')?'NEARBY':'APPROVED_WOODLAND');observeVegetation('PRESENTATION_INSTALLED',()=>({installationRevision:vegetationInstallRevision,sourceRequestRevision:nearby?.receipt?.diagnostic?.requestRevision??null,nearbyKey:nearby?.receipt?.diagnostic?.key??null,woodlandReady:installed.ready===true,roots:summarizeDiagnosticRoots(diagnosticFineRoots(presentation.tiles))}));}
-      return installed;
+      if(woodland!==woodlandFinePresentation){mergePending=true;continue;}
+      // A newer partial in the same request may follow this one. It must not
+      // invalidate useful completed work while selection preparation yields.
+      if(nearby&&nearby.receipt.key!==nearbyFineDesiredKey)continue;
+      installed=installFinePresentation(presentation);
+      if(vegetationTrace){vegetationInstallRevision++;for(const tile of presentation.tiles)for(const root of tile.roots)diagnosticRootOwners.set(root,tile.id.startsWith('NEARBY:')?'NEARBY':'APPROVED_WOODLAND');observeVegetation('PRESENTATION_INSTALLED',()=>({installationRevision:vegetationInstallRevision,sourceRequestRevision:nearby?.receipt?.requestRevision??null,nearbyKey:nearby?.receipt?.key??null,presentationSequence:nearby?.receipt?.presentationSequence??null,complete:nearby?.receipt?.complete??null,woodlandReady:installed.ready===true,roots:summarizeDiagnosticRoots(diagnosticFineRoots(presentation.tiles))}));}
+      if(nearby!==nearbyFinePresentation)mergePending=true;
       }
+      return installed;
+      })().finally(()=>{mergeWorker=null;});
+      return mergeWorker;
     };
     resources.mergeFinePresentation=mergeFinePresentation;
-    nearbyFineCache=createNearbyFineGrassCache(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),{visibleSurface:resources.vegetationVisibleSurface,placementExclusion:isPlantingPilotPoint,yieldControl:yieldToBrowserPaint,...(vegetationTrace?{onDiagnostic:(type,details)=>observeVegetation(type,()=>details)}:{})});
+    nearbyFineCache=createNearbyFineGrassCache(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),{visibleSurface:resources.vegetationVisibleSurface,placementExclusion:isPlantingPilotPoint,yieldControl:yieldToBrowserPaint,onPresentation:async presentation=>{
+      const r=presentation.receipt;
+      if(r.key!==nearbyFineDesiredKey)return;
+      if((nearbyFinePresentation?.receipt.presentationSequence??0)>=r.presentationSequence)return;
+      // Empty partials mean construction is pending, not that existing cover
+      // should disappear. A completed empty habitat remains a valid result.
+      if(!r.complete&&r.contactCount===0&&(nearbyFinePresentation?.receipt.contactCount??0)>0)return;
+      nearbyFinePresentation=presentation;
+      await mergeFinePresentation();
+      if(r.key!==nearbyFineDesiredKey)return;
+      fineGrassProgress({phase:'NEARBY_FINE_GRASS_PARTIAL_GPU_READY',nearbyContactCount:r.contactCount,nearby:r});
+    },...(vegetationTrace?{onDiagnostic:(type,details)=>observeVegetation(type,()=>details)}:{})});
     resources.nearbyFineInitialPromise=refreshNearbyFineGrass(globalCoverInitialCamera,{initial:true});
     await resources.nearbyFineInitialPromise;
     refreshNearbyFineGrass(globalCoverInitialCamera).catch(error=>{resources.nearbyFineError=error.message;});
@@ -1752,15 +1775,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   let nearbyFineUpdateInFlight=null;
   async function refreshNearbyFineGrass(camera,{initial=false}={}){
     if(!nearbyFineCache)return;
-    const key=`${Math.floor(camera.x/4)}:${Math.floor(camera.z/4)}:${initial?'INITIAL':'FULL'}`;
+    const coreRadiusMeters=initial?8:24,outerRadiusMeters=initial?12:32;
+    const key=`${Math.floor(camera.x/4)*4+2}:${Math.floor(camera.z/4)*4+2}:${coreRadiusMeters}:${outerRadiusMeters}`;
     if(key===nearbyFineDesiredKey)return nearbyFineUpdateInFlight;
     nearbyFineDesiredKey=key;
     observeVegetation('PRESENTATION_REQUESTED',()=>({key,camera:{x:camera.x,y:camera.y??null,z:camera.z},initial}));
-    // Forward changed cells immediately: the cache cancels obsolete tile work.
+    // Movement reprioritizes the next tile; completed work publishes independently.
     const update=(async()=>{
-      const presentation=await nearbyFineCache.update(camera,initial?{coreRadiusMeters:8,outerRadiusMeters:12}:{});
+      const presentation=await nearbyFineCache.update(camera,{coreRadiusMeters,outerRadiusMeters});
       if(key!==nearbyFineDesiredKey){observeVegetation('PRESENTATION_STALE',()=>({key,desiredKey:nearbyFineDesiredKey,stage:'BEFORE_MERGE'}));return;}
-      nearbyFinePresentation=presentation;
+      // The cache callback installs incremental and final snapshots.
       await resources.mergeFinePresentation();
       if(key!==nearbyFineDesiredKey){observeVegetation('PRESENTATION_STALE',()=>({key,desiredKey:nearbyFineDesiredKey,stage:'AFTER_MERGE'}));return;}
       nearbyFineReady=true;
@@ -1772,7 +1796,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     finally{if(nearbyFineUpdateInFlight===update)nearbyFineUpdateInFlight=null;}
   }
   function drawWoodlandFineGrass(packet,maximumParents){
-    // Latest camera cells cancel obsolete work without changing world-root IDs.
+    // Latest camera cells reprioritize world-tile work without changing root IDs.
     refreshNearbyFineGrass(packet.camera.position).catch(error=>{resources.nearbyFineError=error.message;});
     const state=resources.woodlandFineGrass;if(!state)return;
     const camera=packet.camera.position,key=`${Math.floor(camera.x/4)}:${Math.floor(camera.z/4)}:${maximumParents}`;let uploadBytes=0;
@@ -2579,7 +2603,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       refinementPatchVertexCount:resources.refinement?.vertexCount??0, refinementPatchTriangleCount:resources.refinement?.triangleCount??0,
       refinementAnchor:resources.refinement?.anchor??null, refinementFallbackAvailable:resources.refinement?.fallbackAvailable===true,
       contactField:{...contactField.stats,buildCount:contactFieldBuildCount,totalBuildMilliseconds:contactFieldTotalMilliseconds},
-      vegetationResidency:{canonicalPreparationTiming:getHEarthRun8ER2CanonicalPreparationTiming(),...(globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getMilestoneTiming?{timing:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getMilestoneTiming()}:{}),preparationComplete:vegetationPreparationComplete,batchPrerequisitesReady:vegetationBatchPrerequisitesReady,priorityTilesPrepared:globalCoverPriorityTilesPrepared,firstPriorityTileReadyAtMs,woodlandVisibleGroundPriority,localPriorityTilesGpuResident:resources.localCoverPreview?.tileCount??0,localPreviewDrawInstances:resources.localCoverPreview?.lastDraw?.visibleInstanceCount??0,nearbyFineGrassReady:nearbyFineReady,nearbyFineGrassError:resources.nearbyFineError??null,globalCoverComplete:resources.globalCover?.cover?.receipt?.instanceCount>0,woodlandFineGrassReady:resources.woodlandFineGrass?.ready===true,woodlandFineGrassPreviewReady:resources.woodlandFineGrass?.previewReady===true,preparationProgress:vegetationPreparationProgress,validationStatus:vegetationTruth?'VALIDATED':'PENDING_POST_READY_VALIDATION',manifestSha256:vegetationTruth?.qualifiedManifestIdentity.manifestSha256??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.manifestSha256,totalInstanceCount:vegetationTruth?.instanceCount??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.instanceCount,totalBatchCount:vegetationTruth?.batches.length??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.batchCount,maxInstancesPerBatch:vegetationTruth?.maxInstancesPerMaterializationBatch??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.maxInstancesPerBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth?.droppedPlacementCount??null,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth?.cameraIndependent??null},
+      vegetationResidency:{canonicalPreparationTiming:getHEarthRun8ER2CanonicalPreparationTiming(),...(globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS?.getMilestoneTiming?{timing:globalThis.H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getMilestoneTiming()}:{}),preparationComplete:vegetationPreparationComplete,batchPrerequisitesReady:vegetationBatchPrerequisitesReady,priorityTilesPrepared:globalCoverPriorityTilesPrepared,firstPriorityTileReadyAtMs,woodlandVisibleGroundPriority,localPriorityTilesGpuResident:resources.localCoverPreview?.tileCount??0,localPreviewDrawInstances:resources.localCoverPreview?.lastDraw?.visibleInstanceCount??0,nearbyFineGrassReady:nearbyFineReady,nearbyFineGrassError:resources.nearbyFineError??null,nearbyFineCache:nearbyFineCache?.getReceipt()??null,globalCoverComplete:resources.globalCover?.cover?.receipt?.instanceCount>0,woodlandFineGrassReady:resources.woodlandFineGrass?.ready===true,woodlandFineGrassPreviewReady:resources.woodlandFineGrass?.previewReady===true,preparationProgress:vegetationPreparationProgress,validationStatus:vegetationTruth?'VALIDATED':'PENDING_POST_READY_VALIDATION',manifestSha256:vegetationTruth?.qualifiedManifestIdentity.manifestSha256??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.manifestSha256,totalInstanceCount:vegetationTruth?.instanceCount??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.instanceCount,totalBatchCount:vegetationTruth?.batches.length??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.batchCount,maxInstancesPerBatch:vegetationTruth?.maxInstancesPerMaterializationBatch??H_EARTH_GEN2521_QUALIFIED_VEGETATION_MANIFEST_IDENTITY.maxInstancesPerBatch,residentInstanceCount:counters.vegetationResidentInstanceCount,residentBatchCount:counters.vegetationBatchMaterializationCount,residentPrimitiveCount:counters.vegetationResidentPrimitiveCount,complete:resources.vegetation.complete,droppedPlacementCount:vegetationTruth?.droppedPlacementCount??null,worldRebuildCount:counters.worldRebuildCount,cameraIndependent:vegetationTruth?.cameraIndependent??null},
       plantingPilot:resources.plantingPilot?{layout:resources.plantingPilotLayout.receipt,gpu:resources.plantingPilot.getReceipt()}:null,
       vegetationVisibleSurface:resources.vegetationVisibleSurface?.receipt??null,
       legacyGrassDrawCensus:resources.legacyGrassDrawCensus??null,

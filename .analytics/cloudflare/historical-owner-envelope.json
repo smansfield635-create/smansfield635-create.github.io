@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-17T18:31:54Z",
+  "generatedAt": "2026-10-17T19:24:49Z",
   "window": {
-    "start": "2026-07-19T18:31:54Z",
-    "end": "2026-10-17T18:31:54Z"
+    "start": "2026-07-19T19:24:49Z",
+    "end": "2026-10-17T19:24:49Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -62,13 +62,13 @@
         "pageLoads": 110,
         "visits": 10
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 147,
-        "visits": 2
-      },
       "/index.html": {
         "pageLoads": 140,
         "visits": 0
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 147,
+        "visits": 2
       },
       "/": {
         "pageLoads": 1033,
@@ -186,6 +186,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -198,7 +202,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -212,10 +216,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {

@@ -172,12 +172,35 @@ export async function buildWoodlandFineGrass(pkg,{refinement=null,yieldControl=a
  }
  const ordered=[...tiles.values()].sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);for(const t of ordered)t.roots.sort((a,b)=>a.seed-b.seed);
  const presentation={tiles:ordered};await prepareWoodlandSelectionCache(presentation,yieldControl);
- return Object.assign(presentation,{receipt:{schema:'H_EARTH_WOODLAND_FINE_GRASS_PRESENTATION_v1',candidateCount:candidates,contactCount:accepted,tileCount:ordered.length,selectionCacheTypedArrayBytes:accepted*44,selectionCacheReferenceSlots:accepted*2,elapsedMilliseconds:performance.now()-started,yieldCount,rejections,originalRecordsChanged:false,terrainChanged:false,footprint:WOODLAND_FINE_GRASS,rootEncoding:'ACTUAL_FLOAT32_TRIANGLE_CONTACTS'}});
+ return Object.assign(presentation,{receipt:{schema:'H_EARTH_WOODLAND_FINE_GRASS_PRESENTATION_v1',candidateCount:candidates,contactCount:accepted,tileCount:ordered.length,selectionCacheTypedArrayBytes:accepted*44,selectionSupportCacheTypedArrayBytesMaximum:accepted*8,selectionCacheTypedArrayBytesMaximum:accepted*52,selectionCacheReferenceSlots:accepted*2,elapsedMilliseconds:performance.now()-started,yieldCount,rejections,originalRecordsChanged:false,terrainChanged:false,footprint:WOODLAND_FINE_GRASS,rootEncoding:'ACTUAL_FLOAT32_TRIANGLE_CONTACTS'}});
 }
-const woodlandSelectionCache=new WeakMap();
+/** Continuous visibility is separate from immutable root placement and blade geometry. */
+export const FINE_GRASS_CONTINUITY=Object.freeze({nearbyInner:14,nearbyOuter:20,woodlandInner:56,woodlandOuter:62,fadeWidth:.04,scoreGuard:.0001});
+export function fineGrassPriority(angle){
+ let seed=Math.imul(Math.trunc(Math.fround(Math.fround(angle)*1000)),1664525)>>>0;
+ seed=Math.imul(seed^(seed>>>16),2246822519)>>>0;seed=Math.imul(seed^(seed>>>13),3266489917)>>>0;
+ return ((seed^(seed>>>16))&0xffffff)/16777216;
+}
+export function fineGrassImportance(root,camera,{nearby=false,priority=fineGrassPriority(root.angle)}={}){
+ const dx=Math.fround(root.x)-Math.fround(camera.x),dz=Math.fround(root.z)-Math.fround(camera.z),d=Math.sqrt(dx*dx+dz*dz);
+ const inner=nearby?FINE_GRASS_CONTINUITY.nearbyInner:FINE_GRASS_CONTINUITY.woodlandInner;
+ const outer=nearby?FINE_GRASS_CONTINUITY.nearbyOuter:FINE_GRASS_CONTINUITY.woodlandOuter;
+ const t=Math.max(0,Math.min(1,(d-inner)/(outer-inner))),envelope=1-t*t*(3-2*t),q=Math.max(0,d-8)/7;
+ return Math.max(0,.16+.84*Math.exp(-q*q)-priority)*envelope;
+}
+export function fineGrassVisibility(root,camera,cutoff=0,options={}){
+ const t=Math.max(0,Math.min(1,(fineGrassImportance(root,camera,options)-cutoff-FINE_GRASS_CONTINUITY.scoreGuard)/FINE_GRASS_CONTINUITY.fadeWidth));
+ return t*t*(3-2*t);
+}
+export function sameWoodlandFineGrassPackedRoots(a,b){
+ if(!a||!b||a.pixels.length!==b.pixels.length)return false;
+ for(let i=0;i<a.pixels.length;i++)if(!Object.is(a.pixels[i],b.pixels[i]))return false;
+ return true;
+}
+const woodlandSelectionCache=new WeakMap(),woodlandPackedSelectionCache=new WeakMap();
 export async function prepareWoodlandSelectionCache(presentation,yieldControl=async()=>{}){
  const n=presentation.tiles.reduce((sum,t)=>sum+t.roots.length,0),c={roots:new Array(n),tiles:[],tileIds:new Array(n),x:new Float64Array(n),z:new Float64Array(n),u:new Float64Array(n),ranks:new Float64Array(n),distances:new Float64Array(n),eligible:new Uint32Array(n)};let i=0,slice=performance.now();
- for(const tile of presentation.tiles){const start=i;for(const root of tile.roots){let h=Math.imul(root.seed^(root.seed>>>16),2246822519);h=Math.imul(h^(h>>>13),3266489917);c.roots[i]=root;c.x[i]=root.x;c.z[i]=root.z;c.u[i]=((h^(h>>>16))>>>0)/4294967296;c.tileIds[i++]=tile.id;}c.tiles.push({x:tile.minX+2,z:tile.minZ+2,start,end:i});if(performance.now()-slice>=8){await yieldControl();slice=performance.now();}}
+ for(const tile of presentation.tiles){const start=i;for(const root of tile.roots){c.roots[i]=root;c.x[i]=root.x;c.z[i]=root.z;c.u[i]=fineGrassPriority(root.angle);c.tileIds[i++]=tile.id;}c.tiles.push({x:tile.minX+2,z:tile.minZ+2,nearby:tile.id.startsWith('NEARBY:'),start,end:i});if(performance.now()-slice>=8){await yieldControl();slice=performance.now();}}
  woodlandSelectionCache.set(presentation,c);
 }
 
@@ -338,28 +361,58 @@ export function createNearbyFineGrassCache(pkg,{visibleSurface,yieldControl=asyn
  },getReceipt(){return{requestRevision,key:latestRequest?.key??null,cachedTiles:tiles.size,cachedRoots,maximumRoots,peakCachedRoots,peakRequestRoots,stickyError,errorCount,building:!!builder,publishing:!!publisher,lastPresentation:lastPresentation?.receipt??null};}});
 }
 
-export function selectWoodlandFineGrass(presentation,camera,{maximumParents=1024}={}){
- const capacity=Math.min(1024,Math.max(0,maximumParents|0)),qx=Math.floor(camera.x/4)*4+2,qz=Math.floor(camera.z/4)*4+2;
+export function selectWoodlandFineGrass(presentation,camera,{maximumParents=1024,reusePackedSelection=null}={}){
+ if(![camera?.x,camera?.z].every(Number.isFinite))throw Error('WOODLAND_SELECTION_CAMERA_INVALID');
+ const capacity=Math.min(1024,Math.max(0,maximumParents|0));
  let c=woodlandSelectionCache.get(presentation);
- if(!c){const roots=presentation.tiles.flatMap(t=>t.roots),n=roots.length;c={roots,tiles:[],tileIds:[],x:new Float64Array(n),z:new Float64Array(n),u:new Float64Array(n),ranks:new Float64Array(n),distances:new Float64Array(n),eligible:new Uint32Array(n)};let i=0;for(const tile of presentation.tiles){const start=i;for(const root of tile.roots){let h=Math.imul(root.seed^(root.seed>>>16),2246822519);h=Math.imul(h^(h>>>13),3266489917);c.x[i]=root.x;c.z[i]=root.z;c.u[i]=((h^(h>>>16))>>>0)/4294967296;c.tileIds[i++]=tile.id;}c.tiles.push({x:tile.minX+2,z:tile.minZ+2,start,end:i});}woodlandSelectionCache.set(presentation,c);}
- // Fixed world-root underlay: selection is independent of camera position and yaw.
- // Once accepted, these same root IDs survive 4m cell transitions and A-B-A walks.
- if(!c.persistentIndices){const fixed=[];for(let i=0;i<c.u.length;i++)if(c.u[i]<.16)fixed.push(i);fixed.sort((a,b)=>c.u[a]-c.u[b]||a-b);c.persistentIndices=fixed;}
- let count=0;const {x,z,u,ranks,distances,eligible}=c;
- for(const tile of c.tiles){const tx=tile.x-qx,tz=tile.z-qz;if(tx*tx+tz*tz>65*65)continue;const nearest=Math.max(0,Math.sqrt(tx*tx+tz*tz)-Math.SQRT2*2),tmax=Math.max(0,nearest-8)/7,upperP=.065+.935*Math.exp(-tmax*tmax);for(let i=tile.start;i<tile.end;i++){if(u[i]<.16||u[i]>=upperP)continue;const dx=x[i]-qx,dz=z[i]-qz,d2=dx*dx+dz*dz;if(d2>3844)continue;const d=Math.sqrt(d2),t=Math.max(0,d-8)/7,p=.065+.935*Math.exp(-t*t),rank=u[i]/p;if(rank<1){ranks[i]=rank;distances[i]=d2;eligible[count++]=i;}}}
- const limit=Math.max(0,capacity*64-128);
- const nearbyFixedIndices=c.persistentIndices.filter(i=>{const dx=x[i]-qx,dz=z[i]-qz;return dx*dx+dz*dz<=3844;});
- const fixedCount=Math.min(nearbyFixedIndices.length,Math.floor(limit*.45));
- const dynamicLimit=Math.max(0,limit-fixedCount);
- if(count>dynamicLimit&&dynamicLimit>0){let lo=0,hi=count-1;while(lo<hi){const pivot=ranks[eligible[(lo+hi)>>>1]];let i=lo,j=hi;while(i<=j){while(ranks[eligible[i]]<pivot)i++;while(ranks[eligible[j]]>pivot)j--;if(i<=j){const tmp=eligible[i];eligible[i++]=eligible[j];eligible[j--]=tmp;}}if(dynamicLimit-1<=j)hi=j;else if(dynamicLimit-1>=i)lo=i;else break;}}
- const packed=[[],[],[]];
- for(let j=0;j<fixedCount;j++){const i=nearbyFixedIndices[j],dx=x[i]-qx,dz=z[i]-qz,d2=dx*dx+dz*dz;packed[d2<100?0:d2<576?1:2].push({root:c.roots[i],tileId:c.tileIds[i]});}
- for(let j=0;j<Math.min(dynamicLimit,count);j++){const i=eligible[j],d2=distances[i];packed[d2<100?0:d2<576?1:2].push({root:c.roots[i],tileId:c.tileIds[i]});}
+ if(!c){
+  const roots=presentation.tiles.flatMap(t=>t.roots),n=roots.length;
+  c={roots,tiles:[],tileIds:[],x:new Float64Array(n),z:new Float64Array(n),u:new Float64Array(n),ranks:new Float64Array(n),distances:new Float64Array(n),eligible:new Uint32Array(n)};
+  let i=0;for(const tile of presentation.tiles){const start=i;for(const root of tile.roots){c.x[i]=root.x;c.z[i]=root.z;c.u[i]=fineGrassPriority(root.angle);c.tileIds[i++]=tile.id;}c.tiles.push({x:tile.minX+2,z:tile.minZ+2,nearby:tile.id.startsWith('NEARBY:'),start,end:i});}
+  woodlandSelectionCache.set(presentation,c);
+ }
+ if(!c.supportSquared){c.supportSquared=new Float64Array(c.roots.length);for(let i=0;i<c.u.length;i++){const u=c.u[i];c.supportSquared[i]=u<=.16?Infinity:(8+7*Math.sqrt(-Math.log((u-.16)/.84)))**2;}}
+ const cx=Math.fround(camera.x),cz=Math.fround(camera.z);let count=0;
+ for(const tile of c.tiles){
+  const outer=tile.nearby?FINE_GRASS_CONTINUITY.nearbyOuter:FINE_GRASS_CONTINUITY.woodlandOuter;
+  if(Math.hypot(tile.x-camera.x,tile.z-camera.z)>outer+Math.SQRT2*2)continue;
+  const options={nearby:tile.nearby,priority:0};
+  for(let i=tile.start;i<tile.end;i++){
+   const dx=c.x[i]-cx,dz=c.z[i]-cz,d2=dx*dx+dz*dz;if(d2>=outer*outer||d2>c.supportSquared[i]+.000001)continue;
+   options.priority=c.u[i];const score=fineGrassImportance(c.roots[i],camera,options);
+   if(score<=0)continue;c.ranks[i]=score;c.eligible[count++]=i;
+  }
+ }
+ // Two owner groups need at most 126 padding slots. Keep the existing128-slot reserve.
+ const limit=Math.max(0,capacity*64-128),selectedCount=Math.min(limit,count);let cutoff=0;
+ if(count>limit&&limit>0){
+  // Partition at K+1, not K: the first excluded score rises continuously from0.
+  let lo=0,hi=count-1;
+  while(lo<hi){const pivot=c.ranks[c.eligible[(lo+hi)>>>1]];let i=lo,j=hi;
+   while(i<=j){while(c.ranks[c.eligible[i]]>pivot)i++;while(c.ranks[c.eligible[j]]<pivot)j--;if(i<=j){const t=c.eligible[i];c.eligible[i++]=c.eligible[j];c.eligible[j--]=t;}}
+   if(limit<=j)hi=j;else if(limit>=i)lo=i;else break;
+  }
+  cutoff=Math.fround(c.ranks[c.eligible[limit]]);
+ }
+ const chosen=Array.from(c.eligible.subarray(0,selectedCount));if(count>limit)chosen.sort((a,b)=>a-b);
+ const previous=reusePackedSelection&&woodlandPackedSelectionCache.get(reusePackedSelection);
+ if(previous?.presentation===presentation&&previous.capacity===capacity&&previous.chosen.length===chosen.length&&chosen.every((id,i)=>id===previous.chosen[i])){
+  const selection={...reusePackedSelection,cutoff};woodlandPackedSelectionCache.set(selection,previous);return selection;
+ }
+ const packed=[[],[]];
+ for(const i of chosen)packed[c.tileIds[i].startsWith('NEARBY:')?1:0].push({root:c.roots[i],tileId:c.tileIds[i]});
  const pixels=new Float32Array(capacity*64*4);for(let i=1;i<pixels.length;i+=4)pixels[i]=-100000;
- const groups=[],chunks=[];let parentCount=0,contactCount=0,vertices=0,triangles=0;
- for(let level=0;level<3;level++){const firstParent=parentCount,leafCount=4,list=packed[level];for(let i=0;i<list.length;i+=64){const group=list.slice(i,i+64),chunk={tileId:'PACKED_'+level,first:i,roots:group.map(x=>x.root),sourceTileIds:[...new Set(group.map(x=>x.tileId))],parent:parentCount,level};chunks.push(chunk);chunk.roots.forEach((r,k)=>pixels.set([r.x,r.y,r.z,r.angle],(parentCount*64+k)*4));parentCount++;contactCount+=chunk.roots.length;}const count=parentCount-firstParent;if(count){groups.push({level,leafCount,firstParent,parentCount:count});vertices+=count*64*leafCount*6;triangles+=count*64*leafCount*4;}}
- const signature=`${qx}:${qz}:${capacity}:${fixedCount}:`+groups.map(g=>`${g.level}:${g.parentCount}`).join(',');
- return{pixels:pixels.subarray(0,parentCount*256),groups,chunks,signature,parentCount,contactCount,persistentContactCount:fixedCount,dynamicContactCount:contactCount-fixedCount,vertices,triangles,draws:groups.length};
+ const groups=[],chunks=[];let parentCount=0,contactCount=0,vertices=0,triangles=0,persistentContactCount=chosen.reduce((n,i)=>n+Number(c.u[i]<.16),0);
+ for(let level=0;level<2;level++){
+  const firstParent=parentCount,leafCount=4,list=packed[level];
+  for(let i=0;i<list.length;i+=64){const group=list.slice(i,i+64),chunk={tileId:level?'PACKED_NEARBY':'PACKED_WOODLAND',first:i,roots:group.map(x=>x.root),sourceTileIds:[...new Set(group.map(x=>x.tileId))],parent:parentCount,level,nearby:level===1};chunks.push(chunk);
+   chunk.roots.forEach((r,k)=>{pixels.set([r.x,r.y,r.z,r.angle],(parentCount*64+k)*4);});parentCount++;contactCount+=chunk.roots.length;
+  }
+  const n=parentCount-firstParent;if(n){groups.push({level,nearby:level===1,leafCount,firstParent,parentCount:n});vertices+=n*64*leafCount*6;triangles+=n*64*leafCount*4;}
+ }
+ if(parentCount>capacity)throw Error('WOODLAND_SELECTION_PARENT_CAPACITY_EXCEEDED');
+ const selection={pixels:pixels.subarray(0,parentCount*256),groups,chunks,signature:groups.map(g=>`${g.level}:${g.parentCount}`).join(','),cutoff,parentCount,contactCount,persistentContactCount,dynamicContactCount:contactCount-persistentContactCount,vertices,triangles,draws:groups.length};
+ woodlandPackedSelectionCache.set(selection,{presentation,capacity,chosen});return selection;
 }
 export function filterWoodlandLegacyGrass(pkg){
  const original=pkg.buffers.indices,indices=Uint32Array.from(original),positions=pkg.buffers.positions,attributes=pkg.clearingAttributes,span=pkg.primitiveSpans.find(s=>s.primitiveId==='H_EARTH_LANDSCAPE_P2_GRASS');let suppressedTriangles=0;const suppressedTypeCounts={},preservedTypeCounts={};

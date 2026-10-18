@@ -48,3 +48,11 @@ Default execution retains the four fast adapter checks and skips the two full ch
 Browser main-thread adoption, real WebGL behavior/resources, current camera refinement, continuous tree ground seals and tablet/perceptual experience-anchor acceptance remain unverified. No local Chromium executable or cached Playwright Chromium was found during this continuation. This preview-execution limitation preserves the candidate and does not authorize production deployment as a workaround.
 
 Next: review the draft exact candidate on an authorized browser/device substrate, including disposition of the inherited fallback terrain-color difference, then complete experience-anchor acceptance. Reuse the packet/admission/CPU proofs. Do not regenerate the packet, repeat census/admission, merge, deploy or publish.
+
+## Gen2801 publication continuation
+
+Owner-authorized publication supersedes the earlier draft-only stop through admitted Gen2801 (issue6426 comment6245355324). Product bytes remain exactly those of18e8420b. Independent source-bound comparison against the controlling anchor proxy confirms same-world terrain/navigation/interface invariants using the accepted corridor receipt precedent. The exact seven experience-file digests are bound in the new anchor receipt. This does not claim new candidate pixel, physical-device, full grass-connectivity or GPU-performance acceptance. Inherited old-prefix terrain albedo divergence is preserved and explicitly accepted as a known limitation of this release, not repaired or called byte parity.
+
+Exact candidate browser publication preflight39094627836/job117578393321 passed h-earth-simple: target18e8420b260d18fbb65757c64278e1599c2bd19b, manifestSHA256 a8f06059264bc086b162b0df1419ec7b504b718a4d9fcbddff87df981096756e, runtime readiness and declared controls interaction PASS; no page or console errors. This is browser evidence, not physical-device acceptance. CPU/census/packet checks are carried forward unchanged. Current main7a476ed differs from governinge8afb6 only in seven analytics paths; canonical differential continuity returns CARRY_FORWARD_APPROVED.
+
+Next: exact evidence-complete merge, registered h-earth-simple current-main deployment, live exact-head verification. No publication has yet occurred at this evidence checkpoint.

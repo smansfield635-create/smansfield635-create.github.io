@@ -1,8 +1,8 @@
 {
   "schema": "H_EARTH_VERIFIED_PLANTING_CHECKPOINT_v1",
-  "generation": 2800,
-  "operationId": "H_EARTH_VERIFIED_PLANTING_PACKET_20261017_001",
-  "stage": "INTEGRATED_CPU_QUALIFIED_DRAFT_PENDING_BROWSER_ANCHOR",
+  "generation": 2801,
+  "operationId": "H_EARTH_VERIFIED_PLANTING_PUBLICATION_20261018_001",
+  "stage": "RELEASE_ANCHOR_ACCEPTED_PREFLIGHT_PASS_PENDING_MERGE_DEPLOY",
   "branch": "h-earth/gen2800-verified-planting-packet-20261017",
   "baseCommit": "218e704c06c09bb0c4ca9a6f979abe0fe717387a",
   "commitBinding": "The Git commit containing this checkpoint; exact resulting SHA is recorded in issue6426 after push and remote readback.",
@@ -32,7 +32,7 @@
   "continuity": {
     "ambiguousEvidenceDisposition": "STRICT_SUCCESSOR_REQUIRED",
     "authorityExpanded": false,
-    "baseHead": "218e704c06c09bb0c4ca9a6f979abe0fe717387a",
+    "baseHead": "e8afb6c893babd2371e13e817e223531b9b60fff",
     "baseIsAncestor": true,
     "carryForwardAuthorized": true,
     "changedPaths": [
@@ -44,15 +44,15 @@
       ".analytics/cloudflare/status.txt",
       "analytics/data/latest.json"
     ],
-    "currentHead": "a370c522997b573206a5c90994dcfca7b0051be2",
+    "currentHead": "7a476edcc2b95bf369919345f06fa84b502e958a",
     "dependencyPaths": [
-      ".github/ai-router",
-      ".github/operation-intake",
+      ".github",
       "AGENTS.md",
       "AI_ENTRYPOINT.json",
+      "AI_RELEASE_ENTRYPOINT.json",
       "h-earth-3d",
       "showroom/globe/h-earth",
-      "tools/operation-intake"
+      "tools"
     ],
     "dependencySurfaceComplete": true,
     "mergeAuthorityCreated": false,
@@ -140,8 +140,8 @@
       "independentReview": "W source/CPU review required before draft; exact remote readback follows commit"
     }
   },
-  "nextAction": "Review the draft exact candidate through an authorized exact-head browser/device preview, including main-thread adoption, real WebGL resources, current refinement, tree ground seals, and experience-anchor acceptance; resolve disposition of inherited fallback terrain-albedo divergence. Keep existing packet/admission/CPU proofs; no census or packet regeneration. No merge/deploy/publication.",
-  "stopCondition": "No merge, deployment or publication. Source checks do not establish visual or tablet acceptance.",
+  "nextAction": "Merge exact evidence-complete candidate under existing Gen2801, dispatch registered h-earth-simple exact-current-main Pages deployment, then verify LIVE_EXACT_HEAD_VERIFIED. Preserve product bytes and completed CPU proofs.",
+  "stopCondition": "Stop on changed product bytes, failed applicable anchor qualification or failed publication preflight; never report publication before exact live receipt.",
   "previousCheckpoint": "aa49d4072ccd1d2c7c25c05f6f5550e73216cfdc",
   "integration": {
     "generatedStartup": "Common raw-package adapter after generation",
@@ -163,5 +163,27 @@
     "ravineMembership": "Saved decoder; every root rechecked against live support/water/material/shared exclusions; contact/population drift fails closed",
     "admissionRepeated": false,
     "censusRepeated": false
+  },
+  "release": {
+    "ownerPublicationAuthorized": true,
+    "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6245355324",
+    "runtimeCandidate": "18e8420b260d18fbb65757c64278e1599c2bd19b",
+    "anchorReview": "SOURCE_BOUND_SAME_WORLD_INVARIANTS_PASS",
+    "independentReviewer": "release_review",
+    "browserPreflight": {
+      "runId": 39094627836,
+      "jobId": 117578393321,
+      "targetSha": "18e8420b260d18fbb65757c64278e1599c2bd19b",
+      "surfaceId": "h-earth-simple",
+      "result": "PREFLIGHT_PASS",
+      "manifestSha256": "a8f06059264bc086b162b0df1419ec7b504b718a4d9fcbddff87df981096756e",
+      "runtimeReadiness": "PASS",
+      "pageErrors": [],
+      "consoleErrors": [],
+      "interaction": "Prepared woodland controls await genuine input before entry: PASS",
+      "physicalDeviceAcceptance": false
+    },
+    "albedoDisposition": "Preserve inherited old-prefix startup-color divergence; no planting-adapter repair or false parity claim.",
+    "publicationPerformed": false
   }
 }

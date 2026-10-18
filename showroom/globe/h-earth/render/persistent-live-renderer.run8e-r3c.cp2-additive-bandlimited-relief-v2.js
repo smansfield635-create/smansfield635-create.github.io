@@ -10,7 +10,7 @@ import {constructGeologicalRuntimeBridge,retireGeologicalBaseIndices,installGeol
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {buildWoodlandRockPresentation,suppressWoodlandRockTriangles} from './woodland-rock-presentation.v1.js';
 import {buildLargeP2BoulderPresentation,suppressLargeP2SourceRockTriangles,LARGE_P2_BOULDER_PRESENTATION} from './large-p2-boulder-presentation.v1.js';
-import {WOODLAND_FINE_GRASS,FINE_GRASS_CONTINUITY,sameWoodlandFineGrassPackedRoots,woodlandGrassClear,buildWoodlandFineGrass,createVegetationContinuityTrace,summarizeVegetationRoots,createNearbyFineGrassCache,prepareWoodlandSelectionCache,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2780-stable-planting-v1';
+import {WOODLAND_FINE_GRASS,FINE_GRASS_CONTINUITY,sameWoodlandFineGrassPackedRoots,woodlandGrassClear,buildWoodlandFineGrass,applyVerifiedPlantingHabitat,createVegetationContinuityTrace,summarizeVegetationRoots,createNearbyFineGrassCache,prepareWoodlandSelectionCache,selectWoodlandFineGrass,filterWoodlandLegacyGrass,buildWoodlandFineGrassIndices} from './woodland-fine-grass.v1.js?rev=gen2780-stable-planting-v1';
 import { H_EARTH_WOODLAND_CLEARING_BOUNDS, H_EARTH_WOODLAND_CLEARING_ASSETS } from './woodland-clearing-trial.js';
 import { buildHEarthGlobalGroundCover, selectHEarthGlobalGroundCoverDraws, selectHEarthMeadowMidDistanceRepresentations, getHEarthMeadowBoundaryPreservedInstances, buildHEarthMeadowPresentationRoots, partitionHEarthMeadowSelectedInstances, sameHEarthMeadowSelectedIds } from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev=gen2780-stable-planting-v1';
 // Observation-only synchronous spans; the operation and its exceptions are unchanged.
@@ -1699,14 +1699,14 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const {pixels,...summary}=mask;resources.shorelineSoilCoverage={...summary,ready:true,derivedFrom:'EXISTING_OASIS_GRASS_ROOTS',terrainGeometryMutated:false};
       onProgress({phase:'SINGLE_POPULATION_PREPARING'});
       const generationStarted=performance.now();
-      const habitat=await buildWoodlandHabitatField({yieldControl:yieldToBrowserPaint,ravinePoints:resources.geologicalRuntime.formation.drainage.points,suitability:(x,z,region)=>{
+      const habitat=applyVerifiedPlantingHabitat(await buildWoodlandHabitatField({yieldControl:yieldToBrowserPaint,ravinePoints:resources.geologicalRuntime.formation.drainage.points,suitability:(x,z,region)=>{
         const support=visibleSurface.sample(x,z);if(!support||!admitGround(x,z,support))return 0;
         const slopeWeight=habitatSlopeWeight(support.slope,region);if(slopeWeight<=0)return 0;
         const local=unprojectPlanetVertex(x,support.y,z),material=pilotMaterialAt(local.x,local.z);
         if(material?.valid!==true||!(material.surfaceClass==='STONE_AND_SPARSE_SOIL'?material.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(material.surfaceClass)&&material.soilDepth>=.20))return 0;
-        if(!woodlandGrassClear(local.x,local.z,1.5)||(pilotPackage.landscapeCoverFootprints??[]).some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+1.5)||(pilotPackage.landscapeFloorFootprints??[]).some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+1.5))return 0;
+        if(!woodlandGrassClear(local.x,local.z,1.5)||(pilotPackage.landscapeCoverFootprints??[]).some(t=>Math.hypot(x-t.x,z-t.z)<(t.grassExclusionRadius??t.radius+1.5))||(pilotPackage.landscapeFloorFootprints??[]).some(t=>Math.hypot(x-t.x,z-t.z)<(t.grassExclusionRadius??t.trunkRadius+1.5)))return 0;
         const beach=visibleSurface.beach.sample({x,z,support});return slopeWeight*(1-habitatSmooth(0,WOODLAND_HABITAT.maximumSandCoverage,beach.rawSandCoverage));
-      }});
+      }}));
       const presentation=await buildWoodlandFineGrass(pilotPackage,{visibleSurface:resources.vegetationVisibleSurface,habitat,yieldControl:yieldToBrowserPaint,onProgress});
       const habitatTexture=createTexture();gl.activeTexture(gl.TEXTURE0+10);gl.bindTexture(gl.TEXTURE_2D,habitatTexture);
       gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,habitat.width,habitat.height,0,gl.RED,gl.UNSIGNED_BYTE,habitat.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
@@ -2771,3 +2771,4 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;
+

@@ -2,7 +2,7 @@
 let getRawPackage,getOW01RawPackage,evaluateHEarthRun8ER2ImmutableLiveRenderPackage,
   evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync,adoptHEarthRun8ER2DeferredLiveRenderPackage,
   getHEarthRun8ER2VegetationWorldTruthPlan,isHEarthRun8ER2VegetationWorldTruthPrepared,
-  createHEarthRun8ER2VegetationPresentationBatch;
+  createHEarthRun8ER2VegetationPresentationBatch,applyHEarthVerifiedPlantingPackage;
 let rawPackageModulePromise=null;
 
 const GRID_SCALE = 16777216;
@@ -261,7 +261,7 @@ rawPackageModulePromise=import('./live-render-package.run8e-r2.js?cb=meadow-dist
     adoptHEarthRun8ER2DeferredLiveRenderPackage,
     getHEarthRun8ER2VegetationWorldTruthPlan,
     isHEarthRun8ER2VegetationWorldTruthPrepared,
-    createHEarthRun8ER2VegetationPresentationBatch}=namespace);
+    createHEarthRun8ER2VegetationPresentationBatch,applyHEarthVerifiedPlantingPackage}=namespace);
 });
 // GEN2666_HYDRATION_BEGIN
 async function hydratePrecomputedBaseWorld(){
@@ -280,7 +280,10 @@ async function hydratePrecomputedBaseWorld(){
      value?.canonical?.packageIdentity!=='H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2'||
      value.raw.revision!==1||value.canonical.revision!==2)
     throw new Error('GEN2666_PACKAGE_IDENTITY_MISMATCH');
-  return value;
+  const raw=applyHEarthVerifiedPlantingPackage(value.raw);
+  const canonical=applyHEarthVerifiedPlantingPackage(value.raw,{canonicalBase:value.canonical});
+  if(canonical.eligible!==true)throw new Error('VERIFIED_PLANTING_CANONICAL_INVALID');
+  return {raw,canonical};
 }
 // GEN2666_HYDRATION_END
 let workerRawReadyPromise=null;
@@ -328,3 +331,4 @@ if(!startupWorkerMode&&earlyPreparationSelected&&typeof globalThis.Worker==='fun
   prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true}).catch(()=>{});
 }
 await(startupWorkerMode?(workerRawReadyPromise??rawPackageModulePromise):measurePreparationStage('CANONICAL_MAIN_RAW_MODULE_WAIT',()=>rawPackageModulePromise));
+

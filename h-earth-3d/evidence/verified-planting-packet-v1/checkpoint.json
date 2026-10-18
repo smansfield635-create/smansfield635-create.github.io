@@ -2,7 +2,7 @@
   "schema": "H_EARTH_VERIFIED_PLANTING_CHECKPOINT_v1",
   "generation": 2800,
   "operationId": "H_EARTH_VERIFIED_PLANTING_PACKET_20261017_001",
-  "stage": "DATA_MODULES_SAVED_NOT_INTEGRATED",
+  "stage": "BOTH_STARTUP_PATHS_INTEGRATED_RUNTIME_QUALIFICATION_PENDING",
   "branch": "h-earth/gen2800-verified-planting-packet-20261017",
   "baseCommit": "218e704c06c09bb0c4ca9a6f979abe0fe717387a",
   "commitBinding": "The Git commit containing this checkpoint; exact resulting SHA is recorded in issue6426 after push and remote readback.",
@@ -68,9 +68,40 @@
     "selectedCellsExact": 12577,
     "treeRecordsExact": 4,
     "method": "Independent exhaustive Node decode vs preserved float32 XYZA and uint32 seed/region packet; bitmap membership against selected-cells.json; real source habitatHash.",
-    "runtimeIntegration": false,
-    "gpuOrTabletAcceptance": false
+    "runtimeIntegration": "WIRING_SAVED_FULL_EXECUTION_PENDING",
+    "gpuOrTabletAcceptance": false,
+    "integrationAdapterTests": {
+      "passed": 4,
+      "total": 4,
+      "fixture": "SHA256-verified unchanged Gen2666 compressed world; exact adapter/evaluator and hydration function bodies",
+      "scope": "Source/CPU adapter only, not full worker/renderer/grass/GPU integration"
+    },
+    "woodlandIntegratedIdentity": false,
+    "continuousTrunkClearance": false,
+    "downstreamResourceQualification": false
   },
-  "nextAction": "Integrate these saved modules into both startup paths, preserving all woodland identities and shared exclusions, then commit that integration separately.",
-  "stopCondition": "No merge, deployment or publication. Source checks do not establish visual or tablet acceptance."
+  "nextAction": "Qualify this integrated exact candidate against the preserved packet: full woodland/ravine identities, actual per-root ground and exclusions, eight tree geometry/support/clearance, owner/cache/GPU resource limits and both full startup paths; independent review; draft PR only. Do not repeat census or admission.",
+  "stopCondition": "No merge, deployment or publication. Source checks do not establish visual or tablet acceptance.",
+  "previousCheckpoint": "06e6a35a64c48909a61b2a33c19a10e85950543f",
+  "integration": {
+    "generatedStartup": "Common raw-package adapter after generation",
+    "precomputedStartup": "Same adapter on verified archived raw and canonical prefixes; only appended canonical values are transformed",
+    "treeIds": [
+      "PROPOSED_OASIS_01",
+      "PROPOSED_OASIS_02",
+      "PROPOSED_OASIS_03",
+      "PROPOSED_OASIS_04"
+    ],
+    "originalTreesPreserved": true,
+    "treeSpansAdded": 8,
+    "treeTrianglesAdded": 18400,
+    "sectorTriangles": 79052,
+    "sectorTriangleBudget": 105000,
+    "newTreeGrassExclusionMeters": 2.108,
+    "selectedCellAtlasWired": true,
+    "woodlandAtlasTexelsPreserved": true,
+    "ravineMembership": "Saved decoder; every root rechecked against live support/water/material/shared exclusions; contact/population drift fails closed",
+    "admissionRepeated": false,
+    "censusRepeated": false
+  }
 }

@@ -15,3 +15,16 @@ The checkpoint is bound to its containing Git commit. The exact pushed SHA and r
 **One next action:** integrate these saved modules into both startup paths, preserving woodland identities, original trees and shared exclusions; commit that integration separately.
 
 Do not repeat admission or census. Do not publish or merge. Actual terrain support, integrated geometry, resource limits and both startup paths still require qualification. Visual and tablet acceptance remain separate. The decoder returns saved candidates, not a substitute for actual support/eligibility validation.
+
+
+## Second bounded checkpoint — startup integration
+
+Both startup paths now use one idempotent raw-package adapter. It appends translated copies of the exact approved four tree templates using saved target coordinates, with eight new bark/canopy spans and eight shared floor footprints. All original buffer prefixes and old-four footprint records remain unchanged. The precomputed path keeps its SHA/length/package verification and adapts original canonical prefixes directly; it does not rebuild/canonicalize the full old world. The generated path applies the same adapter before ordinary canonicalization.
+
+The existing woodland candidate planner uses the unchanged woodland field. Saved139198 ravine records replace procedural rear membership, with actual per-root terrain, water, material, slope and shared exclusion checks still mandatory. Packet-root rejection, terrain-contact drift over0.00002m, or exact woodland/ravine population mismatch fails closed. New-tree exclusion is explicitly2.108m: shared admission adds0.10m to stored cover radius2.008m, while grass/suitability use the explicit2.108m field. Other obstacle rules and old footprints are unchanged. Saved12577cell membership supplies the right atlas half over the packet bounds; left woodland texels are preserved. No data module or packet regeneration.
+
+Focused test command: `node --test h-earth-3d/validation/h-earth.verified-planting-packet.v1.test.mjs`.
+
+Executed4/4 adapter checks PASS on the exact archived Gen2666 fixture: original buffer/old-tree prefix custody, eight added spans and idempotence; generated numeric canonicalization equals the precomputed adapter for every numeric buffer; actual hydration function executes both adapters with original integrity checks; woodland atlas left-half bytes and explicit exclusion wiring. Added18400tree triangles; sector total79052 below105000. Saved count arithmetic fits600000total/150000ravine/9600000packed bytes. This arithmetic is not actual persistent GPU/owner allocation proof.
+
+Full integrated grass generation, exact385944woodland hash and139198ravine identity, actual eight-tree support/continuous trunk clearance, all downstream owner/cache/GPU resource ceilings, and both full startup executions remain pending. The450000woodland planner ceiling is unchanged and is not asserted to be a combined population ceiling. No visual/tablet acceptance, full-runtime PASS, draft PR completion, merge, deployment or publication is claimed by this checkpoint. Source review and exact remote readback are recorded in issue6426. Next: qualify this saved integration; no repeated admission or census.

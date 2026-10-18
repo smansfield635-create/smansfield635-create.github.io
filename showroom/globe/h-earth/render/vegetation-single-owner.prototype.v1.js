@@ -49,7 +49,7 @@ void main(){
  float side=(k==0||k==3||k==5)?-1.:1.;
  float level=(k==2||k==4||k==5)?1.:0.;
  float scale=uFine==1?detail:1.;
- float width=mix(.024,.045,h)*scale;
+ float width=mix(.010,.016,h)*scale;
  float height=mix(.11,.21,h)*scale;
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.86));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*.025*scale;

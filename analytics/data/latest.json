@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-18T09:31:12Z",
+  "generatedAt": "2026-10-18T10:28:28Z",
   "window30d": {
-    "start": "2026-09-18T09:31:12Z",
-    "end": "2026-10-18T09:31:12Z"
+    "start": "2026-09-18T10:28:28Z",
+    "end": "2026-10-18T10:28:28Z"
   },
   "daily": [
     {
@@ -96,15 +96,15 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 89
+      "pageLoads": 40
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 32
+      "pageLoads": 0
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 49
+      "pageLoads": 28
     },
     {
       "date": "2026-10-14",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 18
+      "pageLoads": 19
     }
   ],
   "summary": {
-    "pageLoads": 4160,
-    "botPageLoads": 1665,
-    "nonBotPageLoads": 2495
+    "pageLoads": 4154,
+    "botPageLoads": 1647,
+    "nonBotPageLoads": 2507
   },
   "referrers": [
     {

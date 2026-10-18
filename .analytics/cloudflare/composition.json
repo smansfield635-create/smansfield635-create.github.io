@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-18T09:31:12Z",
+  "generatedAt": "2026-10-18T10:28:28Z",
   "window": {
-    "start": "2026-09-18T09:31:12Z",
-    "end": "2026-10-18T09:31:12Z"
+    "start": "2026-09-18T10:28:28Z",
+    "end": "2026-10-18T10:28:28Z"
   },
   "dimensions": {
     "requestPath": [
@@ -379,28 +379,28 @@
     "userAgentOS": [
       {
         "value": "Android",
-        "pageLoads": 1873,
-        "visits": 736
+        "pageLoads": 1859,
+        "visits": 726
       },
       {
         "value": "Linux",
-        "pageLoads": 1850,
-        "visits": 1850
+        "pageLoads": 1800,
+        "visits": 1800
       },
       {
         "value": "Windows",
-        "pageLoads": 199,
-        "visits": 195
+        "pageLoads": 185,
+        "visits": 181
       },
       {
         "value": "MacOSX",
-        "pageLoads": 118,
-        "visits": 78
+        "pageLoads": 115,
+        "visits": 75
       },
       {
         "value": "iOS",
-        "pageLoads": 95,
-        "visits": 74
+        "pageLoads": 94,
+        "visits": 73
       },
       {
         "value": "Unknown",
@@ -411,13 +411,13 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 2495,
-        "visits": 1293
+        "pageLoads": 2507,
+        "visits": 1308
       },
       {
         "value": "1",
-        "pageLoads": 1665,
-        "visits": 1665
+        "pageLoads": 1647,
+        "visits": 1647
       }
     ],
     "navigationType": [

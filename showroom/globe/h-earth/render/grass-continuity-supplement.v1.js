@@ -1,7 +1,7 @@
 import {habitatHash,habitatNoise,sampleWoodlandHabitat} from './woodland-habitat-field.v1.js';
 import {isVerifiedPlantingPoint} from './verified-planting-cells.v1.js';
-/** Gen2806 explicit presentation allocation. Design budget, not a hardware claim. */
-export const GRASS_CONTINUITY_ALLOCATION=Object.freeze({maximumRoots:1000000,maximumPackedBytes:16000000,maximumWoodlandRoots:450000,maximumRavineRoots:614056,maximumTileRoots:1600,originalWoodlandRoots:385944,originalRavineRoots:139198,spacing:.14});
+/** Gen2809 connector presentation allocation. Design budget, not a hardware claim. */
+export const GRASS_CONTINUITY_ALLOCATION=Object.freeze({maximumRoots:1017124,maximumPackedBytes:16273984,maximumWoodlandRoots:450000,maximumRavineRoots:631180,maximumTileRoots:1600,originalWoodlandRoots:385944,originalRavineRoots:139198,spacing:.14});
 export const GRASS_CONTINUITY_BOUNDS=Object.freeze([-298,-570,88,-234]);
 export const GRASS_CONTINUITY_CONNECTOR=Object.freeze([[-108,-256],[-78,-278],[-38,-286],[0,-282],[40,-274]].map(Object.freeze));
 const clamp=x=>Math.max(0,Math.min(1,x)),smooth=x=>{const t=clamp(x);return t*t*(3-2*t);},f=Math.fround;

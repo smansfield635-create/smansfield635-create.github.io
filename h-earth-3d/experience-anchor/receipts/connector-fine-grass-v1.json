@@ -1,0 +1,78 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_CONNECTOR_FINE_GRASS_20261018_001",
+  "canonicalAdmissionGeneration": 2809,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/connector-fine-grass-v1/checkpoint.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs",
+    "h-earth-3d/evidence/connector-fine-grass-v1/checkpoint.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.connector-fine-grass.v1.mjs",
+      "sha256": "a985a5375c22e1dc980cb3c3427f11b12501190a3d84b2d0786e406a6b5b660d"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs",
+      "sha256": "20c32618707772873bed5b88ab1038d0b65fdc5bd3c5d4916dae7664a0083ce7"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz",
+      "sha256": "33fbd8bf3e05aafb522a3d48714990c60bd5dea16adcab8f09cbbb48eeff3038"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json",
+      "sha256": "be8dab6d5a72eb16afcbf2be59760bc0c5946e7202be0840d0b68f6ab2810cb4"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+      "sha256": "480d252ce43505e502b8278b474a9ec0874700bee18397ece5bae1d3bd644bcb"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "2099455f13a4a3273e33678428123beb11c09c4c5716b06ec8d774de1415e5f9"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-grass.v1.js",
+      "sha256": "bf540045c524bc2ae6787e9488e4ff9ff015543b4a607e785fa7fb0d6bb108a8"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "fb315f47e6f2a58fd323bc2ac4082c669b5eea72bc8793acfc17235f57dd558a"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "08bcd74a55022e60b4e3d743ecf9bd1df9bb08d0",
+    "receipt": "h-earth-3d/experience-anchor/receipts/precomputed-grass-v1.json",
+    "basis": "Same canonical embodied world, terrain geometry, trees, water, navigation, camera and single vegetation owner. Every988170 original root record and woodland atlas texel preserved. Intentional visual delta adds28954 admitted connector roots, narrows blades from4.8-9cm to2-3.2cm full width at unchanged11-21cm height, and strengthens organic soil treatment under BOTH woodland and ravine habitat. No interface or world substitution."
+  },
+  "limitations": [
+    "Source continuity and CPU data acceptance only; exact browser pixels, mobile GPU performance and physical-device acceptance remain unverified.",
+    "Nominal20m connector is clipped by admission and existing density quotas;757 shortfall cells.602 ground-route samples passed, not continuous proof.688 separate soil-atlas route samples min0.92857 mean0.99613; sampling does not establish rendered quality.",
+    "Owner directs established publication route without prepublication physical-device assessment. Exact-candidate browser readiness remains required.",
+    "Receipt does not create merge deployment publication or claim authority."
+  ]
+}

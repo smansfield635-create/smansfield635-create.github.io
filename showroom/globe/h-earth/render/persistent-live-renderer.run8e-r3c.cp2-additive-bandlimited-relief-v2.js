@@ -1017,8 +1017,8 @@ void main(){
       ravineUv=clamp(ravineUv,vec2(uHabitatHalfTexel),vec2(1.0-uHabitatHalfTexel))*uHabitatAtlasScale+vec2(uHabitatAtlasScale.x,0.0);
       habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,ravineUv).r);
     }
-    vec3 habitatSoil=vec3(0.145,0.116,0.067)*(0.90+0.18*noise2(vWorldPosition.xz*.29));
-    base=mix(base,habitatSoil,habitatCoverage*.34);
+    vec3 habitatSoil=vec3(0.105,0.112,0.060)*(0.90+0.18*noise2(vWorldPosition.xz*.29));
+    base=mix(base,habitatSoil,habitatCoverage*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
     // the geographic window fades well before the existing oasis bounds.

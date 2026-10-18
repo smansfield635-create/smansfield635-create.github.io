@@ -1,0 +1,92 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GRASS_SPATIAL_REPAIR_20261018_001",
+  "canonicalAdmissionGeneration": 2811,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/grass-spatial-repair-v1/checkpoint.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs",
+    "h-earth-3d/validation/h-earth.grass-spatial-repair.v1.test.mjs",
+    "h-earth-3d/evidence/grass-spatial-repair-v1/checkpoint.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-grass.v1.js",
+      "sha256": "0b9b6a5cda7ff6273efb0c2ffc082be422659262aeac1a3d2b5f773b69a7ef5f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz",
+      "sha256": "8edaa9574dd94372a7cf3047ec2b5e2395c9f15751de2c11a91f84ddad1a5cee"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json",
+      "sha256": "a080b661751e2fe50d0f4fa5b2b53bd1074f7099a25c7276871c018b4c42d1b1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "0bf41474cf1c4b6f7c85bef537bccd01109914d1bee912ec4c78ba09bfd7fb18"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "64126fa2a350465a3005f025b625f5e2b7101aed538aa4d84e0a7c1a4893eb47"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+      "sha256": "ae99fb16a7d445053d52fed8ee8e051e749e08f39a16eb5a2e11641f1852a62c"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs",
+      "sha256": "6375fe34565142ad4d5f21231ae84f74b204376717e4fd80cd30c27dd45bfbaf"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/foothill-meadow-field.v1.js",
+      "sha256": "2ac39e65c156f918ad464761d3fcacda9ce72d2d9dba912b0044d5a374da3e48"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-spatial-repair-field.v1.js",
+      "sha256": "427dfd2290eaac1332c2259ff6f1e963e2f9a111047fd008ced1b455e7ef2f95"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.grass-spatial-repair.v1.mjs",
+      "sha256": "6f301389859758e19647a293ca98760dc59722753ccda6c3537f315a20b09212"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.grass-spatial-repair.v1.test.mjs",
+      "sha256": "cd2cc75781481e14357b469d29f15cbaf55773b5c7d5ca94ffb6c546dc03d8b4"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "12357909b2cbaab16052b6c30459065547fe9440",
+    "receipt": "h-earth-3d/experience-anchor/receipts/foothill-meadow-v1.json",
+    "basis": "Same canonical world, geometry, trees, bark, water, beach protections, navigation, camera, renderer and uphill color. All1127903 baseline records preserved byte-for-byte. Add122231 admitted static roots in confirmed foothills and bounded ravine shoulders; woodland atlas unchanged; right atlas coordinates unchanged and values only increase."
+  },
+  "limitations": [
+    "Source/data continuity acceptance only; browser pixels, GPU performance and physical-device acceptance remain pending.",
+    "CPU tests and actual-world compiler do not establish physical acceptance.",
+    "Always-submitted population increases10.84%; saved-data loading retained, runtime performance not yet measured.",
+    "306 cells with admitted additions remain below requested per-cell quota; protections and candidate eligibility remain controlling.",
+    "Receipt creates no merge, publication or claim authority."
+  ]
+}

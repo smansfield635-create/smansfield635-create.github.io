@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-18T15:27:51Z",
+  "generatedAt": "2026-10-18T16:30:38Z",
   "window": {
-    "start": "2026-07-20T15:27:51Z",
-    "end": "2026-10-18T15:27:51Z"
+    "start": "2026-07-20T16:30:38Z",
+    "end": "2026-10-18T16:30:38Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -70,13 +70,13 @@
         "pageLoads": 140,
         "visits": 0
       },
-      "/": {
-        "pageLoads": 1033,
-        "visits": 743
-      },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 1033,
+        "visits": 743
       },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
@@ -102,12 +102,12 @@
         "pageLoads": 110,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/test/reverse-audit/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/research/evidence-and-sources/": {
@@ -150,6 +150,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
@@ -159,10 +163,6 @@
         "visits": 0
       },
       "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
       },
@@ -198,12 +198,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/interfaces.html": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/structure/interfaces.html": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -218,13 +218,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/integrity/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/laws/categories/structure/boundaries.html": {
         "pageLoads": 10,
         "visits": 10
+      },
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -238,7 +238,15 @@
         "pageLoads": 60,
         "visits": 30
       },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -252,14 +260,6 @@
       },
       "/door/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -290,13 +290,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 40,
-        "visits": 30
-      },
       "/campaigns/rob/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 40,
+        "visits": 30
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,

@@ -1,0 +1,60 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_TABLET_STARTUP_REPAIR_20261018_001",
+  "canonicalAdmissionGeneration": 2812,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/tablet-startup-v1/checkpoint.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.tablet-startup.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.tablet-startup.v1.test.mjs",
+    "h-earth-3d/evidence/tablet-startup-v1/checkpoint.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-grass.v1.js",
+      "sha256": "d61cf4b0769679ba0c81288d86d6a5fe8c8a826c7755f1bab7220a423a039f63"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "1d33775676d3907970d55f7b2964fc3ecf6ec21a604d8412b5f6c03eba88f608"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "86b7f8393b294f51fa560757fbd7dda683caf7a58083cdd72123441fc0ca5762"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.tablet-startup.v1.test.mjs",
+      "sha256": "9c8572f580927001394fb58058153b12af379e84bd44c0d3c879b74ef453ba03"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "f5ff791472f6cb91c6f2623cb75d04b43b7a33fa",
+    "receipt": "h-earth-3d/experience-anchor/receipts/precomputed-grass-v1.json",
+    "basis": "Source continuity plus exact CPU byte equality for all1250134 roots, atlas and control IDs. Same world, shaders, navigation and draw/upload policy."
+  },
+  "limitations": [
+    "Source continuity and CPU identity only; exact-candidate browser and physical tablet acceptance pending.",
+    "No merge, deployment or publication authority created."
+  ]
+}

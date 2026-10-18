@@ -3,7 +3,7 @@
  * supplies surface geometry and the active physical navigation support. No new world.
  */
 import {GEOLOGICAL_FORMATION_SITES,makeCanonicalAuthoringTerrainSampler,unprojectPlanetVertex,createGeologicalFormation,
-        deriveBaseTriangleRetirement} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
+        deriveBaseTriangleRetirement,constructSurfaceReplacementPatch} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {constructGeologicalPortalAssembly,sampleFormationWalkable,projectGeologicalMeshForRenderer}
   from '../../../../h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs';
 import {constructHEarthSweptPassageMesh} from '../render/geometry-kernel.sweep.v1.js';
@@ -20,8 +20,8 @@ export function shouldPresentHEarthDrawRange(range){
 }
 export const GEOLOGICAL_RUNTIME_BRIDGE_ID='H_EARTH_GEN2735_RUNTIME_GEOLOGICAL_BRIDGE_v1';
 const SITE=GEOLOGICAL_FORMATION_SITES.B_REAR_RAVINE;
-const BOUNDS=Object.freeze({xMin:-120,xMax:96,zMin:-440,zMax:-224});
-const SAMPLER_BOUNDS=Object.freeze({xMin:-160,xMax:192,zMin:-448,zMax:-120});
+const BOUNDS=Object.freeze({xMin:-304,xMax:96,zMin:-568,zMax:-224});
+const SAMPLER_BOUNDS=Object.freeze({xMin:-320,xMax:256,zMin:-720,zMax:-80});
 const DIRS=Object.freeze([[-1,-1],[0,-1],[1,-1],[-1,0],[1,0],[-1,1],[0,1],[1,1]]);
 let active=null;
 function fail(s){throw Error('GEOLOGICAL_RUNTIME_BRIDGE_INVALID:'+s)}
@@ -30,8 +30,12 @@ export function expandVegetationCorridorPoints(points){
   const end=points?.[points.length-1];
   // The portal head precedes the 78 original D8 survey stations.
   if(points?.length!==79||end?.x!==-80||end?.z!==-352)fail('DRY_EXTENSION_SOURCE_ENDPOINT');
-  return Object.freeze([...points,...Array.from({length:32},(_,i)=>
-    Object.freeze({x:end.x,z:end.z-2*(i+1)}))]);
+  const route=[...points,...Array.from({length:32},(_,i)=>Object.freeze({x:end.x,z:end.z-2*(i+1)}))];
+  for(const target of [{x:-112,z:-448},{x:-160,z:-472},{x:-208,z:-488},{x:-256,z:-512},{x:-272,z:-544}]){
+    const start=route.at(-1),steps=Math.ceil(Math.hypot(target.x-start.x,target.z-start.z)/2);
+    for(let i=1;i<=steps;i++)route.push(Object.freeze({x:start.x+(target.x-start.x)*i/steps,z:start.z+(target.z-start.z)*i/steps}));
+  }
+  return Object.freeze(route);
 }
 /** Reconstruct strict downhill flow from actual indexed canonical authoring heights. */
 export function traceGeologicalRuntimeDrainage(sampler,site=SITE){
@@ -513,8 +517,8 @@ export function constructGeologicalRuntimeBridge(canonical){
   const smoother=v=>{v=clamp(v,0,1);return v*v*v*(v*(v*6-15)+10)};
   const extendedOutdoorTerrain=(x,z)=>{
     const original=baseFormation.excavatedOutdoorTerrain(x,z);
-    if(Math.abs(x-extensionStart.x)>=8.45||z>extensionStart.z+8.45||z<extensionStart.z-64-8.45)return original;
-    const nearest=nearestRouteSegment(dryExtension,x,z);
+    if(z>extensionStart.z+8.45)return original;
+    const nearest=nearestRouteSegment(dryExtension,x,z);if(nearest.distance>=8.45)return original;
     // Match the accepted rounded-bank excavation at the source endpoint. The
     // original landform remains authoritative wherever this dry cut is higher.
     const radius=7.2+1.25*Math.sin((drainagePoints.length-1+nearest.segment)*.28);
@@ -524,7 +528,8 @@ export function constructGeologicalRuntimeBridge(canonical){
   const channelInfluenceAt=(x,z)=>{
     const nearest=nearestRouteSegment(vegetationCorridorPoints,x,z);if(!nearest)return 0;
     const approachFade=1-smooth((z-SITE.drainageHeadZ)/(SITE.portalZ-SITE.drainageHeadZ));
-    const edge=Math.min(x-BOUNDS.xMin,BOUNDS.xMax-x,z-BOUNDS.zMin,BOUNDS.zMax-z);
+    const oldEdge=Math.min(x+120,96-x,z+440,-224-z);
+    const edge=z>=-424?oldEdge:Math.min(x-BOUNDS.xMin,BOUNDS.xMax-x,z-BOUNDS.zMin,BOUNDS.zMax-z);
     return smooth(1-nearest.distance/12)*approachFade*smooth(edge/12);
   };
   const authoredOutdoorTerrain=(x,z)=>extendedOutdoorTerrain(x,z)-
@@ -599,9 +604,12 @@ export function constructGeologicalRuntimeBridge(canonical){
     floorAt:physicalFloorAt,roofAt:physicalRoofAt,insideVoid:physicalInsideVoid,
     coverSamples:Object.freeze(coverSamples),minimumRoofCover:minimumKernelRoofCover,
     excavatedOutdoorTerrain,rockSolidAt:(x,y,z)=>y<=excavatedOutdoorTerrain(x,z)&&!physicalInsideVoid(x,y,z)});
-  const assembledPortal=constructGeologicalPortalAssembly(formation,terrainAt,{bounds:BOUNDS});
-  const rawPortal=Object.freeze({...assembledPortal,terrainWithoutAperture:
-    conformEntranceTerrain(assembledPortal.terrainWithoutAperture,kernel.mesh,excavatedOutdoorTerrain,SITE.portalZ)});
+  const assembledPortal=constructGeologicalPortalAssembly(formation,terrainAt,{bounds:{xMin:-120,xMax:96,zMin:-440,zMax:-224}});
+  const conformed=conformEntranceTerrain(assembledPortal.terrainWithoutAperture,kernel.mesh,excavatedOutdoorTerrain,SITE.portalZ);
+  const extensions=[{xMin:-304,xMax:96,zMin:-568,zMax:-440}].map(bounds=>constructSurfaceReplacementPatch(formation,{bounds,spacing:2}));
+  const p=[...conformed.positions],ind=[...conformed.indices];
+  for(const patch of extensions){const offset=p.length/3;for(const value of patch.positions)p.push(value);for(const value of patch.indices)ind.push(value+offset);}
+  const rawPortal=Object.freeze({...assembledPortal,terrainWithoutAperture:Object.freeze({...conformed,positions:new Float32Array(p),indices:new Uint32Array(ind),vertexCount:p.length/3,triangleCount:ind.length/3})});
   const cliff=buildReliefCliffFace(formation,terrainAt,rawPortal.aperture,rawPortal.terrainWithoutAperture);
   const physicalFormation=Object.freeze({...formation,rockFaceFrontAt:cliff.rockFaceFrontAt,lowerEntranceSeamAt:cliff.lowerEntranceSeamAt,
     rockSolidAt:(x,y,z)=>{
@@ -616,7 +624,9 @@ export function constructGeologicalRuntimeBridge(canonical){
     }});
   const portal=Object.freeze({...rawPortal,exposedCliffFace:cliff.mesh,diagnostics:Object.freeze({
     ...rawPortal.diagnostics,...cliff.diagnostics,openCaveApertureCells:true})});
-  const retirement=deriveBaseTriangleRetirement(canonical,BOUNDS);
+  const retirementParts=[{xMin:-120,xMax:96,zMin:-440,zMax:-224},{xMin:-304,xMax:96,zMin:-568,zMax:-440}].map(bounds=>deriveBaseTriangleRetirement(canonical,bounds));
+  const triangleOffsets=Uint32Array.from([...new Set(retirementParts.flatMap(p=>[...p.triangleOffsets]))].sort((a,b)=>a-b));
+  const retirement=Object.freeze({...retirementParts[0],triangleOffsets,triangleCount:triangleOffsets.length,bounds:BOUNDS});
   const basinWater=buildOasisWater(formation,terrainAt);
   const parts=[
     ['ERODED_TERRAIN',portal.terrainWithoutAperture],
@@ -631,7 +641,9 @@ export function constructGeologicalRuntimeBridge(canonical){
   const sampleWaterAt=(x,z)=>{if(!Number.isFinite(x)||!Number.isFinite(z))fail('WATER_SAMPLE_NONFINITE');return sampleWaterTriangles(emittedWater,x,z);};
   const emittedOutdoor=meshes.filter(p=>p.role==='ERODED_TERRAIN').flatMap(p=>waterTriangles(p.mesh,{projected:true,role:'OUTDOOR_TERRAIN'}));
   const sampleOutdoorAt=(x,z)=>{if(!Number.isFinite(x)||!Number.isFinite(z))fail('OUTDOOR_SAMPLE_NONFINITE');return sampleWaterTriangles(emittedOutdoor,x,z);};
-  const output=Object.freeze({sampleWaterAt,sampleOutdoorAt,contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
+  const plannedChannelDistanceAt=(x,z)=>nearestRouteSegment(vegetationCorridorPoints,x,z).distance;
+  const isPlannedWaterFootprint=(x,z)=>plannedChannelDistanceAt(x,z)<=6||!!sampleWaterAt(x,z);
+  const output=Object.freeze({isPlannedWaterFootprint,plannedChannelDistanceAt,sampleWaterAt,sampleOutdoorAt,contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
     formation:physicalFormation,portal,retirement,meshes,route:trace,originalTerrainColorAt,originalTerrainContactAt,
     cavernLightVisibility:makeCavernLightVisibility([kernel.mesh,cliff.mesh]),
     originalTerrainElevationAt:terrainAt,
@@ -654,7 +666,7 @@ export function resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight=2.25}={}){
   if(!active)return null;
   const {site,formation,localBounds:bounds}=active;
   if(z<site.portalZ){
-    if(x<bounds.xMin||x>bounds.xMax||z<bounds.zMin||z>bounds.zMax)return null;
+    if(x<bounds.xMin||x>bounds.xMax||z<bounds.zMin||z>bounds.zMax||(z>-440&&x< -120))return null;
     const ground=active.sampleOutdoorAt(x,z);
     if(!ground)return Object.freeze({class:'EXTERIOR_DRY_CHANNEL',eligible:false,x,z,issues:['GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING']});
     const support={class:'EXTERIOR_DRY_CHANNEL',eligible:true,x,z,footY:ground.y,eyeY:ground.y+eyeHeight,
@@ -682,11 +694,15 @@ export function retireGeologicalBaseIndices(source,retirement){
  * This bounded blend is zero at the patch boundary; all accepted base colors
  * remain authoritative outside the carved landform.
  */
+function geologicalRimDistance(x,z,b){
+ const segments=[[b.xMin,b.zMin,b.xMax,b.zMin],[b.xMax,b.zMin,b.xMax,b.zMax],[b.xMax,b.zMax,-120,b.zMax],[-120,b.zMax,-120,-440],[-120,-440,b.xMin,-440],[b.xMin,-440,b.xMin,b.zMin]];
+ let best=Infinity;for(const [ax,az,bx,bz] of segments){const dx=bx-ax,dz=bz-az,t=Math.max(0,Math.min(1,((x-ax)*dx+(z-az)*dz)/(dx*dx+dz*dz)));best=Math.min(best,Math.hypot(x-ax-t*dx,z-az-t*dz));}return best;
+}
 export function sampleGeologicalMaterialExposure(model,role,x,z){
   if(model?.contractId!==GEOLOGICAL_RUNTIME_BRIDGE_ID||
       !Number.isFinite(x)||!Number.isFinite(z))fail('MATERIAL_SAMPLE_INVALID');
   const b=model.localBounds;
-  const edge=Math.min(x-b.xMin,b.xMax-x,z-b.zMin,b.zMax-z);
+  const edge=geologicalRimDistance(x,z,b);
   const f=Math.max(0,Math.min(1,edge/12)),fade=f*f*(3-2*f);
   const before=model.originalTerrainElevationAt(x,z);
   const after=model.formation.excavatedOutdoorTerrain(x,z);
@@ -711,7 +727,7 @@ export function reconcileGeologicalTerrainRim(model,role,mesh,attributes,source)
   const b=model.localBounds;
   for(let i=0;i<mesh.vertexCount;i++){
     const p=unprojectPlanetVertex(mesh.positions[i*3],mesh.positions[i*3+1],mesh.positions[i*3+2]);
-    const edge=Math.min(p.x-b.xMin,b.xMax-p.x,p.z-b.zMin,b.zMax-p.z);
+    const edge=geologicalRimDistance(p.x,p.z,b);
     if(edge>=12)continue;
     const f=Math.max(0,Math.min(1,edge/12)),weight=1-f*f*(3-2*f);
     const q=model.originalTerrainContactAt(p.x,p.z);

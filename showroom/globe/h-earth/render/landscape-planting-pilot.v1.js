@@ -42,7 +42,7 @@ export async function createUniformGroundAdmission({visibleSurface,geology,toLoc
   if(!Number.isFinite(beach.rawSandCoverage)||beach.rawSandCoverage<0||beach.rawSandCoverage>maximumSandCoverage)return reject('RENDERED_BEACH');
   const water=visibleSurface.water.sample(x,z),future=geology.sampleWaterAt(x,z);
   if(water&&support.y<=water.y+.03)return reject('RENDERED_WATER');
-  if(future&&support.y<=future.y+.03)return reject('FUTURE_WATER');
+  if(future||geology.isPlannedWaterFootprint?.(x,z))return reject('FUTURE_WATER');
   if(boundary.distance(x,z)<=2)return reject('BARE_CHANNEL_MARGIN');
   const local=toLocal(x,support.y,z),structure=sampleStructure(local.x,local.z);
   if(structure?.hardExclusions?.length||structure?.planningHolds?.length)return reject('STRUCTURE');

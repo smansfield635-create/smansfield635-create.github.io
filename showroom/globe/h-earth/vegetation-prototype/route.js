@@ -2,7 +2,7 @@
 import {prepareHEarthRun8ER2CanonicalLiveRenderPackage} from '../render/live-render-package.run8e-r2.canonical.js?cb=meadow-distribution-20261006';
 import {createHEarthRun8ER3AFrameUniformPacket} from '../render/live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
 import {createHEarthRun8ER3CPersistentRenderer} from '../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
-import {installHEarthRun8ER3D2PointerTouchIntake} from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2780-stable-planting-v1';
+import {installHEarthRun8ER3D2PointerTouchIntake,resolveHEarthNavigationBoundaryFeedback} from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2780-stable-planting-v1';
 
 import {createFramePresenter} from '../render/performance-scheduling.v1.js?rev=gen2795-performance-v1';
 import {createHEarthLoadingScreen} from './loading-screen.v1.js?rev=gen2795-performance-v1';
@@ -21,6 +21,12 @@ const delay=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds))
 const control=Object.freeze({x:-139.40267987050615,z:-194.5,radius:2});
 let renderer=null,intake=null,presenter=null,sequence=0,replay=null,preparation=null,interactiveReady=false;
 let diagnosticTourMoving=false;
+const boundaryStatus=document.createElement('output');
+boundaryStatus.id='h-earth-navigation-boundary';boundaryStatus.setAttribute('role','status');boundaryStatus.setAttribute('aria-live','polite');boundaryStatus.hidden=true;
+boundaryStatus.style.cssText='position:fixed;bottom:max(100px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:5;max-width:calc(100vw - 32px);padding:10px 12px;border-radius:8px;background:rgba(7,20,18,.88);color:#f1f7f3;font:13px/1.4 system-ui,sans-serif;text-align:center;pointer-events:none';
+document.body.appendChild(boundaryStatus);
+function updateBoundaryFeedback(proposal){boundaryStatus.textContent=resolveHEarthNavigationBoundaryFeedback(boundaryStatus.textContent,proposal);boundaryStatus.hidden=!boundaryStatus.textContent;}
+
 if(!diagnosticReplay)canvas.style.pointerEvents='none';
 const frames=[],observations=[],timing={firstFrameMilliseconds:null,populatedMilliseconds:null,replayCompleteMilliseconds:null};
 let renderFrameCallCount=0,gpuFramebufferPresentationCount=0;
@@ -139,7 +145,7 @@ try{
   }
   await prepareHEarthRun8ER2CanonicalLiveRenderPackage({deferVegetation:true,onProgress:progress('world','Preparing the preserved landscape…')});
   presenter=createFramePresenter({present,onPresented:(state,frame)=>loader?.observePresentation(state,frame)});
-  intake=installHEarthRun8ER3D2PointerTouchIntake({surface:canvas,onProposal:(proposal,state)=>{if(renderer&&(diagnosticReplay||interactiveReady)&&!diagnosticTourMoving){loader?.observeInput(proposal,state);presenter.request(state);}}});
+  intake=installHEarthRun8ER3D2PointerTouchIntake({surface:canvas,onProposal:(proposal,state)=>{updateBoundaryFeedback(proposal);if(renderer&&(diagnosticReplay||interactiveReady)&&!diagnosticTourMoving){loader?.observeInput(proposal,state);presenter.request(state);}}});
   const initial=intake.getNavigationState();
   assert(Math.hypot(initial.position.x-control.x,initial.position.z-control.z)<.01,'INITIAL_CAMERA_MISMATCH');
   assert(Math.abs(initial.yawDegrees)<.01,'INITIAL_YAW_MISMATCH');

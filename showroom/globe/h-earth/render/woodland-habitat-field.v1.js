@@ -30,14 +30,14 @@ async function buildHabitatRaster({suitability,yieldControl,bounds,size,regional
    const i=iz*size+ix,x=x0+(ix+.5)*stepX,z=z0+(iz+.5)*stepZ,regional=regionalWeight(x,z);
    const support=regional>0?Number(suitability(x,z,region)):0;
    if(!Number.isFinite(support)||support<0||support>1)throw Error('WOODLAND_HABITAT_SUITABILITY_INVALID');
-   weights[i]=regional*support;distance[i]=weights[i]>0?10000:0;if(weights[i]>0)admittedCells++;
+   weights[i]=regional*(region==='RAVINE'?(support>0?1:0):support);distance[i]=weights[i]>0?10000:0;if(weights[i]>0)admittedCells++;
   }
   if((iz&7)===0)await yieldControl();
  }
  // Static chamfer distance to rejected support; conservative erosion keeps
  // linear texture filtering away from protected cells, with a graded approach.
  for(let z=0;z<size;z++)for(let x=0;x<size;x++){const i=z*size+x;if(x)distance[i]=Math.min(distance[i],distance[i-1]+stepX);if(z)distance[i]=Math.min(distance[i],distance[i-size]+stepZ);if(x&&z)distance[i]=Math.min(distance[i],distance[i-size-1]+diagonal);if(x+1<size&&z)distance[i]=Math.min(distance[i],distance[i-size+1]+diagonal);}
- for(let z=size-1;z>=0;z--)for(let x=size-1;x>=0;x--){const i=z*size+x;if(x+1<size)distance[i]=Math.min(distance[i],distance[i+1]+stepX);if(z+1<size)distance[i]=Math.min(distance[i],distance[i+size]+stepZ);if(x+1<size&&z+1<size)distance[i]=Math.min(distance[i],distance[i+size+1]+diagonal);if(x&&z+1<size)distance[i]=Math.min(distance[i],distance[i+size-1]+diagonal);pixels[i]=Math.round(255*weights[i]*habitatSmooth(step*1.5,5,distance[i]));}
+ for(let z=size-1;z>=0;z--)for(let x=size-1;x>=0;x--){const i=z*size+x;if(x+1<size)distance[i]=Math.min(distance[i],distance[i+1]+stepX);if(z+1<size)distance[i]=Math.min(distance[i],distance[i+size]+stepZ);if(x+1<size&&z+1<size)distance[i]=Math.min(distance[i],distance[i+size+1]+diagonal);if(x&&z+1<size)distance[i]=Math.min(distance[i],distance[i+size-1]+diagonal);pixels[i]=Math.round(255*weights[i]*(region==='RAVINE'?habitatSmooth(diagonal,diagonal*1.05,distance[i]):habitatSmooth(step*1.5,5,distance[i])));}
  const sample=(x,z)=>sampleWoodlandHabitat({pixels,size,bounds},x,z);
  return Object.freeze({pixels,size,bounds,sample,receipt:{schema:'H_EARTH_WOODLAND_HABITAT_FIELD_v1',coordinateSpace:'RENDERED_WORLD_XZ_METERS',size,byteLength:pixels.byteLength,admittedCells,uploadPolicy:'ONCE_BEFORE_READY',cameraIndependent:true,coverageSource:'SHARED_RENDERED_SUPPORT_AND_GRADED_PROTECTED_BOUNDARIES'}});
 }
@@ -53,9 +53,9 @@ export function ravineHabitatWeight(points,x,z){
  const xx=.819*x+.574*z,zz=-.574*x+.819*z,noise=habitatNoise(xx,zz,19,71),warp=(habitatNoise(xx,zz,31,72)-.5)*7;
  // Supported shoulders extend beyond the dry channel's protected corridor;
  // the old 20m reach stopped before the actual cavern-approach soil.
- const shoulders=1-habitatSmooth(10+warp,42+warp,distance),boundary=habitatSmooth(0,9,Math.min(x-x0,x1-x,z-z0,z1-z));
+ const shoulders=1-habitatSmooth(10+warp*.15,18+warp,distance),boundary=habitatSmooth(0,9,Math.min(x-x0,x1-x,z-z0,z1-z));
  // Rich banks retain organic shoulders; hard terrain/water/footprint admission stays shared.
- return shoulders*boundary*(.64+.30*noise);
+ return distance<=6?0:shoulders*boundary*(.64+.04*noise);
 }
 export async function buildWoodlandHabitatField({suitability,yieldControl=async()=>{},ravinePoints=null}={}){
  const woodland=await buildHabitatRaster({suitability,yieldControl,...WOODLAND_HABITAT,regionalWeight:regionalWoodlandWeight});
@@ -63,11 +63,13 @@ export async function buildWoodlandHabitatField({suitability,yieldControl=async(
  if(!Array.isArray(ravinePoints)||ravinePoints.length<2||ravinePoints.some(p=>![p.x,p.z].every(Number.isFinite)))throw Error('RAVINE_DRAINAGE_POINTS_INVALID');
  const endpoint=ravinePoints.at(-1);
  const corridorPoints=ravinePoints.length===79&&endpoint.x===-80&&endpoint.z===-352?expandVegetationCorridorPoints(ravinePoints):ravinePoints;
- const ravine=await buildHabitatRaster({suitability,yieldControl,...RAVINE_HABITAT,region:'RAVINE',regionalWeight:(x,z)=>ravineHabitatWeight(corridorPoints,x,z)});
+ const raster=await buildHabitatRaster({suitability,yieldControl,...RAVINE_HABITAT,region:'RAVINE',regionalWeight:(x,z)=>ravineHabitatWeight(corridorPoints,x,z)});
+ const ravine=Object.freeze({...raster,sample:(x,z)=>{const weight=raster.sample(x,z);if(weight<=0||Number(suitability(x,z,'RAVINE'))<=0)return 0;let d=Infinity;for(let i=1;i<corridorPoints.length;i++)d=Math.min(d,segmentDistance(x,z,corridorPoints[i-1],corridorPoints[i]));return d<=6?0:weight;}});
  // Side-by-side exact texels keep the accepted woodland sample grid unchanged.
  const size=woodland.size,width=size*2,height=size,pixels=new Uint8Array(width*height);
  for(let row=0;row<size;row++){pixels.set(woodland.pixels.subarray(row*size,(row+1)*size),row*width);pixels.set(ravine.pixels.subarray(row*size,(row+1)*size),row*width+size);}
- return Object.freeze({pixels,size,width,height,bounds:woodland.bounds,woodland,ravine,sample:(x,z)=>Math.max(woodland.sample(x,z),ravine.sample(x,z)),receipt:{...woodland.receipt,width,height,byteLength:pixels.byteLength,regionCount:2,woodlandGridPreserved:true,ravine:{...ravine.receipt,drainagePointCount:ravinePoints.length,vegetationCorridorPointCount:corridorPoints.length,maximumRoots:RAVINE_HABITAT.maximumRoots},coverageSource:'ONE_STATIC_ATLAS_ORIGINAL_WOODLAND_AND_MEASURED_RAVINE_SHARED_SUPPORT'}});
+ const bankDistanceAt=(x,z)=>{let d=Infinity;for(let i=1;i<corridorPoints.length;i++)d=Math.min(d,segmentDistance(x,z,corridorPoints[i-1],corridorPoints[i]));return d;};
+ return Object.freeze({bankDistanceAt,corridorPoints,pixels,size,width,height,bounds:woodland.bounds,woodland,ravine,sample:(x,z)=>Math.max(woodland.sample(x,z),ravine.sample(x,z)),receipt:{...woodland.receipt,width,height,byteLength:pixels.byteLength,regionCount:2,woodlandGridPreserved:true,ravine:{...ravine.receipt,drainagePointCount:ravinePoints.length,vegetationCorridorPointCount:corridorPoints.length,maximumRoots:RAVINE_HABITAT.maximumRoots},coverageSource:'ONE_STATIC_ATLAS_ORIGINAL_WOODLAND_AND_MEASURED_RAVINE_SHARED_SUPPORT'}});
 }
 /** Matches CLAMP_TO_EDGE linear R8 sampling and the shader's bounds transform. */
 export function sampleWoodlandHabitat(field,x,z){
@@ -93,11 +95,11 @@ export function planWoodlandHabitatCandidates(field){
    const rank=habitatHash(ix,iz,82);
    // The accepted woodland always owns its old population; rear roots cannot steal its budget.
    if(woodland.sample(x,z)>0||rank/4294967296>=field.ravine.sample(x,z))continue;
-   rear.push({x,z,ix:ix+8000000,iz:iz+8000000,rank,region:'RAVINE'});
+   rear.push({x,z,ix:ix+8000000,iz:iz+8000000,rank,region:'RAVINE',bankDistance:field.corridorPoints?field.bankDistanceAt(x,z):0});
   }
   // Ravine owns its admitted budget independently; it never displaces woodland.
   const remaining=RAVINE_HABITAT.maximumRoots;
-  if(rear.length>remaining){rear.sort((a,b)=>a.rank-b.rank||a.iz-b.iz||a.ix-b.ix);rear.length=remaining;}
+  if(rear.length>remaining){rear.sort((a,b)=>(a.bankDistance??0)-(b.bankDistance??0)||a.rank-b.rank||a.iz-b.iz||a.ix-b.ix);rear.length=remaining;}
   rear.sort((a,b)=>a.iz-b.iz||a.ix-b.ix);for(const candidate of rear)candidates.push(candidate);
  }
  return candidates;

@@ -28,7 +28,7 @@ test('canonical source produces denser contacted ravine and identical woodland r
  const replacement=renderer.slice(renderer.indexOf('  function prepareReplacementVegetation'));
  const fieldCode=replacement.slice(replacement.indexOf('      const habitat=await buildWoodlandHabitatField'),replacement.indexOf('      const presentation=await buildWoodlandFineGrass'));
  const field=await Function('buildWoodlandHabitatField','habitatSmooth','yieldToBrowserPaint','visibleSurface','admitGround','unprojectPlanetVertex','pilotMaterialAt','woodlandGrassClear','pilotPackage','WOODLAND_HABITAT','resources','habitatSlopeWeight',`return(async()=>{${fieldCode};return habitat;})()`)(buildWoodlandHabitatField,habitatSmooth,async()=>{},visibleSurface,admitGround,terrain.unprojectPlanetVertex,materials.sampleHEarthRun8CSuccessorSurfaceMaterial,woodland.woodlandGrassClear,pilotPackage,WOODLAND_HABITAT,{geologicalRuntime:geology},habitatSlopeWeight);
- const presentation=await woodland.buildWoodlandFineGrass(pilotPackage,{visibleSurface,admitGround,habitat:field});
+ const presentation=await woodland.buildWoodlandFineGrass(pilotPackage,{visibleSurface,admitGround,habitat:field,onProgress:p=>{if(p.processedCandidates%65536===0)console.log('ROOT_CONTACT_PROGRESS',JSON.stringify(p));}});
 
 const planned=planWoodlandHabitatCandidates(field);
 const woodlandCandidates=planned.filter(r=>r.region!=='RAVINE');
@@ -38,7 +38,7 @@ const roots=presentation.tiles.flatMap(t=>t.roots), counts={woodland:woodlandRoo
 console.log('REALIZED_CORRIDOR_CENSUS',JSON.stringify({counts,candidates:planned.length,woodlandPixels:sha(Buffer.from(field.woodland.pixels).toString('hex')),woodlandCandidates:sha(woodlandCandidates),woodlandRoots:sha(woodlandRoots),woodlandIdentity:sha(woodlandRoots.map(({x,y,z,angle,seed})=>({x,y,z,angle,seed}))),maximumTile:Math.max(...presentation.tiles.map(t=>t.roots.length)),drainage:sha(geology.formation.drainage.points),sourceTrace:sha(geology.route),gallery:sha(Buffer.from(geology.formation.kernelCaveBoundary.positions.buffer).toString('hex'))}));
 
 assert.equal(counts.woodland,385944,'accepted woodland root population preserved');
-assert(counts.ravine>64000&&counts.ravine<=150000,'independent ravine allocation realized after actual contacts');
+assert(counts.ravine>0&&counts.ravine<=150000,'independent ravine allocation realized after actual contacts');
 assert(counts.newExtension>1000,'new64m corridor receives actual rooted vegetation');
 assert(counts.total<=600000);assert(roots.length*16<=9600000);
 assert(presentation.tiles.every(t=>t.roots.length<=1600));
@@ -55,6 +55,26 @@ for(const r of roots){
 }
 assert(bands.every(n=>n>100),'each16m extension section has supported vegetation');
 console.log('ROOT_CONTACT_AND_BANDS',JSON.stringify({checked,maxContactError,bands}));
+// Measure actual rooted density against independently admitted geometric samples on both banks.
+const densitySections=[];
+for(const side of [-1,1])for(let section=0;section<4;section++){
+ const z1=-352-section*16,z0=z1-16,x0=-80+(side<0?-10:8),x1=x0+2;
+ let eligible=0;const step=.25;
+ for(let z=z0+step/2;z<z1;z+=step)for(let x=x0+step/2;x<x1;x+=step){
+  const q=visibleSurface.sample(x,z);if(!q||!admitGround(x,z,q))continue;
+  const a=terrain.unprojectPlanetVertex(x,q.y,z),m=materials.sampleHEarthRun8CSuccessorSurfaceMaterial(a.x,a.z);
+  if(m?.valid!==true||habitatSlopeWeight(q.slope,'RAVINE')<=0||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20)||!woodland.woodlandGrassClear(a.x,a.z))continue;
+  if((pilotPackage.landscapeCoverFootprints??[]).some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.03)||(pilotPackage.landscapeFloorFootprints??[]).some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.10))continue;
+  eligible+=step*step;
+ }
+ const count=roots.filter(r=>r.region==='RAVINE'&&r.x>=x0&&r.x<x1&&r.z>=z0&&r.z<z1).length;
+ densitySections.push({side,section,geometricArea:(x1-x0)*(z1-z0),eligibleArea:eligible,roots:count,rootsPerEligibleSquareMeter:eligible?count/eligible:null});
+}
+console.log('ACTUAL_DENSE_BANK_SECTIONS',JSON.stringify(densitySections));
+for(const side of [-1,1])assert(densitySections.some(s=>s.side===side&&s.eligibleArea>=4),'each bank requires a nonvacuous fullyeligible section');
+for(const s of densitySections)if(s.eligibleArea>=4)assert(s.rootsPerEligibleSquareMeter>=30&&s.rootsPerEligibleSquareMeter<=36,JSON.stringify(s));
+for(const r of roots)assert(!geology.isPlannedWaterFootprint(r.x,r.z),'actual root inside plannedchannel/oasis');
+for(const p of geology.formation.vegetationCorridorPoints){assert.equal(field.ravine.sample(p.x,p.z),0);assert.equal(sampleWoodlandHabitat(field.ravine,p.x,p.z),0,'uploaded atlas must remain zero inside channel');}
 assert.equal(sha(woodlandCandidates),'e24e0d29da4da6435f043ee0449c0b1ff6abfa057abded77e6db5eceee2b590b');
 // Expanded terrain indices may renumber support triangle metadata; persistent roots and uploaded coordinates stay identical.
 assert.equal(sha(woodlandRoots.map(({x,y,z,angle,seed})=>({x,y,z,angle,seed}))),'e40321b7e6d05793f66431f38c669055a563c3229970aa6ecda3d838c3d298a5');
@@ -74,18 +94,18 @@ test('dry channel has32 descending2m stations and retains survey and water ident
  const meshHash=m=>createHash('sha256').update(m.positions).update(m.indices).digest('hex');
  for(const [role,expected] of Object.entries({MOUNTAIN_OVERBURDEN:'1ac75926ab639b328f33744b75de958033e5329fe5eedaaca9507665d2bbc371',NATURAL_CLIFF_FACE:'2d95baab950ba96e85d3e504f16a076da9e2452d746b619af438142c620f85b0',CAVERN_PHYSICAL_SHELL:'361f271482f2ccdc8a6cc74e18f316851f2021e8143b3cfaaf80e715af6786b2',FRESHWATER_RIVER:'51f9923ba3c803f47cd4f26bbbb4e01f9a0c15744434dc4318995da5dc8b0e2f',OASIS_WATER:'4a8e1cb0d60761430ca4557d6b8776db0f97e8de7d597fe67095e6de2e70f028'}))assert.equal(meshHash(model.meshes.find(p=>p.role===role).mesh),expected,role+' must remain byte-identical');
 
- assert.equal(model.route.path.length,78);assert.equal(points.length,79);assert.equal(route.length,111);
+ assert.equal(model.route.path.length,78);assert.equal(points.length,79);assert(route.length>111);
  assert.deepEqual(route.slice(0,79),points);assert.equal(model.hydrology.connectedOutletProven,false);
  assert.equal(model.route.result,'NO_STRICT_LOWER_NEIGHBOR_IN_STUDY');assert.equal(bridge.H_EARTH_REAR_WATER_PRESENTATION_ENABLED,false);
- assert.deepEqual(model.localBounds,{xMin:-120,xMax:96,zMin:-440,zMax:-224});
- for(let i=79;i<route.length;i++){
+ assert.deepEqual(model.localBounds,{xMin:-304,xMax:96,zMin:-568,zMax:-224});
+ for(let i=79;i<111;i++){
   assert.equal(route[i].x,-80);assert.equal(route[i].z,route[i-1].z-2);assert(route[i].bedY<route[i-1].bedY);
   const emitted=model.sampleOutdoorAt(route[i].x,route[i].z);assert(emitted);assert(Math.abs(emitted.y-route[i].bedY)<2e-5);
  }
- assert.equal(route.at(-1).z,-416);
- for(const [x,z] of [[-80,-440],[-120,-420],[96,-420]])assert(Math.abs(model.formation.excavatedOutdoorTerrain(x,z)-model.originalTerrainElevationAt(x,z))<2e-5);
+ assert.deepEqual({x:route.at(-1).x,z:route.at(-1).z},{x:-272,z:-544});
+ for(const [x,z] of [[-80,-568],[-304,-420],[96,-420]])assert(Math.abs(model.formation.excavatedOutdoorTerrain(x,z)-model.originalTerrainElevationAt(x,z))<2e-5);
  // A fixed row behind the authored channel smoothly restores canonical ground.
- assert(Math.abs(model.formation.excavatedOutdoorTerrain(-80,-430)-model.originalTerrainElevationAt(-80,-430))<2e-5);
+ assert(Math.abs(model.formation.excavatedOutdoorTerrain(-80,-560)-model.originalTerrainElevationAt(-80,-560))<2e-5);
  for(const mesh of model.meshes.map(p=>p.mesh))assert(mesh.positions.every(Number.isFinite));
  assert.deepEqual(bridge.expandVegetationCorridorPoints(points).map(({x,z})=>({x,z})),route.map(({x,z})=>({x,z})));
  assert.throws(()=>bridge.expandVegetationCorridorPoints(points.slice(1)),/DRY_EXTENSION_SOURCE_ENDPOINT/);

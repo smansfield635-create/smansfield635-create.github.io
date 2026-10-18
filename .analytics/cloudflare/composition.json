@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-18T13:27:48Z",
+  "generatedAt": "2026-10-18T14:28:08Z",
   "window": {
-    "start": "2026-09-18T13:27:48Z",
-    "end": "2026-10-18T13:27:48Z"
+    "start": "2026-09-18T14:28:08Z",
+    "end": "2026-10-18T14:28:08Z"
   },
   "dimensions": {
     "requestPath": [
@@ -411,30 +411,30 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 2492,
-        "visits": 1290
+        "pageLoads": 2412,
+        "visits": 1260
       },
       {
         "value": "1",
-        "pageLoads": 1665,
-        "visits": 1665
+        "pageLoads": 1625,
+        "visits": 1625
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3218,
-        "visits": 2725
+        "pageLoads": 3418,
+        "visits": 2785
       },
       {
         "value": "reload",
-        "pageLoads": 631,
-        "visits": 160
+        "pageLoads": 921,
+        "visits": 230
       },
       {
         "value": "back-forward",
-        "pageLoads": 223,
-        "visits": 70
+        "pageLoads": 193,
+        "visits": 50
       },
       {
         "value": "soft-navigation",
@@ -450,13 +450,13 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 3262,
-        "visits": 2847
+        "pageLoads": 3082,
+        "visits": 2623
       },
       {
         "value": "cache",
-        "pageLoads": 941,
-        "visits": 241
+        "pageLoads": 1015,
+        "visits": 272
       },
       {
         "value": "navigational-prefetch",
@@ -474,8 +474,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 3961,
-        "visits": 2763
+        "pageLoads": 4157,
+        "visits": 2955
       }
     ]
   }

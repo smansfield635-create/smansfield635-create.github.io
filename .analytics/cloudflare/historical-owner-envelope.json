@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-18T13:27:48Z",
+  "generatedAt": "2026-10-18T14:28:08Z",
   "window": {
-    "start": "2026-07-20T13:27:48Z",
-    "end": "2026-10-18T13:27:48Z"
+    "start": "2026-07-20T14:28:08Z",
+    "end": "2026-10-18T14:28:08Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,27 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4890,
+    "pageLoads": 4840,
     "visits": 1333,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4890,
+        "pageLoads": 4840,
         "visits": 1333
       }
     },
     "byPath": {
-      "/laws/categories/reality/battery-heldout-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/scientific-law/battery-heldout-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/": {
         "pageLoads": 80,
         "visits": 10
@@ -242,6 +230,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -255,10 +247,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -349,7 +337,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3557,
+        "pageLoads": 3507,
         "visits": 0
       },
       "www.google.com": {

@@ -1,0 +1,61 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewScope": "Independent source-bound same-world invariant preservation only; not rendered tree appearance or physical-device acceptance",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/tree-material-eligibility-v1/checkpoint.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/tree-material-eligibility-v1/checkpoint.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.tree-material-eligibility.v1.test.mjs",
+    "h-earth-3d/evidence/tree-material-eligibility-v1/checkpoint.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "636f64f0d04cc24aff9712f7c13f01d05b3fe0f35e0fb2025ee4d38d30dda2df"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.tree-material-eligibility.v1.test.mjs",
+      "sha256": "1f1fe8e464792138bddba396d555898f4214252d638bde6b4e367403518ec426"
+    }
+  ],
+  "acceptedPrecedent": {
+    "receipt": "h-earth-3d/experience-anchor/receipts/verified-planting-packet-v1.json",
+    "head": "4403eadee8530d097c9fbec56b2b961e6d86f9a5",
+    "basis": "Source-bound preservation of anchor invariants with explicit pixel/GPU/device limits."
+  },
+  "comparison": {
+    "anchorObserved": "Ground-level mountain terrain and open horizon with embodied viewpoint and minimal interface.",
+    "deltaObserved": "Separate exact authored tree material weight from clearingEdge. Only model0/role3/w2/z1|2 with clearing enabled gains full material treatment outside the clearing. Positive original edge weights preserved; shadow and fog retain clearingEdge.",
+    "canonicalContinuity": "Only fragment shader material eligibility/lighting changes. No new world, route, interface, geometry, roots or navigation; resource/draw suffix unchanged."
+  },
+  "limitations": [
+    "No GPU compile, rendered pixel, device or performance acceptance yet",
+    "Original tagged fragments outside old bounds intentionally gain material treatment; no all-pixel equivalence claim",
+    "No grass mutation or census repeated",
+    "No merge/deployment authority",
+    "Inherited startup albedo difference remains unresolved"
+  ],
+  "operationId": "H_EARTH_TREE_MATERIAL_ELIGIBILITY_20261018_001",
+  "canonicalAdmissionGeneration": 2802
+}

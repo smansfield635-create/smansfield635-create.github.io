@@ -2,7 +2,7 @@
   "schema": "H_EARTH_TREE_MATERIAL_ELIGIBILITY_CHECKPOINT_v1",
   "operationId": "H_EARTH_TREE_MATERIAL_ELIGIBILITY_20261018_001",
   "authorityGeneration": 2802,
-  "phase": "ADMITTED_IMPLEMENTATION_PENDING",
+  "phase": "SOURCE_CPU_REVIEW_COMPLETE_BROWSER_PENDING",
   "governingHead": "4403eadee8530d097c9fbec56b2b961e6d86f9a5",
   "branch": "h-earth/tree-material-eligibility-20261018",
   "allowedPaths": [
@@ -18,14 +18,44 @@
   "completed": [
     "Published baseline be456edd preserved",
     "Source localization preserved at comment6251321467",
-    "Canonical admission generation2802"
+    "Canonical admission generation2802",
+    "Bounded shader material repair",
+    "Five focused CPU source-contract checks PASS",
+    "Independent West source review PASS"
   ],
-  "nextAction": "Implement bounded tree-material eligibility and focused regression; independent review before browser qualification.",
+  "nextAction": "Run registered PUBLICATION_FAST_PREFLIGHT on immutable saved candidate; provide direct run link and yield. Read completed result on owner report. Rendered original/added-tree appearance and device acceptance remain pending.",
   "expensiveRunProcedure": "Persist candidate and run identity, provide direct run link, then yield without polling. Admission submission alone is not a reason to stop useful work.",
   "limitations": [
-    "No renderer implementation at this checkpoint",
-    "No new browser/GPU/device acceptance",
-    "No merge/deployment authority"
+    "No GPU compile, rendered pixel, device or performance acceptance yet",
+    "Original tagged fragments outside old bounds intentionally gain material treatment; no all-pixel equivalence claim",
+    "No grass mutation or census repeated",
+    "No merge/deployment authority",
+    "Inherited startup albedo difference remains unresolved"
   ],
-  "authorityEffect": "NONE_CHECKPOINT_ONLY"
+  "authorityEffect": "NONE_CHECKPOINT_ONLY",
+  "rendererBaselineSha256": "fbc06b9bb567da7192b94d0c258e90d6e796f7b9dbf95d5234df9caf9b4cd0b9",
+  "sourceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "636f64f0d04cc24aff9712f7c13f01d05b3fe0f35e0fb2025ee4d38d30dda2df"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.tree-material-eligibility.v1.test.mjs",
+      "sha256": "1f1fe8e464792138bddba396d555898f4214252d638bde6b4e367403518ec426"
+    }
+  ],
+  "implementation": "Separate exact authored tree material weight from clearingEdge. Only model0/role3/w2/z1|2 with clearing enabled gains full material treatment outside the clearing. Positive original edge weights preserved; shadow and fog retain clearingEdge.",
+  "validation": {
+    "command": "node --test h-earth-3d/validation/h-earth.tree-material-eligibility.v1.test.mjs",
+    "passed": 5,
+    "failed": 0,
+    "kind": "CPU_EXECUTION_OF_EXTRACTED_SCALAR_SHADER_LOGIC_NOT_GPU",
+    "originalControls": "Four sampled original-region witnesses, not recovered original tree centers.",
+    "protected": "Spatial computation unchanged; all resource/draw code after fragment shader byte-identical to exact remote baseline.",
+    "agents": {
+      "construction": "/root/tarian_material_fix",
+      "orientation": "/root/alaric_route",
+      "independentReview": "/root/soren_review"
+    }
+  }
 }

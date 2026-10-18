@@ -552,6 +552,12 @@ vec3 limitTerrainNormalDeviation(
     tangent / tangentLength * SINE_22_DEGREES
   );
 }
+// Gen2802: material identity travels with authored vegetation. The clearing
+// edge remains the spatial authority for soil, shadow reception and extra fog.
+float authoredTreeMaterialWeight(uint model, uint role, vec4 parameters, int enabled, float edge){
+  bool authoredTree=model==0u&&role==3u&&parameters.w==2.0&&(parameters.z==1.0||parameters.z==2.0);
+  return enabled==1&&authoredTree&&edge<=0.0?1.0:edge;
+}
 vec2 clearingLocalXZ(vec3 p){
   float horizontal=length(p.xz);
   float radial=uPlanetRadius*atan(horizontal,p.y+uPlanetRadius);
@@ -581,7 +587,8 @@ void main(){
       clearingEdge=smoothstep(0.0,1.5,min(edge.x,edge.y));
     }
   }
-  if(clearingType>0.5&&clearingEdge<=0.0)clearingType=0.0;
+  float treeMaterialWeight=authoredTreeMaterialWeight(vMaterialModelCode,vRoleCode,vMaterialParameters,uClearingEnabled,clearingEdge);
+  if(clearingType>0.5&&treeMaterialWeight<=0.0)clearingType=0.0;
   vec4 clearingTexel=vec4(1.0);
   if(clearingType>1.5&&clearingType<2.5){clearingTexel=texture(uClearingLeaf,vMaterialParameters.xy);if(clearingTexel.a<0.45)discard;}
   else if(clearingType>0.5&&clearingType<1.5){
@@ -1046,7 +1053,7 @@ void main(){
   float directional=0.0;
   // Terrain always evaluates the continuous soil-light response; tree assets
   // retain their existing authored treatment.
-  if(clearingEdge!=1.0){
+  if(treeMaterialWeight!=1.0){
     vec3 lightDirection=normalize(-uSunDirection);
     vec3 halfDirection=normalize(lightDirection+viewDirection);
     float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);
@@ -1111,20 +1118,22 @@ void main(){
   if(clearingType>0.5&&clearingType<2.5){
     vec3 reference=clearingType>1.5?vec3(94.0,135.0,61.0)/255.0:vec3(100.0,83.0,62.0)/255.0;
     vec3 detail=clamp(pow(clearingTexel.rgb/max(reference,vec3(0.01)),vec3(2.2)),vec3(0.45),vec3(1.55));
-    base*=mix(vec3(1.0),detail,clearingEdge*0.78);
+    base*=mix(vec3(1.0),detail,treeMaterialWeight*0.78);
   }
   // Shadow-map visibility already returns full light outside its actual frustum.
   // Do not gate ground shadows with the former soil rectangle.
   float clearingShadowFactor=worldSoilTerrain&&uClearingEnabled==1?clearingVisibility(vWorldPosition):1.0;
-  if(clearingEdge>0.0){
+  if(treeMaterialWeight>0.0){
     // atmosphere-state supplies a direction TOWARD the sun. Preserve the old
-    // lighting outside this trial, and blend the corrected illumination at its edge.
+    // lighting for untagged assets, and reuse authored lighting on tagged trees.
     vec3 clearingLight=normalize(uSunDirection);
     float clearingDiffuse=clearingType>1.5&&clearingType<2.5
       ?abs(dot(shadingNormal,clearingLight)):max(dot(shadingNormal,clearingLight),0.0);
-    directional=mix(directional,clearingDiffuse*uSunIntensity*(vRoleCode==1u?0.96:0.82),clearingEdge);
+    directional=mix(directional,clearingDiffuse*uSunIntensity*(vRoleCode==1u?0.96:0.82),treeMaterialWeight);
     vec3 clearingHalf=normalize(clearingLight+viewDirection);
-    specular=mix(specular,pow(max(dot(shadingNormal,clearingHalf),0.0),specularExponent)*specularScale,clearingEdge);
+    specular=mix(specular,pow(max(dot(shadingNormal,clearingHalf),0.0),specularExponent)*specularScale,treeMaterialWeight);
+  }
+  if(clearingEdge>0.0){
     clearingShadowFactor=mix(1.0,clearingVisibility(vWorldPosition),clearingEdge);
   }
   directional*=clearingShadowFactor;

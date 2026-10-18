@@ -1,4 +1,5 @@
 /** H_EARTH_RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_v1 */
+import {H_EARTH_VERIFIED_PLANTING_TREES,H_EARTH_VERIFIED_PLANTING_PACKET} from './verified-planting-packet.v1.js';
 import {
   H_EARTH_RUN_8E_R2_CONTRACT_ID,
   evaluateHEarthRun8ER2Control
@@ -587,7 +588,7 @@ export function buildHEarthRun8ER2ImmutableLiveRenderPackage({
       issues: evaluation.issues
     });
   }
-  return packageRecord;
+  return applyHEarthVerifiedPlantingPackage(packageRecord);
 }
 
 function* evaluatePackageChecks(packageRecord) {
@@ -714,6 +715,65 @@ export function createHEarthRun8ER2GPUBufferViews(packageRecord = getHEarthRun8E
 }
 
 let cachedPackage = null;
+/** Append translated copies of the four immutable approved tree templates.
+ * Both generated and hydrated startup use this one idempotent package adapter.
+ * Existing vertices/indices and original four footprint records are retained. */
+export function applyHEarthVerifiedPlantingPackage(raw,{canonicalBase=null}={}){
+  if(raw?.verifiedPlanting?.packetIdentity===H_EARTH_VERIFIED_PLANTING_PACKET.rootDataSha256)return raw;
+  if(raw?.eligible!==true)throw Error('VERIFIED_PLANTING_BASE_PACKAGE_REQUIRED');
+  const templates=raw.landscapeFloorFootprints;
+  if(templates?.length!==4||H_EARTH_VERIFIED_PLANTING_TREES.some((t,i)=>templates[i]?.id!==t.templateId))throw Error('VERIFIED_PLANTING_TEMPLATE_ORDER');
+  const base=canonicalBase??raw,number=value=>{if(!canonicalBase)return value;const rounded=Math.round(value*16777216)/16777216;return Object.is(rounded,-0)?0:rounded;};
+  const buffers=Object.fromEntries(Object.entries(base.buffers).map(([name,values])=>[name,Array.from(values)]));
+  const clearing=Array.from(base.clearingAttributes),spans=[...raw.primitiveSpans],ranges=raw.drawRanges.map(r=>({...r,primitiveIds:[...r.primitiveIds]}));
+  const roles={...raw.roleCounts},normals={...raw.normalSourceCounts},floor=[...templates],cover=[...raw.landscapeCoverFootprints];
+  const anchors=templates.map(t=>{
+    const p=raw.buffers.positions,idx=raw.buffers.indices;
+    for(const span of raw.primitiveSpans.filter(s=>s.role==='TERRAIN'))for(let j=span.indexStart;j<span.indexStart+span.indexCount;j+=3){
+      const [a,b,c]=[idx[j],idx[j+1],idx[j+2]].map(id=>[Math.fround(p[id*3]),Math.fround(p[id*3+1]),Math.fround(p[id*3+2])]);
+      const den=(b[2]-c[2])*(a[0]-c[0])+(c[0]-b[0])*(a[2]-c[2]);if(Math.abs(den)<1e-10)continue;
+      const u=((b[2]-c[2])*(t.x-c[0])+(c[0]-b[0])*(t.z-c[2]))/den,v=((c[2]-a[2])*(t.x-c[0])+(a[0]-c[0])*(t.z-c[2]))/den;
+      if(Math.min(u,v,1-u-v)>=-1e-7)return u*a[1]+v*b[1]+(1-u-v)*c[1];
+    }
+    throw Error('VERIFIED_PLANTING_TEMPLATE_SUPPORT:'+t.id);
+  });
+  for(let ti=0;ti<4;ti++){
+    const tree=H_EARTH_VERIFIED_PLANTING_TREES[ti],template=templates[ti],delta=[tree.x-template.x,tree.y-anchors[ti],tree.z-template.z];
+    for(const [name,vertices,indices] of [['BARK',608,3048],['CANOPY',7168,10752]]){
+      const source=raw.primitiveSpans.find(s=>s.primitiveId==='H_EARTH_LANDSCAPE_P2_'+name);
+      if(source?.vertexCount!==vertices*4||source.indexCount!==indices*4)throw Error('VERIFIED_PLANTING_TEMPLATE_LAYOUT:'+name);
+      const start=source.vertexStart+ti*vertices,first=source.indexStart+ti*indices,indexStart=buffers.indices.length,vertexStart=buffers.positions.length/3,primitiveIndex=spans.length;
+      for(let n=0;n<vertices;n++){
+        const id=start+n;
+        for(const [key,stride] of [['positions',3],['normals',3],['baseColorsLinear',4],['materialParameters',4],['materialModelCodes',1],['surfaceClassCodes',1],['primitiveIndices',1],['roleCodes',1]])
+          for(let k=0;k<stride;k++)buffers[key].push(key==='primitiveIndices'?primitiveIndex:number(key==='positions'?raw.buffers[key][id*3+k]+delta[k]:raw.buffers[key][id*stride+k]));
+        clearing.push(...raw.clearingAttributes.slice(id*3,id*3+3).map(number));
+      }
+      for(let n=0;n<indices;n++){const id=raw.buffers.indices[first+n];if(id<start||id>=start+vertices)throw Error('VERIFIED_PLANTING_CROSS_TEMPLATE_FACE');buffers.indices.push(vertexStart+id-start);}
+      const primitiveId='H_EARTH_GEN2800_'+tree.id+'_'+name;
+      const span=freezeRecord({...source,primitiveIndex,primitiveId,geometryId:primitiveId+':GEOMETRY',vertexStart,vertexCount:vertices,indexStart,indexCount:indices,triangleCount:indices/3,plantingTreeId:tree.id,templateTreeId:tree.templateId});
+      spans.push(span);mergeDrawRange(ranges,span);roles[source.role]++;normals[source.normalSource]=(normals[source.normalSource]??0)+1;
+    }
+    floor.push(freezeRecord({...template,id:tree.id,x:tree.x,z:tree.z,crownRadius:tree.crownRadius,grassExclusionRadius:tree.grassExclusionRadius}));
+    cover.push(freezeRecord({id:tree.id,kind:'TREE',x:tree.x,z:tree.z,radius:tree.grassExclusionRadius-.10,grassExclusionRadius:tree.grassExclusionRadius}));
+  }
+  const sectorTriangles=spans.filter(s=>s.primitiveId.startsWith('H_EARTH_LANDSCAPE_P2_')||s.plantingTreeId).reduce((n,s)=>n+s.triangleCount,0);
+  if(sectorTriangles>105000)throw Error('VERIFIED_PLANTING_SECTOR_TRIANGLE_BUDGET');
+  const hash=createHashWriter();
+  for(const value of [H_EARTH_RUN_8E_R2_CONTRACT_ID,H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID,H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID,H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID])hash.string(value);
+  for(const span of spans)hash.string(span.primitiveId);
+  for(const name of ['positions','normals','baseColorsLinear','materialParameters','materialModelCodes','surfaceClassCodes','primitiveIndices','roleCodes','indices'])hash.numbers(buffers[name]);
+  const clearingHash=createHashWriter();clearingHash.string('BOUNDED_CLEARING_ATTRIBUTES_v1');clearingHash.numbers(clearing);
+  const floorHash=createHashWriter();floorHash.string('VERIFIED_EIGHT_TREE_FOOTPRINTS_v1');for(const t of floor){floorHash.string(t.id);floorHash.numbers([t.x,t.z,t.crownRadius,t.trunkRadius,t.grassExclusionRadius??0]);}
+  const digest=hash.digest(),result=freezeRecord({...base,packageIdentity:'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_'+digest.toUpperCase(),contentDigest:'fnv1a32:'+digest,
+    primitiveCount:spans.length,vertexCount:buffers.positions.length/3,indexCount:buffers.indices.length,triangleCount:buffers.indices.length/3,
+    primitiveIds:freezeArray(spans.map(s=>s.primitiveId)),primitiveSpans:freezeArray(spans),drawRanges:freezeDrawRanges(ranges),roleCounts:freezeRecord(roles),normalSourceCounts:freezeRecord(normals),
+    buffers:freezeRecord(Object.fromEntries(Object.entries(buffers).map(([k,v])=>[k,freezeArray(v)]))),clearingAttributes:freezeArray(clearing),clearingContentDigest:'fnv1a32:'+clearingHash.digest(),
+    landscapeFloorFootprints:freezeArray(floor),landscapeCoverFootprints:freezeArray(cover),landscapeFloorContentDigest:'fnv1a32:'+floorHash.digest(),
+    verifiedPlanting:freezeRecord({packetIdentity:H_EARTH_VERIFIED_PLANTING_PACKET.rootDataSha256,addedTreeIds:freezeArray(H_EARTH_VERIFIED_PLANTING_TREES.map(t=>t.id)),originalTreesPreserved:true})});
+  const evaluation=evaluateHEarthRun8ER2ImmutableLiveRenderPackage(result);if(!evaluation.eligible)throw Error('VERIFIED_PLANTING_PACKAGE_INVALID:'+evaluation.issues.join(','));
+  return result;
+}
 let cachedDeferredPackage = null;
 let cachedOW01Package = null;
 
@@ -735,3 +795,4 @@ export async function prepareHEarthRun8ER2VegetationWorldTruthPlan(){await prepa
 export function createHEarthRun8ER2VegetationPresentationBatch(batchId,{deferVegetation=false}={}){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=constructHEarthGen2515VegetationPresentationBatch(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');const pkg=getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),presentation=applyHEarthLandscapeCoverBatch(applyHEarthLowlandGrassTrialBatch(materialized,pkg),pkg,truth.batches.indexOf(descriptor));return freezeRecord({...presentation,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
 export async function createHEarthRun8ER2VegetationPresentationBatchAsync(batchId,{deferVegetation=false}={}){const truth=getHEarthRun8ER2VegetationWorldTruthPlan(),descriptor=truth.batches.find(batch=>batch.batchId===batchId);if(!descriptor)throw new Error('R2_VEGETATION_BATCH_UNKNOWN');const materialized=await constructHEarthGen2515VegetationPresentationBatchAsync(batchId);if(materialized?.eligible!==true||materialized.instanceCount!==descriptor.count)throw new Error('R2_VEGETATION_BATCH_INVALID');const pkg=getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),presentation=applyHEarthLandscapeCoverBatch(applyHEarthLowlandGrassTrialBatch(materialized,pkg),pkg,truth.batches.indexOf(descriptor));return freezeRecord({...presentation,descriptor,worldTruthInstanceCount:truth.instanceCount,completeWorldPlacementCoverageRequired:truth.completeWorldPlacementCoverageRequired,populationLimit:truth.populationLimit,droppedPlacementCount:truth.droppedPlacementCount});}
 export default getHEarthRun8ER2ImmutableLiveRenderPackage;
+

@@ -1,0 +1,80 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewScope": "Independent source-bound same-world invariant preservation review; not full visual planting coverage acceptance",
+  "reviewedRuntimeHead": "18e8420b260d18fbb65757c64278e1599c2bd19b",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/verified-planting-packet-v1/README.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.verified-planting-packet.v1.test.mjs",
+    "h-earth-3d/evidence/verified-planting-packet-v1/checkpoint.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/verified-planting-packet-v1/checkpoint.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.verified-planting-packet.v1.test.mjs",
+      "sha256": "1a5ae39929bc4e28c15c39a469025b1618a59aa47c626625049b699e8c067f53"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "sha256": "47b446b1a99136a610f1940971dfa23e34978466f05370d5e8196d6e2c1c38f5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "sha256": "95a4d661a238c7e3155093cd681e16d35a72b43c4b6c6d638713cb20f28a4876"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "fbc06b9bb567da7192b94d0c258e90d6e796f7b9dbf95d5234df9caf9b4cd0b9"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/verified-planting-cells.v1.js",
+      "sha256": "3878d712e24b8707e9aa577faa0ac9855e22c2540aec00429ff89dd9b8587eed"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/verified-planting-packet.v1.js",
+      "sha256": "f586afa2ae1ec2ce6c6d923445258997d1959f3e5102d66653aa96efb029fc27"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "de4f7680f313aced3ee5ed27d88a6315f5885f447f0a4b404b6b2b9a8a3daf2a"
+    }
+  ],
+  "acceptedPrecedent": {
+    "receipt": "h-earth-3d/experience-anchor/receipts/corridor-bank-expansion-v1.json",
+    "basis": "Source-bound preservation of anchor invariants with explicit pixel/GPU/tablet limits."
+  },
+  "comparison": {
+    "anchorObserved": "Inspected embedded visual proxy: ground-level mountain terrain, open continuous horizon, direct embodied ground viewpoint and minimal interface.",
+    "deltaObserved": "Source diff preserves world identity, terrain prefix, globe/region entry, camera, travel and interface. Adds translated approved tree templates and saved ravine roots through the existing startup and vegetation owner; no alternate scene, dashboard, map or product introduced.",
+    "canonicalContinuity": "Both startup paths use the common package adapter; terrain geometry and existing package buffers are retained as prefixes. Existing eight-tree CPU verification and saved exact-root evidence carried forward without rerunning."
+  },
+  "limitations": [
+    "No new pixel comparison of the rendered candidate, GPU performance, physical-device or tablet acceptance claim.",
+    "Does not establish continuous grass coverage along every river bank, meadow connection or cavern entrance; owner screenshots have not been bound to this candidate.",
+    "Inherited precomputed/generated baseColorsLinear divergence is recorded, not repaired; no unconditional cross-startup byte-parity claim.",
+    "Publication preflight, exact-head release and authoritative live verification are separate."
+  ],
+  "operationId": "H_EARTH_VERIFIED_PLANTING_PUBLICATION_20261018_001",
+  "canonicalAdmissionGeneration": 2801
+}

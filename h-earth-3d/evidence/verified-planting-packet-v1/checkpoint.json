@@ -1,0 +1,189 @@
+{
+  "schema": "H_EARTH_VERIFIED_PLANTING_CHECKPOINT_v1",
+  "generation": 2801,
+  "operationId": "H_EARTH_VERIFIED_PLANTING_PUBLICATION_20261018_001",
+  "stage": "RELEASE_ANCHOR_ACCEPTED_PREFLIGHT_PASS_PENDING_MERGE_DEPLOY",
+  "branch": "h-earth/gen2800-verified-planting-packet-20261017",
+  "baseCommit": "218e704c06c09bb0c4ca9a6f979abe0fe717387a",
+  "commitBinding": "The Git commit containing this checkpoint; exact resulting SHA is recorded in issue6426 after push and remote readback.",
+  "lockCommit": "141e5a4172447194550bcfa202cd5c5038c9a283",
+  "packetSha256": "9f2a50cb5317a4f5580ffe9be3f4a6f07631ca335f92317dab74fc79cf58ce30",
+  "sourcePacketLibraryId": "libfile_ab867cb814bc8191bd51b3a25b67a469",
+  "savedFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/verified-planting-packet.v1.js",
+      "bytes": 1155376,
+      "sha256": "f586afa2ae1ec2ce6c6d923445258997d1959f3e5102d66653aa96efb029fc27"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/verified-planting-cells.v1.js",
+      "bytes": 21373,
+      "sha256": "3878d712e24b8707e9aa577faa0ac9855e22c2540aec00429ff89dd9b8587eed"
+    }
+  ],
+  "recovery": {
+    "survivingExactPacket": true,
+    "manifestEntriesVerified": 22,
+    "laterCrashedRoomModulesFound": false,
+    "priorLocalFilesModified": false,
+    "censusRepeated": false,
+    "admissionRepeated": false
+  },
+  "continuity": {
+    "ambiguousEvidenceDisposition": "STRICT_SUCCESSOR_REQUIRED",
+    "authorityExpanded": false,
+    "baseHead": "e8afb6c893babd2371e13e817e223531b9b60fff",
+    "baseIsAncestor": true,
+    "carryForwardAuthorized": true,
+    "changedPaths": [
+      ".analytics/cloudflare/composition.json",
+      ".analytics/cloudflare/historical-owner-envelope.json",
+      ".analytics/cloudflare/latest.json",
+      ".analytics/cloudflare/owner-heartbeats.json",
+      ".analytics/cloudflare/reporting-methodology.json",
+      ".analytics/cloudflare/status.txt",
+      "analytics/data/latest.json"
+    ],
+    "currentHead": "7a476edcc2b95bf369919345f06fa84b502e958a",
+    "dependencyPaths": [
+      ".github",
+      "AGENTS.md",
+      "AI_ENTRYPOINT.json",
+      "AI_RELEASE_ENTRYPOINT.json",
+      "h-earth-3d",
+      "showroom/globe/h-earth",
+      "tools"
+    ],
+    "dependencySurfaceComplete": true,
+    "mergeAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "overlapsObserved": [],
+    "reason": "COMPLETE_DISJOINT_CHANGE_PROVEN",
+    "result": "CARRY_FORWARD_APPROVED",
+    "schema": "DIFFERENTIAL_CONTINUITY_RECEIPT_v1",
+    "strictSuccessorFallbackPreserved": true
+  },
+  "verification": {
+    "decodedRavineRecordsExact": 139198,
+    "selectedCellsExact": 12577,
+    "treeRecordsExact": 4,
+    "method": "Independent exhaustive Node decode vs preserved float32 XYZA and uint32 seed/region packet; bitmap membership against selected-cells.json; real source habitatHash.",
+    "runtimeIntegration": "ACTUAL_CPU_PIPELINE_AND_NODE_PREPARATION_WORKERS_EXECUTED",
+    "gpuOrTabletAcceptance": false,
+    "integrationAdapterTests": {
+      "passed": 4,
+      "total": 4,
+      "fixture": "SHA256-verified unchanged Gen2666 compressed world; exact adapter/evaluator and hydration function bodies",
+      "scope": "Source/CPU adapter only, not full worker/renderer/grass/GPU integration"
+    },
+    "woodlandIntegratedIdentity": true,
+    "continuousTrunkClearance": "CPU_CONSERVATIVE_BARK_GRASS_ENVELOPE_PASS",
+    "downstreamResourceQualification": "PRODUCTION_PACKER_AND_INSTRUMENTED_GL_SUBMISSION_PASS_NOT_GPU",
+    "integratedCpu": {
+      "runtimeSourceCommit": "aa49d4072ccd1d2c7c25c05f6f5550e73216cfdc",
+      "exactSourceDependencyFiles": 80,
+      "counts": {
+        "woodland": 385944,
+        "ravine": 139198,
+        "total": 525142
+      },
+      "groundRejections": {},
+      "woodlandIdentity": "e40321b7e6d05793f66431f38c669055a563c3229970aa6ecda3d838c3d298a5",
+      "rootDataSha256": "d90752a5e4d9c4f1f3e0bcc56edac6bc53cff09e07f1c70c0b1f12f9fff06dde",
+      "seedRegionSha256": "fbdd8604fb367bfce0528edfa01f13d5b797ad9d6a0804e7dfbc57806ac09417",
+      "tileCount": 1770,
+      "maximumTileRoots": 816,
+      "packedBytes": 8402272,
+      "ownerCount": 1,
+      "cameraABAStable": true,
+      "perFrameUploadBytes": 0,
+      "minimumNewTreeCenterRootDistanceMeters": 2.118806854249043,
+      "minimumContinuousBarkGrassSeparationLowerBoundMeters": 1.4540668906090497,
+      "minimumNewTreeBasalVertexBurialMeters": 0.16945171356201172,
+      "basalGroundContactScope": "Actual six lower-cylinder vertices only; not an exhaustive continuous ground-seal proof",
+      "scope": "Archived canonical base plus exact candidate geological exterior; current camera refinement omitted; actual production grass/owner code; GL calls instrumented, not GPU execution"
+    },
+    "completePreparationBranches": {
+      "execution": "Production canonical module in two Node workers; precomputed and forced generated fallback both complete",
+      "precomputedRaw": "fnv1a32:86c9b4f2",
+      "precomputedCanonical": "fnv1a32:4f1b7ff2",
+      "generatedRaw": "fnv1a32:0c547a91",
+      "generatedCanonical": "fnv1a32:27d493d6",
+      "vertices": 141373,
+      "triangles": 122222,
+      "geometryAndMaterialParameterParity": true,
+      "newCanonicalTreeColorParity": true,
+      "fullByteParity": false,
+      "difference": {
+        "onlyBuffer": "baseColorsLinear",
+        "rawOldPrefixComponents": 63172,
+        "rawAddedComponents": 14079,
+        "canonicalOldPrefixComponents": 22239,
+        "canonicalAddedComponents": 0,
+        "maximumCanonicalDifference": 0.09331732988357544
+      },
+      "disposition": "INHERITED_BASE_ALBEDO_DIVERGENCE_RECORDED_NOT_REPAIRED; adapter preserves input prefixes; not unconditional merge readiness",
+      "notProven": [
+        "Browser Worker/main-thread adoption",
+        "Real WebGL shader/raster/resource behavior",
+        "Current camera refinement",
+        "Tablet/perceptual experience-anchor acceptance"
+      ]
+    },
+    "expandedSuite": {
+      "passed": 6,
+      "total": 6,
+      "skipped": 0,
+      "failed": 0,
+      "command": "H_EARTH_PLANTING_FULL_QUALIFICATION=1 node --test h-earth-3d/validation/h-earth.verified-planting-packet.v1.test.mjs",
+      "additionalCheck": "Clearance-neighborhood assertion added after suite launch and separately evaluated PASS over the same eight geometry results; no runtime change",
+      "independentReview": "W source/CPU review required before draft; exact remote readback follows commit"
+    }
+  },
+  "nextAction": "Merge exact evidence-complete candidate under existing Gen2801, dispatch registered h-earth-simple exact-current-main Pages deployment, then verify LIVE_EXACT_HEAD_VERIFIED. Preserve product bytes and completed CPU proofs.",
+  "stopCondition": "Stop on changed product bytes, failed applicable anchor qualification or failed publication preflight; never report publication before exact live receipt.",
+  "previousCheckpoint": "aa49d4072ccd1d2c7c25c05f6f5550e73216cfdc",
+  "integration": {
+    "generatedStartup": "Common raw-package adapter after generation",
+    "precomputedStartup": "Same adapter on verified archived raw and canonical prefixes; only appended canonical values are transformed",
+    "treeIds": [
+      "PROPOSED_OASIS_01",
+      "PROPOSED_OASIS_02",
+      "PROPOSED_OASIS_03",
+      "PROPOSED_OASIS_04"
+    ],
+    "originalTreesPreserved": true,
+    "treeSpansAdded": 8,
+    "treeTrianglesAdded": 18400,
+    "sectorTriangles": 79052,
+    "sectorTriangleBudget": 105000,
+    "newTreeGrassExclusionMeters": 2.108,
+    "selectedCellAtlasWired": true,
+    "woodlandAtlasTexelsPreserved": true,
+    "ravineMembership": "Saved decoder; every root rechecked against live support/water/material/shared exclusions; contact/population drift fails closed",
+    "admissionRepeated": false,
+    "censusRepeated": false
+  },
+  "release": {
+    "ownerPublicationAuthorized": true,
+    "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6245355324",
+    "runtimeCandidate": "18e8420b260d18fbb65757c64278e1599c2bd19b",
+    "anchorReview": "SOURCE_BOUND_SAME_WORLD_INVARIANTS_PASS",
+    "independentReviewer": "release_review",
+    "browserPreflight": {
+      "runId": 39094627836,
+      "jobId": 117578393321,
+      "targetSha": "18e8420b260d18fbb65757c64278e1599c2bd19b",
+      "surfaceId": "h-earth-simple",
+      "result": "PREFLIGHT_PASS",
+      "manifestSha256": "a8f06059264bc086b162b0df1419ec7b504b718a4d9fcbddff87df981096756e",
+      "runtimeReadiness": "PASS",
+      "pageErrors": [],
+      "consoleErrors": [],
+      "interaction": "Prepared woodland controls await genuine input before entry: PASS",
+      "physicalDeviceAcceptance": false
+    },
+    "albedoDisposition": "Preserve inherited old-prefix startup-color divergence; no planting-adapter repair or false parity claim.",
+    "publicationPerformed": false
+  }
+}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-18T17:27:26Z",
+  "generatedAt": "2026-10-18T18:32:36Z",
   "window": {
-    "start": "2026-07-20T17:27:26Z",
-    "end": "2026-10-18T17:27:26Z"
+    "start": "2026-07-20T18:32:36Z",
+    "end": "2026-10-18T18:32:36Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4850,
-    "visits": 1323,
+    "pageLoads": 4950,
+    "visits": 1393,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4850,
-        "visits": 1323
+        "pageLoads": 4950,
+        "visits": 1393
       }
     },
     "byPath": {
@@ -63,24 +63,28 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 135,
+        "pageLoads": 155,
         "visits": 10
       },
       "/index.html": {
         "pageLoads": 140,
         "visits": 0
       },
+      "/": {
+        "pageLoads": 1123,
+        "visits": 833
+      },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
         "visits": 0
       },
-      "/": {
-        "pageLoads": 1023,
-        "visits": 733
-      },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 230,
+        "visits": 20
       },
       "/gauges/h-earth/": {
         "pageLoads": 10,
@@ -91,8 +95,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 270,
-        "visits": 70
+        "pageLoads": 260,
+        "visits": 60
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -178,7 +182,15 @@
         "pageLoads": 10,
         "visits": 10
       },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
       },
@@ -186,16 +198,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -229,10 +233,6 @@
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
-      },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
       },
       "/characters/": {
         "pageLoads": 60,
@@ -322,20 +322,16 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/home/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
-      },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
+        "pageLoads": 140,
+        "visits": 110
       },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -349,16 +345,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3527,
+        "pageLoads": 3557,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 772,
-        "visits": 772
+        "pageLoads": 762,
+        "visits": 762
       },
       "(none)": {
-        "pageLoads": 541,
-        "visits": 541
+        "pageLoads": 621,
+        "visits": 621
       },
       "raw.githack.com": {
         "pageLoads": 10,

@@ -151,14 +151,22 @@ export async function verifyFourTreeFineGrass(raw,{presentation=null,onPresentat
 }
 /** Gen2694: fast read-only source-chain qualification; no world construction or browser. */
 export function verifyGen2694CandidateSourceChain(){
- const rev='gen2710-stable-grass-beach-v1';
+ const historicalRev='gen2710-stable-grass-beach-v1';
+ const indexPath='showroom/globe/h-earth/index.html';
+ const indexSource=fs.readFileSync(new URL(indexPath,ROOT),'utf8');
+ const entryMatch=indexSource.match(/id="h-earth-current-run8e-module"[^>]*src="[^"]*\brev=([^&"]+)/);
+ assert(entryMatch,'GEN2694_ENTRY_MODULE_REVISION_MISSING');
+ const rev=entryMatch[1];
+ const supportedEntryRevisions=new Set([historicalRev,'gen2735-deep-cavern-run8e-v1']);
+ assert(supportedEntryRevisions.has(rev),'GEN2694_UNSUPPORTED_COMPOSITION_REVISION:'+rev);
+ const grassRev=historicalRev;
  const paths=[
-  ['showroom/globe/h-earth/index.html','public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
+  [indexPath,'public-live-gpu-integration.run8e-r3e.receipt.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
   ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.receipt.js','public-live-gpu-integration.run8e-r3e.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
   ['showroom/globe/h-earth/functional-landscape/public-live-gpu-integration.run8e-r3e.js','live-gpu-binding.js?v=run8e-cache-coherence-v1&cb=meadow-distribution-20261006&rev='+rev],
   ['showroom/globe/h-earth/diagnostic/run8e-r3d/live-gpu-binding.js','cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev='+rev],
-  ['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js','woodland-fine-grass.v1.js?rev='+rev],
-  ['showroom/globe/h-earth/render/woodland-fine-grass.v1.js','landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev='+rev]
+  ['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js','woodland-fine-grass.v1.js?rev='+grassRev],
+  ['showroom/globe/h-earth/render/woodland-fine-grass.v1.js','landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev='+grassRev]
  ];
  const sources=new Map();
  for(const [file,needle] of paths){
@@ -167,7 +175,7 @@ export function verifyGen2694CandidateSourceChain(){
   sources.set(file,{source,sha256:digest(bytes),gitBlob:createHash('sha1').update('blob '+bytes.length).update(Buffer.from([0])).update(bytes).digest('hex')});
  }
  const renderer=sources.get(paths[4][0]).source,grass=sources.get(paths[5][0]).source;
- assert(renderer.includes("from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev="+rev+"'"),'GEN2694_GLOBAL_IMPORT_REVISION_DRIFT');
+ assert(renderer.includes("from './landscape-groundcover.global-v1.js?cb=gen2671-visible-three-strata-20261012&rev="+grassRev+"'"),'GEN2694_GLOBAL_IMPORT_REVISION_DRIFT');
  assert(renderer.includes('const GLOBAL_COVER_PATCH_LOD_VS=GLOBAL_COVER_VS')&&renderer.includes('if(uMeadowGeometryPass==0)')&&renderer.includes('int leaf=gl_VertexID/4,vertex=gl_VertexID%4;')&&renderer.includes('float h=.22+.36*r1,halfWidth=.007+.006*r2'),'GEN2694_ACTUAL_THIN_SOURCE_SHADER_NOT_PROVEN');
  assert(renderer.includes('originalSourceBroadFanMeshDrawCount:0'),'GEN2694_GPU_CENSUS_MISSING');
  assert(grass.includes("(types[0]===0||types[0]===3)"),'GEN2694_WOODLAND_LEGACY_TYPE_SUPPRESSION_CHANGED');
@@ -192,7 +200,7 @@ export function verifyGen2694CandidateSourceChain(){
  const publicManifest=JSON.parse(fs.readFileSync(new URL('.github/ai-router/publication-surfaces/h-earth.json',ROOT),'utf8'));
  const html=publicManifest.checks.find(entry=>entry.path==='/showroom/globe/h-earth/index.html');
  assert(html&&html.includes.every(fragment=>sources.get(paths[0][0]).source.includes(fragment)),'GEN2694_PUBLIC_RELEASE_MANIFEST_INCOMPATIBLE');
- return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',qualifiedPresentationGeneration:2710,result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false};
+ return {schema:'H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1',qualifiedPresentationGeneration:2710,result:'PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE',cacheRevision:rev,moduleLinksChecked:paths.length,sourceBlobsChecked:2,activeShader:'GLOBAL_COVER_PATCH_LOD_VS_MODE0_TWELVE_THIN_LEAVES',oldGlobalBroadFanMeshDrawCount:0,canonicalWorldBinaryUnchanged:true,ownerVisualAcceptance:false,releaseAuthorized:false,compositionApplicability:{historicalGen2694CacheRevision:historicalRev,observedEntryRevision:rev,historicalGrassCompositionApplicable:rev===historicalRev,disposition:rev===historicalRev?'APPLICABLE_ORIGINAL_GRASS_COMPOSITION':'NOT_APPLICABLE_CHANGED_MODULE_URLS',protectedGrassSubchainRevision:grassRev}};
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  if(process.argv.includes('--source-binding-only')){console.log(JSON.stringify(verifyGen2694CandidateSourceChain(),null,2));process.exit(0);}

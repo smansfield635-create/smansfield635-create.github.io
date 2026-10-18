@@ -1,0 +1,72 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_BANK_CHANNEL_BOUNDARY_REPAIR_20261017_001",
+  "canonicalAdmissionGeneration": 2799,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/bank-channel-boundary-repair-v1/README.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.bank-channel-boundary-repair.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.corridor-bank-expansion.v1.test.mjs",
+    "h-earth-3d/validation/h-earth.terrain-cavern-seam-repair.v1.test.mjs"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "3eb375b45f31597d1f2f7bf1fca1e7cc86db7d3074f30b2fcb128522c146f41c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-habitat-field.v1.js",
+      "sha256": "8e011a937eb48b671f5177544337911f67dce27d0c37e883182e8ab5e24b2330"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-planting-pilot.v1.js",
+      "sha256": "540c41cd12a209b28653ab8e20f0727bcd1cce906fa97ce27a7b2d9f721ef5e3"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "99d6d04f970cba02dfd92898fa7f8c7ed3e038f45501b6a01facae0becf78248"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.bank-channel-boundary-repair.v1.test.mjs",
+      "sha256": "6d6f065e9eee7de017c21226a17508915ef256851275ba55775a6d6e776e0d53"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.corridor-bank-expansion.v1.test.mjs",
+      "sha256": "8ecc708cbff894a8cf60de926118f4cf4be7612ed96db28553313a9cb283d594"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.terrain-cavern-seam-repair.v1.test.mjs",
+      "sha256": "80a682f44b12694e02a851ffcee2995dd075d65a5324694b0b90486ec243706a"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "79c8f92318b876276268e1778c493daa0a2014e6",
+    "basis": "Same canonical world, four approved trees, unchanged persistent woodland root XYZ/angle/seed, original survey/water/cavern/gallery/mantle/threshold, existing navigation helper and unchanged traversal domain, shaders/loader/scheduler/performance contracts; bounded bank/channel/scenic/notice delta only."
+  },
+  "limitations": [
+    "Source-bound invariant preservation with actual CPU root contact/density and emitted-terrain LOS; no new rendered pixels, GPU timing, tablet performance or owner physical-device acceptance claim.",
+    "Registered publication preflight, qualified release and live exact-head verification remain separate.",
+    "Authored scenic dry channel does not create surveyed hydrology, connected outlet or rear-water enablement."
+  ]
+}

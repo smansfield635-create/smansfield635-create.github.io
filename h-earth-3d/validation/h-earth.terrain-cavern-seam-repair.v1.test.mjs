@@ -73,7 +73,7 @@ test('real emitted support crosses the threshold in both directions with headroo
 test('approach correction leaves surrounding land and terrain patch limits unchanged',()=>{
   for(const [x,z,y] of [[20,-266,11.947017207625684],[40,-274,8.609688422531722],[60,-260,21.63742337209275],[40,-252,22.397696867752387]])
     assert.equal(model.formation.excavatedOutdoorTerrain(x,z),y);
-  assert.deepEqual(model.localBounds,{xMin:-120,xMax:96,zMin:-376,zMax:-224});
+  assert.deepEqual(model.localBounds,{xMin:-304,xMax:96,zMin:-568,zMax:-224});
   assert(ground.positions.every(Number.isFinite));
   for(let i=0;i<ground.indices.length;i+=3){
     const p=ground.positions,[a,b,c]=Array.from(ground.indices.slice(i,i+3),n=>n*3);
@@ -91,6 +91,8 @@ test('all emitted land perimeter vertices inherit full indexed source attributes
   source.coastDistances=Float32Array.from({length:n},(_,i)=>i%91-45);
   source.contactDistances=Float32Array.from({length:n},(_,i)=>i%67+.25);
   const b=model.localBounds;let samples=0,maxError=0;
+  const perimeter=[[b.xMin,b.zMin,b.xMax,b.zMin],[b.xMax,b.zMin,b.xMax,b.zMax],[b.xMax,b.zMax,-120,b.zMax],[-120,b.zMax,-120,-440],[-120,-440,b.xMin,-440],[b.xMin,-440,b.xMin,b.zMin]];
+  const segmentDistance=(p,s)=>{const [ax,az,bx,bz]=s,dx=bx-ax,dz=bz-az,t=Math.max(0,Math.min(1,((p.x-ax)*dx+(p.z-az)*dz)/(dx*dx+dz*dz)));return Math.hypot(p.x-ax-dx*t,p.z-az-dz*t);};
   const sides=new Set(),corners=new Set();
   const betweenErrors=Object.fromEntries(channels.map(([key])=>[key,0]));let betweenSamples=0;
   for(const {role,mesh} of model.meshes){
@@ -99,7 +101,7 @@ test('all emitted land perimeter vertices inherit full indexed source attributes
     reconcileGeologicalTerrainRim(model,role,mesh,attrs,source);
     for(let i=0;i<mesh.vertexCount;i++){
       const p=unprojectPlanetVertex(...mesh.positions.slice(i*3,i*3+3));
-      const distances=[p.x-b.xMin,b.xMax-p.x,p.z-b.zMin,b.zMax-p.z];
+      const distances=perimeter.map(s=>segmentDistance(p,s));
       const edge=Math.min(...distances);
       if(edge>=12){for(const [key,size] of channels)for(let c=0;c<size;c++)assert.equal(attrs[key][i*size+c],Math.fround(.321));continue;}
       if(Math.abs(edge)>.001)continue;
@@ -137,8 +139,8 @@ test('all emitted land perimeter vertices inherit full indexed source attributes
       const [a,c]=key.split(',').map(Number);
       const p=unprojectPlanetVertex(...mesh.positions.slice(a*3,a*3+3));
       const q=unprojectPlanetVertex(...mesh.positions.slice(c*3,c*3+3));
-      const onSide=(r,k)=>Math.abs([r.x-b.xMin,b.xMax-r.x,r.z-b.zMin,b.zMax-r.z][k])<.001;
-      if(![0,1,2,3].some(k=>onSide(p,k)&&onSide(q,k)))continue;
+      const onSide=(r,k)=>segmentDistance(r,perimeter[k])<.001;
+      if(![0,1,2,3,4,5].some(k=>onSide(p,k)&&onSide(q,k)))continue;
       for(let k=1;k<16;k++){
         const t=k/16,x=p.x+(q.x-p.x)*t,z=p.z+(q.z-p.z)*t;
         const hit=model.originalTerrainContactAt(x,z);assert(hit);
@@ -152,7 +154,7 @@ test('all emitted land perimeter vertices inherit full indexed source attributes
       }
     }
   }
-  assert.equal(sides.size,4);assert.equal(corners.size,4);assert(samples>300);
+  assert.equal(sides.size,6);assert.equal(corners.size,6);assert(samples>300);
   console.log(JSON.stringify({check:'FULL_PERIMETER_VERTEX_ATTRIBUTES',samples,sides:sides.size,corners:corners.size,maximumError:maxError}));
   console.log(JSON.stringify({check:'BETWEEN_VERTEX_DIAGNOSTIC_NOT_PIXEL_ACCEPTANCE',samples:betweenSamples,maximumErrors:betweenErrors,coastContactFields:'DISTINCT_SYNTHETIC_INTERPOLATION_STRESS_FIELDS'}));
 });

@@ -1,0 +1,60 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GRATITUDE_STARTUP_20261018_001",
+  "canonicalAdmissionGeneration": 2813,
+  "reviewedAgainstAnchor": true,
+  "disposition": "REVIEW_REQUIRED",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/gratitude-startup-v1/checkpoint.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.gratitude-startup.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.gratitude-startup.v1.test.mjs",
+    "h-earth-3d/evidence/gratitude-startup-v1/checkpoint.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "sha256": "da5eebc5a8a178fd9277513a90906b88e522aec173bbf27741c744c26a517a1e"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "a7ccfac31b6eddb9c29c7058ad23af6d2fb93444072a42270ade9a5876a1ee7a"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "34502b7af99e6e9d5edc391c8da974b67377d34e1e505b64d4baf4cd875495e0"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.gratitude-startup.v1.test.mjs",
+      "sha256": "facb1c1860d4efcf5b2a49e0cb1157418456209a5d8507b9d31e6a2fedbc25ff"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "afc9632ac7fd2196e23868621fcd5639777839e7",
+    "receipt": "h-earth-3d/experience-anchor/receipts/tablet-startup-v1.json",
+    "basis": "Unchanged landscape, shaders, root data, navigation and readiness predicate. Loading presentation and failure classification only."
+  },
+  "limitations": [
+    "Source and interaction continuity reviewed. Visual layout and physical acceptance remain PENDING; this receipt does not pass the release anchor gate.",
+    "No publication authority created."
+  ]
+}

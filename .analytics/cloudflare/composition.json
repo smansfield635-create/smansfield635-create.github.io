@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-18T19:25:54Z",
+  "generatedAt": "2026-10-18T20:30:21Z",
   "window": {
-    "start": "2026-09-18T19:25:54Z",
-    "end": "2026-10-18T19:25:54Z"
+    "start": "2026-09-18T20:30:21Z",
+    "end": "2026-10-18T20:30:21Z"
   },
   "dimensions": {
     "requestPath": [
@@ -19,8 +19,8 @@
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 613,
-        "visits": 583
+        "pageLoads": 616,
+        "visits": 586
       },
       {
         "value": "/mirror-manor-preview/",
@@ -183,14 +183,14 @@
         "visits": 10
       },
       {
-        "value": "/inspection/h-earth-t4-3-d8fca316/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/governance/",
         "pageLoads": 10,
         "visits": 0
+      },
+      {
+        "value": "/inspection/h-earth-t4-3-d8fca316/",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "/governance-bridge/collaboration/",
@@ -221,8 +221,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2763,
-        "visits": 2763
+        "pageLoads": 2766,
+        "visits": 2766
       },
       {
         "value": "diamondgatebridge.com",
@@ -253,8 +253,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 4025,
-        "visits": 2904
+        "pageLoads": 4028,
+        "visits": 2907
       },
       {
         "value": "CN",
@@ -290,8 +290,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2166,
-        "visits": 2122
+        "pageLoads": 2169,
+        "visits": 2125
       },
       {
         "value": "mobile",
@@ -307,13 +307,13 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 1659,
-        "visits": 1659
+        "pageLoads": 1660,
+        "visits": 1660
       },
       {
         "value": "Chrome",
-        "pageLoads": 1302,
-        "visits": 704
+        "pageLoads": 1303,
+        "visits": 705
       },
       {
         "value": "ChromeMobile",
@@ -321,19 +321,19 @@
         "visits": 353
       },
       {
-        "value": "Edge",
-        "pageLoads": 74,
-        "visits": 72
-      },
-      {
         "value": "MobileSafari",
         "pageLoads": 74,
         "visits": 53
       },
       {
+        "value": "Edge",
+        "pageLoads": 74,
+        "visits": 72
+      },
+      {
         "value": "Firefox",
-        "pageLoads": 47,
-        "visits": 46
+        "pageLoads": 48,
+        "visits": 47
       },
       {
         "value": "Unknown",
@@ -354,8 +354,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1844,
-        "visits": 1844
+        "pageLoads": 1847,
+        "visits": 1847
       },
       {
         "value": "Android",
@@ -386,20 +386,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 2408,
-        "visits": 1286
+        "pageLoads": 2410,
+        "visits": 1288
       },
       {
         "value": "1",
-        "pageLoads": 1659,
-        "visits": 1659
+        "pageLoads": 1660,
+        "visits": 1660
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3178,
-        "visits": 2715
+        "pageLoads": 3181,
+        "visits": 2718
       },
       {
         "value": "reload",
@@ -425,8 +425,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 3092,
-        "visits": 2643
+        "pageLoads": 3095,
+        "visits": 2646
       },
       {
         "value": "cache",
@@ -442,15 +442,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 4067,
-        "visits": 2945
+        "pageLoads": 4070,
+        "visits": 2948
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 4107,
-        "visits": 2985
+        "pageLoads": 4070,
+        "visits": 2948
       }
     ]
   }

@@ -7886,45 +7886,6 @@
       "scopeHash": "6f2fef67354a1d562b10d03859496356e9ab853b881305609a907d96ddf8bf05",
       "state": "ADMITTED_LOCKED"
     },
-    "6f7f24370a603cc2c4413f56eea29d608d6c9f521b194f42e5c255838e16a678": {
-      "governingHead": "29aadf39c9ab53396ca64a9f7326895937e9ba52",
-      "independentAuthorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "29aadf39c9ab53396ca64a9f7326895937e9ba52",
-          "lockGeneration": 2809,
-          "lockScope": "H_EARTH:VERIFIED_PLANTING_PACKET:20261017",
-          "operationId": "H_EARTH_CONNECTOR_FINE_GRASS_20261018_001",
-          "procedureLocatorDigest": "a26fc147b0bb69e2197732351e7fe5ddbd92b18e98a388b2799c993a9bdec701",
-          "requestDigest": "aadb2e9fbf4fd43061ceef575814b3e7a0736e146a0b66304a55c94f3d42c299",
-          "scopeHash": "6f7f24370a603cc2c4413f56eea29d608d6c9f521b194f42e5c255838e16a678"
-        },
-        "bindingDigest": "c14bef122bd05772892c26c24881bb6bc0fdb0baa87cfd8706d760bdb4f0f4f9",
-        "compareAndSwap": {
-          "observedLedgerBlobSha": "3270d223028951d454dad47dcb3b2a04c7e243e7",
-          "observedLockRefHead": "810d2911e2a348e1bb6d844b6ff2651266ffdf7d"
-        },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
-        "source": {
-          "authorAssociation": "OWNER",
-          "authorLogin": "smansfield635-create",
-          "commentBodySha256": "25abb7b4de568d7a34fbd33c9413106f486e583b4b40a2e499854aa8f4bf1477",
-          "commentId": 6253827902,
-          "issueNumber": 6426,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io"
-        },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
-      },
-      "lockGeneration": 2809,
-      "lockScope": "H_EARTH:VERIFIED_PLANTING_PACKET:20261017",
-      "operationId": "H_EARTH_CONNECTOR_FINE_GRASS_20261018_001",
-      "procedureLocatorDigest": "a26fc147b0bb69e2197732351e7fe5ddbd92b18e98a388b2799c993a9bdec701",
-      "released": false,
-      "requestDigest": "aadb2e9fbf4fd43061ceef575814b3e7a0736e146a0b66304a55c94f3d42c299",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "6f7f24370a603cc2c4413f56eea29d608d6c9f521b194f42e5c255838e16a678",
-      "state": "ADMITTED_LOCKED"
-    },
     "6f88bd1be54bad5df30dcb03dec510731da948a139965c9449bee6dfe7b7d45e": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -83695,6 +83656,83 @@
       "requestDigest": "5f4c830d47c1de4df4d3f756c6e1eebab32eb127f5eee08b854aa1bb4419a9b2",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "30fb01616ceedba17072343e6232442e352a0ed593b0b2f45563378c89ab19e6",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "29aadf39c9ab53396ca64a9f7326895937e9ba52",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "29aadf39c9ab53396ca64a9f7326895937e9ba52",
+          "lockGeneration": 2809,
+          "lockScope": "H_EARTH:VERIFIED_PLANTING_PACKET:20261017",
+          "operationId": "H_EARTH_CONNECTOR_FINE_GRASS_20261018_001",
+          "procedureLocatorDigest": "a26fc147b0bb69e2197732351e7fe5ddbd92b18e98a388b2799c993a9bdec701",
+          "requestDigest": "aadb2e9fbf4fd43061ceef575814b3e7a0736e146a0b66304a55c94f3d42c299",
+          "scopeHash": "6f7f24370a603cc2c4413f56eea29d608d6c9f521b194f42e5c255838e16a678"
+        },
+        "bindingDigest": "c14bef122bd05772892c26c24881bb6bc0fdb0baa87cfd8706d760bdb4f0f4f9",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "3270d223028951d454dad47dcb3b2a04c7e243e7",
+          "observedLockRefHead": "810d2911e2a348e1bb6d844b6ff2651266ffdf7d"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "25abb7b4de568d7a34fbd33c9413106f486e583b4b40a2e499854aa8f4bf1477",
+          "commentId": 6253827902,
+          "issueNumber": 6426,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "29aadf39c9ab53396ca64a9f7326895937e9ba52",
+          "lockGeneration": 2809,
+          "lockScope": "H_EARTH:VERIFIED_PLANTING_PACKET:20261017",
+          "operationId": "H_EARTH_CONNECTOR_FINE_GRASS_20261018_001",
+          "procedureLocatorDigest": "a26fc147b0bb69e2197732351e7fe5ddbd92b18e98a388b2799c993a9bdec701",
+          "requestDigest": "aadb2e9fbf4fd43061ceef575814b3e7a0736e146a0b66304a55c94f3d42c299",
+          "scopeHash": "6f7f24370a603cc2c4413f56eea29d608d6c9f521b194f42e5c255838e16a678"
+        },
+        "bindingDigest": "c3effc77ea6de8215d9f580e742c8de2bbabe00d59e65775f618e2472f7d2d66",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "3ab94b7d2e016031f3f55372a03487e72c9f3e93",
+          "observedLockRefHead": "07b7c36bb4ba6b2be8d14abce0846e460da9e20b"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "aceafc6a27f54585ada37586cfa4e01a1f5a3ff913dbe641d0f6b9fb2ec1e02d",
+          "commentId": 6254235665,
+          "issueNumber": 6426,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "29aadf39c9ab53396ca64a9f7326895937e9ba52",
+          "lockGeneration": 2809,
+          "lockScope": "H_EARTH:VERIFIED_PLANTING_PACKET:20261017",
+          "operationId": "H_EARTH_CONNECTOR_FINE_GRASS_20261018_001",
+          "released": true,
+          "scopeHash": "6f7f24370a603cc2c4413f56eea29d608d6c9f521b194f42e5c255838e16a678",
+          "state": "TERMINAL",
+          "terminalDisposition": "PASS_CLOSED"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2809,
+      "lockScope": "H_EARTH:VERIFIED_PLANTING_PACKET:20261017",
+      "operationId": "H_EARTH_CONNECTOR_FINE_GRASS_20261018_001",
+      "procedureLocatorDigest": "a26fc147b0bb69e2197732351e7fe5ddbd92b18e98a388b2799c993a9bdec701",
+      "released": true,
+      "requestDigest": "aadb2e9fbf4fd43061ceef575814b3e7a0736e146a0b66304a55c94f3d42c299",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6f7f24370a603cc2c4413f56eea29d608d6c9f521b194f42e5c255838e16a678",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

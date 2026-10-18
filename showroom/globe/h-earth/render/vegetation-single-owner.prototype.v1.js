@@ -1,3 +1,4 @@
+import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';
 import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
 import {uploadInSlices} from './performance-scheduling.v1.js';
@@ -78,8 +79,8 @@ out vec4 outColor;
 void main(){float lit=.48+.52*max(0.,dot(normalize(vNormal),normalize(uSunDirection)));vec3 color=vColor*(vec3(.5)+uSunColor*lit*uSunIntensity*.5);float fog=min(uMaxFog,1.-exp(-max(0.,vDistance-uFogStart)*uFogFalloff));color=mix(color,uHaze,fog);outColor=vec4(pow(max(color,vec3(0.)),vec3(1./2.2)),1.);}`;
 export async function createSingleOwnerVegetation(gl,presentation,{environment,planetRadius,yieldControl=async()=>{},onProgress=()=>{},uploadBudget={}}={}){
  if(!environment||!Number.isFinite(planetRadius))throw Error('OWNER_ENVIRONMENT_REQUIRED');
- const started=performance.now(),tiles=planImmutableTiles(presentation),rootCount=tiles.reduce((n,t)=>n+t.count,0);
- const controlRoots=[];for(const tile of tiles)tile.rootIds.forEach((id,i)=>{if(Math.hypot(tile.packed[i*4]+139.40267987050615,tile.packed[i*4+2]+194.5)<=2)controlRoots.push(id);});
+ const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),tiles=trusted?.tiles??planImmutableTiles(presentation),rootCount=tiles.reduce((n,t)=>n+t.count,0);
+ const controlRoots=trusted?.controlRoots??[];if(!trusted)for(const tile of tiles)tile.rootIds.forEach((id,i)=>{if(Math.hypot(tile.packed[i*4]+139.40267987050615,tile.packed[i*4+2]+194.5)<=2)controlRoots.push(id);});
  if(!controlRoots.length)throw Error('EMPTY_FIXED_CONTROL');
  const ownedShaders=[];let program=null,vao=null,buffer=null;
  function cleanup(){if(buffer)gl.deleteBuffer(buffer);if(vao)gl.deleteVertexArray(vao);if(program)gl.deleteProgram(program);for(const shader of ownedShaders)gl.deleteShader(shader);}

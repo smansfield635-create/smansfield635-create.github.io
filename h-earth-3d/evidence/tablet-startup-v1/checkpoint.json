@@ -1,0 +1,92 @@
+{
+  "schema": "H_EARTH_TABLET_STARTUP_CHECKPOINT_v1",
+  "operationId": "H_EARTH_TABLET_STARTUP_REPAIR_20261018_001",
+  "lockGeneration": 2812,
+  "baseline": "f5ff791472f6cb91c6f2623cb75d04b43b7a33fa",
+  "admissionRun": 39169785182,
+  "admissionSourceComment": 6255600827,
+  "implementation": "Authenticated direct float32 packing with private one-shot WeakMap transfer. Generic decoder and planner unchanged. Exact pinned packet only; no plant, atlas, geometry, shader, GPU scheduling or navigation changes.",
+  "rootCount": 1250134,
+  "tileCount": 3240,
+  "controlRootCount": 44,
+  "gpuPackedSha256": "d8df836eabd37c33d4a7b9542f56e4d1bb63d0d41fa7303be58f91fe5db1d3aa",
+  "tests": {
+    "command": "node --test h-earth-3d/validation/h-earth.tablet-startup.v1.test.mjs h-earth-3d/validation/h-earth.vegetation-single-owner.v1.test.mjs",
+    "newTestsPassed": 5,
+    "existingTestsPassed": 29,
+    "existingFailures": 9,
+    "combinedCommandResult": "FAIL_WITH_SAME_NINE_BASELINE_HARNESS_FAILURES",
+    "baselineFailureComparison": "Same names and causes: missing VM createHEarthLoadingScreen/document.createElement, stale gen2794 expected route revision, missing VM FOOTHILL_MEADOW_GLSL. No harness edits.",
+    "failureNames": [
+      "\u2716 public root without query starts woodland, emits ready and never synthesizes movement",
+      "\u2716 public arrival selection preserves unrelated URL parameters and hash",
+      "\u2716 diagnostic page retains exact synthetic forward-return replay and no public URL rewrite",
+      "\u2716 diagnostic replay still rejects missing explicit prototype selection",
+      "\u2716 failed public preparation does not announce readiness or initiate movement",
+      "\u2716 canonical HTML starts only single-owner entrance and preserves import identity map",
+      "\u2716 manual public intake proposals cannot render before initialization",
+      "\u2716 diagnostic view selectors cannot automate the public entrance",
+      "\u2716 actual single-owner palette shaders compile and link with software GLES"
+    ],
+    "exactEquality": [
+      "all tile metadata and float32 bytes",
+      "atlas",
+      "receipt",
+      "rounded fixed-control IDs"
+    ],
+    "negativeAndOwnerChecks": [
+      "manifest/compressed corruption and truncation",
+      "HTTP failures",
+      "legacy raw integrity and identity",
+      "forged/copied plan rejection",
+      "one-shot transfer",
+      "upload offsets and SHA",
+      "no camera-dependent uploads",
+      "forward-return draws",
+      "cleanup on upload failure"
+    ]
+  },
+  "localCpuMeasurement": {
+    "runtime": "Node 24.19.0 Linux; local file fetch; no GPU/network/browser/tablet",
+    "before": {
+      "decodeMs": 2316.972,
+      "planMs": 7353.795,
+      "sampledRssMiB": 988,
+      "sampledHeapMiB": 699
+    },
+    "after": {
+      "milliseconds": 1601.7234549999998,
+      "memory": {
+        "rss": 369623040,
+        "heapTotal": 19017728,
+        "heapUsed": 10590008,
+        "external": 118086401,
+        "arrayBuffers": 142868705
+      },
+      "maxRSSKiB": 415808,
+      "yields": 203,
+      "tiles": 3240,
+      "roots": 1250134,
+      "controls": 44,
+      "maxSliceIncludingFirstLoadMs": 1452.458689
+    },
+    "limitations": "Before RSS is sampled, after maxRSS is separate process high-water mark. Timings are single local observations, not controlled device benchmarks or whole-world loading. No tablet/OOM claim."
+  },
+  "independentReview": {
+    "agent": "/root/startup_review",
+    "bearing": "W",
+    "result": "PASS_BOUNDED_RUNTIME_DELTA",
+    "blockingDefects": [],
+    "caveat": "Private packed raw-integrity guard reviewed in source; corruption tests cannot forge pinned outer hashes."
+  },
+  "remaining": [
+    "Registered exact-candidate browser readiness",
+    "Exact-candidate physical tablet load/movement review",
+    "Separate merge/publication disposition"
+  ],
+  "authority": {
+    "merge": false,
+    "deployment": false,
+    "publication": false
+  }
+}

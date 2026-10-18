@@ -1713,7 +1713,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const {pixels,...summary}=mask;resources.shorelineSoilCoverage={...summary,ready:true,derivedFrom:'EXISTING_OASIS_GRASS_ROOTS',terrainGeometryMutated:false};
       onProgress({phase:'SINGLE_POPULATION_PREPARING'});
       const generationStarted=performance.now();
-      const presentation=await loadPrecomputedGrass({yieldControl:yieldToBrowserPaint,onProgress});
+      const presentation=await loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress});
       const installedHabitat=presentation.habitat;
       const habitatTexture=createTexture();gl.activeTexture(gl.TEXTURE0+10);gl.bindTexture(gl.TEXTURE_2D,habitatTexture);
       gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,installedHabitat.width,installedHabitat.height,0,gl.RED,gl.UNSIGNED_BYTE,installedHabitat.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);

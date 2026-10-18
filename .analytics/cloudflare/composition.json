@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-18T11:26:40Z",
+  "generatedAt": "2026-10-18T12:38:48Z",
   "window": {
-    "start": "2026-09-18T11:26:40Z",
-    "end": "2026-10-18T11:26:40Z"
+    "start": "2026-09-18T12:38:48Z",
+    "end": "2026-10-18T12:38:48Z"
   },
   "dimensions": {
     "requestPath": [
@@ -423,8 +423,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3219,
-        "visits": 2726
+        "pageLoads": 3223,
+        "visits": 2730
       },
       {
         "value": "reload",
@@ -467,15 +467,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 3668,
-        "visits": 2616
+        "pageLoads": 4158,
+        "visits": 2956
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 4994,
-        "visits": 3801
+        "pageLoads": 4158,
+        "visits": 2956
       }
     ]
   }

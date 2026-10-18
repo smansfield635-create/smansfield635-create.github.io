@@ -1,3 +1,4 @@
+import {appendGrassContinuity} from './grass-continuity-supplement.v1.js';
 import {WOODLAND_HABITAT,habitatHash,planWoodlandHabitatCandidates,habitatSlopeWeight} from './woodland-habitat-field.v1.js';
 import {decodeVerifiedPlantingRoots,H_EARTH_VERIFIED_PLANTING_PACKET} from './verified-planting-packet.v1.js';
 import {isVerifiedPlantingPoint,H_EARTH_VERIFIED_PLANTING_CELLS} from './verified-planting-cells.v1.js';
@@ -469,6 +470,16 @@ async function buildHabitatWoodland(pkg,{visibleSurface,admitGround,habitat,yiel
  }
  if(woodlandAccepted!==H_EARTH_VERIFIED_PLANTING_PACKET.counts.woodland||ravineAccepted!==H_EARTH_VERIFIED_PLANTING_PACKET.counts.ravine)throw Error('VERIFIED_PLANTING_POPULATION_MISMATCH:'+woodlandAccepted+':'+ravineAccepted);
  const ordered=[...tiles.values()].sort((a,b)=>a.minZ-b.minZ||a.minX-b.minX);for(const tile of ordered)tile.roots.sort((a,b)=>a.seed-b.seed);
- return {tiles:ordered,receipt:{schema:'H_EARTH_WOODLAND_FINE_GRASS_PRESENTATION_v1',candidateCount:candidates.length,contactCount:accepted,tileCount:ordered.length,rejections,elapsedMilliseconds:performance.now()-started,footprint:WOODLAND_HABITAT,habitat:habitat.receipt,selectionCacheTypedArrayBytes:0,cameraIndependent:true,originalRecordsChanged:false,terrainChanged:false,rootEncoding:'ACTUAL_FLOAT32_TRIANGLE_CONTACTS'}};
+ const original={tiles:ordered,receipt:{schema:'H_EARTH_WOODLAND_FINE_GRASS_PRESENTATION_v1',candidateCount:candidates.length,contactCount:accepted,tileCount:ordered.length,rejections,elapsedMilliseconds:performance.now()-started,footprint:WOODLAND_HABITAT,habitat:habitat.receipt,selectionCacheTypedArrayBytes:0,cameraIndependent:true,originalRecordsChanged:false,terrainChanged:false,rootEncoding:'ACTUAL_FLOAT32_TRIANGLE_CONTACTS'}};
+ // Supplementary roots use the same actual support, beach and protection rules.
+ const acceptRoot=(x,z,region)=>{
+  const support=visibleSurface.sample(x,z);if(!support||!admitGround(x,z,support))return null;
+  const a=inverseHEarthGroundCoverPoint(x,support.y,z),m=materialAt(a.x,a.z),w=visibleSurface.water.sample(x,z);
+  if(w&&support.y<=w.y+.03)return null;
+  if(m?.valid!==true||habitatSlopeWeight(support.slope,region)<=0||!(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL'].includes(m.surfaceClass)&&m.soilDepth>=.20))return null;
+  if(!woodlandGrassClear(a.x,a.z)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<(t.grassExclusionRadius??t.radius+.03))||trees.some(t=>Math.hypot(x-t.x,z-t.z)<(t.grassExclusionRadius??t.trunkRadius+.10)))return null;
+  return support;
+ };
+ return appendGrassContinuity(original,{habitat,acceptRoot,yieldControl,onProgress});
 }
 

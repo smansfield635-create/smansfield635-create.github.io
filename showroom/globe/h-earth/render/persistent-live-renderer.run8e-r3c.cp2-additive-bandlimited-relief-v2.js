@@ -1717,12 +1717,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         const beach=visibleSurface.beach.sample({x,z,support});return slopeWeight*(1-habitatSmooth(0,WOODLAND_HABITAT.maximumSandCoverage,beach.rawSandCoverage));
       }}));
       const presentation=await buildWoodlandFineGrass(pilotPackage,{visibleSurface:resources.vegetationVisibleSurface,habitat,yieldControl:yieldToBrowserPaint,onProgress});
+      const installedHabitat=presentation.habitat??habitat;
       const habitatTexture=createTexture();gl.activeTexture(gl.TEXTURE0+10);gl.bindTexture(gl.TEXTURE_2D,habitatTexture);
-      gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,habitat.width,habitat.height,0,gl.RED,gl.UNSIGNED_BYTE,habitat.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,installedHabitat.width,installedHabitat.height,0,gl.RED,gl.UNSIGNED_BYTE,installedHabitat.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-      resources.woodlandHabitat={texture:habitatTexture,receipt:habitat.receipt};counters.woodlandHabitatTextureUploadCount++;counters.woodlandHabitatUploadedBytes+=habitat.pixels.byteLength;
-      gl.useProgram(resources.geometryProgram);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitat'),10);gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatBounds'),habitat.bounds);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatEnabled'),1);
-      gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uRavineHabitatBounds'),habitat.ravine.bounds);gl.uniform2f(gl.getUniformLocation(resources.geometryProgram,'uHabitatAtlasScale'),.5,1);gl.uniform1f(gl.getUniformLocation(resources.geometryProgram,'uHabitatHalfTexel'),.5/habitat.size);
+      resources.woodlandHabitat={texture:habitatTexture,receipt:installedHabitat.receipt};counters.woodlandHabitatTextureUploadCount++;counters.woodlandHabitatUploadedBytes+=installedHabitat.pixels.byteLength;
+      gl.useProgram(resources.geometryProgram);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitat'),10);gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatBounds'),installedHabitat.bounds);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatEnabled'),1);
+      gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uRavineHabitatBounds'),installedHabitat.ravine.bounds);gl.uniform2f(gl.getUniformLocation(resources.geometryProgram,'uHabitatAtlasScale'),.5,1);gl.uniform1f(gl.getUniformLocation(resources.geometryProgram,'uHabitatHalfTexel'),.5/installedHabitat.size);
 
       const generationMs=performance.now()-generationStarted;
       resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress});

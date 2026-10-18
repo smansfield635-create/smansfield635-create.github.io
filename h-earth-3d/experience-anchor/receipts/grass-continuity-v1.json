@@ -1,0 +1,69 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewScope": "Source-bound same-world invariant preservation against controlling visual proxy; not rendered grass or device acceptance.",
+  "reviewedBaselineHead": "61edf329569f7d6b37634fb27be85cf70bcce1be",
+  "operationId": "H_EARTH_GRASS_CONTINUITY_20261018_001",
+  "canonicalAdmissionGeneration": 2806,
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/grass-continuity-v1/checkpoint.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.grass-continuity.v1.test.mjs",
+    "h-earth-3d/evidence/grass-continuity-v1/checkpoint.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/grass-continuity-v1/checkpoint.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+      "sha256": "418bc637491cd6955e5b40d7089cb9411383ab2fb435b7ab4635d2a5f589907c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "b7beac140d82237b12c2413cd679e12715e6f89ef4b729e06cf91e2ae117d4ac"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "45dff102ff5a5e0cb646c0b01803e9b85104dd99161051421b232b248a6d2e75"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "ccbddf9b8c389ce1309948e08cac9316bb27c3151180bfd3af5605c0ad7b590c"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.grass-continuity.v1.test.mjs",
+      "sha256": "f834573626b63ac246d212e0df6e347bf29a706b07e26927ac50a7c60d742639"
+    }
+  ],
+  "comparison": {
+    "anchorObserved": "Ground-level mountain terrain, continuous navigable world and horizon, embodied viewpoint and minimal interface.",
+    "sourceDelta": "Adds admitted static grass roots and matching habitat shading within the existing world and single vegetation owner. Preserves accepted bark, original roots, trees, terrain/water geometry, camera, direct look/travel, globe-region entry and interface. No duplicate scene or alternate product.",
+    "acceptanceBoundary": "All same-world invariants preserved at source level; exact candidate pixel/device comparison remains open."
+  },
+  "limitations": [
+    "CPU/source qualification only; no rendered appearance, GPU allocation or mobile performance acceptance.",
+    "Connectivity is sampled within [-130,-340,90,-238], not a global topology proof.",
+    "Organic bands and shoulders do not cover every eligible point in the surrounding rectangles; near-bank whole-zone occupancy is225/386 and added-tree occupancy641/873.",
+    "Exact cave mouth(40,-260) remains excluded by existing FUTURE_WATER admission; grass is present on its eligible apron.",
+    "Larger population increases draw and startup work; 16MB is a declared root-buffer ceiling, not a hardware-performance guarantee."
+  ]
+}

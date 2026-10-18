@@ -1,0 +1,847 @@
+{
+  "schema": "H_EARTH_GRASS_CONTINUITY_CHECKPOINT_v1",
+  "operationId": "H_EARTH_GRASS_CONTINUITY_20261018_001",
+  "canonicalAdmissionGeneration": 2806,
+  "baselineHead": "61edf329569f7d6b37634fb27be85cf70bcce1be",
+  "observedAt": "2026-10-18T17:14:28.604010+00:00",
+  "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6252544861",
+  "ownerDirection": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6252474718",
+  "status": "BOUNDED_CPU_AND_SOURCE_QUALIFIED_NOT_RENDERED_OR_PUBLISHED",
+  "purpose": "Add deterministic dense organic grass bands linking woodland to eligible ravine ground and covering the eligible cave apron, preserving accepted bark, trees and existing roots.",
+  "runtimeAndTestFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+      "sha256": "418bc637491cd6955e5b40d7089cb9411383ab2fb435b7ab4635d2a5f589907c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "sha256": "b7beac140d82237b12c2413cd679e12715e6f89ef4b729e06cf91e2ae117d4ac"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "45dff102ff5a5e0cb646c0b01803e9b85104dd99161051421b232b248a6d2e75"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "ccbddf9b8c389ce1309948e08cac9316bb27c3151180bfd3af5605c0ad7b590c"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.grass-continuity.v1.test.mjs",
+      "sha256": "f834573626b63ac246d212e0df6e347bf29a706b07e26927ac50a7c60d742639"
+    }
+  ],
+  "qualification": {
+    "schema": "H_EARTH_GRASS_CONTINUITY_v1",
+    "originalWoodland": 385944,
+    "originalRavine": 139198,
+    "originalCount": 525142,
+    "addedContacts": 463028,
+    "totalContacts": 988170,
+    "packedBytes": 15810720,
+    "candidates": 812062,
+    "duplicateCandidates": 121824,
+    "rejectedCandidates": 227210,
+    "reference": {
+      "density": 41.9375,
+      "lowerQuartile": 40.375,
+      "sampleResolution": 0.5,
+      "areaConvention": "FULL_4M_TILE_WITH_ALL_64_CELL_CENTER_ADMISSION_WITNESSES",
+      "controls": [
+        {
+          "id": "-39:-62",
+          "minX": -156,
+          "minZ": -248,
+          "eligibleArea": 16,
+          "rootCount": 706,
+          "density": 44.125
+        },
+        {
+          "id": "-38:-62",
+          "minX": -152,
+          "minZ": -248,
+          "eligibleArea": 16,
+          "rootCount": 746,
+          "density": 46.625
+        },
+        {
+          "id": "-37:-62",
+          "minX": -148,
+          "minZ": -248,
+          "eligibleArea": 16,
+          "rootCount": 770,
+          "density": 48.125
+        },
+        {
+          "id": "-36:-62",
+          "minX": -144,
+          "minZ": -248,
+          "eligibleArea": 16,
+          "rootCount": 775,
+          "density": 48.4375
+        },
+        {
+          "id": "-35:-62",
+          "minX": -140,
+          "minZ": -248,
+          "eligibleArea": 16,
+          "rootCount": 768,
+          "density": 48
+        },
+        {
+          "id": "-34:-62",
+          "minX": -136,
+          "minZ": -248,
+          "eligibleArea": 16,
+          "rootCount": 756,
+          "density": 47.25
+        },
+        {
+          "id": "-33:-62",
+          "minX": -132,
+          "minZ": -248,
+          "eligibleArea": 16,
+          "rootCount": 704,
+          "density": 44
+        },
+        {
+          "id": "-40:-61",
+          "minX": -160,
+          "minZ": -244,
+          "eligibleArea": 16,
+          "rootCount": 701,
+          "density": 43.8125
+        },
+        {
+          "id": "-39:-61",
+          "minX": -156,
+          "minZ": -244,
+          "eligibleArea": 16,
+          "rootCount": 730,
+          "density": 45.625
+        },
+        {
+          "id": "-38:-61",
+          "minX": -152,
+          "minZ": -244,
+          "eligibleArea": 16,
+          "rootCount": 718,
+          "density": 44.875
+        },
+        {
+          "id": "-37:-61",
+          "minX": -148,
+          "minZ": -244,
+          "eligibleArea": 16,
+          "rootCount": 722,
+          "density": 45.125
+        },
+        {
+          "id": "-36:-61",
+          "minX": -144,
+          "minZ": -244,
+          "eligibleArea": 16,
+          "rootCount": 716,
+          "density": 44.75
+        },
+        {
+          "id": "-35:-61",
+          "minX": -140,
+          "minZ": -244,
+          "eligibleArea": 16,
+          "rootCount": 709,
+          "density": 44.3125
+        },
+        {
+          "id": "-34:-61",
+          "minX": -136,
+          "minZ": -244,
+          "eligibleArea": 16,
+          "rootCount": 673,
+          "density": 42.0625
+        },
+        {
+          "id": "-33:-61",
+          "minX": -132,
+          "minZ": -244,
+          "eligibleArea": 16,
+          "rootCount": 665,
+          "density": 41.5625
+        },
+        {
+          "id": "-32:-61",
+          "minX": -128,
+          "minZ": -244,
+          "eligibleArea": 16,
+          "rootCount": 684,
+          "density": 42.75
+        },
+        {
+          "id": "-40:-60",
+          "minX": -160,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 700,
+          "density": 43.75
+        },
+        {
+          "id": "-39:-60",
+          "minX": -156,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 718,
+          "density": 44.875
+        },
+        {
+          "id": "-38:-60",
+          "minX": -152,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 695,
+          "density": 43.4375
+        },
+        {
+          "id": "-37:-60",
+          "minX": -148,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 693,
+          "density": 43.3125
+        },
+        {
+          "id": "-36:-60",
+          "minX": -144,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 674,
+          "density": 42.125
+        },
+        {
+          "id": "-35:-60",
+          "minX": -140,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 668,
+          "density": 41.75
+        },
+        {
+          "id": "-34:-60",
+          "minX": -136,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 651,
+          "density": 40.6875
+        },
+        {
+          "id": "-33:-60",
+          "minX": -132,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 616,
+          "density": 38.5
+        },
+        {
+          "id": "-32:-60",
+          "minX": -128,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 648,
+          "density": 40.5
+        },
+        {
+          "id": "-31:-60",
+          "minX": -124,
+          "minZ": -240,
+          "eligibleArea": 16,
+          "rootCount": 646,
+          "density": 40.375
+        },
+        {
+          "id": "-41:-59",
+          "minX": -164,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 735,
+          "density": 45.9375
+        },
+        {
+          "id": "-40:-59",
+          "minX": -160,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 707,
+          "density": 44.1875
+        },
+        {
+          "id": "-39:-59",
+          "minX": -156,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 700,
+          "density": 43.75
+        },
+        {
+          "id": "-38:-59",
+          "minX": -152,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 662,
+          "density": 41.375
+        },
+        {
+          "id": "-37:-59",
+          "minX": -148,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 663,
+          "density": 41.4375
+        },
+        {
+          "id": "-36:-59",
+          "minX": -144,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 657,
+          "density": 41.0625
+        },
+        {
+          "id": "-35:-59",
+          "minX": -140,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 655,
+          "density": 40.9375
+        },
+        {
+          "id": "-34:-59",
+          "minX": -136,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 621,
+          "density": 38.8125
+        },
+        {
+          "id": "-33:-59",
+          "minX": -132,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 573,
+          "density": 35.8125
+        },
+        {
+          "id": "-32:-59",
+          "minX": -128,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 587,
+          "density": 36.6875
+        },
+        {
+          "id": "-31:-59",
+          "minX": -124,
+          "minZ": -236,
+          "eligibleArea": 16,
+          "rootCount": 610,
+          "density": 38.125
+        },
+        {
+          "id": "-41:-58",
+          "minX": -164,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 722,
+          "density": 45.125
+        },
+        {
+          "id": "-40:-58",
+          "minX": -160,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 716,
+          "density": 44.75
+        },
+        {
+          "id": "-37:-58",
+          "minX": -148,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 663,
+          "density": 41.4375
+        },
+        {
+          "id": "-36:-58",
+          "minX": -144,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 649,
+          "density": 40.5625
+        },
+        {
+          "id": "-35:-58",
+          "minX": -140,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 652,
+          "density": 40.75
+        },
+        {
+          "id": "-34:-58",
+          "minX": -136,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 623,
+          "density": 38.9375
+        },
+        {
+          "id": "-33:-58",
+          "minX": -132,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 594,
+          "density": 37.125
+        },
+        {
+          "id": "-32:-58",
+          "minX": -128,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 618,
+          "density": 38.625
+        },
+        {
+          "id": "-31:-58",
+          "minX": -124,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 637,
+          "density": 39.8125
+        },
+        {
+          "id": "-30:-58",
+          "minX": -120,
+          "minZ": -232,
+          "eligibleArea": 16,
+          "rootCount": 672,
+          "density": 42
+        },
+        {
+          "id": "-41:-57",
+          "minX": -164,
+          "minZ": -228,
+          "eligibleArea": 16,
+          "rootCount": 725,
+          "density": 45.3125
+        },
+        {
+          "id": "-34:-57",
+          "minX": -136,
+          "minZ": -228,
+          "eligibleArea": 16,
+          "rootCount": 656,
+          "density": 41
+        },
+        {
+          "id": "-33:-57",
+          "minX": -132,
+          "minZ": -228,
+          "eligibleArea": 16,
+          "rootCount": 629,
+          "density": 39.3125
+        },
+        {
+          "id": "-32:-57",
+          "minX": -128,
+          "minZ": -228,
+          "eligibleArea": 16,
+          "rootCount": 625,
+          "density": 39.0625
+        },
+        {
+          "id": "-31:-57",
+          "minX": -124,
+          "minZ": -228,
+          "eligibleArea": 16,
+          "rootCount": 627,
+          "density": 39.1875
+        },
+        {
+          "id": "-30:-57",
+          "minX": -120,
+          "minZ": -228,
+          "eligibleArea": 16,
+          "rootCount": 680,
+          "density": 42.5
+        },
+        {
+          "id": "-41:-56",
+          "minX": -164,
+          "minZ": -224,
+          "eligibleArea": 16,
+          "rootCount": 705,
+          "density": 44.0625
+        },
+        {
+          "id": "-32:-56",
+          "minX": -128,
+          "minZ": -224,
+          "eligibleArea": 16,
+          "rootCount": 629,
+          "density": 39.3125
+        },
+        {
+          "id": "-31:-56",
+          "minX": -124,
+          "minZ": -224,
+          "eligibleArea": 16,
+          "rootCount": 657,
+          "density": 41.0625
+        },
+        {
+          "id": "-30:-56",
+          "minX": -120,
+          "minZ": -224,
+          "eligibleArea": 16,
+          "rootCount": 662,
+          "density": 41.375
+        },
+        {
+          "id": "-41:-55",
+          "minX": -164,
+          "minZ": -220,
+          "eligibleArea": 16,
+          "rootCount": 720,
+          "density": 45
+        },
+        {
+          "id": "-32:-55",
+          "minX": -128,
+          "minZ": -220,
+          "eligibleArea": 16,
+          "rootCount": 629,
+          "density": 39.3125
+        },
+        {
+          "id": "-31:-55",
+          "minX": -124,
+          "minZ": -220,
+          "eligibleArea": 16,
+          "rootCount": 646,
+          "density": 40.375
+        },
+        {
+          "id": "-32:-54",
+          "minX": -128,
+          "minZ": -216,
+          "eligibleArea": 16,
+          "rootCount": 638,
+          "density": 39.875
+        },
+        {
+          "id": "-31:-54",
+          "minX": -124,
+          "minZ": -216,
+          "eligibleArea": 16,
+          "rootCount": 655,
+          "density": 40.9375
+        },
+        {
+          "id": "-40:-53",
+          "minX": -160,
+          "minZ": -212,
+          "eligibleArea": 16,
+          "rootCount": 691,
+          "density": 43.1875
+        },
+        {
+          "id": "-32:-53",
+          "minX": -128,
+          "minZ": -212,
+          "eligibleArea": 16,
+          "rootCount": 658,
+          "density": 41.125
+        },
+        {
+          "id": "-39:-52",
+          "minX": -156,
+          "minZ": -208,
+          "eligibleArea": 16,
+          "rootCount": 671,
+          "density": 41.9375
+        },
+        {
+          "id": "-38:-52",
+          "minX": -152,
+          "minZ": -208,
+          "eligibleArea": 16,
+          "rootCount": 675,
+          "density": 42.1875
+        }
+      ]
+    },
+    "allocation": {
+      "maximumRoots": 1000000,
+      "maximumPackedBytes": 16000000,
+      "maximumWoodlandRoots": 450000,
+      "maximumRavineRoots": 614056,
+      "maximumTileRoots": 1600,
+      "originalWoodlandRoots": 385944,
+      "originalRavineRoots": 139198,
+      "spacing": 0.14
+    },
+    "maximumTileRoots": 816,
+    "densityAllocation": "EXISTING_PLUS_SUPPLEMENT_ONE_METRE_QUOTA",
+    "cameraIndependent": true,
+    "originalRootsPreserved": true,
+    "renderedAcceptance": false,
+    "connectivity": {
+      "sampleResolution": 1,
+      "adjacency": "FOUR_NEIGHBOURS_WITH_ACTUAL_MIDPOINT_ADMISSION",
+      "bounds": [
+        -130,
+        -340,
+        90,
+        -238
+      ],
+      "componentCount": 10,
+      "hardComponentCount": 10,
+      "policy": "CONNECT_WITHIN_HARD_ELIGIBLE_COMPONENTS_PRESERVE_EXCLUSION_GAPS",
+      "witnesses": [
+        {
+          "id": "WOODLAND_EXIT",
+          "requestedX": -108,
+          "requestedZ": -256,
+          "x": -108.5,
+          "z": -256.5,
+          "distance": 0.7071067811865476,
+          "component": 0,
+          "hardComponent": 0
+        },
+        {
+          "id": "NEAR_BANK",
+          "requestedX": -70,
+          "requestedZ": -286,
+          "x": -70.5,
+          "z": -285.5,
+          "distance": 0.7071067811865476,
+          "component": 0,
+          "hardComponent": 0
+        },
+        {
+          "id": "MID_BANK",
+          "requestedX": -30,
+          "requestedZ": -286,
+          "x": -33.5,
+          "z": -279.5,
+          "distance": 7.3824115301167,
+          "component": 0,
+          "hardComponent": 0
+        },
+        {
+          "id": "CAVE_ENTRANCE",
+          "requestedX": 40,
+          "requestedZ": -260,
+          "x": 34.5,
+          "z": -257.5,
+          "distance": 6.041522986797285,
+          "component": 7,
+          "hardComponent": 6
+        },
+        {
+          "id": "ADDED_TREES",
+          "requestedX": 60,
+          "requestedZ": -306,
+          "x": 59.5,
+          "z": -306.5,
+          "distance": 0.7071067811865476,
+          "component": 1,
+          "hardComponent": 1
+        }
+      ]
+    },
+    "caveMouth": {
+      "x": 40,
+      "z": -260,
+      "supportPresent": true,
+      "hardAdmitted": false,
+      "rejectionReasons": [
+        "FUTURE_WATER"
+      ],
+      "supportOwner": "MOUNTAIN_OVERBURDEN",
+      "supportSlope": 0.5434147792240538,
+      "proposalWeight": 1,
+      "atlasWeight": 0,
+      "rootsInOneMetreCell": 0
+    },
+    "beachNegative": {
+      "x": 3.7832353115081787,
+      "z": -127.66645812988281,
+      "sandCoverage": 0.9175581216095148,
+      "admitted": false
+    },
+    "originalPackedSha256": "d90752a5e4d9c4f1f3e0bcc56edac6bc53cff09e07f1c70c0b1f12f9fff06dde",
+    "originalSeedRegionSha256": "fbdd8604fb367bfce0528edfa01f13d5b797ad9d6a0804e7dfbc57806ac09417",
+    "zoneMetrics": [
+      {
+        "id": "WOODLAND_EXIT",
+        "areaConvention": "HARD_ADMITTED_NONWOODLAND_ONE_METRE_CELLS_FOUR_QUARTER_POINT_WITNESSES",
+        "hardAdmittedArea": 0,
+        "hardOccupiedArea": 0,
+        "proposedArea": 0,
+        "proposedCoreFraction": null,
+        "eligibleArea": 0,
+        "occupiedCells": 0,
+        "atlasCoveredCells": 0,
+        "atlasCoverage": null,
+        "rootCount": 0,
+        "density": null,
+        "occupancy": null,
+        "woodlandDensityRatio": null
+      },
+      {
+        "id": "NEAR_BANK",
+        "areaConvention": "HARD_ADMITTED_NONWOODLAND_ONE_METRE_CELLS_FOUR_QUARTER_POINT_WITNESSES",
+        "hardAdmittedArea": 386,
+        "hardOccupiedArea": 225,
+        "proposedArea": 235,
+        "proposedCoreFraction": 0.3316062176165803,
+        "eligibleArea": 128,
+        "occupiedCells": 128,
+        "atlasCoveredCells": 128,
+        "atlasCoverage": 1,
+        "rootCount": 5170,
+        "density": 40.390625,
+        "occupancy": 1,
+        "woodlandDensityRatio": 0.9631147540983607
+      },
+      {
+        "id": "MID_BANK",
+        "areaConvention": "HARD_ADMITTED_NONWOODLAND_ONE_METRE_CELLS_FOUR_QUARTER_POINT_WITNESSES",
+        "hardAdmittedArea": 88,
+        "hardOccupiedArea": 88,
+        "proposedArea": 88,
+        "proposedCoreFraction": 1,
+        "eligibleArea": 88,
+        "occupiedCells": 88,
+        "atlasCoveredCells": 88,
+        "atlasCoverage": 1,
+        "rootCount": 3561,
+        "density": 40.46590909090909,
+        "occupancy": 1,
+        "woodlandDensityRatio": 0.9649099038070723
+      },
+      {
+        "id": "CAVE_ENTRANCE",
+        "areaConvention": "HARD_ADMITTED_NONWOODLAND_ONE_METRE_CELLS_FOUR_QUARTER_POINT_WITNESSES",
+        "hardAdmittedArea": 72,
+        "hardOccupiedArea": 72,
+        "proposedArea": 72,
+        "proposedCoreFraction": 1,
+        "eligibleArea": 72,
+        "occupiedCells": 72,
+        "atlasCoveredCells": 72,
+        "atlasCoverage": 1,
+        "rootCount": 2945,
+        "density": 40.90277777777778,
+        "occupancy": 1,
+        "woodlandDensityRatio": 0.9753270409008115
+      },
+      {
+        "id": "ADDED_TREES",
+        "areaConvention": "HARD_ADMITTED_NONWOODLAND_ONE_METRE_CELLS_FOUR_QUARTER_POINT_WITNESSES",
+        "hardAdmittedArea": 873,
+        "hardOccupiedArea": 641,
+        "proposedArea": 644,
+        "proposedCoreFraction": 0.5876288659793815,
+        "eligibleArea": 513,
+        "occupiedCells": 513,
+        "atlasCoveredCells": 513,
+        "atlasCoverage": 1,
+        "rootCount": 20847,
+        "density": 40.63742690058479,
+        "occupancy": 1,
+        "woodlandDensityRatio": 0.9689997472568654
+      }
+    ],
+    "exactWorldSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "cpuSupportAndSubmissionOnly": true
+  },
+  "testRun": {
+    "command": "H_EARTH_GRASS_SOURCE_DIR=\"$PWD/grass-runtime/showroom/globe/h-earth/render\" H_EARTH_GRASS_QUALIFICATION_JSON=\"$PWD/grass-qualification.json\" node --max-old-space-size=4096 --test repo/h-earth-3d/validation/h-earth.grass-continuity.v1.test.mjs",
+    "exitCode": 0,
+    "tests": 2,
+    "passed": 2,
+    "skipped": 0,
+    "durationMs": 188451.181729,
+    "sourceSha256": {
+      "repo/showroom/globe/h-earth/render/grass-continuity-supplement.v1.js": "418bc637491cd6955e5b40d7089cb9411383ab2fb435b7ab4635d2a5f589907c",
+      "repo/showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "b7beac140d82237b12c2413cd679e12715e6f89ef4b729e06cf91e2ae117d4ac",
+      "repo/showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js": "45dff102ff5a5e0cb646c0b01803e9b85104dd99161051421b232b248a6d2e75",
+      "repo/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "ccbddf9b8c389ce1309948e08cac9316bb27c3151180bfd3af5605c0ad7b590c",
+      "repo/h-earth-3d/validation/h-earth.grass-continuity.v1.test.mjs": "f834573626b63ac246d212e0df6e347bf29a706b07e26927ac50a7c60d742639"
+    },
+    "qualificationSha256": "4c4f44be731bc2ea54ad6b94504a409a636e1ff88d20c88ecc1305ec6264649d",
+    "logSha256": "07bb1afb385729917014824fab9dca09fffc56ed79c27bdbcdc35ada025ec641",
+    "renderedAcceptance": false,
+    "mobilePerformanceAcceptance": false
+  },
+  "independentReview": {
+    "bearing": "W",
+    "builderSelfDeclaration": false,
+    "result": "PASS_BOUNDED_CPU_SOURCE",
+    "reviewedFileSha256s": [
+      {
+        "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+        "sha256": "418bc637491cd6955e5b40d7089cb9411383ab2fb435b7ab4635d2a5f589907c"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+        "sha256": "b7beac140d82237b12c2413cd679e12715e6f89ef4b729e06cf91e2ae117d4ac"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+        "sha256": "45dff102ff5a5e0cb646c0b01803e9b85104dd99161051421b232b248a6d2e75"
+      },
+      {
+        "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "sha256": "ccbddf9b8c389ce1309948e08cac9316bb27c3151180bfd3af5605c0ad7b590c"
+      },
+      {
+        "path": "h-earth-3d/validation/h-earth.grass-continuity.v1.test.mjs",
+        "sha256": "f834573626b63ac246d212e0df6e347bf29a706b07e26927ac50a7c60d742639"
+      }
+    ],
+    "scope": "Original identity, actual terrain admission, explicit resource ceiling, combined density, actual atlas sampling and bounded exclusion-aware occupied connectivity. No rendered acceptance."
+  },
+  "rootReview": {
+    "rendererDelta": "Only installation of the returned post-admission habitat atlas and its bounds. Bark shader and all other renderer code unchanged.",
+    "worldContinuity": "No terrain, water, tree geometry, camera, navigation, interface, canonical archive or startup-route changes.",
+    "originalWoodlandAtlas": "Byte-identical left half; atlas dimensions and texture count unchanged."
+  },
+  "priorAttempts": [
+    {
+      "result": "ALLOCATION_GUARD_FAILED",
+      "resolution": "Changed full additive density to stable hash-priority union quotas counting existing roots. No ceiling increase or silent truncation."
+    },
+    {
+      "result": "UNCONDITIONAL_GLOBAL_WITNESS_CONNECTIVITY_FAILED",
+      "resolution": "Independent actual hard-ground graph demonstrates existing excluded breaks. Final test requires occupied continuity for every witness pair connected through hard-eligible ground in the same explicit bounded grid."
+    }
+  ],
+  "ownerRegression": {
+    "candidate": {
+      "passed": 30,
+      "failed": 8
+    },
+    "baseline": {
+      "passed": 30,
+      "failed": 8
+    },
+    "interpretation": "Same eight pre-existing startup/HTML fixture failures, including createHEarthLoadingScreen undefined. No new failure in owner planning/resource/upload tests; not a blanket test-suite PASS."
+  },
+  "limitations": [
+    "CPU/source qualification only; no rendered appearance, GPU allocation or mobile performance acceptance.",
+    "Connectivity is sampled within [-130,-340,90,-238], not a global topology proof.",
+    "Organic bands and shoulders do not cover every eligible point in the surrounding rectangles; near-bank whole-zone occupancy is225/386 and added-tree occupancy641/873.",
+    "Exact cave mouth(40,-260) remains excluded by existing FUTURE_WATER admission; grass is present on its eligible apron.",
+    "Larger population increases draw and startup work; 16MB is a declared root-buffer ceiling, not a hardware-performance guarantee."
+  ]
+}

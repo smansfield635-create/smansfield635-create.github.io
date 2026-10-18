@@ -1,0 +1,69 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_PRECOMPUTED_GRASS_ANCHOR_EVIDENCE_20261018_001",
+  "canonicalAdmissionGeneration": 2808,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/precomputed-grass-v1/checkpoint.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs",
+    "h-earth-3d/evidence/precomputed-grass-v1/checkpoint.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.precompute-grass.v1.mjs",
+      "sha256": "2a7b3bcfb7fc24fc2bab549801c62aed97356ab311c4d2640b497de1c74bdee6"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs",
+      "sha256": "6ffe46a263955dd5b668756351131ff9865934497447981ae3d2f3489768ceb5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz",
+      "sha256": "853a8354113497e24c9bcf192f1177ebe3f6219aa95042389344b093df594c95"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json",
+      "sha256": "76b26918197c806aace3ebefe733245c430213cb569bdbed3961d72365dccfb9"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "7911518442043f2775a96ba7ac32a87aa305bc475aaa143a4237d5550f001cfd"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-grass.v1.js",
+      "sha256": "5e6edbf21e8f56d6e29eca33291932eff25371150fc948441037a4a86d7e1a4b"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "b6dc7d7fed63316af13c339b5583ee97842a00f4",
+    "receipt": "h-earth-3d/experience-anchor/receipts/performance-repair-v1.json",
+    "basis": "Same embodied canonical world and navigation. All 988170 saved roots, tile order and habitat atlas equal the accepted scene. Only startup acquisition changes; GPU ownership, upload and drawing remain unchanged."
+  },
+  "limitations": [
+    "Source continuity and CPU identity acceptance only; no exact-candidate browser pixels, GPU execution, network delivery or physical-device acceptance claim.",
+    "Owner waived prepublication visual assessment; this does not establish visual or runtime success. Registered exact-candidate browser readiness remains pending.",
+    "No independent merge, deployment or publication authority is created by this receipt."
+  ]
+}

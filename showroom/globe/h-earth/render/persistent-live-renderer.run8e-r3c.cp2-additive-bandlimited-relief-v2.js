@@ -1,5 +1,6 @@
 import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
 import {loadPrecomputedGrass} from './precomputed-grass.v1.js';
+import {loadPrecomputedOasisSoil} from './precomputed-oasis-soil.v1.js';
 import {WOODLAND_HABITAT,buildWoodlandHabitatField,habitatSmooth,habitatSlopeWeight} from './woodland-habitat-field.v1.js';
 import {createSingleOwnerVegetation} from './vegetation-single-owner.prototype.v1.js';
 import {RENDERED_BEACH_GLSL,createRenderedBeachProvider,createPilotCoverageOwner} from './rendered-beach-signal.v1.js?rev=gen2782-rendered-landscape-v1';
@@ -1702,9 +1703,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const admitGround=await createUniformGroundAdmission({visibleSurface,geology:resources.geologicalRuntime,toLocal:unprojectPlanetVertex,estate:pilotEstate,obstacles:pilotPackage.landscapeCoverFootprints??[],trees:pilotPackage.landscapeFloorFootprints??[],oasis:H_EARTH_OASIS_FOLIAGE_SAMPLE,sampleStructure:pilotStructureAt,yieldControl:yieldToBrowserPaint,maximumSandCoverage:WOODLAND_HABITAT.maximumSandCoverage});
       resources.vegetationVisibleSurface=Object.freeze({...visibleSurface,admitGround});
 
-      // Preserve the identical soil-mask derivation without materializing legacy GPU batches.
-      const oasis=await prepareHEarthOasisFoliagePresentation(pilotPackage,{onProgress:update=>onProgress({...update,phase:'PRESERVING_SOIL_MASK'})});
-      const mask=buildHEarthOasisGrassSoilCoverage(oasis.primitives);
+      // Load the exact offline derivation; legacy rendering paths retain their own generator.
+      const soilStarted=performance.now();onProgress({phase:'SOIL_MASK_LOADING'});
+      const mask=await loadPrecomputedOasisSoil(pilotPackage);
+      const soilMaskMilliseconds=performance.now()-soilStarted;
       if(mask.width!==104||mask.height!==146||mask.grassTuftCount!==350)throw Error('OASIS_SOIL_COVERAGE_IDENTITY_MISMATCH');
       gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,resources.shorelineSoilTexture);gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);
       gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,mask.width,mask.height,gl.RED,gl.UNSIGNED_BYTE,mask.pixels);
@@ -1724,7 +1726,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
 
       const generationMs=performance.now()-generationStarted;
       resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress});
-      resources.singleOwnerTiming={generationMs,loading:presentation.loading,preparationMs:performance.now()-started,includesAcceptedOasisSoilPreparation:true};
+      resources.singleOwnerTiming={soilMaskMilliseconds,generationMs,loading:presentation.loading,preparationMs:performance.now()-started,includesAcceptedOasisSoilPreparation:true};
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
       const error=gl.getError();if(error!==gl.NO_ERROR)throw Error('REPLACEMENT_UPLOAD_GL_ERROR:'+error);
       onProgress({phase:'SINGLE_POPULATION_RESIDENT'});return resources.singleOwnerVegetation.getReceipt();

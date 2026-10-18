@@ -1,0 +1,81 @@
+{
+  "schema": "H_EARTH_GRATITUDE_FAST_START_CHECKPOINT_v1",
+  "operationId": "H_EARTH_GRATITUDE_FAST_START_20261018_001",
+  "generation": 2815,
+  "admissionIssue": 6426,
+  "admissionComment": 6256322649,
+  "baselineHead": "93a2be2f4b498c0cee50c1076dd44151e1855cdb",
+  "changes": [
+    "Initial HTML Gratitude shell; bootstrap hydrates before heavy route import",
+    "Animated dawn/landscape composition, reduced-motion and pause support",
+    "Actual download bytes and decoded plant counts, stage labels and elapsed clock",
+    "Exact source-bound soil mask replaces legacy oasis generation only for single-owner path"
+  ],
+  "validation": {
+    "focusedTests": {
+      "passed": 19,
+      "failed": 0
+    },
+    "offlineRegeneration": "EXACT_EQUAL",
+    "soilPixelSha256": "a2478a8d53201408f41341a95cb71fe32998c66fe247969ffb4c2cadc9cd8d46",
+    "soilPixelBytes": 15184,
+    "legacyDerivationLocalMilliseconds": [
+      39547,
+      34739
+    ],
+    "precomputedLoadAndValidationLocalMilliseconds": [
+      211,
+      225
+    ],
+    "grassPackedGpuSha256": "d8df836eabd37c33d4a7b9542f56e4d1bb63d0d41fa7303be58f91fe5db1d3aa",
+    "independentReview": "PENDING_FINAL_W"
+  },
+  "limits": [
+    "Local timings are not tablet measurements or whole-page timings.",
+    "Browser preflight, live publication and owner tablet review pending.",
+    "Under60 seconds is a target, not an established result.",
+    "Loader visual review remains pending; production review explicitly requested by owner."
+  ],
+  "files": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "2e8cb13b863cd0647ac2ee56c43064349a0ef3ac77ad839f5593bafdf2433b32"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js",
+      "sha256": "cfbe66641fd5d6dc6beeab47ac410d4d0b8091c78d414ed73683a4624343b827"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "sha256": "7203bf1e93521aa8db385796ad95a3f4b96e9c9538ac07d32b6c6d54f0ab27e5"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "b3e80ea6a757605f0b756370a81233185ca0a4587bf5c4bb5f345ccbc1248ad6"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "d0e83c90b5482f21cb5d7bb061a2162d03111ce1f0efdc1f11c4a279d99aca12"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-grass.v1.js",
+      "sha256": "c86349ac7b31b367e4bcfebf579b818ed246f37600389cc4677dc397bf07be88"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-oasis-soil.v1.js",
+      "sha256": "88d9e2c3c7f9a9f221e3eb3844f72b52120548c41122a36f3353faf8ca9a9886"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/oasis-soil-mask.v1.json",
+      "sha256": "de82ecd3efb23f725f2558f003694c05727d519a227358587a9a1719beff787d"
+    },
+    {
+      "path": "h-earth-3d/validation/generate-oasis-soil-mask.v1.mjs",
+      "sha256": "6bc455754e554ff68c3efbcdc6a958e4b495ea27c682d13b240a26e60d1557b1"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.gratitude-fast-start.v1.test.mjs",
+      "sha256": "54a430606b6c1f72ca03bf150d9559f2b6fd1f7a439aa42b7ead79edef561cbf"
+    }
+  ]
+}

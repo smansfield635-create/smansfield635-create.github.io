@@ -1,0 +1,21 @@
+{
+  "schema": "H_EARTH_PRECOMPUTED_GRASS_CHECKPOINT_v1",
+  "baseline": "b6dc7d7fed63316af13c339b5583ee97842a00f4",
+  "rootCount": 988170,
+  "packedBytes": 15810720,
+  "rawBytes": 51458568,
+  "compressedBytes": 22580629,
+  "rawSha256": "376cb527028b601c2e136d9b3f0a2bcff353dc85bab2d21e0a37abd91f02e792",
+  "packedSha256": "fe2341c9538e7789f9a35b44e7fb4bc7c18de16ba976111fd31651abe986e666",
+  "atlasSha256": "215695167d45cf33121d20aabe553187ed6942569a9c97b5df7ea35a1e8b0126",
+  "originalPackedSha256": "d90752a5e4d9c4f1f3e0bcc56edac6bc53cff09e07f1c70c0b1f12f9fff06dde",
+  "originalSeedRegionSha256": "fbdd8604fb367bfce0528edfa01f13d5b797ad9d6a0804e7dfbc57806ac09417",
+  "exactEveryRootFieldAndTileOrder": true,
+  "exactHabitatPixels": true,
+  "offlineBuildMilliseconds": 196274.17986899999,
+  "serializationAndEqualityMilliseconds": 19412.97545899998,
+  "cpuOnly": true,
+  "browserReadinessVerified": false,
+  "phonePerformanceVerified": false,
+  "visualAcceptance": false
+}

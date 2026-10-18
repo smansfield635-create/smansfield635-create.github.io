@@ -32,11 +32,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "636f64f0d04cc24aff9712f7c13f01d05b3fe0f35e0fb2025ee4d38d30dda2df"
+      "sha256": "06dd457af3f8bc72e83e71b776705e614f7db7e928e5c9eb16793936c65d43c6"
     },
     {
       "path": "h-earth-3d/validation/h-earth.tree-material-eligibility.v1.test.mjs",
-      "sha256": "1f1fe8e464792138bddba396d555898f4214252d638bde6b4e367403518ec426"
+      "sha256": "56d65c18d3985e1813472e9a12d5fda7cc2009711f4db1bed4a6b68df6713f9c"
     }
   ],
   "acceptedPrecedent": {
@@ -46,16 +46,19 @@
   },
   "comparison": {
     "anchorObserved": "Ground-level mountain terrain and open horizon with embodied viewpoint and minimal interface.",
-    "deltaObserved": "Separate exact authored tree material weight from clearingEdge. Only model0/role3/w2/z1|2 with clearing enabled gains full material treatment outside the clearing. Positive original edge weights preserved; shadow and fog retain clearingEdge.",
+    "deltaObserved": "One predicate line adds role5/type1; preserves role3/type1 and type2 including real understory stems. Role5/type2 excluded.",
     "canonicalContinuity": "Only fragment shader material eligibility/lighting changes. No new world, route, interface, geometry, roots or navigation; resource/draw suffix unchanged."
   },
   "limitations": [
-    "No GPU compile, rendered pixel, device or performance acceptance yet",
-    "Original tagged fragments outside old bounds intentionally gain material treatment; no all-pixel equivalence claim",
-    "No grass mutation or census repeated",
+    "Earlier five-test PASS used incorrect synthetic bark role3; not bark behavior proof",
+    "No rendered bark/canopy or physical device acceptance",
     "No merge/deployment authority",
-    "Inherited startup albedo difference remains unresolved"
+    "Grass and geometry unchanged",
+    "No published canonical-mesh equivalence, GPU compilation or rendered appearance proof",
+    "Synthetic placement supports/normals; actual generated material arrays",
+    "Initial pair-only suggestion rejected because role3/type1 is also real grass stem"
   ],
-  "operationId": "H_EARTH_TREE_MATERIAL_ELIGIBILITY_20261018_001",
-  "canonicalAdmissionGeneration": 2802
+  "operationId": "H_EARTH_TREE_BARK_ROLE_CORRECTION_20261018_001",
+  "canonicalAdmissionGeneration": 2804,
+  "renderedAcceptance": "PENDING"
 }

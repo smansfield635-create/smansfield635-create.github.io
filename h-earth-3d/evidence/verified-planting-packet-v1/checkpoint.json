@@ -1,0 +1,76 @@
+{
+  "schema": "H_EARTH_VERIFIED_PLANTING_CHECKPOINT_v1",
+  "generation": 2800,
+  "operationId": "H_EARTH_VERIFIED_PLANTING_PACKET_20261017_001",
+  "stage": "DATA_MODULES_SAVED_NOT_INTEGRATED",
+  "branch": "h-earth/gen2800-verified-planting-packet-20261017",
+  "baseCommit": "218e704c06c09bb0c4ca9a6f979abe0fe717387a",
+  "commitBinding": "The Git commit containing this checkpoint; exact resulting SHA is recorded in issue6426 after push and remote readback.",
+  "lockCommit": "141e5a4172447194550bcfa202cd5c5038c9a283",
+  "packetSha256": "9f2a50cb5317a4f5580ffe9be3f4a6f07631ca335f92317dab74fc79cf58ce30",
+  "sourcePacketLibraryId": "libfile_ab867cb814bc8191bd51b3a25b67a469",
+  "savedFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/verified-planting-packet.v1.js",
+      "bytes": 1155376,
+      "sha256": "f586afa2ae1ec2ce6c6d923445258997d1959f3e5102d66653aa96efb029fc27"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/verified-planting-cells.v1.js",
+      "bytes": 21373,
+      "sha256": "3878d712e24b8707e9aa577faa0ac9855e22c2540aec00429ff89dd9b8587eed"
+    }
+  ],
+  "recovery": {
+    "survivingExactPacket": true,
+    "manifestEntriesVerified": 22,
+    "laterCrashedRoomModulesFound": false,
+    "priorLocalFilesModified": false,
+    "censusRepeated": false,
+    "admissionRepeated": false
+  },
+  "continuity": {
+    "ambiguousEvidenceDisposition": "STRICT_SUCCESSOR_REQUIRED",
+    "authorityExpanded": false,
+    "baseHead": "218e704c06c09bb0c4ca9a6f979abe0fe717387a",
+    "baseIsAncestor": true,
+    "carryForwardAuthorized": true,
+    "changedPaths": [
+      ".analytics/cloudflare/composition.json",
+      ".analytics/cloudflare/historical-owner-envelope.json",
+      ".analytics/cloudflare/latest.json",
+      ".analytics/cloudflare/owner-heartbeats.json",
+      ".analytics/cloudflare/reporting-methodology.json",
+      ".analytics/cloudflare/status.txt",
+      "analytics/data/latest.json"
+    ],
+    "currentHead": "a370c522997b573206a5c90994dcfca7b0051be2",
+    "dependencyPaths": [
+      ".github/ai-router",
+      ".github/operation-intake",
+      "AGENTS.md",
+      "AI_ENTRYPOINT.json",
+      "h-earth-3d",
+      "showroom/globe/h-earth",
+      "tools/operation-intake"
+    ],
+    "dependencySurfaceComplete": true,
+    "mergeAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "overlapsObserved": [],
+    "reason": "COMPLETE_DISJOINT_CHANGE_PROVEN",
+    "result": "CARRY_FORWARD_APPROVED",
+    "schema": "DIFFERENTIAL_CONTINUITY_RECEIPT_v1",
+    "strictSuccessorFallbackPreserved": true
+  },
+  "verification": {
+    "decodedRavineRecordsExact": 139198,
+    "selectedCellsExact": 12577,
+    "treeRecordsExact": 4,
+    "method": "Independent exhaustive Node decode vs preserved float32 XYZA and uint32 seed/region packet; bitmap membership against selected-cells.json; real source habitatHash.",
+    "runtimeIntegration": false,
+    "gpuOrTabletAcceptance": false
+  },
+  "nextAction": "Integrate these saved modules into both startup paths, preserving all woodland identities and shared exclusions, then commit that integration separately.",
+  "stopCondition": "No merge, deployment or publication. Source checks do not establish visual or tablet acceptance."
+}

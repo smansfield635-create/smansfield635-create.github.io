@@ -5,7 +5,7 @@ import {createHEarthRun8ER3CPersistentRenderer} from '../render/persistent-live-
 import {installHEarthRun8ER3D2PointerTouchIntake,resolveHEarthNavigationBoundaryFeedback} from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2780-stable-planting-v1';
 
 import {createFramePresenter} from '../render/performance-scheduling.v1.js?rev=gen2795-performance-v1';
-import {createHEarthLoadingScreen} from './loading-screen.v1.js?rev=gen2813-gratitude-v1';
+import {createHEarthLoadingScreen} from './loading-screen.v1.js?rev=gen2815-fast-start-v1';
 
 const sourceBaseline='f64ce197d6bd54cd3627458fc138295e9913f761';
 const root=document.getElementById('h-earth-functional-landscape-route');
@@ -14,7 +14,11 @@ const status=document.getElementById('prototype-status');
 const query=new URLSearchParams(location.search),started=performance.now();
 const diagnosticReplay=location.pathname.endsWith('/vegetation-prototype.html');
 const qualificationView=diagnosticReplay&&['bank-view-v1','habitat-edge-view-v1','ravine-view-v1'].includes(query.get('qualification'))?query.get('qualification'):null;
-const loader=diagnosticReplay?null:createHEarthLoadingScreen({onEnter:markReady});
+const loader=diagnosticReplay?null:(globalThis.H_EARTH_STARTUP_LOADER??createHEarthLoadingScreen({onEnter:markReady}));
+if(!diagnosticReplay){
+ const enterWhenConfirmed=()=>{if(loader.getReceipt().mode!=='entered')return;document.removeEventListener('gratitude-enter',enterWhenConfirmed);markReady();};
+ document.addEventListener('gratitude-enter',enterWhenConfirmed);
+}
 const copy=value=>JSON.parse(JSON.stringify(value));
 const assert=(condition,reason)=>{if(!condition)throw Error('SINGLE_OWNER_PROTOTYPE:'+reason);};
 const delay=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds));

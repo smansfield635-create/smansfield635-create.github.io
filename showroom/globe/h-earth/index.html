@@ -13,7 +13,8 @@
   <script type="importmap">
   {
   "imports": {
-    "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2795-performance-v1",
+    "/showroom/globe/h-earth/render/precomputed-grass.v1.js": "/showroom/globe/h-earth/render/precomputed-grass.v1.js?rev=gen2815-fast-start-v1",
+    "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2815-fast-start-v1",
     "/showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2780-stable-planting-v1": "/showroom/globe/h-earth/render/woodland-fine-grass.v1.js?rev=gen2795-performance-v1",
     "/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js?cb=meadow-fan-20261006": "/showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js?cb=meadow-distribution-20261006",
     "/showroom/globe/h-earth/render/live-render-package.run8e-r2.js?cb=meadow-fan-20261006": "/showroom/globe/h-earth/render/live-render-package.run8e-r2.js?cb=meadow-distribution-20261006",
@@ -33,8 +34,54 @@
   <main id="h-earth-functional-landscape-route" data-run8e-ready="false">
     <canvas id="h-earth-functional-landscape-canvas" aria-label="Navigable H-Earth woodland. Drag to look; slide two fingers to move; pinch to zoom."></canvas>
   </main>
-  <output id="prototype-status" role="status">Loading H-Earth…</output>
-  <script type="module" id="h-earth-current-run8e-module" src="./vegetation-prototype/route.js?rev=gen2795-performance-v1"></script>
+  <output id="prototype-status" role="status">Opening Gratitude…</output>
+  <section id="h-earth-loading-screen" aria-label="Gratitude preparation" data-mode="preparing"><style>
+  #h-earth-loading-screen{position:fixed;inset:0;z-index:10;display:grid;align-items:center;overflow:auto;background:#102b28;color:#f4efdc;padding:clamp(24px,6vw,80px);box-sizing:border-box;font:16px/1.5 system-ui,sans-serif;isolation:isolate}
+  #h-earth-loading-screen *{box-sizing:border-box}
+  #h-earth-loading-screen .he-landscape{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+  #h-earth-loading-screen .he-loading-panel{width:min(620px,100%);padding:30px 0}
+  #h-earth-loading-screen .he-wordmark{font:400 clamp(48px,10vw,100px)/1.05 Georgia,serif;letter-spacing:-.045em;margin:14px 0 18px}
+  #h-earth-loading-screen .he-kicker{color:#d9c58e;text-transform:uppercase;letter-spacing:.24em;font-size:11px;font-weight:600}
+  #h-earth-loading-screen .he-deck{max-width:370px;color:#d1ded0;font-size:17px;line-height:1.65}
+  #h-earth-loading-screen .he-story{margin:32px 0 24px;padding-left:20px;border-left:1px solid #b6c59b77;max-width:410px;min-height:150px}
+  #h-earth-loading-screen .he-story h2{font:400 26px/1.2 Georgia,serif;margin:9px 0}
+  #h-earth-loading-screen .he-story p{color:#ced9cc;line-height:1.6;margin:10px 0}
+  #h-earth-loading-screen .he-story-controls{display:flex;align-items:center;gap:16px;font-size:11px;color:#d9c58e;letter-spacing:.12em}
+  #h-earth-loading-screen button{pointer-events:auto;font:inherit;cursor:pointer}
+  #h-earth-loading-screen .he-story-controls button{border:0;background:transparent;color:#dce3d1;padding:9px 4px;text-decoration:underline;text-underline-offset:4px;min-height:44px}
+  #h-earth-loading-screen .he-preparation{border-top:1px solid #b6c59b44;padding-top:18px;max-width:430px;font-size:13px}
+  #h-earth-loading-screen [data-loading-activity]{margin:0 0 8px;color:#f1eddb}
+  #h-earth-loading-screen [data-loading-instructions],#h-earth-loading-screen [data-loading-units]{color:#c5d2c3;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+  #h-earth-loading-screen progress{width:100%;accent-color:#d9c58e;height:6px}
+  #h-earth-loading-screen [data-enter]{border:1px solid #c8d2ae;border-radius:3px;background:#dce2c4;color:#162e25;padding:12px 22px;margin-top:6px;min-height:46px}
+  #h-earth-loading-screen [data-enter]:disabled{background:transparent;color:#b6c4b4;border-color:#718b7966;cursor:default}
+  #h-earth-loading-screen button:focus-visible{outline:2px solid #efcf7c;outline-offset:4px}
+  #h-earth-loading-screen[data-mode="test"],#h-earth-loading-screen[data-mode="ready"]{background:none;display:flex;align-items:flex-end;justify-content:flex-end;pointer-events:none;padding:16px}
+  #h-earth-loading-screen[data-mode="test"] .he-loading-panel,#h-earth-loading-screen[data-mode="ready"] .he-loading-panel{width:min(400px,100%);padding:18px;background:#102b28f2;border:1px solid #526b54;border-radius:8px}
+  #h-earth-loading-screen[data-mode="test"] .he-wordmark,#h-earth-loading-screen[data-mode="ready"] .he-wordmark{font-size:30px;margin:0 0 12px}
+  #h-earth-loading-screen[data-mode="test"] .he-intro,#h-earth-loading-screen[data-mode="ready"] .he-intro,#h-earth-loading-screen[data-mode="test"] .he-landscape,#h-earth-loading-screen[data-mode="ready"] .he-landscape{display:none}
+  #h-earth-loading-screen[hidden]{display:none}
+  @media(max-width:600px){#h-earth-loading-screen{align-items:start;background:#102b28}#h-earth-loading-screen .he-loading-panel{padding:24px 0}#h-earth-loading-screen .he-landscape{opacity:1}#h-earth-loading-screen .he-story{margin:24px 0 16px;min-height:175px}#h-earth-loading-screen .he-wordmark{font-size:clamp(46px,13vw,76px)}}
+  @media(max-height:560px) and (min-width:601px){#h-earth-loading-screen{padding:20px 36px}#h-earth-loading-screen .he-loading-panel{width:100%;max-width:900px;display:grid;grid-template-columns:1fr 1fr;column-gap:40px;padding:0}#h-earth-loading-screen .he-wordmark{font-size:56px}#h-earth-loading-screen .he-story{grid-column:2;grid-row:1 / 4;margin:12px 0}#h-earth-loading-screen .he-preparation{grid-column:1 / -1}#h-earth-loading-screen[data-mode="test"] .he-loading-panel,#h-earth-loading-screen[data-mode="ready"] .he-loading-panel{display:block}#h-earth-loading-screen[data-mode="test"] p,#h-earth-loading-screen[data-mode="ready"] p{margin:5px 0}}
+  @media(prefers-reduced-motion:reduce){#h-earth-loading-screen{scroll-behavior:auto}}
+  #h-earth-loading-screen .he-cloud{animation:he-drift 22s ease-in-out infinite alternate}
+  #h-earth-loading-screen .he-fireflies{animation:he-glimmer 4s ease-in-out infinite alternate}
+  #h-earth-loading-screen .he-sun{animation:he-dawn 14s ease-in-out infinite alternate}
+  #h-earth-loading-screen .he-stage-track{display:flex;gap:14px;flex-wrap:wrap;color:#9cae9c;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 14px}
+  #h-earth-loading-screen .he-stage-track span[data-active="true"]{color:#ffe2a2;border-bottom:2px solid #e1c485;padding-bottom:5px}
+  #h-earth-loading-screen [data-loading-clock]{font-variant-numeric:tabular-nums;color:#e7d8ad;margin:10px 0}
+  #h-earth-loading-screen .he-pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:#e7cc8a;margin-right:9px;animation:he-glimmer 1.5s ease-in-out infinite alternate}
+  #h-earth-loading-screen[data-paused="true"] .he-landscape *,#h-earth-loading-screen[data-paused="true"] .he-pulse,#h-earth-loading-screen[data-mode="failed"] *{animation-play-state:paused}
+  @keyframes he-drift{to{transform:translateX(35px)}}
+  @keyframes he-glimmer{from{opacity:.25}to{opacity:1}}
+  @keyframes he-dawn{to{transform:translateY(-12px);opacity:.65}}
+  @media(prefers-reduced-motion:reduce){#h-earth-loading-screen *{animation:none!important}}
+  </style>
+  <svg class="he-landscape" aria-hidden="true" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="gr-sky" x2="0" y2="1"><stop stop-color="#152f49"/><stop offset="1" stop-color="#d2ad77"/></linearGradient><linearGradient id="gr-shade"><stop stop-color="#102b28"/><stop offset=".48" stop-color="#102b28" stop-opacity=".68"/><stop offset="1" stop-color="#102b28" stop-opacity="0"/></linearGradient></defs><path fill="url(#gr-sky)" d="M0 0h1200v900H0z"/><circle class="he-sun" cx="950" cy="260" r="96" fill="#f5d895" opacity=".86"/><g class="he-cloud" fill="none" stroke="#f4e6cd" stroke-width="2" opacity=".22"><path d="M500 170q180-45 430 0M690 200q180-28 410 0M520 320q260-40 600 0"/></g><path class="he-far" fill="#687971" d="M0 630Q170 480 340 520T660 420Q800 130 940 410T1200 370V900H0Z"/><path class="he-near" fill="#426f60" d="M0 660Q220 430 410 650Q610 620 810 440T1200 570V900H0Z"/><path fill="#245443" d="M0 730Q260 590 500 710T920 620T1200 680V900H0Z"/><path fill="none" stroke="#b1c1a0" stroke-opacity=".65" stroke-width="4" d="M790 900Q660 810 865 730T935 610M823 900Q685 812 885 736T955 615"/><path fill="#18392f" d="M0 810Q220 720 420 805T750 810Q1000 730 1200 830V900H0Z"/><g fill="#0b302a"><path d="M1060 870V570l-45 95h27l-48 85h48l-57 95h75zm0-300 45 95h-27l48 85h-48l57 95h-75M1150 900V640l-35 75h20l-40 75h40l-44 80h59zm0-260 35 75h-20l40 75h-40l44 80h-59"/></g><g class="he-fireflies" fill="#fbe5a3"><circle cx="840" cy="660" r="2"/><circle cx="930" cy="790" r="3"/><circle cx="1100" cy="530" r="2"/><circle cx="730" cy="720" r="2"/><circle cx="990" cy="690" r="2"/></g><path fill="url(#gr-shade)" d="M0 0h1200v900H0z"/></svg>
+  <div class="he-loading-panel"><div class="he-kicker he-intro">A continent in development</div><h1 class="he-wordmark">Gratitude</h1><div class="he-deck he-intro">A landscape taking shape.<br>A place to explore at your own pace.</div>
+  <div class="he-story he-intro"><div class="he-kicker" data-story-label>Begin in the woodland</div><h2 data-story-title>Every journey starts somewhere.</h2><p data-story-copy>Arrive among the trees. Beyond the grove, meadow, ravine and coast belong to one connected landscape.</p><div class="he-story-controls"><span data-story-count>01 / 03</span><button type="button" data-story-pause aria-pressed="false">Pause stories</button><button type="button" data-story-next aria-label="Next introduction passage">Next</button></div></div>
+  <div class="he-preparation"><div class="he-stage-track" aria-label="Preparation stages"><span data-step="world" data-active="true">01 Landscape</span><span data-step="vegetation">02 Vegetation</span><span data-step="controls">03 Explore</span></div><div><span class="he-pulse" aria-hidden="true"></span><span data-loading-clock>Opening Gratitude…</span></div><p data-loading-activity role="status" aria-live="polite">Preparing the landscape…</p><progress hidden data-loading-progress aria-label="Current preparation stage"></progress><p data-loading-units></p><p data-loading-instructions>Your journey is being prepared. Each stage reports its own progress.</p><button type="button" data-enter disabled>Enter Gratitude</button></div></div></section>
+  <script type="module" id="h-earth-current-run8e-module" data-route="./vegetation-prototype/route.js?rev=gen2795-performance-v1" src="./vegetation-prototype/bootstrap.v1.js?rev=gen2815-fast-start-v1"></script>
 </body>
 </html>
 

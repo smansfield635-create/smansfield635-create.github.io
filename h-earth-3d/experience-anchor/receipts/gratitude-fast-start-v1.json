@@ -1,0 +1,84 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GRATITUDE_FAST_START_20261018_001",
+  "canonicalAdmissionGeneration": 2815,
+  "reviewedAgainstAnchor": true,
+  "disposition": "REVIEW_REQUIRED",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/gratitude-fast-start-v1/checkpoint.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.gratitude-fast-start.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/gratitude-fast-start-v1/checkpoint.json",
+    "h-earth-3d/validation/h-earth.gratitude-fast-start.v1.test.mjs"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "2e8cb13b863cd0647ac2ee56c43064349a0ef3ac77ad839f5593bafdf2433b32"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js",
+      "sha256": "cfbe66641fd5d6dc6beeab47ac410d4d0b8091c78d414ed73683a4624343b827"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "sha256": "7203bf1e93521aa8db385796ad95a3f4b96e9c9538ac07d32b6c6d54f0ab27e5"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "b3e80ea6a757605f0b756370a81233185ca0a4587bf5c4bb5f345ccbc1248ad6"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "d0e83c90b5482f21cb5d7bb061a2162d03111ce1f0efdc1f11c4a279d99aca12"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-grass.v1.js",
+      "sha256": "c86349ac7b31b367e4bcfebf579b818ed246f37600389cc4677dc397bf07be88"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-oasis-soil.v1.js",
+      "sha256": "88d9e2c3c7f9a9f221e3eb3844f72b52120548c41122a36f3353faf8ca9a9886"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/oasis-soil-mask.v1.json",
+      "sha256": "de82ecd3efb23f725f2558f003694c05727d519a227358587a9a1719beff787d"
+    },
+    {
+      "path": "h-earth-3d/validation/generate-oasis-soil-mask.v1.mjs",
+      "sha256": "6bc455754e554ff68c3efbcdc6a958e4b495ea27c682d13b240a26e60d1557b1"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.gratitude-fast-start.v1.test.mjs",
+      "sha256": "54a430606b6c1f72ca03bf150d9559f2b6fd1f7a439aa42b7ead79edef561cbf"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "93a2be2f4b498c0cee50c1076dd44151e1855cdb",
+    "receipt": "h-earth-3d/experience-anchor/receipts/gratitude-startup-v1.json",
+    "basis": "World, root payload, shaders and navigation preserved. Exact same soil pixels and upload; intro presentation/startup scheduling only."
+  },
+  "limitations": [
+    "Source and interaction continuity verified; no physical/visual PASS invented. Owner explicitly selected production review instead of preview.",
+    "Tablet timing and visual acceptance pending."
+  ]
+}

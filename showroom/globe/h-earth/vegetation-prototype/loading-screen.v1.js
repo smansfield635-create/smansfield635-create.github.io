@@ -1,9 +1,9 @@
 /** Gen2795: readiness observes accepted input and successful CPU presentation calls.
  * A later animation frame is a compositor opportunity, never GPU/display proof. */
-export function createHEarthLoadingScreen({document=globalThis.document,now=()=>performance.now(),requestFrame=callback=>requestAnimationFrame(callback),onEnter=()=>{},schedule=(callback,ms)=>setTimeout(callback,ms),cancelSchedule=id=>clearTimeout(id)}={}){
-  const started=now(),shell=document.createElement('section');shell.id='h-earth-loading-screen';
+export function createHEarthLoadingScreen({document=globalThis.document,now=()=>performance.now(),requestFrame=callback=>requestAnimationFrame(callback),onEnter=()=>{},schedule=(callback,ms)=>setTimeout(callback,ms),cancelSchedule=id=>clearTimeout(id),startedAt=null}={}){
+  const started=startedAt??now(),existing=document.getElementById?.('h-earth-loading-screen'),shell=existing??document.createElement('section');shell.id='h-earth-loading-screen';
   shell.setAttribute('aria-label','Gratitude preparation');shell.dataset.mode='preparing';
-  shell.innerHTML=`<style>
+  if(!existing)shell.innerHTML=`<style>
   #h-earth-loading-screen{position:fixed;inset:0;z-index:10;display:grid;align-items:center;overflow:auto;background:#102b28;color:#f4efdc;padding:clamp(24px,6vw,80px);box-sizing:border-box;font:16px/1.5 system-ui,sans-serif;isolation:isolate}
   #h-earth-loading-screen *{box-sizing:border-box}
   #h-earth-loading-screen .he-landscape{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none}
@@ -29,15 +29,27 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   #h-earth-loading-screen[data-mode="test"] .he-wordmark,#h-earth-loading-screen[data-mode="ready"] .he-wordmark{font-size:30px;margin:0 0 12px}
   #h-earth-loading-screen[data-mode="test"] .he-intro,#h-earth-loading-screen[data-mode="ready"] .he-intro,#h-earth-loading-screen[data-mode="test"] .he-landscape,#h-earth-loading-screen[data-mode="ready"] .he-landscape{display:none}
   #h-earth-loading-screen[hidden]{display:none}
-  @media(max-width:600px){#h-earth-loading-screen{align-items:start;background:#102b28}#h-earth-loading-screen .he-loading-panel{padding:24px 0}#h-earth-loading-screen .he-landscape{opacity:.48}#h-earth-loading-screen .he-story{margin:24px 0 16px;min-height:175px}#h-earth-loading-screen .he-wordmark{font-size:clamp(46px,13vw,76px)}}
+  @media(max-width:600px){#h-earth-loading-screen{align-items:start;background:#102b28}#h-earth-loading-screen .he-loading-panel{padding:24px 0}#h-earth-loading-screen .he-landscape{opacity:1}#h-earth-loading-screen .he-story{margin:24px 0 16px;min-height:175px}#h-earth-loading-screen .he-wordmark{font-size:clamp(46px,13vw,76px)}}
   @media(max-height:560px) and (min-width:601px){#h-earth-loading-screen{padding:20px 36px}#h-earth-loading-screen .he-loading-panel{width:100%;max-width:900px;display:grid;grid-template-columns:1fr 1fr;column-gap:40px;padding:0}#h-earth-loading-screen .he-wordmark{font-size:56px}#h-earth-loading-screen .he-story{grid-column:2;grid-row:1 / 4;margin:12px 0}#h-earth-loading-screen .he-preparation{grid-column:1 / -1}#h-earth-loading-screen[data-mode="test"] .he-loading-panel,#h-earth-loading-screen[data-mode="ready"] .he-loading-panel{display:block}#h-earth-loading-screen[data-mode="test"] p,#h-earth-loading-screen[data-mode="ready"] p{margin:5px 0}}
   @media(prefers-reduced-motion:reduce){#h-earth-loading-screen{scroll-behavior:auto}}
+  #h-earth-loading-screen .he-cloud{animation:he-drift 22s ease-in-out infinite alternate}
+  #h-earth-loading-screen .he-fireflies{animation:he-glimmer 4s ease-in-out infinite alternate}
+  #h-earth-loading-screen .he-sun{animation:he-dawn 14s ease-in-out infinite alternate}
+  #h-earth-loading-screen .he-stage-track{display:flex;gap:14px;flex-wrap:wrap;color:#9cae9c;font-size:10px;letter-spacing:.12em;text-transform:uppercase;margin:0 0 14px}
+  #h-earth-loading-screen .he-stage-track span[data-active="true"]{color:#ffe2a2;border-bottom:2px solid #e1c485;padding-bottom:5px}
+  #h-earth-loading-screen [data-loading-clock]{font-variant-numeric:tabular-nums;color:#e7d8ad;margin:10px 0}
+  #h-earth-loading-screen .he-pulse{display:inline-block;width:6px;height:6px;border-radius:50%;background:#e7cc8a;margin-right:9px;animation:he-glimmer 1.5s ease-in-out infinite alternate}
+  #h-earth-loading-screen[data-paused="true"] .he-landscape *,#h-earth-loading-screen[data-paused="true"] .he-pulse,#h-earth-loading-screen[data-mode="failed"] *{animation-play-state:paused}
+  @keyframes he-drift{to{transform:translateX(35px)}}
+  @keyframes he-glimmer{from{opacity:.25}to{opacity:1}}
+  @keyframes he-dawn{to{transform:translateY(-12px);opacity:.65}}
+  @media(prefers-reduced-motion:reduce){#h-earth-loading-screen *{animation:none!important}}
   </style>
-  <svg class="he-landscape" aria-hidden="true" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="gr-sky" x2="0" y2="1"><stop stop-color="#233f39"/><stop offset="1" stop-color="#698478"/></linearGradient><linearGradient id="gr-shade"><stop stop-color="#102b28"/><stop offset=".48" stop-color="#102b28" stop-opacity=".93"/><stop offset="1" stop-color="#102b28" stop-opacity=".08"/></linearGradient></defs><path fill="url(#gr-sky)" d="M0 0h1200v900H0z"/><circle cx="950" cy="200" r="72" fill="#e4d8a7" opacity=".55"/><path fill="#526e60" d="M0 630Q170 480 340 520T660 420Q800 130 940 410T1200 370V900H0Z"/><path fill="#38594d" d="M0 660Q220 430 410 650Q610 620 810 440T1200 570V900H0Z"/><path fill="#25483e" d="M0 730Q260 590 500 710T920 620T1200 680V900H0Z"/><path fill="none" stroke="#b1c1a0" stroke-opacity=".25" stroke-width="2" d="M790 900Q660 810 865 730T935 610M823 900Q685 812 885 736T955 615"/><path fill="#18392f" d="M0 810Q220 720 420 805T750 810Q1000 730 1200 830V900H0Z"/><path fill="url(#gr-shade)" d="M0 0h1200v900H0z"/></svg>
+  <svg class="he-landscape" aria-hidden="true" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="gr-sky" x2="0" y2="1"><stop stop-color="#152f49"/><stop offset="1" stop-color="#d2ad77"/></linearGradient><linearGradient id="gr-shade"><stop stop-color="#102b28"/><stop offset=".48" stop-color="#102b28" stop-opacity=".68"/><stop offset="1" stop-color="#102b28" stop-opacity="0"/></linearGradient></defs><path fill="url(#gr-sky)" d="M0 0h1200v900H0z"/><circle class="he-sun" cx="950" cy="260" r="96" fill="#f5d895" opacity=".86"/><g class="he-cloud" fill="none" stroke="#f4e6cd" stroke-width="2" opacity=".22"><path d="M500 170q180-45 430 0M690 200q180-28 410 0M520 320q260-40 600 0"/></g><path class="he-far" fill="#687971" d="M0 630Q170 480 340 520T660 420Q800 130 940 410T1200 370V900H0Z"/><path class="he-near" fill="#426f60" d="M0 660Q220 430 410 650Q610 620 810 440T1200 570V900H0Z"/><path fill="#245443" d="M0 730Q260 590 500 710T920 620T1200 680V900H0Z"/><path fill="none" stroke="#b1c1a0" stroke-opacity=".65" stroke-width="4" d="M790 900Q660 810 865 730T935 610M823 900Q685 812 885 736T955 615"/><path fill="#18392f" d="M0 810Q220 720 420 805T750 810Q1000 730 1200 830V900H0Z"/><g fill="#0b302a"><path d="M1060 870V570l-45 95h27l-48 85h48l-57 95h75zm0-300 45 95h-27l48 85h-48l57 95h-75M1150 900V640l-35 75h20l-40 75h40l-44 80h59zm0-260 35 75h-20l40 75h-40l44 80h-59"/></g><g class="he-fireflies" fill="#fbe5a3"><circle cx="840" cy="660" r="2"/><circle cx="930" cy="790" r="3"/><circle cx="1100" cy="530" r="2"/><circle cx="730" cy="720" r="2"/><circle cx="990" cy="690" r="2"/></g><path fill="url(#gr-shade)" d="M0 0h1200v900H0z"/></svg>
   <div class="he-loading-panel"><div class="he-kicker he-intro">A continent in development</div><h1 class="he-wordmark">Gratitude</h1><div class="he-deck he-intro">A landscape taking shape.<br>A place to explore at your own pace.</div>
   <div class="he-story he-intro"><div class="he-kicker" data-story-label>Begin in the woodland</div><h2 data-story-title>Every journey starts somewhere.</h2><p data-story-copy>Arrive among the trees. Beyond the grove, meadow, ravine and coast belong to one connected landscape.</p><div class="he-story-controls"><span data-story-count>01 / 03</span><button type="button" data-story-pause aria-pressed="false">Pause stories</button><button type="button" data-story-next aria-label="Next introduction passage">Next</button></div></div>
-  <div class="he-preparation"><p data-loading-activity role="status" aria-live="polite">Preparing the landscape…</p><progress hidden data-loading-progress aria-label="Current preparation stage"></progress><p data-loading-units></p><p data-loading-instructions>Preparing terrain, vegetation and exploration controls.</p><button type="button" data-enter disabled>Enter Gratitude</button></div></div>`;
-  document.body.appendChild(shell);
+  <div class="he-preparation"><div class="he-stage-track" aria-label="Preparation stages"><span data-step="world" data-active="true">01 Landscape</span><span data-step="vegetation">02 Vegetation</span><span data-step="controls">03 Explore</span></div><div><span class="he-pulse" aria-hidden="true"></span><span data-loading-clock>Opening Gratitude…</span></div><p data-loading-activity role="status" aria-live="polite">Preparing the landscape…</p><progress hidden data-loading-progress aria-label="Current preparation stage"></progress><p data-loading-units></p><p data-loading-instructions>Your journey is being prepared. Each stage reports its own progress.</p><button type="button" data-enter disabled>Enter Gratitude</button></div></div>`;
+  if(!existing)document.body.appendChild(shell);
   const activity=shell.querySelector('[data-loading-activity]'),bar=shell.querySelector('[data-loading-progress]'),units=shell.querySelector('[data-loading-units]'),instructions=shell.querySelector('[data-loading-instructions]'),button=shell.querySelector('[data-enter]');
   let mode='preparing',stage='world',baseline=null,lastPose=null,firstInput=null,opportunityPending=false;
   const passages=[
@@ -50,20 +62,27 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   function stopStories(){if(storyTimer!==null)cancelSchedule(storyTimer);storyTimer=null;}
   function showNextStory(){storyIndex=(storyIndex+1)%passages.length;const [label,title,copy]=passages[storyIndex];storyLabel.textContent=label;storyTitle.textContent=title;storyCopy.textContent=copy;storyCount.textContent=`0${storyIndex+1} / 03`;}
   function scheduleStory(){stopStories();if(mode==='preparing'&&!storiesPaused)storyTimer=schedule(()=>{storyTimer=null;if(mode!=='preparing'||storiesPaused)return;showNextStory();scheduleStory();},8000);}
-  pause.addEventListener('click',()=>{storiesPaused=!storiesPaused;pause.textContent=storiesPaused?'Resume stories':'Pause stories';pause.setAttribute('aria-pressed',String(storiesPaused));scheduleStory();});
+  pause.addEventListener('click',()=>{storiesPaused=!storiesPaused;pause.textContent=storiesPaused?'Resume stories':'Pause stories';shell.dataset.paused=String(storiesPaused);pause.setAttribute('aria-pressed',String(storiesPaused));scheduleStory();});
   next.addEventListener('click',()=>{if(mode!=='preparing')return;showNextStory();scheduleStory();});
   scheduleStory();
   const work=new Map(),receipt={schema:'H_EARTH_INPUT_PRESENTATION_READINESS_v1',controlsEnabledMilliseconds:null,firstInputCameraChangeMilliseconds:null,firstInputPoseRenderedMilliseconds:null,nextAnimationFrameOpportunityMilliseconds:null,loaderDismissedMilliseconds:null,firstConsistentlyResponsiveTraversalMilliseconds:null,firstInputPose:null,renderedInputPose:null,firstInputPresentedFrame:null,failure:null,gpuExecutionVerified:false,displayedPixelsVerified:false,physicalDeviceAcceptance:false};
   const elapsed=()=>now()-started;
+  const clock=shell.querySelector('[data-loading-clock]');
+  const refreshClock=()=>{clock.textContent=`${Math.floor(elapsed()/1000)}s elapsed`;};
+  refreshClock();
+  const clockTimer=document.defaultView?.setInterval(refreshClock,1000);
+  const stopClock=()=>{if(clockTimer!==undefined)document.defaultView.clearInterval(clockTimer);refreshClock();};
+  const stages=[];
+  const labels={SINGLE_POPULATION_DOWNLOADING:'Downloading the vegetation',SINGLE_POPULATION_VERIFYING:'Checking the vegetation data',SINGLE_POPULATION_DECOMPRESSING:'Unpacking the vegetation',SINGLE_POPULATION_DECODING:'Preparing the grass',SINGLE_POPULATION_PREPARING:'Preparing the vegetation',SOIL_MASK_LOADING:'Preparing the ground',SINGLE_POPULATION_RESIDENT:'Vegetation ready',RAW_PACKAGE_PREPARING:'Preparing the landscape',CANONICAL_PACKAGE_READY:'Landscape ready'};
   const pose=state=>JSON.stringify([state.position.x,state.position.y,state.position.z,state.yawDegrees,state.pitchDegrees,state.verticalFovDegrees]);
   const clearUnits=()=>{bar.hidden=true;units.textContent='';};
-  function beginStage(name,label){if(mode==='failed'||mode==='entered')return;stage=name;activity.textContent=label;clearUnits();}
+  function beginStage(name,label){if(mode==='failed'||mode==='entered')return;stage=name;stages.push({stage:name,elapsedMilliseconds:elapsed()});for(const key of ['world','vegetation','controls'])shell.querySelector(`[data-step="${key}"]`)?.setAttribute('data-active',String((name==='renderer'?'world':name)===key));activity.textContent=label;clearUnits();}
   function update(detail={}){
     if(mode==='failed'||mode==='entered')return;
     const phase=detail.phase??stage,key=`${stage}:${phase}`;
-    activity.textContent=detail.status??phase.toLowerCase().replaceAll('_',' ');
+    activity.textContent=detail.status??labels[phase]??phase.toLowerCase().replaceAll('_',' ');
     // Only explicit work counts qualify; legacy arbitrary `progress` is ignored.
-    const pairs=[['completed','total',detail.unit??'work units'],['completedRows','totalRows','rows'],['completedTiles','totalTiles','tiles'],['processedCandidates','totalCandidates','candidates']];
+    const pairs=[['completed','total',detail.unit??'work units'],['loadedContacts','totalContacts','plants'],['loadedBytes','totalBytes','bytes'],['completedRows','totalRows','rows'],['completedTiles','totalTiles','tiles'],['processedCandidates','totalCandidates','candidates']];
     const pair=pairs.find(([a,b])=>Number.isFinite(detail[a])&&Number.isFinite(detail[b])&&detail[b]>0&&detail[a]>=0&&detail[a]<=detail[b]);
     if(!pair){clearUnits();return;}
     const [a,b,unit]=pair,previous=work.get(key),total=detail[b];
@@ -74,7 +93,7 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   }
   function enableControls(state){
     if(mode!=='preparing')return;
-    stopStories();baseline=pose(state);lastPose=baseline;mode='test';shell.dataset.mode=mode;
+    stopStories();stopClock();baseline=pose(state);lastPose=baseline;mode='test';shell.dataset.mode=mode;
     receipt.controlsEnabledMilliseconds=elapsed();beginStage('controls','Try the controls before entering');
     instructions.textContent='Drag on the landscape to look. Slide two fingers or use the mouse wheel to move; pinch to zoom. Enter unlocks after your changed view renders.';
   }
@@ -97,7 +116,7 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   }
   function fail(error){
     if(mode==='failed')return;
-    stopStories();mode='failed';shell.hidden=false;shell.dataset.mode=mode;button.disabled=true;pause.disabled=true;next.disabled=true;clearUnits();
+    stopStories();stopClock();mode='failed';shell.hidden=false;shell.dataset.mode=mode;button.disabled=true;pause.disabled=true;next.disabled=true;clearUnits();
     receipt.failure={message:error?.message??String(error),elapsedMilliseconds:elapsed()};
     const graphics=/OWNER_(SHADER|PROGRAM|LINK|CONTEXT)|GRAPHICS_CONTEXT_LOST/.test(receipt.failure.message);
     activity.textContent=graphics?'Graphics preparation stopped':'Gratitude could not finish preparing';
@@ -105,7 +124,7 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   }
   button.addEventListener('click',()=>{
     if(mode!=='ready'||button.disabled)return;
-    stopStories();receipt.loaderDismissedMilliseconds=elapsed();mode='entered';shell.hidden=true;onEnter();
+    stopStories();stopClock();receipt.loaderDismissedMilliseconds=elapsed();mode='entered';shell.hidden=true;onEnter();
   });
-  return Object.freeze({beginStage,update,enableControls,observeInput,observePresentation,fail,getReceipt:()=>structuredClone({...receipt,mode,stage,workUnits:[...work.values()]})});
+  return Object.freeze({beginStage,update,enableControls,observeInput,observePresentation,fail,getReceipt:()=>structuredClone({...receipt,mode,stage,stages,workUnits:[...work.values()]})});
 }

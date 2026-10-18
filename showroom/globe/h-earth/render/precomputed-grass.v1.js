@@ -18,7 +18,7 @@ export async function decodePrecomputedGrass(manifest,bytes,{yieldControl=async(
    roots[j]={x:view.getFloat64(o,true),y:view.getFloat64(o+8,true),z:view.getFloat64(o+16,true),angle:view.getFloat64(o+24,true),slope:view.getFloat64(o+32,true),seed:view.getUint32(o+40,true),triangleId:view.getUint32(o+44,true),...(region?{region:region===1?'RAVINE':'RAVINE_SUPPLEMENT'}:{})};
   }
   tiles.push({id:tile.id,minX:tile.minX,minZ:tile.minZ,roots});
-  if((tiles.length&255)===0){onProgress({phase:'SINGLE_POPULATION_DECODING',loadedContacts:index});await yieldControl();}
+  if((tiles.length&255)===0){onProgress({phase:'SINGLE_POPULATION_DECODING',loadedContacts:index,totalContacts:manifest.rootCount});await yieldControl();}
  }
  if(index!==manifest.rootCount)fail('ROOT_COUNT');
  return{tiles,receipt:manifest.receipt,habitat:{...h,pixels:new Uint8Array(bytes.subarray(index*52))}};
@@ -54,26 +54,39 @@ async function decodePackedGrass(manifest,bytes,{yieldControl=async()=>{},onProg
    if(Math.hypot(fx+139.40267987050615,fz+194.5)<=2)controlRoots.push(`${fx}:${fy}:${fz}:${view.getUint32(o+40,true)}`);
   }
   tiles.push(Object.freeze({id:tile.id,minX:tile.minX,minZ:tile.minZ,packed,count:tile.count,first}));
-  if((tiles.length&15)===0){onProgress({phase:'SINGLE_POPULATION_DECODING',loadedContacts:index});await yieldControl();}
+  if((tiles.length&15)===0){onProgress({phase:'SINGLE_POPULATION_DECODING',loadedContacts:index,totalContacts:manifest.rootCount});await yieldControl();}
  }
  if(index!==manifest.rootCount)fail('ROOT_COUNT');
- onProgress({phase:'SINGLE_POPULATION_DECODING',loadedContacts:index});await yieldControl();
+ onProgress({phase:'SINGLE_POPULATION_DECODING',loadedContacts:index,totalContacts:manifest.rootCount});await yieldControl();
  // The pinned hashes bind uniqueness to the accepted packet. No per-root JS
  // objects, identity strings or duplicate Set are retained for this exact packet.
  return {plan:Object.freeze({tiles:Object.freeze(tiles),controlRoots:Object.freeze(controlRoots)}),
   presentation:{receipt:manifest.receipt,habitat:{...h,pixels:new Uint8Array(bytes.subarray(index*52))}}};
 }
-export async function loadPrecomputedGrass({fetchImpl=globalThis.fetch,yieldControl,onProgress,packed=false}={}){
+export async function loadPrecomputedGrass({fetchImpl=globalThis.fetch,yieldControl,onProgress=()=>{},packed=false}={}){
  const started=performance.now();
  const response=await fetchImpl(new URL('./assets/precomputed-grass.v1.json',import.meta.url));
  if(!response.ok)fail('MANIFEST_HTTP_'+response.status);
  const manifestBytes=new Uint8Array(await response.arrayBuffer());
  if(await sha(manifestBytes)!==MANIFEST_SHA256)fail('MANIFEST_INTEGRITY');
  const manifest=JSON.parse(new TextDecoder().decode(manifestBytes));
+ onProgress({phase:'SINGLE_POPULATION_DOWNLOADING',loadedBytes:0,totalBytes:manifest.compressedBytes});
  const data=await fetchImpl(new URL('./assets/precomputed-grass.v1.bin.gz',import.meta.url));
  if(!data.ok)fail('DATA_HTTP_'+data.status);
- let compressed=new Uint8Array(await data.arrayBuffer());
+ let compressed;
+ if(data.body?.getReader){
+  compressed=new Uint8Array(manifest.compressedBytes);
+  const reader=data.body.getReader();let offset=0;
+  try{for(;;){const {done,value}=await reader.read();if(done)break;
+   if(offset+value.byteLength>compressed.byteLength)fail('COMPRESSED_INTEGRITY_LENGTH');
+   compressed.set(value,offset);offset+=value.byteLength;
+   onProgress({phase:'SINGLE_POPULATION_DOWNLOADING',loadedBytes:offset,totalBytes:manifest.compressedBytes});
+  }}catch(error){await reader.cancel().catch(()=>{});throw error;}finally{reader.releaseLock();}
+  if(offset!==compressed.byteLength)fail('COMPRESSED_INTEGRITY_LENGTH');
+ }else compressed=new Uint8Array(await data.arrayBuffer());
+ onProgress({phase:'SINGLE_POPULATION_VERIFYING'});
  if(compressed.byteLength!==manifest.compressedBytes||await sha(compressed)!==manifest.compressedSha256)fail('COMPRESSED_INTEGRITY');
+ onProgress({phase:'SINGLE_POPULATION_DECOMPRESSING'});
  const stream=new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'));
  compressed=null;
  const bytes=new Uint8Array(await new Response(stream).arrayBuffer());

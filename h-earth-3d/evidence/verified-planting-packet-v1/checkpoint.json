@@ -2,7 +2,7 @@
   "schema": "H_EARTH_VERIFIED_PLANTING_CHECKPOINT_v1",
   "generation": 2800,
   "operationId": "H_EARTH_VERIFIED_PLANTING_PACKET_20261017_001",
-  "stage": "BOTH_STARTUP_PATHS_INTEGRATED_RUNTIME_QUALIFICATION_PENDING",
+  "stage": "INTEGRATED_CPU_QUALIFIED_DRAFT_PENDING_BROWSER_ANCHOR",
   "branch": "h-earth/gen2800-verified-planting-packet-20261017",
   "baseCommit": "218e704c06c09bb0c4ca9a6f979abe0fe717387a",
   "commitBinding": "The Git commit containing this checkpoint; exact resulting SHA is recorded in issue6426 after push and remote readback.",
@@ -68,7 +68,7 @@
     "selectedCellsExact": 12577,
     "treeRecordsExact": 4,
     "method": "Independent exhaustive Node decode vs preserved float32 XYZA and uint32 seed/region packet; bitmap membership against selected-cells.json; real source habitatHash.",
-    "runtimeIntegration": "WIRING_SAVED_FULL_EXECUTION_PENDING",
+    "runtimeIntegration": "ACTUAL_CPU_PIPELINE_AND_NODE_PREPARATION_WORKERS_EXECUTED",
     "gpuOrTabletAcceptance": false,
     "integrationAdapterTests": {
       "passed": 4,
@@ -76,13 +76,73 @@
       "fixture": "SHA256-verified unchanged Gen2666 compressed world; exact adapter/evaluator and hydration function bodies",
       "scope": "Source/CPU adapter only, not full worker/renderer/grass/GPU integration"
     },
-    "woodlandIntegratedIdentity": false,
-    "continuousTrunkClearance": false,
-    "downstreamResourceQualification": false
+    "woodlandIntegratedIdentity": true,
+    "continuousTrunkClearance": "CPU_CONSERVATIVE_BARK_GRASS_ENVELOPE_PASS",
+    "downstreamResourceQualification": "PRODUCTION_PACKER_AND_INSTRUMENTED_GL_SUBMISSION_PASS_NOT_GPU",
+    "integratedCpu": {
+      "runtimeSourceCommit": "aa49d4072ccd1d2c7c25c05f6f5550e73216cfdc",
+      "exactSourceDependencyFiles": 80,
+      "counts": {
+        "woodland": 385944,
+        "ravine": 139198,
+        "total": 525142
+      },
+      "groundRejections": {},
+      "woodlandIdentity": "e40321b7e6d05793f66431f38c669055a563c3229970aa6ecda3d838c3d298a5",
+      "rootDataSha256": "d90752a5e4d9c4f1f3e0bcc56edac6bc53cff09e07f1c70c0b1f12f9fff06dde",
+      "seedRegionSha256": "fbdd8604fb367bfce0528edfa01f13d5b797ad9d6a0804e7dfbc57806ac09417",
+      "tileCount": 1770,
+      "maximumTileRoots": 816,
+      "packedBytes": 8402272,
+      "ownerCount": 1,
+      "cameraABAStable": true,
+      "perFrameUploadBytes": 0,
+      "minimumNewTreeCenterRootDistanceMeters": 2.118806854249043,
+      "minimumContinuousBarkGrassSeparationLowerBoundMeters": 1.4540668906090497,
+      "minimumNewTreeBasalVertexBurialMeters": 0.16945171356201172,
+      "basalGroundContactScope": "Actual six lower-cylinder vertices only; not an exhaustive continuous ground-seal proof",
+      "scope": "Archived canonical base plus exact candidate geological exterior; current camera refinement omitted; actual production grass/owner code; GL calls instrumented, not GPU execution"
+    },
+    "completePreparationBranches": {
+      "execution": "Production canonical module in two Node workers; precomputed and forced generated fallback both complete",
+      "precomputedRaw": "fnv1a32:86c9b4f2",
+      "precomputedCanonical": "fnv1a32:4f1b7ff2",
+      "generatedRaw": "fnv1a32:0c547a91",
+      "generatedCanonical": "fnv1a32:27d493d6",
+      "vertices": 141373,
+      "triangles": 122222,
+      "geometryAndMaterialParameterParity": true,
+      "newCanonicalTreeColorParity": true,
+      "fullByteParity": false,
+      "difference": {
+        "onlyBuffer": "baseColorsLinear",
+        "rawOldPrefixComponents": 63172,
+        "rawAddedComponents": 14079,
+        "canonicalOldPrefixComponents": 22239,
+        "canonicalAddedComponents": 0,
+        "maximumCanonicalDifference": 0.09331732988357544
+      },
+      "disposition": "INHERITED_BASE_ALBEDO_DIVERGENCE_RECORDED_NOT_REPAIRED; adapter preserves input prefixes; not unconditional merge readiness",
+      "notProven": [
+        "Browser Worker/main-thread adoption",
+        "Real WebGL shader/raster/resource behavior",
+        "Current camera refinement",
+        "Tablet/perceptual experience-anchor acceptance"
+      ]
+    },
+    "expandedSuite": {
+      "passed": 6,
+      "total": 6,
+      "skipped": 0,
+      "failed": 0,
+      "command": "H_EARTH_PLANTING_FULL_QUALIFICATION=1 node --test h-earth-3d/validation/h-earth.verified-planting-packet.v1.test.mjs",
+      "additionalCheck": "Clearance-neighborhood assertion added after suite launch and separately evaluated PASS over the same eight geometry results; no runtime change",
+      "independentReview": "W source/CPU review required before draft; exact remote readback follows commit"
+    }
   },
-  "nextAction": "Qualify this integrated exact candidate against the preserved packet: full woodland/ravine identities, actual per-root ground and exclusions, eight tree geometry/support/clearance, owner/cache/GPU resource limits and both full startup paths; independent review; draft PR only. Do not repeat census or admission.",
+  "nextAction": "Review the draft exact candidate through an authorized exact-head browser/device preview, including main-thread adoption, real WebGL resources, current refinement, tree ground seals, and experience-anchor acceptance; resolve disposition of inherited fallback terrain-albedo divergence. Keep existing packet/admission/CPU proofs; no census or packet regeneration. No merge/deploy/publication.",
   "stopCondition": "No merge, deployment or publication. Source checks do not establish visual or tablet acceptance.",
-  "previousCheckpoint": "06e6a35a64c48909a61b2a33c19a10e85950543f",
+  "previousCheckpoint": "aa49d4072ccd1d2c7c25c05f6f5550e73216cfdc",
   "integration": {
     "generatedStartup": "Common raw-package adapter after generation",
     "precomputedStartup": "Same adapter on verified archived raw and canonical prefixes; only appended canonical values are transformed",

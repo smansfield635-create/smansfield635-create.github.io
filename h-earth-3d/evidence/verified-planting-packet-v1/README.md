@@ -1,30 +1,50 @@
-# Generation 2800 — first bounded implementation checkpoint
+# Gen2800 verified planting packet
 
-The recovered packet is preserved. All 22 manifest entries pass. No census, admission or design was repeated. No later planting implementation module was found in the accessible surviving workspaces. Earlier packet files remain untouched.
+The saved packet is integrated into both package startup paths on `h-earth/gen2800-verified-planting-packet-20261017`. This candidate remains a draft: no merge, deployment or publication is authorized by these checks.
 
-## Saved
+Checkpoints: `06e6a35a64c48909a61b2a33c19a10e85950543f` saved the lossless modules; `aa49d4072ccd1d2c7c25c05f6f5550e73216cfdc` connected startup and runtime consumers. The commit containing this document adds qualification/evidence only. Both data modules and all runtime source remain unchanged from those checkpoints. Existing admission, packet, census and differential-continuity evidence are reused.
 
-Two data modules: exact membership and heights for 139,198 ravine roots, the four approved additional tree coordinates/templates, and the 12,577 selected one-metre cells. Root records preserve packet ravine order. Each gzip record is little-endian int16 lattice X, int16 lattice Z, float32 Y; existing habitatHash reconstructs X/Z/angle/seed exactly. The cell bitmap is least-significant-bit first. Data modules are not imported by either startup path yet.
+## Integrated CPU results
 
-Independent exhaustive decode comparison passed for all ravine XYZA/seed records, all selected-cell membership and four trees. Existing tracked source files are unchanged. The preserved packet reports 385,944 woodland roots; this commit does not regenerate or replace them. Packet CPU costs are historical offline evidence, not integrated runtime qualification.
+The actual production grass builder ran against the archived Float32 canonical base, the exact candidate geological exterior, rendered beach signals and shared ground admission. Every one of 525,142 candidates was accepted without rejection: 385,944 woodland and 139,198 ravine roots. The selected-cell atlas contains 12,577 cells and preserves woodland texels.
 
-## Exact identity and continuation
+The full packed roots and seed/region sidecar matched the preserved packet byte for byte. Woodland identity also matched exactly:
 
-The checkpoint is bound to its containing Git commit. The exact pushed SHA and remote-byte verification are recorded in issue #6426. Parent: 218e704c06c09bb0c4ca9a6f979abe0fe717387a. Existing branch: h-earth/gen2800-verified-planting-packet-20261017. Active admission lock: 141e5a4172447194550bcfa202cd5c5038c9a283. Intervening main a370c522997b573206a5c90994dcfca7b0051be2 changes only analytics; the existing differential-continuity gate returned CARRY_FORWARD_APPROVED.
+- Woodland: `e40321b7e6d05793f66431f38c669055a563c3229970aa6ecda3d838c3d298a5`
+- Root bytes: `d90752a5e4d9c4f1f3e0bcc56edac6bc53cff09e07f1c70c0b1f12f9fff06dde`
+- Seed/region bytes: `fbdd8604fb367bfce0528edfa01f13d5b797ad9d6a0804e7dfbc57806ac09417`
 
-**One next action:** integrate these saved modules into both startup paths, preserving woodland identities, original trees and shared exclusions; commit that integration separately.
+The actual owner packer produced 1,770 tiles, maximum 816 roots/tile and 8,402,272 packed bytes. Instrumented GL calls from the production owner requested one buffer of exactly that size and uploaded those bytes in bounded slices. Camera A-B-A produced the same selection, with zero per-frame uploads. This is CPU submission evidence, not successful GPU allocation, shader compilation, rasterization, frame-rate or peak-memory evidence.
 
-Do not repeat admission or census. Do not publish or merge. Actual terrain support, integrated geometry, resource limits and both startup paths still require qualification. Visual and tablet acceptance remain separate. The decoder returns saved candidates, not a substitute for actual support/eligibility validation.
+All four original trees remain intact and four distinct proposed tree IDs are added. Sector geometry totals 79,052 triangles, below 105,000. Every tree's six lower-cylinder vertices has actual Float32 ground support; new-tree minimum measured burial is 0.1694517136 m. This vertex test does not prove every point of the ground seal.
 
+Continuous grass-versus-bark separation is bounded using actual Float32 bark triangles clipped below the highest nearby grass tip. A conservative radial envelope covers every point of each clipped face; a 0.071 m grass horizontal envelope covers width, bend and planetary-up displacement. All bark is asserted inside the 5 m neighborhood used for the proof. All eight trees pass; the minimum new-tree separation lower bound is 1.4540668906 m. The nearest new-tree root center is 2.1188068542 m, beyond the saved 2.108 m exclusion.
 
-## Second bounded checkpoint — startup integration
+## Complete preparation execution and remaining color difference
 
-Both startup paths now use one idempotent raw-package adapter. It appends translated copies of the exact approved four tree templates using saved target coordinates, with eight new bark/canopy spans and eight shared floor footprints. All original buffer prefixes and old-four footprint records remain unchanged. The precomputed path keeps its SHA/length/package verification and adapts original canonical prefixes directly; it does not rebuild/canonicalize the full old world. The generated path applies the same adapter before ordinary canonicalization.
+The complete production canonical module executed in separate Node workers through verified precomputed hydration and a deliberately forced generated fallback. Both complete with 141,373 vertices, 122,222 triangles and eight tree footprints. All positions, normals, indices, material-parameter/model buffers and new canonical tree colors agree. Browser Worker transport and main-thread adoption were not exercised.
 
-The existing woodland candidate planner uses the unchanged woodland field. Saved139198 ravine records replace procedural rear membership, with actual per-root terrain, water, material, slope and shared exclusion checks still mandatory. Packet-root rejection, terrain-contact drift over0.00002m, or exact woodland/ravine population mismatch fails closed. New-tree exclusion is explicitly2.108m: shared admission adds0.10m to stored cover radius2.008m, while grass/suitability use the explicit2.108m field. Other obstacle rules and old footprints are unchanged. Saved12577cell membership supplies the right atlas half over the packet bounds; left woodland texels are preserved. No data module or packet regeneration.
+Full package byte parity does **not** pass:
 
-Focused test command: `node --test h-earth-3d/validation/h-earth.verified-planting-packet.v1.test.mjs`.
+| Branch | Raw digest | Canonical digest |
+| --- | --- | --- |
+| Precomputed | `fnv1a32:86c9b4f2` | `fnv1a32:4f1b7ff2` |
+| Generated | `fnv1a32:0c547a91` | `fnv1a32:27d493d6` |
 
-Executed4/4 adapter checks PASS on the exact archived Gen2666 fixture: original buffer/old-tree prefix custody, eight added spans and idempotence; generated numeric canonicalization equals the precomputed adapter for every numeric buffer; actual hydration function executes both adapters with original integrity checks; woodland atlas left-half bytes and explicit exclusion wiring. Added18400tree triangles; sector total79052 below105000. Saved count arithmetic fits600000total/150000ravine/9600000packed bytes. This arithmetic is not actual persistent GPU/owner allocation proof.
+The only differing buffer is `baseColorsLinear`: raw old-prefix 63,172 components and appended 14,079; canonical old-prefix 22,239 and appended zero. Maximum canonical difference is 0.0933173299. The adapter preserves each input prefix, so the old-prefix albedo divergence is inherited archive-versus-source behavior. Independent review found no Gen2800 adapter repair warranted. Changing approved terrain/archive colors would extend this planting packet's remit. Record `INHERITED_BASE_ALBEDO_DIVERGENCE_RECORDED_NOT_REPAIRED`; do not call this unconditional cross-startup byte parity or merge readiness.
 
-Full integrated grass generation, exact385944woodland hash and139198ravine identity, actual eight-tree support/continuous trunk clearance, all downstream owner/cache/GPU resource ceilings, and both full startup executions remain pending. The450000woodland planner ceiling is unchanged and is not asserted to be a combined population ceiling. No visual/tablet acceptance, full-runtime PASS, draft PR completion, merge, deployment or publication is claimed by this checkpoint. Source review and exact remote readback are recorded in issue6426. Next: qualify this saved integration; no repeated admission or census.
+## Reproduction
+
+The existing test file now includes opt-in production CPU and full preparation-module checks:
+
+```sh
+H_EARTH_PLANTING_FULL_QUALIFICATION=1 node --test h-earth-3d/validation/h-earth.verified-planting-packet.v1.test.mjs
+```
+
+Default execution retains the four fast adapter checks and skips the two full checks. `H_EARTH_PLANTING_SOURCE_DIR` and `H_EARTH_EXACT_WORLD_BINARY` select an isolated exact-source mirror and the unchanged archive when needed. The expanded suite passed 6/6 (zero skips). The final clearance-neighborhood assertion was added after suite launch and separately evaluated PASS on the same eight geometry results. Source custody was checked across 80 imported production files against immutable GitHub blobs and the complete disjoint compare from the local base.
+
+## Remaining acceptance
+
+Browser main-thread adoption, real WebGL behavior/resources, current camera refinement, continuous tree ground seals and tablet/perceptual experience-anchor acceptance remain unverified. No local Chromium executable or cached Playwright Chromium was found during this continuation. This preview-execution limitation preserves the candidate and does not authorize production deployment as a workaround.
+
+Next: review the draft exact candidate on an authorized browser/device substrate, including disposition of the inherited fallback terrain-color difference, then complete experience-anchor acceptance. Reuse the packet/admission/CPU proofs. Do not regenerate the packet, repeat census/admission, merge, deploy or publish.

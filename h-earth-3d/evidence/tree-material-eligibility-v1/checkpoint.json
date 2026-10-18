@@ -1,0 +1,31 @@
+{
+  "schema": "H_EARTH_TREE_MATERIAL_ELIGIBILITY_CHECKPOINT_v1",
+  "operationId": "H_EARTH_TREE_MATERIAL_ELIGIBILITY_20261018_001",
+  "authorityGeneration": 2802,
+  "phase": "ADMITTED_IMPLEMENTATION_PENDING",
+  "governingHead": "4403eadee8530d097c9fbec56b2b961e6d86f9a5",
+  "branch": "h-earth/tree-material-eligibility-20261018",
+  "allowedPaths": [
+    "h-earth-3d/evidence/tree-material-eligibility-v1/checkpoint.json",
+    "h-earth-3d/experience-anchor/receipts/tree-material-eligibility-v1.json",
+    "h-earth-3d/validation/h-earth.tree-material-eligibility.v1.test.mjs",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+  ],
+  "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6251567769",
+  "request": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6251562716",
+  "failedRun": 39138632559,
+  "recovery": "Removed one trailing newline from source envelope; request/procedure unchanged. Admission run39139745528 ADMITTED_AND_LOCKED.",
+  "completed": [
+    "Published baseline be456edd preserved",
+    "Source localization preserved at comment6251321467",
+    "Canonical admission generation2802"
+  ],
+  "nextAction": "Implement bounded tree-material eligibility and focused regression; independent review before browser qualification.",
+  "expensiveRunProcedure": "Persist candidate and run identity, provide direct run link, then yield without polling. Admission submission alone is not a reason to stop useful work.",
+  "limitations": [
+    "No renderer implementation at this checkpoint",
+    "No new browser/GPU/device acceptance",
+    "No merge/deployment authority"
+  ],
+  "authorityEffect": "NONE_CHECKPOINT_ONLY"
+}

@@ -555,7 +555,7 @@ vec3 limitTerrainNormalDeviation(
 // Gen2802: material identity travels with authored vegetation. The clearing
 // edge remains the spatial authority for soil, shadow reception and extra fog.
 float authoredTreeMaterialWeight(uint model, uint role, vec4 parameters, int enabled, float edge){
-  bool authoredTree=model==0u&&role==3u&&parameters.w==2.0&&(parameters.z==1.0||parameters.z==2.0);
+  bool authoredTree=model==0u&&parameters.w==2.0&&((role==3u&&(parameters.z==1.0||parameters.z==2.0))||(role==5u&&parameters.z==1.0));
   return enabled==1&&authoredTree&&edge<=0.0?1.0:edge;
 }
 vec2 clearingLocalXZ(vec3 p){

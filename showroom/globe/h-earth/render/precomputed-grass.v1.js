@@ -1,9 +1,9 @@
 /** Lossless, hash-bound output of the accepted ground-admission compiler. */
-const MANIFEST_SHA256='be8dab6d5a72eb16afcbf2be59760bc0c5946e7202be0840d0b68f6ab2810cb4';
+const MANIFEST_SHA256='ebb17a9e349eb29f411b685c27b6d87375d004381a9d80716972ca56fb5c72f1';
 const fail=reason=>{throw Error('PRECOMPUTED_GRASS_'+reason);};
 const sha=async bytes=>Array.from(new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
 export async function decodePrecomputedGrass(manifest,bytes,{yieldControl=async()=>{},onProgress=()=>{}}={}){
- if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==1017124||manifest.stride!==52||manifest.receipt?.contactCount!==1017124)fail('IDENTITY_MISMATCH');
+ if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==1127903||manifest.stride!==52||manifest.receipt?.contactCount!==1127903)fail('IDENTITY_MISMATCH');
  if(bytes.byteLength!==manifest.rawBytes||await sha(bytes)!==manifest.rawSha256)fail('DATA_INTEGRITY');
  const h=manifest.habitat;
  if(h?.width!==384||h.height!==192||h.size!==192||bytes.byteLength!==manifest.rootCount*52+h.width*h.height)fail('LAYOUT_MISMATCH');

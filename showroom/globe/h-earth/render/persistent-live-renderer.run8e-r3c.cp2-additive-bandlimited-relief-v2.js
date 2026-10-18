@@ -1,3 +1,4 @@
+import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
 import {loadPrecomputedGrass} from './precomputed-grass.v1.js';
 import {WOODLAND_HABITAT,buildWoodlandHabitatField,habitatSmooth,habitatSlopeWeight} from './woodland-habitat-field.v1.js';
 import {createSingleOwnerVegetation} from './vegetation-single-owner.prototype.v1.js';
@@ -573,6 +574,7 @@ float clearingVisibility(vec3 p){
   return mix(0.22,1.0,visibility);
 }
 ${RENDERED_BEACH_GLSL}
+${FOOTHILL_MEADOW_GLSL}
 void main(){
   vec2 localXZ=vec2(0.0);
   float clearingType=vMaterialModelCode==0u&&vMaterialParameters.w>1.5?vMaterialParameters.z:0.0;
@@ -1018,6 +1020,8 @@ void main(){
       habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,ravineUv).r);
     }
     vec3 habitatSoil=vec3(0.105,0.112,0.060)*(0.90+0.18*noise2(vWorldPosition.xz*.29));
+    float foothillDry=foothillDryAmount(vWorldPosition,uPlanetRadius);
+    habitatSoil=mix(habitatSoil,vec3(.14,.12,.065)*(0.90+0.18*noise2(vWorldPosition.xz*.29)),foothillDry*.65);
     base=mix(base,habitatSoil,habitatCoverage*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;

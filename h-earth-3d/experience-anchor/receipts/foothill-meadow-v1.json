@@ -1,0 +1,83 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_FOOTHILL_MEADOW_20261018_001",
+  "canonicalAdmissionGeneration": 2810,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/foothill-meadow-v1/checkpoint.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs",
+    "h-earth-3d/evidence/foothill-meadow-v1/checkpoint.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-grass.v1.js",
+      "sha256": "6d2004b514767d1d2bd3dd55e88b91a8f63911421fcf5bc60bfea9015af21f5a"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz",
+      "sha256": "1941e39e220978a220c15fa01ead046b74971c6c893608f009ec37b85472de81"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json",
+      "sha256": "ebb17a9e349eb29f411b685c27b6d87375d004381a9d80716972ca56fb5c72f1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "0bf41474cf1c4b6f7c85bef537bccd01109914d1bee912ec4c78ba09bfd7fb18"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "64126fa2a350465a3005f025b625f5e2b7101aed538aa4d84e0a7c1a4893eb47"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+      "sha256": "cb5af8310172824c386d28f9532ede8d06d31dfc605d7e68275b7fd62632eb6b"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.precomputed-grass.v1.test.mjs",
+      "sha256": "9061b09e72abd0527e29e0d32de57a13c93d065866457909e1beb7aba3fc6417"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/foothill-meadow-field.v1.js",
+      "sha256": "2ac39e65c156f918ad464761d3fcacda9ce72d2d9dba912b0044d5a374da3e48"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.foothill-meadow.v1.mjs",
+      "sha256": "4c542c650f84900c36c98b01e52ea368af1c8780397d34245908e8017eba5ada"
+    }
+  ],
+  "acceptedPrecedent": {
+    "head": "a4104e8014e78f86e4e576ea61cec6dcd94be003",
+    "receipt": "h-earth-3d/experience-anchor/receipts/connector-fine-grass-v1.json",
+    "basis": "Same canonical embodied world, terrain, water, trees, navigation and camera; all1017124 existing root records and woodland atlas bytes preserved. Intentional delta110779 admitted foothill/meadow roots, geographically bounded local-elevation dry palette, and resampled right soil atlas. No replacement world or interface."
+  },
+  "limitations": [
+    "Source/data continuity acceptance; exact browser pixels, mobile GPU performance and physical-device acceptance pending.",
+    "Right soil atlas bounds changed: old nonzero samples mean absolute delta0.0312 and maximum isolated loss0.5437; connector route minimum0.7371 mean0.9864, no sampled disappearance. Roots remain unchanged. This is not unchanged-habitat evidence.",
+    "Added roots increase always-submitted coarse population10.9%; saved-data loading retained, runtime performance not yet measured.",
+    "Existing physical ground exclusions leave5465 quota-shortfall cells; sampled crest counts alone do not prove density or visual acceptance.",
+    "Receipt creates no additional merge publication or claim authority."
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schema": "H_EARTH_GRATITUDE_STARTUP_CHECKPOINT_v1",
+  "operationId": "H_EARTH_GRATITUDE_STARTUP_20261018_001",
+  "canonicalAdmissionGeneration": 2813,
+  "baselineHead": "afc9632ac7fd2196e23868621fcd5639777839e7",
+  "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6255894953",
+  "ownerEvidence": "Tablet screenshot OWNER_SHADER:null. Failure during owner shader preparation after population load, before its buffer upload. Root cause unresolved.",
+  "changes": [
+    "Gratitude continent introduction, local SVG landscape and three passages rotating every8seconds with Pause/Next",
+    "Preserved counted progress and input/presentation/next-frame readiness",
+    "Explicit shader/program allocation, compile/link stage, context-loss and missing-log classification",
+    "Terminal public context loss prevents delayed readiness and preserves first failure"
+  ],
+  "tests": {
+    "command": "node --test h-earth-3d/validation/h-earth.gratitude-startup.v1.test.mjs",
+    "passed": 12,
+    "failed": 0,
+    "softwareGLESCompileAndLink": "PASS",
+    "shaderDeclarationsUnchanged": true,
+    "independentWReview": "PASS for code delta; 12 tests independently rerun; visual acceptance pending"
+  },
+  "visualReview": {
+    "status": "PENDING",
+    "localBrowserUnavailable": "No installed Chromium; Playwright download returned invalid archive. No visual acceptance claimed.",
+    "requiredViewports": [
+      [
+        390,
+        844
+      ],
+      [
+        1024,
+        768
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "physicalTabletAcceptance": false
+  },
+  "displayContract": {
+    "identity": "Gratitude, the developing continent within existing H-Earth world",
+    "role": "Arrival and introduction while genuine landscape preparation proceeds",
+    "runtime": "DOM/SVG; no new canvas, fetch, fonts, video or image assets",
+    "continuity": "Same canonical route, existing arrival and embodied landscape; control overlay replaces intro when ready for input test",
+    "mobile": "Single column phone, two-column short landscape introduction, scrollable fallback",
+    "reducedMotion": "No animation; identical passages and manual pause/next",
+    "claimBoundary": "Abstract landscape illustration, not a map or actual rendered-world screenshot; rotating passages do not imply loading progress",
+    "return": "Existing route/browser return unchanged; no new navigation"
+  },
+  "limitations": [
+    "Does not establish tablet graphics recovery or identify hardware resource exhaustion.",
+    "Exact-candidate browser qualification and visual/physical review pending.",
+    "No merge, publication or tablet acceptance authority created."
+  ]
+}

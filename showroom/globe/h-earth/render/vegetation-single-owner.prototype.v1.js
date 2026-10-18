@@ -86,8 +86,19 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  function cleanup(){if(buffer)gl.deleteBuffer(buffer);if(vao)gl.deleteVertexArray(vao);if(program)gl.deleteProgram(program);for(const shader of ownedShaders)gl.deleteShader(shader);}
  try{
 
- function shader(type,source){const s=gl.createShader(type);ownedShaders.push(s);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error('OWNER_SHADER:'+gl.getShaderInfoLog(s));return s;}
- program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('OWNER_LINK:'+gl.getProgramInfoLog(program));
+ function graphicsError(code,stage,log){const lost=gl.isContextLost?.()===true;return Error(`${lost?'OWNER_CONTEXT_LOST':code}:${stage}:${String(log??'').trim()||'NO_DRIVER_LOG'}`);}
+ function assertContext(stage){if(gl.isContextLost?.()===true)throw graphicsError('OWNER_CONTEXT_LOST',stage);}
+ function shader(type,source){
+  const stage=type===gl.VERTEX_SHADER?'VERTEX':'FRAGMENT';assertContext(stage);
+  const s=gl.createShader(type);if(!s)throw graphicsError('OWNER_SHADER_ALLOCATION',stage);
+  ownedShaders.push(s);gl.shaderSource(s,source);gl.compileShader(s);
+  if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw graphicsError('OWNER_SHADER_COMPILE',stage,gl.getShaderInfoLog(s));
+  assertContext(stage);return s;
+ }
+ assertContext('PROGRAM');program=gl.createProgram();if(!program)throw graphicsError('OWNER_PROGRAM_ALLOCATION','PROGRAM');
+ gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);
+ if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw graphicsError('OWNER_LINK','PROGRAM',gl.getProgramInfoLog(program));
+ assertContext('LINKED');
  vao=gl.createVertexArray();buffer=gl.createBuffer();gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,rootCount*16,gl.STATIC_DRAW);let gpuUploadCount=1,gpuUploadedBytes=0;
  const uploadScheduling=await uploadInSlices(tiles,{...uploadBudget,yieldControl,onProgress,upload:tile=>{gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);gpuUploadCount++;gpuUploadedBytes+=tile.packed.byteLength;}});
  gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);

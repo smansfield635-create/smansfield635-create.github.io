@@ -114,7 +114,7 @@
           {
             "type": "textContains",
             "selector": "#prototype-status",
-            "value": "Test controls on the landscape to unlock Enter H-Earth"
+            "value": "Test controls on the landscape to unlock Enter Gratitude"
           }
         ],
         "timeoutMs": 15000

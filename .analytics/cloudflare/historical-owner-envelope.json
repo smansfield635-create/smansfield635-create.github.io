@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-18T16:30:38Z",
+  "generatedAt": "2026-10-18T17:27:26Z",
   "window": {
-    "start": "2026-07-20T16:30:38Z",
-    "end": "2026-10-18T16:30:38Z"
+    "start": "2026-07-20T17:27:26Z",
+    "end": "2026-10-18T17:27:26Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4890,
-    "visits": 1333,
+    "pageLoads": 4850,
+    "visits": 1323,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4890,
-        "visits": 1333
+        "pageLoads": 4850,
+        "visits": 1323
       }
     },
     "byPath": {
@@ -30,8 +30,16 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/frontier/energy/battery-coherence-study/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/laws/scientific-law/battery-heldout-study/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/battery-heldout-study/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/": {
@@ -42,16 +50,8 @@
         "pageLoads": 80,
         "visits": 10
       },
-      "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/products/archcoin/": {
         "pageLoads": 40,
-        "visits": 0
-      },
-      "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/": {
@@ -63,7 +63,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 155,
+        "pageLoads": 135,
         "visits": 10
       },
       "/index.html": {
@@ -75,23 +75,19 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1033,
-        "visits": 743
+        "pageLoads": 1023,
+        "visits": 733
       },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 230,
-        "visits": 20
+      "/gauges/h-earth/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
-        "visits": 0
-      },
-      "/gauges/h-earth/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/products/education/": {
@@ -154,6 +150,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
@@ -161,10 +161,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -233,6 +229,10 @@
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
+      },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
       },
       "/characters/": {
         "pageLoads": 60,
@@ -349,12 +349,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3557,
+        "pageLoads": 3527,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 782,
-        "visits": 782
+        "pageLoads": 772,
+        "visits": 772
       },
       "(none)": {
         "pageLoads": 541,

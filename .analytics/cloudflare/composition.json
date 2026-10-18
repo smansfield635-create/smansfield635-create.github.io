@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-18T20:30:21Z",
+  "generatedAt": "2026-10-18T21:27:35Z",
   "window": {
-    "start": "2026-09-18T20:30:21Z",
-    "end": "2026-10-18T20:30:21Z"
+    "start": "2026-09-18T21:27:35Z",
+    "end": "2026-10-18T21:27:35Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 808,
-        "visits": 528
+        "pageLoads": 798,
+        "visits": 518
       },
       {
         "value": "/analytics/",
-        "pageLoads": 617,
-        "visits": 497
+        "pageLoads": 627,
+        "visits": 507
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 616,
-        "visits": 586
+        "pageLoads": 621,
+        "visits": 591
       },
       {
         "value": "/mirror-manor-preview/",
@@ -39,8 +39,8 @@
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 110,
-        "visits": 90
+        "pageLoads": 100,
+        "visits": 80
       },
       {
         "value": "/governance-bridge/governance/",
@@ -221,8 +221,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2766,
-        "visits": 2766
+        "pageLoads": 2761,
+        "visits": 2761
       },
       {
         "value": "diamondgatebridge.com",
@@ -253,8 +253,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 4028,
-        "visits": 2907
+        "pageLoads": 4023,
+        "visits": 2902
       },
       {
         "value": "CN",
@@ -290,13 +290,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2169,
-        "visits": 2125
+        "pageLoads": 2162,
+        "visits": 2118
       },
       {
         "value": "mobile",
-        "pageLoads": 971,
-        "visits": 450
+        "pageLoads": 973,
+        "visits": 452
       },
       {
         "value": "tablet",
@@ -307,18 +307,18 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 1660,
-        "visits": 1660
+        "pageLoads": 1651,
+        "visits": 1651
       },
       {
         "value": "Chrome",
-        "pageLoads": 1303,
-        "visits": 705
+        "pageLoads": 1305,
+        "visits": 707
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 853,
-        "visits": 353
+        "pageLoads": 855,
+        "visits": 355
       },
       {
         "value": "MobileSafari",
@@ -354,13 +354,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1847,
-        "visits": 1847
+        "pageLoads": 1840,
+        "visits": 1840
       },
       {
         "value": "Android",
-        "pageLoads": 1783,
-        "visits": 726
+        "pageLoads": 1785,
+        "visits": 728
       },
       {
         "value": "Windows",
@@ -386,20 +386,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 2410,
-        "visits": 1288
+        "pageLoads": 2414,
+        "visits": 1292
       },
       {
         "value": "1",
-        "pageLoads": 1660,
-        "visits": 1660
+        "pageLoads": 1651,
+        "visits": 1651
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3181,
-        "visits": 2718
+        "pageLoads": 3176,
+        "visits": 2713
       },
       {
         "value": "reload",
@@ -425,8 +425,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 3095,
-        "visits": 2646
+        "pageLoads": 3090,
+        "visits": 2641
       },
       {
         "value": "cache",
@@ -442,15 +442,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 4070,
-        "visits": 2948
+        "pageLoads": 4065,
+        "visits": 2943
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 4070,
-        "visits": 2948
+        "pageLoads": 4065,
+        "visits": 2943
       }
     ]
   }

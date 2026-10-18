@@ -1,18 +1,16 @@
 {
   "schema": "H_EARTH_TREE_MATERIAL_ELIGIBILITY_CHECKPOINT_v1",
-  "operationId": "H_EARTH_TREE_MATERIAL_ELIGIBILITY_20261018_001",
-  "authorityGeneration": 2802,
-  "phase": "SOURCE_CPU_REVIEW_COMPLETE_BROWSER_PENDING",
-  "governingHead": "4403eadee8530d097c9fbec56b2b961e6d86f9a5",
+  "operationId": "H_EARTH_TREE_MATERIAL_PUBLICATION_20261018_001",
+  "authorityGeneration": 2803,
+  "phase": "PREFLIGHT_PASS_OWNER_PUBLICATION_REQUESTED",
+  "governingHead": "45510340f0486327c183561bb4a88b539ab4ee14",
   "branch": "h-earth/tree-material-eligibility-20261018",
   "allowedPaths": [
     "h-earth-3d/evidence/tree-material-eligibility-v1/checkpoint.json",
-    "h-earth-3d/experience-anchor/receipts/tree-material-eligibility-v1.json",
-    "h-earth-3d/validation/h-earth.tree-material-eligibility.v1.test.mjs",
-    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+    "h-earth-3d/experience-anchor/receipts/tree-material-eligibility-v1.json"
   ],
-  "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6251567769",
-  "request": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6251562716",
+  "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6251816949",
+  "request": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6251813169",
   "failedRun": 39138632559,
   "recovery": "Removed one trailing newline from source envelope; request/procedure unchanged. Admission run39139745528 ADMITTED_AND_LOCKED.",
   "completed": [
@@ -21,15 +19,19 @@
     "Canonical admission generation2802",
     "Bounded shader material repair",
     "Five focused CPU source-contract checks PASS",
-    "Independent West source review PASS"
+    "Independent West source review PASS",
+    "Exact candidate PUBLICATION_FAST_PREFLIGHT PASS",
+    "Source anchor gate PASS",
+    "Owner explicitly requested publication; no device/appearance acceptance inferred",
+    "Release successor generation2803 admitted",
+    "Independent release review: historical CI and legacy scope-recognition failures localized; no newly evidenced shader regression"
   ],
-  "nextAction": "Run registered PUBLICATION_FAST_PREFLIGHT on immutable saved candidate; provide direct run link and yield. Read completed result on owner report. Rendered original/added-tree appearance and device acceptance remain pending.",
+  "nextAction": "Owner-authorized registered exact-head publication after release admission and guarded merge. Persist deployment run identity and provide link; yield without polling. On completion verify exact live marker.",
   "expensiveRunProcedure": "Persist candidate and run identity, provide direct run link, then yield without polling. Admission submission alone is not a reason to stop useful work.",
   "limitations": [
     "No GPU compile, rendered pixel, device or performance acceptance yet",
     "Original tagged fragments outside old bounds intentionally gain material treatment; no all-pixel equivalence claim",
     "No grass mutation or census repeated",
-    "No merge/deployment authority",
     "Inherited startup albedo difference remains unresolved"
   ],
   "authorityEffect": "NONE_CHECKPOINT_ONLY",
@@ -57,5 +59,24 @@
       "orientation": "/root/alaric_route",
       "independentReview": "/root/soren_review"
     }
+  },
+  "constructionOperationId": "H_EARTH_TREE_MATERIAL_ELIGIBILITY_20261018_001",
+  "constructionAuthorityGeneration": 2802,
+  "qualifiedCandidate": "c491f26f29365a72a5fd083f445cb8e7c3d264d9",
+  "publicationDirection": {
+    "source": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6251799865",
+    "text": "Proceed to publication",
+    "physicalAcceptanceClaimed": false
+  },
+  "preflight": {
+    "runId": 39140210755,
+    "jobId": 117712913029,
+    "result": "PREFLIGHT_PASS",
+    "surfaceId": "h-earth-simple",
+    "runtimeWitness": "controls-test; prepared woodland awaits genuine input",
+    "pageErrors": [],
+    "consoleErrors": [],
+    "screenshotCaptured": false,
+    "deploymentPerformed": false
   }
 }

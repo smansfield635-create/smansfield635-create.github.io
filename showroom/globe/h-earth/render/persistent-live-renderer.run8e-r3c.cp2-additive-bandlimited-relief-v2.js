@@ -935,12 +935,12 @@ void main(){
         48.0,112.0,max(0.0,vCoastDistanceMeters)
       );
       // Distinct soil families, blended rather than sharply classified.
-      vec3 compactEarth=vec3(0.326,0.275,0.179);
-      vec3 coastalSilt=vec3(0.424,0.365,0.237);
-      vec3 fertileEarth=vec3(0.160,0.206,0.108);
-      vec3 shelteredEarth=vec3(0.128,0.165,0.098);
-      vec3 dryFoothill=vec3(0.357,0.294,0.172);
-      vec3 erodedMineral=vec3(0.315,0.312,0.276);
+      vec3 compactEarth=vec3(0.390,0.248,0.148);
+      vec3 coastalSilt=vec3(0.520,0.440,0.270);
+      vec3 fertileEarth=vec3(0.120,0.265,0.104);
+      vec3 shelteredEarth=vec3(0.090,0.165,0.085);
+      vec3 dryFoothill=vec3(0.480,0.315,0.140);
+      vec3 erodedMineral=vec3(0.345,0.355,0.335);
       vec3 identityBase=mix(
         compactEarth,coastalSilt,coastalEarth*0.74
       );
@@ -963,8 +963,8 @@ void main(){
         22.0,42.0,distance(world,vec2(-139.40268,-210.74617))
       );
       float identityContrast=clamp(
-        0.54+0.25*abs(fertilePatch-0.5)*2.0+
-        0.13*mineralExposure,0.0,0.93
+        0.75+0.15*abs(fertilePatch-0.5)*2.0+
+        0.12*mineralExposure,0.0,0.96
       );
       float identityWeight=inlandIdentity*
         (1.0-protectedGrove)*identityContrast;

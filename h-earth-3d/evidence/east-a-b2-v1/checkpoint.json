@@ -1,0 +1,89 @@
+{
+  "schema": "H_EARTH_EAST_A_B2_CANDIDATE_CHECKPOINT_v1",
+  "operationId": "H_EARTH_EAST_A_B2_PLATEAU_CONSTRUCTION_20261019_001",
+  "authority": {
+    "result": "ADMITTED_AND_LOCKED",
+    "generation": 2820,
+    "lockScope": "H_EARTH:EAST_A_B2_TERRAIN:20261019",
+    "receipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6272170139"
+  },
+  "exactBase": "92e241f27b79cd50a09e4b0ef8f47e080bc5e0d4",
+  "branch": "h-earth-east-a-b2-plateau-gen2820",
+  "construction": {
+    "sourcePath": "h-earth-3d/terrain/h-earth.terrain-field.js",
+    "originalBlob": "deaef74f59edd5c6cfbdc96c32f31e140e6a6c2a",
+    "candidateBlob": "71a95053892140d792573587a6b82798663e3df1",
+    "sourceCommit": "2e2a0ae44f2f138670922d9382574cb4c5dd23e4",
+    "regressionPath": "h-earth-3d/validation/h-earth.east-a-b2.terrain.test.mjs",
+    "regressionBlob": "2cb49a442ff49d191626a805a161c6d390793fa7",
+    "regressionCommit": "e9d86b79acd5f9a4067b75c6cab2ad5f3e6217bd",
+    "sourceScope": "STRICT_EAST_A_ONLY",
+    "westBCMutation": false,
+    "ecologyPopulationMutation": false,
+    "manifestMutation": false
+  },
+  "studiedReference": {
+    "b1": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6260006002",
+    "b2": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6426#issuecomment-6270930139",
+    "directEnvelope": {
+      "xExclusive": [
+        184,
+        232
+      ],
+      "zExclusive": [
+        -368,
+        -280
+      ]
+    },
+    "auditedProtectedRootHaloMeters": 24,
+    "preservedPublishedRootCount": 1457471,
+    "allowableUpliftMeters": 6.289584631437112
+  },
+  "preliminaryReadOnlyObservations": {
+    "method": "REPO_SOURCED_JAVASCRIPT_REPLAY_IN_CONNECTED_V8_NOT_NODE_GITHUB_RUN",
+    "sourceSyntax": "PASS",
+    "intended8mBoundary": "ZERO_DIRECT_DELTA",
+    "outsideSourceDomain": "ZERO_DIRECT_DELTA",
+    "directUpliftMaxMeters": 6.289584631437112,
+    "maximumSampledTerrainNotchGrade": 0.16952032645225112,
+    "fullNativeB2Gen314Tests": "NOT_EXECUTED",
+    "exactBrowserGPUDevice": "NOT_EXECUTED",
+    "visualAcceptance": "NOT_REVIEWED"
+  },
+  "testPlan": {
+    "command": "node --test --test-concurrency=1 h-earth-3d/validation/h-earth.east-a-b2.terrain.test.mjs h-earth-3d/validation/h-earth.run8e-geology-integration.v1.test.mjs",
+    "checks": [
+      "REVERSIBLE_PINNED_G_WORLD_SOURCE_SHA",
+      "EXACT_B2_TAPER_CONSTANTS_AND_8M_ROOT_FREE_OUTSIDE",
+      "GRADIENT_NORMAL_CURVATURE_MATERIAL",
+      "CURVED_SOURCE_NOTCH_GRADE",
+      "ACTUAL_51_GEN314_TRIANGLE_AND_CAMERA_VOLUME",
+      "IMMUTABLE_1457471_GRASS_ROOT_MANIFEST",
+      "H_EARTH_EXPERIENCE_ANCHOR_IDENTITY"
+    ],
+    "nodeExecuted": false,
+    "independentWCompleted": false,
+    "physicalTabletAccepted": false
+  },
+  "ownerDisposition": {
+    "required": true,
+    "allowed": [
+      "KEEP",
+      "ONE_REPAIR",
+      "REJECT"
+    ],
+    "selected": null,
+    "unresolved": [
+      "RESIDUAL_REAR_SWAZE_NEGATIVE_0_857M_READS_NATURAL_OR_TRENCH",
+      "OCEAN_SIGHTLINES",
+      "VISUAL_CONTINUITY",
+      "TABLET_PERFORMANCE"
+    ]
+  },
+  "release": {
+    "merge": false,
+    "pagesDeploy": false,
+    "liveVerified": false
+  },
+  "authorityEffect": "NONE_CHECKPOINT_EVIDENCE_ONLY"
+}

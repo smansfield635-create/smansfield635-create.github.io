@@ -317,9 +317,62 @@ function resolveMaterialProfile(shorelineDistance, elevation, slope) {
   return 'LOWLAND_SOIL';
 }
 
+/**
+ * East A B2 terrain relief, adopted from the preserved B1 mathematical study
+ * with only the two independently studied shoulder-taper denominators changed.
+ * Direct elevation uplift is strictly zero outside the bounded East A interior;
+ * all existing terrain, shoreline, geology, vegetation and renderer contracts
+ * remain driven by this one canonical G_world elevation sampler.
+ * Reference: GitHub issue 6426, comments 6260006002 and 6270930139.
+ */
+const clamp01 = t => Math.max(0, Math.min(1, t));
+const smooth5 = t => {
+  t = clamp01(t);
+  return t*t*t*(t*(t*6-15)+10);
+};
+const gauss = (x,m,s) => Math.exp(-Math.pow((x-m)/s,2));
+const notchX = z =>
+  209.5 + 2.2*Math.sin((z+325)/22) + 0.025*(z+330);
+const crestZ = x =>
+  -332 + 2.2*Math.sin((x-184)/10.5)
+       + 1.15*Math.sin((x-178)/4.7+0.7)
+       + 1.7*gauss(x,225,6);
+
+function upliftB2(x,z) {
+  if (x<=184 || x>=232 || z<=-368 || z>=-280) return 0;
+  const lateral =
+    smooth5((x-184)/(24+1.4*Math.sin((z+332)/23))) *
+    smooth5((232-x)/(26.5+1.1*Math.cos((z+345)/19)));
+  const longitudinal =
+    smooth5((z+368)/19) * (1-smooth5((z+298)/18));
+  const weight = lateral*longitudinal;
+  if (weight<=0) return 0;
+
+  const notch = Math.exp(
+    -0.5*Math.pow(
+      (x-notchX(z))/(10+0.7*Math.sin((z+311)/15)),4));
+  const cliff = 1-smooth5(
+    (z-crestZ(x))/(19+1.2*Math.sin((x-206)/9)));
+  const ramp = 1-smooth5((z+356)/68);
+  const amplitude =
+    6.25 + 0.36*Math.sin((x-183)/18)
+         + 0.22*Math.sin((x+0.85*z)/14)
+         + 0.18*Math.sin((2*x-z)/27);
+  const gullies = 0.8 * (
+    0.56*gauss(x-0.055*(z+324),193,4.3)*gauss(z,-321,11) +
+    0.42*gauss(x+0.07*(z+324),224,3.5)*gauss(z,-323,10)
+  )*(1-notch);
+  const talus =
+    0.54*gauss(x,190,9)*gauss(z,-307,11) +
+    0.29*gauss(x,224,7)*gauss(z,-305,10);
+  return Math.max(0,weight*(
+    amplitude*(notch*ramp+(1-notch)*cliff)
+    -gullies+talus));
+}
+
 export function sampleHEarthTerrainElevation(worldX, worldZ) {
   if (!finite(worldX) || !finite(worldZ)) return Number.NaN;
-  return evaluateRawElevation(worldX, worldZ);
+  return evaluateRawElevation(worldX, worldZ) + upliftB2(worldX, worldZ);
 }
 
 export function sampleHEarthTerrainField(worldX, worldZ) {

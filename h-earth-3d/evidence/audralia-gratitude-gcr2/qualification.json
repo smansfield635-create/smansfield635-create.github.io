@@ -4,7 +4,7 @@
   "candidateBranch": "agent/audralia-gratitude-gcr2-metric-ecology-20261018-001",
   "sourceBaseline": "063fca569d6e9cc3d3b98a70a6913f69618ede76",
   "candidateHead": "RESOLVE_EXACT_BRANCH_HEAD_AT_VERIFICATION",
-  "evidenceClassification": "CANDIDATE_REVISED_REQUALIFICATION_PENDING",
+  "evidenceClassification": "NATIVE_NODE_AND_CANDIDATE_GEOMETRY_SOURCE_PASS_BROWSER_AND_WEST_PENDING",
   "implementation": {
     "metricBridge": "IMPLEMENTED",
     "namedHydrology": "IMPLEMENTED_REV5_SOURCED",
@@ -38,9 +38,6 @@
     }
   ],
   "requiredNextChecks": [
-    "node --test h-earth-3d/validation/audralia-gratitude-gcr2.v1.test.mjs",
-    "EXACT_NINE_PATH_DIFF_VS_ADMITTED_BASE",
-    "VERIFY_ALL_IMPORTS_AND_INITIAL_WEBGL2_CANVAS_ON_EXACT_CANDIDATE",
     "CHROMIUM_SAME_ORIGIN_EXACT_SHA_SCREENSHOT_AND_ERRORS",
     "TABLET_PIXEL_BUDGET_AND_STARTUP_RESOURCE_PROFILE",
     "INDEPENDENT_WEST_SOURCE_AND_GEOGRAPHY_COMPARISON",
@@ -48,7 +45,6 @@
   ],
   "noClaims": {
     "physicalDevicePreviewAccepted": false,
-    "actualNodeTestSuiteExecuted": false,
     "scientificallyValidatedClimate": false,
     "permanentHearthRavineFlow": false,
     "physicalRiverWidthVerified": false,
@@ -65,6 +61,25 @@
     "easternOutflowType": "PROPOSED_TRIBUTARY_CONFLUENCE_TO_EXISTING_NAMED_MAIN_RIVER",
     "modelDerivedNotCanonical": true,
     "actualHydrologicDischargeVerified": false,
-    "remaining": "EXACT_SHA_BROWSER_AND_INDEPENDENT_WEST_VISUAL_GEOGRAPHY_AND_OWNER_REVIEW"
+    "remaining": "EXACT_SHA_BROWSER_AND_INDEPENDENT_WEST_VISUAL_GEOGRAPHY_AND_OWNER_REVIEW",
+    "qualification": {
+      "node": "v22.16.0",
+      "command": "node --test h-earth-3d/validation/audralia-gratitude-gcr2.v1.test.mjs",
+      "passed": 13,
+      "failed": 0,
+      "allExactCandidateCodeBlobsGitHubVerified": true,
+      "runtimeStubIsNotGpuPass": true,
+      "renderedPolygonPointCount": 229,
+      "polygonSelfIntersections": 0,
+      "deltaRiversHaveShorelineMouthContact": 3,
+      "deltaCenterlineOutsideLandKm": 0,
+      "candidateEasternConnectionModeled": true,
+      "headwatersOutsideCurrentCandidateLand": [
+        "WEST_TRIBUTARY_A",
+        "EAST_TRIBUTARY_A"
+      ],
+      "browserPhysicalQualification": "UNVERIFIED",
+      "independentWestVerification": "NOT_PERFORMED"
+    }
   }
 }

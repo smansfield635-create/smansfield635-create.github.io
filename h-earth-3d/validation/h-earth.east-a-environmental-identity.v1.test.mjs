@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
+import { gunzipSync } from 'node:zlib';
+import { sampleHEarthTerrainElevation } from '../terrain/h-earth.terrain-field.js';
 
 // Source-only Stage A checks. These do NOT constitute GLSL compilation,
 // camera screenshots, physical-device validation or owner acceptance.
@@ -69,3 +71,31 @@ test('Stage A does not alter canonical B2 terrain or successor material source b
 
 // Next gates: WebGL2 shader link, actual source-to-pixel comparison, mobile
 // performance and root/vegetation identity, then owner KEEP|ONE_REPAIR|REJECT.
+
+// Qualified product boundary: the published Gen2666 mesh was not rebaked
+// after the B2 canonical sampler changed. A passing witness verifies the
+// discrepancy; it is NOT permission to use a second runtime elevation law.
+test('B2 precomputed height identity mismatch is detected before Stage B', () => {
+  const binary = new URL('../../showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz', import.meta.url);
+  const precomputed = JSON.parse(gunzipSync(readFileSync(binary)).toString('utf8')).canonical;
+  const positions = precomputed.buffers.positions;
+  const terrainVertices = precomputed.primitiveSpans.find(span => span.role === 'TERRAIN').vertexCount;
+  let nearest = -1, best = Infinity;
+  for (let i=0; i<terrainVertices; i++) {
+    const dx=positions[i*3]-208, dz=positions[i*3+2]+344;
+    const distance=dx*dx+dz*dz;
+    if(distance<best) {best=distance;nearest=i;}
+  }
+  assert.ok(nearest>=0 && best<.01, 'EXACT_EAST_A_PACKAGE_VERTEX_MISSING');
+  const x=positions[nearest*3], y=positions[nearest*3+1], z=positions[nearest*3+2];
+  const b2Elevation=sampleHEarthTerrainElevation(x,z);
+  assert.ok(b2Elevation-y>5.5 && b2Elevation-y<6.1,
+    'EXPECTED_PUBLISHED_G_WORLD_AND_GEN2666_MESH_DIVERGENCE_NOT_FOUND');
+  const canon = readFileSync(new URL('../../showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js',import.meta.url),'utf8');
+  assert.ok(canon.includes('GEN2666_HYDRATION_BEGIN'));
+  assert.ok(canon.includes('48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a'));
+  assert.ok(source.includes('const elevation=surface.height+(t.elevation-surface.field)*smoothFade;'));
+  // The local refinement's field-minus-interpolated-field subtraction
+  // cancels B2 at old mesh vertices, and the initial patch is 128 m wide.
+  // This recorded discrepancy must be reconciled before Stage B is accepted.
+});

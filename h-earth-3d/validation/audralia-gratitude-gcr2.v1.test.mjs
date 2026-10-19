@@ -18,7 +18,7 @@ import {
 import {
   HYDROLOGY_SOURCE,GRATITUDE_RIVERS,GRATITUDE_LAKES,
   GRATITUDE_DELTA_SHORE_CONTROLS,GRATITUDE_CANDIDATE_CONTINENT_REMAINDER,
-  GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE,clipCandidateRiverBankToLand,
+  GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE,clipCandidateRiverBankToLand,reconcileGratitudeNorthCoastZ,
   candidateDeltaSouthShoreZ,verifyCandidateDeltaCoast,verifyCandidateEasternConfluence,
   sampleGratitudeHydrology,verifyNamedHydrology
 } from '../../showroom/globe/audralia/gcr2-completed-gratitude/hydrology-graph.v1.mjs';
@@ -27,6 +27,7 @@ import {
   sampleContinentalReliefKm,provinceSignals
 } from '../../showroom/globe/audralia/gcr2-completed-gratitude/ecology-field.v1.mjs';
 
+import { H_EARTH_TERRAIN_FIELD,getHEarthCanonicalShorelineZ } from '../terrain/h-earth.terrain-field.js';
 import { resolveAudraliaGratitudeShorelineZ } from '../../inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
@@ -195,6 +196,37 @@ test('candidate mesh extends beyond all three delta mouth endpoints',()=>{
   assert.match(app,/verifyCandidateEasternConfluence\(\)/);
 });
 
+
+test('Stage 1: entire protected core coastline maps exactly through unchanged metric bridge',()=>{
+  const core=H_EARTH_TERRAIN_FIELD.coreDomain;
+  assert.equal(core.xMinimum,-256);assert.equal(core.xMaximum,256);
+  let samples=0;
+  for(let x=core.xMinimum;x<=core.xMaximum;x+=0.5){
+    const expected=regionalMetersToContinentalKm(x,getHEarthCanonicalShorelineZ(x)).zKm;
+    near(reconcileGratitudeNorthCoastZ(x/1000,-81.84),expected,1e-11);
+    ++samples;
+  }
+  assert.equal(samples,1025);
+  near(reconcileGratitudeNorthCoastZ(.208,-81.84258114837758),-127.94907776723889,1e-11);
+  assert.throws(()=>reconcileGratitudeNorthCoastZ(NaN,0),/NONFINITE/);
+  assert.throws(()=>reconcileGratitudeNorthCoastZ(0,Infinity),/NONFINITE/);
+});
+test('Stage 1: local coastline edges preserve position and tangent; far macro coast is unchanged',()=>{
+  const core=H_EARTH_TERRAIN_FIELD.coreDomain;
+  const h=1e-6;
+  for(const meters of [core.xMinimum,core.xMaximum]){
+    const x=meters/1000,expected=regionalMetersToContinentalKm(meters,getHEarthCanonicalShorelineZ(meters)).zKm;
+    const f=y=>reconcileGratitudeNorthCoastZ(y,-81.84);
+    near(f(x),expected,1e-11);
+    assert.ok(Math.abs(f(x-h)-f(x))<.0001 && Math.abs(f(x+h)-f(x))<.0001);
+    const left=(f(x)-f(x-h))/h,right=(f(x+h)-f(x))/h;
+    assert.ok(Math.abs(left-right)<.01,`shoreline tangent discontinuity at ${x}: ${left} / ${right}`);
+    const side=meters<0?-1:1;
+    near(f(x+side*160),-81.84,1e-12);
+    near(f(x+side*160.1),-81.84,1e-12);
+  }
+});
+
 /* Independent polygon calculations use rev5's shoreline resolver and the
  * candidate shoreline controls; they do not import renderer-only predicates. */
 const testSmooth=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
@@ -204,7 +236,8 @@ function candidateLoop(){
     const t=Math.max(0,Math.min(1,(x+260)/520));
     const s=x<=-260||x>=260?coast(x):left+(right-left)*testSmooth(0,1,t)+9*Math.sin(t*Math.PI)*Math.sin(x*.015);
     const edgeT=Math.max(0,Math.min(1,(x+1130)/2250));
-    return s+(-245-coast(-1130))*(1-testSmooth(0,.12,edgeT))+(-176-coast(1120))*testSmooth(.88,1,edgeT);
+    const provisional=s+(-245-coast(-1130))*(1-testSmooth(0,.12,edgeT))+(-176-coast(1120))*testSmooth(.88,1,edgeT);
+    return reconcileGratitudeNorthCoastZ(x,provisional);
   };
   const north=[];for(let x=-1130;x<1120;x+=12)north.push([x,macro(x)]);
   north.push([1120,macro(1120)]);

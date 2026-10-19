@@ -7,7 +7,7 @@ import {
 } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 
 import { GCR2_METRIC_FRAME, GCR2_ANCHORS, regionalMetersToGeodetic, regionalMetersToContinentalKm } from './metric-geography-bridge.v1.mjs';
-import { GRATITUDE_RIVERS, GRATITUDE_LAKES, GRATITUDE_CANDIDATE_CONTINENT_REMAINDER, GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE, clipCandidateRiverBankToLand, verifyNamedHydrology, verifyCandidateDeltaCoast, verifyCandidateEasternConfluence } from './hydrology-graph.v1.mjs';
+import { GRATITUDE_RIVERS, GRATITUDE_LAKES, GRATITUDE_CANDIDATE_CONTINENT_REMAINDER, GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE, clipCandidateRiverBankToLand, reconcileGratitudeNorthCoastZ, verifyNamedHydrology, verifyCandidateDeltaCoast, verifyCandidateEasternConfluence } from './hydrology-graph.v1.mjs';
 import { sampleContinentalEcology, ECOLOGY_SOURCE } from './ecology-field.v1.mjs';
 import { resolveAudraliaGratitudeShorelineZ } from '../../../../inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
 
@@ -63,8 +63,9 @@ function macroShoreZ(x){
   // Join GCR1's explicitly provisional southern envelope without edge jumps.
   const westAdjustment=-245-resolveAudraliaGratitudeShorelineZ(northEdgeWest);
   const eastAdjustment=-176-resolveAudraliaGratitudeShorelineZ(northEdgeEast);
-  return s+westAdjustment*(1-smooth(0,.12,edgeT))+
+  const provisional=s+westAdjustment*(1-smooth(0,.12,edgeT))+
     eastAdjustment*smooth(.88,1,edgeT);
+  return reconcileGratitudeNorthCoastZ(x,provisional);
 }
 const NORTH_COAST=[];
 for(let x=northEdgeWest;x<northEdgeEast;x+=12)

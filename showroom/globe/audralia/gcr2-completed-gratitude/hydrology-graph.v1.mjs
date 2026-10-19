@@ -4,6 +4,38 @@
  * a candidate inspection. Widths are SOURCE AUTHORING UNITS, not measured river km.
  * No local H-Earth waterPresent or permanent-flow claim is created.
  */
+
+import {H_EARTH_TERRAIN_FIELD,getHEarthCanonicalShorelineZ} from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
+import {regionalMetersToContinentalKm} from './metric-geography-bridge.v1.mjs';
+
+/**
+ * GCR2 Stage 1: local metric coastal correspondence, not a new geographic authority.
+ * The H-Earth core is authoritative in meters; the inherited macro coast remains
+ * provisional outside a bounded 160 km geographic shoulder. Stage 2 must separately
+ * resolve render-grid sampling; this function does not create a regional mesh.
+ */
+export function reconcileGratitudeNorthCoastZ(xKm,provisionalMacroZKm){
+  if(!Number.isFinite(xKm)||!Number.isFinite(provisionalMacroZKm))
+    throw new RangeError('GCR2_COAST_CORRESPONDENCE_NONFINITE');
+  const {xMinimum,xMaximum}=H_EARTH_TERRAIN_FIELD.coreDomain;
+  const metricShore=xMeters=>
+    regionalMetersToContinentalKm(xMeters,getHEarthCanonicalShorelineZ(xMeters)).zKm;
+  const west=xKm<xMinimum/1000,east=xKm>xMaximum/1000;
+  if(!west&&!east)return metricShore(xKm*1000);
+  const edgeMeters=west?xMinimum:xMaximum,edgeKm=edgeMeters/1000,side=west?-1:1;
+  const dKm=Math.abs(xKm-edgeKm);
+  const transitionKm=160;
+  if(dKm>=transitionKm)return provisionalMacroZKm;
+  // Preserve both shoreline location and its one-sided core-edge tangent.
+  // A 1 mm internal probe avoids smoothing out fine canonical coastal rhythm.
+  const probeMeters=0.001;
+  const edgeShore=metricShore(edgeMeters);
+  const slope=(edgeShore-metricShore(edgeMeters-side*probeMeters))/(side*probeMeters/1000);
+  const inherited=edgeShore+slope*(xKm-edgeKm)*Math.exp(-dKm/0.8);
+  const t=dKm/transitionKm,weight=t*t*(3-2*t);
+  return inherited+(provisionalMacroZKm-inherited)*weight;
+}
+
 export const HYDROLOGY_SOURCE=Object.freeze({
   contract:'AUDRALIA_GRATITUDE_GEOGRAPHIC_TRANSFER_AUTHORITY_v1',
   revision:5,

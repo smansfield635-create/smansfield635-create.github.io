@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-19T01:44:22Z",
+  "generatedAt": "2026-10-19T02:43:23Z",
   "window30d": {
-    "start": "2026-09-19T01:44:22Z",
-    "end": "2026-10-19T01:44:22Z"
+    "start": "2026-09-19T02:43:23Z",
+    "end": "2026-10-19T02:43:23Z"
   },
   "daily": [
     {
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 2
+      "pageLoads": 6
     }
   ],
   "summary": {
-    "pageLoads": 4040,
-    "botPageLoads": 1654,
-    "nonBotPageLoads": 2386
+    "pageLoads": 4034,
+    "botPageLoads": 1646,
+    "nonBotPageLoads": 2388
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2765,
-      "visits": 2765
+      "pageLoads": 2759,
+      "visits": 2759
     },
     {
       "host": "diamondgatebridge.com",
@@ -172,18 +172,18 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 627,
-      "visits": 507
+      "pageLoads": 628,
+      "visits": 508
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 624,
-      "visits": 590
+      "pageLoads": 627,
+      "visits": 593
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 430,
-      "visits": 430
+      "pageLoads": 420,
+      "visits": 420
     },
     {
       "path": "/products/education/",

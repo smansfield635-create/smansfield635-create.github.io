@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-18T23:26:21Z",
+  "generatedAt": "2026-10-19T01:07:39Z",
   "window30d": {
-    "start": "2026-09-18T23:26:21Z",
-    "end": "2026-10-18T23:26:21Z"
+    "start": "2026-09-19T01:07:39Z",
+    "end": "2026-10-19T01:07:39Z"
   },
   "daily": [
-    {
-      "date": "2026-09-19",
-      "pageLoads": 330
-    },
     {
       "date": "2026-09-20",
       "pageLoads": 370
@@ -96,11 +92,11 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 73
+      "pageLoads": 70
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 32
+      "pageLoads": 30
     },
     {
       "date": "2026-10-13",
@@ -124,13 +120,17 @@
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 67
+      "pageLoads": 68
+    },
+    {
+      "date": "2026-10-19",
+      "pageLoads": 0
     }
   ],
   "summary": {
-    "pageLoads": 4043,
+    "pageLoads": 4039,
     "botPageLoads": 1653,
-    "nonBotPageLoads": 2390
+    "nonBotPageLoads": 2386
   },
   "referrers": [
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 47,
-      "visits": 47
+      "pageLoads": 43,
+      "visits": 43
     },
     {
       "host": "m.facebook.com",
@@ -177,8 +177,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 624,
-      "visits": 590
+      "pageLoads": 623,
+      "visits": 589
     },
     {
       "path": "/mirror-manor-preview/",

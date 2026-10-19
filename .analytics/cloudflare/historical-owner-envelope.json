@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-19T10:34:05Z",
+  "generatedAt": "2026-10-19T11:32:01Z",
   "window": {
-    "start": "2026-07-21T10:34:05Z",
-    "end": "2026-10-19T10:34:05Z"
+    "start": "2026-07-21T11:32:01Z",
+    "end": "2026-10-19T11:32:01Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4898,
-    "visits": 1337,
+    "pageLoads": 4768,
+    "visits": 1277,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4898,
-        "visits": 1337
+        "pageLoads": 4768,
+        "visits": 1277
       }
     },
     "byPath": {
@@ -39,7 +39,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 80,
+        "pageLoads": 70,
         "visits": 10
       },
       "/frontier/energy/battery-coherence-study/": {
@@ -55,24 +55,24 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 300,
-        "visits": 90
+        "pageLoads": 220,
+        "visits": 40
       },
       "/showroom/": {
         "pageLoads": 110,
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 159,
+        "pageLoads": 149,
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 140,
+        "pageLoads": 130,
         "visits": 0
       },
       "/": {
-        "pageLoads": 1037,
-        "visits": 747
+        "pageLoads": 1027,
+        "visits": 737
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
@@ -99,7 +99,7 @@
         "visits": 70
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 110,
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/": {
@@ -107,15 +107,7 @@
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/laws/research/evidence-and-sources/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/flow/cycles/": {
-        "pageLoads": 30,
+        "pageLoads": 120,
         "visits": 0
       },
       "/showroom/globe/audralia/": {
@@ -194,6 +186,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/laws/categories/flow/cycles/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/gauges/": {
         "pageLoads": 10,
         "visits": 0
@@ -228,6 +224,10 @@
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/research/evidence-and-sources/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
@@ -349,12 +349,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3561,
+        "pageLoads": 3491,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 783,
-        "visits": 783
+        "pageLoads": 723,
+        "visits": 723
       },
       "(none)": {
         "pageLoads": 544,

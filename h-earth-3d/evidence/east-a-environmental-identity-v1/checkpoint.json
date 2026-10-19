@@ -1,0 +1,67 @@
+{
+  "schema": "H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_CHECKPOINT_v1",
+  "operationId": "H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_CONSTRUCTION_20261019_001",
+  "canonicalAdmission": {
+    "result": "ADMITTED_AND_LOCKED",
+    "generation": 2823,
+    "lockScope": "H_EARTH:EAST_A_ENVIRONMENTAL_IDENTITY:20261019:V1",
+    "receipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6562#issuecomment-6278037272",
+    "workflowRun": 39329531792
+  },
+  "governingBaseline": {
+    "main": "c8c5f68b23ca6f71ae07240dfd29ec1b672109c6",
+    "published": true,
+    "b2SourceBlob": "71a95053892140d792573587a6b82798663e3df1",
+    "rendererOldBlob": "0de80a76b08d388e6cd65615488d67c43f6cf82f",
+    "successorMaterialBlob": "a510fa1da1a5d1852153c9d22d2df4f2a4d4efde",
+    "grassRootCount": 1457471,
+    "acceptedFourTrees": true
+  },
+  "candidate": {
+    "branch": "h-earth-east-a-environmental-identity-gen2823",
+    "shaderCommit": "eb80c13bc6085ca379fbcd9777b70755778a9159",
+    "shaderBlob": "19d63cb2ff2dc6884eb21c195687355dc4efddb8",
+    "focusedTestCommit": "894ebccbe178836b19d65f1d5c85f7ae249d735a",
+    "mutationStage": "A_MATERIAL_RENDERER_ONLY",
+    "newTerrainGeometry": false,
+    "newVegetationRoots": false,
+    "newTreeInstances": false,
+    "coastOrHydrologyChange": false,
+    "ownedRendererMutation": true
+  },
+  "materialBehavior": {
+    "source": "actual Run8E terrain shader",
+    "shoreDistanceMask": "smoothstep(28,66)",
+    "sixSoilIdentities": [
+      "COMPACT_EARTH",
+      "COASTAL_SILT",
+      "FERTILE_EARTH",
+      "SHELTERED_EARTH",
+      "DRY_FOOTHILL",
+      "ERODED_MINERAL"
+    ],
+    "texture": "OWNER_APPROVED_GEN2646_SOIL_TEXTURE_PRESERVED",
+    "protectedFourTreeCore": "soft radial attenuation around (-139.40268,-210.74617), 22-42m",
+    "waterRoleUnaffected": true,
+    "rockGeologyPresentationProtected": true,
+    "meansOfDifferentiation": [
+      "canonical world elevation",
+      "slope and rock exposure",
+      "shore distance",
+      "smooth noise patch gradients",
+      "existing real soil texture"
+    ]
+  },
+  "currentProof": {
+    "sourceReadback": "EXACT_BLOBS_CONFIRMED",
+    "glslCompilation": "NOT_EXECUTED",
+    "nodeStageATest": "NOT_EXECUTED",
+    "independentWest": "NOT_EXECUTED",
+    "browserGpu": "NOT_EXECUTED",
+    "phoneMatchedViewport": "NOT_EXECUTED",
+    "ownerDisposition": null,
+    "provisionalReadability": "NOT_CLAIMED"
+  },
+  "next": "Run focused native Stage A Node verification and true compiled WebGL2 shader/browser pixel-source comparison for spatially known viewpoints; if visual differentiation is insufficient, one in-scope shader revision before high-risk G_world East A bench work. Retain candidate as draft; no publication.",
+  "authorityEffect": "NONE_CHECKPOINT_EVIDENCE_ONLY"
+}

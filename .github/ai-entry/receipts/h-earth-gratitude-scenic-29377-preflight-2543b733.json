@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gratitude-scenic-29377-preflight-2543b733",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6551,
+  "requestBranch": "ai-dispatch-request-h-earth-scenic-29377-preflight-2543b733",
+  "requestCommit": "0516963dc76017fbc1c1888d279805df29bc350e",
+  "requestCommitParent": "fc21462952acd54839b77689dc9e3615a77e56ab",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "fc21462952acd54839b77689dc9e3615a77e56ab",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "2543b73309e1a1cb6c00006d1f60d082562d62fa",
+    "surface_id": "h-earth-simple"
+  },
+  "bridgeRunId": "39190368647",
+  "dispatchedRunId": 39190383238,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39190383238",
+  "dispatchedRunHeadSha": "fc21462952acd54839b77689dc9e3615a77e56ab",
+  "dispatchedAt": "2026-10-19T02:31:41.180Z",
+  "resolvedAt": "2026-10-19T02:31:45.351Z"
+}

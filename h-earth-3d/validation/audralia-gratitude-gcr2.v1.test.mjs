@@ -17,7 +17,8 @@ import {
 } from '../../showroom/globe/audralia/gcr2-completed-gratitude/metric-geography-bridge.v1.mjs';
 import {
   HYDROLOGY_SOURCE,GRATITUDE_RIVERS,GRATITUDE_LAKES,
-  GRATITUDE_DELTA_SHORE_CONTROLS,GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE,
+  GRATITUDE_DELTA_SHORE_CONTROLS,GRATITUDE_CANDIDATE_CONTINENT_REMAINDER,
+  GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE,clipCandidateRiverBankToLand,
   candidateDeltaSouthShoreZ,verifyCandidateDeltaCoast,verifyCandidateEasternConfluence,
   sampleGratitudeHydrology,verifyNamedHydrology
 } from '../../showroom/globe/audralia/gcr2-completed-gratitude/hydrology-graph.v1.mjs';
@@ -25,6 +26,8 @@ import {
   ECOLOGY_SOURCE,GRATITUDE_PROVINCES,sampleContinentalEcology,
   sampleContinentalReliefKm,provinceSignals
 } from '../../showroom/globe/audralia/gcr2-completed-gratitude/ecology-field.v1.mjs';
+
+import { resolveAudraliaGratitudeShorelineZ } from '../../inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const candidate='showroom/globe/audralia/gcr2-completed-gratitude/';
@@ -186,8 +189,90 @@ test('proposed eastern outflow connects source endpoints but remains nonauthorit
 test('candidate mesh extends beyond all three delta mouth endpoints',()=>{
   const app=readFileSync(resolve(root,candidate+'app.mjs'),'utf8');
   assert.match(app,/buildAxis\(-2050,260,-420,120,22,8\)/);
-  assert.match(app,/GRATITUDE_DELTA_SHORE_CONTROLS/);
+  assert.match(app,/GRATITUDE_CANDIDATE_CONTINENT_REMAINDER/);
   assert.match(app,/GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE/);
   assert.match(app,/verifyCandidateDeltaCoast\(\)/);
   assert.match(app,/verifyCandidateEasternConfluence\(\)/);
+});
+
+/* Independent polygon calculations use rev5's shoreline resolver and the
+ * candidate shoreline controls; they do not import renderer-only predicates. */
+const testSmooth=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
+function candidateLoop(){
+  const coast=resolveAudraliaGratitudeShorelineZ,left=coast(-260),right=coast(260);
+  const macro=x=>{
+    const t=Math.max(0,Math.min(1,(x+260)/520));
+    const s=x<=-260||x>=260?coast(x):left+(right-left)*testSmooth(0,1,t)+9*Math.sin(t*Math.PI)*Math.sin(x*.015);
+    const edgeT=Math.max(0,Math.min(1,(x+1130)/2250));
+    return s+(-245-coast(-1130))*(1-testSmooth(0,.12,edgeT))+(-176-coast(1120))*testSmooth(.88,1,edgeT);
+  };
+  const north=[];for(let x=-1130;x<1120;x+=12)north.push([x,macro(x)]);
+  north.push([1120,macro(1120)]);
+  return [...north,...GRATITUDE_CANDIDATE_CONTINENT_REMAINDER];
+}
+function inCandidate(point,loop){
+  const [x,z]=point;let inside=false;
+  for(let i=0,j=loop.length-1;i<loop.length;j=i++){
+    const a=loop[i],b=loop[j];
+    if(((a[1]>z)!==(b[1]>z))&&(x<(b[0]-a[0])*(z-a[1])/(b[1]-a[1])+a[0]))inside=!inside;
+  }
+  return inside;
+}
+function coastDistanceForTest(point,loop){
+  let best=Infinity;
+  for(let i=0;i<loop.length;i++){
+    const a=loop[i],b=loop[(i+1)%loop.length],dx=b[0]-a[0],dz=b[1]-a[1],den=dx*dx+dz*dz||1;
+    const t=Math.max(0,Math.min(1,((point[0]-a[0])*dx+(point[1]-a[1])*dz)/den));
+    best=Math.min(best,Math.hypot(point[0]-a[0]-dx*t,point[1]-a[1]-dz*t));
+  }
+  return best;
+}
+test('peripheral source headwaters, all river centerlines and delta mouths match revised one-piece coast',()=>{
+  const loop=candidateLoop();
+  assert.equal(loop.length,229);
+  assert.ok(loop.every(([x,z])=>x>=-1600&&x<=1550&&z>=-2050&&z<=260));
+  const cross=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
+  for(let i=0;i<loop.length;i++)for(let j=i+2;j<loop.length;j++){
+    if(i===0&&j===loop.length-1)continue;
+    const a=loop[i],b=loop[(i+1)%loop.length],c=loop[j],d=loop[(j+1)%loop.length];
+    assert.ok(!(cross(a,b,c)*cross(a,b,d)<0&&cross(c,d,a)*cross(c,d,b)<0),`coast ${i}/${j}`);
+  }
+  for(const [id,original,minCoast] of [
+    ['WEST_TRIBUTARY_A',[-1320,-910],100],
+    ['EAST_TRIBUTARY_A',[1270,-940],40]
+  ]){
+    const first=GRATITUDE_RIVERS.find(r=>r.id===id).points[0];
+    assert.deepEqual(first,original);
+    assert.equal(inCandidate(first,loop),true,id);
+    assert.ok(coastDistanceForTest(first,loop)>minCoast,id);
+  }
+  for(const river of [...GRATITUDE_RIVERS,GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE]){
+    for(let i=0;i<river.points.length-1;i++){
+      const a=river.points[i],b=river.points[i+1],len=Math.hypot(a[0]-b[0],a[1]-b[1]);
+      const samples=Math.ceil(len/2);
+      for(let j=0;j<samples;j++){
+        const t=(j+.5)/samples,p=[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t];
+        assert.ok(inCandidate(p,loop),`${river.id} point ${p}`);
+      }
+    }
+    const end=river.points.at(-1);
+    if(river.id.startsWith('DELTA_BRANCH_'))near(coastDistanceForTest(end,loop),0,1e-8);
+    else assert.equal(inCandidate(end,loop),true,`${river.id} last point`);
+  }
+  assert.equal(GRATITUDE_RIVERS.length,15);assert.equal(GRATITUDE_LAKES.length,3);
+});
+test('coast-constrained river banks and expanded grid remain bounded inspection geometry',()=>{
+  const loop=candidateLoop(),land=(x,z)=>inCandidate([x,z],loop);
+  assert.equal(land(-1320,-910),true);assert.equal(land(-1540,-910),false);
+  const clipped=clipCandidateRiverBankToLand(-1320,-910,-1540,-910,land);
+  assert.equal(land(...clipped),true);
+  assert.ok(clipped[0]>-1540&&clipped[0]<-1320);
+  assert.deepEqual(clipCandidateRiverBankToLand(0,-1000,2,-1000,land),[2,-1000]);
+  assert.throws(()=>clipCandidateRiverBankToLand(Infinity,0,0,0,land));
+  const app=readFileSync(resolve(root,candidate+'app.mjs'),'utf8');
+  assert.match(app,/buildAxis\(-1600,1550,-320,320,22,8\)/);
+  assert.match(app,/verifySourceDrainageOnCandidateLand\(\)/);
+  assert.match(app,/CANDIDATE_RIVERS_OUTSIDE_LAND/);
+  assert.match(app,/clipCandidateRiverBankToLand\(/);
+  assert.match(app,/Math\.ceil\(len\/6\)/);
 });

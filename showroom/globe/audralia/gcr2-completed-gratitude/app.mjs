@@ -67,10 +67,13 @@ function macroShoreZ(x){
     eastAdjustment*smooth(.88,1,edgeT);
   return reconcileGratitudeNorthCoastZ(x,provisional);
 }
-const NORTH_COAST=[];
-for(let x=northEdgeWest;x<northEdgeEast;x+=12)
-  NORTH_COAST.push([x,macroShoreZ(x)]);
-NORTH_COAST.push([northEdgeEast,macroShoreZ(northEdgeEast)]);
+// Stage 2: 8-metre core shoreline samples, retaining the outer 12-km coast.
+const northCoastXs=[];
+for(let x=northEdgeWest;x<northEdgeEast;x+=12)northCoastXs.push(x);
+northCoastXs.push(northEdgeEast);
+for(let i=0;i<=80;i++)northCoastXs.push(-0.32+i*0.008);
+const NORTH_COAST=[...new Set(northCoastXs.map(x=>x.toFixed(9)))]
+  .map(Number).sort((a,b)=>a-b).map(x=>[x,macroShoreZ(x)]);
 
 // Share the coast with the qualified hydrology source and test model.
 const CONTINENT_LOOP=[...NORTH_COAST,...GRATITUDE_CANDIDATE_CONTINENT_REMAINDER];
@@ -98,16 +101,62 @@ function coastDistance(x,z){let best=1e9;for(let i=0;i<CONTINENT_LOOP.length;i++
 function canonicalEcologyAt(x,z,edge){return sampleContinentalEcology(x,z,Math.max(0,edge));}
 
 function buildAxis(min,max,fineMin,fineMax,coarse=22,fine=9){const out=[min];let x=min;while(x<max-1e-6){let step=x>=fineMin&&x<fineMax?fine:coarse,next=Math.min(max,x+step);if(x<fineMin&&next>fineMin)next=fineMin;if(x<fineMax&&next>fineMax)next=fineMax;out.push(next);x=next;}return out;}
+// One nonuniform indexed mesh; fine-resolution nodes are introduced only in
+// the core-aligned axes, with unchanged continental sampling elsewhere.
+function locallyRefinedAxis(base,low,high,step){
+  const values=new Set(base.map(x=>x.toFixed(6)));
+  const n=Math.round((high-low)/step);
+  for(let i=0;i<=n;i++)values.add((low+i*step).toFixed(6));
+  return [...values].map(Number).sort((a,b)=>a-b);
+}
 function buildGratitudeMesh(){
-  const xs=buildAxis(-1600,1550,-320,320,22,8),zs=buildAxis(-2050,260,-420,120,22,8),cols=xs.length,rows=zs.length;
+  const xs=locallyRefinedAxis(buildAxis(-1600,1550,-320,320,22,8),-0.384,0.384,0.008),
+    zs=locallyRefinedAxis(buildAxis(-2050,260,-420,120,22,8),-128.36,-127.70,0.008),
+    cols=xs.length,rows=zs.length;
+  if(cols*rows>80000)throw new Error('GCR2_LOCAL_LOD_VERTEX_BUDGET_EXCEEDED');
   const vertices=[],indices=[],inside=new Uint8Array(cols*rows),at=(r,c)=>r*cols+c;
   for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
     const x=xs[c],z=zs[r],land=pointInPolygon(x,z);inside[at(r,c)]=land?1:0;
     const v=z-LOCAL_CENTER_Z,dir=tangentDirection(x,v),edge=land?coastDistance(x,z):0,eco=land?canonicalEcologyAt(x,z,edge):null,e=eco?eco.altitudeKm:0,col=eco?eco.color:PALETTE.low;
     vertices.push(...dir,e,...col);
   }
+  // Clip nearshore partial triangles instead of filling across water. Every
+  // replacement triangle belongs to the original single continent mesh.
+  function emitShoreIntersection(x,z){
+    const id=vertices.length/7,dir=tangentDirection(x,z-LOCAL_CENTER_Z);
+    const eco=canonicalEcologyAt(x,z,coastDistance(x,z));
+    vertices.push(...dir,eco.altitudeKm,...eco.color);
+    return id;
+  }
+  function clipLocalCoastTriangle(ids){
+    const tri=ids.map(id=>({id,x:xs[id%cols],z:zs[Math.floor(id/cols)],land:inside[id]===1}));
+    if(tri.every(p=>p.land)){indices.push(...ids);return;}
+    if(tri.every(p=>!p.land))return;
+    const clipped=[];
+    for(let i=0;i<3;i++){
+      const a=tri[i],b=tri[(i+1)%3];
+      if(a.land!==b.land){
+        let lo=0,hi=1;
+        for(let k=0;k<27;k++){
+          const t=(lo+hi)*.5;
+          if(pointInPolygon(mix(a.x,b.x,t),mix(a.z,b.z,t))===a.land)lo=t;
+          else hi=t;
+        }
+        const t=(lo+hi)*.5;
+        clipped.push(emitShoreIntersection(mix(a.x,b.x,t),mix(a.z,b.z,t)));
+      }
+      if(b.land)clipped.push(b.id);
+    }
+    for(let i=1;i<clipped.length-1;i++)indices.push(clipped[0],clipped[i],clipped[i+1]);
+  }
   for(let r=0;r<rows-1;r++)for(let c=0;c<cols-1;c++){
     const ids=[at(r,c),at(r,c+1),at(r+1,c+1),at(r+1,c)],count=ids.reduce((n,i)=>n+inside[i],0);
+    const localCell=xs[c+1]>=-0.40&&xs[c]<=0.40&&zs[r+1]>=-128.40&&zs[r]<=-127.68;
+    if(localCell){
+      clipLocalCoastTriangle([ids[0],ids[3],ids[1]]);
+      clipLocalCoastTriangle([ids[1],ids[3],ids[2]]);
+      continue;
+    }
     if(count===4)indices.push(ids[0],ids[3],ids[1],ids[1],ids[3],ids[2]);
     else if(count>=2){const x=(xs[c]+xs[c+1])*.5,z=(zs[r]+zs[r+1])*.5;if(pointInPolygon(x,z))indices.push(ids[0],ids[3],ids[1],ids[1],ids[3],ids[2]);}
   }
@@ -264,6 +313,7 @@ const gcr2Diagnostics=Object.freeze({
   oceanwardMeshZMinKm:-2050,
   localPlantsMagnifiedToContinentalScale:false,
   localWaterFlowAssumed:false,
+  localCoastLodCandidate:{sourceStepMeters:8,vertexBudget:80000,sharedIndexedMesh:true,deviceVerified:false},
   candidateCoastlineProvisional:true,
   contourVisualExaggerationOnly:true,
   sameCanvasAsGCR1Precedent:true,

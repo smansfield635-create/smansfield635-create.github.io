@@ -227,6 +227,29 @@ test('Stage 1: local coastline edges preserve position and tangent; far macro co
   }
 });
 
+
+test('Stage 2: 8-metre shoreline samples reconstruct protected local coast within 1.5 metres',()=>{
+  const knots=Array.from({length:81},(_,i)=>[-0.32+i*0.008,0]);
+  for(const v of knots)v[1]=reconcileGratitudeNorthCoastZ(v[0],-81.84);
+  let worst=0;
+  for(let m=-256;m<=256;m+=0.5){
+    const x=m/1000,i=Math.min(79,Math.max(0,Math.floor((x+0.32)/0.008))),a=knots[i],b=knots[i+1];
+    const approx=a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0]);
+    worst=Math.max(worst,Math.abs(approx-regionalMetersToContinentalKm(m,getHEarthCanonicalShorelineZ(m)).zKm)*1000);
+  }
+  assert.ok(worst<1.5,`Shore deviation metres: ${worst}`);
+});
+test('Stage 2: same indexed continent is locally refined and nearshore cells clipped',()=>{
+  const app=readFileSync(resolve(root,candidate+'app.mjs'),'utf8');
+  assert.match(app,/locallyRefinedAxis\(buildAxis\(-1600,1550,-320,320,22,8\),-0\.384,0\.384,0\.008\)/);
+  assert.match(app,/locallyRefinedAxis\(buildAxis\(-2050,260,-420,120,22,8\),-128\.36,-127\.70,0\.008\)/);
+  assert.match(app,/GCR2_LOCAL_LOD_VERTEX_BUDGET_EXCEEDED/);
+  assert.match(app,/clipLocalCoastTriangle\(\[ids\[0\],ids\[3\],ids\[1\]\]\)/);
+  assert.match(app,/clipLocalCoastTriangle\(\[ids\[1\],ids\[3\],ids\[2\]\]\)/);
+  assert.equal((app.match(/function buildGratitudeMesh\(/g)||[]).length,1);
+  assert.equal((app.match(/canvas\.getContext\('webgl2'/g)||[]).length,1);
+});
+
 /* Independent polygon calculations use rev5's shoreline resolver and the
  * candidate shoreline controls; they do not import renderer-only predicates. */
 const testSmooth=(a,b,x)=>{const t=Math.max(0,Math.min(1,(x-a)/(b-a)));return t*t*(3-2*t);};
@@ -239,8 +262,10 @@ function candidateLoop(){
     const provisional=s+(-245-coast(-1130))*(1-testSmooth(0,.12,edgeT))+(-176-coast(1120))*testSmooth(.88,1,edgeT);
     return reconcileGratitudeNorthCoastZ(x,provisional);
   };
-  const north=[];for(let x=-1130;x<1120;x+=12)north.push([x,macro(x)]);
-  north.push([1120,macro(1120)]);
+  const xs=[];for(let x=-1130;x<1120;x+=12)xs.push(x);
+  xs.push(1120);
+  for(let i=0;i<=80;i++)xs.push(-0.32+i*0.008);
+  const north=[...new Set(xs.map(x=>x.toFixed(9)))].map(Number).sort((a,b)=>a-b).map(x=>[x,macro(x)]);
   return [...north,...GRATITUDE_CANDIDATE_CONTINENT_REMAINDER];
 }
 function inCandidate(point,loop){
@@ -262,7 +287,7 @@ function coastDistanceForTest(point,loop){
 }
 test('peripheral source headwaters, all river centerlines and delta mouths match revised one-piece coast',()=>{
   const loop=candidateLoop();
-  assert.equal(loop.length,229);
+  assert.equal(loop.length,310);
   assert.ok(loop.every(([x,z])=>x>=-1600&&x<=1550&&z>=-2050&&z<=260));
   const cross=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);
   for(let i=0;i<loop.length;i++)for(let j=i+2;j<loop.length;j++){

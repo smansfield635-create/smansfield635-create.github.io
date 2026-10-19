@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-coastal-2818-release-1497b13f-corrected",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6548,
+  "requestBranch": "ai-dispatch-request-h-earth-coastal-2818-release-1497b13f",
+  "requestCommit": "e61dee6a57e74af773454fb6a81793202ff4c2f0",
+  "currentMainSha": "1497b13fc6799567a260de83a12b1a4f7f57294d",
+  "bridgeRunId": "39186178924",
+  "error": "Stale dispatch request: parent 88edb5a1a479bad908ed3aa61702d33ee23e82da != current main 1497b13fc6799567a260de83a12b1a4f7f57294d",
+  "failedAt": "2026-10-19T01:37:15.634Z"
+}

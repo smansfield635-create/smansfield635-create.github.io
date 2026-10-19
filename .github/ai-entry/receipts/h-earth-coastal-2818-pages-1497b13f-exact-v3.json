@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-coastal-2818-pages-1497b13f-exact-v3",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6549,
+  "requestBranch": "ai-dispatch-request-h-earth-coastal-2818-release-final-1497b13f",
+  "requestCommit": "505a4a5bccff672a05b9f4b1737eaddfe21deac8",
+  "requestCommitParent": "1497b13fc6799567a260de83a12b1a4f7f57294d",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "1497b13fc6799567a260de83a12b1a4f7f57294d",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "1497b13fc6799567a260de83a12b1a4f7f57294d",
+    "surface_id": "h-earth-simple"
+  },
+  "bridgeRunId": "39186293429",
+  "dispatchedRunId": 39186304093,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39186304093",
+  "dispatchedRunHeadSha": "1497b13fc6799567a260de83a12b1a4f7f57294d",
+  "dispatchedAt": "2026-10-19T01:38:49.554Z",
+  "resolvedAt": "2026-10-19T01:38:53.100Z"
+}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-19T07:47:53Z",
+  "generatedAt": "2026-10-19T08:46:17Z",
   "window": {
-    "start": "2026-07-21T07:47:53Z",
-    "end": "2026-10-19T07:47:53Z"
+    "start": "2026-07-21T08:46:17Z",
+    "end": "2026-10-19T08:46:17Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4898,
-    "visits": 1337,
+    "pageLoads": 16518,
+    "visits": 1277,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4898,
-        "visits": 1337
+        "pageLoads": 16518,
+        "visits": 1277
       }
     },
     "byPath": {
@@ -39,7 +39,7 @@
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 80,
+        "pageLoads": 70,
         "visits": 10
       },
       "/frontier/energy/battery-coherence-study/": {
@@ -47,44 +47,44 @@
         "visits": 0
       },
       "/products/archcoin/": {
-        "pageLoads": 40,
+        "pageLoads": 210,
         "visits": 0
       },
       "/laws/battery-heldout-study/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/": {
-        "pageLoads": 300,
-        "visits": 90
-      },
-      "/showroom/": {
+      "/index.html": {
         "pageLoads": 110,
-        "visits": 10
+        "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 159,
+        "pageLoads": 119,
         "visits": 10
       },
-      "/index.html": {
-        "pageLoads": 140,
-        "visits": 0
+      "/showroom/": {
+        "pageLoads": 70,
+        "visits": 10
       },
       "/": {
-        "pageLoads": 1037,
-        "visits": 747
-      },
-      "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 30,
-        "visits": 0
+        "pageLoads": 967,
+        "visits": 707
       },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/laws/": {
+        "pageLoads": 260,
+        "visits": 90
+      },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 230,
+        "pageLoads": 210,
         "visits": 20
+      },
+      "/showroom/globe/h-earth/diagnostic/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
@@ -115,15 +115,15 @@
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 160,
+        "pageLoads": 10100,
         "visits": 10
       },
       "/governance/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 10
       },
       "/evidence/readiness/": {
@@ -135,7 +135,7 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 90,
+        "pageLoads": 60,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -143,7 +143,7 @@
         "visits": 10
       },
       "/developer/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 20
       },
       "/coherence-diagnostic/": {
@@ -174,14 +174,6 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/inspection/compass/brain-v10-g1-1/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "/inspection/compass/brain-v10-continuous/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -198,26 +190,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/interfaces.html": {
-        "pageLoads": 40,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/laws/categories/reality/measure.html": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/laws/categories/flow/handoffs/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
@@ -226,40 +198,28 @@
         "pageLoads": 10,
         "visits": 10
       },
+      "/laws/categories/reality/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 70,
+        "pageLoads": 140,
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
+        "pageLoads": 1050,
         "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/about/": {
-        "pageLoads": 42,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 10,
+        "pageLoads": 32,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -271,15 +231,15 @@
         "visits": 0
       },
       "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
+        "pageLoads": 1010,
         "visits": 0
       },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/door/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/story/timeline/": {
@@ -349,16 +309,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3561,
+        "pageLoads": 15241,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 783,
-        "visits": 783
+        "pageLoads": 743,
+        "visits": 743
       },
       "(none)": {
-        "pageLoads": 544,
-        "visits": 544
+        "pageLoads": 524,
+        "visits": 524
       },
       "raw.githack.com": {
         "pageLoads": 10,

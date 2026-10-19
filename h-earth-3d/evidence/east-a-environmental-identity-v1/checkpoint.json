@@ -57,13 +57,13 @@
   },
   "currentProof": {
     "sourceReadback": "EXACT_BLOBS_CONFIRMED",
-    "glslCompilation": "ISOLATED_EXACT_STAGE_ON_MESA_ES3_PASS_NOT_FULL_WEBGL2_PROGRAM",
-    "nodeStageATest": "NOT_EXECUTED_EXACT_REPO_TEST",
+    "glslCompilation": "PASS_FULL_RUN8E_VERTEX_FRAGMENT_GL_ES_3_2_MESA_LINK_BASELINE_AND_STAGE_A2",
+    "nodeStageATest": "PASS_NATIVE_NODE22_4_OF_4_RECONSTRUCTED_EXACT_BLOB_SITE",
     "independentWest": "NOT_EXECUTED",
-    "browserGpu": "NOT_EXECUTED",
+    "browserGpu": "LOCAL_BROWSER_NAVIGATION_BLOCKED_BY_ADMINISTRATOR_NOT_QUALIFIED",
     "phoneMatchedViewport": "NOT_EXECUTED",
     "ownerDisposition": null,
-    "provisionalReadability": "UNACCEPTED_STILL_REQUIRES_MATCHED_REAL_WORLD_VIEWS",
+    "provisionalReadability": "CONTROLLED_FULL_SHADER_RGBA_DIFFERENCES_MEASURED_REAL_SCENE_ACCEPTANCE_NOT_PROVEN",
     "isolatedOpenGLES3": {
       "status": "PASS_ISOLATED_STAGE_ONLY",
       "renderer": "Mesa llvmpipe OpenGL ES 3.2",
@@ -137,8 +137,159 @@
         "Input terrain values were representative synthetic values, not sampled live camera positions",
         "Not phone perceptual acceptance"
       ]
+    },
+    "fullProgramES3": {
+      "status": "PASS_FULL_ASSEMBLED_TERRAIN_PROGRAM_MESA_OPENGL_ES3",
+      "sourceProvenance": "Published B2 GitHub Pages run39322593263 artifact12220466927 extracted; exact B2 terrain renderer blob 0de80a76, canonical terrain 71a95053 and successor surface a510fa1d validated by Git hashing. A2 renderer reconstructed solely from saved bounded diff and verified exact Git blob 6703a05a. Exact test file verified blob 9ad43cb7.",
+      "runner": "Node.js v22.16.0 native node --test plus Mesa 25.0.7 llvmpipe OpenGL ES 3.2 surfaceless EGL",
+      "exactTest": "h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs",
+      "nodeTests": {
+        "passed": 4,
+        "total": 4,
+        "failed": 0,
+        "method": "NATIVE_NODE22_EXACT_SOURCE_BYTES_FROM_VERIFIED_PAGES_ARTIFACT_PLUS_REGISTERED_CANDIDATE_DIFF"
+      },
+      "shaderPrograms": {
+        "baselineB2": {
+          "vertexCompiled": true,
+          "fragmentCompiled": true,
+          "linked": true,
+          "glError": "0x0",
+          "fragmentSha256": "7ec330dbec0362e620cafecfa5be24fe9e772e24f2869227a348c776583bc0af"
+        },
+        "stageA2": {
+          "vertexCompiled": true,
+          "fragmentCompiled": true,
+          "linked": true,
+          "glError": "0x0",
+          "fragmentSha256": "cec5265338c0cd40d3c03a7346d1aa0137bdc2163af1b66671a49f87f4bcd273"
+        },
+        "interpolation": "Full Run8E VS/FS source with unchanged published rendered-beach and foothill GLSL dependencies inserted into the authentic FS template."
+      },
+      "controlledFullShaderSamples": [
+        {
+          "label": "beach_transition",
+          "b2": [
+            109,
+            111,
+            89,
+            255
+          ],
+          "a2": [
+            111,
+            111,
+            90,
+            255
+          ],
+          "rgbEuclideanDelta": 2.236
+        },
+        {
+          "label": "compact_lowland",
+          "b2": [
+            125,
+            109,
+            70,
+            255
+          ],
+          "a2": [
+            118,
+            105,
+            62,
+            255
+          ],
+          "rgbEuclideanDelta": 11.358
+        },
+        {
+          "label": "fertile_meadow",
+          "b2": [
+            112,
+            113,
+            91,
+            255
+          ],
+          "a2": [
+            114,
+            101,
+            79,
+            255
+          ],
+          "rgbEuclideanDelta": 17.088
+        },
+        {
+          "label": "sheltered_basin",
+          "b2": [
+            112,
+            113,
+            91,
+            255
+          ],
+          "a2": [
+            100,
+            98,
+            76,
+            255
+          ],
+          "rgbEuclideanDelta": 24.372
+        },
+        {
+          "label": "dry_foothill",
+          "b2": [
+            119,
+            115,
+            94,
+            255
+          ],
+          "a2": [
+            126,
+            114,
+            86,
+            255
+          ],
+          "rgbEuclideanDelta": 10.677
+        },
+        {
+          "label": "eroded_ridge",
+          "b2": [
+            120,
+            116,
+            95,
+            255
+          ],
+          "a2": [
+            134,
+            117,
+            88,
+            255
+          ],
+          "rgbEuclideanDelta": 15.684
+        },
+        {
+          "label": "four_tree_grove",
+          "b2": [
+            112,
+            113,
+            92,
+            255
+          ],
+          "a2": [
+            112,
+            113,
+            92,
+            255
+          ],
+          "rgbEuclideanDelta": 0
+        }
+      ],
+      "caveats": [
+        "Not whole site or real indexed world mesh; controlled synthetic triangles and lighting/material input values",
+        "No real approved soil texture or physical camera pose was sampled in pixel runs",
+        "Chromium navigation to file:// and localhost was blocked by administrator; do not equate to shader failure",
+        "No real phone GPU, loading, walkability or visually significant environmental outcome shown",
+        "No owner KEEP | ONE_REPAIR | REJECT; Stage B canonical relief not constructed"
+      ],
+      "authorityEffect": "NONE_EVIDENCE_ONLY"
     }
   },
-  "next": "Qualify latest exact Stage A2 shader candidate in full first-party WebGL2 actual H-Earth renderer and execute native Node targeted test on exact head, then independent W and matched mobile views. Stage B stronger canonical East A landforms remain unconstructed; do not publish Stage A alone.",
+  "next": "Exact native four-case Node test and complete assembled Run8E GLSL under Mesa ES3 PASS on verified candidate bytes. Next gate is first-party actual scene render using real site/world textures/known camera positions and Android owner KEEP|ONE_REPAIR|REJECT. Only then proceed to root-safe Stage B stronger East A G_world terrain; no merge or publish until true visual acceptance.",
   "authorityEffect": "NONE_CHECKPOINT_EVIDENCE_ONLY"
 }

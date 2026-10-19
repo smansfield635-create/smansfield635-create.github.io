@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-19T13:36:51Z",
+  "generatedAt": "2026-10-19T14:33:16Z",
   "window": {
-    "start": "2026-07-21T13:36:51Z",
-    "end": "2026-10-19T13:36:51Z"
+    "start": "2026-07-21T14:33:16Z",
+    "end": "2026-10-19T14:33:16Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4873,
-    "visits": 1315,
+    "pageLoads": 4808,
+    "visits": 1257,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4873,
-        "visits": 1315
+        "pageLoads": 4808,
+        "visits": 1257
       }
     },
     "byPath": {
@@ -59,20 +59,20 @@
         "visits": 90
       },
       "/showroom/": {
-        "pageLoads": 110,
+        "pageLoads": 100,
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 146,
-        "visits": 0
+        "pageLoads": 159,
+        "visits": 10
       },
       "/index.html": {
         "pageLoads": 140,
         "visits": 0
       },
       "/": {
-        "pageLoads": 1035,
-        "visits": 745
+        "pageLoads": 1027,
+        "visits": 737
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
@@ -158,22 +158,6 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/compass-composite/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
@@ -242,6 +226,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -255,10 +243,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -327,8 +311,8 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 140,
-        "visits": 110
+        "pageLoads": 150,
+        "visits": 120
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -349,16 +333,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3558,
+        "pageLoads": 3551,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 781,
-        "visits": 781
+        "pageLoads": 773,
+        "visits": 773
       },
       "(none)": {
-        "pageLoads": 524,
-        "visits": 524
+        "pageLoads": 474,
+        "visits": 474
       },
       "raw.githack.com": {
         "pageLoads": 10,

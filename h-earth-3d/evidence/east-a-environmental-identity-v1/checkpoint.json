@@ -19,15 +19,18 @@
   },
   "candidate": {
     "branch": "h-earth-east-a-environmental-identity-gen2823",
-    "shaderCommit": "eb80c13bc6085ca379fbcd9777b70755778a9159",
-    "shaderBlob": "19d63cb2ff2dc6884eb21c195687355dc4efddb8",
+    "shaderCommit": "133961c0655cea4c7cd514550326005b2b392a83",
+    "shaderBlob": "6703a05af4461c67ddfd64bfd91ab6422629af12",
     "focusedTestCommit": "894ebccbe178836b19d65f1d5c85f7ae249d735a",
     "mutationStage": "A_MATERIAL_RENDERER_ONLY",
     "newTerrainGeometry": false,
     "newVegetationRoots": false,
     "newTreeInstances": false,
     "coastOrHydrologyChange": false,
-    "ownedRendererMutation": true
+    "ownedRendererMutation": true,
+    "latestStageRevision": "A2_MATERIAL_CONTRAST",
+    "previousShaderCommit": "eb80c13bc6085ca379fbcd9777b70755778a9159",
+    "previousShaderBlob": "19d63cb2ff2dc6884eb21c195687355dc4efddb8"
   },
   "materialBehavior": {
     "source": "actual Run8E terrain shader",
@@ -54,14 +57,88 @@
   },
   "currentProof": {
     "sourceReadback": "EXACT_BLOBS_CONFIRMED",
-    "glslCompilation": "NOT_EXECUTED",
-    "nodeStageATest": "NOT_EXECUTED",
+    "glslCompilation": "ISOLATED_EXACT_STAGE_ON_MESA_ES3_PASS_NOT_FULL_WEBGL2_PROGRAM",
+    "nodeStageATest": "NOT_EXECUTED_EXACT_REPO_TEST",
     "independentWest": "NOT_EXECUTED",
     "browserGpu": "NOT_EXECUTED",
     "phoneMatchedViewport": "NOT_EXECUTED",
     "ownerDisposition": null,
-    "provisionalReadability": "NOT_CLAIMED"
+    "provisionalReadability": "UNACCEPTED_STILL_REQUIRES_MATCHED_REAL_WORLD_VIEWS",
+    "isolatedOpenGLES3": {
+      "status": "PASS_ISOLATED_STAGE_ONLY",
+      "renderer": "Mesa llvmpipe OpenGL ES 3.2",
+      "vertexCompile": true,
+      "fragmentCompile": true,
+      "link": true,
+      "errorCount": 0,
+      "matchedSourceFragmentFnv1a32": "9f203b2a",
+      "sampleInputs": 7,
+      "results": [
+        {
+          "name": "shore",
+          "rgb": [
+            69,
+            76,
+            46
+          ]
+        },
+        {
+          "name": "coastal",
+          "rgb": [
+            46,
+            66,
+            33
+          ]
+        },
+        {
+          "name": "lowland",
+          "rgb": [
+            81,
+            66,
+            39
+          ]
+        },
+        {
+          "name": "sheltered",
+          "rgb": [
+            55,
+            54,
+            31
+          ]
+        },
+        {
+          "name": "foothill",
+          "rgb": [
+            85,
+            76,
+            44
+          ]
+        },
+        {
+          "name": "ridge",
+          "rgb": [
+            88,
+            88,
+            77
+          ]
+        },
+        {
+          "name": "protected-grove",
+          "rgb": [
+            69,
+            76,
+            46
+          ]
+        }
+      ],
+      "limitations": [
+        "Not actual full H-Earth WebGL2 program link",
+        "Not camera-based world textures or images",
+        "Input terrain values were representative synthetic values, not sampled live camera positions",
+        "Not phone perceptual acceptance"
+      ]
+    }
   },
-  "next": "Run focused native Stage A Node verification and true compiled WebGL2 shader/browser pixel-source comparison for spatially known viewpoints; if visual differentiation is insufficient, one in-scope shader revision before high-risk G_world East A bench work. Retain candidate as draft; no publication.",
+  "next": "Qualify latest exact Stage A2 shader candidate in full first-party WebGL2 actual H-Earth renderer and execute native Node targeted test on exact head, then independent W and matched mobile views. Stage B stronger canonical East A landforms remain unconstructed; do not publish Stage A alone.",
   "authorityEffect": "NONE_CHECKPOINT_EVIDENCE_ONLY"
 }

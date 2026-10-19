@@ -45,7 +45,7 @@
     "intended8mBoundary": "ZERO_DIRECT_DELTA",
     "outsideSourceDomain": "ZERO_DIRECT_DELTA",
     "directUpliftMaxMeters": 6.289584631437112,
-    "maximumSampledCanonicalSourceNotchGrade": 0.16952032645225112,
+    "maximumSampledTerrainNotchGrade": 0.16952032645225112,
     "fullNativeB2Gen314Tests": "NOT_EXECUTED",
     "exactBrowserGPUDevice": "NOT_EXECUTED",
     "visualAcceptance": "NOT_REVIEWED"

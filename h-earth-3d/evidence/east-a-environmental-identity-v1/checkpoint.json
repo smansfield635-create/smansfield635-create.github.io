@@ -21,7 +21,7 @@
     "branch": "h-earth-east-a-environmental-identity-gen2823",
     "shaderCommit": "133961c0655cea4c7cd514550326005b2b392a83",
     "shaderBlob": "6703a05af4461c67ddfd64bfd91ab6422629af12",
-    "focusedTestCommit": "894ebccbe178836b19d65f1d5c85f7ae249d735a",
+    "focusedTestCommit": "2b5799674acb3847248c5231aba0a20717054fee",
     "mutationStage": "A_MATERIAL_RENDERER_ONLY",
     "newTerrainGeometry": false,
     "newVegetationRoots": false,
@@ -30,7 +30,8 @@
     "ownedRendererMutation": true,
     "latestStageRevision": "A2_MATERIAL_CONTRAST",
     "previousShaderCommit": "eb80c13bc6085ca379fbcd9777b70755778a9159",
-    "previousShaderBlob": "19d63cb2ff2dc6884eb21c195687355dc4efddb8"
+    "previousShaderBlob": "19d63cb2ff2dc6884eb21c195687355dc4efddb8",
+    "focusedTestBlob": "391053e4b62e384fb81fd97745cd0880786a7b0e"
   },
   "materialBehavior": {
     "source": "actual Run8E terrain shader",
@@ -58,7 +59,7 @@
   "currentProof": {
     "sourceReadback": "EXACT_BLOBS_CONFIRMED",
     "glslCompilation": "PASS_FULL_RUN8E_VERTEX_FRAGMENT_GL_ES_3_2_MESA_LINK_BASELINE_AND_STAGE_A2",
-    "nodeStageATest": "PASS_NATIVE_NODE22_4_OF_4_RECONSTRUCTED_EXACT_BLOB_SITE",
+    "nodeStageATest": "PASS_NATIVE_NODE22_5_OF_5_WITH_PRECOMPUTED_B2_DISCREPANCY_WITNESS",
     "independentWest": "NOT_EXECUTED",
     "browserGpu": "LOCAL_BROWSER_NAVIGATION_BLOCKED_BY_ADMINISTRATOR_NOT_QUALIFIED",
     "phoneMatchedViewport": "NOT_EXECUTED",
@@ -288,8 +289,97 @@
         "No owner KEEP | ONE_REPAIR | REJECT; Stage B canonical relief not constructed"
       ],
       "authorityEffect": "NONE_EVIDENCE_ONLY"
+    },
+    "actualIndexedMeshES3": {
+      "status": "PASS_CONTROLLED_REAL_INDEXED_TERRAIN_MESH_B2_VS_A2_NOT_PHONE_ACCEPTANCE",
+      "sourceAsset": "Published Gen2666 compressed world from official B2 Pages artifact, 20,736 original near-to-mid terrain triangles, 10,573 vertices",
+      "comparison": "Same indexed triangles, B2 and A2 full Run8E VS/FS shaders, published 256x256 approved woodland-clearing-soil texture enabled, equal offscreen orthographic views, Mesa OpenGL ES 3.2 llvmpipe, 640x480",
+      "caveats": [
+        "Not H-Earth interactive phone camera or full application",
+        "Clearing shadow intentionally forced all-visible; vegetation, water and sky roles not composed",
+        "Contact-distance approximation and top-down camera do not establish coastal/user visual acceptance",
+        "No product shader-source mutations as part of comparison"
+      ],
+      "views": [
+        {
+          "id": "full",
+          "center": [
+            0,
+            -250
+          ],
+          "meanRgbDistance": 45.04,
+          "p95RgbDistance": 91.54
+        },
+        {
+          "id": "eastA",
+          "center": [
+            190,
+            -322
+          ],
+          "meanRgbDistance": 59.22,
+          "p95RgbDistance": 88.97
+        },
+        {
+          "id": "woodland",
+          "center": [
+            -140,
+            -214
+          ],
+          "meanRgbDistance": 48.38,
+          "p95RgbDistance": 90.61,
+          "exactProtectedGroveCenterRgbDelta": 0
+        },
+        {
+          "id": "coastal",
+          "center": [
+            0,
+            -116
+          ],
+          "meanRgbDistance": 24.39,
+          "p95RgbDistance": 85.81,
+          "centerCoastRgbDelta": 1.414
+        }
+      ],
+      "visualDisposition": "NOTICEABLE_COLOR_PATCHES_BUT_NATURALISM_AND_PHONE_SIGNIFICANCE_NOT_ACCEPTED"
+    },
+    "canonicalPrecomputedTerrainMismatch": {
+      "status": "CONFIRMED_ENGINEERING_DISCREPANCY_NO_FIXED_RENDER_BINARY",
+      "publishedSourceCommit": "c8c5f68b23ca6f71ae07240dfd29ec1b672109c6",
+      "worldPackageGenerator": "H_EARTH_GEN2666_PRECOMPUTED_BASE_WORLD_MANIFEST_v1",
+      "packageCompressedSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "packagesAreImmutable": "HARD_CODED_IN_LIVE_RENDER_PACKAGE_CANONICAL_HYDRATOR",
+      "sample": {
+        "worldX": 208.00238513946533,
+        "worldZ": -344.0039446949959,
+        "precomputedMeshY": 4.687925815582275,
+        "originalPreB2CanonicalY": 4.159277560551357,
+        "currentPublishedB2CanonicalY": 10.448828774270622,
+        "b2DirectUplift": 6.289551213719265,
+        "publishedSourceMinusMeshHeightMeters": 5.760902958688346
+      },
+      "rendererRefinementFormula": "surface.height + (t.elevation - surface.field) * smoothFade",
+      "interpretation": "At package grid vertices, field minus interpolation of the same field tends to zero, so the local high-pass refinement does not restore the B2 bulk uplift on the published old mesh. Patch constructed once near initial camera, not a full-world geometry refresh.",
+      "grassRootManifestCount": 1457471,
+      "grassRawSha256": "f6e7d847d1a1a2db09eed7412acb75f4eb20df25c16ea411443fecbeb11babf8",
+      "grassRootCensusInsideB2Envelope": 0,
+      "grassRootCensusInside24mBoundingHalo": 0,
+      "priorStageBMathCandidate": {
+        "additionalMaxUpliftMeters": 11.14924,
+        "notchMaxGrade": 0.16952032645225112,
+        "flankMaxGrade": 3.47263,
+        "disposition": "NOT_ADOPTED_STEEP_FLANK_AND_REPRESENTATION_STALENESS"
+      },
+      "requiredReconciliation": "ONE_CANONICAL_G_WORLD_TO_PRECOMPUTED_LIVE_MESH_GENERATION_OR_EXACT_SOURCE_DERIVED_REBAKE_WITH_REAL_VERTICES_AND_LOD_SEAMS",
+      "currentGen2823AllowedPathsDoNotInclude": [
+        "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz",
+        "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs"
+      ],
+      "authority": "REQUEST_EXACT_SCOPE_SUCCESSOR_OR_AMENDMENT_BEFORE_MUTATING_LISTED_PATHS",
+      "productMutationPerformed": false
     }
   },
-  "next": "Exact native four-case Node test and complete assembled Run8E GLSL under Mesa ES3 PASS on verified candidate bytes. Next gate is first-party actual scene render using real site/world textures/known camera positions and Android owner KEEP|ONE_REPAIR|REJECT. Only then proceed to root-safe Stage B stronger East A G_world terrain; no merge or publish until true visual acceptance.",
+  "next": "Resolve scope-valid registered successor/amendment for Gen2666 source-derived live indexed-mesh reconciliation; existing Gen2823 seven paths do not authorize binary/manifest/hydrator/generator changes. Rebuild exact B2-preserving mesh from canonical source while preserving unchanged trees/grass/coast/cavern and prove source-to-GPU vertex equality and no new startup delay. Then design safe Stage B relief, actual phone-view candidate review, owner KEEP|ONE_REPAIR|REJECT and separately authorized release; do not add another micro-uplift to a stale mesh.",
   "authorityEffect": "NONE_CHECKPOINT_EVIDENCE_ONLY"
 }

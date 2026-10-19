@@ -22,15 +22,15 @@ function fakeGL(failUpload=false){
  },{get:(target,key)=>key in target?target[key]:()=>{}});
  return {gl,uploads,draws,deletions,digest};
 }
-const gpuSha='d8df836eabd37c33d4a7b9542f56e4d1bb63d0d41fa7303be58f91fe5db1d3aa';
+const gpuSha=manifest.packedSha256;
 test('authenticated packed path equals legacy tiles, GPU bytes, atlas and rounded control identities',async()=>{
  let yields=0,last=0,maxDelta=0;
- const fast=await loadPrecomputedGrass({packed:true,fetchImpl,yieldControl:async()=>{yields++;},onProgress:p=>{maxDelta=Math.max(maxDelta,p.loadedContacts-last);last=p.loadedContacts;}});
+ const fast=await loadPrecomputedGrass({packed:true,fetchImpl,yieldControl:async()=>{yields++;},onProgress:p=>{if(p.phase==='SINGLE_POPULATION_DECODING'){maxDelta=Math.max(maxDelta,p.loadedContacts-last);last=p.loadedContacts;}}});
  const plan=takePrecomputedGrassPlan(fast);assert.ok(plan);assert.equal(takePrecomputedGrassPlan(fast),undefined);
- assert.equal(fast.tiles,undefined);assert.ok(yields>=203);assert.equal(last,1250134);assert.ok(maxDelta<=16*1600);
+ assert.equal(fast.tiles,undefined);assert.ok(yields>=203);assert.equal(last,manifest.rootCount);assert.ok(maxDelta<=16*1600);
  const legacy=await loadPrecomputedGrass({fetchImpl});const tiles=planImmutableTiles(legacy),controls=[],digest=createHash('sha256');
  assert.deepEqual(fast.receipt,legacy.receipt);assert.deepEqual(fast.habitat,legacy.habitat);
- assert.equal(fast.habitat.pixels.buffer.byteLength,384*192,'atlas does not retain raw population buffer');
+ assert.equal(fast.habitat.pixels.buffer.byteLength,manifest.habitat.width*manifest.habitat.height,'atlas does not retain raw population buffer');
  assert.equal(plan.tiles.length,tiles.length);
  tiles.forEach((tile,i)=>{
   const actual=plan.tiles[i];for(const k of ['id','minX','minZ','count','first'])assert.equal(actual[k],tile[k]);
@@ -44,13 +44,13 @@ test('authenticated packed path equals legacy tiles, GPU bytes, atlas and rounde
 test('packed owner uploads exact bytes and offsets once; return movement and cleanup remain stable',async()=>{
  const presentation=await loadPrecomputedGrass({packed:true,fetchImpl}),f=fakeGL();
  const owner=await createSingleOwnerVegetation(f.gl,presentation,{environment,planetRadius:6200000});
- assert.equal(f.digest.digest('hex'),gpuSha);assert.equal(f.uploads[0].allocate,1250134*16);
- let start=0;for(const u of f.uploads.slice(1)){assert.equal(u.start,start);start+=u.bytes;}assert.equal(start,1250134*16);
- const receipt=owner.getReceipt();assert.equal(receipt.installedRootCount,1250134);assert.ok(receipt.controlRoots.length);
+ assert.equal(f.digest.digest('hex'),gpuSha);assert.equal(f.uploads[0].allocate,manifest.rootCount*16);
+ let start=0;for(const u of f.uploads.slice(1)){assert.equal(u.start,start);start+=u.bytes;}assert.equal(start,manifest.rootCount*16);
+ const receipt=owner.getReceipt();assert.equal(receipt.installedRootCount,manifest.rootCount);assert.ok(receipt.controlRoots.length);
  const uploadCount=f.uploads.length,frames=[];
  for(const [x,z] of [[-139,-195],[-110,-195],[0,0],[-110,-195],[-139,-195]]){
   const first=f.draws.length;const result=owner.draw({camera:{position:{x,y:4,z},viewProjectionMatrix:new Array(16).fill(0)}});
-  assert.equal(result.perFrameUploadBytes,0);frames.push(f.draws.slice(first));assert.equal(frames.at(-1)[0].count,1250134);
+  assert.equal(result.perFrameUploadBytes,0);frames.push(f.draws.slice(first));assert.equal(frames.at(-1)[0].count,manifest.rootCount);
  }
  assert.deepEqual(frames[0],frames[4]);assert.deepEqual(frames[1],frames[3]);assert.equal(f.uploads.length,uploadCount);
  assert.equal(takePrecomputedGrassPlan(presentation),undefined,'owner consumes private plan');

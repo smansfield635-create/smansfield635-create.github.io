@@ -1,13 +1,13 @@
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
 /** Lossless, hash-bound output of the accepted ground-admission compiler. */
-const MANIFEST_SHA256='a080b661751e2fe50d0f4fa5b2b53bd1074f7099a25c7276871c018b4c42d1b1';
+const MANIFEST_SHA256='2a716b27f385df4dd7a605035c899f83b2ec729e16a04accf1bffa3ae8d16600';
 const fail=reason=>{throw Error('PRECOMPUTED_GRASS_'+reason);};
 const sha=async bytes=>Array.from(new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
 export async function decodePrecomputedGrass(manifest,bytes,{yieldControl=async()=>{},onProgress=()=>{}}={}){
- if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==1250134||manifest.stride!==52||manifest.receipt?.contactCount!==1250134)fail('IDENTITY_MISMATCH');
+ if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==1457471||manifest.stride!==52||manifest.receipt?.contactCount!==1457471)fail('IDENTITY_MISMATCH');
  if(bytes.byteLength!==manifest.rawBytes||await sha(bytes)!==manifest.rawSha256)fail('DATA_INTEGRITY');
  const h=manifest.habitat;
- if(h?.width!==384||h.height!==192||h.size!==192||bytes.byteLength!==manifest.rootCount*52+h.width*h.height)fail('LAYOUT_MISMATCH');
+ if(h?.width!==576||h.height!==192||h.size!==192||bytes.byteLength!==manifest.rootCount*52+h.width*h.height)fail('LAYOUT_MISMATCH');
  const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),tiles=[];let index=0;
  for(const tile of manifest.tiles){
   if(!Number.isInteger(tile.count)||tile.count<1||tile.count>1600||index+tile.count>manifest.rootCount)fail('TILE_COUNT');
@@ -30,10 +30,10 @@ export function takePrecomputedGrassPlan(presentation){
  const plan=packedPlans.get(presentation);packedPlans.delete(presentation);return plan;
 }
 async function decodePackedGrass(manifest,bytes,{yieldControl=async()=>{},onProgress=()=>{}}={}){
- if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==1250134||manifest.stride!==52||manifest.receipt?.contactCount!==1250134)fail('IDENTITY_MISMATCH');
+ if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==1457471||manifest.stride!==52||manifest.receipt?.contactCount!==1457471)fail('IDENTITY_MISMATCH');
  if(bytes.byteLength!==manifest.rawBytes||await sha(bytes)!==manifest.rawSha256)fail('DATA_INTEGRITY');
  const h=manifest.habitat;
- if(h?.width!==384||h.height!==192||h.size!==192||bytes.byteLength!==manifest.rootCount*52+h.width*h.height)fail('LAYOUT_MISMATCH');
+ if(h?.width!==576||h.height!==192||h.size!==192||bytes.byteLength!==manifest.rootCount*52+h.width*h.height)fail('LAYOUT_MISMATCH');
  const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),tiles=[],tileIds=new Set(),controlRoots=[];
  let index=0,woodlandRoots=0,ravineRoots=0;
  for(const tile of manifest.tiles){
@@ -65,13 +65,13 @@ async function decodePackedGrass(manifest,bytes,{yieldControl=async()=>{},onProg
 }
 export async function loadPrecomputedGrass({fetchImpl=globalThis.fetch,yieldControl,onProgress=()=>{},packed=false}={}){
  const started=performance.now();
- const response=await fetchImpl(new URL('./assets/precomputed-grass.v1.json',import.meta.url));
+ const response=await fetchImpl(new URL('./assets/precomputed-grass.v1.json?sha='+MANIFEST_SHA256,import.meta.url));
  if(!response.ok)fail('MANIFEST_HTTP_'+response.status);
  const manifestBytes=new Uint8Array(await response.arrayBuffer());
  if(await sha(manifestBytes)!==MANIFEST_SHA256)fail('MANIFEST_INTEGRITY');
  const manifest=JSON.parse(new TextDecoder().decode(manifestBytes));
  onProgress({phase:'SINGLE_POPULATION_DOWNLOADING',loadedBytes:0,totalBytes:manifest.compressedBytes});
- const data=await fetchImpl(new URL('./assets/precomputed-grass.v1.bin.gz',import.meta.url));
+ const data=await fetchImpl(new URL('./assets/precomputed-grass.v1.bin.gz?sha='+manifest.compressedSha256,import.meta.url));
  if(!data.ok)fail('DATA_HTTP_'+data.status);
  let compressed;
  if(data.body?.getReader){

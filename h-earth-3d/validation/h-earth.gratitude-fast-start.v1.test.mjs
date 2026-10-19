@@ -10,6 +10,7 @@ import {loadPrecomputedGrass,takePrecomputedGrassPlan} from '../../showroom/glob
 import {applyHEarthVerifiedPlantingPackage} from '../../showroom/globe/h-earth/render/live-render-package.run8e-r2.js';
 import {createHEarthLoadingScreen} from '../../showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js';
 const root=new URL('../../',import.meta.url),read=p=>readFileSync(new URL(p,root),'utf8'),hash=x=>createHash('sha256').update(x).digest('hex');
+const grassManifest=JSON.parse(read('showroom/globe/h-earth/render/assets/precomputed-grass.v1.json'));
 const renderer=read('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js');
 const raw=JSON.parse(gunzipSync(readFileSync(new URL('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',root)))).raw;
 const pkg=applyHEarthVerifiedPlantingPackage(raw),fetchImpl=async url=>new Response(readFileSync(url));
@@ -54,10 +55,10 @@ test('hydration retains existing HTML; real progress, clock cleanup and terminal
 test('streamed grass download and decoding report actual totals while GPU payload remains exact',async()=>{
  const events=[],p=await loadPrecomputedGrass({packed:true,fetchImpl,onProgress:e=>events.push(e)}),plan=takePrecomputedGrassPlan(p);
  const digest=createHash('sha256');for(const tile of plan.tiles)digest.update(new Uint8Array(tile.packed.buffer));
- assert.equal(digest.digest('hex'),'d8df836eabd37c33d4a7b9542f56e4d1bb63d0d41fa7303be58f91fe5db1d3aa');
+ assert.equal(digest.digest('hex'),grassManifest.packedSha256);
  const download=events.filter(x=>x.phase==='SINGLE_POPULATION_DOWNLOADING'),decode=events.filter(x=>x.phase==='SINGLE_POPULATION_DECODING');
- assert.equal(download.at(-1).loadedBytes,28561761);assert.equal(decode.at(-1).loadedContacts,1250134);
- for(const e of download)assert.equal(e.totalBytes,28561761);for(const e of decode)assert.equal(e.totalContacts,1250134);
+ assert.equal(download.at(-1).loadedBytes,grassManifest.compressedBytes);assert.equal(decode.at(-1).loadedContacts,grassManifest.rootCount);
+ for(const e of download)assert.equal(e.totalBytes,grassManifest.compressedBytes);for(const e of decode)assert.equal(e.totalContacts,grassManifest.rootCount);
  await assert.rejects(loadPrecomputedGrass({packed:true,fetchImpl:async url=>new Response(url.pathname.endsWith('.gz')?readFileSync(url).subarray(0,100):readFileSync(url))}),/COMPRESSED_INTEGRITY_LENGTH/);
 });
 
@@ -71,5 +72,5 @@ test('route entry event cannot bypass readiness or consume the genuine entry han
 test('packed grass producer and consumer use the same module identity',()=>{
  const owner=read('showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js');
  for(const source of [renderer,owner])assert.match(source,/from ['"]\.\/precomputed-grass\.v1\.js['"]/);
- const html=read('showroom/globe/h-earth/index.html');assert.match(html,/"\/showroom\/globe\/h-earth\/render\/precomputed-grass.v1.js": "\/showroom\/globe\/h-earth\/render\/precomputed-grass.v1.js\?rev=gen2815-fast-start-v1"/);
+ const html=read('showroom/globe/h-earth/index.html');assert.match(html,/"\/showroom\/globe\/h-earth\/render\/precomputed-grass.v1.js": "\/showroom\/globe\/h-earth\/render\/precomputed-grass.v1.js\?rev=gen2817-coastal-grass-v1"/);
 });

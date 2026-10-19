@@ -69,7 +69,7 @@ function assertStableObservation(observation,expectedIds){
   assert(JSON.stringify(ids(observation.vegetation))===JSON.stringify(expectedIds),'INSTALLED_CONTROL_IDENTITY_CHANGED');
   assert(observation.vegetation.coarseRootCount>0&&observation.vegetation.coarseTiles>0&&observation.vegetation.drawCallCount>0,'COARSE_COVERAGE_OR_DRAW_LOST');
   assert(observation.vegetation.perFrameUploadBytes===0,'UNEXPECTED_FRAME_UPLOAD');
-  assert(observation.rendererCounters.woodlandHabitatTextureUploadCount===1&&observation.rendererCounters.woodlandHabitatUploadedBytes===73728,'HABITAT_TEXTURE_UPLOAD_COUNT_CHANGED');
+  assert(observation.rendererCounters.woodlandHabitatTextureUploadCount===1&&observation.rendererCounters.woodlandHabitatUploadedBytes===110592,'HABITAT_TEXTURE_UPLOAD_COUNT_CHANGED');
 }
 // Diagnostic-only tours use the unchanged pointer/wheel intake. No public query
 // can select automatic travel; every final view records its actual supported pose.

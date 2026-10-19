@@ -1,0 +1,59 @@
+{
+  "schema": "AUDRALIA_GCR2_QUALIFICATION_v1",
+  "operationId": "AUDRALIA_GRATITUDE_GCR2_METRIC_ECOLOGY_INSPECTION_20261018_001",
+  "candidateBranch": "agent/audralia-gratitude-gcr2-metric-ecology-20261018-001",
+  "sourceBaseline": "063fca569d6e9cc3d3b98a70a6913f69618ede76",
+  "candidateHead": "RESOLVE_EXACT_BRANCH_HEAD_AT_VERIFICATION",
+  "evidenceClassification": "CANDIDATE_CONSTRUCTION_NOT_YET_QUALIFIED",
+  "implementation": {
+    "metricBridge": "IMPLEMENTED",
+    "namedHydrology": "IMPLEMENTED_REV5_SOURCED",
+    "continentalEcology": "IMPLEMENTED_CANDIDATE",
+    "singleCanvasRenderer": "IMPLEMENTED_GCR1_TEMPLATE_REUSE",
+    "sameSiteInspectionIndex": "IMPLEMENTED_NO_INDEX",
+    "exactRegionalHearthGroundRendering": "NOT_YET_INTEGRATED",
+    "physicalCoastlineReauthoring": "NOT_YET_QUALIFIED",
+    "liveWeatherRuntime": "UNCHANGED_NOT_COPIED_INTO_CANDIDATE"
+  },
+  "staticAndMathematicalChecks": [
+    {
+      "check": "V8 module syntax and marker checks",
+      "disposition": "OBSERVED_IN_PRECOMMIT_TOOLS_NOT_EQUIVALENT_TO_NODE_TEST_SUITE"
+    },
+    {
+      "check": "30N0E frame anchor",
+      "disposition": "PASS_OBSERVED_V8"
+    },
+    {
+      "check": "5 regional named anchor round trips",
+      "disposition": "PASS_OBSERVED_V8"
+    },
+    {
+      "check": "15 named rivers and 3 named lakes",
+      "disposition": "PASS_OBSERVED_V8"
+    },
+    {
+      "check": "4 representative ecology samples finite",
+      "disposition": "PASS_OBSERVED_V8"
+    }
+  ],
+  "requiredNextChecks": [
+    "node --test h-earth-3d/validation/audralia-gratitude-gcr2.v1.test.mjs",
+    "EXACT_NINE_PATH_DIFF_VS_ADMITTED_BASE",
+    "VERIFY_ALL_IMPORTS_AND_INITIAL_WEBGL2_CANVAS_ON_EXACT_CANDIDATE",
+    "CHROMIUM_SAME_ORIGIN_EXACT_SHA_SCREENSHOT_AND_ERRORS",
+    "TABLET_PIXEL_BUDGET_AND_STARTUP_RESOURCE_PROFILE",
+    "INDEPENDENT_WEST_SOURCE_AND_GEOGRAPHY_COMPARISON",
+    "OWNER_KEEP_ONE_REPAIR_REJECT_PHYSICAL_DISPOSITION"
+  ],
+  "noClaims": {
+    "physicalDevicePreviewAccepted": false,
+    "actualNodeTestSuiteExecuted": false,
+    "scientificallyValidatedClimate": false,
+    "permanentHearthRavineFlow": false,
+    "physicalRiverWidthVerified": false,
+    "exactContinentalCoastlineFinal": false,
+    "publicPublication": false
+  },
+  "authorityEffect": "NONE_CANDIDATE_EVIDENCE_ONLY"
+}

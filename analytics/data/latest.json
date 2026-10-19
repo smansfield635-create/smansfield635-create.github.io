@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-19T14:33:16Z",
+  "generatedAt": "2026-10-19T20:33:03Z",
   "window30d": {
-    "start": "2026-09-19T14:33:16Z",
-    "end": "2026-10-19T14:33:16Z"
+    "start": "2026-09-19T20:33:03Z",
+    "end": "2026-10-19T20:33:03Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 35
+      "pageLoads": 38
     },
     {
       "date": "2026-10-13",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 25
+      "pageLoads": 27
     }
   ],
   "summary": {
-    "pageLoads": 3949,
-    "botPageLoads": 1615,
-    "nonBotPageLoads": 2334
+    "pageLoads": 3824,
+    "botPageLoads": 1540,
+    "nonBotPageLoads": 2284
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2682,
-      "visits": 2682
+      "pageLoads": 2597,
+      "visits": 2597
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 1088,
+      "pageLoads": 1048,
       "visits": 0
     },
     {
@@ -167,23 +167,23 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 772,
-      "visits": 512
+      "pageLoads": 733,
+      "visits": 473
     },
     {
       "path": "/analytics/",
-      "pageLoads": 650,
-      "visits": 530
+      "pageLoads": 655,
+      "visits": 535
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 630,
-      "visits": 594
+      "pageLoads": 629,
+      "visits": 593
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 400,
-      "visits": 400
+      "pageLoads": 370,
+      "visits": 370
     },
     {
       "path": "/products/education/",
@@ -201,9 +201,9 @@
       "visits": 61
     },
     {
-      "path": "/showroom/globe/audralia/",
+      "path": "/products/archcoin/contract/",
       "pageLoads": 80,
-      "visits": 60
+      "visits": 10
     }
   ],
   "ownerMeasurement": {

@@ -164,7 +164,7 @@ async function verify({withSource=false}={}) {
   examine(value,manifest,{actualSourceRecords});
   console.log(format({schema:'H_EARTH_GEN2666_PRECOMPUTE_PARITY_RECEIPT_v1',result:'PASS',exactSourceBound:true,fullRawAndCanonicalRecords:true,nineCanonicalAndRawBuffers:true,originalPackageIdentity:manifest.packageIdentity,transportSha256:manifest.binary.sha256,transportBytes:packed.length,hydrationMilliseconds:Math.round(hydrationMs),freshSourceCompared:withSource,environmentalIdentityPreserved:true,physicalAndroidQualified:false,releaseAuthorized:false}));
 }
-async function main(){const args=process.argv.slice(2);assert.equal(args.length,1,'Exactly one mode required');if(args[0]==='--build')await build();else if(args[0]==='--verify')await verify();else if(args[0]==='--verify-source')await verify({withSource:true});else if(args[0]==='--reconcile-east-a')await reconcileEastAPackage();else fatal('GEN2666_UNKNOWN_MODE',args[0]);}
+async function main(){const args=process.argv.slice(2);if(args[0]==='--reconcile-east-a'){if(args.length!==1&&!(args.length===3&&args[1]==='--receipt-path'&&args[2]))fatal('GEN2824_RECEIPT_ARGUMENTS_INVALID');const receipt=await reconcileEastAPackage();if(args.length===3)fs.writeFileSync(args[2],format(receipt));return;}assert.equal(args.length,1,'Exactly one mode required');if(args[0]==='--build')await build();else if(args[0]==='--verify')await verify();else if(args[0]==='--verify-source')await verify({withSource:true});else fatal('GEN2666_UNKNOWN_MODE',args[0]);}
 main().catch(error=>{console.error(JSON.stringify({schema:'H_EARTH_GEN2666_PRECOMPUTE_PARITY_RECEIPT_v1',result:'FAIL_CLOSED',error:error.stack??String(error)}));process.exitCode=1;});
 
 
@@ -352,10 +352,12 @@ async function reconcileEastAPackage() {
   fs.writeFileSync(path.join(ROOT,ASSET),packed);
   fs.writeFileSync(path.join(ROOT,MANIFEST),format(prior));
   fs.writeFileSync(loaderPath,newLoader);
-  console.log(format({schema:'H_EARTH_GEN2824_B2_G_WORLD_TO_PRECOMPUTED_RECONCILIATION_v1',
+  const receipt={schema:'H_EARTH_GEN2824_B2_G_WORLD_TO_PRECOMPUTED_RECONCILIATION_v1',
     result:'CANDIDATE_GENERATED_NOT_QUALIFIED',assetSha256:prior.binary.sha256,
     assetBytes:prior.binary.bytes,changedTerrainVertices:changedIndices,
     recomputedTerrainNormals:normalRecomputed,packageIdentities:shifted,
     sourceBlob:expectedFieldBlob,nonTerrainBytesPreserved:true,
-    mergeAuthorized:false,deploymentAuthorized:false,phoneReviewAccepted:false}));
+    mergeAuthorized:false,deploymentAuthorized:false,phoneReviewAccepted:false};
+  console.log(format(receipt));
+  return receipt;
 }

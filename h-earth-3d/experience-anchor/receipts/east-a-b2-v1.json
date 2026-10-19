@@ -1,0 +1,77 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_EAST_A_B2_PLATEAU_CONSTRUCTION_20261019_001",
+  "canonicalAdmissionGeneration": 2820,
+  "reviewedAgainstAnchor": true,
+  "disposition": "REVIEW_REQUIRED",
+  "reviewStage": "OWNER_AUTHORIZED_PRODUCTION_REVIEW_WITHOUT_PREPUBLICATION_PHYSICAL_ACCEPTANCE",
+  "ownerDirection": "Owner explicitly authorized publication and reasserted the established H-Earth production-review precedent on 2026-10-19; this selects review timing, not physical acceptance or anchor replacement.",
+  "ownerAuthorizationEvidence": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6555#issuecomment-6276604749",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6555#issuecomment-6276807192"
+  ],
+  "acceptedReviewTimingPrecedent": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6537#issuecomment-6256093032",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6541#issuecomment-6256408531"
+  ],
+  "sourceReviewEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/east-a-b2-v1/checkpoint.json"
+  ],
+  "visualEvidence": [],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.east-a-b2.terrain.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/east-a-b2-v1/checkpoint.json",
+    "h-earth-3d/validation/h-earth.east-a-b2.terrain.test.mjs"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true
+  },
+  "unresolvedInvariants": [
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY",
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE",
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE",
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION",
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD",
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE",
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD",
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT"
+  ],
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "sha256": "736f91b9ddcf817f588f18f843b24d1bf12b1ba9880e844cd2bd82b12d434cdc"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.east-a-b2.terrain.test.mjs",
+      "sha256": "1346fedb5d8b15b9f71d63f17a166d3a3f7092d9c646902c3628606f97aff2c9"
+    }
+  ],
+  "technicalEvidence": {
+    "nativeB2Tests": "6_OF_6_PASS",
+    "nativeGen314CameraNotchSamples": "51_SAMPLES_PASS",
+    "terrainCavernSeam": "6_OF_6_PASS",
+    "unchangedGeology": "20_OF_21_WITH_IDENTICAL_INHERITED_BASELINE_HTML_ASSERTION",
+    "originalSelectedCombinedSuite": "26_OF_27_NOT_FULL_PASS",
+    "baselineGrassRootsPreserved": 1457471,
+    "candidateHeadBeforeReceipt": "9870beac4a18a61ba7a7a2170abe61820c52bd03",
+    "browserPreflightOriginalCandidate": "39312234644_PREFLIGHT_PASS_NONDEPLOYING",
+    "finalHeadPreflightStatus": "REQUALIFICATION_REQUIRED_AFTER_RECEIPT_COMMIT"
+  },
+  "limitations": [
+    "No owner physical or perceptual KEEP/ONE_REPAIR/REJECT has been recorded. This document does not manufacture such a result.",
+    "The anchored original video is the controlling experience identity; the unchanged manifest/contact sheet are documentary reference only.",
+    "Visual and mobile interaction evidence for the new B2 East A plateau remain pending review on the actual production environment by owner direction.",
+    "One modeled rear swale of approximately -0.857m and ocean sightlines require owner observation.",
+    "The experience-anchor hard PASS is not asserted; current disposition remains REVIEW_REQUIRED.",
+    "The unchanged geology regression had a pre-existing stale HTML substring assertion; the full original selected combined Node suite was 26 of 27, not fully green.",
+    "Exact-head browser preflight must be rerun for this new receipt-only candidate head before merge/deployment; prior successful run belongs to the original immutable head."
+  ],
+  "authorityEffect": "NONE_RECEIPT_RECORDS_PENDING_ACCEPTANCE_AND_OWNER_REVIEW_TIMING_ONLY"
+}

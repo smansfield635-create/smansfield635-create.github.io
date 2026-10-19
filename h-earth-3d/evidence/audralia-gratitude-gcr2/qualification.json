@@ -4,7 +4,7 @@
   "candidateBranch": "agent/audralia-gratitude-gcr2-metric-ecology-20261018-001",
   "sourceBaseline": "063fca569d6e9cc3d3b98a70a6913f69618ede76",
   "candidateHead": "RESOLVE_EXACT_BRANCH_HEAD_AT_VERIFICATION",
-  "evidenceClassification": "CANDIDATE_CONSTRUCTION_NOT_YET_QUALIFIED",
+  "evidenceClassification": "CANDIDATE_REVISED_REQUALIFICATION_PENDING",
   "implementation": {
     "metricBridge": "IMPLEMENTED",
     "namedHydrology": "IMPLEMENTED_REV5_SOURCED",
@@ -55,5 +55,16 @@
     "exactContinentalCoastlineFinal": false,
     "publicPublication": false
   },
-  "authorityEffect": "NONE_CANDIDATE_EVIDENCE_ONLY"
+  "authorityEffect": "NONE_CANDIDATE_EVIDENCE_ONLY",
+  "latestEngineeringDelta": {
+    "stage": "GCR2_DELTA_EASTERN_CONFLUENCE_CANDIDATE_RECONCILIATION",
+    "baseCandidate": "4e6d7a6a32f71a1f8f567d738cecf0d42fa7b6cf",
+    "sourceRev5GeometryUnchanged": true,
+    "deltaMouths": 3,
+    "southernMeshMinimumKm": -2050,
+    "easternOutflowType": "PROPOSED_TRIBUTARY_CONFLUENCE_TO_EXISTING_NAMED_MAIN_RIVER",
+    "modelDerivedNotCanonical": true,
+    "actualHydrologicDischargeVerified": false,
+    "remaining": "EXACT_SHA_BROWSER_AND_INDEPENDENT_WEST_VISUAL_GEOGRAPHY_AND_OWNER_REVIEW"
+  }
 }

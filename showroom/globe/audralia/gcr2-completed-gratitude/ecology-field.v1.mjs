@@ -103,9 +103,10 @@ export function sampleContinentalEcology(xKm,zKm,coastalDistanceKm=100){
     marineInfluence:marine,moisture,thermal,forestSuitability:forest,
     steppeSuitability:dry,wetlandSuitability:wetland,
     riverRenderIntensity:h.riverRenderIntensity,lakeRenderIntensity:h.lakeRenderIntensity,
+    easternConfluenceCandidateIntensity:h.easternConfluenceCandidateIntensity,
     dominantBiome:biome,color:Object.freeze(color),
     localGrassRootCountClaimed:0,
     physicalRiverWidthClaimed:false,
-    sourceGeographyStatus:'REV5_REGION_PRESERVED_MACRO_INTERPRETATION_CANDIDATE'
+    sourceGeographyStatus:'REV5_REGION_PRESERVED_EASTERN_OUTLET_DERIVED_CANDIDATE'
   });
 }

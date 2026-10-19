@@ -7,7 +7,7 @@ import {
 } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 
 import { GCR2_METRIC_FRAME, GCR2_ANCHORS, regionalMetersToGeodetic, regionalMetersToContinentalKm } from './metric-geography-bridge.v1.mjs';
-import { GRATITUDE_RIVERS, GRATITUDE_LAKES, verifyNamedHydrology } from './hydrology-graph.v1.mjs';
+import { GRATITUDE_RIVERS, GRATITUDE_LAKES, GRATITUDE_DELTA_SHORE_CONTROLS, GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE, verifyNamedHydrology, verifyCandidateDeltaCoast, verifyCandidateEasternConfluence } from './hydrology-graph.v1.mjs';
 import { sampleContinentalEcology, ECOLOGY_SOURCE } from './ecology-field.v1.mjs';
 import { resolveAudraliaGratitudeShorelineZ } from '../../../../inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
 
@@ -71,10 +71,14 @@ for(let x=northEdgeWest;x<northEdgeEast;x+=12)
   NORTH_COAST.push([x,macroShoreZ(x)]);
 NORTH_COAST.push([northEdgeEast,macroShoreZ(northEdgeEast)]);
 
+// Rev5 sources identify three separate delta mouths, while the southern
+// kilometer-scale shoreline between them is provisional. Reconcile them as
+// one asymmetric coastline, never as a second world or separate hydro atlas.
 const PROVISIONAL_REMAINDER=[
   [1120,-176],[1238,-300],[1300,-455],[1218,-575],[1345,-725],[1280,-885],
-  [1124,-1035],[1188,-1190],[1070,-1350],[890,-1460],[720,-1605],[510,-1710],
-  [265,-1815],[10,-1772],[-190,-1650],[-420,-1732],[-645,-1640],[-815,-1490],
+  [1124,-1035],[1188,-1190],[1070,-1350],
+  ...GRATITUDE_DELTA_SHORE_CONTROLS,
+  [-190,-1650],[-420,-1732],[-645,-1640],[-815,-1490],
   [-1005,-1530],[-1160,-1390],[-1108,-1210],[-1275,-1070],[-1218,-885],[-1360,-720],
   [-1290,-545],[-1192,-388],[-1130,-245]
 ];
@@ -89,7 +93,7 @@ function canonicalEcologyAt(x,z,edge){return sampleContinentalEcology(x,z,Math.m
 
 function buildAxis(min,max,fineMin,fineMax,coarse=22,fine=9){const out=[min];let x=min;while(x<max-1e-6){let step=x>=fineMin&&x<fineMax?fine:coarse,next=Math.min(max,x+step);if(x<fineMin&&next>fineMin)next=fineMin;if(x<fineMax&&next>fineMax)next=fineMax;out.push(next);x=next;}return out;}
 function buildGratitudeMesh(){
-  const xs=buildAxis(-1400,1400,-320,320,22,8),zs=buildAxis(-1900,260,-420,120,22,8),cols=xs.length,rows=zs.length;
+  const xs=buildAxis(-1400,1400,-320,320,22,8),zs=buildAxis(-2050,260,-420,120,22,8),cols=xs.length,rows=zs.length;
   const vertices=[],indices=[],inside=new Uint8Array(cols*rows),at=(r,c)=>r*cols+c;
   for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
     const x=xs[c],z=zs[r],land=pointInPolygon(x,z);inside[at(r,c)]=land?1:0;
@@ -113,11 +117,12 @@ function buildHydrologyOverlay(){
     const d=tangentDirection(x,z-LOCAL_CENTER_Z),n=vertices.length/7;
     vertices.push(...d,e,...blue);return n;
   };
-  for(const river of GRATITUDE_RIVERS){
+  // The final course is a candidate inferred eastern outlet, not rev5 data.
+  for(const river of [...GRATITUDE_RIVERS,GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE]){
     for(let i=0;i<river.points.length-1;i++){
       const a=river.points[i],b=river.points[i+1],dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz);
       if(!(len>0))continue;
-      const nx=-dz/len,nz=dx/len,width=Math.max(2.3,river.widthAuthoringUnits*.25);
+      const nx=-dz/len,nz=dx/len,width=Math.max(2.3,(river.widthAuthoringUnits??river.widthVisualUnits)*.25);
       const steps=Math.max(1,Math.ceil(len/14));
       for(let s=0;s<steps;s++){
         const t=s/steps,q=(s+1)/steps;
@@ -184,6 +189,8 @@ function shader(type,src){const s=gl.createShader(type);gl.shaderSource(s,src);g
 const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw new Error(gl.getProgramInfoLog(program));
 function vao(mesh){const v=gl.createVertexArray();gl.bindVertexArray(v);const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,mesh.vertices,gl.STATIC_DRAW);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,3,gl.FLOAT,false,28,0);gl.enableVertexAttribArray(1);gl.vertexAttribPointer(1,1,gl.FLOAT,false,28,12);gl.enableVertexAttribArray(2);gl.vertexAttribPointer(2,3,gl.FLOAT,false,28,16);const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,mesh.indices,gl.STATIC_DRAW);return v;}
 if(!verifyNamedHydrology())throw new Error('REV5_HYDROLOGY_IDENTITY_FAILED');
+if(!verifyCandidateDeltaCoast())throw new Error('DELTA_MOUTH_TO_COAST_RECONCILIATION_FAILED');
+if(!verifyCandidateEasternConfluence())throw new Error('EASTERN_CONFLUENCE_CANDIDATE_INVALID');
 const planetMesh=buildPlanetMesh(),gratitudeMesh=buildGratitudeMesh(),
   hydroMesh=buildHydrologyOverlay(),
   planetVao=vao(planetMesh),gratitudeVao=vao(gratitudeMesh),hydroVao=vao(hydroMesh);
@@ -241,6 +248,9 @@ const gcr2Diagnostics=Object.freeze({
   planetRadiusKm:PLANET_RADIUS,focusLatitude:30,focusLongitude:0,
   sourceRev5DrainageCount:GRATITUDE_RIVERS.length,
   sourceRev5LakeCount:GRATITUDE_LAKES.length,
+  candidateThreeMouthDeltaReconciled:true,
+  candidateEastConfluenceProposedNotCanonical:true,
+  oceanwardMeshZMinKm:-2050,
   localPlantsMagnifiedToContinentalScale:false,
   localWaterFlowAssumed:false,
   candidateCoastlineProvisional:true,

@@ -17,6 +17,8 @@ import {
 } from '../../showroom/globe/audralia/gcr2-completed-gratitude/metric-geography-bridge.v1.mjs';
 import {
   HYDROLOGY_SOURCE,GRATITUDE_RIVERS,GRATITUDE_LAKES,
+  GRATITUDE_DELTA_SHORE_CONTROLS,GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE,
+  candidateDeltaSouthShoreZ,verifyCandidateDeltaCoast,verifyCandidateEasternConfluence,
   sampleGratitudeHydrology,verifyNamedHydrology
 } from '../../showroom/globe/audralia/gcr2-completed-gratitude/hydrology-graph.v1.mjs';
 import {
@@ -146,4 +148,46 @@ test('one nonproduction same-origin WebGL canvas and source-limited GCR2 code',(
   assert.ok(!app.includes('new Worker('));
   assert.ok(!app.includes('cdn.jsdelivr'));
   assert.ok(!app.includes('waterPresent=true'));
+});
+
+// Geographic mutation review for the existing source-anchored GCR2 operation.
+test('rev5 delta branches each meet one reconciled southern coast, without displaced endpoints',()=>{
+  assert.equal(verifyCandidateDeltaCoast(),true);
+  assert.equal(GRATITUDE_DELTA_SHORE_CONTROLS[0][0],890);
+  assert.equal(GRATITUDE_DELTA_SHORE_CONTROLS.at(-1)[0],10);
+  assert.ok(GRATITUDE_DELTA_SHORE_CONTROLS.every((p,i,a)=>i===0||p[0]<a[i-1][0]));
+  for(const id of ['DELTA_BRANCH_WEST','DELTA_BRANCH_CENTRAL','DELTA_BRANCH_EAST']){
+    const branch=GRATITUDE_RIVERS.find(r=>r.id===id);
+    const [x,z]=branch.points.at(-1);
+    near(candidateDeltaSouthShoreZ(x),z,1e-9);
+    assert.ok(z>=-2050);
+  }
+  assert.equal(GRATITUDE_RIVERS.length,15);
+  assert.equal(GRATITUDE_LAKES.length,3);
+});
+
+test('proposed eastern outflow connects source endpoints but remains nonauthoritative',()=>{
+  assert.equal(verifyCandidateEasternConfluence(),true);
+  const candidate=GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE;
+  assert.match(candidate.provenance,/NOT_PROTECTED_REV5_GEOGRAPHY/);
+  assert.equal(candidate.physicallyValidatedDischarge,false);
+  assert.equal(candidate.sourceProvesPerennialWater,false);
+  const e=GRATITUDE_RIVERS.find(r=>r.id==='EASTERN_RIVER');
+  const main=GRATITUDE_RIVERS.find(r=>r.id==='GRATITUDE_MAJOR_THROUGH_RIVER');
+  assert.deepEqual(candidate.points[0],e.points.at(-1));
+  assert.ok(main.points.some(point=>point[0]===candidate.points.at(-1)[0]&&
+    point[1]===candidate.points.at(-1)[1]));
+  const modeled=sampleGratitudeHydrology(431,-1517);
+  assert.ok(modeled.easternConfluenceCandidateIntensity>.99);
+  assert.equal(modeled.easternConfluenceIsSourceAuthority,false);
+  assert.equal(modeled.continentalCompletedNetwork,false);
+});
+
+test('candidate mesh extends beyond all three delta mouth endpoints',()=>{
+  const app=readFileSync(resolve(root,candidate+'app.mjs'),'utf8');
+  assert.match(app,/buildAxis\(-2050,260,-420,120,22,8\)/);
+  assert.match(app,/GRATITUDE_DELTA_SHORE_CONTROLS/);
+  assert.match(app,/GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE/);
+  assert.match(app,/verifyCandidateDeltaCoast\(\)/);
+  assert.match(app,/verifyCandidateEasternConfluence\(\)/);
 });

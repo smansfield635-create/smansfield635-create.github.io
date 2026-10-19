@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {runInNewContext} from 'node:vm';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
@@ -41,4 +42,42 @@ test('SHA-addressed downloads, single module identity and untouched bootstrap pr
  assert.equal(seen[0].searchParams.get('sha'),sha(read(asset+'json')));assert.equal(seen[1].searchParams.get('sha'),manifest.compressedSha256);
  const html=read('showroom/globe/h-earth/index.html').toString(),oldHtml=baseline('showroom/globe/h-earth/index.html').toString();assert.equal(html.match(/src="\.\/vegetation-prototype\/bootstrap[^\"]*"/)[0],oldHtml.match(/src="\.\/vegetation-prototype\/bootstrap[^\"]*"/)[0]);
  assert(html.includes('grass-continuity-supplement.v1.js?rev=gen2817-coastal-grass-v1'));assert(html.includes('precomputed-grass.v1.js?rev=gen2817-coastal-grass-v1'));assert(html.includes('&rev=gen2817-coastal-grass-v1'));
+});
+
+test('actual production route guard accepts three-panel habitat bytes and rejects stale or unsafe uploads',()=>{
+  const route=read('showroom/globe/h-earth/vegetation-prototype/route.js').toString();
+  const idsSource=route.match(/function ids\(record\)\{[\s\S]*?\n\}/)?.[0];
+  const guardSource=route.match(/function assertStableObservation\(observation,expectedIds\)\{[\s\S]*?\n\}/)?.[0];
+  assert(idsSource&&guardSource,'actual production guard must be extractable');
+  const verify=runInNewContext([
+    "const assert=(condition,reason)=>{if(!condition)throw Error('SINGLE_OWNER_PROTOTYPE:'+reason);};",
+    idsSource,guardSource,'assertStableObservation'
+  ].join('\n'));
+  const valid={
+    vegetation:{controlRoots:['root-b','root-a'],coarseRootCount:1,coarseTiles:1,drawCallCount:1,perFrameUploadBytes:0},
+    rendererCounters:{woodlandHabitatTextureUploadCount:1,woodlandHabitatUploadedBytes:110592}
+  };
+  const expectedIds=['root-a','root-b'];
+  assert.doesNotThrow(()=>verify(valid,expectedIds));
+  for(const bytes of [73728,110591,110593])assert.throws(()=>verify({
+    ...valid,rendererCounters:{...valid.rendererCounters,woodlandHabitatUploadedBytes:bytes}
+  },expectedIds),/HABITAT_TEXTURE_UPLOAD_COUNT_CHANGED/);
+  for(const count of [0,2])assert.throws(()=>verify({
+    ...valid,rendererCounters:{...valid.rendererCounters,woodlandHabitatTextureUploadCount:count}
+  },expectedIds),/HABITAT_TEXTURE_UPLOAD_COUNT_CHANGED/);
+  assert.throws(()=>verify({...valid,vegetation:{...valid.vegetation,perFrameUploadBytes:4}},expectedIds),/UNEXPECTED_FRAME_UPLOAD/);
+  assert.throws(()=>verify({...valid,vegetation:{...valid.vegetation,drawCallCount:0}},expectedIds),/COARSE_COVERAGE_OR_DRAW_LOST/);
+  assert.throws(()=>verify({...valid,vegetation:{...valid.vegetation,controlRoots:['root-b','root-b']}},expectedIds),/DUPLICATE_CONTROL_IDS/);
+});
+
+test('production importmap resolves the corrected route without changing bootstrap or data-route',()=>{
+  const html=read('showroom/globe/h-earth/index.html').toString();
+  const importmap=html.match(/<script type="importmap">([\s\S]*?)<\/script>/)?.[1];
+  assert(importmap,'production importmap remains present');
+  const imports=JSON.parse(importmap).imports;
+  assert.equal(
+    imports['/showroom/globe/h-earth/vegetation-prototype/route.js?rev=gen2795-performance-v1'],
+    '/showroom/globe/h-earth/vegetation-prototype/route.js?rev=gen2818-coastal-route-guard-v1'
+  );
+  assert.equal(html.match(/data-route="([^"]*)"/)?.[1],'./vegetation-prototype/route.js?rev=gen2795-performance-v1');
 });

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-19T12:45:12Z",
+  "generatedAt": "2026-10-19T13:36:51Z",
   "window30d": {
-    "start": "2026-09-19T12:45:12Z",
-    "end": "2026-10-19T12:45:12Z"
+    "start": "2026-09-19T13:36:51Z",
+    "end": "2026-10-19T13:36:51Z"
   },
   "daily": [
     {
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 22
+      "pageLoads": 24
     }
   ],
   "summary": {
-    "pageLoads": 3814,
-    "botPageLoads": 1514,
-    "nonBotPageLoads": 2300
+    "pageLoads": 3948,
+    "botPageLoads": 1614,
+    "nonBotPageLoads": 2334
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2689,
-      "visits": 2689
+      "pageLoads": 2681,
+      "visits": 2681
     },
     {
       "host": "diamondgatebridge.com",
@@ -167,18 +167,18 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 842,
-      "visits": 602
+      "pageLoads": 769,
+      "visits": 509
     },
     {
       "path": "/analytics/",
-      "pageLoads": 738,
-      "visits": 528
+      "pageLoads": 644,
+      "visits": 524
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 629,
-      "visits": 593
+      "pageLoads": 614,
+      "visits": 578
     },
     {
       "path": "/mirror-manor-preview/",
@@ -187,8 +187,8 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 294,
-      "visits": 104
+      "pageLoads": 300,
+      "visits": 110
     },
     {
       "path": "/governance-bridge/",

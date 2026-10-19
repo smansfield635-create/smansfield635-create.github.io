@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-19T09:42:56Z",
+  "generatedAt": "2026-10-19T10:34:05Z",
   "window": {
-    "start": "2026-07-21T09:42:56Z",
-    "end": "2026-10-19T09:42:56Z"
+    "start": "2026-07-21T10:34:05Z",
+    "end": "2026-10-19T10:34:05Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4798,
-    "visits": 1317,
+    "pageLoads": 4898,
+    "visits": 1337,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4798,
-        "visits": 1317
+        "pageLoads": 4898,
+        "visits": 1337
       }
     },
     "byPath": {
@@ -59,15 +59,15 @@
         "visits": 90
       },
       "/showroom/": {
-        "pageLoads": 100,
+        "pageLoads": 110,
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 149,
+        "pageLoads": 159,
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 130,
+        "pageLoads": 140,
         "visits": 0
       },
       "/": {
@@ -119,7 +119,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 140,
+        "pageLoads": 160,
         "visits": 10
       },
       "/governance/": {
@@ -135,7 +135,7 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 60,
+        "pageLoads": 90,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -171,6 +171,14 @@
         "visits": 20
       },
       "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "/inspection/compass/brain-v10-g1-1/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "/inspection/compass/brain-v10-continuous/": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -341,7 +349,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3481,
+        "pageLoads": 3561,
         "visits": 0
       },
       "www.google.com": {
@@ -349,8 +357,8 @@
         "visits": 783
       },
       "(none)": {
-        "pageLoads": 524,
-        "visits": 524
+        "pageLoads": 544,
+        "visits": 544
       },
       "raw.githack.com": {
         "pageLoads": 10,

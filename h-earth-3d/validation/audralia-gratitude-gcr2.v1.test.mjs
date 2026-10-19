@@ -239,6 +239,13 @@ test('Stage 2: 8-metre shoreline samples reconstruct protected local coast withi
   }
   assert.ok(worst<1.5,`Shore deviation metres: ${worst}`);
 });
+test('Stage 2: accelerated coast tests retain same exact polygon parity and squared segment distance',()=>{
+  const app=readFileSync(resolve(root,candidate+'app.mjs'),'utf8');
+  assert.match(app,/crossings\.sort\(\(a,b\)=>a-b\)/);
+  assert.match(app,/x>=crossings\[leftCount\]/);
+  assert.match(app,/ox\*ox\+oz\*oz>=best2/);
+  assert.match(app,/return Math\.sqrt\(best2\)/);
+});
 test('Stage 2: same indexed continent is locally refined and nearshore cells clipped',()=>{
   const app=readFileSync(resolve(root,candidate+'app.mjs'),'utf8');
   assert.match(app,/locallyRefinedAxis\(buildAxis\(-1600,1550,-320,320,22,8\),-0\.384,0\.384,0\.008\)/);

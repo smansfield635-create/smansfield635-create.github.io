@@ -95,7 +95,25 @@ function verifySourceDrainageOnCandidateLand(){
   return true;
 }
 function distanceToSegment(x,z,a,b){const dx=b[0]-a[0],dz=b[1]-a[1],d=dx*dx+dz*dz||1,t=clamp(((x-a[0])*dx+(z-a[1])*dz)/d,0,1);return Math.hypot(x-(a[0]+dx*t),z-(a[1]+dz*t));}
-function coastDistance(x,z){let best=1e9;for(let i=0;i<CONTINENT_LOOP.length;i++)best=Math.min(best,distanceToSegment(x,z,CONTINENT_LOOP[i],CONTINENT_LOOP[(i+1)%CONTINENT_LOOP.length]));return best;}
+// Exact coast distance, but skip segments whose bounding box cannot improve
+// the current nearest distance. Reduces local-detail startup cost without
+// changing coast geometry, topology or ecosystem inputs.
+function coastDistance(x,z){
+  let best2=1e18;
+  for(let i=0;i<CONTINENT_LOOP.length;i++){
+    const a=CONTINENT_LOOP[i],b=CONTINENT_LOOP[(i+1)%CONTINENT_LOOP.length];
+    const minX=Math.min(a[0],b[0]),maxX=Math.max(a[0],b[0]),
+      minZ=Math.min(a[1],b[1]),maxZ=Math.max(a[1],b[1]);
+    const ox=x<minX?minX-x:x>maxX?x-maxX:0;
+    const oz=z<minZ?minZ-z:z>maxZ?z-maxZ:0;
+    if(ox*ox+oz*oz>=best2)continue;
+    const dx=b[0]-a[0],dz=b[1]-a[1],den=dx*dx+dz*dz||1;
+    const t=clamp(((x-a[0])*dx+(z-a[1])*dz)/den,0,1);
+    const ex=x-(a[0]+dx*t),ez=z-(a[1]+dz*t),dist2=ex*ex+ez*ez;
+    if(dist2<best2)best2=dist2;
+  }
+  return Math.sqrt(best2);
+}
 
 // Relief and color derive from the separate deterministic continental ecology.
 function canonicalEcologyAt(x,z,edge){return sampleContinentalEcology(x,z,Math.max(0,edge));}
@@ -115,10 +133,26 @@ function buildGratitudeMesh(){
     cols=xs.length,rows=zs.length;
   if(cols*rows>80000)throw new Error('GCR2_LOCAL_LOD_VERTEX_BUDGET_EXCEEDED');
   const vertices=[],indices=[],inside=new Uint8Array(cols*rows),at=(r,c)=>r*cols+c;
-  for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
-    const x=xs[c],z=zs[r],land=pointInPolygon(x,z);inside[at(r,c)]=land?1:0;
-    const v=z-LOCAL_CENTER_Z,dir=tangentDirection(x,v),edge=land?coastDistance(x,z):0,eco=land?canonicalEcologyAt(x,z,edge):null,e=eco?eco.altitudeKm:0,col=eco?eco.color:PALETTE.low;
-    vertices.push(...dir,e,...col);
+  // Scan each continental z-row once to classify all x samples using the
+  // exact same even/odd polygon law as pointInPolygon. No repeated full
+  // coast-polygon scan for every terrain vertex.
+  for(let r=0;r<rows;r++){
+    const z=zs[r],crossings=[];
+    for(let i=0,j=CONTINENT_LOOP.length-1;i<CONTINENT_LOOP.length;j=i++){
+      const a=CONTINENT_LOOP[i],b=CONTINENT_LOOP[j];
+      if((a[1]>z)!==(b[1]>z))
+        crossings.push((b[0]-a[0])*(z-a[1])/((b[1]-a[1])||1e-9)+a[0]);
+    }
+    crossings.sort((a,b)=>a-b);
+    let leftCount=0;
+    for(let c=0;c<cols;c++){
+      const x=xs[c];
+      while(leftCount<crossings.length&&x>=crossings[leftCount])leftCount++;
+      const land=((crossings.length-leftCount)&1)===1;
+      inside[at(r,c)]=land?1:0;
+      const v=z-LOCAL_CENTER_Z,dir=tangentDirection(x,v),edge=land?coastDistance(x,z):0,eco=land?canonicalEcologyAt(x,z,edge):null,e=eco?eco.altitudeKm:0,col=eco?eco.color:PALETTE.low;
+      vertices.push(...dir,e,...col);
+    }
   }
   // Clip nearshore partial triangles instead of filling across water. Every
   // replacement triangle belongs to the original single continent mesh.

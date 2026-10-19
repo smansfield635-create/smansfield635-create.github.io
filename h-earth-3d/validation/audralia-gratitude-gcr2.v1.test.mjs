@@ -136,7 +136,7 @@ test('bounded continental sampling is deterministic and finite',()=>{
 test('one nonproduction same-origin WebGL canvas and source-limited GCR2 code',()=>{
   const read=p=>readFileSync(resolve(root,p),'utf8');
   const html=read(candidate+'index.html'),app=read(candidate+'app.mjs');
-  assert.equal((html.match(/<canvas\\b/g)||[]).length,1);
+  assert.equal((html.match(/<canvas\b/g)||[]).length,1);
   assert.match(html,/noindex,nofollow,noarchive/);
   assert.match(html,/.\/app\.mjs/);
   assert.ok(!html.includes('<iframe'));

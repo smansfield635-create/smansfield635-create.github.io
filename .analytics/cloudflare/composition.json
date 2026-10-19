@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-19T08:46:17Z",
+  "generatedAt": "2026-10-19T09:42:56Z",
   "window": {
-    "start": "2026-09-19T08:46:17Z",
-    "end": "2026-10-19T08:46:17Z"
+    "start": "2026-09-19T09:42:56Z",
+    "end": "2026-10-19T09:42:56Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/",
-        "pageLoads": 767,
-        "visits": 507
+        "pageLoads": 771,
+        "visits": 511
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 690,
-        "visits": 560
+        "pageLoads": 629,
+        "visits": 593
       },
       {
         "value": "/analytics/",
-        "pageLoads": 606,
-        "visits": 486
+        "pageLoads": 628,
+        "visits": 508
       },
       {
         "value": "/mirror-manor-preview/",
@@ -119,13 +119,13 @@
       },
       {
         "value": "/release-proof/",
-        "pageLoads": 25,
-        "visits": 25
+        "pageLoads": 26,
+        "visits": 26
       },
       {
         "value": "/about/",
-        "pageLoads": 21,
-        "visits": 19
+        "pageLoads": 22,
+        "visits": 20
       },
       {
         "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
@@ -221,23 +221,23 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 3265,
-        "visits": 3265
+        "pageLoads": 2648,
+        "visits": 2648
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1395,
+        "pageLoads": 1018,
         "visits": 0
       },
       {
         "value": "www.google.com",
-        "pageLoads": 72,
-        "visits": 72
+        "pageLoads": 84,
+        "visits": 84
       },
       {
         "value": "bing.com",
-        "pageLoads": 33,
-        "visits": 33
+        "pageLoads": 43,
+        "visits": 43
       },
       {
         "value": "m.facebook.com",
@@ -253,8 +253,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 3891,
-        "visits": 2804
+        "pageLoads": 3752,
+        "visits": 2665
       },
       {
         "value": "CN",
@@ -290,8 +290,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 2086,
-        "visits": 2040
+        "pageLoads": 2087,
+        "visits": 2041
       },
       {
         "value": "mobile",
@@ -312,8 +312,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 1255,
-        "visits": 673
+        "pageLoads": 1256,
+        "visits": 674
       },
       {
         "value": "ChromeMobile",
@@ -364,8 +364,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 191,
-        "visits": 185
+        "pageLoads": 192,
+        "visits": 186
       },
       {
         "value": "MacOSX",
@@ -385,21 +385,21 @@
     ],
     "bot": [
       {
-        "value": "0",
-        "pageLoads": 2341,
-        "visits": 1253
+        "value": "1",
+        "pageLoads": 2583,
+        "visits": 2583
       },
       {
-        "value": "1",
-        "pageLoads": 1593,
-        "visits": 1593
+        "value": "0",
+        "pageLoads": 2332,
+        "visits": 1244
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 3062,
-        "visits": 2625
+        "pageLoads": 3063,
+        "visits": 2626
       },
       {
         "value": "reload",
@@ -425,8 +425,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 2986,
-        "visits": 2553
+        "pageLoads": 2987,
+        "visits": 2554
       },
       {
         "value": "cache",
@@ -442,15 +442,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 3934,
-        "visits": 2846
+        "pageLoads": 3935,
+        "visits": 2847
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 3934,
-        "visits": 2846
+        "pageLoads": 3935,
+        "visits": 2847
       }
     ]
   }

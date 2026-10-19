@@ -7,7 +7,7 @@ import {
 } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 
 import { GCR2_METRIC_FRAME, GCR2_ANCHORS, regionalMetersToGeodetic, regionalMetersToContinentalKm } from './metric-geography-bridge.v1.mjs';
-import { GRATITUDE_RIVERS, GRATITUDE_LAKES, GRATITUDE_DELTA_SHORE_CONTROLS, GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE, verifyNamedHydrology, verifyCandidateDeltaCoast, verifyCandidateEasternConfluence } from './hydrology-graph.v1.mjs';
+import { GRATITUDE_RIVERS, GRATITUDE_LAKES, GRATITUDE_CANDIDATE_CONTINENT_REMAINDER, GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE, clipCandidateRiverBankToLand, verifyNamedHydrology, verifyCandidateDeltaCoast, verifyCandidateEasternConfluence } from './hydrology-graph.v1.mjs';
 import { sampleContinentalEcology, ECOLOGY_SOURCE } from './ecology-field.v1.mjs';
 import { resolveAudraliaGratitudeShorelineZ } from '../../../../inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
 
@@ -71,20 +71,25 @@ for(let x=northEdgeWest;x<northEdgeEast;x+=12)
   NORTH_COAST.push([x,macroShoreZ(x)]);
 NORTH_COAST.push([northEdgeEast,macroShoreZ(northEdgeEast)]);
 
-// Rev5 sources identify three separate delta mouths, while the southern
-// kilometer-scale shoreline between them is provisional. Reconcile them as
-// one asymmetric coastline, never as a second world or separate hydro atlas.
-const PROVISIONAL_REMAINDER=[
-  [1120,-176],[1238,-300],[1300,-455],[1218,-575],[1345,-725],[1280,-885],
-  [1124,-1035],[1188,-1190],[1070,-1350],
-  ...GRATITUDE_DELTA_SHORE_CONTROLS,
-  [-190,-1650],[-420,-1732],[-645,-1640],[-815,-1490],
-  [-1005,-1530],[-1160,-1390],[-1108,-1210],[-1275,-1070],[-1218,-885],[-1360,-720],
-  [-1290,-545],[-1192,-388],[-1130,-245]
-];
-const CONTINENT_LOOP=[...NORTH_COAST,...PROVISIONAL_REMAINDER];
+// Share the coast with the qualified hydrology source and test model.
+const CONTINENT_LOOP=[...NORTH_COAST,...GRATITUDE_CANDIDATE_CONTINENT_REMAINDER];
 
 function pointInPolygon(x,z,loop=CONTINENT_LOOP){let inside=false;for(let i=0,j=loop.length-1;i<loop.length;j=i++){const a=loop[i],b=loop[j];if(((a[1]>z)!==(b[1]>z))&&(x<(b[0]-a[0])*(z-a[1])/((b[1]-a[1])||1e-9)+a[0]))inside=!inside;}return inside;}
+// Reject any modeled water centerline offshore except the exact delta mouths.
+function verifySourceDrainageOnCandidateLand(){
+  const network=[...GRATITUDE_RIVERS,GRATITUDE_EASTERN_CONFLUENCE_CANDIDATE];
+  for(const river of network){
+    for(let i=0;i<river.points.length-1;i++){
+      const a=river.points[i],b=river.points[i+1],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
+      const samples=Math.max(1,Math.ceil(length/2));
+      for(let j=0;j<samples;j++){
+        const t=(j+.5)/samples;
+        if(!pointInPolygon(mix(a[0],b[0],t),mix(a[1],b[1],t)))return false;
+      }
+    }
+  }
+  return true;
+}
 function distanceToSegment(x,z,a,b){const dx=b[0]-a[0],dz=b[1]-a[1],d=dx*dx+dz*dz||1,t=clamp(((x-a[0])*dx+(z-a[1])*dz)/d,0,1);return Math.hypot(x-(a[0]+dx*t),z-(a[1]+dz*t));}
 function coastDistance(x,z){let best=1e9;for(let i=0;i<CONTINENT_LOOP.length;i++)best=Math.min(best,distanceToSegment(x,z,CONTINENT_LOOP[i],CONTINENT_LOOP[(i+1)%CONTINENT_LOOP.length]));return best;}
 
@@ -93,7 +98,7 @@ function canonicalEcologyAt(x,z,edge){return sampleContinentalEcology(x,z,Math.m
 
 function buildAxis(min,max,fineMin,fineMax,coarse=22,fine=9){const out=[min];let x=min;while(x<max-1e-6){let step=x>=fineMin&&x<fineMax?fine:coarse,next=Math.min(max,x+step);if(x<fineMin&&next>fineMin)next=fineMin;if(x<fineMax&&next>fineMax)next=fineMax;out.push(next);x=next;}return out;}
 function buildGratitudeMesh(){
-  const xs=buildAxis(-1400,1400,-320,320,22,8),zs=buildAxis(-2050,260,-420,120,22,8),cols=xs.length,rows=zs.length;
+  const xs=buildAxis(-1600,1550,-320,320,22,8),zs=buildAxis(-2050,260,-420,120,22,8),cols=xs.length,rows=zs.length;
   const vertices=[],indices=[],inside=new Uint8Array(cols*rows),at=(r,c)=>r*cols+c;
   for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
     const x=xs[c],z=zs[r],land=pointInPolygon(x,z);inside[at(r,c)]=land?1:0;
@@ -123,15 +128,17 @@ function buildHydrologyOverlay(){
       const a=river.points[i],b=river.points[i+1],dx=b[0]-a[0],dz=b[1]-a[1],len=Math.hypot(dx,dz);
       if(!(len>0))continue;
       const nx=-dz/len,nz=dx/len,width=Math.max(2.3,(river.widthAuthoringUnits??river.widthVisualUnits)*.25);
-      const steps=Math.max(1,Math.ceil(len/14));
+      const steps=Math.max(1,Math.ceil(len/6));
       for(let s=0;s<steps;s++){
         const t=s/steps,q=(s+1)/steps;
         const x0=mix(a[0],b[0],t),z0=mix(a[1],b[1],t),
           x1=mix(a[0],b[0],q),z1=mix(a[1],b[1],q);
-        const v0=emit(x0+nx*width,z0+nz*width),
-          v1=emit(x0-nx*width,z0-nz*width),
-          v2=emit(x1+nx*width,z1+nz*width),
-          v3=emit(x1-nx*width,z1-nz*width);
+        const bank0L=clipCandidateRiverBankToLand(x0,z0,x0+nx*width,z0+nz*width,pointInPolygon);
+        const bank0R=clipCandidateRiverBankToLand(x0,z0,x0-nx*width,z0-nz*width,pointInPolygon);
+        const bank1L=clipCandidateRiverBankToLand(x1,z1,x1+nx*width,z1+nz*width,pointInPolygon);
+        const bank1R=clipCandidateRiverBankToLand(x1,z1,x1-nx*width,z1-nz*width,pointInPolygon);
+        const v0=emit(...bank0L),v1=emit(...bank0R),
+          v2=emit(...bank1L),v3=emit(...bank1R);
         indices.push(v0,v2,v1,v1,v2,v3);
       }
     }
@@ -191,6 +198,7 @@ function vao(mesh){const v=gl.createVertexArray();gl.bindVertexArray(v);const b=
 if(!verifyNamedHydrology())throw new Error('REV5_HYDROLOGY_IDENTITY_FAILED');
 if(!verifyCandidateDeltaCoast())throw new Error('DELTA_MOUTH_TO_COAST_RECONCILIATION_FAILED');
 if(!verifyCandidateEasternConfluence())throw new Error('EASTERN_CONFLUENCE_CANDIDATE_INVALID');
+if(!verifySourceDrainageOnCandidateLand())throw new Error('CANDIDATE_RIVERS_OUTSIDE_LAND');
 const planetMesh=buildPlanetMesh(),gratitudeMesh=buildGratitudeMesh(),
   hydroMesh=buildHydrologyOverlay(),
   planetVao=vao(planetMesh),gratitudeVao=vao(gratitudeMesh),hydroVao=vao(hydroMesh);
@@ -249,6 +257,8 @@ const gcr2Diagnostics=Object.freeze({
   sourceRev5DrainageCount:GRATITUDE_RIVERS.length,
   sourceRev5LakeCount:GRATITUDE_LAKES.length,
   candidateThreeMouthDeltaReconciled:true,
+  candidatePeripheralHeadwatersLandward:true,
+  riverBanksClippedToCandidateLand:true,
   candidateEastConfluenceProposedNotCanonical:true,
   oceanwardMeshZMinKm:-2050,
   localPlantsMagnifiedToContinentalScale:false,

@@ -42,6 +42,36 @@ export const GRATITUDE_DELTA_SHORE_CONTROLS=Object.freeze([[890,-1460],[782,-153
   ([x,z])=>Object.freeze([x,z])
 ));
 
+
+/**
+ * Provisional, asymmetrical coastal shoulders, retaining original rev5 river
+ * coordinates and all three source delta mouths. NOT physical coast authority.
+ */
+export const GRATITUDE_CANDIDATE_CONTINENT_REMAINDER=Object.freeze([
+  [1120,-176],[1238,-300],[1300,-455],[1226,-575],[1390,-725],[1410,-870],
+  [1244,-1048],[1188,-1190],[1070,-1350],
+  ...GRATITUDE_DELTA_SHORE_CONTROLS,
+  [-190,-1650],[-420,-1732],[-645,-1640],[-815,-1490],
+  [-1005,-1530],[-1160,-1390],[-1108,-1210],[-1398,-1095],[-1480,-895],[-1450,-710],
+  [-1290,-545],[-1192,-388],[-1130,-245]
+].map(([x,z])=>Object.freeze([x,z])));
+
+/** Render-only bank correction; does not assert measured river width or flow. */
+export function clipCandidateRiverBankToLand(cx,cz,bx,bz,contains){
+  if(![cx,cz,bx,bz].every(Number.isFinite)||typeof contains!=='function')
+    throw new RangeError('CANDIDATE_RIVER_BANK_INPUT_INVALID');
+  if(contains(bx,bz))return [bx,bz];
+  // A delta outlet is allowed to touch (but not extend across) the shoreline.
+  if(!contains(cx,cz))return [cx,cz];
+  let low=0,high=1;
+  for(let i=0;i<23;i++){
+    const t=(low+high)*.5,x=cx+(bx-cx)*t,z=cz+(bz-cz)*t;
+    if(contains(x,z))low=t;else high=t;
+  }
+  const safe=Math.max(0,low-0.0005);
+  return [cx+(bx-cx)*safe,cz+(bz-cz)*safe];
+}
+
 /**
  * Derived eastern downstream reach, never part of the 15 named rev5 rivers.
  * The rev5 Eastern River stops at (480,-1420) without a declared outlet.

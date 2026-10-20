@@ -9,7 +9,7 @@ import {constructGeologicalPortalAssembly,sampleFormationWalkable,projectGeologi
 import {constructHEarthSweptPassageMesh} from '../render/geometry-kernel.sweep.v1.js';
 // Owner-directed temporary land development mode. Source water meshes remain intact.
 export const H_EARTH_WATER_PRESENTATION_ENABLED=true;
-export const H_EARTH_REAR_WATER_PRESENTATION_ENABLED=false;
+export const H_EARTH_REAR_WATER_PRESENTATION_ENABLED=true;
 export const isHEarthWaterPresentationPart=id=>/(?:^|:)(?:FOAM_CONTACT|SHALLOW_WATER|NEARSHORE_WATER|OPEN_WATER|FAR_OCEAN_CONTINUATION|FRESHWATER_RIVER|OASIS_WATER)$/.test(String(id));
 export function shouldPresentHEarthDrawRange(range){
   if(H_EARTH_WATER_PRESENTATION_ENABLED)return true;
@@ -58,65 +58,82 @@ export function traceGeologicalRuntimeDrainage(sampler,site=SITE){
   if(path.length<10)fail('INSUFFICIENT_ROUTE');
   return Object.freeze({path,result,surveyMethod:'ACTUAL_G_WORLD_CANONICAL_INDEXED_TRIANGLES_INVERSE_SPHERE_D8',waterPresent:false});
 }
-function buildWaterRibbon(route,kind,formation,basinMesh){
-  const points=route.points;if(points.length<2)fail('WATER_ROUTE_TOO_SHORT');
-  // Let the visible channel wander inside its broad excavated valley. The
-  // surveyed bed elevations remain authoritative; this small lateral bend
-  // keeps the approach from reading as a straight blue strip at arrival scale.
-  const centers=points.map((p,i)=>{
-    const a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz)||1;
-    const t=i/(points.length-1),wave=Math.sin(t*Math.PI*3+0.35*Math.sin(t*Math.PI*4));
-    const offset=(kind==='MAIN'?5.5:1.4)*Math.sin(Math.PI*t)*wave;
-    return {...p,x:p.x-dz/length*offset,z:p.z+dx/length*offset};
-  });
+/** Water follows the authored excavated corridor and actual emitted land.
+ * No terrain or survey stations are moved. The downstream spill controls the
+ * basin level; the hidden legacy ribbon's decorative off-bed meander is retired. */
+function buildConnectedRiverWater(points,terrainMesh,formation){
+  const land=waterTriangles(terrainMesh),ground=(x,z)=>sampleWaterTriangles(land,x,z)?.y;
+  const route=points.slice(18),rows=[];
+  // Include every actual triangle crossing, so between-station ridges cannot
+  // interrupt the visible stream. Explicit centre vertices preserve its grade.
+  const stations=[];
+  for(let i=0;i<route.length-1;i++){
+    const a=route[i],b=route[i+1],n=1;
+    const cuts=new Set(Array.from({length:n},(_,j)=>j/n));
+    const dx=b.x-a.x,dz=b.z-a.z;
+    for(const tri of land){
+      if(Math.max(a.x,b.x)<tri.box[0]||Math.min(a.x,b.x)>tri.box[2]||Math.max(a.z,b.z)<tri.box[1]||Math.min(a.z,b.z)>tri.box[3])continue;
+      for(let e=0;e<3;e++){
+        const c=tri.points[e],d=tri.points[(e+1)%3],ex=d.x-c.x,ez=d.z-c.z,den=dx*ez-dz*ex;
+        if(Math.abs(den)<1e-10)continue;
+        const t=((c.x-a.x)*ez-(c.z-a.z)*ex)/den,u=((c.x-a.x)*dz-(c.z-a.z)*dx)/den;
+        if(t>1e-7&&t<1-1e-7&&u>=-1e-7&&u<=1+1e-7)cuts.add(t);
+      }
+    }
+    let last=-1;for(const t of [...cuts].sort((a,b)=>a-b))if(t-last>1e-7){stations.push({x:a.x+dx*t,z:a.z+dz*t});last=t;}
+  }
+  stations.push(route.at(-1));
+  const levels=stations.map(p=>{const y=ground(p.x,p.z);if(!Number.isFinite(y))fail('EXTENSION_GROUND_MISSING');return y+.24;});
+  for(let i=levels.length-2;i>=0;i--)levels[i]=Math.max(levels[i],levels[i+1]+.00001);
+  const basin=formation.oasis,waterLevel=levels[0];
+  const inBasin=p=>Math.hypot((p.x-basin.centerX)/basin.radiusX,(p.z-basin.centerZ)/basin.radiusZ)<=1;
+  for(let i=0;i<stations.length&&inBasin(stations[i]);i++)levels[i]=waterLevel;
+  for(let i=0;i<stations.length;i++){
+    const p=stations[i],a=stations[Math.max(0,i-1)],b=stations[Math.min(stations.length-1,i+1)],dx=b.x-a.x,dz=b.z-a.z,l=Math.hypot(dx,dz)||1;
+    rows.push([p.x-dz/l*3.3,levels[i],p.z+dx/l*3.3,p.x+dz/l*3.3,levels[i],p.z-dx/l*3.3]);
+  }
   const positions=[],indices=[];
-  for(let i=0;i<centers.length;i++){
-    const p=centers[i],a=centers[Math.max(0,i-1)],b=centers[Math.min(centers.length-1,i+1)];
-    const dx=b.x-a.x,dz=b.z-a.z,length=Math.hypot(dx,dz)||1,nx=-dz/length,nz=dx/length;
-    const t=i/(points.length-1),basin=formation?.oasis;
-    const basinDistance=basin?Math.hypot(p.x-basin.centerX,p.z-basin.centerZ):Infinity;
-    const confluence=Number.isFinite(basinDistance)?Math.exp(-basinDistance/18):0;
-    const half=(kind==='MAIN'?1.15+2.25*t:0.85+0.75*t)*(0.9+0.1*Math.sin(i*.17+0.4))+2.15*confluence;
-    const y=p.bedY+0.24;
-    positions.push(p.x+nx*half,y,p.z+nz*half,p.x-nx*half,y,p.z-nz*half);
-    if(i){const q=2*i,r=q-2;indices.push(r,q,r+1,r+1,q,q+1)}
+  const clip=(poly,distance)=>{
+    const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],da=distance(a),db=distance(b);if(da>=0)out.push(a);if((da>=0)!==(db>=0)){const t=da/(da-db);out.push({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,z:a.z+(b.z-a.z)*t});}}return out;
+  };
+  const basinPositions=[],basinIndices=[];
+  for(const t of land){
+    let poly=t.points.map(p=>({...p,ground:p.y,y:waterLevel}));
+    // Clip a level pool to the actual land; its broad construction domain is
+    // the already authored basin. The river owns the downstream continuation.
+    poly=clip(poly,p=>1-Math.hypot((p.x-basin.centerX)/basin.radiusX,(p.z-basin.centerZ)/basin.radiusZ));
+    const [a,b,c]=t.points;
+    poly=clip(poly,p=>{const u=((b.z-c.z)*(p.x-c.x)+(c.x-b.x)*(p.z-c.z))/t.det,v=((c.z-a.z)*(p.x-c.x)+(a.x-c.x)*(p.z-c.z))/t.det;return waterLevel-(u*a.y+v*b.y+(1-u-v)*c.y);});
+    const base=basinPositions.length/3;for(const p of poly)basinPositions.push(p.x,p.y,p.z);for(let k=1;k<poly.length-1;k++)basinIndices.push(base,base+k,base+k+1);
   }
-  // Preserve the source bank rows for drainage witnesses, but emit only the
-  // river outside the actual triangulated basin. The basin owns every overlap.
-  const footprint=waterTriangles(basinMesh),emitted=[];
-  for(let i=0;i<indices.length;i+=3){
-    let pieces=[indices.slice(i,i+3).map(id=>({x:positions[id*3],y:positions[id*3+1],z:positions[id*3+2]}))];
-    for(const triangle of footprint){
-      const next=[];
-      for(const polygon of pieces){
-        const box=polygonBounds(polygon);
-        if(box[2]<triangle.box[0]||box[0]>triangle.box[2]||box[3]<triangle.box[1]||box[1]>triangle.box[3])next.push(polygon);
-        else next.push(...subtractWaterTriangle(polygon,triangle.points));
+  const basinMesh={positions:new Float32Array(basinPositions),indices:new Uint32Array(basinIndices),vertexCount:basinPositions.length/3,triangleCount:basinIndices.length/3,waterLevel};
+  const basinFootprint=waterTriangles(basinMesh);
+  for(let i=1;i<rows.length;i++)for(let side=0;side<2;side++){
+    const split=r=>[r.slice(0,3),[ (r[0]+r[3])/2,r[1],(r[2]+r[5])/2 ],r.slice(3)];
+    const arow=split(rows[i-1]),brow=split(rows[i]);
+    const quad=[arow[side],brow[side],brow[side+1],arow[side+1]].map(([x,y,z])=>({x,y,z}));
+    for(const ids of [[0,1,3],[3,1,2]]){
+      const tri=ids.map(k=>quad[k]),box=polygonBounds(tri);
+      for(const t of land){
+        if(box[2]<t.box[0]||box[0]>t.box[2]||box[3]<t.box[1]||box[1]>t.box[3])continue;
+        let poly=tri;const [a,b,c]=t.points,orientation=Math.sign((b.x-a.x)*(c.z-a.z)-(b.z-a.z)*(c.x-a.x));
+        for(let e=0;e<3&&poly.length;e++){const a=t.points[e],b=t.points[(e+1)%3];poly=clip(poly,p=>orientation*((b.x-a.x)*(p.z-a.z)-(b.z-a.z)*(p.x-a.x)));}
+        poly=clip(poly,p=>{const u=((b.z-c.z)*(p.x-c.x)+(c.x-b.x)*(p.z-c.z))/t.det,v=((c.z-a.z)*(p.x-c.x)+(a.x-c.x)*(p.z-c.z))/t.det;return p.y-(u*a.y+v*b.y+(1-u-v)*c.y);});
+        if(poly.length<3)continue;
+        let pieces=[poly];
+        for(const basinTri of basinFootprint){const box=polygonBounds(poly);if(box[2]<basinTri.box[0]||box[0]>basinTri.box[2]||box[3]<basinTri.box[1]||box[1]>basinTri.box[3])continue;pieces=pieces.flatMap(p=>subtractWaterTriangle(p,basinTri.points));if(!pieces.length)break;}
+        for(const piece of pieces){const base=positions.length/3;for(const p of piece)positions.push(p.x,p.y,p.z);for(let k=1;k<piece.length-1;k++)indices.push(base,base+k,base+k+1);}
+
       }
-      pieces=next;if(!pieces.length)break;
-    }
-    for(const polygon of pieces){
-      const base=positions.length/3;
-      for(const p of polygon){
-        // Boundary vertices share exactly the basin water elevation. Points
-        // introduced by infinite edge extensions outside the basin retain the
-        // original interpolated river grade.
-        const atBasin=sampleWaterTriangles(footprint,p.x,p.z);
-        positions.push(p.x,atBasin?formation.oasis.waterLevel:p.y,p.z);
-      }
-      for(let k=1;k<polygon.length-1;k++)emitted.push(base,base+k,base+k+1);
     }
   }
-  return Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(emitted),vertexCount:positions.length/3,triangleCount:emitted.length/3,routeId:route.id,basinOwnsOverlap:true});
-}
-/** One wet-margin definition constructs the basin's actual clipped polygons. */
-function oasisWetMargin(formation,x,z){
-  const basin=formation.oasis,dx=(x-basin.centerX)/basin.radiusX,dz=(z-basin.centerZ)/basin.radiusZ,angle=Math.atan2(dz,dx);
-  const edge=1+basin.edgeHarmonics[0]*Math.sin(3*angle)+basin.edgeHarmonics[1]*Math.sin(5*angle+0.7)+
-    basin.edgeHarmonics[2]*Math.cos(2*angle-0.4)+basin.edgeHarmonics[3]*Math.sin(7*angle+1.1)+
-    basin.edgeHarmonics[4]*Math.cos(9*angle-.6)+.025*Math.sin(x*.31+z*.23)*Math.cos(z*.27-x*.19);
-  return Math.min(0.98-Math.hypot(dx,dz)/(edge*(basin.waterEdgeScale??0.72)),
-    (basin.waterLevel-formation.excavatedOutdoorTerrain(x,z))*.5);
+  const compact=(positions,indices)=>{
+    const p=[],ids=[],map=new Map(),remap=[];
+    for(let i=0;i<positions.length;i+=3){const key=positions.slice(i,i+3).map(v=>v.toFixed(5)).join(',');let id=map.get(key);if(id===undefined){id=p.length/3;map.set(key,id);p.push(...positions.slice(i,i+3));}remap.push(id);}
+    for(let i=0;i<indices.length;i+=3){const a=remap[indices[i]],b=remap[indices[i+1]],c=remap[indices[i+2]];if(new Set([a,b,c]).size<3)continue;const area=(p[b*3]-p[a*3])*(p[c*3+2]-p[a*3+2])-(p[b*3+2]-p[a*3+2])*(p[c*3]-p[a*3]);if(Math.abs(area)<1e-8)continue;ids.push(a,b,c);}
+    return Object.freeze({positions:new Float32Array(p),indices:new Uint32Array(ids),vertexCount:p.length/3,triangleCount:ids.length/3});
+  };
+  return {basin:compact(basinPositions,basinIndices),waterLevel,river:compact(positions,indices)};
 }
 const polygonBounds=points=>[Math.min(...points.map(p=>p.x)),Math.min(...points.map(p=>p.z)),Math.max(...points.map(p=>p.x)),Math.max(...points.map(p=>p.z))];
 function waterTriangles(mesh,{projected=false,role=null}={}){
@@ -164,28 +181,6 @@ function subtractWaterTriangle(polygon,triangle){
     inside=keep;
   }
   return outside;
-}
-function buildOasisWater(formation,terrainAt){
-  const basin=formation.oasis,step=1.5,positions=[],indices=[];
-  const x0=basin.centerX-basin.radiusX,x1=basin.centerX+basin.radiusX,z0=basin.centerZ-basin.radiusZ,z1=basin.centerZ+basin.radiusZ;
-  const cols=Math.ceil((x1-x0)/step),rows=Math.ceil((z1-z0)/step),shoreMargin=(x,z)=>oasisWetMargin(formation,x,z);
-  for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
-    const x=x0+i*step,z=z0+j*step,xn=Math.min(x1,x+step),zn=Math.min(z1,z+step);
-    let polygon=[{x,z,margin:shoreMargin(x,z)},{x:xn,z,margin:shoreMargin(xn,z)},
-      {x:xn,z:zn,margin:shoreMargin(xn,zn)},{x,z:zn,margin:shoreMargin(x,zn)}];
-    const clipped=[];
-    for(let k=0;k<polygon.length;k++){
-      const a=polygon[k],b=polygon[(k+1)%polygon.length],insideA=a.margin>=0,insideB=b.margin>=0;
-      if(insideA)clipped.push(a);
-      if(insideA!==insideB){const t=a.margin/(a.margin-b.margin);clipped.push({x:a.x+(b.x-a.x)*t,z:a.z+(b.z-a.z)*t,margin:0});}
-    }
-    if(clipped.length<3)continue;
-    const base=positions.length/3;
-    for(const p of clipped)positions.push(p.x,basin.waterLevel,p.z);
-    for(let k=1;k<clipped.length-1;k++)indices.push(base,base+k,base+k+1);
-  }
-  if(!indices.length)fail('OASIS_WATER_SURFACE_EMPTY');
-  return Object.freeze({positions:new Float32Array(positions),indices:new Uint32Array(indices),vertexCount:positions.length/3,triangleCount:indices.length/3,waterLevel:basin.waterLevel});
 }
 function nearestRouteSegment(points,x,z){
   let best=null;
@@ -627,13 +622,14 @@ export function constructGeologicalRuntimeBridge(canonical){
   const retirementParts=[{xMin:-120,xMax:96,zMin:-440,zMax:-224},{xMin:-304,xMax:96,zMin:-568,zMax:-440}].map(bounds=>deriveBaseTriangleRetirement(canonical,bounds));
   const triangleOffsets=Uint32Array.from([...new Set(retirementParts.flatMap(p=>[...p.triangleOffsets]))].sort((a,b)=>a-b));
   const retirement=Object.freeze({...retirementParts[0],triangleOffsets,triangleCount:triangleOffsets.length,bounds:BOUNDS});
-  const basinWater=buildOasisWater(formation,terrainAt);
+  const connectedWater=buildConnectedRiverWater(vegetationCorridorPoints,portal.terrainWithoutAperture,formation);
+  const basinWater=connectedWater.basin;
   const parts=[
     ['ERODED_TERRAIN',portal.terrainWithoutAperture],
     ['MOUNTAIN_OVERBURDEN',portal.upperMantle],
     ['NATURAL_CLIFF_FACE',portal.exposedCliffFace],
     ['CAVERN_PHYSICAL_SHELL',portal.cave],
-    ...formation.drainage.waterRoutes.map(route=>['FRESHWATER_RIVER',buildWaterRibbon(route,route.kind,formation,basinWater)]),
+    ['FRESHWATER_RIVER',connectedWater.river],
     ['OASIS_WATER',basinWater]
   ];
   const meshes=parts.map(([role,mesh])=>Object.freeze({role,mesh:projectGeologicalMeshForRenderer(mesh)}));
@@ -644,14 +640,14 @@ export function constructGeologicalRuntimeBridge(canonical){
   const plannedChannelDistanceAt=(x,z)=>nearestRouteSegment(vegetationCorridorPoints,x,z).distance;
   const isPlannedWaterFootprint=(x,z)=>plannedChannelDistanceAt(x,z)<=6||!!sampleWaterAt(x,z);
   const output=Object.freeze({isPlannedWaterFootprint,plannedChannelDistanceAt,sampleWaterAt,sampleOutdoorAt,contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
-    formation:physicalFormation,portal,retirement,meshes,route:trace,originalTerrainColorAt,originalTerrainContactAt,
+    formation:Object.freeze({...physicalFormation,oasis:Object.freeze({...physicalFormation.oasis,waterLevel:connectedWater.waterLevel})}),portal,retirement,meshes,route:trace,originalTerrainColorAt,originalTerrainContactAt,
     cavernLightVisibility:makeCavernLightVisibility([kernel.mesh,cliff.mesh]),
     originalTerrainElevationAt:terrainAt,
     sourceWorldUnchanged:true,originalBaseTrianglesToRetire:retirement.triangleCount,
     hydrology:Object.freeze({waterPresent:true,waterSourceProven:false,sourceType:formation.drainage.sourceType,
       mainRouteResult:trace.result,mainRouteSteps:trace.path.length,tributaryCount:0,
       downhillTerrainSurvey:'ACTUAL_G_WORLD_CANONICAL_INDEXED_TRIANGLES_INVERSE_SPHERE_D8',
-      oasisWaterLevel:formation.oasis.waterLevel,connectedOutletProven:false}),
+      oasisWaterLevel:connectedWater.waterLevel,connectedOutletProven:false}),
     refinedGeometryClipRequired:true,sourcePass:'CANONICAL_PACKAGE_RUNTIME_DERIVATION'});
   return output;
 }

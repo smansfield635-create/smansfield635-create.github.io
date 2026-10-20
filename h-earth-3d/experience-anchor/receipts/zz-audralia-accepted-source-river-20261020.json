@@ -1,0 +1,123 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewClass": "PRESERVATION_BASED_OWNER_ACCEPTED_AUDRALIA_ADOPTION",
+  "acceptedProductHead": "4011c1a1cafcb67eaf84ee7473b85ca938f84055",
+  "ownerDispositionSource": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6586#issuecomment-6303656921",
+  "visualEvidence": [
+    "showroom/globe/audralia/river-continuity-qa-v1.html"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/audralia/index.html",
+    "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs"
+  ],
+  "continuityEvidence": [
+    "showroom/globe/h-earth/terrain-estate-construction-v1/h-earth-river-source-v1.json",
+    "showroom/globe/h-earth/terrain-estate-construction-v1/river-route-v1.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/index.html",
+      "sha256": "094b819307e136c5e067bdcac21059f42c806c5df83caa17fe225dd5d8844158"
+    },
+    {
+      "path": "showroom/globe/audralia/regional-continuity-qa-v1.html",
+      "sha256": "95c7540090d6edc13461cc9a3ca1bf8e2945ae49edab3c153f651132891a1c9a"
+    },
+    {
+      "path": "showroom/globe/audralia/river-continuity-qa-v1.html",
+      "sha256": "47a4b365d114061eff30058342d59013819880e74e1ee39325166827c552167b"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.bin.gz",
+      "sha256": "1aa18608c496bef5061e6838cdef5c5f5a70e012ee52ecc020adeb373ff4e9f3"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-00.gz",
+      "sha256": "c0e4e898f323b0bcc9bcdbac1a2cdbf202fdf7cfb5d188a48d67d684d4c33f63"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-01.gz",
+      "sha256": "fc1a95273347c501907ae322cbc50cd433652c325e158227dbe0642d13e9971b"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-02.gz",
+      "sha256": "24de4264cc331260145559cc2fc20faeb78961e3fe1ad3d42e506aa5a571d524"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-03.gz",
+      "sha256": "b154243423a876647b04173efb20b2ac5334801067beda6d9caf5d02b6bd7706"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.part-04.gz",
+      "sha256": "11a45bf5f62b74f7d01db46b8f8d9c73669026c430dc58cdb0115dd3c62510ca"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.provenance.json",
+      "sha256": "f35a79240ce761ae9b40d3a7097c9b3dff78841fa9e80e4aa627b14e96f19b51"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/h-earth-river-source-v1.json",
+      "sha256": "a2be938e735da6ee4877545a4c300293116ad75725deb6882947510f68bbe2cc"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs",
+      "sha256": "b40da77b15216a5430b28a1a5a82170ac86e50bee780fafaa1e17be5de0ab0ee"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/regional-ecology-v1.bin.gz",
+      "sha256": "2a792d47283807474cac7dd07131353b49a872d5e6c8fc26891399aeb66998cb"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/regional-ecology-v1.provenance.json",
+      "sha256": "5b3cc1c3f972476e6b748036d571fd0dc095f921f6b1d2c48c49caacd996004c"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs",
+      "sha256": "b0f6e1f8895bb51f3374e23c0f467e0ee12b1ed84a22fb398a8b15b57a678b0e"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/river-continuity-v1.mjs",
+      "sha256": "57e08e4b68b8c070de37c2e329d254cf993bc80d9b8dd2835c9f7970666c01f5"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/river-mesh-v1.bin.gz",
+      "sha256": "2a10a03d6d3a6b072b10f1137d63b438d6b37d9bbb9d7a9f203828fedfb2d4a1"
+    },
+    {
+      "path": "showroom/globe/h-earth/terrain-estate-construction-v1/river-route-v1.json",
+      "sha256": "b9a335e090fcd96364093d53d4130fd5a8987657286fdd50b3fab999c9032d5c"
+    }
+  ],
+  "reviewBasis": {
+    "visual": "Original anchor repository proxy compared with owner tablet image and independent six-view exact-source rendering. Existing world canvas, terrain/horizon, coastline and minimal direct navigation are preserved. Diagnostic comparison is not the production UI.",
+    "interaction": "Source-preservation review: same existing look/travel/pinch controls and H-Earth Play entry; no new ground interaction or collision execution claimed.",
+    "continuity": "All 79 programmed river centers retained, with downstream continuation only. Existing regional terrain, coast/reservoir and H-Earth ground runtime are preserved. Global vegetation remains terrain color/elevation as owner directed.",
+    "independentReviewer": "/root/river_review",
+    "browserRun": 39510914094,
+    "browserArtifact": 12305147561,
+    "screenshotSha256": "a99595ef6cfc4d6cdc8a3e8c337abf52cc6cd1925d6dc5ce8f6538d976c0ada9"
+  },
+  "limits": [
+    "Not a new local-ground physics or collision qualification.",
+    "No physical downhill-flow simulation claimed.",
+    "Right-side green/brown terrain blotching remains owner-accepted unfinished work."
+  ],
+  "authorityEffect": "NONE_EVIDENCE_ONLY"
+}

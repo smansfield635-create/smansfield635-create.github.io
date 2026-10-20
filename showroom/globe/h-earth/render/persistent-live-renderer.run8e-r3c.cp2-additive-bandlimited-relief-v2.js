@@ -1421,6 +1421,22 @@ void main(){float d=texture(uDepth,vUv).r,v=clamp((1.-d)*28.,0.,1.);outColor=vec
 
 // A local map keeps the accepted meadow's resolution and matrix unchanged.
 // Fit vegetation plus nearby receiving ground in light-space; depth matches meadow.
+export function drawCavernShadowCasters(gl,terrain,vegetation){
+  const enabled=gl.isEnabled(gl.POLYGON_OFFSET_FILL),factor=gl.getParameter(gl.POLYGON_OFFSET_FACTOR),units=gl.getParameter(gl.POLYGON_OFFSET_UNITS);
+  let indexCount=0;
+  const draw=parts=>{for(const part of parts){gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.mesh.indices.length,gl.UNSIGNED_INT,0);indexCount+=part.mesh.indices.length;}};
+  try{
+    // Offset opaque terrain by its light-space slope to prevent self-shadow bands.
+    // Keep thin foliage unbiased so its close-contact shadows remain attached.
+    gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(1.5,2);draw(terrain);
+    gl.disable(gl.POLYGON_OFFSET_FILL);draw(vegetation);
+    return indexCount;
+  }finally{
+    gl.polygonOffset(factor,units);
+    if(enabled)gl.enable(gl.POLYGON_OFFSET_FILL);else gl.disable(gl.POLYGON_OFFSET_FILL);
+  }
+}
+
 export function buildCavernShadowMatrix(positions,sun){
   const norm=a=>{const n=Math.hypot(...a);if(!Number.isFinite(n)||n<1e-9)throw Error('CAVERN_SHADOW_DIRECTION_INVALID');return a.map(v=>v/n);};
   const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],dot=(a,b)=>a.reduce((n,v,i)=>n+v*b[i],0);
@@ -2584,7 +2600,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
     gl.useProgram(resources.clearing.program);gl.uniformMatrix4fv(gl.getUniformLocation(resources.clearing.program,'uLightMatrix'),false,matrix);
     gl.viewport(0,0,512,512);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);gl.clearDepth(1);gl.clear(gl.DEPTH_BUFFER_BIT);
-    let indexCount=0;for(const part of [...terrain,...vegetation]){gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.mesh.indices.length,gl.UNSIGNED_INT,0);indexCount+=part.mesh.indices.length;}
+    const indexCount=drawCavernShadowCasters(gl,terrain,vegetation);
     resources.cavernShadow={texture,framebuffer,matrix,gpuByteLength:512*512*4,shadowDrawCount:terrain.length+vegetation.length,casterIndexCount:indexCount,vegetationCasterCount:vegetation.length,rockCasterCount:terrain.length,staticShadowRefresh:'ONCE_AFTER_ASSETS_READY'};
   }
   function disposeCavernShadow(){

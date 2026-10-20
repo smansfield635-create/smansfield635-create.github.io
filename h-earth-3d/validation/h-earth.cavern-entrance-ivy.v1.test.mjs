@@ -80,3 +80,20 @@ test('lobed leaves retain consistent outward winding without overlapping sinus f
   assert.ok(signedArea< -1e-7,'leaf fan triangle reverses across a sinus');
  }
 });
+
+test('terrain-only shadow bias preserves foliage and restores GL state even on draw failure',async()=>{
+ const {drawCavernShadowCasters}=await import('../../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js');
+ for(const initial of [false,true])for(const failure of [null,'terrain','foliage']){
+  let enabled=initial,factor=7,units=9,vao;const draws=[];
+  const gl={POLYGON_OFFSET_FILL:1,POLYGON_OFFSET_FACTOR:2,POLYGON_OFFSET_UNITS:3,TRIANGLES:4,UNSIGNED_INT:5,
+   isEnabled:()=>enabled,getParameter:k=>k===2?factor:units,
+   enable:()=>{enabled=true;},disable:()=>{enabled=false;},polygonOffset:(f,u)=>{factor=f;units=u;},bindVertexArray:v=>{vao=v;},
+   drawElements:()=>{draws.push({vao,enabled,factor,units});if(vao===failure)throw Error('draw failure');}};
+  const part=vao=>({vao,mesh:{indices:new Uint32Array(3)}});
+  if(failure)assert.throws(()=>drawCavernShadowCasters(gl,[part('terrain')],[part('foliage')]),/draw failure/);
+  else assert.equal(drawCavernShadowCasters(gl,[part('terrain')],[part('foliage')]),6);
+  assert.deepEqual(draws[0],{vao:'terrain',enabled:true,factor:1.5,units:2});
+  if(draws.length>1)assert.equal(draws[1].enabled,false);
+  assert.equal(enabled,initial);assert.equal(factor,7);assert.equal(units,9);
+ }
+});

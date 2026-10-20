@@ -1086,6 +1086,13 @@ void main(){
     // Visible water arrives as GPU role 4. Keep the uploaded coast colors.
     // A world-space normal is continuous across the coarse ocean triangles.
     vec2 waterWorld=vWorldPosition.xz;
+    // Shared freshwater material is evaluated per fragment, independently of
+    // basin/river triangulation and vertex density. Ocean albedo is preserved.
+    if(vPrimitiveIndex==62000u){
+      float flow=0.5+0.5*sin(dot(waterWorld,vec2(0.23,0.17))+0.3*sin(dot(waterWorld,vec2(0.11,-0.19))));
+      base=mix(vec3(0.022,0.12,0.15),vec3(0.034,0.148,0.18),flow);
+    }
+
     float broad=dot(waterWorld,vec2(0.055,0.028));
     float cross=dot(waterWorld,vec2(-0.083,0.061))+1.4;
     float slopeX=0.020*cos(broad)-0.012*cos(cross);
@@ -1158,7 +1165,7 @@ void main(){
   // Terrain always evaluates the continuous soil-light response; tree assets
   // retain their existing authored treatment.
   if(treeMaterialWeight!=1.0){
-    vec3 lightDirection=normalize(-uSunDirection);
+    vec3 lightDirection=normalize(vRoleCode==4u&&vPrimitiveIndex==62000u?uSunDirection:-uSunDirection);
     vec3 halfDirection=normalize(lightDirection+viewDirection);
     float geometricDiffuse=max(dot(geometricNormal,lightDirection),0.0);
     float reliefDiffuse=max(dot(shadingNormal,lightDirection),0.0);
@@ -2446,18 +2453,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         const natural=model.originalTerrainColorAt(local.x,local.z);
         if(!natural)throw Error('GEOLOGICAL_CANONICAL_COLOR_CONTACT_MISSING:'+role);
         if(role==='FRESHWATER_RIVER'||role==='OASIS_WATER'){
-          const ripple=.5+.5*Math.sin(local.x*.23+local.z*.17+.3*Math.sin(local.x*.11-local.z*.19));
-          const basin=model.formation.oasis,dx=(local.x-basin.centerX)/basin.radiusX,dz=(local.z-basin.centerZ)/basin.radiusZ;
-          const angle=Math.atan2(dz,dx),h=basin.edgeHarmonics;
-          const edge=1+h[0]*Math.sin(3*angle)+h[1]*Math.sin(5*angle+.7)+h[2]*Math.cos(2*angle-.4)+
-            h[3]*Math.sin(7*angle+1.1)+h[4]*Math.cos(9*angle-.6)+.025*Math.sin(local.x*.31+local.z*.23)*Math.cos(local.z*.27-local.x*.19);
-          const waterline=.98*(basin.waterEdgeScale??.72)*edge;
-          const shoreDepth=Math.max(0,Math.min(1,(waterline-Math.hypot(dx,dz))/0.22));
-          const shallow=[.07+.025*ripple,.19+.035*ripple,.16+.025*ripple];
-          const deep=[.018+.012*ripple,.105+.025*ripple,.13+.03*ripple];
-          const water=role==='OASIS_WATER'?shallow.map((v,c)=>v*(1-shoreDepth)+deep[c]*shoreDepth):
-            [.022+.012*ripple,.12+.028*ripple,.15+.03*ripple];
-          colors.set([...water,1],i*4);
+          // Shared freshwater albedo is refined continuously per fragment.
+          colors.set([.022,.12,.15,1],i*4);
           mats.set([.12,.015,.025,.13],i*4);
           continue;
         }

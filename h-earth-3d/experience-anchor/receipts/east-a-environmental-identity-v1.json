@@ -6,10 +6,11 @@
   "canonicalAdmissionGeneration": 2823,
   "reviewedAgainstAnchor": true,
   "disposition": "REVIEW_REQUIRED",
-  "reviewStage": "OWNER_DIRECTED_PRODUCTION_REVIEW_TIMING_SELECTED_NO_PRIOR_PHYSICAL_KEEP",
-  "ownerDirection": "Owner expressly selected the established recent H-Earth qualify/publish/inspect-on-phone cycle instead of an invented Codespace or duplicate preview. This selects review timing, not visual PASS, waiver of selected engineering qualification, or anchor replacement.",
+  "reviewStage": "OWNER_AUTHORIZED_STAGE_A2_ONE_REPAIR_PRODUCTION_REVIEW_PENDING_ACTUAL_PHONE_ACCEPTANCE",
+  "ownerDirection": "Owner instructed ONE_REPAIR after observing new live Android ground material seams, and previously directed the established qualify/publish/phone-review pattern. This creates neither physical KEEP nor waiver of engineering gates.",
   "ownerAuthorizationEvidence": [
-    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6564#issuecomment-6282814811"
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6564#issuecomment-6282814811",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6576#issuecomment-6283220609"
   ],
   "acceptedReviewTimingPrecedent": [
     "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6555#issuecomment-6276807192",
@@ -47,11 +48,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "6c9a4fb53ac2c83d5b0f977c1a3e31429976633bed290133888fbc3c7a8919ed"
+      "sha256": "4ec995543c65787046e8c6114f072b6d5310ca5b0297e01e99768f3894b34279"
     },
     {
       "path": "h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs",
-      "sha256": "a80650597177d7eeba53cf3a01f4841b5adc9228f0f9fffb85c251c7fa5c48ff"
+      "sha256": "b0a6d776550c8d644546b0832a6b473383671b73ff5714368c783573c5dbc720"
     }
   ],
   "technicalEvidence": {
@@ -63,9 +64,28 @@
     "baselineGrassRootsPreserved": 1457471,
     "candidateHeadBeforeReceipt": "c25dcb0fdba0a057829beb8c7e0f60a07acc76fb",
     "browserPreflightOriginalCandidate": "39363820762_PREFLIGHT_PASS_NONDEPLOYING",
-    "finalHeadPreflightStatus": "REQUALIFICATION_REQUIRED_AFTER_RECEIPT_COMMIT",
+    "finalHeadPreflightStatus": "REQUALIFICATION_REQUIRED_AFTER_THIS_REVIEW_RECEIPT_COMMIT",
     "knownMaterialRisk": "ON_ELIGIBLE_INLAND_SOIL_NEW_PROCEDURAL_PALETTE_75_TO_96_PERCENT_Blend_POSSIBLY_REDUCES_APPROVED_IMAGE_ALBEDO_AUTHORITY",
-    "gen2824Relation": "SEPARATE_PRESERVED_UNCOMMITTED_BINARY_DO_NOT_MERGE"
+    "gen2824Relation": "SEPARATE_PRESERVED_UNCOMMITTED_BINARY_DO_NOT_MERGE",
+    "oneRepairBranch": "h-earth/gen2823-stagea2-ground-material-one-repair-20261020",
+    "oneRepairHeadBeforeReceipt": "f883cdc1b4acb26cb41c5fd9ea4930c3bc7ed478",
+    "repairedShaderGitBlob": "fbf0e92250fbf23e16d906dabf29d6f9cbc537b7",
+    "newSourceBoundTestGitBlob": "4b9504a3a50447bdefed0b6da386e83283db8bcf",
+    "regionalPaletteMixRange": [
+      0.48,
+      0.66
+    ],
+    "priorPublishedBlendRange": [
+      0.75,
+      0.96
+    ],
+    "originalPublishedShader": "6703a05af4461c67ddfd64bfd91ab6422629af12",
+    "originalRootCountPreserved": 1457471,
+    "targetedOneRepair": "REDUCE_POST_PHOTO_REGION_PALETTE_DOMINANCE_ONLY",
+    "firstOneRepairPreflight": "39368429540_PREFLIGHT_PASS_NONDEPLOYING",
+    "nativeSixCaseTest": "NOT_EXECUTED_NEW_SIXTH_SOURCE_BOUND_CASE",
+    "actualAndroidFixAcceptance": "NOT_ESTABLISHED",
+    "diagonalSteppedSeamDisposition": "OBSERVED_BUT_CAUSAL_ATTRIBUTION_UNPROVEN"
   },
   "limitations": [
     "Stage A2 actual phone/tablet physical appearance has not been reviewed. No KEEP, ONE_REPAIR or REJECT is claimed.",
@@ -74,7 +94,10 @@
     "A selected technical or governance failure cannot be labeled passing solely by reference to historical H-Earth production review precedent.",
     "Registered preflight success at earlier head does not qualify the new receipt-only exact head; re-run it before any ordinary merge/release.",
     "The successful accepted Gen2646 soil photograph remains loaded but its perceived color authority may change substantially under this candidate.",
-    "No new turf, soil terrain shape, four-tree, bark, water, cavern, coast or navigation construction is made by this review-stage receipt."
+    "No new turf, soil terrain shape, four-tree, bark, water, cavern, coast or navigation construction is made by this review-stage receipt.",
+    "One-repair source edit reduces procedural color dominance; it does not prove removal of the observed straight/stepped material seam.",
+    "No new Android screenshots of this repaired candidate exist; visual acceptance remains REVIEW_REQUIRED.",
+    "New sixth focused source test is not yet claimed as native Node PASS; selected browser runtime preflight passed on prior exact head before this receipt write."
   ],
-  "authorityEffect": "NONE_TRUTHFUL_OWNER_SELECTED_PRODUCTION_REVIEW_PENDING_OWNER_PHYSICAL_ACCEPTANCE"
+  "authorityEffect": "NONE_TRUTHFUL_GEN2823_ONE_REPAIR_OWNER_DIRECTED_PRODUCTION_REVIEW_PENDING_ACTUAL_PHONE_ACCEPTANCE"
 }

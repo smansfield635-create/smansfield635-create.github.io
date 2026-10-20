@@ -54,7 +54,11 @@ void main(){
  float level=(k==2||k==4||k==5)?1.:0.;
  float scale=uFine==1?detail:1.;
  float width=mix(.010,.016,h)*scale;
- float height=mix(.11,.21,h)*scale;
+ // Local entrance growth affects existing and supplemental roots alike.
+ float entrance=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
+ float shoulders=smoothstep(1.6,5.,abs(aRoot.x-40.));
+ float entranceHeight=mix(mix(.30,.48,h),mix(.58,.88,h),shoulders);
+ float height=mix(mix(.11,.21,h),entranceHeight,entrance)*scale;
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.86));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*.025*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;

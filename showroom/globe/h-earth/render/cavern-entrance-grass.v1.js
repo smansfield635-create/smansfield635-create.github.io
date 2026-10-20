@@ -6,7 +6,7 @@ export const CAVERN_GRASS_LIMIT=30000;
 export function entranceWeight(x,z){
  if(z<-292||z>-258||Math.abs(x-40)>12)return 0;
  if(z>=-260)return (1-smooth((z+260)/2))*(1-smooth((Math.abs(x-40)-1.8)/.8));
- const width=6.4+1.2*Math.sin(z*.37)+.7*Math.sin(z*.83);
+ const width=10.2+.65*Math.sin(z*.37)+.45*Math.sin(z*.83);
  return (1-smooth((Math.abs(x-40)-width+2)/2))*smooth((z+292)/5);
 }
 /** Only low-slope triangles adjacent to the actual floor qualify inside. */
@@ -53,7 +53,7 @@ export async function buildCavernEntranceGrass({existingTiles,visibleSurface,geo
    const q=projectRegionVertex(x,geology.formation.floorAt(x,z),z),px=f(q.x),pz=f(q.z);
    if(near(px,pz)){duplicatesAvoided++;continue;}
    const hit=z>=-260?floor.sample(px,pz):visibleSurface.sample(px,pz);
-   if(!hit||hit.slope>.7)continue;
+   if(!hit||hit.slope>(z>=-260?.7:1.35))continue;
    const local=unprojectPlanetVertex(px,hit.y,pz),water=geology.sampleWaterAt(local.x,local.z);
    if(water&&water.y>local.y+.04)continue;
    if(z>=-260&&(!geology.formation.insideVoid(local.x,local.y+.25,local.z)||local.z>-258))continue;

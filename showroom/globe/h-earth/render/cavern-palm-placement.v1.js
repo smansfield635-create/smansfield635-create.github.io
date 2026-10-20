@@ -2,10 +2,10 @@
 import {buildCavernPalm} from './geometry-cavern-palms.v1.js';
 import {projectGeologicalMeshForRenderer} from '../../../../h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs';
 export const CAVERN_PALM_PLACEMENTS=Object.freeze([
- {id:'CAVERN_LEFT_TALL',x:34.5,z:-267.5,height:4.8,lean:2.8,heading:0,radius:.36,frondLength:3.8},
- {id:'CAVERN_LEFT_SHORT',x:35,z:-269,height:4.1,lean:1.3,heading:0,radius:.32,frondLength:3},
- {id:'CAVERN_RIGHT_TALL',x:45.5,z:-267.5,height:4.3,lean:2.5,heading:Math.PI,radius:.36,frondLength:3.8},
- {id:'CAVERN_RIGHT_SHORT',x:45,z:-270,height:4.1,lean:1.3,heading:Math.PI,radius:.32,frondLength:3}
+ {id:'CAVERN_LEFT_TALL',x:36.7,z:-263.5,height:4.8,lean:2.8,heading:0,radius:.36,frondLength:3.8},
+ {id:'CAVERN_LEFT_SHORT',x:36.9,z:-265.7,height:4.1,lean:1.3,heading:0,radius:.32,frondLength:3},
+ {id:'CAVERN_RIGHT_TALL',x:43.3,z:-263.5,height:4.3,lean:2.5,heading:Math.PI,radius:.36,frondLength:3.8},
+ {id:'CAVERN_RIGHT_SHORT',x:43.1,z:-265.9,height:4.1,lean:1.3,heading:Math.PI,radius:.32,frondLength:3}
 ].map(Object.freeze));
 export function buildCavernPalmPlacement(model){
  if(model?.site?.id!=='B_REAR_RAVINE'||typeof model.sampleOutdoorAt!=='function')throw Error('PALM_SITE_SUPPORT_REQUIRED');

@@ -121,5 +121,94 @@
     "Actual selected-renderer qualification and exact candidate review",
     "Owner device performance and canopy coverage",
     "Grass remains subsequent checkpoint"
-  ]
+  ],
+  "compositionRepair": {
+    "admissionGeneration": 2832,
+    "placements": [
+      {
+        "id": "CAVERN_LEFT_TALL",
+        "x": 36.7,
+        "z": -263.5,
+        "height": 4.8,
+        "lean": 2.8,
+        "heading": 0,
+        "radius": 0.36,
+        "frondLength": 3.8,
+        "rootY": 11.994267940329863,
+        "supportRange": [
+          12.034267940329862,
+          12.827134496799255
+        ],
+        "crown": [
+          39.5,
+          16.794267940329863,
+          -263.5
+        ]
+      },
+      {
+        "id": "CAVERN_LEFT_SHORT",
+        "x": 36.9,
+        "z": -265.7,
+        "height": 4.1,
+        "lean": 1.3,
+        "heading": 0,
+        "radius": 0.32,
+        "frondLength": 3,
+        "rootY": 11.541698252594458,
+        "supportRange": [
+          11.581698252594457,
+          12.303834534810804
+        ],
+        "crown": [
+          38.199999999999996,
+          15.641698252594457,
+          -265.7
+        ]
+      },
+      {
+        "id": "CAVERN_RIGHT_TALL",
+        "x": 43.3,
+        "z": -263.5,
+        "height": 4.3,
+        "lean": 2.5,
+        "heading": 3.141592653589793,
+        "radius": 0.36,
+        "frondLength": 3.8,
+        "rootY": 12.089455709989796,
+        "supportRange": [
+          12.129455709989795,
+          12.898715229388808
+        ],
+        "crown": [
+          40.8,
+          16.389455709989797,
+          -263.5
+        ]
+      },
+      {
+        "id": "CAVERN_RIGHT_SHORT",
+        "x": 43.1,
+        "z": -265.9,
+        "height": 4.1,
+        "lean": 1.3,
+        "heading": 3.141592653589793,
+        "radius": 0.32,
+        "frondLength": 3,
+        "rootY": 11.604181417609233,
+        "supportRange": [
+          11.644181417609232,
+          12.425602376105212
+        ],
+        "crown": [
+          41.800000000000004,
+          15.704181417609233,
+          -265.9
+        ]
+      }
+    ],
+    "bark": "Color-only irregular lighter tan/gray-brown weathering; vertices and indices retained",
+    "study": "Three representative front/left/right actual-mesh views show crowns over upper arch band; offline inspection lighting, not browser or phone proof",
+    "browser": "PENDING",
+    "ownerAcceptance": "PENDING"
+  }
 }

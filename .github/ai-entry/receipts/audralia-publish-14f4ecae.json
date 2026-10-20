@@ -6,9 +6,9 @@
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 6618,
   "requestBranch": "ai-dispatch-request-audralia-publish-14f4ecae",
-  "requestCommit": "6fcd9ed66f8f063a6e58b5dfc5a7939ad0558bcf",
+  "requestCommit": "8ddb7a1f198ece9a40db3d2c274676aba88ef3de",
   "currentMainSha": "14f4ecaea00f47f829561d703cb18fd18e029297",
-  "bridgeRunId": "39513691451",
-  "error": "Input may not be user supplied: target_sha",
-  "failedAt": "2026-10-20T23:14:37.238Z"
+  "bridgeRunId": "39513829653",
+  "error": "Stale dispatch request: parent 6fcd9ed66f8f063a6e58b5dfc5a7939ad0558bcf != current main 14f4ecaea00f47f829561d703cb18fd18e029297",
+  "failedAt": "2026-10-20T23:15:49.430Z"
 }

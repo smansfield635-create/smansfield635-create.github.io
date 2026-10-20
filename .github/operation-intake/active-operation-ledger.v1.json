@@ -11401,50 +11401,6 @@
       "scopeHash": "9417879d994bdadbc8ae3d6d69c7864be12fe1e233d8e1fea86854f7a151d19c",
       "state": "ADMITTED_LOCKED"
     },
-    "947c4bb9d6b047e7622bf3cbf0c0ce601194087a303a134583ce95d9bd9b802b": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "ea1928e93481671ff9c473f443f854d7eb4b6978",
-          "lockGeneration": 2840,
-          "lockScope": "H_EARTH:OASIS_RIVER_WATER:20261020",
-          "operationId": "H_EARTH_OASIS_RIVER_WATER_20261020_001",
-          "procedureLocatorDigest": "70ed3583ab69253862ff62ccf9391c5ee17dbabb5848b161f8d0fdd59d5599a5",
-          "requestDigest": "34ad7e5669d55b392c9acf84f358e6708d7cd7bc72870767082a796703d307e4",
-          "scopeHash": "947c4bb9d6b047e7622bf3cbf0c0ce601194087a303a134583ce95d9bd9b802b"
-        },
-        "bindingDigest": "d8fa3920405bbdfb7f9e13af7199f86109c6a992ba2880d449822ad69ee54172",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "7a51826b8433ee9e488feb542e195ad752f5b6543eab37e451017f6a313ab02b",
-          "commentId": 6303511409,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6585,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 39510765533,
-          "workflowSha": "ea1928e93481671ff9c473f443f854d7eb4b6978"
-        },
-        "lineageAnchorCommitSha": "a85c8879d7066a91c6ee02d59537bf83806fb097",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "ea1928e93481671ff9c473f443f854d7eb4b6978",
-      "lockGeneration": 2840,
-      "lockScope": "H_EARTH:OASIS_RIVER_WATER:20261020",
-      "operationId": "H_EARTH_OASIS_RIVER_WATER_20261020_001",
-      "procedureLocatorDigest": "70ed3583ab69253862ff62ccf9391c5ee17dbabb5848b161f8d0fdd59d5599a5",
-      "released": false,
-      "requestDigest": "34ad7e5669d55b392c9acf84f358e6708d7cd7bc72870767082a796703d307e4",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "947c4bb9d6b047e7622bf3cbf0c0ce601194087a303a134583ce95d9bd9b802b",
-      "state": "ADMITTED_LOCKED"
-    },
     "9485a119ec533eed9ce9e0d01e6d0d672d2384d21fc0b70a6f0fd8ab413071ab": {
       "governingHead": "24d18cba2aa56c7fc5eaf135976700d9e9e7c04f",
       "lockGeneration": 355,
@@ -85470,6 +85426,51 @@
       "scopeHash": "90915b3635e98a3128421ffa084cba8e475a5cdb5cfb38f1922374997b142abe",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+          "lockGeneration": 2840,
+          "lockScope": "H_EARTH:OASIS_RIVER_WATER:20261020",
+          "operationId": "H_EARTH_OASIS_RIVER_WATER_20261020_001",
+          "procedureLocatorDigest": "70ed3583ab69253862ff62ccf9391c5ee17dbabb5848b161f8d0fdd59d5599a5",
+          "requestDigest": "34ad7e5669d55b392c9acf84f358e6708d7cd7bc72870767082a796703d307e4",
+          "scopeHash": "947c4bb9d6b047e7622bf3cbf0c0ce601194087a303a134583ce95d9bd9b802b"
+        },
+        "bindingDigest": "d8fa3920405bbdfb7f9e13af7199f86109c6a992ba2880d449822ad69ee54172",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "7a51826b8433ee9e488feb542e195ad752f5b6543eab37e451017f6a313ab02b",
+          "commentId": 6303511409,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6585,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39510765533,
+          "workflowSha": "ea1928e93481671ff9c473f443f854d7eb4b6978"
+        },
+        "lineageAnchorCommitSha": "a85c8879d7066a91c6ee02d59537bf83806fb097",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+      "lockGeneration": 2840,
+      "lockScope": "H_EARTH:OASIS_RIVER_WATER:20261020",
+      "operationId": "H_EARTH_OASIS_RIVER_WATER_20261020_001",
+      "procedureLocatorDigest": "70ed3583ab69253862ff62ccf9391c5ee17dbabb5848b161f8d0fdd59d5599a5",
+      "released": true,
+      "requestDigest": "34ad7e5669d55b392c9acf84f358e6708d7cd7bc72870767082a796703d307e4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "947c4bb9d6b047e7622bf3cbf0c0ce601194087a303a134583ce95d9bd9b802b",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

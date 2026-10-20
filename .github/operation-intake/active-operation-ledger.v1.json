@@ -9210,50 +9210,6 @@
       "scopeHash": "7a69c718c753b6365c47e0a89d6512f578347dd5c6244ed75b026448a3cd91ee",
       "state": "ADMITTED_LOCKED"
     },
-    "7a7d7b921bc57e61902e22ba39a750adb559e7f83879de269736fcf5c3faceef": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "651face00d5687a22b710925141dbebc58165f5e",
-          "lockGeneration": 2835,
-          "lockScope": "AUDRALIA:GRATITUDE:COASTAL_EARTH_RGB_V4:20261020",
-          "operationId": "AUDRALIA_COASTAL_EARTH_RING_REPAIR_V4_20261020_001",
-          "procedureLocatorDigest": "35c0a146998e9b39b71489bb585e966c1e111b91bbe96c595948ebbc06c9d9de",
-          "requestDigest": "69bb2292fbf066a78945c5a984dadba0b092e16db417459d00040dd7985bcd6a",
-          "scopeHash": "7a7d7b921bc57e61902e22ba39a750adb559e7f83879de269736fcf5c3faceef"
-        },
-        "bindingDigest": "ac82815f18bbb525589d496bea19c760ead1d345c2980b2ecd3e01445f8e9a51",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "163176c2bb0f62d491bc64cc9ba9706d34f5528b5272a6c62a16fa4868c27a08",
-          "commentId": 6298752647,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6586,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 39479240319,
-          "workflowSha": "651face00d5687a22b710925141dbebc58165f5e"
-        },
-        "lineageAnchorCommitSha": "615da934696ed6dd4ff0117ad88437542363709c",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "651face00d5687a22b710925141dbebc58165f5e",
-      "lockGeneration": 2835,
-      "lockScope": "AUDRALIA:GRATITUDE:COASTAL_EARTH_RGB_V4:20261020",
-      "operationId": "AUDRALIA_COASTAL_EARTH_RING_REPAIR_V4_20261020_001",
-      "procedureLocatorDigest": "35c0a146998e9b39b71489bb585e966c1e111b91bbe96c595948ebbc06c9d9de",
-      "released": false,
-      "requestDigest": "69bb2292fbf066a78945c5a984dadba0b092e16db417459d00040dd7985bcd6a",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "7a7d7b921bc57e61902e22ba39a750adb559e7f83879de269736fcf5c3faceef",
-      "state": "ADMITTED_LOCKED"
-    },
     "7a99f3a96064d834a159180c38166b93ef1673f9df41085775220c9c88b68137": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -85166,6 +85122,51 @@
         "transitionId": "CAVERN_MOSS_IVY_SUCCESSOR_20261020"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "651face00d5687a22b710925141dbebc58165f5e",
+          "lockGeneration": 2835,
+          "lockScope": "AUDRALIA:GRATITUDE:COASTAL_EARTH_RGB_V4:20261020",
+          "operationId": "AUDRALIA_COASTAL_EARTH_RING_REPAIR_V4_20261020_001",
+          "procedureLocatorDigest": "35c0a146998e9b39b71489bb585e966c1e111b91bbe96c595948ebbc06c9d9de",
+          "requestDigest": "69bb2292fbf066a78945c5a984dadba0b092e16db417459d00040dd7985bcd6a",
+          "scopeHash": "7a7d7b921bc57e61902e22ba39a750adb559e7f83879de269736fcf5c3faceef"
+        },
+        "bindingDigest": "ac82815f18bbb525589d496bea19c760ead1d345c2980b2ecd3e01445f8e9a51",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "163176c2bb0f62d491bc64cc9ba9706d34f5528b5272a6c62a16fa4868c27a08",
+          "commentId": 6298752647,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6586,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39479240319,
+          "workflowSha": "651face00d5687a22b710925141dbebc58165f5e"
+        },
+        "lineageAnchorCommitSha": "615da934696ed6dd4ff0117ad88437542363709c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "651face00d5687a22b710925141dbebc58165f5e",
+      "lockGeneration": 2835,
+      "lockScope": "AUDRALIA:GRATITUDE:COASTAL_EARTH_RGB_V4:20261020",
+      "operationId": "AUDRALIA_COASTAL_EARTH_RING_REPAIR_V4_20261020_001",
+      "procedureLocatorDigest": "35c0a146998e9b39b71489bb585e966c1e111b91bbe96c595948ebbc06c9d9de",
+      "released": true,
+      "requestDigest": "69bb2292fbf066a78945c5a984dadba0b092e16db417459d00040dd7985bcd6a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7a7d7b921bc57e61902e22ba39a750adb559e7f83879de269736fcf5c3faceef",
+      "state": "TERMINAL",
+      "terminalDisposition": "REJECTED_CLOSED"
     }
   ]
 }

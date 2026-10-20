@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-palms-grass-5e0f7afe",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6591,
+  "requestBranch": "ai-dispatch-request-h-earth-palms-grass-5e0f7afe",
+  "requestCommit": "d1b1668347f1383af6b0c5a2a0233d2019d3d2a2",
+  "currentMainSha": "016e4f0fed19a84a21b27bf2003f05600860403e",
+  "bridgeRunId": "39470228091",
+  "error": "Stale dispatch request: parent 8c7f296f6fa378d139be71440b2d2cdf37971b77 != current main 016e4f0fed19a84a21b27bf2003f05600860403e",
+  "failedAt": "2026-10-20T17:55:19.330Z"
+}

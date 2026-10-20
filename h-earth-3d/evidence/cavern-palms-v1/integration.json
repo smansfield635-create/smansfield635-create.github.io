@@ -1,0 +1,125 @@
+{
+  "schema": "H_EARTH_CAVERN_PALM_INTEGRATION_v1",
+  "acceptedPrototype": "a3341e9b8b9038c6fde4407fd799f744b150bd26",
+  "placements": [
+    {
+      "id": "CAVERN_LEFT_TALL",
+      "x": 34.5,
+      "z": -267.5,
+      "height": 4.8,
+      "lean": 2.8,
+      "heading": 0,
+      "radius": 0.36,
+      "frondLength": 3.8,
+      "rootY": 12.817306162804744,
+      "supportRange": [
+        12.857306162804743,
+        13.461765724619406
+      ],
+      "crown": [
+        37.3,
+        17.617306162804745,
+        -267.5
+      ]
+    },
+    {
+      "id": "CAVERN_LEFT_SHORT",
+      "x": 35,
+      "z": -269,
+      "height": 4.1,
+      "lean": 1.3,
+      "heading": 0,
+      "radius": 0.32,
+      "frondLength": 3,
+      "rootY": 11.89585523979628,
+      "supportRange": [
+        11.935855239796279,
+        12.48593711120446
+      ],
+      "crown": [
+        36.3,
+        15.99585523979628,
+        -269
+      ]
+    },
+    {
+      "id": "CAVERN_RIGHT_TALL",
+      "x": 45.5,
+      "z": -267.5,
+      "height": 4.3,
+      "lean": 2.5,
+      "heading": 3.141592653589793,
+      "radius": 0.36,
+      "frondLength": 3.8,
+      "rootY": 13.4509043529799,
+      "supportRange": [
+        13.4909043529799,
+        14.497753006812747
+      ],
+      "crown": [
+        43,
+        17.7509043529799,
+        -267.5
+      ]
+    },
+    {
+      "id": "CAVERN_RIGHT_SHORT",
+      "x": 45,
+      "z": -270,
+      "height": 4.1,
+      "lean": 1.3,
+      "heading": 3.141592653589793,
+      "radius": 0.32,
+      "frondLength": 3,
+      "rootY": 11.856782412774772,
+      "supportRange": [
+        11.89678241277477,
+        12.595772002004017
+      ],
+      "crown": [
+        43.7,
+        15.956782412774771,
+        -270
+      ]
+    }
+  ],
+  "treeCount": 4,
+  "triangleCount": 26360,
+  "twoSidedLeaflets": true,
+  "perFrameGeneration": false,
+  "sourceTerrainMutated": false,
+  "operationId": "H_EARTH_CAVERN_PALM_INTEGRATION_20261020_001",
+  "generation": 2830,
+  "status": "INTEGRATED_CANDIDATE_PENDING_LIVE_RENDERER_AND_OWNER_REVIEW",
+  "admissionRun": 39467110420,
+  "gpuBytes": 1836252,
+  "gpuBudgetBytes": 2097152,
+  "localConstructionMilliseconds": 2885.97,
+  "focusedTestsPassed": 5,
+  "visualStudy": {
+    "camera": [
+      40,
+      13,
+      -286
+    ],
+    "target": [
+      40,
+      17,
+      -259
+    ],
+    "artifact": "H-Earth-Cavern-Palm-Placement.png",
+    "sha256": "2753f0768b046bc659c4646030a19b407d53449696d90da1cc36f61ddc4cf3c9",
+    "lighting": "INSPECTION_ONLY_NOT_LIVE_RENDERER",
+    "finding": "Lowered tall crowns after first study; short crowns retain sampled central clearance."
+  },
+  "clearanceClaim": "Generated vertices clear x38..42 z-275..-260 below y14.3; not complete triangle collision proof or added navigation collision",
+  "grassChanged": false,
+  "published": false,
+  "liveBrowserQualified": false,
+  "physicalDeviceAccepted": false,
+  "remaining": [
+    "Actual selected-renderer qualification and exact candidate review",
+    "Owner device performance and canopy coverage",
+    "Grass remains subsequent checkpoint"
+  ]
+}

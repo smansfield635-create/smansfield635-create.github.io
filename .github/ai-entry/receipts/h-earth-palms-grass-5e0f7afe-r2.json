@@ -1,0 +1,27 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-palms-grass-5e0f7afe-r2",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6592,
+  "requestBranch": "ai-dispatch-request-h-earth-palms-grass-5e0f7afe-r2",
+  "requestCommit": "da7da74ad0f7b09e16371204b385ee30f1250966",
+  "requestCommitParent": "016e4f0fed19a84a21b27bf2003f05600860403e",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "016e4f0fed19a84a21b27bf2003f05600860403e",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "5e0f7afe79d361de43a3efb7959a5a4c6fd9b744",
+    "route_query": "qualification=ravine-view-v1",
+    "route_path": "/showroom/globe/h-earth/vegetation-prototype.html",
+    "exercise_vegetation_residency": "false"
+  },
+  "bridgeRunId": "39470411099",
+  "dispatchedRunId": 39470438279,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39470438279",
+  "dispatchedRunHeadSha": "016e4f0fed19a84a21b27bf2003f05600860403e",
+  "dispatchedAt": "2026-10-20T17:56:37.878Z",
+  "resolvedAt": "2026-10-20T17:56:45.582Z"
+}

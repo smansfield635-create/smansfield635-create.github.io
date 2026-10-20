@@ -17,7 +17,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#06141b;col
 .title{font-size:clamp(16px,2.4vw,23px);font-weight:650;letter-spacing:.025em;margin-top:5px}
 .sub{margin-top:5px;font-size:12px;line-height:1.5;color:#e0e8e4d9}
 .scale{position:fixed;z-index:2;right:max(14px,env(safe-area-inset-right));top:max(16px,env(safe-area-inset-top));padding:7px 11px;border-radius:999px;background:#0b242dcc;border:1px solid #d6f1e731;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
-.controls{position:fixed;display:flex;align-items:center;gap:8px;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:3;max-width:96vw}
+.controls{position:fixed;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:3;max-width:96vw}
 .controls button,.controls a{appearance:none;border:1px solid #d9f1e43b;color:#ecf5f0;background:#0b242ee0;border-radius:999px;padding:11px 14px;font:600 12px/1 system-ui;text-decoration:none;white-space:nowrap;cursor:pointer}
 .controls button:hover,.controls button:focus-visible,.controls a:focus-visible{background:#204c55;outline:2px solid #bfdac7;outline-offset:2px}
 .detail{position:fixed;bottom:max(82px,calc(env(safe-area-inset-bottom) + 75px));left:max(14px,env(safe-area-inset-left));z-index:2;max-width:440px;pointer-events:none}
@@ -39,12 +39,13 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#06141b;col
 <section class="detail" aria-label="Inspection limitations">
 <p>15 historical drainage segments · 3 named lakes · eight geographic provinces</p>
 <p>Planetary radius 6,200 km · Gratitude at 30°N, 0°E</p>
-<p>Coastal outline and river widths are visual candidates, not verified physical dimensions. Local H-Earth water flow is not established.</p>
+<p>Coastal outline and river widths are visual candidates, not verified physical dimensions. Coast detail magnifies the continental mesh; entered H-Earth terrain and water flow are not established.</p>
 </section>
 <nav class="controls" aria-label="View controls">
 <button data-view="world" type="button">World</button>
 <button data-view="gratitude" type="button">Gratitude</button>
 <button data-view="anchor" type="button">H-Earth anchor</button>
+<button data-view="coast" type="button" aria-label="Inspect H-Earth coastal correspondence in the candidate globe">Coast detail</button>
 <a href="../" aria-label="Return to live Audralia">Live Audralia</a>
 </nav>
 <script>

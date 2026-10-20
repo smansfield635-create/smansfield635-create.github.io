@@ -292,7 +292,21 @@ function lookAt(eye,target,up){const z=norm(sub(eye,target));let x=cross(up,z);i
 function multiply(a,b){const o=new Float32Array(16);for(let c=0;c<4;c++)for(let r=0;r<4;r++)o[c*4+r]=a[r]*b[c*4]+a[4+r]*b[c*4+1]+a[8+r]*b[c*4+2]+a[12+r]*b[c*4+3];return o;}
 
 const state={yaw:-.28,pitch:.92,distance:5000,targetU:0,targetV:-620};
-function viewScale(){return state.distance<850?'Region':state.distance<2400?'Continent':'Planetary';}
+// Preserve the existing single camera/renderer and continental geometry.
+// Close inspection is NOT ground-level H-Earth B2 terrain or traversal.
+const CAMERA_POLICY=Object.freeze({
+  minDistanceKm:3.5,maxDistanceKm:5600,coastPresetDistanceKm:3.5,
+  closeOffsetCutoffKm:8,fullOffsetDistanceKm:48,radialOffsetKm:24,
+  detailNearClipKm:.25,normalNearClipKm:2
+});
+function cameraRadialOffsetKm(distanceKm){
+  return CAMERA_POLICY.radialOffsetKm*smooth(CAMERA_POLICY.closeOffsetCutoffKm,CAMERA_POLICY.fullOffsetDistanceKm,distanceKm);
+}
+function cameraNearClipKm(distanceKm){
+  return mix(CAMERA_POLICY.detailNearClipKm,CAMERA_POLICY.normalNearClipKm,
+    smooth(CAMERA_POLICY.closeOffsetCutoffKm,CAMERA_POLICY.fullOffsetDistanceKm,distanceKm));
+}
+function viewScale(){return state.distance<12?'Coast detail':state.distance<850?'Region':state.distance<2400?'Continent':'Planetary';}
 function reliefScale(){return 1+2.8*smooth(1100,5200,state.distance);} // visual exaggeration only
 function resize(){
   const cssPixels=Math.max(1,canvas.clientWidth*canvas.clientHeight);
@@ -303,26 +317,36 @@ function resize(){
   if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h;}
   gl.viewport(0,0,w,h);
 }
-function camera(){state.pitch=clamp(state.pitch,.42,1.48);state.distance=clamp(state.distance,130,5600);const dir=tangentDirection(state.targetU,state.targetV),target=surface(dir,0),du=norm(sub(surface(tangentDirection(state.targetU+1,state.targetV)),surface(tangentDirection(state.targetU-1,state.targetV)))),dv=norm(sub(surface(tangentDirection(state.targetU,state.targetV+1)),surface(tangentDirection(state.targetU,state.targetV-1)))),h=norm(add(mul(du,Math.sin(state.yaw)),mul(dv,Math.cos(state.yaw)))),eye=add(add(target,mul(dir,state.distance*Math.sin(state.pitch)+24)),mul(h,state.distance*Math.cos(state.pitch)));return{target,eye,up:dir}}
+function camera(){state.pitch=clamp(state.pitch,.42,1.48);state.distance=clamp(state.distance,CAMERA_POLICY.minDistanceKm,CAMERA_POLICY.maxDistanceKm);const dir=tangentDirection(state.targetU,state.targetV),target=surface(dir,0),du=norm(sub(surface(tangentDirection(state.targetU+1,state.targetV)),surface(tangentDirection(state.targetU-1,state.targetV)))),dv=norm(sub(surface(tangentDirection(state.targetU,state.targetV+1)),surface(tangentDirection(state.targetU,state.targetV-1)))),h=norm(add(mul(du,Math.sin(state.yaw)),mul(dv,Math.cos(state.yaw)))),eye=add(add(target,mul(dir,state.distance*Math.sin(state.pitch)+cameraRadialOffsetKm(state.distance))),mul(h,state.distance*Math.cos(state.pitch)));return{target,eye,up:dir}}
 function draw(mesh,v,VP,relief){gl.bindVertexArray(v);gl.uniformMatrix4fv(gl.getUniformLocation(program,'uVP'),false,VP);gl.uniform3fv(gl.getUniformLocation(program,'uCenter'),CENTER);gl.uniform1f(gl.getUniformLocation(program,'uRadius'),PLANET_RADIUS);gl.uniform1f(gl.getUniformLocation(program,'uRelief'),relief);gl.drawElements(gl.TRIANGLES,mesh.indices.length,gl.UNSIGNED_INT,0)}
-function render(){resize();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LESS);gl.clearColor(...PALETTE.sky,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);const cam=camera(),VP=multiply(perspective(54*Math.PI/180,canvas.width/canvas.height,2,PLANET_RADIUS*4.2),lookAt(cam.eye,cam.target,cam.up));gl.useProgram(program);draw(planetMesh,planetVao,VP,1);draw(gratitudeMesh,gratitudeVao,VP,reliefScale());draw(hydroMesh,hydroVao,VP,reliefScale());scaleLabel.textContent=viewScale();}
+function render(){resize();gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LESS);gl.clearColor(...PALETTE.sky,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);const cam=camera(),VP=multiply(perspective(54*Math.PI/180,canvas.width/canvas.height,cameraNearClipKm(state.distance),PLANET_RADIUS*4.2),lookAt(cam.eye,cam.target,cam.up));gl.useProgram(program);draw(planetMesh,planetVao,VP,1);draw(gratitudeMesh,gratitudeVao,VP,reliefScale());draw(hydroMesh,hydroVao,VP,reliefScale());scaleLabel.textContent=viewScale();}
 function setView(which){
   if(which==='world')Object.assign(state,{distance:5350,pitch:1.00,targetU:0,targetV:-620});
   else if(which==='gratitude')Object.assign(state,{distance:2850,pitch:.92,targetU:0,targetV:-650});
-  else{
+  else if(which==='anchor'){
     const p=regionalMetersToContinentalKm(-139,-216);
     Object.assign(state,{distance:660,pitch:.82,targetU:p.xKm,targetV:p.zKm-LOCAL_CENTER_Z});
   }
+  else if(which==='coast'){
+    // Local B2 reference is approximately 267m inland of its canonical shore.
+    // This zooms the corresponding *continental* candidate geometry only.
+    const p=regionalMetersToContinentalKm(208,-344);
+    Object.assign(state,{distance:CAMERA_POLICY.coastPresetDistanceKm,pitch:1.13,
+      targetU:p.xKm,targetV:p.zKm-LOCAL_CENTER_Z});
+    showStatus('Coast detail · modeled shoreline, not entered H-Earth');
+  }
+  else return;
+  if(which!=='coast')showStatus('Candidate geography · rev5 hydrology and ecological provinces · not live');
   render();
 }
 for(const b of document.querySelectorAll('[data-view]'))b.addEventListener('click',()=>setView(b.dataset.view));
 
 const pointers=new Map();let lastSingle=null,lastPinch=null;
 canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===1)lastSingle=[e.clientX,e.clientY]});
-canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,[e.clientX,e.clientY]);const pts=[...pointers.values()];if(pts.length===1&&lastSingle){const dx=pts[0][0]-lastSingle[0],dy=pts[0][1]-lastSingle[1];state.yaw-=dx*.0047;state.pitch=clamp(state.pitch+dy*.0032,.42,1.48);lastSingle=pts[0];render()}else if(pts.length>=2){const d=Math.hypot(pts[0][0]-pts[1][0],pts[0][1]-pts[1][1]);if(lastPinch){state.distance=clamp(state.distance*(lastPinch/d),130,5600);render()}lastPinch=d}});
+canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,[e.clientX,e.clientY]);const pts=[...pointers.values()];if(pts.length===1&&lastSingle){const dx=pts[0][0]-lastSingle[0],dy=pts[0][1]-lastSingle[1];state.yaw-=dx*.0047;state.pitch=clamp(state.pitch+dy*.0032,.42,1.48);lastSingle=pts[0];render()}else if(pts.length>=2){const d=Math.hypot(pts[0][0]-pts[1][0],pts[0][1]-pts[1][1]);if(lastPinch){state.distance=clamp(state.distance*(lastPinch/d),CAMERA_POLICY.minDistanceKm,CAMERA_POLICY.maxDistanceKm);render()}lastPinch=d}});
 function endPointer(e){pointers.delete(e.pointerId);lastPinch=null;lastSingle=pointers.size===1?[...pointers.values()][0]:null}
 canvas.addEventListener('pointerup',endPointer);canvas.addEventListener('pointercancel',endPointer);
-canvas.addEventListener('wheel',e=>{e.preventDefault();state.distance=clamp(state.distance*Math.exp(clamp(e.deltaY,-800,800)*.0011),130,5600);render()},{passive:false});
+canvas.addEventListener('wheel',e=>{e.preventDefault();state.distance=clamp(state.distance*Math.exp(clamp(e.deltaY,-800,800)*.0011),CAMERA_POLICY.minDistanceKm,CAMERA_POLICY.maxDistanceKm);render()},{passive:false});
 canvas.addEventListener('dblclick',()=>setView('gratitude'));
 canvas.addEventListener('webglcontextlost',e=>{e.preventDefault();showStatus('WebGL context lost · reload to inspect');});
 window.addEventListener('resize',render);
@@ -348,6 +372,7 @@ const gcr2Diagnostics=Object.freeze({
   localPlantsMagnifiedToContinentalScale:false,
   localWaterFlowAssumed:false,
   localCoastLodCandidate:{sourceStepMeters:8,vertexBudget:80000,sharedIndexedMesh:true,deviceVerified:false},
+  coastalCameraInspection:{minDistanceKm:CAMERA_POLICY.minDistanceKm,sourceMesh:'CONTINENTAL_ONLY',b2HeightHandoffVerified:false,deviceVerified:false},
   candidateCoastlineProvisional:true,
   contourVisualExaggerationOnly:true,
   sameCanvasAsGCR1Precedent:true,

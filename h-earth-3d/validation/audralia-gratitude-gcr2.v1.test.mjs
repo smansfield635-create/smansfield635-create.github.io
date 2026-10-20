@@ -341,3 +341,32 @@ test('coast-constrained river banks and expanded grid remain bounded inspection 
   assert.match(app,/clipCandidateRiverBankToLand\(/);
   assert.match(app,/Math\.ceil\(len\/6\)/);
 });
+
+test('bounded coastal zoom reuses existing camera, renderer, and geographic reference',()=>{
+  const app=readFileSync(resolve(root,candidate+'app.mjs'),'utf8');
+  const html=readFileSync(resolve(root,candidate+'index.html'),'utf8');
+  assert.equal((app.match(/function camera\(/g)||[]).length,1);
+  assert.equal((app.match(/canvas\.getContext\('webgl2'/g)||[]).length,1);
+  assert.match(app,/minDistanceKm:3\.5,maxDistanceKm:5600,coastPresetDistanceKm:3\.5/);
+  assert.match(app,/state\.distance=clamp\(state\.distance,CAMERA_POLICY\.minDistanceKm,CAMERA_POLICY\.maxDistanceKm\)/);
+  assert.match(app,/distance:660,pitch:\.82,targetU:p\.xKm/);
+  assert.match(app,/regionalMetersToContinentalKm\(208,-344\)/);
+  assert.match(app,/distance:CAMERA_POLICY\.coastPresetDistanceKm,pitch:1\.13/);
+  assert.match(app,/sourceMesh:'CONTINENTAL_ONLY',b2HeightHandoffVerified:false/);
+  assert.match(html,/data-view="coast"/);
+  assert.match(html,/flex-wrap:wrap/);
+});
+test('bounded zoom fades original radial offset and adapts near clipping without altering the regional range',()=>{
+  const app=readFileSync(resolve(root,candidate+'app.mjs'),'utf8');
+  assert.match(app,/CAMERA_POLICY\.radialOffsetKm\*smooth\(CAMERA_POLICY\.closeOffsetCutoffKm,CAMERA_POLICY\.fullOffsetDistanceKm,distanceKm\)/);
+  assert.match(app,/cameraRadialOffsetKm\(state\.distance\)/);
+  assert.match(app,/cameraNearClipKm\(state\.distance\),PLANET_RADIUS\*4\.2/);
+  for(const part of ['closeOffsetCutoffKm:8','fullOffsetDistanceKm:48','radialOffsetKm:24','detailNearClipKm:.25','normalNearClipKm:2'])assert.ok(app.includes(part),part);
+  const offset=d=>24*testSmooth(8,48,d),clip=d=>.25+1.75*testSmooth(8,48,d);
+  near(offset(3.5),0);near(offset(660),24);
+  near(clip(3.5),.25);near(clip(660),2);
+  for(const d of [3.5,8,15,30,48,660])assert.ok(clip(d)>0&&clip(d)<d);
+  const px=(d,p)=>8/(2*Math.hypot(d*Math.sin(p)+offset(d),d*Math.cos(p))*1000*Math.tan(27*Math.PI/180)/800);
+  assert.ok(px(3.5,1.13)>1.5);
+  assert.ok(px(130,.82)<.05);
+});

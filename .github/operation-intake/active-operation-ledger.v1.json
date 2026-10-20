@@ -11917,50 +11917,6 @@
       "scopeHash": "9a669f2349bb42bc4eb98c3939b2c02eadd54a80a8cd7767466ba2036ac020e5",
       "state": "ADMITTED_LOCKED"
     },
-    "9ae9b51ab644cd079a4ee9056734e665fb9a29db4eb99fb65c4a40063e1b4d4c": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "8c7f296f6fa378d139be71440b2d2cdf37971b77",
-          "lockGeneration": 2829,
-          "lockScope": "AUDRALIA:GEN2826:LAND_COLOR_BOUNDARY_REPAIR:20261020",
-          "operationId": "AUDRALIA_GEN2826_LAND_COLOR_BOUNDARY_REPAIR_20261020_001",
-          "procedureLocatorDigest": "dad260d58b3f9a75e39315f5e35f299869e2f272d5303b596cd7e52b4cfac5ed",
-          "requestDigest": "fa7b793240988ebb2c1839ac65a429e34310e1ee9e106cbc19f1e2ea99a3321a",
-          "scopeHash": "9ae9b51ab644cd079a4ee9056734e665fb9a29db4eb99fb65c4a40063e1b4d4c"
-        },
-        "bindingDigest": "53c3b4ebffe23e88300e7c0333b1ac1715011c204b4b0e35cb734dfe4f21e297",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "96d5a244be03c08166e904097a8093db5df24e9d7b198393608de45cd9b67a64",
-          "commentId": 6296806970,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6586,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 39465039865,
-          "workflowSha": "8c7f296f6fa378d139be71440b2d2cdf37971b77"
-        },
-        "lineageAnchorCommitSha": "802b0c524433ffed712bc1f09e8e6c1366bc157f",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "8c7f296f6fa378d139be71440b2d2cdf37971b77",
-      "lockGeneration": 2829,
-      "lockScope": "AUDRALIA:GEN2826:LAND_COLOR_BOUNDARY_REPAIR:20261020",
-      "operationId": "AUDRALIA_GEN2826_LAND_COLOR_BOUNDARY_REPAIR_20261020_001",
-      "procedureLocatorDigest": "dad260d58b3f9a75e39315f5e35f299869e2f272d5303b596cd7e52b4cfac5ed",
-      "released": false,
-      "requestDigest": "fa7b793240988ebb2c1839ac65a429e34310e1ee9e106cbc19f1e2ea99a3321a",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "9ae9b51ab644cd079a4ee9056734e665fb9a29db4eb99fb65c4a40063e1b4d4c",
-      "state": "ADMITTED_LOCKED"
-    },
     "9aed87a97b66500f9c4937666d301980600f681694d45b619875059c23348825": {
       "governingHead": "cc8c8e7ba57a758729eccac5a1080f609c9cfeac",
       "lockGeneration": 362,
@@ -84874,6 +84830,51 @@
       "requestDigest": "e39e3bc51e7b70e91099db4e1f9ec8942d1954d6f0049c4b646f7ef8827adb02",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "23c841a4d7147f325ebc72ec5efc7fe66597b1f3968bdb77e070cf4f9a66c8b7",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8c7f296f6fa378d139be71440b2d2cdf37971b77",
+          "lockGeneration": 2829,
+          "lockScope": "AUDRALIA:GEN2826:LAND_COLOR_BOUNDARY_REPAIR:20261020",
+          "operationId": "AUDRALIA_GEN2826_LAND_COLOR_BOUNDARY_REPAIR_20261020_001",
+          "procedureLocatorDigest": "dad260d58b3f9a75e39315f5e35f299869e2f272d5303b596cd7e52b4cfac5ed",
+          "requestDigest": "fa7b793240988ebb2c1839ac65a429e34310e1ee9e106cbc19f1e2ea99a3321a",
+          "scopeHash": "9ae9b51ab644cd079a4ee9056734e665fb9a29db4eb99fb65c4a40063e1b4d4c"
+        },
+        "bindingDigest": "53c3b4ebffe23e88300e7c0333b1ac1715011c204b4b0e35cb734dfe4f21e297",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "96d5a244be03c08166e904097a8093db5df24e9d7b198393608de45cd9b67a64",
+          "commentId": 6296806970,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6586,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39465039865,
+          "workflowSha": "8c7f296f6fa378d139be71440b2d2cdf37971b77"
+        },
+        "lineageAnchorCommitSha": "802b0c524433ffed712bc1f09e8e6c1366bc157f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8c7f296f6fa378d139be71440b2d2cdf37971b77",
+      "lockGeneration": 2829,
+      "lockScope": "AUDRALIA:GEN2826:LAND_COLOR_BOUNDARY_REPAIR:20261020",
+      "operationId": "AUDRALIA_GEN2826_LAND_COLOR_BOUNDARY_REPAIR_20261020_001",
+      "procedureLocatorDigest": "dad260d58b3f9a75e39315f5e35f299869e2f272d5303b596cd7e52b4cfac5ed",
+      "released": true,
+      "requestDigest": "fa7b793240988ebb2c1839ac65a429e34310e1ee9e106cbc19f1e2ea99a3321a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9ae9b51ab644cd079a4ee9056734e665fb9a29db4eb99fb65c4a40063e1b4d4c",
       "state": "TERMINAL",
       "terminalDisposition": "WITHDRAWN"
     }

@@ -33,14 +33,14 @@
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "f15da38a194289ec374d8c0bbc4974f6aa809b859c7568c7e427bd91901d6842"
+      "sha256": "17033b4539e11aada8d25c7869b712ad342844e93a353678f03366b7a44f3957"
     },
     {
       "path": "h-earth-3d/validation/h-earth.cavern-entrance-ivy.v1.test.mjs",
-      "sha256": "b845c7c4dcdf1aef51e7c2d60e523185353a92bd89a68106ad4dc3570e4cc55c"
+      "sha256": "e9d5a8f6941952f211a5b17f9d96faa01f68bc0aedee9b00582342bc5a1e6644"
     }
   ],
-  "acceptanceBasis": "Structural same-world continuity; bounded cavern vegetation shadow and ivy geometry delta. Existing world UI camera navigation palm placement grass preserved. Browser and owner physical acceptance pending.",
+  "acceptanceBasis": "Same-world continuity; terrain shadow caster bias repair only. Source geometry, world, interaction, vegetation and water unchanged. Visual correction pending confirmation.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
   "canonicalAdmissionGeneration": 2838

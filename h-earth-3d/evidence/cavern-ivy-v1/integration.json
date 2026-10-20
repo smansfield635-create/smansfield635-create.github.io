@@ -15,8 +15,8 @@
   "canonicalAdmissionGeneration": 2838,
   "governingHead": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467",
   "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6302416036",
-  "focusedTests": "7/7 PASS",
-  "browserQualification": "PENDING",
+  "focusedTests": "8/8 PASS",
+  "browserQualification": "PENDING_FOR_BANDING_REPAIR",
   "ownerPerceptualAcceptance": false,
   "independentReview": "PASS: independent source and mathematical review;7/7tests; shader compilation GPU and visual qualification pending",
   "unchanged": [
@@ -34,5 +34,12 @@
   "visualReview": {
     "status": "PENDING_ACTUAL_BROWSER_LIGHTING",
     "priorStudy": "f530f425 offline geometry only; does not establish shadows"
+  },
+  "bandingRepair": {
+    "observed": "Owner phone footage shows new terrain bands after shadow release3e6bf228",
+    "diagnosis": "Terrain self-shadow acne plausible: no slope offset; fixed receiver bias9.6mm",
+    "change": "Slope-scaled terrain caster polygonOffset1.5/2; foliage unbiased; preserve and restore GL state including exceptions",
+    "visualConfirmation": "PENDING",
+    "parentRelease": "3e6bf228246ffab109f7b284d9e25db313b5494c"
   }
 }

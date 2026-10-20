@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-20T18:37:03Z",
+  "generatedAt": "2026-10-20T19:29:56Z",
   "window": {
-    "start": "2026-07-22T18:37:03Z",
-    "end": "2026-10-20T18:37:03Z"
+    "start": "2026-07-22T19:29:56Z",
+    "end": "2026-10-20T19:29:56Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -42,13 +42,13 @@
         "pageLoads": 110,
         "visits": 10
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 159,
-        "visits": 10
-      },
       "/index.html": {
         "pageLoads": 140,
         "visits": 0
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 159,
+        "visits": 10
       },
       "/": {
         "pageLoads": 1037,
@@ -134,6 +134,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -149,10 +153,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -170,6 +170,10 @@
         "pageLoads": 60,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
@@ -178,7 +182,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -192,10 +196,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {

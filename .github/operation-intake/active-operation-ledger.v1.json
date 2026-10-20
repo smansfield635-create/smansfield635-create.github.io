@@ -15446,50 +15446,6 @@
       "scopeHash": "c46a6e867a5e73295d6b6ea8bb0311cee578374b5233bdf553b8dcc2ca8c3361",
       "state": "ADMITTED_LOCKED"
     },
-    "c49850326a4cc572de47adcf4ffd47499c210e6022b4c6b501529463c532102e": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "079f8be89e3cfc4ca26b39ce3c1eee86ff387395",
-          "lockGeneration": 2833,
-          "lockScope": "AUDRALIA:GEN2829:EXACT_MESH_DELIVERY:20261020",
-          "operationId": "AUDRALIA_GEN2829_EXACT_MESH_DELIVERY_REPAIR_20261020_001",
-          "procedureLocatorDigest": "45eb62576c45ae8ad0f8cee3aed1df2e7cbff90931b51478cd3640c3d80ed094",
-          "requestDigest": "fa5fda0fc1bbe7a6621adda8ed2f6902b3a9c7990938e2b8f77064c0ab04f9a4",
-          "scopeHash": "c49850326a4cc572de47adcf4ffd47499c210e6022b4c6b501529463c532102e"
-        },
-        "bindingDigest": "6514bf1c27f9205836b244aa00335284b5fe3773c3d11497e61562c5a475cb4a",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "21bb5350846ba1f027a1885e75b6f0f99a730d5f8b5e486c4348a1d5f6b8868f",
-          "commentId": 6298022089,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6586,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 39474047832,
-          "workflowSha": "079f8be89e3cfc4ca26b39ce3c1eee86ff387395"
-        },
-        "lineageAnchorCommitSha": "b74115f90f996da55c9bcdafa8e2713c586e1dbd",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "079f8be89e3cfc4ca26b39ce3c1eee86ff387395",
-      "lockGeneration": 2833,
-      "lockScope": "AUDRALIA:GEN2829:EXACT_MESH_DELIVERY:20261020",
-      "operationId": "AUDRALIA_GEN2829_EXACT_MESH_DELIVERY_REPAIR_20261020_001",
-      "procedureLocatorDigest": "45eb62576c45ae8ad0f8cee3aed1df2e7cbff90931b51478cd3640c3d80ed094",
-      "released": false,
-      "requestDigest": "fa5fda0fc1bbe7a6621adda8ed2f6902b3a9c7990938e2b8f77064c0ab04f9a4",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c49850326a4cc572de47adcf4ffd47499c210e6022b4c6b501529463c532102e",
-      "state": "ADMITTED_LOCKED"
-    },
     "c4a6c80d043347df4fe4f1fa2846d903656e6e668355c6b9049b1af3a6cfbadf": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -85043,6 +84999,51 @@
         "transitionId": "CAVERN_GRASS_NATURAL_SUCCESSOR_20261020"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "079f8be89e3cfc4ca26b39ce3c1eee86ff387395",
+          "lockGeneration": 2833,
+          "lockScope": "AUDRALIA:GEN2829:EXACT_MESH_DELIVERY:20261020",
+          "operationId": "AUDRALIA_GEN2829_EXACT_MESH_DELIVERY_REPAIR_20261020_001",
+          "procedureLocatorDigest": "45eb62576c45ae8ad0f8cee3aed1df2e7cbff90931b51478cd3640c3d80ed094",
+          "requestDigest": "fa5fda0fc1bbe7a6621adda8ed2f6902b3a9c7990938e2b8f77064c0ab04f9a4",
+          "scopeHash": "c49850326a4cc572de47adcf4ffd47499c210e6022b4c6b501529463c532102e"
+        },
+        "bindingDigest": "6514bf1c27f9205836b244aa00335284b5fe3773c3d11497e61562c5a475cb4a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "21bb5350846ba1f027a1885e75b6f0f99a730d5f8b5e486c4348a1d5f6b8868f",
+          "commentId": 6298022089,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6586,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39474047832,
+          "workflowSha": "079f8be89e3cfc4ca26b39ce3c1eee86ff387395"
+        },
+        "lineageAnchorCommitSha": "b74115f90f996da55c9bcdafa8e2713c586e1dbd",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "079f8be89e3cfc4ca26b39ce3c1eee86ff387395",
+      "lockGeneration": 2833,
+      "lockScope": "AUDRALIA:GEN2829:EXACT_MESH_DELIVERY:20261020",
+      "operationId": "AUDRALIA_GEN2829_EXACT_MESH_DELIVERY_REPAIR_20261020_001",
+      "procedureLocatorDigest": "45eb62576c45ae8ad0f8cee3aed1df2e7cbff90931b51478cd3640c3d80ed094",
+      "released": true,
+      "requestDigest": "fa5fda0fc1bbe7a6621adda8ed2f6902b3a9c7990938e2b8f77064c0ab04f9a4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c49850326a4cc572de47adcf4ffd47499c210e6022b4c6b501529463c532102e",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

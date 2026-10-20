@@ -898,6 +898,79 @@ void main(){
         }
       }
     }
+    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_BEGIN
+    // Material colors now follow local coast / fertile / drainage / foothill
+    // and erosion signals. Keep the approved image texture as grain, and
+    // retain the separate shoreline, woodland, geological and plant overlays.
+    // No vertex elevation, planted root, coast, route or water role is changed.
+    if(!geologicalEarthRock){
+      float inlandIdentity=smoothstep(
+        28.0,66.0,max(0.0,vCoastDistanceMeters)
+      );
+      float identityNoise=noise2(world*0.023+vec2(41.0,-26.0));
+      float basinDistance=length(
+        (world-vec2(2.0,-179.0))/vec2(80.0,72.0)
+      );
+      // This is sheltered soil, not a claim of a new freshwater river.
+      float shelteredBasin=1.0-smoothstep(
+        0.58,1.36,basinDistance+(identityNoise-0.5)*0.34
+      );
+      float fertilePatch=smoothstep(
+        0.42,0.68,
+        macroField*0.47+mesoField*0.38+detailField*0.15
+      );
+      float moistShelter=clamp(
+        shelteredBasin*0.70+
+        (1.0-slopeResponse)*fertilePatch*0.43,
+        0.0,1.0
+      );
+      float upperDry=smoothstep(
+        8.0,30.0,vWorldPosition.y
+      )*(1.0-moistShelter*0.74);
+      float mineralExposure=clamp(
+        rockExposure*0.78+smoothstep(0.25,0.58,slope)*0.45,
+        0.0,1.0
+      );
+      float coastalEarth=1.0-smoothstep(
+        48.0,112.0,max(0.0,vCoastDistanceMeters)
+      );
+      // Distinct soil families, blended rather than sharply classified.
+      vec3 compactEarth=vec3(0.390,0.248,0.148);
+      vec3 coastalSilt=vec3(0.520,0.440,0.270);
+      vec3 fertileEarth=vec3(0.120,0.265,0.104);
+      vec3 shelteredEarth=vec3(0.090,0.165,0.085);
+      vec3 dryFoothill=vec3(0.480,0.315,0.140);
+      vec3 erodedMineral=vec3(0.345,0.355,0.335);
+      vec3 identityBase=mix(
+        compactEarth,coastalSilt,coastalEarth*0.74
+      );
+      identityBase=mix(
+        identityBase,fertileEarth,fertilePatch*0.83
+      );
+      identityBase=mix(
+        identityBase,shelteredEarth,moistShelter*0.88
+      );
+      identityBase=mix(
+        identityBase,dryFoothill,upperDry*0.82
+      );
+      identityBase=mix(
+        identityBase,erodedMineral,mineralExposure*0.92
+      );
+      identityBase*=0.86+0.22*materialVariation+
+        0.06*triFine*nearMaterial;
+      // Preserve the owner-accepted four-tree ground and its natural fringe.
+      float protectedGrove=1.0-smoothstep(
+        22.0,42.0,distance(world,vec2(-139.40268,-210.74617))
+      );
+      float identityContrast=clamp(
+        0.75+0.15*abs(fertilePatch-0.5)*2.0+
+        0.12*mineralExposure,0.0,0.96
+      );
+      float identityWeight=inlandIdentity*
+        (1.0-protectedGrove)*identityContrast;
+      palette=mix(palette,identityBase,identityWeight);
+    }
+    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END
     // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2_END
     base=palette;
 

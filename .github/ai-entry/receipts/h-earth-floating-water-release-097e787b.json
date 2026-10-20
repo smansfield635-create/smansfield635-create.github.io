@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-floating-water-release-097e787b",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6623,
+  "requestBranch": "ai-dispatch-request-water-release-097e787b",
+  "requestCommit": "e83d3c6d60e8ac5c07ee7c3812dad3ea52e4070c",
+  "requestCommitParent": "097e787b5fdae86ec45a54a8e8f980593d843146",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "097e787b5fdae86ec45a54a8e8f980593d843146",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "097e787b5fdae86ec45a54a8e8f980593d843146",
+    "surface_id": "h-earth-simple"
+  },
+  "bridgeRunId": "39516799941",
+  "dispatchedRunId": 39516819302,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39516819302",
+  "dispatchedRunHeadSha": "097e787b5fdae86ec45a54a8e8f980593d843146",
+  "dispatchedAt": "2026-10-20T23:43:01.914Z",
+  "resolvedAt": "2026-10-20T23:43:05.526Z"
+}

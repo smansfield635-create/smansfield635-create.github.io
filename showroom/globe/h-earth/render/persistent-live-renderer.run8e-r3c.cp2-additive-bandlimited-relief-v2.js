@@ -962,9 +962,12 @@ void main(){
       float protectedGrove=1.0-smoothstep(
         22.0,42.0,distance(world,vec2(-139.40268,-210.74617))
       );
+      // Preserve more of the accepted photographic soil albedo while
+      // retaining distinct fertile, sheltered, foothill and mineral regimes.
+      // Broad, continuous environmental weights still own the geography.
       float identityContrast=clamp(
-        0.75+0.15*abs(fertilePatch-0.5)*2.0+
-        0.12*mineralExposure,0.0,0.96
+        0.48+0.10*abs(fertilePatch-0.5)*2.0+
+        0.08*mineralExposure,0.0,0.66
       );
       float identityWeight=inlandIdentity*
         (1.0-protectedGrove)*identityContrast;

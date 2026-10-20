@@ -99,3 +99,25 @@ test('B2 precomputed height identity mismatch is detected before Stage B', () =>
   // cancels B2 at old mesh vertices, and the initial patch is 128 m wide.
   // This recorded discrepancy must be reconciled before Stage B is accepted.
 });
+
+// Gen2823 owner ONE_REPAIR: source-bound weight budget, not visual acceptance.
+test('Regional soil color preserves at least 34 percent of preceding approved photo-based albedo', () => {
+  const begin = source.indexOf('// H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_BEGIN');
+  const end = source.indexOf('// H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END', begin);
+  assert.ok(begin > 0 && end > begin, 'MATERIAL_SCOPE_MISSING');
+  const stage = source.slice(begin, end);
+  assert.match(stage, /0\.48\+0\.10\*abs\(fertilePatch-0\.5\)\*2\.0\+/);
+  assert.match(stage, /0\.08\*mineralExposure,0\.0,0\.66/);
+  assert.match(stage, /identityWeight=inlandIdentity\*/);
+  assert.match(stage, /\(1\.0-protectedGrove\)\*identityContrast/);
+  const weights = [];
+  for (const fertilePatch of [0, 0.5, 1]) for (const mineralExposure of [0, 0.5, 1]) {
+    const contrast = Math.min(0.66, Math.max(0, 0.48 + 0.10 * Math.abs(fertilePatch - 0.5) * 2 + 0.08 * mineralExposure));
+    weights.push(contrast);
+    assert.ok(contrast >= 0.48 && contrast <= 0.66, 'PHOTO_ALBEDO_BUDGET_EXCEEDED');
+  }
+  assert.ok(Math.max(...weights) - Math.min(...weights) > 0.15, 'REGIONAL_DIFFERENTIATION_COLLAPSED');
+  assert.ok(source.indexOf('vec3 worldSoilActualAlbedo=') < begin, 'APPROVED_SOIL_TEXTURE_NOT_PRIOR');
+  assert.match(stage, /if\(!geologicalEarthRock\)/);
+  assert.match(stage, /inlandIdentity=smoothstep\(/);
+});

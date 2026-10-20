@@ -57,10 +57,11 @@ void main(){
  // Local entrance growth affects existing and supplemental roots alike.
  float entrance=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
  float shoulders=smoothstep(1.6,5.,abs(aRoot.x-40.));
- float entranceHeight=mix(mix(.30,.48,h),mix(.58,.88,h),shoulders);
+ float mouthBanks=(1.-smoothstep(.7,2.5,abs(abs(aRoot.x-40.)-3.8)))*(1.-smoothstep(2.,7.,abs(aRoot.z+262.)));
+ float entranceHeight=mix(mix(mix(.30,.48,h),mix(.58,.88,h),shoulders),mix(1.15,1.65,h),mouthBanks);
  float height=mix(mix(.11,.21,h),entranceHeight,entrance)*scale;
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.86));
- p+=vec3(sin(angle),0.,-cos(angle))*level*level*.025*scale;
+ p+=vec3(sin(angle),0.,-cos(angle))*level*level*mix(.025,height*mix(.12,.30,h),entrance)*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;
  // Rotate and warp only color coordinates; every immutable root stays fixed.
  vec2 colorWorld=mat2(.8,.6,-.6,.8)*aRoot.xz;

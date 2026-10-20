@@ -27,3 +27,11 @@ test('palm feet and water remain clear, edge tapers have no rectangular wall',()
  assert.equal(entranceWeight(28,-280),0);assert.equal(entranceWeight(40,-292),0);assert.equal(entranceWeight(40,-258),0);assert.ok(entranceWeight(40,-264)>.9);
 });
 if(process.env.CAVERN_GRASS_EVIDENCE)fs.writeFileSync(process.env.CAVERN_GRASS_EVIDENCE,JSON.stringify({...addition.receipt,combinedRootCount:first+addition.receipt.contactCount,combinedPackedBytes:(first+addition.receipt.contactCount)*16},null,2));
+
+test('supplement breaks alignment along both planting axes',()=>{
+ const roots=addition.tiles.flatMap(t=>t.roots).map(r=>unprojectPlanetVertex(r.x,r.y,r.z));
+ for(const axis of ['x','z']){
+  let c=0,s=0;for(const p of roots){const a=p[axis]/.14*Math.PI*2;c+=Math.cos(a);s+=Math.sin(a);}
+  assert.ok(Math.hypot(c,s)/roots.length<.15,`${axis} grid alignment remains`);
+ }
+});

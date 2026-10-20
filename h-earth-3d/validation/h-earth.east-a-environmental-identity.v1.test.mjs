@@ -121,3 +121,28 @@ test('Regional soil color preserves at least 34 percent of preceding approved ph
   assert.match(stage, /if\(!geologicalEarthRock\)/);
   assert.match(stage, /inlandIdentity=smoothstep\(/);
 });
+
+// Gen2823 earth-tone follow-up: the terrain shader must not paint bare ground
+// with the green colors already supplied by actual foliage.
+test('Bare-ground regional palettes keep foliage green separate', () => {
+  const stage = source.slice(source.indexOf(begin), source.indexOf(end));
+  const soilColors = {
+    compactEarth: [0.390, 0.248, 0.148],
+    coastalSilt: [0.520, 0.440, 0.270],
+    fertileEarth: [0.300, 0.235, 0.155],
+    shelteredEarth: [0.235, 0.188, 0.130],
+    dryFoothill: [0.480, 0.315, 0.140],
+    erodedMineral: [0.355, 0.333, 0.305]
+  };
+  for (const [name, rgb] of Object.entries(soilColors)) {
+    const declaration = 'vec3 ' + name + '=vec3(' + rgb.map(x => x.toFixed(3)).join(',') + ');';
+    assert.ok(stage.includes(declaration), 'EARTH_PALETTE_IDENTITY_' + name);
+    assert.ok(rgb[0] > rgb[1] && rgb[1] > rgb[2], 'FOLIAGE_GREEN_IN_BARE_TERRAIN_' + name);
+  }
+  assert.ok(Math.hypot(...soilColors.fertileEarth.map((x, i) => x - soilColors.shelteredEarth[i])) > 0.08,
+    'FERTILE_AND_SHELTERED_SOIL_DIFFERENTIATION_LOST');
+  assert.ok(stage.includes('float identityContrast=clamp('), 'COLOR_WEIGHT_CONTROL_MISSING');
+  assert.ok(stage.includes('0.48+0.10*abs(fertilePatch-0.5)*2.0+'), 'PREVIOUS_ACCEPTED_BLEND_STRENGTH_CHANGED');
+  assert.ok(stage.includes('(1.0-protectedGrove)*identityContrast'), 'GROVE_PROTECTION_CHANGED');
+  assert.ok(source.includes('WOODLAND_FINE_GRASS_FS'), 'GREEN_FOLIAGE_SHADER_MISSING');
+});

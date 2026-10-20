@@ -934,13 +934,15 @@ void main(){
       float coastalEarth=1.0-smoothstep(
         48.0,112.0,max(0.0,vCoastDistanceMeters)
       );
-      // Distinct soil families, blended rather than sharply classified.
+      // Exposed terrain is earth and mineral, not foliage: green belongs to
+      // actual grass, plants and trees in the separate vegetation layers.
+      // Keep six continuous soil families and all native biome signals.
       vec3 compactEarth=vec3(0.390,0.248,0.148);
       vec3 coastalSilt=vec3(0.520,0.440,0.270);
-      vec3 fertileEarth=vec3(0.120,0.265,0.104);
-      vec3 shelteredEarth=vec3(0.090,0.165,0.085);
+      vec3 fertileEarth=vec3(0.300,0.235,0.155);
+      vec3 shelteredEarth=vec3(0.235,0.188,0.130);
       vec3 dryFoothill=vec3(0.480,0.315,0.140);
-      vec3 erodedMineral=vec3(0.345,0.355,0.335);
+      vec3 erodedMineral=vec3(0.355,0.333,0.305);
       vec3 identityBase=mix(
         compactEarth,coastalSilt,coastalEarth*0.74
       );

@@ -380,7 +380,7 @@
       "productMutationPerformed": false
     }
   },
-  "next": "Verify one-repair immutable shader/test diff, execute only selected native/source and actual WebGL/browser checks through registered route, and obtain owner visual ONE_REPAIR continuation judgment. Do not treat shader weight correction as proof that diagonal seam has disappeared; preserve previous terrain, atlas, grass, beach and navigation.",
+  "next": "Exact renderer color triplets/test and source-diff verification, registered H-Earth exact-candidate browser preflight, then the established approved exact-head release route if qualified; post-release Android owner judgment. Do not alter vegetation, ground geometry, global material masks or Gen2824.",
   "authorityEffect": "NONE_CHECKPOINT_EVIDENCE_ONLY",
   "oneRepair": {
     "schema": "H_EARTH_GEN2823_STAGE_A2_OWNER_ONE_REPAIR_V1",
@@ -427,6 +427,73 @@
       "testSha256": "7497acb10882b4dd1834e11b83f8a89dbd01029928748c35f77ecf563288e1fa",
       "nativeTest": "NOT_EXECUTED",
       "originalColorBlend": "UNCHANGED"
+    }
+  },
+  "earthToneCorrection": {
+    "schema": "H_EARTH_GEN2823_EARTH_TONE_MATERIAL_FOLLOWUP_V1",
+    "ownerDirection": "The 2026-10-20 post-ONE_REPAIR Android views show substantially reduced hard disruption but excessive green-painted bare ground. Owner explicitly directs terrain material correction, reserving green for real grass and foliage.",
+    "rootCause": "Stage A2 actual terrain shader assigns green RGB to fertileEarth (0.120,0.265,0.104) and shelteredEarth (0.090,0.165,0.085) and green-biased mineral (0.345,0.355,0.335); those are bare-ground palette sources independent of root vegetation.",
+    "baselineLiveHead": "41a5dc5da53ee84be7ea302d6adbea9d5e84c699",
+    "authority": {
+      "operationId": "H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_CONSTRUCTION_20261019_001",
+      "generation": 2823,
+      "lockScope": "H_EARTH:EAST_A_ENVIRONMENTAL_IDENTITY:20261019:V1",
+      "ledgerRefHead": "706455c47fa9b36020103d5bfc30f6991efcfda9",
+      "recordStatus": "ADMITTED_LOCKED",
+      "recordReleased": false
+    },
+    "allowedChanges": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs",
+      "h-earth-3d/evidence/east-a-environmental-identity-v1/checkpoint.json",
+      "h-earth-3d/experience-anchor/receipts/east-a-environmental-identity-v1.json"
+    ],
+    "candidateRendererGitBlob": "114747ce812cfbf8010cff7fb1735c773aea983f",
+    "candidateRendererSha256": "98e82cf17ce76de89883c712a5612b0554b061957f830655b34444db3c2884fe",
+    "candidateTestGitBlob": "fb72d275eef75eb7cf789d0b80969aaf37f110ce",
+    "candidateTestSha256": "cd209d8d42fd8a6e3c2d1455e1a81663b6dd387b06e432d6a1c1dfab6c117ecf",
+    "sourceChange": "Three bare-ground RGB triplets, plus explanatory comment, within the existing Gen2823 Stage A2 shader block only. Fertile -> earth-brown, sheltered -> deeper earth-brown, eroded mineral -> neutral warm gray. The six spatially continuous signal-weighting rules and existing 48–66 percent composition strength are unchanged.",
+    "newMaterialPalette": {
+      "compactEarth": [
+        0.39,
+        0.248,
+        0.148
+      ],
+      "coastalSilt": [
+        0.52,
+        0.44,
+        0.27
+      ],
+      "fertileEarth": [
+        0.3,
+        0.235,
+        0.155
+      ],
+      "shelteredEarth": [
+        0.235,
+        0.188,
+        0.13
+      ],
+      "dryFoothill": [
+        0.48,
+        0.315,
+        0.14
+      ],
+      "erodedMineral": [
+        0.355,
+        0.333,
+        0.305
+      ]
+    },
+    "sourceChecks": "ALL_SIX_SOIL_TRIPLETS_RED_GREATER_GREEN_GREATER_BLUE_AND_DIFFERENTIATION_PRESERVED",
+    "protectedObjects": "Same tree/bark/grass records, existing grass habitat texture and blades, bare beach/shoreline, water, terrain geometry, navigation, loaders and separate Gen2824 B2 mesh candidate",
+    "visualLimitations": "Real Android before/after exact-position views of this corrected color candidate unavailable. Do not treat warm palette math as actual phone acceptance or assert existing stepped seams eliminated.",
+    "qualification": {
+      "fullNativeNodeSuite": "PENDING",
+      "webglRuntime": "PENDING",
+      "registeredExactPreflight": "PENDING",
+      "ownerDisposition": "REVIEW_REQUIRED",
+      "publication": "NOT_PERFORMED"
     }
   }
 }

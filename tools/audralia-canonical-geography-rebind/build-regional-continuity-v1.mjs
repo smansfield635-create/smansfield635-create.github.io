@@ -1,0 +1,98 @@
+#!/usr/bin/env node
+// Gen2837. Existing land topology retained; bounded slope collar + real regional ecology.
+import fs from 'node:fs';
+import path from 'node:path';
+import os from 'node:os';
+import {createHash} from 'node:crypto';
+import {gzipSync,gunzipSync} from 'node:zlib';
+import {fileURLToPath,pathToFileURL} from 'node:url';
+const ROOT=fileURLToPath(new URL('../../',import.meta.url));
+const BASE=process.env.AUDRALIA_REGIONAL_BASELINE_DIR;
+const T='showroom/globe/h-earth/terrain-estate-construction-v1/';
+const SNAP='inspection/audralia-24057-exact/snapshot/';
+const R=SNAP+'showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs';
+const G=SNAP+'h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';
+const INDEX='showroom/globe/audralia/index.html';
+const GEN='tools/audralia-canonical-geography-rebind/build-regional-continuity-v1.mjs';
+const VERIFY='tools/audralia-canonical-geography-rebind/validate-regional-continuity-v1.mjs';
+const OP='AUDRALIA_REGIONAL_CONTINUITY_PHYSICAL_ECOLOGY_V1_20261020_001';
+const ORIGINAL='0264e0cfecc32125ea4557e69a17c31cba85e73b2c10381729bdcbd488a539c7';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const blob=b=>createHash('sha1').update('blob '+b.length+'\0').update(b).digest('hex');
+const read=(r,p)=>fs.readFileSync(path.join(r,p));
+const write=(p,b)=>{fs.mkdirSync(path.dirname(path.join(ROOT,p)),{recursive:true});fs.writeFileSync(path.join(ROOT,p),b)};
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
+const mix=(a,b,t)=>a.map((v,k)=>v+(b[k]-v)*t);
+const norm=a=>{const n=Math.hypot(...a)||1;return a.map(v=>v/n)};
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+const sub=(a,b)=>a.map((v,k)=>v-b[k]);
+const add=(a,b)=>a.map((v,k)=>v+b[k]);
+const scale=(a,s)=>a.map(v=>v*s);
+function noise(x,z,period=64){const u=x/period,v=z/period,ix=Math.floor(u),iz=Math.floor(v),tx=smooth(0,1,u-ix),tz=smooth(0,1,v-iz);const h=(a,b)=>{let n=Math.imul(a,374761393)^Math.imul(b,668265263)^2837;n=Math.imul(n^(n>>>13),1274126177);return((n^(n>>>16))>>>0)/4294967295};return(h(ix,iz)*(1-tx)+h(ix+1,iz)*tx)*(1-tz)+(h(ix,iz+1)*(1-tx)+h(ix+1,iz+1)*tx)*tz}
+function random(i,j,k=0){let x=Math.imul(i+2837,1597334677)^Math.imul(j+117,3812015801)^Math.imul(k+9,9582823);x=Math.imul(x^(x>>>16),2246822519);return((x^(x>>>13))>>>0)/4294967295}
+const bounds={xMin:-256,xMax:256,zMin:-256,zMax:64};
+function domain(x,z){const sx=clamp(x,bounds.xMin,bounds.xMax),sz=clamp(z,bounds.zMin,bounds.zMax),dx=x-sx,dz=z-sz,d=Math.hypot(dx,dz),inside=d<1e-7;return{sx,sz,d,inside,nx:d?dx/d:0,nz:d?dz/d:0,edge:inside?Math.min(x+256,256-x,z+256,64-z):-d}}
+if(!BASE||path.resolve(BASE)===path.resolve(ROOT))throw Error('SEPARATE_IMMUTABLE_BASELINE_REQUIRED');
+for(const[p,pin]of[[R,'872d20b17bb0cd89d9613ca0262b25350890a617'],[G,'50991dd777ccd015fd8a6d8eae7b4d02b4a8450c'],[T+'renderer.precomputed.mjs','bce730b6f70130def262a0aa55710ae001059019']])if(blob(read(ROOT,p))!==pin)throw Error('SOURCE_PIN:'+p);
+const a=gunzipSync(read(BASE,T+'gratitude-mesh-v1.bin.gz'));if(sha(a)!==ORIGINAL)throw Error('BASELINE_PAYLOAD');
+const b=Buffer.from(a),landFloats=a.readUInt32LE(12),landCount=landFloats/10,landEnd=32+landFloats*4,indices=new Uint32Array(a.buffer,a.byteOffset+landEnd,a.readUInt32LE(16));
+const temp=fs.mkdtempSync(path.join(os.tmpdir(),'regional-sampler-'));
+const samplerSource=read(ROOT,R).toString().replace("from '../../../../h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js';",'from '+JSON.stringify(pathToFileURL(path.join(ROOT,G)).href)+';')+'\nexport {sampleCanonicalGratitude,sampleCanonicalCoast,sampleLocalSource,tangentCoordinatesFromDirection,tangentPosition,tangentDirection,normalizeLocalElevation,HYDRO,SANDBARS};\n';
+fs.writeFileSync(path.join(temp,'sampler.mjs'),samplerSource);
+const m=await import(pathToFileURL(path.join(temp,'sampler.mjs')).href);
+const barIds=new Set(m.SANDBARS.map(s=>s.id));
+const nearReservoir=(x,z)=>Math.hypot((x-m.HYDRO.reservoir.center.x)/(m.HYDRO.reservoir.radius.x*1.10+6),(z-m.HYDRO.reservoir.center.z)/(m.HYDRO.reservoir.radius.z*1.10+6))<1;
+const stats={changedPositionVertices:0,changedNormalVertices:0,changedRgbVertices:0,maxPositionDelta:0,uniqueSamples:0};
+const cache=new Map();
+function originalHeight(x,z){return m.sampleCanonicalGratitude(x,z+128).elevation}
+function correction(x,z){const d=domain(x,z);if(d.inside||d.d>=64)return 0;const coast=m.sampleCanonicalCoast(x,z+128);if(!coast.inside||coast.sandbar?.inside||barIds.has(coast.component)||coast.distance<12)return 0;const eps=.2,h0=originalHeight(d.sx,d.sz),hin=originalHeight(d.sx-d.nx*eps,d.sz-d.nz*eps),hout=originalHeight(d.sx+d.nx*eps,d.sz+d.nz*eps),match=(h0-hin)/eps-(hout-h0)/eps;const limited=clamp(match,-1.5,1.5),t=d.d/64,q=limited*d.d*(1-t)**3*smooth(12,44,coast.distance);return Math.max(m.HYDRO.seaLevelY+.12-originalHeight(x,z),q)}
+function repairedHeight(x,z){const h=originalHeight(x,z),q=correction(x,z);return Math.max(m.HYDRO.seaLevelY+.12,h+q)}
+function repairedPosition(x,z){return m.tangentPosition(x,z+128,repairedHeight(x,z))}
+function repairedNormal(x,z){const p0=repairedPosition(x-.5,z),p1=repairedPosition(x+.5,z),q0=repairedPosition(x,z-.5),q1=repairedPosition(x,z+.5);let n=norm(cross(sub(q1,q0),sub(p1,p0)));const radial=m.tangentDirection(x,z+128);if(n.reduce((s,v,k)=>s+v*radial[k],0)<0)n=scale(n,-1);return n}
+function ecologicalField(x,z){const woodland=Math.exp(-(((x+125)/195)**2+((z+190)/180)**2)*1.3),foothill=Math.exp(-(((x-70)/280)**2+((z+355)/210)**2)*1.5),patch=noise(x,z,95);return{woodland,foothill,patch}}
+const records=[];
+for(let i=0;i<landCount;i++){
+ const at=32+i*40,xyz=[0,1,2].map(k=>a.readFloatLE(at+4*k)),key=xyz.join(',');let r=cache.get(key);
+ if(!r){const uv=m.tangentCoordinatesFromDirection([xyz[0],xyz[1]+6200,xyz[2]]),x=uv.u,z=uv.v-128,d=domain(x,z),coast=m.sampleCanonicalCoast(x,uv.v),protectedCoast=coast.distance<12||coast.sandbar?.inside||barIds.has(coast.component);const delta=correction(x,z);let position=xyz;
+  if(!d.inside&&d.d<64&&!protectedCoast&&Math.abs(delta)>1e-8){const radius=Math.hypot(xyz[0],xyz[1]+6200,xyz[2]),dir=[xyz[0]/radius,(xyz[1]+6200)/radius,xyz[2]/radius];position=[xyz[0]+dir[0]*delta,xyz[1]+dir[1]*delta,xyz[2]+dir[2]*delta]}
+  const normal=!protectedCoast&&d.edge<8&&d.d<68?repairedNormal(x,z):null;
+  const protectedInterior=x>=-256-.001&&x<=256+.001&&z>=-256-.001&&z<=64+.001;if(protectedInterior)position=xyz;r={x,z,d,coast,protectedCoast,protectedInterior,position,normal,delta};cache.set(key,r);
+ }
+ records.push(r);
+ for(let k=0;k<3;k++)b.writeFloatLE(r.position[k],at+4*k);
+ if(!r.protectedInterior&&Math.abs(r.delta)>1e-8){stats.changedPositionVertices++;stats.maxPositionDelta=Math.max(stats.maxPositionDelta,Math.abs(r.delta))}
+ if(r.normal){for(let k=0;k<3;k++)b.writeFloatLE(r.normal[k],at+12+4*k);stats.changedNormalVertices++}
+ const old=[0,1,2].map(k=>a.readFloatLE(at+24+4*k)),beach=old[0]>=.50&&old[0]>old[1]&&old[1]>old[2];
+ if(r.d.d<150&&!r.protectedCoast&&!beach){const f=ecologicalField(r.x,r.z),local=m.sampleLocalSource(r.x,r.z),forest=clamp((local?.terrain?.biome?.forestWeight??0)*(local?.weight??0)*.6+f.woodland*.5),slope=Math.sqrt(Math.max(0,1-[0,1,2].reduce((v,k)=>v+b.readFloatLE(at+12+4*k)*m.tangentDirection(r.x,r.z+128)[k],0)**2));
+  let color=mix([.31,.365,.235],[.20,.295,.195],clamp(forest*.85));color=mix(color,[.43,.355,.245],clamp((f.patch-.42)*.85));color=mix(color,[.43,.41,.37],smooth(.35,.75,slope)*.65);const amount=.86*(1-smooth(20,150,r.d.d))*smooth(12,55,r.coast.distance);color=mix(old,color,amount);for(let k=0;k<3;k++)b.writeFloatLE(color[k],at+24+4*k);stats.changedRgbVertices++}
+}
+stats.uniqueSamples=cache.size;
+if(stats.maxPositionDelta>12)throw Error('COLLAR_OVERSHOOT');
+// Barycentric terrain index: every ecological root uses the final GPU triangles.
+const positions=Array.from({length:landCount},(_,i)=>[0,1,2].map(k=>b.readFloatLE(32+i*40+4*k))),normals=Array.from({length:landCount},(_,i)=>[0,1,2].map(k=>b.readFloatLE(32+i*40+12+4*k)));
+const buckets=new Map(),CELL=24;
+for(let i=0;i<indices.length;i+=3){const ids=[indices[i],indices[i+1],indices[i+2]],rs=ids.map(j=>records[j]);const xmin=Math.min(...rs.map(r=>r.x)),xmax=Math.max(...rs.map(r=>r.x)),zmin=Math.min(...rs.map(r=>r.z)),zmax=Math.max(...rs.map(r=>r.z));if(xmin>450||xmax<-450||zmin>70||zmax<-520)continue;for(let x=Math.floor(xmin/CELL);x<=Math.floor(xmax/CELL);x++)for(let z=Math.floor(zmin/CELL);z<=Math.floor(zmax/CELL);z++){const key=x+','+z;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(i)}}
+function ground(x,z){for(const i of buckets.get(Math.floor(x/CELL)+','+Math.floor(z/CELL))??[]){const ids=[indices[i],indices[i+1],indices[i+2]],v=ids.map(j=>records[j]),den=(v[1].z-v[2].z)*(v[0].x-v[2].x)+(v[2].x-v[1].x)*(v[0].z-v[2].z);if(Math.abs(den)<1e-10)continue;const w0=((v[1].z-v[2].z)*(x-v[2].x)+(v[2].x-v[1].x)*(z-v[2].z))/den,w1=((v[2].z-v[0].z)*(x-v[2].x)+(v[0].x-v[2].x)*(z-v[2].z))/den,w2=1-w0-w1;if(Math.min(w0,w1,w2)<-1e-5)continue;const w=[w0,w1,w2],position=[0,1,2].map(k=>ids.reduce((s,j,t)=>s+positions[j][k]*w[t],0)),normal=norm([0,1,2].map(k=>ids.reduce((s,j,t)=>s+normals[j][k]*w[t],0)));return{position,normal,triangle:i/3,weights:w,ids}}return null}
+const ev=[],ei=[],anchors=[];let trees=0,rocks=0;
+function vertex(p,n,c){const i=ev.length/10;ev.push(...p,...n,...c,1);return i}
+function ellipsoid(center,up,right,forward,rx,ry,rz,color,phase=0,segments=7,rings=4){const start=ev.length/10;for(let j=0;j<=rings;j++){const lat=-Math.PI/2+j*Math.PI/rings;for(let k=0;k<=segments;k++){const angle=phase+k*Math.PI*2/segments,local=[Math.cos(lat)*Math.cos(angle),Math.sin(lat),Math.cos(lat)*Math.sin(angle)],n=norm(add(add(scale(right,local[0]/rx),scale(up,local[1]/ry)),scale(forward,local[2]/rz))),p=add(center,add(add(scale(right,local[0]*rx),scale(up,local[1]*ry)),scale(forward,local[2]*rz)));vertex(p,n,color.map(c=>clamp(c*(.94+.09*(local[1]+1)/2))))}}for(let j=0;j<rings;j++)for(let k=0;k<segments;k++){const a=start+j*(segments+1)+k,b=a+1,c=a+segments+1,d=c+1;ei.push(a,c,b,b,c,d)}}
+function trunk(root,up,right,forward,height,radius,color){const start=ev.length/10;for(let j=0;j<2;j++)for(let k=0;k<=6;k++){const a=k*Math.PI/3,n=add(scale(right,Math.cos(a)),scale(forward,Math.sin(a))),p=add(add(root,scale(up,j*height)),scale(n,radius*(j?.62:1)));vertex(p,n,color)}for(let k=0;k<6;k++){const a=start+k,b=a+1,c=a+7,d=c+1;ei.push(a,c,b,b,c,d)}}
+for(let ix=-42;ix<=42;ix++)for(let iz=-50;iz<=5;iz++){
+ const x=ix*9+(random(ix,iz)-.5)*7.4,z=iz*9+(random(ix,iz,1)-.5)*7.4,f=ecologicalField(x,z),coast=m.sampleCanonicalCoast(x,z+128),d=domain(x,z);if(nearReservoir(x,z)||!coast.inside||coast.distance<38||coast.sandbar?.inside||barIds.has(coast.component)||d.d>140)continue;const local=m.sampleLocalSource(x,z),forest=clamp((local?.terrain?.biome?.forestWeight??0)*(local?.weight??0));const probability=clamp((.14+.64*f.woodland+.26*forest+.20*f.foothill)*smooth(.16,.55,noise(x,z,78)))*(1-smooth(70,145,d.d));if(random(ix,iz,2)>probability)continue;const g=ground(x,z);if(!g)continue;const up=norm([g.position[0],g.position[1]+6200,g.position[2]]),cos=g.normal.reduce((s,n,k)=>s+n*up[k],0),slope=Math.sqrt(Math.max(0,1-cos*cos));if(slope>.52)continue;const wet=local?.terrain?.hydrology;if(Math.max(wet?.riverWeight??0,wet?.lakeWeight??0)>.10)continue;const right=norm(cross([0,0,1],up)),forward=norm(cross(up,right));const root=add(g.position,scale(up,-.08));const h=8+8*random(ix,iz,3),radius=2.6+2.5*random(ix,iz,4),leaf=mix([.145,.265,.145],[.26,.36,.18],random(ix,iz,5));trunk(root,up,right,forward,h*.65,.28+.22*random(ix,iz,6),[.245,.18,.115]);ellipsoid(add(root,scale(up,h*.72)),up,right,forward,radius,h*.35,radius*.82,leaf,random(ix,iz,7)*Math.PI);ellipsoid(add(add(root,scale(up,h*.60)),scale(right,radius*.66)),up,right,forward,radius*.66,h*.25,radius*.65,leaf.map(v=>v*.95),0,6,3);anchors.push({kind:'TREE',x,z,triangle:g.triangle,weights:g.weights,root:g.position,height:h,radius,coastDistance:coast.distance,slope});trees++;
+}
+// Exposed foothill groups only: never random boulders across the woodland floor.
+for(const[cx,cz]of[[85,-252],[155,-286],[210,-218],[40,-326]])for(let j=0;j<8;j++){const angle=random(j,cx,22)*Math.PI*2,r=5+random(j,cz,23)*19,x=cx+Math.cos(angle)*r,z=cz+Math.sin(angle)*r,coast=m.sampleCanonicalCoast(x,z+128),g=ground(x,z);if(nearReservoir(x,z)||!g||!coast.inside||coast.distance<50)continue;const up=norm([g.position[0],g.position[1]+6200,g.position[2]]),slope=Math.sqrt(Math.max(0,1-g.normal.reduce((s,n,k)=>s+n*up[k],0)**2));if(slope<.20||slope>.76)continue;const right=norm(cross([0,0,1],up)),forward=norm(cross(up,right)),size=2+2.2*random(j,cx,24);ellipsoid(add(g.position,scale(up,size*.28)),up,right,forward,size,size*.7,size*.8,[.40,.38,.32],j,6,3);anchors.push({kind:'ROCK',x,z,triangle:g.triangle,weights:g.weights,root:g.position,radius:size,coastDistance:coast.distance,slope});rocks++}
+if(trees<300||rocks<3)throw Error('INSUFFICIENT_PHYSICAL_ECOLOGY:'+trees+':'+rocks);
+const ecology=Buffer.alloc(16+ev.length*4+ei.length*4);ecology.write('REGECV1\0','ascii');ecology.writeUInt32LE(ev.length,8);ecology.writeUInt32LE(ei.length,12);ev.forEach((v,i)=>ecology.writeFloatLE(v,16+i*4));ei.forEach((v,i)=>ecology.writeUInt32LE(v,16+ev.length*4+i*4));const ecologyGz=gzipSync(ecology,{level:9,mtime:0});
+const full=gzipSync(b,{level:9,mtime:0}),parts=[];
+for(let off=0,i=0;off<b.length;off+=1200000,i++){const raw=b.subarray(off,Math.min(off+1200000,b.length)),gz=gzipSync(raw,{level:9,mtime:0}),file='gratitude-mesh-v1.part-'+String(i).padStart(2,'0')+'.gz';write(T+file,gz);parts.push({index:i,file,expandedBytes:raw.length,compressedBytes:gz.length,expandedSha256:sha(raw),compressedSha256:sha(gz)})}
+const p=JSON.parse(read(BASE,T+'gratitude-mesh-v1.provenance.json'));p.operationId=OP;p.governingHead='698c3bb80f11454ddda417c40e84073b6331cb9e';p.parentCandidate={commit:'b147840296b74383bebf5052276ed9227459f39a',payloadSha256:ORIGINAL};p.generator={path:GEN,sha256:sha(read(ROOT,GEN)),deterministicGzipMtime:0,targetExpandedPartBytes:1200000,mode:'BOUNDED_C1_LOCAL_COLLAR_AND_CONTINUOUS_REGIONAL_MATERIAL'};p.verifier={path:VERIFY,sha256:sha(read(ROOT,VERIFY)),ownerPhysicalAcceptance:false};p.mesh={...p.mesh,payloadSha256:sha(b),fullGzipBytes:full.length,fullGzipSha256:sha(full),parts};p.material={...p.material,repair:'REGIONAL_CONTINUITY_PHYSICAL_ECOLOGY_V1',acceptedInteriorRgbProtected:false,localGeometryProtected:true,acceptedInteriorRgbProtectedOutsideRegionalFootprint:true,regionalMaterialModel:'CONTINUOUS_WOODLAND_FOOTHILL_FIELD'};p.regionalContinuity={collarMaximumDistance:64,derivativeKernel:'d*(1-d/64)^3',maximumPositionDelta:stats.maxPositionDelta,localInteriorPositionsPreserved:true,coastSandbarWaterTopologyPreserved:true,normalInteriorSamplingStrip:8};p.review={status:'INDEPENDENT_AND_RENDERED_REVIEW_PENDING',productionPublished:false};
+const ep={schema:'AUDRALIA_REGIONAL_ECOLOGY_MESH_v1',operationId:OP,generation:2837,landPayloadSha256:sha(b),format:'REGECV1',vertexFloats:ev.length,indexCount:ei.length,treeCount:trees,rockCount:rocks,triangleCount:ei.length/3,compressedBytes:ecologyGz.length,compressedSha256:sha(ecologyGz),expandedBytes:ecology.length,expandedSha256:sha(ecology),grounding:'BARYCENTRIC_FINAL_LAND_TRIANGLES',seed:2837,anchors};
+write(T+'gratitude-mesh-v1.bin.gz',full);write(T+'gratitude-mesh-v1.provenance.json',JSON.stringify(p,null,2)+'\n');write(T+'regional-ecology-v1.bin.gz',ecologyGz);write(T+'regional-ecology-v1.provenance.json',JSON.stringify(ep)+'\n');
+// Owner scale correction: Audralia displays surface color and elevation only.
+let renderer=read(ROOT,T+'renderer.precomputed.mjs').toString();
+renderer=renderer.replace("export function createMapWideEnvironmentRenderer(canvas){","export function createMapWideEnvironmentRenderer(canvas){window.__AUDRALIA_REGIONAL_CONTINUITY_RECEIPT__=Object.freeze({schema:'AUDRALIA_REGIONAL_CONTINUITY_RUNTIME_v1',generation:2837,collarSurfaceCorrected:true,identicalCanonicalGeometry:false,inheritedGeometryFlagSuperseded:true,localInteriorPositionsPreserved:true,canonicalCoastlineAndWaterProtected:true,representation:'GLOBAL_COLOR_AND_ELEVATION_ONLY',physicalEcologyDraw:false,physicalVegetationDraw:false,physicalRockDraw:false});");write(T+'renderer.regional-ecology-v1.mjs',renderer);
+let html=read(BASE,INDEX).toString();html=html.replaceAll('https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs?cb=1a2abff0343f','/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=REGIONAL_SURFACE_GEN2837_REPAIR1');html=html.replace(ORIGINAL,sha(b)).replace('GRATITUDE_COASTAL_EARTH_V4_GEN2835','GRATITUDE_REGIONAL_CONTINUITY_GEN2837');const before="      window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'LOADING_PRIMARY_WORLD';";if(html.split(before).length!==2)throw Error('INDEX_LOAD_MARKER');const importMatch=html.match(/<script type="importmap">([\s\S]*?)<\/script>/);if(!importMatch)throw Error('INDEX_IMPORTMAP');const imports=JSON.parse(importMatch[1]);imports.imports['https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs']='/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=REGIONAL_SURFACE_GEN2837_REPAIR1';html=html.replace(importMatch[1],'\n'+JSON.stringify(imports,null,2)+'\n  ');write(INDEX,html);
+const witness=[89.6,-256],eps=.2;const beforeSlope={inside:(originalHeight(witness[0],witness[1])-originalHeight(witness[0],witness[1]+eps))/eps,outside:(originalHeight(witness[0],witness[1]-eps)-originalHeight(...witness))/eps};const afterSlope={inside:beforeSlope.inside,outside:(repairedHeight(witness[0],witness[1]-eps)-repairedHeight(...witness))/eps};
+const report={result:'BUILT_PENDING_INDEPENDENT_RENDERED_REVIEW',operationId:OP,generation:2837,baselineSha256:ORIGINAL,candidateSha256:sha(b),stats,ecology:{treeCount:trees,rockCount:rocks,triangleCount:ei.length/3,compressedBytes:ecologyGz.length,expandedSha256:sha(ecology)},witness:{x:witness[0],z:witness[1],beforeSlope,afterSlope,beforeJump:Math.abs(beforeSlope.inside-beforeSlope.outside),afterJump:Math.abs(afterSlope.inside-afterSlope.outside)},ownerPhysicalAcceptance:false};console.log(JSON.stringify(report,null,2));fs.rmSync(temp,{recursive:true,force:true});

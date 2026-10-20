@@ -1,7 +1,7 @@
 {
   "schema": "AUDRALIA_PRECOMPUTED_GEOGRAPHY_PROVENANCE_v1",
-  "operationId": "AUDRALIA_CANONICAL_GEOGRAPHY_REBIND_20260915_001",
-  "governingHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd",
+  "operationId": "AUDRALIA_REGIONAL_CONTINUITY_PHYSICAL_ECOLOGY_V1_20261020_001",
+  "governingHead": "698c3bb80f11454ddda417c40e84073b6331cb9e",
   "canonicalGeography": {
     "path": "inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
     "gitBlobSha": "50991dd777ccd015fd8a6d8eae7b4d02b4a8450c",
@@ -51,65 +51,66 @@
     "prohibitedLegacyRiverIdsReachable": false
   },
   "generator": {
-    "path": "tools/audralia-canonical-geography-rebind/generate-precomputed-gratitude-mesh-v1.mjs",
-    "sha256": "640698cabfd6c01c92761ebbcc27dc5dadf57563d59e016a2aa114fabfdfb9dc",
+    "path": "tools/audralia-canonical-geography-rebind/build-regional-continuity-v1.mjs",
+    "sha256": "f977773f2a75ceada9324532a8a13e7b16d5faba56d0c071cd279da104a16f67",
     "deterministicGzipMtime": 0,
-    "targetExpandedPartBytes": 1200000
+    "targetExpandedPartBytes": 1200000,
+    "mode": "BOUNDED_C1_LOCAL_COLLAR_AND_CONTINUOUS_REGIONAL_MATERIAL"
   },
   "loader": {
     "path": "showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs",
-    "gitBlobShaBeforeFinalCommit": "1000c4a56837f5ec8a06abfb51cdb3246780be77",
+    "gitBlobShaBeforeFinalCommit": "a0233d6c49fa095b99ace977fe0e3a5ca79403de",
     "provenanceVerificationRequired": true
   },
   "mesh": {
     "format": "AUDGMV1",
     "version": 1,
     "payloadBytes": 9169742,
-    "payloadSha256": "f8dd85dca58c88df5fe71fc9fd6d10d4859744d5e03322e6c8a1700afccd8569",
+    "payloadSha256": "ed0905a208ee6bc8b99ff7271a3d636119d947dc57306a9293ba7405c3de0442",
     "fullGzipPath": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.bin.gz",
-    "fullGzipBytes": 2802972,
-    "fullGzipSha256": "669c13d9f269b98f97b234025ec94cd542650dc967adc1a3aeb31d4774d9a8de",
+    "fullGzipBytes": 3066298,
+    "fullGzipSha256": "1aa18608c496bef5061e6838cdef5c5f5a70e012ee52ecc020adeb373ff4e9f3",
     "partCount": 8,
     "parts": [
       {
         "index": 0,
         "file": "gratitude-mesh-v1.part-00.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 399560,
-        "expandedSha256": "e7f7b4b468e256f55af11d557b2bbce483a470b4175b32285d55d9a269e1e4b3",
-        "compressedSha256": "5b6d3b0dbfdc3b42578c21b5dad93c073a805265cbed1a494e49b9dd656caf81"
+        "compressedBytes": 515141,
+        "expandedSha256": "3c1222f7e0f72270764f5290c6088a247f0c3ba8240bad870863c877384cfd7b",
+        "compressedSha256": "c0e4e898f323b0bcc9bcdbac1a2cdbf202fdf7cfb5d188a48d67d684d4c33f63"
       },
       {
         "index": 1,
         "file": "gratitude-mesh-v1.part-01.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 430472,
-        "expandedSha256": "fe6081d520ad4f3212af46ff9e3c5ffcab44ca7d5094919c71307ba4377e77bc",
-        "compressedSha256": "83ccbbde79bcce9bb7b545bd0412830f9dc9f352ded9b3b9079f379931fc55d3"
+        "compressedBytes": 496001,
+        "expandedSha256": "72e69cef83c62e510b7e65edac947d5b07aa6ef173637fb921edc549f0299543",
+        "compressedSha256": "fc1a95273347c501907ae322cbc50cd433652c325e158227dbe0642d13e9971b"
       },
       {
         "index": 2,
         "file": "gratitude-mesh-v1.part-02.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 445642,
-        "expandedSha256": "8af552720c68d7a2825db98404fdc1651b0dc1fe86ba94e379cd793ec7786f34",
-        "compressedSha256": "fd2e03e67afd33d55dd621678fd2353eedb83ae72c0506db0b8b2bc5c568cb5c"
+        "compressedBytes": 511006,
+        "expandedSha256": "eaec0b936719a4e24c8ab1a2a200fa75878fb80327464de8509a7ffc9ee80eac",
+        "compressedSha256": "24de4264cc331260145559cc2fc20faeb78961e3fe1ad3d42e506aa5a571d524"
       },
       {
         "index": 3,
         "file": "gratitude-mesh-v1.part-03.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 294338,
-        "expandedSha256": "9ddfc54767cdfd48075fd3e4536544528a7a0311c3d9c5a58e974b1c213dc386",
-        "compressedSha256": "673ac70aa2312a93e4ada1ae9498ec9e61fa0bdb9b3f3589271cc8fe38431a8a"
+        "compressedBytes": 305987,
+        "expandedSha256": "24889b29836c382059cf0574bbbbb34a8cb8443af5ec269e0df19ef7f1511a21",
+        "compressedSha256": "b154243423a876647b04173efb20b2ac5334801067beda6d9caf5d02b6bd7706"
       },
       {
         "index": 4,
         "file": "gratitude-mesh-v1.part-04.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 412605,
-        "expandedSha256": "d5ae96cbfb00348eb56970c34d23857799052e738fc9361ca5778a551d773ff5",
-        "compressedSha256": "3795dc46520b395c49f060638fec304597f5f3b76780a08583920439c5974798"
+        "compressedBytes": 417449,
+        "expandedSha256": "325b609c30e3270eb0ab5e9c281c2b7d95058bdd7879bce8b55cfc00507a99f0",
+        "compressedSha256": "11a45bf5f62b74f7d01db46b8f8d9c73669026c430dc58cdb0115dd3c62510ca"
       },
       {
         "index": 5,
@@ -149,5 +150,99 @@
     "deviceMayChangePerformanceBudgetOnly": true,
     "retiredRev3Reachable": false,
     "importMapMayChangeGeographicTruth": false
+  },
+  "material": {
+    "model": "GRATITUDE_MACRO_MATERIAL_V2",
+    "donorEcologyGitBlob": "7bb01259f2dc4b614a77c5f9c1626ffe55115b08",
+    "modelSourceSha256": "9a87f6ab11517f2f803a0741b36583f6187673359809327cc2af1aa8a9851e8b",
+    "eligibleLandOnly": true,
+    "colorChannels": [
+      6,
+      7,
+      8
+    ],
+    "repair": "REGIONAL_CONTINUITY_PHYSICAL_ECOLOGY_V1",
+    "localHearthRgbRecolored": true,
+    "localGeometryProtected": true,
+    "acceptedInteriorRgbProtected": false,
+    "acceptedInteriorMinimumCoastDistance": 144,
+    "shorelineUnchangedDistance": 0,
+    "coastFullWeightDistance": null,
+    "blend": "SPATIAL_EARTH_VEGETATION_PATCHES_WITH_VARIABLE_96_144_CUBIC_DECAY",
+    "localBeachContribution": 0.74,
+    "localBeachFeatherWeightApplied": true,
+    "sandbarRgbProtected": true,
+    "provinceIds": [
+      "ANCIENT_WESTERN_SHIELD",
+      "GRATITUDE_OROGEN",
+      "WESTERN_RIFT_COAST",
+      "GREAT_INTERIOR_BASIN",
+      "EASTERN_GLACIAL_HIGHLANDS",
+      "SOUTHERN_DELTA_LOWLANDS",
+      "RAIN_SHADOW_STEPPE",
+      "FORESTED_WINDWARD_FOOTHILLS"
+    ],
+    "sourcePayloadSha256": "f136a8c696e38ef72e062bb69ae8e5a625000cc88ab436967f4df766637cee28",
+    "earthPaletteReferenceGitBlob": "a6e1d794faabee033be4404f87fcdc6a8d715e45",
+    "earthPalette": {
+      "compactEarth": [
+        0.39,
+        0.248,
+        0.148
+      ],
+      "coastalSilt": [
+        0.52,
+        0.44,
+        0.27
+      ],
+      "fertileEarth": [
+        0.3,
+        0.235,
+        0.155
+      ],
+      "shelteredEarth": [
+        0.235,
+        0.188,
+        0.13
+      ],
+      "dryFoothill": [
+        0.48,
+        0.315,
+        0.14
+      ],
+      "erodedMineral": [
+        0.355,
+        0.333,
+        0.305
+      ]
+    },
+    "paleBeachRgbProtected": true,
+    "noiseSeed": 2835,
+    "existingElevationAndNormalsUsedReadOnly": true,
+    "acceptedInteriorRgbProtectedOutsideRegionalFootprint": true,
+    "regionalMaterialModel": "CONTINUOUS_WOODLAND_FOOTHILL_FIELD"
+  },
+  "parentCandidate": {
+    "commit": "b147840296b74383bebf5052276ed9227459f39a",
+    "payloadSha256": "0264e0cfecc32125ea4557e69a17c31cba85e73b2c10381729bdcbd488a539c7"
+  },
+  "verifier": {
+    "path": "tools/audralia-canonical-geography-rebind/validate-regional-continuity-v1.mjs",
+    "sha256": "e162ad3222d12ef38100e94624debc79d11964f9b2770cd07bad3e79086a38e0",
+    "ownerPhysicalAcceptance": false
+  },
+  "review": {
+    "status": "OWNER_SCALE_REPAIR_RENDERED_REVIEW_PENDING",
+    "productionPublished": false
+  },
+  "regionalContinuity": {
+    "collarMaximumDistance": 64,
+    "derivativeKernel": "d*(1-d/64)^3",
+    "maximumPositionDelta": 6.289489438745404,
+    "localInteriorPositionsPreserved": true,
+    "coastSandbarWaterTopologyPreserved": true,
+    "normalInteriorSamplingStrip": 8,
+    "globalRepresentation": "COLOR_AND_ELEVATION_ONLY",
+    "physicalEcologyRendered": false
   }
 }

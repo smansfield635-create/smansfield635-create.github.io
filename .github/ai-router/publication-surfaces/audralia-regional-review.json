@@ -1,0 +1,31 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "audralia-regional-review",
+  "description": "Read-only six-panel exact-renderer before-after evidence for admitted regional continuity Gen2837",
+  "checks": [
+    {
+      "path": "/showroom/globe/audralia/regional-continuity-qa-v1.html",
+      "includes": [
+        "AUDRALIA_REGIONAL_RENDER_COMPARISON_v1",
+        "ed0905a208ee6bc8b99ff7271a3d636119d947dc57306a9293ba7405c3de0442",
+        "renderedCanvasCount:6"
+      ],
+      "excludes": [
+        "http-equiv=\"refresh\""
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/showroom/globe/audralia/regional-continuity-qa-v1.html",
+    "timeoutMs": 180000,
+    "readySelector": "[data-comparison-state=\"ready\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/showroom/globe/audralia/regional-continuity-qa-v1.html"
+    },
+    "failOnPageErrors": true,
+    "failOnConsoleErrors": true,
+    "captureScreenshot": true
+  }
+}

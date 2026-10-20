@@ -1,0 +1,41 @@
+{
+  "schema": "H_EARTH_CAVERN_ENTRANCE_IVY_v1",
+  "siteId": "B_REAR_RAVINE",
+  "trailCount": 32,
+  "leafCount": 422,
+  "mossTriangleCount": 720,
+  "triangleCount": 7362,
+  "gpuByteLength": 891918,
+  "drawBatchCount": 3,
+  "surfaceSource": "ACTUAL_RETAINED_CLIFF_TRIANGLES",
+  "perFrameGeneration": false,
+  "sourceTerrainMutated": false,
+  "kernelAdmission": "PASS",
+  "physicalReview": "PENDING",
+  "canonicalAdmissionGeneration": 2836,
+  "governingHead": "651face00d5687a22b710925141dbebc58165f5e",
+  "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6298963434",
+  "focusedTests": "5/5 PASS",
+  "browserQualification": "PENDING",
+  "ownerPerceptualAcceptance": false,
+  "visualReview": {
+    "kind": "OFFLINE_ACTUAL_GEOMETRY_STUDY",
+    "views": [
+      "FRONT",
+      "LEFT_APPROACH",
+      "RIGHT_APPROACH"
+    ],
+    "finding": "Connected trails follow exposed cliff behind accepted palm canopy; passage remains clear; representative camera and inspection lighting, not browser proof"
+  },
+  "unchanged": [
+    "Palm geometry, colors and placements",
+    "Grass placement and heights",
+    "Terrain topology, water and navigation"
+  ],
+  "design": {
+    "ivy": "22 ledge-rooted trails plus10 connected branches;422 lobed leaves; upper leaf spacing75mm versus225mm below",
+    "moss": "Patchy supported polygons with exposed-rock gaps; rejected triangles that bridge relief",
+    "sampling": "Existing rockFaceFrontAt retained-triangle sampler; no constant-Z curtain"
+  },
+  "independentReview": "PASS: five focused tests and projected triangle support checks"
+}

@@ -1,3 +1,4 @@
+import {buildCavernEntranceIvy} from './cavern-entrance-ivy.v1.js';
 import {buildCavernPalmPlacement} from './cavern-palm-placement.v1.js';
 import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
 import {loadPrecomputedGrass} from './precomputed-grass.v1.js';
@@ -2355,10 +2356,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const instances=[];
     const palms=buildCavernPalmPlacement(model);
     resources.cavernPalms=palms.receipt;
+    const ivy=buildCavernEntranceIvy(model);
+    resources.cavernIvy=ivy.receipt;
     const plannedBytes=parts=>parts.reduce((n,p)=>n+p.mesh.vertexCount*69+p.mesh.indices.byteLength,0);
     if(plannedBytes(model.meshes)>4*1024*1024)throw Error('GEOLOGICAL_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(palms.meshes)>2*1024*1024)throw Error('CAVERN_PALM_GPU_MEMORY_BUDGET_EXCEEDED');
-    for(const {role,mesh,colors:palmColors,leaflets} of [...model.meshes,...palms.meshes]){
+    if(plannedBytes(ivy.meshes)>1024*1024)throw Error('CAVERN_IVY_GPU_MEMORY_BUDGET_EXCEEDED');
+    for(const {role,mesh,colors:palmColors,leaflets} of [...model.meshes,...palms.meshes,...ivy.meshes]){
       const n=mesh.vertexCount,positions=mesh.positions,indices=mesh.indices;
       if(!(positions instanceof Float32Array)||!(indices instanceof Uint32Array)||n<=0||indices.length%3!==0)
         throw Error('GEOLOGICAL_MESH_NOT_TRIANGULATED:'+role);
@@ -2378,7 +2382,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       // Source-color continuity: never paint a new rectangle over accepted land.
       // Exact base-triangle linear albedo drives the entire replacement rim.
       for(let i=0;i<n;i++){
-        if(role==='CAVERN_PALM'){
+        if(role==='CAVERN_PALM'||role==='CAVERN_IVY'){
           const linear=palmColors[i].map(c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4));
           colors.set([...linear,1],i*4);mats.set([.82,.035,0,1],i*4);continue;
         }
@@ -2445,7 +2449,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       };
       put(0,positions,3);put(1,normals,3);put(2,colors,4);put(3,mats,4);
       const models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n);
-      surfaces.fill(255);ids.fill(role==='CAVERN_PALM'?(leaflets?62002:62003):role==='NATURAL_CLIFF_FACE'||role==='CAVERN_PHYSICAL_SHELL'?62001:62000);roles.fill(role==='CAVERN_PALM'?3:role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'||role==='NATURAL_CLIFF_FACE'?1:
+      surfaces.fill(255);ids.fill((role==='CAVERN_PALM'||role==='CAVERN_IVY')?(leaflets?62002:62003):role==='NATURAL_CLIFF_FACE'||role==='CAVERN_PHYSICAL_SHELL'?62001:62000);roles.fill((role==='CAVERN_PALM'||role==='CAVERN_IVY')?3:role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'||role==='NATURAL_CLIFF_FACE'?1:
         role==='FRESHWATER_RIVER'||role==='OASIS_WATER'?4:5);
       state.renderedAttributes.coastDistances=coast;state.renderedAttributes.contactDistances=contact;
       put(4,models,1,gl.UNSIGNED_BYTE,true);put(5,surfaces,1,gl.UNSIGNED_BYTE,true);
@@ -2458,17 +2462,19 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       instances.push(state);
     }
     // Separate preflight budgets above preserve the existing geological limit.
-    resources.geologicalMeshes=instances.filter(p=>p.role!=='CAVERN_PALM');
+    resources.geologicalMeshes=instances.filter(p=>p.role!=='CAVERN_PALM'&&p.role!=='CAVERN_IVY');
     resources.cavernPalmMeshes=instances.filter(p=>p.role==='CAVERN_PALM');
     resources.cavernPalmGPUBytes=resources.cavernPalmMeshes.reduce((n,p)=>n+p.gpuByteLength,0);
-    resources.geologicalGPUBytes=totalBytes-resources.cavernPalmGPUBytes;
+    resources.cavernIvyMeshes=instances.filter(p=>p.role==='CAVERN_IVY');
+    resources.cavernIvyGPUBytes=resources.cavernIvyMeshes.reduce((n,p)=>n+p.gpuByteLength,0);
+    resources.geologicalGPUBytes=totalBytes-resources.cavernPalmGPUBytes-resources.cavernIvyGPUBytes;
     gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);
     // Navigation shares the exact same formation object, never a copied height map.
     resources.geologicalNavigationInstallation=installGeologicalRuntimeBridge(model);
   }
   function drawGeologicalRendering(){
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);
-    const parts=[...(resources.geologicalMeshes||[]),...(resources.cavernPalmMeshes||[])];
+    const parts=[...(resources.geologicalMeshes||[]),...(resources.cavernPalmMeshes||[]),...(resources.cavernIvyMeshes||[])];
     for(const part of parts){if(!H_EARTH_REAR_WATER_PRESENTATION_ENABLED&&isHEarthWaterPresentationPart(part.role))continue;gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.mesh.indices.length,gl.UNSIGNED_INT,0);
       part.drawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=part.mesh.indices.length;}
     gl.bindVertexArray(resources.vertexArray);
@@ -2847,6 +2853,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       noUnauthorizedPostInitializationResourceCreation: counters.postInitializationResourceCreationCount === (counters.globalCoverAuthorizedResourceCreateCount??0),
       noUnauthorizedPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0 && (counters.contactOwnershipBufferUpdateCount??0) === 0,
       authorizedVegetationPostReadyResidency: true,
+      cavernIvy:resources.cavernIvy?{...resources.cavernIvy,gpuByteLength:resources.cavernIvyGPUBytes,drawCount:(resources.cavernIvyMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
       cavernPalms:resources.cavernPalms?{...resources.cavernPalms,gpuByteLength:resources.cavernPalmGPUBytes,drawCount:(resources.cavernPalmMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
       geologicalFormation:resources.geologicalRuntime?{siteId:resources.geologicalRuntime.site.id,
         originalBaseTrianglesRetired:resources.geologicalRuntime.retirement.triangleCount,
@@ -2873,7 +2880,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{for(const p of resources.cavernPalmMeshes??[]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];vegetationTrace?.dispose();}},
+    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];vegetationTrace?.dispose();}},
     getVegetationTrace,getVegetationProbe,
     initialize, activateInitialRefinement, prepareReplacementVegetation, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "audralia-river-ec217326",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6612,
+  "requestBranch": "ai-dispatch-request-audralia-river-ec217326",
+  "requestCommit": "4e5a19bd909fc6838d47df688b8167be81710883",
+  "requestCommitParent": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "ec21732612074389d2cfebcf7b909c46e6fd6a49",
+    "surface_id": "audralia-river-review"
+  },
+  "bridgeRunId": "39510240347",
+  "dispatchedRunId": 39510258335,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39510258335",
+  "dispatchedRunHeadSha": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+  "dispatchedAt": "2026-10-20T22:44:15.417Z",
+  "resolvedAt": "2026-10-20T22:44:19.626Z"
+}

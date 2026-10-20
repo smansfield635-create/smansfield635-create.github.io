@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "audralia-publish-14f4ecae",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6618,
+  "requestBranch": "ai-dispatch-request-audralia-publish-14f4ecae",
+  "requestCommit": "6fcd9ed66f8f063a6e58b5dfc5a7939ad0558bcf",
+  "currentMainSha": "14f4ecaea00f47f829561d703cb18fd18e029297",
+  "bridgeRunId": "39513691451",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-10-20T23:14:37.238Z"
+}

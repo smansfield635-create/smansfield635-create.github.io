@@ -83,7 +83,7 @@ function buildConnectedRiverWater(points,terrainMesh,formation){
     let last=-1;for(const t of [...cuts].sort((a,b)=>a-b))if(t-last>1e-7){stations.push({x:a.x+dx*t,z:a.z+dz*t});last=t;}
   }
   stations.push(route.at(-1));
-  const levels=stations.map(p=>{const y=ground(p.x,p.z);if(!Number.isFinite(y))fail('EXTENSION_GROUND_MISSING');return y+.24;});
+  const levels=stations.map(p=>{const y=ground(p.x,p.z);if(!Number.isFinite(y))fail('EXTENSION_GROUND_MISSING');const end=stations.at(-1),taper=Math.min(1,Math.hypot(p.x-end.x,p.z-end.z)/4);return y+.24*taper;});
   for(let i=levels.length-2;i>=0;i--)levels[i]=Math.max(levels[i],levels[i+1]+.00001);
   const basin=formation.oasis,waterLevel=levels[0];
   const inBasin=p=>Math.hypot((p.x-basin.centerX)/basin.radiusX,(p.z-basin.centerZ)/basin.radiusZ)<=1;

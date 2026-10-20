@@ -1,0 +1,43 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/oasis-river-water-v1/integration.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/oasis-river-water-v1/integration.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/oasis-river-water-v1/integration.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "7afafc8399feda2d6ba013f3242b7f9c953708dbeb5ea14bdfe0abdc2bf4d66c"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
+      "sha256": "3838646d4c6141562b9ff677af94d90b10bdc421a96e3e78c4d2aae8202ce2a7"
+    }
+  ],
+  "acceptanceBasis": "Same canonical world and terrain preserved by exact mesh digests. Existing authored watercourse and shared navigation support; no new UI, world, control scheme or ocean outlet. Eight focused tests support source and geometry continuity; browser appearance and phone acceptance remain pending.",
+  "ownerPerceptualAcceptance": false,
+  "newIntegratedBrowserRunPerformed": false,
+  "canonicalAdmissionGeneration": 2840
+}

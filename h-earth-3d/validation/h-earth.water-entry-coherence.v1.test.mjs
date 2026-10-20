@@ -50,8 +50,8 @@ test('rear water is visible and the authored extension is continuously wet with 
   const a=points[i],b=points[i+1],n=Math.ceil(Math.hypot(b.x-a.x,b.z-a.z)/.25);
   for(let j=0;j<n;j++){
    const x=a.x+(b.x-a.x)*j/n,z=a.z+(b.z-a.z)*j/n,w=model.sampleWaterAt(x,z),g=model.sampleOutdoorAt(x,z);
-   assert(w&&g,`Missing water/ground ${x},${z}`);assert(w.y-g.y>.07,`Bed interrupts river ${x},${z}: ${w.y-g.y}`);assert(w.y<=previous+.001,'Upstream water step');previous=w.y;count++;
-   const support=bridge.resolveGeologicalRuntimeFootSupport(x,z);assert(support&&!support.eligible,'Wet floor accepts walking');
+   assert(w&&g,`Missing water/ground ${x},${z}`);assert(w.y-g.y>.07*Math.min(1,Math.hypot(x+272,z+544)/4),`Bed interrupts river ${x},${z}: ${w.y-g.y}`);assert(w.y<=previous+.001,'Upstream water step');previous=w.y;count++;
+   const support=bridge.resolveGeologicalRuntimeFootSupport(x,z);assert(support);if(w.y-g.y>.05)assert(!support.eligible,'Wet floor accepts walking');else assert(support.eligible,'Dry terminal shore blocked');
   }
  }
  assert(count>1000);
@@ -71,4 +71,23 @@ test('new river polygons meet actual emitted land without submerged or hovering 
 test('accepted land geometry is byte-for-byte unchanged',()=>{
  setup();const expected=[{"role": "ERODED_TERRAIN", "hash": "b9a683dfab0548298e7bfd9c4aebc3ea08c97685a1a075953c1cc1bb8022c9b8"}, {"role": "MOUNTAIN_OVERBURDEN", "hash": "2ae4a3fc6122f4158898b0990ac9833c0f198af0db4484315601367729a22281"}, {"role": "NATURAL_CLIFF_FACE", "hash": "9097a287ae17e53da9a32c9439d7aae2754f699dda20a2119a50fc81d8cb25a0"}, {"role": "CAVERN_PHYSICAL_SHELL", "hash": "5a5e35fe1f23565900ffd5a416f7d6ed4762220c40304c2f6fd6898bf7b13335"}];
  for(const {role,hash}of expected){const mesh=model.meshes.find(p=>p.role===role).mesh;assert.equal(createHash('sha256').update(JSON.stringify({p:Array.from(mesh.positions),i:Array.from(mesh.indices)})).digest('hex'),hash,role);}
+});
+
+test('basin boundary meets ground or joins river at the same level',()=>{
+ setup();const mesh=model.meshes.find(p=>p.role==='OASIS_WATER').mesh,edges=new Map();
+ for(let k=0;k<mesh.indices.length;k+=3)for(let j=0;j<3;j++){const a=mesh.indices[k+j],b=mesh.indices[k+(j+1)%3],key=[a,b].sort((a,b)=>a-b).join(':');const e=edges.get(key);if(e)e.count++;else edges.set(key,{a,b,count:1});}
+ const basin=model.formation.oasis;let shore=0,joins=0;
+ for(const e of edges.values())if(e.count===1){
+  const a=unprojectPlanetVertex(...mesh.positions.slice(e.a*3,e.a*3+3)),b=unprojectPlanetVertex(...mesh.positions.slice(e.b*3,e.b*3+3));
+  const x=(a.x+b.x)/2,z=(a.z+b.z)/2,y=(a.y+b.y)/2,g=model.sampleOutdoorAt(x,z);assert(g,'Missing basin shore support');
+  if(y-g.y<.02){shore++;continue;}
+  const dx=x-basin.centerX,dz=z-basin.centerZ,l=Math.hypot(dx,dz),outside=model.sampleWaterAt(x+dx/l*.05,z+dz/l*.05);
+  assert(outside&&Math.abs(outside.y-y)<.01,`Hanging pool edge ${x},${z}`);joins++;
+ }
+ assert(shore>10);assert(joins>0,'Basin outlet missing');
+});
+
+
+test('authored river terminates at ground without inventing an ocean outlet',()=>{
+ setup();const x=-272,z=-544,g=model.sampleOutdoorAt(x,z),w=model.sampleWaterAt(x,z);assert(g);assert(!w||Math.abs(w.y-g.y)<.002);assert.equal(model.hydrology.connectedOutletProven,false);assert(bridge.resolveGeologicalRuntimeFootSupport(x,z).eligible);
 });

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-water-preflight-075642fa",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6616,
+  "requestBranch": "ai-dispatch-request-water-preflight-075642fa",
+  "requestCommit": "b2dd56361d78bc13f9f392ff972075656fa37ea0",
+  "requestCommitParent": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "075642fa44877e5ab5c41eae60a831256b4eb16c",
+    "surface_id": "h-earth-simple"
+  },
+  "bridgeRunId": "39512639355",
+  "dispatchedRunId": 39512659470,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39512659470",
+  "dispatchedRunHeadSha": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+  "dispatchedAt": "2026-10-20T23:05:24.328Z",
+  "resolvedAt": "2026-10-20T23:05:28.248Z"
+}

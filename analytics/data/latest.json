@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-20T04:36:19Z",
+  "generatedAt": "2026-10-20T05:33:23Z",
   "window30d": {
-    "start": "2026-09-20T04:36:19Z",
-    "end": "2026-10-20T04:36:19Z"
+    "start": "2026-09-20T05:33:23Z",
+    "end": "2026-10-20T05:33:23Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 48
+      "pageLoads": 43
     },
     {
       "date": "2026-10-14",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 6
+      "pageLoads": 7
     }
   ],
   "summary": {
-    "pageLoads": 3626,
-    "botPageLoads": 1449,
-    "nonBotPageLoads": 2177
+    "pageLoads": 3592,
+    "botPageLoads": 1439,
+    "nonBotPageLoads": 2153
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2470,
-      "visits": 2470
+      "pageLoads": 2457,
+      "visits": 2457
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 998,
+      "pageLoads": 978,
       "visits": 0
     },
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 43,
-      "visits": 43
+      "pageLoads": 42,
+      "visits": 42
     },
     {
       "host": "m.facebook.com",
@@ -196,14 +196,14 @@
       "visits": 130
     },
     {
-      "path": "/products/archcoin/contract/",
-      "pageLoads": 80,
-      "visits": 10
-    },
-    {
       "path": "/governance-bridge/governance/",
       "pageLoads": 80,
       "visits": 60
+    },
+    {
+      "path": "/prototypes/evan-job-stage/",
+      "pageLoads": 70,
+      "visits": 70
     }
   ],
   "ownerMeasurement": {

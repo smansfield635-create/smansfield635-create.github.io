@@ -1,0 +1,39 @@
+{
+  "schema": "H_EARTH_CAVERN_ENTRANCE_GRASS_v1",
+  "contactCount": 2850,
+  "interiorCount": 199,
+  "duplicatesAvoided": 66,
+  "floorTriangleCount": 8,
+  "maximumAddedRoots": 30000,
+  "existingRootsPreserved": true,
+  "interiorMaximumDepthMeters": 2,
+  "perFrameGeneration": false,
+  "combinedRootCount": 1460321,
+  "combinedPackedBytes": 23365136,
+  "admissionGeneration": 2831,
+  "admissionRun": 39468929341,
+  "originalRootCount": 1457471,
+  "qualification": {
+    "focusedTests": {
+      "passed": 8,
+      "failed": 0
+    },
+    "independentReview": "PASS",
+    "existingOwnerSuite": {
+      "passed": 29,
+      "failed": 9,
+      "sameFailuresOnPristineBaseline": true
+    },
+    "browser": "PENDING",
+    "phone": "NOT_VERIFIED"
+  },
+  "constraints": {
+    "floorOnlyInterior": true,
+    "waterAndPalmBasesExcluded": true,
+    "originalPackedRootsUnchanged": true,
+    "combinedPhysicalTileMaximum": 1600,
+    "singleGpuOwner": true,
+    "regionalCapBasis": "Pinned baseline woodland count 385944; global cap implies ravine cap."
+  },
+  "mergeAuthorization": "Owner authorizes merge of grass and palms conditional on qualification; publication not authorized."
+}

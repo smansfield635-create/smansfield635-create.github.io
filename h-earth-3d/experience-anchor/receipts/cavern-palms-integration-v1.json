@@ -5,13 +5,16 @@
   "reviewedAgainstAnchor": true,
   "disposition": "PASS",
   "visualEvidence": [
-    "h-earth-3d/evidence/cavern-palms-v1/integration.json"
+    "h-earth-3d/evidence/cavern-palms-v1/integration.json",
+    "h-earth-3d/evidence/cavern-palms-v1/grass-integration.json"
   ],
   "interactionEvidence": [
-    "h-earth-3d/evidence/cavern-palms-v1/integration.json"
+    "h-earth-3d/evidence/cavern-palms-v1/integration.json",
+    "h-earth-3d/evidence/cavern-palms-v1/grass-integration.json"
   ],
   "continuityEvidence": [
-    "h-earth-3d/evidence/cavern-palms-v1/integration.json"
+    "h-earth-3d/evidence/cavern-palms-v1/integration.json",
+    "h-earth-3d/evidence/cavern-palms-v1/grass-integration.json"
   ],
   "invariants": {
     "SAME_CANONICAL_WORLD_IDENTITY": true,
@@ -33,11 +36,19 @@
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "e7d18234aa04f40ec43311a0c677724b4430e8a55baebde265dad0c144528005"
+      "sha256": "9f81081764ad67c11f6925b6c174e07fa2d4076dea842f466b964da8ae95c7d1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/cavern-entrance-grass.v1.js",
+      "sha256": "78cf7b957ff8a0d565f2f38e0bc8083a35742c36b59c336e28ab3378a208000c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "1aac1be22c4ac67f33fe0ea909c7c672e9b93c9607a2968fd82cfb2dcc46592c"
     }
   ],
-  "acceptanceBasis": "Source continuity and actual-mesh placement study: additive four palms in existing canonical scene, same terrain, projection, renderer, navigation and interface. This structural anchor assessment does not establish live browser or phone acceptance.",
+  "acceptanceBasis": "Source continuity and actual-mesh placement study: additive four palms in existing canonical scene, same terrain, projection, renderer, navigation and interface. This structural anchor assessment does not establish live browser or phone acceptance. Additive entrance grass preserves original packed roots and uses the existing single GPU owner; actual surface support and allocation checks passed. Browser qualification remains pending.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
-  "canonicalAdmissionGeneration": 2830
+  "canonicalAdmissionGeneration": 2831
 }

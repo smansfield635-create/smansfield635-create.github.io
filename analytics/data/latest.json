@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-20T16:34:13Z",
+  "generatedAt": "2026-10-20T17:30:40Z",
   "window30d": {
-    "start": "2026-09-20T16:34:13Z",
-    "end": "2026-10-20T16:34:13Z"
+    "start": "2026-09-20T17:30:40Z",
+    "end": "2026-10-20T17:30:40Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 30
+      "pageLoads": 28
     },
     {
       "date": "2026-10-14",
@@ -112,11 +112,11 @@
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 78
+      "pageLoads": 76
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 41
+      "pageLoads": 68
     },
     {
       "date": "2026-10-19",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 25
+      "pageLoads": 26
     }
   ],
   "summary": {
-    "pageLoads": 3597,
+    "pageLoads": 3576,
     "botPageLoads": 1439,
-    "nonBotPageLoads": 2158
+    "nonBotPageLoads": 2137
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2410,
-      "visits": 2410
+      "pageLoads": 2459,
+      "visits": 2459
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 910,
+      "pageLoads": 960,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 133,
-      "visits": 133
+      "pageLoads": 83,
+      "visits": 83
     },
     {
       "host": "bing.com",
@@ -155,8 +155,8 @@
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 20,
-      "visits": 20
+      "pageLoads": 30,
+      "visits": 30
     },
     {
       "host": "www.facebook.com",
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 736,
-      "visits": 606
+      "pageLoads": 677,
+      "visits": 557
     },
     {
       "path": "/",
@@ -177,8 +177,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 642,
-      "visits": 614
+      "pageLoads": 612,
+      "visits": 584
     },
     {
       "path": "/mirror-manor-preview/",
@@ -187,18 +187,18 @@
     },
     {
       "path": "/products/education/",
-      "pageLoads": 294,
-      "visits": 104
+      "pageLoads": 304,
+      "visits": 114
     },
     {
       "path": "/governance-bridge/",
-      "pageLoads": 150,
-      "visits": 100
+      "pageLoads": 180,
+      "visits": 130
     },
     {
       "path": "/governance-bridge/governance/",
-      "pageLoads": 140,
-      "visits": 110
+      "pageLoads": 80,
+      "visits": 60
     },
     {
       "path": "/prototypes/evan-job-stage/",

@@ -97,7 +97,13 @@ export function buildCavernPalm({id='CAVERN_PALM_PROTOTYPE',height=7,lean=2.1,he
   const a=j*2.3999632297,d=[Math.cos(a),0,Math.sin(a)],p=trunkPoint(.94);
   sweep(bark,[add(p,mul(d,radius*.5)),add(p,add(mul(d,radius*1.55),[0,.28,0]))],[.085,.045],5,[.34,.23,.12]);
  }
- const parts=[admit(id+':TRUNK',bark,'CLOSED_REQUIRED','PALM_TRUNK'),admit(id+':RACHISES',stems,'CLOSED_REQUIRED','PALM_RACHISES'),admit(id+':LEAFLETS',leaves,'OPEN_ALLOWED','PALM_LEAFLETS')];
+ // Weathered raised bark patches: color only, accepted vertices/indices retained.
+ bark.colors=bark.colors.map((color,i)=>{
+  const p=bark.vertices[i],patch=.5+.5*Math.sin(p.y*5.3+p.x*7.1)*Math.cos(p.z*6.7-p.y*.73);
+  const weather=Math.max(0,(patch-.35)/.65)*.48;
+  return color.map((q,k)=>q*(1-weather)+[.64,.55,.42][k]*weather);
+ });
+ const parts=[admit(id+':TRUNK' ,bark,'CLOSED_REQUIRED','PALM_TRUNK'),admit(id+':RACHISES',stems,'CLOSED_REQUIRED','PALM_RACHISES'),admit(id+':LEAFLETS',leaves,'OPEN_ALLOWED','PALM_LEAFLETS')];
  return Object.freeze({id,parameters:{height,lean,heading,radius,frondLength},crown,fronds,parts,
   triangleCount:(bark.indices.length+stems.indices.length+leaves.indices.length)/3,
   leafletCount:fronds.reduce((n,f)=>n+f.leafletCount,0),runtimeIntegrated:false});

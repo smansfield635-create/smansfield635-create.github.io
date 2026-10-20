@@ -1,39 +1,35 @@
 {
   "schema": "H_EARTH_CAVERN_ENTRANCE_GRASS_v1",
-  "contactCount": 2850,
+  "contactCount": 10898,
   "interiorCount": 199,
-  "duplicatesAvoided": 66,
+  "duplicatesAvoided": 699,
   "floorTriangleCount": 8,
   "maximumAddedRoots": 30000,
   "existingRootsPreserved": true,
   "interiorMaximumDepthMeters": 2,
   "perFrameGeneration": false,
-  "combinedRootCount": 1460321,
-  "combinedPackedBytes": 23365136,
-  "admissionGeneration": 2831,
-  "admissionRun": 39468929341,
-  "originalRootCount": 1457471,
-  "qualification": {
-    "focusedTests": {
-      "passed": 8,
-      "failed": 0
-    },
-    "independentReview": "PASS",
-    "existingOwnerSuite": {
-      "passed": 29,
-      "failed": 9,
-      "sameFailuresOnPristineBaseline": true
-    },
-    "browser": "PENDING",
-    "phone": "NOT_VERIFIED"
+  "combinedRootCount": 1468369,
+  "combinedPackedBytes": 23493904,
+  "admissionGeneration": 2832,
+  "admissionRun": 39473997631,
+  "baseline": "079f8be89e3cfc4ca26b39ce3c1eee86ff387395",
+  "focusedTests": {
+    "passed": 16,
+    "failed": 0
   },
-  "constraints": {
-    "floorOnlyInterior": true,
-    "waterAndPalmBasesExcluded": true,
-    "originalPackedRootsUnchanged": true,
-    "combinedPhysicalTileMaximum": 1600,
-    "singleGpuOwner": true,
-    "regionalCapBasis": "Pinned baseline woodland count 385944; global cap implies ravine cap."
+  "independentReview": "PASS_SOURCE_ONLY",
+  "browser": "PENDING",
+  "phone": "PENDING",
+  "heightMeters": {
+    "center": [
+      0.3,
+      0.48
+    ],
+    "sides": [
+      0.58,
+      0.88
+    ]
   },
-  "mergeAuthorization": "Owner authorizes merge of grass and palms conditional on qualification; publication not authorized."
+  "coverageRepair": "Wider irregular entrance envelope; exterior slope allowance1.35, interior floor remains.7; original roots and water exclusions preserved",
+  "ownerCorrection": "No ground-contact defect established. Placement repair only."
 }

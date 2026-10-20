@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-19T23:29:47Z",
+  "generatedAt": "2026-10-20T01:01:50Z",
   "window30d": {
-    "start": "2026-09-19T23:29:47Z",
-    "end": "2026-10-19T23:29:47Z"
+    "start": "2026-09-20T01:01:50Z",
+    "end": "2026-10-20T01:01:50Z"
   },
   "daily": [
-    {
-      "date": "2026-09-20",
-      "pageLoads": 370
-    },
     {
       "date": "2026-09-21",
       "pageLoads": 820
@@ -96,7 +92,7 @@
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 41
+      "pageLoads": 40
     },
     {
       "date": "2026-10-13",
@@ -124,13 +120,17 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 31
+      "pageLoads": 32
+    },
+    {
+      "date": "2026-10-20",
+      "pageLoads": 0
     }
   ],
   "summary": {
-    "pageLoads": 3751,
+    "pageLoads": 3741,
     "botPageLoads": 1491,
-    "nonBotPageLoads": 2260
+    "nonBotPageLoads": 2250
   },
   "referrers": [
     {
@@ -145,8 +145,8 @@
     },
     {
       "host": "www.google.com",
-      "pageLoads": 103,
-      "visits": 103
+      "pageLoads": 93,
+      "visits": 93
     },
     {
       "host": "bing.com",
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/",
-      "pageLoads": 723,
-      "visits": 463
+      "pageLoads": 713,
+      "visits": 453
     },
     {
       "path": "/analytics/",

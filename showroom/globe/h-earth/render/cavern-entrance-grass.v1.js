@@ -45,9 +45,9 @@ export async function buildCavernEntranceGrass({existingTiles,visibleSurface,geo
  const near=(x,z)=>{const ix=Math.floor(x/.08),iz=Math.floor(z/.08);for(let a=-1;a<=1;a++)for(let b=-1;b<=1;b++)for(const p of occupied.get(`${ix+a}:${iz+b}`)??[])if(Math.hypot(p[0]-x,p[1]-z)<.075)return true;return false;};
  const floor=createEntranceFloorSupport(geology),tiles=new Map();let contactCount=0,interiorCount=0,duplicatesAvoided=0;
  for(let iz=0;iz<243;iz++){
-  const z=-292+(iz+.5)*.14;
+  // Independent full-cell offsets remove fixed planting rows.
   for(let ix=0;ix<172;ix++){
-   const x=28+(ix+.5)*.14+(hash(ix,iz)-.5)*.06,weight=entranceWeight(x,z);
+   const x=28+(ix+hash(ix+431,iz+719))*.14,z=-292+(iz+hash(ix+977,iz+239))*.14,weight=entranceWeight(x,z);
    if(hash(ix+731,iz+97)>weight*.94)continue;
    if(palms.some(p=>Math.hypot(x-p.x,z-p.z)<p.radius*1.2+.18))continue;
    const q=projectRegionVertex(x,geology.formation.floorAt(x,z),z),px=f(q.x),pz=f(q.z);

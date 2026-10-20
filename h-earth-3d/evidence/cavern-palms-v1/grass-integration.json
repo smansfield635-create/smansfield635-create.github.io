@@ -1,35 +1,21 @@
 {
   "schema": "H_EARTH_CAVERN_ENTRANCE_GRASS_v1",
-  "contactCount": 10898,
-  "interiorCount": 199,
-  "duplicatesAvoided": 699,
+  "contactCount": 9341,
+  "interiorCount": 182,
+  "duplicatesAvoided": 2258,
   "floorTriangleCount": 8,
   "maximumAddedRoots": 30000,
   "existingRootsPreserved": true,
   "interiorMaximumDepthMeters": 2,
   "perFrameGeneration": false,
-  "combinedRootCount": 1468369,
-  "combinedPackedBytes": 23493904,
-  "admissionGeneration": 2832,
-  "admissionRun": 39473997631,
-  "baseline": "079f8be89e3cfc4ca26b39ce3c1eee86ff387395",
-  "focusedTests": {
-    "passed": 16,
-    "failed": 0
-  },
-  "independentReview": "PASS_SOURCE_ONLY",
-  "browser": "PENDING",
-  "phone": "PENDING",
-  "heightMeters": {
-    "center": [
-      0.3,
-      0.48
-    ],
-    "sides": [
-      0.58,
-      0.88
-    ]
-  },
-  "coverageRepair": "Wider irregular entrance envelope; exterior slope allowance1.35, interior floor remains.7; original roots and water exclusions preserved",
-  "ownerCorrection": "No ground-contact defect established. Placement repair only."
+  "combinedRootCount": 1466812,
+  "combinedPackedBytes": 23468992,
+  "canonicalAdmissionGeneration": 2834,
+  "admissionReceipt": "issue:6585#issuecomment-6298518033",
+  "baseline": "ece43aea0db67120d5b176db5c884a40f43c8a2c",
+  "placement": "Independent deterministic full-cell x/z offsets; four focused tests pass including spectral alignment rejection",
+  "height": "Immediate portal-side banks 1.15\u20131.65m; center .30\u2013.48m; surrounding shoulders .58\u2013.88m",
+  "browserQualification": "PENDING",
+  "ownerVisualAcceptance": "PENDING",
+  "palmsAndTerrainUnchanged": true
 }

@@ -52,7 +52,7 @@
   },
   "generator": {
     "path": "tools/audralia-canonical-geography-rebind/build-regional-continuity-v1.mjs",
-    "sha256": "7aaac232162424a2154e72e4365d7fbc95007c054198a469470365eedf0dc042",
+    "sha256": "f977773f2a75ceada9324532a8a13e7b16d5faba56d0c071cd279da104a16f67",
     "deterministicGzipMtime": 0,
     "targetExpandedPartBytes": 1200000,
     "mode": "BOUNDED_C1_LOCAL_COLLAR_AND_CONTINUOUS_REGIONAL_MATERIAL"
@@ -228,11 +228,11 @@
   },
   "verifier": {
     "path": "tools/audralia-canonical-geography-rebind/validate-regional-continuity-v1.mjs",
-    "sha256": "b6dfd1acd2d51763480b48e09557ddeec934c3fcecc0dfef3d504fa149f1205c",
+    "sha256": "e162ad3222d12ef38100e94624debc79d11964f9b2770cd07bad3e79086a38e0",
     "ownerPhysicalAcceptance": false
   },
   "review": {
-    "status": "INDEPENDENT_AND_RENDERED_REVIEW_PENDING",
+    "status": "OWNER_SCALE_REPAIR_RENDERED_REVIEW_PENDING",
     "productionPublished": false
   },
   "regionalContinuity": {
@@ -241,6 +241,8 @@
     "maximumPositionDelta": 6.289489438745404,
     "localInteriorPositionsPreserved": true,
     "coastSandbarWaterTopologyPreserved": true,
-    "normalInteriorSamplingStrip": 8
+    "normalInteriorSamplingStrip": 8,
+    "globalRepresentation": "COLOR_AND_ELEVATION_ONLY",
+    "physicalEcologyRendered": false
   }
 }

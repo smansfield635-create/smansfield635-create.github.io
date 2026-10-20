@@ -149,6 +149,50 @@
       "scopeHash": "01a314ffcd4d1ec341cedcc0f64e83a3304850361cab9869908dce31cb915862",
       "state": "ADMITTED_LOCKED"
     },
+    "01a8fa3acd04edc86a337274396089a00d83df0c107ec18435b90e030418886f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8c7f296f6fa378d139be71440b2d2cdf37971b77",
+          "lockGeneration": 2828,
+          "lockScope": "H_EARTH:CAVERN_PALMS:STANDALONE_KERNEL_DESIGN:20261020",
+          "operationId": "H_EARTH_CAVERN_PALM_KERNEL_DESIGN_20261020_001",
+          "procedureLocatorDigest": "cde5fe654e8630b18771dab9998a4fe0a825c345a848b164fa4fe10b3f36aa48",
+          "requestDigest": "faf8928479d5417d576ecc6669a48f8650ddf96ba922c5ef4d38610111415c71",
+          "scopeHash": "01a8fa3acd04edc86a337274396089a00d83df0c107ec18435b90e030418886f"
+        },
+        "bindingDigest": "adf6dfb4a633558e8719ea9fa0f905288a2a92375b9c69bd1f6ddf233c34d177",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "592454bc66a647459650f8f8684090d957e64b3269f8bfb0d31a5aef75519ec2",
+          "commentId": 6296546949,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6585,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39463168099,
+          "workflowSha": "8c7f296f6fa378d139be71440b2d2cdf37971b77"
+        },
+        "lineageAnchorCommitSha": "23e9e2ab970c28f4bccfec2ce18dd6774e0e475d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8c7f296f6fa378d139be71440b2d2cdf37971b77",
+      "lockGeneration": 2828,
+      "lockScope": "H_EARTH:CAVERN_PALMS:STANDALONE_KERNEL_DESIGN:20261020",
+      "operationId": "H_EARTH_CAVERN_PALM_KERNEL_DESIGN_20261020_001",
+      "procedureLocatorDigest": "cde5fe654e8630b18771dab9998a4fe0a825c345a848b164fa4fe10b3f36aa48",
+      "released": false,
+      "requestDigest": "faf8928479d5417d576ecc6669a48f8650ddf96ba922c5ef4d38610111415c71",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "01a8fa3acd04edc86a337274396089a00d83df0c107ec18435b90e030418886f",
+      "state": "ADMITTED_LOCKED"
+    },
     "0262635dded87cbb67f6df7c2f8223a423b267fa1337bd16457f2df4fa9362af": {
       "governingHead": "8992d01dcfab464ae86fcbb4099415238bc8c405",
       "independentAuthorityProvenance": {
@@ -20226,7 +20270,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2827,
+  "lockGeneration": 2828,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

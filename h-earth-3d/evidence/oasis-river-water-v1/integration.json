@@ -1,0 +1,80 @@
+{
+  "schema": "H_EARTH_OASIS_RIVER_WATER_v1",
+  "canonicalAdmissionGeneration": 2840,
+  "governingHead": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+  "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6303519987",
+  "baselinePhysicalAcceptance": "Owner confirmed shadow banding repair successful after cache clear",
+  "construction": "Existing authored centerline; actual emitted triangle crossings; nonascending shallow river levels; basin at downstream spill level; terrain-clipped water polygons; shared wet navigation",
+  "originalSurveyStationsPreserved": 79,
+  "authoredCorridorStations": 232,
+  "endpoint": [
+    -272,
+    -544
+  ],
+  "basinWaterLevel": 5.507967592315671,
+  "waterMeshes": [
+    {
+      "role": "FRESHWATER_RIVER",
+      "vertices": 4641,
+      "triangles": 6753
+    },
+    {
+      "role": "OASIS_WATER",
+      "vertices": 149,
+      "triangles": 202
+    }
+  ],
+  "uploadedWaterBytes": 413970,
+  "waterDrawBatches": 2,
+  "perFrameGeneration": false,
+  "terrainHashes": [
+    {
+      "role": "ERODED_TERRAIN",
+      "hash": "b9a683dfab0548298e7bfd9c4aebc3ea08c97685a1a075953c1cc1bb8022c9b8"
+    },
+    {
+      "role": "MOUNTAIN_OVERBURDEN",
+      "hash": "2ae4a3fc6122f4158898b0990ac9833c0f198af0db4484315601367729a22281"
+    },
+    {
+      "role": "NATURAL_CLIFF_FACE",
+      "hash": "9097a287ae17e53da9a32c9439d7aae2754f699dda20a2119a50fc81d8cb25a0"
+    },
+    {
+      "role": "CAVERN_PHYSICAL_SHELL",
+      "hash": "5a5e35fe1f23565900ffd5a416f7d6ed4762220c40304c2f6fd6898bf7b13335"
+    }
+  ],
+  "unchanged": [
+    "All land mesh positions and indices",
+    "Canonical source package",
+    "Palm geometry placement bark",
+    "Ivy moss grass",
+    "Accepted shadow structure",
+    "Direct navigation controls and dry cavern approach"
+  ],
+  "tests": {
+    "result": "8/8 PASS",
+    "durationSeconds": 13.964,
+    "command": "node --test h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
+    "coverage": [
+      "Full authored river wet continuity",
+      "Basin and river overlap level agreement",
+      "Actual emitted terrain clearance",
+      "Dry cavern approach traversal",
+      "Submerged floor ineligible",
+      "Terrain exact digests",
+      "Basin edge grounded or joined",
+      "Existing total geological4MiB GPU budget",
+      "Final4m water depth tapers to ground at authored terminus"
+    ]
+  },
+  "independentReview": "PASS: independent source and measured basin boundary review; final centreline and terminal taper reviewed; no source blocker",
+  "browserQualification": "PENDING",
+  "phoneVisualAcceptance": false,
+  "limitations": [
+    "Scenic water, no surveyed permanent flow claim",
+    "Existing authored endpoint; no ocean outlet claimed",
+    "Water shading reused; appearance and mobile performance require actual browser and phone review"
+  ]
+}

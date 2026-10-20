@@ -1,7 +1,7 @@
 {
   "schema": "AUDRALIA_PRECOMPUTED_GEOGRAPHY_PROVENANCE_v1",
-  "operationId": "AUDRALIA_GEN2826_LAND_COLOR_BOUNDARY_REPAIR_20261020_001",
-  "governingHead": "8c7f296f6fa378d139be71440b2d2cdf37971b77",
+  "operationId": "AUDRALIA_COASTAL_EARTH_RING_REPAIR_V4_20261020_001",
+  "governingHead": "651face00d5687a22b710925141dbebc58165f5e",
   "canonicalGeography": {
     "path": "inspection/audralia-24057-exact/snapshot/h-earth-3d/integration/audralia.gratitude-geographic-transfer.v1.js",
     "gitBlobSha": "50991dd777ccd015fd8a6d8eae7b4d02b4a8450c",
@@ -51,66 +51,66 @@
     "prohibitedLegacyRiverIdsReachable": false
   },
   "generator": {
-    "path": "tools/audralia-canonical-geography-rebind/repair-precomputed-gratitude-land-boundary-v3.mjs",
-    "sha256": "b4b2d795b4d0ebb3ae310d482774f15b9a85dd50e91e77b72ca73a8d96df9778",
+    "path": "tools/audralia-canonical-geography-rebind/repair-precomputed-gratitude-coastal-earth-v4.mjs",
+    "sha256": "4211de749e45f510b25e8e95f87ec35ca87adda43530399d86a3901c877ed7da",
     "deterministicGzipMtime": 0,
     "targetExpandedPartBytes": 1200000,
     "mode": "DIRECT_EXISTING_BUFFER_RGB_REPAIR_NO_GEOMETRY_GENERATION"
   },
   "loader": {
     "path": "showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs",
-    "gitBlobShaBeforeFinalCommit": "1000c4a56837f5ec8a06abfb51cdb3246780be77",
+    "gitBlobShaBeforeFinalCommit": "a0233d6c49fa095b99ace977fe0e3a5ca79403de",
     "provenanceVerificationRequired": true
   },
   "mesh": {
     "format": "AUDGMV1",
     "version": 1,
     "payloadBytes": 9169742,
-    "payloadSha256": "f136a8c696e38ef72e062bb69ae8e5a625000cc88ab436967f4df766637cee28",
+    "payloadSha256": "0264e0cfecc32125ea4557e69a17c31cba85e73b2c10381729bdcbd488a539c7",
     "fullGzipPath": "showroom/globe/h-earth/terrain-estate-construction-v1/gratitude-mesh-v1.bin.gz",
-    "fullGzipBytes": 3060269,
-    "fullGzipSha256": "9bb95efeb44fa5b9b739c887109b9e2c2f77b0a27d817f64782fc4d878050615",
+    "fullGzipBytes": 3068065,
+    "fullGzipSha256": "cc9111af5a9e2c35d9244fab95c30c0f1ee7c1f295021964c625f2e4758a3503",
     "partCount": 8,
     "parts": [
       {
         "index": 0,
         "file": "gratitude-mesh-v1.part-00.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 511422,
-        "expandedSha256": "f668b2411a7f13da0590175e255e7fd9c5b31a7cfa0ac0c16e0499a8ab1f64a1",
-        "compressedSha256": "7924065224800e73da1ed0bd14d68ee1b483d14d5142515f0af7af03f3adb86b"
+        "compressedBytes": 515141,
+        "expandedSha256": "3c1222f7e0f72270764f5290c6088a247f0c3ba8240bad870863c877384cfd7b",
+        "compressedSha256": "c0e4e898f323b0bcc9bcdbac1a2cdbf202fdf7cfb5d188a48d67d684d4c33f63"
       },
       {
         "index": 1,
         "file": "gratitude-mesh-v1.part-01.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 494489,
-        "expandedSha256": "5e46104a5516f6329fdd488d29a7e68fc1804c1eccfc67192796f54428a003e4",
-        "compressedSha256": "050bc3f9a1006f6edb2291c8fb40925c5280db784c7a39d196c5711aee1eed42"
+        "compressedBytes": 496001,
+        "expandedSha256": "72e69cef83c62e510b7e65edac947d5b07aa6ef173637fb921edc549f0299543",
+        "compressedSha256": "fc1a95273347c501907ae322cbc50cd433652c325e158227dbe0642d13e9971b"
       },
       {
         "index": 2,
         "file": "gratitude-mesh-v1.part-02.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 511251,
-        "expandedSha256": "0fa08f16e03efc156ffab7193a1af793076cb149c0c954cba7b78b71cdd5e935",
-        "compressedSha256": "85120f1089e3cd040ae44df9651987502f70a8784317e499f2e47588f36f7b4a"
+        "compressedBytes": 511918,
+        "expandedSha256": "a3f10b0b3713af5a7074055f00ec9dced03f09d598198f1d54055062bd429c52",
+        "compressedSha256": "f5a4f78529c1acb4c6202aece91b1349b5cf84795b8ff08458555145c74d9ede"
       },
       {
         "index": 3,
         "file": "gratitude-mesh-v1.part-03.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 306544,
-        "expandedSha256": "0f51cdf173a54c78469c141c16b96f2e903abe65a7e5374b708b62feb967d1d2",
-        "compressedSha256": "80c6005535b0ea768c001622aa37aad2143b68761776eb715d5095b0f3d63582"
+        "compressedBytes": 306792,
+        "expandedSha256": "e58df18d28758439885b40ef949f63a5f9ff3992b144cfb7f06750a20cebb188",
+        "compressedSha256": "6641a8d22385b22fa69ae2326e43603a25d2d6b890a2a13d872f961189f9c7e7"
       },
       {
         "index": 4,
         "file": "gratitude-mesh-v1.part-04.gz",
         "expandedBytes": 1200000,
-        "compressedBytes": 417510,
-        "expandedSha256": "1aebc6a7712fdc041336dd8ef4b864e792e9d109e12bc396e75df4175998da1d",
-        "compressedSha256": "fc715cd79f744dadf8e096131f3bb2eee2047a652a58ef2674010a669b6c07c1"
+        "compressedBytes": 417384,
+        "expandedSha256": "94c6af3f7ff3272562ddf88582d71dc1e36cc2ba131d0d101fcec78d7d8d5982",
+        "compressedSha256": "7170c33d1762349441f409a25cd78a72a35497c7e0a7d89e6db6de2f0b531ac8"
       },
       {
         "index": 5,
@@ -161,14 +161,14 @@
       7,
       8
     ],
-    "repair": "LAND_COLOR_BOUNDARY_V3",
+    "repair": "PATCHY_COASTAL_EARTH_V4",
     "localHearthRgbRecolored": true,
     "localGeometryProtected": true,
     "acceptedInteriorRgbProtected": true,
     "acceptedInteriorMinimumCoastDistance": 144,
-    "shorelineUnchangedDistance": 9,
-    "coastFullWeightDistance": 72,
-    "blend": "CUBIC_SMOOTH_9_72_FROM_GEN2826_RGB",
+    "shorelineUnchangedDistance": 0,
+    "coastFullWeightDistance": null,
+    "blend": "SPATIAL_EARTH_VEGETATION_PATCHES_WITH_VARIABLE_96_144_CUBIC_DECAY",
     "localBeachContribution": 0.74,
     "localBeachFeatherWeightApplied": true,
     "sandbarRgbProtected": true,
@@ -181,17 +181,53 @@
       "SOUTHERN_DELTA_LOWLANDS",
       "RAIN_SHADOW_STEPPE",
       "FORESTED_WINDWARD_FOOTHILLS"
-    ]
+    ],
+    "sourcePayloadSha256": "f136a8c696e38ef72e062bb69ae8e5a625000cc88ab436967f4df766637cee28",
+    "earthPaletteReferenceGitBlob": "a6e1d794faabee033be4404f87fcdc6a8d715e45",
+    "earthPalette": {
+      "compactEarth": [
+        0.39,
+        0.248,
+        0.148
+      ],
+      "coastalSilt": [
+        0.52,
+        0.44,
+        0.27
+      ],
+      "fertileEarth": [
+        0.3,
+        0.235,
+        0.155
+      ],
+      "shelteredEarth": [
+        0.235,
+        0.188,
+        0.13
+      ],
+      "dryFoothill": [
+        0.48,
+        0.315,
+        0.14
+      ],
+      "erodedMineral": [
+        0.355,
+        0.333,
+        0.305
+      ]
+    },
+    "paleBeachRgbProtected": true,
+    "noiseSeed": 2835,
+    "existingElevationAndNormalsUsedReadOnly": true
   },
   "parentCandidate": {
-    "commit": "69707b06a3ee1a3737df487060119bbc3d778c12",
-    "payloadSha256": "305657c266ca8ce91227f31cb064b90ed9c744b68a0dcd77ef3914c3cb323c95",
-    "provenanceSha256": "3a7637cf065ebe6c2d49cf71f494b677c10d3948943c2eb724862958d291ff96",
-    "historicalSourceGoverningHead": "3c5b7ece95bb6d642e527737bb60647c032e29dd"
+    "commit": "d20700ecb0e1e4b7a0ba3c03cf4f1c67d2632dfe",
+    "payloadSha256": "f136a8c696e38ef72e062bb69ae8e5a625000cc88ab436967f4df766637cee28",
+    "provenanceSha256": "f74ac3d1991541a880cda4061553d9c1780b6f2525f3cf4a15ad2cc7b9765b9c"
   },
   "verifier": {
-    "path": "tools/audralia-canonical-geography-rebind/validate-precomputed-gratitude-land-boundary-v3.mjs",
-    "sha256": "cbe3f5034200a122d943bab55d999aff800a1d826bac8725cee223002f868399",
+    "path": "tools/audralia-canonical-geography-rebind/validate-precomputed-gratitude-coastal-earth-v4.mjs",
+    "sha256": "4d75fee7e21975e5ee39a8d5c7d5b8d447ab88ecd0e671a538285bcb55b5452e",
     "ownerPhysicalAcceptance": false
   },
   "review": {

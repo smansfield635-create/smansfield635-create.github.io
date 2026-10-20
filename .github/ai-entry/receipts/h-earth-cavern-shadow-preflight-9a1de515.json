@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-cavern-shadow-preflight-9a1de515",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6605,
+  "requestBranch": "ai-dispatch-request-cavern-shadow-9a1de515",
+  "requestCommit": "e75d118401546c9dab6a3c7239b5e2af703a9976",
+  "requestCommitParent": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9a1de515b60ee6df59784909ad6bf30172de3fc6",
+    "surface_id": "h-earth-simple"
+  },
+  "bridgeRunId": "39504925934",
+  "dispatchedRunId": 39504948384,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39504948384",
+  "dispatchedRunHeadSha": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467",
+  "dispatchedAt": "2026-10-20T22:01:10.393Z",
+  "resolvedAt": "2026-10-20T22:01:14.204Z"
+}

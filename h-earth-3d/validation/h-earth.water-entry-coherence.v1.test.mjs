@@ -23,7 +23,7 @@ function wetAt(x,z){const out=[];for(const t of triangles){if(x<t.x0-1e-6||x>t.x
 
 test('actual emitted basin and river have no competing elevated water surfaces',()=>{
  setup();let wetSamples=0;for(let z=-310;z<=-264;z+=.5)for(let x=18;x<=62;x+=.5){const q=wetAt(x,z);if(q.length)wetSamples++;if(q.some(v=>v.role==='OASIS_WATER')&&q.some(v=>v.role==='FRESHWATER_RIVER'))assert(Math.max(...q.map(v=>v.y))-Math.min(...q.map(v=>v.y))<.01,`Competing emitted water at ${x},${z}: ${JSON.stringify(q)}`);}
- assert(wetSamples>200,'Water was removed instead of joined');
+ assert(wetSamples>2000,'Oasis must be a broad pool, not a narrow channel');
  for(const[x,z]of [[34,-286],[30,-288],[24,-288]]){const q=wetAt(x,z);assert(q.some(v=>v.role==='OASIS_WATER'));assert(!q.some(v=>v.role==='FRESHWATER_RIVER'),'Old lower ribbon survives inside basin');}
 });
 
@@ -39,7 +39,7 @@ test('published arrival through cavern mouth stays above actual water and inside
 });
 
 test('basin support follows the active water presentation mode',()=>{
- setup();for(const[x,z]of [[34,-286],[30,-288],[24,-288]]){const water=wetAt(x,z),floor=model.formation.excavatedOutdoorTerrain(x,z);assert(water.some(w=>w.y>floor+.1),'Regression fixture no longer submerged');const support=bridge.resolveGeologicalRuntimeFootSupport(x,z);assert(support);if(bridge.H_EARTH_REAR_WATER_PRESENTATION_ENABLED===false)assert(support.eligible,'Hidden water creates an invisible barrier');else{assert(!support.eligible,`Submerged floor allowed at ${x},${z}`);assert(support.issues.some(s=>/WATER|SUBMERG|WET/.test(s)));}}
+ setup();for(const[x,z]of [[34,-286],[30,-288],[24,-288]]){const water=wetAt(x,z),floor=model.formation.excavatedOutdoorTerrain(x,z);assert(water.some(w=>w.y>floor+.1),'Regression fixture no longer submerged');const support=bridge.resolveGeologicalRuntimeFootSupport(x,z);assert(support);if(bridge.H_EARTH_REAR_WATER_PRESENTATION_ENABLED===false)assert(support.eligible,'Hidden water creates an invisible barrier');else{assert(support.eligible,`Floating crossing blocked at ${x},${z}`);assert(Math.abs(support.footY-Math.max(...water.map(w=>w.y)))<.002);assert.equal(support.eyeY-support.footY,2.25);}}
 });
 
 
@@ -51,11 +51,11 @@ test('rear water is visible and the authored extension is continuously wet with 
   for(let j=0;j<n;j++){
    const x=a.x+(b.x-a.x)*j/n,z=a.z+(b.z-a.z)*j/n,w=model.sampleWaterAt(x,z),g=model.sampleOutdoorAt(x,z);
    assert(w&&g,`Missing water/ground ${x},${z}`);assert(w.y-g.y>.07*Math.min(1,Math.hypot(x+272,z+544)/4),`Bed interrupts river ${x},${z}: ${w.y-g.y}`);assert(w.y<=previous+.001,'Upstream water step');previous=w.y;count++;
-   const support=bridge.resolveGeologicalRuntimeFootSupport(x,z);assert(support);if(w.y-g.y>.05)assert(!support.eligible,'Wet floor accepts walking');else assert(support.eligible,'Dry terminal shore blocked');
+   const support=bridge.resolveGeologicalRuntimeFootSupport(x,z);assert(support);assert(support.eligible,'Floating river crossing blocked');assert(support.eyeY>=w.y+2.249);
   }
  }
  assert(count>1000);
- for(let i=0;i<points.length-1;i+=10)for(const side of [-1,1]){const p=points[i],q=points[i+1],dx=q.x-p.x,dz=q.z-p.z,l=Math.hypot(dx,dz),x=p.x-side*dz/l*7,z=p.z+side*dx/l*7,w=model.sampleWaterAt(x,z);assert(!w,'Water spills beyond reserved corridor');}
+ for(let i=0;i<points.length-1;i+=10)for(const side of [-1,1]){const p=points[i],q=points[i+1],dx=q.x-p.x,dz=q.z-p.z,l=Math.hypot(dx,dz),x=p.x-side*dz/l*18,z=p.z+side*dx/l*18,w=model.sampleWaterAt(x,z);assert(!w,'Water spills beyond reserved corridor');}
 });
 
 test('new river polygons meet actual emitted land without submerged or hovering banks',()=>{
@@ -90,4 +90,20 @@ test('basin boundary meets ground or joins river at the same level',()=>{
 
 test('authored river terminates at ground without inventing an ocean outlet',()=>{
  setup();const x=-272,z=-544,g=model.sampleOutdoorAt(x,z),w=model.sampleWaterAt(x,z);assert(g);assert(!w||Math.abs(w.y-g.y)<.002);assert.equal(model.hydrology.connectedOutletProven,false);assert(bridge.resolveGeologicalRuntimeFootSupport(x,z).eligible);
+});
+
+ test('actual floating navigation crosses both banks and oasis with clearance',()=>{
+ setup();let moved=0;
+ for(const [a,b] of [[[10,-284],[65,-284]],[[-45,-310],[-10,-310]],[[-100,-380],[-60,-380]]]){
+ let r=navigation.createHEarthFunctionalLandscapeNavigationState({waypointId:'GEOLOGICAL_CAVERN_REAR_APPROACH'});assert(r.ok);
+ r=navigation.proposeHEarthFunctionalLandscapeNavigation(r.state,{action:'SET_CAMERA_POSITION',position:{x:a[0],z:a[1]}});assert(r.ok,JSON.stringify(r.issues));
+ for(let t=0;t<=1;t+=.01){const x=a[0]+(b[0]-a[0])*t,z=a[1]+(b[1]-a[1])*t;r=navigation.proposeHEarthFunctionalLandscapeNavigation(r.state,{action:'SET_CAMERA_POSITION',position:{x,z}});assert(r.ok,JSON.stringify({x,z,issues:r.issues}));const w=model.sampleWaterAt(x,z),g=model.sampleOutdoorAt(x,z);if(w)assert(r.state.position.y>=w.y+2.249);if(g)assert(r.state.position.y>=g.y+2.249);moved++;}
+ }assert(moved>=300);
+});
+
+test('river lateral shores meet land or connected water',()=>{
+ setup();const mesh=model.meshes.find(p=>p.role==='FRESHWATER_RIVER').mesh,edges=new Map();
+ for(let k=0;k<mesh.indices.length;k+=3)for(let j=0;j<3;j++){const a=mesh.indices[k+j],b=mesh.indices[k+(j+1)%3],key=[a,b].sort((a,b)=>a-b).join(':');const e=edges.get(key);if(e)e.count++;else edges.set(key,{a,b,count:1});}
+ let shores=0;for(const e of edges.values())if(e.count===1){const a=unprojectPlanetVertex(...mesh.positions.slice(e.a*3,e.a*3+3)),b=unprojectPlanetVertex(...mesh.positions.slice(e.b*3,e.b*3+3));const x=(a.x+b.x)/2,z=(a.z+b.z)/2,y=(a.y+b.y)/2,g=model.sampleOutdoorAt(x,z);if(!g||y-g.y<.025){shores++;continue;}const dx=b.x-a.x,dz=b.z-a.z,l=Math.hypot(dx,dz);if(l<.001)continue;const left=model.sampleWaterAt(x-dz/l*.01,z+dx/l*.01),right=model.sampleWaterAt(x+dz/l*.01,z-dx/l*.01);assert(left&&right&&Math.abs(left.y-right.y)<.02,`Raised river edge ${x},${z}, depth ${y-g.y}`);}
+ assert(shores>10);
 });

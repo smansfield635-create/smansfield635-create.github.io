@@ -1,30 +1,17 @@
 {
   "schema": "H_EARTH_OASIS_RIVER_WATER_v1",
-  "canonicalAdmissionGeneration": 2840,
-  "governingHead": "ea1928e93481671ff9c473f443f854d7eb4b6978",
-  "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6303519987",
+  "canonicalAdmissionGeneration": 2843,
+  "governingHead": "14f4ecaea00f47f829561d703cb18fd18e029297",
+  "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6304100463",
   "baselinePhysicalAcceptance": "Owner confirmed shadow banding repair successful after cache clear",
-  "construction": "Existing authored centerline; actual emitted triangle crossings; nonascending shallow river levels; basin at downstream spill level; terrain-clipped water polygons; shared wet navigation",
+  "construction": "Raised pool7.5m, terrain-clipped wider river domain, floating support, exterior grade freedom, shared per-fragment freshwater material",
   "originalSurveyStationsPreserved": 79,
   "authoredCorridorStations": 232,
   "endpoint": [
     -272,
     -544
   ],
-  "basinWaterLevel": 5.507967592315671,
-  "waterMeshes": [
-    {
-      "role": "FRESHWATER_RIVER",
-      "vertices": 4641,
-      "triangles": 6753
-    },
-    {
-      "role": "OASIS_WATER",
-      "vertices": 149,
-      "triangles": 202
-    }
-  ],
-  "uploadedWaterBytes": 413970,
+  "basinWaterLevel": 7.5,
   "waterDrawBatches": 2,
   "perFrameGeneration": false,
   "terrainHashes": [
@@ -54,27 +41,16 @@
     "Direct navigation controls and dry cavern approach"
   ],
   "tests": {
-    "result": "8/8 PASS",
-    "durationSeconds": 13.964,
+    "result": "10/10 PASS",
     "command": "node --test h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
-    "coverage": [
-      "Full authored river wet continuity",
-      "Basin and river overlap level agreement",
-      "Actual emitted terrain clearance",
-      "Dry cavern approach traversal",
-      "Submerged floor ineligible",
-      "Terrain exact digests",
-      "Basin edge grounded or joined",
-      "Existing total geological4MiB GPU budget",
-      "Final4m water depth tapers to ground at authored terminus"
-    ]
+    "durationSeconds": 15.349
   },
-  "independentReview": "PASS: independent source and measured basin boundary review; final centreline and terminal taper reviewed; no source blocker",
+  "independentReview": "IN_PROGRESS: all river overlap and bank review",
   "browserQualification": "PENDING",
   "phoneVisualAcceptance": false,
   "limitations": [
-    "Scenic water, no surveyed permanent flow claim",
-    "Existing authored endpoint; no ocean outlet claimed",
-    "Water shading reused; appearance and mobile performance require actual browser and phone review"
+    "Work in progress; independent overlap review pending",
+    "No browser or physical visual acceptance",
+    "No ocean outlet claim"
   ]
 }

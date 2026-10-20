@@ -83,14 +83,18 @@ function buildConnectedRiverWater(points,terrainMesh,formation){
     let last=-1;for(const t of [...cuts].sort((a,b)=>a-b))if(t-last>1e-7){stations.push({x:a.x+dx*t,z:a.z+dz*t});last=t;}
   }
   stations.push(route.at(-1));
-  const levels=stations.map(p=>{const y=ground(p.x,p.z);if(!Number.isFinite(y))fail('EXTENSION_GROUND_MISSING');const end=stations.at(-1),taper=Math.min(1,Math.hypot(p.x-end.x,p.z-end.z)/4);return y+.24*taper;});
+  const levels=stations.map(p=>{const y=ground(p.x,p.z);if(!Number.isFinite(y))fail('EXTENSION_GROUND_MISSING');const end=stations.at(-1),taper=Math.min(1,Math.hypot(p.x-end.x,p.z-end.z)/4);return y+1.1*taper;});
   for(let i=levels.length-2;i>=0;i--)levels[i]=Math.max(levels[i],levels[i+1]+.00001);
-  const basin=formation.oasis,waterLevel=levels[0];
+  const basin=formation.oasis,waterLevel=Math.max(7.5,levels[0]);
   const inBasin=p=>Math.hypot((p.x-basin.centerX)/basin.radiusX,(p.z-basin.centerZ)/basin.radiusZ)<=1;
-  for(let i=0;i<stations.length&&inBasin(stations[i]);i++)levels[i]=waterLevel;
+  let downstreamDistance=0;
+  for(let i=0;i<stations.length;i++){
+    if(inBasin(stations[i])&&downstreamDistance===0)levels[i]=waterLevel;
+    else {downstreamDistance+=i?Math.hypot(stations[i].x-stations[i-1].x,stations[i].z-stations[i-1].z):0;levels[i]=Math.max(levels[i],waterLevel-.045*Math.max(0,downstreamDistance-4));}
+  }
   for(let i=0;i<stations.length;i++){
     const p=stations[i],a=stations[Math.max(0,i-1)],b=stations[Math.min(stations.length-1,i+1)],dx=b.x-a.x,dz=b.z-a.z,l=Math.hypot(dx,dz)||1;
-    rows.push([p.x-dz/l*3.3,levels[i],p.z+dx/l*3.3,p.x+dz/l*3.3,levels[i],p.z-dx/l*3.3]);
+    rows.push([p.x-dz/l*16,levels[i],p.z+dx/l*16,p.x+dz/l*16,levels[i],p.z-dx/l*16]);
   }
   const positions=[],indices=[];
   const clip=(poly,distance)=>{
@@ -668,7 +672,7 @@ export function resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight=2.25}={}){
     const support={class:'EXTERIOR_DRY_CHANNEL',eligible:true,x,z,footY:ground.y,eyeY:ground.y+eyeHeight,
       ceilingY:null,headroom:null,issues:[],worldManifoldUnchanged:true,boundarySource:'ACTUAL_EMITTED_TERRAIN_TRIANGLES'};
     const water=H_EARTH_REAR_WATER_PRESENTATION_ENABLED?active.sampleWaterAt(x,z):null;
-    if(water&&water.y>support.footY+.05)return Object.freeze({...support,eligible:false,waterY:water.y,waterDepth:water.y-support.footY,issues:['GEOLOGICAL_SUBMERGED_OUTDOOR_SUPPORT']});
+    if(water&&water.y>support.footY)return Object.freeze({...support,class:'EXTERIOR_WATER_FLOAT',footY:water.y,eyeY:water.y+eyeHeight,groundY:ground.y,waterY:water.y,waterDepth:water.y-ground.y,issues:[]});
     return Object.freeze(support);
   }
   // The cave keeps its existing narrow physical domain and kernel collision.

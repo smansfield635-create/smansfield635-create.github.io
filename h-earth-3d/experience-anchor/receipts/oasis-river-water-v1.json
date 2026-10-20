@@ -29,15 +29,23 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
-      "sha256": "7afafc8399feda2d6ba013f3242b7f9c953708dbeb5ea14bdfe0abdc2bf4d66c"
+      "sha256": "6ffba1f2934afcdf0e4772f355b1815ab9844718ee8c1100f7b48bcd164e70a5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "7f22bcf75c6f13ee8e56460a9e2ffb71eaed7c1f4b30d0fd3aae3acf86fb2ade"
     },
     {
       "path": "h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
-      "sha256": "3838646d4c6141562b9ff677af94d90b10bdc421a96e3e78c4d2aae8202ce2a7"
+      "sha256": "f72c9d66eb9a450f8bded4693c3cce5834a6826b16e6e42b5fb43cf06c39eae2"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "71afdfe1a561c1fc2a739342e6eaba7c10a1a5499c6d8d56408c3058d8fd8d76"
     }
   ],
-  "acceptanceBasis": "Same canonical world and terrain preserved by exact mesh digests. Existing authored watercourse and shared navigation support; no new UI, world, control scheme or ocean outlet. Eight focused tests support source and geometry continuity; browser appearance and phone acceptance remain pending.",
+  "acceptanceBasis": "Same world, terrain and controls preserved; floating traversal restored. Source continuity only; full independent review, browser and phone appearance pending.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
-  "canonicalAdmissionGeneration": 2840
+  "canonicalAdmissionGeneration": 2843
 }

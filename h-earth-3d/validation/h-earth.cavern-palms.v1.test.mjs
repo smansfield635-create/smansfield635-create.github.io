@@ -40,3 +40,23 @@ test('mature fronds droop while inner fronds rise from a compact crown',()=>{
 test('invalid dimensions fail before geometry construction',()=>{
  for(const parameters of [{height:NaN},{height:0},{lean:100},{radius:0},{frondLength:Infinity}])assert.throws(()=>buildCavernPalm(parameters),/PALM_PARAMETERS_INVALID/);
 });
+test('all 720 leaflet bases lie on their actual frond stem segments',()=>{
+ const p=buildCavernPalm(),stems=p.parts[1].geometry.vertices,leaves=p.parts[2].geometry.vertices;
+ const xyz=v=>[v.x,v.y,v.z];
+ for(let f=0;f<15;f++){
+  const centers=Array.from({length:13},(_,k)=>{
+   const ring=stems.slice(f*65+k*5,f*65+k*5+5).map(xyz);
+   return [0,1,2].map(i=>ring.reduce((s,v)=>s+v[i],0)/5);
+  });
+  for(let leaf=0;leaf<48;leaf++){
+   const root=xyz(leaves[(f*48+leaf)*4]);let distance=Infinity;
+   for(let k=0;k<12;k++){
+    const a=centers[k],d=centers[k+1].map((x,i)=>x-a[i]),r=root.map((x,i)=>x-a[i]);
+    const t=Math.max(0,Math.min(1,r.reduce((s,x,i)=>s+x*d[i],0)/d.reduce((s,x)=>s+x*x,0)));
+    distance=Math.min(distance,Math.hypot(...r.map((x,i)=>x-t*d[i])));
+   }
+   assert.ok(distance<1e-10,`detached leaflet ${f}:${leaf}: ${distance}`);
+  }
+ }
+ assert.equal(p.parameters.radius,.36);
+});

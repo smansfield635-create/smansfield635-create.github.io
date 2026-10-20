@@ -45,7 +45,7 @@ function admit(id,m,closure,role){
  return result;
 }
 
-export function buildCavernPalm({id='CAVERN_PALM_PROTOTYPE',height=7,lean=2.1,heading=0,radius=.30,frondLength=3.4}={}){
+export function buildCavernPalm({id='CAVERN_PALM_PROTOTYPE',height=7,lean=2.1,heading=0,radius=.36,frondLength=3.4}={}){
  if(typeof id!=='string'||!id.length||![height,lean,heading,radius,frondLength].every(Number.isFinite)||height<3||height>12||Math.abs(lean)>height*.6||radius<.15||radius>.6||frondLength<1.5||frondLength>5)throw new Error('PALM_PARAMETERS_INVALID');
  const bark=mesh(),stems=mesh(),leaves=mesh();
  const inward=[Math.cos(heading),0,Math.sin(heading)];
@@ -66,10 +66,12 @@ export function buildCavernPalm({id='CAVERN_PALM_PROTOTYPE',height=7,lean=2.1,he
   const origin=add(crown,[0,(f%5)*.045,0]);
   const at=t=>add(origin,add(mul(d,length*t),[0,rise*t-drop*t*t,0]));
   const spine=Array.from({length:13},(_,i)=>at(i/12));
+  // Attach to the actual piecewise-linear stem, not its analytic guide curve.
+  const onStem=t=>{const q=t*12,i=Math.min(11,Math.floor(q));return add(spine[i],mul(sub(spine[i+1],spine[i]),q-i));};
   sweep(stems,spine,spine.map((_,i)=>.038*(1-i/14)),5,[.38,.43,.13]);
   let leafletCount=0;
   for(let k=0;k<24;k++)for(const sign of [-1,1]){
-   const t=.14+k*.034+(sign===1?.008:0),root=at(t);
+   const t=.14+k*.034+(sign===1?.008:0),root=onStem(t);
    const reach=(.15+.68*Math.sin(Math.PI*t))*(length/3.4);
    const direction=unit(add(mul(side,sign),mul(d,.33)));
    const tip=add(root,add(mul(direction,reach),[0,-.20*reach,0]));

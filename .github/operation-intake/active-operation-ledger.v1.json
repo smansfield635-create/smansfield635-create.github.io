@@ -11401,6 +11401,50 @@
       "scopeHash": "9417879d994bdadbc8ae3d6d69c7864be12fe1e233d8e1fea86854f7a151d19c",
       "state": "ADMITTED_LOCKED"
     },
+    "947c4bb9d6b047e7622bf3cbf0c0ce601194087a303a134583ce95d9bd9b802b": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "14f4ecaea00f47f829561d703cb18fd18e029297",
+          "lockGeneration": 2843,
+          "lockScope": "H_EARTH:OASIS_RIVER_WATER:20261020",
+          "operationId": "H_EARTH_OASIS_RIVER_FLOATING_REPAIR_20261020_001",
+          "procedureLocatorDigest": "3164aa930ec5f62819fc692f7484e82917ab1c1d27fa542d4f3d9fadb5282e2c",
+          "requestDigest": "d0992ca7b05c891d9bb29b4e8844729033c00ac06ab233e583c6581f6d74e133",
+          "scopeHash": "947c4bb9d6b047e7622bf3cbf0c0ce601194087a303a134583ce95d9bd9b802b"
+        },
+        "bindingDigest": "93de8e61fb4ae52297405d39fdd8b8b41a92dbad603122bb81a2d36ebb6d148f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a2d9c5098cdbecc7e2c816c64a6e77c5fed07e613d19e3a945c7dde594266138",
+          "commentId": 6304093174,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6585,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39515116069,
+          "workflowSha": "14f4ecaea00f47f829561d703cb18fd18e029297"
+        },
+        "lineageAnchorCommitSha": "aca7185f9c611e5af73523e97d2e0c39a4398640",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "14f4ecaea00f47f829561d703cb18fd18e029297",
+      "lockGeneration": 2843,
+      "lockScope": "H_EARTH:OASIS_RIVER_WATER:20261020",
+      "operationId": "H_EARTH_OASIS_RIVER_FLOATING_REPAIR_20261020_001",
+      "procedureLocatorDigest": "3164aa930ec5f62819fc692f7484e82917ab1c1d27fa542d4f3d9fadb5282e2c",
+      "released": false,
+      "requestDigest": "d0992ca7b05c891d9bb29b4e8844729033c00ac06ab233e583c6581f6d74e133",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "947c4bb9d6b047e7622bf3cbf0c0ce601194087a303a134583ce95d9bd9b802b",
+      "state": "ADMITTED_LOCKED"
+    },
     "9485a119ec533eed9ce9e0d01e6d0d672d2384d21fc0b70a6f0fd8ab413071ab": {
       "governingHead": "24d18cba2aa56c7fc5eaf135976700d9e9e7c04f",
       "lockGeneration": 355,
@@ -20419,7 +20463,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2842,
+  "lockGeneration": 2843,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

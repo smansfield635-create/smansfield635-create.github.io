@@ -20,11 +20,12 @@ const digestHex = async buffer => {
   return [...new Uint8Array(digest)].map(value=>value.toString(16).padStart(2,'0')).join('');
 };
 
-async function loadVerifiedProvenance(){
-  const response = await fetch(PROVENANCE_URL,{cache:'force-cache'});
+async function loadVerifiedProvenance(provenanceUrl,expectedPayloadSha256){
+  const response = await fetch(provenanceUrl,{cache:'force-cache'});
   if(!response.ok) throw new Error(`AUDRALIA_MESH_PROVENANCE_FETCH_FAILED_${response.status}`);
   const provenance = await response.json();
   if(provenance?.schema!=='AUDRALIA_PRECOMPUTED_GEOGRAPHY_PROVENANCE_v1') throw new Error('AUDRALIA_MESH_PROVENANCE_SCHEMA_INVALID');
+  if(expectedPayloadSha256!==null&&provenance?.mesh?.payloadSha256!==expectedPayloadSha256) throw new Error('AUDRALIA_MESH_EXPECTED_PAYLOAD_MISMATCH');
   if(provenance?.canonicalGeography?.gitBlobSha!==EXPECTED_GEOGRAPHY_BLOB) throw new Error('AUDRALIA_MESH_PROVENANCE_GEOGRAPHY_INVALID');
   if(provenance?.canonicalGeography?.contractId!==EXPECTED_GEOGRAPHY_CONTRACT) throw new Error('AUDRALIA_MESH_PROVENANCE_GEOGRAPHY_CONTRACT_INVALID');
   if(provenance?.canonicalTerrain?.gitBlobSha!==EXPECTED_TERRAIN_BLOB) throw new Error('AUDRALIA_MESH_PROVENANCE_TERRAIN_INVALID');
@@ -40,18 +41,24 @@ async function loadVerifiedProvenance(){
   return Object.freeze(provenance);
 }
 
-export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetweenChunks=false}={}) {
+export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetweenChunks=false,expectedPayloadSha256=null}={}) {
+  if(expectedPayloadSha256!==null&&(typeof expectedPayloadSha256!=='string'||!/^[0-9a-f]{64}$/.test(expectedPayloadSha256))) throw new Error('AUDRALIA_MESH_EXPECTED_PAYLOAD_INVALID');
+  const provenanceUrl = new URL(PROVENANCE_URL);
+  const meshUrls = MESH_URLS.map(url => new URL(url));
+  if(expectedPayloadSha256!==null){
+    for(const url of [provenanceUrl,...meshUrls]) url.searchParams.set('mesh',expectedPayloadSha256);
+  }
   const startedAt = performance.now();
   if (typeof DecompressionStream !== 'function') throw new Error('AUDRALIA_MESH_DECOMPRESSION_UNAVAILABLE');
-  const provenance = await loadVerifiedProvenance();
+  const provenance = await loadVerifiedProvenance(provenanceUrl,expectedPayloadSha256);
   const totalLength = provenance.mesh.parts.reduce((total,part)=>total+part.expandedBytes,0);
   if(totalLength!==provenance.mesh.payloadBytes) throw new Error('AUDRALIA_MESH_PROVENANCE_PAYLOAD_LENGTH_INVALID');
   const merged = new Uint8Array(totalLength);
   let mergedOffset = 0;
-  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'START',index:-1,total:MESH_URLS.length,expandedBytes:0,totalExpandedBytes:totalLength}));
-  for (let index = 0; index < MESH_URLS.length; index += 1) {
+  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'START',index:-1,total:meshUrls.length,expandedBytes:0,totalExpandedBytes:totalLength}));
+  for (let index = 0; index < meshUrls.length; index += 1) {
     const metadata = provenance.mesh.parts[index];
-    const response = await fetch(MESH_URLS[index], { cache: 'force-cache' });
+    const response = await fetch(meshUrls[index], { cache: 'force-cache' });
     if (!response.ok) throw new Error(`AUDRALIA_MESH_PART_${index}_FETCH_FAILED_${response.status}`);
     const compressed = await response.arrayBuffer();
     if(compressed.byteLength!==metadata.compressedBytes) throw new Error(`AUDRALIA_MESH_PART_${index}_COMPRESSED_LENGTH_INVALID`);
@@ -61,7 +68,7 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
     if(await digestHex(expanded)!==metadata.expandedSha256) throw new Error(`AUDRALIA_MESH_PART_${index}_EXPANDED_DIGEST_INVALID`);
     merged.set(new Uint8Array(expanded), mergedOffset);
     mergedOffset += expanded.byteLength;
-    if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'PART',index,total:MESH_URLS.length,expandedBytes:mergedOffset,totalExpandedBytes:totalLength}));
+    if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'PART',index,total:meshUrls.length,expandedBytes:mergedOffset,totalExpandedBytes:totalLength}));
     if (yieldBetweenChunks) await yieldToPaint();
   }
   const buffer = merged.buffer;
@@ -97,10 +104,10 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
     schema: 'AUDRALIA_PRECOMPUTED_GRATITUDE_MESH_v2_CANONICAL_AUTHORITY_BOUND',
     identicalCanonicalGeometry: true,
     browserConstructionRemoved: true,
-    verifiedChunkCount: MESH_URLS.length,
+    verifiedChunkCount: meshUrls.length,
     peakExpandedMeshCopies: 1,
     sequentialChunkAssembly: true,
-    sameOriginCriticalPath: MESH_URLS.every(url => url.origin === location.origin) && PROVENANCE_URL.origin === location.origin,
+    sameOriginCriticalPath: meshUrls.every(url => url.origin === location.origin) && provenanceUrl.origin === location.origin,
     loadMilliseconds: performance.now() - startedAt,
     authority: Object.freeze({
       geographyContract: provenance.canonicalGeography.contractId,
@@ -115,7 +122,7 @@ export async function loadPrecomputedGratitudeMesh({onProgress=null,yieldBetween
     landMesh: Object.freeze({ vertices: landVertices, indices: landIndices, statistics: Object.freeze(statistics.land) }),
     coastalWaterMesh: Object.freeze({ vertices: waterVertices, indices: waterIndices, statistics: Object.freeze(statistics.water) })
   });
-  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'COMPLETE',index:MESH_URLS.length-1,total:MESH_URLS.length,expandedBytes:totalLength,totalExpandedBytes:totalLength}));
+  if (typeof onProgress === 'function') onProgress(Object.freeze({stage:'COMPLETE',index:meshUrls.length-1,total:meshUrls.length,expandedBytes:totalLength,totalExpandedBytes:totalLength}));
   return window.__AUDRALIA_PRECOMPUTED_GRATITUDE_MESH__;
 }
 

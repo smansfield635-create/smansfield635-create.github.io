@@ -143,8 +143,8 @@
     };
 
     try {
-      const { loadPrecomputedGratitudeMesh } = await import('/showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs?cb=GRATITUDE_LAND_BOUNDARY_V3_GEN2829');
-      await loadPrecomputedGratitudeMesh();
+      const { loadPrecomputedGratitudeMesh } = await import('/showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs?cb=GRATITUDE_EXACT_MESH_DELIVERY_GEN2833');
+      await loadPrecomputedGratitudeMesh({expectedPayloadSha256:'f136a8c696e38ef72e062bb69ae8e5a625000cc88ab436967f4df766637cee28'});
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'LOADING_PRIMARY_WORLD';
       await nextFrame();
       await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=EXACT_24057');

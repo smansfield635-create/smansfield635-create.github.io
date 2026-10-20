@@ -11,6 +11,7 @@
   <script type="importmap">
 {
   "imports": {
+    "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=SOURCE_RIVER_GEN2839",
     "/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=SOURCE_RIVER_GEN2839",
     "https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=SOURCE_RIVER_GEN2839"
   }
@@ -158,8 +159,8 @@
       await nextFrame();
       const constrainedTablet = window.__AUDRALIA_RENDER_PIXEL_BUDGET__?.active === true;
       if (constrainedTablet) {
-        const { initializeAudraliaTabletSingleContext } = await import('https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs');
-        await initializeAudraliaTabletSingleContext();
+        const { initializeAudraliaTabletSingleContextClouds } = await import('/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs?cb=APPROVED_CLOUD_CONTINUITY_GEN2844');
+        await initializeAudraliaTabletSingleContextClouds();
       } else {
         await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057');
       }

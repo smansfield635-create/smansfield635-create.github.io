@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-20T02:39:35Z",
+  "generatedAt": "2026-10-20T03:37:45Z",
   "window": {
-    "start": "2026-07-22T02:39:35Z",
-    "end": "2026-10-20T02:39:35Z"
+    "start": "2026-07-22T03:37:45Z",
+    "end": "2026-10-20T03:37:45Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -122,20 +122,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 90,
-        "visits": 0
-      },
       "/governance/": {
         "pageLoads": 60,
         "visits": 10
       },
       "/evidence/readiness/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 90,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -330,12 +330,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/governance-bridge/governance/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/analytics/": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {

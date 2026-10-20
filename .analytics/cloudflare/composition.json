@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-20T02:39:35Z",
+  "generatedAt": "2026-10-20T03:37:45Z",
   "window": {
-    "start": "2026-09-20T02:39:35Z",
-    "end": "2026-10-20T02:39:35Z"
+    "start": "2026-09-20T03:37:45Z",
+    "end": "2026-10-20T03:37:45Z"
   },
   "dimensions": {
     "requestPath": [
@@ -143,11 +143,6 @@
         "visits": 20
       },
       {
-        "value": "/products/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/campaigns/consider-the-energy/secret-of-life-edition/",
         "pageLoads": 10,
         "visits": 0
@@ -206,8 +201,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 2503,
-        "visits": 2503
+        "pageLoads": 2493,
+        "visits": 2493
       },
       {
         "value": "diamondgatebridge.com",
@@ -238,8 +233,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 3637,
-        "visits": 2620
+        "pageLoads": 3627,
+        "visits": 2610
       },
       {
         "value": "CN",
@@ -285,8 +280,8 @@
       },
       {
         "value": "tablet",
-        "pageLoads": 788,
-        "visits": 317
+        "pageLoads": 778,
+        "visits": 307
       }
     ],
     "userAgentBrowser": [
@@ -297,8 +292,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 1148,
-        "visits": 636
+        "pageLoads": 1138,
+        "visits": 626
       },
       {
         "value": "ChromeMobile",
@@ -344,8 +339,8 @@
       },
       {
         "value": "Android",
-        "pageLoads": 1619,
-        "visits": 668
+        "pageLoads": 1609,
+        "visits": 658
       },
       {
         "value": "Windows",
@@ -371,8 +366,8 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 2219,
-        "visits": 1201
+        "pageLoads": 2209,
+        "visits": 1191
       },
       {
         "value": "1",
@@ -383,8 +378,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 2847,
-        "visits": 2450
+        "pageLoads": 2837,
+        "visits": 2440
       },
       {
         "value": "reload",
@@ -410,8 +405,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 2781,
-        "visits": 2398
+        "pageLoads": 2771,
+        "visits": 2388
       },
       {
         "value": "cache",
@@ -427,15 +422,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 3679,
-        "visits": 2661
+        "pageLoads": 3639,
+        "visits": 2621
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 3679,
-        "visits": 2661
+        "pageLoads": 3669,
+        "visits": 2651
       }
     ]
   }

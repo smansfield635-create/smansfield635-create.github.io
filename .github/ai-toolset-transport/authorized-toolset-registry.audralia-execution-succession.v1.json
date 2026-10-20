@@ -399,6 +399,135 @@
       "continuationRule": "CONTINUE_ONLY_FROM_COMMAND_EXECUTED_AND_PASSED_WITH_WRITEBACK_PERFORMED_TRUE_AND_NEW_EXACT_CANDIDATE_HEAD",
       "terminationRule": "WRITEBACK_AUTHORITY_TERMINATES_AFTER_ONE_FAST_FORWARD_INSPECTION_COMMIT;NO_MAIN_PRODUCT_MERGE_DEPLOYMENT_OR_RELEASE_AUTHORITY",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "H_EARTH_GEN2824_B2_PRECOMPUTED_GPU_PACKAGE_WRITEBACK_DESCRIPTOR_V1",
+      "operationId": "H_EARTH_G_WORLD_BASE_PACKAGE_CORRESPONDENCE_REPAIR_20261019_001",
+      "operationClass": "H_EARTH_GEN2824_PRECOMPUTED_B2_SOURCE_TO_GPU_PACKAGE_WRITEBACK",
+      "projectId": "H_EARTH",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "H_EARTH_GEN2824_B2_CANONICAL_GPU_PACKAGE_RECONCILER_V1",
+      "exactToolingHead": "a4d71331c414bfdf359be89bdddaf5a5b4efc2d2",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "h-earth-3d",
+          "showroom/globe/h-earth"
+        ],
+        "sparseIndexEntryLimitExclusive": 25000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs",
+        "fixedArguments": [
+          "--reconcile-east-a"
+        ],
+        "inputArgumentBindings": [],
+        "outputArgumentBindings": [
+          {
+            "argument": "--receipt-path",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": true
+      },
+      "canonicalInputSchema": {
+        "schemaId": "H_EARTH_GEN2824_B2_PACKAGE_FIXED_WRITEBACK_INPUT_v1",
+        "required": [
+          "executionHolder"
+        ],
+        "allowed": [
+          "executionHolder"
+        ],
+        "properties": {
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "REGISTERED_GENERATOR_WRITEBACK_RECEIPT_v1",
+        "required": [
+          "schema",
+          "result",
+          "operationId",
+          "descriptorId",
+          "targetBranchRef",
+          "expectedBranchHead",
+          "candidateHead",
+          "changedPaths",
+          "fastForwardOnly",
+          "childCommandGitHubTokenExposed",
+          "mainMutationPerformed",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "writebackSpecification": {
+        "mode": "FAST_FORWARD_EXACT_BRANCH",
+        "targetBranchRef": "refs/heads/h-earth-gworld-precomputed-correspondence-gen2824",
+        "expectedBranchHead": "a4d71331c414bfdf359be89bdddaf5a5b4efc2d2",
+        "commitMessage": "Gen2824: reconcile precomputed GPU terrain with published B2 source",
+        "fastForwardOnly": true,
+        "requireChangedPaths": true
+      },
+      "allowedMutationPaths": [
+        "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz",
+        "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js"
+      ],
+      "prohibitedPaths": [
+        ".github/",
+        "AI_ENTRYPOINT.json",
+        "tools/",
+        "h-earth-3d/environment/",
+        "showroom/globe/audralia/",
+        "showroom/globe/h-earth/index.html",
+        "showroom/globe/h-earth/functional-landscape/"
+      ],
+      "prohibitedSideEffects": [
+        "ARBITRARY_COMMAND",
+        "UNDECLARED_PATH_MUTATION",
+        "MAIN_MUTATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "GENERAL_AGENT_EXECUTION",
+        "THIRD_PARTY_PROVIDER_SELECTION"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
+      "successDisposition": "RETURN_EXACT_GEN2824_B2_GPU_PACKAGE_CANDIDATE_FOR_INDEPENDENT_TESTS",
+      "failureDispositions": {
+        "WRITEBACK_REMOTE_HEAD_MISMATCH": "STOP_WITHOUT_PUSH",
+        "UNAUTHORIZED_PATH_MUTATED": "STOP_WITHOUT_PUSH",
+        "COMMAND_EXECUTED_AND_FAILED": "PRESERVE_CANDIDATE_AND_REPORT_FIRST_ASSERTION",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "PRESERVE_CANDIDATE_AND_STOP",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "REUSE_EXISTING_GEN2824_ADMISSION; CONTINUE_ONLY_FROM_COMMAND_EXECUTED_AND_PASSED_WITH_WRITEBACK_PERFORMED_TRUE_AND_NEW_EXACT_CANDIDATE_HEAD",
+      "terminationRule": "ONE_ADMISSION_BOUND_FAST_FORWARD_COMMIT_MAXIMUM; NO_MAIN_MERGE_DEPLOYMENT_RELEASE_OR_VISUAL_ACCEPTANCE",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

@@ -9,13 +9,14 @@
   <title>Audralia · Planetary World</title>
   <link rel="canonical" href="https://diamondgatebridge.com/showroom/globe/audralia/">
   <script type="importmap">
-    {
-      "imports": {
-        "/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs": "https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs?cb=1a2abff0343f"
-      }
-    }
+{
+  "imports": {
+    "/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=REGIONAL_ECOLOGY_GEN2837",
+    "https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=REGIONAL_ECOLOGY_GEN2837"
+  }
+}
   </script>
-  <link rel="modulepreload" crossorigin="anonymous" href="https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs?cb=1a2abff0343f">
+  <link rel="modulepreload" crossorigin="anonymous" href="/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=REGIONAL_ECOLOGY_GEN2837">
   <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-model.mjs?cb=EXACT_24057">
   <link rel="modulepreload" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/canonical-weather-spatial-lod-proof/weather-renderer.mjs?cb=EXACT_24057">
   <link rel="stylesheet" href="./index.css?v=AUDRALIA_LOADING_CONTINUITY_v4">
@@ -143,8 +144,10 @@
     };
 
     try {
-      const { loadPrecomputedGratitudeMesh } = await import('/showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs?cb=GRATITUDE_COASTAL_EARTH_V4_GEN2835');
-      await loadPrecomputedGratitudeMesh({expectedPayloadSha256:'0264e0cfecc32125ea4557e69a17c31cba85e73b2c10381729bdcbd488a539c7'});
+      const { loadPrecomputedGratitudeMesh } = await import('/showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs?cb=GRATITUDE_REGIONAL_CONTINUITY_GEN2837');
+      await loadPrecomputedGratitudeMesh({expectedPayloadSha256:'ed0905a208ee6bc8b99ff7271a3d636119d947dc57306a9293ba7405c3de0442'});
+      const {loadRegionalEcologyMesh}=await import('/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=REGIONAL_ECOLOGY_GEN2837');
+      await loadRegionalEcologyMesh();
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'LOADING_PRIMARY_WORLD';
       await nextFrame();
       await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=EXACT_24057');

@@ -187,7 +187,9 @@ export const main=async()=>{
   });
   try{
     const page=await browser.newPage();
-    await page.setViewport({width:720,height:1280,deviceScaleFactor:1});
+    await page.setViewport(spec.captureScreenshot===true
+      ? {width:1440,height:2200,deviceScaleFactor:1}
+      : {width:720,height:1280,deviceScaleFactor:1});
     const pageErrors=[];
     const consoleErrors=[];
     const evidenceInteractions=[];
@@ -321,7 +323,18 @@ export const main=async()=>{
     if(spec.trophyPredicate?.enabled===true&&trophyPredicate?.ok!==true)failures.push('TROPHY_RUNTIME_PREDICATE_FAILED');
     if(manifest.surfaceId==='evidence'&&result.currentPublicCondition==='CHECKING')failures.push('EVIDENCE_CONDITION_NOT_TERMINAL');
 
-    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:{...result,trophyPredicate},diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures}};
+    // Opt-in read-only visual evidence uses the existing preflight artifact path.
+    // No caller-selected file path or change to existing surface defaults.
+    let screenshotEvidence=null;
+    if(spec.captureScreenshot===true&&failures.length===0){
+      const directory=process.env.RUNNER_TEMP;
+      if(!directory)throw new Error('SCREENSHOT_RUNNER_TEMP_REQUIRED');
+      const output=`${directory}/publication-preflight-screenshot.png`;
+      await page.screenshot({path:output,fullPage:true});
+      if(fs.statSync(output).size===0)throw new Error('SCREENSHOT_EVIDENCE_EMPTY');
+      screenshotEvidence={file:'publication-preflight-screenshot.png',bytes:fs.statSync(output).size};
+    }
+    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:{...result,trophyPredicate},diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures},...(screenshotEvidence?{screenshotEvidence}:{})};
     console.log(JSON.stringify(receipt,null,2));
     if(failures.length)process.exitCode=1;
   }finally{

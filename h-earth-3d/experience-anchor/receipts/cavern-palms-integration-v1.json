@@ -1,0 +1,79 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/cavern-palms-v1/integration.json",
+    "h-earth-3d/evidence/cavern-palms-v1/grass-integration.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/cavern-palms-v1/integration.json",
+    "h-earth-3d/evidence/cavern-palms-v1/grass-integration.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/cavern-palms-v1/integration.json",
+    "h-earth-3d/evidence/cavern-palms-v1/grass-integration.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-entrance-grass.v1.test.mjs",
+      "sha256": "43a8f82265147cb2ab889ea370a1343340075491637821fc6e2820299d3d61fc"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-palm-placement.v1.test.mjs",
+      "sha256": "d0948e0b8b32a33864577e08699b514cbfa4716a99f0bd278a44e8f29cb6dc20"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-palms.v1.test.mjs",
+      "sha256": "c8bbdc912af3e1c6b5c2f3c6b29e30d0ebd6448bde79cb469a162c307666f8d3"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/cavern-entrance-grass.v1.js",
+      "sha256": "78cf7b957ff8a0d565f2f38e0bc8083a35742c36b59c336e28ab3378a208000c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/cavern-palm-placement.v1.js",
+      "sha256": "df3a2e328ba39a578cd3ad6ba972ecde5c28b6865bd463df7aa0ea87a6c1e615"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-cavern-palms.v1.js",
+      "sha256": "e13c65493865a6139952b88b1eda81a83e10ea3fba43995081e32d0f1e7f943e"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "9f81081764ad67c11f6925b6c174e07fa2d4076dea842f466b964da8ae95c7d1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "1aac1be22c4ac67f33fe0ea909c7c672e9b93c9607a2968fd82cfb2dcc46592c"
+    }
+  ],
+  "acceptanceBasis": "Source continuity and actual-mesh placement study: additive four palms in existing canonical scene, same terrain, projection, renderer, navigation and interface. This structural anchor assessment does not establish live browser or phone acceptance. Additive entrance grass preserves original packed roots and uses the existing single GPU owner; actual surface support and allocation checks passed. Cavern visual composition and phone performance remain unverified.",
+  "ownerPerceptualAcceptance": false,
+  "newIntegratedBrowserRunPerformed": true,
+  "canonicalAdmissionGeneration": 2831,
+  "browserQualification": {
+    "runId": 39471196491,
+    "targetSha": "5e0f7afe79d361de43a3efb7959a5a4c6fd9b744",
+    "result": "PREFLIGHT_PASS",
+    "runtimeReadiness": "PASS",
+    "pageErrors": [],
+    "consoleErrors": [],
+    "scope": "Prepared scene and controls; cavern visual composition and phone performance not established"
+  }
+}

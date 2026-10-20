@@ -1,0 +1,49 @@
+{
+  "schema": "H_EARTH_CAVERN_PALM_DESIGN_v1",
+  "status": "STANDALONE_KERNEL_PROTOTYPE_NOT_VISUALLY_ACCEPTED",
+  "governingHead": "8c7f296f6fa378d139be71440b2d2cdf37971b77",
+  "operationId": "H_EARTH_CAVERN_PALM_KERNEL_DESIGN_20261020_001",
+  "lockGeneration": 2828,
+  "site": {
+    "id": "B_REAR_RAVINE",
+    "centerX": 40,
+    "portalZ": -260,
+    "sampledCenterFloorY": 11.261603930855028,
+    "sampledCenterRoofY": 16.04995859734669,
+    "sampledRadiusParameter": 3.985380624781599,
+    "measurementSource": "Actual geological runtime bridge and canonical base world at 6d8e64386d002b7820f51d6c739ab765485a6985",
+    "placementCaution": "Replacement bounds x32..48 are not the opening width. Unequal shoulders require final visible triangle support for each root."
+  },
+  "composition": {
+    "count": 4,
+    "arrangement": "Tall and short pair on each side, with trunks curving upward and inward",
+    "primaryCoverage": "Hourglass rock surface above the cave mouth and below sky",
+    "openingOverlap": "Only low frond tips may lightly overlap the mouth; preserve usable passage",
+    "finalWorldPlacements": null,
+    "reason": "Screen coverage, root contact, collision and camera-view validation remain integration work; world placements are not certified by this standalone mesh."
+  },
+  "prototype": {
+    "heightMeters": 7,
+    "leanMeters": 2.1,
+    "trunkRadiusMeters": 0.36,
+    "frondLengthMeters": 3.4,
+    "fronds": 15,
+    "leaflets": 720,
+    "triangles": 6590,
+    "triangleBudgetPerPalm": 9000,
+    "trunk": "Capped tangent-aligned sweep with real ring relief, tapered girth and retained crown leaf bases",
+    "foliage": "Basally full, pointed pinnate fronds with broader leaflet shoulders close to each stem; ascending intermediate crown layer and shorter upright inner growth; deterministic tier colors. Trunk unchanged from aa461a7.",
+    "kernel": "Public facade South TriangleMesh then public West primitive admission",
+    "leafRenderingRequirement": "Open leaflets require verified two-sided rendering during integration",
+    "randomness": "Stable identity hash only; no Math.random or per-frame generation"
+  },
+  "remaining": [
+    "Review actual rendered palm silhouette and trunk definition",
+    "Fit four palms to final visible terrain and specified rock coverage from approach views",
+    "Verify root contact, rock clearance, passage and renderer resource budget",
+    "Integrate lush approach grass and explicit floor-only support for the slight interior extension",
+    "Owner phone review before publication; shrubs and bushes remain deferred"
+  ],
+  "runtimeIntegrated": false,
+  "published": false
+}

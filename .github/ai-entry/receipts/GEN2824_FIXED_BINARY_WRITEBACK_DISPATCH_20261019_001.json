@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "GEN2824_FIXED_BINARY_WRITEBACK_DISPATCH_20261019_001",
+  "capabilityId": "H_EARTH_GEN2515_AUTHORIZED_TOOLSET_EXECUTE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6570,
+  "requestBranch": "ai-dispatch-request-gen2824-fixed-binary-writeback-20261019",
+  "requestCommit": "9100f1d484431e48326d03e76de659671b620dae",
+  "requestCommitParent": "18ae561bb03530d946628145da85e89293861d94",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "18ae561bb03530d946628145da85e89293861d94",
+  "workflow": "ai-room-execution-transport.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "{\"schema\":\"AI_ROOM_EXECUTION_REQUEST_v1\",\"requestId\":\"H_EARTH_GEN2824_EXACT_BINARY_WRITEBACK_20261019_001\",\"descriptorId\":\"H_EARTH_GEN2824_B2_PRECOMPUTED_GPU_PACKAGE_WRITEBACK_DESCRIPTOR_V1\",\"operationId\":\"H_EARTH_G_WORLD_BASE_PACKAGE_CORRESPONDENCE_REPAIR_20261019_001\",\"admissionReceiptIdentity\":null,\"routerReceiptIdentity\":null,\"inputs\":{\"executionHolder\":\"H_EARTH_GEN2824_B2_FIXED_BINARY_WRITEBACK_20261019_001\"},\"availableCapabilities\":{\"schema\":\"AVAILABLE_CAPABILITY_RECEIPT_v1\",\"availableBackends\":[\"GITHUB_ACTIONS_CLEAN_EXECUTION\"],\"availableWorkflowPaths\":[\".github/workflows/ai-room-execution-transport.yml\"],\"availableToolingHeads\":[\"a4d71331c414bfdf359be89bdddaf5a5b4efc2d2\"]},\"requestNonce\":\"c82e1ab708465a9d4c677bc2df280134548a73109dec32b1ac992ec70041f5b2\"}",
+    "router_callback_issue": "6562",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "39347903951",
+  "dispatchedRunId": 39347920054,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39347920054",
+  "dispatchedRunHeadSha": "18ae561bb03530d946628145da85e89293861d94",
+  "dispatchedAt": "2026-10-20T00:29:13.202Z",
+  "resolvedAt": "2026-10-20T00:29:16.999Z"
+}

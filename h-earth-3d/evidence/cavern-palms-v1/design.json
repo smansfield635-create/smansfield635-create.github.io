@@ -32,7 +32,7 @@
     "triangles": 6590,
     "triangleBudgetPerPalm": 9000,
     "trunk": "Capped tangent-aligned sweep with real ring relief, tapered girth and retained crown leaf bases",
-    "foliage": "Pointed folded pinnate leaflets rooted on actual stem segments, aligned with local stem slope and tapered toward frond tips; coherent dark-green, olive and yellow-green crown tiers",
+    "foliage": "Basally full, pointed pinnate fronds with broader leaflet shoulders close to each stem; ascending intermediate crown layer and shorter upright inner growth; deterministic tier colors. Trunk unchanged from aa461a7.",
     "kernel": "Public facade South TriangleMesh then public West primitive admission",
     "leafRenderingRequirement": "Open leaflets require verified two-sided rendering during integration",
     "randomness": "Stable identity hash only; no Math.random or per-frame generation"

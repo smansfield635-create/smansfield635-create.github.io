@@ -34,7 +34,8 @@ test('inward headings place opposite crowns across their own roots',()=>{
 test('mature fronds droop while inner fronds rise from a compact crown',()=>{
  const p=buildCavernPalm();
  assert.ok(p.fronds.filter(f=>f.tier===0).every(f=>f.tip[1]<f.origin[1]));
- assert.ok(p.fronds.filter(f=>f.tier===2).every(f=>f.tip[1]>f.origin[1]));
+ assert.ok(p.fronds.filter(f=>f.tier===1).every(f=>f.tip[1]-f.origin[1]>.8));
+ assert.ok(p.fronds.filter(f=>f.tier===2).every(f=>f.tip[1]-f.origin[1]>2.4));
  assert.ok(p.fronds.every(f=>Math.abs(f.origin[1]-p.crown[1])<=.181));
 });
 test('invalid dimensions fail before geometry construction',()=>{

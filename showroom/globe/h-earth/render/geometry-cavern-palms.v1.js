@@ -61,8 +61,8 @@ export function buildCavernPalm({id='CAVERN_PALM_PROTOTYPE',height=7,lean=2.1,he
  for(let f=0;f<15;f++){
   const tier=Math.floor(f/5),a=f*2.3999632297+(noise(id,f)-.5)*.18;
   const d=[Math.cos(a),0,Math.sin(a)],side=[-Math.sin(a),0,Math.cos(a)];
-  const length=frondLength*(tier===2?.73:1)*(.92+noise(id,100+f)*.16);
-  const rise=[.75,1.65,2.65][tier],drop=[1.95,1.65,1.25][tier];
+  const length=frondLength*(tier===2?.65:1)*(.92+noise(id,100+f)*.16);
+  const rise=[.75,2.7,3.8][tier],drop=[1.95,1.8,1.35][tier];
   const origin=add(crown,[0,(f%5)*.045,0]);
   const at=t=>add(origin,add(mul(d,length*t),[0,rise*t-drop*t*t,0]));
   const spine=Array.from({length:13},(_,i)=>at(i/12));
@@ -75,11 +75,12 @@ export function buildCavernPalm({id='CAVERN_PALM_PROTOTYPE',height=7,lean=2.1,he
    const segment=Math.min(11,Math.floor(t*12));
    const tangent=unit(sub(spine[segment+1],spine[segment]));
    const normal=unit(cross(side,tangent));
-   const taper=Math.pow(Math.sin(Math.PI*(t-.06)/.94),.85);
-   const reach=.29*length*taper;
-   const direction=unit(add(mul(side,sign),mul(tangent,1.15)));
+   // Broad basal shoulder followed by a long pointed taper, rather than an oval envelope.
+   const taper=t<.32?Math.sqrt(t/.32):Math.pow((1-t)/.68,1.2);
+   const reach=.32*length*taper;
+   const direction=unit(add(mul(side,sign),mul(tangent,.55)));
    const tip=add(root,add(mul(direction,reach),mul(normal,-.09*reach)));
-   const mid=add(root,mul(sub(tip,root),.48)),width=.045*taper;
+   const mid=add(root,mul(sub(tip,root),.22)),width=.075*taper;
    const palette=[[.19,.29,.065],[.09,.23,.055],[.28,.36,.085]][tier];
    const tint=.92+.12*noise(id,f*60+k);
    const color=palette.map(q=>q*tint);

@@ -6,11 +6,12 @@
   "canonicalAdmissionGeneration": 2823,
   "reviewedAgainstAnchor": true,
   "disposition": "REVIEW_REQUIRED",
-  "reviewStage": "OWNER_AUTHORIZED_STAGE_A2_ONE_REPAIR_PRODUCTION_REVIEW_PENDING_ACTUAL_PHONE_ACCEPTANCE",
-  "ownerDirection": "Owner instructed ONE_REPAIR after observing new live Android ground material seams, and previously directed the established qualify/publish/phone-review pattern. This creates neither physical KEEP nor waiver of engineering gates.",
+  "reviewStage": "OWNER_DIRECTED_TERRAIN_EARTH_TONE_CORRECTION_PRODUCTION_REVIEW_PENDING_PHONE_ACCEPTANCE",
+  "ownerDirection": "After viewing latest live Android result, owner observed that the post-repair landscape remains unnaturally green without corresponding foliage and explicitly requested terrain palettes be earthy. This fixes bare-ground palette RGB only. Keep actual physical KEEP/ONE_REPAIR/REJECT pending.",
   "ownerAuthorizationEvidence": [
     "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6564#issuecomment-6282814811",
-    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6576#issuecomment-6283220609"
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6576#issuecomment-6283220609",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6576#issuecomment-6293902908"
   ],
   "acceptedReviewTimingPrecedent": [
     "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6555#issuecomment-6276807192",
@@ -48,11 +49,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "4ec995543c65787046e8c6114f072b6d5310ca5b0297e01e99768f3894b34279"
+      "sha256": "98e82cf17ce76de89883c712a5612b0554b061957f830655b34444db3c2884fe"
     },
     {
       "path": "h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs",
-      "sha256": "7497acb10882b4dd1834e11b83f8a89dbd01029928748c35f77ecf563288e1fa"
+      "sha256": "cd209d8d42fd8a6e3c2d1455e1a81663b6dd387b06e432d6a1c1dfab6c117ecf"
     }
   ],
   "technicalEvidence": {
@@ -64,7 +65,7 @@
     "baselineGrassRootsPreserved": 1457471,
     "candidateHeadBeforeReceipt": "c25dcb0fdba0a057829beb8c7e0f60a07acc76fb",
     "browserPreflightOriginalCandidate": "39363820762_PREFLIGHT_PASS_NONDEPLOYING",
-    "finalHeadPreflightStatus": "REQUALIFICATION_REQUIRED_AFTER_CORRECTIVE_TEST_AND_RECEIPT_WRITE",
+    "finalHeadPreflightStatus": "PENDING_AFTER_RECEIPT_ONLY_COMMIT",
     "knownMaterialRisk": "ON_ELIGIBLE_INLAND_SOIL_NEW_PROCEDURAL_PALETTE_75_TO_96_PERCENT_Blend_POSSIBLY_REDUCES_APPROVED_IMAGE_ALBEDO_AUTHORITY",
     "gen2824Relation": "SEPARATE_PRESERVED_UNCOMMITTED_BINARY_DO_NOT_MERGE",
     "oneRepairBranch": "h-earth/gen2823-stagea2-ground-material-one-repair-20261020",
@@ -86,7 +87,17 @@
     "nativeSixCaseTest": "NOT_EXECUTED_SOURCE_ASSERTIONS_REPLAYED",
     "actualAndroidFixAcceptance": "NOT_ESTABLISHED",
     "diagonalSteppedSeamDisposition": "OBSERVED_BUT_CAUSAL_ATTRIBUTION_UNPROVEN",
-    "sixthTestRegexEscapesCorrected": "SOURCE_REVIEWED_TRUE"
+    "sixthTestRegexEscapesCorrected": "SOURCE_REVIEWED_TRUE",
+    "earthToneCandidateShaderGitBlob": "114747ce812cfbf8010cff7fb1735c773aea983f",
+    "earthToneCandidateShaderSha256": "98e82cf17ce76de89883c712a5612b0554b061957f830655b34444db3c2884fe",
+    "earthToneCandidateTestGitBlob": "fb72d275eef75eb7cf789d0b80969aaf37f110ce",
+    "earthToneCandidateTestSha256": "cd209d8d42fd8a6e3c2d1455e1a81663b6dd387b06e432d6a1c1dfab6c117ecf",
+    "earthTonePaletteAssertion": "6_OF_6_SOIL_FAMILIES_EARTH_OR_MINERAL_HUES_IN_SOURCE",
+    "shaderColorCorrection": "3_GLSL_VEC3_MATERIAL_CONSTANTS_ONLY_WITH_EXPLANATORY_COMMENT",
+    "previous48to66CompositionStrength": "UNCHANGED",
+    "newNativeSevenCaseTest": "PENDING_NATIVE_RUN",
+    "newWebGlRuntime": "PENDING",
+    "phoneVisualAcceptance": "PENDING"
   },
   "limitations": [
     "Stage A2 actual phone/tablet physical appearance has not been reviewed. No KEEP, ONE_REPAIR or REJECT is claimed.",
@@ -99,7 +110,9 @@
     "One-repair source edit reduces procedural color dominance; it does not prove removal of the observed straight/stepped material seam.",
     "No new Android screenshots of this repaired candidate exist; visual acceptance remains REVIEW_REQUIRED.",
     "New sixth focused source test is not yet claimed as native Node PASS; selected browser runtime preflight passed on prior exact head before this receipt write.",
-    "The new sixth source-bound test has corrected regular expressions, independently matched against the exact renderer's changed text. A complete native Node six-case run is not yet established."
+    "The new sixth source-bound test has corrected regular expressions, independently matched against the exact renderer's changed text. A complete native Node six-case run is not yet established.",
+    "Owner has not seen the earth-tone correction rendered on a phone; all current visual success and hard seam assertions remain unresolved.",
+    "Changing bare-ground shader triplets does not itself prove that all inherited ground shading and green habitat fields disappear. Actual foliage, grass geometry and planting are unchanged."
   ],
-  "authorityEffect": "NONE_TRUTHFUL_GEN2823_ONE_REPAIR_OWNER_DIRECTED_PRODUCTION_REVIEW_PENDING_ACTUAL_PHONE_ACCEPTANCE"
+  "authorityEffect": "NONE_TRUTHFUL_EARTH_TONE_OWNER_REVIEW_STAGE_NO_PHYSICAL_KEEP"
 }

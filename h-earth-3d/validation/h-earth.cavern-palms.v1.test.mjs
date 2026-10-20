@@ -40,6 +40,15 @@ test('mature fronds droop while inner fronds rise from a compact crown',()=>{
 test('invalid dimensions fail before geometry construction',()=>{
  for(const parameters of [{height:NaN},{height:0},{lean:100},{radius:0},{frondLength:Infinity}])assert.throws(()=>buildCavernPalm(parameters),/PALM_PARAMETERS_INVALID/);
 });
+test('frond ends taper and upper leaflets follow the rising stem',()=>{
+ const p=buildCavernPalm(),v=p.parts[2].geometry.vertices;
+ const length=i=>Math.hypot(v[i+1].x-v[i].x,v[i+1].y-v[i].y,v[i+1].z-v[i].z);
+ for(let f=0;f<15;f++){
+  const offset=f*48*4;
+  assert.ok(length(offset+46*4)<length(offset+24*4)*.15);
+  if(f>=10)assert.ok(v[offset+1].y>v[offset].y);
+ }
+});
 test('all 720 leaflet bases lie on their actual frond stem segments',()=>{
  const p=buildCavernPalm(),stems=p.parts[1].geometry.vertices,leaves=p.parts[2].geometry.vertices;
  const xyz=v=>[v.x,v.y,v.z];

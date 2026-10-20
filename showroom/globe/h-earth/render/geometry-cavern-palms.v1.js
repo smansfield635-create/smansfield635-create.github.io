@@ -71,15 +71,22 @@ export function buildCavernPalm({id='CAVERN_PALM_PROTOTYPE',height=7,lean=2.1,he
   sweep(stems,spine,spine.map((_,i)=>.038*(1-i/14)),5,[.38,.43,.13]);
   let leafletCount=0;
   for(let k=0;k<24;k++)for(const sign of [-1,1]){
-   const t=.14+k*.034+(sign===1?.008:0),root=onStem(t);
-   const reach=(.15+.68*Math.sin(Math.PI*t))*(length/3.4);
-   const direction=unit(add(mul(side,sign),mul(d,.33)));
-   const tip=add(root,add(mul(direction,reach),[0,-.20*reach,0]));
-   const mid=add(root,mul(sub(tip,root),.48)),width=.045*(.65+Math.sin(Math.PI*t));
-   const color=[.10+.035*noise(id,f*60+k),.25+.10*noise(id,f*70+k),.065];
+   const t=.10+k*.038+(sign===1?.004:0),root=onStem(t);
+   const segment=Math.min(11,Math.floor(t*12));
+   const tangent=unit(sub(spine[segment+1],spine[segment]));
+   const normal=unit(cross(side,tangent));
+   const taper=Math.pow(Math.sin(Math.PI*(t-.06)/.94),.85);
+   const reach=.29*length*taper;
+   const direction=unit(add(mul(side,sign),mul(tangent,1.15)));
+   const tip=add(root,add(mul(direction,reach),mul(normal,-.09*reach)));
+   const mid=add(root,mul(sub(tip,root),.48)),width=.045*taper;
+   const palette=[[.19,.29,.065],[.09,.23,.055],[.28,.36,.085]][tier];
+   const tint=.92+.12*noise(id,f*60+k);
+   const color=palette.map(q=>q*tint);
+   const bladeSide=unit(cross(normal,direction));
    const base=vertex(leaves,root,color),end=vertex(leaves,tip,color);
-   const left=vertex(leaves,add(mid,add(mul(d,width),[0,.035,0])),color);
-   const right=vertex(leaves,add(mid,add(mul(d,-width),[0,.035,0])),color);
+   const left=vertex(leaves,add(mid,add(mul(bladeSide,width),mul(normal,.025*taper))),color);
+   const right=vertex(leaves,add(mid,add(mul(bladeSide,-width),mul(normal,.025*taper))),color);
    face(leaves,base,end,left);face(leaves,base,right,end);leafletCount++;
   }
   fronds.push({index:f,tier,origin,tip:at(1),leafletCount});

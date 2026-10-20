@@ -14960,6 +14960,50 @@
       "scopeHash": "bf7503f65660de95e6d18a151ff8bd7008f82e46fdcd7a534adb7e31e99c9637",
       "state": "ADMITTED_LOCKED"
     },
+    "bf98f303867b286bdeab06112ac9ea6dfd5326f61a6355e705b21bb4b287c9a0": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "698c3bb80f11454ddda417c40e84073b6331cb9e",
+          "lockGeneration": 2837,
+          "lockScope": "AUDRALIA:GRATITUDE:REGIONAL_CONTINUITY_PHYSICAL_ECOLOGY_V1:20261020",
+          "operationId": "AUDRALIA_REGIONAL_CONTINUITY_PHYSICAL_ECOLOGY_V1_20261020_001",
+          "procedureLocatorDigest": "ea61867adc85162ae5772b3a48a71b16541decef7cc992f093cedc308bac7db4",
+          "requestDigest": "3c2194cd275f2b41a55b65368b272992f7d9981a882554d51d18d719ff08b3aa",
+          "scopeHash": "bf98f303867b286bdeab06112ac9ea6dfd5326f61a6355e705b21bb4b287c9a0"
+        },
+        "bindingDigest": "975989287e4636f8a29634bf98f0cb89fdac042a758af9c15fe3bad68cea372c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "282021492014038a5c6f912850a32aa0e1382aa0b5923a5e41cfce0044f41097",
+          "commentId": 6300208465,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6586,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39488213066,
+          "workflowSha": "698c3bb80f11454ddda417c40e84073b6331cb9e"
+        },
+        "lineageAnchorCommitSha": "1c1aae005e565e610a06aa700b863a52774a6c28",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "698c3bb80f11454ddda417c40e84073b6331cb9e",
+      "lockGeneration": 2837,
+      "lockScope": "AUDRALIA:GRATITUDE:REGIONAL_CONTINUITY_PHYSICAL_ECOLOGY_V1:20261020",
+      "operationId": "AUDRALIA_REGIONAL_CONTINUITY_PHYSICAL_ECOLOGY_V1_20261020_001",
+      "procedureLocatorDigest": "ea61867adc85162ae5772b3a48a71b16541decef7cc992f093cedc308bac7db4",
+      "released": false,
+      "requestDigest": "3c2194cd275f2b41a55b65368b272992f7d9981a882554d51d18d719ff08b3aa",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "bf98f303867b286bdeab06112ac9ea6dfd5326f61a6355e705b21bb4b287c9a0",
+      "state": "ADMITTED_LOCKED"
+    },
     "c0139a5afac150e460d5593c25dc23c832451b4da278d51a90f5a3a969170870": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -20374,7 +20418,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2836,
+  "lockGeneration": 2837,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -29,7 +29,7 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
-      "sha256": "6ffba1f2934afcdf0e4772f355b1815ab9844718ee8c1100f7b48bcd164e70a5"
+      "sha256": "0dd42fe4dc7deb09fc45bd66f32f58371a3544dfd1d71acf5799afeb47298cf2"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
@@ -37,14 +37,14 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
-      "sha256": "f72c9d66eb9a450f8bded4693c3cce5834a6826b16e6e42b5fb43cf06c39eae2"
+      "sha256": "980320f1415dc0f3dbd4947392ccdfe399fae00cc9451a3d5db813c3fca5ad0e"
     },
     {
       "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
       "sha256": "71afdfe1a561c1fc2a739342e6eaba7c10a1a5499c6d8d56408c3058d8fd8d76"
     }
   ],
-  "acceptanceBasis": "Same world, terrain and controls preserved; floating traversal restored. Source continuity only; full independent review, browser and phone appearance pending.",
+  "acceptanceBasis": "Same world, exact accepted land geometry and controls preserved. Independent full-course geometry and floating crossing source qualification pass; browser and physical visual acceptance pending.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
   "canonicalAdmissionGeneration": 2843

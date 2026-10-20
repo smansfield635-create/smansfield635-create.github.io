@@ -107,3 +107,15 @@ test('river lateral shores meet land or connected water',()=>{
  let shores=0;for(const e of edges.values())if(e.count===1){const a=unprojectPlanetVertex(...mesh.positions.slice(e.a*3,e.a*3+3)),b=unprojectPlanetVertex(...mesh.positions.slice(e.b*3,e.b*3+3));const x=(a.x+b.x)/2,z=(a.z+b.z)/2,y=(a.y+b.y)/2,g=model.sampleOutdoorAt(x,z);if(!g||y-g.y<.025){shores++;continue;}const dx=b.x-a.x,dz=b.z-a.z,l=Math.hypot(dx,dz);if(l<.001)continue;const left=model.sampleWaterAt(x-dz/l*.01,z+dx/l*.01),right=model.sampleWaterAt(x+dz/l*.01,z-dx/l*.01);assert(left&&right&&Math.abs(left.y-right.y)<.02,`Raised river edge ${x},${z}, depth ${y-g.y}`);}
  assert(shores>10);
 });
+
+test('whole river contains one elevation at every sampled bend and station',()=>{
+ setup();let count=0;for(const p of model.formation.vegetationCorridorPoints.slice(18))for(let dz=-12;dz<=12;dz+=1.5)for(let dx=-12;dx<=12;dx+=1.5){const q=wetAt(p.x+dx,p.z+dz);if(q.length>1)assert(Math.max(...q.map(w=>w.y))-Math.min(...q.map(w=>w.y))<.005,`Stacked river at ${p.x+dx},${p.z+dz}`);if(q.length)count++;}assert(count>1000);
+});
+
+test('normal strafe input crosses the oasis and returns without a water barrier',()=>{
+ setup();let r=navigation.createHEarthFunctionalLandscapeNavigationState({waypointId:'GEOLOGICAL_CAVERN_REAR_APPROACH'});assert(r.ok);
+ for(let i=0;i<45&&Math.abs(r.state.yawDegrees)>1e-6;i++)r=navigation.proposeHEarthFunctionalLandscapeNavigation(r.state,{action:'TURN_LEFT',degrees:Math.min(8,r.state.yawDegrees)});
+ r=navigation.proposeHEarthFunctionalLandscapeNavigation(r.state,{action:'SET_CAMERA_POSITION',position:{x:10,z:-284}});assert(r.ok);
+ for(const action of ['STRAFE_RIGHT','STRAFE_LEFT'])for(let i=0;i<110;i++){r=navigation.proposeHEarthFunctionalLandscapeNavigation(r.state,{action,magnitude:.5});assert(r.ok,JSON.stringify(r.issues));const w=model.sampleWaterAt(r.state.position.x,r.state.position.z);if(w)assert(r.state.position.y>=w.y+2.249);}
+ assert(Math.abs(r.state.position.x-10)<.001);
+});

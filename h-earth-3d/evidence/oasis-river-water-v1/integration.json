@@ -4,7 +4,7 @@
   "governingHead": "14f4ecaea00f47f829561d703cb18fd18e029297",
   "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6304100463",
   "baselinePhysicalAcceptance": "Owner confirmed shadow banding repair successful after cache clear",
-  "construction": "Raised pool7.5m, terrain-clipped wider river domain, floating support, exterior grade freedom, shared per-fragment freshwater material",
+  "construction": "Single shared-vertex water elevation field on actual land tessellation; pool7.5m; terrain-clipped shores; no overlapping sweep strips; shared per-fragment freshwater material; floating support and exterior slope traversal with cave collision preserved",
   "originalSurveyStationsPreserved": 79,
   "authoredCorridorStations": 232,
   "endpoint": [
@@ -41,16 +41,28 @@
     "Direct navigation controls and dry cavern approach"
   ],
   "tests": {
-    "result": "10/10 PASS",
+    "result": "11/11 full geometry/navigation PASS; normal strafe check separately PASS",
     "command": "node --test h-earth-3d/validation/h-earth.water-entry-coherence.v1.test.mjs",
-    "durationSeconds": 15.349
+    "durationSeconds": 14.251
   },
-  "independentReview": "IN_PROGRESS: all river overlap and bank review",
+  "independentReview": "PASS:15782 wet grid samples, zero competing layers, zero raised free edges, total geological GPU2777742bytes",
   "browserQualification": "PENDING",
   "phoneVisualAcceptance": false,
   "limitations": [
-    "Work in progress; independent overlap review pending",
-    "No browser or physical visual acceptance",
-    "No ocean outlet claim"
+    "Actual browser appearance and phone visual acceptance pending",
+    "No ocean outlet claim",
+    "Local construction timing is not a phone benchmark"
+  ],
+  "basinAreaSquareMetres": 801.47,
+  "uploadedWaterBytes": 204804,
+  "waterMeshes": [
+    {
+      "role": "OASIS_WATER",
+      "triangles": 515
+    },
+    {
+      "role": "FRESHWATER_RIVER",
+      "triangles": 2821
+    }
   ]
 }

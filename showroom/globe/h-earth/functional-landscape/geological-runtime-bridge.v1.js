@@ -63,7 +63,7 @@ export function traceGeologicalRuntimeDrainage(sampler,site=SITE){
  * basin level; the hidden legacy ribbon's decorative off-bed meander is retired. */
 function buildConnectedRiverWater(points,terrainMesh,formation){
   const land=waterTriangles(terrainMesh),ground=(x,z)=>sampleWaterTriangles(land,x,z)?.y;
-  const route=points.slice(18),rows=[];
+  const route=points.slice(18);
   // Include every actual triangle crossing, so between-station ridges cannot
   // interrupt the visible stream. Explicit centre vertices preserve its grade.
   const stations=[];
@@ -92,10 +92,6 @@ function buildConnectedRiverWater(points,terrainMesh,formation){
     if(inBasin(stations[i])&&downstreamDistance===0)levels[i]=waterLevel;
     else {downstreamDistance+=i?Math.hypot(stations[i].x-stations[i-1].x,stations[i].z-stations[i-1].z):0;levels[i]=Math.max(levels[i],waterLevel-.045*Math.max(0,downstreamDistance-4));}
   }
-  for(let i=0;i<stations.length;i++){
-    const p=stations[i],a=stations[Math.max(0,i-1)],b=stations[Math.min(stations.length-1,i+1)],dx=b.x-a.x,dz=b.z-a.z,l=Math.hypot(dx,dz)||1;
-    rows.push([p.x-dz/l*16,levels[i],p.z+dx/l*16,p.x+dz/l*16,levels[i],p.z-dx/l*16]);
-  }
   const positions=[],indices=[];
   const clip=(poly,distance)=>{
     const out=[];for(let i=0;i<poly.length;i++){const a=poly[i],b=poly[(i+1)%poly.length],da=distance(a),db=distance(b);if(da>=0)out.push(a);if((da>=0)!==(db>=0)){const t=da/(da-db);out.push({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t,z:a.z+(b.z-a.z)*t});}}return out;
@@ -112,24 +108,32 @@ function buildConnectedRiverWater(points,terrainMesh,formation){
   }
   const basinMesh={positions:new Float32Array(basinPositions),indices:new Uint32Array(basinIndices),vertexCount:basinPositions.length/3,triangleCount:basinIndices.length/3,waterLevel};
   const basinFootprint=waterTriangles(basinMesh);
-  for(let i=1;i<rows.length;i++)for(let side=0;side<2;side++){
-    const split=r=>[r.slice(0,3),[ (r[0]+r[3])/2,r[1],(r[2]+r[5])/2 ],r.slice(3)];
-    const arow=split(rows[i-1]),brow=split(rows[i]);
-    const quad=[arow[side],brow[side],brow[side+1],arow[side+1]].map(([x,y,z])=>({x,y,z}));
-    for(const ids of [[0,1,3],[3,1,2]]){
-      const tri=ids.map(k=>quad[k]),box=polygonBounds(tri);
-      for(const t of land){
-        if(box[2]<t.box[0]||box[0]>t.box[2]||box[3]<t.box[1]||box[1]>t.box[3])continue;
-        let poly=tri;const [a,b,c]=t.points,orientation=Math.sign((b.x-a.x)*(c.z-a.z)-(b.z-a.z)*(c.x-a.x));
-        for(let e=0;e<3&&poly.length;e++){const a=t.points[e],b=t.points[(e+1)%3];poly=clip(poly,p=>orientation*((b.x-a.x)*(p.z-a.z)-(b.z-a.z)*(p.x-a.x)));}
-        poly=clip(poly,p=>{const u=((b.z-c.z)*(p.x-c.x)+(c.x-b.x)*(p.z-c.z))/t.det,v=((c.z-a.z)*(p.x-c.x)+(a.x-c.x)*(p.z-c.z))/t.det;return p.y-(u*a.y+v*b.y+(1-u-v)*c.y);});
-        if(poly.length<3)continue;
-        let pieces=[poly];
-        for(const basinTri of basinFootprint){const box=polygonBounds(poly);if(box[2]<basinTri.box[0]||box[0]>basinTri.box[2]||box[3]<basinTri.box[1]||box[1]>basinTri.box[3])continue;pieces=pieces.flatMap(p=>subtractWaterTriangle(p,basinTri.points));if(!pieces.length)break;}
-        for(const piece of pieces){const base=positions.length/3;for(const p of piece)positions.push(p.x,p.y,p.z);for(let k=1;k<piece.length-1;k++)indices.push(base,base+k,base+k+1);}
-
-      }
+  // A single height field on the land tessellation avoids stacked sweep
+  // strips at river bends. Shared land vertices receive identical water heights.
+  const field=p=>{
+    let best=Infinity,y=levels[0];
+    for(let i=1;i<stations.length;i++){
+      const a=stations[i-1],b=stations[i],dx=b.x-a.x,dz=b.z-a.z,l2=dx*dx+dz*dz;
+      if(l2<1e-12)continue;
+      const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.z-a.z)*dz)/l2)),d=Math.hypot(p.x-a.x-dx*t,p.z-a.z-dz*t);
+      if(d<best){best=d;y=levels[i-1]+t*(levels[i]-levels[i-1]);}
     }
+    if(inBasin(p))y=waterLevel;
+    return {y,d:best};
+  };
+  for(const t of land){
+    const [a,b,c]=t.points;
+    let poly=t.points.map(p=>({...p,y:field(p).y}));
+    if(t.points.every(p=>field(p).d>24))continue;
+    poly=clip(poly,p=>16-field(p).d);
+    // Keep the authored end plane, including its grounded taper.
+    const end=stations.at(-1),prev=stations.at(-2);
+    poly=clip(poly,p=>(end.x-p.x)*(end.x-prev.x)+(end.z-p.z)*(end.z-prev.z));
+    poly=clip(poly,p=>{const u=((b.z-c.z)*(p.x-c.x)+(c.x-b.x)*(p.z-c.z))/t.det,v=((c.z-a.z)*(p.x-c.x)+(a.x-c.x)*(p.z-c.z))/t.det;return p.y-(u*a.y+v*b.y+(1-u-v)*c.y);});
+    if(poly.length<3)continue;
+    let pieces=[poly];
+    for(const bt of basinFootprint){const box=polygonBounds(poly);if(box[2]<bt.box[0]||box[0]>bt.box[2]||box[3]<bt.box[1]||box[1]>bt.box[3])continue;pieces=pieces.flatMap(p=>subtractWaterTriangle(p,bt.points));if(!pieces.length)break;}
+    for(const piece of pieces){const base=positions.length/3;for(const p of piece)positions.push(p.x,p.y,p.z);for(let k=1;k<piece.length-1;k++)indices.push(base,base+k,base+k+1);}
   }
   const compact=(positions,indices)=>{
     const p=[],ids=[],map=new Map(),remap=[];

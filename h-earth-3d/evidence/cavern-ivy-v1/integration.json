@@ -1,0 +1,38 @@
+{
+  "schema": "H_EARTH_CAVERN_ENTRANCE_IVY_v1",
+  "siteId": "B_REAR_RAVINE",
+  "trailCount": 32,
+  "leafCount": 416,
+  "mossTriangleCount": 926,
+  "triangleCount": 8328,
+  "gpuByteLength": 997350,
+  "drawBatchCount": 3,
+  "surfaceSource": "ACTUAL_RETAINED_CLIFF_TRIANGLES",
+  "perFrameGeneration": false,
+  "sourceTerrainMutated": false,
+  "kernelAdmission": "PASS",
+  "physicalReview": "PENDING",
+  "canonicalAdmissionGeneration": 2838,
+  "governingHead": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467",
+  "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6302416036",
+  "focusedTests": "7/7 PASS",
+  "browserQualification": "PENDING",
+  "ownerPerceptualAcceptance": false,
+  "independentReview": "PASS: independent source and mathematical review;7/7tests; shader compilation GPU and visual qualification pending",
+  "unchanged": [
+    "Palm geometry colors and placements",
+    "Grass placement and heights",
+    "Terrain topology water and navigation"
+  ],
+  "design": {
+    "ivy": "Five lobes with concave sinuses; folded midrib and deterministic orientation variation;32 connected trails416leaves",
+    "moss": "Smaller surface-supported patches with exposed-rock gaps",
+    "shadows": "Reuse meadow depth program, filtered depth comparison and0.22shadow floor; cavern-local512x512D24 map; sunward lighting on palms ivy moss; opaque rock foliage casters; rock terrain vegetation receivers",
+    "lifecycle": "Static once after assets ready; existing VAOs reused;1MiB map; all configured programs disabled on disposal; valid meadow-depth fallback sampler",
+    "limits": "Grass blades not included as shadow receivers; no browser visual or physical acceptance yet"
+  },
+  "visualReview": {
+    "status": "PENDING_ACTUAL_BROWSER_LIGHTING",
+    "priorStudy": "f530f425 offline geometry only; does not establish shadows"
+  }
+}

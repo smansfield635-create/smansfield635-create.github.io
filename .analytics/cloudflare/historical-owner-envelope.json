@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-20T14:32:47Z",
+  "generatedAt": "2026-10-20T15:31:27Z",
   "window": {
-    "start": "2026-07-22T14:32:47Z",
-    "end": "2026-10-20T14:32:47Z"
+    "start": "2026-07-22T15:31:27Z",
+    "end": "2026-10-20T15:31:27Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4848,
-    "visits": 1337,
+    "pageLoads": 4838,
+    "visits": 1347,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4848,
-        "visits": 1337
+        "pageLoads": 4838,
+        "visits": 1347
       }
     },
     "byPath": {
@@ -59,7 +59,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1037,
+        "pageLoads": 1007,
         "visits": 747
       },
       "/showroom/globe/h-earth/diagnostic/": {
@@ -111,7 +111,7 @@
         "visits": 10
       },
       "/governance/": {
-        "pageLoads": 60,
+        "pageLoads": 90,
         "visits": 10
       },
       "/evidence/readiness/": {
@@ -123,7 +123,7 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 90,
+        "pageLoads": 70,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -134,8 +134,16 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/elara/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/research/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/coherence-diagnostic/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
@@ -223,8 +231,8 @@
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+        "pageLoads": 70,
+        "visits": 40
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -234,16 +242,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 42,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 42,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -258,10 +266,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
@@ -271,6 +275,10 @@
         "visits": 0
       },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/prelude/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -337,7 +345,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3511,
+        "pageLoads": 3491,
         "visits": 0
       },
       "www.google.com": {
@@ -345,8 +353,8 @@
         "visits": 783
       },
       "(none)": {
-        "pageLoads": 544,
-        "visits": 544
+        "pageLoads": 554,
+        "visits": 554
       },
       "raw.githack.com": {
         "pageLoads": 10,

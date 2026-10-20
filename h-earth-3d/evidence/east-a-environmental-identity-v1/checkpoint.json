@@ -400,7 +400,7 @@
     "inheritedPublishedMain": "8dc7f5ee09950f0a9d971af303276a4a995d6933",
     "inheritedShaderBlob": "6703a05af4461c67ddfd64bfd91ab6422629af12",
     "adjustedShaderBlob": "fbf0e92250fbf23e16d906dabf29d6f9cbc537b7",
-    "newNativeFocusedTestBlob": "4b9504a3a50447bdefed0b6da386e83283db8bcf",
+    "newNativeFocusedTestBlob": "0dc3e711713be79baea01866c12c0b2e8dee9e1d",
     "changedShaderBoundary": "Only Gen2823 Stage A2 insertion weight formula; do not modify existing soil image, habitat panels, root records, terrain geometry, loading or navigation",
     "originalNewPaletteWeightRange": [
       0.75,
@@ -414,11 +414,19 @@
     "causalStatus": "SOURCE_PROVEN_PHOTO_ALBEDO_SUPPRESSION_REPAIRED_BY_LOWER_WEIGHT; STRAIGHT_SEAM_CAUSE_NOT_YET_PROVEN_OR_CORRECTED",
     "acceptance": {
       "sourceReadback": "PENDING_INDEPENDENT",
-      "nativeNode": "NOT_EXECUTED",
+      "nativeNode": "NEW_SIXTH_SOURCE_TEST_REGEX_REPLAY_PASS_ONLY_NATIVE_NOT_EXECUTED",
       "shaderProgramLink": "PENDING",
-      "registeredBrowserPreflight": "PENDING",
+      "registeredBrowserPreflight": "PRIOR_EXACT_HEAD_2b77d796_PASSED_REQUIRES_NEW_EXACT_HEAD_PREFLIGHT",
       "ownerNewAndroidComparison": "PENDING",
       "publication": "NOT_AUTHORIZED_BY_THIS_EVIDENCE"
+    },
+    "testCorrection": {
+      "cause": "ESCAPED_REGEX_LITERAL_TWICE_IN_NEW_SIXTH_SOURCE_TEST",
+      "correction": "ONE_EXTRA_BACKSLASH_REMOVED_FROM_22_REGEX_ESCAPE_SEQUENCES",
+      "testGitBlob": "0dc3e711713be79baea01866c12c0b2e8dee9e1d",
+      "testSha256": "7497acb10882b4dd1834e11b83f8a89dbd01029928748c35f77ecf563288e1fa",
+      "nativeTest": "NOT_EXECUTED",
+      "originalColorBlend": "UNCHANGED"
     }
   }
 }

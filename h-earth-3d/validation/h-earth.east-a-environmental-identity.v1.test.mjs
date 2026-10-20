@@ -106,10 +106,10 @@ test('Regional soil color preserves at least 34 percent of preceding approved ph
   const end = source.indexOf('// H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END', begin);
   assert.ok(begin > 0 && end > begin, 'MATERIAL_SCOPE_MISSING');
   const stage = source.slice(begin, end);
-  assert.match(stage, /0\\.48\\+0\\.10\\*abs\\(fertilePatch-0\\.5\\)\\*2\\.0\\+/);
-  assert.match(stage, /0\\.08\\*mineralExposure,0\\.0,0\\.66/);
-  assert.match(stage, /identityWeight=inlandIdentity\\*/);
-  assert.match(stage, /\\(1\\.0-protectedGrove\\)\\*identityContrast/);
+  assert.match(stage, /0\.48\+0\.10\*abs\(fertilePatch-0\.5\)\*2\.0\+/);
+  assert.match(stage, /0\.08\*mineralExposure,0\.0,0\.66/);
+  assert.match(stage, /identityWeight=inlandIdentity\*/);
+  assert.match(stage, /\(1\.0-protectedGrove\)\*identityContrast/);
   const weights = [];
   for (const fertilePatch of [0, 0.5, 1]) for (const mineralExposure of [0, 0.5, 1]) {
     const contrast = Math.min(0.66, Math.max(0, 0.48 + 0.10 * Math.abs(fertilePatch - 0.5) * 2 + 0.08 * mineralExposure));
@@ -118,6 +118,6 @@ test('Regional soil color preserves at least 34 percent of preceding approved ph
   }
   assert.ok(Math.max(...weights) - Math.min(...weights) > 0.15, 'REGIONAL_DIFFERENTIATION_COLLAPSED');
   assert.ok(source.indexOf('vec3 worldSoilActualAlbedo=') < begin, 'APPROVED_SOIL_TEXTURE_NOT_PRIOR');
-  assert.match(stage, /if\\(!geologicalEarthRock\\)/);
-  assert.match(stage, /inlandIdentity=smoothstep\\(/);
+  assert.match(stage, /if\(!geologicalEarthRock\)/);
+  assert.match(stage, /inlandIdentity=smoothstep\(/);
 });

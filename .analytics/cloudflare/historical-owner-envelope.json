@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-20T05:33:23Z",
+  "generatedAt": "2026-10-20T06:46:58Z",
   "window": {
-    "start": "2026-07-22T05:33:23Z",
-    "end": "2026-10-20T05:33:23Z"
+    "start": "2026-07-22T06:46:58Z",
+    "end": "2026-10-20T06:46:58Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 5148,
-    "visits": 1427,
+    "pageLoads": 4848,
+    "visits": 1337,
     "byDevice": {
       "tablet": {
-        "pageLoads": 5148,
-        "visits": 1427
+        "pageLoads": 4848,
+        "visits": 1337
       }
     },
     "byPath": {
@@ -30,15 +30,7 @@
         "pageLoads": 80,
         "visits": 10
       },
-      "/laws/categories/reality/battery-heldout-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/scientific-law/battery-heldout-study/": {
         "pageLoads": 20,
         "visits": 0
       },
@@ -47,10 +39,6 @@
         "visits": 0
       },
       "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -83,8 +71,12 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 310,
+        "pageLoads": 230,
         "visits": 20
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
       },
       "/gauges/h-earth/": {
         "pageLoads": 10,
@@ -94,12 +86,12 @@
         "pageLoads": 270,
         "visits": 70
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 490,
-        "visits": 0
-      },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -108,10 +100,6 @@
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -218,13 +206,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -290,13 +278,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 100,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 130,
-        "visits": 120
+        "pageLoads": 40,
+        "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -349,7 +337,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3721,
+        "pageLoads": 3511,
         "visits": 0
       },
       "www.google.com": {
@@ -357,8 +345,8 @@
         "visits": 783
       },
       "(none)": {
-        "pageLoads": 634,
-        "visits": 634
+        "pageLoads": 544,
+        "visits": 544
       },
       "raw.githack.com": {
         "pageLoads": 10,

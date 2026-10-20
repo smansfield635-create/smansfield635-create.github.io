@@ -1,0 +1,499 @@
+{
+  "schema": "H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_CHECKPOINT_v1",
+  "operationId": "H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_CONSTRUCTION_20261019_001",
+  "canonicalAdmission": {
+    "result": "ADMITTED_AND_LOCKED",
+    "generation": 2823,
+    "lockScope": "H_EARTH:EAST_A_ENVIRONMENTAL_IDENTITY:20261019:V1",
+    "receipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6562#issuecomment-6278037272",
+    "workflowRun": 39329531792
+  },
+  "governingBaseline": {
+    "main": "c8c5f68b23ca6f71ae07240dfd29ec1b672109c6",
+    "published": true,
+    "b2SourceBlob": "71a95053892140d792573587a6b82798663e3df1",
+    "rendererOldBlob": "0de80a76b08d388e6cd65615488d67c43f6cf82f",
+    "successorMaterialBlob": "a510fa1da1a5d1852153c9d22d2df4f2a4d4efde",
+    "grassRootCount": 1457471,
+    "acceptedFourTrees": true
+  },
+  "candidate": {
+    "branch": "h-earth-east-a-environmental-identity-gen2823",
+    "shaderCommit": "133961c0655cea4c7cd514550326005b2b392a83",
+    "shaderBlob": "6703a05af4461c67ddfd64bfd91ab6422629af12",
+    "focusedTestCommit": "2b5799674acb3847248c5231aba0a20717054fee",
+    "mutationStage": "A_MATERIAL_RENDERER_ONLY",
+    "newTerrainGeometry": false,
+    "newVegetationRoots": false,
+    "newTreeInstances": false,
+    "coastOrHydrologyChange": false,
+    "ownedRendererMutation": true,
+    "latestStageRevision": "A2_MATERIAL_CONTRAST",
+    "previousShaderCommit": "eb80c13bc6085ca379fbcd9777b70755778a9159",
+    "previousShaderBlob": "19d63cb2ff2dc6884eb21c195687355dc4efddb8",
+    "focusedTestBlob": "391053e4b62e384fb81fd97745cd0880786a7b0e"
+  },
+  "materialBehavior": {
+    "source": "actual Run8E terrain shader",
+    "shoreDistanceMask": "smoothstep(28,66)",
+    "sixSoilIdentities": [
+      "COMPACT_EARTH",
+      "COASTAL_SILT",
+      "FERTILE_EARTH",
+      "SHELTERED_EARTH",
+      "DRY_FOOTHILL",
+      "ERODED_MINERAL"
+    ],
+    "texture": "OWNER_APPROVED_GEN2646_SOIL_TEXTURE_PRESERVED",
+    "protectedFourTreeCore": "soft radial attenuation around (-139.40268,-210.74617), 22-42m",
+    "waterRoleUnaffected": true,
+    "rockGeologyPresentationProtected": true,
+    "meansOfDifferentiation": [
+      "canonical world elevation",
+      "slope and rock exposure",
+      "shore distance",
+      "smooth noise patch gradients",
+      "existing real soil texture"
+    ]
+  },
+  "currentProof": {
+    "sourceReadback": "EXACT_BLOBS_CONFIRMED",
+    "glslCompilation": "PASS_FULL_RUN8E_VERTEX_FRAGMENT_GL_ES_3_2_MESA_LINK_BASELINE_AND_STAGE_A2",
+    "nodeStageATest": "PASS_NATIVE_NODE22_5_OF_5_WITH_PRECOMPUTED_B2_DISCREPANCY_WITNESS",
+    "independentWest": "NOT_EXECUTED",
+    "browserGpu": "LOCAL_BROWSER_NAVIGATION_BLOCKED_BY_ADMINISTRATOR_NOT_QUALIFIED",
+    "phoneMatchedViewport": "NOT_EXECUTED",
+    "ownerDisposition": null,
+    "provisionalReadability": "CONTROLLED_FULL_SHADER_RGBA_DIFFERENCES_MEASURED_REAL_SCENE_ACCEPTANCE_NOT_PROVEN",
+    "isolatedOpenGLES3": {
+      "status": "PASS_ISOLATED_STAGE_ONLY",
+      "renderer": "Mesa llvmpipe OpenGL ES 3.2",
+      "vertexCompile": true,
+      "fragmentCompile": true,
+      "link": true,
+      "errorCount": 0,
+      "matchedSourceFragmentFnv1a32": "9f203b2a",
+      "sampleInputs": 7,
+      "results": [
+        {
+          "name": "shore",
+          "rgb": [
+            69,
+            76,
+            46
+          ]
+        },
+        {
+          "name": "coastal",
+          "rgb": [
+            46,
+            66,
+            33
+          ]
+        },
+        {
+          "name": "lowland",
+          "rgb": [
+            81,
+            66,
+            39
+          ]
+        },
+        {
+          "name": "sheltered",
+          "rgb": [
+            55,
+            54,
+            31
+          ]
+        },
+        {
+          "name": "foothill",
+          "rgb": [
+            85,
+            76,
+            44
+          ]
+        },
+        {
+          "name": "ridge",
+          "rgb": [
+            88,
+            88,
+            77
+          ]
+        },
+        {
+          "name": "protected-grove",
+          "rgb": [
+            69,
+            76,
+            46
+          ]
+        }
+      ],
+      "limitations": [
+        "Not actual full H-Earth WebGL2 program link",
+        "Not camera-based world textures or images",
+        "Input terrain values were representative synthetic values, not sampled live camera positions",
+        "Not phone perceptual acceptance"
+      ]
+    },
+    "fullProgramES3": {
+      "status": "PASS_FULL_ASSEMBLED_TERRAIN_PROGRAM_MESA_OPENGL_ES3",
+      "sourceProvenance": "Published B2 GitHub Pages run39322593263 artifact12220466927 extracted; exact B2 terrain renderer blob 0de80a76, canonical terrain 71a95053 and successor surface a510fa1d validated by Git hashing. A2 renderer reconstructed solely from saved bounded diff and verified exact Git blob 6703a05a. Exact test file verified blob 9ad43cb7.",
+      "runner": "Node.js v22.16.0 native node --test plus Mesa 25.0.7 llvmpipe OpenGL ES 3.2 surfaceless EGL",
+      "exactTest": "h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs",
+      "nodeTests": {
+        "passed": 4,
+        "total": 4,
+        "failed": 0,
+        "method": "NATIVE_NODE22_EXACT_SOURCE_BYTES_FROM_VERIFIED_PAGES_ARTIFACT_PLUS_REGISTERED_CANDIDATE_DIFF"
+      },
+      "shaderPrograms": {
+        "baselineB2": {
+          "vertexCompiled": true,
+          "fragmentCompiled": true,
+          "linked": true,
+          "glError": "0x0",
+          "fragmentSha256": "7ec330dbec0362e620cafecfa5be24fe9e772e24f2869227a348c776583bc0af"
+        },
+        "stageA2": {
+          "vertexCompiled": true,
+          "fragmentCompiled": true,
+          "linked": true,
+          "glError": "0x0",
+          "fragmentSha256": "cec5265338c0cd40d3c03a7346d1aa0137bdc2163af1b66671a49f87f4bcd273"
+        },
+        "interpolation": "Full Run8E VS/FS source with unchanged published rendered-beach and foothill GLSL dependencies inserted into the authentic FS template."
+      },
+      "controlledFullShaderSamples": [
+        {
+          "label": "beach_transition",
+          "b2": [
+            109,
+            111,
+            89,
+            255
+          ],
+          "a2": [
+            111,
+            111,
+            90,
+            255
+          ],
+          "rgbEuclideanDelta": 2.236
+        },
+        {
+          "label": "compact_lowland",
+          "b2": [
+            125,
+            109,
+            70,
+            255
+          ],
+          "a2": [
+            118,
+            105,
+            62,
+            255
+          ],
+          "rgbEuclideanDelta": 11.358
+        },
+        {
+          "label": "fertile_meadow",
+          "b2": [
+            112,
+            113,
+            91,
+            255
+          ],
+          "a2": [
+            114,
+            101,
+            79,
+            255
+          ],
+          "rgbEuclideanDelta": 17.088
+        },
+        {
+          "label": "sheltered_basin",
+          "b2": [
+            112,
+            113,
+            91,
+            255
+          ],
+          "a2": [
+            100,
+            98,
+            76,
+            255
+          ],
+          "rgbEuclideanDelta": 24.372
+        },
+        {
+          "label": "dry_foothill",
+          "b2": [
+            119,
+            115,
+            94,
+            255
+          ],
+          "a2": [
+            126,
+            114,
+            86,
+            255
+          ],
+          "rgbEuclideanDelta": 10.677
+        },
+        {
+          "label": "eroded_ridge",
+          "b2": [
+            120,
+            116,
+            95,
+            255
+          ],
+          "a2": [
+            134,
+            117,
+            88,
+            255
+          ],
+          "rgbEuclideanDelta": 15.684
+        },
+        {
+          "label": "four_tree_grove",
+          "b2": [
+            112,
+            113,
+            92,
+            255
+          ],
+          "a2": [
+            112,
+            113,
+            92,
+            255
+          ],
+          "rgbEuclideanDelta": 0
+        }
+      ],
+      "caveats": [
+        "Not whole site or real indexed world mesh; controlled synthetic triangles and lighting/material input values",
+        "No real approved soil texture or physical camera pose was sampled in pixel runs",
+        "Chromium navigation to file:// and localhost was blocked by administrator; do not equate to shader failure",
+        "No real phone GPU, loading, walkability or visually significant environmental outcome shown",
+        "No owner KEEP | ONE_REPAIR | REJECT; Stage B canonical relief not constructed"
+      ],
+      "authorityEffect": "NONE_EVIDENCE_ONLY"
+    },
+    "actualIndexedMeshES3": {
+      "status": "PASS_CONTROLLED_REAL_INDEXED_TERRAIN_MESH_B2_VS_A2_NOT_PHONE_ACCEPTANCE",
+      "sourceAsset": "Published Gen2666 compressed world from official B2 Pages artifact, 20,736 original near-to-mid terrain triangles, 10,573 vertices",
+      "comparison": "Same indexed triangles, B2 and A2 full Run8E VS/FS shaders, published 256x256 approved woodland-clearing-soil texture enabled, equal offscreen orthographic views, Mesa OpenGL ES 3.2 llvmpipe, 640x480",
+      "caveats": [
+        "Not H-Earth interactive phone camera or full application",
+        "Clearing shadow intentionally forced all-visible; vegetation, water and sky roles not composed",
+        "Contact-distance approximation and top-down camera do not establish coastal/user visual acceptance",
+        "No product shader-source mutations as part of comparison"
+      ],
+      "views": [
+        {
+          "id": "full",
+          "center": [
+            0,
+            -250
+          ],
+          "meanRgbDistance": 45.04,
+          "p95RgbDistance": 91.54
+        },
+        {
+          "id": "eastA",
+          "center": [
+            190,
+            -322
+          ],
+          "meanRgbDistance": 59.22,
+          "p95RgbDistance": 88.97
+        },
+        {
+          "id": "woodland",
+          "center": [
+            -140,
+            -214
+          ],
+          "meanRgbDistance": 48.38,
+          "p95RgbDistance": 90.61,
+          "exactProtectedGroveCenterRgbDelta": 0
+        },
+        {
+          "id": "coastal",
+          "center": [
+            0,
+            -116
+          ],
+          "meanRgbDistance": 24.39,
+          "p95RgbDistance": 85.81,
+          "centerCoastRgbDelta": 1.414
+        }
+      ],
+      "visualDisposition": "NOTICEABLE_COLOR_PATCHES_BUT_NATURALISM_AND_PHONE_SIGNIFICANCE_NOT_ACCEPTED"
+    },
+    "canonicalPrecomputedTerrainMismatch": {
+      "status": "CONFIRMED_ENGINEERING_DISCREPANCY_NO_FIXED_RENDER_BINARY",
+      "publishedSourceCommit": "c8c5f68b23ca6f71ae07240dfd29ec1b672109c6",
+      "worldPackageGenerator": "H_EARTH_GEN2666_PRECOMPUTED_BASE_WORLD_MANIFEST_v1",
+      "packageCompressedSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "packagesAreImmutable": "HARD_CODED_IN_LIVE_RENDER_PACKAGE_CANONICAL_HYDRATOR",
+      "sample": {
+        "worldX": 208.00238513946533,
+        "worldZ": -344.0039446949959,
+        "precomputedMeshY": 4.687925815582275,
+        "originalPreB2CanonicalY": 4.159277560551357,
+        "currentPublishedB2CanonicalY": 10.448828774270622,
+        "b2DirectUplift": 6.289551213719265,
+        "publishedSourceMinusMeshHeightMeters": 5.760902958688346
+      },
+      "rendererRefinementFormula": "surface.height + (t.elevation - surface.field) * smoothFade",
+      "interpretation": "At package grid vertices, field minus interpolation of the same field tends to zero, so the local high-pass refinement does not restore the B2 bulk uplift on the published old mesh. Patch constructed once near initial camera, not a full-world geometry refresh.",
+      "grassRootManifestCount": 1457471,
+      "grassRawSha256": "f6e7d847d1a1a2db09eed7412acb75f4eb20df25c16ea411443fecbeb11babf8",
+      "grassRootCensusInsideB2Envelope": 0,
+      "grassRootCensusInside24mBoundingHalo": 0,
+      "priorStageBMathCandidate": {
+        "additionalMaxUpliftMeters": 11.14924,
+        "notchMaxGrade": 0.16952032645225112,
+        "flankMaxGrade": 3.47263,
+        "disposition": "NOT_ADOPTED_STEEP_FLANK_AND_REPRESENTATION_STALENESS"
+      },
+      "requiredReconciliation": "ONE_CANONICAL_G_WORLD_TO_PRECOMPUTED_LIVE_MESH_GENERATION_OR_EXACT_SOURCE_DERIVED_REBAKE_WITH_REAL_VERTICES_AND_LOD_SEAMS",
+      "currentGen2823AllowedPathsDoNotInclude": [
+        "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz",
+        "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json",
+        "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+        "h-earth-3d/validation/h-earth.canonical-base-world-precompute.v1.mjs"
+      ],
+      "authority": "REQUEST_EXACT_SCOPE_SUCCESSOR_OR_AMENDMENT_BEFORE_MUTATING_LISTED_PATHS",
+      "productMutationPerformed": false
+    }
+  },
+  "next": "Exact renderer color triplets/test and source-diff verification, registered H-Earth exact-candidate browser preflight, then the established approved exact-head release route if qualified; post-release Android owner judgment. Do not alter vegetation, ground geometry, global material masks or Gen2824.",
+  "authorityEffect": "NONE_CHECKPOINT_EVIDENCE_ONLY",
+  "oneRepair": {
+    "schema": "H_EARTH_GEN2823_STAGE_A2_OWNER_ONE_REPAIR_V1",
+    "ownerObservation": "Live Android screenshots 29445.jpg 29447.jpg 29449.jpg 29451.jpg show broad smooth tan/green patches, a straight/stepped diagonal material boundary and horizontal-looking bands. Screenshots attached in owner conversation; none is pinned to an exact x/z position.",
+    "ownerDisposition": "ONE_REPAIR_OWNER_PROCEED_DIRECTION_AFTER_ENGINEERING_RECOMMENDATION",
+    "ownerReleasePrecedent": "Use established exact-head preflight -> approved merge -> registered Pages exact-head deploy -> owner phone review; do not create a separate world or Codespace",
+    "originalOperationId": "H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_CONSTRUCTION_20261019_001",
+    "canonicalGeneration": 2823,
+    "ledgerEvidence": {
+      "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+      "ledgerHead": "706455c47fa9b36020103d5bfc30f6991efcfda9",
+      "ledgerBlob": "8caad2a211dcd92276de06d6a5eba3c7d81d5067",
+      "scopeHash": "80978c735df04cf791931e7f1d75ce816d263496fa8c2cfe8443bd47b707ae46",
+      "state": "ADMITTED_LOCKED",
+      "released": false
+    },
+    "inheritedPublishedMain": "8dc7f5ee09950f0a9d971af303276a4a995d6933",
+    "inheritedShaderBlob": "6703a05af4461c67ddfd64bfd91ab6422629af12",
+    "adjustedShaderBlob": "fbf0e92250fbf23e16d906dabf29d6f9cbc537b7",
+    "newNativeFocusedTestBlob": "0dc3e711713be79baea01866c12c0b2e8dee9e1d",
+    "changedShaderBoundary": "Only Gen2823 Stage A2 insertion weight formula; do not modify existing soil image, habitat panels, root records, terrain geometry, loading or navigation",
+    "originalNewPaletteWeightRange": [
+      0.75,
+      0.96
+    ],
+    "reducedNewPaletteWeightRange": [
+      0.48,
+      0.66
+    ],
+    "minimumPreviouslyExistingSoilPaletteRetention": 0.34,
+    "causalStatus": "SOURCE_PROVEN_PHOTO_ALBEDO_SUPPRESSION_REPAIRED_BY_LOWER_WEIGHT; STRAIGHT_SEAM_CAUSE_NOT_YET_PROVEN_OR_CORRECTED",
+    "acceptance": {
+      "sourceReadback": "PENDING_INDEPENDENT",
+      "nativeNode": "NEW_SIXTH_SOURCE_TEST_REGEX_REPLAY_PASS_ONLY_NATIVE_NOT_EXECUTED",
+      "shaderProgramLink": "PENDING",
+      "registeredBrowserPreflight": "PRIOR_EXACT_HEAD_2b77d796_PASSED_REQUIRES_NEW_EXACT_HEAD_PREFLIGHT",
+      "ownerNewAndroidComparison": "PENDING",
+      "publication": "NOT_AUTHORIZED_BY_THIS_EVIDENCE"
+    },
+    "testCorrection": {
+      "cause": "ESCAPED_REGEX_LITERAL_TWICE_IN_NEW_SIXTH_SOURCE_TEST",
+      "correction": "ONE_EXTRA_BACKSLASH_REMOVED_FROM_22_REGEX_ESCAPE_SEQUENCES",
+      "testGitBlob": "0dc3e711713be79baea01866c12c0b2e8dee9e1d",
+      "testSha256": "7497acb10882b4dd1834e11b83f8a89dbd01029928748c35f77ecf563288e1fa",
+      "nativeTest": "NOT_EXECUTED",
+      "originalColorBlend": "UNCHANGED"
+    }
+  },
+  "earthToneCorrection": {
+    "schema": "H_EARTH_GEN2823_EARTH_TONE_MATERIAL_FOLLOWUP_V1",
+    "ownerDirection": "The 2026-10-20 post-ONE_REPAIR Android views show substantially reduced hard disruption but excessive green-painted bare ground. Owner explicitly directs terrain material correction, reserving green for real grass and foliage.",
+    "rootCause": "Stage A2 actual terrain shader assigns green RGB to fertileEarth (0.120,0.265,0.104) and shelteredEarth (0.090,0.165,0.085) and green-biased mineral (0.345,0.355,0.335); those are bare-ground palette sources independent of root vegetation.",
+    "baselineLiveHead": "41a5dc5da53ee84be7ea302d6adbea9d5e84c699",
+    "authority": {
+      "operationId": "H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_CONSTRUCTION_20261019_001",
+      "generation": 2823,
+      "lockScope": "H_EARTH:EAST_A_ENVIRONMENTAL_IDENTITY:20261019:V1",
+      "ledgerRefHead": "706455c47fa9b36020103d5bfc30f6991efcfda9",
+      "recordStatus": "ADMITTED_LOCKED",
+      "recordReleased": false
+    },
+    "allowedChanges": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs",
+      "h-earth-3d/evidence/east-a-environmental-identity-v1/checkpoint.json",
+      "h-earth-3d/experience-anchor/receipts/east-a-environmental-identity-v1.json"
+    ],
+    "candidateRendererGitBlob": "114747ce812cfbf8010cff7fb1735c773aea983f",
+    "candidateRendererSha256": "98e82cf17ce76de89883c712a5612b0554b061957f830655b34444db3c2884fe",
+    "candidateTestGitBlob": "fb72d275eef75eb7cf789d0b80969aaf37f110ce",
+    "candidateTestSha256": "cd209d8d42fd8a6e3c2d1455e1a81663b6dd387b06e432d6a1c1dfab6c117ecf",
+    "sourceChange": "Three bare-ground RGB triplets, plus explanatory comment, within the existing Gen2823 Stage A2 shader block only. Fertile -> earth-brown, sheltered -> deeper earth-brown, eroded mineral -> neutral warm gray. The six spatially continuous signal-weighting rules and existing 48–66 percent composition strength are unchanged.",
+    "newMaterialPalette": {
+      "compactEarth": [
+        0.39,
+        0.248,
+        0.148
+      ],
+      "coastalSilt": [
+        0.52,
+        0.44,
+        0.27
+      ],
+      "fertileEarth": [
+        0.3,
+        0.235,
+        0.155
+      ],
+      "shelteredEarth": [
+        0.235,
+        0.188,
+        0.13
+      ],
+      "dryFoothill": [
+        0.48,
+        0.315,
+        0.14
+      ],
+      "erodedMineral": [
+        0.355,
+        0.333,
+        0.305
+      ]
+    },
+    "sourceChecks": "ALL_SIX_SOIL_TRIPLETS_RED_GREATER_GREEN_GREATER_BLUE_AND_DIFFERENTIATION_PRESERVED",
+    "protectedObjects": "Same tree/bark/grass records, existing grass habitat texture and blades, bare beach/shoreline, water, terrain geometry, navigation, loaders and separate Gen2824 B2 mesh candidate",
+    "visualLimitations": "Real Android before/after exact-position views of this corrected color candidate unavailable. Do not treat warm palette math as actual phone acceptance or assert existing stepped seams eliminated.",
+    "qualification": {
+      "fullNativeNodeSuite": "PENDING",
+      "webglRuntime": "PENDING",
+      "registeredExactPreflight": "PENDING",
+      "ownerDisposition": "REVIEW_REQUIRED",
+      "publication": "NOT_PERFORMED"
+    }
+  }
+}

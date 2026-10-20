@@ -1,0 +1,118 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_CONSTRUCTION_20261019_001",
+  "canonicalAdmissionGeneration": 2823,
+  "reviewedAgainstAnchor": true,
+  "disposition": "REVIEW_REQUIRED",
+  "reviewStage": "OWNER_DIRECTED_TERRAIN_EARTH_TONE_CORRECTION_PRODUCTION_REVIEW_PENDING_PHONE_ACCEPTANCE",
+  "ownerDirection": "After viewing latest live Android result, owner observed that the post-repair landscape remains unnaturally green without corresponding foliage and explicitly requested terrain palettes be earthy. This fixes bare-ground palette RGB only. Keep actual physical KEEP/ONE_REPAIR/REJECT pending.",
+  "ownerAuthorizationEvidence": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6564#issuecomment-6282814811",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6576#issuecomment-6283220609",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6576#issuecomment-6293902908"
+  ],
+  "acceptedReviewTimingPrecedent": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6555#issuecomment-6276807192",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6555#issuecomment-6276996975",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6541#issuecomment-6256408531",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6537#issuecomment-6256093032"
+  ],
+  "sourceReviewEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/east-a-environmental-identity-v1/checkpoint.json"
+  ],
+  "visualEvidence": [],
+  "interactionEvidence": [
+    "h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/east-a-environmental-identity-v1/checkpoint.json",
+    "h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true
+  },
+  "unresolvedInvariants": [
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY",
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE",
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE",
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION",
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD",
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE",
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD",
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "98e82cf17ce76de89883c712a5612b0554b061957f830655b34444db3c2884fe"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs",
+      "sha256": "cd209d8d42fd8a6e3c2d1455e1a81663b6dd387b06e432d6a1c1dfab6c117ecf"
+    }
+  ],
+  "technicalEvidence": {
+    "independentShaderDiff": "EXACT_B2_PLUS_ONE_BOUNDED_2834_CHARACTER_INSERT",
+    "actualRendererBlob": "6703a05af4461c67ddfd64bfd91ab6422629af12",
+    "nativeNodeTests": "5_OF_5_PREVIOUSLY_RECORDED",
+    "wholeRun8EShaderMesaES3": "COMPILED_LINKED_OFFSCREEN_NOT_PHONE",
+    "actualIndexedMeshTest": "CONTROLLED_MESA_OFFSCREEN_NOT_FULL_WORLD",
+    "baselineGrassRootsPreserved": 1457471,
+    "candidateHeadBeforeReceipt": "c25dcb0fdba0a057829beb8c7e0f60a07acc76fb",
+    "browserPreflightOriginalCandidate": "39363820762_PREFLIGHT_PASS_NONDEPLOYING",
+    "finalHeadPreflightStatus": "PENDING_AFTER_RECEIPT_ONLY_COMMIT",
+    "knownMaterialRisk": "ON_ELIGIBLE_INLAND_SOIL_NEW_PROCEDURAL_PALETTE_75_TO_96_PERCENT_Blend_POSSIBLY_REDUCES_APPROVED_IMAGE_ALBEDO_AUTHORITY",
+    "gen2824Relation": "SEPARATE_PRESERVED_UNCOMMITTED_BINARY_DO_NOT_MERGE",
+    "oneRepairBranch": "h-earth/gen2823-stagea2-ground-material-one-repair-20261020",
+    "oneRepairHeadBeforeReceipt": "f883cdc1b4acb26cb41c5fd9ea4930c3bc7ed478",
+    "repairedShaderGitBlob": "fbf0e92250fbf23e16d906dabf29d6f9cbc537b7",
+    "newSourceBoundTestGitBlob": "0dc3e711713be79baea01866c12c0b2e8dee9e1d",
+    "regionalPaletteMixRange": [
+      0.48,
+      0.66
+    ],
+    "priorPublishedBlendRange": [
+      0.75,
+      0.96
+    ],
+    "originalPublishedShader": "6703a05af4461c67ddfd64bfd91ab6422629af12",
+    "originalRootCountPreserved": 1457471,
+    "targetedOneRepair": "REDUCE_POST_PHOTO_REGION_PALETTE_DOMINANCE_ONLY",
+    "firstOneRepairPreflight": "39368429540_PREFLIGHT_PASS_NONDEPLOYING",
+    "nativeSixCaseTest": "NOT_EXECUTED_SOURCE_ASSERTIONS_REPLAYED",
+    "actualAndroidFixAcceptance": "NOT_ESTABLISHED",
+    "diagonalSteppedSeamDisposition": "OBSERVED_BUT_CAUSAL_ATTRIBUTION_UNPROVEN",
+    "sixthTestRegexEscapesCorrected": "SOURCE_REVIEWED_TRUE",
+    "earthToneCandidateShaderGitBlob": "114747ce812cfbf8010cff7fb1735c773aea983f",
+    "earthToneCandidateShaderSha256": "98e82cf17ce76de89883c712a5612b0554b061957f830655b34444db3c2884fe",
+    "earthToneCandidateTestGitBlob": "fb72d275eef75eb7cf789d0b80969aaf37f110ce",
+    "earthToneCandidateTestSha256": "cd209d8d42fd8a6e3c2d1455e1a81663b6dd387b06e432d6a1c1dfab6c117ecf",
+    "earthTonePaletteAssertion": "6_OF_6_SOIL_FAMILIES_EARTH_OR_MINERAL_HUES_IN_SOURCE",
+    "shaderColorCorrection": "3_GLSL_VEC3_MATERIAL_CONSTANTS_ONLY_WITH_EXPLANATORY_COMMENT",
+    "previous48to66CompositionStrength": "UNCHANGED",
+    "newNativeSevenCaseTest": "PENDING_NATIVE_RUN",
+    "newWebGlRuntime": "PENDING",
+    "phoneVisualAcceptance": "PENDING"
+  },
+  "limitations": [
+    "Stage A2 actual phone/tablet physical appearance has not been reviewed. No KEEP, ONE_REPAIR or REJECT is claimed.",
+    "Anchor PASS and complete original same-world invariants are not asserted; REVIEW_REQUIRED is an explicit unresolved visual disposition.",
+    "Hard anchor gate has prior missing-receipt failure. A truthful review-stage receipt does not imply a PASS under the current gate implementation.",
+    "A selected technical or governance failure cannot be labeled passing solely by reference to historical H-Earth production review precedent.",
+    "Registered preflight success at earlier head does not qualify the new receipt-only exact head; re-run it before any ordinary merge/release.",
+    "The successful accepted Gen2646 soil photograph remains loaded but its perceived color authority may change substantially under this candidate.",
+    "No new turf, soil terrain shape, four-tree, bark, water, cavern, coast or navigation construction is made by this review-stage receipt.",
+    "One-repair source edit reduces procedural color dominance; it does not prove removal of the observed straight/stepped material seam.",
+    "No new Android screenshots of this repaired candidate exist; visual acceptance remains REVIEW_REQUIRED.",
+    "New sixth focused source test is not yet claimed as native Node PASS; selected browser runtime preflight passed on prior exact head before this receipt write.",
+    "The new sixth source-bound test has corrected regular expressions, independently matched against the exact renderer's changed text. A complete native Node six-case run is not yet established.",
+    "Owner has not seen the earth-tone correction rendered on a phone; all current visual success and hard seam assertions remain unresolved.",
+    "Changing bare-ground shader triplets does not itself prove that all inherited ground shading and green habitat fields disappear. Actual foliage, grass geometry and planting are unchanged."
+  ],
+  "authorityEffect": "NONE_TRUTHFUL_EARTH_TONE_OWNER_REVIEW_STAGE_NO_PHYSICAL_KEEP"
+}

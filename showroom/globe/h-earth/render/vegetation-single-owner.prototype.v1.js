@@ -1,3 +1,4 @@
+import {buildCavernEntranceGrass} from './cavern-entrance-grass.v1.js';
 import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';
 import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
@@ -53,9 +54,14 @@ void main(){
  float level=(k==2||k==4||k==5)?1.:0.;
  float scale=uFine==1?detail:1.;
  float width=mix(.010,.016,h)*scale;
- float height=mix(.11,.21,h)*scale;
+ // Local entrance growth affects existing and supplemental roots alike.
+ float entrance=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
+ float shoulders=smoothstep(1.6,5.,abs(aRoot.x-40.));
+ float mouthBanks=(1.-smoothstep(.7,2.5,abs(abs(aRoot.x-40.)-3.8)))*(1.-smoothstep(2.,7.,abs(aRoot.z+262.)));
+ float entranceHeight=mix(mix(mix(.30,.48,h),mix(.58,.88,h),shoulders),mix(1.15,1.65,h),mouthBanks);
+ float height=mix(mix(.11,.21,h),entranceHeight,entrance)*scale;
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.86));
- p+=vec3(sin(angle),0.,-cos(angle))*level*level*.025*scale;
+ p+=vec3(sin(angle),0.,-cos(angle))*level*level*mix(.025,height*mix(.12,.30,h),entrance)*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;
  // Rotate and warp only color coordinates; every immutable root stays fixed.
  vec2 colorWorld=mat2(.8,.6,-.6,.8)*aRoot.xz;
@@ -77,9 +83,18 @@ uniform vec3 uSunDirection;uniform vec3 uSunColor;uniform vec3 uHaze;
 uniform float uSunIntensity;uniform float uFogStart;uniform float uFogFalloff;uniform float uMaxFog;
 out vec4 outColor;
 void main(){float lit=.48+.52*max(0.,dot(normalize(vNormal),normalize(uSunDirection)));vec3 color=vColor*(vec3(.5)+uSunColor*lit*uSunIntensity*.5);float fog=min(uMaxFog,1.-exp(-max(0.,vDistance-uFogStart)*uFogFalloff));color=mix(color,uHaze,fog);outColor=vec4(pow(max(color,vec3(0.)),vec3(1./2.2)),1.);}`;
-export async function createSingleOwnerVegetation(gl,presentation,{environment,planetRadius,yieldControl=async()=>{},onProgress=()=>{},uploadBudget={}}={}){
+export async function createSingleOwnerVegetation(gl,presentation,{environment,planetRadius,yieldControl=async()=>{},onProgress=()=>{},uploadBudget={},entranceGrass=null}={}){
  if(!environment||!Number.isFinite(planetRadius))throw Error('OWNER_ENVIRONMENT_REQUIRED');
- const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),tiles=trusted?.tiles??planImmutableTiles(presentation),rootCount=tiles.reduce((n,t)=>n+t.count,0);
+ const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),baseTiles=trusted?.tiles??planImmutableTiles(presentation);
+ const originalRootCount=baseTiles.reduce((n,t)=>n+t.count,0);let tiles=baseTiles,entranceReceipt=null;
+ if(entranceGrass){
+  if(!trusted)throw Error('ENTRANCE_GRASS_REQUIRES_AUTHENTICATED_BASELINE');
+  const addition=await buildCavernEntranceGrass({...entranceGrass,existingTiles:baseTiles,yieldControl});
+  const extra=planImmutableTiles(addition).map(t=>Object.freeze({...t,first:t.first+originalRootCount}));
+  tiles=Object.freeze([...baseTiles,...extra]);entranceReceipt=addition.receipt;
+ }
+ const rootCount=tiles.reduce((n,t)=>n+t.count,0);
+ if(rootCount>allocation.maximumRoots||rootCount*16>allocation.maximumPackedBytes)throw Error('POPULATION_GPU_BUDGET_EXCEEDED');
  const controlRoots=trusted?.controlRoots??[];if(!trusted)for(const tile of tiles)tile.rootIds.forEach((id,i)=>{if(Math.hypot(tile.packed[i*4]+139.40267987050615,tile.packed[i*4+2]+194.5)<=2)controlRoots.push(id);});
  if(!controlRoots.length)throw Error('EMPTY_FIXED_CONTROL');
  const ownedShaders=[];let program=null,vao=null,buffer=null;
@@ -115,7 +130,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   for(const range of ranges){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;}
   lastDraw={selectedFineRoots,drawCallCount,submittedTriangles:(rootCount+selectedFineRoots)*2,perFrameUploadBytes:0,coarseTiles:tiles.length,fineTiles:fine.length};return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots,maximumWoodlandRoots:450000,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots,maximumWoodlandRoots:450000,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose});
  }catch(error){cleanup();throw error;}

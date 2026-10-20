@@ -1,0 +1,21 @@
+{
+  "schema": "H_EARTH_CAVERN_ENTRANCE_GRASS_v1",
+  "contactCount": 9341,
+  "interiorCount": 182,
+  "duplicatesAvoided": 2258,
+  "floorTriangleCount": 8,
+  "maximumAddedRoots": 30000,
+  "existingRootsPreserved": true,
+  "interiorMaximumDepthMeters": 2,
+  "perFrameGeneration": false,
+  "combinedRootCount": 1466812,
+  "combinedPackedBytes": 23468992,
+  "canonicalAdmissionGeneration": 2834,
+  "admissionReceipt": "issue:6585#issuecomment-6298518033",
+  "baseline": "ece43aea0db67120d5b176db5c884a40f43c8a2c",
+  "placement": "Independent deterministic full-cell x/z offsets; four focused tests pass including spectral alignment rejection",
+  "height": "Immediate portal-side banks 1.15\u20131.65m; center .30\u2013.48m; surrounding shoulders .58\u2013.88m",
+  "browserQualification": "PENDING",
+  "ownerVisualAcceptance": "PENDING",
+  "palmsAndTerrainUnchanged": true
+}

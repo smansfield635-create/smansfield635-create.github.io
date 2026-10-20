@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-20T01:39:59Z",
+  "generatedAt": "2026-10-20T22:29:26Z",
   "window": {
-    "start": "2026-07-22T01:39:59Z",
-    "end": "2026-10-20T01:39:59Z"
+    "start": "2026-07-22T22:29:26Z",
+    "end": "2026-10-20T22:29:26Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4898,
+    "pageLoads": 4818,
     "visits": 1337,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4898,
+        "pageLoads": 4818,
         "visits": 1337
       }
     },
@@ -30,40 +30,20 @@
         "pageLoads": 80,
         "visits": 10
       },
-      "/laws/categories/reality/battery-heldout-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/frontier/energy/battery-coherence-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/scientific-law/battery-heldout-study/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/products/archcoin/": {
         "pageLoads": 40,
-        "visits": 0
-      },
-      "/laws/battery-heldout-study/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/": {
         "pageLoads": 300,
         "visits": 90
       },
-      "/showroom/": {
-        "pageLoads": 110,
-        "visits": 10
-      },
       "/showroom/globe/h-earth/": {
         "pageLoads": 159,
+        "visits": 10
+      },
+      "/showroom/": {
+        "pageLoads": 110,
         "visits": 10
       },
       "/index.html": {
@@ -90,13 +70,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/education/": {
-        "pageLoads": 270,
-        "visits": 70
-      },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
         "visits": 0
+      },
+      "/products/education/": {
+        "pageLoads": 270,
+        "visits": 70
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -106,12 +86,12 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/research/evidence-and-sources/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/laws/categories/structure/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/research/evidence-and-sources/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -150,18 +130,6 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -169,6 +137,18 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -182,16 +162,12 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
         "visits": 0
       },
       "/gauges/": {
@@ -214,6 +190,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/instruments/": {
         "pageLoads": 10,
         "visits": 0
@@ -234,6 +214,10 @@
         "pageLoads": 70,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
@@ -242,20 +226,16 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 42,
-        "visits": 0
-      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/about/": {
+        "pageLoads": 42,
         "visits": 0
       },
       "/door/": {
@@ -270,19 +250,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -349,7 +329,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3561,
+        "pageLoads": 3481,
         "visits": 0
       },
       "www.google.com": {

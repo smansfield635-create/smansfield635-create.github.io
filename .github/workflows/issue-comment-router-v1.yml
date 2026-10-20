@@ -52,12 +52,11 @@ jobs:
           [ "$dispatch" = true ] || { echo "COMMENT_ROUTE_NO_DISPATCH"; exit 0; }
           workflow="$(jq -r '.workflow' "$RUNNER_TEMP/route.json")"
           input="$(jq -r '.input' "$RUNNER_TEMP/route.json")"
-          payload="$(jq -r '.payload' "$RUNNER_TEMP/route.json")"
           case "$workflow" in
             ai-room-execution-transport.yml|canonical-operation-intake-transport-v1.yml|public-private-successor-execution-v1.yml|public-private-terminal-closure-carrier-v1.yml|remote-operation-terminal-closure-v1.yml|bounded-operation-lock-lineage-checkpoint-v1.yml|cloudflare-owner-rum-dispatch-bridge-v1.yml) ;;
             *) echo "UNREGISTERED_HANDLER" >&2; exit 1;;
           esac
-          jq -n --arg ref main --arg key "$input" --arg payload "$payload" --arg issue "$ISSUE_NUMBER" --arg repo "$REPO" \
-            '{ref:$ref,inputs:{($key):$payload,router_callback_issue:$issue,router_callback_repository:$repo}}' > "$RUNNER_TEMP/dispatch.json"
+          jq -c --arg ref main --arg key "$input" --arg issue "$ISSUE_NUMBER" --arg repo "$REPO" \
+            '{ref:$ref,inputs:{($key):.payload,router_callback_issue:$issue,router_callback_repository:$repo}}' "$RUNNER_TEMP/route.json" > "$RUNNER_TEMP/dispatch.json"
           gh api --method POST "/repos/$REPO/actions/workflows/$workflow/dispatches" --input "$RUNNER_TEMP/dispatch.json"
           echo "COMMENT_ROUTE_DISPATCHED=$workflow"

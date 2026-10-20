@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-banding-release-2654fcf8",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6610,
+  "requestBranch": "ai-dispatch-request-banding-release-2654fcf8",
+  "requestCommit": "eb0ade356fe959fc44e4563a191ffd6a33e0b834",
+  "currentMainSha": "ea1928e93481671ff9c473f443f854d7eb4b6978",
+  "bridgeRunId": "39509008965",
+  "error": "Stale dispatch request: parent 2654fcf858332b7362897d89f2679114f9b21966 != current main ea1928e93481671ff9c473f443f854d7eb4b6978",
+  "failedAt": "2026-10-20T22:33:47.745Z"
+}

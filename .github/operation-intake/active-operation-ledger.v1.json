@@ -2087,6 +2087,50 @@
       "scopeHash": "1bf76066179782f0a2835a486ccc69d4e157964228b327ce7f07a5654b755be7",
       "state": "ADMITTED_LOCKED"
     },
+    "1c270513a9af9b70bdd7d418b83c023e55ffe13bfc00ec1a995fed8a2bb2ac83": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "9eba84f61a189d1f177302a16957b52a1c884ddf",
+          "lockGeneration": 2846,
+          "lockScope": "AUDRALIA:EXACT_APPROVED_FAP1_RESTORE:20261021",
+          "operationId": "AUDRALIA_EXACT_APPROVED_FAP1_RESTORE_20261021_001",
+          "procedureLocatorDigest": "037680b1076369eeee85ac5f849dff6417865a55e95d6806d763f6d924658055",
+          "requestDigest": "1d124459049bee64b26de50226a666ee643ff2a171a83d18757d37a534a58624",
+          "scopeHash": "1c270513a9af9b70bdd7d418b83c023e55ffe13bfc00ec1a995fed8a2bb2ac83"
+        },
+        "bindingDigest": "f7562e672c0fd7793814ca0c418da5f5806e7a4a9ac6fa824c632b110c833392",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fa021e8650e37f7634bd3f96a463d0883dfe421c34f79279c035755546605f22",
+          "commentId": 6318517995,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6586,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39616835490,
+          "workflowSha": "9eba84f61a189d1f177302a16957b52a1c884ddf"
+        },
+        "lineageAnchorCommitSha": "7d03f8f8c21ae0b34e745d8dd3ab912cf3945806",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "9eba84f61a189d1f177302a16957b52a1c884ddf",
+      "lockGeneration": 2846,
+      "lockScope": "AUDRALIA:EXACT_APPROVED_FAP1_RESTORE:20261021",
+      "operationId": "AUDRALIA_EXACT_APPROVED_FAP1_RESTORE_20261021_001",
+      "procedureLocatorDigest": "037680b1076369eeee85ac5f849dff6417865a55e95d6806d763f6d924658055",
+      "released": false,
+      "requestDigest": "1d124459049bee64b26de50226a666ee643ff2a171a83d18757d37a534a58624",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1c270513a9af9b70bdd7d418b83c023e55ffe13bfc00ec1a995fed8a2bb2ac83",
+      "state": "ADMITTED_LOCKED"
+    },
     "1d9d8d95d3f6a61a708cf328302c426749126870c51f0e81d18fbda94c0cd952": {
       "governingHead": "0e21f21314d3c453880da19605e3ce2566964b78",
       "lockGeneration": 1686,
@@ -20446,7 +20490,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2845,
+  "lockGeneration": 2846,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

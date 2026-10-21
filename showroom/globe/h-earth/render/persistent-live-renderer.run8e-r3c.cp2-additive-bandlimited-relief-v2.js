@@ -1859,7 +1859,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       onProgress({phase:'SINGLE_POPULATION_PREPARING'});
       const generationStarted=performance.now();
       const presentation=await loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress});
-      const installedHabitat=presentation.habitat;
+      const generationMs=performance.now()-generationStarted;
+      resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress,entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
+      // The admitted entrance roots and their soil coverage are finalized together.
+      const installedHabitat=resources.singleOwnerVegetation.habitat;
       const habitatTexture=createTexture();gl.activeTexture(gl.TEXTURE0+10);gl.bindTexture(gl.TEXTURE_2D,habitatTexture);
       gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R8,installedHabitat.width,installedHabitat.height,0,gl.RED,gl.UNSIGNED_BYTE,installedHabitat.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
@@ -1867,8 +1870,6 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.useProgram(resources.geometryProgram);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitat'),10);gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatBounds'),installedHabitat.bounds);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatEnabled'),1);
       gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uRavineHabitatBounds'),installedHabitat.ravine.bounds);gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uCoastalHabitatBounds'),installedHabitat.coastal.bounds);gl.uniform2f(gl.getUniformLocation(resources.geometryProgram,'uHabitatAtlasScale'),1/3,1);gl.uniform1f(gl.getUniformLocation(resources.geometryProgram,'uHabitatHalfTexel'),.5/installedHabitat.size);
 
-      const generationMs=performance.now()-generationStarted;
-      resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress,entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
       resources.singleOwnerTiming={soilMaskMilliseconds,generationMs,loading:presentation.loading,preparationMs:performance.now()-started,includesAcceptedOasisSoilPreparation:true};
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
       const error=gl.getError();if(error!==gl.NO_ERROR)throw Error('REPLACEMENT_UPLOAD_GL_ERROR:'+error);

@@ -1,21 +1,130 @@
 {
   "schema": "H_EARTH_CAVERN_ENTRANCE_GRASS_v1",
-  "contactCount": 9341,
-  "interiorCount": 182,
-  "duplicatesAvoided": 2258,
+  "contactCount": 54328,
+  "interiorCount": 186,
+  "haloCount": 4657,
+  "rejected": {
+    "support": 131,
+    "slope": 820,
+    "water": 12500,
+    "density": 1147
+  },
+  "duplicatesAvoided": 4533,
   "floorTriangleCount": 8,
-  "maximumAddedRoots": 30000,
+  "maximumAddedRoots": 130000,
   "existingRootsPreserved": true,
   "interiorMaximumDepthMeters": 2,
   "perFrameGeneration": false,
-  "combinedRootCount": 1466812,
-  "combinedPackedBytes": 23468992,
-  "canonicalAdmissionGeneration": 2834,
-  "admissionReceipt": "issue:6585#issuecomment-6298518033",
-  "baseline": "ece43aea0db67120d5b176db5c884a40f43c8a2c",
-  "placement": "Independent deterministic full-cell x/z offsets; four focused tests pass including spectral alignment rejection",
-  "height": "Immediate portal-side banks 1.15\u20131.65m; center .30\u2013.48m; surrounding shoulders .58\u2013.88m",
+  "combinedRootCount": 1511799,
+  "combinedPackedBytes": 24188784,
+  "canonicalAdmissionGeneration": 2849,
+  "admissionReceipt": "issue:6585#issuecomment-6320135825",
+  "baseline": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
+  "placement": "Preserved entrance planting plus continuous meadow-occupancy field over both slopes with Gaussian terrain-slope smoothing, actual triangle support and water exclusion",
+  "height": "Shared18m warped shoulder blend; immediate mouth peaks1.15\u20131.65m preserved",
   "browserQualification": "PENDING",
   "ownerVisualAcceptance": "PENDING",
-  "palmsAndTerrainUnchanged": true
+  "palmsAndTerrainUnchanged": true,
+  "preservedCandidate": "021a4b12fdf7823dc3be5d6076dac72cabf58269",
+  "soilContinuity": {
+    "actualAdditionRoots": 54328,
+    "touchedTexels": 909,
+    "raisedTexels": 608,
+    "rejectedWetOrUnsupportedTexels": 17,
+    "referenceDensity": 41.9375,
+    "woodlandAndCoastalPanelsByteIdentical": true,
+    "savedRootBytesPreserved": true,
+    "candidateShadersByteIdentical": true,
+    "uploadPolicy": "ONCE_AFTER_FINALIZED_VEGETATION_BEFORE_READY",
+    "focusedTests": "12/12 PASS",
+    "visualAcceptance": "PENDING",
+    "inheritedHarnessCaveat": "Older vegetation-single-owner VM tests omit loader and GLSL imports; FOOTHILL_MEADOW_GLSL failure reproduced on preserved candidate00c73ed9",
+    "independentOriginalEntranceComparison": "PASS exact021a4b12 module and all prior roots identical"
+  },
+  "slopeRepair": {
+    "schema": "H_EARTH_CAVERN_SLOPE_CONTINUITY_v1",
+    "bounds": [
+      -10,
+      -330,
+      88,
+      -235
+    ],
+    "priorEntranceCount": 17697,
+    "addedRoots": 36631,
+    "leftAdded": 14621,
+    "rightAdded": 22010,
+    "eligibleCells": 2728,
+    "targetDeficit": 36633,
+    "remainingDeficit": 2,
+    "unfilledCells": 1,
+    "unfilledWitnesses": [
+      {
+        "x": 47,
+        "z": -286,
+        "target": 17,
+        "before": 12,
+        "final": 15
+      }
+    ],
+    "rejected": {
+      "support": 0,
+      "slope": 0,
+      "water": 380,
+      "palm": 0,
+      "duplicate": 9262
+    },
+    "witnessRejected": {
+      "support": 0,
+      "slope": 63,
+      "water": 3383,
+      "palm": 10,
+      "entrance": 32
+    },
+    "referenceDensity": 41.9375,
+    "maximumTargetDensity": 33.550000000000004,
+    "maximumAddedRoots": 100000,
+    "generationMs": 1258.1361940000006,
+    "field": "MEADOW_OCCUPANCY_LOW_PASS_WITH_SMOOTH_TERRAIN_SLOPE_AND_FEATHERED_SURVEY_LIMIT",
+    "priorRootsPreserved": true,
+    "iterationOrderTruncation": false,
+    "densityWitnesses": [
+      {
+        "x": 15,
+        "z": -280,
+        "before": 4.6,
+        "after": 26.2
+      },
+      {
+        "x": 20,
+        "z": -280,
+        "before": 5.4,
+        "after": 26.6
+      },
+      {
+        "x": 25,
+        "z": -280,
+        "before": 10.88,
+        "after": 26.08
+      },
+      {
+        "x": 50,
+        "z": -270,
+        "before": 13.24,
+        "after": 19.96
+      },
+      {
+        "x": 55,
+        "z": -270,
+        "before": 6.16,
+        "after": 21.88
+      },
+      {
+        "x": 60,
+        "z": -270,
+        "before": 0.84,
+        "after": 20.72
+      }
+    ],
+    "qualificationLimit": "Measured spatial continuity improvement; screenshot full camera extent not reconstructed; device visual acceptance required. CPU timing is local, not tablet measurement."
+  }
 }

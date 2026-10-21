@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-slope-continuity-c68be725",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6642,
+  "requestBranch": "ai-dispatch-request-cavern-slopes-c68be725",
+  "requestCommit": "b43af1fdbee5494e1c90997721f6bd20c44527f4",
+  "requestCommitParent": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "c68be725073696f0439a7be61d13003470702775",
+    "surface_id": "h-earth-simple"
+  },
+  "bridgeRunId": "39630078868",
+  "dispatchedRunId": 39630110379,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39630110379",
+  "dispatchedRunHeadSha": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
+  "dispatchedAt": "2026-10-21T15:55:38.434Z",
+  "resolvedAt": "2026-10-21T15:55:42.443Z"
+}

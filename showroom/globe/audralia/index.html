@@ -11,6 +11,7 @@
   <script type="importmap">
 {
   "imports": {
+    "/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/exterior-weather.ga-v2-spatial-handoff.mjs": "/showroom/globe/audralia/exterior-weather.polar-continuity-v1.mjs?cb=GRATITUDE_POLAR_GEN2847",
     "/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=SOURCE_RIVER_GEN2839",
     "https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=SOURCE_RIVER_GEN2839"
   }
@@ -22,7 +23,10 @@
   <link rel="stylesheet" href="./index.css?v=AUDRALIA_LOADING_CONTINUITY_v4">
   <link rel="stylesheet" href="./loading-continuity-v3.css?v=AUDRALIA_CHROMATIC_ARRIVAL_v4">
   <link rel="stylesheet" href="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/reconciliation.css?v=EXACT_24057">
-</head>
+<style>
+[data-gratitude-entry]{position:absolute;z-index:4;display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 12px;border:1px solid #c5e9c0;border-radius:24px;background:#102c23e8;color:#eefbe6;font:600 13px system-ui;text-decoration:none;transform:translate(-50%,-50%);box-shadow:0 0 14px #b4edbb50;white-space:nowrap}
+[data-gratitude-entry][hidden]{display:none}[data-gratitude-entry] span:first-child{color:#c7f8bb;font-size:18px}[data-gratitude-entry]:focus-visible{outline:3px solid #fff;outline-offset:3px}
+</style></head>
 <body>
   <div class="audralia-loading-screen" data-audralia-loader role="status" aria-live="polite" aria-label="Audralia is loading">
     <div class="audralia-loading-panel" data-audralia-loader-panel>
@@ -49,7 +53,7 @@
       <div class="audralia-live-brand" aria-label="Audralia">Audralia</div>
       <nav class="audralia-live-nav" aria-label="World navigation">
         <button class="audralia-live-action audralia-live-action-primary" type="button" data-fit-world>focus Gratitude</button>
-        <a class="audralia-live-action" href="../h-earth/">H-Earth · Play</a>
+        <a class="audralia-live-action" href="../h-earth/">Enter Gratitude</a>
         <a class="audralia-live-action" href="../../../index.html">Compass</a>
         <a class="audralia-live-action" href="../../">Mirrorland</a>
       </nav>
@@ -59,6 +63,7 @@
 
     <section class="audralia-world-stage" aria-label="Interactive Audralia planetary view">
       <canvas class="audralia-world-canvas" data-h-earth-map-wide-canvas aria-label="Interactive Audralia world. One finger looks, two fingers travel, pinch descends and spread ascends."></canvas>
+      <a href="../h-earth/" data-gratitude-entry hidden aria-label="Enter Gratitude at the coast"><span aria-hidden="true">●</span><span>Enter Gratitude</span></a>
       <p class="audralia-sr-only" data-h-earth-diagnostic aria-live="polite"></p>
     </section>
 
@@ -179,5 +184,30 @@
       if (status) status.textContent = 'Audralia could not finish loading';
     }
   </script>
-</body>
+<script type="module" data-gratitude-entry-runtime>
+const marker=document.querySelector('[data-gratitude-entry]'),canvas=document.querySelector('[data-h-earth-map-wide-canvas]');
+const dot=(a,b)=>a.reduce((s,v,i)=>s+v*b[i],0),sub=(a,b)=>a.map((v,i)=>v-b[i]);
+function projectCoastalEntry(frame,point,width,height){
+ const d=sub(point,frame.eye),depth=dot(d,frame.forward),radial=sub(point,frame.planetCenter),towardEye=sub(frame.eye,point);
+ if(depth<=0||dot(radial,towardEye)<=0)return null;
+ const tangent=Math.tan(55*Math.PI/360),x=dot(d,frame.right)/(depth*tangent*width/height),y=dot(d,frame.up)/(depth*tangent);
+ if(!Number.isFinite(x+y)||Math.abs(x)>.82||Math.abs(y)>.9)return null;
+ return {x:(x+1)*width/2,y:(1-y)*height/2};
+}
+function resolveCoastalAnchor(renderer){
+ const coast=renderer.getSnapshot().coastModel,interval=coast.protectedLocalInterval;
+ const choices=coast.mainlandLoop.filter(([u,v])=>u>=interval[0]&&u<=interval[1]&&v>0).sort((a,b)=>Math.abs(a[0])-Math.abs(b[0])||b[1]-a[1]);
+ if(!choices.length)throw Error('GRATITUDE_SOURCE_COAST_ANCHOR_MISSING');
+ const [u,v]=choices[0],frame=renderer.getCameraFrame(),distance=Math.hypot(u,v),angle=distance/frame.planetRadius,s=Math.sin(angle)/(distance||1),r=frame.planetRadius+8;
+ return {sourceUV:[u,v],point:[frame.planetCenter[0]+r*s*u,frame.planetCenter[1]+r*Math.cos(angle),frame.planetCenter[2]+r*s*v]};
+}
+let anchor=null,last=0,evidence={schema:'GRATITUDE_COASTAL_ENTRY_v1',destination:new URL(marker.href).pathname,visible:false,sourceUV:null};
+window.__GRATITUDE_COASTAL_ENTRY__={projectCoastalEntry,resolveCoastalAnchor,getEvidence:()=>({...evidence})};
+function update(time){
+ if(time-last>=100){last=time;const renderer=window.__AUDRALIA_WEATHER_PRESENTATION_RECONCILIATION__?.renderer;
+ if(renderer){anchor??=resolveCoastalAnchor(renderer);const pos=projectCoastalEntry(renderer.getCameraFrame(),anchor.point,canvas.clientWidth,canvas.clientHeight);marker.hidden=!pos;evidence={...evidence,sourceUV:anchor.sourceUV,visible:Boolean(pos),screen:pos};if(pos){marker.style.left=pos.x+'px';marker.style.top=pos.y+'px';}}}
+ requestAnimationFrame(update);
+}
+requestAnimationFrame(update);
+</script></body>
 </html>

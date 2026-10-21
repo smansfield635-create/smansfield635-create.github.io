@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-21T22:30:48Z",
+  "generatedAt": "2026-10-21T23:29:12Z",
   "window": {
-    "start": "2026-07-23T22:30:48Z",
-    "end": "2026-10-21T22:30:48Z"
+    "start": "2026-07-23T23:29:12Z",
+    "end": "2026-10-21T23:29:12Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -130,6 +130,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -137,10 +141,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -162,12 +162,16 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/audralia/disposition/": {
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
@@ -188,10 +192,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -218,11 +218,11 @@
         "pageLoads": 60,
         "visits": 30
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/characters/legacy-dossiers.html": {
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },

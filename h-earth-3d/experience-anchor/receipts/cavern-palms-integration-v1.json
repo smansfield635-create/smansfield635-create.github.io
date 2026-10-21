@@ -32,19 +32,19 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/cavern-entrance-grass.v1.js",
-      "sha256": "cbcbb4e51c2342554326adbbe526661abd4f55715f84154cf243cdd422b5656e"
+      "sha256": "a418cd8000681648212fb1f6fb335c449acd83856c6b57aa174e724d6374acf4"
     },
     {
       "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
-      "sha256": "22019b60020f756eb44a32e2efa7282ab4e610a8f770b4181be9cc1eef8e4ec1"
+      "sha256": "32faf9ba7ea5ebeda82b8860042171417afc07f4eff381494f403524cb5ed5c0"
     },
     {
       "path": "h-earth-3d/validation/h-earth.cavern-entrance-grass.v1.test.mjs",
-      "sha256": "3925a5f06cafd0bd2923704cc4573a8fc964c3adce2ed0cddf90eb04c9b4a38a"
+      "sha256": "e4af8eb2f6a3e4cbf37dd98d049bf7ad571f3a270c84547dbd9b911273060f4c"
     }
   ],
-  "acceptanceBasis": "Structural same-world continuity; only bounded entrance supplement placement and grass presentation change. Actual browser and owner visual acceptance pending.",
+  "acceptanceBasis": "Structural continuity: bounded entrance shoulder density and height blend with original saved roots and same-world geometry/navigation preserved. Actual candidate browser and owner visual acceptance pending.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
-  "canonicalAdmissionGeneration": 2834
+  "canonicalAdmissionGeneration": 2845
 }

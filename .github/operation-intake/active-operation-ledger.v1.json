@@ -16652,50 +16652,6 @@
       "scopeHash": "cefdae8c2b074fefe52c17c13fd53b53cce8800c977ef6246eb50b8c4baf2b92",
       "state": "ADMITTED_LOCKED"
     },
-    "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "097e787b5fdae86ec45a54a8e8f980593d843146",
-          "lockGeneration": 2845,
-          "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
-          "operationId": "H_EARTH_CAVERN_GRASS_BLEND_20261020_001",
-          "procedureLocatorDigest": "2127e5419f4fb55f7eb5275e4b2b4b3fe64c3d3fa8d07eab7a39dae03b3bacae",
-          "requestDigest": "65258990205c098c3a5fdce2e2cbe2c7d7f6ef0bde0f7e824b5cd5ce933d4223",
-          "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a"
-        },
-        "bindingDigest": "d6520a0b81257f3cfedd0679d8de5120939cba34e3970f6ac139278244c5bbda",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "c28679e8578a32d6b14fcc7b56d00a8cbce26a16a5f4501d35d44f04a8bcf5ac",
-          "commentId": 6304623972,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6585,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 39519262165,
-          "workflowSha": "097e787b5fdae86ec45a54a8e8f980593d843146"
-        },
-        "lineageAnchorCommitSha": "56a8dcdcb3580f3a1a8931a575f0b2220e0f43a5",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "097e787b5fdae86ec45a54a8e8f980593d843146",
-      "lockGeneration": 2845,
-      "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
-      "operationId": "H_EARTH_CAVERN_GRASS_BLEND_20261020_001",
-      "procedureLocatorDigest": "2127e5419f4fb55f7eb5275e4b2b4b3fe64c3d3fa8d07eab7a39dae03b3bacae",
-      "released": false,
-      "requestDigest": "65258990205c098c3a5fdce2e2cbe2c7d7f6ef0bde0f7e824b5cd5ce933d4223",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a",
-      "state": "ADMITTED_LOCKED"
-    },
     "d0043d474bd80fb8adc7f12e53fb5ed81ca3c5c48a345aee9ddfce9bf5804190": {
       "governingHead": "0253326d80a89084142465f5210b4bca6361bb1a",
       "lockGeneration": 124,
@@ -85694,6 +85650,51 @@
       "scopeHash": "1c270513a9af9b70bdd7d418b83c023e55ffe13bfc00ec1a995fed8a2bb2ac83",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "097e787b5fdae86ec45a54a8e8f980593d843146",
+          "lockGeneration": 2845,
+          "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
+          "operationId": "H_EARTH_CAVERN_GRASS_BLEND_20261020_001",
+          "procedureLocatorDigest": "2127e5419f4fb55f7eb5275e4b2b4b3fe64c3d3fa8d07eab7a39dae03b3bacae",
+          "requestDigest": "65258990205c098c3a5fdce2e2cbe2c7d7f6ef0bde0f7e824b5cd5ce933d4223",
+          "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a"
+        },
+        "bindingDigest": "d6520a0b81257f3cfedd0679d8de5120939cba34e3970f6ac139278244c5bbda",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c28679e8578a32d6b14fcc7b56d00a8cbce26a16a5f4501d35d44f04a8bcf5ac",
+          "commentId": 6304623972,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6585,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39519262165,
+          "workflowSha": "097e787b5fdae86ec45a54a8e8f980593d843146"
+        },
+        "lineageAnchorCommitSha": "56a8dcdcb3580f3a1a8931a575f0b2220e0f43a5",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "097e787b5fdae86ec45a54a8e8f980593d843146",
+      "lockGeneration": 2845,
+      "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
+      "operationId": "H_EARTH_CAVERN_GRASS_BLEND_20261020_001",
+      "procedureLocatorDigest": "2127e5419f4fb55f7eb5275e4b2b4b3fe64c3d3fa8d07eab7a39dae03b3bacae",
+      "released": true,
+      "requestDigest": "65258990205c098c3a5fdce2e2cbe2c7d7f6ef0bde0f7e824b5cd5ce933d4223",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

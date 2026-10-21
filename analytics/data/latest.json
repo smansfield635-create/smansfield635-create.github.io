@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-21T05:32:58Z",
+  "generatedAt": "2026-10-21T06:48:01Z",
   "window30d": {
-    "start": "2026-09-21T05:32:58Z",
-    "end": "2026-10-21T05:32:58Z"
+    "start": "2026-09-21T06:48:01Z",
+    "end": "2026-10-21T06:48:01Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-14",
-      "pageLoads": 53
+      "pageLoads": 52
     },
     {
       "date": "2026-10-15",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-21",
-      "pageLoads": 33
+      "pageLoads": 34
     }
   ],
   "summary": {
-    "pageLoads": 3284,
-    "botPageLoads": 1226,
-    "nonBotPageLoads": 2058
+    "pageLoads": 3264,
+    "botPageLoads": 1216,
+    "nonBotPageLoads": 2048
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2224,
-      "visits": 2224
+      "pageLoads": 2204,
+      "visits": 2204
     },
     {
       "host": "diamondgatebridge.com",
@@ -187,8 +187,8 @@
     },
     {
       "path": "/mirror-manor-preview/",
-      "pageLoads": 220,
-      "visits": 220
+      "pageLoads": 210,
+      "visits": 210
     },
     {
       "path": "/governance-bridge/",

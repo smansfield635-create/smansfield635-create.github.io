@@ -8706,67 +8706,6 @@
       "scopeHash": "72da0be52cdf8b3b3c90ad57a361328dd63db947205f0072f7bad48efb835410",
       "state": "ADMITTED_LOCKED"
     },
-    "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "384d0f49349e01689a83293c54c8e9e9075dccc9",
-          "lockGeneration": 2856,
-          "lockScope": "H_EARTH:CAVERN:APPROVED_JACARANDA_LIVE:20261021",
-          "operationId": "H_EARTH_APPROVED_JACARANDA_LIVE_20261021_001",
-          "procedureLocatorDigest": "5c7fc1a6237f4e253e2a9abc7a8e5b619cda5325754e16bef1afce19d078e265",
-          "requestDigest": "bc68f0fc5d8b67af00ed7276273c16b476c9169389c33b9ac766bbab798b8165",
-          "scopeHash": "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3"
-        },
-        "bindingDigest": "2e54c3e82e2b1cc97a601ced33aeb11fc0e7d5c3161449f4f3d0ff6d93812c68",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "3751227e9eb2c30b798c4bc9940fcd00d53a1e7cd6e658e6be3e684d16aae164",
-          "commentId": 6328736029,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 6585,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 39692684966,
-          "workflowSha": "384d0f49349e01689a83293c54c8e9e9075dccc9"
-        },
-        "lineageAnchorCommitSha": "6d36d8924747868d0fcd5540a512dc3a063ce558",
-        "origin": "CANONICAL_SUCCESSOR",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "384d0f49349e01689a83293c54c8e9e9075dccc9",
-      "lockGeneration": 2856,
-      "lockScope": "H_EARTH:CAVERN:APPROVED_JACARANDA_LIVE:20261021",
-      "operationId": "H_EARTH_APPROVED_JACARANDA_LIVE_20261021_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "1acf7efd9f07a4789af3b616da1a2c3b10e27300",
-        "lockGeneration": 2855,
-        "lockScope": "H_EARTH:CAVERN:OASIS_FOUR_TREE_RUNTIME:20261021",
-        "operationId": "H_EARTH_CAVERN_TREE_GROUP_20261021_001",
-        "preservedEvidenceRefs": [
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6327650438",
-          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6328088735",
-          "git:b49ec479ffc95f0ccd64b3295a9ffd976c8a85e1",
-          "https://polyhaven.com/a/jacaranda_tree",
-          "library:libfile_c861b422c1dc819194df810c6a44aec7"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "H_EARTH_GEN2855_APPROVED_JACARANDA_SUCCESSOR_20261021_001"
-      },
-      "procedureLocatorDigest": "5c7fc1a6237f4e253e2a9abc7a8e5b619cda5325754e16bef1afce19d078e265",
-      "released": false,
-      "requestDigest": "bc68f0fc5d8b67af00ed7276273c16b476c9169389c33b9ac766bbab798b8165",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3",
-      "state": "ADMITTED_LOCKED"
-    },
     "74933798ee5c239a9ce485fc52563349c7e6417eee30beef1ad60091d4652d20": {
       "governingHead": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
       "lockGeneration": 457,
@@ -86130,6 +86069,105 @@
         "transitionId": "H_EARTH_GEN2855_APPROVED_JACARANDA_SUCCESSOR_20261021_001"
       },
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "384d0f49349e01689a83293c54c8e9e9075dccc9",
+          "lockGeneration": 2856,
+          "lockScope": "H_EARTH:CAVERN:APPROVED_JACARANDA_LIVE:20261021",
+          "operationId": "H_EARTH_APPROVED_JACARANDA_LIVE_20261021_001",
+          "procedureLocatorDigest": "5c7fc1a6237f4e253e2a9abc7a8e5b619cda5325754e16bef1afce19d078e265",
+          "requestDigest": "bc68f0fc5d8b67af00ed7276273c16b476c9169389c33b9ac766bbab798b8165",
+          "scopeHash": "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3"
+        },
+        "bindingDigest": "2e54c3e82e2b1cc97a601ced33aeb11fc0e7d5c3161449f4f3d0ff6d93812c68",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "3751227e9eb2c30b798c4bc9940fcd00d53a1e7cd6e658e6be3e684d16aae164",
+          "commentId": 6328736029,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 6585,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39692684966,
+          "workflowSha": "384d0f49349e01689a83293c54c8e9e9075dccc9"
+        },
+        "lineageAnchorCommitSha": "6d36d8924747868d0fcd5540a512dc3a063ce558",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "384d0f49349e01689a83293c54c8e9e9075dccc9",
+      "independentClosureProvenance": {
+        "authorityIdentity": {
+          "governingHead": "384d0f49349e01689a83293c54c8e9e9075dccc9",
+          "lockGeneration": 2856,
+          "lockScope": "H_EARTH:CAVERN:APPROVED_JACARANDA_LIVE:20261021",
+          "operationId": "H_EARTH_APPROVED_JACARANDA_LIVE_20261021_001",
+          "procedureLocatorDigest": "5c7fc1a6237f4e253e2a9abc7a8e5b619cda5325754e16bef1afce19d078e265",
+          "requestDigest": "bc68f0fc5d8b67af00ed7276273c16b476c9169389c33b9ac766bbab798b8165",
+          "scopeHash": "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3"
+        },
+        "bindingDigest": "2028bff2beb6cfe5536c4ad991a4d009b379adf8dd4e5d72c499ce89c26b7372",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "8209223ace29d3db1612b88ebfbd911ac697a0e8",
+          "observedLockRefHead": "7b9c96bf8aaec7f72343d3ceccfa2a2ea7f75fd3"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_TERMINAL_CLOSURE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "4ee0f82ce34b165c8f681fe3ae630bb7c4ba7338ad7ed1f78dca085eac27a1fb",
+          "commentId": 6328942280,
+          "issueNumber": 6585,
+          "marker": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "terminalIdentity": {
+          "governingHead": "384d0f49349e01689a83293c54c8e9e9075dccc9",
+          "lockGeneration": 2856,
+          "lockScope": "H_EARTH:CAVERN:APPROVED_JACARANDA_LIVE:20261021",
+          "operationId": "H_EARTH_APPROVED_JACARANDA_LIVE_20261021_001",
+          "released": true,
+          "scopeHash": "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3",
+          "state": "TERMINAL",
+          "terminalDisposition": "WITHDRAWN"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_TERMINAL_CLOSURE_V1"
+      },
+      "lockGeneration": 2856,
+      "lockScope": "H_EARTH:CAVERN:APPROVED_JACARANDA_LIVE:20261021",
+      "operationId": "H_EARTH_APPROVED_JACARANDA_LIVE_20261021_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "1acf7efd9f07a4789af3b616da1a2c3b10e27300",
+        "lockGeneration": 2855,
+        "lockScope": "H_EARTH:CAVERN:OASIS_FOUR_TREE_RUNTIME:20261021",
+        "operationId": "H_EARTH_CAVERN_TREE_GROUP_20261021_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6327650438",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6328088735",
+          "git:b49ec479ffc95f0ccd64b3295a9ffd976c8a85e1",
+          "https://polyhaven.com/a/jacaranda_tree",
+          "library:libfile_c861b422c1dc819194df810c6a44aec7"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_GEN2855_APPROVED_JACARANDA_SUCCESSOR_20261021_001"
+      },
+      "procedureLocatorDigest": "5c7fc1a6237f4e253e2a9abc7a8e5b619cda5325754e16bef1afce19d078e265",
+      "released": true,
+      "requestDigest": "bc68f0fc5d8b67af00ed7276273c16b476c9169389c33b9ac766bbab798b8165",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

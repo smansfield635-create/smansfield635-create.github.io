@@ -1,0 +1,47 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/aged-tree-a08-v1/integration.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/aged-tree-a08-v1/integration.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/aged-tree-a08-v1/integration.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-aged-woodland-tree.v1.js",
+      "sha256": "14256b21fc98315e5801b3efde46b2b7134b82ab76c33f729f18addf18b7a5db"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "sha256": "09f4b68db8e7f00b723310964e84cc9b72b7869fa3cf8a47fd9e64069543036c"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.aged-tree-a08.v1.test.mjs",
+      "sha256": "2d17a9be6045aac7d805247463f3e364da09cc9b12caee359a3062531ce0e645"
+    }
+  ],
+  "acceptanceBasis": "Structural same-world continuity: only existing A08 geometry changes in place, other3tree and allnon-tree outputs exact; ecology and navigation unchanged. Independent West9tests PASS including actualterrainroot support and neighborwood clearance. Exactcandidate browser preflight and owner aged-tree appearance/tablet response pending; no perceptual approval claimed.",
+  "ownerPerceptualAcceptance": false,
+  "newIntegratedBrowserRunPerformed": false,
+  "canonicalAdmissionGeneration": 2854
+}

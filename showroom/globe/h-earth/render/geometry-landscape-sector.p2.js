@@ -7,6 +7,7 @@ import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as policy} from '../../../../h-ea
 import {sampleHEarthRun8CSuccessorSurfaceMaterial} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js';
 import {buildHEarthWoodlandGrassTuft} from './grass-lowland-trial.js?cb=meadow-fan-20261006';
 import {appendHEarthWoodlandTreeTrial,H_EARTH_WOODLAND_TREE_TRIAL_ID} from './geometry-woodland-tree-trial.js';
+import {appendHEarthAgedWoodlandTree,H_EARTH_AGED_WOODLAND_TREE_ID} from './geometry-aged-woodland-tree.v1.js';
 import {appendHEarthWoodlandClearingGround,H_EARTH_WOODLAND_CLEARING_TREE_IDS,H_EARTH_WOODLAND_CLEARING_TRIANGLE_LIMIT} from './woodland-clearing-trial.js';
 const SEED='WEST_WOODLAND_P2_20261006';
 const hash=(id,channel)=>{let h=2166136261;for(const c of `${SEED}:${id}:${channel}`)h=Math.imul(h^c.charCodeAt(0),16777619);return (h>>>0)/4294967296;};
@@ -117,10 +118,11 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
  accepted.sort((a,b)=>a.id.localeCompare(b.id));const bark=mesh(),foliage=mesh(),stone=mesh(),grass=mesh();
  for(const p of accepted){const {id,x,z,radius,anchor}=p,y=anchor.y,height=8+hash(id,'height')*8,leanX=(hash(id,'leanX')-.5)*1.1,leanZ=(hash(id,'leanZ')-.5)*1.1;
  const barkVertexStart=bark.vertices.length,canopyVertexStart=foliage.vertices.length;
- let scaffold=null;
+ let scaffold=null,agedTree=null;
  if(H_EARTH_WOODLAND_CLEARING_TREE_IDS.includes(id)){
  const originalBark=mesh(),originalFoliage=mesh();
  scaffold=openWoodlandTree(originalBark,originalFoliage,p,height,leanX,leanZ);
+ if(id===H_EARTH_AGED_WOODLAND_TREE_ID){agedTree=appendHEarthAgedWoodlandTree({bark,foliage,p,ground});}else{
  // Retain the accepted branch vertices and lower closed surface, including
  // the six basal vertices consumed by burySupport. Its top ring continues
  // into the trial trunk; omit the interior cap so every seam edge has two faces.
@@ -130,12 +132,13 @@ export function buildHEarthLandscapeSector({terrainPrimitive,reverseGenerationOr
  const retainedBranchIndices=[...originalBark.indices.slice(0,36),...[36,42,48,54].flatMap(i=>originalBark.indices.slice(i,i+3))];
  bark.indices.push(...retainedBranchIndices.map(i=>i+barkVertexStart));
  appendHEarthWoodlandTreeTrial({bark,foliage,p,height,leanX,leanZ,scaffold,clearing:true});
+ }
  }else if(id.startsWith('P2_TREE_A_'))scaffold=openWoodlandTree(bark,foliage,p,height,leanX,leanZ);else {
  branch(bark,[x,y,z],[x+leanX,y+height*.72,z+leanZ],.32+height*.018,.10,[93,75,52,255]);
  for(let j=0;j<5;j++){const angle=j*2.399+hash(id,'rotation')*6.28,offset=j===4?.15:radius*.33,dx=Math.cos(angle)*offset,dz=Math.sin(angle)*offset,cy=y+height*(j===4?.81:.62+hash(id,`tier${j}`)*.1);branch(bark,[x+leanX*.35,y+height*.35,z+leanZ*.35],[x+dx,cy,z+dz],.15,.055,[94,76,53,255]);const r=radius*(j===4?.59:.58);lobe(foliage,`${id}:${j}`,[x+dx,cy,z+dz],[r,(y+height-cy)*(j===4?1:.76),r*.92],[72+hash(id,'tint')*22,99+hash(id,'tint')*22,42+hash(id,'tint')*12,255]);}
  }
- const support=burySupport(bark,barkVertexStart,barkVertexStart,6,ground,false);if(!support){issues.push(`ROOT_SUPPORT_MISSING:${id}`);continue;}
- manifest.push({...(scaffold?{scaffoldStyle:scaffold.style,crownParts:scaffold.crownParts,trunkRadius:scaffold.trunkRadius,refinementCluster:'A'}:{}),support,barkVertexStart,barkVertexCount:bark.vertices.length-barkVertexStart,canopyVertexStart,canopyVertexCount:foliage.vertices.length-canopyVertexStart,id,kind:'TREE',x,y,z,height,crownRadius:radius,groundTriangle:anchor.triangle,groundSlope:anchor.slope,surfaceClass:p.material.surfaceClass,footprintClear:true});
+ const support=agedTree?.support??burySupport(bark,barkVertexStart,barkVertexStart,6,ground,false);if(!support){issues.push(`ROOT_SUPPORT_MISSING:${id}`);continue;}
+ manifest.push({...(agedTree?{visualTree:agedTree.visualTree}:{}),...(scaffold?{scaffoldStyle:scaffold.style,crownParts:scaffold.crownParts,trunkRadius:scaffold.trunkRadius,refinementCluster:'A'}:{}),support,barkVertexStart,barkVertexCount:bark.vertices.length-barkVertexStart,canopyVertexStart,canopyVertexCount:foliage.vertices.length-canopyVertexStart,id,kind:'TREE',x,y,z,height,crownRadius:radius,groundTriangle:anchor.triangle,groundSlope:anchor.slope,surfaceClass:p.material.surfaceClass,footprintClear:true});
  }
  for(let i=0;i<14;i++){
   const id=`P2_ROCK_${String(i).padStart(2,'0')}`,x=-79+i*2.65+(hash(id,'x')-.5)*5,z=-239+i*1.9+(hash(id,'z')-.5)*8,r=2+hash(id,'size')*2.7,a=ground(x,z);

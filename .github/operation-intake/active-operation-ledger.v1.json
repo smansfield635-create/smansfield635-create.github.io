@@ -16652,67 +16652,6 @@
       "scopeHash": "cefdae8c2b074fefe52c17c13fd53b53cce8800c977ef6246eb50b8c4baf2b92",
       "state": "ADMITTED_LOCKED"
     },
-    "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467",
-          "lockGeneration": 2838,
-          "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
-          "operationId": "H_EARTH_CAVERN_VEGETATION_SHADOW_REPAIR_20261020_001",
-          "procedureLocatorDigest": "41dcf7d24be9a86acb1e9a8d6d0db0e2b28f61d12df0cc13821a7bdfa9e5669d",
-          "requestDigest": "77904761ace34603a2e887025c482506c24b0962382cca092ca25b57d17188aa",
-          "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a"
-        },
-        "bindingDigest": "b93cf62f0b14239d1ac92394c7634ae5b0e97f8ca02088254a8f66268100b14d",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "324caa3f998c2858b7c573d99fa512355c1105c2adaa723164f151317ab6693f",
-          "commentId": 6302407682,
-          "eventAction": "created",
-          "eventName": "issue_comment",
-          "issueNumber": 6585,
-          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 39503502580,
-          "workflowSha": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467"
-        },
-        "lineageAnchorCommitSha": "def8921d401606963dfeec6f9f033b1547312e30",
-        "origin": "CANONICAL_SUCCESSOR",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467",
-      "lockGeneration": 2838,
-      "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
-      "operationId": "H_EARTH_CAVERN_VEGETATION_SHADOW_REPAIR_20261020_001",
-      "predecessor": {
-        "authorityInherited": false,
-        "exactHeadRevalidationRequired": true,
-        "governingHead": "651face00d5687a22b710925141dbebc58165f5e",
-        "lockGeneration": 2836,
-        "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
-        "operationId": "H_EARTH_CAVERN_MOSS_IVY_20261020_001",
-        "preservedEvidenceRefs": [
-          "PR6601:f530f425bbe6c878a032e0d2e5765ac8c51f0c05",
-          "preflight39483398970",
-          "issue:6585#issuecomment-6298963434",
-          "PR6601#issuecomment-6302005385",
-          "Live baseline651face; three intervening analytics commits disjoint; successor required by expanded shadow intent rather than main movement alone"
-        ],
-        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
-        "terminalDisposition": "SUPERSEDED",
-        "transitionId": "CAVERN_VEGETATION_SHADOW_SUCCESSOR_20261020"
-      },
-      "procedureLocatorDigest": "41dcf7d24be9a86acb1e9a8d6d0db0e2b28f61d12df0cc13821a7bdfa9e5669d",
-      "released": false,
-      "requestDigest": "77904761ace34603a2e887025c482506c24b0962382cca092ca25b57d17188aa",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a",
-      "state": "ADMITTED_LOCKED"
-    },
     "d0043d474bd80fb8adc7f12e53fb5ed81ca3c5c48a345aee9ddfce9bf5804190": {
       "governingHead": "0253326d80a89084142465f5210b4bca6361bb1a",
       "lockGeneration": 124,
@@ -85559,6 +85498,68 @@
       "scopeHash": "947c4bb9d6b047e7622bf3cbf0c0ce601194087a303a134583ce95d9bd9b802b",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467",
+          "lockGeneration": 2838,
+          "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
+          "operationId": "H_EARTH_CAVERN_VEGETATION_SHADOW_REPAIR_20261020_001",
+          "procedureLocatorDigest": "41dcf7d24be9a86acb1e9a8d6d0db0e2b28f61d12df0cc13821a7bdfa9e5669d",
+          "requestDigest": "77904761ace34603a2e887025c482506c24b0962382cca092ca25b57d17188aa",
+          "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a"
+        },
+        "bindingDigest": "b93cf62f0b14239d1ac92394c7634ae5b0e97f8ca02088254a8f66268100b14d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "324caa3f998c2858b7c573d99fa512355c1105c2adaa723164f151317ab6693f",
+          "commentId": 6302407682,
+          "eventAction": "created",
+          "eventName": "issue_comment",
+          "issueNumber": 6585,
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39503502580,
+          "workflowSha": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467"
+        },
+        "lineageAnchorCommitSha": "def8921d401606963dfeec6f9f033b1547312e30",
+        "origin": "CANONICAL_SUCCESSOR",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e54b7f9233c3f119d7df6b8d7e16d1b95434f467",
+      "lockGeneration": 2838,
+      "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
+      "operationId": "H_EARTH_CAVERN_VEGETATION_SHADOW_REPAIR_20261020_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "651face00d5687a22b710925141dbebc58165f5e",
+        "lockGeneration": 2836,
+        "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
+        "operationId": "H_EARTH_CAVERN_MOSS_IVY_20261020_001",
+        "preservedEvidenceRefs": [
+          "PR6601:f530f425bbe6c878a032e0d2e5765ac8c51f0c05",
+          "preflight39483398970",
+          "issue:6585#issuecomment-6298963434",
+          "PR6601#issuecomment-6302005385",
+          "Live baseline651face; three intervening analytics commits disjoint; successor required by expanded shadow intent rather than main movement alone"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "CAVERN_VEGETATION_SHADOW_SUCCESSOR_20261020"
+      },
+      "procedureLocatorDigest": "41dcf7d24be9a86acb1e9a8d6d0db0e2b28f61d12df0cc13821a7bdfa9e5669d",
+      "released": true,
+      "requestDigest": "77904761ace34603a2e887025c482506c24b0962382cca092ca25b57d17188aa",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

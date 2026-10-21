@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-21T19:28:14Z",
+  "generatedAt": "2026-10-21T20:31:55Z",
   "window": {
-    "start": "2026-07-23T19:28:14Z",
-    "end": "2026-10-21T19:28:14Z"
+    "start": "2026-07-23T20:31:55Z",
+    "end": "2026-10-21T20:31:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,13 +26,13 @@
       }
     },
     "byPath": {
-      "/products/archcoin/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/laws/": {
         "pageLoads": 300,
         "visits": 90
+      },
+      "/products/archcoin/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/": {
         "pageLoads": 110,
@@ -102,20 +102,20 @@
         "pageLoads": 160,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -134,6 +134,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -149,10 +153,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
@@ -214,13 +214,13 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,

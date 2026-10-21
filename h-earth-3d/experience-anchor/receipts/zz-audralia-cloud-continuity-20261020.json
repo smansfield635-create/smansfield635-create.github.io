@@ -34,11 +34,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/audralia/cloud-continuity-qa-v1.html",
-      "sha256": "ffb92c0e3fb961b6acb02066db638bc0bab88a52d738a45f06c382aae129d915"
+      "sha256": "601912b96ae2605963c757ff15f8948d06e4202a723eb69ebfeb7b45174e3653"
     },
     {
       "path": "showroom/globe/audralia/index.html",
-      "sha256": "af29bff4f09d0e01d4e8e88caa1f2165b2e46c19786e49a2e9271a8c8330b7ad"
+      "sha256": "8cf7f622600651ca3718e468df664bfca2a03583951d9096184c623030942498"
     },
     {
       "path": "showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs",
@@ -69,5 +69,6 @@
   "sourceReviewLimit": "This receipt confirms preservation of the accepted world and direct navigation under a bounded existing-runtime binding repair. It does not claim visible cloud restoration before focused browser qualification.",
   "qualificationHarnessCorrection": "Keep actual entry iframe visible until all captures, use timer deadline, serialize child/error/phase evidence, release test-only GPU context after completion. Previous39516440213 failed readiness with hidden Error object; actual cloud restoration remains unverified.",
   "qualificationResolution": "Actual tablet entry and pixel-budget branch; test-only canvas CSS25percent dimensions preserves aspect and reduces software-GPU work. No full-resolution device-performance acceptance claim.",
-  "contextQualificationCorrection": "Count distinct canvas/WebGL object pairs; preserve all getContext request identities/stacks separately. Repeated requests are not assumed to be newly created contexts. Require one actual context and one canvas after interactions."
+  "contextQualificationCorrection": "Count distinct canvas/WebGL object pairs; preserve all getContext request identities/stacks separately. Repeated requests are not assumed to be newly created contexts. Require one actual context and one canvas after interactions.",
+  "confirmedStartupDependencyRepair": "Run39519600968 proved three distinct contexts: primary plus legacy GA/W5 overlays started by unconditional frozen loader-progress. Index now selects the existing tablet-loader-controller for constrained tablets and retains frozen legacy loader for desktop. No frozen files changed."
 }

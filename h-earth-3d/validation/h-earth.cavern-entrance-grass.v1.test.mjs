@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import zlib from 'node:zlib';
 import {constructGeologicalRuntimeBridge} from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js';
 import {buildVegetationVisibleSurface} from '../../showroom/globe/h-earth/render/vegetation-visible-surface.v1.js';
-import {buildCavernEntranceGrass,createEntranceFloorSupport,entranceWeight} from '../../showroom/globe/h-earth/render/cavern-entrance-grass.v1.js';
+import {buildCavernEntranceGrass,createEntranceFloorSupport,entranceWeight,entranceBlend,ENTRANCE_BLEND_GLSL} from '../../showroom/globe/h-earth/render/cavern-entrance-grass.v1.js';
 import {unprojectPlanetVertex} from '../terrain/h-earth.geological-formation-successor.v1.mjs';
 import {CAVERN_PALM_PLACEMENTS} from '../../showroom/globe/h-earth/render/cavern-palm-placement.v1.js';
 const asset=name=>new URL('../../showroom/globe/h-earth/render/assets/'+name,import.meta.url);
@@ -34,4 +34,23 @@ test('supplement breaks alignment along both planting axes',()=>{
   let c=0,s=0;for(const p of roots){const a=p[axis]/.14*Math.PI*2;c+=Math.cos(a);s+=Math.sin(a);}
   assert.ok(Math.hypot(c,s)/roots.length<.15,`${axis} grid alignment remains`);
  }
+});
+
+test('broad shoulder density and height field converges smoothly to meadow',()=>{
+ for(const z of [-285,-275,-265])for(const side of [-1,1]){
+  let previous=entranceBlend(40+side*7,z);
+  for(let d=7.1;d<=29;d+=.1){const value=entranceBlend(40+side*d,z);assert.ok(value<=previous+1e-9);assert.ok(Math.abs(value-previous)<.012);previous=value;}
+  assert.equal(entranceBlend(40+side*29,z),0);
+  assert.ok(entranceBlend(40+side*14,z)>.4);
+ }
+ const source=fs.readFileSync(new URL('../../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js',import.meta.url),'utf8');
+ assert.ok(source.includes('${ENTRANCE_BLEND_GLSL}'));assert.ok(source.includes('max(core,entranceBlend(aRoot.xz))'));
+ assert.ok(source.includes('mix(1.15,1.65,h),mouthBanks'));
+ assert.ok(ENTRANCE_BLEND_GLSL.includes('edge+18.'));
+});
+test('halo reaches both sides without duplicate root contacts',()=>{
+ const roots=addition.tiles.flatMap(t=>t.roots),seen=new Set();let left=0,right=0;
+ for(const r of roots){const key=`${r.x}:${r.z}`;assert.ok(!seen.has(key));seen.add(key);const q=unprojectPlanetVertex(r.x,r.y,r.z);if(q.x<28)left++;if(q.x>52)right++;}
+ assert.ok(left>100&&right>100,JSON.stringify({left,right}));assert.ok(addition.receipt.haloCount>1000);
+ assert.ok(addition.receipt.rejected.water>0);assert.ok(addition.receipt.rejected.slope>0);
 });

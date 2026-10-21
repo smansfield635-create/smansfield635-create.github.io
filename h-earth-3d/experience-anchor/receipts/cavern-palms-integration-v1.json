@@ -32,19 +32,27 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/cavern-entrance-grass.v1.js",
-      "sha256": "cbcbb4e51c2342554326adbbe526661abd4f55715f84154cf243cdd422b5656e"
+      "sha256": "a418cd8000681648212fb1f6fb335c449acd83856c6b57aa174e724d6374acf4"
     },
     {
       "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
-      "sha256": "22019b60020f756eb44a32e2efa7282ab4e610a8f770b4181be9cc1eef8e4ec1"
+      "sha256": "d9955d673ad83def62dbcdf0bb2cc43840c6501a212cb31d6f8b8dd99d836c6b"
     },
     {
       "path": "h-earth-3d/validation/h-earth.cavern-entrance-grass.v1.test.mjs",
-      "sha256": "3925a5f06cafd0bd2923704cc4573a8fc964c3adce2ed0cddf90eb04c9b4a38a"
+      "sha256": "e4af8eb2f6a3e4cbf37dd98d049bf7ad571f3a270c84547dbd9b911273060f4c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "746364ad928344b9a387db48ee98e74315b52a0ac53190f9b84bd81451216f64"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-grass-soil-continuity.v1.test.mjs",
+      "sha256": "71158379ab2192aa6213b8017f2d92994c809e1ce15f2fa232a46b07f6d978b9"
     }
   ],
-  "acceptanceBasis": "Structural same-world continuity; only bounded entrance supplement placement and grass presentation change. Actual browser and owner visual acceptance pending.",
+  "acceptanceBasis": "Structural continuity: retained exact candidate planting and shader heights; existing meadow habitat atlas now includes installed cavern roots. Geometry/navigation unchanged. Ten focused checks plus actual root/atlas custody checks pass. Browser and owner perceptual acceptance remain pending.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
-  "canonicalAdmissionGeneration": 2834
+  "canonicalAdmissionGeneration": 2848
 }

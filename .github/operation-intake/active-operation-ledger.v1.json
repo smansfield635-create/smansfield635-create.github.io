@@ -8706,6 +8706,50 @@
       "scopeHash": "72da0be52cdf8b3b3c90ad57a361328dd63db947205f0072f7bad48efb835410",
       "state": "ADMITTED_LOCKED"
     },
+    "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "463f7be0902a0b41ccc522be3f2f6f6c5499fe98",
+          "lockGeneration": 2857,
+          "lockScope": "H_EARTH:CAVERN:APPROVED_JACARANDA_LIVE:20261021",
+          "operationId": "H_EARTH_APPROVED_JACARANDA_BASELINE_RECOVERY_20261021_001",
+          "procedureLocatorDigest": "6eb4a080d4684b10af7de3d83b345e09072c07453c1ac7254f2f73950ad23b18",
+          "requestDigest": "a1cb985fb1126126aecf01673b2a002445f377bb32a23966e90a692de38089d3",
+          "scopeHash": "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3"
+        },
+        "bindingDigest": "376e4a23b778bff64263fdc4aa5bada86d8074929fb8e501d4ab165d836ce452",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "015d99b805b79981bf650f71b6b676905e5608777227e259dcc55ac43067b65f",
+          "commentId": 6329076709,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6585,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39695371840,
+          "workflowSha": "463f7be0902a0b41ccc522be3f2f6f6c5499fe98"
+        },
+        "lineageAnchorCommitSha": "50e16a50f89163ed952f1b946aae14b9964de769",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "463f7be0902a0b41ccc522be3f2f6f6c5499fe98",
+      "lockGeneration": 2857,
+      "lockScope": "H_EARTH:CAVERN:APPROVED_JACARANDA_LIVE:20261021",
+      "operationId": "H_EARTH_APPROVED_JACARANDA_BASELINE_RECOVERY_20261021_001",
+      "procedureLocatorDigest": "6eb4a080d4684b10af7de3d83b345e09072c07453c1ac7254f2f73950ad23b18",
+      "released": false,
+      "requestDigest": "a1cb985fb1126126aecf01673b2a002445f377bb32a23966e90a692de38089d3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "73307eead3052fe064448affa6e26780c6098f539f7dfb57ebed869a88ec93e3",
+      "state": "ADMITTED_LOCKED"
+    },
     "74933798ee5c239a9ce485fc52563349c7e6417eee30beef1ad60091d4652d20": {
       "governingHead": "a8ef9e4b4701bd15d09ad14c829e2f4b10f9ccfc",
       "lockGeneration": 457,
@@ -20622,7 +20666,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2856,
+  "lockGeneration": 2857,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

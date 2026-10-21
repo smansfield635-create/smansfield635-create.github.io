@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-21T03:37:14Z",
+  "generatedAt": "2026-10-21T04:36:39Z",
   "window": {
-    "start": "2026-07-23T03:37:14Z",
-    "end": "2026-10-21T03:37:14Z"
+    "start": "2026-07-23T04:36:39Z",
+    "end": "2026-10-21T04:36:39Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4796,
-    "visits": 1346,
+    "pageLoads": 4793,
+    "visits": 1345,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4796,
-        "visits": 1346
+        "pageLoads": 4793,
+        "visits": 1345
       }
     },
     "byPath": {
@@ -39,7 +39,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 158,
+        "pageLoads": 156,
         "visits": 10
       },
       "/index.html": {
@@ -51,8 +51,8 @@
         "visits": 10
       },
       "/": {
-        "pageLoads": 1046,
-        "visits": 756
+        "pageLoads": 1045,
+        "visits": 755
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
@@ -222,6 +222,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -236,10 +240,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -329,12 +329,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3450,
+        "pageLoads": 3448,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 792,
-        "visits": 792
+        "pageLoads": 791,
+        "visits": 791
       },
       "(none)": {
         "pageLoads": 544,

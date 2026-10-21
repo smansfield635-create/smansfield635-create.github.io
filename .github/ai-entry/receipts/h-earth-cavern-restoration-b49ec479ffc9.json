@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-cavern-restoration-b49ec479ffc9",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6655,
+  "requestBranch": "ai-dispatch-request-cavern-restoration-b49ec479",
+  "requestCommit": "e44bc2f9d2d2f62a71c3849facd4826198525803",
+  "currentMainSha": "1acf7efd9f07a4789af3b616da1a2c3b10e27300",
+  "bridgeRunId": "39687188659",
+  "error": "Stale dispatch request: parent bd907086c4aa503ad8a07f51bcba0d55b2e99717 != current main 1acf7efd9f07a4789af3b616da1a2c3b10e27300",
+  "failedAt": "2026-10-21T22:32:16.298Z"
+}

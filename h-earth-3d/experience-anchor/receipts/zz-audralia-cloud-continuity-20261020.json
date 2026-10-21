@@ -34,7 +34,7 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/audralia/cloud-continuity-qa-v1.html",
-      "sha256": "4ff922b72f9976eadb1eae648c55be7cc83039b77ec489cfdf9ffda27cc15e00"
+      "sha256": "ffb92c0e3fb961b6acb02066db638bc0bab88a52d738a45f06c382aae129d915"
     },
     {
       "path": "showroom/globe/audralia/index.html",
@@ -68,5 +68,6 @@
   "independentSourceReview": "PASS_CHEAP_CLOUD_SOURCE_REVIEW_BROWSER_PENDING",
   "sourceReviewLimit": "This receipt confirms preservation of the accepted world and direct navigation under a bounded existing-runtime binding repair. It does not claim visible cloud restoration before focused browser qualification.",
   "qualificationHarnessCorrection": "Keep actual entry iframe visible until all captures, use timer deadline, serialize child/error/phase evidence, release test-only GPU context after completion. Previous39516440213 failed readiness with hidden Error object; actual cloud restoration remains unverified.",
-  "qualificationResolution": "Actual tablet entry and pixel-budget branch; test-only canvas CSS25percent dimensions preserves aspect and reduces software-GPU work. No full-resolution device-performance acceptance claim."
+  "qualificationResolution": "Actual tablet entry and pixel-budget branch; test-only canvas CSS25percent dimensions preserves aspect and reduces software-GPU work. No full-resolution device-performance acceptance claim.",
+  "contextQualificationCorrection": "Count distinct canvas/WebGL object pairs; preserve all getContext request identities/stacks separately. Repeated requests are not assumed to be newly created contexts. Require one actual context and one canvas after interactions."
 }

@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "audralia-cloud-review",
-  "description": "Actual tablet entry, existing cloud pixels and native terrain camera, single context and interactions",
+  "description": "Actual tablet cloud verification; terminal failure is explicit and console errors remain blocking",
   "checks": [
     {
       "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
@@ -19,7 +19,7 @@
     "enabled": true,
     "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
     "timeoutMs": 180000,
-    "readySelector": "[data-cloud-state=\"ready\"]",
+    "readySelector": "[data-cloud-state=\"ready\"],[data-cloud-state=\"failed\"]",
     "binding": {
       "mode": "direct-document",
       "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html"

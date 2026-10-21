@@ -16652,6 +16652,50 @@
       "scopeHash": "cefdae8c2b074fefe52c17c13fd53b53cce8800c977ef6246eb50b8c4baf2b92",
       "state": "ADMITTED_LOCKED"
     },
+    "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "aaeae59e12c65ddef901d8fc69dafe6539678a2c",
+          "lockGeneration": 2848,
+          "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
+          "operationId": "H_EARTH_CAVERN_GRASS_SOIL_CONTINUITY_20261021_001",
+          "procedureLocatorDigest": "8a5c16421d9edaac21941f83dec9ef8d79b2512eab1d440bfef0e30616a6a80e",
+          "requestDigest": "2d5657e7881726beceacced57b999ded40c944ca84bc4bdd87f08ce17687e900",
+          "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a"
+        },
+        "bindingDigest": "6c7bff8fe593281e40a96feeac48b5a7d97b18f98bc041149df095b532eca776",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6a38995e461373f959a206b98b2285ddad56fad61c487d37bc835521176c3e92",
+          "commentId": 6319559552,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6585,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39624541232,
+          "workflowSha": "aaeae59e12c65ddef901d8fc69dafe6539678a2c"
+        },
+        "lineageAnchorCommitSha": "6048bfc66a432cc403a5099941909c3d366a1ef9",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "aaeae59e12c65ddef901d8fc69dafe6539678a2c",
+      "lockGeneration": 2848,
+      "lockScope": "H_EARTH:CAVERN_ENTRANCE:COMPOSITION_REPAIR:20261020",
+      "operationId": "H_EARTH_CAVERN_GRASS_SOIL_CONTINUITY_20261021_001",
+      "procedureLocatorDigest": "8a5c16421d9edaac21941f83dec9ef8d79b2512eab1d440bfef0e30616a6a80e",
+      "released": false,
+      "requestDigest": "2d5657e7881726beceacced57b999ded40c944ca84bc4bdd87f08ce17687e900",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "cf9dda553299050e253f8a0b8ef83f7aed4cfff6ae10bf308244c5158d3eb72a",
+      "state": "ADMITTED_LOCKED"
+    },
     "d0043d474bd80fb8adc7f12e53fb5ed81ca3c5c48a345aee9ddfce9bf5804190": {
       "governingHead": "0253326d80a89084142465f5210b4bca6361bb1a",
       "lockGeneration": 124,
@@ -20446,7 +20490,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2847,
+  "lockGeneration": 2848,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

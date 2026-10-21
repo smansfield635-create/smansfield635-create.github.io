@@ -1,0 +1,69 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewClass": "BOUNDED_GRATITUDE_ENTRY_AND_ORIGINAL_FAP1_COORDINATE_CONTINUITY",
+  "acceptedProductHead": "aaeae59e12c65ddef901d8fc69dafe6539678a2c",
+  "ownerDispositionSource": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6586#issuecomment-6319300808",
+  "visualEvidence": [
+    "showroom/globe/audralia/cloud-continuity-qa-v1.html"
+  ],
+  "interactionEvidence": [
+    "showroom/globe/audralia/index.html",
+    "showroom/globe/h-earth/index.html"
+  ],
+  "continuityEvidence": [
+    "showroom/globe/audralia/exterior-weather.polar-continuity-v1.mjs"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/audralia/cloud-continuity-qa-v1.html",
+      "sha256": "a9772c131a9259c84e5e16f9311af804fd3b625b7df360553479ceb29d84c4bc"
+    },
+    {
+      "path": "showroom/globe/audralia/exterior-weather.polar-continuity-v1.mjs",
+      "sha256": "51bd592f650df1f6bc6ddb101537f17a94387b84342acf06137fb3bde046904a"
+    },
+    {
+      "path": "showroom/globe/audralia/index.html",
+      "sha256": "8a0fc780aeb38b3cd5b3b25b5c7df00c0a392e6e5c963039e69dfb765ea0db12"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "1568facc9cfac43283234a41ef9ac4769a47251460b17453125bcd3ba943e4c1"
+    }
+  ],
+  "reviewBasis": {
+    "visual": "Repository anchor visual proxy inspected. Original terrain, embodied ground scene, horizon, look/travel UI and original FAP1 weather family remain. Only public naming, small source-bound coastal entry and spherical cloud coordinate correction change. Candidate normal-canvas coastal/polar browser evidence is a separate pending qualification, not a physical-device pass.",
+    "interaction": "Existing destination and navigation remain; coastal link is the same regional destination with 44px touch target, native keyboard link, source-bound projection and far-side/offscreen occlusion. Local title/ARIA only: local scene byte-equivalent after reversing two text substitutions.",
+    "continuity": "Frozen cloud snapshot and terrain/river payloads unchanged; cloud morphology/lighting/ray budgets are byte-identical outside the coordinate/import/evidence delta. No independent trees/rocks or parallel world.",
+    "independentReviewer": "/root/river_review; separate source review pending final disposition"
+  },
+  "limits": [
+    "Not a new local-ground physics or collision qualification.",
+    "No physical downhill-flow simulation claimed.",
+    "Right-side green/brown terrain blotching remains owner-accepted unfinished work."
+  ],
+  "authorityEffect": "NONE_EVIDENCE_ONLY",
+  "operationId": "AUDRALIA_GRATITUDE_ENTRY_POLAR_CONTINUITY_20261021_001",
+  "authorityGeneration": 2847,
+  "approvedFrozenSnapshotTree": "6dc23995b4194a073563303839d6f17a7909ed4f",
+  "sourcePreservation": "Frozen original assets unchanged. Original GA derivative changes only spherical coordinates, descriptor import and diagnostic evidence. Local scene behavior unchanged.",
+  "browserQualification": "PENDING_SEPARATE_REGISTERED_EXACT_HEAD_RUN",
+  "physicalTabletPerformanceClaimed": false
+}

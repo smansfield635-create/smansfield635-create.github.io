@@ -1,14 +1,14 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "audralia-cloud-review",
-  "description": "Exact approved4011 entry and originalFAP1 GA/W5 identity at normal canvas dimensions; no substitute shader or reduced-resolution proxy",
+  "description": "Gratitude visible naming and coastal entry, original FAP1 polar wrap repair at normal production canvas budgets",
   "checks": [
     {
       "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
       "includes": [
-        "AUDRALIA_EXACT_APPROVED_FAP1_RESTORE_RECEIPT_v1",
-        "094b819307e136c5e067bdcac21059f42c806c5df83caa17fe225dd5d8844158",
-        "FAP1_GPU_DESCRIPTOR_RENDERER"
+        "AUDRALIA_GRATITUDE_ENTRY_POLAR_CONTINUITY_RECEIPT_v1",
+        "8a0fc780aeb38b3cd5b3b25b5c7df00c0a392e6e5c963039e69dfb765ea0db12",
+        "CENTER_LOCAL_SPHERICAL_LOG_v1"
       ],
       "excludes": [
         "width:25%",

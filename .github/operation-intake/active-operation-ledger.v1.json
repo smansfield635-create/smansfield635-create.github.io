@@ -5742,6 +5742,50 @@
       "scopeHash": "511f47c7711cd7343ef18816c34b6efe9b865a992ae0c9d9a659999d39b1aabb",
       "state": "ADMITTED_LOCKED"
     },
+    "513ea65957f790dcc2f9f4e63a488f9393a1e9256cf68791a3e71ba9587d89ef": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
+          "lockGeneration": 2852,
+          "lockScope": "H_EARTH:CAVERN_ENTRANCE:THRESHOLD_BRUSH:20261021",
+          "operationId": "H_EARTH_CAVERN_THRESHOLD_BRUSH_20261021_001",
+          "procedureLocatorDigest": "29c24fb680bfb8dd851d64d259471b8abc34d4471b0d42ab58a764bca1d66f85",
+          "requestDigest": "a3be19878918ca1c2b590dcc96bd3f0622130ad3fe5b4544bb77e2963b7627a3",
+          "scopeHash": "513ea65957f790dcc2f9f4e63a488f9393a1e9256cf68791a3e71ba9587d89ef"
+        },
+        "bindingDigest": "5a1b39a6962787b68b62f4bb39ca26e1ddcfe31a2500024ce0cc06e64674271a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c858cca51b61f60ec740d737984bedff5a8fbd61bcb71f71e66949f7104c917b",
+          "commentId": 6321318656,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6585,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39637111832,
+          "workflowSha": "0a8e624fec2e85c28449988f3b031a795a1bd70a"
+        },
+        "lineageAnchorCommitSha": "406a1685ff365522d40fa515f19fe5e029bfdec4",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
+      "lockGeneration": 2852,
+      "lockScope": "H_EARTH:CAVERN_ENTRANCE:THRESHOLD_BRUSH:20261021",
+      "operationId": "H_EARTH_CAVERN_THRESHOLD_BRUSH_20261021_001",
+      "procedureLocatorDigest": "29c24fb680bfb8dd851d64d259471b8abc34d4471b0d42ab58a764bca1d66f85",
+      "released": false,
+      "requestDigest": "a3be19878918ca1c2b590dcc96bd3f0622130ad3fe5b4544bb77e2963b7627a3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "513ea65957f790dcc2f9f4e63a488f9393a1e9256cf68791a3e71ba9587d89ef",
+      "state": "ADMITTED_LOCKED"
+    },
     "514f09983e622eda84859dbe0c08e5a74e1fd5bef4da582ea4d7b7e557d5dcca": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -20534,7 +20578,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2851,
+  "lockGeneration": 2852,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

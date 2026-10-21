@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-20T23:28:25Z",
+  "generatedAt": "2026-10-21T01:02:14Z",
   "window30d": {
-    "start": "2026-09-20T23:28:25Z",
-    "end": "2026-10-20T23:28:25Z"
+    "start": "2026-09-21T01:02:14Z",
+    "end": "2026-10-21T01:02:14Z"
   },
   "daily": [
-    {
-      "date": "2026-09-21",
-      "pageLoads": 820
-    },
     {
       "date": "2026-09-22",
       "pageLoads": 250
@@ -96,7 +92,7 @@
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 31
+      "pageLoads": 30
     },
     {
       "date": "2026-10-14",
@@ -124,19 +120,23 @@
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 59
+      "pageLoads": 62
+    },
+    {
+      "date": "2026-10-21",
+      "pageLoads": 12
     }
   ],
   "summary": {
-    "pageLoads": 3422,
-    "botPageLoads": 1315,
-    "nonBotPageLoads": 2107
+    "pageLoads": 3406,
+    "botPageLoads": 1297,
+    "nonBotPageLoads": 2109
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 2359,
-      "visits": 2359
+      "pageLoads": 2343,
+      "visits": 2343
     },
     {
       "host": "diamondgatebridge.com",
@@ -172,18 +172,18 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 631,
-      "visits": 597
+      "pageLoads": 632,
+      "visits": 598
     },
     {
       "path": "/",
-      "pageLoads": 605,
-      "visits": 345
+      "pageLoads": 585,
+      "visits": 325
     },
     {
       "path": "/products/education/",
-      "pageLoads": 304,
-      "visits": 114
+      "pageLoads": 294,
+      "visits": 104
     },
     {
       "path": "/mirror-manor-preview/",
@@ -201,9 +201,9 @@
       "visits": 60
     },
     {
-      "path": "/prototypes/evan-job-stage/",
-      "pageLoads": 70,
-      "visits": 70
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 72,
+      "visits": 52
     }
   ],
   "ownerMeasurement": {

@@ -33,7 +33,7 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/audralia/cloud-continuity-qa-v1.html",
-      "sha256": "55dba33c1741c32e17325ca1ffb71a91b3aa1956e6015e7356ce653c77027b81"
+      "sha256": "f5590beea20d6a38e22a386d23297dca1fab0cbcf8544deaf0d9de6e0b49641e"
     },
     {
       "path": "showroom/globe/audralia/index.html",
@@ -61,5 +61,6 @@
   "approvedFrozenSnapshotTree": "6dc23995b4194a073563303839d6f17a7909ed4f",
   "sourcePreservation": "Exact owner-approved entry restored; all cloud implementation assets and terrain/river unchanged.",
   "browserQualification": "PENDING_SEPARATE_REGISTERED_EXACT_HEAD_RUN",
-  "physicalTabletPerformanceClaimed": false
+  "physicalTabletPerformanceClaimed": false,
+  "qualificationReleaseStampRule": "Repository index remains exact approvedblob248139879. Existing publication builder adds one loading-version stamp; QA validates exact originallabel/full40hexsha/matchinguppercase8suffix and reverses only that single known div before full-sourceSHA094b check. Other changedbytes still fail."
 }

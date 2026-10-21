@@ -64,6 +64,43 @@ function detailedBlade(m,at,side,width,color,{rows=9,columns=5,cup=.025,phase=0,
  details.push({kind,vertexStart,vertexCount:m.vertices.length-vertexStart,indexStart,indexCount:m.indices.length-indexStart,rows,columns,veinRows,midribRelief:width*.13,branchRelief:width*.055,asymmetry});
 }
 
+// ONE_REPAIR specimen: a narrow midrib with explicit shoulders and three narrow
+// chevron veins. These are connected blade triangles, not overlay geometry.
+// Close longitudinal shoulder rows keep relief and pigment from being averaged
+// across the entire blade by the shared-vertex renderer.
+function specimenBlade(m,at,side,width,color,{cup=.025,phase=0,roundness=.8,asymmetry=.08,kind='BROAD_LEAF'}={},details=[]){
+ const vertexStart=m.vertices.length,indexStart=m.indices.length;
+ const root=vertex(m,at(0),tint(color,.70)),tip=vertex(m,at(1),tint(color,1.02));
+ const across=[-1,-.62,-.09,0,.09,.62,1],centers=[.18,.45,.73],grid=[];
+ const rowFractions=centers.flatMap(t=>[t-.018,t,t+.018]);
+ for(let i=0;i<rowFractions.length;i++){
+  const t=rowFractions[i],crest=i%3===1,row=[];
+  for(const u of across){
+   const abs=Math.abs(u),tu=t+.12*abs*(1-t),shape=Math.pow(Math.sin(Math.PI*tu),roundness);
+   const w=width*shape*(1+asymmetry*u+.045*Math.sin(tu*18+phase)*abs),p=at(tu);
+   const isRib=abs<.001,isShoulder=abs>.001&&abs<.10;
+   const rib=width*(isRib?.10:isShoulder?.012:0)*shape;
+   const branch=crest?width*.045*Math.sin(Math.PI*abs)*Math.pow(1-tu,.45)*shape:0;
+   const volume=width*.025*Math.sin(Math.PI*abs)*shape;
+   const curl=cup*shape*Math.pow(abs,3)+width*.06*u*Math.sin(tu*4+phase)*shape;
+   const q=add(p,add(mul(side,u*w),[0,rib+branch+volume+curl,0]));
+   const bladeTone=.91+.07*tu;
+   const pigment=isRib?1.30:isShoulder?.80:(crest?1.17:(i%3===0?.86:.94));
+   // The outermost margin is green blade tissue, not a bright vein border.
+   const tone=abs>.99?bladeTone*.94:pigment;
+   row.push(vertex(m,q,tint(color,tone)));
+  }
+  grid.push(row);
+ }
+ for(let j=0;j<across.length-1;j++)face(m,root,grid[0][j+1],grid[0][j]);
+ for(let i=1;i<grid.length;i++)for(let j=0;j<across.length-1;j++){
+  face(m,grid[i-1][j],grid[i-1][j+1],grid[i][j]);
+  face(m,grid[i-1][j+1],grid[i][j+1],grid[i][j]);
+ }
+ for(let j=0;j<across.length-1;j++)face(m,grid.at(-1)[j],grid.at(-1)[j+1],tip);
+ details.push({kind,vertexStart,vertexCount:m.vertices.length-vertexStart,indexStart,indexCount:m.indices.length-indexStart,rows:grid.length,columns:across.length,veinRows:[2,5,8],midribRelief:width*.10,branchRelief:width*.045,asymmetry,specimenRevision:'CONNECTED_NARROW_VEINS_1',transverseFractions:across,rowFractions,veinShoulderHalfSpacing:.018,midribShoulderFraction:.09});
+}
+
 export function buildCavernUnderstoryPlant({id='CAVERN_UNDERSTORY',kind,scale=1,heading=0}={}){
  if(typeof id!=='string'||!id||!['groundcover','broadleaf','fern','flower'].includes(kind)||!Number.isFinite(scale)||scale<.25||scale>2||!Number.isFinite(heading))throw Error('UNDERSTORY_PARAMETERS_INVALID');
  const stems=mesh(),leaves=mesh(),flowers=mesh(),attachments=[],leafDetails=[];
@@ -77,7 +114,7 @@ export function buildCavernUnderstoryPlant({id='CAVERN_UNDERSTORY',kind,scale=1,
    const root=[0,.015+i*.004,0],base=add(mul(d,broad?.18:.055),[0,height,0]);
    stem(stems,[root,add(mul(d,broad?.07:.025),[0,height*.60,0]),base],broad?.018:.009,stemColor);
    const at=t=>add(base,add(mul(d,length*t),[0,(broad?.95:.30)*t-(broad?.45:.25)*t*t,0]));
-   detailedBlade(leaves,at,side,(broad?.21:.14)*(.91+.16*rnd(80+i)),tint(green,.83+.34*rnd(60+i)),{rows:broad?9:5,columns:5,cup:broad?.025:.012,phase:a+(rnd(100+i)-.5),roundness:broad?.7:.65,asymmetry:(rnd(120+i)-.5)*.28,kind:broad?'BROAD_LEAF':'GROUNDCOVER_LEAF'},leafDetails);
+   (broad&&id==='CAVERN_THRESHOLD_0'?specimenBlade:detailedBlade)(leaves,at,side,(broad?.21:.14)*(.91+.16*rnd(80+i)),tint(green,.83+.34*rnd(60+i)),{rows:broad?9:5,columns:5,cup:broad?.025:.012,phase:a+(rnd(100+i)-.5),roundness:broad?.7:.65,asymmetry:(rnd(120+i)-.5)*.28,kind:broad?'BROAD_LEAF':'GROUNDCOVER_LEAF'},leafDetails);
    attachments.push({kind:'LEAF',stemTip:base,leafRoot:at(0)});
   }
  }else if(kind==='fern'){

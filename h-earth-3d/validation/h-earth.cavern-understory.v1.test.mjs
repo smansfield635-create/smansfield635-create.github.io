@@ -171,3 +171,26 @@ test('outer threshold broadleaves do not pierce neighboring flower heads',()=>{
   assert.ok(![0,1,2].some(k=>pierces(a.p[k],a.p[(k+1)%3],b.p)||pierces(b.p[k],b.p[(k+1)%3],a.p)),`threshold${leaf} leaf pierces flower${flower}`);
  }
 });
+
+// Immutable baseline:5d344fb41e4668361a91e05891f53d1366b1d944; no git required at runtime.
+test('ONE_REPAIR changes only threshold0 and retains all other34 plants byte-identically',()=>{
+ const others=[...CAVERN_UNDERSTORY_PLACEMENTS,...CAVERN_THRESHOLD_PLACEMENTS].filter(d=>d.id!=='CAVERN_THRESHOLD_0').map(d=>buildCavernUnderstoryPlant(d));
+ assert.equal(others.length,34);assert.equal(hash(others),'c5814054f3a3bfa5090639431912e887eb559c7522b82afc427bc05b8c7d77dc');
+});
+test('threshold0 specimen has narrow connected midrib and three raised chevrons',()=>{
+ const specimen=buildCavernUnderstoryPlant(CAVERN_THRESHOLD_PLACEMENTS[0]),g=specimen.parts.find(p=>p.part==='LEAVES').geometry;
+ assert.equal(specimen.leafDetails.length,7);
+ for(const d of specimen.leafDetails){
+  assert.equal(d.specimenRevision,'CONNECTED_NARROW_VEINS_1');assert.equal(d.rows,9);assert.equal(d.columns,7);
+  assert.deepEqual(d.veinRows,[2,5,8]);assert.deepEqual(d.transverseFractions,[-1,-.62,-.09,0,.09,.62,1]);
+  assert.equal(d.vertexCount,65);assert.equal(d.indexCount/3,108);
+  for(let row=0;row<9;row++){const at=d.vertexStart+2+row*7,vs=g.vertices;
+   assert.ok(vs[at+3].y-(vs[at+2].y+vs[at+4].y)/2>.001,'midrib lacks narrow raised crest');
+   assert.ok(g.attributes.colors[at+3][1]>g.attributes.colors[at+2][1],'midrib pigment lost');
+  }
+  for(const row of [1,4,7])for(const column of [1,5]){const at=d.vertexStart+2+row*7+column,vs=g.vertices;
+   assert.ok(vs[at].y-(vs[at-7].y+vs[at+7].y)/2>.0002,'chevron lacks geometric relief');
+  }
+  const root=g.vertices[d.vertexStart];assert.ok(specimen.attachments.some(a=>Math.hypot(root.x-a.leafRoot[0],root.y-a.leafRoot[1],root.z-a.leafRoot[2])<1e-10));
+ }
+});

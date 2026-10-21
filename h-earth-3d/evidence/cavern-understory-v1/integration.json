@@ -3,7 +3,7 @@
   "operationId": "H_EARTH_CAVERN_FOLIAGE_DETAIL_20261021_001",
   "canonicalAdmissionGeneration": 2853,
   "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6322224443",
-  "parent": "114431897704e929d1b3c02b7a34d2b8621b87f2",
+  "parent": "f2b276a151182219bb778571f6bb04594bb722c0",
   "receipt": {
     "schema": "H_EARTH_CAVERN_UNDERSTORY_v1",
     "siteId": "B_REAR_RAVINE",
@@ -235,7 +235,7 @@
         "scale": 1.15,
         "heading": 1.8,
         "rootY": 11.40367875907928,
-        "maximumHeight": 1.4300215069443039
+        "maximumHeight": 1.4195799611712572
       },
       {
         "id": "CAVERN_THRESHOLD_1",
@@ -492,8 +492,8 @@
         "maximumHeight": 0.1313619862801849
       }
     ],
-    "triangleCount": 19672,
-    "gpuByteLength": 1190610,
+    "triangleCount": 19924,
+    "gpuByteLength": 1202328,
     "drawBatchCount": 2,
     "shadowCasterBatchCount": 2,
     "surfaceSource": "ACTUAL_EMITTED_OUTDOOR_AND_FLOOR_TRIANGLES",
@@ -752,21 +752,20 @@
       "rootY": 11.258550835994072
     }
   ],
-  "localGenerationMilliseconds": 6551.721147,
+  "localGenerationMilliseconds": 6376.653407000001,
   "deviceTimingMeasured": false,
   "focusedTests": {
-    "passed": 18,
+    "passed": 20,
     "failed": 0
   },
   "independentReview": {
     "role": "WEST",
+    "status": "STRUCTURAL_PASS_VISUAL_NOT_ESTABLISHED",
     "trianglesNondegenerate": true,
     "accumulatedVertexNormalsNonzero": true,
-    "leafBloomStrictPenetrations": 0,
-    "leafTrianglesCompared": 13392,
-    "bloomTrianglesCompared": 900,
+    "specimenNeighborFlowerClearancePassed": true,
     "all35RootIdentitiesPreserved": true,
-    "original17ScaleHeadingPreserved": true,
+    "other34CompleteOutputsSha256": "c5814054f3a3bfa5090639431912e887eb559c7522b82afc427bc05b8c7d77dc",
     "flowerTopologyColorsRigidShapePreserved": true
   },
   "preservation": {
@@ -776,16 +775,36 @@
     "priorGrassVisualAcceptance": "PENDING",
     "all35RootIdentitiesPreserved": true
   },
-  "visualReview": "PENDING_CLOSE_UP_FOLIAGE_FLOWER_ORIENTATION_NATURAL_VARIATION",
-  "browserQualification": "PENDING",
+  "visualReview": "ONE_REPAIR_SPECIMEN_NOT_VISUALLY_ACCEPTED",
+  "browserQualification": "LOCAL_MANAGED_BROWSER_WEBGL2_UNAVAILABLE",
   "sourceResearch": [
     "https://developer.android.com/games/optimize/materials",
     "https://developer.nvidia.com/gpugems/gpugems3/part-iii-rendering/chapter-16-vegetation-procedural-animation-and-shading-crysis"
   ],
   "timingComparison": {
-    "baselineMilliseconds": 3702.504321999999,
-    "candidateMilliseconds": 6551.721147,
+    "baselineMilliseconds": 6551.721147,
+    "candidateMilliseconds": 6376.653407000001,
     "hostOnly": true,
     "tabletResponsiveness": "PENDING"
+  },
+  "specimenRepair": {
+    "disposition": "ONE_REPAIR",
+    "specimenId": "CAVERN_THRESHOLD_0",
+    "previousCandidate": "f2b276a151182219bb778571f6bb04594bb722c0",
+    "scope": "ONE_EXISTING_BROADLEAF_PLANT_ONLY",
+    "other34PlantsUnchanged": true,
+    "flowersUnchanged": true,
+    "observedDefect": "Device close-ups show broad plain green surfaces; ribs and branching veins do not read clearly. Flower tilt accepted as improved.",
+    "mechanism": "Narrow connected midrib shoulders and three tapered secondary vein crests with green crest/trough vertex contrast. Existing shared-normal renderer and matte material unchanged.",
+    "addedTriangles": 252,
+    "addedGpuBytes": 11718,
+    "visualProof": {
+      "status": "NOT_ESTABLISHED",
+      "reason": "Managed Sites preview of unchanged baseline returned R3C_WEBGL2_CONTEXT_UNAVAILABLE. No before/after visual claim; no propagation.",
+      "requiredComparison": "Same specimen at x37.9 z-262, identical near and approach cameras, actual entrance lighting and shadows. Readable midrib and branching veins; natural curved volume; no flower interference.",
+      "nextAction": "Obtain actual WebGL2 before/after rendering of this saved specimen before propagating."
+    },
+    "longWorkflowDispatched": false,
+    "privatePreviewUpdated": false
   }
 }

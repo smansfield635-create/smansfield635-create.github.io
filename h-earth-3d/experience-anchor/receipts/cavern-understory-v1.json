@@ -29,7 +29,7 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/geometry-cavern-understory.v1.js",
-      "sha256": "afe9f379481db2d024af1975dbbec01b942be6228b875710dcc840c5a1c26cb4"
+      "sha256": "7c30b953f24906024736094cea28bdbf8e8e97f901d3c0ec3a02f037391a0ce0"
     },
     {
       "path": "showroom/globe/h-earth/render/cavern-understory-placement.v1.js",
@@ -41,10 +41,10 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.cavern-understory.v1.test.mjs",
-      "sha256": "1a9fd87e31ce340b8457c143b296ad0e3fde7ab7c0f96fc438957aaa9809f2ea"
+      "sha256": "094d51d031e015cb4a84e2a8731fbe3edbc5aa56547cee1100174de72f055d54"
     }
   ],
-  "acceptanceBasis": "Structural same-world continuity:35 root identities preserved, existing renderer/world/navigation unchanged. Leaf geometry refined in place and flowers rigidly tilted preserving petal topology/colors/shape.18 focused checks and independent review pass. Physical foliage quality and tablet response pending.",
+  "acceptanceBasis": "Structural same-world continuity only: one threshold broadleaf refined in place; all35 roots, all flowers and other34 full plant outputs unchanged.20 focused tests and independent West structural review pass. Actual visual quality NOT_ESTABLISHED: managed browser cannot create WebGL2. No propagation or private preview update.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
   "canonicalAdmissionGeneration": 2853

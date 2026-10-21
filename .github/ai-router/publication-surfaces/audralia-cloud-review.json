@@ -1,17 +1,18 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "audralia-cloud-review",
-  "description": "Actual tablet cloud verification; terminal failure is explicit and console errors remain blocking",
+  "description": "Exact approved4011 entry and originalFAP1 GA/W5 identity at normal canvas dimensions; no substitute shader or reduced-resolution proxy",
   "checks": [
     {
       "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
       "includes": [
-        "AUDRALIA_CLOUD_CONTINUITY_RECEIPT_v1",
-        "initializeAudraliaTabletSingleContextClouds",
-        "ed0905a208ee6bc8b99ff7271a3d636119d947dc57306a9293ba7405c3de0442"
+        "AUDRALIA_EXACT_APPROVED_FAP1_RESTORE_RECEIPT_v1",
+        "094b819307e136c5e067bdcac21059f42c806c5df83caa17fe225dd5d8844158",
+        "FAP1_GPU_DESCRIPTOR_RENDERER"
       ],
       "excludes": [
-        "http-equiv=\"refresh\""
+        "width:25%",
+        "height:25%"
       ]
     }
   ],

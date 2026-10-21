@@ -1,0 +1,51 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/cavern-understory-v1/integration.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/cavern-understory-v1/integration.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/cavern-understory-v1/integration.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-cavern-understory.v1.js",
+      "sha256": "bf5600cd5c244e6bcdb5bda3d73f9ca9110d8dd1a927f6fb97123d4fdd9ae2b0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/cavern-understory-placement.v1.js",
+      "sha256": "cec65ad800f66bcf9b3177c97e689372eb3b7369dd799e10f5a37c5007324476"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "654edbc5a1ff307e88a9d6384cf4b0b22396b908fc4189769e38f47456d3c7c8"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-understory.v1.test.mjs",
+      "sha256": "b07dfe2204d0496df20f2cc7fa7eed9e92493fbbc5039c21608ef677c1908497"
+    }
+  ],
+  "acceptanceBasis": "Structural same-world continuity: additive admitted plant meshes reuse existing renderer, lighting, shadows and navigation; no existing planting or world geometry changed. Physical visual acceptance and exact browser qualification pending.",
+  "ownerPerceptualAcceptance": false,
+  "newIntegratedBrowserRunPerformed": false,
+  "canonicalAdmissionGeneration": 2851
+}

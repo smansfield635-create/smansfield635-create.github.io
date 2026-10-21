@@ -1,14 +1,25 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
-  "result": "WORKFLOW_DISPATCH_FAILED",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
   "requestId": "h-earth-soil-continuity-021a4b12",
   "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 6638,
   "requestBranch": "ai-dispatch-request-soil-continuity-021a4b12",
-  "requestCommit": "4ec196a3febc1f2f31e8b66e65af3b76a637cc94",
+  "requestCommit": "b88dcc327eed96c19852fb4bb8c6e3d0d908c977",
+  "requestCommitParent": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
+  "requestParentWasCurrent": true,
   "currentMainSha": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
-  "bridgeRunId": "39625432567",
-  "error": "Stale dispatch request: parent aaeae59e12c65ddef901d8fc69dafe6539678a2c != current main 0a8e624fec2e85c28449988f3b031a795a1bd70a",
-  "failedAt": "2026-10-21T15:24:57.419Z"
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "021a4b12fdf7823dc3be5d6076dac72cabf58269",
+    "surface_id": "h-earth-simple"
+  },
+  "bridgeRunId": "39625566402",
+  "dispatchedRunId": 39625597456,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39625597456",
+  "dispatchedRunHeadSha": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
+  "dispatchedAt": "2026-10-21T15:25:49.063Z",
+  "resolvedAt": "2026-10-21T15:25:56.540Z"
 }

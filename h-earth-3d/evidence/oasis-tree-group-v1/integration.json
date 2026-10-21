@@ -1,0 +1,328 @@
+{
+  "status": "STRUCTURAL_PASS_VISUAL_PENDING",
+  "baseline": "291b233f387f73599e38061de9260f6489ce6634",
+  "originalIndexHash": "d023ae849deef6b4153ab5a55bd15b9616ee577675f808f0d4ec0073bec71aa9",
+  "originalWorldHash": "36db90ccd585faf817d91eb5e966cda7ec0ae327127503e333d87afca0c3135c",
+  "terrainHash": "03a3152bc2fba340dfd7cf18552809f32271688a58b627f9bde7fcf31b121f1c",
+  "buildMs": 4560.597725,
+  "receipt": {
+    "schema": "H_EARTH_OASIS_TREE_GROUP_v1",
+    "targetId": "PROPOSED_OASIS_01",
+    "treeCount": 4,
+    "placements": [
+      {
+        "id": "PROPOSED_OASIS_01",
+        "x": 55.5,
+        "z": -307.5,
+        "sourceX": 55.5,
+        "sourceZ": -307.5,
+        "scaleX": 1,
+        "scaleY": 1,
+        "scaleZ": 1,
+        "heading": 0.22,
+        "agedFocus": true,
+        "sourceAnchor": {
+          "x": 55.5,
+          "z": -307.5
+        },
+        "rootY": 9.534595874910181,
+        "spans": {
+          "BARK": {
+            "vertexStart": 0,
+            "vertexCount": 1278,
+            "indexStart": 0,
+            "indexCount": 6804,
+            "bounds": {
+              "min": [
+                51.574693799912396,
+                9.355321233290425,
+                -311.72587768932823
+              ],
+              "max": [
+                59.74708706790458,
+                21.988035669656277,
+                -302.9433365186306
+              ]
+            }
+          },
+          "CANOPY": {
+            "vertexStart": 0,
+            "vertexCount": 11760,
+            "indexStart": 0,
+            "indexCount": 17640,
+            "bounds": {
+              "min": [
+                51.22719924543779,
+                14.486541520930395,
+                -312.0073410193216
+              ],
+              "max": [
+                60.08785795721896,
+                22.04138160981756,
+                -302.74075993302654
+              ]
+            }
+          }
+        },
+        "rootCount": 6,
+        "leafCount": 2940,
+        "triangleCount": 8148,
+        "minimumBurial": 0.1373537731565152,
+        "visualHeight": 12.506785734907378,
+        "shapeTemplate": "SAVED_AGED_A08",
+        "groundSamples": 468
+      },
+      {
+        "id": "PROPOSED_OASIS_02",
+        "x": 46,
+        "z": -320,
+        "sourceX": 47.5,
+        "sourceZ": -317.5,
+        "scaleX": 0.72,
+        "scaleY": 0.94,
+        "scaleZ": 0.82,
+        "heading": 2.14,
+        "agedFocus": false,
+        "sourceAnchor": {
+          "x": 47.5,
+          "z": -317.5
+        },
+        "rootY": 9.484078234449669,
+        "spans": {
+          "BARK": {
+            "vertexStart": 1278,
+            "vertexCount": 1278,
+            "indexStart": 6804,
+            "indexCount": 6804,
+            "bounds": {
+              "min": [
+                42.67555497530167,
+                9.301764790535653,
+                -322.90698824489266
+              ],
+              "max": [
+                49.42460434329753,
+                21.190311641511002,
+                -316.32018267125966
+              ]
+            }
+          },
+          "CANOPY": {
+            "vertexStart": 11760,
+            "vertexCount": 11760,
+            "indexStart": 17640,
+            "indexCount": 17640,
+            "bounds": {
+              "min": [
+                42.43225691109756,
+                14.138907141708671,
+                -323.12045607162406
+              ],
+              "max": [
+                49.68822838794182,
+                21.240456825262605,
+                -316.08051626056766
+              ]
+            }
+          }
+        },
+        "rootCount": 6,
+        "leafCount": 2940,
+        "triangleCount": 8148,
+        "minimumBurial": 0.12842249961436045,
+        "visualHeight": 11.756378590812934,
+        "shapeTemplate": "SAVED_AGED_A08",
+        "groundSamples": 468
+      },
+      {
+        "id": "PROPOSED_OASIS_03",
+        "x": 74,
+        "z": -290,
+        "sourceX": 71.5,
+        "sourceZ": -291.5,
+        "scaleX": 0.84,
+        "scaleY": 0.83,
+        "scaleZ": 0.69,
+        "heading": 4.07,
+        "agedFocus": false,
+        "sourceAnchor": {
+          "x": 71.5,
+          "z": -291.5
+        },
+        "rootY": 9.337485241077841,
+        "spans": {
+          "BARK": {
+            "vertexStart": 2556,
+            "vertexCount": 1278,
+            "indexStart": 13608,
+            "indexCount": 6804,
+            "bounds": {
+              "min": [
+                70.31523361919768,
+                9.153548344802484,
+                -293.9170764323716
+              ],
+              "max": [
+                76.92109799068419,
+                19.6738402707171,
+                -286.9119408710163
+              ]
+            }
+          },
+          "CANOPY": {
+            "vertexStart": 23520,
+            "vertexCount": 11760,
+            "indexStart": 35280,
+            "indexCount": 17640,
+            "bounds": {
+              "min": [
+                70.06741330169748,
+                13.447600127274619,
+                -294.12691245075143
+              ],
+              "max": [
+                77.23435668146196,
+                19.718117401050964,
+                -286.70402211035406
+              ]
+            }
+          }
+        },
+        "rootCount": 6,
+        "leafCount": 2940,
+        "triangleCount": 8148,
+        "minimumBurial": 0.11338715391049974,
+        "visualHeight": 10.380632159973123,
+        "shapeTemplate": "SAVED_AGED_A08",
+        "groundSamples": 468
+      },
+      {
+        "id": "PROPOSED_OASIS_04",
+        "x": 65,
+        "z": -306,
+        "sourceX": 63.5,
+        "sourceZ": -301.5,
+        "scaleX": 0.79,
+        "scaleY": 0.88,
+        "scaleZ": 0.88,
+        "heading": 5.36,
+        "agedFocus": false,
+        "sourceAnchor": {
+          "x": 63.5,
+          "z": -301.5
+        },
+        "rootY": 9.212045430679591,
+        "spans": {
+          "BARK": {
+            "vertexStart": 3834,
+            "vertexCount": 1278,
+            "indexStart": 20412,
+            "indexCount": 6804,
+            "bounds": {
+              "min": [
+                61.363184664039174,
+                9.029861781747789,
+                -310.06673852083867
+              ],
+              "max": [
+                68.7379573387315,
+                20.17107245005616,
+                -302.86935377847595
+              ]
+            }
+          },
+          "CANOPY": {
+            "vertexStart": 35280,
+            "vertexCount": 11760,
+            "indexStart": 52920,
+            "indexCount": 17640,
+            "bounds": {
+              "min": [
+                61.06188391089173,
+                13.569757599177379,
+                -310.3346311480733
+              ],
+              "max": [
+                68.96813580757774,
+                20.218016877398085,
+                -302.643418847394
+              ]
+            }
+          }
+        },
+        "rootCount": 6,
+        "leafCount": 2940,
+        "triangleCount": 8148,
+        "minimumBurial": 0.12315938240971464,
+        "visualHeight": 11.005971446718492,
+        "shapeTemplate": "SAVED_AGED_A08",
+        "groundSamples": 468
+      }
+    ],
+    "triangleCount": 32592,
+    "gpuByteLength": 3989592,
+    "drawBatchCount": 2,
+    "shadowCasterBatchCount": 0,
+    "castShadowClaim": false,
+    "existingCavernShadowPreserved": true,
+    "perFrameGeneration": false,
+    "sourceTerrainMutated": false,
+    "originalWoodlandGeometryMutated": false,
+    "hydrationPreserved": true,
+    "physicalReview": "PENDING"
+  },
+  "retirement": {
+    "schema": "H_EARTH_OASIS_TREE_RETIREMENT_v1",
+    "retiredSpanIds": [
+      "H_EARTH_GEN2800_PROPOSED_OASIS_01_BARK",
+      "H_EARTH_GEN2800_PROPOSED_OASIS_01_CANOPY",
+      "H_EARTH_GEN2800_PROPOSED_OASIS_02_BARK",
+      "H_EARTH_GEN2800_PROPOSED_OASIS_02_CANOPY",
+      "H_EARTH_GEN2800_PROPOSED_OASIS_03_BARK",
+      "H_EARTH_GEN2800_PROPOSED_OASIS_03_CANOPY",
+      "H_EARTH_GEN2800_PROPOSED_OASIS_04_BARK",
+      "H_EARTH_GEN2800_PROPOSED_OASIS_04_CANOPY"
+    ],
+    "retiredSpanCount": 8,
+    "retiredTriangleCount": 18400,
+    "sourceIndicesMutated": false,
+    "originalWoodlandRetired": false
+  },
+  "minimumRootBurial": 0.11338715391049974,
+  "minimumLowWoodGap": 6.637374165983431,
+  "sourceHashes": {
+    "showroom/globe/h-earth/render/geometry-oasis-tree-group.v1.js": "8f5bba5ae64d45c3b8f242215e787305b149bd278a29fd7ea6779206dbad9e72",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "4d83aa15dc2b618bdbb8e9bb272d9e4028162803594d4050e5e469a1d1171375"
+  },
+  "visualAcceptance": false,
+  "schema": "H_EARTH_CAVERN_TREE_GROUP_INTEGRATION_v1",
+  "operationId": "H_EARTH_CAVERN_TREE_GROUP_20261021_001",
+  "independentReviewer": "WEST_INDEPENDENT_REVIEW",
+  "test": {
+    "command": "node --test h-earth-3d/validation/h-earth.oasis-tree-group.v1.test.mjs",
+    "passed": 9,
+    "failed": 0,
+    "durationMs": 22545.357652
+  },
+  "admission": {
+    "generation": 2855,
+    "returnComment": 6327650438,
+    "run": 39684416121,
+    "requestComment": 6327643155
+  },
+  "buildTimingQualification": "Node host geometry construction only; no browser or target-device performance claim. Two builds exercised determinism.",
+  "integrationReview": [
+    "Normal baked package hydration retained; exactly eight oasis spans are degenerated before base GPU upload.",
+    "Two replacement batches are built from the actual geological runtime support model and added to main draw and disposal.",
+    "Authored role3 bark/leaf material tags retain atlas sampling outside the original clearing.",
+    "Leaf mip level0 remains exact; both atlas halves survive cutoff0.45 at coarse levels and final1x1 survives.",
+    "Original woodland and every other hydrated index remain unchanged; source ground geometry hash remains unchanged.",
+    "No grove shadow batches added; existing cavern shadow allocation and casters remain unchanged."
+  ],
+  "limitations": [
+    "Browser preflight and private near/far visual review remain pending.",
+    "Natural placement and leaf appearance require owner visual review.",
+    "All four reuse the saved aged shape with varied scale and heading; no claim of four separately authored botanical forms."
+  ],
+  "canonicalBaseGzipSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a"
+}

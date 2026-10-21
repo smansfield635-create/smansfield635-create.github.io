@@ -1,3 +1,4 @@
+import {buildOasisTreeGroup,suppressOasisTreeGroupIndices,buildCoveragePreservingLeafMipmaps} from './geometry-oasis-tree-group.v1.js';
 import {buildCavernUnderstoryPlacement} from './cavern-understory-placement.v1.js';
 import {buildCavernEntranceIvy} from './cavern-entrance-ivy.v1.js';
 import {buildCavernPalmPlacement} from './cavern-palm-placement.v1.js';
@@ -2267,6 +2268,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     // Retire ONLY triangles wholly inside its bounded local patch. The canonical
     // package, original vertex buffers and existing draw-range lengths stay frozen.
     resources.geologicalRuntime=constructGeologicalRuntimeBridge(renderPackage);
+    // Retire only the four cavern-side copies; immutable hydrated bytes stay intact.
+    const oasisRetirement=suppressOasisTreeGroupIndices(resources.woodlandSuppressedIndices,renderPackage.primitiveSpans);
+    resources.woodlandSuppressedIndices=oasisRetirement.indices;resources.oasisTreeRetirement=oasisRetirement.receipt;
     resources.woodlandSuppressedIndices=retireGeologicalBaseIndices(
       resources.woodlandSuppressedIndices,resources.geologicalRuntime.retirement);
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices);
@@ -2425,11 +2429,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     resources.cavernIvy=ivy.receipt;
     const understory=buildCavernUnderstoryPlacement(model);
     resources.cavernUnderstory=understory.receipt;
+    const oasisTrees=buildOasisTreeGroup(model);resources.oasisTrees=oasisTrees.receipt;
     const plannedBytes=parts=>parts.reduce((n,p)=>n+p.mesh.vertexCount*69+p.mesh.indices.byteLength,0);
     if(plannedBytes(model.meshes)>4*1024*1024)throw Error('GEOLOGICAL_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(palms.meshes)>2*1024*1024)throw Error('CAVERN_PALM_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(ivy.meshes)>1024*1024)throw Error('CAVERN_IVY_GPU_MEMORY_BUDGET_EXCEEDED');
-    for(const {role,mesh,colors:palmColors,leaflets} of [...model.meshes,...palms.meshes,...ivy.meshes,...understory.meshes]){
+    if(plannedBytes(oasisTrees.meshes)>5*1024*1024)throw Error('OASIS_GROUP_GPU_MEMORY_BUDGET_EXCEEDED');
+    for(const {role,mesh,colors:palmColors,leaflets,clearingAttributes} of [...model.meshes,...palms.meshes,...ivy.meshes,...understory.meshes,...oasisTrees.meshes]){
       const n=mesh.vertexCount,positions=mesh.positions,indices=mesh.indices;
       if(!(positions instanceof Float32Array)||!(indices instanceof Uint32Array)||n<=0||indices.length%3!==0)
         throw Error('GEOLOGICAL_MESH_NOT_TRIANGULATED:'+role);
@@ -2449,6 +2455,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       // Source-color continuity: never paint a new rectangle over accepted land.
       // Exact base-triangle linear albedo drives the entire replacement rim.
       for(let i=0;i<n;i++){
+        if(role==='OASIS_TREE_GROUP'){
+          const linear=palmColors[i].map(c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4));
+          colors.set([...linear,1],i*4);mats.set([...clearingAttributes[i],2],i*4);continue;
+        }
         if(role==='CAVERN_PALM'||role==='CAVERN_IVY'||role==='CAVERN_UNDERSTORY'){
           const linear=palmColors[i].map(c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4));
           colors.set([...linear,1],i*4);mats.set([.82,.035,0,1],i*4);continue;
@@ -2506,7 +2516,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       };
       put(0,positions,3);put(1,normals,3);put(2,colors,4);put(3,mats,4);
       const models=new Uint8Array(n),surfaces=new Uint8Array(n),ids=new Uint16Array(n),roles=new Uint8Array(n);
-      surfaces.fill(255);ids.fill((role==='CAVERN_PALM'||role==='CAVERN_IVY'||role==='CAVERN_UNDERSTORY')?(leaflets?62002:62003):role==='NATURAL_CLIFF_FACE'||role==='CAVERN_PHYSICAL_SHELL'?62001:62000);roles.fill((role==='CAVERN_PALM'||role==='CAVERN_IVY'||role==='CAVERN_UNDERSTORY')?3:role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'||role==='NATURAL_CLIFF_FACE'?1:
+      surfaces.fill(255);ids.fill(role==='OASIS_TREE_GROUP'?62004:(role==='CAVERN_PALM'||role==='CAVERN_IVY'||role==='CAVERN_UNDERSTORY')?(leaflets?62002:62003):role==='NATURAL_CLIFF_FACE'||role==='CAVERN_PHYSICAL_SHELL'?62001:62000);roles.fill(role==='OASIS_TREE_GROUP'?3:(role==='CAVERN_PALM'||role==='CAVERN_IVY'||role==='CAVERN_UNDERSTORY')?3:role==='ERODED_TERRAIN'||role==='MOUNTAIN_OVERBURDEN'||role==='NATURAL_CLIFF_FACE'?1:
         role==='FRESHWATER_RIVER'||role==='OASIS_WATER'?4:5);
       state.renderedAttributes.coastDistances=coast;state.renderedAttributes.contactDistances=contact;
       put(4,models,1,gl.UNSIGNED_BYTE,true);put(5,surfaces,1,gl.UNSIGNED_BYTE,true);
@@ -2519,21 +2529,23 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       instances.push(state);
     }
     // Separate preflight budgets above preserve the existing geological limit.
-    resources.geologicalMeshes=instances.filter(p=>p.role!=='CAVERN_PALM'&&p.role!=='CAVERN_IVY'&&p.role!=='CAVERN_UNDERSTORY');
+    resources.geologicalMeshes=instances.filter(p=>p.role!=='OASIS_TREE_GROUP'&&p.role!=='CAVERN_PALM'&&p.role!=='CAVERN_IVY'&&p.role!=='CAVERN_UNDERSTORY');
     resources.cavernPalmMeshes=instances.filter(p=>p.role==='CAVERN_PALM');
     resources.cavernPalmGPUBytes=resources.cavernPalmMeshes.reduce((n,p)=>n+p.gpuByteLength,0);
     resources.cavernIvyMeshes=instances.filter(p=>p.role==='CAVERN_IVY');
     resources.cavernIvyGPUBytes=resources.cavernIvyMeshes.reduce((n,p)=>n+p.gpuByteLength,0);
     resources.cavernUnderstoryMeshes=instances.filter(p=>p.role==='CAVERN_UNDERSTORY');
     resources.cavernUnderstoryGPUBytes=resources.cavernUnderstoryMeshes.reduce((n,p)=>n+p.gpuByteLength,0);
-    resources.geologicalGPUBytes=totalBytes-resources.cavernPalmGPUBytes-resources.cavernIvyGPUBytes-resources.cavernUnderstoryGPUBytes;
+    resources.oasisTreeMeshes=instances.filter(p=>p.role==='OASIS_TREE_GROUP');
+    resources.oasisTreeGPUBytes=resources.oasisTreeMeshes.reduce((n,p)=>n+p.gpuByteLength,0);
+    resources.geologicalGPUBytes=totalBytes-resources.cavernPalmGPUBytes-resources.cavernIvyGPUBytes-resources.cavernUnderstoryGPUBytes-resources.oasisTreeGPUBytes;
     gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);
     // Navigation shares the exact same formation object, never a copied height map.
     resources.geologicalNavigationInstallation=installGeologicalRuntimeBridge(model);
   }
   function drawGeologicalRendering(){
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);
-    const parts=[...(resources.geologicalMeshes||[]),...(resources.cavernPalmMeshes||[]),...(resources.cavernIvyMeshes||[]),...(resources.cavernUnderstoryMeshes||[])];
+    const parts=[...(resources.geologicalMeshes||[]),...(resources.cavernPalmMeshes||[]),...(resources.cavernIvyMeshes||[]),...(resources.cavernUnderstoryMeshes||[]),...(resources.oasisTreeMeshes||[])];
     for(const part of parts){if(!H_EARTH_REAR_WATER_PRESENTATION_ENABLED&&isHEarthWaterPresentationPart(part.role))continue;gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.mesh.indices.length,gl.UNSIGNED_INT,0);
       part.drawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=part.mesh.indices.length;}
     gl.bindVertexArray(resources.vertexArray);
@@ -2562,7 +2574,15 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     for(let i=0;i<images.length;i++){
       const texture=createTexture();textures.push(texture);gl.activeTexture(gl.TEXTURE0+3+i);gl.bindTexture(gl.TEXTURE_2D,texture);
       gl.texStorage2D(gl.TEXTURE_2D,9,gl.RGBA8,256,256);gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,gl.RGBA,gl.UNSIGNED_BYTE,images[i]);
-      gl.generateMipmap(gl.TEXTURE_2D);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      if(i===0){
+        const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;
+        const context=canvas.getContext('2d',{willReadFrequently:true});if(!context)throw Error('LEAF_MIP_CANVAS_UNAVAILABLE');
+        context.drawImage(images[i],0,0);
+        const levels=buildCoveragePreservingLeafMipmaps(context.getImageData(0,0,256,256).data);
+        for(let level=1;level<levels.length;level++){const mip=levels[level];gl.texSubImage2D(gl.TEXTURE_2D,level,0,0,mip.width,mip.height,gl.RGBA,gl.UNSIGNED_BYTE,mip.pixels);}
+        resources.leafMipCoverage={schema:'H_EARTH_LEAF_MIP_COVERAGE_v1',levelZeroPreserved:true,levels:levels.map((m,level)=>({level,width:m.width,coverage:m.coverage})),runtimeGeneration:'ONCE_AT_TEXTURE_UPLOAD'};
+      }else gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,i===0?gl.CLAMP_TO_EDGE:gl.REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,i===0?gl.CLAMP_TO_EDGE:gl.REPEAT);
       for(let d=256;d>=1;d/=2)textureStorageBytes+=d*d*4;
     }
@@ -2941,6 +2961,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       noUnauthorizedPostInitializationBufferUpload: counters.postInitializationBufferUploadCount === 0 && (counters.contactOwnershipBufferUpdateCount??0) === 0,
       authorizedVegetationPostReadyResidency: true,
       cavernShadow:resources.cavernShadow?{ready:true,shadowDimensions:[512,512],shadowFormat:'DEPTH_COMPONENT24',gpuByteLength:resources.cavernShadow.gpuByteLength,shadowDrawCount:resources.cavernShadow.shadowDrawCount,casterIndexCount:resources.cavernShadow.casterIndexCount,vegetationCasterCount:resources.cavernShadow.vegetationCasterCount,rockCasterCount:resources.cavernShadow.rockCasterCount,staticShadowRefresh:resources.cavernShadow.staticShadowRefresh,perCameraResourceCreation:0,grassBladeReceiver:false}: {ready:false},
+      oasisTrees:resources.oasisTrees?{...resources.oasisTrees,retirement:resources.oasisTreeRetirement,gpuByteLength:resources.oasisTreeGPUBytes,drawCount:(resources.oasisTreeMeshes??[]).reduce((n,p)=>n+p.drawCount,0),leafMipCoverage:resources.leafMipCoverage}:null,
       cavernUnderstory:resources.cavernUnderstory?{...resources.cavernUnderstory,gpuByteLength:resources.cavernUnderstoryGPUBytes,drawCount:(resources.cavernUnderstoryMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
       cavernIvy:resources.cavernIvy?{...resources.cavernIvy,gpuByteLength:resources.cavernIvyGPUBytes,drawCount:(resources.cavernIvyMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
       cavernPalms:resources.cavernPalms?{...resources.cavernPalms,gpuByteLength:resources.cavernPalmGPUBytes,drawCount:(resources.cavernPalmMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
@@ -2969,7 +2990,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];vegetationTrace?.dispose();}},
+    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
     getVegetationTrace,getVegetationProbe,
     initialize, activateInitialRefinement, prepareReplacementVegetation, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });

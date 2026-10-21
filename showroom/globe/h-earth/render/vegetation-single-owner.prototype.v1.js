@@ -1,4 +1,4 @@
-import {buildCavernEntranceGrass} from './cavern-entrance-grass.v1.js';
+import {buildCavernEntranceGrass,ENTRANCE_BLEND_GLSL} from './cavern-entrance-grass.v1.js';
 import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';
 import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
@@ -43,6 +43,7 @@ uniform int uFine;
 out vec3 vNormal;out vec3 vColor;out float vDistance;
 float woodlandPaletteNoise(vec2 p){vec2 cell=floor(p),f=fract(p);f=f*f*(3.-2.*f);float a=fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453),b=fract(sin(dot(cell+vec2(1.,0.),vec2(127.1,311.7)))*43758.5453),c=fract(sin(dot(cell+vec2(0.,1.),vec2(127.1,311.7)))*43758.5453),d=fract(sin(dot(cell+vec2(1.,1.),vec2(127.1,311.7)))*43758.5453);return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
 ${FOOTHILL_MEADOW_GLSL}
+${ENTRANCE_BLEND_GLSL}
 void main(){
  float d=length(aRoot.xz-uCamera.xz),t=clamp((d-14.)/10.,0.,1.);
  float detail=1.-t*t*(3.-2.*t),h=fract(sin(dot(aRoot.xz,vec2(12.9898,78.233)))*43758.5453);
@@ -55,7 +56,8 @@ void main(){
  float scale=uFine==1?detail:1.;
  float width=mix(.010,.016,h)*scale;
  // Local entrance growth affects existing and supplemental roots alike.
- float entrance=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
+ float core=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
+ float entrance=max(core,entranceBlend(aRoot.xz));
  float shoulders=smoothstep(1.6,5.,abs(aRoot.x-40.));
  float mouthBanks=(1.-smoothstep(.7,2.5,abs(abs(aRoot.x-40.)-3.8)))*(1.-smoothstep(2.,7.,abs(aRoot.z+262.)));
  float entranceHeight=mix(mix(mix(.30,.48,h),mix(.58,.88,h),shoulders),mix(1.15,1.65,h),mouthBanks);

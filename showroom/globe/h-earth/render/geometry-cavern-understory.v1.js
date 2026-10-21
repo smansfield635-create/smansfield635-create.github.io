@@ -35,9 +35,39 @@ function blade(m,at,side,width,color,{segments=4,cup=.05,phase=0,roundness=.8}={
  face(m,...[rows.at(-1)[0],rows.at(-1)[1],tip]);face(m,...[rows.at(-1)[1],rows.at(-1)[2],tip]);
 }
 
+// The rib and branching veins are relief in the blade itself, not floating decals.
+// Each transverse row follows a shallow chevron away from the midrib; alternating
+// rows form raised secondary veins. Five columns retain cupping and edge curl.
+function detailedBlade(m,at,side,width,color,{rows=9,columns=5,cup=.025,phase=0,roundness=.8,asymmetry=.08,kind='BROAD_LEAF'}={},details=[]){
+ const vertexStart=m.vertices.length,indexStart=m.indices.length;
+ const root=vertex(m,at(0),tint(color,.68)),tip=vertex(m,at(1),tint(color,1.04)),grid=[],veinRows=[];
+ for(let i=1;i<=rows;i++){
+  const t=i/(rows+1),row=[],vein=i%2===0;
+  if(vein)veinRows.push(i);
+  for(let j=0;j<columns;j++){
+   const u=2*j/(columns-1)-1,abs=Math.abs(u),tu=t+.055*abs*Math.sin(Math.PI*t);
+   const shape=Math.pow(Math.sin(Math.PI*tu),roundness),wave=Math.sin(tu*20+phase);
+   const w=width*shape*(1+asymmetry*u+.065*wave*abs),p=at(tu);
+   const rib=width*.13*(1-abs),branch=vein?width*.055*Math.sin(Math.PI*abs):0;
+   const fold=cup*shape*abs*abs,twist=width*.085*u*Math.sin(tu*4+phase)*shape;
+   const q=add(p,add(mul(side,u*w),[0,shape*(rib+branch)+fold+twist,0]));
+   row.push(vertex(m,q,tint(color,.88+.12*tu+.18*(1-abs)+(vein?.09*Math.sin(Math.PI*abs):0))));
+  }
+  grid.push(row);
+ }
+ for(let j=0;j<columns-1;j++)face(m,root,grid[0][j+1],grid[0][j]);
+ for(let i=1;i<grid.length;i++)for(let j=0;j<columns-1;j++){
+  face(m,grid[i-1][j],grid[i-1][j+1],grid[i][j]);
+  face(m,grid[i-1][j+1],grid[i][j+1],grid[i][j]);
+ }
+ for(let j=0;j<columns-1;j++)face(m,grid.at(-1)[j],grid.at(-1)[j+1],tip);
+ details.push({kind,vertexStart,vertexCount:m.vertices.length-vertexStart,indexStart,indexCount:m.indices.length-indexStart,rows,columns,veinRows,midribRelief:width*.13,branchRelief:width*.055,asymmetry});
+}
+
 export function buildCavernUnderstoryPlant({id='CAVERN_UNDERSTORY',kind,scale=1,heading=0}={}){
  if(typeof id!=='string'||!id||!['groundcover','broadleaf','fern','flower'].includes(kind)||!Number.isFinite(scale)||scale<.25||scale>2||!Number.isFinite(heading))throw Error('UNDERSTORY_PARAMETERS_INVALID');
- const stems=mesh(),leaves=mesh(),flowers=mesh(),attachments=[];
+ const stems=mesh(),leaves=mesh(),flowers=mesh(),attachments=[],leafDetails=[];
+ let bloom=null,rigidStamenStart=null;
  const rnd=n=>hash(id,n),green=[.20,.38,.12],stemColor=[.25,.34,.10];
  if(kind==='groundcover'||kind==='broadleaf'){
   const broad=kind==='broadleaf',count=broad?7:9;
@@ -47,29 +77,29 @@ export function buildCavernUnderstoryPlant({id='CAVERN_UNDERSTORY',kind,scale=1,
    const root=[0,.015+i*.004,0],base=add(mul(d,broad?.18:.055),[0,height,0]);
    stem(stems,[root,add(mul(d,broad?.07:.025),[0,height*.60,0]),base],broad?.018:.009,stemColor);
    const at=t=>add(base,add(mul(d,length*t),[0,(broad?.95:.30)*t-(broad?.45:.25)*t*t,0]));
-   blade(leaves,at,side,broad?.21:.14,tint(green,.83+.34*rnd(60+i)),{cup:broad?.025:.012,phase:a,roundness:broad?.7:.65});
+   detailedBlade(leaves,at,side,(broad?.21:.14)*(.91+.16*rnd(80+i)),tint(green,.83+.34*rnd(60+i)),{rows:broad?9:5,columns:5,cup:broad?.025:.012,phase:a+(rnd(100+i)-.5),roundness:broad?.7:.65,asymmetry:(rnd(120+i)-.5)*.28,kind:broad?'BROAD_LEAF':'GROUNDCOVER_LEAF'},leafDetails);
    attachments.push({kind:'LEAF',stemTip:base,leafRoot:at(0)});
   }
  }else if(kind==='fern'){
   for(let f=0;f<4;f++){
    const a=f*2.3999632297+(rnd(f)-.5)*.2,d=[Math.cos(a),0,Math.sin(a)],side=[-d[2],0,d[0]],length=.8+.13*rnd(10+f);
    const at=t=>add(mul(d,length*t),[0,.025+1.65*t-1.0*t*t,0]);
-   const points=Array.from({length:7},(_,i)=>at(i/6));stem(stems,points,.013,stemColor);
-   for(let k=1;k<=5;k++)for(const sign of [-1,1]){
+   const points=Array.from({length:9},(_,i)=>at(i/8));stem(stems,points,.013,stemColor);
+   for(let k=1;k<=7;k++)for(const sign of [-1,1]){
     // Attach precisely at the rendered stem's ring, not between analytic samples.
-    const t=k/6,root=points[k],reach=.27*Math.pow(Math.sin(Math.PI*t),.65),dir=unit(add(mul(side,sign),mul(d,.33)));
+    const t=k/8,root=points[k],reach=.27*Math.pow(Math.sin(Math.PI*t),.65)*(.88+.16*rnd(f*100+k*2+(sign===1?1:0))),dir=unit(add(mul(side,sign),mul(d,.28+.12*rnd(f*30+k))));
     const leafAt=u=>add(root,add(mul(dir,reach*u),[0,.055*Math.sin(Math.PI*u)-.045*u,0]));
-    blade(leaves,leafAt,unit(cross([0,1,0],dir)),.045*(1-.35*t),tint(green,.88+.22*rnd(f*20+k)),{segments:2,cup:.008,roundness:.8});
+    detailedBlade(leaves,leafAt,unit(cross([0,1,0],dir)),.045*(1-.35*t),tint(green,.88+.22*rnd(f*20+k)),{rows:3,columns:3,cup:.008,roundness:.8,phase:a+k*.7,asymmetry:sign*.10,kind:'FERN_PINNA'},leafDetails);
     attachments.push({kind:'PINNA',stemTip:root,leafRoot:leafAt(0)});
    }
-   const root=points[6];blade(leaves,t=>add(root,add(mul(d,.15*t),[0,-.04*t,0])),side,.035,green,{segments:2,cup:.004});
+   const root=points[8];detailedBlade(leaves,t=>add(root,add(mul(d,.15*t),[0,-.04*t,0])),side,.035,green,{rows:3,columns:3,cup:.004,phase:a,kind:'FERN_TERMINAL_PINNA'},leafDetails);
    attachments.push({kind:'TERMINAL_PINNA',stemTip:root,leafRoot:root});
   }
  }else{
-  const top=[.08,.91,0],points=[[0,0,0],[.018,.30,0],[.045,.59,0],top];stem(stems,points,.015,stemColor,5);
+  const top=[.08,.91,0],points=[[0,0,0],[.018,.30,0],[.045,.50,0],top];stem(stems,points,.015,stemColor,5);
   for(let i=1;i<=2;i++){
    const root=points[i],sign=i===1?-1:1,dir=[sign*.8,.3,.25],side=unit(cross([0,1,0],dir));
-   const at=t=>add(root,add(mul(dir,.32*t),[0,.09*Math.sin(Math.PI*t),0]));blade(leaves,at,side,.105,green,{cup:.012});
+   const at=t=>add(root,add(mul(dir,.32*t),[0,.09*Math.sin(Math.PI*t),0]));detailedBlade(leaves,at,side,.105,green,{rows:5,columns:5,cup:.012,phase:i,asymmetry:(rnd(80+i)-.5)*.2,kind:'FLOWER_STALK_LEAF'},leafDetails);
    attachments.push({kind:'LEAF',stemTip:root,leafRoot:root});
   }
   // Five cupped petals share the central receptacle; upright enough to read on approach.
@@ -79,9 +109,18 @@ export function buildCavernUnderstoryPlant({id='CAVERN_UNDERSTORY',kind,scale=1,
    const at=t=>add(top,add(mul(d,.25*t),[0,.13*t-.10*t*t+.035*d[2]*t,0]));
    blade(flowers,at,side,.115,color,{segments:5,cup:.018,roundness:.55,phase:a});attachments.push({kind:'PETAL',stemTip:top,leafRoot:at(0)});
   }
+  rigidStamenStart=stems.vertices.length;
   stem(stems,[top,add(top,[0,.13,0])],.016,[.81,.60,.16],5);
   // Small closed golden pollen head.
   stem(flowers,[add(top,[0,.12,0]),add(top,[0,.15,0])],.035,[.93,.73,.25],6);
+  // Rigid bloom rotation preserves every petal/pollen edge and color. Correct
+  // for plant heading so the flower faces the exterior, never the camera.
+  const tiltRadians=.90+.30*rnd(201),forwardAzimuth=(rnd(202)-.5)*.48;
+  const normal=[Math.sin(tiltRadians)*Math.sin(forwardAzimuth),Math.cos(tiltRadians),-Math.sin(tiltRadians)*Math.cos(forwardAzimuth)];
+  const c=Math.cos(heading),s=Math.sin(heading),localNormal=[c*normal[0]+s*normal[2],normal[1],-s*normal[0]+c*normal[2]],axis=unit(cross([0,1,0],localNormal));
+  const rotate=p=>{const v=sub(p,top),cv=cross(axis,v),dot=axis.reduce((n,q,i)=>n+q*v[i],0);return add(top,add(add(mul(v,Math.cos(tiltRadians)),mul(cv,Math.sin(tiltRadians))),mul(axis,dot*(1-Math.cos(tiltRadians)))));};
+  for(const [m,start] of [[flowers,0],[stems,rigidStamenStart]])for(let i=start;i<m.vertices.length;i++){const p=m.vertices[i],q=rotate([p.x,p.y,p.z]);m.vertices[i]={x:q[0],y:q[1],z:q[2]};}
+  bloom={anchor:top,normal,tiltRadians,forwardAzimuth};
  }
  const transform=p=>{const c=Math.cos(heading),s=Math.sin(heading);return [scale*(p[0]*c-p[2]*s),scale*p[1],scale*(p[0]*s+p[2]*c)];};
  const parts=[];
@@ -91,9 +130,9 @@ export function buildCavernUnderstoryPlant({id='CAVERN_UNDERSTORY',kind,scale=1,
   const built=constructHEarthTriangleMesh({primitiveId:id+':'+part,vertices:m.vertices,indices:m.indices,expectedClosure:closure,semanticRole:'CAVERN_UNDERSTORY_'+part,attributes:{colors:m.colors},metadata:{authoringSpace:'LOCAL_METERS',kind,deterministic:true}});
   if(!built.valid)throw Error('UNDERSTORY_KERNEL_CONSTRUCTION:'+JSON.stringify(built.issues));
   const admitted=admitHEarthPrimitiveRecord(built.primitiveRecord);if(!admitted.valid)throw Error('UNDERSTORY_KERNEL_ADMISSION:'+JSON.stringify(admitted.issues));
-  parts.push({part,geometry:admitted.geometry,leaflets});
+  parts.push({part,geometry:admitted.geometry,leaflets,rigidBloomStart:kind==='flower'?(part==='FLOWERS'?0:part==='STEMS'?rigidStamenStart:null):null});
  }
  const vertices=parts.flatMap(p=>p.geometry.vertices),bounds={min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};
  for(const p of vertices)for(const [i,key] of ['x','y','z'].entries()){bounds.min[i]=Math.min(bounds.min[i],p[key]);bounds.max[i]=Math.max(bounds.max[i],p[key]);}
- return Object.freeze({id,kind,scale,heading,parts,triangleCount:parts.reduce((n,p)=>n+p.geometry.indices.length/3,0),bounds,attachments:attachments.map(a=>({...a,stemTip:transform(a.stemTip),leafRoot:transform(a.leafRoot)}))});
+ return Object.freeze({id,kind,scale,heading,parts,triangleCount:parts.reduce((n,p)=>n+p.geometry.indices.length/3,0),bounds,leafDetails,bloom:bloom?{...bloom,anchor:transform(bloom.anchor)}:null,attachments:attachments.map(a=>({...a,stemTip:transform(a.stemTip),leafRoot:transform(a.leafRoot)}))});
 }

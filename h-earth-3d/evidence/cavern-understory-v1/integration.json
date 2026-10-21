@@ -1,9 +1,9 @@
 {
   "schema": "H_EARTH_CAVERN_UNDERSTORY_INTEGRATION_EVIDENCE_v1",
-  "operationId": "H_EARTH_CAVERN_THRESHOLD_BRUSH_20261021_001",
-  "canonicalAdmissionGeneration": 2852,
-  "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6321330541",
-  "parent": "cb96b282c2cc787f26c948df3371e0ffa562fd7c",
+  "operationId": "H_EARTH_CAVERN_FOLIAGE_DETAIL_20261021_001",
+  "canonicalAdmissionGeneration": 2853,
+  "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6322224443",
+  "parent": "114431897704e929d1b3c02b7a34d2b8621b87f2",
   "receipt": {
     "schema": "H_EARTH_CAVERN_UNDERSTORY_v1",
     "siteId": "B_REAR_RAVINE",
@@ -23,7 +23,7 @@
         "scale": 1.05,
         "heading": 0.3,
         "rootY": 13.791395481825218,
-        "maximumHeight": 1.5148347733035918
+        "maximumHeight": 1.5200427307857152
       },
       {
         "id": "CAVERN_UNDERSTORY_1",
@@ -33,7 +33,7 @@
         "scale": 0.86,
         "heading": 2.1,
         "rootY": 13.768113276705188,
-        "maximumHeight": 1.0944008791667874
+        "maximumHeight": 1.1022623701793577
       },
       {
         "id": "CAVERN_UNDERSTORY_2",
@@ -43,7 +43,7 @@
         "scale": 1.05,
         "heading": 0.7,
         "rootY": 12.717040281458555,
-        "maximumHeight": 0.7873745833333331
+        "maximumHeight": 0.7799725588822455
       },
       {
         "id": "CAVERN_UNDERSTORY_3",
@@ -53,7 +53,7 @@
         "scale": 0.8,
         "heading": 2.8,
         "rootY": 13.455134853597944,
-        "maximumHeight": 0.5999044444444442
+        "maximumHeight": 0.5942658517558845
       },
       {
         "id": "CAVERN_UNDERSTORY_4",
@@ -63,7 +63,21 @@
         "scale": 1.25,
         "heading": 0.25,
         "rootY": 12.892192909046177,
-        "maximumHeight": 1.3250000000000002
+        "maximumHeight": 1.4544845115907274,
+        "bloom": {
+          "anchor": [
+            0.09689124217106448,
+            1.1375,
+            0.024740395925452293
+          ],
+          "normal": [
+            0.12013004403119609,
+            0.42279669814096627,
+            -0.8982269894420671
+          ],
+          "tiltRadians": 1.1342671219725162,
+          "forwardAzimuth": 0.13295235011726617
+        }
       },
       {
         "id": "CAVERN_UNDERSTORY_5",
@@ -73,7 +87,21 @@
         "scale": 1.05,
         "heading": 1.7,
         "rootY": 12.100978846083937,
-        "maximumHeight": 1.1130000000000002
+        "maximumHeight": 1.1889329505993012,
+        "bloom": {
+          "anchor": [
+            -0.010822937520824069,
+            0.9555000000000001,
+            0.08329984407800736
+          ],
+          "normal": [
+            -0.028678850702378432,
+            0.5125563978838903,
+            -0.8581744942088886
+          ],
+          "tiltRadians": 1.0326369561022148,
+          "forwardAzimuth": -0.03340600535273552
+        }
       },
       {
         "id": "CAVERN_UNDERSTORY_6",
@@ -83,7 +111,21 @@
         "scale": 0.95,
         "heading": 3.4,
         "rootY": 12.847982356204128,
-        "maximumHeight": 1.007
+        "maximumHeight": 1.0587604516796971,
+        "bloom": {
+          "anchor": [
+            -0.07347666263603905,
+            0.8644999999999999,
+            -0.019421123754039173
+          ],
+          "normal": [
+            -0.05569889256366172,
+            0.5359009445861905,
+            -0.8424415771783883
+          ],
+          "tiltRadians": 1.005221825838089,
+          "forwardAzimuth": -0.06601994354277849
+        }
       },
       {
         "id": "CAVERN_UNDERSTORY_7",
@@ -93,7 +135,7 @@
         "scale": 0.68,
         "heading": 0.5,
         "rootY": 14.381067561724684,
-        "maximumHeight": 0.11618833786669747
+        "maximumHeight": 0.11376772766875402
       },
       {
         "id": "CAVERN_UNDERSTORY_8",
@@ -103,7 +145,7 @@
         "scale": 0.72,
         "heading": 1.4,
         "rootY": 14.040393634429565,
-        "maximumHeight": 0.13862612658242135
+        "maximumHeight": 0.13527305308573603
       },
       {
         "id": "CAVERN_UNDERSTORY_9",
@@ -113,7 +155,7 @@
         "scale": 0.8,
         "heading": 2.2,
         "rootY": 12.893758489559616,
-        "maximumHeight": 0.14328052375741304
+        "maximumHeight": 0.1407674760615104
       },
       {
         "id": "CAVERN_UNDERSTORY_10",
@@ -123,7 +165,7 @@
         "scale": 0.68,
         "heading": 0.9,
         "rootY": 11.862764155028362,
-        "maximumHeight": 0.1368720184955895
+        "maximumHeight": 0.13373169426859763
       },
       {
         "id": "CAVERN_UNDERSTORY_11",
@@ -133,7 +175,7 @@
         "scale": 0.75,
         "heading": 2.9,
         "rootY": 11.62246153178736,
-        "maximumHeight": 0.15348386921945492
+        "maximumHeight": 0.14981573805757215
       },
       {
         "id": "CAVERN_UNDERSTORY_12",
@@ -143,7 +185,7 @@
         "scale": 0.7,
         "heading": 4.2,
         "rootY": 12.04853193729901,
-        "maximumHeight": 0.14430086168003267
+        "maximumHeight": 0.14163711448362742
       },
       {
         "id": "CAVERN_UNDERSTORY_13",
@@ -153,7 +195,7 @@
         "scale": 0.65,
         "heading": 1.2,
         "rootY": 12.341672842966343,
-        "maximumHeight": 0.13130347622083965
+        "maximumHeight": 0.1293146175164637
       },
       {
         "id": "CAVERN_UNDERSTORY_14",
@@ -163,7 +205,7 @@
         "scale": 0.55,
         "heading": 2.6,
         "rootY": 12.647956125578038,
-        "maximumHeight": 0.09222119580736383
+        "maximumHeight": 0.08984947365231875
       },
       {
         "id": "CAVERN_UNDERSTORY_15",
@@ -173,7 +215,7 @@
         "scale": 0.5,
         "heading": 3.2,
         "rootY": 13.283326940148806,
-        "maximumHeight": 0.09280141454827971
+        "maximumHeight": 0.09062225829138092
       },
       {
         "id": "CAVERN_UNDERSTORY_16",
@@ -183,7 +225,7 @@
         "scale": 0.65,
         "heading": 5.4,
         "rootY": 13.161408511288391,
-        "maximumHeight": 0.11918460512815975
+        "maximumHeight": 0.11570531901486808
       },
       {
         "id": "CAVERN_THRESHOLD_0",
@@ -191,9 +233,9 @@
         "x": 37.9,
         "z": -262,
         "scale": 1.15,
-        "heading": 0.25,
+        "heading": 1.8,
         "rootY": 11.40367875907928,
-        "maximumHeight": 1.4195799611712572
+        "maximumHeight": 1.4300215069443039
       },
       {
         "id": "CAVERN_THRESHOLD_1",
@@ -201,9 +243,9 @@
         "x": 42.1,
         "z": -262,
         "scale": 1.15,
-        "heading": 3,
+        "heading": 5.890486225480862,
         "rootY": 11.45431524452312,
-        "maximumHeight": 1.4923450492060508
+        "maximumHeight": 1.4980714999463574
       },
       {
         "id": "CAVERN_THRESHOLD_2",
@@ -213,7 +255,7 @@
         "scale": 1.2,
         "heading": 0.8,
         "rootY": 11.283844575605798,
-        "maximumHeight": 1.787004903140478
+        "maximumHeight": 1.795241496301611
       },
       {
         "id": "CAVERN_THRESHOLD_3",
@@ -223,7 +265,7 @@
         "scale": 1.2,
         "heading": 3.7,
         "rootY": 11.328045188539324,
-        "maximumHeight": 1.3829449815256523
+        "maximumHeight": 1.3936258333456208
       },
       {
         "id": "CAVERN_THRESHOLD_4",
@@ -233,7 +275,7 @@
         "scale": 1.1,
         "heading": 1.3,
         "rootY": 11.28175976283336,
-        "maximumHeight": 1.555362702085404
+        "maximumHeight": 1.5637492363794332
       },
       {
         "id": "CAVERN_THRESHOLD_5",
@@ -243,7 +285,7 @@
         "scale": 1.1,
         "heading": 4.2,
         "rootY": 11.305769638611935,
-        "maximumHeight": 1.352709454408614
+        "maximumHeight": 1.3595361220979194
       },
       {
         "id": "CAVERN_THRESHOLD_6",
@@ -253,7 +295,7 @@
         "scale": 1.05,
         "heading": 0.5,
         "rootY": 11.269531981723041,
-        "maximumHeight": 0.7873745833333331
+        "maximumHeight": 0.7799217333103959
       },
       {
         "id": "CAVERN_THRESHOLD_7",
@@ -263,7 +305,7 @@
         "scale": 1.05,
         "heading": 3.4,
         "rootY": 11.31553674547526,
-        "maximumHeight": 0.7873745833333331
+        "maximumHeight": 0.77989797609197
       },
       {
         "id": "CAVERN_THRESHOLD_8",
@@ -273,7 +315,7 @@
         "scale": 0.8,
         "heading": 1.1,
         "rootY": 11.280534910200629,
-        "maximumHeight": 0.5999044444444442
+        "maximumHeight": 0.5942631583021192
       },
       {
         "id": "CAVERN_THRESHOLD_9",
@@ -283,7 +325,7 @@
         "scale": 0.8,
         "heading": 4.1,
         "rootY": 11.280985236214008,
-        "maximumHeight": 0.5999044444444442
+        "maximumHeight": 0.5942642434576315
       },
       {
         "id": "CAVERN_THRESHOLD_10",
@@ -293,7 +335,21 @@
         "scale": 1.4,
         "heading": 0.3,
         "rootY": 11.278715905379231,
-        "maximumHeight": 1.484
+        "maximumHeight": 1.6252819117386244,
+        "bloom": {
+          "anchor": [
+            0.10699768678206786,
+            1.274,
+            0.03309826314607003
+          ],
+          "normal": [
+            0.057621638167695104,
+            0.4629408205300565,
+            -0.8845142980765371
+          ],
+          "tiltRadians": 1.0894862385699526,
+          "forwardAzimuth": 0.06505302675068378
+        }
       },
       {
         "id": "CAVERN_THRESHOLD_11",
@@ -303,7 +359,21 @@
         "scale": 1.3,
         "heading": 3.2,
         "rootY": 11.337737037730475,
-        "maximumHeight": 1.3780000000000001
+        "maximumHeight": 1.455956412989066,
+        "bloom": {
+          "anchor": [
+            -0.10382265668265434,
+            1.183,
+            -0.00607091091646833
+          ],
+          "normal": [
+            0.12876941865781802,
+            0.4216413575998947,
+            -0.897572839595676
+          ],
+          "tiltRadians": 1.1355416377075016,
+          "forwardAzimuth": 0.14249175544828177
+        }
       },
       {
         "id": "CAVERN_THRESHOLD_12",
@@ -313,7 +383,21 @@
         "scale": 1.35,
         "heading": 1.2,
         "rootY": 11.249178340002203,
-        "maximumHeight": 1.4310000000000003
+        "maximumHeight": 1.5284065771373012,
+        "bloom": {
+          "anchor": [
+            0.039134637483480755,
+            1.2285000000000001,
+            0.10066022128446045
+          ],
+          "normal": [
+            0.21510452113566333,
+            0.36317611874420724,
+            -0.9065501374777296
+          ],
+          "tiltRadians": 1.199121813545935,
+          "forwardAzimuth": 0.23296976655721663
+        }
       },
       {
         "id": "CAVERN_THRESHOLD_13",
@@ -323,7 +407,21 @@
         "scale": 1.2,
         "heading": 4,
         "rootY": 11.272046343432894,
-        "maximumHeight": 1.272
+        "maximumHeight": 1.3642172579473728,
+        "bloom": {
+          "anchor": [
+            -0.06274978760290674,
+            1.092,
+            -0.07265303954956111
+          ],
+          "normal": [
+            0.093604788291161,
+            0.43891980305952905,
+            -0.8936372586744306
+          ],
+          "tiltRadians": 1.1164001943077893,
+          "forwardAzimuth": 0.10436526585370302
+        }
       },
       {
         "id": "CAVERN_THRESHOLD_14",
@@ -333,7 +431,21 @@
         "scale": 1.15,
         "heading": 0.7,
         "rootY": 11.27246339990478,
-        "maximumHeight": 1.2189999999999999
+        "maximumHeight": 1.3009881258425484,
+        "bloom": {
+          "anchor": [
+            0.07036548123017293,
+            1.0465,
+            0.05926802722586757
+          ],
+          "normal": [
+            -0.0839147113851695,
+            0.5521840468647761,
+            -0.829488456581032
+          ],
+          "tiltRadians": 0.9858147208811715,
+          "forwardAzimuth": -0.10082140155136585
+        }
       },
       {
         "id": "CAVERN_THRESHOLD_15",
@@ -343,7 +455,21 @@
         "scale": 1.1,
         "heading": 3.5,
         "rootY": 11.253797453233972,
-        "maximumHeight": 1.1660000000000001
+        "maximumHeight": 1.2192869429996314,
+        "bloom": {
+          "anchor": [
+            -0.0824081884815901,
+            1.0010000000000001,
+            -0.03086892403668655
+          ],
+          "normal": [
+            -0.12927580984372394,
+            0.5845464038971351,
+            -0.8009951726946778
+          ],
+          "tiltRadians": 0.946475438028574,
+          "forwardAzimuth": -0.16001416403800248
+        }
       },
       {
         "id": "CAVERN_THRESHOLD_16",
@@ -353,7 +479,7 @@
         "scale": 0.8,
         "heading": 0.9,
         "rootY": 11.25843241743315,
-        "maximumHeight": 0.13304540037453175
+        "maximumHeight": 0.129356836880296
       },
       {
         "id": "CAVERN_THRESHOLD_17",
@@ -363,18 +489,20 @@
         "scale": 0.8,
         "heading": 3.6,
         "rootY": 11.258550835994072,
-        "maximumHeight": 0.1355420168144256
+        "maximumHeight": 0.1313619862801849
       }
     ],
-    "triangleCount": 9136,
-    "gpuByteLength": 590562,
+    "triangleCount": 19672,
+    "gpuByteLength": 1190610,
     "drawBatchCount": 2,
     "shadowCasterBatchCount": 2,
     "surfaceSource": "ACTUAL_EMITTED_OUTDOOR_AND_FLOOR_TRIANGLES",
     "groundAdaptation": "CONNECTED_MESH_TERRAIN_FOLLOWING",
     "perFrameGeneration": false,
     "sourceTerrainMutated": false,
-    "existingPlantingMutated": false,
+    "existingPlantingMutated": true,
+    "rootLocationsPreserved": true,
+    "foliageDetailRevision": 2,
     "physicalReview": "PENDING"
   },
   "contacts": [
@@ -624,33 +752,40 @@
       "rootY": 11.258550835994072
     }
   ],
-  "localGenerationMilliseconds": 4046.046794,
+  "localGenerationMilliseconds": 6551.721147,
   "deviceTimingMeasured": false,
   "focusedTests": {
-    "passed": 13,
+    "passed": 18,
     "failed": 0
   },
   "independentReview": {
     "role": "WEST",
-    "focusedTestsPassed": 8,
     "trianglesNondegenerate": true,
-    "minimumTriangleAreaSquareMeters": 0.000003616,
-    "minimumGroundClearanceMeters": -0.01326,
-    "seamCrossingTriangles": 79,
-    "newThresholdRockIntersectionsAboveRootSink": 0,
-    "originalGpuPrefixesByteIdentical": true
+    "accumulatedVertexNormalsNonzero": true,
+    "leafBloomStrictPenetrations": 0,
+    "leafTrianglesCompared": 13392,
+    "bloomTrianglesCompared": 900,
+    "all35RootIdentitiesPreserved": true,
+    "original17ScaleHeadingPreserved": true,
+    "flowerTopologyColorsRigidShapePreserved": true
   },
   "preservation": {
     "existingGrassPalmIvyModulesUnchanged": true,
     "terrainWaterNavigationUnchanged": true,
     "shaderStringsUnchanged": true,
     "priorGrassVisualAcceptance": "PENDING",
-    "original17PlantsExactGpuPrefixes": true
+    "all35RootIdentitiesPreserved": true
   },
-  "visualReview": "PENDING",
+  "visualReview": "PENDING_CLOSE_UP_FOLIAGE_FLOWER_ORIENTATION_NATURAL_VARIATION",
   "browserQualification": "PENDING",
   "sourceResearch": [
     "https://developer.android.com/games/optimize/materials",
     "https://developer.nvidia.com/gpugems/gpugems3/part-iii-rendering/chapter-16-vegetation-procedural-animation-and-shading-crysis"
-  ]
+  ],
+  "timingComparison": {
+    "baselineMilliseconds": 3702.504321999999,
+    "candidateMilliseconds": 6551.721147,
+    "hostOnly": true,
+    "tabletResponsiveness": "PENDING"
+  }
 }

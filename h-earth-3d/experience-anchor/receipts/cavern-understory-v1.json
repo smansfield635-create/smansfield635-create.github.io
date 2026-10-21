@@ -29,11 +29,11 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/geometry-cavern-understory.v1.js",
-      "sha256": "bf5600cd5c244e6bcdb5bda3d73f9ca9110d8dd1a927f6fb97123d4fdd9ae2b0"
+      "sha256": "afe9f379481db2d024af1975dbbec01b942be6228b875710dcc840c5a1c26cb4"
     },
     {
       "path": "showroom/globe/h-earth/render/cavern-understory-placement.v1.js",
-      "sha256": "40fa5e4ab8e625a257db8b50071e91456055e47e3606441203f02446f43f9436"
+      "sha256": "816129b09b3fdd51164fd8e528fdd9e03a5b13fcbe1f3e6c7e68ed0d1b8c8406"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
@@ -41,11 +41,11 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.cavern-understory.v1.test.mjs",
-      "sha256": "a395171d66af50097e8ec3798568a95e31e97ddb1d8f628e3aa5042fc9c65693"
+      "sha256": "1a9fd87e31ce340b8457c143b296ad0e3fde7ab7c0f96fc438957aaa9809f2ea"
     }
   ],
-  "acceptanceBasis": "Structural same-world continuity: original17 plants retain exact GPU prefixes;18 additive plants use existing geometry, renderer, lighting, shadows and unchanged walk-through navigation. Threshold uses emitted outdoor and floor support. Physical concealment acceptance and exact browser qualification pending.",
+  "acceptanceBasis": "Structural same-world continuity:35 root identities preserved, existing renderer/world/navigation unchanged. Leaf geometry refined in place and flowers rigidly tilted preserving petal topology/colors/shape.18 focused checks and independent review pass. Physical foliage quality and tablet response pending.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
-  "canonicalAdmissionGeneration": 2852
+  "canonicalAdmissionGeneration": 2853
 }

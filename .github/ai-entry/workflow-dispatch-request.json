@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "audralia-approved-fap1-gen2846-close",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_INVOCATION_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"expectedMainHead\":\"aaeae59e12c65ddef901d8fc69dafe6539678a2c\",\"closureRequest\":{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"AUDRALIA_EXACT_APPROVED_FAP1_RESTORE_20261021_001\",\"lockScope\":\"AUDRALIA:EXACT_APPROVED_FAP1_RESTORE:20261021\",\"lockGeneration\":2846,\"terminalDisposition\":\"PASS_CLOSED\"}}"
   }
 }

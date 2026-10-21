@@ -2429,13 +2429,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     resources.cavernIvy=ivy.receipt;
     const understory=buildCavernUnderstoryPlacement(model);
     resources.cavernUnderstory=understory.receipt;
-    const oasisTrees=buildOasisTreeGroup(model);resources.oasisTrees=oasisTrees.receipt;
+    const oasisTrees=buildOasisTreeGroup(model,renderPackage);resources.oasisTrees=oasisTrees.receipt;
     const plannedBytes=parts=>parts.reduce((n,p)=>n+p.mesh.vertexCount*69+p.mesh.indices.byteLength,0);
     if(plannedBytes(model.meshes)>4*1024*1024)throw Error('GEOLOGICAL_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(palms.meshes)>2*1024*1024)throw Error('CAVERN_PALM_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(ivy.meshes)>1024*1024)throw Error('CAVERN_IVY_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(oasisTrees.meshes)>5*1024*1024)throw Error('OASIS_GROUP_GPU_MEMORY_BUDGET_EXCEEDED');
-    for(const {role,mesh,colors:palmColors,leaflets,clearingAttributes} of [...model.meshes,...palms.meshes,...ivy.meshes,...understory.meshes,...oasisTrees.meshes]){
+    for(const {role,mesh,colors:palmColors,leaflets,clearingAttributes,colorsAreLinear} of [...model.meshes,...palms.meshes,...ivy.meshes,...understory.meshes,...oasisTrees.meshes]){
       const n=mesh.vertexCount,positions=mesh.positions,indices=mesh.indices;
       if(!(positions instanceof Float32Array)||!(indices instanceof Uint32Array)||n<=0||indices.length%3!==0)
         throw Error('GEOLOGICAL_MESH_NOT_TRIANGULATED:'+role);
@@ -2456,7 +2456,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       // Exact base-triangle linear albedo drives the entire replacement rim.
       for(let i=0;i<n;i++){
         if(role==='OASIS_TREE_GROUP'){
-          const linear=palmColors[i].map(c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4));
+          const linear=colorsAreLinear?palmColors[i]:palmColors[i].map(c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4));
           colors.set([...linear,1],i*4);mats.set([...clearingAttributes[i],2],i*4);continue;
         }
         if(role==='CAVERN_PALM'||role==='CAVERN_IVY'||role==='CAVERN_UNDERSTORY'){

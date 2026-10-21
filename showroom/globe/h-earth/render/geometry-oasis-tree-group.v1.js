@@ -1,5 +1,5 @@
 /** Gen2855: four cavern-side trees. Presentation overlay; hydrated source stays intact. */
-import {appendHEarthAgedWoodlandTree} from './geometry-aged-woodland-tree.v1.js';
+import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {constructHEarthTriangleMesh,admitHEarthPrimitiveRecord} from './geometry-kernel.js';
 import {projectGeologicalMeshForRenderer} from '../../../../h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../../../../h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js';
@@ -7,57 +7,62 @@ import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../../../../h-ea
 // Owner's second-from-left specimen keeps its established riverbank anchor.
 // The companions step back and forward rather than following one planted row.
 export const OASIS_TREE_PLACEMENTS=Object.freeze([
- {id:'PROPOSED_OASIS_01',x:55.5,z:-307.5,sourceX:55.5,sourceZ:-307.5,scaleX:1,scaleY:1,scaleZ:1,heading:.22,agedFocus:true},
- {id:'PROPOSED_OASIS_02',x:46,z:-320,sourceX:47.5,sourceZ:-317.5,scaleX:.72,scaleY:.94,scaleZ:.82,heading:2.14,agedFocus:false},
- {id:'PROPOSED_OASIS_03',x:74,z:-290,sourceX:71.5,sourceZ:-291.5,scaleX:.84,scaleY:.83,scaleZ:.69,heading:4.07,agedFocus:false},
- {id:'PROPOSED_OASIS_04',x:65,z:-306,sourceX:63.5,sourceZ:-301.5,scaleX:.79,scaleY:.88,scaleZ:.88,heading:5.36,agedFocus:false}
-].map(Object.freeze));
+ {id:'PROPOSED_OASIS_01',x:55.5,z:-307.5,sourceX:55.5,sourceZ:-307.5},
+ {id:'PROPOSED_OASIS_02',x:43,z:-315,sourceX:47.5,sourceZ:-317.5},
+ {id:'PROPOSED_OASIS_03',x:75,z:-294,sourceX:71.5,sourceZ:-291.5},
+ {id:'PROPOSED_OASIS_04',x:61,z:-297,sourceX:63.5,sourceZ:-301.5}
+].map(d=>Object.freeze({...d,scaleX:1,scaleY:1,scaleZ:1,heading:0,agedFocus:false})));
 const empty=()=>({vertices:[],indices:[],colors:[],clearingAttributes:[]});
 const segmentDistance=(x,z,a,b)=>{const dx=b.x-a.x,dz=b.z-a.z,d=dx*dx+dz*dz,t=d?Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/d)):0;return Math.hypot(x-a.x-t*dx,z-a.z-t*dz);};
 const boundsOf=vs=>({min:['x','y','z'].map(k=>Math.min(...vs.map(v=>v[k]))),max:['x','y','z'].map(k=>Math.max(...vs.map(v=>v[k])))});
 
-export function buildOasisTreeGroup(model){
+export function buildOasisTreeGroup(model,source){
  if(model?.site?.id!=='B_REAR_RAVINE'||typeof model.sampleOutdoorAt!=='function'||typeof model.sampleWaterAt!=='function')throw Error('OASIS_GROUP_ACTUAL_SURFACE_REQUIRED');
- const groups={BARK:empty(),CANOPY:empty()},placements=[],contacts=[];
+ if(!source?.buffers?.positions||!source?.clearingAttributes||!source?.primitiveSpans)throw Error('OASIS_GROUP_HYDRATED_SOURCE_REQUIRED');
+ const groups={BARK:empty(),CANOPY:empty()},placements=[],contacts=[],buffers=source.buffers;
  for(const d of OASIS_TREE_PLACEMENTS){
-  const center=model.sampleOutdoorAt(d.x,d.z);if(!Number.isFinite(center?.y))throw Error('OASIS_GROUP_ROOT_SUPPORT:'+d.id);
-  const rootY=center.y,c=Math.cos(d.heading),s=Math.sin(d.heading);
-  const toWorld=(x,z)=>({x:d.x+c*x*d.scaleX-s*z*d.scaleZ,z:d.z+s*x*d.scaleX+c*z*d.scaleZ});
-  const supportCache=new Map();
-  const ground=(x,z)=>{
-   const key=x+','+z;if(supportCache.has(key))return supportCache.get(key);
-   const q=toWorld(x,z),hit=model.sampleOutdoorAt(q.x,q.z),water=model.sampleWaterAt(q.x,q.z);
-   if(!Number.isFinite(hit?.y))throw Error('OASIS_GROUP_CONTACT_MISSING:'+d.id);
-   if(water&&water.y>=hit.y-.03)throw Error('OASIS_GROUP_WATER_CONTACT:'+d.id);
-   if(estate.footRoute.slice(1).some((b,i)=>segmentDistance(q.x,q.z,estate.footRoute[i],b)<=estate.footRouteRadius+.3))throw Error('OASIS_GROUP_WALK_CONTACT:'+d.id);
-   const out={y:(hit.y-rootY)/d.scaleY,triangle:hit.role??'OUTDOOR_TERRAIN'};supportCache.set(key,out);return out;
-  };
-  // Reuse the saved A08 construction as a shape template, never as scene identity.
-  const bark=empty(),foliage=empty(),shape=appendHEarthAgedWoodlandTree({bark,foliage,p:{id:'P2_TREE_A_08',x:0,z:0,anchor:{y:0}},ground});
+  const sourceParts=Object.fromEntries(['BARK','CANOPY'].map(part=>{
+   const span=source.primitiveSpans.find(s=>s.primitiveId==='H_EARTH_GEN2800_'+d.id+'_'+part);
+   if(!span)throw Error('OASIS_GROUP_SOURCE_SPAN:'+d.id+':'+part);
+   const vertices=Array.from({length:span.vertexCount},(_,i)=>{const j=(span.vertexStart+i)*3;return unprojectPlanetVertex(...buffers.positions.slice(j,j+3).map(Math.fround));});
+   return[part,{span,vertices}];
+  }));
+  const dx=d.x-d.sourceX,dz=d.z-d.sourceZ,bark=sourceParts.BARK.vertices,minY=Math.min(...bark.map(v=>v.y));
+  const basal=bark.filter(v=>v.y<=minY+.25),samples=basal.map(v=>{
+   const x=v.x+dx,z=v.z+dz,hit=model.sampleOutdoorAt(x,z),water=model.sampleWaterAt(x,z);
+   if(!Number.isFinite(hit?.y)||water&&water.y>=hit.y-.03)throw Error('OASIS_GROUP_DRY_SUPPORT:'+d.id);
+   if(estate.footRoute.slice(1).some((b,i)=>segmentDistance(x,z,estate.footRoute[i],b)<=estate.footRouteRadius+.3))throw Error('OASIS_GROUP_WALK_CONTACT:'+d.id);
+   return{source:v,x,z,surfaceY:hit.y};
+  });
+  if(samples.length<3)throw Error('OASIS_GROUP_BASAL_WITNESSES:'+d.id);
+  const dy=Math.min(...samples.map(w=>w.surfaceY-w.source.y-.03)),witnesses=samples.map(w=>({id:d.id,x:w.x,z:w.z,surfaceY:w.surfaceY,meshY:w.source.y+dy,burial:w.surfaceY-w.source.y-dy}));
+  if(Math.max(...witnesses.map(w=>w.burial))>.35)throw Error('OASIS_GROUP_EXCESSIVE_BURIAL:'+d.id);
   const spans={};
-  for(const [key,m]of [['BARK',bark],['CANOPY',foliage]]){
-   const dst=groups[key],offset=dst.vertices.length,indexStart=dst.indices.length;
-   const transformed=m.vertices.map(v=>{const q=toWorld(v.x,v.z);return{x:q.x,y:rootY+v.y*d.scaleY,z:q.z};});
-   // Keep every low wooden point out of the established walk corridor.
-   if(key==='BARK')for(const v of transformed)if(v.y-rootY<2.5&&estate.footRoute.slice(1).some((b,i)=>segmentDistance(v.x,v.z,estate.footRoute[i],b)<=estate.footRouteRadius+.3))throw Error('OASIS_GROUP_LOW_WOOD_WALK:'+d.id);
-   dst.vertices.push(...transformed);dst.indices.push(...m.indices.map(i=>i+offset));
-   dst.colors.push(...m.colors.map(a=>a.slice(0,3).map(v=>v/255)));dst.clearingAttributes.push(...m.clearingAttributes.map(a=>[...a]));
-   spans[key]={vertexStart:offset,vertexCount:m.vertices.length,indexStart,indexCount:m.indices.length,bounds:boundsOf(transformed)};
+  for(const [part,{span,vertices}]of Object.entries(sourceParts)){
+   const dst=groups[part],offset=dst.vertices.length,indexStart=dst.indices.length;
+   const transformed=vertices.map(v=>({x:v.x+dx,y:v.y+dy,z:v.z+dz}));
+   if(part==='BARK')for(const v of transformed)if(v.y-(minY+dy)<2.5&&estate.footRoute.slice(1).some((b,i)=>segmentDistance(v.x,v.z,estate.footRoute[i],b)<=estate.footRouteRadius+.3))throw Error('OASIS_GROUP_LOW_WOOD_WALK:'+d.id);
+   dst.vertices.push(...transformed);
+   for(const index of buffers.indices.slice(span.indexStart,span.indexStart+span.indexCount)){
+    if(index<span.vertexStart||index>=span.vertexStart+span.vertexCount)throw Error('OASIS_GROUP_CROSS_SOURCE_FACE');
+    dst.indices.push(offset+index-span.vertexStart);
+   }
+   for(let i=0;i<span.vertexCount;i++){const id=span.vertexStart+i;dst.colors.push(buffers.baseColorsLinear.slice(id*4,id*4+3));dst.clearingAttributes.push(source.clearingAttributes.slice(id*3,id*3+3));}
+   spans[part]={vertexStart:offset,vertexCount:span.vertexCount,indexStart,indexCount:span.indexCount,bounds:boundsOf(transformed),sourcePrimitiveId:span.primitiveId,sourceVertexStart:span.vertexStart};
   }
-  const witnesses=shape.support.witnesses.map(w=>{const q=toWorld(w.x,w.z);return{id:d.id,x:q.x,z:q.z,surfaceY:rootY+w.surfaceY*d.scaleY,meshY:rootY+w.meshY*d.scaleY,burial:w.burial*d.scaleY};});
   contacts.push(...witnesses);
-  placements.push({...d,sourceAnchor:{x:d.sourceX,z:d.sourceZ},rootY,spans,rootCount:shape.visualTree.roots.length,leafCount:shape.visualTree.leafCount,triangleCount:shape.visualTree.triangleCount,minimumBurial:Math.min(...witnesses.map(w=>w.burial)),visualHeight:shape.visualTree.visualHeight*d.scaleY,shapeTemplate:'SAVED_AGED_A08',groundSamples:supportCache.size});
+  placements.push({...d,sourceAnchor:{x:d.sourceX,z:d.sourceZ},rootY:minY+dy,translation:{x:dx,y:dy,z:dz},spans,rootCount:0,leafCount:sourceParts.CANOPY.span.vertexCount/4,triangleCount:Object.values(sourceParts).reduce((n,p)=>n+p.span.indexCount/3,0),minimumBurial:Math.min(...witnesses.map(w=>w.burial)),maximumBurial:Math.max(...witnesses.map(w=>w.burial)),visualHeight:Math.max(...sourceParts.CANOPY.vertices.map(v=>v.y))-minY,shapeTemplate:'HYDRATED_ORIGINAL',groundSamples:samples.length});
  }
  const meshes=Object.entries(groups).map(([part,m])=>{
   const built=constructHEarthTriangleMesh({primitiveId:'OASIS_TREE_GROUP_'+part,vertices:m.vertices,indices:m.indices,expectedClosure:'OPEN_ALLOWED',semanticRole:'OASIS_TREE_GROUP',attributes:{colors:m.colors}});
   if(!built.valid)throw Error('OASIS_GROUP_CONSTRUCTION:'+JSON.stringify(built.issues));
   const admitted=admitHEarthPrimitiveRecord(built.primitiveRecord);if(!admitted.valid)throw Error('OASIS_GROUP_ADMISSION:'+JSON.stringify(admitted.issues));
   const positions=Float32Array.from(m.vertices.flatMap(v=>[v.x,v.y,v.z]));
-  return{role:'OASIS_TREE_GROUP',part,leaflets:part==='CANOPY',mesh:projectGeologicalMeshForRenderer({positions,indices:Uint32Array.from(m.indices)}),colors:m.colors,clearingAttributes:m.clearingAttributes};
+  return{role:'OASIS_TREE_GROUP',part,leaflets:part==='CANOPY',mesh:projectGeologicalMeshForRenderer({positions,indices:Uint32Array.from(m.indices)}),colors:m.colors,colorsAreLinear:true,clearingAttributes:m.clearingAttributes};
  });
  const triangleCount=meshes.reduce((n,p)=>n+p.mesh.triangleCount,0),gpuByteLength=meshes.reduce((n,p)=>n+p.mesh.vertexCount*69+p.mesh.indices.byteLength,0);
  if(triangleCount>33000||gpuByteLength>5*1024*1024||meshes.length!==2)throw Error('OASIS_GROUP_BUDGET_EXCEEDED');
- return{meshes,contacts,receipt:{schema:'H_EARTH_OASIS_TREE_GROUP_v1',targetId:'PROPOSED_OASIS_01',treeCount:4,placements,triangleCount,gpuByteLength,drawBatchCount:2,shadowCasterBatchCount:0,castShadowClaim:false,existingCavernShadowPreserved:true,perFrameGeneration:false,sourceTerrainMutated:false,originalWoodlandGeometryMutated:false,hydrationPreserved:true,physicalReview:'PENDING'}};
+ return{meshes,contacts,receipt:{schema:'H_EARTH_OASIS_TREE_GROUP_v1',targetId:'PROPOSED_OASIS_01',treeCount:4,placements,triangleCount,gpuByteLength,drawBatchCount:2,shadowCasterBatchCount:0,castShadowClaim:false,existingCavernShadowPreserved:true,perFrameGeneration:false,sourceTerrainMutated:false,originalWoodlandGeometryMutated:false,hydrationPreserved:true,focusShapeStatus:'RESET_TO_ORIGINAL_PENDING_OWNER_REVIEW',physicalReview:'PENDING'}};
 }
 
 export function suppressOasisTreeGroupIndices(indices,primitiveSpans){

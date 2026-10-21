@@ -18,7 +18,7 @@ export const CAVERN_UNDERSTORY_PLACEMENTS=Object.freeze([
  ['groundcover',32.0,-268.6,.5,3.2],['groundcover',34.0,-268.1,.65,5.4]
 ].map(([kind,x,z,scale,heading],i)=>Object.freeze({id:'CAVERN_UNDERSTORY_'+i,kind,x,z,scale,heading})));
 export const CAVERN_THRESHOLD_PLACEMENTS=Object.freeze([
- ['broadleaf',37.9,-262.0,1.15,.25],['broadleaf',42.1,-262.0,1.15,3.0],
+ ['broadleaf',37.9,-262.0,1.15,1.8],['broadleaf',42.1,-262.0,1.15,5.890486225480862],
  ['broadleaf',38.1,-260.6,1.20,.8],['broadleaf',41.9,-260.6,1.20,3.7],
  ['broadleaf',38.3,-259.35,1.10,1.3],['broadleaf',41.7,-259.3,1.10,4.2],
  ['fern',38.9,-261.6,1.05,.5],['fern',41.1,-261.4,1.05,3.4],
@@ -56,13 +56,14 @@ export function buildCavernUnderstoryPlacement(model){
   let maximumHeight=0;
   for(const part of plant.parts){
    const g=part.geometry,key=part.leaflets?'FOLIAGE':'STEMS';
+   const bloomGroundY=Number.isInteger(part.rigidBloomStart)&&plant.bloom?support(d.x+plant.bloom.anchor[0],d.z+plant.bloom.anchor[2],threshold):null;
    if(!groups.has(key))groups.set(key,{vertices:[],indices:[],colors:[],leaflets:part.leaflets});
    const m=groups.get(key),offset=m.vertices.length;
    for(let i=0;i<g.vertices.length;i++){
     const v=g.vertices[i],x=d.x+v.x,z=d.z+v.z;
     // Every vertex follows the actual emitted soil beneath it. This adapts the
     // connected stem/leaf mesh to the shoulder without hovering basal leaves.
-    const groundY=support(x,z,threshold),y=groundY+v.y-.012;
+    const groundY=support(x,z,threshold),rigidBloom=bloomGroundY!==null&&i>=part.rigidBloomStart,y=(rigidBloom?bloomGroundY:groundY)+v.y-.012;
     if(!threshold&&x>=37.8)throw Error('UNDERSTORY_PASSAGE_OCCUPIED');
     if(CAVERN_PALM_PLACEMENTS.some(p=>Math.hypot(x-p.x,z-p.z)<p.radius*1.2+.08))throw Error('UNDERSTORY_PALM_COLLISION');
     m.vertices.push({x,y,z});m.colors.push(g.attributes.colors[i]);maximumHeight=Math.max(maximumHeight,v.y);
@@ -70,7 +71,7 @@ export function buildCavernUnderstoryPlacement(model){
    m.indices.push(...g.indices.map(i=>i+offset));
   }
   contacts.push({id:d.id,x:d.x,z:d.z,groundY:rootY,rootY:rootY-.012});
-  placements.push({...d,rootY:rootY-.012,maximumHeight});
+  placements.push({...d,rootY:rootY-.012,maximumHeight,...(plant.bloom?{bloom:plant.bloom}:{})});
  }
  const meshes=[...groups].map(([key,m])=>{
   const constructed=constructHEarthTriangleMesh({primitiveId:'CAVERN_UNDERSTORY_'+key,vertices:m.vertices,indices:m.indices,expectedClosure:'OPEN_ALLOWED',semanticRole:'CAVERN_UNDERSTORY',attributes:{colors:m.colors}});
@@ -81,6 +82,6 @@ export function buildCavernUnderstoryPlacement(model){
   return {role:'CAVERN_UNDERSTORY',part:key,leaflets:m.leaflets,mesh:projectGeologicalMeshForRenderer({positions,indices:Uint32Array.from(m.indices)}),colors:m.colors};
  });
  const triangleCount=meshes.reduce((n,p)=>n+p.mesh.triangleCount,0),gpuByteLength=meshes.reduce((n,p)=>n+p.mesh.vertexCount*69+p.mesh.indices.byteLength,0);
- if(triangleCount>10000||gpuByteLength>2097152||meshes.length>3)throw Error('UNDERSTORY_BUDGET_EXCEEDED');
- return {meshes,contacts,receipt:{schema:'H_EARTH_CAVERN_UNDERSTORY_v1',siteId:model.site.id,clusterCount:3,side:'LEFT_ORIGINAL_AND_BILATERAL_THRESHOLD',originalPlantCount:17,thresholdPlantCount:CAVERN_THRESHOLD_PLACEMENTS.length,walkThroughBrush:true,navigationModified:false,plantCount:placements.length,placements,triangleCount,gpuByteLength,drawBatchCount:meshes.length,shadowCasterBatchCount:meshes.length,surfaceSource:'ACTUAL_EMITTED_OUTDOOR_AND_FLOOR_TRIANGLES',groundAdaptation:'CONNECTED_MESH_TERRAIN_FOLLOWING',perFrameGeneration:false,sourceTerrainMutated:false,existingPlantingMutated:false,physicalReview:'PENDING'}};
+ if(triangleCount>30000||gpuByteLength>2097152||meshes.length>3)throw Error('UNDERSTORY_BUDGET_EXCEEDED');
+ return {meshes,contacts,receipt:{schema:'H_EARTH_CAVERN_UNDERSTORY_v1',siteId:model.site.id,clusterCount:3,side:'LEFT_ORIGINAL_AND_BILATERAL_THRESHOLD',originalPlantCount:17,thresholdPlantCount:CAVERN_THRESHOLD_PLACEMENTS.length,walkThroughBrush:true,navigationModified:false,plantCount:placements.length,placements,triangleCount,gpuByteLength,drawBatchCount:meshes.length,shadowCasterBatchCount:meshes.length,surfaceSource:'ACTUAL_EMITTED_OUTDOOR_AND_FLOOR_TRIANGLES',groundAdaptation:'CONNECTED_MESH_TERRAIN_FOLLOWING',perFrameGeneration:false,sourceTerrainMutated:false,existingPlantingMutated:true,rootLocationsPreserved:true,foliageDetailRevision:2,physicalReview:'PENDING'}};
 }

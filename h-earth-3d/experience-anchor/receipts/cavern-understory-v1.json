@@ -29,7 +29,7 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/geometry-cavern-understory.v1.js",
-      "sha256": "7c30b953f24906024736094cea28bdbf8e8e97f901d3c0ec3a02f037391a0ce0"
+      "sha256": "1aaed3319266c2ea4b1d387b2e796af93599d5f3c0ec820b616bfe988fdc1086"
     },
     {
       "path": "showroom/globe/h-earth/render/cavern-understory-placement.v1.js",
@@ -41,10 +41,10 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.cavern-understory.v1.test.mjs",
-      "sha256": "094d51d031e015cb4a84e2a8731fbe3edbc5aa56547cee1100174de72f055d54"
+      "sha256": "20f81daa7d375a13a0b970b62cae24a2e01ee4d5d46393513c8ebd3b710ed8e7"
     }
   ],
-  "acceptanceBasis": "Structural same-world continuity only: one threshold broadleaf refined in place; all35 roots, all flowers and other34 full plant outputs unchanged.20 focused tests and independent West structural review pass. Actual visual quality NOT_ESTABLISHED: managed browser cannot create WebGL2. No propagation or private preview update.",
+  "acceptanceBasis": "Structural same-world continuity only: all eight broadleaf blades refined in place; all35 roots/headings/scales, all27 other plant outputs and all8 broadleaf stems unchanged.20 focused tests plus strengthened all8-by9 flower clearance and independent West structural review pass. Prior specimen owner images establish direction only; refined all8 visual acceptance and exact-candidate browser preflight pending.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
   "canonicalAdmissionGeneration": 2853

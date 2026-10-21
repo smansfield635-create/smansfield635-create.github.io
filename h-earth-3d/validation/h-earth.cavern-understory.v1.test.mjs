@@ -150,11 +150,11 @@ test('leaf detail is curved raised geometry with attached roots and tonal veins'
   }
  }
 });
-test('outer threshold broadleaves do not pierce neighboring flower heads',()=>{
+test('all broadleaves clear every flower head',()=>{
  const offsets={STEMS:0,FOLIAGE:0},selected=new Map();
  for(const d of [...CAVERN_UNDERSTORY_PLACEMENTS,...CAVERN_THRESHOLD_PLACEMENTS])for(const part of buildCavernUnderstoryPlant(d).parts){
   const key=part.leaflets?'FOLIAGE':'STEMS',g=part.geometry,merged=cluster.meshes.find(p=>p.part===key);
-  if((['CAVERN_THRESHOLD_0','CAVERN_THRESHOLD_1'].includes(d.id)&&part.part==='LEAVES')||(['CAVERN_THRESHOLD_10','CAVERN_THRESHOLD_11'].includes(d.id)&&part.part==='FLOWERS')){
+  if((d.kind==='broadleaf'&&part.part==='LEAVES')||(d.kind==='flower'&&part.part==='FLOWERS')){
    const vs=g.vertices.map((_,j)=>{const q=unprojectPlanetVertex(...merged.mesh.positions.slice((offsets[key]+j)*3,(offsets[key]+j)*3+3));return[q.x,q.y,q.z];}),triangles=[];
    for(let i=0;i<g.indices.length;i+=3){const p=g.indices.slice(i,i+3).map(j=>vs[j]);triangles.push({p,min:[0,1,2].map(k=>Math.min(...p.map(v=>v[k]))),max:[0,1,2].map(k=>Math.max(...p.map(v=>v[k])))});}selected.set(d.id,triangles);
   }
@@ -166,31 +166,44 @@ test('outer threshold broadleaves do not pierce neighboring flower heads',()=>{
   const q=cross(s,e1),v=dot(direction,q)/det;if(v<1e-5||u+v>1-1e-5)return false;
   const along=dot(e2,q)/det;return along>1e-5&&along<1-1e-5;
  };
- for(const [leaf,flower] of [[0,10],[1,11]])for(const a of selected.get('CAVERN_THRESHOLD_'+leaf))for(const b of selected.get('CAVERN_THRESHOLD_'+flower)){
+ const descriptors=[...CAVERN_UNDERSTORY_PLACEMENTS,...CAVERN_THRESHOLD_PLACEMENTS];
+ for(const leaf of descriptors.filter(d=>d.kind==='broadleaf'))for(const flower of descriptors.filter(d=>d.kind==='flower'))for(const a of selected.get(leaf.id))for(const b of selected.get(flower.id)){
   if([0,1,2].some(k=>a.min[k]>b.max[k]||a.max[k]<b.min[k]))continue;
-  assert.ok(![0,1,2].some(k=>pierces(a.p[k],a.p[(k+1)%3],b.p)||pierces(b.p[k],b.p[(k+1)%3],a.p)),`threshold${leaf} leaf pierces flower${flower}`);
+  assert.ok(![0,1,2].some(k=>pierces(a.p[k],a.p[(k+1)%3],b.p)||pierces(b.p[k],b.p[(k+1)%3],a.p)),`${leaf.id} leaf pierces ${flower.id}`);
  }
 });
 
-// Immutable baseline:5d344fb41e4668361a91e05891f53d1366b1d944; no git required at runtime.
-test('ONE_REPAIR changes only threshold0 and retains all other34 plants byte-identically',()=>{
- const others=[...CAVERN_UNDERSTORY_PLACEMENTS,...CAVERN_THRESHOLD_PLACEMENTS].filter(d=>d.id!=='CAVERN_THRESHOLD_0').map(d=>buildCavernUnderstoryPlant(d));
- assert.equal(others.length,34);assert.equal(hash(others),'c5814054f3a3bfa5090639431912e887eb559c7522b82afc427bc05b8c7d77dc');
+// Immutable baseline:3a2b2906b30426f51645cd3da3908a6acf8828f9; no git required at runtime.
+test('broadleaf refinement preserves all35 descriptors27other plants and8stems',()=>{
+ const descriptors=[...CAVERN_UNDERSTORY_PLACEMENTS,...CAVERN_THRESHOLD_PLACEMENTS],others=descriptors.filter(d=>d.kind!=='broadleaf').map(d=>buildCavernUnderstoryPlant(d)),stems=descriptors.filter(d=>d.kind==='broadleaf').map(d=>buildCavernUnderstoryPlant(d).parts.find(p=>p.part==='STEMS'));
+ assert.equal(descriptors.length,35);assert.equal(others.length,27);assert.equal(stems.length,8);
+ assert.equal(hash(descriptors),'e677f9d49d3667761b1d7311b4c820f3f3975c37418c88412cd0dc30ad98ba13');
+ assert.equal(hash(others),'193c9bb41430b3c1ac6108ecffbe92a1076b1d8065859091a9cdb823ed6d9719');
+ assert.equal(hash(stems),'5aafac44a0dba7b3aaaf5d551d0603be3d15ce48acfaa1d93ef50d3ea77462a4');
 });
-test('threshold0 specimen has narrow connected midrib and three raised chevrons',()=>{
- const specimen=buildCavernUnderstoryPlant(CAVERN_THRESHOLD_PLACEMENTS[0]),g=specimen.parts.find(p=>p.part==='LEAVES').geometry;
- assert.equal(specimen.leafDetails.length,7);
- for(const d of specimen.leafDetails){
-  assert.equal(d.specimenRevision,'CONNECTED_NARROW_VEINS_1');assert.equal(d.rows,9);assert.equal(d.columns,7);
-  assert.deepEqual(d.veinRows,[2,5,8]);assert.deepEqual(d.transverseFractions,[-1,-.62,-.09,0,.09,.62,1]);
-  assert.equal(d.vertexCount,65);assert.equal(d.indexCount/3,108);
-  for(let row=0;row<9;row++){const at=d.vertexStart+2+row*7,vs=g.vertices;
-   assert.ok(vs[at+3].y-(vs[at+2].y+vs[at+4].y)/2>.001,'midrib lacks narrow raised crest');
-   assert.ok(g.attributes.colors[at+3][1]>g.attributes.colors[at+2][1],'midrib pigment lost');
+test('all broadleaves have connected narrow midribs and raised curved branch veins',()=>{
+ for(const descriptor of [...CAVERN_UNDERSTORY_PLACEMENTS,...CAVERN_THRESHOLD_PLACEMENTS].filter(d=>d.kind==='broadleaf')){
+  const plant=buildCavernUnderstoryPlant(descriptor),g=plant.parts.find(p=>p.part==='LEAVES').geometry;
+  for(const d of plant.leafDetails){
+   assert.ok(d.rows>3&&d.columns>=7);assert.equal(d.transverseFractions.length,d.columns);
+   const mid=d.transverseFractions.indexOf(0);assert.ok(mid>0&&mid<d.columns-1);
+   assert.ok(Math.abs(d.transverseFractions[mid-1])<=.1&&d.transverseFractions[mid+1]<=.1,'midrib shoulders span too much blade');
+   assert.ok(d.rowFractions.every((t,i)=>t>0&&t<1&&(i===0||t>d.rowFractions[i-1])));
+   assert.ok(d.veinRows.length>=3);assert.equal(d.vertexCount,2+d.rows*d.columns);
+   const point=(row,col)=>g.vertices[d.vertexStart+2+row*d.columns+col];
+   for(let row=1;row<d.rows-1;row++){
+    const a=point(row,mid-1),b=point(row,mid+1),c=point(row,mid),prev=point(row-1,mid),next=point(row+1,mid),u=[b.x-a.x,b.y-a.y,b.z-a.z],v=[next.x-prev.x,next.y-prev.y,next.z-prev.z],n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],length=Math.hypot(...n),sign=n[1]<0?-1:1;
+    const relief=sign*((c.x-(a.x+b.x)/2)*n[0]+(c.y-(a.y+b.y)/2)*n[1]+(c.z-(a.z+b.z)/2)*n[2])/length;
+    assert.ok(relief>.0002,'midrib lacks raised crest above adjacent shoulders');
+   }
+   for(const row1 of d.veinRows){const row=row1-1;assert.equal(d.rowRoles[row],'VEIN_CREST');assert.equal(d.rowRoles[row-1],'VEIN_SHOULDER');assert.equal(d.rowRoles[row+1],'VEIN_SHOULDER');
+    for(const col of [mid-2,mid+2]){const a=point(row-1,col),b=point(row+1,col),c=point(row,col),f=(d.rowFractions[row]-d.rowFractions[row-1])/(d.rowFractions[row+1]-d.rowFractions[row-1]);
+     assert.ok(c.y-(a.y+(b.y-a.y)*f)>.0001,'branch vein lacks relief');
+    }
+   }
+   const root=g.vertices[d.vertexStart];assert.ok(plant.attachments.some(a=>Math.hypot(root.x-a.leafRoot[0],root.y-a.leafRoot[1],root.z-a.leafRoot[2])<1e-10));
+   const edges=new Map();for(let i=d.indexStart;i<d.indexStart+d.indexCount;i+=3)for(const [a,b] of [[g.indices[i],g.indices[i+1]],[g.indices[i+1],g.indices[i+2]],[g.indices[i+2],g.indices[i]]]){if(!edges.has(a))edges.set(a,new Set());edges.get(a).add(b);if(!edges.has(b))edges.set(b,new Set());edges.get(b).add(a);}
+   const visited=new Set(),stack=[d.vertexStart];while(stack.length){const n=stack.pop();if(visited.has(n))continue;visited.add(n);stack.push(...edges.get(n));}assert.equal(visited.size,d.vertexCount,'vein detail is detached overlay');
   }
-  for(const row of [1,4,7])for(const column of [1,5]){const at=d.vertexStart+2+row*7+column,vs=g.vertices;
-   assert.ok(vs[at].y-(vs[at-7].y+vs[at+7].y)/2>.0002,'chevron lacks geometric relief');
-  }
-  const root=g.vertices[d.vertexStart];assert.ok(specimen.attachments.some(a=>Math.hypot(root.x-a.leafRoot[0],root.y-a.leafRoot[1],root.z-a.leafRoot[2])<1e-10));
  }
 });

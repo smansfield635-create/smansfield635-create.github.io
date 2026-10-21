@@ -3,7 +3,7 @@
   "operationId": "H_EARTH_CAVERN_FOLIAGE_DETAIL_20261021_001",
   "canonicalAdmissionGeneration": 2853,
   "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6322224443",
-  "parent": "f2b276a151182219bb778571f6bb04594bb722c0",
+  "parent": "577005c05028da6679bcbb8b1b76ec2427e00cef",
   "receipt": {
     "schema": "H_EARTH_CAVERN_UNDERSTORY_v1",
     "siteId": "B_REAR_RAVINE",
@@ -23,7 +23,7 @@
         "scale": 1.05,
         "heading": 0.3,
         "rootY": 13.791395481825218,
-        "maximumHeight": 1.5200427307857152
+        "maximumHeight": 1.5213326035134358
       },
       {
         "id": "CAVERN_UNDERSTORY_1",
@@ -33,7 +33,7 @@
         "scale": 0.86,
         "heading": 2.1,
         "rootY": 13.768113276705188,
-        "maximumHeight": 1.1022623701793577
+        "maximumHeight": 1.1008177876304976
       },
       {
         "id": "CAVERN_UNDERSTORY_2",
@@ -235,7 +235,7 @@
         "scale": 1.15,
         "heading": 1.8,
         "rootY": 11.40367875907928,
-        "maximumHeight": 1.4195799611712572
+        "maximumHeight": 1.4280302276578254
       },
       {
         "id": "CAVERN_THRESHOLD_1",
@@ -245,7 +245,7 @@
         "scale": 1.15,
         "heading": 5.890486225480862,
         "rootY": 11.45431524452312,
-        "maximumHeight": 1.4980714999463574
+        "maximumHeight": 1.4997467869634742
       },
       {
         "id": "CAVERN_THRESHOLD_2",
@@ -255,7 +255,7 @@
         "scale": 1.2,
         "heading": 0.8,
         "rootY": 11.283844575605798,
-        "maximumHeight": 1.795241496301611
+        "maximumHeight": 1.7946997758642427
       },
       {
         "id": "CAVERN_THRESHOLD_3",
@@ -265,7 +265,7 @@
         "scale": 1.2,
         "heading": 3.7,
         "rootY": 11.328045188539324,
-        "maximumHeight": 1.3936258333456208
+        "maximumHeight": 1.3899157994809817
       },
       {
         "id": "CAVERN_THRESHOLD_4",
@@ -275,7 +275,7 @@
         "scale": 1.1,
         "heading": 1.3,
         "rootY": 11.28175976283336,
-        "maximumHeight": 1.5637492363794332
+        "maximumHeight": 1.5619450604702505
       },
       {
         "id": "CAVERN_THRESHOLD_5",
@@ -285,7 +285,7 @@
         "scale": 1.1,
         "heading": 4.2,
         "rootY": 11.305769638611935,
-        "maximumHeight": 1.3595361220979194
+        "maximumHeight": 1.3608417711931118
       },
       {
         "id": "CAVERN_THRESHOLD_6",
@@ -492,8 +492,8 @@
         "maximumHeight": 0.1313619862801849
       }
     ],
-    "triangleCount": 19924,
-    "gpuByteLength": 1202328,
+    "triangleCount": 28184,
+    "gpuByteLength": 1605738,
     "drawBatchCount": 2,
     "shadowCasterBatchCount": 2,
     "surfaceSource": "ACTUAL_EMITTED_OUTDOOR_AND_FLOOR_TRIANGLES",
@@ -752,21 +752,24 @@
       "rootY": 11.258550835994072
     }
   ],
-  "localGenerationMilliseconds": 6376.653407000001,
+  "localGenerationMilliseconds": 9323.88511,
   "deviceTimingMeasured": false,
   "focusedTests": {
     "passed": 20,
-    "failed": 0
+    "failed": 0,
+    "additionalStrengthenedAllBroadleafFlowerClearanceTest": "PASS"
   },
   "independentReview": {
     "role": "WEST",
     "status": "STRUCTURAL_PASS_VISUAL_NOT_ESTABLISHED",
     "trianglesNondegenerate": true,
     "accumulatedVertexNormalsNonzero": true,
-    "specimenNeighborFlowerClearancePassed": true,
-    "all35RootIdentitiesPreserved": true,
-    "other34CompleteOutputsSha256": "c5814054f3a3bfa5090639431912e887eb559c7522b82afc427bc05b8c7d77dc",
-    "flowerTopologyColorsRigidShapePreserved": true
+    "allEightBroadleafAgainstAllNineFlowerClearancePassed": true,
+    "all35RootHeadingScaleIdentitiesPreserved": true,
+    "other27CompleteOutputsUnchanged": true,
+    "allEightBroadleafStemsUnchanged": true,
+    "flowerTopologyColorsRigidShapePreserved": true,
+    "connectedRaisedNarrowVeinsPassed": true
   },
   "preservation": {
     "existingGrassPalmIvyModulesUnchanged": true,
@@ -775,19 +778,19 @@
     "priorGrassVisualAcceptance": "PENDING",
     "all35RootIdentitiesPreserved": true
   },
-  "visualReview": "ONE_REPAIR_SPECIMEN_NOT_VISUALLY_ACCEPTED",
-  "browserQualification": "LOCAL_MANAGED_BROWSER_WEBGL2_UNAVAILABLE",
+  "visualReview": "PENDING_ALL_EIGHT_REFINED_BROADLEAVES",
+  "browserQualification": "PENDING_EXACT_CANDIDATE_PREFLIGHT",
   "sourceResearch": [
     "https://developer.android.com/games/optimize/materials",
     "https://developer.nvidia.com/gpugems/gpugems3/part-iii-rendering/chapter-16-vegetation-procedural-animation-and-shading-crysis"
   ],
   "timingComparison": {
-    "baselineMilliseconds": 6551.721147,
-    "candidateMilliseconds": 6376.653407000001,
+    "baselineMilliseconds": 6376.653407,
+    "candidateMilliseconds": 9323.88511,
     "hostOnly": true,
     "tabletResponsiveness": "PENDING"
   },
-  "specimenRepair": {
+  "priorSpecimenRepair": {
     "disposition": "ONE_REPAIR",
     "specimenId": "CAVERN_THRESHOLD_0",
     "previousCandidate": "f2b276a151182219bb778571f6bb04594bb722c0",
@@ -805,6 +808,28 @@
       "nextAction": "Obtain actual WebGL2 before/after rendering of this saved specimen before propagating."
     },
     "longWorkflowDispatched": false,
-    "privatePreviewUpdated": false
+    "privatePreviewUpdated": false,
+    "historicalOnly": true
+  },
+  "broadleafRefinement": {
+    "revision": "CURVED_NARROW_VEINS_2",
+    "plantCount": 8,
+    "leavesPerPlant": 7,
+    "other27PlantsUnchanged": true,
+    "flowersUnchanged": true,
+    "ownerEvidence": [
+      "29606: readable narrow veins, desired direction",
+      "29604: older angular broad folds",
+      "29602: older weak plain definition"
+    ],
+    "authorization": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6323385055",
+    "mechanism": "Connected narrow midrib and curved secondary crests; neutral surface rows smooth curvature and silhouette; deterministic vein spacing variation; continuous intervein blade color.",
+    "addedTriangles": 8260,
+    "addedGpuBytes": 403410,
+    "preferredTriangleTarget": 20000,
+    "hardTriangleLimit": 30000,
+    "preferredTargetExceededReason": "Additional curvature samples across all 56 broadleaf blades reduce large intervein and tip triangles. Two batches retained.",
+    "visualAcceptance": "PENDING_OWNER_DEVICE_REVIEW",
+    "requiredComparison": "Both entrance sides at near and approach distances, shaded and oblique views. Check smooth blade surfaces, readable curved veins, natural variation, flower preservation and movement responsiveness."
   }
 }

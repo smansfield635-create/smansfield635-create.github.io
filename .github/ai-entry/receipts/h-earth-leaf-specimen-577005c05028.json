@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-leaf-specimen-577005c05028",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6651,
+  "requestBranch": "ai-dispatch-request-leaf-577005c05028",
+  "requestCommit": "ace451e6b79a91037425da163b6e8f2388785747",
+  "currentMainSha": "0a8e624fec2e85c28449988f3b031a795a1bd70a",
+  "bridgeRunId": "39650117685",
+  "error": "fetch failed",
+  "failedAt": "2026-10-21T18:09:19.771Z"
+}

@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-21T08:40:34Z",
+  "generatedAt": "2026-10-21T09:34:37Z",
   "window": {
-    "start": "2026-09-21T08:40:34Z",
-    "end": "2026-10-21T08:40:34Z"
+    "start": "2026-09-21T09:34:37Z",
+    "end": "2026-10-21T09:34:37Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 707,
-        "visits": 587
+        "pageLoads": 687,
+        "visits": 567
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -158,11 +158,6 @@
         "visits": 0
       },
       {
-        "value": "/products/auren/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/governance-bridge/collaboration/",
         "pageLoads": 10,
         "visits": 10
@@ -171,11 +166,6 @@
         "value": "/prototypes/abc-roofing/",
         "pageLoads": 10,
         "visits": 10
-      },
-      {
-        "value": "/door/canonical-object.html",
-        "pageLoads": 10,
-        "visits": 0
       },
       {
         "value": "/lbs-resumes/",
@@ -414,8 +404,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 3294,
-        "visits": 2391
+        "pageLoads": 3254,
+        "visits": 2361
       }
     ]
   }

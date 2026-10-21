@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-21T08:40:34Z",
+  "generatedAt": "2026-10-21T09:34:37Z",
   "window": {
-    "start": "2026-07-23T08:40:34Z",
-    "end": "2026-10-21T08:40:34Z"
+    "start": "2026-07-23T09:34:37Z",
+    "end": "2026-10-21T09:34:37Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -18,33 +18,41 @@
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
     "pageLoads": 4793,
-    "visits": 1405,
+    "visits": 1345,
     "byDevice": {
       "tablet": {
         "pageLoads": 4793,
-        "visits": 1405
+        "visits": 1345
       }
     },
     "byPath": {
+      "/laws/": {
+        "pageLoads": 300,
+        "visits": 90
+      },
+      "/products/archcoin/": {
+        "pageLoads": 30,
+        "visits": 0
+      },
+      "/showroom/": {
+        "pageLoads": 110,
+        "visits": 10
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 156,
+        "visits": 10
+      },
       "/index.html": {
-        "pageLoads": 130,
+        "pageLoads": 140,
         "visits": 0
       },
       "/products/": {
         "pageLoads": 60,
         "visits": 10
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 136,
-        "visits": 10
-      },
-      "/showroom/": {
-        "pageLoads": 90,
-        "visits": 10
-      },
       "/": {
-        "pageLoads": 1095,
-        "visits": 785
+        "pageLoads": 1045,
+        "visits": 755
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
@@ -53,10 +61,6 @@
       "/showroom/story/welcome/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/laws/": {
-        "pageLoads": 270,
-        "visits": 90
       },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 230,
@@ -71,8 +75,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 280,
-        "visits": 80
+        "pageLoads": 270,
+        "visits": 70
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -95,11 +99,11 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 180,
+        "pageLoads": 160,
         "visits": 10
       },
       "/governance/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 10
       },
       "/evidence/readiness/": {
@@ -111,7 +115,7 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 110,
+        "pageLoads": 90,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -127,7 +131,7 @@
         "visits": 0
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/build/": {
@@ -150,7 +154,11 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/inspection/compass/brain-v9/": {
+      "/inspection/compass/brain-v10-g1-1/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "/inspection/compass/brain-v10-continuous/": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -207,8 +215,8 @@
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 70,
-        "visits": 40
+        "pageLoads": 60,
+        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -242,6 +250,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
@@ -251,10 +263,6 @@
         "visits": 0
       },
       "/showroom/story/timeline/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/prelude/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -295,12 +303,12 @@
         "visits": 0
       },
       "/home/": {
-        "pageLoads": 20,
-        "visits": 20
+        "pageLoads": 10,
+        "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 160,
-        "visits": 130
+        "pageLoads": 150,
+        "visits": 120
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -321,22 +329,18 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3388,
+        "pageLoads": 3448,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 831,
-        "visits": 831
+        "pageLoads": 791,
+        "visits": 791
       },
       "(none)": {
-        "pageLoads": 554,
-        "visits": 554
+        "pageLoads": 544,
+        "visits": 544
       },
       "raw.githack.com": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "com.google.android.googlequicksearchbox": {
         "pageLoads": 10,
         "visits": 10
       }

@@ -1,14 +1,25 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
-  "result": "WORKFLOW_DISPATCH_FAILED",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
   "requestId": "h-earth-cavern-restoration-b49ec479ffc9",
   "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 6655,
   "requestBranch": "ai-dispatch-request-cavern-restoration-b49ec479",
-  "requestCommit": "e44bc2f9d2d2f62a71c3849facd4826198525803",
+  "requestCommit": "fc325ebe9b36ad92429a7e3b68b58d0c5e345fb5",
+  "requestCommitParent": "1acf7efd9f07a4789af3b616da1a2c3b10e27300",
+  "requestParentWasCurrent": true,
   "currentMainSha": "1acf7efd9f07a4789af3b616da1a2c3b10e27300",
-  "bridgeRunId": "39687188659",
-  "error": "Stale dispatch request: parent bd907086c4aa503ad8a07f51bcba0d55b2e99717 != current main 1acf7efd9f07a4789af3b616da1a2c3b10e27300",
-  "failedAt": "2026-10-21T22:32:16.298Z"
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b49ec479ffc95f0ccd64b3295a9ffd976c8a85e1",
+    "surface_id": "h-earth-simple"
+  },
+  "bridgeRunId": "39687316091",
+  "dispatchedRunId": 39687337025,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39687337025",
+  "dispatchedRunHeadSha": "1acf7efd9f07a4789af3b616da1a2c3b10e27300",
+  "dispatchedAt": "2026-10-21T22:33:21.001Z",
+  "resolvedAt": "2026-10-21T22:33:24.627Z"
 }

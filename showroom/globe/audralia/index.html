@@ -11,6 +11,7 @@
   <script type="importmap">
 {
   "imports": {
+    "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=SOURCE_RIVER_GEN2839",
     "/inspection/audralia-24057-exact/snapshot/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=SOURCE_RIVER_GEN2839",
     "https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.precomputed.mjs": "/showroom/globe/h-earth/terrain-estate-construction-v1/renderer.regional-ecology-v1.mjs?cb=SOURCE_RIVER_GEN2839"
   }
@@ -121,7 +122,6 @@
       environmentBinding: 'IMMUTABLE_24057_SNAPSHOT_TREE_88f8a247d891bd0ca44e21d91da935792afd8993'
     });
   </script>
-  <script type="module" src="/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST"></script>
   <script type="module" src="./audio/estate-soundtrack-v1.mjs?cb=AUDRALIA_ESTATE_SOUNDTRACK_RUNTIME_v1"></script>
   <script type="module">
     const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => resolve()));
@@ -144,11 +144,20 @@
     };
 
     try {
+      const constrainedTablet = window.__AUDRALIA_RENDER_PIXEL_BUDGET__?.active === true;
+      const tabletLoader = constrainedTablet
+        ? (await import('./tablet-loader-controller-v1.mjs?cb=APPROVED_CLOUD_CONTINUITY_GEN2844')).default
+        : null;
+      if (!constrainedTablet) {
+        await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/loader-progress.mjs?cb=EXACT_24057_LOADER_FIRST');
+      }
+      tabletLoader?.meshStart();
       const { loadPrecomputedGratitudeMesh } = await import('/showroom/globe/h-earth/terrain-estate-construction-v1/precomputed-gratitude-mesh-v1.mjs?cb=GRATITUDE_REGIONAL_CONTINUITY_GEN2837');
       await loadPrecomputedGratitudeMesh({expectedPayloadSha256:'ed0905a208ee6bc8b99ff7271a3d636119d947dc57306a9293ba7405c3de0442'});
       const {loadRiverContinuityMesh}=await import('/showroom/globe/h-earth/terrain-estate-construction-v1/river-continuity-v1.mjs?cb=SOURCE_RIVER_GEN2839');
       await loadRiverContinuityMesh();
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'LOADING_PRIMARY_WORLD';
+      tabletLoader?.worldStart();
       await nextFrame();
       await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/acf1-cloud-presentation-v1.mjs?cb=EXACT_24057');
       await nextFrame();
@@ -156,10 +165,9 @@
       await nextFrame();
       await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/fap1-weather-presentation-v1.mjs?cb=EXACT_24057');
       await nextFrame();
-      const constrainedTablet = window.__AUDRALIA_RENDER_PIXEL_BUDGET__?.active === true;
       if (constrainedTablet) {
-        const { initializeAudraliaTabletSingleContext } = await import('https://cdn.jsdelivr.net/gh/smansfield635-create/smansfield635-create.github.io@1a2abff0343f527432c5d00e52de904c70c70f1b/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-runtime.mjs');
-        await initializeAudraliaTabletSingleContext();
+        const { initializeAudraliaTabletSingleContextClouds } = await import('/showroom/globe/h-earth/terrain-estate-construction-v1/audralia-tablet-single-context-clouds-runtime.mjs?cb=APPROVED_CLOUD_CONTINUITY_GEN2844');
+        await initializeAudraliaTabletSingleContextClouds();
       } else {
         await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/weather-presentation-reconciliation/app.mjs?cb=EXACT_24057');
       }
@@ -171,9 +179,11 @@
         await import('/inspection/audralia-24057-exact/snapshot/showroom/globe/audralia/celestial-checkpoint-1.mjs?cb=EXACT_24057');
       }
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'COMPLETE';
+      tabletLoader?.complete();
     } catch (error) {
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.status = 'FAILED';
       window.__AUDRALIA_TABLET_STARTUP_STABILITY__.error = String(error?.message || error);
+      window.__AUDRALIA_TABLET_LOADER_CONTROLLER__?.fail('Audralia could not finish loading', error);
       console.error('AUDRALIA_SEQUENTIAL_STARTUP_FAILED', error);
       const status = document.querySelector('[data-h-earth-status]');
       if (status) status.textContent = 'Audralia could not finish loading';

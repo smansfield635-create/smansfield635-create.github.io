@@ -50,6 +50,8 @@ function sampleCanonicalSurface(u,v){
   return Object.freeze({valid:true,u,v,z,elevation,inside,terrain});
 }
 function cameraFrame(renderer){
+  // Clouds must use the camera of the bound terrain renderer at every scale.
+  if(typeof renderer.getCameraFrame==='function')return renderer.getCameraFrame();
   const snapshot=renderer.getSnapshot();
   const pitch=clamp(snapshot.pitch,.46,1.49),distance=clamp(snapshot.distance,95,5600),yaw=snapshot.yaw;
   const targetU=snapshot.targetU,targetV=snapshot.targetV,direction=tangentDirection(targetU,targetV);

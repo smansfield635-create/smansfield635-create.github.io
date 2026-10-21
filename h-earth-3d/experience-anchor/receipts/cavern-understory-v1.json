@@ -33,7 +33,7 @@
     },
     {
       "path": "showroom/globe/h-earth/render/cavern-understory-placement.v1.js",
-      "sha256": "cec65ad800f66bcf9b3177c97e689372eb3b7369dd799e10f5a37c5007324476"
+      "sha256": "40fa5e4ab8e625a257db8b50071e91456055e47e3606441203f02446f43f9436"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
@@ -41,11 +41,11 @@
     },
     {
       "path": "h-earth-3d/validation/h-earth.cavern-understory.v1.test.mjs",
-      "sha256": "b07dfe2204d0496df20f2cc7fa7eed9e92493fbbc5039c21608ef677c1908497"
+      "sha256": "a395171d66af50097e8ec3798568a95e31e97ddb1d8f628e3aa5042fc9c65693"
     }
   ],
-  "acceptanceBasis": "Structural same-world continuity: additive admitted plant meshes reuse existing renderer, lighting, shadows and navigation; no existing planting or world geometry changed. Physical visual acceptance and exact browser qualification pending.",
+  "acceptanceBasis": "Structural same-world continuity: original17 plants retain exact GPU prefixes;18 additive plants use existing geometry, renderer, lighting, shadows and unchanged walk-through navigation. Threshold uses emitted outdoor and floor support. Physical concealment acceptance and exact browser qualification pending.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
-  "canonicalAdmissionGeneration": 2851
+  "canonicalAdmissionGeneration": 2852
 }

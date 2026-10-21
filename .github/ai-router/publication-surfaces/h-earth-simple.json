@@ -6,7 +6,7 @@
     {
       "path": "/showroom/globe/h-earth/index.html",
       "includes": [
-        "<title>H-Earth · Live Interactive World</title>",
+        "<title>Gratitude · Live Interactive World</title>",
         "id=\"h-earth-functional-landscape-route\"",
         "data-run8e-ready=\"false\"",
         "./vegetation-prototype/route.js?rev=gen2795-performance-v1",

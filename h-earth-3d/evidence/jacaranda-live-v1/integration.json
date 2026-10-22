@@ -8,7 +8,7 @@
   "exactApprovedAsset": {
     "path": "showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb",
     "sha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189",
-    "gitBlobSha": "863f6bfd54e4e2090af17940c5901ae07366f016",
+    "publicGitObjectSha1": "863f6bfd54e4e2090af17940c5901ae07366f016",
     "bytes": 33184612,
     "primitives": 3,
     "textureImages": 9,

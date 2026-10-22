@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-22T04:35:06Z",
+  "generatedAt": "2026-10-22T05:33:27Z",
   "window30d": {
-    "start": "2026-09-22T04:35:06Z",
-    "end": "2026-10-22T04:35:06Z"
+    "start": "2026-09-22T05:33:27Z",
+    "end": "2026-10-22T05:33:27Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 96
+      "pageLoads": 94
     },
     {
       "date": "2026-10-16",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 4
+      "pageLoads": 5
     }
   ],
   "summary": {
-    "pageLoads": 2667,
-    "botPageLoads": 1000,
+    "pageLoads": 2656,
+    "botPageLoads": 989,
     "nonBotPageLoads": 1667
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1892,
-      "visits": 1892
+      "pageLoads": 1881,
+      "visits": 1881
     },
     {
       "host": "diamondgatebridge.com",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 72,
-      "visits": 52
+      "pageLoads": 62,
+      "visits": 42
     },
     {
       "path": "/products/education/",

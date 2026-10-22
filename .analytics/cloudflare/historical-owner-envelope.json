@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-21T23:29:12Z",
+  "generatedAt": "2026-10-22T01:01:29Z",
   "window": {
-    "start": "2026-07-23T23:29:12Z",
-    "end": "2026-10-21T23:29:12Z"
+    "start": "2026-07-24T01:01:29Z",
+    "end": "2026-10-22T01:01:29Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -34,12 +34,12 @@
         "pageLoads": 30,
         "visits": 0
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 155,
-        "visits": 10
-      },
       "/showroom/": {
         "pageLoads": 110,
+        "visits": 10
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 155,
         "visits": 10
       },
       "/index.html": {
@@ -86,12 +86,12 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -130,6 +130,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -141,10 +145,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/build/": {
         "pageLoads": 20,
@@ -226,16 +226,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 42,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 42,
         "visits": 0
       },
       "/door/": {
@@ -250,19 +250,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },

@@ -1,0 +1,835 @@
+{
+  "schema": "H_EARTH_CAVERN_UNDERSTORY_INTEGRATION_EVIDENCE_v1",
+  "operationId": "H_EARTH_CAVERN_FOLIAGE_DETAIL_20261021_001",
+  "canonicalAdmissionGeneration": 2853,
+  "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6322224443",
+  "parent": "577005c05028da6679bcbb8b1b76ec2427e00cef",
+  "receipt": {
+    "schema": "H_EARTH_CAVERN_UNDERSTORY_v1",
+    "siteId": "B_REAR_RAVINE",
+    "clusterCount": 3,
+    "side": "LEFT_ORIGINAL_AND_BILATERAL_THRESHOLD",
+    "originalPlantCount": 17,
+    "thresholdPlantCount": 18,
+    "walkThroughBrush": true,
+    "navigationModified": false,
+    "plantCount": 35,
+    "placements": [
+      {
+        "id": "CAVERN_UNDERSTORY_0",
+        "kind": "broadleaf",
+        "x": 34.55,
+        "z": -265.8,
+        "scale": 1.05,
+        "heading": 0.3,
+        "rootY": 13.791395481825218,
+        "maximumHeight": 1.5213326035134358
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_1",
+        "kind": "broadleaf",
+        "x": 33.45,
+        "z": -267,
+        "scale": 0.86,
+        "heading": 2.1,
+        "rootY": 13.768113276705188,
+        "maximumHeight": 1.1008177876304976
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_2",
+        "kind": "fern",
+        "x": 35.45,
+        "z": -267.2,
+        "scale": 1.05,
+        "heading": 0.7,
+        "rootY": 12.717040281458555,
+        "maximumHeight": 0.7799725588822455
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_3",
+        "kind": "fern",
+        "x": 32.7,
+        "z": -268,
+        "scale": 0.8,
+        "heading": 2.8,
+        "rootY": 13.455134853597944,
+        "maximumHeight": 0.5942658517558845
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_4",
+        "kind": "flower",
+        "x": 34.45,
+        "z": -268.15,
+        "scale": 1.25,
+        "heading": 0.25,
+        "rootY": 12.892192909046177,
+        "maximumHeight": 1.4544845115907274,
+        "bloom": {
+          "anchor": [
+            0.09689124217106448,
+            1.1375,
+            0.024740395925452293
+          ],
+          "normal": [
+            0.12013004403119609,
+            0.42279669814096627,
+            -0.8982269894420671
+          ],
+          "tiltRadians": 1.1342671219725162,
+          "forwardAzimuth": 0.13295235011726617
+        }
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_5",
+        "kind": "flower",
+        "x": 35.5,
+        "z": -268.6,
+        "scale": 1.05,
+        "heading": 1.7,
+        "rootY": 12.100978846083937,
+        "maximumHeight": 1.1889329505993012,
+        "bloom": {
+          "anchor": [
+            -0.010822937520824069,
+            0.9555000000000001,
+            0.08329984407800736
+          ],
+          "normal": [
+            -0.028678850702378432,
+            0.5125563978838903,
+            -0.8581744942088886
+          ],
+          "tiltRadians": 1.0326369561022148,
+          "forwardAzimuth": -0.03340600535273552
+        }
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_6",
+        "kind": "flower",
+        "x": 33.25,
+        "z": -269,
+        "scale": 0.95,
+        "heading": 3.4,
+        "rootY": 12.847982356204128,
+        "maximumHeight": 1.0587604516796971,
+        "bloom": {
+          "anchor": [
+            -0.07347666263603905,
+            0.8644999999999999,
+            -0.019421123754039173
+          ],
+          "normal": [
+            -0.05569889256366172,
+            0.5359009445861905,
+            -0.8424415771783883
+          ],
+          "tiltRadians": 1.005221825838089,
+          "forwardAzimuth": -0.06601994354277849
+        }
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_7",
+        "kind": "groundcover",
+        "x": 33.1,
+        "z": -265.8,
+        "scale": 0.68,
+        "heading": 0.5,
+        "rootY": 14.381067561724684,
+        "maximumHeight": 0.11376772766875402
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_8",
+        "kind": "groundcover",
+        "x": 32.6,
+        "z": -266.8,
+        "scale": 0.72,
+        "heading": 1.4,
+        "rootY": 14.040393634429565,
+        "maximumHeight": 0.13527305308573603
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_9",
+        "kind": "groundcover",
+        "x": 34.8,
+        "z": -267.7,
+        "scale": 0.8,
+        "heading": 2.2,
+        "rootY": 12.893758489559616,
+        "maximumHeight": 0.1407674760615104
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_10",
+        "kind": "groundcover",
+        "x": 36.3,
+        "z": -267.9,
+        "scale": 0.68,
+        "heading": 0.9,
+        "rootY": 11.862764155028362,
+        "maximumHeight": 0.13373169426859763
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_11",
+        "kind": "groundcover",
+        "x": 35.95,
+        "z": -269.1,
+        "scale": 0.75,
+        "heading": 2.9,
+        "rootY": 11.62246153178736,
+        "maximumHeight": 0.14981573805757215
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_12",
+        "kind": "groundcover",
+        "x": 34.8,
+        "z": -269.5,
+        "scale": 0.7,
+        "heading": 4.2,
+        "rootY": 12.04853193729901,
+        "maximumHeight": 0.14163711448362742
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_13",
+        "kind": "groundcover",
+        "x": 33.8,
+        "z": -269.8,
+        "scale": 0.65,
+        "heading": 1.2,
+        "rootY": 12.341672842966343,
+        "maximumHeight": 0.1293146175164637
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_14",
+        "kind": "groundcover",
+        "x": 32.7,
+        "z": -269.6,
+        "scale": 0.55,
+        "heading": 2.6,
+        "rootY": 12.647956125578038,
+        "maximumHeight": 0.08984947365231875
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_15",
+        "kind": "groundcover",
+        "x": 32,
+        "z": -268.6,
+        "scale": 0.5,
+        "heading": 3.2,
+        "rootY": 13.283326940148806,
+        "maximumHeight": 0.09062225829138092
+      },
+      {
+        "id": "CAVERN_UNDERSTORY_16",
+        "kind": "groundcover",
+        "x": 34,
+        "z": -268.1,
+        "scale": 0.65,
+        "heading": 5.4,
+        "rootY": 13.161408511288391,
+        "maximumHeight": 0.11570531901486808
+      },
+      {
+        "id": "CAVERN_THRESHOLD_0",
+        "kind": "broadleaf",
+        "x": 37.9,
+        "z": -262,
+        "scale": 1.15,
+        "heading": 1.8,
+        "rootY": 11.40367875907928,
+        "maximumHeight": 1.4280302276578254
+      },
+      {
+        "id": "CAVERN_THRESHOLD_1",
+        "kind": "broadleaf",
+        "x": 42.1,
+        "z": -262,
+        "scale": 1.15,
+        "heading": 5.890486225480862,
+        "rootY": 11.45431524452312,
+        "maximumHeight": 1.4997467869634742
+      },
+      {
+        "id": "CAVERN_THRESHOLD_2",
+        "kind": "broadleaf",
+        "x": 38.1,
+        "z": -260.6,
+        "scale": 1.2,
+        "heading": 0.8,
+        "rootY": 11.283844575605798,
+        "maximumHeight": 1.7946997758642427
+      },
+      {
+        "id": "CAVERN_THRESHOLD_3",
+        "kind": "broadleaf",
+        "x": 41.9,
+        "z": -260.6,
+        "scale": 1.2,
+        "heading": 3.7,
+        "rootY": 11.328045188539324,
+        "maximumHeight": 1.3899157994809817
+      },
+      {
+        "id": "CAVERN_THRESHOLD_4",
+        "kind": "broadleaf",
+        "x": 38.3,
+        "z": -259.35,
+        "scale": 1.1,
+        "heading": 1.3,
+        "rootY": 11.28175976283336,
+        "maximumHeight": 1.5619450604702505
+      },
+      {
+        "id": "CAVERN_THRESHOLD_5",
+        "kind": "broadleaf",
+        "x": 41.7,
+        "z": -259.3,
+        "scale": 1.1,
+        "heading": 4.2,
+        "rootY": 11.305769638611935,
+        "maximumHeight": 1.3608417711931118
+      },
+      {
+        "id": "CAVERN_THRESHOLD_6",
+        "kind": "fern",
+        "x": 38.9,
+        "z": -261.6,
+        "scale": 1.05,
+        "heading": 0.5,
+        "rootY": 11.269531981723041,
+        "maximumHeight": 0.7799217333103959
+      },
+      {
+        "id": "CAVERN_THRESHOLD_7",
+        "kind": "fern",
+        "x": 41.1,
+        "z": -261.4,
+        "scale": 1.05,
+        "heading": 3.4,
+        "rootY": 11.31553674547526,
+        "maximumHeight": 0.77989797609197
+      },
+      {
+        "id": "CAVERN_THRESHOLD_8",
+        "kind": "fern",
+        "x": 38.8,
+        "z": -259,
+        "scale": 0.8,
+        "heading": 1.1,
+        "rootY": 11.280534910200629,
+        "maximumHeight": 0.5942631583021192
+      },
+      {
+        "id": "CAVERN_THRESHOLD_9",
+        "kind": "fern",
+        "x": 41.15,
+        "z": -258.95,
+        "scale": 0.8,
+        "heading": 4.1,
+        "rootY": 11.280985236214008,
+        "maximumHeight": 0.5942642434576315
+      },
+      {
+        "id": "CAVERN_THRESHOLD_10",
+        "kind": "flower",
+        "x": 38.4,
+        "z": -262.2,
+        "scale": 1.4,
+        "heading": 0.3,
+        "rootY": 11.278715905379231,
+        "maximumHeight": 1.6252819117386244,
+        "bloom": {
+          "anchor": [
+            0.10699768678206786,
+            1.274,
+            0.03309826314607003
+          ],
+          "normal": [
+            0.057621638167695104,
+            0.4629408205300565,
+            -0.8845142980765371
+          ],
+          "tiltRadians": 1.0894862385699526,
+          "forwardAzimuth": 0.06505302675068378
+        }
+      },
+      {
+        "id": "CAVERN_THRESHOLD_11",
+        "kind": "flower",
+        "x": 41.6,
+        "z": -262.2,
+        "scale": 1.3,
+        "heading": 3.2,
+        "rootY": 11.337737037730475,
+        "maximumHeight": 1.455956412989066,
+        "bloom": {
+          "anchor": [
+            -0.10382265668265434,
+            1.183,
+            -0.00607091091646833
+          ],
+          "normal": [
+            0.12876941865781802,
+            0.4216413575998947,
+            -0.897572839595676
+          ],
+          "tiltRadians": 1.1355416377075016,
+          "forwardAzimuth": 0.14249175544828177
+        }
+      },
+      {
+        "id": "CAVERN_THRESHOLD_12",
+        "kind": "flower",
+        "x": 39.5,
+        "z": -260.7,
+        "scale": 1.35,
+        "heading": 1.2,
+        "rootY": 11.249178340002203,
+        "maximumHeight": 1.5284065771373012,
+        "bloom": {
+          "anchor": [
+            0.039134637483480755,
+            1.2285000000000001,
+            0.10066022128446045
+          ],
+          "normal": [
+            0.21510452113566333,
+            0.36317611874420724,
+            -0.9065501374777296
+          ],
+          "tiltRadians": 1.199121813545935,
+          "forwardAzimuth": 0.23296976655721663
+        }
+      },
+      {
+        "id": "CAVERN_THRESHOLD_13",
+        "kind": "flower",
+        "x": 40.6,
+        "z": -260.4,
+        "scale": 1.2,
+        "heading": 4,
+        "rootY": 11.272046343432894,
+        "maximumHeight": 1.3642172579473728,
+        "bloom": {
+          "anchor": [
+            -0.06274978760290674,
+            1.092,
+            -0.07265303954956111
+          ],
+          "normal": [
+            0.093604788291161,
+            0.43891980305952905,
+            -0.8936372586744306
+          ],
+          "tiltRadians": 1.1164001943077893,
+          "forwardAzimuth": 0.10436526585370302
+        }
+      },
+      {
+        "id": "CAVERN_THRESHOLD_14",
+        "kind": "flower",
+        "x": 39.3,
+        "z": -259.1,
+        "scale": 1.15,
+        "heading": 0.7,
+        "rootY": 11.27246339990478,
+        "maximumHeight": 1.3009881258425484,
+        "bloom": {
+          "anchor": [
+            0.07036548123017293,
+            1.0465,
+            0.05926802722586757
+          ],
+          "normal": [
+            -0.0839147113851695,
+            0.5521840468647761,
+            -0.829488456581032
+          ],
+          "tiltRadians": 0.9858147208811715,
+          "forwardAzimuth": -0.10082140155136585
+        }
+      },
+      {
+        "id": "CAVERN_THRESHOLD_15",
+        "kind": "flower",
+        "x": 40.6,
+        "z": -258.9,
+        "scale": 1.1,
+        "heading": 3.5,
+        "rootY": 11.253797453233972,
+        "maximumHeight": 1.2192869429996314,
+        "bloom": {
+          "anchor": [
+            -0.0824081884815901,
+            1.0010000000000001,
+            -0.03086892403668655
+          ],
+          "normal": [
+            -0.12927580984372394,
+            0.5845464038971351,
+            -0.8009951726946778
+          ],
+          "tiltRadians": 0.946475438028574,
+          "forwardAzimuth": -0.16001416403800248
+        }
+      },
+      {
+        "id": "CAVERN_THRESHOLD_16",
+        "kind": "groundcover",
+        "x": 39.25,
+        "z": -260.1,
+        "scale": 0.8,
+        "heading": 0.9,
+        "rootY": 11.25843241743315,
+        "maximumHeight": 0.129356836880296
+      },
+      {
+        "id": "CAVERN_THRESHOLD_17",
+        "kind": "groundcover",
+        "x": 40.9,
+        "z": -259.8,
+        "scale": 0.8,
+        "heading": 3.6,
+        "rootY": 11.258550835994072,
+        "maximumHeight": 0.1313619862801849
+      }
+    ],
+    "triangleCount": 28184,
+    "gpuByteLength": 1605738,
+    "drawBatchCount": 2,
+    "shadowCasterBatchCount": 2,
+    "surfaceSource": "ACTUAL_EMITTED_OUTDOOR_AND_FLOOR_TRIANGLES",
+    "groundAdaptation": "CONNECTED_MESH_TERRAIN_FOLLOWING",
+    "perFrameGeneration": false,
+    "sourceTerrainMutated": false,
+    "existingPlantingMutated": true,
+    "rootLocationsPreserved": true,
+    "foliageDetailRevision": 2,
+    "physicalReview": "PENDING"
+  },
+  "contacts": [
+    {
+      "id": "CAVERN_UNDERSTORY_0",
+      "x": 34.55,
+      "z": -265.8,
+      "groundY": 13.803395481825218,
+      "rootY": 13.791395481825218
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_1",
+      "x": 33.45,
+      "z": -267,
+      "groundY": 13.780113276705189,
+      "rootY": 13.768113276705188
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_2",
+      "x": 35.45,
+      "z": -267.2,
+      "groundY": 12.729040281458555,
+      "rootY": 12.717040281458555
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_3",
+      "x": 32.7,
+      "z": -268,
+      "groundY": 13.467134853597944,
+      "rootY": 13.455134853597944
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_4",
+      "x": 34.45,
+      "z": -268.15,
+      "groundY": 12.904192909046177,
+      "rootY": 12.892192909046177
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_5",
+      "x": 35.5,
+      "z": -268.6,
+      "groundY": 12.112978846083937,
+      "rootY": 12.100978846083937
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_6",
+      "x": 33.25,
+      "z": -269,
+      "groundY": 12.859982356204128,
+      "rootY": 12.847982356204128
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_7",
+      "x": 33.1,
+      "z": -265.8,
+      "groundY": 14.393067561724685,
+      "rootY": 14.381067561724684
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_8",
+      "x": 32.6,
+      "z": -266.8,
+      "groundY": 14.052393634429565,
+      "rootY": 14.040393634429565
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_9",
+      "x": 34.8,
+      "z": -267.7,
+      "groundY": 12.905758489559616,
+      "rootY": 12.893758489559616
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_10",
+      "x": 36.3,
+      "z": -267.9,
+      "groundY": 11.874764155028362,
+      "rootY": 11.862764155028362
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_11",
+      "x": 35.95,
+      "z": -269.1,
+      "groundY": 11.63446153178736,
+      "rootY": 11.62246153178736
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_12",
+      "x": 34.8,
+      "z": -269.5,
+      "groundY": 12.060531937299011,
+      "rootY": 12.04853193729901
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_13",
+      "x": 33.8,
+      "z": -269.8,
+      "groundY": 12.353672842966343,
+      "rootY": 12.341672842966343
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_14",
+      "x": 32.7,
+      "z": -269.6,
+      "groundY": 12.659956125578038,
+      "rootY": 12.647956125578038
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_15",
+      "x": 32,
+      "z": -268.6,
+      "groundY": 13.295326940148806,
+      "rootY": 13.283326940148806
+    },
+    {
+      "id": "CAVERN_UNDERSTORY_16",
+      "x": 34,
+      "z": -268.1,
+      "groundY": 13.173408511288391,
+      "rootY": 13.161408511288391
+    },
+    {
+      "id": "CAVERN_THRESHOLD_0",
+      "x": 37.9,
+      "z": -262,
+      "groundY": 11.415678759079281,
+      "rootY": 11.40367875907928
+    },
+    {
+      "id": "CAVERN_THRESHOLD_1",
+      "x": 42.1,
+      "z": -262,
+      "groundY": 11.46631524452312,
+      "rootY": 11.45431524452312
+    },
+    {
+      "id": "CAVERN_THRESHOLD_2",
+      "x": 38.1,
+      "z": -260.6,
+      "groundY": 11.295844575605798,
+      "rootY": 11.283844575605798
+    },
+    {
+      "id": "CAVERN_THRESHOLD_3",
+      "x": 41.9,
+      "z": -260.6,
+      "groundY": 11.340045188539325,
+      "rootY": 11.328045188539324
+    },
+    {
+      "id": "CAVERN_THRESHOLD_4",
+      "x": 38.3,
+      "z": -259.35,
+      "groundY": 11.29375976283336,
+      "rootY": 11.28175976283336
+    },
+    {
+      "id": "CAVERN_THRESHOLD_5",
+      "x": 41.7,
+      "z": -259.3,
+      "groundY": 11.317769638611935,
+      "rootY": 11.305769638611935
+    },
+    {
+      "id": "CAVERN_THRESHOLD_6",
+      "x": 38.9,
+      "z": -261.6,
+      "groundY": 11.281531981723042,
+      "rootY": 11.269531981723041
+    },
+    {
+      "id": "CAVERN_THRESHOLD_7",
+      "x": 41.1,
+      "z": -261.4,
+      "groundY": 11.32753674547526,
+      "rootY": 11.31553674547526
+    },
+    {
+      "id": "CAVERN_THRESHOLD_8",
+      "x": 38.8,
+      "z": -259,
+      "groundY": 11.29253491020063,
+      "rootY": 11.280534910200629
+    },
+    {
+      "id": "CAVERN_THRESHOLD_9",
+      "x": 41.15,
+      "z": -258.95,
+      "groundY": 11.292985236214008,
+      "rootY": 11.280985236214008
+    },
+    {
+      "id": "CAVERN_THRESHOLD_10",
+      "x": 38.4,
+      "z": -262.2,
+      "groundY": 11.290715905379232,
+      "rootY": 11.278715905379231
+    },
+    {
+      "id": "CAVERN_THRESHOLD_11",
+      "x": 41.6,
+      "z": -262.2,
+      "groundY": 11.349737037730476,
+      "rootY": 11.337737037730475
+    },
+    {
+      "id": "CAVERN_THRESHOLD_12",
+      "x": 39.5,
+      "z": -260.7,
+      "groundY": 11.261178340002203,
+      "rootY": 11.249178340002203
+    },
+    {
+      "id": "CAVERN_THRESHOLD_13",
+      "x": 40.6,
+      "z": -260.4,
+      "groundY": 11.284046343432895,
+      "rootY": 11.272046343432894
+    },
+    {
+      "id": "CAVERN_THRESHOLD_14",
+      "x": 39.3,
+      "z": -259.1,
+      "groundY": 11.28446339990478,
+      "rootY": 11.27246339990478
+    },
+    {
+      "id": "CAVERN_THRESHOLD_15",
+      "x": 40.6,
+      "z": -258.9,
+      "groundY": 11.265797453233972,
+      "rootY": 11.253797453233972
+    },
+    {
+      "id": "CAVERN_THRESHOLD_16",
+      "x": 39.25,
+      "z": -260.1,
+      "groundY": 11.27043241743315,
+      "rootY": 11.25843241743315
+    },
+    {
+      "id": "CAVERN_THRESHOLD_17",
+      "x": 40.9,
+      "z": -259.8,
+      "groundY": 11.270550835994072,
+      "rootY": 11.258550835994072
+    }
+  ],
+  "localGenerationMilliseconds": 9323.88511,
+  "deviceTimingMeasured": false,
+  "focusedTests": {
+    "passed": 20,
+    "failed": 0,
+    "additionalStrengthenedAllBroadleafFlowerClearanceTest": "PASS"
+  },
+  "independentReview": {
+    "role": "WEST",
+    "status": "STRUCTURAL_PASS_VISUAL_NOT_ESTABLISHED",
+    "trianglesNondegenerate": true,
+    "accumulatedVertexNormalsNonzero": true,
+    "allEightBroadleafAgainstAllNineFlowerClearancePassed": true,
+    "all35RootHeadingScaleIdentitiesPreserved": true,
+    "other27CompleteOutputsUnchanged": true,
+    "allEightBroadleafStemsUnchanged": true,
+    "flowerTopologyColorsRigidShapePreserved": true,
+    "connectedRaisedNarrowVeinsPassed": true
+  },
+  "preservation": {
+    "existingGrassPalmIvyModulesUnchanged": true,
+    "terrainWaterNavigationUnchanged": true,
+    "shaderStringsUnchanged": true,
+    "priorGrassVisualAcceptance": "PENDING",
+    "all35RootIdentitiesPreserved": true
+  },
+  "visualReview": "PENDING_ALL_EIGHT_REFINED_BROADLEAVES",
+  "browserQualification": "PENDING_EXACT_CANDIDATE_PREFLIGHT",
+  "sourceResearch": [
+    "https://developer.android.com/games/optimize/materials",
+    "https://developer.nvidia.com/gpugems/gpugems3/part-iii-rendering/chapter-16-vegetation-procedural-animation-and-shading-crysis"
+  ],
+  "timingComparison": {
+    "baselineMilliseconds": 6376.653407,
+    "candidateMilliseconds": 9323.88511,
+    "hostOnly": true,
+    "tabletResponsiveness": "PENDING"
+  },
+  "priorSpecimenRepair": {
+    "disposition": "ONE_REPAIR",
+    "specimenId": "CAVERN_THRESHOLD_0",
+    "previousCandidate": "f2b276a151182219bb778571f6bb04594bb722c0",
+    "scope": "ONE_EXISTING_BROADLEAF_PLANT_ONLY",
+    "other34PlantsUnchanged": true,
+    "flowersUnchanged": true,
+    "observedDefect": "Device close-ups show broad plain green surfaces; ribs and branching veins do not read clearly. Flower tilt accepted as improved.",
+    "mechanism": "Narrow connected midrib shoulders and three tapered secondary vein crests with green crest/trough vertex contrast. Existing shared-normal renderer and matte material unchanged.",
+    "addedTriangles": 252,
+    "addedGpuBytes": 11718,
+    "visualProof": {
+      "status": "NOT_ESTABLISHED",
+      "reason": "Managed Sites preview of unchanged baseline returned R3C_WEBGL2_CONTEXT_UNAVAILABLE. No before/after visual claim; no propagation.",
+      "requiredComparison": "Same specimen at x37.9 z-262, identical near and approach cameras, actual entrance lighting and shadows. Readable midrib and branching veins; natural curved volume; no flower interference.",
+      "nextAction": "Obtain actual WebGL2 before/after rendering of this saved specimen before propagating."
+    },
+    "longWorkflowDispatched": false,
+    "privatePreviewUpdated": false,
+    "historicalOnly": true
+  },
+  "broadleafRefinement": {
+    "revision": "CURVED_NARROW_VEINS_2",
+    "plantCount": 8,
+    "leavesPerPlant": 7,
+    "other27PlantsUnchanged": true,
+    "flowersUnchanged": true,
+    "ownerEvidence": [
+      "29606: readable narrow veins, desired direction",
+      "29604: older angular broad folds",
+      "29602: older weak plain definition"
+    ],
+    "authorization": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6585#issuecomment-6323385055",
+    "mechanism": "Connected narrow midrib and curved secondary crests; neutral surface rows smooth curvature and silhouette; deterministic vein spacing variation; continuous intervein blade color.",
+    "addedTriangles": 8260,
+    "addedGpuBytes": 403410,
+    "preferredTriangleTarget": 20000,
+    "hardTriangleLimit": 30000,
+    "preferredTargetExceededReason": "Additional curvature samples across all 56 broadleaf blades reduce large intervein and tip triangles. Two batches retained.",
+    "visualAcceptance": "PENDING_OWNER_DEVICE_REVIEW",
+    "requiredComparison": "Both entrance sides at near and approach distances, shaded and oblique views. Check smooth blade surfaces, readable curved veins, natural variation, flower preservation and movement responsiveness."
+  }
+}

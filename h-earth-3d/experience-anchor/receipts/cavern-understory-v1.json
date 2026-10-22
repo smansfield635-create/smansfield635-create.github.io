@@ -1,0 +1,51 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "visualEvidence": [
+    "h-earth-3d/evidence/cavern-understory-v1/integration.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/cavern-understory-v1/integration.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/cavern-understory-v1/integration.json"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/geometry-cavern-understory.v1.js",
+      "sha256": "1aaed3319266c2ea4b1d387b2e796af93599d5f3c0ec820b616bfe988fdc1086"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/cavern-understory-placement.v1.js",
+      "sha256": "816129b09b3fdd51164fd8e528fdd9e03a5b13fcbe1f3e6c7e68ed0d1b8c8406"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "654edbc5a1ff307e88a9d6384cf4b0b22396b908fc4189769e38f47456d3c7c8"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-understory.v1.test.mjs",
+      "sha256": "20f81daa7d375a13a0b970b62cae24a2e01ee4d5d46393513c8ebd3b710ed8e7"
+    }
+  ],
+  "acceptanceBasis": "Structural same-world continuity only: all eight broadleaf blades refined in place; all35 roots/headings/scales, all27 other plant outputs and all8 broadleaf stems unchanged.20 focused tests plus strengthened all8-by9 flower clearance and independent West structural review pass. Prior specimen owner images establish direction only; refined all8 visual acceptance and exact-candidate browser preflight pending.",
+  "ownerPerceptualAcceptance": false,
+  "newIntegratedBrowserRunPerformed": false,
+  "canonicalAdmissionGeneration": 2853
+}

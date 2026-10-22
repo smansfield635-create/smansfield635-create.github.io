@@ -1,0 +1,26 @@
+{
+  "schema": "H_EARTH_JACARANDA_LIVE_EXPERIENCE_ANCHOR_RECEIPT_v1",
+  "status": "INTEGRATION_STAGED_NOT_RELEASED",
+  "generation": 2857,
+  "operationId": "H_EARTH_APPROVED_JACARANDA_BASELINE_RECOVERY_20261021_001",
+  "branch": "gratitude-jacaranda-recovered-20261021",
+  "sourceBaseline": "b49ec479ffc95f0ccd64b3295a9ffd976c8a85e1",
+  "sourceOnlyCommits": [
+    "0ef3f15070a121ec747fd2128b15ed45137bbd8c",
+    "77bc569647600f491e383dcaedfb592879edb28b",
+    "4d1cfd22b864517bc762a66a06dccce3954765a1",
+    "96b302b2300552cbef29e1e8b1a8062148e7b651",
+    "f048897fb7ced63ce3752e50b3384264a42785d1",
+    "8fb2f95474d224b354f476a27a9213b7ceaf8216"
+  ],
+  "ownerApprovedModelSha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189",
+  "modelPresentInGithub": false,
+  "stableFallback": "FOUR_ORIGINAL_HYDRATED_OASIS_TREES_REMAIN_VISIBLE_UNTIL_APPROVED_GLB_GPU_READY",
+  "liveSite": {
+    "projectId": "appgprj_6ac81c2205808191b9477a0043ddff15",
+    "url": "https://hearth-clearing-device-measurement.smansfield635.chatgpt.site",
+    "updated": false
+  },
+  "nextAction": "Transfer and commit exact approved GLB on this branch; then run tests + browser qualification and update this same private Site.",
+  "authorityEffect": "NONE_RECEIPT_ONLY"
+}

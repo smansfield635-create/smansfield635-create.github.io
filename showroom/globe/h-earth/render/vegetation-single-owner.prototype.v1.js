@@ -1,8 +1,31 @@
-import {buildCavernEntranceGrass} from './cavern-entrance-grass.v1.js';
+import {buildCavernEntranceGrass,createEntranceFloorSupport,ENTRANCE_BLEND_GLSL} from './cavern-entrance-grass.v1.js';
+import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';
 import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
 import {uploadInSlices} from './performance-scheduling.v1.js';
+/** Extend only the existing ravine atlas from the roots actually installed.
+ * Empty, wet and unsupported texels cannot gain soil; old coverage never falls. */
+export function buildCavernGrassSoilHabitat(habitat,baseTiles,addition,{eligibleAt}={}){
+ const {size,width,height,ravine}=habitat??{},bounds=ravine?.bounds;
+ const density=habitat?.receipt?.grassContinuity?.reference?.density;
+ if(!Number.isInteger(size)||width!==size*3||height!==size||habitat.pixels?.length!==width*height||bounds?.length!==4||!(density>0)||typeof eligibleAt!=='function')throw Error('CAVERN_SOIL_HABITAT_LAYOUT');
+ const [x0,z0,x1,z1]=bounds,dx=(x1-x0)/size,dz=(z1-z0)/size;
+ if(!(dx>0&&dz>0))throw Error('CAVERN_SOIL_HABITAT_BOUNDS');
+ const cell=(x,z)=>x<x0||x>=x1||z<z0||z>=z1?-1:Math.floor((z-z0)/dz)*size+Math.floor((x-x0)/dx);
+ const counts=new Map();let additionRoots=0;
+ for(const tile of addition.tiles)for(const root of tile.roots){const i=cell(root.x,root.z);if(i<0)throw Error('CAVERN_SOIL_ROOT_OUTSIDE_ATLAS');counts.set(i,(counts.get(i)??0)+1);additionRoots++;}
+ // Count existing cover only in cells touched by the accepted addition.
+ for(const tile of baseTiles)for(let k=0;k<tile.packed.length;k+=4){const i=cell(tile.packed[k],tile.packed[k+2]);if(counts.has(i))counts.set(i,counts.get(i)+1);}
+ const pixels=new Uint8Array(habitat.pixels);let raisedTexels=0,rejectedTexels=0;
+ for(const [i,count] of counts){const x=i%size,z=Math.floor(i/size),px=x0+(x+.5)*dx,pz=z0+(z+.5)*dz;
+  if(!eligibleAt(px,pz)){rejectedTexels++;continue;}
+  const offset=z*width+size+x,value=Math.round(255*Math.min(1,count/(density*dx*dz)));
+  if(value>pixels[offset]){pixels[offset]=value;raisedTexels++;}
+ }
+ const cavernGrassSoil={schema:'H_EARTH_CAVERN_GRASS_SOIL_CONTINUITY_v1',additionRoots,touchedTexels:counts.size,raisedTexels,rejectedTexels,referenceDensity:density,coverageSource:'ACTUAL_INSTALLED_ROOT_OCCUPANCY_WITH_DRY_TRIANGLE_SUPPORT',existingCoverageNeverReduced:true,otherAtlasPanelsPreserved:true,rootBytesChanged:false};
+ return {...habitat,pixels,receipt:{...habitat.receipt,cavernGrassSoil}};
+}
 /** Isolated woodland prototype. One immutable population; detail adds lobes, never removes cover. */
 export function detailWeight(distance){
  if(!Number.isFinite(distance)||distance<0)throw Error('DETAIL_DISTANCE_INVALID');
@@ -43,6 +66,7 @@ uniform int uFine;
 out vec3 vNormal;out vec3 vColor;out float vDistance;
 float woodlandPaletteNoise(vec2 p){vec2 cell=floor(p),f=fract(p);f=f*f*(3.-2.*f);float a=fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453),b=fract(sin(dot(cell+vec2(1.,0.),vec2(127.1,311.7)))*43758.5453),c=fract(sin(dot(cell+vec2(0.,1.),vec2(127.1,311.7)))*43758.5453),d=fract(sin(dot(cell+vec2(1.,1.),vec2(127.1,311.7)))*43758.5453);return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
 ${FOOTHILL_MEADOW_GLSL}
+${ENTRANCE_BLEND_GLSL}
 void main(){
  float d=length(aRoot.xz-uCamera.xz),t=clamp((d-14.)/10.,0.,1.);
  float detail=1.-t*t*(3.-2.*t),h=fract(sin(dot(aRoot.xz,vec2(12.9898,78.233)))*43758.5453);
@@ -55,7 +79,8 @@ void main(){
  float scale=uFine==1?detail:1.;
  float width=mix(.010,.016,h)*scale;
  // Local entrance growth affects existing and supplemental roots alike.
- float entrance=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
+ float core=(1.-smoothstep(10.,12.,abs(aRoot.x-40.)))*smoothstep(-293.,-287.,aRoot.z)*(1.-smoothstep(-259.,-257.8,aRoot.z));
+ float entrance=max(core,entranceBlend(aRoot.xz));
  float shoulders=smoothstep(1.6,5.,abs(aRoot.x-40.));
  float mouthBanks=(1.-smoothstep(.7,2.5,abs(abs(aRoot.x-40.)-3.8)))*(1.-smoothstep(2.,7.,abs(aRoot.z+262.)));
  float entranceHeight=mix(mix(mix(.30,.48,h),mix(.58,.88,h),shoulders),mix(1.15,1.65,h),mouthBanks);
@@ -86,12 +111,19 @@ void main(){float lit=.48+.52*max(0.,dot(normalize(vNormal),normalize(uSunDirect
 export async function createSingleOwnerVegetation(gl,presentation,{environment,planetRadius,yieldControl=async()=>{},onProgress=()=>{},uploadBudget={},entranceGrass=null}={}){
  if(!environment||!Number.isFinite(planetRadius))throw Error('OWNER_ENVIRONMENT_REQUIRED');
  const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),baseTiles=trusted?.tiles??planImmutableTiles(presentation);
- const originalRootCount=baseTiles.reduce((n,t)=>n+t.count,0);let tiles=baseTiles,entranceReceipt=null;
+ const originalRootCount=baseTiles.reduce((n,t)=>n+t.count,0);let tiles=baseTiles,entranceReceipt=null,habitat=presentation.habitat;
  if(entranceGrass){
   if(!trusted)throw Error('ENTRANCE_GRASS_REQUIRES_AUTHENTICATED_BASELINE');
   const addition=await buildCavernEntranceGrass({...entranceGrass,existingTiles:baseTiles,yieldControl});
   const extra=planImmutableTiles(addition).map(t=>Object.freeze({...t,first:t.first+originalRootCount}));
   tiles=Object.freeze([...baseTiles,...extra]);entranceReceipt=addition.receipt;
+  const floor=createEntranceFloorSupport(entranceGrass.geology);
+  habitat=buildCavernGrassSoilHabitat(habitat,baseTiles,addition,{eligibleAt:(x,z)=>{
+   const hit=floor.sample(x,z)??entranceGrass.visibleSurface.sample(x,z);
+   if(!hit||hit.slope>1.35)return false;
+   const local=unprojectPlanetVertex(x,hit.y,z),water=entranceGrass.geology.sampleWaterAt(local.x,local.z);
+   return !water||water.y<=local.y+.04;
+  }});
  }
  const rootCount=tiles.reduce((n,t)=>n+t.count,0);
  if(rootCount>allocation.maximumRoots||rootCount*16>allocation.maximumPackedBytes)throw Error('POPULATION_GPU_BUDGET_EXCEEDED');
@@ -132,7 +164,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  }
  function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots,maximumWoodlandRoots:450000,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
- return Object.freeze({draw,getReceipt,dispose});
+ return Object.freeze({draw,getReceipt,dispose,habitat});
  }catch(error){cleanup();throw error;}
 }
 

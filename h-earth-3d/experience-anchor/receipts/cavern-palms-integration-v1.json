@@ -32,19 +32,31 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/cavern-entrance-grass.v1.js",
-      "sha256": "cbcbb4e51c2342554326adbbe526661abd4f55715f84154cf243cdd422b5656e"
+      "sha256": "6504da52b322fce308ce892afbea9c07ec184c8730a500ca663716b6484af21f"
     },
     {
       "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
-      "sha256": "22019b60020f756eb44a32e2efa7282ab4e610a8f770b4181be9cc1eef8e4ec1"
+      "sha256": "d9955d673ad83def62dbcdf0bb2cc43840c6501a212cb31d6f8b8dd99d836c6b"
     },
     {
       "path": "h-earth-3d/validation/h-earth.cavern-entrance-grass.v1.test.mjs",
-      "sha256": "3925a5f06cafd0bd2923704cc4573a8fc964c3adce2ed0cddf90eb04c9b4a38a"
+      "sha256": "e707eac1b40dafef959799ddaa940aac63fd1cda7b624e9b0f06c5d1aefaa53d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "746364ad928344b9a387db48ee98e74315b52a0ac53190f9b84bd81451216f64"
+    },
+    {
+      "path": "h-earth-3d/validation/h-earth.cavern-grass-soil-continuity.v1.test.mjs",
+      "sha256": "71158379ab2192aa6213b8017f2d92994c809e1ce15f2fa232a46b07f6d978b9"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+      "sha256": "2a33cff0d8df38e6124adb27b33aee3291a4490fea86af1651cbdbe1f403f526"
     }
   ],
-  "acceptanceBasis": "Structural same-world continuity; only bounded entrance supplement placement and grass presentation change. Actual browser and owner visual acceptance pending.",
+  "acceptanceBasis": "Structural same-world continuity only: all saved roots and exact021a4b12 entrance roots/shaders preserved, continuous wider slope addition and matched ground atlas;12 focused tests and independent original-root/atlas checks pass. Browser and physical visual acceptance pending.",
   "ownerPerceptualAcceptance": false,
   "newIntegratedBrowserRunPerformed": false,
-  "canonicalAdmissionGeneration": 2834
+  "canonicalAdmissionGeneration": 2849
 }

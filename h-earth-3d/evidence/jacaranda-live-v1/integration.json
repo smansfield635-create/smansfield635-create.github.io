@@ -1,0 +1,124 @@
+{
+  "schema": "H_EARTH_JACARANDA_LIVE_EVIDENCE_v1",
+  "operationId": "H_EARTH_APPROVED_JACARANDA_BASELINE_RECOVERY_20261021_001",
+  "authorityGeneration": 2857,
+  "status": "OWNER_APPROVED_FOR_PUBLICATION_NOT_YET_DEPLOYED",
+  "baseline": "b49ec479ffc95f0ccd64b3295a9ffd976c8a85e1",
+  "preparedBranch": "gratitude-jacaranda-recovered-20261021",
+  "exactApprovedAsset": {
+    "path": "showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb",
+    "sha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189",
+    "publicGitObjectSha1": "863f6bfd54e4e2090af17940c5901ae07366f016",
+    "bytes": 33184612,
+    "primitives": 3,
+    "textureImages": 9,
+    "triangles": 454746,
+    "vertices": 651794,
+    "library": "libfile_5a57992884d48191a5ce4312ea7d94f0",
+    "githubCommitted": true,
+    "githubCommit": "3015d5454f916b8f73e863b7f39650f4ae2319b5"
+  },
+  "stagedCode": {
+    "adapter": {
+      "path": "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+      "blob": "2aa1e774d75fd29c640f71d0864b79dae2340d19"
+    },
+    "renderer": {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "blob": "98d8eeb5e38de34998ac7eb9a6a06ffd1fc674ae"
+    },
+    "testsPath": "h-earth-3d/validation/h-earth.oasis-tree-group.v1.test.mjs"
+  },
+  "offlineLocalValidation": {
+    "nodeTests": 9,
+    "passed": 9,
+    "failed": 0,
+    "liveBrowserTests": 0,
+    "deviceTests": 0,
+    "includes": [
+      "exact GLB bytes and hash",
+      "primitive attribute and embedded texture census",
+      "finite indexed normals and UVs",
+      "dry placement and three companion crown gaps",
+      "failure rejection",
+      "fallback on asset HTTP error",
+      "mock WebGL upload/draw/complete resource disposal"
+    ],
+    "scope": "OFFLINE_NODE_AND_MOCK_GPU_ONLY"
+  },
+  "measuredDesign": {
+    "target": "PROPOSED_OASIS_01",
+    "anchor": {
+      "x": 55.5,
+      "z": -307.5
+    },
+    "scale": 0.61,
+    "estimatedHeightMeters": 11.8561,
+    "crownWidthMeters": 14.8481,
+    "companionCrownAabbGapsMeters": {
+      "PROPOSED_OASIS_02": 1.7602,
+      "PROPOSED_OASIS_03": 12.6871,
+      "PROPOSED_OASIS_04": 2.5757
+    },
+    "note": "Bounding-box geometry/flat sampled ground fixture; actual hydrated terrain and owner-device framing require verification"
+  },
+  "outstanding": [
+    "Merge preserving newer main changes",
+    "Execute registered exact-head Pages publication and verify public result"
+  ],
+  "productionDeployment": false,
+  "publicMainMerged": false,
+  "ownerVisualApprovalOfImportedAssetPreserved": true,
+  "authorityEffect": "NONE_EVIDENCE_ONLY",
+  "originalTransferFailure": {
+    "operation": "GitHub authenticated 44,246,152-char base64 create_blob",
+    "observedError": "h2 protocol error: error reading a body from connection",
+    "remoteBlobCheck": "422 tree.sha ... is not a valid blob",
+    "disposition": "NO_BINARY_BLOB_NO_ASSET_COMMIT"
+  },
+  "transferResolution": {
+    "result": "EXACT_APPROVED_BINARY_COMMITTED",
+    "workflowRun": 39828147215,
+    "sourceCommit": "3015d5454f916b8f73e863b7f39650f4ae2319b5",
+    "remoteFileSha1": "863f6bfd54e4e2090af17940c5901ae07366f016",
+    "remoteFileBytes": 33184612,
+    "remoteSha256Verified": true
+  },
+  "browserQualificationCorrection": {
+    "operationId": "H_EARTH_GEN2857_PUBLICATION_QUALIFIER_CORRECTION_20261022_001",
+    "lockGeneration": 2858,
+    "parentStageHead": "90e0824b713b30605924b824ba53a8f175b7ae3d",
+    "status": "CODE_CANDIDATE_PENDING_INDEPENDENT_NODE_AND_CHROME",
+    "changedSourceScope": [
+      "tools/publication-live-verify.mjs",
+      "tools/publication-live-verify.h-earth-entry.test.mjs",
+      ".github/ai-router/publication-surfaces/h-earth.json",
+      "h-earth-3d/validation/h-earth.cavern-entrance-grass.v1.test.mjs",
+      "h-earth-3d/evidence/jacaranda-live-v1/integration.json"
+    ],
+    "preserveOriginalUserControlledEntry": true,
+    "productionDeployed": false
+  },
+  "ownerReleaseDisposition": {
+    "date": "2026-10-22",
+    "decision": "PUBLISH_APPROVED_INTEGRATED_ASSET",
+    "source": "Explicit owner instruction in Work conversation accompanying isolated Jacaranda render: I approve. Put it in the environment and publish it.",
+    "assetVisualApproval": true,
+    "isolatedRenderIsIntegratedSceneEvidence": false,
+    "runtimeEvidence": {
+      "candidate": "a91ae6a742dbc189d9be3e0ed05ac8c15f2487a9",
+      "run": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39868507678",
+      "runConclusion": "FAIL",
+      "jacarandaState": "READY",
+      "fallbackUsed": false,
+      "textures": 9,
+      "vaos": 3,
+      "drawCount": 32,
+      "companionsPreserved": true,
+      "failure": "Extended camera tour exceeded 600 second budget; full scene assessment and final asset observer did not complete."
+    },
+    "priorEntryPass": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39848757210",
+    "releaseVerification": "Retain original input-confirmed entry, static surface checks, exact-head Pages deployment and live marker checks. Extended camera-tour qualification remains incomplete and is not represented as PASS.",
+    "physicalDeviceAcceptanceProven": false
+  }
+}

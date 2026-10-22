@@ -1,4 +1,5 @@
 import {buildOasisTreeGroup,suppressOasisTreeGroupIndices,buildCoveragePreservingLeafMipmaps} from './geometry-oasis-tree-group.v1.js';
+import {createApprovedJacarandaOverlay,JACARANDA_FOCUS_ID} from './geometry-jacaranda.v1.js';
 import {buildCavernUnderstoryPlacement} from './cavern-understory-placement.v1.js';
 import {buildCavernEntranceIvy} from './cavern-entrance-ivy.v1.js';
 import {buildCavernPalmPlacement} from './cavern-palm-placement.v1.js';
@@ -2430,12 +2431,21 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const understory=buildCavernUnderstoryPlacement(model);
     resources.cavernUnderstory=understory.receipt;
     const oasisTrees=buildOasisTreeGroup(model,renderPackage);resources.oasisTrees=oasisTrees.receipt;
+    // Gen2857: no GLB fetch, shader, or GPU allocation until the world is
+    // initialized AND the camera approaches the specific approved riverbank tree.
+    // The existing source and its four restored fallback trees stay resident.
+    resources.jacaranda=createApprovedJacarandaOverlay(gl,{
+      model,projectWorld:regionToHEarthPlanetPoint,
+      companions:oasisTrees.receipt.placements.filter(p=>p.id!==JACARANDA_FOCUS_ID),
+      assetURL:new URL('../assets/jacaranda/Gratitude-Jacaranda-Candidate.glb',import.meta.url).href,
+      sunDirection:environment.sunDirection
+    });
     const plannedBytes=parts=>parts.reduce((n,p)=>n+p.mesh.vertexCount*69+p.mesh.indices.byteLength,0);
     if(plannedBytes(model.meshes)>4*1024*1024)throw Error('GEOLOGICAL_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(palms.meshes)>2*1024*1024)throw Error('CAVERN_PALM_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(ivy.meshes)>1024*1024)throw Error('CAVERN_IVY_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(oasisTrees.meshes)>5*1024*1024)throw Error('OASIS_GROUP_GPU_MEMORY_BUDGET_EXCEEDED');
-    for(const {role,mesh,colors:palmColors,leaflets,clearingAttributes,colorsAreLinear} of [...model.meshes,...palms.meshes,...ivy.meshes,...understory.meshes,...oasisTrees.meshes]){
+    for(const {role,part:treePart,mesh,colors:palmColors,leaflets,clearingAttributes,colorsAreLinear} of [...model.meshes,...palms.meshes,...ivy.meshes,...understory.meshes,...oasisTrees.meshes]){
       const n=mesh.vertexCount,positions=mesh.positions,indices=mesh.indices;
       if(!(positions instanceof Float32Array)||!(indices instanceof Uint32Array)||n<=0||indices.length%3!==0)
         throw Error('GEOLOGICAL_MESH_NOT_TRIANGULATED:'+role);
@@ -2505,7 +2515,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const coast=new Float32Array(n),contact=new Float32Array(n);coast.fill(140);contact.fill(140);
       const renderedAttributes={positions,indices,normals,baseColorsLinear:colors,materialParameters:mats,coastDistances:coast,contactDistances:contact};
       reconcileGeologicalTerrainRim(model,role,mesh,renderedAttributes,{...uploadViews,coastDistances,contactDistances:contactField.packageDistances});
-      const state={role,mesh,renderedAttributes,vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};
+      const state={role,part:treePart,mesh,renderedAttributes,vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};
       if(!state.vao)throw Error('GEOLOGICAL_VAO_FAILED:'+role);
       counters.vertexArrayCreateCount++;gl.bindVertexArray(state.vao);
       const put=(loc,data,size,type=gl.FLOAT,integer=false)=>{
@@ -2546,8 +2556,18 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   function drawGeologicalRendering(){
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);
     const parts=[...(resources.geologicalMeshes||[]),...(resources.cavernPalmMeshes||[]),...(resources.cavernIvyMeshes||[]),...(resources.cavernUnderstoryMeshes||[]),...(resources.oasisTreeMeshes||[])];
-    for(const part of parts){if(!H_EARTH_REAR_WATER_PRESENTATION_ENABLED&&isHEarthWaterPresentationPart(part.role))continue;gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.mesh.indices.length,gl.UNSIGNED_INT,0);
-      part.drawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=part.mesh.indices.length;}
+    for(const part of parts){
+      if(!H_EARTH_REAR_WATER_PRESENTATION_ENABLED&&isHEarthWaterPresentationPart(part.role))continue;
+      // The target's original hydrated indices are first in BOTH group batches.
+      // Remove them only when the independently verified GLB is GPU READY.
+      // On network/GPU failure nothing is excluded and the original remains.
+      const focus=part.role==='OASIS_TREE_GROUP'&&resources.jacaranda?.ready
+        ?resources.oasisTrees.placements.find(p=>p.id===JACARANDA_FOCUS_ID)?.spans?.[part.part]:null;
+      if(focus&&(focus.indexStart!==0||focus.indexCount>=part.mesh.indices.length))throw Error('JACARANDA_FOCUS_INDICES_NOT_PREFIX');
+      const skipped=focus?.indexCount??0,count=part.mesh.indices.length-skipped;
+      gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,count,gl.UNSIGNED_INT,skipped*4);
+      part.drawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=count;
+    }
     gl.bindVertexArray(resources.vertexArray);
   }
 
@@ -2842,7 +2862,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);for(const resident of resources.vegetation.residentBatches){gl.bindVertexArray(resident.vao);gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);counters.vegetationDrawCallCount++;counters.totalDrawnIndexCount+=resident.indexCount;}gl.bindVertexArray(resources.vertexArray);
     drawWoodlandRocks(false);
     drawLargeP2Boulders(false);
+    resources.jacaranda?.requestIfNear(packet.camera.position);
     drawGeologicalRendering();
+    if(resources.jacaranda?.ready){
+      resources.jacaranda.draw(packet);
+      // Restore the persistent geometry pass for the existing ground cover.
+      gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);gl.activeTexture(gl.TEXTURE0);
+    }
     if(vegetationStrategy){
       resources.singleOwnerVegetation?.draw(packet);
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
@@ -2962,6 +2988,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       authorizedVegetationPostReadyResidency: true,
       cavernShadow:resources.cavernShadow?{ready:true,shadowDimensions:[512,512],shadowFormat:'DEPTH_COMPONENT24',gpuByteLength:resources.cavernShadow.gpuByteLength,shadowDrawCount:resources.cavernShadow.shadowDrawCount,casterIndexCount:resources.cavernShadow.casterIndexCount,vegetationCasterCount:resources.cavernShadow.vegetationCasterCount,rockCasterCount:resources.cavernShadow.rockCasterCount,staticShadowRefresh:resources.cavernShadow.staticShadowRefresh,perCameraResourceCreation:0,grassBladeReceiver:false}: {ready:false},
       oasisTrees:resources.oasisTrees?{...resources.oasisTrees,retirement:resources.oasisTreeRetirement,gpuByteLength:resources.oasisTreeGPUBytes,drawCount:(resources.oasisTreeMeshes??[]).reduce((n,p)=>n+p.drawCount,0),leafMipCoverage:resources.leafMipCoverage}:null,
+      jacaranda:resources.jacaranda?.getReceipt()??null,
       cavernUnderstory:resources.cavernUnderstory?{...resources.cavernUnderstory,gpuByteLength:resources.cavernUnderstoryGPUBytes,drawCount:(resources.cavernUnderstoryMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
       cavernIvy:resources.cavernIvy?{...resources.cavernIvy,gpuByteLength:resources.cavernIvyGPUBytes,drawCount:(resources.cavernIvyMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
       cavernPalms:resources.cavernPalms?{...resources.cavernPalms,gpuByteLength:resources.cavernPalmGPUBytes,drawCount:(resources.cavernPalmMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
@@ -2990,7 +3017,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
+    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
     getVegetationTrace,getVegetationProbe,
     initialize, activateInitialRefinement, prepareReplacementVegetation, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });

@@ -1,31 +1,31 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-22T18:36:14Z",
+  "generatedAt": "2026-10-22T19:28:06Z",
   "window": {
-    "start": "2026-09-22T18:36:14Z",
-    "end": "2026-10-22T18:36:14Z"
+    "start": "2026-09-22T19:28:06Z",
+    "end": "2026-10-22T19:28:06Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 685,
-        "visits": 595
+        "pageLoads": 656,
+        "visits": 566
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 635,
+        "pageLoads": 625,
         "visits": 596
       },
       {
         "value": "/",
         "pageLoads": 392,
-        "visits": 132
+        "visits": 122
       },
       {
         "value": "/governance-bridge/",
-        "pageLoads": 180,
-        "visits": 130
+        "pageLoads": 200,
+        "visits": 150
       },
       {
         "value": "/governance-bridge/governance/",
@@ -48,9 +48,24 @@
         "visits": 43
       },
       {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 41,
+        "visits": 31
+      },
+      {
+        "value": "/nine-summits-of-love/",
+        "pageLoads": 41,
+        "visits": 31
+      },
+      {
         "value": "/preview/h-earth/recovery/875895473fd5569c40e6d2da674f202d4ee1c221/",
         "pageLoads": 40,
         "visits": 40
+      },
+      {
+        "value": "/evidence/",
+        "pageLoads": 40,
+        "visits": 0
       },
       {
         "value": "/showroom/globe/audralia/",
@@ -58,12 +73,7 @@
         "visits": 22
       },
       {
-        "value": "/evidence/agentic-frontier/",
-        "pageLoads": 31,
-        "visits": 21
-      },
-      {
-        "value": "/evidence/",
+        "value": "/governance/",
         "pageLoads": 30,
         "visits": 0
       },
@@ -73,14 +83,14 @@
         "visits": 0
       },
       {
-        "value": "/release-proof/",
-        "pageLoads": 24,
-        "visits": 24
-      },
-      {
-        "value": "/meet-sean-mansfield/",
+        "value": "/evidence/agentic-frontier/",
         "pageLoads": 21,
         "visits": 21
+      },
+      {
+        "value": "/home/",
+        "pageLoads": 20,
+        "visits": 20
       },
       {
         "value": "/developer/",
@@ -113,22 +123,12 @@
         "visits": 20
       },
       {
-        "value": "/nine-summits-of-love/",
-        "pageLoads": 11,
-        "visits": 11
+        "value": "/release-proof/",
+        "pageLoads": 14,
+        "visits": 14
       },
       {
-        "value": "/mirror-manor-preview/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "/products/archcoin/contract/",
-        "pageLoads": 10,
-        "visits": 0
-      },
-      {
-        "value": "/home/",
+        "value": "/preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/A/showroom/globe/h-earth/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -141,11 +141,6 @@
         "value": "/inspection/h-earth-t4-3-d8fca316/",
         "pageLoads": 10,
         "visits": 10
-      },
-      {
-        "value": "/governance/",
-        "pageLoads": 10,
-        "visits": 0
       },
       {
         "value": "/governance-bridge/collaboration/",
@@ -171,8 +166,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1765,
-        "visits": 1765
+        "pageLoads": 1736,
+        "visits": 1736
       },
       {
         "value": "diamondgatebridge.com",
@@ -203,8 +198,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 2462,
-        "visits": 1844
+        "pageLoads": 2433,
+        "visits": 1815
       },
       {
         "value": "CA",
@@ -240,8 +235,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1414,
-        "visits": 1362
+        "pageLoads": 1385,
+        "visits": 1333
       },
       {
         "value": "mobile",
@@ -257,8 +252,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 879,
-        "visits": 879
+        "pageLoads": 850,
+        "visits": 850
       },
       {
         "value": "Chrome",
@@ -304,8 +299,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1085,
-        "visits": 1085
+        "pageLoads": 1056,
+        "visits": 1056
       },
       {
         "value": "Android",
@@ -341,15 +336,15 @@
       },
       {
         "value": "1",
-        "pageLoads": 879,
-        "visits": 879
+        "pageLoads": 850,
+        "visits": 850
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 2076,
-        "visits": 1760
+        "pageLoads": 2047,
+        "visits": 1731
       },
       {
         "value": "reload",
@@ -370,8 +365,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1963,
-        "visits": 1757
+        "pageLoads": 1934,
+        "visits": 1728
       },
       {
         "value": "cache",
@@ -387,15 +382,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2510,
-        "visits": 1891
+        "pageLoads": 2481,
+        "visits": 1862
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 2510,
-        "visits": 1891
+        "pageLoads": 2481,
+        "visits": 1862
       }
     ]
   }

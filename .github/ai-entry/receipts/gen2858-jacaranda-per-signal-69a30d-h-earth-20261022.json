@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "gen2858-jacaranda-per-signal-69a30d-h-earth-20261022",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6665,
+  "requestBranch": "ai-dispatch-request-gen2858-signals-69a30d-h-earth-20261022",
+  "requestCommit": "f06fd8b4d55226a9393b07d0e0ae46d7dcca06a6",
+  "requestCommitParent": "de1ba5a7d320a31e237c212242f45526a46dda03",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "de1ba5a7d320a31e237c212242f45526a46dda03",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "69a30d5efb02541e732b5f9ceb27243d485ae52f",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "39847659326",
+  "dispatchedRunId": 39847686365,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39847686365",
+  "dispatchedRunHeadSha": "de1ba5a7d320a31e237c212242f45526a46dda03",
+  "dispatchedAt": "2026-10-22T20:18:22.900Z",
+  "resolvedAt": "2026-10-22T20:18:30.461Z"
+}

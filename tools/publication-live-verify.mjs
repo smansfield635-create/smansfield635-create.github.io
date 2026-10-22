@@ -150,9 +150,37 @@ export const waitForHEarthNavigation=async(page,sequence)=>{
     if(error?.name!=='TimeoutError'||!await page.evaluate(advanced,sequence))throw error;
   }
 };
+export const aimHEarthAxis=async({axis,target,tolerance,read,pulse,trace,now=Date.now})=>{
+  const delta=value=>axis==='yawDegrees'?((target-value+540)%360)-180:target-value;
+  const deadline=now()+90000;let stalled=0,reversals=0,previousError=null,best=Infinity;
+  for(let step=0;step<32;step++){
+    const before=(await read()).navigation,error=delta(before[axis]);
+    if(!Number.isFinite(error))throw Error('H_EARTH_AIM_INVALID_STATE:'+axis);
+    if(Math.abs(error)<=tolerance)return;
+    if(now()>=deadline)throw Error('H_EARTH_AIM_DEADLINE:'+axis);
+    const amplitude=axis==='yawDegrees'&&Math.abs(error)>20?.15:.061;
+    await pulse(axis==='yawDegrees'?Math.sign(error)*amplitude:0,axis==='pitchDegrees'?-Math.sign(error)*amplitude:0,{axis,target,tolerance,error});
+    const after=(await read()).navigation,nextError=delta(after[axis]);
+    trace.push({axis,target,before:before[axis],after:after[axis],beforeSequence:before.sequence,afterSequence:after.sequence,error:nextError});
+    if(trace.length>160)trace.shift();
+    if(!Number.isFinite(nextError))throw Error('H_EARTH_AIM_INVALID_STATE:'+axis);
+    if(Math.abs(nextError)<=tolerance)return;
+    stalled=Math.abs(nextError)>=Math.abs(error)-.01?stalled+1:0;
+    if(previousError!==null&&Math.sign(nextError)!==Math.sign(previousError))reversals++;
+    if(Math.abs(nextError)<best-.1){best=Math.abs(nextError);reversals=0;}
+    previousError=nextError;
+    if(stalled>=3)throw Error('H_EARTH_AIM_NO_PROGRESS:'+axis);
+    if(reversals>=4)throw Error('H_EARTH_AIM_OSCILLATION:'+axis);
+  }
+  throw Error('H_EARTH_AIM_STEP_LIMIT:'+axis);
+};
+export const observeHEarthFailure=async(read)=>{
+  try{return {observation:await read(),error:null};}
+  catch(error){return {observation:null,error:String(error?.stack||error)};}
+};
 export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserver)=>{
   if(!validateHEarthScenePolicy(surfaceId,policy))return null;
-  const started=Date.now(),deadline=started+600000,views=[],images=[];
+  const started=Date.now(),deadline=started+600000,views=[],images=[],aimTrace=[];
   const check=(condition,message)=>{if(!condition)throw Error(message);};
   const bounded=()=>check(Date.now()<deadline,'H_EARTH_SCENE_TIME_BUDGET_EXCEEDED');
   const read=()=>page.evaluate(()=>{
@@ -168,32 +196,25 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
   check(box&&box.width>=250&&box.height>=180,'H_EARTH_SCENE_CANVAS_UNAVAILABLE');
   const x=box.x+box.width*.5,y=box.y+box.height*.5;
   const difference=(a,b)=>((a-b+540)%360)-180;
-  const pulse=async(dx,dy)=>{
+  const pulse=async(dx,dy,goal)=>{
     bounded();const before=(await read()).navigation;
     await page.mouse.move(x,y);await page.mouse.down();
     try{
       await page.mouse.move(x+dx*box.width,y+dy*box.height);
       // One observed intake update, rather than a wall-clock hold that can
       // overshoot under software-GPU stalls. Never write navigation state.
-      await waitForHEarthNavigation(page,before.sequence);
+      if(goal)await page.waitForFunction(({axis,target,tolerance,error,sequence})=>{
+        const n=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt()?.intake?.currentNavigationState;
+        const d=axis==='yawDegrees'?((target-n?.[axis]+540)%360)-180:target-n?.[axis];
+        return n?.sequence>sequence&&Number.isFinite(d)&&(Math.abs(d)<=tolerance||Math.sign(d)!==Math.sign(error));
+      },{timeout:12000,polling:50},{...goal,sequence:before.sequence});
+      else await waitForHEarthNavigation(page,before.sequence);
     }finally{await page.mouse.up();}
   };
   const aim=async(yaw,pitch)=>{
-    let reached=false;
-    for(let i=0;i<512;i++){
-      bounded();const d=difference(yaw,(await read()).navigation.yawDegrees);
-      if(Math.abs(d)<=6){reached=true;break;}
-      await pulse(Math.sign(d)*(Math.abs(d)>20?.15:.065),0);
-    }
-    check(reached,'H_EARTH_SCENE_YAW_NOT_REACHED');
-    if(pitch===undefined)return;
-    reached=false;
-    for(let i=0;i<256;i++){
-      const d=pitch-(await read()).navigation.pitchDegrees;
-      if(Math.abs(d)<=2.2){reached=true;break;}
-      await pulse(0,-Math.sign(d)*.065);
-    }
-    check(reached,'H_EARTH_SCENE_PITCH_NOT_REACHED');
+    bounded();
+    await aimHEarthAxis({axis:'yawDegrees',target:yaw,tolerance:6,read,pulse,trace:aimTrace});
+    if(pitch!==undefined)await aimHEarthAxis({axis:'pitchDegrees',target:pitch,tolerance:2.2,read,pulse,trace:aimTrace});
   };
   const travel=async(tx,tz)=>{
     for(let i=0;i<40;i++){
@@ -243,8 +264,9 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
     check(near?.distanceToJacarandaMeters<25&&far?.distanceToJacarandaMeters>80&&far.distanceToJacarandaMeters<140&&[near,far].every(v=>v.resources?.jacaranda?.state==='READY'&&v.resources.jacaranda.drawCount>0),'H_EARTH_SCENE_NEAR_FAR_PROOF_MISSING');
     result={schema:'H_EARTH_APPROVED_JACARANDA_SCENE_OBSERVATION_v1',result:'RUNTIME_PASS_VISUAL_REVIEW_PENDING',assessment,assets,views,elapsedMs:Date.now()-started,physicalDeviceAcceptance:false,ownerPerceptualAcceptance:false,publicationAuthorized:false};
   }catch(error){
-    try{await capture('Failure observation');}catch{}
-    result={schema:'H_EARTH_APPROVED_JACARANDA_SCENE_OBSERVATION_v1',result:'FAIL',failure:String(error.stack||error),views,elapsedMs:Date.now()-started,physicalDeviceAcceptance:false,publicationAuthorized:false};
+    const failureObservation=await observeHEarthFailure(read);
+    console.error('H_EARTH_SCENE_FAILURE_STATE '+JSON.stringify({failureObservation,aimTrace}));
+    result={schema:'H_EARTH_APPROVED_JACARANDA_SCENE_OBSERVATION_v1',result:'FAIL',failure:String(error.stack||error),failureObservation,aimTrace,views,elapsedMs:Date.now()-started,physicalDeviceAcceptance:false,publicationAuthorized:false};
   }
   // Reuse the existing uploaded PNG artifact: labeled unaltered scene captures
   // are assembled in a separate evidence document, never in the product page.

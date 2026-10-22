@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
+import {aimHEarthAxis,observeHEarthFailure,waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
 
 const POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
 function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed={},post={}}={}){
@@ -230,4 +230,29 @@ test('navigation execution errors cannot be overridden by deadline readback',asy
   const error=new Error('execution context destroyed');let read=false;
   await assert.rejects(waitForHEarthNavigation({waitForFunction:async()=>{throw error;},evaluate:async()=>{read=true;return true;}},6),e=>e===error);
   assert.equal(read,false);
+});
+
+test('aim tracks actual pitch progress to target with bounded genuine-input pulses',async()=>{
+ let value=16,sequence=1,pulses=0;const trace=[];
+ await aimHEarthAxis({axis:'pitchDegrees',target:4,tolerance:2.2,trace,read:async()=>({navigation:{pitchDegrees:value,sequence}}),pulse:async(dx,dy,goal)=>{assert.equal(dx,0);assert.ok(dy>0);assert.equal(goal.target,4);value-=4;sequence++;pulses++;}});
+ assert.equal(pulses,3);assert.equal(trace.length,3);
+});
+test('aim rejects unchanged angles despite advancing sequence after three pulses',async()=>{
+ let sequence=0;const trace=[];
+ await assert.rejects(aimHEarthAxis({axis:'pitchDegrees',target:4,tolerance:2.2,trace,read:async()=>({navigation:{pitchDegrees:16,sequence}}),pulse:async()=>{sequence++;}}),/NO_PROGRESS/);
+ assert.equal(sequence,3);
+});
+test('aim rejects repeated overshoot instead of consuming the scene budget',async()=>{
+ let value=10,sequence=0;const trace=[];
+ await assert.rejects(aimHEarthAxis({axis:'pitchDegrees',target:4,tolerance:2.2,trace,read:async()=>({navigation:{pitchDegrees:value,sequence}}),pulse:async()=>{value=value===10?-2:10;sequence++;}}),/NO_PROGRESS|OSCILLATION/);
+ assert.ok(sequence<=6);
+});
+test('yaw takes the short path across wraparound',async()=>{
+ let value=179;const trace=[];
+ await aimHEarthAxis({axis:'yawDegrees',target:-170,tolerance:6,trace,read:async()=>({navigation:{yawDegrees:value,sequence:1}}),pulse:async(dx)=>{assert.ok(dx>0);value=-173;}});
+ assert.equal(trace.length,1);
+});
+test('failure observation survives expired scene budget and exposes read errors',async()=>{
+ assert.deepEqual(await observeHEarthFailure(async()=>({navigation:{pitchDegrees:32}})),{observation:{navigation:{pitchDegrees:32}},error:null});
+ const r=await observeHEarthFailure(async()=>{throw Error('page closed');});assert.equal(r.observation,null);assert.match(r.error,/page closed/);
 });

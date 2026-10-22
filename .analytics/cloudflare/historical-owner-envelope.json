@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-22T20:32:10Z",
+  "generatedAt": "2026-10-22T21:29:22Z",
   "window": {
-    "start": "2026-07-24T20:32:10Z",
-    "end": "2026-10-22T20:32:10Z"
+    "start": "2026-07-24T21:29:22Z",
+    "end": "2026-10-22T21:29:22Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -54,13 +54,13 @@
         "pageLoads": 30,
         "visits": 0
       },
-      "/laws/": {
-        "pageLoads": 270,
-        "visits": 90
-      },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/": {
+        "pageLoads": 270,
+        "visits": 90
       },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 230,
@@ -214,13 +214,13 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -250,19 +250,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },

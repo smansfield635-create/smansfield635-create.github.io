@@ -12,7 +12,7 @@ function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed=
     evaluate:async()=>{
       calls.push('evaluate');reads++;
       if(reads===1)return {mode:initialMode,ready:initialReady};
-      if(reads===2)return {mode:'ready',disabled:false,inputChanged:true,inputRendered:true,nextFrame:true,gpuFrames:2,...observed};
+      if(reads===2||(timeoutAt===2&&reads===3))return {mode:'ready',disabled:false,inputChanged:true,inputRendered:true,nextFrame:true,gpuFrames:2,...observed};
       return {ready:'true',mode:'entered',overlayMode:'ready',hidden:true,...post};
     },
     $:async()=>{calls.push('select');return {boundingBox:async()=>{calls.push('boundingBox');return {x:0,y:0,width:720,height:1280};}};},
@@ -122,5 +122,36 @@ test('pre-entry timeout diagnoses missing signals without clicking Enter or chan
     /H_EARTH_INPUT_GATE_TIMEOUT:loadingScreenReady,enterButtonEnabled,changedCameraFrameRendered,animationFrameOpportunityObserved,gpuFramebufferPresented/
   );
   assert.ok(calls.includes('mouse.wheel'));
+  assert.ok(!calls.includes('click'));
+});
+
+test('real all-pass deadline readback continues through actual Enter and post-entry checks',async()=>{
+  const {page,calls}=fakePage({
+    timeoutAt:2,
+    observed:{
+      rootPrototype:'controls-test',rootReady:'false',
+      loaderReceiptMode:'ready',gpuReceiptPresent:true,rootError:null
+    }
+  });
+  const receipt=await runHEarthPreEntry(page,'h-earth',POLICY);
+  assert.equal(receipt.result,'PASS');
+  assert.equal(receipt.entered,true);
+  assert.ok(calls.includes('mouse.wheel'));
+  assert.equal(calls.filter(x=>x==='click').length,1);
+  assert.equal(calls.filter(x=>x==='wait').length,3);
+});
+
+test('all six signals cannot bypass failed authenticity or already-entered state',async()=>{
+  const {page,calls}=fakePage({
+    timeoutAt:2,
+    observed:{
+      rootPrototype:'failed',rootReady:'true',
+      loaderReceiptMode:'entered',gpuReceiptPresent:true,rootError:'true'
+    }
+  });
+  await assert.rejects(
+    runHEarthPreEntry(page,'h-earth',POLICY),
+    /H_EARTH_INPUT_GATE_TIMEOUT:AUTHENTIC_PRE_ENTRY_STATE_NOT_OBSERVED/
+  );
   assert.ok(!calls.includes('click'));
 });

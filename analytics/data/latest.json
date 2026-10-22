@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-22T13:36:04Z",
+  "generatedAt": "2026-10-22T16:35:33Z",
   "window30d": {
-    "start": "2026-09-22T13:36:04Z",
-    "end": "2026-10-22T13:36:04Z"
+    "start": "2026-09-22T16:35:33Z",
+    "end": "2026-10-22T16:35:33Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 89
+      "pageLoads": 97
     },
     {
       "date": "2026-10-16",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 13
+      "pageLoads": 15
     }
   ],
   "summary": {
-    "pageLoads": 2629,
-    "botPageLoads": 959,
-    "nonBotPageLoads": 1670
+    "pageLoads": 2619,
+    "botPageLoads": 968,
+    "nonBotPageLoads": 1651
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1854,
-      "visits": 1854
+      "pageLoads": 1904,
+      "visits": 1904
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 639,
+      "pageLoads": 659,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 72,
-      "visits": 72
+      "pageLoads": 62,
+      "visits": 62
     },
     {
       "host": "bing.com",
@@ -155,8 +155,8 @@
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 20,
-      "visits": 20
+      "pageLoads": 30,
+      "visits": 30
     },
     {
       "host": "www.facebook.com",
@@ -166,19 +166,19 @@
   ],
   "topPages": [
     {
+      "path": "/analytics/",
+      "pageLoads": 654,
+      "visits": 564
+    },
+    {
       "path": "/showroom/globe/h-earth/",
       "pageLoads": 645,
       "visits": 616
     },
     {
-      "path": "/analytics/",
-      "pageLoads": 645,
-      "visits": 555
-    },
-    {
       "path": "/",
-      "pageLoads": 472,
-      "visits": 212
+      "pageLoads": 462,
+      "visits": 202
     },
     {
       "path": "/governance-bridge/",
@@ -191,14 +191,14 @@
       "visits": 60
     },
     {
-      "path": "/products/education/",
-      "pageLoads": 54,
-      "visits": 44
-    },
-    {
       "path": "/build/",
       "pageLoads": 51,
       "visits": 51
+    },
+    {
+      "path": "/products/education/",
+      "pageLoads": 44,
+      "visits": 44
     },
     {
       "path": "/about/",

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {travelHEarthScene,pulseHEarthNavigation,aimHEarthAxis,observeHEarthFailure,waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
+import {launchSurfaceBrowser,launchVerifiedBrowser,travelHEarthScene,pulseHEarthNavigation,aimHEarthAxis,observeHEarthFailure,waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
 
 const POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
 function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed={},post={}}={}){
@@ -357,4 +357,44 @@ test('production pulse does not accept a failed pointer release',async()=>{
  const h=pulseHarness(),error=Error('pointer release failed');h.adapter.page.mouse.up=async()=>{throw error;};
  await assert.rejects(pulseHEarthNavigation(h.adapter,-.061,0,recordedGoal),e=>e===error);
  assert.ok(!h.events.includes('readback'));
+});
+
+const browserStartupHarness=()=>{
+ const events=[],reports=[];let options;
+ const page={goto:async url=>{events.push(url);},evaluate:async()=>true,close:async()=>events.push('probe-close')};
+ const browser={newPage:async()=>page,process:()=>({kill:signal=>events.push(signal)})};
+ const args={executablePath:'/alias/chrome',inspect:()=>({requestedPath:'/alias/chrome',resolvedPath:'/exact/chrome',version:'fixture'}),report:r=>reports.push(r),puppeteer:{launch:async o=>{options=o;events.push('launch');return browser;}}};
+ return {events,reports,page,browser,args,options:()=>options};
+};
+test('browser startup records exact executable and probes blank page before returning browser',async()=>{
+ const h=browserStartupHarness();assert.equal(await launchVerifiedBrowser(h.args),h.browser);
+ assert.deepEqual(h.events,['launch','about:blank','probe-close']);
+ assert.equal(h.options().executablePath,'/exact/chrome');assert.equal(h.options().dumpio,true);assert.equal(h.options().timeout,30000);
+ assert.equal(h.reports.at(-1).result,'PASS');
+});
+test('browser identity failure stops before launch',async()=>{
+ const h=browserStartupHarness();h.args.inspect=()=>{throw Error('missing executable');};
+ await assert.rejects(launchVerifiedBrowser(h.args),/missing executable/);assert.deepEqual(h.events,[]);assert.equal(h.reports.at(-1).phase,'EXECUTABLE_IDENTITY');
+});
+test('browser launch failure preserves cause and does not retry',async()=>{
+ const h=browserStartupHarness();let attempts=0;const error=Error('endpoint timeout');h.args.puppeteer.launch=async()=>{attempts++;throw error;};
+ await assert.rejects(launchVerifiedBrowser(h.args),e=>e===error);assert.equal(attempts,1);assert.equal(h.reports.at(-1).phase,'BROWSER_LAUNCH');
+});
+test('invalid blank page fails closed and terminates browser',async()=>{
+ const h=browserStartupHarness();h.page.evaluate=async()=>false;
+ await assert.rejects(launchVerifiedBrowser(h.args),/PROBE_FAILED/);assert.equal(h.events.at(-1),'SIGKILL');
+});
+test('unresponsive blank-page connection has a bounded deadline',async()=>{
+ const h=browserStartupHarness();h.browser.newPage=()=>new Promise(()=>{});h.args.probeTimeoutMs=10;
+ await assert.rejects(launchVerifiedBrowser(h.args),/PROBE_TIMEOUT/);assert.equal(h.events.at(-1),'SIGKILL');assert.equal(h.reports.at(-1).phase,'BLANK_PAGE_CONNECTION');
+});
+
+test('startup diagnostic is limited to the declared H-Earth scene qualification',async()=>{
+ const manifest=JSON.parse(fs.readFileSync(new URL('../.github/ai-router/publication-surfaces/h-earth.json',import.meta.url),'utf8'));
+ let normal=0,diagnostic=0;
+ const args={executablePath:'/fixture',puppeteer:{launch:async options=>{normal++;assert.equal(options.dumpio,undefined);assert.equal(options.timeout,undefined);}},diagnosticLaunch:async()=>{diagnostic++;}};
+ await launchSurfaceBrowser({...args,surfaceId:'h-earth',scenePolicy:manifest.runtime.sceneQualification});
+ await launchSurfaceBrowser({...args,surfaceId:'audralia',scenePolicy:manifest.runtime.sceneQualification});
+ await launchSurfaceBrowser({...args,surfaceId:'h-earth'});
+ assert.equal(diagnostic,1);assert.equal(normal,2);
 });

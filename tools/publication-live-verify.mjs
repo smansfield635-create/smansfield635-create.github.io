@@ -1,6 +1,43 @@
 import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
+
+export const inspectBrowserExecutable=executablePath=>{
+  const resolvedPath=fs.realpathSync(executablePath);
+  fs.accessSync(resolvedPath,fs.constants.X_OK);
+  const version=execFileSync(resolvedPath,['--version'],{encoding:'utf8',timeout:5000,maxBuffer:65536}).trim();
+  return {requestedPath:executablePath,resolvedPath,version};
+};
+export const launchVerifiedBrowser=async({puppeteer,executablePath,inspect=inspectBrowserExecutable,report=value=>console.error('BROWSER_STARTUP_DIAGNOSTIC '+JSON.stringify(value)),probeTimeoutMs=10000})=>{
+  let browser,timer,phase='EXECUTABLE_IDENTITY';
+  try{
+    const identity=inspect(executablePath);report({phase,result:'PASS',...identity});
+    phase='BROWSER_LAUNCH';report({phase,result:'START',timeoutMs:30000});
+    browser=await puppeteer.launch({executablePath:identity.resolvedPath,headless:'new',timeout:30000,dumpio:true,
+      args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+    phase='BLANK_PAGE_CONNECTION';
+    const probe=async()=>{
+      const page=await browser.newPage();
+      await page.goto('about:blank',{waitUntil:'domcontentloaded',timeout:probeTimeoutMs});
+      const ready=await page.evaluate(()=>location.href==='about:blank'&&document.documentElement?.tagName==='HTML');
+      if(!ready)throw Error('BROWSER_BLANK_PAGE_PROBE_FAILED');
+      await page.close();
+    };
+    await Promise.race([probe(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('BROWSER_BLANK_PAGE_PROBE_TIMEOUT')),probeTimeoutMs);})]);
+    clearTimeout(timer);report({phase,result:'PASS'});return browser;
+  }catch(error){
+    clearTimeout(timer);report({phase,result:'FAIL',error:String(error?.stack||error)});
+    // A failed diagnostic cannot proceed into world loading or leave its process alive.
+    if(browser){try{browser.process()?.kill('SIGKILL');}catch{}}
+    throw error;
+  }
+};
+
+export const launchSurfaceBrowser=({puppeteer,executablePath,surfaceId,scenePolicy,diagnosticLaunch=launchVerifiedBrowser})=>
+  surfaceId==='h-earth'&&scenePolicy===H_EARTH_SCENE_POLICY
+    ? diagnosticLaunch({puppeteer,executablePath})
+    : puppeteer.launch({executablePath,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
 
 const ALLOWED_KEYS=new Set(['ArrowLeft','ArrowRight','Home','End','Enter','Space']);
 const MAX_INTERACTIONS=32;
@@ -515,11 +552,7 @@ export const main=async()=>{
   const executablePath=process.env.CHROME_PATH;
   if(!executablePath)throw new Error('CHROME_PATH is required for runtime verification');
   const spec=manifest.runtime;
-  const browser=await puppeteer.launch({
-    executablePath,
-    headless:'new',
-    args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']
-  });
+  const browser=await launchSurfaceBrowser({puppeteer,executablePath,surfaceId:manifest.surfaceId,scenePolicy:spec.sceneQualification});
   try{
     const page=await browser.newPage();
     await page.setViewport(spec.sceneQualification===H_EARTH_SCENE_POLICY

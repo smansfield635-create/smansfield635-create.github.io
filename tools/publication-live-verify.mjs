@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
 import {pathToFileURL} from 'node:url';
 
 const ALLOWED_KEYS=new Set(['ArrowLeft','ArrowRight','Home','End','Enter','Space']);
@@ -99,6 +100,160 @@ export const runDeclaredInteractions=async(page,interactions)=>{
   return results;
 };
 
+
+// Fixed post-entry qualification: genuine controls, immutable approved asset,
+// and read-only renderer receipts. This never installs a product navigation hook.
+const H_EARTH_SCENE_POLICY='H_EARTH_APPROVED_JACARANDA_SCENE_V1';
+const JACARANDA_SHA256='46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189';
+const JACARANDA_BYTES=33184612;
+const COMPANION_IDS=['PROPOSED_OASIS_02','PROPOSED_OASIS_03','PROPOSED_OASIS_04'];
+export const validateHEarthScenePolicy=(surfaceId,policy)=>{
+  if(policy===undefined||policy===null)return null;
+  if(surfaceId!=='h-earth'||policy!==H_EARTH_SCENE_POLICY)throw Error('H_EARTH_SCENE_POLICY_INVALID');
+  return policy;
+};
+export const assessHEarthJacarandaScene=(resources,asset)=>{
+  const j=resources?.jacaranda;
+  const ids=resources?.oasisTrees?.placements?.map(p=>p.id)??[];
+  const gaps=j?.placement?.gaps?.map(p=>p.id)??[];
+  const conditions={
+    exactFetchedAsset:asset?.status===200&&asset?.bytes===JACARANDA_BYTES&&asset?.sha256===JACARANDA_SHA256,
+    approvedResource:j?.assetSha256===JACARANDA_SHA256&&j?.focusId==='PROPOSED_OASIS_01',
+    readyWithoutFallback:j?.state==='READY'&&j?.ready===true&&j?.fallbackUsed===false,
+    actualDraw:Number.isFinite(j?.drawCount)&&j.drawCount>0,
+    geometry:j?.loadedGeometry?.triangles===454746&&j?.loadedGeometry?.vertices===651794&&j?.loadedGeometry?.assetLength===JACARANDA_BYTES,
+    gpuResources:j?.textureCount===9&&j?.vertexArrayCount===3&&j?.programCount===1,
+    threeCompanions:j?.threeCompanionsPreserved===true&&j?.placement?.companionsPreserved===true&&Number(resources?.oasisTrees?.drawCount)>0&&COMPANION_IDS.every(id=>ids.includes(id)&&gaps.includes(id))&&j.placement.gaps.every(g=>Number.isFinite(g.gapMeters)&&g.gapMeters>=0),
+    existingEcology:['cavernUnderstory','cavernIvy','cavernPalms'].every(key=>Number(resources?.[key]?.drawCount)>0)&&['flower','fern','broadleaf'].every(kind=>resources?.cavernUnderstory?.placements?.some(p=>p.kind===kind)),
+    unchangedWorld:j?.originalHydratedWorldUnchanged===true&&j?.perFrameGeometryConstruction===false
+  };
+  return {pass:Object.values(conditions).every(Boolean),conditions,unmet:Object.keys(conditions).filter(key=>!conditions[key])};
+};
+export const observeHEarthSceneAsset=(page,surfaceId,policy)=>{
+  if(!validateHEarthScenePolicy(surfaceId,policy))return null;
+  const pending=[],responses=[];
+  const listener=response=>{
+    const url=new URL(response.url());
+    if(url.pathname!=='/showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb')return;
+    // Buffer errors are recorded and rejected after navigation; no unhandled task.
+    pending.push((async()=>{try{const bytes=await response.buffer();responses.push({url:response.url(),status:response.status(),bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});}catch(error){responses.push({url:response.url(),error:String(error.message)});}})());
+  };
+  page.on('response',listener);
+  return {async finish(){await Promise.all(pending);page.off('response',listener);return responses;}};
+};
+export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserver)=>{
+  if(!validateHEarthScenePolicy(surfaceId,policy))return null;
+  const started=Date.now(),deadline=started+600000,views=[],images=[];
+  const check=(condition,message)=>{if(!condition)throw Error(message);};
+  const bounded=()=>check(Date.now()<deadline,'H_EARTH_SCENE_TIME_BUDGET_EXCEEDED');
+  const read=()=>page.evaluate(()=>{
+    const r=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt();
+    const all=r?.liveGpu?.resources;
+    const resources=all?Object.fromEntries(['jacaranda','oasisTrees','cavernUnderstory','cavernIvy','cavernPalms','geologicalFormation','woodlandClearing','woodlandFineGrass'].map(key=>[key,all[key]])):null;
+    return {mode:r?.mode,navigation:r?.intake?.currentNavigationState,resources,counters:r?.liveGpu?.counters,entered:window.H_EARTH_STARTUP_LOADER?.getReceipt()?.mode==='entered',ready:document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true'};
+  });
+  const initial=await read();
+  check(initial.mode==='manual-public'&&initial.entered&&initial.ready,'H_EARTH_SCENE_REQUIRES_GENUINE_ENTRY');
+  check(assetObserver,'H_EARTH_SCENE_ASSET_OBSERVER_REQUIRED');
+  const canvas=await page.$('#h-earth-functional-landscape-canvas'),box=await canvas?.boundingBox();
+  check(box&&box.width>=250&&box.height>=180,'H_EARTH_SCENE_CANVAS_UNAVAILABLE');
+  const x=box.x+box.width*.5,y=box.y+box.height*.5;
+  const difference=(a,b)=>((a-b+540)%360)-180;
+  const pulse=async(dx,dy)=>{
+    bounded();const before=(await read()).navigation;
+    await page.mouse.move(x,y);await page.mouse.down();
+    try{
+      await page.mouse.move(x+dx*box.width,y+dy*box.height);
+      // One observed intake update, rather than a wall-clock hold that can
+      // overshoot under software-GPU stalls. Never write navigation state.
+      await page.waitForFunction(sequence=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().intake.currentNavigationState.sequence>sequence,{timeout:15000},before.sequence);
+    }finally{await page.mouse.up();}
+  };
+  const aim=async(yaw,pitch)=>{
+    let reached=false;
+    for(let i=0;i<512;i++){
+      bounded();const d=difference(yaw,(await read()).navigation.yawDegrees);
+      if(Math.abs(d)<=6){reached=true;break;}
+      await pulse(Math.sign(d)*(Math.abs(d)>20?.15:.065),0);
+    }
+    check(reached,'H_EARTH_SCENE_YAW_NOT_REACHED');
+    if(pitch===undefined)return;
+    reached=false;
+    for(let i=0;i<256;i++){
+      const d=pitch-(await read()).navigation.pitchDegrees;
+      if(Math.abs(d)<=2.2){reached=true;break;}
+      await pulse(0,-Math.sign(d)*.065);
+    }
+    check(reached,'H_EARTH_SCENE_PITCH_NOT_REACHED');
+  };
+  const travel=async(tx,tz)=>{
+    for(let i=0;i<40;i++){
+      bounded();const n=(await read()).navigation,p=n.position,d=Math.hypot(tx-p.x,tz-p.z);
+      if(d<3)return;
+      await aim((Math.atan2(tx-p.x,p.z-tz)*180/Math.PI+360)%360);
+      const before=(await read()).navigation;
+      await page.mouse.wheel({deltaY:-70*Math.min(10,Math.max(1,d-1))});
+      await page.waitForFunction(sequence=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().intake.currentNavigationState.sequence>sequence,{timeout:15000},before.sequence);
+      const after=(await read()).navigation.position;
+      check(Math.hypot(after.x-p.x,after.z-p.z)>.1,'H_EARTH_SCENE_TRAVEL_BLOCKED');
+    }
+    throw Error('H_EARTH_SCENE_DESTINATION_NOT_REACHED');
+  };
+  const capture=async name=>{
+    bounded();
+    // Wait for the navigation pose to be actually presented before screenshot.
+    await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().liveGpu.frameScheduling?.pending!==true,{timeout:30000});
+    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    const observation=await read();
+    const bytes=Buffer.from(await page.screenshot({type:'png'}));
+    check(bytes.length>0&&bytes.length<=8*1024*1024,'H_EARTH_SCENE_SCREENSHOT_SIZE_INVALID');
+    images.push({name,bytes});views.push({name,...observation,distanceToJacarandaMeters:Math.hypot(observation.navigation.position.x-55.5,observation.navigation.position.z+307.5),screenshotSha256:createHash('sha256').update(bytes).digest('hex'),screenshotBytes:bytes.length});
+  };
+  let result;
+  try{
+    await capture('Woodland entry');
+    await travel(-145,-280);await travel(-60,-310);
+    await aim(89,4);
+    await page.waitForFunction(()=>['READY','FALLBACK'].includes(window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().resources.jacaranda?.state),{timeout:180000});
+    check((await read()).resources?.jacaranda?.state==='READY','H_EARTH_SCENE_JACARANDA_LOAD_FAILED');
+    await pulse(.065,0);await aim(89,4);
+    await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().resources.jacaranda?.drawCount>0,{timeout:30000});
+    await capture('River group distant context');
+    await travel(40,-300);await aim(64,8);
+    await page.waitForFunction(()=>['READY','FALLBACK'].includes(window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().resources.jacaranda?.state),{timeout:180000});
+    check((await read()).resources?.jacaranda?.state==='READY','H_EARTH_SCENE_JACARANDA_LOAD_FAILED');
+    // Loading does not itself force a presentation. A real look pulse draws it.
+    await pulse(.065,0);await aim(64,8);
+    await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().resources.jacaranda?.drawCount>0,{timeout:30000});
+    await capture('Approved Jacaranda near');
+    await aim(160,2);await capture('River cavern flowers and palms');
+    const assets=await assetObserver.finish();
+    const final=await read(),assessment=assessHEarthJacarandaScene(final.resources,assets.find(a=>a.sha256===JACARANDA_SHA256));
+    check(assessment.pass,'H_EARTH_SCENE_ASSERTION_FAILED:'+assessment.unmet.join(','));
+    const near=views.find(v=>v.name==='Approved Jacaranda near'),far=views.find(v=>v.name==='River group distant context');
+    check(near?.distanceToJacarandaMeters<25&&far?.distanceToJacarandaMeters>80&&far.distanceToJacarandaMeters<140&&[near,far].every(v=>v.resources?.jacaranda?.state==='READY'&&v.resources.jacaranda.drawCount>0),'H_EARTH_SCENE_NEAR_FAR_PROOF_MISSING');
+    result={schema:'H_EARTH_APPROVED_JACARANDA_SCENE_OBSERVATION_v1',result:'RUNTIME_PASS_VISUAL_REVIEW_PENDING',assessment,assets,views,elapsedMs:Date.now()-started,physicalDeviceAcceptance:false,ownerPerceptualAcceptance:false,publicationAuthorized:false};
+  }catch(error){
+    try{await capture('Failure observation');}catch{}
+    result={schema:'H_EARTH_APPROVED_JACARANDA_SCENE_OBSERVATION_v1',result:'FAIL',failure:String(error.stack||error),views,elapsedMs:Date.now()-started,physicalDeviceAcceptance:false,publicationAuthorized:false};
+  }
+  // Reuse the existing uploaded PNG artifact: labeled unaltered scene captures
+  // are assembled in a separate evidence document, never in the product page.
+  if(images.length){
+    const directory=process.env.RUNNER_TEMP;
+    check(directory,'H_EARTH_SCENE_RUNNER_TEMP_REQUIRED');
+    const sheet=await page.browser().newPage();
+    try{
+      await sheet.setViewport({width:1280,height:images.length*836,deviceScaleFactor:1});
+      await sheet.setContent('<html><body style="margin:0;background:#111;color:white;font:20px sans-serif">'+images.map(({name,bytes})=>'<section style="height:836px;display:flex;flex-direction:column;align-items:center"><div style="height:36px">'+name+'</div><img style="height:800px;max-width:1280px;object-fit:contain" src="data:image/png;base64,'+bytes.toString('base64')+'"></section>').join('')+'</body></html>');
+      await sheet.waitForFunction(()=>Array.from(document.images).every(image=>image.complete&&image.naturalWidth>0),{timeout:15000});
+      const output=`${directory}/publication-preflight-screenshot.png`;
+      await sheet.screenshot({path:output,fullPage:true});
+      result.screenshotEvidence={file:'publication-preflight-screenshot.png',bytes:fs.statSync(output).size,sha256:createHash('sha256').update(fs.readFileSync(output)).digest('hex'),kind:'LABELED_ACTUAL_VIEW_CONTACT_SHEET'};
+    }finally{await sheet.close();}
+  }
+  return result;
+};
 
 const H_EARTH_PRE_ENTRY_POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
 export const validateHEarthPreEntryPolicy=(surfaceId,policy)=>{
@@ -307,6 +462,7 @@ export const main=async()=>{
 
   validateDeclaredInteractions(manifest.runtime.interactions);
   validateHEarthPreEntryPolicy(manifest.surfaceId,manifest.runtime.preReadyEntry);
+  validateHEarthScenePolicy(manifest.surfaceId,manifest.runtime.sceneQualification);
 
   const {default:puppeteer}=await import('puppeteer-core');
   const executablePath=process.env.CHROME_PATH;
@@ -319,7 +475,9 @@ export const main=async()=>{
   });
   try{
     const page=await browser.newPage();
-    await page.setViewport(spec.captureScreenshot===true
+    await page.setViewport(spec.sceneQualification===H_EARTH_SCENE_POLICY
+      ? {width:1280,height:800,deviceScaleFactor:1}
+      : spec.captureScreenshot===true
       ? {width:1440,height:2200,deviceScaleFactor:1}
       : {width:720,height:1280,deviceScaleFactor:1});
     const pageErrors=[];
@@ -328,6 +486,8 @@ export const main=async()=>{
     let declaredInteractions=[];
     let preReadyEntryReceipt=null;
     let trophyPredicate=null;
+    let sceneQualification=null;
+    const sceneAssetObserver=observeHEarthSceneAsset(page,manifest.surfaceId,spec.sceneQualification);
     page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
     page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
     page.on('response',response=>{
@@ -415,6 +575,7 @@ export const main=async()=>{
     await verifyEvidenceCarousel('AFTER_CONDITION_TERMINAL');
     declaredInteractions=await runDeclaredInteractions(page,spec.interactions);
     trophyPredicate=await verifyTrophyPredicate(page,spec);
+    sceneQualification=await runHEarthSceneQualification(page,manifest.surfaceId,spec.sceneQualification,sceneAssetObserver);
 
     const binding=spec.binding||{mode:'direct-document'};
     const result=await page.evaluate(({spec,binding})=>{
@@ -449,6 +610,7 @@ export const main=async()=>{
     const ignoredConsoleErrors=consoleErrors.filter(error=>ignoreTokens.some(token=>error.includes(token)));
     const actionableConsoleErrors=consoleErrors.filter(error=>!ignoreTokens.some(token=>error.includes(token)));
     const failures=[];
+    if(sceneQualification&&sceneQualification.result!=='RUNTIME_PASS_VISUAL_REVIEW_PENDING')failures.push('H_EARTH_SCENE_QUALIFICATION_FAILED');
     if(!result.binding.ok)failures.push('RUNTIME_PUBLICATION_BINDING_FAILED');
     if(spec.failOnPageErrors!==false&&pageErrors.length)failures.push('PAGE_ERROR');
     if(spec.failOnConsoleErrors!==false&&actionableConsoleErrors.length)failures.push('CONSOLE_ERROR');
@@ -459,8 +621,8 @@ export const main=async()=>{
 
     // Opt-in read-only visual evidence uses the existing preflight artifact path.
     // No caller-selected file path or change to existing surface defaults.
-    let screenshotEvidence=null;
-    if(spec.captureScreenshot===true&&failures.length===0){
+    let screenshotEvidence=sceneQualification?.screenshotEvidence??null;
+    if(spec.captureScreenshot===true&&!sceneQualification&&failures.length===0){
       const directory=process.env.RUNNER_TEMP;
       if(!directory)throw new Error('SCREENSHOT_RUNNER_TEMP_REQUIRED');
       const output=`${directory}/publication-preflight-screenshot.png`;
@@ -468,7 +630,7 @@ export const main=async()=>{
       if(fs.statSync(output).size===0)throw new Error('SCREENSHOT_EVIDENCE_EMPTY');
       screenshotEvidence={file:'publication-preflight-screenshot.png',bytes:fs.statSync(output).size};
     }
-    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:{...result,trophyPredicate,preReadyEntryReceipt},diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures},...(screenshotEvidence?{screenshotEvidence}:{})};
+    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:{...result,trophyPredicate,preReadyEntryReceipt,sceneQualification},diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures},...(screenshotEvidence?{screenshotEvidence}:{})};
     console.log(JSON.stringify(receipt,null,2));
     if(failures.length)process.exitCode=1;
   }finally{

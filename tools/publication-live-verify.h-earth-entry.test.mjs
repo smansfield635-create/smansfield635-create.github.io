@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness} from './publication-live-verify.mjs';
+import {validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
 
 const POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
 function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed={},post={}}={}){
@@ -154,4 +154,64 @@ test('all six signals cannot bypass failed authenticity or already-entered state
     /H_EARTH_INPUT_GATE_TIMEOUT:AUTHENTIC_PRE_ENTRY_STATE_NOT_OBSERVED/
   );
   assert.ok(!calls.includes('click'));
+});
+
+
+const SCENE_POLICY='H_EARTH_APPROVED_JACARANDA_SCENE_V1';
+function qualifiedScene(){
+  const sha256='46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189';
+  const companions=['PROPOSED_OASIS_02','PROPOSED_OASIS_03','PROPOSED_OASIS_04'];
+  return {asset:{status:200,bytes:33184612,sha256},resources:{
+    jacaranda:{assetSha256:sha256,focusId:'PROPOSED_OASIS_01',state:'READY',ready:true,fallbackUsed:false,drawCount:1,
+      loadedGeometry:{triangles:454746,vertices:651794,assetLength:33184612},textureCount:9,vertexArrayCount:3,programCount:1,
+      threeCompanionsPreserved:true,placement:{companionsPreserved:true,gaps:companions.map(id=>({id,gapMeters:1}))},
+      originalHydratedWorldUnchanged:true,perFrameGeometryConstruction:false},
+    oasisTrees:{drawCount:1,placements:companions.map(id=>({id}))},cavernUnderstory:{drawCount:1,placements:['flower','fern','broadleaf'].map(kind=>({kind}))},cavernIvy:{drawCount:1},cavernPalms:{drawCount:1}
+  }};
+}
+test('target scene qualification is fixed, optional and exclusive to full H-Earth',async()=>{
+  assert.equal(validateHEarthScenePolicy('h-earth',SCENE_POLICY),SCENE_POLICY);
+  assert.throws(()=>validateHEarthScenePolicy('audralia',SCENE_POLICY),/SCENE_POLICY_INVALID/);
+  assert.throws(()=>validateHEarthScenePolicy('h-earth','caller-controlled'),/SCENE_POLICY_INVALID/);
+  assert.equal(await runHEarthSceneQualification(null,'compass',undefined),null);
+  assert.equal(observeHEarthSceneAsset(null,'compass',undefined),null);
+});
+test('qualified imported tree requires fetched bytes, actual drawing and retained ecology',()=>{
+  const {resources,asset}=qualifiedScene();
+  assert.deepEqual(assessHEarthJacarandaScene(resources,asset).unmet,[]);
+  assert.equal(assessHEarthJacarandaScene(resources,asset).pass,true);
+  const cases=[
+    ['asset byte substitution',s=>s.asset.sha256='0'.repeat(64),'exactFetchedAsset'],
+    ['wrong response length',s=>s.asset.bytes--,'exactFetchedAsset'],
+    ['resource substitution',s=>s.resources.jacaranda.assetSha256='0'.repeat(64),'approvedResource'],
+    ['fallback tree',s=>s.resources.jacaranda.fallbackUsed=true,'readyWithoutFallback'],
+    ['ready but never drawn',s=>s.resources.jacaranda.drawCount=0,'actualDraw'],
+    ['partial geometry',s=>s.resources.jacaranda.loadedGeometry.triangles--,'geometry'],
+    ['missing texture',s=>s.resources.jacaranda.textureCount--,'gpuResources'],
+    ['companions never drawn',s=>s.resources.oasisTrees.drawCount=0,'threeCompanions'],
+    ['invalid companion separation',s=>s.resources.jacaranda.placement.gaps[0].gapMeters=-1,'threeCompanions'],
+    ['flower placement absent',s=>s.resources.cavernUnderstory.placements.shift(),'existingEcology'],
+    ['missing companion',s=>s.resources.oasisTrees.placements.pop(),'threeCompanions'],
+    ['unverified companion gap',s=>s.resources.jacaranda.placement.gaps.pop(),'threeCompanions'],
+    ['missing flowers/understory draw',s=>s.resources.cavernUnderstory.drawCount=0,'existingEcology'],
+    ['world rebuilt',s=>s.resources.jacaranda.originalHydratedWorldUnchanged=false,'unchangedWorld']
+  ];
+  for(const [label,change,condition] of cases){
+    const scene=qualifiedScene();change(scene);const result=assessHEarthJacarandaScene(scene.resources,scene.asset);
+    assert.equal(result.pass,false,label);assert.ok(result.unmet.includes(condition),label);
+  }
+  assert.equal(assessHEarthJacarandaScene(null,null).pass,false);
+});
+test('target inspection cannot bypass genuine public entry or missing asset observation',async()=>{
+  const page={evaluate:async()=>({mode:'diagnostic-replay',entered:true,ready:true})};
+  await assert.rejects(runHEarthSceneQualification(page,'h-earth',SCENE_POLICY,{}),/REQUIRES_GENUINE_ENTRY/);
+  page.evaluate=async()=>({mode:'manual-public',entered:true,ready:true});
+  await assert.rejects(runHEarthSceneQualification(page,'h-earth',SCENE_POLICY,null),/ASSET_OBSERVER_REQUIRED/);
+});
+test('full H-Earth manifest selects bounded target proof while keeping entry contract',()=>{
+  const m=JSON.parse(fs.readFileSync('.github/ai-router/publication-surfaces/h-earth.json','utf8'));
+  assert.equal(m.runtime.sceneQualification,SCENE_POLICY);
+  assert.equal(m.runtime.preReadyEntry,POLICY);
+  assert.equal(m.runtime.failOnPageErrors,true);
+  assert.equal(m.runtime.failOnConsoleErrors,true);
 });

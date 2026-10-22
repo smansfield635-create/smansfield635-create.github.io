@@ -1,24 +1,21 @@
 name: TEMP Gen2857 Approved Jacaranda Exact Binary Transfer
-# One-use historical Chapter One file-ingress replay. Never merge this workflow to main.
-# Source: the owner-approved CC0 Jacaranda copied to an anyone-link read-only Drive folder.
-# Product target: exactly one declared Gen2857 asset path on the existing candidate branch.
+# Replay of the Aug 19 temporary file-ingress precedent; DO NOT MERGE this workflow.
+# Zero product mutation unless approved source and exact candidate head both match.
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [main]
     paths:
       - '.github/workflows/gen2857-approved-jacaranda-transfer-temporary.yml'
-
 permissions:
   contents: write
-
 jobs:
   transfer-approved-original:
     if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'transfer/gen2857-jacaranda-public-source-20261022'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - name: Verify historical replay trigger and install source reader
+      - name: Validate fixed historical replay context
         shell: bash
         run: |
           set -euo pipefail
@@ -30,7 +27,7 @@ jobs:
           test "$(jq -r '.pull_request.head.repo.full_name' "$GITHUB_EVENT_PATH")" = "$GITHUB_REPOSITORY"
           python -m pip install --quiet 'gdown==5.2.0'
 
-      - name: Fetch frozen approved source without ChatGPT inline binary transfer
+      - name: Fetch and verify original approved CC0 binary via public read-only Drive source
         shell: bash
         run: |
           set -euo pipefail
@@ -40,40 +37,53 @@ jobs:
           test "$(git hash-object /tmp/Gratitude-Jacaranda-Candidate.glb)" = '863f6bfd54e4e2090af17940c5901ae07366f016'
           echo 'GEN2857_SOURCE_EXACT_SHA256_PASS'
 
-      - name: Checkout exact original candidate and commit only the frozen GLB
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
-
-      - name: Exact-head fast-forward one-path source adoption
+      - name: Commit one approved Git object without hydrating large unchanged source tree
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GIT_TERMINAL_PROMPT: '0'
         run: |
           set -euo pipefail
           expected='017351a6962a9af6a5ff7aedd48935b4e9ee68bd'
           target='refs/heads/gratitude-jacaranda-recovered-20261021'
           asset='showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb'
+          mkdir -p "$RUNNER_TEMP/gen2857-git"
+          cat > "$RUNNER_TEMP/gen2857-git-askpass.sh" <<'SH'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' x-access-token ;;
+            *) printf '%s\n' "$GH_TOKEN" ;;
+          esac
+          SH
+          chmod 700 "$RUNNER_TEMP/gen2857-git-askpass.sh"
+          export GIT_ASKPASS="$RUNNER_TEMP/gen2857-git-askpass.sh"
+          cd "$RUNNER_TEMP/gen2857-git"
+          git init -q
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
           remote=$(git ls-remote origin "$target" | awk '{print $1}')
-          test "$remote" = "$expected" || { echo "GEN2857_STALE_TARGET_BRANCH" >&2; exit 2; }
-          git fetch --no-tags origin "$expected"
-          git checkout --detach "$expected"
-          test "$(git rev-parse HEAD)" = "$expected"
-          test ! -e "$asset"
-          mkdir -p "$(dirname "$asset")"
-          cp /tmp/Gratitude-Jacaranda-Candidate.glb "$asset"
-          test "$(stat -c%s "$asset")" = '33184612'
-          test "$(sha256sum "$asset" | awk '{print $1}')" = '46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189'
-          test "$(git hash-object "$asset")" = '863f6bfd54e4e2090af17940c5901ae07366f016'
-          git add -- "$asset"
-          test "$(git diff --cached --name-only)" = "$asset"
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Gen2857: preserve exact approved Jacaranda GLB'
-          test "$(git diff --name-only "$expected" HEAD)" = "$asset"
+          test "$remote" = "$expected" || { echo 'GEN2857_STALE_TARGET_HEAD_NO_WRITE' >&2; exit 2; }
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$expected"
+          test "$(git rev-parse FETCH_HEAD)" = "$expected"
+          git read-tree "$expected"
+          if git ls-tree -r --name-only "$expected" | grep -Fxq "$asset"; then echo 'GEN2857_TARGET_ALREADY_CONTAINS_FILE' >&2; exit 3; fi
+          blob=$(git hash-object -w /tmp/Gratitude-Jacaranda-Candidate.glb)
+          test "$blob" = '863f6bfd54e4e2090af17940c5901ae07366f016'
+          test "$(git cat-file -s "$blob")" = '33184612'
+          git update-index --add --cacheinfo "100644,$blob,$asset"
+          tree=$(git write-tree)
+          export GIT_AUTHOR_NAME='github-actions[bot]'
+          export GIT_AUTHOR_EMAIL='41898282+github-actions[bot]@users.noreply.github.com'
+          export GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
+          export GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+          new=$(printf '%s\n' 'Gen2857: preserve exact approved Jacaranda GLB' | git commit-tree "$tree" -p "$expected")
+          test "$(git diff-tree --no-commit-id --name-only -r "$new")" = "$asset"
+          test "$(git rev-parse "$new:$asset")" = "$blob"
           remote=$(git ls-remote origin "$target" | awk '{print $1}')
-          test "$remote" = "$expected" || { echo "GEN2857_TARGET_MOVED_NO_PUSH" >&2; exit 3; }
-          git push origin HEAD:"$target"
-          git fetch --no-tags origin "$target"
-          test "$(git rev-parse FETCH_HEAD)" = "$(git rev-parse HEAD)"
-          test "$(git rev-parse "FETCH_HEAD:$asset")" = '863f6bfd54e4e2090af17940c5901ae07366f016'
+          test "$remote" = "$expected" || { echo 'GEN2857_TARGET_MOVED_NO_WRITE' >&2; exit 4; }
+          git push origin "$new:$target"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$target"
+          test "$(git rev-parse FETCH_HEAD)" = "$new"
+          test "$(git rev-parse "FETCH_HEAD:$asset")" = "$blob"
           test "$(git cat-file -s "FETCH_HEAD:$asset")" = '33184612'
           test "$(git show "FETCH_HEAD:$asset" | sha256sum | awk '{print $1}')" = '46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189'
-          echo "GEN2857_REMOTE_EXACT_GLB_PASS_HEAD=$(git rev-parse FETCH_HEAD)"
+          echo "GEN2857_REMOTE_EXACT_GLB_PASS_HEAD=$new"

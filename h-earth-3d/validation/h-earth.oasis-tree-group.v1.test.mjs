@@ -145,8 +145,7 @@ test('Gen2857: exact approved asset identity is bound while absent transfer leav
  original.dispose();
 });
 const approvedAssetURL=new URL('../../showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb',import.meta.url);
-test('Gen2857: committed binary must be exactly approved before release',()=>{
- if(!fs.existsSync(approvedAssetURL))return;
+test('Gen2857: committed binary must be exactly approved before release', {skip:!fs.existsSync(approvedAssetURL)},()=>{
  const bytes=fs.readFileSync(approvedAssetURL);
  assert.equal(bytes.byteLength,jacaranda.JACARANDA_APPROVED_LENGTH);
  assert.equal(hash(bytes),jacaranda.JACARANDA_APPROVED_SHA256);

@@ -8,6 +8,7 @@ import {applyHEarthVerifiedPlantingPackage} from '../../showroom/globe/h-earth/r
 import {unprojectPlanetVertex} from '../terrain/h-earth.geological-formation-successor.v1.mjs';
 import {H_EARTH_GEN311_ESTATE_PLACEMENT_POLICY as estate} from '../environment/h-earth.gen2514-qualified-placement-authority.js';
 import * as oasis from '../../showroom/globe/h-earth/render/geometry-oasis-tree-group.v1.js';
+import * as jacaranda from '../../showroom/globe/h-earth/render/geometry-jacaranda.v1.js';
 const BASELINE='291b233f387f73599e38061de9260f6489ce6634';
 const ORIGINALS=[{id:'PROPOSED_OASIS_01',x:55.5,z:-307.5},{id:'PROPOSED_OASIS_02',x:47.5,z:-317.5},{id:'PROPOSED_OASIS_03',x:71.5,z:-291.5},{id:'PROPOSED_OASIS_04',x:63.5,z:-301.5}];
 const hash=value=>crypto.createHash('sha256').update(value instanceof Uint8Array?value:JSON.stringify(value)).digest('hex');
@@ -110,3 +111,46 @@ if(process.env.H_EARTH_OASIS_REVIEW_OUTPUT){
  const shaFiles=['showroom/globe/h-earth/render/geometry-oasis-tree-group.v1.js','showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'];
  fs.writeFileSync(process.env.H_EARTH_OASIS_REVIEW_OUTPUT,JSON.stringify({status:'METRICS_ONLY_CONFIRM_TEST_RESULT',baseline:BASELINE,originalPackageHash,originalIndexHash,originalWorldHash,terrainHash,buildMs,receipt:group.receipt,retirement:retired.receipt,minimumRootBurial:Math.min(...group.contacts.map(c=>c.burial)),minimumLowWoodGap:Math.min(...lowBounds.flatMap((a,i)=>lowBounds.slice(i+1).map(b=>boundsDistance(a,b)))),sourceHashes:Object.fromEntries(shaFiles.map(p=>[p,hash(fs.readFileSync(new URL('../../'+p,import.meta.url)))])),visualAcceptance:false},null,2));
 }
+
+
+test('Gen2857: original focus remains exact prefix of both restored group batches for an atomic ready-only substitution',()=>{
+ const focus=group.receipt.placements.find(p=>p.id===jacaranda.JACARANDA_FOCUS_ID);
+ assert.ok(focus);assert.equal(focus.x,55.5);assert.equal(focus.z,-307.5);
+ for(const part of group.meshes){
+  const span=focus.spans[part.part];
+  assert.equal(span.indexStart,0,'focus must be first in original batch');
+  assert.equal(part.mesh.indices.length-span.indexCount,
+   group.receipt.placements.filter(p=>p.id!==focus.id).reduce((n,p)=>n+p.spans[part.part].indexCount,0));
+ }
+ assert.match(source,/resources\\.jacaranda\\?\\.ready/);
+ assert.match(source,/resources\\.jacaranda\\.draw\\(packet\\)/);
+ assert.match(source,/resources\\.jacaranda\\?\\.dispose\\(\\)/);
+});
+test('Gen2857: exact approved asset identity is bound while absent transfer leaves the original focus intact',async()=>{
+ assert.equal(jacaranda.JACARANDA_APPROVED_SHA256,'46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189');
+ const companions=group.receipt.placements.filter(p=>p.id!==jacaranda.JACARANDA_FOCUS_ID);
+ const fixture={schema:jacaranda.JACARANDA_MODEL_CONTRACT,trunkMinY:-0.1464279741048813,
+   bounds:{min:[-12.89729118347168,-.1464279741048813,-9.942540168762207],
+           max:[11.443934440612793,19.289831161499023,9.182101249694824]}};
+ const plan=jacaranda.planApprovedJacarandaPlacement(model,fixture,companions);
+ assert.equal(plan.id,'PROPOSED_OASIS_01');assert.ok(plan.crownWidthMeters>14);
+ for(const gap of plan.gaps)assert.ok(gap.gapMeters>=1.25);
+ const original=jacaranda.createApprovedJacarandaOverlay({},{
+   model,companions,projectWorld:p=>p,assetURL:'/missing-approved.glb',
+   fetchAsset:async()=>({ok:false,status:404})
+ });
+ assert.equal(await original.start(),false);
+ assert.equal(original.ready,false);
+ assert.equal(original.getReceipt().fallbackUsed,true);
+ original.dispose();
+});
+const approvedAssetURL=new URL('../../showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb',import.meta.url);
+test('Gen2857: committed binary must be exactly approved before release',()=>{
+ if(!fs.existsSync(approvedAssetURL))return;
+ const bytes=fs.readFileSync(approvedAssetURL);
+ assert.equal(bytes.byteLength,jacaranda.JACARANDA_APPROVED_LENGTH);
+ assert.equal(hash(bytes),jacaranda.JACARANDA_APPROVED_SHA256);
+ const buffer=bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength);
+ const decoded=jacaranda.parseApprovedJacarandaGLB(buffer);
+ assert.equal(decoded.vertexCount,651794);assert.equal(decoded.triangleCount,454746);
+});

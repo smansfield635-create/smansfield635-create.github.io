@@ -183,13 +183,15 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
   imageDecoder=globalThis.createImageBitmap,alphaCanvasFactory=()=>new OffscreenCanvas(1,1),yieldWork=yieldFrame}={}){
   must(gl&&typeof projectWorld==='function'&&Array.isArray(companions)&&assetURL,'OVERLAY_INPUTS_REQUIRED');
   let state='IDLE',failure=null,loaded=null,startedAt=0,loadPromise=null,dead=false,epoch=0,draws=0;
-  const gpu={program:null,shaders:[],parts:[],textures:[],resourceBytes:0};
+  const gpu={program:null,shaders:[],parts:[],buffers:[],textures:[],resourceBytes:0};
   const discard=()=>{
-    for(const part of gpu.parts){for(const b of part.buffers)gl.deleteBuffer(b);gl.deleteBuffer(part.indexBuffer);gl.deleteVertexArray(part.vao);}
+    // Includes buffers still being uploaded when a context is disposed.
+    for(const b of gpu.buffers)gl.deleteBuffer(b);
+    for(const part of gpu.parts)gl.deleteVertexArray(part.vao);
     for(const t of gpu.textures)gl.deleteTexture(t);
     for(const s of gpu.shaders)gl.deleteShader(s);
     if(gpu.program)gl.deleteProgram(gpu.program);
-    gpu.parts.length=0;gpu.textures.length=0;gpu.shaders.length=0;gpu.program=null;gpu.resourceBytes=0;
+    gpu.parts.length=0;gpu.buffers.length=0;gpu.textures.length=0;gpu.shaders.length=0;gpu.program=null;gpu.resourceBytes=0;
   };
   const shader=(kind,body)=>{
     const s=gl.createShader(kind);must(s,'SHADER_CREATE_FAILED');gpu.shaders.push(s);
@@ -198,7 +200,7 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
     return s;
   };
   const uploadBuffer=async(target,typed,currentEpoch,vao)=>{
-    const b=gl.createBuffer();must(b,'BUFFER_CREATE_FAILED');
+    const b=gl.createBuffer();must(b,'BUFFER_CREATE_FAILED');gpu.buffers.push(b);
     const bind=()=>{gl.bindVertexArray(vao);gl.bindBuffer(target,b);};
     bind();gl.bufferData(target,typed.byteLength,gl.STATIC_DRAW);
     const stride=Math.max(1,Math.floor(512*1024/typed.BYTES_PER_ELEMENT));

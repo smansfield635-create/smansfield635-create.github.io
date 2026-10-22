@@ -234,7 +234,7 @@ test('navigation execution errors cannot be overridden by deadline readback',asy
 
 test('aim tracks actual pitch progress to target with bounded genuine-input pulses',async()=>{
  let value=16,sequence=1,pulses=0;const trace=[];
- await aimHEarthAxis({axis:'pitchDegrees',target:4,tolerance:2.2,trace,read:async()=>({navigation:{pitchDegrees:value,sequence}}),pulse:async(dx,dy,goal)=>{assert.equal(dx,0);assert.ok(dy>0);assert.equal(goal.target,4);value-=4;sequence++;pulses++;}});
+ await aimHEarthAxis({axis:'pitchDegrees',target:4,tolerance:2.2,trace,read:async()=>({navigation:{pitchDegrees:value,sequence}}),pulse:async(dx,dy,goal)=>{assert.equal(dx,0);assert.ok(dy>0);assert.equal(goal.target,value-4);value-=4;sequence++;pulses++;}});
  assert.equal(pulses,3);assert.equal(trace.length,3);
 });
 test('aim rejects unchanged angles despite advancing sequence after three pulses',async()=>{
@@ -255,4 +255,10 @@ test('yaw takes the short path across wraparound',async()=>{
 test('failure observation survives expired scene budget and exposes read errors',async()=>{
  assert.deepEqual(await observeHEarthFailure(async()=>({navigation:{pitchDegrees:32}})),{observation:{navigation:{pitchDegrees:32}},error:null});
  const r=await observeHEarthFailure(async()=>{throw Error('page closed');});assert.equal(r.observation,null);assert.match(r.error,/page closed/);
+});
+
+test('large turns use bounded angular holds rather than one full-turn deadline',async()=>{
+ let value=-4,sequence=1;const trace=[],goals=[];
+ await aimHEarthAxis({axis:'yawDegrees',target:72,tolerance:6,trace,read:async()=>({navigation:{yawDegrees:value,sequence}}),pulse:async(dx,dy,goal)=>{assert.ok(dx>0);assert.equal(dy,0);assert.ok(goal.target-value<=(dx===.15?8:4));goals.push(goal.target);value=goal.target;sequence++;}});
+ assert.ok(goals.length>1);assert.ok(Math.abs(value-72)<=6);assert.equal(goals[0],4);
 });

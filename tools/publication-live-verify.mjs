@@ -159,7 +159,10 @@ export const aimHEarthAxis=async({axis,target,tolerance,read,pulse,trace,now=Dat
     if(Math.abs(error)<=tolerance)return;
     if(now()>=deadline)throw Error('H_EARTH_AIM_DEADLINE:'+axis);
     const amplitude=axis==='yawDegrees'&&Math.abs(error)>20?.15:.061;
-    await pulse(axis==='yawDegrees'?Math.sign(error)*amplitude:0,axis==='pitchDegrees'?-Math.sign(error)*amplitude:0,{axis,target,tolerance,error});
+    // A single native hold advances a bounded angle, not the entire remaining turn.
+    const increment=Math.sign(error)*Math.min(Math.abs(error),amplitude===.15?8:4);
+    const stepTarget=before[axis]+increment;
+    await pulse(axis==='yawDegrees'?Math.sign(error)*amplitude:0,axis==='pitchDegrees'?-Math.sign(error)*amplitude:0,{axis,target:stepTarget,tolerance:.5,error:increment});
     const after=(await read()).navigation,nextError=delta(after[axis]);
     trace.push({axis,target,before:before[axis],after:after[axis],beforeSequence:before.sequence,afterSequence:after.sequence,error:nextError});
     if(trace.length>160)trace.shift();

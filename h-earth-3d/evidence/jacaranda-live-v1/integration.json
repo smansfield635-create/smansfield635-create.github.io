@@ -2,7 +2,7 @@
   "schema": "H_EARTH_JACARANDA_LIVE_EVIDENCE_v1",
   "operationId": "H_EARTH_APPROVED_JACARANDA_BASELINE_RECOVERY_20261021_001",
   "authorityGeneration": 2857,
-  "status": "SOURCE_STAGED_BINARY_UPLOAD_AND_REAL_BROWSER_VERIFICATION_PENDING",
+  "status": "APPROVED_BINARY_COMMITTED_QUALIFICATION_REPAIR_STAGED_NOT_PUBLISHED",
   "baseline": "b49ec479ffc95f0ccd64b3295a9ffd976c8a85e1",
   "preparedBranch": "gratitude-jacaranda-recovered-20261021",
   "exactApprovedAsset": {
@@ -15,7 +15,8 @@
     "triangles": 454746,
     "vertices": 651794,
     "library": "libfile_5a57992884d48191a5ce4312ea7d94f0",
-    "githubCommitted": false
+    "githubCommitted": true,
+    "githubCommit": "3015d5454f916b8f73e863b7f39650f4ae2319b5"
   },
   "stagedCode": {
     "adapter": {
@@ -61,21 +62,43 @@
     },
     "note": "Bounding-box geometry/flat sampled ground fixture; actual hydrated terrain and owner-device framing require verification"
   },
-  "transferFailure": {
+  "outstanding": [
+    "Run changed module identity and H-Earth pre-entry positive/negative tests",
+    "Pass actual full H-Earth input-confirmed Chromium readiness and original Jacaranda GPU verification",
+    "Independent preservation review and newer main analytics reconciliation",
+    "Merge only qualified product promotion, run registered Pages exact-head publication, verify served binary/runtime"
+  ],
+  "productionDeployment": false,
+  "publicMainMerged": false,
+  "ownerVisualApprovalOfImportedAssetPreserved": true,
+  "authorityEffect": "NONE_EVIDENCE_ONLY",
+  "originalTransferFailure": {
     "operation": "GitHub authenticated 44,246,152-char base64 create_blob",
     "observedError": "h2 protocol error: error reading a body from connection",
     "remoteBlobCheck": "422 tree.sha ... is not a valid blob",
     "disposition": "NO_BINARY_BLOB_NO_ASSET_COMMIT"
   },
-  "outstanding": [
-    "Transfer exact 33,184,612 byte GLB via authenticated binary-capable substrate",
-    "Commit within Gen2857 admitted nine paths",
-    "Run focused repository suite and real WebGL browser preflight",
-    "Update existing owner-private Site only after PASS",
-    "Read back served model and verify on owner device"
-  ],
-  "productionDeployment": false,
-  "publicMainMerged": false,
-  "ownerVisualApprovalOfImportedAssetPreserved": true,
-  "authorityEffect": "NONE_EVIDENCE_ONLY"
+  "transferResolution": {
+    "result": "EXACT_APPROVED_BINARY_COMMITTED",
+    "workflowRun": 39828147215,
+    "sourceCommit": "3015d5454f916b8f73e863b7f39650f4ae2319b5",
+    "remoteFileSha1": "863f6bfd54e4e2090af17940c5901ae07366f016",
+    "remoteFileBytes": 33184612,
+    "remoteSha256Verified": true
+  },
+  "browserQualificationCorrection": {
+    "operationId": "H_EARTH_GEN2857_PUBLICATION_QUALIFIER_CORRECTION_20261022_001",
+    "lockGeneration": 2858,
+    "parentStageHead": "90e0824b713b30605924b824ba53a8f175b7ae3d",
+    "status": "CODE_CANDIDATE_PENDING_INDEPENDENT_NODE_AND_CHROME",
+    "changedSourceScope": [
+      "tools/publication-live-verify.mjs",
+      "tools/publication-live-verify.h-earth-entry.test.mjs",
+      ".github/ai-router/publication-surfaces/h-earth.json",
+      "h-earth-3d/validation/h-earth.cavern-entrance-grass.v1.test.mjs",
+      "h-earth-3d/evidence/jacaranda-live-v1/integration.json"
+    ],
+    "preserveOriginalUserControlledEntry": true,
+    "productionDeployed": false
+  }
 }

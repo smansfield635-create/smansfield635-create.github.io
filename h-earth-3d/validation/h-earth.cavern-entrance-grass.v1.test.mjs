@@ -1,7 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import zlib from 'node:zlib';
 import {constructGeologicalRuntimeBridge} from '../../showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js';
 import {buildVegetationVisibleSurface} from '../../showroom/globe/h-earth/render/vegetation-visible-surface.v1.js';
-import {buildCavernEntranceGrass,createEntranceFloorSupport,entranceWeight,entranceBlend,ENTRANCE_BLEND_GLSL,createCavernSlopeDensityField,CAVERN_SLOPE_REPAIR} from '../../showroom/globe/h-earth/render/cavern-entrance-grass.v1.js';
+import {buildCavernEntranceGrass,createEntranceFloorSupport,entranceWeight,entranceBlend,ENTRANCE_BLEND_GLSL,createCavernSlopeDensityField,CAVERN_SLOPE_REPAIR} from '../../showroom/globe/h-earth/render/cavern-entrance-grass.v1.js?rev=sha-fa619e50b7b8';
 import {unprojectPlanetVertex} from '../terrain/h-earth.geological-formation-successor.v1.mjs';
 import {CAVERN_PALM_PLACEMENTS} from '../../showroom/globe/h-earth/render/cavern-palm-placement.v1.js';
 const asset=name=>new URL('../../showroom/globe/h-earth/render/assets/'+name,import.meta.url);

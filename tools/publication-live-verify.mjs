@@ -99,6 +99,78 @@ export const runDeclaredInteractions=async(page,interactions)=>{
   return results;
 };
 
+
+const H_EARTH_PRE_ENTRY_POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
+export const validateHEarthPreEntryPolicy=(surfaceId,policy)=>{
+  if(policy===undefined||policy===null)return null;
+  if(surfaceId!=='h-earth'||policy!==H_EARTH_PRE_ENTRY_POLICY)throw Error('H_EARTH_PRE_ENTRY_POLICY_INVALID');
+  return policy;
+};
+export const runHEarthPreEntry=async(page,surfaceId,policy,timeoutMs=120000)=>{
+  if(!validateHEarthPreEntryPolicy(surfaceId,policy))return null;
+  // Follow the user-facing control test. Never set readiness attributes or invoke entry callbacks directly.
+  await page.waitForFunction(()=>{
+    const root=document.querySelector('#h-earth-functional-landscape-route');
+    const shell=document.querySelector('#h-earth-loading-screen');
+    const button=shell?.querySelector('[data-enter]');
+    return root?.dataset.singleOwnerPrototype==='controls-test'&&root.dataset.run8eReady==='false'&&shell?.dataset.mode==='test'&&button?.disabled===true;
+  },{timeout:timeoutMs});
+  const before=await page.evaluate(()=>({
+    mode:document.querySelector('#h-earth-loading-screen')?.dataset.mode??null,
+    ready:document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady??null
+  }));
+  if(before.mode!=='test'||before.ready!=='false')throw Error('H_EARTH_PRE_ENTRY_STATE_INVALID');
+  const canvas=await page.$('#h-earth-functional-landscape-canvas');
+  const bounds=await canvas?.boundingBox();
+  if(!bounds||bounds.width<250||bounds.height<180)throw Error('H_EARTH_INPUT_CANVAS_UNAVAILABLE');
+  const x=bounds.x+bounds.width*.42,y=bounds.y+bounds.height*.42;
+  await page.mouse.move(x,y);
+  await page.mouse.down();
+  try{await page.mouse.move(x+Math.min(bounds.width*.17,130),y+16,{steps:14});}
+  finally{await page.mouse.up();}
+  await page.mouse.wheel({deltaY:-360});
+  await page.waitForFunction(()=>{
+    const shell=document.querySelector('#h-earth-loading-screen'),button=shell?.querySelector('[data-enter]');
+    const input=globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.();
+    const gpu=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+    return shell?.dataset.mode==='ready'&&button?.disabled===false&&
+      Number.isFinite(input?.firstInputCameraChangeMilliseconds)&&
+      Number.isFinite(input?.firstInputPoseRenderedMilliseconds)&&
+      Number.isFinite(input?.nextAnimationFrameOpportunityMilliseconds)&&
+      Number(gpu?.counters?.gpuFramebufferPresentationCount)>0;
+  },{timeout:16000});
+  const observed=await page.evaluate(()=>{
+    const shell=document.querySelector('#h-earth-loading-screen'),button=shell?.querySelector('[data-enter]');
+    const input=globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.();
+    const gpu=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+    return {
+      mode:shell?.dataset.mode??null,disabled:button?.disabled??true,
+      inputChanged:Number.isFinite(input?.firstInputCameraChangeMilliseconds),
+      inputRendered:Number.isFinite(input?.firstInputPoseRenderedMilliseconds),
+      nextFrame:Number.isFinite(input?.nextAnimationFrameOpportunityMilliseconds),
+      gpuFrames:Number(gpu?.counters?.gpuFramebufferPresentationCount)||0
+    };
+  });
+  if(observed.mode!=='ready'||observed.disabled||!observed.inputChanged||!observed.inputRendered||!observed.nextFrame||observed.gpuFrames<1)
+    throw Error('H_EARTH_INPUT_FRAME_NOT_VERIFIED');
+  await page.click('#h-earth-loading-screen [data-enter]');
+  await page.waitForFunction(()=>{
+    const root=document.querySelector('#h-earth-functional-landscape-route');
+    const shell=document.querySelector('#h-earth-loading-screen');
+    return root?.dataset.run8eReady==='true'&&root.dataset.singleOwnerPrototype==='manual-ready'&&shell?.dataset.mode==='entered'&&shell.hidden===true;
+  },{timeout:12000});
+  const after=await page.evaluate(()=>{
+    const root=document.querySelector('#h-earth-functional-landscape-route');
+    const shell=document.querySelector('#h-earth-loading-screen');
+    return {ready:root?.dataset.run8eReady??null,mode:shell?.dataset.mode??null,hidden:shell?.hidden??false};
+  });
+  if(after.ready!=='true'||after.mode!=='entered'||!after.hidden)throw Error('H_EARTH_ENTER_CALLBACK_NOT_OBSERVED');
+  return {schema:'H_EARTH_NATIVE_INPUT_CONFIRMED_ENTRY_v1',result:'PASS',
+    method:'REAL_POINTER_DRAG_WHEEL_AND_ENABLED_ENTER_CLICK',
+    changedCameraInput:true,renderedChangedView:true,nextFrameObserved:true,
+    gpuFramebufferPresentationCount:observed.gpuFrames,entered:true};
+};
+
 export const verifyTrophyPredicate=async(page,spec)=>{
   if(spec?.trophyPredicate?.enabled!==true)return null;
   const predicate=spec.trophyPredicate;
@@ -175,6 +247,7 @@ export const main=async()=>{
   }
 
   validateDeclaredInteractions(manifest.runtime.interactions);
+  validateHEarthPreEntryPolicy(manifest.surfaceId,manifest.runtime.preReadyEntry);
 
   const {default:puppeteer}=await import('puppeteer-core');
   const executablePath=process.env.CHROME_PATH;
@@ -194,6 +267,7 @@ export const main=async()=>{
     const consoleErrors=[];
     const evidenceInteractions=[];
     let declaredInteractions=[];
+    let preReadyEntryReceipt=null;
     let trophyPredicate=null;
     page.on('pageerror',error=>pageErrors.push(String(error?.stack||error)));
     page.on('console',message=>{if(message.type()==='error')consoleErrors.push(message.text());});
@@ -263,6 +337,7 @@ export const main=async()=>{
     },{spec,surfaceId:manifest.surfaceId,failure:String(failure?.stack||failure)});
 
     try{
+      preReadyEntryReceipt=await runHEarthPreEntry(page,manifest.surfaceId,spec.preReadyEntry,spec.timeoutMs||120000);
       if(spec.readySelector)await page.waitForSelector(spec.readySelector,{timeout:spec.timeoutMs||45000});
       if(spec.readyAttribute){
         await page.waitForFunction(({selector,name,contains})=>{
@@ -274,7 +349,7 @@ export const main=async()=>{
     }catch(error){
       let diagnostic=null;
       try{diagnostic=await captureRuntimeDiagnostic(error);}catch(diagnosticError){diagnostic={captureError:String(diagnosticError?.stack||diagnosticError)};}
-      console.error(JSON.stringify({schema:'PUBLICATION_SURFACE_RUNTIME_DIAGNOSTIC_v1',surfaceId:manifest.surfaceId,url,result:'FAIL',phase:'READINESS_WAIT',failure:String(error?.stack||error),diagnostics:{pageErrors,consoleErrors,evidenceInteractions,declaredInteractions,failures:['RUNTIME_READINESS_FAILED']},diagnostic},null,2));
+      console.error(JSON.stringify({schema:'PUBLICATION_SURFACE_RUNTIME_DIAGNOSTIC_v1',surfaceId:manifest.surfaceId,url,result:'FAIL',phase:spec.preReadyEntry&&preReadyEntryReceipt===null?'PRE_READY_ENTRY':'READINESS_WAIT',failure:String(error?.stack||error),diagnostics:{pageErrors,consoleErrors,evidenceInteractions,declaredInteractions,failures:['RUNTIME_READINESS_FAILED']},diagnostic},null,2));
       throw error;
     }
 
@@ -334,7 +409,7 @@ export const main=async()=>{
       if(fs.statSync(output).size===0)throw new Error('SCREENSHOT_EVIDENCE_EMPTY');
       screenshotEvidence={file:'publication-preflight-screenshot.png',bytes:fs.statSync(output).size};
     }
-    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:{...result,trophyPredicate},diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures},...(screenshotEvidence?{screenshotEvidence}:{})};
+    const receipt={schema:'PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1',surfaceId:manifest.surfaceId,url,result:failures.length?'FAIL':'PASS',runtime:{...result,trophyPredicate,preReadyEntryReceipt},diagnostics:{pageErrors,consoleErrors,ignoredConsoleErrors,actionableConsoleErrors,evidenceInteractions,declaredInteractions,failures},...(screenshotEvidence?{screenshotEvidence}:{})};
     console.log(JSON.stringify(receipt,null,2));
     if(failures.length)process.exitCode=1;
   }finally{

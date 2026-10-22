@@ -103,25 +103,32 @@
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "Four-tree woodland camera is reached",
+        "name": "Input-confirmed Gratitude world entry",
         "action": {
           "type": "click",
-          "selector": "#h-earth-b10-world-heading"
+          "selector": "#h-earth-functional-landscape-canvas"
         },
         "assertions": [
           {
-            "type": "textContains",
-            "selector": "#hud-position",
-            "value": "-139.4"
+            "type": "attributeEquals",
+            "selector": "#h-earth-functional-landscape-route",
+            "name": "data-run8e-ready",
+            "value": "true"
           },
           {
-            "type": "textContains",
-            "selector": "#hud-address",
-            "value": "R05:C04"
+            "type": "attributeEquals",
+            "selector": "#h-earth-loading-screen",
+            "name": "data-mode",
+            "value": "entered"
+          },
+          {
+            "type": "exists",
+            "selector": "#h-earth-functional-landscape-route:not([data-run8e-error=\"true\"])"
           }
         ],
         "timeoutMs": 15000
       }
-    ]
+    ],
+    "preReadyEntry": "H_EARTH_CONTROL_TEST_ENTER_V1"
   }
 }

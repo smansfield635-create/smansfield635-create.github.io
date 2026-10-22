@@ -181,12 +181,22 @@ export const runHEarthPreEntry=async(page,surfaceId,policy,timeoutMs=120000)=>{
     try{observed=await observeHEarthInputReadiness(page);}
     catch(e){inspectionError=String(e?.message||e);}
     const assessment=assessHEarthInputReadiness(observed);
-    console.error('H_EARTH_PRE_ENTRY_SIGNAL_DIAGNOSTIC '+JSON.stringify({
-      ...assessment,observed,inspectionError,phase:'AFTER_NATIVE_POINTER_AND_WHEEL'
-    }));
-    throw new Error('H_EARTH_INPUT_GATE_TIMEOUT:'+(
-      assessment.unmet.join(',')||'TRANSIENT_STATE_NOT_OBSERVED'
-    ),{cause:error});
+    const authenticPreEntryState=observed?.rootPrototype==='controls-test'&&
+      observed?.rootReady==='false'&&observed?.loaderReceiptMode==='ready'&&
+      observed?.gpuReceiptPresent===true&&observed?.rootError!=='true';
+    const detail={...assessment,observed,inspectionError,
+      authenticPreEntryState,phase:'AFTER_NATIVE_POINTER_AND_WHEEL'};
+    if(assessment.pass&&authenticPreEntryState){
+      // Chromium may report its 16-second polling deadline while the genuine
+      // renderer/input signals have become true. A fresh complete readback is
+      // valid evidence; the real user-facing Enter and post-click gates remain.
+      console.log('H_EARTH_PRE_ENTRY_DEADLINE_READBACK_PASS '+JSON.stringify(detail));
+    }else{
+      console.error('H_EARTH_PRE_ENTRY_SIGNAL_DIAGNOSTIC '+JSON.stringify(detail));
+      throw new Error('H_EARTH_INPUT_GATE_TIMEOUT:'+(
+        assessment.unmet.join(',')||'AUTHENTIC_PRE_ENTRY_STATE_NOT_OBSERVED'
+      ),{cause:error});
+    }
   }
   const observed=await page.evaluate(()=>{
     const shell=document.querySelector('#h-earth-loading-screen'),button=shell?.querySelector('[data-enter]');

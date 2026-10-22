@@ -106,6 +106,41 @@ export const validateHEarthPreEntryPolicy=(surfaceId,policy)=>{
   if(surfaceId!=='h-earth'||policy!==H_EARTH_PRE_ENTRY_POLICY)throw Error('H_EARTH_PRE_ENTRY_POLICY_INVALID');
   return policy;
 };
+export const assessHEarthInputReadiness=signals=>{
+  // These are independent observations of the existing user-facing entry contract.
+  const conditions={
+    loadingScreenReady:signals?.mode==='ready',
+    enterButtonEnabled:signals?.disabled===false,
+    cameraInputRecorded:signals?.inputChanged===true,
+    changedCameraFrameRendered:signals?.inputRendered===true,
+    animationFrameOpportunityObserved:signals?.nextFrame===true,
+    gpuFramebufferPresented:Number.isFinite(signals?.gpuFrames)&&signals.gpuFrames>0
+  };
+  const unmet=Object.keys(conditions).filter(key=>!conditions[key]);
+  return {schema:'H_EARTH_INPUT_READINESS_CONDITIONS_v1',pass:unmet.length===0,conditions,unmet};
+};
+export const observeHEarthInputReadiness=async page=>page.evaluate(()=>{
+  const root=document.querySelector('#h-earth-functional-landscape-route');
+  const shell=document.querySelector('#h-earth-loading-screen');
+  const button=shell?.querySelector('[data-enter]');
+  const input=globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.();
+  const gpu=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+  return {
+    mode:shell?.dataset.mode??null,disabled:button?.disabled??null,
+    inputChanged:Number.isFinite(input?.firstInputCameraChangeMilliseconds),
+    inputRendered:Number.isFinite(input?.firstInputPoseRenderedMilliseconds),
+    nextFrame:Number.isFinite(input?.nextAnimationFrameOpportunityMilliseconds),
+    gpuFrames:Number(gpu?.counters?.gpuFramebufferPresentationCount)||0,
+    rootPrototype:root?.dataset.singleOwnerPrototype??null,
+    rootReady:root?.dataset.run8eReady??null,
+    rootError:root?.dataset.run8eError??null,
+    loaderReceiptMode:input?.mode??null,
+    controlsEnabled:Number.isFinite(input?.controlsEnabledMilliseconds),
+    inputPoseSequence:input?.firstInputPose?.navigationSequence??null,
+    renderedPoseSequence:input?.renderedInputPose?.navigationSequence??null,
+    gpuReceiptPresent:Boolean(gpu)
+  };
+});
 export const runHEarthPreEntry=async(page,surfaceId,policy,timeoutMs=120000)=>{
   if(!validateHEarthPreEntryPolicy(surfaceId,policy))return null;
   // Follow the user-facing control test. Never set readiness attributes or invoke entry callbacks directly.
@@ -129,16 +164,30 @@ export const runHEarthPreEntry=async(page,surfaceId,policy,timeoutMs=120000)=>{
   try{await page.mouse.move(x+Math.min(bounds.width*.17,130),y+16,{steps:14});}
   finally{await page.mouse.up();}
   await page.mouse.wheel({deltaY:-360});
-  await page.waitForFunction(()=>{
-    const shell=document.querySelector('#h-earth-loading-screen'),button=shell?.querySelector('[data-enter]');
-    const input=globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.();
-    const gpu=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
-    return shell?.dataset.mode==='ready'&&button?.disabled===false&&
-      Number.isFinite(input?.firstInputCameraChangeMilliseconds)&&
-      Number.isFinite(input?.firstInputPoseRenderedMilliseconds)&&
-      Number.isFinite(input?.nextAnimationFrameOpportunityMilliseconds)&&
-      Number(gpu?.counters?.gpuFramebufferPresentationCount)>0;
-  },{timeout:16000});
+  try{
+    await page.waitForFunction(()=>{
+      const shell=document.querySelector('#h-earth-loading-screen'),button=shell?.querySelector('[data-enter]');
+      const input=globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.();
+      const gpu=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+      return shell?.dataset.mode==='ready'&&button?.disabled===false&&
+        Number.isFinite(input?.firstInputCameraChangeMilliseconds)&&
+        Number.isFinite(input?.firstInputPoseRenderedMilliseconds)&&
+        Number.isFinite(input?.nextAnimationFrameOpportunityMilliseconds)&&
+        Number(gpu?.counters?.gpuFramebufferPresentationCount)>0;
+    },{timeout:16000});
+  }catch(error){
+    // Report each predicate separately. Never change production state or fake readiness.
+    let observed=null,inspectionError=null;
+    try{observed=await observeHEarthInputReadiness(page);}
+    catch(e){inspectionError=String(e?.message||e);}
+    const assessment=assessHEarthInputReadiness(observed);
+    console.error('H_EARTH_PRE_ENTRY_SIGNAL_DIAGNOSTIC '+JSON.stringify({
+      ...assessment,observed,inspectionError,phase:'AFTER_NATIVE_POINTER_AND_WHEEL'
+    }));
+    throw new Error('H_EARTH_INPUT_GATE_TIMEOUT:'+(
+      assessment.unmet.join(',')||'TRANSIENT_STATE_NOT_OBSERVED'
+    ),{cause:error});
+  }
   const observed=await page.evaluate(()=>{
     const shell=document.querySelector('#h-earth-loading-screen'),button=shell?.querySelector('[data-enter]');
     const input=globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.();

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions} from './publication-live-verify.mjs';
+import {validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness} from './publication-live-verify.mjs';
 
 const POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
 function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed={},post={}}={}){
@@ -86,4 +86,41 @@ test('registered full H-Earth manifest keeps true readiness and selected user in
   assert.equal(m.runtime.preReadyEntry,POLICY);
   assert.deepEqual(m.runtime.readyAttribute,{selector:'#h-earth-functional-landscape-route',name:'data-run8e-ready',contains:'true'});
   assert.ok(m.runtime.interactions.some(x=>x.assertions.some(a=>a.name==='data-run8e-ready'&&a.value==='true')));
+});
+
+test('pre-entry diagnostic reports every individual missing readiness predicate',()=>{
+  const ready={mode:'ready',disabled:false,inputChanged:true,inputRendered:true,nextFrame:true,gpuFrames:2};
+  const clean=assessHEarthInputReadiness(ready);
+  assert.equal(clean.pass,true);
+  assert.deepEqual(clean.unmet,[]);
+  const cases=[
+    ['mode','test','loadingScreenReady'],
+    ['disabled',true,'enterButtonEnabled'],
+    ['inputChanged',false,'cameraInputRecorded'],
+    ['inputRendered',false,'changedCameraFrameRendered'],
+    ['nextFrame',false,'animationFrameOpportunityObserved'],
+    ['gpuFrames',0,'gpuFramebufferPresented']
+  ];
+  for(const [key,value,reason] of cases){
+    const result=assessHEarthInputReadiness({...ready,[key]:value});
+    assert.equal(result.pass,false,reason);
+    assert.deepEqual(result.unmet,[reason]);
+    assert.equal(result.conditions[reason],false);
+  }
+  const missing=assessHEarthInputReadiness(null);
+  assert.equal(missing.pass,false);
+  assert.equal(missing.unmet.length,6);
+});
+
+test('pre-entry timeout diagnoses missing signals without clicking Enter or changing user gate',async()=>{
+  const {page,calls}=fakePage({
+    timeoutAt:2,
+    observed:{mode:'test',disabled:true,inputChanged:true,inputRendered:false,nextFrame:false,gpuFrames:0}
+  });
+  await assert.rejects(
+    runHEarthPreEntry(page,'h-earth',POLICY),
+    /H_EARTH_INPUT_GATE_TIMEOUT:loadingScreenReady,enterButtonEnabled,changedCameraFrameRendered,animationFrameOpportunityObserved,gpuFramebufferPresented/
+  );
+  assert.ok(calls.includes('mouse.wheel'));
+  assert.ok(!calls.includes('click'));
 });

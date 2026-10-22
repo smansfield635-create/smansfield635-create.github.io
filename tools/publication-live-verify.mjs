@@ -153,32 +153,16 @@ export const runHEarthPreEntry=async(page,surfaceId,policy,timeoutMs=120000)=>{
   });
   if(observed.mode!=='ready'||observed.disabled||!observed.inputChanged||!observed.inputRendered||!observed.nextFrame||observed.gpuFrames<1)
     throw Error('H_EARTH_INPUT_FRAME_NOT_VERIFIED');
-  const inspectClickTarget=async stage=>page.evaluate(stage=>{
-    const root=document.querySelector('#h-earth-functional-landscape-route');
-    const shell=document.querySelector('#h-earth-loading-screen');
-    const button=shell?.querySelector('[data-enter]');
-    const rect=button?.getBoundingClientRect();
-    const hit=rect?document.elementFromPoint(rect.left+rect.width/2,rect.top+rect.height/2):null;
-    const receipt=globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.()??null;
-    return {stage,ready:root?.dataset.run8eReady??null,prototype:root?.dataset.singleOwnerPrototype??null,
-      routeError:root?.dataset.run8eError??null,loaderMode:shell?.dataset.mode??null,
-      loaderHidden:shell?.hidden??null,buttonDisabled:button?.disabled??null,
-      buttonPointerEvents:button?getComputedStyle(button).pointerEvents:null,
-      hitTag:hit?.tagName??null,hitIsButton:hit===button,hitDescription:hit?.getAttribute?.('data-enter')??null,
-      receiptMode:receipt?.mode??null,loaderDismissedMilliseconds:receipt?.loaderDismissedMilliseconds??null};
-  },stage);
-  console.log('H_EARTH_ENTER_PRE_CLICK '+JSON.stringify(await inspectClickTarget('BEFORE')));
   await page.click('#h-earth-loading-screen [data-enter]');
-  console.log('H_EARTH_ENTER_POST_CLICK '+JSON.stringify(await inspectClickTarget('AFTER')));
   await page.waitForFunction(()=>{
     const root=document.querySelector('#h-earth-functional-landscape-route');
     const shell=document.querySelector('#h-earth-loading-screen');
-    return root?.dataset.run8eReady==='true'&&root.dataset.singleOwnerPrototype==='manual-ready'&&shell?.dataset.mode==='entered'&&shell.hidden===true;
+    return root?.dataset.run8eReady==='true'&&root.dataset.singleOwnerPrototype==='manual-ready'&&globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'&&shell?.hidden===true;
   },{timeout:12000});
   const after=await page.evaluate(()=>{
     const root=document.querySelector('#h-earth-functional-landscape-route');
     const shell=document.querySelector('#h-earth-loading-screen');
-    return {ready:root?.dataset.run8eReady??null,mode:shell?.dataset.mode??null,hidden:shell?.hidden??false};
+    return {ready:root?.dataset.run8eReady??null,mode:globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode??null,overlayMode:shell?.dataset.mode??null,hidden:shell?.hidden??false};
   });
   if(after.ready!=='true'||after.mode!=='entered'||!after.hidden)throw Error('H_EARTH_ENTER_CALLBACK_NOT_OBSERVED');
   return {schema:'H_EARTH_NATIVE_INPUT_CONFIRMED_ENTRY_v1',result:'PASS',

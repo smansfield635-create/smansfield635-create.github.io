@@ -116,10 +116,8 @@
             "value": "true"
           },
           {
-            "type": "attributeEquals",
-            "selector": "#h-earth-loading-screen",
-            "name": "data-mode",
-            "value": "entered"
+            "type": "exists",
+            "selector": "#h-earth-loading-screen[hidden]"
           },
           {
             "type": "exists",

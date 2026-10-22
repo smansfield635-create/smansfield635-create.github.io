@@ -13,7 +13,7 @@ function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed=
       calls.push('evaluate');reads++;
       if(reads===1)return {mode:initialMode,ready:initialReady};
       if(reads===2)return {mode:'ready',disabled:false,inputChanged:true,inputRendered:true,nextFrame:true,gpuFrames:2,...observed};
-      return {ready:'true',mode:'entered',hidden:true,...post};
+      return {ready:'true',mode:'entered',overlayMode:'ready',hidden:true,...post};
     },
     $:async()=>{calls.push('select');return {boundingBox:async()=>{calls.push('boundingBox');return {x:0,y:0,width:720,height:1280};}};},
     mouse:{move:async()=>calls.push('mouse.move'),down:async()=>calls.push('mouse.down'),up:async()=>calls.push('mouse.up'),wheel:async()=>calls.push('mouse.wheel')},
@@ -67,6 +67,15 @@ test('blank GPU presentation rejects entry',async()=>{
   const {page,calls}=fakePage({observed:{gpuFrames:0}});
   await assert.rejects(runHEarthPreEntry(page,'h-earth',POLICY),/INPUT_FRAME_NOT_VERIFIED/);
   assert.ok(!calls.includes('click'));
+});
+test('authentic entered receipt and hidden overlay pass despite stale data-mode attribute',async()=>{
+  const {page}=fakePage({post:{mode:'entered',overlayMode:'ready',hidden:true}});
+  const receipt=await runHEarthPreEntry(page,'h-earth',POLICY);
+  assert.equal(receipt.entered,true);
+});
+test('loader receipt still ready rejects even with hidden overlay and world flag',async()=>{
+  const {page}=fakePage({post:{mode:'ready',overlayMode:'ready',ready:'true',hidden:true}});
+  await assert.rejects(runHEarthPreEntry(page,'h-earth',POLICY),/ENTER_CALLBACK_NOT_OBSERVED/);
 });
 test('missing authenticated post-click entry remains fail closed',async()=>{
   const {page}=fakePage({post:{ready:'false'}});

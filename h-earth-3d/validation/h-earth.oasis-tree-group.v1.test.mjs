@@ -122,9 +122,9 @@ test('Gen2857: original focus remains exact prefix of both restored group batche
   assert.equal(part.mesh.indices.length-span.indexCount,
    group.receipt.placements.filter(p=>p.id!==focus.id).reduce((n,p)=>n+p.spans[part.part].indexCount,0));
  }
- assert.match(source,/resources\\.jacaranda\\?\\.ready/);
- assert.match(source,/resources\\.jacaranda\\.draw\\(packet\\)/);
- assert.match(source,/resources\\.jacaranda\\?\\.dispose\\(\\)/);
+ assert.match(source,/resources\.jacaranda\?\.ready/);
+ assert.match(source,/resources\.jacaranda\.draw\(packet\)/);
+ assert.match(source,/resources\.jacaranda\?\.dispose\(\)/);
 });
 test('Gen2857: exact approved asset identity is bound while absent transfer leaves the original focus intact',async()=>{
  assert.equal(jacaranda.JACARANDA_APPROVED_SHA256,'46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189');

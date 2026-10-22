@@ -162,6 +162,7 @@ export const assessHEarthJacarandaScene=(resources,asset)=>{
     gpuResources:j?.textureCount===9&&j?.vertexArrayCount===3&&j?.programCount===1,
     threeCompanions:j?.threeCompanionsPreserved===true&&j?.placement?.companionsPreserved===true&&Number(resources?.oasisTrees?.drawCount)>0&&COMPANION_IDS.every(id=>ids.includes(id)&&gaps.includes(id))&&j.placement.gaps.every(g=>Number.isFinite(g.gapMeters)&&g.gapMeters>=0),
     existingEcology:['cavernUnderstory','cavernIvy','cavernPalms'].every(key=>Number(resources?.[key]?.drawCount)>0)&&['flower','fern','broadleaf'].every(kind=>resources?.cavernUnderstory?.placements?.some(p=>p.kind===kind)),
+    cavernAndRiver:Number(resources?.geologicalFormation?.attachedMeshCount)>0&&resources?.geologicalFormation?.designedFreshwaterRendered===true,
     unchangedWorld:j?.originalHydratedWorldUnchanged===true&&j?.perFrameGeometryConstruction===false
   };
   return {pass:Object.values(conditions).every(Boolean),conditions,unmet:Object.keys(conditions).filter(key=>!conditions[key])};
@@ -181,7 +182,7 @@ export const observeHEarthSceneAsset=(page,surfaceId,policy)=>{
 // Navigation receipts are updated by native input independently of animation frames.
 // Software rendering can delay RAF polling past the deadline despite real movement.
 export const waitForHEarthNavigation=async(page,sequence)=>{
-  const advanced=previous=>Number(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt()?.intake?.currentNavigationState?.sequence)>previous;
+  const advanced=previous=>Number(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt()?.currentNavigationState?.sequence)>previous;
   try{await page.waitForFunction(advanced,{timeout:15000,polling:100},sequence);}
   catch(error){
     if(error?.name!=='TimeoutError'||!await page.evaluate(advanced,sequence))throw error;
@@ -189,12 +190,38 @@ export const waitForHEarthNavigation=async(page,sequence)=>{
 };
 // Serializable predicate shared by the live wait and post-release readback.
 export const hasHEarthGoalProgress=({axis,target,tolerance,error,sequence,start})=>{
-  const n=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt()?.intake?.currentNavigationState;
+  const n=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt()?.currentNavigationState;
   const delta=(a,b)=>axis==='yawDegrees'?((a-b+540)%360)-180:a-b;
   const remaining=delta(target,n?.[axis]),progress=delta(n?.[axis],start);
   return n?.sequence>sequence&&Number.isFinite(remaining)&&Number.isFinite(progress)
     &&progress*Math.sign(error)>0
     &&(Math.abs(remaining)<=tolerance||Math.sign(remaining)!==Math.sign(error));
+};
+export const hasHEarthDirectionalProgress=({axis,error,sequence,start})=>{
+  const n=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt()?.currentNavigationState;
+  const progress=axis==='yawDegrees'?((n?.[axis]-start+540)%360)-180:n?.[axis]-start;
+  return n?.sequence>sequence&&Number.isFinite(progress)&&progress*Math.sign(error)>.1;
+};
+export const createHEarthBudget=(milliseconds,now=Date.now)=>{
+  const deadline=now()+milliseconds,timings=[];
+  const remaining=()=>Math.max(0,deadline-now());
+  const check=()=>{if(!remaining())throw Error('H_EARTH_SCENE_TIME_BUDGET_EXCEEDED');};
+  const run=async(label,action,cap=Infinity)=>{
+    check();const start=now();let timer;
+    try{return await Promise.race([Promise.resolve().then(action),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('H_EARTH_OPERATION_DEADLINE:'+label)),Math.min(cap,remaining()));})]);}
+    finally{clearTimeout(timer);timings.push({label,elapsedMs:now()-start});if(timings.length>300)timings.shift();}
+  };
+  return {check,run,remaining,timings};
+};
+export const closeHEarthBrowser=async(browser,timeoutMs=5000)=>{
+  try{await createHEarthBudget(timeoutMs).run('browser.close',()=>browser.close());}
+  catch(error){try{browser.process()?.kill('SIGKILL');}catch{}throw error;}
+};
+export const hasHEarthPresentedPose=({sequence,minimumFrame=0,minimumDraw=-1})=>{
+  const r=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt();
+  const f=r?.frameRecords?.at(-1);
+  return Number.isFinite(f?.frameSequence)&&f.frameSequence>minimumFrame&&f.navigationSequence===sequence
+    &&(minimumDraw<0||r?.resources?.jacaranda?.drawCount>minimumDraw);
 };
 export const pulseHEarthNavigation=async({page,read,box,bounded},dx,dy,goal)=>{
   bounded();const before=(await read()).navigation;
@@ -211,24 +238,25 @@ export const pulseHEarthNavigation=async({page,read,box,bounded},dx,dy,goal)=>{
   // Stop native input before inspecting the final receipt. Only an angular
   // timeout with verified movement in the requested direction can recover.
   if(failure){
-    if(!goal||failure.name!=='TimeoutError'||!await page.evaluate(hasHEarthGoalProgress,args))throw failure;
+    if(!goal||failure.name!=='TimeoutError'||!await page.evaluate(hasHEarthDirectionalProgress,args))throw failure;
   }
 };
-export const aimHEarthAxis=async({axis,target,tolerance,read,pulse,trace,now=Date.now})=>{
+export const aimHEarthAxis=async({axis,target,tolerance,read,pulse,trace,now=Date.now,bounded=()=>{}})=>{
   const delta=value=>axis==='yawDegrees'?((target-value+540)%360)-180:target-value;
-  const deadline=now()+90000;let stalled=0,reversals=0,previousError=null,best=Infinity;
+  let stalled=0,reversals=0,previousError=null,best=Infinity;
   for(let step=0;step<32;step++){
     const before=(await read()).navigation,error=delta(before[axis]);
     if(!Number.isFinite(error))throw Error('H_EARTH_AIM_INVALID_STATE:'+axis);
     if(Math.abs(error)<=tolerance)return;
-    if(now()>=deadline)throw Error('H_EARTH_AIM_DEADLINE:'+axis);
+    bounded();const stepStarted=now();
     const amplitude=axis==='yawDegrees'&&Math.abs(error)>20?.15:.061;
-    // A single native hold advances a bounded angle, not the entire remaining turn.
-    const increment=Math.sign(error)*Math.min(Math.abs(error),amplitude===.15?8:4);
+    // Aim at the requested heading; each hold remains time-bounded.
+    // Progress at a hold deadline is reconciled after releasing native input.
+    const increment=Math.sign(error)*Math.abs(error);
     const stepTarget=before[axis]+increment;
     await pulse(axis==='yawDegrees'?Math.sign(error)*amplitude:0,axis==='pitchDegrees'?-Math.sign(error)*amplitude:0,{axis,target:stepTarget,tolerance:.5,error:increment});
     const after=(await read()).navigation,nextError=delta(after[axis]);
-    trace.push({axis,target,before:before[axis],after:after[axis],beforeSequence:before.sequence,afterSequence:after.sequence,error:nextError});
+    trace.push({axis,target,before:before[axis],after:after[axis],beforeSequence:before.sequence,afterSequence:after.sequence,error:nextError,elapsedMs:now()-stepStarted});
     if(trace.length>160)trace.shift();
     if(!Number.isFinite(nextError))throw Error('H_EARTH_AIM_INVALID_STATE:'+axis);
     if(Math.abs(nextError)<=tolerance)return;
@@ -260,34 +288,40 @@ export const observeHEarthFailure=async(read)=>{
 };
 export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserver)=>{
   if(!validateHEarthScenePolicy(surfaceId,policy))return null;
-  const started=Date.now(),deadline=started+600000,views=[],images=[],aimTrace=[];
+  const started=Date.now(),budget=createHEarthBudget(600000),views=[],images=[],aimTrace=[];
+  const rawPage=page;
+  // Every scene browser call shares one deadline, including control RPCs.
+  const wrap=(object,prefix)=>new Proxy(object,{get(target,key){const value=target[key];return typeof value==='function'?(...args)=>budget.run(prefix+'.'+String(key),()=>value.apply(target,args)):value;}});
+  const mouse=wrap(page.mouse??{},'mouse');
+  page=new Proxy(page,{get(target,key){if(key==='mouse')return mouse;if(key==='browser')return target.browser.bind(target);const value=target[key];return typeof value==='function'?(...args)=>budget.run('page.'+String(key),()=>value.apply(target,args)):value;}});
   const check=(condition,message)=>{if(!condition)throw Error(message);};
-  const bounded=()=>check(Date.now()<deadline,'H_EARTH_SCENE_TIME_BUDGET_EXCEEDED');
-  const read=()=>page.evaluate(()=>{
+  const bounded=budget.check;
+  const snapshot=()=>page.evaluate(()=>{
     const r=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt();
     const all=r?.liveGpu?.resources;
-    const resources=all?Object.fromEntries(['jacaranda','oasisTrees','cavernUnderstory','cavernIvy','cavernPalms','geologicalFormation','woodlandClearing','woodlandFineGrass'].map(key=>[key,all[key]])):null;
-    return {mode:r?.mode,navigation:r?.intake?.currentNavigationState,resources,counters:r?.liveGpu?.counters,entered:window.H_EARTH_STARTUP_LOADER?.getReceipt()?.mode==='entered',ready:document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true'};
+    const resources=all?Object.fromEntries(['jacaranda','oasisTrees','cavernUnderstory','cavernIvy','cavernPalms','geologicalFormation','woodlandClearing','woodlandFineGrass','singleOwnerVegetation'].map(key=>[key,all[key]])):null;
+    return {mode:r?.mode,navigation:r?.intake?.currentNavigationState,resources,frame:r?.liveGpu?.frameRecords?.at(-1),counters:r?.liveGpu?.counters,entered:window.H_EARTH_STARTUP_LOADER?.getReceipt()?.mode==='entered',ready:document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true'};
   });
-  const initial=await read();
+  const read=()=>page.evaluate(()=>({navigation:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState}));
+  const initial=await snapshot();
   check(initial.mode==='manual-public'&&initial.entered&&initial.ready,'H_EARTH_SCENE_REQUIRES_GENUINE_ENTRY');
   check(assetObserver,'H_EARTH_SCENE_ASSET_OBSERVER_REQUIRED');
-  const canvas=await page.$('#h-earth-functional-landscape-canvas'),box=await canvas?.boundingBox();
+  const canvas=await page.$('#h-earth-functional-landscape-canvas'),box=await budget.run('canvas.bounds',()=>canvas?.boundingBox());
   check(box&&box.width>=250&&box.height>=180,'H_EARTH_SCENE_CANVAS_UNAVAILABLE');
   const difference=(a,b)=>((a-b+540)%360)-180;
   const pulse=(dx,dy,goal)=>pulseHEarthNavigation({page,read,box,bounded},dx,dy,goal);
   const aim=async(yaw,pitch)=>{
     bounded();
-    await aimHEarthAxis({axis:'yawDegrees',target:yaw,tolerance:6,read,pulse,trace:aimTrace});
-    if(pitch!==undefined)await aimHEarthAxis({axis:'pitchDegrees',target:pitch,tolerance:2.2,read,pulse,trace:aimTrace});
+    await aimHEarthAxis({axis:'yawDegrees',target:yaw,tolerance:6,read,pulse,trace:aimTrace,bounded});
+    if(pitch!==undefined)await aimHEarthAxis({axis:'pitchDegrees',target:pitch,tolerance:2.2,read,pulse,trace:aimTrace,bounded});
   };
   const travel=(tx,tz)=>travelHEarthScene({page,read,aim,bounded},tx,tz);
-  const capture=async name=>{
+  const capture=async(name,proof={})=>{
     bounded();
-    // Wait for the navigation pose to be actually presented before screenshot.
-    await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().liveGpu.frameScheduling?.pending!==true,{timeout:30000});
-    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-    const observation=await read();
+    const {navigation}=await read();
+    await page.waitForFunction(hasHEarthPresentedPose,{timeout:Math.min(30000,budget.remaining()),polling:250},{sequence:navigation.sequence,...proof});
+    const observation=await snapshot();
+    check(observation.frame?.navigationSequence===navigation.sequence&&observation.navigation.sequence===navigation.sequence,'H_EARTH_CAPTURE_POSE_CHANGED');
     const bytes=Buffer.from(await page.screenshot({type:'png'}));
     check(bytes.length>0&&bytes.length<=8*1024*1024,'H_EARTH_SCENE_SCREENSHOT_SIZE_INVALID');
     images.push({name,bytes});views.push({name,...observation,distanceToJacarandaMeters:Math.hypot(observation.navigation.position.x-55.5,observation.navigation.position.z+307.5),screenshotSha256:createHash('sha256').update(bytes).digest('hex'),screenshotBytes:bytes.length});
@@ -298,35 +332,40 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
     await travel(-145,-280);await travel(-60,-310);
     await aim(89,4);
     await page.waitForFunction(()=>['READY','FALLBACK'].includes(window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().resources.jacaranda?.state),{timeout:180000});
-    check((await read()).resources?.jacaranda?.state==='READY','H_EARTH_SCENE_JACARANDA_LOAD_FAILED');
+    check((await snapshot()).resources?.jacaranda?.state==='READY','H_EARTH_SCENE_JACARANDA_LOAD_FAILED');
+    const farBefore=await snapshot();
     await pulse(.065,0);await aim(89,4);
     await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().resources.jacaranda?.drawCount>0,{timeout:30000});
-    await capture('River group distant context');
+    await capture('River group distant context',{minimumFrame:farBefore.frame.frameSequence,minimumDraw:farBefore.resources.jacaranda.drawCount});
     await travel(40,-300);await aim(64,8);
     await page.waitForFunction(()=>['READY','FALLBACK'].includes(window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().resources.jacaranda?.state),{timeout:180000});
-    check((await read()).resources?.jacaranda?.state==='READY','H_EARTH_SCENE_JACARANDA_LOAD_FAILED');
+    check((await snapshot()).resources?.jacaranda?.state==='READY','H_EARTH_SCENE_JACARANDA_LOAD_FAILED');
     // Loading does not itself force a presentation. A real look pulse draws it.
+    const nearBefore=await snapshot();
     await pulse(.065,0);await aim(64,8);
     await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().resources.jacaranda?.drawCount>0,{timeout:30000});
-    await capture('Approved Jacaranda near');
+    await capture('Approved Jacaranda near',{minimumFrame:nearBefore.frame.frameSequence,minimumDraw:nearBefore.resources.jacaranda.drawCount});
     await aim(160,2);await capture('River cavern flowers and palms');
-    const assets=await assetObserver.finish();
-    const final=await read(),assessment=assessHEarthJacarandaScene(final.resources,assets.find(a=>a.sha256===JACARANDA_SHA256));
+    const assets=await budget.run('asset.finish',()=>assetObserver.finish());
+    const final=await snapshot(),assessment=assessHEarthJacarandaScene(final.resources,assets.find(a=>a.sha256===JACARANDA_SHA256));
     check(assessment.pass,'H_EARTH_SCENE_ASSERTION_FAILED:'+assessment.unmet.join(','));
     const near=views.find(v=>v.name==='Approved Jacaranda near'),far=views.find(v=>v.name==='River group distant context');
+    check(views.some(v=>Number(v.resources?.singleOwnerVegetation?.drawCallCount)>0&&Number(v.resources?.singleOwnerVegetation?.installedRootCount)>0),'H_EARTH_SCENE_GRASS_DRAW_MISSING');
     check(near?.distanceToJacarandaMeters<25&&far?.distanceToJacarandaMeters>80&&far.distanceToJacarandaMeters<140&&[near,far].every(v=>v.resources?.jacaranda?.state==='READY'&&v.resources.jacaranda.drawCount>0),'H_EARTH_SCENE_NEAR_FAR_PROOF_MISSING');
     result={schema:'H_EARTH_APPROVED_JACARANDA_SCENE_OBSERVATION_v1',result:'RUNTIME_PASS_VISUAL_REVIEW_PENDING',assessment,assets,views,elapsedMs:Date.now()-started,physicalDeviceAcceptance:false,ownerPerceptualAcceptance:false,publicationAuthorized:false};
   }catch(error){
-    const failureObservation=await observeHEarthFailure(read);
-    console.error('H_EARTH_SCENE_FAILURE_STATE '+JSON.stringify({failureObservation,aimTrace}));
+    const recovery=createHEarthBudget(10000);
+    try{await recovery.run('failure.release',()=>rawPage.mouse.up(),2000);}catch{}
+    const failureObservation=await observeHEarthFailure(()=>recovery.run('failure.read',()=>rawPage.evaluate(()=>({navigation:window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getIntakeReceipt()?.currentNavigationState,jacaranda:window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.jacaranda})))) ;
+    console.error('H_EARTH_SCENE_FAILURE_STATE '+JSON.stringify({failureObservation,aimTrace,timings:budget.timings}));
     result={schema:'H_EARTH_APPROVED_JACARANDA_SCENE_OBSERVATION_v1',result:'FAIL',failure:String(error.stack||error),failureObservation,aimTrace,views,elapsedMs:Date.now()-started,physicalDeviceAcceptance:false,publicationAuthorized:false};
   }
   // Reuse the existing uploaded PNG artifact: labeled unaltered scene captures
   // are assembled in a separate evidence document, never in the product page.
-  if(images.length){
+  try{if(images.length&&budget.remaining()>0){
     const directory=process.env.RUNNER_TEMP;
     check(directory,'H_EARTH_SCENE_RUNNER_TEMP_REQUIRED');
-    const sheet=await page.browser().newPage();
+    const rawSheet=await budget.run('evidence.page',()=>page.browser().newPage()),sheet=wrap(rawSheet,'evidence');
     try{
       await sheet.setViewport({width:1280,height:images.length*836,deviceScaleFactor:1});
       await sheet.setContent('<html><body style="margin:0;background:#111;color:white;font:20px sans-serif">'+images.map(({name,bytes})=>'<section style="height:836px;display:flex;flex-direction:column;align-items:center"><div style="height:36px">'+name+'</div><img style="height:800px;max-width:1280px;object-fit:contain" src="data:image/png;base64,'+bytes.toString('base64')+'"></section>').join('')+'</body></html>');
@@ -334,8 +373,10 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
       const output=`${directory}/publication-preflight-screenshot.png`;
       await sheet.screenshot({path:output,fullPage:true});
       result.screenshotEvidence={file:'publication-preflight-screenshot.png',bytes:fs.statSync(output).size,sha256:createHash('sha256').update(fs.readFileSync(output)).digest('hex'),kind:'LABELED_ACTUAL_VIEW_CONTACT_SHEET'};
-    }finally{await sheet.close();}
-  }
+    }finally{try{await createHEarthBudget(2000).run('evidence.close',()=>rawSheet.close());}catch{}}
+  }}catch(error){result.result='FAIL';result.evidenceError=String(error.stack||error);}
+  if(result.result!=='FAIL'&&!result.screenshotEvidence){result.result='FAIL';result.evidenceError='SCREENSHOT_EVIDENCE_MISSING';}
+  result.timings=budget.timings;
   return result;
 };
 
@@ -714,7 +755,8 @@ export const main=async()=>{
     console.log(JSON.stringify(receipt,null,2));
     if(failures.length)process.exitCode=1;
   }finally{
-    await browser.close();
+    if(manifest.surfaceId==='h-earth'&&spec.sceneQualification===H_EARTH_SCENE_POLICY)await closeHEarthBrowser(browser);
+    else await browser.close();
   }
 };
 

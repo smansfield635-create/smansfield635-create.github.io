@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {launchSurfaceBrowser,launchVerifiedBrowser,travelHEarthScene,pulseHEarthNavigation,aimHEarthAxis,observeHEarthFailure,waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
+import {closeHEarthBrowser,createHEarthBudget,hasHEarthPresentedPose,launchSurfaceBrowser,launchVerifiedBrowser,travelHEarthScene,pulseHEarthNavigation,aimHEarthAxis,observeHEarthFailure,waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
 
 const POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
 function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed={},post={}}={}){
@@ -166,7 +166,7 @@ function qualifiedScene(){
       loadedGeometry:{triangles:454746,vertices:651794,assetLength:33184612},textureCount:9,vertexArrayCount:3,programCount:1,
       threeCompanionsPreserved:true,placement:{companionsPreserved:true,gaps:companions.map(id=>({id,gapMeters:1}))},
       originalHydratedWorldUnchanged:true,perFrameGeometryConstruction:false},
-    oasisTrees:{drawCount:1,placements:companions.map(id=>({id}))},cavernUnderstory:{drawCount:1,placements:['flower','fern','broadleaf'].map(kind=>({kind}))},cavernIvy:{drawCount:1},cavernPalms:{drawCount:1}
+    geologicalFormation:{attachedMeshCount:4,designedFreshwaterRendered:true},singleOwnerVegetation:{drawCallCount:2,installedRootCount:100},woodlandFineGrass:null,oasisTrees:{drawCount:1,placements:companions.map(id=>({id}))},cavernUnderstory:{drawCount:1,placements:['flower','fern','broadleaf'].map(kind=>({kind}))},cavernIvy:{drawCount:1},cavernPalms:{drawCount:1}
   }};
 }
 test('target scene qualification is fixed, optional and exclusive to full H-Earth',async()=>{
@@ -234,7 +234,7 @@ test('navigation execution errors cannot be overridden by deadline readback',asy
 
 test('aim tracks actual pitch progress to target with bounded genuine-input pulses',async()=>{
  let value=16,sequence=1,pulses=0;const trace=[];
- await aimHEarthAxis({axis:'pitchDegrees',target:4,tolerance:2.2,trace,read:async()=>({navigation:{pitchDegrees:value,sequence}}),pulse:async(dx,dy,goal)=>{assert.equal(dx,0);assert.ok(dy>0);assert.equal(goal.target,value-4);value-=4;sequence++;pulses++;}});
+ await aimHEarthAxis({axis:'pitchDegrees',target:4,tolerance:2.2,trace,read:async()=>({navigation:{pitchDegrees:value,sequence}}),pulse:async(dx,dy,goal)=>{assert.equal(dx,0);assert.ok(dy>0);assert.equal(goal.target,4);value-=4;sequence++;pulses++;}});
  assert.equal(pulses,3);assert.equal(trace.length,3);
 });
 test('aim rejects unchanged angles despite advancing sequence after three pulses',async()=>{
@@ -257,10 +257,10 @@ test('failure observation survives expired scene budget and exposes read errors'
  const r=await observeHEarthFailure(async()=>{throw Error('page closed');});assert.equal(r.observation,null);assert.match(r.error,/page closed/);
 });
 
-test('large turns use bounded angular holds rather than one full-turn deadline',async()=>{
+test('large turns target the final heading without artificial small-angle restarts',async()=>{
  let value=-4,sequence=1;const trace=[],goals=[];
- await aimHEarthAxis({axis:'yawDegrees',target:72,tolerance:6,trace,read:async()=>({navigation:{yawDegrees:value,sequence}}),pulse:async(dx,dy,goal)=>{assert.ok(dx>0);assert.equal(dy,0);assert.ok(goal.target-value<=(dx===.15?8:4));goals.push(goal.target);value=goal.target;sequence++;}});
- assert.ok(goals.length>1);assert.ok(Math.abs(value-72)<=6);assert.equal(goals[0],4);
+ await aimHEarthAxis({axis:'yawDegrees',target:72,tolerance:6,trace,read:async()=>({navigation:{yawDegrees:value,sequence}}),pulse:async(dx,dy,goal)=>{assert.ok(dx>0);assert.equal(dy,0);assert.equal(goal.target,72);goals.push(goal.target);value=goal.target;sequence++;}});
+ assert.equal(goals.length,1);assert.ok(Math.abs(value-72)<=6);assert.equal(goals[0],72);
 });
 
 // Exercise the production pulse adapter, including pointer release and the exact
@@ -269,7 +269,7 @@ const pulseHarness=({initial=2.341926056139427,final=-4.685275481946448,axis='ya
  const state={yawDegrees:initial,pitchDegrees:0,sequence:5};const events=[];
  const evaluate=(fn,args)=>{
   const previous=globalThis.window;
-  globalThis.window={H_EARTH_RUN8E_PUBLIC_ROUTE:{getReceipt:()=>({intake:{currentNavigationState:state}})}};
+  globalThis.window={H_EARTH_RUN8E_PUBLIC_ROUTE:{getIntakeReceipt:()=>({currentNavigationState:state})}};
   try{return fn(args);}finally{globalThis.window=previous;}
  };
  const error=Object.assign(Error(failure),{name:failure});
@@ -313,7 +313,7 @@ for(const frameMs of [50,1000])test('production traversal with real intake and '
   emit(k,extra={}){this.listeners.get(k)?.({preventDefault(){},pointerId:1,pointerType:'mouse',clientX:x,clientY:y,...extra});}
  }
  const surface=new Surface();
- const globals={HTMLElement:Surface,location:{search:'?arrival=approved-four-trees'},document:{hidden:false},performance:{now:()=>clock},requestAnimationFrame:fn=>{frame=fn;return 1;},cancelAnimationFrame:()=>{},window:{H_EARTH_RUN8E_PUBLIC_ROUTE:{getReceipt:()=>({intake:controller.getReceipt()})}}};
+ const globals={HTMLElement:Surface,location:{search:'?arrival=approved-four-trees'},document:{hidden:false},performance:{now:()=>clock},requestAnimationFrame:fn=>{frame=fn;return 1;},cancelAnimationFrame:()=>{},window:{H_EARTH_RUN8E_PUBLIC_ROUTE:{getIntakeReceipt:()=>controller.getReceipt()}}};
  for(const [k,value] of Object.entries(globals))Object.defineProperty(globalThis,k,{value,configurable:true,writable:true});
  try{
   controller=installHEarthRun8ER3D2PointerTouchIntake({surface});
@@ -397,4 +397,75 @@ test('startup diagnostic is limited to the declared H-Earth scene qualification'
  await launchSurfaceBrowser({...args,surfaceId:'audralia',scenePolicy:manifest.runtime.sceneQualification});
  await launchSurfaceBrowser({...args,surfaceId:'h-earth'});
  assert.equal(diagnostic,1);assert.equal(normal,2);
+});
+
+test('recorded progressing turn survives delayed calls within shared budget',async()=>{
+ const values=[-10.385162542606775,4.007637457392805,18.407637457392806,32.80043745739449,47.200437457394486,61.600437457394484,69];let index=0,clock=0;
+ const budget=createHEarthBudget(600000,()=>clock),trace=[];
+ await aimHEarthAxis({axis:'yawDegrees',target:69.8823026634447,tolerance:6,read:async()=>({navigation:{yawDegrees:values[index],sequence:index}}),pulse:async()=>{index++;clock+=19000;},trace,now:()=>clock,bounded:budget.check});
+ assert.equal(clock,114000);assert.equal(trace.length,6);assert.ok(trace.every(t=>t.elapsedMs===19000));
+});
+test('shared budget rejects a hung browser call without awaiting its completion',async()=>{
+ const budget=createHEarthBudget(15);await assert.rejects(budget.run('hung',()=>new Promise(()=>{})),/OPERATION_DEADLINE:hung/);
+ assert.equal(budget.timings[0].label,'hung');
+});
+test('frame proof rejects absent metadata, wrong pose and stale drawing',()=>{
+ const old=globalThis.window;let receipt={};globalThis.window={H_EARTH_RUN8E_PUBLIC_ROUTE:{getLiveGpuReceipt:()=>receipt}};
+ try{
+  const proof={sequence:4,minimumFrame:3,minimumDraw:5};assert.equal(hasHEarthPresentedPose(proof),false);
+  receipt={frameRecords:[{frameSequence:4,navigationSequence:3}],resources:{jacaranda:{drawCount:6}}};assert.equal(hasHEarthPresentedPose(proof),false);
+  receipt.frameRecords[0].navigationSequence=4;receipt.resources.jacaranda.drawCount=5;assert.equal(hasHEarthPresentedPose(proof),false);
+  receipt.resources.jacaranda.drawCount=6;assert.equal(hasHEarthPresentedPose(proof),true);
+ }finally{globalThis.window=old;}
+});
+
+// Full production orchestration with a deterministic browser port. Actual native
+// controller dynamics are covered above; this covers the previously omitted
+// asset, draw refresh, frame identity, screenshot and failure-packaging stages.
+for(const scenario of ['pass','delayed-pass','fallback','stale-frame','asset-error','capture-error','packaging-error','missing-river','missing-grass'])test('complete scene orchestration: '+scenario,async()=>{
+ let virtualTime=0;const realNow=Date.now;if(scenario==='delayed-pass')Date.now=()=>virtualTime;
+ const scene=qualifiedScene(),r=scene.resources;let n={sequence:1,position:{x:-139.4,y:8,z:-194.5},yawDegrees:0,pitchDegrees:16};let frame=1,dx=0,dy=0,down=false,screens=0,fullReads=0,intakeReads=0;
+ r.jacaranda.state='IDLE';r.jacaranda.drawCount=0;
+ if(scenario==='missing-river')r.geologicalFormation.designedFreshwaterRendered=false;
+ if(scenario==='missing-grass')r.singleOwnerVegetation.drawCallCount=0;
+ const present=()=>{frame++;if(Math.hypot(n.position.x-55.5,n.position.z+307.5)<=180)r.jacaranda.state=scenario==='fallback'?'FALLBACK':'READY';if(r.jacaranda.state==='READY')r.jacaranda.drawCount++;};
+ const gpu=()=>({resources:r,frameRecords:[{frameSequence:frame,navigationSequence:scenario==='stale-frame'?0:n.sequence}],counters:{}});
+ const oldWindow=globalThis.window,oldDocument=globalThis.document,oldTemp=process.env.RUNNER_TEMP;
+ const temp=fs.mkdtempSync('/tmp/gratitude-orchestration-');process.env.RUNNER_TEMP=temp;
+ globalThis.window={H_EARTH_RUN8E_PUBLIC_ROUTE:{getIntakeReceipt:()=>{intakeReads++;return {currentNavigationState:n};},getLiveGpuReceipt:gpu,getReceipt:()=>{fullReads++;return {mode:'manual-public',intake:{currentNavigationState:n},liveGpu:gpu()};}},H_EARTH_STARTUP_LOADER:{getReceipt:()=>({mode:'entered'})}};
+ globalThis.document={querySelector:()=>({dataset:{run8eReady:'true'}})};
+ const clone=v=>JSON.parse(JSON.stringify(v));
+ const sheet={setViewport:async()=>{},setContent:async()=>{if(scenario==='packaging-error')throw Error('sheet failed');},waitForFunction:async()=>{},screenshot:async({path})=>fs.writeFileSync(path,'test png'),close:async()=>{}};
+ const page={evaluate:async(fn,args)=>clone(await fn(args)),$:async()=>({boundingBox:async()=>({x:0,y:0,width:1000,height:800})}),browser:()=>({newPage:async()=>sheet}),
+  screenshot:async()=>{if(scenario==='capture-error')throw Error('capture failed');screens++;return Buffer.from('test capture');},
+  mouse:{move:async(x,y)=>{dx=(x-500)/1000;dy=(y-400)/800;},down:async()=>{down=true;},up:async()=>{down=false;},wheel:async({deltaY})=>{const distance=Math.min(10,Math.abs(deltaY)/70),angle=n.yawDegrees*Math.PI/180;n={...n,sequence:n.sequence+1,position:{...n.position,x:n.position.x+Math.sin(angle)*distance,z:n.position.z-Math.cos(angle)*distance}};present();}},
+  waitForFunction:async(fn,options,args)=>{
+   for(let k=0;k<100;k++){
+    if(fn(args))return;
+    if(down){n={...n,sequence:n.sequence+1,yawDegrees:n.yawDegrees+Math.sign(dx)*2,pitchDegrees:n.pitchDegrees-Math.sign(dy)*2};present();}
+    else break;
+   }
+   throw Object.assign(Error('fixture wait timeout'),{name:'TimeoutError'});
+  }};
+ try{
+  const observer={finish:async()=>{if(scenario==='asset-error')throw Error('asset buffer failed');return [scene.asset];}};
+  const delayed=target=>new Proxy(target,{get(t,k){const value=t[k];if(k==='mouse')return delayed(value);return typeof value==='function'?(...args)=>{virtualTime+=500;return value.apply(t,args);}:value;}});
+  const result=await runHEarthSceneQualification(scenario==='delayed-pass'?delayed(page):page,'h-earth',SCENE_POLICY,observer);
+  assert.equal(result.result,scenario.endsWith('pass')?'RUNTIME_PASS_VISUAL_REVIEW_PENDING':'FAIL');
+  assert.equal(down,false);assert.ok(result.timings.length>0);
+  if(scenario.endsWith('pass')){assert.equal(screens,4);assert.equal(result.views.length,4);assert.ok(result.screenshotEvidence);assert.ok(intakeReads>fullReads);assert.ok(result.views[2].resources.jacaranda.drawCount>result.views[1].resources.jacaranda.drawCount);}
+  if(scenario==='packaging-error')assert.match(result.evidenceError,/sheet failed/);
+  if(scenario==='asset-error')assert.match(result.failure,/asset buffer failed/);
+ }finally{Date.now=realNow;globalThis.window=oldWindow;globalThis.document=oldDocument;if(oldTemp===undefined)delete process.env.RUNNER_TEMP;else process.env.RUNNER_TEMP=oldTemp;fs.rmSync(temp,{recursive:true,force:true});}
+});
+
+test('hung browser cleanup is bounded and attempts process termination',async()=>{
+ let killed=false;await assert.rejects(closeHEarthBrowser({close:()=>new Promise(()=>{}),process:()=>({kill:()=>{killed=true;}})},10),/browser.close/);assert.equal(killed,true);
+});
+test('a partial angular timeout is progress, not final-angle acceptance',async()=>{
+ const h=pulseHarness({final:1});await pulseHEarthNavigation(h.adapter,-.061,0,recordedGoal);assert.equal(h.events.at(-1),'readback');
+});
+test('the shared scene deadline still stops a progressing turn',async()=>{
+ let clock=0,angle=0;const budget=createHEarthBudget(20,()=>clock);
+ await assert.rejects(aimHEarthAxis({axis:'yawDegrees',target:90,tolerance:6,read:async()=>({navigation:{yawDegrees:angle,sequence:angle}}),pulse:async()=>{angle+=5;clock+=21;},trace:[],now:()=>clock,bounded:budget.check}),/TIME_BUDGET_EXCEEDED/);
 });

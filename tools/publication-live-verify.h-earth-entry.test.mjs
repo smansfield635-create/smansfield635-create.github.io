@@ -73,7 +73,7 @@ test('missing authenticated post-click entry remains fail closed',async()=>{
   await assert.rejects(runHEarthPreEntry(page,'h-earth',POLICY),/ENTER_CALLBACK_NOT_OBSERVED/);
 });
 test('registered full H-Earth manifest keeps true readiness and selected user interaction',()=>{
-  const m=JSON.parse(fs.readFileSync(new URL('../.github/ai-router/publication-surfaces/h-earth.json',import.meta.url),'utf8'));
+  const m=JSON.parse(fs.readFileSync('.github/ai-router/publication-surfaces/h-earth.json','utf8'));
   assert.equal(m.runtime.preReadyEntry,POLICY);
   assert.deepEqual(m.runtime.readyAttribute,{selector:'#h-earth-functional-landscape-route',name:'data-run8e-ready',contains:'true'});
   assert.ok(m.runtime.interactions.some(x=>x.assertions.some(a=>a.name==='data-run8e-ready'&&a.value==='true')));

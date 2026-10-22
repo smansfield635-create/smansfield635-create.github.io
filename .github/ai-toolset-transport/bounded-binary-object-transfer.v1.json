@@ -1,19 +1,23 @@
 {
   "schema": "BOUNDED_BINARY_OBJECT_TRANSFER_DESCRIPTOR_v1",
   "id": "BOUNDED_BINARY_OBJECT_TRANSFER_V1",
-  "version": "1.0.0",
-  "status": "QUALIFIED_CANDIDATE_PENDING_ADOPTION_AND_LIVE_PROOF",
-  "purpose": "Reconstruct an exact binary from already-created bounded Git blob chunks and attach it to one exact non-production transfer branch under SHA-256 and exact-head guards.",
+  "version": "1.1.0-candidate",
+  "status": "PACKET_INGRESS_CANDIDATE_LEGACY_MODE_OPERATIONALLY_PROVEN",
+  "purpose": "Attach one exact binary to one exact non-production transfer branch either from already-created bounded Git blob chunks or from owner-authenticated hash-bound inert packet comments, under SHA-256, Git-blob-identity, exact-head, and destination-readback guards.",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "invocation": {
     "issueNumber": 1323,
-    "marker": "BOUNDED_BINARY_OBJECT_TRANSFER_REQUEST_V1",
+    "legacyMarker": "BOUNDED_BINARY_OBJECT_TRANSFER_REQUEST_V1",
+    "packetMarker": "BOUNDED_BINARY_PACKET_V1",
+    "packetIngressFinalizationMarker": "BOUNDED_BINARY_PACKET_INGRESS_REQUEST_V1",
     "authorizedActor": "smansfield635-create",
     "workflowPath": ".github/workflows/bounded-binary-object-transfer-v1.yml",
     "implementationPath": "tools/ai-room-transport/bounded-binary-object-transfer.v1.mjs",
     "testPath": "tools/ai-room-transport/bounded-binary-object-transfer.v1.test.mjs"
   },
   "inputSchema": "BOUNDED_BINARY_OBJECT_TRANSFER_MANIFEST_v1",
+  "packetIngressInputSchema": "BOUNDED_BINARY_PACKET_INGRESS_MANIFEST_v1",
+  "packetSchema": "BOUNDED_BINARY_PACKET_v1",
   "outputSchema": "BOUNDED_BINARY_OBJECT_TRANSFER_RECEIPT_v1",
   "targetLaw": {
     "branchPrefix": "transfer/",
@@ -24,16 +28,35 @@
     "normalizedRepositoryRelativeDestinationRequired": true
   },
   "binaryLaw": {
-    "chunkGitBlobShaRequired": true,
-    "chunkSha256Required": true,
-    "chunkByteLengthRequired": true,
-    "contiguousZeroBasedChunkOrderRequired": true,
+    "legacyChunkGitBlobShaRequired": true,
+    "legacyChunkSha256Required": true,
+    "legacyChunkByteLengthRequired": true,
+    "contiguousZeroBasedOrderRequired": true,
     "finalSha256Required": true,
     "finalByteLengthRequired": true,
+    "finalGitBlobIdentityRequired": true,
     "finalUnreferencedBlobReadbackRequired": true,
     "destinationReadbackRequired": true,
-    "recommendedRawChunkBytes": 524288,
-    "maximumChunkCount": 4096
+    "recommendedLegacyRawChunkBytes": 524288,
+    "maximumLegacyChunkCount": 4096
+  },
+  "packetIngressLaw": {
+    "packetCommentsAreInert": true,
+    "onlyFinalizationMarkerTriggersExecution": true,
+    "exactPacketCommentIdRequired": true,
+    "packetIssueBoundToInvocationIssue": true,
+    "packetActorBoundToAuthorizedActor": true,
+    "packetTransferIdRequired": true,
+    "packetByteLengthRequired": true,
+    "packetSha256Required": true,
+    "packetCanonicalBase64Required": true,
+    "packetOrderContiguousZeroBased": true,
+    "duplicatePacketCommentsRejected": true,
+    "maximumRawPacketBytes": 32768,
+    "maximumPacketCount": 4096,
+    "corruptMissingDuplicateOrOutOfOrderFailsClosed": true,
+    "completePayloadSha256VerifiedBeforeGitBlobCreation": true,
+    "completePayloadGitBlobIdentityVerifiedAfterCreation": true
   },
   "authorityBoundary": {
     "arbitraryCommandAuthority": false,
@@ -41,23 +64,39 @@
     "productSemanticAuthority": false,
     "mergeAuthority": false,
     "deploymentAuthority": false,
-    "repositoryScope": "ONE_REPOSITORY_ONE_TRANSFER_BRANCH_ONE_DESTINATION_PER_REQUEST"
+    "packetCommentCreatesExecutionAuthority": false,
+    "repositoryScope": "ONE_REPOSITORY_ONE_TRANSFER_BRANCH_ONE_DESTINATION_PER_FINALIZATION_REQUEST"
+  },
+  "precedent": {
+    "legacyCarrierIssue": 1323,
+    "legacyOperationalProof": "PASS_OPERATIONALLY_PROVEN",
+    "fileIngressAdapterMerge": "4e2ab91a18ab6a36fd47b83f794267a896d86fde",
+    "fileIngressAdapterPath": "tools/ai-room-transport/bounded-binary-file-ingress.v1.mjs",
+    "reuseLaw": "REUSE_FILE_TO_GIT_OBJECT_HASH_BINDING_AND_LEGACY_TRANSFER_CONTRACT; ADD_ONLY_CROSS_ENVIRONMENT_PACKET_BRIDGE"
   },
   "qualification": {
-    "candidateSelfTestRun": 32204412811,
-    "candidateSelfTestResult": "PASS",
-    "activeToolsetConformanceRun": 32204412936,
-    "activeToolsetConformanceResult": "PASS",
+    "legacyCandidateSelfTestRun": 32204412811,
+    "legacyCandidateSelfTestResult": "PASS",
+    "legacyActiveToolsetConformanceRun": 32204412936,
+    "legacyActiveToolsetConformanceResult": "PASS",
     "realUnreferencedChunkFixture": {
       "bytes": 38,
       "sha256": "ac71d46b0573fc76668cc7449797b1dc2e4f5b48c33ea65aebfd066193ac39f6",
       "gitBlobSha": "e849be941456ba6f6865746c777f421adb2cc4d0",
       "createBlobIdentityMatchedLocallyComputedGitBlobSha": true
+    },
+    "packetIngressCandidate": {
+      "status": "PENDING_EXACT_HEAD_SELF_TEST_AND_PRODUCTION_ACCEPTANCE",
+      "requiredRegression": "EXISTING_ISSUE1323_MANIFEST_MODE_UNCHANGED_AND_PASSING",
+      "productionAcceptanceBytes": 1498587,
+      "productionAcceptanceSha256": "4d351ce55d186f9448e9702e2a961083cb53005ca70b4d8f5add5aeb90e309da",
+      "productionAcceptanceGitBlob": "e624773dcf0a2f3d51460e890a28178305b47ee2"
     }
   },
   "operationalProof": {
-    "requiredBeforeActiveClaim": true,
-    "requiredFixture": "REAL_UNREFERENCED_BINARY_GIT_BLOB_CHUNK_TO_TRANSFER_BRANCH_WITH_FINAL_SHA256_READBACK",
-    "status": "PENDING_POST_ADOPTION_LIVE_TRANSFER"
+    "legacyStatus": "PASS_OPERATIONALLY_PROVEN",
+    "packetIngressRequiredBeforeActiveClaim": true,
+    "packetIngressRequiredFixture": "OWNER_AUTHENTICATED_PACKET_SET_TO_EXACT_TRANSFER_BRANCH_WITH_FINAL_SHA256_AND_GIT_BLOB_READBACK",
+    "packetIngressStatus": "PENDING_CANDIDATE_QUALIFICATION_AND_CHAPTER02_ACCEPTANCE_SPECIMEN"
   }
 }

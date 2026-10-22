@@ -1,0 +1,81 @@
+{
+  "schema": "H_EARTH_JACARANDA_LIVE_EVIDENCE_v1",
+  "operationId": "H_EARTH_APPROVED_JACARANDA_BASELINE_RECOVERY_20261021_001",
+  "authorityGeneration": 2857,
+  "status": "SOURCE_STAGED_BINARY_UPLOAD_AND_REAL_BROWSER_VERIFICATION_PENDING",
+  "baseline": "b49ec479ffc95f0ccd64b3295a9ffd976c8a85e1",
+  "preparedBranch": "gratitude-jacaranda-recovered-20261021",
+  "exactApprovedAsset": {
+    "path": "showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb",
+    "sha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189",
+    "gitBlobSha": "863f6bfd54e4e2090af17940c5901ae07366f016",
+    "bytes": 33184612,
+    "primitives": 3,
+    "textureImages": 9,
+    "triangles": 454746,
+    "vertices": 651794,
+    "library": "libfile_5a57992884d48191a5ce4312ea7d94f0",
+    "githubCommitted": false
+  },
+  "stagedCode": {
+    "adapter": {
+      "path": "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+      "blob": "2aa1e774d75fd29c640f71d0864b79dae2340d19"
+    },
+    "renderer": {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "blob": "98d8eeb5e38de34998ac7eb9a6a06ffd1fc674ae"
+    },
+    "testsPath": "h-earth-3d/validation/h-earth.oasis-tree-group.v1.test.mjs"
+  },
+  "offlineLocalValidation": {
+    "nodeTests": 9,
+    "passed": 9,
+    "failed": 0,
+    "liveBrowserTests": 0,
+    "deviceTests": 0,
+    "includes": [
+      "exact GLB bytes and hash",
+      "primitive attribute and embedded texture census",
+      "finite indexed normals and UVs",
+      "dry placement and three companion crown gaps",
+      "failure rejection",
+      "fallback on asset HTTP error",
+      "mock WebGL upload/draw/complete resource disposal"
+    ],
+    "scope": "OFFLINE_NODE_AND_MOCK_GPU_ONLY"
+  },
+  "measuredDesign": {
+    "target": "PROPOSED_OASIS_01",
+    "anchor": {
+      "x": 55.5,
+      "z": -307.5
+    },
+    "scale": 0.61,
+    "estimatedHeightMeters": 11.8561,
+    "crownWidthMeters": 14.8481,
+    "companionCrownAabbGapsMeters": {
+      "PROPOSED_OASIS_02": 1.7602,
+      "PROPOSED_OASIS_03": 12.6871,
+      "PROPOSED_OASIS_04": 2.5757
+    },
+    "note": "Bounding-box geometry/flat sampled ground fixture; actual hydrated terrain and owner-device framing require verification"
+  },
+  "transferFailure": {
+    "operation": "GitHub authenticated 44,246,152-char base64 create_blob",
+    "observedError": "h2 protocol error: error reading a body from connection",
+    "remoteBlobCheck": "422 tree.sha ... is not a valid blob",
+    "disposition": "NO_BINARY_BLOB_NO_ASSET_COMMIT"
+  },
+  "outstanding": [
+    "Transfer exact 33,184,612 byte GLB via authenticated binary-capable substrate",
+    "Commit within Gen2857 admitted nine paths",
+    "Run focused repository suite and real WebGL browser preflight",
+    "Update existing owner-private Site only after PASS",
+    "Read back served model and verify on owner device"
+  ],
+  "productionDeployment": false,
+  "publicMainMerged": false,
+  "ownerVisualApprovalOfImportedAssetPreserved": true,
+  "authorityEffect": "NONE_EVIDENCE_ONLY"
+}

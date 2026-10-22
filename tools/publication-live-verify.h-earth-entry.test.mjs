@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {aimHEarthAxis,observeHEarthFailure,waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
+import {travelHEarthScene,pulseHEarthNavigation,aimHEarthAxis,observeHEarthFailure,waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
 
 const POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
 function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed={},post={}}={}){
@@ -261,4 +261,100 @@ test('large turns use bounded angular holds rather than one full-turn deadline',
  let value=-4,sequence=1;const trace=[],goals=[];
  await aimHEarthAxis({axis:'yawDegrees',target:72,tolerance:6,trace,read:async()=>({navigation:{yawDegrees:value,sequence}}),pulse:async(dx,dy,goal)=>{assert.ok(dx>0);assert.equal(dy,0);assert.ok(goal.target-value<=(dx===.15?8:4));goals.push(goal.target);value=goal.target;sequence++;}});
  assert.ok(goals.length>1);assert.ok(Math.abs(value-72)<=6);assert.equal(goals[0],4);
+});
+
+// Exercise the production pulse adapter, including pointer release and the exact
+// browser predicate. These fixtures model receipt timing, not GPU acceptance.
+const pulseHarness=({initial=2.341926056139427,final=-4.685275481946448,axis='yawDegrees',failure='TimeoutError',sequence=11}={})=>{
+ const state={yawDegrees:initial,pitchDegrees:0,sequence:5};const events=[];
+ const evaluate=(fn,args)=>{
+  const previous=globalThis.window;
+  globalThis.window={H_EARTH_RUN8E_PUBLIC_ROUTE:{getReceipt:()=>({intake:{currentNavigationState:state}})}};
+  try{return fn(args);}finally{globalThis.window=previous;}
+ };
+ const error=Object.assign(Error(failure),{name:failure});
+ const page={mouse:{move:async()=>events.push('move'),down:async()=>events.push('down'),up:async()=>{events.push('up');state[axis]=final;state.sequence=sequence;}},
+  waitForFunction:async(fn,options,args)=>{events.push('wait');assert.equal(evaluate(fn,args),false);if(failure)throw error;state[axis]=final;state.sequence=sequence;assert.equal(evaluate(fn,args),true);},
+  evaluate:async(fn,args)=>{events.push('readback');assert.equal(events.at(-2),'up');return evaluate(fn,args);}};
+ return {adapter:{page,read:async()=>({navigation:{...state}}),box:{x:0,y:0,width:1000,height:800},bounded:()=>{}},events,error};
+};
+const recordedGoal={axis:'yawDegrees',target:-1.6580739438605732,tolerance:.5,error:-4};
+test('production pulse reconciles recorded completed turn only after pointer release',async()=>{
+ const h=pulseHarness();await pulseHEarthNavigation(h.adapter,-.061,0,recordedGoal);
+ assert.deepEqual(h.events,['move','down','move','wait','up','readback']);
+});
+for(const [label,options] of Object.entries({stalled:{final:2.341926056139427},wrongDirection:{final:8},wrongAxis:{axis:'pitchDegrees'},staleSequence:{sequence:5}})){
+ test('production pulse rejects timeout with '+label,async()=>{
+  const h=pulseHarness(options);await assert.rejects(pulseHEarthNavigation(h.adapter,-.061,0,recordedGoal),e=>e===h.error);
+  assert.ok(h.events.includes('up'));
+ });
+}
+test('production pulse propagates context loss without timeout reconciliation',async()=>{
+ const h=pulseHarness({failure:'ProtocolError'});await assert.rejects(pulseHEarthNavigation(h.adapter,-.061,0,recordedGoal),e=>e===h.error);
+ assert.equal(h.events.at(-1),'up');assert.ok(!h.events.includes('readback'));
+});
+test('production pulse normal completion releases without recovery read',async()=>{
+ const h=pulseHarness({failure:null});await pulseHEarthNavigation(h.adapter,-.061,0,recordedGoal);
+ assert.equal(h.events.at(-1),'up');assert.ok(!h.events.includes('readback'));
+});
+test('production pulse reconciles yaw wrap and pitch separately',async()=>{
+ const h=pulseHarness({initial:179,final:-176});await pulseHEarthNavigation(h.adapter,.061,0,{axis:'yawDegrees',target:183,tolerance:.5,error:4});
+ const p=pulseHarness({axis:'pitchDegrees',final:-5});await pulseHEarthNavigation(p.adapter,0,.061,{axis:'pitchDegrees',target:-4,tolerance:.5,error:-4});
+});
+
+for(const frameMs of [50,1000])test('production traversal with real intake and '+frameMs+'ms simulated frames',async()=>{
+ const {installHEarthRun8ER3D2PointerTouchIntake}=await import('../showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js');
+ const keys=['HTMLElement','location','document','requestAnimationFrame','cancelAnimationFrame','performance','window'];
+ const originals=Object.fromEntries(keys.map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
+ let clock=0,frame,controller,polls=0,recoveries=0,x=500,y=400;
+ class Surface{
+  style={};clientWidth=1000;clientHeight=800;listeners=new Map();
+  addEventListener(k,fn){this.listeners.set(k,fn);}removeEventListener(k){this.listeners.delete(k);}
+  emit(k,extra={}){this.listeners.get(k)?.({preventDefault(){},pointerId:1,pointerType:'mouse',clientX:x,clientY:y,...extra});}
+ }
+ const surface=new Surface();
+ const globals={HTMLElement:Surface,location:{search:'?arrival=approved-four-trees'},document:{hidden:false},performance:{now:()=>clock},requestAnimationFrame:fn=>{frame=fn;return 1;},cancelAnimationFrame:()=>{},window:{H_EARTH_RUN8E_PUBLIC_ROUTE:{getReceipt:()=>({intake:controller.getReceipt()})}}};
+ for(const [k,value] of Object.entries(globals))Object.defineProperty(globalThis,k,{value,configurable:true,writable:true});
+ try{
+  controller=installHEarthRun8ER3D2PointerTouchIntake({surface});
+  const read=async()=>({navigation:controller.getNavigationState()});
+  const page={mouse:{move:async(a,b)=>{x=a;y=b;surface.emit('pointermove');},down:async()=>surface.emit('pointerdown'),up:async()=>surface.emit('pointerup'),wheel:async extra=>surface.emit('wheel',extra)},
+   evaluate:async(fn,args)=>{assert.equal(controller.getReceipt().activeIntent,'NONE');recoveries++;return fn(args);},
+   waitForFunction:async(fn,options,args)=>{
+    const end=clock+options.timeout;polls++;
+    while(clock<end){clock+=frameMs;frame(clock);await Promise.resolve();if(fn(args)){
+     // Reproduce lost completion delivery after genuine controller progress.
+     if(polls===1){clock=end;throw Object.assign(Error('recorded completion race'),{name:'TimeoutError'});}
+     return;
+    }}
+    throw Object.assign(Error('simulated stalled control'),{name:'TimeoutError'});
+   }};
+  const trace=[];const bounded=()=>assert.ok(clock<600000);
+  const pulse=(dx,dy,goal)=>pulseHEarthNavigation({page,read,box:{x:0,y:0,width:1000,height:800},bounded},dx,dy,goal);
+  const aim=async(yaw,pitch)=>{
+   await aimHEarthAxis({axis:'yawDegrees',target:yaw,tolerance:6,read,pulse,trace,now:()=>clock});
+   if(pitch!==undefined)await aimHEarthAxis({axis:'pitchDegrees',target:pitch,tolerance:2.2,read,pulse,trace,now:()=>clock});
+  };
+  for(const [tx,tz] of [[-145,-280],[-60,-310]])await travelHEarthScene({page,read,aim,bounded},tx,tz);
+  await aim(89,4);
+  await travelHEarthScene({page,read,aim,bounded},40,-300);
+  await aim(64,8);await aim(160,2);
+  const n=controller.getNavigationState();assert.ok(Math.hypot(n.position.x-40,n.position.z+300)<3);
+  assert.ok(Math.abs(n.yawDegrees-160)<=6);assert.ok(Math.abs(n.pitchDegrees-2)<=2.2);
+  assert.equal(controller.getReceipt().activeIntent,'NONE');assert.equal(recoveries,1);
+  assert.ok(trace.length>0);assert.ok(clock<600000);
+ }finally{
+  controller?.destroy();for(const k of keys){if(originals[k])Object.defineProperty(globalThis,k,originals[k]);else delete globalThis[k];}
+ }
+});
+
+test('production pulse does not hide post-timeout readback failure',async()=>{
+ const h=pulseHarness(),error=Error('receipt unavailable');h.adapter.page.evaluate=async()=>{throw error;};
+ await assert.rejects(pulseHEarthNavigation(h.adapter,-.061,0,recordedGoal),e=>e===error);
+ assert.equal(h.events.at(-1),'up');
+});
+test('production pulse does not accept a failed pointer release',async()=>{
+ const h=pulseHarness(),error=Error('pointer release failed');h.adapter.page.mouse.up=async()=>{throw error;};
+ await assert.rejects(pulseHEarthNavigation(h.adapter,-.061,0,recordedGoal),e=>e===error);
+ assert.ok(!h.events.includes('readback'));
 });

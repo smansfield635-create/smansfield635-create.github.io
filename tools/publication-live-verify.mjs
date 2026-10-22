@@ -150,6 +150,33 @@ export const waitForHEarthNavigation=async(page,sequence)=>{
     if(error?.name!=='TimeoutError'||!await page.evaluate(advanced,sequence))throw error;
   }
 };
+// Serializable predicate shared by the live wait and post-release readback.
+export const hasHEarthGoalProgress=({axis,target,tolerance,error,sequence,start})=>{
+  const n=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt()?.intake?.currentNavigationState;
+  const delta=(a,b)=>axis==='yawDegrees'?((a-b+540)%360)-180:a-b;
+  const remaining=delta(target,n?.[axis]),progress=delta(n?.[axis],start);
+  return n?.sequence>sequence&&Number.isFinite(remaining)&&Number.isFinite(progress)
+    &&progress*Math.sign(error)>0
+    &&(Math.abs(remaining)<=tolerance||Math.sign(remaining)!==Math.sign(error));
+};
+export const pulseHEarthNavigation=async({page,read,box,bounded},dx,dy,goal)=>{
+  bounded();const before=(await read()).navigation;
+  const x=box.x+box.width*.5,y=box.y+box.height*.5;
+  const args=goal?{...goal,sequence:before.sequence,start:before[goal.axis]}:null;
+  await page.mouse.move(x,y);await page.mouse.down();
+  let failure;
+  try{
+    await page.mouse.move(x+dx*box.width,y+dy*box.height);
+    if(goal)await page.waitForFunction(hasHEarthGoalProgress,{timeout:12000,polling:50},args);
+    else await waitForHEarthNavigation(page,before.sequence);
+  }catch(error){failure=error;}
+  finally{await page.mouse.up();}
+  // Stop native input before inspecting the final receipt. Only an angular
+  // timeout with verified movement in the requested direction can recover.
+  if(failure){
+    if(!goal||failure.name!=='TimeoutError'||!await page.evaluate(hasHEarthGoalProgress,args))throw failure;
+  }
+};
 export const aimHEarthAxis=async({axis,target,tolerance,read,pulse,trace,now=Date.now})=>{
   const delta=value=>axis==='yawDegrees'?((target-value+540)%360)-180:target-value;
   const deadline=now()+90000;let stalled=0,reversals=0,previousError=null,best=Infinity;
@@ -177,6 +204,19 @@ export const aimHEarthAxis=async({axis,target,tolerance,read,pulse,trace,now=Dat
   }
   throw Error('H_EARTH_AIM_STEP_LIMIT:'+axis);
 };
+export const travelHEarthScene=async({page,read,aim,bounded},tx,tz)=>{
+    for(let i=0;i<40;i++){
+      bounded();const n=(await read()).navigation,p=n.position,d=Math.hypot(tx-p.x,tz-p.z);
+      if(d<3)return;
+      await aim((Math.atan2(tx-p.x,p.z-tz)*180/Math.PI+360)%360);
+      const before=(await read()).navigation;
+      await page.mouse.wheel({deltaY:-70*Math.min(10,Math.max(1,d-1))});
+      await waitForHEarthNavigation(page,before.sequence);
+      const after=(await read()).navigation.position;
+      if(Math.hypot(after.x-p.x,after.z-p.z)<=.1)throw Error('H_EARTH_SCENE_TRAVEL_BLOCKED');
+    }
+    throw Error('H_EARTH_SCENE_DESTINATION_NOT_REACHED');
+  };
 export const observeHEarthFailure=async(read)=>{
   try{return {observation:await read(),error:null};}
   catch(error){return {observation:null,error:String(error?.stack||error)};}
@@ -197,41 +237,14 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
   check(assetObserver,'H_EARTH_SCENE_ASSET_OBSERVER_REQUIRED');
   const canvas=await page.$('#h-earth-functional-landscape-canvas'),box=await canvas?.boundingBox();
   check(box&&box.width>=250&&box.height>=180,'H_EARTH_SCENE_CANVAS_UNAVAILABLE');
-  const x=box.x+box.width*.5,y=box.y+box.height*.5;
   const difference=(a,b)=>((a-b+540)%360)-180;
-  const pulse=async(dx,dy,goal)=>{
-    bounded();const before=(await read()).navigation;
-    await page.mouse.move(x,y);await page.mouse.down();
-    try{
-      await page.mouse.move(x+dx*box.width,y+dy*box.height);
-      // One observed intake update, rather than a wall-clock hold that can
-      // overshoot under software-GPU stalls. Never write navigation state.
-      if(goal)await page.waitForFunction(({axis,target,tolerance,error,sequence})=>{
-        const n=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt()?.intake?.currentNavigationState;
-        const d=axis==='yawDegrees'?((target-n?.[axis]+540)%360)-180:target-n?.[axis];
-        return n?.sequence>sequence&&Number.isFinite(d)&&(Math.abs(d)<=tolerance||Math.sign(d)!==Math.sign(error));
-      },{timeout:12000,polling:50},{...goal,sequence:before.sequence});
-      else await waitForHEarthNavigation(page,before.sequence);
-    }finally{await page.mouse.up();}
-  };
+  const pulse=(dx,dy,goal)=>pulseHEarthNavigation({page,read,box,bounded},dx,dy,goal);
   const aim=async(yaw,pitch)=>{
     bounded();
     await aimHEarthAxis({axis:'yawDegrees',target:yaw,tolerance:6,read,pulse,trace:aimTrace});
     if(pitch!==undefined)await aimHEarthAxis({axis:'pitchDegrees',target:pitch,tolerance:2.2,read,pulse,trace:aimTrace});
   };
-  const travel=async(tx,tz)=>{
-    for(let i=0;i<40;i++){
-      bounded();const n=(await read()).navigation,p=n.position,d=Math.hypot(tx-p.x,tz-p.z);
-      if(d<3)return;
-      await aim((Math.atan2(tx-p.x,p.z-tz)*180/Math.PI+360)%360);
-      const before=(await read()).navigation;
-      await page.mouse.wheel({deltaY:-70*Math.min(10,Math.max(1,d-1))});
-      await waitForHEarthNavigation(page,before.sequence);
-      const after=(await read()).navigation.position;
-      check(Math.hypot(after.x-p.x,after.z-p.z)>.1,'H_EARTH_SCENE_TRAVEL_BLOCKED');
-    }
-    throw Error('H_EARTH_SCENE_DESTINATION_NOT_REACHED');
-  };
+  const travel=(tx,tz)=>travelHEarthScene({page,read,aim,bounded},tx,tz);
   const capture=async name=>{
     bounded();
     // Wait for the navigation pose to be actually presented before screenshot.

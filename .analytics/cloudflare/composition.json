@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-22T17:30:20Z",
+  "generatedAt": "2026-10-22T18:36:14Z",
   "window": {
-    "start": "2026-09-22T17:30:20Z",
-    "end": "2026-10-22T17:30:20Z"
+    "start": "2026-09-22T18:36:14Z",
+    "end": "2026-10-22T18:36:14Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 655,
-        "visits": 565
+        "pageLoads": 685,
+        "visits": 595
       },
       {
         "value": "/showroom/globe/h-earth/",
         "pageLoads": 635,
-        "visits": 606
+        "visits": 596
       },
       {
         "value": "/",
-        "pageLoads": 412,
-        "visits": 152
+        "pageLoads": 392,
+        "visits": 132
       },
       {
         "value": "/governance-bridge/",
@@ -48,24 +48,19 @@
         "visits": 43
       },
       {
-        "value": "/showroom/globe/audralia/",
-        "pageLoads": 42,
-        "visits": 22
-      },
-      {
         "value": "/preview/h-earth/recovery/875895473fd5569c40e6d2da674f202d4ee1c221/",
         "pageLoads": 40,
         "visits": 40
       },
       {
+        "value": "/showroom/globe/audralia/",
+        "pageLoads": 32,
+        "visits": 22
+      },
+      {
         "value": "/evidence/agentic-frontier/",
         "pageLoads": 31,
         "visits": 21
-      },
-      {
-        "value": "/meet-sean-mansfield/",
-        "pageLoads": 31,
-        "visits": 31
       },
       {
         "value": "/evidence/",
@@ -78,9 +73,14 @@
         "visits": 0
       },
       {
-        "value": "/mirror-manor-preview/",
-        "pageLoads": 20,
-        "visits": 20
+        "value": "/release-proof/",
+        "pageLoads": 24,
+        "visits": 24
+      },
+      {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 21,
+        "visits": 21
       },
       {
         "value": "/developer/",
@@ -113,14 +113,14 @@
         "visits": 20
       },
       {
-        "value": "/release-proof/",
-        "pageLoads": 14,
-        "visits": 14
-      },
-      {
         "value": "/nine-summits-of-love/",
         "pageLoads": 11,
         "visits": 11
+      },
+      {
+        "value": "/mirror-manor-preview/",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "/products/archcoin/contract/",
@@ -171,12 +171,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1795,
-        "visits": 1795
+        "pageLoads": 1765,
+        "visits": 1765
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 629,
+        "pageLoads": 619,
         "visits": 0
       },
       {
@@ -203,8 +203,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 2502,
-        "visits": 1874
+        "pageLoads": 2462,
+        "visits": 1844
       },
       {
         "value": "CA",
@@ -240,35 +240,35 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1434,
-        "visits": 1382
+        "pageLoads": 1414,
+        "visits": 1362
       },
       {
         "value": "mobile",
-        "pageLoads": 758,
-        "visits": 325
+        "pageLoads": 748,
+        "visits": 315
       },
       {
         "value": "tablet",
-        "pageLoads": 358,
+        "pageLoads": 348,
         "visits": 214
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 899,
-        "visits": 899
+        "pageLoads": 879,
+        "visits": 879
       },
       {
         "value": "Chrome",
-        "pageLoads": 723,
+        "pageLoads": 713,
         "visits": 538
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 648,
-        "visits": 236
+        "pageLoads": 638,
+        "visits": 226
       },
       {
         "value": "Edge",
@@ -304,13 +304,13 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1105,
-        "visits": 1105
+        "pageLoads": 1085,
+        "visits": 1085
       },
       {
         "value": "Android",
-        "pageLoads": 1006,
-        "visits": 450
+        "pageLoads": 986,
+        "visits": 440
       },
       {
         "value": "Windows",
@@ -336,20 +336,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 1651,
-        "visits": 1022
+        "pageLoads": 1631,
+        "visits": 1012
       },
       {
         "value": "1",
-        "pageLoads": 899,
-        "visits": 899
+        "pageLoads": 879,
+        "visits": 879
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 2116,
-        "visits": 1790
+        "pageLoads": 2076,
+        "visits": 1760
       },
       {
         "value": "reload",
@@ -370,13 +370,13 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1983,
-        "visits": 1777
+        "pageLoads": 1963,
+        "visits": 1757
       },
       {
         "value": "cache",
-        "pageLoads": 566,
-        "visits": 143
+        "pageLoads": 546,
+        "visits": 133
       },
       {
         "value": "navigational-prefetch",
@@ -387,15 +387,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2550,
-        "visits": 1921
+        "pageLoads": 2510,
+        "visits": 1891
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 2550,
-        "visits": 1921
+        "pageLoads": 2510,
+        "visits": 1891
       }
     ]
   }

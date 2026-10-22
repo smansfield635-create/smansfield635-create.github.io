@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-22T09:35:02Z",
+  "generatedAt": "2026-10-22T10:32:00Z",
   "window": {
-    "start": "2026-07-24T09:35:02Z",
-    "end": "2026-10-22T09:35:02Z"
+    "start": "2026-07-24T10:32:00Z",
+    "end": "2026-10-22T10:32:00Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,49 +17,41 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4788,
-    "visits": 1344,
+    "pageLoads": 4598,
+    "visits": 1304,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4788,
-        "visits": 1344
+        "pageLoads": 4598,
+        "visits": 1304
       }
     },
     "byPath": {
-      "/laws/": {
-        "pageLoads": 300,
-        "visits": 90
-      },
-      "/products/archcoin/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/showroom/": {
-        "pageLoads": 110,
-        "visits": 10
-      },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 154,
-        "visits": 10
-      },
       "/index.html": {
-        "pageLoads": 140,
+        "pageLoads": 120,
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
+        "visits": 10
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 134,
+        "visits": 10
+      },
+      "/showroom/": {
+        "pageLoads": 50,
         "visits": 10
       },
       "/": {
-        "pageLoads": 1044,
-        "visits": 754
+        "pageLoads": 964,
+        "visits": 714
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
         "visits": 0
       },
-      "/showroom/story/welcome/": {
-        "pageLoads": 20,
+      "/products/five-flags/": {
+        "pageLoads": 100,
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
@@ -73,6 +65,10 @@
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/laws/": {
+        "pageLoads": 230,
+        "visits": 90
       },
       "/products/education/": {
         "pageLoads": 270,
@@ -98,16 +94,16 @@
         "pageLoads": 30,
         "visits": 0
       },
-      "/showroom/globe/audralia/": {
-        "pageLoads": 160,
+      "/governance/": {
+        "pageLoads": 70,
         "visits": 10
       },
-      "/governance/": {
-        "pageLoads": 60,
+      "/showroom/globe/audralia/": {
+        "pageLoads": 170,
         "visits": 10
       },
       "/evidence/readiness/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/build/intake/": {
@@ -115,10 +111,14 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 90,
+        "pageLoads": 80,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "/showroom/globe/h-earth/awards/proof/compass-live-format-proof.html": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -126,12 +126,20 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/elara/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/research/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/coherence-diagnostic/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/build/": {
@@ -154,11 +162,7 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/inspection/compass/brain-v10-g1-1/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "/inspection/compass/brain-v10-continuous/": {
+      "/inspection/compass/brain-v9/": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -329,16 +333,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3444,
+        "pageLoads": 3294,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 791,
-        "visits": 791
+        "pageLoads": 761,
+        "visits": 761
       },
       "(none)": {
-        "pageLoads": 543,
-        "visits": 543
+        "pageLoads": 533,
+        "visits": 533
       },
       "raw.githack.com": {
         "pageLoads": 10,

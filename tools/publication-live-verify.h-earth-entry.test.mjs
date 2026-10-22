@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
+import {waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
 
 const POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
 function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed={},post={}}={}){
@@ -214,4 +214,20 @@ test('full H-Earth manifest selects bounded target proof while keeping entry con
   assert.equal(m.runtime.preReadyEntry,POLICY);
   assert.equal(m.runtime.failOnPageErrors,true);
   assert.equal(m.runtime.failOnConsoleErrors,true);
+});
+
+for(const changed of [true,false])test(`navigation deadline readback ${changed?'accepts actual progress':'rejects unchanged state'}`,async()=>{
+  const timeout=Object.assign(new Error('deadline'),{name:'TimeoutError'});
+  let reads=0;
+  const page={waitForFunction:async(fn,options,sequence)=>{
+    assert.equal(options.polling,100);assert.equal(options.timeout,15000);assert.equal(sequence,6);throw timeout;
+  },evaluate:async(fn,sequence)=>{reads++;assert.equal(sequence,6);return changed;}};
+  if(changed)await waitForHEarthNavigation(page,6);
+  else await assert.rejects(waitForHEarthNavigation(page,6),error=>error===timeout);
+  assert.equal(reads,1);
+});
+test('navigation execution errors cannot be overridden by deadline readback',async()=>{
+  const error=new Error('execution context destroyed');let read=false;
+  await assert.rejects(waitForHEarthNavigation({waitForFunction:async()=>{throw error;},evaluate:async()=>{read=true;return true;}},6),e=>e===error);
+  assert.equal(read,false);
 });

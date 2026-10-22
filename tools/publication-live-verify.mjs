@@ -141,6 +141,15 @@ export const observeHEarthSceneAsset=(page,surfaceId,policy)=>{
   page.on('response',listener);
   return {async finish(){await Promise.all(pending);page.off('response',listener);return responses;}};
 };
+// Navigation receipts are updated by native input independently of animation frames.
+// Software rendering can delay RAF polling past the deadline despite real movement.
+export const waitForHEarthNavigation=async(page,sequence)=>{
+  const advanced=previous=>Number(window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt()?.intake?.currentNavigationState?.sequence)>previous;
+  try{await page.waitForFunction(advanced,{timeout:15000,polling:100},sequence);}
+  catch(error){
+    if(error?.name!=='TimeoutError'||!await page.evaluate(advanced,sequence))throw error;
+  }
+};
 export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserver)=>{
   if(!validateHEarthScenePolicy(surfaceId,policy))return null;
   const started=Date.now(),deadline=started+600000,views=[],images=[];
@@ -166,7 +175,7 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
       await page.mouse.move(x+dx*box.width,y+dy*box.height);
       // One observed intake update, rather than a wall-clock hold that can
       // overshoot under software-GPU stalls. Never write navigation state.
-      await page.waitForFunction(sequence=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().intake.currentNavigationState.sequence>sequence,{timeout:15000},before.sequence);
+      await waitForHEarthNavigation(page,before.sequence);
     }finally{await page.mouse.up();}
   };
   const aim=async(yaw,pitch)=>{
@@ -193,7 +202,7 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
       await aim((Math.atan2(tx-p.x,p.z-tz)*180/Math.PI+360)%360);
       const before=(await read()).navigation;
       await page.mouse.wheel({deltaY:-70*Math.min(10,Math.max(1,d-1))});
-      await page.waitForFunction(sequence=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getReceipt().intake.currentNavigationState.sequence>sequence,{timeout:15000},before.sequence);
+      await waitForHEarthNavigation(page,before.sequence);
       const after=(await read()).navigation.position;
       check(Math.hypot(after.x-p.x,after.z-p.z)>.1,'H_EARTH_SCENE_TRAVEL_BLOCKED');
     }

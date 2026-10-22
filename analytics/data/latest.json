@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-22T02:40:48Z",
+  "generatedAt": "2026-10-22T03:37:29Z",
   "window30d": {
-    "start": "2026-09-22T02:40:48Z",
-    "end": "2026-10-22T02:40:48Z"
+    "start": "2026-09-22T03:37:29Z",
+    "end": "2026-10-22T03:37:29Z"
   },
   "daily": [
     {
@@ -24,7 +24,7 @@
     },
     {
       "date": "2026-09-27",
-      "pageLoads": 40
+      "pageLoads": 20
     },
     {
       "date": "2026-09-28",
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 89
+      "pageLoads": 87
     },
     {
       "date": "2026-10-16",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 2
+      "pageLoads": 3
     }
   ],
   "summary": {
-    "pageLoads": 2658,
+    "pageLoads": 2657,
     "botPageLoads": 990,
-    "nonBotPageLoads": 1668
+    "nonBotPageLoads": 1667
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1883,
-      "visits": 1883
+      "pageLoads": 1882,
+      "visits": 1882
     },
     {
       "host": "diamondgatebridge.com",
@@ -167,18 +167,18 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 695,
-      "visits": 565
+      "pageLoads": 645,
+      "visits": 555
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 631,
-      "visits": 602
+      "pageLoads": 640,
+      "visits": 611
     },
     {
       "path": "/",
-      "pageLoads": 452,
-      "visits": 192
+      "pageLoads": 472,
+      "visits": 212
     },
     {
       "path": "/governance-bridge/",
@@ -186,19 +186,19 @@
       "visits": 130
     },
     {
-      "path": "/showroom/globe/audralia/",
-      "pageLoads": 82,
-      "visits": 82
-    },
-    {
       "path": "/governance-bridge/governance/",
       "pageLoads": 80,
       "visits": 60
     },
     {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 72,
+      "visits": 52
+    },
+    {
       "path": "/products/education/",
-      "pageLoads": 64,
-      "visits": 64
+      "pageLoads": 54,
+      "visits": 44
     },
     {
       "path": "/build/",

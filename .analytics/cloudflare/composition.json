@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-22T02:40:48Z",
+  "generatedAt": "2026-10-22T03:37:29Z",
   "window": {
-    "start": "2026-09-22T02:40:48Z",
-    "end": "2026-10-22T02:40:48Z"
+    "start": "2026-09-22T03:37:29Z",
+    "end": "2026-10-22T03:37:29Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 695,
-        "visits": 565
+        "pageLoads": 645,
+        "visits": 555
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 631,
-        "visits": 602
+        "pageLoads": 640,
+        "visits": 611
       },
       {
         "value": "/",
-        "pageLoads": 452,
-        "visits": 192
+        "pageLoads": 472,
+        "visits": 212
       },
       {
         "value": "/governance-bridge/",
@@ -28,29 +28,24 @@
         "visits": 130
       },
       {
-        "value": "/showroom/globe/audralia/",
-        "pageLoads": 82,
-        "visits": 82
-      },
-      {
         "value": "/governance-bridge/governance/",
         "pageLoads": 80,
         "visits": 60
       },
       {
+        "value": "/showroom/globe/audralia/",
+        "pageLoads": 72,
+        "visits": 52
+      },
+      {
         "value": "/products/education/",
-        "pageLoads": 64,
-        "visits": 64
+        "pageLoads": 54,
+        "visits": 44
       },
       {
         "value": "/build/",
         "pageLoads": 51,
         "visits": 51
-      },
-      {
-        "value": "/mirror-manor-preview/",
-        "pageLoads": 50,
-        "visits": 50
       },
       {
         "value": "/about/",
@@ -71,6 +66,11 @@
         "value": "/meet-sean-mansfield/",
         "pageLoads": 31,
         "visits": 31
+      },
+      {
+        "value": "/mirror-manor-preview/",
+        "pageLoads": 30,
+        "visits": 30
       },
       {
         "value": "/evidence/",
@@ -123,11 +123,6 @@
         "visits": 11
       },
       {
-        "value": "/showroom/globe/h-earth/custody/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/products/archcoin/contract/",
         "pageLoads": 10,
         "visits": 0
@@ -176,8 +171,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1883,
-        "visits": 1883
+        "pageLoads": 1882,
+        "visits": 1882
       },
       {
         "value": "diamondgatebridge.com",
@@ -213,8 +208,8 @@
       },
       {
         "value": "CA",
-        "pageLoads": 20,
-        "visits": 20
+        "pageLoads": 19,
+        "visits": 19
       },
       {
         "value": "CN",
@@ -245,8 +240,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1522,
-        "visits": 1470
+        "pageLoads": 1521,
+        "visits": 1469
       },
       {
         "value": "mobile",
@@ -267,8 +262,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 746,
-        "visits": 551
+        "pageLoads": 745,
+        "visits": 550
       },
       {
         "value": "ChromeMobile",
@@ -319,8 +314,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 214,
-        "visits": 202
+        "pageLoads": 213,
+        "visits": 201
       },
       {
         "value": "MacOSX",
@@ -341,8 +336,8 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 1668,
-        "visits": 1029
+        "pageLoads": 1667,
+        "visits": 1028
       },
       {
         "value": "1",
@@ -353,8 +348,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 2204,
-        "visits": 1878
+        "pageLoads": 2203,
+        "visits": 1877
       },
       {
         "value": "reload",
@@ -375,8 +370,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 2081,
-        "visits": 1875
+        "pageLoads": 2080,
+        "visits": 1874
       },
       {
         "value": "cache",
@@ -392,15 +387,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2658,
-        "visits": 2019
+        "pageLoads": 2657,
+        "visits": 2018
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 2658,
-        "visits": 2019
+        "pageLoads": 2657,
+        "visits": 2018
       }
     ]
   }

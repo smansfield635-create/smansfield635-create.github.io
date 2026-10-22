@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-22T06:48:13Z",
+  "generatedAt": "2026-10-22T07:39:47Z",
   "window30d": {
-    "start": "2026-09-22T06:48:13Z",
-    "end": "2026-10-22T06:48:13Z"
+    "start": "2026-09-22T07:39:47Z",
+    "end": "2026-10-22T07:39:47Z"
   },
   "daily": [
     {
@@ -12,67 +12,67 @@
     },
     {
       "date": "2026-09-24",
-      "pageLoads": 70
-    },
-    {
-      "date": "2026-09-25",
-      "pageLoads": 510
-    },
-    {
-      "date": "2026-09-26",
-      "pageLoads": 150
-    },
-    {
-      "date": "2026-09-27",
-      "pageLoads": 50
-    },
-    {
-      "date": "2026-09-28",
-      "pageLoads": 20
-    },
-    {
-      "date": "2026-09-29",
       "pageLoads": 60
     },
     {
-      "date": "2026-09-30",
-      "pageLoads": 70
+      "date": "2026-09-25",
+      "pageLoads": 640
     },
     {
-      "date": "2026-10-01",
-      "pageLoads": 70
+      "date": "2026-09-26",
+      "pageLoads": 50
     },
     {
-      "date": "2026-10-02",
+      "date": "2026-09-27",
       "pageLoads": 20
     },
     {
+      "date": "2026-09-28",
+      "pageLoads": 10
+    },
+    {
+      "date": "2026-09-29",
+      "pageLoads": 40
+    },
+    {
+      "date": "2026-09-30",
+      "pageLoads": 30
+    },
+    {
+      "date": "2026-10-01",
+      "pageLoads": 50
+    },
+    {
+      "date": "2026-10-02",
+      "pageLoads": 10
+    },
+    {
       "date": "2026-10-03",
-      "pageLoads": 0
+      "pageLoads": 40
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 70
+      "pageLoads": 90
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 160
+      "pageLoads": 140
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 160
+      "pageLoads": 210
     },
     {
       "date": "2026-10-07",
-      "pageLoads": 70
+      "pageLoads": 80
     },
     {
       "date": "2026-10-08",
-      "pageLoads": 130
+      "pageLoads": 70
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-10",
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 91
+      "pageLoads": 90
     },
     {
       "date": "2026-10-16",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 6
+      "pageLoads": 7
     }
   ],
   "summary": {
-    "pageLoads": 2734,
-    "botPageLoads": 1059,
-    "nonBotPageLoads": 1675
+    "pageLoads": 2644,
+    "botPageLoads": 979,
+    "nonBotPageLoads": 1665
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1799,
-      "visits": 1799
+      "pageLoads": 1869,
+      "visits": 1869
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 679,
+      "pageLoads": 639,
       "visits": 0
     },
     {
@@ -150,8 +150,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 32,
-      "visits": 32
+      "pageLoads": 42,
+      "visits": 42
     },
     {
       "host": "m.facebook.com",
@@ -167,43 +167,43 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 675,
-      "visits": 545
+      "pageLoads": 655,
+      "visits": 565
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 597,
-      "visits": 558
+      "pageLoads": 638,
+      "visits": 609
     },
     {
       "path": "/",
-      "pageLoads": 452,
-      "visits": 172
+      "pageLoads": 472,
+      "visits": 212
     },
     {
       "path": "/governance-bridge/",
-      "pageLoads": 190,
-      "visits": 140
+      "pageLoads": 180,
+      "visits": 130
     },
     {
       "path": "/governance-bridge/governance/",
-      "pageLoads": 110,
-      "visits": 80
-    },
-    {
-      "path": "/showroom/globe/audralia/",
-      "pageLoads": 72,
-      "visits": 72
-    },
-    {
-      "path": "/build/",
-      "pageLoads": 61,
-      "visits": 61
+      "pageLoads": 80,
+      "visits": 60
     },
     {
       "path": "/products/education/",
       "pageLoads": 54,
-      "visits": 54
+      "visits": 44
+    },
+    {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 52,
+      "visits": 32
+    },
+    {
+      "path": "/build/",
+      "pageLoads": 51,
+      "visits": 51
     }
   ],
   "ownerMeasurement": {

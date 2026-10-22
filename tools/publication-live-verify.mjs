@@ -35,7 +35,7 @@ export const launchVerifiedBrowser=async({puppeteer,executablePath,inspect=inspe
 };
 
 export const launchSurfaceBrowser=({puppeteer,executablePath,surfaceId,scenePolicy,diagnosticLaunch=launchVerifiedBrowser})=>
-  surfaceId==='h-earth'&&scenePolicy===H_EARTH_SCENE_POLICY
+  surfaceId==='h-earth'
     ? diagnosticLaunch({puppeteer,executablePath})
     : puppeteer.launch({executablePath,headless:'new',args:['--no-sandbox','--disable-setuid-sandbox','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
 
@@ -755,7 +755,7 @@ export const main=async()=>{
     console.log(JSON.stringify(receipt,null,2));
     if(failures.length)process.exitCode=1;
   }finally{
-    if(manifest.surfaceId==='h-earth'&&spec.sceneQualification===H_EARTH_SCENE_POLICY)await closeHEarthBrowser(browser);
+    if(manifest.surfaceId==='h-earth')await closeHEarthBrowser(browser);
     else await browser.close();
   }
 };

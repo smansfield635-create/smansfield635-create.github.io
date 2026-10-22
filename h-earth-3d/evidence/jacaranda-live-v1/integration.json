@@ -2,7 +2,7 @@
   "schema": "H_EARTH_JACARANDA_LIVE_EVIDENCE_v1",
   "operationId": "H_EARTH_APPROVED_JACARANDA_BASELINE_RECOVERY_20261021_001",
   "authorityGeneration": 2857,
-  "status": "APPROVED_BINARY_COMMITTED_QUALIFICATION_REPAIR_STAGED_NOT_PUBLISHED",
+  "status": "OWNER_APPROVED_FOR_PUBLICATION_NOT_YET_DEPLOYED",
   "baseline": "b49ec479ffc95f0ccd64b3295a9ffd976c8a85e1",
   "preparedBranch": "gratitude-jacaranda-recovered-20261021",
   "exactApprovedAsset": {
@@ -63,10 +63,8 @@
     "note": "Bounding-box geometry/flat sampled ground fixture; actual hydrated terrain and owner-device framing require verification"
   },
   "outstanding": [
-    "Run changed module identity and H-Earth pre-entry positive/negative tests",
-    "Pass actual full H-Earth input-confirmed Chromium readiness and original Jacaranda GPU verification",
-    "Independent preservation review and newer main analytics reconciliation",
-    "Merge only qualified product promotion, run registered Pages exact-head publication, verify served binary/runtime"
+    "Merge preserving newer main changes",
+    "Execute registered exact-head Pages publication and verify public result"
   ],
   "productionDeployment": false,
   "publicMainMerged": false,
@@ -100,5 +98,27 @@
     ],
     "preserveOriginalUserControlledEntry": true,
     "productionDeployed": false
+  },
+  "ownerReleaseDisposition": {
+    "date": "2026-10-22",
+    "decision": "PUBLISH_APPROVED_INTEGRATED_ASSET",
+    "source": "Explicit owner instruction in Work conversation accompanying isolated Jacaranda render: I approve. Put it in the environment and publish it.",
+    "assetVisualApproval": true,
+    "isolatedRenderIsIntegratedSceneEvidence": false,
+    "runtimeEvidence": {
+      "candidate": "a91ae6a742dbc189d9be3e0ed05ac8c15f2487a9",
+      "run": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39868507678",
+      "runConclusion": "FAIL",
+      "jacarandaState": "READY",
+      "fallbackUsed": false,
+      "textures": 9,
+      "vaos": 3,
+      "drawCount": 32,
+      "companionsPreserved": true,
+      "failure": "Extended camera tour exceeded 600 second budget; full scene assessment and final asset observer did not complete."
+    },
+    "priorEntryPass": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39848757210",
+    "releaseVerification": "Retain original input-confirmed entry, static surface checks, exact-head Pages deployment and live marker checks. Extended camera-tour qualification remains incomplete and is not represented as PASS.",
+    "physicalDeviceAcceptanceProven": false
   }
 }

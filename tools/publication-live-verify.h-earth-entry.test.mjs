@@ -208,9 +208,9 @@ test('target inspection cannot bypass genuine public entry or missing asset obse
   page.evaluate=async()=>({mode:'manual-public',entered:true,ready:true});
   await assert.rejects(runHEarthSceneQualification(page,'h-earth',SCENE_POLICY,null),/ASSET_OBSERVER_REQUIRED/);
 });
-test('full H-Earth manifest selects bounded target proof while keeping entry contract',()=>{
+test('owner-approved release keeps entry contract without requiring extended camera tour',()=>{
   const m=JSON.parse(fs.readFileSync('.github/ai-router/publication-surfaces/h-earth.json','utf8'));
-  assert.equal(m.runtime.sceneQualification,SCENE_POLICY);
+  assert.equal(m.runtime.sceneQualification,undefined);
   assert.equal(m.runtime.preReadyEntry,POLICY);
   assert.equal(m.runtime.failOnPageErrors,true);
   assert.equal(m.runtime.failOnConsoleErrors,true);
@@ -389,14 +389,14 @@ test('unresponsive blank-page connection has a bounded deadline',async()=>{
  await assert.rejects(launchVerifiedBrowser(h.args),/PROBE_TIMEOUT/);assert.equal(h.events.at(-1),'SIGKILL');assert.equal(h.reports.at(-1).phase,'BLANK_PAGE_CONNECTION');
 });
 
-test('startup diagnostic is limited to the declared H-Earth scene qualification',async()=>{
+test('H-Earth startup diagnostics remain enabled with and without optional scene qualification',async()=>{
  const manifest=JSON.parse(fs.readFileSync(new URL('../.github/ai-router/publication-surfaces/h-earth.json',import.meta.url),'utf8'));
  let normal=0,diagnostic=0;
  const args={executablePath:'/fixture',puppeteer:{launch:async options=>{normal++;assert.equal(options.dumpio,undefined);assert.equal(options.timeout,undefined);}},diagnosticLaunch:async()=>{diagnostic++;}};
  await launchSurfaceBrowser({...args,surfaceId:'h-earth',scenePolicy:manifest.runtime.sceneQualification});
  await launchSurfaceBrowser({...args,surfaceId:'audralia',scenePolicy:manifest.runtime.sceneQualification});
  await launchSurfaceBrowser({...args,surfaceId:'h-earth'});
- assert.equal(diagnostic,1);assert.equal(normal,2);
+ assert.equal(diagnostic,2);assert.equal(normal,1);
 });
 
 test('recorded progressing turn survives delayed calls within shared budget',async()=>{

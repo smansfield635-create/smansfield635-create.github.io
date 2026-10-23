@@ -1,102 +1,113 @@
-/* DiamondGate Preflight Studio | native browser adapter.
- * Owner-inspection candidate rebuilt against preserved HTML, not identical to lost draft. */
+/* DiamondGate Preflight v2: first-use value before optional continuity.
+ * Only deterministic rules; no model call, provider guarantee or implied approval. */
 (function(){
 "use strict";
 const core=window.PreflightCore;
-const storageKey="diamondgate-preflight-studio-v0.1-local";
-const el=id=>document.getElementById(id);
-const fields=["projectName","category","goal","model","customModel","duration"];
-const refs={};for(const id of [...fields,"protectedList","allowedList","protectedInput","allowedInput","protectedCount","allowedCount","intentBadge","integrityDesc","techBadge","techDesc","continuityBadge","continuityDesc","changesSummary","approvalMessage","approveLabel","approveBtn","suggestionBox","suggestionList","outputBox","preparedText","durationField","resetBtn","suggestBtn","prepareBtn","copyBtn","addProtected","addAllowed"])refs[id]=el(id);
-if(!core||!refs.goal||!refs.approveBtn){document.body.dataset.startup="error";throw new Error("Preflight required DOM/core unavailable");}
-const presets={
-  trees:{projectName:"Interactive sanctuary",category:"3d",goal:"Expand a walkable interactive world with coherent vegetation, preserving its existing geography and interaction.",protected:["Keep the established terrain, river, and navigation intact.","Do not replace approved scene assets without consent."],allowed:["Add appropriate native vegetation in previously open spaces."],model:"Unspecified / Other",duration:""},
-  video:{projectName:"Cinematic sequence",category:"video",goal:"Create a cinematic scene with consistent subjects, atmosphere, and camera movement.",protected:["Preserve the approved subject identity throughout the sequence.","Do not change the agreed story or framing silently."],allowed:["Adjust lighting and natural environmental motion."],model:"Unspecified / Other",duration:"8"},
-  app:{projectName:"Customer-facing application",category:"app",goal:"Create an accessible application that helps customers manage their existing information without disrupting their current workflows.",protected:["Existing user data must not be deleted.","Keep essential navigation and accessibility intact."],allowed:["Improve layout and clarify instructions."],model:"Unspecified / Other",duration:""}
+const $=id=>document.getElementById(id);
+const ids=["idea","checkBtn","formMessage","assessmentPanel","taskLabel","recognizedIdea","questionList","flagsPanel","flagsList","methodNote","prepareBtn","resultPanel","preparedText","copyBtn","copyMessage","saveBaselineBtn","baselineMessage","continuityDetails","revisionPanel","revisionText","startOverBtn"];
+const refs=Object.fromEntries(ids.map(id=>[id,$(id)]));
+if(!core?.assessFirstUse||Object.values(refs).some(x=>!x)){
+ document.body.dataset.startup="error";throw new Error("Preflight first-use dependencies missing");
+}
+const storageKey="diamondgate-preflight-first-use-v2-local";
+const examples={
+ video:"I want to create a 20-second commercial for my bakery using AI.",
+ app:"Build a simple appointment-booking app that customers can use.",
+ world:"Create a 3D riverside world with realistic plants and paths people can explore."
 };
-let record={...core.snapshot({category:"3d",model:"Unspecified / Other"}),approvedSnapshot:null,approvedAt:""};
-function load(){
-  try{const data=JSON.parse(localStorage.getItem(storageKey)||"null");return core.safeStored(data);}catch{return null;}
+let report=null,answers={},prepared="",baseline=null;
+try{const stored=JSON.parse(localStorage.getItem(storageKey)||"null");if(stored&&typeof stored.key==="string"&&stored.key.length<12000)baseline={key:stored.key,date:String(stored.date||"")};}catch{}
+function replaceText(node,value){node.textContent=String(value??"");}
+function scrollToPanel(node){if(window.matchMedia("(prefers-reduced-motion: reduce)").matches)node.scrollIntoView({block:"start"});else node.scrollIntoView({behavior:"smooth",block:"start"});}
+function clearOutput(){prepared="";refs.resultPanel.hidden=true;replaceText(refs.preparedText,"");replaceText(refs.copyMessage,"");}
+function revisionNotice(){
+ if(!baseline){refs.revisionPanel.hidden=true;return;}
+ const id=core.firstUseIdentity(report,answers);
+ let changed=!id||id!==baseline.key;
+ if(report&&core.plain(refs.idea.value)!==report.idea)changed=true;
+ refs.revisionPanel.hidden=!changed;
+ if(changed)replaceText(refs.revisionText,"This differs from the version you saved on this device. Review it before saving a new baseline.");
 }
-const recovered=load();if(recovered)record=recovered;
-function save(){try{localStorage.setItem(storageKey,JSON.stringify(record));}catch{/* Storage unavailable: remain functional in memory. */}}
-function setField(id,value){record[id]=value;invalidateOutput();save();render();}
-function current(){return core.snapshot(record);}
-function state(){return core.compare(record.approvedSnapshot,current());}
-function statusBadge(target,title,kind){target.textContent=title;target.className="state-badge"+(kind?" "+kind:"");}
-function invalidateOutput(){refs.outputBox.hidden=true;refs.preparedText.textContent="";}
-function fillList(name){
-  const target=refs[name+"List"],items=core.distinct(record[name]);target.replaceChildren();refs[name+"Count"].textContent=String(items.length);
-  if(items.length===0){const li=document.createElement("li");li.className="empty";li.textContent=name==="protected"?"No protected requirements yet.":"No permitted changes listed.";target.append(li);return;}
-  items.forEach((value,index)=>{
-    const li=document.createElement("li"),label=document.createElement("span"),remove=document.createElement("button");
-    label.textContent=value;remove.type="button";remove.textContent="×";remove.setAttribute("aria-label","Remove "+(name==="protected"?"protected":"permitted")+" requirement: "+value);
-    remove.addEventListener("click",()=>{record[name]=items.filter((_,i)=>i!==index);invalidateOutput();save();render();});
-    li.append(label,remove);target.append(li);
-  });
+function updateResultOnChange(){
+ clearOutput();revisionNotice();
+ if(report&&core.plain(refs.idea.value)!==report.idea){
+   refs.assessmentPanel.hidden=true;
+   replaceText(refs.formMessage,"The idea changed. Check it again for relevant suggestions.");
+ }
 }
-function render(){
-  for(const id of fields){const value=record[id]??"";if(refs[id].value!==String(value))refs[id].value=String(value);}
-  refs.durationField.hidden=record.category!=="video";
-  fillList("protected");fillList("allowed");
-  const s=state(),valid=core.validateApproval(record),tech=core.compatibility(record);
-  statusBadge(refs.techBadge,"Unverified","neutral");refs.techDesc.textContent=tech.explanation;
-  if(!record.approvedSnapshot){statusBadge(refs.intentBadge,"Draft","neutral");refs.integrityDesc.textContent="Waiting for your approval";statusBadge(refs.continuityBadge,"Not started","neutral");refs.continuityDesc.textContent="Nothing approved yet";refs.changesSummary.textContent="Approve a first version to track meaningful revisions here.";}
-  else if(s.changed){statusBadge(refs.intentBadge,"Review needed","warn");refs.integrityDesc.textContent="Current intent differs from your approved record";statusBadge(refs.continuityBadge,"Changed","warn");refs.continuityDesc.textContent="Renew approval to continue";refs.changesSummary.textContent=s.changes.join("; ")+". These changes are not yet approved.";}
-  else{statusBadge(refs.intentBadge,"User approved","good");refs.integrityDesc.textContent="This exact local intent was approved";statusBadge(refs.continuityBadge,"Preserved","good");refs.continuityDesc.textContent="Current input matches the approved baseline";refs.changesSummary.textContent="No changes against the locally approved snapshot.";}
-  refs.approveLabel.textContent=record.approvedSnapshot&&!s.changed?"Approved — reaffirm intent":"Approve this intent";
-  refs.approvalMessage.textContent=valid.ok?"Approval is explicit and local; it is not a signed kernel proof.":valid.reason;
-  refs.approveBtn.disabled=!valid.ok;
+refs.idea.addEventListener("input",updateResultOnChange);
+function renderReport(next){
+ report=next;answers={};clearOutput();
+ refs.assessmentPanel.hidden=false;
+ const labels={video:"Video / animation",app:"App / website",world:"3D world",image:"Image / design",writing:"Writing",audio:"Audio",agent:"Automation",general:"AI task"};
+ replaceText(refs.taskLabel,labels[next.kind]||"AI task");
+ replaceText(refs.recognizedIdea,next.idea);
+ refs.questionList.replaceChildren();
+ for(const q of next.questions){
+  const section=document.createElement("div");section.className="question";
+  const label=document.createElement("label");label.htmlFor="choice-"+q.id;label.textContent=q.title;
+  const why=document.createElement("p");why.textContent=q.why;
+  const select=document.createElement("select");select.id="choice-"+q.id;select.name=q.id;
+  const placeholder=document.createElement("option");placeholder.value="";placeholder.textContent="Skip for now / not decided";select.append(placeholder);
+  for(const value of q.options){const option=document.createElement("option");option.value=value;option.textContent=value;select.append(option);}
+  select.addEventListener("change",()=>{answers[q.id]=select.value;clearOutput();revisionNotice();});
+  section.append(label,why,select);refs.questionList.append(section);
+ }
+ refs.flagsPanel.hidden=next.flags.length===0;refs.flagsList.replaceChildren();
+ for(const flag of next.flags){const li=document.createElement("li");li.textContent=flag;refs.flagsList.append(li);}
+ replaceText(refs.methodNote,next.method);
+ replaceText(refs.formMessage,"");
+ revisionNotice();
+ scrollToPanel(refs.assessmentPanel);
 }
-function add(name){
-  const field=refs[name+"Input"],value=core.plain(field.value);
-  if(!value)return;
-  const other=name==="protected"?"allowed":"protected";
-  if(core.distinct(record[other]).some(x=>x.toLowerCase()===value.toLowerCase())){refs.approvalMessage.textContent="This item cannot be both protected and permitted.";return;}
-  record[name]=core.distinct([...(record[name]||[]),value]);field.value="";invalidateOutput();save();render();field.focus();
+function checkIdea(){
+ const next=core.assessFirstUse(refs.idea.value);
+ if(!next.ok){report=null;refs.assessmentPanel.hidden=true;clearOutput();replaceText(refs.formMessage,next.error);refs.idea.focus();revisionNotice();return;}
+ renderReport(next);
 }
-function suggestions(){
-  refs.suggestionBox.hidden=!refs.suggestionBox.hidden;
-  if(refs.suggestionBox.hidden)return;
-  refs.suggestionList.replaceChildren();
-  const existing=core.distinct(record.protected).map(x=>x.toLowerCase());
-  const items=core.suggestions(record.goal).filter(x=>!existing.includes(x.toLowerCase()));
-  if(items.length===0){const msg=document.createElement("p");msg.textContent="No new suggestions for this description.";refs.suggestionList.append(msg);}
-  for(const suggestion of items){
-    const b=document.createElement("button");b.type="button";b.textContent="+ Add: "+suggestion;
-    b.addEventListener("click",()=>{record.protected=core.distinct([...(record.protected||[]),suggestion]);invalidateOutput();save();render();suggestions();});refs.suggestionList.append(b);
-  }
-}
-fields.forEach(id=>refs[id].addEventListener(id==="goal"||id==="projectName"||id==="customModel"||id==="duration"?"input":"change",()=>setField(id,refs[id].value)));
-refs.addProtected.addEventListener("click",()=>add("protected"));
-refs.addAllowed.addEventListener("click",()=>add("allowed"));
-[["protectedInput","protected"],["allowedInput","allowed"]].forEach(([id,name])=>refs[id].addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();add(name);}}));
-refs.suggestBtn.addEventListener("click",suggestions);
-document.querySelectorAll("[data-preset]").forEach(button=>button.addEventListener("click",()=>{
-  const selected=presets[button.dataset.preset];if(!selected)return;
-  record={...core.snapshot(selected),approvedSnapshot:record.approvedSnapshot,approvedAt:record.approvedAt};
-  refs.suggestionBox.hidden=true;invalidateOutput();save();render();refs.goal.focus();
+refs.checkBtn.addEventListener("click",checkIdea);
+refs.idea.addEventListener("keydown",e=>{if((e.ctrlKey||e.metaKey)&&e.key==="Enter"){e.preventDefault();checkIdea();}});
+document.querySelectorAll("[data-example]").forEach(button=>button.addEventListener("click",()=>{
+ const value=examples[button.dataset.example];if(!value)return;
+ refs.idea.value=value;checkIdea();
 }));
-refs.approveBtn.addEventListener("click",()=>{
-  const check=core.validateApproval(record);
-  if(!check.ok){refs.approvalMessage.textContent=check.reason;return;}
-  record.approvedSnapshot=current();record.approvedAt=new Date().toISOString();invalidateOutput();save();render();
-  refs.approvalMessage.textContent="You approved this local intent snapshot. Revisions will be compared against it.";
-});
 refs.prepareBtn.addEventListener("click",()=>{
-  const output=core.prepare(record,record.approvedSnapshot);
-  if(!output.ok){refs.outputBox.hidden=true;refs.approvalMessage.textContent=output.reason;refs.approveBtn.focus();return;}
-  refs.preparedText.textContent=output.text;refs.outputBox.hidden=false;
+ if(!report||core.plain(refs.idea.value)!==report.idea){replaceText(refs.formMessage,"Check the current idea before preparing it.");refs.idea.focus();return;}
+ const ready=core.makeFirstRequest(report,answers);
+ if(!ready.ok){replaceText(refs.formMessage,ready.error);return;}
+ prepared=ready.text;replaceText(refs.preparedText,prepared);
+ refs.resultPanel.hidden=false;replaceText(refs.copyMessage,"");replaceText(refs.baselineMessage,"");
+ revisionNotice();scrollToPanel(refs.resultPanel);
 });
 refs.copyBtn.addEventListener("click",async()=>{
-  const value=refs.preparedText.textContent;if(!value)return;
-  try{if(!navigator.clipboard?.writeText)throw new Error("unavailable");await navigator.clipboard.writeText(value);refs.copyBtn.textContent="Copied";}
-  catch{refs.copyBtn.textContent="Select and copy the instructions above";}
+ if(!prepared)return;
+ try{
+  if(!navigator.clipboard?.writeText)throw new Error("Clipboard API unavailable");
+  await navigator.clipboard.writeText(prepared);
+  replaceText(refs.copyMessage,"Copied. Paste it into your AI tool.");
+ }catch{
+  replaceText(refs.copyMessage,"Copy isn't available in this browser. Select the request text above and use Copy.");
+  refs.preparedText.focus();
+ }
 });
-refs.resetBtn.addEventListener("click",()=>{
-  record={...core.snapshot({category:"3d",model:"Unspecified / Other"}),approvedSnapshot:null,approvedAt:""};
-  try{localStorage.removeItem(storageKey);}catch{}
-  refs.suggestionBox.hidden=true;invalidateOutput();render();refs.approvalMessage.textContent="Local draft cleared.";
+refs.saveBaselineBtn.addEventListener("click",()=>{
+ if(!prepared||!report){replaceText(refs.baselineMessage,"Prepare a request before saving it.");return;}
+ const key=core.firstUseIdentity(report,answers);
+ if(!key){replaceText(refs.baselineMessage,"Cannot save an unverified draft.");return;}
+ const date=new Date().toISOString();
+ try{
+  localStorage.setItem(storageKey,JSON.stringify({key,date}));
+  baseline={key,date};
+  replaceText(refs.baselineMessage,"Saved on this device. New changes will need another explicit save.");
+  revisionNotice();
+ }catch{
+  replaceText(refs.baselineMessage,"Local storage is unavailable. The request has not been saved.");
+ }
 });
-render();
+refs.startOverBtn.addEventListener("click",()=>{
+ refs.idea.value="";report=null;answers={};refs.assessmentPanel.hidden=true;clearOutput();
+ replaceText(refs.formMessage,"");refs.continuityDetails.open=false;revisionNotice();
+ scrollToPanel(refs.idea);refs.idea.focus();
+});
 document.body.dataset.startup="ready";
 })();

@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "8a1b1a61182598f2381371d73fe6ef2058e991e0",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "88cc933e2128b650dac6254ae3629ac289958e9e",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2875,
+    "lockScope": "H_EARTH:HILLSIDE_SHORELINE_CONTINUITY:20261023",
+    "observedBranchHead": "bd6f2991ef02def391635768f361f34c0aca3798",
+    "observedLedgerBlobSha": "6d84a6ea3389fea2463933dce439e07ae720c645",
+    "operationId": "H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708"
+  },
+  "operationId": "H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002",
+  "operationStarted": true,
+  "procedureLocatorDigest": "ab312ff756bb583aed2640435e1993c6c5588289541e05a1785c62e622a1e18d",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "36d07b558851c184d9e089cea763a0a23ba9ed4b714cd59e66ae8cc67d61dbe0",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

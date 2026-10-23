@@ -63,7 +63,8 @@
       ".github/workflows/public-private-boundary-gate.yml",
       ".github/workflows/operations-chamber-observations-v1.yml",
       ".github/workflows/pages-exact-head-deploy-v3.yml",
-      "tools/publication-duplicate-verification.v1.test.mjs"
+      "tools/publication-duplicate-verification.v1.test.mjs",
+      ".github/ai-toolset-transport/authorized-toolset-registry.audralia-execution-succession.v1.json"
     ],
     "ownedPathPrefixes": [
       ".github/ai-router/",

@@ -107,7 +107,7 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   function enableControls(state){
     if(mode!=='preparing')return;
     stopStories();stopClock();baseline=pose(state);lastPose=baseline;mode='test';shell.dataset.mode=mode;
-    receipt.controlsEnabledMilliseconds=elapsed();beginStage('controls','Try the controls before entering');
+    receipt.controlsEnabledMilliseconds=elapsed();beginStage('controls','Controls ready · try navigation before entering');
     instructions.textContent='Drag on the landscape to look. Slide two fingers or use the mouse wheel to move; pinch to zoom. Enter unlocks after your changed view renders.';
   }
   function observeInput(proposal,state){
@@ -143,9 +143,11 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   });
   function getLoadingReport(){
     let details;try{details=reportProvider();}catch(error){details={diagnosticError:error?.message??String(error)};}
-    return {schema:'GRATITUDE_LOADING_REPORT_v1',reportVersion:'gen2870-collection-report-v1',
+    return {schema:'GRATITUDE_LOADING_REPORT_v1',reportVersion:'gen2871-loading-metrics-v2',
       capturedAt:new Date().toISOString(),elapsedMilliseconds:Math.round(elapsed()),
       preparationMilliseconds:receipt.controlsEnabledMilliseconds??receipt.failure?.elapsedMilliseconds??Math.round(elapsed()),
+      entryTiming:{clock:'LOADER_ELAPSED_MILLISECONDS',controlsReady:receipt.controlsEnabledMilliseconds,firstInputCameraChange:receipt.firstInputCameraChangeMilliseconds,firstChangedViewSubmitted:receipt.firstInputPoseRenderedMilliseconds,loaderDismissed:receipt.loaderDismissedMilliseconds},
+      timingDefinitions:{elapsed:'Time until report capture, including exploration',preparation:'Time until controls enabled; does not include all imported plants',sceneCompletion:'See details.loadingMetrics; route clock differs from loader clock'},
       mode,stage,failure:structuredClone(receipt.failure),controlsEnabledMilliseconds:receipt.controlsEnabledMilliseconds,
       stages:structuredClone(stages),phaseObservations:structuredClone(receipt.phaseTimings??{}),
       phaseTimingNote:'Phase observations can overlap and are not additive durations. Preparation time stops when controls enable.',

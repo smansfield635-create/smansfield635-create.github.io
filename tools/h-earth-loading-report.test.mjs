@@ -53,3 +53,8 @@ test('report stage and work snapshots cannot mutate loader receipt',()=>{
  assert.equal(h.shell.hidden,true);assert.ok(h.body.children.some(n=>n.style.cssText?.includes('position:fixed')));
  state='READY';assert.equal(await h.loader.copyLoadingReport(),true);assert.equal(JSON.parse(copied).details.importedPlants.state,'READY');
  });
+
+test('entry timing remains distinct from copied elapsed and scene resource timing',()=>{
+ const h=harness({});h.setTime(2100);h.loader.enableControls(pose(0));h.setTime(3100);h.loader.observeInput({accepted:true},pose(1));h.setTime(3200);h.loader.observePresentation(pose(1),{navigationSequence:1});h.frames.shift()();h.setTime(4000);h.nodes.get('[data-enter]').listeners.click();h.setTime(9000);
+ const r=h.loader.getLoadingReport();assert.equal(r.entryTiming.controlsReady,2000);assert.equal(r.entryTiming.firstChangedViewSubmitted,3100);assert.equal(r.entryTiming.loaderDismissed,3900);assert.equal(r.elapsedMilliseconds,8900);assert.match(r.timingDefinitions.preparation,/does not include all imported plants/);
+});

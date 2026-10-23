@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createLoadingMetrics,summarizeTransfers} from '../showroom/globe/h-earth/vegetation-prototype/loading-metrics.v2.js';
+const entry=(id,x,ready=false,extra={})=>({id,x,z:0,ready,state:ready?'READY':'IDLE',gpuResourceBytes:10,...extra});
+const resource=(entries,original={focusId:'original',placement:{anchor:{x:0,z:0}},ready:false,gpuResourceBytes:20})=>({jacaranda:original,treeCollection:{entries,replacementCount:entries.length,additionalShrubCount:0,prefetchDistance:180}});
+test('initial target set stays fixed as current camera changes; all resident milestone waits for every asset',()=>{
+ let time=10;const m=createLoadingMetrics({now:()=>time}),r=resource([entry('near',5),entry('far',500)]);m.controlsReady(r,{x:0,z:0});time=20;r.jacaranda.ready=true;r.treeCollection.entries[0].ready=true;m.observeResources(r,{x:500,z:0});let s=m.snapshot(r,{x:500,z:0});assert.deepEqual(s.initialNearbyAssetIds,['original','near']);assert.equal(s.initialNearbyResidentMilliseconds,20);assert.equal(s.allImportedPlantsResidentMilliseconds,null);assert.deepEqual(s.currentNearby.pendingIds,['far']);time=30;r.treeCollection.entries[1].ready=true;m.observeResources(r,{x:500,z:0});s=m.snapshot(r,{x:0,z:0});assert.equal(s.allImportedPlantsResidentMilliseconds,30);time=50;m.observeResources(r,{x:0,z:0});assert.equal(m.snapshot(r).initialNearbyResidentMilliseconds,20);
+});
+test('failed and pending plants remain distinguishable without completion claim',()=>{
+ const m=createLoadingMetrics(),r=resource([entry('failed',5,false,{failure:'decode'}),entry('pending',7)]);m.controlsReady(r,{x:0,z:0});const s=m.snapshot(r,{x:0,z:0});assert.equal(s.allImportedPlants.complete,false);assert.deepEqual(s.allImportedPlants.failed,[{id:'failed',message:'decode'}]);assert.deepEqual(s.allImportedPlants.pendingIds,['original','pending']);assert.equal(s.initialNearbyResidentMilliseconds,null);
+});
+test('input metrics match latest coalesced sequence and retain only bounded recent samples',()=>{
+ let time=0;const m=createLoadingMetrics({now:()=>time,sampleLimit:2});m.input({accepted:false},{sequence:0});m.input({accepted:true},{sequence:1});time=2;m.input({accepted:true},{sequence:2});time=4;m.presented({sequence:1},{navigationSequence:1});m.presented({sequence:2},{navigationSequence:999});m.presented({sequence:2},{navigationSequence:2,cpuSubmitMilliseconds:1});
+ for(const [sequence,latency] of [[3,5],[4,9]]){m.input({accepted:true},{sequence});time+=latency;m.presented({sequence},{navigationSequence:sequence,cpuSubmitMilliseconds:2});}
+ const s=m.snapshot(null).traversal;assert.equal(s.inputCount,4);assert.equal(s.coalescedInputCount,1);assert.equal(s.totalSamples,3);assert.equal(s.samples,2);assert.equal(s.p50Milliseconds,5);assert.equal(s.p95Milliseconds,9);assert.equal(s.cpuSubmission.samples,2);assert.equal(s.pending,false);
+});
+test('hidden input and hidden pending presentation cannot contaminate latency samples',()=>{
+ const m=createLoadingMetrics();m.input({accepted:true},{sequence:1},false);m.input({accepted:true},{sequence:2});m.visibilityChanged();m.presented({sequence:2},{navigationSequence:2});m.input({accepted:true},{sequence:3});m.presented({sequence:3},{navigationSequence:3},false);const s=m.snapshot(null).traversal;assert.equal(s.samples,0);assert.equal(s.hiddenDiscarded,2);assert.equal(s.inputCount,2);
+});
+test('shared GPU allocation counted once and unknown values excluded',()=>{
+ const r=resource([entry('clone',1,true,{sharedGpuResources:true,resourceOwner:'original',gpuResourceBytes:0}),entry('other',2,true,{resourceOwner:'other',gpuResourceBytes:30}),entry('other-alias',3,true,{resourceOwner:'other',gpuResourceBytes:30}),entry('unknown',4,false,{gpuResourceBytes:null})]);const s=createLoadingMetrics().snapshot(r).importedPlantGpu;assert.equal(s.estimatedUniqueResourceBytes,50);assert.equal(s.sharedInstances,1);assert.equal(s.unknownEntries,1);assert.equal(s.resourceOwners,2);assert.match(s.scope,/Not driver memory/);
+});
+test('transfer summary distinguishes zero transfer from known cache and flags incomplete timing',()=>{
+ const values=[{name:'https://a/tree.glb?rev=1',transferSize:0,encodedBodySize:100,decodedBodySize:200,duration:10},{name:'https://a/tree.glb',transferSize:0,encodedBodySize:100,decodedBodySize:200,duration:0,deliveryType:'cache'},{name:'https://a/precomputed-grass.bin',transferSize:50,encodedBodySize:40,decodedBodySize:80,duration:-2}];const s=summarizeTransfers(values,{bufferFullEvents:1});assert.equal(s.groups.importedModels.requests,2);assert.equal(s.groups.importedModels.zeroTransferEntries,2);assert.equal(s.groups.importedModels.knownLocalCacheEntries,1);assert.equal(s.invalidTimingEntries,1);assert.equal(s.knownBufferOverflow,true);assert.equal(s.completeness,'NOT_PROVEN');assert.equal(summarizeTransfers([]).completeness,'NOT_PROVEN');assert.match(s.scope,/Zero transfer alone is not proof of cache/);
+});
+test('unloaded original uses authored target; already resident original is included at controls enable',()=>{
+ for(const ready of [false,true]){let time=100;const m=createLoadingMetrics({now:()=>time}),r=resource([],{focusId:'original',placement:null,targetAnchor:{x:5,z:0},ready,gpuResourceBytes:ready?20:0});m.controlsReady(r,{x:0,z:0});const s=m.snapshot(r,{x:0,z:0});assert.deepEqual(s.initialNearbyAssetIds,['original']);assert.equal(s.currentNearby.expected,1);assert.equal(s.initialNearbyResidentMilliseconds,ready?100:null);assert.equal(s.allImportedPlantsResidentMilliseconds,ready?100:null);}
+});
+test('missing collection members or metadata never claim all assets complete',()=>{
+ const m=createLoadingMetrics(),r=resource([entry('one',0,true)],{focusId:'original',targetAnchor:{x:0,z:0},ready:true,gpuResourceBytes:10});r.treeCollection.replacementCount=2;m.controlsReady(r,{x:0,z:0});let s=m.snapshot(r);assert.equal(s.allImportedPlants.complete,false);assert.equal(s.allImportedPlants.missingEntries,1);assert.equal(s.allImportedPlantsResidentMilliseconds,null);delete r.treeCollection.replacementCount;s=m.snapshot(r);assert.equal(s.allImportedPlants.complete,false);assert.equal(s.allImportedPlants.expected,null);
+});

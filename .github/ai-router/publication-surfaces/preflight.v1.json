@@ -66,7 +66,7 @@
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "Switch to software app example",
+        "name": "Load software-app example",
         "action": {
           "type": "click",
           "selector": "[data-preset=\"app\"]"
@@ -76,6 +76,106 @@
             "type": "textContains",
             "selector": "#protectedList",
             "value": "Existing user data must not be deleted."
+          }
+        ]
+      },
+      {
+        "name": "Explicitly approve local intent",
+        "action": {
+          "type": "click",
+          "selector": "#approveBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#intentBadge",
+            "value": "User approved"
+          }
+        ]
+      },
+      {
+        "name": "Prepare instructions with protected requirement",
+        "action": {
+          "type": "click",
+          "selector": "#prepareBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#preparedText",
+            "value": "P01: Existing user data must not be deleted."
+          },
+          {
+            "type": "textContains",
+            "selector": "#preparedText",
+            "value": "NOT_VERIFIED"
+          }
+        ]
+      },
+      {
+        "name": "Editing goal invalidates approval",
+        "action": {
+          "type": "key",
+          "selector": "#goal",
+          "key": "A"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#intentBadge",
+            "value": "Review needed"
+          },
+          {
+            "type": "textContains",
+            "selector": "#continuityBadge",
+            "value": "Changed"
+          }
+        ]
+      },
+      {
+        "name": "Reject stale approval when preparing revised request",
+        "action": {
+          "type": "click",
+          "selector": "#prepareBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#approvalMessage",
+            "value": "differs from the approved snapshot"
+          }
+        ]
+      },
+      {
+        "name": "Renew approval after user revision",
+        "action": {
+          "type": "click",
+          "selector": "#approveBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#intentBadge",
+            "value": "User approved"
+          }
+        ]
+      },
+      {
+        "name": "Reissue revised approved instructions",
+        "action": {
+          "type": "click",
+          "selector": "#prepareBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#preparedText",
+            "value": "PROTECTED REQUIREMENTS"
+          },
+          {
+            "type": "textContains",
+            "selector": "#preparedText",
+            "value": "NOT_VERIFIED"
           }
         ]
       }

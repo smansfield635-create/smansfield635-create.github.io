@@ -1,0 +1,21 @@
+{
+  "schema":"H_EARTH_TERRAIN_GRASS_ACCEPTANCE_v2",
+  "baseline":"db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d",
+  "northReview":"coverage_contract: independent read-only review before construction",
+  "lowerTerrainRootsPerSquareMetre":24,
+  "middleTerrainRootsPerSquareMetre":8,
+  "crestRootsPerSquareMetre":1.5,
+  "elevationTransitionsMetres":[20,38,50],
+  "slopeReductionMaximum":0.7,
+  "slopeTransitionShaderOneMinusNormalY":[0.18,0.46],
+  "boundaryPolicy":"Terrain-derived named coastal side with 24 metre shoulder transition; no rectangular planting feather. All four census edges must exclude selected component; enlarge scan otherwise.",
+  "scopePolicy":"All admitted components intersecting established coastal and two foothill seed regions. Include LOWLAND soil. Record excluded components. Census limits are computational only.",
+  "targetPolicy":"max(existing occupancy, deterministic terrain quota). Never lower quota to fit memory.",
+  "cellPolicy":"1 metre cells; independently test 4x4 interior probes. Fully eligible cells must meet quota. Boundary shortfalls require counted eligible probes and actual rejected-candidate reasons.",
+  "zeroUnsupportedOrWetAdditions":true,
+  "zeroMissingBaselineRoots":true,
+  "zeroShortFullyEligibleCells":true,
+  "runtimePolicy":"Preserve all visible roots; conservative frustum rejection only. Record combined saved/runtime roots, allocated bytes, visible roots, submitted triangles, draw calls and uploads separately. Any larger resident allocation requires measured exact-candidate runtime evidence.",
+  "ownerPreviewRequired":false,
+  "subjectiveAppearanceOrPhysicalDeviceAcceptanceClaimed":false
+}

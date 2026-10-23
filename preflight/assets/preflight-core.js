@@ -89,5 +89,96 @@
     const approved=raw.approvedSnapshot?snapshot(raw.approvedSnapshot):null;
     return {schema:STATE_SCHEMA,...current,approvedSnapshot:approved,approvedAt:approved?plain(raw.approvedAt):""};
   }
-  return Object.freeze({SCHEMA,STATE_SCHEMA,NOT_VERIFIED,snapshot,key,compare,validateApproval,compatibility,suggestions,prepare,safeStored,distinct,plain});
+
+  // Rule-based first-use baseline. Never claim semantic AI inference or provider validation.
+  function inferTask(textValue){
+    const s=plain(textValue).toLowerCase();
+    const groups=[
+      ["video",/\b(video|commercial|film|clip|reel|animation|trailer|advertisement)\b/],
+      ["app",/\b(app|website|dashboard|software|webpage|saas)\b/],
+      ["world",/\b(3d|virtual world|terrain|landscape|walkable|cavern|oasis|game environment)\b/],
+      ["audio",/\b(audio|voice|podcast|narration|music|soundtrack)\b/],
+      ["image",/\b(image|photo|illustration|poster|logo|graphic|picture)\b/],
+      ["writing",/\b(article|essay|report|email|letter|script|blog|document)\b/],
+      ["agent",/\b(agent|workflow|automation|automate|bot)\b/]
+    ];
+    return groups.find(x=>x[1].test(s))?.[0]||"general";
+  }
+  const q=(id,title,why,options)=>({id,title,why,options});
+  const library={
+    video:[
+      q("destination","Where will people see it?","The destination affects framing and pacing.",["Social media","Website","Presentation or event","Not sure"]),
+      q("footage","What visuals should it use?","Real references and generated imagery need different preparation.",["My photos or footage","AI-generated visuals","A mixture","Not sure"]),
+      q("brand","Are there brand details to preserve?","Exact logos and wording should be supplied as references.",["Existing logo or signage","No fixed brand assets","Not sure"])],
+    app:[
+      q("users","Who will use it?","Primary users shape the interface.",["Customers","My team","Just me","Not sure"]),
+      q("data","Does existing data need protection?","Do not assume a new build may overwrite data.",["Yes, preserve it","Starting fresh","Not sure"]),
+      q("devices","Where must it work?","Mobile and desktop need different interaction patterns.",["Mobile and desktop","Mobile first","Desktop first","Not sure"])],
+    world:[
+      q("interactivity","Will people explore it?","Walkable worlds have different needs from visual renders.",["Walkable and interactive","Visual scene only","Both","Not sure"]),
+      q("existing","Is there an existing environment?","Do not silently replace approved geography and assets.",["Yes, preserve existing work","No, new environment","Not sure"]),
+      q("runtime","Where will it run?","Engine choice affects constraints.",["Browser","Game engine","Rendered video","Not sure"])],
+    image:[
+      q("placement","Where will the image be used?","Purpose affects composition.",["Social or web","Print","Personal project","Not sure"]),
+      q("reference","Should any visual identity be retained?","Exact brands should use provided references.",["I have references","Create something new","Not sure"]),
+      q("shape","What image shape is needed?","Aspect ratio affects framing.",["Portrait","Landscape","Square","Not sure"])],
+    writing:[
+      q("reader","Who is the reader?","Audience determines style and depth.",["General public","Professional audience","One person","Not sure"]),
+      q("tone","What tone is appropriate?","Tone changes how the message lands.",["Friendly","Professional","Direct","Not sure"]),
+      q("facts","Should factual claims be checked?","Do not invent sources or research.",["Verify factual claims","Creative only","Not sure"])],
+    audio:[
+      q("format","What audio do you need?","Speech and music are different workflows.",["Spoken voice","Music","Sound effects","Not sure"]),
+      q("identity","Does it involve a real person's voice?","Mimicking a person requires appropriate permission.",["No real-person voice","I have permission","Not sure"]),
+      q("length","How long should it be?","Length affects production.",["Under 30 seconds","30–120 seconds","Longer","Not sure"])],
+    agent:[
+      q("authority","May it perform external actions?","Irreversible actions need explicit permission.",["Advice only","Draft for review","Ask before executing","Not sure"]),
+      q("systems","Which systems may it access?","Access should be intentionally limited.",["Email or calendar","Files","Business platform","Not sure"]),
+      q("success","How do you know it succeeded?","A clear result prevents vague automation.",["Finished deliverable","Verified notification","Recurring summary","Not sure"])],
+    general:[
+      q("output","What should AI make?","An output type makes the request actionable.",["Image or video","Text or document","App or interactive result","Not sure"]),
+      q("audience","Who is it for?","Audience affects the result.",["Just me","Other people","My business","Not sure"]),
+      q("priority","What is most important?","This clarifies tradeoffs.",["Accuracy","Speed","Quality","Not sure"])]
+  };
+  function assessFirstUse(raw){
+    const idea=plain(raw).slice(0,3000);
+    if(idea.length<12)return {ok:false,error:"Describe what you want AI to accomplish in a little more detail."};
+    const kind=inferTask(idea),s=idea.toLowerCase();
+    const already={
+      destination:/\b(instagram|tiktok|youtube|website|social media|television)\b/,
+      footage:/\b(my photos|my footage|existing images|stock footage)\b/,
+      brand:/\b(logo|brand assets|signage|brand guide)\b/,
+      users:/\b(customers|my team|staff|just me|employees)\b/,
+      data:/\b(existing data|preserve data|from scratch|no data)\b/,
+      devices:/\b(mobile|desktop|phone|tablet|ios|android)\b/,
+      interactivity:/\b(walkable|interactive|still image|static render)\b/,
+      existing:/\b(preserve|keep existing|already built|do not change)\b/,
+      runtime:/\b(browser|webgl|unity|unreal|game engine)\b/,
+      shape:/\b(portrait|landscape|square|16:9|9:16)\b/,
+      tone:/\b(formal|casual|friendly|professional|concise)\b/
+    };
+    const questions=library[kind].filter(x=>!already[x.id]?.test(s)).slice(0,3);
+    const flags=[];
+    if(kind==="video"&&/\b\d+\s*[- ]?(seconds?|secs?|minutes?|mins?)\b/.test(s))flags.push("Duration specified; check the chosen model's current limits before generating.");
+    return {ok:true,idea,kind,questions,flags,method:"This first check uses transparent rules, not AI reasoning or verified model compatibility."};
+  }
+  function firstUseIdentity(report,answers={}){
+    if(!report?.ok)return "";
+    return JSON.stringify({idea:report.idea,decisions:report.questions.map(x=>[x.id,x.options.includes(plain(answers[x.id]))?plain(answers[x.id]):""])});
+  }
+  function makeFirstRequest(report,answers={}){
+    if(!report?.ok)return {ok:false,error:"Check your idea first."};
+    const confirmed=[],open=[];
+    for(const x of report.questions){
+      const a=plain(answers[x.id]);
+      if(a&&a!=="Not sure"&&x.options.includes(a))confirmed.push("- "+x.title+" "+a);
+      else open.push("- "+x.title);
+    }
+    const lines=["MY AI REQUEST",report.idea,"","CONFIRMED DETAILS:",...(confirmed.length?confirmed:["- None yet; ask rather than guess."])];
+    if(open.length)lines.push("","QUESTIONS STILL OPEN:",...open);
+    if(report.flags.length)lines.push("","CHECK BEFORE EXECUTION:",...report.flags.map(x=>"- "+x));
+    lines.push("","Keep my original goal intact. Do not invent answers to open questions. Ask before making consequential assumptions. Verify specific AI model limits separately before executing.","","Prepared with deterministic DiamondGate Preflight guidance, not model execution or verified compatibility.");
+    return {ok:true,text:lines.join("\n"),confirmed:confirmed.length,unresolved:open.length};
+  }
+
+  return Object.freeze({SCHEMA,STATE_SCHEMA,NOT_VERIFIED,snapshot,key,compare,validateApproval,compatibility,suggestions,prepare,safeStored,distinct,plain,inferTask,assessFirstUse,firstUseIdentity,makeFirstRequest});
 });

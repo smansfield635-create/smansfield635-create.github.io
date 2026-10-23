@@ -3,67 +3,74 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#050a13">
+<meta name="theme-color" content="#081020">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<meta name="description" content="Protect what matters across AI tools. DiamondGate Preflight — an owner-inspection prototype.">
-<title>DiamondGate · Preflight Studio</title>
+<meta name="description" content="Check your AI idea, spot important missing decisions, and prepare a better first request. No sign-in required.">
+<title>DiamondGate · Preflight</title>
 <link rel="stylesheet" href="./assets/studio.css">
 <script src="./assets/preflight-core.js" defer></script>
 <script src="./assets/studio.js" defer></script>
 </head>
 <body>
-<a class="skip" href="#workbench">Skip to workspace</a>
-<div class="ambient" aria-hidden="true"></div>
+<a class="skip" href="#idea">Skip to your idea</a>
 <div class="shell">
 <header class="topbar">
- <div class="brand"><span class="brandmark"><span>D</span></span><span class="brandcopy"><strong>DIAMONDGATE</strong><small>PREFLIGHT STUDIO</small></span></div>
- <div class="topright"><span class="preview-pill"><i></i> OWNER INSPECTION</span><button type="button" class="text-button" id="resetBtn" title="Clear saved local prototype data">Start fresh</button></div>
+ <a class="identity" href="#idea" aria-label="DiamondGate Preflight"><span class="monogram" aria-hidden="true">D</span><span><strong>DIAMONDGATE</strong><small>PREFLIGHT</small></span></a>
+ <span class="preview">OWNER INSPECTION</span>
 </header>
 <main>
- <section class="hero" aria-labelledby="headline">
-  <div class="hero-copy"><p class="eyebrow"><span class="hairline"></span> THE INTENT LAYER FOR AI WORK</p><h1 id="headline">Create freely.<br><em>Keep what matters.</em></h1><p class="lede">Describe your idea once. Protect the decisions that count. Know exactly what changed before your next request.</p></div>
-  <div class="hero-art" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="core-glyph"><span>✧</span></div><div class="orbit-dot dot-one"></div><div class="orbit-dot dot-two"></div><div class="orbit-dot dot-three"></div><div class="orbit-label label-one">INTENT</div><div class="orbit-label label-two">CONTINUITY</div></div>
- </section>
- <div class="journey" aria-label="Workflow"><span class="journey-active"><b>01</b> Define</span><span class="journey-line"></span><span><b>02</b> Protect</span><span class="journey-line"></span><span><b>03</b> Continue</span></div>
- <section class="studio-layout" id="workbench" aria-label="Preflight workbench">
-  <div class="editor-column">
-   <div class="surface context-surface">
-    <div class="card-head"><div><p class="section-kicker">YOUR WORKSPACE</p><h2>What are you creating?</h2></div><span class="step-marker">01 / 03</span></div>
-    <div class="field-grid"><label class="field">Project name<input id="projectName" type="text" maxlength="120" autocomplete="off" placeholder="Name your project"></label><label class="field">Type of work<select id="category"><option value="3d">3D & interactive worlds</option><option value="video">Video & animation</option><option value="app">Apps & websites</option><option value="image">Images & design</option><option value="audio">Audio & voice</option><option value="writing">Writing & content</option><option value="agent">AI agents & workflows</option></select></label></div>
-    <label class="field field-large" for="goal">Describe the result you want</label><textarea id="goal" rows="5" placeholder="Describe your idea in natural language. What would success look like?"></textarea>
-    <div class="example-row"><span>Explore an example</span><button type="button" class="example" data-preset="trees">Interactive world</button><button type="button" class="example" data-preset="video">Cinematic video</button><button type="button" class="example" data-preset="app">Software application</button></div>
-   </div>
-   <div class="surface decision-surface">
-    <div class="card-head"><div><p class="section-kicker">YOUR DECISIONS</p><h2>What needs to stay true?</h2><p class="supporting">These are your boundaries—not suggestions the AI can quietly override.</p></div><span class="step-marker">02 / 03</span></div>
-    <div class="group-title"><span class="group-icon shield">◇</span><div><strong>Protected requirements</strong><small>Changes require your renewed confirmation</small></div><span id="protectedCount" class="counter">0</span></div>
-    <ul id="protectedList" class="requirements" aria-live="polite"></ul>
-    <div class="add-line"><input id="protectedInput" type="text" maxlength="400" placeholder="Add something that must remain unchanged" aria-label="Add protected requirement"><button id="addProtected" class="add-button" type="button">Add</button></div>
-    <div class="group-title allowed-title"><span class="group-icon allowed">↗</span><div><strong>Changes you allow</strong><small>Give the AI room to create within your boundaries</small></div><span id="allowedCount" class="counter">0</span></div>
-    <ul id="allowedList" class="requirements requirements-allowed" aria-live="polite"></ul>
-    <div class="add-line"><input id="allowedInput" type="text" maxlength="400" placeholder="Add an allowed change" aria-label="Add permitted change"><button id="addAllowed" class="add-button" type="button">Add</button></div>
-    <div class="extract-strip"><span>Want help identifying boundaries from your description?</span><button id="suggestBtn" type="button" class="ghost-button">Review suggestions <span aria-hidden="true">↗</span></button></div>
-    <div id="suggestionBox" class="suggestions" hidden><strong>Suggested boundaries · not approved</strong><p>Review each suggestion before adding it. Nothing is protected automatically.</p><div id="suggestionList"></div></div>
-   </div>
-   <div class="surface settings-surface">
-    <div class="card-head"><div><p class="section-kicker">TARGET ENVIRONMENT</p><h2>Where will this go?</h2></div><span class="step-marker">03 / 03</span></div>
-    <div class="field-grid"><label class="field">Selected AI platform<select id="model"><option value="Unspecified / Other">Unspecified / other</option><option value="Runway Gen-4.5">Runway Gen-4.5</option><option value="Kling 4.0">Kling 4.0</option><option value="Midjourney">Midjourney</option><option value="Meshy">Meshy</option><option value="ElevenLabs">ElevenLabs</option><option value="Adobe Firefly">Adobe Firefly</option></select></label><label class="field" id="customModelField">Custom model / version<input id="customModel" type="text" maxlength="120" placeholder="Optional"></label></div>
-    <label class="field" id="durationField">Requested duration, seconds<input id="duration" inputmode="numeric" type="number" min="1" max="120" placeholder="Optional"></label>
-    <p class="technical-note"><span>ⓘ</span> Platform checks are version-specific. An unverified adapter never means your request is cleared for generation.</p>
-   </div>
+<section class="intro" aria-labelledby="headline">
+ <p class="eyebrow">A BETTER START WITH AI</p>
+ <h1 id="headline">Make your first<br><em>AI request count.</em></h1>
+ <p class="intro-copy">Tell us what you want to accomplish. Get a quick check of what might be missing—and a clearer request to take into your AI tool.</p>
+</section>
+<section class="workspace" aria-label="Check your idea">
+ <div class="card input-card">
+  <div class="card-top"><span class="step">01 · YOUR IDEA</span><span class="subtle">No sign-in. No setup.</span></div>
+  <h2>What would you like AI to do?</h2>
+  <label class="sr-only" for="idea">Describe what you want AI to accomplish</label>
+  <textarea id="idea" rows="5" maxlength="3000" placeholder="Example: I want to create a 20-second commercial for my bakery using AI." aria-describedby="inputHelp"></textarea>
+  <p id="inputHelp" class="field-help">Just describe it naturally. You don't need to know the platform or technical details.</p>
+  <div class="samples"><span>Try an example:</span>
+    <button type="button" class="chip" data-example="video">Bakery commercial</button>
+    <button type="button" class="chip" data-example="app">New app</button>
+    <button type="button" class="chip" data-example="world">3D world</button>
   </div>
-  <aside class="status-column" aria-label="Decision status">
-   <div class="status-panel"><div class="status-head"><div><p class="section-kicker">DECISION RECORD</p><h2>Your intent, accounted for.</h2></div><span class="status-emblem">✧</span></div>
-    <div class="signal"><span class="signal-icon">◆</span><div class="signal-copy"><strong>Intent integrity</strong><small id="integrityDesc">Waiting for your approval</small></div><span id="intentBadge" class="state-badge">Draft</span></div>
-    <div class="signal"><span class="signal-icon">◈</span><div class="signal-copy"><strong>Technical compatibility</strong><small id="techDesc">No verified adapter selected</small></div><span id="techBadge" class="state-badge neutral">Unverified</span></div>
-    <div class="signal"><span class="signal-icon">⟳</span><div class="signal-copy"><strong>Revision continuity</strong><small id="continuityDesc">Nothing approved yet</small></div><span id="continuityBadge" class="state-badge">Not started</span></div>
-    <div id="changesPanel" class="changes-panel" aria-live="polite"><p class="panel-label">CHANGE REVIEW</p><p id="changesSummary">Approve a first version to track meaningful revisions here.</p></div>
-    <div class="approval-actions"><button type="button" class="primary-button" id="approveBtn"><span id="approveLabel">Approve this intent</span><span aria-hidden="true">→</span></button><p id="approvalMessage" role="status">Approval is explicit. AI suggestions never count as approval.</p></div>
-   </div>
-   <div class="output-panel"><div class="output-top"><div><p class="section-kicker">READY TO TAKE FORWARD</p><h3>Your next request</h3></div><span>↗</span></div><p>Prepare a platform-neutral request that carries your approved boundaries with it.</p><button id="prepareBtn" class="secondary-button" type="button">Prepare instructions <span aria-hidden="true">→</span></button><div id="outputBox" hidden><pre id="preparedText"></pre><button id="copyBtn" type="button" class="copy-button">Copy instructions</button></div></div>
-  </aside>
+  <div class="action-line"><button id="checkBtn" type="button" class="button primary">Check my idea <span aria-hidden="true">→</span></button></div>
+  <p id="formMessage" class="message" role="status" aria-live="polite"></p>
+ </div>
+ <section class="card assessment" id="assessmentPanel" aria-labelledby="assessmentTitle" hidden>
+  <div class="card-top"><span class="step">02 · YOUR FIRST PREFLIGHT</span><span id="taskLabel" class="mini-tag">AI request</span></div>
+  <h2 id="assessmentTitle">A few things worth deciding</h2>
+  <div class="recognized"><span class="recognized-mark" aria-hidden="true">✓</span><div><strong>Here's the request you're starting with</strong><p id="recognizedIdea"></p></div></div>
+  <h3>What could make the result better?</h3>
+  <p class="short-help">These are suggestions, not requirements. Answer what you know and skip the rest.</p>
+  <div id="questionList" class="questions"></div>
+  <div id="flagsPanel" class="flags" hidden><strong>Check before generating</strong><ul id="flagsList"></ul></div>
+  <p id="methodNote" class="method"></p>
+  <button type="button" class="button primary" id="prepareBtn">Prepare my request <span aria-hidden="true">→</span></button>
  </section>
- <footer><span>DIAMONDGATE <b>·</b> PREFLIGHT</span><span>Owner inspection build · local-only storage · no platform execution</span></footer>
+ <section class="card output" id="resultPanel" aria-labelledby="outputTitle" hidden>
+  <div class="card-top"><span class="step">03 · READY TO USE</span><span class="mini-tag">Copy into your AI tool</span></div>
+  <h2 id="outputTitle">Your clearer request</h2>
+  <p class="short-help">Your original idea stays intact. Confirmed details are included, and unresolved decisions are clearly identified.</p>
+  <pre id="preparedText" tabindex="0"></pre>
+  <div class="button-row"><button id="copyBtn" type="button" class="button primary">Copy my request <span aria-hidden="true">↗</span></button><button id="startOverBtn" type="button" class="button light">Check another idea</button></div>
+  <p id="copyMessage" role="status" class="message"></p>
+  <details class="continuity" id="continuityDetails">
+   <summary>Want to keep this direction for later?</summary>
+   <p>Save this exact request as a local baseline. If you change it, Preflight will point out what changed before you save a new version. Nothing is approved automatically.</p>
+   <button id="saveBaselineBtn" type="button" class="button light">Save this version on this device</button>
+   <p class="message" id="baselineMessage" role="status"></p>
+  </details>
+ </section>
+ <section class="revision" id="revisionPanel" hidden aria-live="polite">
+  <strong>Saved direction changed</strong>
+  <p id="revisionText">Review the changes before saving a new version.</p>
+ </section>
+</section>
 </main>
+<footer><span>DIAMONDGATE · PREFLIGHT</span><span>First-use prototype · rule-based checks · no model execution · saved versions stay on this device</span></footer>
 </div>
 </body>
 </html>

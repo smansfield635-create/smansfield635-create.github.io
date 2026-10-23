@@ -143,7 +143,7 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   });
   function getLoadingReport(){
     let details;try{details=reportProvider();}catch(error){details={diagnosticError:error?.message??String(error)};}
-    return {schema:'GRATITUDE_LOADING_REPORT_v1',reportVersion:'gen2871-loading-metrics-v2',
+    return {schema:'GRATITUDE_LOADING_REPORT_v1',reportVersion:'gen2872-prepared-vegetation-v1',
       capturedAt:new Date().toISOString(),elapsedMilliseconds:Math.round(elapsed()),
       preparationMilliseconds:receipt.controlsEnabledMilliseconds??receipt.failure?.elapsedMilliseconds??Math.round(elapsed()),
       entryTiming:{clock:'LOADER_ELAPSED_MILLISECONDS',controlsReady:receipt.controlsEnabledMilliseconds,firstInputCameraChange:receipt.firstInputCameraChangeMilliseconds,firstChangedViewSubmitted:receipt.firstInputPoseRenderedMilliseconds,loaderDismissed:receipt.loaderDismissedMilliseconds},

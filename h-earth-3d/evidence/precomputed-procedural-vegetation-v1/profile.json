@@ -1,0 +1,65 @@
+{
+  "scope": "LOCAL_NODE_CPU_SAMPLES_ONLY",
+  "topSelfTimesMilliseconds": [
+    {
+      "function": "clonePlainValue",
+      "file": "geometry-kernel.west.js",
+      "milliseconds": 3469.665
+    },
+    {
+      "function": "deepFreeze",
+      "file": "geometry-kernel.west.js",
+      "milliseconds": 2140.431
+    },
+    {
+      "function": "clonePlainValue",
+      "file": "geometry-kernel.south.js",
+      "milliseconds": 2130.215
+    },
+    {
+      "function": "(garbage collector)",
+      "file": "",
+      "milliseconds": 2083.661
+    },
+    {
+      "function": "deepFreeze",
+      "file": "geometry-kernel.south.js",
+      "milliseconds": 1377.852
+    },
+    {
+      "function": "deepFreeze",
+      "file": "geometry-kernel.north.js",
+      "milliseconds": 949.765
+    },
+    {
+      "function": "deepFreeze",
+      "file": "geometry-kernel.east.js",
+      "milliseconds": 708.447
+    },
+    {
+      "function": "extractHEarthIndexedTopology",
+      "file": "geometry-kernel.east.js",
+      "milliseconds": 509.496
+    },
+    {
+      "function": "post",
+      "file": "node:inspector",
+      "milliseconds": 458.788
+    },
+    {
+      "function": "",
+      "file": "geometry-kernel.south.js",
+      "milliseconds": 282.939
+    },
+    {
+      "function": "calculateHEarthFaceNormals",
+      "file": "geometry-kernel.east.js",
+      "milliseconds": 279.423
+    },
+    {
+      "function": "lowerEntranceSeamAt",
+      "file": "geological-runtime-bridge.v1.js",
+      "milliseconds": 179.311
+    }
+  ]
+}

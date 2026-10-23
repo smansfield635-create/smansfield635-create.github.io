@@ -80,6 +80,9 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   function update(detail={}){
     if(mode==='failed'||mode==='entered')return;
     const phase=detail.phase??stage,key=`${stage}:${phase}`;
+    receipt.phaseTimings??={};const observed=elapsed();
+    receipt.phaseTimings[key]??={firstObservedMilliseconds:observed};
+    receipt.phaseTimings[key].lastObservedMilliseconds=observed;
     activity.textContent=detail.status??labels[phase]??phase.toLowerCase().replaceAll('_',' ');
     // Only explicit work counts qualify; legacy arbitrary `progress` is ignored.
     const pairs=[['completed','total',detail.unit??'work units'],['loadedContacts','totalContacts','plants'],['loadedBytes','totalBytes','bytes'],['completedRows','totalRows','rows'],['completedTiles','totalTiles','tiles'],['processedCandidates','totalCandidates','candidates']];

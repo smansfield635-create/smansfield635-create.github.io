@@ -1,0 +1,140 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "approvedAssets": [
+      {
+        "bytes": 18496516,
+        "filename": "Tree-Small-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Wild syringa / Tree Small 02",
+        "sha256": "236b81e864c2079dabe4c119c89c7315f0fbc4a00c96f02600e7e875342c6dc6"
+      },
+      {
+        "bytes": 24660600,
+        "filename": "Coastal-Tree-01-v2-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 01 v2",
+        "sha256": "b74dd63e6ee121a6ae913719a08cb8b29e28fb3d6a4c97d2d986c92a79f23bc7"
+      },
+      {
+        "bytes": 19468500,
+        "filename": "Coastal-Tree-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 02",
+        "sha256": "6a1497c91d4a66ed26c1b56c92cdf30b5b934e00dab123bdf990930bf2aad0c2"
+      },
+      {
+        "bytes": 31795372,
+        "filename": "Coastal-Tree-03-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 03",
+        "sha256": "02aad9751e876d2ac2512324b13d81525048d71c6795740ab372cf8e4d27515c"
+      },
+      {
+        "bytes": 10271048,
+        "filename": "Maple-Large-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple large A",
+        "sha256": "56462cb37f7a9ecca707c7095b630af9fa617de4f228c5db0ee0798de6cf87d5"
+      },
+      {
+        "bytes": 9899652,
+        "filename": "Maple-Medium-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple medium A",
+        "sha256": "28a52894e3f08e060ab9eedc7908174f9d98eabc9832ef5a0a999100de7b64fa"
+      },
+      {
+        "bytes": 23471852,
+        "filename": "Searsia-Lucida-A-Candidate.glb",
+        "license": "CC0",
+        "name": "Searsia lucida shrub",
+        "sha256": "4fbb63bff910b2875cf2353c83eef94d7b04c6987c949a91e7635315076070f0"
+      }
+    ],
+    "domain": "H_EARTH_COOPERATIVE_LEAF_TEXTURE_20261023_001",
+    "existingJacarandaSha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189",
+    "governingHead": "5c7a0b76b6259b22c375c48daf5d1e82cbd41bfd",
+    "paths": [
+      "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+      "tools/h-earth-leaf-texture-performance.test.mjs",
+      "h-earth-3d/evidence/cooperative-leaf-texture-v1/**"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "CANONICAL_PACKET_READY_RECEIPT_v1",
+    "PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1",
+    "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "HUMAN_INPUT_REQUIRED_NOT_STARTED",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "APPROVED_ASSET_IDENTITY_MISMATCH",
+    "PLACEMENT_OR_ECOLOGY_REGRESSION",
+    "RUNTIME_READINESS_FAILED",
+    "GPU_DRAW_OR_TEXTURE_PROOF_MISSING",
+    "EXPERIENCE_ANCHOR_FAILED",
+    "LIVE_RELEASE_HEAD_MISMATCH",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact governing head 5c7a0b76b6259b22c375c48daf5d1e82cbd41bfd. Qualify changed dependencies only; preserve later disjoint main changes. Existing bounded entry release route. On remote start send URL and yield without polling.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+    "tools/h-earth-leaf-texture-performance.test.mjs",
+    "h-earth-3d/evidence/cooperative-leaf-texture-v1/**"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "step": 1,
+      "action": "After authentic admission branch from preserved startup candidate dfa2c367c56846c96f718d8f93782e786aa11266; preserve its independent admission and successful preflight."
+    },
+    {
+      "step": 2,
+      "action": "Implement bounded yielding in existing alpha mipmap loops with identical arithmetic, cancellation checks, bitmap cleanup and explicit GL texture state restoration after each yield."
+    },
+    {
+      "step": 3,
+      "action": "Compare every generated mip byte with legacy algorithm using deterministic fixtures; exercise cancellation and interleaved GL state; independent West review."
+    },
+    {
+      "step": 4,
+      "action": "Qualify combined exact candidate through existing bounded entry preflight; immediately return run URL and stop."
+    },
+    {
+      "step": 5,
+      "action": "Merge and publish combined candidate through registered exact-head deployment, preserving disjoint main changes. No physical tablet performance claim until measured."
+    }
+  ],
+  "exactGoverningHead": "5c7a0b76b6259b22c375c48daf5d1e82cbd41bfd",
+  "exactTestRunnerCommand": "node --test tools/h-earth-leaf-texture-performance.test.mjs tools/h-earth-startup-performance.test.mjs tools/publication-live-verify.h-earth-entry.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "BYTE_IDENTICAL_ALPHA_PRESERVING_MIPMAP_OUTPUT",
+      "BOUNDED_COOPERATIVE_CPU_SLICES_AND_CORRECT_GL_REBIND_AFTER_YIELD",
+      "CANCELLATION_AND_BITMAP_CLEANUP",
+      "INDEPENDENT_REVIEW_TARGETED_TESTS_EXACT_HEAD_RELEASE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse published Jacaranda loader and existing successful exact-head release precedent. Inspect only directly affected loader, placements, approved files and selected verifier assertions. Preserve accepted design and source approvals.",
+    "forbidden": "No new models, redesign, parked assets, unrelated historical gate repair, new workflows or control-plane capability, blind repeated expensive runs, false readiness or camera-state injection."
+  },
+  "procedureId": "H_EARTH_COOPERATIVE_LEAF_TEXTURE_20261023_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/cooperative-leaf-texture-v1/**"
+    ],
+    "deploymentWorkflowPath": ".github/workflows/pages-exact-head-deploy-v3.yml",
+    "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+  }
+}

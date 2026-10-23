@@ -1,3 +1,4 @@
+import {fetchStartupAsset} from './precomputed-oasis-soil.v1.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
 /** Lossless, hash-bound output of the accepted ground-admission compiler. */
 const MANIFEST_SHA256='2a716b27f385df4dd7a605035c899f83b2ec729e16a04accf1bffa3ae8d16600';
@@ -65,14 +66,13 @@ async function decodePackedGrass(manifest,bytes,{yieldControl=async()=>{},onProg
 }
 export async function loadPrecomputedGrass({fetchImpl=globalThis.fetch,yieldControl,onProgress=()=>{},packed=false}={}){
  const started=performance.now();
- const response=await fetchImpl(new URL('./assets/precomputed-grass.v1.json?sha='+MANIFEST_SHA256,import.meta.url));
- if(!response.ok)fail('MANIFEST_HTTP_'+response.status);
- const manifestBytes=new Uint8Array(await response.arrayBuffer());
+ const manifestBytes=await fetchStartupAsset(new URL('./assets/precomputed-grass.v1.json?sha='+MANIFEST_SHA256,import.meta.url),{fetchImpl});
+ const manifestMilliseconds=performance.now()-started;
  if(await sha(manifestBytes)!==MANIFEST_SHA256)fail('MANIFEST_INTEGRITY');
  const manifest=JSON.parse(new TextDecoder().decode(manifestBytes));
  onProgress({phase:'SINGLE_POPULATION_DOWNLOADING',loadedBytes:0,totalBytes:manifest.compressedBytes});
- const data=await fetchImpl(new URL('./assets/precomputed-grass.v1.bin.gz?sha='+manifest.compressedSha256,import.meta.url));
- if(!data.ok)fail('DATA_HTTP_'+data.status);
+ const downloadStarted=performance.now();
+ let compressed=await fetchStartupAsset(new URL('./assets/precomputed-grass.v1.bin.gz?sha='+manifest.compressedSha256,import.meta.url),{fetchImpl,readBody:async data=>{
  let compressed;
  if(data.body?.getReader){
   compressed=new Uint8Array(manifest.compressedBytes);
@@ -84,15 +84,19 @@ export async function loadPrecomputedGrass({fetchImpl=globalThis.fetch,yieldCont
   }}catch(error){await reader.cancel().catch(()=>{});throw error;}finally{reader.releaseLock();}
   if(offset!==compressed.byteLength)fail('COMPRESSED_INTEGRITY_LENGTH');
  }else compressed=new Uint8Array(await data.arrayBuffer());
+ return compressed;}});
+ const downloadMilliseconds=performance.now()-downloadStarted,verifyStarted=performance.now();
  onProgress({phase:'SINGLE_POPULATION_VERIFYING'});
  if(compressed.byteLength!==manifest.compressedBytes||await sha(compressed)!==manifest.compressedSha256)fail('COMPRESSED_INTEGRITY');
+ const verificationMilliseconds=performance.now()-verifyStarted,decompressStarted=performance.now();
  onProgress({phase:'SINGLE_POPULATION_DECOMPRESSING'});
  const stream=new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'));
  compressed=null;
  const bytes=new Uint8Array(await new Response(stream).arrayBuffer());
+ const decompressionMilliseconds=performance.now()-decompressStarted,decodeStarted=performance.now();
  const decoded=packed?await decodePackedGrass(manifest,bytes,{yieldControl,onProgress}):null;
  const presentation=decoded?.presentation??await decodePrecomputedGrass(manifest,bytes,{yieldControl,onProgress});
- const result={...presentation,loading:{milliseconds:performance.now()-started,compressedBytes:manifest.compressedBytes,rawBytes:bytes.byteLength,source:'PRECOMPUTED_EXACT_ACCEPTED_PLANTING'}};
+ const result={...presentation,loading:{manifestMilliseconds,downloadMilliseconds,verificationMilliseconds,decompressionMilliseconds,decodeMilliseconds:performance.now()-decodeStarted,milliseconds:performance.now()-started,compressedBytes:manifest.compressedBytes,rawBytes:bytes.byteLength,source:'PRECOMPUTED_EXACT_ACCEPTED_PLANTING'}};
  if(decoded)packedPlans.set(result,decoded.plan);
  return result;
 }

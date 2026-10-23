@@ -1,3 +1,4 @@
+import {HILLSIDE_SHORELINE_GLSL} from './hillside-shoreline-field.v1.js';
 import {loadPreparedVegetation} from './precomputed-procedural-vegetation.v1.js';
 import {uploadStartupBuffer} from './performance-scheduling.v1.js';
 import {buildOasisTreeGroup,suppressOasisTreeGroupIndices,buildCoveragePreservingLeafMipmaps} from './geometry-oasis-tree-group.v1.js';
@@ -595,6 +596,7 @@ float cavernVisibility(vec3 p){
   return mix(0.22,1.0,texture(uCavernShadow,vec3(c.xy,c.z-0.00008)));
 }
 ${RENDERED_BEACH_GLSL}
+${HILLSIDE_SHORELINE_GLSL}
 ${FOOTHILL_MEADOW_GLSL}
 void main(){
   vec2 localXZ=vec2(0.0);
@@ -1037,7 +1039,11 @@ void main(){
     // Actual exposed mesh contacts drive proximity; canonical coast distance
     // retains the existing transition to slope/elevation suitability inland.
     float inlandMeters=vContactDistanceMeters;
-    float sandCoverage=renderedBeachCoverage(inlandMeters,vCoastDistanceMeters,vWorldPosition.y,slope);
+    float sandCoverage=hillsideSandCoverage(world,slope,renderedBeachCoverage(inlandMeters,vCoastDistanceMeters,vWorldPosition.y,slope));
+    // Exposed banks are weathered earth/stone, not the flat beach sand palette.
+    float steepBank=hillsideWeight(world)*smoothstep(.012,.065,slope)*(1.0-smoothstep(10.0,38.0,inlandMeters))*smoothstep(-1.0,0.0,inlandMeters);
+    vec3 bankEarth=mix(vec3(.20,.17,.115),vec3(.28,.255,.215),smoothstep(.08,.35,slope));
+    palette=mix(palette,bankEarth*(.90+.18*grain),steepBank*.78);
     vec3 wetSand=vec3(0.42326766,0.32777810,0.19120169);
     vec3 dampSand=vec3(0.49693298,0.39675522,0.23455058);
     vec3 drySand=vec3(0.57758045,0.47353148,0.28314874);
@@ -1132,7 +1138,7 @@ void main(){
       habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,coastalUv).r);
     }
     vec3 habitatSoil=vec3(0.105,0.112,0.060)*(0.90+0.18*noise2(vWorldPosition.xz*.29));
-    float foothillDry=foothillDryAmount(vWorldPosition,uPlanetRadius);
+    float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
     habitatSoil=mix(habitatSoil,vec3(.14,.12,.065)*(0.90+0.18*noise2(vWorldPosition.xz*.29)),foothillDry*.65);
     base=mix(base,habitatSoil,habitatCoverage*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);

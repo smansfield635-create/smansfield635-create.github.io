@@ -1,3 +1,4 @@
+import {hillsideSandCoverage} from './hillside-shoreline-field.v1.js';
 import {H_EARTH_WATER_PRESENTATION_ENABLED,H_EARTH_REAR_WATER_PRESENTATION_ENABLED} from '../functional-landscape/geological-runtime-bridge.v1.js?rev=gen2780-stable-planting-v1';
 /** Presentation roots belong to the indexed surfaces actually submitted to WebGL. */
 const f=Math.fround,EPS=1e-8;
@@ -95,7 +96,8 @@ export function buildVegetationVisibleSurface(pkg,{refinement=null,geology=null,
     const ordinary=inClip?refined.sample(x,z):base.sample(x,z),replacement=exterior.sample(x,z);
     return !ordinary?replacement:!replacement?ordinary:replacement.y>=ordinary.y?replacement:ordinary;
   }});
-  const beach=beachProviderFactory?beachProviderFactory({surfaceRevision,parts:groundParts,protectedReferenceAt}):null;
+  const originalBeach=beachProviderFactory?beachProviderFactory({surfaceRevision,parts:groundParts,protectedReferenceAt}):null;
+  const beach=originalBeach?Object.freeze({surfaceRevision,sample(args){const b=originalBeach.sample(args);if(!b.valid)return b;return Object.freeze({...b,rawSandCoverage:hillsideSandCoverage({x:args.x,z:args.z,shaderSlope:b.shaderSlope,rawSandCoverage:b.rawSandCoverage})});}}):null;
   return Object.freeze({ground,water,beach,sample:ground.sample,receipt:Object.freeze({
     schema:'H_EARTH_VEGETATION_VISIBLE_SURFACE_v1',coordinateSpace:'UPLOADED_FLOAT32_WORLD_XZ',
     baseTerrainTriangles:base.triangleCount,retiredBaseTriangles:retired.size,

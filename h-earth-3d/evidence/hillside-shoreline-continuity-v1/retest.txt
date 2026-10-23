@@ -1,0 +1,23 @@
+✔ coastal output obeys independent exact baseline, complete allocation and authentic hashes (147.1526ms)
+✔ all 1250134 previous records remain byte exact in original tiles; every addition occurs exactly once (3867.865506ms)
+✔ old atlas panels and world bounds are exact while coastal coverage has its own third panel (12.87565ms)
+✔ all saved additions remain oceanward, below hard slope limit, outside preserved woodland and inside finite field (25.328895ms)
+✔ ridge separator and bounded field blend continuously without a straight density cutoff (8.87645ms)
+✔ SHA-addressed downloads, single module identity and untouched bootstrap preserve cache consistency (1196.875945ms)
+✔ actual production route guard accepts three-panel habitat bytes and rejects stale or unsafe uploads (2.081093ms)
+✔ production importmap resolves the corrected route without changing bootstrap or data-route (0.769398ms)
+PRECOMPUTED_GRASS_CPU {"loadMilliseconds":1375.762974,"loadAndGpuPackingMilliseconds":5411.288296,"compressedBytes":35794570,"roots":1568999,"networkAndGpuAndBrowserExcluded":true}
+✔ exact accepted roots, atlas, ordering and existing GPU allocation survive loading (5413.623591ms)
+✔ manifest, compressed payload, raw payload, truncation and network failure fail closed (1142.950196ms)
+✔ replacement loads static planting without calling the terrain-generation loop (15.453975ms)
+✔ spatial repair preserves every baseline record and woodland texel, with exact admitted additions (3403.9323ms)
+✔ fine silhouette preserves height and distance detail, and soil treatment stays habitat-bound (2.886073ms)
+✔ uphill color stays inside confirmed foothills and retains the original habitat region (1.540608ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10299.694415

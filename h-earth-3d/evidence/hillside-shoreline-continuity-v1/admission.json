@@ -1,0 +1,8 @@
+{
+  "source": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6675#issuecomment-6371835421",
+  "id": 6371835421,
+  "author": "github-actions[bot]",
+  "createdAt": "2026-10-23T18:22:44Z",
+  "body": "```text\nCANONICAL_OPERATION_INTAKE_RETURN_V1\n\ntransportResult = CANONICAL_RECEIPT_PRESERVED\ncanonicalResult = ADMITTED_AND_LOCKED\noperationId = H_EARTH_HILLSIDE_SHORELINE_CONTINUITY_20261023_001\nlockGeneration = 2874\nworkflowRun = 40002749616\n```"
+}
+

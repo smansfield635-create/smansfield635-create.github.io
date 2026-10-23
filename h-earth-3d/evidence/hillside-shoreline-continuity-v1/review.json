@@ -1,0 +1,10 @@
+{
+  "schema": "HILLSIDE_SHORELINE_INDEPENDENT_REVIEW_v1",
+  "reviewer": "/root/review_repair",
+  "builder": "/root",
+  "disposition": "PASS_TO_READ_ONLY_PREFLIGHT_ONLY",
+  "retest": "14 tests passed, 0 failed after updating stale gen2873 source assertions",
+  "findings": ["Bank recoloring follows exposed shoreline contact", "New roots confined to largest four-connected admitted component", "Deterministic recompilation passed", "Every new root tested for support, water exclusion and admission", "All baseline roots and woodland/ravine atlas bytes preserved"],
+  "pending": ["Fixed-view GPU beach/bank and hillside comparison", "Exact-candidate owner perceptual review", "Experience-anchor acceptance", "Physical-device loading comparison"],
+  "publicationApproved": false
+}

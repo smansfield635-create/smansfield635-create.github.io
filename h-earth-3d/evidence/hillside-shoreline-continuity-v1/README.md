@@ -1,6 +1,6 @@
 # Connected hillside and shoreline candidate
 
-Admitted operation H_EARTH_HILLSIDE_SHORELINE_CONTINUITY_20261023_001, generation 2874. Governing baseline c 64 e 78 d 5 a 05711 f 0 b 2 ec 7 e 98 fb 400 c 65 d 8 e 430 df.
+Admitted operation H_EARTH_HILLSIDE_SHORELINE_CONTINUITY_20261023_001, generation 2874. Governing baseline c64e78d5a05711f0b2ec7e98fb400c65d8e430df.
 
 The pictured coastal side is addressed as the previously surveyed coastal component and shoulder, world bounds [-136,-253,249,-101]. Named spatial witnesses are woodland edge (-125,-200), inlet bank (15,-190), central ridge (86,-235), and eastern hill (148,-224). These are terrain survey coordinates, not recovered camera poses from the photos. Exact photo-to-camera correspondence remains unverified.
 

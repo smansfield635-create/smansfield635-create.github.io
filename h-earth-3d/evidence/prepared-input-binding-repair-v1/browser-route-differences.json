@@ -1,0 +1,78 @@
+{
+  "runId": 39992294690,
+  "candidate": "a2f5bb0b322ee8163b33df1756f3253de9cc6a3b",
+  "proof": {
+    "schema": "GRATITUDE_PREPARED_VEGETATION_v1",
+    "path": "RUNTIME_FALLBACK",
+    "failure": "PREPARED_INPUT_MISMATCH",
+    "phases": {
+      "manifestFetch": 5.2999999999883585,
+      "manifestVerification": 0.39999999999417923,
+      "inputVerification": 95
+    },
+    "compressedBytes": 0,
+    "rawBytes": 0,
+    "inputVerification": {
+      "expected": "f412cf1ca1e461e03b667b8b27b6ff095f37ba2dd3def122a823ff9d13aba219",
+      "actual": "6ea117d47941a932dfec0638fc9915e2a770b87663a8d11927e763b083f32b21",
+      "source": "ACTUAL_RENDERER_MODEL_AND_CANONICAL_PACKAGE",
+      "componentCount": 25,
+      "mismatches": [
+        {
+          "name": "route",
+          "expected": "42ce8fc5a14247dd9a8e42394cc4d4e7e59a082abe5e7992fa22cebb24c617ef",
+          "actual": "4f409d34db5d4e77222b7a601707eb250952b9f0b6b72a3bf4129e3f1ddf27d1"
+        }
+      ],
+      "routeDifferences": {
+        "total": 7,
+        "limit": 12,
+        "differences": [
+          {
+            "path": "route.path.51.height",
+            "expected": 5.957751414083832,
+            "actual": 5.957751414083833,
+            "delta": 8.881784197001252e-16
+          },
+          {
+            "path": "route.path.58.height",
+            "expected": 5.10091950984433,
+            "actual": 5.100919509844329,
+            "delta": -8.881784197001252e-16
+          },
+          {
+            "path": "route.path.59.height",
+            "expected": 4.966710855191647,
+            "actual": 4.966710855191646,
+            "delta": -8.881784197001252e-16
+          },
+          {
+            "path": "route.path.60.height",
+            "expected": 4.832502167030578,
+            "actual": 4.832502167030576,
+            "delta": -1.7763568394002505e-15
+          },
+          {
+            "path": "route.path.61.height",
+            "expected": 4.69829348168534,
+            "actual": 4.698293481685338,
+            "delta": -1.7763568394002505e-15
+          },
+          {
+            "path": "route.path.62.height",
+            "expected": 4.562643288634751,
+            "actual": 4.56264328863475,
+            "delta": -8.881784197001252e-16
+          },
+          {
+            "path": "route.path.63.height",
+            "expected": 4.456811536344096,
+            "actual": 4.456811536344095,
+            "delta": -8.881784197001252e-16
+          }
+        ]
+      }
+    },
+    "totalMilliseconds": 100.79999999998836
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "runId": 39990770827,
+  "candidate": "e4ea3e7f2d7a00b6329a20aec610f09516041735",
+  "proof": {
+    "schema": "GRATITUDE_PREPARED_VEGETATION_v1",
+    "path": "RUNTIME_FALLBACK",
+    "failure": "PREPARED_INPUT_MISMATCH",
+    "phases": {
+      "manifestFetch": 8.89999999999418,
+      "manifestVerification": 0.5,
+      "inputVerification": 117.60000000000582
+    },
+    "compressedBytes": 0,
+    "rawBytes": 0,
+    "inputVerification": {
+      "expected": "f412cf1ca1e461e03b667b8b27b6ff095f37ba2dd3def122a823ff9d13aba219",
+      "actual": "6ea117d47941a932dfec0638fc9915e2a770b87663a8d11927e763b083f32b21",
+      "source": "ACTUAL_RENDERER_MODEL_AND_CANONICAL_PACKAGE",
+      "componentCount": 25,
+      "mismatches": [
+        {
+          "name": "route",
+          "expected": "42ce8fc5a14247dd9a8e42394cc4d4e7e59a082abe5e7992fa22cebb24c617ef",
+          "actual": "4f409d34db5d4e77222b7a601707eb250952b9f0b6b72a3bf4129e3f1ddf27d1"
+        }
+      ]
+    },
+    "totalMilliseconds": 127
+  }
+}

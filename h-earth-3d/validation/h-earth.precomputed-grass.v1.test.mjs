@@ -44,7 +44,7 @@ test('manifest, compressed payload, raw payload, truncation and network failure 
 test('replacement loads static planting without calling the terrain-generation loop',async()=>{
  const source=await fs.readFile(new URL('persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',render),'utf8');
  const replacement=source.slice(source.indexOf('  function prepareReplacementVegetation'),source.indexOf('  async function uploadGlobalCover'));
- assert(replacement.includes('settle(loadPrecomputedGrass({packed:true,'));assert(replacement.includes('const grassResult=await grassPromise;if(grassResult.error)throw grassResult.error;')); 
+ assert(replacement.includes('settle(loadPrecomputedGrass({packed:true,'));assert(replacement.includes('const grassResult=await grassPromise;if(grassResult.error)throw grassResult.error;'));
  assert(!replacement.includes('await buildWoodlandFineGrass('));assert(!replacement.includes('await buildWoodlandHabitatField('));
  assert(replacement.includes('await createSingleOwnerVegetation(gl,presentation,'));
  assert(replacement.includes('mask.width!==104||mask.height!==146||mask.grassTuftCount!==350'));

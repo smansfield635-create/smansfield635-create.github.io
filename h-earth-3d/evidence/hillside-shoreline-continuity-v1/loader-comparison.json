@@ -5,7 +5,7 @@
   "runs": [
     {
       "name": "baseline",
-      "milliseconds": 1048.404714,
+      "milliseconds": 867.9777559999999,
       "rootCount": 1457471,
       "packedBytes": 23319536,
       "compressedBytes": 33246067,
@@ -13,10 +13,10 @@
     },
     {
       "name": "candidate",
-      "milliseconds": 998.4168960000002,
-      "rootCount": 1568999,
-      "packedBytes": 25103984,
-      "compressedBytes": 35794570,
+      "milliseconds": 782.7372579999999,
+      "rootCount": 1518809,
+      "packedBytes": 24300944,
+      "compressedBytes": 34666305,
       "phaseMilliseconds": null
     }
   ]

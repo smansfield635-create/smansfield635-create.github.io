@@ -1,0 +1,20 @@
+{
+  "schema": "HILLSIDE_RUNTIME_BUDGET_REPAIR_v1",
+  "failedRun": 40010758520,
+  "failure": "POPULATION_GPU_BUDGET_EXCEEDED",
+  "savedRoots": 1518809,
+  "runtimeEntranceAndSlopeRoots": 54218,
+  "combinedRoots": 1573027,
+  "maximumRoots": 1575168,
+  "headroom": 2141,
+  "packedBytes": 25168432,
+  "maximumPackedBytes": 25202688,
+  "baselineSavedRootsPreserved": true,
+  "allCavernEntranceRootsPreserved": true,
+  "slopeSupplement": "Adapts to hillside density; not claimed byte-identical",
+  "tests": "11 passed",
+  "reviewer": "/root/review_repair",
+  "disposition": "PASS_TO_READ_ONLY_PREFLIGHT_ONLY",
+  "publicationApproved": false,
+  "determinism": "PASS"
+}

@@ -14,7 +14,7 @@ export function hillsideDry(x,y,z){return hillsideWeight(x,z)*smooth(18,42,y);}
 export function hillsideDensity({x,y,z,shaderSlope,contactDistance,sandCoverage}){
  if(sandCoverage>.12||contactDistance<=0)return 0;
  const bank=smooth(.012,.065,shaderSlope),shore=smooth(2,6+10*(1-bank),contactDistance);
- return hillsideWeight(x,z)*shore*(1-smooth(0,.12,sandCoverage))*(10-6*smooth(20,46,y))*(1-.7*smooth(.18,.46,shaderSlope));
+ return hillsideWeight(x,z)*shore*(1-smooth(0,.12,sandCoverage))*(5.8-3.48*smooth(20,46,y))*(1-.7*smooth(.18,.46,shaderSlope));
 }
 export const HILLSIDE_SHORELINE_GLSL=`
 float hillsideWeight(vec2 p){return smoothstep(0.,16.,min(min(p.x+136.,249.-p.x),min(p.y+253.,-101.-p.y)));}

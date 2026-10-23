@@ -1,0 +1,6 @@
+STAGE adapters-ready
+STAGE geology-ready
+STAGE surface-ready
+CONNECTED_COMPONENTS [ 37006, 17 ]
+ALLOCATION {"count":1518809,"added":61338,"removed":0,"maxTile":816,"eligibleCells":35015,"shortCells":0}
+DETERMINISTIC_HILLSIDE_RECOMPILE_PASS

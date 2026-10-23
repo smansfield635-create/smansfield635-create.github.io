@@ -25,7 +25,7 @@ test('beach and bank laws have smooth boundaries, no water-only override, and pr
  for(const [x,z]of [[-136,-180],[249,-180],[0,-253],[0,-101]]){assert.equal(hillsideWeight(x,z),0);assert.equal(at(.08,.8,x,z),.8);}
  for(const contactDistance of [-10,0])assert.equal(hillsideDensity({x:0,y:5,z:-180,shaderSlope:.1,contactDistance,sandCoverage:0}),0);
  assert.equal(hillsideDensity({x:0,y:5,z:-180,shaderSlope:0,contactDistance:5,sandCoverage:1}),0);
- assert(hillsideDensity({x:0,y:5,z:-180,shaderSlope:.1,contactDistance:8,sandCoverage:0})>9);
+ assert(hillsideDensity({x:0,y:5,z:-180,shaderSlope:.1,contactDistance:8,sandCoverage:0})>5);
  const shader=read('showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js').toString();assert(shader.includes('${HILLSIDE_SHORELINE_GLSL}'));assert(shader.includes('hillsideSandCoverage(world,slope,renderedBeachCoverage('));
  const provider=read('showroom/globe/h-earth/render/vegetation-visible-surface.v1.js').toString();assert(provider.includes('shaderSlope:b.shaderSlope,rawSandCoverage:b.rawSandCoverage'));
 });
@@ -38,4 +38,23 @@ test('coverage is one connected component, every eligible quota filled, uplands 
 test('every new root is grounded on actual geometry, dry, admitted, and within shared classification',async()=>{
  const {visibleSurface,groundAdmission,materials,cover}=await import('../evidence/hillside-shoreline-continuity-v1/support-fixture.mjs');
  for(const r of addedRecords){assert(hillsideWeight(r.x,r.z)>0);const s=visibleSurface.sample(r.x,r.z);assert(s);assert.equal(Math.fround(s.y),r.y);assert.equal(s.triangleId,r.triangleId);assert.equal(s.slope,r.slope);assert(s.slope<=1.6);assert(groundAdmission(r.x,r.z,s));const b=visibleSurface.beach.sample({x:r.x,z:r.z,support:s});assert(b.valid&&b.rawSandCoverage<=.12);const w=visibleSurface.water.sample(r.x,r.z);assert(!w||s.y>w.y+.03);const a=cover.inverseHEarthGroundCoverPoint(r.x,r.y,r.z),m=materials.sampleHEarthRun8CSuccessorSurfaceMaterial(a.x,a.z);assert(m.valid);assert(m.soilDepth>=(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?.035:.20));assert(hillsideDensity({x:r.x,y:r.y,z:r.z,shaderSlope:b.shaderSlope,contactDistance:b.interpolatedExposedContactDistance,sandCoverage:b.rawSandCoverage})>0);}
+});
+
+test('combined precomputed and runtime entrance population respects existing GPU allocation',async()=>{
+ const {visibleSurface,geology,groundAdmission}=await import('../evidence/hillside-shoreline-continuity-v1/support-fixture.mjs');
+ const {loadPrecomputedGrass,takePrecomputedGrassPlan}=await import('../../showroom/globe/h-earth/render/precomputed-grass.v1.js');
+ const {buildCavernEntranceGrass}=await import('../../showroom/globe/h-earth/render/cavern-entrance-grass.v1.js');
+ const {buildCavernPalmPlacement}=await import('../../showroom/globe/h-earth/render/cavern-palm-placement.v1.js');
+ const {GRASS_CONTINUITY_ALLOCATION:a}=await import('../../showroom/globe/h-earth/render/grass-continuity-supplement.v1.js');
+ const p=await loadPrecomputedGrass({packed:true,fetchImpl:async u=>new Response(fs.readFileSync(u.pathname))}),plan=takePrecomputedGrassPlan(p);
+ const entrance=await buildCavernEntranceGrass({existingTiles:plan.tiles,visibleSurface:{...visibleSurface,admitGround:groundAdmission},geology,palms:buildCavernPalmPlacement(geology).receipt.placements});
+ const priorManifest=JSON.parse(execFileSync('git',['show',checkpoint.baseline+':'+asset+'json'],{cwd:root}));
+ const priorCounts=new Map(priorManifest.tiles.map(t=>[t.id,t.count]));
+ const oldTiles=plan.tiles.filter(t=>priorCounts.has(t.id)).map(t=>({...t,count:priorCounts.get(t.id),packed:t.packed.slice(0,priorCounts.get(t.id)*4)}));
+ const baselineEntrance=await buildCavernEntranceGrass({existingTiles:oldTiles,visibleSurface:{...visibleSurface,admitGround:groundAdmission},geology,palms:buildCavernPalmPlacement(geology).receipt.placements});
+ const caveRoots=p=>p.tiles.filter(t=>t.id.startsWith('CAVERN_ENTRANCE:')).flatMap(t=>t.roots).map(r=>JSON.stringify(r)).sort();
+ assert.deepEqual(caveRoots(entrance),caveRoots(baselineEntrance),'existing cave entrance roots preserved');
+ const base=plan.tiles.reduce((n,t)=>n+t.count,0),combined=base+entrance.receipt.contactCount;
+ assert(combined<=a.maximumRoots,`combined ${combined} exceeds ${a.maximumRoots}`);assert(combined*16<=a.maximumPackedBytes);assert(entrance.receipt.interiorCount>0);
+ console.log('COMBINED_POPULATION_BUDGET',JSON.stringify({base,entrance:entrance.receipt.contactCount,combined,limit:a.maximumRoots,headroom:a.maximumRoots-combined}));
 });

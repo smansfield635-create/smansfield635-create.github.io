@@ -65,6 +65,6 @@ if(process.argv.includes('--verify')){assert.deepEqual(fs.readFileSync(new URL(a
  fs.writeFileSync(new URL(asset+'bin.gz',root),compressed);fs.writeFileSync(new URL(asset+'json',root),json);
  for(const [name,data]of [['added',Buffer.concat(added)],['removed',Buffer.concat(removed)]])fs.writeFileSync(new URL('./'+name+'.bin.gz',import.meta.url),gzipSync(data,{level:9}));
  fs.writeFileSync(new URL('./coverage.json',import.meta.url),JSON.stringify(coverage));fs.writeFileSync(new URL('./checkpoint.json',import.meta.url),JSON.stringify(measurement,null,2)+'\n');
- const p=new URL('showroom/globe/h-earth/render/precomputed-grass.v1.js',root),s=fs.readFileSync(p,'utf8').replace(/const MANIFEST_SHA256='[^']*';/,`const MANIFEST_SHA256='${sha(json)}';`).replaceAll('!==1457471','!=='+count);fs.writeFileSync(p,s);
+ const p=new URL('showroom/globe/h-earth/render/precomputed-grass.v1.js',root),s=fs.readFileSync(p,'utf8').replace(/const MANIFEST_SHA256='[^']*';/,`const MANIFEST_SHA256='${sha(json)}';`).replace(/manifest\.rootCount!==\d+/g,'manifest.rootCount!=='+count).replace(/manifest\.receipt\?\.contactCount!==\d+/g,'manifest.receipt?.contactCount!=='+count);fs.writeFileSync(p,s);
  console.log(JSON.stringify(measurement));
 }

@@ -95,4 +95,15 @@ test("a stated destination does not prompt duplicate question",()=>{
  assert.ok(!r.questions.some(q=>q.id==="destination"));
 });
 
+test("served HTML references content-addressed stylesheet and runtime assets",()=>{
+ const fs=require("node:fs"),crypto=require("node:crypto");
+ const root=path.join(__dirname,"..");
+ const html=fs.readFileSync(path.join(root,"index.html"),"utf8");
+ for(const name of ["studio.css","preflight-core.js","studio.js"]){
+   const bytes=fs.readFileSync(path.join(root,"assets",name));
+   const expected=crypto.createHash("sha1").update(Buffer.from("blob "+bytes.length+"\0")).update(bytes).digest("hex");
+   const expectedRef="./assets/"+name+"?v="+expected;
+   assert.ok(html.includes(expectedRef),name+" must use its exact current Git blob identity, not a reusable cache URL");
+ }
+});
 console.log(JSON.stringify({result:"PASS",checkCount:pass,liveExecution:false,signedKernel:false}));

@@ -96,7 +96,7 @@
     const groups=[
       ["video",/\b(video|commercial|film|clip|reel|animation|trailer|advertisement)\b/],
       ["app",/\b(app|website|dashboard|software|webpage|saas)\b/],
-      ["world",/\b(3d|virtual world|terrain|landscape|walkable|cavern|oasis|game environment)\b/],
+      ["world",/\b(3d|3 d|three d|three-dimensional|three dimensional|virtual world|terrain|landscape|environment|walkable|cavern|oasis|game environment)\b/],
       ["audio",/\b(audio|voice|podcast|narration|music|soundtrack)\b/],
       ["image",/\b(image|photo|illustration|poster|logo|graphic|picture)\b/],
       ["writing",/\b(article|essay|report|email|letter|script|blog|document)\b/],

@@ -15,8 +15,9 @@
         "id=\"approveBtn\""
       ],
       "excludes": [
-        "github.com/smansfield635-create/geodiametrics1",
-        ".github/ai-router/canonical-control-kernel-v1"
+        "GITHUB_TOKEN",
+        "PRIVATE_KEY",
+        "ED25519_PRIVATE_KEY"
       ]
     },
     {

@@ -207,8 +207,29 @@ export function createCollectionGroundSampler(raw,geology){
   };
 }
 
-export function createTreeCollection(gl,{model,raw,projectWorld,sunDirection,originalJacaranda}){
-  const sampleGround=createCollectionGroundSampler(raw,model),entries=[];let busy=false,dead=false;
+// Completion requests one presentation; that frame selects the next eligible
+// asset using the latest camera. No polling, concurrent loads, or idle loop.
+export function createCollectionLoadQueue(entries,{blocked=()=>false,onSettled=()=>{}}={}){
+  let busy=false,dead=false,settledCount=0;const attempted=new Set(),failures=new Map();
+  const notify=()=>{if(!dead)onSettled();};
+  return {
+    get loading(){return busy;},
+    request(camera){
+      if(dead||busy||blocked()||!Number.isFinite(camera?.x)||!Number.isFinite(camera?.z))return false;
+      const next=entries.filter(e=>!attempted.has(e)&&e.overlay.getReceipt().state==='IDLE'&&Math.hypot(camera.x-e.p.x,camera.z-e.p.z)<180)
+        .sort((a,b)=>Math.hypot(camera.x-a.p.x,camera.z-a.p.z)-Math.hypot(camera.x-b.p.x,camera.z-b.p.z))[0];
+      if(!next)return false;attempted.add(next);busy=true;
+      const settle=()=>{busy=false;settledCount++;notify();};
+      Promise.resolve().then(()=>dead?false:next.overlay.start()).then(settle,error=>{failures.set(next.p.id,String(error?.message??error));settle();});
+      return true;
+    },
+    getReceipt(){return {attemptedCount:attempted.size,settledCount,loading:busy,disposed:dead,failures:Object.fromEntries(failures),completionDrivenPresentation:true};},
+    dispose(){dead=true;}
+  };
+}
+
+export function createTreeCollection(gl,{model,raw,projectWorld,sunDirection,originalJacaranda,onAssetSettled=()=>{}}){
+  const sampleGround=createCollectionGroundSampler(raw,model),entries=[];
   for(const p of TREE_PLACEMENTS){
     const asset=TREE_ASSETS.find(a=>a.id===p.assetId);
     const planner=decoded=>planTreePlacement(decoded,p,sampleGround,model.sampleWaterAt);
@@ -217,23 +238,19 @@ export function createTreeCollection(gl,{model,raw,projectWorld,sunDirection,ori
       planPlacement:planner});
     entries.push({p,overlay});
   }
+  const queue=createCollectionLoadQueue(entries,{blocked:()=>originalJacaranda?.getReceipt().state==='LOADING',onSettled:onAssetSettled});
   const groupReady=group=>entries.filter(e=>e.p.group===group&&e.p.replaces).every(e=>e.overlay.ready);
   return {
-    get loading(){return busy;},
-    requestIfNear(camera){
-      if(dead||busy||originalJacaranda?.getReceipt().state==='LOADING')return false;
-      const next=entries.filter(e=>e.overlay.getReceipt().state==='IDLE'&&Math.hypot(camera.x-e.p.x,camera.z-e.p.z)<180)
-        .sort((a,b)=>Math.hypot(camera.x-a.p.x,camera.z-a.p.z)-Math.hypot(camera.x-b.p.x,camera.z-b.p.z))[0];
-      if(!next)return false;busy=true;next.overlay.start().finally(()=>{busy=false;});return true;
-    },
+    get loading(){return queue.loading;},
+    requestIfNear:camera=>queue.request(camera),
     isReplaced(id){const e=entries.find(e=>e.p.replaces===id);return !!e;},
     woodlandReady(){return groupReady('woodland');},
     draw(packet){for(const e of entries)if(e.overlay.ready)e.overlay.draw(packet);},
     shadowKey(){return entries.map(e=>e.overlay.ready?'1':'0').join('');},
     drawShadows(packet,matrix,group){for(const e of entries)if(e.p.group===group&&e.overlay.ready)e.overlay.drawShadow(packet,matrix);},
-    getReceipt(){return {schema:'H_EARTH_APPROVED_TREE_COLLECTION_RUNTIME_v1',replacementCount:7,additionalShrubCount:1,woodlandReady:groupReady('woodland'),
+    getReceipt(){return {queue:queue.getReceipt(),schema:'H_EARTH_APPROVED_TREE_COLLECTION_RUNTIME_v1',replacementCount:7,additionalShrubCount:1,woodlandReady:groupReady('woodland'),
       entries:entries.map(e=>({...e.p,...e.overlay.getReceipt(),legacySuppressed:!!e.p.replaces,replacementActive:!!e.p.replaces&&e.overlay.ready})),
       preservedOriginalJacaranda:true,parkedAssetsIncluded:false,sequentialLoading:true,legacyTreesVisible:false,prefetchDistance:180};},
-    dispose(){dead=true;for(const e of entries)e.overlay.dispose();}
+    dispose(){queue.dispose();for(const e of entries)e.overlay.dispose();}
   };
 }

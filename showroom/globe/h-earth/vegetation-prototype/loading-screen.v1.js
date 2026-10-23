@@ -137,11 +137,13 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   }
   button.addEventListener('click',()=>{
     if(mode!=='ready'||button.disabled)return;
-    stopStories();stopClock();receipt.loaderDismissedMilliseconds=elapsed();mode='entered';shell.hidden=true;onEnter();
+    stopStories();stopClock();receipt.loaderDismissedMilliseconds=elapsed();mode='entered';shell.hidden=true;
+    reportPanel.style.cssText='position:fixed;top:12px;right:12px;z-index:30;max-width:min(340px,85vw);pointer-events:auto';
+    document.body.appendChild(reportPanel);onEnter();
   });
   function getLoadingReport(){
     let details;try{details=reportProvider();}catch(error){details={diagnosticError:error?.message??String(error)};}
-    return {schema:'GRATITUDE_LOADING_REPORT_v1',reportVersion:'gen2867-copy-report-v1',
+    return {schema:'GRATITUDE_LOADING_REPORT_v1',reportVersion:'gen2870-collection-report-v1',
       capturedAt:new Date().toISOString(),elapsedMilliseconds:Math.round(elapsed()),
       preparationMilliseconds:receipt.controlsEnabledMilliseconds??receipt.failure?.elapsedMilliseconds??Math.round(elapsed()),
       mode,stage,failure:structuredClone(receipt.failure),controlsEnabledMilliseconds:receipt.controlsEnabledMilliseconds,

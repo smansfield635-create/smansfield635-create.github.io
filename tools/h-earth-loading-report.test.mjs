@@ -7,7 +7,7 @@ function harness(clipboard){
  const shell=node();nodes.set('[data-enter]',{...node(),disabled:true});
  const document={createElement:node,getElementById:()=>shell,body:node(),defaultView:{navigator:{clipboard},setInterval:()=>1,clearInterval(){}}};
  const loader=createHEarthLoadingScreen({document,now:()=>time,requestFrame:f=>frames.push(f),schedule:()=>1,cancelSchedule(){}});
- return {loader,nodes,frames,setTime:t=>time=t};
+ return {loader,nodes,frames,body:document.body,shell,setTime:t=>time=t};
 }
 const pose=sequence=>({sequence,position:{x:sequence,y:0,z:0},yawDegrees:0,pitchDegrees:0,verticalFovDegrees:60});
 
@@ -46,3 +46,10 @@ test('report stage and work snapshots cannot mutate loader receipt',()=>{
  report.stages[0].stage='changed';report.workUnits[0].completed=999;report.phaseObservations['vegetation:FETCH'].firstObservedMilliseconds=-1;
  assert.deepEqual(h.loader.getReceipt(),before);
 });
+
+ test('report remains usable after entry and reads current asset state',async()=>{
+ let copied,state='LOADING';const h=harness({writeText:async text=>copied=text});h.loader.setReportProvider(()=>({importedPlants:{state}}));
+ h.loader.enableControls(pose(0));h.loader.observeInput({accepted:true},pose(1));h.loader.observePresentation(pose(1),{navigationSequence:1});h.frames.shift()();h.nodes.get('[data-enter]').listeners.click();
+ assert.equal(h.shell.hidden,true);assert.ok(h.body.children.some(n=>n.style.cssText?.includes('position:fixed')));
+ state='READY';assert.equal(await h.loader.copyLoadingReport(),true);assert.equal(JSON.parse(copied).details.importedPlants.state,'READY');
+ });

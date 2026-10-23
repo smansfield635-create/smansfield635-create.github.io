@@ -1,0 +1,31 @@
+{
+  "operationId": "H_EARTH_COLLECTION_COMPLETION_REPAIR_20261023_001",
+  "generation": 2870,
+  "base": "4a40daf9710ca349404c340f8b3a8750d8df6e49",
+  "admissionRun": 39966990444,
+  "tests": {
+    "passed": 79,
+    "failed": 0,
+    "command": "node --test tools/h-earth-collection-completion.test.mjs tools/h-earth-loading-report.test.mjs tools/publication-live-verify.h-earth-entry.test.mjs"
+  },
+  "independentWest": {
+    "verdict": "PASS",
+    "reviewer": "review_repair",
+    "tests": 8,
+    "findingsResolved": [
+      "Diagnostic replay completion invalidation",
+      "Repair baseline provenance"
+    ]
+  },
+  "behavior": "Asset completion requests presentation, which starts next nearby asset without user input; sequential loading and original resource sharing retained. Report stays accessible after entry with per-asset receipts.",
+  "limitations": [
+    "Actual tablet rendering not yet verified",
+    "No claim that failed downloads are ruled out",
+    "Controls-ready timing does not imply every optional asset loaded"
+  ],
+  "preserved": [
+    "Approved GLB bytes and placements",
+    "Geological sampling optimization",
+    "Shadow and legacy replacement policies"
+  ]
+}

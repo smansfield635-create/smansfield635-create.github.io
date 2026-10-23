@@ -1460,7 +1460,7 @@ export function buildCavernShadowMatrix(positions,sun){
   return new Float32Array([right[0]/extent[0],up[0]/extent[1],-light[0]/extent[2],0,right[1]/extent[0],up[1]/extent[1],-light[1]/extent[2],0,right[2]/extent[0],up[2]/extent[1],-light[2]/extent[2],0,-c[0]/extent[0],-c[1]/extent[1],c[2]/extent[2],1]);
 }
 
-export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, deferVegetation = false, onStartupProgress = null, vegetationTraceEnabled = false, vegetationStrategy = null } = {}) {
+export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 640, height = 360, deferVegetation = false, onStartupProgress = null, onAssetSettled = ()=>{}, vegetationTraceEnabled = false, vegetationStrategy = null } = {}) {
   if(vegetationStrategy!==null&&vegetationStrategy!=='SINGLE_OWNER_WOODLAND_V1')throw Error('VEGETATION_STRATEGY_INVALID');
   if(vegetationStrategy&&!deferVegetation)throw Error('PROTOTYPE_REQUIRES_DEFERRED_BASE');
   if (!(canvas instanceof HTMLCanvasElement)) throw new TypeError('R3C_CANVAS_REQUIRED');
@@ -2466,12 +2466,12 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     // The existing source and its four restored fallback trees stay resident.
     const overlayStarted=performance.now();
     resources.jacaranda=createApprovedJacarandaOverlay(gl,{
-      model,projectWorld:regionToHEarthPlanetPoint,
+      model,projectWorld:regionToHEarthPlanetPoint,onSettled:onAssetSettled,
       companions:oasisTrees.receipt.placements.filter(p=>p.id!==JACARANDA_FOCUS_ID),
       assetURL:new URL('../assets/jacaranda/Gratitude-Jacaranda-Candidate.glb',import.meta.url).href,
       sunDirection:environment.sunDirection
     });
-    resources.treeCollection=createTreeCollection(gl,{model,raw:getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),projectWorld:regionToHEarthPlanetPoint,sunDirection:environment.sunDirection,originalJacaranda:resources.jacaranda});
+    resources.treeCollection=createTreeCollection(gl,{model,raw:getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),projectWorld:regionToHEarthPlanetPoint,sunDirection:environment.sunDirection,originalJacaranda:resources.jacaranda,onAssetSettled});
     detail.builders.treeOverlaySetup=performance.now()-overlayStarted;
     resources.collectionWoodlandSpans=renderPackage.primitiveSpans.filter(p=>['H_EARTH_LANDSCAPE_P2_BARK','H_EARTH_LANDSCAPE_P2_CANOPY'].includes(p.primitiveId));
     if(resources.collectionWoodlandSpans.length!==2)throw Error('TREE_COLLECTION_WOODLAND_SPANS_MISSING');

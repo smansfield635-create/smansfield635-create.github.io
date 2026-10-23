@@ -124,12 +124,17 @@ function liveReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_VEGETATION_LIVE_GPU_
 // Collect only when the owner requests a report, never on the frame path.
 loader?.setReportProvider?.(()=>{
   const resource=resources(),vegetation=resource?.singleOwnerVegetation;
-  return {buildIdentifier:'gen2867-copy-report-v1',sourceBaseline,
+  const transfers=performance.getEntriesByType('resource').filter(e=>/h-earth|precomputed-grass|oasis-soil|\.glb(?:\?|$)/.test(e.name));
+  return {buildIdentifier:'gen2869-geological-startup-v1',sourceBaseline,
+    repairBaseline:'c0b25850ef567327f45eed020659d58e06066b36',
+    reportFormatNote:'Top-level reportVersion identifies the copy-report format. details.buildIdentifier identifies this runtime repair.',
+    clockNote:'Resource start times are navigation-relative; route times are elapsed since route start; loader elapsed uses its own start. Phase values are durations. Do not subtract timestamps from different origins.',
     routeTiming:{...timing},rendererStartupTiming:resource?.rendererStartupTiming??null,vegetationTiming:vegetation?.timing??null,
-    startupDiagnostics:resource?.vegetationResidency?.timing??null,
+    startupDiagnostics:{rendererTimingAvailable:!!resource?.rendererStartupTiming,vegetationResidency:resource?.vegetationResidency?.timing??null},
+    transferSummary:{matchedCount:transfers.length,displayedCount:Math.min(80,transfers.length),transferBytes:transfers.reduce((n,e)=>n+e.transferSize,0),encodedBytes:transfers.reduce((n,e)=>n+e.encodedBodySize,0),invalidTimingCount:transfers.filter(e=>e.duration<0).length,scope:'Matched resource entries only; duration includes network and scheduling, not CPU decode; zero transfer may indicate cache.'},
     userAgent:navigator.userAgent,viewport:{width:canvas.clientWidth,height:canvas.clientHeight,pixelRatio:devicePixelRatio},
-    resourceTransfers:performance.getEntriesByType('resource').filter(e=>/h-earth|precomputed-grass|oasis-soil|\.glb(?:\?|$)/.test(e.name)).map(e=>({
-      path:new URL(e.name,location.href).pathname,startMilliseconds:e.startTime,durationMilliseconds:e.duration,
+    resourceTransfers:transfers.map(e=>({
+      path:new URL(e.name,location.href).pathname,startMilliseconds:e.startTime,durationMilliseconds:e.duration>=0?e.duration:null,timingValid:e.duration>=0,
       transferBytes:e.transferSize,encodedBytes:e.encodedBodySize,decodedBytes:e.decodedBodySize})).slice(-80)};
 });
 function publicReceipt(){return {receiptType:diagnosticReplay?'H_EARTH_SINGLE_OWNER_VEGETATION_PROTOTYPE_v1':'H_EARTH_SINGLE_OWNER_VEGETATION_PUBLIC_v1',eligible:diagnosticReplay?['CAPTURED_POPULATED_CONTINUITY','CAPTURED_STABLE_VIEW'].includes(replay?.result):root.dataset.run8eReady==='true',sourceBaseline,

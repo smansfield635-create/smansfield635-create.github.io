@@ -2563,10 +2563,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     for(const part of parts){
       if(!H_EARTH_REAR_WATER_PRESENTATION_ENABLED&&isHEarthWaterPresentationPart(part.role))continue;
       // The target's original hydrated indices are first in BOTH group batches.
-      // Remove them only when the independently verified GLB is GPU READY.
-      // On network/GPU failure nothing is excluded and the original remains.
+      // Approved replacements own these placements from the first frame.
+      // Never present a different legacy species while an approved asset loads.
       const excluded=part.role==='OASIS_TREE_GROUP'?resources.oasisTrees.placements
-        .filter(p=>(p.id===JACARANDA_FOCUS_ID&&resources.jacaranda?.ready)||resources.treeCollection?.isReplaced(p.id))
+        .filter(p=>(p.id===JACARANDA_FOCUS_ID)||resources.treeCollection?.isReplaced(p.id))
         .map(p=>p.spans[part.part]):[];
       gl.bindVertexArray(part.vao);
       for(const range of retainedIndexRanges(0,part.mesh.indices.length,excluded)){
@@ -2615,7 +2615,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const center=regionToHEarthPlanetPoint({x:(b.minX+b.maxX)/2,z:(b.minZ+b.maxZ)/2,y:sampleHEarthRun8BSuccessorTerrainField((b.minX+b.maxX)/2,(b.minZ+b.maxZ)/2).elevation+10});
     const sun=packet.environmentUniforms.sunDirection,normalize=a=>{const n=Math.hypot(...a);return a.map(v=>v/n);},cross=(a,c)=>[a[1]*c[2]-a[2]*c[1],a[2]*c[0]-a[0]*c[2],a[0]*c[1]-a[1]*c[0]],dot=(a,c)=>a.reduce((n,v,i)=>n+v*c[i],0);
     const light=normalize([sun.x,sun.y,sun.z]),right=normalize(cross([0,1,0],light)),up=normalize(cross(light,right)),c=[center.x,center.y,center.z];
-    const matrix=new Float32Array([right[0]/28,up[0]/28,-light[0]/60,0,right[1]/28,up[1]/28,-light[1]/60,0,right[2]/28,up[2]/28,-light[2]/60,0,-dot(right,c)/28,-dot(up,c)/28,dot(light,c)/60,1]);
+    const matrix=new Float32Array([right[0]/48,up[0]/48,-light[0]/60,0,right[1]/48,up[1]/48,-light[1]/60,0,right[2]/48,up[2]/48,-light[2]/60,0,-dot(right,c)/48,-dot(up,c)/48,dot(light,c)/60,1]);
     const shadow=createTexture();textures.push(shadow);gl.activeTexture(gl.TEXTURE6);gl.bindTexture(gl.TEXTURE_2D,shadow);
     gl.texStorage2D(gl.TEXTURE_2D,1,gl.DEPTH_COMPONENT24,512,512);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_COMPARE_MODE,gl.COMPARE_REF_TO_TEXTURE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_COMPARE_FUNC,gl.LEQUAL);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
     // D24 consumes at most four bytes per texel on the GPU; report conservative storage.
@@ -2633,10 +2633,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const error=gl.getError();if(error!==gl.NO_ERROR)throw new Error('CLEARING_GPU_INITIALIZATION_FAILED:'+error);
   }
 
-  function updateCollectionShadow(){
-    const c=resources.clearing,retired=resources.treeCollection?.woodlandReady()??false;
-    if(!c||c.collectionRetired===retired)return;
-    const indices=retired?c.collectionCasterIndices:c.originalCasterIndices;
+  function updateCollectionShadow(packet){
+    const c=resources.clearing,key=(resources.treeCollection?.shadowKey()??'')+String(resources.jacaranda?.ready);
+    if(!c||c.collectionShadowKey===key)return;
+    const indices=c.collectionCasterIndices;
     gl.bindFramebuffer(gl.FRAMEBUFFER,c.framebuffer);gl.viewport(0,0,512,512);
     gl.useProgram(c.program);gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,c.indexBuffer);
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);
@@ -2644,7 +2644,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.activeTexture(gl.TEXTURE6);gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
     gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);gl.clearDepth(1);gl.clear(gl.DEPTH_BUFFER_BIT);
     gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_INT,0);drawWoodlandRocks(true);drawLargeP2Boulders(true);
-    c.collectionRetired=retired;c.casterIndexCount=indices.length;c.shadowDrawCount++;
+    resources.treeCollection?.drawShadows(packet,c.matrix,'woodland');
+    c.collectionShadowKey=key;c.casterIndexCount=indices.length;c.shadowDrawCount++;
+    const cavern=resources.cavernShadow;
+    if(cavern){
+      gl.bindFramebuffer(gl.FRAMEBUFFER,cavern.framebuffer);gl.activeTexture(gl.TEXTURE11);gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
+      gl.useProgram(c.program);gl.uniformMatrix4fv(gl.getUniformLocation(c.program,'uLightMatrix'),false,cavern.matrix);
+      gl.clear(gl.DEPTH_BUFFER_BIT);drawCavernShadowCasters(gl,cavern.terrain,cavern.vegetation);
+      resources.jacaranda?.drawShadow(packet,cavern.matrix);resources.treeCollection?.drawShadows(packet,cavern.matrix,'oasis');
+      cavern.shadowDrawCount++;
+    }
     gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);
   }
 
@@ -2654,6 +2663,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const terrain=(resources.geologicalMeshes??[]).filter(p=>!isHEarthWaterPresentationPart(p.role));
     const receiverPoints=[];
     for(let x=26;x<=54;x+=7)for(let z=-278;z<=-242;z+=9){const y=resources.geologicalRuntime.originalTerrainElevationAt(x,z),p=regionToHEarthPlanetPoint({x,y,z});receiverPoints.push(p.x,p.y,p.z);}
+    for(let x=20;x<=100;x+=20)for(let z=-340;z<=-280;z+=20)for(const y of [0,40]){const p=regionToHEarthPlanetPoint({x,y,z});receiverPoints.push(p.x,p.y,p.z);}
     const matrix=buildCavernShadowMatrix([...vegetation.map(p=>p.mesh.positions),receiverPoints],packet.environmentUniforms.sunDirection);
     const texture=createTexture();gl.activeTexture(gl.TEXTURE11);gl.bindTexture(gl.TEXTURE_2D,texture);
     gl.texStorage2D(gl.TEXTURE_2D,1,gl.DEPTH_COMPONENT24,512,512);
@@ -2665,7 +2675,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.useProgram(resources.clearing.program);gl.uniformMatrix4fv(gl.getUniformLocation(resources.clearing.program,'uLightMatrix'),false,matrix);
     gl.viewport(0,0,512,512);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);gl.clearDepth(1);gl.clear(gl.DEPTH_BUFFER_BIT);
     const indexCount=drawCavernShadowCasters(gl,terrain,vegetation);
-    resources.cavernShadow={texture,framebuffer,matrix,gpuByteLength:512*512*4,shadowDrawCount:terrain.length+vegetation.length,casterIndexCount:indexCount,vegetationCasterCount:vegetation.length,rockCasterCount:terrain.length,staticShadowRefresh:'ONCE_AFTER_ASSETS_READY'};
+    resources.cavernShadow={texture,framebuffer,matrix,terrain,vegetation,gpuByteLength:512*512*4,shadowDrawCount:terrain.length+vegetation.length,casterIndexCount:indexCount,vegetationCasterCount:vegetation.length,rockCasterCount:terrain.length,staticShadowRefresh:'ONCE_AFTER_ASSETS_READY'};
   }
   function disposeCavernShadow(){
     const c=resources.cavernShadow;if(!c)return;
@@ -2853,7 +2863,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
     if (!Array.isArray(packet.camera.viewProjectionMatrix) || packet.camera.viewProjectionMatrix.length !== 16 || packet.camera.viewProjectionMatrix.some((value) => !finite(value))) throw new Error('R3C_VIEW_PROJECTION_INVALID');
-    updateCollectionShadow();
+    updateCollectionShadow(packet);
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.viewport(0, 0, width, height);
     gl.clearColor(...resources.skyColor, 1); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
@@ -2877,7 +2887,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       if (range.transparencyClass === 'TRANSLUCENT') {
         gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
       } else { gl.disable(gl.BLEND); gl.depthMask(true); }
-      const exclusions=resources.treeCollection?.woodlandReady()?resources.collectionWoodlandSpans:[];
+      const exclusions=resources.treeCollection?resources.collectionWoodlandSpans:[];
       for(const visible of retainedIndexRanges(range.indexStart,range.indexCount,exclusions)){
         gl.drawElements(gl.TRIANGLES,visible.indexCount,gl.UNSIGNED_INT,visible.indexStart*4);
         counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=visible.indexCount;

@@ -189,7 +189,8 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
   imageDecoder=globalThis.createImageBitmap,alphaCanvasFactory=()=>new OffscreenCanvas(1,1),yieldWork=yieldFrame,
   approvedAsset=null,planPlacement=null,target=JACARANDA_TARGET,focusId=JACARANDA_FOCUS_ID}={}){
   must(gl&&typeof projectWorld==='function'&&Array.isArray(companions)&&assetURL,'OVERLAY_INPUTS_REQUIRED');
-  let state='IDLE',failure=null,loaded=null,startedAt=0,loadPromise=null,dead=false,epoch=0,draws=0;
+  let state='IDLE',failure=null,loaded=null,startedAt=0,loadPromise=null,dead=false,epoch=0,draws=0,shadowDraws=0;
+  const phaseMilliseconds={};
   const gpu={program:null,shaders:[],parts:[],buffers:[],textures:[],resourceBytes:0};
   const discard=()=>{
     // Includes buffers still being uploaded when a context is disposed.
@@ -211,9 +212,10 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
     const bind=()=>{gl.bindVertexArray(vao);gl.bindBuffer(target,b);};
     bind();gl.bufferData(target,typed.byteLength,gl.STATIC_DRAW);
     const stride=Math.max(1,Math.floor(512*1024/typed.BYTES_PER_ELEMENT));
+    let sliceStarted=duration();
     for(let i=0;i<typed.length;i+=stride){must(!dead&&epoch===currentEpoch,'LOAD_CANCELLED');
       bind();gl.bufferSubData(target,i*typed.BYTES_PER_ELEMENT,typed.subarray(i,Math.min(i+stride,typed.length)));
-      await yieldWork();
+      if(duration()-sliceStarted>=4){await yieldWork();sliceStarted=duration();}
     }
     gpu.resourceBytes+=typed.byteLength;return b;
   };
@@ -276,12 +278,14 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
       const response=await fetchAsset(assetURL,{cache:'force-cache'});
       must(response?.ok,'ASSET_FETCH_'+fmt(response?.status));
       const bytes=await response.arrayBuffer();
+      phaseMilliseconds.fetch=duration()-startedAt;const decodeStarted=duration();
       must(bytes.byteLength===(approvedAsset?.bytes??JACARANDA_APPROVED_LENGTH),'ASSET_BYTE_COUNT_MISMATCH');
       must(await digestSha256(bytes)===(approvedAsset?.sha256??JACARANDA_APPROVED_SHA256),'ASSET_SHA256_MISMATCH');
       must(!dead&&epoch===currentEpoch,'LOAD_CANCELLED');
       const decoded=parseApprovedJacarandaGLB(bytes,approvedAsset);
       const placement=planPlacement?planPlacement(decoded):planApprovedJacarandaPlacement(model,decoded,companions);
       must(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)>=15,'TEXTURE_UNITS_UNSUPPORTED');
+      phaseMilliseconds.decode=duration()-decodeStarted;const uploadStarted=duration();
       const vs=shader(gl.VERTEX_SHADER,JACARANDA_VS),fs=shader(gl.FRAGMENT_SHADER,JACARANDA_FS);
       gpu.program=gl.createProgram();must(gpu.program,'PROGRAM_CREATE_FAILED');
       gl.attachShader(gpu.program,vs);gl.attachShader(gpu.program,fs);gl.linkProgram(gpu.program);
@@ -316,7 +320,7 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
       const rotatedX=axisX.map((v,i)=>c*v-s*axisZ[i]),rotatedZ=axisZ.map((v,i)=>c*v+s*axisX[i]);
       loaded={placement,decodedPlacement:{bounds:decoded.bounds,trunkMinY:decoded.trunkMinY},axisX:rotatedX,axisY,axisZ:rotatedZ,origin:[base.x,base.y,base.z],uniforms,mats,alphaCutoffs:decoded.alphaCutoffs,assetSha256:approvedAsset?.sha256??JACARANDA_APPROVED_SHA256,
         triangleCount:decoded.triangleCount,vertexCount:decoded.vertexCount,loadMilliseconds:duration()-startedAt};
-      state='READY';return true;
+      phaseMilliseconds.upload=duration()-uploadStarted;state='READY';return true;
     })().catch(e=>{failure=fmt(e?.message);state=dead?'DISPOSED':'FALLBACK';discard();return false;});
     return loadPromise;
   }
@@ -326,7 +330,7 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
     if(Math.hypot(camera.x-target.x,camera.z-target.z)>180)return false;
     void start();return true;
   }
-  function draw(packet,instance=null){
+  function draw(packet,instance=null,shadow=false){
     if(state!=='READY'||!loaded)return false;
     try{
       const U=loaded.uniforms,P=gpu.program,position=packet.camera.position;
@@ -344,18 +348,18 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
         for(let i=0;i<3;i++){gl.activeTexture(gl.TEXTURE0+12+i);gl.bindTexture(gl.TEXTURE_2D,loaded.mats[part.materialId][i]);}
         gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.indexCount,gl.UNSIGNED_INT,0);
       }
-      must(gl.getError()===gl.NO_ERROR,'DRAW_GL_ERROR');draws++;return true;
+      must(gl.getError()===gl.NO_ERROR,'DRAW_GL_ERROR');if(shadow)shadowDraws++;else draws++;return true;
     }catch(e){failure=fmt(e.message);state='FALLBACK';discard();return false;}
     finally{gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(null);}
   }
   function dispose(){if(dead)return;dead=true;epoch++;state='DISPOSED';discard();loaded=null;}
   function getReceipt(){return {schema:JACARANDA_MODEL_CONTRACT,assetSha256:approvedAsset?.sha256??JACARANDA_APPROVED_SHA256,
-    state,ready:state==='READY',failure,focusId,source:approvedAsset?'APPROVED_IMPORTED_GLB':'APPROVED_IMPORTED_CC0_GLB',fallbackUsed:state!=='READY',
+    state,ready:state==='READY',failure,focusId,source:approvedAsset?'APPROVED_IMPORTED_GLB':'APPROVED_IMPORTED_CC0_GLB',fallbackUsed:false,
     originalHydratedWorldUnchanged:true,threeCompanionsPreserved:!approvedAsset,perFrameGeometryConstruction:false,
     loadedGeometry:loaded?{triangles:loaded.triangleCount,vertices:loaded.vertexCount,assetLength:approvedAsset?.bytes??JACARANDA_APPROVED_LENGTH}:null,
     placement:loaded?.placement??null,drawCount:draws,gpuResourceBytes:gpu.resourceBytes,
     programCount:gpu.program?1:0,textureCount:gpu.textures.length,vertexArrayCount:gpu.parts.length,
-    noClaimOfMeasuredMobilePerformance:true,noClaimOfNewShadowCaster:true,loadMilliseconds:loaded?.loadMilliseconds??null};}
+    noClaimOfMeasuredMobilePerformance:true,shadowDrawCount:shadowDraws,phaseMilliseconds:{...phaseMilliseconds},noClaimOfNewShadowCaster:shadowDraws===0,loadMilliseconds:loaded?.loadMilliseconds??null};}
   // Additional approved Jacarandas share the original buffers, textures and program.
   // Instance disposal never deletes the owner's resources.
   function createInstance(id,planner){
@@ -372,12 +376,13 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
     return {
       async start(){await start();prepare();return !!frame&&!instanceFailure;},
       draw(packet){prepare();if(frame&&!instanceDead&&!instanceFailure&&draw(packet,frame)){instanceDraws++;return true;}return false;},
+      drawShadow(packet,matrix){prepare();return !!frame&&!instanceDead&&!instanceFailure&&draw({...packet,camera:{...packet.camera,viewProjectionMatrix:Array.from(matrix)}},frame,true);},
       dispose(){instanceDead=true;frame=null;},
       get ready(){prepare();return state==='READY'&&!!frame&&!instanceDead&&!instanceFailure;},
       getReceipt(){prepare();const r=getReceipt(),ready=state==='READY'&&!!frame&&!instanceDead&&!instanceFailure;
-        return {...r,focusId:id,state:instanceDead?'DISPOSED':instanceFailure?'FALLBACK':r.state,ready,fallbackUsed:!ready,failure:instanceFailure??r.failure,
+        return {...r,focusId:id,state:instanceDead?'DISPOSED':instanceFailure?'FALLBACK':r.state,ready,fallbackUsed:false,failure:instanceFailure??r.failure,
           placement:frame?.placement??null,drawCount:instanceDraws,threeCompanionsPreserved:false,gpuResourceBytes:0,sharedGpuResources:true,resourceOwner:JACARANDA_FOCUS_ID};}
     };
   }
-  return {start,requestIfNear,draw,dispose,getReceipt,createInstance,get ready(){return state==='READY';}};
+  return {start,requestIfNear,draw,drawShadow:(packet,matrix)=>draw({...packet,camera:{...packet.camera,viewProjectionMatrix:Array.from(matrix)}},null,true),dispose,getReceipt,createInstance,get ready(){return state==='READY';}};
 }

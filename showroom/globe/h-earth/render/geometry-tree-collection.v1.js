@@ -222,16 +222,18 @@ export function createTreeCollection(gl,{model,raw,projectWorld,sunDirection,ori
     get loading(){return busy;},
     requestIfNear(camera){
       if(dead||busy||originalJacaranda?.getReceipt().state==='LOADING')return false;
-      const next=entries.filter(e=>e.overlay.getReceipt().state==='IDLE'&&Math.hypot(camera.x-e.p.x,camera.z-e.p.z)<140)
+      const next=entries.filter(e=>e.overlay.getReceipt().state==='IDLE'&&Math.hypot(camera.x-e.p.x,camera.z-e.p.z)<180)
         .sort((a,b)=>Math.hypot(camera.x-a.p.x,camera.z-a.p.z)-Math.hypot(camera.x-b.p.x,camera.z-b.p.z))[0];
       if(!next)return false;busy=true;next.overlay.start().finally(()=>{busy=false;});return true;
     },
-    isReplaced(id){const e=entries.find(e=>e.p.replaces===id);return !!e&&e.overlay.ready&&(e.p.group!=='woodland'||groupReady('woodland'));},
+    isReplaced(id){const e=entries.find(e=>e.p.replaces===id);return !!e;},
     woodlandReady(){return groupReady('woodland');},
-    draw(packet){for(const e of entries)if(e.overlay.ready&&(e.p.group!=='woodland'||groupReady('woodland')))e.overlay.draw(packet);},
+    draw(packet){for(const e of entries)if(e.overlay.ready)e.overlay.draw(packet);},
+    shadowKey(){return entries.map(e=>e.overlay.ready?'1':'0').join('');},
+    drawShadows(packet,matrix,group){for(const e of entries)if(e.p.group===group&&e.overlay.ready)e.overlay.drawShadow(packet,matrix);},
     getReceipt(){return {schema:'H_EARTH_APPROVED_TREE_COLLECTION_RUNTIME_v1',replacementCount:7,additionalShrubCount:1,woodlandReady:groupReady('woodland'),
-      entries:entries.map(e=>({...e.p,...e.overlay.getReceipt(),replacementActive:e.p.replaces?e.overlay.ready&&(e.p.group!=='woodland'||groupReady('woodland')):false})),
-      preservedOriginalJacaranda:true,parkedAssetsIncluded:false,sequentialLoading:true};},
+      entries:entries.map(e=>({...e.p,...e.overlay.getReceipt(),legacySuppressed:!!e.p.replaces,replacementActive:!!e.p.replaces&&e.overlay.ready})),
+      preservedOriginalJacaranda:true,parkedAssetsIncluded:false,sequentialLoading:true,legacyTreesVisible:false,prefetchDistance:180};},
     dispose(){dead=true;for(const e of entries)e.overlay.dispose();}
   };
 }

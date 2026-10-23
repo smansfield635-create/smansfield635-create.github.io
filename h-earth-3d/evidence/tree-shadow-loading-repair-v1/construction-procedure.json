@@ -1,0 +1,151 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "approvedAssets": [
+      {
+        "bytes": 18496516,
+        "filename": "Tree-Small-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Wild syringa / Tree Small 02",
+        "sha256": "236b81e864c2079dabe4c119c89c7315f0fbc4a00c96f02600e7e875342c6dc6"
+      },
+      {
+        "bytes": 24660600,
+        "filename": "Coastal-Tree-01-v2-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 01 v2",
+        "sha256": "b74dd63e6ee121a6ae913719a08cb8b29e28fb3d6a4c97d2d986c92a79f23bc7"
+      },
+      {
+        "bytes": 19468500,
+        "filename": "Coastal-Tree-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 02",
+        "sha256": "6a1497c91d4a66ed26c1b56c92cdf30b5b934e00dab123bdf990930bf2aad0c2"
+      },
+      {
+        "bytes": 31795372,
+        "filename": "Coastal-Tree-03-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 03",
+        "sha256": "02aad9751e876d2ac2512324b13d81525048d71c6795740ab372cf8e4d27515c"
+      },
+      {
+        "bytes": 10271048,
+        "filename": "Maple-Large-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple large A",
+        "sha256": "56462cb37f7a9ecca707c7095b630af9fa617de4f228c5db0ee0798de6cf87d5"
+      },
+      {
+        "bytes": 9899652,
+        "filename": "Maple-Medium-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple medium A",
+        "sha256": "28a52894e3f08e060ab9eedc7908174f9d98eabc9832ef5a0a999100de7b64fa"
+      },
+      {
+        "bytes": 23471852,
+        "filename": "Searsia-Lucida-A-Candidate.glb",
+        "license": "CC0",
+        "name": "Searsia lucida shrub",
+        "sha256": "4fbb63bff910b2875cf2353c83eef94d7b04c6987c949a91e7635315076070f0"
+      }
+    ],
+    "domain": "H_EARTH_TREE_SHADOW_LOADING_REPAIR_20261023_001",
+    "existingJacarandaSha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189",
+    "governingHead": "41d53373b37d6d5e91471597873252f0ead3596a",
+    "paths": [
+      "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+      "showroom/globe/h-earth/render/geometry-tree-collection.v1.js",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "h-earth-3d/evidence/tree-shadow-loading-repair-v1/**",
+      "tools/h-earth-tree-collection.test.mjs",
+      "tools/publication-live-verify.mjs",
+      "tools/publication-live-verify.h-earth-entry.test.mjs",
+      ".github/ai-router/publication-surfaces/h-earth.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "CANONICAL_PACKET_READY_RECEIPT_v1",
+    "PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1",
+    "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "HUMAN_INPUT_REQUIRED_NOT_STARTED",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "APPROVED_ASSET_IDENTITY_MISMATCH",
+    "PLACEMENT_OR_ECOLOGY_REGRESSION",
+    "RUNTIME_READINESS_FAILED",
+    "GPU_DRAW_OR_TEXTURE_PROOF_MISSING",
+    "EXPERIENCE_ANCHOR_FAILED",
+    "LIVE_RELEASE_HEAD_MISMATCH",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Begin from exact published head 41d53373b37d6d5e91471597873252f0ead3596a. Preserve asset bytes. Bind tests and publication to exact candidate; use prior owner-approved bounded entry release contract. Return remote run link immediately and yield without polling.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+    "showroom/globe/h-earth/render/geometry-tree-collection.v1.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "h-earth-3d/evidence/tree-shadow-loading-repair-v1/**",
+    "tools/h-earth-tree-collection.test.mjs",
+    "tools/publication-live-verify.mjs",
+    "tools/publication-live-verify.h-earth-entry.test.mjs",
+    ".github/ai-router/publication-surfaces/h-earth.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "step": 1,
+      "action": "After authentic admission create declared repair branch from exact governing head; preserve request and procedure."
+    },
+    {
+      "step": 2,
+      "action": "Add approved model alpha-tested shadow casting to existing terrain shadow integration for woodland and river. Preserve light direction and ecology; refresh static shadows only when loaded casters change."
+    },
+    {
+      "step": 3,
+      "action": "Remove visible legacy substitution, schedule approved models ahead of visibility with bounded loading and uploads, remove whole-group reveal dependency where safe. Preserve exact source assets and appearance. Capture fetch/decode/upload timings; do not claim measured tablet improvement without evidence."
+    },
+    {
+      "step": 4,
+      "action": "Run targeted regression tests and independent West review. Use existing bounded entry verification, no repeat full camera tour. Preserve unchanged evidence; if remote run starts return URL and yield."
+    },
+    {
+      "step": 5,
+      "action": "Merge qualified bounded change, exact-head publication and live verification; return run URL and yield when remote work starts."
+    }
+  ],
+  "exactGoverningHead": "41d53373b37d6d5e91471597873252f0ead3596a",
+  "exactTestRunnerCommand": "node --test tools/h-earth-tree-collection.test.mjs tools/publication-live-verify.h-earth-entry.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "APPROVED_TREES_CAST_TERRAIN_SHADOWS",
+      "NO_VISIBLE_LEGACY_TREE_SUBSTITUTION",
+      "BOUNDED_RESPONSIVE_LOADING_WITH_PHASE_TIMINGS",
+      "APPROVED_ASSETS_PLACEMENTS_AND_ECOLOGY_PRESERVED",
+      "TARGETED_TESTS_INDEPENDENT_REVIEW_AND_EXACT_HEAD_RELEASE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse published Jacaranda loader and existing successful exact-head release precedent. Inspect only directly affected loader, placements, approved files and selected verifier assertions. Preserve accepted design and source approvals.",
+    "forbidden": "No new models, redesign, parked assets, unrelated historical gate repair, new workflows or control-plane capability, blind repeated expensive runs, false readiness or camera-state injection."
+  },
+  "procedureId": "H_EARTH_TREE_SHADOW_LOADING_REPAIR_20261023_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/tree-shadow-loading-repair-v1/**"
+    ],
+    "deploymentWorkflowPath": ".github/workflows/pages-exact-head-deploy-v3.yml",
+    "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+  }
+}

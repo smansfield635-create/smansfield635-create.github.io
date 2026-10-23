@@ -1,0 +1,29 @@
+{
+  "operationId": "H_EARTH_LOADING_METRICS_20261023_001",
+  "generation": 2871,
+  "admissionRun": 39980196025,
+  "admissionComment": 6368691848,
+  "base": "807d84f5d7df01661293aec1d387ff84dd6bb681",
+  "validation": {
+    "uniqueTests": 88,
+    "passed": 88,
+    "note": "Combined suite87/88; transfer test updated to stricter NOT_PROVEN completeness wording; affected eight-test suite rerun8/8. Other80 tests unchanged and passed."
+  },
+  "independentWest": {
+    "verdict": "PASS",
+    "reviewer": "review_repair",
+    "tests": 8,
+    "corrections": [
+      "Unloaded original authored anchor",
+      "Incomplete collection cannot claim complete"
+    ]
+  },
+  "scope": "Observational report only; no polling, synthetic diagnostic frames, GL queries, scene or asset changes. Controls readiness unchanged. Additional label clarifies controls readiness.",
+  "limitations": [
+    "Residency first observed at controls or asset completion presentation boundary",
+    "Latency starts at accepted navigation callback; not physical input to photons",
+    "GPU allocation estimates cover imported plants only",
+    "Resource Timing retention completeness unproven",
+    "No performance improvement or physical-device acceptance claim"
+  ]
+}

@@ -376,7 +376,7 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
   }
   function dispose(){if(dead)return;dead=true;epoch++;state='DISPOSED';discard();loaded=null;}
   function getReceipt(){return {schema:JACARANDA_MODEL_CONTRACT,assetSha256:approvedAsset?.sha256??JACARANDA_APPROVED_SHA256,
-    state,ready:state==='READY',failure,focusId,source:approvedAsset?'APPROVED_IMPORTED_GLB':'APPROVED_IMPORTED_CC0_GLB',fallbackUsed:false,
+    state,ready:state==='READY',failure,focusId,targetAnchor:{x:target.x,z:target.z},source:approvedAsset?'APPROVED_IMPORTED_GLB':'APPROVED_IMPORTED_CC0_GLB',fallbackUsed:false,
     originalHydratedWorldUnchanged:true,threeCompanionsPreserved:!approvedAsset,perFrameGeometryConstruction:false,
     loadedGeometry:loaded?{triangles:loaded.triangleCount,vertices:loaded.vertexCount,assetLength:approvedAsset?.bytes??JACARANDA_APPROVED_LENGTH}:null,
     placement:loaded?.placement??null,drawCount:draws,gpuResourceBytes:gpu.resourceBytes,

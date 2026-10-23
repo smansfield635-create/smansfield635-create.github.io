@@ -1,0 +1,37 @@
+{
+  "schema": "H_EARTH_GRASS_BOUNDARY_TRANSITION_REPAIR_v1",
+  "operationId": "H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002",
+  "lockGeneration": 2875,
+  "baseline": "c8f70315f2dcee39e5e688d2847af0acbc656228",
+  "previousRelease": "902b06404965527e98de2612ee824d87ce404eaf",
+  "ownerInstruction": "Prioritize squared coverage boundaries; make changes and publish without full visual inspection; assess results after publication.",
+  "cause": "Nonzero ravine and coastal habitat atlas edge texels were held by clamping inside the rectangular domain then abruptly dropped to zero outside.",
+  "repair": "Fade atlas ground tint continuously over 4 to 7 world metres, width varied with existing stable world-space noise. No texture samples added. Preserve panel isolation, full interior tint, all grass roots and assets.",
+  "sourceSha256": "e30938cb1dec6b5cb9563119190d927682c97de32c4e2f577ec6d5b18689917e",
+  "sourcePath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+  "validation": {
+    "boundaryAndVisibilityTests": {
+      "passed": 10,
+      "failed": 0
+    },
+    "javascriptSyntax": "PASS",
+    "independentWestReview": "PASS; separately reran 10 tests; same active scope confirmed",
+    "gpuCompilation": "PENDING_EXISTING_PUBLICATION_PREFLIGHT"
+  },
+  "unchanged": [
+    "GRASS_ROOTS",
+    "GRASS_ASSET_BYTES",
+    "GPU_RESIDENT_GRASS_ALLOCATION",
+    "TERRAIN_GEOMETRY",
+    "PLANTING_EXCLUSIONS",
+    "TREE_ASSETS",
+    "CAMERA_AND_NAVIGATION",
+    "WORKFLOWS"
+  ],
+  "limitations": [
+    "No full visual tour or physical-device acceptance claimed.",
+    "This fixes proven atlas tint boundaries; other planting exclusions are not reclassified.",
+    "Performance non-regression remains unproven; no new population or texture samples."
+  ],
+  "nextAction": "Existing exact-head publication preflight then merge, deployment and live verification."
+}

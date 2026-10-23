@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "gratitude-hillside-preflight-20261023",
+  "requestId": "gratitude-hillside-error-capture-20261023",
   "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "inputs": {
-    "target_sha": "a380b80b2a6a53c7b97a3d5fa66e4804efdb2897",
+    "target_sha": "f0ed48db1cc0ce18c938b0e5dcc4bbca7718167e",
     "surface_id": "h-earth"
   }
 }

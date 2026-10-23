@@ -125,7 +125,7 @@ function liveReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_VEGETATION_LIVE_GPU_
 loader?.setReportProvider?.(()=>{
   const resource=resources(),vegetation=resource?.singleOwnerVegetation;
   return {buildIdentifier:'gen2867-copy-report-v1',sourceBaseline,
-    routeTiming:{...timing},vegetationTiming:vegetation?.timing??null,
+    routeTiming:{...timing},rendererStartupTiming:resource?.rendererStartupTiming??null,vegetationTiming:vegetation?.timing??null,
     startupDiagnostics:resource?.vegetationResidency?.timing??null,
     userAgent:navigator.userAgent,viewport:{width:canvas.clientWidth,height:canvas.clientHeight,pixelRatio:devicePixelRatio},
     resourceTransfers:performance.getEntriesByType('resource').filter(e=>/h-earth|precomputed-grass|oasis-soil|\.glb(?:\?|$)/.test(e.name)).map(e=>({

@@ -1,0 +1,34 @@
+{
+  "generation": 2868,
+  "admissionComment": 6357726493,
+  "admissionRun": 39902996103,
+  "baseHead": "7ba7eb45f1194566e8f1535844a8b5cc4b4ed095",
+  "ownerBaseline": {
+    "controlsReadyMs": 82158.8,
+    "rendererIntervalMs": 43168.6,
+    "lastUploadToReadyMs": 28477.3,
+    "grassDownloadMs": 1969.1
+  },
+  "tests": {
+    "rendererDelta": 10,
+    "loadingReportAndEntry": 70,
+    "result": "PASS"
+  },
+  "independentReview": "West found no blocker;1500 deterministic rays against300 triangles and numerical edge cases match frozen oracle; exact offset buffer uploads and GL rebind reviewed",
+  "syntheticBenchmark": {
+    "legacyMs": 78.5,
+    "scalarMs": 11.71,
+    "scope": "Synthetic CPU workload only; not tablet or scene performance"
+  },
+  "changes": [
+    "Allocation-free ray intersection preserving original evaluation order and thresholds",
+    "Startup uploads use4ms and1MiB cooperative slices with256KiB atomic chunks and timer yields, restoring VAO/buffer state",
+    "Renderer subphase, upload submission and wait timings included in copy report"
+  ],
+  "limitations": [
+    "Tablet improvement unmeasured",
+    "Single GL call cannot be preempted",
+    "Full triangle traversal remains; no spatial approximation",
+    "Renderer phase timings can be nested; do not add cavernVisibility to geologicalRendering"
+  ]
+}

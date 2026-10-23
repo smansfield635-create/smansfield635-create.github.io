@@ -516,6 +516,19 @@
       ],
       "entrypoint": ".github/ai-router/projects/release-proof/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "DIAMONDGATE_PREFLIGHT",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [
+        "preflight/"
+      ],
+      "ownedExactPaths": [
+        ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
+        ".github/ai-router/publication-surfaces/preflight.v1.json"
+      ],
+      "entrypoint": ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

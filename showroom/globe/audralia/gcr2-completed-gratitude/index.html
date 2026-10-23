@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-gcr2-candidate="true">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="theme-color" content="#06141b">
+<title>Audralia GCR2 · Completed Gratitude Candidate</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#06141b;color:#eff6ef;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#world{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+.hud{position:fixed;z-index:2;left:max(14px,env(safe-area-inset-left));top:max(16px,env(safe-area-inset-top));text-shadow:0 2px 5px #0009;pointer-events:none;max-width:min(70vw,500px)}
+.kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#b7d5c7;font-weight:650}
+.title{font-size:clamp(16px,2.4vw,23px);font-weight:650;letter-spacing:.025em;margin-top:5px}
+.sub{margin-top:5px;font-size:12px;line-height:1.5;color:#e0e8e4d9}
+.scale{position:fixed;z-index:2;right:max(14px,env(safe-area-inset-right));top:max(16px,env(safe-area-inset-top));padding:7px 11px;border-radius:999px;background:#0b242dcc;border:1px solid #d6f1e731;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.controls{position:fixed;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:3;max-width:96vw}
+.controls button,.controls a{appearance:none;border:1px solid #d9f1e43b;color:#ecf5f0;background:#0b242ee0;border-radius:999px;padding:11px 14px;font:600 12px/1 system-ui;text-decoration:none;white-space:nowrap;cursor:pointer}
+.controls button:hover,.controls button:focus-visible,.controls a:focus-visible{background:#204c55;outline:2px solid #bfdac7;outline-offset:2px}
+.detail{position:fixed;bottom:max(82px,calc(env(safe-area-inset-bottom) + 75px));left:max(14px,env(safe-area-inset-left));z-index:2;max-width:440px;pointer-events:none}
+.detail p{margin:3px 0;font-size:11px;line-height:1.5;opacity:.78;text-shadow:0 2px 5px #000b}
+#status{position:fixed;left:max(14px,env(safe-area-inset-left));top:max(90px,calc(env(safe-area-inset-top) + 83px));font-size:11px;color:#b8dcc8;z-index:2;max-width:min(70vw,480px);pointer-events:none}
+@media(max-width:640px){.hud{max-width:70vw}.sub{font-size:10px}.detail{display:none}.controls{gap:6px}.controls button,.controls a{padding:11px 10px;font-size:11px}.scale{font-size:10px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="world" aria-label="Audralia GCR2 — single-renderer interactive spherical continental inspection. Drag to orbit, pinch or wheel to zoom."></canvas>
+<header class="hud">
+  <div class="kicker">Diamond Gate · Candidate inspection</div>
+  <div class="title">Audralia · Gratitude GCR2</div>
+  <div class="sub">Continental forests, uplands, grasslands, wetlands and named watersheds</div>
+</header>
+<div class="scale" id="scaleLabel" aria-live="polite">Planetary</div>
+<div id="status" role="status" aria-live="polite">Preparing nonproduction geography…</div>
+<section class="detail" aria-label="Inspection limitations">
+<p>15 historical drainage segments · 3 named lakes · eight geographic provinces</p>
+<p>Planetary radius 6,200 km · Gratitude at 30°N, 0°E</p>
+<p>Coastal outline and river widths are visual candidates, not verified physical dimensions. Coast detail magnifies the continental mesh; entered H-Earth terrain and water flow are not established.</p>
+</section>
+<nav class="controls" aria-label="View controls">
+<button data-view="world" type="button">World</button>
+<button data-view="gratitude" type="button">Gratitude</button>
+<button data-view="anchor" type="button">H-Earth anchor</button>
+<button data-view="coast" type="button" aria-label="Inspect H-Earth coastal correspondence in the candidate globe">Coast detail</button>
+<a href="../" aria-label="Return to live Audralia">Live Audralia</a>
+</nav>
+<script>
+window.addEventListener('error',event=>{
+  const el=document.getElementById('status');
+  if(el)el.textContent='Candidate load error — '+(event.message||'module unavailable');
+});
+window.addEventListener('unhandledrejection',event=>{
+  const el=document.getElementById('status');
+  if(el)el.textContent='Candidate load error — '+String(event.reason?.message||'module unavailable');
+});
+</script>
+<script type="module" src="./app.mjs"></script>
+</body>
+</html>

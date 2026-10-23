@@ -65,8 +65,9 @@ export async function loadPreparedVegetation(model,source,{fetcher=globalThis.fe
   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),12000);
   let manifest,compressed;
   try{
-   const bytes=await measure('manifestFetch',async()=>{const r=await fetcher(new URL('./assets/precomputed-procedural-vegetation.v1.json',import.meta.url),{signal:controller.signal});if(!r.ok)throw Error('PREPARED_MANIFEST_HTTP');return r.arrayBuffer();});
-   manifest=await measure('manifestVerification',async()=>{if(await sha256(bytes)!==manifestHash)throw Error('PREPARED_MANIFEST_HASH');const m=JSON.parse(new TextDecoder().decode(bytes));if(m.schema!=='H_EARTH_PREPARED_PROCEDURAL_VEGETATION_v1'||m.compressedBytes>8*1024*1024||m.rawBytes>32*1024*1024)throw Error('PREPARED_MANIFEST_SCHEMA');return m;});
+   const manifestUrl=new URL('./assets/precomputed-procedural-vegetation.v1.json',import.meta.url);manifestUrl.searchParams.set('sha256',manifestHash);
+   const bytes=await measure('manifestFetch',async()=>{const r=await fetcher(manifestUrl,{signal:controller.signal,cache:'no-cache'});if(!r.ok)throw Error('PREPARED_MANIFEST_HTTP');return r.arrayBuffer();});
+   manifest=await measure('manifestVerification',async()=>{const actual=await sha256(bytes);timing.manifestVerification={expected:manifestHash,actual,bytes:bytes.byteLength,url:manifestUrl.href};if(actual!==manifestHash)throw Error('PREPARED_MANIFEST_HASH');const m=JSON.parse(new TextDecoder().decode(bytes));if(m.schema!=='H_EARTH_PREPARED_PROCEDURAL_VEGETATION_v1'||m.compressedBytes>8*1024*1024||m.rawBytes>32*1024*1024)throw Error('PREPARED_MANIFEST_SCHEMA');return m;});
    await measure('inputVerification',async()=>{const actual=await inputFingerprint(model,source);timing.inputVerification=compareInputFingerprint(actual,manifest);if(actual.hash!==manifest.inputBinding){timing.inputVerification.routeDifferences=routeDifferences(manifest.inputRoute,model.route);throw Error('PREPARED_INPUT_MISMATCH');}});
    compressed=await measure('download',async()=>{const r=await fetcher(new URL('./assets/precomputed-procedural-vegetation.v1.bin.gz',import.meta.url),{signal:controller.signal});if(!r.ok)throw Error('PREPARED_PAYLOAD_HTTP');return r.arrayBuffer();});
   }finally{clearTimeout(timeout);}

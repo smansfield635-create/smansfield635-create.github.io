@@ -1,0 +1,26 @@
+{
+  "operationId": "H_EARTH_PREPARED_INPUT_BINDING_REPAIR_20261023_001",
+  "baseHead": "8005e03b3fb15d62402843920b72b98be51346c2",
+  "failedRun": 39993882800,
+  "failedAssertion": "PREPARED_MANIFEST_HASH",
+  "localExactPayloadPreflight": "PASS",
+  "deployment": "PASS",
+  "liveRuntime": "FAIL",
+  "rootCauseLimit": "Received hash was not recorded; stale cache is a hypothesis, not established. Local public requests returned403.",
+  "delta": [
+    "Manifest request URL includes pinned sha256; conditional cache revalidation requested",
+    "Report expected and actual manifest digests, response byte length and requested URL"
+  ],
+  "preserved": [
+    "Strict digest rejection",
+    "Input binding",
+    "All approved geometry and assets",
+    "Payload and manifest bytes"
+  ],
+  "tests": {
+    "passed": 89,
+    "failed": 0
+  },
+  "routing": "Test path explicitly admitted in existing operation allowedPaths; unregistered tools path does not expand scope",
+  "nextAction": "Exact candidate browser preflight through registered AI dispatch"
+}

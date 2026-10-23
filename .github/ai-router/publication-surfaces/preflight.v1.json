@@ -113,11 +113,10 @@
         ]
       },
       {
-        "name": "Editing goal invalidates approval",
+        "name": "Removing protected requirement invalidates approval",
         "action": {
-          "type": "key",
-          "selector": "#goal",
-          "key": "A"
+          "type": "click",
+          "selector": "#protectedList li:first-child button"
         },
         "assertions": [
           {

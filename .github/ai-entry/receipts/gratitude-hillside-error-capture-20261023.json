@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "gratitude-hillside-error-capture-20261023",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6736,
+  "requestBranch": "ai-dispatch-request-hillside-error-capture-20261023",
+  "requestCommit": "b85d876ab3d87114cd7155b00b15a2a3d40f4576",
+  "currentMainSha": "d7c24596e33207ed728eed06f8b69136874e5d29",
+  "bridgeRunId": "40010119048",
+  "error": "Stale dispatch request: parent e577b8765b6d053982660eb1e7650445587f66b6 != current main d7c24596e33207ed728eed06f8b69136874e5d29",
+  "failedAt": "2026-10-23T19:16:46.031Z"
+}

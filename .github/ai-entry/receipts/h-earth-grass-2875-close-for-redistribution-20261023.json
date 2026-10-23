@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-grass-2875-close-for-redistribution-20261023",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6753,
+  "requestBranch": "ai-dispatch-request-grass-redistribution-close",
+  "requestCommit": "cc759b2bae5c405f8c6202656c253bcf9ef510f6",
+  "requestCommitParent": "8a61c9ac11369ea67a551eb6d19cdd1f9c053046",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "8a61c9ac11369ea67a551eb6d19cdd1f9c053046",
+  "workflow": "remote-operation-terminal-closure-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002\",\"lockScope\":\"H_EARTH:HILLSIDE_SHORELINE_CONTINUITY:20261023\",\"lockGeneration\":2875,\"terminalDisposition\":\"MUTATION_CLOSED_EVIDENCE_CONTINUES\"}",
+    "router_callback_issue": "6753",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "40042603155",
+  "dispatchedRunId": 40042617929,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40042617929",
+  "dispatchedRunHeadSha": "8a61c9ac11369ea67a551eb6d19cdd1f9c053046",
+  "dispatchedAt": "2026-10-23T23:58:54.975Z",
+  "resolvedAt": "2026-10-23T23:58:58.738Z"
+}

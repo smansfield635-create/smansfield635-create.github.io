@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050a13">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="description" content="Protect what matters across AI tools. DiamondGate Preflight — an owner-inspection prototype.">
+<title>DiamondGate · Preflight Studio</title>
+<link rel="stylesheet" href="./assets/studio.css">
+<script src="./assets/preflight-core.js" defer></script>
+<script src="./assets/studio.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#workbench">Skip to workspace</a>
+<div class="ambient" aria-hidden="true"></div>
+<div class="shell">
+<header class="topbar">
+ <div class="brand"><span class="brandmark"><span>D</span></span><span class="brandcopy"><strong>DIAMONDGATE</strong><small>PREFLIGHT STUDIO</small></span></div>
+ <div class="topright"><span class="preview-pill"><i></i> OWNER INSPECTION</span><button type="button" class="text-button" id="resetBtn" title="Clear saved local prototype data">Start fresh</button></div>
+</header>
+<main>
+ <section class="hero" aria-labelledby="headline">
+  <div class="hero-copy"><p class="eyebrow"><span class="hairline"></span> THE INTENT LAYER FOR AI WORK</p><h1 id="headline">Create freely.<br><em>Keep what matters.</em></h1><p class="lede">Describe your idea once. Protect the decisions that count. Know exactly what changed before your next request.</p></div>
+  <div class="hero-art" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="core-glyph"><span>✧</span></div><div class="orbit-dot dot-one"></div><div class="orbit-dot dot-two"></div><div class="orbit-dot dot-three"></div><div class="orbit-label label-one">INTENT</div><div class="orbit-label label-two">CONTINUITY</div></div>
+ </section>
+ <div class="journey" aria-label="Workflow"><span class="journey-active"><b>01</b> Define</span><span class="journey-line"></span><span><b>02</b> Protect</span><span class="journey-line"></span><span><b>03</b> Continue</span></div>
+ <section class="studio-layout" id="workbench" aria-label="Preflight workbench">
+  <div class="editor-column">
+   <div class="surface context-surface">
+    <div class="card-head"><div><p class="section-kicker">YOUR WORKSPACE</p><h2>What are you creating?</h2></div><span class="step-marker">01 / 03</span></div>
+    <div class="field-grid"><label class="field">Project name<input id="projectName" type="text" maxlength="120" autocomplete="off" placeholder="Name your project"></label><label class="field">Type of work<select id="category"><option value="3d">3D & interactive worlds</option><option value="video">Video & animation</option><option value="app">Apps & websites</option><option value="image">Images & design</option><option value="audio">Audio & voice</option><option value="writing">Writing & content</option><option value="agent">AI agents & workflows</option></select></label></div>
+    <label class="field field-large" for="goal">Describe the result you want</label><textarea id="goal" rows="5" placeholder="Describe your idea in natural language. What would success look like?"></textarea>
+    <div class="example-row"><span>Explore an example</span><button type="button" class="example" data-preset="trees">Interactive world</button><button type="button" class="example" data-preset="video">Cinematic video</button><button type="button" class="example" data-preset="app">Software application</button></div>
+   </div>
+   <div class="surface decision-surface">
+    <div class="card-head"><div><p class="section-kicker">YOUR DECISIONS</p><h2>What needs to stay true?</h2><p class="supporting">These are your boundaries—not suggestions the AI can quietly override.</p></div><span class="step-marker">02 / 03</span></div>
+    <div class="group-title"><span class="group-icon shield">◇</span><div><strong>Protected requirements</strong><small>Changes require your renewed confirmation</small></div><span id="protectedCount" class="counter">0</span></div>
+    <ul id="protectedList" class="requirements" aria-live="polite"></ul>
+    <div class="add-line"><input id="protectedInput" type="text" maxlength="400" placeholder="Add something that must remain unchanged" aria-label="Add protected requirement"><button id="addProtected" class="add-button" type="button">Add</button></div>
+    <div class="group-title allowed-title"><span class="group-icon allowed">↗</span><div><strong>Changes you allow</strong><small>Give the AI room to create within your boundaries</small></div><span id="allowedCount" class="counter">0</span></div>
+    <ul id="allowedList" class="requirements requirements-allowed" aria-live="polite"></ul>
+    <div class="add-line"><input id="allowedInput" type="text" maxlength="400" placeholder="Add an allowed change" aria-label="Add permitted change"><button id="addAllowed" class="add-button" type="button">Add</button></div>
+    <div class="extract-strip"><span>Want help identifying boundaries from your description?</span><button id="suggestBtn" type="button" class="ghost-button">Review suggestions <span aria-hidden="true">↗</span></button></div>
+    <div id="suggestionBox" class="suggestions" hidden><strong>Suggested boundaries · not approved</strong><p>Review each suggestion before adding it. Nothing is protected automatically.</p><div id="suggestionList"></div></div>
+   </div>
+   <div class="surface settings-surface">
+    <div class="card-head"><div><p class="section-kicker">TARGET ENVIRONMENT</p><h2>Where will this go?</h2></div><span class="step-marker">03 / 03</span></div>
+    <div class="field-grid"><label class="field">Selected AI platform<select id="model"><option value="Unspecified / Other">Unspecified / other</option><option value="Runway Gen-4.5">Runway Gen-4.5</option><option value="Kling 4.0">Kling 4.0</option><option value="Midjourney">Midjourney</option><option value="Meshy">Meshy</option><option value="ElevenLabs">ElevenLabs</option><option value="Adobe Firefly">Adobe Firefly</option></select></label><label class="field" id="customModelField">Custom model / version<input id="customModel" type="text" maxlength="120" placeholder="Optional"></label></div>
+    <label class="field" id="durationField">Requested duration, seconds<input id="duration" inputmode="numeric" type="number" min="1" max="120" placeholder="Optional"></label>
+    <p class="technical-note"><span>ⓘ</span> Platform checks are version-specific. An unverified adapter never means your request is cleared for generation.</p>
+   </div>
+  </div>
+  <aside class="status-column" aria-label="Decision status">
+   <div class="status-panel"><div class="status-head"><div><p class="section-kicker">DECISION RECORD</p><h2>Your intent, accounted for.</h2></div><span class="status-emblem">✧</span></div>
+    <div class="signal"><span class="signal-icon">◆</span><div class="signal-copy"><strong>Intent integrity</strong><small id="integrityDesc">Waiting for your approval</small></div><span id="intentBadge" class="state-badge">Draft</span></div>
+    <div class="signal"><span class="signal-icon">◈</span><div class="signal-copy"><strong>Technical compatibility</strong><small id="techDesc">No verified adapter selected</small></div><span id="techBadge" class="state-badge neutral">Unverified</span></div>
+    <div class="signal"><span class="signal-icon">⟳</span><div class="signal-copy"><strong>Revision continuity</strong><small id="continuityDesc">Nothing approved yet</small></div><span id="continuityBadge" class="state-badge">Not started</span></div>
+    <div id="changesPanel" class="changes-panel" aria-live="polite"><p class="panel-label">CHANGE REVIEW</p><p id="changesSummary">Approve a first version to track meaningful revisions here.</p></div>
+    <div class="approval-actions"><button type="button" class="primary-button" id="approveBtn"><span id="approveLabel">Approve this intent</span><span aria-hidden="true">→</span></button><p id="approvalMessage" role="status">Approval is explicit. AI suggestions never count as approval.</p></div>
+   </div>
+   <div class="output-panel"><div class="output-top"><div><p class="section-kicker">READY TO TAKE FORWARD</p><h3>Your next request</h3></div><span>↗</span></div><p>Prepare a platform-neutral request that carries your approved boundaries with it.</p><button id="prepareBtn" class="secondary-button" type="button">Prepare instructions <span aria-hidden="true">→</span></button><div id="outputBox" hidden><pre id="preparedText"></pre><button id="copyBtn" type="button" class="copy-button">Copy instructions</button></div></div>
+  </aside>
+ </section>
+ <footer><span>DIAMONDGATE <b>·</b> PREFLIGHT</span><span>Owner inspection build · local-only storage · no platform execution</span></footer>
+</main>
+</div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "preflight.v1",
+  "description": "Unlisted DiamondGate Preflight native web interface for owner inspection; no private kernel source and no publication authority created",
+  "checks": [
+    {
+      "path": "/preflight/index.html",
+      "includes": [
+        "DiamondGate · Preflight Studio",
+        "noindex,nofollow,noarchive",
+        "./assets/studio.css",
+        "./assets/preflight-core.js",
+        "./assets/studio.js",
+        "id=\"goal\"",
+        "id=\"approveBtn\""
+      ],
+      "excludes": [
+        "GITHUB_TOKEN",
+        "PRIVATE_KEY",
+        "ED25519_PRIVATE_KEY"
+      ]
+    },
+    {
+      "path": "/preflight/assets/studio.js",
+      "includes": [
+        "dataset.startup",
+        "approveBtn",
+        "prepareBtn"
+      ],
+      "excludes": [
+        "GITHUB_TOKEN",
+        "PRIVATE_KEY"
+      ]
+    },
+    {
+      "path": "/preflight/assets/preflight-core.js",
+      "includes": [
+        "NOT_VERIFIED",
+        "DGB_PREFLIGHT_USER_APPROVED_SNAPSHOT_v0_1"
+      ],
+      "excludes": [
+        "ED25519_PRIVATE_KEY"
+      ]
+    },
+    {
+      "path": "/preflight/assets/studio.css",
+      "includes": [
+        ".hero",
+        ".studio-layout"
+      ],
+      "excludes": [
+        "javascript:"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/preflight/",
+    "timeoutMs": 45000,
+    "readySelector": "body[data-startup=\"ready\"]",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/preflight/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": [
+      {
+        "name": "Load software-app example",
+        "action": {
+          "type": "click",
+          "selector": "[data-preset=\"app\"]"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#protectedList",
+            "value": "Existing user data must not be deleted."
+          }
+        ]
+      },
+      {
+        "name": "Explicitly approve local intent",
+        "action": {
+          "type": "click",
+          "selector": "#approveBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#intentBadge",
+            "value": "User approved"
+          }
+        ]
+      },
+      {
+        "name": "Prepare instructions with protected requirement",
+        "action": {
+          "type": "click",
+          "selector": "#prepareBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#preparedText",
+            "value": "P01: Existing user data must not be deleted."
+          },
+          {
+            "type": "textContains",
+            "selector": "#preparedText",
+            "value": "NOT_VERIFIED"
+          }
+        ]
+      },
+      {
+        "name": "Removing protected requirement invalidates approval",
+        "action": {
+          "type": "click",
+          "selector": "#protectedList li:first-child button"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#intentBadge",
+            "value": "Review needed"
+          },
+          {
+            "type": "textContains",
+            "selector": "#continuityBadge",
+            "value": "Changed"
+          }
+        ]
+      },
+      {
+        "name": "Reject stale approval when preparing revised request",
+        "action": {
+          "type": "click",
+          "selector": "#prepareBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#approvalMessage",
+            "value": "differs from the approved snapshot"
+          }
+        ]
+      },
+      {
+        "name": "Renew approval after user revision",
+        "action": {
+          "type": "click",
+          "selector": "#approveBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#intentBadge",
+            "value": "User approved"
+          }
+        ]
+      },
+      {
+        "name": "Reissue revised approved instructions",
+        "action": {
+          "type": "click",
+          "selector": "#prepareBtn"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#preparedText",
+            "value": "PROTECTED REQUIREMENTS"
+          },
+          {
+            "type": "textContains",
+            "selector": "#preparedText",
+            "value": "NOT_VERIFIED"
+          }
+        ]
+      }
+    ]
+  }
+}

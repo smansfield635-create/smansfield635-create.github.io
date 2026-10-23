@@ -1,0 +1,67 @@
+{
+  "schema": "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1",
+  "projectId": "DIAMONDGATE_PREFLIGHT",
+  "status": "ACTIVE_REGISTERED_PROJECT",
+  "ownedPathPrefixes": [
+    "preflight/"
+  ],
+  "ownedExactPaths": [
+    ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
+    ".github/ai-router/publication-surfaces/preflight.v1.json"
+  ],
+  "entrypoint": ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
+  "authorityBoundary": [
+    "PRE_FLIGHT_OWNS_ONLY_ITS_EXACT_REGISTERED_PATHS_AND_PRE_FLIGHT_PREFIX",
+    "PROJECT_REGISTRATION_CREATES_ROUTING_IDENTITY_ONLY_NO_MUTATION_MERGE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
+    "RUNTIME_OR_NEW_PRODUCT_REQUIRES_EXISTING_CANONICAL_ADMISSION_AND_ROUTER_PASS",
+    "PROPRIETARY_PRIVATE_CONTROL_KERNEL_SOURCE_MUST_NOT_BE_PUBLISHED_AS_BROWSER_ASSET",
+    "OWNER_INSPECTION_REVIEW_REQUIRED_BEFORE_ANY_PUBLIC_RELEASE",
+    "UNKNOWN_PROVIDER_COMPATIBILITY_MUST_REMAIN_EXPLICITLY_UNVERIFIED",
+    "PROMPT_SUGGESTION_IS_NOT_CUSTOMER_APPROVAL",
+    "UNRELATED_PRODUCT_LANES_AND_SHARED_CONTROL_SUBSTRATE_ARE_UNCHANGED"
+  ],
+  "requiredInstructions": [
+    "AGENTS.md",
+    "AI_ENTRYPOINT.json",
+    ".github/ai-router/publication-release-contract.v1.json"
+  ],
+  "registries": [
+    ".github/ai-router/router.v1.json",
+    ".github/ai-router/shared-procedures.v1.json",
+    ".github/ai-router/workflow-dispatch-capability.v1.json"
+  ],
+  "procedures": {
+    "operationAdmission": "CANONICAL_REPOSITORY_OPERATION_INTAKE_REQUIRED_FOR_NEW_RUNTIME_AND_PRODUCT",
+    "routerCommand": "node tools/repository-ai-entry-router.mjs --path preflight/index.html --task DIAMONDGATE_PREFLIGHT_OWNER_INSPECTION --mutation-intent --output /tmp/dgb-preflight-router-receipt.json",
+    "publicationReleaseContract": ".github/ai-router/publication-release-contract.v1.json",
+    "publicationCapability": "PAGES_EXACT_HEAD_DEPLOY",
+    "implementationOrder": [
+      "CANONICAL_INTAKE_ADMITTED_AND_LOCKED",
+      "EXACT_HEAD_FEATURE_BRANCH",
+      "PROJECT_REGISTRATION",
+      "ROUTER_PASS_FOR_EVERY_PRODUCT_PATH",
+      "BOUNDED_NATIVE_SOURCE_INSTALL",
+      "SELECTED_PAGE_EXCELLENCE_AND_BROWSER_QUALIFICATION",
+      "INDEPENDENT_CANDIDATE_REVIEW",
+      "OWNER_VISUAL_DISPOSITION",
+      "SEPARATELY_AUTHORIZED_MERGE_AND_EXACT_HEAD_PUBLICATION"
+    ]
+  },
+  "localExecution": {
+    "allowed": true,
+    "requirements": [
+      "EXACT_SUBJECT_HEAD",
+      "AUTHORIZED_ALLOWED_PATHS",
+      "COMMAND_EMITTED_ADMISSION_RECEIPT",
+      "ROUTER_PASS",
+      "NO_PRIVATE_KERNEL_CLIENT_ASSETS"
+    ]
+  },
+  "stoppingRules": [
+    "STOP_IF_ADMISSION_NOT_ACTIVE_OR_EXACT_SCOPE_DRIFTS",
+    "STOP_IF_ROUTER_BLOCK_REVIEW_REQUIRED_OR_STOP",
+    "STOP_IF_SELECTED_PAGE_QUALITY_GATE_NOT_PASSED",
+    "STOP_BEFORE_PUBLIC_MERGE_OR_DEPLOYMENT_PENDING_OWNER_VISUAL_ACCEPTANCE",
+    "STOP_IF_PRIVATE_KERNEL_SOURCE_EXPOSED"
+  ]
+}

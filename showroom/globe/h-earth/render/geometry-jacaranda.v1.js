@@ -13,9 +13,9 @@ const must=(ok,code)=>{if(!ok)throw Error(`JACARANDA_${code}`);};
 const finite=x=>typeof x==='number'&&Number.isFinite(x);
 const norm=v=>{const n=Math.hypot(v.x,v.y,v.z);must(n>1e-9,'INVALID_BASIS');return [v.x/n,v.y/n,v.z/n];};
 
-export function parseApprovedJacarandaGLB(raw) {
+export function parseApprovedJacarandaGLB(raw,contract=null) {
   must(raw instanceof ArrayBuffer,'ARRAYBUFFER_REQUIRED');
-  must(raw.byteLength===JACARANDA_APPROVED_LENGTH,'ASSET_LENGTH_MISMATCH');
+  must(raw.byteLength===(contract?.bytes??JACARANDA_APPROVED_LENGTH),'ASSET_LENGTH_MISMATCH');
   const dv=new DataView(raw);
   must(dv.getUint32(0,true)===0x46546c67&&dv.getUint32(4,true)===2&&dv.getUint32(8,true)===raw.byteLength,'INVALID_GLB_HEADER');
   const jsonLen=dv.getUint32(12,true),jsonType=dv.getUint32(16,true);
@@ -28,8 +28,9 @@ export function parseApprovedJacarandaGLB(raw) {
   try{gltf=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(new Uint8Array(raw,20,jsonLen)));}
   catch{throw Error('JACARANDA_INVALID_GLTF_JSON');}
   must(gltf.asset?.version==='2.0'&&gltf.nodes?.length===1&&gltf.nodes[0]?.mesh===0,'SCENE_IDENTITY_DRIFT');
-  must(gltf.meshes?.length===1&&gltf.meshes[0].primitives?.length===3,'PRIMITIVE_CENSUS_DRIFT');
-  must(gltf.materials?.length===3&&gltf.images?.length===9&&gltf.textures?.length===9,'MATERIAL_CENSUS_DRIFT');
+  must(!gltf.nodes[0].matrix&&!gltf.nodes[0].translation&&!gltf.nodes[0].rotation&&!gltf.nodes[0].scale,'UNBAKED_NODE_TRANSFORM');
+  must(gltf.meshes?.length===1&&gltf.meshes[0].primitives?.length===(contract?.materials??3),'PRIMITIVE_CENSUS_DRIFT');
+  must(gltf.materials?.length===(contract?.materials??3)&&gltf.images?.length===(contract?.images??9)&&gltf.textures?.length===(contract?.textures??9),'MATERIAL_CENSUS_DRIFT');
   const view=id=>{
     const x=gltf.bufferViews?.[id];must(x&&x.buffer===0&&Number.isSafeInteger(x.byteOffset??0)&&Number.isSafeInteger(x.byteLength)&&x.byteOffset>=0&&x.byteLength>0&&x.byteOffset+x.byteLength<=binLen,'BUFFER_VIEW_RANGE');
     return new Uint8Array(raw,binStart+(x.byteOffset??0),x.byteLength);
@@ -37,16 +38,19 @@ export function parseApprovedJacarandaGLB(raw) {
   const accessor=(id,type,componentType)=>{
     const a=gltf.accessors?.[id];must(a?.type===type&&a.componentType===componentType&&Number.isSafeInteger(a.count)&&a.count>0&&!a.sparse&&(a.byteOffset??0)===0,'ACCESSOR_TYPE');
     const b=gltf.bufferViews?.[a.bufferView],n=type==='VEC3'?3:type==='VEC2'?2:1;
-    must(b&&!(b.byteStride)&&b.byteLength===a.count*n*4,'ACCESSOR_STRIDE');
+    const width=componentType===5123?2:4;
+    must(b&&!(b.byteStride)&&b.byteLength===a.count*n*width,'ACCESSOR_STRIDE');
     const bytes=view(a.bufferView);
-    must(bytes.byteOffset%4===0,'ACCESSOR_ALIGNMENT');
-    return componentType===5126?new Float32Array(raw,bytes.byteOffset,a.count*n):new Uint32Array(raw,bytes.byteOffset,a.count);
+    must(bytes.byteOffset%width===0,'ACCESSOR_ALIGNMENT');
+    return componentType===5126?new Float32Array(raw,bytes.byteOffset,a.count*n):componentType===5123?Uint32Array.from(new Uint16Array(raw,bytes.byteOffset,a.count)):new Uint32Array(raw,bytes.byteOffset,a.count);
   };
   const parts=[];
   let vertexCount=0,triangleCount=0,minX=Infinity,minY=Infinity,minZ=Infinity,maxX=-Infinity,maxY=-Infinity,maxZ=-Infinity;
   for(const [i,p] of gltf.meshes[0].primitives.entries()){
-    must(p.material===i&&p.mode===undefined,'MATERIAL_PRIMITIVE_IDENTITY');
-    const positions=accessor(p.attributes.POSITION,'VEC3',5126),normals=accessor(p.attributes.NORMAL,'VEC3',5126),uvs=accessor(p.attributes.TEXCOORD_0,'VEC2',5126),indices=accessor(p.indices,'SCALAR',5125);
+    must(p.material===i&&(p.mode===undefined||p.mode===4),'MATERIAL_PRIMITIVE_IDENTITY');
+    const indexType=gltf.accessors[p.indices]?.componentType;
+    must(indexType===5125||(contract&&indexType===5123),'INDEX_COMPONENT_TYPE');
+    const positions=accessor(p.attributes.POSITION,'VEC3',5126),normals=accessor(p.attributes.NORMAL,'VEC3',5126),uvs=accessor(p.attributes.TEXCOORD_0,'VEC2',5126),indices=accessor(p.indices,'SCALAR',indexType);
     const n=positions.length/3;
     must(normals.length===positions.length&&uvs.length===n*2&&indices.length%3===0,'GEOMETRY_CARDINALITY');
     for(let j=0;j<positions.length;j+=3){const x=positions[j],y=positions[j+1],z=positions[j+2];must(finite(x)&&finite(y)&&finite(z),'POSITION_NOT_FINITE');minX=Math.min(minX,x);minY=Math.min(minY,y);minZ=Math.min(minZ,z);maxX=Math.max(maxX,x);maxY=Math.max(maxY,y);maxZ=Math.max(maxZ,z);}
@@ -56,8 +60,10 @@ export function parseApprovedJacarandaGLB(raw) {
     vertexCount+=n;triangleCount+=indices.length/3;
     parts.push({materialId:i,positions,normals,uvs,indices,vertexCount:n,triangleCount:indices.length/3});
   }
-  must(vertexCount===651794&&triangleCount===454746,'APPROVED_GEOMETRY_CENSUS_DRIFT');
-  must(gltf.materials[2].alphaMode==='MASK'&&gltf.materials[2].alphaCutoff===0.45,'LEAF_ALPHA_IDENTITY_DRIFT');
+  must(vertexCount===(contract?.vertices??651794)&&triangleCount===(contract?.triangles??454746),'APPROVED_GEOMETRY_CENSUS_DRIFT');
+  if(!contract)must(gltf.materials[2].alphaMode==='MASK'&&gltf.materials[2].alphaCutoff===0.45,'LEAF_ALPHA_IDENTITY_DRIFT');
+  const alphaCutoffs=gltf.materials.map(m=>{must(!m.alphaMode||['OPAQUE','MASK'].includes(m.alphaMode),'UNSUPPORTED_ALPHA_MODE');return m.alphaMode==='MASK'?(m.alphaCutoff??.5):0;});
+  if(contract)must(JSON.stringify(alphaCutoffs)===JSON.stringify(contract.alphaCutoffs),'LEAF_ALPHA_IDENTITY_DRIFT');
   const textures=gltf.materials.map((m,i)=>{
     const pbr=m.pbrMetallicRoughness;
     must(m.doubleSided===true&&pbr?.baseColorTexture&&m.normalTexture&&pbr?.metallicRoughnessTexture,'SOURCE_MATERIAL_INVALID');
@@ -65,14 +71,14 @@ export function parseApprovedJacarandaGLB(raw) {
     return ids.map((id,k)=>{
       const texture=gltf.textures[id],img=gltf.images[texture?.source];
       must(texture&&img?.bufferView!==undefined&&['image/png','image/jpeg'].includes(img.mimeType),'IMAGE_DEPENDENCY_INVALID');
-      return {materialId:i,role:['baseColor','normal','orm'][k],mimeType:img.mimeType,bytes:view(img.bufferView)};
+      return {materialId:i,alphaCutoff:alphaCutoffs[i],imageId:texture.source,role:['baseColor','normal','orm'][k],mimeType:img.mimeType,bytes:view(img.bufferView)};
     });
   });
-  must(textures[2][0].mimeType==='image/png','LEAF_ALPHA_IMAGE_NOT_PNG');
+  for(let i=0;i<textures.length;i++)if(alphaCutoffs[i]>0)must(textures[i][0].mimeType==='image/png','LEAF_ALPHA_IMAGE_NOT_PNG');
   const tBounds={min:[minX,minY,minZ],max:[maxX,maxY,maxZ]};
-  const trunkMinY=Math.min(...Array.from({length:parts[1].positions.length/3},(_,i)=>parts[1].positions[i*3+1]));
-  must(trunkMinY<0&&maxY>19&&minX< -12&&maxX>11,'APPROVED_SPATIAL_IDENTITY_DRIFT');
-  return {schema:JACARANDA_MODEL_CONTRACT,parts,textures,triangleCount,vertexCount,trunkMinY,bounds:tBounds,leafAlphaCutoff:0.45,assetLength:raw.byteLength};
+  let trunkMinY=Infinity;const trunk=parts[contract?.trunkMaterial??1].positions;for(let i=1;i<trunk.length;i+=3)trunkMinY=Math.min(trunkMinY,trunk[i]);
+  if(!contract)must(trunkMinY<0&&maxY>19&&minX< -12&&maxX>11,'APPROVED_SPATIAL_IDENTITY_DRIFT');
+  return {schema:JACARANDA_MODEL_CONTRACT,parts,textures,alphaCutoffs,triangleCount,vertexCount,trunkMinY,bounds:tBounds,leafAlphaCutoff:0.45,assetLength:raw.byteLength};
 }
 
 export function planApprovedJacarandaPlacement(model,decoded,companions,options=JACARANDA_TARGET){
@@ -180,7 +186,8 @@ const yieldFrame=()=>new Promise(resolve=>setTimeout(resolve,0));
 
 /** The overlay is opt-in after the first world frame and distance-gated. */
 export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions,assetURL,sunDirection,fetchAsset=globalThis.fetch,
-  imageDecoder=globalThis.createImageBitmap,alphaCanvasFactory=()=>new OffscreenCanvas(1,1),yieldWork=yieldFrame}={}){
+  imageDecoder=globalThis.createImageBitmap,alphaCanvasFactory=()=>new OffscreenCanvas(1,1),yieldWork=yieldFrame,
+  approvedAsset=null,planPlacement=null,target=JACARANDA_TARGET,focusId=JACARANDA_FOCUS_ID}={}){
   must(gl&&typeof projectWorld==='function'&&Array.isArray(companions)&&assetURL,'OVERLAY_INPUTS_REQUIRED');
   let state='IDLE',failure=null,loaded=null,startedAt=0,loadPromise=null,dead=false,epoch=0,draws=0;
   const gpu={program:null,shaders:[],parts:[],buffers:[],textures:[],resourceBytes:0};
@@ -213,8 +220,9 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
   const imageTexture=async(desc,currentEpoch)=>{
     must(typeof imageDecoder==='function','IMAGE_DECODER_UNAVAILABLE');
     let bitmap;
-    try{bitmap=await imageDecoder(new Blob([desc.bytes],{type:desc.mimeType}),{premultiplyAlpha:'none',colorSpaceConversion:'none'});}
-    catch{bitmap=await imageDecoder(new Blob([desc.bytes],{type:desc.mimeType}));}
+    const resize=approvedAsset?.runtimeTextureSize?{resizeWidth:approvedAsset.runtimeTextureSize,resizeHeight:approvedAsset.runtimeTextureSize,resizeQuality:'high'}:{};
+    try{bitmap=await imageDecoder(new Blob([desc.bytes],{type:desc.mimeType}),{premultiplyAlpha:'none',colorSpaceConversion:'none',...resize});}
+    catch{bitmap=await imageDecoder(new Blob([desc.bytes],{type:desc.mimeType}),resize);}
     must(!dead&&epoch===currentEpoch,'LOAD_CANCELLED');
     const bmpWidth=bitmap.width,bmpHeight=bitmap.height;
     const max=gl.getParameter(gl.MAX_TEXTURE_SIZE);
@@ -227,7 +235,7 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
     gl.texImage2D(gl.TEXTURE_2D,0,desc.role==='baseColor'?gl.SRGB8_ALPHA8:gl.RGBA8,gl.RGBA,gl.UNSIGNED_BYTE,bitmap);
     // Keep authored leaf transparency visible through distance minification.
-    if(desc.materialId===2&&desc.role==='baseColor'){
+    if(desc.alphaCutoff>0&&desc.role==='baseColor'){
       const canvas=alphaCanvasFactory();must(canvas&&typeof canvas.getContext==='function','ALPHA_CANVAS_REQUIRED');
       canvas.width=bitmap.width;canvas.height=bitmap.height;
       const ctx=canvas.getContext('2d',{willReadFrequently:true});must(ctx,'ALPHA_CONTEXT_UNAVAILABLE');
@@ -268,19 +276,23 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
       const response=await fetchAsset(assetURL,{cache:'force-cache'});
       must(response?.ok,'ASSET_FETCH_'+fmt(response?.status));
       const bytes=await response.arrayBuffer();
-      must(bytes.byteLength===JACARANDA_APPROVED_LENGTH,'ASSET_BYTE_COUNT_MISMATCH');
-      must(await digestSha256(bytes)===JACARANDA_APPROVED_SHA256,'ASSET_SHA256_MISMATCH');
+      must(bytes.byteLength===(approvedAsset?.bytes??JACARANDA_APPROVED_LENGTH),'ASSET_BYTE_COUNT_MISMATCH');
+      must(await digestSha256(bytes)===(approvedAsset?.sha256??JACARANDA_APPROVED_SHA256),'ASSET_SHA256_MISMATCH');
       must(!dead&&epoch===currentEpoch,'LOAD_CANCELLED');
-      const decoded=parseApprovedJacarandaGLB(bytes);
-      const placement=planApprovedJacarandaPlacement(model,decoded,companions);
+      const decoded=parseApprovedJacarandaGLB(bytes,approvedAsset);
+      const placement=planPlacement?planPlacement(decoded):planApprovedJacarandaPlacement(model,decoded,companions);
       must(gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)>=15,'TEXTURE_UNITS_UNSUPPORTED');
       const vs=shader(gl.VERTEX_SHADER,JACARANDA_VS),fs=shader(gl.FRAGMENT_SHADER,JACARANDA_FS);
       gpu.program=gl.createProgram();must(gpu.program,'PROGRAM_CREATE_FAILED');
       gl.attachShader(gpu.program,vs);gl.attachShader(gpu.program,fs);gl.linkProgram(gpu.program);
       must(gl.getProgramParameter(gpu.program,gl.LINK_STATUS),`PROGRAM_LINK_${fmt(gl.getProgramInfoLog(gpu.program))}`);
       // Three original materials, nine embedded color/normal/ORM images.
-      const mats=[];
-      for(const material of decoded.textures){const refs=[];for(const desc of material)refs.push(await imageTexture(desc,currentEpoch));mats.push(refs);}
+      const mats=[],imageCache=new Map();
+      for(const material of decoded.textures){const refs=[];for(const desc of material){
+        const key=`${desc.imageId}:${desc.role}:${desc.role==='baseColor'?desc.alphaCutoff:0}`;
+        if(!imageCache.has(key))imageCache.set(key,await imageTexture(desc,currentEpoch));
+        refs.push(imageCache.get(key));
+      }mats.push(refs);}
       for(const part of decoded.parts){
         must(!dead&&epoch===currentEpoch,'LOAD_CANCELLED');
         const vao=gl.createVertexArray();must(vao,'VAO_CREATE_FAILED');
@@ -300,7 +312,9 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
       const uniforms={};for(const name of ['uViewProjection','uWorldRoot','uAxisX','uAxisY','uAxisZ','uScale','uSourceBaseY','uDiffuse','uNormalMap','uOrmMap','uSunDirection','uCameraWorld','uAlphaCutoff'])uniforms[name]=gl.getUniformLocation(gpu.program,name);
       must(!dead&&epoch===currentEpoch,'LOAD_CANCELLED');
       gl.bindVertexArray(null);gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
-      loaded={placement,axisX,axisY,axisZ,origin:[base.x,base.y,base.z],uniforms,mats,assetSha256:JACARANDA_APPROVED_SHA256,
+      const angle=placement.rotation??0,c=Math.cos(angle),s=Math.sin(angle);
+      const rotatedX=axisX.map((v,i)=>c*v-s*axisZ[i]),rotatedZ=axisZ.map((v,i)=>c*v+s*axisX[i]);
+      loaded={placement,decodedPlacement:{bounds:decoded.bounds,trunkMinY:decoded.trunkMinY},axisX:rotatedX,axisY,axisZ:rotatedZ,origin:[base.x,base.y,base.z],uniforms,mats,alphaCutoffs:decoded.alphaCutoffs,assetSha256:approvedAsset?.sha256??JACARANDA_APPROVED_SHA256,
         triangleCount:decoded.triangleCount,vertexCount:decoded.vertexCount,loadMilliseconds:duration()-startedAt};
       state='READY';return true;
     })().catch(e=>{failure=fmt(e?.message);state=dead?'DISPOSED':'FALLBACK';discard();return false;});
@@ -309,23 +323,24 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
   function requestIfNear(camera){
     if(state!=='IDLE'||!to3(camera))return false;
     // A distant woodland spawn must not download the 33MB imported tree.
-    if(Math.hypot(camera.x-JACARANDA_TARGET.x,camera.z-JACARANDA_TARGET.z)>180)return false;
+    if(Math.hypot(camera.x-target.x,camera.z-target.z)>180)return false;
     void start();return true;
   }
-  function draw(packet){
+  function draw(packet,instance=null){
     if(state!=='READY'||!loaded)return false;
     try{
       const U=loaded.uniforms,P=gpu.program,position=packet.camera.position;
       gl.useProgram(P);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);
       gl.uniformMatrix4fv(U.uViewProjection,false,Float32Array.from(packet.camera.viewProjectionMatrix));
-      gl.uniform3fv(U.uWorldRoot,loaded.origin);
-      gl.uniform3fv(U.uAxisX,loaded.axisX);gl.uniform3fv(U.uAxisY,loaded.axisY);gl.uniform3fv(U.uAxisZ,loaded.axisZ);
-      gl.uniform1f(U.uScale,loaded.placement.scale);gl.uniform1f(U.uSourceBaseY,loaded.placement.sourceBaseY);
+      const frame=instance??loaded;
+      gl.uniform3fv(U.uWorldRoot,frame.origin);
+      gl.uniform3fv(U.uAxisX,frame.axisX);gl.uniform3fv(U.uAxisY,frame.axisY);gl.uniform3fv(U.uAxisZ,frame.axisZ);
+      gl.uniform1f(U.uScale,frame.placement.scale);gl.uniform1f(U.uSourceBaseY,frame.placement.sourceBaseY);
       const cam=projectWorld(position),sun=to3(sunDirection)?sunDirection:{x:.5,y:1,z:.4};
       gl.uniform3f(U.uCameraWorld,cam.x,cam.y,cam.z);gl.uniform3fv(U.uSunDirection,norm(sun));
       gl.uniform1i(U.uDiffuse,12);gl.uniform1i(U.uNormalMap,13);gl.uniform1i(U.uOrmMap,14);
       for(const part of gpu.parts){
-        gl.uniform1f(U.uAlphaCutoff,part.materialId===2?.45:0);
+        gl.uniform1f(U.uAlphaCutoff,loaded.alphaCutoffs[part.materialId]);
         for(let i=0;i<3;i++){gl.activeTexture(gl.TEXTURE0+12+i);gl.bindTexture(gl.TEXTURE_2D,loaded.mats[part.materialId][i]);}
         gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,part.indexCount,gl.UNSIGNED_INT,0);
       }
@@ -334,12 +349,35 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
     finally{gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(null);}
   }
   function dispose(){if(dead)return;dead=true;epoch++;state='DISPOSED';discard();loaded=null;}
-  function getReceipt(){return {schema:JACARANDA_MODEL_CONTRACT,assetSha256:JACARANDA_APPROVED_SHA256,
-    state,ready:state==='READY',failure,focusId:JACARANDA_FOCUS_ID,source:'APPROVED_IMPORTED_CC0_GLB',fallbackUsed:state!=='READY',
-    originalHydratedWorldUnchanged:true,threeCompanionsPreserved:true,perFrameGeometryConstruction:false,
-    loadedGeometry:loaded?{triangles:loaded.triangleCount,vertices:loaded.vertexCount,assetLength:JACARANDA_APPROVED_LENGTH}:null,
+  function getReceipt(){return {schema:JACARANDA_MODEL_CONTRACT,assetSha256:approvedAsset?.sha256??JACARANDA_APPROVED_SHA256,
+    state,ready:state==='READY',failure,focusId,source:approvedAsset?'APPROVED_IMPORTED_GLB':'APPROVED_IMPORTED_CC0_GLB',fallbackUsed:state!=='READY',
+    originalHydratedWorldUnchanged:true,threeCompanionsPreserved:!approvedAsset,perFrameGeometryConstruction:false,
+    loadedGeometry:loaded?{triangles:loaded.triangleCount,vertices:loaded.vertexCount,assetLength:approvedAsset?.bytes??JACARANDA_APPROVED_LENGTH}:null,
     placement:loaded?.placement??null,drawCount:draws,gpuResourceBytes:gpu.resourceBytes,
     programCount:gpu.program?1:0,textureCount:gpu.textures.length,vertexArrayCount:gpu.parts.length,
     noClaimOfMeasuredMobilePerformance:true,noClaimOfNewShadowCaster:true,loadMilliseconds:loaded?.loadMilliseconds??null};}
-  return {start,requestIfNear,draw,dispose,getReceipt,get ready(){return state==='READY';}};
+  // Additional approved Jacarandas share the original buffers, textures and program.
+  // Instance disposal never deletes the owner's resources.
+  function createInstance(id,planner){
+    let frame=null,instanceDraws=0,instanceDead=false,instanceFailure=null;
+    const prepare=()=>{
+      if(frame||state!=='READY'||instanceDead)return;
+      try{
+        const placement=planner(loaded.decodedPlacement),a=placement.anchor,base=projectWorld(a);
+        const axes=['x','y','z'].map(key=>{const p=projectWorld({...a,[key]:a[key]+1});return norm({x:p.x-base.x,y:p.y-base.y,z:p.z-base.z});});
+        const c=Math.cos(placement.rotation??0),s=Math.sin(placement.rotation??0);
+        frame={placement,origin:[base.x,base.y,base.z],axisX:axes[0].map((v,i)=>c*v-s*axes[2][i]),axisY:axes[1],axisZ:axes[2].map((v,i)=>c*v+s*axes[0][i])};
+      }catch(e){instanceFailure=fmt(e.message);}
+    };
+    return {
+      async start(){await start();prepare();return !!frame&&!instanceFailure;},
+      draw(packet){prepare();if(frame&&!instanceDead&&!instanceFailure&&draw(packet,frame)){instanceDraws++;return true;}return false;},
+      dispose(){instanceDead=true;frame=null;},
+      get ready(){prepare();return state==='READY'&&!!frame&&!instanceDead&&!instanceFailure;},
+      getReceipt(){prepare();const r=getReceipt(),ready=state==='READY'&&!!frame&&!instanceDead&&!instanceFailure;
+        return {...r,focusId:id,state:instanceDead?'DISPOSED':instanceFailure?'FALLBACK':r.state,ready,fallbackUsed:!ready,failure:instanceFailure??r.failure,
+          placement:frame?.placement??null,drawCount:instanceDraws,threeCompanionsPreserved:false,gpuResourceBytes:0,sharedGpuResources:true,resourceOwner:JACARANDA_FOCUS_ID};}
+    };
+  }
+  return {start,requestIfNear,draw,dispose,getReceipt,createInstance,get ready(){return state==='READY';}};
 }

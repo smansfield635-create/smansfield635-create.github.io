@@ -141,12 +141,13 @@ export const runDeclaredInteractions=async(page,interactions)=>{
 // Fixed post-entry qualification: genuine controls, immutable approved asset,
 // and read-only renderer receipts. This never installs a product navigation hook.
 const H_EARTH_SCENE_POLICY='H_EARTH_APPROVED_JACARANDA_SCENE_V1';
+const H_EARTH_COLLECTION_POLICY='H_EARTH_APPROVED_TREE_COLLECTION_SCENE_V1';
 const JACARANDA_SHA256='46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189';
 const JACARANDA_BYTES=33184612;
 const COMPANION_IDS=['PROPOSED_OASIS_02','PROPOSED_OASIS_03','PROPOSED_OASIS_04'];
 export const validateHEarthScenePolicy=(surfaceId,policy)=>{
   if(policy===undefined||policy===null)return null;
-  if(surfaceId!=='h-earth'||policy!==H_EARTH_SCENE_POLICY)throw Error('H_EARTH_SCENE_POLICY_INVALID');
+  if(surfaceId!=='h-earth'||![H_EARTH_SCENE_POLICY,H_EARTH_COLLECTION_POLICY].includes(policy))throw Error('H_EARTH_SCENE_POLICY_INVALID');
   return policy;
 };
 export const assessHEarthJacarandaScene=(resources,asset)=>{
@@ -172,7 +173,7 @@ export const observeHEarthSceneAsset=(page,surfaceId,policy)=>{
   const pending=[],responses=[];
   const listener=response=>{
     const url=new URL(response.url());
-    if(url.pathname!=='/showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb')return;
+    if(url.pathname!=='/showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb'&&!(policy===H_EARTH_COLLECTION_POLICY&&url.pathname.startsWith('/showroom/globe/h-earth/assets/tree-collection/')&&url.pathname.endsWith('.glb')))return;
     // Buffer errors are recorded and rejected after navigation; no unhandled task.
     pending.push((async()=>{try{const bytes=await response.buffer();responses.push({url:response.url(),status:response.status(),bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});}catch(error){responses.push({url:response.url(),error:String(error.message)});}})());
   };
@@ -286,6 +287,53 @@ export const observeHEarthFailure=async(read)=>{
   try{return {observation:await read(),error:null};}
   catch(error){return {observation:null,error:String(error?.stack||error)};}
 };
+export const assessHEarthTreeCollection=(resources,assets,expected)=>{
+  const c=resources?.treeCollection,entries=c?.entries??[];
+  const conditions={
+    exactPopulation:c?.replacementCount===7&&c?.additionalShrubCount===1&&entries.length===8&&entries.filter(e=>e.replaces).length===7,
+    allApprovedResources:expected.every(a=>entries.some(e=>e.assetId===a.id&&e.assetSha256===a.sha256&&e.loadedGeometry?.assetLength===a.bytes&&e.loadedGeometry?.triangles===a.triangles&&e.loadedGeometry?.vertices===a.vertices&&e.vertexArrayCount===a.materials&&e.textureCount>=a.images&&e.programCount===1)),
+    allDrawn:entries.length===8&&entries.every(e=>e.ready===true&&e.state==='READY'&&!e.fallbackUsed&&e.drawCount>0),
+    sevenReplacementsActive:entries.filter(e=>e.replacementActive===true).length===7,
+    exactFetchedFiles:expected.every(a=>assets.some(r=>r.status===200&&r.sha256===a.sha256&&r.bytes===a.bytes)),
+    originalJacaranda:resources?.jacaranda?.ready===true&&resources.jacaranda.assetSha256===JACARANDA_SHA256&&resources.jacaranda.drawCount>0,
+    existingEcology:['cavernUnderstory','cavernIvy','cavernPalms'].every(k=>resources?.[k]?.drawCount>0)&&resources?.geologicalFormation?.designedFreshwaterRendered===true,
+    grounded:entries.length===8&&entries.every(e=>e.placement?.groundWitnesses?.length===5),
+    noParkedAssets:c?.parkedAssetsIncluded===false
+  };
+  return {pass:Object.values(conditions).every(Boolean),conditions,unmet:Object.keys(conditions).filter(k=>!conditions[k]),gpuResourceBytes:entries.reduce((n,e)=>n+(e.gpuResourceBytes??0),resources?.jacaranda?.gpuResourceBytes??0)};
+};
+async function qualifyCollection({page,snapshot,read,pulse,aim,travel,capture,bounded,assetObserver,budget,views,check,started}){
+  const {TREE_ASSETS,TREE_PLACEMENTS}=await import('../showroom/globe/h-earth/render/geometry-tree-collection.v1.js');
+  const waitGroup=async(group)=>{
+    const until=Date.now()+180000;
+    while(true){
+      bounded();const r=await snapshot(),rows=r.resources?.treeCollection?.entries?.filter(e=>e.group===group)??[];
+      check(!rows.some(e=>e.state==='FALLBACK'),'TREE_COLLECTION_IMPORT_FAILED:'+JSON.stringify(rows.filter(e=>e.failure).map(e=>({id:e.id,failure:e.failure}))));
+      if(rows.length&&rows.every(e=>e.ready&&e.drawCount>0))return;
+      check(Date.now()<until,'TREE_COLLECTION_GROUP_LOAD_TIMEOUT:'+group);
+      // Genuine look input presents completed uploads and starts the next queued asset.
+      await pulse(.061,0);
+    }
+  };
+  const lookAt=async(p,pitch=8)=>{const n=(await read()).navigation;await aim((Math.atan2(p.x-n.position.x,n.position.z-p.z)*180/Math.PI+360)%360,pitch);};
+  await travel(-142,-244);await waitGroup('woodland');
+  await lookAt({x:-143,z:-214},12);await capture('Approved woodland collection');
+  for(const id of ['maple-large','maple-medium','jacaranda','wild-syringa']){
+    const p=TREE_PLACEMENTS.find(p=>p.assetId===id);await lookAt(p,id==='wild-syringa'?2:12);await capture('Approved '+id);
+  }
+  await travel(-145,-280);await travel(-60,-310);await travel(40,-300);
+  await waitGroup('oasis');
+  await page.waitForFunction(()=>window.H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().resources.jacaranda?.ready,{timeout:Math.min(60000,budget.remaining())});
+  await lookAt({x:55.5,z:-307.5},12);await capture('Original Jacaranda and river group');
+  for(const id of ['coastal-01','coastal-02','coastal-03','searsia']){const p=TREE_PLACEMENTS.find(p=>p.assetId===id);await lookAt(p,3);await capture('Approved '+id);}
+  await aim(160,2);await capture('Preserved river cavern flowers and palms');
+  const assets=await budget.run('asset.finish',()=>assetObserver.finish()),final=await snapshot();
+  const assessment=assessHEarthTreeCollection(final.resources,assets,TREE_ASSETS);
+  check(assessment.pass,'TREE_COLLECTION_ASSERTION_FAILED:'+assessment.unmet.join(','));
+  check(views.some(v=>v.resources?.singleOwnerVegetation?.drawCallCount>0),'TREE_COLLECTION_GRASS_DRAW_MISSING');
+  return {schema:'H_EARTH_APPROVED_TREE_COLLECTION_OBSERVATION_v1',result:'RUNTIME_PASS_VISUAL_REVIEW_PENDING',assessment,assets,views,elapsedMs:Date.now()-started,physicalDeviceAcceptance:false,ownerPerceptualAcceptance:false,publicationAuthorized:false};
+}
+
 export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserver)=>{
   if(!validateHEarthScenePolicy(surfaceId,policy))return null;
   const started=Date.now(),budget=createHEarthBudget(600000),views=[],images=[],aimTrace=[];
@@ -299,7 +347,7 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
   const snapshot=()=>page.evaluate(()=>{
     const r=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getReceipt();
     const all=r?.liveGpu?.resources;
-    const resources=all?Object.fromEntries(['jacaranda','oasisTrees','cavernUnderstory','cavernIvy','cavernPalms','geologicalFormation','woodlandClearing','woodlandFineGrass','singleOwnerVegetation'].map(key=>[key,all[key]])):null;
+    const resources=all?Object.fromEntries(['treeCollection','jacaranda','oasisTrees','cavernUnderstory','cavernIvy','cavernPalms','geologicalFormation','woodlandClearing','woodlandFineGrass','singleOwnerVegetation'].map(key=>[key,all[key]])):null;
     return {mode:r?.mode,navigation:r?.intake?.currentNavigationState,resources,frame:r?.liveGpu?.frameRecords?.at(-1),counters:r?.liveGpu?.counters,entered:window.H_EARTH_STARTUP_LOADER?.getReceipt()?.mode==='entered',ready:document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eReady==='true'};
   });
   const read=()=>page.evaluate(()=>({navigation:window.H_EARTH_RUN8E_PUBLIC_ROUTE.getIntakeReceipt().currentNavigationState}));
@@ -328,6 +376,9 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
   };
   let result;
   try{
+    if(policy===H_EARTH_COLLECTION_POLICY){
+      result=await qualifyCollection({page,snapshot,read,pulse,aim,travel,capture,bounded,assetObserver,budget,views,check,started});
+    }else{
     await capture('Woodland entry');
     await travel(-145,-280);await travel(-60,-310);
     await aim(89,4);
@@ -353,6 +404,7 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
     check(views.some(v=>Number(v.resources?.singleOwnerVegetation?.drawCallCount)>0&&Number(v.resources?.singleOwnerVegetation?.installedRootCount)>0),'H_EARTH_SCENE_GRASS_DRAW_MISSING');
     check(near?.distanceToJacarandaMeters<25&&far?.distanceToJacarandaMeters>80&&far.distanceToJacarandaMeters<140&&[near,far].every(v=>v.resources?.jacaranda?.state==='READY'&&v.resources.jacaranda.drawCount>0),'H_EARTH_SCENE_NEAR_FAR_PROOF_MISSING');
     result={schema:'H_EARTH_APPROVED_JACARANDA_SCENE_OBSERVATION_v1',result:'RUNTIME_PASS_VISUAL_REVIEW_PENDING',assessment,assets,views,elapsedMs:Date.now()-started,physicalDeviceAcceptance:false,ownerPerceptualAcceptance:false,publicationAuthorized:false};
+    }
   }catch(error){
     const recovery=createHEarthBudget(10000);
     try{await recovery.run('failure.release',()=>rawPage.mouse.up(),2000);}catch{}
@@ -596,7 +648,7 @@ export const main=async()=>{
   const browser=await launchSurfaceBrowser({puppeteer,executablePath,surfaceId:manifest.surfaceId,scenePolicy:spec.sceneQualification});
   try{
     const page=await browser.newPage();
-    await page.setViewport(spec.sceneQualification===H_EARTH_SCENE_POLICY
+    await page.setViewport([H_EARTH_SCENE_POLICY,H_EARTH_COLLECTION_POLICY].includes(spec.sceneQualification)
       ? {width:1280,height:800,deviceScaleFactor:1}
       : spec.captureScreenshot===true
       ? {width:1440,height:2200,deviceScaleFactor:1}

@@ -1,0 +1,163 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "approvedAssets": [
+      {
+        "bytes": 18496516,
+        "filename": "Tree-Small-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Wild syringa / Tree Small 02",
+        "sha256": "236b81e864c2079dabe4c119c89c7315f0fbc4a00c96f02600e7e875342c6dc6"
+      },
+      {
+        "bytes": 24660600,
+        "filename": "Coastal-Tree-01-v2-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 01 v2",
+        "sha256": "b74dd63e6ee121a6ae913719a08cb8b29e28fb3d6a4c97d2d986c92a79f23bc7"
+      },
+      {
+        "bytes": 19468500,
+        "filename": "Coastal-Tree-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 02",
+        "sha256": "6a1497c91d4a66ed26c1b56c92cdf30b5b934e00dab123bdf990930bf2aad0c2"
+      },
+      {
+        "bytes": 31795372,
+        "filename": "Coastal-Tree-03-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 03",
+        "sha256": "02aad9751e876d2ac2512324b13d81525048d71c6795740ab372cf8e4d27515c"
+      },
+      {
+        "bytes": 10271048,
+        "filename": "Maple-Large-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple large A",
+        "sha256": "56462cb37f7a9ecca707c7095b630af9fa617de4f228c5db0ee0798de6cf87d5"
+      },
+      {
+        "bytes": 9899652,
+        "filename": "Maple-Medium-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple medium A",
+        "sha256": "28a52894e3f08e060ab9eedc7908174f9d98eabc9832ef5a0a999100de7b64fa"
+      },
+      {
+        "bytes": 23471852,
+        "filename": "Searsia-Lucida-A-Candidate.glb",
+        "license": "CC0",
+        "name": "Searsia lucida shrub",
+        "sha256": "4fbb63bff910b2875cf2353c83eef94d7b04c6987c949a91e7635315076070f0"
+      }
+    ],
+    "domain": "H_EARTH_APPROVED_TREE_COLLECTION_RELEASE_20261023_001",
+    "existingJacarandaSha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189",
+    "governingHead": "844a8898b0b0109fef12b34d12aad82e941ab879",
+    "paths": [
+      "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+      "showroom/globe/h-earth/render/geometry-tree-collection.v1.js",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/assets/tree-collection/**",
+      "h-earth-3d/evidence/tree-collection-v1/**",
+      "h-earth-3d/experience-anchor/receipts/tree-collection-v1.json",
+      "tools/h-earth-tree-collection.test.mjs",
+      "tools/publication-live-verify.mjs",
+      "tools/publication-live-verify.h-earth-entry.test.mjs",
+      ".github/ai-router/publication-surfaces/h-earth.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "CANONICAL_PACKET_READY_RECEIPT_v1",
+    "PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1",
+    "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "HUMAN_INPUT_REQUIRED_NOT_STARTED",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "APPROVED_ASSET_IDENTITY_MISMATCH",
+    "PLACEMENT_OR_ECOLOGY_REGRESSION",
+    "RUNTIME_READINESS_FAILED",
+    "GPU_DRAW_OR_TEXTURE_PROOF_MISSING",
+    "EXPERIENCE_ANCHOR_FAILED",
+    "LIVE_RELEASE_HEAD_MISMATCH",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Begin from exact governing main 844a8898b0b0109fef12b34d12aad82e941ab879. After authentic admission create declared candidate branch. Bind every qualification to exact immutable candidate SHA. Differential continuity preserves disjoint newer production changes; relevant changes require bounded requalification. Use existing registered publication-preflight and pages-exact-head-deploy-v3 target_sha. No moving candidate qualification or dummy release commits.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+    "showroom/globe/h-earth/render/geometry-tree-collection.v1.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/assets/tree-collection/**",
+    "h-earth-3d/evidence/tree-collection-v1/**",
+    "h-earth-3d/experience-anchor/receipts/tree-collection-v1.json",
+    "tools/h-earth-tree-collection.test.mjs",
+    "tools/publication-live-verify.mjs",
+    "tools/publication-live-verify.h-earth-entry.test.mjs",
+    ".github/ai-router/publication-surfaces/h-earth.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "After authentic ADMITTED_AND_LOCKED create gratitude-approved-tree-collection-20261023 from exact governing head. Preserve request/procedure and exact approved asset hashes. N identifies seven legacy instances and environmental constraints; E checks compatibility and minimal dependency delta; S implements; independent W verifies.",
+      "step": 1
+    },
+    {
+      "action": "Copy exact approved GLB bytes into assets/tree-collection with source and license attribution, including LOLIPOP CC BY 4.0 maple credits. Preserve original Jacaranda bytes and original instance. Add six approved tree types plus one additional Jacaranda to replace exactly seven old tree instances; add Searsia as shrub. Exclude parked waterberry, young pine, fir and superseded Coastal 01 v1.",
+      "step": 2
+    },
+    {
+      "action": "Extend established Jacaranda import/GPU route only as needed through optional explicit approved-model metadata preserving its default behavior. Add bounded collection manager/manifest and renderer wiring. Keep original legacy tree as fallback until its exact replacement is ready. Use natural grounded positions within existing two groups, sparse coastal-edge placement for Coastal 03, conservative deterministic rotations/scales without altering approved source geometry. Preserve all other world and palm geometry.",
+      "step": 3
+    },
+    {
+      "action": "Run local positive and negative tests for approved hashes, decoder/material cardinality, alpha handling, seven replacement mapping, placement, preserved original Jacaranda and ecology, loading fallback and resource lifecycle. Reuse unchanged qualification evidence. Extend existing H-Earth verifier/manifest only if needed for genuine read-only collection readiness, GPU draw, texture and asset identity proof. Do not inject readiness or camera state.",
+      "step": 4
+    },
+    {
+      "action": "Capture actual runtime views and direct visitor interaction, inspect every approved type and two groups, check anchor invariants, preserve evidence and genuine anchor receipt. Independent West reviews immutable candidate and selected tests. Start only necessary registered exact-head publication preflight after local checks; send owner run link when expensive execution starts. Inspect first failing assertion before any bounded repair or rerun.",
+      "step": 5
+    },
+    {
+      "action": "On selected qualification and independent review success, merge through existing protected release path while preserving newer production changes. Dispatch existing pages-exact-head-deploy-v3 for exact merged target_sha. Verify authoritative .well-known/dgb-release.json and live route actual collection/texture/draw continuity. Preserve exact hashes, deployment run and live evidence in existing project continuation issue6675. Close only with authentic canonical closure; merge alone is not deployment and deployment alone is not live verification.",
+      "step": 6
+    }
+  ],
+  "exactGoverningHead": "844a8898b0b0109fef12b34d12aad82e941ab879",
+  "exactTestRunnerCommand": "node --test tools/h-earth-tree-collection.test.mjs tools/publication-live-verify.h-earth-entry.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_APPROVED_ASSET_BYTES_AND_LICENSE_ATTRIBUTION",
+      "SEVEN_LEGACY_TREES_REPLACED_WITH_SIX_NEW_MODELS_AND_SECOND_JACARANDA",
+      "SEARSIA_ADDITIONAL_SHRUB_NOT_REPLACEMENT_TREE",
+      "ORIGINAL_JACARANDA_PALMS_AND_SURROUNDING_ECOLOGY_PRESERVED",
+      "GENUINE_GPU_READY_DRAW_TEXTURE_AND_NO_FALLBACK_PROOF",
+      "NATURAL_GROUNDED_TWO_GROUP_PLACEMENT_AND_ALL_APPROVED_TYPES_VISIBLE",
+      "EXPERIENCE_ANCHOR_CONTINUITY_AND_DIRECT_VISITOR_INTERACTION",
+      "BOUNDED_DIFF_LOCAL_TESTS_AND_EXACT_HEAD_PUBLICATION"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse published Jacaranda loader and existing successful exact-head release precedent. Inspect only directly affected loader, placements, approved files and selected verifier assertions. Preserve accepted design and source approvals.",
+    "forbidden": "No new models, redesign, parked assets, unrelated historical gate repair, new workflows or control-plane capability, blind repeated expensive runs, false readiness or camera-state injection."
+  },
+  "procedureId": "H_EARTH_APPROVED_TREE_COLLECTION_RELEASE_20261023_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/tree-collection-v1/**",
+      "h-earth-3d/experience-anchor/receipts/tree-collection-v1.json"
+    ],
+    "deploymentWorkflowPath": ".github/workflows/pages-exact-head-deploy-v3.yml",
+    "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+  }
+}

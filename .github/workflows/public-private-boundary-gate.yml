@@ -22,6 +22,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PYTHON'
+          import json
           import os
           import re
           import subprocess
@@ -41,6 +42,21 @@ jobs:
               r"[A-Za-z0-9_./-]*(?:tools/operation-intake/|tools/ai-entry/|"
               r"\.github/ai-router/|control-plane/)[A-Za-z0-9_./-]*", re.IGNORECASE,
           )
+          def public_new_metadata_schema(path):
+              if re.fullmatch(r"\.github/ai-router/projects/[a-z0-9][a-z0-9-]{0,78}/entrypoint\.v1\.json", path):
+                  return "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1"
+              if re.fullmatch(r"\.github/ai-router/publication-surfaces/[a-z0-9][a-z0-9._-]{0,79}\.json", path):
+                  return "PUBLICATION_SURFACE_VERIFICATION_v1"
+              return None
+
+          # Prove exact public registration allowlist remains narrow.
+          assert public_new_metadata_schema(".github/ai-router/projects/example/entrypoint.v1.json")
+          assert public_new_metadata_schema(".github/ai-router/publication-surfaces/example.v1.json")
+          assert not public_new_metadata_schema(".github/ai-router/canonical-control-kernel-v1")
+          assert not public_new_metadata_schema(".github/ai-router/projects/example/../../private.json")
+          assert not public_new_metadata_schema(".github/ai-router/projects/example/secret.py")
+          assert not public_new_metadata_schema("control-plane/private.json")
+
           in_hunk = False
           for line in diff.splitlines():
               if line.startswith("diff --git "):
@@ -58,11 +74,45 @@ jobs:
                   if path.startswith("/") or any(part in ("", ".", "..") for part in path.split("/")):
                       print("PUBLIC_PRIVATE_BOUNDARY_VIOLATION")
                       sys.exit(1)
+                  # Existing public blob references keep the original rule.
                   result = subprocess.run(
                       ["git", "cat-file", "-t", os.environ["BASE_SHA"] + ":" + path],
                       capture_output=True, text=True,
                   )
-                  if result.returncode != 0 or result.stdout.strip() != "blob":
+                  if result.returncode == 0 and result.stdout.strip() == "blob":
+                      continue
+
+                  # New references require an exact committed REGULAR JSON blob,
+                  # at an allowlisted public registration path and known schema.
+                  # Missing objects, symlinks, directories, traversal and private
+                  # control-plane paths are still prohibited.
+                  expected_schema = public_new_metadata_schema(path)
+                  if expected_schema is None:
+                      print("PUBLIC_PRIVATE_BOUNDARY_VIOLATION")
+                      sys.exit(1)
+                  head = os.environ["HEAD_SHA"]
+                  object_type = subprocess.run(
+                      ["git", "cat-file", "-t", head + ":" + path],
+                      capture_output=True, text=True,
+                  )
+                  tree_entry = subprocess.run(
+                      ["git", "ls-tree", head, "--", path],
+                      capture_output=True, text=True,
+                  )
+                  if (object_type.returncode != 0 or object_type.stdout.strip() != "blob"
+                          or tree_entry.returncode != 0
+                          or not tree_entry.stdout.startswith("100644 blob ")):
+                      print("PUBLIC_PRIVATE_BOUNDARY_VIOLATION")
+                      sys.exit(1)
+                  file_bytes = subprocess.run(
+                      ["git", "show", head + ":" + path],
+                      capture_output=True, text=True,
+                  )
+                  try:
+                      metadata = json.loads(file_bytes.stdout) if file_bytes.returncode == 0 else {}
+                  except (ValueError, UnicodeError):
+                      metadata = {}
+                  if not isinstance(metadata, dict) or metadata.get("schema") != expected_schema:
                       print("PUBLIC_PRIVATE_BOUNDARY_VIOLATION")
                       sys.exit(1)
           print("PUBLIC_PRIVATE_BOUNDARY_PASS")

@@ -121,6 +121,17 @@ function liveReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_VEGETATION_LIVE_GPU_
   frameRecords:copy(frames),singleOwnerVegetationQualification:replay,timing:{...timing},preparation,
   inputPresentationReadiness:loader?.getReceipt()??null,frameScheduling:presenter?.getReceipt()??null,
   canonicalPackageMutated:false,physicalDeviceAcceptance:false,publicationAuthorized:false};}
+// Collect only when the owner requests a report, never on the frame path.
+loader?.setReportProvider?.(()=>{
+  const resource=resources(),vegetation=resource?.singleOwnerVegetation;
+  return {buildIdentifier:'gen2867-copy-report-v1',sourceBaseline,
+    routeTiming:{...timing},vegetationTiming:vegetation?.timing??null,
+    startupDiagnostics:resource?.vegetationResidency?.timing??null,
+    userAgent:navigator.userAgent,viewport:{width:canvas.clientWidth,height:canvas.clientHeight,pixelRatio:devicePixelRatio},
+    resourceTransfers:performance.getEntriesByType('resource').filter(e=>/h-earth|precomputed-grass|oasis-soil|\.glb(?:\?|$)/.test(e.name)).map(e=>({
+      path:new URL(e.name,location.href).pathname,startMilliseconds:e.startTime,durationMilliseconds:e.duration,
+      transferBytes:e.transferSize,encodedBytes:e.encodedBodySize,decodedBytes:e.decodedBodySize})).slice(-80)};
+});
 function publicReceipt(){return {receiptType:diagnosticReplay?'H_EARTH_SINGLE_OWNER_VEGETATION_PROTOTYPE_v1':'H_EARTH_SINGLE_OWNER_VEGETATION_PUBLIC_v1',eligible:diagnosticReplay?['CAPTURED_POPULATED_CONTINUITY','CAPTURED_STABLE_VIEW'].includes(replay?.result):root.dataset.run8eReady==='true',sourceBaseline,
   mode:diagnosticReplay?'diagnostic-replay':'manual-public',automaticNavigation:diagnosticReplay,
   intake:intake?.getReceipt()??null,liveGpu:liveReceipt(),singleOwnerVegetationQualification:replay,physicalDeviceAcceptance:false,publicationAuthorized:false};}

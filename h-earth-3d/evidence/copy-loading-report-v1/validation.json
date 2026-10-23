@@ -1,0 +1,18 @@
+{
+  "generation": 2867,
+  "admissionComment": 6357402589,
+  "admissionRun": 39900574347,
+  "baseHead": "1f9abcdcb79b566f44cb8047e958c2cc75bfaf81",
+  "tests": {
+    "copyReport": 7,
+    "entryContract": 63,
+    "result": "PASS"
+  },
+  "review": "Independent West: no release blocker; failure snapshot clone hardening applied",
+  "behavior": "Copy loading report during preparing/test/ready/failed; selectable textarea fallback; compact on-demand existing timings and pathname-only transfer entries; no rendering or readiness changes",
+  "limits": [
+    "Report identifies code version; no automatic tablet telemetry",
+    "Phase observations overlap and are not additive durations",
+    "Does not claim faster startup"
+  ]
+}

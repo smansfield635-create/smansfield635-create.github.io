@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-23T22:29:55Z",
+  "generatedAt": "2026-10-23T23:29:01Z",
   "window": {
-    "start": "2026-07-25T22:29:55Z",
-    "end": "2026-10-23T22:29:55Z"
+    "start": "2026-07-25T23:29:01Z",
+    "end": "2026-10-23T23:29:01Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -30,6 +30,10 @@
         "pageLoads": 155,
         "visits": 10
       },
+      "/index.html": {
+        "pageLoads": 130,
+        "visits": 0
+      },
       "/": {
         "pageLoads": 1051,
         "visits": 761
@@ -37,10 +41,6 @@
       "/showroom/": {
         "pageLoads": 100,
         "visits": 10
-      },
-      "/index.html": {
-        "pageLoads": 130,
-        "visits": 0
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
@@ -126,6 +126,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -133,10 +137,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -158,12 +158,16 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/audralia/disposition/": {
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
@@ -184,10 +188,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -214,11 +214,11 @@
         "pageLoads": 60,
         "visits": 30
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/characters/legacy-dossiers.html": {
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },

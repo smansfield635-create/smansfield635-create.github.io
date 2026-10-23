@@ -1,0 +1,33 @@
+{
+  "schema": "GRATITUDE_PREPARED_GEOMETRY_EQUIVALENCE_v1",
+  "exactOutputsMatch": true,
+  "outputSha256": "6245ce969a2ba3343b19c42257bb2b347c584be498fdb6f9064ffb0465fe4adc",
+  "baselineBuilderMilliseconds": {
+    "palms": 3714.101038999999,
+    "ivy": 2173.4152319999994,
+    "understory": 8512.358093000003,
+    "oasisTrees": 2537.172780000001
+  },
+  "decodeAndValidationMilliseconds": 774.7495839999974,
+  "compressedBytes": 2452903,
+  "rawBytes": 11663387,
+  "scope": "LOCAL_NODE_CPU_ONLY_NOT_MOBILE_OR_GPU",
+  "groups": {
+    "palms": {
+      "meshCount": 12,
+      "triangleCount": 26360
+    },
+    "ivy": {
+      "meshCount": 3,
+      "triangleCount": 8328
+    },
+    "understory": {
+      "meshCount": 2,
+      "triangleCount": 28184
+    },
+    "oasisTrees": {
+      "meshCount": 2,
+      "triangleCount": 18400
+    }
+  }
+}

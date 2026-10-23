@@ -132,14 +132,15 @@ function liveReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_VEGETATION_LIVE_GPU_
 loader?.setReportProvider?.(()=>{
   const resource=resources(),vegetation=resource?.singleOwnerVegetation;
   const transfers=performance.getEntriesByType('resource').filter(e=>/h-earth|precomputed-grass|oasis-soil|\.glb(?:\?|$)/.test(e.name));
-  return {buildIdentifier:'gen2871-loading-metrics-v2',sourceBaseline,
-    repairBaseline:'807d84f5d7df01661293aec1d387ff84dd6bb681',
+  return {buildIdentifier:'gen2872-prepared-vegetation-v1',sourceBaseline,
+    repairBaseline:'c376aadb93fd1a98c4146733edca4ea12609bc00',
     reportFormatNote:'Top-level reportVersion identifies the copy-report format. details.buildIdentifier identifies this runtime repair.',
     clockNote:'Resource start times are navigation-relative; route times are elapsed since route start; loader elapsed uses its own start. Phase values are durations. Do not subtract timestamps from different origins.',
     loadingMetrics:loadingMetrics.snapshot(resource,intake?.getNavigationState()?.position),
     downloads:summarizeTransfers(transfers,{bufferFullEvents:resourceBufferFullEvents}),
     comparisonContext:{deviceClassHint:/Mobile/.test(navigator.userAgent)?'phone-like':'tablet-or-desktop',classificationIsHeuristic:true,renderViewport:viewport,hardwareConcurrency:navigator.hardwareConcurrency??null,deviceMemoryGiB:navigator.deviceMemory??null,visibilityState:document.visibilityState,baselineAutomaticallyComparable:false},
     importedPlants:{originalJacaranda:resource?.jacaranda??null,collection:resource?.treeCollection??null},
+    preparedProceduralVegetation:resource?.rendererStartupTiming?.geological?.preparedVegetation??null,
     routeTiming:{...timing},rendererStartupTiming:resource?.rendererStartupTiming??null,vegetationTiming:vegetation?.timing??null,
     startupDiagnostics:{rendererTimingAvailable:!!resource?.rendererStartupTiming,vegetationResidency:resource?.vegetationResidency?.timing??null},
     transferSummary:{matchedCount:transfers.length,displayedCount:Math.min(80,transfers.length),transferBytes:transfers.reduce((n,e)=>n+e.transferSize,0),encodedBytes:transfers.reduce((n,e)=>n+e.encodedBodySize,0),invalidTimingCount:transfers.filter(e=>e.duration<0).length,scope:'Matched resource entries only; duration includes network and scheduling, not CPU decode; zero transfer may indicate cache.'},

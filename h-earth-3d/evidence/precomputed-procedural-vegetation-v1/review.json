@@ -1,0 +1,28 @@
+{
+  "operationId": "H_EARTH_PRECOMPUTED_PROCEDURAL_VEGETATION_20261023_001",
+  "generation": 2872,
+  "admissionRun": 39985402276,
+  "admissionComment": 6369438335,
+  "base": "c376aadb93fd1a98c4146733edca4ea12609bc00",
+  "validation": {
+    "uniqueTests": 87,
+    "passed": 87,
+    "note": "Combined selected suite87/87; source query binding and loader report refinements affected16 tests rerun16/16; remaining71 unchanged passed."
+  },
+  "independentWest": {
+    "verdict": "PASS",
+    "reviewer": "review_repair",
+    "corrections": [
+      "Normalize query/hash suffixes in dependency closure;69 source files bound"
+    ]
+  },
+  "equivalence": "Generator deepStrictEqual of every original output and decoded prepared output; no authored numeric precision reduction; original kernel construction and admission used unchanged offline.",
+  "limitations": [
+    "No measured mobile speed claim",
+    "Decode benchmark excludes download and input hashing",
+    "Prepared path adds2.45MB compressed transfer",
+    "Unavailable or mismatched prepared asset falls back once to all original builders; network timeout12seconds",
+    "Existing imported model download/memory and traversal cost are unchanged"
+  ],
+  "experienceAnchor": "No scene geometry, placement, colors, shadows, navigation or interface model changed; exact data equivalence established. Physical-device results remain pending."
+}

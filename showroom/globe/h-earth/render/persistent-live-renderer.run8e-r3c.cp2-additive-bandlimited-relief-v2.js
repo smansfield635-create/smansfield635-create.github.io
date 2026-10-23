@@ -1,3 +1,4 @@
+import {loadPreparedVegetation} from './precomputed-procedural-vegetation.v1.js';
 import {uploadStartupBuffer} from './performance-scheduling.v1.js';
 import {buildOasisTreeGroup,suppressOasisTreeGroupIndices,buildCoveragePreservingLeafMipmaps} from './geometry-oasis-tree-group.v1.js';
 import {createApprovedJacarandaOverlay,JACARANDA_FOCUS_ID} from './geometry-jacaranda.v1.js';
@@ -2299,7 +2300,10 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices,resources.indexBuffer,'indices');
     measureSync('woodlandRocks',()=>initializeWoodlandRocks());
     measureSync('largeBoulders',()=>initializeLargeP2Boulders());
-    measureSync('geologicalRendering',()=>initializeGeologicalRendering(packet.environmentUniforms));
+    const geologicalRenderingStarted=performance.now();
+    await initializeGeologicalRendering(packet.environmentUniforms,progressCallback);
+    rendererTiming.phases.geologicalRendering=performance.now()-geologicalRenderingStarted;
+    progressCallback?.({phase:'RENDERER_GEOLOGICALRENDERING',completed:1,total:1,unit:'phase'});
     const framebufferStarted=performance.now();
     resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
@@ -2445,7 +2449,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   // Gen2735: an actual locally excavated landform, mountain overburden and
   // physical gallery. Reuses the selected persistent WebGL2 shader and depth.
   // The deprecated Gen2730 decorative arch is not allocated or drawn.
-  function initializeGeologicalRendering(environment){
+  async function initializeGeologicalRendering(environment,progressCallback){
     const model=resources.geologicalRuntime;
     const geologicalStarted=performance.now();let cavernVisibilityMilliseconds=0;
     if(!model?.meshes?.length||model.retirement.triangleCount<100)
@@ -2454,13 +2458,17 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const instances=[];
     const detail=resources.rendererStartupTiming.geological;
     const build=(name,run)=>{const start=performance.now();try{return run();}finally{detail.builders[name]=performance.now()-start;}};
-    const palms=build('palms',()=>buildCavernPalmPlacement(model));
+    progressCallback?.({phase:'PREPARED_VEGETATION_LOADING',status:'Loading prepared palms, ivy and flowers…'});
+    const prepared=await loadPreparedVegetation(model,renderPackage);
+    progressCallback?.({phase:prepared.groups?'PREPARED_VEGETATION_READY':'PREPARED_VEGETATION_FALLBACK',status:prepared.groups?'Prepared vegetation verified':'Preparing vegetation on this device…',completed:prepared.groups?1:0,total:1,unit:'packages'});
+    detail.preparedVegetation=prepared.timing;
+    const palms=prepared.groups?.palms??build('palms',()=>buildCavernPalmPlacement(model));
     resources.cavernPalms=palms.receipt;
-    const ivy=build('ivy',()=>buildCavernEntranceIvy(model));
+    const ivy=prepared.groups?.ivy??build('ivy',()=>buildCavernEntranceIvy(model));
     resources.cavernIvy=ivy.receipt;
-    const understory=build('understory',()=>buildCavernUnderstoryPlacement(model));
+    const understory=prepared.groups?.understory??build('understory',()=>buildCavernUnderstoryPlacement(model));
     resources.cavernUnderstory=understory.receipt;
-    const oasisTrees=build('oasisTrees',()=>buildOasisTreeGroup(model,renderPackage));resources.oasisTrees=oasisTrees.receipt;
+    const oasisTrees=prepared.groups?.oasisTrees??build('oasisTrees',()=>buildOasisTreeGroup(model,renderPackage));resources.oasisTrees=oasisTrees.receipt;
     // Gen2857: no GLB fetch, shader, or GPU allocation until the world is
     // initialized AND the camera approaches the specific approved riverbank tree.
     // The existing source and its four restored fallback trees stay resident.

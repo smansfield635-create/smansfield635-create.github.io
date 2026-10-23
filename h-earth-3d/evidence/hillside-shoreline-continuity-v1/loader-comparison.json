@@ -1,0 +1,23 @@
+{
+  "schema": "HILLSIDE_LOADER_COMPARISON_v1",
+  "scope": "Node CPU load and packed plan; local bytes, no network, browser scheduling or GPU execution",
+  "baseline": "c64e78d5a05711f0b2ec7e98fb400c65d8e430df",
+  "runs": [
+    {
+      "name": "baseline",
+      "milliseconds": 867.9777559999999,
+      "rootCount": 1457471,
+      "packedBytes": 23319536,
+      "compressedBytes": 33246067,
+      "phaseMilliseconds": null
+    },
+    {
+      "name": "candidate",
+      "milliseconds": 782.7372579999999,
+      "rootCount": 1518809,
+      "packedBytes": 24300944,
+      "compressedBytes": 34666305,
+      "phaseMilliseconds": null
+    }
+  ]
+}

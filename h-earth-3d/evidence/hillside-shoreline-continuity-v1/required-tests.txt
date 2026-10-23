@@ -1,0 +1,22 @@
+STAGE adapters-ready
+STAGE geology-ready
+✔ whole baseline retained byte-exact, additions unique and bounded, atlas panels preserved (4553.109398ms)
+✔ beach and bank laws have smooth boundaries, no water-only override, and preserve outside region (2.440411ms)
+✔ coverage is one connected component, every eligible quota filled, uplands and near banks improved (28.337414ms)
+STAGE surface-ready
+✔ every new root is grounded on actual geometry, dry, admitted, and within shared classification (14040.273784ms)
+PRECOMPUTED_GRASS_CPU {"loadMilliseconds":1307.650377,"loadAndGpuPackingMilliseconds":5385.753214,"compressedBytes":35794570,"roots":1568999,"networkAndGpuAndBrowserExcluded":true}
+✔ exact accepted roots, atlas, ordering and existing GPU allocation survive loading (5388.125152ms)
+✔ manifest, compressed payload, raw payload, truncation and network failure fail closed (1069.251092ms)
+✔ replacement loads static planting without calling the terrain-generation loop (9.272251ms)
+✔ spatial repair preserves every baseline record and woodland texel, with exact admitted additions (3523.26909ms)
+✔ fine silhouette preserves height and distance detail, and soil treatment stays habitat-bound (4.224215ms)
+✔ uphill color stays inside confirmed foothills and retains the original habitat region (1.983054ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 19195.912087

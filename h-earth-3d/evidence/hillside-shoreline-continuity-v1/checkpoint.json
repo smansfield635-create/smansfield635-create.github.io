@@ -1,0 +1,37 @@
+{
+  "schema": "H_EARTH_HILLSIDE_SHORELINE_CONTINUITY_v1",
+  "baseline": "c64e78d5a05711f0b2ec7e98fb400c65d8e430df",
+  "bounds": [
+    -136,
+    -253,
+    249,
+    -101
+  ],
+  "priorCount": 1457471,
+  "rootCount": 1518809,
+  "added": 61338,
+  "removed": 0,
+  "outsideCount": 1022703,
+  "outsideSha256": "f44b7b05737b3dc3378eea0770484aa05705789aa4d7a9861ec43c8d475f8d1a",
+  "retainedInsideCount": 434768,
+  "retainedInsideSha256": "83dfce3e28e76a812049b8254199d0d26fe693890d9d1fa75efba77db93ab801",
+  "addedSha256": "3242564f0c284c40a8013f4f2600d2b9fd0746d2b1c4541a1378ff2997a900e3",
+  "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "eligibleCells": 35015,
+  "shortCells": 0,
+  "componentSizes": [
+    37006,
+    17
+  ],
+  "selectedComponentCells": 37006,
+  "maximumTileRoots": 816,
+  "compressedBytes": 34666305,
+  "compressedDeltaBytes": 1420238,
+  "packedBytes": 24300944,
+  "rawSha256": "f2eafdb1b81a9434791af03eb22a58c0bc85a61e15a743b0eadf02e7010885bf",
+  "packedSha256": "2b1cde97cd79566be89cadeacd6d69999d35ce978ac16e3a2b54588cc2e01946",
+  "atlasSha256": "2cca5cb9678c364ec2ad46b668bb004c19f83379399489bbf4ee0f736d8122b1",
+  "woodlandAndRavinePanelsPreserved": true,
+  "actualDevicePerformance": "NOT_YET_MEASURED",
+  "visualAcceptance": "PENDING"
+}

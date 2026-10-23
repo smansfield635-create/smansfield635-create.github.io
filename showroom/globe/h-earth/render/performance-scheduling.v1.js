@@ -33,3 +33,20 @@ export async function uploadInSlices(items,{upload,yieldControl,now=()=>performa
  }
  return Object.freeze({sliceCount,yieldCount,maxSliceBytes,maxSliceMilliseconds,maxAtomicMilliseconds,maxBytes,maxMilliseconds,uploadedBytes,totalBytes,timeScope:'CPU_SUBMISSION_NOT_GPU_EXECUTION',atomicOverrunPossible:true});
 }
+
+/** Startup-only uploads: bounded CPU/byte slices, no mandatory frame per chunk. */
+export async function uploadStartupBuffer(data,{upload,yieldControl,now=()=>performance.now(),maxMilliseconds=4,maxBytes=1048576,onProgress=()=>{}}){
+ if(!(ArrayBuffer.isView(data)&&data.BYTES_PER_ELEMENT>0&&Number.isFinite(maxMilliseconds)&&maxMilliseconds>0&&Number.isSafeInteger(maxBytes)&&maxBytes>=data.BYTES_PER_ELEMENT))throw Error('STARTUP_UPLOAD_BUDGET_INVALID');
+ const stride=Math.max(1,Math.floor(Math.min(262144,maxBytes)/data.BYTES_PER_ELEMENT));
+ let sliceStarted=now(),sliceBytes=0,yieldCount=0,uploadedBytes=0,submissionMilliseconds=0,waitMilliseconds=0,maxAtomicMilliseconds=0;
+ for(let start=0;start<data.length;start+=stride){
+   const chunk=data.subarray(start,Math.min(data.length,start+stride));
+   if(sliceBytes&&(sliceBytes+chunk.byteLength>maxBytes||now()-sliceStarted>=maxMilliseconds)){
+     const waitStarted=now();await yieldControl();waitMilliseconds+=now()-waitStarted;yieldCount++;sliceStarted=now();sliceBytes=0;
+   }
+   const atomicStarted=now();upload(start*data.BYTES_PER_ELEMENT,chunk);const duration=now()-atomicStarted;
+   submissionMilliseconds+=duration;maxAtomicMilliseconds=Math.max(maxAtomicMilliseconds,duration);
+   sliceBytes+=chunk.byteLength;uploadedBytes+=chunk.byteLength;onProgress(uploadedBytes);
+ }
+ return {uploadedBytes,yieldCount,submissionMilliseconds,waitMilliseconds,maxAtomicMilliseconds,maxBytes,maxMilliseconds,timeScope:'CPU_SUBMISSION_NOT_GPU_EXECUTION',atomicOverrunPossible:true};
+}

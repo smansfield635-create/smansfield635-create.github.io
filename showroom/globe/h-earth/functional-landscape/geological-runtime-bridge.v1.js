@@ -203,24 +203,28 @@ function nearestRouteSegment(points,x,z){
 /** Static light visibility against the actual cave and exposed rock triangles.
  * Rendering-only point rays; this is not a navigation clearance certificate.
  */
-function makeCavernLightVisibility(meshes){
+export function makeCavernLightVisibility(meshes){
   const triangles=[];
   for(const mesh of meshes)for(let i=0;i<mesh.indices.length;i+=3){
     const [a,b,c]=[0,1,2].map(k=>Array.from(mesh.positions.slice(mesh.indices[i+k]*3,mesh.indices[i+k]*3+3)));
     triangles.push({a,e1:b.map((v,j)=>v-a[j]),e2:c.map((v,j)=>v-a[j])});
   }
-  const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
-  const dot=(a,b)=>a.reduce((n,v,j)=>n+v*b[j],0);
+  // Preserve the accepted intersection order and tolerances, without allocating
+  // cross products, origin deltas or reduce callbacks for every ray/triangle.
   return (origin,direction)=>{
+    const [ox,oy,oz]=origin,[dx,dy,dz]=direction;
     for(const {a,e1,e2} of triangles){
-      const h=cross(direction,e2),det=dot(e1,h);if(Math.abs(det)<1e-10)continue;
-      const s=origin.map((v,j)=>v-a[j]),u=dot(s,h)/det;if(u< -1e-7||u>1+1e-7)continue;
-      const q=cross(s,e1),v=dot(direction,q)/det;if(v< -1e-7||u+v>1+1e-7)continue;
-      const distance=dot(e2,q)/det;if(distance>1e-4)return 0;
+      const hx=dy*e2[2]-dz*e2[1],hy=dz*e2[0]-dx*e2[2],hz=dx*e2[1]-dy*e2[0];
+      const det=((0+e1[0]*hx)+e1[1]*hy)+e1[2]*hz;if(Math.abs(det)<1e-10)continue;
+      const sx=ox-a[0],sy=oy-a[1],sz=oz-a[2],u=(((0+sx*hx)+sy*hy)+sz*hz)/det;if(u< -1e-7||u>1+1e-7)continue;
+      const qx=sy*e1[2]-sz*e1[1],qy=sz*e1[0]-sx*e1[2],qz=sx*e1[1]-sy*e1[0];
+      const v=(((0+dx*qx)+dy*qy)+dz*qz)/det;if(v< -1e-7||u+v>1+1e-7)continue;
+      const distance=(((0+e2[0]*qx)+e2[1]*qy)+e2[2]*qz)/det;if(distance>1e-4)return 0;
     }
     return 1;
   };
 }
+
 /** Consumer-owned cave semantics. The frozen kernel constructs the boundary;
  * vertical ray/triangle intersections, rather than a second arch formula,
  * supply visible lip, supported floor, ceiling and solid occupancy together.

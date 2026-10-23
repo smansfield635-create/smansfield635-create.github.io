@@ -1,3 +1,4 @@
+import {uploadStartupBuffer} from './performance-scheduling.v1.js';
 import {buildOasisTreeGroup,suppressOasisTreeGroupIndices,buildCoveragePreservingLeafMipmaps} from './geometry-oasis-tree-group.v1.js';
 import {createApprovedJacarandaOverlay,JACARANDA_FOCUS_ID} from './geometry-jacaranda.v1.js';
 import {createTreeCollection,retainedIndexRanges} from './geometry-tree-collection.v1.js';
@@ -2245,23 +2246,25 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     let lastStartupPercent=40;
     const totalStartupUploadBytes=specifications.reduce((total,item)=>total+item[1].byteLength,uploadViews.indices.byteLength);
     let uploadedStartupBytes=0;
+    const rendererTiming=resources.rendererStartupTiming={phases:{},uploads:[]};
+    const measureSync=(name,run)=>{const start=performance.now();try{return run();}finally{rendererTiming.phases[name]=performance.now()-start;progressCallback?.({phase:'RENDERER_'+name.toUpperCase(),completed:1,total:1,unit:'phase'});}};
     const reportUploadProgress=(phase,completed,total,unit,label)=>{const progress=Math.max(lastStartupPercent,40+44*(uploadedStartupBytes/Math.max(1,totalStartupUploadBytes)));lastStartupPercent=progress;progressCallback?.(Object.freeze({phase,completed,total,unit,progress,status:label}));};
-    const uploadChunked=async(target,data)=>{
-      gl.bufferData(target,data.byteLength,gl.STATIC_DRAW);
-      const chunkElements=Math.max(1,Math.floor(262144/data.BYTES_PER_ELEMENT));
-      for(let start=0;start<data.length;start+=chunkElements){
-        const chunk=data.subarray(start,Math.min(data.length,start+chunkElements));
-        gl.bufferSubData(target,start*data.BYTES_PER_ELEMENT,chunk);
-        uploadedStartupBytes+=chunk.byteLength;
-        reportUploadProgress('GPU_STARTUP_UPLOAD',uploadedStartupBytes,totalStartupUploadBytes,'bytes','Loading world resources');
-        await yieldToBrowserPaint();
-      }
+    const uploadChunked=async(target,data,buffer)=>{
+      gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(target,buffer);gl.bufferData(target,data.byteLength,gl.STATIC_DRAW);
+      const base=uploadedStartupBytes;
+      const timing=await uploadStartupBuffer(data,{
+        yieldControl:()=>new Promise(resolve=>setTimeout(resolve,0)),
+        upload:(offset,chunk)=>{gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(target,buffer);gl.bufferSubData(target,offset,chunk);},
+        onProgress:bytes=>{uploadedStartupBytes=base+bytes;reportUploadProgress('GPU_STARTUP_UPLOAD',uploadedStartupBytes,totalStartupUploadBytes,'bytes','Loading world resources');}
+      });
+      rendererTiming.uploads.push(timing);
+      gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(target,buffer);
       counters.bufferUploadCount++;counters.packageBufferUploadCount++;counters.uploadedByteLength+=data.byteLength;
     };
     resources.buffers = [];
     for (const [name, data, location, size, type, integer] of specifications) {
       const buffer = createBuffer(); resources.buffers.push({ name, buffer, byteLength: data.byteLength });
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer); await uploadChunked(gl.ARRAY_BUFFER, data); gl.enableVertexAttribArray(location);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer); await uploadChunked(gl.ARRAY_BUFFER, data,buffer); gl.enableVertexAttribArray(location);
       if (integer) gl.vertexAttribIPointer(location, size, type, 0, 0);
       else gl.vertexAttribPointer(location, size, type, false, 0, 0);
     }
@@ -2283,10 +2286,11 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     resources.woodlandSuppressedIndices=oasisRetirement.indices;resources.oasisTreeRetirement=oasisRetirement.receipt;
     resources.woodlandSuppressedIndices=retireGeologicalBaseIndices(
       resources.woodlandSuppressedIndices,resources.geologicalRuntime.retirement);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices);
-    initializeWoodlandRocks();
-    initializeLargeP2Boulders();
-    initializeGeologicalRendering(packet.environmentUniforms);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices,resources.indexBuffer);
+    measureSync('woodlandRocks',()=>initializeWoodlandRocks());
+    measureSync('largeBoulders',()=>initializeLargeP2Boulders());
+    measureSync('geologicalRendering',()=>initializeGeologicalRendering(packet.environmentUniforms));
+    const framebufferStarted=performance.now();
     resources.colorTexture = createTexture(); resources.depthTexture = createTexture(); resources.geometryFramebuffer = createFramebuffer();
     gl.bindTexture(gl.TEXTURE_2D, resources.colorTexture); gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGBA8, width, height);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -2351,7 +2355,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1i(resources.uniforms.landscapeFloorCount,landscapeFloorFootprints.length);
     gl.uniform4fv(resources.uniforms.landscapeFloorFootprints,landscapeFloorUniforms);
 // SHORELINE_SOIL_END sampler
-    await initializeClearing(packet);
+    rendererTiming.phases.framebuffersAndUniforms=performance.now()-framebufferStarted;
+    const clearingStarted=performance.now();await initializeClearing(packet);rendererTiming.phases.clearing=performance.now()-clearingStarted;
     counters.staticUniformUpdateCount = 13; initialized = true;
     progressCallback?.(Object.freeze({phase:'GPU_STARTUP_RESOURCES_READY',completed:1,total:1,unit:'initialization',progress:87,status:'Graphics resources initialized'}));
     return getResourceReceipt();
@@ -2429,6 +2434,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   // The deprecated Gen2730 decorative arch is not allocated or drawn.
   function initializeGeologicalRendering(environment){
     const model=resources.geologicalRuntime;
+    const geologicalStarted=performance.now();let cavernVisibilityMilliseconds=0;
     if(!model?.meshes?.length||model.retirement.triangleCount<100)
       throw Error('GEOLOGICAL_RUNTIME_MODEL_NOT_CONSTRUCTED');
     let totalBytes=0;
@@ -2518,9 +2524,11 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
           const n=[normals[i*3],normals[i*3+1],normals[i*3+2]];
           const origin=[local.x+n[0]*.03,local.y+n[1]*.03,local.z+n[2]*.03];
           const sun=environment.sunDirection;
+          const visibilityStarted=performance.now();
           const direct=model.cavernLightVisibility(origin,[sun.x,sun.y,sun.z]);
           const sky=[[0,1,0],[.707,.707,0],[-.707,.707,0],[0,.707,.707],[0,.707,-.707]];
           const access=sky.reduce((sum,d)=>sum+model.cavernLightVisibility(origin,d),0)/sky.length;
+          cavernVisibilityMilliseconds+=performance.now()-visibilityStarted;
           mats.set([.89,.025,direct,access],i*4);
         }else mats.set([.89,.025,.035,.13],i*4);
       }
@@ -2551,6 +2559,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       instances.push(state);
     }
     // Separate preflight budgets above preserve the existing geological limit.
+    resources.rendererStartupTiming.phases.cavernVisibility=cavernVisibilityMilliseconds;
+    resources.rendererStartupTiming.phases.geologicalBuildAndUpload=performance.now()-geologicalStarted;
     resources.geologicalMeshes=instances.filter(p=>p.role!=='OASIS_TREE_GROUP'&&p.role!=='CAVERN_PALM'&&p.role!=='CAVERN_IVY'&&p.role!=='CAVERN_UNDERSTORY');
     resources.cavernPalmMeshes=instances.filter(p=>p.role==='CAVERN_PALM');
     resources.cavernPalmGPUBytes=resources.cavernPalmMeshes.reduce((n,p)=>n+p.gpuByteLength,0);
@@ -3010,6 +3020,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         uniformCount: rendererInterface.frameUniformNames.length, drawRangeCount: rendererInterface.drawRanges.length
       },
       counters: { ...counters },
+      rendererStartupTiming:resources.rendererStartupTiming??null,
       singleOwnerVegetation:resources.singleOwnerVegetation?{...resources.singleOwnerVegetation.getReceipt(),timing:resources.singleOwnerTiming}:null,
 // SHORELINE_SOIL_BEGIN receipt
       shorelineSoilCoverage:{...resources.shorelineSoilCoverage},

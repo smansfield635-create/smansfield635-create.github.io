@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "gratitude-hillside-budget-repair-20261023",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6738,
+  "requestBranch": "ai-dispatch-request-hillside-budget-repair-20261023",
+  "requestCommit": "4b6d70634b70e41e018bd5fa52cc475b6b2ee792",
+  "requestCommitParent": "d7c24596e33207ed728eed06f8b69136874e5d29",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "d7c24596e33207ed728eed06f8b69136874e5d29",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "cb6d57761fbc8fae5e536431270ae65d706cfc03",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "40012825578",
+  "dispatchedRunId": 40012853936,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40012853936",
+  "dispatchedRunHeadSha": "d7c24596e33207ed728eed06f8b69136874e5d29",
+  "dispatchedAt": "2026-10-23T19:37:24.442Z",
+  "resolvedAt": "2026-10-23T19:37:29.973Z"
+}

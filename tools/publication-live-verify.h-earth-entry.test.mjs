@@ -208,7 +208,7 @@ test('target inspection cannot bypass genuine public entry or missing asset obse
   page.evaluate=async()=>({mode:'manual-public',entered:true,ready:true});
   await assert.rejects(runHEarthSceneQualification(page,'h-earth',SCENE_POLICY,null),/ASSET_OBSERVER_REQUIRED/);
 });
-test('owner-approved release keeps entry contract without requiring extended camera tour',()=>{
+test('owner-approved collection release retains genuine entry and error checks',()=>{
   const m=JSON.parse(fs.readFileSync('.github/ai-router/publication-surfaces/h-earth.json','utf8'));
   assert.equal(m.runtime.sceneQualification,undefined);
   assert.equal(m.runtime.preReadyEntry,POLICY);
@@ -422,8 +422,8 @@ test('frame proof rejects absent metadata, wrong pose and stale drawing',()=>{
 // Full production orchestration with a deterministic browser port. Actual native
 // controller dynamics are covered above; this covers the previously omitted
 // asset, draw refresh, frame identity, screenshot and failure-packaging stages.
-for(const scenario of ['pass','delayed-pass','fallback','stale-frame','asset-error','capture-error','packaging-error','missing-river','missing-grass'])test('complete scene orchestration: '+scenario,async()=>{
- let virtualTime=0;const realNow=Date.now;if(scenario==='delayed-pass')Date.now=()=>virtualTime;
+for(const scenario of ['pass','delayed-pass','deadline-after-capture','fallback','stale-frame','asset-error','capture-error','packaging-error','missing-river','missing-grass'])test('complete scene orchestration: '+scenario,async()=>{
+ let virtualTime=0;const realNow=Date.now;if(scenario==='delayed-pass'||scenario==='deadline-after-capture')Date.now=()=>virtualTime;
  const scene=qualifiedScene(),r=scene.resources;let n={sequence:1,position:{x:-139.4,y:8,z:-194.5},yawDegrees:0,pitchDegrees:16};let frame=1,dx=0,dy=0,down=false,screens=0,fullReads=0,intakeReads=0;
  r.jacaranda.state='IDLE';r.jacaranda.drawCount=0;
  if(scenario==='missing-river')r.geologicalFormation.designedFreshwaterRendered=false;
@@ -437,7 +437,7 @@ for(const scenario of ['pass','delayed-pass','fallback','stale-frame','asset-err
  const clone=v=>JSON.parse(JSON.stringify(v));
  const sheet={setViewport:async()=>{},setContent:async()=>{if(scenario==='packaging-error')throw Error('sheet failed');},waitForFunction:async()=>{},screenshot:async({path})=>fs.writeFileSync(path,'test png'),close:async()=>{}};
  const page={evaluate:async(fn,args)=>clone(await fn(args)),$:async()=>({boundingBox:async()=>({x:0,y:0,width:1000,height:800})}),browser:()=>({newPage:async()=>sheet}),
-  screenshot:async()=>{if(scenario==='capture-error')throw Error('capture failed');screens++;return Buffer.from('test capture');},
+  screenshot:async()=>{if(scenario==='capture-error')throw Error('capture failed');screens++;if(scenario==='deadline-after-capture')virtualTime=600001;return Buffer.from('test capture');},
   mouse:{move:async(x,y)=>{dx=(x-500)/1000;dy=(y-400)/800;},down:async()=>{down=true;},up:async()=>{down=false;},wheel:async({deltaY})=>{const distance=Math.min(10,Math.abs(deltaY)/70),angle=n.yawDegrees*Math.PI/180;n={...n,sequence:n.sequence+1,position:{...n.position,x:n.position.x+Math.sin(angle)*distance,z:n.position.z-Math.cos(angle)*distance}};present();}},
   waitForFunction:async(fn,options,args)=>{
    for(let k=0;k<100;k++){
@@ -454,6 +454,7 @@ for(const scenario of ['pass','delayed-pass','fallback','stale-frame','asset-err
   assert.equal(result.result,scenario.endsWith('pass')?'RUNTIME_PASS_VISUAL_REVIEW_PENDING':'FAIL');
   assert.equal(down,false);assert.ok(result.timings.length>0);
   if(scenario.endsWith('pass')){assert.equal(screens,4);assert.equal(result.views.length,4);assert.ok(result.screenshotEvidence);assert.ok(intakeReads>fullReads);assert.ok(result.views[2].resources.jacaranda.drawCount>result.views[1].resources.jacaranda.drawCount);}
+  if(scenario==='deadline-after-capture'){assert.equal(result.result,'FAIL');assert.equal(result.views.length,1);assert.ok(result.screenshotEvidence);assert.match(result.failure,/TIME_BUDGET_EXCEEDED/);}
   if(scenario==='packaging-error')assert.match(result.evidenceError,/sheet failed/);
   if(scenario==='asset-error')assert.match(result.failure,/asset buffer failed/);
  }finally{Date.now=realNow;globalThis.window=oldWindow;globalThis.document=oldDocument;if(oldTemp===undefined)delete process.env.RUNNER_TEMP;else process.env.RUNNER_TEMP=oldTemp;fs.rmSync(temp,{recursive:true,force:true});}

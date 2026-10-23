@@ -1,5 +1,6 @@
 import {buildOasisTreeGroup,suppressOasisTreeGroupIndices,buildCoveragePreservingLeafMipmaps} from './geometry-oasis-tree-group.v1.js';
 import {createApprovedJacarandaOverlay,JACARANDA_FOCUS_ID} from './geometry-jacaranda.v1.js';
+import {createTreeCollection,retainedIndexRanges} from './geometry-tree-collection.v1.js';
 import {buildCavernUnderstoryPlacement} from './cavern-understory-placement.v1.js';
 import {buildCavernEntranceIvy} from './cavern-entrance-ivy.v1.js';
 import {buildCavernPalmPlacement} from './cavern-palm-placement.v1.js';
@@ -2440,6 +2441,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       assetURL:new URL('../assets/jacaranda/Gratitude-Jacaranda-Candidate.glb',import.meta.url).href,
       sunDirection:environment.sunDirection
     });
+    resources.treeCollection=createTreeCollection(gl,{model,raw:getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),projectWorld:regionToHEarthPlanetPoint,sunDirection:environment.sunDirection,originalJacaranda:resources.jacaranda});
+    resources.collectionWoodlandSpans=renderPackage.primitiveSpans.filter(p=>['H_EARTH_LANDSCAPE_P2_BARK','H_EARTH_LANDSCAPE_P2_CANOPY'].includes(p.primitiveId));
+    if(resources.collectionWoodlandSpans.length!==2)throw Error('TREE_COLLECTION_WOODLAND_SPANS_MISSING');
     const plannedBytes=parts=>parts.reduce((n,p)=>n+p.mesh.vertexCount*69+p.mesh.indices.byteLength,0);
     if(plannedBytes(model.meshes)>4*1024*1024)throw Error('GEOLOGICAL_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(palms.meshes)>2*1024*1024)throw Error('CAVERN_PALM_GPU_MEMORY_BUDGET_EXCEEDED');
@@ -2561,12 +2565,14 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       // The target's original hydrated indices are first in BOTH group batches.
       // Remove them only when the independently verified GLB is GPU READY.
       // On network/GPU failure nothing is excluded and the original remains.
-      const focus=part.role==='OASIS_TREE_GROUP'&&resources.jacaranda?.ready
-        ?resources.oasisTrees.placements.find(p=>p.id===JACARANDA_FOCUS_ID)?.spans?.[part.part]:null;
-      if(focus&&(focus.indexStart!==0||focus.indexCount>=part.mesh.indices.length))throw Error('JACARANDA_FOCUS_INDICES_NOT_PREFIX');
-      const skipped=focus?.indexCount??0,count=part.mesh.indices.length-skipped;
-      gl.bindVertexArray(part.vao);gl.drawElements(gl.TRIANGLES,count,gl.UNSIGNED_INT,skipped*4);
-      part.drawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=count;
+      const excluded=part.role==='OASIS_TREE_GROUP'?resources.oasisTrees.placements
+        .filter(p=>(p.id===JACARANDA_FOCUS_ID&&resources.jacaranda?.ready)||resources.treeCollection?.isReplaced(p.id))
+        .map(p=>p.spans[part.part]):[];
+      gl.bindVertexArray(part.vao);
+      for(const range of retainedIndexRanges(0,part.mesh.indices.length,excluded)){
+        gl.drawElements(gl.TRIANGLES,range.indexCount,gl.UNSIGNED_INT,range.indexStart*4);
+        part.drawCount++;counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=range.indexCount;
+      }
     }
     gl.bindVertexArray(resources.vertexArray);
   }
@@ -2580,11 +2586,11 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const x=uploadViews.positions[i*3],y=uploadViews.positions[i*3+1],z=uploadViews.positions[i*3+2],h=Math.hypot(x,z),r=planetRadius*Math.atan2(h,y+planetRadius),k=h?r/h:1;
       return {x:x*k,z:z*k};
     };
-    const caster=[],presentationIndices=resources.woodlandSuppressedIndices??uploadViews.indices;
+    const caster=[],casterWithoutTrees=[],presentationIndices=resources.woodlandSuppressedIndices??uploadViews.indices;
     for(let i=0;i<presentationIndices.length;i+=3){
       const ids=[presentationIndices[i],presentationIndices[i+1],presentationIndices[i+2]];
       if(ids[0]===ids[1]&&ids[1]===ids[2])continue;
-      if(ids.every(id=>{const q=localPoint(id);return uploadViews.materialParameters[id*4+3]===2&&uploadViews.materialParameters[id*4+2]>0&&q.x>=b.minX&&q.x<=b.maxX&&q.z>=b.minZ&&q.z<=b.maxZ;}))caster.push(...ids);
+      if(ids.every(id=>{const q=localPoint(id);return uploadViews.materialParameters[id*4+3]===2&&uploadViews.materialParameters[id*4+2]>0&&q.x>=b.minX&&q.x<=b.maxX&&q.z>=b.minZ&&q.z<=b.maxZ;})){caster.push(...ids);if(!resources.collectionWoodlandSpans.some(s=>i>=s.indexStart&&i<s.indexStart+s.indexCount))casterWithoutTrees.push(...ids);}
     }
     if(!caster.length)throw new Error('CLEARING_STATIC_CASTERS_EMPTY');
     const images=await Promise.all(H_EARTH_WOODLAND_CLEARING_ASSETS.map(asset=>new Promise((resolve,reject)=>{
@@ -2617,7 +2623,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const framebuffer=createFramebuffer();gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.TEXTURE_2D,shadow,0);gl.drawBuffers([gl.NONE]);gl.readBuffer(gl.NONE);requireCompleteFramebuffer('CLEARING_SHADOW');
     const vs=createShader(gl.VERTEX_SHADER,CLEARING_SHADOW_VS,'CLEARING_SV'),fs=createShader(gl.FRAGMENT_SHADER,CLEARING_SHADOW_FS,'CLEARING_SF'),program=createProgram(vs,fs,'CLEARING_SHADOW_PROGRAM');
     const indexBuffer=createBuffer(),indices=new Uint32Array(caster);gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);counters.bufferUploadCount++;counters.clearingIndexBufferUploadCount++;counters.uploadedByteLength+=indices.byteLength;
-    resources.clearing={textures,framebuffer,program,indexBuffer,matrix,bounds:new Float32Array([b.minX,b.minZ,b.maxX,b.maxZ]),casterIndexCount:indices.length,shadowDrawCount:0,textureStorageBytes,indexStorageBytes:indices.byteLength,gpuByteLength:textureStorageBytes+indices.byteLength,staticShadowRefresh:'ONCE_AFTER_ASSETS_READY',mainDrawCallsAdded:0,perCameraResourceCreation:0};
+    resources.clearing={originalCasterIndices:indices,collectionCasterIndices:Uint32Array.from(casterWithoutTrees),collectionRetired:false,textures,framebuffer,program,indexBuffer,matrix,bounds:new Float32Array([b.minX,b.minZ,b.maxX,b.maxZ]),casterIndexCount:indices.length,shadowDrawCount:0,textureStorageBytes,indexStorageBytes:indices.byteLength,gpuByteLength:textureStorageBytes+indices.byteLength,staticShadowRefresh:'ONCE_AFTER_ASSETS_READY',mainDrawCallsAdded:0,perCameraResourceCreation:0};
     gl.useProgram(program);gl.uniformMatrix4fv(gl.getUniformLocation(program,'uLightMatrix'),false,matrix);gl.uniform1i(gl.getUniformLocation(program,'uLeaf'),3);bindClearingTextures();
     // Avoid sampling the depth attachment while writing it.
     gl.activeTexture(gl.TEXTURE6);gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
@@ -2625,6 +2631,21 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     initializeCavernShadow(packet);
     gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);gl.viewport(0,0,width,height);configureClearingProgram(resources.geometryProgram);
     const error=gl.getError();if(error!==gl.NO_ERROR)throw new Error('CLEARING_GPU_INITIALIZATION_FAILED:'+error);
+  }
+
+  function updateCollectionShadow(){
+    const c=resources.clearing,retired=resources.treeCollection?.woodlandReady()??false;
+    if(!c||c.collectionRetired===retired)return;
+    const indices=retired?c.collectionCasterIndices:c.originalCasterIndices;
+    gl.bindFramebuffer(gl.FRAMEBUFFER,c.framebuffer);gl.viewport(0,0,512,512);
+    gl.useProgram(c.program);gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,c.indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW);
+    gl.uniformMatrix4fv(gl.getUniformLocation(c.program,'uLightMatrix'),false,c.matrix);gl.uniform1i(gl.getUniformLocation(c.program,'uLeaf'),3);bindClearingTextures();
+    gl.activeTexture(gl.TEXTURE6);gl.bindTexture(gl.TEXTURE_2D,null);gl.activeTexture(gl.TEXTURE0);
+    gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.disable(gl.BLEND);gl.disable(gl.CULL_FACE);gl.clearDepth(1);gl.clear(gl.DEPTH_BUFFER_BIT);
+    gl.drawElements(gl.TRIANGLES,indices.length,gl.UNSIGNED_INT,0);drawWoodlandRocks(true);drawLargeP2Boulders(true);
+    c.collectionRetired=retired;c.casterIndexCount=indices.length;c.shadowDrawCount++;
+    gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,resources.indexBuffer);
   }
 
   function initializeCavernShadow(packet){
@@ -2832,6 +2853,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if (!initialized) throw new Error('R3C_RENDERER_NOT_INITIALIZED');
     if (packet.packageIdentity !== rendererInterface.packageIdentity || packet.packageContentDigest !== rendererInterface.packageContentDigest) throw new Error('R3C_FRAME_PACKET_PACKAGE_MISMATCH');
     if (!Array.isArray(packet.camera.viewProjectionMatrix) || packet.camera.viewProjectionMatrix.length !== 16 || packet.camera.viewProjectionMatrix.some((value) => !finite(value))) throw new Error('R3C_VIEW_PROJECTION_INVALID');
+    updateCollectionShadow();
     gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.viewport(0, 0, width, height);
     gl.clearColor(...resources.skyColor, 1); gl.clearDepth(1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
@@ -2855,20 +2877,26 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       if (range.transparencyClass === 'TRANSLUCENT') {
         gl.enable(gl.BLEND); gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(false);
       } else { gl.disable(gl.BLEND); gl.depthMask(true); }
-      gl.drawElements(gl.TRIANGLES, range.indexCount, gl.UNSIGNED_INT, range.indexStart * 4);
-      counters.geometryDrawCallCount += 1; counters.totalDrawnIndexCount += range.indexCount;
+      const exclusions=resources.treeCollection?.woodlandReady()?resources.collectionWoodlandSpans:[];
+      for(const visible of retainedIndexRanges(range.indexStart,range.indexCount,exclusions)){
+        gl.drawElements(gl.TRIANGLES,visible.indexCount,gl.UNSIGNED_INT,visible.indexStart*4);
+        counters.geometryDrawCallCount++;counters.totalDrawnIndexCount+=visible.indexCount;
+      }
     }
     if(resources.refinement?.created){gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);gl.bindVertexArray(resources.refinement.vao);gl.drawElements(gl.TRIANGLES,resources.refinement.indexCount,gl.UNSIGNED_INT,0);counters.refinementDrawCallCount++;gl.bindVertexArray(resources.vertexArray);}
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);for(const resident of resources.vegetation.residentBatches){gl.bindVertexArray(resident.vao);gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);counters.vegetationDrawCallCount++;counters.totalDrawnIndexCount+=resident.indexCount;}gl.bindVertexArray(resources.vertexArray);
     drawWoodlandRocks(false);
     drawLargeP2Boulders(false);
-    resources.jacaranda?.requestIfNear(packet.camera.position);
+    if(!resources.treeCollection?.loading)resources.jacaranda?.requestIfNear(packet.camera.position);
+    resources.treeCollection?.requestIfNear(packet.camera.position);
     drawGeologicalRendering();
     if(resources.jacaranda?.ready){
       resources.jacaranda.draw(packet);
       // Restore the persistent geometry pass for the existing ground cover.
       gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);gl.activeTexture(gl.TEXTURE0);
     }
+    resources.treeCollection?.draw(packet);
+    gl.useProgram(resources.geometryProgram);gl.bindVertexArray(resources.vertexArray);gl.activeTexture(gl.TEXTURE0);
     if(vegetationStrategy){
       resources.singleOwnerVegetation?.draw(packet);
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
@@ -2989,6 +3017,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       cavernShadow:resources.cavernShadow?{ready:true,shadowDimensions:[512,512],shadowFormat:'DEPTH_COMPONENT24',gpuByteLength:resources.cavernShadow.gpuByteLength,shadowDrawCount:resources.cavernShadow.shadowDrawCount,casterIndexCount:resources.cavernShadow.casterIndexCount,vegetationCasterCount:resources.cavernShadow.vegetationCasterCount,rockCasterCount:resources.cavernShadow.rockCasterCount,staticShadowRefresh:resources.cavernShadow.staticShadowRefresh,perCameraResourceCreation:0,grassBladeReceiver:false}: {ready:false},
       oasisTrees:resources.oasisTrees?{...resources.oasisTrees,retirement:resources.oasisTreeRetirement,gpuByteLength:resources.oasisTreeGPUBytes,drawCount:(resources.oasisTreeMeshes??[]).reduce((n,p)=>n+p.drawCount,0),leafMipCoverage:resources.leafMipCoverage}:null,
       jacaranda:resources.jacaranda?.getReceipt()??null,
+      treeCollection:resources.treeCollection?.getReceipt()??null,
       cavernUnderstory:resources.cavernUnderstory?{...resources.cavernUnderstory,gpuByteLength:resources.cavernUnderstoryGPUBytes,drawCount:(resources.cavernUnderstoryMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
       cavernIvy:resources.cavernIvy?{...resources.cavernIvy,gpuByteLength:resources.cavernIvyGPUBytes,drawCount:(resources.cavernIvyMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
       cavernPalms:resources.cavernPalms?{...resources.cavernPalms,gpuByteLength:resources.cavernPalmGPUBytes,drawCount:(resources.cavernPalmMeshes??[]).reduce((n,p)=>n+p.drawCount,0)}:null,
@@ -3017,7 +3046,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
+    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{resources.treeCollection?.dispose();resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
     getVegetationTrace,getVegetationProbe,
     initialize, activateInitialRefinement, prepareReplacementVegetation, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });

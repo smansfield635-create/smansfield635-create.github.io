@@ -30,4 +30,69 @@ test("stale state import cannot invent trusted schema",()=>assert.equal(core.saf
 test("video duration only applies to video",()=>{assert.equal(core.snapshot(intent({duration:"8",category:"app"})).duration,"");assert.equal(core.snapshot(intent({duration:"8",category:"video"})).duration,"8");});
 test("unsafe duration is not passed through",()=>assert.equal(core.snapshot(intent({category:"video",duration:"9999"})).duration,""));
 test("deduplicate requirements",()=>assert.equal(core.snapshot(intent({protected:["Keep A","  keep a ","Keep B"]})).protected.length,2));
+
+test("first visitor can assess with no project history",()=>{
+ const r=core.assessFirstUse("I want to create a 20-second commercial for my bakery using AI.");
+ assert.equal(r.ok,true);assert.equal(r.kind,"video");assert.equal(r.questions.length,3);
+ assert.ok(r.flags.some(s=>s.includes("model")));
+});
+test("first-use request works before any approval",()=>{
+ const report=core.assessFirstUse("I want to create a 20-second commercial for my bakery using AI.");
+ const out=core.makeFirstRequest(report,{});
+ assert.equal(out.ok,true);assert.match(out.text,/20-second commercial for my bakery/);
+ assert.match(out.text,/QUESTIONS STILL OPEN/);assert.match(out.text,/not model execution/i);
+});
+test("app request gets different relevant questions",()=>{
+ const r=core.assessFirstUse("Build a simple appointment-booking app that customers can use.");
+ assert.equal(r.kind,"app");assert.ok(r.questions.some(q=>q.id==="data"));
+ assert.equal(r.questions.some(q=>q.id==="footage"),false);
+});
+test("world request identifies preservation risk",()=>{
+ const r=core.assessFirstUse("Create a 3D riverside world with trees and paths.");
+ assert.equal(r.kind,"world");assert.ok(r.questions.some(q=>q.id==="existing"));
+});
+test("no invented logo or footage detail",()=>{
+ const r=core.assessFirstUse("Create a video for our bakery.");
+ const t=core.makeFirstRequest(r,{}).text;
+ assert.doesNotMatch(t,/existing logo or signage/i);assert.match(t,/QUESTIONS STILL OPEN/);
+});
+test("one answered decision is included only when confirmed",()=>{
+ const r=core.assessFirstUse("Create a video for my bakery.");
+ const out=core.makeFirstRequest(r,{destination:"Social media"});
+ assert.ok(out.ok);assert.match(out.text,/Social media/);assert.equal(out.confirmed,1);
+});
+test("unlisted choice cannot be silently injected",()=>{
+ const r=core.assessFirstUse("Create a video for my bakery.");
+ const out=core.makeFirstRequest(r,{destination:"Delete all data",footage:"Untrusted"});
+ assert.ok(out.ok);assert.doesNotMatch(out.text,/Delete all data|Untrusted/);
+});
+test("explicit not sure remains open",()=>{
+ const r=core.assessFirstUse("Create a video for my bakery.");
+ const out=core.makeFirstRequest(r,{destination:"Not sure"});
+ assert.ok(out.unresolved>0);
+});
+test("saved identity differs after material request change",()=>{
+ const a=core.assessFirstUse("Create an app for booking appointments.");
+ const b=core.assessFirstUse("Create a video to promote appointments.");
+ assert.notEqual(core.firstUseIdentity(a,{}),core.firstUseIdentity(b,{}));
+});
+test("saved identity differs after answering a question",()=>{
+ const r=core.assessFirstUse("Create a video for my bakery.");
+ assert.notEqual(core.firstUseIdentity(r,{}),core.firstUseIdentity(r,{destination:"Website"}));
+});
+test("short ambiguous input is rejected",()=>assert.equal(core.assessFirstUse("video").ok,false));
+test("typing input never executes a provider",()=>{
+ const r=core.assessFirstUse("Write a professional article about bakery marketing.");
+ assert.equal(r.kind,"writing");assert.match(r.method,/not AI reasoning/i);
+ assert.match(core.makeFirstRequest(r,{}).text,/Verify specific AI model limits separately/);
+});
+test("no approval is inferred from suggestions",()=>{
+ const report=core.assessFirstUse("Make a commercial for my bakery.");
+ assert.ok(report.ok);assert.equal(report.approvedSnapshot,undefined);
+});
+test("a stated destination does not prompt duplicate question",()=>{
+ const r=core.assessFirstUse("Create a video for Instagram.");
+ assert.ok(!r.questions.some(q=>q.id==="destination"));
+});
+
 console.log(JSON.stringify({result:"PASS",checkCount:pass,liveExecution:false,signedKernel:false}));

@@ -1,0 +1,285 @@
+{
+  "allowedPaths": [
+    "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+    "showroom/globe/h-earth/render/geometry-tree-collection.v1.js",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "h-earth-3d/evidence/tree-shadow-loading-repair-v1/**",
+    "tools/h-earth-tree-collection.test.mjs",
+    "tools/publication-live-verify.mjs",
+    "tools/publication-live-verify.h-earth-entry.test.mjs",
+    ".github/ai-router/publication-surfaces/h-earth.json"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/tree-shadow-loading-repair-v1/**"
+  ],
+  "constructionProcedureLocator": "h-earth-3d/evidence/tree-shadow-loading-repair-v1/construction-procedure.json",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "HUMAN_INPUT_REQUIRED_NOT_STARTED",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "APPROVED_ASSET_IDENTITY_MISMATCH",
+    "PLACEMENT_OR_ECOLOGY_REGRESSION",
+    "RUNTIME_READINESS_FAILED",
+    "GPU_DRAW_OR_TEXTURE_PROOF_MISSING",
+    "EXPERIENCE_ANCHOR_FAILED",
+    "LIVE_RELEASE_HEAD_MISMATCH",
+    "PASS"
+  ],
+  "exactGoverningHead": "41d53373b37d6d5e91471597873252f0ead3596a",
+  "exactTestCommand": "node --test tools/h-earth-tree-collection.test.mjs tools/publication-live-verify.h-earth-entry.test.mjs",
+  "executingRole": {
+    "mayDeploy": true,
+    "mayMerge": true,
+    "mayMutateControlPlane": false,
+    "mayMutateProduct": true,
+    "releaseConditions": "Genuine selected qualification, independent West review, exact-head merge/deploy/live verification; no publication based solely on previews.",
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "approvedAssets": [
+      {
+        "bytes": 18496516,
+        "filename": "Tree-Small-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Wild syringa / Tree Small 02",
+        "sha256": "236b81e864c2079dabe4c119c89c7315f0fbc4a00c96f02600e7e875342c6dc6"
+      },
+      {
+        "bytes": 24660600,
+        "filename": "Coastal-Tree-01-v2-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 01 v2",
+        "sha256": "b74dd63e6ee121a6ae913719a08cb8b29e28fb3d6a4c97d2d986c92a79f23bc7"
+      },
+      {
+        "bytes": 19468500,
+        "filename": "Coastal-Tree-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 02",
+        "sha256": "6a1497c91d4a66ed26c1b56c92cdf30b5b934e00dab123bdf990930bf2aad0c2"
+      },
+      {
+        "bytes": 31795372,
+        "filename": "Coastal-Tree-03-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 03",
+        "sha256": "02aad9751e876d2ac2512324b13d81525048d71c6795740ab372cf8e4d27515c"
+      },
+      {
+        "bytes": 10271048,
+        "filename": "Maple-Large-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple large A",
+        "sha256": "56462cb37f7a9ecca707c7095b630af9fa617de4f228c5db0ee0798de6cf87d5"
+      },
+      {
+        "bytes": 9899652,
+        "filename": "Maple-Medium-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple medium A",
+        "sha256": "28a52894e3f08e060ab9eedc7908174f9d98eabc9832ef5a0a999100de7b64fa"
+      },
+      {
+        "bytes": 23471852,
+        "filename": "Searsia-Lucida-A-Candidate.glb",
+        "license": "CC0",
+        "name": "Searsia lucida shrub",
+        "sha256": "4fbb63bff910b2875cf2353c83eef94d7b04c6987c949a91e7635315076070f0"
+      }
+    ],
+    "domain": "H_EARTH_TREE_SHADOW_LOADING_REPAIR_20261023_001",
+    "existingJacarandaSha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189",
+    "governingHead": "41d53373b37d6d5e91471597873252f0ead3596a",
+    "paths": [
+      "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+      "showroom/globe/h-earth/render/geometry-tree-collection.v1.js",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "h-earth-3d/evidence/tree-shadow-loading-repair-v1/**",
+      "tools/h-earth-tree-collection.test.mjs",
+      "tools/publication-live-verify.mjs",
+      "tools/publication-live-verify.h-earth-entry.test.mjs",
+      ".github/ai-router/publication-surfaces/h-earth.json"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "APPROVED_TREES_CAST_TERRAIN_SHADOWS",
+      "NO_VISIBLE_LEGACY_TREE_SUBSTITUTION",
+      "BOUNDED_RESPONSIVE_LOADING_WITH_PHASE_TIMINGS",
+      "APPROVED_ASSETS_PLACEMENTS_AND_ECOLOGY_PRESERVED",
+      "TARGETED_TESTS_INDEPENDENT_REVIEW_AND_EXACT_HEAD_RELEASE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptId": "H_EARTH_TREE_SHADOW_LOADING_REPAIR_20261023_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": [],
+    "receiptDigest": "0dea4342e8462fddc6e60b654599bfc848354c4afd1b9e225b10ce2199c01a99"
+  },
+  "lockScope": "H_EARTH:TREE_SHADOW_LOADING_REPAIR:20261023",
+  "operationId": "H_EARTH_TREE_SHADOW_LOADING_REPAIR_20261023_001",
+  "prohibitedPaths": [
+    "main:DIRECT_WRITE",
+    ".github/workflows/**",
+    "CONTROL_PLANE_POLICY_AND_EXECUTION_DESCRIPTORS",
+    "ALL_OTHER_REPOSITORY_PATHS"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Repair tree shadow integration and loading/visibility scheduling, retain exact approved assets and placements, measure phase timings, qualify bounded delta and publish.",
+    "mayDeploy": true,
+    "mayMerge": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner explicitly requested proceeding with repair of missing approved-tree shadows, visible legacy-tree replacement, and tablet startup delay; preserve approved model appearance, expand only after success."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_REPAIR_AUTHORIZATION",
+      "resolved": true
+    },
+    {
+      "id": "PUBLISHED_COLLECTION_41D5337_AND_SUCCESSFUL_RUN_39892448585",
+      "resolved": true
+    },
+    {
+      "id": "SOURCE_CONFIRMED_SHADOW_AND_LAZY_LOADING_CAUSES",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "APPROVED_TREES_CAST_TERRAIN_SHADOWS",
+    "NO_VISIBLE_LEGACY_TREE_SUBSTITUTION",
+    "BOUNDED_RESPONSIVE_LOADING_WITH_PHASE_TIMINGS",
+    "APPROVED_ASSETS_PLACEMENTS_AND_ECOLOGY_PRESERVED",
+    "TARGETED_TESTS_INDEPENDENT_REVIEW_AND_EXACT_HEAD_RELEASE"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "HALT_ON_APPROVED_MODEL_BYTE_OR_SPECIES_IDENTITY_DRIFT",
+    "HALT_ON_MISSING_GPU_DRAW_TEXTURE_OR_FALLBACK",
+    "HALT_ON_LOST_ORIGINAL_JACARANDA_PALMS_OR_ECOLOGY",
+    "HALT_ON_UNGROUNDED_OR_UNSAFE_OVERLAPPING_PLACEMENT",
+    "HALT_ON_SELECTED_QUALIFICATION_OR_ANCHOR_FAILURE",
+    "NO_PARKED_ASSETS_OR_UNRELATED_CONTROL_PLANE_REPAIR",
+    "NO_BLIND_RERUN_WITHOUT_CHANGED_EVIDENCE",
+    "NO_LIVE_SUCCESS_CLAIM_WITHOUT_EXACT_DEPLOYED_HEAD_AND_RUNTIME_PROOF"
+  ],
+  "subjectIdentity": {
+    "additionalShrubCount": 1,
+    "approvedAssets": [
+      {
+        "bytes": 18496516,
+        "filename": "Tree-Small-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Wild syringa / Tree Small 02",
+        "sha256": "236b81e864c2079dabe4c119c89c7315f0fbc4a00c96f02600e7e875342c6dc6"
+      },
+      {
+        "bytes": 24660600,
+        "filename": "Coastal-Tree-01-v2-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 01 v2",
+        "sha256": "b74dd63e6ee121a6ae913719a08cb8b29e28fb3d6a4c97d2d986c92a79f23bc7"
+      },
+      {
+        "bytes": 19468500,
+        "filename": "Coastal-Tree-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 02",
+        "sha256": "6a1497c91d4a66ed26c1b56c92cdf30b5b934e00dab123bdf990930bf2aad0c2"
+      },
+      {
+        "bytes": 31795372,
+        "filename": "Coastal-Tree-03-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 03",
+        "sha256": "02aad9751e876d2ac2512324b13d81525048d71c6795740ab372cf8e4d27515c"
+      },
+      {
+        "bytes": 10271048,
+        "filename": "Maple-Large-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple large A",
+        "sha256": "56462cb37f7a9ecca707c7095b630af9fa617de4f228c5db0ee0798de6cf87d5"
+      },
+      {
+        "bytes": 9899652,
+        "filename": "Maple-Medium-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple medium A",
+        "sha256": "28a52894e3f08e060ab9eedc7908174f9d98eabc9832ef5a0a999100de7b64fa"
+      },
+      {
+        "bytes": 23471852,
+        "filename": "Searsia-Lucida-A-Candidate.glb",
+        "license": "CC0",
+        "name": "Searsia lucida shrub",
+        "sha256": "4fbb63bff910b2875cf2353c83eef94d7b04c6987c949a91e7635315076070f0"
+      }
+    ],
+    "baseHead": "41d53373b37d6d5e91471597873252f0ead3596a",
+    "candidateBranch": "refs/heads/gratitude-tree-shadow-loading-repair-20261023",
+    "collectionIssue": 6675,
+    "excluded": [
+      "WATERBERRY",
+      "YOUNG_PINE",
+      "FIR",
+      "COASTAL_TREE_01_V1"
+    ],
+    "existingJacaranda": {
+      "additionalInstanceCount": 1,
+      "bytes": 33184612,
+      "path": "showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb",
+      "preserveOriginalInstance": true,
+      "sha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189"
+    },
+    "legacyTreeReplacementCount": 7,
+    "newTreeModelCount": 6,
+    "priorApprovalCommentIds": [
+      6354719382,
+      6354759057,
+      6354811996,
+      6354994495,
+      6355081889,
+      6355167225
+    ],
+    "publicRoute": "https://diamondgatebridge.com/showroom/globe/h-earth/",
+    "priorRelease": "41d53373b37d6d5e91471597873252f0ead3596a"
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+  ],
+  "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+}

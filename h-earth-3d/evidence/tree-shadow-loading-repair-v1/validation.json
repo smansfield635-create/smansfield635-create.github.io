@@ -1,0 +1,23 @@
+{
+  "baseHead": "41d53373b37d6d5e91471597873252f0ead3596a",
+  "changes": [
+    "Reuse approved alpha-tested model draw into existing static woodland and cavern depth maps, refresh only on readiness changes",
+    "Extend shadow coverage for approved placements",
+    "Suppress seven legacy slots and original Jacaranda legacy placeholder from first frame; show approved models individually",
+    "Bound prefetch to180 region units; preserve serial GPU loading",
+    "Yield buffer uploads after4ms work slices rather than each512KB chunk; record fetch/decode/upload durations"
+  ],
+  "validation": {
+    "deltaTests": "22 PASS",
+    "entryVerifierTests": "63 PASS",
+    "syntaxAndWhitespace": "PASS",
+    "assetTests": "Prior exact asset evidence retained; 13 file-dependent tests could not run in sparse checkout (ENOENT), no asset bytes changed",
+    "independentReview": "West reviewed GL state and alpha-tested depth reuse, found no GL state blocker; corrected partial-readiness receipts and retained enabled shader guard"
+  },
+  "unproven": [
+    "Actual shadow appearance pending runtime/tablet inspection",
+    "Measured tablet loading improvement",
+    "Network payload remains unchanged; no claim to eliminate all delayed appearance"
+  ],
+  "remotePolicy": "No full camera tour retry. Start bounded existing entry preflight, return link immediately, yield."
+}

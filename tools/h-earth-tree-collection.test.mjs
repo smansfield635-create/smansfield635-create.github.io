@@ -127,12 +127,16 @@ test('triangle draw spans reject fractional, negative and unaligned index ranges
 });
 
 
-test('unloaded collection cannot retire legacy trees or start distant downloads',()=>{
+test('approved replacement slots suppress legacy models before loading without claiming GPU readiness',()=>{
  const collection=createTreeCollection({}, {model:{sampleOutdoorAt:flat,sampleWaterAt:()=>null},raw:{buffers:{positions:[],indices:[]},primitiveSpans:[]},projectWorld:p=>p,originalJacaranda:{getReceipt:()=>({state:'READY'})}});
  assert.equal(collection.requestIfNear({x:10000,y:0,z:10000}),false);
  assert.equal(collection.woodlandReady(),false);
- for(const p of TREE_PLACEMENTS.filter(p=>p.replaces))assert.equal(collection.isReplaced(p.replaces),false);
+ for(const p of TREE_PLACEMENTS.filter(p=>p.replaces))assert.equal(collection.isReplaced(p.replaces),true);
  assert.equal(collection.isReplaced('PROPOSED_OASIS_01'),false);
+ assert.equal(collection.isReplaced('UNRELATED_TREE'),false);
+ assert.equal(collection.shadowKey(),'00000000');
+ // Unloaded slots remain unready: shadow and color draws must not touch GL.
+ collection.draw({});collection.drawShadows({},new Float32Array(16),'woodland');
  assert.ok(collection.getReceipt().entries.every(e=>e.state==='IDLE'&&!e.replacementActive));
  collection.dispose();collection.dispose();
  assert.equal(collection.requestIfNear({x:43,y:0,z:-315}),false);

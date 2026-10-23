@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import {execFileSync,spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
+import {gunzipSync} from 'node:zlib';
 const root=new URL('../../../',import.meta.url);
 const baseline='db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d';
 const expected={
@@ -36,6 +37,12 @@ function verify(paths){for(const p of paths){const bytes=fs.readFileSync(new URL
 const binary='showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz';
 verify(Object.keys(expected).filter(p=>p!==binary));
 if(spawnSync('git',['cat-file','-e',baseline+'^{commit}'],{cwd:root}).status!==0)execFileSync('git',['fetch','--no-tags','--depth=1','--filter=blob:none','origin',baseline],{cwd:root,stdio:'inherit'});
+// Preserve the recovered evidence archive only after proving exact expanded bytes.
+// Python and Node gzip level 9 encode this JSON differently.
+const coveragePath=new URL('./coverage.json.gz',import.meta.url);
+const recoveredCoverage=fs.readFileSync(coveragePath);
 await import('./compile.mjs');
+assert(gunzipSync(fs.readFileSync(coveragePath)).equals(gunzipSync(recoveredCoverage)),'COVERAGE_EXPANDED_BYTES_CHANGED');
+fs.writeFileSync(coveragePath,recoveredCoverage);
 verify(Object.keys(expected));
 console.log('EXACT_RECOVERED_GRASS_CANDIDATE_26_FILES_VERIFIED');

@@ -86,6 +86,7 @@
     }
   ],
   "runtime": {
+    "sceneQualification": "H_EARTH_APPROVED_TREE_COLLECTION_SCENE_V1",
     "enabled": true,
     "path": "/showroom/globe/h-earth/?arrival=approved-four-trees",
     "timeoutMs": 120000,

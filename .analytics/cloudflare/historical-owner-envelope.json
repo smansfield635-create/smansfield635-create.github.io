@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-23T13:32:45Z",
+  "generatedAt": "2026-10-23T14:36:07Z",
   "window": {
-    "start": "2026-07-25T13:32:45Z",
-    "end": "2026-10-23T13:32:45Z"
+    "start": "2026-07-25T14:36:07Z",
+    "end": "2026-10-23T14:36:07Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4720,
-    "visits": 1349,
+    "pageLoads": 4723,
+    "visits": 1350,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4720,
-        "visits": 1349
+        "pageLoads": 4723,
+        "visits": 1350
       }
     },
     "byPath": {
@@ -35,7 +35,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 151,
+        "pageLoads": 153,
         "visits": 10
       },
       "/showroom/": {
@@ -43,8 +43,8 @@
         "visits": 10
       },
       "/": {
-        "pageLoads": 1049,
-        "visits": 759
+        "pageLoads": 1050,
+        "visits": 760
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
@@ -218,6 +218,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -231,10 +235,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -325,12 +325,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3371,
+        "pageLoads": 3373,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 796,
-        "visits": 796
+        "pageLoads": 797,
+        "visits": 797
       },
       "(none)": {
         "pageLoads": 543,

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-23T05:32:58Z",
+  "generatedAt": "2026-10-23T06:48:48Z",
   "window30d": {
-    "start": "2026-09-23T05:32:58Z",
-    "end": "2026-10-23T05:32:58Z"
+    "start": "2026-09-23T06:48:48Z",
+    "end": "2026-10-23T06:48:48Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 94
+      "pageLoads": 93
     },
     {
       "date": "2026-10-17",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 32
+      "pageLoads": 36
     }
   ],
   "summary": {
-    "pageLoads": 2495,
-    "botPageLoads": 849,
-    "nonBotPageLoads": 1646
+    "pageLoads": 2498,
+    "botPageLoads": 850,
+    "nonBotPageLoads": 1648
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1743,
-      "visits": 1743
+      "pageLoads": 1746,
+      "visits": 1746
     },
     {
       "host": "diamondgatebridge.com",
@@ -172,8 +172,8 @@
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 645,
-      "visits": 605
+      "pageLoads": 648,
+      "visits": 608
     },
     {
       "path": "/",

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-23T15:34:00Z",
+  "generatedAt": "2026-10-23T16:36:33Z",
   "window30d": {
-    "start": "2026-09-23T15:34:00Z",
-    "end": "2026-10-23T15:34:00Z"
+    "start": "2026-09-23T16:36:33Z",
+    "end": "2026-10-23T16:36:33Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 102
+      "pageLoads": 101
     },
     {
       "date": "2026-10-17",
@@ -124,56 +124,61 @@
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 50
+      "pageLoads": 58
     }
   ],
   "summary": {
-    "pageLoads": 2511,
-    "botPageLoads": 861,
-    "nonBotPageLoads": 1650
+    "pageLoads": 2647,
+    "botPageLoads": 1062,
+    "nonBotPageLoads": 1585
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1745,
-      "visits": 1745
+      "pageLoads": 1770,
+      "visits": 1770
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 612,
+      "pageLoads": 614,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 68,
-      "visits": 68
+      "pageLoads": 69,
+      "visits": 69
     },
     {
       "host": "bing.com",
-      "pageLoads": 37,
-      "visits": 37
+      "pageLoads": 43,
+      "visits": 43
     },
     {
       "host": "m.facebook.com",
       "pageLoads": 20,
       "visits": 20
+    },
+    {
+      "host": "www.facebook.com",
+      "pageLoads": 2,
+      "visits": 2
     }
   ],
   "topPages": [
+    {
+      "path": "/showroom/globe/h-earth/",
+      "pageLoads": 658,
+      "visits": 614
+    },
     {
       "path": "/analytics/",
       "pageLoads": 656,
       "visits": 576
     },
     {
-      "path": "/showroom/globe/h-earth/",
-      "pageLoads": 652,
-      "visits": 610
-    },
-    {
       "path": "/",
-      "pageLoads": 407,
-      "visits": 147
+      "pageLoads": 408,
+      "visits": 148
     },
     {
       "path": "/governance-bridge/",

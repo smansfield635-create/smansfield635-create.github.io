@@ -1,0 +1,19 @@
+{
+  "schema": "H_EARTH_PREPARED_BINDING_DIAGNOSTIC_CANDIDATE_v1",
+  "operationId": "H_EARTH_PREPARED_INPUT_BINDING_REPAIR_20261023_001",
+  "generation": 2873,
+  "governingHead": "e7c3522c305486812efaeea47affeec1a4f118f8",
+  "admissionRun": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/39989554938",
+  "purpose": "DIAGNOSTIC_PREFLIGHT_ONLY_NOT_PUBLICATION",
+  "observedFailure": "PREPARED_INPUT_MISMATCH",
+  "rootCause": "NOT_YET_IDENTIFIED",
+  "aggregateBindingUnchanged": true,
+  "payloadBytesUnchanged": true,
+  "rawOutputSha256": "6245ce969a2ba3343b19c42257bb2b347c584be498fdb6f9064ffb0465fe4adc",
+  "selectedTests": {
+    "passed": 85,
+    "failed": 0,
+    "command": "node --test tools/h-earth-precomputed-procedural-vegetation.test.mjs tools/h-earth-prepared-input-binding.test.mjs tools/h-earth-loading-report.test.mjs tools/publication-live-verify.h-earth-entry.test.mjs"
+  },
+  "nextAction": "Exact candidate browser preflight; capture component mismatch diagnostics; stop on remote run dispatch. No publication based on fallback readiness."
+}

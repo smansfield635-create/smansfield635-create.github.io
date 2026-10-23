@@ -1,5 +1,5 @@
 /** Exact admitted procedural vegetation, generated offline; no runtime kernel bypass for new geometry. */
-export const MANIFEST_SHA256 = 'fd84424ecfd9c7e2999f13de9c3bb981732ee7853c2f91a3790f3c57ea0faaa6';
+export const MANIFEST_SHA256 = '6851ef9c95c5cd8903ea70715e9bde9a769a5b763bac7166e8e1dede0d3f81d0';
 export const GROUPS = ['palms','ivy','understory','oasisTrees'];
 const TYPES = {Float32Array, Float64Array, Uint32Array, Uint16Array, Uint8Array, Int32Array};
 export async function sha256(bytes) {return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),b=>b.toString(16).padStart(2,'0')).join('');}
@@ -8,12 +8,28 @@ export function decodePrepared(text) {return JSON.parse(text,(_,v)=>{
  if(v?.$typed){const T=TYPES[v.$typed];if(!T||!Array.isArray(v.values)||!v.values.every(Number.isFinite))throw Error('PREPARED_ARRAY_TYPE');return T.from(v.values);}return v;
 });}
 // Normalize input storage types: generation and runtime may store the same numbers in different arrays.
-export async function inputBinding(model, source) {
- const parts=[JSON.stringify({site:model.site,route:model.route,spans:source.primitiveSpans})];
- const numeric=async value=>{const a=Float64Array.from(value);parts.push(await sha256(a.buffer));};
- for(const p of model.meshes){parts.push(JSON.stringify({role:p.role,part:p.part??null}));await numeric(p.mesh.positions);await numeric(p.mesh.indices);}
- for(const v of [source.buffers.positions,source.buffers.indices,source.buffers.baseColorsLinear,source.clearingAttributes])await numeric(v);
- return sha256(new TextEncoder().encode(parts.join('\n')));
+export async function inputFingerprint(model, source) {
+ const parts=[JSON.stringify({site:model.site,route:model.route,spans:source.primitiveSpans})],components={};
+ const textHash=value=>sha256(new TextEncoder().encode(JSON.stringify(value)));
+ for(const [name,value] of Object.entries({site:model.site,route:model.route,spans:source.primitiveSpans}))components[name]=await textHash(value);
+ const numeric=async(name,value)=>{const a=Float64Array.from(value),hash=await sha256(a.buffer);parts.push(hash);components[name]=hash;};
+ for(const [i,p] of model.meshes.entries()){
+  const descriptor={role:p.role,part:p.part??null};parts.push(JSON.stringify(descriptor));
+  components[`mesh.${i}.descriptor`]=await textHash(descriptor);
+  await numeric(`mesh.${i}.positions`,p.mesh.positions);await numeric(`mesh.${i}.indices`,p.mesh.indices);
+ }
+ for(const name of ['positions','indices','baseColorsLinear'])await numeric(`source.${name}`,source.buffers[name]);
+ await numeric('source.clearingAttributes',source.clearingAttributes);
+ return {hash:await sha256(new TextEncoder().encode(parts.join('\n'))),components};
+}
+export async function inputBinding(model,source){return (await inputFingerprint(model,source)).hash;}
+export function compareInputFingerprint(actual,manifest){
+ const expected=manifest.inputComponents??{};
+ const names=[...new Set([...Object.keys(expected),...Object.keys(actual.components)])];
+ return {expected:manifest.inputBinding,actual:actual.hash,
+  source:'ACTUAL_RENDERER_MODEL_AND_CANONICAL_PACKAGE',
+  componentCount:names.length,
+  mismatches:names.filter(name=>expected[name]!==actual.components[name]).map(name=>({name,expected:expected[name]??null,actual:actual.components[name]??null}))};
 }
 export function validatePrepared(groups, manifest) {
  if(Object.keys(groups).sort().join()!==[...GROUPS].sort().join())throw Error('PREPARED_GROUPS');
@@ -35,7 +51,7 @@ export async function loadPreparedVegetation(model,source,{fetcher=globalThis.fe
   try{
    const bytes=await measure('manifestFetch',async()=>{const r=await fetcher(new URL('./assets/precomputed-procedural-vegetation.v1.json',import.meta.url),{signal:controller.signal});if(!r.ok)throw Error('PREPARED_MANIFEST_HTTP');return r.arrayBuffer();});
    manifest=await measure('manifestVerification',async()=>{if(await sha256(bytes)!==manifestHash)throw Error('PREPARED_MANIFEST_HASH');const m=JSON.parse(new TextDecoder().decode(bytes));if(m.schema!=='H_EARTH_PREPARED_PROCEDURAL_VEGETATION_v1'||m.compressedBytes>8*1024*1024||m.rawBytes>32*1024*1024)throw Error('PREPARED_MANIFEST_SCHEMA');return m;});
-   await measure('inputVerification',async()=>{if(await inputBinding(model,source)!==manifest.inputBinding)throw Error('PREPARED_INPUT_MISMATCH');});
+   await measure('inputVerification',async()=>{const actual=await inputFingerprint(model,source);timing.inputVerification=compareInputFingerprint(actual,manifest);if(actual.hash!==manifest.inputBinding)throw Error('PREPARED_INPUT_MISMATCH');});
    compressed=await measure('download',async()=>{const r=await fetcher(new URL('./assets/precomputed-procedural-vegetation.v1.bin.gz',import.meta.url),{signal:controller.signal});if(!r.ok)throw Error('PREPARED_PAYLOAD_HTTP');return r.arrayBuffer();});
   }finally{clearTimeout(timeout);}
   timing.compressedBytes=compressed.byteLength;timing.groups=manifest.groups;timing.scope='Exact offline-admitted geometry; CPU wall timings, not GPU execution';

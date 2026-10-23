@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-23T10:32:45Z",
+  "generatedAt": "2026-10-23T11:31:54Z",
   "window30d": {
-    "start": "2026-09-23T10:32:45Z",
-    "end": "2026-10-23T10:32:45Z"
+    "start": "2026-09-23T11:31:54Z",
+    "end": "2026-10-23T11:31:54Z"
   },
   "daily": [
     {
@@ -12,11 +12,11 @@
     },
     {
       "date": "2026-09-25",
-      "pageLoads": 640
+      "pageLoads": 490
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 50
+      "pageLoads": 90
     },
     {
       "date": "2026-09-27",
@@ -28,11 +28,11 @@
     },
     {
       "date": "2026-09-29",
-      "pageLoads": 40
+      "pageLoads": 70
     },
     {
       "date": "2026-09-30",
-      "pageLoads": 30
+      "pageLoads": 70
     },
     {
       "date": "2026-10-01",
@@ -44,7 +44,7 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 40
+      "pageLoads": 60
     },
     {
       "date": "2026-10-04",
@@ -64,23 +64,23 @@
     },
     {
       "date": "2026-10-08",
-      "pageLoads": 70
+      "pageLoads": 100
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 80
+      "pageLoads": 30
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 70
+      "pageLoads": 100
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-13",
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 107
+      "pageLoads": 106
     },
     {
       "date": "2026-10-17",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 40
+      "pageLoads": 41
     }
   ],
   "summary": {
-    "pageLoads": 2516,
-    "botPageLoads": 860,
-    "nonBotPageLoads": 1656
+    "pageLoads": 2566,
+    "botPageLoads": 900,
+    "nonBotPageLoads": 1666
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1764,
-      "visits": 1764
+      "pageLoads": 1833,
+      "visits": 1833
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 620,
+      "pageLoads": 640,
       "visits": 0
     },
     {
@@ -150,11 +150,16 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 43,
-      "visits": 43
+      "pageLoads": 33,
+      "visits": 33
     },
     {
       "host": "m.facebook.com",
+      "pageLoads": 20,
+      "visits": 20
+    },
+    {
+      "host": "l.instagram.com",
       "pageLoads": 20,
       "visits": 20
     },
@@ -167,28 +172,28 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 666,
-      "visits": 576
+      "pageLoads": 776,
+      "visits": 676
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 648,
-      "visits": 608
+      "pageLoads": 607,
+      "visits": 567
     },
     {
       "path": "/",
-      "pageLoads": 406,
-      "visits": 146
+      "pageLoads": 446,
+      "visits": 206
     },
     {
       "path": "/governance-bridge/",
-      "pageLoads": 180,
-      "visits": 130
+      "pageLoads": 120,
+      "visits": 80
     },
     {
       "path": "/governance-bridge/governance/",
-      "pageLoads": 80,
-      "visits": 60
+      "pageLoads": 90,
+      "visits": 50
     },
     {
       "path": "/build/",
@@ -201,9 +206,9 @@
       "visits": 43
     },
     {
-      "path": "/preview/h-earth/recovery/875895473fd5569c40e6d2da674f202d4ee1c221/",
-      "pageLoads": 40,
-      "visits": 40
+      "path": "/meet-sean-mansfield/",
+      "pageLoads": 41,
+      "visits": 31
     }
   ],
   "ownerMeasurement": {

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-23T10:32:45Z",
+  "generatedAt": "2026-10-23T11:31:54Z",
   "window": {
-    "start": "2026-07-25T10:32:45Z",
-    "end": "2026-10-23T10:32:45Z"
+    "start": "2026-07-25T11:31:54Z",
+    "end": "2026-10-23T11:31:54Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4720,
-    "visits": 1349,
+    "pageLoads": 4430,
+    "visits": 1249,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4720,
-        "visits": 1349
+        "pageLoads": 4430,
+        "visits": 1249
       }
     },
     "byPath": {
@@ -35,7 +35,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 151,
+        "pageLoads": 161,
         "visits": 10
       },
       "/showroom/": {
@@ -44,7 +44,7 @@
       },
       "/": {
         "pageLoads": 1049,
-        "visits": 759
+        "visits": 769
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
@@ -55,15 +55,15 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 270,
-        "visits": 90
+        "pageLoads": 210,
+        "visits": 60
       },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 230,
-        "visits": 20
+        "visits": 10
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
+        "pageLoads": 490,
         "visits": 0
       },
       "/gauges/h-earth/": {
@@ -75,28 +75,16 @@
         "visits": 70
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 110,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/test/reverse-audit/": {
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/research/evidence-and-sources/": {
+      "/laws/categories/structure/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/categories/flow/cycles/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/globe/audralia/": {
-        "pageLoads": 160,
-        "visits": 10
+        "pageLoads": 130,
+        "visits": 20
       },
       "/governance/": {
         "pageLoads": 60,
@@ -119,7 +107,7 @@
         "visits": 10
       },
       "/developer/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 20
       },
       "/coherence-diagnostic/": {
@@ -134,19 +122,11 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/": {
         "pageLoads": 20,
         "visits": 20
       },
       "/compass-composite/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -163,10 +143,14 @@
         "visits": 0
       },
       "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 20,
+        "visits": 10
+      },
+      "/showroom/globe/audralia/disposition/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/audralia/disposition/": {
+      "/laws/categories/flow/cycles/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -174,23 +158,31 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/interfaces.html": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/laws/categories/reality/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/laws/categories/reality/measure.html": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/laws/categories/flow/handoffs/": {
-        "pageLoads": 20,
+        "pageLoads": 80,
         "visits": 0
       },
       "/instruments/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/categories/integrity/continuity/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/categories/reality/limits.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/research/applied-investigations/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 20,
+        "visits": 10
+      },
+      "/laws/research/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -198,20 +190,24 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
         "visits": 0
       },
+      "/laws/test/reverse-audit/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/laws/research/evidence-and-sources/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 70,
+        "pageLoads": 60,
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
+        "pageLoads": 80,
         "visits": 30
       },
       "/characters/legacy-dossiers.html": {
@@ -262,10 +258,6 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
@@ -303,20 +295,16 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
+        "pageLoads": 90,
+        "visits": 80
       },
       "/analytics/": {
-        "pageLoads": 40,
+        "pageLoads": 60,
         "visits": 0
       },
       "/governance-bridge/governance/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/prototypes/abc-roofing/": {
         "pageLoads": 10,
-        "visits": 10
+        "visits": 0
       },
       "/about-this-underdog/": {
         "pageLoads": 10,
@@ -325,16 +313,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3371,
+        "pageLoads": 3181,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 796,
-        "visits": 796
+        "pageLoads": 756,
+        "visits": 756
       },
       "(none)": {
-        "pageLoads": 543,
-        "visits": 543
+        "pageLoads": 483,
+        "visits": 483
       },
       "raw.githack.com": {
         "pageLoads": 10,

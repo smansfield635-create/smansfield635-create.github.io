@@ -414,10 +414,12 @@ export const runHEarthSceneQualification=async(page,surfaceId,policy,assetObserv
   }
   // Reuse the existing uploaded PNG artifact: labeled unaltered scene captures
   // are assembled in a separate evidence document, never in the product page.
-  try{if(images.length&&budget.remaining()>0){
+  try{if(images.length){
+    const evidenceBudget=createHEarthBudget(30000);
+    const evidenceWrap=object=>new Proxy(object,{get(target,key){const value=target[key];return typeof value==='function'?(...args)=>evidenceBudget.run('evidence.'+String(key),()=>value.apply(target,args)):value;}});
     const directory=process.env.RUNNER_TEMP;
     check(directory,'H_EARTH_SCENE_RUNNER_TEMP_REQUIRED');
-    const rawSheet=await budget.run('evidence.page',()=>page.browser().newPage()),sheet=wrap(rawSheet,'evidence');
+    const rawSheet=await evidenceBudget.run('evidence.page',()=>rawPage.browser().newPage()),sheet=evidenceWrap(rawSheet);
     try{
       await sheet.setViewport({width:1280,height:images.length*836,deviceScaleFactor:1});
       await sheet.setContent('<html><body style="margin:0;background:#111;color:white;font:20px sans-serif">'+images.map(({name,bytes})=>'<section style="height:836px;display:flex;flex-direction:column;align-items:center"><div style="height:36px">'+name+'</div><img style="height:800px;max-width:1280px;object-fit:contain" src="data:image/png;base64,'+bytes.toString('base64')+'"></section>').join('')+'</body></html>');
@@ -648,7 +650,9 @@ export const main=async()=>{
   const browser=await launchSurfaceBrowser({puppeteer,executablePath,surfaceId:manifest.surfaceId,scenePolicy:spec.sceneQualification});
   try{
     const page=await browser.newPage();
-    await page.setViewport([H_EARTH_SCENE_POLICY,H_EARTH_COLLECTION_POLICY].includes(spec.sceneQualification)
+    await page.setViewport(spec.sceneQualification===H_EARTH_COLLECTION_POLICY
+      ? {width:800,height:500,deviceScaleFactor:1}
+      : spec.sceneQualification===H_EARTH_SCENE_POLICY
       ? {width:1280,height:800,deviceScaleFactor:1}
       : spec.captureScreenshot===true
       ? {width:1440,height:2200,deviceScaleFactor:1}

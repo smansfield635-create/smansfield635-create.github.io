@@ -1,0 +1,37 @@
+{
+  "operationId": "H_EARTH_APPROVED_TREE_COLLECTION_RELEASE_20261023_001",
+  "generation": 2860,
+  "ownerReleaseDisposition": "PUBLISH_APPROVED_INTEGRATED_ASSETS",
+  "ownerInstruction": "Publish using retained successful state; apply earlier instrumental-failure release precedent rather than repeat expensive tour failures.",
+  "precedentCommit": "ccfd9435dc904342f4923cfbd65e0d29e382c6ef",
+  "candidateSha": "cac422952f022f464a47d50fd4adbc3e8a07b6d6",
+  "extendedSceneQualification": {
+    "result": "FAIL",
+    "run": 39890704749,
+    "failure": "H_EARTH_SCENE_TIME_BUDGET_EXCEEDED",
+    "artifactId": 12474688074,
+    "artifactSha256": "23f507b078d5e33419f13374b87cd1b72710a287eef20e8f6e7082a46e51e2fb",
+    "noFurtherTourRetry": true
+  },
+  "retainedEvidence": [
+    "97/97 collection local tests",
+    "63/63 verifier tests after bounded instrumentation repair",
+    "Staged payload and static verification passed",
+    "Genuine public world entry passed",
+    "Four woodland replacements READY in runtime receipts",
+    "Saved contact sheet visually inspected: woodland overview, maple-large, maple-medium, jacaranda-labelled view",
+    "No page or console errors reported"
+  ],
+  "unproven": [
+    "River-group runtime rendering not reached by camera tour",
+    "Complete scene visual qualification",
+    "Physical-device performance"
+  ],
+  "releaseChecksRetained": [
+    "Static publication checks",
+    "Genuine world entry and ready attributes",
+    "Page and console error checks",
+    "Exact-head deployment and live verification"
+  ],
+  "productBytesChangedByDisposition": false
+}

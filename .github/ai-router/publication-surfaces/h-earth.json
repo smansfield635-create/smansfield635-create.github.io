@@ -127,7 +127,6 @@
         "timeoutMs": 15000
       }
     ],
-    "preReadyEntry": "H_EARTH_CONTROL_TEST_ENTER_V1",
-    "sceneQualification": "H_EARTH_APPROVED_TREE_COLLECTION_SCENE_V1"
+    "preReadyEntry": "H_EARTH_CONTROL_TEST_ENTER_V1"
   }
 }

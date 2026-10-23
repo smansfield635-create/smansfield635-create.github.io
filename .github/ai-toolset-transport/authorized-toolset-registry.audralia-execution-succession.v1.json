@@ -538,7 +538,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "H_EARTH_GEN2875_GRASS_EXACT_CANDIDATE_COMPILER_V1",
-      "exactToolingHead": "f44880a475a03b33aac371d1122bc466d02992e1",
+      "exactToolingHead": "1b390e8a46d4afff62ccbc8fa8358f32b84c6d87",
       "toolingMaterialization": {
         "mode": "BOUNDED_SPARSE_INDEX",
         "sparsePaths": [
@@ -608,7 +608,7 @@
       "writebackSpecification": {
         "mode": "FAST_FORWARD_EXACT_BRANCH",
         "targetBranchRef": "refs/heads/gratitude-terrain-grass-continuity-v2-20261023",
-        "expectedBranchHead": "f44880a475a03b33aac371d1122bc466d02992e1",
+        "expectedBranchHead": "1b390e8a46d4afff62ccbc8fa8358f32b84c6d87",
         "commitMessage": "Reproduce exact recovered terrain grass asset for Gen2875",
         "fastForwardOnly": true,
         "requireChangedPaths": true

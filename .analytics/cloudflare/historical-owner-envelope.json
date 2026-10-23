@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-23T14:36:07Z",
+  "generatedAt": "2026-10-23T15:34:00Z",
   "window": {
-    "start": "2026-07-25T14:36:07Z",
-    "end": "2026-10-23T14:36:07Z"
+    "start": "2026-07-25T15:34:00Z",
+    "end": "2026-10-23T15:34:00Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -26,6 +26,10 @@
       }
     },
     "byPath": {
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 153,
+        "visits": 10
+      },
       "/index.html": {
         "pageLoads": 140,
         "visits": 0
@@ -34,9 +38,9 @@
         "pageLoads": 60,
         "visits": 10
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 153,
-        "visits": 10
+      "/showroom/globe/h-earth/diagnostic/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/": {
         "pageLoads": 100,
@@ -45,10 +49,6 @@
       "/": {
         "pageLoads": 1050,
         "visits": 760
-      },
-      "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 30,
-        "visits": 0
       },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
@@ -222,16 +222,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {

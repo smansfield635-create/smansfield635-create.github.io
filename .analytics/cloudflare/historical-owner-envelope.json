@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-23T06:48:48Z",
+  "generatedAt": "2026-10-23T07:39:42Z",
   "window": {
-    "start": "2026-07-25T06:48:48Z",
-    "end": "2026-10-23T06:48:48Z"
+    "start": "2026-07-25T07:39:42Z",
+    "end": "2026-10-23T07:39:42Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4722,
-    "visits": 1345,
+    "pageLoads": 4720,
+    "visits": 1349,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4722,
-        "visits": 1345
+        "pageLoads": 4720,
+        "visits": 1349
       }
     },
     "byPath": {
@@ -35,7 +35,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 157,
+        "pageLoads": 151,
         "visits": 10
       },
       "/showroom/": {
@@ -43,8 +43,8 @@
         "visits": 10
       },
       "/": {
-        "pageLoads": 1045,
-        "visits": 755
+        "pageLoads": 1049,
+        "visits": 759
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 30,
@@ -325,16 +325,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3377,
+        "pageLoads": 3371,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 795,
-        "visits": 795
+        "pageLoads": 796,
+        "visits": 796
       },
       "(none)": {
-        "pageLoads": 540,
-        "visits": 540
+        "pageLoads": 543,
+        "visits": 543
       },
       "raw.githack.com": {
         "pageLoads": 10,

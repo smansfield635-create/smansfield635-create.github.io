@@ -546,6 +546,10 @@ export const runHEarthPreEntry=async(page,surfaceId,policy,timeoutMs=120000)=>{
   });
   if(observed.mode!=='ready'||observed.disabled||!observed.inputChanged||!observed.inputRendered||!observed.nextFrame||observed.gpuFrames<1)
     throw Error('H_EARTH_INPUT_FRAME_NOT_VERIFIED');
+  const prepared=await page.evaluate(()=>globalThis.H_EARTH_STARTUP_LOADER?.getLoadingReport?.()?.details?.preparedProceduralVegetation??null);
+  console.log('H_EARTH_PREPARED_VEGETATION_PROOF '+JSON.stringify(prepared));
+  if(prepared?.path!=='PREPARED'||prepared.failure!==null||!(prepared.compressedBytes>0)||!(prepared.rawBytes>0))
+    throw Error('H_EARTH_PREPARED_VEGETATION_NOT_USED:'+JSON.stringify(prepared));
   await page.click('#h-earth-loading-screen [data-enter]');
   await page.waitForFunction(()=>{
     const root=document.querySelector('#h-earth-functional-landscape-route');

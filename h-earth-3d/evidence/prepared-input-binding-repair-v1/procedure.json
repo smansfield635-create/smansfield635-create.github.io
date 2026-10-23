@@ -1,0 +1,164 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "approvedAssets": [
+      {
+        "bytes": 18496516,
+        "filename": "Tree-Small-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Wild syringa / Tree Small 02",
+        "sha256": "236b81e864c2079dabe4c119c89c7315f0fbc4a00c96f02600e7e875342c6dc6"
+      },
+      {
+        "bytes": 24660600,
+        "filename": "Coastal-Tree-01-v2-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 01 v2",
+        "sha256": "b74dd63e6ee121a6ae913719a08cb8b29e28fb3d6a4c97d2d986c92a79f23bc7"
+      },
+      {
+        "bytes": 19468500,
+        "filename": "Coastal-Tree-02-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 02",
+        "sha256": "6a1497c91d4a66ed26c1b56c92cdf30b5b934e00dab123bdf990930bf2aad0c2"
+      },
+      {
+        "bytes": 31795372,
+        "filename": "Coastal-Tree-03-Candidate.glb",
+        "license": "CC0",
+        "name": "Coastal Tree 03",
+        "sha256": "02aad9751e876d2ac2512324b13d81525048d71c6795740ab372cf8e4d27515c"
+      },
+      {
+        "bytes": 10271048,
+        "filename": "Maple-Large-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple large A",
+        "sha256": "56462cb37f7a9ecca707c7095b630af9fa617de4f228c5db0ee0798de6cf87d5"
+      },
+      {
+        "bytes": 9899652,
+        "filename": "Maple-Medium-A-Candidate.glb",
+        "license": "CC-BY-4.0",
+        "name": "Maple medium A",
+        "sha256": "28a52894e3f08e060ab9eedc7908174f9d98eabc9832ef5a0a999100de7b64fa"
+      },
+      {
+        "bytes": 23471852,
+        "filename": "Searsia-Lucida-A-Candidate.glb",
+        "license": "CC0",
+        "name": "Searsia lucida shrub",
+        "sha256": "4fbb63bff910b2875cf2353c83eef94d7b04c6987c949a91e7635315076070f0"
+      }
+    ],
+    "domain": "H_EARTH_PREPARED_INPUT_BINDING_REPAIR_20261023_001",
+    "existingJacarandaSha256": "46b65326f75c29b1f076fdd161213a226bae3f519c92a3ac9d9a1972398b7189",
+    "governingHead": "e7c3522c305486812efaeea47affeec1a4f118f8",
+    "paths": [
+      "showroom/globe/h-earth/render/precomputed-procedural-vegetation.v1.js",
+      "showroom/globe/h-earth/render/assets/precomputed-procedural-vegetation.v1.json",
+      "showroom/globe/h-earth/render/assets/precomputed-procedural-vegetation.v1.bin.gz",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "tools/h-earth-precompute-procedural-vegetation.mjs",
+      "tools/h-earth-precomputed-procedural-vegetation.test.mjs",
+      "tools/h-earth-procedural-vegetation-profile.mjs",
+      "tools/h-earth-prepared-input-binding.test.mjs",
+      "tools/publication-live-verify.mjs",
+      "tools/publication-live-verify.h-earth-entry.test.mjs",
+      "h-earth-3d/evidence/prepared-input-binding-repair-v1/**",
+      "h-earth-3d/evidence/precomputed-procedural-vegetation-v1/equivalence.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "CANONICAL_PACKET_READY_RECEIPT_v1",
+    "PUBLICATION_FAST_PREFLIGHT_RECEIPT_v1",
+    "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "HUMAN_INPUT_REQUIRED_NOT_STARTED",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "APPROVED_ASSET_IDENTITY_MISMATCH",
+    "PLACEMENT_OR_ECOLOGY_REGRESSION",
+    "RUNTIME_READINESS_FAILED",
+    "GPU_DRAW_OR_TEXTURE_PROOF_MISSING",
+    "EXPERIENCE_ANCHOR_FAILED",
+    "LIVE_RELEASE_HEAD_MISMATCH",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact governing head e7c3522c305486812efaeea47affeec1a4f118f8; carry forward disjoint movement. Return remote run URL and stop without polling.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/precomputed-procedural-vegetation.v1.js",
+    "showroom/globe/h-earth/render/assets/precomputed-procedural-vegetation.v1.json",
+    "showroom/globe/h-earth/render/assets/precomputed-procedural-vegetation.v1.bin.gz",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+    "tools/h-earth-precompute-procedural-vegetation.mjs",
+    "tools/h-earth-precomputed-procedural-vegetation.test.mjs",
+    "tools/h-earth-procedural-vegetation-profile.mjs",
+    "tools/h-earth-prepared-input-binding.test.mjs",
+    "tools/publication-live-verify.mjs",
+    "tools/publication-live-verify.h-earth-entry.test.mjs",
+    "h-earth-3d/evidence/prepared-input-binding-repair-v1/**",
+    "h-earth-3d/evidence/precomputed-procedural-vegetation-v1/equivalence.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "step": 1,
+      "action": "After admission create isolated branch from governing head and preserve request/procedure."
+    },
+    {
+      "step": 2,
+      "action": "Repair gen2872 PREPARED_INPUT_MISMATCH observed on owner tablet. Identify differing input components between actual browser worker canonical preparation and offline generator; correct proven representation/source binding defect or regenerate exact artifacts from correct accepted runtime inputs without bypassing integrity or changing geometry. Add component expected/actual fingerprint diagnostics and require actual renderer PREPARED/no-fallback in bounded browser preflight. Preserve all vegetation, admission evidence, approved model assets, navigation and appearance. No successful optimization claim from fallback readiness."
+    },
+    {
+      "step": 3,
+      "action": "Reproduce mismatch by component using actual worker path; preserve fingerprint strength and exact output evidence. Reject fallback as optimization qualification. Verify fallback still preserves scene on corruption. Independent review before exact candidate preflight."
+    },
+    {
+      "step": 4,
+      "action": "Immutable exact candidate bounded preflight; return run URL and stop."
+    },
+    {
+      "step": 5,
+      "action": "After success merge and exact-head publish through AI entry point; return run URL and stop."
+    }
+  ],
+  "exactGoverningHead": "e7c3522c305486812efaeea47affeec1a4f118f8",
+  "exactTestRunnerCommand": "node --test tools/h-earth-precomputed-procedural-vegetation.test.mjs tools/h-earth-prepared-input-binding.test.mjs tools/h-earth-loading-report.test.mjs tools/publication-live-verify.h-earth-entry.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "IDENTIFY_EXACT_MISMATCH_COMPONENT_WITH_REPRODUCTION",
+      "PRESERVE_EXACT_GEOMETRY_AND_INTEGRITY_BINDINGS",
+      "BROWSER_PREFLIGHT_REQUIRES_PREPARED_NO_FALLBACK",
+      "REPORT_EXPECTED_ACTUAL_COMPONENT_HASHES_AND_SOURCE",
+      "PRESERVE_FAILURE_FALLBACK_WITH_EXPLICIT_DIAGNOSTICS",
+      "INDEPENDENT_WEST_REVIEW_AND_SELECTED_TESTS"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse published Jacaranda loader and existing successful exact-head release precedent. Inspect only directly affected loader, placements, approved files and selected verifier assertions. Preserve accepted design and source approvals.",
+    "forbidden": "No new models, redesign, parked assets, unrelated historical gate repair, new workflows or control-plane capability, blind repeated expensive runs, false readiness or camera-state injection."
+  },
+  "procedureId": "H_EARTH_PREPARED_INPUT_BINDING_REPAIR_20261023_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/prepared-input-binding-repair-v1/**"
+    ],
+    "deploymentWorkflowPath": ".github/workflows/pages-exact-head-deploy-v3.yml",
+    "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+  }
+}

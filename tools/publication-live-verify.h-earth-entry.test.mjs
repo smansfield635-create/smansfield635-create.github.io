@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {closeHEarthBrowser,createHEarthBudget,hasHEarthPresentedPose,launchSurfaceBrowser,launchVerifiedBrowser,travelHEarthScene,pulseHEarthNavigation,aimHEarthAxis,observeHEarthFailure,waitForHEarthNavigation,validateHEarthPreEntryPolicy,runHEarthPreEntry,validateDeclaredInteractions,assessHEarthInputReadiness,validateHEarthScenePolicy,assessHEarthJacarandaScene,runHEarthSceneQualification,observeHEarthSceneAsset} from './publication-live-verify.mjs';
 
 const POLICY='H_EARTH_CONTROL_TEST_ENTER_V1';
-function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed={},post={}}={}){
+function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed={},post={},prepared={path:'PREPARED',failure:null,compressedBytes:1,rawBytes:1}}={}){
   const calls=[];
   let waits=0,reads=0;
   const page={
@@ -13,6 +13,7 @@ function fakePage({timeoutAt=0,initialReady='false',initialMode='test',observed=
       calls.push('evaluate');reads++;
       if(reads===1)return {mode:initialMode,ready:initialReady};
       if(reads===2||(timeoutAt===2&&reads===3))return {mode:'ready',disabled:false,inputChanged:true,inputRendered:true,nextFrame:true,gpuFrames:2,...observed};
+      if(reads===(timeoutAt===2?4:3))return prepared;
       return {ready:'true',mode:'entered',overlayMode:'ready',hidden:true,...post};
     },
     $:async()=>{calls.push('select');return {boundingBox:async()=>{calls.push('boundingBox');return {x:0,y:0,width:720,height:1280};}};},
@@ -469,4 +470,8 @@ test('a partial angular timeout is progress, not final-angle acceptance',async()
 test('the shared scene deadline still stops a progressing turn',async()=>{
  let clock=0,angle=0;const budget=createHEarthBudget(20,()=>clock);
  await assert.rejects(aimHEarthAxis({axis:'yawDegrees',target:90,tolerance:6,read:async()=>({navigation:{yawDegrees:angle,sequence:angle}}),pulse:async()=>{angle+=5;clock+=21;},trace:[],now:()=>clock,bounded:budget.check}),/TIME_BUDGET_EXCEEDED/);
+});
+
+for(const prepared of [null,{path:'RUNTIME_FALLBACK',failure:'PREPARED_INPUT_MISMATCH'},{path:'PREPARED',failure:null,compressedBytes:0,rawBytes:0}])test('entry refuses unproven prepared vegetation '+JSON.stringify(prepared),async()=>{
+ const {page,calls}=fakePage({prepared});await assert.rejects(runHEarthPreEntry(page,'h-earth',POLICY),/H_EARTH_PREPARED_VEGETATION_NOT_USED/);assert.ok(!calls.includes('click'));
 });

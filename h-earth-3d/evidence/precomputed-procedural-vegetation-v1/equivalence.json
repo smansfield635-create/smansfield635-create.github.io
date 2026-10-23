@@ -3,12 +3,12 @@
   "exactOutputsMatch": true,
   "outputSha256": "6245ce969a2ba3343b19c42257bb2b347c584be498fdb6f9064ffb0465fe4adc",
   "baselineBuilderMilliseconds": {
-    "palms": 3714.101038999999,
-    "ivy": 2173.4152319999994,
-    "understory": 8512.358093000003,
-    "oasisTrees": 2537.172780000001
+    "palms": 3239.3305740000014,
+    "ivy": 2070.471798999999,
+    "understory": 7106.215135999999,
+    "oasisTrees": 3656.725880000002
   },
-  "decodeAndValidationMilliseconds": 774.7495839999974,
+  "decodeAndValidationMilliseconds": 651.2503089999991,
   "compressedBytes": 2452903,
   "rawBytes": 11663387,
   "scope": "LOCAL_NODE_CPU_ONLY_NOT_MOBILE_OR_GPU",

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-grass-gen2875-publish-20261023",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6749,
+  "requestBranch": "ai-dispatch-request-grass-gen2875-publish",
+  "requestCommit": "d474166cb5fbed14b3c6cbc59b172405a309c435",
+  "requestCommitParent": "902b06404965527e98de2612ee824d87ce404eaf",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "902b06404965527e98de2612ee824d87ce404eaf",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "902b06404965527e98de2612ee824d87ce404eaf",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "40038892738",
+  "dispatchedRunId": 40038906748,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40038906748",
+  "dispatchedRunHeadSha": "902b06404965527e98de2612ee824d87ce404eaf",
+  "dispatchedAt": "2026-10-23T23:18:19.182Z",
+  "resolvedAt": "2026-10-23T23:18:23.001Z"
+}

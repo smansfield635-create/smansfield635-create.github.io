@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-22T23:30:08Z",
+  "generatedAt": "2026-10-23T01:04:48Z",
   "window": {
-    "start": "2026-09-22T23:30:08Z",
-    "end": "2026-10-22T23:30:08Z"
+    "start": "2026-09-23T01:04:48Z",
+    "end": "2026-10-23T01:04:48Z"
   },
   "dimensions": {
     "requestPath": [
@@ -53,11 +53,6 @@
         "visits": 40
       },
       {
-        "value": "/showroom/globe/audralia/",
-        "pageLoads": 34,
-        "visits": 24
-      },
-      {
         "value": "/evidence/agentic-frontier/",
         "pageLoads": 31,
         "visits": 21
@@ -76,6 +71,11 @@
         "value": "/gauges/",
         "pageLoads": 30,
         "visits": 0
+      },
+      {
+        "value": "/showroom/globe/audralia/",
+        "pageLoads": 24,
+        "visits": 24
       },
       {
         "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
@@ -118,14 +118,14 @@
         "visits": 11
       },
       {
-        "value": "/home/",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "/products/archcoin/contract/",
         "pageLoads": 10,
         "visits": 0
+      },
+      {
+        "value": "/home/",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "/inspection/h-earth-t4-3-d8fca316/",
@@ -176,7 +176,7 @@
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 623,
+        "pageLoads": 613,
         "visits": 0
       },
       {
@@ -203,7 +203,7 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 2451,
+        "pageLoads": 2441,
         "visits": 1829
       },
       {
@@ -250,7 +250,7 @@
       },
       {
         "value": "tablet",
-        "pageLoads": 348,
+        "pageLoads": 338,
         "visits": 214
       }
     ],
@@ -262,7 +262,7 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 715,
+        "pageLoads": 705,
         "visits": 539
       },
       {
@@ -309,7 +309,7 @@
       },
       {
         "value": "Android",
-        "pageLoads": 986,
+        "pageLoads": 976,
         "visits": 440
       },
       {
@@ -336,7 +336,7 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 1647,
+        "pageLoads": 1637,
         "visits": 1024
       },
       {
@@ -348,7 +348,7 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 2060,
+        "pageLoads": 2050,
         "visits": 1744
       },
       {
@@ -370,7 +370,7 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1951,
+        "pageLoads": 1941,
         "visits": 1741
       },
       {
@@ -387,14 +387,14 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 2498,
+        "pageLoads": 2488,
         "visits": 1875
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 2498,
+        "pageLoads": 2488,
         "visits": 1875
       }
     ]

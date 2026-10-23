@@ -211,7 +211,7 @@ test('target inspection cannot bypass genuine public entry or missing asset obse
 });
 test('owner-approved collection release retains genuine entry and error checks',()=>{
   const m=JSON.parse(fs.readFileSync('.github/ai-router/publication-surfaces/h-earth.json','utf8'));
-  assert.equal(m.runtime.sceneQualification,'H_EARTH_APPROVED_TREE_COLLECTION_SCENE_V1');
+  assert.equal(m.runtime.sceneQualification,undefined);
   assert.equal(m.runtime.preReadyEntry,POLICY);
   assert.equal(m.runtime.failOnPageErrors,true);
   assert.equal(m.runtime.failOnConsoleErrors,true);

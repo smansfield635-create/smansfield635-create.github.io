@@ -1,18 +1,21 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "preflight.v1",
-  "description": "Unlisted DiamondGate Preflight native web interface for owner inspection; no private kernel source and no publication authority created",
+  "description": "Unlisted Preflight first-use inspection: a useful zero-setup check before optional local continuity; transparent rule-based baseline",
   "checks": [
     {
       "path": "/preflight/index.html",
       "includes": [
-        "DiamondGate · Preflight Studio",
+        "DiamondGate · Preflight",
         "noindex,nofollow,noarchive",
         "./assets/studio.css",
         "./assets/preflight-core.js",
         "./assets/studio.js",
-        "id=\"goal\"",
-        "id=\"approveBtn\""
+        "id=\"idea\"",
+        "id=\"checkBtn\"",
+        "id=\"assessmentPanel\"",
+        "id=\"prepareBtn\"",
+        "id=\"resultPanel\""
       ],
       "excludes": [
         "GITHUB_TOKEN",
@@ -24,19 +27,26 @@
       "path": "/preflight/assets/studio.js",
       "includes": [
         "dataset.startup",
-        "approveBtn",
-        "prepareBtn"
+        "checkBtn",
+        "assessFirstUse",
+        "makeFirstRequest",
+        "copyBtn",
+        "saveBaselineBtn"
       ],
       "excludes": [
         "GITHUB_TOKEN",
-        "PRIVATE_KEY"
+        "PRIVATE_KEY",
+        "ED25519_PRIVATE_KEY"
       ]
     },
     {
       "path": "/preflight/assets/preflight-core.js",
       "includes": [
         "NOT_VERIFIED",
-        "DGB_PREFLIGHT_USER_APPROVED_SNAPSHOT_v0_1"
+        "DGB_PREFLIGHT_USER_APPROVED_SNAPSHOT_v0_1",
+        "assessFirstUse",
+        "makeFirstRequest",
+        "firstUseIdentity"
       ],
       "excludes": [
         "ED25519_PRIVATE_KEY"
@@ -45,8 +55,10 @@
     {
       "path": "/preflight/assets/studio.css",
       "includes": [
-        ".hero",
-        ".studio-layout"
+        ".intro",
+        ".input-card",
+        ".assessment",
+        ".questions"
       ],
       "excludes": [
         "javascript:"
@@ -67,35 +79,31 @@
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "Load software-app example",
+        "name": "First visit uses bakery example with no registration",
         "action": {
           "type": "click",
-          "selector": "[data-preset=\"app\"]"
+          "selector": "[data-example=\"video\"]"
         },
         "assertions": [
           {
             "type": "textContains",
-            "selector": "#protectedList",
-            "value": "Existing user data must not be deleted."
-          }
-        ]
-      },
-      {
-        "name": "Explicitly approve local intent",
-        "action": {
-          "type": "click",
-          "selector": "#approveBtn"
-        },
-        "assertions": [
+            "selector": "#taskLabel",
+            "value": "Video / animation"
+          },
           {
             "type": "textContains",
-            "selector": "#intentBadge",
-            "value": "User approved"
+            "selector": "#recognizedIdea",
+            "value": "20-second commercial for my bakery"
+          },
+          {
+            "type": "textContains",
+            "selector": "#questionList",
+            "value": "Where will people see it?"
           }
         ]
       },
       {
-        "name": "Prepare instructions with protected requirement",
+        "name": "Prepare first request without any approval",
         "action": {
           "type": "click",
           "selector": "#prepareBtn"
@@ -104,36 +112,73 @@
           {
             "type": "textContains",
             "selector": "#preparedText",
-            "value": "P01: Existing user data must not be deleted."
+            "value": "MY AI REQUEST"
           },
           {
             "type": "textContains",
             "selector": "#preparedText",
-            "value": "NOT_VERIFIED"
+            "value": "QUESTIONS STILL OPEN"
+          },
+          {
+            "type": "textContains",
+            "selector": "#preparedText",
+            "value": "20-second commercial for my bakery"
           }
         ]
       },
       {
-        "name": "Removing protected requirement invalidates approval",
+        "name": "Open optional local continuity",
         "action": {
           "type": "click",
-          "selector": "#protectedList li:first-child button"
+          "selector": "#continuityDetails summary"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#saveBaselineBtn"
+          }
+        ]
+      },
+      {
+        "name": "Explicit save of first-use request",
+        "action": {
+          "type": "click",
+          "selector": "#saveBaselineBtn"
         },
         "assertions": [
           {
             "type": "textContains",
-            "selector": "#intentBadge",
-            "value": "Review needed"
-          },
-          {
-            "type": "textContains",
-            "selector": "#continuityBadge",
-            "value": "Changed"
+            "selector": "#baselineMessage",
+            "value": "Saved on this device"
           }
         ]
       },
       {
-        "name": "Reject stale approval when preparing revised request",
+        "name": "Different app example gets domain-specific questions",
+        "action": {
+          "type": "click",
+          "selector": "[data-example=\"app\"]"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#taskLabel",
+            "value": "App / website"
+          },
+          {
+            "type": "textContains",
+            "selector": "#questionList",
+            "value": "Does existing data need protection?"
+          },
+          {
+            "type": "textContains",
+            "selector": "#revisionText",
+            "value": "differs from the version you saved"
+          }
+        ]
+      },
+      {
+        "name": "Make another request without repeat approval",
         "action": {
           "type": "click",
           "selector": "#prepareBtn"
@@ -141,41 +186,13 @@
         "assertions": [
           {
             "type": "textContains",
-            "selector": "#approvalMessage",
-            "value": "differs from the approved snapshot"
-          }
-        ]
-      },
-      {
-        "name": "Renew approval after user revision",
-        "action": {
-          "type": "click",
-          "selector": "#approveBtn"
-        },
-        "assertions": [
-          {
-            "type": "textContains",
-            "selector": "#intentBadge",
-            "value": "User approved"
-          }
-        ]
-      },
-      {
-        "name": "Reissue revised approved instructions",
-        "action": {
-          "type": "click",
-          "selector": "#prepareBtn"
-        },
-        "assertions": [
-          {
-            "type": "textContains",
             "selector": "#preparedText",
-            "value": "PROTECTED REQUIREMENTS"
+            "value": "appointment-booking app"
           },
           {
             "type": "textContains",
             "selector": "#preparedText",
-            "value": "NOT_VERIFIED"
+            "value": "CONFIRMED DETAILS"
           }
         ]
       }

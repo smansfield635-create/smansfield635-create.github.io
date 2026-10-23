@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-23T09:35:21Z",
+  "generatedAt": "2026-10-23T10:32:45Z",
   "window30d": {
-    "start": "2026-09-23T09:35:21Z",
-    "end": "2026-10-23T09:35:21Z"
+    "start": "2026-09-23T10:32:45Z",
+    "end": "2026-10-23T10:32:45Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 100
+      "pageLoads": 107
     },
     {
       "date": "2026-10-17",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 39
+      "pageLoads": 40
     }
   ],
   "summary": {
-    "pageLoads": 2508,
+    "pageLoads": 2516,
     "botPageLoads": 860,
-    "nonBotPageLoads": 1648
+    "nonBotPageLoads": 1656
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1756,
-      "visits": 1756
+      "pageLoads": 1764,
+      "visits": 1764
     },
     {
       "host": "diamondgatebridge.com",
@@ -177,8 +177,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 397,
-      "visits": 137
+      "pageLoads": 406,
+      "visits": 146
     },
     {
       "path": "/governance-bridge/",

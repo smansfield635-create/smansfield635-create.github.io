@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-23T16:36:33Z",
+  "generatedAt": "2026-10-23T17:29:50Z",
   "window": {
-    "start": "2026-07-25T16:36:33Z",
-    "end": "2026-10-23T16:36:33Z"
+    "start": "2026-07-25T17:29:50Z",
+    "end": "2026-10-23T17:29:50Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -18,11 +18,11 @@
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
     "pageLoads": 4726,
-    "visits": 1411,
+    "visits": 1351,
     "byDevice": {
       "tablet": {
         "pageLoads": 4726,
-        "visits": 1411
+        "visits": 1351
       }
     },
     "byPath": {
@@ -31,11 +31,11 @@
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 230,
+        "pageLoads": 140,
         "visits": 0
       },
       "/products/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 10
       },
       "/showroom/globe/h-earth/diagnostic/": {
@@ -43,31 +43,39 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1071,
-        "visits": 811
+        "pageLoads": 1051,
+        "visits": 761
       },
-      "/products/five-flags/": {
+      "/showroom/": {
         "pageLoads": 100,
+        "visits": 10
+      },
+      "/showroom/story/welcome/": {
+        "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 490,
-        "visits": 0
+      "/laws/": {
+        "pageLoads": 270,
+        "visits": 90
+      },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 230,
+        "visits": 20
       },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/": {
-        "pageLoads": 300,
-        "visits": 110
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
       },
       "/products/education/": {
         "pageLoads": 270,
         "visits": 70
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 80,
+        "pageLoads": 110,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -75,7 +83,7 @@
         "visits": 0
       },
       "/laws/categories/structure/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/research/evidence-and-sources/": {
@@ -87,15 +95,15 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 150,
+        "pageLoads": 160,
         "visits": 10
       },
       "/governance/": {
         "pageLoads": 60,
-        "visits": 0
+        "visits": 10
       },
       "/evidence/readiness/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/build/intake/": {
@@ -103,26 +111,18 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 80,
+        "pageLoads": 90,
         "visits": 0
-      },
-      "/showroom/globe/h-earth/awards/proof/compass-live-format-proof.html": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
         "visits": 10
       },
       "/developer/": {
-        "pageLoads": 40,
+        "pageLoads": 50,
         "visits": 20
       },
-      "/elara/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/research/": {
+      "/coherence-diagnostic/": {
         "pageLoads": 20,
         "visits": 0
       },
@@ -130,25 +130,17 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/coherence-diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/": {
-        "pageLoads": 30,
-        "visits": 10
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -158,45 +150,57 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/inspection/compass/brain-v9/": {
+      "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
       },
-      "/laws/categories/integrity/continuity/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
-      "/laws/categories/structure/boundaries.html": {
+      "/inspection/compass/brain-v10-continuous/": {
         "pageLoads": 10,
-        "visits": 0
+        "visits": 10
       },
-      "/laws/categories/flow/handoffs/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 70,
-        "visits": 0
-      },
-      "/laws/categories/reality/limits.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/research/applied-investigations/": {
-        "pageLoads": 10,
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
         "visits": 0
       },
       "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/structure/interfaces.html": {
+        "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/categories/reality/measure.html": {
+        "pageLoads": 30,
+        "visits": 0
+      },
+      "/laws/categories/flow/handoffs/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/instruments/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
         "visits": 10
+      },
+      "/laws/categories/integrity/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -206,17 +210,13 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
+      "/characters/": {
+        "pageLoads": 60,
+        "visits": 30
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -260,6 +260,10 @@
       },
       "/showroom/story/timeline/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/hearth/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/rob/": {
@@ -321,16 +325,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3315,
+        "pageLoads": 3375,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 848,
-        "visits": 848
+        "pageLoads": 798,
+        "visits": 798
       },
       "(none)": {
-        "pageLoads": 553,
-        "visits": 553
+        "pageLoads": 543,
+        "visits": 543
       },
       "raw.githack.com": {
         "pageLoads": 10,

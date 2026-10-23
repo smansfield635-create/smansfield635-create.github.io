@@ -184,6 +184,39 @@ const to3=x=>x&&[x.x,x.y,x.z].every(finite);
 const duration=()=>globalThis.performance?.now?.()??0;
 const yieldFrame=()=>new Promise(resolve=>setTimeout(resolve,0));
 
+// Same alpha coverage and averaging arithmetic as the accepted loader. Yield
+// only between bounded pixel blocks; upload callbacks must restore GL bindings.
+export async function buildAlphaCoverageMipmaps({pixels,width,height,yieldWork=yieldFrame,now=duration,checkActive=()=>{},onLevel}){
+  let current=pixels,sliceStarted=now();
+  const pause=async()=>{checkActive();await yieldWork();checkActive();sliceStarted=now();};
+  checkActive();
+      let covered=0;for(let i=3;i<current.length;i+=4){if(current[i]>=115)covered++;if((i&4095)===4095&&now()-sliceStarted>=4)await pause();}
+      const targetCoverage=covered/(current.length/4);
+      let w=width,h=height,level=0;
+      while(w>1||h>1){
+        const nw=Math.max(1,w>>1),nh=Math.max(1,h>>1),next=new Uint8Array(nw*nh*4);
+        for(let y=0;y<nh;y++)for(let x=0;x<nw;x++){
+          const accum=[0,0,0,0];let count=0;
+          for(let dy=0;dy<2;dy++)for(let dx=0;dx<2;dx++){
+            const sx=Math.min(w-1,2*x+dx),sy=Math.min(h-1,2*y+dy),a=(sy*w+sx)*4;
+            for(let c=0;c<4;c++)accum[c]+=current[a+c];count++;
+          }
+          for(let c=0;c<4;c++)next[(y*nw+x)*4+c]=Math.round(accum[c]/count);
+          if(((y*nw+x)&1023)===1023&&now()-sliceStarted>=4)await pause();
+        }
+        // Find a bounded multiplier retaining approximately the source alpha coverage.
+        // One-bit case cannot encode fractional coverage; favor keeping a distant crown.
+        const needed=Math.max(1,Math.round(targetCoverage*nw*nh));
+        const histogram=new Uint32Array(256);for(let i=3;i<next.length;i+=4){histogram[next[i]]++;if((i&4095)===4095&&now()-sliceStarted>=4)await pause();}
+        let running=0,threshold=0;for(let v=255;v>=0;v--){running+=histogram[v];if(running>=needed){threshold=v;break;}}
+        const mult=threshold>0?Math.min(12,Math.max(1,116/threshold)):1;
+        for(let i=3;i<next.length;i+=4){next[i]=Math.min(255,Math.round(next[i]*mult));if((i&4095)===4095&&now()-sliceStarted>=4)await pause();}
+        checkActive();level++;onLevel({level,width:nw,height:nh,pixels:next});
+        if(now()-sliceStarted>=4)await pause();
+        current=next;w=nw;h=nh;
+      }
+}
+
 /** The overlay is opt-in after the first world frame and distance-gated. */
 export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions,assetURL,sunDirection,fetchAsset=globalThis.fetch,
   imageDecoder=globalThis.createImageBitmap,alphaCanvasFactory=()=>new OffscreenCanvas(1,1),yieldWork=yieldFrame,
@@ -225,17 +258,19 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
     const resize=approvedAsset?.runtimeTextureSize?{resizeWidth:approvedAsset.runtimeTextureSize,resizeHeight:approvedAsset.runtimeTextureSize,resizeQuality:'high'}:{};
     try{bitmap=await imageDecoder(new Blob([desc.bytes],{type:desc.mimeType}),{premultiplyAlpha:'none',colorSpaceConversion:'none',...resize});}
     catch{bitmap=await imageDecoder(new Blob([desc.bytes],{type:desc.mimeType}),resize);}
+    try{
     must(!dead&&epoch===currentEpoch,'LOAD_CANCELLED');
     const bmpWidth=bitmap.width,bmpHeight=bitmap.height;
     const max=gl.getParameter(gl.MAX_TEXTURE_SIZE);
     must(bmpWidth>0&&bitmap.height>0&&bitmap.width<=max&&bitmap.height<=max,'IMAGE_SIZE_UNSUPPORTED');
     const tex=gl.createTexture();must(tex,'TEXTURE_CREATE_FAILED');gpu.textures.push(tex);
-    gl.bindTexture(gl.TEXTURE_2D,tex);
+    gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.REPEAT);
     gl.texImage2D(gl.TEXTURE_2D,0,desc.role==='baseColor'?gl.SRGB8_ALPHA8:gl.RGBA8,gl.RGBA,gl.UNSIGNED_BYTE,bitmap);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
     // Keep authored leaf transparency visible through distance minification.
     if(desc.alphaCutoff>0&&desc.role==='baseColor'){
       const canvas=alphaCanvasFactory();must(canvas&&typeof canvas.getContext==='function','ALPHA_CANVAS_REQUIRED');
@@ -243,33 +278,20 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
       const ctx=canvas.getContext('2d',{willReadFrequently:true});must(ctx,'ALPHA_CONTEXT_UNAVAILABLE');
       ctx.drawImage(bitmap,0,0);
       let current=ctx.getImageData(0,0,bitmap.width,bitmap.height).data;
-      const targetCoverage=(()=>{let n=0;for(let i=3;i<current.length;i+=4)if(current[i]>=115)n++;return n/(current.length/4);})();
-      let w=bitmap.width,h=bitmap.height,level=0;
-      while(w>1||h>1){
-        const nw=Math.max(1,w>>1),nh=Math.max(1,h>>1),next=new Uint8Array(nw*nh*4);
-        for(let y=0;y<nh;y++)for(let x=0;x<nw;x++){
-          const accum=[0,0,0,0];let count=0;
-          for(let dy=0;dy<2;dy++)for(let dx=0;dx<2;dx++){
-            const sx=Math.min(w-1,2*x+dx),sy=Math.min(h-1,2*y+dy),a=(sy*w+sx)*4;
-            for(let c=0;c<4;c++)accum[c]+=current[a+c];count++;
-          }
-          for(let c=0;c<4;c++)next[(y*nw+x)*4+c]=Math.round(accum[c]/count);
-        }
-        // Find a bounded multiplier retaining approximately the source alpha coverage.
-        // One-bit case cannot encode fractional coverage; favor keeping a distant crown.
-        const needed=Math.max(1,Math.round(targetCoverage*nw*nh));
-        const histogram=new Uint32Array(256);for(let i=3;i<next.length;i+=4)histogram[next[i]]++;
-        let running=0,threshold=0;for(let v=255;v>=0;v--){running+=histogram[v];if(running>=needed){threshold=v;break;}}
-        const mult=threshold>0?Math.min(12,Math.max(1,116/threshold)):1;
-        for(let i=3;i<next.length;i+=4)next[i]=Math.min(255,Math.round(next[i]*mult));
-        level++;gl.texImage2D(gl.TEXTURE_2D,level,gl.SRGB8_ALPHA8,nw,nh,0,gl.RGBA,gl.UNSIGNED_BYTE,next);
-        current=next;w=nw;h=nh;
-      }
+      await buildAlphaCoverageMipmaps({pixels:current,width:bitmap.width,height:bitmap.height,yieldWork,
+        checkActive:()=>must(!dead&&epoch===currentEpoch,'LOAD_CANCELLED'),
+        onLevel:({level,width,height,pixels})=>{
+          // A frame may have changed the active unit and binding while we yielded.
+          gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);
+          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+          gl.texImage2D(gl.TEXTURE_2D,level,gl.SRGB8_ALPHA8,width,height,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels);
+          gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
+        }});
     }else gl.generateMipmap(gl.TEXTURE_2D);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);
-    bitmap.close?.();
     gpu.resourceBytes+=Math.floor(bmpWidth*bmpHeight*4*4/3);
     return tex;
+    }finally{gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);bitmap.close?.();}
   };
   async function start(){
     if(state!=='IDLE'||dead)return loadPromise;

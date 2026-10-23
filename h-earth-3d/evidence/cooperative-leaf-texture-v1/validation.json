@@ -1,0 +1,25 @@
+{
+  "operationId": "H_EARTH_COOPERATIVE_LEAF_TEXTURE_20261023_001",
+  "generation": 2866,
+  "admissionComment": 6357129795,
+  "admissionRun": 39898587376,
+  "parentCandidate": "dfa2c367c56846c96f718d8f93782e786aa11266",
+  "preservedPreflight": 39897630571,
+  "tests": {
+    "newLeafTests": 23,
+    "existingStartupAndEntry": 79,
+    "result": "PASS"
+  },
+  "independentReview": "West: no blocker; frozen legacy oracle byte-identical for transparent, opaque and random fixtures including odd and single-axis sizes; cancellation before uploads; GL rebind and finally bitmap cleanup reviewed",
+  "limits": [
+    "4ms cooperative target checked every1024pixels, not hard wall-clock guarantee",
+    "Image decode, canvas readback and individual GL calls remain non-preemptible",
+    "Actual tablet improvement and under60second entry unmeasured"
+  ],
+  "preserved": [
+    "All authored GLB bytes",
+    "Mipmap arithmetic and output",
+    "Tree placement and shadows",
+    "Startup repair candidate and evidence"
+  ]
+}

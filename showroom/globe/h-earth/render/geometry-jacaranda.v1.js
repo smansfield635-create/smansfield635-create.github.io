@@ -220,7 +220,7 @@ export async function buildAlphaCoverageMipmaps({pixels,width,height,yieldWork=y
 /** The overlay is opt-in after the first world frame and distance-gated. */
 export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions,assetURL,sunDirection,fetchAsset=globalThis.fetch,
   imageDecoder=globalThis.createImageBitmap,alphaCanvasFactory=()=>new OffscreenCanvas(1,1),yieldWork=yieldFrame,
-  approvedAsset=null,planPlacement=null,target=JACARANDA_TARGET,focusId=JACARANDA_FOCUS_ID}={}){
+  onSettled=()=>{},approvedAsset=null,planPlacement=null,target=JACARANDA_TARGET,focusId=JACARANDA_FOCUS_ID}={}){
   must(gl&&typeof projectWorld==='function'&&Array.isArray(companions)&&assetURL,'OVERLAY_INPUTS_REQUIRED');
   let state='IDLE',failure=null,loaded=null,startedAt=0,loadPromise=null,dead=false,epoch=0,draws=0,shadowDraws=0;
   const phaseMilliseconds={};
@@ -343,7 +343,7 @@ export function createApprovedJacarandaOverlay(gl,{model,projectWorld,companions
       loaded={placement,decodedPlacement:{bounds:decoded.bounds,trunkMinY:decoded.trunkMinY},axisX:rotatedX,axisY,axisZ:rotatedZ,origin:[base.x,base.y,base.z],uniforms,mats,alphaCutoffs:decoded.alphaCutoffs,assetSha256:approvedAsset?.sha256??JACARANDA_APPROVED_SHA256,
         triangleCount:decoded.triangleCount,vertexCount:decoded.vertexCount,loadMilliseconds:duration()-startedAt};
       phaseMilliseconds.upload=duration()-uploadStarted;state='READY';return true;
-    })().catch(e=>{failure=fmt(e?.message);state=dead?'DISPOSED':'FALLBACK';discard();return false;});
+    })().catch(e=>{failure=fmt(e?.message);state=dead?'DISPOSED':'FALLBACK';discard();return false;}).then(result=>{if(!dead)onSettled();return result;});
     return loadPromise;
   }
   function requestIfNear(camera){

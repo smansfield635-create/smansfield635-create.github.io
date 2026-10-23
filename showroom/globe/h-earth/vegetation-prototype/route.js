@@ -125,10 +125,11 @@ function liveReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_VEGETATION_LIVE_GPU_
 loader?.setReportProvider?.(()=>{
   const resource=resources(),vegetation=resource?.singleOwnerVegetation;
   const transfers=performance.getEntriesByType('resource').filter(e=>/h-earth|precomputed-grass|oasis-soil|\.glb(?:\?|$)/.test(e.name));
-  return {buildIdentifier:'gen2869-geological-startup-v1',sourceBaseline,
-    repairBaseline:'c0b25850ef567327f45eed020659d58e06066b36',
+  return {buildIdentifier:'gen2870-collection-completion-v1',sourceBaseline,
+    repairBaseline:'4a40daf9710ca349404c340f8b3a8750d8df6e49',
     reportFormatNote:'Top-level reportVersion identifies the copy-report format. details.buildIdentifier identifies this runtime repair.',
     clockNote:'Resource start times are navigation-relative; route times are elapsed since route start; loader elapsed uses its own start. Phase values are durations. Do not subtract timestamps from different origins.',
+    importedPlants:{originalJacaranda:resource?.jacaranda??null,collection:resource?.treeCollection??null},
     routeTiming:{...timing},rendererStartupTiming:resource?.rendererStartupTiming??null,vegetationTiming:vegetation?.timing??null,
     startupDiagnostics:{rendererTimingAvailable:!!resource?.rendererStartupTiming,vegetationResidency:resource?.vegetationResidency?.timing??null},
     transferSummary:{matchedCount:transfers.length,displayedCount:Math.min(80,transfers.length),transferBytes:transfers.reduce((n,e)=>n+e.transferSize,0),encodedBytes:transfers.reduce((n,e)=>n+e.encodedBodySize,0),invalidTimingCount:transfers.filter(e=>e.duration<0).length,scope:'Matched resource entries only; duration includes network and scheduling, not CPU decode; zero transfer may indicate cache.'},
@@ -176,6 +177,7 @@ try{
   assert(Math.hypot(initial.position.x-control.x,initial.position.z-control.z)<.01,'INITIAL_CAMERA_MISMATCH');
   assert(Math.abs(initial.yawDegrees)<.01,'INITIAL_YAW_MISMATCH');
   renderer=await createHEarthRun8ER3CPersistentRenderer({canvas,width:viewport.width,height:viewport.height,deferVegetation:true,vegetationStrategy:'SINGLE_OWNER_WOODLAND_V1',
+    onAssetSettled:()=>{if(!terminalFailure&&(diagnosticReplay||interactiveReady)&&intake)presenter?.request(intake.getNavigationState());},
     onStartupProgress:progress('renderer','Preparing terrain and renderer…')});
   assertRouteActive();
   await renderer.initialize(packetFor(initial));

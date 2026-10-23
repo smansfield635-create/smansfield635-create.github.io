@@ -496,6 +496,12 @@ float noise2(vec2 p){
   return mix(mix(hash21(i),hash21(i+vec2(1.0,0.0)),f.x),
              mix(hash21(i+vec2(0.0,1.0)),hash21(i+vec2(1.0,1.0)),f.x),f.y);
 }
+// Fade nonzero atlas edge texels to the surrounding soil in world metres.
+// Sampling stays inside its own panel; roots and habitat interiors are unchanged.
+float habitatEdgeWeight(float x,float z,vec4 bounds,float width){
+  float edge=min(min(x-bounds.x,bounds.z-x),min(z-bounds.y,bounds.w-z));
+  return smoothstep(0.0,width,edge);
+}
 float stableWave(float phase){
   float footprint=max(fwidth(phase),0.00001);
   float retained=1.0-smoothstep(0.72,1.65,footprint);
@@ -1127,15 +1133,16 @@ void main(){
       habitatUv=clamp(habitatUv,vec2(uHabitatHalfTexel),vec2(1.0-uHabitatHalfTexel))*uHabitatAtlasScale;
       habitatCoverage=texture(uWoodlandHabitat,habitatUv).r;
     }
+    float habitatEdgeWidth=4.0+3.0*noise2(vWorldPosition.xz*0.07);
     vec2 ravineUv=(vWorldPosition.xz-uRavineHabitatBounds.xy)/(uRavineHabitatBounds.zw-uRavineHabitatBounds.xy);
     if(all(greaterThan(ravineUv,vec2(0.0)))&&all(lessThan(ravineUv,vec2(1.0)))){
       ravineUv=clamp(ravineUv,vec2(uHabitatHalfTexel),vec2(1.0-uHabitatHalfTexel))*uHabitatAtlasScale+vec2(uHabitatAtlasScale.x,0.0);
-      habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,ravineUv).r);
+      habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,ravineUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uRavineHabitatBounds,habitatEdgeWidth));
     }
     vec2 coastalUv=(vWorldPosition.xz-uCoastalHabitatBounds.xy)/(uCoastalHabitatBounds.zw-uCoastalHabitatBounds.xy);
     if(all(greaterThan(coastalUv,vec2(0.0)))&&all(lessThan(coastalUv,vec2(1.0)))){
       coastalUv=clamp(coastalUv,vec2(uHabitatHalfTexel),vec2(1.0-uHabitatHalfTexel))*uHabitatAtlasScale+vec2(2.0*uHabitatAtlasScale.x,0.0);
-      habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,coastalUv).r);
+      habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
     }
     vec3 habitatSoil=vec3(0.105,0.112,0.060)*(0.90+0.18*noise2(vWorldPosition.xz*.29));
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));

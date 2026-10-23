@@ -28,5 +28,14 @@
     "Performance non-regression unproven; current whole-frame outlier2823.3ms retained.",
     "CPU submission timings exclude GPU execution.",
     "No physical-device or subjective visual acceptance claimed."
-  ]
+  ],
+  "boundaryTransitionRepair": {
+    "evidencePath": "h-earth-3d/evidence/terrain-grass-continuity-v2/boundary-transition-repair.json",
+    "sourcePath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "sourceSha256": "e30938cb1dec6b5cb9563119190d927682c97de32c4e2f577ec6d5b18689917e",
+    "ownerPreviewRequired": false,
+    "sameWorldInvariantAssessment": "Existing world, geometry, roots, navigation and interface unchanged; only ground-tint border interpolation changes.",
+    "independentReview": "PASS",
+    "runtimeQualification": "PENDING_EXISTING_EXACT_HEAD_PREFLIGHT"
+  }
 }

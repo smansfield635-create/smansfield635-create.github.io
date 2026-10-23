@@ -106,4 +106,10 @@ test("served HTML references content-addressed stylesheet and runtime assets",()
    assert.ok(html.includes(expectedRef),name+" must use its exact current Git blob identity, not a reusable cache URL");
  }
 });
+test("spoken three d environment receives 3D world guidance",()=>{
+ const r=core.assessFirstUse("I want to create a more complete three d environment");
+ assert.equal(r.ok,true);
+ assert.equal(r.kind,"world");
+ assert.ok(r.questions.some(q=>q.id==="existing"));
+});
 console.log(JSON.stringify({result:"PASS",checkCount:pass,liveExecution:false,signedKernel:false}));

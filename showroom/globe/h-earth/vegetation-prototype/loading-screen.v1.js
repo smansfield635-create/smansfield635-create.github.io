@@ -51,6 +51,16 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
   <div class="he-preparation"><div class="he-stage-track" aria-label="Preparation stages"><span data-step="world" data-active="true">01 Landscape</span><span data-step="vegetation">02 Vegetation</span><span data-step="controls">03 Explore</span></div><div><span class="he-pulse" aria-hidden="true"></span><span data-loading-clock>Opening Gratitude…</span></div><p data-loading-activity role="status" aria-live="polite">Preparing the landscape…</p><progress hidden data-loading-progress aria-label="Current preparation stage"></progress><p data-loading-units></p><p data-loading-instructions>Your journey is being prepared. Each stage reports its own progress.</p><button type="button" data-enter disabled>Enter Gratitude</button></div></div>`;
   if(!existing)document.body.appendChild(shell);
   const activity=shell.querySelector('[data-loading-activity]'),bar=shell.querySelector('[data-loading-progress]'),units=shell.querySelector('[data-loading-units]'),instructions=shell.querySelector('[data-loading-instructions]'),button=shell.querySelector('[data-enter]');
+  const reportPanel=document.createElement('div');
+  reportPanel.style.cssText='pointer-events:auto;margin-top:12px;max-width:100%';
+  const copyButton=document.createElement('button');copyButton.type='button';copyButton.setAttribute('data-copy-loading-report','');copyButton.textContent='Copy loading report';
+  copyButton.style.cssText='padding:10px 14px;min-height:44px;background:#183c34;color:#f4efdc;border:1px solid #718b79;border-radius:3px';
+  const reportStatus=document.createElement('p');reportStatus.setAttribute('data-loading-report-status','');reportStatus.setAttribute('role','status');reportStatus.style.cssText='font-size:12px;margin:6px 0';
+  const reportText=document.createElement('textarea');reportText.setAttribute('data-loading-report-text','');reportText.setAttribute('aria-label','Loading report — select and copy');reportText.readOnly=true;reportText.hidden=true;
+  reportText.style.cssText='width:100%;height:150px;font:12px/1.4 monospace;user-select:text;pointer-events:auto';
+  reportPanel.appendChild(copyButton);reportPanel.appendChild(reportStatus);reportPanel.appendChild(reportText);
+  (shell.querySelector('.he-preparation')??shell).appendChild(reportPanel);
+  let reportProvider=()=>({});
   let mode='preparing',stage='world',baseline=null,lastPose=null,firstInput=null,opportunityPending=false;
   const passages=[
     ['Begin in the woodland','Every journey starts somewhere.','Arrive among the trees. Beyond the grove, meadow, ravine and coast belong to one connected landscape.'],
@@ -129,5 +139,28 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
     if(mode!=='ready'||button.disabled)return;
     stopStories();stopClock();receipt.loaderDismissedMilliseconds=elapsed();mode='entered';shell.hidden=true;onEnter();
   });
-  return Object.freeze({beginStage,update,enableControls,observeInput,observePresentation,fail,getReceipt:()=>structuredClone({...receipt,mode,stage,stages,workUnits:[...work.values()]})});
+  function getLoadingReport(){
+    let details;try{details=reportProvider();}catch(error){details={diagnosticError:error?.message??String(error)};}
+    return {schema:'GRATITUDE_LOADING_REPORT_v1',reportVersion:'gen2867-copy-report-v1',
+      capturedAt:new Date().toISOString(),elapsedMilliseconds:Math.round(elapsed()),
+      preparationMilliseconds:receipt.controlsEnabledMilliseconds??receipt.failure?.elapsedMilliseconds??Math.round(elapsed()),
+      mode,stage,failure:structuredClone(receipt.failure),controlsEnabledMilliseconds:receipt.controlsEnabledMilliseconds,
+      stages:structuredClone(stages),phaseObservations:structuredClone(receipt.phaseTimings??{}),
+      phaseTimingNote:'Phase observations can overlap and are not additive durations. Preparation time stops when controls enable.',
+      workUnits:structuredClone([...work.values()]),details};
+  }
+  async function copyLoadingReport(){
+    const text=JSON.stringify(getLoadingReport(),null,2);reportText.value=text;
+    try{
+      const clipboard=document.defaultView?.navigator?.clipboard??globalThis.navigator?.clipboard;
+      if(typeof clipboard?.writeText!=='function')throw Error('CLIPBOARD_UNAVAILABLE');
+      await clipboard.writeText(text);reportText.hidden=true;reportStatus.textContent='Report copied. Paste it into your chat.';
+      return true;
+    }catch{
+      reportText.hidden=false;reportText.focus();reportText.select();
+      reportStatus.textContent='Automatic copy unavailable. Select and copy the report below.';return false;
+    }
+  }
+  copyButton.addEventListener('click',()=>{void copyLoadingReport();});
+  return Object.freeze({getLoadingReport,copyLoadingReport,setReportProvider:provider=>{if(typeof provider==='function')reportProvider=provider;},beginStage,update,enableControls,observeInput,observePresentation,fail,getReceipt:()=>structuredClone({...receipt,mode,stage,stages,workUnits:[...work.values()]})});
 }

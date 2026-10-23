@@ -884,6 +884,50 @@
       "scopeHash": "09317f370d2fc10b38b187cd2fb7a60b5606035ccc6197a3f19a1f963cc302ec",
       "state": "ADMITTED_LOCKED"
     },
+    "093f59029b2298f1ed352a014e58d42aadbe2d7f63c20980b74aeeb1ef9a45ba": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "5bfc84d90170add8373d286d13451ef56e1a6aa3",
+          "lockGeneration": 2862,
+          "lockScope": "DGB_SECURITY_BOUNDARY:PUBLIC_REGISTRATION_EXACT_BLOB_CHECK_20261022",
+          "operationId": "DGB_PUBLIC_PRIVATE_BOUNDARY_PUBLIC_REGISTRATION_REPAIR_20261022_001",
+          "procedureLocatorDigest": "9681f91474ed22196e01094b436c0d00ced0345f750509e6dd6488c1eae2657e",
+          "requestDigest": "aa2f652d41f6137aac5e2e783d032fcd51720f054d84884fffeb85cd3ab17bd8",
+          "scopeHash": "093f59029b2298f1ed352a014e58d42aadbe2d7f63c20980b74aeeb1ef9a45ba"
+        },
+        "bindingDigest": "b76fb527bb4ff096e74bf84d1e57b8c51ebb6e5e41a376d53eba71131316e586",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "22fc6ed9d2c09533b2157e0a86f40fe1b135f428ef2d162057021f6f90bdf957",
+          "commentId": 6355951346,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6684,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 39889898301,
+          "workflowSha": "5bfc84d90170add8373d286d13451ef56e1a6aa3"
+        },
+        "lineageAnchorCommitSha": "068745688a71e626901358717adbb9b5e586644c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "5bfc84d90170add8373d286d13451ef56e1a6aa3",
+      "lockGeneration": 2862,
+      "lockScope": "DGB_SECURITY_BOUNDARY:PUBLIC_REGISTRATION_EXACT_BLOB_CHECK_20261022",
+      "operationId": "DGB_PUBLIC_PRIVATE_BOUNDARY_PUBLIC_REGISTRATION_REPAIR_20261022_001",
+      "procedureLocatorDigest": "9681f91474ed22196e01094b436c0d00ced0345f750509e6dd6488c1eae2657e",
+      "released": false,
+      "requestDigest": "aa2f652d41f6137aac5e2e783d032fcd51720f054d84884fffeb85cd3ab17bd8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "093f59029b2298f1ed352a014e58d42aadbe2d7f63c20980b74aeeb1ef9a45ba",
+      "state": "ADMITTED_LOCKED"
+    },
     "09bf95ed0b631e0161641a0ac2b0ed7e1b4e154372645434a7dd54cfcf5a508f": {
       "governingHead": "ecbcf817c50b54ce5bf2d22f8512be7cb9e7b0c9",
       "lockGeneration": 349,
@@ -20798,7 +20842,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2861,
+  "lockGeneration": 2862,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

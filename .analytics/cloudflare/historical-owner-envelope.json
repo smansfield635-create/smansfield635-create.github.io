@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-23T20:33:50Z",
+  "generatedAt": "2026-10-23T21:30:22Z",
   "window": {
-    "start": "2026-07-25T20:33:50Z",
-    "end": "2026-10-23T20:33:50Z"
+    "start": "2026-07-25T21:30:22Z",
+    "end": "2026-10-23T21:30:22Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -46,6 +46,10 @@
         "pageLoads": 30,
         "visits": 0
       },
+      "/showroom/story/welcome/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/laws/": {
         "pageLoads": 270,
         "visits": 90
@@ -53,10 +57,6 @@
       "/products/": {
         "pageLoads": 50,
         "visits": 10
-      },
-      "/showroom/story/welcome/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 230,
@@ -246,19 +246,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },

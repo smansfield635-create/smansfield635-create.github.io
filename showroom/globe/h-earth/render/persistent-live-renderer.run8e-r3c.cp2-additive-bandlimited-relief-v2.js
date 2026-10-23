@@ -3060,7 +3060,22 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
         uniformCount: rendererInterface.frameUniformNames.length, drawRangeCount: rendererInterface.drawRanges.length
       },
       counters: { ...counters },
-      rendererStartupTiming:resources.rendererStartupTiming??null,
+      // Extend the existing preflight proof with an observation-only current grass snapshot.
+      // Existing preparation fields retain their meanings; no GL queries or readiness changes.
+      rendererStartupTiming:resources.rendererStartupTiming?{
+        ...resources.rendererStartupTiming,
+        geological:resources.rendererStartupTiming.geological?{
+          ...resources.rendererStartupTiming.geological,
+          preparedVegetation:resources.rendererStartupTiming.geological.preparedVegetation?{
+            ...resources.rendererStartupTiming.geological.preparedVegetation,
+            grassRuntimeQualification:resources.singleOwnerVegetation?{
+              ...resources.singleOwnerVegetation.getReceipt(),
+              timing:resources.singleOwnerTiming??null,
+              evidenceScope:'CURRENT_RESIDENT_ALLOCATION_AND_CPU_SUBMISSION_NOT_DEVICE_GPU_TIMING'
+            }:null
+          }:resources.rendererStartupTiming.geological.preparedVegetation
+        }:resources.rendererStartupTiming.geological
+      }:null,
       singleOwnerVegetation:resources.singleOwnerVegetation?{...resources.singleOwnerVegetation.getReceipt(),timing:resources.singleOwnerTiming}:null,
 // SHORELINE_SOIL_BEGIN receipt
       shorelineSoilCoverage:{...resources.shorelineSoilCoverage},

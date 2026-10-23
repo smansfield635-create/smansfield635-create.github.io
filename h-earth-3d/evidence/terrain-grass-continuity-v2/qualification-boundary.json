@@ -1,0 +1,12 @@
+{
+  "schema": "H_EARTH_TERRAIN_GRASS_QUALIFICATION_BOUNDARY_v2",
+  "localBrowser": "NOT_EXECUTED: local sandbox denies Chrome Unix socket creation",
+  "preparedBrowserChecks": [
+    "runtime.mjs",
+    "shader-parity.mjs"
+  ],
+  "remoteRuntimeRequirement": "Existing exact-head h-earth publication preflight must reach input-confirmed ready; owner now asserts queried GPU BUFFER_SIZE equals installedRootCount*16, exact upload bytes, zero allocation/upload GL errors and live context before ready.",
+  "physicalDeviceAcceptance": false,
+  "subjectiveVisualAcceptance": false,
+  "ownerPreviewRequired": false
+}

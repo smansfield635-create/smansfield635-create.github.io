@@ -1,0 +1,32 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002",
+  "reviewedAgainstAnchor": false,
+  "disposition": "OWNER_APPROVED_BOUNDED_RELEASE_WITH_RETAINED_AUTOMATED_EVIDENCE",
+  "physicalAcceptance": false,
+  "subjectiveVisualAcceptance": false,
+  "fullSceneTourResult": "FAIL",
+  "interactionEvidence": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40036982659"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/terrain-grass-continuity-v2/release-qualification.json",
+    "h-earth-3d/evidence/terrain-grass-continuity-v2/checkpoint.json"
+  ],
+  "releaseChecksRetained": [
+    "STATIC_PAYLOAD",
+    "GENUINE_INPUT_CONFIRMED_ENTRY",
+    "READY_STATE",
+    "PAGE_AND_CONSOLE_ERRORS",
+    "EXACT_HEAD_DEPLOYMENT",
+    "LIVE_HEAD_AND_ASSET_VERIFICATION"
+  ],
+  "limitations": [
+    "Extended scene tour remains FAIL.",
+    "Performance non-regression unproven; current whole-frame outlier2823.3ms retained.",
+    "CPU submission timings exclude GPU execution.",
+    "No physical-device or subjective visual acceptance claimed."
+  ]
+}

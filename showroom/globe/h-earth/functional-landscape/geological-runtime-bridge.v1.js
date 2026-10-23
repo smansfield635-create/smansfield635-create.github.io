@@ -110,7 +110,12 @@ function buildConnectedRiverWater(points,terrainMesh,formation){
   const basinFootprint=waterTriangles(basinMesh);
   // A single height field on the land tessellation avoids stacked sweep
   // strips at river bends. Shared land vertices receive identical water heights.
+  // Repeated shared vertices and clipping endpoints use exactly the same X/Z.
+  // Cache only within this construction call, with no coordinate quantization.
+  const fieldCache=new Map();
   const field=p=>{
+    let row=fieldCache.get(p.x);if(!row){row=new Map();fieldCache.set(p.x,row);}
+    const cached=row.get(p.z);if(cached)return cached;
     let best=Infinity,y=levels[0];
     for(let i=1;i<stations.length;i++){
       const a=stations[i-1],b=stations[i],dx=b.x-a.x,dz=b.z-a.z,l2=dx*dx+dz*dz;
@@ -119,7 +124,7 @@ function buildConnectedRiverWater(points,terrainMesh,formation){
       if(d<best){best=d;y=levels[i-1]+t*(levels[i]-levels[i-1]);}
     }
     if(inBasin(p))y=waterLevel;
-    return {y,d:best};
+    const result={y,d:best};row.set(p.z,result);return result;
   };
   for(const t of land){
     const [a,b,c]=t.points;
@@ -156,7 +161,27 @@ function waterTriangles(mesh,{projected=false,role=null}={}){
   }
   return result;
 }
+// Each triangle list is immutable after construction. Preserve source order in
+// each bin so equal-height hits retain exactly the original role selection.
+const triangleSampleIndices=new WeakMap();
+export function createGeologicalTriangleSampler(triangles,{binSize=8}={}){
+  if(!Number.isFinite(binSize)||binSize<=0)throw Error('GEOLOGICAL_SAMPLE_BIN_INVALID');
+  const bins=new Map();
+  for(const t of triangles){
+    const [minX,minZ,maxX,maxZ]=t.box;
+    for(let ix=Math.floor((minX-1e-6)/binSize);ix<=Math.floor((maxX+1e-6)/binSize);ix++)
+      for(let iz=Math.floor((minZ-1e-6)/binSize);iz<=Math.floor((maxZ+1e-6)/binSize);iz++){
+        const key=ix+':'+iz;let bin=bins.get(key);if(!bin){bin=[];bins.set(key,bin);}bin.push(t);
+      }
+  }
+  return (x,z)=>sampleOrderedTriangles(bins.get(Math.floor(x/binSize)+':'+Math.floor(z/binSize))??[],x,z);
+}
 function sampleWaterTriangles(triangles,x,z){
+  let sample=triangleSampleIndices.get(triangles);
+  if(!sample){sample=createGeologicalTriangleSampler(triangles);triangleSampleIndices.set(triangles,sample);}
+  return sample(x,z);
+}
+function sampleOrderedTriangles(triangles,x,z){
   let top=null;
   for(const t of triangles){
     if(x<t.box[0]-1e-6||x>t.box[2]+1e-6||z<t.box[1]-1e-6||z>t.box[3]+1e-6)continue;

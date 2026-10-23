@@ -1,0 +1,24 @@
+{
+  "operationId": "H_EARTH_GEOLOGICAL_STARTUP_REPAIR_20261023_001",
+  "generation": 2869,
+  "admissionComment": 6358066820,
+  "baseline": "c0b25850ef567327f45eed020659d58e06066b36",
+  "tests": {
+    "passed": 75,
+    "failed": 0,
+    "command": "node --test tools/h-earth-geological-startup-performance.test.mjs tools/h-earth-loading-report.test.mjs tools/publication-live-verify.h-earth-entry.test.mjs"
+  },
+  "independentReview": {
+    "role": "WEST",
+    "result": "PASS_AFTER_TWO_MINOR_CORRECTIONS",
+    "corrections": [
+      "Clock note distinguishes route elapsed and navigation timestamps",
+      "Repeated initialization rejects before overwriting timing receipt"
+    ],
+    "samplerEquivalence": "6000 random queries plus boundaries tolerances overlaps role ties and near-degenerate triangles",
+    "triangleListsImmutableAfterFirstUse": true
+  },
+  "performanceEvidence": "actual-scene-comparison.json",
+  "physicalDeviceAcceptance": false,
+  "publicationStatus": "PENDING_EXACT_HEAD_PREFLIGHT"
+}

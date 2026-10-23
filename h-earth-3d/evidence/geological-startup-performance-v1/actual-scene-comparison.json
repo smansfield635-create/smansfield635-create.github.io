@@ -1,0 +1,47 @@
+{
+  "schema": "GRATITUDE_ACTUAL_SCENE_CPU_COMPARISON_v1",
+  "baselineHead": "c0b25850ef567327f45eed020659d58e06066b36",
+  "scope": "ACTUAL_ACCEPTED_GEOMETRY_BUILDERS_AND_ALL_GEOLOGICAL_VERTEX_MATERIAL_SAMPLES; NO_GPU_OR_TABLET_CLAIM",
+  "exactOutputsMatch": true,
+  "before": {
+    "label": "baseline",
+    "phases": {
+      "geologicalConstruction": 4803.630861,
+      "palms": 3077.682479000001,
+      "ivy": 1748.127837,
+      "understory": 8546.151098999999,
+      "oasis": 2515.916904999998,
+      "actualMeshColorAndExposure": 606.7370689999989
+    },
+    "totalMilliseconds": 21298.246249999997,
+    "outputs": {
+      "geological": "dc4c5a0ff4d24d94db28e7d40ea9dda34acdd58eacb4af55a8c02ec3946a5c29",
+      "palms": "a089e149c497bc636a7a71e14e4322404c82f5c2a8fb3ec1b960fbcb03a2d0bc",
+      "ivy": "8e74380fc0763abaee3854c25718d87cf9b0ec3fd575dec516c22483ee3cf47e",
+      "understory": "8a06d124a847df5f838edfbb4f10336198b27fad5777efc45a170b1370bc9668",
+      "oasis": "1f5e64b661316ae648c42c915bc454546cc00642b3d61e5051eadd6bb549fe1d",
+      "materialSamples": "fbc5b735e5b8b0ab1ee69094d8a00cd9d96ad38ad08133dee5174268af07df70"
+    }
+  },
+  "after": {
+    "label": "candidate",
+    "phases": {
+      "geologicalConstruction": 1976.8111900000004,
+      "palms": 2635.9065859999973,
+      "ivy": 1556.8576690000045,
+      "understory": 4961.729969,
+      "oasis": 2558.0652709999995,
+      "actualMeshColorAndExposure": 588.2101200000034
+    },
+    "totalMilliseconds": 14277.580805000005,
+    "outputs": {
+      "geological": "dc4c5a0ff4d24d94db28e7d40ea9dda34acdd58eacb4af55a8c02ec3946a5c29",
+      "palms": "a089e149c497bc636a7a71e14e4322404c82f5c2a8fb3ec1b960fbcb03a2d0bc",
+      "ivy": "8e74380fc0763abaee3854c25718d87cf9b0ec3fd575dec516c22483ee3cf47e",
+      "understory": "8a06d124a847df5f838edfbb4f10336198b27fad5777efc45a170b1370bc9668",
+      "oasis": "1f5e64b661316ae648c42c915bc454546cc00642b3d61e5051eadd6bb549fe1d",
+      "materialSamples": "fbc5b735e5b8b0ab1ee69094d8a00cd9d96ad38ad08133dee5174268af07df70"
+    }
+  },
+  "speedup": 1.4917265425345276
+}

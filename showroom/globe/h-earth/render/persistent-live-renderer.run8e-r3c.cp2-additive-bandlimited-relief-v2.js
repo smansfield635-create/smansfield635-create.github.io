@@ -2200,6 +2200,11 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     }
     if(![packet.camera?.position?.x,packet.camera?.position?.z].every(Number.isFinite))
       throw new Error('R3C_CAMERA_PRIORITY_ORIGIN_INVALID');
+    const initializationStarted=performance.now();
+    const rendererTiming=resources.rendererStartupTiming={schema:'GRATITUDE_RENDERER_TIMING_v2',phases:{},uploads:[],geological:{builders:{},meshes:[]},
+      timingNote:'CPU wall times; geological builders and mesh timings are children of geologicalRendering. Cavern visibility is inside mesh materials. Never add parent and child durations. GPU call timing is CPU submission, not GPU execution.'};
+    const measureSync=(name,run)=>{const start=performance.now();try{return run();}finally{rendererTiming.phases[name]=performance.now()-start;progressCallback?.({phase:'RENDERER_'+name.toUpperCase(),completed:1,total:1,unit:'phase'});}};
+    const shaderStarted=performance.now();
     globalCoverInitialCamera={x:packet.camera.position.x,z:packet.camera.position.z};
     // The grass first visible on this upward-pitched camera is ahead, not underfoot.
     const view=packet.camera.viewProjectionMatrix;
@@ -2243,33 +2248,35 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       ['coastDistances', coastDistances, 8, 1, gl.FLOAT, false],
       ['contactDistances', contactField.packageDistances, 9, 1, gl.FLOAT, false]
     ];
+    rendererTiming.phases.shadersAndVertexSetup=performance.now()-shaderStarted;
     let lastStartupPercent=40;
     const totalStartupUploadBytes=specifications.reduce((total,item)=>total+item[1].byteLength,uploadViews.indices.byteLength);
     let uploadedStartupBytes=0;
-    const rendererTiming=resources.rendererStartupTiming={phases:{},uploads:[]};
-    const measureSync=(name,run)=>{const start=performance.now();try{return run();}finally{rendererTiming.phases[name]=performance.now()-start;progressCallback?.({phase:'RENDERER_'+name.toUpperCase(),completed:1,total:1,unit:'phase'});}};
     const reportUploadProgress=(phase,completed,total,unit,label)=>{const progress=Math.max(lastStartupPercent,40+44*(uploadedStartupBytes/Math.max(1,totalStartupUploadBytes)));lastStartupPercent=progress;progressCallback?.(Object.freeze({phase,completed,total,unit,progress,status:label}));};
-    const uploadChunked=async(target,data,buffer)=>{
+    const uploadChunked=async(target,data,buffer,name)=>{
+      const wallStarted=performance.now(),allocationStarted=performance.now();
       gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(target,buffer);gl.bufferData(target,data.byteLength,gl.STATIC_DRAW);
+      const allocationMilliseconds=performance.now()-allocationStarted;
       const base=uploadedStartupBytes;
       const timing=await uploadStartupBuffer(data,{
         yieldControl:()=>new Promise(resolve=>setTimeout(resolve,0)),
         upload:(offset,chunk)=>{gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(target,buffer);gl.bufferSubData(target,offset,chunk);},
         onProgress:bytes=>{uploadedStartupBytes=base+bytes;reportUploadProgress('GPU_STARTUP_UPLOAD',uploadedStartupBytes,totalStartupUploadBytes,'bytes','Loading world resources');}
       });
-      rendererTiming.uploads.push(timing);
+      rendererTiming.uploads.push({...timing,name,allocationMilliseconds,wallMilliseconds:performance.now()-wallStarted});
       gl.bindVertexArray(resources.vertexArray);gl.bindBuffer(target,buffer);
       counters.bufferUploadCount++;counters.packageBufferUploadCount++;counters.uploadedByteLength+=data.byteLength;
     };
     resources.buffers = [];
     for (const [name, data, location, size, type, integer] of specifications) {
       const buffer = createBuffer(); resources.buffers.push({ name, buffer, byteLength: data.byteLength });
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer); await uploadChunked(gl.ARRAY_BUFFER, data,buffer); gl.enableVertexAttribArray(location);
+      gl.bindBuffer(gl.ARRAY_BUFFER, buffer); await uploadChunked(gl.ARRAY_BUFFER, data,buffer,name); gl.enableVertexAttribArray(location);
       if (integer) gl.vertexAttribIPointer(location, size, type, 0, 0);
       else gl.vertexAttribPointer(location, size, type, false, 0, 0);
     }
     resources.indexBuffer = createBuffer();
     resources.buffers.push({ name: 'indices', buffer: resources.indexBuffer, byteLength: uploadViews.indices.byteLength });
+    const legacyPreparationStarted=performance.now();
     const woodlandSuppression=filterWoodlandLegacyGrass(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}));
     if(woodlandSuppression.indices.length!==uploadViews.indices.length)throw Error('WOODLAND_INDEX_SOURCE_LENGTH_DRIFT');
     resources.woodlandLegacySuppression=woodlandSuppression.receipt;resources.woodlandRocks={geometry:buildWoodlandRockPresentation(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation})),mainDrawCount:0,shadowDrawCount:0};resources.woodlandSuppressedIndices=suppressWoodlandRockTriangles(woodlandSuppression.indices,resources.woodlandRocks.geometry);
@@ -2280,13 +2287,16 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     // Gen2735: derive the approved candidate landform from the actual canonical package.
     // Retire ONLY triangles wholly inside its bounded local patch. The canonical
     // package, original vertex buffers and existing draw-range lengths stay frozen.
-    resources.geologicalRuntime=constructGeologicalRuntimeBridge(renderPackage);
+    rendererTiming.phases.legacySuppressionAndRocks=performance.now()-legacyPreparationStarted;
+    resources.geologicalRuntime=measureSync('geologicalConstruction',()=>constructGeologicalRuntimeBridge(renderPackage));
+    const retirementStarted=performance.now();
     // Retire only the four cavern-side copies; immutable hydrated bytes stay intact.
     const oasisRetirement=suppressOasisTreeGroupIndices(resources.woodlandSuppressedIndices,renderPackage.primitiveSpans);
     resources.woodlandSuppressedIndices=oasisRetirement.indices;resources.oasisTreeRetirement=oasisRetirement.receipt;
     resources.woodlandSuppressedIndices=retireGeologicalBaseIndices(
       resources.woodlandSuppressedIndices,resources.geologicalRuntime.retirement);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices,resources.indexBuffer);
+    rendererTiming.phases.indexRetirement=performance.now()-retirementStarted;
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices,resources.indexBuffer,'indices');
     measureSync('woodlandRocks',()=>initializeWoodlandRocks());
     measureSync('largeBoulders',()=>initializeLargeP2Boulders());
     measureSync('geologicalRendering',()=>initializeGeologicalRendering(packet.environmentUniforms));
@@ -2358,6 +2368,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     rendererTiming.phases.framebuffersAndUniforms=performance.now()-framebufferStarted;
     const clearingStarted=performance.now();await initializeClearing(packet);rendererTiming.phases.clearing=performance.now()-clearingStarted;
     counters.staticUniformUpdateCount = 13; initialized = true;
+    rendererTiming.totalInitializationMilliseconds=performance.now()-initializationStarted;
+    rendererTiming.accountedMilliseconds=Object.entries(rendererTiming.phases).filter(([name])=>!['cavernVisibility','geologicalBuildAndUpload'].includes(name)).reduce((n,[,v])=>n+v,0)+rendererTiming.uploads.reduce((n,v)=>n+v.wallMilliseconds,0);
+    rendererTiming.unattributedMilliseconds=Math.max(0,rendererTiming.totalInitializationMilliseconds-rendererTiming.accountedMilliseconds);
     progressCallback?.(Object.freeze({phase:'GPU_STARTUP_RESOURCES_READY',completed:1,total:1,unit:'initialization',progress:87,status:'Graphics resources initialized'}));
     return getResourceReceipt();
   }
@@ -2439,16 +2452,19 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       throw Error('GEOLOGICAL_RUNTIME_MODEL_NOT_CONSTRUCTED');
     let totalBytes=0;
     const instances=[];
-    const palms=buildCavernPalmPlacement(model);
+    const detail=resources.rendererStartupTiming.geological;
+    const build=(name,run)=>{const start=performance.now();try{return run();}finally{detail.builders[name]=performance.now()-start;}};
+    const palms=build('palms',()=>buildCavernPalmPlacement(model));
     resources.cavernPalms=palms.receipt;
-    const ivy=buildCavernEntranceIvy(model);
+    const ivy=build('ivy',()=>buildCavernEntranceIvy(model));
     resources.cavernIvy=ivy.receipt;
-    const understory=buildCavernUnderstoryPlacement(model);
+    const understory=build('understory',()=>buildCavernUnderstoryPlacement(model));
     resources.cavernUnderstory=understory.receipt;
-    const oasisTrees=buildOasisTreeGroup(model,renderPackage);resources.oasisTrees=oasisTrees.receipt;
+    const oasisTrees=build('oasisTrees',()=>buildOasisTreeGroup(model,renderPackage));resources.oasisTrees=oasisTrees.receipt;
     // Gen2857: no GLB fetch, shader, or GPU allocation until the world is
     // initialized AND the camera approaches the specific approved riverbank tree.
     // The existing source and its four restored fallback trees stay resident.
+    const overlayStarted=performance.now();
     resources.jacaranda=createApprovedJacarandaOverlay(gl,{
       model,projectWorld:regionToHEarthPlanetPoint,
       companions:oasisTrees.receipt.placements.filter(p=>p.id!==JACARANDA_FOCUS_ID),
@@ -2456,6 +2472,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       sunDirection:environment.sunDirection
     });
     resources.treeCollection=createTreeCollection(gl,{model,raw:getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),projectWorld:regionToHEarthPlanetPoint,sunDirection:environment.sunDirection,originalJacaranda:resources.jacaranda});
+    detail.builders.treeOverlaySetup=performance.now()-overlayStarted;
     resources.collectionWoodlandSpans=renderPackage.primitiveSpans.filter(p=>['H_EARTH_LANDSCAPE_P2_BARK','H_EARTH_LANDSCAPE_P2_CANOPY'].includes(p.primitiveId));
     if(resources.collectionWoodlandSpans.length!==2)throw Error('TREE_COLLECTION_WOODLAND_SPANS_MISSING');
     const plannedBytes=parts=>parts.reduce((n,p)=>n+p.mesh.vertexCount*69+p.mesh.indices.byteLength,0);
@@ -2464,6 +2481,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(plannedBytes(ivy.meshes)>1024*1024)throw Error('CAVERN_IVY_GPU_MEMORY_BUDGET_EXCEEDED');
     if(plannedBytes(oasisTrees.meshes)>5*1024*1024)throw Error('OASIS_GROUP_GPU_MEMORY_BUDGET_EXCEEDED');
     for(const {role,part:treePart,mesh,colors:palmColors,leaflets,clearingAttributes,colorsAreLinear} of [...model.meshes,...palms.meshes,...ivy.meshes,...understory.meshes,...oasisTrees.meshes]){
+      const meshStarted=performance.now(),partTiming={role,part:treePart??null,vertices:mesh.vertexCount,triangles:mesh.indices.length/3};
       const n=mesh.vertexCount,positions=mesh.positions,indices=mesh.indices;
       if(!(positions instanceof Float32Array)||!(indices instanceof Uint32Array)||n<=0||indices.length%3!==0)
         throw Error('GEOLOGICAL_MESH_NOT_TRIANGULATED:'+role);
@@ -2479,6 +2497,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       }
       for(let i=0;i<normals.length;i+=3){const l=Math.hypot(normals[i],normals[i+1],normals[i+2])||1;
         normals[i]/=l;normals[i+1]/=l;normals[i+2]/=l;}
+      partTiming.normalsMilliseconds=performance.now()-meshStarted;
+      const materialsStarted=performance.now();
       const colors=new Float32Array(n*4),mats=new Float32Array(n*4);
       // Source-color continuity: never paint a new rectangle over accepted land.
       // Exact base-triangle linear albedo drives the entire replacement rim.
@@ -2532,9 +2552,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
           mats.set([.89,.025,direct,access],i*4);
         }else mats.set([.89,.025,.035,.13],i*4);
       }
+      partTiming.terrainColorAndMaterialsMilliseconds=performance.now()-materialsStarted;
+      const rimStarted=performance.now();
       const coast=new Float32Array(n),contact=new Float32Array(n);coast.fill(140);contact.fill(140);
       const renderedAttributes={positions,indices,normals,baseColorsLinear:colors,materialParameters:mats,coastDistances:coast,contactDistances:contact};
       reconcileGeologicalTerrainRim(model,role,mesh,renderedAttributes,{...uploadViews,coastDistances,contactDistances:contactField.packageDistances});
+      partTiming.rimReconciliationMilliseconds=performance.now()-rimStarted;
+      const gpuStarted=performance.now();
       const state={role,part:treePart,mesh,renderedAttributes,vao:gl.createVertexArray(),buffers:[],gpuByteLength:0,drawCount:0};
       if(!state.vao)throw Error('GEOLOGICAL_VAO_FAILED:'+role);
       counters.vertexArrayCreateCount++;gl.bindVertexArray(state.vao);
@@ -2557,6 +2581,8 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       state.gpuByteLength+=indices.byteLength;totalBytes+=state.gpuByteLength;
       counters.uploadedByteLength+=indices.byteLength;counters.bufferUploadCount++;
       instances.push(state);
+      partTiming.gpuAllocationAndSubmissionMilliseconds=performance.now()-gpuStarted;
+      partTiming.gpuBytes=state.gpuByteLength;partTiming.totalMilliseconds=performance.now()-meshStarted;detail.meshes.push(partTiming);
     }
     // Separate preflight budgets above preserve the existing geological limit.
     resources.rendererStartupTiming.phases.cavernVisibility=cavernVisibilityMilliseconds;

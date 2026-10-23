@@ -3115,12 +3115,21 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       canonicalPackageMutated:false
     };
   }
+  // Observation only: serialize caught startup failures for the existing remote verifier.
+  // Preserve the original error object, rejection and successful return value.
+  const observeStartupFailure=(phase,operation)=>async(...args)=>{
+    try{return await operation(...args);}
+    catch(error){
+      try{console.error('GRATITUDE_RENDERER_STARTUP_FAILURE '+JSON.stringify({phase,name:error?.name??'Error',message:error?.message??String(error),stack:error?.stack??null}));}catch{}
+      throw error;
+    }
+  };
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
     disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{resources.treeCollection?.dispose();resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
     getVegetationTrace,getVegetationProbe,
-    initialize, activateInitialRefinement, prepareReplacementVegetation, prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
+    initialize:observeStartupFailure("initialize",initialize), activateInitialRefinement, prepareReplacementVegetation:observeStartupFailure("prepareReplacementVegetation",prepareReplacementVegetation), prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt
   });
 }
 export default createHEarthRun8ER3CPersistentRenderer;

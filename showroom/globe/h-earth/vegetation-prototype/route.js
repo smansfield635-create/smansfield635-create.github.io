@@ -132,7 +132,7 @@ function liveReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_VEGETATION_LIVE_GPU_
 loader?.setReportProvider?.(()=>{
   const resource=resources(),vegetation=resource?.singleOwnerVegetation;
   const transfers=performance.getEntriesByType('resource').filter(e=>/h-earth|precomputed-grass|oasis-soil|\.glb(?:\?|$)/.test(e.name));
-  return {buildIdentifier:'gen2872-prepared-vegetation-v1',sourceBaseline,
+  return {buildIdentifier:'gen2873-prepared-binding-repair-v1',sourceBaseline,
     repairBaseline:'c376aadb93fd1a98c4146733edca4ea12609bc00',
     reportFormatNote:'Top-level reportVersion identifies the copy-report format. details.buildIdentifier identifies this runtime repair.',
     clockNote:'Resource start times are navigation-relative; route times are elapsed since route start; loader elapsed uses its own start. Phase values are durations. Do not subtract timestamps from different origins.',

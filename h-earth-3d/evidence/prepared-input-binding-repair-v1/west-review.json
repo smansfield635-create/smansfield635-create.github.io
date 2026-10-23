@@ -1,0 +1,14 @@
+{
+  "schema": "WEST_PREPARED_BINDING_REPAIR_REVIEW_v1",
+  "reviewer": "/root/review_repair",
+  "independent": true,
+  "disposition": "PASS_CANDIDATE_PREFLIGHT",
+  "findings": [
+    "Derived route heights normalized at existing2^-24 canonical precision; same-bin values equivalent",
+    "Recorded seven browser discrepancies reproduce and normalize identically",
+    "Route coordinates, source buffers, and emitted mesh hashes remain exact",
+    "Raw output and compressed payload hashes unchanged; manifest pin matches",
+    "Production publication requires actual browser PREPARED/no fallback proof"
+  ],
+  "publicationApproved": false
+}

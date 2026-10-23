@@ -1,0 +1,29 @@
+{
+  "baseHead": "5c7a0b76b6259b22c375c48daf5d1e82cbd41bfd",
+  "target": "under60000ms to usable entry on owner tablet; not yet demonstrated",
+  "tests": {
+    "startupFaultRecovery": 16,
+    "entryContract": 63,
+    "result": "PASS"
+  },
+  "independentReview": "West found no blocking correctness issue; network body resets, bounded retry and integrity rejection covered",
+  "preserved": [
+    "exact assets and placements",
+    "shadow integration",
+    "genuine input-confirmed entry",
+    "hash and length integrity checks"
+  ],
+  "change": [
+    "essential soil/grass begin before CPU ground admission with immediately handled rejections",
+    "optional tree loading waits until essential vegetation is prepared",
+    "one250ms-delayed retry on transport TypeError or HTTP408429500502503504",
+    "named failed resource and fetch/decode/upload/phase timing"
+  ],
+  "clockCorrection": "Existing display stops when controls enable;80seconds is preparation time, not human input wait. Separate input timing already exists.",
+  "limitations": [
+    "device performance not measured",
+    "no guarantee under60seconds",
+    "tree downloads may finish after controls become available",
+    "no expanded collection"
+  ]
+}

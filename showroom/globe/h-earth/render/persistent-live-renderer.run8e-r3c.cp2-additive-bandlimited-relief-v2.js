@@ -1840,20 +1840,27 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     if(replacementPreparation)return replacementPreparation;
     replacementPreparation=(async()=>{
       const started=performance.now();
+      const pilotPackage=getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation});
+      // Start independent essential assets before CPU admission. Attach rejection
+      // handlers immediately so failure during CPU work cannot go unhandled.
+      const settle=promise=>promise.then(value=>({value}),error=>({error}));
+      const soilStarted=performance.now();let soilMaskMilliseconds=0;
+      const soilPromise=settle(loadPrecomputedOasisSoil(pilotPackage).then(value=>{soilMaskMilliseconds=performance.now()-soilStarted;return value;}));
+      const grassPromise=settle(loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress}));
+      const admissionStarted=performance.now();
       // Terrain no longer has a rectangular protected-material branch.
       const protectedReferenceAt=()=>false;
       const visibleSurface=buildVegetationVisibleSurface(getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation}),{
         refinement:resources.refinement?.surface??null,geology:resources.geologicalRuntime,
         renderedAttributes:{base:{positions:uploadViews.positions,normals:uploadViews.normals,coastDistances,contactDistances:contactField.packageDistances},refinement:resources.refinement?.surface??null,geology:resources.geologicalMeshes?.map(part=>part.renderedAttributes)},
         beachProviderFactory:createRenderedBeachProvider,protectedReferenceAt,surfaceRevision:contactFieldBuildCount});
-      const pilotPackage=getHEarthRun8ER2ImmutableLiveRenderPackage({deferVegetation});
       const admitGround=await createUniformGroundAdmission({visibleSurface,geology:resources.geologicalRuntime,toLocal:unprojectPlanetVertex,estate:pilotEstate,obstacles:pilotPackage.landscapeCoverFootprints??[],trees:pilotPackage.landscapeFloorFootprints??[],oasis:H_EARTH_OASIS_FOLIAGE_SAMPLE,sampleStructure:pilotStructureAt,yieldControl:yieldToBrowserPaint,maximumSandCoverage:WOODLAND_HABITAT.maximumSandCoverage});
       resources.vegetationVisibleSurface=Object.freeze({...visibleSurface,admitGround});
 
       // Load the exact offline derivation; legacy rendering paths retain their own generator.
-      const soilStarted=performance.now();onProgress({phase:'SOIL_MASK_LOADING'});
-      const mask=await loadPrecomputedOasisSoil(pilotPackage);
-      const soilMaskMilliseconds=performance.now()-soilStarted;
+      const groundAdmissionMilliseconds=performance.now()-admissionStarted;
+      onProgress({phase:'SOIL_MASK_LOADING'});
+      const soilResult=await soilPromise;if(soilResult.error)throw soilResult.error;const mask=soilResult.value;
       if(mask.width!==104||mask.height!==146||mask.grassTuftCount!==350)throw Error('OASIS_SOIL_COVERAGE_IDENTITY_MISMATCH');
       gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,resources.shorelineSoilTexture);gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);
       gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,mask.width,mask.height,gl.RED,gl.UNSIGNED_BYTE,mask.pixels);
@@ -1862,8 +1869,9 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       const {pixels,...summary}=mask;resources.shorelineSoilCoverage={...summary,ready:true,derivedFrom:'EXISTING_OASIS_GRASS_ROOTS',terrainGeometryMutated:false};
       onProgress({phase:'SINGLE_POPULATION_PREPARING'});
       const generationStarted=performance.now();
-      const presentation=await loadPrecomputedGrass({packed:true,yieldControl:yieldToBrowserPaint,onProgress});
+      const grassResult=await grassPromise;if(grassResult.error)throw grassResult.error;const presentation=grassResult.value;
       const generationMs=performance.now()-generationStarted;
+      const gpuStarted=performance.now();
       resources.singleOwnerVegetation=await createSingleOwnerVegetation(gl,presentation,{environment:resources.environment,planetRadius,yieldControl:yieldToBrowserPaint,onProgress,entranceGrass:{visibleSurface:resources.vegetationVisibleSurface,geology:resources.geologicalRuntime,palms:resources.cavernPalms?.placements??[]}});
       // The admitted entrance roots and their soil coverage are finalized together.
       const installedHabitat=resources.singleOwnerVegetation.habitat;
@@ -1874,7 +1882,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       gl.useProgram(resources.geometryProgram);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitat'),10);gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatBounds'),installedHabitat.bounds);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uWoodlandHabitatEnabled'),1);
       gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uRavineHabitatBounds'),installedHabitat.ravine.bounds);gl.uniform4fv(gl.getUniformLocation(resources.geometryProgram,'uCoastalHabitatBounds'),installedHabitat.coastal.bounds);gl.uniform2f(gl.getUniformLocation(resources.geometryProgram,'uHabitatAtlasScale'),1/3,1);gl.uniform1f(gl.getUniformLocation(resources.geometryProgram,'uHabitatHalfTexel'),.5/installedHabitat.size);
 
-      resources.singleOwnerTiming={soilMaskMilliseconds,generationMs,loading:presentation.loading,preparationMs:performance.now()-started,includesAcceptedOasisSoilPreparation:true};
+      resources.singleOwnerTiming={groundAdmissionMilliseconds,gpuPreparationMilliseconds:performance.now()-gpuStarted,soilMaskMilliseconds,generationMs,loading:presentation.loading,preparationMs:performance.now()-started,includesAcceptedOasisSoilPreparation:true};
       gl.activeTexture(gl.TEXTURE0);gl.bindVertexArray(resources.vertexArray);gl.useProgram(resources.geometryProgram);
       const error=gl.getError();if(error!==gl.NO_ERROR)throw Error('REPLACEMENT_UPLOAD_GL_ERROR:'+error);
       onProgress({phase:'SINGLE_POPULATION_RESIDENT'});return resources.singleOwnerVegetation.getReceipt();
@@ -2897,8 +2905,11 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     gl.uniform1i(resources.uniforms.clipBaseTerrain,0);gl.disable(gl.BLEND);gl.depthMask(true);for(const resident of resources.vegetation.residentBatches){gl.bindVertexArray(resident.vao);gl.drawElements(gl.TRIANGLES,resident.indexCount,gl.UNSIGNED_INT,0);counters.vegetationDrawCallCount++;counters.totalDrawnIndexCount+=resident.indexCount;}gl.bindVertexArray(resources.vertexArray);
     drawWoodlandRocks(false);
     drawLargeP2Boulders(false);
-    if(!resources.treeCollection?.loading)resources.jacaranda?.requestIfNear(packet.camera.position);
-    resources.treeCollection?.requestIfNear(packet.camera.position);
+    // Essential grass/soil preparation owns startup network and GPU budget.
+    if(vegetationStrategy!=='SINGLE_OWNER_WOODLAND_V1'||resources.singleOwnerTiming){
+      if(!resources.treeCollection?.loading)resources.jacaranda?.requestIfNear(packet.camera.position);
+      resources.treeCollection?.requestIfNear(packet.camera.position);
+    }
     drawGeologicalRendering();
     if(resources.jacaranda?.ready){
       resources.jacaranda.draw(packet);

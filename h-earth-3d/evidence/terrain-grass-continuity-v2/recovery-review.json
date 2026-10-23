@@ -1,0 +1,16 @@
+{
+  "schema": "H_EARTH_RECOVERY_REVIEW_v1",
+  "operationId": "H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002",
+  "authorityGeneration": 2875,
+  "recoveredCommit": "445d1f88927becb0e087285ff3344c96339059e0",
+  "independentReviewer": "west_review native subagent",
+  "sourceReview": "PASS_RENDERER_CULLING_ONLY",
+  "visibilityTests": "8/8 PASS",
+  "remaining": [
+    "Full independent census terminal result",
+    "Exact-candidate browser allocation/upload/render proof",
+    "Frame and loading cost evidence; no physical-device performance claim"
+  ],
+  "testRepair": "Rename shadowed boundary variable in independent census verifier; no product bytes changed",
+  "publication": "NOT_PERFORMED"
+}

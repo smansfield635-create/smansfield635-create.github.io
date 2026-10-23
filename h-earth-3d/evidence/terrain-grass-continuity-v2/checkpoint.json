@@ -1,0 +1,126 @@
+{
+  "schema": "H_EARTH_TERRAIN_GRASS_CONTINUITY_v2",
+  "baseline": "db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d",
+  "bounds": [
+    -384,
+    -283,
+    384,
+    -93
+  ],
+  "scanBounds": [
+    -512,
+    -360,
+    512,
+    160
+  ],
+  "centerEligibleCells": 94228,
+  "boundaryCheckedCells": 3813,
+  "boundaryIncludedCells": 726,
+  "selectedBoundaryCells": 726,
+  "seedRegions": [
+    {
+      "name": "ESTABLISHED_COASTAL_HILLSIDE",
+      "bounds": [
+        -136,
+        -253,
+        249,
+        -101
+      ]
+    },
+    {
+      "name": "SHOULDER",
+      "center": [
+        -52,
+        -208
+      ],
+      "radii": [
+        58,
+        46
+      ]
+    },
+    {
+      "name": "WEST",
+      "center": [
+        18,
+        -226
+      ],
+      "radii": [
+        42,
+        39
+      ]
+    }
+  ],
+  "componentReport": [
+    {
+      "id": 0,
+      "cells": 94954,
+      "bounds": [
+        -384,
+        -283,
+        384,
+        -93
+      ],
+      "selected": true,
+      "seeds": [
+        "ESTABLISHED_COASTAL_HILLSIDE",
+        "WEST",
+        "SHOULDER"
+      ],
+      "exclusionReason": null
+    }
+  ],
+  "censusRejections": {
+    "NO_SUPPORT": 157696,
+    "ZERO_TERRAIN_DENSITY": 69243,
+    "GROUND_ADMISSION": 34367,
+    "WATER": 175217,
+    "STEEP": 198,
+    "MATERIAL": 805
+  },
+  "rejectionCounts": {
+    "BASELINE_RUNTIME_PROXIMITY": 161,
+    "GROUND_ADMISSION": 1325,
+    "STEEP": 54,
+    "MATERIAL": 841
+  },
+  "shortFullyEligibleCells": 0,
+  "acceptanceSha256": "114e11b7f5dc61a262d4c80a602111e0c607d292ba9bbbe29f4f8b55e06cab2b",
+  "allBaselineRecordsPreserved": true,
+  "baselineRootRecordsSha256": "7cd8a2c5c2ad1c429c4a997703b2888763f092cf86fe29f45a2e5988c9fa806a",
+  "budgetApproval": "NOT_CLAIMED",
+  "runtimeBaselineSha256": "9d4ce18e694b697e1d8534bb628e531a1e376cc0bca2a0f6409976ed1819f55d",
+  "runtimeBaselineCount": 54218,
+  "baselineSavedCount": 1518809,
+  "baselineCombinedCount": 1573027,
+  "combinedRootCount": 2912956,
+  "combinedMaximumTileRoots": 816,
+  "combinedSavedRootBytes": 148654376,
+  "savedPackedAndAtlasBytes": 45850400,
+  "combinedPackedAndAtlasBytes": 46717888,
+  "priorCount": 1518809,
+  "rootCount": 2858738,
+  "added": 1339929,
+  "removed": 0,
+  "outsideCount": 0,
+  "outsideSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "retainedInsideCount": 1518809,
+  "retainedInsideSha256": "7cd8a2c5c2ad1c429c4a997703b2888763f092cf86fe29f45a2e5988c9fa806a",
+  "addedSha256": "8c778eee35b4a320748a9c6a6a3de4c7a97b13e8968389c36ff408ce1ea54c6d",
+  "removedSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "eligibleCells": 94954,
+  "shortCells": 1,
+  "componentSizes": [
+    94954
+  ],
+  "selectedComponentCells": 94954,
+  "maximumTileRoots": 816,
+  "compressedBytes": 64481774,
+  "compressedDeltaBytes": 29815469,
+  "packedBytes": 45739808,
+  "rawSha256": "a7988a67d4f12eece749b2699655444b73a6384588ed5af78f367dc1145fb50b",
+  "packedSha256": "ca443994fc8bd4185b38dbc07d7494c74a37d214493a4b22405fd56a689b91fb",
+  "atlasSha256": "4df63d454a24613dc3f087ffb074be64872b5b22426a2315cb347af6e068fab5",
+  "woodlandAndRavinePanelsPreserved": true,
+  "actualDevicePerformance": "NOT_YET_MEASURED",
+  "visualAcceptance": "NOT_REQUIRED_BY_OWNER; NOT_CLAIMED"
+}

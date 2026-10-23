@@ -2,8 +2,19 @@ import {buildCavernEntranceGrass,createEntranceFloorSupport,ENTRANCE_BLEND_GLSL}
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';
 import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
+import {HILLSIDE_SHORELINE_GLSL} from './hillside-shoreline-field.v1.js';
+import {boundGrassTiles,grassFrustumPlanes,selectVisibleGrassTiles,mergeGrassRanges} from './grass-visibility.v2.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
 import {uploadInSlices} from './performance-scheduling.v1.js';
+/** Only authenticated original prefixes influence the unchanged runtime planting recipe.
+ * Offline continuity additions remain installed but must not suppress saved runtime planting. */
+export function runtimePlantingBaselineTiles(tiles){
+ return Object.freeze(tiles.flatMap(tile=>{
+  const count=tile.baselineCount;
+  if(!Number.isInteger(count)||count<0||count>tile.count||!(tile.packed instanceof Float32Array)||tile.packed.length!==tile.count*4)throw Error('RUNTIME_PLANTING_BASELINE_INVALID');
+  return count?[Object.freeze({...tile,count,packed:tile.packed.subarray(0,count*4)})]:[];
+ }));
+}
 /** Extend only the existing ravine atlas from the roots actually installed.
  * Empty, wet and unsupported texels cannot gain soil; old coverage never falls. */
 export function buildCavernGrassSoilHabitat(habitat,baseTiles,addition,{eligibleAt}={}){
@@ -66,6 +77,7 @@ uniform int uFine;
 out vec3 vNormal;out vec3 vColor;out float vDistance;
 float woodlandPaletteNoise(vec2 p){vec2 cell=floor(p),f=fract(p);f=f*f*(3.-2.*f);float a=fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453),b=fract(sin(dot(cell+vec2(1.,0.),vec2(127.1,311.7)))*43758.5453),c=fract(sin(dot(cell+vec2(0.,1.),vec2(127.1,311.7)))*43758.5453),d=fract(sin(dot(cell+vec2(1.,1.),vec2(127.1,311.7)))*43758.5453);return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
 ${FOOTHILL_MEADOW_GLSL}
+${HILLSIDE_SHORELINE_GLSL}
 ${ENTRANCE_BLEND_GLSL}
 void main(){
  float d=length(aRoot.xz-uCamera.xz),t=clamp((d-14.)/10.,0.,1.);
@@ -96,7 +108,7 @@ void main(){
  vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),palettePatch);
  vec3 palette=mix(forest,olive,smoothstep(.35,.8,dry));
  palette=mix(palette,vec3(.29,.255,.12),smoothstep(.78,.99,h)*.34);
- float foothillDry=foothillDryAmount(aRoot.xyz,uRadius);
+ float foothillDry=max(foothillDryAmount(aRoot.xyz,uRadius),hillsideDry(aRoot.xyz));
  vec3 dryPalette=mix(vec3(.24,.225,.075),vec3(.29,.235,.12),smoothstep(.35,.95,foothillDry));
  palette=mix(palette,dryPalette,foothillDry*.88);
  vColor=palette*(.78+level*.40)*(.88+.24*h);vDistance=length(p-uCamera);
@@ -114,7 +126,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  const originalRootCount=baseTiles.reduce((n,t)=>n+t.count,0);let tiles=baseTiles,entranceReceipt=null,habitat=presentation.habitat;
  if(entranceGrass){
   if(!trusted)throw Error('ENTRANCE_GRASS_REQUIRES_AUTHENTICATED_BASELINE');
-  const addition=await buildCavernEntranceGrass({...entranceGrass,existingTiles:baseTiles,yieldControl});
+  const addition=await buildCavernEntranceGrass({...entranceGrass,existingTiles:runtimePlantingBaselineTiles(baseTiles),yieldControl});
   const extra=planImmutableTiles(addition).map(t=>Object.freeze({...t,first:t.first+originalRootCount}));
   tiles=Object.freeze([...baseTiles,...extra]);entranceReceipt=addition.receipt;
   const floor=createEntranceFloorSupport(entranceGrass.geology);
@@ -146,23 +158,33 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
  gl.attachShader(program,shader(gl.VERTEX_SHADER,VS));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,FS));gl.linkProgram(program);
  if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw graphicsError('OWNER_LINK','PROGRAM',gl.getProgramInfoLog(program));
  assertContext('LINKED');
- vao=gl.createVertexArray();buffer=gl.createBuffer();gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,rootCount*16,gl.STATIC_DRAW);let gpuUploadCount=1,gpuUploadedBytes=0;
+ const gpuRequestedBytes=rootCount*16;
+ vao=gl.createVertexArray();buffer=gl.createBuffer();gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,gpuRequestedBytes,gl.STATIC_DRAW);
+ const gpuObservedBufferBytes=gl.getBufferParameter(gl.ARRAY_BUFFER,gl.BUFFER_SIZE),allocationGlError=gl.getError();
+ assertContext('BUFFER_ALLOCATION');
+ if(allocationGlError!==gl.NO_ERROR)throw graphicsError('OWNER_BUFFER_ALLOCATION_GL_ERROR','BUFFER_ALLOCATION',allocationGlError);
+ if(gpuObservedBufferBytes!==gpuRequestedBytes)throw graphicsError('OWNER_BUFFER_SIZE_MISMATCH','BUFFER_ALLOCATION',`${gpuObservedBufferBytes}/${gpuRequestedBytes}`);
+ let gpuUploadCount=1,gpuUploadedBytes=0;
  const uploadScheduling=await uploadInSlices(tiles,{...uploadBudget,yieldControl,onProgress,upload:tile=>{gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferSubData(gl.ARRAY_BUFFER,tile.first*16,tile.packed);gpuUploadCount++;gpuUploadedBytes+=tile.packed.byteLength;}});
+ const uploadGlError=gl.getError();assertContext('BUFFER_UPLOAD');
+ if(uploadGlError!==gl.NO_ERROR)throw graphicsError('OWNER_BUFFER_UPLOAD_GL_ERROR','BUFFER_UPLOAD',uploadGlError);
+ if(gpuUploadedBytes!==gpuRequestedBytes)throw graphicsError('OWNER_BUFFER_UPLOAD_SIZE_MISMATCH','BUFFER_UPLOAD',`${gpuUploadedBytes}/${gpuRequestedBytes}`);
  gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.vertexAttribDivisor(0,1);
  const u=Object.fromEntries(['uViewProjection','uCamera','uRadius','uFine','uSunDirection','uSunColor','uHaze','uSunIntensity','uFogStart','uFogFalloff','uMaxFog'].map(n=>[n,gl.getUniformLocation(program,n)]));
  const rgb=value=>{const a=Array.isArray(value)?value.slice(0,3):[value.r,value.g,value.b],scale=a.some(v=>v>1)?255:1;return a.map(v=>v/scale);};
  gl.useProgram(program);const e=environment;gl.uniform1f(u.uRadius,planetRadius);gl.uniform3f(u.uSunDirection,e.sunDirection.x,e.sunDirection.y,e.sunDirection.z);gl.uniform3fv(u.uSunColor,rgb(e.sunColor));gl.uniform3fv(u.uHaze,rgb(e.groundHazeColor));gl.uniform1f(u.uSunIntensity,e.sunIntensity);gl.uniform1f(u.uFogStart,e.fogStartDistance);gl.uniform1f(u.uFogFalloff,e.fogFalloff);gl.uniform1f(u.uMaxFog,e.maximumFogFactor);
- let disposed=false,lastDraw={selectedFineRoots:0,drawCallCount:0,submittedTriangles:0,perFrameUploadBytes:0};const preparationMs=performance.now()-started;
+ const visibilityBounds=boundGrassTiles(tiles);
+ let disposed=false,lastDraw={visibleCoarseRoots:0,selectedFineRoots:0,drawCallCount:0,submittedTriangles:0,perFrameUploadBytes:0};const preparationMs=performance.now()-started;
  function draw(packet){
-  if(disposed)throw Error('OWNER_DISPOSED');const camera=packet.camera.position,fine=selectFineTiles(tiles,camera);
-  gl.useProgram(program);gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.uniformMatrix4fv(u.uViewProjection,false,new Float32Array(packet.camera.viewProjectionMatrix));gl.uniform3f(u.uCamera,camera.x,camera.y,camera.z);gl.uniform1i(u.uFine,0);gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,0);gl.drawArraysInstanced(gl.TRIANGLES,0,6,rootCount);
-  gl.uniform1i(u.uFine,1);let selectedFineRoots=0,drawCallCount=1;
-  // Merge consecutive immutable tile ranges; no selection buffer or texture upload.
-  const ranges=[];for(const tile of fine){const last=ranges[ranges.length-1];if(last&&last.first+last.count===tile.first)last.count+=tile.count;else ranges.push({first:tile.first,count:tile.count});selectedFineRoots+=tile.count;}
-  for(const range of ranges){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;}
-  lastDraw={selectedFineRoots,drawCallCount,submittedTriangles:(rootCount+selectedFineRoots)*2,perFrameUploadBytes:0,coarseTiles:tiles.length,fineTiles:fine.length};return {...lastDraw};
+  if(disposed)throw Error('OWNER_DISPOSED');const cpuStarted=performance.now();const camera=packet.camera.position,frustum=grassFrustumPlanes(packet.camera.viewProjectionMatrix),visible=selectVisibleGrassTiles(visibilityBounds,frustum.planes),fine=selectFineTiles(visible,camera);
+  gl.useProgram(program);gl.bindVertexArray(vao);gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.uniformMatrix4fv(u.uViewProjection,false,frustum.matrix);gl.uniform3f(u.uCamera,camera.x,camera.y,camera.z);gl.uniform1i(u.uFine,0);
+  let visibleCoarseRoots=0,selectedFineRoots=0,drawCallCount=0;
+  for(const range of mergeGrassRanges(visible)){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;visibleCoarseRoots+=range.count;}
+  gl.uniform1i(u.uFine,1);
+  for(const range of mergeGrassRanges(fine)){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;selectedFineRoots+=range.count;}
+  lastDraw={cpuDrawSubmissionMilliseconds:performance.now()-cpuStarted,visibleCoarseRoots,selectedFineRoots,drawCallCount,submittedTriangles:(visibleCoarseRoots+selectedFineRoots)*2,perFrameUploadBytes:0,coarseTiles:visible.length,culledTiles:tiles.length-visible.length,fineTiles:fine.length};return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots,maximumWoodlandRoots:450000,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:rootCount*16,preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_INSTALLED_ROOTS_ALWAYS_SUBMITTED',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots,maximumWoodlandRoots:450000,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose,habitat});
  }catch(error){cleanup();throw error;}

@@ -1,24 +1,25 @@
 import {fetchStartupAsset} from './precomputed-oasis-soil.v1.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
 /** Lossless, hash-bound output of the accepted ground-admission compiler. */
-const MANIFEST_SHA256='644af144d75abbc5876ba0abd9c7f718d5da06e2893fd1a1d21b92cae666a84b';
+const MANIFEST_SHA256='d2487ccae592e4f62efe5e4432a2ef3d73a1e0c1b882dde90cb1decb99d7fb2a';
 const fail=reason=>{throw Error('PRECOMPUTED_GRASS_'+reason);};
 const sha=async bytes=>Array.from(new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
 export async function decodePrecomputedGrass(manifest,bytes,{yieldControl=async()=>{},onProgress=()=>{}}={}){
- if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==1518809||manifest.stride!==52||manifest.receipt?.contactCount!==1518809)fail('IDENTITY_MISMATCH');
+ if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==2858738||manifest.stride!==52||manifest.receipt?.contactCount!==2858738)fail('IDENTITY_MISMATCH');
  if(bytes.byteLength!==manifest.rawBytes||await sha(bytes)!==manifest.rawSha256)fail('DATA_INTEGRITY');
  const h=manifest.habitat;
  if(h?.width!==576||h.height!==192||h.size!==192||bytes.byteLength!==manifest.rootCount*52+h.width*h.height)fail('LAYOUT_MISMATCH');
  const view=new DataView(bytes.buffer,bytes.byteOffset,bytes.byteLength),tiles=[];let index=0;
  for(const tile of manifest.tiles){
   if(!Number.isInteger(tile.count)||tile.count<1||tile.count>1600||index+tile.count>manifest.rootCount)fail('TILE_COUNT');
+  if(!Number.isInteger(tile.baselineCount)||tile.baselineCount<0||tile.baselineCount>tile.count)fail('TILE_BASELINE_COUNT');
   const roots=new Array(tile.count);
   for(let j=0;j<tile.count;j++,index++){
    const o=index*52,region=view.getUint32(o+48,true);
    if(region>2)fail('REGION');
    roots[j]={x:view.getFloat64(o,true),y:view.getFloat64(o+8,true),z:view.getFloat64(o+16,true),angle:view.getFloat64(o+24,true),slope:view.getFloat64(o+32,true),seed:view.getUint32(o+40,true),triangleId:view.getUint32(o+44,true),...(region?{region:region===1?'RAVINE':'RAVINE_SUPPLEMENT'}:{})};
   }
-  tiles.push({id:tile.id,minX:tile.minX,minZ:tile.minZ,roots});
+  tiles.push({id:tile.id,minX:tile.minX,minZ:tile.minZ,baselineCount:tile.baselineCount,roots});
   if((tiles.length&255)===0){onProgress({phase:'SINGLE_POPULATION_DECODING',loadedContacts:index,totalContacts:manifest.rootCount});await yieldControl();}
  }
  if(index!==manifest.rootCount)fail('ROOT_COUNT');
@@ -31,7 +32,7 @@ export function takePrecomputedGrassPlan(presentation){
  const plan=packedPlans.get(presentation);packedPlans.delete(presentation);return plan;
 }
 async function decodePackedGrass(manifest,bytes,{yieldControl=async()=>{},onProgress=()=>{}}={}){
- if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==1518809||manifest.stride!==52||manifest.receipt?.contactCount!==1518809)fail('IDENTITY_MISMATCH');
+ if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==2858738||manifest.stride!==52||manifest.receipt?.contactCount!==2858738)fail('IDENTITY_MISMATCH');
  if(bytes.byteLength!==manifest.rawBytes||await sha(bytes)!==manifest.rawSha256)fail('DATA_INTEGRITY');
  const h=manifest.habitat;
  if(h?.width!==576||h.height!==192||h.size!==192||bytes.byteLength!==manifest.rootCount*52+h.width*h.height)fail('LAYOUT_MISMATCH');
@@ -41,6 +42,7 @@ async function decodePackedGrass(manifest,bytes,{yieldControl=async()=>{},onProg
   if(typeof tile.id!=='string'||tileIds.has(tile.id)||!Number.isFinite(tile.minX)||!Number.isFinite(tile.minZ))fail('TILE_INVALID');
   tileIds.add(tile.id);
   if(!Number.isInteger(tile.count)||tile.count<1||tile.count>1600||index+tile.count>manifest.rootCount)fail('TILE_COUNT');
+  if(!Number.isInteger(tile.baselineCount)||tile.baselineCount<0||tile.baselineCount>tile.count)fail('TILE_BASELINE_COUNT');
   const first=index,packed=new Float32Array(tile.count*4);
   for(let j=0;j<tile.count;j++,index++){
    const o=index*52,region=view.getUint32(o+48,true);
@@ -54,7 +56,7 @@ async function decodePackedGrass(manifest,bytes,{yieldControl=async()=>{},onProg
    packed[j*4]=fx;packed[j*4+1]=fy;packed[j*4+2]=fz;packed[j*4+3]=fa;
    if(Math.hypot(fx+139.40267987050615,fz+194.5)<=2)controlRoots.push(`${fx}:${fy}:${fz}:${view.getUint32(o+40,true)}`);
   }
-  tiles.push(Object.freeze({id:tile.id,minX:tile.minX,minZ:tile.minZ,packed,count:tile.count,first}));
+  tiles.push(Object.freeze({id:tile.id,minX:tile.minX,minZ:tile.minZ,packed,count:tile.count,baselineCount:tile.baselineCount,first}));
   if((tiles.length&15)===0){onProgress({phase:'SINGLE_POPULATION_DECODING',loadedContacts:index,totalContacts:manifest.rootCount});await yieldControl();}
  }
  if(index!==manifest.rootCount)fail('ROOT_COUNT');

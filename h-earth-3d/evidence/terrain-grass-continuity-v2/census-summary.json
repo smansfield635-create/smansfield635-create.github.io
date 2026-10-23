@@ -1,0 +1,25 @@
+{
+  "bounds": [
+    -512,
+    -360,
+    512,
+    160
+  ],
+  "step": 2,
+  "counts": {
+    "NO_SUPPORT": 39424,
+    "INLAND_SIDE": 18151,
+    "SUITABLE": 23518,
+    "WATER": 43176,
+    "ADMISSION_EXCLUSION": 6667,
+    "STEEP_ROCK": 52,
+    "NON_SOIL": 2061,
+    "SHALLOW_SOIL": 71
+  },
+  "suitableBounds": [
+    -383,
+    -281,
+    383,
+    -103
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "H_EARTH_COASTAL_GRASS_REDISTRIBUTION_v1",
+  "baseline": "8a61c9ac11369ea67a551eb6d19cdd1f9c053046",
+  "rootCount": 2858738,
+  "moved": 22566,
+  "added": 0,
+  "removed": 0,
+  "donorCandidates": 22566,
+  "recipientCapacity": 147963,
+  "unchangedRoots": 2836172,
+  "unchangedRecordsSha256": "c5582d33c89ae5d8b8c227c7ac1b331493fdd5926da10921fdbf22f1c2b48d33",
+  "baselinePrefixesPreserved": true,
+  "nonCoastalAtlasPanelsPreserved": true,
+  "maximumTileRoots": 816,
+  "packedBytes": 45739808,
+  "rawSha256": "bc54a5c9d84e1562dc5ca8e17e5356de1d4ed01a44ccc0d2e973eb214bf8d96e",
+  "compressedSha256": "e52de7ab9268430f1e0a9c9d871e2e5a173b479618b2f92a11b9665254ec5fcd",
+  "packedSha256": "581372edc240fdecfd0f06a76418669890c6c653398d5f6bdf26fdaa281b4896",
+  "atlasSha256": "c7b5a58454177233e7bf4847ae5c6426af40019b842c91832161912c4e6ddc2f",
+  "changesSha256": "d542cd4dcc1f417d501e59f4084ed536c6aa92b303a68fbc9d139ad3f34fa353",
+  "actualDevicePerformance": "NOT_MEASURED"
+}

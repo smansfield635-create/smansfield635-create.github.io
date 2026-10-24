@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "a0a1ddf5c1d6f40de2e72de9e23b2d79a9f68fa2",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "68e5db638b3e7820047cbb9538dfb6390ad122d3",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2878,
+    "lockScope": "H_EARTH:HILLSIDE_SHORELINE_CONTINUITY:20261023",
+    "observedBranchHead": "1cdf8bb8ed19f7d03a49b467ed343ab54dedffb7",
+    "observedLedgerBlobSha": "fd523a1f14c2725ba6525cc9df9dd23471c489ae",
+    "operationId": "H_EARTH_COASTAL_GRASS_REDISTRIBUTION_20261023_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708"
+  },
+  "operationId": "H_EARTH_COASTAL_GRASS_REDISTRIBUTION_20261023_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "bb619d6abbbe0088f14d21b41fa4e8bc50b7447ea387cf704ebb2125d9f65cb6",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "351949817661f29452c36aad5a2fd5eddbba6dea506adeb0209463c14688fdb1",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

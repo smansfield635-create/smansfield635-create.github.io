@@ -1,0 +1,23 @@
+{
+  "schema": "H_EARTH_CENTRAL_GRASS_REPAIR_CONTINUATION_v1",
+  "operationId": "H_EARTH_COASTAL_GRASS_REDISTRIBUTION_20261023_001",
+  "authorityGeneration": 2878,
+  "registryAuthorityGeneration": 2879,
+  "priorCandidate": "e7d8317b167c5f206cd5ba747d394236da61a2b2",
+  "mainAtResume": "3c98682d0778d4f348626230b3275a7a00b581cd",
+  "mainMovementSinceLastRelease": "SEVEN_ANALYTICS_PATHS_ONLY; GRASS_PRODUCT_UNCHANGED",
+  "ownerDirection": "No camera or prior materialization; same checks/publication pattern; publish for owner assessment.",
+  "donorAndRecipientBasis": "Source/terrain-derived central coastal additions and dry exterior of actual protected oasis footprint; no image-to-world registration claim.",
+  "moved": 7235,
+  "added": 0,
+  "nextAction": "REPIN_EXISTING_FIXED_WRITEBACK_TO_EXACT_SOURCE_AND_RUN_ONCE",
+  "newInfrastructure": false,
+  "newCameraOrTourRequired": false,
+  "physicalOrSubjectiveAcceptanceClaimed": false,
+  "completedChecks": [
+    "23_FOCUSED_TESTS_PASS",
+    "EXACT_54218_ROOT_CAVERN_BASELINE_HASH_PRESERVED",
+    "INDEPENDENT_WEST_SOURCE_AND_PAYLOAD_REVIEW_PASS",
+    "EXACT_LOCAL_FIXED_WRAPPER_REBUILD_PASS"
+  ]
+}

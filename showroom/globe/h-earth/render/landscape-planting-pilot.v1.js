@@ -25,15 +25,21 @@ async function boundaryIndex(geology,yieldControl){
  if(!boundary.length)throw Error('PLANTING_PILOT_WATER_BOUNDARY_MISSING');
  return {count:boundary.length,distance(x,z){let best=Infinity;for(const edge of bins.get(Math.floor(x/size)+':'+Math.floor(z/size))??[])best=Math.min(best,distance(x,z,edge.a,edge.b));return best;}};
 }
-function policyClear(x,z,estate,oasis){
+function policyClear(x,z,estate,oasis,oasisReservedAt=null){
  for(const box of [estate.manorCore,estate.gardens,estate.outbuildingProposal,estate.acceptedEnvelope]){if(!box||![box.minX,box.maxX,box.minZ,box.maxZ].every(Number.isFinite))throw Error('PLANTING_PILOT_ESTATE_BOX_INVALID');if(x>=box.minX-.1&&x<=box.maxX+.1&&z>=box.minZ-.1&&z<=box.maxZ+.1)return false;}
  for(let i=1;i<estate.footRoute.length;i++)if(distance(x,z,estate.footRoute[i-1],estate.footRoute[i])<=estate.footRouteRadius+.1)return false;
- return !(x>=oasis.minX-.1&&x<=oasis.maxX+.1&&z>=oasis.minZ-.1&&z<=oasis.maxZ+.1);
+ const inOasis=x>=oasis.minX-.1&&x<=oasis.maxX+.1&&z>=oasis.minZ-.1&&z<=oasis.maxZ+.1;
+ if(!inOasis)return true;
+ if(!oasisReservedAt)return false;
+ const reserved=oasisReservedAt(x,z);
+ if(typeof reserved!=='boolean')throw Error('UNIFORM_GROUND_OASIS_RESERVATION_INVALID');
+ return !reserved;
 }
 /** Geographic replacement admission, independent of the former rectangle. */
-export async function createUniformGroundAdmission({visibleSurface,geology,toLocal,estate,obstacles=[],trees=[],oasis,sampleStructure,yieldControl=async()=>{},maximumSandCoverage=0}={}){
+export async function createUniformGroundAdmission({visibleSurface,geology,toLocal,estate,obstacles=[],trees=[],oasis,sampleStructure,yieldControl=async()=>{},maximumSandCoverage=0,oasisReservedAt=null}={}){
  if(typeof visibleSurface?.beach?.sample!=='function'||typeof geology?.sampleWaterAt!=='function'||typeof toLocal!=='function'||typeof sampleStructure!=='function')throw Error('UNIFORM_GROUND_PROVIDER_REQUIRED');
  if(!Number.isFinite(maximumSandCoverage)||maximumSandCoverage<0||maximumSandCoverage>.12)throw Error('UNIFORM_GROUND_SAND_LIMIT_INVALID');
+ if(oasisReservedAt!==null&&typeof oasisReservedAt!=='function')throw Error('UNIFORM_GROUND_OASIS_RESERVATION_REQUIRED');
  const boundary=await boundaryIndex(geology,yieldControl),rejections={};let tested=0;
  const reject=reason=>{rejections[reason]=(rejections[reason]??0)+1;return false;};
  const admit=(x,z,support)=>{
@@ -46,7 +52,7 @@ export async function createUniformGroundAdmission({visibleSurface,geology,toLoc
   if(boundary.distance(x,z)<=2)return reject('BARE_CHANNEL_MARGIN');
   const local=toLocal(x,support.y,z),structure=sampleStructure(local.x,local.z);
   if(structure?.hardExclusions?.length||structure?.planningHolds?.length)return reject('STRUCTURE');
-  if(!policyClear(local.x,local.z,estate,oasis)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.10)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.15))return reject('PROTECTED_FOOTPRINT');
+  if(!policyClear(local.x,local.z,estate,oasis,oasisReservedAt)||obstacles.some(t=>Math.hypot(x-t.x,z-t.z)<t.radius+.10)||trees.some(t=>Math.hypot(x-t.x,z-t.z)<t.trunkRadius+.15))return reject('PROTECTED_FOOTPRINT');
   return true;
  };
  admit.getReceipt=()=>({schema:'H_EARTH_UNIFORM_GROUND_ADMISSION_v1',tested,rejections:{...rejections},waterBoundaryEdges:boundary.count,maximumSandCoverage,geographicWaterPolicy:true,rectangleMask:false});

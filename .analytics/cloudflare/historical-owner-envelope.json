@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-24T17:28:05Z",
+  "generatedAt": "2026-10-24T18:34:23Z",
   "window": {
-    "start": "2026-07-26T17:28:05Z",
-    "end": "2026-10-24T17:28:05Z"
+    "start": "2026-07-26T18:34:23Z",
+    "end": "2026-10-24T18:34:23Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4666,
+    "pageLoads": 4646,
     "visits": 1351,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4666,
+        "pageLoads": 4646,
         "visits": 1351
       }
     },
     "byPath": {
-      "/": {
-        "pageLoads": 1051,
-        "visits": 761
-      },
       "/showroom/": {
         "pageLoads": 100,
         "visits": 10
       },
+      "/": {
+        "pageLoads": 1041,
+        "visits": 761
+      },
       "/index.html": {
-        "pageLoads": 130,
+        "pageLoads": 120,
         "visits": 0
       },
       "/products/": {
@@ -158,7 +158,15 @@
         "pageLoads": 10,
         "visits": 10
       },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
       },
@@ -166,16 +174,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -306,12 +306,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -325,7 +325,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3315,
+        "pageLoads": 3295,
         "visits": 0
       },
       "www.google.com": {

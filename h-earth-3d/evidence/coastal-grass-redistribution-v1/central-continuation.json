@@ -3,21 +3,29 @@
   "operationId": "H_EARTH_COASTAL_GRASS_REDISTRIBUTION_20261023_001",
   "authorityGeneration": 2878,
   "registryAuthorityGeneration": 2879,
-  "priorCandidate": "e7d8317b167c5f206cd5ba747d394236da61a2b2",
-  "mainAtResume": "3c98682d0778d4f348626230b3275a7a00b581cd",
-  "mainMovementSinceLastRelease": "SEVEN_ANALYTICS_PATHS_ONLY; GRASS_PRODUCT_UNCHANGED",
-  "ownerDirection": "No camera or prior materialization; same checks/publication pattern; publish for owner assessment.",
-  "donorAndRecipientBasis": "Source/terrain-derived central coastal additions and dry exterior of actual protected oasis footprint; no image-to-world registration claim.",
-  "moved": 7235,
-  "added": 0,
-  "nextAction": "REPIN_EXISTING_FIXED_WRITEBACK_TO_EXACT_SOURCE_AND_RUN_ONCE",
+  "priorCandidate": "0a1124d4337fdabed155273dbf80b4750188141b",
+  "mainAtResume": "e4d73c74095cc35483c0a46fac99966be99265ab",
+  "mainMovementSinceLastCandidate": "SEVEN_ANALYTICS_PATHS_AND_EXISTING_COMPILER_REGISTRY_ONLY; GRASS_PRODUCT_UNCHANGED; CARRY_FORWARD_APPROVED",
+  "ownerDirection": "Fix the still-overlong coastal strip and rectangular corner using the existing pattern; no further clarification or camera-preview gate.",
+  "priorDisposition": "OWNER_REJECTED_BOUNDARY_SHAPE",
+  "donorAndRecipientBasis": "All identified coastal kind2 roots, including earlier baseline roots, within explicit local lowland contour or rounded estate clearance. All selected donors relocate to existing admitted inland planting. Protected estate remains unplanted. No image-to-world registration claim.",
+  "nextAction": "REPIN_EXISTING_FIXED_WRITEBACK_TO_EXACT_REVIEWED_SOURCE_AND_RUN_ONCE",
   "newInfrastructure": false,
   "newCameraOrTourRequired": false,
   "physicalOrSubjectiveAcceptanceClaimed": false,
+  "preservedEvidence": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6675#issuecomment-6378652260",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/compare/0a1124d4337fdabed155273dbf80b4750188141b...e4d73c74095cc35483c0a46fac99966be99265ab"
+  ],
   "completedChecks": [
-    "23_FOCUSED_TESTS_PASS",
+    "26_FOCUSED_TESTS_PASS",
     "EXACT_54218_ROOT_CAVERN_BASELINE_HASH_PRESERVED",
-    "INDEPENDENT_WEST_SOURCE_AND_PAYLOAD_REVIEW_PASS",
-    "EXACT_LOCAL_FIXED_WRAPPER_REBUILD_PASS"
-  ]
+    "ALL_SELECTED_60963_COASTAL_DONORS_RELOCATED",
+    "2797775_UNRELATED_RECORDS_BYTE_IDENTICAL",
+    "DEFAULT_HEAP_BOUNDED_COMPILER_PASS",
+    "EXACT_LOCAL_FIXED_WRAPPER_REBUILD_PASS_DEFAULT_HEAP"
+  ],
+  "moved": 60963,
+  "added": 0,
+  "selectedDonorsFullyRelocated": true
 }

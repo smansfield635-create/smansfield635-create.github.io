@@ -40,7 +40,7 @@ test('authenticated global loader and bank payload preserve custody',async()=>{
  const presentation=await loadPrecomputedGrass({packed:true,fetchImpl}),plan=takePrecomputedGrassPlan(presentation);
  assert.equal(oasisBankTiles().reduce((n,t)=>n+t.count,0),points.length);assert.equal(plan.tiles.reduce((n,t)=>n+t.count,0),manifest.rootCount);assert.equal(takePrecomputedGrassPlan(presentation),undefined);
  await assert.rejects(loadPrecomputedGrass({packed:true,fetchImpl:async()=>new Response('{}')}),/MANIFEST_INTEGRITY/);
- const mask=await loadPrecomputedOasisSoil(integrated,{fetchImpl});assert.equal(mask.supplementalRootCount,points.length);assert.equal(mask.grassTuftCount,350);
+ const mask=await loadPrecomputedOasisSoil(integrated,{fetchImpl:async url=>{assert.equal(new URL(url).searchParams.get('sha'),sha(read('showroom/globe/h-earth/render/assets/oasis-soil-mask.v1.json')));return fetchImpl(url);}});assert.equal(mask.supplementalRootCount,points.length);assert.equal(mask.grassTuftCount,350);
 });
 test('fourteen rocks retain submerged bases and identities while exposed form and neutral colors change',async()=>{
  const path='showroom/globe/h-earth/render/large-p2-boulder-presentation.v1.js';

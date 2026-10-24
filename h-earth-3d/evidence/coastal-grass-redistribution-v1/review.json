@@ -3,14 +3,14 @@
   "independentReviewer": "/root/writeback_review",
   "sourceReview": "PASS",
   "focusedTests": {
-    "passed": 13,
+    "passed": 18,
     "failed": 0
   },
-  "deterministicRebuild": "PASS",
+  "deterministicRebuild": "PENDING_REMOTE_EXACT_HASH_REPRODUCTION",
   "physicalDeviceAcceptance": false,
   "remaining": [
     "EXACT_HEAD_STARTUP_PREFLIGHT",
     "EXACT_HEAD_DEPLOYMENT_AND_LIVE_VERIFICATION"
   ],
-  "scope": "22566 existing blades relocated;2858738 saved roots conserved;2836172 unrelated records exact;54218 procedural baseline hash unchanged."
+  "scope": "176752 existing blades relocated; 2858738 saved roots conserved; 2681986 unrelated records exact; 54218 procedural baseline hash unchanged."
 }

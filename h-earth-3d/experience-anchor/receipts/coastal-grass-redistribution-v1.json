@@ -32,18 +32,22 @@
   "coastalRedistribution": {
     "evidencePath": "h-earth-3d/evidence/coastal-grass-redistribution-v1/receipt.json",
     "changedSourceSha256": {
-      "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz": "e52de7ab9268430f1e0a9c9d871e2e5a173b479618b2f92a11b9665254ec5fcd",
-      "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json": "a272fdd0813302e417817cc21104e3400badccaaffd3cc605098b38dd2dd8794",
-      "showroom/globe/h-earth/render/precomputed-grass.v1.js": "78e847875ede6b97aeec5da894cffbf18c784e7c350623a33946f5906a37b7eb",
+      "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz": "effa1a0ee03a692932f7f9c4575869e1ceadfa140e3378553b012b30a6eeacd0",
+      "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json": "2960a5a97674ae1219c819642c186f4a691976e377a35a8f8abf1a479d101c4e",
+      "showroom/globe/h-earth/render/precomputed-grass.v1.js": "7f9283893b198de41b3561e52770e4bcd63f127b83469cde096a8548cbba1368",
       "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js": "f7191a217cd408db8b4bce9491b6613019939cdfc233e6d3f717964ca6bc687f",
-      "h-earth-3d/evidence/coastal-grass-redistribution-v1/field.mjs": "3292d60396d88a1ea11a3b7130d0234c1b4c6909a0da20db4f43a92481de8b46",
-      "h-earth-3d/evidence/coastal-grass-redistribution-v1/compile.mjs": "cecd55c337b3f9202e3c5655d47d9c46c5d204e0dcbf29e420e64ecac9703c70",
-      "h-earth-3d/evidence/coastal-grass-redistribution-v1/changes.json.gz": "9d8ae3b674b745de418757c01f1ede30121b053870e0c9526445c320cbd44b95",
-      "h-earth-3d/evidence/coastal-grass-redistribution-v1/receipt.json": "a0176b67019a49bd7ff157a7da40d68a574e7c896d0d56d577b4b1bb88413bd7"
+      "h-earth-3d/evidence/coastal-grass-redistribution-v1/field.mjs": "f0622ef2f6f3ecaea2edf9887391e0b79fb536f2f50b9f7ce7de0ac66b6825c7",
+      "h-earth-3d/evidence/coastal-grass-redistribution-v1/compile.mjs": "670b625c407dd46ed6dbf2053ea97953d1aa1192f00936c4c6f94a74b6ef887c",
+      "h-earth-3d/evidence/coastal-grass-redistribution-v1/changes.json.gz": "d660ab00239409fa4018343732d99a00548fe81863c9adfa6fa69cadb3372508",
+      "h-earth-3d/evidence/coastal-grass-redistribution-v1/receipt.json": "5f2fd40fbd82b80980fca537d3c3da5e13f7b50230552ce0d958cc346c83556c"
     },
-    "sameWorldInvariantAssessment": "Existing world geometry, controls, navigation, trees and other assets preserved. Only grass support inclusion and authenticated coastal root distribution/atlas change.",
-    "focusedTests": "13 PASS",
-    "runtimeQualification": "PENDING_EXISTING_EXACT_HEAD_PREFLIGHT",
-    "ownerPreviewRequired": false
+    "sameWorldInvariantAssessment": "Same world, geometry, trees, navigation and interface. Redistribute176752 existing grass roots to round coastal ends and retract the long tip.",
+    "focusedTests": {
+      "passed": 18,
+      "failed": 0
+    },
+    "runtimeQualification": "PENDING_NEW_EXACT_HEAD_PREFLIGHT",
+    "ownerPreviewRequired": false,
+    "ownerContourReference": "29849.jpg"
   }
 }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-24T20:30:16Z",
+  "generatedAt": "2026-10-24T21:29:40Z",
   "window": {
-    "start": "2026-07-26T20:30:16Z",
-    "end": "2026-10-24T20:30:16Z"
+    "start": "2026-07-26T21:29:40Z",
+    "end": "2026-10-24T21:29:40Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -34,6 +34,10 @@
         "pageLoads": 1041,
         "visits": 761
       },
+      "/showroom/story/welcome/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/laws/": {
         "pageLoads": 270,
         "visits": 90
@@ -45,10 +49,6 @@
       "/products/": {
         "pageLoads": 50,
         "visits": 10
-      },
-      "/showroom/story/welcome/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 125,
@@ -246,19 +246,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },

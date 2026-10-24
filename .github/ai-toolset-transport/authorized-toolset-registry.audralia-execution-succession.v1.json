@@ -658,7 +658,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "H_EARTH_GEN2878_GRASS_EXACT_CANDIDATE_COMPILER_V1",
-      "exactToolingHead": "6ef9718a4696561cea8b3ccdc72e81c8586831d1",
+      "exactToolingHead": "091343af2445127438c3f85c0df7d3df60e3452e",
       "toolingMaterialization": {
         "mode": "BOUNDED_SPARSE_INDEX",
         "sparsePaths": [
@@ -728,7 +728,7 @@
       "writebackSpecification": {
         "mode": "FAST_FORWARD_EXACT_BRANCH",
         "targetBranchRef": "refs/heads/gratitude-coastal-grass-redistribution-20261023",
-        "expectedBranchHead": "6ef9718a4696561cea8b3ccdc72e81c8586831d1",
+        "expectedBranchHead": "091343af2445127438c3f85c0df7d3df60e3452e",
         "commitMessage": "Regenerate verified coastal grass redistribution payload",
         "fastForwardOnly": true,
         "requireChangedPaths": true

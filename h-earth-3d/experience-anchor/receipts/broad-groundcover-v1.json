@@ -1,0 +1,54 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_BROAD_GROUNDCOVER_20261024_001",
+  "canonicalAdmissionGeneration": 2881,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewStage": "BOUNDED_MATERIAL_DELTA_SAME_WORLD_PRESERVATION",
+  "acceptedBaseline": "405374758079c1d89000fb24af7d1f6862ea504c",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/broad-groundcover-v1/README.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/broad-groundcover-v1/groundcover.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/broad-groundcover-v1/README.md",
+    "h-earth-3d/evidence/broad-groundcover-v1/groundcover.test.mjs"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "b631da62961cbcd011db7d3a89ddff45c5fa9e0f739f953098c0d3cb01417669"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "e0f7e9049bd08e320a17e69bf9b4c6b55e786e7926a62664318f6bc29b6575a8"
+    }
+  ],
+  "evidenceScope": "Anchor-preserving bounded terrain-material delta. All geometry, world identity, camera, navigation, UI, water and draw mechanics remain byte-identical outside the single material insert. Invariants are preserved from owner-accepted live baseline, not newly established by a whole-world visual audit.",
+  "limitations": [
+    "No physical-device or owner aesthetic acceptance is asserted.",
+    "Numeric shader samples are not rendered scene captures.",
+    "Exact candidate browser qualification is tracked separately in the operation PR before release.",
+    "No mobile GPU frame-time measurement is claimed."
+  ],
+  "ownerDirection": "Owner accepted oasis release and requests broad groundcover attempt through qualification and publishing; separate visual review is not a prerequisite.",
+  "authorityEffect": "NONE_PRESERVATION_EVIDENCE_ONLY"
+}

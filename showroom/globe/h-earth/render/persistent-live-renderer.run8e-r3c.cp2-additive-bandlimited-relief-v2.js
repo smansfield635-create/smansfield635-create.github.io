@@ -1066,11 +1066,11 @@ void main(){
       float moist=1.0-smoothstep(0.5,6.0,max(0.0,inlandMeters));
       float broadSoil=noise2(world*0.37+vec2(7.3,13.8));
       float brokenSoil=noise2(world*1.1+vec2(19.7,3.2));
-      vec3 drySoil=vec3(0.245,0.174,0.092);
-      vec3 dampSoil=vec3(0.125,0.082,0.043);
+      vec3 drySoil=vec3(0.31,0.255,0.17);
+      vec3 dampSoil=vec3(0.20,0.155,0.095);
       vec3 soil=mix(drySoil,dampSoil,moist*0.82);
       soil*=0.88+0.19*broadSoil+0.07*brokenSoil;
-      float soilBlend=coverage*(0.70+0.23*broadSoil);
+      float soilBlend=coverage*(0.56+0.22*broadSoil);
       palette=mix(palette,soil,soilBlend);
     }
 // SHORELINE_SOIL_END shade

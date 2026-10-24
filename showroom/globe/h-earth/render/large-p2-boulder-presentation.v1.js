@@ -123,25 +123,30 @@ export function buildLargeP2BoulderPresentation(raw){
      rx=radius*(.85+.2*noise(id,32)),rz=radius*(.73+.24*noise(id,33));
    const sourceId=original.sourceVertexIndices[0],start=positions.length/3,indexStart=indices.length,contacts=[],rings=[];
    const baseColor=[0,1,2].map(ch=>original.sourceVertexIndices.reduce((sum,i)=>sum+raw.buffers.baseColorsLinear[i*4+ch],0)/16);
-   const stoneTint=[.20,.195,.175].map((v,ch)=>v*(.88+.24*noise(id,87,ch)));
-   const color=(layer,k)=>baseColor.map((v,ch)=>clamp((v*.48+stoneTint[ch]*.52)*(.80+layer*.055)*(.94+.12*noise(id,k,layer)),.012,.75));
+   // Warm neutral stone inherits the surrounding surface, with restrained chroma.
+   const surroundings=[m.baseColorProfile.linearR,m.baseColorProfile.linearG,m.baseColorProfile.linearB];
+   const neutral=surroundings.reduce((a,b)=>a+b,0)/3;
+   const stoneTint=surroundings.map((v,ch)=>clamp(.32*v+.68*neutral+[.025,.018,.008][ch],.16,.42));
+   const color=(layer,k)=>stoneTint.map((v,ch)=>clamp((v*.94+baseColor[ch]*.06)*(.91+layer*.025)*(.95+.10*noise(id,k,layer)),.012,.75));
    for(let layer=0;layer<5;layer++){
      const ring=[];
      for(let k=0;k<12;k++){
        const a=k*pi/6+.055*Math.sin(k*2.7+id),phi=a+direction;
        const irregular=1+.105*Math.sin(3*a+id*1.1)+.055*Math.cos(5*a-id);
-       const scale=[.72,.96,.88,.63,.28][layer]*(.96+.04*noise(id,k+layer*17));
-       const px=f(x+rx*Math.cos(phi)*scale*irregular),pz=f(z+rz*Math.sin(phi)*scale*irregular);
+       const scale=[.72,.96,.80+.12*noise(id,91),.52+.20*noise(id,92),.30+.13*noise(id,93)][layer]*(.96+.04*noise(id,k+layer*17));
+       // Keep both submerged contact rings byte-identical; vary the exposed shoulders.
+       const lean=layer<2?0:(layer-1)/3;
+       const px=f(x+rx*Math.cos(phi)*scale*irregular+lean*rx*.18*Math.cos(direction+.7)),pz=f(z+rz*Math.sin(phi)*scale*irregular+lean*rz*.18*Math.sin(direction+.7));
        const contact=ground(px,pz);if(!contact)throw Error('LARGE_P2_UNGROUNDED_RING:'+id+':'+layer+':'+k);
        if(layer<2&&!bank.submerged(px,pz))throw Error('LARGE_P2_BASE_NOT_SUBMERGED:'+id+':'+layer+':'+k);
-       const y=f(layer<2?contact.y-(layer===0?.18:.023):baseY+h*([0,0,.36,.70,.94][layer]+.06*(noise(id,k+layer*37)-.5)));
+       const y=f(layer<2?contact.y-(layer===0?.18:.023):baseY+h*([0,0,.36,.69,.90][layer]+.08*Math.sin(phi+id)*layer/4+.035*(noise(id,k+layer*37)-.5)));
        ring.push(vertex(px,y,pz,color(layer,k),sourceId));
        if(layer<2)contacts.push({x:px,z:pz,terrainY:contact.y,meshY:y,burial:f(contact.y-y),triangleId:contact.triangleId,layer});
      }
      rings.push(ring);
    }
    for(let layer=0;layer<4;layer++)for(let k=0;k<12;k++){const n=(k+1)%12,a=rings[layer][k],b=rings[layer][n],c=rings[layer+1][k],d=rings[layer+1][n];indices.push(a,c,b,b,c,d);}
-   const low=vertex(x,baseY-.22,z,color(0,51),sourceId),top=vertex(x,baseY+h*.99,z,color(4,52),sourceId);
+   const low=vertex(x,baseY-.22,z,color(0,51),sourceId),top=vertex(x+rx*.18*Math.cos(direction+.7),baseY+h*.93,z+rz*.18*Math.sin(direction+.7),color(4,52),sourceId);
    for(let k=0;k<12;k++){const n=(k+1)%12;indices.push(low,rings[0][k],rings[0][n],top,rings[4][n],rings[4][k]);}
    selected.push({x,z,radius});
    records.push({originalRockId:original.originalRockId,originalForm:'PAIRED_FRACTURE_WEDGES',

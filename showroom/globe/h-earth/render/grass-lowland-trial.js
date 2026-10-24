@@ -500,7 +500,7 @@ export async function prepareHEarthOasisFoliagePresentation(renderPackage,{yield
 }
 
 /** One presentation mask from the existing oasis grass roots; never a terrain or placement authority. */
-export function buildHEarthOasisGrassSoilCoverage(primitives){
+export function buildHEarthOasisGrassSoilCoverage(primitives,supplementalRoots=[]){
   const cellSizeMeters=.5,width=104,height=146,size=width*height,bounds=Object.freeze({minX:O.minX,maxX:O.maxX,minZ:O.minZ,maxZ:O.maxZ});
   const occupied=new Uint8Array(size);let grassTuftCount=0,grassRootCount=0;
   for(const primitive of primitives??[]){
@@ -510,6 +510,11 @@ export function buildHEarthOasisGrassSoilCoverage(primitives){
       const x=Math.floor((root.x-O.minX)/cellSizeMeters),z=Math.floor((root.z-O.minZ)/cellSizeMeters);
       if(x>=0&&x<width&&z>=0&&z<height){occupied[z*width+x]=1;grassRootCount++;}
     }
+  }
+  for(const root of supplementalRoots){
+    if(!Number.isFinite(root.x)||!Number.isFinite(root.z))throw Error('OASIS_SOIL_ROOT_INVALID');
+    const x=Math.floor((root.x-O.minX)/cellSizeMeters),z=Math.floor((root.z-O.minZ)/cellSizeMeters);
+    if(x>=0&&x<width&&z>=0&&z<height)occupied[z*width+x]=1;
   }
   let occupiedCellCount=0;const expanded=new Float32Array(size);
   for(let z=0;z<height;z++)for(let x=0;x<width;x++)if(occupied[z*width+x]){
@@ -521,12 +526,12 @@ export function buildHEarthOasisGrassSoilCoverage(primitives){
     for(let z=0;z<height;z++)for(let x=0;x<width;x++){let sum=0;for(let d=-2;d<=2;d++)if(z+d>=0&&z+d<height)sum+=horizontal[(z+d)*width+x];output[z*width+x]=sum/5;}
     return output;
   };
-  const blurred=blur(blur(expanded)),pixels=new Uint8Array(size),smooth=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};let nonzeroTexelCount=0;
+  const blurred=blur(blur(blur(blur(expanded)))),pixels=new Uint8Array(size),smooth=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};let nonzeroTexelCount=0;
   for(let z=0;z<height;z++)for(let x=0;x<width;x++){
-    const edge=Math.min(x,width-1-x,z,height-1-z)*cellSizeMeters,value=smooth(.025,.70,blurred[z*width+x])*smooth(0,1.5,edge);
+    const edge=Math.min(x,width-1-x,z,height-1-z)*cellSizeMeters,value=smooth(0,.90,blurred[z*width+x])*smooth(0,3.5,edge);
     pixels[z*width+x]=Math.round(value*255);if(pixels[z*width+x])nonzeroTexelCount++;
   }
-  return Object.freeze({width,height,bounds,cellSizeMeters,pixels,grassTuftCount,grassRootCount,occupiedCellCount,nonzeroTexelCount});
+  return Object.freeze({width,height,bounds,cellSizeMeters,pixels,grassTuftCount,grassRootCount,supplementalRootCount:supplementalRoots.length,occupiedCellCount,nonzeroTexelCount});
 }
 
 

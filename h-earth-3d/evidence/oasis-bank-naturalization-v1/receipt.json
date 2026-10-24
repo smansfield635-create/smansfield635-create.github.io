@@ -1,0 +1,21 @@
+{
+  "schema": "H_EARTH_OASIS_BANK_NATURALIZATION_v1",
+  "baseline": "2f3d00175eaf6edae6d59cf0a5f5fa4e36f9e088",
+  "originalRoots": 2858738,
+  "addedRoots": 1571,
+  "eligibleCount": 1571,
+  "globalAllocationChanged": false,
+  "oasisAllowance": {
+    "maximumRoots": 4096,
+    "maximumPackedBytes": 65536,
+    "maximumTriangles": 16384
+  },
+  "additionalPackedBytes": 25136,
+  "maximumAdditionalTriangles": 6284,
+  "originalRecordsSha256": "3782b088763857ce6603ca89f6c702cdbf8f117633c0f2f91c36e85101e0ab12",
+  "originalGrassAssetUnchanged": true,
+  "atlasPreserved": true,
+  "baselinePrefixesPreserved": true,
+  "packedSha256": "3727d13efde230634fa9390d43aae7fb3e44aeafe6ca5a3f455c97f10518583b",
+  "actualDevicePerformance": "NOT_MEASURED"
+}

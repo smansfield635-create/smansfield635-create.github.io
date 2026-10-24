@@ -1,5 +1,5 @@
 /** Exact output of the existing oasis soil derivation, never a new placement authority. */
-const ASSET_SHA256='de82ecd3efb23f725f2558f003694c05727d519a227358587a9a1719beff787d';
+const ASSET_SHA256='05435e62907b8880d2972330d3c16dde8619186c2f014b7df7796318594ae6ec';
 const sha=async bytes=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
 const fail=reason=>{throw Error('OASIS_SOIL_'+reason);};
 export async function loadPrecomputedOasisSoil(pkg,{fetchImpl=globalThis.fetch}={}){

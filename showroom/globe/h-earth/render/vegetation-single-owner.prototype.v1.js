@@ -1,3 +1,4 @@
+import {assertOasisBankBudget,OASIS_BANK_ALLOCATION,oasisBankTiles} from './oasis-bank-field.v1.js';
 import {buildCavernEntranceGrass,createEntranceFloorSupport,ENTRANCE_BLEND_GLSL} from './cavern-entrance-grass.v1.js';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
 import {takePrecomputedGrassPlan} from './precomputed-grass.v1.js';
@@ -122,12 +123,13 @@ out vec4 outColor;
 void main(){float lit=.48+.52*max(0.,dot(normalize(vNormal),normalize(uSunDirection)));vec3 color=vColor*(vec3(.5)+uSunColor*lit*uSunIntensity*.5);float fog=min(uMaxFog,1.-exp(-max(0.,vDistance-uFogStart)*uFogFalloff));color=mix(color,uHaze,fog);outColor=vec4(pow(max(color,vec3(0.)),vec3(1./2.2)),1.);}`;
 export async function createSingleOwnerVegetation(gl,presentation,{environment,planetRadius,yieldControl=async()=>{},onProgress=()=>{},uploadBudget={},entranceGrass=null}={}){
  if(!environment||!Number.isFinite(planetRadius))throw Error('OWNER_ENVIRONMENT_REQUIRED');
- const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),baseTiles=trusted?.tiles??planImmutableTiles(presentation);
- const originalRootCount=baseTiles.reduce((n,t)=>n+t.count,0);let tiles=baseTiles,entranceReceipt=null,habitat=presentation.habitat;
+ const started=performance.now(),trusted=takePrecomputedGrassPlan(presentation),globalTiles=trusted?.tiles??planImmutableTiles(presentation);
+ const originalRootCount=globalTiles.reduce((n,t)=>n+t.count,0),bankTiles=trusted?oasisBankTiles(originalRootCount):[],oasisRoots=bankTiles.reduce((n,t)=>n+t.count,0),baseTiles=Object.freeze([...globalTiles,...bankTiles]),baseRootCount=originalRootCount+oasisRoots;
+ let tiles=baseTiles,entranceReceipt=null,habitat=presentation.habitat;
  if(entranceGrass){
   if(!trusted)throw Error('ENTRANCE_GRASS_REQUIRES_AUTHENTICATED_BASELINE');
   const addition=await buildCavernEntranceGrass({...entranceGrass,existingTiles:runtimePlantingBaselineTiles(baseTiles),yieldControl});
-  const extra=planImmutableTiles(addition).map(t=>Object.freeze({...t,first:t.first+originalRootCount}));
+  const extra=planImmutableTiles(addition).map(t=>Object.freeze({...t,first:t.first+baseRootCount}));
   tiles=Object.freeze([...baseTiles,...extra]);entranceReceipt=addition.receipt;
   const floor=createEntranceFloorSupport(entranceGrass.geology);
   habitat=buildCavernGrassSoilHabitat(habitat,baseTiles,addition,{eligibleAt:(x,z)=>{
@@ -138,7 +140,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   }});
  }
  const rootCount=tiles.reduce((n,t)=>n+t.count,0);
- if(rootCount>allocation.maximumRoots||rootCount*16>allocation.maximumPackedBytes)throw Error('POPULATION_GPU_BUDGET_EXCEEDED');
+ assertOasisBankBudget(rootCount-oasisRoots,oasisRoots,allocation);
  const controlRoots=trusted?.controlRoots??[];if(!trusted)for(const tile of tiles)tile.rootIds.forEach((id,i)=>{if(Math.hypot(tile.packed[i*4]+139.40267987050615,tile.packed[i*4+2]+194.5)<=2)controlRoots.push(id);});
  if(!controlRoots.length)throw Error('EMPTY_FIXED_CONTROL');
  const ownedShaders=[];let program=null,vao=null,buffer=null;
@@ -184,7 +186,7 @@ export async function createSingleOwnerVegetation(gl,presentation,{environment,p
   for(const range of mergeGrassRanges(fine)){gl.vertexAttribPointer(0,4,gl.FLOAT,false,16,range.first*16);gl.drawArraysInstanced(gl.TRIANGLES,0,6,range.count);drawCallCount++;selectedFineRoots+=range.count;}
   lastDraw={cpuDrawSubmissionMilliseconds:performance.now()-cpuStarted,visibleCoarseRoots,selectedFineRoots,drawCallCount,submittedTriangles:(visibleCoarseRoots+selectedFineRoots)*2,perFrameUploadBytes:0,coarseTiles:visible.length,culledTiles:tiles.length-visible.length,fineTiles:fine.length};return {...lastDraw};
  }
- function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots,maximumWoodlandRoots:450000,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
+ function getReceipt(){return {schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',scope:'APPROVED_WOODLAND_AND_MEASURED_RAVINE_NOT_WHOLE_WORLD',entranceGrass:entranceReceipt,originalRootCount,installedRootCount:rootCount,coarseRootCount:rootCount,rootOwnerCount:1,generationCount:1,ownedObjectCounts:{programs:1,shaders:2,vertexArrays:1,buffers:1,textures:0},maximumRoots:allocation.maximumRoots+OASIS_BANK_ALLOCATION.maximumRoots,globalMaximumRoots:allocation.maximumRoots,oasisRoots,oasisAllocation:OASIS_BANK_ALLOCATION,maximumWoodlandRoots:450000,maximumRavineRoots:allocation.maximumRavineRoots,maximumPackedBytes:allocation.maximumPackedBytes+OASIS_BANK_ALLOCATION.maximumPackedBytes,globalMaximumPackedBytes:allocation.maximumPackedBytes,maximumTileRoots:1600,tileCount:tiles.length,uploadScheduling,gpuUploadCount,gpuUploadedBytes,gpuAllocatedBytes:gpuObservedBufferBytes,gpuRequestedBytes,gpuObservedBufferBytes,allocationGlError,uploadGlError,gpuAllocationVerified:true,cpuDrawTimingScope:'CPU_CULLING_AND_DRAW_SUBMISSION_EXCLUDES_GPU_EXECUTION',preparationMs,controlRoots:[...controlRoots],coarseCoverPolicy:'ALL_POTENTIALLY_VISIBLE_ROOTS_CONSERVATIVE_FRUSTUM',finePolicy:'SECOND_LOBE_SAME_ROOTS_SMOOTH_14_TO_24_METERS',...lastDraw,disposed};}
  function dispose(){if(disposed)return;disposed=true;cleanup();}
  return Object.freeze({draw,getReceipt,dispose,habitat});
  }catch(error){cleanup();throw error;}

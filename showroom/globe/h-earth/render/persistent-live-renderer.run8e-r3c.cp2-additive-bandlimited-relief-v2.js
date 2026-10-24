@@ -1038,10 +1038,10 @@ void main(){
         slopeResponse*0.20,0.0,0.65
       );
       vec3 groundcoverTone=mix(
-        vec3(0.150,0.215,0.100),vec3(0.095,0.170,0.065),groundcoverMoisture
+        vec3(0.135,0.155,0.105),vec3(0.095,0.120,0.075),groundcoverMoisture
       );
       groundcoverTone=mix(
-        groundcoverTone,vec3(0.310,0.265,0.130),groundcoverDry
+        groundcoverTone,vec3(0.245,0.225,0.160),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
       palette=mix(palette,groundcoverTone,groundcoverWeight);

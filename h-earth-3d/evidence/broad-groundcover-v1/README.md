@@ -26,3 +26,9 @@ node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp
 ```
 
 Tests require the exact baseline Git object and resident prepared-vegetation manifest. No prepared grass/vegetation rebuild is needed for this shader-only change.
+
+## Olive palette correction
+
+Operation `H_EARTH_OLIVE_GROUNDCOVER_20261024_001`, admitted generation 2882 by run [40064221356](https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40064221356), canonical return [6380091345](https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6675#issuecomment-6380091345). Exact source baseline: `03de8e0ace21ccf5e2bafdb55786ef4a32a9ef93`. The correction changes only the three groundcover color constants to muted olive and dry-grass tones, then updates both renderer cache aliases. Coverage, all protected regions, resources, geometry and prepared assets remain byte-identical.
+
+Exact baseline replacement proof confirms only these RGB triplets change: sage `(0.150,0.215,0.100)` to `(0.135,0.155,0.105)`; moist `(0.095,0.170,0.065)` to `(0.095,0.120,0.075)`; straw `(0.310,0.265,0.130)` to `(0.245,0.225,0.160)`. The six existing focused tests and syntax check pass. Prior independent coverage/resource findings are retained for their unchanged scope. New palette review and exact-candidate browser qualification are separate; this record does not claim aesthetic or physical-device acceptance.

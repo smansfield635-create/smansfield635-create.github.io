@@ -15,10 +15,45 @@
     "fractionZero": 0.068,
     "scope": "CPU double-precision feasibility survey on eligible gentle inland soil; not actual scene area or GPU measurement"
   },
-  "preserved": ["OASIS", "GROVE", "ESTATE_AND_FOOTPATH", "BEACHES", "EXPOSED_ROCK", "GEOMETRY", "WATER", "GRASS_POPULATION", "PREPARED_ASSETS", "DRAW_AND_UPLOAD_CODE", "CAMERA_AND_NAVIGATION"],
-  "additionalResources": {"geometry": 0, "textures": 0, "textureSamples": 0, "noiseSamples": 0, "uniforms": 0, "drawCalls": 0, "grassRoots": 0},
+  "preserved": [
+    "OASIS",
+    "GROVE",
+    "ESTATE_AND_FOOTPATH",
+    "BEACHES",
+    "EXPOSED_ROCK",
+    "GEOMETRY",
+    "WATER",
+    "GRASS_POPULATION",
+    "PREPARED_ASSETS",
+    "DRAW_AND_UPLOAD_CODE",
+    "CAMERA_AND_NAVIGATION"
+  ],
+  "additionalResources": {
+    "geometry": 0,
+    "textures": 0,
+    "textureSamples": 0,
+    "noiseSamples": 0,
+    "uniforms": 0,
+    "drawCalls": 0,
+    "grassRoots": 0
+  },
   "browserQualification": "REQUIRED_SEPARATE_EXACT_CANDIDATE_RECEIPT_IN_PR_CONTINUATION",
   "physicalOrAestheticAcceptance": "NOT_CLAIMED",
   "deviceGpuFrameTime": "NOT_MEASURED",
-  "authorityEffect": "NONE_EVIDENCE_ONLY"
+  "authorityEffect": "NONE_EVIDENCE_ONLY",
+  "paletteCorrection": {
+    "operationId": "H_EARTH_OLIVE_GROUNDCOVER_20261024_001",
+    "generation": 2882,
+    "baseline": "03de8e0ace21ccf5e2bafdb55786ef4a32a9ef93",
+    "rendererSha256": "eda2606001ef336e0e7c9d2ab19e5036eb5b8184d4a7e35a8b6a98f756ed8706",
+    "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6675#issuecomment-6380091345",
+    "south": "Native task /root/south_groundcover changed exactly three RGB triplets and two renderer cache aliases. Existing masks, coverage, shader control flow, geometry, prepared assets and rendering resources preserved.",
+    "exactBaselineReplacementProof": "PASS_THREE_RGB_TRIPLETS_ONLY",
+    "focusedTests": "SIX_PASS",
+    "syntaxCheck": "PASS",
+    "west": "Native task /root/west_groundcover independently verified exact three renderer RGB replacements and two cache aliases against 03de8e0ace21ccf5e2bafdb55786ef4a32a9ef93, preserved all other renderer/index bytes, and reran six passing tests. No aesthetic or physical-device acceptance is claimed.",
+    "browserQualification": "REQUIRED_SEPARATE_EXACT_CANDIDATE_RECEIPT",
+    "physicalOrAestheticAcceptance": "NOT_CLAIMED",
+    "inheritedEvidenceScope": "Prior West coverage/resource review and field survey remain applicable to unchanged coverage and resources; no inherited palette acceptance is claimed."
+  }
 }

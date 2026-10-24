@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-24T22:27:59Z",
+  "generatedAt": "2026-10-24T23:26:43Z",
   "window": {
-    "start": "2026-07-26T22:27:59Z",
-    "end": "2026-10-24T22:27:59Z"
+    "start": "2026-07-26T23:26:43Z",
+    "end": "2026-10-24T23:26:43Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4776,
-    "visits": 1351,
+    "pageLoads": 4616,
+    "visits": 1341,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4776,
-        "visits": 1351
+        "pageLoads": 4616,
+        "visits": 1341
       }
     },
     "byPath": {
@@ -42,16 +42,12 @@
         "pageLoads": 270,
         "visits": 90
       },
-      "/index.html": {
-        "pageLoads": 120,
-        "visits": 0
-      },
       "/products/": {
         "pageLoads": 50,
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 155,
+        "pageLoads": 125,
         "visits": 10
       },
       "/campaigns/consider-the-energy/": {
@@ -67,7 +63,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 630,
+        "pageLoads": 500,
         "visits": 0
       },
       "/products/education/": {
@@ -75,7 +71,7 @@
         "visits": 70
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 80,
+        "pageLoads": 110,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -95,7 +91,7 @@
         "visits": 0
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 170,
+        "pageLoads": 160,
         "visits": 10
       },
       "/build/intake/": {
@@ -110,15 +106,15 @@
         "pageLoads": 60,
         "visits": 10
       },
+      "/index.html": {
+        "pageLoads": 110,
+        "visits": 0
+      },
       "/evidence/readiness/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "/showroom/globe/h-earth/awards/proof/compass-live-format-proof.html": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -130,6 +126,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
@@ -137,10 +137,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -162,12 +158,12 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
@@ -214,15 +210,15 @@
         "pageLoads": 70,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
       },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -329,7 +325,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3425,
+        "pageLoads": 3275,
         "visits": 0
       },
       "www.google.com": {
@@ -337,8 +333,8 @@
         "visits": 788
       },
       "(none)": {
-        "pageLoads": 553,
-        "visits": 553
+        "pageLoads": 543,
+        "visits": 543
       },
       "raw.githack.com": {
         "pageLoads": 10,

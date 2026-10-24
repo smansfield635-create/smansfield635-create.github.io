@@ -2,12 +2,12 @@
   "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
   "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
   "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
-  "operationId": "H_EARTH_OLIVE_GROUNDCOVER_20261024_001",
-  "canonicalAdmissionGeneration": 2882,
+  "operationId": "H_EARTH_ORGANIC_GROUND_20261024_001",
+  "canonicalAdmissionGeneration": 2883,
   "reviewedAgainstAnchor": true,
   "disposition": "PASS",
-  "reviewStage": "THREE_COLOR_PALETTE_DELTA_SAME_WORLD_PRESERVATION",
-  "acceptedBaseline": "03de8e0ace21ccf5e2bafdb55786ef4a32a9ef93",
+  "reviewStage": "BOUNDED_MATERIAL_FIELD_SAME_WORLD_SOURCE_PRESERVATION",
+  "acceptedBaseline": "68e3a38eb51f43c50fadd019eac9103b69dbe102",
   "invariants": {
     "SAME_CANONICAL_WORLD_IDENTITY": true,
     "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
@@ -23,7 +23,9 @@
   },
   "visualEvidence": [
     "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
-    "h-earth-3d/evidence/broad-groundcover-v1/README.md"
+    "h-earth-3d/evidence/broad-groundcover-v1/README.md",
+    "h-earth-3d/evidence/broad-groundcover-v1/browser-material-comparison.png",
+    "h-earth-3d/evidence/broad-groundcover-v1/browser-material-result.json"
   ],
   "interactionEvidence": [
     "h-earth-3d/evidence/broad-groundcover-v1/groundcover.test.mjs"
@@ -35,21 +37,22 @@
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/index.html",
-      "sha256": "c0ceeb2094b7cbb7488f32b5d9fb8154fabd7e8e4c27b8480b403ade717671a7"
+      "sha256": "a5d6b4fe08c958d07297646910879fc63c2f2f425cb28d8b071b5a59c3c29fd7"
     },
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "eda2606001ef336e0e7c9d2ab19e5036eb5b8184d4a7e35a8b6a98f756ed8706"
+      "sha256": "a1e3c164f29bca2924b9c7b0080ac854218a773fc97dbd60e28f6781315c37e3"
     }
   ],
-  "evidenceScope": "Three groundcover RGB constants and their two entry cache identities only. Exact replacement comparison preserves the entire renderer outside those constants, including previously qualified masks, coverage, geometry, world identity, camera, navigation, UI, water and draw mechanics. Existing anchor invariants are carried forward for unchanged mechanisms; no new aesthetic or physical-device acceptance is asserted.",
+  "evidenceScope": "Same-world source-preservation receipt only. Exact baseline comparison preserves every renderer byte outside the groundcover block, all geometry, camera, navigation, UI, water and draw mechanics, plus the exact protected regions and suitability expressions inside the block. Field distribution and three colors change. This source receipt does not assert rendered organic appearance or physical-device acceptance; independent and rendered qualification remains separately required.",
   "limitations": [
     "No physical-device or owner aesthetic acceptance is asserted.",
     "Numeric shader samples are not rendered scene captures.",
     "Exact candidate browser qualification is tracked separately in the operation PR before release.",
-    "No mobile GPU frame-time measurement is claimed."
+    "No mobile GPU frame-time measurement is claimed.",
+    "Independent West source/evidence review passed. Controlled three-scale near/far shader render evidence is recorded; full-scene exact-candidate preflight remains separate. This anchor PASS covers same-world mechanism preservation only."
   ],
-  "ownerDirection": "Owner-authorized muted olive groundcover correction through qualification and publication; separate visual review is not a prerequisite.",
+  "ownerDirection": "Owner-authorized organic darker earth ground material repair through qualification/publication; no separate owner visual-approval hold.",
   "authorityEffect": "NONE_PRESERVATION_EVIDENCE_ONLY",
-  "priorPreservationOperation": "H_EARTH_BROAD_GROUNDCOVER_20261024_001"
+  "priorPreservationOperation": "H_EARTH_OLIVE_GROUNDCOVER_20261024_001"
 }

@@ -1,0 +1,63 @@
+{
+  "baseline": {
+    "samples": 361201,
+    "transitionSamples": 121106,
+    "axialFraction": 0.27036645583208097,
+    "uniformAxialFraction": 0.2222222222222222,
+    "peakOrientationBinFraction": 0.07102868561425528,
+    "meanPatch": 0.6319357706852295,
+    "almostBare": 0.1131170733192876,
+    "almostCovered": 0.35399126801974523,
+    "orientationBins": [
+      8602,
+      7149,
+      6385,
+      5791,
+      5645,
+      5824,
+      5992,
+      6822,
+      7775,
+      8031,
+      6941,
+      6392,
+      6020,
+      5933,
+      6045,
+      6507,
+      6917,
+      8335
+    ]
+  },
+  "candidate": {
+    "samples": 361201,
+    "transitionSamples": 139965,
+    "axialFraction": 0.23987425427785516,
+    "uniformAxialFraction": 0.2222222222222222,
+    "peakOrientationBinFraction": 0.06110813417640124,
+    "meanPatch": 0.6041046762625781,
+    "almostBare": 0.1008745822962838,
+    "almostCovered": 0.2799715393921944,
+    "orientationBins": [
+      8422,
+      8221,
+      7865,
+      7409,
+      7230,
+      7502,
+      7790,
+      8219,
+      8553,
+      8417,
+      8056,
+      7476,
+      7269,
+      6943,
+      7206,
+      7373,
+      7832,
+      8182
+    ]
+  },
+  "scope": "Source-derived scalar CPU double field; not rendered scene, actual covered land area, GPU precision or timing evidence"
+}

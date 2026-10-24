@@ -55,5 +55,32 @@
     "browserQualification": "REQUIRED_SEPARATE_EXACT_CANDIDATE_RECEIPT",
     "physicalOrAestheticAcceptance": "NOT_CLAIMED",
     "inheritedEvidenceScope": "Prior West coverage/resource review and field survey remain applicable to unchanged coverage and resources; no inherited palette acceptance is claimed."
+  },
+  "organicRepair": {
+    "operationId": "H_EARTH_ORGANIC_GROUND_20261024_001",
+    "generation": 2883,
+    "baseline": "68e3a38eb51f43c50fadd019eac9103b69dbe102",
+    "rendererSha256": "a1e3c164f29bca2924b9c7b0080ac854218a773fc97dbd60e28f6781315c37e3",
+    "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6675#issuecomment-6386345561",
+    "east": "Native /root/east_groundcover isolated thresholded Cartesian field bias using numerical counterfactuals; mesh/whole-coordinate rewrite not supported.",
+    "south": "Native /root/south_groundcover changed only material patch domain, threshold and three colors within existing groundcover block, two cache identities, and bounded evidence.",
+    "focusedTests": "SEVEN_PASS",
+    "syntaxCheck": "PASS",
+    "west": "Native /root/west_groundcover independently reviewed exact bounded diff, source-bound survey/harness and final FAR-aware PNG/result; reran7/7 passing tests. PASS for source preservation, cost accounting and limited darker/less-axis-biased material claim. No source/evidence blocker. Full-scene exact-candidate preflight remains required; elimination of all facets and physical/device performance acceptance not claimed.",
+    "additionalCost": {
+      "noiseSamples": 1,
+      "hashEvaluations": 4,
+      "textures": 0,
+      "textureReads": 0,
+      "geometry": 0,
+      "drawCalls": 0,
+      "uniforms": 0,
+      "grassRoots": 0,
+      "note": "Additional fragment arithmetic; device timing not measured."
+    },
+    "numericalEvidence": "organic-field-survey.json; actual scalar source via source-identity-checked CPU double noise adapter",
+    "renderedEvidence": "browser-material-result.json and browser-material-comparison.png: exact VS/FS with actual imported GLSL, six compile/link/draw passes at120/600/2400m in controlled flat terrain using Chrome SwiftShader. Full-scene exact-candidate startup preflight remains separate. No physical-device/frame-time/all-facets-resolved claim.",
+    "physicalOrAestheticAcceptance": "NOT_CLAIMED",
+    "inheritedEvidenceScope": "Same-world identity, geometry, vegetation, water, navigation, protected regions and resource mechanics unchanged; material appearance and extra arithmetic require current qualification."
   }
 }

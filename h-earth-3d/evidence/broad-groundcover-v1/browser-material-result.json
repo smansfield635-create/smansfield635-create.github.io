@@ -1,0 +1,107 @@
+{
+  "scope": "Exact source shader on controlled flat terrain; not full scene or physical device acceptance",
+  "cases": [
+    {
+      "candidate": false,
+      "span": 120,
+      "role": "near terrain",
+      "compileLink": "PASS",
+      "draw": "PASS",
+      "meanRGB": [
+        86.039625,
+        82.68742261904762,
+        66.08038690476191
+      ],
+      "redRange": [
+        76,
+        113
+      ]
+    },
+    {
+      "candidate": true,
+      "span": 120,
+      "role": "near terrain",
+      "compileLink": "PASS",
+      "draw": "PASS",
+      "meanRGB": [
+        78.34522023809524,
+        74.23571428571428,
+        58.10274404761905
+      ],
+      "redRange": [
+        71,
+        96
+      ]
+    },
+    {
+      "candidate": false,
+      "span": 600,
+      "role": "near terrain",
+      "compileLink": "PASS",
+      "draw": "PASS",
+      "meanRGB": [
+        91.75019047619048,
+        85.46958928571429,
+        67.58548214285715
+      ],
+      "redRange": [
+        75,
+        113
+      ]
+    },
+    {
+      "candidate": true,
+      "span": 600,
+      "role": "near terrain",
+      "compileLink": "PASS",
+      "draw": "PASS",
+      "meanRGB": [
+        84.37275,
+        78.20645833333333,
+        61.02135119047619
+      ],
+      "redRange": [
+        70,
+        112
+      ]
+    },
+    {
+      "candidate": false,
+      "span": 2400,
+      "role": "far continuation",
+      "compileLink": "PASS",
+      "draw": "PASS",
+      "meanRGB": [
+        90.00940476190476,
+        84.33910119047619,
+        66.69639880952381
+      ],
+      "redRange": [
+        73,
+        130
+      ]
+    },
+    {
+      "candidate": true,
+      "span": 2400,
+      "role": "far continuation",
+      "compileLink": "PASS",
+      "draw": "PASS",
+      "meanRGB": [
+        85.186,
+        78.82751785714285,
+        61.42111904761905
+      ],
+      "redRange": [
+        66,
+        130
+      ]
+    }
+  ],
+  "rendererSha256": "a1e3c164f29bca2924b9c7b0080ac854218a773fc97dbd60e28f6781315c37e3",
+  "baseline": "68e3a38eb51f43c50fadd019eac9103b69dbe102",
+  "browser": "Chrome for Testing156.0.8078.47",
+  "backend": "SwiftShader software WebGL2",
+  "conditions": "Flat constant-normal terrain,200m coast distance,64m contact distance,constant gray soil texture,uniform lighting; habitat/clearing disabled; no fog. Same conditions for both versions.120/600m select near terrain role1;2400m selects exact far-continuation primitive branch.",
+  "limits": "No phone frame-time, full scene, grazing-angle geometry, physical-device or whole-world visual acceptance claim."
+}

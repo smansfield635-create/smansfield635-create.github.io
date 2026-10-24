@@ -1021,8 +1021,13 @@ void main(){
         smoothstep(0.0,10.0,length(vec2(groundcoverEstateX,groundcoverEstateZ)))*
         smoothstep(4.0,9.0,groundcoverRouteDistance)*
         (1.0-protectedGrove);
+      // Rotate and softly warp one material sample with resident fields.
+      // This bends cell boundaries without adding geometry or texture reads.
+      float groundcoverDomainX=(0.8*world.x-0.6*world.y)*0.018+5.0+0.65*(broad-0.5);
+      float groundcoverDomainZ=(0.6*world.x+0.8*world.y)*0.018-11.0+0.65*(macroField-0.5);
+      float groundcoverOrganic=noise2(vec2(groundcoverDomainX,groundcoverDomainZ));
       float groundcoverPatch=smoothstep(
-        0.24,0.62,macroField*0.78+mesoField*0.22
+        0.20,0.66,groundcoverOrganic*0.78+mesoField*0.22
       );
       float groundcoverSuitability=
         smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters))*
@@ -1038,10 +1043,10 @@ void main(){
         slopeResponse*0.20,0.0,0.65
       );
       vec3 groundcoverTone=mix(
-        vec3(0.135,0.155,0.105),vec3(0.095,0.120,0.075),groundcoverMoisture
+        vec3(0.110,0.118,0.075),vec3(0.075,0.090,0.055),groundcoverMoisture
       );
       groundcoverTone=mix(
-        groundcoverTone,vec3(0.245,0.225,0.160),groundcoverDry
+        groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
       palette=mix(palette,groundcoverTone,groundcoverWeight);

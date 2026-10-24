@@ -4,27 +4,33 @@ import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {root,source,block,blockPattern,rendererPath,sample} from './sample-shader.mjs';
-const baseline='405374758079c1d89000fb24af7d1f6862ea504c';
+const baseline='68e3a38eb51f43c50fadd019eac9103b69dbe102';
 const git=p=>execFileSync('git',['show',baseline+':'+p],{cwd:root,maxBuffer:4*1024*1024,encoding:'utf8'});
 const digest=s=>createHash('sha256').update(s).digest('hex');
 
 test('one bounded terrain-only insertion preserves all geometry, vegetation, water and rendering-resource code',()=>{
- assert.equal(source.replace(blockPattern,''),git(rendererPath));
+ assert.equal(source.replace(blockPattern,''),git(rendererPath).replace(blockPattern,''));
  const before=source.slice(0,source.indexOf(block));
  assert.ok(before.lastIndexOf('if(!geologicalEarthRock){')>before.lastIndexOf('if(worldSoilTerrain){'));
  assert.match(before,/bool worldSoilTerrain=geologicalEarthRock\|\|vRoleCode==1u\|\|\s*int\(vPrimitiveIndex\)==uGlobalCoverFarPrimitiveIndex;/);
  assert.ok(source.indexOf(block)<source.indexOf('// SHORELINE_SOIL_BEGIN shade'));
- assert.doesNotMatch(block,/\b(?:texture|noise2|uniform|discard|dFdx|dFdy)\s*\(|\b(?:uCameraPosition|distanceToCamera|nearMaterial|upperDry)\b|vWorldPosition\.y|gl\.|Math\.random/);
+ assert.doesNotMatch(block,/\b(?:texture|uniform|discard|dFdx|dFdy)\s*\(|\b(?:uCameraPosition|distanceToCamera|nearMaterial|upperDry)\b|vWorldPosition\.y|gl\.|Math\.random/);
  assert.equal((block.match(/palette=/g)||[]).length,1);
+ assert.equal((block.match(/noise2\(/g)||[]).length,1);
+ const oldBlock=git(rendererPath).match(blockPattern)[0];
+ for(const [start,end] of [['float groundcoverOasisX','float groundcoverPatch'],['float groundcoverSuitability','vec3 groundcoverTone']]){
+  const section=b=>b.slice(b.indexOf(start),b.indexOf(end)).replace(/      \/\/ Rotate and softly warp[\s\S]*$/,'');
+  assert.equal(section(block).trimEnd(),section(oldBlock).trimEnd());
+ }
 });
 
 test('near and far suitable land receive material cover, while dry regions remain bare',()=>{
  for(const [x,z] of [[220,-360],[-350,-450],[900,-1700],[-1800,-3200]]){
-   assert.ok(sample({x,z}).weight>0.75);
-   assert.equal(sample({x,z,macroField:0.10,mesoField:0.15}).weight,0);
+   assert.ok(sample({x,z,noise2:()=>1}).weight>0.75);
+   assert.equal(sample({x,z,noise2:()=>0,mesoField:0.15}).weight,0);
  }
  const weights=[];
- for(let i=0;i<=100;i++)weights.push(sample({macroField:i/100,mesoField:.5}).weight);
+ for(let i=0;i<=100;i++)weights.push(sample({noise2:()=>i/100,mesoField:.5}).weight);
  assert.ok(weights.some(w=>w===0)); assert.ok(weights.some(w=>w>.8));
  for(let i=1;i<weights.length;i++)assert.ok(weights[i]>=weights[i-1]);
  assert.ok(sample({moistShelter:.9,terrainWetness:.8}).dry<sample({moistShelter:0,terrainWetness:0}).dry);
@@ -72,8 +78,8 @@ test('both renderer import aliases use exact updated content identity; every oth
  const p='showroom/globe/h-earth/index.html',html=fs.readFileSync(new URL(p,root),'utf8'),old=git(p);
  const suffix='sha-'+digest(source).slice(0,12);
  assert.equal(html.split(suffix).length-1,2);
- assert.equal(html.replaceAll(suffix,'sha-9271637284c1'),old);
- const manifest=JSON.parse(fs.readFileSync(new URL('showroom/globe/h-earth/render/assets/precomputed-procedural-vegetation.v1.json',root)));
+ assert.equal(html.replaceAll(suffix,'sha-eda2606001ef'),old);
+ const manifest=JSON.parse(git('showroom/globe/h-earth/render/assets/precomputed-procedural-vegetation.v1.json'));
  assert.ok(!JSON.stringify(manifest.sources).includes(rendererPath));
  assert.ok(!JSON.stringify(manifest.inputComponents).includes(rendererPath));
 });

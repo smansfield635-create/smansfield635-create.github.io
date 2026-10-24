@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-24T16:30:20Z",
+  "generatedAt": "2026-10-24T17:28:05Z",
   "window": {
-    "start": "2026-09-24T16:30:20Z",
-    "end": "2026-10-24T16:30:20Z"
+    "start": "2026-09-24T17:28:05Z",
+    "end": "2026-10-24T17:28:05Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 715,
-        "visits": 635
+        "pageLoads": 675,
+        "visits": 595
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 623,
-        "visits": 577
+        "pageLoads": 673,
+        "visits": 627
       },
       {
         "value": "/",
@@ -44,23 +44,8 @@
       },
       {
         "value": "/meet-sean-mansfield/",
-        "pageLoads": 41,
+        "pageLoads": 31,
         "visits": 31
-      },
-      {
-        "value": "/nine-summits-of-love/",
-        "pageLoads": 41,
-        "visits": 31
-      },
-      {
-        "value": "/about-this-underdog/",
-        "pageLoads": 40,
-        "visits": 20
-      },
-      {
-        "value": "/showroom/globe/audralia/",
-        "pageLoads": 34,
-        "visits": 34
       },
       {
         "value": "/evidence/",
@@ -71,6 +56,16 @@
         "value": "/gauges/",
         "pageLoads": 30,
         "visits": 0
+      },
+      {
+        "value": "/showroom/globe/audralia/",
+        "pageLoads": 24,
+        "visits": 24
+      },
+      {
+        "value": "/evidence/agentic-frontier/",
+        "pageLoads": 21,
+        "visits": 21
       },
       {
         "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
@@ -84,6 +79,11 @@
       },
       {
         "value": "/evidence/readiness/",
+        "pageLoads": 20,
+        "visits": 0
+      },
+      {
+        "value": "/about-this-underdog/",
         "pageLoads": 20,
         "visits": 0
       },
@@ -104,6 +104,11 @@
       },
       {
         "value": "/products/education/",
+        "pageLoads": 11,
+        "visits": 11
+      },
+      {
+        "value": "/nine-summits-of-love/",
         "pageLoads": 11,
         "visits": 11
       },
@@ -146,11 +151,6 @@
         "value": "/products/",
         "pageLoads": 2,
         "visits": 2
-      },
-      {
-        "value": "/evidence/agentic-frontier/",
-        "pageLoads": 1,
-        "visits": 1
       },
       {
         "value": "/showroom/globe/h-earth/**",
@@ -221,12 +221,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1819,
-        "visits": 1819
+        "pageLoads": 1759,
+        "visits": 1759
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 596,
+        "pageLoads": 576,
         "visits": 0
       },
       {
@@ -248,8 +248,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 2452,
-        "visits": 1857
+        "pageLoads": 2382,
+        "visits": 1807
       },
       {
         "value": "CN",
@@ -290,8 +290,8 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 665,
-        "visits": 282
+        "pageLoads": 695,
+        "visits": 312
       },
       {
         "value": "tablet",
@@ -302,8 +302,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 815,
-        "visits": 815
+        "pageLoads": 875,
+        "visits": 875
       },
       {
         "value": "Chrome",
@@ -312,18 +312,18 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 496,
-        "visits": 224
+        "pageLoads": 576,
+        "visits": 214
       },
       {
         "value": "Edge",
-        "pageLoads": 94,
-        "visits": 88
+        "pageLoads": 84,
+        "visits": 78
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 90,
-        "visits": 69
+        "pageLoads": 80,
+        "visits": 59
       },
       {
         "value": "Firefox",
@@ -331,19 +331,19 @@
         "visits": 67
       },
       {
-        "value": "Facebook",
-        "pageLoads": 30,
-        "visits": 10
-      },
-      {
-        "value": "Unknown",
-        "pageLoads": 29,
-        "visits": 29
-      },
-      {
         "value": "Safari",
         "pageLoads": 23,
         "visits": 23
+      },
+      {
+        "value": "Facebook",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
+        "value": "Unknown",
+        "pageLoads": 19,
+        "visits": 19
       }
     ],
     "userAgentOS": [

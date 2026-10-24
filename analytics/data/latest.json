@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-24T16:30:20Z",
+  "generatedAt": "2026-10-24T17:28:05Z",
   "window30d": {
-    "start": "2026-09-24T16:30:20Z",
-    "end": "2026-10-24T16:30:20Z"
+    "start": "2026-09-24T17:28:05Z",
+    "end": "2026-10-24T17:28:05Z"
   },
   "daily": [
     {
@@ -12,11 +12,11 @@
     },
     {
       "date": "2026-09-26",
-      "pageLoads": 100
+      "pageLoads": 50
     },
     {
       "date": "2026-09-27",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-09-28",
@@ -88,7 +88,7 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 100
+      "pageLoads": 90
     },
     {
       "date": "2026-10-16",
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 58
+      "pageLoads": 57
     },
     {
       "date": "2026-10-18",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-10-24",
-      "pageLoads": 50
+      "pageLoads": 51
     }
   ],
   "summary": {
@@ -135,12 +135,12 @@
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1819,
-      "visits": 1819
+      "pageLoads": 1759,
+      "visits": 1759
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 596,
+      "pageLoads": 576,
       "visits": 0
     },
     {
@@ -162,13 +162,13 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 715,
-      "visits": 635
+      "pageLoads": 675,
+      "visits": 595
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 623,
-      "visits": 577
+      "pageLoads": 673,
+      "visits": 627
     },
     {
       "path": "/",
@@ -197,7 +197,7 @@
     },
     {
       "path": "/meet-sean-mansfield/",
-      "pageLoads": 41,
+      "pageLoads": 31,
       "visits": 31
     }
   ],

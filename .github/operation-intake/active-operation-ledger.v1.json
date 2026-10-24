@@ -9925,6 +9925,50 @@
       "scopeHash": "7aed71ed492ffe5eb54d87d3338e4b55229d84897894ef885614fa0472a6f158",
       "state": "ADMITTED_LOCKED"
     },
+    "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8a61c9ac11369ea67a551eb6d19cdd1f9c053046",
+          "lockGeneration": 2878,
+          "lockScope": "H_EARTH:HILLSIDE_SHORELINE_CONTINUITY:20261023",
+          "operationId": "H_EARTH_COASTAL_GRASS_REDISTRIBUTION_20261023_001",
+          "procedureLocatorDigest": "bb619d6abbbe0088f14d21b41fa4e8bc50b7447ea387cf704ebb2125d9f65cb6",
+          "requestDigest": "351949817661f29452c36aad5a2fd5eddbba6dea506adeb0209463c14688fdb1",
+          "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708"
+        },
+        "bindingDigest": "a24f2f847ddaea6c0d3daefd7fe3e2280b703c322ec1a4a3162428d1eecd2c9d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "956a1c37f0fd7cfcb6f740ee95b08e56cde0f5185ee1abdd189c9f543db046ec",
+          "commentId": 6377240470,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6675,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40043147797,
+          "workflowSha": "8a61c9ac11369ea67a551eb6d19cdd1f9c053046"
+        },
+        "lineageAnchorCommitSha": "1cdf8bb8ed19f7d03a49b467ed343ab54dedffb7",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8a61c9ac11369ea67a551eb6d19cdd1f9c053046",
+      "lockGeneration": 2878,
+      "lockScope": "H_EARTH:HILLSIDE_SHORELINE_CONTINUITY:20261023",
+      "operationId": "H_EARTH_COASTAL_GRASS_REDISTRIBUTION_20261023_001",
+      "procedureLocatorDigest": "bb619d6abbbe0088f14d21b41fa4e8bc50b7447ea387cf704ebb2125d9f65cb6",
+      "released": false,
+      "requestDigest": "351949817661f29452c36aad5a2fd5eddbba6dea506adeb0209463c14688fdb1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708",
+      "state": "ADMITTED_LOCKED"
+    },
     "7bbff05fdadc2d17328198a61b882e5d2a470c8968663a71d8fa67f74c6cd6a4": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -21414,7 +21458,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2877,
+  "lockGeneration": 2878,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

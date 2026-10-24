@@ -1,0 +1,17 @@
+STAGE adapters-ready
+STAGE geology-ready
+STAGE surface-ready
+✔ all prior roots, original tile prefixes and complete habitat atlas preserved byte for byte (124.226206ms)
+✔ every new blade is dry, grounded, within connected bank and outside protected footprints (363.358491ms)
+✔ both allocations fail closed independently, including runtime entrance roots (0.264358ms)
+✔ authenticated global loader and bank payload preserve custody (2076.396028ms)
+✔ fourteen rocks retain submerged bases and identities while exposed form and neutral colors change (2261.8107ms)
+✔ active owner uploads global, bank and entrance contacts exactly once within named budgets (2894.360433ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13065.702644

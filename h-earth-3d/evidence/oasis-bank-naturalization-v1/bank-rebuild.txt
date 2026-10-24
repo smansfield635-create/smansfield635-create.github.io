@@ -1,0 +1,13 @@
+STAGE adapters-ready
+STAGE geology-ready
+STAGE surface-ready
+ADMISSION { field: 14161, admitted: 1571, material: 1571 } {
+  schema: 'H_EARTH_UNIFORM_GROUND_ADMISSION_v1',
+  tested: 14161,
+  rejections: { RENDERED_WATER: 7135, RENDERED_BEACH: 5455 },
+  waterBoundaryEdges: 1324,
+  maximumSandCoverage: 0.12,
+  geographicWaterPolicy: true,
+  rectangleMask: false
+}
+DETERMINISTIC_BANK_REBUILD_PASS

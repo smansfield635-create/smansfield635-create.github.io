@@ -71,7 +71,7 @@ export function buildVegetationVisibleSurface(pkg,{refinement=null,geology=null,
   const retired=new Set(geology?.retirement?.triangleOffsets??[]);
   for(const offset of retired)if(!Number.isSafeInteger(offset)||offset<0||offset%3||offset+2>=pkg.buffers.indices.length)invalid('RETIREMENT_OFFSET');
   const packagePart={positions:renderedAttributes?.base?.positions??pkg.buffers.positions,indices:pkg.buffers.indices};
-  const basePart={...packagePart,...renderedAttributes?.base,spans:pkg.primitiveSpans.filter(s=>s.role==='TERRAIN'),owner:'CANONICAL_VISIBLE_TERRAIN',partId:'BASE',surfaceRevision,skip:retired};
+  const basePart={...packagePart,...renderedAttributes?.base,spans:pkg.primitiveSpans.filter(s=>s.role==='TERRAIN'||s.primitiveId==='H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION'),owner:'CANONICAL_VISIBLE_TERRAIN',partId:'BASE',surfaceRevision,skip:retired};
   const groundParts=[basePart];
   const base=triangleSurface([basePart]);
   let refined=null,clip=null;

@@ -1,0 +1,49 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_COASTAL_GRASS_REDISTRIBUTION_20261023_001",
+  "reviewedAgainstAnchor": false,
+  "disposition": "OWNER_APPROVED_BOUNDED_RELEASE_WITH_RETAINED_AUTOMATED_EVIDENCE",
+  "physicalAcceptance": false,
+  "subjectiveVisualAcceptance": false,
+  "fullSceneTourResult": "FAIL",
+  "interactionEvidence": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40036982659"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/terrain-grass-continuity-v2/release-qualification.json",
+    "h-earth-3d/evidence/terrain-grass-continuity-v2/checkpoint.json"
+  ],
+  "releaseChecksRetained": [
+    "STATIC_PAYLOAD",
+    "GENUINE_INPUT_CONFIRMED_ENTRY",
+    "READY_STATE",
+    "PAGE_AND_CONSOLE_ERRORS",
+    "EXACT_HEAD_DEPLOYMENT",
+    "LIVE_HEAD_AND_ASSET_VERIFICATION"
+  ],
+  "limitations": [
+    "Extended scene tour remains FAIL.",
+    "Performance non-regression unproven; current whole-frame outlier2823.3ms retained.",
+    "CPU submission timings exclude GPU execution.",
+    "No physical-device or subjective visual acceptance claimed."
+  ],
+  "coastalRedistribution": {
+    "evidencePath": "h-earth-3d/evidence/coastal-grass-redistribution-v1/receipt.json",
+    "changedSourceSha256": {
+      "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz": "e52de7ab9268430f1e0a9c9d871e2e5a173b479618b2f92a11b9665254ec5fcd",
+      "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json": "a272fdd0813302e417817cc21104e3400badccaaffd3cc605098b38dd2dd8794",
+      "showroom/globe/h-earth/render/precomputed-grass.v1.js": "78e847875ede6b97aeec5da894cffbf18c784e7c350623a33946f5906a37b7eb",
+      "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js": "f7191a217cd408db8b4bce9491b6613019939cdfc233e6d3f717964ca6bc687f",
+      "h-earth-3d/evidence/coastal-grass-redistribution-v1/field.mjs": "3292d60396d88a1ea11a3b7130d0234c1b4c6909a0da20db4f43a92481de8b46",
+      "h-earth-3d/evidence/coastal-grass-redistribution-v1/compile.mjs": "cecd55c337b3f9202e3c5655d47d9c46c5d204e0dcbf29e420e64ecac9703c70",
+      "h-earth-3d/evidence/coastal-grass-redistribution-v1/changes.json.gz": "9d8ae3b674b745de418757c01f1ede30121b053870e0c9526445c320cbd44b95",
+      "h-earth-3d/evidence/coastal-grass-redistribution-v1/receipt.json": "a0176b67019a49bd7ff157a7da40d68a574e7c896d0d56d577b4b1bb88413bd7"
+    },
+    "sameWorldInvariantAssessment": "Existing world geometry, controls, navigation, trees and other assets preserved. Only grass support inclusion and authenticated coastal root distribution/atlas change.",
+    "focusedTests": "13 PASS",
+    "runtimeQualification": "PENDING_EXISTING_EXACT_HEAD_PREFLIGHT",
+    "ownerPreviewRequired": false
+  }
+}

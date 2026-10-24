@@ -9925,50 +9925,6 @@
       "scopeHash": "7aed71ed492ffe5eb54d87d3338e4b55229d84897894ef885614fa0472a6f158",
       "state": "ADMITTED_LOCKED"
     },
-    "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d",
-          "lockGeneration": 2875,
-          "lockScope": "H_EARTH:HILLSIDE_SHORELINE_CONTINUITY:20261023",
-          "operationId": "H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002",
-          "procedureLocatorDigest": "ab312ff756bb583aed2640435e1993c6c5588289541e05a1785c62e622a1e18d",
-          "requestDigest": "36d07b558851c184d9e089cea763a0a23ba9ed4b714cd59e66ae8cc67d61dbe0",
-          "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708"
-        },
-        "bindingDigest": "760d516d5044840a00d60f5ceaff9fefaa3b278777da4ec7d4aaa88e53f68d56",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "9884a81e3e4d40a7ed5279386b83450f1304edd56c482959d74578873abb3f2b",
-          "commentId": 6374472797,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6675,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 40022337273,
-          "workflowSha": "db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d"
-        },
-        "lineageAnchorCommitSha": "bd6f2991ef02def391635768f361f34c0aca3798",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d",
-      "lockGeneration": 2875,
-      "lockScope": "H_EARTH:HILLSIDE_SHORELINE_CONTINUITY:20261023",
-      "operationId": "H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002",
-      "procedureLocatorDigest": "ab312ff756bb583aed2640435e1993c6c5588289541e05a1785c62e622a1e18d",
-      "released": false,
-      "requestDigest": "36d07b558851c184d9e089cea763a0a23ba9ed4b714cd59e66ae8cc67d61dbe0",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708",
-      "state": "ADMITTED_LOCKED"
-    },
     "7bbff05fdadc2d17328198a61b882e5d2a470c8968663a71d8fa67f74c6cd6a4": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -87094,6 +87050,51 @@
       "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d",
+          "lockGeneration": 2875,
+          "lockScope": "H_EARTH:HILLSIDE_SHORELINE_CONTINUITY:20261023",
+          "operationId": "H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002",
+          "procedureLocatorDigest": "ab312ff756bb583aed2640435e1993c6c5588289541e05a1785c62e622a1e18d",
+          "requestDigest": "36d07b558851c184d9e089cea763a0a23ba9ed4b714cd59e66ae8cc67d61dbe0",
+          "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708"
+        },
+        "bindingDigest": "760d516d5044840a00d60f5ceaff9fefaa3b278777da4ec7d4aaa88e53f68d56",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "9884a81e3e4d40a7ed5279386b83450f1304edd56c482959d74578873abb3f2b",
+          "commentId": 6374472797,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6675,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40022337273,
+          "workflowSha": "db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d"
+        },
+        "lineageAnchorCommitSha": "bd6f2991ef02def391635768f361f34c0aca3798",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "db743204f1fcc0b6d8fd1dae5bf3b590be5f6d9d",
+      "lockGeneration": 2875,
+      "lockScope": "H_EARTH:HILLSIDE_SHORELINE_CONTINUITY:20261023",
+      "operationId": "H_EARTH_TERRAIN_GRASS_CONTINUITY_20261023_002",
+      "procedureLocatorDigest": "ab312ff756bb583aed2640435e1993c6c5588289541e05a1785c62e622a1e18d",
+      "released": true,
+      "requestDigest": "36d07b558851c184d9e089cea763a0a23ba9ed4b714cd59e66ae8cc67d61dbe0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }
   ]
 }

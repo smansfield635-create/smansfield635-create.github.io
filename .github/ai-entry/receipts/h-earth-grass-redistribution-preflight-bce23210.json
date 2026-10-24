@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-grass-redistribution-preflight-bce23210",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6755,
+  "requestBranch": "ai-dispatch-request-grass-redistribution-bce23210",
+  "requestCommit": "c327c711d394ad6435dbd82a3df99aca6c9d95f7",
+  "requestCommitParent": "62a7b384387a4162c494c7f2518a515e62f9eafa",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "62a7b384387a4162c494c7f2518a515e62f9eafa",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "bce232104d36fc26d7fd3802b544e8910c89a5d6",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "40044907336",
+  "dispatchedRunId": 40044920644,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40044920644",
+  "dispatchedRunHeadSha": "62a7b384387a4162c494c7f2518a515e62f9eafa",
+  "dispatchedAt": "2026-10-24T00:25:41.447Z",
+  "resolvedAt": "2026-10-24T00:25:48.013Z"
+}

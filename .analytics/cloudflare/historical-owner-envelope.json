@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-24T03:36:37Z",
+  "generatedAt": "2026-10-24T04:33:25Z",
   "window": {
-    "start": "2026-07-26T03:36:37Z",
-    "end": "2026-10-24T03:36:37Z"
+    "start": "2026-07-26T04:33:25Z",
+    "end": "2026-10-24T04:33:25Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,19 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4706,
+    "pageLoads": 4696,
     "visits": 1351,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4706,
+        "pageLoads": 4696,
         "visits": 1351
       }
     },
     "byPath": {
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 155,
-        "visits": 10
-      },
       "/showroom/": {
         "pageLoads": 100,
         "visits": 10
@@ -37,6 +33,10 @@
       "/index.html": {
         "pageLoads": 130,
         "visits": 0
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 145,
+        "visits": 10
       },
       "/": {
         "pageLoads": 1051,
@@ -218,6 +218,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -232,10 +236,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {
@@ -325,7 +325,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3355,
+        "pageLoads": 3345,
         "visits": 0
       },
       "www.google.com": {

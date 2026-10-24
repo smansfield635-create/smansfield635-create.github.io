@@ -5,10 +5,12 @@ import {execFileSync} from 'node:child_process';
 import {gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import {visibleSurface,groundAdmission,geology} from '../hillside-shoreline-continuity-v1/support-fixture.mjs';
-import {contourWeight} from './field.mjs';
+import {centralGroundAdmission,oasisClearance} from './central-admission.mjs';
+import {inverseHEarthGroundCoverPoint} from '../../../showroom/globe/h-earth/render/landscape-groundcover.global-v1.js';
+import {getHEarthSignedCoastDistanceMeters} from '../../../showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js';
 import {buildCavernEntranceGrass} from '../../../showroom/globe/h-earth/render/cavern-entrance-grass.v1.js';
 import {buildCavernPalmPlacement} from '../../../showroom/globe/h-earth/render/cavern-palm-placement.v1.js';
-const root=new URL('../../../',import.meta.url),asset='showroom/globe/h-earth/render/assets/precomputed-grass.v1.',base='bce232104d36fc26d7fd3802b544e8910c89a5d6';
+const root=new URL('../../../',import.meta.url),asset='showroom/globe/h-earth/render/assets/precomputed-grass.v1.',base='e7d8317b167c5f206cd5ba747d394236da61a2b2';
 const git=p=>execFileSync('git',['show',base+':'+p],{cwd:root,maxBuffer:180*1024*1024}),sha=b=>createHash('sha256').update(b).digest('hex');
 const oldManifest=JSON.parse(git(asset+'json')),oldRaw=gunzipSync(git(asset+'bin.gz')),manifest=JSON.parse(fs.readFileSync(new URL(asset+'json',root))),raw=gunzipSync(fs.readFileSync(new URL(asset+'bin.gz',root))),report=JSON.parse(fs.readFileSync(new URL('./receipt.json',import.meta.url))),changes=JSON.parse(gunzipSync(fs.readFileSync(new URL('./changes.json.gz',import.meta.url))));
 function unpack(m,b){const map=new Map();let offset=0;for(const t of m.tiles){const records=[];for(let j=0;j<t.count;j++){records.push(b.subarray(offset,offset+52));offset+=52;}map.set(t.id,{...t,records});}return map;}
@@ -25,8 +27,8 @@ test('every unrelated record is byte-identical and every moved blade has exactly
  assert.equal(preserved,report.unchangedRoots);assert.equal(preserved+changes.length,manifest.rootCount);
  const positions=new Set();for(const t of tiles.values())for(const b of t.records){const k=b.readDoubleLE(0)+':'+b.readDoubleLE(16);assert(!positions.has(k),'DUPLICATE_ROOT');positions.add(k);}
 });
-test('every moved destination is dry admitted rendered ground inside the rounded contour',()=>{
- for(const c of changes){const [x,y,z]=c.to,s=visibleSurface.sample(x,z);assert(s);assert.equal(s.y,y);assert.equal(s.terrainPrimitiveId,c.primitive);assert.equal(s.triangleId,c.triangleId);assert(groundAdmission(x,z,s));assert(Math.abs(x)>250&&Math.abs(x)<444);assert(z>-283&&z<-145);assert(contourWeight(x,z)>0);const w=visibleSurface.water.sample(x,z);assert(!w||y>w.y+.03);}
+test('every moved destination is newly admitted dry ground in the former oasis sample gap',()=>{
+ for(const c of changes){const [x,y,z]=c.to,s=visibleSurface.sample(x,z);assert(s);assert.equal(s.y,y);assert.equal(s.terrainPrimitiveId,c.primitive);assert.equal(s.triangleId,c.triangleId);assert(centralGroundAdmission(x,z,s));assert.equal(groundAdmission(x,z,s),false);const local=inverseHEarthGroundCoverPoint(x,y,z);assert(local.x>=-18.1&&local.x<=34.1&&local.z>=-204.1&&local.z<=-130.9);assert(oasisClearance(local.x,local.z)>0);const w=visibleSurface.water.sample(x,z);assert(!w||y>w.y+.03);}
 });
 test('woodland and ravine atlas panels remain byte-identical',()=>{const off=manifest.rootCount*52;for(let z=0;z<192;z++)assert.deepEqual(raw.subarray(off+z*576,off+z*576+384),oldRaw.subarray(off+z*576,off+z*576+384));});
 test('shared support change preserves exact procedural cavern baseline',async()=>{
@@ -36,11 +38,11 @@ test('shared support change preserves exact procedural cavern baseline',async()=
  assert.equal(result.receipt.contactCount,54218);assert.equal(sha(bytes),oldManifest.receipt.terrainRuntimeBaseline.sha256);
 });
 
-test('coastal tip is shortened and rounded shoulder receives actual blades',()=>{
- let beforeTip=0,afterTip=0,shoulder=0;
- for(const [source,isOld] of [[oldTiles,true],[tiles,false]])for(const t of source.values())for(let j=t.baselineCount;j<t.records.length;j++){const b=t.records[j],x=b.readDoubleLE(0),y=b.readDoubleLE(8),z=b.readDoubleLE(16);if(Math.abs(x)>350&&z>-145&&y<6&&b.readUInt32LE(48)===2){if(isOld)beforeTip++;else afterTip++;}}
- for(const c of changes)if(Math.abs(c.to[0])>384&&c.to[2]<-190)shoulder++;
- assert(beforeTip>1000);assert.equal(afterTip,0);assert(shoulder>10000);
+test('actual central coastal additions retract while the formerly rectangular dry gap receives roots',()=>{
+ assert(changes.length>1000);assert.equal(report.added,0);
+ for(const c of changes){const [x,y,z]=c.from;assert(x>-120&&x<180&&z>-175&&z<-90&&y<8);const local=inverseHEarthGroundCoverPoint(x,y,z);assert(getHEarthSignedCoastDistanceMeters(local.x,local.z)<56);}
+ const outside=source=>{const records=[];for(const t of source.values())for(const b of t.records){const x=b.readDoubleLE(0),z=b.readDoubleLE(16);if(x<-120||x>180||z<-216||z>-90)records.push(b);}return sha(Buffer.concat(records));};
+ assert.equal(outside(tiles),outside(oldTiles),'UNRELATED_OUTER_GRASS_CHANGED');
 });
 test('relocated blades span each full cell without repeated empty row bands',()=>{
  const bins=[0,0,0,0];for(const c of changes){const z=c.to[2];bins[Math.min(3,Math.floor((z-Math.floor(z))*4))]++;}

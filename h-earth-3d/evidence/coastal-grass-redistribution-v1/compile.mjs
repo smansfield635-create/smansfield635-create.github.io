@@ -3,13 +3,15 @@ import {execFileSync} from 'node:child_process';
 import {gzipSync,gunzipSync} from 'node:zlib';
 import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
-import {visibleSurface,groundAdmission,materials,cover,habitatModule} from '../hillside-shoreline-continuity-v1/support-fixture.mjs';
-import {recipientWeight,donorWeight} from './field.mjs';
-const base='bce232104d36fc26d7fd3802b544e8910c89a5d6',root=new URL('../../../',import.meta.url),asset='showroom/globe/h-earth/render/assets/precomputed-grass.v1.',sha=b=>createHash('sha256').update(b).digest('hex');
+import {visibleSurface,groundAdmission as originalGroundAdmission,materials,cover,habitatModule} from '../hillside-shoreline-continuity-v1/support-fixture.mjs';
+import {centralGroundAdmission as groundAdmission,oasisClearance,reservationReceipt} from './central-admission.mjs';
+import {getHEarthSignedCoastDistanceMeters} from '../../../showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js';
+import {smooth} from '../../../showroom/globe/h-earth/render/grass-coastal-field.v1.js';
+const base='e7d8317b167c5f206cd5ba747d394236da61a2b2',root=new URL('../../../',import.meta.url),asset='showroom/globe/h-earth/render/assets/precomputed-grass.v1.',sha=b=>createHash('sha256').update(b).digest('hex');
 const git=p=>execFileSync('git',['show',base+':'+p],{cwd:root,maxBuffer:180*1024*1024});
 const prior=JSON.parse(git(asset+'json')),before=gunzipSync(git(asset+'bin.gz'));
 assert.equal(sha(before),prior.rawSha256);
-const occupied=new Set();const hash=habitatModule.habitatHash,tiles=new Map(),cells=new Map(),donors=[],retained=[];let offset=0;
+const occupied=new Set(),donorDistances=new Map();const hash=habitatModule.habitatHash,tiles=new Map(),cells=new Map(),donors=[],retained=[];let offset=0;
 const key=(x,z)=>Math.floor(x)+':'+Math.floor(z);
 function witness(x,z){const s=visibleSurface.sample(x,z);if(!s)return null;const b=visibleSurface.beach.sample({x,z,support:s});if(!b.valid)return null;return {s,b};}
 function eligible(x,z,w){if(!w||!groundAdmission(x,z,w.s)||w.s.slope>1.6)return false;const a=cover.inverseHEarthGroundCoverPoint(x,w.s.y,z),m=materials.sampleHEarthRun8CSuccessorSurfaceMaterial(a.x,a.z);return m?.valid===true&&(m.surfaceClass==='STONE_AND_SPARSE_SOIL'?m.soilDepth>=.035:['LOWLAND_SOIL','COASTAL_SOIL','DRY_SAND'].includes(m.surfaceClass)&&m.soilDepth>=.20);}
@@ -18,27 +20,39 @@ for(const t of prior.tiles)for(let j=0;j<t.count;j++){
  const b=before.subarray(offset,offset+52);offset+=52;
  const x=b.readDoubleLE(0),y=b.readDoubleLE(8),z=b.readDoubleLE(16);
  let donate=false;
- if(j>=t.baselineCount&&b.readUInt32LE(48)===2&&y<8&&Math.abs(x)>250){const w=witness(x,z);donate=!!w&&hash(b.readUInt32LE(40),2878,11)/4294967296<donorWeight(x,y,z,w.b.interpolatedExposedContactDistance);}
+ if(j>=t.baselineCount&&b.readUInt32LE(48)===2&&y<8&&x>-120&&x<180&&z>-175&&z<-90){
+  const local=cover.inverseHEarthGroundCoverPoint(x,y,z),coast=getHEarthSignedCoastDistanceMeters(local.x,local.z);
+  const weight=smooth(-120,-95,x)*(1-smooth(155,180,x))*smooth(-175,-155,z)*(1-smooth(6,8,y))*(1-smooth(40,56,coast));
+  donate=hash(b.readUInt32LE(40),2878,12)/4294967296<weight;if(donate)donorDistances.set(b,coast);
+ }
  if(donate)donors.push(b);else {retained.push(b);add(b,j<t.baselineCount);}
 }
 console.log('DONOR_COHORT',donors.length);
 // Generate candidates once, rank deterministically, and move no more roots than
 // either the eligible destination capacity or the authenticated donor cohort.
 const candidates=[];
-for(let z=-283;z<-145;z++)for(const side of [-1,1])for(let ex=0;ex<194;ex++){
- const cx=side<0?-251-ex:250+ex,cw=recipientWeight(cx+.5,z+.5);if(!cw)continue;
+for(let z=-216;z<-119;z++)for(let cx=-30;cx<46;cx++){
+ const mid=witness(cx+.5,z+.5);if(!mid||originalGroundAdmission(cx+.5,z+.5,mid.s)||!eligible(cx+.5,z+.5,mid))continue;
+ const local=cover.inverseHEarthGroundCoverPoint(cx+.5,mid.s.y,z+.5),coast=getHEarthSignedCoastDistanceMeters(local.x,local.z);
+ const cw=smooth(0,4,oasisClearance(local.x,local.z))*smooth(40,56,coast);if(!cw)continue;
  const quota=Math.floor(24*cw),existing=cells.get(key(cx,z))||0;
  for(let j=existing;j<quota;j++){
   const slot=(j*7+hash(cx,z,2881)%24)%24,ix=slot%6,iz=Math.floor(slot/6),x=Math.fround(cx+(ix+.15+.7*hash(cx*31+j,z,2878)/4294967296)/6),zz=Math.fround(z+(iz+.15+.7*hash(cx,z*31+j,2879)/4294967296)/4);
-  if(occupied.has(x+':'+zz))continue;const w=witness(x,zz);if(!eligible(x,zz,w))continue;
-  candidates.push({x,z:zz,w,rank:Math.hypot(Math.max(0,Math.abs(x)-300)/140,(zz+240)/90)+.10*hash(cx*31+j,z,2880)/4294967296});
+  if(occupied.has(x+':'+zz))continue;const w=witness(x,zz);if(!eligible(x,zz,w)||originalGroundAdmission(x,zz,w.s))continue;
+  const actual=cover.inverseHEarthGroundCoverPoint(x,w.s.y,zz);if(oasisClearance(actual.x,actual.z)<=0||getHEarthSignedCoastDistanceMeters(actual.x,actual.z)<40)continue;
+  candidates.push({x,z:zz,w,rank:hash(cx*31+j,z,2880)/4294967296});
  }
 }
 candidates.sort((a,b)=>a.rank-b.rank||a.x-b.x||a.z-b.z);
-const moved=Math.min(donors.length,candidates.length);assert(moved>0,'NO_VALID_REDISTRIBUTION');assert.equal(moved,donors.length,'INSUFFICIENT_ROUNDED_DESTINATION_CAPACITY');
+donors.sort((a,b)=>donorDistances.get(a)-donorDistances.get(b)||a.readUInt32LE(40)-b.readUInt32LE(40));
+const moved=Math.min(donors.length,candidates.length);assert(moved>0,'NO_VALID_REDISTRIBUTION');
+const chosen=new Set(donors.slice(0,moved).map(b=>b.byteOffset-before.byteOffset));
+// Preserve original ordering and bytes for every unselected record.
+tiles.clear();cells.clear();occupied.clear();retained.length=0;offset=0;
+for(const t of prior.tiles)for(let j=0;j<t.count;j++){const b=before.subarray(offset,offset+52);if(!chosen.has(offset)){retained.push(b);add(b,j<t.baselineCount);}offset+=52;}
 const changes=[];
-for(let i=0;i<donors.length;i++){
- const old=donors[i];if(i>=moved){retained.push(old);add(old);continue;}
+for(let i=0;i<moved;i++){
+ const old=donors[i];
  const p=candidates[i],b=Buffer.from(old);b.writeDoubleLE(p.x,0);b.writeDoubleLE(Math.fround(p.w.s.y),8);b.writeDoubleLE(p.z,16);b.writeDoubleLE(p.w.s.slope,32);b.writeUInt32LE(p.w.s.triangleId,44);add(b);
  changes.push({from:[old.readDoubleLE(0),old.readDoubleLE(8),old.readDoubleLE(16)],to:[p.x,p.w.s.y,p.z],primitive:p.w.s.terrainPrimitiveId,triangleId:p.w.s.triangleId,seed:b.readUInt32LE(40)});
 }
@@ -52,7 +66,7 @@ for(let z=0;z<192;z++)for(let x=0;x<192;x++){
 }
 const rootBytes=Buffer.concat(records),raw=Buffer.concat([rootBytes,pixels]),compressed=gzipSync(raw,{level:9}),packed=new Float32Array(records.length*4);
 for(let i=0;i<records.length;i++)for(let j=0;j<4;j++)packed[i*4+j]=records[i].readDoubleLE(j*8);
-const report={schema:'H_EARTH_COASTAL_GRASS_REDISTRIBUTION_v1',baseline:base,rootCount:prior.rootCount,moved,added:0,removed:0,donorCandidates:donors.length,recipientCapacity:candidates.length,unchangedRoots:retained.length,unchangedRecordsSha256:sha(Buffer.concat(retained)),baselinePrefixesPreserved:true,nonCoastalAtlasPanelsPreserved:true,maximumTileRoots:maxTile,packedBytes:packed.byteLength,rawSha256:sha(raw),compressedSha256:sha(compressed),packedSha256:sha(Buffer.from(packed.buffer)),atlasSha256:sha(pixels),changesSha256:sha(JSON.stringify(changes)),actualDevicePerformance:'NOT_MEASURED'};
+const report={schema:'H_EARTH_COASTAL_GRASS_REDISTRIBUTION_v1',baseline:base,rootCount:prior.rootCount,moved,added:0,removed:0,donorCandidates:donors.length,recipientCapacity:candidates.length,unmovedDonorCandidates:donors.length-moved,repairTarget:"CENTRAL_DRY_OASIS_SHOULDER_AND_COASTAL_TIPS",oasisReservation:reservationReceipt,ownerImageRegistration:"NOT_CLAIMED_OWNER_WAIVED_CAMERA_PREVIEW",unchangedRoots:retained.length,unchangedRecordsSha256:sha(Buffer.concat(retained)),baselinePrefixesPreserved:true,nonCoastalAtlasPanelsPreserved:true,maximumTileRoots:maxTile,packedBytes:packed.byteLength,rawSha256:sha(raw),compressedSha256:sha(compressed),packedSha256:sha(Buffer.from(packed.buffer)),atlasSha256:sha(pixels),changesSha256:sha(JSON.stringify(changes)),actualDevicePerformance:'NOT_MEASURED'};
 const manifest={...prior,rawBytes:raw.length,compressedBytes:compressed.length,rawSha256:report.rawSha256,compressedSha256:report.compressedSha256,packedSha256:report.packedSha256,atlasSha256:report.atlasSha256,tiles:ordered.map(t=>({id:t.id,minX:t.minX,minZ:t.minZ,count:t.baseline.length+t.extra.length,baselineCount:t.baseline.length})),receipt:{...prior.receipt,tileCount:ordered.length,coastalRedistribution:report},habitat:{...prior.habitat,coastal:{...prior.habitat.coastal,bounds}}};
 const json=JSON.stringify(manifest)+'\n';
 if(process.argv.includes('--verify')){assert.deepEqual(fs.readFileSync(new URL(asset+'bin.gz',root)),compressed);assert.equal(fs.readFileSync(new URL(asset+'json',root),'utf8'),json);console.log('DETERMINISTIC_REDISTRIBUTION_PASS');}else{

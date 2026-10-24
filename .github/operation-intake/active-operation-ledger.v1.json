@@ -15773,50 +15773,6 @@
       "scopeHash": "bb638420fe76f1dfd6ab87392ad1fe4b6088121cc7efef2d2a9989cbffe3e570",
       "state": "ADMITTED_LOCKED"
     },
-    "bbb1242f3cacb3822a3fd35925b183ce7970dce08bb7b39801046f0ac5833799": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "2f3d00175eaf6edae6d59cf0a5f5fa4e36f9e088",
-          "lockGeneration": 2880,
-          "lockScope": "H_EARTH:CONNECTED_COASTAL_OASIS_BANK_AND_BOULDERS:20261024",
-          "operationId": "H_EARTH_OASIS_BANK_AND_BOULDERS_20261024_001",
-          "procedureLocatorDigest": "b9146743c32122d60e47e61c4b9fa2583c80231ebc4d19009ac9337a4de7e592",
-          "requestDigest": "a1b02fc91b5de3d39391528aff9b9a05d3b518d4ce08a81f772f566f828f4965",
-          "scopeHash": "bbb1242f3cacb3822a3fd35925b183ce7970dce08bb7b39801046f0ac5833799"
-        },
-        "bindingDigest": "2fb3daae8230e2225e12486b03d5c8a7fa40c16a3ba023e42bc099e4a595b78c",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "418f08dea53e23aac87f739a825d8f044ee228acb63e4ec7972f2de815f55be6",
-          "commentId": 6379365688,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6675,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 40058855483,
-          "workflowSha": "2f3d00175eaf6edae6d59cf0a5f5fa4e36f9e088"
-        },
-        "lineageAnchorCommitSha": "e61d3ef5711b46434d026082c47a51c129e43bee",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "2f3d00175eaf6edae6d59cf0a5f5fa4e36f9e088",
-      "lockGeneration": 2880,
-      "lockScope": "H_EARTH:CONNECTED_COASTAL_OASIS_BANK_AND_BOULDERS:20261024",
-      "operationId": "H_EARTH_OASIS_BANK_AND_BOULDERS_20261024_001",
-      "procedureLocatorDigest": "b9146743c32122d60e47e61c4b9fa2583c80231ebc4d19009ac9337a4de7e592",
-      "released": false,
-      "requestDigest": "a1b02fc91b5de3d39391528aff9b9a05d3b518d4ce08a81f772f566f828f4965",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "bbb1242f3cacb3822a3fd35925b183ce7970dce08bb7b39801046f0ac5833799",
-      "state": "ADMITTED_LOCKED"
-    },
     "bcb1c9d8558143897010a4a9a9bdc29be0ffceb7606184e072f8bfbbe71be0c2": {
       "governingHead": "1a8bce8f6cdd91dd43fa60fe63d1d966b8d22500",
       "lockGeneration": 14,
@@ -87271,6 +87227,51 @@
       "scopeHash": "7b4aa597c002ad23348c7b5089d65415e05af4af8087ccb102fd485f3eded708",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "2f3d00175eaf6edae6d59cf0a5f5fa4e36f9e088",
+          "lockGeneration": 2880,
+          "lockScope": "H_EARTH:CONNECTED_COASTAL_OASIS_BANK_AND_BOULDERS:20261024",
+          "operationId": "H_EARTH_OASIS_BANK_AND_BOULDERS_20261024_001",
+          "procedureLocatorDigest": "b9146743c32122d60e47e61c4b9fa2583c80231ebc4d19009ac9337a4de7e592",
+          "requestDigest": "a1b02fc91b5de3d39391528aff9b9a05d3b518d4ce08a81f772f566f828f4965",
+          "scopeHash": "bbb1242f3cacb3822a3fd35925b183ce7970dce08bb7b39801046f0ac5833799"
+        },
+        "bindingDigest": "2fb3daae8230e2225e12486b03d5c8a7fa40c16a3ba023e42bc099e4a595b78c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "418f08dea53e23aac87f739a825d8f044ee228acb63e4ec7972f2de815f55be6",
+          "commentId": 6379365688,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6675,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40058855483,
+          "workflowSha": "2f3d00175eaf6edae6d59cf0a5f5fa4e36f9e088"
+        },
+        "lineageAnchorCommitSha": "e61d3ef5711b46434d026082c47a51c129e43bee",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "2f3d00175eaf6edae6d59cf0a5f5fa4e36f9e088",
+      "lockGeneration": 2880,
+      "lockScope": "H_EARTH:CONNECTED_COASTAL_OASIS_BANK_AND_BOULDERS:20261024",
+      "operationId": "H_EARTH_OASIS_BANK_AND_BOULDERS_20261024_001",
+      "procedureLocatorDigest": "b9146743c32122d60e47e61c4b9fa2583c80231ebc4d19009ac9337a4de7e592",
+      "released": true,
+      "requestDigest": "a1b02fc91b5de3d39391528aff9b9a05d3b518d4ce08a81f772f566f828f4965",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "bbb1242f3cacb3822a3fd35925b183ce7970dce08bb7b39801046f0ac5833799",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

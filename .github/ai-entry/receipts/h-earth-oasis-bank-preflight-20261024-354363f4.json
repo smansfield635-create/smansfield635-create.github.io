@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-oasis-bank-preflight-20261024-354363f4",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6771,
+  "requestBranch": "ai-dispatch-request-oasis-preflight-354363f4",
+  "requestCommit": "dfbb1858d5c29eedd9ecc7c67cda9d83b6010dd6",
+  "requestCommitParent": "b3fadb1ebfbc046f15e94cb15bfdd837546fd6fd",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "b3fadb1ebfbc046f15e94cb15bfdd837546fd6fd",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "354363f4d2510386897c8d5944ef40b76dcb8c98",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "40060199991",
+  "dispatchedRunId": 40060208894,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40060208894",
+  "dispatchedRunHeadSha": "b3fadb1ebfbc046f15e94cb15bfdd837546fd6fd",
+  "dispatchedAt": "2026-10-24T03:54:26.372Z",
+  "resolvedAt": "2026-10-24T03:54:30.197Z"
+}

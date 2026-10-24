@@ -1002,6 +1002,50 @@ void main(){
       float identityWeight=inlandIdentity*
         (1.0-protectedGrove)*identityContrast;
       palette=mix(palette,identityBase,identityWeight);
+      // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN
+      // Low vegetation reads through the existing ground surface at every
+      // distance. Reuse the resident habitat signals and texture grain;
+      // bare patches, beaches and exposed rock retain their earth material.
+      // Preserve the accepted oasis and navigable estate, including fringes.
+      float groundcoverOasisX=max(max(-18.0-world.x,0.0),world.x-34.0);
+      float groundcoverOasisZ=max(max(-204.0-world.y,0.0),world.y+131.0);
+      float groundcoverEstateX=max(max(18.0-world.x,0.0),world.x-132.0);
+      float groundcoverEstateZ=max(max(-210.0-world.y,0.0),world.y+125.0);
+      // The final approach segment leaves the protected estate rectangle.
+      float groundcoverRouteT=clamp((world.y-world.x+192.0)/96.0,0.0,1.0);
+      float groundcoverRouteDistance=distance(
+        world,vec2(48.0-48.0*groundcoverRouteT,-144.0+48.0*groundcoverRouteT)
+      );
+      float groundcoverProtection=
+        smoothstep(0.0,12.0,length(vec2(groundcoverOasisX,groundcoverOasisZ)))*
+        smoothstep(0.0,10.0,length(vec2(groundcoverEstateX,groundcoverEstateZ)))*
+        smoothstep(4.0,9.0,groundcoverRouteDistance)*
+        (1.0-protectedGrove);
+      float groundcoverPatch=smoothstep(
+        0.24,0.62,macroField*0.78+mesoField*0.22
+      );
+      float groundcoverSuitability=
+        smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters))*
+        (1.0-smoothstep(0.12,0.42,slope))*
+        (1.0-smoothstep(0.18,0.58,rockExposure));
+      float groundcoverWeight=0.88*groundcoverPatch*
+        groundcoverSuitability*groundcoverProtection;
+      float groundcoverMoisture=clamp(
+        0.20+0.55*moistShelter+0.25*terrainWetness,0.0,1.0
+      );
+      float groundcoverDry=clamp(
+        (1.0-groundcoverMoisture)*(0.18+0.28*mesoField)+
+        slopeResponse*0.20,0.0,0.65
+      );
+      vec3 groundcoverTone=mix(
+        vec3(0.150,0.215,0.100),vec3(0.095,0.170,0.065),groundcoverMoisture
+      );
+      groundcoverTone=mix(
+        groundcoverTone,vec3(0.310,0.265,0.130),groundcoverDry
+      );
+      groundcoverTone*=0.88+0.24*materialVariation;
+      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END
     // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2_END

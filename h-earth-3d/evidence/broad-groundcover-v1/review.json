@@ -1,0 +1,24 @@
+{
+  "schema": "H_EARTH_BROAD_GROUNDCOVER_v1",
+  "operationId": "H_EARTH_BROAD_GROUNDCOVER_20261024_001",
+  "generation": 2881,
+  "baseline": "405374758079c1d89000fb24af7d1f6862ea504c",
+  "rendererSha256": "e0f7e9049bd08e320a17e69bf9b4c6b55e786e7926a62664318f6bc29b6575a8",
+  "north": "Parent bound published owner-accepted oasis baseline, AI-entry runtime classification, canonical admission and bounded scope.",
+  "east": "Native task /root/east_groundcover traced shared terrain/far-land roles, overlay ordering, protected regions and applicable construction context. No mutations.",
+  "south": "Native task /root/south_groundcover implemented 44-line material insert, two renderer cache aliases and focused tests. Six tests and JS syntax check passed.",
+  "west": "Native task /root/west_groundcover independently read exact shader, ran six passing tests, checked actual prepared input manifests and independently surveyed existing hash/noise coordinates. No source defect found.",
+  "independentFieldSurvey": {
+    "sampleCount": 9576,
+    "meanBlend": 0.557,
+    "fractionAboveHalf": 0.606,
+    "fractionZero": 0.068,
+    "scope": "CPU double-precision feasibility survey on eligible gentle inland soil; not actual scene area or GPU measurement"
+  },
+  "preserved": ["OASIS", "GROVE", "ESTATE_AND_FOOTPATH", "BEACHES", "EXPOSED_ROCK", "GEOMETRY", "WATER", "GRASS_POPULATION", "PREPARED_ASSETS", "DRAW_AND_UPLOAD_CODE", "CAMERA_AND_NAVIGATION"],
+  "additionalResources": {"geometry": 0, "textures": 0, "textureSamples": 0, "noiseSamples": 0, "uniforms": 0, "drawCalls": 0, "grassRoots": 0},
+  "browserQualification": "REQUIRED_SEPARATE_EXACT_CANDIDATE_RECEIPT_IN_PR_CONTINUATION",
+  "physicalOrAestheticAcceptance": "NOT_CLAIMED",
+  "deviceGpuFrameTime": "NOT_MEASURED",
+  "authorityEffect": "NONE_EVIDENCE_ONLY"
+}

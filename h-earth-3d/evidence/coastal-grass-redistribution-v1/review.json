@@ -1,17 +1,29 @@
 {
   "schema": "H_EARTH_COASTAL_REDISTRIBUTION_REVIEW_v1",
-  "independentReviewer": "/root/central_grass_west_review",
+  "independentReviewer": "/root/west_review",
   "sourceReview": "PASS",
   "focusedTests": {
-    "passed": 23,
+    "passed": 26,
     "failed": 0
   },
-  "deterministicRebuild": "PASS_EXACT_LOCAL_FIXED_WRAPPER",
+  "deterministicRebuild": "PASS_EXACT_LOCAL_FIXED_WRAPPER_DEFAULT_HEAP",
   "physicalDeviceAcceptance": false,
   "remaining": [
     "EXACT_FIXED_GENERATOR_WRITEBACK",
     "EXACT_HEAD_STARTUP_PREFLIGHT",
     "EXACT_HEAD_DEPLOYMENT_AND_LIVE_VERIFICATION"
   ],
-  "scope": "7235 recent central coastal roots relocated;2858738 saved roots conserved;2851503 unrelated records exact;54218 procedural cavern baseline hash unchanged;actual oasis foliage/bank and estate reservations preserved."
+  "scope": "60963 identified coastal roots relocated including43966 older baseline roots;2858738 saved roots conserved;2797775 unrelated records exact;54218 procedural cavern baseline hash unchanged;protected estate/oasis/water unchanged.",
+  "independentPayloadWitnesses": {
+    "lowTipBefore": 13441,
+    "lowTipAfter": 0,
+    "estateClearanceBefore": 14734,
+    "estateClearanceAfter": 0,
+    "maximumTileRoots": 816
+  },
+  "expectedGeneratedBlobs": {
+    "grass": "78275dbc10dc8ae580343262e8a0322fcb60b479",
+    "changes": "cd5b659daafe66a88159992dd0523ad5ff1f53ca",
+    "manifest": "a3e9bee42b97accca2bb3be6b55fb62636a99532"
+  }
 }

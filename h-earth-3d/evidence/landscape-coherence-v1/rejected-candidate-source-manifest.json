@@ -1,0 +1,20 @@
+{
+  "schema": "H_EARTH_LANDSCAPE_COHERENCE_SOURCE_v1",
+  "operationId": "H_EARTH_LANDSCAPE_COHERENCE_20261025_001",
+  "lockGeneration": 2892,
+  "baseline": "a955845640df5f1ed9dda6dcb74226e35e8ce3e5",
+  "candidateFiles": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "9e65bafe0ecaa2507747ddfbf06d8feb000dfc4b23ac306b358ba1997599842a",
+    "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js": "addf466b14cf21b5f901a62884083ed09ab39aa199a6fac3ada9a740cfce1b0a",
+    "showroom/globe/h-earth/render/foothill-meadow-field.v1.js": "a2961c0507d679ea998a78708127a84d41d8b3a3387831c9fb13cf0dcaa115fb",
+    "showroom/globe/h-earth/render/landscape-coherence-field.v1.js": "54aa2bf97e19fc63631cd3f7ece0a6d4c3a8d13222afa9a66fef2666d3e1a7b1",
+    "showroom/globe/h-earth/index.html": "56856e362f4e401b20521760801dea6ebc54ab04af38e0ca198458908f7ca0b5"
+  },
+  "protectedFiles": {
+    "showroom/globe/h-earth/functional-landscape/navigation.js": "a8db77dc0d43dd630392256558af184dca9aa18f096ed1d2150954c4e260e584",
+    "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js": "643299799415d366ef775c3fe97e9bc13039669e92360e1337e96ac45a691e5a",
+    "showroom/globe/h-earth/render/grass-visibility.v2.js": "9f6bb5fe3cf4c0829a8b339a1b2d818636908710ef2a525f4a757d4aae81df29",
+    "showroom/globe/h-earth/render/woodland-fine-grass.v1.js": "b7beac140d82237b12c2413cd679e12715e6f89ef4b729e06cf91e2ae117d4ac",
+    "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js": "4054ce023cfc01c451c26c0211ef1d9e630c8de3d12e9db90666c60d86b87471"
+  }
+}

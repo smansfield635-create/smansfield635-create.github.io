@@ -1,0 +1,323 @@
+{
+  "schema": "H_EARTH_BOUNDED_DENSITY_PLAN_v1",
+  "inputRawSha256": "2f196095203c9a4a250c697496c6734f8d8e60487684d3956bd05950c5a5b020",
+  "method": "Minimize cardinal total variation plus0.08 absolute change penalty, fixed total, existing tiles, immutable prefixes, neighbor maximum upper bounds; selected8 seam differences at most40% of baseline; mixed-integer solution, no rounding relaxation",
+  "tiles": [
+    {
+      "x": -396,
+      "z": -204,
+      "before": 63,
+      "after": 134,
+      "baselineCount": 0
+    },
+    {
+      "x": -396,
+      "z": -200,
+      "before": 30,
+      "after": 134,
+      "baselineCount": 0
+    },
+    {
+      "x": -396,
+      "z": -196,
+      "before": 27,
+      "after": 133,
+      "baselineCount": 0
+    },
+    {
+      "x": -396,
+      "z": -192,
+      "before": 32,
+      "after": 131,
+      "baselineCount": 0
+    },
+    {
+      "x": -392,
+      "z": -200,
+      "before": 205,
+      "after": 204,
+      "baselineCount": 0
+    },
+    {
+      "x": -392,
+      "z": -196,
+      "before": 169,
+      "after": 189,
+      "baselineCount": 0
+    },
+    {
+      "x": -392,
+      "z": -192,
+      "before": 177,
+      "after": 189,
+      "baselineCount": 0
+    },
+    {
+      "x": -392,
+      "z": -188,
+      "before": 194,
+      "after": 189,
+      "baselineCount": 0
+    },
+    {
+      "x": -388,
+      "z": -196,
+      "before": 336,
+      "after": 344,
+      "baselineCount": 0
+    },
+    {
+      "x": -388,
+      "z": -192,
+      "before": 345,
+      "after": 344,
+      "baselineCount": 0
+    },
+    {
+      "x": -388,
+      "z": -188,
+      "before": 337,
+      "after": 338,
+      "baselineCount": 0
+    },
+    {
+      "x": -388,
+      "z": -184,
+      "before": 339,
+      "after": 338,
+      "baselineCount": 0
+    },
+    {
+      "x": 384,
+      "z": -196,
+      "before": 326,
+      "after": 331,
+      "baselineCount": 0
+    },
+    {
+      "x": 384,
+      "z": -192,
+      "before": 329,
+      "after": 331,
+      "baselineCount": 0
+    },
+    {
+      "x": 384,
+      "z": -188,
+      "before": 329,
+      "after": 331,
+      "baselineCount": 0
+    },
+    {
+      "x": 388,
+      "z": -200,
+      "before": 218,
+      "after": 158,
+      "baselineCount": 0
+    },
+    {
+      "x": 388,
+      "z": -196,
+      "before": 170,
+      "after": 140,
+      "baselineCount": 0
+    },
+    {
+      "x": 388,
+      "z": -192,
+      "before": 163,
+      "after": 138,
+      "baselineCount": 0
+    },
+    {
+      "x": 388,
+      "z": -188,
+      "before": 161,
+      "after": 79,
+      "baselineCount": 0
+    },
+    {
+      "x": 392,
+      "z": -204,
+      "before": 70,
+      "after": 81,
+      "baselineCount": 0
+    },
+    {
+      "x": 392,
+      "z": -200,
+      "before": 25,
+      "after": 81,
+      "baselineCount": 0
+    },
+    {
+      "x": 392,
+      "z": -196,
+      "before": 21,
+      "after": 81,
+      "baselineCount": 0
+    },
+    {
+      "x": 392,
+      "z": -192,
+      "before": 20,
+      "after": 81,
+      "baselineCount": 0
+    },
+    {
+      "x": 396,
+      "z": -248,
+      "before": 376,
+      "after": 359,
+      "baselineCount": 0
+    },
+    {
+      "x": 396,
+      "z": -244,
+      "before": 380,
+      "after": 359,
+      "baselineCount": 0
+    },
+    {
+      "x": 396,
+      "z": -240,
+      "before": 376,
+      "after": 359,
+      "baselineCount": 0
+    },
+    {
+      "x": 396,
+      "z": -236,
+      "before": 373,
+      "after": 359,
+      "baselineCount": 0
+    },
+    {
+      "x": 396,
+      "z": -232,
+      "before": 362,
+      "after": 359,
+      "baselineCount": 0
+    },
+    {
+      "x": 400,
+      "z": -248,
+      "before": 294,
+      "after": 285,
+      "baselineCount": 0
+    },
+    {
+      "x": 400,
+      "z": -244,
+      "before": 291,
+      "after": 285,
+      "baselineCount": 0
+    },
+    {
+      "x": 400,
+      "z": -240,
+      "before": 299,
+      "after": 285,
+      "baselineCount": 0
+    },
+    {
+      "x": 404,
+      "z": -248,
+      "before": 182,
+      "after": 148,
+      "baselineCount": 0
+    },
+    {
+      "x": 404,
+      "z": -244,
+      "before": 189,
+      "after": 148,
+      "baselineCount": 0
+    },
+    {
+      "x": 404,
+      "z": -240,
+      "before": 182,
+      "after": 148,
+      "baselineCount": 0
+    },
+    {
+      "x": 404,
+      "z": -236,
+      "before": 179,
+      "after": 148,
+      "baselineCount": 0
+    },
+    {
+      "x": 404,
+      "z": -232,
+      "before": 166,
+      "after": 103,
+      "baselineCount": 0
+    },
+    {
+      "x": 404,
+      "z": -228,
+      "before": 126,
+      "after": 103,
+      "baselineCount": 0
+    },
+    {
+      "x": 408,
+      "z": -248,
+      "before": 80,
+      "after": 53,
+      "baselineCount": 0
+    },
+    {
+      "x": 408,
+      "z": -244,
+      "before": 76,
+      "after": 53,
+      "baselineCount": 0
+    },
+    {
+      "x": 408,
+      "z": -240,
+      "before": 77,
+      "after": 53,
+      "baselineCount": 0
+    },
+    {
+      "x": 408,
+      "z": -236,
+      "before": 78,
+      "after": 53,
+      "baselineCount": 0
+    },
+    {
+      "x": 408,
+      "z": -232,
+      "before": 39,
+      "after": 53,
+      "baselineCount": 0
+    },
+    {
+      "x": 412,
+      "z": -240,
+      "before": 2,
+      "after": 1,
+      "baselineCount": 0
+    }
+  ],
+  "metrics": {
+    "before": {
+      "totalVariation": 17271,
+      "maximumJump": 277,
+      "squaredVariation": 1926945
+    },
+    "after": {
+      "totalVariation": 17013,
+      "maximumJump": 277,
+      "squaredVariation": 1919223
+    }
+  },
+  "edgeCount": 445,
+  "domainTiles": 197,
+  "moved": 632
+}

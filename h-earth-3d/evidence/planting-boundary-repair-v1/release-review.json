@@ -1,0 +1,30 @@
+{
+  "schema": "H_EARTH_BOUNDARY_RELEASE_REVIEW_v1",
+  "operationId": "H_EARTH_PLANTING_BOUNDARY_REPAIR_20261025_002",
+  "generation": 2894,
+  "ownerInstruction": "Publish to live website for visual inspection; use existing performance measurement.",
+  "visualAcceptance": "PENDING_OWNER_LIVE_REVIEW_EXPLICITLY_AUTHORIZED",
+  "packageTests": {
+    "passed": 3,
+    "failed": 0
+  },
+  "independentWest": {
+    "result": "PASS_PACKAGE_INTEGRITY_AND_RESOURCE_LIMITS",
+    "productionPackedLoader": true,
+    "rootCount": 2858738,
+    "tileCount": 8198,
+    "packedBytes": 45739808,
+    "baselineRoots": 1474843,
+    "controlRoots": 178,
+    "compressedByteDelta": 126,
+    "localNodeLoaderMs": 1531.63,
+    "notPhoneOrGpuTiming": true
+  },
+  "measurement": "Existing ?performance=1 H_EARTH_RENDERER_STARTUP_DIAGNOSTICS.getPerformanceReport()",
+  "remaining": [
+    "Registered publication preflight",
+    "Exact-head deployment and live verification",
+    "Owner live visual inspection and device report"
+  ],
+  "continuity": "Main movement 79dc1b3..cd13012 changes preflight/app only, disjoint from H-Earth. Reuse unchanged shader/camera qualification."
+}

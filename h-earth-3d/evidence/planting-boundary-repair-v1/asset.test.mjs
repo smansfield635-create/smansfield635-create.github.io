@@ -1,0 +1,9 @@
+import test from 'node:test';import assert from 'node:assert/strict';import fs from 'node:fs';import {gunzipSync} from 'node:zlib';import {createHash} from 'node:crypto';
+const sha=b=>createHash('sha256').update(b).digest('hex'),asset=new URL('../../../showroom/globe/h-earth/render/assets/',import.meta.url);
+test('exact loader, compressed payload, packed roots and immutable cavern prefixes agree',()=>{
+ const manifestBytes=fs.readFileSync(new URL('precomputed-grass.v1.json',asset)),m=JSON.parse(manifestBytes),compressed=fs.readFileSync(new URL('precomputed-grass.v1.bin.gz',asset)),raw=gunzipSync(compressed),verification=JSON.parse(fs.readFileSync(new URL('./independent-verification.json',import.meta.url))),loader=fs.readFileSync(new URL('../../../showroom/globe/h-earth/render/precomputed-grass.v1.js',import.meta.url),'utf8');
+ assert(loader.includes("const MANIFEST_SHA256='"+sha(manifestBytes)+"';"));assert.equal(sha(compressed),m.compressedSha256);assert.equal(sha(raw),m.rawSha256);assert.equal(m.rootCount,2858738);assert.equal(m.tiles.length,8198);assert.equal(m.receipt.contactCount,2858738);
+ let offset=0;const prefixes=createHash('sha256'),packed=new Float32Array(m.rootCount*4);let index=0;
+ for(const t of m.tiles){assert(t.count>=1&&t.count<=816);assert(t.baselineCount<=t.count);prefixes.update(raw.subarray(offset,offset+t.baselineCount*52));for(let j=0;j<t.count;j++){const x=raw.readDoubleLE(offset),z=raw.readDoubleLE(offset+16);assert(x>=t.minX&&x<t.minX+4&&z>=t.minZ&&z<t.minZ+4);for(let k=0;k<4;k++)packed[index*4+k]=raw.readDoubleLE(offset+k*8);index++;offset+=52;}}
+ assert.equal(prefixes.digest('hex'),verification.prefixSha256);assert.equal(sha(Buffer.from(packed.buffer)),m.packedSha256);assert.equal(sha(raw.subarray(offset)),m.atlasSha256);assert.equal(offset+576*192,raw.length);
+});

@@ -1,0 +1,1414 @@
+{
+  "schema": "H_EARTH_LANDSCAPE_COHERENCE_QUALIFICATION_v1",
+  "baseline": "a955845640df5f1ed9dda6dcb74226e35e8ce3e5",
+  "viewport": {
+    "width": 540,
+    "height": 1000,
+    "dpr": 1
+  },
+  "baselineReadyMs": 34219,
+  "candidateReadyMs": 33848,
+  "failures": [],
+  "views": [
+    {
+      "site": {
+        "name": "woodland-edge",
+        "x": -139.4,
+        "z": -194.5,
+        "yaw": 40,
+        "pitch": 0
+      },
+      "navigationState": {
+        "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "stateId": "H_EARTH_NAVIGATION_STATE_0107",
+        "sequence": 107,
+        "action": "COHERENCE_FIXED_VIEW",
+        "accepted": true,
+        "recovered": false,
+        "rejectionReason": null,
+        "navigationLayer": "SURFACE",
+        "position": {
+          "x": -139.4,
+          "y": 6.659593097414472,
+          "z": -194.5
+        },
+        "yawDegrees": 40,
+        "pitchDegrees": 0,
+        "verticalFovDegrees": 56,
+        "terrainElevation": 4.409593097414472,
+        "visibleTerrainElevation": 4.409593097414472,
+        "clearanceReferenceElevation": 4.409593097414472,
+        "canonicalTerrainElevation": 4.103004148944425,
+        "minimumCameraY": 6.659593097414472,
+        "targetCameraY": 6.659593097414472,
+        "clearance": 2.25,
+        "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+        "verticalDelta": 0,
+        "verticalAcceleration": 0,
+        "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+        "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C01_C04",
+        "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+        "formationIds": [
+          "H_EARTH_COASTAL_BERM_001",
+          "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+          "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+          "H_EARTH_GRATITUDE_WESTERN_PENINSULA_001",
+          "H_EARTH_LOWLAND_001"
+        ],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R05:C04",
+        "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+        "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0107",
+        "terrainSupported": true,
+        "geologicalPhysicalSupport": false,
+        "geologicalFloorClass": null,
+        "geologicalCeilingY": null,
+        "sweptTerrainSupportSampleCount": 0,
+        "canonicalCameraStateAuthority": false,
+        "collisionOrPhysicsClaim": false,
+        "geographyAuthorityCreated": false,
+        "topologyAuthorityCreated": false,
+        "navigationScaleAuthorityCreated": false
+      },
+      "baselineFrame": {
+        "frameSequence": 11,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": -139.4022028085844,
+          "y": 6.591422244498972,
+          "z": -194.50307350265186
+        },
+        "cpuSubmitMilliseconds": 3.1999999955296516
+      },
+      "candidateFrame": {
+        "frameSequence": 11,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": -139.4022028085844,
+          "y": 6.591422244498972,
+          "z": -194.50307350265186
+        },
+        "cpuSubmitMilliseconds": 2.2999999970197678
+      },
+      "baselineVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 346873,
+        "selectedFineRoots": 14508,
+        "drawCallCount": 107,
+        "submittedTriangles": 722762,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 804,
+        "culledTiles": 7776,
+        "fineTiles": 32
+      },
+      "candidateVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 346873,
+        "selectedFineRoots": 14508,
+        "drawCallCount": 107,
+        "submittedTriangles": 722762,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 804,
+        "culledTiles": 7776,
+        "fineTiles": 32
+      },
+      "resourceDeltaKeys": [],
+      "baselineDiagnosticFrameMs": [
+        99.30000000447035,
+        3.100000001490116,
+        7,
+        16.700000002980232
+      ],
+      "candidateDiagnosticFrameMs": [
+        17.799999997019768,
+        15.600000001490116,
+        19.200000002980232,
+        16.899999998509884
+      ],
+      "baselineCpuSubmissionMs": [
+        4,
+        2.8000000044703484,
+        2.600000001490116,
+        2.5
+      ],
+      "candidateCpuSubmissionMs": [
+        3.2999999970197678,
+        4.300000004470348,
+        4.5,
+        4.199999995529652
+      ],
+      "baselineContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "candidateContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "baselineCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "candidateCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "baselinePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      },
+      "candidatePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      }
+    },
+    {
+      "site": {
+        "name": "foothill-west",
+        "x": -52,
+        "z": -208,
+        "yaw": 180,
+        "pitch": -12
+      },
+      "navigationState": {
+        "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "stateId": "H_EARTH_NAVIGATION_STATE_0107",
+        "sequence": 107,
+        "action": "COHERENCE_FIXED_VIEW",
+        "accepted": true,
+        "recovered": false,
+        "rejectionReason": null,
+        "navigationLayer": "SURFACE",
+        "position": {
+          "x": -52,
+          "y": 28.96588020704803,
+          "z": -208
+        },
+        "yawDegrees": 180,
+        "pitchDegrees": -12,
+        "verticalFovDegrees": 56,
+        "terrainElevation": 26.71588020704803,
+        "visibleTerrainElevation": 26.71588020704803,
+        "clearanceReferenceElevation": 26.71588020704803,
+        "canonicalTerrainElevation": 22.57153381029853,
+        "minimumCameraY": 28.96588020704803,
+        "targetCameraY": 28.96588020704803,
+        "clearance": 2.25,
+        "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+        "verticalDelta": 0,
+        "verticalAcceleration": 0,
+        "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+        "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R05_R08_C05_C08",
+        "physicalRole": "COASTAL_TO_INLAND_TRANSITION_TERRAIN",
+        "formationIds": [
+          "H_EARTH_COASTAL_BERM_001",
+          "H_EARTH_DRAINAGE_VALLEY_001",
+          "H_EARTH_GRATITUDE_CENTRAL_HEADLAND_001",
+          "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+          "H_EARTH_GRATITUDE_SANCTUARY_BAY_001",
+          "H_EARTH_GRATITUDE_WESTERN_GULF_001",
+          "H_EARTH_LOWLAND_001"
+        ],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R05:C07",
+        "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+        "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0107",
+        "terrainSupported": true,
+        "geologicalPhysicalSupport": false,
+        "geologicalFloorClass": null,
+        "geologicalCeilingY": null,
+        "sweptTerrainSupportSampleCount": 0,
+        "canonicalCameraStateAuthority": false,
+        "collisionOrPhysicsClaim": false,
+        "geographyAuthorityCreated": false,
+        "topologyAuthorityCreated": false,
+        "navigationScaleAuthorityCreated": false
+      },
+      "baselineFrame": {
+        "frameSequence": 20,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": -52.003583993236504,
+          "y": 28.911152624583337,
+          "z": -208.01433597294601
+        },
+        "cpuSubmitMilliseconds": 3.2999999970197678
+      },
+      "candidateFrame": {
+        "frameSequence": 21,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": -52.003583993236504,
+          "y": 28.911152624583337,
+          "z": -208.01433597294601
+        },
+        "cpuSubmitMilliseconds": 3.100000001490116
+      },
+      "baselineVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 23463,
+        "selectedFineRoots": 12081,
+        "drawCallCount": 22,
+        "submittedTriangles": 71088,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 73,
+        "culledTiles": 8507,
+        "fineTiles": 32
+      },
+      "candidateVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 23463,
+        "selectedFineRoots": 12081,
+        "drawCallCount": 22,
+        "submittedTriangles": 71088,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 73,
+        "culledTiles": 8507,
+        "fineTiles": 32
+      },
+      "resourceDeltaKeys": [],
+      "baselineDiagnosticFrameMs": [
+        6.699999995529652,
+        45.20000000298023,
+        32.70000000298023,
+        15.899999998509884
+      ],
+      "candidateDiagnosticFrameMs": [
+        23.600000001490116,
+        41.600000001490116,
+        27,
+        11
+      ],
+      "baselineCpuSubmissionMs": [
+        4.799999997019768,
+        5.300000004470348,
+        5.799999997019768,
+        15.5
+      ],
+      "candidateCpuSubmissionMs": [
+        15.400000005960464,
+        9.600000001490116,
+        4.5,
+        10.5
+      ],
+      "baselineContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "candidateContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "baselineCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "candidateCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "baselinePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      },
+      "candidatePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      }
+    },
+    {
+      "site": {
+        "name": "hill-river",
+        "x": 18,
+        "z": -226,
+        "yaw": 30,
+        "pitch": -14
+      },
+      "navigationState": {
+        "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "stateId": "H_EARTH_NAVIGATION_STATE_0107",
+        "sequence": 107,
+        "action": "COHERENCE_FIXED_VIEW",
+        "accepted": true,
+        "recovered": false,
+        "rejectionReason": null,
+        "navigationLayer": "SURFACE",
+        "position": {
+          "x": 18,
+          "y": 30.744426662719086,
+          "z": -226
+        },
+        "yawDegrees": 30,
+        "pitchDegrees": -14,
+        "verticalFovDegrees": 56,
+        "terrainElevation": 28.494426662719086,
+        "visibleTerrainElevation": 28.494426662719086,
+        "clearanceReferenceElevation": 28.494426662719086,
+        "canonicalTerrainElevation": 24.590451886301786,
+        "minimumCameraY": 30.744426662719086,
+        "targetCameraY": 30.744426662719086,
+        "clearance": 2.25,
+        "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+        "verticalDelta": 0,
+        "verticalAcceleration": 0,
+        "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+        "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R13_R16_C09_C12",
+        "physicalRole": "INLAND_ELEVATED_TERRAIN_WITH_PROXY_PARTITIONS",
+        "formationIds": [
+          "H_EARTH_DISTANT_HIGHLAND_001",
+          "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+          "H_EARTH_GRATITUDE_INLAND_RANGE_001",
+          "H_EARTH_GRATITUDE_PASS_CENTRAL_001",
+          "H_EARTH_GRATITUDE_PASS_EAST_001",
+          "H_EARTH_GRATITUDE_RECEIVING_BASIN_001"
+        ],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R15:C11",
+        "selectionProjectionModel": "GEOLOGICAL_PHYSICAL_EXTERIOR_LOCAL_SUPPORT",
+        "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0107",
+        "terrainSupported": true,
+        "geologicalPhysicalSupport": true,
+        "geologicalFloorClass": "EXTERIOR_DRY_CHANNEL",
+        "geologicalCeilingY": null,
+        "sweptTerrainSupportSampleCount": 0,
+        "canonicalCameraStateAuthority": false,
+        "collisionOrPhysicsClaim": false,
+        "geographyAuthorityCreated": false,
+        "topologyAuthorityCreated": false,
+        "navigationScaleAuthorityCreated": false
+      },
+      "baselineFrame": {
+        "frameSequence": 29,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": 18.00131674407191,
+          "y": 30.683231708826497,
+          "z": -226.0165324533473
+        },
+        "cpuSubmitMilliseconds": 6.100000001490116
+      },
+      "candidateFrame": {
+        "frameSequence": 29,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": 18.00131674407191,
+          "y": 30.683231708826497,
+          "z": -226.0165324533473
+        },
+        "cpuSubmitMilliseconds": 3.899999998509884
+      },
+      "baselineVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 129595,
+        "selectedFineRoots": 10975,
+        "drawCallCount": 103,
+        "submittedTriangles": 281140,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 467,
+        "culledTiles": 8113,
+        "fineTiles": 52
+      },
+      "candidateVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 129595,
+        "selectedFineRoots": 10975,
+        "drawCallCount": 103,
+        "submittedTriangles": 281140,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 467,
+        "culledTiles": 8113,
+        "fineTiles": 52
+      },
+      "resourceDeltaKeys": [],
+      "baselineDiagnosticFrameMs": [
+        7.700000002980232,
+        13.100000001490116,
+        15.199999995529652,
+        17
+      ],
+      "candidateDiagnosticFrameMs": [
+        22.900000005960464,
+        10.899999998509884,
+        14.899999998509884,
+        14.899999998509884
+      ],
+      "baselineCpuSubmissionMs": [
+        6.899999998509884,
+        6.5,
+        5.5999999940395355,
+        6.5
+      ],
+      "candidateCpuSubmissionMs": [
+        7.700000002980232,
+        4.799999997019768,
+        5.100000001490116,
+        4.600000001490116
+      ],
+      "baselineContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "candidateContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "baselineCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "candidateCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "baselinePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      },
+      "candidatePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      }
+    },
+    {
+      "site": {
+        "name": "bare-mountain",
+        "x": 88,
+        "z": -260,
+        "yaw": 95,
+        "pitch": -10
+      },
+      "navigationState": {
+        "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "stateId": "H_EARTH_NAVIGATION_STATE_0107",
+        "sequence": 107,
+        "action": "COHERENCE_FIXED_VIEW",
+        "accepted": true,
+        "recovered": false,
+        "rejectionReason": null,
+        "navigationLayer": "SURFACE",
+        "position": {
+          "x": 88,
+          "y": 29.353883081512176,
+          "z": -260
+        },
+        "yawDegrees": 95,
+        "pitchDegrees": -10,
+        "verticalFovDegrees": 56,
+        "terrainElevation": 27.103883081512176,
+        "visibleTerrainElevation": 27.103883081512176,
+        "clearanceReferenceElevation": 27.103883081512176,
+        "canonicalTerrainElevation": 24.733124180151815,
+        "minimumCameraY": 29.353883081512176,
+        "targetCameraY": 29.353883081512176,
+        "clearance": 2.25,
+        "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+        "verticalDelta": 0,
+        "verticalAcceleration": 0,
+        "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+        "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R13_R16_C09_C12",
+        "physicalRole": "INLAND_ELEVATED_TERRAIN_WITH_PROXY_PARTITIONS",
+        "formationIds": [
+          "H_EARTH_DISTANT_HIGHLAND_001",
+          "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+          "H_EARTH_GRATITUDE_INLAND_RANGE_001",
+          "H_EARTH_GRATITUDE_PASS_CENTRAL_001",
+          "H_EARTH_GRATITUDE_PASS_EAST_001",
+          "H_EARTH_GRATITUDE_RECEIVING_BASIN_001"
+        ],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R14:C11",
+        "selectionProjectionModel": "GEOLOGICAL_PHYSICAL_EXTERIOR_LOCAL_SUPPORT",
+        "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0107",
+        "terrainSupported": true,
+        "geologicalPhysicalSupport": true,
+        "geologicalFloorClass": "EXTERIOR_DRY_CHANNEL",
+        "geologicalCeilingY": null,
+        "sweptTerrainSupportSampleCount": 0,
+        "canonicalCameraStateAuthority": false,
+        "collisionOrPhysicsClaim": false,
+        "geographyAuthorityCreated": false,
+        "topologyAuthorityCreated": false,
+        "navigationScaleAuthorityCreated": false
+      },
+      "baselineFrame": {
+        "frameSequence": 37,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": 88.00614407254056,
+          "y": 29.26418157783337,
+          "z": -260.0181529415971
+        },
+        "cpuSubmitMilliseconds": 4.300000004470348
+      },
+      "candidateFrame": {
+        "frameSequence": 37,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": 88.00614407254056,
+          "y": 29.26418157783337,
+          "z": -260.0181529415971
+        },
+        "cpuSubmitMilliseconds": 4.899999998509884
+      },
+      "baselineVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 501688,
+        "selectedFineRoots": 7098,
+        "drawCallCount": 199,
+        "submittedTriangles": 1017572,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 1600,
+        "culledTiles": 6980,
+        "fineTiles": 32
+      },
+      "candidateVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 501688,
+        "selectedFineRoots": 7098,
+        "drawCallCount": 199,
+        "submittedTriangles": 1017572,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 1600,
+        "culledTiles": 6980,
+        "fineTiles": 32
+      },
+      "resourceDeltaKeys": [],
+      "baselineDiagnosticFrameMs": [
+        16.30000000447035,
+        16.899999998509884,
+        16.299999997019768,
+        46.600000001490116
+      ],
+      "candidateDiagnosticFrameMs": [
+        18.5,
+        69.20000000298023,
+        49.5,
+        7.299999997019768
+      ],
+      "baselineCpuSubmissionMs": [
+        7.100000001490116,
+        5.199999995529652,
+        5.100000001490116,
+        5.899999998509884
+      ],
+      "candidateCpuSubmissionMs": [
+        6.9000000059604645,
+        5.600000001490116,
+        6.799999997019768,
+        6.700000002980232
+      ],
+      "baselineContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "candidateContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "baselineCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "candidateCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "baselinePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      },
+      "candidatePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      }
+    },
+    {
+      "site": {
+        "name": "coast-oblique",
+        "x": 0,
+        "z": -110,
+        "yaw": 170,
+        "pitch": -8
+      },
+      "navigationState": {
+        "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "stateId": "H_EARTH_NAVIGATION_STATE_0107",
+        "sequence": 107,
+        "action": "COHERENCE_FIXED_VIEW",
+        "accepted": true,
+        "recovered": false,
+        "rejectionReason": null,
+        "navigationLayer": "SURFACE",
+        "position": {
+          "x": 0,
+          "y": 7.983492115366971,
+          "z": -110
+        },
+        "yawDegrees": 170,
+        "pitchDegrees": -8,
+        "verticalFovDegrees": 56,
+        "terrainElevation": 5.733492115366971,
+        "visibleTerrainElevation": 5.733492115366971,
+        "clearanceReferenceElevation": 5.733492115366971,
+        "canonicalTerrainElevation": 5.742178784391134,
+        "minimumCameraY": 7.983492115366971,
+        "targetCameraY": 7.983492115366971,
+        "clearance": 2.25,
+        "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+        "verticalDelta": 0,
+        "verticalAcceleration": 0,
+        "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+        "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R01_R04_C05_C08",
+        "physicalRole": "COASTAL_FOREGROUND_TERRAIN",
+        "formationIds": [
+          "H_EARTH_GRATITUDE_CENTRAL_HEADLAND_001",
+          "H_EARTH_GRATITUDE_SANCTUARY_BAY_001",
+          "H_EARTH_GRATITUDE_WESTERN_GULF_001"
+        ],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R02:C08",
+        "selectionProjectionModel": "CHUNK_LOCAL_NEAREST_AVAILABLE_TERRAIN_MEMBER",
+        "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0107",
+        "terrainSupported": true,
+        "geologicalPhysicalSupport": false,
+        "geologicalFloorClass": null,
+        "geologicalCeilingY": null,
+        "sweptTerrainSupportSampleCount": 0,
+        "canonicalCameraStateAuthority": false,
+        "collisionOrPhysicsClaim": false,
+        "geographyAuthorityCreated": false,
+        "topologyAuthorityCreated": false,
+        "navigationScaleAuthorityCreated": false
+      },
+      "baselineFrame": {
+        "frameSequence": 45,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": 0,
+          "y": 7.977773761784192,
+          "z": -110.0020919321026
+        },
+        "cpuSubmitMilliseconds": 3.899999998509884
+      },
+      "candidateFrame": {
+        "frameSequence": 45,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": 0,
+          "y": 7.977773761784192,
+          "z": -110.0020919321026
+        },
+        "cpuSubmitMilliseconds": 3.7000000029802322
+      },
+      "baselineVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 0,
+        "selectedFineRoots": 0,
+        "drawCallCount": 0,
+        "submittedTriangles": 0,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 0,
+        "culledTiles": 8580,
+        "fineTiles": 0
+      },
+      "candidateVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 0,
+        "selectedFineRoots": 0,
+        "drawCallCount": 0,
+        "submittedTriangles": 0,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 0,
+        "culledTiles": 8580,
+        "fineTiles": 0
+      },
+      "resourceDeltaKeys": [],
+      "baselineDiagnosticFrameMs": [
+        16.600000001490116,
+        16.69999999552965,
+        16.600000001490116,
+        16.700000002980232
+      ],
+      "candidateDiagnosticFrameMs": [
+        16.799999997019768,
+        16.600000001490116,
+        16.700000002980232,
+        16.899999998509884
+      ],
+      "baselineCpuSubmissionMs": [
+        4.100000001490116,
+        4.399999998509884,
+        4.700000002980232,
+        3.7000000029802322
+      ],
+      "candidateCpuSubmissionMs": [
+        4.600000001490116,
+        8.200000002980232,
+        4.5,
+        5.899999998509884
+      ],
+      "baselineContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "candidateContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "baselineCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "candidateCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "baselinePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      },
+      "candidatePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      }
+    },
+    {
+      "site": {
+        "name": "cavern-upper",
+        "x": 40,
+        "z": -248,
+        "yaw": 180,
+        "pitch": -8
+      },
+      "navigationState": {
+        "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+        "cameraClearanceSuccessorContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "terrainSupportedLocomotionContractId": "H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_GEN324_v1",
+        "stateId": "H_EARTH_NAVIGATION_STATE_0107",
+        "sequence": 107,
+        "action": "COHERENCE_FIXED_VIEW",
+        "accepted": true,
+        "recovered": false,
+        "rejectionReason": null,
+        "navigationLayer": "SURFACE",
+        "position": {
+          "x": 40,
+          "y": 26.350420885917664,
+          "z": -248
+        },
+        "yawDegrees": 180,
+        "pitchDegrees": -8,
+        "verticalFovDegrees": 56,
+        "terrainElevation": 24.100420885917664,
+        "visibleTerrainElevation": 24.100420885917664,
+        "clearanceReferenceElevation": 24.100420885917664,
+        "canonicalTerrainElevation": 21.397375114144772,
+        "minimumCameraY": 26.350420885917664,
+        "targetCameraY": 26.350420885917664,
+        "clearance": 2.25,
+        "verticalResponseMode": "HARD_TERRAIN_SUPPORT",
+        "verticalDelta": 0,
+        "verticalAcceleration": 0,
+        "clearanceSurfaceContractId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_SURFACE_GEN314_v1",
+        "protectedGeographicFloor": "e03363f42441cea7587a49623fd878e8ca51fe28",
+        "chunkId": "H_EARTH_LANDSCAPE_CHUNK_R13_R16_C09_C12",
+        "physicalRole": "INLAND_ELEVATED_TERRAIN_WITH_PROXY_PARTITIONS",
+        "formationIds": [
+          "H_EARTH_DISTANT_HIGHLAND_001",
+          "H_EARTH_GRATITUDE_FOOTHILL_TRANSITION_001",
+          "H_EARTH_GRATITUDE_INLAND_RANGE_001",
+          "H_EARTH_GRATITUDE_PASS_CENTRAL_001",
+          "H_EARTH_GRATITUDE_PASS_EAST_001",
+          "H_EARTH_GRATITUDE_RECEIVING_BASIN_001"
+        ],
+        "selectedSemanticAddressId": "H_EARTH_GROUND_CELL_001:R14:C11",
+        "selectionProjectionModel": "GEOLOGICAL_PHYSICAL_EXTERIOR_LOCAL_SUPPORT",
+        "terrainClearanceReceiptId": "H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_0107",
+        "terrainSupported": true,
+        "geologicalPhysicalSupport": true,
+        "geologicalFloorClass": "EXTERIOR_DRY_CHANNEL",
+        "geologicalCeilingY": null,
+        "sweptTerrainSupportSampleCount": 0,
+        "canonicalCameraStateAuthority": false,
+        "collisionOrPhysicsClaim": false,
+        "geographyAuthorityCreated": false,
+        "topologyAuthorityCreated": false,
+        "navigationScaleAuthorityCreated": false
+      },
+      "baselineFrame": {
+        "frameSequence": 52,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": 40.00250717886147,
+          "y": 26.27529236540431,
+          "z": -248.01554450894113
+        },
+        "cpuSubmitMilliseconds": 7.399999998509884
+      },
+      "candidateFrame": {
+        "frameSequence": 52,
+        "navigationSequence": 107,
+        "cameraPosition": {
+          "x": 40.00250717886147,
+          "y": 26.27529236540431,
+          "z": -248.01554450894113
+        },
+        "cpuSubmitMilliseconds": 4.700000002980232
+      },
+      "baselineVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 76035,
+        "selectedFineRoots": 11807,
+        "drawCallCount": 91,
+        "submittedTriangles": 175684,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 277,
+        "culledTiles": 8303,
+        "fineTiles": 30
+      },
+      "candidateVegetation": {
+        "originalRootCount": 2858738,
+        "installedRootCount": 2914527,
+        "coarseRootCount": 2914527,
+        "rootOwnerCount": 1,
+        "generationCount": 1,
+        "ownedObjectCounts": {
+          "programs": 1,
+          "shaders": 2,
+          "vertexArrays": 1,
+          "buffers": 1,
+          "textures": 0
+        },
+        "maximumRoots": 2917052,
+        "maximumPackedBytes": 46672832,
+        "gpuUploadCount": 8581,
+        "gpuUploadedBytes": 46632432,
+        "gpuAllocatedBytes": 46632432,
+        "gpuRequestedBytes": 46632432,
+        "gpuObservedBufferBytes": 46632432,
+        "allocationGlError": 0,
+        "uploadGlError": 0,
+        "gpuAllocationVerified": true,
+        "visibleCoarseRoots": 76035,
+        "selectedFineRoots": 11807,
+        "drawCallCount": 91,
+        "submittedTriangles": 175684,
+        "perFrameUploadBytes": 0,
+        "coarseTiles": 277,
+        "culledTiles": 8303,
+        "fineTiles": 30
+      },
+      "resourceDeltaKeys": [],
+      "baselineDiagnosticFrameMs": [
+        12,
+        16.69999999552965,
+        17.200000002980232,
+        14.799999997019768
+      ],
+      "candidateDiagnosticFrameMs": [
+        17,
+        15.400000005960464,
+        8.799999997019768,
+        16.5
+      ],
+      "baselineCpuSubmissionMs": [
+        5.5,
+        9.5,
+        6.600000001490116,
+        7.100000001490116
+      ],
+      "candidateCpuSubmissionMs": [
+        6.700000002980232,
+        12.300000004470348,
+        7,
+        7.100000001490116
+      ],
+      "baselineContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "candidateContext": {
+        "created": true,
+        "lost": false,
+        "vendor": "WebKit",
+        "renderer": "WebKit WebGL",
+        "unmaskedVendor": "Google Inc. (Google)",
+        "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "version": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "shadingLanguageVersion": "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      },
+      "baselineCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "candidateCanonicalPackage": {
+        "logicalPromotedIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_OCCURRENCE_001",
+        "runtimeIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+        "runtimeContentDigest": "fnv1a32:4f1b7ff2",
+        "primitiveCount": 22,
+        "vertexCount": 141373,
+        "triangleCount": 122222,
+        "indexCount": 366666,
+        "drawRangeCount": 17,
+        "canonicalGpuTransport": true
+      },
+      "baselinePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      },
+      "candidatePersistentObjects": {
+        "contexts": 1,
+        "programs": 4,
+        "shaders": 8,
+        "vertexArrays": 29,
+        "gpuBuffers": 309,
+        "textures": 10,
+        "framebuffers": 4
+      }
+    }
+  ],
+  "interpretation": "Fixed-view shader/runtime and vegetation-resource comparison only. Four turn samples/site insufficient for performance tails or sustained acceptance. Local-server startup excludes real network. No physical Android acceptance. Preliminary incomplete-asset run excluded.",
+  "physicalAndroidAccepted": false,
+  "performanceAccepted": false,
+  "evidenceCandidate": "574a8a0127b7a0c77d70156ea22e057ad0417bb0",
+  "scope": "Historical rejected predecessor six-view resource comparison, not current repair visual acceptance"
+}

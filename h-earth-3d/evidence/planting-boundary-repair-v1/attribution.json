@@ -1,0 +1,1012 @@
+{
+  "scope": "40 highest-population candidate edges; support attribution only, not full landscape acceptance",
+  "edges": [
+    {
+      "x": 64,
+      "z": -276,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 663,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 4.229509083044981
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 9.295148039045348
+      }
+    },
+    {
+      "x": 68,
+      "z": -276,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 654,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 4.856724287763332
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 9.804075179042414
+      }
+    },
+    {
+      "x": -164,
+      "z": -484,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 653,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 4,
+        "reasons": {
+          "STEEP": 1,
+          "ADMISSION": 11,
+          "ELIGIBLE": 4
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": 60,
+      "z": -276,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 649,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 3.6352676214571007
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 8.520575778264586
+      }
+    },
+    {
+      "x": -176,
+      "z": -488,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 646,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 5,
+        "reasons": {
+          "ELIGIBLE": 5,
+          "ADMISSION": 11
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": 56,
+      "z": -276,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 646,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 3.0770911914181784
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 7.925064802428623
+      }
+    },
+    {
+      "x": -148,
+      "z": -476,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 642,
+      "neighborRoots": 30,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -200,
+      "z": -496,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 641,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 3,
+        "reasons": {
+          "STEEP": 2,
+          "ADMISSION": 11,
+          "ELIGIBLE": 3
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": 52,
+      "z": -276,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 636,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 2.5580710813466836
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 7.108559903961128
+      }
+    },
+    {
+      "x": -248,
+      "z": -520,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 635,
+      "neighborRoots": 3,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 8,
+        "reasons": {
+          "ELIGIBLE": 8,
+          "ADMISSION": 6,
+          "STEEP": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -272,
+      "z": -524,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 633,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -228,
+      "z": -508,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 633,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -220,
+      "z": -504,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 629,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -140,
+      "z": -472,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 629,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -268,
+      "z": -516,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 625,
+      "neighborRoots": 1,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -180,
+      "z": -488,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 603,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 15,
+        "reasons": {
+          "ELIGIBLE": 15,
+          "ADMISSION": 1
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "ADMISSION": 16
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": 72,
+      "z": -276,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 597,
+      "neighborRoots": 26,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 5.513821947193673
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 10.4715553087017
+      }
+    },
+    {
+      "x": -64,
+      "z": -332,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 589,
+      "neighborRoots": 3,
+      "first": {
+        "eligible": 12,
+        "reasons": {
+          "ELIGIBLE": 12,
+          "ADMISSION": 4
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "WATER": 12,
+          "ADMISSION": 4
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -132,
+      "z": -468,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 571,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -56,
+      "z": -304,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 559,
+      "neighborRoots": 51,
+      "first": {
+        "eligible": 3,
+        "reasons": {
+          "ADMISSION": 10,
+          "ELIGIBLE": 3,
+          "WATER": 3
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "WATER": 15,
+          "ADMISSION": 1
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -48,
+      "z": -296,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 544,
+      "neighborRoots": 26,
+      "first": {
+        "eligible": 3,
+        "reasons": {
+          "ADMISSION": 10,
+          "ELIGIBLE": 3,
+          "WATER": 3
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "WATER": 15,
+          "ADMISSION": 1
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -192,
+      "z": -492,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 539,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 15,
+        "reasons": {
+          "ELIGIBLE": 15,
+          "ADMISSION": 1
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "ADMISSION": 16
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": 12,
+      "z": -280,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 535,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 4,
+        "reasons": {
+          "WATER": 4,
+          "ADMISSION": 8,
+          "ELIGIBLE": 4
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 4,
+        "reasons": {
+          "WATER": 4,
+          "ADMISSION": 8,
+          "ELIGIBLE": 4
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -84,
+      "z": -324,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 533,
+      "neighborRoots": 53,
+      "first": {
+        "eligible": 5,
+        "reasons": {
+          "ADMISSION": 9,
+          "ELIGIBLE": 5,
+          "WATER": 2
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "WATER": 15,
+          "ADMISSION": 1
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -276,
+      "z": -532,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 491,
+      "neighborRoots": 2,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -252,
+      "z": -520,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 491,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "ADMISSION": 14,
+          "STEEP": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": 56,
+      "z": -296,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 491,
+      "neighborRoots": 24,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -236,
+      "z": -512,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 489,
+      "neighborRoots": 2,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -268,
+      "z": -552,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 487,
+      "neighborRoots": 4,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 8,
+        "reasons": {
+          "ADMISSION": 6,
+          "STEEP": 2,
+          "ELIGIBLE": 8
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -156,
+      "z": -480,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 485,
+      "neighborRoots": 1,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -212,
+      "z": -500,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 483,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "ADMISSION": 14,
+          "STEEP": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": 40,
+      "z": -312,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 478,
+      "neighborRoots": 25,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -116,
+      "z": -460,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 474,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -68,
+      "z": -332,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 471,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 8,
+        "reasons": {
+          "ELIGIBLE": 8,
+          "ADMISSION": 8
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "WATER": 16
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": 28,
+      "z": -308,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 456,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -52,
+      "z": -320,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 453,
+      "neighborRoots": 25,
+      "first": {
+        "eligible": 6,
+        "reasons": {
+          "ADMISSION": 9,
+          "WATER": 1,
+          "ELIGIBLE": 6
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "WATER": 15,
+          "ADMISSION": 1
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": 32,
+      "z": -260,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 430,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 10,
+        "reasons": {
+          "ELIGIBLE": 10,
+          "ADMISSION": 6
+        },
+        "expectedDensity": 12.758361623114004
+      },
+      "second": {
+        "eligible": 0,
+        "reasons": {
+          "ADMISSION": 16
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -124,
+      "z": -464,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 420,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 2,
+        "reasons": {
+          "ADMISSION": 14,
+          "ELIGIBLE": 2
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -256,
+      "z": -504,
+      "direction": [
+        4,
+        0
+      ],
+      "roots": 419,
+      "neighborRoots": 8,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 5,
+        "reasons": {
+          "ADMISSION": 6,
+          "STEEP": 5,
+          "ELIGIBLE": 5
+        },
+        "expectedDensity": 0
+      }
+    },
+    {
+      "x": -56,
+      "z": -272,
+      "direction": [
+        0,
+        4
+      ],
+      "roots": 416,
+      "neighborRoots": 0,
+      "first": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      },
+      "second": {
+        "eligible": 16,
+        "reasons": {
+          "ELIGIBLE": 16
+        },
+        "expectedDensity": 0
+      }
+    }
+  ]
+}

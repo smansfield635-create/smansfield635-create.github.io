@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-25T02:41:27Z",
+  "generatedAt": "2026-10-25T03:38:52Z",
   "window": {
-    "start": "2026-07-27T02:41:27Z",
-    "end": "2026-10-25T02:41:27Z"
+    "start": "2026-07-27T03:38:52Z",
+    "end": "2026-10-25T03:38:52Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -54,12 +54,12 @@
         "pageLoads": 230,
         "visits": 20
       },
-      "/gauges/h-earth/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/gauges/h-earth/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/products/education/": {
@@ -94,6 +94,14 @@
         "pageLoads": 160,
         "visits": 10
       },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/build/intake/": {
         "pageLoads": 10,
         "visits": 0
@@ -102,16 +110,8 @@
         "pageLoads": 90,
         "visits": 0
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
       "/index.html": {
         "pageLoads": 110,
-        "visits": 0
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -306,12 +306,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/governance-bridge/governance/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/analytics/": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {

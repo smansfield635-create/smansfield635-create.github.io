@@ -1,0 +1,81 @@
+{
+  "schema": "DIAMONDGATE_WEBSITE_MIGRATION_v1",
+  "sourceCommit": "f4ebed5b746a13dcae2bf5262d5c7b0512ccf335",
+  "operationId": "DIAMONDGATE_WORKING_APP_WEBSITE_MIGRATION_20261025_001",
+  "authorityGeneration": 2887,
+  "runtimeFiles": [
+    {
+      "path": "dist/app.mjs",
+      "sha256": "a6a11d9cd203d1695ca786141ee7fb56a3d38a981585bd0d59e51b79f2aeab98"
+    },
+    {
+      "path": "dist/automatic-tracking.mjs",
+      "sha256": "9321e17b073537d4cd14001353e9dc253cbc319c38eac2f25d0baf1de36d7399"
+    },
+    {
+      "path": "dist/core.mjs",
+      "sha256": "fe170e15d5f1d89f0449ade304d8739fc1cdf6ab2ab4f2b770e29757a48ed463"
+    },
+    {
+      "path": "dist/history.mjs",
+      "sha256": "5901d3c85f66a57c95155ba4bfdf5c2176b4f137ccd15ece83297c46299d25ac"
+    },
+    {
+      "path": "dist/index.html",
+      "sha256": "ffd92d1f1fc0a5bd483fbfea767f57930f10c5ea15812c1a3c2b0d2ac479690d"
+    },
+    {
+      "path": "dist/intake.mjs",
+      "sha256": "8a736315b08d35672418a440afc66ff3aedc421b2abffb7d269692239a4d3caf"
+    },
+    {
+      "path": "dist/lifecycle.mjs",
+      "sha256": "aab033896db2ce46df89e5b904efbc0d371d15c82eca480b962ff7a32dc1e2e3"
+    },
+    {
+      "path": "dist/observations.mjs",
+      "sha256": "ba22669658b2e6be3b4d4ba4d0162bea4d5a1f772bdd9dda3994e1f2de27b3e8"
+    },
+    {
+      "path": "dist/packet.mjs",
+      "sha256": "60a80cba82ba064319d71296dabb100fc3d9461b9539a592504e3e2a92948f90"
+    },
+    {
+      "path": "dist/progress-record.mjs",
+      "sha256": "fc9d54ffa388ef318a9bf9d897e821c317c446c5e6e2005d5be6b24644a347da"
+    },
+    {
+      "path": "dist/progress-wire.mjs",
+      "sha256": "89d722aacbd20ce190d9016fd5b9522d9a7278def81a10cfdcb9d23d677da114"
+    },
+    {
+      "path": "dist/progression.mjs",
+      "sha256": "c5e849fdbe8f8300fe85e7d53d98d9747961af205035aea110e1550c93df7291"
+    },
+    {
+      "path": "dist/response-envelope.mjs",
+      "sha256": "19c682dae538b4278a3611ea121f25d443401b6246392fc31b7ede1fcd0bf9b9"
+    },
+    {
+      "path": "dist/response.mjs",
+      "sha256": "dccd9df002a470e273fd22ec1ef418a50e189b2c2eb14d6bfdb562f158229b8d"
+    },
+    {
+      "path": "dist/storage.mjs",
+      "sha256": "386f289778b5520864d8a3fefb76d88a7ae93bc793f918d391fd6dafaf20c0e8"
+    },
+    {
+      "path": "dist/style.css",
+      "sha256": "2181a9a42464759dd097f6d6eef93301eef8d94e18e7d26786aff0d2e0be6da6"
+    }
+  ],
+  "excluded": [
+    "instrumentation",
+    "audit",
+    "owner fixtures",
+    ".openai",
+    "qa-fixture.html",
+    "qa-task-selection.json"
+  ],
+  "runtimeChanges": "None; generated entry rewrites only asset and home URLs for nested hosting."
+}

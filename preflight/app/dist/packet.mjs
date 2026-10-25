@@ -78,6 +78,7 @@ export function mergePacket(previous,incoming,{released=[]}={}){
  return {fields,currentFields:{...incoming.fields},carried,diff,priorDecisions:prior,newDecisions:fresh};
 }
 export function captureRequest(mode='continue',project,reportPhase=false){
+ if(reportPhase&&project?.progress)return structuredContinuationReport(project);
  if(reportPhase)return `Return a concise change report for the user's project. Report the requested task outcome separately from product changes. An investigation can complete with the product UNCHANGED. Record concrete findings and their references. Identify only confirmed dependencies that prevent the specific next task. Keep permission boundaries, untested capability and remaining validation out of BLOCKERS. Internal handoff/report IDs identify conversation records, not product artifacts. Do not compare those IDs with source commits. Record any dependencies actually resolved during this task under RESOLVED BLOCKERS with their existing supporting check. This report format does not request another dependency investigation or receipt reconciliation. Keep permission limits under AUTHORIZATION BOUNDARIES, rather than blocking permitted investigation. Use UNKNOWN where necessary; claims remain source-reported. This reporting step grants no authority.
 
 ${PROGRESS_CONTRACT}
@@ -184,3 +185,23 @@ UNFINISHED WORK: Remaining work toward the established objective.
 BLOCKERS: A demonstrated limitation of this attempt; omit if none.
 NEXT STEP: The next bounded permitted action.
 Retain existing permissions and decisions. An omitted section does not erase history. Do not claim project completion or user acceptance on the user's behalf.`;}
+
+// Continuations already carry the requirement map and selected evidence above.
+// Keep event correspondence explicit without repeating the full intake contract.
+export function structuredContinuationReport(project){return `Return one concise packet for the work actually performed. Do not repeat the history or unchanged requirements. Report task outcome separately from product changes; an investigation can be COMPLETED with the product UNCHANGED. These are source-reported checks, not user acceptance. This reporting step grants no authority.
+
+${FORMAT}
+PROJECT: ${projectName(project)}
+BASELINE: ${project.checkpoints.at(-1).id}
+TASK OUTCOME: <COMPLETED, PARTIAL, BLOCKED, FAILED, NO_CHANGE or UNKNOWN>
+PRODUCT CHANGES: <CHANGED, UNCHANGED or UNKNOWN>
+CURRENT STATE: <new position>
+COMPLETED WORK: <new work or findings>
+PROGRESS EVENTS: <JSON array of new events, or []>
+NEXT STEP: <first unfinished permitted action>
+VERIFICATION: <actual checks and references, or NOT CHECKED>
+
+Each event needs {id,requirement,kind,details,reference}. Use the recorded requirement ID. FINDING records a new observation. RESULT also needs artifact (exact work/version identity). CHECK also needs artifact, result (the RESULT event ID), criterion (the exact recorded criterion), and outcome PASS or FAIL. LIMITATION also needs route (the attempted method/environment); describe its scope without assuming other environments failed. Use a new RESULT ID for a changed artifact. Reuse existing IDs for unchanged evidence; do not rerun or relabel it.
+If attribution is unresolved, use requirement UNKNOWN; it cannot advance completion. To assign existing unassigned evidence, use a new ID and attributionOf referencing its original ID; preserve its other evidence fields. A CHECK may link the corresponding attributed RESULT.
+Only include changed optional sections. BLOCKERS contains confirmed current prerequisites, not permission limits, untested capabilities, or statements saying there is no blocker. Keep permissions under AUTHORIZATION BOUNDARIES. Record actual dependency resolutions under RESOLVED BLOCKERS using the exact earlier blocker text and supporting check; BLOCKERS NONE alone does not erase prior dependencies.
+Preserve adopted requirement IDs, wording, criteria and dependencies. Omit unchanged REQUIREMENTS. After explicit reopening, propose append-only additions retaining prior rows unchanged; user adoption is still required. Internal report/baseline IDs are not product artifact identities. Never infer user approval from a passing check. To propose whole-scope closure, include PROJECT STATUS: COMPLETE, UNFINISHED WORK: NONE and NEXT STEP: NONE with supporting evidence.`;}

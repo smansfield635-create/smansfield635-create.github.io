@@ -1,5 +1,5 @@
 import {automaticPlan,automaticContext,automaticSnapshot} from './automatic-tracking.mjs';
-import {initializeProgress,prepareProgress,progressPlan,progressSnapshot,progressContext,requirementDecision,requirementReviewState,requestRequirementEvidence} from './progress-record.mjs';
+import {initializeProgress,prepareProgress,progressPlan,progressSnapshot,progressContext,requirementDecision,requirementReviewState,requestRequirementEvidence,recordRequirementAdoption} from './progress-record.mjs';
 import {accessFailure,investigationQuestion,intakeGaps,mutationAction} from './intake.mjs';
 import {allCheckpoints,allActivity,archiveHistory,validateArchives} from './history.mjs';
 import {hasWorkEvidence,workObservations,resolutionEvidence as hasResolutionEvidence} from './observations.mjs';
@@ -24,11 +24,29 @@ export function recordedAction(fields){
 // Classify explicit non-blockers without asserting that a real dependency was resolved.
 export function nonBlockingStatement(text){
  const s=clean(text).replace(/^[-*•]\s*/,'');
- if(/\b(?:but|however)\b/i.test(s))return false;
- return /^(?:no (?:confirmed |genuine )?(?:execution )?blocker (?:is confirmed|remains)|no blocker is confirmed)\b/i.test(s)
- || /^(?:access to .+ is working; source investigation is not blocked|source investigation is not blocked)[.!]?$/i.test(s)
+ if(/\b(?:but|however|except|unless)\b/i.test(s))return false;
+ if(/^(?:access to .+ is working; source investigation is not blocked|source investigation is not blocked)[.!]?$/i.test(s))return true;
+ const clauses=s.split(/;|(?<=[.!?])\s+/).filter(Boolean);
+ if(clauses.length>1&&!clauses.every(nonBlockingStatement))return false;
+ if(/\b(?:missing|unavailable|inaccessible|failed|denied|awaiting|cannot|outage)\b/i.test(s))return false;
+ return /^(?:there (?:is|are) )?no [a-z ,/-]{0,200}\bblockers?\b[^;.!?]*[.!]?$/i.test(s)
  || /^implementation authorization is deliberately excluded from the investigation blocker list[.!]?$/i.test(s);
 }
+// A failed method in a named room is preserved evidence, not proof that the
+// receiving room lacks that capability. Never classify missing inputs or a
+// shared service failure as a room-local limitation merely because it was
+// reported from a particular room.
+export function environmentAccessLimitation(text){
+ const s=clean(text);
+ if(!accessFailure(s)||!/\b(?:in (?:this|that|the previous|the reporting) (?:session|room|environment|container)|(?:this|previous|reporting) (?:session|room|environment|container)(?:'s)?|here)\b/i.test(s))return false;
+ if(!/\b(?:access|browser|web[- ]reading|interactive|tool|runtime|editor|rendering|network|dns)\b/i.test(s))return false;
+ if(/\b(?:outage|(?:HTTP|status|error)\s*5\d\d|(?:provider|server|service|site) (?:is )?down|account (?:suspended|disabled)|(?:source|input|attachment|asset|dataset|file|(?:original|customer|signed) (?:file|document|form|asset))\b[^.;\n]*(?:missing|unavailable|not supplied|not provided)|(?:missing|unavailable)\s+(?:source|input|attachment|asset|dataset|file|(?:original|customer|signed) (?:file|document|form|asset)))\b/i.test(s))return false;
+ // Do not hide a second, independently asserted dependency in a mixed report.
+ const clauses=s.split(/;|(?<=[.!?])\s+|\n/).filter(Boolean);
+ if(clauses.some(c=>/^(?:Required access:\s*)?(?:(?:the|original|remote|required|public|private)\s+)*(?:provider|server|service|site|website)\s+(?:is\s+)?unavailable\b/i.test(c.trim())))return false;
+ return !clauses.some(c=>accessFailure(c)&&! /\b(?:session|room|environment|container|here)\b/i.test(c)&&!nonBlockingStatement(c));
+}
+const activeDependency=s=>!nonBlockingStatement(s)&&!permissionOnly(s)&&!investigationQuestion(s)&&!environmentAccessLimitation(s);
 export function reportReference(fields){
  return fields.productChanges==='UNCHANGED' && /\breturned report\s+["“]?[a-f0-9]{16,64}\b/i.test(fields.resultIdentity||'')
  && /(?:immutable report artifact:\s*UNKNOWN|independent identity of report|report-artifact identity)/i.test([fields.resultIdentity,fields.checkedIdentity].join(' '));
@@ -198,7 +216,7 @@ export function reconciliationDecision(p){
  if(!context)return {context:null,disposition:'NONE',subjects:[]};
  const activity=allActivity(p),source=activity.findIndex(r=>r.id===context.reportId);
  const replies=source<0?[]:activity.slice(source+1);
- const subjects=context.subjects.filter(s=>!nonBlockingStatement(s)&&!permissionOnly(s)&&!investigationQuestion(s));
+ const subjects=context.subjects.filter(activeDependency);
  if(context.type==='DEPENDENCIES'){
   const addressed=new Set();
   for(const r of replies){
@@ -220,7 +238,7 @@ export function reconciliationDecision(p){
 export function reconciliationContext(p){return reconciliationDecision(p).context;}
 export function selectNextTask(p){
  const f=p.flow,c=current(p).fields,decision=reconciliationDecision(p);
- const blockers=[...new Set([...f.blockers,...(decision.disposition==='ANSWERED'?decision.subjects:[])])].filter(b=>!nonBlockingStatement(b)&&!permissionOnly(b)&&!investigationQuestion(b));
+ const blockers=[...new Set([...f.blockers,...(decision.disposition==='ANSWERED'?decision.subjects:[])])].filter(activeDependency);
  const explicit=p.request.trim()||f.promptRequest||f.reviewPending||f.userDecision?.value==='REJECTED'||f.userDecision?.value==='MORE_INFORMATION'||f.status==='COMPLETE';
  if(decision.disposition!=='ANSWERED'||explicit)return {reconciliation:decision.context,task:p.request.trim()||f.action,blockers,resumed:false};
  const remaining=lines(known(c.remaining)).filter(x=>!/^NONE[.!]?$/i.test(x));
@@ -246,7 +264,7 @@ function baseWorkflow(p){if(p.automaticTracking&&!p.progress&&!p.flow.promptRequ
  else if(f.reviewPending)phase='USER REVIEW';
  else if(f.status==='COMPLETE')phase='COMPLETE';
  else if(selection.resumed)phase='INVESTIGATION';
- else if(f.status==='BLOCKED')phase='RECOVERY';
+ else if(selection.blockers.length)phase='RECOVERY';
  else if(/^Investigate the next unfinished requirement:/.test(task))phase='INVESTIGATION';
  else if(!phase||!['INVESTIGATION','READY FOR EXECUTION','EXECUTION','VERIFICATION','USER REVIEW','RECOVERY','RELEASE'].includes(phase)){
   phase=/^(verify|test|check|validate|examine)\b/i.test(phaseTask)?'VERIFICATION':/^(release|publish|deploy)\b/i.test(phaseTask)?'RELEASE':/^(resume|recover|restore)\b/i.test(phaseTask)?'RECOVERY':/^(implement|fix|correct|modify|build|add|update|execute|create|draft|write|design|produce|revise|compose|generate)\b/i.test(phaseTask)?(permission==='REPORTED_PERMISSION'?'EXECUTION':'READY FOR EXECUTION'):/^(review|accept|approve)\b/i.test(phaseTask)?'USER REVIEW':'INVESTIGATION';
@@ -260,7 +278,8 @@ const PHASE_TYPES={'INVESTIGATION':'Investigation Prompt','READY FOR EXECUTION':
 export const PROGRESSION_RULE='Stop preparing when the next bounded action has enough information and established permission. Before requesting more reading or testing, name the exact unresolved question and explain how its answer could change that action. If no such question remains, execute the action; do not return another plan. Check the result against its stated criterion, report PASS, FAIL, or NOT CHECKED with evidence, correct demonstrated failures, and advance after a pass. Keep human judgment separate and request it only where the criterion requires it. Do not treat the entire project’s remaining uncertainty as a prerequisite to every action.';
 export function workflowDecision(p){
  const f=p.flow,c=current(p).fields,plan={...baseWorkflow(p)};
- const blockers=[...new Set((f.blockers||[]).filter(x=>!nonBlockingStatement(x)&&!permissionOnly(x)&&!investigationQuestion(x)))];
+ const blockers=[...new Set((f.blockers||[]).filter(activeDependency))];
+ const attemptLimitations=[...new Set((f.blockers||[]).filter(environmentAccessLimitation))];
  const closed=f.status==='COMPLETE'&&!f.promptRequest;
  if(closed){plan.phase='COMPLETE';plan.action='Accepted scope complete. Reopen with a new direction to continue.';}
  else if(blockers.length&&!f.promptRequest&&!f.reviewPending){plan.phase='RECOVERY';plan.action='Resolve only the observed dependencies preventing the current action: '+blockers.join(' · ')+'. Use an available permitted alternative; do not repeat a failed route without changed conditions. Preserve the intended next action: '+plan.action;}
@@ -270,19 +289,28 @@ export function workflowDecision(p){
  if(!closed&&!blockers.length&&!f.promptRequest&&!f.reviewPending&&!readOnlyExecution&&(plan.phase==='EXECUTION'||plan.phase==='CORRECTION'||mutationAction(plan.action))&&permission!=='REPORTED_PERMISSION'){
   plan.phase='READY FOR EXECUTION';plan.action='Establish the existing permission and bounded scope for the proposed task: '+plan.action+' Do not perform it until the receiving tool establishes applicable permission.';
  }
- if(f.stalled&&!closed&&!blockers.length&&!f.promptRequest&&!f.reviewPending){plan.phase='INVESTIGATION';plan.action='The last attempt added no new evidence. Using preserved findings, identify the exact unanswered question that would change this next action: '+plan.action+'. If none remains, carry out the next bounded permitted action. Do not repeat the previous preparation or relabel old evidence.';plan.condition='One specific decision-changing gap with its resolution method, or a new bounded work result. An unchanged report does not advance the project.';}
+ if(f.stalled&&!closed&&!blockers.length&&!attemptLimitations.length&&!f.promptRequest&&!f.reviewPending){plan.phase='INVESTIGATION';plan.action='The last attempt added no new evidence. Using preserved findings, identify the exact unanswered question that would change this next action: '+plan.action+'. If none remains, carry out the next bounded permitted action. Do not repeat the previous preparation or relabel old evidence.';plan.condition='One specific decision-changing gap with its resolution method, or a new bounded work result. An unchanged report does not advance the project.';}
  const snapshot=p.progress?progressSnapshot(p.progress):null;
- const review=snapshot?requirementReviewState(p,snapshot.next?.id):null;
+ const review=snapshot?requirementReviewState({...p,flow:{...f,blockers}},snapshot.next?.id):null;
  const correspondence=evidenceCorrespondence(c,c);
  const checkText=String(c.verification||'');
  const passedCheck=/\bpass(?:ed)?\b/i.test(checkText)&&!/\b(?:fail(?:ed|ure)?|not (?:all )?pass(?:ed)?|not checked|not tested|unchecked|unverified|pending)\b/i.test(checkText.replace(/\b0 failed\b/gi,''));
  if(!snapshot&&!closed&&!blockers.length&&!f.promptRequest&&!f.reviewPending&&plan.phase==='USER REVIEW'&&!passedCheck){plan.phase=/\bfail(?:ed|ure)?\b/i.test(checkText)?'CORRECTION':'VERIFICATION';plan.action=plan.phase==='CORRECTION'?'Address the failed check for the current result before seeking acceptance. '+checkText:'Verify the exact current result against its acceptance criterion and return an explicit PASS or FAIL with the check reference. '+plan.action;}
  if(!snapshot&&!closed&&!f.promptRequest&&!f.reviewPending&&f.userDecision?.value==='ACCEPTED'&&f.userDecision.baseline===current(p).id){plan.phase='INVESTIGATION';plan.action='The current result was accepted. Use the remaining scope to select the next unfinished bounded action, or report the scope complete with supporting checks if no work remains. Do not request acceptance of this same result again.';}
  if(plan.phase==='CORRECTION'&&permission!=='REPORTED_PERMISSION'){plan.phase='READY FOR EXECUTION';plan.action='Establish applicable permission for this bounded correction before changing the result: '+plan.action;}
+ if(!closed&&!blockers.length&&attemptLimitations.length&&!['USER REVIEW','COMPLETE'].includes(plan.phase)&&!f.promptRequest&&!f.reviewPending){
+  if(plan.phase==='RECOVERY'){
+   const intended=recordedAction(c);
+   if(/^(?:verify|test|check|validate|examine)\b|^perform\b[^.!?]*\b(?:verification|inspection|check)\b/i.test(intended))plan.phase='VERIFICATION';
+   else if(/^(?:inspect|trace|identify|review|compare|analy[sz]e|research)\b/i.test(intended))plan.phase='INVESTIGATION';
+  }
+  plan.action+=' Access check: establish the receiving environment’s permitted capability, then perform this task if available. Earlier environment-specific failures remain recorded and unresolved; do not repeat the same failed route under unchanged conditions. If unavailable, report the specific capability or input needed.';
+  plan.reason='The intended task remains next. The reported access failure belongs to its attempted environment; current access must be established without repeating completed investigation.';
+ }
  const legacyReady=!snapshot&&plan.phase==='USER REVIEW'&&correspondence.standing==='CORRESPONDING_REPORTED'&&passedCheck&&(!f.userDecision||f.userDecision.baseline!==current(p).id);
  const canClose=!!snapshot?.allSatisfied&&!blockers.length&&!f.attempt&&!f.reviewPending&&!f.promptRequest&&!p.request.trim()&&!closed;
  const canReviewResult=!closed&&!f.promptRequest&&!f.reviewPending&&!f.attempt&&!blockers.length&&(snapshot?!!review?.eligible:legacyReady);
- return {...plan,type:PHASE_TYPES[plan.phase]||plan.type,blockers,canContinue:!closed&&!f.reviewPending,canReviewResult,canClose,reviewReason:canReviewResult?'The current result is checked and ready for your judgment.':canClose?'All requirements are satisfied; the project outcome can be closed.':review?.reason||'Result judgment becomes available only for a checked result at its review stage.'};
+ return {...plan,type:PHASE_TYPES[plan.phase]||plan.type,blockers,attemptLimitations,canContinue:!closed&&!f.reviewPending,canReviewResult,canClose,reviewReason:canReviewResult?'The current result is checked and ready for your judgment.':canClose?'All requirements are satisfied; the project outcome can be closed.':review?.reason||'Result judgment becomes available only for a checked result at its review stage.'};
 }
 export function workflow(p){return workflowDecision(p);}
 export function workingBlockers(p){const context=reconciliationContext(p);return [...new Set([...selectNextTask(p).blockers,...(context?.type==='EVIDENCE'?context.subjects:[])])];}
@@ -315,7 +343,7 @@ export function continuation(p){
  const w=decision;let action=w.action;
  const gaps=intakeGaps(current(p).fields);
  const deniedMutation=!w.resumed&&mutationAction(action)&&permissionStanding([current(p).fields.authorization,...(f.boundaries||[])].join(' · '))!=='REPORTED_PERMISSION';
- if(f.status==='BLOCKED'&&!w.resumed&&!f.promptRequest&&!reconciliationContext(p))action='Inspect existing accessible records to resolve these exact dependencies'+(f.userDecision?.value==='REJECTED'?' while addressing the rejected result: '+f.userDecision.note:'')+':\n'+f.blockers.map(x=>'- '+x).join('\n')+'\nUse a different permitted route if the previous route failed. If no route is available, report BLOCKED with the exact access needed. Do not repeat a summary as progress.';
+ if(w.blockers.length&&!w.resumed&&!f.promptRequest&&!reconciliationContext(p))action='Inspect existing accessible records to resolve these exact dependencies'+(f.userDecision?.value==='REJECTED'?' while addressing the rejected result: '+f.userDecision.note:'')+':\n'+w.blockers.map(x=>'- '+x).join('\n')+'\nUse a different permitted route if the previous route failed. If no route is available, report BLOCKED with the exact access needed. Do not repeat a summary as progress.';
  else if(!action)action='Inspect the accepted record and identify the exact missing dependency preventing selection of the next unfinished action. Reuse existing evidence.';
  if(gaps.length&&!f.blockers.length){w.phase='INVESTIGATION';w.type='Clarification Prompt';action='Use the existing conversation first, then ask only for the missing intent: '+gaps.join(' ')+' Return the clarified packet; do not execute the underspecified task.';w.reason='Required intent is missing from the saved record.';w.condition='The missing intent is established without inventing prior work or permission.';}
  else if(deniedMutation&&w.phase!=='RELEASE'&&!f.blockers.length&&!f.promptRequest){w.phase='READY FOR EXECUTION';w.type='Execution Preparation Prompt';action='Establish the existing permission and bounded scope for the proposed task: '+action+' Do not perform that task until its permission is established in the receiving tool.';w.reason='The proposed action is not covered by established task-specific permission.';w.condition='Report the applicable permitted task or the exact permission still needed; no implementation is claimed.';}
@@ -333,8 +361,8 @@ export function recordUserDecision(p,value,note=''){
  if(p.progress){
   const snapshot=progressSnapshot(p.progress),r=snapshot.next;
   if(value==='ACCEPTED'&&snapshot.allSatisfied)p.flow.status='COMPLETE';
-  else if(value==='MORE_INFORMATION')requestRequirementEvidence(p,r.id,note);
-  else requirementDecision(p,r.id,value,{note});
+  else if(value==='MORE_INFORMATION')requestRequirementEvidence({...p,flow:{...p.flow,blockers:ready.blockers}},r.id,note);
+  else requirementDecision({...p,flow:{...p.flow,blockers:ready.blockers}},r.id,value,{note});
   p.flow.log.push({id:uid(),at:new Date().toISOString(),baseline:current(p).id,kind:'USER_DECISION',status:p.flow.status,raw:note,note:'User outcome decision: '+value+(note?' — '+note:'')});
   p.flow.attempt=null;p.flow.stalled='';return {value,note};
  }
@@ -357,7 +385,11 @@ export function applyReviewed(p,incoming,merged,assessment,{note='',acceptComple
  const nextCycle=fresh.kind==='PROGRESS'&&f.status==='COMPLETE'&&f.promptRequest==='DIRECTION'&&known(incoming.fields.next)&&clean(incoming.fields.next)!==clean(f.action)&&!fresh.canComplete;
  archiveHistory(p,{cycle:!!nextCycle});if(nextCycle){f.userDecision=null;fresh.fields.remaining=known(incoming.fields.remaining)||fresh.action;fresh.fields.status=known(incoming.fields.status)||'';}
  if(recordMode==='MANUAL_REVIEW'&&merged.diff.includes('authorization')&&known(incoming.fields.authorization)){record.retiredBoundaries=clone(fresh.boundaries);fresh.boundaries=[];}
- if(fresh.kind==='PROGRESS'&&fresh.progressRecord)p.progress=clone(fresh.progressRecord);
+ if(fresh.kind==='PROGRESS'&&fresh.progressRecord){
+  const priorIds=new Set(p.progress?.requirements.map(r=>r.id)||[]);
+  p.progress=clone(fresh.progressRecord);
+  if(recordMode==='MANUAL_REVIEW')recordRequirementAdoption(p,{at,baseline:current(p).id,requirements:p.progress.requirements.filter(r=>!priorIds.has(r.id)).map(r=>r.id)});
+ }
  if(fresh.kind==='PROGRESS'&&p.automaticTracking)p.unlinkedProgress=!!fresh.automatic;
  if(fresh.kind==='PROGRESS'){p.checkpoints.push({id:uid(),parent:current(p).id,at,raw:incoming.raw,fields:{...clone(fresh.fields),blockers:fresh.blockers.filter(b=>!b.startsWith('Required access: ')).join('\n')||'NONE',access:fresh.access},note});f.acceptedBaseline=current(p).id;p.request='';}
  record.checkpointId=fresh.kind==='PROGRESS'?current(p).id:null;

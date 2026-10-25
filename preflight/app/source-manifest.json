@@ -6,7 +6,7 @@
   "runtimeFiles": [
     {
       "path": "dist/app.mjs",
-      "sha256": "ba44ef4a1611c31059e0c5eb5b468f2defbeeeef3cf456d4ad15be73159cad5c",
+      "sha256": "62afe68c1db5c60411d67c7d2bdcc8a0132a7ac0dca3814aa50fb6dd154d0e59",
       "originalSha256": "a6a11d9cd203d1695ca786141ee7fb56a3d38a981585bd0d59e51b79f2aeab98"
     },
     {
@@ -24,7 +24,7 @@
     },
     {
       "path": "dist/index.html",
-      "sha256": "5e5c026e164d0d6385eb3c59575b714109f972affb30984dddb86a6301244285",
+      "sha256": "57624b954328fdf32765711cd366e9401809573b68df5e0720c3f30dd656c5a3",
       "originalSha256": "ffd92d1f1fc0a5bd483fbfea767f57930f10c5ea15812c1a3c2b0d2ac479690d"
     },
     {
@@ -42,12 +42,12 @@
     },
     {
       "path": "dist/packet.mjs",
-      "sha256": "c5a36081317cf9a410ef6d67ce95e4248bca7ea6205e448f66152eded8bba1c7",
+      "sha256": "8fcf9e1f87fe66883cb0d8aaa5edd75fb3b75240d3285c63537250cf0328b110",
       "originalSha256": "60a80cba82ba064319d71296dabb100fc3d9461b9539a592504e3e2a92948f90"
     },
     {
       "path": "dist/progress-record.mjs",
-      "sha256": "fe5f4af81f7750aaffa1fda8a00341c495adf2b82be85805fc80178429953a93",
+      "sha256": "1014aed4bcd0505283f77b8ce397c0688f3fc438c11e602e43c2c6595de51748",
       "originalSha256": "fc9d54ffa388ef318a9bf9d897e821c317c446c5e6e2005d5be6b24644a347da"
     },
     {
@@ -56,7 +56,7 @@
     },
     {
       "path": "dist/progression.mjs",
-      "sha256": "fff6b5be68754a3a573c92a306926bbcbd9888b2a2fd5405187edb139c262981",
+      "sha256": "5420d14d4cd49ea96a18572a2e74c0064ade7f316660067398e1aec567bf4476",
       "originalSha256": "c5e849fdbe8f8300fe85e7d53d98d9747961af205035aea110e1550c93df7291"
     },
     {
@@ -87,10 +87,10 @@
   ],
   "runtimeChanges": "None; generated entry rewrites only asset and home URLs for nested hosting.",
   "currentRevision": {
-    "operationId": "DIAMONDGATE_FULL_CYCLE_MATRIX_REPAIR_20261025_001",
-    "authorityGeneration": 2889,
-    "governingHead": "8da340ed426ba8f1ab8cb39fb07f18715982a54a",
-    "scope": "Workflow transitions, result review, evidence dependencies and import/recovery matrix repair",
-    "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6401937830"
+    "operationId": "DIAMONDGATE_SHARED_CONTINUATION_REPAIR_20261025_002",
+    "authorityGeneration": 2895,
+    "governingHead": "79dc1b3ac89e8b585a45b08b39870c56887fb932",
+    "scope": "Shared continuation routing, explicit requirement adoption, concise reporting and whole-response import guidance",
+    "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6404514939"
   }
 }

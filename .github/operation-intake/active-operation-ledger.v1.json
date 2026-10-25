@@ -13680,50 +13680,6 @@
       "scopeHash": "a3efca2fc5f7073a7384d3aa10783eb9da27aec041ae343237f2198f68067173",
       "state": "ADMITTED_LOCKED"
     },
-    "a4579d64d95a2c890d424f36299b52aade4912839b457772172e94e2e2d62d40": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "79dc1b3ac89e8b585a45b08b39870c56887fb932",
-          "lockGeneration": 2893,
-          "lockScope": "H_EARTH:PLANTING_BOUNDARY_REPAIR:20261025",
-          "operationId": "H_EARTH_PLANTING_BOUNDARY_REPAIR_20261025_001",
-          "procedureLocatorDigest": "f05fb590e13603df4eedbad5a85f398e9df96ed6c0e1f564640601693922500b",
-          "requestDigest": "21a26ede58ab0b548972541fd4e80b89990cb4e76706a61f6bf1b1ddf9117b00",
-          "scopeHash": "a4579d64d95a2c890d424f36299b52aade4912839b457772172e94e2e2d62d40"
-        },
-        "bindingDigest": "c20eae99e1eaa7d874242a5d6fb631efc4205b3a47c446e4499fc20f59b8232e",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "b990ced632c757c951b7176307b32ee559e9da9f1494ada97ac19cf27a48a980",
-          "commentId": 6404357365,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6783,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 40240964564,
-          "workflowSha": "79dc1b3ac89e8b585a45b08b39870c56887fb932"
-        },
-        "lineageAnchorCommitSha": "831dd3b2a7fceb5e7fb7e9d0fd9c25832b7b3839",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "79dc1b3ac89e8b585a45b08b39870c56887fb932",
-      "lockGeneration": 2893,
-      "lockScope": "H_EARTH:PLANTING_BOUNDARY_REPAIR:20261025",
-      "operationId": "H_EARTH_PLANTING_BOUNDARY_REPAIR_20261025_001",
-      "procedureLocatorDigest": "f05fb590e13603df4eedbad5a85f398e9df96ed6c0e1f564640601693922500b",
-      "released": false,
-      "requestDigest": "21a26ede58ab0b548972541fd4e80b89990cb4e76706a61f6bf1b1ddf9117b00",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "a4579d64d95a2c890d424f36299b52aade4912839b457772172e94e2e2d62d40",
-      "state": "ADMITTED_LOCKED"
-    },
     "a49e4993cafb9d0a0ae1082bf71f215c7feb4c326cfcba3ee94af1d2fe3a1888": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -87844,6 +87800,51 @@
       "requestDigest": "7ea5ba1298567b9416276443bfe66796cfc4902842051069553e445625d88e38",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "415bd19f02dafb3ff9bddec4c8d732891b47cd9eacf209732c59bd0fe6a9c4f1",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "79dc1b3ac89e8b585a45b08b39870c56887fb932",
+          "lockGeneration": 2893,
+          "lockScope": "H_EARTH:PLANTING_BOUNDARY_REPAIR:20261025",
+          "operationId": "H_EARTH_PLANTING_BOUNDARY_REPAIR_20261025_001",
+          "procedureLocatorDigest": "f05fb590e13603df4eedbad5a85f398e9df96ed6c0e1f564640601693922500b",
+          "requestDigest": "21a26ede58ab0b548972541fd4e80b89990cb4e76706a61f6bf1b1ddf9117b00",
+          "scopeHash": "a4579d64d95a2c890d424f36299b52aade4912839b457772172e94e2e2d62d40"
+        },
+        "bindingDigest": "c20eae99e1eaa7d874242a5d6fb631efc4205b3a47c446e4499fc20f59b8232e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b990ced632c757c951b7176307b32ee559e9da9f1494ada97ac19cf27a48a980",
+          "commentId": 6404357365,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6783,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40240964564,
+          "workflowSha": "79dc1b3ac89e8b585a45b08b39870c56887fb932"
+        },
+        "lineageAnchorCommitSha": "831dd3b2a7fceb5e7fb7e9d0fd9c25832b7b3839",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "79dc1b3ac89e8b585a45b08b39870c56887fb932",
+      "lockGeneration": 2893,
+      "lockScope": "H_EARTH:PLANTING_BOUNDARY_REPAIR:20261025",
+      "operationId": "H_EARTH_PLANTING_BOUNDARY_REPAIR_20261025_001",
+      "procedureLocatorDigest": "f05fb590e13603df4eedbad5a85f398e9df96ed6c0e1f564640601693922500b",
+      "released": true,
+      "requestDigest": "21a26ede58ab0b548972541fd4e80b89990cb4e76706a61f6bf1b1ddf9117b00",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a4579d64d95a2c890d424f36299b52aade4912839b457772172e94e2e2d62d40",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
     }

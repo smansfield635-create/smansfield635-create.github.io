@@ -1,14 +1,25 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
-  "result": "WORKFLOW_DISPATCH_FAILED",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
   "requestId": "diamondgate-shared-release-cd130122-20261025",
   "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 6817,
   "requestBranch": "ai-dispatch-request-diamondgate-shared-release-cd130122",
-  "requestCommit": "835c3419e6e5c60f44d44286cdcb12afbe724b9c",
+  "requestCommit": "fc332e78bde03bc5f66fea09f7d542c66cec7996",
+  "requestCommitParent": "cd130122220cfa987f04a698900c6e2be08f2bc2",
+  "requestParentWasCurrent": true,
   "currentMainSha": "cd130122220cfa987f04a698900c6e2be08f2bc2",
-  "bridgeRunId": "40243274831",
-  "error": "Input may not be user supplied: target_sha",
-  "failedAt": "2026-10-25T23:07:01.174Z"
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "cd130122220cfa987f04a698900c6e2be08f2bc2",
+    "surface_id": "preflight.v1"
+  },
+  "bridgeRunId": "40243360115",
+  "dispatchedRunId": 40243375327,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40243375327",
+  "dispatchedRunHeadSha": "cd130122220cfa987f04a698900c6e2be08f2bc2",
+  "dispatchedAt": "2026-10-25T23:08:09.290Z",
+  "resolvedAt": "2026-10-25T23:08:13.266Z"
 }

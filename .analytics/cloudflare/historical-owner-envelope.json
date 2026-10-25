@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-25T16:32:22Z",
+  "generatedAt": "2026-10-25T17:27:14Z",
   "window": {
-    "start": "2026-07-27T16:32:22Z",
-    "end": "2026-10-25T16:32:22Z"
+    "start": "2026-07-27T17:27:14Z",
+    "end": "2026-10-25T17:27:14Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4586,
+    "pageLoads": 4576,
     "visits": 1341,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4586,
+        "pageLoads": 4576,
         "visits": 1341
       }
     },
@@ -35,7 +35,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1021,
+        "pageLoads": 1011,
         "visits": 751
       },
       "/laws/": {
@@ -50,16 +50,16 @@
         "pageLoads": 230,
         "visits": 20
       },
+      "/gauges/h-earth/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
-        "visits": 0
-      },
-      "/gauges/h-earth/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/products/education/": {
@@ -130,6 +130,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
         "visits": 0
@@ -137,10 +141,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -325,7 +325,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3245,
+        "pageLoads": 3235,
         "visits": 0
       },
       "www.google.com": {

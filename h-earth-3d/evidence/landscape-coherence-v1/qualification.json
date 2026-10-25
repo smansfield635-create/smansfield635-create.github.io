@@ -1408,5 +1408,7 @@
   ],
   "interpretation": "Fixed-view shader/runtime and vegetation-resource comparison only. Four turn samples/site insufficient for performance tails or sustained acceptance. Local-server startup excludes real network. No physical Android acceptance. Preliminary incomplete-asset run excluded.",
   "physicalAndroidAccepted": false,
-  "performanceAccepted": false
+  "performanceAccepted": false,
+  "evidenceCandidate": "574a8a0127b7a0c77d70156ea22e057ad0417bb0",
+  "scope": "Historical rejected predecessor six-view resource comparison, not current repair visual acceptance"
 }

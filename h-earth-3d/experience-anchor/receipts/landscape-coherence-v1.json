@@ -32,12 +32,13 @@
   ],
   "continuityEvidence": [
     "h-earth-3d/evidence/landscape-coherence-v1/source-manifest.json",
-    "h-earth-3d/evidence/landscape-coherence-v1/west-review.json"
+    "h-earth-3d/evidence/landscape-coherence-v1/west-review.json",
+    "h-earth-3d/evidence/landscape-coherence-v1/material-repair-review.json"
   ],
   "experienceFiles": [
     {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
-      "sha256": "9e65bafe0ecaa2507747ddfbf06d8feb000dfc4b23ac306b358ba1997599842a"
+      "sha256": "4450c9e9f66f3dfd8f3094e897311e09550269c2c0f7510a4ce2a4982387d2c1"
     },
     {
       "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
@@ -53,14 +54,15 @@
     },
     {
       "path": "showroom/globe/h-earth/index.html",
-      "sha256": "56856e362f4e401b20521760801dea6ebc54ab04af38e0ca198458908f7ca0b5"
+      "sha256": "0c9513ddbc7796555ec9965cb9ed48f147932a851bdb6c02c50dceac60bed656"
     }
   ],
-  "evidenceScope": "Bounded same-world continuity: unchanged geometry, support and navigation; exact supported fixed-view renderer frames and resource counts. Soil/grass presentation only. Not broad landscape completion, physical Android acceptance, sustained performance acceptance or publication authority.",
+  "evidenceScope": "Same-world source continuity only: material-only repair; immutable geometry, root population, draw selection, camera and navigation preserved. Historical six-view evidence belongs to rejected predecessor574a8a0. Final repair GPU invariance test establishes ordinary material isolation only. Not visual completeness, performance or release acceptance.",
   "limitations": [
     "Four diagnostic turn samples per view cannot establish frame-time tails; apparent bare-mountain slowdown requires repeated investigation.",
     "Grass density boundaries and distant patchwork remain; true river/canopy views and connecting travel not established.",
-    "Required Android/perceptual review remains pending. Existing corridor preview workflow substitutes old renderer and deploys production; it is unsuitable. No production-as-preview."
+    "Required Android/perceptual review remains pending. Existing corridor preview workflow substitutes old renderer and deploys production; it is unsuitable. No production-as-preview.",
+    "Owner rejects predecessor due remaining boundaries and reports slowdown. Current material repair does not establish repaired vegetation-density boundaries; further qualification required."
   ],
   "ownerDirection": "Owner directs continuation on the same existing H-Earth product and GitHub Pages publication route, without rematerializing a separate world or new orchestration, and wants actual live comparison after lawful release.",
   "authorityEffect": "EVIDENCE_ONLY_NOT_PUBLICATION_AUTHORITY"

@@ -32,3 +32,13 @@ These sources motivate measurement and bounded rendering choices. They do not es
 View labels are diagnostic identifiers, not claims of visible habitat coverage: hill-river faces uphill without showing the river, woodland-edge lacks a canopy, and cavern-upper does not show the interior. True river/canopy views and connecting movement remain outstanding. The first candidate improves palette/lighting agreement; unchanged grass density edges remain visible.
 
 All 130 observed baseline resource files were verified against their exact Git blobs with zero mismatches. Six complete baseline/candidate views have zero runtime/HTTP errors and equal vegetation resource receipts. One bare-mountain diagnostic has an upper-median frame duration of49.5ms versus16.9ms; four samples cannot distinguish noise from regression, so performance remains unaccepted and needs repeated investigation. Canonical package and persistent object counts also match.
+
+## Ordinary material repair after owner review
+
+Owner screenshots29963–29975 reject predecessor574a8a0: hard vegetation boundaries and angular ground remain, with reported slowdown. No further ChatGPT hosting work is part of this repair.
+
+The active single-owner grass already retains coarse roots and fades fine lobes14–24m. Raising draw distance is not justified. This bounded repair instead removes ordinary/far soil dependence on indexed face colour and legacy material properties. Geological rock inheritance, cavern attenuation, shoreline inputs, root buffers, selection and geometry are unchanged.
+
+Actual WebGL2 fragment-shader probe changes only incoming face colour/material while holding position, normal and shoreline fixed. Rejected predecessor renders different pixels; repaired shader produces identical pixels. See material-invariance.json. Replay with CHROME_BIN and REJECTED_CANDIDATE_REF set to the retained predecessor commit; requires puppeteer-core. This isolates one cause, not every possible normal/slope seam.
+
+qualification.json and the six-view PNGs are HISTORICAL predecessor evidence. They do not qualify this repaired head visually. Vegetation-density boundaries, broad final-scene comparison, sustained comparative performance and Android acceptance remain unresolved. Native preflight is next; no merge/publication authorized by these tests.

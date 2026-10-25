@@ -796,7 +796,7 @@ void main(){
     // adjacent slopes share this treatment instead of introducing a gray panel.
     float mountainContactEdge=min(min(world.x+120.0,96.0-world.x),min(world.y+376.0,-224.0-world.y));
     float mountainContact=smoothstep(0.0,12.0,mountainContactEdge);
-    exposedRock=mix(exposedRock,base*mix(0.86,1.06,weathering),mountainContact);
+    if(geologicalEarthRock)exposedRock=mix(exposedRock,base*mix(0.86,1.06,weathering),mountainContact);
     exposedRock*=mix(0.82,1.13,fracture);
     vec3 groundedSoil=mix(soilTone,vec3(0.285,0.255,0.165),triCoarse*0.30);
     groundedSoil=mix(groundedSoil,vec3(0.205,0.235,0.135),shelteredSoil*(1.0-weathering)*0.22);
@@ -804,19 +804,17 @@ void main(){
     palette=mix(palette,exposedRock,rockExposure*(0.62+0.20*fracture));
     palette*=mix(0.89,1.11,materialVariation);
     palette*=mix(0.94,1.06,triMicro*nearMaterial);
-    palette=mix(palette,base,0.34);
+    // Indexed face colour must not reintroduce polygon panels in ordinary soil.
+    if(geologicalEarthRock)palette=mix(palette,base,0.34);
 
-    float terrainRoughness=vRoleCode==1u?
-      clamp(vMaterialParameters.x,0.04,1.0):0.86;
+    float terrainRoughness=geologicalEarthRock?0.86:0.94;
     terrainRoughnessForLighting=terrainRoughness;
-    float terrainReflectance=vRoleCode==1u?
-      clamp(vMaterialParameters.y,0.0,1.0):0.045;
+    float terrainReflectance=geologicalEarthRock?0.045:0.02;
     terrainReflectanceForLighting=terrainReflectance;
-    float terrainWetness=vRoleCode==1u?
-      clamp(vMaterialParameters.z,0.0,1.0):0.06;
+    float terrainWetness=geologicalEarthRock?0.06:
+      clamp((1.0-elevationMix)*0.12+macroField*0.06,0.0,0.18);
     terrainWetnessForLighting=terrainWetness;
-    float terrainCurvature=vRoleCode==1u?
-      clamp(vMaterialParameters.w,0.0,1.0):0.0;
+    float terrainCurvature=0.0;
     specularScale=mix(0.28,1.24,terrainReflectance);
     specularScale*=mix(0.78,1.38,terrainWetness);
     specularScale*=mix(0.92,1.10,rockExposure);
@@ -1297,7 +1295,7 @@ void main(){
   float ambient=
     0.26+
     0.16*clamp(geometricNormal.y,0.0,1.0)+
-    0.05*materialSignal;
+    0.05*((worldSoilTerrain&&!geologicalEarthRock)?0.0:materialSignal);
   if(clearingType>0.5&&clearingType<2.5){
     vec3 reference=clearingType>1.5?vec3(94.0,135.0,61.0)/255.0:vec3(100.0,83.0,62.0)/255.0;
     vec3 detail=clamp(pow(clearingTexel.rgb/max(reference,vec3(0.01)),vec3(2.2)),vec3(0.45),vec3(1.55));

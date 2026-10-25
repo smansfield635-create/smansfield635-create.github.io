@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-25T21:29:00Z",
+  "generatedAt": "2026-10-25T22:28:20Z",
   "window30d": {
-    "start": "2026-09-25T21:29:00Z",
-    "end": "2026-10-25T21:29:00Z"
+    "start": "2026-09-25T22:28:20Z",
+    "end": "2026-10-25T22:28:20Z"
   },
   "daily": [
     {
       "date": "2026-09-26",
-      "pageLoads": 50
+      "pageLoads": 70
     },
     {
       "date": "2026-09-27",
-      "pageLoads": 20
+      "pageLoads": 50
     },
     {
       "date": "2026-09-28",
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 35
+      "pageLoads": 31
     },
     {
       "date": "2026-10-19",
@@ -124,29 +124,29 @@
     },
     {
       "date": "2026-10-25",
-      "pageLoads": 50
+      "pageLoads": 51
     }
   ],
   "summary": {
-    "pageLoads": 1958,
-    "botPageLoads": 858,
-    "nonBotPageLoads": 1100
+    "pageLoads": 1855,
+    "botPageLoads": 847,
+    "nonBotPageLoads": 1008
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1642,
-      "visits": 1642
+      "pageLoads": 1630,
+      "visits": 1630
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 234,
+      "pageLoads": 183,
       "visits": 0
     },
     {
       "host": "www.google.com",
-      "pageLoads": 39,
-      "visits": 39
+      "pageLoads": 79,
+      "visits": 79
     },
     {
       "host": "bing.com",
@@ -162,18 +162,18 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 685,
-      "visits": 631
+      "pageLoads": 703,
+      "visits": 650
     },
     {
       "path": "/analytics/",
-      "pageLoads": 655,
-      "visits": 595
+      "pageLoads": 645,
+      "visits": 585
     },
     {
       "path": "/",
-      "pageLoads": 160,
-      "visits": 120
+      "pageLoads": 169,
+      "visits": 149
     },
     {
       "path": "/build/",
@@ -191,14 +191,14 @@
       "visits": 31
     },
     {
-      "path": "/governance-bridge/governance/",
-      "pageLoads": 30,
-      "visits": 30
-    },
-    {
       "path": "/gauges/",
       "pageLoads": 30,
       "visits": 0
+    },
+    {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 25,
+      "visits": 25
     }
   ],
   "ownerMeasurement": {

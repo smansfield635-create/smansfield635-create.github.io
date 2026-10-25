@@ -1,0 +1,47 @@
+{
+  "schema": "H_EARTH_CAVERN_SURFACE_LAYER_WEST_REVIEW_v1",
+  "reviewer": "independent West agent",
+  "disposition": "PASS_WITH_BOUNDED_EVIDENCE",
+  "statement": "No remaining demonstrated product or source blocker within the tested scope.",
+  "reviewMethod": "Read-only source diff, import-map identity, qualification artifact and runner inspection; no independent full-scene rerun.",
+  "sourceGitBlobs": {
+    "showroom/globe/h-earth/functional-landscape/navigation.js": "dcd1d0800a1f8c82cccabd9f2cba7dc2744fb86b",
+    "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js": "cf293b9e3f19ae40395df24bdd74d10ca6da3273",
+    "showroom/globe/h-earth/index.html": "8481f856b4b7839bee349e3111ffd0ec5f50c0fb"
+  },
+  "verifiedEvidence": {
+    "qualificationResult": "PASS",
+    "failures": 0,
+    "pairedAboveBelowSites": 5,
+    "completedSurfaceRoutes": 12,
+    "sideBackEscapeRejectionsPreservingState": 15,
+    "portalRoundTrips": 3,
+    "refinedPortalCrossings": 8,
+    "refinedCameraDeltaEqualsGroundDelta": true,
+    "smallestRefinedCameraDeltaMeters": 3.1391038763928236e-06,
+    "acceptedNearGuardSteps": 12,
+    "fineTurnSites": 2,
+    "fineTurnsPerSite": 1440,
+    "fineTurnMaximumCameraDeltaMeters": 0,
+    "priorBoundaryRegressions": 20,
+    "renderedReceipts": 6,
+    "renderedNavigationSequence": 100,
+    "actualProductionPublicNavigationFunctionsUsed": true,
+    "diagnosticHelpersUsedOnlyForStateSeeding": true,
+    "importIdentityBlockerResolved": true
+  },
+  "sourceFindings": [
+    "Upper support is sampled from emitted ERODED_TERRAIN and MOUNTAIN_OVERBURDEN triangles, not fabricated analytic support.",
+    "Selected layer persists through navigation and evaluation; portal admission checks actual accepted source height.",
+    "Interior side/back escape remains fail-closed; explicit invalid layers and inconsistent interior heights are rejected.",
+    "Protected geometry and world rendering are unchanged by the support-query correction."
+  ],
+  "limitations": [
+    "All four jamb seeds were ineligible; accepted near-jamb transitions were not exercised.",
+    "Desktop software WebGL evidence does not establish physical-device performance or perceptual acceptance.",
+    "The dark cave screenshot does not establish visual quality.",
+    "Bridge calls omitting layer intentionally default to SURFACE; legacy navigation states are supported, but legacy bridge semantics are not identical.",
+    "The review is not exhaustive collision or performance certification and does not establish merge or publication completion."
+  ],
+  "authorityEffect": "NONE_INDEPENDENT_REVIEW_ONLY"
+}

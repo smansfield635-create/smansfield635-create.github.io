@@ -1,0 +1,64 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_CAVERN_SURFACE_LAYER_20261025_001",
+  "canonicalAdmissionGeneration": 2890,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewStage": "EXACT_SOURCE_AND_ACTIVE_LAYER_NAVIGATION_PRESERVATION",
+  "acceptedBaseline": "3cab245406d8b4b4b7edc905cacd2f3849741a7b",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/cavern-surface-layer-v1/upper-surface.png"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/cavern-surface-layer-v1/qualification.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/cavern-surface-layer-v1/source-manifest.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "b35cc2ac7b6ff129ac9b9396b77ae6b0e7f83b85908e6b736cf379fcc2fb5b84"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "643299799415d366ef775c3fe97e9bc13039669e92360e1337e96ac45a691e5a"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js",
+      "sha256": "e3873658d46cc65fbac0efe3dea10e6079164490004d34ad1ad29b42ee097bee"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "f2b33c6989156322e06cfbf8af6cb03f20c42e0b5e666d642df86315ec89d725"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs",
+      "sha256": "3e2433367453ec929be41c45ba76fdac0525af9f43233a185de4a6dfe206269c"
+    }
+  ],
+  "evidenceScope": "Same-world source preservation and desktop software-WebGL layer navigation review. Existing emitted geometry, scene, UI and globe preserved. Normal drag-to-unlock entry worked. Actual production navigation functions qualified both heights at identical XZ, portal entry/reversal and solid-side rejection. Diagnostic seed and renderer exposure only in harness. Not physical-device or owner aesthetic acceptance.",
+  "limitations": [
+    "Desktop software GPU; no physical phone responsiveness or touch-timing acceptance.",
+    "Selected rendered crossings establish bounded mechanism behavior, not exhaustive framing aesthetics or collision proof.",
+    "Existing resident physical ground seams remain; source changes preserve hard physical clearance."
+  ],
+  "ownerDirection": "Owner directs continuation on the same existing H-Earth product and GitHub Pages publication route, without rematerializing a separate world or new orchestration, and wants actual live comparison after lawful release.",
+  "authorityEffect": "EVIDENCE_ONLY_NOT_PUBLICATION_AUTHORITY"
+}

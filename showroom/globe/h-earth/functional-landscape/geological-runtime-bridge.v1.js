@@ -674,9 +674,14 @@ export function constructGeologicalRuntimeBridge(canonical){
   const sampleWaterAt=(x,z)=>{if(!Number.isFinite(x)||!Number.isFinite(z))fail('WATER_SAMPLE_NONFINITE');return sampleWaterTriangles(emittedWater,x,z);};
   const emittedOutdoor=meshes.filter(p=>p.role==='ERODED_TERRAIN').flatMap(p=>waterTriangles(p.mesh,{projected:true,role:'OUTDOOR_TERRAIN'}));
   const sampleOutdoorAt=(x,z)=>{if(!Number.isFinite(x)||!Number.isFinite(z))fail('OUTDOOR_SAMPLE_NONFINITE');return sampleWaterTriangles(emittedOutdoor,x,z);};
+  // Reuse the emitted exterior skin, including the mountain above the cave.
+  // These are support-query indices only; renderer geometry is unchanged.
+  const emittedSurface=meshes.filter(p=>['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN'].includes(p.role))
+    .flatMap(p=>waterTriangles(p.mesh,{projected:true,role:p.role}));
+  const sampleSurfaceAt=(x,z)=>{if(!Number.isFinite(x)||!Number.isFinite(z))fail('SURFACE_SAMPLE_NONFINITE');return sampleWaterTriangles(emittedSurface,x,z);};
   const plannedChannelDistanceAt=(x,z)=>nearestRouteSegment(vegetationCorridorPoints,x,z).distance;
   const isPlannedWaterFootprint=(x,z)=>plannedChannelDistanceAt(x,z)<=6||!!sampleWaterAt(x,z);
-  const output=Object.freeze({isPlannedWaterFootprint,plannedChannelDistanceAt,sampleWaterAt,sampleOutdoorAt,contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
+  const output=Object.freeze({isPlannedWaterFootprint,plannedChannelDistanceAt,sampleWaterAt,sampleOutdoorAt,sampleSurfaceAt,contractId:GEOLOGICAL_RUNTIME_BRIDGE_ID,site:SITE,localBounds:BOUNDS,
     formation:Object.freeze({...physicalFormation,oasis:Object.freeze({...physicalFormation.oasis,waterLevel:connectedWater.waterLevel})}),portal,retirement,meshes,route:trace,originalTerrainColorAt,originalTerrainContactAt,
     cavernLightVisibility:makeCavernLightVisibility([kernel.mesh,cliff.mesh]),
     originalTerrainElevationAt:terrainAt,
@@ -694,23 +699,25 @@ export function installGeologicalRuntimeBridge(value){
   active=value;return Object.freeze({installed:true,siteId:value.site.id,originalBaseTrianglesToRetire:value.retirement.triangleCount});
 }
 export function getGeologicalRuntimeBridge(){return active}
-/** null => preserve existing Gen324 behavior without touching canonical navigation. */
-export function resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight=2.25}={}){
-  if(!active)return null;
+/** A surface and an interior floor may share X/Z. Layer is explicit; only
+ * navigation's swept portal crossing can change it. Missing ordinary support
+ * returns null only for SURFACE outside the existing geological footprint. */
+export function resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight=2.25,layer='SURFACE'}={}){
+  if(layer!=='SURFACE'&&layer!=='INTERIOR')return Object.freeze({eligible:false,x,z,issues:['GEOLOGICAL_NAVIGATION_LAYER_INVALID']});
+  if(!active)return layer==='INTERIOR'?Object.freeze({class:'INTERIOR',eligible:false,x,z,issues:['GEOLOGICAL_INTERIOR_UNAVAILABLE']}):null;
   const {site,formation,localBounds:bounds}=active;
-  if(z<site.portalZ){
-    if(x<bounds.xMin||x>bounds.xMax||z<bounds.zMin||z>bounds.zMax||(z>-440&&x< -120))return null;
-    const ground=active.sampleOutdoorAt(x,z);
-    if(!ground)return Object.freeze({class:'EXTERIOR_DRY_CHANNEL',eligible:false,x,z,issues:['GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING']});
-    const support={class:'EXTERIOR_DRY_CHANNEL',eligible:true,x,z,footY:ground.y,eyeY:ground.y+eyeHeight,
-      ceilingY:null,headroom:null,issues:[],worldManifoldUnchanged:true,boundarySource:'ACTUAL_EMITTED_TERRAIN_TRIANGLES'};
-    const water=H_EARTH_REAR_WATER_PRESENTATION_ENABLED?active.sampleWaterAt(x,z):null;
-    if(water&&water.y>support.footY)return Object.freeze({...support,class:'EXTERIOR_WATER_FLOAT',footY:water.y,eyeY:water.y+eyeHeight,groundY:ground.y,waterY:water.y,waterDepth:water.y-ground.y,issues:[]});
-    return Object.freeze(support);
+  if(layer==='INTERIOR'){
+    if(z<site.portalZ||z>site.portalZ+site.galleryLength)return Object.freeze({class:'INTERIOR',eligible:false,x,z,issues:['INTERIOR_PORTAL_TRANSITION_REQUIRED']});
+    return sampleFormationWalkable(formation,{x,z,eyeHeight});
   }
-  // The cave keeps its existing narrow physical domain and kernel collision.
-  if(x<site.x-site.width-7||x>site.x+site.width+7||z>site.portalZ+site.galleryLength)return null;
-  return sampleFormationWalkable(formation,{x,z,eyeHeight});
+  if(x<bounds.xMin||x>bounds.xMax||z<bounds.zMin||z>bounds.zMax||(z>-440&&x< -120))return null;
+  const ground=active.sampleSurfaceAt(x,z);
+  if(!ground)return Object.freeze({class:'EXTERIOR_DRY_CHANNEL',eligible:false,x,z,issues:['GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING']});
+  const support={class:ground.role==='MOUNTAIN_OVERBURDEN'?'EXTERIOR_UPPER_SURFACE':'EXTERIOR_DRY_CHANNEL',eligible:true,x,z,footY:ground.y,eyeY:ground.y+eyeHeight,
+    ceilingY:null,headroom:null,issues:[],worldManifoldUnchanged:true,boundarySource:'ACTUAL_EMITTED_TERRAIN_TRIANGLES'};
+  const water=H_EARTH_REAR_WATER_PRESENTATION_ENABLED?active.sampleWaterAt(x,z):null;
+  if(water&&water.y>support.footY)return Object.freeze({...support,class:'EXTERIOR_WATER_FLOAT',footY:water.y,eyeY:water.y+eyeHeight,groundY:ground.y,waterY:water.y,waterDepth:water.y-ground.y,issues:[]});
+  return Object.freeze(support);
 }
 /** Strict counterpart to the Run8E source index degeneracy technique. */
 export function retireGeologicalBaseIndices(source,retirement){

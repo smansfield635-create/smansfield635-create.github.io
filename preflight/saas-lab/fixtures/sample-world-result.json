@@ -1,0 +1,14 @@
+{
+  "id":"DEMO-REPORT-QUAL",
+  "at":"2026-10-24T23:20:00Z",
+  "summary":"sample-renderer camera presentation diagnostic found that a recorded discontinuity survived downstream reconciliation; actual-world visual impact remains unverified.",
+  "outcome":"PARTIAL",
+  "resultArtifact":"sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "events":[
+    {"id":"DEMO-EVENT-026","requirementId":"UNKNOWN","kind":"RESULT","details":"Source-based sample-renderer presentation diagnostic reported a 3.75-unit vertical difference surviving reconciliation; no live browser execution.","artifact":"sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","reference":"demo-navigation-check.json"},
+    {"id":"DEMO-EVENT-027","requirementId":"UNKNOWN","kind":"FINDING","details":"sample-renderer enforces a minimum height but no temporal smoothing; accepted states are forwarded unchanged.","reference":"DEMO-EVENT-026"}
+  ],
+  "milestoneUpdates":[],
+  "attempts":[],
+  "suggestedNextMilestoneId":"CAM-FINAL"
+}

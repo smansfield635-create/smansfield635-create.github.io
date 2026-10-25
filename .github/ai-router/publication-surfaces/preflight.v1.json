@@ -63,6 +63,66 @@
       "excludes": [
         "javascript:"
       ]
+    },
+    {
+      "path": "/preflight/saas-lab/index.html",
+      "includes": [
+        "DiamondGate • Development Lab",
+        "noindex,nofollow,noarchive",
+        "./styles.css",
+        "./app.mjs",
+        "id=\"project-input\"",
+        "id=\"report-input\"",
+        "id=\"preview\"",
+        "id=\"continuation\""
+      ],
+      "excludes": [
+        "GITHUB_TOKEN",
+        "PRIVATE_KEY",
+        "sk-proj-"
+      ]
+    },
+    {
+      "path": "/preflight/saas-lab/app.mjs",
+      "includes": [
+        "receiveResult",
+        "describeProgress",
+        "generateContinuation",
+        "Unassigned evidence",
+        "textContent"
+      ],
+      "excludes": [
+        "localStorage",
+        "sessionStorage",
+        "fetch(",
+        "XMLHttpRequest",
+        "GITHUB_TOKEN"
+      ]
+    },
+    {
+      "path": "/preflight/saas-lab/progression.mjs",
+      "includes": [
+        "validateState",
+        "receiveResult",
+        "generateContinuation",
+        "milestone"
+      ],
+      "excludes": [
+        "GITHUB_TOKEN",
+        "PRIVATE_KEY",
+        "sk-proj-"
+      ]
+    },
+    {
+      "path": "/preflight/saas-lab/fixtures/sample-world-before.json",
+      "includes": [
+        "SAMPLE_WORLD",
+        "CAM-FINAL"
+      ],
+      "excludes": [
+        "GITHUB_TOKEN",
+        "PRIVATE_KEY"
+      ]
     }
   ],
   "runtime": {

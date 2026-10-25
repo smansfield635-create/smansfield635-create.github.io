@@ -1,0 +1,26 @@
+{
+  "schema": "DGB_PROGRESS_ACCOUNTING_ISOLATED_v1",
+  "projectId": "SAMPLE_WORLD",
+  "projectName": "Sample World — Worldwide Terrain Realism and Camera Navigation Stabilization",
+  "goal": "Make navigation stable and terrain believable across the world; preserve accepted landscape and verify before publication.",
+  "requirements": [
+    {"id":"R1","title":"Camera navigation stability","standing":"proposed","milestones":[
+      {"id":"CAM-DIAG","title":"Identify and reproduce camera discontinuities","objective":"Identify and reproduce the reported discontinuities in bounded cases.","order":1,"status":"reported_complete","progressBasis":"source_reported","acceptanceCriteria":["Bounded reproducible cases and their limitations are preserved"],"evidenceIds":[],"prerequisites":[]},
+      {"id":"CAM-EXPLORE","title":"Explore and compare correction candidates","objective":"Compare bounded correction alternatives without mutating product code.","order":2,"status":"reported_complete","progressBasis":"source_reported","acceptanceCriteria":["Candidate comparison evidence retained"],"evidenceIds":[],"prerequisites":["CAM-DIAG"]},
+      {"id":"CAM-FINAL","title":"Final camera correction qualification","objective":"Determine whether the candidate or narrow alternative preserves terrain-appropriate camera height, obstacle visibility and safe clearance at actual relevant terrain.","order":3,"status":"active","acceptanceCriteria":["Source-bound and, when possible, real-terrain height tradeoffs checked","Specific recommendation or specific unresolved safety/experience issue returned"],"evidenceIds":[],"prerequisites":["CAM-EXPLORE"],"actionClass":"qualification"},
+      {"id":"CAM-IMPLEMENT","title":"Implement bounded camera correction","objective":"Implement the qualified delta only after the required authorization.","order":4,"status":"pending","acceptanceCriteria":["Qualified source delta tested against protected invariants"],"evidenceIds":[],"prerequisites":["CAM-FINAL"],"actionClass":"implementation"},
+      {"id":"CAM-VISUAL","title":"Visual and mobile regression qualification","objective":"Verify the corrected camera experience in actual traversals.","order":5,"status":"pending","acceptanceCriteria":["Real-world terrain coverage and user visual review checked"],"evidenceIds":[],"prerequisites":["CAM-IMPLEMENT"],"requiresHumanAcceptance":true,"actionClass":"verification"},
+      {"id":"CAM-RELEASE","title":"Authorize and publish camera repair","objective":"Publish independently qualified accepted candidate through approved channel.","order":6,"status":"pending","acceptanceCriteria":["Authorized exact release and live verification"],"evidenceIds":[],"prerequisites":["CAM-VISUAL"],"actionClass":"publication"}
+    ]},
+    {"id":"R2","title":"Natural terrain and ecological boundaries","standing":"proposed","milestones":[
+      {"id":"TERRAIN-ATTRIBUTE","title":"Attribute visible terrain boundaries","objective":"Identify source causes of polygonal materials and hard ecological edges at real positions.","order":7,"status":"pending","acceptanceCriteria":["Representative real-coordinate witnesses and bounded repair spec"],"evidenceIds":[],"prerequisites":[]}
+    ]}
+  ],
+  "events": [],
+  "history": [{"id":"OLD-RECONCILIATION","fingerprint":"legacy","latest":{"id":"OLD-RECONCILIATION","summary":"Reconciled three disputed dependencies","outcome":"COMPLETED","newEventIds":[],"resultArtifact":"PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1"}}],
+  "attempts": [],
+  "latestActivity":{"id":"OLD-RECONCILIATION","summary":"Reconciled three disputed dependencies","outcome":"COMPLETED","newEventIds":[],"resultArtifact":"PUBLICATION_SURFACE_RUNTIME_RECEIPT_v1"},
+  "activeMilestoneId":"CAM-FINAL",
+  "productIdentity":"DEMO_RELEASE_HEAD",
+  "authorizations":{"implementation":false,"publication":false}
+}

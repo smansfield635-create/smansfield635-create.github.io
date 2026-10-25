@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-25T14:29:09Z",
+  "generatedAt": "2026-10-25T15:28:49Z",
   "window": {
-    "start": "2026-07-27T14:29:09Z",
-    "end": "2026-10-25T14:29:09Z"
+    "start": "2026-07-27T15:28:49Z",
+    "end": "2026-10-25T15:28:49Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4466,
-    "visits": 1301,
+    "pageLoads": 4366,
+    "visits": 1341,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4466,
-        "visits": 1301
+        "pageLoads": 4366,
+        "visits": 1341
       }
     },
     "byPath": {
@@ -31,15 +31,15 @@
         "visits": 10
       },
       "/": {
-        "pageLoads": 981,
-        "visits": 711
+        "pageLoads": 1021,
+        "visits": 751
       },
       "/showroom/story/welcome/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 270,
+        "pageLoads": 250,
         "visits": 90
       },
       "/products/": {
@@ -51,15 +51,15 @@
         "visits": 10
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 230,
-        "visits": 20
+        "pageLoads": 220,
+        "visits": 10
       },
       "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
+        "pageLoads": 350,
         "visits": 0
       },
       "/gauges/h-earth/": {
@@ -71,7 +71,7 @@
         "visits": 70
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 90,
+        "pageLoads": 110,
         "visits": 0
       },
       "/laws/categories/structure/": {
@@ -79,11 +79,11 @@
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
-        "pageLoads": 40,
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/research/evidence-and-sources/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -99,7 +99,7 @@
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 110,
+        "pageLoads": 120,
         "visits": 0
       },
       "/evidence/readiness/": {
@@ -115,6 +115,10 @@
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "/showroom/globe/h-earth/awards/proof/compass-live-format-proof.html": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -202,13 +206,17 @@
         "pageLoads": 10,
         "visits": 10
       },
+      "/laws/categories/integrity/accountability/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/evidence/agentic-frontier/": {
         "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
-        "pageLoads": 60,
-        "visits": 30
+        "pageLoads": 50,
+        "visits": 20
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -218,21 +226,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/jen-leney/": {
+      "/nine-summits-of-love/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
+        "pageLoads": 30,
+        "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
@@ -243,7 +243,7 @@
         "visits": 0
       },
       "/prelude/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/door/canonical-object.html": {
@@ -254,12 +254,16 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/door/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/hearth/": {
-        "pageLoads": 20,
+      "/nine-summits/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/products/on-your-side-ai/native-chat/": {
@@ -321,16 +325,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3165,
+        "pageLoads": 3025,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 748,
-        "visits": 748
+        "pageLoads": 798,
+        "visits": 798
       },
       "(none)": {
-        "pageLoads": 543,
-        "visits": 543
+        "pageLoads": 533,
+        "visits": 533
       },
       "raw.githack.com": {
         "pageLoads": 10,

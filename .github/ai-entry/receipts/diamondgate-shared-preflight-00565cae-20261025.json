@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "diamondgate-shared-preflight-00565cae-20261025",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6816,
+  "requestBranch": "ai-dispatch-request-diamondgate-shared-00565cae",
+  "requestCommit": "239d6e8f17228456a7d657411fb10afee963e5b6",
+  "requestCommitParent": "79dc1b3ac89e8b585a45b08b39870c56887fb932",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "79dc1b3ac89e8b585a45b08b39870c56887fb932",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "00565cae3958d687494a5c81e8e4c4eb7f65023a",
+    "surface_id": "preflight.v1"
+  },
+  "bridgeRunId": "40242857670",
+  "dispatchedRunId": 40242869638,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40242869638",
+  "dispatchedRunHeadSha": "79dc1b3ac89e8b585a45b08b39870c56887fb932",
+  "dispatchedAt": "2026-10-25T23:01:40.392Z",
+  "resolvedAt": "2026-10-25T23:01:44.156Z"
+}

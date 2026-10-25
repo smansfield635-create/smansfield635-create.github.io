@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_CAMERA_SUPPORT_CLOSE_20261025_002",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6802,
+  "requestBranch": "ai-dispatch-request-camera-support-close-20261025",
+  "requestCommit": "aba78a46fb267af909a937ab2bff98a75ae50275",
+  "requestCommitParent": "3cab245406d8b4b4b7edc905cacd2f3849741a7b",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "3cab245406d8b4b4b7edc905cacd2f3849741a7b",
+  "workflow": "remote-operation-terminal-closure-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"H_EARTH_CAMERA_SUPPORT_CONTINUITY_20261025_001\",\"lockScope\":\"H_EARTH:CAMERA_SUPPORT_CONTINUITY:20261025\",\"lockGeneration\":2888,\"terminalDisposition\":\"PASS_CLOSED\"}",
+    "router_callback_issue": "6802",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "40226419026",
+  "dispatchedRunId": 40226431438,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40226431438",
+  "dispatchedRunHeadSha": "3cab245406d8b4b4b7edc905cacd2f3849741a7b",
+  "dispatchedAt": "2026-10-25T19:31:23.757Z",
+  "resolvedAt": "2026-10-25T19:31:28.008Z"
+}

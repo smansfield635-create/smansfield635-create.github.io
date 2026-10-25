@@ -1,0 +1,23 @@
+{
+  "base": "7631fda70e7712eebc5598bd96276ca3553638db",
+  "operationId": "H_EARTH_GROUND_ATTACHMENT_20261025_001",
+  "generation": 2891,
+  "files": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "a8db77dc0d43dd630392256558af184dca9aa18f096ed1d2150954c4e260e584"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "912dafd50a4cdb11cb03d8ad74d0d45d44241ca82f4b9717d76f6f5eb0489655"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "sha256": "643299799415d366ef775c3fe97e9bc13039669e92360e1337e96ac45a691e5a"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js",
+      "sha256": "e3873658d46cc65fbac0efe3dea10e6079164490004d34ad1ad29b42ee097bee"
+    }
+  ]
+}

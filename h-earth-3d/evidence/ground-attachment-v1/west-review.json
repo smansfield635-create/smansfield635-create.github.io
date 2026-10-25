@@ -1,0 +1,51 @@
+{
+  "schema": "H_EARTH_GROUND_ATTACHMENT_WEST_REVIEW_v1",
+  "operationId": "H_EARTH_GROUND_ATTACHMENT_20261025_001",
+  "reviewer": "Independent West agent",
+  "disposition": "PASS_WITH_BOUNDED_EVIDENCE",
+  "statement": "No remaining demonstrated source or qualification blocker within tested scope.",
+  "reviewMethod": "Independent read-only diff, import-map, qualification runner and final active-scene artifact review. Did not repeat the browser qualification.",
+  "sourceGitBlobs": {
+    "showroom/globe/h-earth/functional-landscape/navigation.js": "3912671a7d6fe380a3605e33fd6547e2f672f319",
+    "showroom/globe/h-earth/index.html": "3730671b36df959e39c8738b9500e28a0d412671"
+  },
+  "verifiedEvidence": {
+    "productionNavigationBlob": "3912671a7d6fe380a3605e33fd6547e2f672f319",
+    "qualificationFailures": 0,
+    "baselineMaximumExcessAboveLocalEyeHeightMeters": 18.765551028293,
+    "candidateAttachmentSweepMaximumExcessMeters": 0,
+    "maximumLongRouteResidualMeters": 3.552713678800501e-15,
+    "stationaryHeadingHeightRangeMeters": 0,
+    "fineTurnSites": 6,
+    "fineTurnsPerSite": 1440,
+    "fineTurnMaximumDeltaMeters": 0,
+    "completeLongRoutes": 18,
+    "longRoutesStoppedByLocalCollision": 3,
+    "longRoutesWithInvalidInitialSeed": 3,
+    "actualExteriorCollisionRejections": 4,
+    "pairedCavernSites": 5,
+    "surfaceRegressionRoutes": 12,
+    "portalRoundTrips": 3,
+    "refinedPortalCrossings": 8,
+    "nearGuardChecks": 12,
+    "sideBackEscapeRejections": 15,
+    "priorBoundaryRegressions": 20,
+    "rendererReceipts": 6
+  },
+  "sourceFindings": [
+    "Surface output, current-state admission and evaluation enforce local support plus 2.25m within 1e-8m; distant lookahead and yaw do not determine height.",
+    "The local geometric guard rejects obstruction rather than lifting camera height.",
+    "Surface sweep now bounds ascent and descent by 1.0m per horizontal meter plus 0.04m per sampled segment; interior or portal segments retain 0.65m/m plus 0.04m.",
+    "Cavern layer persistence, real emitted support geometry and portal-only transition logic remain unchanged.",
+    "All observed navigation import aliases converge to the exact reviewed source blob."
+  ],
+  "limitations": [
+    "The 24 long-route cases comprise 18 complete routes, three hill-up collision stops near z=-207.9 and three invalid reverse seeds at z=-220; they are not 24 complete traversals.",
+    "The added slope rule is a sampled traversal policy, not full collision physics. Its fixed 0.04m per-segment allowance can produce timestep-dependent eligibility near sharp physical seams.",
+    "Four jamb seeds remained ineligible, so accepted near-jamb transitions were not exercised.",
+    "Already detached or lifted predecessor states are rejected except RESET; normal new states initialize against the new local support rule.",
+    "Headless desktop software WebGL does not establish physical-device performance or perceptual acceptance.",
+    "No exhaustive collision certification, exact owner-footage route reproduction, or live publication completion is asserted by this review."
+  ],
+  "authorityEffect": "NONE_INDEPENDENT_REVIEW_ONLY"
+}

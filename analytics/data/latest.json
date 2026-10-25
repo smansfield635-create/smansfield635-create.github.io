@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-25T20:30:58Z",
+  "generatedAt": "2026-10-25T21:29:00Z",
   "window30d": {
-    "start": "2026-09-25T20:30:58Z",
-    "end": "2026-10-25T20:30:58Z"
+    "start": "2026-09-25T21:29:00Z",
+    "end": "2026-10-25T21:29:00Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 31
+      "pageLoads": 35
     },
     {
       "date": "2026-10-19",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-25",
-      "pageLoads": 48
+      "pageLoads": 50
     }
   ],
   "summary": {
-    "pageLoads": 2142,
-    "botPageLoads": 868,
-    "nonBotPageLoads": 1274
+    "pageLoads": 1958,
+    "botPageLoads": 858,
+    "nonBotPageLoads": 1100
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1646,
-      "visits": 1646
+      "pageLoads": 1642,
+      "visits": 1642
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 414,
+      "pageLoads": 234,
       "visits": 0
     },
     {
@@ -162,8 +162,8 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 679,
-      "visits": 625
+      "pageLoads": 685,
+      "visits": 631
     },
     {
       "path": "/analytics/",
@@ -172,7 +172,7 @@
     },
     {
       "path": "/",
-      "pageLoads": 340,
+      "pageLoads": 160,
       "visits": 120
     },
     {
@@ -186,14 +186,14 @@
       "visits": 41
     },
     {
-      "path": "/governance-bridge/governance/",
-      "pageLoads": 40,
-      "visits": 40
-    },
-    {
       "path": "/meet-sean-mansfield/",
       "pageLoads": 31,
       "visits": 31
+    },
+    {
+      "path": "/governance-bridge/governance/",
+      "pageLoads": 30,
+      "visits": 30
     },
     {
       "path": "/gauges/",

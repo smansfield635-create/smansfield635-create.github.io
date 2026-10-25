@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-25T20:30:58Z",
+  "generatedAt": "2026-10-25T21:29:00Z",
   "window": {
-    "start": "2026-07-27T20:30:58Z",
-    "end": "2026-10-25T20:30:58Z"
+    "start": "2026-07-27T21:29:00Z",
+    "end": "2026-10-25T21:29:00Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,23 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4556,
+    "pageLoads": 4506,
     "visits": 1341,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4556,
+        "pageLoads": 4506,
         "visits": 1341
       }
     },
     "byPath": {
-      "/showroom/": {
-        "pageLoads": 70,
-        "visits": 10
-      },
-      "/showroom/story/welcome/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/": {
         "pageLoads": 1011,
         "visits": 751
@@ -129,6 +121,10 @@
       "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
+      },
+      "/showroom/": {
+        "pageLoads": 40,
+        "visits": 10
       },
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
@@ -246,19 +242,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -324,13 +320,13 @@
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 3215,
-        "visits": 0
-      },
       "www.google.com": {
         "pageLoads": 788,
         "visits": 788
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 3165,
+        "visits": 0
       },
       "(none)": {
         "pageLoads": 543,

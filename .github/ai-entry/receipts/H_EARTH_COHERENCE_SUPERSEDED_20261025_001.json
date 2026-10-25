@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_COHERENCE_SUPERSEDED_20261025_001",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6814,
+  "requestBranch": "ai-dispatch-request-h-earth-coherence-superseded-20261025",
+  "requestCommit": "17168b0d13606e34e31122abae11ebc04645bb68",
+  "requestCommitParent": "445e62fa3118c8ec3ba18ee59ffab6f8159ffb80",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "445e62fa3118c8ec3ba18ee59ffab6f8159ffb80",
+  "workflow": "remote-operation-terminal-closure-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"H_EARTH_LANDSCAPE_COHERENCE_20261025_001\",\"lockScope\":\"H_EARTH:LANDSCAPE_COHERENCE:20261025\",\"lockGeneration\":2892,\"terminalDisposition\":\"SUPERSEDED\"}",
+    "router_callback_issue": "6814",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "40240302469",
+  "dispatchedRunId": 40240319048,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40240319048",
+  "dispatchedRunHeadSha": "445e62fa3118c8ec3ba18ee59ffab6f8159ffb80",
+  "dispatchedAt": "2026-10-25T22:27:58.933Z",
+  "resolvedAt": "2026-10-25T22:28:02.772Z"
+}

@@ -1,0 +1,66 @@
+{
+  "schema": "H_EARTH_GEN323_SAME_WORLD_SOURCE_PRESERVATION_AUDIT_v1",
+  "operationId": "H_EARTH_CAMERA_CLEARANCE_GEN323_20261024_001",
+  "canonicalAdmissionGeneration": 2884,
+  "reviewClass": "EXACT_CANDIDATE_SOURCE_PRESERVATION_ONLY",
+  "result": "PASS_SOURCE_PRESERVATION_WITH_VISUAL_ACCEPTANCE_OUTSTANDING",
+  "branch": "h-earth/camera-stand-off-gen323-20261024",
+  "sourceRelease": "fb90b10ca9aac60c2c511525966687e29799ec97",
+  "admittedBase": "675866f24882a5d762b7a5f4cb3be6d8430be65e",
+  "sourceChangeSet": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js",
+      "beforeGitBlob": "708abe973fadb4a4109f4fb27a70f5a0ecf50913",
+      "afterGitBlob": "b4e5bea429e85281de45709d6a511069a43cc88f",
+      "afterSha256": "962d285d7cf7b3aad61b3ccd8ffd249334b88750253e24cacec5ecc1ed28d1a9",
+      "role": "Replace only observer view-margin discontinuity calculation; retain terrain sampling, camera envelope footprint, validity, fail-closed and contract identity"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "beforeGitBlob": "b95b98d5fc74514b256e71eb795c07ef1c3b5ea3",
+      "afterGitBlob": "714b3db54b627f66c3ef09d14a65a92444d58705",
+      "afterSha256": "6a79501c3fe2b3b759bccb1b66a364eceb45ae1977d0be5de6f28756bd3dd9f8",
+      "role": "Add one import-map cache alias; no route, layout, scene, controls or model substitution"
+    }
+  ],
+  "unchangedProtections": [
+    "Globe, regional, ground single world connection and world frame modules not edited",
+    "Gen311 terrain meshes, geographical coordinates, coastline, ocean, trees, grass, cavern geometry and geological renderer not edited",
+    "Pointer gesture input, navigation step interpretation, keyboard/wheel, camera orientation inputs and frame presenter not edited",
+    "Existing camera-volume 165-point sampling, domain validity, critical-volume and 80-percent coverage guards retain same exact source code",
+    "Clearance reference retains at least maximum sampled Gen311 terrain elevation"
+  ],
+  "observedTests": {
+    "sourceBasedChromeJsModule": true,
+    "movementProposalsAccepted": 5280,
+    "yawProposalsAccepted": 2100,
+    "geometricElevationFloorFailures": 0,
+    "stepsGreaterThanOne": 0,
+    "largestMovementHeightChange": 0.46094205852971726,
+    "largestYawHeightChange": 0.2044213879528698,
+    "focusNodeTestsPassed": 4,
+    "comparativePublishedMovementMax": 5.5073,
+    "comparativePublishedYawMax": 5.4877
+  },
+  "sourceVisualReference": {
+    "path": "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "sha256": "1b63b7f83ab5bd399f1210051474179182d2c10dedf1f4d4860198e1c6d7b07b",
+    "sourceVideoSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+    "reviewInterpretation": "Existing accepted ground-world visual reference only; this is not a new Gen323 screenshot."
+  },
+  "explicitNonClaims": [
+    "No full H-Earth render or renderer GPU frame comparison from this source audit",
+    "No physical phone/device or owner perceptual KEEP disposition",
+    "No assertion that changed camera height near slope/cavern reads naturally",
+    "No claim that unrelated failed CP3D/legacy registry workflow means a Gen323 regression",
+    "No right to merge or release based on this source preservation record alone"
+  ],
+  "riskStillOpen": {
+    "relativeToPriorCameraTarget": {
+      "maximumRaisedWorldUnits": 2.57,
+      "maximumLoweredWorldUnits": 2.79
+    },
+    "reason": "Potential slope/obstacle framing and horizon experience cannot be adjudicated by geometric safety alone"
+  },
+  "nextExistingStep": "Obtain exact candidate rendered camera/interaction evidence using existing H-Earth browser-native route; if unavailable, preserve the qualified draft without a parallel product or release-as-preview bypass."
+}

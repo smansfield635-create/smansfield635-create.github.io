@@ -1,0 +1,52 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_GROUND_ATTACHMENT_20261025_001",
+  "canonicalAdmissionGeneration": 2891,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewStage": "EXACT_SOURCE_AND_ACTIVE_LAYER_NAVIGATION_PRESERVATION",
+  "acceptedBaseline": "7631fda70e7712eebc5598bd96276ca3553638db",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/ground-attachment-v1/upper-surface.png"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/ground-attachment-v1/qualification.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/ground-attachment-v1/source-manifest.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "a8db77dc0d43dd630392256558af184dca9aa18f096ed1d2150954c4e260e584"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "912dafd50a4cdb11cb03d8ad74d0d45d44241ca82f4b9717d76f6f5eb0489655"
+    }
+  ],
+  "evidenceScope": "Same canonical world and emitted geometry preserved; walking eye anchored to existing local support plus2.25m. Distant view allowance no longer raises walking height. Local obstruction rejects motion rather than levitating. Desktop active-geology paired layer, stationary turns, long-route and renderer tests; no physical phone acceptance.",
+  "limitations": [
+    "Desktop software GPU; no physical phone responsiveness or touch-timing acceptance.",
+    "Selected rendered crossings establish bounded mechanism behavior, not exhaustive framing aesthetics or collision proof.",
+    "Existing resident physical ground seams remain; source changes preserve hard physical clearance."
+  ],
+  "ownerDirection": "Owner directs continuation on the same existing H-Earth product and GitHub Pages publication route, without rematerializing a separate world or new orchestration, and wants actual live comparison after lawful release.",
+  "authorityEffect": "EVIDENCE_ONLY_NOT_PUBLICATION_AUTHORITY"
+}

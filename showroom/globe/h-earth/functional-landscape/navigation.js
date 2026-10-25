@@ -9,8 +9,7 @@ import { H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN } from '../../../../h-ear
 import {
   H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,
   H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR,
-  sampleHEarthVisibleTerrainClearanceSurface,
-  sampleHEarthVisibleTerrainClearanceEnvelope
+  sampleHEarthVisibleTerrainClearanceSurface
 } from './visible-terrain-clearance.js?cb=3bd635f46186bf3c';
 
 const freeze=(v,s=new WeakSet())=>{if(v===null||typeof v!=='object'||Object.isFrozen(v)||s.has(v))return v;s.add(v);Object.values(v).forEach(x=>freeze(x,s));return Object.freeze(v)};
@@ -75,7 +74,6 @@ export function resolveHEarthNavigableTerrainChunk(x,z){
 }
 function parseAddress(a){const m=/:R(\d+):C(\d+)$/.exec(a);return m?{address:a,row:Number(m[1]),column:Number(m[2])}:null;}
 function semantic(chunk,x,z){const c=chunk.terrainMemberAddressIds.map(parseAddress).filter(Boolean);if(!c.length)return{selectedSemanticAddressId:null};const xp=clamp((x-chunk.worldBounds.xMin)/Math.max(1e-8,chunk.worldBounds.xMax-chunk.worldBounds.xMin),0,.999999),zp=clamp((z-chunk.worldBounds.zMin)/Math.max(1e-8,chunk.worldBounds.zMax-chunk.worldBounds.zMin),0,.999999),tc=chunk.addressRange.columnMin+Math.floor(xp*4),tr=chunk.addressRange.rowMin+Math.floor(zp*4);return{selectedSemanticAddressId:[...c].sort((a,b)=>(Math.abs(a.row-tr)+Math.abs(a.column-tc))-(Math.abs(b.row-tr)+Math.abs(b.column-tc))||a.address.localeCompare(b.address))[0].address};}
-const smoothUnit=t=>{const u=clamp(t,0,1);return u*u*(3-2*u)};
 // Local physical support is never blended: it remains an immutable hard floor.
 function sampleExteriorSupport(x,z){
   const support=resolveGeologicalRuntimeFootSupport(x,z,{layer:'SURFACE'});
@@ -95,36 +93,6 @@ function exteriorRimDistance(x,z,model){
     distance=Math.min(distance,Math.hypot(x-ax-t*dx,z-az-t*dz));
   }
   return distance;
-}
-function sampleExteriorViewReference(x,z){
-  const base=sampleHEarthVisibleTerrainClearanceSurface(x,z);
-  const surface=sampleExteriorSupport(x,z),model=getGeologicalRuntimeBridge();
-  // At the exact emitted-mesh rim, floating-point barycentric coverage may
-  // miss a triangle. The optional collar's limiting reference is already the
-  // original base there. This epsilon fallback does NOT apply to local/near
-  // physical support, interior collisions, or missing samples inside the patch.
-  if(!surface.valid&&base.valid&&model&&surface.issues?.length===1&&
-      surface.issues[0]==='GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING'&&
-      exteriorRimDistance(x,z,model)<=1e-5)return base;
-  if(!surface.valid||!base.valid||!surface.geologicalSupport||!model)return surface;
-  // Different resident mesh tessellations have small geometric rim seams.
-  // Only the optional view reference blends through a 2m inward collar; the
-  // unmodified physical support still clamps the final camera independently.
-  const weight=smoothUnit(exteriorRimDistance(x,z,model)/2);
-  return{valid:true,visibleElevation:base.visibleElevation+(surface.visibleElevation-base.visibleElevation)*weight};
-}
-function caveApproachViewWeight(x,z){
-  const model=getGeologicalRuntimeBridge();
-  if(!model)return 1;
-  const {site}=model;
-  // The cave resolver's finite interior domain includes its collision walls.
-  // The 10m-by-4.5m envelope cannot intersect it outside this circumscribed
-  // radius. Suppress that distant envelope before intersection, and restore
-  // it smoothly over the existing 12m approach scale in every direction.
-  const halfWidth=site.width+7;
-  const dx=Math.max(site.x-halfWidth-x,0,x-site.x-halfWidth);
-  const dz=Math.max(site.portalZ-z,0,z-site.portalZ-site.galleryLength);
-  return smoothUnit((Math.hypot(dx,dz)-Math.hypot(10,4.5))/12);
 }
 function stateNavigationLayer(state){
   if(state.navigationLayer==='SURFACE')return 'SURFACE';
@@ -173,9 +141,9 @@ function guardSupportAt(from,x,z,p){
 }
 function nearCameraSupport(x,z,p,ground){
   const origin={position:{x,y:ground+p.eyeHeight,z},terrainElevation:ground,navigationLayer:'SURFACE'};
-  // A local geometric guard remains hard while the distant view allowance
-  // fades. The existing cave wall clearance is .35m. This sampled guard is
-  // not a new general collision/physics certification.
+  // A yaw-independent local geometric guard rejects obstructed positions;
+  // it never raises the walking eye above its local support. The existing
+  // cave wall clearance is .35m. This is a sampled guard, not full physics.
   const radius=Math.max(.35,2*p.nearPlane);
   let highest=-Infinity;
   for(let i=0;i<17;i++){
@@ -229,26 +197,17 @@ function resolvePosition(x,z,yaw=0,layer='SURFACE'){
   }
   const surface=sampleExteriorSupport(x,z);
   if(canonical?.valid!==true||surface?.valid!==true)return{eligible:false,issues:['PRESENTED_TERRAIN_SAMPLE_INVALID']};
-  const weight=caveApproachViewWeight(x,z),ground=surface.visibleElevation;
-  // At zero weight the distant envelope is irrelevant and may cross a cave
-  // wall. Do not reject a lawful position because a far sample hits that wall.
-  const envelope=weight===0?null:sampleHEarthVisibleTerrainClearanceEnvelope(x,z,{yawDegrees:yaw,
-    lookAheadDistance:p.lookAheadClearanceDistance,lateralRadius:p.clearanceFootprintRadius,
-    surfaceSampler:sampleExteriorViewReference});
-  if(envelope&&envelope.valid!==true)return{eligible:false,issues:['VISIBLE_TERRAIN_CLEARANCE_SAMPLE_INVALID']};
-  const reference=weight===0?ground:weight===1?envelope.visibleElevation:
-    ground+Math.max(0,envelope.visibleElevation-ground)*weight;
-  const support=ground+p.hardTerrainSupportOffset;
-  const near=weight<1?nearCameraSupport(x,z,p,ground):null;
-  if(near&&!near.eligible)return near;
-  const minimumCameraY=Math.max(support,reference+p.minimumTerrainClearance,near?.minimumCameraY??-Infinity);
-  const y=Math.max(minimumCameraY,reference+p.eyeHeight);
+  const ground=surface.visibleElevation,y=ground+p.eyeHeight;
+  const near=nearCameraSupport(x,z,p,ground);
+  if(!near.eligible)return near;
+  if(y<near.minimumCameraY-1e-8)return{eligible:false,issues:['LOCAL_TERRAIN_CLEARANCE_COLLISION']};
+  const minimumCameraY=y;
   return{eligible:true,navigationLayer:'SURFACE',position:{x,y,z},terrainElevation:ground,visibleTerrainElevation:ground,
-    clearanceReferenceElevation:reference,canonicalTerrainElevation:canonical.elevation,
+    clearanceReferenceElevation:ground,canonicalTerrainElevation:canonical.elevation,
     minimumCameraY,targetCameraY:y,clearance:y-ground,
     chunkId:chunk.chunkId,physicalRole:chunk.physicalRole,formationIds:chunk.formationIds,
     selectedSemanticAddressId:sel.selectedSemanticAddressId,
-    selectionProjectionModel:cave?'GEOLOGICAL_PHYSICAL_EXTERIOR_SHARED_CLEARANCE':containedTerrainChunk(x,z)?p.selectionProjectionModel:'EXTENDED_GROUND_NEAREST_EXISTING_TERRAIN_MEMBER',
+    selectionProjectionModel:cave?'GEOLOGICAL_PHYSICAL_EXTERIOR_LOCAL_SUPPORT':containedTerrainChunk(x,z)?p.selectionProjectionModel:'EXTENDED_GROUND_NEAREST_EXISTING_TERRAIN_MEMBER',
     terrainSupported:true,geologicalPhysicalSupport:!!cave,geologicalFloorClass:cave?.class??null,
     geologicalCeilingY:null,issues:[]};
 }
@@ -266,7 +225,10 @@ function sweep(state,x,z,yaw){
     if(!transition.eligible)return{eligible:false,issues:transition.issues,sampleCount:i-1};
     const r=resolvePosition(nx,nz,yaw,transition.layer);
     if(!r.eligible)return{eligible:false,issues:r.issues,sampleCount:i-1};
-    if((r.navigationLayer==='INTERIOR'||last.navigationLayer==='INTERIOR')&&Math.abs(r.terrainElevation-last.terrainElevation)>.65*(d/n)+.04)
+    // Bound both ascent and descent: local ground attachment cannot turn a
+    // vertical face into a step. Retain the tighter cavern/portal grade.
+    const grade=(r.navigationLayer==='INTERIOR'||last.navigationLayer==='INTERIOR') ? .65 : 1;
+    if(Math.abs(r.terrainElevation-last.terrainElevation)>grade*(d/n)+.04)
       return{eligible:false,issues:['GEOLOGICAL_UNWALKABLE_STEP_GRADE'],sampleCount:i-1};
     last=r;
   }
@@ -275,6 +237,6 @@ function sweep(state,x,z,yaw){
 function stateFrom(r,{yaw,pitch,fov,sequence,action,accepted=true,rejectionReason=null,previousY=null,swept=0}){return freeze({contractId:H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID,cameraClearanceSuccessorContractId:H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_CONTRACT_ID,terrainSupportedLocomotionContractId:H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_CONTRACT_ID,stateId:`H_EARTH_NAVIGATION_STATE_${String(sequence).padStart(4,'0')}`,sequence,action,accepted,recovered:false,rejectionReason,navigationLayer:r.navigationLayer??'SURFACE',position:r.position,yawDegrees:norm(yaw),pitchDegrees:clamp(pitch,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.pitchMinimumDegrees,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.pitchMaximumDegrees),verticalFovDegrees:clamp(fov,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.verticalFovMinimumDegrees,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.verticalFovMaximumDegrees),terrainElevation:r.terrainElevation,visibleTerrainElevation:r.visibleTerrainElevation,clearanceReferenceElevation:r.clearanceReferenceElevation,canonicalTerrainElevation:r.canonicalTerrainElevation,minimumCameraY:r.minimumCameraY,targetCameraY:r.targetCameraY,clearance:r.clearance,verticalResponseMode:'HARD_TERRAIN_SUPPORT',verticalDelta:finite(previousY)?r.position.y-previousY:0,verticalAcceleration:0,clearanceSurfaceContractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,protectedGeographicFloor:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR,chunkId:r.chunkId,physicalRole:r.physicalRole,formationIds:r.formationIds,selectedSemanticAddressId:r.selectedSemanticAddressId,selectionProjectionModel:r.selectionProjectionModel,terrainClearanceReceiptId:`H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_${String(sequence).padStart(4,'0')}`,terrainSupported:true,geologicalPhysicalSupport:r.geologicalPhysicalSupport===true,geologicalFloorClass:r.geologicalFloorClass??null,geologicalCeilingY:r.geologicalCeilingY??null,sweptTerrainSupportSampleCount:swept,canonicalCameraStateAuthority:false,collisionOrPhysicsClaim:false,geographyAuthorityCreated:false,topologyAuthorityCreated:false,navigationScaleAuthorityCreated:false});}
 export function createHEarthFunctionalLandscapeNavigationState({waypointId='COAST'}={}){const w=H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS[waypointId]??H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.COAST,r=resolvePosition(w.position.x,w.position.z,w.yawDegrees);if(!r.eligible)return freeze({ok:false,status:'INITIAL_NAVIGATION_STATE_REJECTED',issues:r.issues});return freeze({ok:true,status:'INITIAL_NAVIGATION_STATE_COMPLETE',state:stateFrom(r,{yaw:w.yawDegrees,pitch:w.pitchDegrees,fov:56,sequence:1,action:`GOTO_WAYPOINT:${w.waypointId}`}),issues:[]});}
 function delta(state,action,m){const y=state.yawDegrees*Math.PI/180,f={x:Math.sin(y),z:-Math.cos(y)},r={x:Math.cos(y),z:Math.sin(y)};if(action==='MOVE_FORWARD')return{x:f.x*m,z:f.z*m};if(action==='MOVE_BACKWARD')return{x:-f.x*m,z:-f.z*m};if(action==='STRAFE_LEFT')return{x:-r.x*m,z:-r.z*m};if(action==='STRAFE_RIGHT')return{x:r.x*m,z:r.z*m};return{x:0,z:0};}
-export function proposeHEarthFunctionalLandscapeNavigation(current,intent={}){if(!current||current.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)return freeze({ok:false,status:'NAVIGATION_PROPOSAL_REJECTED',state:current??null,issues:['CURRENT_NAVIGATION_STATE_INVALID']});const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,action=typeof intent.action==='string'?intent.action:'NO_OP',sequence=current.sequence+1;if(action==='RESET'){const r=createHEarthFunctionalLandscapeNavigationState();return freeze({ok:r.ok,status:r.ok?'NAVIGATION_RESET_COMPLETE':'NAVIGATION_RESET_FAILED',state:r.ok?stateFrom(resolvePosition(r.state.position.x,r.state.position.z,r.state.yawDegrees),{yaw:r.state.yawDegrees,pitch:r.state.pitchDegrees,fov:r.state.verticalFovDegrees,sequence,action,previousY:current.position.y}):current,issues:r.issues});}let x=current.position.x,z=current.position.z,yaw=current.yawDegrees,pitch=current.pitchDegrees,fov=current.verticalFovDegrees;if(action==='GOTO_WAYPOINT'){const w=H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS[intent.waypointId];if(!w)return freeze({ok:false,status:'NAVIGATION_WAYPOINT_REJECTED',state:current,issues:['UNKNOWN_WAYPOINT']});x=w.position.x;z=w.position.z;yaw=w.yawDegrees;pitch=w.pitchDegrees;}else if(['MOVE_FORWARD','MOVE_BACKWARD','STRAFE_LEFT','STRAFE_RIGHT'].includes(action)){const m=clamp(finite(intent.magnitude)?Math.abs(intent.magnitude):p.movementStepWorldUnits,0,p.maximumMovementIntentWorldUnits),d=delta(current,action,m);x+=d.x;z+=d.z;}else if(action==='TURN_LEFT')yaw-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.turnStepDegrees,0,8);else if(action==='TURN_RIGHT')yaw+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.turnStepDegrees,0,8);else if(action==='PITCH_UP')pitch+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.pitchStepDegrees,0,8);else if(action==='PITCH_DOWN')pitch-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.pitchStepDegrees,0,8);else if(action==='ZOOM_IN')fov-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):3,0,6);else if(action==='ZOOM_OUT')fov+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):3,0,6);else if(action==='SET_CAMERA_POSITION'){x=intent.position?.x;z=intent.position?.z;}const moved=Math.hypot(x-current.position.x,z-current.position.z)>1e-9,s=moved?sweep(current,x,z,yaw):null,r=moved?(s.eligible?s.result:null):resolvePosition(x,z,yaw,stateNavigationLayer(current));if(!r?.eligible)return freeze({ok:false,status:'NAVIGATION_PROPOSAL_REJECTED_STATE_PRESERVED',state:current,issues:s?.issues??r?.issues??['TERRAIN_SUPPORT_REJECTED']});return freeze({ok:true,status:'NAVIGATION_PROPOSAL_ACCEPTED',state:stateFrom(r,{yaw,pitch,fov,sequence,action,previousY:current.position.y,swept:s?.sampleCount??0}),issues:[]});}
+export function proposeHEarthFunctionalLandscapeNavigation(current,intent={}){if(!current||current.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)return freeze({ok:false,status:'NAVIGATION_PROPOSAL_REJECTED',state:current??null,issues:['CURRENT_NAVIGATION_STATE_INVALID']});const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,action=typeof intent.action==='string'?intent.action:'NO_OP',sequence=current.sequence+1;if(action==='RESET'){const r=createHEarthFunctionalLandscapeNavigationState();return freeze({ok:r.ok,status:r.ok?'NAVIGATION_RESET_COMPLETE':'NAVIGATION_RESET_FAILED',state:r.ok?stateFrom(resolvePosition(r.state.position.x,r.state.position.z,r.state.yawDegrees),{yaw:r.state.yawDegrees,pitch:r.state.pitchDegrees,fov:r.state.verticalFovDegrees,sequence,action,previousY:current.position.y}):current,issues:r.issues});}const attachment=resolvePosition(current.position.x,current.position.z,current.yawDegrees,stateNavigationLayer(current));if(!attachment.eligible||!finite(current.position.y)||Math.abs(current.position.y-attachment.position.y)>1e-8)return freeze({ok:false,status:'NAVIGATION_PROPOSAL_REJECTED_STATE_PRESERVED',state:current,issues:attachment.eligible?['CAMERA_NOT_ATTACHED_TO_LOCAL_SUPPORT']:attachment.issues});let x=current.position.x,z=current.position.z,yaw=current.yawDegrees,pitch=current.pitchDegrees,fov=current.verticalFovDegrees;if(action==='GOTO_WAYPOINT'){const w=H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS[intent.waypointId];if(!w)return freeze({ok:false,status:'NAVIGATION_WAYPOINT_REJECTED',state:current,issues:['UNKNOWN_WAYPOINT']});x=w.position.x;z=w.position.z;yaw=w.yawDegrees;pitch=w.pitchDegrees;}else if(['MOVE_FORWARD','MOVE_BACKWARD','STRAFE_LEFT','STRAFE_RIGHT'].includes(action)){const m=clamp(finite(intent.magnitude)?Math.abs(intent.magnitude):p.movementStepWorldUnits,0,p.maximumMovementIntentWorldUnits),d=delta(current,action,m);x+=d.x;z+=d.z;}else if(action==='TURN_LEFT')yaw-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.turnStepDegrees,0,8);else if(action==='TURN_RIGHT')yaw+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.turnStepDegrees,0,8);else if(action==='PITCH_UP')pitch+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.pitchStepDegrees,0,8);else if(action==='PITCH_DOWN')pitch-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.pitchStepDegrees,0,8);else if(action==='ZOOM_IN')fov-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):3,0,6);else if(action==='ZOOM_OUT')fov+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):3,0,6);else if(action==='SET_CAMERA_POSITION'){x=intent.position?.x;z=intent.position?.z;}const moved=Math.hypot(x-current.position.x,z-current.position.z)>1e-9,s=moved?sweep(current,x,z,yaw):null,r=moved?(s.eligible?s.result:null):resolvePosition(x,z,yaw,stateNavigationLayer(current));if(!r?.eligible)return freeze({ok:false,status:'NAVIGATION_PROPOSAL_REJECTED_STATE_PRESERVED',state:current,issues:s?.issues??r?.issues??['TERRAIN_SUPPORT_REJECTED']});return freeze({ok:true,status:'NAVIGATION_PROPOSAL_ACCEPTED',state:stateFrom(r,{yaw,pitch,fov,sequence,action,previousY:current.position.y,swept:s?.sampleCount??0}),issues:[]});}
 export function createHEarthFunctionalLandscapeCamera(state){if(!state||state.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)return null;const yaw=state.yawDegrees*Math.PI/180,pitch=state.pitchDegrees*Math.PI/180,h=Math.cos(pitch),d=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.lookDistanceWorldUnits,dir={x:Math.sin(yaw)*h,y:Math.sin(pitch),z:-Math.cos(yaw)*h};return freeze({position:freeze({...state.position}),target:freeze({x:state.position.x+dir.x*d,y:state.position.y+dir.y*d,z:state.position.z+dir.z*d}),up:freeze({x:0,y:1,z:0}),verticalFovDegrees:state.verticalFovDegrees,nearPlane:H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.nearPlane,farPlane:H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.farPlane,sourceCapacityContractId:'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5',cameraAuthority:'SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL',terrainClearanceReceiptId:state.terrainClearanceReceiptId,visibleTerrainClearanceContractId:state.clearanceSurfaceContractId});}
-export function evaluateHEarthFunctionalLandscapeNavigationState(state){const issues=[];if(!state||state.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)issues.push('NAVIGATION_STATE_INVALID');else{const r=resolvePosition(state.position.x,state.position.z,state.yawDegrees,stateNavigationLayer(state));if(!r.eligible)issues.push(...r.issues);else if(state.position.y<r.minimumCameraY-1e-8||state.position.y<r.terrainElevation+H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.hardTerrainSupportOffset-1e-8)issues.push('CAMERA_BELOW_PRESENTED_TERRAIN_SUPPORT');if(!state.selectedSemanticAddressId)issues.push('SEMANTIC_SELECTION_MISSING');if(state.terrainSupported!==true)issues.push('TERRAIN_SUPPORT_FLAG_MISSING');}return freeze({eligible:issues.length===0,status:issues.length?'NAVIGATION_STATE_FAIL':'NAVIGATION_STATE_PASS',issues});}
+export function evaluateHEarthFunctionalLandscapeNavigationState(state){const issues=[];if(!state||state.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)issues.push('NAVIGATION_STATE_INVALID');else{const r=resolvePosition(state.position.x,state.position.z,state.yawDegrees,stateNavigationLayer(state));if(!r.eligible)issues.push(...r.issues);else if(!finite(state.position.y)||Math.abs(state.position.y-r.position.y)>1e-8)issues.push('CAMERA_NOT_ATTACHED_TO_LOCAL_SUPPORT');if(!state.selectedSemanticAddressId)issues.push('SEMANTIC_SELECTION_MISSING');if(state.terrainSupported!==true)issues.push('TERRAIN_SUPPORT_FLAG_MISSING');}return freeze({eligible:issues.length===0,status:issues.length?'NAVIGATION_STATE_FAIL':'NAVIGATION_STATE_PASS',issues});}

@@ -1,0 +1,76 @@
+{
+  "schema": "H_EARTH_GEN323_CAMERA_CLEARANCE_QUALIFICATION_v1",
+  "status": "SOURCE_BOUND_REGRESSION_PASS_RENDERED_VISUAL_PENDING",
+  "operationId": "H_EARTH_CAMERA_CLEARANCE_GEN323_20261024_001",
+  "admission": {
+    "result": "ADMITTED_AND_LOCKED",
+    "generation": 2884,
+    "source": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6783#issuecomment-6392915806"
+  },
+  "publishedReference": {
+    "commit": "fb90b10ca9aac60c2c511525966687e29799ec97",
+    "clearanceBlob": "708abe973fadb4a4109f4fb27a70f5a0ecf50913",
+    "pagesArtifactId": 12566152931
+  },
+  "candidate": {
+    "codeBlob": "b4e5bea429e85281de45709d6a511069a43cc88f",
+    "cacheBindingBlob": "714b3db54b627f66c3ef09d14a65a92444d58705",
+    "gitBranch": "h-earth/camera-stand-off-gen323-20261024",
+    "viewProminenceSmoothRange": [
+      0.85,
+      3.2
+    ],
+    "legacyViewStandOffIntentionallyRelaxed": true
+  },
+  "browserNativeSourceTest": {
+    "identity": "H_EARTH_GEN323_EXACT_PUBLISHED_DEPENDENCY_SOURCE_OVERLAY_REGRESSION_v1",
+    "resultSha256": "0a4c6a1859fe3896d05f8ac3f2f89251303c87c107b78b3c1e1ffef7dd4b7460",
+    "acceptedMovementSteps": 5280,
+    "acceptedYawSteps": 2100,
+    "rejectedSteps": 0,
+    "stepsAboveOneWorldUnit": 0,
+    "geometricClearanceViolations": 0,
+    "maxMovementStepWorldUnits": 0.46094205852971726,
+    "maxYawStepWorldUnits": 0.2044213879528698,
+    "allNavigationStatesValid": true
+  },
+  "publishedBaseline": {
+    "movementStepsAboveOne": 17,
+    "yawStepsAboveOne": 11,
+    "maxMovementStepWorldUnits": 5.5073,
+    "maxYawStepWorldUnits": 5.4877
+  },
+  "unitTest": {
+    "testFile": "h-earth-3d/evidence/camera-clearance-gen323/clearance.test.mjs",
+    "passed": 4,
+    "failed": 0,
+    "deterministicSyntheticSafetySamples": 20000
+  },
+  "cpuMicrobenchmark": {
+    "description": "Chromium source-module clearance evaluation of 2772 envelopes per measured round, 2 warm-up + 3 measured rounds each",
+    "publishedMedianMs": 768.1,
+    "candidateMedianMs": 729.3,
+    "performanceGuaranteeClaimed": false,
+    "sha256": "d737e230752c666e90c4e96656c4049adb330ea35450c478f50a1f0f1166ec82"
+  },
+  "materialRemainingUnknowns": [
+    "Candidate camera can rise as much as 2.57 and fall as much as 2.79 world units relative to original view-stand-off target; geometric floor is not full visual/obstacle safety.",
+    "No active geological formation support in detached browser-module survey.",
+    "No scene rendered-frame position samples, no mobile GPU/physical-device frame evidence.",
+    "Experience anchor acceptance and owner exact-candidate KEEP/ONE_REPAIR/REJECT pending.",
+    "No worldwide prevalence; regional sample does not cover globe entry and distal world."
+  ],
+  "releaseGate": {
+    "draftPR": 6784,
+    "mergeAuthorizedByThisFile": false,
+    "publicationAuthorizedByThisFile": false,
+    "requiredBeforePromotion": [
+      "Actual scene and geological clearance verification",
+      "H-Earth experience anchor gate PASS and independent West review",
+      "Exact candidate visual/device review if renderable",
+      "Selected existing exact-head publication preflight PASS",
+      "Then guarded merge, Pages deploy and production before/after verification"
+    ]
+  },
+  "productChangesAtTimeOfEvidence": "CANDIDATE_BRANCH_ONLY"
+}

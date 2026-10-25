@@ -1,3 +1,4 @@
+import {LANDSCAPE_COHERENCE_GLSL} from './landscape-coherence-field.v1.js';
 import {HILLSIDE_SHORELINE_GLSL} from './hillside-shoreline-field.v1.js';
 import {loadPreparedVegetation} from './precomputed-procedural-vegetation.v1.js';
 import {uploadStartupBuffer} from './performance-scheduling.v1.js';
@@ -603,6 +604,7 @@ float cavernVisibility(vec3 p){
 }
 ${RENDERED_BEACH_GLSL}
 ${HILLSIDE_SHORELINE_GLSL}
+${LANDSCAPE_COHERENCE_GLSL}
 ${FOOTHILL_MEADOW_GLSL}
 void main(){
   vec2 localXZ=vec2(0.0);
@@ -685,7 +687,8 @@ void main(){
     float detailField=noise2(world*0.29+vec2(29.0,-17.0));
     float elevationMix=smoothstep(-1.0,34.0,vWorldPosition.y);
     float slopeResponse=smoothstep(0.025,0.58,slope);
-    float curvatureResponse=clamp(length(fwidth(geometricNormal))*3.25,0.0,1.0);
+    // Screen derivatives accentuate mesh triangle boundaries rather than landform.
+    float curvatureResponse=0.0;
     float nearDetail=1.0-smoothstep(72.0,250.0,distanceToCamera);
 
     // Phase 1 realism: nonperiodic multiscale shading relief. Geometry remains frozen.
@@ -1180,7 +1183,7 @@ void main(){
     float habitatCoverage=0.0;
     if(all(greaterThan(habitatUv,vec2(0.0)))&&all(lessThan(habitatUv,vec2(1.0)))){
       habitatUv=clamp(habitatUv,vec2(uHabitatHalfTexel),vec2(1.0-uHabitatHalfTexel))*uHabitatAtlasScale;
-      habitatCoverage=texture(uWoodlandHabitat,habitatUv).r;
+      habitatCoverage=texture(uWoodlandHabitat,habitatUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uWoodlandHabitatBounds,6.0);
     }
     float habitatEdgeWidth=4.0+3.0*noise2(vWorldPosition.xz*0.07);
     vec2 ravineUv=(vWorldPosition.xz-uRavineHabitatBounds.xy)/(uRavineHabitatBounds.zw-uRavineHabitatBounds.xy);
@@ -1193,9 +1196,8 @@ void main(){
       coastalUv=clamp(coastalUv,vec2(uHabitatHalfTexel),vec2(1.0-uHabitatHalfTexel))*uHabitatAtlasScale+vec2(2.0*uHabitatAtlasScale.x,0.0);
       habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
     }
-    vec3 habitatSoil=vec3(0.105,0.112,0.060)*(0.90+0.18*noise2(vWorldPosition.xz*.29));
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
-    habitatSoil=mix(habitatSoil,vec3(.14,.12,.065)*(0.90+0.18*noise2(vWorldPosition.xz*.29)),foothillDry*.65);
+    vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
     base=mix(base,habitatSoil,habitatCoverage*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
@@ -1240,6 +1242,8 @@ void main(){
     // Existing global lightDirection is sun-away; the original clearing
     // uses sunward illumination. Blend their *diffuse responses* directly
     // to avoid normalizing zero when opposite sun vectors are interpolated.
+    // Shared ground lighting must not reverse with material eligibility.
+    if(worldSoilTerrain)worldSoilLightingWeight=1.0;
     vec3 soilSunwardLight=normalize(uSunDirection);
     float soilGeometricDiffuse=max(
       dot(geometricNormal,soilSunwardLight),0.0

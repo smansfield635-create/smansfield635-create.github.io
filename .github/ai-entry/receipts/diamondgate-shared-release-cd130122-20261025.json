@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "diamondgate-shared-release-cd130122-20261025",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6817,
+  "requestBranch": "ai-dispatch-request-diamondgate-shared-release-cd130122",
+  "requestCommit": "835c3419e6e5c60f44d44286cdcb12afbe724b9c",
+  "currentMainSha": "cd130122220cfa987f04a698900c6e2be08f2bc2",
+  "bridgeRunId": "40243274831",
+  "error": "Input may not be user supplied: target_sha",
+  "failedAt": "2026-10-25T23:07:01.174Z"
+}

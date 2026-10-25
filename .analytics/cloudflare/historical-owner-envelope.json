@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-25T05:30:33Z",
+  "generatedAt": "2026-10-25T06:44:22Z",
   "window": {
-    "start": "2026-07-27T05:30:33Z",
-    "end": "2026-10-25T05:30:33Z"
+    "start": "2026-07-27T06:44:22Z",
+    "end": "2026-10-25T06:44:22Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -58,6 +58,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
+      },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
@@ -66,12 +70,12 @@
         "pageLoads": 270,
         "visits": 70
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -80,10 +84,6 @@
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -194,13 +194,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -266,13 +266,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,

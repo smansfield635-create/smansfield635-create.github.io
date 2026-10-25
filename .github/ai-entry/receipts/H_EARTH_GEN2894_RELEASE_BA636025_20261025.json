@@ -6,9 +6,9 @@
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 6825,
   "requestBranch": "ai-dispatch-request-h-earth-gen2894-release-ba636025",
-  "requestCommit": "cef5bccb0f816515bfe69297fae4946388590390",
+  "requestCommit": "b3434132863754574168f9a944c919f9e636eb6d",
   "currentMainSha": "ba636025dae7dfae0af14b2e35ecdaa7980ef62d",
-  "bridgeRunId": "40247110333",
-  "error": "Input may not be user supplied: target_sha",
-  "failedAt": "2026-10-25T23:58:37.757Z"
+  "bridgeRunId": "40247173957",
+  "error": "Stale dispatch request: parent cef5bccb0f816515bfe69297fae4946388590390 != current main ba636025dae7dfae0af14b2e35ecdaa7980ef62d",
+  "failedAt": "2026-10-25T23:59:30.074Z"
 }

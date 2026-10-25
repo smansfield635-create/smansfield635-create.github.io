@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "4fe75834cc28eef60bbae9e694d30031649e6e41",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "87726afb1da6f3fed8507cd71edf5ac6104a37c0",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 2894,
+    "lockScope": "H_EARTH:PLANTING_BOUNDARY_REPAIR:20261025",
+    "observedBranchHead": "5792bf4fed9bd32e088ac6a3a6a9e3162a7bf308",
+    "observedLedgerBlobSha": "1c893a505771d56a564744d95b7f907a2ca20ee6",
+    "operationId": "H_EARTH_PLANTING_BOUNDARY_REPAIR_20261025_002",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "a4579d64d95a2c890d424f36299b52aade4912839b457772172e94e2e2d62d40"
+  },
+  "operationId": "H_EARTH_PLANTING_BOUNDARY_REPAIR_20261025_002",
+  "operationStarted": true,
+  "procedureLocatorDigest": "a3dc6cd6118e795e1c048b54df29db022dd046ed1f8d83b9529eebe34bf2e8f4",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "d29ea642d0a6f52aaf1b2ed0a5f09dc35e4ceee7080a99fc1ddf5a75cdf1e927",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

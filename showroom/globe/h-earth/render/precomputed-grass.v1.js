@@ -1,7 +1,7 @@
 import {fetchStartupAsset} from './precomputed-oasis-soil.v1.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
 /** Lossless, hash-bound output of the accepted ground-admission compiler. */
-const MANIFEST_SHA256='e186d57007b252015cdad1d720c300637f3c8ace75a469db2970d335c7ea153a';
+const MANIFEST_SHA256='9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf';
 const fail=reason=>{throw Error('PRECOMPUTED_GRASS_'+reason);};
 const sha=async bytes=>Array.from(new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
 export async function decodePrecomputedGrass(manifest,bytes,{yieldControl=async()=>{},onProgress=()=>{}}={}){

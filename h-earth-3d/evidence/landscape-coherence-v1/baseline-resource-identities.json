@@ -1,0 +1,657 @@
+{
+  "baseline": "a955845640df5f1ed9dda6dcb74226e35e8ce3e5",
+  "resources": [
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/media/gratitude-grove-29377.v1.webp",
+      "expectedBlob": "fc66abc0d25a30b3d4530f814714d72deb48d887",
+      "observedBlob": "fc66abc0d25a30b3d4530f814714d72deb48d887"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/media/gratitude-coastal-grove-29377.v1.webp",
+      "expectedBlob": "46427325f3ad9e46b495346c5b86d55f8cdfb036",
+      "observedBlob": "46427325f3ad9e46b495346c5b86d55f8cdfb036"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/media/gratitude-shore-29377.v1.webp",
+      "expectedBlob": "80437c8cd27d107611a4168adf2445e927f1966a",
+      "observedBlob": "80437c8cd27d107611a4168adf2445e927f1966a"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js",
+      "expectedBlob": "59c77d100d793f9dd28e9db7bd357ef078de0165",
+      "observedBlob": "59c77d100d793f9dd28e9db7bd357ef078de0165"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "expectedBlob": "04f1c76202e121f2f9ab77e41913b12a727d664b",
+      "observedBlob": "04f1c76202e121f2f9ab77e41913b12a727d664b"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "expectedBlob": "e3c6f1780565a3f3e6ac225185288efecdf797bb",
+      "observedBlob": "e3c6f1780565a3f3e6ac225185288efecdf797bb"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "expectedBlob": "98ef78138aa6104f707832eabfa64bf1958a7312",
+      "observedBlob": "98ef78138aa6104f707832eabfa64bf1958a7312"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+      "expectedBlob": "d360e92c575be0c52254f454e7f57c1b87693b13",
+      "observedBlob": "d360e92c575be0c52254f454e7f57c1b87693b13"
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/run8e-r3d/pointer-touch-intake.js",
+      "expectedBlob": "53ef461512c20a83140ec374e0a56fdeb7ab790a",
+      "observedBlob": "53ef461512c20a83140ec374e0a56fdeb7ab790a"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "expectedBlob": "7f96c5b796df64a5dffd80dfc7b04e8b6e71579b",
+      "observedBlob": "7f96c5b796df64a5dffd80dfc7b04e8b6e71579b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/performance-scheduling.v1.js",
+      "expectedBlob": "65cb4ce8f6e49d4ad9bfb808d2c9af40636ccfd1",
+      "observedBlob": "65cb4ce8f6e49d4ad9bfb808d2c9af40636ccfd1"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-metrics.v2.js",
+      "expectedBlob": "2d10135a9f0fd34cc5085dd1e9bda00cf883df8d",
+      "observedBlob": "2d10135a9f0fd34cc5085dd1e9bda00cf883df8d"
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js",
+      "expectedBlob": "dbab15717f754b2dc9cedd75ab6835d3f4328a15",
+      "observedBlob": "dbab15717f754b2dc9cedd75ab6835d3f4328a15"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.atmosphere-state.js",
+      "expectedBlob": "d3c8472529b4b8e5b34a3aa100240ca69bf4fef1",
+      "observedBlob": "d3c8472529b4b8e5b34a3aa100240ca69bf4fef1"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js",
+      "expectedBlob": "4f929cd467edb447e2116de745d9b02c28daf219",
+      "observedBlob": "4f929cd467edb447e2116de745d9b02c28daf219"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "expectedBlob": "3912671a7d6fe380a3605e33fd6547e2f672f319",
+      "observedBlob": "3912671a7d6fe380a3605e33fd6547e2f672f319"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js",
+      "expectedBlob": "ca4b239cfa9332a41b4adb7ccc76530beea10e77",
+      "observedBlob": "ca4b239cfa9332a41b4adb7ccc76530beea10e77"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/planetary-world-frame.js",
+      "expectedBlob": "0938daa8586715c3636b373894bd7e6e28c1ea91",
+      "observedBlob": "0938daa8586715c3636b373894bd7e6e28c1ea91"
+    },
+    {
+      "path": "showroom/globe/h-earth/diagnostic/touch-motion-cp3a/touch-control-lattice.js",
+      "expectedBlob": "89434de5190f710265e97c717bb2ccba52e8571f",
+      "observedBlob": "89434de5190f710265e97c717bb2ccba52e8571f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/hillside-shoreline-field.v1.js",
+      "expectedBlob": "d564eabcb55425c5b6a0a34192aa1a9982da54ce",
+      "observedBlob": "d564eabcb55425c5b6a0a34192aa1a9982da54ce"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/performance-scheduling.v1.js",
+      "expectedBlob": "65cb4ce8f6e49d4ad9bfb808d2c9af40636ccfd1",
+      "observedBlob": "65cb4ce8f6e49d4ad9bfb808d2c9af40636ccfd1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-procedural-vegetation.v1.js",
+      "expectedBlob": "50cdbd1d3dd367c394351c9afcddbf78914d3566",
+      "observedBlob": "50cdbd1d3dd367c394351c9afcddbf78914d3566"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-oasis-tree-group.v1.js",
+      "expectedBlob": "996245d11b590cf56d5a30b73503de838ced79eb",
+      "observedBlob": "996245d11b590cf56d5a30b73503de838ced79eb"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-jacaranda.v1.js",
+      "expectedBlob": "19bca97ed17428850ba1cf0e8a6eb8e2ef8e24fd",
+      "observedBlob": "19bca97ed17428850ba1cf0e8a6eb8e2ef8e24fd"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-tree-collection.v1.js",
+      "expectedBlob": "a4273b8cbe93a8525ff669c03160b411b5f5d4d2",
+      "observedBlob": "a4273b8cbe93a8525ff669c03160b411b5f5d4d2"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/cavern-understory-placement.v1.js",
+      "expectedBlob": "6c616eb6d1bf47fc43417b3fdb497729d9cbfdc5",
+      "observedBlob": "6c616eb6d1bf47fc43417b3fdb497729d9cbfdc5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/cavern-entrance-ivy.v1.js",
+      "expectedBlob": "04d3ca3653b5ee30acac50e225addeb4b6ad82cb",
+      "observedBlob": "04d3ca3653b5ee30acac50e225addeb4b6ad82cb"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/cavern-palm-placement.v1.js",
+      "expectedBlob": "37a3f47fc7e40f775278a4b0821c4cd7854e6a86",
+      "observedBlob": "37a3f47fc7e40f775278a4b0821c4cd7854e6a86"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/foothill-meadow-field.v1.js",
+      "expectedBlob": "88abc584295ab89a6c7286540c43a4c7eda4ed31",
+      "observedBlob": "88abc584295ab89a6c7286540c43a4c7eda4ed31"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-grass.v1.js",
+      "expectedBlob": "06ba2f716ec3cf18d1662192bd88b85e6d5757c5",
+      "observedBlob": "06ba2f716ec3cf18d1662192bd88b85e6d5757c5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-oasis-soil.v1.js",
+      "expectedBlob": "e30169f7f54619211172f38ec77f3046317b0bfa",
+      "observedBlob": "e30169f7f54619211172f38ec77f3046317b0bfa"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-habitat-field.v1.js",
+      "expectedBlob": "35fc2915a80c792bcc892aaa484798d856d462ce",
+      "observedBlob": "35fc2915a80c792bcc892aaa484798d856d462ce"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "expectedBlob": "a10a2585a354e1e59844e1857189692447b5ed5a",
+      "observedBlob": "a10a2585a354e1e59844e1857189692447b5ed5a"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/rendered-beach-signal.v1.js",
+      "expectedBlob": "adb199239dca10a2a99370ace9b47898c59d611f",
+      "observedBlob": "adb199239dca10a2a99370ace9b47898c59d611f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-planting-pilot.v1.js",
+      "expectedBlob": "5ffcc92489278d83677e2bfb48f5683b07c107b3",
+      "observedBlob": "5ffcc92489278d83677e2bfb48f5683b07c107b3"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/planting-pilot-renderer.v1.js",
+      "expectedBlob": "b770a08fbb688003f813481e953b4fc3b2f73956",
+      "observedBlob": "b770a08fbb688003f813481e953b4fc3b2f73956"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.gen2514-qualified-surface-material.run8c.js",
+      "expectedBlob": "805e7bf35cb71c77680455dc92943ae1fd641e5d",
+      "observedBlob": "805e7bf35cb71c77680455dc92943ae1fd641e5d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js",
+      "expectedBlob": "46334ed155ce1f45df215c9a0cc75acea5196407",
+      "observedBlob": "46334ed155ce1f45df215c9a0cc75acea5196407"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.gen2514-qualified-placement-authority.js",
+      "expectedBlob": "cd1a7ab0c4574f220992704ab27cdc1787f88549",
+      "observedBlob": "cd1a7ab0c4574f220992704ab27cdc1787f88549"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs",
+      "expectedBlob": "fad56b7709f90fb7e274155dfc3ff66677c7cb97",
+      "observedBlob": "fad56b7709f90fb7e274155dfc3ff66677c7cb97"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "expectedBlob": "cf293b9e3f19ae40395df24bdd74d10ca6da3273",
+      "observedBlob": "cf293b9e3f19ae40395df24bdd74d10ca6da3273"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-rock-presentation.v1.js",
+      "expectedBlob": "77e7038d27862a39c31676d1d9a1ee9a84d5f267",
+      "observedBlob": "77e7038d27862a39c31676d1d9a1ee9a84d5f267"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/large-p2-boulder-presentation.v1.js",
+      "expectedBlob": "9df13376e0983314bac20fe97ae7cffabc7ad747",
+      "observedBlob": "9df13376e0983314bac20fe97ae7cffabc7ad747"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-fine-grass.v1.js",
+      "expectedBlob": "da8fd76127a6dd2d05cc458e866cb8f1db068552",
+      "observedBlob": "da8fd76127a6dd2d05cc458e866cb8f1db068552"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/woodland-clearing-trial.js",
+      "expectedBlob": "14c366d2241469fbccd08ee31bbeac0f1b7598f4",
+      "observedBlob": "14c366d2241469fbccd08ee31bbeac0f1b7598f4"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.js",
+      "expectedBlob": "f9a26a0a48fd98d2fbdf69a5b3d1078bb0986f7b",
+      "observedBlob": "f9a26a0a48fd98d2fbdf69a5b3d1078bb0986f7b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "expectedBlob": "d851d2cf4afb3a5f616d5123a88928cdf58003ec",
+      "observedBlob": "d851d2cf4afb3a5f616d5123a88928cdf58003ec"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
+      "expectedBlob": "3ade65c73005366f03af7d7e0474170ce6fe900c",
+      "observedBlob": "3ade65c73005366f03af7d7e0474170ce6fe900c"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.world-manifold-domain.js",
+      "expectedBlob": "09ceab4505c52c8bede19afb77343fc1f7ed2d7f",
+      "observedBlob": "09ceab4505c52c8bede19afb77343fc1f7ed2d7f"
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/h-earth.run8a.dimensional-reconciliation.js",
+      "expectedBlob": "3f0a833cc32106029318eee460d9ca15cf841959",
+      "observedBlob": "3f0a833cc32106029318eee460d9ca15cf841959"
+    },
+    {
+      "path": "showroom/globe/h-earth/capacity.js",
+      "expectedBlob": "89e4622bb9c30b533a1d13d7db887ee53e7a46c8",
+      "observedBlob": "89e4622bb9c30b533a1d13d7db887ee53e7a46c8"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-field.js",
+      "expectedBlob": "71a95053892140d792573587a6b82798663e3df1",
+      "observedBlob": "71a95053892140d792573587a6b82798663e3df1"
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.landscape-realization-planner.js",
+      "expectedBlob": "8f20a80ce5797b3616bee64a53d95911c641e46b",
+      "observedBlob": "8f20a80ce5797b3616bee64a53d95911c641e46b"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js",
+      "expectedBlob": "ad633f3eaf4ef10d49c7fb635803c148b4f08ddf",
+      "observedBlob": "ad633f3eaf4ef10d49c7fb635803c148b4f08ddf"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-shoreline.js",
+      "expectedBlob": "559a8a0c3d2b8229d3129a0825bc4f10464299af",
+      "observedBlob": "559a8a0c3d2b8229d3129a0825bc4f10464299af"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-coastal-field.v1.js",
+      "expectedBlob": "4197026579ab641d830cdb852522e46bdb247609",
+      "observedBlob": "4197026579ab641d830cdb852522e46bdb247609"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.js",
+      "expectedBlob": "91eabcc240b54ef01a52d59a237dff629d90a722",
+      "observedBlob": "91eabcc240b54ef01a52d59a237dff629d90a722"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs",
+      "expectedBlob": "bafc99889e614620a6fa25225aaa51979fe78f24",
+      "observedBlob": "bafc99889e614620a6fa25225aaa51979fe78f24"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "expectedBlob": "d851d2cf4afb3a5f616d5123a88928cdf58003ec",
+      "observedBlob": "d851d2cf4afb3a5f616d5123a88928cdf58003ec"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-cavern-palms.v1.js",
+      "expectedBlob": "179b969424c2625ea67bee809845a9308a5d4f96",
+      "observedBlob": "179b969424c2625ea67bee809845a9308a5d4f96"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-cavern-understory.v1.js",
+      "expectedBlob": "04beaab3a05aa7752f615f903fa6e60825a86127",
+      "observedBlob": "04beaab3a05aa7752f615f903fa6e60825a86127"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/cavern-entrance-grass.v1.js",
+      "expectedBlob": "fa619e50b7b8a586a4bd119f6d2431dfbe8f5e0f",
+      "observedBlob": "fa619e50b7b8a586a4bd119f6d2431dfbe8f5e0f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-continuity-supplement.v1.js",
+      "expectedBlob": "686d8e9a9778509b082ad67fe8f3e043ca15acfa",
+      "observedBlob": "686d8e9a9778509b082ad67fe8f3e043ca15acfa"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/oasis-bank-field.v1.js",
+      "expectedBlob": "375371142d40b3b46665b965a4b1b04f444ce624",
+      "observedBlob": "375371142d40b3b46665b965a4b1b04f444ce624"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-visibility.v2.js",
+      "expectedBlob": "5908e0b6186c0be8157868ac2fcdb3cc20682e06",
+      "observedBlob": "5908e0b6186c0be8157868ac2fcdb3cc20682e06"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.surface-state-field.js",
+      "expectedBlob": "d71aaf047bebcc18a47a6bb9c741211ca2a10f45",
+      "observedBlob": "d71aaf047bebcc18a47a6bb9c741211ca2a10f45"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.gen2514-qualified-terrain-field.js",
+      "expectedBlob": "81adf620a21612393bd9eab47f7f4ba496a5b525",
+      "observedBlob": "81adf620a21612393bd9eab47f7f4ba496a5b525"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.gen2514-qualified-successor-terrain-field.run8b.js",
+      "expectedBlob": "4b4b449c83da704ad607ee730e6777f7eb2f0dd6",
+      "observedBlob": "4b4b449c83da704ad607ee730e6777f7eb2f0dd6"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.vegetation-resolution.run8d.js",
+      "expectedBlob": "82d0590fdc7346f7b6cdb5eafeb3d51ef13411dc",
+      "observedBlob": "82d0590fdc7346f7b6cdb5eafeb3d51ef13411dc"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js",
+      "expectedBlob": "c4e7af8ccab13bfea5aa1f64ecb1edbb0b3afe01",
+      "observedBlob": "c4e7af8ccab13bfea5aa1f64ecb1edbb0b3afe01"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-groundcover.global-v1.js",
+      "expectedBlob": "d851d2cf4afb3a5f616d5123a88928cdf58003ec",
+      "observedBlob": "d851d2cf4afb3a5f616d5123a88928cdf58003ec"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/verified-planting-packet.v1.js",
+      "expectedBlob": "ee2f64c27d1b73e2d251c2eecc7a26ba9104265a",
+      "observedBlob": "ee2f64c27d1b73e2d251c2eecc7a26ba9104265a"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/verified-planting-cells.v1.js",
+      "expectedBlob": "e247c4c5bba65cedda6d1316891ce3683aefe3b9",
+      "observedBlob": "e247c4c5bba65cedda6d1316891ce3683aefe3b9"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/run8e-successor-environment.js",
+      "expectedBlob": "623e247eb333fa2660db0ce24e1ee6c87a24c7ea",
+      "observedBlob": "623e247eb333fa2660db0ce24e1ee6c87a24c7ea"
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r2.immutable-live-render-package.js",
+      "expectedBlob": "63ac317ca90b2c71ef8dc366e83ad17b13d6a155",
+      "observedBlob": "63ac317ca90b2c71ef8dc366e83ad17b13d6a155"
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.run8e-successor-environment-transfer.js",
+      "expectedBlob": "09d7a522b15c3c4e2418cb10b2579808a394d5bd",
+      "observedBlob": "09d7a522b15c3c4e2418cb10b2579808a394d5bd"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-cover.js",
+      "expectedBlob": "26012b066c2bfd3c886fcf6b1497b919c878e2cb",
+      "observedBlob": "26012b066c2bfd3c886fcf6b1497b919c878e2cb"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.successor-surface-material.run8c.js",
+      "expectedBlob": "a510fa1da1a5d1852153c9d22d2df4f2a4d4efde",
+      "observedBlob": "a510fa1da1a5d1852153c9d22d2df4f2a4d4efde"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/renderer.functional-landscape.js",
+      "expectedBlob": "0f2e5074cec7f9f61020a6a0a8167b9a10399dfc",
+      "observedBlob": "0f2e5074cec7f9f61020a6a0a8167b9a10399dfc"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-visible-surface.v1.js",
+      "expectedBlob": "46334ed155ce1f45df215c9a0cc75acea5196407",
+      "observedBlob": "46334ed155ce1f45df215c9a0cc75acea5196407"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.terrain-formations.js",
+      "expectedBlob": "880d099ef617edb9108607d911b1750f64856486",
+      "observedBlob": "880d099ef617edb9108607d911b1750f64856486"
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.post-west-admitted-geometry-transfer.js",
+      "expectedBlob": "2bcb67ebf84f36248475921c85e75236a1115102",
+      "observedBlob": "2bcb67ebf84f36248475921c85e75236a1115102"
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.source-object-geometry-resolution.js",
+      "expectedBlob": "8ed548780039fffba3989e55f5c8f3713354e34f",
+      "observedBlob": "8ed548780039fffba3989e55f5c8f3713354e34f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape.js",
+      "expectedBlob": "647b855336bdad047efe1b4c0b325f0dd24ee336",
+      "observedBlob": "647b855336bdad047efe1b4c0b325f0dd24ee336"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-distant-context.js",
+      "expectedBlob": "1d47037a2fa086d40fbb722a4bd20b21932bdf68",
+      "observedBlob": "1d47037a2fa086d40fbb722a4bd20b21932bdf68"
+    },
+    {
+      "path": "h-earth-3d/zones/ground-cell-001.landscape-lattice.js",
+      "expectedBlob": "ed9ff1f7d3c139a1cba7df169f278336342339f4",
+      "observedBlob": "ed9ff1f7d3c139a1cba7df169f278336342339f4"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-preview.js",
+      "expectedBlob": "7c53e064df2a28e238e4727a382fd09107570aea",
+      "observedBlob": "7c53e064df2a28e238e4727a382fd09107570aea"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.north.js",
+      "expectedBlob": "b5289094db8648800197a03226d6322902960b48",
+      "observedBlob": "b5289094db8648800197a03226d6322902960b48"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.east.js",
+      "expectedBlob": "5de01fd65474abf677e797c6291cc986d0f8a1ea",
+      "observedBlob": "5de01fd65474abf677e797c6291cc986d0f8a1ea"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.south.js",
+      "expectedBlob": "af1c78e2fe336678f9f477256a619b1a25c0d7b1",
+      "observedBlob": "af1c78e2fe336678f9f477256a619b1a25c0d7b1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-kernel.west.js",
+      "expectedBlob": "26f1b41c6a25bc7324082465b70cb6b68c2a457d",
+      "observedBlob": "26f1b41c6a25bc7324082465b70cb6b68c2a457d"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.population-planner.js",
+      "expectedBlob": "a7f7cf194f5a7dda86526244ae396adb81b521ea",
+      "observedBlob": "a7f7cf194f5a7dda86526244ae396adb81b521ea"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.spatial-lifecycle.js",
+      "expectedBlob": "e5478149cfe78f1371232bf3ba2b0e610371b030",
+      "observedBlob": "e5478149cfe78f1371232bf3ba2b0e610371b030"
+    },
+    {
+      "path": "h-earth-3d/terrain/h-earth.gen2514-qualified-world-manifold-domain.js",
+      "expectedBlob": "1249c5a7bc73fc101a50e66a3b6005b0974d239b",
+      "observedBlob": "1249c5a7bc73fc101a50e66a3b6005b0974d239b"
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/h-earth.gen2514-qualified-run8a.dimensional-reconciliation.js",
+      "expectedBlob": "3a14e47c5ea0dac44ac97598ec70cd06beb3e9ac",
+      "observedBlob": "3a14e47c5ea0dac44ac97598ec70cd06beb3e9ac"
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.world-representation-plan.js",
+      "expectedBlob": "bc3c39095551db0f1844717ef9626911adbab2c3",
+      "observedBlob": "bc3c39095551db0f1844717ef9626911adbab2c3"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-landscape-sector.p2.js",
+      "expectedBlob": "edd3c2047d3d062eb8d60325410af8ae8f3a6fa5",
+      "observedBlob": "edd3c2047d3d062eb8d60325410af8ae8f3a6fa5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/lighting-material-successor-terrain.run8c.js",
+      "expectedBlob": "2c869229ff98519eefcbde4d0a68e7d1abcd2440",
+      "observedBlob": "2c869229ff98519eefcbde4d0a68e7d1abcd2440"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.successor-vegetation.run8d.js",
+      "expectedBlob": "3f39d6805df9d9232ac06c2d662d760ca0ed58f3",
+      "observedBlob": "3f39d6805df9d9232ac06c2d662d760ca0ed58f3"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-grounded-vegetation.run8d.js",
+      "expectedBlob": "d427855a5de8f19cd5c6aef563f3791b597a1e8b",
+      "observedBlob": "d427855a5de8f19cd5c6aef563f3791b597a1e8b"
+    },
+    {
+      "path": "h-earth-3d/control-plane/run-8/h-earth.run8e.integration-and-live-delivery.js",
+      "expectedBlob": "e141af58c037b1be170a168a7b7ee464b3008e6c",
+      "observedBlob": "e141af58c037b1be170a168a7b7ee464b3008e6c"
+    },
+    {
+      "path": "h-earth-3d/h-earth.matrix.js",
+      "expectedBlob": "a34f94e0c285cd6e0a46111f8e4dcc97bc95f1c9",
+      "observedBlob": "a34f94e0c285cd6e0a46111f8e4dcc97bc95f1c9"
+    },
+    {
+      "path": "h-earth-3d/cells/ground-cell-001.js",
+      "expectedBlob": "0ce8b5123678cfa36339879792c0bfa4a1a0444d",
+      "observedBlob": "0ce8b5123678cfa36339879792c0bfa4a1a0444d"
+    },
+    {
+      "path": "h-earth-3d/zones/ground-cell-001.zones.js",
+      "expectedBlob": "2d21f90e6eda8b0885ce4815b352335827a38522",
+      "observedBlob": "2d21f90e6eda8b0885ce4815b352335827a38522"
+    },
+    {
+      "path": "h-earth-3d/objects/ground-cell-001.objects.js",
+      "expectedBlob": "1d791ee32d07a16f687c0e40b9e25b3c8074b880",
+      "observedBlob": "1d791ee32d07a16f687c0e40b9e25b3c8074b880"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-successor-terrain.run8b.js",
+      "expectedBlob": "ec11e15611bea52dc1202e11d3b94a9503f1298f",
+      "observedBlob": "ec11e15611bea52dc1202e11d3b94a9503f1298f"
+    },
+    {
+      "path": "h-earth-3d/integration/h-earth.world-manifold-union-admission.js",
+      "expectedBlob": "82c21662603673464f347707b3f0f9a55b004b91",
+      "observedBlob": "82c21662603673464f347707b3f0f9a55b004b91"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.biome-field.js",
+      "expectedBlob": "059aced691f3947cdadd582d84b562fb7f9b94be",
+      "observedBlob": "059aced691f3947cdadd582d84b562fb7f9b94be"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/grass-lowland-trial.js",
+      "expectedBlob": "3ade65c73005366f03af7d7e0474170ce6fe900c",
+      "observedBlob": "3ade65c73005366f03af7d7e0474170ce6fe900c"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-aged-woodland-tree.v1.js",
+      "expectedBlob": "4036633b86d53b8a0c11b31c35847eb0e74f543b",
+      "observedBlob": "4036633b86d53b8a0c11b31c35847eb0e74f543b"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/geometry-woodland-tree-trial.js",
+      "expectedBlob": "3958513dec53aa27f4216388a190f772e71fb9b0",
+      "observedBlob": "3958513dec53aa27f4216388a190f772e71fb9b0"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/environment-atmosphere.js",
+      "expectedBlob": "756574142e1bf8f17d515ced2fc7b1c38d1c5806",
+      "observedBlob": "756574142e1bf8f17d515ced2fc7b1c38d1c5806"
+    },
+    {
+      "path": "h-earth-3d/environment/h-earth.water-state.js",
+      "expectedBlob": "c99e933a14b2642e0971ffbd8b06dfbaaf562284",
+      "observedBlob": "c99e933a14b2642e0971ffbd8b06dfbaaf562284"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js",
+      "expectedBlob": "98ef78138aa6104f707832eabfa64bf1958a7312",
+      "observedBlob": "98ef78138aa6104f707832eabfa64bf1958a7312"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-procedural-vegetation.v1.json",
+      "expectedBlob": "12fbe726117aa804a90c275f85f20d9864d1df01",
+      "observedBlob": "12fbe726117aa804a90c275f85f20d9864d1df01"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-procedural-vegetation.v1.bin.gz",
+      "expectedBlob": "003b620b53da239676c8d7ca4ba13f135191c4ea",
+      "observedBlob": "003b620b53da239676c8d7ca4ba13f135191c4ea"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/woodland-clearing-leaf.png",
+      "expectedBlob": "3193d3a087af5c50b87616fa647c5746df946b5f",
+      "observedBlob": "3193d3a087af5c50b87616fa647c5746df946b5f"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/woodland-clearing-bark.png",
+      "expectedBlob": "87546ae5396e08c8eb56c67ab21cd000327b01ab",
+      "observedBlob": "87546ae5396e08c8eb56c67ab21cd000327b01ab"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/woodland-clearing-soil.png",
+      "expectedBlob": "23435bfdcf7e44b2fcb7c3937b6408ef5c980be9",
+      "observedBlob": "23435bfdcf7e44b2fcb7c3937b6408ef5c980be9"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/oasis-soil-mask.v1.json",
+      "expectedBlob": "e9a59ae18b7bed0b0514cd54580b709f64f5b65d",
+      "observedBlob": "e9a59ae18b7bed0b0514cd54580b709f64f5b65d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json",
+      "expectedBlob": "a3e9bee42b97accca2bb3be6b55fb62636a99532",
+      "observedBlob": "a3e9bee42b97accca2bb3be6b55fb62636a99532"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz",
+      "expectedBlob": "78275dbc10dc8ae580343262e8a0322fcb60b479",
+      "observedBlob": "78275dbc10dc8ae580343262e8a0322fcb60b479"
+    },
+    {
+      "path": "showroom/globe/h-earth/assets/jacaranda/Gratitude-Jacaranda-Candidate.glb",
+      "expectedBlob": "863f6bfd54e4e2090af17940c5901ae07366f016",
+      "observedBlob": "863f6bfd54e4e2090af17940c5901ae07366f016"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "expectedBlob": "3912671a7d6fe380a3605e33fd6547e2f672f319",
+      "observedBlob": "3912671a7d6fe380a3605e33fd6547e2f672f319"
+    },
+    {
+      "path": "showroom/globe/h-earth/assets/tree-collection/Tree-Small-02-Candidate.glb",
+      "expectedBlob": "024788e10b5480cce1a43059a9d679c8b9fab9a6",
+      "observedBlob": "024788e10b5480cce1a43059a9d679c8b9fab9a6"
+    },
+    {
+      "path": "showroom/globe/h-earth/assets/tree-collection/Maple-Medium-A-Candidate.glb",
+      "expectedBlob": "80f51383d5255c9462e784b4fe01ae993a82d488",
+      "observedBlob": "80f51383d5255c9462e784b4fe01ae993a82d488"
+    },
+    {
+      "path": "showroom/globe/h-earth/assets/tree-collection/Maple-Large-A-Candidate.glb",
+      "expectedBlob": "bf61af5ebefeae1cad3f0a921c0562f2866e1a0b",
+      "observedBlob": "bf61af5ebefeae1cad3f0a921c0562f2866e1a0b"
+    },
+    {
+      "path": "showroom/globe/h-earth/assets/tree-collection/Coastal-Tree-03-Candidate.glb",
+      "expectedBlob": "9c851f98476e2b2159f0d4eca48106fdb935627e",
+      "observedBlob": "9c851f98476e2b2159f0d4eca48106fdb935627e"
+    },
+    {
+      "path": "showroom/globe/h-earth/assets/tree-collection/Coastal-Tree-02-Candidate.glb",
+      "expectedBlob": "a733a1efd056714f0ec24086202d1096296526fc",
+      "observedBlob": "a733a1efd056714f0ec24086202d1096296526fc"
+    },
+    {
+      "path": "showroom/globe/h-earth/assets/tree-collection/Searsia-Lucida-A-Candidate.glb",
+      "expectedBlob": "ffd3d12b7168103f76fdcf48b5663dfd4b57915a",
+      "observedBlob": "ffd3d12b7168103f76fdcf48b5663dfd4b57915a"
+    }
+  ],
+  "mismatches": [],
+  "instrumentation": "Existing route present function exposed for diagnostic frames; resource source bytes listed before that observation-only hook."
+}

@@ -1,3 +1,4 @@
+import {LANDSCAPE_COHERENCE_GLSL} from './landscape-coherence-field.v1.js';
 import {assertOasisBankBudget,OASIS_BANK_ALLOCATION,oasisBankTiles} from './oasis-bank-field.v1.js';
 import {buildCavernEntranceGrass,createEntranceFloorSupport,ENTRANCE_BLEND_GLSL} from './cavern-entrance-grass.v1.js';
 import {unprojectPlanetVertex} from '../../../../h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs';
@@ -76,7 +77,7 @@ uniform vec3 uCamera;
 uniform float uRadius;
 uniform int uFine;
 out vec3 vNormal;out vec3 vColor;out float vDistance;
-float woodlandPaletteNoise(vec2 p){vec2 cell=floor(p),f=fract(p);f=f*f*(3.-2.*f);float a=fract(sin(dot(cell,vec2(127.1,311.7)))*43758.5453),b=fract(sin(dot(cell+vec2(1.,0.),vec2(127.1,311.7)))*43758.5453),c=fract(sin(dot(cell+vec2(0.,1.),vec2(127.1,311.7)))*43758.5453),d=fract(sin(dot(cell+vec2(1.,1.),vec2(127.1,311.7)))*43758.5453);return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}
+${LANDSCAPE_COHERENCE_GLSL}
 ${FOOTHILL_MEADOW_GLSL}
 ${HILLSIDE_SHORELINE_GLSL}
 ${ENTRANCE_BLEND_GLSL}
@@ -101,17 +102,10 @@ void main(){
  vec3 p=aRoot.xyz+up*(.003+level*height)+across*(side*width*(1.-level*.86));
  p+=vec3(sin(angle),0.,-cos(angle))*level*level*mix(.025,height*mix(.12,.30,h),entrance)*scale;
  gl_Position=uViewProjection*vec4(p,1.);vNormal=up;
- // Rotate and warp only color coordinates; every immutable root stays fixed.
- vec2 colorWorld=mat2(.8,.6,-.6,.8)*aRoot.xz;
- vec2 colorWarp=vec2(woodlandPaletteNoise(colorWorld/37.),woodlandPaletteNoise(colorWorld/41.+vec2(19.,-7.)))-.5;
- float palettePatch=woodlandPaletteNoise(colorWorld/13.+colorWarp*1.4),dry=woodlandPaletteNoise(colorWorld/29.+colorWarp+vec2(7.,-11.));
- vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),palettePatch);
- vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),palettePatch);
- vec3 palette=mix(forest,olive,smoothstep(.35,.8,dry));
- palette=mix(palette,vec3(.29,.255,.12),smoothstep(.78,.99,h)*.34);
+ // One world-space palette for existing grass and occupied ground.
  float foothillDry=max(foothillDryAmount(aRoot.xyz,uRadius),hillsideDry(aRoot.xyz));
- vec3 dryPalette=mix(vec3(.24,.225,.075),vec3(.29,.235,.12),smoothstep(.35,.95,foothillDry));
- palette=mix(palette,dryPalette,foothillDry*.88);
+ vec3 palette=landscapeCoverPalette(aRoot.xz,foothillDry);
+ palette=mix(palette,vec3(.29,.255,.12),smoothstep(.78,.99,h)*.34);
  vColor=palette*(.78+level*.40)*(.88+.24*h);vDistance=length(p-uCamera);
 }`;
 const FS=`#version 300 es

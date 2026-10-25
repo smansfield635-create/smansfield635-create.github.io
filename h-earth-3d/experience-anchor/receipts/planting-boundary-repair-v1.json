@@ -1,0 +1,81 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_PLANTING_BOUNDARY_REPAIR_20261025_002",
+  "canonicalAdmissionGeneration": 2894,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewStage": "SAME_WORLD_CONTINUITY_WITH_OWNER_AUTHORIZED_LIVE_VISUAL_REVIEW",
+  "acceptedBaseline": "a955845640df5f1ed9dda6dcb74226e35e8ce3e5",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/landscape-coherence-v1/baseline-bare-mountain.png",
+    "h-earth-3d/evidence/landscape-coherence-v1/candidate-bare-mountain.png",
+    "h-earth-3d/evidence/landscape-coherence-v1/candidate-woodland-edge.png"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/landscape-coherence-v1/qualification.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/landscape-coherence-v1/source-manifest.json",
+    "h-earth-3d/evidence/landscape-coherence-v1/west-review.json",
+    "h-earth-3d/evidence/landscape-coherence-v1/material-repair-review.json",
+    "h-earth-3d/evidence/planting-boundary-repair-v1/independent-verification.json",
+    "h-earth-3d/evidence/planting-boundary-repair-v1/release-review.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "70403efc00e1154415e1c0e7a89bd7f2af4ccf1a9309839e17f791ba5289e334"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz",
+      "sha256": "4a2ff2a135984d67d68d3df7c3212236894c75b66826f256a60130c87b73e800"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json",
+      "sha256": "9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/foothill-meadow-field.v1.js",
+      "sha256": "a2961c0507d679ea998a78708127a84d41d8b3a3387831c9fb13cf0dcaa115fb"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/landscape-coherence-field.v1.js",
+      "sha256": "54aa2bf97e19fc63631cd3f7ece0a6d4c3a8d13222afa9a66fef2666d3e1a7b1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "4450c9e9f66f3dfd8f3094e897311e09550269c2c0f7510a4ce2a4982387d2c1"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/precomputed-grass.v1.js",
+      "sha256": "d3de07b531e9dcf6d5a3ed18976f97e5eb2e7288a312f35c9e66977da04392cb"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js",
+      "sha256": "addf466b14cf21b5f901a62884083ed09ab39aa199a6fac3ada9a740cfce1b0a"
+    }
+  ],
+  "evidenceScope": "Carry forward qualified shader/camera same-world continuity. New change redistributes632 existing roots only within attributed eligible coastal tiles; protected prefixes, population, terrain, navigation, allocations and loader guards preserved. Owner explicitly requests live publication for visual inspection. No phone/GPU performance acceptance asserted.",
+  "limitations": [
+    "Live owner visual and physical-device performance review remains pending; explicitly authorized after publication.",
+    "Local Node loader timing is not a device or GPU benchmark."
+  ],
+  "ownerDirection": "Owner directs continuation on the same existing H-Earth product and GitHub Pages publication route, without rematerializing a separate world or new orchestration, and wants actual live comparison after lawful release.",
+  "authorityEffect": "EVIDENCE_ONLY_NOT_PUBLICATION_AUTHORITY"
+}

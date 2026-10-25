@@ -1,0 +1,119 @@
+{
+  "moved": 632,
+  "prefixes": "PASS",
+  "prefixSha256": "956b8d45669179b2d1e0b8da2988c21592597efd36dfe123a920339d2d0b828a",
+  "untouchedRecords": "PASS",
+  "seedMultiset": "PASS",
+  "tileCount": 8198,
+  "selectedSeams": [
+    {
+      "high": [
+        388,
+        -200
+      ],
+      "low": [
+        392,
+        -200
+      ],
+      "before": 193,
+      "after": 77
+    },
+    {
+      "high": [
+        -392,
+        -200
+      ],
+      "low": [
+        -396,
+        -200
+      ],
+      "before": 175,
+      "after": 70
+    },
+    {
+      "high": [
+        -392,
+        -192
+      ],
+      "low": [
+        -396,
+        -192
+      ],
+      "before": 145,
+      "after": 58
+    },
+    {
+      "high": [
+        388,
+        -196
+      ],
+      "low": [
+        392,
+        -196
+      ],
+      "before": 149,
+      "after": 59
+    },
+    {
+      "high": [
+        -392,
+        -196
+      ],
+      "low": [
+        -396,
+        -196
+      ],
+      "before": 142,
+      "after": 56
+    },
+    {
+      "high": [
+        404,
+        -232
+      ],
+      "low": [
+        408,
+        -232
+      ],
+      "before": 127,
+      "after": 50
+    },
+    {
+      "high": [
+        388,
+        -192
+      ],
+      "low": [
+        392,
+        -192
+      ],
+      "before": 143,
+      "after": 57
+    },
+    {
+      "high": [
+        388,
+        -188
+      ],
+      "low": [
+        392,
+        -188
+      ],
+      "before": 136,
+      "after": 54
+    }
+  ],
+  "surroundingMetrics": {
+    "before": {
+      "totalVariation": 17271,
+      "maximumJump": 277,
+      "squaredVariation": 1926945
+    },
+    "after": {
+      "totalVariation": 17013,
+      "maximumJump": 277,
+      "squaredVariation": 1919223
+    }
+  },
+  "runtimePrefixReplay": "SAME_AUTHENTICATED_INPUT_PREFIXES"
+}

@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_CAVERN_CLOSE_20261025_001",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6806,
+  "requestBranch": "ai-dispatch-request-h-earth-cavern-close-20261025",
+  "requestCommit": "b146ba1e4de6553701a4f5928bb890b33b3f581c",
+  "requestCommitParent": "7631fda70e7712eebc5598bd96276ca3553638db",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7631fda70e7712eebc5598bd96276ca3553638db",
+  "workflow": "remote-operation-terminal-closure-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"H_EARTH_CAVERN_SURFACE_LAYER_20261025_001\",\"lockScope\":\"H_EARTH:CAVERN_SURFACE_LAYER:20261025\",\"lockGeneration\":2890,\"terminalDisposition\":\"PASS_CLOSED\"}",
+    "router_callback_issue": "6806",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "40230720527",
+  "dispatchedRunId": 40230733390,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40230733390",
+  "dispatchedRunHeadSha": "7631fda70e7712eebc5598bd96276ca3553638db",
+  "dispatchedAt": "2026-10-25T20:25:56.200Z",
+  "resolvedAt": "2026-10-25T20:26:00.092Z"
+}

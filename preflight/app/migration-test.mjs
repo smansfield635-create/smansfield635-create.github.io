@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {KEYS,projectBackup,decodeProjectBackup} from './dist/packet.mjs';
 const manifest=JSON.parse(fs.readFileSync(new URL('./source-manifest.json',import.meta.url)));
-test('all migrated runtime bytes match the original qualified source',()=>{
+test('runtime bytes match the explicitly versioned source manifest',()=>{
  for(const f of manifest.runtimeFiles)assert.equal(createHash('sha256').update(fs.readFileSync(new URL(f.path,import.meta.url))).digest('hex'),f.sha256,f.path);
 });
 test('nested website entry and module dependencies resolve without root assets',()=>{

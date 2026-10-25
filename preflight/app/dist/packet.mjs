@@ -28,9 +28,10 @@ export function lines(s){return String(s||'').split('\n').map(x=>x.replace(/^\s*
 export function parsePacket(raw,{plain=false,normalized=false}={}){
  if(typeof raw!=='string'||raw.length>180000||!raw.trim())throw Error('Paste a response or brief first (up to 180,000 characters).');
  const envelope=normalized?null:decodeEnvelope(raw,KEYS,headings);
- if(envelope){const normalized=Object.entries(envelope.fields).map(([k,v])=>(Object.entries(headings).find(([,key])=>key===k)?.[0]||k)+': '+v).join('\n');const parsed=parsePacket(normalized,{plain:true,normalized:true});return {...parsed,raw,extra:envelope.extra,plain:false,representation:'JSON'};}
- const mappingIssues=[];const fields=Object.fromEntries(KEYS.map(k=>[k,'']));let active=null,found=new Set(),extra=[];
+ if(envelope){const fields={...Object.fromEntries(KEYS.map(k=>[k,''])),...envelope.fields};return {...finalizePacket(fields,raw),extra:envelope.extra,representation:'JSON'};}
+ const fields=Object.fromEntries(KEYS.map(k=>[k,'']));let active=null,found=new Set(),extra=[];
  for(const line of raw.replace(/\r\n?/g,'\n').split('\n')){
+ if(/^\s*(?:#{1,6}\s*)?(?:\*\*)?TASK OUTCOME:\s*(?:COMPLETED|PARTIAL|BLOCKED|FAILED|NO_CHANGE|UNKNOWN)\s*PRODUCT(?: CHANGES)?:/i.test(line))throw Error('TASK OUTCOME and PRODUCT CHANGES are joined together. Put each on its own line; the original response is preserved.');
  const match=line.trim().replace(/^#{1,6}\s*/,'').replace(/\*\*/g,'').replace(/^__([^:]+):__/,'$1:').match(/^([A-Za-z &]+):\s*(.*)$/);
  const key=match&&headings[match[1].toUpperCase()];
  if(key){if(found.has(key))throw Error('The response repeats a section. Copy the request again and ask your tool for one complete packet.');found.add(key);active=key;if(match[2])fields[key]+=match[2]+'\n';}
@@ -38,10 +39,14 @@ export function parsePacket(raw,{plain=false,normalized=false}={}){
  }
  for(const k of KEYS)fields[k]=fields[k].trim().replace(/\n```\s*$/,'').trim();
  if(found.size<3&&!normalized){if(!plain)throw Error('This looks like a general brief. Choose “Use as a plain brief”, or ask your tool to use the supplied section headings.');fields.state=raw.trim();return {fields,raw,plain:true,extra:''};}
+ return finalizePacket(fields,raw,extra.join('\n'));
+}
+function finalizePacket(fields,raw,extra=''){
+ const mappingIssues=[];
  for(const [key,label] of [['requirements','REQUIREMENTS'],['progressEvents','PROGRESS EVENTS']])if(fields[key]&&!/^(UNKNOWN|NONE|NOT SUPPLIED)[.!]?$/i.test(fields[key])){try{fields[key]=JSON.stringify(readProgressRows(fields[key],label));}catch(e){mappingIssues.push(e.message);}}
  const identityDetails=fields.project.split('\n').slice(1).join('\n').trim();
  fields.project=identityName(fields.project);fields.baseline=identityName(fields.baseline);
- return {fields,raw,plain:false,identityDetails,mappingIssues,extra:extra.join('\n')};
+ return {fields,raw,plain:false,identityDetails,mappingIssues,extra};
 }
 const empty=s=>!clean(s)||/^(none|unknown|not supplied|not known|not applicable|n\/a)[.!]?$/i.test(clean(s));
 export function routePacket(incoming,projects){

@@ -6,11 +6,13 @@
   "runtimeFiles": [
     {
       "path": "dist/app.mjs",
-      "sha256": "a6a11d9cd203d1695ca786141ee7fb56a3d38a981585bd0d59e51b79f2aeab98"
+      "sha256": "ba44ef4a1611c31059e0c5eb5b468f2defbeeeef3cf456d4ad15be73159cad5c",
+      "originalSha256": "a6a11d9cd203d1695ca786141ee7fb56a3d38a981585bd0d59e51b79f2aeab98"
     },
     {
       "path": "dist/automatic-tracking.mjs",
-      "sha256": "9321e17b073537d4cd14001353e9dc253cbc319c38eac2f25d0baf1de36d7399"
+      "sha256": "aec5fc4261615892798ffd3f99a0553ab0bafe7fc61fcea36f1feae263a8e491",
+      "originalSha256": "9321e17b073537d4cd14001353e9dc253cbc319c38eac2f25d0baf1de36d7399"
     },
     {
       "path": "dist/core.mjs",
@@ -22,7 +24,8 @@
     },
     {
       "path": "dist/index.html",
-      "sha256": "ffd92d1f1fc0a5bd483fbfea767f57930f10c5ea15812c1a3c2b0d2ac479690d"
+      "sha256": "5e5c026e164d0d6385eb3c59575b714109f972affb30984dddb86a6301244285",
+      "originalSha256": "ffd92d1f1fc0a5bd483fbfea767f57930f10c5ea15812c1a3c2b0d2ac479690d"
     },
     {
       "path": "dist/intake.mjs",
@@ -30,7 +33,8 @@
     },
     {
       "path": "dist/lifecycle.mjs",
-      "sha256": "aab033896db2ce46df89e5b904efbc0d371d15c82eca480b962ff7a32dc1e2e3"
+      "sha256": "04255fae5e58edd3f3fbd28f0392a7d3ca42042df6b0a6fec12379bc525b20ed",
+      "originalSha256": "aab033896db2ce46df89e5b904efbc0d371d15c82eca480b962ff7a32dc1e2e3"
     },
     {
       "path": "dist/observations.mjs",
@@ -38,11 +42,13 @@
     },
     {
       "path": "dist/packet.mjs",
-      "sha256": "60a80cba82ba064319d71296dabb100fc3d9461b9539a592504e3e2a92948f90"
+      "sha256": "c5a36081317cf9a410ef6d67ce95e4248bca7ea6205e448f66152eded8bba1c7",
+      "originalSha256": "60a80cba82ba064319d71296dabb100fc3d9461b9539a592504e3e2a92948f90"
     },
     {
       "path": "dist/progress-record.mjs",
-      "sha256": "fc9d54ffa388ef318a9bf9d897e821c317c446c5e6e2005d5be6b24644a347da"
+      "sha256": "fe5f4af81f7750aaffa1fda8a00341c495adf2b82be85805fc80178429953a93",
+      "originalSha256": "fc9d54ffa388ef318a9bf9d897e821c317c446c5e6e2005d5be6b24644a347da"
     },
     {
       "path": "dist/progress-wire.mjs",
@@ -50,11 +56,13 @@
     },
     {
       "path": "dist/progression.mjs",
-      "sha256": "c5e849fdbe8f8300fe85e7d53d98d9747961af205035aea110e1550c93df7291"
+      "sha256": "fff6b5be68754a3a573c92a306926bbcbd9888b2a2fd5405187edb139c262981",
+      "originalSha256": "c5e849fdbe8f8300fe85e7d53d98d9747961af205035aea110e1550c93df7291"
     },
     {
       "path": "dist/response-envelope.mjs",
-      "sha256": "19c682dae538b4278a3611ea121f25d443401b6246392fc31b7ede1fcd0bf9b9"
+      "sha256": "8b1a94f9c01072ce0747a4de867318be69d50bc1fa6afcd7a2f0b9064ecdab67",
+      "originalSha256": "19c682dae538b4278a3611ea121f25d443401b6246392fc31b7ede1fcd0bf9b9"
     },
     {
       "path": "dist/response.mjs",
@@ -77,5 +85,12 @@
     "qa-fixture.html",
     "qa-task-selection.json"
   ],
-  "runtimeChanges": "None; generated entry rewrites only asset and home URLs for nested hosting."
+  "runtimeChanges": "None; generated entry rewrites only asset and home URLs for nested hosting.",
+  "currentRevision": {
+    "operationId": "DIAMONDGATE_FULL_CYCLE_MATRIX_REPAIR_20261025_001",
+    "authorityGeneration": 2889,
+    "governingHead": "8da340ed426ba8f1ab8cb39fb07f18715982a54a",
+    "scope": "Workflow transitions, result review, evidence dependencies and import/recovery matrix repair",
+    "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6401937830"
+  }
 }

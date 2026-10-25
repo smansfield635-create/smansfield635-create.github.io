@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>DiamondGate • Development Lab</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <p class="eyebrow">DIAMONDGATE · DEVELOPMENT LAB</p>
+      <h1>Progress, with evidence.</h1>
+      <p class="muted">Isolated frontend prototype. No accounts, uploads, model calls, or server storage. Everything runs in this browser tab.</p>
+      <p class="warning">Development only. This is not the original private DiamondGate Site or a published SaaS service.</p>
+    </header>
+    <section class="stack" aria-labelledby="input-title">
+      <h2 id="input-title">Inspect project progression</h2>
+      <label for="project-input">Project state (JSON)</label>
+      <textarea id="project-input" rows="8" spellcheck="false" placeholder="Paste a validated project state. No data leaves this tab."></textarea>
+      <label for="report-input">Receiving AI result (JSON)</label>
+      <textarea id="report-input" rows="7" spellcheck="false" placeholder="Paste an AI result containing evidence events and any proposed milestone changes."></textarea>
+      <div class="actions">
+        <button id="preview" type="button">Preview result</button>
+        <button id="apply" type="button" disabled>Accept local result</button>
+        <button id="copy" type="button" disabled>Copy continuation</button>
+        <button id="reset" type="button" class="secondary">Clear tab</button>
+      </div>
+      <p id="status" aria-live="polite" class="muted">No project loaded.</p>
+    </section>
+    <section class="stack" aria-labelledby="result-title">
+      <h2 id="result-title">What advanced</h2>
+      <div id="advanced" class="items">No new evidence yet.</div>
+      <h2>What remains</h2>
+      <div id="remaining" class="items">No project yet.</div>
+      <h2>Where you come in</h2>
+      <p id="decision" class="muted">No decision required yet.</p>
+    </section>
+    <section class="stack" aria-labelledby="continuation-title">
+      <h2 id="continuation-title">Next AI continuation</h2>
+      <pre id="continuation" tabindex="0">Load a project and preview a result.</pre>
+      <p class="muted">The receiving AI decides the technical method. The lab does not grant implementation or publication authority.</p>
+    </section>
+  </main>
+</body>
+</html>

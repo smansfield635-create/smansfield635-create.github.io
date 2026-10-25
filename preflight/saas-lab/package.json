@@ -1,0 +1,11 @@
+{
+  "name": "diamondgate-frontend-progression-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm test && node tests/site-boundary.mjs"
+  },
+  "engines": {"node": ">=20"}
+}

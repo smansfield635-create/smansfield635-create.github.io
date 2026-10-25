@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {blank,clone,changes,check,pack,unpack,prepared} from './dist/core.mjs';
+const a={...blank(),title:'Test',original:'Build a private page.',request:'Build a private page.',requirements:[{id:'one',kind:'protected',text:'Keep it private.'}]};
+assert.equal(check(a).missing,false);assert.deepEqual(changes(a,{...a,request:'  Build a private page.\n'}),[]);
+const b=clone(a);b.requirements[0].text='Publish publicly.';assert.equal(changes(a,b)[0].kind,'protected');
+const c=clone(a);c.requirements=[];assert.equal(changes(a,c)[0].kind,'protected');
+const d=clone(a);d.requirements[0].kind='flexible';assert.equal(changes(a,d)[0].kind,'protected');
+assert.equal(changes(a,{...a,request:'Build a public page.'})[0].kind,'uncertain');
+assert.equal(check({...a,questions:'Who approves?'}).open,true);
+const w={id:'test',draft:a,history:[{number:1,at:'2026-10-23T00:00:00Z',brief:clone(a),reason:'Approved.'}]};
+const p=await pack(w),restored=await unpack(p);assert.deepEqual(restored.draft,a);assert.deepEqual(restored.history,w.history);
+const corrupt=clone(p);corrupt.payload.draft.requirements[0].text='Changed';await assert.rejects(()=>unpack(corrupt));
+const bad=clone(w);bad.history[0].brief.original='Different original';await assert.rejects(async()=>unpack(await pack(bad)));
+const dupe=clone(w);dupe.draft.requirements.push(clone(dupe.draft.requirements[0]));await assert.rejects(async()=>unpack(await pack(dupe)));
+const sequence=clone(w);sequence.history[0].number=2;await assert.rejects(async()=>unpack(await pack(sequence)));
+assert.match(prepared(a,'1'),/Technical compatibility: NOT VERIFIED/);assert.match(prepared({...a,questions:'Resolve this.'},'draft'),/Resolve this/);
+console.log('PASS: whitespace, protected edits/removal/reclassification, uncertain request changes, open decisions, exact round-trip, corruption, original invariance, unique IDs, revision order, handoff limits.');

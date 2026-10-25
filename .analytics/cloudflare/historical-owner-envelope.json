@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-25T01:07:49Z",
+  "generatedAt": "2026-10-25T01:40:10Z",
   "window": {
-    "start": "2026-07-27T01:07:49Z",
-    "end": "2026-10-25T01:07:49Z"
+    "start": "2026-07-27T01:40:10Z",
+    "end": "2026-10-25T01:40:10Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -62,13 +62,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 270,
         "visits": 70
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -130,6 +130,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -141,10 +145,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/compass-composite/": {
         "pageLoads": 20,

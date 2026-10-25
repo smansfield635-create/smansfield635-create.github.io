@@ -1,3 +1,4 @@
+import {WORKSPACE_KEY,WORKSPACE_EVENT,validateWorkspace,openChamberProject} from './workspace-bridge.mjs';
 import {automaticSnapshot,automaticPlan,currentAttempt} from './automatic-tracking.mjs';
 import {progressSnapshot,progressPlan,requirementDecision,requirementReviewState,recordRequirementAdoption} from './progress-record.mjs';
 import {intakeGaps} from './intake.mjs';
@@ -8,7 +9,7 @@ import {recordResponse,actionTitle,reconcileSavedFindings,scopeProposalPacket,di
 import {ensureFlow as storedFlow,displayStatus,assessUpdate,continuation,markAwaiting,applyReviewed,workflow,workflowDecision,projectSummary,recordUserDecision,requestDirection} from './progression.mjs';
 import {KEYS,LABELS,FORMAT,uid,parsePacket,parseReturnedResponse,mergePacket,captureRequest,workRequest,progressSetupRequest,progressRepairRequest,validateProject,decodeProjectBackup,projectBackup,migrateLegacy,decisions,routePacket,projectDisplayName as projectName,identityName} from './packet.mjs';
 import {clone,clean} from './core.mjs';
-const $=id=>document.getElementById(id),KEY='diamondgate.projects.v2',LEGACY='diamondgate.preflight.workspace.v1';
+const $=id=>document.getElementById(id),KEY=WORKSPACE_KEY,LEGACY='diamondgate.preflight.workspace.v1';
 const savedWorkspace=workspaceStorage(()=>localStorage,KEY);
 let db={projects:[],selected:'',inbox:'',newIntent:'',updates:{}},pending=null,screen='home',toastTimer,storageBlocked=false,unreadableWorkspace=false,originalSavedBytes='',purgeSelection=[],reviewFeedbackProjectId='';
 function el(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;}
@@ -20,7 +21,7 @@ function storageFailure(message){
 }
 function save(){
  if(storageBlocked){$('save-status').textContent='Saving paused · keep your recovery copy';return false;}
- try{savedWorkspace.write(db);if(!unreadableWorkspace)originalSavedBytes='';$('save-status').textContent='Saved on this device';return true;}
+ try{validateWorkspace(db);savedWorkspace.write(db);window.dispatchEvent(new Event(WORKSPACE_EVENT));if(!unreadableWorkspace)originalSavedBytes='';$('save-status').textContent='Saved on this device';return true;}
  catch(e){
   storageBlocked=true;
   $('save-status').textContent='Not saved · download a backup';
@@ -125,7 +126,10 @@ $('backup').onclick=()=>{backupProject(project());toast('Project backup download
 $('copy-brief').onclick=()=>{const c=checkpoint();copy(FORMAT+'\n'+KEYS.map(k=>LABELS[k].toUpperCase()+': '+((k==='baseline'?c.id:c.fields[k])||'UNKNOWN')).join('\n')+'\n\nRecord accepted in DiamondGate; source claims are not independently verified.');};
 $('restore').onclick=()=>$('backup-file').click();$('backup-file').onchange=async()=>{const f=$('backup-file').files[0];$('backup-file').value='';if(!f)return;try{if(f.size>16000000)throw Error('This backup is too large (maximum 16 MB).');if(activeProjects(db).length>=20||db.projects.length>=100)throw Error('This browser has reached its project limit. Move unused projects to Trash or preserve backups.');const {project:p,draft}=await decodeProjectBackup(await f.text());delete p.deletedAt;ensureFlow(p,db.localOwnerId);if(db.projects.some(x=>x.id===p.id)){p.id=uid();p.title=p.title.slice(0,145)+' · restored copy';p.localLabel=p.title.slice(0,140)+' '+p.id.slice(0,4);}db.projects.push(p);db.selected=p.id;db.updates[p.id]=draft;const persisted=save();fillProject();if(persisted)toast('Backup restored. Existing projects and checkpoint history were kept.');}catch(e){toast('Backup not restored: '+e.message+' Your existing projects were kept.');}};
 for(const id of ['help','privacy'])$(id).onclick=()=>$('help-dialog').showModal();$('close-help').onclick=()=>$('help-dialog').close();$('close-copy').onclick=()=>$('copy-dialog').close();
-try{const saved=savedWorkspace.read();originalSavedBytes=saved||'';if(saved){const value=JSON.parse(saved);if(!value||!Array.isArray(value.projects)||value.projects.length>100||typeof value.inbox!=='string'||typeof value.newIntent!=='string'||!value.updates||typeof value.updates!=='object')throw Error('Invalid saved workspace.');for(const p of value.projects)validateProject(p);db=value;}const old=sessionStorage.getItem(LEGACY);if(old&&!db.migratedLegacy){const p=migrateLegacy(JSON.parse(old));if(p.checkpoints.some(c=>c.fields.goal.trim())){db.projects.push(p);db.selected=p.id;db.migratedLegacy=true;save();toast('Your earlier workspace was carried into the new project view.');}}}catch{storageBlocked=true;unreadableWorkspace=true;storageFailure('The saved workspace could not be read. Original saved data has not been overwritten. Download it before attempting recovery.');$('save-status').textContent='Recovery needs attention';toast('Stored data could not be read. It has not been deleted. Restore a downloaded project backup if available.');}
+try{const saved=savedWorkspace.read();originalSavedBytes=saved||'';if(saved){const value=JSON.parse(saved);validateWorkspace(value);db=value;}const old=sessionStorage.getItem(LEGACY);if(old&&!db.migratedLegacy){const p=migrateLegacy(JSON.parse(old));if(p.checkpoints.some(c=>c.fields.goal.trim())){db.projects.push(p);db.selected=p.id;db.migratedLegacy=true;save();toast('Your earlier workspace was carried into the new project view.');}}}catch{storageBlocked=true;unreadableWorkspace=true;storageFailure('The saved workspace could not be read. Original saved data has not been overwritten. Download it before attempting recovery.');$('save-status').textContent='Recovery needs attention';toast('Stored data could not be read. It has not been deleted. Restore a downloaded project backup if available.');}
+// A same-origin Chamber link selects an existing record or imports source context.
+// It never rewrites a linked project's checkpoints, drafts or approvals.
+if(!storageBlocked){try{const query=new URLSearchParams(location.search),chamberId=query.get('chamberProject'),projectId=query.get('project');if(chamberId){db=openChamberProject(db,chamberId).workspace;}else if(projectId){const selected=db.projects.find(p=>p.id===projectId&&!p.deletedAt);if(!selected)throw Error('This project is unavailable or in Trash. Open My Projects to restore it.');db.selected=selected.id;}if(chamberId||projectId)history.replaceState(null,'',location.pathname+location.hash);}catch(e){toast(e.message);}}
 try{db.localOwnerId=typeof db.localOwnerId==='string'?db.localOwnerId:uid();for(const p of db.projects){ensureFlow(p,db.localOwnerId);if(!p.deletedAt)reconcileSavedFindings(p);}if(db.projects.length)save();}catch{storageBlocked=true;unreadableWorkspace=true;storageFailure('A saved progression record could not be read. Original saved data has not been overwritten. Download it before attempting recovery.');db={projects:[],selected:'',inbox:'',newIntent:'',updates:{},localOwnerId:uid()};$('save-status').textContent='Recovery needs attention';toast('A saved progression record could not be read. Original browser data was kept; restore a known project backup to continue.');}$('packet').value=db.inbox;$('direction').value=db.entryMode==='start'?'start':'existing';menu();template();if(project()){fillProject();if(db.updates[project().id]?.trim()&&!project().flow.reviewPending)processReturned();}else if(db.projects.length){renderLibrary();show('library');}else show('home');
 
 // Resume a response left in the former mandatory-review workflow.
@@ -177,7 +181,7 @@ $('purge-dialog').addEventListener('close',clearPurge);
 $('confirm-purge').onclick=()=>{
  if(storageBlocked)return;
  const before=clone(db),ids=[...purgeSelection];
- try{const count=purgeTrashedProjects(db,ids);if(!save()){db=before;return;}
+ try{const count=purgeTrashedProjects(db,ids);if(db.chamber)db.chamber.links=db.chamber.links.filter(link=>!ids.includes(link.diamondgateId));if(!save()){db=before;return;}
   if(pending&&ids.includes(pending.targetId))pending=null;
   let legacyCleanupFailed=false;if(before.projects.some(p=>ids.includes(p.id)&&p.legacy)){try{sessionStorage.removeItem(LEGACY);}catch{legacyCleanupFailed=true;}}
   $('purge-dialog').close();menu();renderLibrary();show('library');$('trash-panel').open=true;toast(count+' project'+(count===1?'':'s')+' permanently deleted.'+(legacyCleanupFailed?' An older session copy could not be cleared.':''));

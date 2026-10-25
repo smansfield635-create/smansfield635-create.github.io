@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "H_EARTH_CAMERA_SUPPORT_CLOSE_20261025_001",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6802,
+  "requestBranch": "ai-dispatch-request-camera-support-close-20261025",
+  "requestCommit": "8ec0793ce9d7a159663aa8bae745e0710f174b1e",
+  "currentMainSha": "3cab245406d8b4b4b7edc905cacd2f3849741a7b",
+  "bridgeRunId": "40226321958",
+  "error": "Stale dispatch request: parent 8da340ed426ba8f1ab8cb39fb07f18715982a54a != current main 3cab245406d8b4b4b7edc905cacd2f3849741a7b",
+  "failedAt": "2026-10-25T19:30:14.751Z"
+}

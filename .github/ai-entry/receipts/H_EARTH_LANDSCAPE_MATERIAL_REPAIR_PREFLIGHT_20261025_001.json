@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_LANDSCAPE_MATERIAL_REPAIR_PREFLIGHT_20261025_001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6813,
+  "requestBranch": "ai-dispatch-request-landscape-material-repair-20261025",
+  "requestCommit": "c841384740c293c799c107f52329de9ac7a02d91",
+  "requestCommitParent": "445e62fa3118c8ec3ba18ee59ffab6f8159ffb80",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "445e62fa3118c8ec3ba18ee59ffab6f8159ffb80",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "8dfc7e7aac4dc8dab528fc5e6b71f086752f63b5",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "40239028913",
+  "dispatchedRunId": 40239039973,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40239039973",
+  "dispatchedRunHeadSha": "445e62fa3118c8ec3ba18ee59ffab6f8159ffb80",
+  "dispatchedAt": "2026-10-25T22:11:44.230Z",
+  "resolvedAt": "2026-10-25T22:11:48.099Z"
+}

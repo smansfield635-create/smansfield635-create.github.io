@@ -47,3 +47,12 @@ GitHub account access, repository permissions and GitHub Actions availability re
 The copied regression tests use synthetic records. Private instruments, owner project records, Site credentials, audit archives and QA-only assets were excluded. The live application remains a local project and continuation tool; it does not execute AI calls, edit GitHub, or authenticate imported claims.
 
 Admission: generation 2887, operation `DIAMONDGATE_WORKING_APP_WEBSITE_MIGRATION_20261025_001`, https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6400828261.
+
+
+## Full-cycle matrix repair (generation 2889)
+
+The application now derives result-review availability from the same workflow decision used for continuation. Saving a checkpoint is recordkeeping; it does not mean the result passed or that an external action is authorized. A specific next action can progress to execution under established permission. Missing information must identify what could change that action. Results then need matching checks; failures lead to correction. Human acceptance appears only for a current result that requires it. All tracked criteria must be satisfied before closing the project.
+
+“Need more evidence” preserves the feedback and returns a verification task. Changed prerequisite results invalidate downstream checks. Historical structured checkpoints are read-only because restoring their text alone would mix older context with newer evidence; full project backups remain portable.
+
+See [audit-matrix.md](audit-matrix.md) for coverage and limits. `workflow-matrix-test.mjs`, `evidence-matrix-test.mjs`, and `matrix-test.mjs` supplement the original suite. Hashes in `source-manifest.json` bind the current runtime; `originalSha256` retains migration provenance for changed files. Updating hashes is never a substitute for passing behavioral tests.

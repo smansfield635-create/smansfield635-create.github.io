@@ -30,6 +30,7 @@ function parseEvents(raw){return !known(raw)?[]:list(raw,'PROGRESS EVENTS',100).
   if(!id(e.result)||!['PASS','FAIL'].includes(e.outcome))throw Error('A check needs a result event ID and PASS or FAIL.');
   row.result=e.result;row.outcome=e.outcome;row.criterion=text(e.criterion,'checked criterion',3000);
  }
+ if(e.attributionOf!==undefined){if(!id(e.attributionOf))throw Error('Invalid source event attribution.');row.attributionOf=e.attributionOf;}
  if(e.kind==='LIMITATION')row.route=text(e.route,'attempted route',300);
  // Acceptance cannot be supplied by an AI packet.
  if('accepted' in e||'acceptance' in e||'independentlyVerified' in e)throw Error('AI events cannot grant user acceptance or independent verification.');
@@ -41,6 +42,14 @@ function addEvents(record,events,source){
   const linked=record.requirements.some(r=>r.id===e.requirement);
   const prior=byId.get(e.id);
   if(prior){const {source:ignored,...payload}=prior;if(JSON.stringify(payload)!==JSON.stringify(e))throw Error('An existing event ID cannot be rewritten: '+e.id);continue;}
+  if(e.attributionOf){
+   const original=byId.get(e.attributionOf);
+   if(!linked||!original||record.requirements.some(r=>r.id===original.requirement)||original.attributionOf)throw Error('Attribution must map an existing unassigned event to an established requirement.');
+   const payload=x=>JSON.stringify(Object.fromEntries(Object.entries(x).filter(([key])=>!['id','requirement','source','attributionOf'].includes(key)).sort(([a],[b])=>a.localeCompare(b))));
+   const attributed=e.kind==='CHECK'&&byId.get(e.result)?.attributionOf===original.result?{...e,result:original.result}:e;
+   if(payload(original)!==payload(attributed))throw Error('Attribution must preserve the original evidence payload.');
+   if(record.events.some(x=>x.attributionOf===e.attributionOf))throw Error('This source event is already attributed.');
+  }
   if(e.kind==='CHECK'&&linked){
    const result=byId.get(e.result),r=record.requirements.find(r=>r.id===e.requirement);
    if(!result||result.kind!=='RESULT'||result.requirement!==e.requirement||result.artifact!==e.artifact||r.criterion!==e.criterion)throw Error('Check must match the requirement criterion and exact result artifact.');
@@ -51,14 +60,25 @@ function addEvents(record,events,source){
  }
  if(record.events.length>2000)throw Error('Progress record capacity reached; preserve the backup before extending this project.');
 }
-export function prepareProgress(p,fields){
+export function prepareProgress(p,fields,{allowScopeExtension=false}={}){
  if(!p.progress&&!known(fields.requirements))return null;
  if(p.progress&&!known(fields.progressEvents)&&['completed','observations'].some(k=>known(fields[k])&&fields[k]!==p.checkpoints.at(-1).fields[k]))throw new ProgressFormatError('PROGRESS EVENTS','The response contains work descriptions but no requirement-linked events. Preserve those descriptions and supply their requirement IDs and evidence references');
  const record=p.progress?clone(p.progress):{version:1,objective:text(p.checkpoints.at(-1).fields.goal,'project objective'),requirements:parseRequirements(fields.requirements),events:[],decisions:[]};
- if(known(fields.requirements)&&JSON.stringify(parseRequirements(fields.requirements))!==JSON.stringify(record.requirements))throw Error('Accepted requirements cannot be replaced by a tool response. Preserve their IDs and criteria; scope changes need a separate user decision.');
+ let scopeExtended=false;
+ if(known(fields.requirements)){
+  const proposed=parseRequirements(fields.requirements);
+  if(JSON.stringify(proposed)!==JSON.stringify(record.requirements)){
+   const existing=new Set(record.requirements.map(r=>r.id));
+   if(!allowScopeExtension||p.flow?.promptRequest!=='DIRECTION'||!progressSnapshot(record).allSatisfied||proposed.length<=record.requirements.length||JSON.stringify(proposed.filter(r=>existing.has(r.id)))!==JSON.stringify(record.requirements))throw Error('Accepted requirements cannot be replaced by a tool response. Preserve their IDs and criteria; scope changes need a separate user decision.');
+   record.requirements=proposed;scopeExtended=true;
+  }
+ }
+ // Pin legacy decisions to the check that existed before a new response arrives.
+ // This preserves old backups without letting later checks inherit old consent.
+ for(const decision of record.decisions)if(decision.check===undefined){const prior=record.events.findLast(e=>e.kind==='CHECK'&&e.requirement===decision.requirement&&e.result===decision.result);if(prior)decision.check=prior.id;}
  const before=record.events.length;
  addEvents(record,parseEvents(fields.progressEvents),fields.baseline||p.checkpoints.at(-1).id);
- return {record,changed:!p.progress||record.events.length>before,needsReview:!p.progress};
+ return {record,changed:!p.progress||scopeExtended||record.events.length>before,needsReview:!p.progress||scopeExtended,scopeExtended};
 }
 export function initializeProgress(p){
  if(p.progress){validateProgress(p.progress);return;}
@@ -71,7 +91,11 @@ export function validateProgress(record){
  const rebuilt={requirements,events:[]};
  // Replay validates references and immutable identities, including across restores.
  for(const saved of record.events){if(!known(saved.source))throw Error('Progress event source is missing.');const {source,...e}=saved;addEvents(rebuilt,parseEvents(JSON.stringify([e])),source);}
- for(const d of record.decisions)if(!requirements.some(r=>r.id===d.requirement)||!['ACCEPTED','REJECTED'].includes(d.value)||!id(d.result)||!known(d.at)||!record.events.some(e=>e.id===d.result&&e.requirement===d.requirement&&e.kind==='RESULT'))throw Error('Invalid human requirement decision.');
+ for(const d of record.decisions)if(!requirements.some(r=>r.id===d.requirement)||!['ACCEPTED','REJECTED'].includes(d.value)||!id(d.result)||!known(d.at)||!Number.isFinite(Date.parse(d.at))||(d.note!==undefined&&(typeof d.note!=='string'||d.note.length>4000))||(d.check!==undefined&&!record.events.some(e=>e.id===d.check&&e.kind==='CHECK'&&e.result===d.result&&e.requirement===d.requirement))||!record.events.some(e=>e.id===d.result&&e.requirement===d.requirement&&e.kind==='RESULT'))throw Error('Invalid human requirement decision.');
+ if(record.reviewRequests!==undefined){
+  if(!Array.isArray(record.reviewRequests)||record.reviewRequests.length>2000)throw Error('Invalid evidence requests.');
+  for(const q of record.reviewRequests)if(!q||!requirements.some(r=>r.id===q.requirement)||!id(q.result)||!id(q.check)||typeof q.note!=='string'||q.note.length>4000||!Number.isFinite(Date.parse(q.at))||!record.events.some(e=>e.id===q.result&&e.requirement===q.requirement&&e.kind==='RESULT')||!record.events.some(e=>e.id===q.check&&e.requirement===q.requirement&&e.kind==='CHECK'&&e.result===q.result))throw Error('Invalid evidence request.');
+ }
  return true;
 }
 export function progressSnapshot(record){
@@ -79,45 +103,80 @@ export function progressSnapshot(record){
  const rows=record.requirements.map(r=>{
   const events=record.events.filter(e=>e.requirement===r.id),result=events.findLast(e=>e.kind==='RESULT');
   const check=result?events.findLast(e=>e.kind==='CHECK'&&e.result===result.id):null;
-  const decision=result?record.decisions.findLast(d=>d.requirement===r.id&&d.result===result.id):null;
+  const decision=result?record.decisions.findLast(d=>d.requirement===r.id&&d.result===result.id&&(d.check===undefined||d.check===check?.id)):null;
+  const request=result?(record.reviewRequests||[]).findLast(q=>q.requirement===r.id&&q.result===result.id):null;
+  const evidenceRequest=request&&request.check===check?.id?request:null;
   let status=result?'RESULT_REPORTED':events.some(e=>e.kind==='FINDING')?'FINDINGS_REPORTED':'OPEN';
   if(check?.outcome==='PASS')status='CHECK_REPORTED';
+  if(check?.outcome==='PASS'&&decision?.value==='ACCEPTED'&&r.review==='REQUIRED')status='ACCEPTED';
   if(check?.outcome==='FAIL'||decision?.value==='REJECTED')status='NEEDS_CORRECTION';
-  if(check?.outcome==='PASS'&&decision?.value==='ACCEPTED')status='ACCEPTED';
-  const satisfied=status==='ACCEPTED'||status==='CHECK_REPORTED'&&r.review==='NOT_REQUIRED';
-  return {...r,status,satisfied,result,check,decision,limitations:events.filter(e=>e.kind==='LIMITATION'),events};
+  if(evidenceRequest)status='EVIDENCE_REQUESTED';
+  return {...r,status,satisfied:false,result,check,decision,evidenceRequest,limitations:events.filter(e=>e.kind==='LIMITATION'),events};
  });
- const next=rows.find(r=>!r.satisfied&&r.dependsOn.every(d=>rows.find(x=>x.id===d).satisfied))||rows.find(r=>!r.satisfied);
- const latest=record.events.at(-1);
- return {objective:record.objective,rows,next,latest,unassigned:record.events.filter(e=>!record.requirements.some(r=>r.id===e.requirement)),checked:rows.filter(r=>['CHECK_REPORTED','ACCEPTED'].includes(r.status)).length,accepted:rows.filter(r=>r.status==='ACCEPTED').length,total:rows.length,allSatisfied:rows.every(r=>r.satisfied)};
+ const byId=new Map(rows.map(r=>[r.id,r])),done=new Set();
+ function evaluate(r){
+  if(done.has(r.id))return;
+  for(const id of r.dependsOn)evaluate(byId.get(id));
+  r.dependenciesSatisfied=r.dependsOn.every(id=>byId.get(id).satisfied);
+  r.staleDependencies=r.check?r.dependsOn.filter(id=>{const result=byId.get(id).result;return result&&record.events.indexOf(result)>record.events.indexOf(r.check);}):[];
+  if(!r.dependenciesSatisfied)r.status='BLOCKED_DEPENDENCY';
+  else if(r.staleDependencies.length)r.status='NEEDS_RECHECK';
+  r.satisfied=r.dependenciesSatisfied&&!r.staleDependencies.length&&(r.status==='ACCEPTED'||r.status==='CHECK_REPORTED'&&r.review==='NOT_REQUIRED');
+  done.add(r.id);
+ }
+ rows.forEach(evaluate);
+ const next=rows.find(r=>!r.satisfied&&r.dependenciesSatisfied)||rows.find(r=>!r.satisfied);
+ return {objective:record.objective,rows,next,latest:record.events.at(-1),unassigned:record.events.filter(e=>!record.requirements.some(r=>r.id===e.requirement)&&!record.events.some(x=>x.attributionOf===e.id)),checked:rows.filter(r=>['CHECK_REPORTED','ACCEPTED'].includes(r.status)).length,accepted:rows.filter(r=>r.status==='ACCEPTED').length,total:rows.length,allSatisfied:rows.every(r=>r.satisfied)};
 }
-export function requirementDecision(p,requirement,value){
- const snapshot=progressSnapshot(p.progress),r=snapshot?.rows.find(r=>r.id===requirement);
- if(!r?.result||!['ACCEPTED','REJECTED'].includes(value))throw Error('Choose an existing requirement result.');
- if(value==='ACCEPTED'&&r.check?.outcome!=='PASS')throw Error('A matching passed check is required before accepting this result.');
- p.progress.decisions.push({requirement,result:r.result.id,value,at:new Date().toISOString()});
+export function requirementReviewState(p,requirement){
+ const snapshot=progressSnapshot(p.progress),row=requirement?snapshot?.rows.find(r=>r.id===requirement):snapshot?.next;
+ let reason='';
+ if(!row)reason='No requirement result is awaiting human review.';
+ else if(row.review!=='REQUIRED')reason='This criterion does not require human acceptance.';
+ else if(!row.dependenciesSatisfied)reason='Prerequisite requirements are not satisfied.';
+ else if(row.status!=='CHECK_REPORTED')reason='The current result needs a matching passing check before review.';
+ else if(p.flow?.status==='COMPLETE'||p.flow?.promptRequest||p.request?.trim())reason='Resolve the current direction before reviewing a requirement result.';
+ else if(p.flow?.blockers?.length)reason='Resolve the recorded blocker before reviewing this result.';
+ else if(p.flow?.attempt||p.flow?.reviewPending)reason='Finish processing the current response before judging its result.';
+ return {eligible:!reason,row,reason};
+}
+function reviewNote(note){if(typeof note!=='string'||note.length>4000)throw Error('Review feedback must be text of at most 4000 characters.');return note.trim();}
+export function requirementDecision(p,requirement,value,{note=''}={}){
+ if(!['ACCEPTED','REJECTED'].includes(value))throw Error('Invalid requirement decision.');
+ const review=requirementReviewState(p,requirement);if(!review.eligible)throw Error(review.reason);
+ note=reviewNote(note);
+ if(p.progress.decisions.length>=2000)throw Error('Decision capacity reached; preserve a backup before extending this project.');
+ p.progress.decisions.push({requirement,result:review.row.result.id,check:review.row.check.id,value,note,at:new Date().toISOString()});
+}
+export function requestRequirementEvidence(p,requirement,note=''){
+ const review=requirementReviewState(p,requirement);if(!review.eligible)throw Error(review.reason);
+ note=reviewNote(note);
+ if((p.progress.reviewRequests?.length||0)>=2000)throw Error('Evidence request capacity reached; preserve a backup before extending this project.');
+ (p.progress.reviewRequests||=[]).push({requirement,result:review.row.result.id,check:review.row.check.id,note,at:new Date().toISOString()});
 }
 function recordRecent(record,source){return record.events.filter(e=>e.source===source&&e.kind!=='LIMITATION'&&record.requirements.some(r=>r.id===e.requirement));}
 export function progressPlan(p){
  const s=progressSnapshot(p.progress);if(!s)return null;
- const r=s.next;
+ const r=s.next,fields=p.checkpoints.at(-1).fields;
  const attempt=currentAttempt(p);
  const advance=attempt.latest.join('\n')||'No new finding classified in the current response. Earlier evidence remains in history.';
  let phase,action,condition;
- if(!r){phase='USER REVIEW';action='Review the project outcome against the established objective. All requirement checks are reported; confirm the overall result with the user. Publication remains subject to its own recorded requirement and authorization.';condition='An explicit user decision on the project outcome; no independent verification or publication inferred.';}
- else if(r.status==='CHECK_REPORTED'){phase='USER REVIEW';action='Present requirement '+r.id+' for user judgment: '+r.text.replace(/[.!?]+$/,'')+'. Show the result and its reported check. Do not accept on the user’s behalf.';condition='The user accepts this exact result or supplies corrective feedback.';}
- else if(r.status==='RESULT_REPORTED'){phase='VERIFICATION';action='Verify requirement '+r.id+': '+r.text.replace(/[.!?]+$/,'')+'. Check exact result '+r.result.artifact+' against: '+r.criterion.replace(/[.!?]+$/,'')+'. The receiving AI chooses the appropriate permitted verification method.';condition='A CHECK event bound to result '+r.result.id+', its exact artifact, criterion, outcome and evidence reference.';}
- else{phase='INVESTIGATION';action='Continue unfinished requirement '+r.id+': '+r.text.replace(/[.!?]+$/,'')+'. Acceptance criterion: '+r.criterion.replace(/[.!?]+$/,'')+'. Perform one bounded test or deliverable for this requirement using existing findings. Identify the exact case and evidence gained; do not repeat the entire program. Choose the permitted method in the receiving AI tool. Preserve completed requirements and existing authority.';if(r.limitations.length)action+=' Previous attempted routes failed: '+r.limitations.map(e=>e.route+' — '+e.details+' ['+e.reference+']').join('; ')+'. Choose a different permitted approach; repeat a failed route only with new conditions and an explicit reason.';if(r.status==='NEEDS_CORRECTION')action+=' Address the failed check or user rejection before seeking acceptance.';condition='New requirement-linked findings, a result with evidence, or a demonstrated limitation of a different attempted route. Rephrasing prior evidence is not progress.';}
- return {snapshot:s,phase,type:phase==='USER REVIEW'?'Review Prompt':phase==='VERIFICATION'?'Verification Prompt':'Investigation Prompt',action,condition,reason:'The next action follows unsatisfied acceptance criteria. Receiving AI tools choose methods; failed routes do not replace the objective.',latest:advance,resumed:true,accounted:true};
+ if(s.unassigned.length&&r&&['OPEN','FINDINGS_REPORTED'].includes(r.status)&&!(known(fields.next)&&['EXECUTION','READY FOR EXECUTION','VERIFICATION','RELEASE'].includes(fields.phase))){phase='EVIDENCE MAPPING';action='Map the already recorded unassigned evidence to the established requirement IDs. Reuse the original artifacts and references; do not repeat the underlying investigation. Return requirement-linked copies using a new event ID and attributionOf set to the original event ID, preserving every other evidence field, or identify the exact attribution that cannot be established.';condition='Existing evidence is attributed to an established requirement, or a specific unresolved attribution is identified. No completion or execution permission is inferred.';}
+ else if(!r){phase='USER REVIEW';action='Review the project outcome against the established objective. All requirement checks are reported; confirm the overall result with the user. Publication remains subject to its own recorded requirement and authorization.';condition='An explicit user decision on the project outcome; no independent verification or publication inferred.';}
+ else if(r.status==='CHECK_REPORTED'){phase='USER REVIEW';action='Present requirement '+r.id+' for user judgment: '+r.text.replace(/[.!?]+$/,'')+'. Show the exact result and its reported check. Do not accept on the user’s behalf.';condition='The user accepts this exact result or supplies corrective feedback.';}
+ else if(['RESULT_REPORTED','NEEDS_RECHECK','EVIDENCE_REQUESTED'].includes(r.status)){phase='VERIFICATION';action='Verify requirement '+r.id+': '+r.text.replace(/[.!?]+$/,'')+'. Check exact result '+r.result.artifact+' against: '+r.criterion.replace(/[.!?]+$/,'')+'. '+(r.evidenceRequest?'The user requested additional evidence: '+(r.evidenceRequest.note||'Identify and supply the evidence needed to judge this result.')+' ':r.staleDependencies.length?'Prerequisite results changed after the earlier check; verify against their current results. ':'')+'The receiving AI chooses the appropriate permitted verification method.';condition='A new CHECK event bound to result '+r.result.id+', its exact artifact, criterion, outcome and evidence reference.';}
+ else if(r.status==='NEEDS_CORRECTION'){phase='CORRECTION';action='Correct the demonstrated gap in requirement '+r.id+': '+r.text+'. Preserve accepted work. '+(r.decision?.value==='REJECTED'?'User feedback: '+(r.decision.note||'Ask the user which part of the result needs correction before selecting a repair.'):'Failed check: '+r.check.details)+' Return the changed result with an exact artifact identity, then verify it against: '+r.criterion;condition='A corrected RESULT with an exact artifact identity and subsequent matching CHECK. A failed result cannot be accepted.';}
+ else {const next=known(fields.next)?fields.next.trim():'';phase=next&&['EXECUTION','READY FOR EXECUTION','VERIFICATION','RELEASE','INVESTIGATION'].includes(fields.phase)?fields.phase:'INVESTIGATION';action=next||'Identify the specific missing fact preventing execution of requirement '+r.id+': '+r.text+'. Explain how that fact would change the next bounded action; if no such gap remains, perform the permitted action.';const suffix=' Acceptance criterion: '+r.criterion+'. Use existing findings; do not repeat completed work. Preserve existing authorization boundaries.';action=action.split(suffix)[0]+suffix;if(r.limitations.length)action+=' Previous attempted routes failed: '+r.limitations.map(e=>e.route+' — '+e.details+' ['+e.reference+']').join('; ')+'. Retry only with changed conditions and an explicit reason.';condition='A requirement-linked result and evidence, or a specific missing fact that materially prevents the next action. Rephrasing prior evidence is not progress.';}
+ return {snapshot:s,phase,type:({'USER REVIEW':'Review Prompt','VERIFICATION':'Verification Prompt','EXECUTION':'Execution Prompt','READY FOR EXECUTION':'Execution Readiness Prompt','RELEASE':'Release Prompt','CORRECTION':'Correction Prompt','EVIDENCE MAPPING':'Evidence Mapping Prompt'})[phase]||'Investigation Prompt',action,condition,reason:'The next action follows current results, acceptance criteria and prerequisite evidence. Source-reported checks do not grant authority or human acceptance.',latest:advance,resumed:true,accounted:true};
 }
 export function progressContext(p){
  const s=progressSnapshot(p.progress);
  const summaries=s.rows.map(r=>{
   const findings=r.events.filter(e=>e.kind==='FINDING').slice(-3);
   const routes=[...new Map(r.limitations.map(e=>[e.route,e])).values()];
-  return r.id+' | '+r.status+' | user: '+(r.decision?.value||'No acceptance recorded')+'\n'+[...findings,...(r.result?[r.result]:[]),...(r.check?[r.check]:[]),...routes].map(e=>e.id+' | '+e.kind+' | '+e.details+' | '+e.reference+(e.artifact?' | artifact: '+e.artifact:'')).join('\n');
+  return r.id+' | '+r.status+' | user: '+(r.decision?.value||'No acceptance recorded')+(r.decision?.note?' | feedback: '+r.decision.note:'')+(r.evidenceRequest?' | evidence requested: '+r.evidenceRequest.note:'')+'\n'+[...findings,...(r.result?[r.result]:[]),...(r.check?[r.check]:[]),...routes].map(e=>e.id+' | '+e.kind+' | '+e.details+' | '+e.reference+(e.artifact?' | artifact: '+e.artifact:'')).join('\n');
  }).join('\n\n');
  return 'OBJECTIVE\n'+s.objective+'\n\nACCEPTED REQUIREMENTS\n'+JSON.stringify(p.progress.requirements)+'\n\nCURRENT PROGRESS AND RELEVANT EVIDENCE\n'+summaries+'\n\nUNASSIGNED EVIDENCE (does not advance requirements)\n'+s.unassigned.map(e=>e.id+' | supplied requirement: '+e.requirement+' | '+e.kind+' | '+e.details+' | '+e.reference).join('\n')+'\n\nCURRENT REPORTED ATTEMPT\n'+currentAttempt(p).latest.join('\n')+'\nEvidence artifacts: '+currentAttempt(p).identities.join('; ')+'\nEvidence references: '+currentAttempt(p).references.join('; ')+'\nDo not repeat these reported diagnostics merely to recreate evidence. Their limitations remain unresolved.\n\nAll original events remain in project history. This brief carries current results, checks, recent findings and the latest limitation per attempted route. Evidence checks are source-reported. DiamondGate validates correspondence, not the truth of arbitrary claims. Human acceptance is recorded separately in the app.';
 }
-export const PROGRESS_CONTRACT=`REQUIREMENTS: JSON array of {id,text,criterion,review,dependsOn}. Use stable IDs such as R1; criterion is an observable completion condition; review is REQUIRED only where human judgment is needed, otherwise NOT_REQUIRED; dependsOn lists prerequisite requirement IDs. Cover the end-to-end user objective, including verification and any requested publication. Existing requirements cannot silently change. Preserve any supplied standing as PROPOSED, APPROVED or UNKNOWN; never infer approval. The complete initial map awaits explicit user review in DiamondGate before adoption.
-PROGRESS EVENTS: JSON array of new events only. Each has {id,requirement,kind,details,reference}. requirement must match an established ID; use UNKNOWN only when attribution is unresolved. Such evidence is held unassigned and cannot advance completion. kind is FINDING, RESULT, CHECK, or LIMITATION. RESULT additionally requires artifact (exact version/identity). CHECK requires artifact, result (RESULT event ID), criterion (exact accepted criterion), outcome (PASS or FAIL). LIMITATION requires route (the attempted method/environment). Keep all claims source-reported; never grant user acceptance or independent verification. Use a new RESULT ID for changed artifacts. Reuse event IDs for unchanged evidence; do not relabel old evidence as new. Execution limitations attach to attempts, not to the project objective. Write these two section values as JSON arrays; fenced json blocks are accepted. Do not output placeholders or convert the arrays into prose. Example REQUIREMENTS value: [{"id":"R1","text":"Investigate the reported defect","criterion":"A cause is documented with evidence","review":"NOT_REQUIRED","dependsOn":[],"standing":"PROPOSED"}]. Example PROGRESS EVENTS value: [{"id":"E1","requirement":"R1","kind":"FINDING","details":"A potential cause was identified; location reproduction remains unfinished","reference":"Investigation report, source section"}]. Omit unchanged requirements on subsequent reports. If no requirements exist, propose them from established intent and accomplished work without repeating work; request user judgment only for material scope ambiguity.`;
+export const PROGRESS_CONTRACT=`REQUIREMENTS: JSON array of {id,text,criterion,review,dependsOn}. Use stable IDs such as R1; criterion is an observable completion condition; review is REQUIRED only where human judgment is needed, otherwise NOT_REQUIRED; dependsOn lists prerequisite requirement IDs. Cover the end-to-end user objective, including verification and any requested publication. Existing requirements cannot silently change. After a completed scope is explicitly reopened, propose an append-only map retaining every prior requirement unchanged and adding new IDs for the new direction; this extension awaits user adoption. Preserve any supplied standing as PROPOSED, APPROVED or UNKNOWN; never infer approval. The complete initial map awaits explicit user review in DiamondGate before adoption.
+PROGRESS EVENTS: JSON array of new events only. Each has {id,requirement,kind,details,reference}. requirement must match an established ID; use UNKNOWN only when attribution is unresolved. Such evidence is held unassigned and cannot advance completion. To resolve attribution, return a new event with a new id, the established requirement, and attributionOf naming the original unassigned event; preserve all other evidence fields (a CHECK result reference may name the corresponding attributed RESULT). Do not rerun the work to map it. kind is FINDING, RESULT, CHECK, or LIMITATION. RESULT additionally requires artifact (exact version/identity). CHECK requires artifact, result (RESULT event ID), criterion (exact accepted criterion), outcome (PASS or FAIL). LIMITATION requires route (the attempted method/environment). Keep all claims source-reported; never grant user acceptance or independent verification. Use a new RESULT ID for changed artifacts. Reuse event IDs for unchanged evidence; do not relabel old evidence as new. Execution limitations attach to attempts, not to the project objective. Write these two section values as JSON arrays; fenced json blocks are accepted. Do not output placeholders or convert the arrays into prose. Example REQUIREMENTS value: [{"id":"R1","text":"Investigate the reported defect","criterion":"A cause is documented with evidence","review":"NOT_REQUIRED","dependsOn":[],"standing":"PROPOSED"}]. Example PROGRESS EVENTS value: [{"id":"E1","requirement":"R1","kind":"FINDING","details":"A potential cause was identified; location reproduction remains unfinished","reference":"Investigation report, source section"}]. Omit unchanged requirements on subsequent reports. If no requirements exist, propose them from established intent and accomplished work without repeating work; request user judgment only for material scope ambiguity.`;

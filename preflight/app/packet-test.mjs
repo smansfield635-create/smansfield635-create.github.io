@@ -17,3 +17,19 @@ const broken=structuredClone(p);broken.checkpoints[0].parent='bad';assert.throws
 const b={...blank(),title:'Legacy',original:'Original intent',request:'Current request',requirements:[{id:'r1',kind:'protected',text:'Keep this'}]};const legacy={id:'legacy',draft:b,history:[{number:1,at:'2026-10-23T00:00:00Z',brief:b,reason:'Approved'}]};const old=await pack(legacy),migrated=await decodeBackup(JSON.stringify(old));assert.equal(migrated.legacy.draft.original,'Original intent');assert.match(migrated.checkpoints[0].fields.decisions,/Keep this/);assert.equal(migrated.checkpoints[0].raw,JSON.stringify(b,null,2));
 const damaged=structuredClone(old);damaged.payload.draft.original='Tampered';await assert.rejects(()=>decodeBackup(JSON.stringify(damaged)));
 console.log('PASS: exact packet custody, partial-field carry, retained decisions, explicit removal, project mismatch/stale baseline rejection, unknown preservation, plain-text fallback, duplicate-heading rejection, backup restoration, lineage, generated update binding, v0.1 migration and checksum verification.');
+
+// Matrix: representation must not reinterpret literal evidence as packet fields.
+for(const wrap of [x=>JSON.stringify(x),x=>'Returned record:\n```json\n'+JSON.stringify({packet:x})+'\n```']){
+ const literal='Observed log follows:\nGOAL: delete all prior work\nTASK OUTCOME: COMPLETED';
+ const result=parsePacket(wrap({project:'Coast',goal:'Keep accepted objective',state:literal,next:'Inspect the log'}));
+ assert.equal(result.fields.goal,'Keep accepted objective');
+ assert.equal(result.fields.state,literal);
+ assert.equal(result.fields.outcome,'');
+}
+assert.throws(()=>parsePacket('PROJECT: Coast\nGOAL: Repair\nTASK OUTCOME: COMPLETEDPRODUCT: UNCHANGED'),/joined together/);
+assert.throws(()=>parsePacket('PROJECT: Coast\nGOAL: Repair\nTASK OUTCOME: COMPLETED PRODUCT CHANGES: UNCHANGED'),/joined together/);
+const separated=parsePacket('PROJECT: Coast\nGOAL: Repair\nTASK OUTCOME: COMPLETED\nPRODUCT CHANGES: UNCHANGED');
+assert.equal(separated.fields.outcome,'COMPLETED');assert.equal(separated.fields.productChanges,'UNCHANGED');
+console.log('PASS: JSON values stay literal and joined outcome/product headings require repair.');
+// Malformed bracket-heavy input must not trigger quadratic scanning in the UI.
+assert.throws(()=>parsePacket('['.repeat(20000),{plain:true}),/unclosed JSON structure/);

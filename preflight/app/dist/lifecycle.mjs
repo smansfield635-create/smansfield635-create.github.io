@@ -11,6 +11,7 @@ export function moveToTrash(db,id,at=new Date().toISOString()){
 export function restoreProject(db,id){
  const p=db.projects.find(p=>p.id===id);
  if(!p?.deletedAt)throw Error('This project is not in Trash.');
+ if(activeProjects(db).length>=20)throw Error('This device holds 20 active projects. Move an unused project to Trash before restoring another.');
  delete p.deletedAt;db.selected=p.id;return p;
 }
 

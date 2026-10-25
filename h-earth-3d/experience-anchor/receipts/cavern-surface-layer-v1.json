@@ -41,16 +41,8 @@
       "sha256": "643299799415d366ef775c3fe97e9bc13039669e92360e1337e96ac45a691e5a"
     },
     {
-      "path": "showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js",
-      "sha256": "e3873658d46cc65fbac0efe3dea10e6079164490004d34ad1ad29b42ee097bee"
-    },
-    {
       "path": "showroom/globe/h-earth/index.html",
       "sha256": "f2b33c6989156322e06cfbf8af6cb03f20c42e0b5e666d642df86315ec89d725"
-    },
-    {
-      "path": "h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs",
-      "sha256": "3e2433367453ec929be41c45ba76fdac0525af9f43233a185de4a6dfe206269c"
     }
   ],
   "evidenceScope": "Same-world source preservation and desktop software-WebGL layer navigation review. Existing emitted geometry, scene, UI and globe preserved. Normal drag-to-unlock entry worked. Actual production navigation functions qualified both heights at identical XZ, portal entry/reversal and solid-side rejection. Diagnostic seed and renderer exposure only in harness. Not physical-device or owner aesthetic acceptance.",

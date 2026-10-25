@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+const here=new URL('./',import.meta.url),read=n=>JSON.parse(fs.readFileSync(new URL(n,here)));
+test('final source matches the active-scene measured candidate',()=>{const m=read('source-manifest.json');for(const f of m.files){const bytes=fs.readFileSync(new URL('../../../'+f.path,here));assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),f.sha256,f.path);}});
+test('refined boundary camera changes have no unexplained switch jump',()=>{const q=read('qualification.json');assert.equal(q.crossings.length,32);for(const c of q.crossings){assert.equal(c.rows.length,4);const r=c.rows.at(-1);assert.ok(Math.abs(r.dy)<.01||(r.dy*r.dg>=0&&Math.abs(r.dy)<=Math.abs(r.dg)+.01&&Math.abs(r.dg)<.25),JSON.stringify(c));}});
+test('real movement sequences retain baseline traversal eligibility',()=>{const q=read('qualification.json');assert.equal(q.sequences.length,48);for(const s of q.sequences){assert.ok(s.rejected<=s.baselineRejected,JSON.stringify(s));assert.ok(s.maxDy<.6,JSON.stringify(s));}});
+test('fine turns, local support, cave headroom and 75 ordinary-ground comparisons pass',()=>{const q=read('qualification.json');assert.equal(q.flatComparisons,75);assert.equal(q.summary.result,'PASS');assert.deepEqual(q.failures,[]);for(const t of q.turns)if(!t.skipped)assert.ok(t.maxDy<.2);});
+test('actual scene submits all 48 tested crossing camera states',()=>{const r=read('navigation-verification.json');assert.equal(r.cases.length,48);for(const c of r.cases){assert.equal(c.accepted,true,JSON.stringify(c));assert.ok(c.submittedFrame?.cameraPosition);assert.equal(c.submittedFrame.navigationSequence,101,JSON.stringify(c));assert.ok(Math.abs(c.dy)<.6,JSON.stringify(c));}});

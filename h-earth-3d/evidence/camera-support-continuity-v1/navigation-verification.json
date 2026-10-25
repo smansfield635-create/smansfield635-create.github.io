@@ -1,0 +1,2081 @@
+{
+  "baseline": "8da1b0cd0fbae0799b111bd95c2beed0ba84df99",
+  "scope": "Actual navigation proposals and renderer submissions in source-pinned local scene. Diagnostic exposes existing present() only; no product formula changed. Desktop software GPU, not mobile touch timing.",
+  "cases": [
+    {
+      "name": "north-mountain",
+      "yaw": 0,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 88,
+          "y": 29.297024225368258,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 27.047024225368258,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 88,
+          "y": 29.350495424274413,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 27.01416111396975,
+        "clearance": 2.3363343103046645,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.05347119890615559,
+      "dg": -0.03286311139850895,
+      "submittedFrame": {
+        "frameSequence": 6,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 88.00614336274575,
+          "y": 29.260793921304867,
+          "z": -260.01815084447605
+        },
+        "cpuSubmitMilliseconds": 4.4000000059604645
+      }
+    },
+    {
+      "name": "north-mountain",
+      "yaw": 0,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 88,
+          "y": 29.350495424274413,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 27.01416111396975,
+        "clearance": 2.3363343103046645,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 88,
+          "y": 29.297024225368258,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 27.047024225368258,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.05347119890615559,
+      "dg": 0.03286311139850895,
+      "submittedFrame": {
+        "frameSequence": 8,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 88.00613215709514,
+          "y": 29.20729177625617,
+          "z": -260.0681212210522
+        },
+        "cpuSubmitMilliseconds": 3.5
+      }
+    },
+    {
+      "name": "north-mountain",
+      "yaw": 90,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 88,
+          "y": 40.75314175574838,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 27.047024225368258,
+        "clearance": 13.706117530380123,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 88,
+          "y": 40.808684563693674,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 27.01416111396975,
+        "clearance": 13.794523449723926,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.05554280794529376,
+      "dg": -0.03286311139850895,
+      "submittedFrame": {
+        "frameSequence": 10,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 88.00854412601359,
+          "y": 40.71898061368847,
+          "z": -260.0252440086765
+        },
+        "cpuSubmitMilliseconds": 2.600000001490116
+      }
+    },
+    {
+      "name": "north-mountain",
+      "yaw": 90,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 88,
+          "y": 40.808684563693674,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 27.01416111396975,
+        "clearance": 13.794523449723926,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 88,
+          "y": 40.75314175574838,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 27.047024225368258,
+        "clearance": 13.706117530380123,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.05554280794529376,
+      "dg": 0.03286311139850895,
+      "submittedFrame": {
+        "frameSequence": 12,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 88.00853248631151,
+          "y": 40.663406859268434,
+          "z": -260.07521446665123
+        },
+        "cpuSubmitMilliseconds": 2.5
+      }
+    },
+    {
+      "name": "north-mountain",
+      "yaw": 180,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 88,
+          "y": 47.059551364253146,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 27.047024225368258,
+        "clearance": 20.012527138884888,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 88,
+          "y": 47.11509417219844,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 27.01416111396975,
+        "clearance": 20.10093305822869,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.05554280794529376,
+      "dg": -0.03286311139850895,
+      "submittedFrame": {
+        "frameSequence": 14,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 88.00986546888511,
+          "y": 47.02538887539413,
+          "z": -260.02914797625147
+        },
+        "cpuSubmitMilliseconds": 1.7999999970197678
+      }
+    },
+    {
+      "name": "north-mountain",
+      "yaw": 180,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 88,
+          "y": 47.11509417219844,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 27.01416111396975,
+        "clearance": 20.10093305822869,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 88,
+          "y": 47.059551364253146,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 27.047024225368258,
+        "clearance": 20.012527138884888,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.05554280794529376,
+      "dg": 0.03286311139850895,
+      "submittedFrame": {
+        "frameSequence": 16,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 88.00985382918302,
+          "y": 46.96981512050843,
+          "z": -260.07911918498917
+        },
+        "cpuSubmitMilliseconds": 2.0999999940395355
+      }
+    },
+    {
+      "name": "north-mountain",
+      "yaw": 270,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 88,
+          "y": 40.75314175574838,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 27.047024225368258,
+        "clearance": 13.706117530380123,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 88,
+          "y": 40.808684563693674,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 27.01416111396975,
+        "clearance": 13.794523449723926,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.05554280794529376,
+      "dg": -0.03286311139850895,
+      "submittedFrame": {
+        "frameSequence": 18,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 88.00854412601359,
+          "y": 40.71898061368847,
+          "z": -260.0252440086765
+        },
+        "cpuSubmitMilliseconds": 2.5
+      }
+    },
+    {
+      "name": "north-mountain",
+      "yaw": 270,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 88,
+          "y": 40.808684563693674,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 27.01416111396975,
+        "clearance": 13.794523449723926,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 88,
+          "y": 40.75314175574838,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 27.047024225368258,
+        "clearance": 13.706117530380123,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.05554280794529376,
+      "dg": 0.03286311139850895,
+      "submittedFrame": {
+        "frameSequence": 20,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 88.00853248631151,
+          "y": 40.663406859268434,
+          "z": -260.07521446665123
+        },
+        "cpuSubmitMilliseconds": 41
+      }
+    },
+    {
+      "name": "foothill-north",
+      "yaw": 0,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 24,
+          "y": 18.55949541070228,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 16.30949541070228,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 24,
+          "y": 18.804698670923244,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 16.554698670923244,
+        "clearance": 2.25,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.24520326022096484,
+      "dg": 0.24520326022096484,
+      "submittedFrame": {
+        "frameSequence": 22,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 24.00107300819954,
+          "y": 18.723533134907484,
+          "z": -260.011624255495
+        },
+        "cpuSubmitMilliseconds": 9.800000004470348
+      }
+    },
+    {
+      "name": "foothill-north",
+      "yaw": 0,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 24,
+          "y": 18.804698670923244,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 16.554698670923244,
+        "clearance": 2.25,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 24,
+          "y": 18.55949541070228,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 16.30949541070228,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.24520326022096484,
+      "dg": -0.24520326022096484,
+      "submittedFrame": {
+        "frameSequence": 6,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 24.00105899599592,
+          "y": 18.47829896537587,
+          "z": -260.0614746628641
+        },
+        "cpuSubmitMilliseconds": 4.299999997019768
+      },
+      "supersededRacyReceipt": {
+        "frameSequence": 25,
+        "navigationSequence": 3,
+        "cameraPosition": {
+          "x": -139.4055245738837,
+          "y": 8.525229511316866,
+          "z": -194.50396903995997
+        },
+        "cpuSubmitMilliseconds": 2.3000000044703484
+      },
+      "receiptCorrection": "Single-case recheck using synchronous present() return; original after-RAF read raced background navigation. Product source unchanged."
+    },
+    {
+      "name": "foothill-north",
+      "yaw": 90,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 24,
+          "y": 18.55949541070228,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 16.30949541070228,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 24,
+          "y": 18.804698670923244,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 16.554698670923244,
+        "clearance": 2.25,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.24520326022096484,
+      "dg": 0.24520326022096484,
+      "submittedFrame": {
+        "frameSequence": 27,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 24.00107300819954,
+          "y": 18.723533134907484,
+          "z": -260.011624255495
+        },
+        "cpuSubmitMilliseconds": 5.200000002980232
+      }
+    },
+    {
+      "name": "foothill-north",
+      "yaw": 90,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 24,
+          "y": 18.804698670923244,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 16.554698670923244,
+        "clearance": 2.25,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 24,
+          "y": 18.55949541070228,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 16.30949541070228,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.24520326022096484,
+      "dg": -0.24520326022096484,
+      "submittedFrame": {
+        "frameSequence": 29,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 24.00105899599592,
+          "y": 18.47829896537587,
+          "z": -260.0614746628641
+        },
+        "cpuSubmitMilliseconds": 4.9000000059604645
+      }
+    },
+    {
+      "name": "foothill-north",
+      "yaw": 180,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 24,
+          "y": 18.55949541070228,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 16.30949541070228,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 24,
+          "y": 18.804698670923244,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 16.554698670923244,
+        "clearance": 2.25,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.24520326022096484,
+      "dg": 0.24520326022096484,
+      "submittedFrame": {
+        "frameSequence": 31,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 24.00107300819954,
+          "y": 18.723533134907484,
+          "z": -260.011624255495
+        },
+        "cpuSubmitMilliseconds": 4.600000001490116
+      }
+    },
+    {
+      "name": "foothill-north",
+      "yaw": 180,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 24,
+          "y": 18.804698670923244,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 16.554698670923244,
+        "clearance": 2.25,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 24,
+          "y": 18.55949541070228,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 16.30949541070228,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.24520326022096484,
+      "dg": -0.24520326022096484,
+      "submittedFrame": {
+        "frameSequence": 33,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 24.00105899599592,
+          "y": 18.47829896537587,
+          "z": -260.0614746628641
+        },
+        "cpuSubmitMilliseconds": 2.3000000044703484
+      }
+    },
+    {
+      "name": "foothill-north",
+      "yaw": 270,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 24,
+          "y": 18.55949541070228,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 16.30949541070228,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 24,
+          "y": 18.804698670923244,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 16.554698670923244,
+        "clearance": 2.25,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.24520326022096484,
+      "dg": 0.24520326022096484,
+      "submittedFrame": {
+        "frameSequence": 35,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 24.00107300819954,
+          "y": 18.723533134907484,
+          "z": -260.011624255495
+        },
+        "cpuSubmitMilliseconds": 5
+      }
+    },
+    {
+      "name": "foothill-north",
+      "yaw": 270,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 24,
+          "y": 18.804698670923244,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 16.554698670923244,
+        "clearance": 2.25,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 24,
+          "y": 18.55949541070228,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 16.30949541070228,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.24520326022096484,
+      "dg": -0.24520326022096484,
+      "submittedFrame": {
+        "frameSequence": 37,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 24.00105899599592,
+          "y": 18.47829896537587,
+          "z": -260.0614746628641
+        },
+        "cpuSubmitMilliseconds": 3.600000001490116
+      }
+    },
+    {
+      "name": "east",
+      "yaw": 0,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 95.95,
+          "y": 10.274151468169709,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 7.813703905741841,
+        "clearance": 2.460447562427868,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 96.05,
+          "y": 10.26960862583688,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 7.690499741720123,
+        "clearance": 2.579108884116758,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": -0.004542842332828201,
+      "dg": -0.1232041640217183,
+      "submittedFrame": {
+        "frameSequence": 39,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 96.05233955672483,
+          "y": 10.15148002578644,
+          "z": -300.00730730887506
+        },
+        "cpuSubmitMilliseconds": 7.800000004470348
+      }
+    },
+    {
+      "name": "east",
+      "yaw": 0,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 96.05,
+          "y": 10.26960862583688,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 7.690499741720123,
+        "clearance": 2.579108884116758,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 95.95,
+          "y": 10.274151468169709,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 7.813703905741841,
+        "clearance": 2.460447562427868,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": 0.004542842332828201,
+      "dg": 0.1232041640217183,
+      "submittedFrame": {
+        "frameSequence": 41,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 95.95233816051889,
+          "y": 10.156045724521391,
+          "z": -300.0073105592045
+        },
+        "cpuSubmitMilliseconds": 543
+      }
+    },
+    {
+      "name": "east",
+      "yaw": 90,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 95.95,
+          "y": 10.075386949901105,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 7.813703905741841,
+        "clearance": 2.2616830441592644,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 96.05,
+          "y": 10.069660000786826,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 7.690499741720123,
+        "clearance": 2.379160259066703,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": -0.0057269491142797335,
+      "dg": -0.1232041640217183,
+      "submittedFrame": {
+        "frameSequence": 43,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 96.05229383038284,
+          "y": 9.951531456958037,
+          "z": -300.00716448844196
+        },
+        "cpuSubmitMilliseconds": 7689.4000000059605
+      }
+    },
+    {
+      "name": "east",
+      "yaw": 90,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 96.05,
+          "y": 10.069660000786826,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 7.690499741720123,
+        "clearance": 2.379160259066703,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 95.95,
+          "y": 10.075386949901105,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 7.813703905741841,
+        "clearance": 2.2616830441592644,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": 0.0057269491142797335,
+      "dg": 0.1232041640217183,
+      "submittedFrame": {
+        "frameSequence": 45,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 95.95229275229569,
+          "y": 9.957281262148172,
+          "z": -300.00716858456184
+        },
+        "cpuSubmitMilliseconds": 8735.19999999553
+      }
+    },
+    {
+      "name": "east",
+      "yaw": 180,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 95.95,
+          "y": 10.685029880386239,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 7.813703905741841,
+        "clearance": 2.8713259746443978,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 96.05,
+          "y": 10.67976345131013,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 7.690499741720123,
+        "clearance": 2.9892637095900074,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": -0.005266429076108636,
+      "dg": -0.1232041640217183,
+      "submittedFrame": {
+        "frameSequence": 47,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 96.05243335521838,
+          "y": 10.561634735902771,
+          "z": -300.0076002765801
+        },
+        "cpuSubmitMilliseconds": 835.7000000029802
+      }
+    },
+    {
+      "name": "east",
+      "yaw": 180,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 96.05,
+          "y": 10.67976345131013,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 7.690499741720123,
+        "clearance": 2.9892637095900074,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 95.95,
+          "y": 10.685029880386239,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 7.813703905741841,
+        "clearance": 2.8713259746443978,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": 0.005266429076108636,
+      "dg": 0.1232041640217183,
+      "submittedFrame": {
+        "frameSequence": 49,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 95.95243202666165,
+          "y": 10.566924021171872,
+          "z": -300.0076040437571
+        },
+        "cpuSubmitMilliseconds": 808.8000000044703
+      }
+    },
+    {
+      "name": "east",
+      "yaw": 270,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 95.95,
+          "y": 10.637208600568274,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 7.813703905741841,
+        "clearance": 2.8235046948264326,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 96.05,
+          "y": 10.631729065400418,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 7.690499741720123,
+        "clearance": 2.941229323680295,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": -0.005479535167856042,
+      "dg": -0.1232041640217183,
+      "submittedFrame": {
+        "frameSequence": 51,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 96.05242237021284,
+          "y": 10.513600363454316,
+          "z": -300.00756596630765
+        },
+        "cpuSubmitMilliseconds": 4094.5
+      }
+    },
+    {
+      "name": "east",
+      "yaw": 270,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 96.05,
+          "y": 10.631729065400418,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 7.690499741720123,
+        "clearance": 2.941229323680295,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 95.95,
+          "y": 10.637208600568274,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 7.813703905741841,
+        "clearance": 2.8235046948264326,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": 0.005479535167856042,
+      "dg": 0.1232041640217183,
+      "submittedFrame": {
+        "frameSequence": 53,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 95.95242110177746,
+          "y": 10.519102754828054,
+          "z": -300.00756988570333
+        },
+        "cpuSubmitMilliseconds": 4372
+      }
+    },
+    {
+      "name": "west",
+      "yaw": 0,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": -120.05,
+          "y": 8.388841601515741,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 5.962228493819566,
+        "clearance": 2.426613107696175,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": -119.95,
+          "y": 8.384828138101875,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 6.081746131885773,
+        "clearance": 2.303082006216102,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.004013463413865992,
+      "dg": 0.11951763806620708,
+      "submittedFrame": {
+        "frameSequence": 55,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": -119.95238283630964,
+          "y": 8.260554231761489,
+          "z": -300.0059595739299
+        },
+        "cpuSubmitMilliseconds": 886.3999999985099
+      }
+    },
+    {
+      "name": "west",
+      "yaw": 0,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": -119.95,
+          "y": 8.384828138101875,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 6.081746131885773,
+        "clearance": 2.303082006216102,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": -120.05,
+          "y": 8.388841601515741,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 5.962228493819566,
+        "clearance": 2.426613107696175,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.004013463413865992,
+      "dg": -0.11951763806620708,
+      "submittedFrame": {
+        "frameSequence": 57,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": -120.05238596729352,
+          "y": 8.264539121999405,
+          "z": -300.00596243388634
+        },
+        "cpuSubmitMilliseconds": 778.2999999970198
+      }
+    },
+    {
+      "name": "west",
+      "yaw": 90,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": -120.05,
+          "y": 8.287649174975572,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 5.962228493819566,
+        "clearance": 2.3254206811560056,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": -119.95,
+          "y": 8.331746131885772,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 6.081746131885773,
+        "clearance": 2.249999999999999,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": 0.04409695691020055,
+      "dg": 0.11951763806620708,
+      "submittedFrame": {
+        "frameSequence": 59,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": -119.95236767634293,
+          "y": 8.207472241250798,
+          "z": -300.0059216582149
+        },
+        "cpuSubmitMilliseconds": 6557.89999999851
+      }
+    },
+    {
+      "name": "west",
+      "yaw": 90,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": -119.95,
+          "y": 8.331746131885772,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 6.081746131885773,
+        "clearance": 2.249999999999999,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": -120.05,
+          "y": 8.287649174975572,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 5.962228493819566,
+        "clearance": 2.3254206811560056,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": -0.04409695691020055,
+      "dg": -0.11951763806620708,
+      "submittedFrame": {
+        "frameSequence": 61,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": -120.05235704312778,
+          "y": 8.163346725399606,
+          "z": -300.0058901535888
+        },
+        "cpuSubmitMilliseconds": 7301.5
+      }
+    },
+    {
+      "name": "west",
+      "yaw": 180,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": -120.05,
+          "y": 8.458611757295149,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 5.962228493819566,
+        "clearance": 2.4963832634755825,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": -119.95,
+          "y": 8.454995373003475,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 6.081746131885773,
+        "clearance": 2.373249241117702,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.0036163842916732136,
+      "dg": 0.11951763806620708,
+      "submittedFrame": {
+        "frameSequence": 63,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": -119.9524028757358,
+          "y": 8.33072144590551,
+          "z": -300.0060096933784
+        },
+        "cpuSubmitMilliseconds": 198.29999999701977
+      }
+    },
+    {
+      "name": "west",
+      "yaw": 180,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": -119.95,
+          "y": 8.454995373003475,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 6.081746131885773,
+        "clearance": 2.373249241117702,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": -120.05,
+          "y": 8.458611757295149,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 5.962228493819566,
+        "clearance": 2.4963832634755825,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.0036163842916732136,
+      "dg": -0.11951763806620708,
+      "submittedFrame": {
+        "frameSequence": 65,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": -120.05240590992773,
+          "y": 8.334309257159475,
+          "z": -300.00601226970696
+        },
+        "cpuSubmitMilliseconds": 169.89999999850988
+      }
+    },
+    {
+      "name": "west",
+      "yaw": 270,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": -120.05,
+          "y": 8.595846463918498,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 5.962228493819566,
+        "clearance": 2.633617970098932,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": -119.95,
+          "y": 8.59475023318264,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 6.081746131885773,
+        "clearance": 2.5130041012968674,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.0010962307358575174,
+      "dg": 0.11951763806620708,
+      "submittedFrame": {
+        "frameSequence": 67,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": -119.95244278905443,
+          "y": 8.470476264716126,
+          "z": -300.0061095182687
+        },
+        "cpuSubmitMilliseconds": 1153.1000000014901
+      }
+    },
+    {
+      "name": "west",
+      "yaw": 270,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": -119.95,
+          "y": 8.59475023318264,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 6.081746131885773,
+        "clearance": 2.5130041012968674,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": -120.05,
+          "y": 8.595846463918498,
+          "z": -300
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 5.962228493819566,
+        "clearance": 2.633617970098932,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.0010962307358575174,
+      "dg": -0.11951763806620708,
+      "submittedFrame": {
+        "frameSequence": 69,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": -120.0524451361775,
+          "y": 8.471543923136778,
+          "z": -300.0061102944877
+        },
+        "cpuSubmitMilliseconds": 3.7000000029802322
+      }
+    },
+    {
+      "name": "portal",
+      "yaw": 0,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 40,
+          "y": 13.511106209112379,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 11.261106209112379,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 40,
+          "y": 13.512364686773319,
+          "z": -259.95
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 11.262364686773319,
+        "clearance": 2.25,
+        "source": "INTERIOR"
+      },
+      "dy": 0.001258477660940116,
+      "dg": 0.001258477660940116,
+      "submittedFrame": {
+        "frameSequence": 71,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 40.001284277505064,
+          "y": 13.430012037104461,
+          "z": -259.958346198436
+        },
+        "cpuSubmitMilliseconds": 3793
+      }
+    },
+    {
+      "name": "portal",
+      "yaw": 0,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 40,
+          "y": 13.512364686773319,
+          "z": -259.95
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 11.262364686773319,
+        "clearance": 2.25,
+        "source": "INTERIOR"
+      },
+      "after": {
+        "position": {
+          "x": 40,
+          "y": 13.511106209112379,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 11.261106209112379,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.001258477660940116,
+      "dg": -0.001258477660940116,
+      "submittedFrame": {
+        "frameSequence": 73,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 40.001284155684765,
+          "y": 13.428691652952693,
+          "z": -260.0583486171456
+        },
+        "cpuSubmitMilliseconds": 1310.6000000014901
+      }
+    },
+    {
+      "name": "portal",
+      "yaw": 90,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 40,
+          "y": 13.511106209112379,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 11.261106209112379,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 40,
+          "y": 13.512364686773319,
+          "z": -259.95
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 11.262364686773319,
+        "clearance": 2.25,
+        "source": "INTERIOR"
+      },
+      "dy": 0.001258477660940116,
+      "dg": 0.001258477660940116,
+      "submittedFrame": {
+        "frameSequence": 75,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 40.001284277505064,
+          "y": 13.430012037104461,
+          "z": -259.958346198436
+        },
+        "cpuSubmitMilliseconds": 6205.60000000149
+      }
+    },
+    {
+      "name": "portal",
+      "yaw": 90,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 40,
+          "y": 13.512364686773319,
+          "z": -259.95
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 11.262364686773319,
+        "clearance": 2.25,
+        "source": "INTERIOR"
+      },
+      "after": {
+        "position": {
+          "x": 40,
+          "y": 13.511106209112379,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 11.261106209112379,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.001258477660940116,
+      "dg": -0.001258477660940116,
+      "submittedFrame": {
+        "frameSequence": 77,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 40.001284155684765,
+          "y": 13.428691652952693,
+          "z": -260.0583486171456
+        },
+        "cpuSubmitMilliseconds": 6125.79999999702
+      }
+    },
+    {
+      "name": "portal",
+      "yaw": 180,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 40,
+          "y": 13.511106209112379,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 11.261106209112379,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 40,
+          "y": 13.512364686773319,
+          "z": -259.95
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 11.262364686773319,
+        "clearance": 2.25,
+        "source": "INTERIOR"
+      },
+      "dy": 0.001258477660940116,
+      "dg": 0.001258477660940116,
+      "submittedFrame": {
+        "frameSequence": 79,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 40.001284277505064,
+          "y": 13.430012037104461,
+          "z": -259.958346198436
+        },
+        "cpuSubmitMilliseconds": 1587.8000000044703
+      }
+    },
+    {
+      "name": "portal",
+      "yaw": 180,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 40,
+          "y": 13.512364686773319,
+          "z": -259.95
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 11.262364686773319,
+        "clearance": 2.25,
+        "source": "INTERIOR"
+      },
+      "after": {
+        "position": {
+          "x": 40,
+          "y": 13.511106209112379,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 11.261106209112379,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.001258477660940116,
+      "dg": -0.001258477660940116,
+      "submittedFrame": {
+        "frameSequence": 81,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 40.001284155684765,
+          "y": 13.428691652952693,
+          "z": -260.0583486171456
+        },
+        "cpuSubmitMilliseconds": 1526.2000000029802
+      }
+    },
+    {
+      "name": "portal",
+      "yaw": 270,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 40,
+          "y": 13.511106209112379,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 11.261106209112379,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "after": {
+        "position": {
+          "x": 40,
+          "y": 13.512364686773319,
+          "z": -259.95
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 11.262364686773319,
+        "clearance": 2.25,
+        "source": "INTERIOR"
+      },
+      "dy": 0.001258477660940116,
+      "dg": 0.001258477660940116,
+      "submittedFrame": {
+        "frameSequence": 83,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 40.001284277505064,
+          "y": 13.430012037104461,
+          "z": -259.958346198436
+        },
+        "cpuSubmitMilliseconds": 5475.9000000059605
+      }
+    },
+    {
+      "name": "portal",
+      "yaw": 270,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 40,
+          "y": 13.512364686773319,
+          "z": -259.95
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 11.262364686773319,
+        "clearance": 2.25,
+        "source": "INTERIOR"
+      },
+      "after": {
+        "position": {
+          "x": 40,
+          "y": 13.511106209112379,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 11.261106209112379,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.001258477660940116,
+      "dg": -0.001258477660940116,
+      "submittedFrame": {
+        "frameSequence": 85,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 40.001284155684765,
+          "y": 13.428691652952693,
+          "z": -260.0583486171456
+        },
+        "cpuSubmitMilliseconds": 6599.20000000298
+      }
+    },
+    {
+      "name": "flat-control",
+      "yaw": 0,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 0,
+          "y": 8.456853670771235,
+          "z": -110
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 5.733492115366971,
+        "clearance": 2.7233615554042636,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 0,
+          "y": 8.44566254151534,
+          "z": -109.95
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 5.722300986111077,
+        "clearance": 2.7233615554042627,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": -0.01119112925589505,
+      "dg": -0.011191129255894161,
+      "submittedFrame": {
+        "frameSequence": 87,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 0,
+          "y": 8.43127058254322,
+          "z": -109.9522096979313
+        },
+        "cpuSubmitMilliseconds": 2132.60000000149
+      }
+    },
+    {
+      "name": "flat-control",
+      "yaw": 0,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 0,
+          "y": 8.44566254151534,
+          "z": -109.95
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 5.722300986111077,
+        "clearance": 2.7233615554042627,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 0,
+          "y": 8.456853670771235,
+          "z": -110
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 5.733492115366971,
+        "clearance": 2.7233615554042636,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.01119112925589505,
+      "dg": 0.011191129255894161,
+      "submittedFrame": {
+        "frameSequence": 89,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 0,
+          "y": 8.442448618880007,
+          "z": -110.00221363266321
+        },
+        "cpuSubmitMilliseconds": 1707.7000000029802
+      }
+    },
+    {
+      "name": "flat-control",
+      "yaw": 90,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 0,
+          "y": 8.447579470567522,
+          "z": -110
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 5.733492115366971,
+        "clearance": 2.714087355200551,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 0,
+          "y": 8.453396774771331,
+          "z": -109.95
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 5.722300986111077,
+        "clearance": 2.7310957886602543,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.005817304203809215,
+      "dg": -0.011191129255894161,
+      "submittedFrame": {
+        "frameSequence": 91,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 0,
+          "y": 8.439004815532826,
+          "z": -109.95221172264306
+        },
+        "cpuSubmitMilliseconds": 1095.7999999970198
+      }
+    },
+    {
+      "name": "flat-control",
+      "yaw": 90,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 0,
+          "y": 8.453396774771331,
+          "z": -109.95
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 5.722300986111077,
+        "clearance": 2.7310957886602543,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 0,
+          "y": 8.447579470567522,
+          "z": -110
+        },
+        "pitch": -8,
+        "yaw": 90,
+        "ground": 5.733492115366971,
+        "clearance": 2.714087355200551,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": -0.005817304203809215,
+      "dg": 0.011191129255894161,
+      "submittedFrame": {
+        "frameSequence": 93,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 0,
+          "y": 8.433174419042189,
+          "z": -110.00221120370604
+        },
+        "cpuSubmitMilliseconds": 695.1000000014901
+      }
+    },
+    {
+      "name": "flat-control",
+      "yaw": 180,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 0,
+          "y": 8.010280016584147,
+          "z": -110
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 5.733492115366971,
+        "clearance": 2.276787901217176,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 0,
+          "y": 7.999088887328253,
+          "z": -109.95
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 5.722300986111077,
+        "clearance": 2.276787901217176,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": -0.011191129255894161,
+      "dg": -0.011191129255894161,
+      "submittedFrame": {
+        "frameSequence": 95,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 0,
+          "y": 7.984696943662129,
+          "z": -109.9520927913296
+        },
+        "cpuSubmitMilliseconds": 680.2999999970198
+      }
+    },
+    {
+      "name": "flat-control",
+      "yaw": 180,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 0,
+          "y": 7.999088887328253,
+          "z": -109.95
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 5.722300986111077,
+        "clearance": 2.276787901217176,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 0,
+          "y": 8.010280016584147,
+          "z": -110
+        },
+        "pitch": -8,
+        "yaw": 180,
+        "ground": 5.733492115366971,
+        "clearance": 2.276787901217176,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.011191129255894161,
+      "dg": 0.011191129255894161,
+      "submittedFrame": {
+        "frameSequence": 97,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 0,
+          "y": 7.995874979998916,
+          "z": -110.00209667289798
+        },
+        "cpuSubmitMilliseconds": 929.1000000014901
+      }
+    },
+    {
+      "name": "flat-control",
+      "yaw": 270,
+      "reverse": false,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 0,
+          "y": 8.386372768579168,
+          "z": -110
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 5.733492115366971,
+        "clearance": 2.652880653212197,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 0,
+          "y": 8.382892364463988,
+          "z": -109.95
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 5.722300986111077,
+        "clearance": 2.660591378352911,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": -0.0034804041151801357,
+      "dg": -0.011191129255894161,
+      "submittedFrame": {
+        "frameSequence": 99,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 0,
+          "y": 8.368500407668762,
+          "z": -109.95219326559584
+        },
+        "cpuSubmitMilliseconds": 3615.4000000059605
+      }
+    },
+    {
+      "name": "flat-control",
+      "yaw": 270,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 0,
+          "y": 8.382892364463988,
+          "z": -109.95
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 5.722300986111077,
+        "clearance": 2.660591378352911,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 0,
+          "y": 8.386372768579168,
+          "z": -110
+        },
+        "pitch": -8,
+        "yaw": -90,
+        "ground": 5.733492115366971,
+        "clearance": 2.652880653212197,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "dy": 0.0034804041151801357,
+      "dg": 0.011191129255894161,
+      "submittedFrame": {
+        "frameSequence": 101,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 0,
+          "y": 8.371967719111126,
+          "z": -110.0021951733795
+        },
+        "cpuSubmitMilliseconds": 3860
+      }
+    }
+  ]
+}

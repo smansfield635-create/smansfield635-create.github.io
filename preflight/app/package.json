@@ -1,0 +1,15 @@
+{
+  "name": "diamondgate-preflight",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Portable DiamondGate browser application and synthetic regression tests",
+  "scripts": {
+    "test": "node --test test.mjs *-test.mjs",
+    "check": "node build.mjs --check",
+    "build": "node build.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,12 +1,12 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "preflight.v1",
-  "description": "Unlisted Preflight first-use inspection: a useful zero-setup check before optional local continuity; transparent rule-based baseline",
+  "description": "Original DiamondGate project workspace migration; legacy surfaces retained.",
   "checks": [
     {
       "path": "/preflight/index.html",
       "includes": [
-        "DiamondGate · Preflight",
+        "DiamondGate \u00b7 Preflight",
         "noindex,nofollow,noarchive",
         "./assets/studio.css",
         "./assets/preflight-core.js",
@@ -67,7 +67,7 @@
     {
       "path": "/preflight/saas-lab/index.html",
       "includes": [
-        "DiamondGate • Development Lab",
+        "DiamondGate \u2022 Development Lab",
         "noindex,nofollow,noarchive",
         "./styles.css",
         "./app.mjs",
@@ -123,136 +123,94 @@
         "GITHUB_TOKEN",
         "PRIVATE_KEY"
       ]
+    },
+    {
+      "path": "/preflight/app/index.html",
+      "includes": [
+        "DiamondGate \u2014 Pick up your work",
+        "./dist/style.css",
+        "./dist/app.mjs",
+        "id=\"projects\"",
+        "id=\"backup-file\"",
+        "noindex,nofollow,noarchive"
+      ],
+      "excludes": [
+        "GITHUB_TOKEN",
+        "PRIVATE_KEY",
+        "sk-proj-"
+      ]
     }
   ],
   "runtime": {
     "enabled": true,
-    "path": "/preflight/",
+    "path": "/preflight/app/",
     "timeoutMs": 45000,
-    "readySelector": "body[data-startup=\"ready\"]",
+    "readySelector": "#template-preview:not(:empty)",
     "binding": {
       "mode": "direct-document",
-      "path": "/preflight/"
+      "path": "/preflight/app/"
     },
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "First visit uses bakery example with no registration",
+        "name": "Original workspace help is interactive",
         "action": {
           "type": "click",
-          "selector": "[data-example=\"video\"]"
-        },
-        "assertions": [
-          {
-            "type": "textContains",
-            "selector": "#taskLabel",
-            "value": "Video / animation"
-          },
-          {
-            "type": "textContains",
-            "selector": "#recognizedIdea",
-            "value": "20-second commercial for my bakery"
-          },
-          {
-            "type": "textContains",
-            "selector": "#questionList",
-            "value": "Where will people see it?"
-          }
-        ]
-      },
-      {
-        "name": "Prepare first request without any approval",
-        "action": {
-          "type": "click",
-          "selector": "#prepareBtn"
-        },
-        "assertions": [
-          {
-            "type": "textContains",
-            "selector": "#preparedText",
-            "value": "MY AI REQUEST"
-          },
-          {
-            "type": "textContains",
-            "selector": "#preparedText",
-            "value": "QUESTIONS STILL OPEN"
-          },
-          {
-            "type": "textContains",
-            "selector": "#preparedText",
-            "value": "20-second commercial for my bakery"
-          }
-        ]
-      },
-      {
-        "name": "Open optional local continuity",
-        "action": {
-          "type": "click",
-          "selector": "#continuityDetails summary"
+          "selector": "#help"
         },
         "assertions": [
           {
             "type": "exists",
-            "selector": "#saveBaselineBtn"
+            "selector": "#help-dialog[open]"
+          },
+          {
+            "type": "textContains",
+            "selector": "#help-dialog",
+            "value": "local storage"
           }
         ]
       },
       {
-        "name": "Explicit save of first-use request",
+        "name": "Return to workspace",
         "action": {
           "type": "click",
-          "selector": "#saveBaselineBtn"
+          "selector": "#close-help"
         },
         "assertions": [
           {
-            "type": "textContains",
-            "selector": "#baselineMessage",
-            "value": "Saved on this device"
+            "type": "exists",
+            "selector": "#help-dialog:not([open])"
           }
         ]
       },
       {
-        "name": "Different app example gets domain-specific questions",
+        "name": "Start-new-work path",
         "action": {
-          "type": "click",
-          "selector": "[data-example=\"app\"]"
+          "type": "key",
+          "selector": "#entry-route",
+          "key": "Home"
         },
         "assertions": [
           {
-            "type": "textContains",
-            "selector": "#taskLabel",
-            "value": "App / website"
-          },
-          {
-            "type": "textContains",
-            "selector": "#questionList",
-            "value": "Does existing data need protection?"
-          },
-          {
-            "type": "textContains",
-            "selector": "#revisionText",
-            "value": "differs from the version you saved"
+            "type": "exists",
+            "selector": "#review-packet"
           }
         ]
       },
       {
-        "name": "Make another request without repeat approval",
+        "name": "Open saved projects",
         "action": {
-          "type": "click",
-          "selector": "#prepareBtn"
+          "type": "key",
+          "selector": "#entry-route",
+          "key": "End"
         },
         "assertions": [
           {
             "type": "textContains",
-            "selector": "#preparedText",
-            "value": "appointment-booking app"
-          },
-          {
-            "type": "textContains",
-            "selector": "#preparedText",
-            "value": "CONFIRMED DETAILS"
+            "selector": "#library-view",
+            "value": "My Projects"
           }
         ]
       }

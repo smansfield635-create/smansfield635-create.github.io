@@ -1,0 +1,870 @@
+{
+  "schema": "H_EARTH_CAVERN_SURFACE_LAYER_QUALIFICATION_v1",
+  "activeGeology": true,
+  "site": {
+    "id": "B_REAR_RAVINE",
+    "x": 40,
+    "portalZ": -260,
+    "drainageHeadZ": -268,
+    "entranceFloorY": 11.3,
+    "roofClearance": 5.3,
+    "width": 3.8,
+    "galleryLength": 24
+  },
+  "paired": [
+    {
+      "x": 37.25,
+      "z": -258,
+      "surfaceY": 21.85738118504261,
+      "interiorY": 13.74180463387237,
+      "ceiling": 14.984116262312046
+    },
+    {
+      "x": 37.75,
+      "z": -254,
+      "surfaceY": 24.264894898078726,
+      "interiorY": 14.007725078806253,
+      "ceiling": 15.159081487831108
+    },
+    {
+      "x": 39.5,
+      "z": -248,
+      "surfaceY": 26.46761392826043,
+      "interiorY": 14.08163051592035,
+      "ceiling": 15.92774677883016
+    },
+    {
+      "x": 38,
+      "z": -242,
+      "surfaceY": 29.057322412866114,
+      "interiorY": 14.183682168516636,
+      "ceiling": 15.847165230606125
+    },
+    {
+      "x": 36.75,
+      "z": -238,
+      "surfaceY": 30.911177303867127,
+      "interiorY": 14.308678983461657,
+      "ceiling": 15.781173658207264
+    }
+  ],
+  "turns": [
+    {
+      "layer": "SURFACE",
+      "count": 1440,
+      "maxDy": 0
+    },
+    {
+      "layer": "INTERIOR",
+      "count": 1440,
+      "maxDy": 0
+    }
+  ],
+  "refined": [
+    {
+      "eps": 0.05,
+      "reverse": false,
+      "dy": -0.00027497570657253334,
+      "dg": -0.00027497570657253334,
+      "layer": "INTERIOR"
+    },
+    {
+      "eps": 0.05,
+      "reverse": true,
+      "dy": 0.00027497570657253334,
+      "dg": 0.00027497570657253334,
+      "layer": "SURFACE"
+    },
+    {
+      "eps": 0.01,
+      "reverse": false,
+      "dy": -0.00005575263987900314,
+      "dg": -0.00005575263987900314,
+      "layer": "INTERIOR"
+    },
+    {
+      "eps": 0.01,
+      "reverse": true,
+      "dy": 0.00005575263987900314,
+      "dg": 0.00005575263987900314,
+      "layer": "SURFACE"
+    },
+    {
+      "eps": 0.002,
+      "reverse": false,
+      "dy": -0.000011908026541718186,
+      "dg": -0.000011908026541718186,
+      "layer": "INTERIOR"
+    },
+    {
+      "eps": 0.002,
+      "reverse": true,
+      "dy": 0.000011908026541718186,
+      "dg": 0.000011908026541718186,
+      "layer": "SURFACE"
+    },
+    {
+      "eps": 0.0004,
+      "reverse": false,
+      "dy": -0.0000031391038763928236,
+      "dg": -0.0000031391038763928236,
+      "layer": "INTERIOR"
+    },
+    {
+      "eps": 0.0004,
+      "reverse": true,
+      "dy": 0.0000031391038763928236,
+      "dg": 0.0000031391038763928236,
+      "layer": "SURFACE"
+    }
+  ],
+  "jambs": [
+    {
+      "edge": "left-out",
+      "x": 37.009999999998996,
+      "seedEligible": false
+    },
+    {
+      "edge": "left-in",
+      "x": 37.049999999999,
+      "seedEligible": false
+    },
+    {
+      "edge": "right-in",
+      "x": 42.96999999999781,
+      "seedEligible": false
+    },
+    {
+      "edge": "right-out",
+      "x": 43.00999999999782,
+      "seedEligible": false
+    }
+  ],
+  "guard": [
+    {
+      "delta": 0.5004,
+      "dz": 0,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.5004,
+      "dz": -0.0004,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.5004,
+      "dz": 0.0004,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.5,
+      "dz": 0,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.5,
+      "dz": -0.0004,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.5,
+      "dz": 0.0004,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.4996,
+      "dz": 0,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.4996,
+      "dz": -0.0004,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.4996,
+      "dz": 0.0004,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.0004,
+      "dz": 0,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.0004,
+      "dz": -0.0004,
+      "accepted": true,
+      "layer": "SURFACE"
+    },
+    {
+      "delta": 0.0004,
+      "dz": 0.0004,
+      "accepted": true,
+      "layer": "INTERIOR"
+    }
+  ],
+  "routes": [
+    {
+      "name": "across-front",
+      "reverse": false,
+      "accepted": 160,
+      "expected": 160,
+      "maxDy": 0.08410174003833149,
+      "final": {
+        "x": 60,
+        "y": 25.884871524312928,
+        "z": -257
+      }
+    },
+    {
+      "name": "across-front",
+      "reverse": true,
+      "accepted": 160,
+      "expected": 160,
+      "maxDy": 0.08410174003833149,
+      "final": {
+        "x": 20,
+        "y": 19.674169920251472,
+        "z": -257
+      }
+    },
+    {
+      "name": "across-middle",
+      "reverse": false,
+      "accepted": 160,
+      "expected": 160,
+      "maxDy": 0.1770209355056913,
+      "final": {
+        "x": 60,
+        "y": 27.380204090901746,
+        "z": -248
+      }
+    },
+    {
+      "name": "across-middle",
+      "reverse": true,
+      "accepted": 160,
+      "expected": 160,
+      "maxDy": 0.1770209355056913,
+      "final": {
+        "x": 20,
+        "y": 25.74108915826661,
+        "z": -248
+      }
+    },
+    {
+      "name": "across-back",
+      "reverse": false,
+      "accepted": 160,
+      "expected": 160,
+      "maxDy": 0.2417581943271614,
+      "final": {
+        "x": 60,
+        "y": 30.570074524438688,
+        "z": -238
+      }
+    },
+    {
+      "name": "across-back",
+      "reverse": true,
+      "accepted": 160,
+      "expected": 160,
+      "maxDy": 0.2417581943271614,
+      "final": {
+        "x": 20,
+        "y": 31.720315393776634,
+        "z": -238
+      }
+    },
+    {
+      "name": "along-left",
+      "reverse": false,
+      "accepted": 96,
+      "expected": 96,
+      "maxDy": 0.1652267111181125,
+      "final": {
+        "x": 34,
+        "y": 33.71405379554416,
+        "z": -234
+      }
+    },
+    {
+      "name": "along-left",
+      "reverse": true,
+      "accepted": 96,
+      "expected": 96,
+      "maxDy": 0.1652267111181125,
+      "final": {
+        "x": 34,
+        "y": 21.854652131572323,
+        "z": -258
+      }
+    },
+    {
+      "name": "along-center",
+      "reverse": false,
+      "accepted": 96,
+      "expected": 96,
+      "maxDy": 0.13566104816477065,
+      "final": {
+        "x": 40,
+        "y": 29.230210544473074,
+        "z": -234
+      }
+    },
+    {
+      "name": "along-center",
+      "reverse": true,
+      "accepted": 96,
+      "expected": 96,
+      "maxDy": 0.13566104816477065,
+      "final": {
+        "x": 40,
+        "y": 21.85969002998533,
+        "z": -258
+      }
+    },
+    {
+      "name": "along-right",
+      "reverse": false,
+      "accepted": 96,
+      "expected": 96,
+      "maxDy": 0.11401393290549677,
+      "final": {
+        "x": 46,
+        "y": 24.620485879410822,
+        "z": -234
+      }
+    },
+    {
+      "name": "along-right",
+      "reverse": true,
+      "accepted": 96,
+      "expected": 96,
+      "maxDy": 0.11401393290549677,
+      "final": {
+        "x": 46,
+        "y": 22.843633976786407,
+        "z": -258
+      }
+    }
+  ],
+  "portal": [
+    {
+      "dt": 0.008333333333333333,
+      "transitions": 2,
+      "maxDy": 0.0003449282505556539,
+      "final": {
+        "x": 38,
+        "y": 13.548151042216972,
+        "z": -260.5
+      }
+    },
+    {
+      "dt": 0.016666666666666666,
+      "transitions": 2,
+      "maxDy": 0.0006908033742991648,
+      "final": {
+        "x": 38,
+        "y": 13.548151042216972,
+        "z": -260.5
+      }
+    },
+    {
+      "dt": 0.03333333333333333,
+      "transitions": 2,
+      "maxDy": 0.0013797130022137338,
+      "final": {
+        "x": 38,
+        "y": 13.548151042216972,
+        "z": -260.5
+      }
+    }
+  ],
+  "entryX": 38,
+  "collisions": [
+    {
+      "from": {
+        "x": 37.25,
+        "y": 13.74180463387237,
+        "z": -258
+      },
+      "target": [
+        20,
+        -258
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 37.25,
+        "y": 13.74180463387237,
+        "z": -258
+      },
+      "target": [
+        60,
+        -258
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 37.25,
+        "y": 13.74180463387237,
+        "z": -258
+      },
+      "target": [
+        40,
+        -234
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 37.75,
+        "y": 14.007725078806253,
+        "z": -254
+      },
+      "target": [
+        20,
+        -254
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 37.75,
+        "y": 14.007725078806253,
+        "z": -254
+      },
+      "target": [
+        60,
+        -254
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 37.75,
+        "y": 14.007725078806253,
+        "z": -254
+      },
+      "target": [
+        40,
+        -234
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 39.5,
+        "y": 14.08163051592035,
+        "z": -248
+      },
+      "target": [
+        20,
+        -248
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 39.5,
+        "y": 14.08163051592035,
+        "z": -248
+      },
+      "target": [
+        60,
+        -248
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 39.5,
+        "y": 14.08163051592035,
+        "z": -248
+      },
+      "target": [
+        40,
+        -234
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 38,
+        "y": 14.183682168516636,
+        "z": -242
+      },
+      "target": [
+        20,
+        -242
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 38,
+        "y": 14.183682168516636,
+        "z": -242
+      },
+      "target": [
+        60,
+        -242
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 38,
+        "y": 14.183682168516636,
+        "z": -242
+      },
+      "target": [
+        40,
+        -234
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 36.75,
+        "y": 14.308678983461657,
+        "z": -238
+      },
+      "target": [
+        20,
+        -238
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 36.75,
+        "y": 14.308678983461657,
+        "z": -238
+      },
+      "target": [
+        60,
+        -238
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    },
+    {
+      "from": {
+        "x": 36.75,
+        "y": 14.308678983461657,
+        "z": -238
+      },
+      "target": [
+        40,
+        -234
+      ],
+      "rejected": true,
+      "issues": [
+        "CAVERN_SOLID_OR_HEADROOM_COLLISION"
+      ]
+    }
+  ],
+  "regression": [
+    {
+      "name": "mountain",
+      "yaw": 0,
+      "dy": 0.0008667307053151774,
+      "dg": 0.0009097460921658751
+    },
+    {
+      "name": "mountain",
+      "yaw": 90,
+      "dy": 0.0008873548867853742,
+      "dg": 0.0009097460921658751
+    },
+    {
+      "name": "mountain",
+      "yaw": 180,
+      "dy": 0.0008873583126458584,
+      "dg": 0.0009097460921658751
+    },
+    {
+      "name": "mountain",
+      "yaw": 270,
+      "dy": 0.0008873548867853742,
+      "dg": 0.0009097460921658751
+    },
+    {
+      "name": "foothill",
+      "yaw": 0,
+      "dy": 0.0005360472324795751,
+      "dg": 0.0005360472324795751
+    },
+    {
+      "name": "foothill",
+      "yaw": 90,
+      "dy": 0.0005360472324795751,
+      "dg": 0.0005360472324795751
+    },
+    {
+      "name": "foothill",
+      "yaw": 180,
+      "dy": 0.0005360472324795751,
+      "dg": 0.0005360472324795751
+    },
+    {
+      "name": "foothill",
+      "yaw": 270,
+      "dy": 0.0005360472324795751,
+      "dg": 0.0005360472324795751
+    },
+    {
+      "name": "east",
+      "yaw": 0,
+      "dy": -0.000036342738660266605,
+      "dg": -0.11817617293131555
+    },
+    {
+      "name": "east",
+      "yaw": 90,
+      "dy": -0.000044134306749654684,
+      "dg": -0.11817617293131555
+    },
+    {
+      "name": "east",
+      "yaw": 180,
+      "dy": -0.00004213143260756169,
+      "dg": -0.11817617293131555
+    },
+    {
+      "name": "east",
+      "yaw": 270,
+      "dy": -0.000043836281392373166,
+      "dg": -0.11817617293131555
+    },
+    {
+      "name": "west",
+      "yaw": 0,
+      "dy": -0.000032107707312434286,
+      "dg": 0.12426822637830082
+    },
+    {
+      "name": "west",
+      "yaw": 90,
+      "dy": 0.046174925299904857,
+      "dg": 0.12426822637830082
+    },
+    {
+      "name": "west",
+      "yaw": 180,
+      "dy": -0.000028931074332660955,
+      "dg": 0.12426822637830082
+    },
+    {
+      "name": "west",
+      "yaw": 270,
+      "dy": -0.00000876984588771279,
+      "dg": 0.12426822637830082
+    },
+    {
+      "name": "flat",
+      "yaw": 0,
+      "dy": -0.0000429906004164593,
+      "dg": -0.00017905806809359603
+    },
+    {
+      "name": "flat",
+      "yaw": 90,
+      "dy": 0.00009307686725890107,
+      "dg": -0.00017905806809359603
+    },
+    {
+      "name": "flat",
+      "yaw": 180,
+      "dy": -0.00017905806809181968,
+      "dg": -0.00017905806809359603
+    },
+    {
+      "name": "flat",
+      "yaw": 270,
+      "dy": -0.0001790580680953724,
+      "dg": -0.00017905806809359603
+    }
+  ],
+  "frames": [
+    {
+      "layer": "SURFACE",
+      "position": {
+        "x": 37.25,
+        "y": 21.85738118504261,
+        "z": -258
+      },
+      "frame": {
+        "frameSequence": 5,
+        "navigationSequence": 100,
+        "cameraPosition": {
+          "x": 37.25193614989083,
+          "y": 21.776482260553166,
+          "z": -258.0134101119956
+        },
+        "cpuSubmitMilliseconds": 4.100000001490116
+      }
+    },
+    {
+      "layer": "INTERIOR",
+      "position": {
+        "x": 37.25,
+        "y": 13.74180463387237,
+        "z": -258
+      },
+      "frame": {
+        "frameSequence": 6,
+        "navigationSequence": 100,
+        "cameraPosition": {
+          "x": 37.25121637558816,
+          "y": 13.66090727248229,
+          "z": -258.00842482957705
+        },
+        "cpuSubmitMilliseconds": 2
+      }
+    },
+    {
+      "layer": "SURFACE",
+      "position": {
+        "x": 37.75,
+        "y": 24.264894898078726,
+        "z": -254
+      },
+      "frame": {
+        "frameSequence": 7,
+        "navigationSequence": 100,
+        "cameraPosition": {
+          "x": 37.752178599804225,
+          "y": 24.186389100388624,
+          "z": -254.01465865828536
+        },
+        "cpuSubmitMilliseconds": 2
+      }
+    },
+    {
+      "layer": "INTERIOR",
+      "position": {
+        "x": 37.75,
+        "y": 14.007725078806253,
+        "z": -254
+      },
+      "frame": {
+        "frameSequence": 8,
+        "navigationSequence": 100,
+        "cameraPosition": {
+          "x": 37.75125667566956,
+          "y": 13.929221198195592,
+          "z": -254.00845551311437
+        },
+        "cpuSubmitMilliseconds": 1.6000000014901161
+      }
+    },
+    {
+      "layer": "SURFACE",
+      "position": {
+        "x": 39.5,
+        "y": 26.46761392826043,
+        "z": -248
+      },
+      "frame": {
+        "frameSequence": 9,
+        "navigationSequence": 100,
+        "cameraPosition": {
+          "x": 39.50248686233524,
+          "y": 26.392532711208332,
+          "z": -248.01561371795287
+        },
+        "cpuSubmitMilliseconds": 1.7999999970197678
+      }
+    },
+    {
+      "layer": "INTERIOR",
+      "position": {
+        "x": 39.5,
+        "y": 14.08163051592035,
+        "z": -248
+      },
+      "frame": {
+        "frameSequence": 10,
+        "navigationSequence": 100,
+        "cameraPosition": {
+          "x": 39.50132199015515,
+          "y": 14.006551512924489,
+          "z": -248.00830009008803
+        },
+        "cpuSubmitMilliseconds": 1.5999999940395355
+      }
+    }
+  ],
+  "failures": [],
+  "summary": {
+    "result": "PASS",
+    "paired": 5,
+    "surfaceRoutes": 12,
+    "portalSequences": 3,
+    "regressions": 20,
+    "rendered": 6,
+    "failureCount": 0,
+    "failures": []
+  },
+  "moduleIdentity": {
+    "navigation": "http://127.0.0.1:8766/showroom/globe/h-earth/functional-landscape/navigation.js?cb=dcd1d0800a1f8c82cccabd9f2cba7dc2744fb86b",
+    "bridge": "http://127.0.0.1:8766/showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js?cb=cf293b9e3f19ae40395df24bdd74d10ca6da3273"
+  }
+}

@@ -78,14 +78,14 @@ function semantic(chunk,x,z){const c=chunk.terrainMemberAddressIds.map(parseAddr
 const smoothUnit=t=>{const u=clamp(t,0,1);return u*u*(3-2*u)};
 // Local physical support is never blended: it remains an immutable hard floor.
 function sampleExteriorSupport(x,z){
-  const support=resolveGeologicalRuntimeFootSupport(x,z);
+  const support=resolveGeologicalRuntimeFootSupport(x,z,{layer:'SURFACE'});
   if(support&&support.class!=='INTERIOR')return support.eligible?
     {valid:true,visibleElevation:support.footY,geologicalSupport:support}:
     {valid:false,issues:support.issues};
   return sampleHEarthVisibleTerrainClearanceSurface(x,z);
 }
 function exteriorRimDistance(x,z,model){
-  const b=model.localBounds,front=model.site.portalZ;
+  const b=model.localBounds,front=b.zMax;
   // Exact L-shaped exterior support footprint used by the installed bridge.
   const points=[[b.xMin,b.zMin],[b.xMax,b.zMin],[b.xMax,front],[-120,front],[-120,-440],[b.xMin,-440]];
   let distance=Infinity;
@@ -126,7 +126,53 @@ function caveApproachViewWeight(x,z){
   const dz=Math.max(site.portalZ-z,0,z-site.portalZ-site.galleryLength);
   return smoothUnit((Math.hypot(dx,dz)-Math.hypot(10,4.5))/12);
 }
-function nearCameraSupport(x,z,p){
+function stateNavigationLayer(state){
+  if(state.navigationLayer==='SURFACE')return 'SURFACE';
+  if(state.navigationLayer==='INTERIOR'){
+    const support=resolveGeologicalRuntimeFootSupport(state.position.x,state.position.z,{layer:'INTERIOR'});
+    return support?.eligible&&Math.abs(state.position.y-support.eyeY)<1e-6?'INTERIOR':'INVALID';
+  }
+  if(state.navigationLayer!==undefined)return 'INVALID';
+  // One-time compatibility for an already accepted old interior state. X/Z
+  // alone never selects the cave; its recorded height must fit the real floor.
+  if(state.geologicalFloorClass==='INTERIOR'){
+    const support=resolveGeologicalRuntimeFootSupport(state.position.x,state.position.z,{layer:'INTERIOR'});
+    if(support?.eligible&&Math.abs(state.position.y-support.eyeY)<1e-6)return 'INTERIOR';
+  }
+  return 'SURFACE';
+}
+function layerForSegment(from,x,z){
+  const layer=from.navigationLayer??'SURFACE',model=getGeologicalRuntimeBridge();
+  if(!model)return{eligible:layer==='SURFACE',layer,issues:['GEOLOGICAL_INTERIOR_UNAVAILABLE']};
+  const {site,portal}=model,start=from.position;
+  const entering=layer==='SURFACE'&&start.z<site.portalZ&&z>=site.portalZ;
+  const exiting=layer==='INTERIOR'&&start.z>=site.portalZ&&z<site.portalZ;
+  if(!entering&&!exiting)return{eligible:true,layer};
+  const t=(site.portalZ-start.z)/(z-start.z),crossX=start.x+(x-start.x)*t;
+  const crossing=resolveGeologicalRuntimeFootSupport(crossX,site.portalZ+1e-5,{layer:'INTERIOR'});
+  const distance=Math.hypot(crossX-start.x,site.portalZ-start.z),allowance=.65*distance+.04;
+  const lowAndAligned=crossing?.eligible&&Math.abs(from.terrainElevation-crossing.footY)<=allowance&&
+    Math.abs(start.y-crossing.eyeY)<=allowance&&start.y<=crossing.ceilingY-.35;
+  if(lowAndAligned)return{eligible:true,layer:entering?'INTERIOR':'SURFACE'};
+  if(exiting)return{eligible:false,layer,issues:['CAVERN_PORTAL_CROSSING_REJECTED']};
+  // High surface travel over the opening stays on the upper skin. A low
+  // approach may not jump a vertical rock face when the aperture is blocked.
+  if(crossX>=portal.aperture.xMin&&crossX<=portal.aperture.xMax){
+    const top=resolveGeologicalRuntimeFootSupport(crossX,site.portalZ+1e-5,{layer:'SURFACE'});
+    const section=model.formation.caveSectionAt?.(crossX,site.portalZ);
+    const openingCeiling=section?.ceilingY??model.formation.roofAt?.(crossX,site.portalZ);
+    if(top?.eligible&&finite(openingCeiling)&&start.y<openingCeiling&&from.terrainElevation<top.footY-allowance)
+      return{eligible:false,layer,issues:['CAVERN_PORTAL_CROSSING_REJECTED']};
+  }
+  return{eligible:true,layer};
+}
+function guardSupportAt(from,x,z,p){
+  const transition=layerForSegment(from,x,z);
+  if(!transition.eligible)return{eligible:false,class:'INTERIOR',issues:transition.issues};
+  return resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight:p.eyeHeight,layer:transition.layer});
+}
+function nearCameraSupport(x,z,p,ground){
+  const origin={position:{x,y:ground+p.eyeHeight,z},terrainElevation:ground,navigationLayer:'SURFACE'};
   // A local geometric guard remains hard while the distant view allowance
   // fades. The existing cave wall clearance is .35m. This sampled guard is
   // not a new general collision/physics certification.
@@ -135,18 +181,18 @@ function nearCameraSupport(x,z,p){
   for(let i=0;i<17;i++){
     const angle=i*Math.PI/8,r=i===16?0:radius;
     const sx=x+Math.cos(angle)*r,sz=z+Math.sin(angle)*r;
-    let cave=resolveGeologicalRuntimeFootSupport(sx,sz,{eyeHeight:p.eyeHeight});
+    let cave=guardSupportAt(origin,sx,sz,p);
     const model=getGeologicalRuntimeBridge();
     if(cave&&!cave.eligible&&model&&cave.class==='EXTERIOR_DRY_CHANNEL'&&
         cave.issues?.length===1&&cave.issues[0]==='GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING'&&
-        exteriorRimDistance(sx,sz,model)<=1e-5){
+        (exteriorRimDistance(sx,sz,model)<=1e-5||Math.abs(sz-model.site.portalZ)<=1e-5)){
       // A guard sample exactly on the emitted rim can fall between rounded
       // triangles. Query actual physical neighbors at ±20 micrometre X/Z offsets and
       // retain their highest support; never substitute the intact mountain.
       // A real interior collision remains a rejection, even at this epsilon.
       let highestSupport=null;
       for(const [dx,dz] of [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]]){
-        const adjacent=resolveGeologicalRuntimeFootSupport(sx+dx*2e-5,sz+dz*2e-5,{eyeHeight:p.eyeHeight});
+        const adjacent=guardSupportAt(origin,sx+dx*2e-5,sz+dz*2e-5,p);
         if(adjacent?.class==='INTERIOR'&&!adjacent.eligible)return{eligible:false,issues:adjacent.issues};
         if(adjacent?.eligible&&(!highestSupport||adjacent.footY>highestSupport.footY))highestSupport=adjacent;
       }
@@ -159,19 +205,20 @@ function nearCameraSupport(x,z,p){
   }
   return{eligible:true,minimumCameraY:highest+p.minimumTerrainClearance,radius};
 }
-function resolvePosition(x,z,yaw=0){
+function resolvePosition(x,z,yaw=0,layer='SURFACE'){
+  if(layer!=='SURFACE'&&layer!=='INTERIOR')return{eligible:false,issues:['GEOLOGICAL_NAVIGATION_LAYER_INVALID']};
   if(!finite(x)||!finite(z))return{eligible:false,issues:['NAVIGATION_POSITION_INVALID']};
   if(!isHEarthPositionInsideTraversalDomain(x,z))return{eligible:false,issues:['OUTER_NAVIGATION_BOUNDARY']};
   const chunk=resolveHEarthNavigableTerrainChunk(x,z);
   if(!chunk)return{eligible:false,issues:['NO_NAVIGABLE_TERRAIN_CHUNK']};
   const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE;
-  const cave=resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight:p.eyeHeight});
+  const cave=resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight:p.eyeHeight,layer});
   if(cave&&!cave.eligible)return{eligible:false,issues:cave.issues};
   const canonical=sampleHEarthTerrainField(x,z),sel=semantic(chunk,x,z);
   if(cave?.class==='INTERIOR'){
     const y=cave.footY+p.eyeHeight;
     if(!finite(cave.ceilingY)||y>cave.ceilingY-.35)return{eligible:false,issues:['CAVERN_SOLID_OR_HEADROOM_COLLISION']};
-    return{eligible:true,position:{x,y,z},terrainElevation:cave.footY,
+    return{eligible:true,navigationLayer:'INTERIOR',position:{x,y,z},terrainElevation:cave.footY,
       visibleTerrainElevation:cave.footY,clearanceReferenceElevation:cave.footY,
       canonicalTerrainElevation:canonical?.valid?canonical.elevation:cave.footY,
       minimumCameraY:y,targetCameraY:y,clearance:p.eyeHeight,
@@ -192,11 +239,11 @@ function resolvePosition(x,z,yaw=0){
   const reference=weight===0?ground:weight===1?envelope.visibleElevation:
     ground+Math.max(0,envelope.visibleElevation-ground)*weight;
   const support=ground+p.hardTerrainSupportOffset;
-  const near=weight<1?nearCameraSupport(x,z,p):null;
+  const near=weight<1?nearCameraSupport(x,z,p,ground):null;
   if(near&&!near.eligible)return near;
   const minimumCameraY=Math.max(support,reference+p.minimumTerrainClearance,near?.minimumCameraY??-Infinity);
   const y=Math.max(minimumCameraY,reference+p.eyeHeight);
-  return{eligible:true,position:{x,y,z},terrainElevation:ground,visibleTerrainElevation:ground,
+  return{eligible:true,navigationLayer:'SURFACE',position:{x,y,z},terrainElevation:ground,visibleTerrainElevation:ground,
     clearanceReferenceElevation:reference,canonicalTerrainElevation:canonical.elevation,
     minimumCameraY,targetCameraY:y,clearance:y-ground,
     chunkId:chunk.chunkId,physicalRole:chunk.physicalRole,formationIds:chunk.formationIds,
@@ -205,10 +252,29 @@ function resolvePosition(x,z,yaw=0){
     terrainSupported:true,geologicalPhysicalSupport:!!cave,geologicalFloorClass:cave?.class??null,
     geologicalCeilingY:null,issues:[]};
 }
-function sweep(state,x,z,yaw){const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,dx=x-state.position.x,dz=z-state.position.z,d=Math.hypot(dx,dz),n=Math.max(1,Math.ceil(d/p.sweptTerrainSampleSpacing));let last=resolvePosition(state.position.x,state.position.z,state.yawDegrees);if(!last.eligible)return{eligible:false,issues:last.issues,sampleCount:0};for(let i=1;i<=n;i++){const t=i/n,r=resolvePosition(state.position.x+dx*t,state.position.z+dz*t,yaw);if(!r.eligible)return{eligible:false,issues:r.issues,sampleCount:i-1};if(last&&(r.geologicalFloorClass==='INTERIOR'||last.geologicalFloorClass==='INTERIOR')&&Math.abs(r.terrainElevation-last.terrainElevation)>0.65*(d/n)+.04)return{eligible:false,issues:['GEOLOGICAL_UNWALKABLE_STEP_GRADE'],sampleCount:i-1};last=r;}return{eligible:true,result:last??resolvePosition(x,z,yaw),sampleCount:n};}
-function stateFrom(r,{yaw,pitch,fov,sequence,action,accepted=true,rejectionReason=null,previousY=null,swept=0}){return freeze({contractId:H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID,cameraClearanceSuccessorContractId:H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_CONTRACT_ID,terrainSupportedLocomotionContractId:H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_CONTRACT_ID,stateId:`H_EARTH_NAVIGATION_STATE_${String(sequence).padStart(4,'0')}`,sequence,action,accepted,recovered:false,rejectionReason,position:r.position,yawDegrees:norm(yaw),pitchDegrees:clamp(pitch,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.pitchMinimumDegrees,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.pitchMaximumDegrees),verticalFovDegrees:clamp(fov,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.verticalFovMinimumDegrees,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.verticalFovMaximumDegrees),terrainElevation:r.terrainElevation,visibleTerrainElevation:r.visibleTerrainElevation,clearanceReferenceElevation:r.clearanceReferenceElevation,canonicalTerrainElevation:r.canonicalTerrainElevation,minimumCameraY:r.minimumCameraY,targetCameraY:r.targetCameraY,clearance:r.clearance,verticalResponseMode:'HARD_TERRAIN_SUPPORT',verticalDelta:finite(previousY)?r.position.y-previousY:0,verticalAcceleration:0,clearanceSurfaceContractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,protectedGeographicFloor:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR,chunkId:r.chunkId,physicalRole:r.physicalRole,formationIds:r.formationIds,selectedSemanticAddressId:r.selectedSemanticAddressId,selectionProjectionModel:r.selectionProjectionModel,terrainClearanceReceiptId:`H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_${String(sequence).padStart(4,'0')}`,terrainSupported:true,geologicalPhysicalSupport:r.geologicalPhysicalSupport===true,geologicalFloorClass:r.geologicalFloorClass??null,geologicalCeilingY:r.geologicalCeilingY??null,sweptTerrainSupportSampleCount:swept,canonicalCameraStateAuthority:false,collisionOrPhysicsClaim:false,geographyAuthorityCreated:false,topologyAuthorityCreated:false,navigationScaleAuthorityCreated:false});}
+function sweep(state,x,z,yaw){
+  const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,dx=x-state.position.x,dz=z-state.position.z;
+  const d=Math.hypot(dx,dz),n=Math.max(1,Math.ceil(d/p.sweptTerrainSampleSpacing));
+  let last=resolvePosition(state.position.x,state.position.z,state.yawDegrees,stateNavigationLayer(state));
+  if(!last.eligible)return{eligible:false,issues:last.issues,sampleCount:0};
+  // Retain the actual accepted source height for portal admission, not a new
+  // projected height inferred solely from its X/Z.
+  last={...last,position:{...last.position,y:state.position.y}};
+  for(let i=1;i<=n;i++){
+    const t=i/n,nx=state.position.x+dx*t,nz=state.position.z+dz*t;
+    const transition=layerForSegment(last,nx,nz);
+    if(!transition.eligible)return{eligible:false,issues:transition.issues,sampleCount:i-1};
+    const r=resolvePosition(nx,nz,yaw,transition.layer);
+    if(!r.eligible)return{eligible:false,issues:r.issues,sampleCount:i-1};
+    if((r.navigationLayer==='INTERIOR'||last.navigationLayer==='INTERIOR')&&Math.abs(r.terrainElevation-last.terrainElevation)>.65*(d/n)+.04)
+      return{eligible:false,issues:['GEOLOGICAL_UNWALKABLE_STEP_GRADE'],sampleCount:i-1};
+    last=r;
+  }
+  return{eligible:true,result:last,sampleCount:n};
+}
+function stateFrom(r,{yaw,pitch,fov,sequence,action,accepted=true,rejectionReason=null,previousY=null,swept=0}){return freeze({contractId:H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID,cameraClearanceSuccessorContractId:H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_CONTRACT_ID,terrainSupportedLocomotionContractId:H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_CONTRACT_ID,stateId:`H_EARTH_NAVIGATION_STATE_${String(sequence).padStart(4,'0')}`,sequence,action,accepted,recovered:false,rejectionReason,navigationLayer:r.navigationLayer??'SURFACE',position:r.position,yawDegrees:norm(yaw),pitchDegrees:clamp(pitch,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.pitchMinimumDegrees,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.pitchMaximumDegrees),verticalFovDegrees:clamp(fov,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.verticalFovMinimumDegrees,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.verticalFovMaximumDegrees),terrainElevation:r.terrainElevation,visibleTerrainElevation:r.visibleTerrainElevation,clearanceReferenceElevation:r.clearanceReferenceElevation,canonicalTerrainElevation:r.canonicalTerrainElevation,minimumCameraY:r.minimumCameraY,targetCameraY:r.targetCameraY,clearance:r.clearance,verticalResponseMode:'HARD_TERRAIN_SUPPORT',verticalDelta:finite(previousY)?r.position.y-previousY:0,verticalAcceleration:0,clearanceSurfaceContractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,protectedGeographicFloor:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR,chunkId:r.chunkId,physicalRole:r.physicalRole,formationIds:r.formationIds,selectedSemanticAddressId:r.selectedSemanticAddressId,selectionProjectionModel:r.selectionProjectionModel,terrainClearanceReceiptId:`H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_${String(sequence).padStart(4,'0')}`,terrainSupported:true,geologicalPhysicalSupport:r.geologicalPhysicalSupport===true,geologicalFloorClass:r.geologicalFloorClass??null,geologicalCeilingY:r.geologicalCeilingY??null,sweptTerrainSupportSampleCount:swept,canonicalCameraStateAuthority:false,collisionOrPhysicsClaim:false,geographyAuthorityCreated:false,topologyAuthorityCreated:false,navigationScaleAuthorityCreated:false});}
 export function createHEarthFunctionalLandscapeNavigationState({waypointId='COAST'}={}){const w=H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS[waypointId]??H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.COAST,r=resolvePosition(w.position.x,w.position.z,w.yawDegrees);if(!r.eligible)return freeze({ok:false,status:'INITIAL_NAVIGATION_STATE_REJECTED',issues:r.issues});return freeze({ok:true,status:'INITIAL_NAVIGATION_STATE_COMPLETE',state:stateFrom(r,{yaw:w.yawDegrees,pitch:w.pitchDegrees,fov:56,sequence:1,action:`GOTO_WAYPOINT:${w.waypointId}`}),issues:[]});}
 function delta(state,action,m){const y=state.yawDegrees*Math.PI/180,f={x:Math.sin(y),z:-Math.cos(y)},r={x:Math.cos(y),z:Math.sin(y)};if(action==='MOVE_FORWARD')return{x:f.x*m,z:f.z*m};if(action==='MOVE_BACKWARD')return{x:-f.x*m,z:-f.z*m};if(action==='STRAFE_LEFT')return{x:-r.x*m,z:-r.z*m};if(action==='STRAFE_RIGHT')return{x:r.x*m,z:r.z*m};return{x:0,z:0};}
-export function proposeHEarthFunctionalLandscapeNavigation(current,intent={}){if(!current||current.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)return freeze({ok:false,status:'NAVIGATION_PROPOSAL_REJECTED',state:current??null,issues:['CURRENT_NAVIGATION_STATE_INVALID']});const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,action=typeof intent.action==='string'?intent.action:'NO_OP',sequence=current.sequence+1;if(action==='RESET'){const r=createHEarthFunctionalLandscapeNavigationState();return freeze({ok:r.ok,status:r.ok?'NAVIGATION_RESET_COMPLETE':'NAVIGATION_RESET_FAILED',state:r.ok?stateFrom(resolvePosition(r.state.position.x,r.state.position.z,r.state.yawDegrees),{yaw:r.state.yawDegrees,pitch:r.state.pitchDegrees,fov:r.state.verticalFovDegrees,sequence,action,previousY:current.position.y}):current,issues:r.issues});}let x=current.position.x,z=current.position.z,yaw=current.yawDegrees,pitch=current.pitchDegrees,fov=current.verticalFovDegrees;if(action==='GOTO_WAYPOINT'){const w=H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS[intent.waypointId];if(!w)return freeze({ok:false,status:'NAVIGATION_WAYPOINT_REJECTED',state:current,issues:['UNKNOWN_WAYPOINT']});x=w.position.x;z=w.position.z;yaw=w.yawDegrees;pitch=w.pitchDegrees;}else if(['MOVE_FORWARD','MOVE_BACKWARD','STRAFE_LEFT','STRAFE_RIGHT'].includes(action)){const m=clamp(finite(intent.magnitude)?Math.abs(intent.magnitude):p.movementStepWorldUnits,0,p.maximumMovementIntentWorldUnits),d=delta(current,action,m);x+=d.x;z+=d.z;}else if(action==='TURN_LEFT')yaw-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.turnStepDegrees,0,8);else if(action==='TURN_RIGHT')yaw+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.turnStepDegrees,0,8);else if(action==='PITCH_UP')pitch+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.pitchStepDegrees,0,8);else if(action==='PITCH_DOWN')pitch-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.pitchStepDegrees,0,8);else if(action==='ZOOM_IN')fov-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):3,0,6);else if(action==='ZOOM_OUT')fov+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):3,0,6);else if(action==='SET_CAMERA_POSITION'){x=intent.position?.x;z=intent.position?.z;}const moved=Math.hypot(x-current.position.x,z-current.position.z)>1e-9,s=moved?sweep(current,x,z,yaw):null,r=moved?(s.eligible?s.result:null):resolvePosition(x,z,yaw);if(!r?.eligible)return freeze({ok:false,status:'NAVIGATION_PROPOSAL_REJECTED_STATE_PRESERVED',state:current,issues:s?.issues??r?.issues??['TERRAIN_SUPPORT_REJECTED']});return freeze({ok:true,status:'NAVIGATION_PROPOSAL_ACCEPTED',state:stateFrom(r,{yaw,pitch,fov,sequence,action,previousY:current.position.y,swept:s?.sampleCount??0}),issues:[]});}
+export function proposeHEarthFunctionalLandscapeNavigation(current,intent={}){if(!current||current.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)return freeze({ok:false,status:'NAVIGATION_PROPOSAL_REJECTED',state:current??null,issues:['CURRENT_NAVIGATION_STATE_INVALID']});const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,action=typeof intent.action==='string'?intent.action:'NO_OP',sequence=current.sequence+1;if(action==='RESET'){const r=createHEarthFunctionalLandscapeNavigationState();return freeze({ok:r.ok,status:r.ok?'NAVIGATION_RESET_COMPLETE':'NAVIGATION_RESET_FAILED',state:r.ok?stateFrom(resolvePosition(r.state.position.x,r.state.position.z,r.state.yawDegrees),{yaw:r.state.yawDegrees,pitch:r.state.pitchDegrees,fov:r.state.verticalFovDegrees,sequence,action,previousY:current.position.y}):current,issues:r.issues});}let x=current.position.x,z=current.position.z,yaw=current.yawDegrees,pitch=current.pitchDegrees,fov=current.verticalFovDegrees;if(action==='GOTO_WAYPOINT'){const w=H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS[intent.waypointId];if(!w)return freeze({ok:false,status:'NAVIGATION_WAYPOINT_REJECTED',state:current,issues:['UNKNOWN_WAYPOINT']});x=w.position.x;z=w.position.z;yaw=w.yawDegrees;pitch=w.pitchDegrees;}else if(['MOVE_FORWARD','MOVE_BACKWARD','STRAFE_LEFT','STRAFE_RIGHT'].includes(action)){const m=clamp(finite(intent.magnitude)?Math.abs(intent.magnitude):p.movementStepWorldUnits,0,p.maximumMovementIntentWorldUnits),d=delta(current,action,m);x+=d.x;z+=d.z;}else if(action==='TURN_LEFT')yaw-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.turnStepDegrees,0,8);else if(action==='TURN_RIGHT')yaw+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.turnStepDegrees,0,8);else if(action==='PITCH_UP')pitch+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.pitchStepDegrees,0,8);else if(action==='PITCH_DOWN')pitch-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):p.pitchStepDegrees,0,8);else if(action==='ZOOM_IN')fov-=clamp(finite(intent.degrees)?Math.abs(intent.degrees):3,0,6);else if(action==='ZOOM_OUT')fov+=clamp(finite(intent.degrees)?Math.abs(intent.degrees):3,0,6);else if(action==='SET_CAMERA_POSITION'){x=intent.position?.x;z=intent.position?.z;}const moved=Math.hypot(x-current.position.x,z-current.position.z)>1e-9,s=moved?sweep(current,x,z,yaw):null,r=moved?(s.eligible?s.result:null):resolvePosition(x,z,yaw,stateNavigationLayer(current));if(!r?.eligible)return freeze({ok:false,status:'NAVIGATION_PROPOSAL_REJECTED_STATE_PRESERVED',state:current,issues:s?.issues??r?.issues??['TERRAIN_SUPPORT_REJECTED']});return freeze({ok:true,status:'NAVIGATION_PROPOSAL_ACCEPTED',state:stateFrom(r,{yaw,pitch,fov,sequence,action,previousY:current.position.y,swept:s?.sampleCount??0}),issues:[]});}
 export function createHEarthFunctionalLandscapeCamera(state){if(!state||state.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)return null;const yaw=state.yawDegrees*Math.PI/180,pitch=state.pitchDegrees*Math.PI/180,h=Math.cos(pitch),d=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.lookDistanceWorldUnits,dir={x:Math.sin(yaw)*h,y:Math.sin(pitch),z:-Math.cos(yaw)*h};return freeze({position:freeze({...state.position}),target:freeze({x:state.position.x+dir.x*d,y:state.position.y+dir.y*d,z:state.position.z+dir.z*d}),up:freeze({x:0,y:1,z:0}),verticalFovDegrees:state.verticalFovDegrees,nearPlane:H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.nearPlane,farPlane:H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.farPlane,sourceCapacityContractId:'H_EARTH_3D_CAPACITY_FILE_RENEWAL_STEP_034O_3_GROUND_OBSERVER_CAMERA_CAPACITY_v5',cameraAuthority:'SUCCESSOR_COMPOSITOR_ACCEPTED_NAVIGATION_PROPOSAL',terrainClearanceReceiptId:state.terrainClearanceReceiptId,visibleTerrainClearanceContractId:state.clearanceSurfaceContractId});}
-export function evaluateHEarthFunctionalLandscapeNavigationState(state){const issues=[];if(!state||state.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)issues.push('NAVIGATION_STATE_INVALID');else{const r=resolvePosition(state.position.x,state.position.z,state.yawDegrees);if(!r.eligible)issues.push(...r.issues);else if(state.position.y<r.minimumCameraY-1e-8||state.position.y<r.terrainElevation+H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.hardTerrainSupportOffset-1e-8)issues.push('CAMERA_BELOW_PRESENTED_TERRAIN_SUPPORT');if(!state.selectedSemanticAddressId)issues.push('SEMANTIC_SELECTION_MISSING');if(state.terrainSupported!==true)issues.push('TERRAIN_SUPPORT_FLAG_MISSING');}return freeze({eligible:issues.length===0,status:issues.length?'NAVIGATION_STATE_FAIL':'NAVIGATION_STATE_PASS',issues});}
+export function evaluateHEarthFunctionalLandscapeNavigationState(state){const issues=[];if(!state||state.contractId!==H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID)issues.push('NAVIGATION_STATE_INVALID');else{const r=resolvePosition(state.position.x,state.position.z,state.yawDegrees,stateNavigationLayer(state));if(!r.eligible)issues.push(...r.issues);else if(state.position.y<r.minimumCameraY-1e-8||state.position.y<r.terrainElevation+H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.hardTerrainSupportOffset-1e-8)issues.push('CAMERA_BELOW_PRESENTED_TERRAIN_SUPPORT');if(!state.selectedSemanticAddressId)issues.push('SEMANTIC_SELECTION_MISSING');if(state.terrainSupported!==true)issues.push('TERRAIN_SUPPORT_FLAG_MISSING');}return freeze({eligible:issues.length===0,status:issues.length?'NAVIGATION_STATE_FAIL':'NAVIGATION_STATE_PASS',issues});}

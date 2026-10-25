@@ -1,0 +1,51 @@
+{
+  "schema": "OPERATIONS_CHAMBER_WEBSITE_MIGRATION_v1",
+  "sourceCommit": "e8a67c6db78577774d21133b72c2cf2ea21b6830",
+  "operationId": "DIAMONDGATE_CHAMBER_LOCAL_WORKSPACE_MIGRATION_20261025_001",
+  "runtimeFiles": [
+    {
+      "path": "agent-checkpoints.mjs",
+      "sha256": "41be5d2fdda9fe7131d361e7dae3cc86a95ab6172fed57bb1a5ababadf3a9d81"
+    },
+    {
+      "path": "capability-evidence.mjs",
+      "sha256": "c974c570110d74dd587fdfbf3b611a218335bfb024879c868ff28c5999496ad5"
+    },
+    {
+      "path": "capability-view.mjs",
+      "sha256": "160bcb3382936010664f054bb85895b40efabbd44fc671ce107ed77594abcb00"
+    },
+    {
+      "path": "dashboard.mjs",
+      "sha256": "04aa387a9e7f6e1a95a945632adb40981dae94538b3b76f389710e65f565017a"
+    },
+    {
+      "path": "index.html",
+      "sha256": "c9fbe03cf7636838a12b804089c57052ddd63f3ff48a7c1c15c123192739e94b"
+    },
+    {
+      "path": "local-data.mjs",
+      "sha256": "35258abe0e3360343a8d44bfbb15430cb4c4f5a4f0b20be1d1a07ed49a3e1b5b"
+    },
+    {
+      "path": "presentation-guard.mjs",
+      "sha256": "3c24a76d1cf6dcd34a879c1f534646f4f14134f7f2d0aa5a4b6aa03c0f68ba98"
+    },
+    {
+      "path": "project-briefings.mjs",
+      "sha256": "e4ffe4f46890d0e597d1c532d10fb57efee257ec9eb83e6d689141662eb208d7"
+    },
+    {
+      "path": "spatial.mjs",
+      "sha256": "da0fe883b3dfa04564fc72b1a4ed0b8af8f216a41b7de142209a74118453fdae"
+    },
+    {
+      "path": "study-view.mjs",
+      "sha256": "9f12719cbefe091ca2b9ab392d408d2a47e07ffbf46b443c7a98e44b37955988"
+    },
+    {
+      "path": "workspace-ui.mjs",
+      "sha256": "9f50489485e8c02dd485df9eca33520136bf66449025a0e3d733a801b67affbc"
+    }
+  ]
+}

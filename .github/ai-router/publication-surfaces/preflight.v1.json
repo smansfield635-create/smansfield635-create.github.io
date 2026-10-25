@@ -139,6 +139,31 @@
         "PRIVATE_KEY",
         "sk-proj-"
       ]
+    },
+    {
+      "path": "/preflight/chamber/index.html",
+      "includes": [
+        "workspace-controls",
+        "workspace-ui.mjs",
+        "noindex,nofollow,noarchive"
+      ],
+      "excludes": [
+        "GITHUB_TOKEN",
+        "PRIVATE_KEY",
+        "sk-proj-"
+      ]
+    },
+    {
+      "path": "/preflight/app/dist/workspace-bridge.mjs",
+      "includes": [
+        "diamondgate.workspace-backup.v1",
+        "openChamberProject",
+        "mergeWorkspaceBackup"
+      ],
+      "excludes": [
+        "GITHUB_TOKEN",
+        "PRIVATE_KEY"
+      ]
     }
   ],
   "runtime": {

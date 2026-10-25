@@ -6,7 +6,7 @@
   "runtimeFiles": [
     {
       "path": "dist/app.mjs",
-      "sha256": "62afe68c1db5c60411d67c7d2bdcc8a0132a7ac0dca3814aa50fb6dd154d0e59",
+      "sha256": "7c64148cec1ab8258bbe6452805e919ba9f3093c4f9d13f172acc9ee90ff5c87",
       "originalSha256": "a6a11d9cd203d1695ca786141ee7fb56a3d38a981585bd0d59e51b79f2aeab98"
     },
     {
@@ -24,7 +24,7 @@
     },
     {
       "path": "dist/index.html",
-      "sha256": "57624b954328fdf32765711cd366e9401809573b68df5e0720c3f30dd656c5a3",
+      "sha256": "d1f41ebfc0da75d3c1710578dcda9868897a94667c1ad2d84382ec36b8c5edd9",
       "originalSha256": "ffd92d1f1fc0a5bd483fbfea767f57930f10c5ea15812c1a3c2b0d2ac479690d"
     },
     {
@@ -75,6 +75,10 @@
     {
       "path": "dist/style.css",
       "sha256": "2181a9a42464759dd097f6d6eef93301eef8d94e18e7d26786aff0d2e0be6da6"
+    },
+    {
+      "path": "dist/workspace-bridge.mjs",
+      "sha256": "12fec9779ee96b6a323575adbd54c5bd70840b3edaec4735ee04b7688fb4da42"
     }
   ],
   "excluded": [

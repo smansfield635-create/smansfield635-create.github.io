@@ -1,0 +1,49 @@
+{
+  "baseline": "8da1b0cd0fbae0799b111bd95c2beed0ba84df99",
+  "scope": "Actual navigation proposals and renderer submissions in source-pinned local scene. Diagnostic exposes existing present() only; no product formula changed. Desktop software GPU, not mobile touch timing.",
+  "cases": [
+    {
+      "name": "foothill-north",
+      "yaw": 0,
+      "reverse": true,
+      "accepted": true,
+      "issues": [],
+      "before": {
+        "position": {
+          "x": 24,
+          "y": 18.804698670923244,
+          "z": -260
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 16.554698670923244,
+        "clearance": 2.25,
+        "source": "CLEARANCE_ENVELOPE"
+      },
+      "after": {
+        "position": {
+          "x": 24,
+          "y": 18.55949541070228,
+          "z": -260.05
+        },
+        "pitch": -8,
+        "yaw": 0,
+        "ground": 16.30949541070228,
+        "clearance": 2.25,
+        "source": "EXTERIOR_DRY_CHANNEL"
+      },
+      "dy": -0.24520326022096484,
+      "dg": -0.24520326022096484,
+      "submittedFrame": {
+        "frameSequence": 6,
+        "navigationSequence": 101,
+        "cameraPosition": {
+          "x": 24.00105899599592,
+          "y": 18.47829896537587,
+          "z": -260.0614746628641
+        },
+        "cpuSubmitMilliseconds": 4.299999997019768
+      }
+    }
+  ]
+}

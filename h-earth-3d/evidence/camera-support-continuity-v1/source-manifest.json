@@ -1,0 +1,25 @@
+{
+  "schema": "H_EARTH_CAMERA_SUPPORT_CANDIDATE_v1",
+  "operationId": "H_EARTH_CAMERA_SUPPORT_CONTINUITY_20261025_001",
+  "generation": 2888,
+  "admissionRun": 40217703471,
+  "baseHead": "8da1b0cd0fbae0799b111bd95c2beed0ba84df99",
+  "files": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "8f9c522caec56a3ff98cbf393ade4883d7654ed13118a5c30797f46fcf42760b"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js",
+      "sha256": "e3873658d46cc65fbac0efe3dea10e6079164490004d34ad1ad29b42ee097bee"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "c24b000d0fca438b8203bab6ea9981c5fada13d8dec8d66c8db6539d917af9dd"
+    }
+  ],
+  "baselineDependenciesMatched": 334,
+  "priorSurvey": "candidate3-survey.json",
+  "surveyInheritance": "Final delta is only exact-rim missing nearby-guard query: use highest eligible actual neighboring support within20micrometers. Full204-route survey preserved from preceding candidate; final refined/movement/render tests rerun on final source.",
+  "physicalDeviceAcceptance": "NOT_ESTABLISHED"
+}

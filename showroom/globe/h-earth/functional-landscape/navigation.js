@@ -2,7 +2,7 @@
  * H-Earth terrain-supported navigation successor.
  * Ordinary ground traversal derives camera Y from the exact presented terrain.
  */
-import {resolveGeologicalRuntimeFootSupport} from './geological-runtime-bridge.v1.js?rev=gen2780-stable-planting-v1';
+import {resolveGeologicalRuntimeFootSupport,getGeologicalRuntimeBridge} from './geological-runtime-bridge.v1.js?rev=gen2780-stable-planting-v1';
 import { H_EARTH_3D_CAMERA_CAPACITY } from '../capacity.js';
 import { sampleHEarthTerrainField } from '../../../../h-earth-3d/terrain/h-earth.terrain-field.js';
 import { H_EARTH_FUNCTIONAL_LANDSCAPE_REALIZATION_PLAN } from '../../../../h-earth-3d/integration/h-earth.landscape-realization-planner.js';
@@ -75,24 +75,137 @@ export function resolveHEarthNavigableTerrainChunk(x,z){
 }
 function parseAddress(a){const m=/:R(\d+):C(\d+)$/.exec(a);return m?{address:a,row:Number(m[1]),column:Number(m[2])}:null;}
 function semantic(chunk,x,z){const c=chunk.terrainMemberAddressIds.map(parseAddress).filter(Boolean);if(!c.length)return{selectedSemanticAddressId:null};const xp=clamp((x-chunk.worldBounds.xMin)/Math.max(1e-8,chunk.worldBounds.xMax-chunk.worldBounds.xMin),0,.999999),zp=clamp((z-chunk.worldBounds.zMin)/Math.max(1e-8,chunk.worldBounds.zMax-chunk.worldBounds.zMin),0,.999999),tc=chunk.addressRange.columnMin+Math.floor(xp*4),tr=chunk.addressRange.rowMin+Math.floor(zp*4);return{selectedSemanticAddressId:[...c].sort((a,b)=>(Math.abs(a.row-tr)+Math.abs(a.column-tc))-(Math.abs(b.row-tr)+Math.abs(b.column-tc))||a.address.localeCompare(b.address))[0].address};}
-function resolvePosition(x,z,yaw=0){if(!finite(x)||!finite(z))return{eligible:false,issues:['NAVIGATION_POSITION_INVALID']};if(!isHEarthPositionInsideTraversalDomain(x,z))return{eligible:false,issues:['OUTER_NAVIGATION_BOUNDARY']};const chunk=resolveHEarthNavigableTerrainChunk(x,z);if(!chunk)return{eligible:false,issues:['NO_NAVIGABLE_TERRAIN_CHUNK']};// Use exactly the SAME resident G_world-derived formation that owns the
-  // Run8E cavern aperture. Never resolve a cave camera against the intact roof.
-  const cave=resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight:H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.eyeHeight});
-  if(cave){
-    if(!cave.eligible)return{eligible:false,issues:cave.issues};
-    const original=sampleHEarthTerrainField(x,z),p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE;
-    const supportY=cave.footY+p.eyeHeight,sel=semantic(chunk,x,z);
-    return{eligible:true,position:{x,y:supportY,z},terrainElevation:cave.footY,
+const smoothUnit=t=>{const u=clamp(t,0,1);return u*u*(3-2*u)};
+// Local physical support is never blended: it remains an immutable hard floor.
+function sampleExteriorSupport(x,z){
+  const support=resolveGeologicalRuntimeFootSupport(x,z);
+  if(support&&support.class!=='INTERIOR')return support.eligible?
+    {valid:true,visibleElevation:support.footY,geologicalSupport:support}:
+    {valid:false,issues:support.issues};
+  return sampleHEarthVisibleTerrainClearanceSurface(x,z);
+}
+function exteriorRimDistance(x,z,model){
+  const b=model.localBounds,front=model.site.portalZ;
+  // Exact L-shaped exterior support footprint used by the installed bridge.
+  const points=[[b.xMin,b.zMin],[b.xMax,b.zMin],[b.xMax,front],[-120,front],[-120,-440],[b.xMin,-440]];
+  let distance=Infinity;
+  for(let i=0;i<points.length;i++){
+    const [ax,az]=points[i],[bx,bz]=points[(i+1)%points.length],dx=bx-ax,dz=bz-az;
+    const t=clamp(((x-ax)*dx+(z-az)*dz)/(dx*dx+dz*dz),0,1);
+    distance=Math.min(distance,Math.hypot(x-ax-t*dx,z-az-t*dz));
+  }
+  return distance;
+}
+function sampleExteriorViewReference(x,z){
+  const base=sampleHEarthVisibleTerrainClearanceSurface(x,z);
+  const surface=sampleExteriorSupport(x,z),model=getGeologicalRuntimeBridge();
+  // At the exact emitted-mesh rim, floating-point barycentric coverage may
+  // miss a triangle. The optional collar's limiting reference is already the
+  // original base there. This epsilon fallback does NOT apply to local/near
+  // physical support, interior collisions, or missing samples inside the patch.
+  if(!surface.valid&&base.valid&&model&&surface.issues?.length===1&&
+      surface.issues[0]==='GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING'&&
+      exteriorRimDistance(x,z,model)<=1e-5)return base;
+  if(!surface.valid||!base.valid||!surface.geologicalSupport||!model)return surface;
+  // Different resident mesh tessellations have small geometric rim seams.
+  // Only the optional view reference blends through a 2m inward collar; the
+  // unmodified physical support still clamps the final camera independently.
+  const weight=smoothUnit(exteriorRimDistance(x,z,model)/2);
+  return{valid:true,visibleElevation:base.visibleElevation+(surface.visibleElevation-base.visibleElevation)*weight};
+}
+function caveApproachViewWeight(x,z){
+  const model=getGeologicalRuntimeBridge();
+  if(!model)return 1;
+  const {site}=model;
+  // The cave resolver's finite interior domain includes its collision walls.
+  // The 10m-by-4.5m envelope cannot intersect it outside this circumscribed
+  // radius. Suppress that distant envelope before intersection, and restore
+  // it smoothly over the existing 12m approach scale in every direction.
+  const halfWidth=site.width+7;
+  const dx=Math.max(site.x-halfWidth-x,0,x-site.x-halfWidth);
+  const dz=Math.max(site.portalZ-z,0,z-site.portalZ-site.galleryLength);
+  return smoothUnit((Math.hypot(dx,dz)-Math.hypot(10,4.5))/12);
+}
+function nearCameraSupport(x,z,p){
+  // A local geometric guard remains hard while the distant view allowance
+  // fades. The existing cave wall clearance is .35m. This sampled guard is
+  // not a new general collision/physics certification.
+  const radius=Math.max(.35,2*p.nearPlane);
+  let highest=-Infinity;
+  for(let i=0;i<17;i++){
+    const angle=i*Math.PI/8,r=i===16?0:radius;
+    const sx=x+Math.cos(angle)*r,sz=z+Math.sin(angle)*r;
+    let cave=resolveGeologicalRuntimeFootSupport(sx,sz,{eyeHeight:p.eyeHeight});
+    const model=getGeologicalRuntimeBridge();
+    if(cave&&!cave.eligible&&model&&cave.class==='EXTERIOR_DRY_CHANNEL'&&
+        cave.issues?.length===1&&cave.issues[0]==='GEOLOGICAL_VISIBLE_OUTDOOR_SUPPORT_MISSING'&&
+        exteriorRimDistance(sx,sz,model)<=1e-5){
+      // A guard sample exactly on the emitted rim can fall between rounded
+      // triangles. Query actual physical neighbors at ±20 micrometre X/Z offsets and
+      // retain their highest support; never substitute the intact mountain.
+      // A real interior collision remains a rejection, even at this epsilon.
+      let highestSupport=null;
+      for(const [dx,dz] of [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]]){
+        const adjacent=resolveGeologicalRuntimeFootSupport(sx+dx*2e-5,sz+dz*2e-5,{eyeHeight:p.eyeHeight});
+        if(adjacent?.class==='INTERIOR'&&!adjacent.eligible)return{eligible:false,issues:adjacent.issues};
+        if(adjacent?.eligible&&(!highestSupport||adjacent.footY>highestSupport.footY))highestSupport=adjacent;
+      }
+      if(highestSupport)cave=highestSupport;
+    }
+    if(cave&&!cave.eligible)return{eligible:false,issues:cave.issues};
+    const surface=cave?{valid:true,visibleElevation:cave.footY}:sampleHEarthVisibleTerrainClearanceSurface(sx,sz);
+    if(!surface.valid)return{eligible:false,issues:['NEAR_CAMERA_SUPPORT_UNAVAILABLE']};
+    highest=Math.max(highest,surface.visibleElevation);
+  }
+  return{eligible:true,minimumCameraY:highest+p.minimumTerrainClearance,radius};
+}
+function resolvePosition(x,z,yaw=0){
+  if(!finite(x)||!finite(z))return{eligible:false,issues:['NAVIGATION_POSITION_INVALID']};
+  if(!isHEarthPositionInsideTraversalDomain(x,z))return{eligible:false,issues:['OUTER_NAVIGATION_BOUNDARY']};
+  const chunk=resolveHEarthNavigableTerrainChunk(x,z);
+  if(!chunk)return{eligible:false,issues:['NO_NAVIGABLE_TERRAIN_CHUNK']};
+  const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE;
+  const cave=resolveGeologicalRuntimeFootSupport(x,z,{eyeHeight:p.eyeHeight});
+  if(cave&&!cave.eligible)return{eligible:false,issues:cave.issues};
+  const canonical=sampleHEarthTerrainField(x,z),sel=semantic(chunk,x,z);
+  if(cave?.class==='INTERIOR'){
+    const y=cave.footY+p.eyeHeight;
+    if(!finite(cave.ceilingY)||y>cave.ceilingY-.35)return{eligible:false,issues:['CAVERN_SOLID_OR_HEADROOM_COLLISION']};
+    return{eligible:true,position:{x,y,z},terrainElevation:cave.footY,
       visibleTerrainElevation:cave.footY,clearanceReferenceElevation:cave.footY,
-      canonicalTerrainElevation:original?.valid?original.elevation:cave.footY,
-      minimumCameraY:supportY,targetCameraY:supportY,clearance:p.eyeHeight,
+      canonicalTerrainElevation:canonical?.valid?canonical.elevation:cave.footY,
+      minimumCameraY:y,targetCameraY:y,clearance:p.eyeHeight,
       chunkId:chunk.chunkId,physicalRole:chunk.physicalRole,formationIds:chunk.formationIds,
       selectedSemanticAddressId:sel.selectedSemanticAddressId,selectionProjectionModel:'GEOLOGICAL_PHYSICAL_CAVERN_FLOOR',
       terrainSupported:true,geologicalPhysicalSupport:true,geologicalFloorClass:cave.class,
       geologicalCeilingY:cave.ceilingY,issues:[]};
   }
-  const canonical=sampleHEarthTerrainField(x,z),surface=sampleHEarthVisibleTerrainClearanceSurface(x,z);if(canonical?.valid!==true||surface?.valid!==true)return{eligible:false,issues:['PRESENTED_TERRAIN_SAMPLE_INVALID']};const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,envelope=sampleHEarthVisibleTerrainClearanceEnvelope(x,z,{yawDegrees:yaw,lookAheadDistance:p.lookAheadClearanceDistance,lateralRadius:p.clearanceFootprintRadius});if(envelope?.valid!==true)return{eligible:false,issues:['VISIBLE_TERRAIN_CLEARANCE_SAMPLE_INVALID']};const support=surface.visibleElevation+p.hardTerrainSupportOffset,clearance=envelope.visibleElevation+p.minimumTerrainClearance,eye=envelope.visibleElevation+p.eyeHeight,y=Math.max(support,clearance,eye),sel=semantic(chunk,x,z);return{eligible:true,position:{x,y,z},terrainElevation:surface.visibleElevation,visibleTerrainElevation:surface.visibleElevation,clearanceReferenceElevation:envelope.visibleElevation,canonicalTerrainElevation:canonical.elevation,minimumCameraY:Math.max(support,clearance),targetCameraY:y,clearance:y-surface.visibleElevation,chunkId:chunk.chunkId,physicalRole:chunk.physicalRole,formationIds:chunk.formationIds,selectedSemanticAddressId:sel.selectedSemanticAddressId,selectionProjectionModel:containedTerrainChunk(x,z)?p.selectionProjectionModel:'EXTENDED_GROUND_NEAREST_EXISTING_TERRAIN_MEMBER',terrainSupported:true,issues:[]};}
-function sweep(state,x,z,yaw){const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,dx=x-state.position.x,dz=z-state.position.z,d=Math.hypot(dx,dz),n=Math.max(1,Math.ceil(d/p.sweptTerrainSampleSpacing));let last=null;for(let i=1;i<=n;i++){const t=i/n,r=resolvePosition(state.position.x+dx*t,state.position.z+dz*t,yaw);if(!r.eligible)return{eligible:false,issues:r.issues,sampleCount:i-1};if(last&&(r.geologicalFloorClass==='INTERIOR'||last.geologicalFloorClass==='INTERIOR')&&Math.abs(r.terrainElevation-last.terrainElevation)>0.65*(d/n)+.04)return{eligible:false,issues:['GEOLOGICAL_UNWALKABLE_STEP_GRADE'],sampleCount:i-1};last=r;}return{eligible:true,result:last??resolvePosition(x,z,yaw),sampleCount:n};}
+  const surface=sampleExteriorSupport(x,z);
+  if(canonical?.valid!==true||surface?.valid!==true)return{eligible:false,issues:['PRESENTED_TERRAIN_SAMPLE_INVALID']};
+  const weight=caveApproachViewWeight(x,z),ground=surface.visibleElevation;
+  // At zero weight the distant envelope is irrelevant and may cross a cave
+  // wall. Do not reject a lawful position because a far sample hits that wall.
+  const envelope=weight===0?null:sampleHEarthVisibleTerrainClearanceEnvelope(x,z,{yawDegrees:yaw,
+    lookAheadDistance:p.lookAheadClearanceDistance,lateralRadius:p.clearanceFootprintRadius,
+    surfaceSampler:sampleExteriorViewReference});
+  if(envelope&&envelope.valid!==true)return{eligible:false,issues:['VISIBLE_TERRAIN_CLEARANCE_SAMPLE_INVALID']};
+  const reference=weight===0?ground:weight===1?envelope.visibleElevation:
+    ground+Math.max(0,envelope.visibleElevation-ground)*weight;
+  const support=ground+p.hardTerrainSupportOffset;
+  const near=weight<1?nearCameraSupport(x,z,p):null;
+  if(near&&!near.eligible)return near;
+  const minimumCameraY=Math.max(support,reference+p.minimumTerrainClearance,near?.minimumCameraY??-Infinity);
+  const y=Math.max(minimumCameraY,reference+p.eyeHeight);
+  return{eligible:true,position:{x,y,z},terrainElevation:ground,visibleTerrainElevation:ground,
+    clearanceReferenceElevation:reference,canonicalTerrainElevation:canonical.elevation,
+    minimumCameraY,targetCameraY:y,clearance:y-ground,
+    chunkId:chunk.chunkId,physicalRole:chunk.physicalRole,formationIds:chunk.formationIds,
+    selectedSemanticAddressId:sel.selectedSemanticAddressId,
+    selectionProjectionModel:cave?'GEOLOGICAL_PHYSICAL_EXTERIOR_SHARED_CLEARANCE':containedTerrainChunk(x,z)?p.selectionProjectionModel:'EXTENDED_GROUND_NEAREST_EXISTING_TERRAIN_MEMBER',
+    terrainSupported:true,geologicalPhysicalSupport:!!cave,geologicalFloorClass:cave?.class??null,
+    geologicalCeilingY:null,issues:[]};
+}
+function sweep(state,x,z,yaw){const p=H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE,dx=x-state.position.x,dz=z-state.position.z,d=Math.hypot(dx,dz),n=Math.max(1,Math.ceil(d/p.sweptTerrainSampleSpacing));let last=resolvePosition(state.position.x,state.position.z,state.yawDegrees);if(!last.eligible)return{eligible:false,issues:last.issues,sampleCount:0};for(let i=1;i<=n;i++){const t=i/n,r=resolvePosition(state.position.x+dx*t,state.position.z+dz*t,yaw);if(!r.eligible)return{eligible:false,issues:r.issues,sampleCount:i-1};if(last&&(r.geologicalFloorClass==='INTERIOR'||last.geologicalFloorClass==='INTERIOR')&&Math.abs(r.terrainElevation-last.terrainElevation)>0.65*(d/n)+.04)return{eligible:false,issues:['GEOLOGICAL_UNWALKABLE_STEP_GRADE'],sampleCount:i-1};last=r;}return{eligible:true,result:last??resolvePosition(x,z,yaw),sampleCount:n};}
 function stateFrom(r,{yaw,pitch,fov,sequence,action,accepted=true,rejectionReason=null,previousY=null,swept=0}){return freeze({contractId:H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID,cameraClearanceSuccessorContractId:H_EARTH_TERRAIN_RELATIVE_CAMERA_CLEARANCE_SUCCESSOR_CONTRACT_ID,terrainSupportedLocomotionContractId:H_EARTH_TERRAIN_SUPPORTED_LOCOMOTION_CONTRACT_ID,stateId:`H_EARTH_NAVIGATION_STATE_${String(sequence).padStart(4,'0')}`,sequence,action,accepted,recovered:false,rejectionReason,position:r.position,yawDegrees:norm(yaw),pitchDegrees:clamp(pitch,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.pitchMinimumDegrees,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.pitchMaximumDegrees),verticalFovDegrees:clamp(fov,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.verticalFovMinimumDegrees,H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROFILE.verticalFovMaximumDegrees),terrainElevation:r.terrainElevation,visibleTerrainElevation:r.visibleTerrainElevation,clearanceReferenceElevation:r.clearanceReferenceElevation,canonicalTerrainElevation:r.canonicalTerrainElevation,minimumCameraY:r.minimumCameraY,targetCameraY:r.targetCameraY,clearance:r.clearance,verticalResponseMode:'HARD_TERRAIN_SUPPORT',verticalDelta:finite(previousY)?r.position.y-previousY:0,verticalAcceleration:0,clearanceSurfaceContractId:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_CONTRACT_ID,protectedGeographicFloor:H_EARTH_VISIBLE_TERRAIN_CLEARANCE_PROTECTED_FLOOR,chunkId:r.chunkId,physicalRole:r.physicalRole,formationIds:r.formationIds,selectedSemanticAddressId:r.selectedSemanticAddressId,selectionProjectionModel:r.selectionProjectionModel,terrainClearanceReceiptId:`H_EARTH_VISIBLE_TERRAIN_CLEARANCE_RECEIPT_${String(sequence).padStart(4,'0')}`,terrainSupported:true,geologicalPhysicalSupport:r.geologicalPhysicalSupport===true,geologicalFloorClass:r.geologicalFloorClass??null,geologicalCeilingY:r.geologicalCeilingY??null,sweptTerrainSupportSampleCount:swept,canonicalCameraStateAuthority:false,collisionOrPhysicsClaim:false,geographyAuthorityCreated:false,topologyAuthorityCreated:false,navigationScaleAuthorityCreated:false});}
 export function createHEarthFunctionalLandscapeNavigationState({waypointId='COAST'}={}){const w=H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS[waypointId]??H_EARTH_FUNCTIONAL_LANDSCAPE_WAYPOINTS.COAST,r=resolvePosition(w.position.x,w.position.z,w.yawDegrees);if(!r.eligible)return freeze({ok:false,status:'INITIAL_NAVIGATION_STATE_REJECTED',issues:r.issues});return freeze({ok:true,status:'INITIAL_NAVIGATION_STATE_COMPLETE',state:stateFrom(r,{yaw:w.yawDegrees,pitch:w.pitchDegrees,fov:56,sequence:1,action:`GOTO_WAYPOINT:${w.waypointId}`}),issues:[]});}
 function delta(state,action,m){const y=state.yawDegrees*Math.PI/180,f={x:Math.sin(y),z:-Math.cos(y)},r={x:Math.cos(y),z:Math.sin(y)};if(action==='MOVE_FORWARD')return{x:f.x*m,z:f.z*m};if(action==='MOVE_BACKWARD')return{x:-f.x*m,z:-f.z*m};if(action==='STRAFE_LEFT')return{x:-r.x*m,z:-r.z*m};if(action==='STRAFE_RIGHT')return{x:r.x*m,z:r.z*m};return{x:0,z:0};}

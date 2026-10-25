@@ -1,0 +1,60 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_CAMERA_SUPPORT_CONTINUITY_20261025_001",
+  "canonicalAdmissionGeneration": 2888,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewStage": "EXACT_SOURCE_AND_RENDERED_CROSSING_MECHANISM_PRESERVATION",
+  "acceptedBaseline": "8da1b0cd0fbae0799b111bd95c2beed0ba84df99",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/camera-support-continuity-v1/jump-before.png",
+    "h-earth-3d/evidence/camera-support-continuity-v1/jump-after.png",
+    "h-earth-3d/evidence/camera-support-continuity-v1/active-scene.png"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/camera-support-continuity-v1/navigation-verification.json",
+    "h-earth-3d/evidence/camera-support-continuity-v1/qualification.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/camera-support-continuity-v1/source-manifest.json",
+    "h-earth-3d/evidence/camera-support-continuity-v1/qualification.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/navigation.js",
+      "sha256": "8f9c522caec56a3ff98cbf393ade4883d7654ed13118a5c30797f46fcf42760b"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js",
+      "sha256": "e3873658d46cc65fbac0efe3dea10e6079164490004d34ad1ad29b42ee097bee"
+    },
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "c24b000d0fca438b8203bab6ea9981c5fada13d8dec8d66c8db6539d917af9dd"
+    }
+  ],
+  "evidenceScope": "Same-world source preservation and desktop software-WebGL crossing review. Historical anchor imagery and exact changed source reviewed. Normal drag-to-unlock entry worked. All48 diagnostic navigation proposals were accepted and submitted through the existing renderer. Before/after mountain frames preserve the same hill and horizon with a small framing change. No terrain, vegetation, geometry, route, UI, globe or regional identity replaced. This is not physical-device or owner aesthetic acceptance.",
+  "limitations": [
+    "Desktop software GPU; no physical phone responsiveness or touch-timing acceptance.",
+    "Selected rendered crossings establish bounded mechanism behavior, not exhaustive framing aesthetics or collision proof.",
+    "Existing resident physical ground seams remain; source changes preserve hard physical clearance."
+  ],
+  "ownerDirection": "Owner directs continuation on the same existing H-Earth product and GitHub Pages publication route, without rematerializing a separate world or new orchestration, and wants actual live comparison after lawful release.",
+  "authorityEffect": "EVIDENCE_ONLY_NOT_PUBLICATION_AUTHORITY"
+}

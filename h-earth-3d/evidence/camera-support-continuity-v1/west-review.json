@@ -1,0 +1,23 @@
+{
+  "schema": "H_EARTH_CAMERA_SUPPORT_WEST_REVIEW_v1",
+  "operationId": "H_EARTH_CAMERA_SUPPORT_CONTINUITY_20261025_001",
+  "navigationBlob": "1a9d43c56d4070459b730956313f866072a2e259",
+  "disposition": "PASS",
+  "scope": "Independent source and bounded final qualification readback",
+  "checks": [
+    "32 refined crossing profiles",
+    "48 movement sequences retain exact baseline final XZ and rejection behavior",
+    "7 fine-turn sites; 1 baseline-invalid skip",
+    "75 unchanged ordinary terrain controls",
+    "48 correct renderer navigationSequence101 receipts",
+    "5 exact-source and saved-evidence tests pass",
+    "Same-world anchor source preservation"
+  ],
+  "corrections": "Review found and required fixes for unbounded cave taper, exact-rim guard rejection regression and one background-frame receipt race. Final artifacts clear all three.",
+  "limitations": [
+    "Desktop software WebGL, not phone acceptance",
+    "Existing physical support seams and baseline rim rejections retained",
+    "No exhaustive collision, performance or aesthetic acceptance",
+    "Merge and live publication remain separate"
+  ]
+}

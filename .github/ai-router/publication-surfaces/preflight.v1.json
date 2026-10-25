@@ -105,7 +105,6 @@
         "validateState",
         "receiveResult",
         "generateContinuation",
-        "PROGRESSION",
         "milestone"
       ],
       "excludes": [

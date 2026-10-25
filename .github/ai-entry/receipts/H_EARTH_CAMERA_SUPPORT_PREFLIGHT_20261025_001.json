@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_CAMERA_SUPPORT_PREFLIGHT_20261025_001",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6797,
+  "requestBranch": "ai-dispatch-request-h-earth-camera-support-preflight-20261025",
+  "requestCommit": "4410b40934e9a368ba6d96123d34c132bd92b17a",
+  "requestCommitParent": "7c8934904a6887a614bc5092c3554703d8c01fdb",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7c8934904a6887a614bc5092c3554703d8c01fdb",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "6643be6325d954e62f3a3a8ab61ab66e7808d2ea",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "40219873267",
+  "dispatchedRunId": 40219908621,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40219908621",
+  "dispatchedRunHeadSha": "7c8934904a6887a614bc5092c3554703d8c01fdb",
+  "dispatchedAt": "2026-10-25T18:09:37.178Z",
+  "resolvedAt": "2026-10-25T18:09:41.163Z"
+}

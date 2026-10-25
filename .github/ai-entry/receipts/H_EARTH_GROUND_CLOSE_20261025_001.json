@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "H_EARTH_GROUND_CLOSE_20261025_001",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6810,
+  "requestBranch": "ai-dispatch-request-h-earth-ground-close-20261025",
+  "requestCommit": "37e7d6d9eb6c7957c76eee55acc4f9a8723a7f66",
+  "requestCommitParent": "a955845640df5f1ed9dda6dcb74226e35e8ce3e5",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a955845640df5f1ed9dda6dcb74226e35e8ce3e5",
+  "workflow": "remote-operation-terminal-closure-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"H_EARTH_GROUND_ATTACHMENT_20261025_001\",\"lockScope\":\"H_EARTH:GROUND_ATTACHMENT:20261025\",\"lockGeneration\":2891,\"terminalDisposition\":\"PASS_CLOSED\"}",
+    "router_callback_issue": "6810",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "40234647048",
+  "dispatchedRunId": 40234659946,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40234659946",
+  "dispatchedRunHeadSha": "a955845640df5f1ed9dda6dcb74226e35e8ce3e5",
+  "dispatchedAt": "2026-10-25T21:15:47.522Z",
+  "resolvedAt": "2026-10-25T21:15:54.034Z"
+}

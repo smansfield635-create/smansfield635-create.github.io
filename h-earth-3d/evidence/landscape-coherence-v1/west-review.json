@@ -1,0 +1,83 @@
+{
+  "schema": "H_EARTH_LANDSCAPE_COHERENCE_WEST_REVIEW_v1",
+  "operationId": "H_EARTH_LANDSCAPE_COHERENCE_20261025_001",
+  "disposition": "BOUNDED_SOURCE_FIXED_VIEW_RESOURCE_PASS_RETAINED_CANDIDATE_NOT_RELEASE_ACCEPTED",
+  "reviewer": "Independent West agent",
+  "sourceGitBlobs": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "bacbb1450ff81d14db221861dc5beafbfc236d70",
+    "showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js": "e58708075b37df256cb907fcd67f5be70703ed92",
+    "showroom/globe/h-earth/render/foothill-meadow-field.v1.js": "4259f53e8e4e60d0d79608f71d6ffd04a0bf9e09",
+    "showroom/globe/h-earth/render/landscape-coherence-field.v1.js": "81da4392c9e8469ba48e838468f15758d15d1ae3",
+    "showroom/globe/h-earth/index.html": "136fbd474d4dd88da719419a4dc60e6eca929a51"
+  },
+  "fieldExperiment": {
+    "comparison": "HEAD versus candidate foothill module loaded separately; x=-115..59 step2, z=-270..-156 step2, y in[0,10,20,30,40]",
+    "samples": 25520,
+    "densityAndAllNonDryOutputMetadataExactlyPreserved": true,
+    "dryFiniteWithinZeroOne": true,
+    "dryZeroWhenDensityZero": true,
+    "changedDrySamples": 1708,
+    "maximumDryChange": 0.39399604430884116,
+    "maximumDryNeighborChangeAt0001Meter": 3.899043246252676e-05
+  },
+  "sourceFindings": [
+    "No root placement, selection, cap, terrain geometry, navigation, water or tree asset change identified.",
+    "Shared world-position palette replaces grass warp and occupied-ground palette; actual active-owner selection remains unchanged.",
+    "Foothill dryness becomes density-weighted across overlapping fields while density admission stays identical.",
+    "Terrain derivative-based curvature emphasis is removed and woodland habitat material contribution feathers at its atlas edge.",
+    "Uniform sunward ground lighting changes worldSoilTerrain appearance and requires visual comparison.",
+    "Grass palette uses fewer noise evaluations; ground fragment cost still requires measurement."
+  ],
+  "pendingAcceptance": [
+    "Repeated warmed translation/turn and cold-start comparisons with sufficient frame counts to investigate observed bare-mountain slowdown; four samples per site cannot establish p95/p99 or sustained acceptance.",
+    "Actual distance/heading transition visual coverage and broader density/far-land/river/canopy comparison.",
+    "Physical Android performance and perceptual acceptance through lawful exact-head preview before merge/publication."
+  ],
+  "limitations": [
+    "Independent finite25,520-point field grid is not exhaustive CPU/GLSL numeric equivalence proof.",
+    "Resource counters matching does not establish shader runtime cost or overall sustained performance.",
+    "Fixed views preserve same-world framing; they do not establish physical Android or owner aesthetic acceptance.",
+    "No density selection repair is claimed.",
+    "Retaining or preflighting the candidate does not authorize bypass of pending release acceptance."
+  ],
+  "authorityEffect": "NONE_INDEPENDENT_REVIEW_ONLY",
+  "browserShaderCorrection": "Reserved GLSL identifier patch was renamed patchWeight; completed corrected candidate browser run has zero reported errors.",
+  "baselineVisualInspection": {
+    "set": "baseline-complete",
+    "imagesReviewed": 6,
+    "observations": [
+      "Bare-mountain reproduces sparse midground and near-grass contrast plus distant soil patchwork.",
+      "Foothill-west shows near-grass to bare coastal terrain boundary.",
+      "Site labels do not establish habitat coverage: hill-river image has no visible river, woodland-edge has rocks/ferns/grass but no canopy, cavern-upper depicts the exterior slope."
+    ],
+    "candidateComparison": "All six completed baseline/candidate image pairs independently inspected."
+  },
+  "fixedViewReview": {
+    "pairsInspected": 6,
+    "exactCameraPositionAndNavigationSequenceMatch": true,
+    "vegetationReceiptsExactlyMatchPerView": true,
+    "canonicalPackageExactlyMatchesPerView": true,
+    "persistentObjectCountsExactlyMatchPerView": true,
+    "installedRoots": 2914527,
+    "vegetationGpuAllocatedBytes": 46632432,
+    "perFrameVegetationUploadBytes": 0,
+    "visibleChanges": [
+      "Ground in grass/fern/rock view is greener and closer to grass palette; roots and visible object positions remain aligned.",
+      "Foothill coastal slope and bare coast are visibly brighter under sunward lighting.",
+      "Bare-mountain and upper-cavern views show greener occupied ground and brighter exposed slopes while preserving silhouettes.",
+      "Hill-river-labelled image remains a close uphill straw-grass view with relatively subtle change."
+    ],
+    "unresolvedVisualScope": [
+      "Foreground-to-midground density boundaries remain visible; selection is unchanged.",
+      "Distant land patchwork remains visible; no broad far-land coherence completion claimed.",
+      "Visible river and canopy comparison coverage remains incomplete.",
+      "No movement/transition visual completion is inferred from fixed screenshots."
+    ]
+  },
+  "performanceReview": {
+    "accepted": false,
+    "physicalAndroidAccepted": false,
+    "observation": "Bare-mountain candidate diagnostic upper median approximately49.5ms versus baseline16.9ms. No speed or no-regression claim; repeat investigation required.",
+    "startup": "One local-server run per version is diagnostic only and excludes real-network startup."
+  }
+}

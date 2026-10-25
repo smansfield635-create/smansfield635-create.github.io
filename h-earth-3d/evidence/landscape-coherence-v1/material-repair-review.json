@@ -1,0 +1,64 @@
+{
+  "schema": "H_EARTH_LANDSCAPE_MATERIAL_REPAIR_WEST_REVIEW_v1",
+  "reviewer": "Independent West agent",
+  "operationId": "H_EARTH_LANDSCAPE_COHERENCE_20261025_001",
+  "disposition": "BOUNDED_ORDINARY_MATERIAL_ISOLATION_PASS_NOT_LANDSCAPE_OR_RELEASE_ACCEPTANCE",
+  "sourceGitBlob": "31d97193a508ede2c244b4253c76be892fd9782e",
+  "sourcePath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+  "reviewMethod": "Read-only final diff and actual WebGL2 fragment-shader test script/result review; no independent browser rerun.",
+  "sourceFindings": [
+    "Ordinary soil no longer inherits indexed base color through either the34percent palette blend or mountain-contact exposed-rock inheritance. Both remain geologicalEarthRock-only.",
+    "Ordinary roughness and reflectance are stable constants; wetness is a bounded world-field value; legacy curvature is removed.",
+    "Ordinary ambient lighting no longer consumes legacy materialSignal; geological and other material branches retain it.",
+    "Geological rock hue inheritance, cavern material attenuation, shoreline/contact logic, true normals, geometry buffers, root population, selection and draw paths are unchanged by this repair.",
+    "Correction to earlier diagnosis: normal-based base multiplier in the non-soil else branch does not execute for ordinary soil."
+  ],
+  "fragmentTest": {
+    "type": "Actual renderer fragment shader with synthetic WebGL2 vertex fixture",
+    "fixedInputs": "Ordinary role1/materialModel1; approximately x200,y20,z-350; up normal; coast/contact100; same light and camera.",
+    "variedInputs": "BaseColor [.1,.1,.1,1] versus [.8,.4,.2,1]; material [0,0,0,0] versus [1,1,1,1].",
+    "rejectedRGBA": [
+      [
+        145,
+        138,
+        112,
+        255
+      ],
+      [
+        158,
+        145,
+        117,
+        255
+      ]
+    ],
+    "repairedRGBA": [
+      [
+        149,
+        142,
+        114,
+        255
+      ],
+      [
+        149,
+        142,
+        114,
+        255
+      ]
+    ],
+    "result": "PASS_BOUNDED_ATTRIBUTE_INVARIANCE",
+    "limits": [
+      "One sampled position/normal/light fixture and two attribute variants; not exhaustive shading proof.",
+      "Fixture x200 is outside mountain-contact region; geological-only exposedRock guard is source-reviewed, not separately activated by this pixel test.",
+      "Clearing/habitat/shadow feature uniforms default disabled in synthetic fixture; their preservation is source-reviewed."
+    ]
+  },
+  "fullSceneEvidenceLimit": "Two-view candidate-material-repair run precedes the final exposedRock and ambient isolation guards. It is supporting earlier-stage runtime evidence, not a final full-scene qualification of this exact source.",
+  "pending": [
+    "Final exact-source full-scene images including rejected farland panels and correct river/woodland coverage.",
+    "Vegetation and ecological density-boundary diagnosis/repair; this source change does not address them.",
+    "Movement and heading transition evaluation, resource accounting and sufficient repeated performance measurements.",
+    "Physical Android and owner perceptual acceptance before release."
+  ],
+  "scopeConclusion": "A source-grounded ordinary material contamination repair within the same world. Does not establish that all angular shading or owner-reported landscape discontinuities are fixed.",
+  "authorityEffect": "NONE_INDEPENDENT_REVIEW_ONLY"
+}

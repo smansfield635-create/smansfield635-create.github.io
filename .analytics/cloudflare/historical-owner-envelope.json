@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-25T18:34:06Z",
+  "generatedAt": "2026-10-25T19:25:45Z",
   "window": {
-    "start": "2026-07-27T18:34:06Z",
-    "end": "2026-10-25T18:34:06Z"
+    "start": "2026-07-27T19:25:45Z",
+    "end": "2026-10-25T19:25:45Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4576,
+    "pageLoads": 4556,
     "visits": 1341,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4576,
+        "pageLoads": 4556,
         "visits": 1341
       }
     },
     "byPath": {
       "/showroom/": {
-        "pageLoads": 80,
+        "pageLoads": 70,
         "visits": 10
       },
       "/showroom/story/welcome/": {
@@ -37,10 +37,6 @@
       "/": {
         "pageLoads": 1011,
         "visits": 751
-      },
-      "/laws/": {
-        "pageLoads": 270,
-        "visits": 90
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 125,
@@ -53,6 +49,10 @@
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/laws/": {
+        "pageLoads": 260,
+        "visits": 90
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 20,
@@ -162,6 +162,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -174,7 +178,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -188,10 +192,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -325,7 +325,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3235,
+        "pageLoads": 3215,
         "visits": 0
       },
       "www.google.com": {

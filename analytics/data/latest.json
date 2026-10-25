@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-25T18:34:06Z",
+  "generatedAt": "2026-10-25T19:25:45Z",
   "window30d": {
-    "start": "2026-09-25T18:34:06Z",
-    "end": "2026-10-25T18:34:06Z"
+    "start": "2026-09-25T19:25:45Z",
+    "end": "2026-10-25T19:25:45Z"
   },
   "daily": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 37
+      "pageLoads": 35
     },
     {
       "date": "2026-10-19",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-25",
-      "pageLoads": 42
+      "pageLoads": 44
     }
   ],
   "summary": {
-    "pageLoads": 2382,
-    "botPageLoads": 917,
-    "nonBotPageLoads": 1465
+    "pageLoads": 2242,
+    "botPageLoads": 877,
+    "nonBotPageLoads": 1365
   },
   "referrers": [
     {
@@ -140,7 +140,7 @@
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 554,
+      "pageLoads": 494,
       "visits": 0
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "host": "m.facebook.com",
-      "pageLoads": 20,
-      "visits": 20
+      "pageLoads": 10,
+      "visits": 10
     }
   ],
   "topPages": [
@@ -176,19 +176,14 @@
       "visits": 130
     },
     {
-      "path": "/governance-bridge/",
-      "pageLoads": 62,
-      "visits": 22
-    },
-    {
-      "path": "/governance-bridge/governance/",
-      "pageLoads": 60,
-      "visits": 50
-    },
-    {
       "path": "/build/",
       "pageLoads": 51,
       "visits": 51
+    },
+    {
+      "path": "/governance-bridge/governance/",
+      "pageLoads": 50,
+      "visits": 50
     },
     {
       "path": "/about/",
@@ -199,6 +194,11 @@
       "path": "/meet-sean-mansfield/",
       "pageLoads": 31,
       "visits": 31
+    },
+    {
+      "path": "/gauges/",
+      "pageLoads": 30,
+      "visits": 0
     }
   ],
   "ownerMeasurement": {

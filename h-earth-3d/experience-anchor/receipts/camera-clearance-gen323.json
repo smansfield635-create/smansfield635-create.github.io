@@ -1,0 +1,57 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "operationId": "H_EARTH_CAMERA_CLEARANCE_GEN323_20261024_001",
+  "canonicalAdmissionGeneration": 2884,
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "reviewStage": "EXACT_SOURCE_SAME_WORLD_MECHANISM_PRESERVATION_ONLY",
+  "acceptedBaseline": "675866f24882a5d762b7a5f4cb3be6d8430be65e",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/camera-clearance-gen323/source-preservation-review.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/camera-clearance-gen323/clearance.test.mjs",
+    "h-earth-3d/evidence/camera-clearance-gen323/qualification.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/camera-clearance-gen323/source-preservation-review.json",
+    "h-earth-3d/evidence/camera-clearance-gen323/qualification.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "6a79501c3fe2b3b759bccb1b66a364eceb45ae1977d0be5de6f28756bd3dd9f8"
+    },
+    {
+      "path": "showroom/globe/h-earth/functional-landscape/visible-terrain-clearance.js",
+      "sha256": "962d285d7cf7b3aad61b3ccd8ffd249334b88750253e24cacec5ecc1ed28d1a9"
+    }
+  ],
+  "evidenceScope": "SOURCE-PRESERVATION ONLY. The anchor imagery was reviewed as historical accepted baseline; code diff and navigation tests show no replacement world, camera input mechanism, physical terrain, geometry, water, vegetation, UI, route or globe/regional identity. The candidate changes view stand-off and therefore its *visual framing* has not passed physical/perceptual review. Source preservation PASS is not user/physical acceptance and must not be treated as authorization to merge, publish or skip exact-candidate visual qualification.",
+  "limitations": [
+    "Full rendered H-Earth same-frame before/after visual acceptance has not been established; source review cannot verify horizon or obstructed-slope aesthetics.",
+    "The candidate can raise camera by up to 2.57 world units or lower by up to 2.79 relative to the previous observer-view target; sampled geometric floor remains, but geological-runtime observation is outstanding.",
+    "Chromium browser-module test exercised exact source without active WebGL scene and is not evidence of device GPU frame timing.",
+    "Existing independent West exact-candidate review and camera physical/perceptual disposition remain distinct and pending.",
+    "The anchor source-preservation assertion covers the *unchanged same-world implementation*, not a claim that changed view parameters are visually pleasing.",
+    "Production must not be deployed merely as a workaround to obtain otherwise eligible exact-candidate review."
+  ],
+  "ownerDirection": "Owner directs continuation on the same existing H-Earth product and GitHub Pages publication route, without rematerializing a separate world or new orchestration, and wants actual live comparison after lawful release.",
+  "authorityEffect": "NONE_SOURCE_PRESERVATION_EVIDENCE_ONLY"
+}

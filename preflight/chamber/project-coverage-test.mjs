@@ -40,15 +40,22 @@ test('without published briefings, nothing is silently called source-reviewed',(
 test('dated published captures yield an explicit, non-live coverage inventory',()=>{
  const capture=JSON.parse(readFileSync(new URL('./data/control-plane.json',import.meta.url),'utf8'));
  const briefings=JSON.parse(readFileSync(new URL('./data/briefings.json',import.meta.url),'utf8'));
- assert.equal(capture.observedAt,'2026-10-17T07:05:23.245Z');
+ assert(Number.isFinite(Date.parse(capture.observedAt)));
  assert.equal(briefings.schema,'DGB_PROJECT_BRIEFINGS_v1');
+ const before=structuredClone({capture,briefings});
+ const operationalIds=[...new Set(capture.projects.map(p=>p.id))];
+ const briefingIds=new Set(briefings.records.map(b=>b.projectId));
+ const exactIds=operationalIds.filter(id=>briefingIds.has(id));
+ const aliasIds=operationalIds.filter(id=>!briefingIds.has(id)&&id==='PRIVATE_PUBLIC_BRIDGE'&&briefingIds.has('OPERATIONS_CHAMBER'));
+ const linkedIds=new Set([...exactIds,...aliasIds]);
+ const missingIds=operationalIds.filter(id=>!linkedIds.has(id));
+ const briefingOnlyIds=[...briefingIds].filter(id=>!operationalIds.includes(id)&&!(id==='OPERATIONS_CHAMBER'&&operationalIds.includes('PRIVATE_PUBLIC_BRIDGE')));
  const result=projectBriefingCoverage(capture.projects,briefings.records);
- assert.equal(result.operationalIdentities,41);
- assert.equal(result.linkedOperational,3);
- assert.equal(result.exactMatches,2);
- assert.equal(result.declaredAliasMatches,1);
- assert.equal(result.missingOperational,38);
- assert.equal(result.briefingOnly,2);
- assert.equal(result.visibleProjects,43);
- assert.equal(result.missingIds.length,38);
+ assert.deepEqual(result,{
+  operationalIdentities:operationalIds.length,linkedOperational:linkedIds.size,
+  exactMatches:exactIds.length,declaredAliasMatches:aliasIds.length,
+  missingOperational:missingIds.length,briefingOnly:briefingOnlyIds.length,
+  visibleProjects:operationalIds.length+briefingOnlyIds.length,missingIds
+ });
+ assert.deepEqual({capture,briefings},before);
 });

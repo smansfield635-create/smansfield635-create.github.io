@@ -6,7 +6,7 @@ import {fileURLToPath} from 'node:url';
 
 export const DIAGNOSTIC_MODES=Object.freeze(['reference','unlit-albedo']);
 export const DIAGNOSTIC_STAGE_MEANINGS=Object.freeze({reference:'Original terrain lighting and material composition; only grass is hidden.','unlit-albedo':'Final composed terrain base without lighting or fog, using original exposure and gamma.'});
-export const SEARCH_PROVENANCE=Object.freeze({kind:'SEARCH_POSES_NOT_RECOVERED_TELEMETRY',targetVideo:'30053.mp4',targetVideoSeconds:22,targetScreenshots:Object.freeze(['01-30048.jpg','02-30046.jpg','03-30044.jpg']),exactScreenshotMatchProven:false});
+export const SEARCH_PROVENANCE=Object.freeze({kind:'SEARCH_POSES_NOT_RECOVERED_TELEMETRY',targetVideo:'30053.mp4',targetVideoSeconds:22,targetScreenshots:Object.freeze(['01-30048.jpg','02-30046.jpg','03-30044.jpg']),exactScreenshotMatchProven:false,diagnosticPass:2,priorUnmatchedRun:40417092530,localizationBasis:'SOURCE_OASIS_SEED_AND_171_SHARED_EDGE_CPU_AUDIT',oasisSeed:Object.freeze({x:-6,z:-164})});
 export const RENDERER_SHA256='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2';
 export const HEADS=Object.freeze({baseline:'85372f3dc896d73457f6a7d008ac08a51d0ba85b',candidate:'9127904e725a3f4ca13c1221451023102ad09435'});
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
@@ -18,7 +18,7 @@ export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pit
 {name:'patch-close-south',x:88,z:-236,yaw:180,pitch:-17.72},
 {name:'patch-east',x:92,z:-232,yaw:270,pitch:-6.69},
 {name:'patch-west',x:84,z:-232,yaw:90,pitch:-13.5}].map(Object.freeze));
-export const DIAGNOSTIC_POSES=Object.freeze([30,120,210,300].map(yaw=>Object.freeze({name:'river-search-'+String(yaw).padStart(3,'0'),x:18,z:-226,yaw,pitch:-14})));
+export const DIAGNOSTIC_POSES=Object.freeze([{name:'oasis-near-contact',x:-14,z:-146,yaw:35.5,pitch:-14},{name:'oasis-near-inland',x:-14,z:-146,yaw:215.5,pitch:-14},{name:'oasis-west-water',x:-20,z:-164,yaw:90,pitch:-14},{name:'oasis-west-inland',x:-20,z:-164,yaw:270,pitch:-14}].map(Object.freeze));
 // Observer heights exceed measured immutable mesh/analytic elevations by 2.25m.
 // These views are outside walking bounds and confer no traversal/support authority.
 export function comparisonState(nav,pose,sequence,action){

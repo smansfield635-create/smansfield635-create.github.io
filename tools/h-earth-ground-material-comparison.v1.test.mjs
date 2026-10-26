@@ -70,7 +70,7 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('marked boundary search fixes four ordinary poses, two modes and honest provenance',()=>{
  assert.deepEqual(diagnostic.DIAGNOSTIC_MODES,['reference','unlit-albedo']);
- assert.deepEqual(diagnostic.DIAGNOSTIC_POSES.map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[30,120,210,300].map(y=>['river-search-'+String(y).padStart(3,'0'),18,-226,y,-14]));
+ assert.deepEqual(diagnostic.DIAGNOSTIC_POSES.map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[['oasis-near-contact',-14,-146,35.5,-14],['oasis-near-inland',-14,-146,215.5,-14],['oasis-west-water',-20,-164,90,-14],['oasis-west-inland',-20,-164,270,-14]]);
  for(const p of diagnostic.DIAGNOSTIC_POSES)assert.equal(p.diagnosticObserver,undefined);
  assert.equal(diagnostic.SEARCH_PROVENANCE.kind,'SEARCH_POSES_NOT_RECOVERED_TELEMETRY');assert.equal(diagnostic.SEARCH_PROVENANCE.targetVideoSeconds,22);assert.equal(diagnostic.SEARCH_PROVENANCE.exactScreenshotMatchProven,false);
  assert.throws(()=>diagnostic.instrumentDiagnosticRenderer('changed'),/SOURCE_HASH_MISMATCH/);

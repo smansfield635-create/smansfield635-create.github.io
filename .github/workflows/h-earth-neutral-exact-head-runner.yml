@@ -33,7 +33,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' }}
+    if: ${{ inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-a' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1083,3 +1083,60 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  ground-material-comparison:
+    if: ${{ inputs.route_query == 'qualification=ground-material-gen2898-stage-a' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Require the admitted fixed comparison
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          ROUTE_PATH: ${{ inputs.route_path }}
+          EXERCISE: ${{ inputs.exercise_vegetation_residency }}
+          TIMING_SHIM: ${{ inputs.apply_timing_shim }}
+        run: |
+          test "$TARGET_SHA" = 9486b1cf5d42915ee61fef58c758f4b952486f0c
+          test "$ROUTE_PATH" = /showroom/globe/h-earth/
+          test "$EXERCISE" = false
+          test "$TIMING_SHIM" = false
+      - name: Check out immutable runner tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Check out complete fixed baseline
+        uses: actions/checkout@v4
+        with:
+          ref: 6caa1f644c8869349192fe274b50e79c45b894e8
+          path: baseline
+          persist-credentials: false
+      - name: Check out complete fixed candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 9486b1cf5d42915ee61fef58c758f4b952486f0c
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate bounded comparison tooling
+        working-directory: tooling
+        run: node --test tools/h-earth-ground-material-comparison.v1.test.mjs
+      - name: Install Chromium
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture fixed baseline and candidate views
+        working-directory: tooling
+        run: |
+          timeout 1500s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/ground-material-comparison"
+      - name: Preserve comparison evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-ground-material-gen2898-stage-a-${{ github.run_id }}
+          path: ${{ runner.temp }}/ground-material-comparison
+          if-no-files-found: error
+          retention-days: 30

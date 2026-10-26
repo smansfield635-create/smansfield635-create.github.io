@@ -1,0 +1,83 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "6a06f72fb228755a29747bf07fbc62373ca15760",
+    "operationId": "H_EARTH_GROUND_ROLLBACK_20261026_002",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/evidence/ground-rollback-20261026/**",
+      "h-earth-3d/experience-anchor/receipts/ground-rollback-20261026.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_ROLLBACK_QUALIFICATION_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "GEOMETRIC_CLEARANCE_FAILURE",
+    "SUPPORT_SWITCH_DISCONTINUITY",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Pin current main 6a06f72fb228755a29747bf07fbc62373ca15760; verify exact baseline byte restoration and only two HTML import pin replacements. Existing exact-head publication preflight.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/index.html",
+    "h-earth-3d/evidence/ground-rollback-20261026/**",
+    "h-earth-3d/experience-anchor/receipts/ground-rollback-20261026.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Obtain canonical admission for owner-requested rollback.",
+      "step": 1
+    },
+    {
+      "action": "South restores exact baseline renderer blob and two import pins on declared branch, adds bounded rollback evidence.",
+      "step": 2
+    },
+    {
+      "action": "West independently verifies source identity, scope and tests.",
+      "step": 3
+    },
+    {
+      "action": "Merge reviewed rollback; registered exact-head Pages deployment and live byte verification.",
+      "step": 4
+    }
+  ],
+  "exactGoverningHead": "6a06f72fb228755a29747bf07fbc62373ca15760",
+  "exactTestRunnerCommand": "node --test h-earth-3d/evidence/ground-rollback-20261026/rollback.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_PRE_6847_RENDERER_BLOB_RESTORED",
+      "ONLY_TWO_IMPORT_PINS_CHANGED",
+      "UNCHANGED_VEGETATION_AND_OTHER_PRODUCT_BYTES",
+      "INDEPENDENT_WEST_REVIEW",
+      "LIVE_EXACT_HEAD_VERIFICATION",
+      "EXPERIENCE_ANCHOR_ACCEPTANCE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Exact baseline/source and rejected PR diff only; preserve user visual evidence for future work.",
+    "forbidden": "New terrain treatment, vegetation or geometry changes, unrelated changes."
+  },
+  "procedureId": "H_EARTH_GROUND_ROLLBACK_20261026_002_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/ground-rollback-20261026/**",
+      "h-earth-3d/experience-anchor/receipts/ground-rollback-20261026.json"
+    ],
+    "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+  }
+}

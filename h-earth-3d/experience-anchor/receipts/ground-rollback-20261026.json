@@ -1,0 +1,46 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "operationId": "H_EARTH_GROUND_ROLLBACK_20261026_002",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/ground-rollback-20261026/rollback.test.mjs"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/ground-rollback-20261026/rollback.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/ground-rollback-20261026/rollback.test.mjs"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "70403efc00e1154415e1c0e7a89bd7f2af4ccf1a9309839e17f791ba5289e334"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "4450c9e9f66f3dfd8f3094e897311e09550269c2c0f7510a4ce2a4982387d2c1"
+    }
+  ],
+  "continuityBasis": "Exact restoration of pre-6847 renderer; only two HTML import pins changed. Existing world, geometry, vegetation, input, navigation, UI and scale continuity are preserved byte-for-byte. The owner explicitly rejected the replacement and authorized restoring this previous experience. Anchor comparison is source/identity based and reuses unchanged behavior, not a new physical-device test.",
+  "limitations": [
+    "Existing polygon/color-region defects remain for subsequent work.",
+    "No claim of new physical Android acceptance or performance measurement."
+  ]
+}

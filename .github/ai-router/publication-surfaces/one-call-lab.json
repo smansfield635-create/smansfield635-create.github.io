@@ -1,0 +1,74 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "one-call-lab",
+  "description": "One-Call Lab isolated interview demonstration; verifies original customer identities are not present, targets remain targets, and homeowner coaching modules are present.",
+  "checks": [
+    {
+      "path": "/research/one-call-lab/index.html",
+      "includes": [
+        "<title>One-Call Lab · Field Sales Coaching Demonstration</title>",
+        "Every appointment should improve",
+        "Three phases. One measurable coaching loop.",
+        "Separate an improvement target from a measured result.",
+        "Evidence, not embellishment.",
+        "[hidden]{display:none !important}",
+        "Targets are not achieved conversion rates."
+      ],
+      "excludes": [
+        "Diana Vandergriff",
+        "Arnold Lawson",
+        "Susan Finehout"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/research/one-call-lab/",
+    "timeoutMs": 20000,
+    "readySelector": "#overview",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/research/one-call-lab/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "interactions": [
+      {
+        "name": "coaching navigation opens coach",
+        "action": {
+          "type": "click",
+          "selector": "nav [data-view=\"coach\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#coach:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#coach-title",
+            "value": "Coach the next conversation."
+          }
+        ]
+      },
+      {
+        "name": "homeowner navigation opens guide",
+        "action": {
+          "type": "click",
+          "selector": "nav [data-view=\"guide\"]"
+        },
+        "assertions": [
+          {
+            "type": "exists",
+            "selector": "#guide:not([hidden])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#guide-title",
+            "value": "Give the customer a clearer decision."
+          }
+        ]
+      }
+    ]
+  }
+}

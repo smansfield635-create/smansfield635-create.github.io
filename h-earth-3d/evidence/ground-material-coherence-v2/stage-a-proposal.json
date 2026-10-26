@@ -1,0 +1,50 @@
+{
+  "schema": "H_EARTH_GROUND_MATERIAL_STAGE_A_PROPOSAL_v1",
+  "status": "UNQUALIFIED_PROPOSED_TREATMENT",
+  "baselineHead": "6caa1f644c8869349192fe274b50e79c45b894e8",
+  "baselineRendererBlob": "31d97193a508ede2c244b4253c76be892fd9782e",
+  "operationId": "H_EARTH_GROUND_MATERIAL_COHERENCE_20261026_001",
+  "stage": "A_DISTANCE_AND_FOOTPRINT_SOIL_CONTRAST_ONLY",
+  "parameters": {
+    "distanceBlendMeters": [
+      120,
+      520
+    ],
+    "nearProtectionMeters": [
+      72,
+      140
+    ],
+    "pixelFootprintMeters": [
+      1.5,
+      8
+    ],
+    "coastProtectionMeters": [
+      28,
+      66
+    ],
+    "maximumCompression": 0.65,
+    "retainedFarDifference": 0.35
+  },
+  "purpose": "Compress final composed ordinary-soil contrast toward a low-contrast mixture of existing earth and groundcover colors while retaining broad coast, elevation and mineral identity. Leave all local overlays, habitat tint, lighting, normals, geometry and vegetation byte-identical. No extra texture reads or noise samples.",
+  "protectedControls": [
+    "distance<=72m",
+    "coastDistance<=28m",
+    "approved grove interior",
+    "geologicalEarthRock branch",
+    "all water and vegetation roles"
+  ],
+  "limitations": [
+    "Candidate parameters have not been visually accepted or performance-qualified.",
+    "Far broad-color anchor may lighten or warm current ground; compare saved views.",
+    "Habitat tint remains unchanged and may still reintroduce green bands; phase B is separate.",
+    "No claim of physical Android performance."
+  ],
+  "requiredComparisons": [
+    "bare-mountain original and grass-hidden far crop versus baseline",
+    "river-overlook",
+    "coast-oblique",
+    "foothill-west",
+    "near soil and approved grove",
+    "smooth camera-distance transition and sustained equal-resolution rendering cost"
+  ]
+}

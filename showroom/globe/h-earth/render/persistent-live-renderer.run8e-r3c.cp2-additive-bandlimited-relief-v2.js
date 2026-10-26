@@ -497,6 +497,17 @@ float noise2(vec2 p){
   return mix(mix(hash21(i),hash21(i+vec2(1.0,0.0)),f.x),
              mix(hash21(i+vec2(0.0,1.0)),hash21(i+vec2(1.0,1.0)),f.x),f.y);
 }
+// H_EARTH_GROUND_MATERIAL_STAGE_A_FUNCTION_BEGIN
+// Ground albedo only: retain close detail, compress unresolved far contrast.
+float groundMaterialCompression(float cameraDistance,float pixelFootprint,float coastDistance,float groveProtection){
+  float distanceBlend=smoothstep(120.0,520.0,cameraDistance);
+  float footprintBlend=smoothstep(1.5,8.0,pixelFootprint);
+  float nearProtection=smoothstep(72.0,140.0,cameraDistance);
+  float inlandProtection=smoothstep(28.0,66.0,max(0.0,coastDistance));
+  return 0.65*max(distanceBlend,footprintBlend)*nearProtection*
+    inlandProtection*(1.0-groveProtection);
+}
+// H_EARTH_GROUND_MATERIAL_STAGE_A_FUNCTION_END
 // Fade nonzero atlas edge texels to the surrounding soil in world metres.
 // Sampling stays inside its own panel; roots and habitat interiors are unchanged.
 float habitatEdgeWeight(float x,float z,vec4 bounds,float width){
@@ -1052,6 +1063,21 @@ void main(){
       groundcoverTone*=0.88+0.24*materialVariation;
       palette=mix(palette,groundcoverTone,groundcoverWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
+      // H_EARTH_GROUND_MATERIAL_STAGE_A_BEGIN
+      // Compress the effective composed soil, not the overwritten FAR base.
+      // Existing soil families retain broad coast, elevation and mineral identity.
+      // Local overlays, habitat tint, geometric lighting and all grass stay intact.
+      vec3 distantSoilAnchor=mix(compactEarth,fertileEarth,0.5);
+      distantSoilAnchor=mix(distantSoilAnchor,
+        mix(vec3(0.110,0.118,0.075),vec3(0.075,0.090,0.055),0.5),0.45);
+      distantSoilAnchor=mix(distantSoilAnchor,coastalSilt,coastalEarth*0.25);
+      distantSoilAnchor=mix(distantSoilAnchor,dryFoothill,
+        smoothstep(8.0,30.0,vWorldPosition.y)*0.20);
+      distantSoilAnchor=mix(distantSoilAnchor,erodedMineral,mineralExposure*0.30);
+      float groundCompression=groundMaterialCompression(distanceToCamera,
+        length(fwidth(world)),vCoastDistanceMeters,protectedGrove);
+      palette=mix(palette,distantSoilAnchor,groundCompression);
+      // H_EARTH_GROUND_MATERIAL_STAGE_A_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END
     // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2_END

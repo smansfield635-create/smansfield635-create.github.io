@@ -1,11 +1,11 @@
 {
   "schema": "OPERATIONS_CHAMBER_WEBSITE_MIGRATION_v1",
   "sourceCommit": "e8a67c6db78577774d21133b72c2cf2ea21b6830",
-  "operationId": "DIAMONDGATE_CHAMBER_LOCAL_WORKSPACE_MIGRATION_20261025_001",
+  "operationId": "OPERATIONS_CHAMBER_PUBLIC_DISPLAY_FEEDS_20261026_001",
   "runtimeFiles": [
     {
       "path": "agent-checkpoints.mjs",
-      "sha256": "41be5d2fdda9fe7131d361e7dae3cc86a95ab6172fed57bb1a5ababadf3a9d81"
+      "sha256": "666142915d05c6a57eec8010a5e2299d8a70c6bc8ab23aff5a884d88fbc79651"
     },
     {
       "path": "capability-evidence.mjs",
@@ -17,15 +17,15 @@
     },
     {
       "path": "dashboard.mjs",
-      "sha256": "04aa387a9e7f6e1a95a945632adb40981dae94538b3b76f389710e65f565017a"
+      "sha256": "04cb4e812f5a71eb955155e31ef8645099bda3a0a5014fc105b5802f48ea9add"
     },
     {
       "path": "index.html",
-      "sha256": "c46ad70308de70774a1f42fe7b036c469972bde2ade0bf166dfb48f56e0a8c7b"
+      "sha256": "a35dc0eeaf2b7313382975fd2ecafda82940d7910b3763be6dfdc6977d90bcfd"
     },
     {
       "path": "local-data.mjs",
-      "sha256": "35258abe0e3360343a8d44bfbb15430cb4c4f5a4f0b20be1d1a07ed49a3e1b5b"
+      "sha256": "6a792b4f097a3480c14898402fc67585e614076d1681ad047873c0fa23ded628"
     },
     {
       "path": "presentation-guard.mjs",
@@ -33,7 +33,7 @@
     },
     {
       "path": "project-briefings.mjs",
-      "sha256": "e4ffe4f46890d0e597d1c532d10fb57efee257ec9eb83e6d689141662eb208d7"
+      "sha256": "5d17329cdc63d5b7e805225ba9c2acc5707aa768984e7cebc8e46ca6151204ec"
     },
     {
       "path": "spatial.mjs",
@@ -41,11 +41,28 @@
     },
     {
       "path": "study-view.mjs",
-      "sha256": "9f12719cbefe091ca2b9ab392d408d2a47e07ffbf46b443c7a98e44b37955988"
+      "sha256": "b94dddc5fac5e4e9f2a9034dd33073071e3af27e7ccd89517633e46740a73b21"
     },
     {
       "path": "workspace-ui.mjs",
-      "sha256": "e8b8471dee8abbb135839e1e7ceb6fb6e81a7e37b1763b1d893f4632a8301283"
+      "sha256": "79160c015a25b4ed7e90ce031cace844df4b96c1a176978f31c8b6b09ce2d291"
+    },
+    {
+      "path": "data/control-plane.json",
+      "sha256": "6ae9698a71aac45e3314930f4f55e082a68e8c3643f4e6d027cefdfcab8b7f28"
+    },
+    {
+      "path": "data/study.json",
+      "sha256": "adcb1403de555c58de44f5be40013dcf11581267867f063455dc7982a0a09493"
+    },
+    {
+      "path": "data/briefings.json",
+      "sha256": "19ed2f88445c7593bff439c8719724ede888b2fc54b88491b64721290902d38a"
+    },
+    {
+      "path": "data/agents.json",
+      "sha256": "0b723fb336b67e097e9e9b024c026aa30770e48fb477f6b570aeae8205936333"
     }
-  ]
+  ],
+  "dataMode": "PUBLIC_SAME_ORIGIN_DISPLAY_SNAPSHOTS"
 }

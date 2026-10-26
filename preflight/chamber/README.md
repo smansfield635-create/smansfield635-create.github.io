@@ -1,19 +1,18 @@
 # Operations Chamber on the website
 
-This is the original v20 Chamber interface, migrated from source e8a67c6db78577774d21133b72c2cf2ea21b6830 into the website's buildless `/preflight/chamber/` route. DiamondGate links here and both apps share `diamondgate.projects.v2` in the same browser origin.
+The original v20 interface (source e8a67c6db78577774d21133b72c2cf2ea21b6830) runs at `/preflight/chamber/`. Projects, instruments, system, evidence, briefings and agent reports load four same-origin JSON display feeds. No ChatGPT session, access token or backup import is required. The website and these display records are public; noindex is not access control. Private evidence links still require access at their original source.
 
-## Use and recovery
+## Update outside Work Mode
 
-Import the private Chamber snapshot using **Import workspace backup**. This merges the captured records into existing DiamondGate projects; it does not send the file to a server. Open a project and continue it in DiamondGate. Imported source context does not adopt requirements, grant authority, or accept results.
+1. Open `preflight/chamber/data/` in this GitHub repository or an ordinary Git checkout.
+2. Edit the relevant display file: `control-plane.json` (projects, operations and instrument observations), `study.json` (saved study), `briefings.json` (project progress and next steps), or `agents.json` (delivered reports). Preserve schema and original observation dates. Change an observation date only after checking its source. Do not add credentials, raw source files, browser drafts or private continuation instructions.
+3. Validate with `node --test preflight/chamber/*test.mjs`. Update source-manifest hashes for changed display files. Follow `AI_ENTRYPOINT.json` and the existing review and exact-head Pages release process. A GitHub edit alone is not a completed deployment.
+4. After publication, reload or press **Refresh published records**. The open page also checks every minute. All devices read the published files.
 
-**Download combined backup** preserves projects, drafts, history, explicit links and all four imported observation feeds. Restore on another device using the same import control. Conflicting project versions cancel the whole import; retain both backups and reconcile in DiamondGate. Browser storage is device/profile-specific, can be cleared, and does not provide account authentication. The public app assets contain no owner snapshots. The route is unlisted and noindex; it is not an authenticated private URL.
+Refresh retrieves published snapshots; it does not trigger GitHub collectors or execute instruments. Original source timestamps and stale warnings are preserved. The existing GitHub collectors remain separate; automatic publication of new collector output is not introduced by this change. The original Site is retained as a historical source, not a runtime dependency. Historical report links may refer to it.
 
-Use **Update from a current Chamber source response** to add a source-checked capture from a connected Operations Chamber read. This uses the existing local validation and merge path and does not automatically query new data. The existing backup import remains available.
+## Qualification
 
-Operational captures, briefings, study and agent reports retain their source dates. Refresh rereads local storage, not the old Site or a live repository collector. Import a newer snapshot to refresh source observations. Local DiamondGate summaries appear separately.
+Run `node --test preflight/chamber/*test.mjs`, then `cd preflight/app && npm test && npm run check`. Verify all four `/preflight/chamber/data/*.json` URLs and the release marker after the registered Pages deployment. Source data include 49 project-source rows, five briefings, six instrument registry entries and nine delivered reports; project tiles combine aliases and briefing-only projects.
 
-## Maintain without ChatGPT Sites
-
-All runtime source is in this repository. No Sites service, npm installation, framework build, cloud database or API key is needed to serve the Chamber. Edit these modules with any editor or repository coding environment; preview the repository with a static HTTP server. Preserve the repository AI entrypoint for authorized repository operations.
-
-Run `node --test preflight/chamber/*test.mjs`, then `cd preflight/app && npm test && npm run check`. If DiamondGate HTML changes, run its `npm run build`. Update source-manifest runtime hashes after modifications. Publish through the repository's registered exact-head Pages workflow and verify `/preflight/chamber/`, `/preflight/app/`, and the release marker. The original Site is untouched and remains available as a separate historical copy.
+Operation: `OPERATIONS_CHAMBER_PUBLIC_DISPLAY_FEEDS_20261026_001`, admission generation 2901. Preserved source inputs were read through the existing Chamber connector. The non-rendered agent continuation object was excluded. The private control-plane workflow implementation locator is omitted; its public display name, observed run and status are retained. No underlying instrument execution, project completion, or new scientific result is claimed by publication.

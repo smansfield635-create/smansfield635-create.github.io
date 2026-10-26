@@ -164,78 +164,118 @@
         "GITHUB_TOKEN",
         "PRIVATE_KEY"
       ]
+    },
+    {
+      "path": "/preflight/chamber/data/control-plane.json",
+      "includes": [
+        "DGB_OPERATIONS_CHAMBER_DASHBOARD_DATA_v1"
+      ],
+      "excludes": [
+        "github_pat_",
+        "-----BEGIN PRIVATE KEY",
+        "sk-proj-"
+      ]
+    },
+    {
+      "path": "/preflight/chamber/data/study.json",
+      "includes": [
+        "DGB_HOSTED_STUDY_CAPTURE_v1"
+      ],
+      "excludes": [
+        "github_pat_",
+        "-----BEGIN PRIVATE KEY",
+        "sk-proj-"
+      ]
+    },
+    {
+      "path": "/preflight/chamber/data/briefings.json",
+      "includes": [
+        "DGB_PROJECT_BRIEFINGS_v1"
+      ],
+      "excludes": [
+        "github_pat_",
+        "-----BEGIN PRIVATE KEY",
+        "sk-proj-"
+      ]
+    },
+    {
+      "path": "/preflight/chamber/data/agents.json",
+      "includes": [
+        "DGB_CHAMBER_AGENT_DELIVERIES_v1"
+      ],
+      "excludes": [
+        "github_pat_",
+        "-----BEGIN PRIVATE KEY",
+        "sk-proj-"
+      ]
     }
   ],
   "runtime": {
     "enabled": true,
-    "path": "/preflight/app/",
+    "path": "/preflight/chamber/",
     "timeoutMs": 45000,
-    "readySelector": "#template-preview:not(:empty)",
+    "readySelector": "#continuing-study h3",
     "binding": {
       "mode": "direct-document",
-      "path": "/preflight/app/"
+      "path": "/preflight/chamber/"
     },
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
     "ignoreConsoleErrorIncludes": [],
     "interactions": [
       {
-        "name": "Original workspace help is interactive",
+        "name": "Published projects load without imports",
         "action": {
           "type": "click",
-          "selector": "#help"
+          "selector": ".nav [data-target=\"overview\"]"
         },
         "assertions": [
           {
             "type": "exists",
-            "selector": "#help-dialog[open]"
+            "selector": "#projects [data-project=\"DIAMONDGATE_PREFLIGHT\"]"
           },
           {
             "type": "textContains",
-            "selector": "#help-dialog",
-            "value": "local storage"
+            "selector": "#overview",
+            "value": "H-Earth"
           }
         ]
       },
       {
-        "name": "Return to workspace",
+        "name": "Instrument room retains existing services",
         "action": {
           "type": "click",
-          "selector": "#close-help"
-        },
-        "assertions": [
-          {
-            "type": "exists",
-            "selector": "#help-dialog:not([open])"
-          }
-        ]
-      },
-      {
-        "name": "Start-new-work path",
-        "action": {
-          "type": "key",
-          "selector": "#entry-route",
-          "key": "Home"
-        },
-        "assertions": [
-          {
-            "type": "exists",
-            "selector": "#review-packet"
-          }
-        ]
-      },
-      {
-        "name": "Open saved projects",
-        "action": {
-          "type": "key",
-          "selector": "#entry-route",
-          "key": "End"
+          "selector": ".nav [data-target=\"instrument-view\"]"
         },
         "assertions": [
           {
             "type": "textContains",
-            "selector": "#library-view",
-            "value": "My Projects"
+            "selector": "#instrument-view",
+            "value": "Canonical Control"
+          },
+          {
+            "type": "textContains",
+            "selector": "#instrument-view",
+            "value": "Epistemic Control Plane"
+          }
+        ]
+      },
+      {
+        "name": "Refresh published records retains source dates",
+        "action": {
+          "type": "click",
+          "selector": "#refresh"
+        },
+        "assertions": [
+          {
+            "type": "textContains",
+            "selector": "#timestamp",
+            "value": "2026-10-17"
+          },
+          {
+            "type": "textContains",
+            "selector": "#continuing-study",
+            "value": "1,826"
           }
         ]
       }

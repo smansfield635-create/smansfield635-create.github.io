@@ -1,6 +1,6 @@
 {
   "schema": "DGB_PROJECT_BRIEFINGS_v1",
-  "updatedAt": "2026-10-26T00:00:32.661Z",
+  "updatedAt": "2026-10-26T02:19:10.429Z",
   "records": [
     {
       "projectId": "AUDRALIA",
@@ -30,7 +30,7 @@
         ]
       },
       "publication": {
-        "text": "Pages39625496191 SUCCESS. Actual public runtimePASS exact0a8e624f/entry8a0fc780, visible source-bound coastal marker, local nameGratitude, original FAP1_ONLY spherical projection/W5PASS, normal960\u00d7885 canvas and zero runtime errors. Native custom-domain exact-head marker and staged bytes converged.",
+        "text": "Pages39625496191 SUCCESS. Actual public runtimePASS exact0a8e624f/entry8a0fc780, visible source-bound coastal marker, local nameGratitude, original FAP1_ONLY spherical projection/W5PASS, normal960×885 canvas and zero runtime errors. Native custom-domain exact-head marker and staged bytes converged.",
         "basis": "VERIFIED_RECORD",
         "sources": [
           {
@@ -164,16 +164,20 @@
         ]
       },
       "unfinished": {
-        "text": "Import the portable snapshot once on the owner's browser. Physical Android visual acceptance remains unmeasured. Local observations are dated snapshots; new source captures need import and devices do not auto-sync.",
+        "text": "The published Chamber feed already loads without a browser import. Separate browser-local DiamondGate project drafts and backups remain an optional function; progress updates still require source reconciliation and publication. Physical Android visual acceptance remains unverified.",
         "basis": "REPORTED_RESULT",
         "sources": [
           {
-            "label": "Website migration and qualification",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6818"
+            "label": "Published Chamber data reader",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/local-data.mjs"
           },
           {
-            "label": "Exact-head Pages release",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40245854369"
+            "label": "Current Chamber update instructions",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/workspace-ui.mjs"
+          },
+          {
+            "label": "Published project briefing feed",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/data/briefings.json"
           }
         ]
       },
@@ -192,16 +196,20 @@
         ]
       },
       "nextStep": {
-        "text": "Open https://diamondgatebridge.com/preflight/chamber/ and import the supplied Chamber snapshot. Existing DiamondGate projects remain in the same browser workspace. Download combined backups for device transfers.",
+        "text": "Use ordinary chat to reconcile evidence-backed DiamondGate project progress, write the public Chamber briefing feed through GitHub, and verify website readback after publication. No Chamber snapshot import is required to refresh published data.",
         "basis": "PROPOSED_NEXT_STEP",
         "sources": [
           {
-            "label": "Website migration and qualification",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6818"
+            "label": "Published Chamber data reader",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/local-data.mjs"
           },
           {
-            "label": "Exact-head Pages release",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40245854369"
+            "label": "Current Chamber update instructions",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/workspace-ui.mjs"
+          },
+          {
+            "label": "Published project briefing feed",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/data/briefings.json"
           }
         ]
       },
@@ -400,16 +408,20 @@
         ]
       },
       "unfinished": {
-        "text": "Import the portable snapshot once on the owner's browser. Physical Android visual acceptance remains unmeasured. Local observations are dated snapshots; new source captures need import and devices do not auto-sync.",
+        "text": "The display retains dated control-plane, study and agent captures. Five published project briefings do not cover every project in the operational inventory, and several briefing IDs do not directly match operational project IDs. Complete identity reconciliation and source review before expanding coverage. Physical Android visual acceptance remains unverified.",
         "basis": "REPORTED_RESULT",
         "sources": [
           {
-            "label": "Website migration and qualification",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6818"
+            "label": "Published Chamber data reader",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/local-data.mjs"
           },
           {
-            "label": "Exact-head Pages release",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40245854369"
+            "label": "Current Chamber update instructions",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/workspace-ui.mjs"
+          },
+          {
+            "label": "Published project briefing feed",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/data/briefings.json"
           }
         ]
       },
@@ -428,16 +440,20 @@
         ]
       },
       "nextStep": {
-        "text": "Open https://diamondgatebridge.com/preflight/chamber/ and import the supplied Chamber snapshot. Existing DiamondGate projects remain in the same browser workspace. Download combined backups for device transfers.",
+        "text": "Reconcile project-ID mappings and evidence-backed briefing gaps, update the Chamber's published data through ordinary chat and GitHub, and verify Pages publication and website readback. Preserve original source timestamps; no mandatory browser snapshot import.",
         "basis": "PROPOSED_NEXT_STEP",
         "sources": [
           {
-            "label": "Website migration and qualification",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6818"
+            "label": "Published Chamber data reader",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/local-data.mjs"
           },
           {
-            "label": "Exact-head Pages release",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40245854369"
+            "label": "Current Chamber update instructions",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/workspace-ui.mjs"
+          },
+          {
+            "label": "Published project briefing feed",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/data/briefings.json"
           }
         ]
       },
@@ -526,7 +542,7 @@
           "name": "Actual-controller and timed-view checks",
           "use": "Verify persistent payoff and coordinated view context without state changes",
           "result": {
-            "text": "Full actual38/37/1 guarded journey, stale/current receipts and exact export pass. Controlled animation clock verifies repeated held EXECUTE, explicit continuation, kernel\u2192trail\u2192feature\u2192trail outgoing/incoming captions/cues/actions/feature labels, disabled/inert restoration and no requests/order mutation. Cinematic/full mesh/interruption, situation hierarchy, presenter cues, diff check and fresh production build pass.",
+            "text": "Full actual38/37/1 guarded journey, stale/current receipts and exact export pass. Controlled animation clock verifies repeated held EXECUTE, explicit continuation, kernel→trail→feature→trail outgoing/incoming captions/cues/actions/feature labels, disabled/inert restoration and no requests/order mutation. Cinematic/full mesh/interruption, situation hierarchy, presenter cues, diff check and fresh production build pass.",
             "basis": "REPORTED_RESULT",
             "sources": [
               {

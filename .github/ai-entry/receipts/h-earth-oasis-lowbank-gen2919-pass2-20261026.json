@@ -1,0 +1,27 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-oasis-lowbank-gen2919-pass2-20261026",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6898,
+  "requestBranch": "ai-dispatch-request-h-earth-oasis-lowbank-gen2919-pass2",
+  "requestCommit": "8733cadf6474b104759292e37b7063e71bb8c028",
+  "requestCommitParent": "96049be3c50d6da65b8c9758716a6d7090c46895",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "96049be3c50d6da65b8c9758716a6d7090c46895",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "9127904e725a3f4ca13c1221451023102ad09435",
+    "route_query": "qualification=ground-material-gen2898-stage-c",
+    "route_path": "/showroom/globe/h-earth/",
+    "exercise_vegetation_residency": "false"
+  },
+  "bridgeRunId": "40419465235",
+  "dispatchedRunId": 40419484820,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40419484820",
+  "dispatchedRunHeadSha": "96049be3c50d6da65b8c9758716a6d7090c46895",
+  "dispatchedAt": "2026-10-26T23:23:58.946Z",
+  "resolvedAt": "2026-10-26T23:24:02.795Z"
+}

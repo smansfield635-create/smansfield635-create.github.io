@@ -1095,7 +1095,7 @@ jobs:
           EXERCISE: ${{ inputs.exercise_vegetation_residency }}
           TIMING_SHIM: ${{ inputs.apply_timing_shim }}
         run: |
-          test "$TARGET_SHA" = 289f9e0922da4a55b5ca6588407eac8615b14a34
+          test "$TARGET_SHA" = 85372f3dc896d73457f6a7d008ac08a51d0ba85b
           test "$ROUTE_PATH" = /showroom/globe/h-earth/
           test "$EXERCISE" = false
           test "$TIMING_SHIM" = false
@@ -1108,13 +1108,13 @@ jobs:
       - name: Check out complete fixed baseline
         uses: actions/checkout@v4
         with:
-          ref: 6caa1f644c8869349192fe274b50e79c45b894e8
+          ref: 098295a83e5c8372cf0764090c28fa9c81a93264
           path: baseline
           persist-credentials: false
       - name: Check out complete fixed candidate
         uses: actions/checkout@v4
         with:
-          ref: 289f9e0922da4a55b5ca6588407eac8615b14a34
+          ref: 85372f3dc896d73457f6a7d008ac08a51d0ba85b
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1136,7 +1136,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-ground-material-gen2898-stage-a-${{ github.run_id }}
+          name: h-earth-terrain-seam-gen2911-${{ github.run_id }}
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30

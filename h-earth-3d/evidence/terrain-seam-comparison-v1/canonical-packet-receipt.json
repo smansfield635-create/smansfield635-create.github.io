@@ -1,0 +1,30 @@
+{
+  "admissionAuthorityCreated": false,
+  "artifactDigests": {
+    "canonicalConstructionProcedure": "d671057705f8b752192476ab6bf32954f87eef5e3f941b27246c24ff4e81b1e7",
+    "canonicalIntakeComment": "f9ebe8a57f1507423987fa41501d290092f825db7b753a3503e160994f492781",
+    "canonicalIntakeEnvelope": "7e42905be7ef9494008088afb373fdcca8d574c541ef37a0e5e3ccf0b2d702e4",
+    "canonicalOperationRequest": "55df1721ca2e132a7f97e3720fb9cf061cde658c18ebc6d5578844e5992a9312"
+  },
+  "authorityEffect": "NONE_PACKET_COMPILATION_ONLY",
+  "claimAuthorityCreated": false,
+  "commentDigest": "f9ebe8a57f1507423987fa41501d290092f825db7b753a3503e160994f492781",
+  "deploymentAuthorityCreated": false,
+  "envelopeDigest": "309edc43f8deeb118e86d0e1b27fcc2ff84ad09af9e338d44f5152373c529f94",
+  "governingHead": "098295a83e5c8372cf0764090c28fa9c81a93264",
+  "lockScope": "H_EARTH:FIXED_GROUND_COMPARISON:20261026",
+  "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+  "mergeAuthorityCreated": false,
+  "mutationAuthorityCreated": false,
+  "operationId": "H_EARTH_SEAM_COMPARISON_REBIND_20261026_001",
+  "procedureDigest": "4e0ecf6d3ec6fb8462f958acc7c69b3b328baa04379dd0999227d39ddee63f9b",
+  "publicationAuthorityCreated": false,
+  "releaseAuthorityCreated": false,
+  "requestDigest": "feca4c925ba74ee810fd024a335b4fd7dde79cbd440377efa7ccf8aef3557142",
+  "result": "PACKET_READY",
+  "schema": "CANONICAL_PACKET_READY_RECEIPT_v1",
+  "scientificAuthorityCreated": false,
+  "semanticValidator": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
+  "submissionReady": true,
+  "transportSchema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1"
+}

@@ -119,7 +119,7 @@ test('invalid and future control-plane records preserve the last valid capture a
 test('study dates stay explicit and schema, checkpoint and clock guards reject invalid replacements',()=>{
  const original=feeds['/api/study'],before=structuredClone(original),now=Math.max(...[original.capturedAt,original.hostedStoredAt,original.rollingStudy.through].map(Date.parse))+86400000;
  assert.equal(validateStudy(original,now),original);
- assert.equal(studyStamp(original),'Study evidence through: October 26 at 11:26 AM Central');
+ assert.equal(studyStamp(original),'Study evidence through: '+centralTime(original.rollingStudy.through));
  assert.doesNotMatch(renderStudy(original),/stale|over 75 minutes/i);assert.deepEqual(original,before);
  for(const changed of [
   {...original,schema:'WRONG'},
@@ -140,7 +140,7 @@ test('mounted study warns on failed refresh, retains evidence and clears warning
   await new Promise(resolve=>setImmediate(resolve));
   const stamp=nodes['study-freshness'],root=nodes['dialog-continuing-study'];
   assert.equal(stamp.textContent,studyStamp(original));assert.equal(stamp.classList.warning,false);
-  fail=true;await mounted.refresh();assert.equal(stamp.classList.warning,true);assert.match(stamp.textContent,/update unavailable/);assert.match(root.innerHTML,/last loaded study/);assert.match(root.innerHTML,/October 26 at 11:26 AM Central/);
+  fail=true;await mounted.refresh();assert.equal(stamp.classList.warning,true);assert.match(stamp.textContent,/update unavailable/);assert.match(root.innerHTML,/last loaded study/);assert(root.innerHTML.includes(centralTime(original.rollingStudy.through)));
   fail=false;await mounted.refresh();assert.equal(stamp.classList.warning,false);assert.equal(stamp.textContent,studyStamp(original));assert.equal(count,3);
  }finally{mounted.destroy();}
 });
@@ -170,7 +170,7 @@ test('published refresh labels retain the release verifier contract alongside th
  assert(timestamp.includes('commands disabled.'));
  assert(study.includes('merged PRs saved'));
  assert(study.includes('Source cutoff'));
- assert(timestamp.startsWith('Last checked: October 26 at 10:42 AM Central'));
- assert(study.includes('Study evidence through: October 26 at 11:26 AM Central'));
+ assert(timestamp.startsWith('Last checked: '+centralTime(feeds['/data.json'].observedAt)));
+ assert(study.includes('Study evidence through: '+centralTime(feeds['/api/study'].rollingStudy.through)));
  assert.doesNotMatch(timestamp+study,/STALE SOURCE|over 75 minutes/);
 });

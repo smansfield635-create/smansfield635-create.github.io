@@ -1,40 +1,40 @@
 {
   "schema": "DGB_HOSTED_STUDY_CAPTURE_v1",
-  "capturedAt": "2026-10-23T21:43:15.576Z",
-  "projectionHead": "f0828fbabf84b3fbd02d543399b4d63abaa8b06a",
-  "sourceProjectionDigest": "b8927a0dd0c33e654fd77ef55e4e57c60c52676a4dbb7d31aad4163ae8f43f27",
+  "capturedAt": "2026-10-26T16:28:15.615Z",
+  "projectionHead": "066e95992dfb370f3b47fa158406fe7c2360f69e",
+  "sourceProjectionDigest": "7c9e87509e003b34ca6b52327bd1408a136700d5b49b77a7ef934c4ce1b62857",
   "rollingStudy": {
     "schema": "DGB_ROLLING_STUDY_DISPLAY_v1",
-    "through": "2026-10-23T21:41:30Z",
+    "through": "2026-10-26T16:26:11Z",
     "coverage": "COMPLETE_SEARCH_RECONCILED",
     "currentProductivity": "NOT_ESTABLISHED",
     "cohorts": [
       {
         "repository": "smansfield635-create/smansfield635-create.github.io",
-        "total": 1678,
-        "evidenceCollected": 1678,
-        "SUPPORT": 726,
-        "STANDARD": 938,
+        "total": 1721,
+        "evidenceCollected": 1721,
+        "SUPPORT": 737,
+        "STANDARD": 970,
         "PARAMOUNT": 14,
         "UNRESOLVED": 0,
-        "materialUnits": 952
+        "materialUnits": 984
       },
       {
         "repository": "smansfield635-create/geodiametrics1",
-        "total": 148,
-        "evidenceCollected": 148,
-        "SUPPORT": 71,
-        "STANDARD": 77,
+        "total": 150,
+        "evidenceCollected": 150,
+        "SUPPORT": 72,
+        "STANDARD": 78,
         "PARAMOUNT": 0,
         "UNRESOLVED": 0,
-        "materialUnits": 77
+        "materialUnits": 78
       }
     ],
     "measurement": "AUTOMATED_BASELINE_WITH_PRESERVED_CORRECTIONS",
     "checkpoint": {
-      "commit": "1e83db740eea69c995506e94a89df595c7dbce5f",
-      "savedThrough": "2026-10-23T21:41:30Z",
-      "lastSuccessfulUpdate": "2026-10-23T21:41:30Z"
+      "commit": "5989168dfd3e20185dfea9267f5f1e92e46a77d3",
+      "savedThrough": "2026-10-26T16:26:11Z",
+      "lastSuccessfulUpdate": "2026-10-26T16:26:11Z"
     },
     "reviewedCount": 390,
     "correctionCount": 47,
@@ -67,5 +67,5 @@
       "reason": "COMPLETE_TREE_PATHS_WITH_PARTIAL_LINE_STATS_AND_RENAME_PAIRING"
     }
   ],
-  "hostedStoredAt": "2026-10-23T22:02:16.457Z"
+  "hostedStoredAt": "2026-10-26T16:32:40.289Z"
 }

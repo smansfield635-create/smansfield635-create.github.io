@@ -1,6 +1,6 @@
 {
   "schema": "DGB_PROJECT_BRIEFINGS_v1",
-  "updatedAt": "2026-10-26T15:14:10.113Z",
+  "updatedAt": "2026-10-26T16:32:40.289Z",
   "records": [
     {
       "projectId": "AUDRALIA",
@@ -372,118 +372,166 @@
     },
     {
       "projectId": "OPERATIONS_CHAMBER",
-      "observedAt": "2026-10-26T15:13:28Z",
+      "observedAt": "2026-10-26T16:32:40.289Z",
       "sourceHeads": [
         {
           "repository": "smansfield635-create/smansfield635-create.github.io",
-          "head": "6c3b1ed3bbaf265fcd2826ce569789e2203fecf4"
+          "head": "ee209856d587448b0963cf51abcfc291de69b456"
+        },
+        {
+          "repository": "smansfield635-create/geodiametrics1",
+          "head": "e3b4c882623e79c4f8862b525b0b7c12e9f9e52b"
         }
       ],
       "accomplishment": {
-        "text": "The live Chamber loads four public same-origin display feeds from the website repository. Refresh reloads published records without a ChatGPT session, backup import or collector execution. Project coverage distinguishes exact matches, the declared Chamber alias, briefing-only projects and missing briefings.",
+        "text": "The existing GitHub collector completed successfully and independently verified its saved private checkpoint. Continuing-study evidence now covers 1,871 merged PRs through 2026-10-26T16:26:11Z, preserving 390 source reviews, 47 corrections and five audit flags. A separate bounded control-plane capture was read at 2026-10-26T15:42:07.333Z. The live Chamber remains independent of the ChatGPT Site.",
         "basis": "VERIFIED_RECORD",
         "sources": [
           {
-            "label": "Published display-feed restoration",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6836"
+            "label": "Successful collector and independent private readback",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40359013242"
           },
           {
-            "label": "Project coverage inventory",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6845"
+            "label": "Exact adopted collector binding",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/ee209856d587448b0963cf51abcfc291de69b456"
           },
           {
-            "label": "Successful preflight, Pages and live checks",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40259803771"
+            "label": "Source-preserved independent study verification",
+            "url": "https://github.com/smansfield635-create/geodiametrics1/blob/dea1602fc9186c2eea3d621d85e75ca6bc964992/tools/private-public-bridge/standalone/study/runtime/study-readback-verification.v1.json"
           }
         ]
       },
       "publication": {
-        "text": "The restored feeds and project coverage were published from f8bca3646b30e95c03b1c7407ffc4659d680ee7d by Pages run40259803771. Its exact-payload preflight, Pages deployment, live static/runtime checks and custom-domain convergence passed. Later website releases are separate from these records' source-observation times.",
+        "text": "Collector run40359013242 and independent private readback passed. The refreshed website display files are prepared for the existing exact-head Pages release; their deployment and live readback are not yet verified at this observation. Collector success does not establish website publication.",
         "basis": "VERIFIED_RECORD",
         "sources": [
           {
-            "label": "Published display-feed restoration",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6836"
+            "label": "Successful collector and independent private readback",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40359013242"
           },
           {
-            "label": "Project coverage inventory",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6845"
+            "label": "Exact adopted collector binding",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/ee209856d587448b0963cf51abcfc291de69b456"
           },
           {
-            "label": "Successful preflight, Pages and live checks",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40259803771"
+            "label": "Source-preserved independent study verification",
+            "url": "https://github.com/smansfield635-create/geodiametrics1/blob/dea1602fc9186c2eea3d621d85e75ca6bc964992/tools/private-public-bridge/standalone/study/runtime/study-readback-verification.v1.json"
           }
         ]
       },
       "unfinished": {
-        "text": "The control-plane, continuing-study and agent feeds retain their original source dates. Many operational identities still lack source-reviewed briefings. Expand coverage only after project identity reconciliation and source review. Physical Android visual acceptance remains unverified; automatic collector-output publication is not established.",
+        "text": "Publish the prepared control-plane, study and Chamber briefing display records, then compare all four live feeds with the released commit. Instrument observations remain explicitly dated 2026-10-17T07:05:23.245Z and were not revalidated in this capture. Other project briefings and agent deliveries retain their prior records. Missing briefing coverage and physical Android visual acceptance remain unverified. Automatic collector-output publication is not established.",
         "basis": "VERIFIED_RECORD",
         "sources": [
           {
-            "label": "Exact published data reader",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/6c3b1ed3bbaf265fcd2826ce569789e2203fecf4/preflight/chamber/local-data.mjs"
+            "label": "Admitted source reconciliation and publication scope",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6421200011"
           },
           {
-            "label": "Exact coverage tests and source inventory",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/6c3b1ed3bbaf265fcd2826ce569789e2203fecf4/preflight/chamber/project-coverage-test.mjs"
+            "label": "Canonical admission generation2908",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6421213159"
           },
           {
-            "label": "Existing scope and publication limits",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/6c3b1ed3bbaf265fcd2826ce569789e2203fecf4/preflight/chamber/README.md"
+            "label": "Successful collector and independent private readback",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40359013242"
+          },
+          {
+            "label": "Exact adopted collector binding",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/ee209856d587448b0963cf51abcfc291de69b456"
+          },
+          {
+            "label": "Source-preserved independent study verification",
+            "url": "https://github.com/smansfield635-create/geodiametrics1/blob/dea1602fc9186c2eea3d621d85e75ca6bc964992/tools/private-public-bridge/standalone/study/runtime/study-readback-verification.v1.json"
           }
         ]
       },
       "blocker": {
-        "text": "No failure in the verified feed-restoration release. Missing briefing coverage and unchanged source captures remain explicit evidence limits, not a requirement to use the ChatGPT Site.",
+        "text": "The previous collector binding interruption is resolved by the successful source-bound run and independent readback. Display deployment and live verification remain pending checkpoints. Bounded activity coverage, historical instrument observations and missing project briefings remain evidence limits.",
         "basis": "VERIFIED_RECORD",
         "sources": [
           {
-            "label": "Published display-feed restoration",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6836"
+            "label": "Successful collector and independent private readback",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40359013242"
           },
           {
-            "label": "Project coverage inventory",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6845"
+            "label": "Exact adopted collector binding",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/ee209856d587448b0963cf51abcfc291de69b456"
           },
           {
-            "label": "Successful preflight, Pages and live checks",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40259803771"
+            "label": "Source-preserved independent study verification",
+            "url": "https://github.com/smansfield635-create/geodiametrics1/blob/dea1602fc9186c2eea3d621d85e75ca6bc964992/tools/private-public-bridge/standalone/study/runtime/study-readback-verification.v1.json"
           }
         ]
       },
       "nextStep": {
-        "text": "After the next meaningful source-verified project change, preserve its GitHub continuation, prepare the affected complete briefing, qualify the bounded diff, and use the existing Pages release with exact live readback. Reconcile current project evidence before execution. Refresh alone does not gather evidence or establish a project change.",
+        "text": "Use the existing exact-head Pages release for this reviewed display update, verify the release marker and all four live feed payloads, then retain that publication evidence in the GitHub continuation. Before later execution, reconcile the current project state. Refresh only reloads published records.",
         "basis": "PROPOSED_NEXT_STEP",
         "sources": [
           {
-            "label": "GitHub-first event handoff scope and admission",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6419478293"
+            "label": "Admitted source reconciliation and publication scope",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6421200011"
           },
           {
-            "label": "Canonical admission generation2904",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6419491097"
+            "label": "Canonical admission generation2908",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6421213159"
           }
         ]
       },
       "instruments": [
         {
-          "name": "Exact-head Pages verification",
-          "use": "Keep implementation, deployment and live evidence separate",
+          "name": "Fixed GitHub study collector",
+          "use": "Collect and save the existing private study without exporting raw private source",
           "result": {
-            "text": "Run40259803771 passed payload preflight, deployment, live static/runtime checks and custom-domain convergence for the restored Chamber feeds and coverage display.",
+            "text": "Run40359013242 succeeded. The saved study covers 1,871 merged PRs through 2026-10-26T16:26:11Z; its independent readback preserves 390 reviews, 47 corrections and five audit flags.",
             "basis": "VERIFIED_RECORD",
             "sources": [
               {
-                "label": "Published display-feed restoration",
-                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6836"
+                "label": "Successful collector and independent private readback",
+                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40359013242"
               },
               {
-                "label": "Project coverage inventory",
-                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6845"
+                "label": "Exact adopted collector binding",
+                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/ee209856d587448b0963cf51abcfc291de69b456"
               },
               {
-                "label": "Successful preflight, Pages and live checks",
-                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40259803771"
+                "label": "Source-preserved independent study verification",
+                "url": "https://github.com/smansfield635-create/geodiametrics1/blob/dea1602fc9186c2eea3d621d85e75ca6bc964992/tools/private-public-bridge/standalone/study/runtime/study-readback-verification.v1.json"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Bounded control-plane capture",
+          "use": "Project current registered identities and bounded activity without inferring execution or health",
+          "result": {
+            "text": "Capture2026-10-26T15:42:07.333Z contains 49 project-source rows. Activity reads are bounded to 20 open PRs and 100 recent runs per repository. Six instrument records retain their 2026-10-17T07:05:23.245Z observation time and original run/lifecycle evidence.",
+            "basis": "VERIFIED_RECORD",
+            "sources": [
+              {
+                "label": "Admitted source reconciliation and publication scope",
+                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6421200011"
+              },
+              {
+                "label": "Canonical admission generation2908",
+                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6421213159"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Exact-head Pages verification",
+          "use": "Distinguish prepared display files, deployment and live readback",
+          "result": {
+            "text": "The current data refresh is prepared; Pages deployment and exact live feed verification remain pending at this source observation.",
+            "basis": "NOT_ESTABLISHED",
+            "sources": [
+              {
+                "label": "Admitted source reconciliation and publication scope",
+                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6421200011"
+              },
+              {
+                "label": "Canonical admission generation2908",
+                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6421213159"
               }
             ]
           }

@@ -49,15 +49,15 @@
     },
     {
       "path": "data/control-plane.json",
-      "sha256": "6ae9698a71aac45e3314930f4f55e082a68e8c3643f4e6d027cefdfcab8b7f28"
+      "sha256": "241435cf8a5e8f3994d6106545fbf9d2fdabc11a05dfb99927c7a9894623dca7"
     },
     {
       "path": "data/study.json",
-      "sha256": "adcb1403de555c58de44f5be40013dcf11581267867f063455dc7982a0a09493"
+      "sha256": "13537af8fcd8993e997dcc963f44ae6e442e73781d9c7420460bbb30b4a86b76"
     },
     {
       "path": "data/briefings.json",
-      "sha256": "d8230a36f3c39edd110f1dfb26de2c1ba123e69f36d04bee6b1d95d67b6002ad"
+      "sha256": "ea462431f86acf5d00e3ac5a568aa6d7758029ce155c9c076830da64d74c18bb"
     },
     {
       "path": "data/agents.json",

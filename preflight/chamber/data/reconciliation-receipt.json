@@ -1,0 +1,57 @@
+{
+  "schema": "OPERATIONS_CHAMBER_SOURCE_RECONCILIATION_RECEIPT_v1",
+  "operationId": "OPERATIONS_CHAMBER_SOURCE_RECONCILIATION_20261026_002",
+  "lockGeneration": 2908,
+  "result": "PREPARED_NOT_PUBLISHED",
+  "preparedAt": "2026-10-26T16:32:40.289Z",
+  "publicBaseHead": "ee209856d587448b0963cf51abcfc291de69b456",
+  "controlPlane": {
+    "observedAt": "2026-10-26T15:42:07.333Z",
+    "coverage": "WINDOWED",
+    "projectSourceRows": 49,
+    "activityWindow": {
+      "openPRsPerRepository": 20,
+      "changedPathsPerPR": 100,
+      "recentRunsPerRepository": 100,
+      "maxPages": 1
+    },
+    "instrumentRecords": 6,
+    "instrumentObservationAt": "2026-10-17T07:05:23.245Z",
+    "instrumentsRevalidated": false,
+    "commandsEnabled": false
+  },
+  "study": {
+    "collectorRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40359013242",
+    "collectorResult": "SUCCESS",
+    "independentReadback": "INDEPENDENT_READBACK_VERIFIED",
+    "sourceThrough": "2026-10-26T16:26:11Z",
+    "capturedAt": "2026-10-26T16:28:15.615Z",
+    "displayPreparedAt": "2026-10-26T16:32:40.289Z",
+    "mergedPRs": 1871,
+    "preservedSourceReviews": 390,
+    "preservedCorrections": 47,
+    "auditFlags": 5,
+    "checkpoint": "5989168dfd3e20185dfea9267f5f1e92e46a77d3"
+  },
+  "preserved": {
+    "otherProjectBriefings": true,
+    "agentFeedBytes": true,
+    "originalInstrumentRunAndLifecycleFields": true,
+    "studyCaptureFields": true
+  },
+  "feedSha256": {
+    "control-plane": "241435cf8a5e8f3994d6106545fbf9d2fdabc11a05dfb99927c7a9894623dca7",
+    "study": "13537af8fcd8993e997dcc963f44ae6e442e73781d9c7420460bbb30b4a86b76",
+    "briefings": "ea462431f86acf5d00e3ac5a568aa6d7758029ce155c9c076830da64d74c18bb",
+    "agents": "0b723fb336b67e097e9e9b024c026aa30770e48fb477f6b570aeae8205936333"
+  },
+  "limits": [
+    "Control-plane activity is a bounded, non-atomic window.",
+    "Instrument observations were retained, not refreshed.",
+    "Collector completion does not establish display publication.",
+    "The preparation timestamp is distinct from each source-observation timestamp.",
+    "No project execution, instrument health, scientific result or automatic collector-output publication is inferred."
+  ],
+  "rawPrivateSourcePublished": false,
+  "websitePublicationVerified": false
+}

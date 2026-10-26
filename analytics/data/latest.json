@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-26T10:36:21Z",
+  "generatedAt": "2026-10-26T11:37:28Z",
   "window30d": {
-    "start": "2026-09-26T10:36:21Z",
-    "end": "2026-10-26T10:36:21Z"
+    "start": "2026-09-26T11:37:28Z",
+    "end": "2026-10-26T11:37:28Z"
   },
   "daily": [
     {
@@ -72,11 +72,11 @@
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-10-14",
-      "pageLoads": 70
+      "pageLoads": 80
     },
     {
       "date": "2026-10-15",
@@ -96,7 +96,7 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 32
+      "pageLoads": 31
     },
     {
       "date": "2026-10-20",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-26",
-      "pageLoads": 12
+      "pageLoads": 13
     }
   ],
   "summary": {
-    "pageLoads": 1821,
-    "botPageLoads": 857,
-    "nonBotPageLoads": 964
+    "pageLoads": 1801,
+    "botPageLoads": 887,
+    "nonBotPageLoads": 914
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1632,
-      "visits": 1632
+      "pageLoads": 1642,
+      "visits": 1642
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 128,
+      "pageLoads": 148,
       "visits": 0
     },
     {
@@ -163,22 +163,17 @@
     {
       "path": "/showroom/globe/h-earth/",
       "pageLoads": 699,
-      "visits": 641
+      "visits": 631
     },
     {
       "path": "/analytics/",
-      "pageLoads": 605,
-      "visits": 605
+      "pageLoads": 635,
+      "visits": 635
     },
     {
       "path": "/",
-      "pageLoads": 106,
+      "pageLoads": 116,
       "visits": 86
-    },
-    {
-      "path": "/build/",
-      "pageLoads": 51,
-      "visits": 51
     },
     {
       "path": "/about/",
@@ -186,12 +181,7 @@
       "visits": 41
     },
     {
-      "path": "/meet-sean-mansfield/",
-      "pageLoads": 31,
-      "visits": 31
-    },
-    {
-      "path": "/gauges/",
+      "path": "/coherence-diagnostic/",
       "pageLoads": 30,
       "visits": 0
     },
@@ -199,6 +189,16 @@
       "path": "/showroom/globe/audralia/",
       "pageLoads": 25,
       "visits": 25
+    },
+    {
+      "path": "/products/nutrition/",
+      "pageLoads": 22,
+      "visits": 22
+    },
+    {
+      "path": "/release-proof/",
+      "pageLoads": 22,
+      "visits": 22
     }
   ],
   "ownerMeasurement": {

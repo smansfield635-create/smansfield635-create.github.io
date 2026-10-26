@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-26T10:36:21Z",
+  "generatedAt": "2026-10-26T11:37:28Z",
   "window": {
-    "start": "2026-07-28T10:36:21Z",
-    "end": "2026-10-26T10:36:21Z"
+    "start": "2026-07-28T11:37:28Z",
+    "end": "2026-10-26T11:37:28Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4508,
+    "pageLoads": 4538,
     "visits": 1337,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4508,
+        "pageLoads": 4538,
         "visits": 1337
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 1007,
-        "visits": 747
+        "pageLoads": 1057,
+        "visits": 787
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 131,
@@ -39,11 +39,11 @@
         "visits": 20
       },
       "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 20,
+        "pageLoads": 30,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
+        "pageLoads": 510,
         "visits": 0
       },
       "/gauges/h-earth/": {
@@ -83,11 +83,11 @@
         "visits": 10
       },
       "/governance/": {
-        "pageLoads": 60,
+        "pageLoads": 80,
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 110,
+        "pageLoads": 120,
         "visits": 0
       },
       "/evidence/readiness/": {
@@ -127,7 +127,7 @@
         "visits": 0
       },
       "/build/": {
-        "pageLoads": 20,
+        "pageLoads": 40,
         "visits": 0
       },
       "/compass-isolated-clone/": {
@@ -175,7 +175,7 @@
         "visits": 0
       },
       "/laws/categories/reality/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -215,7 +215,7 @@
         "visits": 0
       },
       "/door/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -250,11 +250,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/story/timeline/": {
+      "/explore/frontier/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -299,15 +295,15 @@
         "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
+        "pageLoads": 90,
+        "visits": 80
       },
       "/analytics/": {
-        "pageLoads": 40,
+        "pageLoads": 60,
         "visits": 0
       },
       "/governance-bridge/governance/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -321,16 +317,16 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 787,
-        "visits": 787
+        "pageLoads": 827,
+        "visits": 827
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3171,
+        "pageLoads": 3201,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 540,
-        "visits": 540
+        "pageLoads": 500,
+        "visits": 500
       },
       "raw.githack.com": {
         "pageLoads": 10,

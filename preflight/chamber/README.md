@@ -8,6 +8,8 @@ Import the private Chamber snapshot using **Import workspace backup**. This merg
 
 **Download combined backup** preserves projects, drafts, history, explicit links and all four imported observation feeds. Restore on another device using the same import control. Conflicting project versions cancel the whole import; retain both backups and reconcile in DiamondGate. Browser storage is device/profile-specific, can be cleared, and does not provide account authentication. The public app assets contain no owner snapshots. The route is unlisted and noindex; it is not an authenticated private URL.
 
+Use **Update from a current Chamber source response** to add a source-checked capture from a connected Operations Chamber read. This uses the existing local validation and merge path and does not automatically query new data. The existing backup import remains available.
+
 Operational captures, briefings, study and agent reports retain their source dates. Refresh rereads local storage, not the old Site or a live repository collector. Import a newer snapshot to refresh source observations. Local DiamondGate summaries appear separately.
 
 ## Maintain without ChatGPT Sites

@@ -29,12 +29,22 @@ export function validateDashboard(d){
  for(const p of d.projects)if(!Number.isSafeInteger(p.activeCount)||p.activeCount<0||!Number.isSafeInteger(p.totalRecorded)||typeof p.repository!=='string')fail('PROJECT_INVALID');
  return d;
 }
-export function freshness(d,now=Date.now()){const age=now-Date.parse(d.observedAt);return age< -30000?'INVALID_CLOCK':age>75*60*1000?'STALE':'RECENT_CAPTURE';}
+export function freshness(d,now=Date.now()){const age=now-Date.parse(d.observedAt);return !Number.isFinite(age)||age< -30000?'INVALID_CLOCK':'DATED_CAPTURE';}
+// Optional source-reviewed publication annotation. Age and repository-head movement are not evidence.
+export function publicationNotice(d,publishedThrough,now=Date.now()){
+ const e=d?.confirmedNewerEvidence,cutoff=Date.parse(publishedThrough);
+ if(!e||e.status!=='CONFIRMED_NOT_PUBLISHED'||e.publishedThrough!==publishedThrough||!githubURL(e.sourceUrl))return null;
+ const through=Date.parse(e.evidenceThrough),verified=Date.parse(e.verifiedAt);
+ if(![now,cutoff,through,verified].every(Number.isFinite)||through<=cutoff||verified<through||through>now+30000||verified>now+30000)return null;
+ return {message:'Newer evidence confirmed · not yet published in this record',sourceUrl:githubURL(e.sourceUrl)};
+}
 export function createRefreshController({load,onState,now=()=>Date.now()}){
  let data=null,busy=false,lastError=false;
- const publish=()=>onState({data,busy,error:lastError,freshness:data?freshness(data,now()):'NO_DATA'});
+ const publish=()=>onState({data,busy,error:lastError,freshness:data?freshness(data,now()):'NO_DATA',publicationNotice:data?publicationNotice(data,data.observedAt,now()):null});
  return {tick:publish,async refresh(){if(busy)return;busy=true;publish();try{const next=validateDashboard(await load());if(freshness(next,now())==='INVALID_CLOCK')fail('CLOCK_INVALID');data=next;lastError=false;}catch{lastError=true;}finally{busy=false;publish();}}};
 }
+export const centralTime=value=>new Date(value).toLocaleString('en-US',{timeZone:'America/Chicago',month:'long',day:'numeric',hour:'numeric',minute:'2-digit'})+' Central';
+export function captureStatus(s){return s.busy?'Reading published records…':s.error?(s.data?'Control-plane update unavailable · showing its last capture':'Published activity capture unavailable · projects remain available'):s.publicationNotice?s.publicationNotice.message:s.data?'Read-only capture · coverage '+label(s.data.coverage)+' · commands disabled':'Waiting for source data';}
 export const label=x=>String(x??'UNVERIFIED').replaceAll('_',' ');
 function link(url,title){const safe=githubURL(url);return safe?`<a href="${esc(safe)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>`:esc(title);}
 export function opRows(items){return items.length?items.map(o=>`<li><strong>${esc(o.id)}</strong><span>${esc(label(o.state))} · Generation ${esc(o.generation)}</span>${link(o.source,'Source evidence')}</li>`).join(''):'<li>No matched records in this capture.</li>';}
@@ -159,9 +169,9 @@ export function mount(document,fetchImpl=localFetch){
  for(const dialog of document.querySelectorAll('dialog'))dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
  const controller=createRefreshController({load:async()=>{const r=await fetchImpl('/data.json',{cache:'no-store',credentials:'same-origin',redirect:'error',signal:AbortSignal.timeout(15000)});if(!r.ok)fail('SOURCE_UNAVAILABLE');return r.json();},onState:s=>{
   $('refresh').disabled=s.busy;$('refresh').textContent=s.busy?'Checking…':'Refresh published records';
-  $('status').textContent=s.busy?'Reading published records…':s.error?(s.data?'Control-plane update unavailable · showing its last capture':'Published activity capture unavailable · projects remain available'):s.data?s.freshness==='STALE'?'Read-only capture is over 75 minutes old · coverage '+label(s.data.coverage):'Read-only capture · coverage '+label(s.data.coverage)+' · commands disabled':'Waiting for source data';
-  $('status').classList.toggle('warning',s.error||s.freshness==='STALE');
-  if(!s.data)return;const observed=new Date(s.data.observedAt);$('timestamp').textContent='Read-only control-plane capture · '+observed.toISOString()+' · commands disabled.';const coverage=$('canonical-coverage');if(coverage)coverage.textContent=label(s.data.coverage).toUpperCase();const observedNode=$('canonical-observed-at');if(observedNode){observedNode.dateTime=observed.toISOString();observedNode.textContent=observed.toISOString();}
+  $('status').textContent=captureStatus(s);
+  $('status').classList.toggle('warning',s.error||!!s.publicationNotice);
+  if(!s.data)return;const observed=new Date(s.data.observedAt);$('timestamp').textContent='Last checked: '+centralTime(s.data.observedAt)+' · read-only control-plane capture · commands disabled.';const coverage=$('canonical-coverage');if(coverage)coverage.textContent=label(s.data.coverage).toUpperCase();const observedNode=$('canonical-observed-at');if(observedNode){observedNode.dateTime=observed.toISOString();observedNode.textContent=centralTime(s.data.observedAt);}
   if(current===s.data)return;current=s.data;
   $('project-count').textContent=current.projects.length;$('active-count').textContent=current.projects.reduce((n,p)=>n+p.activeCount,0);$('instrument-count').textContent=current.instruments.records.length;const lifecycle=current.instruments.records;const installed=lifecycle.filter(i=>i.lifecycleStatus==='INSTALLED'&&i.sourceStatus==='PRESENT').length;const historical=lifecycle.filter(i=>i.lifecycleStatus==='HISTORICAL_RETIRED').length;const unknown=lifecycle.length-installed-historical;const conflicts=lifecycle.filter(i=>i.registrationConflict).length;$('instrument-summary').innerHTML='<div class="eyebrow">Instrument observatory · saved capture</div><strong>'+lifecycle.length+' registry entries</strong><p>'+installed+' installed definitions · '+historical+' historical definitions · '+unknown+' not verified as installed or historical'+(conflicts?' · '+conflicts+' registration conflicts':' · no registration conflicts in this capture')+'.</p><p>Source presence, registration, observed runs, and executed jobs or steps are separate evidence classes. Open workflow observations for the bounded capture details.</p>';
   $('attention').innerHTML=`<h2>What needs attention</h2><ul><li>${current.coverage==='WINDOWED'?'Pinned registry and ledger reads are available. Activity is a bounded recent window, not a full backlog or workflow history.':current.coverage==='PARTIAL'?'Some requested sources were unavailable or pagination was incomplete; this is separate from the normal activity window.':'Source capture status: '+esc(label(current.coverage))+'.'}</li><li>${esc(workflowCoverageText(current.instruments.records))}</li><li>Open project details for canonical operation dispositions and linked activity. Project-wide health remains unverified.</li></ul>`;

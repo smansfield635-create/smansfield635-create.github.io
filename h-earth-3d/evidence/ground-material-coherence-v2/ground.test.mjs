@@ -8,7 +8,8 @@ const body=source.match(/float groundMaterialCompression\([^)]*\)\{([\s\S]*?)\n\
 const compression=new Function('smoothstep','max','cameraDistance','pixelFootprint','coastDistance','groveProtection',body.replace(/\bfloat\b/g,'const'));
 const amount=(d,p=0,c=100,g=0)=>compression(smoothstep,Math.max,d,p,c,g);
 test('stage A restores exact admitted baseline when its two blocks are removed',()=>{
-  const restored=source.replace(/\/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_FUNCTION_BEGIN\n[\s\S]*?\/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_FUNCTION_END\n/,'').replace(/      \/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_BEGIN\n[\s\S]*?      \/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_END\n/,'');
+  const withoutB=source.replace(/    \/\/ H_EARTH_GROUND_MATERIAL_STAGE_B_BEGIN\n[\s\S]*?    \/\/ H_EARTH_GROUND_MATERIAL_STAGE_B_END\n/,'');
+  const restored=withoutB.replace(/\/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_FUNCTION_BEGIN\n[\s\S]*?\/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_FUNCTION_END\n/,'').replace(/      \/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_BEGIN\n[\s\S]*?      \/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_END\n/,'');
   const bytes=Buffer.from(restored);const sha=createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
   assert.equal(sha,'31d97193a508ede2c244b4253c76be892fd9782e');
 });
@@ -30,4 +31,23 @@ test('stage A adds no texture, geometry, normal, habitat or grass mutation',()=>
   const block=source.match(/      \/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_BEGIN\n([\s\S]*?)      \/\/ H_EARTH_GROUND_MATERIAL_STAGE_A_END/)[1];
   assert.doesNotMatch(block,/texture\s*\(|noise2\s*\(|(?:shadingNormal|geometricNormal|base|habitatCoverage)\s*=/);
   assert.match(block,/palette=mix\(palette,distantSoilAnchor,groundCompression\)/);
+});
+test('stage B only harmonizes the later habitat tint on distant soil',()=>{
+  const block=source.match(/    \/\/ H_EARTH_GROUND_MATERIAL_STAGE_B_BEGIN\n([\s\S]*?)    \/\/ H_EARTH_GROUND_MATERIAL_STAGE_B_END/)[1];
+  assert.match(block,/groundMaterialCompression\(/);
+  assert.match(block,/habitatSoil=mix\(habitatSoil,base,habitatReconciliation\)/);
+  assert.doesNotMatch(block,/texture\s*\(|noise2\s*\(|(?:habitatCoverage|shadingNormal|geometricNormal|vWorldPosition|base)\s*=/);
+  assert.ok(source.indexOf('H_EARTH_GROUND_MATERIAL_STAGE_B_BEGIN')>source.indexOf('H_EARTH_GROUND_MATERIAL_STAGE_A_END'));
+  assert.ok(source.indexOf('H_EARTH_GROUND_MATERIAL_STAGE_B_END')<source.indexOf('float bankWindow='));
+  assert.match(source,/base=mix\(base,habitatSoil,habitatCoverage\*\.68\)/);
+});
+test('stage B preserves close, coastal and grove habitat color and reduces only distant tint',()=>{
+  for(const d of [0,20,55,72])for(const p of [0,2,8,100])assert.equal(amount(d,p),0);
+  for(const d of [100,520,3000]){assert.equal(amount(d,30,28),0);assert.equal(amount(d,30,100,1),0);}
+  const far=amount(650,12,100,0);
+  assert.equal(far,0.65);
+  const originalOverlay=0.68;
+  const adjustedOverlay=originalOverlay*(1-far);
+  assert.ok(adjustedOverlay<0.25&&adjustedOverlay>0);
+  assert.ok(Math.abs(adjustedOverlay-0.238)<1e-12);
 });

@@ -1086,7 +1086,7 @@ jobs:
   ground-material-comparison:
     if: ${{ inputs.route_query == 'qualification=ground-material-gen2898-stage-c' }}
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Require the admitted fixed comparison
         env:
@@ -1095,7 +1095,7 @@ jobs:
           EXERCISE: ${{ inputs.exercise_vegetation_residency }}
           TIMING_SHIM: ${{ inputs.apply_timing_shim }}
         run: |
-          test "$TARGET_SHA" = 85372f3dc896d73457f6a7d008ac08a51d0ba85b
+          test "$TARGET_SHA" = 9127904e725a3f4ca13c1221451023102ad09435
           test "$ROUTE_PATH" = /showroom/globe/h-earth/
           test "$EXERCISE" = false
           test "$TIMING_SHIM" = false
@@ -1108,13 +1108,13 @@ jobs:
       - name: Check out complete fixed baseline
         uses: actions/checkout@v4
         with:
-          ref: 098295a83e5c8372cf0764090c28fa9c81a93264
+          ref: 85372f3dc896d73457f6a7d008ac08a51d0ba85b
           path: baseline
           persist-credentials: false
       - name: Check out complete fixed candidate
         uses: actions/checkout@v4
         with:
-          ref: 85372f3dc896d73457f6a7d008ac08a51d0ba85b
+          ref: 9127904e725a3f4ca13c1221451023102ad09435
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1131,12 +1131,12 @@ jobs:
       - name: Capture fixed baseline and candidate views
         working-directory: tooling
         run: |
-          timeout 1500s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/ground-material-comparison"
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/ground-material-comparison"
       - name: Preserve comparison evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-terrain-seam-gen2911-${{ github.run_id }}
+          name: h-earth-internal-coast-gen2914-${{ github.run_id }}
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30

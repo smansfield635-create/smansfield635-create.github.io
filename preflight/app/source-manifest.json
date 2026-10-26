@@ -6,7 +6,7 @@
   "runtimeFiles": [
     {
       "path": "dist/app.mjs",
-      "sha256": "7c64148cec1ab8258bbe6452805e919ba9f3093c4f9d13f172acc9ee90ff5c87",
+      "sha256": "873a284560a6b0f5b57eb3efa0cea05b200692437758f1f8ea60aa7d81df8407",
       "originalSha256": "a6a11d9cd203d1695ca786141ee7fb56a3d38a981585bd0d59e51b79f2aeab98"
     },
     {
@@ -56,7 +56,7 @@
     },
     {
       "path": "dist/progression.mjs",
-      "sha256": "5420d14d4cd49ea96a18572a2e74c0064ade7f316660067398e1aec567bf4476",
+      "sha256": "f1a1bd932e5f763939fec5408091d0c0d1cc3666020e688b7bc0a37e750d4b71",
       "originalSha256": "c5e849fdbe8f8300fe85e7d53d98d9747961af205035aea110e1550c93df7291"
     },
     {
@@ -79,6 +79,10 @@
     {
       "path": "dist/workspace-bridge.mjs",
       "sha256": "12fec9779ee96b6a323575adbd54c5bd70840b3edaec4735ee04b7688fb4da42"
+    },
+    {
+      "path": "dist/requirement-check.mjs",
+      "sha256": "da75f52950b7af60d0c2a2572c7788d889c81210967a1101f4428d5e4cebbdb2"
     }
   ],
   "excluded": [
@@ -91,10 +95,10 @@
   ],
   "runtimeChanges": "None; generated entry rewrites only asset and home URLs for nested hosting.",
   "currentRevision": {
-    "operationId": "DIAMONDGATE_SHARED_CONTINUATION_REPAIR_20261025_002",
-    "authorityGeneration": 2895,
-    "governingHead": "79dc1b3ac89e8b585a45b08b39870c56887fb932",
-    "scope": "Shared continuation routing, explicit requirement adoption, concise reporting and whole-response import guidance",
-    "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6404514939"
+    "operationId": "DIAMONDGATE_REQUIREMENT_RESPONSE_CHECK_20261026_001",
+    "authorityGeneration": 2916,
+    "governingHead": "32edba773b0fd83767a62370ff7df3e39a7c1ddf",
+    "scope": "Visible local requirement checks and evidence-bound continuation context",
+    "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6427877867"
   }
 }

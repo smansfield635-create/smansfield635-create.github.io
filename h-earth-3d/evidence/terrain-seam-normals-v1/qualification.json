@@ -1,0 +1,27 @@
+{
+  "schema": "H_EARTH_TERRAIN_SEAM_NUMERICAL_QUALIFICATION_v1",
+  "matchedVertices": 349,
+  "matchedEdges": 348,
+  "maxNormalComponentError": 2.9639499743439046e-08,
+  "maxContactDistanceErrorMeters": 1.4833188330953817e-06,
+  "maxCoastDistanceErrorMeters": 2.6233342168779927e-05,
+  "sourceAssetSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+  "gpuRenderVerified": false,
+  "ownerVisualAcceptance": false,
+  "result": "NUMERICAL_PASS_BROWSER_AND_PERCEPTUAL_REVIEW_PENDING",
+  "testsPassed": 5,
+  "baseHead": "098295a83e5c8372cf0764090c28fa9c81a93264",
+  "operationId": "H_EARTH_NEAR_FAR_SEAM_CONTINUITY_20261026_001",
+  "lockGeneration": 2910,
+  "mergeAuthorized": false,
+  "deployAuthorized": false,
+  "experienceAnchorAcceptance": "PENDING_VISUAL_INTERACTION_CONTINUITY_REVIEW",
+  "localBrowserFailure": "No installed Chromium; Playwright Chromium download returned truncated non-ZIP payload. No browser run claimed.",
+  "additionalTemporaryCpuBytes": 2205380,
+  "physicalDevicePerformanceProven": false,
+  "fileSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "2fe37fc54840fcbb49c12adf56d10ae264230fb3e2fe59df6659528b38621ec1",
+    "showroom/globe/h-earth/render/terrain-seam-normal.v1.js": "59ef7a60b5bb74340173c17659259aba1adba1cb44326e7e83e673c2ca1677de",
+    "showroom/globe/h-earth/index.html": "32403032732e086cf97569d79de58fbcdee7fa710894932f6f3ce089363a88f7"
+  }
+}

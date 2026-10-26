@@ -1,0 +1,16 @@
+{
+  "reviewer": "native independent /root/rollback_review",
+  "result": "NUMERICAL_AND_SOURCE_REVIEW_PASS_VISUAL_UNPROVEN",
+  "verified": [
+    "349 boundary vertices and348edges",
+    "source normals and CPU support unchanged",
+    "GPU buffer layout and byte counts unchanged",
+    "T-junction raw interpolation preserved"
+  ],
+  "risks": [
+    "Rim parity affects whole far primitive; visual comparison required",
+    "Dormant refinement contact overwrite must be reconciled before future activation",
+    "Startup/mobile performance and GPU appearance unverified"
+  ],
+  "authorityEffect": "NO_MERGE_OR_DEPLOYMENT_AUTHORITY"
+}

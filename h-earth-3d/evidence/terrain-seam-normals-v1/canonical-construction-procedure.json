@@ -1,0 +1,86 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "098295a83e5c8372cf0764090c28fa9c81a93264",
+    "operationId": "H_EARTH_NEAR_FAR_SEAM_CONTINUITY_20261026_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/render/terrain-seam-normal.v1.js",
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/evidence/terrain-seam-normals-v1/**",
+      "h-earth-3d/experience-anchor/receipts/terrain-seam-normals-v1.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_TERRAIN_SEAM_QUALIFICATION_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "GEOMETRIC_CLEARANCE_FAILURE",
+    "SUPPORT_SWITCH_DISCONTINUITY",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Pin 098295a83e5c8372cf0764090c28fa9c81a93264; measured current package boundary continuity, regression preservation, exact candidate browser comparison and owner perceptual review.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/terrain-seam-normal.v1.js",
+    "showroom/globe/h-earth/index.html",
+    "h-earth-3d/evidence/terrain-seam-normals-v1/**",
+    "h-earth-3d/experience-anchor/receipts/terrain-seam-normals-v1.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Obtain canonical admission after read-only baseline seam diagnosis.",
+      "step": 1
+    },
+    {
+      "action": "South copies/interpolates near terrain boundary normals and coast/contact scalars onto matched far-boundary presentation vertices (including T-junctions within Float32 tolerance), and aligns far-soil rim lighting with near soil, preserving canonical inputs for placement, all geometry, palette constants, interior attributes and vegetation bytes.",
+      "step": 2
+    },
+    {
+      "action": "West independently checks exact candidate, numerical seam tests, unchanged payload and browser comparison.",
+      "step": 3
+    },
+    {
+      "action": "Preserve immutable review candidate for KEEP, ONE_REPAIR or REJECT; no merge or deployment in this construction operation.",
+      "step": 4
+    }
+  ],
+  "exactGoverningHead": "098295a83e5c8372cf0764090c28fa9c81a93264",
+  "exactTestRunnerCommand": "node --test h-earth-3d/evidence/terrain-seam-normals-v1/terrain-seam.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "ACTUAL_PACKAGE_BOUNDARY_DIAGNOSIS",
+      "NORMAL_AND_SCALAR_BOUNDARY_CONTINUITY",
+      "UNCHANGED_GEOMETRY_PALETTE_VEGETATION_AND_NAVIGATION",
+      "INDEPENDENT_WEST_REVIEW",
+      "MATCHED_NEAR_MID_FAR_BROWSER_COMPARISON",
+      "EXPERIENCE_ANCHOR_ACCEPTANCE",
+      "OWNER_CANDIDATE_PERCEPTUAL_DISPOSITION"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Restored renderer, actual terrain package, latest video and screenshot, rejected palette regression as preservation evidence.",
+    "forbidden": "Reopening global palette, root census, terrain topology or unrelated work."
+  },
+  "procedureId": "H_EARTH_NEAR_FAR_SEAM_CONTINUITY_20261026_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/terrain-seam-normals-v1/**",
+      "h-earth-3d/experience-anchor/receipts/terrain-seam-normals-v1.json"
+    ],
+    "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+  }
+}

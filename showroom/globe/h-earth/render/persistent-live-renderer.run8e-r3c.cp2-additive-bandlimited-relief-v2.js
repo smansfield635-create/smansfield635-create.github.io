@@ -1,3 +1,4 @@
+import {createTerrainSeamPresentation} from './terrain-seam-normal.v1.js';
 import {LANDSCAPE_COHERENCE_GLSL} from './landscape-coherence-field.v1.js';
 import {HILLSIDE_SHORELINE_GLSL} from './hillside-shoreline-field.v1.js';
 import {loadPreparedVegetation} from './precomputed-procedural-vegetation.v1.js';
@@ -1336,7 +1337,7 @@ void main(){
     ambient*=cavernSky;
   }
   vec3 lit=base*(ambient+directional)*uSunColor;
-  lit+=base*rim*(vRoleCode==1u?0.14:0.10)*cavernSky;
+  lit+=base*rim*((vRoleCode==1u||isExactFarLandSoilPrimitive)?0.14:0.10)*cavernSky;
   lit+=uSunColor*specular*specularLightingGain;
 
   float rawFog=clamp((distanceToCamera-uFogStartDistance)*max(uFogFalloff,0.00001),0.0,uMaximumFogFactor);
@@ -2301,17 +2302,21 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     resources.vertexArray = gl.createVertexArray();
     if (!resources.vertexArray) throw new Error('R3C_VERTEX_ARRAY_CREATE_FAILED');
     gl.bindVertexArray(resources.vertexArray);
+    // Reconcile only the shared near/far boundary in presentation buffers.
+    // Canonical attributes remain unchanged for CPU support and plant placement.
+    const seamPresentation=createTerrainSeamPresentation({...uploadViews,coastDistances,contactDistances:contactField.packageDistances,primitiveSpans:renderPackage.primitiveSpans});
+    resources.terrainSeamPresentation=seamPresentation.receipt;
     const specifications = [
       ['positions', uploadViews.positions, 0, 3, gl.FLOAT, false],
-      ['normals', uploadViews.normals, 1, 3, gl.FLOAT, false],
+      ['normals', seamPresentation.normals, 1, 3, gl.FLOAT, false],
       ['baseColorsLinear', uploadViews.baseColorsLinear, 2, 4, gl.FLOAT, false],
       ['materialParameters', uploadViews.materialParameters, 3, 4, gl.FLOAT, false],
       ['materialModelCodes', uploadViews.materialModelCodes, 4, 1, gl.UNSIGNED_BYTE, true],
       ['surfaceClassCodes', uploadViews.surfaceClassCodes, 5, 1, gl.UNSIGNED_BYTE, true],
       ['primitiveIndices', uploadViews.primitiveIndices, 6, 1, gl.UNSIGNED_SHORT, true],
       ['roleCodes', uploadViews.roleCodes, 7, 1, gl.UNSIGNED_BYTE, true],
-      ['coastDistances', coastDistances, 8, 1, gl.FLOAT, false],
-      ['contactDistances', contactField.packageDistances, 9, 1, gl.FLOAT, false]
+      ['coastDistances', seamPresentation.coastDistances, 8, 1, gl.FLOAT, false],
+      ['contactDistances', seamPresentation.contactDistances, 9, 1, gl.FLOAT, false]
     ];
     rendererTiming.phases.shadersAndVertexSetup=performance.now()-shaderStarted;
     let lastStartupPercent=40;
@@ -3086,6 +3091,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     const debugRenderer = gl.getExtension('WEBGL_debug_renderer_info');
     return {
       woodlandHabitat:resources.woodlandHabitat?{...resources.woodlandHabitat.receipt,textureUploadCount:counters.woodlandHabitatTextureUploadCount,uploadedBytes:counters.woodlandHabitatUploadedBytes,perFrameUploadBytes:0}:null,
+      terrainSeamPresentation:resources.terrainSeamPresentation??null,
       rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
       presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
       presentationProfile: {

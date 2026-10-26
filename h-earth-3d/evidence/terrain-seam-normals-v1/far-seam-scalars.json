@@ -1,0 +1,150 @@
+{
+  "coast": {
+    "maximumMismatch": 2.279909679477214,
+    "above1Millimeter": 9,
+    "worst": [
+      {
+        "i": 14791,
+        "position": [
+          102.35601806640625,
+          14.489460945129395,
+          -736.0261840820312
+        ],
+        "isT": true,
+        "nearValue": 610.9403711052585,
+        "farValue": 608.6604614257812,
+        "difference": 2.279909679477214
+      },
+      {
+        "i": 14783,
+        "position": [
+          96.89973449707031,
+          14.720049858093262,
+          -736.0265502929688
+        ],
+        "isT": true,
+        "nearValue": 618.721802190113,
+        "farValue": 620,
+        "difference": 1.2781978098870468
+      },
+      {
+        "i": 14792,
+        "position": [
+          146.40414428710938,
+          12.857376098632812,
+          -736.0233154296875
+        ],
+        "isT": true,
+        "nearValue": 608.2721175778343,
+        "farValue": 608.2610473632812,
+        "difference": 0.011070214553001279
+      },
+      {
+        "i": 14800,
+        "position": [
+          150.69625854492188,
+          12.783781051635742,
+          -736.023193359375
+        ],
+        "isT": true,
+        "nearValue": 608.3920313102692,
+        "farValue": 608.3848876953125,
+        "difference": 0.007143614956703459
+      },
+      {
+        "i": 14545,
+        "position": [
+          -384.0016174316406,
+          1.6063623428344727,
+          -204.63116455078125
+        ],
+        "isT": true,
+        "nearValue": 117.6475972857345,
+        "farValue": 117.64598846435547,
+        "difference": 0.00160882137903684
+      }
+    ]
+  },
+  "contact": {
+    "maximumMismatch": 77.47743166912608,
+    "above1Millimeter": 32,
+    "worst": [
+      {
+        "i": 14514,
+        "position": [
+          -383.99951171875,
+          -0.6650955080986023,
+          -76.38224792480469
+        ],
+        "isT": true,
+        "nearValue": -13.477431669126084,
+        "farValue": 64,
+        "difference": 77.47743166912608
+      },
+      {
+        "i": 14517,
+        "position": [
+          -383.99957275390625,
+          -0.6006324887275696,
+          -79.99990844726562
+        ],
+        "isT": false,
+        "nearValue": -9.986255645751953,
+        "farValue": 64,
+        "difference": 73.98625564575195
+      },
+      {
+        "i": 14658,
+        "position": [
+          383.9996643066406,
+          -0.5002539753913879,
+          -76.38227844238281
+        ],
+        "isT": true,
+        "nearValue": -9.27150933942773,
+        "farValue": 64,
+        "difference": 73.27150933942772
+      },
+      {
+        "i": 14659,
+        "position": [
+          383.9997863769531,
+          -0.36866295337677,
+          -79.99995422363281
+        ],
+        "isT": false,
+        "nearValue": -5.654051780700684,
+        "farValue": 64,
+        "difference": 69.65405178070068
+      },
+      {
+        "i": 14654,
+        "position": [
+          383.9998779296875,
+          -0.2635737657546997,
+          -82.98888397216797
+        ],
+        "isT": true,
+        "nearValue": -2.6652494093215857,
+        "farValue": 64,
+        "difference": 66.66524940932159
+      }
+    ],
+    "stats": {
+      "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+      "saturationMeters": 64,
+      "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+      "terrainTriangles": 20736,
+      "oceanTriangles": 17696,
+      "overlapTests": 62308,
+      "contactSegments": 434,
+      "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+      "patchTriangles": 0,
+      "packageVertices": 10573,
+      "patchVertices": 0,
+      "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+      "contactTrianglesWithoutVertexSignChange": 0,
+      "initializationMilliseconds": 299.72722499999963
+    }
+  }
+}

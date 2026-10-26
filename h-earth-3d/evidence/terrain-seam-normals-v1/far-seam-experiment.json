@@ -1,0 +1,125 @@
+{
+  "assetSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+  "canonicalIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_2F3D0EB2",
+  "sourcePositionEncoding": "Float32Array",
+  "sourceNormalEncoding": "decimal6 then Float32Array",
+  "nearBoundaryEdges": 408,
+  "farBoundaryEdges": 420,
+  "matchedSeamVertices": 349,
+  "exactFloat32CoordinateMatches": 261,
+  "tJunctionMatches": 88,
+  "maxSeamPositionResidual": 0.000050426509591049345,
+  "maxBeforeAngle": 29.742406266421362,
+  "maxAfterAngle": 0.000002091309789151873,
+  "matchedSeamEdges": 348,
+  "maxMidpointPositionResidual": 0.00005260871312919431,
+  "maxMidpointNormalComponentError": 5.960464477539063e-8,
+  "maxMidpointNormalAngle": 0.000002699869328381916,
+  "changedNormalVertices": 349,
+  "unrelatedNormalChanges": 0,
+  "sourceArraysMutated": false,
+  "positionsAndIndicesChanged": false,
+  "cpuEligibilityNormalsChanged": false,
+  "limitations": [
+    "NO_GPU_RENDER",
+    "USER_POSE_UNKNOWN",
+    "ONLY_NEAR_FAR_SEAM_DOMAIN"
+  ],
+  "worst": [
+    {
+      "i": 14726,
+      "exactNear": 23,
+      "t": 0,
+      "distance": 0,
+      "tolerance": 0.0001754827972035855,
+      "target": [
+        0.06933099776506424,
+        0.9973300099372864,
+        0.022921999916434288
+      ],
+      "beforeAngle": 29.742406266421362,
+      "afterAngle": 0.0000012074182697257333,
+      "position": [
+        -200.00765991210938,
+        15.616744041442871,
+        -736.0281982421875
+      ]
+    },
+    {
+      "i": 14727,
+      "exactNear": 22,
+      "t": 0,
+      "distance": 0,
+      "tolerance": 0.00017548301548231393,
+      "target": [
+        0.05553999915719032,
+        0.9981930255889893,
+        0.02294199913740158
+      ],
+      "beforeAngle": 24.724970709395937,
+      "afterAngle": 0.0000017075472925031877,
+      "position": [
+        -208.0082244873047,
+        16.138547897338867,
+        -736.0291137695312
+      ]
+    },
+    {
+      "i": 14728,
+      "exactNear": 21,
+      "t": 0,
+      "distance": 0,
+      "tolerance": 0.00017548317555338144,
+      "target": [
+        0.03256800025701523,
+        0.999206006526947,
+        0.02296599932014942
+      ],
+      "beforeAngle": 18.36664703389835,
+      "afterAngle": 0,
+      "position": [
+        -216.0087432861328,
+        16.54540252685547,
+        -736.02978515625
+      ]
+    },
+    {
+      "i": 14841,
+      "exactNear": 1066,
+      "t": 0,
+      "distance": 0,
+      "tolerance": 0.00015640878700651228,
+      "target": [
+        0.01875700056552887,
+        0.9998120069503784,
+        0.004985999781638384
+      ],
+      "beforeAngle": 18.203480709607536,
+      "afterAngle": 0.0000012074182697257333,
+      "position": [
+        384.01519775390625,
+        16.17803955078125,
+        -656.0260009765625
+      ]
+    },
+    {
+      "i": 14731,
+      "exactNear": 18,
+      "t": 0,
+      "distance": 0,
+      "tolerance": 0.00017548317555338144,
+      "target": [
+        -0.019828999415040016,
+        0.9995390176773071,
+        0.02297399938106537
+      ],
+      "beforeAngle": 17.865679599050868,
+      "afterAngle": 0,
+      "position": [
+        -240.00970458984375,
+        16.515390396118164,
+        -736.02978515625
+      ]
+    }
+  ]
+}

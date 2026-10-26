@@ -1,0 +1,88 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "1729af2f93e1645ee6aba08092fc59a7c4389acd",
+    "operationId": "H_EARTH_INTERNAL_TERRAIN_CONTINUITY_20261026_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/render/terrain-seam-normal.v1.js",
+      "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/evidence/internal-terrain-continuity-v1/**",
+      "h-earth-3d/experience-anchor/receipts/internal-terrain-continuity-v1.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_TERRAIN_SEAM_QUALIFICATION_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "GEOMETRIC_CLEARANCE_FAILURE",
+    "SUPPORT_SWITCH_DISCONTINUITY",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Pin 1729af2f93e1645ee6aba08092fc59a7c4389acd; measured current package boundary continuity, regression preservation, exact candidate browser comparison and owner perceptual review.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/terrain-seam-normal.v1.js",
+    "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+    "showroom/globe/h-earth/index.html",
+    "h-earth-3d/evidence/internal-terrain-continuity-v1/**",
+    "h-earth-3d/experience-anchor/receipts/internal-terrain-continuity-v1.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Close prior Gen2910 narrow scope as superseded, then authentic admission at exact main.",
+      "step": 1
+    },
+    {
+      "action": "Carry forward exact85372f3 product delta and preserve completed evidence; diagnose internal geological normal/coast/contact fields before correction.",
+      "step": 2
+    },
+    {
+      "action": "Correct only proven derived-attribute discontinuities, verify geometry/root/palette identity, measure boundaries and resource delta.",
+      "step": 3
+    },
+    {
+      "action": "Independent West review; exact candidate browser preflight and matched visual comparison using existing capability; preserve owner disposition. No deployment.",
+      "step": 4
+    }
+  ],
+  "exactGoverningHead": "1729af2f93e1645ee6aba08092fc59a7c4389acd",
+  "exactTestRunnerCommand": "node --test h-earth-3d/evidence/internal-terrain-continuity-v1/terrain-seam.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "ACTUAL_INTERNAL_BOUNDARY_DIAGNOSIS",
+      "CONTINUOUS_DERIVED_ATTRIBUTES",
+      "UNCHANGED_GEOMETRY_PALETTE_VEGETATION_AND_NAVIGATION",
+      "INDEPENDENT_WEST_REVIEW",
+      "MATCHED_BROWSER_COMPARISON",
+      "EXPERIENCE_ANCHOR_ACCEPTANCE",
+      "OWNER_CANDIDATE_PERCEPTUAL_DISPOSITION"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Carry forward exact reviewed near/far candidate85372f3dc896d73457f6a7d008ac08a51d0ba85b unchanged, diagnose remaining internal ground polygons in actual geological presentation meshes, and correct only proven discontinuities in derived normal/coast/contact attributes and their bounded transitions. Specifically investigate artificial140m coast/contact defaults versus source terrain inside the12m geological rim. Preserve all geometry, topology, colors/palette constants, vegetation roots/population/habitat masks, camera/navigation, and lighting. No global material flattening. Candidate-only preparation and numerical plus matched browser/visual qualification; no product merge/deploy.",
+    "forbidden": "Global palette/material flattening; geometry topology habitat root navigation edits; product merge/deploy; new control plane capabilities."
+  },
+  "procedureId": "H_EARTH_INTERNAL_TERRAIN_CONTINUITY_20261026_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/internal-terrain-continuity-v1/**",
+      "h-earth-3d/experience-anchor/receipts/internal-terrain-continuity-v1.json"
+    ],
+    "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+  }
+}

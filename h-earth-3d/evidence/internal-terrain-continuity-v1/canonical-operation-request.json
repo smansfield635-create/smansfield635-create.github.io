@@ -1,0 +1,161 @@
+{
+  "allowedPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/terrain-seam-normal.v1.js",
+    "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+    "showroom/globe/h-earth/index.html",
+    "h-earth-3d/evidence/internal-terrain-continuity-v1/**",
+    "h-earth-3d/experience-anchor/receipts/internal-terrain-continuity-v1.json"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/internal-terrain-continuity-v1/**",
+    "h-earth-3d/experience-anchor/receipts/internal-terrain-continuity-v1.json"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "GEOMETRIC_CLEARANCE_FAILURE",
+    "SUPPORT_SWITCH_DISCONTINUITY",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "1729af2f93e1645ee6aba08092fc59a7c4389acd",
+  "exactTestCommand": "node --test h-earth-3d/evidence/internal-terrain-continuity-v1/terrain-seam.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateProduct": true,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "1729af2f93e1645ee6aba08092fc59a7c4389acd",
+    "operationId": "H_EARTH_INTERNAL_TERRAIN_CONTINUITY_20261026_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/render/terrain-seam-normal.v1.js",
+      "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/evidence/internal-terrain-continuity-v1/**",
+      "h-earth-3d/experience-anchor/receipts/internal-terrain-continuity-v1.json"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "ACTUAL_INTERNAL_BOUNDARY_DIAGNOSIS",
+      "CONTINUOUS_DERIVED_ATTRIBUTES",
+      "UNCHANGED_GEOMETRY_PALETTE_VEGETATION_AND_NAVIGATION",
+      "INDEPENDENT_WEST_REVIEW",
+      "MATCHED_BROWSER_COMPARISON",
+      "EXPERIENCE_ANCHOR_ACCEPTANCE",
+      "OWNER_CANDIDATE_PERCEPTUAL_DISPOSITION"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "8a260afb46434675d4891b260906f76a5c8721cb39aa5c97efaa4861fdf7b473",
+    "receiptId": "H_EARTH_INTERNAL_TERRAIN_CONTINUITY_20261026_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:GROUND_MATERIAL_COHERENCE:20261026",
+  "operationId": "H_EARTH_INTERNAL_TERRAIN_CONTINUITY_20261026_001",
+  "prohibitedPaths": [
+    "MAIN:DIRECT_WRITE",
+    ".github/**",
+    "TERRAIN_POSITION_INDEX_OR_TOPOLOGY_MUTATION",
+    "PALETTE_OR_VEGETATION_POPULATION_CHANGE",
+    "NAVIGATION_OR_INPUT_CHANGE",
+    "ANY_PATH_OUTSIDE_DECLARED_SCOPE"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "conditionalOnSelectedGates": true,
+    "intent": "Carry forward exact reviewed near/far candidate85372f3dc896d73457f6a7d008ac08a51d0ba85b unchanged, diagnose remaining internal ground polygons in actual geological presentation meshes, and correct only proven discontinuities in derived normal/coast/contact attributes and their bounded transitions. Specifically investigate artificial140m coast/contact defaults versus source terrain inside the12m geological rim. Preserve all geometry, topology, colors/palette constants, vegetation roots/population/habitat masks, camera/navigation, and lighting. No global material flattening. Candidate-only preparation and numerical plus matched browser/visual qualification; no product merge/deploy.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner accepted localized seam improvement and explicitly directed proceeding to remaining targets after comparison40378543633."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_PROCEED_EDGE_CLEANUP",
+      "resolved": true
+    },
+    {
+      "id": "ROLLBACK_LIVE_AND_CLOSED",
+      "resolved": true
+    },
+    {
+      "id": "CURRENT_RESTORED_RENDERER_IDENTIFIED",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "ACTUAL_INTERNAL_BOUNDARY_DIAGNOSIS",
+    "CONTINUOUS_DERIVED_ATTRIBUTES",
+    "UNCHANGED_GEOMETRY_PALETTE_VEGETATION_AND_NAVIGATION",
+    "INDEPENDENT_WEST_REVIEW",
+    "MATCHED_BROWSER_COMPARISON",
+    "EXPERIENCE_ANCHOR_ACCEPTANCE",
+    "OWNER_CANDIDATE_PERCEPTUAL_DISPOSITION"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "STOP_UNLESS_CANONICAL_ADMITTED_AND_LOCKED",
+    "STOP_ON_OUT_OF_SCOPE_CHANGE",
+    "STOP_ON_GEOMETRY_NAVIGATION_OR_HABITAT_REGRESSION",
+    "STOP_ON_SELECTED_QUALIFICATION_FAILURE",
+    "STOP_ON_UNEXPLAINED_RESOURCE_OR_SUSTAINED_PERFORMANCE_REGRESSION",
+    "NO_HEADLESS_AS_PHYSICAL_ANDROID_ACCEPTANCE",
+    "NO_PRODUCTION_DEPLOYMENT_AS_PREVIEW_WORKAROUND",
+    "NO_REPAIR_WITHOUT_MEASURED_BASELINE_SEAM",
+    "NO_ADOPTION_WITHOUT_MATCHED_RENDER_AND_PERCEPTUAL_REVIEW"
+  ],
+  "subjectIdentity": {
+    "baseHead": "1729af2f93e1645ee6aba08092fc59a7c4389acd",
+    "baselineRendererBlob": "31d97193a508ede2c244b4253c76be892fd9782e",
+    "candidateBranch": "refs/heads/h-earth/internal-terrain-continuity-20261026",
+    "carriedForwardCandidate": "85372f3dc896d73457f6a7d008ac08a51d0ba85b",
+    "scope": "Carry forward exact reviewed near/far candidate85372f3dc896d73457f6a7d008ac08a51d0ba85b unchanged, diagnose remaining internal ground polygons in actual geological presentation meshes, and correct only proven discontinuities in derived normal/coast/contact attributes and their bounded transitions. Specifically investigate artificial140m coast/contact defaults versus source terrain inside the12m geological rim. Preserve all geometry, topology, colors/palette constants, vegetation roots/population/habitat masks, camera/navigation, and lighting. No global material flattening. Candidate-only preparation and numerical plus matched browser/visual qualification; no product merge/deploy."
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "INTERNAL_COAST_PRESENTATION_QUALIFICATION_v1",
+  "summary": [
+    {
+      "role": "ERODED_TERRAIN",
+      "vertices": 24964,
+      "changedVertices": 24213,
+      "responseRelevantVertices": 43,
+      "maxErrorMeters": 1.5258442999765975e-05,
+      "minChangedCoast": 103.06644439697266,
+      "startupMilliseconds": 26.498231999999916,
+      "temporaryCopyBytes": 99856
+    },
+    {
+      "role": "MOUNTAIN_OVERBURDEN",
+      "vertices": 45,
+      "changedVertices": 45,
+      "responseRelevantVertices": 0,
+      "maxErrorMeters": 7.577031396976963e-06,
+      "minChangedCoast": 140,
+      "startupMilliseconds": 0.07974099999955797,
+      "temporaryCopyBytes": 180
+    }
+  ],
+  "physicalAndroidPerformanceProven": false,
+  "visualAcceptance": false
+}

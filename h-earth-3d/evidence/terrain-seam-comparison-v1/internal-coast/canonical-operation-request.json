@@ -1,0 +1,153 @@
+{
+  "allowedPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "GEOMETRIC_CLEARANCE_FAILURE",
+    "SUPPORT_SWITCH_DISCONTINUITY",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "9e2873decd12d53f3bcae5832e5841ff778435ed",
+  "exactTestCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": true,
+    "mayMutateControlPlane": true,
+    "mayMutateProduct": false,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "9e2873decd12d53f3bcae5832e5841ff778435ed",
+    "operationId": "H_EARTH_INTERNAL_COAST_COMPARISON_20261026_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_IMMUTABLE_PAIR",
+      "FIXED_SEAM_AND_PRESERVATION_POSES",
+      "COMPARISON_TOOL_TESTS",
+      "INDEPENDENT_WEST_TOOLING_REVIEW",
+      "MATCHED_BROWSER_CAPTURES_OR_EXACT_FAILURE_RECEIPT"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "0bc0d0cd3e648dd0a9adc684c033c19b077474dcae381fd3bad758b35309c87f",
+    "receiptId": "H_EARTH_INTERNAL_COAST_COMPARISON_20261026_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:FIXED_GROUND_COMPARISON:20261026",
+  "operationId": "H_EARTH_INTERNAL_COAST_COMPARISON_20261026_001",
+  "prohibitedPaths": [
+    "MAIN:DIRECT_WRITE",
+    "showroom/**",
+    "ANY_PRODUCT_ASSETS_OR_PALETTE_CHANGE",
+    "ANY_PATH_OUTSIDE_DECLARED_SCOPE",
+    "NEW_CAPABILITY_OR_TRANSPORT_CLASS"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "conditionalOnSelectedGates": true,
+    "intent": "Rebind the existing fixed comparison from prior coastal candidate85372f3dc896d73457f6a7d008ac08a51d0ba85b to inland candidate9127904e725a3f4ca13c1221451023102ad09435. Preserve nine existing views and add three finite playable poses around affected(88,-232) patch. Keep all camera, frame, asset, checkout and failure guards. Increase bounded timeout if needed for48captures. No product source modification, deployment or new capability.",
+    "mayDeploy": false,
+    "mayMerge": true,
+    "mayMutateProduct": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner authorized remaining inland targets; Gen2912 exact candidate passed preflight40388830243. Continue its matched visual qualification."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_MATCHED_COMPARISON_AUTHORIZED",
+      "resolved": true
+    },
+    {
+      "id": "EXACT_PAIR_IDENTIFIED",
+      "resolved": true
+    },
+    {
+      "id": "EXISTING_REGISTERED_FIXED_RUNNER_IDENTIFIED",
+      "resolved": true
+    },
+    {
+      "id": "CANDIDATE_RUNTIME_PREFLIGHT_SUCCESS",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "EXACT_IMMUTABLE_PAIR",
+    "FIXED_SEAM_AND_PRESERVATION_POSES",
+    "COMPARISON_TOOL_TESTS",
+    "INDEPENDENT_WEST_TOOLING_REVIEW",
+    "MATCHED_BROWSER_CAPTURES_OR_EXACT_FAILURE_RECEIPT"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "STOP_UNLESS_CANONICAL_ADMITTED_AND_LOCKED",
+    "STOP_ON_OUT_OF_SCOPE_CHANGE",
+    "NO_PRODUCT_SOURCE_MUTATION",
+    "NO_PRODUCTION_DEPLOYMENT_AS_PREVIEW",
+    "NO_HEADLESS_AS_PHYSICAL_ANDROID_ACCEPTANCE",
+    "NO_VISUAL_PASS_FROM_RUNTIME_PASS"
+  ],
+  "subjectIdentity": {
+    "baseHead": "9e2873decd12d53f3bcae5832e5841ff778435ed",
+    "baselineProductHead": "85372f3dc896d73457f6a7d008ac08a51d0ba85b",
+    "candidateBranch": "refs/heads/h-earth/internal-coast-comparison-20261026",
+    "candidateProductHead": "9127904e725a3f4ca13c1221451023102ad09435",
+    "existingRegisteredCapability": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+    "scope": "Rebind the existing fixed comparison from prior coastal candidate85372f3dc896d73457f6a7d008ac08a51d0ba85b to inland candidate9127904e725a3f4ca13c1221451023102ad09435. Preserve nine existing views and add three finite playable poses around affected(88,-232) patch. Keep all camera, frame, asset, checkout and failure guards. Increase bounded timeout if needed for48captures. No product source modification, deployment or new capability."
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+}

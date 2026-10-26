@@ -4,13 +4,16 @@ import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
-export const HEADS=Object.freeze({baseline:'098295a83e5c8372cf0764090c28fa9c81a93264',candidate:'85372f3dc896d73457f6a7d008ac08a51d0ba85b'});
+export const HEADS=Object.freeze({baseline:'85372f3dc896d73457f6a7d008ac08a51d0ba85b',candidate:'9127904e725a3f4ca13c1221451023102ad09435'});
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
 {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
 {name:'inland-seam-mid',x:-200,z:-704,y:18.272624,yaw:0,pitch:-4,diagnosticObserver:true},
 {name:'inland-seam-far',x:-200,z:-656,y:18.793665,yaw:0,pitch:-2,diagnosticObserver:true},
 {name:'coastal-seam-east',x:376,z:-96,y:2.603263,yaw:90,pitch:-14,diagnosticObserver:true},
-{name:'coastal-seam-west',x:-376,z:-96,y:2.518974,yaw:270,pitch:-14,diagnosticObserver:true}].map(Object.freeze));
+{name:'coastal-seam-west',x:-376,z:-96,y:2.518974,yaw:270,pitch:-14,diagnosticObserver:true},
+{name:'patch-close-south',x:88,z:-236,yaw:180,pitch:-17.72},
+{name:'patch-east',x:92,z:-232,yaw:270,pitch:-6.69},
+{name:'patch-west',x:84,z:-232,yaw:90,pitch:-13.5}].map(Object.freeze));
 // Observer heights exceed measured immutable mesh/analytic elevations by 2.25m.
 // These views are outside walking bounds and confer no traversal/support authority.
 export function comparisonState(nav,pose,sequence,action){

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!-- ONE-CALL LAB · isolated standalone interview demo · v1.0
+     No network, recording, customer PII, Rilla API or employer integration.
+     Documented values and illustrative inputs are deliberately segregated.
+     Static, single-file build: full-file replacement only.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b1420">
+  <meta name="description" content="An interactive field-sales coaching demonstration built from premium home-improvement selling experience, a structured homeowner study, and an evidence-aware improvement plan.">
+  <title>One-Call Lab · Field Sales Coaching Demonstration</title>
+  <style>
+    :root{--bg:#0b1420;--bg2:#101e2b;--card:#132333;--card2:#182b3a;--line:#324657;--ink:#f0f5f4;--muted:#b0c0c6;--muted2:#879da7;--accent:#a5f1cf;--teal:#75cfbd;--warn:#f3d5a1;--bad:#e5afa6;--radius:18px;--shadow:0 20px 70px #030a1460}
+    *{box-sizing:border-box}
+    [hidden]{display:none !important}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:linear-gradient(140deg,#0a1521,#0b1725 48%,#0c1c29);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Arial,sans-serif;min-height:100vh}
+    button,input,select{font:inherit}
+    button{cursor:pointer}
+    a{color:var(--accent);text-underline-offset:3px}
+    :focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+    .wrap{width:min(1080px,calc(100% - 36px));margin:auto}
+    .topbar{position:sticky;top:0;z-index:50;border-bottom:1px solid #52647266;background:#091522ee;backdrop-filter:blur(14px)}
+    .toprow{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);min-width:0}
+    .mark{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border:1px solid var(--accent);border-radius:12px;color:var(--accent);font-weight:800;letter-spacing:-1.5px;font-size:15px}
+    .brandtext{display:grid;line-height:1.1}.brandtext strong{letter-spacing:.02em;font-size:16px}.brandtext small{font-size:11px;color:var(--muted);letter-spacing:.075em;text-transform:uppercase;margin-top:5px}
+    .topnote{font-size:12px;color:var(--muted2);text-align:right}
+    nav{display:flex;gap:4px;padding-bottom:10px;overflow-x:auto;scrollbar-width:none}nav::-webkit-scrollbar{display:none}
+    nav button{background:transparent;color:var(--muted);border:0;border-bottom:2px solid transparent;border-radius:0;padding:8px 15px;white-space:nowrap;font-size:13px;font-weight:650}
+    nav button[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent);background:#a5f1cf0e}
+    main{padding-bottom:50px}
+    .view{padding:42px 0 22px;min-height:63vh}.view[hidden]{display:none}
+    .eyebrow{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+    h1,h2,h3,p{margin-top:0}h1{font-size:clamp(36px,6vw,64px);line-height:1.08;letter-spacing:-.045em;margin:12px 0 22px;font-weight:750;max-width:840px}h2{font-size:clamp(27px,3.4vw,38px);letter-spacing:-.032em;line-height:1.17;margin:10px 0 14px}h3{font-size:20px;line-height:1.3;margin:0 0 10px}p{color:var(--muted);margin-bottom:16px}
+    .lead{font-size:clamp(17px,2.4vw,21px);line-height:1.56;max-width:730px;color:#d5e0e1}
+    .hero{padding:18px 0 22px}.hero span{color:var(--accent)}
+    .actions{display:flex;flex-wrap:wrap;gap:11px;margin:26px 0 18px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid var(--line);border-radius:11px;padding:12px 18px;color:var(--ink);background:var(--card2);font-weight:750;font-size:14px;min-height:46px;transition:background .15s,border-color .15s}
+    .btn:hover{background:#234252;border-color:var(--teal)}.btn.primary{background:var(--accent);border-color:var(--accent);color:#07201b}.btn.primary:hover{background:#d5ffe8}.btn.quiet{background:transparent}
+    .pills{display:flex;gap:8px;flex-wrap:wrap}.pill{border:1px solid #527165;border-radius:999px;padding:5px 11px;color:#cde6d9;font-size:11px;font-weight:700;letter-spacing:.03em}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .card{border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(140deg,#142435,#10202e);padding:23px;min-width:0}
+    .card.plain{background:#0d1c2a}.card strong{color:#f3f7f6}
+    .card .sub{color:var(--muted2);font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+    .card .big{font-size:clamp(27px,3vw,38px);line-height:1.13;letter-spacing:-.04em;color:var(--ink);font-weight:800;margin:11px 0 9px;font-variant-numeric:tabular-nums}
+    .card p{font-size:14px;margin-bottom:0}
+    .label{font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)}
+    .hair{height:1px;background:var(--line);margin:24px 0}.section{padding-top:35px}
+    .stepindex{border:1px solid #4a766b;color:var(--accent);width:27px;height:27px;display:inline-grid;place-items:center;border-radius:8px;font-size:12px;font-weight:900;margin-bottom:14px}
+    .role-layout{display:grid;grid-template-columns:minmax(0,1.48fr) minmax(280px,.7fr);gap:16px}
+    .scenario{padding:15px 17px;background:#192d3b;border-left:3px solid var(--accent);color:#eef4f2;border-radius:0 12px 12px 0;margin:20px 0;line-height:1.6}
+    .scenario em{display:block;color:var(--muted2);font-style:normal;font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+    .choice-stack{display:grid;gap:9px}
+    .choice{width:100%;text-align:left;background:#102232;color:var(--ink);border:1px solid var(--line);border-radius:11px;padding:13px 15px;font-size:14px;line-height:1.45}
+    .choice:hover:not(:disabled){background:#1b3745;border-color:#8bd9bc}.choice:disabled{cursor:default;opacity:.67}.choice.picked{opacity:1;background:#173d40;border-color:var(--accent)}
+    .feedback{border:1px solid #507b6d;background:#132e32;border-radius:12px;padding:16px;margin-top:16px}.feedback[hidden]{display:none}
+    .feedback b{color:var(--accent)}.feedback p{margin:8px 0 0;font-size:14px}
+    .progress{height:6px;background:#354a59;border-radius:99px;overflow:hidden;margin:12px 0 21px}.progress div{height:100%;width:25%;background:var(--teal);transition:width .25s}
+    .audit-list{display:grid;gap:15px;margin:18px 0}.audit-item{display:grid;grid-template-columns:26px 1fr;gap:10px}.audit-item .i{width:22px;height:22px;display:grid;place-items:center;border:1px solid #537a6e;border-radius:50%;color:var(--accent);font-size:12px;font-weight:800}
+    .audit-item p{font-size:13px;margin:4px 0 0}
+    .select-row{display:flex;gap:9px;flex-wrap:wrap;margin:16px 0 21px}.selector{padding:9px 13px;border-radius:10px;border:1px solid var(--line);background:#122535;color:var(--ink);font-size:13px;font-weight:650}.selector[aria-pressed="true"]{background:#235045;border-color:var(--accent);color:#e8ffef}
+    .formgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin:20px 0}
+    label.field{display:grid;gap:6px;color:var(--muted);font-weight:700;font-size:12px}.field input{background:#0b1b29;color:var(--ink);border:1px solid #587080;padding:12px 13px;border-radius:10px;width:100%;font-size:18px;font-variant-numeric:tabular-nums}.field input::placeholder{color:#718995}
+    .result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin-top:15px}.result{background:#0c1c2a;border:1px solid var(--line);border-radius:12px;padding:15px}.result small{color:var(--muted);font-size:12px}.result .num{font-weight:800;font-size:28px;color:#e6f6ed;letter-spacing:-.035em;margin:4px 0;font-variant-numeric:tabular-nums}
+    .status{color:var(--warn);font-size:12px}.muted{color:var(--muted2);font-size:13px}.fine{font-size:12px;color:var(--muted2)}
+    .method{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start}.stats{display:grid;gap:8px}.statline{display:grid;grid-template-columns:108px 1fr 35px;align-items:center;gap:11px;font-size:13px;margin-bottom:13px}.bar{background:#314757;height:9px;border-radius:100px;overflow:hidden}.bar span{display:block;height:100%;background:var(--teal);border-radius:100px}
+    .questions{margin:18px 0 0;padding-left:22px}.questions li{padding:3px 0;color:#dce5e5}
+    .topic{background:#0f2533;border:1px solid #426276;border-radius:13px;padding:24px}.topic .why{border-top:1px solid var(--line);margin-top:18px;padding-top:16px;font-size:14px;color:var(--muted)}
+    .foot{border-top:1px solid var(--line);padding:26px 0 35px;color:var(--muted2);font-size:12px}.foot .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .inline-note{font-size:12px;color:var(--muted2);border-left:2px solid #729790;padding-left:12px;margin-top:16px}
+    .disclaimer{padding:15px 17px;background:#102531;border:1px solid #385b64;border-radius:11px;font-size:13px;color:#bcd1d4;margin-top:23px}
+    .checked{font-weight:700;color:var(--accent)}
+    @media (max-width:780px){.grid,.grid.two,.role-layout,.method{grid-template-columns:1fr}.grid.two{gap:12px}.topnote{display:none}.formgrid,.result-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.method{gap:6px}.view{padding-top:26px}}
+    @media (max-width:480px){.wrap{width:min(100% - 24px,1080px)}.toprow{min-height:68px}.brandtext small{font-size:10px}.card{padding:18px}.view{padding-top:19px}.formgrid{grid-template-columns:1fr 1fr;gap:9px}.result-grid{grid-template-columns:1fr 1fr}.actions{gap:9px}.btn{flex:1 1 125px;padding:11px 12px}.statline{grid-template-columns:104px 1fr 27px}.pills{gap:5px}.pill{font-size:10px}nav button{padding:9px 12px}}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <div class="toprow">
+      <a href="#overview" class="brand" id="home-link" aria-label="One-Call Lab home"><span class="mark">OC</span><span class="brandtext"><strong>ONE-CALL LAB</strong><small>Field sales · coaching systems</small></span></a>
+      <div class="topnote">Independent portfolio demonstration<br>Sean Mansfield</div>
+    </div>
+    <nav aria-label="Sections">
+      <button type="button" data-view="overview" aria-current="page">Overview</button>
+      <button type="button" data-view="coach">Coaching demo</button>
+      <button type="button" data-view="measure">Measurement</button>
+      <button type="button" data-view="guide">Homeowner guide</button>
+      <button type="button" data-view="evidence">Evidence</button>
+    </nav>
+  </div>
+</header>
+<main class="wrap" id="main">
+  <section id="overview" class="view" aria-labelledby="overview-title">
+    <div class="hero">
+      <div class="eyebrow">Field-derived training · Interactive demonstration</div>
+      <h1 id="overview-title">Every appointment should improve <span>the next one.</span></h1>
+      <p class="lead">I approached premium home-improvement sales as a repeatable learning process: listen for the actual problem, explain the trade-offs, coach the conversation, and measure what changes.</p>
+      <div class="pills"><span class="pill">Homeowner discovery</span><span class="pill">One-call consultation</span><span class="pill">Behavioral coaching</span><span class="pill">Evidence boundaries</span></div>
+      <div class="actions">
+        <button type="button" class="btn primary" data-go="coach">Try the coaching demo</button>
+        <button type="button" class="btn" data-go="guide">View homeowner guide</button>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="sub">Reported first-year LeafGuard production</div><div class="big">≈ $1.2M</div><p>Personal sales production reported in résumé materials. Not independently audited within this demonstration.</p></div>
+      <div class="card"><div class="sub">100-customer study · accessible source subset</div><div class="big">87 / 100</div><p>The preserved source contains indexed notes 14–100. Missing entries are not reconstructed.</p></div>
+      <div class="card"><div class="sub">12-month plan · target, not achieved close rate</div><div class="big">34–36%+</div><p>Stabilization goal from a planning document. Historical appointment and closed-contract totals were not recovered.</p></div>
+    </div>
+    <div class="section"><div class="eyebrow">The system in four moves</div><h2>From field observation to repeatable coaching.</h2>
+      <div class="grid">
+        <div class="card plain"><span class="stepindex">01</span><h3>Observe</h3><p>Identify what actually concerns the homeowner, not just the product being quoted.</p></div>
+        <div class="card plain"><span class="stepindex">02</span><h3>Review</h3><p>Use a recorded-conversation review process, such as Rilla's model, where authorized and consented.</p></div>
+        <div class="card plain"><span class="stepindex">03</span><h3>Coach</h3><p>Practice one specific behavior: discovery, timing, clear comparisons, or a comfortable next step.</p></div>
+      </div>
+      <div class="actions"><button class="btn quiet" type="button" data-go="measure">See how measurement works</button></div>
+    </div>
+    <div class="disclaimer"><b>Transparency:</b> This is an independent, client-side educational demonstration. It does not contain Rilla recordings or company CRM data, does not represent an official LeafGuard or HVAC training product, and does not claim verified close-rate improvement.</div>
+  </section>
+
+  <section id="coach" class="view" aria-labelledby="coach-title" hidden>
+    <div class="eyebrow">Practice lab · Interactive</div>
+    <h2 id="coach-title">Coach the next conversation.</h2>
+    <p class="lead">A short roleplay based on a fictional HVAC appointment. Choose how to respond at four decision points; the tool explains the coaching rationale. There is no AI grading or recorded customer data.</p>
+    <div class="role-layout">
+      <div class="card">
+        <div class="label" id="coach-progress-label">Step 1 of 4 · Discover</div>
+        <div class="progress" aria-hidden="true"><div id="coach-progress-bar"></div></div>
+        <h3 id="coach-stage">Start with discovery.</h3>
+        <div class="scenario" id="coach-customer"><em>Fictional homeowner</em>"Another contractor's quote is lower. I'm mainly interested in the cheapest option."</div>
+        <div class="choice-stack" id="coach-choices"></div>
+        <div id="coach-feedback" class="feedback" aria-live="polite" hidden></div>
+        <div class="actions"><button type="button" id="coach-next" class="btn primary" hidden>Next stage</button><button type="button" id="coach-restart" class="btn quiet">Restart practice</button></div>
+      </div>
+      <aside class="card plain">
+        <div class="label">A four-point coaching lens</div>
+        <div class="audit-list">
+          <div class="audit-item"><span class="i">1</span><div><strong>Discovery before price</strong><p>Find the homeowner's problem, timing, and priorities.</p></div></div>
+          <div class="audit-item"><span class="i">2</span><div><strong>Reflect the concern</strong><p>Confirm your understanding before introducing a solution.</p></div></div>
+          <div class="audit-item"><span class="i">3</span><div><strong>Demonstrate trade-offs</strong><p>Compare scope and terms without unverified savings promises.</p></div></div>
+          <div class="audit-item"><span class="i">4</span><div><strong>Invite a real decision</strong><p>Clarify next steps without pressure or false urgency.</p></div></div>
+        </div>
+        <div class="inline-note">Inspired by a field-sales review cycle: observation → specific coaching → rehearsal → measurement. <a href="https://www.rilla.com/" target="_blank" rel="noopener noreferrer">Rilla</a> is an independent third-party conversation-coaching product, not connected to this page.</div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="measure" class="view" aria-labelledby="measure-title" hidden>
+    <div class="eyebrow">Performance instrumentation · Interactive</div>
+    <h2 id="measure-title">Separate an improvement target from a measured result.</h2>
+    <p class="lead">Enter appointments run, contracts signed, and cancellations to calculate a period's gross and net closing rate. Data stays in this browser and is not uploaded.</p>
+    <div class="role-layout">
+      <div class="card">
+        <div class="label">Your inputs · no records preloaded</div>
+        <div class="formgrid">
+          <label class="field" for="appts">Appointments completed<input type="number" id="appts" min="1" max="1000000" step="1" inputmode="numeric" placeholder="e.g. 40"></label>
+          <label class="field" for="sold">Contracts signed<input type="number" id="sold" min="0" max="1000000" step="1" inputmode="numeric" placeholder="e.g. 14"></label>
+          <label class="field" for="cancel">Later cancellations<input type="number" id="cancel" min="0" max="1000000" step="1" inputmode="numeric" placeholder="e.g. 1"></label>
+        </div>
+        <div class="actions"><button class="btn primary" type="button" id="calc-button">Calculate</button><button class="btn" type="button" id="example-button">Load hypothetical example</button><button class="btn quiet" type="button" id="clear-button">Clear</button></div>
+        <div id="calc-message" class="fine" role="status">Add all three values to see the calculation.</div>
+        <div id="calc-result" class="result-grid" hidden>
+          <div class="result"><small>Gross close rate</small><div class="num" id="gross-result">—</div><small>Signed / completed appointments</small></div>
+          <div class="result"><small>Net close rate</small><div class="num" id="net-result">—</div><small>(Signed − cancelled) / appointments</small></div>
+          <div class="result"><small>Cancellation rate</small><div class="num" id="cancel-result">—</div><small>Cancelled / signed</small></div>
+        </div>
+      </div>
+      <aside class="card plain">
+        <div class="label">Historical document · 12-month plan</div>
+        <div class="big">34–36%+</div>
+        <p>Target close-rate average, not a verified prior result.</p>
+        <div class="hair"></div>
+        <div class="label">Target cancellation range</div>
+        <div class="big">≤ 5–6%</div>
+        <p>Stated stabilization objective, not a documented achieved rate.</p>
+        <div class="hair"></div>
+        <p class="fine">The plan also forecast $1.5M–$1.65M in new revenue under assumptions. Without original appointment denominators and realized cancellations, forecast performance cannot be relabeled as achieved performance.</p>
+      </aside>
+    </div>
+    <div class="disclaimer">Measurement rule: define the appointment population and time window before comparing periods. A weekly close rate, a monthly net close rate, and an annual revenue total are different measurements.</div>
+  </section>
+
+  <section id="guide" class="view" aria-labelledby="guide-title" hidden>
+    <div class="eyebrow">Homeowner-facing module · Interactive</div>
+    <h2 id="guide-title">Give the customer a clearer decision.</h2>
+    <p class="lead">A reusable reference guide a homeowner could consult before purchasing a major home service. It asks what to verify rather than promoting a particular brand.</p>
+    <div class="label">What matters most to you?</div>
+    <div class="select-row" id="guide-choices"></div>
+    <div class="topic" id="guide-card" aria-live="polite"><div class="eyebrow" id="guide-tag">Compare thoughtfully</div><h3 id="guide-heading">Comfort and reliability</h3><p id="guide-description">Understand the problem before comparing solutions.</p><ol class="questions" id="guide-questions"></ol><div class="why" id="guide-why"></div></div>
+    <div class="actions"><button type="button" class="btn" id="copy-guide">Copy these questions</button></div>
+    <div class="fine">This guide is independent educational material—not a recommendation for specific equipment or a substitute for qualified inspection, code-compliant installation, or written contract terms.</div>
+  </section>
+
+  <section id="evidence" class="view" aria-labelledby="evidence-title" hidden>
+    <div class="eyebrow">Source discipline · What the records support</div>
+    <h2 id="evidence-title">Evidence, not embellishment.</h2>
+    <p class="lead">The purpose of a training system is to make decisions more defensible. Its measurements must be honest about what was observed, what was modeled, and what remains unknown.</p>
+    <div class="grid two">
+      <div class="card"><div class="label">Reported commercial experience</div><div class="big">≈ $1.2M</div><p>Individual first-year sales at LeafGuard, recorded in professional CV materials. The source is self-reported, not a payroll or CRM audit.</p></div>
+      <div class="card"><div class="label">Field-study record coverage</div><div class="big">87 indexed notes</div><p>Study refers to 100 customers; the source currently retains entries #14–#100. Entries #1–#13 are absent from that published index.</p></div>
+    </div>
+    <div class="section method">
+      <div><div class="label">Topic tagging</div><p class="muted">Counts from keyword matching in 87 retained notes. Topics can overlap.</p></div>
+      <div class="card plain"><h3>What came up in the field notes</h3>
+        <div class="statline"><span>Debris / clogs</span><div class="bar"><span style="width:24.14%"></span></div><strong>21</strong></div>
+        <div class="statline"><span>Attachment / damage</span><div class="bar"><span style="width:10.35%"></span></div><strong>9</strong></div>
+        <div class="statline"><span>Fit / corners</span><div class="bar"><span style="width:8.05%"></span></div><strong>7</strong></div>
+        <div class="statline"><span>Finish / color</span><div class="bar"><span style="width:6.90%"></span></div><strong>6</strong></div>
+        <p class="fine">50 entries do not match these four keyword categories. This is a classification of short notes, not a survey prevalence estimate or proof of what caused a sale. No individual customer identities or reviews are included here.</p>
+      </div>
+    </div>
+    <div class="grid two section">
+      <div class="card plain"><h3>What the plan says</h3><p>Three-month target 32–35%; six-month 33–36%; 12-month 34–38%; desired long-run average 34–36%+. Desired cancellations at or below 5–6%.</p><div class="inline-note">Targets are not achieved conversion rates. The underlying appointments, wins, and cancellation data have not been recovered.</div></div>
+      <div class="card plain"><h3>What the demo actually does</h3><p>Exercises simulated selling choices, calculates rates from user-supplied numbers, and produces homeowner questions. The scoring rules are explicit and simple; this is not a deployed AI product.</p><div class="inline-note">Rilla is a third-party tool. No Rilla API, recordings, transcripts, proprietary scripts, or employer data are in this demo.</div></div>
+    </div>
+    <div class="disclaimer">Independent personal portfolio demonstration. Not affiliated with, authorized by, or endorsed by LeafGuard, Rilla, Lennox, Renewal by Andersen, or The Chill Brothers. Public materials intentionally exclude individual customer names, contact data, and any real private transcripts.</div>
+  </section>
+</main>
+<footer class="foot"><div class="wrap"><span>One-Call Lab · Interactive field-sales methods · v1.0</span><span>Independent portfolio demonstration · No customer data sent or stored</span></div></footer>
+<script>
+(()=>{'use strict';
+ const pages=[...document.querySelectorAll('section.view')];
+ const tabs=[...document.querySelectorAll('nav [data-view]')];
+ function show(id,push=true){if(!pages.some(e=>e.id===id))id='overview';pages.forEach(e=>e.hidden=e.id!==id);tabs.forEach(e=>{if(e.dataset.view===id)e.setAttribute('aria-current','page');else e.removeAttribute('aria-current')});if(push&&location.hash!=='#'+id)history.replaceState(null,'','#'+id);window.scrollTo({top:0,behavior:'instant'});}
+ document.querySelectorAll('[data-view],[data-go]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.view||b.dataset.go)));
+ document.getElementById('home-link').addEventListener('click',e=>{e.preventDefault();show('overview')});
+ window.addEventListener('hashchange',()=>show(location.hash.slice(1),false));
+ show(location.hash.slice(1)||'overview',false);
+ // Fully fictional, deterministic teaching exercise. No audio, CRM or Rilla data.
+ const stages=[
+ {name:'Discover',title:'Understand the problem before quoting.',customer:'“Another contractor\'s quote is lower. I\'m mainly interested in the cheapest option.”',options:[
+  ['Ask what happened with the current system and why they are considering a change now.',2,'You opened discovery without arguing about price. The actual need determines what a fair comparison means.'],
+  ['Offer to lower the quote before discussing the home.',0,'An immediate discount sacrifices discovery and can undermine price credibility.'],
+  ['Say your company is better and they should trust you.',0,'A brand assertion does not answer the homeowner\'s particular problem.']]},
+ {name:'Clarify',title:'Reflect the homeowner’s stated concern.',customer:'“The air conditioner struggled all night. The upstairs bedrooms stay warm and I’m worried it will fail again.”',options:[
+  ['Repeat the specific comfort and reliability concerns and ask which outcome matters most.',2,'You confirmed understanding before presenting a product. That makes the consultation responsive rather than scripted.'],
+  ['Immediately recommend the most expensive equipment.',0,'A recommendation without proper diagnosis, sizing and alternatives is premature.'],
+  ['Criticize the previous contractor to build urgency.',0,'Attacking a third party avoids the actual concern and adds no reliable evidence.']]},
+ {name:'Demonstrate',title:'Compare value without exaggeration.',customer:'“Your proposal costs more than the other one. What am I actually getting?”',options:[
+  ['Compare documented scope, installation responsibilities, terms and options line by line.',2,'You made the difference inspectable and avoided inventing performance or cost-savings guarantees.'],
+  ['Claim the system always pays for itself.',0,'A universal savings claim needs supporting assumptions and evidence and may mislead the homeowner.'],
+  ['Repeat the brand name and hope they recognize it.',0,'Reputation helps, but it does not replace a written scope comparison.']]},
+ {name:'Confirm',title:'Make the next decision comfortable and explicit.',customer:'“I would like to go over this with my spouse before deciding.”',options:[
+  ['Ask what remains unclear and offer a written comparison they can review together.',2,'You identified the open question, respected the buying process and preserved a useful next step.'],
+  ['Use an invented today-only deadline to force a decision.',0,'Artificial urgency harms trust and increases regret or cancellation risk.'],
+  ['Dismiss the spouse’s involvement as unnecessary.',0,'A major household decision should respect the decision makers involved.']]}
+ ];
+ let stage=0,score=0,done=false,answered=false;
+ const choices=document.getElementById('coach-choices'),msg=document.getElementById('coach-feedback'),next=document.getElementById('coach-next');
+ function renderCoach(){const x=stages[stage];answered=false;document.getElementById('coach-progress-label').textContent=`Step ${stage+1} of ${stages.length} · ${x.name}`;document.getElementById('coach-progress-bar').style.width=`${(stage+1)/stages.length*100}%`;document.getElementById('coach-stage').textContent=x.title;document.getElementById('coach-customer').innerHTML='<em>Fictional homeowner</em>'+x.customer;choices.replaceChildren();msg.hidden=true;next.hidden=true;next.textContent=stage===stages.length-1?'See practice feedback':'Next stage';x.options.forEach((opt,i)=>{let b=document.createElement('button');b.type='button';b.className='choice';b.textContent=String.fromCharCode(65+i)+'.  '+opt[0];b.addEventListener('click',()=>choose(i));choices.appendChild(b)});}
+ function choose(n){if(answered)return;answered=true;const selected=stages[stage].options[n];score+=selected[1];[...choices.children].forEach((b,i)=>{b.disabled=true;if(i===n)b.classList.add('picked')});msg.replaceChildren();let heading=document.createElement('b');heading.textContent=selected[1]?'Effective coaching choice':'Coaching opportunity';let p=document.createElement('p');p.textContent=selected[2];msg.append(heading,p);msg.hidden=false;next.hidden=false;}
+ function finish(){done=true;document.getElementById('coach-progress-label').textContent='Practice complete · Illustrative result';document.getElementById('coach-stage').textContent='Turn the review into a specific next drill.';document.getElementById('coach-customer').innerHTML='<em>Fictional demonstration only</em>This exercise tests four habits. It does not predict sales performance or score real recorded calls.';choices.replaceChildren();let card=document.createElement('div');card.className='topic';const a=document.createElement('h3');a.textContent=`${score} / 8 illustrative practice points`;const p=document.createElement('p');p.textContent=score===8?'Your choices consistently kept the customer’s actual priorities and a respectful next step at the center.':score>=4?'Review the stages where price, urgency or product claims displaced discovery.':'Begin the next practice with discovery and scope comparison rather than pressure.';const small=document.createElement('p');small.className='fine';small.textContent='Next practice target: choose one habit to rehearse, then check it against consented real appointments and actual close/cancellation denominators.';card.append(a,p,small);choices.append(card);msg.hidden=true;next.hidden=true;}
+ next.addEventListener('click',()=>{if(!answered)return;if(stage<stages.length-1){stage++;renderCoach()}else finish()});document.getElementById('coach-restart').addEventListener('click',()=>{stage=0;score=0;done=false;renderCoach()});renderCoach();
+ // No persistence or network. The user explicitly supplies any performance denominators.
+ const $=id=>document.getElementById(id);
+ function readInt(id){const e=$(id);if(e.value.trim()==='')return null;const n=Number(e.value);return Number.isInteger(n)&&Number.isFinite(n)?n:NaN;}
+ function calc(){const [a,s,c]=['appts','sold','cancel'].map(readInt);const out=$('calc-result'),m=$('calc-message');out.hidden=true;
+  if([a,s,c].some(v=>v===null)){m.textContent='Add all three values to see the calculation.';return;}
+  if(!Number.isFinite(a)||!Number.isFinite(s)||!Number.isFinite(c)||a<=0||s<0||c<0||s>a||c>s||a>1000000){m.textContent='Check inputs: appointments must be positive; signed ≤ appointments; cancellations ≤ signed; all values must be whole numbers.';return;}
+  const gross=100*s/a,net=100*(s-c)/a,cr=s>0?100*c/s:0;const pct=n=>n.toFixed(1)+'%';$('gross-result').textContent=pct(gross);$('net-result').textContent=pct(net);$('cancel-result').textContent=pct(cr);
+  out.hidden=false;m.textContent='Calculated from the numbers entered here only. This is not a recovered personal scorecard.';
+ }
+ $('calc-button').addEventListener('click',calc);$('example-button').addEventListener('click',()=>{$('appts').value=40;$('sold').value=14;$('cancel').value=1;calc();$('calc-message').textContent='Hypothetical illustration loaded: 40 completed appointments, 14 signed contracts, 1 cancellation. Not historical personal performance.'});$('clear-button').addEventListener('click',()=>{['appts','sold','cancel'].forEach(x=>$(x).value='');$('calc-result').hidden=true;$('calc-message').textContent='Fields cleared. No information is stored.'});
+ const topics={
+  comfort:{label:'Comfort / reliability',heading:'Understand the problem first',text:'A quote should follow a clear explanation of the homeowner’s existing condition and desired outcome.',questions:['What specific problem are we solving and how was it diagnosed?','What options would adequately address it, and why?','Which assumptions would change the recommended solution?'],why:'A good proposal relates each recommendation to a specific homeowner need, rather than starting with the highest-priced option.'},
+  cost:{label:'Budget / affordability',heading:'Understand the complete cost',text:'The useful comparison is the documented scope and total terms, not just a monthly payment or headline price.',questions:['What work is included, excluded or conditional?','What are the total financing charges and the cash-price alternative?','What happens if additional work is discovered after the quote?'],why:'Transparent comparisons reduce price misunderstandings and unexpected costs.'},
+  installation:{label:'Installation quality',heading:'Verify what happens after the sale',text:'Professional installation scope, responsibilities, timing, and inspection matter as much as the equipment selected.',questions:['Who performs the work and who is responsible for permits or inspections?','What preparation or access will be required at my property?','How will completion, cleanup and unresolved issues be documented?'],why:'Written expectations help prevent dissatisfaction even when a product itself is reliable.'},
+  warranty:{label:'Warranty / aftercare',heading:'Know what support really covers',text:'Warranty and service statements should be verified in the written agreement and compared to actual exclusions.',questions:['Which components, labor and service calls are covered, and for how long?','What exclusions, maintenance duties or registration rules apply?','Who is responsible for service if a problem occurs later?'],why:'Separating manufacturer warranties from installer workmanship commitments helps homeowners make informed decisions.'}
+ };
+ let topic='comfort';const guideChoices=$('guide-choices');for(const [key,val] of Object.entries(topics)){const b=document.createElement('button');b.type='button';b.className='selector';b.textContent=val.label;b.addEventListener('click',()=>setTopic(key));b.dataset.topic=key;guideChoices.append(b)}
+ function setTopic(id){topic=id;const x=topics[id];[...guideChoices.children].forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.topic===topic)));$('guide-heading').textContent=x.heading;$('guide-tag').textContent=x.label;$('guide-description').textContent=x.text;$('guide-why').textContent=x.why;$('guide-questions').replaceChildren();x.questions.forEach(q=>{const li=document.createElement('li');li.textContent=q;$('guide-questions').append(li)})}
+ setTopic('comfort');$('copy-guide').addEventListener('click',()=>{const x=topics[topic];const str=x.heading+'\n'+x.questions.map((v,i)=>`${i+1}. ${v}`).join('\n')+'\n\nIndependent One-Call Lab · Educational checklist';if(navigator.clipboard?.writeText)navigator.clipboard.writeText(str).then(()=>{$('copy-guide').textContent='Copied questions';setTimeout(()=>$('copy-guide').textContent='Copy these questions',2200)}).catch(()=>{window.prompt('Copy these questions:',str)});else window.prompt('Copy these questions:',str)});
+})();
+</script>
+</body>
+</html>

@@ -3,74 +3,24 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#081020">
 <meta name="robots" content="noindex,nofollow,noarchive">
-<meta name="description" content="Check your AI idea, spot important missing decisions, and prepare a better first request. No sign-in required.">
+<meta name="theme-color" content="#f4f0ff">
+<meta name="description" content="Start a project with your AI tool, bring its response back, and keep your work moving.">
 <title>DiamondGate · Preflight</title>
-<link rel="stylesheet" href="./assets/studio.css?v=05d62fe9727a1d6ca65e77c7c14b72671556584e">
-<script src="./assets/preflight-core.js?v=7da73ad6555fd67ae6302df2dd096b3cf60c6a1b" defer></script>
-<script src="./assets/studio.js?v=a55feac5f185fecafa8cde1a7431edbf9d4bf486" defer></script>
 </head>
-<body><aside style="padding:1rem;text-align:center;background:#eee8ff;color:#241245"><a href="./app/" style="color:inherit;font-weight:700">Open the full DiamondGate workspace →</a><p>Projects, response import, history and portable backups.</p></aside>
-<a class="skip" href="#idea">Skip to your idea</a>
-<div class="shell">
-<header class="topbar">
- <a class="identity" href="#idea" aria-label="DiamondGate Preflight"><span class="monogram" aria-hidden="true">D</span><span><strong>DIAMONDGATE</strong><small>PREFLIGHT</small></span></a>
- <span class="preview">OWNER INSPECTION</span>
-</header>
+<body>
 <main>
-<section class="intro" aria-labelledby="headline">
- <p class="eyebrow">A BETTER START WITH AI</p>
- <h1 id="headline">Make your first<br><em>AI request count.</em></h1>
- <p class="intro-copy">Tell us what you want to accomplish. Get a quick check of what might be missing—and a clearer request to take into your AI tool.</p>
-</section>
-<section class="workspace" aria-label="Check your idea">
- <div class="card input-card">
-  <div class="card-top"><span class="step">01 · YOUR IDEA</span><span class="subtle">No sign-in. No setup.</span></div>
-  <h2>What would you like AI to do?</h2>
-  <label class="sr-only" for="idea">Describe what you want AI to accomplish</label>
-  <textarea id="idea" rows="5" maxlength="3000" placeholder="Example: I want to create a 20-second commercial for my bakery using AI." aria-describedby="inputHelp"></textarea>
-  <p id="inputHelp" class="field-help">Just describe it naturally. You don't need to know the platform or technical details.</p>
-  <div class="samples"><span>Try an example:</span>
-    <button type="button" class="chip" data-example="video">Bakery commercial</button>
-    <button type="button" class="chip" data-example="app">New app</button>
-    <button type="button" class="chip" data-example="world">3D world</button>
-  </div>
-  <div class="action-line"><button id="checkBtn" type="button" class="button primary">Check my idea <span aria-hidden="true">→</span></button></div>
-  <p id="formMessage" class="message" role="status" aria-live="polite"></p>
- </div>
- <section class="card assessment" id="assessmentPanel" aria-labelledby="assessmentTitle" hidden>
-  <div class="card-top"><span class="step">02 · YOUR FIRST PREFLIGHT</span><span id="taskLabel" class="mini-tag">AI request</span></div>
-  <h2 id="assessmentTitle">A few things worth deciding</h2>
-  <div class="recognized"><span class="recognized-mark" aria-hidden="true">✓</span><div><strong>Here's the request you're starting with</strong><p id="recognizedIdea"></p></div></div>
-  <h3>What could make the result better?</h3>
-  <p class="short-help">These are suggestions, not requirements. Answer what you know and skip the rest.</p>
-  <div id="questionList" class="questions"></div>
-  <div id="flagsPanel" class="flags" hidden><strong>Check before generating</strong><ul id="flagsList"></ul></div>
-  <p id="methodNote" class="method"></p>
-  <button type="button" class="button primary" id="prepareBtn">Prepare my request <span aria-hidden="true">→</span></button>
- </section>
- <section class="card output" id="resultPanel" aria-labelledby="outputTitle" hidden>
-  <div class="card-top"><span class="step">03 · READY TO USE</span><span class="mini-tag">Copy into your AI tool</span></div>
-  <h2 id="outputTitle">Your clearer request</h2>
-  <p class="short-help">Your original idea stays intact. Confirmed details are included, and unresolved decisions are clearly identified.</p>
-  <pre id="preparedText" tabindex="0"></pre>
-  <div class="button-row"><button id="copyBtn" type="button" class="button primary">Copy my request <span aria-hidden="true">↗</span></button><button id="startOverBtn" type="button" class="button light">Check another idea</button></div>
-  <p id="copyMessage" role="status" class="message"></p>
-  <details class="continuity" id="continuityDetails">
-   <summary>Want to keep this direction for later?</summary>
-   <p>Save this exact request as a local baseline. If you change it, Preflight will point out what changed before you save a new version. Nothing is approved automatically.</p>
-   <button id="saveBaselineBtn" type="button" class="button light">Save this version on this device</button>
-   <p class="message" id="baselineMessage" role="status"></p>
-  </details>
- </section>
- <section class="revision" id="revisionPanel" hidden aria-live="polite">
-  <strong>Saved direction changed</strong>
-  <p id="revisionText">Review the changes before saving a new version.</p>
- </section>
-</section>
+<h1>Opening your DiamondGate workspace</h1>
+<p><a id="open-workspace" href="./app/">Open DiamondGate</a></p>
+<p>Copy the new-work prompt into your AI conversation. Answer there, then bring its response back to your project.</p>
+<noscript><p>Enable JavaScript to use the project workspace.</p></noscript>
 </main>
-<footer><span>DIAMONDGATE · PREFLIGHT</span><span>First-use prototype · rule-based checks · no model execution · saved versions stay on this device</span></footer>
-</div>
+<script>
+const workspace = new URL('./app/', window.location.href);
+workspace.search = window.location.search;
+workspace.hash = window.location.hash;
+document.getElementById('open-workspace').href = workspace.href;
+window.location.replace(workspace.href);
+</script>
 </body>
 </html>

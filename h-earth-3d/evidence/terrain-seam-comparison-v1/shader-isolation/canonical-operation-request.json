@@ -1,0 +1,157 @@
+{
+  "allowedPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "GEOMETRIC_CLEARANCE_FAILURE",
+    "SUPPORT_SWITCH_DISCONTINUITY",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "32edba773b0fd83767a62370ff7df3e39a7c1ddf",
+  "exactTestCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": true,
+    "mayMutateControlPlane": true,
+    "mayMutateProduct": false,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "32edba773b0fd83767a62370ff7df3e39a7c1ddf",
+    "operationId": "H_EARTH_TERRAIN_SHADER_ISOLATION_20261026_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "IMMUTABLE_PRODUCT_CHECKOUT",
+      "CLOSED_DIAGNOSTIC_MODES_AND_FIXED_POSES",
+      "ORIGINAL_REFERENCE_PRESERVED",
+      "SOURCE_AND_TRANSFORM_HASHES",
+      "COMPARISON_TOOL_TESTS",
+      "INDEPENDENT_WEST_TOOLING_REVIEW",
+      "MATCHED_DIAGNOSTIC_CAPTURES_OR_FAILURE_RECEIPT"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "bd32d8e809bfde70bd2a633b36d89b7cafe9580da374dc0fe0d93976213492e5",
+    "receiptId": "H_EARTH_TERRAIN_SHADER_ISOLATION_20261026_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:FIXED_GROUND_COMPARISON:20261026",
+  "operationId": "H_EARTH_TERRAIN_SHADER_ISOLATION_20261026_001",
+  "prohibitedPaths": [
+    "MAIN:DIRECT_WRITE",
+    "showroom/**",
+    "ANY_PRODUCT_ASSETS_OR_PALETTE_CHANGE",
+    "ANY_PATH_OUTSIDE_DECLARED_SCOPE",
+    "NEW_CAPABILITY_OR_TRANSPORT_CLASS"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "conditionalOnSelectedGates": true,
+    "intent": "Extend the existing fixed ground comparator for diagnostic-only shader isolation on immutable product9127904e725a3f4ca13c1221451023102ad09435. Capture three existing fixed poses (foothill-west, inland-seam-near, coastal-seam-east) with four closed modes: original grass-hidden reference, unlit final ground albedo, uniform gray with original lighting, and RGB actual sand/habitat/bank-contact coverage weights. Only in-memory intercepted renderer responses may differ; product checkout, geometry, camera, assets and live site remain unchanged. Preserve frame, asset, exact-head and failure guards; record source/transformed hashes and explicit diagnostic mode metadata. Reuse H_EARTH_NEUTRAL_EXACT_HEAD_RUN and its fixed query, no new capability or arbitrary shader input. Exactly12 captures on one product head; CPU triangle/source diagnosis may precede captures. Tooling-only merge after tests and independent review; no visual acceptance from diagnostic renders.",
+    "mayDeploy": false,
+    "mayMerge": true,
+    "mayMutateProduct": false,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner: Proceed accordingly after proposed three diagnostic view types and developer-source research, following negative Gen2914 visual result."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_DIAGNOSTIC_AUTHORIZED",
+      "resolved": true
+    },
+    {
+      "id": "EXACT_PRODUCT_HEAD_IDENTIFIED",
+      "resolved": true
+    },
+    {
+      "id": "EXISTING_REGISTERED_FIXED_RUNNER_IDENTIFIED",
+      "resolved": true
+    },
+    {
+      "id": "GEN2914_NEGATIVE_VISUAL_EVIDENCE_PRESERVED",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "IMMUTABLE_PRODUCT_CHECKOUT",
+    "CLOSED_DIAGNOSTIC_MODES_AND_FIXED_POSES",
+    "ORIGINAL_REFERENCE_PRESERVED",
+    "SOURCE_AND_TRANSFORM_HASHES",
+    "COMPARISON_TOOL_TESTS",
+    "INDEPENDENT_WEST_TOOLING_REVIEW",
+    "MATCHED_DIAGNOSTIC_CAPTURES_OR_FAILURE_RECEIPT"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "STOP_UNLESS_CANONICAL_ADMITTED_AND_LOCKED",
+    "STOP_ON_OUT_OF_SCOPE_CHANGE",
+    "NO_PRODUCT_SOURCE_MUTATION",
+    "NO_PRODUCTION_DEPLOYMENT_AS_PREVIEW",
+    "NO_HEADLESS_AS_PHYSICAL_ANDROID_ACCEPTANCE",
+    "NO_VISUAL_PASS_FROM_RUNTIME_PASS"
+  ],
+  "subjectIdentity": {
+    "baseHead": "32edba773b0fd83767a62370ff7df3e39a7c1ddf",
+    "baselineProductHead": "9127904e725a3f4ca13c1221451023102ad09435",
+    "candidateBranch": "refs/heads/h-earth/terrain-shader-isolation-20261026",
+    "candidateProductHead": "9127904e725a3f4ca13c1221451023102ad09435",
+    "existingRegisteredCapability": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+    "scope": "Extend the existing fixed ground comparator for diagnostic-only shader isolation on immutable product9127904e725a3f4ca13c1221451023102ad09435. Capture three existing fixed poses (foothill-west, inland-seam-near, coastal-seam-east) with four closed modes: original grass-hidden reference, unlit final ground albedo, uniform gray with original lighting, and RGB actual sand/habitat/bank-contact coverage weights. Only in-memory intercepted renderer responses may differ; product checkout, geometry, camera, assets and live site remain unchanged. Preserve frame, asset, exact-head and failure guards; record source/transformed hashes and explicit diagnostic mode metadata. Reuse H_EARTH_NEUTRAL_EXACT_HEAD_RUN and its fixed query, no new capability or arbitrary shader input. Exactly12 captures on one product head; CPU triangle/source diagnosis may precede captures. Tooling-only merge after tests and independent review; no visual acceptance from diagnostic renders."
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+}

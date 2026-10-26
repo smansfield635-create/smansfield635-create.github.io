@@ -15,7 +15,7 @@ export function sourceResponseToSnapshot(raw,capturedAt=new Date().toISOString()
 }
 const host=typeof document==='undefined'?null:document.getElementById('workspace-controls');
 if(host){
- host.innerHTML=\`<style>
+ host.innerHTML=`<style>
  #workspace-controls{border:1px solid #344f55;border-radius:14px;background:#13252d;padding:16px 18px;color:#d9e7ea}
  #workspace-controls .chamber-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
  #workspace-controls button{background:#19383c;color:#e2f6ed;border:1px solid #567b75;border-radius:9px;padding:10px 13px;min-height:44px;cursor:pointer;font:inherit;font-size:13px}
@@ -26,7 +26,7 @@ if(host){
  #workspace-controls small,#workspace-controls p{color:#b3c9d0;font-size:12px}
  </style><div class="chamber-actions"><button id="workspace-import">Import workspace backup</button><button id="workspace-export">Download combined backup</button><a href="../app/">Open DiamondGate</a><input id="workspace-file" type="file" accept=".json,application/json" hidden></div>
  <details id="source-response-panel"><summary>Update from a current Chamber source response</summary><p>Copy the complete JSON payload from a connected Operations Chamber read in ordinary ChatGPT. Supports project briefings, activity capture, continuing study or agent reports, one at a time. Source dates are preserved.</p><label for="source-response-input">Operations Chamber response JSON</label><textarea id="source-response-input" spellcheck="false" maxlength="16000000" placeholder='{"schema":"DGB_PROJECT_BRIEFINGS_v1",...}'></textarea><p><button id="source-response-apply">Validate and import response</button></p></details>
- <p>Saved only in this browser. Reload reopens saved data; it does not fetch new observations. This unlisted website route is not authenticated, and browser storage is not account-private. Do not use a shared browser profile.</p><p id="workspace-message" role="status" aria-live="polite"></p>\`;
+ <p>Saved only in this browser. Reload reopens saved data; it does not fetch new observations. This unlisted website route is not authenticated, and browser storage is not account-private. Do not use a shared browser profile.</p><p id="workspace-message" role="status" aria-live="polite"></p>`;
  const message=document.getElementById('workspace-message'),input=document.getElementById('workspace-file');
  const report=text=>message.textContent=text;
  document.getElementById('workspace-import').onclick=()=>input.click();

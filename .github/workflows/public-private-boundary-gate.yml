@@ -27,6 +27,7 @@ jobs:
           import re
           import subprocess
           import sys
+          from urllib.parse import unquote, urlsplit
           
           # Git failures must not turn into an empty, passing additions set.
           diff = subprocess.run(
@@ -42,6 +43,51 @@ jobs:
               r"[A-Za-z0-9_./-]*(?:tools/operation-intake/|tools/ai-entry/|"
               r"\.github/ai-router/|control-plane/)[A-Za-z0-9_./-]*", re.IGNORECASE,
           )
+          def violation():
+              print("PUBLIC_PRIVATE_BOUNDARY_VIOLATION")
+              sys.exit(1)
+
+          def protected_references(text):
+              # Recognize URLs before the path regex consumes their //host prefix.
+              # Only this public repository's literal HTTPS blob URLs qualify.
+              references = []
+              url_tokens = re.compile(r"(?:[A-Za-z][A-Za-z0-9+.-]*:)?//[^\s<>\"'`\[\]()]+")
+              def extract(match):
+                  token = match.group(0)
+                  decoded = unquote(token)
+                  if not protected.search(decoded):
+                      return token
+                  try:
+                      url = urlsplit(token)
+                  except ValueError:
+                      violation()
+                  prefix = "/smansfield635-create/smansfield635-create.github.io/blob/"
+                  if (url.scheme != "https" or url.netloc != "github.com"
+                          or not url.path.startswith(prefix)
+                          or "%" in url.path or "\\" in token
+                          or protected.search(unquote(url.query + " " + url.fragment))):
+                      violation()
+                  tail = url.path[len(prefix):]
+                  ref, separator, path = tail.partition("/")
+                  if (not separator or not re.fullmatch(r"[A-Za-z0-9_.-]+", ref)
+                          or ref in (".", "..")
+                          or not re.fullmatch(r"[A-Za-z0-9_./-]+", path)
+                          or any(part in ("", ".", "..") for part in path.split("/"))
+                          or not protected.fullmatch(path)):
+                      violation()
+                  # URL references must already exist as regular public blobs;
+                  # a new metadata registration cannot legitimize an external URL.
+                  entry = subprocess.run(
+                      ["git", "ls-tree", os.environ["BASE_SHA"], "--", path],
+                      check=True, capture_output=True, text=True,
+                  ).stdout
+                  if not entry.startswith("100644 blob "):
+                      violation()
+                  references.append(path)
+                  return " "
+              remainder = url_tokens.sub(extract, text)
+              return references + protected.findall(remainder)
+
           def public_new_metadata_schema(path):
               if re.fullmatch(r"\.github/ai-router/projects/[a-z0-9][a-z0-9-]{0,78}/entrypoint\.v1\.json", path):
                   return "REPOSITORY_AI_PROJECT_ENTRYPOINT_v1"
@@ -65,7 +111,7 @@ jobs:
                   in_hunk = True
               if not in_hunk or not line.startswith("+"):
                   continue
-              paths = protected.findall(line[1:])
+              paths = protected_references(line[1:])
               if sensitive.search(line) or (paths and "geodiametrics1" in line.lower()):
                   print("PUBLIC_PRIVATE_BOUNDARY_VIOLATION")
                   sys.exit(1)
@@ -117,3 +163,91 @@ jobs:
                       sys.exit(1)
           print("PUBLIC_PRIVATE_BOUNDARY_PASS")
           PYTHON
+
+  importer-browser-regression:
+    # Fixed passive CI proof of the admitted candidate, never a deployment.
+    if: github.event.pull_request.head.ref == 'fix/importer-qualification-20261026'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: c552617fdfa9c37d7756f21c06a11029cc531520
+          path: candidate
+          sparse-checkout: preflight/app
+          persist-credentials: false
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+      - name: Install fixed browser driver
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+        run: npm install --prefix "$RUNNER_TEMP/importer-driver" --no-audit --no-fund playwright-core@1.62.1
+      - name: Import the complete preserved response in desktop and mobile browsers
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C candidate rev-parse HEAD)" = c552617fdfa9c37d7756f21c06a11029cc531520
+          python3 -m http.server 18345 --bind 127.0.0.1 --directory candidate > "$RUNNER_TEMP/importer-http.log" 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          const {chromium}=await import(process.env.RUNNER_TEMP+'/importer-driver/node_modules/playwright-core/index.mjs');
+          const raw=fs.readFileSync('candidate/preflight/app/fixtures/build-renewal-response.txt','utf8');
+          const fixtureSha256=createHash('sha256').update(raw).digest('hex');
+          assert.equal(fixtureSha256,'49ec91e88ec04c959fbd2045766e9897931e428650d571703a71786988937d74');
+          const arrays=[...raw.matchAll(/```json\s*\n([\s\S]*?)\n```/g)].map(m=>JSON.parse(m[1]));
+          const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox']});
+          const results=[];
+          try {
+            for(const [name,viewport] of [['desktop',{width:1440,height:1000}],['mobile',{width:390,height:844}]]){
+              const context=await browser.newContext({viewport});
+              const page=await context.newPage(),errors=[];
+              page.on('pageerror',e=>errors.push(String(e)));
+              await page.goto('http://127.0.0.1:18345/preflight/app/');
+              await page.locator('#packet').fill(raw);
+              await page.locator('#review-packet').click();
+              await page.locator('#review-view:not([hidden])').waitFor();
+              assert.equal(await page.locator('#raw-preview').textContent(),raw);
+              assert.equal(await page.locator('#parse-error').isVisible(),false);
+              assert.match(await page.locator('#accept').textContent(),/adopt requirements/);
+              const before=await page.evaluate(()=>JSON.parse(localStorage.getItem('diamondgate.projects.v2')));
+              assert.equal(before.projects.length,0);
+              await page.screenshot({path:process.env.RUNNER_TEMP+'/importer-'+name+'-review.png',fullPage:true});
+              // This click adopts only the isolated synthetic browser's map.
+              await page.locator('#accept').click();
+              await page.locator('#project-view:not([hidden])').waitFor();
+              await page.reload();
+              await page.locator('#project-view:not([hidden])').waitFor();
+              const saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('diamondgate.projects.v2')));
+              assert.equal(saved.projects.length,1);
+              const project=saved.projects[0],checkpoint=project.checkpoints.at(-1);
+              assert.equal(checkpoint.raw,raw);
+              assert.equal(checkpoint.fields.project,'Build Your Own Website — Diamond Gate Bridge');
+              assert.deepEqual(JSON.parse(checkpoint.fields.requirements),arrays[0]);
+              assert.deepEqual(JSON.parse(checkpoint.fields.progressEvents),arrays[1]);
+              assert.equal(project.progress.requirements.length,6);
+              assert.equal(project.progress.events.length,4);
+              assert(project.progress.events.every(e=>e.kind==='FINDING'));
+              assert(project.progress.requirements.every(r=>r.standing==='PROPOSED'));
+              assert.notEqual(project.flow.status,'COMPLETE');
+              assert.deepEqual(errors,[]);
+              await page.screenshot({path:process.env.RUNNER_TEMP+'/importer-'+name+'-saved.png',fullPage:true});
+              results.push({name,result:'PASS',requirements:6,findings:4,rawPreserved:true,reloadPreserved:true,projectComplete:false});
+              await context.close();
+            }
+            fs.writeFileSync(process.env.RUNNER_TEMP+'/importer-browser-receipt.json',JSON.stringify({schema:'DIAMONDGATE_IMPORTER_BROWSER_REGRESSION_v1',candidate:'c552617fdfa9c37d7756f21c06a11029cc531520',fixtureSha256,results,isolatedTestAdoptionOnly:true,deploymentPerformed:false},null,2));
+          } finally {await browser.close();}
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: importer-browser-regression-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/importer-browser-receipt.json
+            ${{ runner.temp }}/importer-*-review.png
+            ${{ runner.temp }}/importer-*-saved.png

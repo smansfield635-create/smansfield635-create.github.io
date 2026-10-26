@@ -1,0 +1,23 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "preflight-importer.v1",
+  "description": "DiamondGate importer startup and empty-input guard. Full supplied-response browser regression is the separate fixed CI job.",
+  "checks": [
+    {"path":"/preflight/app/index.html","includes":["id=\"packet\"","id=\"review-packet\"","./dist/app.mjs"],"excludes":["PRIVATE_KEY","sk-proj-"]},
+    {"path":"/preflight/app/dist/packet.mjs","includes":["packetLines","nestedProject"],"excludes":["PRIVATE_KEY"]},
+    {"path":"/preflight/app/dist/packet-headings.mjs","includes":["packetHeading","packetLines"],"excludes":["PRIVATE_KEY"]}
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/preflight/app/",
+    "timeoutMs": 45000,
+    "readySelector": "#packet:not([readonly])",
+    "binding": {"mode":"direct-document","path":"/preflight/app/"},
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": ["Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/"],
+    "interactions": [
+      {"name":"Empty response is rejected without creating a project","action":{"type":"click","selector":"#review-packet"},"assertions":[{"type":"textContains","selector":"#parse-error","value":"Paste a response"},{"type":"exists","selector":"#review-view[hidden]"}]}
+    ]
+  }
+}

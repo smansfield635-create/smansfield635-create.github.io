@@ -33,7 +33,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-b' }}
+    if: ${{ inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1084,7 +1084,7 @@ jobs:
           retention-days: 30
 
   ground-material-comparison:
-    if: ${{ inputs.route_query == 'qualification=ground-material-gen2898-stage-b' }}
+    if: ${{ inputs.route_query == 'qualification=ground-material-gen2898-stage-c' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -1095,7 +1095,7 @@ jobs:
           EXERCISE: ${{ inputs.exercise_vegetation_residency }}
           TIMING_SHIM: ${{ inputs.apply_timing_shim }}
         run: |
-          test "$TARGET_SHA" = 92095bc80209a10172f80f154a8930aaaabbe155
+          test "$TARGET_SHA" = 289f9e0922da4a55b5ca6588407eac8615b14a34
           test "$ROUTE_PATH" = /showroom/globe/h-earth/
           test "$EXERCISE" = false
           test "$TIMING_SHIM" = false
@@ -1114,7 +1114,7 @@ jobs:
       - name: Check out complete fixed candidate
         uses: actions/checkout@v4
         with:
-          ref: 92095bc80209a10172f80f154a8930aaaabbe155
+          ref: 289f9e0922da4a55b5ca6588407eac8615b14a34
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4

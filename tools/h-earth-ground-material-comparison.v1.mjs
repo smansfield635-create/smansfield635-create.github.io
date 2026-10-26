@@ -4,7 +4,7 @@ import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
-export const HEADS=Object.freeze({baseline:'6caa1f644c8869349192fe274b50e79c45b894e8',candidate:'92095bc80209a10172f80f154a8930aaaabbe155'});
+export const HEADS=Object.freeze({baseline:'6caa1f644c8869349192fe274b50e79c45b894e8',candidate:'289f9e0922da4a55b5ca6588407eac8615b14a34'});
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12}]);
 const ROOT='/showroom/globe/h-earth/';
 const RENDERER=ROOT+'render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';

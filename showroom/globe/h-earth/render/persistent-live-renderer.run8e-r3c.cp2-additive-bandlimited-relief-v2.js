@@ -1222,6 +1222,16 @@ void main(){
     }
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
     vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
+    // H_EARTH_GROUND_MATERIAL_STAGE_B_BEGIN
+    // Stage A's distant earth coherence must survive the later habitat tint.
+    // Preserve the same atlas coverage/edges and all close soil contact.
+    float habitatGroveProtection=1.0-smoothstep(22.0,42.0,
+      distance(vWorldPosition.xz,vec2(-139.40268,-210.74617)));
+    float habitatReconciliation=groundMaterialCompression(
+      distanceToCamera,length(fwidth(vWorldPosition.xz)),
+      vCoastDistanceMeters,habitatGroveProtection);
+    habitatSoil=mix(habitatSoil,base,habitatReconciliation);
+    // H_EARTH_GROUND_MATERIAL_STAGE_B_END
     base=mix(base,habitatSoil,habitatCoverage*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;

@@ -1,19 +1,15 @@
-# Operations Chamber on the website
+# Operations Chamber private-feed reconnection
 
-This is the original v20 Chamber interface, migrated from source e8a67c6db78577774d21133b72c2cf2ea21b6830 into the website's buildless `/preflight/chamber/` route. DiamondGate links here and both apps share `diamondgate.projects.v2` in the same browser origin.
+Candidate recovery for admitted operation OPERATIONS_CHAMBER_PRIVATE_FEED_RECONNECTION_20261026_001, generation 2899.
 
-## Use and recovery
+The website keeps the existing Chamber interface. Connect Chamber opens the existing owner-private service in a sign-in tab. Four fixed read-only feeds pass to the exact diamondgatebridge.com opener with a per-connection nonce. Refresh reads the service; no snapshot import is required and source dates remain unchanged. The live path does not persist private feeds in browser storage. DiamondGate integration is deferred.
 
-Import the private Chamber snapshot using **Import workspace backup**. This merges the captured records into existing DiamondGate projects; it does not send the file to a server. Open a project and continue it in DiamondGate. Imported source context does not adopt requirements, grant authority, or accept results.
+The service source is retained in `service/`: deploy the route to `app/website-connection/route.ts` and module to `public/website-connection.mjs` in the existing Operations Chamber Site, preserving its owner-only audience, R2 data and MCP update tools. Routine source updates continue through the existing connected Operations Chamber tools outside Work Mode. A website refresh reads those saved records; it does not execute a new collector.
 
-**Download combined backup** preserves projects, drafts, history, explicit links and all four imported observation feeds. Restore on another device using the same import control. Conflicting project versions cancel the whole import; retain both backups and reconcile in DiamondGate. Browser storage is device/profile-specific, can be cleared, and does not provide account authentication. The public app assets contain no owner snapshots. The route is unlisted and noindex; it is not an authenticated private URL.
+## Incomplete verification
 
-Use **Update from a current Chamber source response** to add a source-checked capture from a connected Operations Chamber read. This uses the existing local validation and merge path and does not automatically query new data. The existing backup import remains available.
+38 Chamber tests and 180 unchanged DiamondGate regression tests pass; the generated application check passes. An independent source review corrected per-refresh status and disconnect propagation. Real browser cross-origin sign-in must still be qualified before publication. Test signed-out sign-in, popup/opener preservation, all four real feeds, repeated Refresh, reconnect, blocked popup, closed tab, expired sign-in, hostile messages and preserved source dates. Do not substitute a synthetic feed test for real authenticated connection proof.
 
-Operational captures, briefings, study and agent reports retain their source dates. Refresh rereads local storage, not the old Site or a live repository collector. Import a newer snapshot to refresh source observations. Local DiamondGate summaries appear separately.
+The managed preview failed with ERR_CONNECTION_REFUSED and, after restart, a stale vinext server lock for PID 14 at /site. Production is unchanged. No connection deployment or live success is claimed.
 
-## Maintain without ChatGPT Sites
-
-All runtime source is in this repository. No Sites service, npm installation, framework build, cloud database or API key is needed to serve the Chamber. Edit these modules with any editor or repository coding environment; preview the repository with a static HTTP server. Preserve the repository AI entrypoint for authorized repository operations.
-
-Run `node --test preflight/chamber/*test.mjs`, then `cd preflight/app && npm test && npm run check`. If DiamondGate HTML changes, run its `npm run build`. Update source-manifest runtime hashes after modifications. Publish through the repository's registered exact-head Pages workflow and verify `/preflight/chamber/`, `/preflight/app/`, and the release marker. The original Site is untouched and remains available as a separate historical copy.
+Owner explicitly approved saving the recovery candidate to the draft branch. Publication remains pending real authenticated browser verification and the registered release checks.

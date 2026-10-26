@@ -1,6 +1,9 @@
+import {connection} from './connection.mjs';
 import {readSharedWorkspace,chamberData,linkedProjectSummaries} from '../app/dist/workspace-bridge.mjs';
-// Every feed is read from this browser. There is deliberately no network fallback.
-export async function localFetch(route,{storage=globalThis.localStorage}={}){
+// Production reads use the authenticated service connection. Explicit storage is retained only for legacy import tests.
+export async function localFetch(route,options={}){
+ if(connection&&!Object.hasOwn(options,'storage'))return connection.read(route);
+ const storage=options.storage??globalThis.localStorage;
  const db=readSharedWorkspace(storage), captures=chamberData(db);
  const key={'/data.json':'controlPlane','/api/study':'study','/api/briefings':'briefings','/api/agent-checkpoints':'agents'}[route];
  let data=captures[key];
@@ -17,6 +20,6 @@ export async function localFetch(route,{storage=globalThis.localStorage}={}){
 }
 export function watchWorkspace(view,refresh){
  const listener=e=>{if(e.type!=='storage'||e.key===null||e.key==='diamondgate.projects.v2')void refresh();};
- view?.addEventListener('storage',listener);view?.addEventListener('diamondgate:workspace-updated',listener);
- return ()=>{view?.removeEventListener('storage',listener);view?.removeEventListener('diamondgate:workspace-updated',listener);};
+ view?.addEventListener('chamber:connected',listener);view?.addEventListener('chamber:disconnected',listener);view?.addEventListener('storage',listener);view?.addEventListener('diamondgate:workspace-updated',listener);
+ return ()=>{view?.removeEventListener('chamber:connected',listener);view?.removeEventListener('chamber:disconnected',listener);view?.removeEventListener('storage',listener);view?.removeEventListener('diamondgate:workspace-updated',listener);};
 }

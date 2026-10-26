@@ -135,8 +135,8 @@ export function mount(document,fetchImpl=localFetch){
  });
  for(const dialog of document.querySelectorAll('dialog'))dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
  const controller=createRefreshController({load:async()=>{const r=await fetchImpl('/data.json',{cache:'no-store',credentials:'same-origin',redirect:'error',signal:AbortSignal.timeout(15000)});if(!r.ok)fail('SOURCE_UNAVAILABLE');return r.json();},onState:s=>{
-  $('refresh').disabled=s.busy;$('refresh').textContent=s.busy?'Checking…':'Refresh local records';
-  $('status').textContent=s.busy?'Reading local records…':s.error?(s.data?'Control-plane update unavailable · showing its last capture':'No local activity capture imported · projects remain available'):s.data?s.freshness==='STALE'?'Read-only capture is over 75 minutes old · coverage '+label(s.data.coverage):'Read-only capture · coverage '+label(s.data.coverage)+' · commands disabled':'Waiting for source data';
+  $('refresh').disabled=s.busy;$('refresh').textContent=s.busy?'Checking…':'Refresh source records';
+  $('status').textContent=s.busy?'Reading source records…':s.error?(s.data?'Control-plane update unavailable · showing its last capture':'Source unavailable · connect to the private Chamber'):s.data?s.freshness==='STALE'?'Read-only capture is over 75 minutes old · coverage '+label(s.data.coverage):'Read-only capture · coverage '+label(s.data.coverage)+' · commands disabled':'Waiting for source data';
   $('status').classList.toggle('warning',s.error||s.freshness==='STALE');
   if(!s.data)return;const observed=new Date(s.data.observedAt);$('timestamp').textContent='Read-only control-plane capture · '+observed.toISOString()+' · commands disabled.';const coverage=$('canonical-coverage');if(coverage)coverage.textContent=label(s.data.coverage).toUpperCase();const observedNode=$('canonical-observed-at');if(observedNode){observedNode.dateTime=observed.toISOString();observedNode.textContent=observed.toISOString();}
   if(current===s.data)return;current=s.data;

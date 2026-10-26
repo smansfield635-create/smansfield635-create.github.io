@@ -9,7 +9,7 @@ async function load(){try{
  title.textContent='Agent updates · '+data.records.length;
  const next=JSON.stringify(data);if(next===signature)return;signature=next;
  const opened=new Set([...content.querySelectorAll('details[open]')].map(d=>d.dataset.operation));content.replaceChildren();
- if(!data.records.length){const p=document.createElement('p');p.textContent='No agent reports imported in this browser.';content.append(p);}
+ if(!data.records.length){const p=document.createElement('p');p.textContent='No agent reports in the saved source.';content.append(p);}
  for(const row of data.records.slice(0,12)){
   const e=row.event,report=document.createElement('details'),summary=document.createElement('summary'),p=document.createElement('p'),meta=document.createElement('p'),a=document.createElement('a');
   report.className='agent-report';report.dataset.operation=e.operationId;report.open=opened.has(e.operationId);

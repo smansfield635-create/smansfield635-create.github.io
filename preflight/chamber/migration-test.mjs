@@ -123,10 +123,10 @@ test('public port has original navigation roots and noindex without claiming aut
  for(const id of ['home-view','overview','instrument-view','system-view','evidence-view'])assert(html.includes('id="'+id+'"'),id+' retained');
  assert.match(html,/noindex/i);assert.doesNotMatch(html,/owner-only access|authenticated private workspace/i);
 });
-test('production assets contain no private repository snapshots or old Site runtime dependency',()=>{
+test('production assets contain no private repository snapshots; connection names only the existing service',()=>{
  const files=productionFiles();assert(files.length>1);
  for(const path of files){const text=readFileSync(path,'utf8');
-  assert.doesNotMatch(text,/operations-chamber\.smansfield635\.chatgpt\.site|geodiametrics1|appgdep_6adc3af2b11c8191932001f192f0e5ba/,path);
+  assert.doesNotMatch(text,/geodiametrics1|appgdep_6adc3af2b11c8191932001f192f0e5ba/,path);
   assert.doesNotMatch(text,/fetch\s*\(\s*['"](?:\/api\/|\/data\.json|https?:)/,path+' must not fetch old host/API data');
  }
 });

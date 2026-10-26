@@ -1,11 +1,11 @@
 {
   "schema": "OPERATIONS_CHAMBER_WEBSITE_MIGRATION_v1",
   "sourceCommit": "e8a67c6db78577774d21133b72c2cf2ea21b6830",
-  "operationId": "DIAMONDGATE_CHAMBER_LOCAL_WORKSPACE_MIGRATION_20261025_001",
+  "operationId": "OPERATIONS_CHAMBER_PRIVATE_FEED_RECONNECTION_20261026_001",
   "runtimeFiles": [
     {
       "path": "agent-checkpoints.mjs",
-      "sha256": "41be5d2fdda9fe7131d361e7dae3cc86a95ab6172fed57bb1a5ababadf3a9d81"
+      "sha256": "ff3b341ff33db45d9f274ec80439d7eaceec6615ce7a750418b55cb7015b4e79"
     },
     {
       "path": "capability-evidence.mjs",
@@ -17,15 +17,15 @@
     },
     {
       "path": "dashboard.mjs",
-      "sha256": "04aa387a9e7f6e1a95a945632adb40981dae94538b3b76f389710e65f565017a"
+      "sha256": "e0bfdd1b9ec688d0244851d557fb1314360d6ba6bbdc85238d0ee7d248d5fc8f"
     },
     {
       "path": "index.html",
-      "sha256": "c46ad70308de70774a1f42fe7b036c469972bde2ade0bf166dfb48f56e0a8c7b"
+      "sha256": "984a48e8034f8db77d9410f606a5325da373381387f8f871ede4907275ccaa0f"
     },
     {
       "path": "local-data.mjs",
-      "sha256": "35258abe0e3360343a8d44bfbb15430cb4c4f5a4f0b20be1d1a07ed49a3e1b5b"
+      "sha256": "11019c1f889aa1955826862924818e9ecdd94ae9b4dde8a11aa53978e177fb83"
     },
     {
       "path": "presentation-guard.mjs",
@@ -41,11 +41,15 @@
     },
     {
       "path": "study-view.mjs",
-      "sha256": "9f12719cbefe091ca2b9ab392d408d2a47e07ffbf46b443c7a98e44b37955988"
+      "sha256": "04e3311429ff9c27287f19941162045986b2eb80b904f6dc3f9bfcb6e2349ac5"
     },
     {
       "path": "workspace-ui.mjs",
-      "sha256": "e8b8471dee8abbb135839e1e7ceb6fb6e81a7e37b1763b1d893f4632a8301283"
+      "sha256": "e50fa21bed99c5b7e24b753784cfa3cf04dc2ecd6ad424b08961b4489d6b21c6"
+    },
+    {
+      "path": "connection.mjs",
+      "sha256": "2e13879668a66c94655fc916d1e78c5ba717f2f0fac5781eefea44b965bc31fc"
     }
   ]
 }

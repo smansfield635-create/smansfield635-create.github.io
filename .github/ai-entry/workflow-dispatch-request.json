@@ -1,9 +1,8 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-2907-freeze-20261026",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"H_EARTH_GROUND_ROLLBACK_20261026_002\",\"lockScope\":\"H_EARTH:GROUND_MATERIAL_COHERENCE:20261026\",\"lockGeneration\":2907,\"terminalDisposition\":\"MUTATION_CLOSED_EVIDENCE_CONTINUES\"}"
   }
 }

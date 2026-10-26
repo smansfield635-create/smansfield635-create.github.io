@@ -1,0 +1,43 @@
+{
+  "schema": "H_EARTH_INLAND_PALETTE_TRACE_PLAN_v1",
+  "productHead": "9127904e725a3f4ca13c1221451023102ad09435",
+  "priorRun": 40405609020,
+  "findings": {
+    "priorDiagnostic": "Albedo bands persist unlit, disappear gray-lit; displayed sand/habitat/bank masks zero on inland terrain below row260.",
+    "raySamples": 33,
+    "centralSameTriangleBandRows": [
+      260,
+      265,
+      270,
+      275,
+      280,
+      285,
+      290,
+      300
+    ],
+    "centralTriangle": 24914,
+    "primitive": "BASE_FAR",
+    "slopeRange": [
+      0.0002168546783561931,
+      0.0003732684651557294
+    ],
+    "coastDistanceMeters": 620,
+    "rootCause": "NOT_YET_ATTRIBUTED_TO_SPECIFIC_LAYER"
+  },
+  "nextCapture": {
+    "pose": "inland-seam-near",
+    "modes": [
+      "unlit-albedo",
+      "substrate",
+      "after-soil",
+      "after-identity",
+      "after-groundcover"
+    ],
+    "count": 5
+  },
+  "limits": [
+    "CPU rays approximate actual GPU rasterization; float interpolation and derivative effects require rendered stage evidence.",
+    "No product geometry, foliage or material changes.",
+    "No production release."
+  ]
+}

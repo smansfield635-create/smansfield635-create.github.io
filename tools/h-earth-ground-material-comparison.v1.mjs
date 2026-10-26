@@ -4,7 +4,14 @@ import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
-export const DIAGNOSTIC_MODES=Object.freeze(['reference','unlit-albedo','gray-lit','coverage-weights']);
+export const DIAGNOSTIC_MODES=Object.freeze(['unlit-albedo','substrate','after-soil','after-identity','after-groundcover']);
+export const DIAGNOSTIC_STAGE_MEANINGS=Object.freeze({
+ 'unlit-albedo':'Final composed terrain base after all material overlays, without lighting or fog.',
+ substrate:'Terrain palette immediately before the approved world-soil texture blend.',
+ 'after-soil':'Terrain palette after the approved world-soil texture blend, before environmental identity.',
+ 'after-identity':'Terrain palette immediately after environmental identity, before broad groundcover.',
+ 'after-groundcover':'Terrain palette immediately after broad groundcover, before subsequent local overlays.'
+});
 export const RENDERER_SHA256='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2';
 export const HEADS=Object.freeze({baseline:'85372f3dc896d73457f6a7d008ac08a51d0ba85b',candidate:'9127904e725a3f4ca13c1221451023102ad09435'});
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
@@ -16,7 +23,7 @@ export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pit
 {name:'patch-close-south',x:88,z:-236,yaw:180,pitch:-17.72},
 {name:'patch-east',x:92,z:-232,yaw:270,pitch:-6.69},
 {name:'patch-west',x:84,z:-232,yaw:90,pitch:-13.5}].map(Object.freeze));
-export const DIAGNOSTIC_POSES=Object.freeze(POSES.filter(p=>['foothill-west','inland-seam-near','coastal-seam-east'].includes(p.name)));
+export const DIAGNOSTIC_POSES=Object.freeze(POSES.filter(p=>p.name==='inland-seam-near'));
 // Observer heights exceed measured immutable mesh/analytic elevations by 2.25m.
 // These views are outside walking bounds and confer no traversal/support authority.
 export function comparisonState(nav,pose,sequence,action){
@@ -43,20 +50,31 @@ export function transformDiagnosticSource(source){
  if(start<0||end<0)throw Error('DIAGNOSTIC_FS_BOUNDARY');
  let fsSource=source.slice(start,end);
  fsSource=replaceExactlyOnce(fsSource,'out vec4 outColor;','out vec4 outColor;\nuniform int uGroundDiagnosticMode;');
- fsSource=replaceExactlyOnce(fsSource,'void main(){','void main(){\n vec3 diagnosticWeights=vec3(0.0);');
- fsSource=replaceExactlyOnce(fsSource,'palette=mix(palette,sand,sandCoverage);','diagnosticWeights.r=sandCoverage;\n    palette=mix(palette,sand,sandCoverage);');
- fsSource=replaceExactlyOnce(fsSource,'base=mix(base,habitatSoil,habitatCoverage*.68);','diagnosticWeights.g=habitatCoverage*.68;\n    base=mix(base,habitatSoil,habitatCoverage*.68);');
- fsSource=replaceExactlyOnce(fsSource,'base=mix(base,bankGravel,bankContact*.26);','diagnosticWeights.b=bankContact*.26;\n    base=mix(base,bankGravel,bankContact*.26);');
- fsSource=replaceExactlyOnce(fsSource,'vec3 lit=base*(ambient+directional)*uSunColor;','if(worldSoilTerrain&&uGroundDiagnosticMode==2)base=vec3(.35);\n  vec3 lit=base*(ambient+directional)*uSunColor;');
- fsSource=replaceExactlyOnce(fsSource,'lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));','if(worldSoilTerrain&&uGroundDiagnosticMode==1)lit=base;\n  if(worldSoilTerrain&&uGroundDiagnosticMode==3){outColor=vec4(diagnosticWeights,outputAlpha);return;}\n  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));');
+ fsSource=replaceExactlyOnce(fsSource,'void main(){','void main(){\n vec3 diagnosticSubstrate=vec3(0.0);\n vec3 diagnosticAfterSoil=vec3(0.0);\n vec3 diagnosticAfterIdentity=vec3(0.0);\n vec3 diagnosticAfterGroundcover=vec3(0.0);');
+ const soilAnchor='    // Coast/sand, rock-exposure and local ecological overlays stay native.\n    if(uClearingEnabled==1){';
+ fsSource=replaceExactlyOnce(fsSource,soilAnchor,'    // Coast/sand, rock-exposure and local ecological overlays stay native.\n    diagnosticSubstrate=palette;\n    if(uClearingEnabled==1){');
+ const identityAnchor='    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_BEGIN';
+ // Identity and broad groundcover are skipped for geological rock; a skipped
+ // stage retains the preceding snapshot instead of showing an uninitialized color.
+ fsSource=replaceExactlyOnce(fsSource,identityAnchor,'    diagnosticAfterSoil=palette;\n    diagnosticAfterIdentity=palette;\n    diagnosticAfterGroundcover=palette;\n'+identityAnchor);
+ fsSource=replaceExactlyOnce(fsSource,'      palette=mix(palette,identityBase,identityWeight);','      palette=mix(palette,identityBase,identityWeight);\n      diagnosticAfterIdentity=palette;');
+ fsSource=replaceExactlyOnce(fsSource,'      palette=mix(palette,groundcoverTone,groundcoverWeight);','      palette=mix(palette,groundcoverTone,groundcoverWeight);\n      diagnosticAfterGroundcover=palette;');
+ fsSource=replaceExactlyOnce(fsSource,'lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));',`if(worldSoilTerrain){
+    if(uGroundDiagnosticMode==0)lit=base;
+    else if(uGroundDiagnosticMode==1)lit=diagnosticSubstrate;
+    else if(uGroundDiagnosticMode==2)lit=diagnosticAfterSoil;
+    else if(uGroundDiagnosticMode==3)lit=diagnosticAfterIdentity;
+    else if(uGroundDiagnosticMode==4)lit=diagnosticAfterGroundcover;
+  }
+  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));`);
  source=source.slice(0,start)+fsSource+source.slice(end);
  const anchor='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
- source=replaceExactlyOnce(source,anchor,anchor+`\n    {const mode=globalThis.__groundDiagnosticMode;if(!Number.isInteger(mode)||mode<0||mode>3)throw Error('DIAGNOSTIC_MODE_INVALID');const loc=gl.getUniformLocation(resources.geometryProgram,'uGroundDiagnosticMode');if(loc===null)throw Error('DIAGNOSTIC_UNIFORM_MISSING');gl.uniform1i(loc,mode);globalThis.__groundDiagnosticApplied=mode;}`);
+ source=replaceExactlyOnce(source,anchor,anchor+`\n    {const mode=globalThis.__groundDiagnosticMode;if(!Number.isInteger(mode)||mode<0||mode>4)throw Error('DIAGNOSTIC_MODE_INVALID');const loc=gl.getUniformLocation(resources.geometryProgram,'uGroundDiagnosticMode');if(loc===null)throw Error('DIAGNOSTIC_UNIFORM_MISSING');gl.uniform1i(loc,mode);globalThis.__groundDiagnosticApplied=mode;}`);
  return instrumentRenderer(source);
 }
 export function validateDiagnosticSet(views){
- if(views.length!==12)throw Error('DIAGNOSTIC_INCOMPLETE');
- for(const pose of DIAGNOSTIC_POSES){const group=views.filter(v=>v.pose.name===pose.name);if(group.length!==4||new Set(group.map(v=>v.mode)).size!==4||!DIAGNOSTIC_MODES.every(m=>group.some(v=>v.mode===m)))throw Error('DIAGNOSTIC_MODE_SET');const ref=group.find(v=>v.mode==='reference');for(const v of group)if(!v.grassHidden||v.diagnosticApplied!==DIAGNOSTIC_MODES.indexOf(v.mode)||v.assetSignature!==ref.assetSignature||JSON.stringify(v.state.position)!==JSON.stringify(ref.state.position)||JSON.stringify(v.lastFrame.cameraPosition)!==JSON.stringify(ref.lastFrame.cameraPosition))throw Error('DIAGNOSTIC_MATCH_MISMATCH');}
+ if(views.length!==5)throw Error('DIAGNOSTIC_INCOMPLETE');
+ for(const pose of DIAGNOSTIC_POSES){const group=views.filter(v=>v.pose.name===pose.name);if(group.length!==5||new Set(group.map(v=>v.mode)).size!==5||!DIAGNOSTIC_MODES.every(m=>group.some(v=>v.mode===m)))throw Error('DIAGNOSTIC_MODE_SET');const ref=group.find(v=>v.mode==='unlit-albedo');for(const v of group)if(!v.grassHidden||v.diagnosticApplied!==DIAGNOSTIC_MODES.indexOf(v.mode)||v.assetSignature!==ref.assetSignature||JSON.stringify(v.state.position)!==JSON.stringify(ref.state.position)||JSON.stringify(v.lastFrame.cameraPosition)!==JSON.stringify(ref.lastFrame.cameraPosition))throw Error('DIAGNOSTIC_MATCH_MISMATCH');}
  return true;
 }
 export function sameHeading(a,b){return Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(((a-b)%360+540)%360-180)<1e-8;}
@@ -91,7 +109,7 @@ export function assertCheckout(dir,expected){const head=execFileSync('git',['-C'
 export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(!['--baseline-dir','--candidate-dir','--output'].includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==3)throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==3)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
-  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,poses:DIAGNOSTIC_POSES,modes:DIAGNOSTIC_MODES,diagnosticOnly:true,coverageChannels:{r:'sandCoverage',g:'habitatCoverage * .68',b:'bankContact * .26'},viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
+  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,poses:DIAGNOSTIC_POSES,modes:DIAGNOSTIC_MODES,diagnosticOnly:true,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,colorTransform:'ALL_STAGES_LINEAR_RGB_TIMES_1.12_THEN_GAMMA_1_OVER_2.2',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
   let browser=null,server=null;
   const interrupt=signal=>{receipt.result='INTERRUPTED';receipt.errors.push(signal);persist();server?.kill();process.exit(signal==='SIGTERM'?143:130);};

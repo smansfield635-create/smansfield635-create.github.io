@@ -1,0 +1,81 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "098295a83e5c8372cf0764090c28fa9c81a93264",
+    "operationId": "H_EARTH_SEAM_COMPARISON_REBIND_20261026_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "GEOMETRIC_CLEARANCE_FAILURE",
+    "SUPPORT_SWITCH_DISCONTINUITY",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact tooling commit independently reviewed before merge; workflow runs main tooling against the two immutable product commits.",
+  "exactAllowedRepositoryPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Canonical admission for exact bounded qualification-tooling paths.",
+      "step": 1
+    },
+    {
+      "action": "Rebind existing runner pair and add fixed measured seam views, preserving original four views and closed-world guards.",
+      "step": 2
+    },
+    {
+      "action": "Run runner tests and independent West review, then merge tooling only.",
+      "step": 3
+    },
+    {
+      "action": "Dispatch existing registered fixed comparison capability once; preserve exact captures/failure receipt; return to product Gen2910 candidate-finalization.",
+      "step": 4
+    }
+  ],
+  "exactGoverningHead": "098295a83e5c8372cf0764090c28fa9c81a93264",
+  "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_IMMUTABLE_PAIR",
+      "FIXED_SEAM_AND_PRESERVATION_POSES",
+      "COMPARISON_TOOL_TESTS",
+      "INDEPENDENT_WEST_TOOLING_REVIEW",
+      "MATCHED_BROWSER_CAPTURES_OR_EXACT_FAILURE_RECEIPT"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse existing fixed comparison and safeguards, bind current exact pair and finite seam views.",
+    "forbidden": "Product edits, new control-plane capabilities, arbitrary executable inputs, deployment."
+  },
+  "procedureId": "H_EARTH_SEAM_COMPARISON_REBIND_20261026_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

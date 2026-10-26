@@ -64,3 +64,7 @@ The Requirement check panel explains the existing progress engine after each sav
 Check details can be downloaded with project/baseline identity, criteria and evidence references. A download is a local record-correspondence receipt, not authenticated external proof. There is no artificial delay, backend AI call, GitHub job per prompt, semantic truth classifier, or new acceptance authority. Existing result-review controls handle user feedback; scope changes remain explicit. Unsaved edits are excluded from the saved-record panel. Projects without a requirement map remain explicitly unverified.
 
 Operation: DIAMONDGATE_REQUIREMENT_RESPONSE_CHECK_20261026_001. Admission: https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6427877867. Owner candidate review remains required before public release.
+
+## Markdown packet import (generation 2920)
+
+The importer recognizes Markdown section headings as well as colon labels. An undecorated mixed-case Project label inside Project organization stays explanatory text when a separate explicit project heading exists. Genuine repeated sections still fail. Code-fenced evidence stays literal, and complete input remains in the checkpoint and backup. The full Build renewal response is a regression fixture with six proposed requirements and four findings; import does not adopt scope, verify claims, or authorize Build changes.

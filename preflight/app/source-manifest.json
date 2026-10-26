@@ -42,7 +42,7 @@
     },
     {
       "path": "dist/packet.mjs",
-      "sha256": "8fcf9e1f87fe66883cb0d8aaa5edd75fb3b75240d3285c63537250cf0328b110",
+      "sha256": "f7faa9ebc2a57f6491cace261fbbe470831538ebdb2473b6317e21be946be386",
       "originalSha256": "60a80cba82ba064319d71296dabb100fc3d9461b9539a592504e3e2a92948f90"
     },
     {
@@ -61,7 +61,7 @@
     },
     {
       "path": "dist/response-envelope.mjs",
-      "sha256": "8b1a94f9c01072ce0747a4de867318be69d50bc1fa6afcd7a2f0b9064ecdab67",
+      "sha256": "c13d1775e957ee1bc4ccc882b1971347fce2c2b95afe784c97ac5bee26f6d19a",
       "originalSha256": "19c682dae538b4278a3611ea121f25d443401b6246392fc31b7ede1fcd0bf9b9"
     },
     {
@@ -83,6 +83,10 @@
     {
       "path": "dist/requirement-check.mjs",
       "sha256": "da75f52950b7af60d0c2a2572c7788d889c81210967a1101f4428d5e4cebbdb2"
+    },
+    {
+      "path": "dist/packet-headings.mjs",
+      "sha256": "38cee9951ddfa7bea60e04417c23c9303900cf43ad7c9b1b9b9b2a149f1a58e8"
     }
   ],
   "excluded": [
@@ -100,5 +104,10 @@
     "governingHead": "32edba773b0fd83767a62370ff7df3e39a7c1ddf",
     "scope": "Visible local requirement checks and evidence-bound continuation context",
     "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6427877867"
+  },
+  "packetMarkdownRepair": {
+    "operationId": "DIAMONDGATE_PACKET_MARKDOWN_IMPORT_REPAIR_20261026_001",
+    "authorityGeneration": 2920,
+    "scope": "Heading representation only; raw input and evidence semantics preserved"
   }
 }

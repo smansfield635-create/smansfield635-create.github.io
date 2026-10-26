@@ -56,3 +56,11 @@ The application now derives result-review availability from the same workflow de
 “Need more evidence” preserves the feedback and returns a verification task. Changed prerequisite results invalidate downstream checks. Historical structured checkpoints are read-only because restoring their text alone would mix older context with newer evidence; full project backups remain portable.
 
 See [audit-matrix.md](audit-matrix.md) for coverage and limits. `workflow-matrix-test.mjs`, `evidence-matrix-test.mjs`, and `matrix-test.mjs` supplement the original suite. Hashes in `source-manifest.json` bind the current runtime; `originalSha256` retains migration provenance for changed files. Updating hashes is never a substitute for passing behavioral tests.
+
+## Requirement checks between prompts (generation 2916)
+
+The Requirement check panel explains the existing progress engine after each saved response and in the response-review screen. It classifies cumulative evidence as supported (source-reported), missing, contradicted by an explicit failed check or user rejection, or unverified. Prior supported work is preserved when omitted from a later response. Changed artifacts and prerequisites still require current matching checks. The continuation prompt includes unresolved findings and requirements to preserve; the existing planner remains authoritative.
+
+Check details can be downloaded with project/baseline identity, criteria and evidence references. A download is a local record-correspondence receipt, not authenticated external proof. There is no artificial delay, backend AI call, GitHub job per prompt, semantic truth classifier, or new acceptance authority. Existing result-review controls handle user feedback; scope changes remain explicit. Unsaved edits are excluded from the saved-record panel. Projects without a requirement map remain explicitly unverified.
+
+Operation: DIAMONDGATE_REQUIREMENT_RESPONSE_CHECK_20261026_001. Admission: https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6427877867. Owner candidate review remains required before public release.

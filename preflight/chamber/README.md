@@ -23,7 +23,7 @@ Review the candidate diff, copy it into `data/briefings.json`, update its SHA-25
 
 The 30-minute presentation guard requests reconciliation before executing a recorded next step. It does not invalidate historical accomplishments or prove that a project changed.
 
-Refresh retrieves published snapshots; it does not trigger GitHub collectors or execute instruments. Original source timestamps and stale warnings are preserved. The existing GitHub collectors remain separate; automatic publication of new collector output is not introduced by this change. The original Site is retained as a historical source, not a runtime dependency. Historical report links may refer to it.
+Refresh retrieves published snapshots; it does not trigger GitHub collectors or execute instruments. Original source timestamps are preserved. The control-plane capture shows **Last checked** and the study shows **Study evidence through**, in Central time. Age alone does not mark either record stale or trigger a warning. Refresh failures remain warnings and retain the last valid record; invalid schemas and future timestamps are rejected. Project execution-reconciliation safeguards remain unchanged. The website does not infer unpublished evidence from elapsed time or claim to discover private updates independently. The existing GitHub collectors remain separate; automatic publication of new collector output is not introduced by this change. The original Site is retained as a historical source, not a runtime dependency. Historical report links may refer to it.
 
 ## Qualification
 
@@ -38,3 +38,9 @@ The GitHub collector run [40359013242](https://github.com/smansfield635-create/s
 The separate control-plane capture was read at `2026-10-26T15:42:07.333Z` and remains a bounded, non-atomic activity window. Its six instrument observations retain `2026-10-17T07:05:23.245Z`; each instrument’s evidence coverage explicitly marks that it was not revalidated. Run and lifecycle records remain unchanged. Other project briefings and agent reports are preserved.
 
 `data/reconciliation-receipt.json` records these component dates, limits and feed hashes. Its `PREPARED_NOT_PUBLISHED` disposition is the historical preparation state. Subsequent deployment and live verification belong in the GitHub release continuation; do not relabel source dates as publication dates. Existing exact-head Pages release and four-feed live readback are still required. No automatic collector-output publication is introduced.
+
+## Confirmed unpublished evidence
+
+A source reviewer may attach `confirmedNewerEvidence` to an existing control-plane or study display record after independently verifying newer evidence that is not represented in that record. This is an optional display annotation, not a collector or authority source. It must contain `status: "CONFIRMED_NOT_PUBLISHED"`, `publishedThrough` exactly matching that record’s `observedAt` (control plane) or `rollingStudy.through` (study), a strictly later `evidenceThrough`, a `verifiedAt` at or after that evidence time, and a credential-free HTTPS GitHub `sourceUrl`. Times must be valid and not in the future beyond the existing 30-second allowance. An absent, mismatched or invalid annotation never creates a warning. An update-failure warning takes precedence; source dates remain visible.
+
+Publish an independently reviewed annotation through the existing display-update process only when such evidence exists; remove it or re-evaluate it when publishing the newer record. No annotation is asserted by this warning repair. The website cannot detect unpublished private evidence by itself, and age does not substitute for that missing information.

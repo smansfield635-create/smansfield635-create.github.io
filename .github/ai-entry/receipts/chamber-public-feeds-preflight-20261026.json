@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "chamber-public-feeds-preflight-20261026",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6837,
+  "requestBranch": "ai-dispatch-request-chamber-public-preflight-20261026",
+  "requestCommit": "22d074410f48ab1c5579209d68b798d668831f69",
+  "requestCommitParent": "e9d05cb83c0c7acf09b3e6bccf41e35eaeca071d",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e9d05cb83c0c7acf09b3e6bccf41e35eaeca071d",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "1ba114315ba0497f5d993f180eecd75f3e0374d3",
+    "surface_id": "preflight.v1"
+  },
+  "bridgeRunId": "40255966991",
+  "dispatchedRunId": 40255979610,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40255979610",
+  "dispatchedRunHeadSha": "e9d05cb83c0c7acf09b3e6bccf41e35eaeca071d",
+  "dispatchedAt": "2026-10-26T01:48:04.538Z",
+  "resolvedAt": "2026-10-26T01:48:08.455Z"
+}

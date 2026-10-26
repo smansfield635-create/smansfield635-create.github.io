@@ -24,8 +24,8 @@ jobs:
       group: private-study-checkpoint-v1
       cancel-in-progress: false
     env:
-      DGB_STUDY_SOURCE_HEAD: 62e9416ceff65ed8319cf6fca864d93331c24b97
-      DGB_STUDY_RATIFICATION_COMMIT: e38806125cb0b0aec1581001373212376610c137
+      DGB_STUDY_SOURCE_HEAD: e3b4c882623e79c4f8862b525b0b7c12e9f9e52b
+      DGB_STUDY_RATIFICATION_COMMIT: 7625ff398be7a46c254e2f940266fcda57746a22
       DGB_READBACK_QUALIFICATION_ONLY: ${{ github.event_name == 'push' && github.event.head_commit.message == 'Qualify independently saved checkpoint readback only' }}
     steps:
       - name: Require independently admitted public binding
@@ -36,11 +36,11 @@ jobs:
             const f=(await github.rest.repos.getContent({owner:context.repo.owner,repo:context.repo.repo,path,ref:'operation-locks/repository-operation-intake-v1'})).data;
             const blob=f.encoding==='base64'?f:(await github.rest.git.getBlob({owner:context.repo.owner,repo:context.repo.repo,file_sha:f.sha})).data;
             const ledger=JSON.parse(Buffer.from(blob.content.replace(/\s/g,''),'base64').toString('utf8'));
-            const id='DGB_PUBLIC_PRIVATE_GOVERNING_REBIND_ADOPTION_20261016_001';
+            const id='OPERATIONS_CHAMBER_SOURCE_RECONCILIATION_20261026_002';
             const active=Object.values(ledger.activeScopes).filter(x=>x.operationId===id);
-            const terminal=ledger.terminalHistory.filter(x=>x.operationId===id&&x.lockGeneration===2770);
+            const terminal=ledger.terminalHistory.filter(x=>x.operationId===id&&x.lockGeneration===2908);
             const row=active.length===1&&terminal.length===0?active[0]:active.length===0&&terminal.length===1&&terminal[0].released===true&&terminal[0].terminalDisposition==='PASS_CLOSED'?terminal[0]:null;
-            if(!row||row.lockGeneration!==2770||row.requestDigest!=='d13502f780b0c2dba3764f65b83c77e1b3b99042828bca81f39ab0003b4d5924'||row.procedureLocatorDigest!=='bb0d5f909821e9d91dfa6e4cb656b1d5d84d21c22c2e5267427723c5a3cf5f74'||!(row.state==='ADMITTED_LOCKED'&&row.released===false||row.state==='TERMINAL'&&row.released===true&&row.terminalDisposition==='PASS_CLOSED'))throw Error('PUBLIC_RECURRING_AUTHORITY_REFUSED');
+            if(!row||row.lockGeneration!==2908||row.requestDigest!=='e19be05f632dc951316fea42c0633609b514bf30f0e9e2a15e98a710cf5c2e6b'||row.procedureLocatorDigest!=='d5b613788c72374d7d3e0ce22c19018b2546a72733ab6b40e1960dc90287cf76'||!(row.state==='ADMITTED_LOCKED'&&row.released===false||row.state==='TERMINAL'&&row.released===true&&row.terminalDisposition==='PASS_CLOSED'))throw Error('PUBLIC_RECURRING_AUTHORITY_REFUSED');
       - name: Mint existing private installation write credential
         id: private
         uses: actions/create-github-app-token@fee1f7d63c2ff003460e3d139729b119787bc349
@@ -266,28 +266,28 @@ jobs:
           
           async function verifyReadbackGrant({github,jsonAt,digest}){
            const root='https://api.github.com/repos/smansfield635-create/geodiametrics1';
-           const packetPath='tools/private-public-bridge/standalone/study/rebound-readback-evidence-20261016/operation-packet.v1.json';
-           const closure='efb8879cc2d7aa6bf2949f3447cbd66211ecd515';
-           const packet=await jsonAt(packetPath,'052fc63f741d9b74f6f7708052d2ba4a84442ba3');
+           const packetPath='tools/private-public-bridge/standalone/study/rebound-readback-evidence-20261026/operation-packet.v1.json';
+           const closure='0a0bc3a4b85f434a74f32273a1104d4a520af185';
+           const packet=await jsonAt(packetPath,'d2aa844cbf97881024c5c17461884702c5ed49bf');
            const r=packet?.operationRequest,p=packet?.constructionProcedure,s=r?.subjectIdentity;
-           const req='a3e9be2d16c0e07a241ea360ef7cd7c0eef865eb970948d421fd91a76763d7fa',proc='4996809c9826e844ab15b3da88bb18dbf30f106e9d5eb610c14d0d0636b89e26';
-           const id='DGB_STUDY_REBOUND_READBACK_EVIDENCE_20261016_001',scope='PRIVATE_PUBLIC_BRIDGE:OPERATIONS_CHAMBER:FIXED_STUDY_READBACK_EVIDENCE_V1';
+           const req='7bef4e9b1080173c0ede876e0632a9c7739a2585c0c1547e24ec1bd6ce57a2c5',proc='02d7a641afdecb72496fbe811df81d846984b680580bfbb1812bdb56d692ffb7';
+           const id='DGB_STUDY_REBOUND_READBACK_EVIDENCE_20261026_001',scope='PRIVATE_PUBLIC_BRIDGE:OPERATIONS_CHAMBER:FIXED_STUDY_READBACK_EVIDENCE_V1';
            const proof='tools/private-public-bridge/standalone/study/runtime/study-readback-verification.v1.json';
            const refuse=()=>{throw Error('READBACK_AUTHORITY_REFUSED');};
-           if(!r||!p||digest(r)!==req||digest(p)!==proc||r.operationId!==id||r.lockScope!==scope||s?.sourceHead!=='62e9416ceff65ed8319cf6fca864d93331c24b97'||s?.sourceRatification!=='e38806125cb0b0aec1581001373212376610c137'||s?.runtimeBranch!=='ops-chamber-study-checkpoint-v1'||s?.proofPath!==proof||s?.priorCustodyCheckpoint!=='6e1f4fc90408f05139461bfd61508e1e4d66f24a'||s?.standingFixedReadbackEvidenceAuthorityAfterVerifiedClosure!==true||s?.publicRawDataExport!==false||s?.collectorAndCheckpointMutation!==false||!r.allowedPaths.includes(proof))refuse();
+           if(!r||!p||digest(r)!==req||digest(p)!==proc||r.operationId!==id||r.lockScope!==scope||s?.sourceHead!=='e3b4c882623e79c4f8862b525b0b7c12e9f9e52b'||s?.sourceRatification!=='7625ff398be7a46c254e2f940266fcda57746a22'||s?.runtimeBranch!=='ops-chamber-study-checkpoint-v1'||s?.proofPath!==proof||s?.priorCustodyCheckpoint!=='6e1f4fc90408f05139461bfd61508e1e4d66f24a'||s?.standingFixedReadbackEvidenceAuthorityAfterVerifiedClosure!==true||s?.publicRawDataExport!==false||s?.collectorAndCheckpointMutation!==false||!r.allowedPaths.includes(proof))refuse();
            const ledgerPath='.github/operation-intake/active-operation-ledger.v1.json';
            const closed=await jsonAt(ledgerPath,closure);
            const liveHead=(await github.read(root+'/git/ref/heads/operation-locks/repository-operation-intake-v1')).object?.sha;
            const live=await jsonAt(ledgerPath,liveHead);
            const check=ledger=>{
-            const terminal=(ledger?.terminalHistory??[]).filter(x=>x.operationId===id&&x.lockGeneration===682);
+            const terminal=(ledger?.terminalHistory??[]).filter(x=>x.operationId===id&&x.lockGeneration===691);
             if(Object.values(ledger?.activeScopes??{}).some(x=>x.operationId===id)||terminal.length!==1)refuse();
             const x=terminal[0];if(x.state!=='TERMINAL'||x.released!==true||x.terminalDisposition!=='PASS_CLOSED'||x.requestDigest!==req||x.procedureLocatorDigest!==proc||x.lockScope!==scope||x.governingHead!==r.exactGoverningHead)refuse();return x;
            };
            if(digest(check(closed))!==digest(check(live)))refuse();
            const commit=await github.read(root+'/commits/'+closure);
-           if(commit.sha!==closure||commit.parents?.length!==1||commit.files?.length!==1||commit.files[0].filename!==ledgerPath||commit.files[0].sha!=='dde1b45f8d3ae754b95d935015290ea0d9851550')refuse();
-           return {operationId:id,generation:682,requestDigest:req,procedureDigest:proc,packetHead:'052fc63f741d9b74f6f7708052d2ba4a84442ba3',closureHead:closure,proofPath:proof};
+           if(commit.sha!==closure||commit.parents?.length!==1||commit.files?.length!==1||commit.files[0].filename!==ledgerPath||commit.files[0].sha!=='0a809aba3672616240f63c114df6087a145de7c8')refuse();
+           return {operationId:id,generation:691,requestDigest:req,procedureDigest:proc,packetHead:'d2aa844cbf97881024c5c17461884702c5ed49bf',closureHead:closure,proofPath:proof};
           }
           
           try {
@@ -298,7 +298,7 @@ jobs:
            const {digest}=await import(base+'material-work-study.v1.mjs');
            const github=createPrivateReadbackApi({token:process.env.DGB_GITHUB_TOKEN});
            const authority=async args=>{await verifyReadbackGrant(args);return true;};
-           process.exitCode=await runSafe({github,native:{createCheckpointStore,projectSavedBaseline,projectRollingStudy,validateDashboard,digest},authority,sourceHead:'62e9416ceff65ed8319cf6fca864d93331c24b97',qualificationOnly:process.env.DGB_READBACK_QUALIFICATION_ONLY==='true'});
+           process.exitCode=await runSafe({github,native:{createCheckpointStore,projectSavedBaseline,projectRollingStudy,validateDashboard,digest},authority,sourceHead:process.env.DGB_STUDY_SOURCE_HEAD,qualificationOnly:process.env.DGB_READBACK_QUALIFICATION_ONLY==='true'});
           } catch { console.log('{"schema":"DGB_SAFE_PRIVATE_STUDY_READBACK_v1","result":"FAIL_CLOSED"}'); process.exitCode=1; }
           NODE
 

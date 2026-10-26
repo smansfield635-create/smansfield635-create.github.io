@@ -263,7 +263,7 @@
         ]
       },
       {
-        "name": "Refresh published records retains source dates",
+        "name": "Refresh published records preserves source timing and read-only status",
         "action": {
           "type": "click",
           "selector": "#refresh"
@@ -272,12 +272,26 @@
           {
             "type": "textContains",
             "selector": "#timestamp",
-            "value": "2026-10-17"
+            "value": "Read-only control-plane capture ·"
+          },
+          {
+            "type": "textContains",
+            "selector": "#timestamp",
+            "value": "commands disabled."
+          },
+          {
+            "type": "exists",
+            "selector": "#canonical-observed-at[datetime]:not([datetime=\"\"])"
+          },
+          {
+            "type": "textContains",
+            "selector": "#continuing-study h3",
+            "value": "merged PRs saved"
           },
           {
             "type": "textContains",
             "selector": "#continuing-study",
-            "value": "1,826"
+            "value": "Source cutoff"
           }
         ]
       }

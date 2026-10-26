@@ -1,6 +1,6 @@
 {
   "schema": "DGB_PROJECT_BRIEFINGS_v1",
-  "updatedAt": "2026-10-26T02:19:10.429Z",
+  "updatedAt": "2026-10-26T15:14:10.113Z",
   "records": [
     {
       "projectId": "AUDRALIA",
@@ -372,106 +372,118 @@
     },
     {
       "projectId": "OPERATIONS_CHAMBER",
-      "observedAt": "2026-10-25T23:43:47.668Z",
+      "observedAt": "2026-10-26T15:13:28Z",
       "sourceHeads": [
         {
           "repository": "smansfield635-create/smansfield635-create.github.io",
-          "head": "f011ff078739eca0468e3815cdb6bb39a7e4eab7"
+          "head": "6c3b1ed3bbaf265fcd2826ce569789e2203fecf4"
         }
       ],
       "accomplishment": {
-        "text": "Original v20 Chamber interface migrated into /preflight/chamber/ on the owner's website, joined to DiamondGate through browser-local shared storage. Private captures imported separately; no private snapshots embedded in public assets. Combined backup/import preserves project history and drafts.",
+        "text": "The live Chamber loads four public same-origin display feeds from the website repository. Refresh reloads published records without a ChatGPT session, backup import or collector execution. Project coverage distinguishes exact matches, the declared Chamber alias, briefing-only projects and missing briefings.",
         "basis": "VERIFIED_RECORD",
         "sources": [
           {
-            "label": "Website migration and qualification",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6818"
+            "label": "Published display-feed restoration",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6836"
           },
           {
-            "label": "Exact-head Pages release",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40245854369"
+            "label": "Project coverage inventory",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6845"
+          },
+          {
+            "label": "Successful preflight, Pages and live checks",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40259803771"
           }
         ]
       },
       "publication": {
-        "text": "Published at https://diamondgatebridge.com/preflight/chamber/ from exact merge f011ff078739eca0468e3815cdb6bb39a7e4eab7. Pages run40245854369 deployment, live static and runtime checks passed. Direct custom-domain Chamber and release marker verified. Original ChatGPT Site untouched.",
+        "text": "The restored feeds and project coverage were published from f8bca3646b30e95c03b1c7407ffc4659d680ee7d by Pages run40259803771. Its exact-payload preflight, Pages deployment, live static/runtime checks and custom-domain convergence passed. Later website releases are separate from these records' source-observation times.",
         "basis": "VERIFIED_RECORD",
         "sources": [
           {
-            "label": "Website migration and qualification",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6818"
+            "label": "Published display-feed restoration",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6836"
           },
           {
-            "label": "Exact-head Pages release",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40245854369"
+            "label": "Project coverage inventory",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6845"
+          },
+          {
+            "label": "Successful preflight, Pages and live checks",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40259803771"
           }
         ]
       },
       "unfinished": {
-        "text": "The display retains dated control-plane, study and agent captures. Five published project briefings do not cover every project in the operational inventory, and several briefing IDs do not directly match operational project IDs. Complete identity reconciliation and source review before expanding coverage. Physical Android visual acceptance remains unverified.",
-        "basis": "REPORTED_RESULT",
+        "text": "The control-plane, continuing-study and agent feeds retain their original source dates. Many operational identities still lack source-reviewed briefings. Expand coverage only after project identity reconciliation and source review. Physical Android visual acceptance remains unverified; automatic collector-output publication is not established.",
+        "basis": "VERIFIED_RECORD",
         "sources": [
           {
-            "label": "Published Chamber data reader",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/local-data.mjs"
+            "label": "Exact published data reader",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/6c3b1ed3bbaf265fcd2826ce569789e2203fecf4/preflight/chamber/local-data.mjs"
           },
           {
-            "label": "Current Chamber update instructions",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/workspace-ui.mjs"
+            "label": "Exact coverage tests and source inventory",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/6c3b1ed3bbaf265fcd2826ce569789e2203fecf4/preflight/chamber/project-coverage-test.mjs"
           },
           {
-            "label": "Published project briefing feed",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/data/briefings.json"
+            "label": "Existing scope and publication limits",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/6c3b1ed3bbaf265fcd2826ce569789e2203fecf4/preflight/chamber/README.md"
           }
         ]
       },
       "blocker": {
-        "text": "No product migration or publication blocker. Canonical generation2896 terminal closure requested; administrative receipt pending.",
+        "text": "No failure in the verified feed-restoration release. Missing briefing coverage and unchanged source captures remain explicit evidence limits, not a requirement to use the ChatGPT Site.",
         "basis": "VERIFIED_RECORD",
         "sources": [
           {
-            "label": "Website migration and qualification",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6818"
+            "label": "Published display-feed restoration",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6836"
           },
           {
-            "label": "Exact-head Pages release",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40245854369"
+            "label": "Project coverage inventory",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6845"
+          },
+          {
+            "label": "Successful preflight, Pages and live checks",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40259803771"
           }
         ]
       },
       "nextStep": {
-        "text": "Reconcile project-ID mappings and evidence-backed briefing gaps, update the Chamber's published data through ordinary chat and GitHub, and verify Pages publication and website readback. Preserve original source timestamps; no mandatory browser snapshot import.",
+        "text": "After the next meaningful source-verified project change, preserve its GitHub continuation, prepare the affected complete briefing, qualify the bounded diff, and use the existing Pages release with exact live readback. Reconcile current project evidence before execution. Refresh alone does not gather evidence or establish a project change.",
         "basis": "PROPOSED_NEXT_STEP",
         "sources": [
           {
-            "label": "Published Chamber data reader",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/local-data.mjs"
+            "label": "GitHub-first event handoff scope and admission",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6419478293"
           },
           {
-            "label": "Current Chamber update instructions",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/workspace-ui.mjs"
-          },
-          {
-            "label": "Published project briefing feed",
-            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/preflight/chamber/data/briefings.json"
+            "label": "Canonical admission generation2904",
+            "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6787#issuecomment-6419491097"
           }
         ]
       },
       "instruments": [
         {
-          "name": "Shared local workspace migration qualification",
-          "use": "Verify original interface, data portability and intent-safe project continuation",
+          "name": "Exact-head Pages verification",
+          "use": "Keep implementation, deployment and live evidence separate",
           "result": {
-            "text": "180 DiamondGate tests and20 independent migration checks pass. Browser import/export/restore and all five briefing detail views checked; new project context asks current intent rather than adopting historical blockers. No physical-device acceptance claimed.",
-            "basis": "REPORTED_RESULT",
+            "text": "Run40259803771 passed payload preflight, deployment, live static/runtime checks and custom-domain convergence for the restored Chamber feeds and coverage display.",
+            "basis": "VERIFIED_RECORD",
             "sources": [
               {
-                "label": "Website migration and qualification",
-                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6818"
+                "label": "Published display-feed restoration",
+                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6836"
               },
               {
-                "label": "Exact-head Pages release",
-                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40245854369"
+                "label": "Project coverage inventory",
+                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6845"
+              },
+              {
+                "label": "Successful preflight, Pages and live checks",
+                "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40259803771"
               }
             ]
           }

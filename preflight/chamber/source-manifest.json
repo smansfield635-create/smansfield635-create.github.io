@@ -29,11 +29,11 @@
     },
     {
       "path": "presentation-guard.mjs",
-      "sha256": "3c24a76d1cf6dcd34a879c1f534646f4f14134f7f2d0aa5a4b6aa03c0f68ba98"
+      "sha256": "233cea49e1966ef5235776dd9bfc2b48784004fb7d1aaf2a0db2a97a47e0a26c"
     },
     {
       "path": "project-briefings.mjs",
-      "sha256": "5d17329cdc63d5b7e805225ba9c2acc5707aa768984e7cebc8e46ca6151204ec"
+      "sha256": "3562039aebe390affee460484bffaaa031fc50082042aa9392540526ebd819da"
     },
     {
       "path": "spatial.mjs",
@@ -57,7 +57,7 @@
     },
     {
       "path": "data/briefings.json",
-      "sha256": "773e5fa348c5b8984132f88396a2fc2afc6ab5d2b24c23d5d0a7321384217de6"
+      "sha256": "d8230a36f3c39edd110f1dfb26de2c1ba123e69f36d04bee6b1d95d67b6002ad"
     },
     {
       "path": "data/agents.json",

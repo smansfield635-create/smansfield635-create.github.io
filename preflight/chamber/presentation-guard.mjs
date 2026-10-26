@@ -58,7 +58,7 @@ function validSourceHeads(sourceHeads) {
 
 const descriptions = Object.freeze({
   SOURCE_REVIEWED: 'Source-reviewed proposed next step. Independently reconcile before agent execution.',
-  SOURCE_CHECK_AGED: 'Last reviewed; its continued validity is not confirmed.',
+  SOURCE_CHECK_AGED: 'Recorded proposal; reconcile linked evidence before execution. Age alone does not establish a project change.',
   REVALIDATION_REQUIRED: 'Linked project evidence changed. Revalidation required before a next step can be shown as current.',
   SOURCE_CHECK_UNAVAILABLE: 'Source check unavailable. Current action unknown; prior briefing retained for inspection.',
   UNKNOWN: 'Current next action not established by the available evidence.'

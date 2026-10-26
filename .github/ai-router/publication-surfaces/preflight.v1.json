@@ -1,26 +1,27 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "preflight.v1",
-  "description": "Original DiamondGate project workspace migration; legacy surfaces retained.",
+  "description": "DiamondGate project workspace with a single primary entry and retained experimental lab.",
   "checks": [
     {
       "path": "/preflight/index.html",
       "includes": [
-        "DiamondGate · Preflight",
+        "DiamondGate \u00b7 Preflight",
         "noindex,nofollow,noarchive",
-        "./assets/studio.css",
-        "./assets/preflight-core.js",
-        "./assets/studio.js",
-        "id=\"idea\"",
-        "id=\"checkBtn\"",
-        "id=\"assessmentPanel\"",
-        "id=\"prepareBtn\"",
-        "id=\"resultPanel\""
+        "id=\"open-workspace\"",
+        "href=\"./app/\"",
+        "new URL('./app/', window.location.href)",
+        "workspace.search = window.location.search",
+        "workspace.hash = window.location.hash",
+        "window.location.replace(workspace.href)"
       ],
       "excludes": [
         "GITHUB_TOKEN",
         "PRIVATE_KEY",
-        "ED25519_PRIVATE_KEY"
+        "ED25519_PRIVATE_KEY",
+        "id=\"idea\"",
+        "id=\"checkBtn\"",
+        "./assets/studio.js"
       ]
     },
     {
@@ -67,7 +68,7 @@
     {
       "path": "/preflight/saas-lab/index.html",
       "includes": [
-        "DiamondGate • Development Lab",
+        "DiamondGate \u2022 Development Lab",
         "noindex,nofollow,noarchive",
         "./styles.css",
         "./app.mjs",
@@ -127,7 +128,7 @@
     {
       "path": "/preflight/app/index.html",
       "includes": [
-        "DiamondGate — Pick up your work",
+        "DiamondGate \u2014 Pick up your work",
         "./dist/style.css",
         "./dist/app.mjs",
         "id=\"projects\"",
@@ -272,7 +273,7 @@
           {
             "type": "textContains",
             "selector": "#timestamp",
-            "value": "Read-only control-plane capture ·"
+            "value": "Read-only control-plane capture \u00b7"
           },
           {
             "type": "textContains",

@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-2898-rejected-20261026",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6859,
+  "requestBranch": "ai-dispatch-request-h-earth-2898-rejected-20261026",
+  "requestCommit": "4883617b3475661544b23e77b6d124e9c7b925f7",
+  "requestCommitParent": "6a06f72fb228755a29747bf07fbc62373ca15760",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "6a06f72fb228755a29747bf07fbc62373ca15760",
+  "workflow": "remote-operation-terminal-closure-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"H_EARTH_GROUND_MATERIAL_COHERENCE_20261026_001\",\"lockScope\":\"H_EARTH:GROUND_MATERIAL_COHERENCE:20261026\",\"lockGeneration\":2898,\"terminalDisposition\":\"REJECTED_CLOSED\"}",
+    "router_callback_issue": "6859",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "40353114399",
+  "dispatchedRunId": 40353140827,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40353140827",
+  "dispatchedRunHeadSha": "6a06f72fb228755a29747bf07fbc62373ca15760",
+  "dispatchedAt": "2026-10-26T15:49:41.097Z",
+  "resolvedAt": "2026-10-26T15:49:45.190Z"
+}

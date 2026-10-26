@@ -497,6 +497,17 @@ float noise2(vec2 p){
   return mix(mix(hash21(i),hash21(i+vec2(1.0,0.0)),f.x),
              mix(hash21(i+vec2(0.0,1.0)),hash21(i+vec2(1.0,1.0)),f.x),f.y);
 }
+// H_EARTH_GROUND_MATERIAL_STAGE_A_FUNCTION_BEGIN
+// Ground albedo only: retain close detail, compress unresolved far contrast.
+float groundMaterialCompression(float cameraDistance,float pixelFootprint,float coastDistance,float groveProtection){
+  float distanceBlend=smoothstep(120.0,520.0,cameraDistance);
+  float footprintBlend=smoothstep(1.5,8.0,pixelFootprint);
+  float nearProtection=smoothstep(72.0,140.0,cameraDistance);
+  float inlandProtection=smoothstep(28.0,66.0,max(0.0,coastDistance));
+  return 0.65*max(distanceBlend,footprintBlend)*nearProtection*
+    inlandProtection*(1.0-groveProtection);
+}
+// H_EARTH_GROUND_MATERIAL_STAGE_A_FUNCTION_END
 // Fade nonzero atlas edge texels to the surrounding soil in world metres.
 // Sampling stays inside its own panel; roots and habitat interiors are unchanged.
 float habitatEdgeWeight(float x,float z,vec4 bounds,float width){
@@ -646,6 +657,10 @@ void main(){
   float specularScale=1.0;
   float terrainReliefEnvelope=0.0;
   // Blend the approved soil's sunward lighting only into eligible ground.
+  // H_EARTH_GROUND_MATERIAL_STAGE_C_STATE_BEGIN
+  // Only ordinary ground eligible for the existing cover treatment is reconciled.
+  float groundEarthProtection=0.0;
+  // H_EARTH_GROUND_MATERIAL_STAGE_C_STATE_END
   float worldSoilLightingWeight=0.0;
   float materialSignal=clearingType>0.5?0.0:clamp(vMaterialParameters.x+vMaterialParameters.y*0.5,0.0,1.0);
   float identitySignal=float((vMaterialModelCode+vSurfaceClassCode+vPrimitiveIndex)%7u)/7.0;
@@ -1022,6 +1037,11 @@ void main(){
         smoothstep(0.0,10.0,length(vec2(groundcoverEstateX,groundcoverEstateZ)))*
         smoothstep(4.0,9.0,groundcoverRouteDistance)*
         (1.0-protectedGrove);
+      // H_EARTH_GROUND_MATERIAL_STAGE_C_PROTECTION_BEGIN
+      // Carry the accepted oasis, estate, route and grove protections through
+      // the later habitat tint as well; do not recolor those ground controls.
+      groundEarthProtection=groundcoverProtection;
+      // H_EARTH_GROUND_MATERIAL_STAGE_C_PROTECTION_END
       // Rotate and softly warp one material sample with resident fields.
       // This bends cell boundaries without adding geometry or texture reads.
       float groundcoverDomainX=(0.8*world.x-0.6*world.y)*0.018+5.0+0.65*(broad-0.5);
@@ -1049,9 +1069,37 @@ void main(){
       groundcoverTone=mix(
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
+      // H_EARTH_GROUND_MATERIAL_STAGE_C_COVER_BEGIN
+      // Ground beneath vegetation stays in the earth family. The old olive
+      // endpoint created large albedo jumps across unchanged habitat masks.
+      groundcoverTone=mix(fertileEarth,shelteredEarth,groundcoverMoisture);
+      groundcoverTone=mix(groundcoverTone,compactEarth,groundcoverDry);
+      // H_EARTH_GROUND_MATERIAL_STAGE_C_COVER_END
       groundcoverTone*=0.88+0.24*materialVariation;
       palette=mix(palette,groundcoverTone,groundcoverWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
+      // H_EARTH_GROUND_MATERIAL_STAGE_A_BEGIN
+      // Compress the effective composed soil, not the overwritten FAR base.
+      // Existing soil families retain broad coast, elevation and mineral identity.
+      // Local overlays, habitat tint, geometric lighting and all grass stay intact.
+      vec3 distantSoilAnchor=mix(compactEarth,fertileEarth,0.5);
+      distantSoilAnchor=mix(distantSoilAnchor,
+        mix(vec3(0.110,0.118,0.075),vec3(0.075,0.090,0.055),0.5),0.45);
+      // H_EARTH_GROUND_MATERIAL_STAGE_C_ANCHOR_BEGIN
+      // Use the same earth endpoints at distance; retain Stage A's fade,
+      // environmental weights and all near/coast/grove protections.
+      distantSoilAnchor=mix(distantSoilAnchor,
+        mix(mix(compactEarth,fertileEarth,0.5),
+          mix(fertileEarth,shelteredEarth,0.5),0.45),groundEarthProtection);
+      // H_EARTH_GROUND_MATERIAL_STAGE_C_ANCHOR_END
+      distantSoilAnchor=mix(distantSoilAnchor,coastalSilt,coastalEarth*0.25);
+      distantSoilAnchor=mix(distantSoilAnchor,dryFoothill,
+        smoothstep(8.0,30.0,vWorldPosition.y)*0.20);
+      distantSoilAnchor=mix(distantSoilAnchor,erodedMineral,mineralExposure*0.30);
+      float groundCompression=groundMaterialCompression(distanceToCamera,
+        length(fwidth(world)),vCoastDistanceMeters,protectedGrove);
+      palette=mix(palette,distantSoilAnchor,groundCompression);
+      // H_EARTH_GROUND_MATERIAL_STAGE_A_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END
     // H_EARTH_ACTUAL_WORLD_SOIL_MATERIAL_20261010_V2_END
@@ -1196,6 +1244,24 @@ void main(){
     }
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
     vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
+    // H_EARTH_GROUND_MATERIAL_STAGE_B_BEGIN
+    // Stage A's distant earth coherence must survive the later habitat tint.
+    // Preserve the same atlas coverage/edges and all close soil contact.
+    float habitatGroveProtection=1.0-smoothstep(22.0,42.0,
+      distance(vWorldPosition.xz,vec2(-139.40268,-210.74617)));
+    float habitatReconciliation=groundMaterialCompression(
+      distanceToCamera,length(fwidth(vWorldPosition.xz)),
+      vCoastDistanceMeters,habitatGroveProtection);
+    habitatSoil=mix(habitatSoil,base,habitatReconciliation);
+    // H_EARTH_GROUND_MATERIAL_STAGE_B_END
+    // H_EARTH_GROUND_MATERIAL_STAGE_C_HABITAT_BEGIN
+    // Ground-only habitat contact follows the composed soil hue, including
+    // its texture and woodland litter. The shared plant palette is untouched.
+    // World-space blending fixes middle-distance fields as well as far soil.
+    float habitatEarthWeight=smoothstep(28.0,66.0,
+      max(0.0,vCoastDistanceMeters))*groundEarthProtection;
+    habitatSoil=mix(habitatSoil,base*0.92,habitatEarthWeight);
+    // H_EARTH_GROUND_MATERIAL_STAGE_C_HABITAT_END
     base=mix(base,habitatSoil,habitatCoverage*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;

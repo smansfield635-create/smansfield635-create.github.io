@@ -1,0 +1,70 @@
+{
+  "schema": "H_EARTH_GROUND_REPAIR_BASELINE_v1",
+  "operationId": "H_EARTH_GROUND_MATERIAL_COHERENCE_20261026_001",
+  "generation": 2898,
+  "baselineCommit": "6caa1f644c8869349192fe274b50e79c45b894e8",
+  "publishedAuditedCommit": "ba636025dae7dfae0af14b2e35ecdaa7980ef62d",
+  "baselineRendererBlob": "31d97193a508ede2c244b4253c76be892fd9782e",
+  "baselineRendererSha256": "4450c9e9f66f3dfd8f3094e897311e09550269c2c0f7510a4ce2a4982387d2c1",
+  "auditRendererByteIdentical": true,
+  "auditLibraryFile": "libfile_3317acde8ce881918524ce9d3d4e1c1d",
+  "admissionReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6783#issuecomment-6405700395",
+  "baselineViewport": {
+    "cssWidth": 540,
+    "cssHeight": 1000,
+    "backingWidth": 529,
+    "backingHeight": 980,
+    "fov": 56
+  },
+  "poses": [
+    {
+      "name": "river-overlook",
+      "x": 18,
+      "z": -226,
+      "yaw": 210,
+      "pitch": -14
+    },
+    {
+      "name": "bare-mountain",
+      "x": 88,
+      "z": -260,
+      "yaw": 95,
+      "pitch": -10
+    },
+    {
+      "name": "coast-oblique",
+      "x": 0,
+      "z": -110,
+      "yaw": 170,
+      "pitch": -8
+    },
+    {
+      "name": "foothill-west",
+      "x": -52,
+      "z": -208,
+      "yaw": 180,
+      "pitch": -12
+    }
+  ],
+  "firstPass": "DISTANT_EFFECTIVE_SOIL_PALETTE_ONLY",
+  "unchanged": [
+    "habitat tint",
+    "grass shaders and population",
+    "root and atlas assets",
+    "terrain geometry",
+    "geological rim",
+    "normals and lighting",
+    "navigation",
+    "water",
+    "trees",
+    "resolution"
+  ],
+  "qualificationPending": [
+    "matched fixed-view baseline/candidate captures",
+    "real shader compilation and rendering",
+    "resource and bounded cost comparison",
+    "independent review",
+    "perceptual acceptance"
+  ],
+  "publicationAuthorizedByThisRecord": false
+}

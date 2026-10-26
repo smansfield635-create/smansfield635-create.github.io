@@ -1,0 +1,41 @@
+{
+  "schema": "H_EARTH_GROUND_STAGE_A_WEST_SOURCE_REVIEW_v1",
+  "operationId": "H_EARTH_GROUND_MATERIAL_COHERENCE_20261026_001",
+  "authorityGeneration": 2898,
+  "reviewer": "independent West child agent /root/west_review",
+  "result": "SOURCE_REVIEW_PASS_WITH_RENDERED_QUALIFICATION_PENDING",
+  "baselineRendererBlob": "31d97193a508ede2c244b4253c76be892fd9782e",
+  "candidateRendererBlob": "2ceb4515dccc18da56f1bf6c4a8e079cfcf8df46",
+  "candidateSha256": "51216df4c87a2ff5d6775e07bb308c361d7b50fa69639affa8b18d9a14b319ba",
+  "checks": {
+    "baselineIdentity": "PASS",
+    "onlyTwoAddedShaderBlocks": "PASS",
+    "allOtherRendererBytesRestoredToBaselineByBlockRemoval": "PASS",
+    "nodeSyntax": "PASS",
+    "focusedNodeTests": "5/5 PASS",
+    "GLSLStaticInspection": "No syntax/type/scope defect found; actual compilation pending",
+    "nearSoilWithin72m": "ZERO_COMPRESSION",
+    "coastDistanceAtMost28m": "ZERO_COMPRESSION",
+    "fullyProtectedGrove": "ZERO_COMPRESSION",
+    "compressionBound": "0..0.65",
+    "unchangedGrassHabitatGeometryNormalsLighting": "PASS by exact restorable baseline",
+    "addedTextureReadsDrawsUploadsResources": "NONE in source"
+  },
+  "risks": [
+    "Distance/footprint-dependent color changes can still produce visible moving bands despite continuous scalar weight; fixed-view and camera-motion validation required.",
+    "The world-space fwidth estimate varies with angle and perspective and is evaluated inside existing material branches; edge behavior must be checked in actual rendering.",
+    "The distant anchor retains 35 percent of same-anchor differences but is not proof of natural colors or improved depth; lighting remains unchanged.",
+    "Geological rock is excluded; preserved base-to-geology witness and oasis/estate controls need rendered comparison for any newly visible material contrast.",
+    "No texture-read/resource additions does not establish no GPU time regression; added arithmetic/derivatives require bounded cost comparison."
+  ],
+  "notEstablished": [
+    "actual GLSL compilation",
+    "matched four-view improvement",
+    "temporal stability",
+    "GPU/mobile performance",
+    "anchor perceptual acceptance",
+    "owner KEEP",
+    "merge or publication readiness"
+  ],
+  "nextAction": "Run existing exact-head shader/startup preflight, then matched baseline/candidate audit with recovered camera poses; do not infer visual acceptance from preflight."
+}

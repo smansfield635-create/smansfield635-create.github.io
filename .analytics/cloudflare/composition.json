@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-26T19:31:11Z",
+  "generatedAt": "2026-10-26T20:34:05Z",
   "window": {
-    "start": "2026-09-26T19:31:11Z",
-    "end": "2026-10-26T19:31:11Z"
+    "start": "2026-09-26T20:34:05Z",
+    "end": "2026-10-26T20:34:05Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 685,
-        "visits": 631
+        "pageLoads": 683,
+        "visits": 629
       },
       {
         "value": "/analytics/",
@@ -58,6 +58,11 @@
         "visits": 21
       },
       {
+        "value": "/products/education/",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
         "value": "/about-this-underdog/",
         "pageLoads": 20,
         "visits": 0
@@ -71,11 +76,6 @@
         "value": "/instruments/operations-chamber/",
         "pageLoads": 20,
         "visits": 20
-      },
-      {
-        "value": "/products/education/",
-        "pageLoads": 18,
-        "visits": 18
       },
       {
         "value": "/release-proof/",
@@ -243,13 +243,13 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1753,
-        "visits": 1630
+        "pageLoads": 1751,
+        "visits": 1628
       },
       {
         "value": "CN",
-        "pageLoads": 36,
-        "visits": 36
+        "pageLoads": 38,
+        "visits": 38
       },
       {
         "value": "CA",
@@ -285,13 +285,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1430,
-        "visits": 1373
+        "pageLoads": 1428,
+        "visits": 1371
       },
       {
         "value": "mobile",
-        "pageLoads": 295,
-        "visits": 254
+        "pageLoads": 297,
+        "visits": 256
       },
       {
         "value": "tablet",
@@ -302,8 +302,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 854,
-        "visits": 854
+        "pageLoads": 853,
+        "visits": 853
       },
       {
         "value": "Chrome",
@@ -327,13 +327,13 @@
       },
       {
         "value": "Firefox",
-        "pageLoads": 74,
-        "visits": 64
+        "pageLoads": 73,
+        "visits": 63
       },
       {
         "value": "Unknown",
-        "pageLoads": 40,
-        "visits": 31
+        "pageLoads": 42,
+        "visits": 33
       },
       {
         "value": "Safari",
@@ -354,8 +354,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1096,
-        "visits": 1096
+        "pageLoads": 1094,
+        "visits": 1094
       },
       {
         "value": "Android",
@@ -379,20 +379,20 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 40,
-        "visits": 31
+        "pageLoads": 42,
+        "visits": 33
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 977,
-        "visits": 844
+        "pageLoads": 978,
+        "visits": 845
       },
       {
         "value": "1",
-        "pageLoads": 854,
-        "visits": 854
+        "pageLoads": 853,
+        "visits": 853
       }
     ],
     "navigationType": [

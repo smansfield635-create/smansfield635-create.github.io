@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {readPublishedFeed,localFetch,DISPLAY_FEEDS} from './local-data.mjs';
-import {validateDashboard,createRefreshController,freshness,captureStatus,centralTime,publicationNotice,renderProjectTiles,projectWorkspace,renderInstruments} from './dashboard.mjs';
+import {validateDashboard,createRefreshController,freshness,captureStatus,captureTimestamp,centralTime,publicationNotice,renderProjectTiles,projectWorkspace,renderInstruments} from './dashboard.mjs';
 import {render as renderStudy,studyStamp,validateStudy,mountStudy} from './study-view.mjs';
 import {evaluateBriefing,REVIEW_AFTER_MS} from './presentation-guard.mjs';
 import {renderProjectBriefing} from './project-briefings.mjs';
@@ -119,7 +119,7 @@ test('invalid and future control-plane records preserve the last valid capture a
 test('study dates stay explicit and schema, checkpoint and clock guards reject invalid replacements',()=>{
  const original=feeds['/api/study'],before=structuredClone(original),now=Math.max(...[original.capturedAt,original.hostedStoredAt,original.rollingStudy.through].map(Date.parse))+86400000;
  assert.equal(validateStudy(original,now),original);
- assert.equal(studyStamp(original),'Study evidence through: October 26 at 11:26 AM Central');
+ assert.equal(studyStamp(original),'Study evidence through: '+centralTime(original.rollingStudy.through));
  assert.doesNotMatch(renderStudy(original),/stale|over 75 minutes/i);assert.deepEqual(original,before);
  for(const changed of [
   {...original,schema:'WRONG'},
@@ -140,7 +140,7 @@ test('mounted study warns on failed refresh, retains evidence and clears warning
   await new Promise(resolve=>setImmediate(resolve));
   const stamp=nodes['study-freshness'],root=nodes['dialog-continuing-study'];
   assert.equal(stamp.textContent,studyStamp(original));assert.equal(stamp.classList.warning,false);
-  fail=true;await mounted.refresh();assert.equal(stamp.classList.warning,true);assert.match(stamp.textContent,/update unavailable/);assert.match(root.innerHTML,/last loaded study/);assert.match(root.innerHTML,/October 26 at 11:26 AM Central/);
+  fail=true;await mounted.refresh();assert.equal(stamp.classList.warning,true);assert.match(stamp.textContent,/update unavailable/);assert.match(root.innerHTML,/last loaded study/);assert(root.innerHTML.includes(centralTime(original.rollingStudy.through)));
   fail=false;await mounted.refresh();assert.equal(stamp.classList.warning,false);assert.equal(stamp.textContent,studyStamp(original));assert.equal(count,3);
  }finally{mounted.destroy();}
 });
@@ -160,4 +160,17 @@ test('unpublished warning requires confirmed source evidence bound to the displa
  const study=feeds['/api/study'],through=study.rollingStudy.through,t=Date.parse(through),annotated={...study,confirmedNewerEvidence:{...annotation,publishedThrough:through,evidenceThrough:new Date(t+60000).toISOString(),verifiedAt:new Date(t+120000).toISOString()}};
  assert.match(studyStamp(annotated,t+3600000),/Newer evidence confirmed/);assert.match(renderStudy(annotated,t+3600000),/Source evidence/);
  assert.doesNotMatch(studyStamp(study,t+3600000),/Newer evidence/);
+});
+
+
+test('published refresh labels retain the release verifier contract alongside the new primary dates',()=>{
+ const timestamp=captureTimestamp(feeds['/data.json']),study=renderStudy(feeds['/api/study']);
+ // Exact text assertions in publication-surfaces/preflight.v1.json.
+ assert(timestamp.includes('Read-only control-plane capture ·'));
+ assert(timestamp.includes('commands disabled.'));
+ assert(study.includes('merged PRs saved'));
+ assert(study.includes('Source cutoff'));
+ assert(timestamp.startsWith('Last checked: '+centralTime(feeds['/data.json'].observedAt)));
+ assert(study.includes('Study evidence through: '+centralTime(feeds['/api/study'].rollingStudy.through)));
+ assert.doesNotMatch(timestamp+study,/STALE SOURCE|over 75 minutes/);
 });

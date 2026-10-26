@@ -6,7 +6,7 @@
     {
       "path": "/preflight/index.html",
       "includes": [
-        "DiamondGate \u00b7 Preflight",
+        "DiamondGate · Preflight",
         "noindex,nofollow,noarchive",
         "./assets/studio.css",
         "./assets/preflight-core.js",
@@ -67,7 +67,7 @@
     {
       "path": "/preflight/saas-lab/index.html",
       "includes": [
-        "DiamondGate \u2022 Development Lab",
+        "DiamondGate • Development Lab",
         "noindex,nofollow,noarchive",
         "./styles.css",
         "./app.mjs",
@@ -127,7 +127,7 @@
     {
       "path": "/preflight/app/index.html",
       "includes": [
-        "DiamondGate \u2014 Pick up your work",
+        "DiamondGate — Pick up your work",
         "./dist/style.css",
         "./dist/app.mjs",
         "id=\"projects\"",
@@ -221,7 +221,9 @@
     },
     "failOnConsoleErrors": true,
     "failOnPageErrors": true,
-    "ignoreConsoleErrorIncludes": [],
+    "ignoreConsoleErrorIncludes": [
+      "Loading the script 'https://static.cloudflareinsights.com/beacon.min.js/"
+    ],
     "interactions": [
       {
         "name": "Published projects load without imports",

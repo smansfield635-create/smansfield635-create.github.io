@@ -51,3 +51,10 @@ test('stage B preserves close, coastal and grove habitat color and reduces only 
   assert.ok(adjustedOverlay<0.25&&adjustedOverlay>0);
   assert.ok(Math.abs(adjustedOverlay-0.238)<1e-12);
 });
+test('public H-Earth import map binds both renderer aliases to this exact Stage B blob',()=>{
+  const html=readFileSync(new URL('../../../showroom/globe/h-earth/index.html',import.meta.url),'utf8');
+  const sha=createHash('sha1').update(`blob ${Buffer.byteLength(source)}\\0`).update(source).digest('hex');
+  const rendererPath='/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+  const exact=rendererPath+'?rev='+sha;
+  assert.equal(html.split(exact).length-1,2);
+});

@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-near-far-seam-preflight-85372f3d",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6870,
+  "requestBranch": "ai-dispatch-request-h-earth-near-far-seam-preflight-85372f3d",
+  "requestCommit": "1e77efa2ad4fa56a327b0adf6817e0124cc5a1c1",
+  "requestCommitParent": "098295a83e5c8372cf0764090c28fa9c81a93264",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "098295a83e5c8372cf0764090c28fa9c81a93264",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "85372f3dc896d73457f6a7d008ac08a51d0ba85b",
+    "surface_id": "h-earth"
+  },
+  "bridgeRunId": "40373848378",
+  "dispatchedRunId": 40373874234,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40373874234",
+  "dispatchedRunHeadSha": "098295a83e5c8372cf0764090c28fa9c81a93264",
+  "dispatchedAt": "2026-10-26T18:00:26.530Z",
+  "resolvedAt": "2026-10-26T18:00:30.729Z"
+}

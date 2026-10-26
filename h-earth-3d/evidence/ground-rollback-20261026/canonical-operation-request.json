@@ -1,0 +1,152 @@
+{
+  "allowedPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/index.html",
+    "h-earth-3d/evidence/ground-rollback-20261026/**",
+    "h-earth-3d/experience-anchor/receipts/ground-rollback-20261026.json"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/ground-rollback-20261026/**",
+    "h-earth-3d/experience-anchor/receipts/ground-rollback-20261026.json"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "GEOMETRIC_CLEARANCE_FAILURE",
+    "SUPPORT_SWITCH_DISCONTINUITY",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "6a06f72fb228755a29747bf07fbc62373ca15760",
+  "exactTestCommand": "node --test h-earth-3d/evidence/ground-rollback-20261026/rollback.test.mjs",
+  "executingRole": {
+    "mayDeploy": true,
+    "mayMerge": true,
+    "mayMutateControlPlane": false,
+    "mayMutateProduct": true,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "6a06f72fb228755a29747bf07fbc62373ca15760",
+    "operationId": "H_EARTH_GROUND_ROLLBACK_20261026_002",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/index.html",
+      "h-earth-3d/evidence/ground-rollback-20261026/**",
+      "h-earth-3d/experience-anchor/receipts/ground-rollback-20261026.json"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_PRE_6847_RENDERER_BLOB_RESTORED",
+      "ONLY_TWO_IMPORT_PINS_CHANGED",
+      "UNCHANGED_VEGETATION_AND_OTHER_PRODUCT_BYTES",
+      "INDEPENDENT_WEST_REVIEW",
+      "LIVE_EXACT_HEAD_VERIFICATION",
+      "EXPERIENCE_ANCHOR_ACCEPTANCE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "1eb855006aa1973aa148fff3c688394ff44b1a034d882fb61933dc68de327901",
+    "receiptId": "H_EARTH_GROUND_ROLLBACK_20261026_002_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:GROUND_MATERIAL_COHERENCE:20261026",
+  "operationId": "H_EARTH_GROUND_ROLLBACK_20261026_002",
+  "prohibitedPaths": [
+    "MAIN:DIRECT_WRITE",
+    ".github/**",
+    "ALL_VEGETATION_SHADERS_AND_ASSETS",
+    "TERRAIN_GEOMETRY_WATER_TREE_ASSETS_NAVIGATION_AND_INPUT_MUTATION",
+    "ANY_PATH_OUTSIDE_DECLARED_SCOPE"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "conditionalOnSelectedGates": true,
+    "intent": "Restore exact pre-6847 renderer and two import aliases. Preserve previous foliage and all unrelated changes. Owner explicitly authorizes rollback and publication. No new visual design.",
+    "mayDeploy": true,
+    "mayMerge": true,
+    "mayMutateProduct": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner rejected Stage C and requested rollback, then confirmed: Okay, proceed."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_EXPLICIT_ROLLBACK_PROCEED",
+      "resolved": true
+    },
+    {
+      "id": "PR6847_REJECTED_CLOSED_LOCK_RELEASED",
+      "resolved": true
+    },
+    {
+      "id": "EXACT_BASELINE_BLOB_IDENTIFIED",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "EXACT_PRE_6847_RENDERER_BLOB_RESTORED",
+    "ONLY_TWO_IMPORT_PINS_CHANGED",
+    "UNCHANGED_VEGETATION_AND_OTHER_PRODUCT_BYTES",
+    "INDEPENDENT_WEST_REVIEW",
+    "LIVE_EXACT_HEAD_VERIFICATION",
+    "EXPERIENCE_ANCHOR_ACCEPTANCE"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "STOP_UNLESS_CANONICAL_ADMITTED_AND_LOCKED",
+    "STOP_ON_OUT_OF_SCOPE_CHANGE",
+    "STOP_ON_GEOMETRY_NAVIGATION_OR_HABITAT_REGRESSION",
+    "STOP_ON_SELECTED_QUALIFICATION_FAILURE",
+    "STOP_ON_UNEXPLAINED_RESOURCE_OR_SUSTAINED_PERFORMANCE_REGRESSION",
+    "NO_HEADLESS_AS_PHYSICAL_ANDROID_ACCEPTANCE",
+    "NO_PRODUCTION_DEPLOYMENT_AS_PREVIEW_WORKAROUND"
+  ],
+  "subjectIdentity": {
+    "baseHead": "6a06f72fb228755a29747bf07fbc62373ca15760",
+    "baselineRendererBlob": "31d97193a508ede2c244b4253c76be892fd9782e",
+    "candidateBranch": "refs/heads/h-earth/ground-rollback-20261026",
+    "rejectedPullRequest": 6847,
+    "scope": "Restore exact pre-6847 renderer and two import aliases. Preserve previous foliage and all unrelated changes. Owner explicitly authorizes rollback and publication. No new visual design."
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/publication-preflight-v1.yml"
+}

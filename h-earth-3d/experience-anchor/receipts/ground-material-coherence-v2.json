@@ -1,0 +1,67 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "operationId": "H_EARTH_GROUND_MATERIAL_COHERENCE_20261026_001",
+  "canonicalAdmissionGeneration": 2898,
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/ground-material-coherence-v2/baseline.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/ground-material-coherence-v2/ground.test.mjs"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/ground-material-coherence-v2/ground.test.mjs",
+    "h-earth-3d/evidence/ground-material-coherence-v2/west-source-review.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "8faa4ae3c5f89e4c3b7209c4df8409f4553dae34085205d697bba1f1c5add365"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "3a3e6dbb0e613ac9bfa0b142021531ff8f135fbcdbb9c1851abe7b6672cde879"
+    }
+  ],
+  "runtimeCandidate": "289f9e0922da4a55b5ca6588407eac8615b14a34",
+  "ownerDisposition": "KEEP_AND_PUBLISH",
+  "ownerAuthorization": "Okay, at this point we should just get it published. My concern now is that it's going to look like a desert again. But this is definitely an improvement over its current state nonetheless",
+  "qualification": {
+    "preflightRun": 40339504669,
+    "comparisonRun": 40344793763,
+    "artifact": 12661252842,
+    "archiveSha256": "95157601e3563813555aa2d06b4946ce9d5ea85d3144702b6a49558662326f12",
+    "images": 16,
+    "browserErrors": 0,
+    "groundTests": 12
+  },
+  "independentReview": {
+    "function": "Soren/West",
+    "nativeTask": "/root/material_diagnosis",
+    "result": "KEEP_PASS_BOUNDED_VIEWS",
+    "record": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6783#issuecomment-6419712415"
+  },
+  "continuityBasis": "Bounded ground palette change. Foliage placement, shared vegetation palette, geometry, water, navigation, world routes and UI are unchanged. Four matched poses retain world identity. Interaction continuity is inherited from unchanged input and navigation code, not newly measured on a physical phone.",
+  "limitations": [
+    "Warm bare earth and existing sparse vegetation remain visible; no claim of comprehensive greening.",
+    "No physical Android or sustained performance acceptance.",
+    "Finalization changes evidence only; exact merged payload preflight and live verification remain required."
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "DGB_HOSTED_STUDY_CAPTURE_v1",
+  "capturedAt": "2026-10-23T21:43:15.576Z",
+  "projectionHead": "f0828fbabf84b3fbd02d543399b4d63abaa8b06a",
+  "sourceProjectionDigest": "b8927a0dd0c33e654fd77ef55e4e57c60c52676a4dbb7d31aad4163ae8f43f27",
+  "rollingStudy": {
+    "schema": "DGB_ROLLING_STUDY_DISPLAY_v1",
+    "through": "2026-10-23T21:41:30Z",
+    "coverage": "COMPLETE_SEARCH_RECONCILED",
+    "currentProductivity": "NOT_ESTABLISHED",
+    "cohorts": [
+      {
+        "repository": "smansfield635-create/smansfield635-create.github.io",
+        "total": 1678,
+        "evidenceCollected": 1678,
+        "SUPPORT": 726,
+        "STANDARD": 938,
+        "PARAMOUNT": 14,
+        "UNRESOLVED": 0,
+        "materialUnits": 952
+      },
+      {
+        "repository": "smansfield635-create/geodiametrics1",
+        "total": 148,
+        "evidenceCollected": 148,
+        "SUPPORT": 71,
+        "STANDARD": 77,
+        "PARAMOUNT": 0,
+        "UNRESOLVED": 0,
+        "materialUnits": 77
+      }
+    ],
+    "measurement": "AUTOMATED_BASELINE_WITH_PRESERVED_CORRECTIONS",
+    "checkpoint": {
+      "commit": "1e83db740eea69c995506e94a89df595c7dbce5f",
+      "savedThrough": "2026-10-23T21:41:30Z",
+      "lastSuccessfulUpdate": "2026-10-23T21:41:30Z"
+    },
+    "reviewedCount": 390,
+    "correctionCount": 47,
+    "auditFlagCount": 5
+  },
+  "auditFlags": [
+    {
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "number": 3771,
+      "reason": "GITHUB_ZERO_COUNT_CONTRADICTS_EXHAUSTED_FILE_LIST"
+    },
+    {
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "number": 3827,
+      "reason": "GITHUB_ZERO_COUNT_CONTRADICTS_EXHAUSTED_FILE_LIST"
+    },
+    {
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "number": 3919,
+      "reason": "GITHUB_ZERO_COUNT_CONTRADICTS_EXHAUSTED_FILE_LIST"
+    },
+    {
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "number": 5702,
+      "reason": "GITHUB_3000_FILE_CAP_AUDIT_REQUIRED"
+    },
+    {
+      "repository": "smansfield635-create/smansfield635-create.github.io",
+      "number": 6377,
+      "reason": "COMPLETE_TREE_PATHS_WITH_PARTIAL_LINE_STATS_AND_RENAME_PAIRING"
+    }
+  ],
+  "hostedStoredAt": "2026-10-23T22:02:16.457Z"
+}

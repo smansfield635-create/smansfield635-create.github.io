@@ -1,0 +1,159 @@
+{
+  "schema": "DGB_CHAMBER_AGENT_DELIVERIES_v1",
+  "records": [
+    {
+      "schema": "DGB_CHAMBER_AGENT_DELIVERY_v1",
+      "sequence": 1,
+      "receivedAt": "2026-10-16T19:26:16.487Z",
+      "event": {
+        "schema": "DGB_CHAMBER_AGENT_CHECKPOINT_v1",
+        "projectId": "OPERATIONS_CHAMBER",
+        "operationId": "DGB_PUBLIC_PRIVATE_GOVERNING_REBIND_ADOPTION_20261016_001",
+        "agentId": "CODEX_CHAMBER_FRESHNESS_REBIND_20261016",
+        "phase": "CHECKPOINT",
+        "sequence": 1,
+        "occurredAt": "2026-10-16T19:25:45Z",
+        "summary": "Collector and readback authority repair merged in PR #6420; exact source verified. Awaiting one existing scheduled cycle, then source and hosted readback. Study remains at 03:55 UTC; no repaired-cycle success claimed.",
+        "githubEvidenceUrl": "https://github.com/smansfield635-create/geodiametrics1/issues/712#issuecomment-6223060184",
+        "interpretation": "SELF_REPORTED_NOT_OUTCOME_VERIFIED"
+      }
+    },
+    {
+      "schema": "DGB_CHAMBER_AGENT_DELIVERY_v1",
+      "sequence": 1,
+      "receivedAt": "2026-10-16T17:12:47.275Z",
+      "event": {
+        "schema": "DGB_CHAMBER_AGENT_CHECKPOINT_v1",
+        "projectId": "OPERATIONS_CHAMBER",
+        "operationId": "CHAMBER_INSTRUMENTATION_RECONCILIATION_20261016_001",
+        "agentId": "CHATGPT_OPERATOR",
+        "phase": "CHECKPOINT",
+        "sequence": 1,
+        "occurredAt": "2026-10-16T17:12:42.716Z",
+        "summary": "Source-pinned Chamber reconciliation saved in Issue 712: Canonical/Epistemic/SBK, Geometry Kernel, Compass identities, lifecycle and study separated. Site source/editor unavailable here; UI and data stores unchanged.",
+        "githubEvidenceUrl": "https://github.com/smansfield635-create/geodiametrics1/issues/712#issuecomment-6220768136",
+        "interpretation": "SELF_REPORTED_NOT_OUTCOME_VERIFIED"
+      }
+    },
+    {
+      "schema": "DGB_CHAMBER_AGENT_DELIVERY_v1",
+      "sequence": 1,
+      "receivedAt": "2026-10-16T01:05:05.584Z",
+      "event": {
+        "schema": "DGB_CHAMBER_AGENT_CHECKPOINT_v1",
+        "projectId": "OPERATIONS_CHAMBER",
+        "operationId": "SOURCE_COVERAGE_RECONCILIATION_20261016_001",
+        "agentId": "CHATGPT_OPERATOR",
+        "phase": "CHECKPOINT",
+        "sequence": 1,
+        "occurredAt": "2026-10-16T01:05:04.117Z",
+        "summary": "Six workflow registry records reconciled: 3 installed, 3 retired; 1 of 3 installed lacks a recent matched run. Two observed failure conclusions have zero steps/jobs. Source coverage is not run success. No collector or Site source change.",
+        "githubEvidenceUrl": "https://github.com/smansfield635-create/geodiametrics1/issues/712#issuecomment-6205657139",
+        "interpretation": "SELF_REPORTED_NOT_OUTCOME_VERIFIED"
+      }
+    },
+    {
+      "schema": "DGB_CHAMBER_AGENT_DELIVERY_v1",
+      "sequence": 1,
+      "receivedAt": "2026-10-16T00:52:30.934Z",
+      "event": {
+        "schema": "DGB_CHAMBER_AGENT_CHECKPOINT_v1",
+        "projectId": "PRIVATE_PUBLIC_BRIDGE",
+        "operationId": "DGB_STUDY_COMPLETE_TREE_RUNTIME_COMMISSION_20261016_001",
+        "agentId": "CHATGPT_OPERATOR",
+        "phase": "BLOCKED",
+        "sequence": 1,
+        "occurredAt": "2026-10-16T00:49:25.427Z",
+        "summary": "Private Gen674 commissioning is admitted and locked; repaired source 4106ad5 is qualified but not ratified. Public collector still pins old source; scheduled cycle failed. Saved study unchanged at 1,732 through 18:49:41Z.",
+        "githubEvidenceUrl": "https://github.com/smansfield635-create/geodiametrics1/issues/712#issuecomment-6205471253",
+        "interpretation": "SELF_REPORTED_NOT_OUTCOME_VERIFIED"
+      }
+    },
+    {
+      "schema": "DGB_CHAMBER_AGENT_DELIVERY_v1",
+      "sequence": 1,
+      "receivedAt": "2026-10-15T16:04:57.969Z",
+      "event": {
+        "schema": "DGB_CHAMBER_AGENT_CHECKPOINT_v1",
+        "projectId": "PRIVATE_PUBLIC_BRIDGE",
+        "operationId": "DGB_CHAMBER_EVENT_SPINE_MAIN_ADOPTION_20261015_001",
+        "agentId": "CHATGPT_OPERATOR",
+        "phase": "COMPLETED",
+        "sequence": 1,
+        "occurredAt": "2026-10-15T14:46:02.326Z",
+        "summary": "Event Spine adopted in private main and Gen671 closed; real private agent reports replayed through the installed code.",
+        "githubEvidenceUrl": "https://github.com/smansfield635-create/geodiametrics1/issues/712#issuecomment-6194871437",
+        "interpretation": "SELF_REPORTED_NOT_OUTCOME_VERIFIED"
+      }
+    },
+    {
+      "schema": "DGB_CHAMBER_AGENT_DELIVERY_v1",
+      "sequence": 1,
+      "receivedAt": "2026-10-15T16:04:54.582Z",
+      "event": {
+        "schema": "DGB_CHAMBER_AGENT_CHECKPOINT_v1",
+        "projectId": "PRIVATE_PUBLIC_BRIDGE",
+        "operationId": "DGB_AI_ENTRY_AGENT_BURST_REPORTING_ADOPTION_20261015_001",
+        "agentId": "CHATGPT_OPERATOR",
+        "phase": "COMPLETED",
+        "sequence": 1,
+        "occurredAt": "2026-10-15T05:44:22.666Z",
+        "summary": "AI entry reporting rule merged to private main; generations 669 and 670 closed and verified.",
+        "githubEvidenceUrl": "https://github.com/smansfield635-create/geodiametrics1/issues/712#issuecomment-6185362430",
+        "interpretation": "SELF_REPORTED_NOT_OUTCOME_VERIFIED"
+      }
+    },
+    {
+      "schema": "DGB_CHAMBER_AGENT_DELIVERY_v1",
+      "sequence": 1,
+      "receivedAt": "2026-10-15T16:04:50.728Z",
+      "event": {
+        "schema": "DGB_CHAMBER_AGENT_CHECKPOINT_v1",
+        "projectId": "PRIVATE_PUBLIC_BRIDGE",
+        "operationId": "DGB_CHAMBER_EVENT_SPINE_PRIVATE_CONSTRUCTION_20261014_001",
+        "agentId": "CHATGPT_OPERATOR",
+        "phase": "CHECKPOINT",
+        "sequence": 1,
+        "occurredAt": "2026-10-15T05:21:51.000Z",
+        "summary": "Agent burst code and tests preserved in draft PR 753; private source readback matched.",
+        "githubEvidenceUrl": "https://github.com/smansfield635-create/geodiametrics1/issues/712#issuecomment-6185063964",
+        "interpretation": "SELF_REPORTED_NOT_OUTCOME_VERIFIED"
+      }
+    },
+    {
+      "schema": "DGB_CHAMBER_AGENT_DELIVERY_v1",
+      "sequence": 1,
+      "receivedAt": "2026-10-15T15:58:18.661Z",
+      "event": {
+        "schema": "DGB_CHAMBER_AGENT_CHECKPOINT_v1",
+        "projectId": "PRIVATE_PUBLIC_BRIDGE",
+        "operationId": "DGB_STUDY_DEPENDENCY_REQUALIFICATION_20261015_001",
+        "agentId": "CHATGPT_OPERATOR",
+        "phase": "COMPLETED",
+        "sequence": 1,
+        "occurredAt": "2026-10-15T15:58:05.303Z",
+        "summary": "Study collector repair verified: PR 6360 merged; scheduled run 38764389676 passed. Site readback matched 1,730 records through 15:54:27Z; 390 reviews, 47 corrections and four flags preserved.",
+        "githubEvidenceUrl": "https://github.com/smansfield635-create/geodiametrics1/issues/712#issuecomment-6196397704",
+        "interpretation": "SELF_REPORTED_NOT_OUTCOME_VERIFIED"
+      }
+    },
+    {
+      "schema": "DGB_CHAMBER_AGENT_DELIVERY_v1",
+      "sequence": 1,
+      "receivedAt": "2026-10-15T15:03:37.755Z",
+      "event": {
+        "schema": "DGB_CHAMBER_AGENT_CHECKPOINT_v1",
+        "projectId": "OPERATIONS_CHAMBER",
+        "operationId": "SITE_RECEIVER_CONNECTION_20261015",
+        "agentId": "CHATGPT_OPERATOR",
+        "phase": "CHECKPOINT",
+        "sequence": 1,
+        "occurredAt": "2026-10-15T15:03:07.707Z",
+        "summary": "Original private Site receiver published; 12 tests and production build passed. Plugin installed; native tool invocation remains unverified.",
+        "githubEvidenceUrl": "https://github.com/smansfield635-create/geodiametrics1/issues/712#issuecomment-6195236092",
+        "interpretation": "SELF_REPORTED_NOT_OUTCOME_VERIFIED"
+      }
+    }
+  ],
+  "truncated": false
+}

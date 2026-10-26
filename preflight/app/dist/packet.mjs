@@ -1,3 +1,4 @@
+import {packetLines} from './packet-headings.mjs';
 import {decodeEnvelope} from './response-envelope.mjs';
 import {readProgressRows} from './progress-wire.mjs';
 import {PROGRESS_CONTRACT,validateProgress} from './progress-record.mjs';
@@ -30,11 +31,13 @@ export function parsePacket(raw,{plain=false,normalized=false}={}){
  const envelope=normalized?null:decodeEnvelope(raw,KEYS,headings);
  if(envelope){const fields={...Object.fromEntries(KEYS.map(k=>[k,''])),...envelope.fields};return {...finalizePacket(fields,raw),extra:envelope.extra,representation:'JSON'};}
  const fields=Object.fromEntries(KEYS.map(k=>[k,'']));let active=null,found=new Set(),extra=[];
- for(const line of raw.replace(/\r\n?/g,'\n').split('\n')){
- if(/^\s*(?:#{1,6}\s*)?(?:\*\*)?TASK OUTCOME:\s*(?:COMPLETED|PARTIAL|BLOCKED|FAILED|NO_CHANGE|UNKNOWN)\s*PRODUCT(?: CHANGES)?:/i.test(line))throw Error('TASK OUTCOME and PRODUCT CHANGES are joined together. Put each on its own line; the original response is preserved.');
- const match=line.trim().replace(/^#{1,6}\s*/,'').replace(/\*\*/g,'').replace(/^__([^:]+):__/,'$1:').match(/^([A-Za-z &]+):\s*(.*)$/);
- const key=match&&headings[match[1].toUpperCase()];
- if(key){if(found.has(key))throw Error('The response repeats a section. Copy the request again and ask your tool for one complete packet.');found.add(key);active=key;if(match[2])fields[key]+=match[2]+'\n';}
+ const rows=packetLines(raw,headings);
+ const explicitProject=rows.some(r=>r.heading?.key==='project'&&r.heading.explicit);
+ for(const {line,heading} of rows){
+ if(heading?.key==='outcome'&&/^\s*(?:#{1,6}\s*)?(?:\*\*)?TASK OUTCOME:\s*(?:COMPLETED|PARTIAL|BLOCKED|FAILED|NO_CHANGE|UNKNOWN)\s*PRODUCT(?: CHANGES)?:/i.test(line))throw Error('TASK OUTCOME and PRODUCT CHANGES are joined together. Put each on its own line; the original response is preserved.');
+ const nestedProject=active==='organization'&&heading?.key==='project'&&!heading.explicit&&explicitProject;
+ const key=!nestedProject&&heading?.key;
+ if(key){if(found.has(key))throw Error('The response repeats a section. Copy the request again and ask your tool for one complete packet.');found.add(key);active=key;if(heading.value)fields[key]+=heading.value+'\n';}
  else if(active)fields[active]+=line+'\n';else if(line.trim()&&!['```','```text',FORMAT].includes(line.trim()))extra.push(line);
  }
  for(const k of KEYS)fields[k]=fields[k].trim().replace(/\n```\s*$/,'').trim();

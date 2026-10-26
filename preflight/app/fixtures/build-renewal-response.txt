@@ -1,0 +1,291 @@
+Worked for 3m 42s
+
+### DIAMONDGATE_PACKET_V1
+
+INTAKE CONTRACT: 2
+
+WORK ORIGIN: EXISTING WORK
+
+PROJECT ORGANIZATION: One existing project — PROPOSED.
+
+Project: Build Your Own Website, registered as `BUILD`.
+
+Work areas: promotional renewal, commercial copy, architecture preservation, regression verification, and eventual publication. These are related changes to one existing website page, not separate projects.
+
+The previously developed conversational companion remains a protected existing feature, not a separate task under this renewal.
+
+PROJECT: Build Your Own Website — Diamond Gate Bridge
+
+SOURCE: Current user instruction; live website at [Build Your Own Website](https://diamondgatebridge.com/build/?utm_source=chatgpt.com); GitHub repository `smansfield635-create/smansfield635-create.github.io`; registered `BUILD` project; existing Build development records.
+
+CAPTURED: October 26, 2026, America/Chicago.
+
+USER INTENT:
+
+> It's come to my attention my Build your own website page has become stale. We need to renew any promotions through the end of the year. And we need to find a way to update the page without changing the architecture.
+
+The requested renewal period extends through December 31, 2026.
+
+### REQUIREMENTS
+
+```json
+
+[
+  {
+    "id": "R1",
+    "text": "Identify existing Build-page promotions, starting prices, commercial terms, and their current validity disclosures.",
+    "criterion": "A source-referenced inventory identifies each displayed promotion, its price, and whether its expiration is stated.",
+    "review": "NOT_REQUIRED",
+    "dependsOn": [],
+    "standing": "PROPOSED"
+  },
+  {
+    "id": "R2",
+    "text": "Renew the existing promotional offers through December 31, 2026 using bounded content changes without inventing new discounts or modifying unrelated commercial terms.",
+    "criterion": "The two existing 50%-off starting-price offers explicitly state validity through December 31, 2026, with their established pricing unchanged.",
+    "review": "NOT_REQUIRED",
+    "dependsOn": ["R1"],
+    "standing": "PROPOSED"
+  },
+  {
+    "id": "R3",
+    "text": "Preserve the existing page architecture, styling system, pricing carousel, package-card interaction, companion, navigation, and inquiry routes.",
+    "criterion": "The candidate diff contains only authorized promotional content changes and no changes to protected structure, interaction code, or routes.",
+    "review": "NOT_REQUIRED",
+    "dependsOn": ["R2"],
+    "standing": "PROPOSED"
+  },
+  {
+    "id": "R4",
+    "text": "Qualify the exact renewal candidate using applicable existing checks.",
+    "criterion": "Promotional content, price consistency, desktop and mobile presentation, package navigation, card flipping, inquiry access, and directly affected regression checks pass.",
+    "review": "NOT_REQUIRED",
+    "dependsOn": ["R2"],
+    "standing": "PROPOSED"
+  },
+  {
+    "id": "R5",
+    "text": "Publish the qualified renewal through the existing authorized repository release process.",
+    "criterion": "A separately authorized and approved candidate is merged and deployed with identifiable release evidence.",
+    "review": "REQUIRED",
+    "dependsOn": ["R3", "R4"],
+    "standing": "PROPOSED"
+  },
+  {
+    "id": "R6",
+    "text": "Verify that the live public page reflects the renewed offers and retains existing interactions.",
+    "criterion": "The deployed live page displays both correct prices and the December 31, 2026 expiration, and directly affected interactions remain functional.",
+    "review": "NOT_REQUIRED",
+    "dependsOn": ["R5"],
+    "standing": "PROPOSED"
+  }
+]
+```
+
+The complete initial map awaits explicit review in DiamondGate before adoption. No existing adopted requirement is superseded by this proposal.
+
+### PROGRESS EVENTS
+
+```json
+
+[
+  {
+    "id": "E1",
+    "requirement": "R1",
+    "kind": "FINDING",
+    "details": "Live page inspection identified Custom Essential at a displayed promotional starting price of $750 from $1,500, and Custom Interactive at $1,750 from $3,500. No promotional expiration date was visible.",
+    "reference": "https://diamondgatebridge.com/build/ — pricing section, observed October 26, 2026"
+  },
+  {
+    "id": "E2",
+    "requirement": "R1",
+    "kind": "FINDING",
+    "details": "Current main-branch source confirms both promotional price pairs. Custom Systems remains consultation-priced. The first month of support is included across packages; no distinct expiration was established for this standing term.",
+    "reference": "build/index.html, blob cb2e3e102e1fc081f1b49234ece83ba79cf9cfa6, lines 79–85"
+  },
+  {
+    "id": "E3",
+    "requirement": "R3",
+    "kind": "FINDING",
+    "details": "The page stores its existing commercial content in build/index.html. The registered BUILD project owns that exact path. Its registration does not automatically authorize changes to intake assets or companion runtime files.",
+    "reference": ".github/ai-router/projects/build/entrypoint.v1.json, blob aaa79b490930dcde89a780130be50cb954eb1b71"
+  },
+  {
+    "id": "E4",
+    "requirement": "R3",
+    "kind": "FINDING",
+    "details": "Source inspection found existing pricing orbit markup, three package readers, front/back card controls, and separately referenced companion resources. The renewal can target existing content without proposing replacement interaction architecture.",
+    "reference": "build/index.html, blob cb2e3e102e1fc081f1b49234ece83ba79cf9cfa6"
+  }
+]
+```
+
+### GOAL
+
+Restore the commercial relevance of the existing Build Your Own Website page by extending its current promotional offers through December 31, 2026.
+
+Deliver the renewal as a bounded content update rather than an architectural redesign.
+
+### CURRENT STATE
+
+The public page is online and contains an established three-package pricing presentation.
+
+| Package            | Displayed original | Displayed offer           |
+| ------------------ | ------------------ | ------------------------- |
+| Custom Essential   | From $1,500        | From $750                 |
+| Custom Interactive | From $3,500        | From $1,750               |
+| Custom Systems     | —                  | Scoped after consultation |
+
+Both fixed-price offers represent 50% reductions. The page currently does not visibly specify when these prices expire.
+
+The page also retains its existing payment terms of 50% to begin and 50% after acceptance, plus the first month of support included.
+
+No renewal candidate was created during this intake.
+
+### ACCEPTED DECISIONS
+
+* Preserve the existing project rather than create a replacement.
+
+* Renew promotions through the end of 2026.
+
+* Do not change the page architecture.
+
+* Preserve the established public-facing name, Build Your Own Website.
+
+* Preserve previously approved companion functionality and website-discovery behavior. The existing companion design does not need to be reconstructed for a pricing-content renewal.
+
+The exact promotional wording proposed for the new expiry disclosure has not been separately accepted.
+
+### FILES AND EVIDENCE
+
+Primary page: [build/index.html](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/build/index.html?utm_source=chatgpt.com)
+
+Observed blob: `cb2e3e102e1fc081f1b49234ece83ba79cf9cfa6`
+
+AI entry point: [AI_ENTRYPOINT.json](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/AI_ENTRYPOINT.json?utm_source=chatgpt.com)
+
+Project registration: [.github/ai-router/projects/build/entrypoint.v1.json](https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/.github/ai-router/projects/build/entrypoint.v1.json?utm_source=chatgpt.com)
+
+Previous companion development: [Issue #5895](https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5895?utm_source=chatgpt.com), documenting the Build Companion Matrix v2 direction.
+
+The existing `assets/build/` presentation and companion resources are relevant protected dependencies. They are not automatically authorized mutation targets.
+
+Source and live page were inspected. No user-provided picture or video was inspected for this intake. No additional attachment is required to identify the immediate content-renewal task, although later visual-review materials can accompany the candidate.
+
+These links identify evidence; they do not guarantee that a receiving tool has access.
+
+### COMPLETED WORK
+
+The current intake established the project, user objective, existing offers, source location, and bounded update opportunity.
+
+A source-level inspection confirmed that the two promotional prices reside inside the existing package-card presentation and that the page has an established architecture worth preserving.
+
+The earlier Build companion was already published separately under PR #5881. Its implementation is not unfinished work in this promotional-renewal task.
+
+### UNFINISHED WORK
+
+* Add a clear December 31, 2026 expiration disclosure to the existing discounted offers.
+
+* Preserve the observed promotional prices and unrelated commercial terms.
+
+* Confirm the change does not alter pricing-card behavior, presentation, companion operation, navigation or intake.
+
+* Complete applicable source, visual and functional qualification.
+
+* Obtain separate publication authority, deploy, and verify the live result.
+
+The wider companion development roadmap is outside this bounded promotional renewal.
+
+### NEXT STEP
+
+Prepare the existing-page promotional renewal candidate using the repository AI entry point and required authorization process.
+
+Target `build/index.html` only. Introduce the year-end validity disclosure into the existing promotional pricing presentation, preserve both 50%-off price pairs, and retain current HTML structure, CSS behavior, JavaScript interaction and routes.
+
+Stop at a qualified draft candidate before merge or publication.
+
+### UNKNOWNS
+
+The page does not state a prior promotion expiration date, so the previous deadline is UNKNOWN.
+
+Whether additional non-promotional editorial content is stale is not established by this bounded investigation.
+
+The currently active canonical operation/admission receipt for this new renewal is UNKNOWN.
+
+Whether a receiving execution environment can run all applicable existing qualification tools remains untested.
+
+No user acceptance of a new visual candidate has occurred.
+
+BASELINE: UNKNOWN
+
+PROJECT STATUS: READY — reported readiness for bounded continuation, not mutation authorization.
+
+TASK OUTCOME: COMPLETED — informational handoff and source-level promotion investigation.
+
+PRODUCT CHANGES: UNCHANGED
+
+### BLOCKERS
+
+No repository-access failure was observed during read-only inspection.
+
+Before product mutation, the receiving room must secure the applicable canonical admission and routing authority. Before publication, separate release authorization is required.
+
+These are required authorization steps, not observed technical failures.
+
+### REQUIRED ACCESS
+
+For the next engineering task: GitHub access to the existing public repository, the Build project registration, AI entry point, exact source revision, and applicable qualification/release facilities.
+
+Read access was available in this conversation. Write, execution and publication access were not exercised.
+
+WORKFLOW PHASE: READY FOR EXECUTION — admission remains prerequisite.
+
+### AUTHORIZATION BOUNDARIES
+
+Current instruction authorizes identifying the existing work, investigating accessible evidence, and preparing an informational DiamondGate handoff.
+
+It does not authorize edits, branch creation, commits, pull requests, merges, deployment, or publication.
+
+The user has requested the renewal and explicitly prohibited architecture changes. That scope may be carried forward as intent, but the actual execution must follow existing repository authority requirements.
+
+Do not change companion logic, interactive card architecture, CSS geometry, package structure, route destinations, or other estate projects merely to refresh the promotions.
+
+### COMPLETION CONDITION
+
+For the next bounded action: an identifiable, source-bound promotional renewal candidate exists showing the existing discounted starting prices with validity through December 31, 2026.
+
+Its diff demonstrates that only authorized commercial content was altered. The candidate is available for subsequent qualification and review, without having been merged or published.
+
+### RESOLVED BLOCKERS
+
+UNKNOWN — no earlier blocker resolution was established specifically for this promotion-renewal task.
+
+### WORK OBSERVATIONS
+
+INSPECTED | Public Build page | Two displayed discounted starting prices and no visible expiry disclosure | `https://diamondgatebridge.com/build/`
+
+INSPECTED | Existing Build source | Commercial content and protected pricing interaction found in current `build/index.html` | Blob `cb2e3e102e1fc081f1b49234ece83ba79cf9cfa6`
+
+INSPECTED | Build project registration | Exact `build/index.html` ownership established; mutation and publication require independent authority | `entrypoint.v1.json`, blob `aaa79b490930dcde89a780130be50cb954eb1b71`
+
+DRAFTED | DiamondGate renewal handoff | Requirements and bounded continuation prepared; no product candidate created | `DIAMONDGATE_PACKET_V1`, October 26, 2026
+
+### VERIFICATION
+
+Read-only GitHub source inspection: COMPLETED.
+
+Public webpage content inspection: COMPLETED. Pricing and standing terms were observed.
+
+Source-to-public promotional values: CONSISTENT for the two observed discounted starting prices.
+
+Exact deployment-commit identity: NOT VERIFIED.
+
+New promotion text: NOT IMPLEMENTED.
+
+Architecture-preservation regression tests: NOT RUN.
+
+Mobile interaction testing: NOT RUN.
+
+Publication and post-publication verification: NOT PERFORMED.
+
+No implementation, merge, deployment, user visual acceptance, or additional product change is claimed by this handoff.

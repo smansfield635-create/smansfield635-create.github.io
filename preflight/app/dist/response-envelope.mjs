@@ -1,3 +1,4 @@
+import {packetLines} from './packet-headings.mjs';
 // Accept different representations without interpreting arbitrary technical claims.
 export function decodeEnvelope(raw,keys,headings){
  const norm=s=>s.replace(/[^a-z0-9]/gi,'').toLowerCase();
@@ -18,7 +19,7 @@ export function decodeEnvelope(raw,keys,headings){
  }
  const trimmed=raw.trim();try{const f=fieldsOf(JSON.parse(trimmed));if(f)return {fields:f,extra:''};}catch(e){if(e.message.startsWith('Conflicting'))throw e;}
  // If this already has packet headings, their section parser owns embedded JSON.
- if(raw.split('\n').some(line=>{const m=line.trim().replace(/^#{1,6}\s*/,'').replace(/\*\*/g,'').match(/^([A-Za-z &]+):/);return m&&Object.hasOwn(headings,m[1].toUpperCase());}))return null;
+ if(packetLines(raw,headings).some(row=>row.heading))return null;
  const candidates=[];let scanned=0;
  const scanLimit=Math.max(1000,raw.length*4);
  // Balanced scanning handles a JSON packet surrounded by explanatory prose.

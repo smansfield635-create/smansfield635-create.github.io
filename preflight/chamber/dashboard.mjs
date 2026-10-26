@@ -106,6 +106,23 @@ export function projectWorkspace(projects=[],records=[]){
  }
  return result;
 }
+/** Visibility audit only; never promotes an operational capture into a source-reviewed briefing. */
+export function projectBriefingCoverage(projects=[],records=[]){
+ const groups=groupProjects(projectWorkspace(projects,records));
+ const operational=groups.filter(g=>g.entries.some(p=>!p.briefingOnly));
+ const linked=operational.filter(g=>g.entries.some(p=>p.briefing));
+ const matchedExact=linked.filter(g=>records.some(r=>r.projectId===g.id));
+ return {
+  operationalIdentities:operational.length,
+  linkedOperational:linked.length,
+  exactMatches:matchedExact.length,
+  declaredAliasMatches:linked.length-matchedExact.length,
+  missingOperational:operational.length-linked.length,
+  briefingOnly:groups.length-operational.length,
+  visibleProjects:groups.length,
+  missingIds:operational.filter(g=>!g.entries.some(p=>p.briefing)).map(g=>g.id)
+ };
+}
 export function renderProjectTiles(projects,query='',area='all'){
  const q=query.trim().toLowerCase();const groups=groupProjects(projects).filter(g=>(area==='all'||g.area===area)&&g.entries.some(p=>(p.id+' '+(p.briefing?.title??projectName(p.id))+' '+p.repository+' '+p.operations.map(o=>o.id).join(' ')).toLowerCase().includes(q)));
  return groups.map(g=>`<button class="project-tile" data-project="${esc(g.id)}"><small>${esc(PROJECT_AREAS.find(a=>a.id===g.area)?.name??'Other projects')}</small><strong>${esc(g.entries.find(p=>p.briefing?.title)?.briefing.title??projectName(g.id))}</strong><span class="project-brief-status">Progress briefing not loaded</span><span class="tile-bottom">Open project ↗</span><small>${g.entries.some(p=>p.briefing?.localOnly)?'Browser-local project · source-reported':g.entries.every(p=>p.briefingOnly)?'Source briefing · activity not captured':g.entries.length+' operational source'+(g.entries.length===1?'':'s')}</small></button>`).join('')||'<p class="notice">No projects match. Try another category or search.</p>';
@@ -115,12 +132,17 @@ export function renderToolSpaces(){return `<div class="instrument-map" aria-labe
 export function renderEngineeringUse(i){const c=[["Coordinate overlapping changes","Change request, exact revision and declared scope.","Admission or hold, an ownership receipt and operation lifecycle records.","Repository identity, routing policy and lock custody must be adapted. A reservation is not running work."],["Guard a stateful transition","Declared state, proposed action, temporal conditions and policy.","An admissibility decision with reasons and bound state identity.","A registered project is established; deployed enforcement and runtime qualification are not established here."],["Avoid repeating irrelevant qualification","Last proven revision, complete dependency surface and cumulative changes.","A bounded carry-forward or requalification decision.","Incomplete or overlapping dependencies require fresh qualification. This is not blanket equivalence."],["Separate product failure from test-equipment failure","Exact subject identity, executed test steps and failure evidence.","A bounded diagnosis and repair scope with preserved product evidence.","The recorded repair case is evidence of one capability, not universal automatic diagnosis."],["Keep a tool inventory from becoming a misleading health panel","Pinned definitions, lifecycle registry, observed runs and job/step evidence.","Separate source, installation, retirement and execution classifications.","Missing matches are coverage gaps. No-jobs results do not establish a failed product test."],["Construct reusable spatial geometry","An open route, strictly convex profiles, station scales and supported clearance query.","Deterministic sweep geometry, interior-facing buffers and conservative supported sphere-clearance certificates.","Opt-in consumer code is merged and H-Earth Site B adoption is published. General GPU and bent-route collision qualification remain bounded. Unsupported geometry is held, not certified."]][i];if(!c)return '';return '<details class="engineering-use"><summary>Engineering use beyond Diamond Gate Bridge</summary><dl>'+['Recurring problem','Inputs','Outputs','Integration & limits'].map((label,n)=>'<dt>'+label+'</dt><dd>'+esc(c[n])+'</dd>').join('')+'</dl><p>These are potential applications of the documented contract. Independent deployment or measured benefits in another organization have not been established.</p></details>'; }
 
 export function mount(document,fetchImpl=localFetch){
- const $=id=>document.getElementById(id);let current=null,area='all',briefings=[];
+ const $=id=>document.getElementById(id);let current=null,area='all',briefings=[],briefingReadState='loading';
  const workspace=()=>projectWorkspace(current?.projects??[],briefings);
  const spatial=mountSpatial(document);
- const drawProjects=()=>{const projects=workspace();$('projects').innerHTML=renderProjectTiles(projects,$('search').value,area);$('search-count').textContent=$('projects').querySelectorAll('[data-project]').length+' projects shown';$('project-count').textContent=groupProjects(projects).length;
+ const drawProjects=()=>{const projects=workspace();$('projects').innerHTML=renderProjectTiles(projects,$('search').value,area);const visible=$('projects').querySelectorAll('[data-project]').length;
+ const coverage=projectBriefingCoverage(current?.projects??[],briefings);
+ $('search-count').textContent=briefingReadState==='ok'&&current
+  ? visible+' projects shown · Published briefings cover '+coverage.linkedOperational+'/'+coverage.operationalIdentities+' operational identities ('+coverage.missingOperational+' missing; '+coverage.exactMatches+' exact, '+coverage.declaredAliasMatches+' declared alias) · '+coverage.briefingOnly+' briefing-only. Operational capture: '+current.observedAt.slice(0,10)+'.'
+  :visible+' projects shown · Published briefing coverage '+(briefingReadState==='failed'?'unavailable':'loading')+'.';
+ $('project-count').textContent=groupProjects(projects).length;
  $('project-categories').innerHTML=[{id:'all',name:'All projects'},...PROJECT_AREAS,...(groupProjects(projects).some(g=>g.area==='other')?[{id:'other',name:'Other'}]:[])].map(a=>`<button data-category="${a.id}" aria-pressed="${area===a.id}">${a.name}<small>${groupProjects(projects).filter(g=>a.id==='all'||g.area===a.id).length}</small></button>`).join('');};
- const onBriefings=e=>{briefings=e.detail.records;drawProjects();};
+ const onBriefings=e=>{briefings=e.detail.records??[];briefingReadState=e.detail.failed?'failed':'ok';drawProjects();};
  document.addEventListener('chamber-briefings',onBriefings);
  $('capabilities').innerHTML=renderToolSpaces();
  function showDialog(id){const dialog=$(id);if(!dialog.open)dialog.showModal();}

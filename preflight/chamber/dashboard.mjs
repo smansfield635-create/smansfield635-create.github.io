@@ -54,6 +54,7 @@ export const CAPABILITIES=Object.freeze([
 
 export function renderCapabilities(){return CAPABILITIES.map((c,n)=>`<article class="instrument-card"><div class="instrument-top"><span class="instrument-number">${String(n+1).padStart(2,'0')}</span><span class="badge neutral">Documented capability</span></div><h3>${esc(c.name)}</h3><p class="question">${esc(c.question)}</p><p class="description">${esc(c.description)}</p><details><summary>Evidence &amp; monitoring</summary><p>${esc(c.basis)}</p><p>Live result: not connected to this dashboard.</p></details></article>`).join('');}
 const WORKFLOW_NAMES={
+ 'control-plane-observation':['Control-plane workflow','Reports the recorded execution outcome of the control-plane workflow.'],
  'progressive-system-continuity-v1.yml':['System continuity check','Checks whether related system components have the evidence required for a bounded continuity claim.'],
  'instrument-lifecycle-observation-v1.yml':['Instrument lifecycle observer','Observes workflow lifecycle classifications without authorizing retirement.'],
  'platform-control-plane-strike-v1.yml':['Control-plane workflow','Reports the recorded execution outcome of the platform control-plane workflow.'],

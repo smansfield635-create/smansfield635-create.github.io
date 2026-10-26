@@ -4685,7 +4685,7 @@
         "registrationConflict": false
       },
       {
-        "name": ".github/workflows/platform-control-plane-strike-v1.yml",
+        "name": "control-plane-observation",
         "registeredState": "ACTIVE_CURRENT",
         "candidateOnly": false,
         "currentHeadRunId": 38963976242,
@@ -4707,7 +4707,7 @@
         "evidenceRepository": "smansfield635-create/geodiametrics1",
         "sourceHead": "68a0bf5823d2d7ec83feb4c08b5ab57937ee31cd",
         "lifecycleEvidence": null,
-        "definitionUrl": "https://github.com/smansfield635-create/geodiametrics1/blob/68a0bf5823d2d7ec83feb4c08b5ab57937ee31cd/.github/workflows/platform-control-plane-strike-v1.yml",
+        "definitionUrl": null,
         "registrationConflict": false
       },
       {

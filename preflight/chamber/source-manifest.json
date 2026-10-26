@@ -17,7 +17,7 @@
     },
     {
       "path": "dashboard.mjs",
-      "sha256": "26c229338adc3fdc1a550ddc5d7b58bd273677b15ab13353ca712110a0cccc28"
+      "sha256": "04cb4e812f5a71eb955155e31ef8645099bda3a0a5014fc105b5802f48ea9add"
     },
     {
       "path": "index.html",
@@ -49,7 +49,7 @@
     },
     {
       "path": "data/control-plane.json",
-      "sha256": "e11482c4e890d5e66d991b8b5932e53ac3bd1b16b77159add03b55c42129eef3"
+      "sha256": "6ae9698a71aac45e3314930f4f55e082a68e8c3643f4e6d027cefdfcab8b7f28"
     },
     {
       "path": "data/study.json",

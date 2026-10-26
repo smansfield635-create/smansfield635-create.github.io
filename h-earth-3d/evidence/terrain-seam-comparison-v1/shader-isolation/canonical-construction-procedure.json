@@ -1,0 +1,83 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "32edba773b0fd83767a62370ff7df3e39a7c1ddf",
+    "operationId": "H_EARTH_TERRAIN_SHADER_ISOLATION_20261026_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "GEOMETRIC_CLEARANCE_FAILURE",
+    "SUPPORT_SWITCH_DISCONTINUITY",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact reviewed tooling head; diagnostic product9127904e725a3f4ca13c1221451023102ad09435; immutable checkout and response hashes, no disk product mutation.",
+  "exactAllowedRepositoryPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Canonical admission for exact bounded qualification-tooling paths.",
+      "step": 1
+    },
+    {
+      "action": "Extend the existing fixed ground comparator for diagnostic-only shader isolation on immutable product9127904e725a3f4ca13c1221451023102ad09435. Capture three existing fixed poses (foothill-west, inland-seam-near, coastal-seam-east) with four closed modes: original grass-hidden reference, unlit final ground albedo, uniform gray with original lighting, and RGB actual sand/habitat/bank-contact coverage weights. Only in-memory intercepted renderer responses may differ; product checkout, geometry, camera, assets and live site remain unchanged. Preserve frame, asset, exact-head and failure guards; record source/transformed hashes and explicit diagnostic mode metadata. Reuse H_EARTH_NEUTRAL_EXACT_HEAD_RUN and its fixed query, no new capability or arbitrary shader input. Exactly12 captures on one product head; CPU triangle/source diagnosis may precede captures. Tooling-only merge after tests and independent review; no visual acceptance from diagnostic renders.",
+      "step": 2
+    },
+    {
+      "action": "Run runner tests and independent West review, then merge tooling only.",
+      "step": 3
+    },
+    {
+      "action": "Dispatch existing fixed capability once, verify diagnostic artifacts, identify actual boundary cause without asserting visual product acceptance.",
+      "step": 4
+    }
+  ],
+  "exactGoverningHead": "32edba773b0fd83767a62370ff7df3e39a7c1ddf",
+  "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "IMMUTABLE_PRODUCT_CHECKOUT",
+      "CLOSED_DIAGNOSTIC_MODES_AND_FIXED_POSES",
+      "ORIGINAL_REFERENCE_PRESERVED",
+      "SOURCE_AND_TRANSFORM_HASHES",
+      "COMPARISON_TOOL_TESTS",
+      "INDEPENDENT_WEST_TOOLING_REVIEW",
+      "MATCHED_DIAGNOSTIC_CAPTURES_OR_FAILURE_RECEIPT"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Extend the existing fixed ground comparator for diagnostic-only shader isolation on immutable product9127904e725a3f4ca13c1221451023102ad09435. Capture three existing fixed poses (foothill-west, inland-seam-near, coastal-seam-east) with four closed modes: original grass-hidden reference, unlit final ground albedo, uniform gray with original lighting, and RGB actual sand/habitat/bank-contact coverage weights. Only in-memory intercepted renderer responses may differ; product checkout, geometry, camera, assets and live site remain unchanged. Preserve frame, asset, exact-head and failure guards; record source/transformed hashes and explicit diagnostic mode metadata. Reuse H_EARTH_NEUTRAL_EXACT_HEAD_RUN and its fixed query, no new capability or arbitrary shader input. Exactly12 captures on one product head; CPU triangle/source diagnosis may precede captures. Tooling-only merge after tests and independent review; no visual acceptance from diagnostic renders.",
+    "forbidden": "Product edits, new control-plane capabilities, arbitrary executable inputs, deployment."
+  },
+  "procedureId": "H_EARTH_TERRAIN_SHADER_ISOLATION_20261026_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/terrain-seam-comparison-v1/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

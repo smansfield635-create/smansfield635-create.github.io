@@ -66,3 +66,18 @@ test('five finite observer views never claim accepted traversal or inherit suppo
 test('ordinary preservation poses still reject ineligible navigation',()=>assert.throws(()=>comparisonState({auditResolvePosition:()=>({eligible:false})},POSES[0],1,'TEST'),/POSE_INELIGIBLE/));
 
 test('three local patch views are finite ordinary navigation inputs',()=>{assert.deepEqual(POSES.slice(9).map(p=>[p.x,p.z,p.yaw,p.pitch]),[[88,-236,180,-17.72],[92,-232,270,-6.69],[84,-232,90,-13.5]]);for(const p of POSES.slice(9)){assert.equal(p.diagnosticObserver,undefined);assert.ok(p.x>=-256&&p.x<=256&&p.z>=-400&&p.z<=-80);}});
+
+const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
+test('diagnostic modes and three existing poses are closed',()=>{assert.deepEqual(diagnostic.DIAGNOSTIC_MODES,['reference','unlit-albedo','gray-lit','coverage-weights']);assert.deepEqual(diagnostic.DIAGNOSTIC_POSES.map(p=>p.name),['foothill-west','inland-seam-near','coastal-seam-east']);assert.throws(()=>diagnostic.instrumentDiagnosticRenderer('changed'),/SOURCE_HASH_MISMATCH/);});
+test('diagnostic completeness rejects missing modes and mode/camera/asset drift',()=>{
+ const views=diagnostic.DIAGNOSTIC_POSES.flatMap(pose=>diagnostic.DIAGNOSTIC_MODES.map((mode,i)=>({pose,mode,grassHidden:true,diagnosticApplied:i,assetSignature:'same',state:{position:{x:pose.x,y:1,z:pose.z}},lastFrame:{cameraPosition:{x:pose.x,y:1,z:pose.z}}})));
+ assert.equal(diagnostic.validateDiagnosticSet(views),true);
+ assert.throws(()=>diagnostic.validateDiagnosticSet(views.slice(1)),/INCOMPLETE/);
+ for(const mutate of [v=>v[1].mode='reference',v=>v[1].diagnosticApplied=0,v=>v[1].grassHidden=false,v=>v[1].assetSignature='changed',v=>v[1].lastFrame.cameraPosition.y++]){const v=structuredClone(views);mutate(v);assert.throws(()=>diagnostic.validateDiagnosticSet(v));}
+});
+test('diagnostic transforms scope to terrain FS, retain reference branch and raw weight channels',()=>{
+ const fixture="const FS = `out vec4 outColor; void main(){ palette=mix(palette,sand,sandCoverage); base=mix(base,habitatSoil,habitatCoverage*.68); base=mix(base,bankGravel,bankContact*.26); vec3 lit=base*(ambient+directional)*uSunColor; lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2)); }`;\n// Ordered screen-door coverage\ngl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);resources.singleOwnerVegetation?.draw(packet);";
+ const transformed=diagnostic.transformDiagnosticSource(fixture);
+ for(const term of ['diagnosticWeights.r=sandCoverage','diagnosticWeights.g=habitatCoverage*.68','diagnosticWeights.b=bankContact*.26','worldSoilTerrain&&uGroundDiagnosticMode==1','worldSoilTerrain&&uGroundDiagnosticMode==2','outColor=vec4(diagnosticWeights,outputAlpha);return;','DIAGNOSTIC_UNIFORM_MISSING','DIAGNOSTIC_MODE_INVALID'])assert.ok(transformed.includes(term),term);
+ for(const bad of [fixture.replace('palette=mix(palette,sand,sandCoverage);',''),fixture.replace('out vec4 outColor;','out vec4 outColor;out vec4 outColor;')])assert.throws(()=>diagnostic.transformDiagnosticSource(bad),/ANCHOR_NOT_UNIQUE/);
+});

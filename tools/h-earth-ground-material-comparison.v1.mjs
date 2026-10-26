@@ -4,6 +4,8 @@ import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
+export const DIAGNOSTIC_MODES=Object.freeze(['reference','unlit-albedo','gray-lit','coverage-weights']);
+export const RENDERER_SHA256='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2';
 export const HEADS=Object.freeze({baseline:'85372f3dc896d73457f6a7d008ac08a51d0ba85b',candidate:'9127904e725a3f4ca13c1221451023102ad09435'});
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
 {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
@@ -14,6 +16,7 @@ export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pit
 {name:'patch-close-south',x:88,z:-236,yaw:180,pitch:-17.72},
 {name:'patch-east',x:92,z:-232,yaw:270,pitch:-6.69},
 {name:'patch-west',x:84,z:-232,yaw:90,pitch:-13.5}].map(Object.freeze));
+export const DIAGNOSTIC_POSES=Object.freeze(POSES.filter(p=>['foothill-west','inland-seam-near','coastal-seam-east'].includes(p.name)));
 // Observer heights exceed measured immutable mesh/analytic elevations by 2.25m.
 // These views are outside walking bounds and confer no traversal/support authority.
 export function comparisonState(nav,pose,sequence,action){
@@ -31,6 +34,31 @@ const sha=value=>crypto.createHash('sha256').update(value).digest('hex');
 export function replaceExactlyOnce(source,needle,replacement){if(source.split(needle).length!==2)throw Error('INSTRUMENTATION_ANCHOR_NOT_UNIQUE:'+needle);return source.replace(needle,replacement);}
 export function instrumentRoute(source){return replaceExactlyOnce(source,'const cssWidth=','globalThis.__HEarthAuditPresent=present;globalThis.__HEarthAuditPacket=createHEarthRun8ER3AFrameUniformPacket;\nconst cssWidth=');}
 export function instrumentRenderer(source){return replaceExactlyOnce(source,'resources.singleOwnerVegetation?.draw(packet);','if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');}
+export function instrumentDiagnosticRenderer(source){
+ if(sha(source)!==RENDERER_SHA256)throw Error('DIAGNOSTIC_SOURCE_HASH_MISMATCH');
+ return transformDiagnosticSource(source);
+}
+export function transformDiagnosticSource(source){
+ const start=source.indexOf('const FS ='),end=source.indexOf('// Ordered screen-door coverage',start);
+ if(start<0||end<0)throw Error('DIAGNOSTIC_FS_BOUNDARY');
+ let fsSource=source.slice(start,end);
+ fsSource=replaceExactlyOnce(fsSource,'out vec4 outColor;','out vec4 outColor;\nuniform int uGroundDiagnosticMode;');
+ fsSource=replaceExactlyOnce(fsSource,'void main(){','void main(){\n vec3 diagnosticWeights=vec3(0.0);');
+ fsSource=replaceExactlyOnce(fsSource,'palette=mix(palette,sand,sandCoverage);','diagnosticWeights.r=sandCoverage;\n    palette=mix(palette,sand,sandCoverage);');
+ fsSource=replaceExactlyOnce(fsSource,'base=mix(base,habitatSoil,habitatCoverage*.68);','diagnosticWeights.g=habitatCoverage*.68;\n    base=mix(base,habitatSoil,habitatCoverage*.68);');
+ fsSource=replaceExactlyOnce(fsSource,'base=mix(base,bankGravel,bankContact*.26);','diagnosticWeights.b=bankContact*.26;\n    base=mix(base,bankGravel,bankContact*.26);');
+ fsSource=replaceExactlyOnce(fsSource,'vec3 lit=base*(ambient+directional)*uSunColor;','if(worldSoilTerrain&&uGroundDiagnosticMode==2)base=vec3(.35);\n  vec3 lit=base*(ambient+directional)*uSunColor;');
+ fsSource=replaceExactlyOnce(fsSource,'lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));','if(worldSoilTerrain&&uGroundDiagnosticMode==1)lit=base;\n  if(worldSoilTerrain&&uGroundDiagnosticMode==3){outColor=vec4(diagnosticWeights,outputAlpha);return;}\n  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));');
+ source=source.slice(0,start)+fsSource+source.slice(end);
+ const anchor='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
+ source=replaceExactlyOnce(source,anchor,anchor+`\n    {const mode=globalThis.__groundDiagnosticMode;if(!Number.isInteger(mode)||mode<0||mode>3)throw Error('DIAGNOSTIC_MODE_INVALID');const loc=gl.getUniformLocation(resources.geometryProgram,'uGroundDiagnosticMode');if(loc===null)throw Error('DIAGNOSTIC_UNIFORM_MISSING');gl.uniform1i(loc,mode);globalThis.__groundDiagnosticApplied=mode;}`);
+ return instrumentRenderer(source);
+}
+export function validateDiagnosticSet(views){
+ if(views.length!==12)throw Error('DIAGNOSTIC_INCOMPLETE');
+ for(const pose of DIAGNOSTIC_POSES){const group=views.filter(v=>v.pose.name===pose.name);if(group.length!==4||new Set(group.map(v=>v.mode)).size!==4||!DIAGNOSTIC_MODES.every(m=>group.some(v=>v.mode===m)))throw Error('DIAGNOSTIC_MODE_SET');const ref=group.find(v=>v.mode==='reference');for(const v of group)if(!v.grassHidden||v.diagnosticApplied!==DIAGNOSTIC_MODES.indexOf(v.mode)||v.assetSignature!==ref.assetSignature||JSON.stringify(v.state.position)!==JSON.stringify(ref.state.position)||JSON.stringify(v.lastFrame.cameraPosition)!==JSON.stringify(ref.lastFrame.cameraPosition))throw Error('DIAGNOSTIC_MATCH_MISMATCH');}
+ return true;
+}
 export function sameHeading(a,b){return Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(((a-b)%360+540)%360-180)<1e-8;}
 export function validateFrame(value,pose,sequence){
   const {state,lastFrame,canvas,expectedCameraPosition}=value;
@@ -63,7 +91,7 @@ export function assertCheckout(dir,expected){const head=execFileSync('git',['-C'
 export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(!['--baseline-dir','--candidate-dir','--output'].includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==3)throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==3)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
-  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,poses:POSES,viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
+  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,poses:DIAGNOSTIC_POSES,modes:DIAGNOSTIC_MODES,diagnosticOnly:true,coverageChannels:{r:'sandCoverage',g:'habitatCoverage * .68',b:'bankContact * .26'},viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
   let browser=null,server=null;
   const interrupt=signal=>{receipt.result='INTERRUPTED';receipt.errors.push(signal);persist();server?.kill();process.exit(signal==='SIGTERM'?143:130);};
@@ -73,16 +101,16 @@ export async function run(argv){
     for(const label of Object.keys(HEADS))assertCheckout(a['--'+label+'-dir'],HEADS[label]);
     const {chromium}=await import('playwright');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-    for(const [index,label] of Object.keys(HEADS).entries()){
+    for(const [index,label] of ['candidate'].entries()){
       const dir=a['--'+label+'-dir'],port=18767+index,base='http://127.0.0.1:'+port;
       const runRecord={label,head:HEADS[label],errors:[],instrumentation:[],startedAt:new Date().toISOString()};receipt.runs.push(runRecord);persist();
       server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
       const serverError=[];server.on('error',e=>serverError.push(e.message));
       let listening=false;for(let n=0;n<50;n++){try{const r=await fetch(base+ROOT);if(r.ok){listening=true;break;}}catch{}await new Promise(r=>setTimeout(r,100));}if(!listening)throw Error('SERVER_UNAVAILABLE:'+serverError.join(';'));
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
-      await page.addInitScript({content:'globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
+      await page.addInitScript({content:'globalThis.__groundDiagnosticMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
-      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,instrumentRenderer]]){
+      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,instrumentDiagnosticRenderer]]){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
         await page.route(url=>url.pathname===pathname,route=>route.fulfill({status:200,contentType:'text/javascript',body:transformed}));
       }
@@ -95,7 +123,8 @@ export async function run(argv){
       await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled);await page.click('[data-enter]');
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
       let sequence=10000,previousFrame=0;
-      for(const pose of POSES)for(const hidden of [false,true]){
+      for(const pose of DIAGNOSTIC_POSES)for(const mode of DIAGNOSTIC_MODES){
+        const hidden=true;await page.evaluate(value=>{globalThis.__groundDiagnosticMode=value;},DIAGNOSTIC_MODES.indexOf(mode));
         const settleDeadline=Date.now()+180000;let stable=0,signature=null;
         while(stable<2){
           const settled=await page.evaluate(async({pose,hidden,sequence})=>{
@@ -115,21 +144,21 @@ export async function run(argv){
           const costs=[];for(let i=0;i<12;i++){const t=performance.now();globalThis.__HEarthAuditPresent(state);costs.push(performance.now()-t);await new Promise(requestAnimationFrame);}
           const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
           const expectedPacket=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
-          return {state,expectedCameraPosition:expectedPacket.camera.position,lastFrame:gpu.frameRecords.at(-1),canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},cpuSubmitMilliseconds:costs,resources:gpu.resources,grassHidden:hidden};
+          return {state,expectedCameraPosition:expectedPacket.camera.position,lastFrame:gpu.frameRecords.at(-1),canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},cpuSubmitMilliseconds:costs,resources:gpu.resources,grassHidden:hidden,diagnosticApplied:globalThis.__groundDiagnosticApplied};
         },{pose,hidden,sequence:++sequence});
-        receipt.lastAttempt={label,pose,mode:hidden?'grass-hidden':'normal',...view};persist();
+        receipt.lastAttempt={label,pose,mode,...view};persist();
+        if(view.diagnosticApplied!==DIAGNOSTIC_MODES.indexOf(mode))throw Error('DIAGNOSTIC_MODE_NOT_APPLIED');
         const assets=assetReadiness(view.resources,view.lastFrame.cameraPosition);if(!assets.ready||assets.signature!==signature)throw Error('ASSETS_CHANGED_DURING_CAPTURE');view.assetSignature=assets.signature;
         validateFrame(view,pose,sequence);if(view.lastFrame.frameSequence<=previousFrame)throw Error('FRAME_DID_NOT_ADVANCE');previousFrame=view.lastFrame.frameSequence;
-        const name=label+'-'+pose.name+'-'+(hidden?'grass-hidden':'normal')+'.png';const capture=await page.evaluate(()=>{const canvas=document.querySelector('#h-earth-functional-landscape-canvas');const gl=canvas?.getContext('webgl2');if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('CAPTURE_CONTEXT_NOT_PRESERVED');const before=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);const dataUrl=canvas.toDataURL('image/png');const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);return {dataUrl,before,after};});const bytes=decodeCanvasCapture(capture,view.lastFrame);fs.writeFileSync(path.join(out,name),bytes);
+        const name=label+'-'+pose.name+'-'+mode+'.png';const capture=await page.evaluate(()=>{const canvas=document.querySelector('#h-earth-functional-landscape-canvas');const gl=canvas?.getContext('webgl2');if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('CAPTURE_CONTEXT_NOT_PRESERVED');const before=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);const dataUrl=canvas.toDataURL('image/png');const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);return {dataUrl,before,after};});const bytes=decodeCanvasCapture(capture,view.lastFrame);fs.writeFileSync(path.join(out,name),bytes);
         const after=await page.evaluate(()=>H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1));if(after.navigationSequence!==sequence||after.frameSequence!==view.lastFrame.frameSequence)throw Error('CAPTURE_FRAME_CHANGED');
-        receipt.views.push({label,pose,mode:hidden?'grass-hidden':'normal',...view,captureMethod:'PRESERVED_WEBGL_CANVAS_PNG',imageWidth:529,imageHeight:980,image:name,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
+        receipt.views.push({label,pose,mode,instrumentation:runRecord.instrumentation,...view,captureMethod:'PRESERVED_WEBGL_CANVAS_PNG',imageWidth:529,imageHeight:980,image:name,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
       }
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(receipt.views.length!==POSES.length*4)throw Error('COMPARISON_INCOMPLETE');
-    for(const pose of POSES)for(const mode of ['normal','grass-hidden']){const pair=receipt.views.filter(v=>v.pose.name===pose.name&&v.mode===mode);if(pair.length!==2||pair[0].assetSignature!==pair[1].assetSignature||JSON.stringify(pair[0].state.position)!==JSON.stringify(pair[1].state.position)||JSON.stringify(pair[0].lastFrame.cameraPosition)!==JSON.stringify(pair[1].lastFrame.cameraPosition))throw Error('MATCHED_CAMERA_MISMATCH');}
-    receipt.result='CAPTURE_COMPLETE_OWNER_VISUAL_REVIEW_PENDING';
+    validateDiagnosticSet(receipt.views);
+    receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_CAUSE_REVIEW_PENDING';
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}
   finally{persist();server?.kill();if(browser)await browser.close();process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInt);}
   return receipt;

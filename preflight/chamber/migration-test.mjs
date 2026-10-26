@@ -6,6 +6,7 @@ import {KEYS} from '../app/dist/packet.mjs';
 import {ensureFlow} from '../app/dist/progression.mjs';
 import {WORKSPACE_KEY,createEmptyWorkspace,validateWorkspace,workspaceBackup,decodeWorkspaceBackup,mergeWorkspaceBackup,openChamberProject} from '../app/dist/workspace-bridge.mjs';
 import {localFetch} from './local-data.mjs';
+import {sourceResponseToSnapshot} from './workspace-ui.mjs';
 
 const oldTime='2026-09-01T12:00:00Z',newTime='2026-10-25T22:00:00Z';
 const fact=text=>({text,basis:'NOT_ESTABLISHED',sources:[]});
@@ -128,4 +129,56 @@ test('production assets contain no private repository snapshots or old Site runt
   assert.doesNotMatch(text,/operations-chamber\.smansfield635\.chatgpt\.site|geodiametrics1|appgdep_6adc3af2b11c8191932001f192f0e5ba/,path);
   assert.doesNotMatch(text,/fetch\s*\(\s*['"](?:\/api\/|\/data\.json|https?:)/,path+' must not fetch old host/API data');
  }
+});
+
+
+test('ordinary-room source response updates saved briefings without erasing project history or drafts',()=>{
+ const before=workspace(),original=structuredClone(before),newBrief={...briefing(),observedAt:newTime};
+ const source={schema:'DGB_PROJECT_BRIEFINGS_v1',updatedAt:newTime,records:[newBrief]};
+ const incoming=decodeWorkspaceBackup(sourceResponseToSnapshot(JSON.stringify(source),newTime));
+ const merged=mergeWorkspaceBackup(before,incoming);
+ assert.deepEqual(before,original);
+ assert.deepEqual(merged.workspace.projects,original.projects);
+ assert.deepEqual(merged.workspace.updates,original.updates);
+ assert.equal(merged.workspace.chamber.captures.briefings.updatedAt,newTime);
+ assert.equal(merged.workspace.chamber.captures.briefings.records[0].observedAt,newTime);
+ assert(merged.updatedCaptures.includes('briefings'));
+ const second=mergeWorkspaceBackup(merged.workspace,incoming);
+ assert.deepEqual(second.workspace,merged.workspace);
+ assert.equal(second.updatedCaptures.length,0);
+});
+test('older source response never replaces newer briefing and preserves old source timing',()=>{
+ const current=workspace(),newRecord={...briefing(),observedAt:newTime};
+ current.chamber.captures.briefings={schema:'DGB_PROJECT_BRIEFINGS_v1',updatedAt:newTime,records:[newRecord]};
+ const incoming=decodeWorkspaceBackup(sourceResponseToSnapshot(JSON.stringify({
+  schema:'DGB_PROJECT_BRIEFINGS_v1',updatedAt:oldTime,records:[briefing()]
+ }),newTime));
+ const merged=mergeWorkspaceBackup(current,incoming);
+ assert.equal(merged.updatedCaptures.length,0);
+ assert.equal(merged.workspace.chamber.captures.briefings.records[0].observedAt,newTime);
+});
+test('malformed and unsupported source payloads fail before any existing data changes',()=>{
+ const current=workspace(),original=structuredClone(current);
+ for(const text of [
+  'This Chamber is currently updated.',
+  '[]',
+  '{"schema":"UNSUPPORTED"}',
+  '{"structuredContent":{"schema":"DGB_PROJECT_BRIEFINGS_v1"}}'
+ ])assert.throws(()=>sourceResponseToSnapshot(text,newTime));
+ const incomplete=sourceResponseToSnapshot(JSON.stringify({schema:'DGB_PROJECT_BRIEFINGS_v1',records:[{}]}),newTime);
+ assert.throws(()=>decodeWorkspaceBackup(incomplete));
+ assert.deepEqual(current,original);
+});
+for(const [schema,key] of Object.entries({
+ DGB_OPERATIONS_CHAMBER_DASHBOARD_DATA_v1:'controlPlane',
+ DGB_HOSTED_STUDY_CAPTURE_v1:'study',
+ DGB_PROJECT_BRIEFINGS_v1:'briefings',
+ DGB_CHAMBER_AGENT_DELIVERIES_v1:'agents'
+}))test('source response preserves '+key+' evidence and distinct receipt time',()=>{
+ const original={schema,observedAt:oldTime,updatedAt:oldTime,example:'Source value'};
+ const wrapper=JSON.parse(sourceResponseToSnapshot(JSON.stringify(original),newTime));
+ assert.equal(wrapper.schema,'diamondgate.chamber-capture.v1');
+ assert.equal(wrapper.capturedAt,newTime);
+ assert.deepEqual(wrapper.captures[key],original);
+ assert.deepEqual(Object.keys(wrapper.captures),[key]);
 });

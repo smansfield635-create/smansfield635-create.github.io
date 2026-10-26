@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {readPublishedFeed,localFetch,DISPLAY_FEEDS} from './local-data.mjs';
-import {validateDashboard,createRefreshController,freshness,captureStatus,centralTime,publicationNotice,renderProjectTiles,projectWorkspace,renderInstruments} from './dashboard.mjs';
+import {validateDashboard,createRefreshController,freshness,captureStatus,captureTimestamp,centralTime,publicationNotice,renderProjectTiles,projectWorkspace,renderInstruments} from './dashboard.mjs';
 import {render as renderStudy,studyStamp,validateStudy,mountStudy} from './study-view.mjs';
 import {evaluateBriefing,REVIEW_AFTER_MS} from './presentation-guard.mjs';
 import {renderProjectBriefing} from './project-briefings.mjs';
@@ -160,4 +160,17 @@ test('unpublished warning requires confirmed source evidence bound to the displa
  const study=feeds['/api/study'],through=study.rollingStudy.through,t=Date.parse(through),annotated={...study,confirmedNewerEvidence:{...annotation,publishedThrough:through,evidenceThrough:new Date(t+60000).toISOString(),verifiedAt:new Date(t+120000).toISOString()}};
  assert.match(studyStamp(annotated,t+3600000),/Newer evidence confirmed/);assert.match(renderStudy(annotated,t+3600000),/Source evidence/);
  assert.doesNotMatch(studyStamp(study,t+3600000),/Newer evidence/);
+});
+
+
+test('published refresh labels retain the release verifier contract alongside the new primary dates',()=>{
+ const timestamp=captureTimestamp(feeds['/data.json']),study=renderStudy(feeds['/api/study']);
+ // Exact text assertions in publication-surfaces/preflight.v1.json.
+ assert(timestamp.includes('Read-only control-plane capture ·'));
+ assert(timestamp.includes('commands disabled.'));
+ assert(study.includes('merged PRs saved'));
+ assert(study.includes('Source cutoff'));
+ assert(timestamp.startsWith('Last checked: October 26 at 10:42 AM Central'));
+ assert(study.includes('Study evidence through: October 26 at 11:26 AM Central'));
+ assert.doesNotMatch(timestamp+study,/STALE SOURCE|over 75 minutes/);
 });

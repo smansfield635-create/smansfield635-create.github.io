@@ -17,7 +17,7 @@
     },
     {
       "path": "dashboard.mjs",
-      "sha256": "547227e22c4f18a6e905a4337565a9ba47af91bdf868b32d4768dd9b9117da58"
+      "sha256": "1a7b40b2523f103bf5284527994f5fb07c71b7806e1d5771addf9f8bd15a7f42"
     },
     {
       "path": "index.html",
@@ -41,7 +41,7 @@
     },
     {
       "path": "study-view.mjs",
-      "sha256": "ac329b376a36de55952d2a973cd7efa7ced2106ea5af280b58baa11e136aa8c3"
+      "sha256": "32e2dc3e27c2868579eb74264af586c359ace1206d9d8a3b02a7f3c93bbfee5c"
     },
     {
       "path": "workspace-ui.mjs",

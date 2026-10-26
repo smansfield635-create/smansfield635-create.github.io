@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-26T05:36:39Z",
+  "generatedAt": "2026-10-26T07:02:45Z",
   "window": {
-    "start": "2026-07-28T05:36:39Z",
-    "end": "2026-10-26T05:36:39Z"
+    "start": "2026-07-28T07:02:45Z",
+    "end": "2026-10-26T07:02:45Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -42,6 +42,10 @@
         "pageLoads": 20,
         "visits": 0
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
+      },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
@@ -54,12 +58,12 @@
         "pageLoads": 270,
         "visits": 70
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -68,10 +72,6 @@
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -262,13 +262,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-27T01:44:31Z",
+  "generatedAt": "2026-10-27T02:43:43Z",
   "window": {
-    "start": "2026-07-29T01:44:31Z",
-    "end": "2026-10-27T01:44:31Z"
+    "start": "2026-07-29T02:43:43Z",
+    "end": "2026-10-27T02:43:43Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -34,6 +34,10 @@
         "pageLoads": 230,
         "visits": 20
       },
+      "/showroom/globe/h-earth/diagnostic/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
@@ -45,10 +49,6 @@
       "/laws/": {
         "pageLoads": 260,
         "visits": 90
-      },
-      "/showroom/globe/h-earth/diagnostic/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/products/education/": {
         "pageLoads": 270,

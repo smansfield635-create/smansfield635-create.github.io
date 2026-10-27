@@ -1,6 +1,13 @@
 name: H-Earth Neutral Exact Head Runner
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main]
+    paths:
+      - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
+      - 'tools/h-earth-ground-material-comparison.v1.mjs'
+      - 'tools/h-earth-ground-material-comparison.v1.test.mjs'
   workflow_dispatch:
     inputs:
       target_sha:
@@ -33,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1142,16 +1149,19 @@ jobs:
           retention-days: 30
 
   ground-material-mapwide-scout:
-    if: ${{ inputs.route_query == 'qualification=groundcover-mapwide-scout-v1' }}
+    if: >-
+      ${{ (github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=groundcover-mapwide-scout-v1') ||
+          (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+           github.event.pull_request.head.ref == 'h-earth/groundcover-band-continuity-20261026') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
       - name: Require the admitted fixed comparison
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
-          ROUTE_PATH: ${{ inputs.route_path }}
-          EXERCISE: ${{ inputs.exercise_vegetation_residency }}
-          TIMING_SHIM: ${{ inputs.apply_timing_shim }}
+          TARGET_SHA: ${{ github.event_name == 'pull_request' && '60b3c07f0216645119a1b92b16dac82cae739145' || inputs.target_sha }}
+          ROUTE_PATH: ${{ github.event_name == 'pull_request' && '/showroom/globe/h-earth/' || inputs.route_path }}
+          EXERCISE: ${{ github.event_name == 'pull_request' && 'false' || inputs.exercise_vegetation_residency }}
+          TIMING_SHIM: ${{ github.event_name == 'pull_request' && 'false' || inputs.apply_timing_shim }}
         run: |
           test "$TARGET_SHA" = 60b3c07f0216645119a1b92b16dac82cae739145
           test "$ROUTE_PATH" = /showroom/globe/h-earth/

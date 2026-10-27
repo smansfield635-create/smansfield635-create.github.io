@@ -6,7 +6,7 @@
   "runtimeFiles": [
     {
       "path": "dist/app.mjs",
-      "sha256": "9c8e115706f564466a86432f52e74f2d89e69515b024fa6a1206e0a1db0117c8",
+      "sha256": "a8a2e1a7c9f880d61d627fbd5ca801c7dd381317f344abdc02aa99321e5806c7",
       "originalSha256": "a6a11d9cd203d1695ca786141ee7fb56a3d38a981585bd0d59e51b79f2aeab98"
     },
     {
@@ -56,7 +56,7 @@
     },
     {
       "path": "dist/progression.mjs",
-      "sha256": "f1a1bd932e5f763939fec5408091d0c0d1cc3666020e688b7bc0a37e750d4b71",
+      "sha256": "26d68ac59e1e3be8d70b9cc400f8723af62e7673f4f9868522ece635cb7f6257",
       "originalSha256": "c5e849fdbe8f8300fe85e7d53d98d9747961af205035aea110e1550c93df7291"
     },
     {
@@ -87,6 +87,10 @@
     {
       "path": "dist/packet-headings.mjs",
       "sha256": "38cee9951ddfa7bea60e04417c23c9303900cf43ad7c9b1b9b9b2a149f1a58e8"
+    },
+    {
+      "path": "dist/scoped-authorization.mjs",
+      "sha256": "d25e8ab4deab857ef96e079030144deefa24816e94239565770ad9109230191d"
     }
   ],
   "excluded": [
@@ -109,5 +113,11 @@
     "operationId": "DIAMONDGATE_PACKET_MARKDOWN_IMPORT_REPAIR_20261026_001",
     "authorityGeneration": 2920,
     "scope": "Heading representation only; raw input and evidence semantics preserved"
+  },
+  "scopedAuthorization": {
+    "operationId": "DIAMONDGATE_SCOPED_AUTHORIZATION_READINESS_20261027_001",
+    "authorityGeneration": 2926,
+    "baseHead": "02b644562020e8432d9904b28b15f8bf1e7d8b4b",
+    "qualification": "See scoped-authorization-test.mjs; local user intent is not external authority."
   }
 }

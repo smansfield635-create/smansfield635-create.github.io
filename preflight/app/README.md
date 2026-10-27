@@ -68,3 +68,27 @@ Operation: DIAMONDGATE_REQUIREMENT_RESPONSE_CHECK_20261026_001. Admission: https
 ## Markdown packet import (generation 2920)
 
 The importer recognizes Markdown section headings as well as colon labels. An undecorated mixed-case Project label inside Project organization stays explanatory text when a separate explicit project heading exists. Genuine repeated sections still fail. Code-fenced evidence stays literal, and complete input remains in the checkpoint and backup. The full Build renewal response is a regression fixture with six proposed requirements and four findings; import does not adopt scope, verify claims, or authorize Build changes.
+
+## Scoped action authorization (generation 2926, candidate)
+
+The existing progression controller distinguishes editing, publication, sending,
+deletion and purchasing permission when the action and permission clauses are
+unambiguous. Permission for editing does not imply publication, and a separate
+publication restriction does not cancel editing permission. Ambiguous wording
+continues to require clarification in the receiving tool.
+
+The project view offers **Authorize this action**, **Decide later**, and **Do not
+authorize** for an eligible selected action. Evidence mapping, unresolved blockers,
+verification and required result judgment retain priority. Sending/publication
+requires matching reported prerequisite evidence; a checklist is not permission.
+The decision binds the project, accepted checkpoint, action and recorded target
+and evidence state. A changed binding requires a new decision. Restored backups
+retain the decision as browser-local user intent, never authenticated external
+permission. Imported responses cannot create this decision. Copying a continuation
+never executes work, and the destination must still enforce its own native gates.
+
+This is a bounded readiness/authorization improvement in the working app, not a
+complete semantic Outcome State Estimator. Source-reported checks remain
+source-reported. Admission: operation
+`DIAMONDGATE_SCOPED_AUTHORIZATION_READINESS_20261027_001`, generation 2926,
+issue 6787 comment 6432401294. Public merge and release require candidate review.

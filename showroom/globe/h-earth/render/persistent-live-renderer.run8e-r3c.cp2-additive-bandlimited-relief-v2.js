@@ -1035,7 +1035,9 @@ void main(){
         smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters))*
         (1.0-smoothstep(0.12,0.42,slope))*
         (1.0-smoothstep(0.18,0.58,rockExposure));
+      float groundcoverPatchContinuity=smoothstep(0.30,0.85,groundcoverPatch);
       float groundcoverWeight=0.88*groundcoverPatch*
+        (1.0-0.25*groundcoverPatchContinuity)*
         groundcoverSuitability*groundcoverProtection;
       float groundcoverMoisture=clamp(
         0.20+0.55*moistShelter+0.25*terrainWetness,0.0,1.0

@@ -36,12 +36,13 @@ function parseEvents(raw){return !known(raw)?[]:list(raw,'PROGRESS EVENTS',100).
  if('accepted' in e||'acceptance' in e||'independentlyVerified' in e)throw Error('AI events cannot grant user acceptance or independent verification.');
  return row;
 });}
+function evidenceConflict(message,existing,incoming){const e=new Error(message);e.name='EvidenceConflictError';e.issue={existing,incoming};return e;}
 function addEvents(record,events,source){
  const byId=new Map(record.events.map(e=>[e.id,e]));
  for(const e of events){
   const linked=record.requirements.some(r=>r.id===e.requirement);
   const prior=byId.get(e.id);
-  if(prior){const {source:ignored,...payload}=prior;if(JSON.stringify(payload)!==JSON.stringify(e))throw Error('An existing event ID cannot be rewritten: '+e.id);continue;}
+  if(prior){const {source:ignored,...payload}=prior;if(JSON.stringify(payload)!==JSON.stringify(e))throw evidenceConflict('An existing event ID cannot be rewritten: '+e.id,prior,e);continue;}
   if(e.attributionOf){
    const original=byId.get(e.attributionOf);
    if(!linked||!original||record.requirements.some(r=>r.id===original.requirement)||original.attributionOf)throw Error('Attribution must map an existing unassigned event to an established requirement.');
@@ -55,7 +56,7 @@ function addEvents(record,events,source){
    if(!result||result.kind!=='RESULT'||result.requirement!==e.requirement||result.artifact!==e.artifact||r.criterion!==e.criterion)throw Error('Check must match the requirement criterion and exact result artifact.');
   }
   const duplicateEvidence=record.events.find(x=>x.requirement===e.requirement&&x.kind===e.kind&&x.reference===e.reference&&x.artifact===e.artifact&&x.result===e.result&&x.outcome===e.outcome&&x.route===e.route&&(e.kind!=='FINDING'||x.details===e.details));
-  if(duplicateEvidence)throw Error('This evidence is already recorded as '+duplicateEvidence.id+'. Reuse its event ID; do not create progress by relabeling it.');
+  if(duplicateEvidence)throw evidenceConflict('This evidence is already recorded as '+duplicateEvidence.id+'. Reuse its event ID; do not create progress by relabeling it.',duplicateEvidence,e);
   const next={...e,source};record.events.push(next);byId.set(e.id,next);
  }
  if(record.events.length>2000)throw Error('Progress record capacity reached; preserve the backup before extending this project.');

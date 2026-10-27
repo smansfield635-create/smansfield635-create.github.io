@@ -129,3 +129,17 @@ without inheriting downstream mutation blockers. Mixed actions retain preparatio
 and permission boundaries. Empty dependency lists mean no upstream prerequisites
 were declared, not that execution capability was verified. Prompt, UI and audit
 share these distinctions; no BUILD-specific conditions are used.
+
+## Compact execution handoffs (generation 2941)
+
+The default continuation renders one controller decision in six sections: action,
+completion criterion, exact binding, preserved constraints, relevant evidence and
+a concise return format. `continuation(project, {expanded: true})` and the expanded
+handoff button retain the complete context. Both forms bind the same action and
+permissions. Full project history and backups remain unchanged.
+
+Conflicting immutable evidence IDs pause import and offer a targeted correction
+request instead of another requirements setup. The raw response remains a draft.
+Missing task maps explain their historical binding and do not resurrect stale
+satisfaction. Unchanged blocked work requests a concrete capability handoff, not
+another preparation artifact presented as resolution.

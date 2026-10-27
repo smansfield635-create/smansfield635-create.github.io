@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-27T04:36:30Z",
+  "generatedAt": "2026-10-27T05:33:48Z",
   "window30d": {
-    "start": "2026-09-27T04:36:30Z",
-    "end": "2026-10-27T04:36:30Z"
+    "start": "2026-09-27T05:33:48Z",
+    "end": "2026-10-27T05:33:48Z"
   },
   "daily": [
     {
@@ -36,7 +36,7 @@
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 140
+      "pageLoads": 130
     },
     {
       "date": "2026-10-06",
@@ -80,11 +80,11 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 90
+      "pageLoads": 70
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 60
+      "pageLoads": 50
     },
     {
       "date": "2026-10-18",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 30
+      "pageLoads": 29
     },
     {
       "date": "2026-10-20",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 10
+      "pageLoads": 12
     }
   ],
   "summary": {
-    "pageLoads": 1833,
+    "pageLoads": 1834,
     "botPageLoads": 850,
-    "nonBotPageLoads": 983
+    "nonBotPageLoads": 984
   },
   "referrers": [
     {
@@ -145,8 +145,8 @@
     },
     {
       "host": "bing.com",
-      "pageLoads": 33,
-      "visits": 33
+      "pageLoads": 34,
+      "visits": 34
     },
     {
       "host": "www.google.com",
@@ -167,23 +167,18 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 708,
-      "visits": 650
+      "pageLoads": 699,
+      "visits": 641
     },
     {
       "path": "/analytics/",
-      "pageLoads": 593,
-      "visits": 593
+      "pageLoads": 603,
+      "visits": 603
     },
     {
       "path": "/",
-      "pageLoads": 114,
-      "visits": 92
-    },
-    {
-      "path": "/build/",
-      "pageLoads": 51,
-      "visits": 51
+      "pageLoads": 134,
+      "visits": 102
     },
     {
       "path": "/about/",
@@ -196,7 +191,7 @@
       "visits": 31
     },
     {
-      "path": "/gauges/",
+      "path": "/coherence-diagnostic/",
       "pageLoads": 30,
       "visits": 0
     },
@@ -204,6 +199,11 @@
       "path": "/evidence/agentic-frontier/",
       "pageLoads": 25,
       "visits": 21
+    },
+    {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 25,
+      "visits": 25
     }
   ],
   "ownerMeasurement": {

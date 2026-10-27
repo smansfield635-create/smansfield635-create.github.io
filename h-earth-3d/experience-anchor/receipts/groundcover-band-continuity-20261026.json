@@ -1,0 +1,64 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "operationId": "H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001",
+  "canonicalAdmissionGeneration": 2928,
+  "reviewBasis": "Exact one-expression global eligible world-soil groundcover color attenuation against preserved hard anchor/proxy; owner visually approved candidate GPU A/B material images and conditionally directed publication upon shared near/far-world shader reach. Source-only reuse of identical world/interaction/foliage/nav dependencies per prior terrain-seam acceptance. No invented fresh phone test or whole-map hard-region resolution.",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/groundcover-band-continuity-20261026/GEN2928_OWNER_RELEASE_SCOPE_AND_ANCHOR_REUSE_20261027.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/terrain-seam-publication-v1/near-far.test.mjs",
+    "h-earth-3d/evidence/groundcover-band-continuity-20261026/GEN2928_OWNER_RELEASE_SCOPE_AND_ANCHOR_REUSE_20261027.md"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/terrain-seam-publication-v1/source-custody.test.mjs",
+    "h-earth-3d/evidence/terrain-seam-publication-v1/evidence.json",
+    "h-earth-3d/evidence/groundcover-band-continuity-20261026/GEN2928_OWNER_RELEASE_SCOPE_AND_ANCHOR_REUSE_20261027.md"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec"
+    }
+  ],
+  "sourceCandidateForGPUQualification": "d540c7c05ea77bbcab83d7489100d7aa8082b747",
+  "originalRendererSha256": "7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2",
+  "candidateRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "gpuQualification": {
+    "originalRun": 40514307979,
+    "candidateRun": 40544837764,
+    "originalArtifact": 12739776958,
+    "candidateArtifact": 12753941463,
+    "sourceCameraAndAssetControls": "PASS_20_FRAMES_EACH",
+    "vegetationVisibleInDiagnostic": false
+  },
+  "ownerDisposition": "APPROVED_DISPLAYED_MATERIAL_CHANGE_CONDITIONAL_PUBLICATION_ON_SHARED_TERRAIN_APPLICATION",
+  "releaseAuthorizedByThisReceipt": false,
+  "independentWestReviewStatus": "NOT_COMPLETED_BY_THIS_SOURCE_REUSE_RECEIPT",
+  "fullWorldPhysicalPhonePreviewPerformed": false,
+  "newVegetationQualificationRequiredByChangedBytes": false,
+  "limitations": [
+    "Anchor preservation is based on unchanged interaction/world/geometry and source-bound material captures; no new physical Android navigation or foliage-on pixel review is claimed.",
+    "Groundcover formula is globally wired only across eligible world-soil groundcover, not water, vegetation, unqualified geological rock, or unrelated habitat material overlays.",
+    "Map-wide hard polygonal/straight/curved boundary classes remain open under issue #6911.",
+    "Owner's positive material approval and publication direction do not replace independent review or the separate merge and Pages release authorization."
+  ]
+}

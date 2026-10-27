@@ -1028,8 +1028,9 @@ void main(){
       float groundcoverDomainX=(0.8*world.x-0.6*world.y)*0.018+5.0+0.65*(broad-0.5);
       float groundcoverDomainZ=(0.6*world.x+0.8*world.y)*0.018-11.0+0.65*(macroField-0.5);
       float groundcoverOrganic=noise2(vec2(groundcoverDomainX,groundcoverDomainZ));
+      // Gen2940: broaden only the material-only organic transition, not planted roots.
       float groundcoverPatch=smoothstep(
-        0.20,0.66,groundcoverOrganic*0.78+mesoField*0.22
+        0.12,0.78,groundcoverOrganic*0.78+mesoField*0.22
       );
       float groundcoverSuitability=
         smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters))*

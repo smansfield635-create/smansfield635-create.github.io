@@ -201,3 +201,36 @@ test('unrecognized effect wording remains quoted diagnostic scope and never exec
   assert.equal(w.authorizationRequest,null);assert.equal(w.canAuthorize,false);assert.equal(w.canReviewResult,false);assert.equal(w.canClose,false);
  }
 });
+
+import {progressRepairRequest} from './dist/packet.mjs';
+test('conflicting event IDs preserve the entire accepted record and produce a bounded correction',()=>{
+ const p=integrated(),event={id:'stable-finding',requirement:'R3',kind:'FINDING',details:'Original observation',reference:'evidence/original'};
+ receive(p,'PROGRESS EVENTS: '+JSON.stringify([event]));
+ const before=JSON.stringify(p),changed={...event,details:'Different observation',reference:'evidence/new'},raw='PROJECT: Transition integration\nBASELINE: '+p.checkpoints.at(-1).id+'\nPROGRESS EVENTS: '+JSON.stringify([changed]);
+ let error;try{recordResponse(p,raw);}catch(e){error=e;}
+ assert.equal(error?.name,'EvidenceConflictError');assert.equal(error.issue.existing.id,event.id);assert.equal(error.issue.incoming.reference,changed.reference);assert.equal(JSON.stringify(p),before);
+ const repair=progressRepairRequest(p,raw,error.issue);assert.match(repair,/CORRECT RETURNED EVIDENCE ONLY/);assert.match(repair,/choose a new unique ID/);assert.match(repair,/Do not auto-renumber unrelated events/);assert.match(repair,/not execution or new permission/);assert(repair.includes(raw));assert(repair.includes(JSON.stringify(p.progress.requirements)));
+ const corrected={...changed,id:'new-finding'};receive(p,'PROGRESS EVENTS: '+JSON.stringify([corrected]));assert.equal(p.progress.events.length,2);assert.equal(p.progress.events[0].reference,event.reference);assert.equal(p.progress.events[1].reference,changed.reference);
+});
+test('same evidence under a new ID is a recoverable conflict without manufacturing progress',()=>{
+ const p=integrated(),event={id:'stable-finding',requirement:'R3',kind:'FINDING',details:'Original observation',reference:'evidence/original'};
+ receive(p,'PROGRESS EVENTS: '+JSON.stringify([event]));const before=JSON.stringify(p);
+ let error;try{receive(p,'PROGRESS EVENTS: '+JSON.stringify([{...event,id:'relabeled-finding'}]));}catch(e){error=e;}
+ assert.equal(error?.name,'EvidenceConflictError');assert.equal(error.issue.existing.id,event.id);assert.equal(JSON.stringify(p),before);
+ assert.match(progressRepairRequest(p,'returned source',error.issue),/reuse its existing ID unchanged or omit it/);
+});
+test('omitted task map after changed result remains historical and cannot revive satisfaction',()=>{
+ const r=report();r.conditions[0]={...r.conditions[0],status:'SATISFIED',reference:'receipt/v1',subject:r.subject};const p=project(r);
+ p.checkpoints.push({id:'new-result',fields:{resultIdentity:'candidate-v2',transition:'',next:'Inspect successor'}});
+ const t=inspectTransition(p);assert.equal(t.status,'ABSENT');assert.equal(t.needsRebind,true);assert.equal(t.report,undefined);assert.equal(t.selected,undefined);assert.equal(t.trace,undefined);assert(t.priorTask.includes('candidate-v1'));
+ assert.match(transitionContext(p),/historical, not current authority/);assert.match(transitionContext(p),/reuse stale satisfaction/);
+});
+
+test('compact and expanded handoffs keep the same action, criterion, accepted constraints and stored evidence',()=>{
+ const p=integrated(),r=report();p.checkpoints.at(-1).fields.decisions='Keep the existing content and allow cancellation.';p.checkpoints.at(-1).fields.authorization='Editing only. No sending, merge or publication.';
+ receive(p,'TASK TRANSITION: '+JSON.stringify(r));
+ const before=JSON.stringify(p),compact=continuation(p),expanded=continuation(p,{expanded:true});
+ assert.equal(compact.action,expanded.action);assert.equal(compact.condition,expanded.condition);assert.equal(compact.phase,expanded.phase);assert.equal(JSON.stringify(p),before);
+ for(const prompt of [compact.text,expanded.text]){assert(prompt.includes(p.checkpoints.at(-1).fields.decisions));assert(prompt.includes(p.checkpoints.at(-1).fields.authorization));assert(prompt.includes(p.checkpoints.at(-1).id));assert(prompt.includes(r.subject));assert.match(prompt,/source-reported|Source-reported/);}
+ assert.match(compact.text,/Task map \(source-reported\)/);assert(compact.text.includes(JSON.stringify(r)));assert.equal(compact.expanded,false);assert.equal(expanded.expanded,true);assert(compact.text.length<expanded.text.length);
+});

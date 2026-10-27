@@ -58,7 +58,11 @@ export function inspectTransition(p){
  const checkpoints=allCheckpoints(p),current=checkpoints.at(-1),fields=current?.fields||{};
  let report;
  try{
-  if(absent(fields.transition))return {status:'ABSENT'};
+  if(absent(fields.transition)){
+   const prior=checkpoints.slice(0,-1).findLast(c=>!absent(c.fields?.transition));
+   if(prior){const changes=['next','resultIdentity','requirements'].filter(k=>fields[k]!==prior.fields[k]);return {status:'ABSENT',needsRebind:true,priorTask:prior.fields.transition,reason:'A previous task map remains in history but is not active'+(changes.length?' after changes to '+changes.join(', '):' in the current record')+'. Supply only its necessary binding or prerequisite update; do not reconstruct completed history or reuse stale satisfaction.'};}
+   return {status:'ABSENT'};
+  }
   const snapshot=p.progress?progressSnapshot(p.progress):null;
   // Finished requirement evidence and actual user acceptance govern closure.
   // A retained task report must not resurrect an already satisfied task.
@@ -95,7 +99,7 @@ export function inspectTransition(p){
  if(available.length>1)reason+=' Other independent ready prerequisites remain: '+available.slice(1).map(c=>c.id).join(', ')+'.';
  if(needsPrerequisite){
   action='Identify the exact missing capability, input, permission or check preventing prerequisite '+selected.id+' using the latest reported limitation and existing evidence. If an actual missing condition is established, add it to conditions with a stable ID, source reference, action and observable criterion, and link '+selected.id+' to it through dependsOn. Preserve the intended task and existing prerequisites. Do not invent a dependency, repeat completed preparation or retry a failed route under unchanged conditions. If a different permitted route is already available, report its stable attempt identity and supporting evidence instead.';
-  condition='A source-referenced missing prerequisite linked to '+selected.id+', or a current-subject attempt record establishing an available changed route or execution condition. If neither is established, report the specific unavailable capability without claiming task advancement.';
+  condition='A source-referenced missing prerequisite linked to '+selected.id+', or a current-subject attempt record establishing an available changed route or execution condition. If neither is established, return BLOCKED with a concrete capability handoff: missing capability, exact input/subject, bounded operation, expected output, known destination if any, and permission boundary. Do not invent a destination or another preparation layer; preparation artifacts do not resolve this prerequisite.';
   reason='The subject and prerequisite states remain unchanged. New descriptions or a completed investigation do not establish prerequisite resolution.'+(repeated?' The structured route and execution-condition identities also remain unchanged.':' Route identity is not inferred from narrative wording.');
  }else if(attemptChanged){
   reason+=' A changed attempt has a current-subject source reference; prerequisite resolution and execution permission are not implied.';
@@ -109,6 +113,7 @@ export const TRANSITION_CONTRACT=`TASK TRANSITION: Optional JSON object describi
 export function transitionContext(p,decision){
  const t=inspectTransition(p);
  if(t.status==='INVALID')return 'TASK TRANSITION NEEDS CORRECTION\n'+t.error+' Preserve the original source report; establish only the missing or inconsistent dependency evidence. Do not infer readiness.\n\n'+TRANSITION_CONTRACT;
+ if(t.status==='ABSENT'&&t.needsRebind)return 'TASK TRANSITION UPDATE NEEDED\n'+t.reason+'\nPrevious map (historical, not current authority): '+t.priorTask;
  if(t.status==='ABSENT')return 'TASK TRANSITION\nNo explicit task prerequisite map is recorded. During the requested work, identify the immediate missing condition and the evidence that would unlock the intended action where useful; do not create a separate mapping ceremony or invent dependency order.\n\n'+TRANSITION_CONTRACT;
  const trace=decision?{...t.trace,stage:decision.phase,expectedEvidence:decision.condition}:t.trace;
  return 'TASK TRANSITION DECISION\n'+JSON.stringify(trace)+'\nSelected action: '+(decision?.action||t.action)+'\nWhy: '+(decision?.reason||t.reason)+'\nPreserved intended action: '+t.report.intendedAction+'\nExpected return: '+(decision?.condition||t.condition)+'\n\n'+TRANSITION_CONTRACT;

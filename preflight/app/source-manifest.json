@@ -6,7 +6,7 @@
   "runtimeFiles": [
     {
       "path": "dist/app.mjs",
-      "sha256": "c412ab977777d65569de98d22d3c6153d1ff31ed1dd9e49d1ddac7f007bc6f3f",
+      "sha256": "17647631db4a6b4c7261b2e8bb82be6464713e81fbf1c93b9d93556d35220417",
       "originalSha256": "a6a11d9cd203d1695ca786141ee7fb56a3d38a981585bd0d59e51b79f2aeab98"
     },
     {
@@ -42,12 +42,12 @@
     },
     {
       "path": "dist/packet.mjs",
-      "sha256": "9c2fdcaf999392464f0409b5a50817e40efcba85ee2a780f8a82c1d6cb65981f",
+      "sha256": "734b0ba22834d0c5a968705bd3407acec86201286b31697c2c3f9e93fa10a5b8",
       "originalSha256": "60a80cba82ba064319d71296dabb100fc3d9461b9539a592504e3e2a92948f90"
     },
     {
       "path": "dist/progress-record.mjs",
-      "sha256": "6f9c3cfbe48e4d7ab069d389fbac78ec88586aa7431658a8cff08300f98a4a38",
+      "sha256": "c9f6f0572c22e8de6f80f413eb55a981611248d974738360865d24c22d22b8c6",
       "originalSha256": "fc9d54ffa388ef318a9bf9d897e821c317c446c5e6e2005d5be6b24644a347da"
     },
     {
@@ -56,7 +56,7 @@
     },
     {
       "path": "dist/progression.mjs",
-      "sha256": "ac1ae1ca45a1411d90aa72bdab07a3a18e9d4c824ec53bab6c06e8909ebf2064",
+      "sha256": "326afb5b99cba1eff99287fdfab6dd48bcc1279ee00eb1db6b03930f43c0615f",
       "originalSha256": "c5e849fdbe8f8300fe85e7d53d98d9747961af205035aea110e1550c93df7291"
     },
     {
@@ -94,7 +94,7 @@
     },
     {
       "path": "dist/transitions.mjs",
-      "sha256": "c3c7a8f2ac7c91ec7ed0ebb87fd84a6e9aece5e41d660eab3a85893968a94349",
+      "sha256": "73aee51d2da92853f355ec1dc004ec4c5e2602ce80860a4b8de705ac11b6778c",
       "originalSha256": "94ee25d66774efceb6e0ab555ffff9894ab21959e1866a6633b454486d994613"
     }
   ],
@@ -133,5 +133,10 @@
     "operationId": "DIAMONDGATE_GENERAL_PREREQUISITE_RECOVERY_20261027_001",
     "generation": 2939,
     "governingHead": "6749fd6af55714bcfb14b90c22a146b6e5b7b955"
+  },
+  "compactHandoff": {
+    "operationId": "DIAMONDGATE_COMPACT_EXECUTION_HANDOFF_20261027_001",
+    "generation": 2941,
+    "governingHead": "c9d58dd87e0475cae83e0c86d39b3c93b253f12a"
   }
 }

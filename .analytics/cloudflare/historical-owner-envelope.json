@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-27T17:25:34Z",
+  "generatedAt": "2026-10-27T18:28:15Z",
   "window": {
-    "start": "2026-07-29T17:25:34Z",
-    "end": "2026-10-27T17:25:34Z"
+    "start": "2026-07-29T18:28:15Z",
+    "end": "2026-10-27T18:28:15Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -38,6 +38,10 @@
         "pageLoads": 987,
         "visits": 727
       },
+      "/laws/": {
+        "pageLoads": 260,
+        "visits": 90
+      },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 20,
         "visits": 0
@@ -45,10 +49,6 @@
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
         "visits": 0
-      },
-      "/laws/": {
-        "pageLoads": 260,
-        "visits": 90
       },
       "/products/education/": {
         "pageLoads": 270,
@@ -150,7 +150,15 @@
         "pageLoads": 10,
         "visits": 10
       },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
       },
@@ -158,16 +166,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -302,12 +302,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {

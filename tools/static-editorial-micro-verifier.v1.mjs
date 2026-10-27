@@ -11,7 +11,9 @@ function htmlRuntimeSignature(source){
   const scriptTags=[...source.matchAll(/<script\b[^>]*>/gi)].map(m=>m[0]);
   const attributes=[...source.matchAll(/\b(?:data-[a-z0-9_-]+|on[a-z]+)\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi)].map(m=>m[0]);
   const javascriptUrls=[...source.matchAll(/\b(?:href|src|action|formaction|xlink:href)\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi)].map(m=>m[0]).filter(v=>/javascript\s*:/i.test(v));
-  return JSON.stringify({scripts,scriptTags,attributes,javascriptUrls});
+  const javascriptTokens=[...source.matchAll(/javascript\s*:[^\s\"'<>]*/gi)].map(m=>m[0]);
+  const scriptTokens=[...source.matchAll(/<script\b/gi)].map(m=>m[0]);
+  return JSON.stringify({scripts,scriptTags,scriptTokens,attributes,javascriptUrls,javascriptTokens});
 }
 function htmlRuntimeChanged(base,head){return htmlRuntimeSignature(base)!==htmlRuntimeSignature(head);}
 function selfTest(){
@@ -25,6 +27,7 @@ function selfTest(){
     ['SCRIPT_BODY_CHANGE_REJECTED',htmlRuntimeChanged(base,base.replace('window.a=1','window.a=2'))],
     ['SCRIPT_INSERTION_REJECTED',htmlRuntimeChanged(base,base+'<script src="/untrusted.js"></script>')],
     ['JAVASCRIPT_URL_REJECTED',htmlRuntimeChanged(base,base.replace('href="/build/"','href="javascript:go()"'))],
+    ['JAVASCRIPT_IN_STYLE_REJECTED',htmlRuntimeChanged(base,base.replace('data-reader="1"','data-reader="1" style="background:javascript:bad()"'))],
     ['CSS_HIT_SURFACE_PROTECTION_PRESERVED',CSS_RUNTIME_PATTERNS.some(re=>re.test('touch-action:none'))]
   ];
   const pass=probes.every(([,ok])=>ok);

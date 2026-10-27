@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+// Single canonical reference prevents static-asset identity drift across test suites.
+const GEN2940_RENDERER_URL=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
 import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
 
 const fixture=()=>({state:{position:{x:18,y:24,z:-226},yawDegrees:-150,pitchDegrees:-14,verticalFovDegrees:56,sequence:10001},lastFrame:{navigationSequence:10001,frameSequence:21,cameraPosition:{x:18,y:24,z:-226}},expectedCameraPosition:{x:18,y:24,z:-226},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}});
@@ -69,7 +71,7 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
- const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const shader=fs.readFileSync(GEN2940_RENDERER_URL,'utf8');
  const digest=diagnostic.verifyGen2940MaterialCandidate(shader);
  assert.match(digest,/^[0-9a-f]{64}$/);
  const oldGen2928=shader.replace(diagnostic.GEN2940_NEW_PATCH,diagnostic.GEN2940_OLD_PATCH);
@@ -124,7 +126,7 @@ test('no product change: overlay only allowed with published SHA; all vegetation
 });
 
 test('Gen2940 candidate is exact published Gen2928 with one widened soil-cover transition',()=>{
- const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const shader=fs.readFileSync(GEN2940_RENDERER_URL,'utf8');
  assert.equal(diagnostic.GEN2928_PRODUCT_HEAD,'cb57c275b95d0d48883bc4da4dcfcf17cbec5060');
  assert.equal(diagnostic.GEN2928_RENDERER_SHA256,'fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec');
  assert.match(diagnostic.verifyGen2940MaterialCandidate(shader),/^[0-9a-f]{64}$/);
@@ -149,4 +151,34 @@ test('Gen2940 paired source receipt requires identical baseline and candidate po
  }else{
   assert.equal(diagnostic.HEADS.baseline,diagnostic.HEADS.candidate,'historic profile preserved');
  }
+});
+
+test('Gen2940 material patch transition has lower maximum gradient without erasing groundcover',()=>{
+ const smooth=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};
+ const weight=p=>0.88*p*(1-0.25*smooth(0.30,0.85,p));
+ const original=[],candidate=[];
+ for(let k=0;k<=10000;k++){
+   const signal=k/10000;
+   original.push(weight(smooth(0.20,0.66,signal)));
+   candidate.push(weight(smooth(0.12,0.78,signal)));
+ }
+ const peak=a=>{let max=0;for(let i=1;i<a.length;i++)max=Math.max(max,Math.abs(a[i]-a[i-1]));return max;};
+ const average=a=>a.reduce((sum,x)=>sum+x,0)/a.length;
+ assert.ok(peak(candidate)<0.75*peak(original),'widened transition reduces peak per-signal gradient');
+ assert.ok(average(candidate)>=0.95*average(original),'cover density retained');
+ assert.ok(average(candidate)<=1.05*average(original),'avoid new color carpet');
+ assert.equal(candidate[0],0);
+ assert.ok(candidate.at(-1)>0.60,'protected core retains material depth');
+});
+test('Gen2940 exact-source material blend retains coast, slope, rock and grove protection',()=>{
+ const shader=fs.readFileSync(GEN2940_RENDERER_URL,'utf8');
+ for(const anchor of [
+  'groundcoverSuitability*groundcoverProtection;',
+  'smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters))',
+  '(1.0-smoothstep(0.12,0.42,slope))',
+  '(1.0-smoothstep(0.18,0.58,rockExposure))',
+  '(1.0-protectedGrove);',
+  'palette=mix(palette,groundcoverTone,groundcoverWeight);',
+  'if(worldSoilTerrain&&uWoodlandHabitatEnabled==1)'
+ ])assert.ok(shader.includes(anchor),'Existing gating must remain: '+anchor);
 });

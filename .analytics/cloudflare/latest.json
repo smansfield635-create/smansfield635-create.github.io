@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_BRIDGE_V3",
-  "generatedAt": "2026-10-27T22:25:14Z",
+  "generatedAt": "2026-10-27T23:25:30Z",
   "window": {
-    "start": "2026-07-29T22:25:14Z",
-    "end": "2026-10-27T22:25:14Z"
+    "start": "2026-07-29T23:25:30Z",
+    "end": "2026-10-27T23:25:30Z"
   },
   "chunkDays": 1,
   "accounts": [
@@ -11,18 +11,6 @@
       "accountTag": "832a0c759fbdc46553494f572a0e534b",
       "chunks": 90,
       "pages": [
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-07-29T22:00:00Z"
-          }
-        },
-        {
-          "count": 20,
-          "dimensions": {
-            "datetimeHour": "2026-07-29T23:00:00Z"
-          }
-        },
         {
           "count": 20,
           "dimensions": {
@@ -3414,39 +3402,9 @@
           }
         },
         {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-10-16T08:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-10-16T10:00:00Z"
-          }
-        },
-        {
-          "count": 20,
-          "dimensions": {
-            "datetimeHour": "2026-10-16T20:00:00Z"
-          }
-        },
-        {
-          "count": 30,
+          "count": 100,
           "dimensions": {
             "datetimeHour": "2026-10-16T21:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-10-16T22:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-10-16T23:00:00Z"
           }
         },
         {
@@ -3513,12 +3471,6 @@
           "count": 10,
           "dimensions": {
             "datetimeHour": "2026-10-19T20:00:00Z"
-          }
-        },
-        {
-          "count": 1,
-          "dimensions": {
-            "datetimeHour": "2026-10-19T22:00:00Z"
           }
         },
         {
@@ -4566,7 +4518,7 @@
           }
         },
         {
-          "count": 1,
+          "count": 3,
           "dimensions": {
             "datetimeHour": "2026-10-27T22:00:00Z"
           }

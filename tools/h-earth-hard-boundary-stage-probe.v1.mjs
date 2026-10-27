@@ -9,6 +9,7 @@ export const GEN2928_HEAD='cb57c275b95d0d48883bc4da4dcfcf17cbec5060';
 export const GEN2928_SHADER_SHA256='fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec';
 export const MODES=Object.freeze(['reference-lit','pre-worldsoil-unlit','post-worldsoil-unlit','post-identity-unlit','post-groundcover-unlit','post-local-unlit','post-habitat-unlit','groundcover-weight-raw','habitat-weight-raw','reference-lit-with-grass']);
 export const MODES_MINIMUM=Object.freeze(MODES.map((_,i)=>i));
+export const NEAR_FAR_EXTRA_MODES=Object.freeze(['role1-contact-disabled-lit','primitive-role-raw']);
 function probeOnce(s,needle,repl){if(s.split(needle).length!==2)throw Error('STAGE_ANCHOR_NOT_UNIQUE:'+needle.slice(0,75));return s.replace(needle,repl);}
 export function transformHardBoundaryRenderer(original){
  const actual=crypto.createHash('sha256').update(original).digest('hex');
@@ -25,18 +26,19 @@ export function transformHardBoundaryRenderer(original){
  fs=probeOnce(fs,'    base=palette;\n  }else if(vRoleCode==4u){','    bndLocal=palette;\n    base=palette;\n  }else if(vRoleCode==4u){');
  fs=probeOnce(fs,'    vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;','    bndHabitatWeight=habitatCoverage*.68;\n    vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;');
  fs=probeOnce(fs,'  if(clearingType>0.5&&clearingType<1.5){','  bndHabitat=base;\n  if(clearingType>0.5&&clearingType<1.5){');
+ fs=probeOnce(fs,'  if(vRoleCode==1u){','  if(vRoleCode==1u&&uHardBoundaryStageMode!=10){');
  const gamma='  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));';
- fs=probeOnce(fs,gamma,gamma+"\n  if(worldSoilTerrain&&uHardBoundaryStageMode>0){\n    int m=uHardBoundaryStageMode;\n    if(m>=1&&m<=6){\n      vec3 c=m==1?bndBeforeSoil:m==2?bndSoil:m==3?bndIdentity:m==4?bndGroundcover:m==5?bndLocal:bndHabitat;\n      lit=pow(clamp(c*1.12,0.0,1.0),vec3(1.0/2.2));\n    }else if(m==7)lit=vec3(clamp(bndGCWeight,0.0,1.0));\n    else if(m==8)lit=vec3(clamp(bndHabitatWeight,0.0,1.0));\n  }");
+ fs=probeOnce(fs,gamma,gamma+"\n  if(worldSoilTerrain&&uHardBoundaryStageMode>0){\n    int m=uHardBoundaryStageMode;\n    if(m>=1&&m<=6){\n      vec3 c=m==1?bndBeforeSoil:m==2?bndSoil:m==3?bndIdentity:m==4?bndGroundcover:m==5?bndLocal:bndHabitat;\n      lit=pow(clamp(c*1.12,0.0,1.0),vec3(1.0/2.2));\n    }else if(m==7)lit=vec3(clamp(bndGCWeight,0.0,1.0));\n    else if(m==8)lit=vec3(clamp(bndHabitatWeight,0.0,1.0));\n    else if(m==11)lit=vRoleCode==1u?vec3(1.0,0.0,0.0):isExactFarLandSoilPrimitive?vec3(0.0,1.0,0.0):vec3(0.0,0.0,1.0);\n  }");
  let source=original.slice(0,start)+fs+original.slice(end);
  const draw='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
- source=probeOnce(source,draw,draw+"\n    {const mode=globalThis.__hardBoundaryStageMode??0;if(!Number.isInteger(mode)||mode<0||mode>=10)throw Error('HARD_BOUNDARY_MODE_INVALID');const loc=gl.getUniformLocation(resources.geometryProgram,'uHardBoundaryStageMode');if(loc===null)throw Error('HARD_BOUNDARY_UNIFORM_MISSING');gl.uniform1i(loc,mode);globalThis.__hardBoundaryModeApplied=mode;}");
+ source=probeOnce(source,draw,draw+"\n    {const mode=globalThis.__hardBoundaryStageMode??0;if(!Number.isInteger(mode)||mode<0||mode>=12)throw Error('HARD_BOUNDARY_MODE_INVALID');const loc=gl.getUniformLocation(resources.geometryProgram,'uHardBoundaryStageMode');if(loc===null)throw Error('HARD_BOUNDARY_UNIFORM_MISSING');gl.uniform1i(loc,mode);globalThis.__hardBoundaryModeApplied=mode;}");
  return Object.freeze({source,originalSha256:actual,instrumentedSha256:crypto.createHash('sha256').update(source).digest('hex'),productDiskMutation:false});
 }
 
 
 
 export const DIAGNOSTIC_MODES=Object.freeze(MODES.slice());
-const MODE_ID_BY_NAME=new Map(MODES.map((name,index)=>[name,index]));
+const MODE_ID_BY_NAME=new Map([...MODES,...NEAR_FAR_EXTRA_MODES].map((name,index)=>[name,index]));
 export const DIAGNOSTIC_STAGE_MEANINGS=Object.freeze(Object.fromEntries(DIAGNOSTIC_MODES.map(name=>[name,'Read-only browser-injected ordered shader stage, unchanged product disk source'])));
 export const SEARCH_PROVENANCE=Object.freeze({kind:'POST_GEN2928_NEW_CAMERAS_OWNER_SCREENSHOT_NOT_EXACT_MATCH',operationId:'H_EARTH_POST_GEN2928_HARD_BOUNDARY_STAGE_DIAGNOSTIC_20261027_001',sourceIssue:6911,sourceHead:GEN2928_HEAD,ownerExactCameraKnown:false});
 export const RENDERER_SHA256=GEN2928_SHADER_SHA256;
@@ -73,6 +75,25 @@ export const SOURCE_RAVINE_TARGET_POSES=Object.freeze([
  makeRavineObserver('source-ravine-east-inside-looking-east',74,-286,90)
 ]);
 export const SOURCE_RAVINE_TARGET_MODES=Object.freeze(['reference-lit','pre-worldsoil-unlit','post-worldsoil-unlit','post-identity-unlit','post-groundcover-unlit','post-local-unlit','post-habitat-unlit','reference-lit-with-grass']);
+
+
+function nearFarObserver(name,x,z,yaw){
+ const t=sampleHEarthTerrainField(x,z);
+ if(t?.valid!==true||!Number.isFinite(t.elevation))throw Error('NEAR_FAR_SOURCE_TERRAIN_NOT_FINITE');
+ return Object.freeze({name,x,z,y:Number((t.elevation+18).toFixed(6)),yaw,pitch:-28,
+  diagnosticObserver:true,navigationAuthorized:false,terrainDerivedY:true,
+  sourceBoundary:Object.freeze({x:x<0?-384:384,z:-112,primitiveIds:['H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001','H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION'],sourceArtifact:12775922825})});
+}
+export const SOURCE_NEAR_FAR_TARGET_POSES=Object.freeze([
+ nearFarObserver('source-west-near-far-albedo-join',-356,-112,270),
+ nearFarObserver('source-east-near-far-albedo-join',356,-112,90)
+]);
+export const SOURCE_NEAR_FAR_TARGET_MODES=Object.freeze([
+ 'reference-lit','role1-contact-disabled-lit','primitive-role-raw',
+ 'pre-worldsoil-unlit','post-worldsoil-unlit','post-identity-unlit',
+ 'post-groundcover-unlit','post-local-unlit','post-habitat-unlit',
+ 'reference-lit-with-grass'
+]);
 
 export function comparisonState(nav,pose,sequence,action){
   if(pose.diagnosticObserver===true){
@@ -137,9 +158,9 @@ export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(![
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'POST_GEN2928_STAGE_PROBE_V1';
-  if(!['POST_GEN2928_STAGE_PROBE_V1','SOURCE_FIRST_CALCULATED_TARGETS_V1','RAVINE_EAST_EFFECTIVE_MAX_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=profile==='RAVINE_EAST_EFFECTIVE_MAX_V1'?SOURCE_RAVINE_TARGET_POSES:(profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_POSES:DIAGNOSTIC_POSES);
-  const modes=profile==='RAVINE_EAST_EFFECTIVE_MAX_V1'?SOURCE_RAVINE_TARGET_MODES:(profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_MODES:DIAGNOSTIC_MODES);
+  if(!['POST_GEN2928_STAGE_PROBE_V1','SOURCE_FIRST_CALCULATED_TARGETS_V1','RAVINE_EAST_EFFECTIVE_MAX_V1','NEAR_FAR_SOURCE_JOIN_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=profile==='NEAR_FAR_SOURCE_JOIN_V1'?SOURCE_NEAR_FAR_TARGET_POSES:(profile==='RAVINE_EAST_EFFECTIVE_MAX_V1'?SOURCE_RAVINE_TARGET_POSES:(profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_POSES:DIAGNOSTIC_POSES));
+  const modes=profile==='NEAR_FAR_SOURCE_JOIN_V1'?SOURCE_NEAR_FAR_TARGET_MODES:(profile==='RAVINE_EAST_EFFECTIVE_MAX_V1'?SOURCE_RAVINE_TARGET_MODES:(profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_MODES:DIAGNOSTIC_MODES));
   if(poses.length*modes.length>60)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:'H_EARTH_POST_GEN2928_HARD_BOUNDARY_STAGE_DIAGNOSTIC_20261027_001',baselineProductSha256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,newOwnerScreenshotExactMatch:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};

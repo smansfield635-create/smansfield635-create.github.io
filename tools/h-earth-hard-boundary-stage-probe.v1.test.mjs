@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import {
  GEN2928_HEAD,GEN2928_SHADER_SHA256,MODES,POSES,HEADS,
  transformHardBoundaryRenderer,verifyExactMaterialCandidate,
- instrumentDiagnosticRenderer,validateDiagnosticSet,SOURCE_FIRST_TARGET_POSES,SOURCE_FIRST_TARGET_MODES,SOURCE_RAVINE_TARGET_POSES,SOURCE_RAVINE_TARGET_MODES
+ instrumentDiagnosticRenderer,validateDiagnosticSet,SOURCE_FIRST_TARGET_POSES,SOURCE_FIRST_TARGET_MODES,SOURCE_RAVINE_TARGET_POSES,SOURCE_RAVINE_TARGET_MODES,SOURCE_NEAR_FAR_TARGET_POSES,SOURCE_NEAR_FAR_TARGET_MODES,NEAR_FAR_EXTRA_MODES
 } from './h-earth-hard-boundary-stage-probe.v1.mjs';
 
 const rendererPath=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
@@ -189,4 +189,18 @@ test('ravine east targeted cameras derive elevations from canonical world terrai
  assert(SOURCE_RAVINE_TARGET_POSES.every(p=>p.sourceBoundary.x===88&&p.sourceBoundary.z===-286&&p.sourceBoundary.sourceArtifact===12770542590));
  assert.equal(SOURCE_RAVINE_TARGET_POSES.length*SOURCE_RAVINE_TARGET_MODES.length,16);
  assert(SOURCE_RAVINE_TARGET_MODES.includes('reference-lit-with-grass'));
+});
+
+test('near far observed GPU roles and role-only final lighting can be isolated without writing the real shader',()=>{
+ const original=fs.readFileSync(rendererPath);
+ const patched=transformHardBoundaryRenderer(production);
+ assert(patched.source.includes('if(vRoleCode==1u&&uHardBoundaryStageMode!=10){'));
+ assert(patched.source.includes('isExactFarLandSoilPrimitive?vec3(0.0,1.0,0.0)'));
+ assert.equal(Buffer.compare(original,fs.readFileSync(rendererPath)),0);
+ assert.deepEqual(NEAR_FAR_EXTRA_MODES,['role1-contact-disabled-lit','primitive-role-raw']);
+ assert.equal(SOURCE_NEAR_FAR_TARGET_POSES.length,2);
+ assert.equal(SOURCE_NEAR_FAR_TARGET_MODES.length,10);
+ assert.equal(SOURCE_NEAR_FAR_TARGET_POSES.length*SOURCE_NEAR_FAR_TARGET_MODES.length,20);
+ assert.deepEqual(SOURCE_NEAR_FAR_TARGET_POSES.map(p=>[p.sourceBoundary.x,p.sourceBoundary.z]),[[-384,-112],[384,-112]]);
+ assert(SOURCE_NEAR_FAR_TARGET_POSES.every(p=>p.diagnosticObserver===true&&p.navigationAuthorized===false&&p.terrainDerivedY===true));
 });

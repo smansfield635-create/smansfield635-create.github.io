@@ -1,0 +1,102 @@
+{
+  "schema": "H_EARTH_TERRAIN_SEAM_RELEASE_EVIDENCE_v1",
+  "operationId": "H_EARTH_TERRAIN_SEAM_PUBLICATION_20261026_001",
+  "generation": 2924,
+  "sourceCandidate": "9127904e725a3f4ca13c1221451023102ad09435",
+  "governingHead": "67c852d27b0f25f88ce4819c150546f9b2fc1e2c",
+  "files": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "fbde77412fd6f30cdac48b7d0ac8bb2f5850d6082009cf0515e69401283966ad"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/terrain-seam-normal.v1.js",
+      "sha256": "62a96acb6f9299ab79591aaa8fa5c7f8209b92aaf4b26289720509b96007f739"
+    }
+  ],
+  "dependencyDiff": [
+    "showroom/globe/h-earth/index.html",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/terrain-seam-normal.v1.js"
+  ],
+  "protectedRuntimeDependenciesUnchanged": true,
+  "sourceReview": "Presentation normals/coast/contact array copies and far-land rim parity; positions/indices, physical support/planting arrays, root assets, draw calls, navigation, UI and world entry logic unchanged.",
+  "visualReview": {
+    "run": 40395048043,
+    "url": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40395048043",
+    "receiptSha256": "8f79c07197b75766bcb69bbd3e9cba11178b5bb7a714e730f55b321c150ff0e9",
+    "verifiedImages": 48,
+    "errors": [],
+    "reviewedNormalViews": [
+      {
+        "image": "candidate-river-overlook-normal.png",
+        "imageSha256": "db16a058e28244b0b0d8bb217950d866cd1fc4d33994e95d89d2c0de737b4a7e",
+        "pose": {
+          "name": "river-overlook",
+          "x": 18,
+          "z": -226,
+          "yaw": 210,
+          "pitch": -14
+        },
+        "mode": "normal",
+        "grassHidden": false
+      },
+      {
+        "image": "candidate-bare-mountain-normal.png",
+        "imageSha256": "d4ee3cf9dde3286ddfbda8bfd682f7e9a7f39231c25fb2aa58ec3d0002ad8d68",
+        "pose": {
+          "name": "bare-mountain",
+          "x": 88,
+          "z": -260,
+          "yaw": 95,
+          "pitch": -10
+        },
+        "mode": "normal",
+        "grassHidden": false
+      },
+      {
+        "image": "candidate-coast-oblique-normal.png",
+        "imageSha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+        "pose": {
+          "name": "coast-oblique",
+          "x": 0,
+          "z": -110,
+          "yaw": 170,
+          "pitch": -8
+        },
+        "mode": "normal",
+        "grassHidden": false
+      },
+      {
+        "image": "candidate-foothill-west-normal.png",
+        "imageSha256": "aea7bf1070d1f048cf43e092723cacbd901e3fc07df847f8c2b933b45c701430",
+        "pose": {
+          "name": "foothill-west",
+          "x": -52,
+          "z": -208,
+          "yaw": 180,
+          "pitch": -12
+        },
+        "mode": "normal",
+        "grassHidden": false
+      }
+    ]
+  },
+  "independentReview": {
+    "role": "WEST",
+    "task": "/root/west_scope_review",
+    "result": "PASS_BOUNDED_ANCHOR_PRESERVATION",
+    "basis": "Actual source/helper diff, exact3blob proof, anchor proxy and four original normal candidate frames. Planetary/regional continuity inherited only through unchanged source."
+  },
+  "ownerDisposition": "PUBLISH_EXISTING_CANDIDATE",
+  "limitations": [
+    "No claim photographed sharp tan curve fixed.",
+    "No new physical Android performance/interaction acceptance.",
+    "No claim fresh global or regional traversal test.",
+    "Prior normal visual evidence reused only for identical product/runtime dependencies; full payload entry/live verification remains required."
+  ]
+}

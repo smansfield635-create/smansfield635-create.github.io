@@ -1,0 +1,62 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "operationId": "H_EARTH_TERRAIN_SEAM_PUBLICATION_20261026_001",
+  "canonicalAdmissionGeneration": 2924,
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/evidence/terrain-seam-publication-v1/evidence.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/terrain-seam-publication-v1/near-far.test.mjs",
+    "h-earth-3d/evidence/terrain-seam-publication-v1/evidence.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/terrain-seam-publication-v1/source-custody.test.mjs",
+    "h-earth-3d/evidence/terrain-seam-publication-v1/geological.test.mjs"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "fbde77412fd6f30cdac48b7d0ac8bb2f5850d6082009cf0515e69401283966ad"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/terrain-seam-normal.v1.js",
+      "sha256": "62a96acb6f9299ab79591aaa8fa5c7f8209b92aaf4b26289720509b96007f739"
+    }
+  ],
+  "sourceCandidate": "9127904e725a3f4ca13c1221451023102ad09435",
+  "ownerDisposition": "PUBLISH_EXISTING_CANDIDATE",
+  "independentReview": {
+    "role": "WEST",
+    "task": "/root/west_scope_review",
+    "result": "PASS_BOUNDED_ANCHOR_PRESERVATION",
+    "basis": "Actual source/helper diff, exact3blob proof, anchor proxy and four original normal candidate frames. Planetary/regional continuity inherited only through unchanged source."
+  },
+  "limitations": [
+    "No claim photographed sharp tan curve fixed.",
+    "No new physical Android performance/interaction acceptance.",
+    "No claim fresh global or regional traversal test.",
+    "Prior normal visual evidence reused only for identical product/runtime dependencies; full payload entry/live verification remains required."
+  ]
+}

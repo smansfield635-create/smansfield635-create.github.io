@@ -1,26 +1,26 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-27T18:28:15Z",
+  "generatedAt": "2026-10-27T19:24:09Z",
   "window": {
-    "start": "2026-09-27T18:28:15Z",
-    "end": "2026-10-27T18:28:15Z"
+    "start": "2026-09-27T19:24:09Z",
+    "end": "2026-10-27T19:24:09Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 706,
-        "visits": 648
+        "pageLoads": 707,
+        "visits": 649
       },
       {
         "value": "/analytics/",
-        "pageLoads": 602,
-        "visits": 602
+        "pageLoads": 603,
+        "visits": 603
       },
       {
         "value": "/",
-        "pageLoads": 113,
-        "visits": 91
+        "pageLoads": 112,
+        "visits": 90
       },
       {
         "value": "/build/",
@@ -133,11 +133,6 @@
         "visits": 2
       },
       {
-        "value": "/showroom/globe/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
         "value": "/index.html",
         "pageLoads": 2,
         "visits": 2
@@ -159,6 +154,11 @@
       },
       {
         "value": "/laws/scientific-law/battery-heldout-study/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
+        "value": "/showroom/globe/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -216,8 +216,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1638,
-        "visits": 1638
+        "pageLoads": 1639,
+        "visits": 1639
       },
       {
         "value": "diamondgatebridge.com",
@@ -248,8 +248,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1759,
-        "visits": 1632
+        "pageLoads": 1760,
+        "visits": 1633
       },
       {
         "value": "CN",
@@ -290,8 +290,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1437,
-        "visits": 1382
+        "pageLoads": 1438,
+        "visits": 1383
       },
       {
         "value": "mobile",
@@ -307,33 +307,33 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 859,
-        "visits": 859
+        "pageLoads": 861,
+        "visits": 861
       },
       {
         "value": "Chrome",
-        "pageLoads": 492,
-        "visits": 410
+        "pageLoads": 491,
+        "visits": 409
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 160,
-        "visits": 158
+        "pageLoads": 180,
+        "visits": 178
       },
       {
         "value": "Edge",
-        "pageLoads": 88,
-        "visits": 83
-      },
-      {
-        "value": "MobileSafari",
-        "pageLoads": 86,
-        "visits": 56
+        "pageLoads": 98,
+        "visits": 93
       },
       {
         "value": "Firefox",
-        "pageLoads": 71,
-        "visits": 62
+        "pageLoads": 81,
+        "visits": 72
+      },
+      {
+        "value": "MobileSafari",
+        "pageLoads": 76,
+        "visits": 56
       },
       {
         "value": "Unknown",
@@ -359,8 +359,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1098,
-        "visits": 1098
+        "pageLoads": 1100,
+        "visits": 1100
       },
       {
         "value": "Android",
@@ -369,8 +369,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 219,
-        "visits": 204
+        "pageLoads": 218,
+        "visits": 203
       },
       {
         "value": "MacOSX",
@@ -391,20 +391,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 947,
-        "visits": 819
+        "pageLoads": 969,
+        "visits": 832
       },
       {
         "value": "1",
-        "pageLoads": 810,
-        "visits": 810
+        "pageLoads": 901,
+        "visits": 891
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1736,
-        "visits": 1641
+        "pageLoads": 1777,
+        "visits": 1682
       },
       {
         "value": "routing-apis",
@@ -425,27 +425,32 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1609,
-        "visits": 1442
+        "pageLoads": 1741,
+        "visits": 1657
       },
       {
         "value": "cache",
-        "pageLoads": 105,
-        "visits": 43
+        "pageLoads": 98,
+        "visits": 45
+      },
+      {
+        "value": "navigational-prefetch",
+        "pageLoads": 1,
+        "visits": 1
       }
     ],
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1839,
-        "visits": 1702
+        "pageLoads": 1840,
+        "visits": 1703
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1839,
-        "visits": 1702
+        "pageLoads": 1840,
+        "visits": 1703
       }
     ]
   }

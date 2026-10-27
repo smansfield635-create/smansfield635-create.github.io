@@ -1170,7 +1170,7 @@ jobs:
       - name: Check out immutable runner tooling
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           path: tooling
           persist-credentials: false
       - name: Check out complete fixed baseline
@@ -1182,7 +1182,7 @@ jobs:
       - name: Check out complete fixed candidate
         uses: actions/checkout@v4
         with:
-          ref: 60b3c07f0216645119a1b92b16dac82cae739145
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '60b3c07f0216645119a1b92b16dac82cae739145' }}
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1196,17 +1196,18 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Capture twenty distributed published-renderer groundcover factor frames
+      - name: Capture twenty exact-candidate groundcover factor frames
         working-directory: tooling
         env:
-          H_EARTH_COMPARISON_PROFILE: MAPWIDE_SCOUT_V1
+          H_EARTH_COMPARISON_PROFILE: ${{ github.event_name == 'pull_request' && 'MAPWIDE_CANDIDATE_V1' || 'MAPWIDE_SCOUT_V1' }}
+          H_EARTH_COMPARISON_CANDIDATE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || '' }}
         run: |
           timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/ground-material-comparison"
       - name: Preserve comparison evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-groundcover-mapwide-scout-${{ github.run_id }}
+          name: h-earth-groundcover-mapwide-${{ github.run_id }}
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30

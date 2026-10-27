@@ -92,3 +92,25 @@ complete semantic Outcome State Estimator. Source-reported checks remain
 source-reported. Admission: operation
 `DIAMONDGATE_SCOPED_AUTHORIZATION_READINESS_20261027_001`, generation 2926,
 issue 6787 comment 6432401294. Public merge and release require candidate review.
+
+## Evidence-driven task transitions (generation 2938)
+
+The existing response parser accepts an optional TASK TRANSITION JSON report. Its
+validated prerequisite graph identifies the immediate unresolved condition while
+preserving the intended task. The existing workflowDecision remains the single
+source for prompt selection, UI and persisted attempt instrumentation. Missing,
+cyclic, stale-candidate or mismatched-requirement evidence cannot advance review.
+Qualification is explicit: a missing selected gate can request qualification,
+then return to review only through existing result/check correspondence rules.
+Reports remain source-reported and never grant permission or human acceptance.
+
+The task stage names the intended next stage after prerequisites; each condition
+can name the stage used to resolve it. Stable route/condition identity detects
+repeated attempts despite new descriptive prose. Existing projects and backups
+need no migration; absent task maps request focused information during ordinary
+work. Changed next actions, requirements or candidate identities discard an
+omitted carried task map from the current projection, preserving original history.
+The system cannot authenticate external receipts or infer arbitrary dependency
+relationships: the working AI supplies explicit evidence, which is checked for
+structural correspondence. No backend AI, new control-plane authority or release
+permission is introduced.

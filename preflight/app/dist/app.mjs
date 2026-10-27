@@ -62,6 +62,8 @@ function renderProgress(p){
  box.append(el('h2','Current position'));
  const current=snapshot?snapshot.checked+' of '+snapshot.total+' requirements have matching reported checks. '+snapshot.accepted+' accepted by you.':'Requirement attribution is incomplete. Saved reports do not establish completion.';
  const latest=plan.latest||'No new finding classified in the latest response.';
+ if(plan.transition?.status==='VALID'){const t=plan.transition;box.append(el('h3','Task progression'),el('p','Selected stage: '+plan.phase),el('p',t.selected?'Immediate prerequisite: '+t.selected.id+' — '+t.selected.criterion:'Reported prerequisites satisfied; existing verification and permission rules still apply.'),el('p','Next result needed: '+plan.condition),el('p',t.repeated?'The same route and conditions have already been reported. A materially different route or changed conditions is needed.':'Transition evidence is source-reported.','hint'));}else if(plan.transition?.status==='INVALID')box.append(el('p','Task transition needs clarification: '+plan.transition.error,'notice'));
+
  const remaining=snapshot?(snapshot.next?snapshot.next.id+' · '+snapshot.next.text:'All tracked requirement criteria are satisfied.'):fallback.remaining[0]||'Next unmet criterion needs clarification.';
  for(const [label,value]of [['Progress standing',current],['Still unfinished',remaining]]){
   const item=el('div',undefined,'field');item.append(el('h3',label),el('p',short(value)));box.append(item);

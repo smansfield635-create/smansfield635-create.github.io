@@ -157,7 +157,8 @@ export function run(){
  const compressed=fs.readFileSync(file('showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz'));
  if(sha(compressed)!==SOURCE_SHA)throw Error('FROZEN_PRECOMPUTED_WORLD_HASH_MISMATCH');
  const record=JSON.parse(zlib.gunzipSync(compressed).toString('utf8'));
- const pkg=record.canonical;if(!pkg?.primitiveSpans?.length)throw Error('CANONICAL_PACKAGE_ABSENT');
+ const freeze=value=>{if(value&&typeof value==='object'&&!Object.isFrozen(value)){for(const item of Object.values(value))freeze(item);Object.freeze(value);}return value;};
+ const pkg=freeze(record.canonical);if(!pkg?.primitiveSpans?.length)throw Error('CANONICAL_PACKAGE_ABSENT');
  const views=createHEarthRun8ER2DCanonicalGPUUploadViews(pkg,{enableWoodlandClearing:true});
  const seam=seamProvenance(pkg,views),graph=runtimeImportGraph();
  return {schema:'H_EARTH_GEN2935_SOURCE_PROVENANCE_NEAR_FAR_AND_GEOLOGY_v1',

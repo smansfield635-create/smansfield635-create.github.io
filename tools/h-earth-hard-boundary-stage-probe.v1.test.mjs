@@ -146,6 +146,7 @@ test('source first coastal atlas edge is evaluated after overlapping woodland an
 
 test('source-first border ranking excludes fully masked coastal panel while detecting active unmasked panel',()=>{
  const n=16,width=n*3,pixels=new Uint8Array(n*width).fill(255);
+ for(let y=0;y<n;y++)pixels.fill(0,y*width,y*width+n); // woodland absent: ravine alone masks coastal
  const mask={size:n,width,bytes:pixels};
  const regions=[
   {name:'woodland',bounds:[-20,-20,30,30],panel:0},

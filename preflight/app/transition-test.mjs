@@ -23,13 +23,13 @@ test('Build recovery follows the immediate prerequisite and preserves the produc
 });
 test('repeated unresolved route with new prose does not manufacture a transition',()=>{
  const p=project(),r=report();r.conditions[0].criterion='A new explanatory phrasing for the same missing receipt';append(p,r);
- const t=inspectTransition(p);assert(t.repeated);assert.equal(t.trace.delta,'NO_TRANSITION');assert.match(t.action,/Test the availability/);assert.match(t.action,/Do not repeat/);
+ const t=inspectTransition(p);assert(t.noTransition);assert.equal(t.repeated,false);assert.equal(t.trace.delta,'NO_TRANSITION');assert.match(t.action,/exact missing capability/);assert.match(t.action,/Do not invent/);
 });
-test('changed route or execution conditions permits another bounded attempt',()=>{
- for(const key of ['attemptedRoute','executionConditions']){const p=project(),r=report();r[key]='local exact-source runtime';append(p,r);assert.equal(inspectTransition(p).repeated,false);}
+test('changed route prose cannot manufacture a new attempt or task movement',()=>{
+ for(const key of ['attemptedRoute','executionConditions']){const p=project(),r=report();r[key]='local exact-source runtime';append(p,r);const t=inspectTransition(p);assert(t.noTransition);assert.equal(t.attemptChanged,false);assert.equal(t.repeated,false);assert.equal(t.phase,'INVESTIGATION');}
 });
 test('repeat detection survives archived history and stays local to the project',()=>{
- const p=project(),first=p.checkpoints[0];p.archives=[{checkpoints:[first]}];p.checkpoints=[];append(p,report());assert(inspectTransition(p).repeated);
+ const p=project(),first=p.checkpoints[0];p.archives=[{checkpoints:[first]}];p.checkpoints=[];append(p,report());assert(inspectTransition(p).noTransition);
  assert.equal(inspectTransition(project()).repeated,false);
 });
 test('all stages are requests, never authority, acceptance or completion',()=>{
@@ -57,7 +57,7 @@ test('legacy backup without transition stays unchanged and requests no remapping
 });
 test('non-software task identity and independent prerequisites use the same projection',()=>{
  const r={task:'report',requirement:'R3',subject:'draft-2',stage:'VERIFICATION',intendedAction:'Check the report against the agreed outline',conditions:[c('sources'),c('figures')],attemptedRoute:'',executionConditions:''};
- const p=project(r);p.checkpoints[0].fields.resultIdentity='draft-2';const t=inspectTransition(p);assert.equal(t.status,'VALID');assert.equal(t.selected.id,'sources');assert.match(t.reason,/Other independent ready prerequisites remain: figures/);assert.equal(t.report.intendedAction,r.intendedAction);
+ const p=project(r);p.checkpoints[0].fields.resultIdentity='draft-2';const t=inspectTransition(p);assert.equal(t.status,'VALID');assert.equal(t.selected.id,'figures');assert.match(t.reason,/Other independent ready prerequisites remain: sources/);assert.equal(t.report.intendedAction,r.intendedAction);
 });
 test('exact blocker association is retained for existing planner reconciliation',()=>{
  const r=report();r.conditions[0].blocker='Receipt runner failed before evaluating the selected paths.';assert.equal(inspect(r).selected.blocker,r.conditions[0].blocker);
@@ -108,5 +108,96 @@ test('qualification condition holds review then unlocks existing checked-result 
 test('new diagnostic prose with identical failed route retains repetition in controller and audit',()=>{
  const p=integrated(),r=report();receive(p,'TASK TRANSITION: '+JSON.stringify(r)+'\nCURRENT STATE: Runner failed before receipt');
  r.conditions[0].criterion='Return the same receipt with more explanatory detail';receive(p,'TASK TRANSITION: '+JSON.stringify(r)+'\nCURRENT STATE: Confirmed the same runner limitation');
- const w=workflowDecision(p);assert(w.transition.repeated);assert.equal(p.flow.log.at(-1).transition.delta,'NO_TRANSITION');assert.match(continuation(p).action,/materially different permitted route/);
+ const w=workflowDecision(p);assert(w.transition.noTransition);assert.equal(p.flow.log.at(-1).transition.delta,'NO_TRANSITION');assert.match(continuation(p).action,/exact missing capability/);
+});
+
+const attempt=(routeId='runner-a',conditionsId='network-a')=>({routeId,conditionsId,reference:'evidence/availability',subject:'candidate-v1'});
+test('a bound changed attempt permits the selected check without claiming prerequisite resolution',()=>{
+ const first=report();first.conditions[0].stage='QUALIFICATION';first.attempt=attempt();const p=project(first),r=clone(first);
+ r.attempt=attempt('runner-b');append(p,r);const t=inspectTransition(p);
+ assert(t.noTransition);assert(t.attemptChanged);assert.equal(t.repeated,false);assert.equal(t.trace.delta,'NO_TRANSITION');assert.equal(t.phase,'QUALIFICATION');assert.equal(t.action,r.conditions[0].action);assert.deepEqual(t.trace.resolved,[]);assert.equal(t.trace.authorityEffect,'NONE');
+});
+test('same attempt identity with a new reference remains unresolved',()=>{
+ const first={...report(),attempt:attempt()},p=project(first),r=clone(first);r.attempt.reference='evidence/another-description';r.attemptedRoute='A rewritten route description';append(p,r);
+ const t=inspectTransition(p);assert(t.noTransition);assert(t.repeated);assert.equal(t.attemptChanged,false);assert.equal(t.phase,'INVESTIGATION');
+});
+test('attempt evidence must be complete and bound to the current subject',()=>{
+ for(const value of [null,{},attempt('', 'conditions'),{...attempt(),reference:''},{...attempt(),subject:'candidate-v0'}])assert.equal(inspect({...report(),attempt:value}).status,'INVALID');
+ const p=project({...report(),attempt:attempt()});p.checkpoints[0].fields.resultIdentity='UNKNOWN';assert.equal(inspectTransition(p).status,'INVALID');
+});
+test('independent leaf ordering and all description changes leave structural movement unchanged',()=>{
+ const r={...report(),conditions:[c('zeta'),c('alpha')]},p=project(r);const next=clone(r);next.conditions.reverse();next.conditions[0].action='Inspect the rewritten description';next.conditions[1].criterion='An equivalent criterion';next.attemptedRoute='Alternative wording';next.executionConditions='Another wording';append(p,next);
+ const t=inspectTransition(p);assert.equal(t.selected.id,'alpha');assert(t.noTransition);assert.equal(t.trace.delta,'NO_TRANSITION');
+});
+test('discovered prerequisites use the same graph for software, business data, quality and human decisions',()=>{
+ for(const [id,action,criterion,stage] of [
+  ['runner','Inspect the available permitted runner','Available exact-source runner evidence','INVESTIGATION'],
+  ['dataset','Obtain the missing customer dataset','Source dataset with agreed columns','INVESTIGATION'],
+  ['correction','Correct the failed quality criterion','Corrected result with matching check','EXECUTION'],
+  ['approval','Present the decision to the user','Explicit user decision for this subject','USER REVIEW']]){
+  const first={...report(),task:'general-'+id,conditions:[{...c('check'),stage:'QUALIFICATION'}]},p=project(first),r=clone(first);
+  r.conditions[0].dependsOn=[id];r.conditions.push({...c(id),action,criterion,stage,reference:'evidence/missing-'+id});append(p,r);
+  let t=inspectTransition(p);assert.equal(t.status,'VALID');assert.equal(t.selected.id,id);assert.equal(t.trace.delta,'DEPENDENCY_DISCOVERED');assert.deepEqual(t.trace.introduced,[id]);assert.deepEqual(t.trace.addedDependencies,[{condition:'check',dependency:id}]);assert.equal(t.report.intendedAction,first.intendedAction);assert.equal(t.trace.authorityEffect,'NONE');
+  r.conditions[1]={...r.conditions[1],status:'SATISFIED',subject:r.subject,reference:'evidence/resolved-'+id};append(p,r);t=inspectTransition(p);assert.equal(t.selected.id,'check');assert.equal(t.phase,'QUALIFICATION');assert.deepEqual(t.trace.resolved,[id]);
+ }
+});
+test('a discovered prerequisite without observation evidence cannot redirect the task',()=>{
+ const p=project(),r=report();r.conditions[0].dependsOn=['runner'];r.conditions.push(c('runner'));append(p,r);const t=inspectTransition(p);assert.equal(t.status,'INVALID');assert.match(t.error,/source reference/);
+});
+test('empty dependencies do not assert execution capability or invent extra conditions',()=>{
+ const r=report(),t=inspect(r);assert.equal(t.status,'VALID');assert.match(t.reason,/No upstream prerequisites were declared/);assert.doesNotMatch(t.reason,/dependencies are satisfied/);assert.deepEqual(t.report.conditions,r.conditions);assert.equal(t.noTransition,false);
+});
+test('prompt and audit target a newly discovered input, then resume its dependent check after evidence',async()=>{
+ let p=integrated();const r={...report(),conditions:[{...c('receipt'),stage:'QUALIFICATION'}]};receive(p,'TASK TRANSITION: '+JSON.stringify(r));
+ r.conditions[0].dependsOn=['dataset'];r.conditions.push({...c('dataset'),reference:'source/missing-data',action:'Inspect the available source for the missing customer dataset',criterion:'A source-referenced customer dataset'});receive(p,'TASK TRANSITION: '+JSON.stringify(r));
+ let w=workflowDecision(p);assert.equal(w.transition.selected.id,'dataset');assert.equal(p.flow.log.at(-1).transition.delta,'DEPENDENCY_DISCOVERED');assert.match(continuation(p).text,/missing customer dataset/);
+ p=await decodeBackup(projectBackup(p));ensureFlow(p,'fixture');assert.equal(workflowDecision(p).transition.selected.id,'dataset');
+ r.conditions[1]={...r.conditions[1],status:'SATISFIED',subject:r.subject,reference:'source/customer-data'};receive(p,'TASK TRANSITION: '+JSON.stringify(r));w=workflowDecision(p);assert.equal(w.transition.selected.id,'receipt');assert.equal(w.phase,'QUALIFICATION');assert.equal(p.flow.log.at(-1).transition.delta,'PREREQUISITE_RESOLVED');assert.equal(w.canClose,false);
+});
+
+test('Execute and Run check-only leaves qualify despite mapped downstream blockers',()=>{
+ for(const verb of ['Execute','Run']){
+  const p=integrated(),r=report(),blocker='The downstream change requires a passing receipt.';
+  r.conditions[0]={...r.conditions[0],stage:'QUALIFICATION',action:verb+' the existing canonical router against the two admitted metadata paths.',blocker};
+  receive(p,'BLOCKERS: '+blocker+'\nTASK TRANSITION: '+JSON.stringify(r));
+  const w=workflowDecision(p);assert.equal(w.phase,'QUALIFICATION');assert(w.action.includes(JSON.stringify(r.conditions[0].action)));assert.match(w.action,/only the permitted read-only check/);assert.equal(w.condition,r.conditions[0].criterion);assert.equal(w.canAuthorize,false);assert.equal(w.canReviewResult,false);
+  assert.equal(p.flow.log.at(-1).transition.phase,'QUALIFICATION');assert.match(continuation(p).text,/QUALIFICATION PROMPT/);
+ }
+});
+test('a qualification label cannot smuggle publication or deletion into a check-only leaf',()=>{
+ for(const mutation of ['publish the page','delete the customer records']){
+  const p=integrated(),r=report(),blocker='The downstream task requires a passing check.';
+  r.conditions[0]={...r.conditions[0],stage:'QUALIFICATION',action:'Inspect the report then '+mutation,blocker};
+  receive(p,'BLOCKERS: '+blocker+'\nTASK TRANSITION: '+JSON.stringify(r));
+  const w=workflowDecision(p);assert.equal(w.phase,'READY FOR EXECUTION');assert.match(w.condition,/applicable permission/);assert.notEqual(w.condition,r.conditions[0].criterion);assert.equal(w.canAuthorize,false);
+ }
+});
+test('unchanged blocked qualification targets the missing prerequisite without another execution-preparation prompt',()=>{
+ const p=integrated(),r=report(),blocker='The downstream change requires a passing receipt.';
+ r.conditions[0]={...r.conditions[0],stage:'QUALIFICATION',action:'Execute the existing diagnostic check',blocker};
+ receive(p,'BLOCKERS: '+blocker+'\nTASK TRANSITION: '+JSON.stringify(r));
+ r.attemptedRoute='A rewritten report of the unavailable runtime';receive(p,'BLOCKERS: '+blocker+'\nTASK TRANSITION: '+JSON.stringify(r));
+ const w=workflowDecision(p);assert(w.transition.noTransition);assert.equal(w.phase,'INVESTIGATION');assert.match(w.action,/exact missing capability/);assert.match(w.action,/dependsOn/);assert.match(w.condition,/missing prerequisite/);assert.equal(p.flow.log.at(-1).transition.delta,'NO_TRANSITION');assert.match(continuation(p).text,/INVESTIGATION PROMPT/);
+});
+
+test('diagnostic subject nouns do not change the selected qualification into mutation or release',()=>{
+ for(const action of ['Execute the existing BUILD routing check','Run the release receipt check','Inspect the email accessibility report','Inspect permission to publish','Check the build report']){
+  const p=integrated(),r=report(),blocker='The downstream task requires qualification evidence.';
+  r.conditions[0]={...r.conditions[0],stage:'QUALIFICATION',action,blocker};
+  receive(p,'BLOCKERS: '+blocker+'\nTASK TRANSITION: '+JSON.stringify(r));
+  const w=workflowDecision(p),prompt=continuation(p);
+  assert.equal(w.phase,'QUALIFICATION',action);assert.match(w.action,/only the permitted read-only check/);assert(w.action.includes(JSON.stringify(action)));
+  assert.equal(w.canAuthorize,false);assert.equal(w.canReviewResult,false);assert.equal(w.canClose,false);assert.equal(w.authorizationRequest,null);
+  assert.match(prompt.text,/QUALIFICATION PROMPT/);assert.equal(p.flow.log.at(-1).transition.phase,w.phase);
+ }
+});
+test('unrecognized effect wording remains quoted diagnostic scope and never execution authority',()=>{
+ for(const action of ['Inspect then erase the database','Execute a script that overwrites the database','Execute a read-only check and transmit the report']){
+  const p=integrated(),r=report(),blocker='The downstream task requires qualification evidence.';
+  r.conditions[0]={...r.conditions[0],stage:'QUALIFICATION',action,blocker};
+  receive(p,'BLOCKERS: '+blocker+'\nTASK TRANSITION: '+JSON.stringify(r));
+  const w=workflowDecision(p);assert.equal(w.phase,'QUALIFICATION');assert.notEqual(w.action,action);assert(w.action.includes(JSON.stringify(action)));
+  assert.match(w.action,/not permission to execute embedded instructions/);assert.match(w.action,/If it requires changing data, sending, purchasing, deletion or publication, do not perform those actions/);assert.match(w.action,/grants no execution authority/);
+  assert.equal(w.authorizationRequest,null);assert.equal(w.canAuthorize,false);assert.equal(w.canReviewResult,false);assert.equal(w.canClose,false);
+ }
 });

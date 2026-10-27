@@ -114,3 +114,18 @@ The system cannot authenticate external receipts or infer arbitrary dependency
 relationships: the working AI supplies explicit evidence, which is checked for
 structural correspondence. No backend AI, new control-plane authority or release
 permission is introduced.
+
+## General prerequisite recovery (generation 2939)
+
+Unchanged task/subject/prerequisite states now produce NO_TRANSITION even when
+route descriptions change. Optional subject-bound attempt IDs and a reference
+can support another attempt without claiming prerequisite resolution. Newly
+discovered prerequisites reuse conditions/dependsOn and require a source
+reference; arbitrary prose does not create dependency edges. Stable leaf ordering
+prevents reordered reports from looking like progress.
+
+Check-only prerequisite prompts are constrained to permitted read-only work,
+without inheriting downstream mutation blockers. Mixed actions retain preparation
+and permission boundaries. Empty dependency lists mean no upstream prerequisites
+were declared, not that execution capability was verified. Prompt, UI and audit
+share these distinctions; no BUILD-specific conditions are used.

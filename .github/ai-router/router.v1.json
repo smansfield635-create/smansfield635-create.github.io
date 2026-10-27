@@ -344,7 +344,8 @@
         "build/index.html",
         ".github/workflows/build-companion-v4-qualification.yml",
         "assets/build/build-engine.v3.mjs",
-        "assets/build/build-companion.js"
+        "assets/build/build-companion.js",
+        "tools/build-companion-matrix-v3-browser.test.mjs"
       ],
       "entrypoint": ".github/ai-router/projects/build/entrypoint.v1.json",
       "priority": 100

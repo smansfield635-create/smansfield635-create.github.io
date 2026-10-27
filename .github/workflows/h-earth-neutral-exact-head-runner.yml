@@ -33,7 +33,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' }}
+    if: ${{ inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1084,7 +1084,7 @@ jobs:
           retention-days: 30
 
   ground-material-comparison:
-    if: ${{ inputs.route_query == 'qualification=ground-material-gen2898-stage-c' }}
+    if: ${{ inputs.route_query == 'qualification=groundcover-factor-v1' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -1095,7 +1095,7 @@ jobs:
           EXERCISE: ${{ inputs.exercise_vegetation_residency }}
           TIMING_SHIM: ${{ inputs.apply_timing_shim }}
         run: |
-          test "$TARGET_SHA" = 9127904e725a3f4ca13c1221451023102ad09435
+          test "$TARGET_SHA" = 60b3c07f0216645119a1b92b16dac82cae739145
           test "$ROUTE_PATH" = /showroom/globe/h-earth/
           test "$EXERCISE" = false
           test "$TIMING_SHIM" = false
@@ -1108,13 +1108,13 @@ jobs:
       - name: Check out complete fixed baseline
         uses: actions/checkout@v4
         with:
-          ref: 85372f3dc896d73457f6a7d008ac08a51d0ba85b
+          ref: 60b3c07f0216645119a1b92b16dac82cae739145
           path: baseline
           persist-credentials: false
       - name: Check out complete fixed candidate
         uses: actions/checkout@v4
         with:
-          ref: 9127904e725a3f4ca13c1221451023102ad09435
+          ref: 60b3c07f0216645119a1b92b16dac82cae739145
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1122,13 +1122,13 @@ jobs:
           node-version: 22
       - name: Validate bounded comparison tooling
         working-directory: tooling
-        run: node --test tools/h-earth-ground-material-comparison.v1.test.mjs
+        run: node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
       - name: Install Chromium
         working-directory: tooling
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Capture twenty source-bound habitat isolation views
+      - name: Capture eighteen published-renderer groundcover factor images
         working-directory: tooling
         run: |
           timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/ground-material-comparison"
@@ -1136,7 +1136,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-coordinate-boundary-${{ github.run_id }}
+          name: h-earth-groundcover-factor-${{ github.run_id }}
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30

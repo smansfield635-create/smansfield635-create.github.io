@@ -33,7 +33,8 @@ function sampleGroundcover(x,z){
  const continuity=smooth(.30,.85,patch);
  const xOasis=distOutside([-18,-204,34,-131],x,z),xEstate=distOutside([18,-210,132,-125],x,z);
  const routeT=clamp((z-x+192)/96),routeD=Math.hypot(x-(48-48*routeT),z-(-144+48*routeT));
- const grove=1-smooth(22,42,Math.hypot(x+139.40268,z+210.74617));
+ // Published shader: protectedGrove=1-smooth(22,42,d), then protection multiplies (1-protectedGrove).
+ const grove=smooth(22,42,Math.hypot(x+139.40268,z+210.74617));
  const protection=smooth(0,12,xOasis)*smooth(0,10,xEstate)*smooth(4,9,routeD)*grove;
  const coastSuit=smooth(28,72,distance),slopeSuit=1-smooth(.12,.42,slope),rockSuit=1-smooth(.18,.58,rockExposure);
  const suitability=coastSuit*slopeSuit*rockSuit;

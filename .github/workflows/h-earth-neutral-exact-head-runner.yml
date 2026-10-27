@@ -1211,3 +1211,65 @@ jobs:
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30
+
+  post-gen2928-hard-boundary-stage-probe:
+    if: >-
+      ${{ github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/hard-boundary-stage-probe-20261027' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    steps:
+      - name: Check out admitted exact diagnostic tooling only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Check out frozen published Gen2928 baseline
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: baseline
+          persist-credentials: false
+      - name: Check out identical frozen renderer target (not PR product bytes)
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify source identity and diagnostic syntax and tests
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tools/h-earth-hard-boundary-stage-probe.v1.mjs
+          node --check tools/h-earth-hard-boundary-stage-probe.v1.test.mjs
+          node --test tools/h-earth-hard-boundary-stage-probe.v1.test.mjs
+          printf '%s  %s\n' fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js | sha256sum --check --status
+      - name: Install bounded Chromium from comparison precedent
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture 60 matched source-stage GPU images (no product mutation)
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: POST_GEN2928_STAGE_PROBE_V1
+        run: |
+          timeout 3600s node tools/h-earth-hard-boundary-stage-probe.v1.mjs \
+            --baseline-dir ../baseline \
+            --candidate-dir ../candidate \
+            --output "${{ runner.temp }}/post-gen2928-stage-probe"
+      - name: Preserve receipt and images even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-post-gen2928-hard-boundary-stages-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/post-gen2928-stage-probe
+          if-no-files-found: warn
+          retention-days: 30
+

@@ -3,12 +3,14 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {transformPublishedRenderer,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
 
-export const DIAGNOSTIC_MODES=Object.freeze(['reference','unlit-albedo','unlit-no-habitat','habitat-coverage','reference-no-habitat']);
-export const DIAGNOSTIC_STAGE_MEANINGS=Object.freeze({reference:'Original terrain lighting/material; grass hidden for diagnosis only.','unlit-albedo':'Final terrain albedo with original exposure/gamma.','unlit-no-habitat':'Same unlit pipeline with only habitat color and roughness weights zeroed.','habitat-coverage':'Original combined habitat coverage, raw grayscale without exposure/gamma; nonterrain unchanged.','reference-no-habitat':'Original lit pipeline with only habitat color and roughness weights zeroed.'});
-export const SEARCH_PROVENANCE=Object.freeze({kind:'SOURCE_BOUND_COORDINATES_NOT_SCREENSHOT_TELEMETRY',exactScreenshotMatchProven:false,operationId:'H_EARTH_COORDINATE_BOUNDARY_ISOLATION_20261026_001',lockGeneration:2922,diagnosticPass:1,priorUnmatchedRuns:Object.freeze([40417092530,40419484820]),localizationBasis:'AUTHENTICATED_COMBINED_MASK_AND_EXPOSED_SAME_TRIANGLE_TRANSECTS',traceResultSha256:'4ae74ab9625a40715ab787faf1388c5cced191c7906c9bb9384dec5d7f49c579',anchor:Object.freeze({x:149.33333333333337,y:6.748141765594482,z:-169.69270833333331})});
+export const DIAGNOSTIC_MODES=Object.freeze(MODES_MINIMUM.map(i=>MODES[i]));
+const MODE_ID_BY_NAME=new Map(MODES.map((name,index)=>[name,index]));
+export const DIAGNOSTIC_STAGE_MEANINGS=Object.freeze(Object.fromEntries(DIAGNOSTIC_MODES.map(name=>[name,'GPU source-interception read-only factor visualization; product bytes unchanged'])));
+export const SEARCH_PROVENANCE=Object.freeze({kind:'PUBLISHED_RENDERER_KNOWN_INLAND_BAND_PLUS_HEALTHY_COAST_CONTROL',exactScreenshotMatchProven:false,operationId:'H_EARTH_GROUNDCOVER_FACTOR_GPU_DIAGNOSTIC_20261026_001',priorStageAttributionRun:40411050366,expectedPublishedRendererSha256:'7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2'});
 export const RENDERER_SHA256='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2';
-export const HEADS=Object.freeze({baseline:'85372f3dc896d73457f6a7d008ac08a51d0ba85b',candidate:'9127904e725a3f4ca13c1221451023102ad09435'});
+export const HEADS=Object.freeze({baseline:'60b3c07f0216645119a1b92b16dac82cae739145',candidate:'60b3c07f0216645119a1b92b16dac82cae739145'});
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
 {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
 {name:'inland-seam-mid',x:-200,z:-704,y:18.272624,yaw:0,pitch:-4,diagnosticObserver:true},
@@ -18,16 +20,7 @@ export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pit
 {name:'patch-close-south',x:88,z:-236,yaw:180,pitch:-17.72},
 {name:'patch-east',x:92,z:-232,yaw:270,pitch:-6.69},
 {name:'patch-west',x:84,z:-232,yaw:90,pitch:-13.5}].map(Object.freeze));
-const observer=(name,target,z,y)=>Object.freeze({name,x:target.x,y,z,yaw:0,pitch:Math.atan2(target.y-y,z-target.z)*180/Math.PI,diagnosticObserver:true,target:Object.freeze(target)});
-const anchor=SEARCH_PROVENANCE.anchor;
-export const DIAGNOSTIC_POSES=Object.freeze([
- observer('coastal-mask-close',anchor,anchor.z+10,18),
- observer('coastal-mask-down',anchor,anchor.z+2,18),
- observer('coastal-mask-context',anchor,anchor.z+26,34),
- observer('southern-mask-down',{x:142.33333333333337,y:7.017276763916016,z:-271.125},-269.125,18)
-]);
-// Diagnostic observer positions aim at measured indexed ground coordinates.
-// These views are outside walking bounds and confer no traversal/support authority.
+export const DIAGNOSTIC_POSES=Object.freeze([POSES.find(p=>p.name==='inland-seam-near'),POSES.find(p=>p.name==='coast-oblique')]);
 export function comparisonState(nav,pose,sequence,action){
   if(pose.diagnosticObserver===true){
     if(!['x','y','z','yaw','pitch'].every(k=>Number.isFinite(pose[k])))throw Error('DIAGNOSTIC_POSE_INVALID');
@@ -45,24 +38,18 @@ export function instrumentRoute(source){return replaceExactlyOnce(source,'const 
 export function instrumentRenderer(source){return replaceExactlyOnce(source,'resources.singleOwnerVegetation?.draw(packet);','if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');}
 export function instrumentDiagnosticRenderer(source){
  if(sha(source)!==RENDERER_SHA256)throw Error('DIAGNOSTIC_SOURCE_HASH_MISMATCH');
- return transformDiagnosticSource(source);
-}
-export function transformDiagnosticSource(source){
- const start=source.indexOf('const FS ='),end=source.indexOf('// Ordered screen-door coverage',start);
- if(start<0||end<0)throw Error('DIAGNOSTIC_FS_BOUNDARY');
- let fsSource=source.slice(start,end);
- fsSource=replaceExactlyOnce(fsSource,'out vec4 outColor;','out vec4 outColor;\nuniform int uGroundDiagnosticMode;');
- fsSource=replaceExactlyOnce(fsSource,'float terrainRoughnessForLighting=0.72;','float terrainRoughnessForLighting=0.72;\n  float diagnosticHabitatCoverage=0.0;');
- fsSource=replaceExactlyOnce(fsSource,'base=mix(base,habitatSoil,habitatCoverage*.68);','diagnosticHabitatCoverage=habitatCoverage;\n    if(uGroundDiagnosticMode==2||uGroundDiagnosticMode==4)habitatCoverage=0.0;\n    base=mix(base,habitatSoil,habitatCoverage*.68);');
- fsSource=replaceExactlyOnce(fsSource,'lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));','if(worldSoilTerrain&&(uGroundDiagnosticMode==1||uGroundDiagnosticMode==2))lit=base;\n  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));\n  if(worldSoilTerrain&&uGroundDiagnosticMode==3)lit=vec3(diagnosticHabitatCoverage);');
- source=source.slice(0,start)+fsSource+source.slice(end);
- const anchor='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
- source=replaceExactlyOnce(source,anchor,anchor+`\n    {const mode=globalThis.__groundDiagnosticMode;if(!Number.isInteger(mode)||mode<0||mode>4)throw Error('DIAGNOSTIC_MODE_INVALID');const loc=gl.getUniformLocation(resources.geometryProgram,'uGroundDiagnosticMode');if(loc===null)throw Error('DIAGNOSTIC_UNIFORM_MISSING');gl.uniform1i(loc,mode);globalThis.__groundDiagnosticApplied=mode;}`);
- return instrumentRenderer(source);
+ return instrumentRenderer(transformPublishedRenderer(source).source);
 }
 export function validateDiagnosticSet(views){
- if(views.length!==20)throw Error('DIAGNOSTIC_INCOMPLETE');
- for(const pose of DIAGNOSTIC_POSES){const group=views.filter(v=>v.pose.name===pose.name);if(group.length!==5||new Set(group.map(v=>v.mode)).size!==5||!DIAGNOSTIC_MODES.every(m=>group.some(v=>v.mode===m)))throw Error('DIAGNOSTIC_MODE_SET');const ref=group.find(v=>v.mode==='reference');for(const v of group)if(!v.grassHidden||v.diagnosticApplied!==DIAGNOSTIC_MODES.indexOf(v.mode)||v.assetSignature!==ref.assetSignature||JSON.stringify(v.state.position)!==JSON.stringify(ref.state.position)||JSON.stringify(v.lastFrame.cameraPosition)!==JSON.stringify(ref.lastFrame.cameraPosition))throw Error('DIAGNOSTIC_MATCH_MISMATCH');}
+ if(views.length!==DIAGNOSTIC_POSES.length*DIAGNOSTIC_MODES.length)throw Error('DIAGNOSTIC_INCOMPLETE');
+ for(const pose of DIAGNOSTIC_POSES){
+  const group=views.filter(v=>v.pose.name===pose.name);
+  if(group.length!==DIAGNOSTIC_MODES.length||new Set(group.map(v=>v.mode)).size!==DIAGNOSTIC_MODES.length||!DIAGNOSTIC_MODES.every(m=>group.some(v=>v.mode===m)))throw Error('DIAGNOSTIC_MODE_SET');
+  const ref=group[0];
+  for(const v of group){
+   if(!v.grassHidden||v.diagnosticApplied!==MODE_ID_BY_NAME.get(v.mode)||v.assetSignature!==ref.assetSignature||JSON.stringify(v.state.position)!==JSON.stringify(ref.state.position)||JSON.stringify(v.lastFrame.cameraPosition)!==JSON.stringify(ref.lastFrame.cameraPosition)||v.sourceHead!==ref.sourceHead||v.rendererHash!==ref.rendererHash)throw Error('DIAGNOSTIC_MATCH_MISMATCH');
+  }
+ }
  return true;
 }
 export function sameHeading(a,b){return Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(((a-b)%360+540)%360-180)<1e-8;}
@@ -97,7 +84,7 @@ export function assertCheckout(dir,expected){const head=execFileSync('git',['-C'
 export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(!['--baseline-dir','--candidate-dir','--output'].includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==3)throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==3)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
-  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,poses:DIAGNOSTIC_POSES,modes:DIAGNOSTIC_MODES,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
+  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,poses:DIAGNOSTIC_POSES,modes:DIAGNOSTIC_MODES,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
   let browser=null,server=null;
   const interrupt=signal=>{receipt.result='INTERRUPTED';receipt.errors.push(signal);persist();server?.kill();process.exit(signal==='SIGTERM'?143:130);};
@@ -114,7 +101,7 @@ export async function run(argv){
       const serverError=[];server.on('error',e=>serverError.push(e.message));
       let listening=false;for(let n=0;n<50;n++){try{const r=await fetch(base+ROOT);if(r.ok){listening=true;break;}}catch{}await new Promise(r=>setTimeout(r,100));}if(!listening)throw Error('SERVER_UNAVAILABLE:'+serverError.join(';'));
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
-      await page.addInitScript({content:'globalThis.__groundDiagnosticMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
+      await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
       for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,instrumentDiagnosticRenderer]]){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
@@ -130,7 +117,7 @@ export async function run(argv){
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
       let sequence=10000,previousFrame=0;
       for(const pose of DIAGNOSTIC_POSES)for(const mode of DIAGNOSTIC_MODES){
-        const hidden=true;await page.evaluate(value=>{globalThis.__groundDiagnosticMode=value;},DIAGNOSTIC_MODES.indexOf(mode));
+        const hidden=true;await page.evaluate(value=>{globalThis.__groundcoverFactorMode=value;},MODE_ID_BY_NAME.get(mode));
         const settleDeadline=Date.now()+180000;let stable=0,signature=null;
         while(stable<2){
           const settled=await page.evaluate(async({pose,hidden,sequence})=>{
@@ -150,21 +137,21 @@ export async function run(argv){
           const costs=[];for(let i=0;i<12;i++){const t=performance.now();globalThis.__HEarthAuditPresent(state);costs.push(performance.now()-t);await new Promise(requestAnimationFrame);}
           const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
           const expectedPacket=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
-          return {state,expectedCameraPosition:expectedPacket.camera.position,lastFrame:gpu.frameRecords.at(-1),canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},cpuSubmitMilliseconds:costs,resources:gpu.resources,grassHidden:hidden,diagnosticApplied:globalThis.__groundDiagnosticApplied};
+          return {state,expectedCameraPosition:expectedPacket.camera.position,lastFrame:gpu.frameRecords.at(-1),canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},cpuSubmitMilliseconds:costs,resources:gpu.resources,grassHidden:hidden,diagnosticApplied:globalThis.__groundcoverFactorModeApplied};
         },{pose,hidden,sequence:++sequence});
         receipt.lastAttempt={label,pose,mode,...view};persist();
-        if(view.diagnosticApplied!==DIAGNOSTIC_MODES.indexOf(mode))throw Error('DIAGNOSTIC_MODE_NOT_APPLIED');
+        if(view.diagnosticApplied!==MODE_ID_BY_NAME.get(mode))throw Error('DIAGNOSTIC_MODE_NOT_APPLIED');
         const assets=assetReadiness(view.resources,view.lastFrame.cameraPosition);if(!assets.ready||assets.signature!==signature)throw Error('ASSETS_CHANGED_DURING_CAPTURE');view.assetSignature=assets.signature;
         validateFrame(view,pose,sequence);if(view.lastFrame.frameSequence<=previousFrame)throw Error('FRAME_DID_NOT_ADVANCE');previousFrame=view.lastFrame.frameSequence;
         const name=label+'-'+pose.name+'-'+mode+'.png';const capture=await page.evaluate(()=>{const canvas=document.querySelector('#h-earth-functional-landscape-canvas');const gl=canvas?.getContext('webgl2');if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('CAPTURE_CONTEXT_NOT_PRESERVED');const before=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);const dataUrl=canvas.toDataURL('image/png');const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);return {dataUrl,before,after};});const bytes=decodeCanvasCapture(capture,view.lastFrame);fs.writeFileSync(path.join(out,name),bytes);
         const after=await page.evaluate(()=>H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1));if(after.navigationSequence!==sequence||after.frameSequence!==view.lastFrame.frameSequence)throw Error('CAPTURE_FRAME_CHANGED');
-        receipt.views.push({label,pose,mode,instrumentation:runRecord.instrumentation,...view,captureMethod:'PRESERVED_WEBGL_CANVAS_PNG',imageWidth:529,imageHeight:980,image:name,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
+        receipt.views.push({label,pose,mode,instrumentation:runRecord.instrumentation,...view,modeId:MODE_ID_BY_NAME.get(mode),sourceHead:HEADS[label],rendererHash:RENDERER_SHA256,captureMethod:'PRESERVED_WEBGL_CANVAS_PNG',imageWidth:529,imageHeight:980,image:name,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
       }
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
     validateDiagnosticSet(receipt.views);
-    receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_CAUSE_REVIEW_PENDING';
+    receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}
   finally{persist();server?.kill();if(browser)await browser.close();process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInt);}
   return receipt;

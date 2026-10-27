@@ -68,6 +68,21 @@ test('ordinary preservation poses still reject ineligible navigation',()=>assert
 test('three local patch views are finite ordinary navigation inputs',()=>{assert.deepEqual(POSES.slice(9).map(p=>[p.x,p.z,p.yaw,p.pitch]),[[88,-236,180,-17.72],[92,-232,270,-6.69],[84,-232,90,-13.5]]);for(const p of POSES.slice(9)){assert.equal(p.diagnosticObserver,undefined);assert.ok(p.x>=-256&&p.x<=256&&p.z>=-400&&p.z<=-80);}});
 
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
+test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
+ const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const digest=diagnostic.verifyExactMaterialCandidate(shader);
+ assert.match(digest,/^[0-9a-f]{64}$/);
+ assert.equal(shader.split(diagnostic.CANDIDATE_BLEND_EXPRESSION).length,2);
+ assert.ok(shader.includes('smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters))'));
+ assert.ok(shader.includes('(1.0-protectedGrove)'));
+ assert.ok(shader.includes('palette=mix(palette,groundcoverTone,groundcoverWeight);'));
+ const smooth=t=>{const x=Math.max(0,Math.min(1,(t-0.30)/0.55));return x*x*(3-2*x);};
+ const corrected=p=>0.88*p*(1-0.25*smooth(p));
+ let last=-1;
+ for(let i=0;i<=1000;i++){const p=i/1000, v=corrected(p);assert.ok(v>=last-1e-12);assert.ok(v<=0.88*p+1e-12);last=v;}
+ assert.equal(corrected(0),0);assert.ok(corrected(1)<=0.661);assert.ok(corrected(1)>=0.659);
+ assert.throws(()=>diagnostic.verifyExactMaterialCandidate(shader+'//unexpected'),/NOT_EXACT_ONE_FORMULA_DIFF/);
+});
 test('Gen2928 four-source survey preserves Gen2925 and stays under twenty frames',()=>{
  assert.deepEqual(diagnostic.SURVEY_POSES.map(p=>p.name),['inland-seam-near','inland-seam-far','coastal-seam-east','coast-oblique']);
  assert.deepEqual(diagnostic.SURVEY_MODES,['reference-lit','before-groundcover-unlit','after-groundcover-unlit','patch-weight-raw','groundcover-weight-raw']);

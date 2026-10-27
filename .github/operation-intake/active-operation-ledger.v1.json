@@ -10817,6 +10817,50 @@
       "scopeHash": "82d45d80641595abe556df757e2d980f7b492bdfab6164b0e69801d1936a9c46",
       "state": "ADMITTED_LOCKED"
     },
+    "82ec7178f4db27a923d22e48b785e37982ec08ff2441db957d708821ecc6d03f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "67c852d27b0f25f88ce4819c150546f9b2fc1e2c",
+          "lockGeneration": 2923,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BUILD_REMOTE_ROUTER_MATERIALIZATION:20261026",
+          "operationId": "BUILD_REMOTE_ROUTER_EXACT_PATH_MATERIALIZATION_REPAIR_20261026_001",
+          "procedureLocatorDigest": "86ca5c03a01dadc0c955bafe4b5aa472964548497800853f0e3cfa0ccf80a14e",
+          "requestDigest": "74a9c1e0f195d9308d3efd8c036a9148cb7749af05e89e265bea8a44f28b7c06",
+          "scopeHash": "82ec7178f4db27a923d22e48b785e37982ec08ff2441db957d708821ecc6d03f"
+        },
+        "bindingDigest": "13bef6c24cb6d76bc0d0cc1f4af444e9c601fdede098d8df6b8d7e1be0517877",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "4b13dd0fef7d2c3f02d42c0b328cc3787c0c605cc3ad0c59d317053d3689ffb0",
+          "commentId": 6430952915,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 3017,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40429020204,
+          "workflowSha": "67c852d27b0f25f88ce4819c150546f9b2fc1e2c"
+        },
+        "lineageAnchorCommitSha": "b0e1224a084ccea6bf0ca0f94a154237dd5c992f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "67c852d27b0f25f88ce4819c150546f9b2fc1e2c",
+      "lockGeneration": 2923,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:BUILD_REMOTE_ROUTER_MATERIALIZATION:20261026",
+      "operationId": "BUILD_REMOTE_ROUTER_EXACT_PATH_MATERIALIZATION_REPAIR_20261026_001",
+      "procedureLocatorDigest": "86ca5c03a01dadc0c955bafe4b5aa472964548497800853f0e3cfa0ccf80a14e",
+      "released": false,
+      "requestDigest": "74a9c1e0f195d9308d3efd8c036a9148cb7749af05e89e265bea8a44f28b7c06",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "82ec7178f4db27a923d22e48b785e37982ec08ff2441db957d708821ecc6d03f",
+      "state": "ADMITTED_LOCKED"
+    },
     "83367db80c32d2f85e32bab4485f7efcf3c1d8d98de7b9e0b420cf0ac630befc": {
       "governingHead": "6469b1b800e3ce3d3334623f591797cfac78d378",
       "lockGeneration": 625,
@@ -21914,7 +21958,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2922,
+  "lockGeneration": 2923,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

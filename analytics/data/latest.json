@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-27T05:33:48Z",
+  "generatedAt": "2026-10-27T06:50:01Z",
   "window30d": {
-    "start": "2026-09-27T05:33:48Z",
-    "end": "2026-10-27T05:33:48Z"
+    "start": "2026-09-27T06:50:01Z",
+    "end": "2026-10-27T06:50:01Z"
   },
   "daily": [
     {
@@ -36,7 +36,7 @@
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 130
+      "pageLoads": 140
     },
     {
       "date": "2026-10-06",
@@ -80,11 +80,11 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 70
+      "pageLoads": 90
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 50
+      "pageLoads": 60
     },
     {
       "date": "2026-10-18",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 29
+      "pageLoads": 28
     },
     {
       "date": "2026-10-20",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 12
+      "pageLoads": 13
     }
   ],
   "summary": {
@@ -167,18 +167,23 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 699,
-      "visits": 641
+      "pageLoads": 709,
+      "visits": 651
     },
     {
       "path": "/analytics/",
-      "pageLoads": 603,
-      "visits": 603
+      "pageLoads": 593,
+      "visits": 593
     },
     {
       "path": "/",
-      "pageLoads": 134,
-      "visits": 102
+      "pageLoads": 114,
+      "visits": 92
+    },
+    {
+      "path": "/build/",
+      "pageLoads": 51,
+      "visits": 51
     },
     {
       "path": "/about/",
@@ -191,7 +196,7 @@
       "visits": 31
     },
     {
-      "path": "/coherence-diagnostic/",
+      "path": "/gauges/",
       "pageLoads": 30,
       "visits": 0
     },
@@ -199,11 +204,6 @@
       "path": "/evidence/agentic-frontier/",
       "pageLoads": 25,
       "visits": 21
-    },
-    {
-      "path": "/showroom/globe/audralia/",
-      "pageLoads": 25,
-      "visits": 25
     }
   ],
   "ownerMeasurement": {

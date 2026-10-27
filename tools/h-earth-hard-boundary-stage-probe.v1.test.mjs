@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import {
  GEN2928_HEAD,GEN2928_SHADER_SHA256,MODES,POSES,HEADS,
  transformHardBoundaryRenderer,verifyExactMaterialCandidate,
- instrumentDiagnosticRenderer,validateDiagnosticSet,SOURCE_FIRST_TARGET_POSES,SOURCE_FIRST_TARGET_MODES
+ instrumentDiagnosticRenderer,validateDiagnosticSet,SOURCE_FIRST_TARGET_POSES,SOURCE_FIRST_TARGET_MODES,SOURCE_RAVINE_TARGET_POSES,SOURCE_RAVINE_TARGET_MODES
 } from './h-earth-hard-boundary-stage-probe.v1.mjs';
 
 const rendererPath=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
@@ -179,4 +179,14 @@ test('source candidate ranking prefers current walking domain but does not asser
  assert.equal(seed.navigablePositionDeclared,false);
  assert(Number.isFinite(seed.y)&&Number.isFinite(seed.terrainElevation));
  assert(Math.abs(seed.y-seed.terrainElevation-9)<.000002);
+});
+
+test('ravine east targeted cameras derive elevations from canonical world terrain, without inventing navigation approval',()=>{
+ assert.deepEqual(SOURCE_RAVINE_TARGET_POSES.map(p=>[p.x,p.z,p.yaw]),[[102,-286,270],[74,-286,90]]);
+ assert(SOURCE_RAVINE_TARGET_POSES.every(p=>p.diagnosticObserver===true&&p.cameraNotNavigationAuthorized===true));
+ assert(SOURCE_RAVINE_TARGET_POSES.every(p=>Number.isFinite(p.y)&&Number.isFinite(p.observedElevation)&&Number.isFinite(p.targetElevation)));
+ assert(SOURCE_RAVINE_TARGET_POSES.every(p=>Math.abs((p.y-p.observedElevation)-9)<.000002));
+ assert(SOURCE_RAVINE_TARGET_POSES.every(p=>p.sourceBoundary.x===88&&p.sourceBoundary.z===-286&&p.sourceBoundary.sourceArtifact===12770542590));
+ assert.equal(SOURCE_RAVINE_TARGET_POSES.length*SOURCE_RAVINE_TARGET_MODES.length,16);
+ assert(SOURCE_RAVINE_TARGET_MODES.includes('reference-lit-with-grass'));
 });

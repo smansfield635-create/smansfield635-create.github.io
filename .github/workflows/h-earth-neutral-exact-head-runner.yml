@@ -1373,3 +1373,61 @@ jobs:
           path: ${{ runner.temp }}/h-earth-source-first-targeted-gpu
           if-no-files-found: warn
           retention-days: 30
+
+  post-gen2928-ravine-east-gpu:
+    if: >-
+      ${{ github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/hard-boundary-stage-probe-20261027' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Checkout admitted ravine-edge diagnostic tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Checkout immutable published baseline
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: baseline
+          persist-credentials: false
+      - name: Checkout same immutable published source as GPU target
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate canonical terrain-derived camera and unchanged product shader
+        working-directory: tooling
+        run: |
+          set -euo pipefail
+          node --check tools/h-earth-hard-boundary-stage-probe.v1.mjs
+          node --test tools/h-earth-hard-boundary-stage-probe.v1.test.mjs
+      - name: Install source-matched headless Chromium
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture 16 source-calculated ravine-edge shader stages and grass controls
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: RAVINE_EAST_EFFECTIVE_MAX_V1
+        run: |
+          timeout 2100s node tools/h-earth-hard-boundary-stage-probe.v1.mjs \
+            --baseline-dir ../baseline \
+            --candidate-dir ../candidate \
+            --output "${{ runner.temp }}/ravine-east-source-gpu"
+      - name: Preserve complete and partial diagnostic GPU receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-ravine-east-source-gpu-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/ravine-east-source-gpu
+          if-no-files-found: warn
+          retention-days: 30

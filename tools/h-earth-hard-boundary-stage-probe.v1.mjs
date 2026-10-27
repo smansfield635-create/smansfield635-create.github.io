@@ -3,6 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {sampleHEarthTerrainField} from '../h-earth-3d/terrain/h-earth.terrain-field.js';
 
 export const GEN2928_HEAD='cb57c275b95d0d48883bc4da4dcfcf17cbec5060';
 export const GEN2928_SHADER_SHA256='fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec';
@@ -58,6 +59,21 @@ export const SOURCE_FIRST_TARGET_POSES=Object.freeze([
  {name:'estate-groundcover-east-edge',x:145,z:-202,yaw:270,pitch:-18,sourceBoundary:{x:132,z:-202,stage:'groundcover-protection',origin:'SOURCE_FIRST_CENSUS_ARTIFACT_12768211588'}}
 ].map(Object.freeze));
 export const SOURCE_FIRST_TARGET_MODES=Object.freeze(['reference-lit','pre-worldsoil-unlit','post-worldsoil-unlit','post-identity-unlit','post-groundcover-unlit','post-local-unlit','post-habitat-unlit','reference-lit-with-grass']);
+
+function makeRavineObserver(name,x,z,yaw){
+ const at=sampleHEarthTerrainField(x,z),atTarget=sampleHEarthTerrainField(88,-286);
+ if(!at?.valid||!atTarget?.valid||!Number.isFinite(at.elevation)||!Number.isFinite(atTarget.elevation))throw Error('RAVINE_CANONICAL_TERRAIN_SEED_FAILED');
+ return Object.freeze({name,x,z,y:Number((at.elevation+9).toFixed(6)),yaw,pitch:-28,diagnosticObserver:true,
+  observedElevation:Number(at.elevation.toFixed(6)),targetElevation:Number(atTarget.elevation.toFixed(6)),
+  sourceBoundary:Object.freeze({x:88,z:-286,stage:'ravine-effective-habitat-max',sourceArtifact:12770542590}),
+  cameraNotNavigationAuthorized:true});
+}
+export const SOURCE_RAVINE_TARGET_POSES=Object.freeze([
+ makeRavineObserver('source-ravine-east-outside-looking-west',102,-286,270),
+ makeRavineObserver('source-ravine-east-inside-looking-east',74,-286,90)
+]);
+export const SOURCE_RAVINE_TARGET_MODES=Object.freeze(['reference-lit','pre-worldsoil-unlit','post-worldsoil-unlit','post-identity-unlit','post-groundcover-unlit','post-local-unlit','post-habitat-unlit','reference-lit-with-grass']);
+
 export function comparisonState(nav,pose,sequence,action){
   if(pose.diagnosticObserver===true){
     if(!['x','y','z','yaw','pitch'].every(k=>Number.isFinite(pose[k])))throw Error('DIAGNOSTIC_POSE_INVALID');
@@ -121,9 +137,9 @@ export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(![
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'POST_GEN2928_STAGE_PROBE_V1';
-  if(!['POST_GEN2928_STAGE_PROBE_V1','SOURCE_FIRST_CALCULATED_TARGETS_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_POSES:DIAGNOSTIC_POSES;
-  const modes=profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_MODES:DIAGNOSTIC_MODES;
+  if(!['POST_GEN2928_STAGE_PROBE_V1','SOURCE_FIRST_CALCULATED_TARGETS_V1','RAVINE_EAST_EFFECTIVE_MAX_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=profile==='RAVINE_EAST_EFFECTIVE_MAX_V1'?SOURCE_RAVINE_TARGET_POSES:(profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_POSES:DIAGNOSTIC_POSES);
+  const modes=profile==='RAVINE_EAST_EFFECTIVE_MAX_V1'?SOURCE_RAVINE_TARGET_MODES:(profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_MODES:DIAGNOSTIC_MODES);
   if(poses.length*modes.length>60)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:'H_EARTH_POST_GEN2928_HARD_BOUNDARY_STAGE_DIAGNOSTIC_20261027_001',baselineProductSha256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,newOwnerScreenshotExactMatch:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};

@@ -1378,7 +1378,8 @@ jobs:
     if: >-
       ${{ github.event_name == 'pull_request' &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.pull_request.head.ref == 'h-earth/hard-boundary-stage-probe-20261027' }}
+          github.event.pull_request.head.ref == 'h-earth/hard-boundary-stage-probe-20261027' &&
+          github.event.pull_request.head.sha == '1a3417d92f82e8842533291b5f269821642ff524' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
@@ -1429,5 +1430,42 @@ jobs:
         with:
           name: h-earth-ravine-east-source-gpu-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/ravine-east-source-gpu
+          if-no-files-found: warn
+          retention-days: 30
+
+  post-gen2928-primitive-source-provenance:
+    if: >-
+      ${{ github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/hard-boundary-stage-probe-20261027' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Checkout exact admitted diagnostic head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate true geometry-albedo seam provenance source and original numerical seam test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check h-earth-3d/evidence/post-gen2928-hard-boundary-20261027/primitive-source-provenance.v1.mjs
+          node --test h-earth-3d/evidence/terrain-seam-publication-v1/near-far.test.mjs
+      - name: Compare actual frozen GPU material attributes on all shared near/far seam vertices
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --max-old-space-size=4096 h-earth-3d/evidence/post-gen2928-hard-boundary-20261027/primitive-source-provenance.v1.mjs \
+            --output "${{ runner.temp }}/h-earth-primitive-provenance/primitive-provenance.json"
+      - name: Preserve exact source/primitive evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen2935-primitive-provenance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-primitive-provenance
           if-no-files-found: warn
           retention-days: 30

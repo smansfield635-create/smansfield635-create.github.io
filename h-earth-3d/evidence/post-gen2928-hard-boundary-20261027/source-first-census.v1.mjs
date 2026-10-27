@@ -83,6 +83,66 @@ export function effectiveCoastalCrossing(mask,regions,x=-146,edgeZ=-283){
  result:'EFFECTIVE_MAX_OVERLAPPING_HABITAT_WEIGHT_BOUNDED_NOT_RGB'};
 }
 
+
+/** Derive influential atlas-border positions from the published three-panel max.
+ * Each boundary sample has a true source coordinate; score only what a panel
+ * adds beyond competing panels, not the isolated single-panel gradient.
+ */
+export function rankEffectiveHabitatBorders(mask,regions,{stepMetres=4}={}){
+ if(!(stepMetres>0&&stepMetres<=8))throw Error('INVALID_BORDER_SCAN_STEP');
+ const samplePoint=(name,panel,x,z)=>{
+  const all=combinedHabitatRange(mask,regions,x,z);
+  const without=regions.filter(r=>r.name!==name);
+  const excluded=combinedHabitatRange(mask,without,x,z);
+  return {x,z,all,excluded,incrementLower:Math.max(0,all.lower-excluded.lower),
+   incrementUpper:Math.max(0,all.upper-excluded.upper),
+   isolated:all.panelRanges.find(p=>p.panel===name)};
+ };
+ const samples=[];
+ for(const region of regions){
+  const [x0,z0,x1,z1]=region.bounds;
+  const edges=[
+   {side:'west',length:z1-z0,point:(t,d)=>[x0+d,z0+t]},
+   {side:'east',length:z1-z0,point:(t,d)=>[x1-d,z0+t]},
+   {side:'south',length:x1-x0,point:(t,d)=>[x0+t,z0+d]},
+   {side:'north',length:x1-x0,point:(t,d)=>[x0+t,z1-d]}
+  ];
+  for(const edge of edges)for(let t=4;t<edge.length-4;t+=stepMetres){
+   const [x,z]=edge.point(t,0);
+   const atEdge=samplePoint(region.name,region.panel,...edge.point(t,.001));
+   const atTwo=samplePoint(region.name,region.panel,...edge.point(t,2));
+   const atFour=samplePoint(region.name,region.panel,...edge.point(t,4));
+   const outside=samplePoint(region.name,region.panel,...edge.point(t,-2));
+   const round=x=>Number(x.toFixed(6));
+   const stageTwo={lower:round(atTwo.incrementLower),upper:round(atTwo.incrementUpper)};
+   const stageFour={lower:round(atFour.incrementLower),upper:round(atFour.incrementUpper)};
+   const widthChange={low:round(atTwo.all.lower-outside.all.upper),high:round(atTwo.all.upper-outside.all.lower)};
+   const sourceGateTouch={low:round(atEdge.incrementLower),high:round(atEdge.incrementUpper)};
+   const rank=round(Math.max(stageTwo.upper,stageFour.upper));
+   samples.push({region:region.name,side:edge.side,x:round(x),z:round(z),
+    effectiveAddedAtTwoMetres:stageTwo,effectiveAddedAtFourMetres:stageFour,
+    gateInteriorAtOneMillimetre:sourceGateTouch,
+    fourMetreCombinedCoverageDeltaRange:widthChange,
+    insideUpperDominance:atTwo.all.upperDominance,
+    rank,fullyMaskedAtTwoMetres:stageTwo.upper===0,
+    sourceOnly:true,finalLitRgbProven:false});
+  }
+ }
+ samples.sort((a,b)=>b.rank-a.rank||b.effectiveAddedAtTwoMetres.upper-a.effectiveAddedAtTwoMetres.upper||
+  a.region.localeCompare(b.region)||a.side.localeCompare(b.side)||a.x-b.x||a.z-b.z);
+ const perRegion=regions.map(r=>{
+  const values=samples.filter(s=>s.region===r.name);
+  return {region:r.name,inspected:values.length,maskedAtTwoMetres:values.filter(v=>v.fullyMaskedAtTwoMetres).length,
+    effectiveAtTwoMetres:values.filter(v=>!v.fullyMaskedAtTwoMetres).length,
+    topSourceCoordinates:values.slice(0,12)};
+ });
+ return {schema:'H_EARTH_EFFECTIVE_MAX_COMPOSITED_HABITAT_BORDER_CENSUS_v1',
+  kind:'REAL_PUBLISHED_ATLAS_BILINEAR_SOURCE_CONTRIBUTION_NOT_GPU_COLOR',
+  candidateCount:samples.length,perRegion,ranked: samples.slice(0,40),
+  result:'ACTUAL_MAX_COMPOSITED_REGION_CONTRIBUTIONS_RANKED',
+  limitations:'4m/7m width bounds may not reproduce point-specific procedural edge noise. Stage color depends on RGB soil palette, mesh primitive and other shader stages. Gate values within 1mm are zero for smooth atlas edges and do not establish a mathematical discontinuity. No owner camera match or product fix.'};
+}
+
 export function atlasCrossSections(mask,region,width){
  const [x0,z0,x1,z1]=region.bounds;
  const lines=[
@@ -152,6 +212,7 @@ export function sourceFirstCensus(root){
  ];
  const atlas=regions.map(q=>({bounds:q.bounds,conservativeFourMetre:atlasCrossSections(mask,q,4),sevenMetreEnvelope:atlasCrossSections(mask,q,7),actualWidthRule:q.name==='woodland'?'EXACT_6_METRES':'4_TO_7_METRES_PER_FRAGMENT_NOISE_DEPENDENT'}));
  const effectiveComposite=[-146,-142,-138].map(x=>effectiveCoastalCrossing(mask,regions,x,-283));
+ const effectiveRegionBorders=rankEffectiveHabitatBorders(mask,regions);
  const protection=[
   protectionCrossSections([-18,-204,34,-131],'oasis-protection'),
   protectionCrossSections([18,-210,132,-125],'estate-protection')
@@ -180,10 +241,11 @@ export function sourceFirstCensus(root){
   groundcoverProtection:protection,
   atlasCoverage:atlas,
   effectiveOverlappingHabitat:effectiveComposite,
+  effectiveRegionBorders,
   coastalDivide:{spine,linearContinuous:true,shoreSideWidthMetres:24,knotValues:divides,mechanism:'CONTINUOUS_PIECEWISE_DIVIDE_WITH_DERIVATIVE_KNOTS'},
   candidateHardGuards:distinct,
   strongestSourceDerivedSamplePoints:ranked,
-  interpretation:'Composite habitat impact must use max(woodland,ravine,coastal). Single-panel gradients can be completely masked by overlapping panels. Bounded bilinear coverage proxies use 4m/7m edge-width envelopes and are not final lit RGB or exact noise. Rank is for source-bound validation only.',
+  interpretation:'Composite habitat impact uses max(woodland,ravine,coastal); source candidates are ranked by each panel incremental contribution AFTER competitor masks, not isolated atlas boundary weight. All 4m/7m proxy envelopes require eventual exact shader RGB and geometry verification. A zero gate jump does not preclude a visually abrupt nearby gradient.',
   next:'At top calculated hotspots, bind actual rendered terrain primitive, sample exact same-camera stage RGB across the source-defined line; retain attractive controls. Do not repeat 60-view general search. No product repair until observed boundary corresponds.'
  };
 }

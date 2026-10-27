@@ -77,7 +77,7 @@ test('paired source-camera-mode validation refuses incomplete or mixed vegetatio
 
 import {
  PUBLISHED_HEAD,PUBLISHED_RENDERER_SHA,smooth,outsideDistance,groundProtection,
- piecewiseDivide,hillsideResponse,atlasCrossSections,protectionCrossSections,combinedHabitatRange,effectiveCoastalCrossing
+ piecewiseDivide,hillsideResponse,atlasCrossSections,protectionCrossSections,combinedHabitatRange,effectiveCoastalCrossing,rankEffectiveHabitatBorders
 } from '../h-earth-3d/evidence/post-gen2928-hard-boundary-20261027/source-first-census.v1.mjs';
 
 test('source-first method preserves published identity and uses continuous analytic ramps',()=>{
@@ -142,4 +142,23 @@ test('source first coastal atlas edge is evaluated after overlapping woodland an
  const coastalOnly=combinedHabitatRange(mask,regions,5,2);
  assert(coastalOnly.upper>coastalOnly.lower);
  assert(coastalOnly.upperDominance.includes('coastal'));
+});
+
+test('source-first border ranking excludes fully masked coastal panel while detecting active unmasked panel',()=>{
+ const n=16,width=n*3,pixels=new Uint8Array(n*width).fill(255);
+ const mask={size:n,width,bytes:pixels};
+ const regions=[
+  {name:'woodland',bounds:[-20,-20,30,30],panel:0},
+  {name:'ravine',bounds:[-20,-20,30,30],panel:1},
+  {name:'coastal',bounds:[0,0,10,10],panel:2}
+ ];
+ const all=rankEffectiveHabitatBorders(mask,regions,{stepMetres:2});
+ assert.equal(all.perRegion.find(x=>x.region==='coastal').effectiveAtTwoMetres,0);
+ assert(all.perRegion.find(x=>x.region==='coastal').maskedAtTwoMetres>0);
+ assert(all.perRegion.some(x=>x.region==='ravine'&&x.effectiveAtTwoMetres>0));
+ for(let y=0;y<n;y++)pixels.fill(0,y*width,y*width+n*2);
+ const isolated=rankEffectiveHabitatBorders(mask,regions,{stepMetres:2});
+ assert(isolated.perRegion.find(x=>x.region==='coastal').effectiveAtTwoMetres>0);
+ assert(isolated.ranked.every(x=>Number.isFinite(x.x)&&Number.isFinite(x.z)));
+ assert.equal(isolated.result,'ACTUAL_MAX_COMPOSITED_REGION_CONTRIBUTIONS_RANKED');
 });

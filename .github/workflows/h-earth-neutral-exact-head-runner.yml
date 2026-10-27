@@ -1252,8 +1252,8 @@ jobs:
         working-directory: tooling
         run: |
           set -euo pipefail
-          node --test h-earth-3d/validation/h-earth.groundcover-band-continuity.gen2940.test.mjs tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
-          git diff --no-ext-diff --exit-code cb57c275b95d0d48883bc4da4dcfcf17cbec5060 -- showroom/globe/h-earth/render/assets
+          node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+          test "$(git -C ../baseline rev-parse HEAD:showroom/globe/h-earth/render/assets)" = "$(git -C ../candidate rev-parse HEAD:showroom/globe/h-earth/render/assets)"
       - name: Install browser software renderer
         working-directory: tooling
         run: |

@@ -59,7 +59,12 @@
       "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-benchmark.config.mjs",
       "verification/benchmark-tools/four-compass-benchmark-v1/four-compass-browser-baseline.mjs",
       ".github/workflows/showroom-four-compass-exact-head-regression.yml",
-      ".github/workflows/bt4-world-diagnostic-entitlement-v1.yml"
+      ".github/workflows/bt4-world-diagnostic-entitlement-v1.yml",
+      ".github/workflows/public-private-boundary-gate.yml",
+      ".github/workflows/operations-chamber-observations-v1.yml",
+      ".github/workflows/pages-exact-head-deploy-v3.yml",
+      "tools/publication-duplicate-verification.v1.test.mjs",
+      ".github/ai-toolset-transport/authorized-toolset-registry.audralia-execution-succession.v1.json"
     ],
     "ownedPathPrefixes": [
       ".github/ai-router/",
@@ -79,7 +84,8 @@
       "ownedPathPrefixes": [
         "h-earth-3d/",
         "showroom/globe/h-earth/",
-        "showroom/globe/audralia/audio/"
+        "showroom/globe/audralia/audio/",
+        "h-earth-live-6d18e158/preview/"
       ],
       "ownedExactPaths": [
         "preview/h-earth/corridor/38df744ba7402aabe7fd2eaee71b961a451350de/B/showroom/globe/h-earth/render/run8e-successor-environment.js",
@@ -335,7 +341,10 @@
       "status": "ACTIVE_REGISTERED_PROJECT",
       "ownedPathPrefixes": [],
       "ownedExactPaths": [
-        "build/index.html"
+        "build/index.html",
+        ".github/workflows/build-companion-v4-qualification.yml",
+        "assets/build/build-engine.v3.mjs",
+        "assets/build/build-companion.js"
       ],
       "entrypoint": ".github/ai-router/projects/build/entrypoint.v1.json",
       "priority": 100
@@ -500,6 +509,29 @@
         "nine-summits-of-love/index.html"
       ],
       "entrypoint": ".github/ai-router/projects/book-page/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "RELEASE_PROOF",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "release-proof/index.html"
+      ],
+      "entrypoint": ".github/ai-router/projects/release-proof/entrypoint.v1.json",
+      "priority": 100
+    },
+    {
+      "projectId": "DIAMONDGATE_PREFLIGHT",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [
+        "preflight/"
+      ],
+      "ownedExactPaths": [
+        ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
+        ".github/ai-router/publication-surfaces/preflight.v1.json"
+      ],
+      "entrypoint": ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
       "priority": 100
     }
   ],

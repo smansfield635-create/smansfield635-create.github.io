@@ -52,6 +52,12 @@ export const POSES=Object.freeze([
 export const DIAGNOSTIC_POSES=POSES;
 export const SURVEY_POSES=POSES;
 export const SURVEY_MODES=DIAGNOSTIC_MODES;
+export const SOURCE_FIRST_TARGET_POSES=Object.freeze([
+ {name:'coastal-atlas-edge-approach-north',x:-146,z:-270,yaw:180,pitch:-18,sourceBoundary:{x:-146,z:-283,stage:'coastal-habitat',origin:'SOURCE_FIRST_CENSUS_ARTIFACT_12768211588'}},
+ {name:'coastal-atlas-edge-approach-south',x:-146,z:-296,yaw:0,pitch:-18,sourceBoundary:{x:-146,z:-283,stage:'coastal-habitat',origin:'SOURCE_FIRST_CENSUS_ARTIFACT_12768211588'}},
+ {name:'estate-groundcover-east-edge',x:145,z:-202,yaw:270,pitch:-18,sourceBoundary:{x:132,z:-202,stage:'groundcover-protection',origin:'SOURCE_FIRST_CENSUS_ARTIFACT_12768211588'}}
+].map(Object.freeze));
+export const SOURCE_FIRST_TARGET_MODES=Object.freeze(['reference-lit','pre-worldsoil-unlit','post-worldsoil-unlit','post-identity-unlit','post-groundcover-unlit','post-local-unlit','post-habitat-unlit','reference-lit-with-grass']);
 export function comparisonState(nav,pose,sequence,action){
   if(pose.diagnosticObserver===true){
     if(!['x','y','z','yaw','pitch'].every(k=>Number.isFinite(pose[k])))throw Error('DIAGNOSTIC_POSE_INVALID');
@@ -115,9 +121,9 @@ export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(![
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'POST_GEN2928_STAGE_PROBE_V1';
-  if(profile!=='POST_GEN2928_STAGE_PROBE_V1')throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=DIAGNOSTIC_POSES;
-  const modes=DIAGNOSTIC_MODES;
+  if(!['POST_GEN2928_STAGE_PROBE_V1','SOURCE_FIRST_CALCULATED_TARGETS_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_POSES:DIAGNOSTIC_POSES;
+  const modes=profile==='SOURCE_FIRST_CALCULATED_TARGETS_V1'?SOURCE_FIRST_TARGET_MODES:DIAGNOSTIC_MODES;
   if(poses.length*modes.length>60)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:'H_EARTH_POST_GEN2928_HARD_BOUNDARY_STAGE_DIAGNOSTIC_20261027_001',baselineProductSha256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,newOwnerScreenshotExactMatch:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};

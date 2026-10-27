@@ -1,0 +1,20 @@
+{"schema":"INTERNAL_COAST_PRESENTATION_QUALIFICATION_v1","summary":[{"role":"ERODED_TERRAIN","vertices":24964,"changedVertices":24213,"responseRelevantVertices":43,"maxErrorMeters":0.000015258442999765975,"minChangedCoast":103.06644439697266,"startupMilliseconds":19.561201000000437,"temporaryCopyBytes":99856},{"role":"MOUNTAIN_OVERBURDEN","vertices":45,"changedVertices":45,"responseRelevantVertices":0,"maxErrorMeters":0.000007577031396976963,"minChangedCoast":140,"startupMilliseconds":0.045939999999973224,"temporaryCopyBytes":180}],"physicalAndroidPerformanceProven":false,"visualAcceptance":false}
+{"schema":"H_EARTH_TERRAIN_SEAM_NUMERICAL_QUALIFICATION_v1","matchedVertices":349,"matchedEdges":348,"maxNormalComponentError":2.9639499743439046e-8,"maxContactDistanceErrorMeters":0.0000014833188330953817,"maxCoastDistanceErrorMeters":0.000026233342168779927,"sourceAssetSha256":"48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a","gpuRenderVerified":false,"ownerVisualAcceptance":false}
+✔ release runtime blobs equal reviewed source candidate (2.485577ms)
+✔ ERODED_TERRAIN inherits canonical geographic coast without mutating shared data (2338.400503ms)
+✔ MOUNTAIN_OVERBURDEN inherits canonical geographic coast without mutating shared data (0.646506ms)
+✔ non-target roles preserve exact array identity (0.176176ms)
+✔ invalid source fails closed (0.488468ms)
+✔ presentation is GPU-only and physical provider keeps original coast (0.224068ms)
+✔ actual shared near/far boundary agrees at vertices and edge interiors (0.242557ms)
+✔ canonical arrays and all nonseam attributes remain byte-identical (11.68062ms)
+✔ no additional GPU storage and finite, inward far normals (0.449179ms)
+✔ missing primitive identity fails before producing a candidate (0.30478ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11497.011532

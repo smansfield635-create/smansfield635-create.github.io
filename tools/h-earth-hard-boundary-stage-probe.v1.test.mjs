@@ -77,7 +77,7 @@ test('paired source-camera-mode validation refuses incomplete or mixed vegetatio
 
 import {
  PUBLISHED_HEAD,PUBLISHED_RENDERER_SHA,smooth,outsideDistance,groundProtection,
- piecewiseDivide,hillsideResponse,atlasCrossSections,protectionCrossSections
+ piecewiseDivide,hillsideResponse,atlasCrossSections,protectionCrossSections,combinedHabitatRange,effectiveCoastalCrossing
 } from '../h-earth-3d/evidence/post-gen2928-hard-boundary-20261027/source-first-census.v1.mjs';
 
 test('source-first method preserves published identity and uses continuous analytic ramps',()=>{
@@ -120,4 +120,26 @@ test('source-first GPU targets correspond to independently measured source coord
  assert(SOURCE_FIRST_TARGET_POSES.every(p=>p.sourceBoundary.origin==='SOURCE_FIRST_CENSUS_ARTIFACT_12768211588'));
  assert(SOURCE_FIRST_TARGET_POSES.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.z)&&Number.isFinite(p.yaw)&&Number.isFinite(p.pitch)));
  assert(SOURCE_FIRST_TARGET_MODES.includes('reference-lit-with-grass'));
+});
+
+test('source first coastal atlas edge is evaluated after overlapping woodland and ravine max composition',()=>{
+ const pixels=new Uint8Array(8*24).fill(255);
+ const mask={size:8,width:24,bytes:pixels};
+ const regions=[
+  {name:'woodland',panel:0,bounds:[-10,-10,20,20]},
+  {name:'ravine',panel:1,bounds:[-10,-10,20,20]},
+  {name:'coastal',panel:2,bounds:[0,0,10,10]}
+ ];
+ const withoutCoastal=combinedHabitatRange(mask,regions,5,-1);
+ const withCoastal=combinedHabitatRange(mask,regions,5,2);
+ assert(Math.abs(withoutCoastal.lower-withCoastal.lower)<.00001);
+ assert(Math.abs(withoutCoastal.upper-withCoastal.upper)<.00001);
+ assert(withCoastal.lowerDominance.includes('woodland'));
+ assert(!withCoastal.upperDominance.includes('coastal'));
+ const transect=effectiveCoastalCrossing(mask,regions,5,0);
+ assert.equal(transect.acrossFourMetres.maximumPossibleCoverageDifference,0);
+ pixels.fill(0,0,8*16);
+ const coastalOnly=combinedHabitatRange(mask,regions,5,2);
+ assert(coastalOnly.upper>coastalOnly.lower);
+ assert(coastalOnly.upperDominance.includes('coastal'));
 });

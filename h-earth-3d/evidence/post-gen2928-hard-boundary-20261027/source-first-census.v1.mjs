@@ -48,6 +48,41 @@ function sampleAtlas(mask,region,x,z,width){
  const c=pixel(x0,z1)*(1-tx)+pixel(x1,z1)*tx;
  return (a*(1-tz)+c*tz)*smooth(0,width,dist)*.68;
 }
+
+/** Effective habitat layer is the MAX of overlapping panels, not an individual atlas mask.
+ * The 4m/7m bounds enclose shader noise-driven edge widths for ravine and coast;
+ * woodland remains fixed at 6m. These are coverage-weight bounds, not RGB.
+ */
+export function combinedHabitatRange(mask,regions,x,z){
+ const entries=regions.map(region=>{
+  const fixed=region.name==='woodland';
+  const at7=sampleAtlas(mask,region,x,z,fixed?6:7);
+  const at4=sampleAtlas(mask,region,x,z,fixed?6:4);
+  return {panel:region.name,lower:at7,upper:at4};
+ });
+ const lower=Math.max(0,...entries.map(e=>e.lower)),upper=Math.max(0,...entries.map(e=>e.upper));
+ const dominance=bound=>entries.filter(e=>Math.abs(e[bound]-(bound==='lower'?lower:upper))<1e-10&&e[bound]>1e-10).map(e=>e.panel);
+ return {x,z,lower:Number(lower.toFixed(8)),upper:Number(upper.toFixed(8)),
+  lowerDominance:dominance('lower'),upperDominance:dominance('upper'),
+  panelRanges:entries.map(e=>({panel:e.panel,lower:Number(e.lower.toFixed(8)),upper:Number(e.upper.toFixed(8))}))};
+}
+export function effectiveCoastalCrossing(mask,regions,x=-146,edgeZ=-283){
+ const positions=[-8,-4,-2,-1,-.5,-.001,0,.001,.5,1,2,4,8];
+ const samples=positions.map(d=>({offsetMetres:d,...combinedHabitatRange(mask,regions,x,edgeZ+d)}));
+ const before=samples.find(x=>x.offsetMetres===-2);
+ const after=samples.find(x=>x.offsetMetres===2);
+ const interval=[after.lower-before.upper,after.upper-before.lower];
+ const lowerAbs=interval[0]<=0&&interval[1]>=0?0:Math.min(Math.abs(interval[0]),Math.abs(interval[1]));
+ const upperAbs=Math.max(Math.abs(interval[0]),Math.abs(interval[1]));
+ return {x,edgeZ,measuredOffsets:samples,acrossFourMetres:{
+  before:{lower:before.lower,upper:before.upper,dominance:before.upperDominance},
+  after:{lower:after.lower,upper:after.upper,dominance:after.upperDominance},
+  minimumPossibleCoverageDifference:Number(lowerAbs.toFixed(8)),
+  maximumPossibleCoverageDifference:Number(upperAbs.toFixed(8))
+ },window:'[-2m,+2m]_ACROSS_COASTAL_SOUTH_ATLAS_BOUNDARY',
+ result:'EFFECTIVE_MAX_OVERLAPPING_HABITAT_WEIGHT_BOUNDED_NOT_RGB'};
+}
+
 export function atlasCrossSections(mask,region,width){
  const [x0,z0,x1,z1]=region.bounds;
  const lines=[
@@ -116,6 +151,7 @@ export function sourceFirstCensus(root){
   {name:'coastal',bounds:h.coastal.bounds,panel:2}
  ];
  const atlas=regions.map(q=>({bounds:q.bounds,conservativeFourMetre:atlasCrossSections(mask,q,4),sevenMetreEnvelope:atlasCrossSections(mask,q,7),actualWidthRule:q.name==='woodland'?'EXACT_6_METRES':'4_TO_7_METRES_PER_FRAGMENT_NOISE_DEPENDENT'}));
+ const effectiveComposite=[-146,-142,-138].map(x=>effectiveCoastalCrossing(mask,regions,x,-283));
  const protection=[
   protectionCrossSections([-18,-204,34,-131],'oasis-protection'),
   protectionCrossSections([18,-210,132,-125],'estate-protection')
@@ -143,10 +179,11 @@ export function sourceFirstCensus(root){
   highLevel:{knownCoordinates:true,sourceFirst:true,prior60ImageRerun:false,productBytesMutated:false,shaderEdited:false,geometryEdited:false,vegetationEdited:false,ownerScreenshotPoseMatched:false},
   groundcoverProtection:protection,
   atlasCoverage:atlas,
+  effectiveOverlappingHabitat:effectiveComposite,
   coastalDivide:{spine,linearContinuous:true,shoreSideWidthMetres:24,knotValues:divides,mechanism:'CONTINUOUS_PIECEWISE_DIVIDE_WITH_DERIVATIVE_KNOTS'},
   candidateHardGuards:distinct,
   strongestSourceDerivedSamplePoints:ranked,
-  interpretation:'A binary condition or weight gradient is a source-defined candidate, not a measured terrain-color discontinuity. Texture-derived habitat proxy samples are bilinear approximations with 4m/7m envelopes, not exact noise-width lit RGB. Rank is for targeted camera captures only; never claim screenshot correspondence or universal cause.',
+  interpretation:'Composite habitat impact must use max(woodland,ravine,coastal). Single-panel gradients can be completely masked by overlapping panels. Bounded bilinear coverage proxies use 4m/7m edge-width envelopes and are not final lit RGB or exact noise. Rank is for source-bound validation only.',
   next:'At top calculated hotspots, bind actual rendered terrain primitive, sample exact same-camera stage RGB across the source-defined line; retain attractive controls. Do not repeat 60-view general search. No product repair until observed boundary corresponds.'
  };
 }

@@ -1319,7 +1319,8 @@ jobs:
     if: >-
       ${{ github.event_name == 'pull_request' &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.pull_request.head.ref == 'h-earth/hard-boundary-stage-probe-20261027' }}
+          github.event.pull_request.head.ref == 'h-earth/hard-boundary-stage-probe-20261027' &&
+          github.event.pull_request.head.sha == 'bd5aba5b8ac257020cd6cdc327fe8fe61b2a22ed' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:

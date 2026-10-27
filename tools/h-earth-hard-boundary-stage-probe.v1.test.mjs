@@ -5,7 +5,7 @@ import crypto from 'node:crypto';
 import {
  GEN2928_HEAD,GEN2928_SHADER_SHA256,MODES,POSES,HEADS,
  transformHardBoundaryRenderer,verifyExactMaterialCandidate,
- instrumentDiagnosticRenderer,validateDiagnosticSet
+ instrumentDiagnosticRenderer,validateDiagnosticSet,SOURCE_FIRST_TARGET_POSES,SOURCE_FIRST_TARGET_MODES
 } from './h-earth-hard-boundary-stage-probe.v1.mjs';
 
 const rendererPath=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
@@ -111,4 +111,13 @@ test('atlas geographic gates fade to zero on region perimeter, not assumed to be
  const p=protectionCrossSections([18,-210,132,-125],'estate');
  assert(p.examined>0);
  assert(p.maximumTwoMetreMaskContrast>0);
+});
+
+test('source-first GPU targets correspond to independently measured source coordinates rather than arbitrary survey poses',()=>{
+ assert.deepEqual(SOURCE_FIRST_TARGET_POSES.map(p=>[p.sourceBoundary.x,p.sourceBoundary.z]),
+  [[-146,-283],[-146,-283],[132,-202]]);
+ assert.equal(SOURCE_FIRST_TARGET_POSES.length*SOURCE_FIRST_TARGET_MODES.length,24);
+ assert(SOURCE_FIRST_TARGET_POSES.every(p=>p.sourceBoundary.origin==='SOURCE_FIRST_CENSUS_ARTIFACT_12768211588'));
+ assert(SOURCE_FIRST_TARGET_POSES.every(p=>Number.isFinite(p.x)&&Number.isFinite(p.z)&&Number.isFinite(p.yaw)&&Number.isFinite(p.pitch)));
+ assert(SOURCE_FIRST_TARGET_MODES.includes('reference-lit-with-grass'));
 });

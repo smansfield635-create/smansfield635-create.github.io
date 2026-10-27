@@ -1314,3 +1314,61 @@ jobs:
           path: ${{ runner.temp }}/h-earth-source-first-census
           if-no-files-found: warn
           retention-days: 30
+
+  post-gen2928-source-first-targeted-gpu:
+    if: >-
+      ${{ github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/hard-boundary-stage-probe-20261027' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact source-first diagnostic tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Checkout unchanged published Gen2928 GPU source baseline
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: baseline
+          persist-credentials: false
+      - name: Checkout exact same published GPU product for source-derived views
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify target coordinates and exact-source injection tests
+        working-directory: tooling
+        run: |
+          set -euo pipefail
+          node --check tools/h-earth-hard-boundary-stage-probe.v1.mjs
+          node --test tools/h-earth-hard-boundary-stage-probe.v1.test.mjs
+      - name: Install bounded Chromium
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture 24 source-calculated habitat/groundcover stage frames with grass controls
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: SOURCE_FIRST_CALCULATED_TARGETS_V1
+        run: |
+          timeout 2400s node tools/h-earth-hard-boundary-stage-probe.v1.mjs \
+            --baseline-dir ../baseline \
+            --candidate-dir ../candidate \
+            --output "${{ runner.temp }}/h-earth-source-first-targeted-gpu"
+      - name: Preserve exact camera-stage GPU evidence on success or failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-source-first-targeted-gpu-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-source-first-targeted-gpu
+          if-no-files-found: warn
+          retention-days: 30

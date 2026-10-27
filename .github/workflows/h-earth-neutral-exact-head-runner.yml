@@ -1211,3 +1211,66 @@ jobs:
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30
+
+  gen2940-groundcover-dual-head-gpu:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen2940-groundcover-band-continuity-20261027' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    steps:
+      - name: Check out Gen2940 admitted exact candidate tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Check out immutable published Gen2928 baseline
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: baseline
+          persist-credentials: false
+      - name: Check out Gen2940 exact PR candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Require unchanged admitted Gen2928 and exact candidate heads
+        env:
+          CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git -C baseline rev-parse HEAD)" = cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          test "$(git -C candidate rev-parse HEAD)" = "$CANDIDATE_SHA"
+          test "$(git -C tooling rev-parse HEAD)" = "$CANDIDATE_SHA"
+      - name: Validate material-only mutation and historic comparator invariants
+        working-directory: tooling
+        run: |
+          set -euo pipefail
+          node --test h-earth-3d/validation/h-earth.groundcover-band-continuity.gen2940.test.mjs tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+          git diff --no-ext-diff --exit-code cb57c275b95d0d48883bc4da4dcfcf17cbec5060 -- showroom/globe/h-earth/render/assets
+      - name: Install browser software renderer
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture exact Gen2928 before and Gen2940 after with preserved grass references
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN2940_CANDIDATE_V1
+          H_EARTH_COMPARISON_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen2940-groundcover-paired"
+      - name: Preserve all source-bound matched images and receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen2940-groundcover-paired-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen2940-groundcover-paired
+          if-no-files-found: warn
+          retention-days: 30

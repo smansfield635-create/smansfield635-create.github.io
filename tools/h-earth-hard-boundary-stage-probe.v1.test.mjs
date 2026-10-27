@@ -77,7 +77,7 @@ test('paired source-camera-mode validation refuses incomplete or mixed vegetatio
 
 import {
  PUBLISHED_HEAD,PUBLISHED_RENDERER_SHA,smooth,outsideDistance,groundProtection,
- piecewiseDivide,hillsideResponse,atlasCrossSections,protectionCrossSections,combinedHabitatRange,effectiveCoastalCrossing,rankEffectiveHabitatBorders
+ piecewiseDivide,hillsideResponse,atlasCrossSections,protectionCrossSections,combinedHabitatRange,effectiveCoastalCrossing,rankEffectiveHabitatBorders,withinWalkingBounds,rankWithinWalkingBounds,makeCanonicalTerrainObserverSeed
 } from '../h-earth-3d/evidence/post-gen2928-hard-boundary-20261027/source-first-census.v1.mjs';
 
 test('source-first method preserves published identity and uses continuous analytic ramps',()=>{
@@ -162,4 +162,21 @@ test('source-first border ranking excludes fully masked coastal panel while dete
  assert(isolated.perRegion.find(x=>x.region==='coastal').effectiveAtTwoMetres>0);
  assert(isolated.ranked.every(x=>Number.isFinite(x.x)&&Number.isFinite(x.z)));
  assert.equal(isolated.result,'ACTUAL_MAX_COMPOSITED_REGION_CONTRIBUTIONS_RANKED');
+});
+
+test('source candidate ranking prefers current walking domain but does not assert GPU camera eligibility',()=>{
+ assert.equal(withinWalkingBounds(-298,-546),false);
+ assert.equal(withinWalkingBounds(88,-286),true);
+ assert.equal(withinWalkingBounds(-256,-400),true);
+ assert.equal(withinWalkingBounds(257,-286),false);
+ const synthetic={ranked:[{region:'ravine',side:'west',x:-298,z:-546,rank:.56},{region:'ravine',side:'east',x:88,z:-286,rank:.46}],
+  perRegion:[{topSourceCoordinates:[{region:'ravine',side:'east',x:88,z:-286,rank:.46}]}]};
+ const r=rankWithinWalkingBounds(synthetic);
+ assert.equal(r.top.length,1);
+ assert.deepEqual([r.top[0].x,r.top[0].z],[88,-286]);
+ const seed=makeCanonicalTerrainObserverSeed(102,-286,270,{x:88,z:-286});
+ assert.equal(seed.diagnosticObserver,true);
+ assert.equal(seed.navigablePositionDeclared,false);
+ assert(Number.isFinite(seed.y)&&Number.isFinite(seed.terrainElevation));
+ assert(Math.abs(seed.y-seed.terrainElevation-9)<.000002);
 });

@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import zlib from 'node:zlib';
+import {sampleHEarthTerrainField} from '../../terrain/h-earth.terrain-field.js';
 import {fileURLToPath} from 'node:url';
 
 export const PUBLISHED_HEAD='cb57c275b95d0d48883bc4da4dcfcf17cbec5060';
@@ -88,6 +89,39 @@ export function effectiveCoastalCrossing(mask,regions,x=-146,edgeZ=-283){
  * Each boundary sample has a true source coordinate; score only what a panel
  * adds beyond competing panels, not the isolated single-panel gradient.
  */
+
+/** The walking domain is an existing public navigation policy. A point inside
+ * its rectangular bounds is not automatically a physically supported camera.
+ */
+export const WALK_DOMAIN=Object.freeze({xMin:-256,xMax:256,zMin:-400,zMax:-80});
+export function withinWalkingBounds(x,z){
+ return Number.isFinite(x)&&Number.isFinite(z)&&x>=WALK_DOMAIN.xMin&&x<=WALK_DOMAIN.xMax&&z>=WALK_DOMAIN.zMin&&z<=WALK_DOMAIN.zMax;
+}
+export function rankWithinWalkingBounds(borderCensus){
+ const all=borderCensus.ranked.concat(...borderCensus.perRegion.flatMap(r=>r.topSourceCoordinates));
+ const seen=new Set();
+ const inside=all.filter(e=>{
+  if(!withinWalkingBounds(e.x,e.z))return false;
+  const key=[e.region,e.side,e.x,e.z].join(':');
+  if(seen.has(key))return false;seen.add(key);return true;
+ }).sort((a,b)=>b.rank-a.rank||a.region.localeCompare(b.region)||a.x-b.x||a.z-b.z);
+ return {scope:'ACCEPTED_WALKING_BOUNDS_CANDIDATES_ONLY_NOT_CAMERA_ELIGIBILITY',
+  domain:WALK_DOMAIN,top:inside.slice(0,20),
+  presentInRankedEvidence:inside.length,filterUsesExistingRankedAndPerRegionTopNotExhaustive:true};
+}
+export function makeCanonicalTerrainObserverSeed(x,z,yaw,sourceTarget){
+ const terrain=sampleHEarthTerrainField(x,z);
+ if(terrain.valid!==true||!Number.isFinite(terrain.elevation))throw Error('CANONICAL_TERRAIN_INVALID:'+x+','+z);
+ const boundary=sampleHEarthTerrainField(sourceTarget.x,sourceTarget.z);
+ if(!boundary.valid||!Number.isFinite(boundary.elevation))throw Error('CANONICAL_BOUNDARY_INVALID');
+ return {x,z,yaw,pitch:-28,y:Number((terrain.elevation+9).toFixed(6)),
+  target:sourceTarget,terrainElevation:Number(terrain.elevation.toFixed(6)),
+  targetTerrainElevation:Number(boundary.elevation.toFixed(6)),
+  terrainSlope:Number(terrain.slope.toFixed(6)),targetTerrainSlope:Number(boundary.slope.toFixed(6)),
+  source:'CANONICAL_TERRAIN_FIELD_ONLY_NOT_LIVE_VISIBLE_GPU_OR_NAVIGATION_AUTHORITY',
+  navigablePositionDeclared:false,diagnosticObserver:true};
+}
+
 export function rankEffectiveHabitatBorders(mask,regions,{stepMetres=4}={}){
  if(!(stepMetres>0&&stepMetres<=8))throw Error('INVALID_BORDER_SCAN_STEP');
  const samplePoint=(name,panel,x,z)=>{
@@ -213,6 +247,11 @@ export function sourceFirstCensus(root){
  const atlas=regions.map(q=>({bounds:q.bounds,conservativeFourMetre:atlasCrossSections(mask,q,4),sevenMetreEnvelope:atlasCrossSections(mask,q,7),actualWidthRule:q.name==='woodland'?'EXACT_6_METRES':'4_TO_7_METRES_PER_FRAGMENT_NOISE_DEPENDENT'}));
  const effectiveComposite=[-146,-142,-138].map(x=>effectiveCoastalCrossing(mask,regions,x,-283));
  const effectiveRegionBorders=rankEffectiveHabitatBorders(mask,regions);
+ const walkingBoundsRanking=rankWithinWalkingBounds(effectiveRegionBorders);
+ const sourceDerivedObserverSeeds=[
+  makeCanonicalTerrainObserverSeed(102,-286,270,{x:88,z:-286,side:'EAST_RAVINE_EAST_BORDER'}),
+  makeCanonicalTerrainObserverSeed(74,-286,90,{x:88,z:-286,side:'WEST_RAVINE_EAST_BORDER'})
+ ];
  const protection=[
   protectionCrossSections([-18,-204,34,-131],'oasis-protection'),
   protectionCrossSections([18,-210,132,-125],'estate-protection')
@@ -242,6 +281,8 @@ export function sourceFirstCensus(root){
   atlasCoverage:atlas,
   effectiveOverlappingHabitat:effectiveComposite,
   effectiveRegionBorders,
+  walkingBoundsRanking,
+  sourceDerivedObserverSeeds,
   coastalDivide:{spine,linearContinuous:true,shoreSideWidthMetres:24,knotValues:divides,mechanism:'CONTINUOUS_PIECEWISE_DIVIDE_WITH_DERIVATIVE_KNOTS'},
   candidateHardGuards:distinct,
   strongestSourceDerivedSamplePoints:ranked,

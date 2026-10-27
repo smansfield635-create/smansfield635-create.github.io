@@ -884,6 +884,50 @@
       "scopeHash": "0902576e94816ec8c8ec07bd30856394eddaa9321526d780ed8a4307e473e727",
       "state": "ADMITTED_LOCKED"
     },
+    "092266fbe988f22363189d0694e74b95318b8d2579eb4bb8a8fb98b3f59cca88": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+          "lockGeneration": 2935,
+          "lockScope": "H_EARTH:TERRAIN_MATERIAL_BOUNDARY_DIAGNOSTIC:20261027",
+          "operationId": "H_EARTH_POST_GEN2928_HARD_BOUNDARY_STAGE_DIAGNOSTIC_20261027_001",
+          "procedureLocatorDigest": "8b42d270768a922bd0590cd32ca71d9462390569f3d6f52ca49a8b3efa6faf16",
+          "requestDigest": "dc6c8bc600fe74be487f56d6273962f37c3ae15c0f0bd73213dc757f5c20e0bb",
+          "scopeHash": "092266fbe988f22363189d0694e74b95318b8d2579eb4bb8a8fb98b3f59cca88"
+        },
+        "bindingDigest": "d83867c329ae437bf9c2302b70d47785b2126ff007be796ea6caba32cb57f2a2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "113cc59efed9f9da3b40116d913e5506970d766d7d75f30e51961b174c8108a9",
+          "commentId": 6451221451,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40567039507,
+          "workflowSha": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060"
+        },
+        "lineageAnchorCommitSha": "72fb55b15d122d6bfa8a4e7ff7f616aa0a56b34d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+      "lockGeneration": 2935,
+      "lockScope": "H_EARTH:TERRAIN_MATERIAL_BOUNDARY_DIAGNOSTIC:20261027",
+      "operationId": "H_EARTH_POST_GEN2928_HARD_BOUNDARY_STAGE_DIAGNOSTIC_20261027_001",
+      "procedureLocatorDigest": "8b42d270768a922bd0590cd32ca71d9462390569f3d6f52ca49a8b3efa6faf16",
+      "released": false,
+      "requestDigest": "dc6c8bc600fe74be487f56d6273962f37c3ae15c0f0bd73213dc757f5c20e0bb",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "092266fbe988f22363189d0694e74b95318b8d2579eb4bb8a8fb98b3f59cca88",
+      "state": "ADMITTED_LOCKED"
+    },
     "09317f370d2fc10b38b187cd2fb7a60b5606035ccc6197a3f19a1f963cc302ec": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -21942,7 +21986,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2934,
+  "lockGeneration": 2935,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

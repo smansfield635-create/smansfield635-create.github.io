@@ -35,6 +35,10 @@
   ],
   "experienceFiles": [
     {
+      "path": "showroom/globe/h-earth/index.html",
+      "sha256": "b706cd0c9462abd80ae6ccab916ce987541e08e5e162d9141f81bd0fdc398ec8"
+    },
+    {
       "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
       "sha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec"
     }
@@ -60,5 +64,11 @@
     "Groundcover formula is globally wired only across eligible world-soil groundcover, not water, vegetation, unqualified geological rock, or unrelated habitat material overlays.",
     "Map-wide hard polygonal/straight/curved boundary classes remain open under issue #6911.",
     "Owner's positive material approval and publication direction do not replace independent review or the separate merge and Pages release authorization."
-  ]
+  ],
+  "browserAssetRequestIdentity": {
+    "importMapEntryCount": 2,
+    "oldRevision": "internal-coast-7ac013645110fc91ac9d",
+    "newRevision": "groundcover-fa6acc426c75c3b2292b",
+    "purpose": "Prevent returning browsers from loading the former shader under its unchanged URL; no product GLSL or navigation changes"
+  }
 }

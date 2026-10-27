@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-27T19:24:09Z",
+  "generatedAt": "2026-10-27T20:26:34Z",
   "window": {
-    "start": "2026-09-27T19:24:09Z",
-    "end": "2026-10-27T19:24:09Z"
+    "start": "2026-09-27T20:26:34Z",
+    "end": "2026-10-27T20:26:34Z"
   },
   "dimensions": {
     "requestPath": [
@@ -14,8 +14,8 @@
       },
       {
         "value": "/analytics/",
-        "pageLoads": 603,
-        "visits": 603
+        "pageLoads": 604,
+        "visits": 604
       },
       {
         "value": "/",
@@ -133,6 +133,11 @@
         "visits": 2
       },
       {
+        "value": "/showroom/globe/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
         "value": "/index.html",
         "pageLoads": 2,
         "visits": 2
@@ -154,11 +159,6 @@
       },
       {
         "value": "/laws/scientific-law/battery-heldout-study/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/showroom/globe/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -216,8 +216,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1639,
-        "visits": 1639
+        "pageLoads": 1640,
+        "visits": 1640
       },
       {
         "value": "diamondgatebridge.com",
@@ -248,8 +248,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1760,
-        "visits": 1633
+        "pageLoads": 1761,
+        "visits": 1634
       },
       {
         "value": "CN",
@@ -290,8 +290,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1438,
-        "visits": 1383
+        "pageLoads": 1439,
+        "visits": 1384
       },
       {
         "value": "mobile",
@@ -307,8 +307,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 861,
-        "visits": 861
+        "pageLoads": 862,
+        "visits": 862
       },
       {
         "value": "Chrome",
@@ -317,23 +317,23 @@
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 180,
-        "visits": 178
+        "pageLoads": 160,
+        "visits": 158
       },
       {
         "value": "Edge",
-        "pageLoads": 98,
-        "visits": 93
-      },
-      {
-        "value": "Firefox",
-        "pageLoads": 81,
-        "visits": 72
+        "pageLoads": 88,
+        "visits": 83
       },
       {
         "value": "MobileSafari",
-        "pageLoads": 76,
+        "pageLoads": 86,
         "visits": 56
+      },
+      {
+        "value": "Firefox",
+        "pageLoads": 71,
+        "visits": 62
       },
       {
         "value": "Unknown",
@@ -359,8 +359,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1100,
-        "visits": 1100
+        "pageLoads": 1101,
+        "visits": 1101
       },
       {
         "value": "Android",
@@ -391,20 +391,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 969,
-        "visits": 832
+        "pageLoads": 979,
+        "visits": 842
       },
       {
         "value": "1",
-        "pageLoads": 901,
-        "visits": 891
+        "pageLoads": 862,
+        "visits": 862
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1777,
-        "visits": 1682
+        "pageLoads": 1778,
+        "visits": 1683
       },
       {
         "value": "routing-apis",
@@ -425,8 +425,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1741,
-        "visits": 1657
+        "pageLoads": 1742,
+        "visits": 1658
       },
       {
         "value": "cache",
@@ -442,15 +442,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1840,
-        "visits": 1703
+        "pageLoads": 1841,
+        "visits": 1704
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1840,
-        "visits": 1703
+        "pageLoads": 1841,
+        "visits": 1704
       }
     ]
   }

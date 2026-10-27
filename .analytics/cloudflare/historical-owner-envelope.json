@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-27T19:24:09Z",
+  "generatedAt": "2026-10-27T20:26:34Z",
   "window": {
-    "start": "2026-07-29T19:24:09Z",
-    "end": "2026-10-27T19:24:09Z"
+    "start": "2026-07-29T20:26:34Z",
+    "end": "2026-10-27T20:26:34Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4458,
-    "visits": 1317,
+    "pageLoads": 4428,
+    "visits": 1307,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4458,
-        "visits": 1317
+        "pageLoads": 4428,
+        "visits": 1307
       }
     },
     "byPath": {
@@ -39,8 +39,8 @@
         "visits": 727
       },
       "/laws/": {
-        "pageLoads": 260,
-        "visits": 90
+        "pageLoads": 240,
+        "visits": 80
       },
       "/showroom/globe/h-earth/diagnostic/": {
         "pageLoads": 20,
@@ -49,10 +49,6 @@
       "/showroom/globe/h-earth/awards/": {
         "pageLoads": 500,
         "visits": 0
-      },
-      "/products/education/": {
-        "pageLoads": 270,
-        "visits": 70
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -78,6 +74,14 @@
         "pageLoads": 160,
         "visits": 10
       },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 90,
+        "visits": 0
+      },
       "/governance/": {
         "pageLoads": 60,
         "visits": 10
@@ -88,14 +92,6 @@
       },
       "/evidence/readiness/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 90,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -122,6 +118,10 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -138,10 +138,6 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
@@ -154,12 +150,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/gauges/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/reality/": {
@@ -206,13 +202,13 @@
         "pageLoads": 220,
         "visits": 20
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -286,6 +282,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/products/education/": {
+        "pageLoads": 260,
+        "visits": 70
+      },
       "/analytics-owner-device/": {
         "pageLoads": 30,
         "visits": 30
@@ -321,12 +321,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3141,
+        "pageLoads": 3121,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 767,
-        "visits": 767
+        "pageLoads": 757,
+        "visits": 757
       },
       "(none)": {
         "pageLoads": 540,

@@ -4,9 +4,9 @@ import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 
-export const DIAGNOSTIC_MODES=Object.freeze(['reference','unlit-albedo']);
-export const DIAGNOSTIC_STAGE_MEANINGS=Object.freeze({reference:'Original terrain lighting and material composition; only grass is hidden.','unlit-albedo':'Final composed terrain base without lighting or fog, using original exposure and gamma.'});
-export const SEARCH_PROVENANCE=Object.freeze({kind:'SEARCH_POSES_NOT_RECOVERED_TELEMETRY',targetVideo:'30053.mp4',targetVideoSeconds:22,targetScreenshots:Object.freeze(['01-30048.jpg','02-30046.jpg','03-30044.jpg']),exactScreenshotMatchProven:false,diagnosticPass:2,priorUnmatchedRun:40417092530,localizationBasis:'SOURCE_OASIS_SEED_AND_171_SHARED_EDGE_CPU_AUDIT',oasisSeed:Object.freeze({x:-6,z:-164})});
+export const DIAGNOSTIC_MODES=Object.freeze(['reference','unlit-albedo','unlit-no-habitat','habitat-coverage','reference-no-habitat']);
+export const DIAGNOSTIC_STAGE_MEANINGS=Object.freeze({reference:'Original terrain lighting/material; grass hidden for diagnosis only.','unlit-albedo':'Final terrain albedo with original exposure/gamma.','unlit-no-habitat':'Same unlit pipeline with only habitat color and roughness weights zeroed.','habitat-coverage':'Original combined habitat coverage, raw grayscale without exposure/gamma; nonterrain unchanged.','reference-no-habitat':'Original lit pipeline with only habitat color and roughness weights zeroed.'});
+export const SEARCH_PROVENANCE=Object.freeze({kind:'SOURCE_BOUND_COORDINATES_NOT_SCREENSHOT_TELEMETRY',exactScreenshotMatchProven:false,operationId:'H_EARTH_COORDINATE_BOUNDARY_ISOLATION_20261026_001',lockGeneration:2922,diagnosticPass:1,priorUnmatchedRuns:Object.freeze([40417092530,40419484820]),localizationBasis:'AUTHENTICATED_COMBINED_MASK_AND_EXPOSED_SAME_TRIANGLE_TRANSECTS',traceResultSha256:'4ae74ab9625a40715ab787faf1388c5cced191c7906c9bb9384dec5d7f49c579',anchor:Object.freeze({x:149.33333333333337,y:6.748141765594482,z:-169.69270833333331})});
 export const RENDERER_SHA256='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2';
 export const HEADS=Object.freeze({baseline:'85372f3dc896d73457f6a7d008ac08a51d0ba85b',candidate:'9127904e725a3f4ca13c1221451023102ad09435'});
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
@@ -18,8 +18,15 @@ export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pit
 {name:'patch-close-south',x:88,z:-236,yaw:180,pitch:-17.72},
 {name:'patch-east',x:92,z:-232,yaw:270,pitch:-6.69},
 {name:'patch-west',x:84,z:-232,yaw:90,pitch:-13.5}].map(Object.freeze));
-export const DIAGNOSTIC_POSES=Object.freeze([{name:'oasis-near-contact',x:-14,z:-146,yaw:35.5,pitch:-14},{name:'oasis-near-inland',x:-14,z:-146,yaw:215.5,pitch:-14},{name:'oasis-west-water',x:-20,z:-164,yaw:90,pitch:-14},{name:'oasis-west-inland',x:-20,z:-164,yaw:270,pitch:-14}].map(Object.freeze));
-// Observer heights exceed measured immutable mesh/analytic elevations by 2.25m.
+const observer=(name,target,z,y)=>Object.freeze({name,x:target.x,y,z,yaw:0,pitch:Math.atan2(target.y-y,z-target.z)*180/Math.PI,diagnosticObserver:true,target:Object.freeze(target)});
+const anchor=SEARCH_PROVENANCE.anchor;
+export const DIAGNOSTIC_POSES=Object.freeze([
+ observer('coastal-mask-close',anchor,anchor.z+10,18),
+ observer('coastal-mask-down',anchor,anchor.z+2,18),
+ observer('coastal-mask-context',anchor,anchor.z+26,34),
+ observer('southern-mask-down',{x:142.33333333333337,y:7.017276763916016,z:-271.125},-269.125,18)
+]);
+// Diagnostic observer positions aim at measured indexed ground coordinates.
 // These views are outside walking bounds and confer no traversal/support authority.
 export function comparisonState(nav,pose,sequence,action){
   if(pose.diagnosticObserver===true){
@@ -45,15 +52,17 @@ export function transformDiagnosticSource(source){
  if(start<0||end<0)throw Error('DIAGNOSTIC_FS_BOUNDARY');
  let fsSource=source.slice(start,end);
  fsSource=replaceExactlyOnce(fsSource,'out vec4 outColor;','out vec4 outColor;\nuniform int uGroundDiagnosticMode;');
- fsSource=replaceExactlyOnce(fsSource,'lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));','if(worldSoilTerrain&&uGroundDiagnosticMode==1)lit=base;\n  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));');
+ fsSource=replaceExactlyOnce(fsSource,'float terrainRoughnessForLighting=0.72;','float terrainRoughnessForLighting=0.72;\n  float diagnosticHabitatCoverage=0.0;');
+ fsSource=replaceExactlyOnce(fsSource,'base=mix(base,habitatSoil,habitatCoverage*.68);','diagnosticHabitatCoverage=habitatCoverage;\n    if(uGroundDiagnosticMode==2||uGroundDiagnosticMode==4)habitatCoverage=0.0;\n    base=mix(base,habitatSoil,habitatCoverage*.68);');
+ fsSource=replaceExactlyOnce(fsSource,'lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));','if(worldSoilTerrain&&(uGroundDiagnosticMode==1||uGroundDiagnosticMode==2))lit=base;\n  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));\n  if(worldSoilTerrain&&uGroundDiagnosticMode==3)lit=vec3(diagnosticHabitatCoverage);');
  source=source.slice(0,start)+fsSource+source.slice(end);
  const anchor='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
- source=replaceExactlyOnce(source,anchor,anchor+`\n    {const mode=globalThis.__groundDiagnosticMode;if(!Number.isInteger(mode)||mode<0||mode>1)throw Error('DIAGNOSTIC_MODE_INVALID');const loc=gl.getUniformLocation(resources.geometryProgram,'uGroundDiagnosticMode');if(loc===null)throw Error('DIAGNOSTIC_UNIFORM_MISSING');gl.uniform1i(loc,mode);globalThis.__groundDiagnosticApplied=mode;}`);
+ source=replaceExactlyOnce(source,anchor,anchor+`\n    {const mode=globalThis.__groundDiagnosticMode;if(!Number.isInteger(mode)||mode<0||mode>4)throw Error('DIAGNOSTIC_MODE_INVALID');const loc=gl.getUniformLocation(resources.geometryProgram,'uGroundDiagnosticMode');if(loc===null)throw Error('DIAGNOSTIC_UNIFORM_MISSING');gl.uniform1i(loc,mode);globalThis.__groundDiagnosticApplied=mode;}`);
  return instrumentRenderer(source);
 }
 export function validateDiagnosticSet(views){
- if(views.length!==8)throw Error('DIAGNOSTIC_INCOMPLETE');
- for(const pose of DIAGNOSTIC_POSES){const group=views.filter(v=>v.pose.name===pose.name);if(group.length!==2||new Set(group.map(v=>v.mode)).size!==2||!DIAGNOSTIC_MODES.every(m=>group.some(v=>v.mode===m)))throw Error('DIAGNOSTIC_MODE_SET');const ref=group.find(v=>v.mode==='reference');for(const v of group)if(!v.grassHidden||v.diagnosticApplied!==DIAGNOSTIC_MODES.indexOf(v.mode)||v.assetSignature!==ref.assetSignature||JSON.stringify(v.state.position)!==JSON.stringify(ref.state.position)||JSON.stringify(v.lastFrame.cameraPosition)!==JSON.stringify(ref.lastFrame.cameraPosition))throw Error('DIAGNOSTIC_MATCH_MISMATCH');}
+ if(views.length!==20)throw Error('DIAGNOSTIC_INCOMPLETE');
+ for(const pose of DIAGNOSTIC_POSES){const group=views.filter(v=>v.pose.name===pose.name);if(group.length!==5||new Set(group.map(v=>v.mode)).size!==5||!DIAGNOSTIC_MODES.every(m=>group.some(v=>v.mode===m)))throw Error('DIAGNOSTIC_MODE_SET');const ref=group.find(v=>v.mode==='reference');for(const v of group)if(!v.grassHidden||v.diagnosticApplied!==DIAGNOSTIC_MODES.indexOf(v.mode)||v.assetSignature!==ref.assetSignature||JSON.stringify(v.state.position)!==JSON.stringify(ref.state.position)||JSON.stringify(v.lastFrame.cameraPosition)!==JSON.stringify(ref.lastFrame.cameraPosition))throw Error('DIAGNOSTIC_MATCH_MISMATCH');}
  return true;
 }
 export function sameHeading(a,b){return Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(((a-b)%360+540)%360-180)<1e-8;}
@@ -88,7 +97,7 @@ export function assertCheckout(dir,expected){const head=execFileSync('git',['-C'
 export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(!['--baseline-dir','--candidate-dir','--output'].includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==3)throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==3)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
-  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,poses:DIAGNOSTIC_POSES,modes:DIAGNOSTIC_MODES,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
+  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,poses:DIAGNOSTIC_POSES,modes:DIAGNOSTIC_MODES,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
   let browser=null,server=null;
   const interrupt=signal=>{receipt.result='INTERRUPTED';receipt.errors.push(signal);persist();server?.kill();process.exit(signal==='SIGTERM'?143:130);};

@@ -74,3 +74,41 @@ test('paired source-camera-mode validation refuses incomplete or mixed vegetatio
  views.at(-1).grassHidden=true;
  assert.throws(()=>validateDiagnosticSet(views),/DIAGNOSTIC_MATCH_MISMATCH/);
 });
+
+import {
+ PUBLISHED_HEAD,PUBLISHED_RENDERER_SHA,smooth,outsideDistance,groundProtection,
+ piecewiseDivide,hillsideResponse,atlasCrossSections,protectionCrossSections
+} from '../h-earth-3d/evidence/post-gen2928-hard-boundary-20261027/source-first-census.v1.mjs';
+
+test('source-first method preserves published identity and uses continuous analytic ramps',()=>{
+ assert.equal(PUBLISHED_HEAD,GEN2928_HEAD);
+ assert.equal(PUBLISHED_RENDERER_SHA,GEN2928_SHADER_SHA256);
+ assert.equal(smooth(-48,-24,-48),0);
+ assert.equal(smooth(-48,-24,-24),1);
+ assert.equal(smooth(-48,-24,-36),.5);
+ assert.equal(outsideDistance([-18,-204,34,-131],0,-175),0);
+ assert.equal(outsideDistance([-18,-204,34,-131],-30,-175),12);
+ assert.equal(groundProtection(0,-175),0);
+ assert(groundProtection(-40,-175)>groundProtection(-28,-175));
+ assert.equal(groundProtection(150,-175)>0,true);
+});
+test('published coastal-divide knots have continuous values and smooth hillside masking',()=>{
+ const spine=[[-52,-208],[18,-226],[86,-235],[148,-224]];
+ for(const [x,z] of spine)assert.equal(piecewiseDivide(x,spine),z);
+ for(const [x] of spine)assert(Math.abs(piecewiseDivide(x-1e-6,spine)-piecewiseDivide(x+1e-6,spine))<.00001);
+ assert.equal(hillsideResponse(18,-226-48,spine),0);
+ assert.equal(hillsideResponse(18,-226-24,spine),1);
+ assert.equal(hillsideResponse(18,-226-36,spine),.5);
+});
+test('atlas geographic gates fade to zero on region perimeter, not assumed to be hard seam',()=>{
+ const mask={size:8,width:24,bytes:new Uint8Array(8*24).fill(255)};
+ const region={name:'test',panel:1,bounds:[0,0,80,80]};
+ const m=atlasCrossSections(mask,region,4);
+ assert.equal(m.region,'test');
+ assert(m.examined>0);
+ assert(m.largestTwoMetre[0].twoMetres>0);
+ assert(m.largestTwoMetre.every(x=>x.zeroLimit<.00001));
+ const p=protectionCrossSections([18,-210,132,-125],'estate');
+ assert(p.examined>0);
+ assert(p.maximumTwoMetreMaskContrast>0);
+});

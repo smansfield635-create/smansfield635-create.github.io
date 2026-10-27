@@ -1,36 +1,31 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-27T06:50:01Z",
+  "generatedAt": "2026-10-27T07:41:48Z",
   "window": {
-    "start": "2026-09-27T06:50:01Z",
-    "end": "2026-10-27T06:50:01Z"
+    "start": "2026-09-27T07:41:48Z",
+    "end": "2026-10-27T07:41:48Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 709,
-        "visits": 651
+        "pageLoads": 585,
+        "visits": 537
       },
       {
         "value": "/analytics/",
-        "pageLoads": 593,
-        "visits": 593
+        "pageLoads": 522,
+        "visits": 522
       },
       {
         "value": "/",
-        "pageLoads": 114,
-        "visits": 92
+        "pageLoads": 112,
+        "visits": 90
       },
       {
         "value": "/build/",
         "pageLoads": 51,
         "visits": 51
-      },
-      {
-        "value": "/about/",
-        "pageLoads": 41,
-        "visits": 41
       },
       {
         "value": "/meet-sean-mansfield/",
@@ -109,13 +104,8 @@
       },
       {
         "value": "/preflight/saas-lab/",
-        "pageLoads": 9,
-        "visits": 9
-      },
-      {
-        "value": "/preflight/app/",
-        "pageLoads": 9,
-        "visits": 9
+        "pageLoads": 8,
+        "visits": 8
       },
       {
         "value": "/products/",
@@ -168,6 +158,11 @@
         "visits": 0
       },
       {
+        "value": "/about/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/showroom/globe/h-earth/**",
         "pageLoads": 1,
         "visits": 1
@@ -208,6 +203,11 @@
         "visits": 1
       },
       {
+        "value": "/preflight/app/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/research/one-call-lab/",
         "pageLoads": 1,
         "visits": 1
@@ -216,8 +216,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1633,
-        "visits": 1633
+        "pageLoads": 1634,
+        "visits": 1634
       },
       {
         "value": "diamondgatebridge.com",
@@ -248,8 +248,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1755,
-        "visits": 1628
+        "pageLoads": 1756,
+        "visits": 1629
       },
       {
         "value": "CN",
@@ -285,8 +285,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1431,
-        "visits": 1376
+        "pageLoads": 1432,
+        "visits": 1377
       },
       {
         "value": "mobile",
@@ -302,8 +302,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 850,
-        "visits": 850
+        "pageLoads": 851,
+        "visits": 851
       },
       {
         "value": "Chrome",
@@ -354,8 +354,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1089,
-        "visits": 1089
+        "pageLoads": 1090,
+        "visits": 1090
       },
       {
         "value": "Android",
@@ -391,15 +391,15 @@
       },
       {
         "value": "1",
-        "pageLoads": 850,
-        "visits": 850
+        "pageLoads": 851,
+        "visits": 851
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1771,
-        "visits": 1676
+        "pageLoads": 1772,
+        "visits": 1677
       },
       {
         "value": "routing-apis",
@@ -420,8 +420,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1735,
-        "visits": 1651
+        "pageLoads": 1736,
+        "visits": 1652
       },
       {
         "value": "cache",
@@ -437,15 +437,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1834,
-        "visits": 1697
+        "pageLoads": 1835,
+        "visits": 1698
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1834,
-        "visits": 1697
+        "pageLoads": 1835,
+        "visits": 1698
       }
     ]
   }

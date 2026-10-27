@@ -138,7 +138,7 @@ test('source first coastal atlas edge is evaluated after overlapping woodland an
  assert(!withCoastal.upperDominance.includes('coastal'));
  const transect=effectiveCoastalCrossing(mask,regions,5,0);
  assert.equal(transect.acrossFourMetres.maximumPossibleCoverageDifference,0);
- pixels.fill(0,0,8*16);
+ for(let row=0;row<8;row++)pixels.fill(0,row*24,row*24+16);
  const coastalOnly=combinedHabitatRange(mask,regions,5,2);
  assert(coastalOnly.upper>coastalOnly.lower);
  assert(coastalOnly.upperDominance.includes('coastal'));

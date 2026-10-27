@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-seam-gen2924-deploy-server-bound",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6909,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2924-deploy-fixed",
+  "requestCommit": "2c3820a6afa9ef57f1287eeb7cd53305ece13693",
+  "currentMainSha": "7e44bbf71c18d94d9f7e26e912e0bb8d648a7598",
+  "bridgeRunId": "40430911140",
+  "error": "Stale dispatch request: parent 515101ba31da332c473f504d183b836e7c304043 != current main 7e44bbf71c18d94d9f7e26e912e0bb8d648a7598",
+  "failedAt": "2026-10-27T01:09:53.062Z"
+}

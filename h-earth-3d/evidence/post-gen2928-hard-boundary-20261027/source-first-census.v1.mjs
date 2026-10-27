@@ -123,8 +123,9 @@ export function sourceFirstCensus(root){
  const divides=spine.map(([x,z],i)=>{
   const actual=piecewiseDivide(x,spine);
   if(Math.abs(actual-z)>1e-9)throw Error('SPINE_VALUE_DRIFT');
-  const difference=Math.abs(hillsideResponse(x,z+2,spine)-hillsideResponse(x,z-2,spine));
-  return {node:i,x,z,hillsideWeightAtDivide:hillsideResponse(x,z,spine),twoMetreMaskContrast:Number(difference.toFixed(6))};
+  const centerZ=actual-36,lowerZ=actual-48,upperZ=actual-24;
+  const difference=Math.abs(hillsideResponse(x,centerZ+2,spine)-hillsideResponse(x,centerZ-2,spine));
+  return {node:i,x,dividerZ:z,transitionLowerZ:lowerZ,transitionCenterZ:centerZ,transitionUpperZ:upperZ,hillsideWeightAtCenter:hillsideResponse(x,centerZ,spine),fourMetreAcrossCenterMaskContrast:Number(difference.toFixed(6))};
  });
  const distinct=[
   {rule:'shoreline-soil-rectangle',bounds:[-18,-204,34,-131],condition:'HARD_INSIDE_OUTSIDE_GUARD',risk:'POTENTIAL_MASK_CUTOFF',textureBoundaryPixelsRead:false,visualJumpEstablished:false},

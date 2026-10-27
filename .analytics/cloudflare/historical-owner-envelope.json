@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-27T07:41:48Z",
+  "generatedAt": "2026-10-27T08:42:17Z",
   "window": {
-    "start": "2026-07-29T07:41:48Z",
-    "end": "2026-10-27T07:41:48Z"
+    "start": "2026-07-29T08:42:17Z",
+    "end": "2026-10-27T08:42:17Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -18,11 +18,11 @@
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
     "pageLoads": 4468,
-    "visits": 1277,
+    "visits": 1317,
     "byDevice": {
       "tablet": {
         "pageLoads": 4468,
-        "visits": 1277
+        "visits": 1317
       }
     },
     "byPath": {
@@ -47,11 +47,11 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 927,
-        "visits": 687
+        "pageLoads": 987,
+        "visits": 727
       },
       "/laws/": {
-        "pageLoads": 250,
+        "pageLoads": 260,
         "visits": 90
       },
       "/products/education/": {
@@ -83,7 +83,7 @@
         "visits": 10
       },
       "/governance/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 10
       },
       "/index.html": {
@@ -91,7 +91,7 @@
         "visits": 0
       },
       "/evidence/readiness/": {
-        "pageLoads": 110,
+        "pageLoads": 20,
         "visits": 0
       },
       "/build/intake/": {
@@ -99,7 +99,7 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 80,
+        "pageLoads": 90,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -321,12 +321,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3191,
+        "pageLoads": 3151,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 727,
-        "visits": 727
+        "pageLoads": 767,
+        "visits": 767
       },
       "(none)": {
         "pageLoads": 540,

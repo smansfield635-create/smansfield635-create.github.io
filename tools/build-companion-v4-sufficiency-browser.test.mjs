@@ -76,4 +76,22 @@ for(const [name,steps] of journeys){const page=await browser.newPage();await pag
  assert.ok(!await page.$eval('#build-companion',e=>e.innerText).then(x=>x.includes('Which existing services need to stay connected?')));
  await page.close();
 }
+// A terminal review with no unanswered questions must not offer a no-op
+// continuation that routes back to the same screen indefinitely.
+{
+ const page=await browser.newPage();await page.goto('http://127.0.0.1:18115/build/',{waitUntil:'networkidle0'});
+ await page.evaluate(()=>{
+  sessionStorage.setItem('dgb-build-companion-v4',JSON.stringify({
+   cursor:'REVIEW',view:'review',route:'REST',purposePath:'root',queue:[],sharedIndex:99,
+   records:[],history:[],sufficiencyOffered:false,deepMode:false,
+   contact:{name:'',email:'',phone:''}
+  }));
+ });await page.reload({waitUntil:'networkidle0'});
+ await page.evaluate(()=>document.querySelector('[data-open-build-companion],a[href="/build/intake/"]').click());
+ const actions=await page.$eval('#build-companion',e=>[...e.querySelectorAll('.bc-review-actions button')].map(x=>x.textContent));
+ assert.ok(!actions.includes('Continue discovery'),'terminal review cannot loop to itself');
+ assert.ok(!actions.includes('Explore additional details'),'no fabricated detail branch');
+ assert.ok(actions.includes('Prepare email inquiry'),'inquiry remains available');
+ await page.close();
+}
 await browser.close();server.close();console.log('BUILD_COMPANION_V4_SEVEN_SUFFICIENCY_JOURNEYS_PASS');

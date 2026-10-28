@@ -259,3 +259,11 @@ test('four-tap footprint integration improves dense-reference RMS over one cente
  t.diagnostic(JSON.stringify({sampleCount:count,denseTapsPerFootprint:1024,centerRms,filteredRms,precision:'JS_DOUBLE_NOT_GPU'}));
  assert.ok(centerRms>0);assert.ok(filteredRms<centerRms*.8,JSON.stringify({centerRms,filteredRms}));
 });
+
+// The successful baseline from the first GPU run is inherited, never silently recaptured.
+test('preserved baseline pins all twelve original frame hashes',async()=>{
+ const {preservedFootprintBaseline}=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const {mkdtempSync,rmSync}=await import('node:fs');const {tmpdir}=await import('node:os');const {join}=await import('node:path');
+ const out=mkdtempSync(join(tmpdir(),'footprint-baseline-'));
+ try{const m=preservedFootprintBaseline(new URL('../',import.meta.url).pathname,out);assert.equal(m.views.length,12);assert.equal(m.sourceRun,40716213632);assert.equal(m.baselineErrors.length,0);}finally{rmSync(out,{recursive:true,force:true});}
+});

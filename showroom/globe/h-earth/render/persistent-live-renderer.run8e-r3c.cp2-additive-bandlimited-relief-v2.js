@@ -508,8 +508,8 @@ float groundcoverPatchFactorAt(vec2 p){
   float domainX=(0.8*p.x-0.6*p.y)*0.018+5.0+0.65*(broad-0.5);
   float domainZ=(0.6*p.x+0.8*p.y)*0.018-11.0+0.65*(macroField-0.5);
   float organic=noise2(vec2(domainX,domainZ));
-  float patch=smoothstep(0.20,0.66,organic*0.78+mesoField*0.22);
-  return 0.88*patch*(1.0-0.25*smoothstep(0.30,0.85,patch));
+  float patchCoverage=smoothstep(0.20,0.66,organic*0.78+mesoField*0.22);
+  return 0.88*patchCoverage*(1.0-0.25*smoothstep(0.30,0.85,patchCoverage));
 }
 // H_EARTH_GROUNDCOVER_FOOTPRINT_HELPER_END
 // Fade nonzero atlas edge texels to the surrounding soil in world metres.

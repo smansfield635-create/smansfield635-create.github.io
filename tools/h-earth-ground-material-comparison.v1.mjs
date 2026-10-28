@@ -142,6 +142,20 @@ export function decodeCanvasCapture(capture,expectedFrame){
   if(!bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))||bytes.toString('ascii',12,16)!=='IHDR'||bytes.readUInt32BE(16)!==529||bytes.readUInt32BE(20)!==980)throw Error('CAPTURE_PNG_DIMENSIONS_INVALID');
   return bytes;
 }
+export const FOOTPRINT_ARCHIVE_SHA256='6ce5e77441d037646c19cf6b37698bbed99eebda34b2246c214a7fc3e5d2fbea';
+export function preservedFootprintBaseline(candidateDir,outputDir){
+ const dir=path.join(candidateDir,'h-earth-3d/evidence/groundcover-footprint-continuity-20261028/baseline-run40716213632');
+ const bytes=fs.readFileSync(path.join(dir,'manifest.json'));
+ if(sha(bytes)!==FOOTPRINT_ARCHIVE_SHA256)throw Error('PRESERVED_BASELINE_MANIFEST_DRIFT');
+ const m=JSON.parse(bytes);
+ if(m.sourceRun!==40716213632||m.baselineHead!==FOOTPRINT_BASELINE_HEAD||m.baselineErrors.length||m.views.length!==12)throw Error('PRESERVED_BASELINE_CUSTODY_INVALID');
+ for(const v of m.views){
+   if(v.label!=='baseline'||v.sourceHead!==FOOTPRINT_BASELINE_HEAD||v.rendererHash!==FOOTPRINT_BASELINE_SHA256||path.basename(v.image)!==v.image)throw Error('PRESERVED_BASELINE_VIEW_INVALID');
+   const png=fs.readFileSync(path.join(dir,v.image));if(sha(png)!==v.imageSha256)throw Error('PRESERVED_BASELINE_IMAGE_DRIFT');
+   fs.writeFileSync(path.join(outputDir,v.image),png);
+ }
+ return m;
+}
 export function assertSceneParity(baselineDir,candidateDir){
  const manifest=dir=>execFileSync('git',['-C',dir,'ls-tree','-r','HEAD','--','showroom/globe/h-earth','h-earth-3d'],{encoding:'utf8',maxBuffer:16*1024*1024}).split('\n').filter(line=>{
    const p=line.split('\t')[1]??'';
@@ -177,10 +191,10 @@ export async function run(argv){
   process.once('SIGTERM',onTerm);process.once('SIGINT',onInt);persist();
   try{
     for(const label of Object.keys(HEADS))assertCheckout(a['--'+label+'-dir'],HEADS[label]);
-    if(footprintCapture){receipt.sceneParity=assertSceneParity(a['--baseline-dir'],a['--candidate-dir']);persist();}
+    if(footprintCapture){receipt.sceneParity=assertSceneParity(a['--baseline-dir'],a['--candidate-dir']);const archive=preservedFootprintBaseline(a['--candidate-dir'],out);receipt.views.push(...archive.views.map(v=>({...v,inheritedFromRun:archive.sourceRun})));receipt.runs.push({label:'baseline',head:FOOTPRINT_BASELINE_HEAD,inheritedFromRun:archive.sourceRun,manifestSha256:FOOTPRINT_ARCHIVE_SHA256,completedAt:archive.baselineCompletedAt,errors:[]});persist();}
     const {chromium}=await import('playwright');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-    for(const [index,label] of (footprintCapture?['baseline','candidate']:['candidate']).entries()){
+    for(const [index,label] of ['candidate'].entries()){
       const dir=a['--'+label+'-dir'],port=18767+index,base='http://127.0.0.1:'+port;
       const runRecord={label,head:HEADS[label],errors:[],instrumentation:[],startedAt:new Date().toISOString()};receipt.runs.push(runRecord);persist();
       server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});

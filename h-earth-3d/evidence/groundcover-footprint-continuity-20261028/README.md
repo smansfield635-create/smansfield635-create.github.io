@@ -57,3 +57,11 @@ Three explicitly marked additive source blocks reconstruct the approved baseline
 - A successful inland-band result is still partial until the other owner-observed straight/curved classes are source-resolved and reviewed. No map-wide repair claim from one view. No merge/deploy from green CI.
 
 OW01 mapping: D01/D02 and S01/S06 (continuity and comparative qualification); preserve D03/D04 causal subtropical expression and all other geographic/narrative/acoustic truths. No global morphology or accessibility change.
+
+## First GPU execution and bounded correction
+
+Run40716213632 (candidate42071d278563f15052958bab1da367a6cf1fc329) captured all twelve baseline frames with no baseline browser errors, then candidate compilation failed because `patch` is reserved in GLSL. The helper identifier is corrected to `patchCoverage`. Genuine local Mesa/EGL GLES compilation accepts the corrected extracted helper and rejects the original reserved identifier; this is not a full-runtime link result. The corrected Node suites pass34/34.
+
+The twelve successful baseline PNGs, pinned manifest and compressed unmodified partial-run receipt are preserved in `baseline-run40716213632/`. Subsequent capture inherits those exact bytes after verifying every hash and scene parity. Candidate images remain pending. Baseline activation is nonzero at the known inland scan row260 but zero at tested rows270–300: the filter does not operate over much of the foreground taper. This is evidence against treating footprint filtering as a complete solution even if it improves horizon chatter.
+
+Independent reinspection of original Gen2925 factor images distinguishes thin horizon stripes from the broad high-weight lobe around rows250–280. Suitability and protection are uniformly1 across rows250–310. Removing only horizon chatter is not a successful repair of that broad band.

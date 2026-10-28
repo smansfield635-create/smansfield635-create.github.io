@@ -14,18 +14,12 @@
     "gauges/ohm/index.html",
     "gauges/instrument/index.html",
     "compass-presentable/index.html",
-    "compass-presentable/index.css",
-    "compass-presentable/index.js",
-    "compass-presentable/BUILD_HOLD.md",
-    "compass-successor/index.html",
-    "compass-successor/index.css",
-    "compass-successor/index.js",
-    "compass-successor/PUBLISH_RECEIPT_20260822_1901.txt"
+    "compass-successor/index.html"
   ],
   "entrypoint": ".github/ai-router/projects/legacy-diagnostic-pages/entrypoint.v1.json",
   "authorityBoundary": [
     "PROJECT_REGISTRATION_CREATES_ROUTING_IDENTITY_ONLY_NOT_PRODUCT_MUTATION_MERGE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
-    "LEGACY_DIAGNOSTIC_PUBLIC_PAGES_OWNS_ONLY_SEVENTEEN_DECLARED_LEGACY_DIAGNOSTIC_GAUGE_AND_DORMANT_COMPASS_PATHS",
+    "LEGACY_DIAGNOSTIC_PUBLIC_PAGES_OWNS_ONLY_ELEVEN_EXTANT_LEGACY_DIAGNOSTIC_GAUGE_AND_DORMANT_COMPASS_PATHS",
     "NO_ROOT_PREFIX_NO_ACTIVE_RUNTIME_ASSET_NO_OTHER_PUBLIC_PAGE_OWNERSHIP",
     "RUNTIME_OR_AUTHORITY_CHANGES_REQUIRE_CANONICAL_OPERATION_ADMISSION_WHEN_APPLICABLE",
     "PUBLICATION_USES_EXISTING_EXACT_HEAD_RELEASE_SPINE_NO_NEW_SURFACE_OR_CAPABILITY",

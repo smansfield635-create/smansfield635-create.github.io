@@ -3148,6 +3148,50 @@
       "scopeHash": "297d84dc3c4b5e2e9b3d9bb1feeb246e78d141f73363939bf45b7dd7a742a5ca",
       "state": "ADMITTED_LOCKED"
     },
+    "29f6c8af5b0aac1c2fb818f5af5a5ebe1c1a1b48eb6460009ae30d1b7cae9068": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "20d3dee222254969935db1e5f81cec4929006061",
+          "lockGeneration": 2948,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DIAMONDGATE_PREFLIGHT_DUPLICATE_METADATA_OWNERSHIP:20261027",
+          "operationId": "DIAMONDGATE_PREFLIGHT_ROUTER_OWNERSHIP_COLLISION_RECONCILIATION_20261027_001",
+          "procedureLocatorDigest": "aed143214552f0098e472d85ebd2587fbfd896d156b4551bfb2224cf0d69c479",
+          "requestDigest": "718906341ef5e795640e24645d4916bfabc16f2033849b42e55db90df4877fc3",
+          "scopeHash": "29f6c8af5b0aac1c2fb818f5af5a5ebe1c1a1b48eb6460009ae30d1b7cae9068"
+        },
+        "bindingDigest": "c8211f141eb8969aca42147232bdfec14687e012751fd71816f8bc11ec608097",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "7b84ff47d7a8e1e5e0f06369170e0ad39a5a8f99bf46e709d754d8c0ec821931",
+          "commentId": 6458884914,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5964,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40620273802,
+          "workflowSha": "20d3dee222254969935db1e5f81cec4929006061"
+        },
+        "lineageAnchorCommitSha": "cea89c331de36728b0a38242e3f8510b8048f83b",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "20d3dee222254969935db1e5f81cec4929006061",
+      "lockGeneration": 2948,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DIAMONDGATE_PREFLIGHT_DUPLICATE_METADATA_OWNERSHIP:20261027",
+      "operationId": "DIAMONDGATE_PREFLIGHT_ROUTER_OWNERSHIP_COLLISION_RECONCILIATION_20261027_001",
+      "procedureLocatorDigest": "aed143214552f0098e472d85ebd2587fbfd896d156b4551bfb2224cf0d69c479",
+      "released": false,
+      "requestDigest": "718906341ef5e795640e24645d4916bfabc16f2033849b42e55db90df4877fc3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "29f6c8af5b0aac1c2fb818f5af5a5ebe1c1a1b48eb6460009ae30d1b7cae9068",
+      "state": "ADMITTED_LOCKED"
+    },
     "29faefeb037e128676d0cd86d7542c497e2cf6f151d47a24410af7b1abefb882": {
       "governingHead": "9e9dacaed861ebec4704fad5d5938f83addf9de3",
       "lockGeneration": 99,
@@ -22264,7 +22308,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2947,
+  "lockGeneration": 2948,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

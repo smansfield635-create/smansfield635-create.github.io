@@ -5271,50 +5271,6 @@
       "scopeHash": "41cea5ecc3b4d3a622a8507d60b16f46554692fc85853fcaa8380500d26df468",
       "state": "ADMITTED_LOCKED"
     },
-    "41e913747b2f41d70b5a2326e939b597e674e0eb09e770aa049ed2c691f7f141": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "20d3dee222254969935db1e5f81cec4929006061",
-          "lockGeneration": 2944,
-          "lockScope": "H_EARTH:CANONICAL_RIDGE_NORMAL_CONTINUITY:POST_GEN2942:20261027",
-          "operationId": "H_EARTH_GEN2943_CANONICAL_MOUNTAIN_RIDGE_CONTINUITY_REPAIR_20261027_001",
-          "procedureLocatorDigest": "ea61b1f501e98ba770d755abb255e20a629df1523ac8e4a07ded13cd646238c7",
-          "requestDigest": "d26ae62e7eb84d860d0623056bca9b0c2ec786864524720042fafc488a5c32f3",
-          "scopeHash": "41e913747b2f41d70b5a2326e939b597e674e0eb09e770aa049ed2c691f7f141"
-        },
-        "bindingDigest": "b5c8b2d5166698b5cf5b026a868e7916e801abc638f54d3a98dea4379b99973b",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "e6817ab3a48a35ee334f8df50cc41161ba73219a30cfa096967b33e4f1ed42ae",
-          "commentId": 6458385205,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6911,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 40616602899,
-          "workflowSha": "20d3dee222254969935db1e5f81cec4929006061"
-        },
-        "lineageAnchorCommitSha": "04f9a9b5221cd0dc54a8f4adb940f50e1def239f",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "20d3dee222254969935db1e5f81cec4929006061",
-      "lockGeneration": 2944,
-      "lockScope": "H_EARTH:CANONICAL_RIDGE_NORMAL_CONTINUITY:POST_GEN2942:20261027",
-      "operationId": "H_EARTH_GEN2943_CANONICAL_MOUNTAIN_RIDGE_CONTINUITY_REPAIR_20261027_001",
-      "procedureLocatorDigest": "ea61b1f501e98ba770d755abb255e20a629df1523ac8e4a07ded13cd646238c7",
-      "released": false,
-      "requestDigest": "d26ae62e7eb84d860d0623056bca9b0c2ec786864524720042fafc488a5c32f3",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "41e913747b2f41d70b5a2326e939b597e674e0eb09e770aa049ed2c691f7f141",
-      "state": "ADMITTED_LOCKED"
-    },
     "4224968c344e7769394dace6d1cb598f641bcead7610c17d0d4e898636421a99": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -90615,6 +90571,51 @@
       "scopeHash": "4522d60078e330665fa9a7abae55ae172a1d0e6579cf367d656201230b5ade95",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "20d3dee222254969935db1e5f81cec4929006061",
+          "lockGeneration": 2944,
+          "lockScope": "H_EARTH:CANONICAL_RIDGE_NORMAL_CONTINUITY:POST_GEN2942:20261027",
+          "operationId": "H_EARTH_GEN2943_CANONICAL_MOUNTAIN_RIDGE_CONTINUITY_REPAIR_20261027_001",
+          "procedureLocatorDigest": "ea61b1f501e98ba770d755abb255e20a629df1523ac8e4a07ded13cd646238c7",
+          "requestDigest": "d26ae62e7eb84d860d0623056bca9b0c2ec786864524720042fafc488a5c32f3",
+          "scopeHash": "41e913747b2f41d70b5a2326e939b597e674e0eb09e770aa049ed2c691f7f141"
+        },
+        "bindingDigest": "b5c8b2d5166698b5cf5b026a868e7916e801abc638f54d3a98dea4379b99973b",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e6817ab3a48a35ee334f8df50cc41161ba73219a30cfa096967b33e4f1ed42ae",
+          "commentId": 6458385205,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40616602899,
+          "workflowSha": "20d3dee222254969935db1e5f81cec4929006061"
+        },
+        "lineageAnchorCommitSha": "04f9a9b5221cd0dc54a8f4adb940f50e1def239f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "20d3dee222254969935db1e5f81cec4929006061",
+      "lockGeneration": 2944,
+      "lockScope": "H_EARTH:CANONICAL_RIDGE_NORMAL_CONTINUITY:POST_GEN2942:20261027",
+      "operationId": "H_EARTH_GEN2943_CANONICAL_MOUNTAIN_RIDGE_CONTINUITY_REPAIR_20261027_001",
+      "procedureLocatorDigest": "ea61b1f501e98ba770d755abb255e20a629df1523ac8e4a07ded13cd646238c7",
+      "released": true,
+      "requestDigest": "d26ae62e7eb84d860d0623056bca9b0c2ec786864524720042fafc488a5c32f3",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "41e913747b2f41d70b5a2326e939b597e674e0eb09e770aa049ed2c691f7f141",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

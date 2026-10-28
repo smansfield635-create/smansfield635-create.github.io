@@ -48,9 +48,18 @@ await page.waitForFunction(()=>!document.querySelector('.bc-choices').classList.
 assert.match(await body(),/What kind of business or project is this website for/);
 
 // Reproduce the owner-observed private-event repetition with all compatible offers.
-await page.click('#build-companion .bc-close');
+// The close event saves the old session asynchronously; await that save before
+// injecting the regression fixture so the old session cannot overwrite it.
+await page.evaluate(()=>new Promise(resolve=>{
+ const dialog=document.querySelector('#build-companion');
+ dialog.addEventListener('close',resolve,{once:true});
+ dialog.querySelector('.bc-close').click();
+}));
 await page.evaluate(()=>{sessionStorage.setItem('dgb-build-companion-v4',JSON.stringify({cursor:'PRIVATE_EVENT',route:'REST',purposePath:'root',queue:[],records:[],history:[],sharedIndex:0,contact:{name:'Alex',email:'alex@example.com',phone:'8175551234'},deepMode:true}));});
 await page.reload({waitUntil:'networkidle0'});await reopen();
+const fixture=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('dgb-build-companion-v4')));
+assert.equal(fixture.cursor,'PRIVATE_EVENT','session fixture was not restored as private event');
+assert.equal(fixture.route,'REST','session fixture business route was overwritten');
 for(const label of ['A private room or event space','Exclusive use of the venue','Space with food or catering'])await click(label);
 await click('Use these choices');
 for(const label of ['Occasion and guest count','Date and duration','Food or drink needs','Budget range'])await click(label);

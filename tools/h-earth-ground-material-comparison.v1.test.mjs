@@ -168,3 +168,33 @@ test('Gen2942 source-first mountain polygon target preserves the original demons
  assert.equal(diagnostic.IDENTITY_MODES[6],'primitive-role-raw');
  for(const old of diagnostic.IDENTITY_POSES)assert.ok(!p.some(x=>x.name===old.name),'no old image replay');
 });
+
+test('Gen2942 lighting normal disambiguation is source-bound and non-mutating',()=>{
+ const before=fs.readFileSync(GEN2942_RENDERER_URL,'utf8');
+ const instrumented=diagnostic.instrumentIdentityPixelRenderer(before);
+ for(const line of [
+  'if(uIdentityPixelMode==13){shadingNormal=geometricNormal;terrainReliefEnvelope=0.0;}',
+  'else if(m==8)lit=geometricNormal*0.5+0.5;',
+  'else if(m==9)lit=shadingNormal*0.5+0.5;',
+  'else if(m==10)lit=vec3(max(dot(geometricNormal,normalize(uSunDirection)),0.0));',
+  'else if(m==11)lit=vec3(max(dot(shadingNormal,normalize(uSunDirection)),0.0));',
+  'else if(m==12)lit=vec3(clamp(terrainReliefEnvelope,0.0,1.0));'
+ ])assert.ok(instrumented.includes(line),line);
+ assert.equal(fs.readFileSync(GEN2942_RENDERER_URL,'utf8'),before);
+ assert.deepEqual(diagnostic.IDENTITY_LIGHTING_MODES,[
+ 'reference-lit','geometric-normal-raw','shading-normal-raw','geometric-sun-diffuse-raw',
+ 'relief-sun-diffuse-raw','relief-envelope-raw','reference-lit-geometric-only']);
+ assert.equal(diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES.length*diagnostic.IDENTITY_LIGHTING_MODES.length,7);
+ assert.equal(diagnostic.IDENTITY_POSES.length*diagnostic.IDENTITY_MODES.length,32);
+ const p=diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES[0];
+ const ids=[0,8,9,10,11,12,13];
+ const views=diagnostic.IDENTITY_LIGHTING_MODES.map((mode,i)=>({
+  pose:p,mode,diagnosticApplied:ids[i],grassHidden:true,assetSignature:'unchanged',
+  sourceHead:diagnostic.GEN2942_PUBLISHED_HEAD,
+  rendererHash:diagnostic.GEN2942_PUBLISHED_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:88.00614407254056,y:29.26418157783337,z:-260.0181529415971}}
+ }));
+ assert.equal(diagnostic.validateIdentityPixelSet(views,diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES,diagnostic.IDENTITY_LIGHTING_MODES),true);
+ const altered=structuredClone(views);altered[3].diagnosticApplied=12;
+ assert.throws(()=>diagnostic.validateIdentityPixelSet(altered,diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES,diagnostic.IDENTITY_LIGHTING_MODES),/GEN2942_CAPTURE_IDENTITY_MISMATCH/);
+});

@@ -1023,14 +1023,14 @@ void main(){
         smoothstep(0.0,10.0,length(vec2(groundcoverEstateX,groundcoverEstateZ)))*
         smoothstep(4.0,9.0,groundcoverRouteDistance)*
         (1.0-protectedGrove);
-      // H_EARTH_GROUNDCOVER_RESIDENT_FIELD_BEGIN
-      // Couple cover to the soil's existing meso/detail fields instead of
-      // imposing a separate rotated low-frequency color-region field.
-      float groundcoverOrganic=mesoField;
+      // Rotate and softly warp one material sample with resident fields.
+      // This bends cell boundaries without adding geometry or texture reads.
+      float groundcoverDomainX=(0.8*world.x-0.6*world.y)*0.018+5.0+0.65*(broad-0.5);
+      float groundcoverDomainZ=(0.6*world.x+0.8*world.y)*0.018-11.0+0.65*(macroField-0.5);
+      float groundcoverOrganic=noise2(vec2(groundcoverDomainX,groundcoverDomainZ));
       float groundcoverPatch=smoothstep(
-        0.20,0.66,groundcoverOrganic*0.78+detailField*0.22
+        0.20,0.66,groundcoverOrganic*0.78+mesoField*0.22
       );
-      // H_EARTH_GROUNDCOVER_RESIDENT_FIELD_END
       float groundcoverSuitability=
         smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters))*
         (1.0-smoothstep(0.12,0.42,slope))*
@@ -1052,8 +1052,7 @@ void main(){
       groundcoverTone=mix(
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
-      groundcoverTone*=0.88+0.24*materialVariation;
-      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      palette+=0.24*groundcoverWeight*groundcoverTone*(materialVariation-0.5);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END

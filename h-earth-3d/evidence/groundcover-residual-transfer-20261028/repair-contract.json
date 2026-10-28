@@ -1,0 +1,176 @@
+{
+  "anchorVideoSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "approvedRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "authorityEffect": "NONE_PRE_ADMISSION_CONTRACT",
+  "baselineBinding": {
+    "directory": "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/baseline-run40716213632",
+    "frames": [
+      {
+        "image": "baseline-inland-seam-near-reference-lit.png",
+        "sha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a"
+      },
+      {
+        "image": "baseline-inland-seam-near-after-groundcover-unlit.png",
+        "sha256": "96195fac6da4fca401c64d2ce31a034cd7d628620409f772114616b78354ff3a"
+      },
+      {
+        "image": "baseline-inland-seam-far-reference-lit.png",
+        "sha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc"
+      },
+      {
+        "image": "baseline-inland-seam-far-after-groundcover-unlit.png",
+        "sha256": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a"
+      },
+      {
+        "image": "baseline-protected-meadow-reference-lit.png",
+        "sha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b"
+      },
+      {
+        "image": "baseline-protected-meadow-after-groundcover-unlit.png",
+        "sha256": "dea2132ddb7662475bcadfbcef2ea5dd67dea9a0be5e1669c4c8e77407d7d4dc"
+      },
+      {
+        "image": "baseline-protected-coast-reference-lit.png",
+        "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56"
+      },
+      {
+        "image": "baseline-protected-coast-after-groundcover-unlit.png",
+        "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7"
+      }
+    ],
+    "head": "1251313313c7223befeee2ff7f765cc545db3cd5",
+    "manifestBlob": "713d8babb84d44361d09aff9e2567c76047642f7",
+    "manifestSha256": "6ce5e77441d037646c19cf6b37698bbed99eebda34b2246c214a7fc3e5d2fbea"
+  },
+  "baselinePolicy": "Reuse eight matching archived approved frames validated in S1; no recapture.",
+  "candidateFrames": 8,
+  "comparison": {
+    "baselineFrames": "8 matching existing archived views; do not recapture",
+    "candidateFrames": 8,
+    "immutableProtections": [
+      "vegetation and asset signatures",
+      "physical geometry and world asset",
+      "water/coast/shoreline",
+      "navigation/contact support",
+      "approved original fields and masks"
+    ],
+    "modes": [
+      "reference-lit",
+      "after-groundcover-unlit"
+    ],
+    "poses": [
+      {
+        "diagnosticObserver": true,
+        "name": "inland-seam-near",
+        "pitch": -14,
+        "x": -200,
+        "y": 18.361431,
+        "yaw": 0,
+        "z": -728
+      },
+      {
+        "diagnosticObserver": true,
+        "name": "inland-seam-far",
+        "pitch": -2,
+        "x": -200,
+        "y": 18.793665,
+        "yaw": 0,
+        "z": -656
+      },
+      {
+        "height": "Reuse exact archived baseline camera height; mismatch stops capture.",
+        "name": "protected-meadow",
+        "pitch": -15,
+        "x": -52,
+        "yaw": 136,
+        "z": -208
+      },
+      {
+        "height": "Reuse exact archived baseline camera height; mismatch stops capture.",
+        "name": "protected-coast",
+        "pitch": -8,
+        "x": 0,
+        "yaw": 170,
+        "z": -110
+      }
+    ],
+    "thresholdStatus": "Frozen here: exact custody/source/coast gates; band metrics descriptive; required visual rejection and owner disposition.",
+    "viewport": {
+      "backingHeight": 980,
+      "backingWidth": 529,
+      "cssHeight": 1000,
+      "cssWidth": 540,
+      "fov": 56
+    }
+  },
+  "continuationHead": "1251313313c7223befeee2ff7f765cc545db3cd5",
+  "deficiencyScope": "D02/S01 bounded material repair only; not closure of all D01-D08, full OW01, map-wide straight/curved classes or Android performance",
+  "descriptiveMetrics": {
+    "farY": [
+      470,
+      940
+    ],
+    "halfWidth": 4,
+    "nearY": [
+      260,
+      940
+    ],
+    "report": [
+      "signed/absolute differences",
+      "gradient distributions",
+      "clipping and saturation",
+      "censored samples"
+    ],
+    "threshold": "No numerical visual-success threshold asserted; descriptive only.",
+    "transectsX": [
+      132,
+      264,
+      396
+    ],
+    "verticalLag": 16
+  },
+  "formula": {
+    "boundLimits": "Not a gradient, positivity, spatial-zero-mean or visual-success bound. No added clamp or parameter search.",
+    "candidate": "P+0.24*w*T0*(v-0.5)",
+    "implementation": "Retain T0 before modulation; replace only modulation/composition with centered residual. Exact inverse substitution must reconstruct approved bytes.",
+    "l1AdditiveBound": 0.044352,
+    "old": "P+w*(T-P), T=T0*(0.88+0.24*v)"
+  },
+  "governingHead": "97b9b80082bcfc50af66c281aa20bfa2c5de6cc7",
+  "harnessRequirements": [
+    "New bounded residual profile in existing runner, not diagnostic profile relabeling",
+    "Comparator must validate candidate source and capture actual candidate formula in both lit and albedo probe paths",
+    "Test old-mix probe contamination rejection and exact unique transformation anchors",
+    "Workflow publication/synchronize must not launch candidate GPU: explicit authorized fixed exact-head launch only after source qualification and saved dispatch intent",
+    "Existing profile semantics and diagnostic archive remain unchanged",
+    "Scene parity exclusions restricted to exact preserved diagnostic evidence and declared new evidence/receipt paths; renderer remains sole runtime exception. No world/asset exclusion widening."
+  ],
+  "newBranch": "refs/heads/h-earth/groundcover-residual-transfer-20261028",
+  "numericGates": {
+    "capture": "All eight decoded frames match declared head/hash/asset/pose/mode/viewport custody; no errors",
+    "coast": "Both complete protected-coast decoded RGBA frames exactly equal baseline, zero differing pixels; conservative gate not an algebraic guarantee for eligible inland pixels visible in coast frame.",
+    "source": "Unique exact inverse reconstruction equals approved renderer SHA256"
+  },
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
+  "ownerReview": "KEEP | ONE_REPAIR | REJECT on exact candidate before terminal repair closure; ONE_REPAIR only inside active original scope with fresh qualification. No merge/deploy authorization. ONE_REPAIR does not increase one-run budget: any additional capture requires explicit budget authorization and current valid admission; otherwise planning only.",
+  "protections": [
+    "Original v,w,moisture,slope,rock,coast eligibility and protection",
+    "World/physical geometry/asset/vegetation signatures",
+    "Navigation/contact/camera/audio/narrative states and existing holds"
+  ],
+  "runLimit": {
+    "automaticRetry": false,
+    "candidate": 1,
+    "launchAllowedNow": false,
+    "newDiagnosticIntermediates": 0,
+    "parameterSweeps": 0
+  },
+  "status": "PRE_ADMISSION_CONTRACT",
+  "tradeoff": "Reduced mean olive tint; broad residual fields remain.",
+  "visualReject": [
+    "Bands persist at intended near/far views",
+    "Groundcover/ecological/subtropical character lost (D03/S02 or D04 regression)",
+    "Meadow/coast healthy controls regress",
+    "Anchor embodied same-world continuity fails"
+  ]
+}

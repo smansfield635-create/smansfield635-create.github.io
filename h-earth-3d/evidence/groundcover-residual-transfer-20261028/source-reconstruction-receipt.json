@@ -1,0 +1,14 @@
+{
+  "schema": "H_EARTH_RESIDUAL_TRANSFER_SOURCE_RECONSTRUCTION_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
+  "result": "PASS",
+  "rendererPath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+  "candidateRendererSha256": "7a666a9269dfac1597a8bec31d6a04072d811257bb57b0c5b1bc87f209a693c7",
+  "inverseReconstructedSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "expectedApprovedSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "instrumentationVerified": true,
+  "instrumentedSourceSha256": "42e59e34921c7c2ad66cb370d9acaa6ea20c39072c30624d0fccd7a3807cf545",
+  "formula": "P+0.24*w*T0*(v-0.5)",
+  "additionalFieldOrMaskChanges": false,
+  "visualAcceptance": false
+}

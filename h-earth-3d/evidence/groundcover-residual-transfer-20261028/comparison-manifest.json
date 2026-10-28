@@ -1,0 +1,59 @@
+{
+  "baselineFrames": "8 matching existing archived views; do not recapture",
+  "candidateFrames": 8,
+  "immutableProtections": [
+    "vegetation and asset signatures",
+    "physical geometry and world asset",
+    "water/coast/shoreline",
+    "navigation/contact support",
+    "approved original fields and masks"
+  ],
+  "modes": [
+    "reference-lit",
+    "after-groundcover-unlit"
+  ],
+  "poses": [
+    {
+      "diagnosticObserver": true,
+      "name": "inland-seam-near",
+      "pitch": -14,
+      "x": -200,
+      "y": 18.361431,
+      "yaw": 0,
+      "z": -728
+    },
+    {
+      "diagnosticObserver": true,
+      "name": "inland-seam-far",
+      "pitch": -2,
+      "x": -200,
+      "y": 18.793665,
+      "yaw": 0,
+      "z": -656
+    },
+    {
+      "height": "Reuse exact archived baseline camera height; mismatch stops capture.",
+      "name": "protected-meadow",
+      "pitch": -15,
+      "x": -52,
+      "yaw": 136,
+      "z": -208
+    },
+    {
+      "height": "Reuse exact archived baseline camera height; mismatch stops capture.",
+      "name": "protected-coast",
+      "pitch": -8,
+      "x": 0,
+      "yaw": 170,
+      "z": -110
+    }
+  ],
+  "thresholdStatus": "Frozen here: exact custody/source/coast gates; band metrics descriptive; required visual rejection and owner disposition.",
+  "viewport": {
+    "backingHeight": 980,
+    "backingWidth": 529,
+    "cssHeight": 1000,
+    "cssWidth": 540,
+    "fov": 56
+  }
+}

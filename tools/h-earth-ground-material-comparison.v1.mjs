@@ -14,12 +14,13 @@ export const MATERIAL_BASELINE_HEAD='60b3c07f0216645119a1b92b16dac82cae739145';
 const contributionCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GROUNDCOVER_CONTRIBUTION_LEDGER_V1';
 export const CONTRIBUTION_SOURCE_HEAD='1e39f93a07eb2cc5156483b899094937ba2149db';
 export const CONTRIBUTION_RENDERER_SHA256='b4bda2b8953b5bcc3cd65e101a447a878c2d033ec683af53a93ff211c13cdf70';
+const residualCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GROUNDCOVER_RESIDUAL_TRANSFER_V1';
 const residentCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GROUNDCOVER_RESIDENT_FIELD_V1';
 const composedCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GROUNDCOVER_COMPOSED_TARGET_V1';
 const footprintCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GROUNDCOVER_FOOTPRINT_V1';
 export const FOOTPRINT_BASELINE_HEAD='cb57c275b95d0d48883bc4da4dcfcf17cbec5060';
 export const FOOTPRINT_BASELINE_SHA256='fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec';
-const pairedCapture=footprintCapture||composedCapture||residentCapture;
+const pairedCapture=footprintCapture||composedCapture||residentCapture||residualCapture;
 const resourceCapture=pairedCapture||contributionCapture;
 const candidateCapture=pairedCapture||process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
@@ -70,6 +71,54 @@ export function verifyExactMaterialCandidate(source){
 export function instrumentCandidateRenderer(source){
  verifyExactMaterialCandidate(source);
  return instrumentRenderer(transformPublishedRenderer(source,{strictHash:false}).source);
+}
+export const RESIDUAL_MODES=COMPOSED_MODES;
+export const RESIDUAL_POSES=FOOTPRINT_POSES;
+export const ORIGINAL_RESIDUAL_COMPOSITION='      groundcoverTone*=0.88+0.24*materialVariation;\n      palette=mix(palette,groundcoverTone,groundcoverWeight);';
+export const RESIDUAL_COMPOSITION='      palette+=0.24*groundcoverWeight*groundcoverTone*(materialVariation-0.5);';
+export const RESIDUAL_PROBE='      probeGCAfter=palette+0.24*groundcoverWeight*groundcoverTone*(materialVariation-0.5);';
+export function reconstructResidualBaseline(source){
+ const baseline=replaceExactlyOnce(source,RESIDUAL_COMPOSITION,ORIGINAL_RESIDUAL_COMPOSITION);
+ if(sha(baseline)!==FOOTPRINT_BASELINE_SHA256)throw Error('RESIDUAL_BASELINE_RECONSTRUCTION_MISMATCH');
+ return baseline;
+}
+export function verifyResidualInstrumentation(source){
+ if(source.split(RESIDUAL_COMPOSITION).length!==2||source.split(RESIDUAL_PROBE).length!==2||source.includes('probeGCAfter=mix(')||source.includes('palette=mix(palette,groundcoverTone,groundcoverWeight);')||source.includes('groundcoverTone*=0.88+0.24*materialVariation;'))throw Error('RESIDUAL_PROBE_CONTAMINATION');
+ return true;
+}
+export function instrumentResidualRenderer(source){
+ reconstructResidualBaseline(source);
+ // Reuse the established overlay's anchors without restoring the old T0
+ // modulation. Both its actual composition and albedo probe are then replaced.
+ const overlayInput=replaceExactlyOnce(source,RESIDUAL_COMPOSITION,'      palette=mix(palette,groundcoverTone,groundcoverWeight);');
+ let observed=transformPublishedRenderer(overlayInput,{strictHash:false}).source;
+ observed=replaceExactlyOnce(observed,'      probeGCAfter=mix(palette,groundcoverTone,groundcoverWeight);',RESIDUAL_PROBE);
+ observed=replaceExactlyOnce(observed,'      palette=mix(palette,groundcoverTone,groundcoverWeight);',RESIDUAL_COMPOSITION);
+ verifyResidualInstrumentation(observed);
+ return instrumentRenderer(observed);
+}
+export function compareDecodedCoastPair(baseline,candidate){
+ for(const image of [baseline,candidate])if(image.width!==529||image.height!==980||image.data?.length!==529*980*4)throw Error('RESIDUAL_COAST_DECODE_INVALID');
+ let differingPixels=0;
+ for(let i=0;i<baseline.data.length;i+=4)if([0,1,2,3].some(c=>baseline.data[i+c]!==candidate.data[i+c]))differingPixels++;
+ if(differingPixels)throw Error('RESIDUAL_COAST_PIXEL_MISMATCH:'+differingPixels);
+ return {width:529,height:980,differingPixels};
+}
+export async function validateResidualCoastPixels(views,outputDir){
+ const {PNG}=await import('pngjs');
+ const results=[];
+ for(const mode of RESIDUAL_MODES){
+  const pair=['baseline','candidate'].map(label=>{
+   const matches=views.filter(v=>v.label===label&&v.pose.name==='protected-coast'&&v.mode===mode);
+   if(matches.length!==1)throw Error('RESIDUAL_COAST_PAIR_MISSING');
+   const view=matches[0];if(path.basename(view.image)!==view.image)throw Error('RESIDUAL_COAST_PATH_INVALID');
+   const bytes=fs.readFileSync(path.join(outputDir,view.image));
+   if(sha(bytes)!==view.imageSha256)throw Error('RESIDUAL_COAST_IMAGE_DRIFT');
+   return PNG.sync.read(bytes,{checkCRC:true});
+  });
+  results.push({mode,...compareDecodedCoastPair(...pair)});
+ }
+ return {result:'EXACT_DECODED_RGBA_COAST_PARITY',comparisons:results};
 }
 export function reconstructFootprintBaseline(source){
  let baseline=source;
@@ -181,6 +230,12 @@ export function validateComposedSet(views,expectedCandidateHead=HEADS.candidate)
  }
  return true;
 }
+export function validateResidualSet(views,expectedCandidateHead,expectedRendererHash){
+ validateComposedSet(views,expectedCandidateHead);
+ if(!/^[a-f0-9]{64}$/.test(expectedRendererHash)||views.some(v=>v.label==='candidate'&&v.rendererHash!==expectedRendererHash))throw Error('RESIDUAL_CANDIDATE_HASH_MISMATCH');
+ if(views.filter(v=>v.label==='candidate').length!==8||views.filter(v=>v.label==='baseline').length!==8)throw Error('RESIDUAL_FRAME_SET_INVALID');
+ return true;
+}
 export function instrumentDiagnosticRenderer(source){
  if(sha(source)!==RENDERER_SHA256)throw Error('DIAGNOSTIC_SOURCE_HASH_MISMATCH');
  return instrumentRenderer(transformPublishedRenderer(source).source);
@@ -239,10 +294,12 @@ export function preservedFootprintBaseline(candidateDir,outputDir){
  }
  return m;
 }
-export function assertSceneParity(baselineDir,candidateDir){
+export const PRESERVED_CONTRIBUTION_EVIDENCE_PATHS=Object.freeze(["h-earth-3d/evidence/groundcover-contribution-ledger-20261028/README.md","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/admission-receipt.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/analysis-plan.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/analyze-capture.py","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/construction-procedure.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/independent-recovery-review.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/operation-request.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/reconstructed-repair-proposal.md","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/recovered-analysis/analysis-rows.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/recovered-analysis/analysis.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/recovery-authority-readback.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/recovery-continuity-input.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/recovery-continuity.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/recovery-main-delta-review.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/recovery-source-tests.txt","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/candidate-inland-seam-far-after-groundcover-unlit.png","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/candidate-inland-seam-far-before-groundcover-unlit.png","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/candidate-inland-seam-far-groundcover-tone-color.png","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/candidate-inland-seam-far-groundcover-weight-raw.png","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/candidate-inland-seam-near-after-groundcover-unlit.png","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/candidate-inland-seam-near-before-groundcover-unlit.png","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/candidate-inland-seam-near-groundcover-tone-color.png","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/candidate-inland-seam-near-groundcover-weight-raw.png","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/receipt.json.gz","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/source-review.json","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/source-tests.txt","h-earth-3d/evidence/groundcover-contribution-ledger-20261028/test-analysis.py"]);
+export const RESIDUAL_EVIDENCE_PATHS=Object.freeze(["h-earth-3d/evidence/groundcover-residual-transfer-20261028/operation-request.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/construction-procedure.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/repair-contract.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/comparison-manifest.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/admission-receipt.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/source-reconstruction-receipt.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/source-tests.txt","h-earth-3d/evidence/groundcover-residual-transfer-20261028/independent-source-review.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/dispatch-intent.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/launch-receipt.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/capture-receipt.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/evidence-manifest.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/comparison-report.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/independent-evidence-review.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/owner-disposition.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/continuation.json","h-earth-3d/evidence/groundcover-residual-transfer-20261028/README.md","h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-near-reference-lit.png","h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-near-after-groundcover-unlit.png","h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-far-reference-lit.png","h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-far-after-groundcover-unlit.png","h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-meadow-reference-lit.png","h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-meadow-after-groundcover-unlit.png","h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-coast-reference-lit.png","h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-coast-after-groundcover-unlit.png","h-earth-3d/experience-anchor/receipts/groundcover-residual-transfer-20261028.acceptance.json"]);
+export function assertSceneParity(baselineDir,candidateDir,{residual=false}={}){
  const manifest=dir=>execFileSync('git',['-C',dir,'ls-tree','-r','HEAD','--','showroom/globe/h-earth','h-earth-3d'],{encoding:'utf8',maxBuffer:16*1024*1024}).split('\n').filter(line=>{
    const p=line.split('\t')[1]??'';
-   return p&&p!==RENDERER.slice(1)&&!p.startsWith('h-earth-3d/evidence/groundcover-resident-field-20261028/')&&p!=='h-earth-3d/experience-anchor/receipts/groundcover-resident-field-20261028.json'&&!p.startsWith('h-earth-3d/evidence/groundcover-composed-target-20261028/')&&p!=='h-earth-3d/experience-anchor/receipts/groundcover-composed-target-20261028.json'&&!p.startsWith('h-earth-3d/evidence/groundcover-footprint-continuity-20261028/')&&p!=='h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json';
+   return p&&p!==RENDERER.slice(1)&&!(residual&&(PRESERVED_CONTRIBUTION_EVIDENCE_PATHS.includes(p)||RESIDUAL_EVIDENCE_PATHS.includes(p)))&&!p.startsWith('h-earth-3d/evidence/groundcover-resident-field-20261028/')&&p!=='h-earth-3d/experience-anchor/receipts/groundcover-resident-field-20261028.json'&&!p.startsWith('h-earth-3d/evidence/groundcover-composed-target-20261028/')&&p!=='h-earth-3d/experience-anchor/receipts/groundcover-composed-target-20261028.json'&&!p.startsWith('h-earth-3d/evidence/groundcover-footprint-continuity-20261028/')&&p!=='h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json';
  }).join('\n');
  const a=manifest(baselineDir),b=manifest(candidateDir);
  if(!a||a!==b)throw Error('FOOTPRINT_SCENE_SOURCE_DRIFT');
@@ -261,14 +318,16 @@ export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(![
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GROUNDCOVER_FOOTPRINT_V1','GROUNDCOVER_COMPOSED_TARGET_V1','GROUNDCOVER_RESIDENT_FIELD_V1','GROUNDCOVER_CONTRIBUTION_LEDGER_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GROUNDCOVER_FOOTPRINT_V1','GROUNDCOVER_COMPOSED_TARGET_V1','GROUNDCOVER_RESIDENT_FIELD_V1','GROUNDCOVER_CONTRIBUTION_LEDGER_V1','GROUNDCOVER_RESIDUAL_TRANSFER_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
   const poses=contributionCapture?CONTRIBUTION_POSES:pairedCapture?FOOTPRINT_POSES:profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES;
-  const modes=contributionCapture?CONTRIBUTION_MODES:(composedCapture||residentCapture)?COMPOSED_MODES:footprintCapture?FOOTPRINT_MODES:profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES;
+  const modes=contributionCapture?CONTRIBUTION_MODES:(composedCapture||residentCapture||residualCapture)?COMPOSED_MODES:footprintCapture?FOOTPRINT_MODES:profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES;
+  if(residualCapture&&poses.length*modes.length!==8)throw Error('RESIDUAL_FRAME_CAP_INVALID');
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   if(pairedCapture)Object.assign(receipt,{repairOperationId:'H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001',baselineProductSha256:FOOTPRINT_BASELINE_SHA256,searchProvenance:{kind:'REUSE_ARCHIVED_SOURCE_PROVEN_INLAND_BAND_AND_HEALTHY_CONTROLS',exactScreenshotMatchProven:false,priorStageAttributionRun:40411050366},stageMeanings:{'reference-lit':'Unchanged final lighting with physical vegetation visible','after-groundcover-unlit':'Composed groundcover albedo; physical vegetation hidden','footprint-activation-raw':'Linear raw filter activation (zero means hypothesis not exercised)'},filterHypothesisProven:false});
   if(composedCapture)Object.assign(receipt,{repairOperationId:'H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001',stageMeanings:{'reference-lit':'Original final lighting, physical vegetation visible','after-groundcover-unlit':'Actual composed-target albedo, physical vegetation hidden'},composedHypothesisProven:false});
   if(residentCapture)Object.assign(receipt,{repairOperationId:'H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001',stageMeanings:{'reference-lit':'Original final lighting, physical vegetation visible','after-groundcover-unlit':'Resident-field groundcover albedo, physical vegetation hidden'},residentFieldHypothesisProven:false});
+  if(residualCapture)Object.assign(receipt,{repairOperationId:'H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001',noBaselineCapture:true,candidateFrameLimit:8,stageMeanings:{'reference-lit':'Actual residual-transfer candidate with unchanged lighting and physical vegetation visible','after-groundcover-unlit':'Actual residual-transfer candidate albedo with physical vegetation hidden'},residualHypothesisProven:false});
   if(contributionCapture)Object.assign(receipt,{heads:{candidate:CONTRIBUTION_SOURCE_HEAD},repairOperationId:'H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001',baselineProductSha256:null,sourceProductSha256:CONTRIBUTION_RENDERER_SHA256,noBaselineCapture:true,searchProvenance:{kind:'REUSE_FROZEN_RESIDENT_FIELD_NEAR_FAR_POSES',exactScreenshotMatchProven:false,sourceDisposition:'REJECTED_CANDIDATE_DIAGNOSTIC_ONLY',priorResidentRun:40734434775},stageMeanings:{'before-groundcover-unlit':'Incoming soil albedo before the groundcover mix','groundcover-tone-color':'Existing target tone before the groundcover mix','groundcover-weight-raw':'Original linear groundcover weight (no exposure or gamma)','after-groundcover-unlit':'Actual result of the groundcover mix'},contributionAttributionProven:false});
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
   let browser=null,server=null;
@@ -282,7 +341,8 @@ export async function run(argv){
       instrumentContributionRenderer(frozenRenderer);
       receipt.sceneIdentity={result:'EXACT_FROZEN_SCENE_IDENTITY_NO_BASELINE_RENDER',sourceHead:CONTRIBUTION_SOURCE_HEAD,rendererSha256:sha(frozenRenderer),toolingHead:execFileSync('git',['-C',path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),'rev-parse','HEAD'],{encoding:'utf8'}).trim(),independentBaselineParityClaimed:false};persist();
     }else for(const label of Object.keys(HEADS))assertCheckout(a['--'+label+'-dir'],HEADS[label]);
-    if(pairedCapture){receipt.sceneParity=assertSceneParity(a['--baseline-dir'],a['--candidate-dir']);const archive=preservedFootprintBaseline(a['--candidate-dir'],out);receipt.views.push(...archive.views.filter(v=>modes.includes(v.mode)).map(v=>({...v,inheritedFromRun:archive.sourceRun})));receipt.runs.push({label:'baseline',head:FOOTPRINT_BASELINE_HEAD,inheritedFromRun:archive.sourceRun,manifestSha256:FOOTPRINT_ARCHIVE_SHA256,completedAt:archive.baselineCompletedAt,errors:[]});persist();}
+    if(pairedCapture){receipt.sceneParity=assertSceneParity(a['--baseline-dir'],a['--candidate-dir'],{residual:residualCapture});const archive=preservedFootprintBaseline(a['--candidate-dir'],out);receipt.views.push(...archive.views.filter(v=>modes.includes(v.mode)).map(v=>({...v,inheritedFromRun:archive.sourceRun})));receipt.runs.push({label:'baseline',head:FOOTPRINT_BASELINE_HEAD,inheritedFromRun:archive.sourceRun,manifestSha256:FOOTPRINT_ARCHIVE_SHA256,completedAt:archive.baselineCompletedAt,errors:[]});persist();}
+    if(residualCapture){const {PNG}=await import('pngjs');if(typeof PNG?.sync?.read!=='function')throw Error('RESIDUAL_PNG_DECODER_UNAVAILABLE');}
     const {chromium}=await import('playwright');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
     for(const [index,label] of ['candidate'].entries()){
@@ -294,7 +354,7 @@ export async function run(argv){
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
       await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';globalThis.normalizeVegetationIdentity='+normalizeVegetationIdentity.toString()+';globalThis.__footprintVegetationReadiness='+footprintVegetationReadiness.toString()+';' });
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
-      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,contributionCapture?instrumentContributionRenderer:residentCapture?instrumentResidentRenderer:composedCapture?instrumentComposedRenderer:footprintCapture?(source=>instrumentFootprintRenderer(source,{baseline:label==='baseline'})):profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer]]){
+      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,residualCapture?instrumentResidualRenderer:contributionCapture?instrumentContributionRenderer:residentCapture?instrumentResidentRenderer:composedCapture?instrumentComposedRenderer:footprintCapture?(source=>instrumentFootprintRenderer(source,{baseline:label==='baseline'})):profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer]]){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
         await page.route(url=>url.pathname===pathname,route=>route.fulfill({status:200,contentType:'text/javascript',body:transformed}));
       }
@@ -343,8 +403,9 @@ export async function run(argv){
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(contributionCapture)validateContributionSet(receipt.views);else if(composedCapture||residentCapture)validateComposedSet(receipt.views);else if(footprintCapture)validateFootprintSet(receipt.views);else validateDiagnosticSet(receipt.views,poses,modes);
-    receipt.result=contributionCapture?'CONTRIBUTION_LEDGER_CAPTURE_COMPLETE_ANALYSIS_PENDING':residentCapture?'RESIDENT_FIELD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':composedCapture?'COMPOSED_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':footprintCapture?'FOOTPRINT_CAPTURE_COMPLETE_VISUAL_AND_ACTIVATION_REVIEW_PENDING':'DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';
+    if(residualCapture)validateResidualSet(receipt.views,HEADS.candidate,receipt.sourceProductSha256);else if(contributionCapture)validateContributionSet(receipt.views);else if(composedCapture||residentCapture)validateComposedSet(receipt.views);else if(footprintCapture)validateFootprintSet(receipt.views);else validateDiagnosticSet(receipt.views,poses,modes);
+    if(residualCapture)receipt.coastPixelParity=await validateResidualCoastPixels(receipt.views,out);
+    receipt.result=residualCapture?'RESIDUAL_CAPTURE_COMPLETE_COAST_PARITY_VERIFIED_VISUAL_REVIEW_PENDING':contributionCapture?'CONTRIBUTION_LEDGER_CAPTURE_COMPLETE_ANALYSIS_PENDING':residentCapture?'RESIDENT_FIELD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':composedCapture?'COMPOSED_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':footprintCapture?'FOOTPRINT_CAPTURE_COMPLETE_VISUAL_AND_ACTIVATION_REVIEW_PENDING':'DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}
   finally{persist();server?.kill();if(browser)await browser.close();process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInt);}
   return receipt;

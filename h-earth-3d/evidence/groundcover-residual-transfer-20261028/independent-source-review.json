@@ -1,0 +1,84 @@
+{
+  "schema": "H_EARTH_RESIDUAL_TRANSFER_SOURCE_REVIEW_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
+  "lockGeneration": 2961,
+  "result": "PASS",
+  "builderSelfApproval": false,
+  "reviewRole": "WEST_INDEPENDENT_REVIEW",
+  "reviewAgent": "/root/admission_recovery",
+  "builderAgent": "/root/south_candidate",
+  "reviewedAt": "2026-10-28T20:04:59.290864+00:00",
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "7a666a9269dfac1597a8bec31d6a04072d811257bb57b0c5b1bc87f209a693c7",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "a6618e3b7385d194b74776f7b3e078b4400dba4ac7d6b8a7b1e24cb6aa472b31",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "4135df64caaea055f7a975cd3de7c263db586960db04738589f66c243a57170b",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "69cfe8bae22941bb7ef6e4a159f65c86545f59369df7ca612642e1b472831071"
+  },
+  "findings": [
+    {
+      "id": "EXACT_APPROVED_SOURCE_RECONSTRUCTION",
+      "result": "PASS",
+      "evidence": "Independent local inverse substitution reconstructs approved renderer SHA256 fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec. Restores original fields from rejected resident experiment; only reviewed composition differs from approved baseline."
+    },
+    {
+      "id": "TRUE_CANDIDATE_LIT_AND_ALBEDO_PROBES",
+      "result": "PASS",
+      "evidence": "Lit composition and probe both use P+0.24*w*T0*(v-0.5), retain unmodulated T0, and reject old modulation/mix contamination. Independently executed instrumentResidualRenderer and verifyResidualInstrumentation."
+    },
+    {
+      "id": "FIELDS_MASKS_AND_SCENE_CUSTODY",
+      "result": "PASS",
+      "evidence": "Exact inverse source proof preserves all original v,w,moisture,slope,rock,coast and grove protections. New scene parity exclusions are exact27 preserved diagnostic evidence paths and exact admitted residual evidence/anchor paths; renderer remains sole runtime exception. Existing historical exclusions unchanged; asset/unknown-path rejection tests reviewed."
+    },
+    {
+      "id": "FROZEN_POSE_ASSET_FRAME_CUSTODY",
+      "result": "PASS",
+      "evidence": "Four frozen poses times reference-lit/after-groundcover-unlit only. Candidate-only render loop; eight inherited matching baseline views selected from hash-pinned 12-image archive; no baseline recapture or new intermediate captures. Existing camera, viewport, mode, image hash, asset/vegetation and exact source checks retained; strict candidate hash bound."
+    },
+    {
+      "id": "EXACT_COAST_PIXEL_PARITY",
+      "result": "PASS",
+      "evidence": "Both protected-coast modes require unique baseline/candidate pairs, image hash and PNG CRC validation, 529x980 decoded RGBA, and zero differing pixels across all channels. Byte/alpha/last-pixel and invalid-dimension rejection tests reviewed."
+    },
+    {
+      "id": "NO_AUTOMATIC_GPU_TRIGGER",
+      "result": "PASS",
+      "evidence": "Residual job requires explicit workflow_dispatch, exact declared branch and residual query; generic exact-head job excludes residual query. PR opened/synchronize/reopened does not select this job. First attempt only; no retry implementation."
+    },
+    {
+      "id": "EXACT_SOURCE_AND_DISPATCH_BINDINGS",
+      "result": "PASS",
+      "evidence": "Workflow binds exact candidate/tooling checkouts to target SHA, checkpoint to workflow SHA, identical workflow blob, review schema/operation/PASS/non-self-approval, exact four source-digest keys and actual bytes, eight frames/one run/no baseline recapture/no automatic retry. Fixed CPU suites execute before browser tooling/capture."
+    },
+    {
+      "id": "FOCUSED_TESTS",
+      "result": "PASS",
+      "evidence": "Reviewed South test log: 47/47 pass, zero skipped/failed. Test source covers inverse hash/unique anchors, field tampering, old-mix contamination, scalar lit/probe equivalence, frame/pose/mode/asset drift, decoded coast mismatch, and scene custody. Historical resident fixture is frozen and known contribution source hash is enforced."
+    },
+    {
+      "id": "NO_FALSE_VISUAL_SUCCESS_OR_DEVICE_ACCEPTANCE",
+      "result": "PASS",
+      "evidence": "Success reports capture complete/coast parity verified/visual review pending; residualHypothesisProven false, ownerVisualAcceptance false, physicalAndroidPerformanceProven false, releaseAuthorized false. No source-only claim of band removal, meadow ecological quality or map-wide acceptance."
+    }
+  ],
+  "focusedTestLogSha256": "d16aa993351538f9ca7654751f3cce31a4befe4da5172c3bfc11ad3537fdcf61",
+  "limits": [
+    "Source review only; no GPU capture was executed by reviewer.",
+    "One new eight-frame run remains subject to durable exact dispatch intent and live authority/head readback. Attempt guard prevents workflow reruns; owner/orchestrator must enforce total one-run budget across separate dispatches.",
+    "Exact coast parity, near/far band quality and meadow/subtropical identity must be evaluated from forthcoming images; source correctness cannot establish visual improvement.",
+    "Owner KEEP/ONE_REPAIR/REJECT and exact-candidate anchor evidence remain pending; no merge/deploy authority is created."
+  ],
+  "gpuExecuted": false,
+  "productAcceptance": false,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false,
+  "combinedCpuTests": {
+    "command": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs",
+    "passed": 52,
+    "failed": 0,
+    "skipped": 0,
+    "logPath": "h-earth-3d/evidence/groundcover-residual-transfer-20261028/source-tests.txt",
+    "logSha256": "5422adbcd77a4a255d9b2fb35d501ae8ca68d39301cb2a5950771f1f8eeb101d",
+    "execution": "Root executed; independent West read and verified recorded totals."
+  }
+}

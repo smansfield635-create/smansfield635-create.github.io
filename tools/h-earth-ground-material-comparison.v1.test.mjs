@@ -384,7 +384,9 @@ test('saved 24-image failed receipt has only the known timing mismatch and passe
  }
 });
 
-const residentShader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+// Frozen historical fixture from12513133; reconstruct against archived approved bytes
+// so advancing the product renderer does not retarget resident/contribution tests.
+const residentShader=diagnostic.reconstructFootprintBaseline(footprintShader).replace(diagnostic.ORIGINAL_GROUNDCOVER_FIELD,"      // H_EARTH_GROUNDCOVER_RESIDENT_FIELD_BEGIN\n      // Couple cover to the soil's existing meso/detail fields instead of\n      // imposing a separate rotated low-frequency color-region field.\n      float groundcoverOrganic=mesoField;\n      float groundcoverPatch=smoothstep(\n        0.20,0.66,groundcoverOrganic*0.78+detailField*0.22\n      );\n      // H_EARTH_GROUNDCOVER_RESIDENT_FIELD_END\n");
 test('resident field replaces only independent domain support and restores exact approved source',()=>{
  const baseline=diagnostic.reconstructResidentBaseline(residentShader);
  assert.equal(diagnostic.verifyExactMaterialCandidate(baseline),diagnostic.FOOTPRINT_BASELINE_SHA256);
@@ -504,4 +506,82 @@ test('contribution failure receipt binds frozen source rather than historical di
  assert.deepEqual(r.heads,{candidate:CONTRIBUTION_SOURCE_HEAD});assert.equal(r.sourceProductSha256,CONTRIBUTION_RENDERER_SHA256);assert.equal(r.baselineProductSha256,null);assert.equal(r.noBaselineCapture,true);assert.equal(r.repairOperationId,'H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001');assert.deepEqual(Object.keys(r.stageMeanings),CONTRIBUTION_MODES);assert.equal(r.productDiskMutation,false);assert.equal(r.views.length,0);assert.equal(r.sceneParity,undefined);assert.equal(r.result,'INCOMPLETE_OR_FAILED');
  }finally{fs.rmSync(dir,{recursive:true,force:true});}`;
  execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'GROUNDCOVER_CONTRIBUTION_LEDGER_V1'},encoding:'utf8'});
+});
+
+test('residual candidate is only the reviewed composition change against approved bytes',()=>{
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const baseline=diagnostic.reconstructResidualBaseline(source);
+ assert.equal(baseline,diagnostic.reconstructFootprintBaseline(footprintShader));
+ assert.ok(!source.includes('groundcoverTone*=0.88+0.24*materialVariation;'));
+ assert.ok(source.includes(diagnostic.CANDIDATE_BLEND_EXPRESSION));
+ assert.throws(()=>diagnostic.reconstructResidualBaseline(source+diagnostic.RESIDUAL_COMPOSITION),/ANCHOR_NOT_UNIQUE/);
+ assert.throws(()=>diagnostic.reconstructResidualBaseline(baseline),/ANCHOR_NOT_UNIQUE/);
+ for(const [old,value] of [['smoothstep(28.0,72.0','smoothstep(27.0,72.0'],['(1.0-protectedGrove)','(1.0-0.5*protectedGrove)'],['0.24*groundcoverWeight','0.25*groundcoverWeight']])assert.throws(()=>diagnostic.reconstructResidualBaseline(source.replace(old,value)));
+ const observed=diagnostic.instrumentResidualRenderer(source);
+ assert.equal(diagnostic.verifyResidualInstrumentation(observed),true);
+ for(const bad of [observed.replace(diagnostic.RESIDUAL_PROBE,'      probeGCAfter=mix(palette,groundcoverTone,groundcoverWeight);'),observed+diagnostic.RESIDUAL_PROBE,observed.replace(diagnostic.RESIDUAL_COMPOSITION,'      palette=mix(palette,groundcoverTone,groundcoverWeight);'),observed+'groundcoverTone*=0.88+0.24*materialVariation;'])assert.throws(()=>diagnostic.verifyResidualInstrumentation(bad),/PROBE_CONTAMINATION/);
+ // Execute the scalar form of the exact source expressions: lit composition
+ // and probe agree, retain incoming-soil differences, and vanish at v=.5/w=0.
+ const expression=diagnostic.RESIDUAL_COMPOSITION.trim().replace('palette+=','palette=palette+');
+ const compose=new Function('palette','groundcoverWeight','groundcoverTone','materialVariation',expression+'return palette;');
+ const probe=new Function('palette','groundcoverWeight','groundcoverTone','materialVariation','let probeGCAfter;'+diagnostic.RESIDUAL_PROBE+'return probeGCAfter;');
+ for(const p of [.02,.2,.8])for(const w of [0,.1,.66])for(const t of [.055,.11,.175])for(const v of [0,.5,1]){
+  const actual=compose(p,w,t,v);assert.equal(actual,probe(p,w,t,v));assert.ok(Math.abs(actual-(p+.24*w*t*(v-.5)))<1e-15);
+  assert.ok(Math.abs((compose(p+.01,w,t,v)-actual)-.01)<1e-15);
+  if(w===0||v===.5)assert.equal(actual,p);
+ }
+});
+
+test('residual coast gate compares every decoded RGBA channel and rejects any pixel drift',()=>{
+ const image=()=>({width:529,height:980,data:Buffer.alloc(529*980*4,100)});
+ assert.equal(diagnostic.compareDecodedCoastPair(image(),image()).differingPixels,0);
+ for(const index of [0,3,529*980*4-1]){const bad=image();bad.data[index]++;assert.throws(()=>diagnostic.compareDecodedCoastPair(image(),bad),/PIXEL_MISMATCH:1/);}
+ for(const mutate of [v=>v.width++,v=>v.height--,v=>v.data=v.data.subarray(1)]){const bad=image();mutate(bad);assert.throws(()=>diagnostic.compareDecodedCoastPair(image(),bad),/DECODE_INVALID/);}
+});
+
+test('residual profile freezes only eight candidate frames and keeps baseline inherited',async()=>{
+ const {execFileSync}=await import('node:child_process');
+ const url=new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url).href;
+ const script=`import assert from 'node:assert/strict';import {HEADS,RESIDUAL_POSES,RESIDUAL_MODES,parseArgs} from ${JSON.stringify(url)};
+ assert.equal(HEADS.baseline,'cb57c275b95d0d48883bc4da4dcfcf17cbec5060');assert.equal(HEADS.candidate,'${'a'.repeat(40)}');
+ assert.deepEqual(RESIDUAL_POSES.map(p=>p.name),['inland-seam-near','inland-seam-far','protected-meadow','protected-coast']);
+ assert.deepEqual(RESIDUAL_MODES,['reference-lit','after-groundcover-unlit']);assert.equal(RESIDUAL_POSES.length*RESIDUAL_MODES.length,8);
+ assert.throws(()=>parseArgs(['--baseline-dir','same','--candidate-dir','same','--output','out']),/DIRECTORIES_NOT_DISTINCT/);`;
+ execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'GROUNDCOVER_RESIDUAL_TRANSFER_V1',H_EARTH_COMPARISON_CANDIDATE_SHA:'a'.repeat(40)},encoding:'utf8'});
+ assert.throws(()=>execFileSync(process.execPath,['--input-type=module','-e',`await import(${JSON.stringify(url)})`],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'GROUNDCOVER_RESIDUAL_TRANSFER_V1',H_EARTH_COMPARISON_CANDIDATE_SHA:''},stdio:'pipe'}),/CANDIDATE_EXACT_SHA_REQUIRED/);
+ const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8').split('  groundcover-residual-transfer-comparison:')[1].split('\n  groundcover-contribution-ledger-comparison:')[0];
+ assert.ok(workflow.includes("github.event_name == 'workflow_dispatch'"));assert.ok(!workflow.includes("github.event_name == 'pull_request'"));
+ assert.ok(workflow.includes("github.ref == 'refs/heads/h-earth/groundcover-residual-transfer-20261028'"));
+ assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GROUNDCOVER_RESIDUAL_TRANSFER_V1'));
+ assert.ok(workflow.includes('pngjs@7.0.0'));assert.ok(workflow.includes('test "$RUN_ATTEMPT" = 1'));
+});
+
+test('residual scene parity excludes only declared new evidence and preserves world asset custody',async()=>{
+ const {execFileSync}=await import('node:child_process');const {tmpdir}=await import('node:os');const path=await import('node:path');
+ const root=fs.mkdtempSync(path.join(tmpdir(),'residual-parity-'));
+ const git=(dir,args)=>execFileSync('git',['-C',dir,...args],{stdio:'pipe'});
+ const put=(dir,name,body)=>{const p=path.join(dir,name);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,body);};
+ const commit=dir=>{git(dir,['add','.']);git(dir,['-c','user.name=Test','-c','user.email=test@local','commit','-qm','fixture']);};
+ try{
+  const a=path.join(root,'baseline'),b=path.join(root,'candidate');fs.mkdirSync(a);git(a,['init','-q']);
+  put(a,'h-earth-3d/protected-world.json','world');put(a,'showroom/globe/h-earth/render/protected-asset.js','asset');commit(a);execFileSync('git',['clone','-q',a,b]);
+  put(b,diagnostic.RESIDUAL_EVIDENCE_PATHS[0],'declared evidence');put(b,diagnostic.PRESERVED_CONTRIBUTION_EVIDENCE_PATHS[0],'old preserved diagnostic');commit(b);
+  assert.equal(diagnostic.assertSceneParity(a,b,{residual:true}).result,'EXACT_SCENE_TREE_PARITY_EXCEPT_DECLARED_RENDERER_AND_EVIDENCE');
+  assert.throws(()=>diagnostic.assertSceneParity(a,b),/SCENE_SOURCE_DRIFT/);
+  put(b,'h-earth-3d/evidence/groundcover-residual-transfer-20261028/unadmitted.json','not allowed');commit(b);assert.throws(()=>diagnostic.assertSceneParity(a,b,{residual:true}),/SCENE_SOURCE_DRIFT/);
+  git(b,['reset','--hard','HEAD~1']);put(b,'showroom/globe/h-earth/render/protected-asset.js','changed asset');commit(b);assert.throws(()=>diagnostic.assertSceneParity(a,b,{residual:true}),/SCENE_SOURCE_DRIFT/);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+test('residual paired custody rejects candidate hash, frame, camera, pose, modes and assets drift',async()=>{
+ const {gunzipSync}=await import('node:zlib');
+ const captured=JSON.parse(gunzipSync(fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-resident-field-20261028/run40734434775/receipt.json.gz',import.meta.url))));
+ // Shape-only synthetic test fixtures, never presented as residual image evidence.
+ const head='a'.repeat(40),hash='b'.repeat(64);
+ const views=captured.views.filter(v=>diagnostic.RESIDUAL_MODES.includes(v.mode)).map(v=>({...structuredClone(v),...(v.label==='candidate'?{sourceHead:head,rendererHash:hash}:{})}));
+ assert.equal(diagnostic.validateResidualSet(views,head,hash),true);
+ assert.throws(()=>diagnostic.validateResidualSet(views.slice(1),head,hash));
+ for(const mutate of [v=>v.sourceHead='c'.repeat(40),v=>v.rendererHash='d'.repeat(64),v=>v.lastFrame.navigationSequence++,v=>v.lastFrame.cameraPosition.y++,v=>v.pose.pitch++,v=>v.mode='before-groundcover-unlit',v=>v.diagnosticApplied=2,v=>v.grassHidden=!v.grassHidden,v=>v.resources.singleOwnerVegetation.gpuObservedBufferBytes++,v=>v.assetSignature+='drift']){
+  const bad=structuredClone(views);mutate(bad.find(v=>v.label==='candidate'));assert.throws(()=>diagnostic.validateResidualSet(bad,head,hash));
+ }
 });

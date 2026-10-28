@@ -1,0 +1,171 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "contractSha256": "f84055cbe2ae01743c841e770c4502336993db71df8eab0fe106544466c280d8",
+    "head": "97b9b80082bcfc50af66c281aa20bfa2c5de6cc7",
+    "operationId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/operation-request.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/construction-procedure.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/repair-contract.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/comparison-manifest.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/admission-receipt.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/source-reconstruction-receipt.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/source-tests.txt",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/independent-source-review.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/dispatch-intent.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/launch-receipt.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/capture-receipt.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/evidence-manifest.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/comparison-report.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/independent-evidence-review.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/owner-disposition.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/continuation.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/README.md",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-near-reference-lit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-near-after-groundcover-unlit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-far-reference-lit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-far-after-groundcover-unlit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-meadow-reference-lit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-meadow-after-groundcover-unlit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-coast-reference-lit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-coast-after-groundcover-unlit.png",
+      "h-earth-3d/experience-anchor/receipts/groundcover-residual-transfer-20261028.acceptance.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_COMPARISON_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact immutable tooling and candidate SHAs before launch. Approved renderer hash fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec; inverse reconstruction required. Reuse S1 archive, exact poses/assets/viewport/modes. No rejected renderer inheritance.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/operation-request.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/construction-procedure.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/repair-contract.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/comparison-manifest.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/admission-receipt.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/source-reconstruction-receipt.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/source-tests.txt",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/independent-source-review.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/dispatch-intent.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/launch-receipt.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/capture-receipt.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/evidence-manifest.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/comparison-report.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/independent-evidence-review.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/owner-disposition.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/continuation.json",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/README.md",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-near-reference-lit.png",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-near-after-groundcover-unlit.png",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-far-reference-lit.png",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-far-after-groundcover-unlit.png",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-meadow-reference-lit.png",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-meadow-after-groundcover-unlit.png",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-coast-reference-lit.png",
+    "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-coast-after-groundcover-unlit.png",
+    "h-earth-3d/experience-anchor/receipts/groundcover-residual-transfer-20261028.acceptance.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Obtain authentic admission; create h-earth/groundcover-residual-transfer-20261028 from exact1251313313c7223befeee2ff7f765cc545db3cd5. Preserve all diagnostic evidence.",
+      "step": 1
+    },
+    {
+      "action": "Reconstruct approved renderer, apply only one centered residual formula, preserve all fields/masks; adapt existing comparator and tests including actual albedo probe.",
+      "step": 2
+    },
+    {
+      "action": "Amend only existing runner for bounded profile and explicit exact-head launch; prohibit GPU from synchronize/workflow publication.",
+      "step": 3
+    },
+    {
+      "action": "Run focused CPU tests and independent source review; commit allowed paths, remote readback and inverse hash proof.",
+      "step": 4
+    },
+    {
+      "action": "Persist exact candidate/tooling dispatch intent; launch at most one eight-frame qualification; report exact run link and pause.",
+      "step": 5
+    },
+    {
+      "action": "Preserve raw capture, validate identities/coast parity, report descriptive metrics and required visual review.",
+      "step": 6
+    },
+    {
+      "action": "Provide authorized exact-candidate preview and anchor receipt; owner KEEP/ONE_REPAIR/REJECT before repair closure. No merge/deploy.",
+      "step": 7
+    }
+  ],
+  "exactGoverningHead": "97b9b80082bcfc50af66c281aa20bfa2c5de6cc7",
+  "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_APPROVED_SOURCE_RECONSTRUCTION",
+      "TRUE_CANDIDATE_LIT_AND_ALBEDO_PROBES",
+      "NO_AUTOMATIC_GPU_TRIGGER",
+      "FROZEN_POSE_ASSET_FRAME_CUSTODY",
+      "EXACT_COAST_PIXEL_PARITY",
+      "NO_FALSE_NUMERIC_VISUAL_SUCCESS_OR_DEVICE_ACCEPTANCE",
+      "NO_MEADOW_SUBTROPICAL_IDENTITY_REGRESSION"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse preserved diagnostic attribution and approved archive only; inspect proposed single formula and affected harness dependencies.",
+    "forbidden": "No baseline/control recapture, new attribution intermediates, camera search, parameter sweep, workflow carrier or policy redesign."
+  },
+  "procedureId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/operation-request.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/construction-procedure.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/repair-contract.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/comparison-manifest.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/admission-receipt.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/source-reconstruction-receipt.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/source-tests.txt",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/independent-source-review.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/dispatch-intent.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/launch-receipt.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/capture-receipt.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/evidence-manifest.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/comparison-report.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/independent-evidence-review.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/owner-disposition.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/continuation.json",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/README.md",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-near-reference-lit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-near-after-groundcover-unlit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-far-reference-lit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-inland-seam-far-after-groundcover-unlit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-meadow-reference-lit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-meadow-after-groundcover-unlit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-coast-reference-lit.png",
+      "h-earth-3d/evidence/groundcover-residual-transfer-20261028/candidate-protected-coast-after-groundcover-unlit.png",
+      "h-earth-3d/experience-anchor/receipts/groundcover-residual-transfer-20261028.acceptance.json"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

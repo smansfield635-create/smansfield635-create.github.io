@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=groundcover-residual-transfer-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1484,6 +1484,160 @@ jobs:
           path: ${{ runner.temp }}/groundcover-resident-field
           if-no-files-found: error
           retention-days: 90
+
+  groundcover-residual-transfer-comparison:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=groundcover-residual-transfer-v1' &&
+          github.ref == 'refs/heads/h-earth/groundcover-residual-transfer-20261028' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact candidate tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out approved Gen2928 baseline
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: baseline
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out exact candidate scene
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          path: candidate
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out immutable dispatch checkpoint
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: dispatch
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /h-earth-3d/evidence/groundcover-residual-transfer-20261028/dispatch-intent.json
+      - name: Validate fixed explicit launch and exact checkout identities
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          WORKFLOW_SHA: ${{ github.sha }}
+          ROUTE_PATH: ${{ inputs.route_path }}
+          EXERCISE: ${{ inputs.exercise_vegetation_residency }}
+          TIMING_SHIM: ${{ inputs.apply_timing_shim }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUN_ATTEMPT" = 1
+          test "$ROUTE_PATH" = /showroom/globe/h-earth/
+          test "$EXERCISE" = false
+          test "$TIMING_SHIM" = false
+          test "$(git -C tooling rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git -C candidate rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git -C baseline rev-parse HEAD)" = cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          test "$(git -C dispatch rev-parse HEAD)" = "$WORKFLOW_SHA"
+          test "$(git -C tooling rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)" = "$(git -C dispatch rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          const dir='h-earth-3d/evidence/groundcover-residual-transfer-20261028/';
+          const intent=JSON.parse(fs.readFileSync('dispatch/'+dir+'dispatch-intent.json'));
+          assert.equal(intent.schema,'H_EARTH_RESIDUAL_TRANSFER_DISPATCH_INTENT_v1');
+          assert.equal(intent.operationId,'H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001');
+          assert.equal(intent.lockGeneration,2961);
+          assert.equal(intent.candidateHead,process.env.TARGET_SHA);
+          assert.equal(intent.toolingHead,process.env.TARGET_SHA);
+          assert.equal(intent.profile,'GROUNDCOVER_RESIDUAL_TRANSFER_V1');
+          assert.equal(intent.candidateFrames,8);
+          assert.equal(intent.candidateRuns,1);
+          assert.equal(intent.baselineRecapture,false);
+          assert.equal(intent.automaticRetry,false);
+          assert.equal(intent.sourceQualification,'PASS');
+          const review=JSON.parse(fs.readFileSync('tooling/'+dir+'independent-source-review.json'));
+          assert.equal(review.schema,'H_EARTH_RESIDUAL_TRANSFER_SOURCE_REVIEW_v1');
+          assert.equal(review.operationId,intent.operationId);
+          assert.equal(review.result,'PASS');
+          assert.equal(review.builderSelfApproval,false);
+          for(const [path,digest] of Object.entries(intent.sourceSha256)) {
+            assert.equal(createHash('sha256').update(fs.readFileSync('tooling/'+path)).digest('hex'),digest);
+            assert.equal(review.sourceSha256[path],digest);
+          }
+          assert.deepEqual(Object.keys(intent.sourceSha256).sort(),[
+            '.github/workflows/h-earth-neutral-exact-head-runner.yml',
+            'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',
+            'tools/h-earth-ground-material-comparison.v1.mjs',
+            'tools/h-earth-ground-material-comparison.v1.test.mjs'
+          ].sort());
+          NODE
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate source reconstruction and numerical coverage
+        working-directory: tooling
+        run: node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+      - name: Install fixed Chromium tooling
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture eight candidate residual-transfer frames with archived baseline only
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GROUNDCOVER_RESIDUAL_TRANSFER_V1
+          H_EARTH_COMPARISON_CANDIDATE_SHA: ${{ inputs.target_sha }}
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/groundcover-residual-transfer"
+      - name: Preserve comparison evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-groundcover-residual-transfer-${{ github.run_id }}
+          path: ${{ runner.temp }}/groundcover-residual-transfer
+          if-no-files-found: error
+          retention-days: 90
+
 
   groundcover-contribution-ledger-comparison:
     if: >-

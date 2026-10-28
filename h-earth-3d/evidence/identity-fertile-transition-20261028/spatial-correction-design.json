@@ -1,0 +1,62 @@
+{
+  "schema": "H_EARTH_NEXT_CORRECTION_SPATIAL_PREREQUISITES_v1",
+  "status": "CORRECTION_DESIGN_NOT_GPU_READY",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "proposedMechanism": "Redistribute the complete coarse ecological contribution in world space with symmetric no-flux transport, retaining an explicitly defined detail residual; preserve area-weighted mean rather than renormalizing to pre-identity brightness.",
+  "exactComposition": {
+    "A": "(1-wI)*(1-wG)",
+    "B": "(1-wG)*wI*TI+wG*TG",
+    "D": "(A-1)*P+B",
+    "conservativeUpdate": "L_i'=L_i+tau/a_i*sum_j(s_ij*(L_j-L_i)); D_i'=L_i'+R_i",
+    "conditions": [
+      "D=L+R must be defined from source, including target/coverage detail.",
+      "a_i is positive world-area measure.",
+      "s_ij=s_ji>=0 and protected crossings have s_ij=0.",
+      "tau<=min_i a_i/sum_j s_ij.",
+      "No screenshot-calibrated gain and no claim that source noise scales alone select filter support."
+    ]
+  },
+  "completed": [
+    "Recovered bounded world points using exact spherical camera source, actual captured position and invertible height probes.",
+    "Checked all2484 samples against independently captured nearMaterial intervals: zero contradictions.",
+    "Independent review of complete composition shows incoming-soil detail alone is insufficient."
+  ],
+  "evidenceGap": {
+    "nearMaximumWorldZIntervalMeters": 60.17935301920738,
+    "farMaximumWorldZIntervalMeters": 8.080826552805206,
+    "worldAreaQuadratureEstablished": false,
+    "sourceDetailSplitEstablished": false,
+    "conclusion": "Existing RGB8 height probes do not establish sufficiently precise neighboring world geometry for this correction. Screen-space diffusion would not validate a world-space fix."
+  },
+  "nextMeasurementPreparation": {
+    "purpose": "Obtain precise world positions and exact view/projection matrices at frozen poses; reuse existing baseline P/T/W evidence after custody validation.",
+    "scene": "approved baseline only",
+    "poses": [
+      "inland-seam-near",
+      "inland-seam-far"
+    ],
+    "proposedWorldChannels": [
+      "world XZ,16bits each,range[-2048,2048]",
+      "world Y,16bits,range[-64,128]; coast distance,16bits,range[0,1024]"
+    ],
+    "nominalCodeSteps": {
+      "xzMeters": 0.06250095368886854,
+      "yMeters": 0.002929732204165713,
+      "coastMeters": 0.015625238422217136
+    },
+    "requirements": [
+      "Capture eligibility/range validity separately; fail on saturation, not silent clamping.",
+      "Record exact view/projection matrices and framebuffer mapping.",
+      "Disable color transforms, blending and dithering for packed values; verify actual framebuffer encoding.",
+      "Validate old/new scene pose pixel custody before reusing color evidence.",
+      "Area and protection inference require uncertainty propagation;16bit proposal is not established sufficient.",
+      "Use registered bounded diagnostic route and applicable successor scope; old GPU budget exhausted."
+    ],
+    "runtimeInstrumentationImplemented": false,
+    "dispatchSubmitted": false
+  },
+  "nextAction": "Build the source-bound world-sample evaluator and scoped high-precision measurement instrument; establish its precision and full coarse/detail definition before authorizing this design as a repair candidate.",
+  "runtimeEdits": 0,
+  "gpuRuns": 0,
+  "repairClaim": false
+}

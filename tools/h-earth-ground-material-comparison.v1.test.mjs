@@ -198,3 +198,25 @@ test('Gen2942 lighting normal disambiguation is source-bound and non-mutating',(
  const altered=structuredClone(views);altered[3].diagnosticApplied=12;
  assert.throws(()=>diagnostic.validateIdentityPixelSet(altered,diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES,diagnostic.IDENTITY_LIGHTING_MODES),/GEN2942_CAPTURE_IDENTITY_MISMATCH/);
 });
+
+test('Gen2942 mountain ridge winner probe matches all 12 frozen source components with no disk mutation',()=>{
+ const renderer=fs.readFileSync(GEN2942_RENDERER_URL,'utf8');
+ const intercepted=diagnostic.instrumentIdentityPixelRenderer(renderer);
+ for(let i=0;i<12;i++)assert.ok(intercepted.includes('float ridge'+i+'='),'ridge '+i);
+ assert.ok(intercepted.includes('float vals[12]=float[12]('));
+ assert.ok(intercepted.includes('else if(m==14||m==15)'));
+ assert.deepEqual(diagnostic.IDENTITY_RIDGE_MODES,['reference-lit','ridge-dominant-raw','ridge-lead-margin-raw']);
+ assert.equal(diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES.length*diagnostic.IDENTITY_RIDGE_MODES.length,3);
+ assert.equal(fs.readFileSync(GEN2942_RENDERER_URL,'utf8'),renderer);
+ assert.throws(()=>diagnostic.instrumentIdentityPixelRenderer(renderer+' '),/GEN2942_FROZEN_RENDERER_HASH_MISMATCH/);
+ const pose=diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES[0];
+ const ids=[0,14,15];
+ const views=diagnostic.IDENTITY_RIDGE_MODES.map((mode,i)=>({
+  pose,mode,diagnosticApplied:ids[i],grassHidden:true,assetSignature:'immutable',
+  sourceHead:diagnostic.GEN2942_PUBLISHED_HEAD,rendererHash:diagnostic.GEN2942_PUBLISHED_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:88,y:29,z:-260}}
+ }));
+ assert.equal(diagnostic.validateIdentityPixelSet(views,diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES,diagnostic.IDENTITY_RIDGE_MODES),true);
+ const altered=structuredClone(views);altered[1].diagnosticApplied=15;
+ assert.throws(()=>diagnostic.validateIdentityPixelSet(altered,diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES,diagnostic.IDENTITY_RIDGE_MODES),/GEN2942_CAPTURE_IDENTITY_MISMATCH/);
+});

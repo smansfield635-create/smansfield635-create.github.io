@@ -27,10 +27,13 @@ export const IDENTITY_MOUNTAIN_POLYGON_POSES=Object.freeze([
  Object.freeze({name:'source-mountain-diagonal-material-edge',x:88,z:-260,yaw:118,pitch:-13})
 ]);
 export const IDENTITY_LIGHTING_MODES=Object.freeze(['reference-lit','geometric-normal-raw','shading-normal-raw','geometric-sun-diffuse-raw','relief-sun-diffuse-raw','relief-envelope-raw','reference-lit-geometric-only']);
-const IDENTITY_MODE_ID=new Map([...IDENTITY_MODES,...IDENTITY_LIGHTING_MODES.filter(mode=>mode!=='reference-lit')].map((name,index)=>[name,index]));
+// Source-aligned diagnostic only: canonical terrain's hard max among 12 mountain ridges.
+export const IDENTITY_RIDGE_MODES=Object.freeze(['reference-lit','ridge-dominant-raw','ridge-lead-margin-raw']);
+const IDENTITY_MODE_ID=new Map([...IDENTITY_MODES,...IDENTITY_LIGHTING_MODES.filter(mode=>mode!=='reference-lit'),...IDENTITY_RIDGE_MODES.filter(mode=>mode!=='reference-lit')].map((name,index)=>[name,index]));
+const mountainRidgeCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_MOUNTAIN_RIDGE_WINNER_V1';
 const mountainLightingCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_MOUNTAIN_LIGHTING_V1';
 const mountainPolygonCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_MOUNTAIN_POLYGON_V1';
-const identityPixelCapture=mountainLightingCapture||mountainPolygonCapture||process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_IDENTITY_PIXEL_V1';
+const identityPixelCapture=mountainRidgeCapture||mountainLightingCapture||mountainPolygonCapture||process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_IDENTITY_PIXEL_V1';
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
@@ -117,6 +120,27 @@ export function instrumentIdentityPixelRenderer(original){
   '    else if(m==10)lit=vec3(max(dot(geometricNormal,normalize(uSunDirection)),0.0));',
   '    else if(m==11)lit=vec3(max(dot(shadingNormal,normalize(uSunDirection)),0.0));',
   '    else if(m==12)lit=vec3(clamp(terrainReliefEnvelope,0.0,1.0));',
+  "    else if(m==14||m==15){",
+  "      vec2 q=vWorldPosition.xz;",
+  "      float ridge0=27.0*exp(-1.6*dot((q-vec2(72.0,-172.0))/vec2(62.0,50.0),(q-vec2(72.0,-172.0))/vec2(62.0,50.0)));",
+  "      float ridge1=38.0*exp(-1.6*dot((q-vec2(148.0,-224.0))/vec2(66.0,34.0),(q-vec2(148.0,-224.0))/vec2(66.0,34.0)));",
+  "      float ridge2=34.0*exp(-1.6*dot((q-vec2(86.0,-235.0))/vec2(68.0,37.0),(q-vec2(86.0,-235.0))/vec2(68.0,37.0)));",
+  "      float ridge3=29.0*exp(-1.6*dot((q-vec2(18.0,-226.0))/vec2(76.0,43.0),(q-vec2(18.0,-226.0))/vec2(76.0,43.0)));",
+  "      float ridge4=21.0*exp(-1.6*dot((q-vec2(-52.0,-208.0))/vec2(82.0,52.0),(q-vec2(-52.0,-208.0))/vec2(82.0,52.0)));",
+  "      float ridge5=8.5*exp(-1.6*dot((q-vec2(-12.0,-176.0))/vec2(126.0,62.0),(q-vec2(-12.0,-176.0))/vec2(126.0,62.0)));",
+  "      float ridge6=9.0*exp(-1.6*dot((q-vec2(126.0,-251.0))/vec2(42.0,17.0),(q-vec2(126.0,-251.0))/vec2(42.0,17.0)));",
+  "      float ridge7=8.2*exp(-1.6*dot((q-vec2(74.0,-263.0))/vec2(46.0,18.0),(q-vec2(74.0,-263.0))/vec2(46.0,18.0)));",
+  "      float ridge8=7.0*exp(-1.6*dot((q-vec2(142.0,-194.0))/vec2(18.0,49.0),(q-vec2(142.0,-194.0))/vec2(18.0,49.0)));",
+  "      float ridge9=6.4*exp(-1.6*dot((q-vec2(94.0,-191.0))/vec2(17.0,54.0),(q-vec2(94.0,-191.0))/vec2(17.0,54.0)));",
+  "      float ridge10=5.8*exp(-1.6*dot((q-vec2(45.0,-187.0))/vec2(18.0,51.0),(q-vec2(45.0,-187.0))/vec2(18.0,51.0)));",
+  "      float ridge11=5.0*exp(-1.6*dot((q-vec2(-8.0,-181.0))/vec2(20.0,48.0),(q-vec2(-8.0,-181.0))/vec2(20.0,48.0)));",
+  "      float vals[12]=float[12](ridge0,ridge1,ridge2,ridge3,ridge4,ridge5,ridge6,ridge7,ridge8,ridge9,ridge10,ridge11);",
+  "      float best=-1.0,second=-1.0;int bestId=-1;",
+  "      for(int i=0;i<12;i++){float value=vals[i];if(value>best){second=best;best=value;bestId=i;}else if(value>second){second=value;}}",
+  "      if(m==14){",
+  "        lit=bestId==0?vec3(0.98,0.90,0.13):bestId==1?vec3(1.0,0.13,0.13):bestId==2?vec3(0.11,0.93,0.22):bestId==3?vec3(0.10,0.28,0.98):bestId==4?vec3(0.82,0.27,0.98):bestId==5?vec3(0.55,0.36,0.20):bestId==6?vec3(0.17,0.95,0.96):bestId==7?vec3(0.08,0.64,0.71):bestId==8?vec3(1.0,0.56,0.08):bestId==9?vec3(1.0,0.25,0.66):bestId==10?vec3(0.81,0.79,0.76):vec3(0.37,0.43,0.48);",
+  "      }else lit=vec3(clamp((best-second)/12.0,0.0,1.0));",
+  "    }",
   '  }'
  ].join('\n'));
  let transformed=original.slice(0,start)+fragment+original.slice(end);
@@ -124,7 +148,7 @@ export function instrumentIdentityPixelRenderer(original){
  if(transformed.split(draw).length!==2)throw Error('GEN2942_UNIFORM_DRAW_ANCHOR_NOT_UNIQUE');
  transformed=transformed.replace(draw,draw+[
   "    {const mode=globalThis.__identityPixelMode??0;",
-  "     if(!Number.isInteger(mode)||mode<0||mode>=14)throw Error('GEN2942_IDENTITY_MODE_INVALID');",
+  "     if(!Number.isInteger(mode)||mode<0||mode>=16)throw Error('GEN2942_IDENTITY_MODE_INVALID');",
   "     const loc=gl.getUniformLocation(resources.geometryProgram,'uIdentityPixelMode');",
   "     if(loc===null)throw Error('GEN2942_IDENTITY_UNIFORM_MISSING');",
   "     gl.uniform1i(loc,mode);globalThis.__identityPixelModeApplied=mode;}"
@@ -193,9 +217,9 @@ export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(![
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2942_IDENTITY_PIXEL_V1','GEN2942_MOUNTAIN_POLYGON_V1','GEN2942_MOUNTAIN_LIGHTING_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=(mountainPolygonCapture||mountainLightingCapture)?IDENTITY_MOUNTAIN_POLYGON_POSES:(identityPixelCapture?IDENTITY_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
-  const modes=mountainLightingCapture?IDENTITY_LIGHTING_MODES:(identityPixelCapture?IDENTITY_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES));
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2942_IDENTITY_PIXEL_V1','GEN2942_MOUNTAIN_POLYGON_V1','GEN2942_MOUNTAIN_LIGHTING_V1','GEN2942_MOUNTAIN_RIDGE_WINNER_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=(mountainPolygonCapture||mountainLightingCapture||mountainRidgeCapture)?IDENTITY_MOUNTAIN_POLYGON_POSES:(identityPixelCapture?IDENTITY_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
+  const modes=mountainRidgeCapture?IDENTITY_RIDGE_MODES:(mountainLightingCapture?IDENTITY_LIGHTING_MODES:(identityPixelCapture?IDENTITY_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES)));
   if(poses.length*modes.length>(identityPixelCapture?32:20))throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:identityPixelCapture?'H_EARTH_POST_GEN2940_SOIL_IDENTITY_PIXEL_CAUSAL_REPAIR_20261027_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:identityPixelCapture?GEN2942_PUBLISHED_SHADER_SHA256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};

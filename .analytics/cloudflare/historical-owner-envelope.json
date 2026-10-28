@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-28T13:26:38Z",
+  "generatedAt": "2026-10-28T14:27:21Z",
   "window": {
-    "start": "2026-07-30T13:26:38Z",
-    "end": "2026-10-28T13:26:38Z"
+    "start": "2026-07-30T14:27:21Z",
+    "end": "2026-10-28T14:27:21Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4318,
-    "visits": 1287,
+    "pageLoads": 4458,
+    "visits": 1317,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4318,
-        "visits": 1287
+        "pageLoads": 4458,
+        "visits": 1317
       }
     },
     "byPath": {
@@ -31,20 +31,28 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 91,
+        "pageLoads": 111,
         "visits": 10
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 510,
+        "pageLoads": 500,
         "visits": 0
       },
-      "/laws/": {
-        "pageLoads": 230,
-        "visits": 80
+      "/gauges/h-earth/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/": {
-        "pageLoads": 977,
-        "visits": 707
+        "pageLoads": 987,
+        "visits": 727
+      },
+      "/laws/": {
+        "pageLoads": 260,
+        "visits": 90
+      },
+      "/products/education/": {
+        "pageLoads": 270,
+        "visits": 70
       },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
@@ -94,10 +102,6 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/h-earth/awards/proof/compass-live-format-proof.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/products/": {
         "pageLoads": 40,
         "visits": 10
@@ -119,7 +123,7 @@
         "visits": 0
       },
       "/build/": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/compass-isolated-clone/": {
@@ -195,7 +199,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 40,
+        "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
@@ -203,6 +207,10 @@
         "visits": 30
       },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -219,14 +227,10 @@
         "visits": 0
       },
       "/about/": {
-        "pageLoads": 50,
+        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -271,16 +275,16 @@
         "visits": 0
       },
       "/products/archcoin/receivable/": {
-        "pageLoads": 30,
+        "pageLoads": 50,
         "visits": 0
       },
-      "/products/archcoin/payable/": {
-        "pageLoads": 20,
+      "/products/archcoin/contract/": {
+        "pageLoads": 40,
         "visits": 0
       },
-      "/products/education/": {
-        "pageLoads": 240,
-        "visits": 60
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -317,16 +321,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3031,
+        "pageLoads": 3141,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 747,
-        "visits": 747
+        "pageLoads": 767,
+        "visits": 767
       },
       "(none)": {
-        "pageLoads": 530,
-        "visits": 530
+        "pageLoads": 540,
+        "visits": 540
       },
       "raw.githack.com": {
         "pageLoads": 10,

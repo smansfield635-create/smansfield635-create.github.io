@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-28T13:26:38Z",
+  "generatedAt": "2026-10-28T14:27:21Z",
   "window30d": {
-    "start": "2026-09-28T13:26:38Z",
-    "end": "2026-10-28T13:26:38Z"
+    "start": "2026-09-28T14:27:21Z",
+    "end": "2026-10-28T14:27:21Z"
   },
   "daily": [
     {
       "date": "2026-09-29",
-      "pageLoads": 70
+      "pageLoads": 40
     },
     {
       "date": "2026-09-30",
-      "pageLoads": 80
+      "pageLoads": 30
     },
     {
       "date": "2026-10-01",
@@ -24,11 +24,11 @@
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 20
+      "pageLoads": 40
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 70
+      "pageLoads": 90
     },
     {
       "date": "2026-10-05",
@@ -36,11 +36,11 @@
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 220
+      "pageLoads": 210
     },
     {
       "date": "2026-10-07",
-      "pageLoads": 70
+      "pageLoads": 80
     },
     {
       "date": "2026-10-08",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 45
+      "pageLoads": 44
     },
     {
       "date": "2026-10-21",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-10-28",
-      "pageLoads": 16
+      "pageLoads": 17
     }
   ],
   "summary": {
@@ -167,28 +167,23 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 732,
-      "visits": 674
+      "pageLoads": 712,
+      "visits": 654
     },
     {
       "path": "/analytics/",
-      "pageLoads": 584,
-      "visits": 584
+      "pageLoads": 604,
+      "visits": 604
     },
     {
       "path": "/",
-      "pageLoads": 104,
-      "visits": 82
+      "pageLoads": 114,
+      "visits": 92
     },
     {
       "path": "/build/",
-      "pageLoads": 81,
-      "visits": 81
-    },
-    {
-      "path": "/meet-sean-mansfield/",
-      "pageLoads": 41,
-      "visits": 31
+      "pageLoads": 51,
+      "visits": 51
     },
     {
       "path": "/about/",
@@ -196,14 +191,19 @@
       "visits": 41
     },
     {
+      "path": "/meet-sean-mansfield/",
+      "pageLoads": 31,
+      "visits": 31
+    },
+    {
       "path": "/gauges/",
       "pageLoads": 30,
       "visits": 0
     },
     {
-      "path": "/nine-summits/universe/",
-      "pageLoads": 30,
-      "visits": 30
+      "path": "/evidence/agentic-frontier/",
+      "pageLoads": 25,
+      "visits": 21
     }
   ],
   "ownerMeasurement": {

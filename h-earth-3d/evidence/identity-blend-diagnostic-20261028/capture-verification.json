@@ -1,0 +1,19 @@
+{
+  "schema": "H_EARTH_IDENTITY_CAPTURE_VERIFICATION_v1",
+  "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+  "runId": 40773251264,
+  "runConclusion": "success",
+  "workflowHead": "4d3591a8daec7f4a6e42a8fb23d2b089f44e212d",
+  "toolingHead": "ac49ca79dd6684dfd69655d118a9c58822a1952c",
+  "artifactId": 12854046080,
+  "artifactSha256": "ad2eb7e12002942b364377ffc6661de1cf5c4cede2a264c1a0309b2650277ff1",
+  "receiptSha256": "9f508de29fcc479e5cbe9c848bc9bb8b466cb0e161bbbab5aa5cacd15fc4ab36",
+  "analysisSha256": "e78de9582334d5be2d3ef10bfea582e74fddf7569f8515217f6e3ea2647cad5c",
+  "frameCount": 20,
+  "archiveParity": "EXACT_RGBA_MATCH",
+  "reconstructionFailures": 0,
+  "formalClassification": "MIXED_OR_INCONCLUSIVE",
+  "strongestIndividualRootAtThreeFixedWitnesses": "fertile",
+  "soleCauseClaim": false,
+  "repairVerified": false
+}

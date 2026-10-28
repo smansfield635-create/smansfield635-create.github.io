@@ -1,0 +1,182 @@
+{
+  "schema": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_MEASUREMENT_REVIEW_v1",
+  "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2962,
+  "reviewer": "West independent reviewer /root/review_diag",
+  "reviewedAt": "2026-10-28T21:44:50.455020+00:00",
+  "result": "PASS_MEASUREMENT_CUSTODY_AND_BOUNDED_INTERPRETATION",
+  "builderSelfApproval": false,
+  "runId": 40773251264,
+  "captureArtifactSha256": "ad2eb7e12002942b364377ffc6661de1cf5c4cede2a264c1a0309b2650277ff1",
+  "artifactDigestVerification": "Parent verified downloaded archive digest; West independently checked extracted receipt and image custody.",
+  "analysisSha256": "e78de9582334d5be2d3ef10bfea582e74fddf7569f8515217f6e3ea2647cad5c",
+  "receiptSha256": "9f508de29fcc479e5cbe9c848bc9bb8b466cb0e161bbbab5aa5cacd15fc4ab36",
+  "analyzerSha256": "b209ec3d1e2ecc1ecfbc96b61afbf5f2639f1f10df399c65a7e88c8ed233be37",
+  "independentSourceReviewSha256": "8223e2912d745e494cb0713b36c99e350e5d81e345fc7e1c401066285e68e6ab",
+  "contractSha256": "b0a7b3b01e30fbf38e65a89c7e1b58f976b47a74a27ec7eec15c15bd506acc4b",
+  "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "sceneRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "toolingHead": "ac49ca79dd6684dfd69655d118a9c58822a1952c",
+  "independentChecks": [
+    {
+      "check": "Reran verify_capture against exact contract and archived reference PNGs",
+      "result": "PASS",
+      "capturedFrames": 20
+    },
+    {
+      "check": "Archived incoming/result RGBA pixel parity",
+      "result": "EXACT_RGBA_MATCH"
+    },
+    {
+      "check": "Strictly increasing frameSequence across every captured view",
+      "result": "PASS"
+    },
+    {
+      "check": "Recomputed each of the three contract-fixed witness groups and compared entire resulting group objects to analysis.json",
+      "result": "EXACT_MATCH"
+    },
+    {
+      "check": "Reviewed all fifteen group numerical gates",
+      "result": "PASS",
+      "reconstructionFailures": 0
+    }
+  ],
+  "fixedWitnesses": [
+    {
+      "label": "known-witness-x132",
+      "validPairs": 9,
+      "observedSignedMeanRGB": [
+        0.030658484589384843,
+        0.0154048205361816,
+        0.006748713533493455
+      ],
+      "fertileSignedMeanRGB": [
+        0.024478896200038014,
+        0.011433588493826629,
+        0.004609856248145466
+      ],
+      "fertileSignedMeanRGBInterval": {
+        "lo": [
+          0.022577249149039323,
+          0.010366392974897772,
+          0.004022961556499582
+        ],
+        "hi": [
+          0.02628273336822124,
+          0.012516785674646223,
+          0.005223273821137861
+        ]
+      },
+      "largestOtherIndividualRootUpperMagnitudeRGB": [
+        0.004260154765541713,
+        0.0029300168706914965,
+        0.0017053304732180124
+      ],
+      "fertileLowerExceedsEachOtherRootUpperRGB": [
+        true,
+        true,
+        true
+      ],
+      "formalResult": "MIXED_OR_INCONCLUSIVE",
+      "formalChannelDominance": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "label": "known-witness-x264",
+      "validPairs": 9,
+      "observedSignedMeanRGB": [
+        0.04821926140742973,
+        0.02078721272918468,
+        0.007015403813208619
+      ],
+      "fertileSignedMeanRGB": [
+        0.04877075885909913,
+        0.019962396402035683,
+        0.006263444042724335
+      ],
+      "fertileSignedMeanRGBInterval": {
+        "lo": [
+          0.04586374098445894,
+          0.01839979101661871,
+          0.005459094245937927
+        ],
+        "hi": [
+          0.05102043974234694,
+          0.021371259115750222,
+          0.007063931778863793
+        ]
+      },
+      "largestOtherIndividualRootUpperMagnitudeRGB": [
+        0.002556280561460417,
+        0.002709929127410103,
+        0.001965628975168788
+      ],
+      "fertileLowerExceedsEachOtherRootUpperRGB": [
+        true,
+        true,
+        true
+      ],
+      "formalResult": "MIXED_OR_INCONCLUSIVE",
+      "formalChannelDominance": [
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "label": "known-witness-x396",
+      "validPairs": 9,
+      "observedSignedMeanRGB": [
+        0.04554916935034746,
+        0.019269213107034278,
+        0.009303311040917528
+      ],
+      "fertileSignedMeanRGB": [
+        0.044155382991049055,
+        0.02033516313800853,
+        0.008510802632904138
+      ],
+      "fertileSignedMeanRGBInterval": {
+        "lo": [
+          0.04127295921313312,
+          0.018691377007316733,
+          0.007595809363150114
+        ],
+        "hi": [
+          0.0468098152401044,
+          0.021981989658651183,
+          0.00946159048995493
+        ]
+      },
+      "largestOtherIndividualRootUpperMagnitudeRGB": [
+        0.0025398542458411584,
+        0.003193312718517452,
+        0.002138110468964195
+      ],
+      "fertileLowerExceedsEachOtherRootUpperRGB": [
+        true,
+        true,
+        true
+      ],
+      "formalResult": "MIXED_OR_INCONCLUSIVE",
+      "formalChannelDominance": [
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "interpretation": "The grouped fertile root is the largest measured signed-mean contribution at each fixed known boundary in every RGB channel, with its positive lower bound above each other individual root upper magnitude. Its influence passes through direct palette, moisture, dryness and blend-weight pathways. These are shared-root contributions, not independent additive causes to be counted again.",
+  "limitations": [
+    "All fifteen formal group results remain MIXED_OR_INCONCLUSIVE, with null channelDominance; this review does not override that contract classification.",
+    "Smaller opposing contributions exist, including blue direct-palette/dry pathways and some triplanar terms. No sole-cause or no-cancellation claim is supported.",
+    "Measured weight-path contribution does not establish the blend-weight expression as the sole responsible expression.",
+    "Broad near/far strip summaries do not establish a unique root. Fixed witness conclusions are limited to the measured boundaries.",
+    "Footprints alone do not prove aliasing; no unseen upstream noise defect is inferred here.",
+    "No product correction, visual acceptance, protected-control acceptance, deployment or publication is established."
+  ],
+  "nextEvidenceRequired": "Any bounded correction requires a separately authorized source change and near/far plus protected-control verification; preserve formal mixed result and evaluate the shared fertile pathways explicitly."
+}

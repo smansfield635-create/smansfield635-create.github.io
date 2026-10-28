@@ -5,7 +5,7 @@
   "branch": "h-earth/identity-blend-diagnostic-20261028",
   "baseHead": "d416cd37d061403e403735ae6c8cf093f8de390c",
   "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
-  "state": "DIAGNOSTIC_RUN_IN_PROGRESS",
+  "state": "CAPTURE_ANALYSIS_REVIEWED",
   "completed": [
     "PREDECESSOR_REJECTED_CLOSED",
     "DESIGN_REVIEW_PASS",
@@ -17,9 +17,13 @@
     "ANALYZER_TESTS_9_PASS",
     "LOCAL_GLES_COMPILE_PASS_NO_DRAWS",
     "REVIEWED_SOURCE_REMOTE_READBACK_PASS",
-    "SINGLE_DIAGNOSTIC_DISPATCH_ACCEPTED"
+    "SINGLE_DIAGNOSTIC_DISPATCH_ACCEPTED",
+    "EXACT_20_FRAME_CAPTURE_CUSTODY_PASS",
+    "ARCHIVE_EXACT_RGBA_PARITY_PASS",
+    "NUMERICAL_RECONSTRUCTION_PASS",
+    "INDEPENDENT_MEASUREMENT_REVIEW_PASS"
   ],
-  "nextAction": "Read run 40773251264 after owner reports completion, retrieve its existing artifact, and analyze exact capture against archived references. Do not dispatch or rerun.",
+  "nextAction": "Complete upstream fertile transition mechanism evidence and single bounded repair design, then close diagnostic and obtain separate repair admission. No duplicate diagnostic launch.",
   "runBudget": 1,
   "runsLaunched": 1,
   "maximumFrames": 20,
@@ -29,5 +33,6 @@
   "toolingHead": "ac49ca79dd6684dfd69655d118a9c58822a1952c",
   "dispatchHead": "4d3591a8daec7f4a6e42a8fb23d2b089f44e212d",
   "runId": 40773251264,
-  "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40773251264"
+  "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40773251264",
+  "runConclusion": "success"
 }

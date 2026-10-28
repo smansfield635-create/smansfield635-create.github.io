@@ -1,0 +1,19 @@
+{
+  "operationId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001",
+  "generation": 2955,
+  "candidateHead": "952361071fccb98a1e6b69ca7213aeec6e8db613",
+  "run": 40730251323,
+  "technicalCapture": "PASS",
+  "visualRepair": "REJECT",
+  "independentReviewer": "/root/west_review",
+  "verifiedImages": 16,
+  "inlandNear": "Olive band below horizon remains visible although lighter.",
+  "inlandFar": "Broad curved olive/tan region and boundary remain conspicuous in lit and albedo modes.",
+  "coast": "PIXEL_IDENTICAL_BOTH_MODES",
+  "meadow": "Grass placement and terrain shape preserved; soil warmer/lighter. Control changed; owner acceptance not established.",
+  "validatorCorrection": "QUALIFIED_BY_SAVED_24_FRAME_REPLAY_AND_PHYSICAL_NEGATIVES",
+  "shaderPromotionAllowed": false,
+  "ownerAcceptance": false,
+  "mapWideRepair": false,
+  "nextAction": "Retain validator correction and rejected evidence; any further shader experiment must address surviving spatial chromatic pattern under separately resolved scope, using these exact captures. Do not rerun unchanged candidate or repeat endpoint-only brightening."
+}

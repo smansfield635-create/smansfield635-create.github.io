@@ -1,6 +1,6 @@
 # Soil-relative groundcover target — generation 2955
 
-Status: implementation and qualification in progress; no owner acceptance, map-wide repair, merge or deployment.
+Status: REJECTED as a visual band repair. Technical capture and validator correction passed; no owner acceptance, map-wide repair, merge or deployment.
 
 ## Durable authority and continuity
 
@@ -27,3 +27,13 @@ The timing correction must omit only `entranceGrass.slopeRepair.generationMs` fr
 ## Source qualification
 
 39/39 source/numerical/harness tests pass. Independent West source review passed after correcting the workflow branch guard. All24 saved images independently hash-verified; the original receipt passes the corrected validator without rerendering. Numerical luminance preservation applies to sampled positive soil/tone; epsilon guards near-black. GPU visual qualification remains pending.
+
+## Final GPU result and independent disposition
+
+Run40730251323 at exact candidate `952361071fccb98a1e6b69ca7213aeec6e8db613` succeeded. All16 matched image hashes and the exact composed-set validator pass. The raw receipt, all16 PNGs, manifest, paired pixel analysis and timing observations are committed under `run40730251323/`. Baseline8 frames are inherited from verified run40716213632; candidate8 frames are new.
+
+Independent West inspected all16 images and returned **REJECT**: near olive horizon band remains; far broad curved olive/tan region remains conspicuous in both lit and albedo. The change reduces darkening but does not remove spatial color boundaries. Coast is pixel-identical. Meadow retains grass and terrain but soil becomes warmer/lighter; it is not an unchanged control or an accepted aesthetic result.
+
+The timing-only validator correction is supported independently by original24-frame replay and negative tests. Preserve it separately from rejection of the product shader. Software-GPU median timing differs across inherited and current runs and is not a controlled hardware performance gain or Android proof. No product bytes changed after the captured candidate.
+
+**Next boundary:** do not promote this shader or rerun unchanged. Any further bounded candidate must explicitly address the surviving spatial chromatic pattern using these captures; another endpoint-only brightening, threshold tweak or camera search is unsupported. The other owner-reported straight/curved classes and map-wide acceptance remain open.

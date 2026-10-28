@@ -53,7 +53,8 @@
     "VISUAL_REVIEW_COMPLETED",
     "INDEPENDENT_EVIDENCE_REVIEW_COMPLETED",
     "OWNER_REJECT_CONFIRMED",
-    "POST_REJECTION_ARCHIVED_UPSTREAM_COMPARISON"
+    "POST_REJECTION_ARCHIVED_UPSTREAM_COMPARISON",
+    "ARCHIVED_NEAR_IDENTITY_STAGE_AMPLIFICATION_VERIFIED"
   ],
   "sceneParityManifestSha256": "d331d5fd7c88fb2162b8ad1053b5a90cf0fac342ed7052e9e73f3eca49009e92",
   "preservedEvidence": [
@@ -137,5 +138,61 @@
     "newGpuRuns": 0,
     "productMutation": false,
     "repairAuthorized": false
+  },
+  "upstreamStageAnalysis": {
+    "kind": "REUSED_ARCHIVED_FIVE_STAGE_CAPTURE_NO_RERENDER",
+    "runId": 40411050366,
+    "artifactId": 12693448660,
+    "archiveSha256": "12f1728d356f0d750bde067983fd420659e3c894adb724cd39909effa8633db9",
+    "historicalSourceHead": "9127904e725a3f4ca13c1221451023102ad09435",
+    "historicalRendererSha256": "7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2",
+    "custody": "Archive digest matches GitHub artifact digest; all five PNG hashes match receipt. Poses, actual/expected camera, canvas and asset signatures match across stages. Exact renderer prefix before groundcover is byte-identical to rejected residual candidate. Historical after-identity PNG is exactly RGBA-identical to run40739898768 near before-groundcover PNG.",
+    "stageHashes": {
+      "substrate": "da41efb8ee85b1e22c7ad0487d105c9465e3cf9f5826fd91daa21e9c16bb56c3",
+      "afterSoil": "c38501a0ea5b7e8a627573f2f7d5d43fc4e18d94238b649952aa44e29961fccd",
+      "afterIdentity": "a6c5218c46d3a3ecfcbf5510eec34fea32e00914fc85d287a8ae454424f3d4e2"
+    },
+    "finding": "In frozen near view, layered tan-band contrast is amplified by the environmental identity stage relative to the incoming textured soil. Some substrate/soil variation predates this stage; do not claim identity creates every band or is the sole cause.",
+    "descriptiveMethod": "Post-hoc zero-based strips x132/264/396 +/-4, y260..300 inclusive. Mean RGB over each row; report range and mean absolute adjacent-row difference in RGB8 code units. Diagnostic stages have same output transform. Descriptive, not preregistered acceptance or uncertainty-bounded term dominance.",
+    "rows": [
+      {
+        "x": 132,
+        "soilRange": 4.740740740740748,
+        "identityRange": 9.444444444444443,
+        "soilMeanAbsRowStep": 0.5879629629629634,
+        "identityMeanAbsRowStep": 1.0768518518518513
+      },
+      {
+        "x": 264,
+        "soilRange": 4.555555555555557,
+        "identityRange": 10.666666666666671,
+        "soilMeanAbsRowStep": 0.4379629629629619,
+        "identityMeanAbsRowStep": 1.0768518518518497
+      },
+      {
+        "x": 396,
+        "soilRange": 4.074074074074076,
+        "identityRange": 11.444444444444443,
+        "soilMeanAbsRowStep": 0.47962962962963046,
+        "identityMeanAbsRowStep": 1.4120370370370359
+      }
+    ],
+    "sourceBoundary": "palette=mix(palette,identityBase,identityWeight)",
+    "unresolvedTerms": [
+      "identityWeight spatial variation",
+      "identityBase palette mixing through fertile/sheltered/dry/mineral signals",
+      "identityBase brightness modulation: 0.86+0.22*materialVariation+0.06*triFine*nearMaterial"
+    ],
+    "nextDiscriminatingQuestion": "At the same fixed near-view bands, which contribution dominates deltaC=(1-meanW)*deltaP+meanW*deltaT+deltaW*(meanT-meanP), where P=after-soil, T=fully modulated identityBase, W=identityWeight?",
+    "minimalMissingEvidence": "Archived P and C are already available and source-compatible for near view. Missing direct target identityBase and raw identityWeight at matching camera/source. Prepare one bounded diagnostic contract for those two channels with existing P/C reuse, source/frame custody, clipping/quantization bounds and reconstruction checks. This is a proposal, not capture authorization. Far-view stage attribution remains unmeasured.",
+    "prohibitions": [
+      "No identity removal or flattening as an inferred repair",
+      "No groundcover parameter sweep",
+      "No far-view or map-wide causal claim from this near-view stage set",
+      "No new GPU run within consumed generation2961 budget"
+    ],
+    "newGpuRuns": 0,
+    "productChanges": 0,
+    "ownerDisposition": "REJECT"
   }
 }

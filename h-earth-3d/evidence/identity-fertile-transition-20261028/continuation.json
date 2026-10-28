@@ -2,7 +2,7 @@
   "schema": "H_EARTH_IDENTITY_FERTILE_TRANSITION_CONTINUATION_v1",
   "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
   "lockGeneration": 2963,
-  "state": "BASELINE_GROUNDCOVER_WEIGHT_ATTRIBUTION_COMPLETE_PATCH_CHANGE_REQUIRED",
+  "state": "COORDINATED_BLEND_TRIAL_REJECTED_OFFLINE_APPEARANCE_PRESERVATION_FAILED",
   "candidateHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
   "branch": "h-earth/identity-fertile-transition-20261028",
   "completed": [
@@ -27,9 +27,12 @@
     "INDEPENDENT_TONE_RECONSTRUCTION_2484_PIXELS_ZERO_INCONSISTENCIES",
     "BASELINE_WEIGHT_DOMINANCE_53_OF_180_BROAD_COMPARISONS",
     "MASK_ONLY_EXPLANATION_EXCLUDED_AT_ALL_NINE_FAR_CENTER_WITNESS_PIXELS",
-    "INDEPENDENT_OFFLINE_RECOMPUTATION_PASS_NO_GPU"
+    "INDEPENDENT_OFFLINE_RECOMPUTATION_PASS_NO_GPU",
+    "COORDINATED_TWO_STAGE_NORMALIZATION_TRIAL_450_OFFLINE_COMPARISONS",
+    "INDEPENDENT_EXACT_RECOMPUTATION_OF_TRIAL",
+    "TRIAL_REJECTED_FOR_39_5_TO_44_3_PERCENT_SAMPLED_DARKENING_NO_GPU"
   ],
-  "nextAction": "Read groundcover-attribution.md and review-tone-mask.json. Prepare a source-bound repair design addressing measured patch-driven palette replacement alongside upstream identity contrast; predict contributions on frozen witnesses offline before a bounded comparison. Do not repeat isolated residual removal, field substitution or fertility widening. Current GPU budget remains consumed; applicable successor scope required for new runtime/capture work.",
+  "nextAction": "Read coordinated-blend-trial.md and coordinated-blend-independent-review.json. Define a camera-independent world-space mean/detail decomposition of the complete correlated contribution W*(T-P) at both stages; justify preservation and spatial scale from source before another candidate equation. Do not use pre-identity luminance as neutral reference or apply screenshot-fitted gain. No GPU until a concrete candidate passes preservation screening and applicable successor scope is prepared.",
   "workflow": ".github/workflows/h-earth-neutral-exact-head-runner.yml",
   "inputs": {
     "target_sha": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
@@ -69,5 +72,13 @@
     "newGpuRuns": 0,
     "rendererEdits": 0
   },
-  "chamberSynchronization": "UNVERIFIED_PUBLIC_BRIEFING_REMAINS_2026-10-26"
+  "chamberSynchronization": "UNVERIFIED_PUBLIC_BRIEFING_REMAINS_2026-10-26",
+  "coordinatedTrial": {
+    "report": "coordinated-blend-trial.md",
+    "analysis": "coordinated-blend-offline.json",
+    "script": "test-coordinated-blend.py",
+    "review": "coordinated-blend-independent-review.json",
+    "disposition": "REJECT_OFFLINE_NO_GPU",
+    "productCandidateCreated": false
+  }
 }

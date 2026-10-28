@@ -2,7 +2,7 @@
   "schema": "H_EARTH_IDENTITY_FERTILE_TRANSITION_CONTINUATION_v1",
   "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
   "lockGeneration": 2963,
-  "state": "COORDINATED_BLEND_TRIAL_REJECTED_OFFLINE_APPEARANCE_PRESERVATION_FAILED",
+  "state": "SPATIAL_CORRECTION_DESIGN_PRECISION_GAP_DOCUMENTED",
   "candidateHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
   "branch": "h-earth/identity-fertile-transition-20261028",
   "completed": [
@@ -30,9 +30,13 @@
     "INDEPENDENT_OFFLINE_RECOMPUTATION_PASS_NO_GPU",
     "COORDINATED_TWO_STAGE_NORMALIZATION_TRIAL_450_OFFLINE_COMPARISONS",
     "INDEPENDENT_EXACT_RECOMPUTATION_OF_TRIAL",
-    "TRIAL_REJECTED_FOR_39_5_TO_44_3_PERCENT_SAMPLED_DARKENING_NO_GPU"
+    "TRIAL_REJECTED_FOR_39_5_TO_44_3_PERCENT_SAMPLED_DARKENING_NO_GPU",
+    "COMPLETE_TWO_STAGE_ECOLOGICAL_CONTRIBUTION_DECOMPOSED",
+    "SOURCE_SPHERICAL_CAMERA_RECOVERED_2484_WORLD_INTERVALS",
+    "INDEPENDENT_RECOVERY_RECOMPUTED_ZERO_DISTANCE_INTERVAL_CONTRADICTIONS",
+    "ARCHIVED_HEIGHT_PRECISION_INSUFFICIENT_FOR_WORLD_SPACE_CORRECTION"
   ],
-  "nextAction": "Read coordinated-blend-trial.md and coordinated-blend-independent-review.json. Define a camera-independent world-space mean/detail decomposition of the complete correlated contribution W*(T-P) at both stages; justify preservation and spatial scale from source before another candidate equation. Do not use pre-identity luminance as neutral reference or apply screenshot-fitted gain. No GPU until a concrete candidate passes preservation screening and applicable successor scope is prepared.",
+  "nextAction": "Read spatial-correction-design.json. Prepare a source-bound world evaluator and qualified high-precision world-data measurement, including byte-exact capture and per-cell area uncertainty. Define the full correlated ecological coarse/detail split before claiming correction readiness. Existing image-space samples cannot qualify the world-space operator. Use applicable successor scope before runtime instrumentation/new capture; no new owner visual approval is implied.",
   "workflow": ".github/workflows/h-earth-neutral-exact-head-runner.yml",
   "inputs": {
     "target_sha": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
@@ -80,5 +84,12 @@
     "review": "coordinated-blend-independent-review.json",
     "disposition": "REJECT_OFFLINE_NO_GPU",
     "productCandidateCreated": false
+  },
+  "spatialCorrection": {
+    "design": "spatial-correction-design.json",
+    "worldRecoveryScript": "reconstruct-world-samples.py",
+    "worldIntervals": "world-samples.json",
+    "status": "DESIGN_ONLY_NOT_RUNTIME_CANDIDATE",
+    "gpuRuns": 0
   }
 }

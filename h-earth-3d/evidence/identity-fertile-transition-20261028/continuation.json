@@ -2,7 +2,7 @@
   "schema": "H_EARTH_IDENTITY_FERTILE_TRANSITION_CONTINUATION_v1",
   "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
   "lockGeneration": 2963,
-  "state": "SPATIAL_WEB_AUDIT_COMPLETE_GROUNDCOVER_CONTRIBUTION_REQUIRED",
+  "state": "BASELINE_GROUNDCOVER_WEIGHT_ATTRIBUTION_COMPLETE_PATCH_CHANGE_REQUIRED",
   "candidateHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
   "branch": "h-earth/identity-fertile-transition-20261028",
   "completed": [
@@ -22,9 +22,14 @@
     "TWELVE_ARCHIVED_BAND_REGION_GROUPS_RECOMPUTED_AND_INDEPENDENTLY_VERIFIED",
     "PRIMARY_RENDERING_LITERATURE_AND_SOURCE_AUDIT_COMPLETE",
     "INDEPENDENT_SPATIAL_PROFILE_AND_CROSS_RUN_CUSTODY_VERIFIED",
-    "CONSTANT_GROUNDCOVER_TARGET_AND_WEIGHT_HYPOTHESIS_EXCLUDED_AT_FAR_CENTER_WITNESS"
+    "CONSTANT_GROUNDCOVER_TARGET_AND_WEIGHT_HYPOTHESIS_EXCLUDED_AT_FAR_CENTER_WITNESS",
+    "ARCHIVED_TARGET_SOURCE_AND_PIXEL_CUSTODY_RECONCILED",
+    "INDEPENDENT_TONE_RECONSTRUCTION_2484_PIXELS_ZERO_INCONSISTENCIES",
+    "BASELINE_WEIGHT_DOMINANCE_53_OF_180_BROAD_COMPARISONS",
+    "MASK_ONLY_EXPLANATION_EXCLUDED_AT_ALL_NINE_FAR_CENTER_WITNESS_PIXELS",
+    "INDEPENDENT_OFFLINE_RECOMPUTATION_PASS_NO_GPU"
   ],
-  "nextAction": "Read spatial-web-audit.json. Reconcile any archived final-groundcover P/T/W probes to exact renderer source before reuse. Decompose final blend into incoming, target and weight contributions at fixed near/far windows. If probes unavailable, prepare bounded diagnostic under applicable successor scope; no fertility-width retry or extra run under consumed budget.",
+  "nextAction": "Read groundcover-attribution.md and review-tone-mask.json. Prepare a source-bound repair design addressing measured patch-driven palette replacement alongside upstream identity contrast; predict contributions on frozen witnesses offline before a bounded comparison. Do not repeat isolated residual removal, field substitution or fertility widening. Current GPU budget remains consumed; applicable successor scope required for new runtime/capture work.",
   "workflow": ".github/workflows/h-earth-neutral-exact-head-runner.yml",
   "inputs": {
     "target_sha": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
@@ -54,5 +59,15 @@
     "runArtifactSha256": "63bfcd317a427713aa2276be44c65e59ad8a05b53d841dc954916596135f439b"
   },
   "spatialWebAudit": "spatial-web-audit.json",
-  "spatialAuditScript": "spatial-audit.py"
+  "spatialAuditScript": "spatial-audit.py",
+  "groundcoverAttribution": {
+    "report": "groundcover-attribution.md",
+    "allComparisons": "groundcover-attribution.json",
+    "analyzer": "groundcover-attribution.py",
+    "independentReview": "review-tone-mask.json",
+    "independentAnalyzer": "review-tone-mask.py",
+    "newGpuRuns": 0,
+    "rendererEdits": 0
+  },
+  "chamberSynchronization": "UNVERIFIED_PUBLIC_BRIEFING_REMAINS_2026-10-26"
 }

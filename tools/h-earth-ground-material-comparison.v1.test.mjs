@@ -190,3 +190,20 @@ test('Gen2944 normal image-set custody rejects missing frames and vegetation dis
   assert.throws(()=>diagnostic.validateRidgeNormalSet(candidate),/GEN2944_/);
  }
 });
+
+test('Gen2944 two-frame eligibility probe keeps original terrain and exact mode IDs',async()=>{
+ const d=await import('./h-earth-ground-material-comparison.v1.mjs');
+ assert.deepEqual(d.NORMAL_PROBE_MODES,['original-lit','normal-correction-raw']);
+ assert.equal(d.NORMAL_PROBE_POSES.length,1);
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const candidate=d.instrumentRidgeNormalRenderer(source);
+ assert.ok(candidate.includes('ridgeRegionRaw=region;ridgeGapRaw=1.0-smoothstep(0.0,2.0,gap);'));
+ assert.ok(candidate.includes('lit=vec3(ridgeCorrectionRaw,ridgeRegionRaw,ridgeGapRaw)'));
+ assert.equal(fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8'),source);
+ const views=d.NORMAL_PROBE_MODES.map((mode,i)=>({
+  pose:d.NORMAL_PROBE_POSES[0],mode,diagnosticApplied:i===0?0:2,grassHidden:true,
+  assetSignature:'same',sourceHead:d.GEN2944_SOURCE_HEAD,rendererHash:d.GEN2944_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:88,y:29,z:-260}}
+ }));
+ assert.equal(d.validateRidgeNormalSet(views,d.NORMAL_PROBE_POSES,d.NORMAL_PROBE_MODES),true);
+});

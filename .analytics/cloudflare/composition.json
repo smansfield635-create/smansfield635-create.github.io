@@ -1,31 +1,36 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-28T12:34:27Z",
+  "generatedAt": "2026-10-28T13:26:38Z",
   "window": {
-    "start": "2026-09-28T12:34:27Z",
-    "end": "2026-10-28T12:34:27Z"
+    "start": "2026-09-28T13:26:38Z",
+    "end": "2026-10-28T13:26:38Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 712,
-        "visits": 654
+        "pageLoads": 732,
+        "visits": 674
       },
       {
         "value": "/analytics/",
-        "pageLoads": 604,
-        "visits": 604
+        "pageLoads": 584,
+        "visits": 584
       },
       {
         "value": "/",
-        "pageLoads": 114,
-        "visits": 92
+        "pageLoads": 104,
+        "visits": 82
       },
       {
         "value": "/build/",
-        "pageLoads": 51,
-        "visits": 51
+        "pageLoads": 81,
+        "visits": 81
+      },
+      {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 41,
+        "visits": 31
       },
       {
         "value": "/about/",
@@ -33,14 +38,14 @@
         "visits": 41
       },
       {
-        "value": "/meet-sean-mansfield/",
-        "pageLoads": 31,
-        "visits": 31
-      },
-      {
         "value": "/gauges/",
         "pageLoads": 30,
         "visits": 0
+      },
+      {
+        "value": "/nine-summits/universe/",
+        "pageLoads": 30,
+        "visits": 30
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -66,11 +71,6 @@
         "value": "/about-this-underdog/",
         "pageLoads": 20,
         "visits": 0
-      },
-      {
-        "value": "/nine-summits/universe/",
-        "pageLoads": 20,
-        "visits": 20
       },
       {
         "value": "/instruments/operations-chamber/",
@@ -295,40 +295,35 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1447,
-        "visits": 1392
+        "pageLoads": 1427,
+        "visits": 1372
       },
       {
         "value": "mobile",
-        "pageLoads": 307,
-        "visits": 265
+        "pageLoads": 277,
+        "visits": 255
       },
       {
         "value": "tablet",
-        "pageLoads": 98,
-        "visits": 57
+        "pageLoads": 88,
+        "visits": 47
       }
     ],
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 873,
-        "visits": 873
+        "pageLoads": 853,
+        "visits": 853
       },
       {
         "value": "Chrome",
-        "pageLoads": 490,
-        "visits": 408
+        "pageLoads": 480,
+        "visits": 398
       },
       {
         "value": "ChromeMobile",
         "pageLoads": 162,
         "visits": 159
-      },
-      {
-        "value": "MobileSafari",
-        "pageLoads": 87,
-        "visits": 57
       },
       {
         "value": "Edge",
@@ -339,6 +334,11 @@
         "value": "Firefox",
         "pageLoads": 71,
         "visits": 62
+      },
+      {
+        "value": "MobileSafari",
+        "pageLoads": 57,
+        "visits": 47
       },
       {
         "value": "Unknown",

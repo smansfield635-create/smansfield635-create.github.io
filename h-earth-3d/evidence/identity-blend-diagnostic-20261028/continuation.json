@@ -5,7 +5,7 @@
   "branch": "h-earth/identity-blend-diagnostic-20261028",
   "baseHead": "d416cd37d061403e403735ae6c8cf093f8de390c",
   "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
-  "state": "SOURCE_QUALIFIED_READY_FOR_DISPATCH",
+  "state": "DIAGNOSTIC_RUN_IN_PROGRESS",
   "completed": [
     "PREDECESSOR_REJECTED_CLOSED",
     "DESIGN_REVIEW_PASS",
@@ -15,13 +15,19 @@
     "INDEPENDENT_SOURCE_REVIEW_PASS",
     "CAPTURE_TESTS_56_PASS",
     "ANALYZER_TESTS_9_PASS",
-    "LOCAL_GLES_COMPILE_PASS_NO_DRAWS"
+    "LOCAL_GLES_COMPILE_PASS_NO_DRAWS",
+    "REVIEWED_SOURCE_REMOTE_READBACK_PASS",
+    "SINGLE_DIAGNOSTIC_DISPATCH_ACCEPTED"
   ],
-  "nextAction": "Commit exact reviewed source, save dispatch intent bound to its commit, then launch the single 20-frame diagnostic capture.",
+  "nextAction": "Read run 40773251264 after owner reports completion, retrieve its existing artifact, and analyze exact capture against archived references. Do not dispatch or rerun.",
   "runBudget": 1,
-  "runsLaunched": 0,
+  "runsLaunched": 1,
   "maximumFrames": 20,
   "productShaderMutation": false,
   "mergeAuthorized": false,
-  "deploymentAuthorized": false
+  "deploymentAuthorized": false,
+  "toolingHead": "ac49ca79dd6684dfd69655d118a9c58822a1952c",
+  "dispatchHead": "4d3591a8daec7f4a6e42a8fb23d2b089f44e212d",
+  "runId": 40773251264,
+  "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40773251264"
 }

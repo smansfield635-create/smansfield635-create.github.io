@@ -1,0 +1,1096 @@
+{
+  "schema": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_COMPARISON_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
+  "runId": 40760859003,
+  "candidateHead": "ce0a5c08b708d51ed9beed74339a1e72e3fc823a",
+  "result": "CAPTURE_VALID_VISUAL_REJECTION_RECOMMENDED",
+  "custody": "PASS",
+  "candidateFrames": 8,
+  "baselineRecaptured": false,
+  "coastPixelParity": {
+    "result": "EXACT_DECODED_RGBA_COAST_PARITY",
+    "comparisons": [
+      {
+        "mode": "reference-lit",
+        "width": 529,
+        "height": 980,
+        "differingPixels": 0
+      },
+      {
+        "mode": "after-groundcover-unlit",
+        "width": 529,
+        "height": 980,
+        "differingPixels": 0
+      }
+    ]
+  },
+  "visualFindings": [
+    "Near and far horizontal bands remain visible in lit and albedo views despite reduced olive tint.",
+    "Meadow geometry and vegetation remain visually consistent; subtle ground-color change; no obvious regression in these fixed views.",
+    "Coast is exactly identical in both decoded RGBA images."
+  ],
+  "recommendation": "REJECT",
+  "ownerDisposition": "PENDING",
+  "anchorEmbodiedContinuity": "NOT_ESTABLISHED_BY_FIXED_FRAMES",
+  "physicalAndroidPerformanceProven": false,
+  "releaseAuthorized": false,
+  "metricsMethod": "Frozen 9-pixel-wide transects and inclusive y ranges; signed/absolute RGB8 differences and 16-pixel vertical differences; channels in display-encoded 0..255 units, not radiometric linear gradients; exclude gradient pairs with any channel 0 or 255. No new segmentation, numeric success threshold or camera search.",
+  "metrics": [
+    {
+      "pose": "inland-seam-near",
+      "mode": "reference-lit",
+      "xCenter": 132,
+      "yInclusive": [
+        260,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 18387,
+        "mean": 4.050905531081742,
+        "meanAbsolute": 4.050905531081742,
+        "minimum": 0.0,
+        "maximum": 28.0,
+        "absolutePercentiles": {
+          "p50": 3.0,
+          "p90": 8.0,
+          "p95": 8.0,
+          "p99": 17.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.3659806448400456,
+            "meanAbsolute": 0.3659806448400456,
+            "minimum": 0.29770992366412213,
+            "maximum": 0.4024390243902439,
+            "absolutePercentiles": {
+              "p50": 0.36538461538461536,
+              "p90": 0.3836477987421384,
+              "p95": 0.3875,
+              "p99": 0.3936935483870968
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.2556390977443609,
+            "meanAbsolute": 2.2275689223057644,
+            "minimum": -22.0,
+            "maximum": 27.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 5.0,
+              "p95": 8.0,
+              "p99": 16.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.382660948256296,
+            "meanAbsolute": 0.382660948256296,
+            "minimum": 0.35064935064935066,
+            "maximum": 0.4147727272727273,
+            "absolutePercentiles": {
+              "p50": 0.38181818181818183,
+              "p90": 0.3939393939393939,
+              "p95": 0.39634146341463417,
+              "p99": 0.40236686390532544
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.06232247284878864,
+            "meanAbsolute": 2.2063492063492065,
+            "minimum": -25.0,
+            "maximum": 27.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 5.0,
+              "p95": 8.0,
+              "p99": 13.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-near",
+      "mode": "reference-lit",
+      "xCenter": 264,
+      "yInclusive": [
+        260,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 18387,
+        "mean": 3.969489313101648,
+        "meanAbsolute": 3.969489313101648,
+        "minimum": 0.0,
+        "maximum": 27.0,
+        "absolutePercentiles": {
+          "p50": 3.0,
+          "p90": 8.0,
+          "p95": 9.0,
+          "p99": 15.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.3699737339443237,
+            "meanAbsolute": 0.3699737339443237,
+            "minimum": 0.288,
+            "maximum": 0.40853658536585363,
+            "absolutePercentiles": {
+              "p50": 0.3684210526315789,
+              "p90": 0.3924050632911392,
+              "p95": 0.3950617283950617,
+              "p99": 0.3987730061349693
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.28153717627401836,
+            "meanAbsolute": 2.613589529379003,
+            "minimum": -22.0,
+            "maximum": 33.0,
+            "absolutePercentiles": {
+              "p50": 2.0,
+              "p90": 6.0,
+              "p95": 9.0,
+              "p99": 17.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.38570004198225477,
+            "meanAbsolute": 0.38570004198225477,
+            "minimum": 0.3509933774834437,
+            "maximum": 0.42528735632183906,
+            "absolutePercentiles": {
+              "p50": 0.38509316770186336,
+              "p90": 0.39759036144578314,
+              "p95": 0.4,
+              "p99": 0.4090909090909091
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.10336953494848232,
+            "meanAbsolute": 2.5390142021720967,
+            "minimum": -24.0,
+            "maximum": 24.0,
+            "absolutePercentiles": {
+              "p50": 2.0,
+              "p90": 6.0,
+              "p95": 9.0,
+              "p99": 15.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-near",
+      "mode": "reference-lit",
+      "xCenter": 396,
+      "yInclusive": [
+        260,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 18387,
+        "mean": 4.028879099363681,
+        "meanAbsolute": 4.028879099363681,
+        "minimum": 0.0,
+        "maximum": 28.0,
+        "absolutePercentiles": {
+          "p50": 3.0,
+          "p90": 8.0,
+          "p95": 9.0,
+          "p99": 14.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.37721142894971765,
+            "meanAbsolute": 0.37721142894971765,
+            "minimum": 0.2903225806451613,
+            "maximum": 0.4088050314465409,
+            "absolutePercentiles": {
+              "p50": 0.37662337662337664,
+              "p90": 0.3987730061349693,
+              "p95": 0.4012345679012346,
+              "p99": 0.40372670807453415
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.31339459760512395,
+            "meanAbsolute": 2.713951545530493,
+            "minimum": -24.0,
+            "maximum": 33.0,
+            "absolutePercentiles": {
+              "p50": 2.0,
+              "p90": 6.0,
+              "p95": 10.0,
+              "p99": 16.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.39217136124222446,
+            "meanAbsolute": 0.39217136124222446,
+            "minimum": 0.35333333333333333,
+            "maximum": 0.4277456647398844,
+            "absolutePercentiles": {
+              "p50": 0.39263803680981596,
+              "p90": 0.4024390243902439,
+              "p95": 0.4049079754601227,
+              "p99": 0.4117647058823529
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.1293233082706767,
+            "meanAbsolute": 2.586911723753829,
+            "minimum": -26.0,
+            "maximum": 26.0,
+            "absolutePercentiles": {
+              "p50": 2.0,
+              "p90": 6.0,
+              "p95": 9.0,
+              "p99": 15.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit",
+      "xCenter": 132,
+      "yInclusive": [
+        260,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 18387,
+        "mean": 4.370859846630772,
+        "meanAbsolute": 4.370859846630772,
+        "minimum": 0.0,
+        "maximum": 27.0,
+        "absolutePercentiles": {
+          "p50": 4.0,
+          "p90": 8.0,
+          "p95": 9.0,
+          "p99": 17.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.34569787465081486,
+            "meanAbsolute": 0.34569787465081486,
+            "minimum": 0.2605042016806723,
+            "maximum": 0.36666666666666664,
+            "absolutePercentiles": {
+              "p50": 0.3472222222222222,
+              "p90": 0.35570469798657717,
+              "p95": 0.3576158940397351,
+              "p99": 0.36
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.2867724867724868,
+            "meanAbsolute": 1.6941798941798942,
+            "minimum": -10.0,
+            "maximum": 27.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 3.0,
+              "p95": 5.0,
+              "p99": 13.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.3626514247543525,
+            "meanAbsolute": 0.3626514247543525,
+            "minimum": 0.3120567375886525,
+            "maximum": 0.3780487804878049,
+            "absolutePercentiles": {
+              "p50": 0.36363636363636365,
+              "p90": 0.36774193548387096,
+              "p95": 0.3684210526315789,
+              "p99": 0.3717948717948718
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.10197716513505987,
+            "meanAbsolute": 1.6712336396546923,
+            "minimum": -14.0,
+            "maximum": 15.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 4.0,
+              "p95": 5.0,
+              "p99": 10.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit",
+      "xCenter": 264,
+      "yInclusive": [
+        260,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 18387,
+        "mean": 4.2523522053624845,
+        "meanAbsolute": 4.2523522053624845,
+        "minimum": 0.0,
+        "maximum": 27.0,
+        "absolutePercentiles": {
+          "p50": 3.0,
+          "p90": 8.0,
+          "p95": 9.0,
+          "p99": 14.139999999999418
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.3454911230524146,
+            "meanAbsolute": 0.3454911230524146,
+            "minimum": 0.24561403508771928,
+            "maximum": 0.3684210526315789,
+            "absolutePercentiles": {
+              "p50": 0.3469387755102041,
+              "p90": 0.35947712418300654,
+              "p95": 0.3618421052631579,
+              "p99": 0.3660130718954248
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.328599275967697,
+            "meanAbsolute": 1.7748816485658592,
+            "minimum": -12.0,
+            "maximum": 32.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 4.0,
+              "p95": 5.0,
+              "p99": 14.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.36163744255094193,
+            "meanAbsolute": 0.36163744255094193,
+            "minimum": 0.31386861313868614,
+            "maximum": 0.3795180722891566,
+            "absolutePercentiles": {
+              "p50": 0.36363636363636365,
+              "p90": 0.36774193548387096,
+              "p95": 0.36875,
+              "p99": 0.3717948717948718
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.1592314118629908,
+            "meanAbsolute": 1.7387357282094125,
+            "minimum": -14.0,
+            "maximum": 19.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 4.0,
+              "p95": 5.0,
+              "p99": 10.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit",
+      "xCenter": 396,
+      "yInclusive": [
+        260,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 18387,
+        "mean": 4.264806656877141,
+        "meanAbsolute": 4.264806656877141,
+        "minimum": 0.0,
+        "maximum": 27.0,
+        "absolutePercentiles": {
+          "p50": 3.0,
+          "p90": 9.0,
+          "p95": 9.0,
+          "p99": 14.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.34566833955517334,
+            "meanAbsolute": 0.34566833955517334,
+            "minimum": 0.24561403508771928,
+            "maximum": 0.3708609271523179,
+            "absolutePercentiles": {
+              "p50": 0.3469387755102041,
+              "p90": 0.36129032258064514,
+              "p95": 0.36363636363636365,
+              "p99": 0.3660130718954248
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.3712057922584238,
+            "meanAbsolute": 1.7033138401559453,
+            "minimum": -14.0,
+            "maximum": 32.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 3.0,
+              "p95": 5.0,
+              "p99": 13.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 6129,
+            "mean": 0.361241743526194,
+            "meanAbsolute": 0.361241743526194,
+            "minimum": 0.3115942028985507,
+            "maximum": 0.3780487804878049,
+            "absolutePercentiles": {
+              "p50": 0.3630573248407643,
+              "p90": 0.36774193548387096,
+              "p95": 0.36875,
+              "p99": 0.3708609271523179
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 17955,
+            "mean": 0.19704817599554442,
+            "meanAbsolute": 1.6374269005847952,
+            "minimum": -16.0,
+            "maximum": 16.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 4.0,
+              "p95": 5.0,
+              "p99": 10.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "reference-lit",
+      "xCenter": 132,
+      "yInclusive": [
+        470,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 12717,
+        "mean": 12.683887709365417,
+        "meanAbsolute": 12.683887709365417,
+        "minimum": 1.0,
+        "maximum": 29.0,
+        "absolutePercentiles": {
+          "p50": 11.0,
+          "p90": 24.0,
+          "p95": 25.0,
+          "p99": 28.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.32759961551831485,
+            "meanAbsolute": 0.32759961551831485,
+            "minimum": 0.30303030303030304,
+            "maximum": 0.39634146341463417,
+            "absolutePercentiles": {
+              "p50": 0.32608695652173914,
+              "p90": 0.34265734265734266,
+              "p95": 0.3475177304964539,
+              "p99": 0.3836477987421384
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.29987789987789987,
+            "meanAbsolute": 1.5521367521367522,
+            "minimum": -33.0,
+            "maximum": 16.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 3.0,
+              "p95": 5.0,
+              "p99": 14.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.38686981171221746,
+            "meanAbsolute": 0.38686981171221746,
+            "minimum": 0.36423841059602646,
+            "maximum": 0.4166666666666667,
+            "absolutePercentiles": {
+              "p50": 0.38509316770186336,
+              "p90": 0.39880952380952384,
+              "p95": 0.4,
+              "p99": 0.4061780303030303
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.07855107855107855,
+            "meanAbsolute": 1.8636548636548635,
+            "minimum": -24.0,
+            "maximum": 26.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 4.0,
+              "p95": 6.0,
+              "p99": 11.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "reference-lit",
+      "xCenter": 264,
+      "yInclusive": [
+        470,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 12717,
+        "mean": 12.103404891090666,
+        "meanAbsolute": 12.103404891090666,
+        "minimum": 0.0,
+        "maximum": 28.0,
+        "absolutePercentiles": {
+          "p50": 10.0,
+          "p90": 23.0,
+          "p95": 24.0,
+          "p99": 26.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.32879532569187736,
+            "meanAbsolute": 0.32879532569187736,
+            "minimum": 0.2992125984251969,
+            "maximum": 0.4,
+            "absolutePercentiles": {
+              "p50": 0.32857142857142857,
+              "p90": 0.3475177304964539,
+              "p95": 0.36666666666666664,
+              "p99": 0.39634146341463417
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.43988603988603986,
+            "meanAbsolute": 2.024582824582825,
+            "minimum": -21.0,
+            "maximum": 16.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 4.0,
+              "p95": 7.0,
+              "p99": 13.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.3869477769228215,
+            "meanAbsolute": 0.3869477769228215,
+            "minimum": 0.3624161073825503,
+            "maximum": 0.4235294117647059,
+            "absolutePercentiles": {
+              "p50": 0.38650306748466257,
+              "p90": 0.3987730061349693,
+              "p95": 0.40119760479041916,
+              "p99": 0.4065849462365591
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.09784289784289785,
+            "meanAbsolute": 2.2741554741554744,
+            "minimum": -27.0,
+            "maximum": 20.0,
+            "absolutePercentiles": {
+              "p50": 2.0,
+              "p90": 5.0,
+              "p95": 7.0,
+              "p99": 11.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "reference-lit",
+      "xCenter": 396,
+      "yInclusive": [
+        470,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 12717,
+        "mean": 12.176849885979397,
+        "meanAbsolute": 12.176849885979397,
+        "minimum": 0.0,
+        "maximum": 28.0,
+        "absolutePercentiles": {
+          "p50": 10.0,
+          "p90": 23.0,
+          "p95": 24.0,
+          "p99": 26.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.3350196261638952,
+            "meanAbsolute": 0.3350196261638952,
+            "minimum": 0.2903225806451613,
+            "maximum": 0.4049079754601227,
+            "absolutePercentiles": {
+              "p50": 0.3381294964028777,
+              "p90": 0.3591549295774648,
+              "p95": 0.3815789473684211,
+              "p99": 0.4
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.3964997964997965,
+            "meanAbsolute": 2.0363858363858363,
+            "minimum": -22.0,
+            "maximum": 17.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 5.0,
+              "p95": 7.0,
+              "p99": 15.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.3911067055276029,
+            "meanAbsolute": 0.3911067055276029,
+            "minimum": 0.35570469798657717,
+            "maximum": 0.4235294117647059,
+            "absolutePercentiles": {
+              "p50": 0.39375,
+              "p90": 0.40372670807453415,
+              "p95": 0.40606060606060607,
+              "p99": 0.41025641025641024
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.017826617826617826,
+            "meanAbsolute": 2.2113960113960114,
+            "minimum": -21.0,
+            "maximum": 18.0,
+            "absolutePercentiles": {
+              "p50": 2.0,
+              "p90": 5.0,
+              "p95": 7.0,
+              "p99": 12.159999999999854
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit",
+      "xCenter": 132,
+      "yInclusive": [
+        470,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 12717,
+        "mean": 13.341904537233624,
+        "meanAbsolute": 13.341904537233624,
+        "minimum": 1.0,
+        "maximum": 28.0,
+        "absolutePercentiles": {
+          "p50": 11.0,
+          "p90": 24.0,
+          "p95": 25.0,
+          "p99": 27.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.2997593817488243,
+            "meanAbsolute": 0.2997593817488243,
+            "minimum": 0.26666666666666666,
+            "maximum": 0.3618421052631579,
+            "absolutePercentiles": {
+              "p50": 0.30158730158730157,
+              "p90": 0.31007751937984496,
+              "p95": 0.3153846153846154,
+              "p99": 0.35135135135135137
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.31493691493691495,
+            "meanAbsolute": 1.3741147741147741,
+            "minimum": -32.0,
+            "maximum": 13.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 3.0,
+              "p95": 4.0,
+              "p99": 14.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.36262322178538237,
+            "meanAbsolute": 0.36262322178538237,
+            "minimum": 0.3333333333333333,
+            "maximum": 0.37888198757763975,
+            "absolutePercentiles": {
+              "p50": 0.36423841059602646,
+              "p90": 0.3691275167785235,
+              "p95": 0.3708609271523179,
+              "p99": 0.37254901960784315
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.05982905982905983,
+            "meanAbsolute": 1.748066748066748,
+            "minimum": -16.0,
+            "maximum": 14.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 4.0,
+              "p95": 5.0,
+              "p99": 9.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit",
+      "xCenter": 264,
+      "yInclusive": [
+        470,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 12717,
+        "mean": 12.657859558071872,
+        "meanAbsolute": 12.657859558071872,
+        "minimum": 0.0,
+        "maximum": 28.0,
+        "absolutePercentiles": {
+          "p50": 11.0,
+          "p90": 23.0,
+          "p95": 24.0,
+          "p99": 26.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.29712738262528676,
+            "meanAbsolute": 0.29712738262528676,
+            "minimum": 0.2564102564102564,
+            "maximum": 0.3660130718954248,
+            "absolutePercentiles": {
+              "p50": 0.3023255813953488,
+              "p90": 0.31343283582089554,
+              "p95": 0.3288025210084031,
+              "p99": 0.3618421052631579
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.4236874236874237,
+            "meanAbsolute": 1.7037851037851037,
+            "minimum": -20.0,
+            "maximum": 15.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 4.0,
+              "p95": 5.0,
+              "p99": 12.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.3590502574139929,
+            "meanAbsolute": 0.3590502574139929,
+            "minimum": 0.3333333333333333,
+            "maximum": 0.3795180722891566,
+            "absolutePercentiles": {
+              "p50": 0.3624161073825503,
+              "p90": 0.3684210526315789,
+              "p95": 0.36942675159235666,
+              "p99": 0.3710691823899371
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.04664224664224664,
+            "meanAbsolute": 2.0634106634106635,
+            "minimum": -16.0,
+            "maximum": 15.0,
+            "absolutePercentiles": {
+              "p50": 2.0,
+              "p90": 5.0,
+              "p95": 6.0,
+              "p99": 9.0
+            }
+          }
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit",
+      "xCenter": 396,
+      "yInclusive": [
+        470,
+        940
+      ],
+      "halfWidth": 4,
+      "verticalLag": 16,
+      "candidateMinusBaselineRGB8": {
+        "count": 12717,
+        "mean": 12.551387905952662,
+        "meanAbsolute": 12.551387905952662,
+        "minimum": 0.0,
+        "maximum": 27.0,
+        "absolutePercentiles": {
+          "p50": 11.0,
+          "p90": 23.0,
+          "p95": 24.0,
+          "p99": 25.0
+        }
+      },
+      "images": {
+        "baseline": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.2967180812418518,
+            "meanAbsolute": 0.2967180812418518,
+            "minimum": 0.24347826086956523,
+            "maximum": 0.3660130718954248,
+            "absolutePercentiles": {
+              "p50": 0.3053435114503817,
+              "p90": 0.3157894736842105,
+              "p95": 0.3424657534246575,
+              "p99": 0.3618421052631579
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": -0.3497761497761498,
+            "meanAbsolute": 1.5894993894993894,
+            "minimum": -21.0,
+            "maximum": 18.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 3.0,
+              "p95": 6.0,
+              "p99": 14.0
+            }
+          }
+        },
+        "candidate": {
+          "censoredPixels": 0,
+          "censoredGradientPairs": 0,
+          "clippedChannels": 0,
+          "saturationHSV": {
+            "count": 4239,
+            "mean": 0.35646765601459846,
+            "meanAbsolute": 0.35646765601459846,
+            "minimum": 0.30935251798561153,
+            "maximum": 0.3765432098765432,
+            "absolutePercentiles": {
+              "p50": 0.3618421052631579,
+              "p90": 0.3684210526315789,
+              "p95": 0.37012987012987014,
+              "p99": 0.3717948717948718
+            }
+          },
+          "verticalRGB8Difference": {
+            "count": 12285,
+            "mean": 0.05811965811965812,
+            "meanAbsolute": 1.837037037037037,
+            "minimum": -15.0,
+            "maximum": 15.0,
+            "absolutePercentiles": {
+              "p50": 1.0,
+              "p90": 4.0,
+              "p95": 5.0,
+              "p99": 11.0
+            }
+          }
+        }
+      }
+    }
+  ]
+}

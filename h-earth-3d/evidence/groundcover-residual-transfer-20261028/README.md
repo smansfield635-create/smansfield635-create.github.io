@@ -9,3 +9,11 @@ Qualification is limited to one explicitly dispatched run: four frozen poses, li
 No automatic GPU execution on PR publication or synchronization. No sweep, baseline recapture, automatic retry, merge, or deployment. Any further capture requires explicit budget authorization. The exact candidate still requires owner KEEP / ONE_REPAIR / REJECT before terminal repair closure; ONE_REPAIR does not expand the one-run budget.
 
 Read `continuation.json` and `dispatch-intent.json` for exact candidate/tooling identity and the next action. If a dispatch response is lost, find the existing matching run before any retry.
+
+## Completed capture and evidence review
+
+Run40760859003 completed successfully at exact candidate `ce0a5c08b708d51ed9beed74339a1e72e3fc823a`, attempt1, eight new frames. Archive SHA256 `d9d74dc979a0050f6879640644b373b0b714e4a26523a8e1f0fc40374a81ef15`. All frame hashes/dimensions and eight frozen baseline hashes independently checked; both coast RGBA pairs identical.
+
+The candidate reduces olive tint, but near/far horizontal bands remain in both lit and albedo views. Recommendation: **REJECT**, under the frozen bands-persist visual criterion. This is a reviewer recommendation, not owner disposition or terminal closure. Meadow remains recognizably similar but is browner; embodied anchor continuity and physical Android acceptance are not established by these fixed images.
+
+Raw receipt, candidate PNGs, manifest, descriptive comparison and independent review are preserved here. No new capture is authorized; the one-run budget is consumed. Owner disposition remains pending. No merge, deployment or production preview has occurred.

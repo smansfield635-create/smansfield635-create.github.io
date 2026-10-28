@@ -2,7 +2,7 @@
   "schema": "H_EARTH_RESIDUAL_TRANSFER_CONTINUATION_v1",
   "operationId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
   "lockGeneration": 2961,
-  "state": "RUN_DISPATCHED_WAITING_FOR_COMPLETION",
+  "state": "EVIDENCE_REVIEWED_OWNER_DISPOSITION_PENDING",
   "candidateHead": "ce0a5c08b708d51ed9beed74339a1e72e3fc823a",
   "branch": "h-earth/groundcover-residual-transfer-20261028",
   "allowedPaths": [
@@ -44,7 +44,14 @@
     "CPU_TESTS_52_PASS",
     "INDEPENDENT_SOURCE_REVIEW_PASS",
     "REMOTE_COMMIT_READBACK_PASS",
-    "EXACT_SCENE_TREE_PARITY_PASS"
+    "EXACT_SCENE_TREE_PARITY_PASS",
+    "RUN_SUCCESS_ATTEMPT_1",
+    "ALL_IMAGE_HASHES_VERIFIED",
+    "EIGHT_FROZEN_BASELINE_HASHES_VERIFIED",
+    "EXACT_COAST_RGBA_PARITY_VERIFIED",
+    "DESCRIPTIVE_METRICS_RECORDED",
+    "VISUAL_REVIEW_COMPLETED",
+    "INDEPENDENT_EVIDENCE_REVIEW_COMPLETED"
   ],
   "sceneParityManifestSha256": "d331d5fd7c88fb2162b8ad1053b5a90cf0fac342ed7052e9e73f3eca49009e92",
   "preservedEvidence": [
@@ -52,7 +59,7 @@
     "approved archived baseline",
     "generation2961 canonical admission"
   ],
-  "nextAction": "Wait for owner-reported completion, then inspect this exact run and its artifacts. Do not dispatch again.",
+  "nextAction": "Owner disposition on exact candidate ce0a5c08b708d51ed9beed74339a1e72e3fc823a: recommendation REJECT because bands persist. No further capture, repair, merge, deployment or terminal closure before applicable owner disposition and authority.",
   "candidateRuns": 1,
   "candidateFrames": 8,
   "automaticRetry": false,
@@ -61,5 +68,9 @@
   "deploymentAuthorized": false,
   "dispatchHead": "3894c32abed18c7ed6a3759dc0b6154a799c06ca",
   "runId": 40760859003,
-  "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40760859003"
+  "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40760859003",
+  "qualificationResult": "CAPTURE_VALID_VISUAL_REJECTION_RECOMMENDED",
+  "ownerDisposition": "PENDING",
+  "runBudgetConsumed": true,
+  "anchorEmbodiedContinuity": "NOT_ESTABLISHED_BY_FIXED_FRAMES"
 }

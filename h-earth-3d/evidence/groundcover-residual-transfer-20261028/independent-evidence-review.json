@@ -1,0 +1,221 @@
+{
+  "schema": "H_EARTH_RESIDUAL_TRANSFER_EVIDENCE_REVIEW_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
+  "lockGeneration": 2961,
+  "reviewRole": "WEST_INDEPENDENT_REVIEW",
+  "reviewAgent": "/root/admission_recovery",
+  "reviewedAt": "2026-10-28T20:23:56.464203+00:00",
+  "runId": 40760859003,
+  "candidateHead": "ce0a5c08b708d51ed9beed74339a1e72e3fc823a",
+  "rendererSha256": "7a666a9269dfac1597a8bec31d6a04072d811257bb57b0c5b1bc87f209a693c7",
+  "receiptSha256": "40bdb60abf268ad6ad9edbee0112b9a15ac581da33a5f1eb25792614f082a30b",
+  "result": "VALID_CAPTURE_VISUAL_REJECTION_RECOMMENDED",
+  "recommendation": "REJECT",
+  "recommendationIsOwnerDisposition": false,
+  "ownerDisposition": null,
+  "captureValidation": {
+    "result": "PASS",
+    "candidateFrames": 8,
+    "inheritedBaselineFramesReviewed": 8,
+    "baselineSourceRun": 40716213632,
+    "baselineRecaptured": false,
+    "newDiagnosticIntermediateFrames": 0,
+    "frameCustodyValidator": "validateResidualSet passed against exact candidate and source renderer SHA",
+    "imageHashes": "All16 reviewed image SHA256 values match capture receipt; eight baseline hashes match preserved immutable archive",
+    "decodedDimensions": "All16 images independently decoded with Pillow at529x980",
+    "candidateErrors": [],
+    "sceneParity": "Capture reports exact scene tree parity except declared renderer/evidence; source review independently bounded exclusions",
+    "coastDecodedRGBA": "Both modes independently compare exactly equal over all529x980RGBA pixels; zero differences"
+  },
+  "visualReview": [
+    {
+      "pose": "inland-seam-near",
+      "modes": [
+        "reference-lit",
+        "after-groundcover-unlit"
+      ],
+      "observed": "The broad olive/dark transition is substantially weaker and the soil texture remains visible. Several horizontal, gently curved tonal bands remain across the upper ground, approximately y250\u2013300. The candidate is browner and more uniform than baseline.",
+      "contractAssessment": "Partial improvement; does not establish removal of the visible banding."
+    },
+    {
+      "pose": "inland-seam-far",
+      "modes": [
+        "reference-lit",
+        "after-groundcover-unlit"
+      ],
+      "observed": "The dominant broad olive swath is greatly reduced. Layered tan/darker bands remain visible below the horizon, approximately y450\u2013520, in lit and albedo views. Foreground soil texture remains.",
+      "contractAssessment": "Predeclared bands-persist visual rejection criterion remains applicable; numeric/capture pass is not repair acceptance."
+    },
+    {
+      "pose": "protected-meadow",
+      "modes": [
+        "reference-lit",
+        "after-groundcover-unlit"
+      ],
+      "observed": "Grass placement, terrain silhouette, water and visible objects remain aligned. The candidate foreground shifts from olive toward lighter brown/tan, most evident in unlit albedo. No clear geometry or vegetation-loss regression is visible in these fixed views.",
+      "contractAssessment": "The declared reduced-olive tradeoff is visible. Subtropical/ecological identity acceptance is not established by these captures; do not claim healthy-control or whole-world acceptance."
+    },
+    {
+      "pose": "protected-coast",
+      "modes": [
+        "reference-lit",
+        "after-groundcover-unlit"
+      ],
+      "observed": "No visual change; both complete decoded images are byte-for-byte RGBA equal to baseline.",
+      "contractAssessment": "PASS exact protected-coast gate."
+    }
+  ],
+  "rationale": "Recommend rejection as a completed band-continuity repair because visible bands remain in the frozen near/far views despite a substantial reduction in the broad dark tint. This is an independent engineering recommendation, not the owner KEEP/ONE_REPAIR/REJECT record and not terminal closure.",
+  "descriptivePairDifferences": [
+    {
+      "pose": "inland-seam-near",
+      "mode": "reference-lit",
+      "differingPixels": 389137,
+      "meanAbsoluteRGBCodeDifference": 3.3227563237015034,
+      "interpretation": "Descriptive only; not a visual-success threshold."
+    },
+    {
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit",
+      "differingPixels": 389729,
+      "meanAbsoluteRGBCodeDifference": 3.537038180111364,
+      "interpretation": "Descriptive only; not a visual-success threshold."
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "reference-lit",
+      "differingPixels": 285353,
+      "meanAbsoluteRGBCodeDifference": 6.832334143487262,
+      "interpretation": "Descriptive only; not a visual-success threshold."
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit",
+      "differingPixels": 285347,
+      "meanAbsoluteRGBCodeDifference": 7.112580533158443,
+      "interpretation": "Descriptive only; not a visual-success threshold."
+    },
+    {
+      "pose": "protected-meadow",
+      "mode": "reference-lit",
+      "differingPixels": 129506,
+      "meanAbsoluteRGBCodeDifference": 1.0095681750961254,
+      "interpretation": "Descriptive only; not a visual-success threshold."
+    },
+    {
+      "pose": "protected-meadow",
+      "mode": "after-groundcover-unlit",
+      "differingPixels": 168775,
+      "meanAbsoluteRGBCodeDifference": 3.2354847421009993,
+      "interpretation": "Descriptive only; not a visual-success threshold."
+    },
+    {
+      "pose": "protected-coast",
+      "mode": "reference-lit",
+      "differingPixels": 0,
+      "meanAbsoluteRGBCodeDifference": 0.0,
+      "interpretation": "Descriptive only; not a visual-success threshold."
+    },
+    {
+      "pose": "protected-coast",
+      "mode": "after-groundcover-unlit",
+      "differingPixels": 0,
+      "meanAbsoluteRGBCodeDifference": 0.0,
+      "interpretation": "Descriptive only; not a visual-success threshold."
+    }
+  ],
+  "reviewedImages": [
+    {
+      "image": "baseline-inland-seam-near-reference-lit.png",
+      "sha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a",
+      "visuallyInspected": true
+    },
+    {
+      "image": "baseline-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "96195fac6da4fca401c64d2ce31a034cd7d628620409f772114616b78354ff3a",
+      "visuallyInspected": true
+    },
+    {
+      "image": "baseline-inland-seam-far-reference-lit.png",
+      "sha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc",
+      "visuallyInspected": true
+    },
+    {
+      "image": "baseline-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a",
+      "visuallyInspected": true
+    },
+    {
+      "image": "baseline-protected-meadow-reference-lit.png",
+      "sha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b",
+      "visuallyInspected": true
+    },
+    {
+      "image": "baseline-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "dea2132ddb7662475bcadfbcef2ea5dd67dea9a0be5e1669c4c8e77407d7d4dc",
+      "visuallyInspected": true
+    },
+    {
+      "image": "baseline-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+      "visuallyInspected": true
+    },
+    {
+      "image": "baseline-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7",
+      "visuallyInspected": true
+    },
+    {
+      "image": "candidate-inland-seam-near-reference-lit.png",
+      "sha256": "ffe879eb2277d76d0338f3878a62bb4518dc5f76a9f03c2245b7f50fc4ccba02",
+      "visuallyInspected": true
+    },
+    {
+      "image": "candidate-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "468c64a91eba88099fc0d25ed037aec3c74c516c71178ce6c882c5bdcddd27a4",
+      "visuallyInspected": true
+    },
+    {
+      "image": "candidate-inland-seam-far-reference-lit.png",
+      "sha256": "9cc95179601ca1f4004ca45ad07227e6e321cbdc89fa8b63cd967974c3d60787",
+      "visuallyInspected": true
+    },
+    {
+      "image": "candidate-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "20c3e3bba7d6c35ba40b42a94b0df463f5ce578aeb9076309d4c29cdeccb8efe",
+      "visuallyInspected": true
+    },
+    {
+      "image": "candidate-protected-meadow-reference-lit.png",
+      "sha256": "a8c42cfcad6f7fdbd055ec17b639339dfcb16c274a5186c2e5b050e704a31a7f",
+      "visuallyInspected": true
+    },
+    {
+      "image": "candidate-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "968cb95028a2c0b6bfde882884f3b60418f149999708ef25f39ed2db0f5ec280",
+      "visuallyInspected": true
+    },
+    {
+      "image": "candidate-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+      "visuallyInspected": true
+    },
+    {
+      "image": "candidate-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7",
+      "visuallyInspected": true
+    }
+  ],
+  "limits": [
+    "All eight candidate images and their eight matching baselines were visually inspected using view_image; conclusions are confined to those fixed software-GPU views.",
+    "Remaining visible bands are not causally attributed to a new source mechanism by this review. No new diagnostic images or GPU work were performed.",
+    "No numerical threshold is used to infer visual success; descriptive differences do not prove band reduction globally.",
+    "Physical Android performance, exact screenshot reproduction, map-wide straight/curved classes and full OW01 acceptance remain unproven.",
+    "One permitted candidate run is consumed. No automatic retry or additional capture is authorized by this review.",
+    "Owner disposition, exact-candidate preview and final closure remain separate; no merge/deploy authorization."
+  ],
+  "gpuExecutedByReviewer": false,
+  "productMutationPerformed": false,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false
+}

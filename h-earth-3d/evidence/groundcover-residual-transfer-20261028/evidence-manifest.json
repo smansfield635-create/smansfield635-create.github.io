@@ -1,0 +1,78 @@
+{
+  "schema": "H_EARTH_RESIDUAL_TRANSFER_EVIDENCE_MANIFEST_v1",
+  "runId": 40760859003,
+  "artifactId": 12846824859,
+  "archiveSha256": "d9d74dc979a0050f6879640644b373b0b714e4a26523a8e1f0fc40374a81ef15",
+  "captureReceiptSha256": "40bdb60abf268ad6ad9edbee0112b9a15ac581da33a5f1eb25792614f082a30b",
+  "candidateHead": "ce0a5c08b708d51ed9beed74339a1e72e3fc823a",
+  "candidateFrames": [
+    {
+      "image": "candidate-inland-seam-near-reference-lit.png",
+      "sha256": "ffe879eb2277d76d0338f3878a62bb4518dc5f76a9f03c2245b7f50fc4ccba02"
+    },
+    {
+      "image": "candidate-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "468c64a91eba88099fc0d25ed037aec3c74c516c71178ce6c882c5bdcddd27a4"
+    },
+    {
+      "image": "candidate-inland-seam-far-reference-lit.png",
+      "sha256": "9cc95179601ca1f4004ca45ad07227e6e321cbdc89fa8b63cd967974c3d60787"
+    },
+    {
+      "image": "candidate-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "20c3e3bba7d6c35ba40b42a94b0df463f5ce578aeb9076309d4c29cdeccb8efe"
+    },
+    {
+      "image": "candidate-protected-meadow-reference-lit.png",
+      "sha256": "a8c42cfcad6f7fdbd055ec17b639339dfcb16c274a5186c2e5b050e704a31a7f"
+    },
+    {
+      "image": "candidate-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "968cb95028a2c0b6bfde882884f3b60418f149999708ef25f39ed2db0f5ec280"
+    },
+    {
+      "image": "candidate-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56"
+    },
+    {
+      "image": "candidate-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7"
+    }
+  ],
+  "baselineFrames": [
+    {
+      "image": "baseline-inland-seam-near-reference-lit.png",
+      "sha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a"
+    },
+    {
+      "image": "baseline-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "96195fac6da4fca401c64d2ce31a034cd7d628620409f772114616b78354ff3a"
+    },
+    {
+      "image": "baseline-inland-seam-far-reference-lit.png",
+      "sha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc"
+    },
+    {
+      "image": "baseline-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a"
+    },
+    {
+      "image": "baseline-protected-meadow-reference-lit.png",
+      "sha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b"
+    },
+    {
+      "image": "baseline-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "dea2132ddb7662475bcadfbcef2ea5dd67dea9a0be5e1669c4c8e77407d7d4dc"
+    },
+    {
+      "image": "baseline-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56"
+    },
+    {
+      "image": "baseline-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7"
+    }
+  ],
+  "validation": "All receipt image hashes and dimensions verified; all8 frozen baseline hashes matched; both coast decoded RGBA pairs exact.",
+  "baselineRecapture": false
+}

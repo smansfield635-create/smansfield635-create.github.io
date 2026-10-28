@@ -1,0 +1,192 @@
+{
+  "allowedPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+    "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json",
+    "h-earth-3d/evidence/groundcover-composed-target-20261028/**",
+    "h-earth-3d/experience-anchor/receipts/groundcover-composed-target-20261028.json"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+    "h-earth-3d/evidence/groundcover-composed-target-20261028/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "50ed04ad17de834e96e96d6a28985a125b17aa8a",
+  "exactTestCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateProduct": true,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "50ed04ad17de834e96e96d6a28985a125b17aa8a",
+    "operationId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json",
+      "h-earth-3d/evidence/groundcover-composed-target-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/groundcover-composed-target-20261028.json"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_SOURCE_AND_IMAGE_CUSTODY",
+      "TIMING_ONLY_NORMALIZATION_PHYSICAL_NEGATIVES",
+      "ALL_ACTIVE_CONSUMERS",
+      "SOIL_LUMINANCE_AND_VARIATION_PRESERVATION",
+      "FIXED_GPU_BAND_AND_HEALTHY_CONTROLS",
+      "NO_RELEASE_OR_PHYSICAL_DEVICE_ACCEPTANCE_INFERRED"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "7d363a7cdf6541dd864cf385b16d29ee4bf475f0d25a6dbef32466b846677459",
+    "receiptId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+  "operationId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001",
+  "prohibitedPaths": [
+    "VEGETATION_ROOT_OR_TREE_OR_GRASS_ASSET_MUTATION",
+    "PHYSICAL_GEOMETRY_OR_G_WORLD_ELEVATION_MUTATION",
+    "PRECOMPUTED_WORLD_ASSET_OR_LOADER_MUTATION",
+    "NAVIGATION_OR_CONTACT_SUPPORT_MUTATION",
+    "WATER_OCEAN_COAST_SHORELINE_EDIT",
+    "SOURCE_MATERIAL_PALETTE_GLOBAL_FLATTENING",
+    "PROTECTED_MEADOW_TREE_FOOTHILL_COLOR_DEGRADATION",
+    "GEOGRAPHIC_CAMERA_GUESS_AS_USER_TELEMETRY",
+    "ANY_PATH_OUTSIDE_DECLARED_SCOPE",
+    "DIRECT_MAIN_WRITE"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Preserve rejected footprint evidence; correct exact known generationMs identity leaf without weakening physical comparison; test one substrate-luminance-preserving groundcover target in existing shared shader against frozen Gen2928 inputs. No production advancement.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner current session explicitly approved rejection writeback, timing-only validator correction, composed soil/target/weight audit, and one source-justified candidate: Proceed accordingly."
+  },
+  "requiredInputs": [
+    {
+      "id": "GEN2917_STAGE_FIRST_CAUSE_40411050366",
+      "resolved": true
+    },
+    {
+      "id": "GEN2925_REMOVAL_CONFIRMATION_40442633983",
+      "resolved": true
+    },
+    {
+      "id": "GEN2928_APPROVED_BASELINE",
+      "resolved": true
+    },
+    {
+      "id": "GEN2940_SMOOTHSTEP_INSUFFICIENT",
+      "resolved": true
+    },
+    {
+      "id": "GEN2944_TINT_REJECTED",
+      "resolved": true
+    },
+    {
+      "id": "ACTIVE_CONSUMER_SOURCE_INVENTORY",
+      "resolved": true
+    },
+    {
+      "id": "OW01_AND_EXPERIENCE_ANCHOR_PRESERVATION",
+      "resolved": true
+    },
+    {
+      "id": "RUN40719150366_TIMING_ONLY_PAIR_MISMATCH_AND_VISUAL_REJECTION",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "DURABLE_REJECTION_WITH_24_HASH_VERIFIED_IMAGES",
+    "TIMING_ONLY_IDENTITY_REPAIR_WITH_NEGATIVE_TESTS",
+    "COMPLETED_ACTIVE_TRANSITION_INVENTORY",
+    "ONE_SOIL_RELATIVE_LUMINANCE_PRESERVING_GROUNDCOVER_TARGET",
+    "FROZEN_GPU_COMPARISON_AND_EXPLICIT_KEEP_OR_REJECT",
+    "INDEPENDENT_WEST_REVIEW_NO_AUTOMATIC_OWNER_ACCEPTANCE"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "NO_WRITE_BEFORE_AUTHENTIC_SUCCESSOR_ADMISSION",
+    "NO_GEOMETRY_ROOTS_VEGETATION_WATER_NAVIGATION_CHANGE",
+    "NO_GLOBAL_PALETTE_FLATTENING_OR_REGIONAL_TINT",
+    "REJECT_IF_BROAD_BAND_PERSISTS_OR_HEALTHY_CONTROLS_REGRESS",
+    "STRAIGHT_AND_CURVED_CLASSES_REMAIN_SEPARATE",
+    "NO_MERGE_DEPLOY_OR_OWNER_KEEP_INFERENCE"
+  ],
+  "subjectIdentity": {
+    "activePredecessorLockGeneration": 2953,
+    "currentDiagnosticPR": 6936,
+    "currentExactGpuHead": "c6f12367fca48ebe8ff152bdc396f6d48b26d0a6",
+    "currentGpuRun": 40704179505,
+    "governingHead": "50ed04ad17de834e96e96d6a28985a125b17aa8a",
+    "healthyControl": "MEADOW_TREES_SHORTER_FOOTHILLS",
+    "ownerDirectiveComment": 6472173332,
+    "ownerScreenshot1": "30108.jpg",
+    "ownerScreenshot2": "30106.jpg",
+    "precomputedWorldSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "predecessorOperation": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001",
+    "principalDefect": "SOURCE_PROVEN_GROUNDCOVER_INLAND_BANDS_WITH_OWNER_STRAIGHT_CURVED_CLASSES_STILL_OPEN",
+    "publishedReferenceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "publishedShaderSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+    "sourceDiagnosisCorrection": "Footprint candidate 1e4eeaa rejected: broad band persists. Capture40719150366 all24 hashes verified; signature mismatch solely entranceGrass.slopeRepair.generationMs. New hypothesis addresses independent dark endpoint replacing soil luminance and texture, not spatial sampling.",
+    "sourceIssue": 6911
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+}

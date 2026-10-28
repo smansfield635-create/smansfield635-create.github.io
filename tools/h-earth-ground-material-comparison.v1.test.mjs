@@ -69,7 +69,7 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
- const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const shader=fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-footprint-continuity-20261028/rejected-renderer.js',import.meta.url),'utf8');
  const baseline=diagnostic.reconstructFootprintBaseline(shader);
  const digest=diagnostic.verifyExactMaterialCandidate(baseline);
  assert.match(digest,/^[0-9a-f]{64}$/);
@@ -123,7 +123,7 @@ test('no product change: overlay only allowed with published SHA; all vegetation
 
 // Execute the production scalar GLSL expressions with double precision for a
 // numerical quadrature check. This does not certify GPU precision or pixels.
-const footprintShader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+const footprintShader=fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-footprint-continuity-20261028/rejected-renderer.js',import.meta.url),'utf8');
 const footprintBlock=name=>{
  const matches=[...footprintShader.matchAll(new RegExp('^[ \\t]*// H_EARTH_GROUNDCOVER_FOOTPRINT_'+name+'_BEGIN\\n([\\s\\S]*?)^[ \\t]*// H_EARTH_GROUNDCOVER_FOOTPRINT_'+name+'_END\\n','gm'))];
  assert.equal(matches.length,1);return matches[0][1];
@@ -266,4 +266,120 @@ test('preserved baseline pins all twelve original frame hashes',async()=>{
  const {mkdtempSync,rmSync}=await import('node:fs');const {tmpdir}=await import('node:os');const {join}=await import('node:path');
  const out=mkdtempSync(join(tmpdir(),'footprint-baseline-'));
  try{const m=preservedFootprintBaseline(new URL('../',import.meta.url).pathname,out);assert.equal(m.views.length,12);assert.equal(m.sourceRun,40716213632);assert.equal(m.baselineErrors.length,0);}finally{rmSync(out,{recursive:true,force:true});}
+});
+
+const composedShader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+test('composed target changes only the marked endpoint and retains exact approved source elsewhere',()=>{
+ const baseline=diagnostic.reconstructComposedBaseline(composedShader);
+ assert.equal(diagnostic.verifyExactMaterialCandidate(baseline),diagnostic.FOOTPRINT_BASELINE_SHA256);
+ assert.ok(!composedShader.includes('H_EARTH_GROUNDCOVER_FOOTPRINT_'));
+ assert.equal(composedShader.split(diagnostic.CANDIDATE_BLEND_EXPRESSION).length,2);
+ assert.throws(()=>diagnostic.reconstructComposedBaseline(composedShader+'//drift'),/RECONSTRUCTION_MISMATCH/);
+ assert.throws(()=>diagnostic.reconstructComposedBaseline(baseline),/BLOCK_NOT_UNIQUE/);
+ const instrumented=diagnostic.instrumentComposedRenderer(composedShader);
+ assert.ok(instrumented.includes('probeGCBefore=palette;'));
+ assert.ok(instrumented.includes('probeGCTone=groundcoverTone;'));
+ assert.ok(instrumented.indexOf('groundcoverTone=groundcoverRelative*')<instrumented.indexOf('probeGCTone=groundcoverTone;'));
+ assert.ok(instrumented.includes('probeGCAfter=mix(palette,groundcoverTone,groundcoverWeight);'));
+});
+
+test('source-derived composed endpoint retains luminance, soil variation and protected zero weight',t=>{
+ // Extract constants from the GLSL under test, then check its output against
+ // independent luminance and homogeneity invariants across sampled positive soil/tone inputs.
+ const lumaMatch=composedShader.match(/vec3 groundcoverLuma=vec3\(([^)]+)\);/);
+ const luma=lumaMatch[1].split(',').map(Number);
+ const epsilon=Number(composedShader.match(/max\(dot\(groundcoverRelative,groundcoverLuma\),([\d.]+)\)/)[1]);
+ assert.deepEqual(luma,[.2126,.7152,.0722]);assert.equal(epsilon,.000001);
+ assert.ok(composedShader.includes('vec3 groundcoverRelative=palette*groundcoverTone;'));
+ assert.ok(composedShader.includes('groundcoverTone=groundcoverRelative*(dot(palette,groundcoverLuma)/'));
+ const Y=c=>c.reduce((sum,x,i)=>sum+x*luma[i],0);
+ const endpoint=(soil,tone)=>{const relative=soil.map((x,i)=>x*tone[i]);return relative.map(x=>x*Y(soil)/Math.max(Y(relative),epsilon));};
+ let maxError=0,maxChannel=0;
+ for(let i=0;i<1000;i++){
+  const soil=[.025+(i%31)*.007,.03+(i%23)*.008,.02+(i%19)*.006];
+  const moisture=(i%101)/100,dry=(i%66)/100,variation=.88+.24*((i%97)/96);
+  const tone=[.110,.118,.075].map((x,k)=>mix(mix(x,[.075,.090,.055][k],moisture),[.175,.150,.095][k],dry)*variation);
+  const target=endpoint(soil,tone);
+  for(const weight of [0,.05,.33,.66]){
+   const output=soil.map((x,k)=>mix(x,target[k],weight));
+   maxError=Math.max(maxError,Math.abs(Y(output)-Y(soil)));
+   maxChannel=Math.max(maxChannel,...output);
+   assert.ok(output.every(x=>Number.isFinite(x)&&x>=0&&x<=1));
+   if(weight===0)assert.deepEqual(output,soil);
+   // Soil-brightness texture is propagated pointwise, not attenuated toward a constant endpoint.
+   const bright=soil.map(x=>x*1.07),brightTarget=endpoint(bright,tone);
+   const brighter=bright.map((x,k)=>mix(x,brightTarget[k],weight));
+   for(let k=0;k<3;k++)assert.ok(Math.abs(brighter[k]-output[k]*1.07)<1e-14);
+  }
+ }
+ assert.ok(maxError<1e-14);assert.deepEqual(endpoint([0,0,0],[.1,.1,.1]),[0,0,0]);
+ t.diagnostic(JSON.stringify({sampleCount:1000,maxLinearLuminanceError:maxError,maxChannel,domain:'SAMPLED_POSITIVE_SOIL_TONE_DOMAIN_JS_DOUBLE_NOT_GPU',chromaticBandRemovalProven:false}));
+});
+
+test('duration normalization retains unknown fields, physical identity and malformed metadata',()=>{
+ const identity={schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',installedRootCount:10,controlRoots:[{x:1,y:2,z:3}],entranceGrass:{generationMs:40,slopeRepair:{generationMs:12,rootCount:10,otherMs:3}}};
+ const signature=x=>'[{"id":"tree","state":"READY","ready":true}]|'+JSON.stringify(x);
+ const changed=structuredClone(identity);changed.entranceGrass.slopeRepair.generationMs=500;
+ assert.equal(diagnostic.normalizeAssetSignature(signature(identity)),diagnostic.normalizeAssetSignature(signature(changed)));
+ assert.equal(identity.entranceGrass.slopeRepair.generationMs,12);
+ for(const mutate of [x=>x.installedRootCount++,x=>x.controlRoots[0].y++,x=>x.entranceGrass.generationMs++,x=>x.entranceGrass.slopeRepair.rootCount++,x=>x.entranceGrass.slopeRepair.otherMs++,x=>x.newPhysicalField=1,x=>delete x.entranceGrass.slopeRepair.generationMs,x=>x.entranceGrass.slopeRepair.generationMs='12',x=>x.entranceGrass.slopeRepair.generationMs=-1]){
+  const copy=structuredClone(identity);mutate(copy);
+  assert.notEqual(diagnostic.normalizeAssetSignature(signature(identity)),diagnostic.normalizeAssetSignature(signature(copy)));
+ }
+ assert.equal(diagnostic.normalizeAssetSignature('malformed|{'), 'malformed|{');
+});
+
+test('composed workflow binds the admitted branch, exact head and sixteen matched images',()=>{
+ const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8').split('  groundcover-composed-target-comparison:')[1];
+ assert.ok(workflow.includes("github.event.pull_request.head.ref == 'h-earth/groundcover-composed-target-20261028'"));
+ assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GROUNDCOVER_COMPOSED_TARGET_V1'));
+ assert.equal(diagnostic.FOOTPRINT_POSES.length*diagnostic.COMPOSED_MODES.length*2,16);
+ assert.deepEqual(diagnostic.COMPOSED_MODES,['reference-lit','after-groundcover-unlit']);
+ assert.ok(workflow.includes('H_EARTH_COMPARISON_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}'));
+});
+
+test('saved 24-image failed receipt has only the known timing mismatch and passes corrected identity',async()=>{
+ const {gunzipSync}=await import('node:zlib');
+ const receipt=JSON.parse(gunzipSync(fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-footprint-continuity-20261028/rejected-run40719150366/receipt.json.gz',import.meta.url))));
+ const head='1e4eeaaec018b92e7eeade9ba17b773a4ea4ccef';
+ assert.equal(receipt.result,'INCOMPLETE_OR_FAILED');
+ assert.ok(receipt.errors.some(x=>x.includes('FOOTPRINT_PAIR_MISMATCH')));
+ const paths=new Set();let rawMismatchCount=0;
+ function differences(a,b,p=''){
+  if(JSON.stringify(a)===JSON.stringify(b))return;
+  if(a&&b&&typeof a==='object'&&typeof b==='object'){
+   for(const key of new Set([...Object.keys(a),...Object.keys(b)]))differences(a[key],b[key],p?p+'.'+key:key);
+  }else paths.add(p);
+ }
+ for(const pose of diagnostic.FOOTPRINT_POSES)for(const mode of diagnostic.FOOTPRINT_MODES){
+  const pair=receipt.views.filter(v=>v.pose.name===pose.name&&v.mode===mode);
+  assert.equal(pair.length,2);
+  const [a,b]=pair.map(v=>v.assetSignature.split('|'));
+  assert.equal(a[0],b[0]);
+  if(a[1]!==b[1])rawMismatchCount++;
+  differences(JSON.parse(a[1]),JSON.parse(b[1]));
+ }
+ assert.ok(rawMismatchCount>0);
+ assert.deepEqual([...paths],['entranceGrass.slopeRepair.generationMs']);
+ assert.equal(diagnostic.validateFootprintSet(receipt.views,head),true);
+ // Every original PNG remains independently hash-bound in the durable artifact.
+ const crypto=await import('node:crypto');
+ for(const view of receipt.views){
+  const bytes=fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-footprint-continuity-20261028/rejected-run40719150366/'+view.image,import.meta.url));
+  assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),view.imageSha256);
+ }
+ const subset=receipt.views.filter(v=>diagnostic.COMPOSED_MODES.includes(v.mode));
+ assert.equal(diagnostic.validateComposedSet(subset,head),true);
+ // Real-resource negatives: failure must survive the timing correction.
+ for(const mutate of [
+  v=>v.lastFrame.cameraPosition.x++,v=>v.state.pitchDegrees++,v=>v.canvas.width++,
+  v=>v.resources.singleOwnerVegetation.installedRootCount++,
+  v=>v.resources.singleOwnerVegetation.entranceGrass.slopeRepair.unexpectedRoot=1,
+  v=>v.resources.singleOwnerVegetation.entranceGrass.slopeRepair.otherGenerationMs=1,
+  v=>v.resources.treeCollection.entries[0].ready=!v.resources.treeCollection.entries[0].ready,
+  v=>v.rendererHash='c'.repeat(64),v=>v.pose.yaw++,v=>v.grassHidden=!v.grassHidden
+ ]){
+  const copy=structuredClone(subset);mutate(copy.find(v=>v.label==='candidate'));
+  assert.throws(()=>diagnostic.validateComposedSet(copy,head));
+ }
 });

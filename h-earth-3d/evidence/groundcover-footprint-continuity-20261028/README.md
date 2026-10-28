@@ -1,6 +1,12 @@
 # Groundcover footprint continuity candidate
 
-Status: candidate under qualification; no visual repair, owner acceptance, merge or publication claimed.
+Status: REJECTED experiment; superseded by admitted generation 2955. No visual repair, owner acceptance, merge or publication.
+
+## Final disposition
+
+Run40719150366 captured 24 hash-verified images at candidate `1e4eeaaec018b92e7eeade9ba17b773a4ea4ccef`. The broad inland band persists, so footprint filtering is rejected for this target. The raw receipt retains `INCOMPLETE_OR_FAILED`: its paired-identity check included the nondeterministic `entranceGrass.slopeRepair.generationMs` duration. This harness defect is separate from the failed visual hypothesis. See `rejected-run40719150366/manifest.json`, the unmodified compressed receipt, all original PNGs, and `review.json`. The shader is preserved as `rejected-renderer.js`; historical source tests can still reproduce its exact behavior.
+
+The successor request and admission are issue6911 comments6474494938 and6474507061. Correcting the timing identity does not turn this candidate into an accepted repair. Historical qualification notes below are retained as history.
 
 ## Custody
 

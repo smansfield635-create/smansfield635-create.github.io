@@ -1256,17 +1256,17 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Capture same-camera worldsoil identity and primitive pixels
+      - name: Capture source-confirmed mountain diagonal worldsoil identity and primitive pixels
         working-directory: tooling
         env:
-          H_EARTH_COMPARISON_PROFILE: GEN2942_IDENTITY_PIXEL_V1
+          H_EARTH_COMPARISON_PROFILE: GEN2942_MOUNTAIN_POLYGON_V1
         run: |
-          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen2942-identity-pixels"
-      - name: Preserve exact 32-frame source-stage evidence
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen2942-mountain-boundary"
+      - name: Preserve exact eight-frame mountain source-stage evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gen2942-identity-pixels-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/gen2942-identity-pixels
+          name: h-earth-gen2942-mountain-boundary-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen2942-mountain-boundary
           if-no-files-found: warn
           retention-days: 30

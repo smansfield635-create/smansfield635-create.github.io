@@ -3,14 +3,14 @@
   "projectId": "BUILD",
   "status": "ACTIVE_REGISTERED_PROJECT",
   "ownedPathPrefixes": [],
-  "ownedExactPaths": ["build/index.html"],
+  "ownedExactPaths": ["build/index.html",".github/workflows/build-companion-v4-qualification.yml","assets/build/build-engine.v3.mjs","assets/build/build-companion.js","tools/build-companion-matrix-v3-browser.test.mjs","tools/build-companion-v4-browser.test.mjs","build/intake/index.html"],
   "entrypoint": ".github/ai-router/projects/build/entrypoint.v1.json",
   "authorityBoundary": [
     "PROJECT_REGISTRATION_CREATES_ROUTING_IDENTITY_ONLY_NOT_PRODUCT_MUTATION_MERGE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
     "BUILD_INDEX_RUNTIME_OR_AUTHORITY_CHANGES_REQUIRE_FRESH_CANONICAL_OPERATION_ADMISSION",
     "PAGE_EXCELLENCE_REQUIREMENTS_REMAIN_MANDATORY_WHERE_APPLICABLE",
     "BUILD_VISUAL_EXPRESSION_AND_COMMERCIAL_FACTS_REMAIN_BOUND_TO_SEPARATELY_FROZEN_PRODUCT_AUTHORITY",
-    "BUILD_PROJECT_OWNERSHIP_DOES_NOT_INCLUDE_BUILD_INTAKE_ASSETS_BUILD_OR_ANY_OTHER_ESTATE_PROJECT_PATH",
+    "BUILD_PROJECT_OWNERSHIP_INCLUDES_ONLY_DECLARED_BUILD_INDEX_INTAKE_COMPANION_AND_QUALIFICATION_PATHS_NOT_OTHER_ESTATE_PROJECT_PATHS",
     "CROSS_PROJECT_LINKS_AND_PROOF_DESTINATIONS_DO_NOT_TRANSFER_MUTATION_AUTHORITY"
   ],
   "requiredInstructions": ["AGENTS.md", "AI_ENTRYPOINT.json"],

@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-28T21:25:29Z",
+  "generatedAt": "2026-10-28T22:25:06Z",
   "window": {
-    "start": "2026-09-28T21:25:29Z",
-    "end": "2026-10-28T21:25:29Z"
+    "start": "2026-09-28T22:25:06Z",
+    "end": "2026-10-28T22:25:06Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 723,
-        "visits": 658
+        "pageLoads": 711,
+        "visits": 651
       },
       {
         "value": "/analytics/",
@@ -24,23 +24,23 @@
       },
       {
         "value": "/build/",
-        "pageLoads": 55,
-        "visits": 55
+        "pageLoads": 54,
+        "visits": 54
       },
       {
         "value": "/about/",
-        "pageLoads": 41,
-        "visits": 41
-      },
-      {
-        "value": "/meet-sean-mansfield/",
-        "pageLoads": 31,
-        "visits": 31
+        "pageLoads": 40,
+        "visits": 40
       },
       {
         "value": "/gauges/",
         "pageLoads": 30,
         "visits": 0
+      },
+      {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 30,
+        "visits": 30
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -221,12 +221,12 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1651,
-        "visits": 1651
+        "pageLoads": 1641,
+        "visits": 1641
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 145,
+        "pageLoads": 140,
         "visits": 0
       },
       {
@@ -253,8 +253,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1782,
-        "visits": 1647
+        "pageLoads": 1767,
+        "visits": 1637
       },
       {
         "value": "CN",
@@ -295,8 +295,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1449,
-        "visits": 1395
+        "pageLoads": 1434,
+        "visits": 1385
       },
       {
         "value": "mobile",
@@ -312,8 +312,8 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 879,
-        "visits": 879
+        "pageLoads": 878,
+        "visits": 878
       },
       {
         "value": "Chrome",
@@ -337,8 +337,8 @@
       },
       {
         "value": "Firefox",
-        "pageLoads": 67,
-        "visits": 59
+        "pageLoads": 53,
+        "visits": 50
       },
       {
         "value": "Unknown",
@@ -364,8 +364,8 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1118,
-        "visits": 1118
+        "pageLoads": 1117,
+        "visits": 1117
       },
       {
         "value": "Android",
@@ -374,8 +374,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 212,
-        "visits": 198
+        "pageLoads": 198,
+        "visits": 189
       },
       {
         "value": "MacOSX",
@@ -396,24 +396,24 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 982,
-        "visits": 837
+        "pageLoads": 968,
+        "visits": 828
       },
       {
         "value": "1",
-        "pageLoads": 879,
-        "visits": 879
+        "pageLoads": 878,
+        "visits": 878
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1799,
-        "visits": 1695
+        "pageLoads": 1789,
+        "visits": 1685
       },
       {
         "value": "routing-apis",
-        "pageLoads": 37,
+        "pageLoads": 32,
         "visits": 0
       },
       {
@@ -430,8 +430,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1752,
-        "visits": 1669
+        "pageLoads": 1737,
+        "visits": 1659
       },
       {
         "value": "cache",
@@ -447,15 +447,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1861,
-        "visits": 1716
+        "pageLoads": 1846,
+        "visits": 1706
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1861,
-        "visits": 1716
+        "pageLoads": 1846,
+        "visits": 1706
       }
     ]
   }

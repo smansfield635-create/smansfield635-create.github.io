@@ -20,8 +20,15 @@ export const IDENTITY_POSES=Object.freeze([
  {name:'identity-coast-control',x:376,z:-96,y:2.603263,yaw:111,pitch:-13,diagnosticObserver:true},
  {name:'identity-foothill-control',x:-52,z:-208,yaw:136,pitch:-15}
 ].map(Object.freeze));
+// The mountain camera comes from the immutable Gen2935 60-image archive,
+ // where a sharply diagonal tan/olive material boundary is visually evident.
+ // Gen2942 already measured the four old poses; do not dispatch them again.
+export const IDENTITY_MOUNTAIN_POLYGON_POSES=Object.freeze([
+ Object.freeze({name:'source-mountain-diagonal-material-edge',x:88,z:-260,yaw:118,pitch:-13})
+]);
 const IDENTITY_MODE_ID=new Map(IDENTITY_MODES.map((name,index)=>[name,index]));
-const identityPixelCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_IDENTITY_PIXEL_V1';
+const mountainPolygonCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_MOUNTAIN_POLYGON_V1';
+const identityPixelCapture=mountainPolygonCapture||process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_IDENTITY_PIXEL_V1';
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
@@ -98,7 +105,7 @@ export function instrumentIdentityPixelRenderer(original){
   '      lit=pow(clamp(p*1.12,0.0,1.0),vec3(1.0/2.2));',
   '    }else if(m==4)lit=vec3(clamp(pixSoilWeight,0.0,1.0));',
   '    else if(m==5)lit=vec3(clamp(pixIdentityWeight,0.0,1.0));',
-  '    else if(m==6)lit=vRoleCode==1u?vec3(1.0,0.0,0.0):isExactFarLandSoilPrimitive?vec3(0.0,1.0,0.0):vec3(0.0,0.0,1.0);',
+  '    else if(m==6)lit=geologicalEarthRock?vec3(1.0,1.0,0.0):vRoleCode==1u?vec3(1.0,0.0,0.0):isExactFarLandSoilPrimitive?vec3(0.0,1.0,0.0):vec3(0.0,0.0,1.0);',
   '  }'
  ].join('\n'));
  let transformed=original.slice(0,start)+fragment+original.slice(end);
@@ -175,8 +182,8 @@ export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(![
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2942_IDENTITY_PIXEL_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=identityPixelCapture?IDENTITY_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES);
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2942_IDENTITY_PIXEL_V1','GEN2942_MOUNTAIN_POLYGON_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=mountainPolygonCapture?IDENTITY_MOUNTAIN_POLYGON_POSES:(identityPixelCapture?IDENTITY_POSES:(profile='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
   const modes=identityPixelCapture?IDENTITY_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES);
   if(poses.length*modes.length>(identityPixelCapture?32:20))throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:identityPixelCapture?'H_EARTH_POST_GEN2940_SOIL_IDENTITY_PIXEL_CAUSAL_REPAIR_20261027_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:identityPixelCapture?GEN2942_PUBLISHED_SHADER_SHA256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};

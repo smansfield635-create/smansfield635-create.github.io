@@ -1,0 +1,19 @@
+{
+  "schema": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_DISPATCH_INTENT_v1",
+  "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2962,
+  "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "toolingHead": "ac49ca79dd6684dfd69655d118a9c58822a1952c",
+  "profile": "IDENTITY_BLEND_DIAGNOSTIC_V1",
+  "candidateFrames": 20,
+  "candidateRuns": 1,
+  "baselineRecapture": false,
+  "automaticRetry": false,
+  "sourceQualification": "PASS",
+  "sceneRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "sourceSha256": {
+    "tools/h-earth-ground-material-comparison.v1.mjs": "2fd30202ea66fc33764afd40b0b160defd100434fbe253537b48d79d39d33b5f",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "141fe57cd21cb2d2c38fe9d1a673122d5ca3e5e8ffd83b1c022ed581b5db56d1",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "451ee80e4e3d2554d73aa7f1b20db83aeef0f00454be3727031f4ae14def3347"
+  }
+}

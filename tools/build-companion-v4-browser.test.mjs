@@ -25,5 +25,6 @@ assert.equal(await page.$eval('#build-companion .bc-email-draft',e=>e.value),'Ed
 assert.deepEqual(await readHistory(),originalHistory,'draft editing and reload preserve stored history');
 await click('Cancel email draft');assert.equal((await page.$('#build-companion .bc-email-draft')).length,0);
 assert.equal((await page.$('#build-companion a[href^="mailto:"]')).length,0);
-assert.equal(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('dgb-build-companion-v4')).emailDraft),'');
+assert.equal(await page.evaluate(()=>Object.hasOwn(JSON.parse(sessionStorage.getItem('dgb-build-companion-v4')),'emailDraft')),false);
+await click('Prepare email draft');assert.match(await page.$eval('#build-companion .bc-email-draft',e=>e.value),/Hello Sean,/);
 await browser.close();server.close();console.log('BUILD_COMPANION_V4_CONTACT_CONVERSATION_R3_PASS');

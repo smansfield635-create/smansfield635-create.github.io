@@ -20978,40 +20978,72 @@
       "state": "ADMITTED_LOCKED"
     },
     "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c": {
-      "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+      "governingHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
       "independentAuthorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
-          "lockGeneration": 2963,
+          "governingHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+          "lockGeneration": 2964,
           "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
-          "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
-          "procedureLocatorDigest": "d88c4e358372200b33e8b3b4a4becb7267ba0a699bb5c59c0a1c54079f35ca50",
-          "requestDigest": "70e9ddbf06c1603dcadcb80b15a06f68fdfaf81420a9a92d0a21d45aa68b3e3c",
+          "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+          "procedureLocatorDigest": "c5ddac15f7f04706bdb20b84061ee6a427e9b963c48cbbda3039f11058c333ed",
+          "requestDigest": "584ac087dfd59033ab39289742e3ad0f660d53fdd4ea07814cdf9bc54814c4a9",
           "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c"
         },
-        "bindingDigest": "35bdeb42c1d42acdddd922590554fb9367b15f60fce911d3f5d62ae83b16dceb",
+        "bindingDigest": "56cfcf275be65b790989f2145189b19f980975d9ae1148e70f5a1cc9ff82781b",
         "compareAndSwap": {
-          "observedLedgerBlobSha": "53781fca05da5cfaf2e1af6adcfbe7530510a971",
-          "observedLockRefHead": "59a9a751dc15129bdfe4bcbb997087ecd5c1aafd"
+          "observedLedgerBlobSha": "fc1046aa14362618dd6db7f769d432ec97cb5a9a",
+          "observedLockRefHead": "7296b80e99651abf594a2aac6972ba5a15d6ae4d"
         },
-        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_SUCCESSOR_PROVENANCE_v1",
         "source": {
           "authorAssociation": "OWNER",
           "authorLogin": "smansfield635-create",
-          "commentBodySha256": "3ccb12eb4426a05ccb67837b71109bc92ada44ee902883263740d5db78f13549",
-          "commentId": 6481733669,
+          "commentBodySha256": "aceb7908aeb0209e62c7a993508c6290e40ea4c84653c3acb3f08cb7c4b1d94c",
+          "commentId": 6483584889,
           "issueNumber": 6948,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io"
         },
-        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+        "transitionIdentity": {
+          "predecessor": {
+            "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+            "lockGeneration": 2963,
+            "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+            "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001"
+          },
+          "successor": {
+            "governingHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+            "lockGeneration": 2964,
+            "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+            "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001"
+          },
+          "transitionId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_SUCCESSOR"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1"
       },
-      "lockGeneration": 2963,
+      "lockGeneration": 2964,
       "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
-      "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
-      "procedureLocatorDigest": "d88c4e358372200b33e8b3b4a4becb7267ba0a699bb5c59c0a1c54079f35ca50",
+      "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+        "lockGeneration": 2963,
+        "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+        "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+        "preservedEvidenceRefs": [
+          "584c37c09c2078392bb32ae343b67918c2235eac",
+          "run:40779962491",
+          "run:40773251264",
+          "run:40739898768"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_SUCCESSOR"
+      },
+      "procedureLocatorDigest": "c5ddac15f7f04706bdb20b84061ee6a427e9b963c48cbbda3039f11058c333ed",
       "released": false,
-      "requestDigest": "70e9ddbf06c1603dcadcb80b15a06f68fdfaf81420a9a92d0a21d45aa68b3e3c",
+      "requestDigest": "584ac087dfd59033ab39289742e3ad0f660d53fdd4ea07814cdf9bc54814c4a9",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c",
       "state": "ADMITTED_LOCKED"
@@ -22655,7 +22687,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2963,
+  "lockGeneration": 2964,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -91231,6 +91263,63 @@
       "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+          "lockGeneration": 2963,
+          "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+          "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+          "procedureLocatorDigest": "d88c4e358372200b33e8b3b4a4becb7267ba0a699bb5c59c0a1c54079f35ca50",
+          "requestDigest": "70e9ddbf06c1603dcadcb80b15a06f68fdfaf81420a9a92d0a21d45aa68b3e3c",
+          "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c"
+        },
+        "bindingDigest": "35bdeb42c1d42acdddd922590554fb9367b15f60fce911d3f5d62ae83b16dceb",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "53781fca05da5cfaf2e1af6adcfbe7530510a971",
+          "observedLockRefHead": "59a9a751dc15129bdfe4bcbb997087ecd5c1aafd"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "3ccb12eb4426a05ccb67837b71109bc92ada44ee902883263740d5db78f13549",
+          "commentId": 6481733669,
+          "issueNumber": 6948,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2963,
+      "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+      "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+      "procedureLocatorDigest": "d88c4e358372200b33e8b3b4a4becb7267ba0a699bb5c59c0a1c54079f35ca50",
+      "released": true,
+      "requestDigest": "70e9ddbf06c1603dcadcb80b15a06f68fdfaf81420a9a92d0a21d45aa68b3e3c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "584c37c09c2078392bb32ae343b67918c2235eac",
+          "run:40779962491",
+          "run:40773251264",
+          "run:40739898768"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+        "successorLockGeneration": 2964,
+        "successorLockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+        "successorOperationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+        "transitionId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_SUCCESSOR"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

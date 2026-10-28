@@ -1,0 +1,865 @@
+{
+  "schema": "H_EARTH_IDENTITY_BLEND_MECHANISM_EVIDENCE_v1",
+  "result": "SOURCE_EXPRESSION_AMPLIFICATION_IDENTIFIED_BOUNDED_REPAIR_HYPOTHESIS",
+  "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "contractSha256": "b0a7b3b01e30fbf38e65a89c7e1b58f976b47a74a27ec7eec15c15bd506acc4b",
+  "qualifiedAnalysisSha256": "e78de9582334d5be2d3ef10bfea582e74fddf7569f8515217f6e3ea2647cad5c",
+  "captureReceiptSha256": "9f508de29fcc479e5cbe9c848bc9bb8b466cb0e161bbbab5aa5cacd15fc4ab36",
+  "analysisStatus": "SECONDARY_SOURCE_DRIVEN_READ_ONLY_ANALYSIS_NO_NEW_CAPTURE_NO_GATE_CHANGE",
+  "mechanism": {
+    "responsibleExpression": "fertilePatch=smoothstep(0.42,0.68,macroField*0.47+mesoField*0.38+detailField*0.15)",
+    "location": "persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js:948",
+    "effect": "A narrow0.26-wide transition turns adjacent-pixel weighted noise changes into much larger fertility changes. Shared fertile pathways then alter direct fertile palette, moist shelter, dry foothill and identity blend weight together.",
+    "upstreamSamples": {
+      "macroField": "noise2(world*0.018+vec2(5,-11))",
+      "mesoField": "noise2(world*0.082+vec2(-13,7))",
+      "detailField": "noise2(world*0.29+vec2(29,-17))"
+    },
+    "maxDerivativeOld": 5.769230769230767,
+    "conclusionLimit": "Established amplification at three declared near-view witnesses; not sole cause of every band, no aliasing proof and no map-wide visual closure. Original MIXED_OR_INCONCLUSIVE output remains unchanged because opposing terms/cancellation exist."
+  },
+  "recommendedSingleCorrection": {
+    "expression": "fertilePatch=smoothstep(0.29,0.81,macroField*0.47+mesoField*0.38+detailField*0.15)",
+    "fixedMidpoint": 0.55,
+    "oldWidth": 0.26,
+    "newWidth": 0.52,
+    "maxDerivativeNew": 2.8846153846153846,
+    "maximumDerivativeRatio": 0.5,
+    "choiceBasis": "Smallest one-expression source-directed candidate with a predeclared factor-of-two reduction of maximum transition gain and unchanged midpoint/noise fields/palette families; no parameter sweep. The factor2 is an explicit engineering choice, not a measured perceptual success threshold.",
+    "alternativesNotAsserted": "Do not adopt footprint filtering from a proxy alone; it adds derivative/filter semantics without current proof of aliasing.",
+    "requiredQualification": [
+      "Source inverse reconstruction confirms only endpoints changed",
+      "Near and far lit plus albedo images compared with frozen approved baseline",
+      "Protected meadow and coast controls with exact-source scene and assets",
+      "Visual review before owner KEEP/ONE_REPAIR/REJECT"
+    ],
+    "authority": "Recommendation only. Diagnostic admission does not authorize shader correction or extra capture.",
+    "risk": "Reducing gain does not guarantee eliminating visible bands and may alter ecological palette distribution. Protected character and perceptual quality require actual candidate validation."
+  },
+  "witnesses": [
+    {
+      "xCenter": 132,
+      "rows": [
+        260,
+        261
+      ],
+      "pixels": 9,
+      "measuredFields": {
+        "macro": {
+          "beforeMean": 0.80479302832244,
+          "afterMean": 0.7564270152505447,
+          "deltaMean": -0.04836601307189546,
+          "deltaMeanInterval": {
+            "lo": -0.05620915032679741,
+            "hi": -0.040522875816993494
+          }
+        },
+        "meso": {
+          "beforeMean": 0.2392156862745098,
+          "afterMean": 0.2797385620915033,
+          "deltaMean": 0.04052287581699346,
+          "deltaMeanInterval": {
+            "lo": 0.0326797385620915,
+            "hi": 0.04836601307189543
+          }
+        },
+        "detail": {
+          "beforeMean": 0.5978213507625273,
+          "afterMean": 0.28322440087145967,
+          "deltaMean": -0.31459694989106757,
+          "deltaMeanInterval": {
+            "lo": -0.3224400871459695,
+            "hi": -0.30675381263616563
+          }
+        },
+        "fertile": {
+          "beforeMean": 0.550326797385621,
+          "afterMean": 0.24749455337690632,
+          "deltaMean": -0.3028322440087146,
+          "deltaMeanInterval": {
+            "lo": -0.31067538126361655,
+            "hi": -0.2949891067538126
+          }
+        },
+        "moist": {
+          "beforeMean": 0.23703703703703705,
+          "afterMean": 0.10588235294117647,
+          "deltaMean": -0.13115468409586056,
+          "deltaMeanInterval": {
+            "lo": -0.13899782135076252,
+            "hi": -0.12331154684095862
+          }
+        },
+        "dry": {
+          "beforeMean": 0.32897603485838783,
+          "afterMean": 0.3633986928104575,
+          "deltaMean": 0.0344226579520697,
+          "deltaMeanInterval": {
+            "lo": 0.026579520697167767,
+            "hi": 0.04226579520697168
+          }
+        },
+        "W": {
+          "beforeMean": 0.493681917211329,
+          "afterMean": 0.5337690631808278,
+          "deltaMean": 0.040087145969498895,
+          "deltaMeanInterval": {
+            "lo": 0.03224400871459695,
+            "hi": 0.047930283224400856
+          }
+        },
+        "variation": {
+          "beforeMean": 0.5294117647058822,
+          "afterMean": 0.6000000000000001,
+          "deltaMean": 0.07058823529411767,
+          "deltaMeanInterval": {
+            "lo": 0.06274509803921569,
+            "hi": 0.07843137254901962
+          }
+        },
+        "tri": {
+          "beforeMean": 0.3076252723311547,
+          "afterMean": 0.6810457516339868,
+          "deltaMean": 0.37342047930283223,
+          "deltaMeanInterval": {
+            "lo": 0.36557734204793024,
+            "hi": 0.38126361655773416
+          }
+        },
+        "near": {
+          "beforeMean": 0.9163398692810456,
+          "afterMean": 0.9376906318082789,
+          "deltaMean": 0.021350762527233152,
+          "deltaMeanInterval": {
+            "lo": 0.013507625272331205,
+            "hi": 0.029193899782135085
+          }
+        },
+        "inland": {
+          "beforeMean": 1.0,
+          "afterMean": 1.0,
+          "deltaMean": 0.0,
+          "deltaMeanInterval": {
+            "lo": -0.0039215686274509665,
+            "hi": 0.0039215686274509665
+          }
+        },
+        "grove": {
+          "beforeMean": 0.0,
+          "afterMean": 0.0,
+          "deltaMean": 0.0,
+          "deltaMeanInterval": {
+            "lo": -0.00392156862745098,
+            "hi": 0.00392156862745098
+          }
+        },
+        "mineral": {
+          "beforeMean": 0.043137254901960784,
+          "afterMean": 0.043137254901960784,
+          "deltaMean": 0.0,
+          "deltaMeanInterval": {
+            "lo": -0.00784313725490196,
+            "hi": 0.00784313725490196
+          }
+        }
+      },
+      "weightedSignal": {
+        "beforeMean": 0.5588278867102396,
+        "afterMean": 0.5043050108932463,
+        "deltaMean": -0.05452287581699349,
+        "deltaMeanInterval": {
+          "lo": -0.06236601307189546,
+          "hi": -0.046679738562091525
+        }
+      },
+      "weightedNoiseDelta": {
+        "macro": {
+          "point": -0.022732026143790867,
+          "interval": {
+            "lo": -0.02641830065359478,
+            "hi": -0.019045751633986942
+          }
+        },
+        "meso": {
+          "point": 0.015398692810457514,
+          "interval": {
+            "lo": 0.01241830065359477,
+            "hi": 0.018379084967320266
+          }
+        },
+        "detail": {
+          "point": -0.04718954248366013,
+          "interval": {
+            "lo": -0.048366013071895426,
+            "hi": -0.046013071895424834
+          }
+        }
+      },
+      "sourceSmoothstepSecantGain": {
+        "min": 5.547284866627218,
+        "mean": 5.567695263579184,
+        "max": 5.600148362110646
+      },
+      "noiseViaFertileColorPointDecomposition": {
+        "macro": [
+          0.01023852179465835,
+          0.004783335090145657,
+          0.0019296230600208655
+        ],
+        "meso": [
+          -0.006909543912558356,
+          -0.0032235380977735876,
+          -0.0012966838410831353
+        ],
+        "detail": [
+          0.02116936481187,
+          0.009874510393062953,
+          0.003970697085153281
+        ]
+      },
+      "noiseDecompositionLimit": "Secondary point decomposition through the exact reconstructed source; no independent unique-dominance confidence claim. Signed changes can cancel. Captured raw factor intervals and original root intervals are retained separately.",
+      "measuredObservedDeltaRGB": {
+        "signedMeanRGB": [
+          0.030658484589384843,
+          0.0154048205361816,
+          0.006748713533493455
+        ],
+        "signedMeanRGBInterval": {
+          "lo": [
+            0.02277530444345683,
+            0.00895733595591899,
+            0.0020772713211635874
+          ],
+          "hi": [
+            0.038542010448945674,
+            0.021852547903636558,
+            0.011420337721764505
+          ]
+        },
+        "meanAbsoluteRGB": [
+          0.030658484589384843,
+          0.0154048205361816,
+          0.006748713533493455
+        ]
+      },
+      "qualifiedFertileRootContribution": {
+        "signedMeanRGB": [
+          0.024478896200038014,
+          0.011433588493826629,
+          0.004609856248145466
+        ],
+        "signedMeanRGBInterval": {
+          "lo": [
+            0.022577249149039323,
+            0.010366392974897772,
+            0.004022961556499582
+          ],
+          "hi": [
+            0.02628273336822124,
+            0.012516785674646223,
+            0.005223273821137861
+          ]
+        },
+        "meanAbsoluteRGB": [
+          0.024478896200038014,
+          0.011433588493826629,
+          0.004609856248145466
+        ]
+      },
+      "worldFootprintUnitsPerPixel": {
+        "minimumLower": 4.1000000000000005,
+        "maximumUpper": 4.425531914893616
+      },
+      "singleDoubleWidthCounterfactual": {
+        "oldModelDeltaMeanRGB": [
+          0.03142846295516766,
+          0.015614074518748026,
+          0.007252952212843617
+        ],
+        "newModelDeltaMeanRGB": [
+          0.018922588410759857,
+          0.009822084830939203,
+          0.004961815684152803
+        ],
+        "newModelDeltaMeanRGBInterval": {
+          "lo": [
+            -0.0014709318600303828,
+            -0.005072706046698707,
+            -0.004293092224033054
+          ],
+          "hi": [
+            0.03918073827258542,
+            0.024664099658492658,
+            0.014200295650206434
+          ]
+        },
+        "newFertileBeforeMean": 0.5254528918646804,
+        "newFertileAfterMean": 0.36955359516586095,
+        "newFertileDeltaMean": -0.1558992966988194,
+        "newMinusOldEndpointMeanRGB": {
+          "before": [
+            -0.00011332867625637701,
+            -0.00046512017413104386,
+            -0.0005183204236859856
+          ],
+          "after": [
+            -0.012619203220664177,
+            -0.006257109861939867,
+            -0.0028094569523767995
+          ]
+        },
+        "claim": "Predicted unlit identity-stage response to one fixed formula change, not rendered candidate evidence or downstream groundcover/lighting/protected-view validation."
+      }
+    },
+    {
+      "xCenter": 264,
+      "rows": [
+        268,
+        269
+      ],
+      "pixels": 9,
+      "measuredFields": {
+        "macro": {
+          "beforeMean": 0.6679738562091503,
+          "afterMean": 0.6348583877995642,
+          "deltaMean": -0.03311546840958606,
+          "deltaMeanInterval": {
+            "lo": -0.04095860566448803,
+            "hi": -0.025272331154684094
+          }
+        },
+        "meso": {
+          "beforeMean": 0.3965141612200436,
+          "afterMean": 0.17821350762527233,
+          "deltaMean": -0.21830065359477124,
+          "deltaMeanInterval": {
+            "lo": -0.22614379084967318,
+            "hi": -0.21045751633986928
+          }
+        },
+        "detail": {
+          "beforeMean": 0.8196078431372549,
+          "afterMean": 0.21437908496732028,
+          "deltaMean": -0.6052287581699347,
+          "deltaMeanInterval": {
+            "lo": -0.6130718954248366,
+            "hi": -0.5973856209150328
+          }
+        },
+        "fertile": {
+          "beforeMean": 0.7098039215686274,
+          "afterMean": 0.00043572984749455336,
+          "deltaMean": -0.7093681917211329,
+          "deltaMeanInterval": {
+            "lo": -0.7137254901960783,
+            "hi": -0.7015250544662309
+          }
+        },
+        "moist": {
+          "beforeMean": 0.3058823529411765,
+          "afterMean": 0.0,
+          "deltaMean": -0.3058823529411765,
+          "deltaMeanInterval": {
+            "lo": -0.30980392156862746,
+            "hi": -0.29803921568627456
+          }
+        },
+        "dry": {
+          "beforeMean": 0.2797385620915033,
+          "afterMean": 0.3599128540305011,
+          "deltaMean": 0.0801742919389978,
+          "deltaMeanInterval": {
+            "lo": 0.07233115468409587,
+            "hi": 0.08801742919389978
+          }
+        },
+        "W": {
+          "beforeMean": 0.5259259259259258,
+          "afterMean": 0.5843137254901961,
+          "deltaMean": 0.05838779956427019,
+          "deltaMeanInterval": {
+            "lo": 0.05054466230936824,
+            "hi": 0.06623093681917214
+          }
+        },
+        "variation": {
+          "beforeMean": 0.3368191721132898,
+          "afterMean": 0.3464052287581699,
+          "deltaMean": 0.009586056644880183,
+          "deltaMeanInterval": {
+            "lo": 0.0017429193899782135,
+            "hi": 0.017429193899782133
+          }
+        },
+        "tri": {
+          "beforeMean": 0.4893246187363835,
+          "afterMean": 0.4492374727668845,
+          "deltaMean": -0.04008714596949892,
+          "deltaMeanInterval": {
+            "lo": -0.047930283224400856,
+            "hi": -0.032244008714596976
+          }
+        },
+        "near": {
+          "beforeMean": 0.9694989106753812,
+          "afterMean": 0.9795206971677559,
+          "deltaMean": 0.010021786492374693,
+          "deltaMeanInterval": {
+            "lo": 0.0021786492374727593,
+            "hi": 0.017864923747276624
+          }
+        },
+        "inland": {
+          "beforeMean": 1.0,
+          "afterMean": 1.0,
+          "deltaMean": 0.0,
+          "deltaMeanInterval": {
+            "lo": -0.0039215686274509665,
+            "hi": 0.0039215686274509665
+          }
+        },
+        "grove": {
+          "beforeMean": 0.0,
+          "afterMean": 0.0,
+          "deltaMean": 0.0,
+          "deltaMeanInterval": {
+            "lo": -0.00392156862745098,
+            "hi": 0.00392156862745098
+          }
+        },
+        "mineral": {
+          "beforeMean": 0.0392156862745098,
+          "afterMean": 0.0392156862745098,
+          "deltaMean": 0.0,
+          "deltaMeanInterval": {
+            "lo": -0.00784313725490196,
+            "hi": 0.00784313725490196
+          }
+        }
+      },
+      "weightedSignal": {
+        "beforeMean": 0.5875642701525053,
+        "afterMean": 0.3982614379084968,
+        "deltaMean": -0.1893028322440087,
+        "deltaMeanInterval": {
+          "lo": -0.19714596949891067,
+          "hi": -0.18145969498910672
+        }
+      },
+      "weightedNoiseDelta": {
+        "macro": {
+          "point": -0.015564270152505447,
+          "interval": {
+            "lo": -0.019250544662309372,
+            "hi": -0.011877995642701523
+          }
+        },
+        "meso": {
+          "point": -0.08295424836601308,
+          "interval": {
+            "lo": -0.08593464052287583,
+            "hi": -0.07997385620915033
+          }
+        },
+        "detail": {
+          "point": -0.09078431372549019,
+          "interval": {
+            "lo": -0.0919607843137255,
+            "hi": -0.0896078431372549
+          }
+        }
+      },
+      "sourceSmoothstepSecantGain": {
+        "min": 3.154319352859664,
+        "mean": 3.7641089779259684,
+        "max": 4.488513311203263
+      },
+      "noiseViaFertileColorPointDecomposition": {
+        "macro": [
+          0.004023454840732069,
+          0.001643192944223903,
+          0.0005122186868050305
+        ],
+        "meso": [
+          0.021455708008235944,
+          0.00876112515222217,
+          0.0027293573455179783
+        ],
+        "detail": [
+          0.023302516873208657,
+          0.00956726804152362,
+          0.0030291710727685336
+        ]
+      },
+      "noiseDecompositionLimit": "Secondary point decomposition through the exact reconstructed source; no independent unique-dominance confidence claim. Signed changes can cancel. Captured raw factor intervals and original root intervals are retained separately.",
+      "measuredObservedDeltaRGB": {
+        "signedMeanRGB": [
+          0.04821926140742973,
+          0.02078721272918468,
+          0.007015403813208619
+        ],
+        "signedMeanRGBInterval": {
+          "lo": [
+            0.04032798759843396,
+            0.014336043718124608,
+            0.0023340436272768525
+          ],
+          "hi": [
+            0.056111078319304175,
+            0.027238709158796046,
+            0.011696952848547144
+          ]
+        },
+        "meanAbsoluteRGB": [
+          0.04821926140742973,
+          0.02078721272918468,
+          0.007015403813208619
+        ]
+      },
+      "qualifiedFertileRootContribution": {
+        "signedMeanRGB": [
+          0.04877075885909913,
+          0.019962396402035683,
+          0.006263444042724335
+        ],
+        "signedMeanRGBInterval": {
+          "lo": [
+            0.04586374098445894,
+            0.01839979101661871,
+            0.005459094245937927
+          ],
+          "hi": [
+            0.05102043974234694,
+            0.021371259115750222,
+            0.007063931778863793
+          ]
+        },
+        "meanAbsoluteRGB": [
+          0.04877075885909913,
+          0.019962396402035683,
+          0.006263444042724335
+        ]
+      },
+      "worldFootprintUnitsPerPixel": {
+        "minimumLower": 3.0476190476190474,
+        "maximumUpper": 3.249999999999999
+      },
+      "singleDoubleWidthCounterfactual": {
+        "oldModelDeltaMeanRGB": [
+          0.04887463039730003,
+          0.020609968391451367,
+          0.006866619484591482
+        ],
+        "newModelDeltaMeanRGB": [
+          0.03674505433580351,
+          0.016686623710296496,
+          0.006530643986392863
+        ],
+        "newModelDeltaMeanRGBInterval": {
+          "lo": [
+            0.017367023309873064,
+            0.0026241195550882612,
+            -0.0022083940833383217
+          ],
+          "hi": [
+            0.05578679919280708,
+            0.030670669511188235,
+            0.015268729021753564
+          ]
+        },
+        "newFertileBeforeMean": 0.6074603492414115,
+        "newFertileAfterMean": 0.11386465210681525,
+        "newFertileDeltaMean": -0.49359569713459606,
+        "newMinusOldEndpointMeanRGB": {
+          "before": [
+            5.990011832680676e-05,
+            -0.0015794233011119344,
+            -0.0019420108746796868
+          ],
+          "after": [
+            -0.012069675943169718,
+            -0.005502767982266806,
+            -0.0022779863728783056
+          ]
+        },
+        "claim": "Predicted unlit identity-stage response to one fixed formula change, not rendered candidate evidence or downstream groundcover/lighting/protected-view validation."
+      }
+    },
+    {
+      "xCenter": 396,
+      "rows": [
+        273,
+        274
+      ],
+      "pixels": 9,
+      "measuredFields": {
+        "macro": {
+          "beforeMean": 0.6627450980392157,
+          "afterMean": 0.6309368191721132,
+          "deltaMean": -0.03180827886710239,
+          "deltaMeanInterval": {
+            "lo": -0.039651416122004325,
+            "hi": -0.023965141612200463
+          }
+        },
+        "meso": {
+          "beforeMean": 0.3764705882352941,
+          "afterMean": 0.20435729847494555,
+          "deltaMean": -0.1721132897603486,
+          "deltaMeanInterval": {
+            "lo": -0.17995642701525055,
+            "hi": -0.1642701525054466
+          }
+        },
+        "detail": {
+          "beforeMean": 0.6923747276688453,
+          "afterMean": 0.5481481481481482,
+          "deltaMean": -0.14422657952069715,
+          "deltaMeanInterval": {
+            "lo": -0.15206971677559908,
+            "hi": -0.1363834422657952
+          }
+        },
+        "fertile": {
+          "beforeMean": 0.548148148148148,
+          "afterMean": 0.05403050108932462,
+          "deltaMean": -0.49411764705882355,
+          "deltaMeanInterval": {
+            "lo": -0.5019607843137255,
+            "hi": -0.4862745098039215
+          }
+        },
+        "moist": {
+          "beforeMean": 0.23485838779956428,
+          "afterMean": 0.02352941176470588,
+          "deltaMean": -0.21132897603485837,
+          "deltaMeanInterval": {
+            "lo": -0.21917211328976036,
+            "hi": -0.2034858387799564
+          }
+        },
+        "dry": {
+          "beforeMean": 0.27886710239651413,
+          "afterMean": 0.3302832244008715,
+          "deltaMean": 0.05141612200435728,
+          "deltaMeanInterval": {
+            "lo": 0.04357298474945535,
+            "hi": 0.05925925925925925
+          }
+        },
+        "W": {
+          "beforeMean": 0.4923747276688453,
+          "afterMean": 0.5725490196078431,
+          "deltaMean": 0.08017429193899778,
+          "deltaMeanInterval": {
+            "lo": 0.07233115468409584,
+            "hi": 0.08801742919389977
+          }
+        },
+        "variation": {
+          "beforeMean": 0.4200435729847494,
+          "afterMean": 0.43442265795206975,
+          "deltaMean": 0.014379084967320254,
+          "deltaMeanInterval": {
+            "lo": 0.006535947712418309,
+            "hi": 0.022222222222222216
+          }
+        },
+        "tri": {
+          "beforeMean": 0.5272331154684095,
+          "afterMean": 0.4148148148148148,
+          "deltaMean": -0.11241830065359476,
+          "deltaMeanInterval": {
+            "lo": -0.1202614379084967,
+            "hi": -0.10457516339869281
+          }
+        },
+        "near": {
+          "beforeMean": 0.9664488017429194,
+          "afterMean": 0.9769063180827886,
+          "deltaMean": 0.010457516339869244,
+          "deltaMeanInterval": {
+            "lo": 0.002614379084967311,
+            "hi": 0.018300653594771177
+          }
+        },
+        "inland": {
+          "beforeMean": 1.0,
+          "afterMean": 1.0,
+          "deltaMean": 0.0,
+          "deltaMeanInterval": {
+            "lo": -0.0039215686274509665,
+            "hi": 0.0039215686274509665
+          }
+        },
+        "grove": {
+          "beforeMean": 0.0,
+          "afterMean": 0.0,
+          "deltaMean": 0.0,
+          "deltaMeanInterval": {
+            "lo": -0.00392156862745098,
+            "hi": 0.00392156862745098
+          }
+        },
+        "mineral": {
+          "beforeMean": 0.0392156862745098,
+          "afterMean": 0.0392156862745098,
+          "deltaMean": 0.0,
+          "deltaMeanInterval": {
+            "lo": -0.00784313725490196,
+            "hi": 0.00784313725490196
+          }
+        }
+      },
+      "weightedSignal": {
+        "beforeMean": 0.5584052287581699,
+        "afterMean": 0.4564183006535948,
+        "deltaMean": -0.10198692810457517,
+        "deltaMeanInterval": {
+          "lo": -0.10983006535947709,
+          "hi": -0.09414379084967321
+        }
+      },
+      "weightedNoiseDelta": {
+        "macro": {
+          "point": -0.014949891067538123,
+          "interval": {
+            "lo": -0.01863616557734203,
+            "hi": -0.011263616557734217
+          }
+        },
+        "meso": {
+          "point": -0.06540305010893245,
+          "interval": {
+            "lo": -0.0683834422657952,
+            "hi": -0.06242265795206971
+          }
+        },
+        "detail": {
+          "point": -0.021633986928104577,
+          "interval": {
+            "lo": -0.022810457516339862,
+            "hi": -0.02045751633986928
+          }
+        }
+      },
+      "sourceSmoothstepSecantGain": {
+        "min": 4.662039756775734,
+        "mean": 4.847592998681904,
+        "max": 5.074155330824929
+      },
+      "noiseViaFertileColorPointDecomposition": {
+        "macro": [
+          0.006466059882179048,
+          0.0029760669520264163,
+          0.0012441314790127833
+        ],
+        "meso": [
+          0.02831777204849944,
+          0.013045423980839903,
+          0.005463158878954193
+        ],
+        "detail": [
+          0.009348067385158284,
+          0.004298997076124461,
+          0.0017943167550446466
+        ]
+      },
+      "noiseDecompositionLimit": "Secondary point decomposition through the exact reconstructed source; no independent unique-dominance confidence claim. Signed changes can cancel. Captured raw factor intervals and original root intervals are retained separately.",
+      "measuredObservedDeltaRGB": {
+        "signedMeanRGB": [
+          0.04554916935034746,
+          0.019269213107034278,
+          0.009303311040917528
+        ],
+        "signedMeanRGBInterval": {
+          "lo": [
+            0.03766525819683428,
+            0.012845972243459153,
+            0.004651592345798372
+          ],
+          "hi": [
+            0.053433594258946844,
+            0.025692759687991756,
+            0.013955282455276802
+          ]
+        },
+        "meanAbsoluteRGB": [
+          0.04554916935034746,
+          0.019269213107034278,
+          0.009303311040917528
+        ]
+      },
+      "qualifiedFertileRootContribution": {
+        "signedMeanRGB": [
+          0.044155382991049055,
+          0.02033516313800853,
+          0.008510802632904138
+        ],
+        "signedMeanRGBInterval": {
+          "lo": [
+            0.04127295921313312,
+            0.018691377007316733,
+            0.007595809363150114
+          ],
+          "hi": [
+            0.0468098152401044,
+            0.021981989658651183,
+            0.00946159048995493
+          ]
+        },
+        "meanAbsoluteRGB": [
+          0.044155382991049055,
+          0.02033516313800853,
+          0.008510802632904138
+        ]
+      },
+      "worldFootprintUnitsPerPixel": {
+        "minimumLower": 2.863636363636364,
+        "maximumUpper": 3.6363636363636362
+      },
+      "singleDoubleWidthCounterfactual": {
+        "oldModelDeltaMeanRGB": [
+          0.043497155678680496,
+          0.020943477221554936,
+          0.008956925323502762
+        ],
+        "newModelDeltaMeanRGB": [
+          0.023797312871457612,
+          0.01224038172610662,
+          0.005530665296131683
+        ],
+        "newModelDeltaMeanRGBInterval": {
+          "lo": [
+            0.003604213536325812,
+            -0.0024482036887498787,
+            -0.0036310929456609903
+          ],
+          "hi": [
+            0.04377837752416871,
+            0.026878867692513037,
+            0.014686406829115015
+          ]
+        },
+        "newFertileBeforeMean": 0.5242330986209843,
+        "newFertileAfterMean": 0.24181991197114408,
+        "newFertileDeltaMean": -0.2824131866498403,
+        "newMinusOldEndpointMeanRGB": {
+          "before": [
+            -4.585023508513506e-05,
+            -0.00042075099477347405,
+            -0.00048174993324003046
+          ],
+          "after": [
+            -0.019745693042308016,
+            -0.00912384649022179,
+            -0.0039080099606111085
+          ]
+        },
+        "claim": "Predicted unlit identity-stage response to one fixed formula change, not rendered candidate evidence or downstream groundcover/lighting/protected-view validation."
+      }
+    }
+  ]
+}

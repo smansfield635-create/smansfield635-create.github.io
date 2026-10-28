@@ -1,0 +1,119 @@
+{
+  "schema": "AWARDS_CINEMATIC_EPILOGUE_CONFORM_v1",
+  "operationId": "AWARDS_CINEMATIC_EPILOGUE_FIRST_PICTURE_CONSTRUCTION_20260911_002",
+  "lockGeneration": 2128,
+  "governingHead": "ec39bc5ac6529e015f147433d9a39df05757fe65",
+  "ledger": "showroom/globe/h-earth/awards/EPILOGUE_EXACT_CONFORM_LEDGER_20260911.md",
+  "runtimeSeconds": 58.774,
+  "music": {
+    "sourceClip": "EPILOGUE-CLIP-002",
+    "carrierStartSeconds": 88.77,
+    "carrierEndSeconds": 147.544,
+    "durationSeconds": 58.774,
+    "sampleRateHz": 48000,
+    "channels": 2,
+    "terminalAuthority": "MUSIC_FALL_ENDS_EQUALS_PICTURE_ENDS"
+  },
+  "video": {
+    "width": 1280,
+    "height": 720,
+    "authoredCadenceFps": 30,
+    "codecTarget": "H264_HIGH_YUV420P_BT709",
+    "decodedFrameCount": 1763,
+    "decodedVideoDurationSeconds": 58.766667,
+    "containerDurationSeconds": 58.774,
+    "terminalResidualSeconds": 0.007333,
+    "terminalPolicy": "HOLD_LAST_DECODED_CONTINUING_WORLD_FRAME_THROUGH_RESIDUAL_AUDIO_TO_EXACT_CONTAINER_END",
+    "terminalPolicyEvidence": "FFMPEG7_1_5_TECHNICAL_CONFORM_PROBE_20260911",
+    "blackTail": false,
+    "extraAuthoredTailFrame": false
+  },
+  "globalLaws": {
+    "singleMasterClock": true,
+    "oneContinuousCinematicField": true,
+    "textAnchoredToVisibleMotion": true,
+    "rawScreenRecordingFinalPicture": false,
+    "generatedImagery": false,
+    "genericSubstituteWorlds": false,
+    "motionContinuityHardGate": true,
+    "unplannedFreezeAllowed": false,
+    "t4LandingLateBindableWithinSlotOnly": true
+  },
+  "landmarks": [
+    {"time":0.000,"carrierTime":88.770,"event":"FILM_START_MELODIC_PICKUP"},
+    {"time":0.750,"carrierTime":89.520,"event":"FIRST_STRONG_ARRIVAL"},
+    {"time":3.130,"carrierTime":91.900,"event":"OPENING_CLUSTER_RESOLVES"},
+    {"time":13.190,"carrierTime":101.960,"event":"PHRASE_CHANGE_ENTRY"},
+    {"time":19.430,"carrierTime":108.200,"event":"STORM_COMMITS"},
+    {"time":28.830,"carrierTime":117.600,"event":"PRE_DROP_ACCENT"},
+    {"time":29.580,"carrierTime":118.350,"event":"BREATH_STORM_DECELERATION"},
+    {"time":36.730,"carrierTime":125.500,"event":"FINAL_PHRASE_WITHDRAWAL_BEGINS"},
+    {"time":47.630,"carrierTime":136.400,"event":"INVITATION_RISE"},
+    {"time":52.330,"carrierTime":141.100,"event":"LATE_CLUSTER_RESOLVES"},
+    {"time":58.774,"carrierTime":147.544,"event":"TERMINAL_FALL_FILM_END"}
+  ],
+  "phases": [
+    {
+      "id":"T0","in":0.000,"out":3.130,"state":"QUESTION_FIRST_REVEAL",
+      "pictureAuthority":"H_EARTH_AUDRALIA_WORLD_RENDERER",
+      "camera":"LOW_COASTAL_UNRESOLVED_PROGRESSIVE_LEGIBILITY",
+      "text":["What makes something real?","What WASN'T before"],
+      "transitionCause":"GEOGRAPHIC_LEGIBILITY_INCREASES"
+    },
+    {
+      "id":"T1","in":3.130,"out":13.190,"state":"WASNT_TO_IS_WORLD_RESOLUTION",
+      "pictureAuthority":"H_EARTH_AUDRALIA_WORLD_RENDERER",
+      "camera":"CONTINUOUS_ORIENTATION_AND_APPROACH_TO_RECOGNIZABLE_WORLD",
+      "text":["What WASN'T before","doesn't define","what IS possible."],
+      "semanticAccent":"WASN'T_TO_IS",
+      "transitionCause":"CAMERA_LOWERS_TOWARD_INHABITED_LOCAL_REGISTER"
+    },
+    {
+      "id":"T2","in":13.190,"out":19.430,"state":"ENTRY_INHABITED_WORLD_THRESHOLD",
+      "pictureAuthority":"CHARACTERS_CARDINAL_SITE_GEOMETRY",
+      "camera":"SHARED_WORLD_SIGNAL_LOCAL_APPROACH_CHARACTER_IDENTITY_EMERGES",
+      "text":["The experience creates reality."],
+      "textCompletionAllowed":false,
+      "transitionCause":"LOCAL_SIGNAL_AND_SITE_GEOMETRY_SEPARATE_INTO_SPATIAL_CELLS"
+    },
+    {
+      "id":"T3","in":19.430,"out":29.580,"state":"DIMENSIONAL_ESTATE_COMPILATION_STORM",
+      "pictureAuthority":["H_EARTH_AUDRALIA_WORLD_RENDERER","CHARACTERS_CARDINAL_SITE_GEOMETRY","COMPASS_GEOMETRY","MIRRORLAND_WINDOW_GEOMETRY"],
+      "method":"R11A_PIXEL_RECONFIGURATION_PLUS_ABOUT_CAUSAL_TRANSFORMATION",
+      "storm":"AUTHENTIC_SOURCE_RENDER_CELLS_ORBIT_ACCELERATE_CONVERGE_RESOLVE_REABSORB",
+      "text":["The experience","creates"],
+      "peakWord":"creates",
+      "transitionCause":"STORM_ENERGY_EXHAUSTS_INTO_MUSIC_BREATH"
+    },
+    {
+      "id":"T4","in":29.580,"out":36.730,"state":"DECELERATION_REALITY_LANDING",
+      "pictureAuthority":"CURRENT_QUALIFIED_CHARACTERS_LOCAL_ENVIRONMENT",
+      "defaultLandingSite":"WATERLINE_STATION",
+      "lateBindableFields":["landingSite","cameraFit"],
+      "text":["reality."],
+      "motion":"CONTINUOUS_STORM_DECELERATION_TO_INTENTIONAL_AUTHORED_HOLD",
+      "transitionCause":"CAMERA_WITHDRAWS_FROM_SAME_RESOLVED_WORLD"
+    },
+    {
+      "id":"T5","in":36.730,"out":47.630,"state":"LOCAL_TO_PLANETARY_WITHDRAWAL",
+      "pictureAuthority":"H_EARTH_AUDRALIA_WORLD_RENDERER",
+      "camera":"SAME_WORLD_LOCAL_TERRAIN_TO_CURVATURE_TO_PLANETARY",
+      "text":["So where does reality begin?"],
+      "transitionCause":"ORBITAL_WORLD_MOTION_CONTINUES"
+    },
+    {
+      "id":"T6","in":47.630,"out":52.330,"state":"INVITATION_RISE",
+      "pictureAuthority":"H_EARTH_AUDRALIA_WORLD_RENDERER",
+      "camera":"RESTRAINED_CONTINUOUS_GLOBAL_MOTION",
+      "text":["DISCOVER","EXPLORE"],
+      "transitionCause":"GLOBAL_MOTION_REMAINS_CONTINUOUS"
+    },
+    {
+      "id":"T7","in":52.330,"out":58.774,"state":"URL_TERMINAL_FALL",
+      "pictureAuthority":"H_EARTH_AUDRALIA_WORLD_RENDERER",
+      "camera":"SAME_PLANETARY_FIELD_TO_EXACT_MUSIC_END",
+      "text":["DIAMONDGATEBRIDGE.COM"],
+      "terminal":"NO_END_CARD_NO_BLACK_SLIDE_NO_VISUAL_TAIL"
+    }
+  ]
+}

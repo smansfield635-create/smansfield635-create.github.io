@@ -158,3 +158,13 @@ test('Gen2942 source-bound image set rejects missing poses, role drift, wrong sh
   assert.throws(()=>diagnostic.validateIdentityPixelSet(changed),/GEN2942_/);
  }
 });
+
+test('Gen2942 source-first mountain polygon target preserves the original demonstrated pose and no recapture of prior four controls',()=>{
+ const p=diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES;
+ assert.deepEqual(p.map(v=>[v.name,v.x,v.z,v.yaw,v.pitch]),[['source-mountain-diagonal-material-edge',88,-260,118,-13]]);
+ assert.equal(p.length*diagnostic.IDENTITY_MODES.length,8);
+ assert.equal(diagnostic.IDENTITY_POSES.length*diagnostic.IDENTITY_MODES.length,32);
+ assert.equal(diagnostic.IDENTITY_MODES.at(-1),'reference-lit-with-grass');
+ assert.equal(diagnostic.IDENTITY_MODES[6],'primitive-role-raw');
+ for(const old of diagnostic.IDENTITY_POSES)assert.ok(!p.some(x=>x.name===old.name),'no old image replay');
+});

@@ -80,7 +80,7 @@ export function instrumentRidgeNormalRenderer(original){
  let fragment=original.slice(start,end);
  const one=(a,b)=>{if(fragment.split(a).length!==2)throw Error('GEN2944_SHADER_ANCHOR_NOT_UNIQUE:'+a.slice(0,75));fragment=fragment.replace(a,b);};
  one('out vec4 outColor;','out vec4 outColor;\nuniform int uRidgeNormalMode;');
- one('float terrainRoughnessForLighting=0.72;','float terrainRoughnessForLighting=0.72;\n  float ridgeCorrectionRaw=0.0;\n  float ridgeRegionRaw=0.0,ridgeGapRaw=0.0;');
+ one('float terrainRoughnessForLighting=0.72;','float terrainRoughnessForLighting=0.72;\n  float ridgeCorrectionRaw=0.0;\n  float ridgeRegionRaw=0.0,ridgeGapRaw=0.0;\n  vec2 ridgeDebugWorld=vec2(0.0);float ridgeSignedGapRaw=0.0;');
  const classification='  bool worldSoilTerrain=geologicalEarthRock||vRoleCode==1u||\n    int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;';
  const counterfactual=[
   classification,
@@ -94,6 +94,8 @@ export function instrumentRidgeNormalRenderer(original){
   '    float b=34.0*exp(-1.6*dot(c,c));',
   '    float gap=abs(a-b);',
   '    ridgeRegionRaw=region;ridgeGapRaw=1.0-smoothstep(0.0,2.0,gap);',
+  '    ridgeDebugWorld=vec2(clamp((q.x+256.0)/512.0,0.0,1.0),clamp((q.y+400.0)/320.0,0.0,1.0));',
+  '    ridgeSignedGapRaw=clamp(0.5+(a-b)/24.0,0.0,1.0);',
   '    if(region>0.0&&gap<2.0){',
   '      vec2 ga=vec2(-3.2*a*(q.x-148.0)/(66.0*66.0),-3.2*a*(q.y+224.0)/(34.0*34.0));',
   '      vec2 gb=vec2(-3.2*b*(q.x-86.0)/(68.0*68.0),-3.2*b*(q.y+235.0)/(37.0*37.0));',
@@ -111,7 +113,7 @@ export function instrumentRidgeNormalRenderer(original){
  ].join('\n');
  one(classification,counterfactual);
  const gamma='  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));';
- one(gamma,gamma+'\n  if(worldSoilTerrain&&uRidgeNormalMode==2)lit=vec3(ridgeCorrectionRaw,ridgeRegionRaw,ridgeGapRaw);');
+ one(gamma,gamma+'\n  if(worldSoilTerrain&&uRidgeNormalMode==2)lit=vec3(ridgeDebugWorld,ridgeSignedGapRaw);');
  let source=original.slice(0,start)+fragment+original.slice(end);
  const draw='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
  if(source.split(draw).length!==2)throw Error('GEN2944_DRAW_ANCHOR_NOT_UNIQUE');

@@ -1,0 +1,31 @@
+{
+  "schema": "H_EARTH_IDENTITY_FERTILE_TRANSITION_DESIGN_REVIEW_v1",
+  "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+  "role": "Elara/East",
+  "nativeTaskIdentity": "/root/east_review",
+  "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+  "result": "DESIGN_REQUIREMENTS_CONFIRMED",
+  "source": "Native agent returned review in current session",
+  "requirements": [
+    "Exact approved renderer reconstruction and inverse SHA256",
+    "Actual candidate fertile expression in lit and albedo",
+    "Eight candidate frames and archived baseline reuse",
+    "Frozen camera/source/asset/mode/viewport custody",
+    "Exact decoded coast RGBA parity",
+    "Exclude new query from generic job; explicit branch dispatch only",
+    "Attempt 1; saved dispatch intent and independent source hashes"
+  ],
+  "transportFinding": {
+    "priorRuns": [
+      40760859003,
+      40773251264
+    ],
+    "events": "workflow_dispatch on operation branch",
+    "existingPrBridge": "FIXED_MAIN_REF_NOT_APPLICABLE",
+    "directDispatchToolAvailable": false,
+    "newCarrierAllowed": false
+  },
+  "gpuRuns": 0,
+  "visualAcceptance": false,
+  "authorityEffect": "NONE"
+}

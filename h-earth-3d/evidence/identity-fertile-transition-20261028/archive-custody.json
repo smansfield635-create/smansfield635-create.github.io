@@ -1,0 +1,41 @@
+{
+  "schema": "H_EARTH_IDENTITY_FERTILE_ARCHIVE_CUSTODY_v1",
+  "result": "PASS",
+  "sourceRun": 40716213632,
+  "verifiedArchivedFrames": 12,
+  "selectedBaselineFrames": [
+    {
+      "image": "baseline-inland-seam-near-reference-lit.png",
+      "sha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a"
+    },
+    {
+      "image": "baseline-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "96195fac6da4fca401c64d2ce31a034cd7d628620409f772114616b78354ff3a"
+    },
+    {
+      "image": "baseline-inland-seam-far-reference-lit.png",
+      "sha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc"
+    },
+    {
+      "image": "baseline-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a"
+    },
+    {
+      "image": "baseline-protected-meadow-reference-lit.png",
+      "sha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b"
+    },
+    {
+      "image": "baseline-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "dea2132ddb7662475bcadfbcef2ea5dd67dea9a0be5e1669c4c8e77407d7d4dc"
+    },
+    {
+      "image": "baseline-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56"
+    },
+    {
+      "image": "baseline-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7"
+    }
+  ],
+  "newCaptures": 0
+}

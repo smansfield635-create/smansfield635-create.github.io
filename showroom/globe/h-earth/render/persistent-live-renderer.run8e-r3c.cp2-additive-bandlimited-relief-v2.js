@@ -946,7 +946,7 @@ void main(){
         0.58,1.36,basinDistance+(identityNoise-0.5)*0.34
       );
       float fertilePatch=smoothstep(
-        0.42,0.68,
+        0.29,0.81,
         macroField*0.47+mesoField*0.38+detailField*0.15
       );
       float moistShelter=clamp(
@@ -1052,7 +1052,8 @@ void main(){
       groundcoverTone=mix(
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
-      palette+=0.24*groundcoverWeight*groundcoverTone*(materialVariation-0.5);
+      groundcoverTone*=0.88+0.24*materialVariation;
+      palette=mix(palette,groundcoverTone,groundcoverWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END

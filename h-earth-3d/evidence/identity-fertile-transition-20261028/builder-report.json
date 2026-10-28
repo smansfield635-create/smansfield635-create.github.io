@@ -1,0 +1,40 @@
+{
+  "schema": "H_EARTH_IDENTITY_FERTILE_BUILDER_REPORT_v1",
+  "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+  "lockGeneration": 2963,
+  "canonicalFunction": "SOUTH_TARIAN",
+  "result": "SOURCE_IMPLEMENTED_TESTS_PASS_INDEPENDENT_REVIEW_PENDING",
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "f46e60932114977fd7e8f6257f4ae45159f21a6942adecd53e4973b059b20c75",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "553fc84aa542ba75f74c4af56a592bcd09abe5eb59a7f55fa23d43ebb03cd011",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "63f4ff4b300b2bd21688d7961e9e3bec7626f3e2d6f5a6f3853faa7d0e657d25"
+  },
+  "tests": {
+    "command": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs",
+    "passed": 59,
+    "failed": 0,
+    "nodeSyntaxChecks": "PASS",
+    "workflowYamlParse": "PASS"
+  },
+  "registryPreflight": "PASS",
+  "historicalProfilePreservation": "Residual test fixture reconstructed from exact approved renderer by historical residual substitution; identity workflow assertion bounded to its original job only. All historic source profiles unchanged.",
+  "runtimeDelta": "Restore approved fa6acc42 renderer then change only fertilePatch endpoints 0.42/0.68 to 0.29/0.81; inverse exact approved hash",
+  "capturePolicy": {
+    "candidateFrames": 8,
+    "baselineRecapture": false,
+    "automaticRetry": false,
+    "gpuRunsLaunched": 0,
+    "manualExactHeadDispatchRequired": true
+  },
+  "remaining": [
+    "Independent source review",
+    "Exact committed scene parity",
+    "Zero-frame GLSL compile if selected",
+    "Saved dispatch checkpoint and one run",
+    "Visual comparison and owner disposition"
+  ],
+  "ownerAcceptance": false,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false
+}

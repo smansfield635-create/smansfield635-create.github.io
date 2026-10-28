@@ -509,7 +509,7 @@ test('contribution failure receipt binds frozen source rather than historical di
 });
 
 test('residual candidate is only the reviewed composition change against approved bytes',()=>{
- const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const source=diagnostic.reconstructFootprintBaseline(footprintShader).replace(diagnostic.ORIGINAL_RESIDUAL_COMPOSITION,diagnostic.RESIDUAL_COMPOSITION);
  const baseline=diagnostic.reconstructResidualBaseline(source);
  assert.equal(baseline,diagnostic.reconstructFootprintBaseline(footprintShader));
  assert.ok(!source.includes('groundcoverTone*=0.88+0.24*materialVariation;'));
@@ -635,11 +635,47 @@ test('identity evidence validator rejects missing modes, drift,wrong source and 
 });
 
 test('identity workflow requires explicit reviewed immutable launch and cannot launch on pull request',()=>{
- const all=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');const y=all.split('\n  identity-blend-diagnostic:')[1];
+ const all=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');const y=all.split('\n  identity-blend-diagnostic:')[1].split('\n  identity-fertile-transition-comparison:')[0];
  assert.ok(y.includes("github.event_name == 'workflow_dispatch'"));assert.ok(!y.includes("github.event_name == 'pull_request'"));
  assert.ok(y.includes("github.ref == 'refs/heads/h-earth/identity-blend-diagnostic-20261028'"));
  assert.ok(all.includes("inputs.route_query != 'qualification=identity-blend-diagnostic-v1'"));
  assert.equal(y.split('uses: actions/checkout@v4').length-1,3);assert.ok(!y.includes('path: baseline'));assert.ok(!y.includes('path: candidate'));
  for(const required of ['test "$RUN_ATTEMPT" = 1',"assert.equal(intent.lockGeneration,2962)","assert.equal(intent.candidateFrames,20)","assert.equal(intent.toolingHead,process.env.TARGET_SHA)","assert.equal(review.builderSelfApproval,false)","assert.equal(admission.result,'ADMITTED_AND_LOCKED')","assert.equal(intent.sceneRendererSha256,sceneHash)",'--baseline-dir ../scene --candidate-dir ../scene'])assert.ok(y.includes(required),required);
  assert.ok(y.includes("assert.equal(intent.automaticRetry,false)"));assert.ok(y.includes('H_EARTH_COMPARISON_PROFILE: IDENTITY_BLEND_DIAGNOSTIC_V1'));
+});
+
+test('fertile transition is an exact approved-source endpoint change and its overlay preserves both actual modes',()=>{
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const baseline=diagnostic.reconstructFertileBaseline(source);
+ assert.equal(baseline,diagnostic.reconstructFootprintBaseline(footprintShader));
+ assert.ok(source.includes(diagnostic.ORIGINAL_RESIDUAL_COMPOSITION));
+ assert.ok(!source.includes(diagnostic.RESIDUAL_COMPOSITION));
+ assert.throws(()=>diagnostic.reconstructFertileBaseline(source+'\n'),/RECONSTRUCTION_MISMATCH/);
+ assert.throws(()=>diagnostic.reconstructFertileBaseline(source+diagnostic.FERTILE_CANDIDATE_EXPRESSION),/ANCHOR_NOT_UNIQUE/);
+ const observed=diagnostic.instrumentFertileRenderer(source);
+ assert.equal(diagnostic.verifyFertileInstrumentation(observed),true);
+ assert.ok(observed.includes('if(m==3)albedo=probeGCSeen>0.5?probeGCAfter:base;'));
+ for(const contaminated of [observed.replace(diagnostic.FERTILE_CANDIDATE_EXPRESSION,diagnostic.FERTILE_ORIGINAL_EXPRESSION),observed+diagnostic.RESIDUAL_COMPOSITION,observed.replace('probeGCAfter=mix(palette,groundcoverTone,groundcoverWeight);',diagnostic.RESIDUAL_PROBE)])assert.throws(()=>diagnostic.verifyFertileInstrumentation(contaminated),/CONTAMINATION/);
+});
+test('fertile profile is exactly eight candidate frames, frozen paired controls and an explicit isolated dispatch',async()=>{
+ const {execFileSync}=await import('node:child_process');const url=new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url).href;
+ const script=`import assert from 'node:assert/strict';import {HEADS,FERTILE_POSES,FERTILE_MODES} from ${JSON.stringify(url)};assert.equal(HEADS.candidate,'${'a'.repeat(40)}');assert.equal(HEADS.baseline,'cb57c275b95d0d48883bc4da4dcfcf17cbec5060');assert.deepEqual(FERTILE_MODES,['reference-lit','after-groundcover-unlit']);assert.deepEqual(FERTILE_POSES.map(p=>p.name),['inland-seam-near','inland-seam-far','protected-meadow','protected-coast']);assert.equal(FERTILE_MODES.length*FERTILE_POSES.length,8);`;
+ execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'IDENTITY_FERTILE_TRANSITION_V1',H_EARTH_COMPARISON_CANDIDATE_SHA:'a'.repeat(40)},encoding:'utf8'});
+ assert.throws(()=>execFileSync(process.execPath,['--input-type=module','-e',`await import(${JSON.stringify(url)})`],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'IDENTITY_FERTILE_TRANSITION_V1',H_EARTH_COMPARISON_CANDIDATE_SHA:''},stdio:'pipe'}),/CANDIDATE_EXACT_SHA_REQUIRED/);
+ const all=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ assert.ok(all.split('    runs-on:')[0].includes("inputs.route_query != 'qualification=identity-fertile-transition-v1'"));
+ const job=all.split('\n  identity-fertile-transition-comparison:')[1];
+ assert.ok(job.includes("github.event_name == 'workflow_dispatch'"));assert.ok(job.includes("github.ref == 'refs/heads/h-earth/identity-fertile-transition-20261028'"));
+ assert.ok(job.includes('H_EARTH_COMPARISON_PROFILE: IDENTITY_FERTILE_TRANSITION_V1'));assert.ok(job.includes('test "$RUN_ATTEMPT" = 1'));
+ assert.ok(job.includes('assert.equal(intent.lockGeneration,2963)'));assert.ok(job.includes('assert.equal(intent.candidateFrames,8)'));assert.ok(job.includes('assert.equal(review.builderSelfApproval,false)'));
+});
+test('fertile scene parity excludes declared evidence but rejects world and undeclared historical evidence drift',async()=>{
+ const {execFileSync}=await import('node:child_process');const {tmpdir}=await import('node:os');const path=await import('node:path');
+ const root=fs.mkdtempSync(path.join(tmpdir(),'fertile-parity-')),a=path.join(root,'a'),b=path.join(root,'b');
+ const git=(dir,args)=>execFileSync('git',['-C',dir,...args],{stdio:'pipe'});const put=(dir,p,v)=>{fs.mkdirSync(path.dirname(path.join(dir,p)),{recursive:true});fs.writeFileSync(path.join(dir,p),v);};const commit=dir=>{git(dir,['add','.']);git(dir,['-c','user.name=Test','-c','user.email=test@local','commit','-qm','fixture']);};
+ try{fs.mkdirSync(a);git(a,['init','-q']);put(a,'h-earth-3d/protected-world.json','world');commit(a);execFileSync('git',['clone','-q',a,b]);
+ put(b,diagnostic.PRESERVED_IDENTITY_EVIDENCE_PATHS[0],'preserved');put(b,'h-earth-3d/evidence/identity-fertile-transition-20261028/admission-receipt.json','new evidence');commit(b);assert.equal(diagnostic.assertSceneParity(a,b,{fertile:true}).result,'EXACT_SCENE_TREE_PARITY_EXCEPT_DECLARED_RENDERER_AND_EVIDENCE');
+ put(b,'h-earth-3d/evidence/identity-blend-diagnostic-20261028/not-preserved.json','not admitted');commit(b);assert.throws(()=>diagnostic.assertSceneParity(a,b,{fertile:true}),/SCENE_SOURCE_DRIFT/);
+ git(b,['reset','--hard','HEAD~1']);put(b,'h-earth-3d/protected-world.json','changed');commit(b);assert.throws(()=>diagnostic.assertSceneParity(a,b,{fertile:true}),/SCENE_SOURCE_DRIFT/);
+ }finally{fs.rmSync(root,{recursive:true,force:true});}
 });

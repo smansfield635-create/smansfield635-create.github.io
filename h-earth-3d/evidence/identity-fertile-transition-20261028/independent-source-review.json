@@ -1,0 +1,56 @@
+{
+  "schema": "H_EARTH_IDENTITY_FERTILE_TRANSITION_SOURCE_REVIEW_v1",
+  "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+  "lockGeneration": 2963,
+  "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+  "result": "PASS",
+  "reviewScope": "INDEPENDENT_SOURCE_REVIEW_ONLY_NOT_COMPLETE_LAUNCH_QUALIFICATION",
+  "builderSelfApproval": false,
+  "reviewer": {
+    "canonicalIdentity": "Soren",
+    "function": "WEST_BOUNDARY",
+    "nativeTaskIdentity": "/root/west_review",
+    "separateNativeAgent": true
+  },
+  "reviewedAt": "2026-10-28T22:22:10.947343+00:00",
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "f46e60932114977fd7e8f6257f4ae45159f21a6942adecd53e4973b059b20c75",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "553fc84aa542ba75f74c4af56a592bcd09abe5eb59a7f55fa23d43ebb03cd011",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "63f4ff4b300b2bd21688d7961e9e3bec7626f3e2d6f5a6f3853faa7d0e657d25"
+  },
+  "tests": {
+    "command": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs",
+    "passed": 59,
+    "failed": 0,
+    "executedByReviewer": true
+  },
+  "checks": {
+    "approvedSourceInverse": "Exact candidate substitution reversed once reproduces git source cb57c275 and SHA256 fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+    "candidateInstrumentation": "Actual changed fertile expression retained through lit mode and actual groundcover output albedo probe; rejected residual expression absent",
+    "baselineCustody": "Manifest SHA256 and all eight selected image SHA256 values independently matched contract; no baseline renderer invocation",
+    "frameBudget": "Four frozen poses times two modes; candidate-only capture loop; exact candidate/baseline pairing validator requires eight each",
+    "sceneScope": "201 baseline-to-current scene changed paths accounted for by renderer and declared/preserved evidence; no unexplained runtime or asset path",
+    "workflowIsolation": "Explicit workflow_dispatch only on repair branch, unique qualification query, generic job excludes query; all existing job triggers inspected; attempt1 and immutable target/checkpoint identities enforced",
+    "coastGate": "Both modes compared over complete decoded RGBA images; any differing pixel throws",
+    "claims": "Capture success remains visual-review pending; no owner acceptance, performance, publication or map-wide claims",
+    "glslCompilation": {
+      "result": "PASS",
+      "executionSource": "/root/east_review",
+      "receipt": "h-earth-3d/evidence/identity-fertile-transition-20261028/glsl-compile-receipt.json",
+      "receiptSha256": "751ea7d76df6624ae2af6cb0c0f2ce106676d36a04284107b56a75079558114c",
+      "reviewerReadback": "Source and dependency digests independently matched; both actual candidate and instrumented fragment compiled",
+      "limits": "Zero frames; no shader linking or rendering; not visual acceptance"
+    }
+  },
+  "remainingQualification": [
+    "Exact remote candidate and dispatch checkpoint readback pending.",
+    "GPU capture, visual assessment and owner KEEP/ONE_REPAIR/REJECT pending."
+  ],
+  "gpuRuns": 0,
+  "visualAcceptance": false,
+  "physicalDeviceAcceptance": false,
+  "mergeAuthority": false,
+  "deploymentAuthority": false,
+  "authorityEffect": "NONE_REVIEW_EVIDENCE_ONLY"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "H_EARTH_IDENTITY_FERTILE_GLSL_COMPILE_CHECK_v1",
+  "backend": "OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "framesRendered": 0,
+  "captureRunLaunched": false,
+  "shaders": [
+    {
+      "name": "original",
+      "sha256": "cf571107c4acf357883f56a3388a0a42093e1084b1f78243ab7714b1c41c2dd8",
+      "compiled": true,
+      "log": ""
+    },
+    {
+      "name": "instrumented",
+      "sha256": "a74a2bb9ca1d7f24910e482e823b6dca9db06f154ecf1ea61ba2afbc4475638e",
+      "compiled": true,
+      "log": ""
+    }
+  ],
+  "result": "PASS",
+  "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+  "lockGeneration": 2963,
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "f46e60932114977fd7e8f6257f4ae45159f21a6942adecd53e4973b059b20c75",
+    "showroom/globe/h-earth/render/rendered-beach-signal.v1.js": "e51cbf64b6cc9feeaf699d1f68871bbea055522bf623ef2b24c3c6e1b182ef34",
+    "showroom/globe/h-earth/render/hillside-shoreline-field.v1.js": "4353dbcd28e31ca41c0de8eb3dd3e9607ee996ff02ae669d5fd3595c18d104a8",
+    "showroom/globe/h-earth/render/landscape-coherence-field.v1.js": "54aa2bf97e19fc63631cd3f7ece0a6d4c3a8d13222afa9a66fef2666d3e1a7b1",
+    "showroom/globe/h-earth/render/foothill-meadow-field.v1.js": "a2961c0507d679ea998a78708127a84d41d8b3a3387831c9fb13cf0dcaa115fb"
+  },
+  "scope": "Fragment shader compilation only; no link, render, capture or visual acceptance claimed"
+}

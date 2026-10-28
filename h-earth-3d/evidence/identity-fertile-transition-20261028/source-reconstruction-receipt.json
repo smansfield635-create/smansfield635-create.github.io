@@ -1,0 +1,13 @@
+{
+  "schema": "H_EARTH_IDENTITY_FERTILE_SOURCE_RECONSTRUCTION_v1",
+  "result": "PASS",
+  "approvedHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "approvedRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "candidateRendererSha256": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+  "inverseRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "changedExpressionCount": 1,
+  "old": "fertilePatch=smoothstep(\n        0.42,0.68,\n        macroField*0.47+mesoField*0.38+detailField*0.15\n      )",
+  "new": "fertilePatch=smoothstep(\n        0.29,0.81,\n        macroField*0.47+mesoField*0.38+detailField*0.15\n      )",
+  "gpuRuns": 0,
+  "ownerAcceptance": false
+}

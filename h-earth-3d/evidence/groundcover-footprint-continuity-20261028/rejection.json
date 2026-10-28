@@ -1,0 +1,113 @@
+{
+  "schema": "H_EARTH_REJECTED_EXPERIMENT_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001",
+  "sourceHead": "1e4eeaaec018b92e7eeade9ba17b773a4ea4ccef",
+  "run": 40719150366,
+  "artifactId": 12831100038,
+  "artifactSha256": "31c666f5e2392f2b63bd968c05f8b73d61137e6bdb0c62fad638cc5745c8d65d",
+  "decision": "REJECT",
+  "failedAssertion": "Footprint filtering leaves the broad band visible.",
+  "validatorDefect": "Asset identity incorrectly includes entranceGrass.slopeRepair.generationMs.",
+  "validatorReplay": "PASS_ALL_24_SAVED_FRAMES_NO_GPU_RERUN",
+  "images": [
+    {
+      "path": "failed-run40719150366/baseline-inland-seam-near-reference-lit.png",
+      "sha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a"
+    },
+    {
+      "path": "failed-run40719150366/baseline-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "96195fac6da4fca401c64d2ce31a034cd7d628620409f772114616b78354ff3a"
+    },
+    {
+      "path": "failed-run40719150366/baseline-inland-seam-near-footprint-activation-raw.png",
+      "sha256": "9b610c4adbd998de71ba5d19a88884fbba79197a9dcd2954f403b7abcf991b31"
+    },
+    {
+      "path": "failed-run40719150366/baseline-inland-seam-far-reference-lit.png",
+      "sha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc"
+    },
+    {
+      "path": "failed-run40719150366/baseline-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a"
+    },
+    {
+      "path": "failed-run40719150366/baseline-inland-seam-far-footprint-activation-raw.png",
+      "sha256": "dd52f605105fc0445738c5b211fff3a9e13f292530f9df304c98c1deca3590a5"
+    },
+    {
+      "path": "failed-run40719150366/baseline-protected-meadow-reference-lit.png",
+      "sha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b"
+    },
+    {
+      "path": "failed-run40719150366/baseline-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "dea2132ddb7662475bcadfbcef2ea5dd67dea9a0be5e1669c4c8e77407d7d4dc"
+    },
+    {
+      "path": "failed-run40719150366/baseline-protected-meadow-footprint-activation-raw.png",
+      "sha256": "034f052e353147a911cc8a93468784a2be1c947e02420969b3ad5425c22f82a3"
+    },
+    {
+      "path": "failed-run40719150366/baseline-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56"
+    },
+    {
+      "path": "failed-run40719150366/baseline-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7"
+    },
+    {
+      "path": "failed-run40719150366/baseline-protected-coast-footprint-activation-raw.png",
+      "sha256": "b3978a4d50ad68b9f7fd1415ac9c0d8b00d660c3600bedd10fd3a8afe1dcaa01"
+    },
+    {
+      "path": "failed-run40719150366/candidate-inland-seam-near-reference-lit.png",
+      "sha256": "6dde0379ba131abaa12972dfa1a9908d6281d9b3264f48b784d649ebaba3aa1d"
+    },
+    {
+      "path": "failed-run40719150366/candidate-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "a5694b6c4d803dab47264ee8c60ea89e54c12fc5e736bcb59df23a61516cee40"
+    },
+    {
+      "path": "failed-run40719150366/candidate-inland-seam-near-footprint-activation-raw.png",
+      "sha256": "9b610c4adbd998de71ba5d19a88884fbba79197a9dcd2954f403b7abcf991b31"
+    },
+    {
+      "path": "failed-run40719150366/candidate-inland-seam-far-reference-lit.png",
+      "sha256": "d8da828f67d6a166142c908839a58014daab9b9ad0d914debc24a7c23fb45d84"
+    },
+    {
+      "path": "failed-run40719150366/candidate-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "1e5851e2a57097b068dabab4ee4840354377cdfe37f2e7159db28d0790d3710a"
+    },
+    {
+      "path": "failed-run40719150366/candidate-inland-seam-far-footprint-activation-raw.png",
+      "sha256": "dd52f605105fc0445738c5b211fff3a9e13f292530f9df304c98c1deca3590a5"
+    },
+    {
+      "path": "failed-run40719150366/candidate-protected-meadow-reference-lit.png",
+      "sha256": "a129a4cd3df7cce728418446fd3b3d5ceefbf56552bef3b89ae84feb26223c69"
+    },
+    {
+      "path": "failed-run40719150366/candidate-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "c479b8f9f50117225d17517952fa7e11c6d735f4a59e715b5f15a034e7db28da"
+    },
+    {
+      "path": "failed-run40719150366/candidate-protected-meadow-footprint-activation-raw.png",
+      "sha256": "034f052e353147a911cc8a93468784a2be1c947e02420969b3ad5425c22f82a3"
+    },
+    {
+      "path": "failed-run40719150366/candidate-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56"
+    },
+    {
+      "path": "failed-run40719150366/candidate-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7"
+    },
+    {
+      "path": "failed-run40719150366/candidate-protected-coast-footprint-activation-raw.png",
+      "sha256": "b3978a4d50ad68b9f7fd1415ac9c0d8b00d660c3600bedd10fd3a8afe1dcaa01"
+    }
+  ],
+  "straightAndCurvedCutoffClasses": "SEPARATELY_UNRESOLVED",
+  "ownerKeep": false,
+  "publicationAuthorized": false
+}

@@ -94,7 +94,7 @@ export function validateFootprintSet(views,expectedCandidateHead=HEADS.candidate
    if(pair.length!==2||!['baseline','candidate'].every(label=>pair.filter(v=>v.label===label).length===1))throw Error('FOOTPRINT_PAIR_MISSING');
    for(const v of pair){if(v.sourceHead!==(v.label==='baseline'?FOOTPRINT_BASELINE_HEAD:expectedCandidateHead)||v.modeId!==MODE_ID_BY_NAME.get(mode)||v.diagnosticApplied!==v.modeId||v.grassHidden!==(mode!=='reference-lit')||(v.label==='baseline'&&v.rendererHash!==FOOTPRINT_BASELINE_SHA256))throw Error('FOOTPRINT_SOURCE_OR_MODE_MISMATCH');}
    const [a,b]=pair;
-   if(a.assetSignature!==b.assetSignature||JSON.stringify(a.lastFrame.cameraPosition)!==JSON.stringify(b.lastFrame.cameraPosition)||a.grassHidden!==b.grassHidden)throw Error('FOOTPRINT_PAIR_MISMATCH');
+   if(comparisonAssetIdentity(a.assetSignature)!==comparisonAssetIdentity(b.assetSignature)||JSON.stringify(a.lastFrame.cameraPosition)!==JSON.stringify(b.lastFrame.cameraPosition)||a.grassHidden!==b.grassHidden)throw Error('FOOTPRINT_PAIR_MISMATCH');
  }
  return true;
 }
@@ -165,13 +165,24 @@ export function assertSceneParity(baselineDir,candidateDir){
  if(!a||a!==b)throw Error('FOOTPRINT_SCENE_SOURCE_DRIFT');
  return {result:'EXACT_SCENE_TREE_PARITY_EXCEPT_DECLARED_RENDERER_AND_EVIDENCE',manifestSha256:sha(a)};
 }
+// Exclude only the observed execution duration, never physical asset identity.
+export function comparisonAssetIdentity(signature){
+ const parts=signature.split('|');
+ if(parts.length===1)return signature;
+ if(parts.length!==2)throw Error('ASSET_SIGNATURE_FORMAT_INVALID');
+ const physical=JSON.parse(parts[1]);
+ if(physical.entranceGrass?.slopeRepair)delete physical.entranceGrass.slopeRepair.generationMs;
+ return parts[0]+'|'+JSON.stringify(physical);
+}
 export function footprintVegetationReadiness(resources){
  const r=resources?.singleOwnerVegetation;
  if(!r)return {ready:false,signature:'SINGLE_OWNER_PENDING'};
  if(r.disposed||r.allocationGlError||r.uploadGlError)throw Error('FOOTPRINT_VEGETATION_UPLOAD_FAILED');
  const keys=['schema','installedRootCount','originalRootCount','rootOwnerCount','gpuAllocationVerified','gpuUploadCount','gpuUploadedBytes','gpuAllocatedBytes','gpuRequestedBytes','gpuObservedBufferBytes','entranceGrass','allocationGlError','uploadGlError','disposed','tileCount','controlRoots'];
  const ready=r.schema==='H_EARTH_SINGLE_OWNER_WOODLAND_v1'&&r.rootOwnerCount===1&&r.gpuAllocationVerified===true&&Number.isInteger(r.installedRootCount)&&r.installedRootCount>0&&r.gpuUploadCount>0&&r.disposed===false&&r.gpuRequestedBytes===r.installedRootCount*16&&r.gpuObservedBufferBytes===r.gpuRequestedBytes&&r.gpuAllocatedBytes===r.gpuRequestedBytes&&r.gpuUploadedBytes===r.gpuRequestedBytes&&r.allocationGlError===0&&r.uploadGlError===0;
- return {ready,signature:JSON.stringify(Object.fromEntries(keys.map(k=>[k,r[k]])))};
+ const identity=structuredClone(Object.fromEntries(keys.map(k=>[k,r[k]])));
+ if(identity.entranceGrass?.slopeRepair)delete identity.entranceGrass.slopeRepair.generationMs;
+ return {ready,signature:JSON.stringify(identity)};
 }
 export function assertCheckout(dir,expected){const head=execFileSync('git',['-C',dir,'rev-parse','HEAD'],{encoding:'utf8'}).trim();if(head!==expected)throw Error('CHECKOUT_HEAD_MISMATCH');if(execFileSync('git',['-C',dir,'status','--porcelain','--untracked-files=no'],{encoding:'utf8'}).trim())throw Error('CHECKOUT_TRACKED_BYTES_CHANGED');}
 export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(!['--baseline-dir','--candidate-dir','--output'].includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==3)throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==3)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
@@ -259,4 +270,5 @@ export async function run(argv){
   return receipt;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{console.error(e);process.exitCode=1;});
+
 

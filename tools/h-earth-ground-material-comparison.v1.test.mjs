@@ -69,7 +69,7 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
- const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const shader=fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-footprint-continuity-20261028/rejected-renderer.js',import.meta.url),'utf8');
  const baseline=diagnostic.reconstructFootprintBaseline(shader);
  const digest=diagnostic.verifyExactMaterialCandidate(baseline);
  assert.match(digest,/^[0-9a-f]{64}$/);
@@ -123,7 +123,7 @@ test('no product change: overlay only allowed with published SHA; all vegetation
 
 // Execute the production scalar GLSL expressions with double precision for a
 // numerical quadrature check. This does not certify GPU precision or pixels.
-const footprintShader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+const footprintShader=fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-footprint-continuity-20261028/rejected-renderer.js',import.meta.url),'utf8');
 const footprintBlock=name=>{
  const matches=[...footprintShader.matchAll(new RegExp('^[ \\t]*// H_EARTH_GROUNDCOVER_FOOTPRINT_'+name+'_BEGIN\\n([\\s\\S]*?)^[ \\t]*// H_EARTH_GROUNDCOVER_FOOTPRINT_'+name+'_END\\n','gm'))];
  assert.equal(matches.length,1);return matches[0][1];
@@ -266,4 +266,33 @@ test('preserved baseline pins all twelve original frame hashes',async()=>{
  const {mkdtempSync,rmSync}=await import('node:fs');const {tmpdir}=await import('node:os');const {join}=await import('node:path');
  const out=mkdtempSync(join(tmpdir(),'footprint-baseline-'));
  try{const m=preservedFootprintBaseline(new URL('../',import.meta.url).pathname,out);assert.equal(m.views.length,12);assert.equal(m.sourceRun,40716213632);assert.equal(m.baselineErrors.length,0);}finally{rmSync(out,{recursive:true,force:true});}
+});
+
+
+// Replay the original failed receipt; no render or timing measurement is repeated.
+const failedDir=new URL('../h-earth-3d/evidence/groundcover-footprint-continuity-20261028/failed-run40719150366/',import.meta.url);
+const savedReceipt=JSON.parse(fs.readFileSync(new URL('receipt.json',failedDir),'utf8'));
+test('saved 24 frames pass identity after exact timing-leaf exclusion',()=>{
+ assert.equal(savedReceipt.views.length,24);
+ assert.equal(diagnostic.validateFootprintSet(savedReceipt.views,savedReceipt.heads.candidate),true);
+});
+test('saved image bytes retain their original SHA256',async()=>{
+ const {createHash}=await import('node:crypto');
+ for(const v of savedReceipt.views)assert.equal(createHash('sha256').update(fs.readFileSync(new URL(v.image,failedDir))).digest('hex'),v.imageSha256);
+});
+test('timing exclusion preserves root asset camera and scene negative checks',()=>{
+ const mutations=[
+ v=>{v.lastFrame.cameraPosition.x+=1;},
+ v=>{v.sourceHead='0'.repeat(40);},
+ ...['installedRootCount','originalRootCount','gpuUploadedBytes','controlRoots','entranceGrass'].map(key=>v=>{
+ const parts=v.assetSignature.split('|');const physical=JSON.parse(parts[1]);physical[key]={tampered:true};v.assetSignature=parts[0]+'|'+JSON.stringify(physical);
+ }),
+ v=>{const parts=v.assetSignature.split('|');const assets=JSON.parse(parts[0]);assets[0].id='wrong';v.assetSignature=JSON.stringify(assets)+'|'+parts[1];},
+ v=>{const parts=v.assetSignature.split('|');const physical=JSON.parse(parts[1]);physical.entranceGrass.slopeRepair.extraPhysicalFact=1;v.assetSignature=parts[0]+'|'+JSON.stringify(physical);}
+ ];
+ for(const mutate of mutations){const views=structuredClone(savedReceipt.views);mutate(views.find(v=>v.label==='candidate'));assert.throws(()=>diagnostic.validateFootprintSet(views,savedReceipt.heads.candidate));}
+ const original=savedReceipt.views.find(v=>v.label==='candidate').assetSignature;
+ const parts=original.split('|'),physical=JSON.parse(parts[1]);physical.entranceGrass.slopeRepair.generationMs=999999;
+ assert.equal(diagnostic.comparisonAssetIdentity(original),diagnostic.comparisonAssetIdentity(parts[0]+'|'+JSON.stringify(physical)));
+ assert.equal(savedReceipt.views.find(v=>v.label==='candidate').assetSignature,original);
 });

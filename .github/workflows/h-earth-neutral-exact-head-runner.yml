@@ -1211,3 +1211,62 @@ jobs:
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30
+
+  gen2942-identity-source-gpu:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen2942-source-pixel-identity-diagnostic-20261027' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted Gen2942 read-only tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Checkout exact published Gen2928 source baseline
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: baseline
+          persist-credentials: false
+      - name: Checkout same immutable Gen2928 diagnostic render substrate
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Require exact source identities and focused source-stage tests
+        working-directory: tooling
+        env:
+          TOOLING_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TOOLING_HEAD"
+          test "$(git -C ../baseline rev-parse HEAD)" = cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          test "$(git -C ../candidate rev-parse HEAD)" = cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          test "$(git -C ../baseline rev-parse HEAD:showroom/globe/h-earth/render/assets)" = "$(git -C ../candidate rev-parse HEAD:showroom/globe/h-earth/render/assets)"
+          node --test tools/h-earth-ground-material-comparison.v1.test.mjs
+      - name: Install pinned Chromium
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture published terrain ridge-dominance model at the mountain normal crease
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN2942_MOUNTAIN_RIDGE_WINNER_V1
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen2942-ridge-winner"
+      - name: Preserve three-frame ridge-first-cause provenance
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen2942-ridge-winner-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen2942-ridge-winner
+          if-no-files-found: warn
+          retention-days: 30

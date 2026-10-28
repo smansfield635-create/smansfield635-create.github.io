@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
 
+const GEN2942_RENDERER_URL=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
 const fixture=()=>({state:{position:{x:18,y:24,z:-226},yawDegrees:-150,pitchDegrees:-14,verticalFovDegrees:56,sequence:10001},lastFrame:{navigationSequence:10001,frameSequence:21,cameraPosition:{x:18,y:24,z:-226}},expectedCameraPosition:{x:18,y:24,z:-226},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}});
 test('exact immutable pair and recovered four poses are frozen',()=>{assert.equal(HEADS.baseline,'60b3c07f0216645119a1b92b16dac82cae739145');assert.equal(HEADS.candidate,'60b3c07f0216645119a1b92b16dac82cae739145');assert.deepEqual(POSES.slice(0,4).map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[['river-overlook',18,-226,210,-14],['bare-mountain',88,-260,95,-10],['coast-oblique',0,-110,170,-8],['foothill-west',-52,-208,180,-12]]);});
 test('renderer normal mode executes identical draw while hidden mode suppresses only that draw',()=>{const source='before();resources.singleOwnerVegetation?.draw(packet);after();',patched=instrumentRenderer(source);for(const hidden of [false,true]){const calls=[];new Function('globalThis','resources','packet','before','after',patched)({__groundComparisonHideGrass:hidden},{singleOwnerVegetation:{draw:p=>calls.push(p)}},'draw',()=>calls.push('before'),()=>calls.push('after'));assert.deepEqual(calls,hidden?['before','after']:['before','draw','after']);}});
@@ -69,7 +70,7 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
- const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const shader=fs.readFileSync(GEN2942_RENDERER_URL,'utf8');
  const digest=diagnostic.verifyExactMaterialCandidate(shader);
  assert.match(digest,/^[0-9a-f]{64}$/);
  assert.equal(shader.split(diagnostic.CANDIDATE_BLEND_EXPRESSION).length,2);
@@ -118,4 +119,104 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  assert.equal(diagnostic.DIAGNOSTIC_MODES.length,9);
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
+});
+
+test('Gen2942 identity pixel source profile has frozen Gen2928 shader and diagnostic-only instrumentation',()=>{
+ const frozen=fs.readFileSync(GEN2942_RENDERER_URL,'utf8');
+ assert.equal(diagnostic.GEN2942_PUBLISHED_HEAD,'cb57c275b95d0d48883bc4da4dcfcf17cbec5060');
+ assert.equal(diagnostic.GEN2942_PUBLISHED_SHADER_SHA256,'fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec');
+ const transformed=diagnostic.instrumentIdentityPixelRenderer(frozen);
+ for(const anchor of [
+  'uniform int uIdentityPixelMode;',
+  'pixBefore=palette;',
+  'pixSoilWeight=worldSoilWeight;',
+  'pixSoil=palette;',
+  'pixIdentityWeight=identityWeight;',
+  'pixIdentity=palette;',
+  'vRoleCode==1u?vec3(1.0,0.0,0.0)',
+  'globalThis.__identityPixelModeApplied=mode'
+ ])assert.ok(transformed.includes(anchor),anchor);
+ assert.notEqual(transformed,frozen);
+ assert.equal(fs.readFileSync(GEN2942_RENDERER_URL,'utf8'),frozen);
+ assert.throws(()=>diagnostic.instrumentIdentityPixelRenderer(frozen+'\\n'),/GEN2942_FROZEN_RENDERER_HASH_MISMATCH/);
+ assert.equal(diagnostic.IDENTITY_POSES.length*diagnostic.IDENTITY_MODES.length,32);
+ assert.deepEqual(diagnostic.IDENTITY_POSES.slice(0,2).map(x=>[x.x,x.z,x.yaw]),[[-210,-704,333],[-190,-704,27]]);
+ assert.deepEqual(diagnostic.IDENTITY_MODES.slice(1,4),['pre-worldsoil-unlit','post-worldsoil-unlit','post-identity-unlit']);
+ assert.ok(diagnostic.IDENTITY_MODES.includes('primitive-role-raw'));
+});
+
+test('Gen2942 source-bound image set rejects missing poses, role drift, wrong shader and grass disappearance',()=>{
+ const views=diagnostic.IDENTITY_POSES.flatMap(pose=>diagnostic.IDENTITY_MODES.map((mode,i)=>({
+  pose,mode,diagnosticApplied:i,grassHidden:mode!=='reference-lit-with-grass',
+  assetSignature:'frozen',sourceHead:diagnostic.GEN2942_PUBLISHED_HEAD,
+  rendererHash:diagnostic.GEN2942_PUBLISHED_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:pose.x,y:pose.y??19,z:pose.z}}
+ })));
+ assert.equal(diagnostic.validateIdentityPixelSet(views),true);
+ for(const mutate of [v=>v.pop(),v=>v[1].assetSignature='new',v=>v[2].sourceHead='wrong',v=>v[3].rendererHash='changed',v=>v.at(-1).grassHidden=true,v=>v[1].diagnosticApplied=7]){
+  const changed=structuredClone(views);mutate(changed);
+  assert.throws(()=>diagnostic.validateIdentityPixelSet(changed),/GEN2942_/);
+ }
+});
+
+test('Gen2942 source-first mountain polygon target preserves the original demonstrated pose and no recapture of prior four controls',()=>{
+ const p=diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES;
+ assert.deepEqual(p.map(v=>[v.name,v.x,v.z,v.yaw,v.pitch]),[['source-mountain-diagonal-material-edge',88,-260,118,-13]]);
+ assert.equal(p.length*diagnostic.IDENTITY_MODES.length,8);
+ assert.equal(diagnostic.IDENTITY_POSES.length*diagnostic.IDENTITY_MODES.length,32);
+ assert.equal(diagnostic.IDENTITY_MODES.at(-1),'reference-lit-with-grass');
+ assert.equal(diagnostic.IDENTITY_MODES[6],'primitive-role-raw');
+ for(const old of diagnostic.IDENTITY_POSES)assert.ok(!p.some(x=>x.name===old.name),'no old image replay');
+});
+
+test('Gen2942 lighting normal disambiguation is source-bound and non-mutating',()=>{
+ const before=fs.readFileSync(GEN2942_RENDERER_URL,'utf8');
+ const instrumented=diagnostic.instrumentIdentityPixelRenderer(before);
+ for(const line of [
+  'if(uIdentityPixelMode==13){shadingNormal=geometricNormal;terrainReliefEnvelope=0.0;}',
+  'else if(m==8)lit=geometricNormal*0.5+0.5;',
+  'else if(m==9)lit=shadingNormal*0.5+0.5;',
+  'else if(m==10)lit=vec3(max(dot(geometricNormal,normalize(uSunDirection)),0.0));',
+  'else if(m==11)lit=vec3(max(dot(shadingNormal,normalize(uSunDirection)),0.0));',
+  'else if(m==12)lit=vec3(clamp(terrainReliefEnvelope,0.0,1.0));'
+ ])assert.ok(instrumented.includes(line),line);
+ assert.equal(fs.readFileSync(GEN2942_RENDERER_URL,'utf8'),before);
+ assert.deepEqual(diagnostic.IDENTITY_LIGHTING_MODES,[
+ 'reference-lit','geometric-normal-raw','shading-normal-raw','geometric-sun-diffuse-raw',
+ 'relief-sun-diffuse-raw','relief-envelope-raw','reference-lit-geometric-only']);
+ assert.equal(diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES.length*diagnostic.IDENTITY_LIGHTING_MODES.length,7);
+ assert.equal(diagnostic.IDENTITY_POSES.length*diagnostic.IDENTITY_MODES.length,32);
+ const p=diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES[0];
+ const ids=[0,8,9,10,11,12,13];
+ const views=diagnostic.IDENTITY_LIGHTING_MODES.map((mode,i)=>({
+  pose:p,mode,diagnosticApplied:ids[i],grassHidden:true,assetSignature:'unchanged',
+  sourceHead:diagnostic.GEN2942_PUBLISHED_HEAD,
+  rendererHash:diagnostic.GEN2942_PUBLISHED_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:88.00614407254056,y:29.26418157783337,z:-260.0181529415971}}
+ }));
+ assert.equal(diagnostic.validateIdentityPixelSet(views,diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES,diagnostic.IDENTITY_LIGHTING_MODES),true);
+ const altered=structuredClone(views);altered[3].diagnosticApplied=12;
+ assert.throws(()=>diagnostic.validateIdentityPixelSet(altered,diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES,diagnostic.IDENTITY_LIGHTING_MODES),/GEN2942_CAPTURE_IDENTITY_MISMATCH/);
+});
+
+test('Gen2942 mountain ridge winner probe matches all 12 frozen source components with no disk mutation',()=>{
+ const renderer=fs.readFileSync(GEN2942_RENDERER_URL,'utf8');
+ const intercepted=diagnostic.instrumentIdentityPixelRenderer(renderer);
+ for(let i=0;i<12;i++)assert.ok(intercepted.includes('float ridge'+i+'='),'ridge '+i);
+ assert.ok(intercepted.includes('float vals[12]=float[12]('));
+ assert.ok(intercepted.includes('else if(m==14||m==15)'));
+ assert.deepEqual(diagnostic.IDENTITY_RIDGE_MODES,['reference-lit','ridge-dominant-raw','ridge-lead-margin-raw']);
+ assert.equal(diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES.length*diagnostic.IDENTITY_RIDGE_MODES.length,3);
+ assert.equal(fs.readFileSync(GEN2942_RENDERER_URL,'utf8'),renderer);
+ assert.throws(()=>diagnostic.instrumentIdentityPixelRenderer(renderer+' '),/GEN2942_FROZEN_RENDERER_HASH_MISMATCH/);
+ const pose=diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES[0];
+ const ids=[0,14,15];
+ const views=diagnostic.IDENTITY_RIDGE_MODES.map((mode,i)=>({
+  pose,mode,diagnosticApplied:ids[i],grassHidden:true,assetSignature:'immutable',
+  sourceHead:diagnostic.GEN2942_PUBLISHED_HEAD,rendererHash:diagnostic.GEN2942_PUBLISHED_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:88,y:29,z:-260}}
+ }));
+ assert.equal(diagnostic.validateIdentityPixelSet(views,diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES,diagnostic.IDENTITY_RIDGE_MODES),true);
+ const altered=structuredClone(views);altered[1].diagnosticApplied=15;
+ assert.throws(()=>diagnostic.validateIdentityPixelSet(altered,diagnostic.IDENTITY_MOUNTAIN_POLYGON_POSES,diagnostic.IDENTITY_RIDGE_MODES),/GEN2942_CAPTURE_IDENTITY_MISMATCH/);
 });

@@ -119,3 +119,18 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
 });
+
+test('Gen2944 ridge hard-winner derivative breaks at the source crossover',()=>{
+ const g=(x,z,cx,cz,rx,rz,a)=>a*Math.exp(-1.6*(((x-cx)/rx)**2+((z-cz)/rz)**2));
+ const east=x=>g(x,-250,148,-224,66,34,38),central=x=>g(x,-250,86,-235,68,37,34);
+ let lo=120,hi=140;
+ for(let i=0;i<65;i++){const m=(lo+hi)/2;if(east(m)>central(m))hi=m;else lo=m;}
+ const x=(hi+lo)/2,h=1e-5,hard=p=>Math.max(east(p),central(p));
+ const left=(hard(x)-hard(x-h))/h,right=(hard(x+h)-hard(x))/h;
+ assert.ok(Math.abs(right-left)>0.5);
+ const smooth=p=>{const a=east(p),b=central(p),d=Math.abs(a-b),w=2;
+  return Math.max(a,b)-(d<w?0.5*d*(1-d/w)**2:0);};
+ assert.ok(Math.abs(((smooth(x+h)-smooth(x))/h)-((smooth(x)-smooth(x-h))/h))<0.001);
+ const source=fs.readFileSync(new URL('../h-earth-3d/terrain/h-earth.terrain-field.js',import.meta.url),'utf8');
+ assert.ok(source.includes('const strongestPositiveRelief = Math.max(...positiveReliefComponents);'));
+});

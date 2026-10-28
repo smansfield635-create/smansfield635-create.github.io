@@ -26,9 +26,11 @@ export const IDENTITY_POSES=Object.freeze([
 export const IDENTITY_MOUNTAIN_POLYGON_POSES=Object.freeze([
  Object.freeze({name:'source-mountain-diagonal-material-edge',x:88,z:-260,yaw:118,pitch:-13})
 ]);
-const IDENTITY_MODE_ID=new Map(IDENTITY_MODES.map((name,index)=>[name,index]));
+export const IDENTITY_LIGHTING_MODES=Object.freeze(['reference-lit','geometric-normal-raw','shading-normal-raw','geometric-sun-diffuse-raw','relief-sun-diffuse-raw','relief-envelope-raw','reference-lit-geometric-only']);
+const IDENTITY_MODE_ID=new Map([...IDENTITY_MODES,...IDENTITY_LIGHTING_MODES.filter(mode=>mode!=='reference-lit')].map((name,index)=>[name,index]));
+const mountainLightingCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_MOUNTAIN_LIGHTING_V1';
 const mountainPolygonCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_MOUNTAIN_POLYGON_V1';
-const identityPixelCapture=mountainPolygonCapture||process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_IDENTITY_PIXEL_V1';
+const identityPixelCapture=mountainLightingCapture||mountainPolygonCapture||process.env.H_EARTH_COMPARISON_PROFILE==='GEN2942_IDENTITY_PIXEL_V1';
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
@@ -96,6 +98,10 @@ export function instrumentIdentityPixelRenderer(original){
   '    pixSoil=palette;pixIdentity=palette;\\n    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_BEGIN'.replaceAll('\\n','\n'));
  once('      palette=mix(palette,identityBase,identityWeight);',
   '      pixIdentityWeight=identityWeight;\\n      palette=mix(palette,identityBase,identityWeight);\\n      pixIdentity=palette;'.replaceAll('\\n','\n'));
+ // Mode 13 is browser-only: use geometric normals without relief normals,
+ // preserving exact topology, base terrain bytes and physical vegetation.
+ once('  float geometricRim=pow(',
+  '  if(uIdentityPixelMode==13){shadingNormal=geometricNormal;terrainReliefEnvelope=0.0;}\\n  float geometricRim=pow('.replaceAll('\\n','\n'));
  const gamma='  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));';
  once(gamma,gamma+[
   '  if(worldSoilTerrain&&uIdentityPixelMode>0){',
@@ -106,6 +112,11 @@ export function instrumentIdentityPixelRenderer(original){
   '    }else if(m==4)lit=vec3(clamp(pixSoilWeight,0.0,1.0));',
   '    else if(m==5)lit=vec3(clamp(pixIdentityWeight,0.0,1.0));',
   '    else if(m==6)lit=geologicalEarthRock?vec3(1.0,1.0,0.0):vRoleCode==1u?vec3(1.0,0.0,0.0):isExactFarLandSoilPrimitive?vec3(0.0,1.0,0.0):vec3(0.0,0.0,1.0);',
+  '    else if(m==8)lit=geometricNormal*0.5+0.5;',
+  '    else if(m==9)lit=shadingNormal*0.5+0.5;',
+  '    else if(m==10)lit=vec3(max(dot(geometricNormal,normalize(uSunDirection)),0.0));',
+  '    else if(m==11)lit=vec3(max(dot(shadingNormal,normalize(uSunDirection)),0.0));',
+  '    else if(m==12)lit=vec3(clamp(terrainReliefEnvelope,0.0,1.0));',
   '  }'
  ].join('\n'));
  let transformed=original.slice(0,start)+fragment+original.slice(end);
@@ -113,7 +124,7 @@ export function instrumentIdentityPixelRenderer(original){
  if(transformed.split(draw).length!==2)throw Error('GEN2942_UNIFORM_DRAW_ANCHOR_NOT_UNIQUE');
  transformed=transformed.replace(draw,draw+[
   "    {const mode=globalThis.__identityPixelMode??0;",
-  "     if(!Number.isInteger(mode)||mode<0||mode>=8)throw Error('GEN2942_IDENTITY_MODE_INVALID');",
+  "     if(!Number.isInteger(mode)||mode<0||mode>=14)throw Error('GEN2942_IDENTITY_MODE_INVALID');",
   "     const loc=gl.getUniformLocation(resources.geometryProgram,'uIdentityPixelMode');",
   "     if(loc===null)throw Error('GEN2942_IDENTITY_UNIFORM_MISSING');",
   "     gl.uniform1i(loc,mode);globalThis.__identityPixelModeApplied=mode;}"
@@ -182,9 +193,9 @@ export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(![
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2942_IDENTITY_PIXEL_V1','GEN2942_MOUNTAIN_POLYGON_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=mountainPolygonCapture?IDENTITY_MOUNTAIN_POLYGON_POSES:(identityPixelCapture?IDENTITY_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
-  const modes=identityPixelCapture?IDENTITY_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES);
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2942_IDENTITY_PIXEL_V1','GEN2942_MOUNTAIN_POLYGON_V1','GEN2942_MOUNTAIN_LIGHTING_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=(mountainPolygonCapture||mountainLightingCapture)?IDENTITY_MOUNTAIN_POLYGON_POSES:(identityPixelCapture?IDENTITY_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
+  const modes=mountainLightingCapture?IDENTITY_LIGHTING_MODES:(identityPixelCapture?IDENTITY_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES));
   if(poses.length*modes.length>(identityPixelCapture?32:20))throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:identityPixelCapture?'H_EARTH_POST_GEN2940_SOIL_IDENTITY_PIXEL_CAUSAL_REPAIR_20261027_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:identityPixelCapture?GEN2942_PUBLISHED_SHADER_SHA256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};

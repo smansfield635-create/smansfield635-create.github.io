@@ -12,10 +12,10 @@ await page.reload({waitUntil:'networkidle0'});await page.evaluate(()=>document.q
 const originalHistory=JSON.parse(stored).history;
 const readHistory=()=>page.evaluate(()=>JSON.parse(sessionStorage.getItem('dgb-build-companion-v4')).history);
 assert.deepEqual(await readHistory(),originalHistory,'reloading did not mutate stored history');
-const bubbles=await page.$eval('#build-companion .bc-bubble',es=>es.map(e=>e.textContent));assert.equal(bubbles.length,originalHistory.length,'no duplicate transcript bubbles');
+const bubbles=await page.evaluate(()=>[...document.querySelectorAll('#build-companion .bc-bubble')].map(e=>e.textContent));assert.equal(bubbles.length,originalHistory.length,'no duplicate transcript bubbles');
 await page.click('#build-companion .bc-close');
 const reopen=()=>page.evaluate(()=>document.querySelector('[data-open-build-companion],a[href="/build/intake/"]').click());
-await reopen();assert.deepEqual(await readHistory(),originalHistory,'close and reopen preserve stored history');assert.deepEqual(await page.$eval('#build-companion .bc-bubble',es=>es.map(e=>e.textContent)),bubbles);
+await reopen();assert.deepEqual(await readHistory(),originalHistory,'close and reopen preserve stored history');assert.deepEqual(await page.evaluate(()=>[...document.querySelectorAll('#build-companion .bc-bubble')].map(e=>e.textContent)),bubbles);
 await page.click('#build-companion [data-review]');await click('Prepare email draft');
 assert.equal(await page.$eval('#build-companion .bc-email-draft',e=>e.getAttribute('aria-label')),'Email draft');
 await page.$eval('#build-companion .bc-email-draft',e=>{e.value='Edited by the visitor after discovery';e.dispatchEvent(new Event('input',{bubbles:true}));});
@@ -23,8 +23,8 @@ assert.match(await page.$eval('#build-companion a[href^="mailto:"]',e=>e.href),/
 await page.click('#build-companion .bc-close');await page.reload({waitUntil:'networkidle0'});await reopen();
 assert.equal(await page.$eval('#build-companion .bc-email-draft',e=>e.value),'Edited by the visitor after discovery');
 assert.deepEqual(await readHistory(),originalHistory,'draft editing and reload preserve stored history');
-await click('Cancel email draft');assert.equal((await page.$('#build-companion .bc-email-draft')).length,0);
-assert.equal((await page.$('#build-companion a[href^="mailto:"]')).length,0);
+await click('Cancel email draft');assert.equal(await page.evaluate(()=>document.querySelectorAll('#build-companion .bc-email-draft').length),0);
+assert.equal(await page.evaluate(()=>document.querySelectorAll('#build-companion a[href^="mailto:"]').length),0);
 assert.equal(await page.evaluate(()=>Object.hasOwn(JSON.parse(sessionStorage.getItem('dgb-build-companion-v4')),'emailDraft')),false);
 await click('Prepare email draft');assert.match(await page.$eval('#build-companion .bc-email-draft',e=>e.value),/Hello Sean,/);
 await browser.close();server.close();console.log('BUILD_COMPANION_V4_CONTACT_CONVERSATION_R3_PASS');

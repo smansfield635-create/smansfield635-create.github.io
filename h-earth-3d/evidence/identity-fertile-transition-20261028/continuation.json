@@ -2,7 +2,7 @@
   "schema": "H_EARTH_IDENTITY_FERTILE_TRANSITION_CONTINUATION_v1",
   "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
   "lockGeneration": 2963,
-  "state": "CAPTURE_VERIFIED_REVIEWER_REJECT_ARCHIVED_BAND_ANALYSIS_COMPLETE",
+  "state": "SPATIAL_WEB_AUDIT_COMPLETE_GROUNDCOVER_CONTRIBUTION_REQUIRED",
   "candidateHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
   "branch": "h-earth/identity-fertile-transition-20261028",
   "completed": [
@@ -19,9 +19,12 @@
     "ALL_16_RECEIPT_IMAGE_HASHES_VERIFIED",
     "EXACT_COAST_RGBA_PARITY_VERIFIED",
     "INDEPENDENT_VISUAL_REVIEW_REJECT_RECOMMENDED",
-    "TWELVE_ARCHIVED_BAND_REGION_GROUPS_RECOMPUTED_AND_INDEPENDENTLY_VERIFIED"
+    "TWELVE_ARCHIVED_BAND_REGION_GROUPS_RECOMPUTED_AND_INDEPENDENTLY_VERIFIED",
+    "PRIMARY_RENDERING_LITERATURE_AND_SOURCE_AUDIT_COMPLETE",
+    "INDEPENDENT_SPATIAL_PROFILE_AND_CROSS_RUN_CUSTODY_VERIFIED",
+    "CONSTANT_GROUNDCOVER_TARGET_AND_WEIGHT_HYPOTHESIS_EXCLUDED_AT_FAR_CENTER_WITNESS"
   ],
-  "nextAction": "Read comparison-recovery-review.json; continue source-bound spatial attribution of coherent near/far boundaries using archived factors, separating fertility and brightness contributions. Do not repeat endpoint widening or launch another capture under consumed budget.",
+  "nextAction": "Read spatial-web-audit.json. Reconcile any archived final-groundcover P/T/W probes to exact renderer source before reuse. Decompose final blend into incoming, target and weight contributions at fixed near/far windows. If probes unavailable, prepare bounded diagnostic under applicable successor scope; no fertility-width retry or extra run under consumed budget.",
   "workflow": ".github/workflows/h-earth-neutral-exact-head-runner.yml",
   "inputs": {
     "target_sha": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
@@ -49,5 +52,7 @@
     "library_file_id": "libfile_11768c333c5081919b1f7fbe9e926d8e",
     "file_name": "H-Earth-40779962491-recovery.zip",
     "runArtifactSha256": "63bfcd317a427713aa2276be44c65e59ad8a05b53d841dc954916596135f439b"
-  }
+  },
+  "spatialWebAudit": "spatial-web-audit.json",
+  "spatialAuditScript": "spatial-audit.py"
 }

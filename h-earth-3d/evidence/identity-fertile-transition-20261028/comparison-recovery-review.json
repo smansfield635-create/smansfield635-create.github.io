@@ -1,0 +1,3201 @@
+{
+  "comparison": {
+    "schema": "H_EARTH_COMPARISON_RECOVERY_v1",
+    "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+    "candidateHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+    "runId": 40779962491,
+    "artifactId": 12857186591,
+    "artifactSha256": "63bfcd317a427713aa2276be44c65e59ad8a05b53d841dc954916596135f439b",
+    "captureReceiptSha256": "4faa39e597cf29f37c0f3c607b6f62d3c90e62067488c15ca90cbbbd7e0ee3e7",
+    "reviewerRecommendation": "REJECT",
+    "ownerDisposition": "NOT_EXPLICITLY_RECORDED",
+    "captureResult": "FERTILE_CAPTURE_COMPLETE_COAST_PARITY_VERIFIED_VISUAL_REVIEW_PENDING",
+    "coastPixelParity": {
+      "result": "EXACT_DECODED_RGBA_COAST_PARITY",
+      "comparisons": [
+        {
+          "mode": "reference-lit",
+          "width": 529,
+          "height": 980,
+          "differingPixels": 0
+        },
+        {
+          "mode": "after-groundcover-unlit",
+          "width": 529,
+          "height": 980,
+          "differingPixels": 0
+        }
+      ]
+    },
+    "newCaptures": 0,
+    "sourceHash": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+    "frames": [
+      {
+        "image": "baseline-inland-seam-near-reference-lit.png",
+        "imageSha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a",
+        "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+        "rendererHash": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+        "mode": "reference-lit",
+        "pose": {
+          "name": "inland-seam-near",
+          "x": -200,
+          "z": -728,
+          "y": 18.361431,
+          "yaw": 0,
+          "pitch": -14,
+          "diagnosticObserver": true
+        }
+      },
+      {
+        "image": "baseline-inland-seam-near-after-groundcover-unlit.png",
+        "imageSha256": "96195fac6da4fca401c64d2ce31a034cd7d628620409f772114616b78354ff3a",
+        "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+        "rendererHash": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+        "mode": "after-groundcover-unlit",
+        "pose": {
+          "name": "inland-seam-near",
+          "x": -200,
+          "z": -728,
+          "y": 18.361431,
+          "yaw": 0,
+          "pitch": -14,
+          "diagnosticObserver": true
+        }
+      },
+      {
+        "image": "baseline-inland-seam-far-reference-lit.png",
+        "imageSha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc",
+        "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+        "rendererHash": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+        "mode": "reference-lit",
+        "pose": {
+          "name": "inland-seam-far",
+          "x": -200,
+          "z": -656,
+          "y": 18.793665,
+          "yaw": 0,
+          "pitch": -2,
+          "diagnosticObserver": true
+        }
+      },
+      {
+        "image": "baseline-inland-seam-far-after-groundcover-unlit.png",
+        "imageSha256": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a",
+        "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+        "rendererHash": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+        "mode": "after-groundcover-unlit",
+        "pose": {
+          "name": "inland-seam-far",
+          "x": -200,
+          "z": -656,
+          "y": 18.793665,
+          "yaw": 0,
+          "pitch": -2,
+          "diagnosticObserver": true
+        }
+      },
+      {
+        "image": "baseline-protected-meadow-reference-lit.png",
+        "imageSha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b",
+        "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+        "rendererHash": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+        "mode": "reference-lit",
+        "pose": {
+          "name": "protected-meadow",
+          "x": -52,
+          "z": -208,
+          "yaw": 136,
+          "pitch": -15
+        }
+      },
+      {
+        "image": "baseline-protected-meadow-after-groundcover-unlit.png",
+        "imageSha256": "dea2132ddb7662475bcadfbcef2ea5dd67dea9a0be5e1669c4c8e77407d7d4dc",
+        "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+        "rendererHash": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+        "mode": "after-groundcover-unlit",
+        "pose": {
+          "name": "protected-meadow",
+          "x": -52,
+          "z": -208,
+          "yaw": 136,
+          "pitch": -15
+        }
+      },
+      {
+        "image": "baseline-protected-coast-reference-lit.png",
+        "imageSha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+        "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+        "rendererHash": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+        "mode": "reference-lit",
+        "pose": {
+          "name": "protected-coast",
+          "x": 0,
+          "z": -110,
+          "yaw": 170,
+          "pitch": -8
+        }
+      },
+      {
+        "image": "baseline-protected-coast-after-groundcover-unlit.png",
+        "imageSha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7",
+        "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+        "rendererHash": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+        "mode": "after-groundcover-unlit",
+        "pose": {
+          "name": "protected-coast",
+          "x": 0,
+          "z": -110,
+          "yaw": 170,
+          "pitch": -8
+        }
+      },
+      {
+        "image": "candidate-inland-seam-near-reference-lit.png",
+        "imageSha256": "aa9957fb5b0c6050097d09fa3691146b1e0f0182d17f45fe25c0f1fea90f1eb7",
+        "sourceHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+        "rendererHash": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+        "mode": "reference-lit",
+        "pose": {
+          "name": "inland-seam-near",
+          "x": -200,
+          "z": -728,
+          "y": 18.361431,
+          "yaw": 0,
+          "pitch": -14,
+          "diagnosticObserver": true
+        }
+      },
+      {
+        "image": "candidate-inland-seam-near-after-groundcover-unlit.png",
+        "imageSha256": "d52d89c0def5e4da95ec71c470efbcb5d0ef7fe21727b2e49aff901ac733425f",
+        "sourceHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+        "rendererHash": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+        "mode": "after-groundcover-unlit",
+        "pose": {
+          "name": "inland-seam-near",
+          "x": -200,
+          "z": -728,
+          "y": 18.361431,
+          "yaw": 0,
+          "pitch": -14,
+          "diagnosticObserver": true
+        }
+      },
+      {
+        "image": "candidate-inland-seam-far-reference-lit.png",
+        "imageSha256": "bcf3ee087503375160feabe10f6df3223408bba2e11602e231851d7c56c1c48e",
+        "sourceHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+        "rendererHash": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+        "mode": "reference-lit",
+        "pose": {
+          "name": "inland-seam-far",
+          "x": -200,
+          "z": -656,
+          "y": 18.793665,
+          "yaw": 0,
+          "pitch": -2,
+          "diagnosticObserver": true
+        }
+      },
+      {
+        "image": "candidate-inland-seam-far-after-groundcover-unlit.png",
+        "imageSha256": "52399822f7d9939eb7b49b83da66965198a8ee08c0f292d79afac66755e657db",
+        "sourceHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+        "rendererHash": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+        "mode": "after-groundcover-unlit",
+        "pose": {
+          "name": "inland-seam-far",
+          "x": -200,
+          "z": -656,
+          "y": 18.793665,
+          "yaw": 0,
+          "pitch": -2,
+          "diagnosticObserver": true
+        }
+      },
+      {
+        "image": "candidate-protected-meadow-reference-lit.png",
+        "imageSha256": "c12c1979ad2ab6e16c009cf2a9b05cdff55426e4c5a208e0d82c8f836ee0a51a",
+        "sourceHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+        "rendererHash": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+        "mode": "reference-lit",
+        "pose": {
+          "name": "protected-meadow",
+          "x": -52,
+          "z": -208,
+          "yaw": 136,
+          "pitch": -15
+        }
+      },
+      {
+        "image": "candidate-protected-meadow-after-groundcover-unlit.png",
+        "imageSha256": "d60efcada79f39247dd0740d9326a752a6b5f9f4710972ccad7347226e540089",
+        "sourceHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+        "rendererHash": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+        "mode": "after-groundcover-unlit",
+        "pose": {
+          "name": "protected-meadow",
+          "x": -52,
+          "z": -208,
+          "yaw": 136,
+          "pitch": -15
+        }
+      },
+      {
+        "image": "candidate-protected-coast-reference-lit.png",
+        "imageSha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+        "sourceHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+        "rendererHash": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+        "mode": "reference-lit",
+        "pose": {
+          "name": "protected-coast",
+          "x": 0,
+          "z": -110,
+          "yaw": 170,
+          "pitch": -8
+        }
+      },
+      {
+        "image": "candidate-protected-coast-after-groundcover-unlit.png",
+        "imageSha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7",
+        "sourceHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+        "rendererHash": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+        "mode": "after-groundcover-unlit",
+        "pose": {
+          "name": "protected-coast",
+          "x": 0,
+          "z": -110,
+          "yaw": 170,
+          "pitch": -8
+        }
+      }
+    ],
+    "bandMetrics": [
+      {
+        "pose": "near",
+        "x": 132,
+        "rows": [
+          260,
+          300
+        ],
+        "baseline": {
+          "rangeRGB8": 19.66666666666667,
+          "meanAbsRowStepRGB8": 1.0490740740740734,
+          "witnessStepRGB8": 4
+        },
+        "candidate": {
+          "rangeRGB8": 17.740740740740748,
+          "meanAbsRowStepRGB8": 0.932407407407408,
+          "witnessStepRGB8": 2.7777777777777857
+        }
+      },
+      {
+        "pose": "near",
+        "x": 264,
+        "rows": [
+          260,
+          300
+        ],
+        "baseline": {
+          "rangeRGB8": 24.222222222222214,
+          "meanAbsRowStepRGB8": 1.3462962962962965,
+          "witnessStepRGB8": 7.333333333333343
+        },
+        "candidate": {
+          "rangeRGB8": 23.29629629629629,
+          "meanAbsRowStepRGB8": 1.2712962962962955,
+          "witnessStepRGB8": 6.037037037037038
+        }
+      },
+      {
+        "pose": "near",
+        "x": 396,
+        "rows": [
+          260,
+          300
+        ],
+        "baseline": {
+          "rangeRGB8": 24.851851851851848,
+          "meanAbsRowStepRGB8": 1.6305555555555558,
+          "witnessStepRGB8": 8.555555555555557
+        },
+        "candidate": {
+          "rangeRGB8": 23.703703703703695,
+          "meanAbsRowStepRGB8": 1.516666666666668,
+          "witnessStepRGB8": 6
+        }
+      },
+      {
+        "pose": "far",
+        "x": 132,
+        "rows": [
+          470,
+          520
+        ],
+        "baseline": {
+          "rangeRGB8": 19.592592592592595,
+          "meanAbsRowStepRGB8": 0.9948148148148147
+        },
+        "candidate": {
+          "rangeRGB8": 17.48148148148148,
+          "meanAbsRowStepRGB8": 0.960740740740741
+        }
+      },
+      {
+        "pose": "far",
+        "x": 264,
+        "rows": [
+          470,
+          520
+        ],
+        "baseline": {
+          "rangeRGB8": 15.296296296296305,
+          "meanAbsRowStepRGB8": 0.8562962962962979
+        },
+        "candidate": {
+          "rangeRGB8": 15.333333333333329,
+          "meanAbsRowStepRGB8": 0.8962962962962961
+        }
+      },
+      {
+        "pose": "far",
+        "x": 396,
+        "rows": [
+          470,
+          520
+        ],
+        "baseline": {
+          "rangeRGB8": 14.370370370370367,
+          "meanAbsRowStepRGB8": 1.4770370370370358
+        },
+        "candidate": {
+          "rangeRGB8": 14.962962962962962,
+          "meanAbsRowStepRGB8": 1.4096296296296293
+        }
+      }
+    ],
+    "metricLimit": "Post-hoc descriptive output RGB8, not linear causal estimates, acceptance threshold or perceptual proof.",
+    "failedAssertion": "Near/far bands remain visible in lit and albedo; endpoint widening did not remove the broad boundary.",
+    "sourceTrace": {
+      "identity": "fertile -> direct palette/moistShelter/upperDry/identityContrast -> identity blend",
+      "downstream": "moistShelter -> groundcoverMoisture -> groundcoverDry/tone -> final groundcover blend",
+      "unchangedWeight": "groundcoverWeight has no fertilePatch dependency; depends on organic/meso patch, coast/slope/rock suitability, protection masks",
+      "limits": "Groundcover weight independence does not establish it as cause. Archived bands already predate groundcover."
+    }
+  },
+  "archivedBandReanalysis": {
+    "kind": "POST_HOC_ARCHIVED_BAND_REGION_REANALYSIS",
+    "newCaptures": 0,
+    "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "method": "Unchanged existing analyzer group_result; restrict to previously documented band regions near260..300 far470..520, three nine-pixel transects, lag1/16. Exploratory descriptive analysis, no changed acceptance gate.",
+    "groups": [
+      {
+        "label": "inland-seam-near-band-x132-lag1",
+        "pose": "inland-seam-near",
+        "xCenter": 132,
+        "yInclusive": [
+          260,
+          300
+        ],
+        "lag": 1,
+        "validPairs": 360,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.0009256587491136098,
+            0.0004033980012097003,
+            0.00018188670129487027
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              -0.006997566609025709,
+              -0.006093703539738967,
+              -0.004564680415809357
+            ],
+            "hi": [
+              0.008848894435355194,
+              0.006900505890350864,
+              0.004928458714343613
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.00565197440863885,
+            0.0034104921101939406,
+            0.0020834834466818843
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00003255359405977177,
+              0.00006013092435530963,
+              0.0000483774380963592
+            ],
+            "meanAbsoluteRGB": [
+              0.0006900563667357852,
+              0.0006427839675228474,
+              0.00039436709521291537
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.0002939688277939617,
+              -0.000033821655896937776,
+              -0.00010334623350741849
+            ],
+            "meanAbsoluteRGB": [
+              0.004930940949595058,
+              0.002389647953840882,
+              0.0010920613559181897
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              0.0006120326254298972,
+              0.00039472065804929484,
+              0.0002485647448885806
+            ],
+            "meanAbsoluteRGB": [
+              0.003211825581534242,
+              0.00219944452174151,
+              0.0014467781124789575
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.0013147151724784126,
+              0.0006081603006642084,
+              0.0002546890660209333
+            ],
+            "meanAbsoluteRGB": [
+              0.003960702292572385,
+              0.0022543530866472898,
+              0.0013921261161900262
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.00008282032075309281,
+              -0.00004885708388685382,
+              0.000004353920962237967
+            ],
+            "meanAbsoluteRGB": [
+              0.00008282032075309281,
+              0.00004885708388685382,
+              0.000004353920962237967
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              0.0000010858603221447566,
+              -0.000004598580600108475,
+              -0.000008959198480563479
+            ],
+            "meanAbsoluteRGB": [
+              0.0000010858603221447566,
+              0.000004598580600108475,
+              0.000008959198480563479
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              -0.0002406445550517924,
+              -0.00015525185124226767,
+              -0.00008656170130741665
+            ],
+            "meanAbsoluteRGB": [
+              0.001602973055462658,
+              0.0011003831912201356,
+              0.0006433648503424055
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              -0.00007566573893475192,
+              -0.00004404944988957273,
+              -0.000022518416921259198
+            ],
+            "meanAbsoluteRGB": [
+              0.0012538134307566854,
+              0.0008716678690945089,
+              0.0005146242113068293
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.000013464870584382052,
+              0.00000902415650109115,
+              0.000005147604189297009
+            ],
+            "meanAbsoluteRGB": [
+              0.000013464870584382052,
+              0.00000902415650109115,
+              0.000005147604189297009
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00003258183946842248,
+              0.00006006937906864961,
+              0.00004834446823153173
+            ],
+            "meanAbsoluteRGB": [
+              0.0006905636323318588,
+              0.0006432737501423447,
+              0.0003946501354528871
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-near-band-x132-lag16",
+        "pose": "inland-seam-near",
+        "xCenter": 132,
+        "yInclusive": [
+          260,
+          300
+        ],
+        "lag": 16,
+        "validPairs": 225,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.010476094307144497,
+            0.0037764949580520084,
+            0.0009626220023749261
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              0.0026244390290094026,
+              -0.002687897081154484,
+              -0.0037760657755130764
+            ],
+            "hi": [
+              0.018327867731947684,
+              0.010240946310451578,
+              0.005701335404202489
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.03807949305052732,
+            0.01445300110227622,
+            0.0034183665017469126
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00006352038025681397,
+              0.00017107466760968084,
+              0.00015785484912523068
+            ],
+            "meanAbsoluteRGB": [
+              0.0013284777866272447,
+              0.0021099961470386684,
+              0.0014864038943948807
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.01062339245240193,
+              0.0038829268693177156,
+              0.0009278912086098812
+            ],
+            "meanAbsoluteRGB": [
+              0.03780126260970387,
+              0.013047659480150768,
+              0.003156160236322601
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              -0.00021463150268972176,
+              -0.00016566247763095547,
+              -0.00011044814387337073
+            ],
+            "meanAbsoluteRGB": [
+              0.008298503305562435,
+              0.005642600615748481,
+              0.0037175042277434603
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.009999471354107949,
+              0.0030753552083369207,
+              0.00011729344325739765
+            ],
+            "meanAbsoluteRGB": [
+              0.03520706327343107,
+              0.011611966357996798,
+              0.003504999590836038
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.0012564602158479296,
+              -0.000703495336868286,
+              0.00005530494688669101
+            ],
+            "meanAbsoluteRGB": [
+              0.0012564602158479296,
+              0.000703495336868286,
+              0.00005530494688669101
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              -0.000015089837435423328,
+              -0.000059542747538322184,
+              -0.00009895613625766104
+            ],
+            "meanAbsoluteRGB": [
+              0.000015089837435423328,
+              0.000059542747538322184,
+              0.00009895613625766104
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              0.0012564304811360206,
+              0.0008886158356652709,
+              0.0005315750805699445
+            ],
+            "meanAbsoluteRGB": [
+              0.005475947224568915,
+              0.003807194063804906,
+              0.0022519263234577194
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              0.000484416054432261,
+              0.0003352366418398672,
+              0.00019884408537057207
+            ],
+            "meanAbsoluteRGB": [
+              0.002399256396211188,
+              0.001675899475982645,
+              0.0009946941623535876
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.00004679146893829344,
+              0.00003291149726694384,
+              0.000019571194834644657
+            ],
+            "meanAbsoluteRGB": [
+              0.00004679146893829344,
+              0.00003291149726694384,
+              0.000019571194834644657
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00006347042944734322,
+              0.00017110967157495468,
+              0.00015793583797644035
+            ],
+            "meanAbsoluteRGB": [
+              0.0013298896974990493,
+              0.0021127588162797085,
+              0.001488413622340718
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-near-band-x264-lag1",
+        "pose": "inland-seam-near",
+        "xCenter": 264,
+        "yInclusive": [
+          260,
+          300
+        ],
+        "lag": 1,
+        "validPairs": 360,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.0010853202690869047,
+            0.000326990371642812,
+            0.00004658795568227674
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              -0.006824985786284566,
+              -0.006183763684052613,
+              -0.004715634813277858
+            ],
+            "hi": [
+              0.008995638335403709,
+              0.00683774946148173,
+              0.004808811928925213
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.006386164934640722,
+            0.003381440505578854,
+            0.0022232332949370165
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00005344439543983545,
+              0.00010679122350863914,
+              0.00009196716531657973
+            ],
+            "meanAbsoluteRGB": [
+              0.00047159028299821,
+              0.00045270535229380824,
+              0.0003476366920038172
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.0008870951406985504,
+              0.00019901247157383533,
+              -0.00007129757328905566
+            ],
+            "meanAbsoluteRGB": [
+              0.006713043803424847,
+              0.0030749995622473165,
+              0.0011674988927482925
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              0.00010509960140882684,
+              0.00003927467993567875,
+              0.000007493770948215778
+            ],
+            "meanAbsoluteRGB": [
+              0.003544371668058979,
+              0.0024693336053456015,
+              0.001660152696526001
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.0013248723631296292,
+              0.0004291891194185136,
+              0.000030307175838548037
+            ],
+            "meanAbsoluteRGB": [
+              0.004165205904287502,
+              0.002350798013208622,
+              0.0015702925378895578
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.00009302866132214718,
+              -0.000051000771107247106,
+              0.000003760342865905893
+            ],
+            "meanAbsoluteRGB": [
+              0.00009302866132214718,
+              0.000051000771107247106,
+              0.000003760342865905893
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              -0.0000021700112072035586,
+              -0.000005492519035122591,
+              -0.000008667325544111186
+            ],
+            "meanAbsoluteRGB": [
+              0.0000021700112072035586,
+              0.000005492519035122591,
+              0.000008667325544111186
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              -0.0002070264343090481,
+              -0.000143668104497522,
+              -0.00008484977824753007
+            ],
+            "meanAbsoluteRGB": [
+              0.0015892606642847963,
+              0.0011216468447900329,
+              0.0006711759354304625
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              -0.0000653084416098568,
+              -0.000039980077399034095,
+              -0.000021420707255539976
+            ],
+            "meanAbsoluteRGB": [
+              0.001357947243710971,
+              0.0009597883788909042,
+              0.0005750738743995126
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.00004568467644104363,
+              0.00003312912487887189,
+              0.000020146633176661144
+            ],
+            "meanAbsoluteRGB": [
+              0.00004568467644104363,
+              0.00003312912487887189,
+              0.000020146633176661144
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00005354419314769585,
+              0.00010701385130973752,
+              0.00009215718779670061
+            ],
+            "meanAbsoluteRGB": [
+              0.0004722461859924391,
+              0.00045320450344619605,
+              0.0003481125351830847
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-near-band-x264-lag16",
+        "pose": "inland-seam-near",
+        "xCenter": 264,
+        "yInclusive": [
+          260,
+          300
+        ],
+        "lag": 16,
+        "validPairs": 225,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.021643663234894105,
+            0.009087303296649293,
+            0.003055492337203824
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              0.013807667878469173,
+              0.002609174452270111,
+              -0.0016990501062002588
+            ],
+            "hi": [
+              0.02947989638974373,
+              0.01556557120924054,
+              0.007810114262431997
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.03268497346206568,
+            0.013837834704813508,
+            0.004395789554499997
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.0004318866004290688,
+              0.0004652114249949687,
+              0.0003434160461274181
+            ],
+            "meanAbsoluteRGB": [
+              0.0007757872342105821,
+              0.0014116320869390223,
+              0.0011223452206743298
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.020167032859935038,
+              0.007781439164698024,
+              0.0021250364078530142
+            ],
+            "meanAbsoluteRGB": [
+              0.030609975534634067,
+              0.01185353138857207,
+              0.003825686804300079
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              0.001102676882678707,
+              0.0008155029091005818,
+              0.0005724873898130715
+            ],
+            "meanAbsoluteRGB": [
+              0.005479286245989012,
+              0.0037143187959618866,
+              0.002458334239728062
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.01757611878778904,
+              0.006047056878883112,
+              0.0009040713801894469
+            ],
+            "meanAbsoluteRGB": [
+              0.02801289711687375,
+              0.010414595588673815,
+              0.0025621720820825566
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.0012288761940304877,
+              -0.000664406677110742,
+              0.000046963462588550206
+            ],
+            "meanAbsoluteRGB": [
+              0.0012288761940304877,
+              0.000664406677110742,
+              0.000046963462588550206
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              -0.000018000316666920676,
+              -0.00003719463571862673,
+              -0.000056821779928226674
+            ],
+            "meanAbsoluteRGB": [
+              0.000018000316666920676,
+              0.00003719463571862673,
+              0.000056821779928226674
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              0.003736965959756543,
+              0.0025079325320808096,
+              0.0014477604449582772
+            ],
+            "meanAbsoluteRGB": [
+              0.007211133098861095,
+              0.0050237837724166,
+              0.002981311726042943
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              0.0009213421479402485,
+              0.0006053341725037233,
+              0.0003433010709340722
+            ],
+            "meanAbsoluteRGB": [
+              0.002740213749722742,
+              0.0019030719072948372,
+              0.0011268488899604814
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.0002708487810268121,
+              0.00019855809462391308,
+              0.0001219878532929077
+            ],
+            "meanAbsoluteRGB": [
+              0.0002708487810268121,
+              0.00019855809462391308,
+              0.0001219878532929077
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00043244619740975295,
+              0.0004659385259152054,
+              0.00034402071640591696
+            ],
+            "meanAbsoluteRGB": [
+              0.0007767676579359736,
+              0.0014133552300030839,
+              0.0011238268685763843
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-near-band-x396-lag1",
+        "pose": "inland-seam-near",
+        "xCenter": 396,
+        "yInclusive": [
+          260,
+          300
+        ],
+        "lag": 1,
+        "validPairs": 360,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.0013801239644267815,
+            0.0006614812840805191,
+            0.0003279922607805101
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              -0.006401766668561027,
+              -0.005761095967602079,
+              -0.0043838798767948444
+            ],
+            "hi": [
+              0.009162029747441661,
+              0.007084068762220563,
+              0.005039873085645027
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.007447088669513003,
+            0.004145855508492538,
+            0.0027468932857132576
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.000029126336671854277,
+              0.00005864483251295644,
+              0.000044863378030538934
+            ],
+            "meanAbsoluteRGB": [
+              0.000558947118248712,
+              0.0004728557646363207,
+              0.00034631881055920995
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.0007169637457263775,
+              0.00020523233998128145,
+              0.000039715883077454655
+            ],
+            "meanAbsoluteRGB": [
+              0.006559434933324934,
+              0.0032647826065321673,
+              0.0014852385853475413
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              0.0005952449727139608,
+              0.00037784359007286594,
+              0.00023310421659563716
+            ],
+            "meanAbsoluteRGB": [
+              0.004154841823120078,
+              0.002863701036459592,
+              0.0019176375914569986
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.0012805034423525915,
+              0.0005799336245316128,
+              0.00024148789849326108
+            ],
+            "meanAbsoluteRGB": [
+              0.004378574919760619,
+              0.0027507497421392483,
+              0.0018334721702999057
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.00010262513990443599,
+              -0.000054294832761743683,
+              0.0000036229903012855985
+            ],
+            "meanAbsoluteRGB": [
+              0.00010262513990443599,
+              0.000054294832761743683,
+              0.0000036229903012855985
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              -0.0000028521342992073526,
+              -0.000005837144742597072,
+              -0.000008934916793158989
+            ],
+            "meanAbsoluteRGB": [
+              0.0000028521342992073526,
+              0.000005837144742597072,
+              0.000008934916793158989
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              0.000008476466950468277,
+              0.0000031962064428437688,
+              8.848046459459446e-7
+            ],
+            "meanAbsoluteRGB": [
+              0.0018693857785980791,
+              0.0013210528466696765,
+              0.0007926053194786365
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              0.00005674120438039348,
+              0.000032984045125905076,
+              0.000016786288180037676
+            ],
+            "meanAbsoluteRGB": [
+              0.0022669674897099696,
+              0.0015981476229622988,
+              0.0009583554740755729
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.000054094012048915624,
+              0.00003935151388357078,
+              0.000024065876507550135
+            ],
+            "meanAbsoluteRGB": [
+              0.000054094012048915624,
+              0.00003935151388357078,
+              0.000024065876507550135
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.000029173940741455933,
+              0.00005864614858515545,
+              0.000044864673291892064
+            ],
+            "meanAbsoluteRGB": [
+              0.000559593862446484,
+              0.0004732627386516797,
+              0.0003466739339230968
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-near-band-x396-lag16",
+        "pose": "inland-seam-near",
+        "xCenter": 396,
+        "yInclusive": [
+          260,
+          300
+        ],
+        "lag": 16,
+        "validPairs": 225,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.01399812563162178,
+            0.004526105505393894,
+            0.00034738371006326263
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              0.0062164005870041245,
+              -0.001900432967764885,
+              -0.004370967435631942
+            ],
+            "hi": [
+              0.021780008580816766,
+              0.010952713494971364,
+              0.005065742615483123
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.024706220706828753,
+            0.010933603213660758,
+            0.0046113484668327985
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.0009704434439291567,
+              0.0010957079994327076,
+              0.0009193814559964621
+            ],
+            "meanAbsoluteRGB": [
+              0.0011190035678364093,
+              0.0013662478997349822,
+              0.0011194002448107496
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.015937778961668318,
+              0.005281669326180229,
+              0.0007048876311719273
+            ],
+            "meanAbsoluteRGB": [
+              0.02112484928078336,
+              0.007290014644392214,
+              0.0018263484258641274
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              -0.0029137238556222285,
+              -0.00206151522709382,
+              -0.001427269474325492
+            ],
+            "meanAbsoluteRGB": [
+              0.008379340237415657,
+              0.005655004686521919,
+              0.003732152026256961
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.013323776672183426,
+              0.0031964736440015375,
+              -0.0010295820966034544
+            ],
+            "meanAbsoluteRGB": [
+              0.02392493212440984,
+              0.009729923563365866,
+              0.0037751100695493306
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.001106422602326496,
+              -0.0006098673703003999,
+              0.00004623216774497104
+            ],
+            "meanAbsoluteRGB": [
+              0.001106422602326496,
+              0.0006098673703003999,
+              0.00004623216774497104
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              -0.000003917299600543973,
+              -0.00002451575841477283,
+              -0.00004188200903078673
+            ],
+            "meanAbsoluteRGB": [
+              0.000003917299600543973,
+              0.00002451575841477283,
+              0.00004188200903078673
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              0.00037809572299299566,
+              0.00021590957285426874,
+              0.00010993295773823993
+            ],
+            "meanAbsoluteRGB": [
+              0.0038646741923397013,
+              0.0026900731043878637,
+              0.0015989229462935765
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              -0.00022818806560635053,
+              -0.00012789736041651987,
+              -0.00006336982450809455
+            ],
+            "meanAbsoluteRGB": [
+              0.0028950414943750527,
+              0.0020377184986871515,
+              0.0012209747219992663
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.0007191346390731277,
+              0.0005123592532519883,
+              0.0003090477143246497
+            ],
+            "meanAbsoluteRGB": [
+              0.0007191346390731277,
+              0.0005123592532519883,
+              0.0003090477143246497
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.0009714197969518857,
+              0.0010970643591844736,
+              0.000920470342260427
+            ],
+            "meanAbsoluteRGB": [
+              0.0011201399152353558,
+              0.0013677868535892327,
+              0.0011206169988412823
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-far-band-x132-lag1",
+        "pose": "inland-seam-far",
+        "xCenter": 132,
+        "yInclusive": [
+          470,
+          520
+        ],
+        "lag": 1,
+        "validPairs": 450,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.00022548384690468788,
+            0.00008752239136102106,
+            0.000036872816281094864
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              -0.008020510253004286,
+              -0.0065719332015795155,
+              -0.004789288670617577
+            ],
+            "hi": [
+              0.00847148036816548,
+              0.0067469793233083455,
+              0.004863035273508521
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.005353336416547045,
+            0.0032922665479091485,
+            0.001738389242511824
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.000004216310287703895,
+              0.000013662889714402132,
+              0.00001524063109232636
+            ],
+            "meanAbsoluteRGB": [
+              0.0005510396479204401,
+              0.00048372731442618543,
+              0.00031460052706252037
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.00003252206859599042,
+              -0.000045771415507711916,
+              -0.00004247795240560744
+            ],
+            "meanAbsoluteRGB": [
+              0.00417782092169191,
+              0.0023088763423335054,
+              0.001287325266635553
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              0.00020022868013465727,
+              0.00012580228955716218,
+              0.00007800798464097492
+            ],
+            "meanAbsoluteRGB": [
+              0.001656200563683221,
+              0.0010602969810380896,
+              0.0006742429544684162
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.0003961077357596458,
+              0.00017903257191646878,
+              0.00007566431386606862
+            ],
+            "meanAbsoluteRGB": [
+              0.00314326426931553,
+              0.0014736985603581428,
+              0.0006716515970434676
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.00004210989414128611,
+              -0.0000276573943940778,
+              0.000002954884966639318
+            ],
+            "meanAbsoluteRGB": [
+              0.00006359852648047527,
+              0.00004330180308659223,
+              0.000004793965578042149
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              -0.0000013787648638939668,
+              -0.000004123275035611712,
+              -0.000006520576064505235
+            ],
+            "meanAbsoluteRGB": [
+              0.0000013787648638939668,
+              0.000004123275035611712,
+              0.000006520576064505235
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              -0.000016770278320006805,
+              -0.000010085881737615267,
+              -0.000005873450536011794
+            ],
+            "meanAbsoluteRGB": [
+              0.0016530738456745772,
+              0.0010925011575321358,
+              0.0006272676085803724
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              -0.00012476654151924753,
+              -0.00007966835844430616,
+              -0.00004453809280652414
+            ],
+            "meanAbsoluteRGB": [
+              0.0018227209476651663,
+              0.0012034204219736877,
+              0.0006905632189477511
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.000029960595084978217,
+              0.000019902423268231743,
+              0.000011430119137566405
+            ],
+            "meanAbsoluteRGB": [
+              0.000029960595084978217,
+              0.000019902423268231743,
+              0.000011430119137566405
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.000004244012753966921,
+              0.000013745021153839686,
+              0.000015321994067976115
+            ],
+            "meanAbsoluteRGB": [
+              0.0005522861045546475,
+              0.0004847772219792882,
+              0.00031515179747511655
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-far-band-x132-lag16",
+        "pose": "inland-seam-far",
+        "xCenter": 132,
+        "yInclusive": [
+          470,
+          520
+        ],
+        "lag": 16,
+        "validPairs": 315,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.0035084346752417383,
+            0.0016186854607293012,
+            0.000965540802181597
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              -0.00470711551047003,
+              -0.005023774077862689,
+              -0.003851197890580695
+            ],
+            "hi": [
+              0.011724022472164171,
+              0.008261169671632778,
+              0.005782304475458762
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.01944999577679325,
+            0.009700675977428116,
+            0.004056495608463627
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00014736691850227856,
+              0.00046896958239010453,
+              0.0004472422168296438
+            ],
+            "meanAbsoluteRGB": [
+              0.0006803646639522664,
+              0.0007115938865575554,
+              0.0005552017699279171
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.0008487840941284625,
+              -0.0005138533204572899,
+              -0.0005022432756262109
+            ],
+            "meanAbsoluteRGB": [
+              0.011948941706982567,
+              0.004478411319641779,
+              0.0019724996868679743
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              0.002697310449594569,
+              0.0016725408834038912,
+              0.0010547595237080428
+            ],
+            "meanAbsoluteRGB": [
+              0.008020080256257263,
+              0.005150731812576283,
+              0.0032980552971977116
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.00547502597642722,
+              0.002429060647446779,
+              0.0010294525727206202
+            ],
+            "meanAbsoluteRGB": [
+              0.017530665121419806,
+              0.00793857921451581,
+              0.0033492683602429924
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.0005551336381813255,
+              -0.0003566471047168631,
+              0.00003701542983546803
+            ],
+            "meanAbsoluteRGB": [
+              0.0006479692217077692,
+              0.00042575803911988136,
+              0.00004526748170448518
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              0.0000014010991551904384,
+              -0.00009082953667069498,
+              -0.00016173913847176145
+            ],
+            "meanAbsoluteRGB": [
+              0.000011939285287782347,
+              0.00009082953667069498,
+              0.00016173913847176145
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              -0.0010914754627070037,
+              -0.0007112427856191981,
+              -0.0004043611799039499
+            ],
+            "meanAbsoluteRGB": [
+              0.003599164647487878,
+              0.002381289010537992,
+              0.0013691548416558882
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              -0.0006498358770775364,
+              -0.0004252914187415094,
+              -0.00024373377423817004
+            ],
+            "meanAbsoluteRGB": [
+              0.0026176079521373903,
+              0.0017298765137366817,
+              0.000994305546265711
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.0003269076953360398,
+              0.00021930205658666962,
+              0.00012717026448648736
+            ],
+            "meanAbsoluteRGB": [
+              0.0003269076953360398,
+              0.00021930205658666962,
+              0.00012717026448648736
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00014764862271741307,
+              0.00047011324233613914,
+              0.00044834645768223425
+            ],
+            "meanAbsoluteRGB": [
+              0.0006819539827735732,
+              0.0007130631061531765,
+              0.000556353688116163
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-far-band-x264-lag1",
+        "pose": "inland-seam-far",
+        "xCenter": 264,
+        "yInclusive": [
+          470,
+          520
+        ],
+        "lag": 1,
+        "validPairs": 450,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.0006488461499009103,
+            0.0003813033933653048,
+            0.0002234965679184263
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              -0.007698248246361109,
+              -0.006323991581255389,
+              -0.004635407613657954
+            ],
+            "hi": [
+              0.0089959475258768,
+              0.0070866041508918865,
+              0.005082406533429161
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.004452892647979491,
+            0.0027961515015994223,
+            0.001424341279074684
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00006522382459878617,
+              0.00010455574539183699,
+              0.00008194676819641684
+            ],
+            "meanAbsoluteRGB": [
+              0.000534254490564925,
+              0.0005745921539207911,
+              0.0003532347866290964
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.00026282752658654497,
+              0.000029020836449432036,
+              -0.000010933067139734028
+            ],
+            "meanAbsoluteRGB": [
+              0.003561409764662087,
+              0.002243497749614498,
+              0.0013113228434709775
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              0.0003584880527147109,
+              0.00023105346492683602,
+              0.00014544731887580935
+            ],
+            "meanAbsoluteRGB": [
+              0.0010127315642235184,
+              0.000634245463901436,
+              0.00039930091156116867
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.0006966766545225695,
+              0.0003273541311426093,
+              0.00014385254718315063
+            ],
+            "meanAbsoluteRGB": [
+              0.00196923623181458,
+              0.0008880434823814094,
+              0.00038074369547039163
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.00005380112522396899,
+              -0.000039171244840895966,
+              0.000004602933999026423
+            ],
+            "meanAbsoluteRGB": [
+              0.00007301619418772979,
+              0.000053475796180584575,
+              0.000006310940129138492
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              6.506546118231872e-7,
+              -0.000003909490658771028,
+              -0.0000072664844788058346
+            ],
+            "meanAbsoluteRGB": [
+              6.506546118231872e-7,
+              0.000003909490658771028,
+              0.0000072664844788058346
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              -0.00014591035365276535,
+              -0.00009316876651444747,
+              -0.00005227111701548384
+            ],
+            "meanAbsoluteRGB": [
+              0.0019456410691706294,
+              0.0012688747658007777,
+              0.0007248253731163793
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              0.00006816067395973584,
+              0.00004452477459485414,
+              0.000025607426896013352
+            ],
+            "meanAbsoluteRGB": [
+              0.0017071616405744936,
+              0.0011122356120194733,
+              0.0006350558848941349
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.00003966176266281711,
+              0.000025967169019974913,
+              0.000014804015227919153
+            ],
+            "meanAbsoluteRGB": [
+              0.00003966176266281711,
+              0.000025967169019974913,
+              0.000014804015227919153
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00006537870992311085,
+              0.00010489897111344194,
+              0.00008219396897345826
+            ],
+            "meanAbsoluteRGB": [
+              0.0005354234571071173,
+              0.00057590470868668,
+              0.0003540385753828433
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-far-band-x264-lag16",
+        "pose": "inland-seam-far",
+        "xCenter": 264,
+        "yInclusive": [
+          470,
+          520
+        ],
+        "lag": 16,
+        "validPairs": 315,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            -0.000560860961144772,
+            -0.00020068781555923824,
+            0.00022480642914447804
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              -0.008904476775611556,
+              -0.006903793336560872,
+              -0.004632680653375332
+            ],
+            "hi": [
+              0.00778274963970651,
+              0.006502414968901827,
+              0.0050822994690688135
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.008309771972642288,
+            0.004435254553878661,
+            0.0022178340683187514
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.0002135440800447815,
+              0.0005835121773959588,
+              0.0004930967985051287
+            ],
+            "meanAbsoluteRGB": [
+              0.0009325798794525188,
+              0.001930428017854482,
+              0.0015698774810963365
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              -0.0013023453443684952,
+              -0.0013529739316110313,
+              -0.000503994070869234
+            ],
+            "meanAbsoluteRGB": [
+              0.00660618118863351,
+              0.0040703447621858405,
+              0.0025308865297160475
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              0.0006116032195809626,
+              0.0003751965128216915,
+              0.00024049649062858584
+            ],
+            "meanAbsoluteRGB": [
+              0.0030757260836667276,
+              0.001903633106897477,
+              0.0011948378077080402
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.0012229859526627458,
+              0.0005394217447797399,
+              0.00023186403078584311
+            ],
+            "meanAbsoluteRGB": [
+              0.005953486229430336,
+              0.0026411774446809034,
+              0.0011166519034347207
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.0008125376073172462,
+              -0.000582090526115368,
+              0.00006757320751852659
+            ],
+            "meanAbsoluteRGB": [
+              0.0009800406588907863,
+              0.0007056142840374353,
+              0.00008222588811468602
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              0.000006254456259251415,
+              -0.00005619106450731261,
+              -0.00010264520852588387
+            ],
+            "meanAbsoluteRGB": [
+              0.000006568156783516045,
+              0.00005619106450731261,
+              0.00010264520852588387
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              -0.0017902201453753115,
+              -0.0011702488242506003,
+              -0.0006745862018182425
+            ],
+            "meanAbsoluteRGB": [
+              0.007081052308375124,
+              0.004618433890957319,
+              0.0026454780850758536
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              0.00005943875927303161,
+              0.00003834156933831666,
+              0.00002226320810006037
+            ],
+            "meanAbsoluteRGB": [
+              0.0021743072044853495,
+              0.0014177726912597277,
+              0.0008118345777523335
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.0004575369551649614,
+              0.00029928646848616995,
+              0.0001712443054272914
+            ],
+            "meanAbsoluteRGB": [
+              0.0004575369551649614,
+              0.00029928646848616995,
+              0.0001712443054272914
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00021391617685571335,
+              0.0005848096769337652,
+              0.0004942245771481631
+            ],
+            "meanAbsoluteRGB": [
+              0.0009344641191945483,
+              0.0019346600275893366,
+              0.0015732675361391543
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-far-band-x396-lag1",
+        "pose": "inland-seam-far",
+        "xCenter": 396,
+        "yInclusive": [
+          470,
+          520
+        ],
+        "lag": 1,
+        "validPairs": 450,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            -0.00017783063441841268,
+            -0.00008238240858119386,
+            -0.000016200596217690938
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              -0.008389322272947185,
+              -0.006694357807455764,
+              -0.0048238857225804815
+            ],
+            "hi": [
+              0.008033659208769415,
+              0.006529591784352992,
+              0.004791484121128652
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.008622828595353238,
+            0.004441932186773505,
+            0.0022646493901658424
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.000011073367975706042,
+              0.000016655724796882182,
+              0.000014089080389481328
+            ],
+            "meanAbsoluteRGB": [
+              0.0005167578063434404,
+              0.0005790823695958141,
+              0.00033595727553783187
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              -0.00014520328755176097,
+              -0.0000891101554441867,
+              -0.0000192415096516836
+            ],
+            "meanAbsoluteRGB": [
+              0.006070290234237105,
+              0.0029088091426681274,
+              0.001272403597186657
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              -0.00002006020049408571,
+              -0.000016437109305147875,
+              -0.000008829572939050452
+            ],
+            "meanAbsoluteRGB": [
+              0.0026983909922461092,
+              0.0016892430361827237,
+              0.0010855829309368032
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              -0.00003597366504587112,
+              -0.00002127649805985018,
+              -0.000009676960052518438
+            ],
+            "meanAbsoluteRGB": [
+              0.005701672371808943,
+              0.002528820699615531,
+              0.001079990600874433
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.00006822186213725226,
+              -0.0000484449935938315,
+              0.000005573600397492408
+            ],
+            "meanAbsoluteRGB": [
+              0.00008777375404013375,
+              0.00006296699413431342,
+              0.0000073050110557242
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              -1.306998352747474e-8,
+              -0.000003856670461640144,
+              -0.0000068593290796879905
+            ],
+            "meanAbsoluteRGB": [
+              9.29637809566557e-7,
+              0.000012058230283750225,
+              0.000021544484737525834
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              -0.00012107380824022034,
+              -0.00008515611730661968,
+              -0.000050337055346912616
+            ],
+            "meanAbsoluteRGB": [
+              0.0018889467451650287,
+              0.0012457297684192888,
+              0.0007212100560585356
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              -0.000007434156249424533,
+              -0.000005024804006675383,
+              -0.0000030944002697860834
+            ],
+            "meanAbsoluteRGB": [
+              0.001742452614818216,
+              0.0011372862333005396,
+              0.0006556868552203743
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.00006786770727498183,
+              0.000044734923568810224,
+              0.00002578217124326807
+            ],
+            "meanAbsoluteRGB": [
+              0.00006786770727498183,
+              0.000044734923568810224,
+              0.00002578217124326807
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.000011034537760508613,
+              0.000016545290211396498,
+              0.000014052527329589947
+            ],
+            "meanAbsoluteRGB": [
+              0.0005177390089159171,
+              0.0005803307144865701,
+              0.0003366041342544602
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      },
+      {
+        "label": "inland-seam-far-band-x396-lag16",
+        "pose": "inland-seam-far",
+        "xCenter": 396,
+        "yInclusive": [
+          470,
+          520
+        ],
+        "lag": 16,
+        "validPairs": 315,
+        "reconstructionFailures": {
+          "fertile_from_noise": 0,
+          "moist_from_fields": 0,
+          "dry_from_fields": 0,
+          "target_from_factors": 0,
+          "weight_from_factors": 0,
+          "result_from_measured_boundary": 0,
+          "result_from_source_reconstruction": 0
+        },
+        "observedDelta": {
+          "signedMeanRGB": [
+            0.003051341509001716,
+            0.0011825719998720206,
+            0.0010587323468720193
+          ],
+          "signedMeanRGBInterval": {
+            "lo": [
+              -0.005147831628000407,
+              -0.005421949013249018,
+              -0.003746005833354838
+            ],
+            "hi": [
+              0.011250549101046014,
+              0.007787112048351494,
+              0.00586349850019569
+            ]
+          },
+          "meanAbsoluteRGB": [
+            0.017222694832371994,
+            0.009100714339408324,
+            0.00461571971805882
+          ]
+        },
+        "outerMeasuredTerms": {
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00008753761053081389,
+              0.000211445426005777,
+              0.0001388241874370574
+            ],
+            "meanAbsoluteRGB": [
+              0.0007138654835547262,
+              0.000882722497729467,
+              0.0006927711412124938
+            ]
+          },
+          "target_color": {
+            "signedMeanRGB": [
+              0.001366674900004201,
+              0.00006449971196384124,
+              0.00023475708466404296
+            ],
+            "meanAbsoluteRGB": [
+              0.011793817718644092,
+              0.005587145247727329,
+              0.002153102506414264
+            ]
+          },
+          "blend_weight": {
+            "signedMeanRGB": [
+              0.0016184998004415366,
+              0.0010116383530343097,
+              0.0006512254769549183
+            ],
+            "meanAbsoluteRGB": [
+              0.006195396654622098,
+              0.003825203203816393,
+              0.002448230699576229
+            ]
+          }
+        },
+        "sourceRootTerms": {
+          "coastal": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "fertile": {
+            "signedMeanRGB": [
+              0.003650127478539866,
+              0.0015963559712262494,
+              0.0006787065588637994
+            ],
+            "meanAbsoluteRGB": [
+              0.012657574706697507,
+              0.005544000692414539,
+              0.0023651040807914614
+            ]
+          },
+          "basin": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "slopeResponse": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "heightDry": {
+            "signedMeanRGB": [
+              -0.0012994255351627259,
+              -0.0009173360445348618,
+              0.00010500050359738968
+            ],
+            "meanAbsoluteRGB": [
+              0.0014140537994944602,
+              0.0009986164208765013,
+              0.00011436383834645176
+            ]
+          },
+          "mineral": {
+            "signedMeanRGB": [
+              0.00000721169408914642,
+              -0.0001046818392002896,
+              -0.0001867275500736309
+            ],
+            "meanAbsoluteRGB": [
+              0.000010893854531625156,
+              0.00012755077401644782,
+              0.00022705389947054482
+            ]
+          },
+          "variation": {
+            "signedMeanRGB": [
+              0.00038961372513117914,
+              0.0002624034931112289,
+              0.0001580985399628608
+            ],
+            "meanAbsoluteRGB": [
+              0.003893099832486742,
+              0.0025463570458821483,
+              0.0014716234658350563
+            ]
+          },
+          "tri": {
+            "signedMeanRGB": [
+              -0.0005563251961773094,
+              -0.0003624257034589884,
+              -0.00021057481683322277
+            ],
+            "meanAbsoluteRGB": [
+              0.0029667758580909755,
+              0.0019372413848106971,
+              0.00111849245915441
+            ]
+          },
+          "near": {
+            "signedMeanRGB": [
+              0.0007889148911316575,
+              0.0005165678797795614,
+              0.0002978012518620378
+            ],
+            "meanAbsoluteRGB": [
+              0.0007889148911316575,
+              0.0005165678797795614,
+              0.0002978012518620378
+            ]
+          },
+          "incoming_soil": {
+            "signedMeanRGB": [
+              0.00008774979123697323,
+              0.00021180125712066974,
+              0.00013913924275088904
+            ],
+            "meanAbsoluteRGB": [
+              0.0007153228161727817,
+              0.0008844216414375952,
+              0.0006941057171480226
+            ]
+          },
+          "inland": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          },
+          "grove": {
+            "signedMeanRGB": [
+              0,
+              0,
+              0
+            ],
+            "meanAbsoluteRGB": [
+              0,
+              0,
+              0
+            ]
+          }
+        },
+        "result": "MIXED_OR_INCONCLUSIVE"
+      }
+    ],
+    "summary": "All twelve groups remain MIXED_OR_INCONCLUSIVE. At lag16 fertile has largest summed descriptive RGB magnitude in all three near transects and two far transects, but not every channel. At far x264 materialVariation exceeds fertile absolute magnitude in every channel, with opposing signed effects. Near x264 variation also exceeds fertile in blue. No unique-cause inference; full intervals preserved in recovery archive."
+  },
+  "independentReview": {
+    "schema": "H_EARTH_RECOVERY_INDEPENDENT_REVIEW_v1",
+    "reviewer": "/root/review_recovery",
+    "runId": 40779962491,
+    "candidateHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+    "result": "CAPTURE_VERIFIED_VISUAL_REJECTION_RECOMMENDED",
+    "ownerDisposition": "NOT_CLAIMED",
+    "checks": [
+      "16 reference/candidate PNG hashes match receipt",
+      "Eight candidate frames and eight archived baseline frames",
+      "Exact decoded coast RGBA parity in both modes",
+      "Near/far bands persist in lit and albedo",
+      "All 20 archived diagnostic PNG hashes verified",
+      "All twelve narrowed band-region group_result objects independently recomputed exactly",
+      "Zero reconstruction failures; preserve MIXED_OR_INCONCLUSIVE for all twelve groups"
+    ],
+    "limitations": [
+      "Meadow foliage visible is not full device or vegetation acceptance",
+      "No sole cause established",
+      "Candidate source materialization extra newline removed to reproduce recorded hash",
+      "Analyzer materialization extra newline has no semantic change; source hash requires removal"
+    ],
+    "nextQuestion": "Separate remaining fertility-driven color changes from materialVariation/triFine brightness effects across coherent near/far band boundaries using archived factors before new capture or repair."
+  },
+  "continuity": {
+    "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+    "observedMain": "13b25c3015eb2a4df55b0ada539ce58ef26b75ae",
+    "changedPaths": [
+      ".analytics/cloudflare/composition.json",
+      ".analytics/cloudflare/historical-owner-envelope.json",
+      ".analytics/cloudflare/latest.json",
+      ".analytics/cloudflare/owner-heartbeats.json",
+      ".analytics/cloudflare/reporting-methodology.json",
+      ".analytics/cloudflare/status.txt",
+      "analytics/data/latest.json"
+    ],
+    "finding": "Analytics-only changes disjoint from evidence/source/harness; existing evidence finalization scope reused. No runtime mutation or new capture."
+  },
+  "nextAction": {
+    "kind": "READ_ONLY_SOURCE_BOUND_SPATIAL_ATTRIBUTION",
+    "objective": "Explain coherent band rather than optimize individual adjacent-pixel gain.",
+    "inputs": "Archived diagnostic run40773251264 and failed comparison40779962491, exact approved source",
+    "steps": [
+      "Preserve source-consumer map: fertility affects identity target/weight and groundcover tone, not groundcoverWeight.",
+      "Decompose materialVariation into broad/medium/grain/macro/triplanar components and triFine*nearMaterial brightness, retaining signed interaction with fertile pathways.",
+      "Associate contributions with coherent band segments in both poses, rather than signed mean over entire ground image.",
+      "Reuse stored factors first; if world-coordinate/raw-component data is insufficient, design only the missing bounded diagnostic before separately admitted execution.",
+      "Select no repair until a source change predicts removal of the coherent boundary while preserving controls."
+    ],
+    "prohibited": [
+      "No automatic rerun",
+      "No baseline recapture",
+      "No new endpoint widening or tint sweep",
+      "No merge or deployment",
+      "No owner acceptance inference"
+    ]
+  }
+}

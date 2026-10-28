@@ -1,0 +1,22 @@
+{
+  "schema": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_DISPATCH_INTENT_v1",
+  "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2964,
+  "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "toolingHead": "e29a1b6a95e3073bc527ebb8971ecce09a87f10b",
+  "profile": "WORLD_POSITION_DIAGNOSTIC_V1",
+  "candidateFrames": 8,
+  "candidateRuns": 1,
+  "baselineRecapture": false,
+  "automaticRetry": false,
+  "sourceQualification": "PASS",
+  "sceneRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "contractSha256": "b249bcfa2b05b3b5bcf2564894c20e8464a4851ea07e641bd0a2c9e177cc4837",
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "c9f36c70c141f0ebb82760ebb8920f011cd8f605713ebf8d27ea21870868c6e8",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "944aa23c072539626dac2e1974b8c00bcaaada792c0b0ab1cdd8c7e92d659d05",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "b14b6ca697bf6d6671aeb8354a2f51cf4fc4922d72fba9daace24b0a1ff4e1a9",
+    "tools/h-earth-world-position-overlay.mjs": "d61880ba98d81eae5d7cc6503f10f34d5aaa37819f4ba4a22218d87e711ca797",
+    "tools/h-earth-world-position-overlay.test.mjs": "9ca6a8a13b291ab280fff498dfd3e9d607242ec9124ad887d11da6e489552f39"
+  }
+}

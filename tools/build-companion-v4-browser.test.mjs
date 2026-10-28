@@ -38,4 +38,19 @@ await page.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'reduce'}]
 await page.click('#build-companion [data-reset]');
 await page.waitForFunction(()=>!document.querySelector('.bc-choices').classList.contains('bc-waiting'),{timeout:1000});
 assert.equal(await page.$eval('#build-companion input',e=>e.getAttribute('aria-label')),'Your name');
+
+// Reproduce the owner-observed private-event repetition with all compatible offers.
+await page.click('#build-companion .bc-close');
+await page.evaluate(()=>{sessionStorage.setItem('dgb-build-companion-v4',JSON.stringify({cursor:'PRIVATE_EVENT',route:'REST',purposePath:'root',queue:[],records:[],history:[],sharedIndex:0,contact:{name:'Alex',email:'alex@example.com',phone:'8175551234'},deepMode:true}));});
+await page.reload({waitUntil:'networkidle0'});await reopen();
+for(const label of ['A private room or event space','Exclusive use of the venue','Space with food or catering'])await click(label);
+await click('Use these choices');
+for(const label of ['Occasion and guest count','Date and duration','Food or drink needs','Budget range'])await click(label);
+await click('Use these choices');
+assert.match(await body(),/Are we starting fresh or changing a website/);
+const eventHistory=await readHistory();assert.equal(eventHistory.filter(x=>x.role==='host'&&x.text.includes('What should the event inquiry include?')).length,1,'event inquiry is asked once');
+const eventState=await page.evaluate(()=>sessionStorage.getItem('dgb-build-companion-v4'));
+await page.click('#build-companion .bc-close');await reopen();
+assert.equal(await page.evaluate(()=>sessionStorage.getItem('dgb-build-companion-v4')),eventState,'reopen preserves records and queue as well as transcript');
+
 await browser.close();server.close();console.log('BUILD_COMPANION_V4_CONTACT_CONVERSATION_R3_PASS');

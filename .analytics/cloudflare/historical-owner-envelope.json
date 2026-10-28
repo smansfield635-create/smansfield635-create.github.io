@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-28T05:25:59Z",
+  "generatedAt": "2026-10-28T06:37:54Z",
   "window": {
-    "start": "2026-07-30T05:25:59Z",
-    "end": "2026-10-28T05:25:59Z"
+    "start": "2026-07-30T06:37:54Z",
+    "end": "2026-10-28T06:37:54Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -34,6 +34,10 @@
         "pageLoads": 111,
         "visits": 10
       },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 500,
+        "visits": 0
+      },
       "/gauges/h-earth/": {
         "pageLoads": 10,
         "visits": 0
@@ -50,12 +54,12 @@
         "pageLoads": 270,
         "visits": 70
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -64,10 +68,6 @@
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -186,13 +186,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,

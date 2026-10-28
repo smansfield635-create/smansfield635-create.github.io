@@ -62,10 +62,10 @@ for(const journey of journeys){
  assert.ok(!brief.includes('context.route='),journey.name+': no internal keys in proposal');
  await clickText(page,'Explore additional details');
  for(const action of journey.deep)await clickText(page,action);
- const expanded=await page.$eval('#build-companion',e=>e.innerText);
- for(const prompt of journey.prompts)assert.ok(expanded.includes(prompt),journey.name+' missing '+prompt);
- for(const bad of ['In a sentence, what is the organization','Who does this website need to serve first?','What should the website accomplish for them and for you?'])assert.ok(!expanded.includes(bad),journey.name+' unrequested generic prompt '+bad);
  const current=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('dgb-build-companion-v4')));
+ const transcript=(current.history||[]).map(x=>x.text).join('\\n');
+ for(const prompt of journey.prompts)assert.ok(transcript.includes(prompt),journey.name+' did not ask '+prompt);
+ for(const bad of ['In a sentence, what is the organization','Who does this website need to serve first?','What should the website accomplish for them and for you?'])assert.ok(!transcript.includes(bad),journey.name+' unrequested generic prompt '+bad);
  assert.equal(current.deepMode,true,journey.name+': deep path chosen voluntarily');
  assert.ok(current.records.length>=state.records.length,journey.name+': collected answers preserved');
  await page.close();

@@ -1,0 +1,39 @@
+{
+  "schema": "H_EARTH_WORLD_POSITION_CONTINUATION_v1",
+  "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2964,
+  "branch": "h-earth/world-position-diagnostic-20261028",
+  "candidateHead": "e29a1b6a95e3073bc527ebb8971ecce09a87f10b",
+  "dispatchHead": "e9e09129e9f5f2ff352b031f085a2359482d1c90",
+  "completedCheckpoints": [
+    "EXISTING_ADMISSION_READBACK_AND_LINEAGE_VERIFIED",
+    "CALIBRATED_OVERLAY_INTEGRATED",
+    "68_SOURCE_TESTS_PASS",
+    "CHANGED_GLSL_COMPILED",
+    "INDEPENDENT_SOURCE_REVIEW_PASS",
+    "EXACT_CANDIDATE_AND_DISPATCH_COMMITTED",
+    "ONE_RUN_LAUNCHED"
+  ],
+  "run": {
+    "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
+    "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+    "lockGeneration": 2964,
+    "candidateHead": "e29a1b6a95e3073bc527ebb8971ecce09a87f10b",
+    "dispatchHead": "e9e09129e9f5f2ff352b031f085a2359482d1c90",
+    "runId": 40790969812,
+    "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40790969812",
+    "observedStatus": "in_progress",
+    "runAttempt": 1,
+    "createdAt": "2026-10-28T23:58:38Z",
+    "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "profile": "WORLD_POSITION_DIAGNOSTIC_V1",
+    "captureFrameLimit": 8,
+    "automaticRetry": false,
+    "launchCount": 1,
+    "completionClaimed": false
+  },
+  "exactlyOneNextAction": "After owner reports completion retrieve run40790969812 artifacts, verify source/hash/pose/calibration and analyze world coordinates against preserved material evidence.",
+  "stopCondition": "STOP_AFTER_LAUNCH_NO_POLLING_NO_AUTOMATIC_RETRY",
+  "productChanged": false,
+  "authorityEffect": "NONE_CONTINUATION_ONLY"
+}

@@ -119,3 +119,121 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
 });
+
+test('Gen2944 ridge hard-winner derivative breaks at the source crossover',()=>{
+ const g=(x,z,cx,cz,rx,rz,a)=>a*Math.exp(-1.6*(((x-cx)/rx)**2+((z-cz)/rz)**2));
+ const east=x=>g(x,-250,148,-224,66,34,38),central=x=>g(x,-250,86,-235,68,37,34);
+ let lo=120,hi=140;
+ for(let i=0;i<65;i++){const m=(lo+hi)/2;if(east(m)>central(m))hi=m;else lo=m;}
+ const x=(hi+lo)/2,h=1e-5,hard=p=>Math.max(east(p),central(p));
+ const left=(hard(x)-hard(x-h))/h,right=(hard(x+h)-hard(x))/h;
+ assert.ok(Math.abs(right-left)>0.5);
+ const smooth=p=>{const a=east(p),b=central(p),d=Math.abs(a-b),w=2;
+  return Math.max(a,b)-(d<w?0.5*d*(1-d/w)**2:0);};
+ assert.ok(Math.abs(((smooth(x+h)-smooth(x))/h)-((smooth(x)-smooth(x-h))/h))<0.001);
+ const source=fs.readFileSync(new URL('../h-earth-3d/terrain/h-earth.terrain-field.js',import.meta.url),'utf8');
+ assert.ok(source.includes('const strongestPositiveRelief = Math.max(...positiveReliefComponents);'));
+});
+
+test('Gen2944 immutable hydrated world differs from newer canonical B2 source at documented location',async()=>{
+ const {createHash}=await import('node:crypto'),{gunzipSync}=await import('node:zlib');
+ const terrain=await import('../h-earth-3d/terrain/h-earth.terrain-field.js');
+ const asset=fs.readFileSync(new URL('../showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',import.meta.url));
+ const digest=createHash('sha256').update(asset).digest('hex');
+ assert.equal(digest,'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a');
+ const manifest=JSON.parse(fs.readFileSync(new URL('../showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json',import.meta.url)));
+ assert.equal(manifest.binary.sha256,digest);
+ const packed=JSON.parse(gunzipSync(asset).toString('utf8'));
+ assert.equal(packed.raw.packageIdentity,'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0C47F685');
+ const v=packed.raw.buffers.positions;
+ let best=Infinity,index=-1;for(let i=0;i<v.length;i+=3){
+  const dist=Math.hypot(v[i]-208.00238513946533,v[i+2]+344.0039446949959);
+  if(dist<best){best=dist;index=i;}
+ }
+ assert.ok(index>=0&&best<0.15,JSON.stringify({index,best}));
+ const difference=terrain.sampleHEarthTerrainElevation(v[index],v[index+2])-v[index+1];
+ assert.ok(Math.abs(difference)>4.5,JSON.stringify({difference,index,best}));
+});
+
+test('Gen2944 ridge normal GPU counterfactual is source-pinned and never changes disk source',async()=>{
+ const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const sourcePath=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
+ const original=fs.readFileSync(sourcePath,'utf8');
+ const result=diagnostic.instrumentRidgeNormalRenderer(original);
+ assert.equal(diagnostic.GEN2944_SOURCE_HEAD,'cb57c275b95d0d48883bc4da4dcfcf17cbec5060');
+ assert.equal(diagnostic.GEN2944_SHADER_SHA256,'fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec');
+ for(const anchor of [
+  'uniform int uRidgeNormalMode;',
+  'if((uRidgeNormalMode==1||uRidgeNormalMode==2||uRidgeNormalMode==4)&&vRoleCode==1u)',
+  'ridgeCorrectionRaw=clamp(length(correction)/0.3,0.0,1.0);',
+  'gl.uniform1i(loc,m);globalThis.__ridgeNormalModeApplied=m;'
+ ])assert.ok(result.includes(anchor),anchor);
+ assert.notEqual(result,original);
+ assert.equal(fs.readFileSync(sourcePath,'utf8'),original);
+ assert.throws(()=>diagnostic.instrumentRidgeNormalRenderer(original+'\n'),/FROZEN_RENDERER_HASH_MISMATCH/);
+ assert.deepEqual(diagnostic.NORMAL_POSES.map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[
+ ['ridge-diagonal',88,-260,118,-13],['healthy-coast',0,-110,170,-8]]);
+ assert.deepEqual(diagnostic.NORMAL_MODES,['original-lit','normal-candidate-lit','normal-correction-raw','original-lit-with-grass','normal-candidate-lit-with-grass']);
+ assert.equal(diagnostic.NORMAL_POSES.length*diagnostic.NORMAL_MODES.length,10);
+});
+test('Gen2944 normal image-set custody rejects missing frames and vegetation disappearance',async()=>{
+ const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const views=diagnostic.NORMAL_POSES.flatMap(pose=>diagnostic.NORMAL_MODES.map((mode,diagnosticApplied)=>({
+  pose,mode,diagnosticApplied,grassHidden:!mode.endsWith('with-grass'),
+  assetSignature:'preserved',sourceHead:diagnostic.GEN2944_SOURCE_HEAD,
+  rendererHash:diagnostic.GEN2944_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:pose.x,y:12,z:pose.z}}
+ })));
+ assert.equal(diagnostic.validateRidgeNormalSet(views),true);
+ for(const change of [a=>a.pop(),a=>a[1].assetSignature='drift',a=>a[2].sourceHead='wrong',a=>a[3].grassHidden=true,a=>a[4].diagnosticApplied=0]){
+  const candidate=structuredClone(views);change(candidate);
+  assert.throws(()=>diagnostic.validateRidgeNormalSet(candidate),/GEN2944_/);
+ }
+});
+
+test('Gen2944 two-frame eligibility probe keeps original terrain and exact mode IDs',async()=>{
+ const d=await import('./h-earth-ground-material-comparison.v1.mjs');
+ assert.deepEqual(d.NORMAL_PROBE_MODES,['original-lit','normal-correction-raw']);
+ assert.equal(d.NORMAL_PROBE_POSES.length,1);
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const candidate=d.instrumentRidgeNormalRenderer(source);
+ assert.ok(candidate.includes('ridgeRegionRaw=region;ridgeGapRaw=1.0-smoothstep(0.0,2.0,gap);'));
+ assert.ok(candidate.includes('lit=vec3(ridgeDebugWorld,ridgeSignedGapRaw)'));
+ assert.ok(candidate.includes('ridgeDebugWorld=vec2(clamp((q.x+256.0)/512.0,0.0,1.0),clamp((q.y+400.0)/320.0,0.0,1.0));'));
+ assert.ok(candidate.includes('ridgeSignedGapRaw=clamp(0.5+(a-b)/24.0,0.0,1.0);'));
+ assert.equal(fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8'),source);
+ const views=d.NORMAL_PROBE_MODES.map((mode,i)=>({
+  pose:d.NORMAL_PROBE_POSES[0],mode,diagnosticApplied:i===0?0:2,grassHidden:true,
+  assetSignature:'same',sourceHead:d.GEN2944_SOURCE_HEAD,rendererHash:d.GEN2944_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:88,y:29,z:-260}}
+ }));
+ assert.equal(d.validateRidgeNormalSet(views,d.NORMAL_PROBE_POSES,d.NORMAL_PROBE_MODES),true);
+});
+
+test('Gen2944 owner-directed steep-side material blend is image-only and leaves protected biome and plants unchanged',async()=>{
+ const d=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const sourcePath=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
+ const original=fs.readFileSync(sourcePath,'utf8');
+ const transformed=d.instrumentSteepMaterialRenderer(original);
+ for(const token of [
+  'GEN2944_STEEP_OWNER_BLEND_DIAGNOSTIC',
+  'smoothstep(48.0,116.0,s.x)',
+  'smoothstep(-200.0,-143.0,s.y)',
+  'zone*=1.0-preservedGrove;',
+  'uRidgeNormalMode==1&&worldSoilTerrain&&!geologicalEarthRock',
+  'base=mix(base,coherentSoilTint,strength);'
+ ])assert.ok(transformed.includes(token),token);
+ assert.ok(!/\bvec3 coherent\s*=/.test(transformed),'GLSL_RESERVATION_VIOLATION');
+ assert.equal(fs.readFileSync(sourcePath,'utf8'),original);
+ assert.throws(()=>d.instrumentSteepMaterialRenderer(original+' '),/GEN2944_STEEP_FROZEN_SHADER_DRIFT/);
+ assert.deepEqual(d.STEEP_MATERIAL_MODES,['original-lit-with-grass','coherent-lit-with-grass']);
+ assert.deepEqual(d.STEEP_MATERIAL_POSES.map(p=>p.name),['steep-diagonal','steep-across','protected-meadow','protected-coast']);
+ const views=d.STEEP_MATERIAL_POSES.flatMap(pose=>d.STEEP_MATERIAL_MODES.map((mode,diagnosticApplied)=>({
+  pose,mode,diagnosticApplied,grassHidden:false,assetSignature:'preserved',
+  sourceHead:d.GEN2944_SOURCE_HEAD,rendererHash:d.GEN2944_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:pose.x,y:24,z:pose.z}}
+ })));
+ assert.equal(d.validateSteepMaterialSet(views),true);
+ const altered=structuredClone(views);altered[3].grassHidden=true;
+ assert.throws(()=>d.validateSteepMaterialSet(altered),/GEN2944_STEEP_CAPTURE_MISMATCH/);
+});

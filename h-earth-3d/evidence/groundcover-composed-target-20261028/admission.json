@@ -1,0 +1,78 @@
+{
+  "authorityInherited": false,
+  "authorityPolicy": "FRESH_SUCCESSOR_REQUEST_REQUIRED_NO_IMPLICIT_INHERITANCE",
+  "authoritySource": "FRESH_SUCCESSOR_REQUEST_AND_CONSTRUCTION_PROCEDURE",
+  "authorityVerification": {
+    "authorityIdentity": {
+      "governingHead": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+      "lockGeneration": 2953,
+      "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+      "operationId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001",
+      "procedureLocatorDigest": "8f94a270fccebf8bcfe6b1be2be8af364aa31d6b2e9efdff3ffc145827329cff",
+      "requestDigest": "15663ec96878a6462b4accbe7e64af8bfb6819c32b340620141a42a324070a82",
+      "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c"
+    },
+    "commentId": 6472769932,
+    "issueNumber": 6911,
+    "lineage": {
+      "anchorCommitSha": "fc05623edeaecc179882b27cd22181a8adcd6072",
+      "branchHead": "fb21172e2121855857834a2f5c58950f047bbbf3",
+      "checkpointVerification": null,
+      "commitCount": 2,
+      "result": "CANONICAL_LOCK_REF_LINEAGE_VERIFIED",
+      "spanRecovery": null
+    },
+    "origin": "CANONICAL_INTAKE",
+    "result": "AUTHENTICATED_CANONICAL_AUTHORITY",
+    "workflowRunId": 40713550505
+  },
+  "branchCreationAuthorized": true,
+  "casAttempt": 1,
+  "casRetryLimit": 8,
+  "committedLedgerBlobSha": "90cb3c39fdb77a7d377f0e8caf7f9461e87536d5",
+  "contentTransport": "GIT_BLOB_FALLBACK",
+  "evidencePolicy": "EXACT_HEAD_REVALIDATION_REQUIRED",
+  "exactHeadRevalidationRequired": true,
+  "governingRef": "refs/heads/main",
+  "implementationInferenceAuthorized": false,
+  "ledgerCompareAndSwapCommitted": true,
+  "ledgerGenerationAfter": 2955,
+  "ledgerGenerationBefore": 2954,
+  "liveGoverningHead": "50ed04ad17de834e96e96d6a28985a125b17aa8a",
+  "observedLedgerBlobSha": "4e41411ddd4c61f52038206811886b26dea545f7",
+  "observedLockRefHead": "fb21172e2121855857834a2f5c58950f047bbbf3",
+  "oneLedgerMutationRequired": true,
+  "operationStarted": true,
+  "predecessor": {
+    "governingHead": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+    "lockGeneration": 2953,
+    "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+    "operationId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001",
+    "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c",
+    "terminalDisposition": "SUPERSEDED",
+    "terminalHistoryPreserved": true
+  },
+  "preservedEvidenceRefs": [
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/6943",
+    "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40719150366"
+  ],
+  "reasonCode": "GOVERNING_HEAD_ADVANCED",
+  "repositoryWritesAuthorized": true,
+  "result": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED",
+  "schema": "REPOSITORY_OPERATION_SUCCESSOR_TRANSITION_RECEIPT_v1",
+  "successor": {
+    "authorityProvenanceBound": true,
+    "governingHead": "50ed04ad17de834e96e96d6a28985a125b17aa8a",
+    "lockGeneration": 2955,
+    "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+    "operationId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001",
+    "procedureLocatorDigest": "dccd33299713f76aa02d39cd22c46274b6df5437e99ae445135de9e7dde451f9",
+    "projectId": "H_EARTH",
+    "requestDigest": "028c4d45b7169b2a9845dd730fe59babd92eae07ebd4ea902c4386f0a9e2525a",
+    "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c",
+    "state": "ADMITTED_LOCKED"
+  },
+  "transitionCommitSha": "a2d54b916535bf45f6d8abdeca2cfd21e171b7e9",
+  "transitionId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001_TRANSITION",
+  "workflowExecutionAuthorized": true
+}

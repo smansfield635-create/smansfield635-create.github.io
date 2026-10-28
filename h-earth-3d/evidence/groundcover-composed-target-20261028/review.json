@@ -1,0 +1,16 @@
+{
+  "schema": "H_EARTH_SOURCE_REVIEW_CHECKPOINT_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001",
+  "generation": 2955,
+  "rendererSha256": "0a8eecd0c4dc87d4521f403331ff642955e23b1255f4da52a2319751c23008d2",
+  "independentReview": "NO_BLOCKING_SOURCE_ISSUE",
+  "harnessTestsPassed": 37,
+  "candidateTestsPassed": 6,
+  "preservedImageHashesVerified": 24,
+  "originalFailedReceiptUnchanged": true,
+  "gpuRunStarted": false,
+  "visualDecision": "PENDING",
+  "nextAction": "Adapt fixed comparison source binding to composed target, retain frozen four poses and archived baseline, then report cost before GPU execution. Do not run old footprint instrumenter against this candidate.",
+  "publication": "BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW_PUBLIC_EVIDENCE_SENSITIVITY",
+  "mergeOrDeployAuthorized": false
+}

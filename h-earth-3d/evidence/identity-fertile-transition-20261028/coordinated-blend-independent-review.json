@@ -1,0 +1,15 @@
+{
+  "schema": "H_EARTH_COORDINATED_BLEND_INDEPENDENT_REVIEW_v1",
+  "result": "REJECT_OFFLINE_NO_GPU",
+  "independentRecomputation": "EXACT_MATCH",
+  "scriptSha256": "cd6b09d5d2de7cdd955da03c702c8a9c1c0b627fb1effc625298bf3570c0a205",
+  "reportSha256": "5521dcb1744406dba80bdc4841f8ea5625dedc38e0895ef191ff9ce0b7f89c26",
+  "findings": [
+    "Broad RGB contrast ratio0.1979..0.2823; mean luminance ratio0.5565..0.6046.",
+    "Normalization cancels target scalar brightness/detail, while chromatic boundaries remain possible.",
+    "Reduced contrast does not satisfy material appearance preservation; no sampled clipping does not rescue the candidate."
+  ],
+  "nextDesignRequirement": "Define camera-independent world-space mean of complete contribution E[W(T-P)], retaining coverage/color correlations. Preserve E[C]=E[P]+E[W(T-P)] rather than fitting screenshot gain. No spatial filter is approved absent justified scale and protected-edge behavior.",
+  "runtimeEdits": 0,
+  "gpuRuns": 0
+}

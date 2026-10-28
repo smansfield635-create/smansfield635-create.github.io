@@ -54,7 +54,8 @@
     "INDEPENDENT_EVIDENCE_REVIEW_COMPLETED",
     "OWNER_REJECT_CONFIRMED",
     "POST_REJECTION_ARCHIVED_UPSTREAM_COMPARISON",
-    "ARCHIVED_NEAR_IDENTITY_STAGE_AMPLIFICATION_VERIFIED"
+    "ARCHIVED_NEAR_IDENTITY_STAGE_AMPLIFICATION_VERIFIED",
+    "TRANSITION_WITNESSES_LOCALIZED_AND_SOURCE_CONTINUITY_AUDITED"
   ],
   "sceneParityManifestSha256": "d331d5fd7c88fb2162b8ad1053b5a90cf0fac342ed7052e9e73f3eca49009e92",
   "preservedEvidence": [
@@ -194,5 +195,56 @@
     "newGpuRuns": 0,
     "productChanges": 0,
     "ownerDisposition": "REJECT"
+  },
+  "transitionNeutralization": {
+    "objective": "Neutralize objectionable spatial transitions while preserving soil texture, regional character and protected controls; no palette redesign.",
+    "method": "Read-only post-hoc localization on verified archived after-soil and after-identity PNGs, near view, x132/264/396 +/-4 pixels, y260..300; signed adjacent-row steps of mean RGB8. Values are descriptive output-code differences, not linear-radiometric causal term estimates. Strongest rows selected after inspection.",
+    "witnesses": [
+      {
+        "x": 132,
+        "rows": [
+          260,
+          261
+        ],
+        "soilStep": -0.2963,
+        "afterIdentityStep": 5.1481,
+        "stageAddedStep": 5.4444
+      },
+      {
+        "x": 264,
+        "rows": [
+          268,
+          269
+        ],
+        "soilStep": 0.5556,
+        "afterIdentityStep": 7.2222,
+        "stageAddedStep": 6.6667
+      },
+      {
+        "x": 396,
+        "rows": [
+          273,
+          274
+        ],
+        "soilStep": 0.6667,
+        "afterIdentityStep": 7.1852,
+        "stageAddedStep": 6.5185
+      }
+    ],
+    "sourceAudit": {
+      "noise": "noise2 uses cubic Hermite interpolation between hashed lattice corners; floor alone does not establish a discontinuity in the interpolated field.",
+      "blend": "Environmental identity uses smoothstep, mix, clamp, and bounded multipliers. Mathematical continuity does not imply visually neutral transitions or sufficient pixel-footprint filtering.",
+      "unresolved": "Palette-field variation, blend-weight variation, and brightness modulation can each amplify a projected transition. Saved P/C images do not uniquely recover internal T and W. Distance compression or aliasing is a hypothesis, not a finding.",
+      "candidateSourceTerms": [
+        "fertilePatch=smoothstep(0.42,0.68,macroField*0.47+mesoField*0.38+detailField*0.15)",
+        "identityContrast=clamp(0.48+0.10*abs(fertilePatch-0.5)*2.0+0.08*mineralExposure,0.0,0.66)",
+        "identityBase*=0.86+0.22*materialVariation+0.06*triFine*nearMaterial",
+        "palette=mix(palette,identityBase,identityWeight)"
+      ]
+    },
+    "decision": "No source term uniquely implicated yet; do not apply another broad smoothstep change, flatten identity, or infer repair authority from owner rejection.",
+    "nextBoundedDiagnostic": "Use the localized transitions as witnesses. First distinguish coverage contribution from identity-color contribution using actual identityWeight and fully modulated identityBase with archived P/C reconstruction. These are internal measurements, not a requested new target palette. If identity color dominates, separate its palette fields from its brightness modulation; if footprint aliasing is asserted, require footprint-aware evidence before filtering. No GPU launch authorized by this saved analysis.",
+    "newGpuRuns": 0,
+    "shaderChanges": 0
   }
 }

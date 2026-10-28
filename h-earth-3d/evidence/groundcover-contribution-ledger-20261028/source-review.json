@@ -1,0 +1,37 @@
+{
+  "schema": "H_EARTH_CONTRIBUTION_LEDGER_SOURCE_REVIEW_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001",
+  "generation": 2957,
+  "reviewer": "West/Soren independent review",
+  "disposition": "PASS_FOR_DIAGNOSTIC_CAPTURE_ONLY",
+  "blockingFindings": [],
+  "frozenSceneHead": "1e39f93a07eb2cc5156483b899094937ba2149db",
+  "rendererSha256": "b4bda2b8953b5bcc3cd65e101a447a878c2d033ec683af53a93ff211c13cdf70",
+  "reviewedFileSha256": {
+    "tools/h-earth-ground-material-comparison.v1.mjs": "08df848938bd381913165b3739e6da3ef7a853d8400a1634ba57b4378c3b49f0",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "9c00e8e095002df8a1ce2f9686d0932267ec710e6627b432883a0f7a34a9f12a",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "06f74b77143d55d6d1efe278664abf875ae32f0a1c92ef9559850de81b80cd7c",
+    "h-earth-3d/evidence/groundcover-contribution-ledger-20261028/analysis-plan.json": "2ed4b83195f52234367ff5c164078ee49e30ceb498d381b0df7b9e8e0f8c5456"
+  },
+  "findings": [
+    "Active product renderer independently compared byte-for-byte to frozen rejected source; no product source change. Existing diagnostic overlay probes original mix inputs/output and does not represent product repair.",
+    "Profile fixes two existing inland poses and four modes (before, tone, raw weight, after), eight candidate-labelled frames; workflow checks out exact PR tooling and one frozen scene, with branch-scoped job and no baseline capture/parity claim.",
+    "Validator binds exact source, renderer hash, modes, poses, frame sequence, physical scene state and normalized resource identity; shared scene directory permitted only for this profile, output distinct.",
+    "Symmetric endpoint decomposition is an exact bilinear identity. Per-pixel decomposition before transect-width aggregation preserves covariance.",
+    "Color transfer inverse and raw-weight decode match overlay. Revised plan treats +/-1 output code as an explicit assumed rounding/dither uncertainty model, not a demonstrated GPU precision bound. DITHER remains enabled.",
+    "Saturated color samples are censored, alpha255 and equal raw-weight channels required, interval corner propagation and residual gate constrain inference; uncertainty does not shrink by averaging."
+  ],
+  "independentValidation": {
+    "targetedTests": 5,
+    "passed": 5,
+    "failed": 0,
+    "command": "node --test --test-name-pattern='contribution|ledger' tools/h-earth-ground-material-comparison.v1.test.mjs",
+    "gitDiffCheck": "PASS",
+    "frozenRendererByteComparison": "PASS"
+  },
+  "limits": [
+    "GPU capture and artifact/source custody remain pending; no causal attribution established by source review.",
+    "Actual analysis must report censored/ineligible pixels and residual failures; unresolved reconstruction mismatch blocks causal inference. Dominance requires uncertainty-separated evidence within declared transects.",
+    "No visual acceptance, map-wide conclusion, temporal aliasing finding, merge or deployment authority is granted."
+  ]
+}

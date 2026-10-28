@@ -428,3 +428,80 @@ test('resident workflow captures same frozen poses and only the admitted branch'
  assert.ok(workflow.includes('H_EARTH_COMPARISON_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}'));
  assert.equal(diagnostic.FOOTPRINT_POSES.length*diagnostic.COMPOSED_MODES.length*2,16);
 });
+
+test('contribution ledger freezes eight frames and exact rejected-source bytes without changing shader',()=>{
+ assert.equal(diagnostic.CONTRIBUTION_SOURCE_HEAD,'1e39f93a07eb2cc5156483b899094937ba2149db');
+ assert.equal(diagnostic.CONTRIBUTION_RENDERER_SHA256,'b4bda2b8953b5bcc3cd65e101a447a878c2d033ec683af53a93ff211c13cdf70');
+ assert.deepEqual(diagnostic.CONTRIBUTION_POSES.map(p=>p.name),['inland-seam-near','inland-seam-far']);
+ assert.deepEqual(diagnostic.CONTRIBUTION_MODES,['before-groundcover-unlit','groundcover-tone-color','groundcover-weight-raw','after-groundcover-unlit']);
+ assert.equal(diagnostic.CONTRIBUTION_POSES.length*diagnostic.CONTRIBUTION_MODES.length,8);
+ const instrumented=diagnostic.instrumentContributionRenderer(residentShader);
+ for(const anchor of ['probeGCBefore=palette;','probeGCTone=groundcoverTone;','probeGCWeight=groundcoverWeight;','probeGCAfter=mix(palette,groundcoverTone,groundcoverWeight);'])assert.ok(instrumented.includes(anchor));
+ assert.ok(instrumented.includes('if(m==12)albedo=probeGCSeen>0.5?probeGCTone:base;'));
+ assert.throws(()=>diagnostic.instrumentContributionRenderer(residentShader+'//drift'),/FROZEN_RENDERER_MISMATCH/);
+ assert.throws(()=>diagnostic.instrumentContributionRenderer(composedShader),/FROZEN_RENDERER_MISMATCH/);
+});
+
+test('contribution ledger enforces exact modes, source, resource identity, scene state and frame custody',async()=>{
+ const {gunzipSync}=await import('node:zlib');
+ const receipt=JSON.parse(gunzipSync(fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-resident-field-20261028/run40734434775/receipt.json.gz',import.meta.url))));
+ // Synthetic validation fixtures reuse actual resource/state shapes. They are
+ // never image evidence: the newly selected modes have not been captured here.
+ const ids=[2,12,11,3];
+ const views=diagnostic.CONTRIBUTION_POSES.flatMap(pose=>diagnostic.CONTRIBUTION_MODES.map((mode,i)=>{
+  const captured=receipt.views.find(v=>v.label==='candidate'&&v.pose.name===pose.name&&v.mode==='after-groundcover-unlit');
+  const view=structuredClone(captured);
+  delete view.image;delete view.imageSha256;
+  return {...view,mode,modeId:ids[i],diagnosticApplied:ids[i],sourceHead:diagnostic.CONTRIBUTION_SOURCE_HEAD};
+ }));
+ assert.equal(diagnostic.validateContributionSet(views),true);
+ assert.throws(()=>diagnostic.validateContributionSet(views.slice(1)),/INCOMPLETE/);
+ for(const mutate of [
+  v=>v.label='baseline',v=>v.sourceHead='a'.repeat(40),v=>v.rendererHash='b'.repeat(64),
+  v=>v.modeId=0,v=>v.diagnosticApplied=0,v=>v.grassHidden=false,
+  v=>v.lastFrame.cameraPosition.y++,v=>v.state.yawDegrees++,v=>v.pose.pitch++,
+  v=>v.canvas.height++,v=>v.lastFrame.navigationSequence++,
+  v=>v.resources.singleOwnerVegetation.controlRoots=[{x:0,y:0,z:0}],
+  v=>v.resources.singleOwnerVegetation.gpuObservedBufferBytes++,
+  v=>v.resources.treeCollection.queue.loading=true
+ ]){
+  const copy=structuredClone(views);mutate(copy[0]);
+  assert.throws(()=>diagnostic.validateContributionSet(copy));
+ }
+});
+
+test('contribution profile permits only one shared frozen scene plus distinct output',async()=>{
+ const {execFileSync}=await import('node:child_process');
+ const moduleUrl=new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url).href;
+ const script=`import assert from 'node:assert/strict';import {HEADS,parseArgs} from ${JSON.stringify(moduleUrl)};
+ assert.equal(HEADS.candidate,'1e39f93a07eb2cc5156483b899094937ba2149db');
+ const args=parseArgs(['--baseline-dir','scene','--candidate-dir','scene','--output','output']);assert.equal(args['--baseline-dir'],args['--candidate-dir']);
+ for(const paths of [['one','two','out'],['scene','scene','scene']])assert.throws(()=>parseArgs(['--baseline-dir',paths[0],'--candidate-dir',paths[1],'--output',paths[2]]),/ONE_FROZEN_SCENE/);`;
+ execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'GROUNDCOVER_CONTRIBUTION_LEDGER_V1'},encoding:'utf8'});
+ assert.throws(()=>parseArgs(['--baseline-dir','scene','--candidate-dir','scene','--output','out']),/DIRECTORIES_NOT_DISTINCT/);
+});
+
+test('contribution workflow uses exactly two checkouts and never renders a baseline',()=>{
+ const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8').split('  groundcover-contribution-ledger-comparison:')[1];
+ assert.ok(workflow.includes("github.event.pull_request.head.ref == 'h-earth/groundcover-contribution-ledger-20261028'"));
+ assert.equal(workflow.split('uses: actions/checkout@v4').length-1,2);
+ assert.equal(workflow.split('ref: ${{ github.event.pull_request.head.sha }}').length-1,1);
+ assert.equal(workflow.split('ref: '+diagnostic.CONTRIBUTION_SOURCE_HEAD).length-1,1);
+ assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GROUNDCOVER_CONTRIBUTION_LEDGER_V1'));
+ assert.ok(workflow.includes('--baseline-dir ../scene --candidate-dir ../scene'));
+ assert.ok(!workflow.includes('path: baseline'));
+ assert.ok(!workflow.includes('H_EARTH_COMPARISON_CANDIDATE_SHA:'));
+});
+
+test('contribution failure receipt binds frozen source rather than historical diagnostic defaults',async()=>{
+ const {execFileSync}=await import('node:child_process');
+ const moduleUrl=new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url).href;
+ const script=`import assert from 'node:assert/strict';import fs from 'node:fs';import os from 'node:os';import path from 'node:path';import {execFileSync} from 'node:child_process';import {run,CONTRIBUTION_SOURCE_HEAD,CONTRIBUTION_RENDERER_SHA256,CONTRIBUTION_MODES} from ${JSON.stringify(moduleUrl)};
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'contribution-receipt-'));const scene=path.join(dir,'scene'),output=path.join(dir,'out');
+ try{fs.mkdirSync(scene);execFileSync('git',['init','-q',scene]);execFileSync('git',['-C',scene,'-c','user.name=Test','-c','user.email=test@local','commit','--allow-empty','-qm','test']);
+ await assert.rejects(run(['--baseline-dir',scene,'--candidate-dir',scene,'--output',output]),/CHECKOUT_HEAD_MISMATCH/);
+ const r=JSON.parse(fs.readFileSync(path.join(output,'receipt.json')));
+ assert.deepEqual(r.heads,{candidate:CONTRIBUTION_SOURCE_HEAD});assert.equal(r.sourceProductSha256,CONTRIBUTION_RENDERER_SHA256);assert.equal(r.baselineProductSha256,null);assert.equal(r.noBaselineCapture,true);assert.equal(r.repairOperationId,'H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001');assert.deepEqual(Object.keys(r.stageMeanings),CONTRIBUTION_MODES);assert.equal(r.productDiskMutation,false);assert.equal(r.views.length,0);assert.equal(r.sceneParity,undefined);assert.equal(r.result,'INCOMPLETE_OR_FAILED');
+ }finally{fs.rmSync(dir,{recursive:true,force:true});}`;
+ execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'GROUNDCOVER_CONTRIBUTION_LEDGER_V1'},encoding:'utf8'});
+});

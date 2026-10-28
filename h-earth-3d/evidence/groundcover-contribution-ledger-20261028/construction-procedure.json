@@ -1,0 +1,83 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+    "operationId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-contribution-ledger-20261028/**"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Approved Gen2928 baseline cb57c275b95d0d48883bc4da4dcfcf17cbec5060 renderer fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec, frozen existing poses, exact candidate source. Reuse verified baseline bytes; no old source qualification promoted to successor.",
+  "exactAllowedRepositoryPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/groundcover-contribution-ledger-20261028/**"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Obtain admission after authentic2956 closure; branch h-earth/groundcover-contribution-ledger-20261028 from1e39f93a preserving all failed evidence.",
+      "step": 1
+    },
+    {
+      "action": "Adapt existing response-overlay harness and branch-scoped exact-head workflow for only two frozen inland poses and four diagnostic modes: before-groundcover, target-color, raw-weight and after-groundcover. Product shader bytes remain unchanged.",
+      "step": 2
+    },
+    {
+      "action": "Independent source review and selected tests; commit and launch existing fixed qualification. Send lengthy Action link and pause for owner completion notification.",
+      "step": 3
+    },
+    {
+      "action": "After completion verify8 frame hashes and exact camera/asset/source identities. Decode linear albedo and quantify signed contributions along predeclared image-space transects; retain8bit quantization/clipping bounds and reconstruction residual.",
+      "step": 4
+    },
+    {
+      "action": "Independent review names remaining mechanism or precise evidence gap; preserve raw evidence and ledger. No new shader candidate, merge or deployment.",
+      "step": 5
+    }
+  ],
+  "exactGoverningHead": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+  "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_UNCHANGED_RENDERER_HASH",
+      "FROZEN_POSE_ASSET_AND_FRAME_CUSTODY",
+      "CORRECT_COLOR_TRANSFER_AND_SIGNED_CONTRIBUTION_IDENTITY",
+      "NO_CLIPPED_OR_QUANTIZED_FALSE_PRECISION",
+      "NO_SHADER_REPAIR_OR_RELEASE_INFERENCE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Source-matched existing evidence and only missing intermediates at the frozen near/far poses; exact linear RGB decomposition.",
+    "forbidden": "No product renderer change, camera search, repeated stage attribution, blind parameter candidate or baseline/control rerender."
+  },
+  "procedureId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/groundcover-contribution-ledger-20261028/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

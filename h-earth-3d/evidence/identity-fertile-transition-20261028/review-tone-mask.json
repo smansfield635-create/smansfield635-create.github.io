@@ -213,5 +213,17 @@
     ],
     "allMarginsPositive": true,
     "meaning": "Shared suitability/protection variation alone with constant patch cannot explain the inferred baseline weight increase at these nine pixels. Patch-amplitude change is required, conditional on source-equivalent archived P/T and interval conventions; this is not repair sufficiency."
+  },
+  "maskContributionBound": {
+    "decomposition": "deltaW=mean(M)*deltaF+mean(F)*deltaM; F=.88*patch*(1-.25*smoothstep(.3,.85,patch)), M=suitability*protection. Bound mean(F)<=.88 conservatively.",
+    "maskTermAbsoluteRGBUpper": [
+      0.00710277949023964,
+      0.0031405515516314143,
+      0.0014214486651242526
+    ],
+    "maskTermL1Upper": 0.011664779706995306,
+    "totalWeightTermL1Lower": 0.06959611355696176,
+    "patchTermL1RequiredLowerByTriangleInequality": 0.057931333849966446,
+    "meaning": "Even allowing patch change simultaneously, shared mask contribution cannot account for total weight term. Remaining patch-amplitude contribution must be nonzero at this witness. Bounds concern source-equivalent baseline and RGB interval model only."
   }
 }

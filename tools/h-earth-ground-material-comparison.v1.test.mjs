@@ -154,3 +154,39 @@ test('Gen2944 immutable hydrated world differs from newer canonical B2 source at
  const difference=terrain.sampleHEarthTerrainElevation(v[index],v[index+2])-v[index+1];
  assert.ok(Math.abs(difference)>4.5,JSON.stringify({difference,index,best}));
 });
+
+test('Gen2944 ridge normal GPU counterfactual is source-pinned and never changes disk source',async()=>{
+ const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const sourcePath=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
+ const original=fs.readFileSync(sourcePath,'utf8');
+ const result=diagnostic.instrumentRidgeNormalRenderer(original);
+ assert.equal(diagnostic.GEN2944_SOURCE_HEAD,'cb57c275b95d0d48883bc4da4dcfcf17cbec5060');
+ assert.equal(diagnostic.GEN2944_SHADER_SHA256,'fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec');
+ for(const anchor of [
+  'uniform int uRidgeNormalMode;',
+  'if((uRidgeNormalMode==1||uRidgeNormalMode==2||uRidgeNormalMode==4)&&vRoleCode==1u)',
+  'ridgeCorrectionRaw=clamp(length(correction)/0.3,0.0,1.0);',
+  'gl.uniform1i(loc,m);globalThis.__ridgeNormalModeApplied=m;'
+ ])assert.ok(result.includes(anchor),anchor);
+ assert.notEqual(result,original);
+ assert.equal(fs.readFileSync(sourcePath,'utf8'),original);
+ assert.throws(()=>diagnostic.instrumentRidgeNormalRenderer(original+'\n'),/FROZEN_RENDERER_HASH_MISMATCH/);
+ assert.deepEqual(diagnostic.NORMAL_POSES.map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[
+ ['ridge-diagonal',88,-260,118,-13],['healthy-coast',0,-110,170,-8]]);
+ assert.deepEqual(diagnostic.NORMAL_MODES,['original-lit','normal-candidate-lit','normal-correction-raw','original-lit-with-grass','normal-candidate-lit-with-grass']);
+ assert.equal(diagnostic.NORMAL_POSES.length*diagnostic.NORMAL_MODES.length,10);
+});
+test('Gen2944 normal image-set custody rejects missing frames and vegetation disappearance',async()=>{
+ const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const views=diagnostic.NORMAL_POSES.flatMap(pose=>diagnostic.NORMAL_MODES.map((mode,diagnosticApplied)=>({
+  pose,mode,diagnosticApplied,grassHidden:!mode.endsWith('with-grass'),
+  assetSignature:'preserved',sourceHead:diagnostic.GEN2944_SOURCE_HEAD,
+  rendererHash:diagnostic.GEN2944_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:pose.x,y:12,z:pose.z}}
+ })));
+ assert.equal(diagnostic.validateRidgeNormalSet(views),true);
+ for(const change of [a=>a.pop(),a=>a[1].assetSignature='drift',a=>a[2].sourceHead='wrong',a=>a[3].grassHidden=true,a=>a[4].diagnosticApplied=0]){
+  const candidate=structuredClone(views);change(candidate);
+  assert.throws(()=>diagnostic.validateRidgeNormalSet(candidate),/GEN2944_/);
+ }
+});

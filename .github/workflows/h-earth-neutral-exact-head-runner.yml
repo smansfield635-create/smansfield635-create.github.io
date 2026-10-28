@@ -1271,17 +1271,17 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Capture two exact-source ridge eligibility frames
+      - name: Capture eight steep-side soil blend before-after frames with protected meadow and coast
         working-directory: tooling
         env:
-          H_EARTH_COMPARISON_PROFILE: GEN2944_NORMAL_PROBE_V1
+          H_EARTH_COMPARISON_PROFILE: GEN2944_STEEP_MATERIAL_BLEND_V1
         run: |
-          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen2944-ridge-normal-probe"
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen2944-steep-soil-preview"
       - name: Preserve image hashes and evidence even on failure
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gen2944-normal-probe-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/gen2944-ridge-normal-probe
+          name: h-earth-gen2944-steep-soil-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen2944-steep-soil-preview
           if-no-files-found: warn
           retention-days: 30

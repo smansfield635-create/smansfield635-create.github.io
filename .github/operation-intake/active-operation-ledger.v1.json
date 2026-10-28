@@ -9986,43 +9986,57 @@
     "7732937cff645079c7a16429d395d752b581bb44ef831d601fa1182995503fe0": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "487cd2699c500aabb4d1a40b85e6bb4272858e1d",
-          "lockGeneration": 2936,
+          "governingHead": "0bbf7e8631be7fe9b5c3e8d07c88ceb46d4b1415",
+          "lockGeneration": 2943,
           "lockScope": "BUILD:COMPANION_V4:R3_CUSTOMER_EXPERIENCE:20261027",
-          "operationId": "BUILD_COMPANION_V4_R3_CUSTOMER_EXPERIENCE_20261027_001",
-          "procedureLocatorDigest": "6921e0a739969b1e7a439728f3e26ce66e53452a3107b84a8beb09a88d2131a8",
-          "requestDigest": "e92a4df4cff9ae07c526286b21ae59e233f7e73c771d20773c4b28357ead6d44",
+          "operationId": "BUILD_COMPANION_V4_R3_CUSTOMER_EXPERIENCE_20261027_SUCCESSOR_001",
+          "procedureLocatorDigest": "46c219857433e58ffcd2c2cc7f514d76f0c12d4b38b731b90d6f208bbc715feb",
+          "requestDigest": "89524bbae227de3e4c801ca23214bfa0cffbd38e029c2751beefd0b303d1be73",
           "scopeHash": "7732937cff645079c7a16429d395d752b581bb44ef831d601fa1182995503fe0"
         },
-        "bindingDigest": "f3d47c3cd60545d5d50a7c737edfd4ad9905ff264fa372983482e5d97744eb1a",
+        "bindingDigest": "52863a04bb8eb047503a186cddedb8f77e7ed7ab80ae8fdd8c55b5d024f1c551",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "dc4a99d451b78cb285946633c3d0b7eac34e8f1a0445c98aab364c9a58311d3d",
-          "commentId": 6453312812,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
+          "commentBodySha256": "57bab271553e85ac873706dd59ef4b93e4b4eb325568dddc3a1ce364a3af8681",
+          "commentId": 6458066277,
+          "eventAction": "created",
+          "eventName": "issue_comment",
           "issueNumber": 5964,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 40582268795,
-          "workflowSha": "487cd2699c500aabb4d1a40b85e6bb4272858e1d"
+          "workflowRunId": 40614274066,
+          "workflowSha": "0bbf7e8631be7fe9b5c3e8d07c88ceb46d4b1415"
         },
-        "lineageAnchorCommitSha": "9dbbb38c0747342869c1165c381d97fc0f3d5ca6",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "29dd73fc7034fa022406bf61755aaaaf8811edb6",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "487cd2699c500aabb4d1a40b85e6bb4272858e1d",
-      "lockGeneration": 2936,
+      "governingHead": "0bbf7e8631be7fe9b5c3e8d07c88ceb46d4b1415",
+      "lockGeneration": 2943,
       "lockScope": "BUILD:COMPANION_V4:R3_CUSTOMER_EXPERIENCE:20261027",
-      "operationId": "BUILD_COMPANION_V4_R3_CUSTOMER_EXPERIENCE_20261027_001",
-      "procedureLocatorDigest": "6921e0a739969b1e7a439728f3e26ce66e53452a3107b84a8beb09a88d2131a8",
+      "operationId": "BUILD_COMPANION_V4_R3_CUSTOMER_EXPERIENCE_20261027_SUCCESSOR_001",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "487cd2699c500aabb4d1a40b85e6bb4272858e1d",
+        "lockGeneration": 2936,
+        "lockScope": "BUILD:COMPANION_V4:R3_CUSTOMER_EXPERIENCE:20261027",
+        "operationId": "BUILD_COMPANION_V4_R3_CUSTOMER_EXPERIENCE_20261027_001",
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/c14a3d4d96b6e4884dd3c0c2ba8ace27eab79365",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5964#issuecomment-6451238861"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "BUILD_R3_REGISTERED_CANDIDATE_SUCCESSOR_20261027_001"
+      },
+      "procedureLocatorDigest": "46c219857433e58ffcd2c2cc7f514d76f0c12d4b38b731b90d6f208bbc715feb",
       "released": false,
-      "requestDigest": "e92a4df4cff9ae07c526286b21ae59e233f7e73c771d20773c4b28357ead6d44",
+      "requestDigest": "89524bbae227de3e4c801ca23214bfa0cffbd38e029c2751beefd0b303d1be73",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "7732937cff645079c7a16429d395d752b581bb44ef831d601fa1182995503fe0",
       "state": "ADMITTED_LOCKED"
@@ -22118,7 +22132,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2942,
+  "lockGeneration": 2943,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -90144,6 +90158,66 @@
       "scopeHash": "4522d60078e330665fa9a7abae55ae172a1d0e6579cf367d656201230b5ade95",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "487cd2699c500aabb4d1a40b85e6bb4272858e1d",
+          "lockGeneration": 2936,
+          "lockScope": "BUILD:COMPANION_V4:R3_CUSTOMER_EXPERIENCE:20261027",
+          "operationId": "BUILD_COMPANION_V4_R3_CUSTOMER_EXPERIENCE_20261027_001",
+          "procedureLocatorDigest": "6921e0a739969b1e7a439728f3e26ce66e53452a3107b84a8beb09a88d2131a8",
+          "requestDigest": "e92a4df4cff9ae07c526286b21ae59e233f7e73c771d20773c4b28357ead6d44",
+          "scopeHash": "7732937cff645079c7a16429d395d752b581bb44ef831d601fa1182995503fe0"
+        },
+        "bindingDigest": "f3d47c3cd60545d5d50a7c737edfd4ad9905ff264fa372983482e5d97744eb1a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "dc4a99d451b78cb285946633c3d0b7eac34e8f1a0445c98aab364c9a58311d3d",
+          "commentId": 6453312812,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5964,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40582268795,
+          "workflowSha": "487cd2699c500aabb4d1a40b85e6bb4272858e1d"
+        },
+        "lineageAnchorCommitSha": "9dbbb38c0747342869c1165c381d97fc0f3d5ca6",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "487cd2699c500aabb4d1a40b85e6bb4272858e1d",
+      "lockGeneration": 2936,
+      "lockScope": "BUILD:COMPANION_V4:R3_CUSTOMER_EXPERIENCE:20261027",
+      "operationId": "BUILD_COMPANION_V4_R3_CUSTOMER_EXPERIENCE_20261027_001",
+      "procedureLocatorDigest": "6921e0a739969b1e7a439728f3e26ce66e53452a3107b84a8beb09a88d2131a8",
+      "released": true,
+      "requestDigest": "e92a4df4cff9ae07c526286b21ae59e233f7e73c771d20773c4b28357ead6d44",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "7732937cff645079c7a16429d395d752b581bb44ef831d601fa1182995503fe0",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/commit/c14a3d4d96b6e4884dd3c0c2ba8ace27eab79365",
+          "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/5964#issuecomment-6451238861"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "0bbf7e8631be7fe9b5c3e8d07c88ceb46d4b1415",
+        "successorLockGeneration": 2943,
+        "successorLockScope": "BUILD:COMPANION_V4:R3_CUSTOMER_EXPERIENCE:20261027",
+        "successorOperationId": "BUILD_COMPANION_V4_R3_CUSTOMER_EXPERIENCE_20261027_SUCCESSOR_001",
+        "transitionId": "BUILD_R3_REGISTERED_CANDIDATE_SUCCESSOR_20261027_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

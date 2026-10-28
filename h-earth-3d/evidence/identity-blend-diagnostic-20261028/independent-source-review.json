@@ -1,0 +1,64 @@
+{
+  "schema": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_SOURCE_REVIEW_v1",
+  "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2962,
+  "result": "PASS",
+  "builderSelfApproval": false,
+  "reviewer": "West independent reviewer /root/review_diag",
+  "reviewedAt": "2026-10-28T21:33:31.269957+00:00",
+  "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "sceneRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "sourceSha256": {
+    "tools/h-earth-ground-material-comparison.v1.mjs": "2fd30202ea66fc33764afd40b0b160defd100434fbe253537b48d79d39d33b5f",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "141fe57cd21cb2d2c38fe9d1a673122d5ca3e5e8ffd83b1c022ed581b5db56d1",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "451ee80e4e3d2554d73aa7f1b20db83aeef0f00454be3727031f4ae14def3347"
+  },
+  "analysisSha256": {
+    "h-earth-3d/evidence/identity-blend-diagnostic-20261028/analyze-capture.py": "b209ec3d1e2ecc1ecfbc96b61afbf5f2639f1f10df399c65a7e88c8ed233be37",
+    "h-earth-3d/evidence/identity-blend-diagnostic-20261028/test-analysis.py": "2a98572b954de0a835ef3080ce9fefcd569fcc163cf309eb1e3ce835e967251a"
+  },
+  "contractSha256": "b0a7b3b01e30fbf38e65a89c7e1b58f976b47a74a27ec7eec15c15bd506acc4b",
+  "sourceOnly": true,
+  "captureNotRun": true,
+  "causalAttributionEstablished": false,
+  "ownerAcceptance": false,
+  "findings": [],
+  "checks": [
+    "Instrumentation pins approved scene renderer bytes and retains original environmental identity arithmetic; no product renderer edit is part of this diagnostic.",
+    "Modes 0 through 9 match contract packing. Incoming/result historical snapshots preserve non-identity soil behavior; raw probes zero outside actual eligible identity execution. Derivatives execute before branching/discard.",
+    "Collector fixes two poses, canvas and FOV; one measured submission and two settled frames per mode; exactly twenty frames. Collector source checks advancing frameSequence, actual navigation and unchanged frame during capture. No performance claims.",
+    "Workflow requires explicit workflow_dispatch qualification, exact diagnostic branch, first attempt, frozen scene, verified admission generation 2962, exact contract and independent source hashes plus dispatch intent. Legacy routes retain their prior behavior.",
+    "Analyzer verifies capture completion, mode IDs and applied values, source identity, actual/expected camera, observer/FOV, dimensions, asset custody and PNG hashes. Archived incoming/result parity is mandatory before attribution.",
+    "Nested mix finite-difference attribution closes signed RGB before scalarization. Shared fertile pathways are grouped once; weight expansion preserves actual mean U and cubic cross term.",
+    "Quantized intervals propagate conservatively through source reconstruction and attribution; color endpoints are censored, bounded raw endpoints remain one-sided and saturated footprint has unbounded upper interval. Non-separated dominance remains mixed/inconclusive."
+  ],
+  "tests": [
+    {
+      "command": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs",
+      "executedByReviewer": true,
+      "passed": 56,
+      "failed": 0
+    },
+    {
+      "command": "python h-earth-3d/evidence/identity-blend-diagnostic-20261028/test-analysis.py",
+      "executedByReviewer": true,
+      "passed": 9,
+      "failed": 0
+    }
+  ],
+  "compileEvidence": {
+    "performedBy": "root independent of builder; receipt inspected by West",
+    "receipt": "glsl-compile-receipt.json",
+    "backend": "Mesa GLES 3.2 surfaceless EGL",
+    "result": "PASS",
+    "framesRendered": 0,
+    "instrumentedFragmentSha256": "fcd88032fc82af6c92d7674b786af712096512e650bec0272ed9546838af4963",
+    "limitation": "Offline GLSL compile only; not WebGL/ANGLE/device qualification."
+  },
+  "remainingGates": [
+    "Exact committed source readback and saved dispatch intent",
+    "Single authorized twenty-frame capture",
+    "Archived pixel parity, source reconstruction and quantization-aware analysis",
+    "Independent evidence review before any mechanism or correction claim"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "H_EARTH_IDENTITY_BLEND_ANALYSIS_PLAN_v1",
+  "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+  "contractSha256": "b0a7b3b01e30fbf38e65a89c7e1b58f976b47a74a27ec7eec15c15bd506acc4b",
+  "command": "python analyze-capture.py --capture-dir <downloaded20framecapture> --archive-dir reference --output analysis",
+  "dependencies": [
+    "Python3",
+    "numpy",
+    "Pillow"
+  ],
+  "tests": "python test-analysis.py",
+  "gates": [
+    "Exact receipt completion/profile/source/mode/frame/pose/camera/asset/capture identity",
+    "Exact archived nearP/C SHA and decodedRGBA parity",
+    "Per-endpoint T/W/C and fertile/moist/dry reconstructed intervals consistent with measured code intervals (difference interval contains zero within2e-7 float allowance)",
+    "Exact point finite-difference decomposition algebra"
+  ],
+  "outputs": [
+    "analysis.json or analysis-failure.json"
+  ],
+  "analysisUnits": "Signed linearRGB differences per individual pixel pair, then average across fixed nine-pixel strips",
+  "groups": "Twelve full-strip summaries (3xcenters*2poses*2lags) and three preselected near witness summaries",
+  "factorPathAccounting": "sourcePathways preserves palette/brightness/weight routes; sourceRootTerms groups shared fertile direct palette, moisture, dry and weight contributions exactly once. Captured fertile/mineral are source-model roots; raw noise\u2192fertile checked but no unsupported raw slope/mineral root decomposition.",
+  "intervals": "Conservative +/-1 output code, exact bounded raw endpoints; no false independence or stochastic confidence interpretation. Monotone/clamp interval evaluation and all signed product corners, no early grayscale conversion.",
+  "censoring": "Exclude any pair with color0or255 in P/C/T and exclude any endpoint without exact executed-mask255. Bounded raw0or255 remain one-sided intervals. Footprint upper saturation is reported unbounded.",
+  "limits": [
+    "Root and pathway interval widths may be conservative because shared dependencies are not cancelled.",
+    "Unique signed-mean term is reported only if one interval magnitude exceeds every competitor in every RGB channel with no opposite-sign cancellation. Otherwise MIXED_OR_INCONCLUSIVE.",
+    "Descriptive mean contributions do not establish visual success, repair sufficiency, owner acceptance, or map-wide causality.",
+    "No aliasing claim from footprint alone.",
+    "No capture or renderer execution by this analyzer."
+  ]
+}

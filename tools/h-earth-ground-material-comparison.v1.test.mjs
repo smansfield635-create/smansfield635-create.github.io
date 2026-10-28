@@ -484,7 +484,7 @@ test('contribution profile permits only one shared frozen scene plus distinct ou
 });
 
 test('contribution workflow uses exactly two checkouts and never renders a baseline',()=>{
- const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8').split('  groundcover-contribution-ledger-comparison:')[1];
+ const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8').split('  groundcover-contribution-ledger-comparison:')[1].split('\n  identity-blend-diagnostic:')[0];
  assert.ok(workflow.includes("github.event.pull_request.head.ref == 'h-earth/groundcover-contribution-ledger-20261028'"));
  assert.equal(workflow.split('uses: actions/checkout@v4').length-1,2);
  assert.equal(workflow.split('ref: ${{ github.event.pull_request.head.sha }}').length-1,1);
@@ -584,4 +584,62 @@ test('residual paired custody rejects candidate hash, frame, camera, pose, modes
  for(const mutate of [v=>v.sourceHead='c'.repeat(40),v=>v.rendererHash='d'.repeat(64),v=>v.lastFrame.navigationSequence++,v=>v.lastFrame.cameraPosition.y++,v=>v.pose.pitch++,v=>v.mode='before-groundcover-unlit',v=>v.diagnosticApplied=2,v=>v.grassHidden=!v.grassHidden,v=>v.resources.singleOwnerVegetation.gpuObservedBufferBytes++,v=>v.assetSignature+='drift']){
   const bad=structuredClone(views);mutate(bad.find(v=>v.label==='candidate'));assert.throws(()=>diagnostic.validateResidualSet(bad,head,hash));
  }
+});
+
+
+test('identity interception freezes approved source and preserves actual palette arithmetic',()=>{
+ const approved=diagnostic.reconstructFootprintBaseline(footprintShader);
+ const instrumented=diagnostic.instrumentIdentityRenderer(approved);
+ assert.throws(()=>diagnostic.instrumentIdentityRenderer(approved+'\n'),/IDENTITY_FROZEN_RENDERER_MISMATCH/);
+ assert.throws(()=>diagnostic.instrumentIdentityRenderer(footprintShader),/IDENTITY_FROZEN_RENDERER_MISMATCH/);
+ assert.ok(instrumented.includes('identityP=palette;\n    identityC=palette;\n    identityT=palette;\n    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY'));
+ const actual='      palette=mix(palette,identityBase,identityWeight);';
+ assert.equal(instrumented.split(actual).length,2);
+ assert.ok(instrumented.includes(actual+'\n      identityC=palette;'));
+ const fsStart=instrumented.indexOf('const FS = '),main=instrumented.indexOf('void main(){',fsStart),derivative=instrumented.indexOf('identityDx=dFdx(vWorldPosition)',main),firstIf=instrumented.indexOf('if(',main),firstDiscard=instrumented.indexOf('discard;',main);
+ assert.ok(derivative>main&&derivative<firstIf&&derivative<firstDiscard);
+ assert.ok(instrumented.includes('else if(uIdentityDiagnosticMode==2)lit=identityT;\n  }\n  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));'));
+ assert.ok(instrumented.includes('if(uIdentityDiagnosticMode>=3){\n    lit=vec3(0.0);\n    if(worldSoilTerrain&&identitySeen>0.5)'));
+ assert.ok(instrumented.includes('identityPack1=vec3(upperDry,mineralExposure,identityWeight)'));
+ assert.ok(instrumented.includes('identityPack5=vec3(inlandIdentity,protectedGrove,smoothstep(8.0,30.0,vWorldPosition.y))'));
+ assert.ok(instrumented.includes('identityQWorld/(1.0+identityQWorld),identityQTri/(1.0+identityQTri),identitySeen'));
+ // Reconstruct exact original FS arithmetic by removing only inserted probe lines/blocks.
+ const originalIdentity=approved.slice(approved.indexOf('    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY'),approved.indexOf('      // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN'));
+ const observedIdentity=instrumented.slice(instrumented.indexOf('    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY'),instrumented.indexOf('      // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN')).replace(/^      identity(?:T|Seen|Pack[0-5]|C)=.*;\n/gm,'');
+ assert.equal(observedIdentity,originalIdentity);
+});
+
+test('identity profile fixes one source,20 modes and one submission without changing legacy profile',async()=>{
+ const {execFileSync}=await import('node:child_process');const url=new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url).href;
+ const script=`import assert from 'node:assert/strict';import {HEADS,IDENTITY_SOURCE_HEAD,IDENTITY_MODES,IDENTITY_POSES,parseArgs} from ${JSON.stringify(url)};
+ assert.equal(HEADS.baseline,IDENTITY_SOURCE_HEAD);assert.equal(HEADS.candidate,IDENTITY_SOURCE_HEAD);assert.equal(IDENTITY_MODES.length*IDENTITY_POSES.length,20);
+ const a=parseArgs(['--baseline-dir','scene','--candidate-dir','scene','--output','output']);assert.equal(a['--baseline-dir'],a['--candidate-dir']);
+ assert.throws(()=>parseArgs(['--baseline-dir','a','--candidate-dir','b','--output','out']),/ONE_FROZEN_SCENE/);`;
+ execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'IDENTITY_BLEND_DIAGNOSTIC_V1'},encoding:'utf8'});
+ const runner=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+ assert.ok(runner.includes('submissionCount:identityCapture?1:12'));assert.ok(runner.includes('while(stable<2)'));
+});
+
+test('identity evidence validator rejects missing modes, drift,wrong source and timing expansion',async()=>{
+ const {gunzipSync}=await import('node:zlib');
+ const cap=JSON.parse(gunzipSync(fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/receipt.json.gz',import.meta.url))));
+ const views=diagnostic.IDENTITY_POSES.flatMap(pose=>diagnostic.IDENTITY_MODES.map((mode,index)=>{
+  const v=structuredClone(cap.views.find(v=>v.pose.name===pose.name));
+  return {...v,pose:{...pose},mode,modeId:index,diagnosticApplied:index,sourceHead:diagnostic.IDENTITY_SOURCE_HEAD,rendererHash:diagnostic.IDENTITY_RENDERER_SHA256,cpuSubmitMilliseconds:[1],softwareGpuFinishMilliseconds:[1]};
+ }));
+ assert.equal(diagnostic.validateIdentitySet(views),true);
+ assert.throws(()=>diagnostic.validateIdentitySet(views.slice(1)),/FRAME_CAP/);
+ for(const mutate of [v=>v.mode='wrong',v=>v.sourceHead='a'.repeat(40),v=>v.rendererHash='b'.repeat(64),v=>v.pose.y++,v=>v.lastFrame.cameraPosition.y++,v=>v.assetSignature+='drift',v=>v.diagnosticApplied++,v=>v.grassHidden=false,v=>v.cpuSubmitMilliseconds.push(2)]){
+  const bad=structuredClone(views);mutate(bad[1]);assert.throws(()=>diagnostic.validateIdentitySet(bad));
+ }
+});
+
+test('identity workflow requires explicit reviewed immutable launch and cannot launch on pull request',()=>{
+ const all=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');const y=all.split('\n  identity-blend-diagnostic:')[1];
+ assert.ok(y.includes("github.event_name == 'workflow_dispatch'"));assert.ok(!y.includes("github.event_name == 'pull_request'"));
+ assert.ok(y.includes("github.ref == 'refs/heads/h-earth/identity-blend-diagnostic-20261028'"));
+ assert.ok(all.includes("inputs.route_query != 'qualification=identity-blend-diagnostic-v1'"));
+ assert.equal(y.split('uses: actions/checkout@v4').length-1,3);assert.ok(!y.includes('path: baseline'));assert.ok(!y.includes('path: candidate'));
+ for(const required of ['test "$RUN_ATTEMPT" = 1',"assert.equal(intent.lockGeneration,2962)","assert.equal(intent.candidateFrames,20)","assert.equal(intent.toolingHead,process.env.TARGET_SHA)","assert.equal(review.builderSelfApproval,false)","assert.equal(admission.result,'ADMITTED_AND_LOCKED')","assert.equal(intent.sceneRendererSha256,sceneHash)",'--baseline-dir ../scene --candidate-dir ../scene'])assert.ok(y.includes(required),required);
+ assert.ok(y.includes("assert.equal(intent.automaticRetry,false)"));assert.ok(y.includes('H_EARTH_COMPARISON_PROFILE: IDENTITY_BLEND_DIAGNOSTIC_V1'));
 });

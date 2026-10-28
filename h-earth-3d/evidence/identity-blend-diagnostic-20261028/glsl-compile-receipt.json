@@ -1,0 +1,22 @@
+{
+  "schema": "H_EARTH_IDENTITY_GLSL_COMPILE_CHECK_v1",
+  "backend": "OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+  "renderer": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "framesRendered": 0,
+  "captureRunLaunched": false,
+  "shaders": [
+    {
+      "name": "original",
+      "sha256": "c3ac9afe363b8e6ad53fe3774c957917a83c27f5112f2a4b983db0c8678b52a9",
+      "compiled": true,
+      "log": ""
+    },
+    {
+      "name": "instrumented",
+      "sha256": "fcd88032fc82af6c92d7674b786af712096512e650bec0272ed9546838af4963",
+      "compiled": true,
+      "log": ""
+    }
+  ],
+  "result": "PASS"
+}

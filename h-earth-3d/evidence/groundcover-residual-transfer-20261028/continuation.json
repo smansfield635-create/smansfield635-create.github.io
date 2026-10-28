@@ -2,7 +2,7 @@
   "schema": "H_EARTH_RESIDUAL_TRANSFER_CONTINUATION_v1",
   "operationId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
   "lockGeneration": 2961,
-  "state": "SOURCE_COMMITTED_DISPATCH_PENDING",
+  "state": "RUN_DISPATCHED_WAITING_FOR_COMPLETION",
   "candidateHead": "ce0a5c08b708d51ed9beed74339a1e72e3fc823a",
   "branch": "h-earth/groundcover-residual-transfer-20261028",
   "allowedPaths": [
@@ -52,11 +52,14 @@
     "approved archived baseline",
     "generation2961 canonical admission"
   ],
-  "nextAction": "Check live lock, branch and prior dispatches; dispatch once using dispatch-intent.json, save run identity, then pause for owner-reported completion.",
+  "nextAction": "Wait for owner-reported completion, then inspect this exact run and its artifacts. Do not dispatch again.",
   "candidateRuns": 1,
   "candidateFrames": 8,
   "automaticRetry": false,
   "baselineRecapture": false,
   "mergeAuthorized": false,
-  "deploymentAuthorized": false
+  "deploymentAuthorized": false,
+  "dispatchHead": "3894c32abed18c7ed6a3759dc0b6154a799c06ca",
+  "runId": 40760859003,
+  "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40760859003"
 }

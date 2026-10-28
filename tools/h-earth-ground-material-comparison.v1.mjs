@@ -18,11 +18,20 @@ export const NORMAL_POSES=Object.freeze([
  Object.freeze({name:'ridge-diagonal',x:88,z:-260,yaw:118,pitch:-13}),
  Object.freeze({name:'healthy-coast',x:0,z:-110,yaw:170,pitch:-8})
 ]);
+// Owner-directed steep mountain-side blending versus established meadow/tree side.
+export const STEEP_MATERIAL_MODES=Object.freeze(['original-lit-with-grass','coherent-lit-with-grass']);
+export const STEEP_MATERIAL_POSES=Object.freeze([
+ Object.freeze({name:'steep-diagonal',x:88,z:-260,yaw:118,pitch:-13}),
+ Object.freeze({name:'steep-across',x:88,z:-260,yaw:95,pitch:-10}),
+ Object.freeze({name:'protected-meadow',x:-52,z:-208,yaw:136,pitch:-15}),
+ Object.freeze({name:'protected-coast',x:0,z:-110,yaw:170,pitch:-8})
+]);
 export const NORMAL_PROBE_MODES=Object.freeze(['original-lit','normal-correction-raw']);
 export const NORMAL_PROBE_POSES=Object.freeze([NORMAL_POSES[0]]);
 const NORMAL_IDS=new Map(NORMAL_MODES.map((m,i)=>[m,i]));
+const steepMaterialCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_STEEP_MATERIAL_BLEND_V1';
 const normalProbeCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_NORMAL_PROBE_V1';
-const normalCapture=normalProbeCapture||process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_NORMAL_ONLY_V1';
+const normalCapture=steepMaterialCapture||normalProbeCapture||process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_NORMAL_ONLY_V1';
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
@@ -126,6 +135,49 @@ export function instrumentRidgeNormalRenderer(original){
  ].join('\n'));
  return instrumentRenderer(source);
 }
+// In-memory material candidate only: retain published geometry, sun and physical
+// plants while gently reconciling steep-side bare ground toward one approved
+// world-space soil texture family. The broad geographic feather has no hard edge.
+export function instrumentSteepMaterialRenderer(original){
+ if(sha(original)!==GEN2944_SHADER_SHA256)throw Error('GEN2944_STEEP_FROZEN_SHADER_DRIFT');
+ const start=original.indexOf('const FS = '),end=original.indexOf('// Ordered screen-door coverage',start);
+ if(start<0||end<=start)throw Error('GEN2944_STEEP_FS_SCOPE_MISSING');
+ let fragment=original.slice(start,end);
+ const one=(a,z)=>{if(fragment.split(a).length!==2)throw Error('GEN2944_STEEP_ANCHOR_MISSING:'+a.slice(0,60));fragment=fragment.replace(a,z);};
+ one('out vec4 outColor;','out vec4 outColor;\\nuniform int uRidgeNormalMode;'.replaceAll('\\n','\n'));
+ const anchor='  if(clearingType>0.5&&clearingType<1.5){\\n    // Texture-derived shallow bark relief'.replaceAll('\\n','\n');
+ const patch=[
+ '  // GEN2944_STEEP_OWNER_BLEND_DIAGNOSTIC: only physical soil roles.',
+ '  if(uRidgeNormalMode==1&&worldSoilTerrain&&!geologicalEarthRock&&uClearingEnabled==1){',
+ '    vec2 s=vWorldPosition.xz;',
+ '    float zone=smoothstep(48.0,116.0,s.x)*(1.0-smoothstep(-200.0,-143.0,s.y))*',
+ '      smoothstep(34.0,91.0,max(0.0,vCoastDistanceMeters));',
+ '    float preservedGrove=1.0-smoothstep(48.0,95.0,distance(s,vec2(-139.40268,-210.74617)));',
+ '    zone*=1.0-preservedGrove;',
+ '    if(zone>0.0001){',
+ '      vec3 coherent=pow(texture(uClearingSoil,clearingLocalXZ(vWorldPosition)*0.28).rgb,vec3(2.2))*0.75;',
+ '      float wideTonal=noise2(s*0.018+vec2(5.0,-11.0));',
+ '      coherent*=mix(vec3(1.12,1.06,0.91),vec3(0.92,0.97,1.02),wideTonal);',
+ '      float strength=0.78*zone;',
+ '      base=mix(base,coherent,strength);',
+ '      terrainRoughnessForLighting=mix(terrainRoughnessForLighting,0.94,strength);',
+ '      terrainReflectanceForLighting=mix(terrainReflectanceForLighting,0.02,strength);',
+ '    }',
+ '  }'
+ ].join('\n');
+ one(anchor,patch+'\n'+anchor);
+ let source=original.slice(0,start)+fragment+original.slice(end);
+ const draw='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
+ if(source.split(draw).length!==2)throw Error('GEN2944_STEEP_DRAW_ANCHOR_MISSING');
+ source=source.replace(draw,draw+[
+ '    {const m=globalThis.__ridgeNormalMode??0;',
+ '    if(!Number.isInteger(m)||m<0||m>1)throw Error("GEN2944_STEEP_MODE_INVALID");',
+ '    const loc=gl.getUniformLocation(resources.geometryProgram,"uRidgeNormalMode");',
+ '    if(loc===null)throw Error("GEN2944_STEEP_MODE_UNIFORM_MISSING");',
+ '    gl.uniform1i(loc,m);globalThis.__ridgeNormalModeApplied=m;}'
+ ].join('\n'));
+ return instrumentRenderer(source);
+}
 export function validateRidgeNormalSet(views,poses=NORMAL_POSES,modes=NORMAL_MODES){
  if(views.length!==poses.length*modes.length)throw Error('GEN2944_FRAME_COUNT');
  for(const pose of poses){
@@ -188,9 +240,9 @@ export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(![
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2944_NORMAL_ONLY_V1','GEN2944_NORMAL_PROBE_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=normalProbeCapture?NORMAL_PROBE_POSES:(normalCapture?NORMAL_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
-  const modes=normalProbeCapture?NORMAL_PROBE_MODES:(normalCapture?NORMAL_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES));
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2944_NORMAL_ONLY_V1','GEN2944_NORMAL_PROBE_V1','GEN2944_STEEP_MATERIAL_BLEND_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=steepMaterialCapture?STEEP_MATERIAL_POSES:(normalProbeCapture?NORMAL_PROBE_POSES:(normalCapture?NORMAL_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES)));
+  const modes=steepMaterialCapture?STEEP_MATERIAL_MODES:(normalProbeCapture?NORMAL_PROBE_MODES:(normalCapture?NORMAL_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES)));
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:normalCapture?'H_EARTH_GEN2943_CANONICAL_MOUNTAIN_RIDGE_CONTINUITY_REPAIR_20261027_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:normalCapture?GEN2944_SHADER_SHA256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
@@ -211,7 +263,7 @@ export async function run(argv){
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
       await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__ridgeNormalMode=0;globalThis.__ridgeNormalCapture='+normalCapture+';globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
-      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,normalCapture?instrumentRidgeNormalRenderer:(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer)]]){
+      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,steepMaterialCapture?instrumentSteepMaterialRenderer:(normalCapture?instrumentRidgeNormalRenderer:(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer))]]){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
         await page.route(url=>url.pathname===pathname,route=>route.fulfill({status:200,contentType:'text/javascript',body:transformed}));
       }

@@ -62,7 +62,7 @@ for(const [name,steps] of journeys){const page=await browser.newPage();await pag
 {
  const page=await browser.newPage();await page.goto('http://127.0.0.1:18115/build/',{waitUntil:'networkidle0'});
  await page.evaluate(()=>document.querySelector('[data-open-build-companion],a[href="/build/intake/"]').click());
- for(const t of ['Restaurant, food service or hospitality','Restaurant or cafe','Receive table reservation requests','Use these choices','Replace or redesign my current website','Its domain name','Current ordering, booking or client systems','Use these choices','I need help preparing it','No fixed deadline'])await click(page,t);
+ for(const t of ['Restaurant, food service or hospitality','Restaurant or cafe','Receive table reservation requests','Use these choices','Replace or redesign my current website','Its domain name','Existing ordering or reservation platforms','Use these choices','I need help preparing it','No fixed deadline'])await click(page,t);
  const state=JSON.parse(await page.evaluate(()=>sessionStorage.getItem('dgb-build-companion-v4')));
  assert.equal(state.sufficiencyOffered,true,'redesign has concise first-pass sufficiency');
  assert.ok(state.queue.some(x=>x.id==='RESERVATION'),'reservation handling is retained for optional detail');

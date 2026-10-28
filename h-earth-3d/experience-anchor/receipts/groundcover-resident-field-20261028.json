@@ -1,0 +1,49 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "REJECT",
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+  "canonicalAdmissionGeneration": 2956,
+  "sourceCandidate": "7882a91c4ff8ed1652df8453ce3772a863a7e109",
+  "ownerDisposition": "NOT_ESTABLISHED",
+  "visualEvidence": [
+    "h-earth-3d/evidence/groundcover-resident-field-20261028/verdict.json",
+    "h-earth-3d/evidence/groundcover-resident-field-20261028/run40734434775/manifest.json"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/evidence/groundcover-resident-field-20261028/continuity.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/evidence/groundcover-resident-field-20261028/source-review.json"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "b4bda2b8953b5bcc3cd65e101a447a878c2d033ec683af53a93ff211c13cdf70"
+    }
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": null,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": null,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": null,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": null,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": null,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": null,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": null,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": null,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": null,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": null,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": null
+  },
+  "limitations": [
+    "Engineering visual repair rejected; no passing upgrade acceptance receipt is claimed.",
+    "Geometry/navigation/UI/world identity unchanged by source reconstruction, but no fresh physical-device or whole-world traversal acceptance.",
+    "Band continuity goal remains failed; replacement spatial banding visible. Still frames do not prove temporal aliasing."
+  ],
+  "independentReview": {
+    "task": "/root/west_review",
+    "result": "REJECT_BAND_REPAIR"
+  }
+}

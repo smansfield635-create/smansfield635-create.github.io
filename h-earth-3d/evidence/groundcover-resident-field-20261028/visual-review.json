@@ -1,0 +1,71 @@
+{
+  "schema": "H_EARTH_RESIDENT_FIELD_INDEPENDENT_VISUAL_REVIEW_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+  "lockGeneration": 2956,
+  "reviewer": "WEST_SOREN",
+  "nativeTask": "/root/west_review",
+  "sourceRun": 40734434775,
+  "artifactId": 12837402038,
+  "candidateHead": "7882a91c4ff8ed1652df8453ce3772a863a7e109",
+  "baselineHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "rawReceiptSha256": "61479f5800315e0461a95e72d1e79d4cbb53a8fe6d529bf1f0a1079aa414864e",
+  "rawCaptureResult": "RESIDENT_FIELD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING",
+  "technicalQualification": "PASS",
+  "visualDisposition": "REJECT",
+  "reason": "REPLACEMENT_BANDING_PERSISTS_AFTER_SPATIAL_FIELD_SUBSTITUTION",
+  "reviewedImages": 16,
+  "independentImageHashAndDimensionChecks": "PASS_16_OF_16_529_BY_980",
+  "independentPairFrameAssetValidator": "PASS_EXACT_CANDIDATE",
+  "sceneParity": {
+    "result": "EXACT_SCENE_TREE_PARITY_EXCEPT_DECLARED_RENDERER_AND_EVIDENCE",
+    "manifestSha256": "d331d5fd7c88fb2162b8ad1053b5a90cf0fac342ed7052e9e73f3eca49009e92"
+  },
+  "observations": [
+    {
+      "pose": "inland-seam-near",
+      "modes": [
+        "reference-lit",
+        "after-groundcover-unlit"
+      ],
+      "finding": "Candidate redistributes the band into broader dark olive coverage beneath the horizon. Visible region separation remains; no sufficient continuity improvement."
+    },
+    {
+      "pose": "inland-seam-far",
+      "modes": [
+        "reference-lit",
+        "after-groundcover-unlit"
+      ],
+      "finding": "Original broad lobe is redistributed, but a conspicuous sweeping tan/olive band remains across the upper-middle ground. Closely spaced repeated horizon stripes are more apparent. Replacement banding fails acceptance."
+    },
+    {
+      "pose": "protected-meadow",
+      "modes": [
+        "reference-lit",
+        "after-groundcover-unlit"
+      ],
+      "finding": "Grass placement and terrain shape remain stable. Final lit appearance is close to baseline, while the unlit foreground shows changed soil coverage. This is not a pixel-identical control and does not establish owner preference."
+    },
+    {
+      "pose": "protected-coast",
+      "modes": [
+        "reference-lit",
+        "after-groundcover-unlit"
+      ],
+      "finding": "Pixel-identical paired outputs."
+    }
+  ],
+  "metricsSource": "run40734434775/paired-pixels.json",
+  "metricsUsedAsVisualAcceptance": false,
+  "limits": [
+    "STATIC_FIXED_VIEW_SOFTWARE_GPU_EVIDENCE",
+    "TEMPORAL_ALIASING_OR_SHIMMER_NOT_PROVEN_FROM_STILLS",
+    "NOT_OWNER_PHYSICAL_DEVICE_ACCEPTANCE",
+    "NOT_MAPWIDE_CONTINUITY_QUALIFICATION",
+    "NO_NEW_GEOMETRY_OR_VEGETATION_DAMAGE_OBSERVED_IN_THESE_PAIRS"
+  ],
+  "nextBoundary": "PRESERVE_REJECTION_AND_EVIDENCE_DO_NOT_PROMOTE_THIS_SHADER",
+  "ownerAcceptance": false,
+  "mapWideRepair": false,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false
+}

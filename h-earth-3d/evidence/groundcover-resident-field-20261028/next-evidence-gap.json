@@ -1,0 +1,36 @@
+{
+  "schema": "H_EARTH_GROUNDCOVER_NEXT_EVIDENCE_GAP_v1",
+  "role": "EAST_ELARA_READ_ONLY_INTERPRETATION",
+  "candidateHead": "7882a91c4ff8ed1652df8453ce3772a863a7e109",
+  "imagePairsInspected": [
+    "pair-inland-seam-far-after-groundcover-unlit.jpg",
+    "pair-inland-seam-near-after-groundcover-unlit.jpg"
+  ],
+  "finding": "The substituted field still yields a broad olive/tan division in the far albedo image and a pronounced olive near-horizon band. The original55.6m field was therefore not a sufficient explanation of the objectionable pattern, and its replacement is not an acceptable repair. The observed stills do not prove temporal shimmer or aliasing.",
+  "preservedKnowledge": [
+    "Groundcover stage causal attribution and removal counterfactual remain established for the original inland band class.",
+    "Footprint, endpoint-only luminance correction and resident-field substitution have failed visual repair acceptance.",
+    "Keep fixed scene/source/pose evidence; do not reopen stage attribution or hunt for another camera."
+  ],
+  "oneEvidenceGap": "At the actual surviving broad contour, the relative contributions of incoming palette P, endpoint T, and weight w to the spatial color change have not been quantitatively separated on the exact candidate. A scalar field autocorrelation grid is not the projected contour, and constant suitability/protection at previous sampled near-view pixels cannot be generalized to every far-view contour.",
+  "oneNextAction": "Build one source-bound signed RGB contribution ledger along fixed image-space transects crossing the existing near/far band. Reuse archived factor/pre-tone/post images where exact source/pose custody permits; obtain only missing before-groundcover, tone and raw-weight intermediates on the same frozen poses through existing response-overlay tooling if a separately admitted evidence scope permits. Do not change the product shader.",
+  "decomposition": {
+    "definition": "C=(1-w)P+wT in linear albedo",
+    "adjacentSampleIdentity": "deltaC=(1-meanW)*deltaP + meanW*deltaT + deltaW*(meanT-meanP)",
+    "requiredOutputs": [
+      "Signed per-channel contributions across the same observed contour, plus reconstructed-versus-observed post-groundcover residual",
+      "Exact source head, image hashes, frozen pose, chosen transect coordinates and source/output color-transfer treatment",
+      "Only if weight term dominates: decompose existing patch/suitability/protection at those same samples; do not repeat broad masks indiscriminately",
+      "A falsifiable named remaining mechanism or exact instrumentation gap before proposing another candidate"
+    ],
+    "transferCaveat": "Existing factor overlay color outputs apply pow(clamp(albedo*1.12,0,1),1/2.2), while raw factors are grayscale. Decode before linear-albedo arithmetic and retain quantization/clipping uncertainty;8-bit PNG reconstruction is not exact shader-float evidence."
+  },
+  "stopConditions": [
+    "No new parameter candidate from image appearance alone",
+    "No success inference from source tests or field statistics",
+    "No universal boundary or map-wide conclusion from these sampled transects"
+  ],
+  "mutation": "Evidence note only; no shader changes or new experiment performed",
+  "ownerAcceptance": false,
+  "mapWideRepair": false
+}

@@ -49,7 +49,15 @@ The decisive branch is coverage-driven palette replacement at these witnesses. C
 
 Do not repeat the failed residual-only repair: earlier captures showed upstream identity bands surviving it. Do not infer that changing the noise hash, broad noise frequency, distance fade or normal weighting will solve all observed transitions.
 
-Next isolate which factor in W changes at the same witnesses: organic patch response versus suitability/protection. Reuse the resident raw-weight capture only to bound its shared mask after accounting for its different patch; never transplant its W to baseline. Preserve the upstream identity contribution as a separate path. Select a repair only after the full affected composition is explained; no additional threshold widening, regional tint or amplitude sweep is justified.
+## Additional decisive exclusion: procedural patch change is required
+
+The independent review reconstructed the resident patch from captured meso/detail factors and divided resident W by its patch amplitude to bound the shared suitability/protection mask M. This does not transplant resident W to baseline.
+
+At all nine far-center pixels, baseline weight increase is at least0.257376..0.296735. If patch amplitude were constant, mask variation could produce at most0.028226..0.050262. Every pixel excludes that explanation by at least0.216498. Therefore changing procedural patch amplitude is required at this witness. Mask=1 is consistent, but exact mask constancy is not claimed.
+
+Both independent scripts and numeric output are retained. Independent review reran the main attribution exactly and verified53/180 broad comparisons and0/270 adjacent comparisons.
+
+Next prepare a source-bound repair design for the coupled patch-driven palette-replacement and upstream identity paths. It must explain how the ecological color and fine soil detail remain while the measured broad contrasts are removed. Test its predicted contributions offline against these frozen witnesses before any GPU dispatch. Avoid repeating already rejected isolated field substitution, residual removal or fertility widening. A new GPU comparison requires applicable successor scope/budget; the current one-run budget is consumed.
 
 ## Reproduction and custody
 

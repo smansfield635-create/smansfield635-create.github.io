@@ -134,3 +134,23 @@ test('Gen2944 ridge hard-winner derivative breaks at the source crossover',()=>{
  const source=fs.readFileSync(new URL('../h-earth-3d/terrain/h-earth.terrain-field.js',import.meta.url),'utf8');
  assert.ok(source.includes('const strongestPositiveRelief = Math.max(...positiveReliefComponents);'));
 });
+
+test('Gen2944 immutable hydrated world differs from newer canonical B2 source at documented location',async()=>{
+ const {createHash}=await import('node:crypto'),{gunzipSync}=await import('node:zlib');
+ const terrain=await import('../h-earth-3d/terrain/h-earth.terrain-field.js');
+ const asset=fs.readFileSync(new URL('../showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz',import.meta.url));
+ const digest=createHash('sha256').update(asset).digest('hex');
+ assert.equal(digest,'48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a');
+ const manifest=JSON.parse(fs.readFileSync(new URL('../showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json',import.meta.url)));
+ assert.equal(manifest.binary.sha256,digest);
+ const packed=JSON.parse(gunzipSync(asset).toString('utf8'));
+ assert.equal(packed.raw.packageIdentity,'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_0C47F685');
+ const v=packed.raw.buffers.positions;
+ let best=Infinity,index=-1;for(let i=0;i<v.length;i+=3){
+  const dist=Math.hypot(v[i]-208.00238513946533,v[i+2]+344.0039446949959);
+  if(dist<best){best=dist;index=i;}
+ }
+ assert.ok(index>=0&&best<0.15,JSON.stringify({index,best}));
+ const difference=terrain.sampleHEarthTerrainElevation(v[index],v[index+2])-v[index+1];
+ assert.ok(Math.abs(difference)>4.5,JSON.stringify({difference,index,best}));
+});

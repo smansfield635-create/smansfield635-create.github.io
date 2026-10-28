@@ -1,0 +1,70 @@
+{
+  "result": "ARCHIVE_SOURCE_PREFIX_AND_NEAR_FRAME_CUSTODY_VERIFIED",
+  "approvedHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "approvedRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "historicalHead": "9127904e725a3f4ca13c1221451023102ad09435",
+  "historicalRendererSha256": "7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2",
+  "prefixBoundary": "      // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN",
+  "prefixBytes": 53327,
+  "prefixSha256": "ba5fbf6231e2f6c12361b5c33c7e2710acc5c4a7418c7b075af030fcb4a248a5",
+  "allFiveArchivedImageHashesVerified": true,
+  "archivedPoseCameraCanvasAssetParity": true,
+  "receiptSha256": "adaf320b10b6abb73ba62e736a09aa77a59dad52b92c942e9a6eb30a23327d33",
+  "archiveSha256": "12f1728d356f0d750bde067983fd420659e3c894adb724cd39909effa8633db9",
+  "referenceFrames": [
+    {
+      "image": "candidate-inland-seam-near-after-soil.png",
+      "imageSha256": "c38501a0ea5b7e8a627573f2f7d5d43fc4e18d94238b649952aa44e29961fccd",
+      "pose": {
+        "name": "inland-seam-near",
+        "x": -200,
+        "z": -728,
+        "y": 18.361431,
+        "yaw": 0,
+        "pitch": -14,
+        "diagnosticObserver": true
+      },
+      "expectedCameraPosition": {
+        "x": -200.00863582715297,
+        "y": 17.68284913705429,
+        "z": -728.0314344108368
+      },
+      "canvas": {
+        "width": 529,
+        "height": 980,
+        "cssWidth": 540,
+        "cssHeight": 1000
+      },
+      "assetSignature": "[{\"id\":\"PROPOSED_OASIS_01\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_COASTAL_01\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_COASTAL_02\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_COASTAL_03\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_MAPLE_LARGE\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_MAPLE_MEDIUM\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_JACARANDA_02\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_WILD_SYRINGA\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_SEARSIA\",\"state\":\"IDLE\",\"ready\":false}]",
+      "stage": "after-soil"
+    },
+    {
+      "image": "candidate-inland-seam-near-after-identity.png",
+      "imageSha256": "a6c5218c46d3a3ecfcbf5510eec34fea32e00914fc85d287a8ae454424f3d4e2",
+      "pose": {
+        "name": "inland-seam-near",
+        "x": -200,
+        "z": -728,
+        "y": 18.361431,
+        "yaw": 0,
+        "pitch": -14,
+        "diagnosticObserver": true
+      },
+      "expectedCameraPosition": {
+        "x": -200.00863582715297,
+        "y": 17.68284913705429,
+        "z": -728.0314344108368
+      },
+      "canvas": {
+        "width": 529,
+        "height": 980,
+        "cssWidth": 540,
+        "cssHeight": 1000
+      },
+      "assetSignature": "[{\"id\":\"PROPOSED_OASIS_01\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_COASTAL_01\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_COASTAL_02\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_COASTAL_03\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_MAPLE_LARGE\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_MAPLE_MEDIUM\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_JACARANDA_02\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_WILD_SYRINGA\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_SEARSIA\",\"state\":\"IDLE\",\"ready\":false}]",
+      "stage": "after-identity"
+    }
+  ],
+  "newCaptureParityStatus": "REQUIRED_NOT_YET_CAPTURED",
+  "scope": "Upstream renderer prefix and archived near stages only; no full-scene/evidence reuse beyond verified dependencies, no far incoming stage archive exists."
+}

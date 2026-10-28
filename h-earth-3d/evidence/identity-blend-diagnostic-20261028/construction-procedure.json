@@ -1,0 +1,90 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "contractSha256": "b0a7b3b01e30fbf38e65a89c7e1b58f976b47a74a27ec7eec15c15bd506acc4b",
+    "head": "93c96345c25c684d2e4a75b966c1f1ae688614a3",
+    "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/identity-blend-diagnostic-20261028/**"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Scene frozen at cb57c275b95d0d48883bc4da4dcfcf17cbec5060; product renderer SHA256 fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec. Tooling immutable SHA bound before launch; contract SHA256 b0a7b3b01e30fbf38e65a89c7e1b58f976b47a74a27ec7eec15c15bd506acc4b. Source tests, independent West review and saved one-run dispatch intent required. No moving refs.",
+  "exactAllowedRepositoryPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/identity-blend-diagnostic-20261028/**"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Compile finalized source-bound20-frame contract with canonical request/procedure; submit only after root review. Admission does not assert future source qualification complete.",
+      "step": 1
+    },
+    {
+      "action": "Obtain authentic admission then create h-earth/identity-blend-diagnostic-20261028 from d416cd37d061403e403735ae6c8cf093f8de390c; preserve all prior evidence.",
+      "step": 2
+    },
+    {
+      "action": "Adapt existing comparator/test/workflow for ten frozen modes x near/far,20frames,2settled frames and1measured submission/mode; preserve same-frame state/assets/camera custody. Product disk source remains unchanged; no performance claims.",
+      "step": 3
+    },
+    {
+      "action": "Run selected source and numerical tests, independent West source review, exact immutable remote readback and save dispatch intent.",
+      "step": 4
+    },
+    {
+      "action": "Launch at most one bounded diagnostic run using existing registered qualification route; send exact run link and pause for owner.",
+      "step": 5
+    },
+    {
+      "action": "After completion validate custody and numeric reconstruction, attribute internal contributions with uncertainty bounds, preserve evidence and independent review; no correction or deployment in this scope.",
+      "step": 6
+    }
+  ],
+  "exactGoverningHead": "93c96345c25c684d2e4a75b966c1f1ae688614a3",
+  "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_UNCHANGED_PRODUCT_RENDERER",
+      "FROZEN_POSE_ASSET_VIEWPORT_AND_FRAME_CUSTODY",
+      "ALL_IDENTITY_WEIGHT_PALETTE_AND_BRIGHTNESS_CONTRIBUTIONS_IN_ONE_RUN",
+      "CORRECT_LINEAR_TRANSFER_OR_RAW_ENCODING_AND_RECONSTRUCTION_BOUNDS",
+      "NO_AUTOMATIC_GPU_ON_WORKFLOW_PUBLICATION",
+      "NO_FALSE_UNIQUE_CAUSE_CLAIM_FROM_OVERLAPPING_UNCERTAINTY",
+      "NO_SHADER_REPAIR_OR_RELEASE_INFERENCE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Source-compatible archived after-soil/after-identity evidence, localized witnesses and exact source; one sufficient internal-factor capture.",
+    "forbidden": "No staged speculative repair, parameter sweep, camera search, baseline/control recapture, archive rewrite, new workflow carrier or shader edit."
+  },
+  "procedureId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/identity-blend-diagnostic-20261028/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "acquisitionCommitSha": "eed02b2d6382aebc061b9d21a757bddd8fda746b",
+  "auditEvents": [
+    {
+      "details": {
+        "expectedMainHead": "93c96345c25c684d2e4a75b966c1f1ae688614a3",
+        "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+        "repository": "smansfield635-create/smansfield635-create.github.io",
+        "sourceCommentId": 6480908906
+      },
+      "event": "EXECUTION_INPUT_VALIDATED",
+      "sequence": 1
+    },
+    {
+      "details": {
+        "issueNumber": 6948,
+        "sourceCommentId": 6480908906
+      },
+      "event": "OWNER_SOURCE_AUTHENTICATED",
+      "sequence": 2
+    },
+    {
+      "details": {
+        "ledgerGeneration": 2961,
+        "observedLedgerBlobSha": "a7a98eea0ff5aae43a334a508992861079ec4c32",
+        "observedLockRefHead": "63cc840940c1694b6c329a367629b06bd37da05f"
+      },
+      "event": "CANONICAL_STATE_OBSERVED",
+      "sequence": 3
+    },
+    {
+      "details": {
+        "lockGeneration": 2962,
+        "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+        "planIsReceipt": false
+      },
+      "event": "CANONICAL_PLAN_PRODUCED",
+      "sequence": 4
+    },
+    {
+      "details": {
+        "ledgerBlobSha": "a7a98eea0ff5aae43a334a508992861079ec4c32",
+        "lockRefHead": "63cc840940c1694b6c329a367629b06bd37da05f",
+        "mainHead": "93c96345c25c684d2e4a75b966c1f1ae688614a3"
+      },
+      "event": "WRITE_BOUNDARY_REVALIDATED",
+      "sequence": 5
+    },
+    {
+      "details": {
+        "createdCommitSha": "eed02b2d6382aebc061b9d21a757bddd8fda746b",
+        "ledgerBlobSha": "3e0e21d9a9bf5164c93b19196727f2ec30de650b",
+        "message": "Acquire operation lock 2962: H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+        "parent": "63cc840940c1694b6c329a367629b06bd37da05f"
+      },
+      "event": "CANDIDATE_LEDGER_COMMIT_MATERIALIZED",
+      "sequence": 6
+    },
+    {
+      "details": {
+        "createdCommitSha": "eed02b2d6382aebc061b9d21a757bddd8fda746b"
+      },
+      "event": "LOCK_REF_CAS_COMMITTED",
+      "sequence": 7
+    },
+    {
+      "details": {
+        "commitVerification": "CANONICAL_LEDGER_COMMIT_VERIFIED",
+        "lineageVerification": "CANONICAL_LOCK_REF_LINEAGE_VERIFIED",
+        "lockGeneration": 2962,
+        "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001"
+      },
+      "event": "READBACK_AND_LINEAGE_VERIFIED",
+      "sequence": 8
+    }
+  ],
+  "canonicalAdmissionReceipt": {
+    "branchCreationAuthorized": true,
+    "errorCode": null,
+    "field": null,
+    "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+    "implementationInferenceAuthorized": false,
+    "lock": {
+      "governingHead": "93c96345c25c684d2e4a75b966c1f1ae688614a3",
+      "independentAuthorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "93c96345c25c684d2e4a75b966c1f1ae688614a3",
+          "lockGeneration": 2962,
+          "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+          "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+          "procedureLocatorDigest": "ca482d3066b78394ca0a2164786e09212c8833cb1c35bc698c45723ccea8bf19",
+          "requestDigest": "5f943e36675077c56c39cebd2b382203f3041af98244ded5dea2b67ab3a9e164",
+          "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c"
+        },
+        "bindingDigest": "d20c0f270274f63a0c057068505eff4b01b29eba194577d7acffad44cd0455bc",
+        "compareAndSwap": {
+          "observedLedgerBlobSha": "a7a98eea0ff5aae43a334a508992861079ec4c32",
+          "observedLockRefHead": "63cc840940c1694b6c329a367629b06bd37da05f"
+        },
+        "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_PROVENANCE_v1",
+        "source": {
+          "authorAssociation": "OWNER",
+          "authorLogin": "smansfield635-create",
+          "commentBodySha256": "487eb1b820a94075140243ca9221d5ca4cfb025d4d76801670b743f275d18b13",
+          "commentId": 6480908906,
+          "issueNumber": 6948,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io"
+        },
+        "transportId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_V1"
+      },
+      "lockGeneration": 2962,
+      "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+      "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+      "procedureLocatorDigest": "ca482d3066b78394ca0a2164786e09212c8833cb1c35bc698c45723ccea8bf19",
+      "released": false,
+      "requestDigest": "5f943e36675077c56c39cebd2b382203f3041af98244ded5dea2b67ab3a9e164",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c",
+      "state": "ADMITTED_LOCKED"
+    },
+    "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+    "operationStarted": true,
+    "procedureLocatorDigest": "ca482d3066b78394ca0a2164786e09212c8833cb1c35bc698c45723ccea8bf19",
+    "repositoryWritesAuthorized": true,
+    "requestDigest": "5f943e36675077c56c39cebd2b382203f3041af98244ded5dea2b67ab3a9e164",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "sourceDocument": null,
+    "workflowExecutionAuthorized": true
+  },
+  "committedLedgerBlobSha": "3e0e21d9a9bf5164c93b19196727f2ec30de650b",
+  "directUnplannedLedgerMutation": false,
+  "githubActionsAgentTransport": false,
+  "governingHead": "93c96345c25c684d2e4a75b966c1f1ae688614a3",
+  "lockGeneration": 2962,
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+  "observedLedgerBlobSha": "a7a98eea0ff5aae43a334a508992861079ec4c32",
+  "observedLockRefHead": "63cc840940c1694b6c329a367629b06bd37da05f",
+  "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+  "planWasReceipt": false,
+  "plannerSemanticsDuplicated": false,
+  "procedureLocatorDigest": "ca482d3066b78394ca0a2164786e09212c8833cb1c35bc698c45723ccea8bf19",
+  "readbackVerified": true,
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "repositoryMutationLimitedToCanonicalLedger": true,
+  "requestDigest": "5f943e36675077c56c39cebd2b382203f3041af98244ded5dea2b67ab3a9e164",
+  "result": "ADMITTED_AND_LOCKED",
+  "routeId": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_INTAKE_EXECUTOR_V1",
+  "schema": "OWNER_AUTHENTICATED_CANONICAL_INTAKE_EXECUTION_RECEIPT_v1",
+  "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c",
+  "sourceCommentId": 6480908906
+}

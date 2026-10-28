@@ -1,0 +1,568 @@
+{
+  "allowedPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/identity-blend-diagnostic-20261028/**"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/identity-blend-diagnostic-20261028/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "93c96345c25c684d2e4a75b966c1f1ae688614a3",
+  "exactTestCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateProduct": false,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "contractSha256": "b0a7b3b01e30fbf38e65a89c7e1b58f976b47a74a27ec7eec15c15bd506acc4b",
+    "head": "93c96345c25c684d2e4a75b966c1f1ae688614a3",
+    "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/identity-blend-diagnostic-20261028/**"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_UNCHANGED_PRODUCT_RENDERER",
+      "FROZEN_POSE_ASSET_VIEWPORT_AND_FRAME_CUSTODY",
+      "ALL_IDENTITY_WEIGHT_PALETTE_AND_BRIGHTNESS_CONTRIBUTIONS_IN_ONE_RUN",
+      "CORRECT_LINEAR_TRANSFER_OR_RAW_ENCODING_AND_RECONSTRUCTION_BOUNDS",
+      "NO_AUTOMATIC_GPU_ON_WORKFLOW_PUBLICATION",
+      "NO_FALSE_UNIQUE_CAUSE_CLAIM_FROM_OVERLAPPING_UNCERTAINTY",
+      "NO_SHADER_REPAIR_OR_RELEASE_INFERENCE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "a8b9ed4b5f7d9e32dba180d8a8bdba48eec5f8c4300165eeda87fe0cb07dcc6f",
+    "receiptId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+  "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+  "prohibitedPaths": [
+    "VEGETATION_ROOT_OR_TREE_OR_GRASS_ASSET_MUTATION",
+    "PHYSICAL_GEOMETRY_OR_G_WORLD_ELEVATION_MUTATION",
+    "PRECOMPUTED_WORLD_ASSET_OR_LOADER_MUTATION",
+    "NAVIGATION_OR_CONTACT_SUPPORT_MUTATION",
+    "WATER_OCEAN_COAST_SHORELINE_EDIT",
+    "SOURCE_MATERIAL_PALETTE_GLOBAL_FLATTENING",
+    "PROTECTED_MEADOW_TREE_FOOTHILL_COLOR_DEGRADATION",
+    "GEOGRAPHIC_CAMERA_GUESS_AS_USER_TELEMETRY",
+    "ANY_PATH_OUTSIDE_DECLARED_SCOPE",
+    "DIRECT_MAIN_WRITE",
+    "PRODUCT_RENDERER_MUTATION",
+    "NEW_EXECUTION_TRANSPORT_OR_CONTROL_PLANE_POLICY",
+    "AUTOMATIC_GPU_ON_WORKFLOW_PUBLICATION",
+    "ARCHIVED_EVIDENCE_REWRITE"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Diagnostic-only internal environmental identity blend attribution at frozen near/far witnesses, one bounded run using existing harness. No product correction, merge or deployment in this admission.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner continuous-investigation instruction recovered from crashed room: Complete the investigation; no new imagery needed for the known band; neutralize transitions rather than redesign target palette."
+  },
+  "requiredInputs": [
+    {
+      "id": "GEN2961_CANONICAL_REJECTION_CLOSURE_VERIFIED_63cc8409",
+      "resolved": true
+    },
+    {
+      "id": "OWNER_CONTINUOUS_INVESTIGATION_AND_TRANSITION_OBJECTIVE",
+      "resolved": true
+    },
+    {
+      "id": "EXACT_SOURCE_CHANNELS_FRAME_COUNT_AND_NUMERIC_ENCODING_CONTRACT",
+      "resolved": true
+    },
+    {
+      "id": "SOURCE_AND_ARCHIVED_BOUNDARY_CUSTODY_FOR_CHOSEN_FROZEN_SCENE",
+      "resolved": true
+    },
+    {
+      "id": "EAST_TEN_MODE_NESTED_FACTOR_AND_FOOTPRINT_DESIGN",
+      "resolved": true
+    },
+    {
+      "id": "CURRENT_MAIN_COMPILER_GATE_LOCK_MANAGER_BYTES_VERIFIED",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "UNCHANGED_PRODUCT_SOURCE_CUSTODY",
+    "TWENTY_SOURCE_BOUND_FRAMES_TWO_FROZEN_POSES_TEN_MODES",
+    "PREDECLARED_SIGNED_LINEAR_CONTRIBUTION_AND_RECONSTRUCTION_ANALYSIS",
+    "SOURCE_TERM_ATTRIBUTION_OR_PRECISE_RESIDUAL_UNCERTAINTY",
+    "INDEPENDENT_SOURCE_AND_EVIDENCE_REVIEW"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "NO_REPOSITORY_WRITE_BEFORE_AUTHENTIC_ADMISSION",
+    "NO_GPU_BEFORE_EXACT_SOURCE_TESTS_WEST_REVIEW_AND_SAVED_DISPATCH_INTENT",
+    "NO_AUTOMATIC_GPU_ON_PUSH_OR_SYNCHRONIZE",
+    "FAIL_CLOSED_ON_SOURCE_ASSET_CAMERA_FRAME_OR_RECONSTRUCTION_MISMATCH",
+    "ONE_RUN_NO_RETRY_NO_SWEEP_NO_BASELINE_RECAPTURE",
+    "SEND_LONG_RUNNING_ACTION_LINK_AND_PAUSE_FOR_OWNER",
+    "NO_PRODUCT_SHADER_REPAIR_MERGE_DEPLOY_OR_ACCEPTANCE_INFERENCE"
+  ],
+  "subjectIdentity": {
+    "archiveCustodyResult": "ARCHIVE_SOURCE_PREFIX_AND_NEAR_FRAME_CUSTODY_VERIFIED",
+    "archivePolicy": "Reuse verified historical near stages as mandatory parity witnesses; capture matching near P/C and missing far P/C inside single20-frame batch. No baseline/control sweep.",
+    "automaticRetries": 0,
+    "branch": "h-earth/identity-blend-diagnostic-20261028",
+    "closureCommit": "63cc840940c1694b6c329a367629b06bd37da05f",
+    "continuationHead": "d416cd37d061403e403735ae6c8cf093f8de390c",
+    "contractSha256": "b0a7b3b01e30fbf38e65a89c7e1b58f976b47a74a27ec7eec15c15bd506acc4b",
+    "diagnosticContract": {
+      "analysis": {
+        "brightness": "b=0.86+0.22*materialVariation+0.06*triFine*nearMaterial; T=K4*b; DeltaT=meanB*DeltaK4+meanK4*DeltaB; DeltaB=0.22*DeltaMaterialVariation+0.06*(meanNear*DeltaTriFine+meanTriFine*DeltaNear).",
+        "domain": "Per-pixel signed linear RGB; average contributions only after per-pixel evaluation.",
+        "farYInclusive": [
+          470,
+          940
+        ],
+        "fieldChecks": [
+          "fertilePatch=smoothstep(0.42,0.68,0.47*macroField+0.38*mesoField+0.15*detailField)",
+          "moistShelter=clamp(0.70*shelteredBasin+0.43*(1-slopeResponse)*fertilePatch,0,1)",
+          "upperDry=heightDry*(1-0.74*moistShelter)"
+        ],
+        "forbiddenClaims": [
+          "Numeric contrast metric proves visual repair",
+          "Footprint proxy alone proves aliasing",
+          "Near evidence proves far or map-wide causality",
+          "Diagnostic proves owner device acceptance",
+          "Any new target palette has been accepted"
+        ],
+        "halfWidth": 4,
+        "nearWitnesses": [
+          {
+            "rows": [
+              260,
+              261
+            ],
+            "x": 132
+          },
+          {
+            "rows": [
+              268,
+              269
+            ],
+            "x": 264
+          },
+          {
+            "rows": [
+              273,
+              274
+            ],
+            "x": 396
+          }
+        ],
+        "nearYInclusive": [
+          260,
+          940
+        ],
+        "nestedPaletteDelta": "For each mix(K,B,a) with fixed B: DeltaOut=(1-meanA)*DeltaK+DeltaA*(B-meanK), preserving original source order and downstream attenuation.",
+        "numericRequirements": [
+          "Intervals must enclose measured T reconstructed from factor packs.",
+          "Intervals must enclose measured W reconstructed from protection/contrast factors.",
+          "Intervals must enclose measured C reconstructed from P/T/W.",
+          "Propagate output-code intervals through all nested operations; report residuals, clipped/censored endpoints and eligible counts.",
+          "Do not assign unique dominance where conservative contribution intervals overlap or cancel; report MIXED or INCONCLUSIVE.",
+          "All factor pathways belonging to one root field must be accounted for together; do not double count shared fertilePatch pathways."
+        ],
+        "outerIdentity": "DeltaC=(1-meanW)*DeltaP+meanW*DeltaT+DeltaW*(meanT-meanP)",
+        "pairs": "Both endpoints must lie inside declared row interval and be eligible.",
+        "paletteConstants": {
+          "coastalSilt": [
+            0.52,
+            0.44,
+            0.27
+          ],
+          "compactEarth": [
+            0.39,
+            0.248,
+            0.148
+          ],
+          "dryFoothill": [
+            0.48,
+            0.315,
+            0.14
+          ],
+          "erodedMineral": [
+            0.355,
+            0.333,
+            0.305
+          ],
+          "fertileEarth": [
+            0.3,
+            0.235,
+            0.155
+          ],
+          "shelteredEarth": [
+            0.235,
+            0.188,
+            0.13
+          ]
+        },
+        "paletteStages": [
+          "K0=mix(compactEarth,coastalSilt,0.74*coastalEarth)",
+          "K1=mix(K0,fertileEarth,0.83*fertilePatch)",
+          "K2=mix(K1,shelteredEarth,0.88*moistShelter)",
+          "K3=mix(K2,dryFoothill,0.82*upperDry)",
+          "K4=mix(K3,erodedMineral,0.92*mineralExposure)"
+        ],
+        "transectsX": [
+          132,
+          264,
+          396
+        ],
+        "verticalLags": [
+          1,
+          16
+        ],
+        "weight": "contrast=clamp(0.48+0.2*abs(fertilePatch-0.5)+0.08*mineralExposure,0,0.66); U=inlandIdentity*(1-protectedGrove); W=U*contrast. Product deltas use DeltaAB=meanA*DeltaB+meanB*DeltaA recursively. Evaluate U at both endpoints and use meanU=(U0+U1)/2 for W; do not replace meanU with meanInland*(1-meanGrove), which would omit the triple-product cross term.",
+        "witnessPolicy": "Analyze fixed nine-pixel witness strips separately from full predefined strips. Known witnesses were selected from prior evidence; no post-hoc inferential acceptance threshold."
+      },
+      "archiveComparison": {
+        "nearC": "Must match archived after-identity decoded RGBA exactly.",
+        "nearP": "Must match archived after-soil decoded RGBA exactly.",
+        "onMismatch": "FAIL_CLOSED_SOURCE_OR_CAPTURE_CUSTODY; no causal claim or automatic rerun.",
+        "scope": "The near P/C frames are source/instrumentation parity witnesses; far P/C are required contemporaneous reconstruction boundaries. No baseline or protected-control sweep."
+      },
+      "archiveCustody": {
+        "allFiveArchivedImageHashesVerified": true,
+        "approvedHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+        "approvedRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+        "archiveSha256": "12f1728d356f0d750bde067983fd420659e3c894adb724cd39909effa8633db9",
+        "archivedPoseCameraCanvasAssetParity": true,
+        "historicalHead": "9127904e725a3f4ca13c1221451023102ad09435",
+        "historicalRendererSha256": "7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2",
+        "newCaptureParityStatus": "REQUIRED_NOT_YET_CAPTURED",
+        "prefixBoundary": "      // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN",
+        "prefixBytes": 53327,
+        "prefixSha256": "ba5fbf6231e2f6c12361b5c33c7e2710acc5c4a7418c7b075af030fcb4a248a5",
+        "receiptSha256": "adaf320b10b6abb73ba62e736a09aa77a59dad52b92c942e9a6eb30a23327d33",
+        "referenceFrames": [
+          {
+            "assetSignature": "[{\"id\":\"PROPOSED_OASIS_01\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_COASTAL_01\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_COASTAL_02\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_COASTAL_03\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_MAPLE_LARGE\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_MAPLE_MEDIUM\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_JACARANDA_02\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_WILD_SYRINGA\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_SEARSIA\",\"state\":\"IDLE\",\"ready\":false}]",
+            "canvas": {
+              "cssHeight": 1000,
+              "cssWidth": 540,
+              "height": 980,
+              "width": 529
+            },
+            "expectedCameraPosition": {
+              "x": -200.00863582715297,
+              "y": 17.68284913705429,
+              "z": -728.0314344108368
+            },
+            "image": "candidate-inland-seam-near-after-soil.png",
+            "imageSha256": "c38501a0ea5b7e8a627573f2f7d5d43fc4e18d94238b649952aa44e29961fccd",
+            "pose": {
+              "diagnosticObserver": true,
+              "name": "inland-seam-near",
+              "pitch": -14,
+              "x": -200,
+              "y": 18.361431,
+              "yaw": 0,
+              "z": -728
+            },
+            "stage": "after-soil"
+          },
+          {
+            "assetSignature": "[{\"id\":\"PROPOSED_OASIS_01\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_COASTAL_01\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_COASTAL_02\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_COASTAL_03\",\"state\":\"IDLE\",\"ready\":false},{\"id\":\"COLLECTION_MAPLE_LARGE\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_MAPLE_MEDIUM\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_JACARANDA_02\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_WILD_SYRINGA\",\"state\":\"READY\",\"ready\":true},{\"id\":\"COLLECTION_SEARSIA\",\"state\":\"IDLE\",\"ready\":false}]",
+            "canvas": {
+              "cssHeight": 1000,
+              "cssWidth": 540,
+              "height": 980,
+              "width": 529
+            },
+            "expectedCameraPosition": {
+              "x": -200.00863582715297,
+              "y": 17.68284913705429,
+              "z": -728.0314344108368
+            },
+            "image": "candidate-inland-seam-near-after-identity.png",
+            "imageSha256": "a6c5218c46d3a3ecfcbf5510eec34fea32e00914fc85d287a8ae454424f3d4e2",
+            "pose": {
+              "diagnosticObserver": true,
+              "name": "inland-seam-near",
+              "pitch": -14,
+              "x": -200,
+              "y": 18.361431,
+              "yaw": 0,
+              "z": -728
+            },
+            "stage": "after-identity"
+          }
+        ],
+        "result": "ARCHIVE_SOURCE_PREFIX_AND_NEAR_FRAME_CUSTODY_VERIFIED",
+        "scope": "Upstream renderer prefix and archived near stages only; no full-scene/evidence reuse beyond verified dependencies, no far incoming stage archive exists."
+      },
+      "authorityEffect": "NONE_PRE_ADMISSION_CONTRACT",
+      "automaticRetry": false,
+      "baselineOrControlRecapture": false,
+      "encoding": {
+        "color": "RGB8 = clamp(pow(max(linearRGB*1.12,0),1/2.2),0,1), inverse=(code/255)^2.2/1.12",
+        "colorInterval": "Decode conservative code +/-1 endpoints through inverse; codes0/255 censored for color unless exact endpoint proven.",
+        "eligibility": "Initialize0; set1 exactly inside actual !geologicalEarthRock identity block. W=0 can still be eligible. Outside-identity pixels excluded from attribution.",
+        "footprint": "q>=0 encoded e=q/(1+q), inverse=e/(1-e). Propagate +/-1 code endpoints; encoded255 has unbounded upper and must not receive finite precision claim.",
+        "raw": "RGB8 raw linear factors, no exposure/gamma. Use conservative +/-1 output-code uncertainty.",
+        "rawEndpoints": "Each named scalar has source-proven [0,1] range; code0 and255 remain one-sided intervals [0,1/255] and[254/255,1], not exact0/1. Do not conflate natural bounded endpoints with uncensored color."
+      },
+      "footprint": {
+        "claimLimit": "Conservative projected footprint proxies; not proof of aliasing or sufficient basis for filtering.",
+        "evaluation": "Compute derivatives unconditionally at fragment main before any divergent branch or discard.",
+        "offlineFrequencyMultipliers": {
+          "triplanar": [
+            0.115,
+            0.38525,
+            1.1155
+          ],
+          "world": [
+            0.018,
+            0.082,
+            0.29
+          ]
+        },
+        "qTri": "dx=dFdx(vWorldPosition); dy=dFdy(vWorldPosition); max(length(dx.xy),length(dx.xz),length(dx.yz),length(dy.xy),length(dy.xz),length(dy.yz))",
+        "qWorld": "max(length(dFdx(vWorldPosition.xz)),length(dFdy(vWorldPosition.xz)))",
+        "units": "world units per pixel"
+      },
+      "frameCap": 20,
+      "modes": [
+        {
+          "channels": [
+            "P.r",
+            "P.g",
+            "P.b"
+          ],
+          "encoding": "EXPOSURE_GAMMA",
+          "name": "identity-incoming-color"
+        },
+        {
+          "channels": [
+            "C.r",
+            "C.g",
+            "C.b"
+          ],
+          "encoding": "EXPOSURE_GAMMA",
+          "name": "identity-result-color"
+        },
+        {
+          "channels": [
+            "T.r",
+            "T.g",
+            "T.b"
+          ],
+          "encoding": "EXPOSURE_GAMMA",
+          "name": "identity-target-color"
+        },
+        {
+          "channels": [
+            "coastalEarth",
+            "fertilePatch",
+            "moistShelter"
+          ],
+          "encoding": "RAW_BOUNDED_UNIT_RGB",
+          "name": "identity-palette-factors-raw"
+        },
+        {
+          "channels": [
+            "upperDry",
+            "mineralExposure",
+            "identityWeight"
+          ],
+          "encoding": "RAW_BOUNDED_UNIT_RGB",
+          "name": "identity-mix-factors-raw"
+        },
+        {
+          "channels": [
+            "materialVariation",
+            "triFine",
+            "nearMaterial"
+          ],
+          "encoding": "RAW_BOUNDED_UNIT_RGB",
+          "name": "identity-brightness-factors-raw"
+        },
+        {
+          "channels": [
+            "macroField",
+            "mesoField",
+            "detailField"
+          ],
+          "encoding": "RAW_BOUNDED_UNIT_RGB",
+          "name": "identity-noise-factors-raw"
+        },
+        {
+          "channels": [
+            "shelteredBasin",
+            "slopeResponse",
+            "rockExposure"
+          ],
+          "encoding": "RAW_BOUNDED_UNIT_RGB",
+          "name": "identity-landform-factors-raw"
+        },
+        {
+          "channels": [
+            "inlandIdentity",
+            "protectedGrove",
+            "smoothstep(8.0,30.0,vWorldPosition.y)"
+          ],
+          "encoding": "RAW_BOUNDED_UNIT_RGB",
+          "name": "identity-protection-factors-raw"
+        },
+        {
+          "channels": [
+            "qWorld/(1+qWorld)",
+            "qTri/(1+qTri)",
+            "identityBlockExecuted"
+          ],
+          "encoding": "RAW_FOOTPRINT_AND_MASK",
+          "name": "identity-footprint-raw"
+        }
+      ],
+      "objective": "Identify expression contributions amplifying the known terrain transition; no target palette redesign or product correction in this scope.",
+      "operationId": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001",
+      "parameterSweeps": 0,
+      "poses": [
+        {
+          "diagnosticObserver": true,
+          "name": "inland-seam-near",
+          "pitch": -14,
+          "x": -200,
+          "y": 18.361431,
+          "yaw": 0,
+          "z": -728
+        },
+        {
+          "diagnosticObserver": true,
+          "name": "inland-seam-far",
+          "pitch": -2,
+          "x": -200,
+          "y": 18.793665,
+          "yaw": 0,
+          "z": -656
+        }
+      ],
+      "postDispatch": "Send exact lengthy Action link and pause for owner completion notification.",
+      "preDispatchGates": [
+        "AUTHENTIC_CANONICAL_ADMISSION",
+        "EXACT_UNCHANGED_SCENE_RENDERER_HASH",
+        "UNIQUE_INSTRUMENTATION_ANCHORS",
+        "SELECTED_CPU_AND_NUMERIC_TESTS",
+        "INDEPENDENT_WEST_SOURCE_REVIEW",
+        "EXACT_IMMUTABLE_TOOLING_REMOTE_READBACK",
+        "SAVED_ONE_RUN_DISPATCH_INTENT"
+      ],
+      "productDiskMutation": false,
+      "rendererPath": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+      "runBudget": 1,
+      "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+      "schema": "H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_CONTRACT_v1",
+      "sourceBoundary": {
+        "C": "palette immediately after palette=mix(palette,identityBase,identityWeight), before groundcover",
+        "P": "palette immediately before environmental identity block",
+        "T": "fully brightness-modulated identityBase immediately before final identity mix",
+        "W": "identityWeight"
+      },
+      "status": "PRE_ADMISSION_SOURCE_BOUND",
+      "timingPolicy": {
+        "measuredSubmissionsPerMode": 1,
+        "performanceClaims": false,
+        "retainStateAssetAndSameFrameCaptureCustody": true,
+        "scope": "Only the new diagnostic profile; legacy profile timing remains unchanged.",
+        "settledFramesPerMode": 2
+      },
+      "toolingBaseHead": "d416cd37d061403e403735ae6c8cf093f8de390c",
+      "viewport": {
+        "backingHeight": 980,
+        "backingWidth": 529,
+        "cssHeight": 1000,
+        "cssWidth": 540,
+        "fov": 56
+      }
+    },
+    "diagnosticModes": [
+      "identity-incoming-color",
+      "identity-result-color",
+      "identity-target-color",
+      "identity-palette-factors-raw",
+      "identity-mix-factors-raw",
+      "identity-brightness-factors-raw",
+      "identity-noise-factors-raw",
+      "identity-landform-factors-raw",
+      "identity-protection-factors-raw",
+      "identity-footprint-raw"
+    ],
+    "frozenSceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "governingHead": "93c96345c25c684d2e4a75b966c1f1ae688614a3",
+    "maximumFrames": 20,
+    "parameterSweeps": 0,
+    "predecessorDisposition": "REJECTED_CLOSED",
+    "predecessorGeneration": 2961,
+    "predecessorOperation": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
+    "principalDefect": "NEAR_VIEW_BAND_AMPLIFICATION_INSIDE_ENVIRONMENTAL_IDENTITY_BLEND",
+    "productRendererMutation": false,
+    "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+    "runBudget": 1,
+    "sourceIssue": 6911,
+    "sourcePR": 6948
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+}

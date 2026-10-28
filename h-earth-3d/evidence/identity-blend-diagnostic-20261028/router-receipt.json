@@ -1,0 +1,88 @@
+{
+  "schema": "REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3",
+  "mutationIntent": true,
+  "pageMutationClassification": {
+    "schema": "PAGE_MUTATION_CLASSIFICATION_RECEIPT_v1",
+    "instrumentId": "PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1",
+    "result": "BLOCK",
+    "mutationClass": "RUNTIME_OR_AUTHORITY",
+    "reasonCode": "CONTROL_OR_AUTHORITY_SURFACE",
+    "canonicalAdmissionRequired": true,
+    "pageExcellenceRequired": true,
+    "declaredPaths": [
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/identity-blend-diagnostic-20261028/diagnostic-contract.json",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs"
+    ],
+    "task": "Measure environmental identity blend contributions at frozen near/far views; diagnostic tooling only, no product shader changes",
+    "ambiguityPolicy": "RUNTIME_OR_AUTHORITY"
+  },
+  "wholeEstateExecutionDecision": {
+    "schema": "WHOLE_ESTATE_EXECUTION_DECISION_v1",
+    "status": "AUTHORITATIVE_FOR_BLOCKING_GATE_SELECTION",
+    "mutationClass": "RUNTIME_OR_AUTHORITY",
+    "classificationReason": "CONTROL_OR_AUTHORITY_SURFACE",
+    "declaredPaths": [
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/identity-blend-diagnostic-20261028/diagnostic-contract.json",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs"
+    ],
+    "task": "Measure environmental identity blend contributions at frozen near/far views; diagnostic tooling only, no product shader changes",
+    "canonicalAdmissionRequired": true,
+    "agentMode": "REQUIRED",
+    "selectedGateClasses": [
+      "CANONICAL_INTAKE",
+      "PROJECT_ROUTE",
+      "DIRECT_DEPENDENCY_QUALIFICATION",
+      "PRODUCT_OR_AUTHORITY_SPECIFIC_VERIFIER"
+    ],
+    "gatePolicy": {
+      "onlySelectedGatesMayBlock": true,
+      "blockingRequiresChangedByteDirectDependencyOrExplicitSemanticDependency": true,
+      "filesystemDirectoryPrefixAloneMayBlock": false,
+      "unselectedWorkflowFailureDisposition": "ADVISORY_NON_BLOCKING_EVIDENCE"
+    },
+    "precedentReuse": {
+      "default": "REUSE_ACCEPTED_PRECEDENT_BEFORE_NEW_CONSTRUCTION",
+      "unchangedQualifiedBehaviorMayInheritEvidence": true,
+      "inheritanceRequiresAcceptedIdentityAndExplicitUnchangedContract": true,
+      "qualifyOnlyDeclaredDeltaAndDirectlyAffectedDependencies": true,
+      "authorityOrClaimUpgradeByInheritanceAllowed": false
+    },
+    "candidateScopeRecognition": {
+      "exactDeclaredCandidatePathsRecognizedForOperation": true,
+      "candidateCreatedPathNeedsSeparatePersistentRegistrationSolelyBecauseNew": false,
+      "persistentRegistrationRequiredOnlyForDurableAuthorityBoundary": true,
+      "mayExpandDeclaredScope": false
+    },
+    "continuity": {
+      "mainMovementAloneForcesStrictSuccessor": false,
+      "disjointMovementDefault": "DIFFERENTIAL_CONTINUITY_THEN_CARRY_FORWARD",
+      "strictSuccessorOnlyForRelevantScopeDependencyAuthorityScientificChangeOrIncompleteEvidence": true
+    },
+    "invariants": {
+      "readOnlyMayEscalateToMutationSemantics": false,
+      "controlPlaneDefectMayManufactureProductPrerequisite": false,
+      "exactHeadCustodyPreserved": true,
+      "boundedMutationScopePreserved": true,
+      "scientificAndEmpiricalFailClosedBoundariesPreserved": true,
+      "mergeDeploymentPublicationSeparationPreserved": true
+    },
+    "blockerTaxonomy": [
+      "PRODUCT_DEFECT",
+      "QUALIFICATION_HARNESS_DEFECT",
+      "CONTROL_PLANE_DEFECT",
+      "EXECUTION_SUBSTRATE_DEFECT",
+      "AUTHORITY_DEFECT",
+      "PUBLICATION_DEFECT",
+      "SCIENTIFIC_OR_EMPIRICAL_DEFECT"
+    ],
+    "routeDisposition": null,
+    "authorityEffect": "NONE"
+  },
+  "reasonCodes": [
+    "WHOLE_ESTATE_EXECUTION_DECISION_BOUND"
+  ]
+}

@@ -207,7 +207,7 @@
           {
             "type": "textContains",
             "selector": ".bc-log",
-            "value": "Who am I speaking with?"
+            "value": "What kind of business or project is this website for?"
           }
         ]
       },

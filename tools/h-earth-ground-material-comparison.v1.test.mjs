@@ -198,7 +198,9 @@ test('Gen2944 two-frame eligibility probe keeps original terrain and exact mode 
  const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
  const candidate=d.instrumentRidgeNormalRenderer(source);
  assert.ok(candidate.includes('ridgeRegionRaw=region;ridgeGapRaw=1.0-smoothstep(0.0,2.0,gap);'));
- assert.ok(candidate.includes('lit=vec3(ridgeCorrectionRaw,ridgeRegionRaw,ridgeGapRaw)'));
+ assert.ok(candidate.includes('lit=vec3(ridgeDebugWorld,ridgeSignedGapRaw)'));
+ assert.ok(candidate.includes('ridgeDebugWorld=vec2(clamp((q.x+256.0)/512.0,0.0,1.0),clamp((q.y+400.0)/320.0,0.0,1.0));'));
+ assert.ok(candidate.includes('ridgeSignedGapRaw=clamp(0.5+(a-b)/24.0,0.0,1.0);'));
  assert.equal(fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8'),source);
  const views=d.NORMAL_PROBE_MODES.map((mode,i)=>({
   pose:d.NORMAL_PROBE_POSES[0],mode,diagnosticApplied:i===0?0:2,grassHidden:true,

@@ -70,7 +70,8 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
  const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
- const digest=diagnostic.verifyExactMaterialCandidate(shader);
+ const baseline=diagnostic.reconstructFootprintBaseline(shader);
+ const digest=diagnostic.verifyExactMaterialCandidate(baseline);
  assert.match(digest,/^[0-9a-f]{64}$/);
  assert.equal(shader.split(diagnostic.CANDIDATE_BLEND_EXPRESSION).length,2);
  assert.ok(shader.includes('smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters))'));
@@ -81,7 +82,7 @@ test('Gen2928 bounded provisional high-patch blend is exact source-reversible, m
  let last=-1;
  for(let i=0;i<=1000;i++){const p=i/1000, v=corrected(p);assert.ok(v>=last-1e-12);assert.ok(v<=0.88*p+1e-12);last=v;}
  assert.equal(corrected(0),0);assert.ok(corrected(1)<=0.661);assert.ok(corrected(1)>=0.659);
- assert.throws(()=>diagnostic.verifyExactMaterialCandidate(shader+'//unexpected'),/NOT_EXACT_ONE_FORMULA_DIFF/);
+ assert.throws(()=>diagnostic.verifyExactMaterialCandidate(baseline+'//unexpected'),/NOT_EXACT_ONE_FORMULA_DIFF/);
 });
 test('Gen2928 four-source survey preserves Gen2925 and stays under twenty frames',()=>{
  assert.deepEqual(diagnostic.SURVEY_POSES.map(p=>p.name),['inland-seam-near','inland-seam-far','coastal-seam-east','coast-oblique']);
@@ -118,4 +119,151 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  assert.equal(diagnostic.DIAGNOSTIC_MODES.length,9);
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
+});
+
+// Execute the production scalar GLSL expressions with double precision for a
+// numerical quadrature check. This does not certify GPU precision or pixels.
+const footprintShader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+const footprintBlock=name=>{
+ const matches=[...footprintShader.matchAll(new RegExp('^[ \\t]*// H_EARTH_GROUNDCOVER_FOOTPRINT_'+name+'_BEGIN\\n([\\s\\S]*?)^[ \\t]*// H_EARTH_GROUNDCOVER_FOOTPRINT_'+name+'_END\\n','gm'))];
+ assert.equal(matches.length,1);return matches[0][1];
+};
+const fract=x=>x-Math.floor(x);
+const mix=(a,b,t)=>a*(1-t)+b*t;
+const smoothstep=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};
+const hash21=p=>{let x=fract(p[0]*123.34),y=fract(p[1]*456.21);const dot=x*(x+45.32)+y*(y+45.32);x+=dot;y+=dot;return fract(x*y);};
+const noise2=p=>{const x=Math.floor(p[0]),y=Math.floor(p[1]),u=smoothstep(0,1,fract(p[0])),v=smoothstep(0,1,fract(p[1]));return mix(mix(hash21([x,y]),hash21([x+1,y]),u),mix(hash21([x,y+1]),hash21([x+1,y+1]),u),v);};
+const vec2=(x,y)=>[x,y];
+const helperBody=footprintBlock('HELPER').match(/float groundcoverPatchFactorAt\(vec2 p\)\{([\s\S]*?)\n\}/)[1].replace(/\bfloat\b/g,'let').replace(/p\.x/g,'p[0]').replace(/p\.y/g,'p[1]');
+const patchFactor=new Function('noise2','vec2','smoothstep','p',helperBody).bind(null,noise2,vec2,smoothstep);
+const scale=(v,s)=>v.map(x=>x*s);
+const offset=(p,dx,sx,dy,sy)=>p.map((v,i)=>v+sx*dx[i]+sy*dy[i]);
+let blendBody=footprintBlock('BLEND')
+ .replace(/\b(?:float|vec2)\s+(\w+)=/g,'let $1=')
+ .replace(/length\((groundcoverWorldD[xy])\*([\d.]+)\)/g,'Math.hypot(...scale($1,$2))')
+ .replace(/(groundcoverWorldD[xy])\*([\d.]+)/g,'scale($1,$2)')
+ .replace(/\bmax\(/g,'Math.max(');
+for(const sx of ['-','+'])for(const sy of ['-','+'])blendBody=blendBody.replace('world'+sx+'groundcoverTapX'+sy+'groundcoverTapY',`offset(world,groundcoverTapX,${sx}1,groundcoverTapY,${sy}1)`);
+const evaluateBlend=new Function('groundcoverPatchFactorAt','smoothstep','mix','scale','offset','world','groundcoverWorldDx','groundcoverWorldDy','groundcoverWeight','groundcoverSuitability','groundcoverProtection',blendBody+';return {weight:groundcoverWeight,activation:groundcoverFilterActivation};').bind(null,patchFactor,smoothstep,mix,scale,offset);
+const filtered=(p,dx,dy,s=1,protection=1)=>evaluateBlend(p,dx,dy,patchFactor(p)*s*protection,s,protection);
+
+test('footprint candidate reverses to the immutable approved shader and derivatives precede branches',()=>{
+ const baseline=diagnostic.reconstructFootprintBaseline(footprintShader);
+ assert.equal(diagnostic.verifyExactMaterialCandidate(baseline),diagnostic.FOOTPRINT_BASELINE_SHA256);
+ assert.equal(diagnostic.FOOTPRINT_BASELINE_HEAD,'cb57c275b95d0d48883bc4da4dcfcf17cbec5060');
+ const fsMain=footprintShader.indexOf('void main(){',footprintShader.indexOf('const FS ='));
+ const derivatives=footprintShader.indexOf('// H_EARTH_GROUNDCOVER_FOOTPRINT_DERIVATIVES_BEGIN');
+ assert.ok(derivatives>fsMain);
+ assert.equal(footprintShader.slice(fsMain,derivatives).trim(),'void main(){');
+ // Removing just the declared blocks restores every untouched role, normal,
+ // palette, moisture, protection, geometry and vegetation byte via SHA custody.
+ assert.ok(!baseline.includes('H_EARTH_GROUNDCOVER_FOOTPRINT_'));
+});
+
+test('original near-field result and protected zero influence remain exact',()=>{
+ for(const p of [[0,0],[-200,-728],[88,-236],[376,-96],[-73.24,81.66]]){
+  for(const [dx,dy] of [[[0,0],[0,0]],[[0.2,0.1],[-0.1,0.2]],[[3,0],[0,3]]]){
+   const result=filtered(p,dx,dy,0.73,0.41);
+   assert.equal(result.activation,0);assert.equal(result.weight,patchFactor(p)*0.73*0.41);
+  }
+  for(const [s,protection] of [[0,1],[1,0],[0,0]])assert.equal(filtered(p,[100,0],[0,100],s,protection).weight,0);
+ }
+});
+
+test('finite bounded factor and smooth onset for anisotropic world footprints',()=>{
+ for(let n=0;n<300;n++){
+  const p=[n*7.137-1000,n*3.381-800],size=n/5;
+  for(const [dx,dy] of [[[size,0],[0,size]],[[size,size*.4],[size*.02,-size*.03]]]){
+   const r=filtered(p,dx,dy);assert.ok(Number.isFinite(r.weight));assert.ok(r.weight>=0&&r.weight<=0.660000000001);assert.ok(r.activation>=0&&r.activation<=1);
+  }
+ }
+ for(const cells of [.25,.75]){
+  const a=filtered([-200,-728],[(cells-1e-6)/.082,0],[0,.1]);
+  const b=filtered([-200,-728],[(cells+1e-6)/.082,0],[0,.1]);
+  assert.ok(Math.abs(a.weight-b.weight)<1e-5);
+ }
+});
+
+test('sampled helper reproduces the original approved nonlinear patch factor',()=>{
+ const baseline=diagnostic.reconstructFootprintBaseline(footprintShader);
+ const names=['broad','macroField','mesoField','groundcoverDomainX','groundcoverDomainZ','groundcoverOrganic','groundcoverPatch','groundcoverPatchContinuity','groundcoverWeight'];
+ let body=names.map(name=>{
+  const expression=baseline.match(new RegExp('float '+name+'=([^;]+);'));
+  assert.ok(expression,name);return 'let '+name+'='+expression[1]+';';
+ }).join('\n');
+ body=body.replace(/world\*([\d.]+)\+vec2\(([-\d.]+),([-\d.]+)\)/g,'vec2(world[0]*$1+($2),world[1]*$1+($3))')
+  .replace(/world\*([\d.]+)/g,'scale(world,$1)').replace(/world\.x/g,'world[0]').replace(/world\.y/g,'world[1]');
+ const original=new Function('noise2','vec2','smoothstep','scale','world','groundcoverSuitability','groundcoverProtection',body+'return groundcoverWeight;').bind(null,noise2,vec2,smoothstep,scale);
+ for(let n=0;n<500;n++){
+  const p=[n*17.31-4500,n*13.73-2700];assert.ok(Math.abs(patchFactor(p)-original(p,1,1))<1e-14);
+ }
+});
+
+test('footprint instrumentation binds approved baseline and reads actual candidate activation',()=>{
+ const baseline=diagnostic.reconstructFootprintBaseline(footprintShader);
+ const before=diagnostic.instrumentFootprintRenderer(baseline,{baseline:true});
+ const after=diagnostic.instrumentFootprintRenderer(footprintShader);
+ assert.ok(before.includes('probeGCOrganic=smoothstep(0.25,0.75,max(length(footprintProbeDx*0.082),length(footprintProbeDy*0.082)));'));
+ assert.ok(after.includes('probeGCOrganic=groundcoverFilterActivation;'));
+ assert.ok(!before.includes('groundcoverPatchFactorAt'));
+ assert.ok(after.includes('groundcoverPatchFactorAt'));
+ const baselineMain=before.indexOf('void main(){',before.indexOf('const FS ='));
+ const baselineDerivatives=before.indexOf('vec2 footprintProbeDx=');
+ assert.equal(before.slice(baselineMain,baselineDerivatives).trim(),'void main(){');
+ for(const [source,options] of [[baseline+'//drift',{baseline:true}],[footprintShader+'//drift',{}]])assert.throws(()=>diagnostic.instrumentFootprintRenderer(source,options),/MISMATCH/);
+ assert.throws(()=>diagnostic.reconstructFootprintBaseline(baseline),/BLOCK_NOT_UNIQUE/);
+ assert.throws(()=>diagnostic.reconstructFootprintBaseline(footprintShader+footprintBlock('HELPER')+'\n// H_EARTH_GROUNDCOVER_FOOTPRINT_HELPER_BEGIN\n// H_EARTH_GROUNDCOVER_FOOTPRINT_HELPER_END\n'),/BLOCK_NOT_UNIQUE/);
+});
+
+test('footprint paired captures reject wrong identity, mode, visibility, assets and camera',()=>{
+ const candidateHead='a'.repeat(40),candidateHash='b'.repeat(64);
+ const ids={'reference-lit':0,'after-groundcover-unlit':3,'footprint-activation-raw':4};
+ const views=diagnostic.FOOTPRINT_POSES.flatMap(pose=>diagnostic.FOOTPRINT_MODES.flatMap(mode=>['baseline','candidate'].map(label=>({
+  label,pose,mode,modeId:ids[mode],diagnosticApplied:ids[mode],grassHidden:mode!=='reference-lit',
+  sourceHead:label==='baseline'?diagnostic.FOOTPRINT_BASELINE_HEAD:candidateHead,
+  rendererHash:label==='baseline'?diagnostic.FOOTPRINT_BASELINE_SHA256:candidateHash,
+  assetSignature:'same',lastFrame:{cameraPosition:{x:pose.x,y:pose.y??2,z:pose.z}}
+ }))));
+ assert.equal(views.length,24);assert.equal(diagnostic.validateFootprintSet(views,candidateHead),true);
+ assert.throws(()=>diagnostic.validateFootprintSet(views,'moving-main'),/CANDIDATE_IDENTITY_INVALID/);
+ assert.throws(()=>diagnostic.validateFootprintSet(views,'c'.repeat(40)),/SOURCE_OR_MODE_MISMATCH/);
+ assert.throws(()=>diagnostic.validateFootprintSet(views.slice(1),candidateHead),/INCOMPLETE/);
+ for(const mutate of [
+  v=>v[0].label='unexpected',v=>v[0].label='candidate',v=>v[1].label='baseline',
+  v=>v[0].sourceHead=candidateHead,v=>v[1].sourceHead=diagnostic.FOOTPRINT_BASELINE_HEAD,
+  v=>v[0].rendererHash=candidateHash,v=>v[1].rendererHash='c'.repeat(64),
+  v=>v.filter(x=>x.label==='candidate').forEach(x=>{x.rendererHash=diagnostic.FOOTPRINT_BASELINE_SHA256;}),
+  v=>v.filter(x=>x.label==='candidate').forEach(x=>{x.rendererHash='invalid';}),
+  v=>v[0].modeId=4,v=>v[1].diagnosticApplied=4,v=>v[0].mode='unknown',
+  v=>v[0].grassHidden=true,v=>v[1].grassHidden=true,v=>v[2].grassHidden=false,
+  v=>v[0].assetSignature='different',v=>v[1].lastFrame.cameraPosition.x++,
+  v=>v[0].pose={...v[0].pose,name:'unregistered'}
+ ]){
+  const copy=structuredClone(views);mutate(copy);assert.throws(()=>diagnostic.validateFootprintSet(copy,candidateHead));
+ }
+});
+
+test('four-tap footprint integration improves dense-reference RMS over one center sample',t=>{
+ // Stratified midpoint integration independently samples the whole footprint;
+ // it does not use the candidate's Gauss offsets or activation transition.
+ let centerSquared=0,filteredSquared=0,count=0;
+ for(let n=0;n<80;n++){
+  const p=[n*23.17-800,n*13.31-1100],size=10+(n%4)*2;
+  const dx=[size,size*.15],dy=[-size*.2,size*.7];
+  let dense=0;
+  for(let x=0;x<32;x++)for(let y=0;y<32;y++)dense+=patchFactor(offset(p,dx,(x+.5)/32-.5,dy,(y+.5)/32-.5));
+  dense/=1024;const r=filtered(p,dx,dy);assert.equal(r.activation,1);
+  centerSquared+=(patchFactor(p)-dense)**2;filteredSquared+=(r.weight-dense)**2;count++;
+ }
+ const centerRms=Math.sqrt(centerSquared/count),filteredRms=Math.sqrt(filteredSquared/count);
+ t.diagnostic(JSON.stringify({sampleCount:count,denseTapsPerFootprint:1024,centerRms,filteredRms,precision:'JS_DOUBLE_NOT_GPU'}));
+ assert.ok(centerRms>0);assert.ok(filteredRms<centerRms*.8,JSON.stringify({centerRms,filteredRms}));
+});
+
+// The successful baseline from the first GPU run is inherited, never silently recaptured.
+test('preserved baseline pins all twelve original frame hashes',async()=>{
+ const {preservedFootprintBaseline}=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const {mkdtempSync,rmSync}=await import('node:fs');const {tmpdir}=await import('node:os');const {join}=await import('node:path');
+ const out=mkdtempSync(join(tmpdir(),'footprint-baseline-'));
+ try{const m=preservedFootprintBaseline(new URL('../',import.meta.url).pathname,out);assert.equal(m.views.length,12);assert.equal(m.sourceRun,40716213632);assert.equal(m.baselineErrors.length,0);}finally{rmSync(out,{recursive:true,force:true});}
 });

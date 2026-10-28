@@ -498,6 +498,20 @@ float noise2(vec2 p){
   return mix(mix(hash21(i),hash21(i+vec2(1.0,0.0)),f.x),
              mix(hash21(i+vec2(0.0,1.0)),hash21(i+vec2(1.0,1.0)),f.x),f.y);
 }
+// H_EARTH_GROUNDCOVER_FOOTPRINT_HELPER_BEGIN
+// Integrate the existing nonlinear patch factor, preserving its authored field.
+// Tone, slope/coast eligibility and protected regions remain center-sampled.
+float groundcoverPatchFactorAt(vec2 p){
+  float broad=noise2(vec2(p.x*0.035,p.y*0.035));
+  float macroField=noise2(vec2(p.x*0.018+5.0,p.y*0.018-11.0));
+  float mesoField=noise2(vec2(p.x*0.082-13.0,p.y*0.082+7.0));
+  float domainX=(0.8*p.x-0.6*p.y)*0.018+5.0+0.65*(broad-0.5);
+  float domainZ=(0.6*p.x+0.8*p.y)*0.018-11.0+0.65*(macroField-0.5);
+  float organic=noise2(vec2(domainX,domainZ));
+  float patchCoverage=smoothstep(0.20,0.66,organic*0.78+mesoField*0.22);
+  return 0.88*patchCoverage*(1.0-0.25*smoothstep(0.30,0.85,patchCoverage));
+}
+// H_EARTH_GROUNDCOVER_FOOTPRINT_HELPER_END
 // Fade nonzero atlas edge texels to the surrounding soil in world metres.
 // Sampling stays inside its own panel; roots and habitat interiors are unchanged.
 float habitatEdgeWeight(float x,float z,vec4 bounds,float width){
@@ -608,6 +622,11 @@ ${HILLSIDE_SHORELINE_GLSL}
 ${LANDSCAPE_COHERENCE_GLSL}
 ${FOOTHILL_MEADOW_GLSL}
 void main(){
+  // H_EARTH_GROUNDCOVER_FOOTPRINT_DERIVATIVES_BEGIN
+  // Evaluate before divergent material branches and discard operations.
+  vec2 groundcoverWorldDx=dFdx(vWorldPosition.xz);
+  vec2 groundcoverWorldDy=dFdy(vWorldPosition.xz);
+  // H_EARTH_GROUNDCOVER_FOOTPRINT_DERIVATIVES_END
   vec2 localXZ=vec2(0.0);
   float clearingType=vMaterialModelCode==0u&&vMaterialParameters.w>1.5?vMaterialParameters.z:0.0;
   float clearingEdge=0.0;
@@ -1039,6 +1058,27 @@ void main(){
       float groundcoverWeight=0.88*groundcoverPatch*
         (1.0-0.25*groundcoverPatchContinuity)*
         groundcoverSuitability*groundcoverProtection;
+      // H_EARTH_GROUNDCOVER_FOOTPRINT_BLEND_BEGIN
+      // Four-point Gauss quadrature of the patch factor over this pixel's
+      // world footprint. Minification onset is a candidate, not visual proof.
+      float groundcoverPixelCells=max(
+        length(groundcoverWorldDx*0.082),length(groundcoverWorldDy*0.082)
+      );
+      float groundcoverFilterActivation=smoothstep(0.25,0.75,groundcoverPixelCells);
+      if(groundcoverFilterActivation>0.0 && groundcoverSuitability>0.0 && groundcoverProtection>0.0){
+        vec2 groundcoverTapX=groundcoverWorldDx*0.2886751345948129;
+        vec2 groundcoverTapY=groundcoverWorldDy*0.2886751345948129;
+        float groundcoverFootprintFactor=0.25*(
+          groundcoverPatchFactorAt(world-groundcoverTapX-groundcoverTapY)+
+          groundcoverPatchFactorAt(world-groundcoverTapX+groundcoverTapY)+
+          groundcoverPatchFactorAt(world+groundcoverTapX-groundcoverTapY)+
+          groundcoverPatchFactorAt(world+groundcoverTapX+groundcoverTapY)
+        );
+        groundcoverWeight=mix(groundcoverWeight,
+          groundcoverFootprintFactor*groundcoverSuitability*groundcoverProtection,
+          groundcoverFilterActivation);
+      }
+      // H_EARTH_GROUNDCOVER_FOOTPRINT_BLEND_END
       float groundcoverMoisture=clamp(
         0.20+0.55*moistShelter+0.25*terrainWetness,0.0,1.0
       );

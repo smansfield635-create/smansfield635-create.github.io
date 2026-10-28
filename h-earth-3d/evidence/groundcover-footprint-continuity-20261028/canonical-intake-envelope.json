@@ -1,0 +1,283 @@
+{
+  "constructionProcedure": {
+    "bridgeOutputFingerprintDomain": {
+      "head": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+      "operationId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001",
+      "paths": [
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "tools/h-earth-ground-material-comparison.v1.mjs",
+        "tools/h-earth-ground-material-comparison.v1.test.mjs",
+        ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+        "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+        "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json"
+      ]
+    },
+    "canonicalInputSchemas": [
+      "REPOSITORY_OPERATION_REQUEST_v1",
+      "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+    ],
+    "canonicalOutputSchemas": [
+      "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+      "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_RECEIPT_v1",
+      "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "GOVERNING_HEAD_MISMATCH",
+      "ACTIVE_SCOPE_ALREADY_LOCKED",
+      "DECLARED_PATH_VIOLATION",
+      "SELECTED_QUALIFICATION_FAILURE",
+      "PASS"
+    ],
+    "evaluationToolingHeadBindingRule": "Pin approved Gen2928 cb57c275b95d0d48883bc4da4dcfcf17cbec5060 and shader fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec. Preserve historical harness modes. New profile uses exact candidate source, same assets and fixed archived poses. Read raw filter activation; no claim from inactive candidate.",
+    "exactAllowedRepositoryPaths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json"
+    ],
+    "exactBranchAndCommitSequence": [
+      {
+        "action": "After predecessor closure and authentic admission, create h-earth/groundcover-footprint-continuity-20261028 from exact governing head.",
+        "step": 1
+      },
+      {
+        "action": "South builds bounded terrain-only nonlinear patch-factor quadrature; keep tone suitability protection geometry roots unchanged.",
+        "step": 2
+      },
+      {
+        "action": "Extend existing comparator and tests with source-bound current baseline profile; commit source inventory and pass/fail rules.",
+        "step": 3
+      },
+      {
+        "action": "Qualify exact candidate: numerical and source tests then same-camera GPU baseline/candidate/activation including prior inland band and healthy meadow/coast; measure performance and inspect images.",
+        "step": 4
+      },
+      {
+        "action": "Independent West reviews exact delta and evidence. Preserve truthful outcome and pending owner disposition; no merge or deployment.",
+        "step": 5
+      }
+    ],
+    "exactGoverningHead": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+    "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+    "independentVerifierDefinition": {
+      "builderMaySelfDeclarePass": false,
+      "repairAuthority": false,
+      "required": [
+        "EXACT_BASELINE_AND_CANDIDATE_SOURCE_CUSTODY",
+        "ACTIVE_TERRAIN_CONSUMER_COVERAGE_AND_EXCLUSIONS",
+        "PATCH_FACTOR_FOOTPRINT_INTEGRAL_VS_DENSE_REFERENCE",
+        "ORIGINAL_BELOW_ONSET_AND_ZERO_PROTECTION",
+        "KNOWN_BAND_FILTER_ACTIVATION",
+        "SAME_CAMERA_GPU_BAND_AND_HEALTHY_CONTROLS",
+        "PERFORMANCE_AND_PALETTE_REGRESSION_REVIEW",
+        "INDEPENDENT_WEST_AND_EXPERIENCE_ANCHOR",
+        "NO_OWNER_ACCEPTANCE_OR_MAPWIDE_SUCCESS_INFERRED"
+      ],
+      "role": "WEST_INDEPENDENT_REVIEW"
+    },
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "priorAttemptInspectionLimits": {
+      "allowed": "Reuse all audited exclusions, immutable source and archived known-band poses. New experiment tests nonlinear patch-factor footprint filtering only.",
+      "forbidden": "No guessed-camera search, third threshold/amplitude tweak, broad recolor, geological identity rewrite, control-plane expansion, or owner acceptance invention."
+    },
+    "procedureId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001_PROCEDURE",
+    "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "workflowAndArtifactPackagingPaths": {
+      "artifactPaths": [
+        "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**"
+      ],
+      "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+    }
+  },
+  "operationRequest": {
+    "allowedPaths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json"
+    ],
+    "artifactPaths": [
+      "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**"
+    ],
+    "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+    "errorPrecedence": [
+      "GOVERNING_HEAD_MISMATCH",
+      "ACTIVE_SCOPE_ALREADY_LOCKED",
+      "DECLARED_PATH_VIOLATION",
+      "SELECTED_QUALIFICATION_FAILURE",
+      "PASS"
+    ],
+    "exactGoverningHead": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+    "exactTestCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+    "executingRole": {
+      "mayDeploy": false,
+      "mayMerge": false,
+      "mayMutateControlPlane": false,
+      "mayMutateProduct": true,
+      "role": "SOUTH_BUILDER",
+      "scopeExpansionAllowed": false
+    },
+    "fingerprintDomain": {
+      "head": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+      "operationId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001",
+      "paths": [
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "tools/h-earth-ground-material-comparison.v1.mjs",
+        "tools/h-earth-ground-material-comparison.v1.test.mjs",
+        ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+        "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+        "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json"
+      ]
+    },
+    "functionalCoordination": {
+      "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+      "authorityEffect": "NONE",
+      "functionalBearing": {
+        "bearings": [
+          "N",
+          "E",
+          "S",
+          "W",
+          "N"
+        ],
+        "exemptionReason": null,
+        "mode": "ROUTE"
+      },
+      "primitiveRequirements": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+    },
+    "independentVerifier": {
+      "builderMaySelfDeclarePass": false,
+      "repairAuthority": false,
+      "required": [
+        "EXACT_BASELINE_AND_CANDIDATE_SOURCE_CUSTODY",
+        "ACTIVE_TERRAIN_CONSUMER_COVERAGE_AND_EXCLUSIONS",
+        "PATCH_FACTOR_FOOTPRINT_INTEGRAL_VS_DENSE_REFERENCE",
+        "ORIGINAL_BELOW_ONSET_AND_ZERO_PROTECTION",
+        "KNOWN_BAND_FILTER_ACTIVATION",
+        "SAME_CAMERA_GPU_BAND_AND_HEALTHY_CONTROLS",
+        "PERFORMANCE_AND_PALETTE_REGRESSION_REVIEW",
+        "INDEPENDENT_WEST_AND_EXPERIENCE_ANCHOR",
+        "NO_OWNER_ACCEPTANCE_OR_MAPWIDE_SUCCESS_INFERRED"
+      ],
+      "role": "WEST_INDEPENDENT_REVIEW"
+    },
+    "intakeCompletenessReceipt": {
+      "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+      "receiptDigest": "744641c79da63926ef90c94140139cf0a1bdb9d5a82bd6cb00cd678c08a3b46f",
+      "receiptId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001_COMPLETE",
+      "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+      "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+      "unresolvedMaterialQuestions": []
+    },
+    "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+    "operationId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001",
+    "prohibitedPaths": [
+      "VEGETATION_ROOT_OR_TREE_OR_GRASS_ASSET_MUTATION",
+      "PHYSICAL_GEOMETRY_OR_G_WORLD_ELEVATION_MUTATION",
+      "PRECOMPUTED_WORLD_ASSET_OR_LOADER_MUTATION",
+      "NAVIGATION_OR_CONTACT_SUPPORT_MUTATION",
+      "WATER_OCEAN_COAST_SHORELINE_EDIT",
+      "SOURCE_MATERIAL_PALETTE_GLOBAL_FLATTENING",
+      "PROTECTED_MEADOW_TREE_FOOTHILL_COLOR_DEGRADATION",
+      "GEOGRAPHIC_CAMERA_GUESS_AS_USER_TELEMETRY",
+      "ANY_PATH_OUTSIDE_DECLARED_SCOPE",
+      "DIRECT_MAIN_WRITE"
+    ],
+    "projectId": "H_EARTH",
+    "requestingAuthority": {
+      "intent": "Repair source-proven groundcover band class across all active consumers with bounded footprint-filtering candidate. Reuse audited evidence; preserve approved Gen2928 palette, controls, geometry, roots, assets, water, navigation. No merge/deploy authority.",
+      "mayDeploy": false,
+      "mayMerge": false,
+      "mayMutateProduct": true,
+      "principal": "OWNER",
+      "scopeExpansionAllowed": false,
+      "source": "Owner current session: all work durable within Repository; find all code consistent with failures and alter to desired blend; move forward deterministically; Proceed accordingly."
+    },
+    "requiredInputs": [
+      {
+        "id": "GEN2917_STAGE_FIRST_CAUSE_40411050366",
+        "resolved": true
+      },
+      {
+        "id": "GEN2925_REMOVAL_CONFIRMATION_40442633983",
+        "resolved": true
+      },
+      {
+        "id": "GEN2928_APPROVED_BASELINE",
+        "resolved": true
+      },
+      {
+        "id": "GEN2940_SMOOTHSTEP_INSUFFICIENT",
+        "resolved": true
+      },
+      {
+        "id": "GEN2944_TINT_REJECTED",
+        "resolved": true
+      },
+      {
+        "id": "ACTIVE_CONSUMER_SOURCE_INVENTORY",
+        "resolved": true
+      },
+      {
+        "id": "OW01_AND_EXPERIENCE_ANCHOR_PRESERVATION",
+        "resolved": true
+      }
+    ],
+    "requiredOutputs": [
+      "DURABLE_SOURCE_EVIDENCE_AND_EXCLUSION_INVENTORY",
+      "ONE_BOUNDED_NONLINEAR_GROUNDCOVER_FOOTPRINT_CANDIDATE",
+      "REGRESSION_AND_NUMERICAL_TESTS",
+      "IMMUTABLE_GEN2928_COMPARISON_PROFILE",
+      "KNOWN_BAND_ACTIVATION_AND_MATCHED_GPU_IMAGES",
+      "HEALTHY_WORLD_CONTROLS_AND_PERFORMANCE",
+      "INDEPENDENT_REVIEW_AND_TRUTHFUL_EXPERIENCE_ANCHOR_RECEIPT"
+    ],
+    "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+    "stopConditions": [
+      "PREDECESSOR_AUTHENTICALLY_CLOSED_BEFORE_ADMISSION",
+      "NO_PRODUCT_WRITE_BEFORE_ADMITTED_AND_LOCKED",
+      "NO_PATH_SCOPE_EXPANSION",
+      "REJECT_IF_FILTER_INACTIVE_AT_KNOWN_BAND",
+      "REJECT_IF_BAND_PERSISTS_OR_HEALTHY_CONTROLS_REGRESS",
+      "NO_MAPWIDE_OR_OWNER_ACCEPTANCE_CLAIM_FROM_PARTIAL_EVIDENCE",
+      "NO_MAIN_WRITE_MERGE_OR_DEPLOY"
+    ],
+    "subjectIdentity": {
+      "activePredecessorLockGeneration": 2944,
+      "currentDiagnosticPR": 6936,
+      "currentExactGpuHead": "c6f12367fca48ebe8ff152bdc396f6d48b26d0a6",
+      "currentGpuRun": 40704179505,
+      "governingHead": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+      "healthyControl": "MEADOW_TREES_SHORTER_FOOTHILLS",
+      "ownerDirectiveComment": 6472173332,
+      "ownerScreenshot1": "30108.jpg",
+      "ownerScreenshot2": "30106.jpg",
+      "precomputedWorldSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "predecessorOperation": "H_EARTH_GEN2943_CANONICAL_MOUNTAIN_RIDGE_CONTINUITY_REPAIR_20261027_001",
+      "principalDefect": "SOURCE_PROVEN_GROUNDCOVER_INLAND_BANDS_WITH_OWNER_STRAIGHT_CURVED_CLASSES_STILL_OPEN",
+      "publishedReferenceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+      "publishedShaderSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+      "sourceDiagnosisCorrection": "Groundcover first-cause proved by staged and removal GPU evidence. Filtering hypothesis unproved. Gen2944 broad tint failed. Geological perimeter override hypothesis withdrawn. Do not repeat scalar/threshold adjustment or assumed camera matching.",
+      "sourceIssue": 6911
+    },
+    "terminalDispositions": [
+      "PASS_CLOSED",
+      "FAIL_CLOSED",
+      "REJECTED_CLOSED",
+      "WITHDRAWN",
+      "SUPERSEDED"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  },
+  "schema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1"
+}

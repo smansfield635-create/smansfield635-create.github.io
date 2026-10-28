@@ -1,0 +1,65 @@
+{
+  "schema": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_SOURCE_REVIEW_v1",
+  "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2964,
+  "result": "PASS",
+  "builderSelfApproval": false,
+  "reviewer": "Independent West agent /root/west_review",
+  "sceneRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "contractSha256": "b249bcfa2b05b3b5bcf2564894c20e8464a4851ea07e641bd0a2c9e177cc4837",
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "c9f36c70c141f0ebb82760ebb8920f011cd8f605713ebf8d27ea21870868c6e8",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "944aa23c072539626dac2e1974b8c00bcaaada792c0b0ab1cdd8c7e92d659d05",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "b14b6ca697bf6d6671aeb8354a2f51cf4fc4922d72fba9daace24b0a1ff4e1a9",
+    "tools/h-earth-world-position-overlay.mjs": "d61880ba98d81eae5d7cc6503f10f34d5aaa37819f4ba4a22218d87e711ca797",
+    "tools/h-earth-world-position-overlay.test.mjs": "9ca6a8a13b291ab280fff498dfd3e9d607242ec9124ad887d11da6e489552f39"
+  },
+  "reviewedDeltaBase": "584c37c09c2078392bb32ae343b67918c2235eac",
+  "sourceTests": {
+    "count": 68,
+    "passed": 68,
+    "failed": 0,
+    "independentlyExecuted": true,
+    "logSha256": "474f5d8dcc0d3fcd1937623c3e4efe3d70c21eece8b26735c2489aa83f86490b"
+  },
+  "findings": [
+    {
+      "id": "W1",
+      "status": "RESOLVED",
+      "finding": "Original calibration strip bypassed geometry RGBA8 and presentation path.",
+      "resolution": "Calibration now drawn into geometryFramebuffer after scene draw and before normal texture presentation, then PNG byte validated."
+    },
+    {
+      "id": "W2",
+      "status": "RESOLVED",
+      "finding": "Expected packet alone did not record actual render camera.",
+      "resolution": "Overlay captures actual render packet camera and viewport; comparator checks actual against expected camera and frozen per-mode camera/asset identity."
+    }
+  ],
+  "checks": [
+    "Fixed approved renderer SHA before response instrumentation; no product renderer disk mutation",
+    "Four precise scalar modes at two frozen observer poses; capture cardinality eight",
+    "CPU exhaustive representable values, invalid sentinel and corrupted calibration tests",
+    "Opaque alpha, raw RGB without exposure/gamma, DITHER disabled",
+    "Non-terrain RGB invalidation preserves original discard/depth; original uniform paths retained",
+    "Geometry RGBA8 NEAREST texture and unchanged presentation shader transfer same calibration bytes",
+    "All image pixels decoded; out-of-range/alpha failure rejects capture; calibration region excluded; masks equal across modes",
+    "Actual and expected camera matrices match; frame/navigation custody and asset/root readiness remain guarded",
+    "Explicit dispatch only, fixed branch/query, immutable tooling/source hashes, exact scene checkout, attempt1 only; no PR GPU execution"
+  ],
+  "glslQualification": {
+    "receiptSha256": "4327c77d70fef2f3e226eab77b96cf6bd60825dc9d10d22d56f9bd9c8e21d582",
+    "result": "PASS_DIAGNOSTIC_DELTA_WITH_UNCHANGED_BASELINE_DRIVER_LIMITATION",
+    "newDiagnosticShadersCompile": true,
+    "sceneFramesRenderedDuringReview": 0
+  },
+  "limitations": [
+    "Selected browser/GPU capture remains runtime qualification; no scene capture executed in this review.",
+    "Native Mesa rejects unchanged global-cover vertex identifier patch; same baseline failure is documented, with no new diagnostic shader failure.",
+    "Coordinates measure interpolated shader highp values with declared quantization intervals, not exact mesh-real coordinates.",
+    "Terrain outside declared scalar range fails capture; full-scene range fit is not yet a GPU observation."
+  ],
+  "authorityEffect": "NONE_INDEPENDENT_SOURCE_REVIEW_ONLY",
+  "mergeAuthorized": false,
+  "publicationAuthorized": false
+}

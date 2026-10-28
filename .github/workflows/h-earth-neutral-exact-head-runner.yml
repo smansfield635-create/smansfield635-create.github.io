@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=groundcover-residual-transfer-v1' && inputs.route_query != 'qualification=identity-blend-diagnostic-v1' && inputs.route_query != 'qualification=identity-fertile-transition-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=groundcover-residual-transfer-v1' && inputs.route_query != 'qualification=identity-blend-diagnostic-v1' && inputs.route_query != 'qualification=identity-fertile-transition-v1' && inputs.route_query != 'qualification=world-position-diagnostic-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -2010,5 +2010,159 @@ jobs:
           path: ${{ runner.temp }}/identity-fertile-transition
           if-no-files-found: error
           retention-days: 90
+
+  world-position-diagnostic:
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=world-position-diagnostic-v1' &&
+          github.ref == 'refs/heads/h-earth/world-position-diagnostic-20261028' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact candidate tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_sha }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out approved immutable diagnostic scene
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: scene
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out immutable dispatch checkpoint
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: dispatch
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /h-earth-3d/evidence/world-position-diagnostic-20261028/dispatch-intent.json
+      - name: Validate fixed explicit launch and exact checkout identities
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          WORKFLOW_SHA: ${{ github.sha }}
+          ROUTE_PATH: ${{ inputs.route_path }}
+          EXERCISE: ${{ inputs.exercise_vegetation_residency }}
+          TIMING_SHIM: ${{ inputs.apply_timing_shim }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUN_ATTEMPT" = 1
+          test "$ROUTE_PATH" = /showroom/globe/h-earth/
+          test "$EXERCISE" = false
+          test "$TIMING_SHIM" = false
+          test "$(git -C tooling rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git -C scene rev-parse HEAD)" = cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          test "$(git -C dispatch rev-parse HEAD)" = "$WORKFLOW_SHA"
+          test "$(git -C tooling rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)" = "$(git -C dispatch rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          const dir='h-earth-3d/evidence/world-position-diagnostic-20261028/';
+          const intent=JSON.parse(fs.readFileSync('dispatch/'+dir+'dispatch-intent.json'));
+          assert.equal(intent.schema,'H_EARTH_WORLD_POSITION_DIAGNOSTIC_DISPATCH_INTENT_v1');
+          assert.equal(intent.operationId,'H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001');
+          assert.equal(intent.lockGeneration,2964);
+          assert.equal(intent.sceneHead,'cb57c275b95d0d48883bc4da4dcfcf17cbec5060');
+          assert.equal(intent.toolingHead,process.env.TARGET_SHA);
+          assert.equal(intent.profile,'WORLD_POSITION_DIAGNOSTIC_V1');
+          assert.equal(intent.candidateFrames,8);
+          assert.equal(intent.candidateRuns,1);
+          assert.equal(intent.baselineRecapture,false);
+          assert.equal(intent.automaticRetry,false);
+          assert.equal(intent.sourceQualification,'PASS');
+          const review=JSON.parse(fs.readFileSync('tooling/'+dir+'independent-source-review.json'));
+          assert.equal(review.schema,'H_EARTH_WORLD_POSITION_DIAGNOSTIC_SOURCE_REVIEW_v1');
+          assert.equal(review.operationId,intent.operationId);
+          assert.equal(review.result,'PASS');
+          assert.equal(review.builderSelfApproval,false);
+          const contractBytes=fs.readFileSync('tooling/'+dir+'diagnostic-contract.json');
+          assert.equal(createHash('sha256').update(contractBytes).digest('hex'),intent.contractSha256);
+          assert.equal(review.contractSha256,intent.contractSha256);
+          const contract=JSON.parse(contractBytes);
+          assert.equal(contract.frameCap,8);
+          assert.equal(contract.runBudget,1);
+          assert.equal(contract.timingPolicy.measuredSubmissionsPerMode,1);
+          const admission=JSON.parse(fs.readFileSync('tooling/'+dir+'admission-receipt.json'));
+          assert.equal(admission.schema,'H_EARTH_ADMISSION_RECOVERY_VERIFICATION_v1');
+          assert.equal(admission.result,'SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED');
+          assert.equal(admission.readbackVerified,true);
+          assert.equal(admission.commitVerification.result,'CANONICAL_LEDGER_COMMIT_VERIFIED');
+          assert.equal(admission.lineageVerification.result,'CANONICAL_LOCK_REF_LINEAGE_VERIFIED');
+          assert.equal(admission.lockGeneration,2964);
+          assert.equal(admission.operationId,intent.operationId);
+          const renderer='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+          const sceneHash=createHash('sha256').update(fs.readFileSync('scene/'+renderer)).digest('hex');
+          assert.equal(sceneHash,'fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec');
+          assert.equal(intent.sceneRendererSha256,sceneHash);
+          assert.equal(review.sceneRendererSha256,sceneHash);
+          for(const [path,digest] of Object.entries(intent.sourceSha256)) {
+            assert.equal(createHash('sha256').update(fs.readFileSync('tooling/'+path)).digest('hex'),digest);
+            assert.equal(review.sourceSha256[path],digest);
+          }
+          assert.deepEqual(Object.keys(intent.sourceSha256).sort(),[
+            '.github/workflows/h-earth-neutral-exact-head-runner.yml',
+            'tools/h-earth-ground-material-comparison.v1.mjs',
+            'tools/h-earth-ground-material-comparison.v1.test.mjs',
+            'tools/h-earth-world-position-overlay.mjs',
+            'tools/h-earth-world-position-overlay.test.mjs'
+          ].sort());
+          NODE
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate source reconstruction and numerical coverage
+        working-directory: tooling
+        run: node --test tools/h-earth-world-position-overlay.test.mjs tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+      - name: Install fixed Chromium tooling
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture eight world-position diagnostic frames from one frozen scene
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: WORLD_POSITION_DIAGNOSTIC_V1
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../scene --candidate-dir ../scene --output "${{ runner.temp }}/world-position-diagnostic"
+      - name: Preserve comparison evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-world-position-diagnostic-${{ github.run_id }}
+          path: ${{ runner.temp }}/world-position-diagnostic
+          if-no-files-found: error
+          retention-days: 90
+
 
 

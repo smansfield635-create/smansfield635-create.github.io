@@ -1,0 +1,74 @@
+{
+  "schema": "H_EARTH_WORLD_POSITION_NATIVE_GLSL_DELTA_v1",
+  "result": "PASS_DIAGNOSTIC_DELTA_WITH_UNCHANGED_BASELINE_DRIVER_LIMITATION",
+  "changedShaders": [
+    {
+      "name": "CALIBRATION_FS",
+      "sourceSha256": "310044abb135317907729360803d76f26b6b1aaa9c2314724fa8e15b83224534",
+      "compiled": true,
+      "log": ""
+    },
+    {
+      "name": "CALIBRATION_VS",
+      "sourceSha256": "eb24568221957dba47cf90903957d20935b0f8bdae19003d31f0c97baf07ee0f",
+      "compiled": true,
+      "log": ""
+    },
+    {
+      "name": "FS",
+      "sourceSha256": "5f84068e3f47c0bccbda548d68b690e7fb67396b27606acff936ba6369b3e148",
+      "compiled": true,
+      "log": ""
+    },
+    {
+      "name": "GLOBAL_COVER_PATCH_SUPPRESSION_FS",
+      "sourceSha256": "cd55cfd1c8f70986c6e1706906e0ce25f8d2bcbfa6fff484f54523b3e04682a3",
+      "compiled": true,
+      "log": ""
+    },
+    {
+      "name": "WOODLAND_FINE_GRASS_FS",
+      "sourceSha256": "5bac17615730a3b4a835630f79faa56271a3bba5b2101976b3381ce83387db90",
+      "compiled": true,
+      "log": ""
+    }
+  ],
+  "linkedDiagnosticPrograms": [
+    {
+      "name": "calibration",
+      "vertex": "CALIBRATION_VS",
+      "fragment": "CALIBRATION_FS",
+      "linked": true,
+      "log": ""
+    },
+    {
+      "name": "ordinary-terrain",
+      "vertex": "VS",
+      "fragment": "FS",
+      "linked": true,
+      "log": ""
+    },
+    {
+      "name": "woodland-fine-grass",
+      "vertex": "WOODLAND_FINE_GRASS_VS",
+      "fragment": "WOODLAND_FINE_GRASS_FS",
+      "linked": true,
+      "log": ""
+    }
+  ],
+  "unchangedBaselineFailure": [
+    {
+      "name": "GLOBAL_COVER_PATCH_LOD_VS",
+      "sourceSha256": "4d446d26ccaef2155e9388d738ec33250242c6e560b0f66f25f7fd688fbc2319",
+      "compiled": false,
+      "log": "0:78(8): error: illegal use of reserved word `patch'\n0:78(8): error: syntax error, unexpected ERROR_TOK, expecting ',' or ';'\n"
+    }
+  ],
+  "limitation": "Native Mesa reserves patch in unchanged GLOBAL_COVER_PATCH_LOD_VS; baseline identical failure. No claim of global cover program native linkage. Browser runtime remains selected GPU qualification.",
+  "sceneFramesRendered": 0,
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "sourceRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "transformedRendererSha256": "938be05b6a888aebf8a26255fa8e19da1f2c46736dec71873a8ed8500dab137c",
+  "qualificationReuse": "All exact shader hashes unchanged; only calibration framebuffer insertion and actual packet custody JS changed.",
+  "calibrationPath": "geometryFramebuffer RGBA8 -> existing NEAREST colorTexture presentation -> default framebuffer -> PNG"
+}

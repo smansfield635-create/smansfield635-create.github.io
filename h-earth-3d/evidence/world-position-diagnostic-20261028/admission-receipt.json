@@ -1,0 +1,110 @@
+{
+  "schema": "H_EARTH_ADMISSION_RECOVERY_VERIFICATION_v1",
+  "result": "SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED",
+  "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2964,
+  "governingHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+  "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
+  "lockRefHead": "048eb40fdd7a651c6bec7b01fb0d9ae97d7d0242",
+  "ledgerBlobSha": "3ea8fadcbf5ad94d8ff8fcd6443828ea5453bedb",
+  "commitVerification": {
+    "lockGeneration": 2964,
+    "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+    "principal": "OWNER_AUTHENTICATED_GITHUB_CONNECTOR_CANONICAL_SUCCESSOR_V1",
+    "provenance": {
+      "authorityIdentity": {
+        "governingHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+        "lockGeneration": 2964,
+        "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+        "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+        "procedureLocatorDigest": "c5ddac15f7f04706bdb20b84061ee6a427e9b963c48cbbda3039f11058c333ed",
+        "requestDigest": "584ac087dfd59033ab39289742e3ad0f660d53fdd4ea07814cdf9bc54814c4a9",
+        "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c"
+      },
+      "result": "OWNER_CONNECTOR_SUCCESSOR_PROVENANCE_VERIFIED",
+      "transitionIdentity": {
+        "predecessor": {
+          "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+          "lockGeneration": 2963,
+          "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+          "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001"
+        },
+        "successor": {
+          "governingHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+          "lockGeneration": 2964,
+          "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+          "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001"
+        },
+        "transitionId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_SUCCESSOR"
+      }
+    },
+    "result": "CANONICAL_LEDGER_COMMIT_VERIFIED"
+  },
+  "provenanceVerification": {
+    "authorityIdentity": {
+      "governingHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+      "lockGeneration": 2964,
+      "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+      "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+      "procedureLocatorDigest": "c5ddac15f7f04706bdb20b84061ee6a427e9b963c48cbbda3039f11058c333ed",
+      "requestDigest": "584ac087dfd59033ab39289742e3ad0f660d53fdd4ea07814cdf9bc54814c4a9",
+      "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c"
+    },
+    "result": "OWNER_CONNECTOR_SUCCESSOR_PROVENANCE_VERIFIED",
+    "transitionIdentity": {
+      "predecessor": {
+        "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+        "lockGeneration": 2963,
+        "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+        "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001"
+      },
+      "successor": {
+        "governingHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+        "lockGeneration": 2964,
+        "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+        "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001"
+      },
+      "transitionId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_SUCCESSOR"
+    }
+  },
+  "lineageVerification": {
+    "anchorCommitSha": "7296b80e99651abf594a2aac6972ba5a15d6ae4d",
+    "branchHead": "048eb40fdd7a651c6bec7b01fb0d9ae97d7d0242",
+    "checkpointVerification": null,
+    "commitCount": 1,
+    "result": "CANONICAL_LOCK_REF_LINEAGE_VERIFIED",
+    "spanRecovery": null
+  },
+  "sourceCommentId": 6483584889,
+  "sourceCommentBodySha256": "aceb7908aeb0209e62c7a993508c6290e40ea4c84653c3acb3f08cb7c4b1d94c",
+  "readbackVerified": true,
+  "verificationMethod": "UNCHANGED_CANONICAL_VERIFIERS_WITH_LIVE_CONNECTOR_RESPONSE_REPLAY_AND_EXACT_GIT_BLOB_MATCH",
+  "replayedRequests": [
+    "https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/compare/7296b80e99651abf594a2aac6972ba5a15d6ae4d...048eb40fdd7a651c6bec7b01fb0d9ae97d7d0242?per_page=100&page=1",
+    "https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/commits/048eb40fdd7a651c6bec7b01fb0d9ae97d7d0242",
+    "https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/git/blobs/3ea8fadcbf5ad94d8ff8fcd6443828ea5453bedb"
+  ],
+  "repositoryWritesPerformed": false,
+  "authorityCreated": false,
+  "priorMutationSurvived": true,
+  "router": {
+    "rawDisposition": "BLOCK",
+    "admittedAllowedPathsContainAllDeclaredPaths": true,
+    "candidateScopeRecognition": {
+      "exactDeclaredCandidatePathsRecognizedForOperation": true,
+      "candidateCreatedPathNeedsSeparatePersistentRegistrationSolelyBecauseNew": false,
+      "persistentRegistrationRequiredOnlyForDurableAuthorityBoundary": true,
+      "mayExpandDeclaredScope": false
+    },
+    "interpretation": "Declared tooling paths are expressly admitted; whole-estate candidate scope recognition applies. No persistent authority boundary registration is being created."
+  },
+  "permissions": {
+    "diagnosticToolingWithinAllowedPaths": true,
+    "oneEightFrameCaptureAfterQualification": true,
+    "productMutation": false,
+    "merge": false,
+    "deploy": false,
+    "controlPlaneMutation": false
+  },
+  "nextAction": "Integrate recovered encoder within admitted paths; obtain independent review and exact immutable candidate before one eight-frame launch."
+}

@@ -617,7 +617,7 @@ test('identity profile fixes one source,20 modes and one submission without chan
  assert.throws(()=>parseArgs(['--baseline-dir','a','--candidate-dir','b','--output','out']),/ONE_FROZEN_SCENE/);`;
  execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'IDENTITY_BLEND_DIAGNOSTIC_V1'},encoding:'utf8'});
  const runner=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
- assert.ok(runner.includes('submissionCount:identityCapture?1:12'));assert.ok(runner.includes('while(stable<2)'));
+ assert.ok(runner.includes('submissionCount:worldCapture?1:identityCapture?1:12'));assert.ok(runner.includes('while(stable<2)'));
 });
 
 test('identity evidence validator rejects missing modes, drift,wrong source and timing expansion',async()=>{
@@ -678,4 +678,31 @@ test('fertile scene parity excludes declared evidence but rejects world and unde
  put(b,'h-earth-3d/evidence/identity-blend-diagnostic-20261028/not-preserved.json','not admitted');commit(b);assert.throws(()=>diagnostic.assertSceneParity(a,b,{fertile:true}),/SCENE_SOURCE_DRIFT/);
  git(b,['reset','--hard','HEAD~1']);put(b,'h-earth-3d/protected-world.json','changed');commit(b);assert.throws(()=>diagnostic.assertSceneParity(a,b,{fertile:true}),/SCENE_SOURCE_DRIFT/);
  }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
+
+
+test('world diagnostic profile freezes baseline and exactly eight near/far modes',async()=>{
+ const {execFileSync}=await import('node:child_process');const url=new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url).href;
+ const script=`import assert from 'node:assert/strict';import {HEADS,WORLD_POSES,parseArgs} from ${JSON.stringify(url)};assert.equal(HEADS.candidate,'cb57c275b95d0d48883bc4da4dcfcf17cbec5060');assert.equal(WORLD_POSES.length,2);parseArgs(['--baseline-dir','scene','--candidate-dir','scene','--output','out']);assert.throws(()=>parseArgs(['--baseline-dir','a','--candidate-dir','b','--output','out']),/ONE_FROZEN_SCENE/);`;
+ execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'WORLD_POSITION_DIAGNOSTIC_V1'},encoding:'utf8'});
+});
+test('world pixels enforce exact calibration, opaque alpha, range and valid terrain',async()=>{
+ const {encodeWorld,calibrationExpected}=await import('./h-earth-world-position-overlay.mjs');
+ const png={width:529,height:980,data:Buffer.alloc(529*980*4)};for(let i=3;i<png.data.length;i+=4)png.data[i]=255;
+ const strip=(980-1)*529*4;Buffer.from(calibrationExpected(0).flat()).copy(png.data,strip);Buffer.from(encodeWorld(-200,0)).copy(png.data,0);
+ const v=diagnostic.validateWorldPixels(png,0);assert.equal(v.validPixels,1);assert.equal(v.min,-200);
+ png.data[3]=254;assert.throws(()=>diagnostic.validateWorldPixels(png,0),/RGBA/);png.data[3]=255;
+ png.data[strip+1]^=1;assert.throws(()=>diagnostic.validateWorldPixels(png,0),/CALIBRATION/);png.data[strip+1]^=1;
+ Buffer.from([255,255,255,255]).copy(png.data,0);assert.throws(()=>diagnostic.validateWorldPixels(png,0),/OUT_OF_RANGE/);
+ Buffer.from([0,0,0,255]).copy(png.data,0);assert.throws(()=>diagnostic.validateWorldPixels(png,0),/NO_TERRAIN/);
+});
+test('world evidence rejects source, calibration, masks and camera drift',async()=>{
+ const {gunzipSync}=await import('node:zlib');const {WORLD_MODES,calibrationExpected}=await import('./h-earth-world-position-overlay.mjs');
+ const cap=JSON.parse(gunzipSync(fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-contribution-ledger-20261028/run40739898768/receipt.json.gz',import.meta.url))));
+ const views=diagnostic.WORLD_POSES.flatMap(pose=>WORLD_MODES.map((mode,index)=>{
+  const v=structuredClone(cap.views.find(v=>v.pose.name===pose.name));
+  return {...v,pose:{...pose},mode,modeId:index,diagnosticApplied:index,sourceHead:diagnostic.IDENTITY_SOURCE_HEAD,rendererHash:diagnostic.IDENTITY_RENDERER_SHA256,cpuSubmitMilliseconds:[1],softwareGpuFinishMilliseconds:[1],worldActualPacket:{mode:index,camera:{position:{...v.lastFrame.cameraPosition}},viewport:{width:529,height:980}},worldPacket:{camera:{position:{...v.lastFrame.cameraPosition}},viewport:{width:529,height:980}},worldData:{calibration:calibrationExpected(index).flat(),calibrationVerified:true,validPixels:1,terrainMaskSha256:'a'.repeat(64)}};
+ }));
+ assert.equal(diagnostic.validateWorldSet(views),true);assert.throws(()=>diagnostic.validateWorldSet(views.slice(1)),/FRAME_CAP/);
+ for(const mutate of [v=>v.mode='wrong',v=>v.sourceHead='a'.repeat(40),v=>v.worldData.calibration[0]^=1,v=>v.worldData.terrainMaskSha256='bad',v=>v.worldPacket.camera.position.x++,v=>v.worldData.validPixels=0,v=>v.cpuSubmitMilliseconds.push(1)]){const bad=structuredClone(views);mutate(bad[1]);assert.throws(()=>diagnostic.validateWorldSet(bad));}
 });

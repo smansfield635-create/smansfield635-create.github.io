@@ -1,0 +1,151 @@
+{
+  "allowedPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    "tools/h-earth-world-position-overlay.mjs",
+    "tools/h-earth-world-position-overlay.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/world-position-diagnostic-20261028/**"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/world-position-diagnostic-20261028/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+  "exactTestCommand": "node --test tools/h-earth-world-position-overlay.test.mjs tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateDiagnosticTooling": true,
+    "mayMutateProduct": false,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+    "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      "tools/h-earth-world-position-overlay.mjs",
+      "tools/h-earth-world-position-overlay.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/world-position-diagnostic-20261028/**"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "BYTE_EXACT_ENCODING_AND_INVALID_SENTINELS",
+      "APPROVED_RENDERER_HASH_UNCHANGED",
+      "FROZEN_POSE_MATRIX_ASSET_CUSTODY",
+      "ONE_RUN_EIGHT_FRAMES_NO_RETRY",
+      "NO_MATERIAL_REPAIR_OR_VISUAL_ACCEPTANCE_CLAIM"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "880c98425e865bf2305712dbb8dc4c362d1994725ff2973f4fe724c5b5e06992",
+    "receiptId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+  "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+  "prohibitedPaths": [
+    "PRODUCT_RENDERER_OR_GEOMETRY_OR_ASSET_MUTATION",
+    "VEGETATION_OR_CAMERA_SEARCH",
+    "PALETTE_REPAIR_OR_PARAMETER_SWEEP",
+    "NEW_EXECUTION_TRANSPORT_OR_CONTROL_PLANE_CHANGE",
+    "DIRECT_MAIN_WRITE",
+    "MERGE_DEPLOY_PUBLICATION"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "One eight-frame diagnostic at existing near/far poses on unchanged approved baseline, RGB scalar X/Y/Z/coast with opaque alpha and byte calibration. Product unchanged.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": false,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Current conversation: Proceed accordingly after explicit proposal to implement validated world-position capture and launch once."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_DIRECTED_PRECISE_WORLD_CAPTURE_AND_SINGLE_LAUNCH",
+      "resolved": true
+    },
+    {
+      "id": "INDEPENDENT_WORLD_UNCERTAINTY_AND_ALPHA_RISK_REVIEW",
+      "resolved": true
+    },
+    {
+      "id": "APPROVED_BASELINE_IDENTITY_AND_EXISTING_FIXED_RUNNER",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "SOURCE_BOUND_RGB_SCALAR_PROBE",
+    "BYTE_ENCODING_CALIBRATION_AND_TESTS",
+    "EXACT_IMMUTABLE_TOOLING_HEAD",
+    "ONE_EIGHT_FRAME_RUN_LINK",
+    "HASHED_RAW_CAPTURE_RECEIPT_AND_CONTINUATION"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "NO_RUNTIME_REPOSITORY_WRITE_BEFORE_AUTHENTIC_ADMISSION",
+    "ONE_DIAGNOSTIC_RUN_EIGHT_SCENE_FRAMES_NO_AUTO_RETRY",
+    "NO_PRODUCT_RENDERER_DISK_MUTATION",
+    "INVALID_BYTE_CALIBRATION_OR_SCENE_IDENTITY_FAILS_CAPTURE",
+    "RETURN_RUN_LINK_AND_STOP_ON_LAUNCH"
+  ],
+  "subjectIdentity": {
+    "baseline": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "evidenceGap": "Archived RGB8 height inversion has60m uncertainty; exact world scalar capture required.",
+    "predecessorEvidenceHead": "584c37c09c2078392bb32ae343b67918c2235eac",
+    "predecessorGeneration": 2963,
+    "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+    "sourceIssue": 6911
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+}

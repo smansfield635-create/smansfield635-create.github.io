@@ -1,0 +1,102 @@
+{
+  "schema": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_CONTRACT_v1",
+  "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2964,
+  "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "sceneRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "frameCap": 8,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "poses": [
+    {
+      "name": "inland-seam-near",
+      "x": -200,
+      "z": -728,
+      "y": 18.361431,
+      "yaw": 0,
+      "pitch": -14,
+      "diagnosticObserver": true
+    },
+    {
+      "name": "inland-seam-far",
+      "x": -200,
+      "z": -656,
+      "y": 18.793665,
+      "yaw": 0,
+      "pitch": -2,
+      "diagnosticObserver": true
+    }
+  ],
+  "modes": [
+    "world-x",
+    "world-y",
+    "world-z",
+    "coast-distance"
+  ],
+  "encoding": {
+    "version": 1,
+    "alpha": 255,
+    "invalidCode": 0,
+    "outOfRangeCode": 16777215,
+    "rounding": "nearest-half-up",
+    "float32ArithmeticAllowanceInBins": 0.125,
+    "measuredQuantity": "interpolated-shader-highp-float-not-exact-mesh-real",
+    "byteOrder": "RGB-most-significant-first",
+    "specs": [
+      {
+        "name": "world-x",
+        "min": -32768,
+        "step": 0.0625,
+        "max": 32768
+      },
+      {
+        "name": "world-y",
+        "min": -128,
+        "step": 0.000244140625,
+        "max": 128
+      },
+      {
+        "name": "world-z",
+        "min": -32768,
+        "step": 0.0625,
+        "max": 32768
+      },
+      {
+        "name": "coast-distance",
+        "min": -32768,
+        "step": 0.0625,
+        "max": 32768
+      }
+    ]
+  },
+  "timingPolicy": {
+    "measuredSubmissionsPerMode": 1,
+    "settling": "existing bounded stable asset guard",
+    "performanceClaims": false
+  },
+  "calibration": {
+    "pixelRegion": {
+      "x": 0,
+      "y": 979,
+      "width": 16,
+      "height": 1
+    },
+    "pngOrigin": "TOP_LEFT",
+    "excludedFromTerrain": true,
+    "byteExact": true,
+    "path": "GEOMETRY_RGBA8_THEN_EXISTING_TEXTURE_PRESENTATION_THEN_PNG"
+  },
+  "failures": [
+    "wrong source/head/hash",
+    "byte calibration mismatch",
+    "nonopaque pixel",
+    "out of range terrain",
+    "changed terrain mask across modes",
+    "asset or camera drift"
+  ],
+  "productMutation": false,
+  "mergeAuthorized": false,
+  "publicationAuthorized": false,
+  "nextAfterLaunch": "Return run link and stop without polling; retrieve after owner reports completion.",
+  "cameraCustody": "ACTUAL_RENDER_PACKET_MATCHES_FROZEN_EXPECTED_PACKET"
+}

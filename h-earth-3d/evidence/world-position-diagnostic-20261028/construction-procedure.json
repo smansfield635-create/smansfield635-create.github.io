@@ -1,0 +1,91 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+    "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      "tools/h-earth-world-position-overlay.mjs",
+      "tools/h-earth-world-position-overlay.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/world-position-diagnostic-20261028/**"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_WORLD_POSITION_CAPTURE_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "One frozen approved baseline scene, exact immutable diagnostic tooling head, RGB scalar with alpha255, explicit range/invalid checks and calibration; no material changes.",
+  "exactAllowedRepositoryPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    "tools/h-earth-world-position-overlay.mjs",
+    "tools/h-earth-world-position-overlay.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/world-position-diagnostic-20261028/**"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Obtain authentic successor admission at current main; create h-earth/world-position-diagnostic-20261028 from584c37c09c2078392bb32ae343b67918c2235eac; retain prior evidence.",
+      "step": 1
+    },
+    {
+      "action": "Implement isolated scalar observation overlay and existing fixed comparator profile for baseline only; restore baseline renderer in scene checkout without editing product bytes.",
+      "step": 2
+    },
+    {
+      "action": "Validate CPU packing exhaustive code boundaries, GLSL compile, source hash, scene/matrix custody and independent review. No expensive scene run during preparation.",
+      "step": 3
+    },
+    {
+      "action": "Persist immutable remote candidate and source-test evidence; enable exact profile via existing fixed runner precedent, with no GPU on PR synchronization.",
+      "step": 4
+    },
+    {
+      "action": "Submit one explicit eight-frame diagnostic; return verified run URL immediately, no polling/automatic retry.",
+      "step": 5
+    },
+    {
+      "action": "On completion verify calibration/image hashes/poses/source and preserve results; no repair or owner acceptance claim.",
+      "step": 6
+    }
+  ],
+  "exactGoverningHead": "75cb9c0660145c3efc4861dabd5e6fa5c5953a95",
+  "exactTestRunnerCommand": "node --test tools/h-earth-world-position-overlay.test.mjs tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "BYTE_EXACT_ENCODING_AND_INVALID_SENTINELS",
+      "APPROVED_RENDERER_HASH_UNCHANGED",
+      "FROZEN_POSE_MATRIX_ASSET_CUSTODY",
+      "ONE_RUN_EIGHT_FRAMES_NO_RETRY",
+      "NO_MATERIAL_REPAIR_OR_VISUAL_ACCEPTANCE_CLAIM"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Inspect only existing capture/harness dependencies and high-precision measurement. Reuse all prior evidence.",
+    "forbidden": "No product correction, camera search, baseline visual recapture, parameter sweep or execution transport redesign."
+  },
+  "procedureId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/world-position-diagnostic-20261028/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

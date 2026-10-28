@@ -21,7 +21,7 @@
         "From $1,750",
         "Scoped after consultation",
         "Generation 2084 environmental refinement",
-        "/assets/build/build-companion.js?v=6",
+        "/assets/build/build-companion.js?v=7",
         "/assets/build/build-companion.css?v=5"
       ],
       "excludes": []
@@ -30,7 +30,7 @@
       "path": "/build/intake/index.html",
       "includes": [
         "data-open-build-companion",
-        "/assets/build/build-companion.js?v=6"
+        "/assets/build/build-companion.js?v=7"
       ],
       "excludes": [
         "wizard-progress"

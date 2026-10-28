@@ -31,9 +31,16 @@ function enqueueUnique(m,s,items){
  }
 }
 export function nextAfterReturn(m,s){
- while(s.queue.length){const id=activate(m,s,s.queue.shift());if(!answered(s,{id}))return id;}
- while(s.sharedIndex<(m.sharedSequence||[]).length){const id=m.sharedSequence[s.sharedIndex++];s.purposePath='root';s.contextLabel='';if(!answered(s,{id}))return id;}
- return 'REVIEW';
+ const queued=()=>{while(s.queue.length){const id=activate(m,s,s.queue.shift());if(!answered(s,{id}))return id;}return null;};
+ // First-pass discovery bypasses detailed question branches without deleting them.
+ // They remain available if the visitor explicitly requests further scoping.
+ if(s.deepMode){const id=queued();if(id)return id;}
+ while(s.sharedIndex<(m.sharedSequence||[]).length){
+  const id=m.sharedSequence[s.sharedIndex++];s.purposePath='root';s.contextLabel='';
+  if(!s.deepMode&&['SH.STYLE','SH.READINESS','RESOLVE_HANDOFF'].includes(id))continue;
+  if(!answered(s,{id}))return id;
+ }
+ return s.deepMode?(queued()||'REVIEW'):'REVIEW';
 }
 export function resolveNext(m,s,id){if(!id||id==='RETURN')return nextAfterReturn(m,s);s.contextLabel=contextLabel(m,s.purposePath,id);return answered(s,{id})?nextAfterReturn(m,s):id;}
 function storeRecord(m,s,n,data){
@@ -49,7 +56,7 @@ export function applyOption(m,s,n,o){
  if(o.scope?.startsWith('child:'))s.purposePath+=(s.purposePath==='root'?'':'/')+o.scope.slice(6);
  return resolveNext(m,s,o.next);
 }
-export function optionLabel(n,o,s){const reuse=s.inquiryReuse?.[questionKey(s,n)];if(reuse?.sharedDate&&o.id==='catering_fields_03')return 'Preferred serving time (date already included)';if(reuse?.sharedDate&&o.id==='private_fields_02')return 'Event duration (date already included)';return o.label;}
+export function optionLabel(n,o,s){if(n.id==='EXISTING_SYSTEMS'&&s.route==='REST'&&o.id==='existing_systems_01')return 'Existing table-reservation platform (only if in use)';if(n.id==='SH.PRESERVE'&&s.route==='REST'&&o.id==='sh_preserve_03')return 'Existing ordering or reservation platforms';const reuse=s.inquiryReuse?.[questionKey(s,n)];if(reuse?.sharedDate&&o.id==='catering_fields_03')return 'Preferred serving time (date already included)';if(reuse?.sharedDate&&o.id==='private_fields_02')return 'Event duration (date already included)';return o.label;}
 export function inheritedOptions(s,n){return s.inquiryReuse?.[questionKey(s,n)]?.optionIds||[];}
 export function applyMulti(m,s,n,ids){
  if(answered(s,n))return nextAfterReturn(m,s);
@@ -97,19 +104,50 @@ export function reuseAnswer(m,s,n,proposal){
 export function ack(n,opts){if(!Array.isArray(opts))return opts.reply||'';return opts.every(o=>o.status==='declined')?'We’ll leave those features out for now.':opts.every(o=>o.status==='unknown')?'We’ll mark that as something to discuss.':'I’ve noted '+opts.map(o=>o.label).join(', ')+'.';}
 const critical=new Set(['BUS.ACTIVITY','PRO.ACTIVITY','CRE.ACTIVITY','PORT.ACTIVITY','HOSPITALITY','COM.ACTIVITY','BUS.INTENT','PRO.INTENT','CRE.INTENT','PORT.INTENT','REST.INTENT','STAY.INTENT','COM.INTENT','SHOP.INTENT','APP.INTENT','SPACE.INTENT','CLARIFY','FORMAT','SH.EXISTING']);
 export function nodeDepth(id){return critical.has(id)?'QUALIFICATION_CRITICAL':id.startsWith('SH.')?'CONDITIONAL_QUALIFICATION':'DEEP_SCOPING'}
-export function readiness(s){const contact=validName(s.contact?.name)&&validEmail(s.contact?.email)&&validPhone(s.contact?.phone),hasRoute=!!s.route&&s.route!=='unknown'&&s.route!=='pending_hospitality',hasSubtype=s.records.some(r=>/\.ACTIVITY$|HOSPITALITY/.test(r.node)&&r.status==='confirmed'),hasFunction=s.records.some(r=>/\.INTENT$/.test(r.node)&&r.status==='confirmed'),hasOperational=s.records.some(r=>r.status==='confirmed'&&(r.kind==='future_customer_field'||(r.kind==='website_requirement'&&nodeDepth(r.node)==='DEEP_SCOPING'&&!['APPOINTMENT','VOLUNTEER'].includes(r.node)))),hasStart=s.records.some(r=>r.node==='SH.EXISTING');return {contact,hasRoute,hasSubtype:hasSubtype||['SHOP','APP','SPACE'].includes(s.route),hasFunction,hasOperational,hasStart}}
-export function needsStartingPoint(s){const x=readiness(s);return x.contact&&x.hasRoute&&x.hasSubtype&&x.hasFunction&&x.hasOperational&&!x.hasStart}
-export function sufficient(s){const x=readiness(s);return Object.values(x).every(Boolean)&&['SH.DOMAIN','SH.ASSETS','SH.TIMING'].every(id=>s.records.some(r=>r.node===id))&&!s.queue.length}
+export function readiness(s){
+ const hasRoute=!!s.route&&s.route!=='unknown'&&s.route!=='pending_hospitality';
+ const hasSubtype=s.records.some(r=>/\.ACTIVITY$|HOSPITALITY/.test(r.node)&&r.status==='confirmed')||['SHOP','APP','SPACE'].includes(s.route);
+ const hasFunction=s.records.some(r=>/\.INTENT$/.test(r.node)&&r.status==='confirmed');
+ const hasStart=s.records.some(r=>r.node==='SH.EXISTING');
+ return {hasRoute,hasSubtype,hasFunction,hasStart};
+}
+export function needsStartingPoint(s){const x=readiness(s);return x.hasRoute&&x.hasSubtype&&x.hasFunction&&!x.hasStart;}
+export function sufficient(s){const x=readiness(s);return Object.values(x).every(Boolean)&&['SH.ASSETS','SH.TIMING'].every(id=>s.records.some(r=>r.node===id));}
 export function brief(s,m){
- const groups=new Map([['Contact',[[s.contact?.name,s.contact?.email,s.contact?.phone&&formatPhone(s.contact.phone)].filter(Boolean).join(' · ')]]]);
- const topics={'ENTRY':'Website type','SH.EXISTING':'Starting point','SH.DOMAIN':'Domain','SH.ASSETS':'Content readiness','SH.TIMING':'Timing','SH.READINESS':'Next step','SH.PRESERVE':'Keep from the current website','SH.STYLE':'Presentation preference'};
- for(const r of s.records){const section=r.status==='unknown'?'Decisions still open':r.section||'Project details';if(!groups.has(section))groups.set(section,[]);
- const topic=topics[r.node]||r.question||node(m||{nodes:{}},r.node)?.prompt||(/\.INTENT$/.test(r.node)?'What visitors should be able to do':/\.ACTIVITY$/.test(r.node)?'Business or project focus':'Project detail');
- const answer=(!r.optionId&&!r.optionIds&&typeof r.value==='string'&&!r.value.startsWith('context.route='))?r.value:r.label||'Not specified';groups.get(section).push(topic+': '+answer+(r.status==='unknown'?' — to discuss':r.status==='declined'?' — not requested':'')+(r.additionalStatus==='unknown'?' — additional fields to discuss':''));
+ const records=s.records||[],find=id=>records.find(r=>r.node===id),label=id=>find(id)?.label||'';
+ const options=r=>r?.optionIds?.map(id=>node(m,r.node)?.options?.find(o=>o.id===id)?.label).filter(Boolean)||[r?.label].filter(Boolean);
+ const kind=label('HOSPITALITY')||records.find(r=>/\.ACTIVITY$/.test(r.node))?.label||label('ENTRY')||'Website project';
+ const intent=records.find(r=>/\.INTENT$/.test(r.node));const functions=options(intent);
+ const start=label('SH.EXISTING')||'To confirm';
+ const preserve=options(find('SH.PRESERVE')).map(v=>v==='Current ordering, booking or client systems'?'Existing business platforms where applicable':v);
+ const lines=['Proposed website — '+kind];
+ if(functions.length)lines.push('Visitors should be able to: '+functions.join('; ')+'.');
+ lines.push('Starting point: '+start+'.');
+ if(preserve.length)lines.push('Preserve: '+preserve.join('; ')+'.');
+ if(label('SH.DOMAIN'))lines.push('Domain: '+label('SH.DOMAIN')+'.');
+ if(label('SH.ASSETS'))lines.push('Content and materials: '+label('SH.ASSETS')+'.');
+ if(label('SH.TIMING'))lines.push('Launch preference: '+label('SH.TIMING')+(label('INPUT.DATE')?' — '+label('INPUT.DATE'):'')+'.');
+ const notes=[],open=[];
+ const reservation=find('RESERVATION');
+ if(s.route==='REST'&&intent?.optionIds?.includes('rest_intent_02')){
+  if(reservation?.optionId==='reservation_01')notes.push('Table reservations will be requests reviewed by the restaurant; no appointment platform is assumed.');
+  else if(reservation?.optionId==='reservation_02')notes.push('Existing table-reservation provider to identify and confirm before integration.');
+  else open.push('Confirm how table reservation requests will be handled.');
  }
- return [...groups].filter(([,v])=>v.some(Boolean)).map(([k,v])=>k+'\n'+v.filter(Boolean).map(x=>'• '+x).join('\n')).join('\n\n');
+ if(s.route==='REST'&&intent?.optionIds?.some(id=>['rest_intent_01','rest_intent_03'].includes(id))){const parts=[intent.optionIds.includes('rest_intent_01')?'Catering':null,intent.optionIds.includes('rest_intent_03')?'private-event':null].filter(Boolean);notes.push(parts.join(' and ')+' inquiries can start with standard fields; exact form fields are to be reviewed later.');}
+ if(s.route==='REST'&&intent?.optionIds?.includes('rest_intent_04')&&!find('ORDERING'))open.push('Confirm the online-ordering approach or current provider.');
+ const primary=new Set(['ENTRY','HOSPITALITY','SH.EXISTING','SH.PRESERVE','SH.DOMAIN','SH.ASSETS','SH.TIMING','INPUT.DATE','SH.READINESS','SH.STYLE']);
+ const extras=records.filter(r=>!primary.has(r.node)&&!/\.ACTIVITY$|\.INTENT$/.test(r.node));
+ const meaningful=extras.filter(r=>!['RESERVATION','EXISTING_SYSTEMS'].includes(r.node)||r.node==='EXISTING_SYSTEMS'&&r.status==='confirmed');
+ for(const r of meaningful){if(r.status==='unknown'){open.push((r.question||'Additional requirement')+' — to discuss');continue;}if(r.status==='declined')continue;const detail=r.label||((typeof r.value==='string')?r.value:'');if(detail)notes.push((r.question||node(m,r.node)?.prompt||'Additional requirement')+': '+detail);}
+ if(s.contact?.name||s.contact?.email||s.contact?.phone)lines.push('Contact: '+[s.contact.name,s.contact.email,s.contact.phone&&formatPhone(s.contact.phone)].filter(Boolean).join(' · ')+'.');
+ if(notes.length)lines.push('Additional confirmed details:\n• '+[...new Set(notes)].join('\n• '));
+ if(open.length)lines.push('Open decisions:\n• '+[...new Set(open)].join('\n• '));
+ lines.push('Project scope, integrations, pricing and launch dates remain subject to discussion; no service is automatically booked or connected.');
+ return lines.join('\n\n');
 }
 export function contextualPrompt(n,s,m){
+ if(n.id==='EXISTING_SYSTEMS'&&s.route==='REST')return 'Which existing restaurant platforms actually need to stay connected? Only select services you already use.';
  const redesign=s.records.some(r=>r.node==='SH.EXISTING'&&/redesign|Improve/i.test(r.label));
  if(n.id==='SH.DOMAIN')return redesign?'Will we keep your current website’s domain, or use a different one?':n.prompt;
  if(n.id==='SH.ASSETS'){const what={REST:'menus, photos and business information',SHOP:'product descriptions, prices and photos',SPACE:'images, plans or other material for the experience',PRO:'service descriptions, credentials and team information',COM:'your organization’s story, programs and photos'}[s.route]||'text, images and business information';return 'How much of your '+what+' is ready?';}

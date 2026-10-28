@@ -221,8 +221,9 @@ test('Gen2944 owner-directed steep-side material blend is image-only and leaves 
   'smoothstep(-200.0,-143.0,s.y)',
   'zone*=1.0-preservedGrove;',
   'uRidgeNormalMode==1&&worldSoilTerrain&&!geologicalEarthRock',
-  'base=mix(base,coherent,strength);'
+  'base=mix(base,coherentSoilTint,strength);'
  ])assert.ok(transformed.includes(token),token);
+ assert.ok(!/\bvec3 coherent\s*=/.test(transformed),'GLSL_RESERVATION_VIOLATION');
  assert.equal(fs.readFileSync(sourcePath,'utf8'),original);
  assert.throws(()=>d.instrumentSteepMaterialRenderer(original+' '),/GEN2944_STEEP_FROZEN_SHADER_DRIFT/);
  assert.deepEqual(d.STEEP_MATERIAL_MODES,['original-lit-with-grass','coherent-lit-with-grass']);

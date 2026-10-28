@@ -5,10 +5,7 @@
   "ownedPathPrefixes": [
     "preflight/"
   ],
-  "ownedExactPaths": [
-    ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
-    ".github/ai-router/publication-surfaces/preflight.v1.json"
-  ],
+  "ownedExactPaths": [],
   "entrypoint": ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
   "authorityBoundary": [
     "PRE_FLIGHT_OWNS_ONLY_ITS_EXACT_REGISTERED_PATHS_AND_PRE_FLIGHT_PREFIX",

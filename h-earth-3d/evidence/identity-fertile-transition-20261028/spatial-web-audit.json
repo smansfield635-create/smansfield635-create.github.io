@@ -1,0 +1,118 @@
+{
+  "schema": "H_EARTH_SPATIAL_WEB_AUDIT_v1",
+  "date": "2026-10-28",
+  "candidate": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+  "runId": 40779962491,
+  "conclusion": "Multiple contributing paths; no unique whole-band root cause established. Narrow next attribution to groundcover target versus blend-weight changes.",
+  "verified": [
+    "Spatial audit independently recomputed exactly; SHA256 78bd9644536510d988e90429d0ffaa1e4c0c34f5bb955ac22079afe527724900.",
+    "Cross-run source, renderer hash, camera, pose, canvas, dimensions and grass visibility match. Asset signature differs only in generationMs. Both compared stage probes apply exposure 1.12 and gamma 1/2.2 once.",
+    "At far-center columns260..268 rows481->497, groundcover-stage red change exceeds possible inherited identity change even under conservative +/-1 code decoding intervals.",
+    "nearMaterial feeds positive noise into albedo brightness and material variation; this creates camera-dependent color independently of direct lighting.",
+    "Perturbed shadingNormal determines triplanar albedo weights.",
+    "Texture mipmaps exist. Local value-noise interpolation is continuous at lattice boundaries; floor alone does not prove jumps."
+  ],
+  "witness": {
+    "pose": "far",
+    "columns": [
+      260,
+      268
+    ],
+    "rows": [
+      481,
+      497
+    ],
+    "identityMeanRedDeltaInterval": [
+      -0.02528573,
+      -0.00873151
+    ],
+    "groundcoverMeanRedDeltaInterval": [
+      -0.08134262,
+      -0.06608602
+    ],
+    "allNineIdentityIntervalsNegative": true,
+    "clipping": false,
+    "logic": "Q=(1-W)P+WT. With T,W constant across each row pair and W in[0,1], incoming delta can only attenuate. Maximum inherited magnitude .02528573 < observed minimum .06608602. Therefore downstream T and/or W vary and contribute at this witness.",
+    "limitation": "Posthoc localization witness, not global dominance or visual acceptance threshold."
+  },
+  "sourceFixture": {
+    "assumption": "Hold triMicro=triFine=0.5, vary nearMaterial from1 to0; illustrative values, not measured local means.",
+    "materialVariationDecrease": 0.0312,
+    "identityBrightnessMultiplierDecrease": 0.036864,
+    "preidentityMultiplier": [
+      1,
+      0.94
+    ],
+    "limitation": "Pathway arithmetic, not final rendered contrast or confirmed band cause."
+  },
+  "hypotheses": [
+    {
+      "path": "Groundcover tone/weight",
+      "status": "Contribution required at bounded witness",
+      "next": "Exact finite-difference P/T/W decomposition at fixed band windows."
+    },
+    {
+      "path": "Distance fade mean shift",
+      "status": "Source mechanism verified; observed-band contribution unquantified",
+      "next": "If implicated by decomposition, hold view/world samples fixed and vary only material-distance input."
+    },
+    {
+      "path": "Perturbed-normal triplanar feedback",
+      "status": "Source mechanism verified; observed-band attribution untested",
+      "next": "If upstream path implicated, compare geometric versus perturbed normal weights, holding all other inputs fixed."
+    },
+    {
+      "path": "Nonlinear procedural aliasing",
+      "status": "Literature-supported possibility, not established locally",
+      "next": "Only if relevant, compare increased sampling and linear-space downsampling with identical scene and pose."
+    },
+    {
+      "path": "Hash spatial correlation",
+      "status": "Untested; no justification for hash replacement",
+      "next": "World-coordinate correlation evidence required."
+    },
+    {
+      "path": "Steep-slope eligibility threshold",
+      "status": "Weakened in six centerline windows: captured slopeResponse zero",
+      "next": "Do not generalize to unsampled terrain or mesh boundaries."
+    }
+  ],
+  "nextInvestigation": {
+    "first": "Search existing contribution captures for same-source final groundcover incoming P, target T and weight W; reconcile renderer differences before numeric reuse.",
+    "missing": "Current identity-factor archive lacks exact final groundcover target and weight, world positions and triplanar normal weights.",
+    "formula": "DeltaQ=(1-meanW)*DeltaP + meanW*DeltaT + (meanT-meanP)*DeltaW",
+    "contract": "Use existing near/far band windows, columns132/264/396 +/-4, lags1/16; decode once to linear space, propagate quantization bounds, reconstruct final delta. Separate signed change from absolute activity. No new visual acceptance threshold.",
+    "ifCaptureNeeded": "Prepare a source-bound diagnostic with incoming P, groundcover T, W and resulting Q. Obtain applicable successor operation scope/budget before dispatch; existing single-run budget consumed.",
+    "repairGate": "Choose a minimal repair only after a measured path explains boundary contrast; validate all eight views and exact coast parity plus independent visual acceptance."
+  },
+  "sources": [
+    {
+      "url": "https://www.pbr-book.org/3ed-2018/Texture/Noise",
+      "supports": "Filtered-out noise should retain its average contribution; zero is appropriate only for zero-mean noise."
+    },
+    {
+      "url": "https://arxiv.org/html/2407.06107v1",
+      "supports": "Nonlinear shading can create frequencies after input filtering; smooth interpolation alone does not guarantee antialiasing."
+    },
+    {
+      "url": "https://developer.nvidia.com/gpugems/gpugems3/part-i-geometry/chapter-1-generating-complex-procedural-terrains-using-gpu",
+      "supports": "Reference triplanar terrain implementation computes projection weights from original interpolated normal before applying bump."
+    },
+    {
+      "url": "https://registry.khronos.org/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf",
+      "supports": "Derivatives in nonuniform flow are undefined; actual divergence at these bands not established."
+    },
+    {
+      "url": "https://jcgt.org/published/0009/03/02/paper.pdf",
+      "supports": "Some GPU hashes exhibit spatial artifacts; does not establish this implementation defective."
+    }
+  ],
+  "disposition": {
+    "reviewerRecommendation": "REJECT",
+    "ownerDisposition": "NOT_EXPLICITLY_RECORDED",
+    "runtimeEdits": 0,
+    "newGpuRuns": 0,
+    "mergeAuthorized": false,
+    "deploymentAuthorized": false
+  }
+}

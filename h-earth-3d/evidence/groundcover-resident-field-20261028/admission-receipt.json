@@ -1,0 +1,43 @@
+{
+  "admissionSemanticsDuplicated": false,
+  "authorityCreated": false,
+  "canonicalChildExitCode": 0,
+  "canonicalGateExecuted": true,
+  "canonicalLocator": ".github/operation-intake/locator.v1.json",
+  "canonicalReceiptJson": {
+    "branchCreationAuthorized": true,
+    "errorCode": null,
+    "field": null,
+    "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+    "implementationInferenceAuthorized": false,
+    "lock": {
+      "acquisitionCommitSha": "f0914b953f3e22f558aae0bc262ccf153e31db47",
+      "authorityProvenanceBound": true,
+      "committedLedgerBlobSha": "f669da569317df06b40ea2bbaa6543f94b5f8f8e",
+      "contentTransport": "GIT_BLOB_FALLBACK",
+      "lockAcquired": true,
+      "lockGeneration": 2956,
+      "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+      "observedBranchHead": "6464255590941b5b83f929d6bca88d97d396d898",
+      "observedLedgerBlobSha": "22a60cffd847131f2e0016aaa99734278065c861",
+      "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+      "result": "ADMITTED_AND_LOCKED",
+      "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+      "scopeHash": "e963f7c2706e7a398a4f26d8a18454b010b25a2caa5ed3496842732be4a5262c"
+    },
+    "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+    "operationStarted": true,
+    "procedureLocatorDigest": "ff6a1562ff175adc810d6b13d82cd18f3bd62cf198e87d48fb04b3b4736752ac",
+    "projectId": "H_EARTH",
+    "repositoryWritesAuthorized": true,
+    "requestDigest": "47c426c11f8d6a08c60f4ce7f7494811164c38331d566443c3224c88b5403749",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "sourceDocument": null,
+    "workflowExecutionAuthorized": true
+  },
+  "mergeAuthorityCreated": false,
+  "repositoryMutationPerformedByTransport": false,
+  "result": "CANONICAL_RECEIPT_PRESERVED",
+  "schema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_RECEIPT_v1"
+}

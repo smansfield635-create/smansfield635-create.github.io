@@ -268,7 +268,7 @@ test('preserved baseline pins all twelve original frame hashes',async()=>{
  try{const m=preservedFootprintBaseline(new URL('../',import.meta.url).pathname,out);assert.equal(m.views.length,12);assert.equal(m.sourceRun,40716213632);assert.equal(m.baselineErrors.length,0);}finally{rmSync(out,{recursive:true,force:true});}
 });
 
-const composedShader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+const composedShader=fs.readFileSync(new URL('../h-earth-3d/evidence/groundcover-resident-field-20261028/rejected-composed-renderer.js',import.meta.url),'utf8');
 test('composed target changes only the marked endpoint and retains exact approved source elsewhere',()=>{
  const baseline=diagnostic.reconstructComposedBaseline(composedShader);
  assert.equal(diagnostic.verifyExactMaterialCandidate(baseline),diagnostic.FOOTPRINT_BASELINE_SHA256);
@@ -382,4 +382,49 @@ test('saved 24-image failed receipt has only the known timing mismatch and passe
   const copy=structuredClone(subset);mutate(copy.find(v=>v.label==='candidate'));
   assert.throws(()=>diagnostic.validateComposedSet(copy,head));
  }
+});
+
+const residentShader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+test('resident field replaces only independent domain support and restores exact approved source',()=>{
+ const baseline=diagnostic.reconstructResidentBaseline(residentShader);
+ assert.equal(diagnostic.verifyExactMaterialCandidate(baseline),diagnostic.FOOTPRINT_BASELINE_SHA256);
+ assert.ok(!residentShader.includes('groundcoverDomainX'));
+ assert.ok(!residentShader.includes('groundcoverDomainZ'));
+ assert.ok(!residentShader.includes('H_EARTH_GROUNDCOVER_COMPOSED_TARGET_'));
+ assert.ok(!residentShader.includes('H_EARTH_GROUNDCOVER_FOOTPRINT_'));
+ assert.equal(residentShader.split(diagnostic.CANDIDATE_BLEND_EXPRESSION).length,2);
+ assert.throws(()=>diagnostic.reconstructResidentBaseline(residentShader+'//drift'),/RECONSTRUCTION_MISMATCH/);
+ assert.throws(()=>diagnostic.reconstructResidentBaseline(baseline),/BLOCK_NOT_UNIQUE/);
+ const instrumented=diagnostic.instrumentResidentRenderer(residentShader);
+ assert.ok(instrumented.includes('probeGCOrganic=groundcoverOrganic;'));
+ assert.ok(instrumented.includes('probeGCAfter=mix(palette,groundcoverTone,groundcoverWeight);'));
+});
+test('source-derived resident support is bounded, monotone and retains original protected weight formula',()=>{
+ const block=residentShader.match(/\/\/ H_EARTH_GROUNDCOVER_RESIDENT_FIELD_BEGIN\n([\s\S]*?)\/\/ H_EARTH_GROUNDCOVER_RESIDENT_FIELD_END/)[1];
+ assert.ok(block.includes('float groundcoverOrganic=mesoField;'));
+ assert.ok(!block.includes('noise2('));
+ assert.ok(!block.includes('world.'));
+ const body=block.replace(/\bfloat\b/g,'let');
+ const patch=new Function('smoothstep','mesoField','detailField',body+'return groundcoverPatch;').bind(null,smoothstep);
+ assert.equal(patch(0,0),0);assert.equal(patch(1,1),1);
+ for(let meso=0;meso<=100;meso++){
+  let prior=-1;
+  for(let detail=0;detail<=100;detail++){
+   const p=patch(meso/100,detail/100);
+   assert.ok(Number.isFinite(p)&&p>=0&&p<=1&&p>=prior);prior=p;
+   const expected=smoothstep(.20,.66,.78*meso/100+.22*detail/100);
+   assert.ok(Math.abs(p-expected)<1e-14);
+  }
+ }
+ const weightBody=diagnostic.CANDIDATE_BLEND_EXPRESSION.replace(/\bfloat\b/g,'let');
+ const weight=new Function('smoothstep','groundcoverPatch','groundcoverSuitability','groundcoverProtection',weightBody+'return groundcoverWeight;').bind(null,smoothstep);
+ for(let i=0;i<=100;i++)for(const [s,p] of [[0,1],[1,0],[0,0]])assert.equal(weight(i/100,s,p),0);
+ for(let i=0;i<=100;i++){const v=weight(i/100,1,1);assert.ok(v>=0&&v<=.6600000000001);}
+});
+test('resident workflow captures same frozen poses and only the admitted branch',()=>{
+ const workflow=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8').split('  groundcover-resident-field-comparison:')[1];
+ assert.ok(workflow.includes("github.event.pull_request.head.ref == 'h-earth/groundcover-resident-field-20261028'"));
+ assert.ok(workflow.includes('H_EARTH_COMPARISON_PROFILE: GROUNDCOVER_RESIDENT_FIELD_V1'));
+ assert.ok(workflow.includes('H_EARTH_COMPARISON_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}'));
+ assert.equal(diagnostic.FOOTPRINT_POSES.length*diagnostic.COMPOSED_MODES.length*2,16);
 });

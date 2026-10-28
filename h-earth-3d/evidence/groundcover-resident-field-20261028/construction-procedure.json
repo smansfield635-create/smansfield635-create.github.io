@@ -1,0 +1,89 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+    "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-resident-field-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/groundcover-resident-field-20261028.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_RECEIPT_v1",
+    "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Approved Gen2928 baseline cb57c275b95d0d48883bc4da4dcfcf17cbec5060 renderer fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec, frozen existing poses, exact candidate source. Reuse verified baseline bytes; no old source qualification promoted to successor.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/groundcover-resident-field-20261028/**",
+    "h-earth-3d/experience-anchor/receipts/groundcover-resident-field-20261028.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "After authentic Gen2955 closure obtain new admission at current governing main; retain exact candidate3754eca and unchanged evidence.",
+      "step": 1
+    },
+    {
+      "action": "Create h-earth/groundcover-resident-field-20261028 from3754eca; archive rejected composed shader in new evidence; keep proven timing-only comparator correction.",
+      "step": 2
+    },
+    {
+      "action": "Remove rejected composed block; substitute mesoField and detailField for independent coarse patch field; preserve all other renderer bytes. Adapt existing exact-head harness and tests to this sole candidate.",
+      "step": 3
+    },
+    {
+      "action": "Run source tests and existing four frozen poses in lit and after-groundcover modes against pinned Gen2928 frames. Independent West reviews source and all images. Reject broad band, busy mottling, chatter or control degradation.",
+      "step": 4
+    },
+    {
+      "action": "Preserve exact source, raw receipts, images, hashes and truthful verdict; close bounded operation. No merge, deploy or owner physical acceptance inferred.",
+      "step": 5
+    }
+  ],
+  "exactGoverningHead": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+  "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_SOURCE_AND_IMAGE_CUSTODY",
+      "ALL_ACTIVE_CONSUMERS",
+      "ORIGINAL_TONE_WEIGHT_SUITABILITY_PROTECTION",
+      "FROZEN_GPU_NO_BROAD_BAND_NO_REPLACEMENT_MOTTLING_OR_CHATTER",
+      "HEALTHY_CONTROLS",
+      "NO_RELEASE_OR_OWNER_ACCEPTANCE_INFERRED"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Use existing evidence and frozen views; one resident meso/detail spatial field substitution with original tone restored. Preserve earlier failed evidence and proven validator.",
+    "forbidden": "No camera hunting, repeated stage attribution, amplitude/threshold/footprint tuning, regional tint, geometry/vegetation changes or unchanged reruns."
+  },
+  "procedureId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/groundcover-resident-field-20261028/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

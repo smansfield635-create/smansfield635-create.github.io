@@ -21,7 +21,7 @@
         "From $1,750",
         "Scoped after consultation",
         "Generation 2084 environmental refinement",
-        "/assets/build/build-companion.js?v=3",
+        "/assets/build/build-companion.js?v=4",
         "/assets/build/build-companion.css?v=3"
       ],
       "excludes": []
@@ -30,7 +30,7 @@
       "path": "/build/intake/index.html",
       "includes": [
         "data-open-build-companion",
-        "/assets/build/build-companion.js?v=3"
+        "/assets/build/build-companion.js?v=4"
       ],
       "excludes": [
         "wizard-progress"
@@ -39,7 +39,7 @@
     {
       "path": "/assets/build/build-companion.js",
       "includes": [
-        "dgb-build-companion-v3",
+        "dgb-build-companion-v4",
         "build-matrix.v3.json",
         "build-engine.v3.mjs",
         "geodiametrics@gmail.com",
@@ -207,7 +207,7 @@
           {
             "type": "textContains",
             "selector": ".bc-log",
-            "value": "What kind of business or project is this website for?"
+            "value": "Who am I speaking with?"
           }
         ]
       },

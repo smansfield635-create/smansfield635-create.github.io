@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-28T06:37:54Z",
+  "generatedAt": "2026-10-28T07:27:00Z",
   "window": {
-    "start": "2026-07-30T06:37:54Z",
-    "end": "2026-10-28T06:37:54Z"
+    "start": "2026-07-30T07:27:00Z",
+    "end": "2026-10-28T07:27:00Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -262,13 +262,13 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
         "pageLoads": 40,
         "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,

@@ -6,3 +6,7 @@
 @media(max-height:520px){.bc-header{padding:10px 16px}.bc-eyebrow{display:none}.bc-footer{padding:8px 16px}.bc-saving{display:none}}
 
 .bc-select-group{display:block}.bc-option-grid:has([aria-pressed]){grid-template-columns:1fr 1fr}
+/* Conversation hierarchy: the current turn stays distinct from its history. */
+.build-companion{background:#080f19;border-color:#8b805f}.bc-bubble{background:#24374b;color:#fff;border-color:#597189;line-height:1.5}.bc-bubble.user{background:#ead18f;color:#18202b;border-color:#f7e4b4}.bc-bubble.host:last-child{background:#f2f5fa;color:#142235;border:2px solid #b5c8df;font-weight:600;max-width:100%;box-sizing:border-box}.bc-choices{padding-top:16px;gap:8px}.build-companion .bc-choices button{background:#17283c;border-color:#71869e;color:#fff}.build-companion .bc-choices button[aria-pressed=true]{background:#ead18f;color:#18202b;border-color:#fff1c6}.build-companion .bc-choices .bc-primary{background:#ebcf87;color:#131923}.bc-choices.bc-waiting{display:none}.bc-pending{margin:14px 0;color:#e9d49a;letter-spacing:0;font-size:14px}.bc-pending[hidden],.bc-bubble[hidden]{display:none}.bc-brief{white-space:pre-wrap!important;color:#f4f0e2!important}.bc-validation{color:#ffd0c6}.bc-validation:empty{display:none}
+@media(min-width:650px){.bc-choices:has(button[data-id]){grid-template-columns:repeat(2,minmax(0,1fr))}.bc-choices .bc-primary{grid-column:1/-1}}
+@media(prefers-reduced-motion:reduce){.build-companion *{scroll-behavior:auto!important;animation:none!important;transition:none!important}}

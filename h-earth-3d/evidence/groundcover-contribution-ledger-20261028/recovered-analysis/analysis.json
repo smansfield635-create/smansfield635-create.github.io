@@ -1,0 +1,956 @@
+{
+  "schema": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001",
+  "generation": 2957,
+  "result": "BOUNDED_TRANSECT_ANALYSIS_COMPLETE",
+  "planSha256": "2ed4b83195f52234367ff5c164078ee49e30ceb498d381b0df7b9e8e0f8c5456",
+  "scriptSha256": "2b57f8c156fc53fd6a44b55dc90568d6e02a413f8bfa7785c0d595508c16dae5",
+  "custody": {
+    "receiptSha256": "a8ae5ad168472584dbc37734539c77cc227ec2f4d89c9ad99dd2f7ecd30aa5ef",
+    "receiptStoredFile": "receipt.json.gz",
+    "receiptStoredSha256": "c0ddce860ec058b7b179c7ea413b2e429006fc36a152c46e71808f0c4a696a79",
+    "zipSha256Verified": "6c3ffd91d89e8309e5f486844804935834753670162f68bdd860d7014a4d3a74",
+    "toolingHead": "59af7c4ab16743704c6427ad5acd518f1f84434c",
+    "toolingSha256": {
+      "tools/h-earth-ground-material-comparison.v1.mjs": "08df848938bd381913165b3739e6da3ef7a853d8400a1634ba57b4378c3b49f0",
+      "tools/h-earth-groundcover-factor-overlay.mjs": "e9a872402371087e49031bca2ca27d0f37c9ab1012df50a5ebbf63617a3bf9e1"
+    },
+    "sceneIdentity": {
+      "result": "EXACT_FROZEN_SCENE_IDENTITY_NO_BASELINE_RENDER",
+      "sourceHead": "1e39f93a07eb2cc5156483b899094937ba2149db",
+      "rendererSha256": "b4bda2b8953b5bcc3cd65e101a447a878c2d033ec683af53a93ff211c13cdf70",
+      "toolingHead": "59af7c4ab16743704c6427ad5acd518f1f84434c",
+      "independentBaselineParityClaimed": false
+    },
+    "captureValidator": "validateContributionSet from admitted tooling",
+    "images": [
+      {
+        "file": "candidate-inland-seam-near-before-groundcover-unlit.png",
+        "sha256": "a6c5218c46d3a3ecfcbf5510eec34fea32e00914fc85d287a8ae454424f3d4e2",
+        "bytes": 468837
+      },
+      {
+        "file": "candidate-inland-seam-near-groundcover-tone-color.png",
+        "sha256": "b7b0664c993659b5b7fc14d2346d9d242f5eeda06b5d88b36f191f69c41be111",
+        "bytes": 56065
+      },
+      {
+        "file": "candidate-inland-seam-near-groundcover-weight-raw.png",
+        "sha256": "882dd7fe378f1e2c00f3485611c683aafbb26ef4db177804e8171de48e71beaa",
+        "bytes": 102558
+      },
+      {
+        "file": "candidate-inland-seam-near-after-groundcover-unlit.png",
+        "sha256": "105bb89a1a17c1e741d8a797cfbc698cd19a77d694849fd9ce4b9e94deacfb4a",
+        "bytes": 415068
+      },
+      {
+        "file": "candidate-inland-seam-far-before-groundcover-unlit.png",
+        "sha256": "cca398836301acdf0a07911245702974e1e5b5cc20e806833be857a0c5203868",
+        "bytes": 354128
+      },
+      {
+        "file": "candidate-inland-seam-far-groundcover-tone-color.png",
+        "sha256": "864baeaa71f6e5a76b09121e8dc119efb27d7c86fe9ab538b2f73484792f1695",
+        "bytes": 68562
+      },
+      {
+        "file": "candidate-inland-seam-far-groundcover-weight-raw.png",
+        "sha256": "c5544836d2fb04b7ace8ee8edaa8d752c549c6876b4529680f9ab1dbe2b8d6b3",
+        "bytes": 125771
+      },
+      {
+        "file": "candidate-inland-seam-far-after-groundcover-unlit.png",
+        "sha256": "08e33723c27bcf2e4c4941f6fa538c88cb3a14b5629de4675f0476c0233f8aac",
+        "bytes": 324929
+      }
+    ]
+  },
+  "reconstruction": [
+    {
+      "pose": "inland-seam-near",
+      "xCenter": 132,
+      "yStart": 260,
+      "yEndInclusive": 940,
+      "sampledPixels": 6129,
+      "eligiblePixels": 6129,
+      "censoredPixels": 0,
+      "alphaFailures": 0,
+      "weightGrayFailures": 0,
+      "outsideIntervalPixels": 0,
+      "outsideFractionEligible": 0.0,
+      "maxAbsResidualLinear": 0.003445655642896839,
+      "meanAbsResidualLinear": 0.0008584291462829735
+    },
+    {
+      "pose": "inland-seam-near",
+      "xCenter": 264,
+      "yStart": 260,
+      "yEndInclusive": 940,
+      "sampledPixels": 6129,
+      "eligiblePixels": 6129,
+      "censoredPixels": 0,
+      "alphaFailures": 0,
+      "weightGrayFailures": 0,
+      "outsideIntervalPixels": 0,
+      "outsideFractionEligible": 0.0,
+      "maxAbsResidualLinear": 0.0037225740579221733,
+      "meanAbsResidualLinear": 0.0008653684377947654
+    },
+    {
+      "pose": "inland-seam-near",
+      "xCenter": 396,
+      "yStart": 260,
+      "yEndInclusive": 940,
+      "sampledPixels": 6129,
+      "eligiblePixels": 6129,
+      "censoredPixels": 0,
+      "alphaFailures": 0,
+      "weightGrayFailures": 0,
+      "outsideIntervalPixels": 0,
+      "outsideFractionEligible": 0.0,
+      "maxAbsResidualLinear": 0.004254934831640578,
+      "meanAbsResidualLinear": 0.0008287777014244261
+    },
+    {
+      "pose": "inland-seam-far",
+      "xCenter": 132,
+      "yStart": 470,
+      "yEndInclusive": 940,
+      "sampledPixels": 4239,
+      "eligiblePixels": 4239,
+      "censoredPixels": 0,
+      "alphaFailures": 0,
+      "weightGrayFailures": 0,
+      "outsideIntervalPixels": 0,
+      "outsideFractionEligible": 0.0,
+      "maxAbsResidualLinear": 0.0036315862884533368,
+      "meanAbsResidualLinear": 0.0008777793410978585
+    },
+    {
+      "pose": "inland-seam-far",
+      "xCenter": 264,
+      "yStart": 470,
+      "yEndInclusive": 940,
+      "sampledPixels": 4239,
+      "eligiblePixels": 4239,
+      "censoredPixels": 0,
+      "alphaFailures": 0,
+      "weightGrayFailures": 0,
+      "outsideIntervalPixels": 0,
+      "outsideFractionEligible": 0.0,
+      "maxAbsResidualLinear": 0.0035654206174153824,
+      "meanAbsResidualLinear": 0.0008506013478937244
+    },
+    {
+      "pose": "inland-seam-far",
+      "xCenter": 396,
+      "yStart": 470,
+      "yEndInclusive": 940,
+      "sampledPixels": 4239,
+      "eligiblePixels": 4239,
+      "censoredPixels": 0,
+      "alphaFailures": 0,
+      "weightGrayFailures": 0,
+      "outsideIntervalPixels": 0,
+      "outsideFractionEligible": 0.0,
+      "maxAbsResidualLinear": 0.004123933085190434,
+      "meanAbsResidualLinear": 0.000866276264686879
+    }
+  ],
+  "transects": [
+    {
+      "pose": "inland-seam-near",
+      "xCenter": 132,
+      "rows": 665,
+      "fullyEligibleRows": 665,
+      "robustCoverageDominantRows": 37,
+      "robustStartYIntervalsInclusive": [
+        [
+          260,
+          268
+        ],
+        [
+          279,
+          290
+        ],
+        [
+          297,
+          307
+        ],
+        [
+          332,
+          335
+        ],
+        [
+          338,
+          338
+        ]
+      ],
+      "strongestPosthocWitness": {
+        "pose": "inland-seam-near",
+        "xCenter": 132,
+        "y": 264,
+        "y2": 280,
+        "eligiblePairs": 9,
+        "totalPairs": 9,
+        "censoredPairs": 0,
+        "reconstructionOutsidePairs": 0,
+        "soil": {
+          "signedRGB": [
+            -0.02906030181615299,
+            -0.008549596568377955,
+            0.0007132654511580049
+          ],
+          "l1": 0.03832316383568895,
+          "signedRGBInterval": [
+            [
+              -0.034543335770255,
+              -0.013002151714749924,
+              -0.0025222344509749648
+            ],
+            [
+              -0.023583544718493846,
+              -0.004127884603246081,
+              0.003957150594241493
+            ]
+          ],
+          "l1Interval": [
+            0.027711429321739926,
+            0.05150263807924642
+          ]
+        },
+        "target": {
+          "signedRGB": [
+            0.001634921023966055,
+            0.0008323432866710665,
+            0.0006472805561006392
+          ],
+          "l1": 0.0031145448667377605,
+          "signedRGBInterval": [
+            [
+              0.0,
+              -0.0008422259906025172,
+              -0.0006549659452891691
+            ],
+            [
+              0.003308706541498626,
+              0.002526697984939901,
+              0.001964921501921977
+            ]
+          ],
+          "l1Interval": [
+            0.0,
+            0.007800326028360505
+          ]
+        },
+        "coverage": {
+          "signedRGB": [
+            -0.10233594382993177,
+            -0.047234355313847204,
+            -0.021913565275662978
+          ],
+          "l1": 0.17148386441944197,
+          "signedRGBInterval": [
+            [
+              -0.10749806635672032,
+              -0.051486418570348795,
+              -0.024996713407772268
+            ],
+            [
+              -0.09692095744553712,
+              -0.042903358887683866,
+              -0.018816254090369473
+            ]
+          ],
+          "l1Interval": [
+            0.15864057042359045,
+            0.1839811983348414
+          ]
+        },
+        "observedDeltaRGB": [
+          -0.13052997152822357,
+          -0.05575594108194583,
+          -0.02133453712131423
+        ],
+        "predictedDeltaRGB": [
+          -0.12976132462211865,
+          -0.054951608595554084,
+          -0.020553019268404336
+        ],
+        "identityResidualMax": 5.551115123125783e-17,
+        "observedDeltaResidualMax": 0.0008043324863917373,
+        "cancellationL1": 0.00765562063579156,
+        "coverageDominanceMargin": 0.09933760631598353,
+        "coverageDominatesCombinedWithinAssumedBounds": true
+      }
+    },
+    {
+      "pose": "inland-seam-near",
+      "xCenter": 264,
+      "rows": 665,
+      "fullyEligibleRows": 665,
+      "robustCoverageDominantRows": 30,
+      "robustStartYIntervalsInclusive": [
+        [
+          263,
+          265
+        ],
+        [
+          267,
+          272
+        ],
+        [
+          278,
+          294
+        ],
+        [
+          331,
+          334
+        ]
+      ],
+      "strongestPosthocWitness": {
+        "pose": "inland-seam-near",
+        "xCenter": 264,
+        "y": 269,
+        "y2": 285,
+        "eligiblePairs": 9,
+        "totalPairs": 9,
+        "censoredPairs": 0,
+        "reconstructionOutsidePairs": 0,
+        "soil": {
+          "signedRGB": [
+            -0.026939455669591494,
+            -0.008264959443491086,
+            0.0
+          ],
+          "l1": 0.03520441511308258,
+          "signedRGBInterval": [
+            [
+              -0.032383796951092995,
+              -0.012684840711304112,
+              -0.003205348872244806
+            ],
+            [
+              -0.02148413475741506,
+              -0.0038672275589693083,
+              0.003205348872244806
+            ]
+          ],
+          "l1Interval": [
+            0.02535136231638437,
+            0.04827398653464191
+          ]
+        },
+        "target": {
+          "signedRGB": [
+            0.0008229572811244254,
+            0.0008328923257783692,
+            0.0006477075221666688
+          ],
+          "l1": 0.0023035571290694634,
+          "signedRGBInterval": [
+            [
+              -0.0008327221005444909,
+              -0.0008427750297098199,
+              -0.0006553929113551986
+            ],
+            [
+              0.0024981864886728113,
+              0.00252834511530818,
+              0.001966202415547741
+            ]
+          ],
+          "l1Interval": [
+            0.0,
+            0.0069927340195287315
+          ]
+        },
+        "coverage": {
+          "signedRGB": [
+            -0.10097751394700395,
+            -0.046128359516419117,
+            -0.02067202735232463
+          ],
+          "l1": 0.1677779008157477,
+          "signedRGBInterval": [
+            [
+              -0.10599455100173949,
+              -0.05029202954735897,
+              -0.0236972465696683
+            ],
+            [
+              -0.09557458711883388,
+              -0.04182292789583125,
+              -0.01760632151532418
+            ]
+          ],
+          "l1Interval": [
+            0.1550038365299893,
+            0.17998382711876676
+          ]
+        },
+        "observedDeltaRGB": [
+          -0.12822437034047784,
+          -0.0539036947275542,
+          -0.020267776475887303
+        ],
+        "predictedDeltaRGB": [
+          -0.12709401233547102,
+          -0.05356042663413185,
+          -0.02002431983015797
+        ],
+        "identityResidualMax": 2.0816681711721685e-17,
+        "observedDeltaResidualMax": 0.0011303580050068263,
+        "cancellationL1": 0.00460711425813895,
+        "coverageDominanceMargin": 0.09973711597581868,
+        "coverageDominatesCombinedWithinAssumedBounds": true
+      }
+    },
+    {
+      "pose": "inland-seam-near",
+      "xCenter": 396,
+      "rows": 665,
+      "fullyEligibleRows": 665,
+      "robustCoverageDominantRows": 45,
+      "robustStartYIntervalsInclusive": [
+        [
+          260,
+          261
+        ],
+        [
+          271,
+          271
+        ],
+        [
+          273,
+          277
+        ],
+        [
+          280,
+          298
+        ],
+        [
+          345,
+          352
+        ],
+        [
+          354,
+          354
+        ],
+        [
+          402,
+          402
+        ],
+        [
+          406,
+          408
+        ],
+        [
+          414,
+          416
+        ],
+        [
+          418,
+          418
+        ],
+        [
+          420,
+          420
+        ]
+      ],
+      "strongestPosthocWitness": {
+        "pose": "inland-seam-near",
+        "xCenter": 396,
+        "y": 293,
+        "y2": 309,
+        "eligiblePairs": 9,
+        "totalPairs": 9,
+        "censoredPairs": 0,
+        "reconstructionOutsidePairs": 0,
+        "soil": {
+          "signedRGB": [
+            -1.2560550695208667e-05,
+            -0.0028066840906607474,
+            -0.0026382969434970783
+          ],
+          "l1": 0.005457541584853034,
+          "signedRGBInterval": [
+            [
+              -0.006280701581082053,
+              -0.007872665553851306,
+              -0.006298205637532392
+            ],
+            [
+              0.006255566190722795,
+              0.0022449055610102814,
+              0.0010080635487492602
+            ]
+          ],
+          "l1Interval": [
+            0.0,
+            0.020451572772465752
+          ]
+        },
+        "target": {
+          "signedRGB": [
+            -0.0017657237547950284,
+            -0.00178682763427727,
+            -0.0009221627241748064
+          ],
+          "l1": 0.004474714113247105,
+          "signedRGBInterval": [
+            [
+              -0.002992334239547432,
+              -0.003028097591608275,
+              -0.0018753270685921855
+            ],
+            [
+              -0.0005836285710628917,
+              -0.0005906041746659692,
+              0.0
+            ]
+          ],
+          "l1Interval": [
+            0.001174232745728861,
+            0.007895758899747892
+          ]
+        },
+        "coverage": {
+          "signedRGB": [
+            0.07619850759500034,
+            0.032776046222873875,
+            0.013932172207390216
+          ],
+          "l1": 0.12290672602526442,
+          "signedRGBInterval": [
+            [
+              0.07188904028612587,
+              0.02954299639444862,
+              0.011700053914339918
+            ],
+            [
+              0.07994701205207846,
+              0.03580324409091171,
+              0.01609890405680091
+            ]
+          ],
+          "l1Interval": [
+            0.11313209059491441,
+            0.1318491601997911
+          ]
+        },
+        "observedDeltaRGB": [
+          0.07472413961940451,
+          0.028862954315110476,
+          0.009925429374739133
+        ],
+        "predictedDeltaRGB": [
+          0.07442022328951009,
+          0.028182534497935858,
+          0.010371712539718329
+        ],
+        "identityResidualMax": 1.3877787807814457e-17,
+        "observedDeltaResidualMax": 0.0006804198171746177,
+        "cancellationL1": 0.01986451139620027,
+        "coverageDominanceMargin": 0.08478475892270076,
+        "coverageDominatesCombinedWithinAssumedBounds": true
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "xCenter": 132,
+      "rows": 455,
+      "fullyEligibleRows": 455,
+      "robustCoverageDominantRows": 46,
+      "robustStartYIntervalsInclusive": [
+        [
+          475,
+          476
+        ],
+        [
+          481,
+          503
+        ],
+        [
+          514,
+          518
+        ],
+        [
+          538,
+          553
+        ]
+      ],
+      "strongestPosthocWitness": {
+        "pose": "inland-seam-far",
+        "xCenter": 132,
+        "y": 492,
+        "y2": 508,
+        "eligiblePairs": 9,
+        "totalPairs": 9,
+        "censoredPairs": 0,
+        "reconstructionOutsidePairs": 0,
+        "soil": {
+          "signedRGB": [
+            0.014991433865706841,
+            0.007813796797925867,
+            0.0032941711261196766
+          ],
+          "l1": 0.026099401789752383,
+          "signedRGBInterval": [
+            [
+              0.00931445081005324,
+              0.003258279736847192,
+              0.0
+            ],
+            [
+              0.02073403165924465,
+              0.012422245309062132,
+              0.006626778922421627
+            ]
+          ],
+          "l1Interval": [
+            0.012572730546900432,
+            0.039783055890728405
+          ]
+        },
+        "target": {
+          "signedRGB": [
+            -9.44522198430995e-05,
+            0.0,
+            0.0005094615412242413
+          ],
+          "l1": 0.0006039137610673409,
+          "signedRGBInterval": [
+            [
+              -0.001788985743483097,
+              -0.0017145062780910875,
+              -0.0008149963059101291
+            ],
+            [
+              0.0015978566723531733,
+              0.0017145062780910875,
+              0.0018462450952536555
+            ]
+          ],
+          "l1Interval": [
+            0.0,
+            0.00534973711682784
+          ]
+        },
+        "coverage": {
+          "signedRGB": [
+            0.09326054949007646,
+            0.04041228489449501,
+            0.017717352579727542
+          ],
+          "l1": 0.151390186964299,
+          "signedRGBInterval": [
+            [
+              0.08830550340900986,
+              0.03663405669098599,
+              0.01507212631205186
+            ],
+            [
+              0.09832265783542156,
+              0.04428477227925293,
+              0.020433049342301942
+            ]
+          ],
+          "l1Interval": [
+            0.1400116864120477,
+            0.16304047945697644
+          ]
+        },
+        "observedDeltaRGB": [
+          0.10819997652163983,
+          0.04914865839343647,
+          0.021620469971133
+        ],
+        "predictedDeltaRGB": [
+          0.1081575311359402,
+          0.04822608169242088,
+          0.02152098524707146
+        ],
+        "identityResidualMax": 0.0,
+        "observedDeltaResidualMax": 0.0009225767010155872,
+        "cancellationL1": 0.00018890443968619386,
+        "coverageDominanceMargin": 0.09487889340449145,
+        "coverageDominatesCombinedWithinAssumedBounds": true
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "xCenter": 264,
+      "rows": 455,
+      "fullyEligibleRows": 455,
+      "robustCoverageDominantRows": 49,
+      "robustStartYIntervalsInclusive": [
+        [
+          472,
+          482
+        ],
+        [
+          486,
+          487
+        ],
+        [
+          490,
+          506
+        ],
+        [
+          510,
+          511
+        ],
+        [
+          513,
+          529
+        ]
+      ],
+      "strongestPosthocWitness": {
+        "pose": "inland-seam-far",
+        "xCenter": 264,
+        "y": 472,
+        "y2": 488,
+        "eligiblePairs": 9,
+        "totalPairs": 9,
+        "censoredPairs": 0,
+        "reconstructionOutsidePairs": 0,
+        "soil": {
+          "signedRGB": [
+            -0.0068162122371337374,
+            -0.0035702623045999454,
+            -0.0009931718388035053
+          ],
+          "l1": 0.011379646380537187,
+          "signedRGBInterval": [
+            [
+              -0.01303033006860267,
+              -0.008553681235966466,
+              -0.00458727492019359
+            ],
+            [
+              -0.0006438078406478452,
+              0.0013839797255705874,
+              0.0025935327778527544
+            ]
+          ],
+          "l1Interval": [
+            0.0006438078406478452,
+            0.026171286224762724
+          ]
+        },
+        "target": {
+          "signedRGB": [
+            0.0008670158310249006,
+            0.00028982661543778485,
+            0.00022139604180123517
+          ],
+          "l1": 0.0013782384882639208,
+          "signedRGBInterval": [
+            [
+              -0.0004528150539536829,
+              -0.001047666756435274,
+              -0.0008210052053263902
+            ],
+            [
+              0.0022134574388012617,
+              0.0016362427283946792,
+              0.0012707373838419028
+            ]
+          ],
+          "l1Interval": [
+            0.0,
+            0.005120437551037844
+          ]
+        },
+        "coverage": {
+          "signedRGB": [
+            -0.0867828390476914,
+            -0.037639460730665084,
+            -0.015788136436185853
+          ],
+          "l1": 0.14021043621454235,
+          "signedRGBInterval": [
+            [
+              -0.09120107081711379,
+              -0.041099587082279336,
+              -0.018236540999740272
+            ],
+            [
+              -0.08208694255294291,
+              -0.03410035187274693,
+              -0.01333329391232454
+            ]
+          ],
+          "l1Interval": [
+            0.1295205883380144,
+            0.15053719889913342
+          ]
+        },
+        "observedDeltaRGB": [
+          -0.09259639803043293,
+          -0.03965326010145877,
+          -0.016450873279930153
+        ],
+        "predictedDeltaRGB": [
+          -0.09273203545380022,
+          -0.04091989641982725,
+          -0.016559912233188128
+        ],
+        "identityResidualMax": 1.3877787807814457e-17,
+        "observedDeltaResidualMax": 0.001266636318368479,
+        "cancellationL1": 0.0027564769765278663,
+        "coverageDominanceMargin": 0.09822886456221382,
+        "coverageDominatesCombinedWithinAssumedBounds": true
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "xCenter": 396,
+      "rows": 455,
+      "fullyEligibleRows": 455,
+      "robustCoverageDominantRows": 56,
+      "robustStartYIntervalsInclusive": [
+        [
+          471,
+          473
+        ],
+        [
+          475,
+          476
+        ],
+        [
+          479,
+          491
+        ],
+        [
+          496,
+          496
+        ],
+        [
+          499,
+          499
+        ],
+        [
+          503,
+          521
+        ],
+        [
+          523,
+          539
+        ]
+      ],
+      "strongestPosthocWitness": {
+        "pose": "inland-seam-far",
+        "xCenter": 396,
+        "y": 488,
+        "y2": 504,
+        "eligiblePairs": 9,
+        "totalPairs": 9,
+        "censoredPairs": 0,
+        "reconstructionOutsidePairs": 0,
+        "soil": {
+          "signedRGB": [
+            -0.0045704760582200785,
+            -0.0031530080623338452,
+            -0.001142584318753842
+          ],
+          "l1": 0.008866068439307765,
+          "signedRGBInterval": [
+            [
+              -0.01053606757496283,
+              -0.007952426741835363,
+              -0.0046266868959123925
+            ],
+            [
+              0.0013726980993303641,
+              0.0016290781719961534,
+              0.0023352136671245167
+            ]
+          ],
+          "l1Interval": [
+            0.0,
+            0.023115181212710584
+          ]
+        },
+        "target": {
+          "signedRGB": [
+            0.0013895165125822398,
+            0.0001460444025425486,
+            5.63595207158868e-05
+          ],
+          "l1": 0.0015919204358406753,
+          "signedRGBInterval": [
+            [
+              0.0,
+              -0.001276078407879725,
+              -0.0010524954228761647
+            ],
+            [
+              0.002818361892886739,
+              0.0015725630483432807,
+              0.0011669243958805954
+            ]
+          ],
+          "l1Interval": [
+            0.0,
+            0.005557849337110616
+          ]
+        },
+        "coverage": {
+          "signedRGB": [
+            -0.09320870726181171,
+            -0.04061033946600593,
+            -0.017710753228597435
+          ],
+          "l1": 0.15152979995641508,
+          "signedRGBInterval": [
+            [
+              -0.09756229491791618,
+              -0.04415887601568406,
+              -0.02027992414137368
+            ],
+            [
+              -0.08827526676784195,
+              -0.036844059789732445,
+              -0.015068309890088803
+            ]
+          ],
+          "l1Interval": [
+            0.14018763644766322,
+            0.1620010950749739
+          ]
+        },
+        "observedDeltaRGB": [
+          -0.09613675950050554,
+          -0.04318088711340795,
+          -0.018581186420025746
+        ],
+        "predictedDeltaRGB": [
+          -0.09638966680744956,
+          -0.04361730312579723,
+          -0.018796978026635394
+        ],
+        "identityResidualMax": 1.3877787807814457e-17,
+        "observedDeltaResidualMax": 0.0004364160123892791,
+        "cancellationL1": 0.0031838408716813316,
+        "coverageDominanceMargin": 0.11151460589784201,
+        "coverageDominatesCombinedWithinAssumedBounds": true
+      }
+    }
+  ],
+  "rowsFile": "analysis-rows.json",
+  "totalRows": 3360,
+  "limits": [
+    "Intervals condition on at most one output code of combined quantization/dither error; not proved GPU float equivalence.",
+    "Interval endpoints are averaged directly, without independence or square-root sample-size uncertainty reduction.",
+    "L1 is sum of absolute linear RGB components, not a perceptual color metric.",
+    "Witness selection is posthoc maximum dominance margin within predeclared transects; all rows retained.",
+    "Only two frozen diagnostic views of the rejected resident-field scene; no map-wide, physical-device, temporal-aliasing or repair acceptance claim.",
+    "Any unresolved reconstruction interval mismatch blocks causal inference."
+  ],
+  "repairProven": false,
+  "releaseAuthorized": false,
+  "rowsSha256": "75b649b52350ed5c52fc544cb28d6fe13385de4c43d8a949066da5dc749d68ca"
+}

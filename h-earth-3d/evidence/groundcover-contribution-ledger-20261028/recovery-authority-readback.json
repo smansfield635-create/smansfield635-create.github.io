@@ -1,0 +1,12 @@
+{
+  "schema": "H_EARTH_RECOVERY_AUTHORITY_READBACK_v1",
+  "ledgerBlob": "5533988009ca5afc70e498c7e839b0f7c31e0ad1",
+  "operationId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001",
+  "generation": 2957,
+  "state": "ADMITTED_LOCKED",
+  "governingHead": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+  "requestDigest": "db7e19a64ac42e2a3f9e47088bb5556e0d7415c8b77665d31894a2583cbb153e",
+  "procedureLocatorDigest": "f1b3a619042ff6cd9ff9025ee8a21eec22d9bfccd6184812a8188392adaa6759",
+  "scope": "Existing diagnostic evidence only; no new shader/merge/deploy authority",
+  "authorityEffect": "NONE_READBACK_ONLY"
+}

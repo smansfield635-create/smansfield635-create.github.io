@@ -1,0 +1,329 @@
+{
+  "schema": "H_EARTH_INDEPENDENT_RECOVERY_REVIEW_v1",
+  "reviewRole": "WEST_INDEPENDENT_REVIEW",
+  "reviewer": "native child agent /root/review_recovery",
+  "result": "PASS_BOUNDED_DIAGNOSTIC_RECOVERY_NO_REPAIR_CLAIM",
+  "operationId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001",
+  "toolingHead": "59af7c4ab16743704c6427ad5acd518f1f84434c",
+  "frozenSceneHead": "1e39f93a07eb2cc5156483b899094937ba2149db",
+  "archiveSha256": "6c3ffd91d89e8309e5f486844804935834753670162f68bdd860d7014a4d3a74",
+  "custody": {
+    "archiveMatchesGitHubArtifactDigest": true,
+    "allEightImageHashesAndSizesMatchReceipt": true,
+    "existingValidateContributionSetPassed": true
+  },
+  "math": {
+    "overlayColorDecodeSourceVerified": true,
+    "colorDecode": "(byte/255)^2.2/1.12",
+    "weightDecode": "byte/255",
+    "contributionIdentity": "deltaC=(1-meanW)*deltaP+meanW*deltaT+deltaW*(meanT-meanP)",
+    "independentIntervalMethod": "Conservative interval products, per-pixel before nine-pixel mean; verified both RGB L2 and the builder-reported RGB L1. L1 lower bound for coverage compared with sum of soil and tone L1 upper bounds. No averaging uncertainty reduction.",
+    "transects": [
+      {
+        "pose": "inland-seam-near",
+        "x": 132,
+        "eligibleRows": 665,
+        "allRows": 665,
+        "robustCoverageRows": 37,
+        "reconstructionOutsideEndpoints": 0,
+        "top": [
+          {
+            "y": 264,
+            "margin": 0.09933760631598353,
+            "weightLower": 0.15864057042359045,
+            "soilUpper": 0.05150263807924642,
+            "toneUpper": 0.007800326028360505
+          },
+          {
+            "y": 265,
+            "margin": 0.09454531372577281,
+            "weightLower": 0.16198690587463976,
+            "soilUpper": 0.06140262344813893,
+            "toneUpper": 0.006038968700728018
+          },
+          {
+            "y": 266,
+            "margin": 0.08313609780819554,
+            "weightLower": 0.1532797091859974,
+            "soilUpper": 0.06218993238992549,
+            "toneUpper": 0.007953678987876375
+          },
+          {
+            "y": 263,
+            "margin": 0.07316802175976361,
+            "weightLower": 0.11395501354621132,
+            "soilUpper": 0.033192749678512004,
+            "toneUpper": 0.00759424210793571
+          },
+          {
+            "y": 260,
+            "margin": 0.07304667826436254,
+            "weightLower": 0.10101693395194249,
+            "soilUpper": 0.020917813626035724,
+            "toneUpper": 0.007052442061544234
+          }
+        ]
+      },
+      {
+        "pose": "inland-seam-near",
+        "x": 264,
+        "eligibleRows": 665,
+        "allRows": 665,
+        "robustCoverageRows": 30,
+        "reconstructionOutsideEndpoints": 0,
+        "top": [
+          {
+            "y": 269,
+            "margin": 0.09973711597581868,
+            "weightLower": 0.1550038365299893,
+            "soilUpper": 0.04827398653464191,
+            "toneUpper": 0.0069927340195287315
+          },
+          {
+            "y": 285,
+            "margin": 0.0991814002703851,
+            "weightLower": 0.15417808072189365,
+            "soilUpper": 0.04948601574047841,
+            "toneUpper": 0.005510664711030143
+          },
+          {
+            "y": 281,
+            "margin": 0.09206675771277462,
+            "weightLower": 0.15932245269870046,
+            "soilUpper": 0.057841867966909294,
+            "toneUpper": 0.009413827019016557
+          },
+          {
+            "y": 282,
+            "margin": 0.09186461893523229,
+            "weightLower": 0.15691961595479068,
+            "soilUpper": 0.05694155404928398,
+            "toneUpper": 0.008113442970274422
+          },
+          {
+            "y": 284,
+            "margin": 0.09089693092864722,
+            "weightLower": 0.15375395989117863,
+            "soilUpper": 0.05736073365100853,
+            "toneUpper": 0.005496295311522893
+          }
+        ]
+      },
+      {
+        "pose": "inland-seam-near",
+        "x": 396,
+        "eligibleRows": 665,
+        "allRows": 665,
+        "robustCoverageRows": 45,
+        "reconstructionOutsideEndpoints": 0,
+        "top": [
+          {
+            "y": 293,
+            "margin": 0.08478475892270076,
+            "weightLower": 0.11313209059491441,
+            "soilUpper": 0.020451572772465752,
+            "toneUpper": 0.007895758899747892
+          },
+          {
+            "y": 292,
+            "margin": 0.07671701154691597,
+            "weightLower": 0.11862213079241266,
+            "soilUpper": 0.03499225526706073,
+            "toneUpper": 0.006912863978435943
+          },
+          {
+            "y": 294,
+            "margin": 0.07551163641753204,
+            "weightLower": 0.10825226700489876,
+            "soilUpper": 0.0254243769279673,
+            "toneUpper": 0.007316253659399423
+          },
+          {
+            "y": 285,
+            "margin": 0.0713546942942598,
+            "weightLower": 0.1508187804246225,
+            "soilUpper": 0.06994022736696802,
+            "toneUpper": 0.009523858763394673
+          },
+          {
+            "y": 284,
+            "margin": 0.0670922790942226,
+            "weightLower": 0.14362511282878848,
+            "soilUpper": 0.06635489737959017,
+            "toneUpper": 0.010177936354975693
+          }
+        ]
+      },
+      {
+        "pose": "inland-seam-far",
+        "x": 132,
+        "eligibleRows": 455,
+        "allRows": 455,
+        "robustCoverageRows": 46,
+        "reconstructionOutsideEndpoints": 0,
+        "top": [
+          {
+            "y": 492,
+            "margin": 0.09487889340449145,
+            "weightLower": 0.1400116864120477,
+            "soilUpper": 0.039783055890728405,
+            "toneUpper": 0.00534973711682784
+          },
+          {
+            "y": 493,
+            "margin": 0.08363850547430417,
+            "weightLower": 0.10438484579850124,
+            "soilUpper": 0.01468831603673304,
+            "toneUpper": 0.006058024287464033
+          },
+          {
+            "y": 489,
+            "margin": 0.07326479796563104,
+            "weightLower": 0.14288059751230311,
+            "soilUpper": 0.06466072769771407,
+            "toneUpper": 0.004955071848958008
+          },
+          {
+            "y": 491,
+            "margin": 0.072747209368095,
+            "weightLower": 0.14925564259659008,
+            "soilUpper": 0.06879176735251255,
+            "toneUpper": 0.007716665875982523
+          },
+          {
+            "y": 483,
+            "margin": 0.06426632571444521,
+            "weightLower": 0.0916971746975786,
+            "soilUpper": 0.019207234922550196,
+            "toneUpper": 0.00822361406058319
+          }
+        ]
+      },
+      {
+        "pose": "inland-seam-far",
+        "x": 264,
+        "eligibleRows": 455,
+        "allRows": 455,
+        "robustCoverageRows": 49,
+        "reconstructionOutsideEndpoints": 0,
+        "top": [
+          {
+            "y": 472,
+            "margin": 0.09822886456221382,
+            "weightLower": 0.1295205883380144,
+            "soilUpper": 0.026171286224762724,
+            "toneUpper": 0.005120437551037844
+          },
+          {
+            "y": 515,
+            "margin": 0.09732612664781437,
+            "weightLower": 0.12009324516596276,
+            "soilUpper": 0.01588159164813433,
+            "toneUpper": 0.006885526870014064
+          },
+          {
+            "y": 517,
+            "margin": 0.09378772900674157,
+            "weightLower": 0.14009310063237232,
+            "soilUpper": 0.04027059507987989,
+            "toneUpper": 0.006034776545750874
+          },
+          {
+            "y": 516,
+            "margin": 0.0931638968114416,
+            "weightLower": 0.1309791177073779,
+            "soilUpper": 0.031573787506626094,
+            "toneUpper": 0.006241433389310212
+          },
+          {
+            "y": 518,
+            "margin": 0.0919147621172534,
+            "weightLower": 0.1477196817540285,
+            "soilUpper": 0.0494148848387132,
+            "toneUpper": 0.006390034798061896
+          }
+        ]
+      },
+      {
+        "pose": "inland-seam-far",
+        "x": 396,
+        "eligibleRows": 455,
+        "allRows": 455,
+        "robustCoverageRows": 56,
+        "reconstructionOutsideEndpoints": 0,
+        "top": [
+          {
+            "y": 488,
+            "margin": 0.11151460589784201,
+            "weightLower": 0.14018763644766322,
+            "soilUpper": 0.023115181212710584,
+            "toneUpper": 0.005557849337110616
+          },
+          {
+            "y": 487,
+            "margin": 0.11070913728797974,
+            "weightLower": 0.15183022046310093,
+            "soilUpper": 0.03366905805285317,
+            "toneUpper": 0.007452025122268034
+          },
+          {
+            "y": 489,
+            "margin": 0.10788170671632687,
+            "weightLower": 0.12859035298818378,
+            "soilUpper": 0.015510205179621692,
+            "toneUpper": 0.005198441092235223
+          },
+          {
+            "y": 486,
+            "margin": 0.10297868808998935,
+            "weightLower": 0.15365664438746052,
+            "soilUpper": 0.0437763328189135,
+            "toneUpper": 0.0069016234785576735
+          },
+          {
+            "y": 490,
+            "margin": 0.10063584039289364,
+            "weightLower": 0.12256032310221558,
+            "soilUpper": 0.016143927960702652,
+            "toneUpper": 0.005780554748619305
+          }
+        ]
+      }
+    ],
+    "reportedMetric": "L1 sum absolute linear RGB components, not perceptual difference",
+    "robustRowsL1": 263,
+    "earlierReviewerCountReconciliation": "Earlier independent300 count used L2. Recomputed L1 agrees exactly with builder263 and all six strongest witness margins."
+  },
+  "limitations": [
+    "Assumes at most one output-code combined rounding/dither error, as predeclared.",
+    "Localized frozen-view band dominance, not uniform/map-wide dominance.",
+    "No repair or live-device acceptance proven.",
+    "263/3360 is a count of overlapping image-space row comparisons, not independent trials or a map-wide prevalence estimate.",
+    "No GPU execution, new shader candidate, release or owner acceptance authorized by this review."
+  ],
+  "newGpuRuns": 0,
+  "productMutation": false,
+  "mainScriptReview": {
+    "sourceSha256": "2b57f8c156fc53fd6a44b55dc90568d6e02a413f8bfa7785c0d595508c16dae5",
+    "analysisSha256": "174a0113b30e3945914a63c2ec62371e8970b72bf68f560347c28779a62630ee",
+    "rowsSha256": "75b649b52350ed5c52fc544cb28d6fe13385de4c43d8a949066da5dc749d68ca",
+    "independentRerunByteIdentical": true,
+    "all3360RowsRetained": true,
+    "allSampledRowsFullyEligible": true,
+    "reconstructionIntervalMismatchCount": 0,
+    "intervalMath": "PASS",
+    "signedIdentity": "PASS",
+    "posthocWitnessLabeling": "PASS",
+    "boundedClaim": "PASS",
+    "gzipReceiptRoundtrip": "PASS: durable decompressed receipt matches original receipt bytes and validator stdin preserves bytes",
+    "exactValidatorSourceBinding": "PASS: both imported source modules compared against git show of admitted exact tooling head",
+    "arithmeticTests": "4/4 PASS: covariance counterexample, interval corner coverage, L1 zero crossing, clipped weight endpoints"
+  },
+  "continuityReview": {
+    "baseHead": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+    "currentHead": "866082e047768a1ccb0c9466fc87d69cc4ed0b61",
+    "independentlyReadGitDiff": true,
+    "exactChangedPathCount": 7,
+    "assessment": "BUILD-only assets/pages/tests and BUILD publication cache witness version5 to6; disjoint from frozen H-Earth diagnostic and governing semantics. Carry-forward rationale supported."
+  }
+}

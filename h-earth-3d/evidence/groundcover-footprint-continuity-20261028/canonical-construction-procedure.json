@@ -1,0 +1,92 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+    "operationId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_RECEIPT_v1",
+    "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Pin approved Gen2928 cb57c275b95d0d48883bc4da4dcfcf17cbec5060 and shader fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec. Preserve historical harness modes. New profile uses exact candidate source, same assets and fixed archived poses. Read raw filter activation; no claim from inactive candidate.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+    "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "After predecessor closure and authentic admission, create h-earth/groundcover-footprint-continuity-20261028 from exact governing head.",
+      "step": 1
+    },
+    {
+      "action": "South builds bounded terrain-only nonlinear patch-factor quadrature; keep tone suitability protection geometry roots unchanged.",
+      "step": 2
+    },
+    {
+      "action": "Extend existing comparator and tests with source-bound current baseline profile; commit source inventory and pass/fail rules.",
+      "step": 3
+    },
+    {
+      "action": "Qualify exact candidate: numerical and source tests then same-camera GPU baseline/candidate/activation including prior inland band and healthy meadow/coast; measure performance and inspect images.",
+      "step": 4
+    },
+    {
+      "action": "Independent West reviews exact delta and evidence. Preserve truthful outcome and pending owner disposition; no merge or deployment.",
+      "step": 5
+    }
+  ],
+  "exactGoverningHead": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+  "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_BASELINE_AND_CANDIDATE_SOURCE_CUSTODY",
+      "ACTIVE_TERRAIN_CONSUMER_COVERAGE_AND_EXCLUSIONS",
+      "PATCH_FACTOR_FOOTPRINT_INTEGRAL_VS_DENSE_REFERENCE",
+      "ORIGINAL_BELOW_ONSET_AND_ZERO_PROTECTION",
+      "KNOWN_BAND_FILTER_ACTIVATION",
+      "SAME_CAMERA_GPU_BAND_AND_HEALTHY_CONTROLS",
+      "PERFORMANCE_AND_PALETTE_REGRESSION_REVIEW",
+      "INDEPENDENT_WEST_AND_EXPERIENCE_ANCHOR",
+      "NO_OWNER_ACCEPTANCE_OR_MAPWIDE_SUCCESS_INFERRED"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse all audited exclusions, immutable source and archived known-band poses. New experiment tests nonlinear patch-factor footprint filtering only.",
+    "forbidden": "No guessed-camera search, third threshold/amplitude tweak, broad recolor, geological identity rewrite, control-plane expansion, or owner acceptance invention."
+  },
+  "procedureId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

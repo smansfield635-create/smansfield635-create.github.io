@@ -1,0 +1,18 @@
+{
+  "schema": "H_EARTH_GROUNDCOVER_WEST_SOURCE_REVIEW_v1",
+  "reviewer": "/root/west_groundcover_review",
+  "reviewedCandidate": "ba5f50381398e25893d78aab2944f4d822d3ff9b",
+  "result": "NO_BLOCKING_SOURCE_DEFECT_FOR_GPU_EXPERIMENT",
+  "rendererSha256": "d570a6e638a4b191721d3fc4e52c025cc59f00de4e5d569ea1d501fde25be15c",
+  "comparatorSha256": "43d9fbc56cb502b5fec4849c1982d3204cc7888574293e697ddd88445942880c",
+  "testsSha256": "c5328af1ca78f921145bd22d39de46bd330053ac1e463308cdef5f93639ff683",
+  "sourceTestsPassed": 33,
+  "additionalExecutedCheck": "SOURCE_IMPORTED_SINGLE_OWNER_READINESS_VALID_ACCEPTED_ABSENT_PENDING_15_INVALID_VARIANTS_REJECTED",
+  "additionalCheckIsDurableSuiteTest": false,
+  "laterToolingOnlyCandidate": "42071d278563f15052958bab1da367a6cf1fc329",
+  "laterDelta": "Bounded sparse checkout only; renderer comparator and tests unchanged",
+  "gpuAcceptance": false,
+  "ownerAcceptance": false,
+  "mergeAuthority": false,
+  "publicationAuthority": false
+}

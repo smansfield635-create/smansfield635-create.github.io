@@ -1,0 +1,33 @@
+{
+  "schema": "H_EARTH_GROUNDCOVER_FOOTPRINT_SOURCE_REVIEW_v1",
+  "governingHead": "873eeb5f1ff66f477d40968ccc96ac14e40c41ce",
+  "operationId": "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_20261028_001",
+  "lockGeneration": 2953,
+  "admissionRun": 40713550505,
+  "rendererSha256": "d570a6e638a4b191721d3fc4e52c025cc59f00de4e5d569ea1d501fde25be15c",
+  "sourceTests": {
+    "passed": 33,
+    "failed": 0
+  },
+  "numericalEvidence": {
+    "samples": 80,
+    "denseTapsPerSample": 1024,
+    "centerRms": 0.023357691609318373,
+    "candidateRms": 0.00297173781752535,
+    "precision": "JS_DOUBLE_NOT_GPU_FLOAT"
+  },
+  "independentReviewer": "/root/west_groundcover_review",
+  "review": "NO_BLOCKING_SOURCE_OR_MATH_DEFECT_FOR_BOUNDED_GPU_EXPERIMENT",
+  "reviewFixes": [
+    "SCENE_TREE_PARITY",
+    "BASELINE_DERIVATIVES_BEFORE_DIVERGENCE",
+    "ARCHIVED_HEALTHY_CONTROLS",
+    "EXACT_PAIR_CUSTODY",
+    "SINGLE_OWNER_VEGETATION_ALLOCATION_AND_UPLOAD_EQUALITY"
+  ],
+  "gpuExecuted": false,
+  "visualRepairProven": false,
+  "ownerAcceptance": false,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false
+}

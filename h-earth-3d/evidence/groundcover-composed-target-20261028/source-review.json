@@ -1,0 +1,18 @@
+{
+  "phase": "SOURCE_AND_HARNESS",
+  "result": "PASS_FOR_BOUNDED_GPU_EXPERIMENT",
+  "builder": "/root/south_implementation",
+  "independentReviewer": "/root/west_review",
+  "sourceAnalyst": "/root/east_source_audit",
+  "testCount": 39,
+  "failedTests": 0,
+  "savedReceiptReplayViews": 24,
+  "hashVerifiedFailedImages": 24,
+  "baselineReconstruction": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "identityNormalization": "ONLY_FINITE_NONNEGATIVE_entranceGrass.slopeRepair.generationMs",
+  "gpuQualified": false,
+  "ownerAccepted": false,
+  "mapWideRepair": false,
+  "remainingRisk": "UNCHANGED_SPATIAL_WEIGHT_MAY_RETAIN_CHROMATIC_BAND",
+  "numericalLimits": "Positive sampled soil/tone domain; epsilon protects near-black, not universal exact-luminance proof."
+}

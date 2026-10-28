@@ -1211,3 +1211,185 @@ jobs:
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30
+
+  groundcover-footprint-comparison:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/groundcover-footprint-continuity-20261028' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact candidate tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out approved Gen2928 baseline
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: baseline
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out exact candidate scene
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate source reconstruction and numerical coverage
+        working-directory: tooling
+        run: node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+      - name: Install fixed Chromium tooling
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture matched baseline candidate and activation evidence
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GROUNDCOVER_FOOTPRINT_V1
+          H_EARTH_COMPARISON_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/groundcover-footprint"
+      - name: Preserve comparison evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-groundcover-footprint-${{ github.run_id }}
+          path: ${{ runner.temp }}/groundcover-footprint
+          if-no-files-found: error
+          retention-days: 90
+
+  groundcover-composed-target-comparison:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/groundcover-composed-target-20261028' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact candidate tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out approved Gen2928 baseline
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: baseline
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out exact candidate scene
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate source reconstruction and numerical coverage
+        working-directory: tooling
+        run: node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
+      - name: Install fixed Chromium tooling
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture matched baseline candidate composed-albedo evidence
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GROUNDCOVER_COMPOSED_TARGET_V1
+          H_EARTH_COMPARISON_CANDIDATE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/groundcover-composed-target"
+      - name: Preserve comparison evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-groundcover-composed-target-${{ github.run_id }}
+          path: ${{ runner.temp }}/groundcover-composed-target
+          if-no-files-found: error
+          retention-days: 90

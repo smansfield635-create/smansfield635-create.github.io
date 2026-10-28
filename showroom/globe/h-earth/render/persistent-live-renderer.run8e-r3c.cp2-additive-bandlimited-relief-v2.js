@@ -1053,6 +1053,14 @@ void main(){
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
+      // H_EARTH_GROUNDCOVER_COMPOSED_TARGET_BEGIN
+      // Retain the incoming soil luminance and spatial texture while applying
+      // the existing groundcover chroma through the unchanged spatial weight.
+      vec3 groundcoverLuma=vec3(0.2126,0.7152,0.0722);
+      vec3 groundcoverRelative=palette*groundcoverTone;
+      groundcoverTone=groundcoverRelative*(dot(palette,groundcoverLuma)/
+        max(dot(groundcoverRelative,groundcoverLuma),0.000001));
+      // H_EARTH_GROUNDCOVER_COMPOSED_TARGET_END
       palette=mix(palette,groundcoverTone,groundcoverWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }

@@ -11,6 +11,9 @@ for v in r['views']:
 l=json.load(open('ledger-capture/receipt.json'))
 for v in l['views']:
  assert hashlib.sha256((Path('ledger-capture')/v['image']).read_bytes()).hexdigest()==v['imageSha256']
+b=json.load(open('recovered/receipt.json'))
+for v in b['views']:
+ assert hashlib.sha256((Path('recovered')/v['image']).read_bytes()).hexdigest()==v['imageSha256']
 def inv(v):
  lo=np.zeros_like(v);hi=np.ones_like(v)
  for _ in range(60):
@@ -48,5 +51,13 @@ delta_lower=wl[1]-wh[0]
 # A constant patch amplitude is at most .88 (loose but safe upper bound).
 mask_only_upper=.88*(np.array(mask[1]['maskUpper'])-np.array(mask[0]['maskLower']))
 report['maskOnlyExclusion']={'rows':[481,497],'x':xs.tolist(),'baselineInferredDeltaWeightLower':delta_lower.tolist(),'constantPatchMaskOnlyDeltaWeightUpper':mask_only_upper.tolist(),'margin':(delta_lower-mask_only_upper).tolist(),'allMarginsPositive':bool(np.all(delta_lower>mask_only_upper)),'meaning':'Shared suitability/protection variation alone with constant patch cannot explain the inferred baseline weight increase at these nine pixels. Patch-amplitude change is required, conditional on source-equivalent archived P/T and interval conventions; this is not repair sufficiency.'}
+dm_upper=np.maximum(np.array(mask[1]['maskUpper'])-np.array(mask[0]['maskLower']),np.array(mask[0]['maskUpper'])-np.array(mask[1]['maskLower']))
+contrast_upper=(pi.hi[0]+pi.hi[1]-ti.lo[0]-ti.lo[1])/2
+mask_rgb_upper=(.88*dm_upper[:,None]*contrast_upper).mean(axis=0)
+mw=a.Interval((wl[0]+wl[1])/2,(wh[0]+wh[1])/2)
+dw=a.Interval(wl[1]-wh[0],wh[1]-wl[0])
+contrast=a.Interval((ti.lo[0]+ti.lo[1]-pi.hi[0]-pi.hi[1])/2,(ti.hi[0]+ti.hi[1]-pi.lo[0]-pi.lo[1])/2)
+weight_term=(a.rgb(dw)*contrast).mean();weight_l1_lower=float(weight_term.absolute().lo.sum())
+report['maskContributionBound']={'decomposition':'deltaW=mean(M)*deltaF+mean(F)*deltaM; F=.88*patch*(1-.25*smoothstep(.3,.85,patch)), M=suitability*protection. Bound mean(F)<=.88 conservatively.','maskTermAbsoluteRGBUpper':mask_rgb_upper.tolist(),'maskTermL1Upper':float(mask_rgb_upper.sum()),'totalWeightTermL1Lower':weight_l1_lower,'patchTermL1RequiredLowerByTriangleInequality':float(weight_l1_lower-mask_rgb_upper.sum()),'meaning':'Even allowing patch change simultaneously, shared mask contribution cannot account for total weight term. Remaining patch-amplitude contribution must be nonzero at this witness. Bounds concern source-equivalent baseline and RGB interval model only.'}
 Path('review-tone-mask.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps(report,indent=2))

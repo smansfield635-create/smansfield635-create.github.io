@@ -1,0 +1,22 @@
+{
+  "schema": "H_EARTH_RESIDUAL_TRANSFER_DISPATCH_INTENT_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDUAL_TRANSFER_20261028_001",
+  "lockGeneration": 2961,
+  "candidateHead": "ce0a5c08b708d51ed9beed74339a1e72e3fc823a",
+  "toolingHead": "ce0a5c08b708d51ed9beed74339a1e72e3fc823a",
+  "profile": "GROUNDCOVER_RESIDUAL_TRANSFER_V1",
+  "candidateFrames": 8,
+  "candidateRuns": 1,
+  "baselineRecapture": false,
+  "automaticRetry": false,
+  "sourceQualification": "PASS",
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "7a666a9269dfac1597a8bec31d6a04072d811257bb57b0c5b1bc87f209a693c7",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "a6618e3b7385d194b74776f7b3e078b4400dba4ac7d6b8a7b1e24cb6aa472b31",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "4135df64caaea055f7a975cd3de7c263db586960db04738589f66c243a57170b",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "69cfe8bae22941bb7ef6e4a159f65c86545f59369df7ca612642e1b472831071"
+  },
+  "branch": "h-earth/groundcover-residual-transfer-20261028",
+  "route_query": "qualification=groundcover-residual-transfer-v1",
+  "createdAt": "2026-10-28T20:09:04.763477+00:00"
+}

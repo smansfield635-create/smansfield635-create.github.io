@@ -1227,3 +1227,61 @@ jobs:
           node-version: 22
       - name: Verify ridge derivative and canonical world parity
         run: node --test tools/h-earth-ground-material-comparison.v1.test.mjs
+
+  gen2944-normal-only-gpu:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'h-earth/gen2944-ridge-c1-package-parity-20261027' && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted diagnostic tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+      - name: Checkout published Gen2928 immutable baseline
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: baseline
+          persist-credentials: false
+      - name: Checkout same immutable source for in-memory normal comparison
+        uses: actions/checkout@v4
+        with:
+          ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify normal-only regression tests and frozen source identity
+        working-directory: tooling
+        env:
+          TOOLING_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TOOLING_SHA"
+          test "$(git -C ../baseline rev-parse HEAD)" = cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          test "$(git -C ../candidate rev-parse HEAD)" = cb57c275b95d0d48883bc4da4dcfcf17cbec5060
+          node --test tools/h-earth-ground-material-comparison.v1.test.mjs
+      - name: Install pinned browser
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture 10 exact-source ridge normal comparison images
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN2944_NORMAL_ONLY_V1
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/gen2944-ridge-normals"
+      - name: Preserve image hashes and evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen2944-normal-only-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gen2944-ridge-normals
+          if-no-files-found: warn
+          retention-days: 30

@@ -1,0 +1,187 @@
+{
+  "anchorVideoSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "approvedRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "approvedSourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "authorityEffect": "NONE_PRE_ADMISSION_CONTRACT",
+  "baselineBinding": {
+    "directory": "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/baseline-run40716213632",
+    "frames": [
+      {
+        "image": "baseline-inland-seam-near-reference-lit.png",
+        "sha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a"
+      },
+      {
+        "image": "baseline-inland-seam-near-after-groundcover-unlit.png",
+        "sha256": "96195fac6da4fca401c64d2ce31a034cd7d628620409f772114616b78354ff3a"
+      },
+      {
+        "image": "baseline-inland-seam-far-reference-lit.png",
+        "sha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc"
+      },
+      {
+        "image": "baseline-inland-seam-far-after-groundcover-unlit.png",
+        "sha256": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a"
+      },
+      {
+        "image": "baseline-protected-meadow-reference-lit.png",
+        "sha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b"
+      },
+      {
+        "image": "baseline-protected-meadow-after-groundcover-unlit.png",
+        "sha256": "dea2132ddb7662475bcadfbcef2ea5dd67dea9a0be5e1669c4c8e77407d7d4dc"
+      },
+      {
+        "image": "baseline-protected-coast-reference-lit.png",
+        "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56"
+      },
+      {
+        "image": "baseline-protected-coast-after-groundcover-unlit.png",
+        "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7"
+      }
+    ],
+    "head": "1251313313c7223befeee2ff7f765cc545db3cd5",
+    "manifestBlob": "713d8babb84d44361d09aff9e2567c76047642f7",
+    "manifestSha256": "6ce5e77441d037646c19cf6b37698bbed99eebda34b2246c214a7fc3e5d2fbea"
+  },
+  "baselinePolicy": "Reuse eight matching previously qualified approved frames. Before launch reverify manifest and each image hash; no baseline recapture.",
+  "candidateFrames": 8,
+  "comparison": {
+    "baselineFrames": "8 matching existing archived views; do not recapture",
+    "candidateFrames": 8,
+    "immutableProtections": [
+      "vegetation and asset signatures",
+      "physical geometry and world asset",
+      "water/coast/shoreline",
+      "navigation/contact support",
+      "Approved noise inputs, palette constants and protection masks; fertile field and its downstream values intentionally change"
+    ],
+    "modes": [
+      "reference-lit",
+      "after-groundcover-unlit"
+    ],
+    "poses": [
+      {
+        "diagnosticObserver": true,
+        "name": "inland-seam-near",
+        "pitch": -14,
+        "x": -200,
+        "y": 18.361431,
+        "yaw": 0,
+        "z": -728
+      },
+      {
+        "diagnosticObserver": true,
+        "name": "inland-seam-far",
+        "pitch": -2,
+        "x": -200,
+        "y": 18.793665,
+        "yaw": 0,
+        "z": -656
+      },
+      {
+        "height": "Reuse exact archived baseline camera height; mismatch stops capture.",
+        "name": "protected-meadow",
+        "pitch": -15,
+        "x": -52,
+        "yaw": 136,
+        "z": -208
+      },
+      {
+        "height": "Reuse exact archived baseline camera height; mismatch stops capture.",
+        "name": "protected-coast",
+        "pitch": -8,
+        "x": 0,
+        "yaw": 170,
+        "z": -110
+      }
+    ],
+    "thresholdStatus": "Frozen here: exact custody/source/coast gates; band metrics descriptive; required visual rejection and owner disposition.",
+    "viewport": {
+      "backingHeight": 980,
+      "backingWidth": 529,
+      "cssHeight": 1000,
+      "cssWidth": 540,
+      "fov": 56
+    }
+  },
+  "continuationHead": "0f6c901b10aa171c94e82136534794e83b9f730b",
+  "deficiencyScope": "Known near-view identity-stage amplification with near/far validation and healthy meadow/coast controls. Not map-wide closure, sole-cause proof, aliasing proof or Android performance qualification.",
+  "descriptiveMetrics": {
+    "farY": [
+      470,
+      940
+    ],
+    "halfWidth": 4,
+    "nearY": [
+      260,
+      940
+    ],
+    "report": [
+      "signed/absolute differences",
+      "gradient distributions",
+      "clipping and saturation",
+      "censored samples"
+    ],
+    "threshold": "No numerical visual-success threshold asserted; descriptive only.",
+    "transectsX": [
+      132,
+      264,
+      396
+    ],
+    "verticalLag": 16
+  },
+  "formula": {
+    "boundLimits": "Maximum derivative reduction is mathematical only. Predicted boundary changes at three witnesses do not establish perceptual improvement or a sole/map-wide cause.",
+    "candidate": "fertilePatch=smoothstep(0.29,0.81,macroField*0.47+mesoField*0.38+detailField*0.15)",
+    "fixedMidpoint": 0.55,
+    "implementation": "Replace inherited rejected renderer with exact approved source cb57c275b95d0d48883bc4da4dcfcf17cbec5060 hash fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec; then change only the two endpoints at the unique fertilePatch expression. No other source-byte changes relative to approved renderer. Reverse exactly that substitution and require approved SHA256.",
+    "maximumDerivativeRatio": 0.5,
+    "newWidth": 0.52,
+    "old": "fertilePatch=smoothstep(0.42,0.68,macroField*0.47+mesoField*0.38+detailField*0.15)",
+    "oldWidth": 0.26
+  },
+  "governingHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+  "harnessRequirements": [
+    "Add bounded IDENTITY_FERTILE_TRANSITION_V1 profile to existing comparator and fixed runner; preserve every historical profile",
+    "Instrument actual candidate expression in both reference-lit and after-groundcover-unlit; test that neither overlay nor source loading restores baseline fertilePatch or inherits rejected residual transfer",
+    "Require exact inverse reconstruction, all eight candidate frame identities and archived image hashes",
+    "Workflow push/synchronize/publication must not launch GPU; explicit exact immutable head launch only after tests/review and saved intent",
+    "Scene parity exclusions limited to enumerated preserved diagnostic evidence and declared new evidence/anchor paths; renderer is sole runtime exception; no new world or asset exclusions"
+  ],
+  "mechanismEvidence": {
+    "diagnosticRun": 40773251264,
+    "head": "0f6c901b10aa171c94e82136534794e83b9f730b",
+    "path": "h-earth-3d/evidence/identity-blend-diagnostic-20261028/mechanism-evidence.json",
+    "result": "SOURCE_EXPRESSION_AMPLIFICATION_IDENTIFIED_BOUNDED_REPAIR_HYPOTHESIS"
+  },
+  "newBranch": "refs/heads/h-earth/identity-fertile-transition-20261028",
+  "nextAfterDispatch": "Return run URL immediately and stop. Retrieve only after owner reports completion.",
+  "numericGates": {
+    "capture": "All eight decoded frames match declared head/hash/asset/pose/mode/viewport custody; no errors",
+    "coast": "Both complete protected-coast decoded RGBA frames exactly equal baseline, zero differing pixels; conservative gate not an algebraic guarantee for eligible inland pixels visible in coast frame.",
+    "source": "Unique exact inverse reconstruction equals approved renderer SHA256"
+  },
+  "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+  "ownerReview": "KEEP | ONE_REPAIR | REJECT on exact candidate before terminal repair closure; ONE_REPAIR only inside active original scope with fresh qualification. No merge/deploy authorization. ONE_REPAIR does not increase one-run budget: any additional capture requires explicit budget authorization and current valid admission; otherwise planning only.",
+  "protections": [
+    "Noise fields, weights, palette constants, protection masks and every other approved shader byte",
+    "World/physical geometry/asset/vegetation signatures",
+    "Navigation/contact/camera/audio/narrative states and existing holds"
+  ],
+  "qualificationStatus": "Not executed for new candidate. Future source tests, review, capture and visual acceptance remain requirements.",
+  "runLimit": {
+    "automaticRetry": false,
+    "candidate": 1,
+    "launchAllowedNow": false,
+    "newDiagnosticIntermediates": 0,
+    "parameterSweeps": 0
+  },
+  "status": "PRE_ADMISSION_DESIGN_READY",
+  "tradeoff": "Wider fertility transition can reduce band amplification but alters ecological color distribution; healthy character must be reviewed. No guaranteed visual cure.",
+  "visualReject": [
+    "Bands persist at intended near/far views",
+    "Groundcover/ecological/subtropical character lost (D03/S02 or D04 regression)",
+    "Meadow/coast healthy controls regress",
+    "Anchor embodied same-world continuity fails"
+  ]
+}

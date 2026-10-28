@@ -1,0 +1,99 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "contractSha256": "ef4eddc47462e12627b3fc7638986563c55b5cdf9294051e3be0dec857130385",
+    "head": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+    "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/identity-fertile-transition-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/identity-fertile-transition-20261028.acceptance.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_IDENTITY_FERTILE_TRANSITION_COMPARISON_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact immutable tooling and candidate SHAs before launch. Approved renderer hash fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec; inverse reconstruction required. Reuse S1 archive, exact poses/assets/viewport/modes. No rejected renderer inheritance.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/identity-fertile-transition-20261028/**",
+    "h-earth-3d/experience-anchor/receipts/identity-fertile-transition-20261028.acceptance.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Obtain authentic admission at current governing head; create h-earth/identity-fertile-transition-20261028 from exact 0f6c901b10aa171c94e82136534794e83b9f730b. Preserve completed diagnostic and rejected evidence.",
+      "step": 1
+    },
+    {
+      "action": "Restore approved renderer bytes, substitute only fertilePatch endpoints 0.42/0.68 to 0.29/0.81; adapt existing comparator/test for actual candidate lit and albedo.",
+      "step": 2
+    },
+    {
+      "action": "Adapt existing fixed runner for explicit immutable-head eight-frame profile; no GPU from push/synchronize/workflow publication.",
+      "step": 3
+    },
+    {
+      "action": "Reverify preserved baseline image custody, scene parity and inverse source equality; execute focused CPU/GLSL checks and independent source review; persist exact remote candidate identity.",
+      "step": 4
+    },
+    {
+      "action": "Save one-run dispatch intent, submit at most one eight-frame qualification and immediately return URL and stop for owner.",
+      "step": 5
+    },
+    {
+      "action": "After owner completion notification verify all capture identities and exact coast parity; independently review near/far lit/albedo and healthy meadow/coast controls.",
+      "step": 6
+    },
+    {
+      "action": "Present exact candidate comparison for owner KEEP/ONE_REPAIR/REJECT. Extra captures require explicit budget and valid admission; no automatic merge/deploy or map-wide closure claim.",
+      "step": 7
+    }
+  ],
+  "exactGoverningHead": "51ffd8aa810ad92dceb3ae36491212836a0445b6",
+  "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_APPROVED_SOURCE_RECONSTRUCTION",
+      "TRUE_CANDIDATE_LIT_AND_ALBEDO_PROBES",
+      "NO_AUTOMATIC_GPU_TRIGGER",
+      "FROZEN_POSE_ASSET_FRAME_CUSTODY",
+      "EXACT_COAST_PIXEL_PARITY",
+      "NO_FALSE_NUMERIC_VISUAL_SUCCESS_OR_DEVICE_ACCEPTANCE",
+      "NO_MEADOW_SUBTROPICAL_IDENTITY_REGRESSION"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse qualified diagnostic mechanism evidence and preserved approved baseline; inspect only single fertile endpoint formula and directly affected harness dependencies.",
+    "forbidden": "No baseline/control recapture, new attribution intermediates, camera search, parameter sweep, workflow carrier or policy redesign."
+  },
+  "procedureId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/identity-fertile-transition-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/identity-fertile-transition-20261028.acceptance.json"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

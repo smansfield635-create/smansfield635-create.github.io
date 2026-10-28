@@ -209,3 +209,30 @@ test('Gen2944 two-frame eligibility probe keeps original terrain and exact mode 
  }));
  assert.equal(d.validateRidgeNormalSet(views,d.NORMAL_PROBE_POSES,d.NORMAL_PROBE_MODES),true);
 });
+
+test('Gen2944 owner-directed steep-side material blend is image-only and leaves protected biome and plants unchanged',async()=>{
+ const d=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const sourcePath=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
+ const original=fs.readFileSync(sourcePath,'utf8');
+ const transformed=d.instrumentSteepMaterialRenderer(original);
+ for(const token of [
+  'GEN2944_STEEP_OWNER_BLEND_DIAGNOSTIC',
+  'smoothstep(48.0,116.0,s.x)',
+  'smoothstep(-200.0,-143.0,s.y)',
+  'zone*=1.0-preservedGrove;',
+  'uRidgeNormalMode==1&&worldSoilTerrain&&!geologicalEarthRock',
+  'base=mix(base,coherent,strength);'
+ ])assert.ok(transformed.includes(token),token);
+ assert.equal(fs.readFileSync(sourcePath,'utf8'),original);
+ assert.throws(()=>d.instrumentSteepMaterialRenderer(original+' '),/GEN2944_STEEP_FROZEN_SHADER_DRIFT/);
+ assert.deepEqual(d.STEEP_MATERIAL_MODES,['original-lit-with-grass','coherent-lit-with-grass']);
+ assert.deepEqual(d.STEEP_MATERIAL_POSES.map(p=>p.name),['steep-diagonal','steep-across','protected-meadow','protected-coast']);
+ const views=d.STEEP_MATERIAL_POSES.flatMap(pose=>d.STEEP_MATERIAL_MODES.map((mode,diagnosticApplied)=>({
+  pose,mode,diagnosticApplied,grassHidden:false,assetSignature:'preserved',
+  sourceHead:d.GEN2944_SOURCE_HEAD,rendererHash:d.GEN2944_SHADER_SHA256,
+  lastFrame:{cameraPosition:{x:pose.x,y:24,z:pose.z}}
+ })));
+ assert.equal(d.validateSteepMaterialSet(views),true);
+ const altered=structuredClone(views);altered[3].grassHidden=true;
+ assert.throws(()=>d.validateSteepMaterialSet(altered),/GEN2944_STEEP_CAPTURE_MISMATCH/);
+});

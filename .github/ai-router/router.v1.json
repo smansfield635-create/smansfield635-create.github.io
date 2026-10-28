@@ -518,10 +518,7 @@
       "ownedPathPrefixes": [
         "preflight/"
       ],
-      "ownedExactPaths": [
-        ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
-        ".github/ai-router/publication-surfaces/preflight.v1.json"
-      ],
+      "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
       "priority": 100
     }

@@ -1211,3 +1211,19 @@ jobs:
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30
+
+  gen2944-ridge-parity:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'h-earth/gen2944-ridge-c1-package-parity-20261027' && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify ridge derivative and canonical world parity
+        run: node --test tools/h-earth-ground-material-comparison.v1.test.mjs

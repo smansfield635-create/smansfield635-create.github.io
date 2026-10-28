@@ -1,0 +1,217 @@
+{
+  "schema": "H_EARTH_INDEPENDENT_TONE_MASK_REVIEW_v1",
+  "toneChecks": [
+    {
+      "pose": "inland-seam-near",
+      "samples": 1107,
+      "failures": 0,
+      "wetnessBounds": [
+        0.08762084655675927,
+        0.11327984770857233
+      ],
+      "maxToneIntervalWidth": [
+        0.0007444145996719775,
+        0.000561793473642061,
+        0.00037106374028382516
+      ]
+    },
+    {
+      "pose": "inland-seam-far",
+      "samples": 1377,
+      "failures": 0,
+      "wetnessBounds": [
+        0.08502788516998813,
+        0.09837080568255431
+      ],
+      "maxToneIntervalWidth": [
+        0.0007373532205614819,
+        0.0005543345941864536,
+        0.0003653287798939808
+      ]
+    }
+  ],
+  "maskWitness": [
+    {
+      "row": 481,
+      "x": [
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268
+      ],
+      "maskLower": [
+        0.9566807323295313,
+        0.9679245767536246,
+        0.9535475675106444,
+        0.9573904559769084,
+        0.9428841499869761,
+        0.9595210340663345,
+        0.9449089102785809,
+        0.9515613287792789,
+        0.9443599256488383
+      ],
+      "maskUpper": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "residentPatchBounds": [
+        [
+          0.380700054294929,
+          0.36407140429452156,
+          0.35445697732932535,
+          0.3422075710122231,
+          0.33271732856103076,
+          0.3112912286842761,
+          0.30201180541420736,
+          0.29022060985735904,
+          0.2785548445517844
+        ],
+        [
+          0.40574715252093063,
+          0.3889375736582474,
+          0.37920553520006106,
+          0.3667921104275292,
+          0.35716361067885716,
+          0.3353881202645894,
+          0.3259407468546291,
+          0.3139209961155551,
+          0.30201180541420736
+        ]
+      ]
+    },
+    {
+      "row": 497,
+      "x": [
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268
+      ],
+      "maskLower": [
+        0.9834636701495673,
+        0.9862853020732169,
+        0.9844805040372224,
+        0.991296299671656,
+        0.9846876576738449,
+        0.9850752179836721,
+        0.9877314953818048,
+        0.983937222844471,
+        0.9815134357586608
+      ],
+      "maskUpper": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "residentPatchBounds": [
+        [
+          0.8964905773711531,
+          0.8936982107571068,
+          0.8890337470741623,
+          0.8824036305522285,
+          0.8824036305522285,
+          0.8756216594987681,
+          0.8667103306149909,
+          0.8575626396868749,
+          0.8534646919422093
+        ],
+        [
+          0.9122933515776479,
+          0.9096834008472316,
+          0.9053156395611589,
+          0.8990910159184103,
+          0.8990910159184103,
+          0.8927054907062135,
+          0.8842891912314339,
+          0.8756216594987681,
+          0.8717302709164491
+        ]
+      ]
+    }
+  ],
+  "methods": {
+    "tone": "Invert captured interior heightDry=smoothstep(8,30,y), calculate elevationMix=smoothstep(-1,34,y), then terrainWetness and exact tone from captured moist, meso, slopeResponse and variation with +/-1-code intervals.",
+    "mask": "Resident W divided by .88*p*(1-.25*smoothstep(.3,.85,p)), resident p=smoothstep(.2,.66,.78*meso+.22*detail). This amplitude is monotone on [0,1]; endpoints bound it. All denominators strictly positive at this witness."
+  },
+  "limits": [
+    "Baseline source-equivalent tone only; resident W is not baseline W.",
+    "Shared mask assumes only organic/patch differ between resident and approved source; all other source and scene dependencies match.",
+    "Mask=1 consistent but not proven exactly; quantization permits small variation.",
+    "No GPU, product change, visual acceptance or repair sufficiency established."
+  ],
+  "maskOnlyExclusion": {
+    "rows": [
+      481,
+      497
+    ],
+    "x": [
+      260,
+      261,
+      262,
+      263,
+      264,
+      265,
+      266,
+      267,
+      268
+    ],
+    "baselineInferredDeltaWeightLower": [
+      0.2736341328421234,
+      0.2736341328421234,
+      0.2573763223800593,
+      0.2573763223800593,
+      0.2967348679441884,
+      0.2967348679441884,
+      0.2967348679441884,
+      0.2738526980715443,
+      0.2899925590340154
+    ],
+    "constantPatchMaskOnlyDeltaWeightUpper": [
+      0.038120955550012436,
+      0.028226372456810315,
+      0.040878140590632925,
+      0.0374963987403206,
+      0.05026194801146102,
+      0.03562149002162565,
+      0.048480158954848786,
+      0.042626030674234566,
+      0.04896326542902229
+    ],
+    "margin": [
+      0.23551317729211096,
+      0.2454077603853131,
+      0.21649818178942637,
+      0.2198799236397387,
+      0.24647291993272738,
+      0.26111337792256273,
+      0.24825470898933963,
+      0.2312266673973097,
+      0.2410292936049931
+    ],
+    "allMarginsPositive": true,
+    "meaning": "Shared suitability/protection variation alone with constant patch cannot explain the inferred baseline weight increase at these nine pixels. Patch-amplitude change is required, conditional on source-equivalent archived P/T and interval conventions; this is not repair sufficiency."
+  }
+}

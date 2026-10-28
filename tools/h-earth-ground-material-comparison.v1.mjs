@@ -29,6 +29,7 @@ export const STEEP_MATERIAL_POSES=Object.freeze([
 export const NORMAL_PROBE_MODES=Object.freeze(['original-lit','normal-correction-raw']);
 export const NORMAL_PROBE_POSES=Object.freeze([NORMAL_POSES[0]]);
 const NORMAL_IDS=new Map(NORMAL_MODES.map((m,i)=>[m,i]));
+const STEEP_IDS=new Map(STEEP_MATERIAL_MODES.map((m,i)=>[m,i]));
 const steepMaterialCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_STEEP_MATERIAL_BLEND_V1';
 const normalProbeCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_NORMAL_PROBE_V1';
 const normalCapture=steepMaterialCapture||normalProbeCapture||process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_NORMAL_ONLY_V1';
@@ -178,6 +179,23 @@ export function instrumentSteepMaterialRenderer(original){
  ].join('\n'));
  return instrumentRenderer(source);
 }
+export function validateSteepMaterialSet(views,poses=STEEP_MATERIAL_POSES,modes=STEEP_MATERIAL_MODES){
+ if(views.length!==poses.length*modes.length)throw Error('GEN2944_STEEP_FRAME_COUNT');
+ for(const pose of poses){
+  const list=views.filter(v=>v.pose.name===pose.name);
+  if(list.length!==modes.length)throw Error('GEN2944_STEEP_POSE_MODES');
+  const ref=list[0];
+  for(const mode of modes){
+   const v=list.find(q=>q.mode===mode);
+   if(!v||v.diagnosticApplied!==STEEP_IDS.get(mode)||v.grassHidden!==false||
+    v.assetSignature!==ref.assetSignature||v.sourceHead!==GEN2944_SOURCE_HEAD||
+    v.rendererHash!==GEN2944_SHADER_SHA256||
+    JSON.stringify(v.lastFrame.cameraPosition)!==JSON.stringify(ref.lastFrame.cameraPosition))
+     throw Error('GEN2944_STEEP_CAPTURE_MISMATCH');
+  }
+ }
+ return true;
+}
 export function validateRidgeNormalSet(views,poses=NORMAL_POSES,modes=NORMAL_MODES){
  if(views.length!==poses.length*modes.length)throw Error('GEN2944_FRAME_COUNT');
  for(const pose of poses){
@@ -278,7 +296,7 @@ export async function run(argv){
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
       let sequence=10000,previousFrame=0;
       for(const pose of poses)for(const mode of modes){
-        const hidden=normalCapture?!mode.endsWith('with-grass'):true;await page.evaluate(value=>{if(globalThis.__ridgeNormalCapture)globalThis.__ridgeNormalMode=value;else globalThis.__groundcoverFactorMode=value;},normalCapture?NORMAL_IDS.get(mode):MODE_ID_BY_NAME.get(mode));
+        const hidden=normalCapture?!mode.endsWith('with-grass'):true;await page.evaluate(value=>{if(globalThis.__ridgeNormalCapture)globalThis.__ridgeNormalMode=value;else globalThis.__groundcoverFactorMode=value;},steepMaterialCapture?STEEP_IDS.get(mode):(normalCapture?NORMAL_IDS.get(mode):MODE_ID_BY_NAME.get(mode)));
         const settleDeadline=Date.now()+180000;let stable=0,signature=null;
         while(stable<2){
           const settled=await page.evaluate(async({pose,hidden,sequence})=>{
@@ -301,19 +319,20 @@ export async function run(argv){
           return {state,expectedCameraPosition:expectedPacket.camera.position,lastFrame:gpu.frameRecords.at(-1),canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},cpuSubmitMilliseconds:costs,resources:gpu.resources,grassHidden:hidden,diagnosticApplied:globalThis.__ridgeNormalCapture?globalThis.__ridgeNormalModeApplied:globalThis.__groundcoverFactorModeApplied};
         },{pose,hidden,sequence:++sequence});
         receipt.lastAttempt={label,pose,mode,...view};persist();
-        if(view.diagnosticApplied!==(normalCapture?NORMAL_IDS.get(mode):MODE_ID_BY_NAME.get(mode)))throw Error('DIAGNOSTIC_MODE_NOT_APPLIED');
+        if(view.diagnosticApplied!==(steepMaterialCapture?STEEP_IDS.get(mode):(normalCapture?NORMAL_IDS.get(mode):MODE_ID_BY_NAME.get(mode))))throw Error('DIAGNOSTIC_MODE_NOT_APPLIED');
         const assets=assetReadiness(view.resources,view.lastFrame.cameraPosition);if(!assets.ready||assets.signature!==signature)throw Error('ASSETS_CHANGED_DURING_CAPTURE');view.assetSignature=assets.signature;
         validateFrame(view,pose,sequence);if(view.lastFrame.frameSequence<=previousFrame)throw Error('FRAME_DID_NOT_ADVANCE');previousFrame=view.lastFrame.frameSequence;
         const name=label+'-'+pose.name+'-'+mode+'.png';const capture=await page.evaluate(()=>{const canvas=document.querySelector('#h-earth-functional-landscape-canvas');const gl=canvas?.getContext('webgl2');if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('CAPTURE_CONTEXT_NOT_PRESERVED');const before=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);const dataUrl=canvas.toDataURL('image/png');const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);return {dataUrl,before,after};});const bytes=decodeCanvasCapture(capture,view.lastFrame);fs.writeFileSync(path.join(out,name),bytes);
         const after=await page.evaluate(()=>H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1));if(after.navigationSequence!==sequence||after.frameSequence!==view.lastFrame.frameSequence)throw Error('CAPTURE_FRAME_CHANGED');
-        receipt.views.push({label,pose,mode,instrumentation:runRecord.instrumentation,...view,modeId:normalCapture?NORMAL_IDS.get(mode):MODE_ID_BY_NAME.get(mode),sourceHead:HEADS[label],rendererHash:receipt.sourceProductSha256,captureMethod:'PRESERVED_WEBGL_CANVAS_PNG',imageWidth:529,imageHeight:980,image:name,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
+        receipt.views.push({label,pose,mode,instrumentation:runRecord.instrumentation,...view,modeId:steepMaterialCapture?STEEP_IDS.get(mode):(normalCapture?NORMAL_IDS.get(mode):MODE_ID_BY_NAME.get(mode)),sourceHead:HEADS[label],rendererHash:receipt.sourceProductSha256,captureMethod:'PRESERVED_WEBGL_CANVAS_PNG',imageWidth:529,imageHeight:980,image:name,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
       }
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(normalCapture)validateRidgeNormalSet(receipt.views,poses,modes);
+    if(steepMaterialCapture)validateSteepMaterialSet(receipt.views,poses,modes);
+    else if(normalCapture)validateRidgeNormalSet(receipt.views,poses,modes);
     else validateDiagnosticSet(receipt.views,poses,modes);
-    receipt.result=normalCapture?'GEN2944_NORMAL_ONLY_CAPTURE_COMPLETE_REVIEW_PENDING':'DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';
+    receipt.result=steepMaterialCapture?'GEN2944_STEEP_BLEND_GPU_REVIEW_PENDING':(normalCapture?'GEN2944_NORMAL_ONLY_CAPTURE_COMPLETE_REVIEW_PENDING':'DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING');
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}
   finally{persist();server?.kill();if(browser)await browser.close();process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInt);}
   return receipt;

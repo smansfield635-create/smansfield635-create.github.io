@@ -22,9 +22,11 @@ function showReview(resume=false){
  const h=document.createElement('h3');h.textContent='Your website proposal';
  const pre=document.createElement('p');pre.className='bc-brief';pre.textContent=e.brief(s,m)||'Your proposal is still taking shape.';
  review.append(h,pre);const a=document.createElement('div');a.className='bc-review-actions';
- btn(s.sufficiencyOffered?'Explore additional details':'Continue discovery',()=>{
-  if(s.sufficiencyOffered){s.deepMode=true;s.handoffPending=false;go(e.nextAfterReturn(m,s),'You can go into more detail if you want.');}
-  else go(s.cursor==='REVIEW'?e.nextAfterReturn(m,s):s.cursor);
+ const hasPendingDetail=(s.queue||[]).length>0 || (s.sharedIndex||0)<(m.sharedSequence||[]).length;
+ if(hasPendingDetail)btn(s.sufficiencyOffered||s.cursor==='REVIEW'?'Explore additional details':'Continue discovery',()=>{
+  if(s.sufficiencyOffered||s.cursor==='REVIEW'){
+   s.deepMode=true;s.handoffPending=false;go(e.nextAfterReturn(m,s),'You can go into more detail if you want.');
+  }else go(s.cursor||'ENTRY');
  },a);
  btn('Prepare email inquiry',()=>prepare(),a).className='bc-primary';review.append(a);
 }

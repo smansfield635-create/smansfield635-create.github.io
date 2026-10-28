@@ -1,0 +1,21 @@
+{
+  "schema": "H_EARTH_IDENTITY_FERTILE_TRANSITION_DISPATCH_INTENT_v1",
+  "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+  "lockGeneration": 2963,
+  "candidateHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+  "toolingHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+  "profile": "IDENTITY_FERTILE_TRANSITION_V1",
+  "candidateFrames": 8,
+  "candidateRuns": 1,
+  "baselineRecapture": false,
+  "automaticRetry": false,
+  "sourceQualification": "PASS",
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "f46e60932114977fd7e8f6257f4ae45159f21a6942adecd53e4973b059b20c75",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "553fc84aa542ba75f74c4af56a592bcd09abe5eb59a7f55fa23d43ebb03cd011",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "63f4ff4b300b2bd21688d7961e9e3bec7626f3e2d6f5a6f3853faa7d0e657d25"
+  },
+  "branch": "h-earth/identity-fertile-transition-20261028",
+  "route_query": "qualification=identity-fertile-transition-v1"
+}

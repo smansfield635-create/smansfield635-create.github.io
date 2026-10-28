@@ -1,0 +1,6 @@
+{
+  "result": "EXACT_SCENE_TREE_PARITY_EXCEPT_DECLARED_RENDERER_AND_EVIDENCE",
+  "manifestSha256": "d331d5fd7c88fb2162b8ad1053b5a90cf0fac342ed7052e9e73f3eca49009e92",
+  "candidateHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+  "baselineHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060"
+}

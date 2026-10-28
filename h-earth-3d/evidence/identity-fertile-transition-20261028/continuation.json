@@ -1,0 +1,38 @@
+{
+  "schema": "H_EARTH_IDENTITY_FERTILE_TRANSITION_CONTINUATION_v1",
+  "operationId": "H_EARTH_IDENTITY_FERTILE_TRANSITION_20261028_001",
+  "lockGeneration": 2963,
+  "state": "SOURCE_QUALIFIED_DISPATCH_NOT_SUBMITTED_BROWSER_FALLBACK_APPROVAL_REQUIRED",
+  "candidateHead": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+  "branch": "h-earth/identity-fertile-transition-20261028",
+  "completed": [
+    "ADMISSION_RECOVERED_NO_REPLAY",
+    "GOVERNING_HEAD_UNCHANGED",
+    "APPROVED_SOURCE_INVERSE_PASS",
+    "SOURCE_TESTS_59_PASS",
+    "INDEPENDENT_SOURCE_REVIEW_PASS",
+    "ZERO_FRAME_GLSL_COMPILE_PASS",
+    "ARCHIVED_BASELINE_HASHES_VERIFIED",
+    "REMOTE_CANDIDATE_TREE_READBACK",
+    "EXACT_SCENE_PARITY_PASS"
+  ],
+  "nextAction": "With user approval for browser fallback, dispatch the existing workflow exactly once using saved intent; recover run URL and immediately return to owner. Check existing runs before submitting.",
+  "workflow": ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+  "inputs": {
+    "target_sha": "57c18e56d3e49af266cc16eb3c237e999d7ffc4f",
+    "route_path": "/showroom/globe/h-earth/",
+    "route_query": "qualification=identity-fertile-transition-v1",
+    "exercise_vegetation_residency": false,
+    "apply_timing_shim": false
+  },
+  "launchesSubmitted": 0,
+  "runBudgetConsumed": false,
+  "sourceReview": "independent-source-review.json",
+  "admissionCommit": "7296b80e99651abf594a2aac6972ba5a15d6ae4d",
+  "stopCondition": "RETURN_RUN_URL_IMMEDIATELY_AFTER_DISPATCH_WAIT_FOR_OWNER_COMPLETION",
+  "browserFallbackReason": "Connected GitHub tools lack workflow dispatch; registered fallback bridge fixes main ref and cannot launch branch profile. Host browser rules require user approval before fallback.",
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false,
+  "ownerAcceptance": false,
+  "authorityEffect": "NONE_CONTINUATION_ONLY"
+}

@@ -1225,18 +1225,57 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           path: tooling
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
       - name: Check out approved Gen2928 baseline
         uses: actions/checkout@v4
         with:
           ref: cb57c275b95d0d48883bc4da4dcfcf17cbec5060
           path: baseline
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
       - name: Check out exact candidate scene
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           path: candidate
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
       - uses: actions/setup-node@v4
         with:
           node-version: 22

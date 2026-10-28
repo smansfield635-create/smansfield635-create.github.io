@@ -18,8 +18,11 @@ export const NORMAL_POSES=Object.freeze([
  Object.freeze({name:'ridge-diagonal',x:88,z:-260,yaw:118,pitch:-13}),
  Object.freeze({name:'healthy-coast',x:0,z:-110,yaw:170,pitch:-8})
 ]);
+export const NORMAL_PROBE_MODES=Object.freeze(['original-lit','normal-correction-raw']);
+export const NORMAL_PROBE_POSES=Object.freeze([NORMAL_POSES[0]]);
 const NORMAL_IDS=new Map(NORMAL_MODES.map((m,i)=>[m,i]));
-const normalCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_NORMAL_ONLY_V1';
+const normalProbeCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_NORMAL_PROBE_V1';
+const normalCapture=normalProbeCapture||process.env.H_EARTH_COMPARISON_PROFILE==='GEN2944_NORMAL_ONLY_V1';
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
@@ -77,7 +80,7 @@ export function instrumentRidgeNormalRenderer(original){
  let fragment=original.slice(start,end);
  const one=(a,b)=>{if(fragment.split(a).length!==2)throw Error('GEN2944_SHADER_ANCHOR_NOT_UNIQUE:'+a.slice(0,75));fragment=fragment.replace(a,b);};
  one('out vec4 outColor;','out vec4 outColor;\nuniform int uRidgeNormalMode;');
- one('float terrainRoughnessForLighting=0.72;','float terrainRoughnessForLighting=0.72;\n  float ridgeCorrectionRaw=0.0;');
+ one('float terrainRoughnessForLighting=0.72;','float terrainRoughnessForLighting=0.72;\n  float ridgeCorrectionRaw=0.0;\n  float ridgeRegionRaw=0.0,ridgeGapRaw=0.0;');
  const classification='  bool worldSoilTerrain=geologicalEarthRock||vRoleCode==1u||\n    int(vPrimitiveIndex)==uGlobalCoverFarPrimitiveIndex;';
  const counterfactual=[
   classification,
@@ -90,6 +93,7 @@ export function instrumentRidgeNormalRenderer(original){
   '    float a=38.0*exp(-1.6*dot(e,e));',
   '    float b=34.0*exp(-1.6*dot(c,c));',
   '    float gap=abs(a-b);',
+  '    ridgeRegionRaw=region;ridgeGapRaw=1.0-smoothstep(0.0,2.0,gap);',
   '    if(region>0.0&&gap<2.0){',
   '      vec2 ga=vec2(-3.2*a*(q.x-148.0)/(66.0*66.0),-3.2*a*(q.y+224.0)/(34.0*34.0));',
   '      vec2 gb=vec2(-3.2*b*(q.x-86.0)/(68.0*68.0),-3.2*b*(q.y+235.0)/(37.0*37.0));',
@@ -107,7 +111,7 @@ export function instrumentRidgeNormalRenderer(original){
  ].join('\n');
  one(classification,counterfactual);
  const gamma='  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));';
- one(gamma,gamma+'\n  if(worldSoilTerrain&&uRidgeNormalMode==2)lit=vec3(ridgeCorrectionRaw);');
+ one(gamma,gamma+'\n  if(worldSoilTerrain&&uRidgeNormalMode==2)lit=vec3(ridgeCorrectionRaw,ridgeRegionRaw,ridgeGapRaw);');
  let source=original.slice(0,start)+fragment+original.slice(end);
  const draw='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
  if(source.split(draw).length!==2)throw Error('GEN2944_DRAW_ANCHOR_NOT_UNIQUE');
@@ -182,9 +186,9 @@ export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(![
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2944_NORMAL_ONLY_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=normalCapture?NORMAL_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES);
-  const modes=normalCapture?NORMAL_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES);
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN2944_NORMAL_ONLY_V1','GEN2944_NORMAL_PROBE_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=normalProbeCapture?NORMAL_PROBE_POSES:(normalCapture?NORMAL_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
+  const modes=normalProbeCapture?NORMAL_PROBE_MODES:(normalCapture?NORMAL_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES));
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:normalCapture?'H_EARTH_GEN2943_CANONICAL_MOUNTAIN_RIDGE_CONTINUITY_REPAIR_20261027_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:normalCapture?GEN2944_SHADER_SHA256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};

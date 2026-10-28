@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';import http from 'node:http';import fs from 'node:fs';import path from 'node:path';import * as engine from '../assets/build/build-engine.v3.mjs';
+import assert from 'node:assert/strict';import http from 'node:http';import fs from 'node:fs';import path from 'node:path';import * as engine from '../assets/build/build-engine.v3.mjs?v=7';
 const matrix=JSON.parse(fs.readFileSync(new URL('../assets/build/build-matrix.v3.json',import.meta.url)));
 const confirmed=n=>n.options.filter(o=>o.status==='confirmed'&&!o.exclusive);
 // Same-context siblings must produce one question and must not overwrite its answer.

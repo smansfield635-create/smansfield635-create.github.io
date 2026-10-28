@@ -50,7 +50,10 @@
       "Disable color transforms, blending and dithering for packed values; verify actual framebuffer encoding.",
       "Validate old/new scene pose pixel custody before reusing color evidence.",
       "Area and protection inference require uncertainty propagation;16bit proposal is not established sufficient.",
-      "Use registered bounded diagnostic route and applicable successor scope; old GPU budget exhausted."
+      "Use registered bounded diagnostic route and applicable successor scope; old GPU budget exhausted.",
+      "Do not pack data into canvas PNG alpha. Existing preserved-canvas capture can alter alpha or premultiply RGB; use qualified raw RGBA8 framebuffer readPixels, or alpha255 with additional frames.",
+      "Validate byte-exact roundtrips including255-to256 carry. One high-byte error is256 code steps (~16m XZ).",
+      "Require per-cell interval area/Jacobian bounds and reject degenerate cells; coordinate resolution alone does not qualify world-area weights."
     ],
     "runtimeInstrumentationImplemented": false,
     "dispatchSubmitted": false
@@ -58,5 +61,11 @@
   "nextAction": "Build the source-bound world-sample evaluator and scoped high-precision measurement instrument; establish its precision and full coarse/detail definition before authorizing this design as a repair candidate.",
   "runtimeEdits": 0,
   "gpuRuns": 0,
-  "repairClaim": false
+  "repairClaim": false,
+  "independentReview": {
+    "worldRecovery": "EXACT_RECOMPUTATION",
+    "nearDistanceIntervalMismatches": 0,
+    "farDistanceIntervalMismatches": 0,
+    "conclusion": "Spatial uncertainty and absent neighborhood/detail contract prevent repair readiness; nominal16bit packing not yet qualified."
+  }
 }

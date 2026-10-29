@@ -44,7 +44,11 @@
     "MESH_GATE_V2_GAMUT_LIMITER_REJECTED_ADVERSARIAL_WITNESS",
     "MESH_GATE_V3_GROSS_FLUX_FIX_COMMITTED_F92B8518",
     "MESH_GATE_V3_12_TESTS_AND_10000_RANDOM_DENSE_CASES_PASS",
-    "EXACT_FROZEN_BASE_WORLD_BINARY_AVAILABLE_GITHUB_BLOB_BUT_NOT_MATERIALIZED"
+    "EXACT_FROZEN_BASE_WORLD_BINARY_AVAILABLE_GITHUB_BLOB_BUT_NOT_MATERIALIZED",
+    "GEN2666_ORIGINAL_CONSTRUCTOR_EIGHT_SOURCE_IDENTITIES_REVERIFIED",
+    "EXACT_GIT_OBJECT_RECOVERY_ROUTE_FOUND",
+    "SOURCE_NATIVE_RECOVERY_BOOTSTRAP_COMMITTED_AND_5_TESTS_PASS",
+    "FIXED_H_EARTH_RUNNER_REUSE_PROPOSED_NOT_ACTIVATED"
   ],
   "run": {
     "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
@@ -65,8 +69,8 @@
     "completionClaimed": true,
     "conclusion": "success"
   },
-  "exactlyOneNextAction": "Recover the exact 11736235-byte frozen canonical-base-world.v1.json.gz blob (Git blob 3d11947ad94f98736035cbdf0e021e5f324659fb, SHA-256 48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a) through authorized binary-preserving Git checkout or independently hashed existing source artifact; do not substitute mismatched Gen2824 candidate or incomplete Git bundles. After exact hash verification use original committed CPU reconstruct.mjs/reconstruct-direct.mjs/upload-replay.mjs and match-surface.py to regenerate uploaded buffers and run V3 mesh_domain_gate.py, followed by independent actual-mesh closure check. Preserve all 2484 witnesses/2575 memberships. Only after closure qualify full paired f0 composition and real 1m/2m appearance. No GPU/product mutation.",
-  "stopCondition": "NO_GPU_OR_PRODUCT_MUTATION_UNTIL_EXACT_FROZEN_SOURCE_ASSET_AND_ORIGINAL_SOURCE_MESH_CLOSED_AND_PAIRED_F0_APPEARANCE_QUALIFIED",
+  "exactlyOneNextAction": "Resolve applicable fresh canonical read-only exact-head qualification admission and register one bounded profile on EXISTING h-earth-neutral-exact-head-runner.yml (no new runner), checkout immutable source commit cb57c275 and diagnostic bootstrap at e202e8fe, run cpu/mesh/source-native-recovery/recover-original-mesh.sh --mesh on clean GitHub-hosted Node22/Python environment. Source stage first uses binary-safe git show for original blob 3d11947, falls back to Gen2666 commit 5ac87e source builder only if exact length/SHA256 verified. Upload exact world asset+original upload positions/indices and mesh-domain gate receipt as Actions artifact even on FAILED_ASSERTION; return run URL and pause. No new GPU or product mutation. If topology fails, preserve precise witness and repair mathematical domain only; then full P(c,f0),D(c,f0) and 1m/2m appearance.",
+  "stopCondition": "NO_UNREGISTERED_ACTIONS_DISPATCH_OR_PRODUCT_MUTATION_UNTIL_EXACT_ASSET_AND_ORIGINAL_MESH_ARE_SHA_VERIFIED_AND_FULL_PAIRED_MATERIAL_AND_APPEARANCE_QUALIFIED",
   "productChanged": false,
   "authorityEffect": "NONE_CONTINUATION_ONLY",
   "evidence": {
@@ -116,6 +120,28 @@
       "exactFrozenAssetBlob": "3d11947ad94f98736035cbdf0e021e5f324659fb",
       "exactFrozenAssetSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
       "sourceAssetTransfer": "UNAVAILABLE_GITHUB_CONNECTED_UTF8_ONLY"
+    },
+    "sourceNativeRecovery": {
+      "status": "SOURCE_BOOTSTRAP_COMMITTED_NOT_RUN_ON_EXACT_SOURCE",
+      "sourceCommit": "e66c871faf69cf66a6fa2997f80e61d90fd8ed62",
+      "documentedCommit": "e202e8fea496cc0858f1d20ee8a22b687dc1f01c",
+      "script": "cpu/mesh/source-native-recovery/recover-original-mesh.sh",
+      "readme": "cpu/mesh/source-native-recovery/README.md",
+      "sourcePrecedent": "cpu/mesh/source-native-recovery/source-precedent.json",
+      "testsPassed": 5,
+      "frozenCommit": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+      "originalBuildCommit": "5ac87e31a543473040a18b6ea00b62b6f0690553",
+      "originalAssetGitBlob": "3d11947ad94f98736035cbdf0e021e5f324659fb",
+      "originalAssetBytes": 11736235,
+      "originalAssetSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "sourceGeneratorPrecedent": "ALL_EIGHT_GEN2666_SOURCE_GIT_BLOBS_MATCH",
+      "fallback": "REGENERATE_FROM_GEN2666_ORIGINAL_COMMIT_AND_VERIFY_EXACT_HASH",
+      "selectedExecutionRoute": "REUSE_EXISTING_H_EARTH_NEUTRAL_EXACT_HEAD_RUNNER_AFTER_BOUNDED_PROFILE_ACTIVATION_AND_CANONICAL_ADMISSION",
+      "registeredForDispatch": false,
+      "workflowDispatched": false,
+      "sourceMeshClosed": false,
+      "productChanged": false,
+      "note": "Current chat's GitHub text connector cannot read >1MB binary; binary survives as Git object and is retrievable in runner. Gen2824 gzip is mismatched and forbidden as source."
     }
   }
 }

@@ -299,5 +299,5 @@ if __name__=='__main__':
         failure={'schema':'H_EARTH_ORIGINAL_SOURCE_MESH_DOMAIN_GATE_FAILURE_v1',
                  'result':'FAIL_CLOSED','closureQualified':False,'error':str(e),
                  'sourceHead':SOURCE_HEAD,'noSourceGeometryMutation':True}
-        Path(a.report).write_text(json.dumps(failure,indent=2)+'\\n')
+        Path(a.report).write_text(json.dumps(failure,indent=2)+'\n')
         print(json.dumps(failure));raise SystemExit(2)

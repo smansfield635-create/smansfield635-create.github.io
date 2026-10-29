@@ -149,6 +149,38 @@ main{position:relative;max-width:none}
 .universe-encounter #toggle-motion,.universe-encounter #reset-view{display:none}
 @media(max-width:600px){.peace-encounter{padding:30px 22px 35px}.peace-encounter h2{font-size:32px}}
 @media(prefers-reduced-motion:reduce){.peace-encounter,.intro{transition:none}}
+
+/* Checkpoint A: cinematic hero proof. Gen2970 Peace sequence otherwise preserved. */
+:root{--hero-starlight:#d8e9ee;--hero-gold:#ffe2ae}
+body{background:#02060f}
+.topbar{position:absolute;inset:0 0 auto;z-index:50;border:0;background:linear-gradient(180deg,rgba(2,7,17,.96),rgba(2,7,17,.45) 72%,transparent);padding:17px clamp(22px,5vw,74px);font-size:11px;letter-spacing:.13em}
+.topbar .brand{color:#cbbda4}
+main{position:relative;max-width:none;min-height:100svh}
+.scene{height:100svh;min-height:680px;background:
+ radial-gradient(ellipse at 76% 76%,rgba(20,110,151,.34),transparent 42%),
+ radial-gradient(ellipse at 42% 53%,rgba(125,84,128,.18),transparent 46%),
+ radial-gradient(ellipse at 65% 29%,rgba(29,46,93,.31),transparent 54%),
+ linear-gradient(140deg,#02040d,#061328 67%,#030712)}
+.scene::before{opacity:.53;background-image:radial-gradient(circle,#f6e7db99 .7px,transparent 1px),radial-gradient(circle,#83cee4aa .6px,transparent 1px);background-size:173px 149px,251px 229px;mask-image:linear-gradient(180deg,black,transparent 97%)}
+.scene::after{z-index:1;background:linear-gradient(90deg,rgba(0,4,13,.38),transparent 60%),radial-gradient(ellipse at center,transparent 36%,rgba(0,3,11,.7) 100%)}
+.intro{top:clamp(90px,11svh,140px);left:clamp(24px,6.5vw,112px);right:auto;max-width:min(530px,calc(100vw - 48px));width:auto;text-align:left;z-index:15;padding:0;pointer-events:none;transition:opacity .65s ease,transform .7s ease}
+.intro h1{font-size:clamp(36px,5.1vw,75px);line-height:1.045;letter-spacing:-.055em;margin:12px 0 16px;color:#fff5e5;text-shadow:0 3px 26px rgba(0,0,0,.75),0 0 35px rgba(178,201,255,.13)}
+.intro h1 span{display:block}
+.intro .eyebrow{font-size:10px;letter-spacing:.26em;color:#d9b98b;margin:0}
+.intro .invitation{font:italic clamp(17px,2.1vw,24px) Georgia,serif;color:#ffe5b2;margin:0 0 12px}
+.intro .intro-copy{font-size:clamp(12px,1.1vw,15px);line-height:1.6;color:rgba(221,228,234,.85);margin:0 0 18px;max-width:370px}
+.explore-worlds{display:inline-flex;align-items:center;gap:24px;background:rgba(8,26,44,.68);border:1px solid rgba(219,229,229,.58);box-shadow:inset 0 1px rgba(255,255,255,.09),0 16px 40px rgba(0,0,0,.25);border-radius:50px;padding:12px 21px;min-height:47px;letter-spacing:.08em;font:600 12px system-ui,sans-serif;color:#f5efe3;pointer-events:auto;backdrop-filter:blur(14px)}
+.explore-worlds:hover,.explore-worlds:focus-visible{background:rgba(35,81,95,.77);border-color:#fff0c7}
+.explore-worlds span{font-size:18px;color:#d8be91}
+.heart-glow{z-index:0;width:clamp(270px,48vw,660px);height:clamp(300px,52vw,720px);background:radial-gradient(ellipse,rgba(238,218,164,.42),rgba(92,196,227,.21) 22%,rgba(229,143,93,.09) 46%,transparent 72%);filter:blur(26px)}
+.planet-label{opacity:0!important;pointer-events:none!important;transition:opacity .2s ease!important;background:rgba(3,12,25,.84);border:1px solid rgba(161,218,228,.31);box-shadow:0 0 25px rgba(5,24,39,.7);font-size:11px}
+.planet-label.is-hovered,.planet-label:focus-visible,.planet-label[aria-pressed=true]{opacity:1!important;pointer-events:auto!important}
+.scene[data-stage=approach] .intro,.scene[data-stage=encounter] .intro,.scene[data-stage=return] .intro{opacity:0;transform:translateY(-15px);pointer-events:none}
+.scene[data-stage=approach] .explore-worlds,.scene[data-stage=encounter] .explore-worlds,.scene[data-stage=return] .explore-worlds{pointer-events:none}
+@media(max-width:600px){.topbar{padding:17px 22px;font-size:10px}.topbar .brand{font-size:9px}.intro{top:82px;left:23px;max-width:calc(100vw - 46px)}.intro h1{font-size:clamp(34px,9vw,42px);line-height:1.07;margin:14px 0 10px}.intro .eyebrow{font-size:9px;letter-spacing:.17em}.intro .invitation{font-size:17px;margin:0 0 7px}.intro .intro-copy{font-size:12px;max-width:266px;line-height:1.45;margin:0 0 14px}.explore-worlds{font-size:11px;padding:10px 17px;min-height:43px}.scene{min-height:650px}.heart-glow{width:330px;height:380px}}
+@media(max-width:350px){.intro{top:78px;left:19px}.intro h1{font-size:32px}.intro .intro-copy{max-width:240px}}
+@media(prefers-reduced-motion:reduce){.intro,.planet-label{transition:none!important}}
+
 </style>
 <script defer src="/assets/compass/compass.orbit-physics.js?cb=nine-summits-physics-20261006"></script>
 <script type="module" src="./universe.motion.js?cb=flagship-gen2970-ec7bee09"></script>
@@ -156,7 +188,7 @@ main{position:relative;max-width:none}
 <body>
 <header class="topbar"><a href="/">← Back to Compass</a><span class="brand">DIAMOND GATE BRIDGE</span></header>
 <main>
-<header class="intro"><p class="eyebrow">The Nine Summits Universe</p><h1 aria-label="Nine summits. One heart. One choice. One path."><span>Nine summits.</span> <span>One heart.</span><br><span>One choice.</span> <span>One path.</span></h1><p class="invitation">Choose love.</p><p class="intro-copy">Each summit explores the choice between love and fear.<br>Discover what choosing love can look like in your life.</p></header>
+<header class="intro"><p class="eyebrow">THE NINE SUMMITS UNIVERSE</p><h1 aria-label="Nine summits. One heart. One choice. One path."><span>Nine summits.</span><span>One heart.</span></h1><p class="invitation">One choice. One path.</p><p class="intro-copy">Each summit explores the choice between love and fear. Choose love.</p><button id="explore-worlds" class="explore-worlds" type="button" aria-controls="path-list">Explore the worlds <span aria-hidden="true">↗</span></button></header>
 <section class="scene" id="universe-scene" aria-label="Nine summit planets around an illuminated diamond heart">
 <div class="heart-glow" aria-hidden="true"></div><canvas id="universe-canvas" aria-hidden="true"></canvas><div class="loading">Preparing your universe…</div><div id="planet-labels"></div><aside id="peace-encounter" class="peace-encounter" aria-hidden="true" tabindex="-1" aria-label="Forgiveness to Peace encounter"><p class="world-kicker">Forgiveness → Peace · Summit five of nine</p><h2>Peace leaves room for truth.</h2><p>Forgiveness releases the fight without erasing what happened.</p><p>Forgiveness does not erase truth. It ends the unnecessary war so truth, boundaries, and repair can occupy the same room.</p><p class="world-reflection">What would peace look like while keeping an honest boundary?</p><div class="world-actions"><button type="button" id="peace-return">Return to the universe</button><a href="/nine-summits-of-love/#connected-paths-title">Explore the full teaching</a></div></aside></section>
 <p class="scene-note" id="scene-note">Drag to turn the universe · Choose a planet to explore</p>

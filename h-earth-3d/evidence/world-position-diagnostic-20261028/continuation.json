@@ -48,7 +48,11 @@
     "GEN2666_ORIGINAL_CONSTRUCTOR_EIGHT_SOURCE_IDENTITIES_REVERIFIED",
     "EXACT_GIT_OBJECT_RECOVERY_ROUTE_FOUND",
     "SOURCE_NATIVE_RECOVERY_BOOTSTRAP_COMMITTED_AND_5_TESTS_PASS",
-    "FIXED_H_EARTH_RUNNER_REUSE_PROPOSED_NOT_ACTIVATED"
+    "FIXED_H_EARTH_RUNNER_REUSE_PROPOSED_NOT_ACTIVATED",
+    "RUN40885973120_EXACT_ORIGINAL_BINARY_SHA256_AND_SIZE_VERIFIED",
+    "RUN40885973120_FROZEN_ARCHIVE_MISSING_ROOT_PACKAGE_JSON_FAILURE_PRESERVED",
+    "SOURCE_NATIVE_ARCHIVE_PATH_LIST_CORRECTED_WITH_REGRESSION_TEST",
+    "EXACT_ASSET_ACTIONS_ARTIFACT_DOWNLOADED_INDEPENDENTLY_VERIFIED"
   ],
   "run": {
     "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
@@ -69,8 +73,8 @@
     "completionClaimed": true,
     "conclusion": "success"
   },
-  "exactlyOneNextAction": "Resolve applicable fresh canonical read-only exact-head qualification admission and register one bounded profile on EXISTING h-earth-neutral-exact-head-runner.yml (no new runner), checkout immutable source commit cb57c275 and diagnostic bootstrap at e202e8fe, run cpu/mesh/source-native-recovery/recover-original-mesh.sh --mesh on clean GitHub-hosted Node22/Python environment. Source stage first uses binary-safe git show for original blob 3d11947, falls back to Gen2666 commit 5ac87e source builder only if exact length/SHA256 verified. Upload exact world asset+original upload positions/indices and mesh-domain gate receipt as Actions artifact even on FAILED_ASSERTION; return run URL and pause. No new GPU or product mutation. If topology fails, preserve precise witness and repair mathematical domain only; then full P(c,f0),D(c,f0) and 1m/2m appearance.",
-  "stopCondition": "NO_UNREGISTERED_ACTIONS_DISPATCH_OR_PRODUCT_MUTATION_UNTIL_EXACT_ASSET_AND_ORIGINAL_MESH_ARE_SHA_VERIFIED_AND_FULL_PAIRED_MATERIAL_AND_APPEARANCE_QUALIFIED",
+  "exactlyOneNextAction": "Validate new frozen-archive missing-root-package regression against exact diagnostic head f3e198f493544c17e4ce4a3c491bc7746a7ff54d, obtain applicable canonical bounded delta admission, adopt only fixed existing runner profile pinned to this exact amended diagnostic head and source script hash, then ONE new CPU-only source replay with full original source Git archive and actual V3 mesh gate; preserve any first failure and do not repeat or mutate product.",
+  "stopCondition": "NO_UNREGISTERED_RETRY_OR_PRODUCT_MUTATION; ORIGINAL_GZIP_VERIFIED_BUT_SOURCE_MESH_AND_PAIRED_MATERIAL_UNQUALIFIED",
   "productChanged": false,
   "authorityEffect": "NONE_CONTINUATION_ONLY",
   "evidence": {
@@ -122,7 +126,7 @@
       "sourceAssetTransfer": "UNAVAILABLE_GITHUB_CONNECTED_UTF8_ONLY"
     },
     "sourceNativeRecovery": {
-      "status": "SOURCE_BOOTSTRAP_COMMITTED_NOT_RUN_ON_EXACT_SOURCE",
+      "status": "EXACT_ORIGINAL_WORLD_RETRIEVED_SHA_VERIFIED; FULL_SOURCE_ARCHIVE_FAILURE_REPAIRED_IN_DIAGNOSTIC_BRANCH_UNQUALIFIED",
       "sourceCommit": "e66c871faf69cf66a6fa2997f80e61d90fd8ed62",
       "documentedCommit": "e202e8fea496cc0858f1d20ee8a22b687dc1f01c",
       "script": "cpu/mesh/source-native-recovery/recover-original-mesh.sh",
@@ -137,11 +141,23 @@
       "sourceGeneratorPrecedent": "ALL_EIGHT_GEN2666_SOURCE_GIT_BLOBS_MATCH",
       "fallback": "REGENERATE_FROM_GEN2666_ORIGINAL_COMMIT_AND_VERIFY_EXACT_HASH",
       "selectedExecutionRoute": "REUSE_EXISTING_H_EARTH_NEUTRAL_EXACT_HEAD_RUNNER_AFTER_BOUNDED_PROFILE_ACTIVATION_AND_CANONICAL_ADMISSION",
-      "registeredForDispatch": false,
-      "workflowDispatched": false,
+      "registeredForDispatch": true,
+      "workflowDispatched": true,
       "sourceMeshClosed": false,
       "productChanged": false,
-      "note": "Current chat's GitHub text connector cannot read >1MB binary; binary survives as Git object and is retrievable in runner. Gen2824 gzip is mismatched and forbidden as source."
+      "note": "Current chat's GitHub text connector cannot read >1MB binary; binary survives as Git object and is retrievable in runner. Gen2824 gzip is mismatched and forbidden as source.",
+      "firstExecutionRunId": 40885973120,
+      "firstExecutionRunConclusion": "failure",
+      "firstExecutionFailureCode": "FROZEN_SOURCE_MATERIALIZATION",
+      "firstExecutionUnderlyingError": "FROZEN_COMMIT_ROOT_PACKAGE_JSON_ABSENT",
+      "originalWorldAssetRetrieved": true,
+      "originalWorldAssetSha256IndependentCheck": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "artifactId": 12902168523,
+      "artifactZipSha256": "3a0e9185a78ef4f2c129d29416d2427be71149236314116109e88c3a439de584",
+      "regressionRepairPath": "cpu/mesh/source-native-recovery/recover-original-mesh.sh",
+      "repairEvidence": "cpu/mesh/source-native-recovery/run-40885973120-failure-and-repair.json",
+      "repairStatus": "SOURCE_CORRECTION_COMMITTED; NO_NEW_RUN_AUTHORIZED",
+      "retryCandidateHead": "f3e198f493544c17e4ce4a3c491bc7746a7ff54d"
     }
   }
 }

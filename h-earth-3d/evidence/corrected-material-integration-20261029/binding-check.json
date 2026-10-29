@@ -1,0 +1,47 @@
+{
+  "schema": "H_EARTH_CORRECTED_MATERIAL_INTEGRATION_BINDING_CHECK_v1",
+  "result": "BLOCKED_EXACT_SOURCE_BINDING",
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_PRODUCT_INTEGRATION_20261029_001",
+  "generation": 2973,
+  "constructionBase": "0137d0deb7abde6beca110c107b789e0221706ff",
+  "frozenComparisonBase": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+  "frozen": {
+    "blob": "2ae6c42f6febaada2cb2a240844b9fddc5b9ed8e",
+    "sha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+    "fertilePatchSmoothstep": [
+      0.42,
+      0.68
+    ]
+  },
+  "construction": {
+    "blob": "0ce269b25bb174dd4a7c28edd50897c1cd1b47a3",
+    "sha256": "0c2190286effe0b4fa6269835df7d137d0e271bd71ff9b6196abdf0f6350af54",
+    "fertilePatchSmoothstep": [
+      0.29,
+      0.81
+    ]
+  },
+  "otherRendererBytesEqual": true,
+  "failedAssertion": "CORRECTED_RENDERER_SOURCE_HASH",
+  "independentReview": "Separate integration_review agent fetched both source identities and confirmed the sole line949 expression difference; product integration must remain held.",
+  "mainContinuity": {
+    "admitted": "69ddfa53d39aa7c940334e6cba6d0cd8c23a4d2d",
+    "observed": "ec1391aa9858af9356eea8545f77b2d22038d66f",
+    "files": [
+      ".analytics/cloudflare/composition.json",
+      ".analytics/cloudflare/historical-owner-envelope.json",
+      ".analytics/cloudflare/latest.json",
+      ".analytics/cloudflare/owner-heartbeats.json",
+      ".analytics/cloudflare/reporting-methodology.json",
+      ".analytics/cloudflare/status.txt",
+      "analytics/data/latest.json"
+    ],
+    "result": "ANALYTICS_ONLY_DISJOINT"
+  },
+  "productFilesChanged": false,
+  "newGpuRuns": 0,
+  "merge": false,
+  "publication": false,
+  "nextAction": "Reconcile saved correction's incoming-soil baseline with current fertilePatch expression using existing source and saved material evidence; resolve canonical source binding before product writes. Do not silently revert current thresholds or bypass the hash guard."
+}

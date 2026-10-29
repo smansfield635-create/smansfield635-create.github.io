@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1211,3 +1211,148 @@ jobs:
           path: ${{ runner.temp }}/ground-material-comparison
           if-no-files-found: error
           retention-days: 30
+
+  # Gen2965: fixed CPU-only original binary/mesh source qualification. No GPU or product mutation.
+  original-indexed-mesh-recovery:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=h-earth-original-indexed-mesh-v1' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - name: Enforce exact qualified input profile
+        shell: bash
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          ROUTE_PATH: ${{ inputs.route_path }}
+          ROUTE_QUERY: ${{ inputs.route_query }}
+          EXERCISE: ${{ inputs.exercise_vegetation_residency }}
+          TIMING_SHIM: ${{ inputs.apply_timing_shim }}
+        run: |
+          set -euo pipefail
+          test "$TARGET_SHA" = 'ee8463c17b9df9fc0c9f534792fa7235fa836443'
+          test "$ROUTE_PATH" = '/showroom/globe/h-earth/'
+          test "$ROUTE_QUERY" = 'qualification=h-earth-original-indexed-mesh-v1'
+          test "$EXERCISE" = 'false'
+          test "$TIMING_SHIM" = 'false'
+
+      - name: Checkout exact committed source-recovery tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ee8463c17b9df9fc0c9f534792fa7235fa836443
+          fetch-depth: 1
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/
+
+      - name: Verify immutable tooling checkout
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'ee8463c17b9df9fc0c9f534792fa7235fa836443'
+          test "$(git config --get remote.origin.url)" != ''
+          test "$(git hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh)" = 661595489af17db36ea65a9b4e57d22e203ebc12
+          test "$(git hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 2033596bf75ccd3dbd9664a55460df037e4be2b1
+
+      - name: Install pinned Node and Python runtimes
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install CPU-only geometry dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --disable-pip-version-check --no-cache-dir \
+            numpy==2.2.6 scipy==1.15.3 shapely==2.1.2 Pillow==11.3.0
+
+      - name: Reconstruct exact original binary and physical uploaded mesh once
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash -n h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh
+          python3 h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
+          mkdir -p "$RUNNER_TEMP/h-earth-source-native"
+          bash h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh --mesh "$RUNNER_TEMP/h-earth-source-native/original-mesh"
+
+      - name: Preserve bounded invocation receipt on any result
+        if: always()
+        shell: bash
+        env:
+          JOB_STATUS: ${{ job.status }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/h-earth-source-native"
+          printf 'schema=H_EARTH_ORIGINAL_INDEXED_MESH_QUALIFICATION_V1\nresult=%s\nrun_id=%s\ndiagnostic_sha=ee8463c17b9df9fc0c9f534792fa7235fa836443\nsource_sha=cb57c275b95d0d48883bc4da4dcfcf17cbec5060\noriginal_asset_sha256=48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a\n' "$JOB_STATUS" "$RUN_ID" > "$RUNNER_TEMP/h-earth-source-native/qualification-invocation.txt"
+
+      - name: Upload exact source and failed-or-qualified mesh receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-original-indexed-mesh-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-source-native/
+          if-no-files-found: error
+          retention-days: 30
+
+  # Gen2965: source-only CI verification for precisely the tooling PR branch.
+  original-indexed-mesh-static-test:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/source-native-mesh-qualification-20261028' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout proposed exact-head runner
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh
+            /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
+      - name: Checkout immutable source bootstrap for PR test
+        uses: actions/checkout@v4
+        with:
+          ref: ee8463c17b9df9fc0c9f534792fa7235fa836443
+          fetch-depth: 1
+          path: source-tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate bounded profile and source bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          workflow=Path('.github/workflows/h-earth-neutral-exact-head-runner.yml').read_text()
+          assert workflow.splitlines().count('  original-indexed-mesh-recovery:') == 1
+          assert workflow.splitlines().count('  original-indexed-mesh-static-test:') == 1
+          assert "inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1'" in workflow
+          assert "inputs.route_query == 'qualification=h-earth-original-indexed-mesh-v1'" in workflow
+          assert "ref: ee8463c17b9df9fc0c9f534792fa7235fa836443" in workflow
+          assert "test \"$TARGET_SHA\" = 'ee8463c17b9df9fc0c9f534792fa7235fa836443'" in workflow
+          assert 'if: always()' in workflow
+          assert "recover-original-mesh.sh --mesh" in workflow
+          assert "numpy==2.2.6 scipy==1.15.3 shapely==2.1.2 Pillow==11.3.0" in workflow
+          assert '  original-indexed-mesh-recovery:' in workflow
+          print('PASS:FIXED_ORIGINAL_INDEXED_MESH_WORKFLOW_STATIC_GUARDS')
+          PY
+          test "$(git -C source-tooling rev-parse HEAD)" = ee8463c17b9df9fc0c9f534792fa7235fa836443
+          test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh)" = 661595489af17db36ea65a9b4e57d22e203ebc12
+          bash -n source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh
+          python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py

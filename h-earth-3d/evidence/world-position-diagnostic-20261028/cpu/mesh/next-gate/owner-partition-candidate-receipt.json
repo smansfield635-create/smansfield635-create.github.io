@@ -1,0 +1,102 @@
+{
+  "schema": "H_EARTH_GEN2969_SOURCE_OWNER_CANDIDATE_v1",
+  "result": "NEAR_PRIORITY_CLIPPED_SOURCE_CANDIDATE_REVIEW_REQUIRED",
+  "candidatePolicy": "NEAR_LOCAL_SOURCE_OVER_FAR_CONTINUATION_DRAFT_v1",
+  "policyAccepted": false,
+  "materialOwnerPromoted": false,
+  "scientificClosure": false,
+  "originalAssetVerified": true,
+  "sourceFaces": 22,
+  "rawPositivePairs": 18,
+  "archivedWitnesses": 2484,
+  "memberships": 2575,
+  "artificialCutClearanceMeters": 48.19317335779048,
+  "originalBoundaryReviewRequired": true,
+  "partialSeamCount": 2,
+  "statistics": {
+    "sourceOverlapXZ": 0.0005452013574540615,
+    "uniqueUnionXZ": 1365.488405060023,
+    "clippedAreaXZ": 1365.4884050600233,
+    "areaErrorXZ": 2.2737367544323206e-13,
+    "maxResidualCrossOwnerXZ": 2.768248425649311e-17,
+    "sourceArea3D": 1368.2476321952925,
+    "sourceWeightedBaseColorRGBA": [
+      148.556497844969,
+      181.0558817339397,
+      94.44447443342752,
+      1368.2476321952925
+    ],
+    "farClippedAreaXZ": 0.0005452013572266878,
+    "originalDoubleCountedSourceArea3D": 1368.2481917250432,
+    "originalDoubleCountedSourceWeightedRGBA": [
+      148.5565556200589,
+      181.05595221872292,
+      94.44451229183069,
+      1368.2481917250432
+    ],
+    "removedDuplicateFarSourceArea3D": 0.0005595297507170471,
+    "removedDuplicateFarWeightedRGBA": [
+      0.00005777508991400282,
+      0.0000704847832082578,
+      0.000037858403175050626,
+      0.0005595297507170471
+    ],
+    "farPriorityCounterfactualArea3D": 1368.2476458335018,
+    "farPriorityCounterfactualWeightedRGBA": [
+      148.55645255684925,
+      181.05583889082263,
+      94.44446260049827,
+      1368.2476458335018
+    ],
+    "nearVsFarMaximumWeightedColorDifference": 0.00004528811973614211,
+    "originalSourceMassConservationClaimed": false,
+    "sourceSingleOwnerMaterialConservationQualified": false
+  },
+  "prohibitedConclusions": [
+    "NO_AUTOMATIC_SHORELINE_LAND_FILL",
+    "NO_PRODUCT_PIXEL_PROOF",
+    "NO_FULL_SOURCE_MASS_FLUX_ACCEPTANCE",
+    "NO_MATERIAL_INTEGRAL_INVARIANCE",
+    "NO_RELEASE"
+  ],
+  "firstUnresolvedAssertion": "SOURCE_MATERIAL_OWNER_PRECEDENCE_NOT_AUTHORIZED",
+  "materialOwnerInvariance": false,
+  "sourceMaterialConservation": "HELD_UNTIL_OWNER_AUTHORITY_AND_PHYSICAL_FLUX",
+  "verification": {
+    "mode": "LOCAL_EXACT_ORIGINAL_ARTIFACT_ONLY",
+    "artifactSha256": "e1eb8a2fdbaacce663783440e2189b17e487eacb6c13fd50907d07cdb640bc4a",
+    "testsPassed": 18,
+    "testsFailed": 0,
+    "sourceGitBlob": "2a82ee02d8195cbd5ebe39bf2bab18dfbbe30522",
+    "testsGitBlob": "8bccbdbc017eeab493e9daceca26bb5b5c89f356",
+    "hostedCandidateCiQualified": false,
+    "originalGateGitBlob": "10b5623b09c552930e54a1c1071c37535a831971",
+    "testedOn": "ORIGINAL_GEN2969_PINNED_ZIP_LOCAL_ONLY"
+  },
+  "localFluxQualification": {
+    "result": "LOCAL_SOURCE_FACE_FLUX_MECHANISM_PASS_WITH_GLOBAL_BOUNDARY_HELD",
+    "graphSource": "SHARED_CLIPPED_ORIGINAL_SOURCE_BOUNDARIES_ONLY",
+    "connectedInternalEdges": 25,
+    "crossPrimitiveInternalEdges": 9,
+    "sharedPlanarEdgeLengthMeters": 269.16987188297617,
+    "maxHeightMismatchMeters": 0.000028884628786585154,
+    "sourceFloat32ToleranceLaw": "max(1e-6,2*maxAbsoluteSourceXYZ*2**-23)",
+    "maxRGBMassConservationError": 4.263256414560601e-14,
+    "transportReportedMassError": 4.263256414560601e-14,
+    "appliedTransportEdges": 25,
+    "minimumRGB": 0.06578470755305618,
+    "maximumRGB": 0.2136593486592084,
+    "protectedSourceFaces": 0,
+    "externalDomainFluxQualified": false,
+    "globalPhysicalClosure": false,
+    "sourceMaterialOwnerAccepted": false,
+    "fullP_D_f0Evaluated": false,
+    "noLandWaterSeamSynthesized": true
+  },
+  "boundaryStatus": {
+    "localSourceFluxMechanism": "QUALIFIED_SOURCE_22_FACE_ONLY",
+    "globalSourceFieldFlux": "HELD",
+    "wholeEstateSourceAndVisual": "HELD",
+    "shorelineLandWater": "HELD_SEPARATE"
+  }
+}

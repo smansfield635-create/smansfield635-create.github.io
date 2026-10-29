@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-29T13:26:47Z",
+  "generatedAt": "2026-10-29T14:27:37Z",
   "window": {
-    "start": "2026-07-31T13:26:47Z",
-    "end": "2026-10-29T13:26:47Z"
+    "start": "2026-07-31T14:27:37Z",
+    "end": "2026-10-29T14:27:37Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4348,
-    "visits": 1287,
+    "pageLoads": 4358,
+    "visits": 1317,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4348,
-        "visits": 1287
+        "pageLoads": 4358,
+        "visits": 1317
       }
     },
     "byPath": {
@@ -35,19 +35,23 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 987,
+        "pageLoads": 967,
         "visits": 727
       },
       "/laws/": {
-        "pageLoads": 200,
-        "visits": 60
+        "pageLoads": 260,
+        "visits": 90
       },
       "/products/education/": {
         "pageLoads": 270,
         "visits": 70
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 100,
+        "pageLoads": 110,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -71,7 +75,7 @@
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 110,
+        "pageLoads": 100,
         "visits": 0
       },
       "/evidence/readiness/": {
@@ -191,7 +195,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 70,
+        "pageLoads": 40,
         "visits": 0
       },
       "/characters/": {
@@ -199,6 +203,10 @@
         "visits": 30
       },
       "/characters/legacy-dossiers.html": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -219,14 +227,6 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -317,12 +317,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3061,
+        "pageLoads": 3041,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 737,
-        "visits": 737
+        "pageLoads": 767,
+        "visits": 767
       },
       "(none)": {
         "pageLoads": 540,

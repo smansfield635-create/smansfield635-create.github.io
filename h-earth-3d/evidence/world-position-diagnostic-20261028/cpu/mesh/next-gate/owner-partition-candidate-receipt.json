@@ -26,12 +26,49 @@
       94.44447443342752,
       1368.2476321952925
     ],
-    "farClippedAreaXZ": 0.0005452013572266878
+    "farClippedAreaXZ": 0.0005452013572266878,
+    "originalDoubleCountedSourceArea3D": 1368.2481917250432,
+    "originalDoubleCountedSourceWeightedRGBA": [
+      148.5565556200589,
+      181.05595221872292,
+      94.44451229183069,
+      1368.2481917250432
+    ],
+    "removedDuplicateFarSourceArea3D": 0.0005595297507170471,
+    "removedDuplicateFarWeightedRGBA": [
+      0.00005777508991400282,
+      0.0000704847832082578,
+      0.000037858403175050626,
+      0.0005595297507170471
+    ],
+    "farPriorityCounterfactualArea3D": 1368.2476458335018,
+    "farPriorityCounterfactualWeightedRGBA": [
+      148.55645255684925,
+      181.05583889082263,
+      94.44446260049827,
+      1368.2476458335018
+    ],
+    "nearVsFarMaximumWeightedColorDifference": 0.00004528811973614211,
+    "originalSourceMassConservationClaimed": false,
+    "sourceSingleOwnerMaterialConservationQualified": false
   },
   "prohibitedConclusions": [
     "NO_AUTOMATIC_SHORELINE_LAND_FILL",
     "NO_PRODUCT_PIXEL_PROOF",
     "NO_FULL_SOURCE_MASS_FLUX_ACCEPTANCE",
+    "NO_MATERIAL_INTEGRAL_INVARIANCE",
     "NO_RELEASE"
-  ]
+  ],
+  "firstUnresolvedAssertion": "SOURCE_MATERIAL_OWNER_PRECEDENCE_NOT_AUTHORIZED",
+  "materialOwnerInvariance": false,
+  "sourceMaterialConservation": "HELD_UNTIL_OWNER_AUTHORITY_AND_PHYSICAL_FLUX",
+  "verification": {
+    "mode": "LOCAL_EXACT_ORIGINAL_ARTIFACT_ONLY",
+    "artifactSha256": "e1eb8a2fdbaacce663783440e2189b17e487eacb6c13fd50907d07cdb640bc4a",
+    "testsPassed": 11,
+    "testsFailed": 0,
+    "sourceGitBlob": "5ca289737f075de89c073d1a480e688500e0f4f7",
+    "testsGitBlob": "10d728bacfa8b3f833e3410b999a4141a79c2e4a",
+    "hostedCandidateCiQualified": false
+  }
 }

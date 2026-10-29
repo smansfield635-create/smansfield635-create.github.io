@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 from shapely.geometry import Polygon
-from owner_partition_candidate import clip,affine_integral,must
+from owner_partition_candidate import clip,affine_integral,must,local_source_flux,float32_source_tolerance
 
 class TestOwnerPartition(unittest.TestCase):
     def setUp(self):
@@ -51,6 +51,44 @@ class TestOwnerPartition(unittest.TestCase):
         xyz=np.array([[0.,0.,0.],[2.,1.,0.],[0.,0.,2.]])
         ar,col=affine_integral(Polygon([(0,0),(2,0),(0,2)]),xyz,np.tile([0.1,0.2,0.3,1.],(3,1)))
         self.assertAlmostEqual(ar,col[3])
+    def flux_fixture(self,zoffset=0, rgb_a=.2,rgb_b=.8,coord_offset=(0.,0.)):
+        x,z=coord_offset
+        a=np.array([[x,0,z],[x+1,0,z],[x,0,z+1]],float)
+        b=np.array([[x+1,zoffset,z],[x+1,zoffset,z+1],[x,zoffset,z+1]],float)
+        p={1:Polygon(a[:,[0,2]]),2:Polygon(b[:,[0,2]])}
+        c={1:np.tile([rgb_a,.3,.4,1.],(3,1)),2:np.tile([rgb_b,.3,.4,1.],(3,1))}
+        return p,{1:a,2:b},c
+    def test_local_shared_source_flux_mass_and_gamut(self):
+        p,t,c=self.flux_fixture()
+        r=local_source_flux(p,t,c,near_source_ids={1})
+        self.assertEqual(r['connectedInternalEdges'],1)
+        self.assertEqual(r['crossPrimitiveInternalEdges'],1)
+        self.assertEqual(r['appliedTransportEdges'],1)
+        self.assertLess(r['maxRGBMassConservationError'],1e-11)
+        self.assertFalse(r['globalPhysicalClosure'])
+    def test_local_flux_rejects_disconnected_height(self):
+        p,t,c=self.flux_fixture(zoffset=1.)
+        with self.assertRaisesRegex(ValueError,'DISCONNECTED_3D_SOURCE_CONTACT'):
+            local_source_flux(p,t,c,near_source_ids={1})
+    def test_vertex_contact_is_not_flux_edge(self):
+        p,t,c=self.flux_fixture()
+        t[2]+=np.array([1.,0.,1.])
+        p[2]=Polygon(t[2][:,[0,2]])
+        with self.assertRaisesRegex(ValueError,'NO_PHYSICAL_SOURCE_LINKS'):
+            local_source_flux(p,t,c)
+    def test_protected_source_blocks_flux(self):
+        p,t,c=self.flux_fixture(coord_offset=(-139.,-210.))
+        r=local_source_flux(p,t,c,near_source_ids={1})
+        self.assertEqual(r['protectedSourceFaces'],2)
+        self.assertEqual(r['appliedTransportEdges'],0)
+        self.assertEqual(r['maxRGBMassConservationError'],0)
+    def test_reject_out_of_gamut_source_color(self):
+        p,t,c=self.flux_fixture(rgb_b=1.1)
+        with self.assertRaisesRegex(ValueError,'SOURCE_RGB_OUTSIDE_GAMUT'):
+            local_source_flux(p,t,c)
+    def test_existing_float32_seam_tolerance(self):
+        a=np.array([[0.,0.,-736.],[1.,0.,-736.],[0.,0.,-735.]],float)
+        self.assertAlmostEqual(float32_source_tolerance(a,a),2*736.*2**-23)
     def test_witness_mismatch_fails(self):
         with self.assertRaisesRegex(ValueError,'WITNESS_DRIFT'):
             must(2483==2484,'WITNESS_DRIFT')

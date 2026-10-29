@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-29T18:30:41Z",
+  "generatedAt": "2026-10-29T19:25:02Z",
   "window": {
-    "start": "2026-09-29T18:30:41Z",
-    "end": "2026-10-29T18:30:41Z"
+    "start": "2026-09-29T19:25:02Z",
+    "end": "2026-10-29T19:25:02Z"
   },
   "dimensions": {
     "requestPath": [
@@ -133,11 +133,6 @@
         "visits": 2
       },
       {
-        "value": "/showroom/globe/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
         "value": "/index.html",
         "pageLoads": 2,
         "visits": 2
@@ -159,6 +154,11 @@
       },
       {
         "value": "/laws/scientific-law/battery-heldout-study/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
+        "value": "/showroom/globe/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -452,8 +452,8 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1870,
-        "visits": 1729
+        "pageLoads": 1860,
+        "visits": 1719
       }
     ],
     "siteTag": [

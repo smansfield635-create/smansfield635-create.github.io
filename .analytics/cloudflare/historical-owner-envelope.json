@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-29T18:30:41Z",
+  "generatedAt": "2026-10-29T19:25:02Z",
   "window": {
-    "start": "2026-07-31T18:30:41Z",
-    "end": "2026-10-29T18:30:41Z"
+    "start": "2026-07-31T19:25:02Z",
+    "end": "2026-10-29T19:25:02Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -110,13 +110,13 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
+      },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
         "pageLoads": 20,
@@ -146,6 +146,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/gauges/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
         "visits": 0
@@ -158,7 +162,7 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/gauges/": {
+      "/instruments/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -172,10 +176,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {

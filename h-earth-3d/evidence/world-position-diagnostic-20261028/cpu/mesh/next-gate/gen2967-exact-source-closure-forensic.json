@@ -1,0 +1,137 @@
+{
+  "schema": "H_EARTH_GEN2967_EXACT_SOURCE_MESH_CLOSURE_FORENSIC_v1",
+  "provenance": {
+    "originalSuccessfulMeshSourceRun": 40889517193,
+    "archiveId": 12903309782,
+    "originalZipSHA256": "c72dc10f86c2f9a12072b68f8ac45e577535bb1ed98b548f58caae9dff4923e0",
+    "followOnHostRun": 40893778929,
+    "hostRunDisposition": "FAILED_CLOSED_MESH_GATE_V3_DRIFT_PRE_GATE",
+    "originalWorldSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "uploadedPositionSha256": "342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83",
+    "uploadedIndicesSha256": "483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c",
+    "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "gateGitBlob": "6fda70656fd8fd7695a990a7b45a3d47ccc43aa3",
+    "gateBlobReconstructedFromArchivedV3": "2033596bf75ccd3dbd9664a55460df037e4be2b1",
+    "byteExactGitBlobMatched": true,
+    "localExactGateReportSHA256": "82ac168ad49378e29a947be71336e4901527369bdd4cb15de6ff925373e7afc2",
+    "execution": "Local independent replay of exact GitHub V4 gate source on original SHA-matched GPU upload buffers; NumPy2.3.5 SciPy1.17 Shapely2.1.2; no new Actions run or GPU"
+  },
+  "actualSourceDomainGate": {
+    "exitCode": 2,
+    "closureQualified": false,
+    "sourceTriangles": 21890,
+    "activeOriginalFaces": 358,
+    "retainedSourceSeedFaces": 47,
+    "witnessSamples": 2484,
+    "candidateMemberships": 2575,
+    "sourceTriangleAreaTotalInCandidateSupportSquareMeters": 92046.60955326598,
+    "protectedActiveSourceFaces": 0,
+    "nearFarSeamLinksFound": 348,
+    "partialSourceSeamEdges": 2,
+    "nearFarProjectedOverlaps": 18,
+    "maxProjectedPairOverlapSquareMeters": 0.000144828261574588,
+    "totalProjectedOverlapSquareMeters": 0.0005452013572495901,
+    "partialEdges": [
+      {
+        "group": "NEAR",
+        "sourceFaceIndex": 15744,
+        "originalSourceIndexOffset": 47232,
+        "vertexIds": [
+          7954,
+          8051
+        ],
+        "endpointsXYZ": [
+          [
+            -383.99957275390625,
+            -0.6006324887275696,
+            -79.99990844726562
+          ],
+          [
+            -383.9994201660156,
+            -0.7431848049163818,
+            -71.99989318847656
+          ]
+        ],
+        "lengthMeters": 8.001285229698519,
+        "linkedMeters": 3.618234810000672,
+        "unlinkedMeters": 4.383050419697847
+      },
+      {
+        "group": "NEAR",
+        "sourceFaceIndex": 15935,
+        "originalSourceIndexOffset": 47805,
+        "vertexIds": [
+          8050,
+          8147
+        ],
+        "endpointsXYZ": [
+          [
+            383.9997863769531,
+            -0.36866295337677,
+            -79.99995422363281
+          ],
+          [
+            383.99951171875,
+            -0.6596606969833374,
+            -71.99990844726562
+          ]
+        ],
+        "lengthMeters": 8.005336481759635,
+        "linkedMeters": 3.620068268722876,
+        "unlinkedMeters": 4.385268213036759
+      }
+    ],
+    "actualGateCut": {
+      "count": 128,
+      "minimumSeedSourceFaceCentroidDistanceMeters": 12.330264446886414,
+      "medianSeedSourceFaceCentroidDistanceMeters": 31.991019183253748,
+      "influenceRequirementMeters": 40,
+      "status": "FAIL_CLOSED"
+    }
+  },
+  "independentCutMethodAudit": {
+    "method": "Use exact uploaded source indexed edge adjacency; for an active face sharing an edge with an omitted face count only that exact crossed edge, not every edge of the source face. Preserve all unsealed original source-boundary edges separately; no source geometry or threshold edit.",
+    "originalGateCutRecords": 128,
+    "actualCrossingEdgeCutRecords": 45,
+    "originalGateMinimumActualWitnessToCutMeters": 0.005305904850700283,
+    "actualCrossingCutMinimumSeedFaceCentroidDistanceMeters": 25.52513545004553,
+    "actualCrossingCutMedianSeedFaceCentroidDistanceMeters": 50.135506445177825,
+    "actualCrossingCutMinimumActualWitnessToCutMeters": 38.096026014602074,
+    "actualCrossingCutMedianActualWitnessToCutMeters": 53.2366629205067,
+    "closestActualWitness": {
+      "pose": "inland-seam-far",
+      "pixel": [
+        128,
+        476
+      ],
+      "world": [
+        -213.0625,
+        16.299072265625,
+        -744.3125
+      ],
+      "cutSourceOffset": 74706,
+      "cutCategory": "source-boundary"
+    },
+    "result": "GATE_CUT_OVERCOUNT_PROVED; TRUE_BOUNDARY_DISTANCE_38M_STILL_BELOW_40M_AND_UNQUALIFIED"
+  },
+  "separateSourceClasses": {
+    "partialSeams": "NEAR at X about ±384, Z -80 to -72, each about 4.38m source edge uncovered",
+    "microscopicOverlaps": "18 cross-primitive projected slivers near world Z~-736, interpolated source height deltas under 9.05 micrometers",
+    "cutInfluence": "Existing validator counts all edges of cut-adjacent faces; exact crossed-edge audit still has real source edge 38.096m from observed witness"
+  },
+  "requiredNextMathematicalWork": [
+    "Prove near/far 2D single-owner integration for positive source overlap; do not raise epsilon.",
+    "Distinguish true original world boundaries from artificial candidate support cuts and count only their exact source edges.",
+    "Reconcile two near/far partially linked source segments and fixed 40m witness influence without discarding faces or widening numerical thresholds.",
+    "Before local material transport, spatially clip/partition large FAR triangle contributions to the actual correction footprint rather than changing entire 8.7–12.5k m² faces."
+  ],
+  "acceptance": {
+    "actualMeshGeometryAndUploadsReproduced": true,
+    "sourceFaceSupportComplete": true,
+    "originalDomainClosure": false,
+    "fullPairedMaterialF0": false,
+    "physical1m2mAppearance": false,
+    "publishedProductUnchanged": true,
+    "noNewGpuRun": true
+  }
+}

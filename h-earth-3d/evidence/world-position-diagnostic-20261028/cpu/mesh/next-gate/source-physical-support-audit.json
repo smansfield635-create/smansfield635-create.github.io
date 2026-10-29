@@ -115,7 +115,7 @@
     }
   ],
   "replayScript": "cpu/mesh/next-gate/source-physical-support-audit.py",
-  "replayScriptBlob": "8a6bd3a3f0d30aada431a264e7134751a197aad6",
+  "replayScriptBlob": "892ef162db0b72be5d71199037e7d3d2d00f0e66",
   "method": "Exact stored uploaded Float32 positions and Uint32 indices; source spans; KD-tree conservative centroid-to-vertex-radius bound; for each possible source face measure exact projected triangle distance to at least one archived witness, fixed physical radius 48 m. All 47 selected seed faces are included. Cross NEAR/FAR actual projected triangle intersections tested at existing eps=1e-12 without waivers.",
   "evidenceClass": "OFFLINE_SOURCE_PHYSICAL_SUPPORT_EXPERIMENT_NOT_V3_GATE_PASS",
   "limits": [
@@ -124,5 +124,19 @@
     "No source P(c,f0), D(c,f0) or 1m/2m area conservation pass claimed."
   ],
   "noProductMutation": true,
-  "noNewGpuCapture": true
+  "noNewGpuCapture": true,
+  "overlapHeightAudit": {
+    "method": "Barycentric height interpolation of both exact original uploaded triangles at each positive XZ overlap centroid",
+    "positiveNearFarOverlapCount": 18,
+    "largestOverlapXZSquareMeters": 0.000144828261574588,
+    "combinedOverlapXZSquareMeters": 0.0005452013572495901,
+    "minInterpolatedHeightDifferenceMeters": 9.979926574033016e-8,
+    "maxInterpolatedHeightDifferenceMeters": 0.000009044347217823656,
+    "overlapZRangeMeters": [
+      -736.02951713605,
+      -736.024375410467
+    ],
+    "classification": "MICROMETRIC_NEAR_FAR_COPLANARITY_WITNESSES; NO ZERO_OVERLAP_CLOSURE_CLAIM",
+    "source": "Source-native exact Float32 upload positions and UInt32 original indices; no product modification"
+  }
 }

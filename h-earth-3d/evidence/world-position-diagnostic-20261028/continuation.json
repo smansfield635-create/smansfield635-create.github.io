@@ -17,7 +17,11 @@
     "EIGHT_RAW_FRAMES_HASH_CALIBRATION_POSE_ASSET_VERIFIED",
     "INDEPENDENT_CAPTURE_REVIEW_PASS",
     "2484_ARCHIVED_HEIGHT_SAMPLES_RECONCILED",
-    "PER_PIXEL_AREA_LIMIT_RECORDED"
+    "PER_PIXEL_AREA_LIMIT_RECORDED",
+    "NOMINAL_RAY_AREA_REFINEMENT_REJECTED_735_CONTRADICTIONS",
+    "COUPLED_PAIRED_RESIDUAL_DESIGN_FORMULATED",
+    "CONSERVATIVE_GAMUT_LIMITED_TRANSPORT_ALGEBRA_100_CASES_PASS",
+    "INDEPENDENT_250_BOUNDARY_CASES_PASS_AFTER_ZERO_FLUX_FIX"
   ],
   "run": {
     "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
@@ -38,8 +42,8 @@
     "completionClaimed": true,
     "conclusion": "success"
   },
-  "exactlyOneNextAction": "Using these existing captures and exact scene source, establish interval-bounded surface neighborhoods and source-defined full ecological coarse/detail composition; screen mean/detail preservation offline before proposing any further GPU run.",
-  "stopCondition": "NO_NEW_GPU_RUN_OR_PRODUCT_REPAIR_WITHOUT_QUALIFIED_SOURCE_DESIGN_AND_APPLICABLE_SCOPE",
+  "exactlyOneNextAction": "Materialize the immutable scene geometry and complete source material evaluator on CPU; first reproduce package4f1b7ff2 uploaded positions/topology and archived material samples, then define/recompute P(c,f0),D(c,f0) with explicit camera/detail handling. Only then run the fixed near/far appearance screen with actual mesh area/protection bounds. Reuse existing captures; no GPU launch is needed for source extraction.",
+  "stopCondition": "NO_GPU_OR_PRODUCT_MUTATION_UNTIL_SOURCE_SPLIT_MESH_AREA_AND_OFFLINE_APPEARANCE_ARE_QUALIFIED",
   "productChanged": false,
   "authorityEffect": "NONE_CONTINUATION_ONLY",
   "evidence": {
@@ -49,6 +53,10 @@
     "analysis": "world-material-analysis.json",
     "areaWeightsQualified": false,
     "repairQualified": false,
-    "chamberSynchronization": "UNVERIFIED"
+    "chamberSynchronization": "UNVERIFIED",
+    "offlineDesign": "offline/design.json",
+    "offlineReview": "offline/independent-review.json",
+    "algebraOnlyPass": true,
+    "sourceSceneEvaluatorComplete": false
   }
 }

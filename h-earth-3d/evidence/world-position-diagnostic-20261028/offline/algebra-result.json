@@ -1,0 +1,22 @@
+{
+  "schema": "H_EARTH_OFFLINE_CONSERVATIVE_TRANSPORT_ALGEBRA_v1",
+  "result": "ALGEBRA_INVARIANTS_PASS_NOT_SCENE_QUALIFICATION",
+  "trials": 100,
+  "nodesPerTrial": 31,
+  "invariants": [
+    "RGB area integral conserved",
+    "RGB gamut retained without final clamping",
+    "Protected nodes unchanged",
+    "Defined full paired residual unchanged",
+    "Edge reversal and permutation equivalent within1e-12"
+  ],
+  "maximumRGBIntegralError": 2.2664162213636985e-15,
+  "limitedEdgesAcrossTrials": 759,
+  "sourceSceneEvaluated": false,
+  "visualImprovementEstablished": false,
+  "limits": [
+    "Synthetic arithmetic specimens only; these are not terrain samples.",
+    "Source-qualified P,L,R,area and graph remain required.",
+    "Gamut limiter can prevent sufficient smoothing; no visual success follows from conservation."
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "schema": "H_EARTH_COUPLED_CONSERVATIVE_BLEND_DESIGN_v1",
+  "status": "ALGEBRA_SCREENED_SCENE_EVALUATOR_NOT_COMPLETE",
+  "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2964,
+  "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "problem": "Coupled identity and groundcover palette replacement; patch-amplitude contribution already established. Do not normalize to darker pre-identity brightness.",
+  "composition": {
+    "Q": "(1-wG)*((1-wI)*P+wI*TI)+wG*TG",
+    "D": "Q-P",
+    "coarse": "L=D(c,f0), evaluated from the complete source expression including incoming P",
+    "detail": "R=D(c,f)-D(c,f0)",
+    "candidate": "Q'=P(c,f)+H(L)+R",
+    "identity": "Q'-Q=H(L)-L"
+  },
+  "transport": {
+    "areas": "Positive areas of exact uploaded Float32 terrain triangles, with explicitly resolved shared-edge topology, not adjacent screen pixels.",
+    "edges": "Undirected source surface adjacency; symmetric nonnegative conductance; zero across protected or unqualified boundaries.",
+    "step": "tau=0.5*min_i(a_i/sum_j s_ij) on nonisolated nodes.",
+    "flux": "F_ij=tau*s_ij*(L_j-L_i); sum positive/negative requested RGB mass at every node.",
+    "gamutLimiter": "At each node/channel bound positive mass by a_i*(1-Q_i), negative mass by a_i*Q_i. Each edge gets the minimum corresponding donor/recipient ratio over all RGB channels. Apply one common scalar to both ends and all RGB channels. No final color clamping. Zero-flux channels impose no cap.",
+    "conservation": "Every accepted flux is equal and opposite in RGB mass. Thus sum a_i*Q_i is unchanged, regardless of nonzero residual mean.",
+    "detailPreservation": "Store R from paired complete expressions and leave it unchanged; do not preserve only incoming P grain while dropping target or coverage detail.",
+    "scope": "Discrete offline algebra only; choice of quadrature, nodal representation, interpolation continuity and source masks remains unqualified."
+  },
+  "sourceSplitStatus": {
+    "established": [
+      "P must be recomputed under the same fine-source substitutions as targets and weights.",
+      "Retain both upstream identity and groundcover expressions in D.",
+      "Nonlinear interactions belong in exact paired residual; f0 is a reference, never falsely called measured mean.",
+      "Do not infer a spectral cutoff from source noise cell size."
+    ],
+    "unresolved": [
+      "No fully enumerated c/f source-leaf inventory and f0 reference has been qualified.",
+      "P includes actual approved soil texture, procedural triplanar terms, relief-derived normals, branch masks and camera-dependent detail. Archived composite P does not expose its counterfactual P(c,f0).",
+      "Near-material and microrelief envelopes depend on camera and derivatives; a world-baked L must not silently acquire camera dependence.",
+      "Exact scene triangle areas, neighborhood protection, quadrature error, continuous reconstruction and post-reconstruction gamut are required before this discrete operator becomes a shader candidate."
+    ]
+  },
+  "geometryFindings": {
+    "nearDomain": {
+      "x": [
+        -384,
+        384
+      ],
+      "z": [
+        -736,
+        128
+      ]
+    },
+    "nearPrimitive": "H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001",
+    "farPrimitive": "H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION",
+    "capturedPackage": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+    "capturedVertexCount": 141373,
+    "capturedTriangleCount": 122222,
+    "capturedRefinementCreated": false,
+    "seamMatchedVertices": 349,
+    "seamMaximumResidualMeters": 0.00005042651046467775,
+    "warning": "Far-center witness straddles nominal near/far domain reach, but source stage attribution and this geometric coincidence do not establish seam causation. Other frozen near samples lie entirely farther inland."
+  },
+  "rejectedInference": {
+    "name": "IDEAL_PIXEL_RAY_INTERSECTION_FOR_TIGHTER_WORLD_INTERVALS",
+    "nearContradictions": 273,
+    "nearSamples": 1107,
+    "farContradictions": 462,
+    "farSamples": 1377,
+    "method": "Float32-rounded uploaded viewProjection matrix inverted in CPU float64; intersect pixel-center ray with .625-bin XYZ boxes.",
+    "disposition": "REJECT_FOR_AREA_QUALIFICATION",
+    "reason": "Recorded shader scalar quantization intervals are not certified exact geometric surface intervals. Vertex/raster/interpolation/presentation effects unresolved. Do not expand tolerances until contradictions disappear or discard failed points."
+  },
+  "nextAction": "Materialize the immutable scene geometry and complete source material evaluator on CPU; first reproduce package4f1b7ff2 uploaded positions/topology and archived material samples, then define/recompute P(c,f0),D(c,f0) with explicit camera/detail handling. Only then run the fixed near/far appearance screen with actual mesh area/protection bounds. Reuse existing captures; no GPU launch is needed for source extraction.",
+  "gpuReady": false,
+  "productChanged": false,
+  "newGpuRuns": 0,
+  "publicationAuthorized": false,
+  "chamberSynchronization": "UNVERIFIED"
+}

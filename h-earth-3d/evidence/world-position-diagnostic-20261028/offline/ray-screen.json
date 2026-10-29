@@ -1,0 +1,29 @@
+{
+  "result": "EXPLORATORY_NOMINAL_RAY_BOX_COMPATIBILITY_ONLY",
+  "groups": [
+    {
+      "pose": "inland-seam-near",
+      "samples": 1107,
+      "incompatible": 273,
+      "nominalRayDepthWidthQuantiles": [
+        -0.3505860662182272,
+        0.008106915799636738,
+        0.06141333161882301
+      ]
+    },
+    {
+      "pose": "inland-seam-far",
+      "samples": 1377,
+      "incompatible": 462,
+      "nominalRayDepthWidthQuantiles": [
+        -0.11303791725383405,
+        0.004887595869810468,
+        0.0188691193484658
+      ]
+    }
+  ],
+  "limits": [
+    "Float32 uploaded matrix inverted in CPU float64; no established GPU interpolation/projection error bound.",
+    "Passing ray-box compatibility does not establish true correlated intervals or mesh connectivity."
+  ]
+}

@@ -1,0 +1,3016 @@
+{
+  "sourceSha256": "9b857cad2084c72acc7c216499d8fb12fc0674e22fee34172924c9a399911bec",
+  "independentCases": 250,
+  "failedCases": 0,
+  "maximumErrors": {
+    "RGBIntegral": 5.537237335317968e-15,
+    "gamut": 0.0,
+    "protected": 0.0,
+    "residual": 5.551115123125783e-17,
+    "edgeOrientationPermutation": 8.881784197001252e-16
+  },
+  "firstFailure": null,
+  "cases": [
+    {
+      "mode": "boundary",
+      "trial": 0,
+      "errors": {
+        "RGBIntegral": 2.3869795029440866e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 1,
+      "errors": {
+        "RGBIntegral": 2.9698465908722937e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 2,
+      "errors": {
+        "RGBIntegral": 3.969047313034935e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 3,
+      "errors": {
+        "RGBIntegral": 2.220446049250313e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 4,
+      "errors": {
+        "RGBIntegral": 1.5404344466674047e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 5,
+      "errors": {
+        "RGBIntegral": 2.9976021664879227e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 6,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 7,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 8,
+      "errors": {
+        "RGBIntegral": 2.7755575615628914e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 9,
+      "errors": {
+        "RGBIntegral": 2.6645352591003757e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 10,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 11,
+      "errors": {
+        "RGBIntegral": 1.0269562977782698e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 12,
+      "errors": {
+        "RGBIntegral": 1.4970663597679845e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 13,
+      "errors": {
+        "RGBIntegral": 1.2906342661267445e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 14,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 15,
+      "errors": {
+        "RGBIntegral": 4.996003610813204e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 16,
+      "errors": {
+        "RGBIntegral": 2.220446049250313e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 17,
+      "errors": {
+        "RGBIntegral": 1.4988010832439613e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 18,
+      "errors": {
+        "RGBIntegral": 5.551115123125783e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 19,
+      "errors": {
+        "RGBIntegral": 1.4849232954361469e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 20,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 21,
+      "errors": {
+        "RGBIntegral": 2.3314683517128287e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 22,
+      "errors": {
+        "RGBIntegral": 3.552713678800501e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 23,
+      "errors": {
+        "RGBIntegral": 2.699229728619912e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 24,
+      "errors": {
+        "RGBIntegral": 3.3306690738754696e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 25,
+      "errors": {
+        "RGBIntegral": 1.3600232051658168e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 26,
+      "errors": {
+        "RGBIntegral": 8.881784197001252e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 27,
+      "errors": {
+        "RGBIntegral": 1.9984014443252818e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 28,
+      "errors": {
+        "RGBIntegral": 1.887379141862766e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 29,
+      "errors": {
+        "RGBIntegral": 3.552713678800501e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 30,
+      "errors": {
+        "RGBIntegral": 4.052314039881821e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 31,
+      "errors": {
+        "RGBIntegral": 1.6653345369377348e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 32,
+      "errors": {
+        "RGBIntegral": 1.5265566588595902e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 5.551115123125783e-17,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 33,
+      "errors": {
+        "RGBIntegral": 2.4841240175987878e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 5.551115123125783e-17,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 34,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 35,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 36,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 37,
+      "errors": {
+        "RGBIntegral": 2.0539125955565396e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 38,
+      "errors": {
+        "RGBIntegral": 4.440892098500626e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 39,
+      "errors": {
+        "RGBIntegral": 2.1163626406917047e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 40,
+      "errors": {
+        "RGBIntegral": 1.0269562977782698e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 41,
+      "errors": {
+        "RGBIntegral": 3.219646771412954e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 42,
+      "errors": {
+        "RGBIntegral": 1.7763568394002505e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 43,
+      "errors": {
+        "RGBIntegral": 1.27675647831893e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 44,
+      "errors": {
+        "RGBIntegral": 1.1102230246251565e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 45,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 46,
+      "errors": {
+        "RGBIntegral": 1.3322676295501878e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 47,
+      "errors": {
+        "RGBIntegral": 1.5543122344752192e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 48,
+      "errors": {
+        "RGBIntegral": 1.4988010832439613e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "boundary",
+      "trial": 49,
+      "errors": {
+        "RGBIntegral": 2.886579864025407e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 0,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 1,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 2,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 3,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 4,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 5,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 6,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 7,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 8,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 9,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 10,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 11,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 12,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 13,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 14,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 15,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 16,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 17,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 18,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 19,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 20,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 21,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 22,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 23,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 24,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 25,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 26,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 27,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 28,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 29,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 30,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 31,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 32,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 33,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 34,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 35,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 36,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 37,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 38,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 39,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 40,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 41,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 42,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 43,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 44,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 45,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 46,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 47,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 48,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "all-protected",
+      "trial": 49,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 0,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 1,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 2,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 3,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 4,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 5,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 6,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 7,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 8,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 9,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 10,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 11,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 12,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 13,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 14,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 15,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 16,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 17,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 18,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 19,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 20,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 21,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 22,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 23,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 24,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 25,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 26,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 27,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 28,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 29,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 30,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 31,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 32,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 33,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 34,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 35,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 36,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 37,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 38,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 39,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 40,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 41,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 42,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 43,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 44,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 45,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 46,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 47,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 48,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "zero-conductance",
+      "trial": 49,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 0,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 1,
+      "errors": {
+        "RGBIntegral": 9.992007221626409e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 5.551115123125783e-17,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 2,
+      "errors": {
+        "RGBIntegral": 3.5041414214731503e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 3,
+      "errors": {
+        "RGBIntegral": 4.440892098500626e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 4,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 5,
+      "errors": {
+        "RGBIntegral": 9.020562075079397e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 6,
+      "errors": {
+        "RGBIntegral": 5.100087019371813e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 7,
+      "errors": {
+        "RGBIntegral": 1.6930901125533637e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 8,
+      "errors": {
+        "RGBIntegral": 1.6323747908941755e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 9,
+      "errors": {
+        "RGBIntegral": 2.831068712794149e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 10,
+      "errors": {
+        "RGBIntegral": 1.0130785099704553e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 11,
+      "errors": {
+        "RGBIntegral": 1.2212453270876722e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 12,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 13,
+      "errors": {
+        "RGBIntegral": 4.440892098500626e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 14,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 15,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 16,
+      "errors": {
+        "RGBIntegral": 5.537237335317968e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 17,
+      "errors": {
+        "RGBIntegral": 1.0824674490095276e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 4.440892098500626e-16
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 18,
+      "errors": {
+        "RGBIntegral": 2.1094237467877974e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 19,
+      "errors": {
+        "RGBIntegral": 3.219646771412954e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 20,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 21,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 22,
+      "errors": {
+        "RGBIntegral": 2.248201624865942e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 23,
+      "errors": {
+        "RGBIntegral": 1.27675647831893e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 24,
+      "errors": {
+        "RGBIntegral": 2.3314683517128287e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 8.881784197001252e-16
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 25,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 26,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 27,
+      "errors": {
+        "RGBIntegral": 8.326672684688674e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 28,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 29,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 30,
+      "errors": {
+        "RGBIntegral": 2.220446049250313e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 5.551115123125783e-17,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 31,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 32,
+      "errors": {
+        "RGBIntegral": 1.304512053934559e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 33,
+      "errors": {
+        "RGBIntegral": 1.5265566588595902e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 34,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 35,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 36,
+      "errors": {
+        "RGBIntegral": 2.1094237467877974e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 37,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 38,
+      "errors": {
+        "RGBIntegral": 4.440892098500626e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 1.3877787807814457e-17
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 39,
+      "errors": {
+        "RGBIntegral": 4.107825191113079e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 40,
+      "errors": {
+        "RGBIntegral": 4.163336342344337e-17,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 41,
+      "errors": {
+        "RGBIntegral": 3.219646771412954e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 42,
+      "errors": {
+        "RGBIntegral": 2.609024107869118e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 43,
+      "errors": {
+        "RGBIntegral": 1.1102230246251565e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 44,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 45,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 46,
+      "errors": {
+        "RGBIntegral": 1.3409412469300719e-15,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 47,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 48,
+      "errors": {
+        "RGBIntegral": 8.049116928532385e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "duplicate-edges",
+      "trial": 49,
+      "errors": {
+        "RGBIntegral": 4.996003610813204e-16,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 0,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 1,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 2,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 3,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 4,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 5,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 6,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 7,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 8,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 9,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 10,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 11,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 12,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 13,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 14,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 15,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 16,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 17,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 18,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 19,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 20,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 21,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 22,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 23,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 24,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 25,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 26,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 27,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 28,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 29,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 30,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 31,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 32,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 33,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 34,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 35,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 36,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 37,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 38,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 39,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 40,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 41,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 42,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 43,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 44,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 45,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 46,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 47,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 48,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    },
+    {
+      "mode": "self-edges",
+      "trial": 49,
+      "errors": {
+        "RGBIntegral": 0.0,
+        "gamut": 0.0,
+        "protected": 0.0,
+        "residual": 0.0,
+        "edgeOrientationPermutation": 0.0
+      },
+      "pass": true
+    }
+  ],
+  "sceneQualified": false
+}

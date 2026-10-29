@@ -1,0 +1,121 @@
+{
+  "schema": "H_EARTH_OFFLINE_COMPOSITION_INDEPENDENT_REVIEW_v1",
+  "result": "ALGEBRAIC_CONSERVATION_DESIGN_CONDITIONALLY_VALID_NOT_GPU_READY",
+  "source": "/tmp/world-renderer.js",
+  "frozenSourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "scope": "Read-only independent source and mathematical review; no runtime mutation or GPU execution",
+  "exactComposition": {
+    "Q": "A*P+B",
+    "A": "(1-wI)*(1-wG)",
+    "B": "(1-wG)*wI*TI+wG*TG",
+    "D": "Q-P",
+    "sourcePairedSplit": "L=F(c,f0)-P(c,f0); R=[F(c,f)-P(c,f)]-L; Q=P(c,f)+L+R",
+    "updatedOutput": "Q'=P(c,f)+H(L)+R",
+    "preservedIdentity": "Q'-Q=H(L)-L; every original fine interaction captured by the exact paired residual R remains unchanged",
+    "conservation": "If sum_i a_i H(L)_i = sum_i a_i L_i, then sum_i a_i Q'_i = sum_i a_i Q_i in every RGB channel, regardless of whether R has zero mean"
+  },
+  "necessarySourceContract": [
+    "Evaluate the complete identity and groundcover composition together, with the SAME substitutions in every upstream/downstream consumer. Do not separately smooth wI, wG or palette endpoints and assume the cross terms survive.",
+    "Declare each substituted leaf signal by its source name, expression and frequency. A named-signal split is valid as a definition, but is not a proven spectral low/high separation.",
+    "Potential explicit fine leaves include detailField, grain, triFine and triMicro. medium, mesoField, triCoarse, geometric slope, shading-normal effects and all photograph/texture inputs require an explicit keep/substitute classification; do not omit them silently.",
+    "f0=0.5 may be defined as a neutral reference, but cannot be called the measured spatial mean of a deterministic finite field. E[F(c,f)] is generally not F(c,E[f]) because smoothstep, clamp, absolute value and multiplicative weights are nonlinear.",
+    "Incoming P must be recomputed under the SAME leaf substitutions for L=D(c,f0). Simply preserving P's fine detail omits target and weight interactions. R must be the exact difference of complete source evaluations.",
+    "Near-material/distance modulation and shading-normal dependence can make L camera dependent. A world-space precomputed L needs an explicit view-independent source evaluation; preserve actual view-dependent differences in R and qualify that split.",
+    "The selected f0 changes the coarse field even though Q=L+R+P is an exact reconstruction. It therefore needs a declared source rationale and cannot be chosen by fitting screenshot improvement."
+  ],
+  "transportConditions": [
+    "Use symmetric edge conductance s_ij=s_ji>=0 with positive world-area a_i and no-flux protected boundaries.",
+    "For an explicit step H(L)_i=L_i+tau/a_i*sum_j s_ij(L_j-L_i), tau<=min_i a_i/sum_j s_ij makes each H(L)_i a convex combination of coarse neighbor values.",
+    "Convexity of H(L) does NOT establish 0<=Q'<=1 after adding signed R and P. A separate output gamut check is required; clamping would break the conservation proof. Any bound-preserving flux limiter must be paired/conservative and qualified, not a posteriori clipping.",
+    "Global or component mean preservation is weaker than preserving each local accepted meadow/soil appearance. Healthy protected controls need exact no-change constraints; unprotected controls need measured bounded change.",
+    "Preserving R exactly is a construction identity, not independent evidence that visible soil detail is retained. R may contain broad components because fine amplitudes are modulated by coarse masks. Final band improvement and detail remain independent screening requirements.",
+    "Screen-visible pixels do not define complete terrain connectivity, protected components, or area quadrature; avoid screen-space diffusion masquerading as world-space transport."
+  ],
+  "rayRefinementScreen": {
+    "nominalDoubleVPRayBox": {
+      "near": {
+        "samples": 1107,
+        "emptyIntersections": 262,
+        "maxRayParameterGapMeters": 0.3600552668818011
+      },
+      "far": {
+        "samples": 1377,
+        "emptyIntersections": 462,
+        "maxRayParameterGapMeters": 0.11314539697879411
+      }
+    },
+    "float32VPInverseNearFarRayBox": {
+      "near": {
+        "samples": 1107,
+        "emptyIntersections": 273,
+        "maxRayParameterGapMeters": 0.3505860662181419
+      },
+      "far": {
+        "samples": 1377,
+        "emptyIntersections": 462,
+        "maxRayParameterGapMeters": 0.11303791725360668
+      }
+    },
+    "coordinateHalfWidthsMeters": [
+      0.0390625,
+      0.000152587890625,
+      0.0390625
+    ],
+    "meaning": "Nominal pixel-ray plus encoded-coordinate boxes are contradictory at some frozen samples. The existing image bytes remain verified. The extra ideal ray law is not qualified to tighten coordinate or area intervals.",
+    "prohibitedRepair": "Do not discard contradictory samples or tune an empirical pixel/meter tolerance until the test passes.",
+    "requiredResolution": "Reconcile source-bound uploaded matrix, raster precision, interpolation, viewport and presentation semantics, or recover world-area/connectivity from the already existing immutable scene mesh. No new GPU run is justified solely by this failed ideal-ray inference."
+  },
+  "nextEvidenceAction": "Prefer immutable scene mesh/index/role/protection source to establish world-area neighborhoods offline. In parallel, implement the paired full-composition evaluator with an explicitly declared source-leaf/reference contract. Validate exact reconstruction and conservative transport/gamut separately before any actual candidate capture.",
+  "repairQualified": false,
+  "visualAcceptance": false,
+  "productMutation": false,
+  "newGPUCapture": false,
+  "conservativeTransportSpecimenReview": {
+    "result": "PASS_AFTER_ZERO_FLUX_ORIENTATION_REPAIR_SYNTHETIC_ONLY",
+    "sourceSha256": "9b857cad2084c72acc7c216499d8fb12fc0674e22fee34172924c9a399911bec",
+    "authorTrialsRerun": 100,
+    "independentBoundaryCases": 250,
+    "failedIndependentCases": 0,
+    "maximumIndependentErrors": {
+      "RGBIntegral": 5.537237335317968e-15,
+      "gamut": 0.0,
+      "protected": 0.0,
+      "residual": 5.551115123125783e-17,
+      "edgeOrientationPermutation": 8.881784197001252e-16
+    },
+    "discoveredDefect": {
+      "firstWitness": "seed7991/boundary/trial0",
+      "edgeOrientationMaximumRGBDifferenceBeforeRepair": 0.09434173142863811,
+      "cause": "Exactly zero channel flux incorrectly constrained the shared RGB edge alpha using orientation-dependent endpoint budgets.",
+      "repair": "Set channel cap=1 when flux==0 before taking common RGB minimum.",
+      "verified": "250 boundary/protected/zero-conductance/duplicate-edge/self-edge cases now pass; maximum reversal/permutation error8.88e-16."
+    },
+    "reasoning": [
+      "Accepted edge flux is added/subtracted symmetrically in integrated RGB mass.",
+      "Every accepted channel flux respects aggregate precomputed positive/negative endpoint capacities. A common alpha preserves pairing and RGB direction.",
+      "Zero flux imposes no capacity demand and now imposes no cap.",
+      "Protected incident edges are disabled; R remains unchanged by definition."
+    ],
+    "preconditions": [
+      "Finite positive areas; finite nonnegative conductance; valid edge indices/shapes; finite RGB arrays; original Q in[0,1].",
+      "Current specimen does not explicitly validate every precondition; production implementation would need those validations."
+    ],
+    "limits": [
+      "Synthetic arithmetic only. Actual source-qualified P,L,R,mesh area,protection and adjacency remain unestablished.",
+      "Flux limiting can prevent sufficient boundary improvement; no visual or GPU readiness follows.",
+      "Residual identity is construction preservation, not independently measured perceptual detail."
+    ]
+  },
+  "designManifestReview": {
+    "path": "/tmp/world-offline/design.json",
+    "sha256": "e342d48ca2dee4298c46d49ce4663fae0a556041640c7acb91fac289e6de8833",
+    "verdict": "TRUTHFUL_ALGEBRA_SCREENED_SCENE_EVALUATOR_INCOMPLETE",
+    "comments": [
+      "Manifest explicitly separates source-split gaps, geometric qualification, discrete algebra, and visual readiness.",
+      "Gamut limiter text should explicitly say zero-flux channels impose no cap, matching repaired implementation.",
+      "Geometry inventory numbers are parent source-inspection findings, not independently recomputed by this review.",
+      "The next action correctly reuses immutable source and existing captures rather than launching a GPU run."
+    ],
+    "repairQualified": false
+  }
+}

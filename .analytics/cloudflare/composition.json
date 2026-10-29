@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-29T20:26:12Z",
+  "generatedAt": "2026-10-29T21:25:54Z",
   "window": {
-    "start": "2026-09-29T20:26:12Z",
-    "end": "2026-10-29T20:26:12Z"
+    "start": "2026-09-29T21:25:54Z",
+    "end": "2026-10-29T21:25:54Z"
   },
   "dimensions": {
     "requestPath": [
@@ -29,13 +29,18 @@
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 44,
-        "visits": 44
+        "pageLoads": 43,
+        "visits": 43
       },
       {
         "value": "/about/",
         "pageLoads": 40,
         "visits": 40
+      },
+      {
+        "value": "/nine-summits/universe/",
+        "pageLoads": 31,
+        "visits": 31
       },
       {
         "value": "/gauges/",
@@ -46,11 +51,6 @@
         "value": "/meet-sean-mansfield/",
         "pageLoads": 30,
         "visits": 30
-      },
-      {
-        "value": "/nine-summits/universe/",
-        "pageLoads": 29,
-        "visits": 29
       },
       {
         "value": "/evidence/agentic-frontier/",
@@ -64,8 +64,8 @@
       },
       {
         "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
-        "pageLoads": 22,
-        "visits": 22
+        "pageLoads": 21,
+        "visits": 21
       },
       {
         "value": "/about-this-underdog/",
@@ -221,8 +221,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1656,
-        "visits": 1656
+        "pageLoads": 1655,
+        "visits": 1655
       },
       {
         "value": "diamondgatebridge.com",
@@ -231,8 +231,8 @@
       },
       {
         "value": "bing.com",
-        "pageLoads": 32,
-        "visits": 32
+        "pageLoads": 33,
+        "visits": 33
       },
       {
         "value": "www.google.com",
@@ -295,13 +295,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1441,
-        "visits": 1392
+        "pageLoads": 1440,
+        "visits": 1391
       },
       {
         "value": "mobile",
-        "pageLoads": 322,
-        "visits": 271
+        "pageLoads": 323,
+        "visits": 272
       },
       {
         "value": "tablet",
@@ -317,13 +317,13 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 506,
-        "visits": 424
+        "pageLoads": 505,
+        "visits": 423
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 174,
-        "visits": 162
+        "pageLoads": 175,
+        "visits": 163
       },
       {
         "value": "Edge",
@@ -374,13 +374,13 @@
       },
       {
         "value": "Android",
-        "pageLoads": 265,
-        "visits": 212
+        "pageLoads": 266,
+        "visits": 213
       },
       {
         "value": "Windows",
-        "pageLoads": 214,
-        "visits": 205
+        "pageLoads": 213,
+        "visits": 204
       },
       {
         "value": "MacOSX",

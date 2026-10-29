@@ -70,9 +70,31 @@ class MeshGate(unittest.TestCase):
   from mesh_domain_gate import boundary_distance
   v,i,g=self.fixture();o,vid,verts,area,n,b=topo(v,i,g)
   links,partial,sealed=continuous_source_seam(v,b,g,o,n,require_complete=True)
-  a=boundary_distance(v,o,vid,b,{0,1,2},{0,1},n,verts,sealed)
-  b2=boundary_distance(v,o,vid,b,{0,1,2},{0,1},n,verts,set())
+  a=boundary_distance(v,o,vid,b,{0,1,2},{0,1},n,verts,sealed,[{'world':[2.,0.,2.]}])
+  b2=boundary_distance(v,o,vid,b,{0,1,2},{0,1},n,verts,set(),[{'world':[2.,0.,2.]}])
   self.assertEqual(b2['cutEdges']-a['cutEdges'],3)
+ def test_exact_indexed_cut_counts_only_shared_edge(self):
+  # Two original indexed NEAR faces share only one crossing edge.
+  # Historical overcount added all three edges of the selected face.
+  from mesh_domain_gate import boundary_distance
+  v=np.array([[0.,0.,0.],[10.,0.,0.],[0.,0.,10.],[10.,0.,10.]])
+  i=np.array([0,1,2,1,3,2],np.uint32)
+  o,vid,verts,area,n,b=topo(v,i,{0:'NEAR',3:'NEAR'})
+  report=boundary_distance(v,o,vid,b,{0},{0},n,verts,set(),
+                           [{'world':[5.,0.,5.]}])
+  self.assertEqual(report['artificialIndexedCutEdges'],1)
+  self.assertEqual(report['originalSourceBoundaryEdges'],2)
+  self.assertEqual(report['cutEdges'],3)
+  self.assertEqual(report['witnessCount'],1)
+  self.assertAlmostEqual(report['minimumActualWitnessToCutMeters'],0.)
+  self.assertLess(report['minimumActualWitnessToCutMeters'],40.)
+  self.assertEqual(report['unresolvedCrossPrimitiveCuts'],0)
+ def test_missing_real_witnesses_fails_closed(self):
+  from mesh_domain_gate import boundary_distance
+  v,i,g=self.fixture();o,vid,verts,area,n,b=topo(v,i,g)
+  with self.assertRaisesRegex(ValueError,'MISSING_ACTUAL_CUT_WITNESSES'):
+   boundary_distance(v,o,vid,b,{0},{0},n,verts,set(),[])
+
  def test_overlapping_near_far_fails(self):
   v,i,g=self.fixture();v[5,2]=2.0
   o,vid,verts,area,n,b=topo(v,i,g)

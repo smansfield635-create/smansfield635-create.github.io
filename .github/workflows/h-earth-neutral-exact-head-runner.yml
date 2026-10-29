@@ -1298,3 +1298,41 @@ jobs:
           path: ${{ runner.temp }}/h-earth-source-native/
           if-no-files-found: error
           retention-days: 30
+
+  # Gen2965: source-only CI verification for precisely the tooling PR branch.
+  original-indexed-mesh-static-test:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/source-native-mesh-qualification-20261028' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout proposed exact-head runner
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate bounded profile and source bootstrap
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          workflow=Path('.github/workflows/h-earth-neutral-exact-head-runner.yml').read_text()
+          assert workflow.count('  original-indexed-mesh-recovery:') == 1
+          assert workflow.count('  original-indexed-mesh-static-test:') == 1
+          assert "inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1'" in workflow
+          assert "inputs.route_query == 'qualification=h-earth-original-indexed-mesh-v1'" in workflow
+          assert "ref: ee8463c17b9df9fc0c9f534792fa7235fa836443" in workflow
+          assert "test \"$TARGET_SHA\" = 'ee8463c17b9df9fc0c9f534792fa7235fa836443'" in workflow
+          assert 'if: always()' in workflow
+          assert "recover-original-mesh.sh --mesh" in workflow
+          assert "numpy==2.2.6 scipy==1.15.3 shapely==2.1.2 Pillow==11.3.0" in workflow
+          assert '  original-indexed-mesh-recovery:' in workflow
+          print('PASS:FIXED_ORIGINAL_INDEXED_MESH_WORKFLOW_STATIC_GUARDS')
+          PY
+          bash -n h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh
+          python3 h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py

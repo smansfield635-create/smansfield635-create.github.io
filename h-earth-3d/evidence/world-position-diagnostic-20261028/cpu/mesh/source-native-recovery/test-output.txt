@@ -1,0 +1,10 @@
+test_no_overwrite (__main__.Bootstrap.test_no_overwrite) ... ok
+test_no_product_write_or_bypass (__main__.Bootstrap.test_no_product_write_or_bypass) ... ok
+test_refuses_non_repository (__main__.Bootstrap.test_refuses_non_repository) ... ok
+test_requires_mode (__main__.Bootstrap.test_requires_mode) ... ok
+test_shell_syntax (__main__.Bootstrap.test_shell_syntax) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.010s
+
+OK

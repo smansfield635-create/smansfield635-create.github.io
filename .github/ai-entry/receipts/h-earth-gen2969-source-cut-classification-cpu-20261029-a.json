@@ -1,0 +1,27 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen2969-source-cut-classification-cpu-20261029-a",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6966,
+  "requestBranch": "ai-dispatch-request-h-earth-gen2969-cut-class-20261029",
+  "requestCommit": "8c3a030f295f6a4bf1a0c54e9d6a71b7f3e8e1b8",
+  "requestCommitParent": "10bbb83a95145328ad96a017abdaee28857e03a8",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "10bbb83a95145328ad96a017abdaee28857e03a8",
+  "workflow": "h-earth-neutral-exact-head-runner.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "6e6b60089ab640566dc27d50bcfe53b54564b42e",
+    "route_query": "qualification=h-earth-original-indexed-mesh-v1",
+    "route_path": "/showroom/globe/h-earth/",
+    "exercise_vegetation_residency": "false"
+  },
+  "bridgeRunId": "40909474337",
+  "dispatchedRunId": 40909501175,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40909501175",
+  "dispatchedRunHeadSha": "10bbb83a95145328ad96a017abdaee28857e03a8",
+  "dispatchedAt": "2026-10-29T16:13:52.473Z",
+  "resolvedAt": "2026-10-29T16:13:56.782Z"
+}

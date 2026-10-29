@@ -85,7 +85,7 @@ const ORBIT_RADIANS_PER_SECOND=.08;
 let orbitPhase=0, orbitSpeed=0, motionPaused=false, sceneVisible=true, windowFocused=true, pageActive=true;
 let ready=false, reduced=media.matches, receipt={status:'loading'}, disposed=false, teachingRevealVersion=0;
 // Gen2970 one-world proof: dedicated spatial encounter; the public Gen2968 page is untouched.
-let flight=0,flightTarget=0,cameraZ=9,flightStage='arrival',universeClock=0;
+let flight=0,flightTarget=0,cameraZ=9,flightStage='arrival',universeClock=0,peaceFocusReturn=null;
 const $=s=>document.querySelector(s);
 const peaceOverlay=$('#peace-encounter');
 const color=hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
@@ -96,7 +96,20 @@ $('#toggle-motion').addEventListener('click',()=>{motionPaused=!motionPaused;orb
 function stopInertia(){if(inertia){quaternion=P.constellationReleaseQuaternionAt(inertia,Math.min(inertia.durationMs,performance.now()-inertia.startedAt));inertia=null;}}
 function choose(index,scroll=true){
   if(pointer?.dragging || performance.now()<suppressUntil)return;
-  stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; selected=index; close=false; targetZoom=1;targetOffset=[0,0,0];panel.style.setProperty('--world-accent',summits[index][2]);scene.style.setProperty('--world-accent',summits[index][2]);
+  stopInertia();
+  // Switching from the exemplar must not leave its camera zoom, hidden labels or overlay behind.
+  if(index!==4&&(selected===4||flight>.002||flightTarget>0)){
+    flight=0;flightTarget=0;cameraZ=9;flightStage='arrival';
+    peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');
+    scene.dataset.stage='arrival';document.documentElement.classList.remove('universe-encounter');
+    peaceFocusReturn=null;
+  }
+  if(index===4&&ready){
+    const active=document.activeElement;
+    peaceFocusReturn=active&&active!==document.body&&typeof active.focus==='function'
+      ?active:labels[4]||document.querySelector('[data-summit="4"]');
+  }
+  teachingRevealVersion++;$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; selected=index; close=false; targetZoom=1;targetOffset=[0,0,0];panel.style.setProperty('--world-accent',summits[index][2]);scene.style.setProperty('--world-accent',summits[index][2]);
   const [begin,summit]=summits[index], teaching=teachings[index];
   $('#reflection-path').textContent=`Summit ${index+1} of 9 · ${begin} → ${summit}`;
   $('#reflection-title').textContent=teaching.title;
@@ -370,6 +383,8 @@ function render(time){
     flightStage='encounter';scene.dataset.stage='encounter';peaceOverlay.classList.add('is-visible');peaceOverlay.setAttribute('aria-hidden','false');
     document.documentElement.classList.add('universe-encounter');
     $('#scene-note').textContent='Forgiveness → Peace · A world to explore';status.textContent='Arrived at the world of Peace.';
+    // The new encounter precedes the path list in DOM order: move focus to its readable landmark.
+    peaceOverlay.focus({preventScroll:true});
   }
   if(selected===4&&flight===0&&flightStage==='return'){
     selected=-1;close=false;flightStage='arrival';targetZoom=1;targetOffset=[0,0,0];
@@ -377,6 +392,8 @@ function render(time){
     labels.forEach(el=>el.setAttribute('aria-pressed','false'));
     $('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore';
     status.textContent='Returned to the universe.';updateMotionControl();
+    const restore=peaceFocusReturn?.isConnected?peaceFocusReturn:(labels[4]||document.querySelector('[data-summit="4"]'));
+    peaceFocusReturn=null;restore?.focus({preventScroll:true});
   }
   zoom+=(targetZoom-zoom)*settle;offset=offset.map((v,i)=>v+(targetOffset[i]-v)*settle);
   const moving=Math.abs(zoom-targetZoom)>.0001||offset.some((v,i)=>Math.abs(v-targetOffset[i])>.0001);
@@ -401,7 +418,7 @@ function render(time){
     gl.depthMask(true);gl.disable(gl.BLEND);
   }
   const heart=project([0,0,0]), glow=$('.heart-glow');glow.style.left=heart.x+'px';glow.style.top=heart.y+'px';glow.style.transform=`translate(-50%,-50%) scale(${zoom})`;
-  if(inertia||moving||orbitActive||flight!==flightTarget||selected===4&&flight>.02&&!reduced)requestFrame();else lastTime=0;
+  if(inertia||moving||orbitActive||flight!==flightTarget||(selected===4&&flight>.02&&!reduced&&windowFocused&&pageActive&&sceneVisible))requestFrame();else lastTime=0;
 }
 function resize(){if(!gl)return;const b=scene.getBoundingClientRect();width=b.width;height=b.height;labelSizes=labels.map(el=>({width:el.offsetWidth||96,height:el.offsetHeight||44}));const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);viewWidth=width<600?2.85:Math.max(3.9,width/height*2.5);viewHeight=viewWidth*height/width;if(close&&selected>=0&&selected!==4)targetOffset=P.quaternionRotateVector(quaternion,basePosition(selected));requestFrame();}
 function cancelPointer(){if(!pointer)return;const id=pointer.id;quaternion=pointer.startQuaternion.slice();pointer=null;try{if(scene.hasPointerCapture(id))scene.releasePointerCapture(id);}catch{}suppressUntil=performance.now()+P.GESTURE.suppressClickMs;requestFrame();}

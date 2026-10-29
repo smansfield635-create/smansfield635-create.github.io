@@ -1,0 +1,39 @@
+{
+  "schema": "H_EARTH_INDEPENDENT_SOURCE_REVIEW_v1",
+  "operationId": "H_EARTH_OWNER_BOUNDARY_SURVEY_20261029_001",
+  "result": "PASS",
+  "builderSelfApproval": false,
+  "reviewer": "WEST /root/survey_west_review",
+  "sourceSha256": {
+    "tools/h-earth-owner-boundary-survey.v1.mjs": "87aaf53037a8a2b3fe33e7de4bfce97e139ac25975a3e12f3fe05f25f14f995c",
+    "tools/h-earth-owner-boundary-survey.v1.test.mjs": "b6d91d287cf1fbb0c1226b9e33cc5daef38dc8f369938b52a2f68caa20bd1b99",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "59b426a1f1543d572f8b85e6589e65ea5043fcde54807d46bf9ece3ee09804d9"
+  },
+  "sceneHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+  "supportHead": "a26dc41964ae334a5ce73a637bcc96a0b4d43807",
+  "checks": [
+    "Independent Node test run:8passed0failed",
+    "Twelve overlapping30-degree headings384x688 at report search anchor, actual navigation support required",
+    "Exact scene checkout, renderer/route source hashes, renderer+atlasHTTP hashes verified by runtime guards",
+    "9of9 imported assetsREADY and2914527 roots, verifiedGPU allocation, normalized identities stable across12captures",
+    "No renderer interception or vegetation suppression; route observation wrapper only",
+    "Final receipt carries actual world packet and projected camera position; image/frame/sequence custody checked",
+    "WorkflowYAML parse and immutable existing workflow prefix preservation passed",
+    "Launch restricted to same-repositoryPR6984 reopened,declaredbranch,mainbase,runattempt1",
+    "Exact tooling/workflow identity,authentic admission2977 and independent source hashes guarded",
+    "Four helper files copied only into ephemeral tooling checkout from immutable support after exactSHA256checks; no scene changes",
+    "Evidence retained on failure; twelve-frame one-runbudget;no automaticretry"
+  ],
+  "resolvedReviewFinding": "Initial workflow copied comparator without two missing transitive modules. Fixed by staging all four hash-guarded immutable modules. Final application module was refreshed to exact support a26 source blob796a96cc5ca5de4b2d58b98361947e81ff811c91, SHA256070ad7daf51bbf41c2f4223ad9ba3a0143bde6aa3f7439df603c4a2718f50558. Independent8test rerun passed against final dependency. Previous workflow review hash438c is superseded.",
+  "limits": [
+    "Source review only; GPU survey has not run",
+    "Report capture position is not proven screenshot position",
+    "Mechanical capture does not prove visual match, material cause, repair, owneracceptance or Androidperformance"
+  ],
+  "supportHelperSha256": {
+    "h-earth-ground-material-comparison.v1.mjs": "b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509",
+    "h-earth-corrected-material-application.mjs": "070ad7daf51bbf41c2f4223ad9ba3a0143bde6aa3f7439df603c4a2718f50558",
+    "h-earth-world-position-overlay.mjs": "d61880ba98d81eae5d7cc6503f10f34d5aaa37819f4ba4a22218d87e711ca797",
+    "h-earth-groundcover-factor-overlay.mjs": "e9a872402371087e49031bca2ca27d0f37c9ab1012df50a5ebbf63617a3bf9e1"
+  }
+}

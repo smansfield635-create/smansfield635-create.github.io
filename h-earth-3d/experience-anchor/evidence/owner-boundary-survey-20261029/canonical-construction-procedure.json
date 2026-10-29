@@ -1,0 +1,84 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "228820fb198dea82466811eff1bc040532cbd8a6",
+    "operationId": "H_EARTH_OWNER_BOUNDARY_SURVEY_20261029_001",
+    "paths": [
+      "tools/h-earth-owner-boundary-survey.v1.mjs",
+      "tools/h-earth-owner-boundary-survey.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/experience-anchor/evidence/owner-boundary-survey-20261029/**"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_OWNER_BOUNDARY_SURVEY_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Immutable scene50b337 and exact tooling commit; hash guarded unchanged production files, actual navigation pose and resource receipts. Explicit one-attempt PR launch. No image or material response transforms.",
+  "exactAllowedRepositoryPaths": [
+    "tools/h-earth-owner-boundary-survey.v1.mjs",
+    "tools/h-earth-owner-boundary-survey.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/experience-anchor/evidence/owner-boundary-survey-20261029/**"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "After authentic admission create declared non-main branch from governing head; freeze production scene at 50b337ff7bbfb6fce4876e1037ac96d5faff65a6.",
+      "step": 1
+    },
+    {
+      "action": "Add a bounded survey tool and tests reusing existing capture precedent. Twelve headings at report position,384x688,actual supported eye height,pitch-14. Preserve production shader and vegetation.",
+      "step": 2
+    },
+    {
+      "action": "Run tests and independent West review, commit tooling and evidence, bind exact tooling and scene hashes in dispatch intent.",
+      "step": 3
+    },
+    {
+      "action": "Use existing same-repository PR reopened exact-head qualification precedent in neutral runner. One run, twelve frames, no automatic retry. Return monitor link.",
+      "step": 4
+    },
+    {
+      "action": "Inspect resulting frames against owner imagery; record exact reproduced pose or report not reproduced. No material change or success claim based on loading alone.",
+      "step": 5
+    }
+  ],
+  "exactGoverningHead": "228820fb198dea82466811eff1bc040532cbd8a6",
+  "exactTestRunnerCommand": "node --test tools/h-earth-owner-boundary-survey.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_UNCHANGED_PRODUCTION_SCENE",
+      "TWELVE_OVERLAPPING_HEADINGS_OWNER_RENDER_SIZE",
+      "ACTUAL_NAVIGATION_SUPPORT_AND_POSE_RECEIPTS",
+      "VEGETATION_PRESERVED",
+      "ONE_RUN_NO_AUTOMATIC_RETRY",
+      "NO_REPAIR_OR_LOCATION_CERTAINTY_CLAIM"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse existing GPU harness and accepted product bytes; change only survey pose coverage and diagnostic custody.",
+    "forbidden": "No old baseline recapture, palette experiment, model deletion, production mutation, automatic rerun, or claim report pose equals screenshot pose."
+  },
+  "procedureId": "H_EARTH_OWNER_BOUNDARY_SURVEY_20261029_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/experience-anchor/evidence/owner-boundary-survey-20261029/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

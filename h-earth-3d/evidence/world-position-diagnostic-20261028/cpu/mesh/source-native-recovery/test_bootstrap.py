@@ -54,6 +54,16 @@ class Bootstrap(unittest.TestCase):
             source=SCRIPT.read_text()
             self.assertIn('paths+=("$ASSET")',source)
             self.assertNotIn('paths+=(package.json "$ASSET")',source)
+    def test_live_mesh_gate_blob_identity_matches_recovery_script(self):
+        # Regression: Gen2967 run 40893778929 failed with MESH_GATE_V3_DRIFT
+        # because an internally pinned historical V3 digest survived adoption.
+        source=ROOT.parent/'next-gate'/'mesh_domain_gate.py'
+        self.assertTrue(source.is_file(),'Missing source mesh gate in exact source checkout')
+        current=subprocess.run(['git','hash-object',str(source)],capture_output=True,text=True,check=True).stdout.strip()
+        self.assertEqual(len(current),40)
+        self.assertIn(current,SCRIPT.read_text())
+        self.assertIn('SOURCE_MESH_GATE_VERSION_BINDING_MISMATCH',SCRIPT.read_text())
+        self.assertNotIn('2033596bf75ccd3dbd9664a55460df037e4be2b1',SCRIPT.read_text())
     def test_no_product_write_or_bypass(self):
         s=SCRIPT.read_text()
         for forbidden in ['git push','git reset','git checkout -f','git commit','gh api','curl ','wget ','git apply ','git merge ']:

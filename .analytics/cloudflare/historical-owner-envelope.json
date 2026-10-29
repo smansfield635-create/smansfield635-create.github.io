@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-29T17:25:14Z",
+  "generatedAt": "2026-10-29T18:30:41Z",
   "window": {
-    "start": "2026-07-31T17:25:14Z",
-    "end": "2026-10-29T17:25:14Z"
+    "start": "2026-07-31T18:30:41Z",
+    "end": "2026-10-29T18:30:41Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4398,
+    "pageLoads": 4388,
     "visits": 1307,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4398,
+        "pageLoads": 4388,
         "visits": 1307
       }
     },
     "byPath": {
       "/laws/": {
-        "pageLoads": 260,
+        "pageLoads": 250,
         "visits": 90
       },
       "/showroom/globe/h-earth/": {
@@ -46,13 +46,13 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/": {
         "pageLoads": 977,
         "visits": 717
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
@@ -142,7 +142,15 @@
         "pageLoads": 10,
         "visits": 10
       },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
         "pageLoads": 60,
         "visits": 0
       },
@@ -150,16 +158,8 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -298,12 +298,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {
@@ -316,13 +316,13 @@
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 3091,
-        "visits": 0
-      },
       "www.google.com": {
         "pageLoads": 757,
         "visits": 757
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 3081,
+        "visits": 0
       },
       "(none)": {
         "pageLoads": 540,

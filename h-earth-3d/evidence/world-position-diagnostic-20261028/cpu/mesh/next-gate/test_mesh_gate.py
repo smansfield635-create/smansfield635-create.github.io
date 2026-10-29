@@ -5,7 +5,7 @@ Synthetic fixtures test the implementation, NOT the real H-Earth uploaded geomet
 """
 import unittest
 import numpy as np
-from mesh_domain_gate import topo,continuous_source_seam,no_duplicate_projected_area,transport,require,source_protected,protected_faces
+from mesh_domain_gate import topo,continuous_source_seam,no_duplicate_projected_area,transport,require,source_protected,protected_faces,select_support
 
 class MeshGate(unittest.TestCase):
  def fixture(self):
@@ -16,6 +16,36 @@ class MeshGate(unittest.TestCase):
               [5,0,0],[10,0,0],[10,0,-10]],float)
   i=np.arange(9,dtype=np.uint32);g={0:'NEAR',3:'FAR',6:'FAR'}
   return v,i,g
+ def test_large_source_polygon_support_retains_original_seed(self):
+  # A 300m-long FAR face covers the source witness despite a distant centroid.
+  verts=np.array([[[0.,0.,0.],[300.,0.,0.],[0.,0.,10.]],
+                  [[900.,0.,0.],[910.,0.,0.],[900.,0.,10.]]])
+  offsets=np.array([0,3],dtype=np.int64)
+  sample={'world':[.1,0.,.1],'candidateOffsets':[0]}
+  samples=[dict(sample) for _ in range(2484)]
+  self.assertGreater(np.linalg.norm(verts[0].mean(axis=0)[[0,2]]-[.1,.1]),48.)
+  active,seeds=select_support(verts,offsets,samples)
+  self.assertEqual(active,{0})
+  self.assertEqual(seeds,{0})
+ def test_exact_polygon_support_still_rejects_uncovered_membership(self):
+  verts=np.array([[[0.,0.,0.],[300.,0.,0.],[0.,0.,10.]],
+                  [[900.,0.,0.],[910.,0.,0.],[900.,0.,10.]]])
+  samples=[{'world':[.1,0.,.1],'candidateOffsets':[3]} for _ in range(2484)]
+  with self.assertRaisesRegex(ValueError,'SOURCE_SEED_OUTSIDE_SUPPORT'):
+   select_support(verts,np.array([0,3],np.int64),samples)
+ def test_fail_closed_report_on_missing_exact_upload(self):
+  import tempfile,subprocess,json,sys
+  from pathlib import Path
+  with tempfile.TemporaryDirectory() as root:
+   report=Path(root)/'gate.json'
+   file=Path(__file__).with_name('mesh_domain_gate.py')
+   action=subprocess.run([sys.executable,str(file),'--mesh-dir',root,'--report',str(report)],
+                         capture_output=True,text=True)
+   self.assertEqual(action.returncode,2,action.stdout+action.stderr)
+   result=json.loads(report.read_text())
+   self.assertEqual(result['result'],'FAIL_CLOSED')
+   self.assertFalse(result['closureQualified'])
+   self.assertIn('MISSING_ORIGINAL_UPLOAD_POSITIONS',result['error'])
  def test_exact_junction_no_area_overlap(self):
   v,i,g=self.fixture();o,vid,verts,area,n,b=topo(v,i,g)
   self.assertEqual(len(b),9)

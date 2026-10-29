@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-29T08:31:35Z",
+  "generatedAt": "2026-10-29T09:27:53Z",
   "window": {
-    "start": "2026-09-29T08:31:35Z",
-    "end": "2026-10-29T08:31:35Z"
+    "start": "2026-09-29T09:27:53Z",
+    "end": "2026-10-29T09:27:53Z"
   },
   "dimensions": {
     "requestPath": [
@@ -54,8 +54,8 @@
       },
       {
         "value": "/products/education/",
-        "pageLoads": 22,
-        "visits": 22
+        "pageLoads": 23,
+        "visits": 23
       },
       {
         "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
@@ -221,8 +221,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1651,
-        "visits": 1651
+        "pageLoads": 1652,
+        "visits": 1652
       },
       {
         "value": "diamondgatebridge.com",
@@ -258,8 +258,8 @@
       },
       {
         "value": "CN",
-        "pageLoads": 40,
-        "visits": 40
+        "pageLoads": 41,
+        "visits": 41
       },
       {
         "value": "CA",
@@ -300,8 +300,8 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 310,
-        "visits": 259
+        "pageLoads": 311,
+        "visits": 260
       },
       {
         "value": "tablet",
@@ -312,18 +312,18 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 863,
-        "visits": 863
+        "pageLoads": 843,
+        "visits": 843
       },
       {
         "value": "Chrome",
-        "pageLoads": 506,
-        "visits": 424
+        "pageLoads": 466,
+        "visits": 384
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 164,
-        "visits": 152
+        "pageLoads": 124,
+        "visits": 112
       },
       {
         "value": "Edge",
@@ -342,8 +342,8 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 42,
-        "visits": 33
+        "pageLoads": 43,
+        "visits": 34
       },
       {
         "value": "Safari",
@@ -389,15 +389,15 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 42,
-        "visits": 33
+        "pageLoads": 43,
+        "visits": 34
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 992,
-        "visits": 851
+        "pageLoads": 993,
+        "visits": 852
       },
       {
         "value": "1",
@@ -408,8 +408,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1797,
-        "visits": 1693
+        "pageLoads": 1798,
+        "visits": 1694
       },
       {
         "value": "routing-apis",
@@ -430,8 +430,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1744,
-        "visits": 1666
+        "pageLoads": 1745,
+        "visits": 1667
       },
       {
         "value": "cache",
@@ -447,15 +447,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1855,
-        "visits": 1714
+        "pageLoads": 1856,
+        "visits": 1715
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1855,
-        "visits": 1714
+        "pageLoads": 1856,
+        "visits": 1715
       }
     ]
   }

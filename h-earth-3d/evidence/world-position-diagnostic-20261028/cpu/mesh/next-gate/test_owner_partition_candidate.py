@@ -86,6 +86,21 @@ class TestOwnerPartition(unittest.TestCase):
         p,t,c=self.flux_fixture(rgb_b=1.1)
         with self.assertRaisesRegex(ValueError,'SOURCE_RGB_OUTSIDE_GAMUT'):
             local_source_flux(p,t,c)
+    def test_original_protected_face_centroid_guard(self):
+        # None of the individual vertices enters the grove, but the original
+        # mesh gate protects the triangle because its source centroid does.
+        a=np.array([[-220.,0.,-270.],[-60.,0.,-270.],[-139.,0.,-140.]])
+        from mesh_domain_gate import source_protected
+        self.assertFalse(np.any(source_protected(a[:,[0,2]])))
+        self.assertTrue(source_protected(a.mean(axis=0)[None,[0,2]])[0])
+        b=a+np.array([0.,0.,0.])
+        b[1]=a[0];b[0]=a[1];b[2]=np.array([-140.,0.,-360.])
+        p={1:Polygon(a[:,[0,2]]),2:Polygon(b[:,[0,2]])}
+        # A and B share the original physical edge from a[0] to a[1].
+        c={1:np.tile([.2,.3,.4,1.],(3,1)),2:np.tile([.8,.4,.2,1.],(3,1))}
+        r=local_source_flux(p,{1:a,2:b},c,near_source_ids={1})
+        self.assertGreaterEqual(r['protectedSourceFaces'],1)
+        self.assertEqual(r['appliedTransportEdges'],0)
     def test_existing_float32_seam_tolerance(self):
         a=np.array([[0.,0.,-736.],[1.,0.,-736.],[0.,0.,-735.]],float)
         self.assertAlmostEqual(float32_source_tolerance(a,a),2*736.*2**-23)

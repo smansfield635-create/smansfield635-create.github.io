@@ -1,39 +1,20 @@
-# H-Earth — exact source-mesh domain gate (research, not product)
+# H-Earth source-mesh gate v3 — adverse-flux correction
 
-## Result / decision
+Research status: executable mesh gate and conservation tests **PASS SYNTHETIC_ONLY**; original uploaded H-Earth mesh and source-defined 2D color correction **NOT QUALIFIED**. This is evidence, not a product patch.
 
-Preserved source branch: `h-earth/world-position-diagnostic-20261028`, exact head `33e752c712be61cd2a5c3f52a35b55da0354fe30`.
-Frozen published-source anchor: `cb57c275b95d0d48883bc4da4dcfcf17cbec5060`.
+## New exact assertion and repair
 
-**The source-mesh closure gate is NOT yet passed.** The original uploaded position/index binary buffers, which are reproducible using the already-committed CPU mesh construction, are not present in this ChatGPT room's recovered ZIP archives. Running `mesh_domain_gate.py` against these archives correctly fails `MISSING_ORIGINAL_UPLOAD_POSITIONS`. Do not use the captured pixel positions as replacement triangle vertices.
+Version 2 incorrectly used **net** requested per-node RGB flux to determine available incoming and outgoing color capacity. Different per-edge coefficients could break the cancellation and create out-of-gamut output. A deterministic 6-node dense-graph witness (seed 1, trial 1) fails with `POST_GAMUT` on v2. Simply raising tolerance or post-clamping would conceal the defect and violate conservation.
 
-The complete new, unchanged, source-bound world-coordinate archive is included in this packet. `audit_image_geometry.py` and its `image-geometry-audit.json` independently show why screen-derived quadrilaterals are unsafe for physical area:
+Version 3 instead computes total *gross* positive and negative mass at each node/channel before limiting any edge. For a requested signed flux F_ij, incoming capacity is area_i*(1-Q_i), outgoing capacity is area_i*Q_i. Each undirected RGB edge receives a single common coefficient no greater than the smallest of its source/outflow and destination/inflow ratios across all three channels; equal and opposite accepted flux is then applied to both nodes. This conservatively guarantees 0<=Q'<=1 and exact paired area-mass conservation up to floating point roundoff, even with opposing requested fluxes. Protected incident edges remain zero.
 
-- Six original inland near/far pixel patches, 4,320 image-derived pseudo triangles.
-- 24 have exactly zero **nominal** area, and 3,974 have nonpositive *guaranteed lower area bounds* when the original XYZ scalar-code half widths are retained.
-- This invalidates an image-grid source-area workaround, **not** the world-position capture or the 47 original-source-triangle associations proven in the committed CPU audit.
+Reproduction: `python3 -m unittest test_mesh_gate -v`; Python3, NumPy, SciPy, Shapely. 12 tests pass, including 10,000 seeded dense six-face gamut/mass trials, 200 prior mass tests and near/far seam, nonmanifold, overlap and zero-area tests. Synthetic tests do not prove real-source mesh closure.
 
-`mesh_domain_gate.py` is a new fail-closed CPU verification algorithm, not a shader or visual correction. It requires the exact source-upload positions/indices and 2,484 recorded sample-to-source associations before it can report a physically grounded result. All source input hashes and package identities are checked; triangles are never silently collapsed or corrected.
+## Immutable input dependency and source custody
 
-## Reproduction from the already frozen source and diagnostic evidence
+The original frozen approved source is `cb57c275b95d0d48883bc4da4dcfcf17cbec5060`, original world file `showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz`, expected SHA256 `48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a`, size 11,736,235 bytes, Git blob SHA `3d11947ad94f98736035cbdf0e021e5f324659fb`. GitHub connected text API provides file/blob metadata but no binary bytes for this file; the alternative recovered Gen2824 candidate is hash `e4ff829a51c98b1f0383c9cf4f30f321aa8ecb833fbc108b460a7538d98bef67` and **must not** be substituted. The older recovered Git bundle lacks prerequisite parent `12357909b2cbaab16052b6c30459065547fe9440`. Neither source is a qualified replacement.
 
-1. From the published source commit `cb57c275`, materialize the existing original asset 
-   `showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz`, exact SHA-256 `48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a`, and materialize the frozen ES modules. Use the repository's existing committed CPU instructions at
-   `h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/README.md` (branch `33e752c7`).
-2. Re-run the **already committed** `reconstruct.mjs`, `reconstruct-direct.mjs`, `upload-replay.mjs`, `match-surface.py` against the same frozen source. The original 2,484 witness associations must retain all 2,575 memberships, including 86 ambiguous locations.
-3. Run `python mesh_domain_gate.py --mesh-dir /tmp/mesh-cpu --report ./source-mesh-gate-result.json` using NumPy, SciPy and Shapely. Compare with the committed `cpu/mesh/domain-audit.json` (47 seed triangles and six verified near/far candidate links). A result failing to close the physical domain remains a **failed research gate**, not permission to widen tolerances or change rendering.
-4. Run `python test_mesh_gate.py` (ten fixture/functional tests) and `python audit_image_geometry.py --archive ./h-earth-world-position-original-40790969812.zip --report ./image-geometry-audit.json` (verified source images and quantization-based no-go report).
+Once the exact original 11.7 MB asset and frozen renderer modules are materialized, run the *already committed* 
+`cpu/mesh/reconstruct.mjs`, `reconstruct-direct.mjs`, `upload-replay.mjs`, `match-surface.py` to regenerate original buffers. Verify `upload-positions.bin` SHA256 `342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83`, `upload-indices.bin` SHA256 `483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c` and all 2,484 samples / 2,575 candidate memberships. Then run `mesh_domain_gate.py --mesh-dir ... --report ...`, independently audit each seam cut and 40m influence boundary, and only afterward evaluate fully paired source-defined P(c,f0)/D(c,f0) and actual mesh-area 2m/1m appearance/conservation. Do not infer success from the older 1D proxy.
 
-## Acceptance law
-
-A v2 independent seam audit corrected a near-edge loop-variable shadowing defect in the provisional gate, added near- and far-side partial-seam rejection and checks that verified sealed edges no longer count as open cut edges. Ten tests pass in the corrected version. The previous version remains preserved in Git history; do not use it for source-mesh acceptance.
-
-The **mesh-domain** gate needs every selected source triangle from the original uploaded indices, positive Float32-source 3D area, nonoverlapping active terrain faces, source-indexed adjacency, verified near/far T-junction overlaps, protected/no-flux estate/oasis/route/grove zones and adequate influence-radius distance from artificial cuts. Ambiguous memberships may not be dropped. Candidate transport uses symmetric paired flux and one RGB gamut limiter, not clamping, and must maintain area-weighted RGB integral exactly. The conserved computation remains separate from material texture and appearance gates.
-
-The **product-repair** gate is still later and separate. The paired complete source expression `P(c,f0),D(c,f0)` must be evaluated with sampler/mip/normal uncertainty over the resolved physical domain, then judged at both 1 m and 2 m with frozen near/far and healthy meadow controls. The rejected six-transect continuous proxy and the lost 31.7% local trial do not establish global appearance improvement.
-
-No product sources, original vegetation, ocean, navigation, or assets were changed here. No GPU job was launched. No merge or deployment was performed. This packet is evidence and a reproducible gating implementation only.
-
-## Known boundary of this room
-
-The exact 141,373-vertex uploaded positions and 366,666-index binary buffers were **not included** in the prior recovered archives; original source modules/asset require the repository's CPU reconstruction. New code is tested on synthetic source-topology fixtures and real source-bound diagnostic PNGs, but has **not yet run on real uploaded mesh bytes**. Do not report the gate as qualified until that run succeeds and its receipt is independently reviewed.
+No new GPU run, shader/geometry/vegetation mutation, render publication, or source-asset approximation. Keep v1/v2 in Git history as rejected intermediate implementations.

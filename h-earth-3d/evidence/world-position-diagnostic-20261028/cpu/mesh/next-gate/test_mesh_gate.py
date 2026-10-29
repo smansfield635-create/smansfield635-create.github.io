@@ -69,6 +69,28 @@ class MeshGate(unittest.TestCase):
    self.assertLess(m['protectedChange'],1e-13)
    self.assertGreaterEqual(Q.min(),-1e-13);self.assertLessEqual(Q.max(),1+1e-13)
    self.assertTrue(np.allclose((Q-P),(L1-L),atol=1e-13))
+ def test_gross_flux_adversarial_regression(self):
+  # The historical net-budget limiter failed gamut at random seed 1/trial 1.
+  rng=np.random.default_rng(1)
+  for trial in range(2):
+   n=6;area=rng.uniform(.1,2,n);Q=rng.beta(.2,.2,(n,3));L=rng.uniform(-15,15,(n,3))
+   edges=[(i,j,float(rng.uniform(.1,10))) for i in range(n) for j in range(i+1,n) if rng.random()<.8]
+  changed,coarse,meta=transport(Q,L,area,edges,np.zeros(n,bool))
+  self.assertGreaterEqual(changed.min(),-1e-13)
+  self.assertLessEqual(changed.max(),1+1e-13)
+  self.assertLess(meta['massError'],1e-11)
+  np.testing.assert_allclose(changed-Q,coarse-L,rtol=0,atol=1e-13)
+ def test_dense_adversarial_gamut_mass_10000(self):
+  rng=np.random.default_rng(107)
+  for trial in range(10000):
+   n=6;area=rng.uniform(.1,2,n);Q=rng.beta(.2,.2,(n,3));L=rng.uniform(-15,15,(n,3));protected=rng.random(n)<.2
+   edges=[(i,j,float(rng.uniform(.1,10))) for i in range(n) for j in range(i+1,n) if rng.random()<.8]
+   c,k,m=transport(Q,L,area,edges,protected)
+   self.assertGreaterEqual(c.min(),-1e-12)
+   self.assertLessEqual(c.max(),1+1e-12)
+   self.assertLess(m['massError'],5e-12)
+   self.assertLess(m['protectedChange'],1e-12)
+   np.testing.assert_allclose(c-Q,k-L,rtol=0,atol=1e-12)
  def test_zero_flux_orientation(self):
   q=np.array([[0,.35,.8],[.8,.34,.1],[.4,.5,.3]]);L=np.array([[.1,1,0],[.5,1,0],[0,1,0]]);a=np.array([1,2,3]);prot=np.zeros(3,bool)
   a1,l1,_=transport(q,L,a,[(0,1,2.),(1,2,3.)],prot)

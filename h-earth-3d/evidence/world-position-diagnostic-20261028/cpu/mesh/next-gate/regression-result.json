@@ -1,0 +1,14 @@
+{
+  "schema": "H_EARTH_MESH_GATE_V3_ANTAGONISTIC_FLUX_REPAIR_v1",
+  "result": "PASS_SYNTHETIC_ONLY",
+  "previousDefect": "Net requested flux cancellations falsely increase per-edge gamut allowance; regression old implementation throws POST_GAMUT on seed1 trial1",
+  "fix": "Gross positive/negative per-node RGB mass budgets, shared per-edge coefficient and exact paired flux",
+  "tests": 12,
+  "randomDenseTrials": 10000,
+  "sourceMeshClosureQualified": false,
+  "productChanged": false,
+  "files": {
+    "mesh_domain_gate.py": "0f3c10d4cce74062d302693abfa54fa55c96eb4f74c15e33c4e45fe1abbdf50f",
+    "test_mesh_gate.py": "ef537588d7b82b520550c252c9015cc66e8b74f01e5379287f8cf677f58d428a"
+  }
+}

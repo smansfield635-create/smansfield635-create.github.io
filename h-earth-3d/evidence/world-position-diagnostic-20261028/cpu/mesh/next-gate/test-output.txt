@@ -1,0 +1,17 @@
+test_dense_adversarial_gamut_mass_10000 (test_mesh_gate.MeshGate.test_dense_adversarial_gamut_mass_10000) ... ok
+test_exact_junction_no_area_overlap (test_mesh_gate.MeshGate.test_exact_junction_no_area_overlap) ... ok
+test_exposed_partial_seam_fails (test_mesh_gate.MeshGate.test_exposed_partial_seam_fails) ... ok
+test_far_partial_seam_rejected (test_mesh_gate.MeshGate.test_far_partial_seam_rejected) ... ok
+test_gross_flux_adversarial_regression (test_mesh_gate.MeshGate.test_gross_flux_adversarial_regression) ... ok
+test_mass_exact_and_protection (test_mesh_gate.MeshGate.test_mass_exact_and_protection) ... ok
+test_nonmanifold_same_primitive_fails (test_mesh_gate.MeshGate.test_nonmanifold_same_primitive_fails) ... ok
+test_overlapping_near_far_fails (test_mesh_gate.MeshGate.test_overlapping_near_far_fails) ... ok
+test_sealed_edge_not_counted_as_open_cut (test_mesh_gate.MeshGate.test_sealed_edge_not_counted_as_open_cut) ... ok
+test_source_protection_regions (test_mesh_gate.MeshGate.test_source_protection_regions) ... ok
+test_zero_area_fails (test_mesh_gate.MeshGate.test_zero_area_fails) ... ok
+test_zero_flux_orientation (test_mesh_gate.MeshGate.test_zero_flux_orientation) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 2.201s
+
+OK

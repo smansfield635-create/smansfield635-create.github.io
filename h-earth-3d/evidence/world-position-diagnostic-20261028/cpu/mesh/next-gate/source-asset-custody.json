@@ -1,0 +1,19 @@
+{
+  "schema": "H_EARTH_ORIGINAL_ASSET_CUSTODY_BOUNDARY_v1",
+  "frozenSourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "sourceAssetPath": "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz",
+  "expectedSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+  "expectedSize": 11736235,
+  "githubBlobSha": "3d11947ad94f98736035cbdf0e021e5f324659fb",
+  "githubConnectedBase64Characters": 0,
+  "githubBlobDecode": "BINARY_UNAVAILABLE_UTF8_ONLY",
+  "localGitNetwork": "DNS_UNAVAILABLE",
+  "olderGitBundle": "MISSING_PREREQUISITE_12357909b2cbaab16052b6c30459065547fe9440",
+  "alternativeGen2824Sha256": "e4ff829a51c98b1f0383c9cf4f30f321aa8ecb833fbc108b460a7538d98bef67",
+  "alternativeGen2824Status": "MISMATCH_REJECTED",
+  "originalBuffersMaterialized": false,
+  "sourceMeshClosureQualified": false,
+  "originalPNGMaterialEvidence": "PRESERVED_PRIOR",
+  "nextRequiredInput": "exact frozen 11736235-byte asset, existing source modules, then exact source replay",
+  "productChanged": false
+}

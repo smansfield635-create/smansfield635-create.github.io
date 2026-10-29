@@ -1,0 +1,15 @@
+{
+  "schema": "H_EARTH_MESH_GATE_V3_PACKET_MANIFEST_v1",
+  "files": {
+    "mesh_domain_gate.py": "0f3c10d4cce74062d302693abfa54fa55c96eb4f74c15e33c4e45fe1abbdf50f",
+    "test_mesh_gate.py": "ef537588d7b82b520550c252c9015cc66e8b74f01e5379287f8cf677f58d428a",
+    "audit_image_geometry.py": "b8df99a64734edcd9693ce1406204c12e68407526d2f578a94c13aba327417e3",
+    "image-geometry-audit.json": "cdf0b0bcb4eb7995b2a7256f6fcb112a67df4c0ddfeb7847eec2055137962370",
+    "README.md": "221c6bb84778d757446754df056469d7c17896c56523ae2120538922f15a6d95",
+    "regression-result.json": "dd6a1476cdcc29eafef73758aa69d51806b6fbaba53a307e36d3b0cd84eac87e",
+    "source-asset-custody.json": "e1047eed6253211b4e72c8579d807b3e8b256ef3c785d6de2ae6729d130055a9",
+    "test-output.txt": "c4a67cd9012479cc1660b4eb935b4c66f014cc18034b056af3db2f759afe172e"
+  },
+  "sourceMeshQualified": false,
+  "testsPassed": 12
+}

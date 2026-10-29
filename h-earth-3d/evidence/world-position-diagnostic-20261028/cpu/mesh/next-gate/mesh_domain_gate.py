@@ -225,9 +225,18 @@ def transport(Q,L,area,links,protected,step=0.5):
     degree=np.bincount(rows.ravel(),weights=np.repeat(w,2),minlength=n)
     live=degree>0;dt=step*float(np.min(area[live]/degree[live]))
     flows=dt*w[:,None]*(L[rows[:,1]]-L[rows[:,0]])
-    req=np.zeros_like(Q);np.add.at(req,rows[:,0],flows);np.add.at(req,rows[:,1],-flows)
-    pos=np.minimum(1.,(1.-Q)*area[:,None]/np.maximum(req,1e-100))
-    neg=np.minimum(1.,Q*area[:,None]/np.maximum(-req,1e-100))
+    # A net sum is NOT a safe capacity bound: opposing edge fluxes may
+    # cancel before differently limited edges are accepted. Bound GROSS
+    # incoming/outgoing mass independently at each face and RGB channel.
+    gross_in=np.zeros_like(Q);gross_out=np.zeros_like(Q)
+    positive=np.maximum(flows,0.);negative=np.maximum(-flows,0.)
+    np.add.at(gross_in,rows[:,0],positive);np.add.at(gross_in,rows[:,1],negative)
+    np.add.at(gross_out,rows[:,0],negative);np.add.at(gross_out,rows[:,1],positive)
+    in_budget=(1.-Q)*area[:,None];out_budget=Q*area[:,None]
+    pos=np.ones_like(Q);neg=np.ones_like(Q)
+    np.divide(in_budget,gross_in,out=pos,where=gross_in>0)
+    np.divide(out_budget,gross_out,out=neg,where=gross_out>0)
+    np.minimum(pos,1.,out=pos);np.minimum(neg,1.,out=neg)
     limits=np.ones(len(rows))
     for c in range(3):
         f=flows[:,c];i=rows[:,0];j=rows[:,1]

@@ -85,37 +85,38 @@ const ORBIT_RADIANS_PER_SECOND=.08;
 let orbitPhase=0, orbitSpeed=0, motionPaused=false, sceneVisible=true, windowFocused=true, pageActive=true;
 let ready=false, reduced=media.matches, receipt={status:'loading'}, disposed=false, teachingRevealVersion=0;
 // Gen2970 one-world proof: dedicated spatial encounter; the public Gen2968 page is untouched.
-let flight=0,flightTarget=0,cameraZ=9,flightStage='arrival',universeClock=0,peaceFocusReturn=null,joyFocusReturn=null,loveFocusReturn=null,stabilityFocusReturn=null;
+let flight=0,flightTarget=0,cameraZ=9,flightStage='arrival',universeClock=0,peaceFocusReturn=null,joyFocusReturn=null,loveFocusReturn=null,stabilityFocusReturn=null,emberFocusReturn=null;
 const $=s=>document.querySelector(s);
 const peaceOverlay=$('#peace-encounter');
 const joyOverlay=$('#joy-world'), joyHud=$('#joy-world-hud');
 const loveOverlay=$('#love-world'),loveHud=$('#love-world-hud');
 const stabilityOverlay=$('#stability-world'),stabilityHud=$('#stability-world-hud');
+const emberOverlay=$('#ember-world'),emberHud=$('#ember-world-hud');
 const color=hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
 function requestFrame(){if(!raf && ready && !disposed && !document.hidden && sceneVisible && pageActive)raf=requestAnimationFrame(render);}
 function orbitCanMove(){return !reduced&&!motionPaused&&!pointer&&!inertia&&selected<0&&flight<.001&&sceneVisible&&windowFocused&&pageActive&&!document.hidden;}
-function updateMotionControl(){const button=$('#toggle-motion');button.disabled=reduced||!ready;button.textContent=reduced?'Reduced motion':motionPaused?'Resume motion':(selected===4||selected===0||selected===1||selected===2)?'World in focus':'Pause motion';button.setAttribute('aria-pressed',String(motionPaused));}
+function updateMotionControl(){const button=$('#toggle-motion');button.disabled=reduced||!ready;button.textContent=reduced?'Reduced motion':motionPaused?'Resume motion':(selected===4||selected===0||selected===1||selected===2||selected===3)?'World in focus':'Pause motion';button.setAttribute('aria-pressed',String(motionPaused));}
 $('#toggle-motion').addEventListener('click',()=>{motionPaused=!motionPaused;orbitSpeed=0;lastTime=0;updateMotionControl();requestFrame();});
 function stopInertia(){if(inertia){quaternion=P.constellationReleaseQuaternionAt(inertia,Math.min(inertia.durationMs,performance.now()-inertia.startedAt));inertia=null;}}
 function choose(index,scroll=true){
   if(pointer?.dragging || performance.now()<suppressUntil)return;
   stopInertia();
   // Switching from the exemplar must not leave its camera zoom, hidden labels or overlay behind.
-  if(index!==selected&&(selected===4||selected===0||selected===1||selected===2)&&(flight>.002||flightTarget>0)){
+  if(index!==selected&&(selected===4||selected===0||selected===1||selected===2||selected===3)&&(flight>.002||flightTarget>0)){
     flight=0;flightTarget=0;cameraZ=9;flightStage='arrival';
     peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');
     joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');
     loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
-    stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');
-    document.documentElement.classList.remove('universe-joy','universe-love','universe-stability');joyFocusReturn=null;loveFocusReturn=null;stabilityFocusReturn=null;
+    stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');emberOverlay.classList.remove('is-visible');emberOverlay.setAttribute('aria-hidden','true');
+    document.documentElement.classList.remove('universe-joy','universe-love','universe-stability','universe-ember');joyFocusReturn=null;loveFocusReturn=null;stabilityFocusReturn=null;emberFocusReturn=null;
     scene.dataset.stage='arrival';document.documentElement.classList.remove('universe-encounter','universe-approaching');
     peaceFocusReturn=null;
   }
-  if((index===4||index===0||index===1||index===2)&&ready){
+  if((index===4||index===0||index===1||index===2||index===3)&&ready){
     const active=document.activeElement;
     const stored=active&&active!==document.body&&typeof active.focus==='function'
       ?active:labels[index]||document.querySelector(`[data-summit="${index}"]`);
-    if(index===4)peaceFocusReturn=stored;else if(index===1)loveFocusReturn=stored;else if(index===2)stabilityFocusReturn=stored;else joyFocusReturn=stored;
+    if(index===4)peaceFocusReturn=stored;else if(index===1)loveFocusReturn=stored;else if(index===2)stabilityFocusReturn=stored;else if(index===3)emberFocusReturn=stored;else joyFocusReturn=stored;
   }
   teachingRevealVersion++;$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; selected=index; close=false; targetZoom=1;targetOffset=[0,0,0];panel.style.setProperty('--world-accent',summits[index][2]);scene.style.setProperty('--world-accent',summits[index][2]);
   const [begin,summit]=summits[index], teaching=teachings[index];
@@ -135,12 +136,13 @@ function choose(index,scroll=true){
   if(index===0&&ready){startJoyFlight();return;}
   if(index===1&&ready){startLoveFlight();return;}
   if(index===2&&ready){startStabilityFlight();return;}
+  if(index===3&&ready){startEmberFlight();return;}
   requestFrame();
   if(scroll){panel.scrollIntoView({behavior:reduced?'instant':'smooth',block:'nearest'});panel.focus({preventScroll:true});}
 }
 function returnToAll(){
-  if((selected===4||selected===0||selected===1||selected===2)&&(flight>.002||flightTarget>0)){flightTarget=0;flightStage='return';peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
-    stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');scene.dataset.stage='return';document.documentElement.classList.remove('universe-encounter','universe-joy','universe-love','universe-stability');updateMotionControl();requestFrame();return;}
+  if((selected===4||selected===0||selected===1||selected===2||selected===3)&&(flight>.002||flightTarget>0)){flightTarget=0;flightStage='return';peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
+    stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');emberOverlay.classList.remove('is-visible');emberOverlay.setAttribute('aria-hidden','true');scene.dataset.stage='return';document.documentElement.classList.remove('universe-encounter','universe-joy','universe-love','universe-stability','universe-ember');updateMotionControl();requestFrame();return;}
   stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];panel.style.removeProperty('--world-accent');scene.style.removeProperty('--world-accent');
   panel.hidden=true;returnButton.hidden=true;status.textContent='All nine summits. One path. Your orientation is preserved.';
   $('#summit-teaching').hidden=true;approach.setAttribute('aria-expanded','false');
@@ -166,7 +168,9 @@ $('#peace-return').addEventListener('click',returnToAll);
 $('#joy-return').addEventListener('click',returnToAll);
 $('#love-return').addEventListener('click',returnToAll);
 $('#stability-return').addEventListener('click',returnToAll);
+$('#ember-return').addEventListener('click',returnToAll);
 function startLoveFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!loveGL){try{setupLoveWorld();}catch(error){console.error('Generosity world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;approach.hidden=true;$('#summit-teaching').hidden=false;status.textContent='The Living Constellation is unavailable. Read the complete Love teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Generosity — Love';status.textContent='Traveling toward the Living Constellation.';updateMotionControl();requestFrame();}
+function startEmberFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!emberGL){try{setupEmberWorld();}catch(error){console.error('Accountability world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;approach.hidden=true;$('#summit-teaching').hidden=false;status.textContent='The Ember Canyons are unavailable. Read the complete Character teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Accountability — Character';status.textContent='Traveling toward the Ember Canyons.';updateMotionControl();requestFrame();}
 function startStabilityFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!stabilityGL){try{setupStabilityWorld();}catch(error){console.error('Dependability world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;approach.hidden=true;$('#summit-teaching').hidden=false;status.textContent='The Great Basalt Terraces are unavailable. Read the complete Stability teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Dependability — Stability';status.textContent='Traveling toward the Great Basalt Terraces.';updateMotionControl();requestFrame();}
 function startJoyFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Gratitude — Joy';status.textContent='Traveling toward the Dawn Archipelago.';updateMotionControl();requestFrame();}
 
@@ -174,7 +178,7 @@ document.querySelectorAll('[data-summit]').forEach(el=>el.addEventListener('clic
 returnButton.addEventListener('click',returnToAll);
 $('#return-from-teaching').addEventListener('click',returnToAll);
 approach.addEventListener('click',()=>{
-  if(selected<0)return;if(selected===4){startPeaceFlight();return;}if(selected===0){startJoyFlight();return;}if(selected===1){startLoveFlight();return;}if(selected===2){startStabilityFlight();return;}stopInertia();close=true;
+  if(selected<0)return;if(selected===4){startPeaceFlight();return;}if(selected===0){startJoyFlight();return;}if(selected===1){startLoveFlight();return;}if(selected===2){startStabilityFlight();return;}if(selected===3){startEmberFlight();return;}stopInertia();close=true;
   if(ready){targetOffset=centers[selected].map(value=>value*(width<600?.12:.20));targetZoom=width<600?1.08:1.27;requestFrame();}
   approach.disabled=true;approach.textContent='Exploring this summit';approach.setAttribute('aria-expanded','true');
   $('#scene-note').textContent=`${summits[selected][0]} → ${summits[selected][1]} · Return to all nine to keep exploring`;
@@ -620,6 +624,127 @@ function drawStabilityWorld(t){if(!stabilityGL)return;
  drawMesh(stabilityMesh,0);drawMesh(stabilityArch,1);drawMesh(stabilityColumns,2);
 }
 
+/* WORLD 04 — ACCOUNTABILITY → CHARACTER / The Ember Canyons.
+ * Intersecting, asymmetric geological corridors, exposed strata and rare vents.
+ * Deliberately dissimilar from island/ocean, network valley and basalt terraces. */
+let emberGL=null,emberProgram=null,emberSkyProgram=null,emberGround=null,emberSpurs=null,emberFaults=null,emberSkyBuffer=null,emberLoc={},emberSkyLoc={};
+const emberCanvas=document.querySelector('#ember-world-canvas');
+const emberVertex=`precision highp float;
+attribute vec3 aPosition,aNormal;uniform vec2 uViewport;uniform float uTime,uKind;
+varying vec3 vPos,vNorm;varying float vFog;
+void main(){vec3 p=aPosition;vec3 eye=p-vec3(0.,4.6,-8.8);float depth=max(.6,eye.z);
+ gl_Position=vec4(eye.x*2.13/uViewport.x,(eye.y+eye.z*.036)*2.13,eye.z*.997-.31,depth);
+ vPos=p;vNorm=aNormal;vFog=depth;
+}`;
+const emberFragment=`precision highp float;
+uniform float uTime,uKind;varying vec3 vPos,vNorm;varying float vFog;
+float hs(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float ns(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(hs(i),hs(i+vec2(1.,0.)),f.x),mix(hs(i+vec2(0.,1.)),hs(i+vec2(1.,1.)),f.x),f.y);}
+void main(){vec3 norm=normalize(vNorm);vec3 light=normalize(vec3(-.65,.71,-.48));
+ float lambert=max(0.,dot(norm,light));float rockshade=.32+lambert*.85;
+ float erosion=ns(vPos.xz*.38+vPos.y*.045)*.13+ns(vPos.xy*1.63)*.065;
+ float planes=sin(vPos.y*5.8+ns(vPos.xz*.37)*1.4);
+ vec3 tone;
+ if(uKind<.5){
+   tone=mix(vec3(.085,.045,.049),vec3(.40,.18,.12),.36+.26*planes+.20*ns(vPos.xz*.17));
+   float top=pow(max(0.,norm.y),4.);tone+=vec3(.19,.105,.055)*top;
+   float cliff=pow(1.-abs(norm.y),3.);tone=mix(tone,vec3(.24,.116,.088),cliff*.45);
+ }else if(uKind<1.5){
+   float stratum=sin(vPos.y*7.5+vPos.x*.09);tone=mix(vec3(.21,.085,.061),vec3(.46,.22,.12),stratum*.32+.43);
+ }else{
+   float ember=.50+.22*sin(vPos.z*.41-uTime*.39)+.12*ns(vPos.xz*.44);
+   tone=mix(vec3(.48,.10,.025),vec3(1.0,.53,.17),clamp(ember,0.,1.));
+   rockshade=1.;
+ }
+ tone=(tone+erosion*.24)*rockshade;
+ float rim=pow(max(0.,dot(reflect(-light,norm),vec3(0.,.08,-1.))),16.);
+ tone+=vec3(.16,.07,.04)*rim*.12;
+ float dust=ns(vec2(vPos.z*.075+uTime*.0016,vPos.y*.34+uTime*.003))*.11;
+ float fog=clamp((vFog-24.)/115.+dust,0.,.72);
+ tone=mix(tone,vec3(.35,.175,.14),fog);
+ if(uKind>1.5){tone+=vec3(.42,.13,.018)*(.8+ns(vPos.xz*.8))*.44;}
+ gl_FragColor=vec4(pow(max(tone,vec3(.001)),vec3(.87)),1.);
+}`;
+const emberSkyVertex=`precision mediump float;attribute vec2 aXY;varying vec2 vUv;void main(){vUv=aXY*.5+.5;gl_Position=vec4(aXY,0.,1.);}`;
+const emberSkyFragment=`precision highp float;uniform float uTime,uAspect;varying vec2 vUv;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}
+void main(){vec2 uv=vUv;
+ vec3 sky=mix(vec3(.36,.16,.135),vec3(.022,.026,.045),smoothstep(.04,1.,uv.y));
+ float sun=length((uv-vec2(.18,.38))*vec2(uAspect,1.));
+ sky+=vec3(.63,.23,.07)*(.15*exp(-sun*4.)+.55*exp(-sun*21.));
+ float wind=noise(vec2(uv.x*7.1-uTime*.006,uv.y*11.));
+ float streak=smoothstep(.49,.80,wind)*exp(-pow((uv.y-.30)/.18,2.));
+ sky+=vec3(.28,.16,.12)*streak*.31;
+ sky+=vec3(.18,.09,.06)*.12*noise(vec2(uv.x*21.-uTime*.016,uv.y*25.));
+ gl_FragColor=vec4(pow(max(sky,vec3(.001)),vec3(.92)),1.);
+}`;
+function emberCompile(type,src){let sh=emberGL.createShader(type);emberGL.shaderSource(sh,src);emberGL.compileShader(sh);if(!emberGL.getShaderParameter(sh,emberGL.COMPILE_STATUS))throw Error('Ember shader: '+emberGL.getShaderInfoLog(sh));return sh;}
+function emberLink(v,f){let p=emberGL.createProgram(),a=emberCompile(emberGL.VERTEX_SHADER,v),b=emberCompile(emberGL.FRAGMENT_SHADER,f);emberGL.attachShader(p,a);emberGL.attachShader(p,b);emberGL.linkProgram(p);emberGL.deleteShader(a);emberGL.deleteShader(b);if(!emberGL.getProgramParameter(p,emberGL.LINK_STATUS))throw Error('Ember program: '+emberGL.getProgramInfoLog(p));return p;}
+function emberTriangle(o,a,b,c){const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]];
+ let n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];const len=Math.hypot(...n)||1;n=n.map(x=>x/len);if(n[1]<0)n=n.map(x=>-x);for(const p of [a,b,c])o.push(...p,...n);}
+function emberQuad(o,a,b,c,d){emberTriangle(o,a,b,c);emberTriangle(o,b,d,c);}
+function emberTrack(z){return 2.15*Math.sin(z*.14)+1.3*Math.sin(z*.042+.7);}
+function emberHeight(x,z){
+ const track=emberTrack(z),d=Math.abs(x-track);
+ const fan=Math.exp(-Math.pow((z-42)/17,2))*Math.abs(x-(-15+(z-38)*.59));
+ const branch=z>26&&z<75?Math.max(0,1.-Math.abs(fan)/3.6)*3.0:0;
+ const body=Math.max(0,d-3.1);
+ const wall=7.9*(1.-Math.exp(-Math.pow(body/6.9,1.72)));
+ const uneven=.53*Math.sin(x*.31+z*.12)*Math.sin(z*.17)+.27*Math.sin(x*.74-z*.22);
+ const mesa=.83*Math.max(0,d-19)*.07;
+ return -.86+wall+mesa+uneven*(.15+.85*Math.min(1,body/7))-branch;
+}
+function emberTerrain(){const out=[],nx=100,nz=124;for(let zi=0;zi<nz;zi++)for(let xi=0;xi<nx;xi++){
+ const x0=-37+xi*74/nx,x1=-37+(xi+1)*74/nx,z0=-1+zi*92/nz,z1=-1+(zi+1)*92/nz;
+ const a=[x0,emberHeight(x0,z0),z0],b=[x1,emberHeight(x1,z0),z0],c=[x0,emberHeight(x0,z1),z1],d=[x1,emberHeight(x1,z1),z1];emberQuad(out,a,b,c,d);
+ }return new Float32Array(out);}
+function emberSpurMesh(){const out=[];
+ const buttes=[[-17,13,7,4.4],[20,21,9,5.1],[-24,32,8,4.5],[19,45,7,3.4],[-20,59,10,6.7],[26,67,11,5.4],[-9,79,7,3.2],[12,84,8,3.9]];
+ for(let i=0;i<buttes.length;i++){
+   let [cx,cz,high,rad]=buttes[i],levels=7;
+   for(let layer=0;layer<levels;layer++){
+    let y0=emberHeight(cx,cz)+high*layer/levels,y1=emberHeight(cx,cz)+high*(layer+1)/levels;
+    let r0=rad*(1.-.45*layer/levels),r1=rad*(1.-.45*(layer+1)/levels);
+    for(let side=0;side<7;side++){
+       const t=Math.PI*2*side/7,q=Math.PI*2*(side+1)/7;
+       const wobble=1.+.14*Math.sin(i*2.8+side*1.7+layer*.62);
+       const a=[cx+r0*wobble*Math.cos(t),y0,cz+r0*wobble*Math.sin(t)],b=[cx+r0*Math.cos(q),y0,cz+r0*Math.sin(q)];
+       const c=[cx+r1*wobble*Math.cos(t),y1,cz+r1*wobble*Math.sin(t)],d=[cx+r1*Math.cos(q),y1,cz+r1*Math.sin(q)];emberQuad(out,a,b,c,d);
+    }
+   }
+ }return new Float32Array(out);}
+function emberFaultMesh(){const out=[],length=87,segments=185;
+ for(let i=0;i<segments;i++){
+  const z0=1+i*length/segments,z1=1+(i+1)*length/segments;
+  const a=emberTrack(z0),b=emberTrack(z1),w0=.22+.08*Math.sin(z0*.36),w1=.22+.08*Math.sin(z1*.36);
+  emberQuad(out,[a-w0,emberHeight(a,z0)+.07,z0],[a+w0,emberHeight(a,z0)+.07,z0],[b-w1,emberHeight(b,z1)+.07,z1],[b+w1,emberHeight(b,z1)+.07,z1]);
+ }
+ return new Float32Array(out);}
+function setupEmberWorld(){if(emberGL)return;
+ emberGL=emberCanvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power'});
+ if(!emberGL)throw Error('Character world WebGL unavailable');
+ emberProgram=emberLink(emberVertex,emberFragment);emberSkyProgram=emberLink(emberSkyVertex,emberSkyFragment);
+ for(const n of ['aPosition','aNormal'])emberLoc[n]=emberGL.getAttribLocation(emberProgram,n);
+ for(const n of ['uViewport','uTime','uKind'])emberLoc[n]=emberGL.getUniformLocation(emberProgram,n);
+ emberSkyLoc.aXY=emberGL.getAttribLocation(emberSkyProgram,'aXY');for(const n of ['uAspect','uTime'])emberSkyLoc[n]=emberGL.getUniformLocation(emberSkyProgram,n);
+ const upload=a=>{const b=emberGL.createBuffer();emberGL.bindBuffer(emberGL.ARRAY_BUFFER,b);emberGL.bufferData(emberGL.ARRAY_BUFFER,a,emberGL.STATIC_DRAW);return{buffer:b,count:a.length/6};};
+ emberGround=upload(emberTerrain());emberSpurs=upload(emberSpurMesh());emberFaults=upload(emberFaultMesh());
+ emberSkyBuffer=emberGL.createBuffer();emberGL.bindBuffer(emberGL.ARRAY_BUFFER,emberSkyBuffer);emberGL.bufferData(emberGL.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),emberGL.STATIC_DRAW);
+ emberGL.enable(emberGL.DEPTH_TEST);emberGL.clearColor(.1,.045,.04,1);
+}
+function drawEmberWorld(t){if(!emberGL)return;
+ const rect=emberCanvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.3),w=Math.max(1,Math.round(rect.width*dpr)),h=Math.max(1,Math.round(rect.height*dpr));
+ if(emberCanvas.width!==w||emberCanvas.height!==h){emberCanvas.width=w;emberCanvas.height=h;}
+ emberGL.viewport(0,0,w,h);emberGL.clear(emberGL.COLOR_BUFFER_BIT|emberGL.DEPTH_BUFFER_BIT);
+ emberGL.disable(emberGL.DEPTH_TEST);emberGL.useProgram(emberSkyProgram);emberGL.bindBuffer(emberGL.ARRAY_BUFFER,emberSkyBuffer);
+ emberGL.vertexAttribPointer(emberSkyLoc.aXY,2,emberGL.FLOAT,false,0,0);emberGL.enableVertexAttribArray(emberSkyLoc.aXY);emberGL.uniform1f(emberSkyLoc.uTime,t);emberGL.uniform1f(emberSkyLoc.uAspect,w/h);emberGL.drawArrays(emberGL.TRIANGLES,0,3);
+ emberGL.enable(emberGL.DEPTH_TEST);emberGL.useProgram(emberProgram);emberGL.uniform2f(emberLoc.uViewport,w/h,1);emberGL.uniform1f(emberLoc.uTime,t);
+ const drawMesh=(mesh,kind)=>{emberGL.bindBuffer(emberGL.ARRAY_BUFFER,mesh.buffer);emberGL.vertexAttribPointer(emberLoc.aPosition,3,emberGL.FLOAT,false,24,0);emberGL.enableVertexAttribArray(emberLoc.aPosition);emberGL.vertexAttribPointer(emberLoc.aNormal,3,emberGL.FLOAT,false,24,12);emberGL.enableVertexAttribArray(emberLoc.aNormal);emberGL.uniform1f(emberLoc.uKind,kind);emberGL.drawArrays(emberGL.TRIANGLES,0,mesh.count);};
+ drawMesh(emberGround,0);drawMesh(emberSpurs,1);drawMesh(emberFaults,2);
+}
+
 const vertexSource=`attribute vec3 aPosition;attribute vec3 aNormal;attribute float aFacet;
 uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ;uniform vec2 uView;
 varying vec3 vWorld,vNormal,vLocal;varying float vFacet;
@@ -714,10 +839,13 @@ void main() {
      material*=.79+.28*b;
      material-=vec3(.035,.047,.055)*escarpment*region;
      rough=.87;
-   } else if(uWorld<3.5) { // Accountability: fractured copper basalt
-     float fault=abs(a-.51)+abs(b-.5)*.24;
-     material=mix(vec3(.16,.09,.075),vec3(.79,.40,.22),smoothstep(.10,.35,fault));
-     material*=.76+.38*c;rough=.81;metal=.13;
+   } else if(uWorld<3.5) { // Accountability: dark copper strata and branching asymmetric canyons
+     float basin=fbm(p*3.2+vec3(.8,-1.2,2.5));
+     float fissure=abs(sin(p.x*4.7+p.y*2.5+fbm(p*6.8)*3.7));
+     float fault=(1.-smoothstep(.028,.16,fissure))*(.3+.7*basin);
+     material=mix(vec3(.08,.039,.043),vec3(.53,.24,.13),smoothstep(.25,.81,basin));
+     material+=vec3(.30,.075,.017)*fault*.4;
+     rough=.91;metal=.06;
    } else if(uWorld<4.5) { // Forgiveness: sea glass and soft tidal layers
      float coast=fbm(p*7.8+vec3(a*.35,0.,b*.38));
      float deep=smoothstep(.32,.67,coast*.75+a*.32);
@@ -872,17 +1000,23 @@ function render(time){
   if(orbitActive){orbitSpeed+=(ORBIT_RADIANS_PER_SECOND-orbitSpeed)*(1-Math.exp(-P.GESTURE.settleSpeed*dt));orbitPhase=(orbitPhase+orbitSpeed*dt)%(Math.PI*2);}else orbitSpeed=0;
   const settle=reduced?1:1-Math.exp(-P.GESTURE.settleSpeed*dt);
   const flightStep=reduced?1:Math.min(1,dt/.95);
-  if(selected===0||selected===1||selected===2){if(reduced)flight=flightTarget;else{const delta=flightTarget-flight;flight=Math.abs(delta)<.00001?flightTarget:Math.max(0,Math.min(1,flight+Math.sign(delta)*Math.min(Math.abs(delta),dt/3.4)));}}
+  if(selected===0||selected===1||selected===2||selected===3){if(reduced)flight=flightTarget;else{const delta=flightTarget-flight;flight=Math.abs(delta)<.00001?flightTarget:Math.max(0,Math.min(1,flight+Math.sign(delta)*Math.min(Math.abs(delta),dt/3.4)));}}
   else flight+=(flightTarget-flight)*flightStep;
   if(Math.abs(flight-flightTarget)<.0006)flight=flightTarget;
   const smooth=flight*flight*(3-2*flight);
   cameraZ=9-4.6*smooth;
   if(!reduced&&sceneVisible)universeClock+=dt;
-  if((selected===4||selected===0||selected===1||selected===2)&&flight>.01){
+  if((selected===4||selected===0||selected===1||selected===2||selected===3)&&flight>.01){
     const focus=P.quaternionRotateVector(quaternion,basePosition(selected));
     targetOffset=[focus[0]*smooth-.18*smooth,focus[1]*smooth,focus[2]*smooth];
     targetZoom=1+2.6*smooth;
   }
+  if(selected===3&&flight>.55){
+    emberOverlay.classList.add('is-visible');emberOverlay.setAttribute('aria-hidden',flightStage==='encounter'?'false':'true');
+    emberOverlay.style.opacity=String(Math.max(0,Math.min(1,(flight-.55)/.36)));
+    emberOverlay.style.pointerEvents=flightStage==='encounter'?'auto':'none';
+    drawEmberWorld(reduced?0:universeClock);
+  }else if(selected===3&&flight<=.55){emberOverlay.style.opacity='0';emberOverlay.style.pointerEvents='none';}
   if(selected===2&&flight>.55){
     stabilityOverlay.classList.add('is-visible');stabilityOverlay.setAttribute('aria-hidden',flightStage==='encounter'?'false':'true');
     stabilityOverlay.style.opacity=String(Math.max(0,Math.min(1,(flight-.55)/.36)));
@@ -905,6 +1039,10 @@ function render(time){
     flightStage='encounter';scene.dataset.stage='encounter';joyOverlay.classList.add('is-visible');joyOverlay.setAttribute('aria-hidden','false');joyOverlay.style.opacity='1';joyOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-joy');
     $('#scene-note').textContent='Gratitude → Joy · The Dawn Archipelago';status.textContent='Arrived at the world of Joy.';joyHud.focus({preventScroll:true});
   }
+  if(selected===3&&flight===1&&flightStage==='approach'){
+    flightStage='encounter';scene.dataset.stage='encounter';emberOverlay.classList.add('is-visible');emberOverlay.setAttribute('aria-hidden','false');emberOverlay.style.opacity='1';emberOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-ember');
+    $('#scene-note').textContent='Accountability → Character · The Ember Canyons';status.textContent='Arrived at the world of Character.';emberHud.focus({preventScroll:true});
+  }
   if(selected===2&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';stabilityOverlay.classList.add('is-visible');stabilityOverlay.setAttribute('aria-hidden','false');stabilityOverlay.style.opacity='1';stabilityOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-stability');
     $('#scene-note').textContent='Dependability → Stability · The Great Basalt Terraces';status.textContent='Arrived at the world of Stability.';stabilityHud.focus({preventScroll:true});
@@ -920,15 +1058,15 @@ function render(time){
     // The new encounter precedes the path list in DOM order: move focus to its readable landmark.
     peaceOverlay.focus({preventScroll:true});
   }
-  if((selected===4||selected===0||selected===1||selected===2)&&flight===0&&flightStage==='return'){
-    const wasJoy=selected===0,wasLove=selected===1,wasStability=selected===2;
+  if((selected===4||selected===0||selected===1||selected===2||selected===3)&&flight===0&&flightStage==='return'){
+    const wasJoy=selected===0,wasLove=selected===1,wasStability=selected===2,wasEmber=selected===3;
     selected=-1;close=false;flightStage='arrival';targetZoom=1;targetOffset=[0,0,0];
-    scene.dataset.stage='arrival';panel.hidden=true;returnButton.hidden=true;document.documentElement.classList.remove('universe-approaching');joyOverlay.classList.remove('is-visible');joyOverlay.style.opacity='0';loveOverlay.classList.remove('is-visible');loveOverlay.style.opacity='0';stabilityOverlay.classList.remove('is-visible');stabilityOverlay.style.opacity='0';
+    scene.dataset.stage='arrival';panel.hidden=true;returnButton.hidden=true;document.documentElement.classList.remove('universe-approaching');joyOverlay.classList.remove('is-visible');joyOverlay.style.opacity='0';loveOverlay.classList.remove('is-visible');loveOverlay.style.opacity='0';stabilityOverlay.classList.remove('is-visible');stabilityOverlay.style.opacity='0';emberOverlay.classList.remove('is-visible');emberOverlay.style.opacity='0';
     labels.forEach(el=>el.setAttribute('aria-pressed','false'));
     $('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore';
     status.textContent='Returned to the universe.';updateMotionControl();
-    const saved=wasJoy?joyFocusReturn:wasLove?loveFocusReturn:wasStability?stabilityFocusReturn:peaceFocusReturn;const restore=saved?.isConnected?saved:(labels[wasJoy?0:wasLove?1:wasStability?2:4]||document.querySelector(`[data-summit="${wasJoy?0:wasLove?1:wasStability?2:4}"]`));
-    peaceFocusReturn=null;joyFocusReturn=null;loveFocusReturn=null;stabilityFocusReturn=null;restore?.focus({preventScroll:true});
+    const saved=wasJoy?joyFocusReturn:wasLove?loveFocusReturn:wasStability?stabilityFocusReturn:wasEmber?emberFocusReturn:peaceFocusReturn;const restore=saved?.isConnected?saved:(labels[wasJoy?0:wasLove?1:wasStability?2:wasEmber?3:4]||document.querySelector(`[data-summit="${wasJoy?0:wasLove?1:wasStability?2:wasEmber?3:4}"]`));
+    peaceFocusReturn=null;joyFocusReturn=null;loveFocusReturn=null;stabilityFocusReturn=null;emberFocusReturn=null;restore?.focus({preventScroll:true});
   }
   zoom+=(targetZoom-zoom)*settle;offset=offset.map((v,i)=>v+(targetOffset[i]-v)*settle);
   const moving=Math.abs(zoom-targetZoom)>.0001||offset.some((v,i)=>Math.abs(v-targetOffset[i])>.0001);
@@ -939,7 +1077,7 @@ function render(time){
   const heartPosition=[width<600?-.35:.38,width<600?-.37:-.14,.40];
   draw(meshes[0],heartPosition,(width<600?1.90:1.72)*(1-.38*smooth),[.76,.9,.96],true,false);
   projected=centers.map((center,i)=>{
-    draw(meshes[i+1],center,radius(i)*((i===4&&selected===4||i===0&&selected===0||i===1&&selected===1)?1+3.1*smooth:1),color(summits[i][2]),false,i===selected,i);
+    draw(meshes[i+1],center,radius(i)*((i===4&&selected===4||i===0&&selected===0||i===1&&selected===1||i===2&&selected===2||i===3&&selected===3)?1+3.1*smooth:1),color(summits[i][2]),false,i===selected,i);
     const p=project(center),label=labels[i];
     const obscured=center[2]<-.1&&Math.hypot(center[0],center[1])<.75;
     const hidden=flight>.16||close&&i!==selected||obscured;
@@ -948,16 +1086,16 @@ function render(time){
     return {...p,radius:Math.max(22,radius(i)*p.scale),hidden};
   });
   placeLabels();
-  if(flight>.08&&(selected===4||selected===0||selected===1||selected===2)){
+  if(flight>.08&&(selected===4||selected===0||selected===1||selected===2||selected===3)){
     gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);
     const k=selected;draw(meshes[k+1],centers[k],radius(k)*(1+3.1*smooth)*1.095,color(summits[k][2]),false,true,k,true);
     gl.depthMask(true);gl.disable(gl.BLEND);
   }
   // The Joy landscape is drawn during its cross-atmosphere transition above.
   const heart=project(heartPosition), glow=$('.heart-glow');glow.style.left=heart.x+'px';glow.style.top=heart.y+'px';glow.style.transform=`translate(-50%,-50%) scale(${zoom})`;
-  if(inertia||moving||orbitActive||flight!==flightTarget||((selected===4||selected===0||selected===1||selected===2)&&flight>.02&&!reduced&&windowFocused&&pageActive&&sceneVisible))requestFrame();else lastTime=0;
+  if(inertia||moving||orbitActive||flight!==flightTarget||((selected===4||selected===0||selected===1||selected===2||selected===3)&&flight>.02&&!reduced&&windowFocused&&pageActive&&sceneVisible))requestFrame();else lastTime=0;
 }
-function resize(){if(!gl)return;const b=scene.getBoundingClientRect();width=b.width;height=b.height;labelSizes=labels.map(el=>({width:el.offsetWidth||96,height:el.offsetHeight||44}));const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);viewWidth=width<600?2.85:Math.max(3.9,width/height*2.5);viewHeight=viewWidth*height/width;if(close&&selected>=0&&selected!==4&&selected!==0&&selected!==1)targetOffset=P.quaternionRotateVector(quaternion,basePosition(selected));requestFrame();}
+function resize(){if(!gl)return;const b=scene.getBoundingClientRect();width=b.width;height=b.height;labelSizes=labels.map(el=>({width:el.offsetWidth||96,height:el.offsetHeight||44}));const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);viewWidth=width<600?2.85:Math.max(3.9,width/height*2.5);viewHeight=viewWidth*height/width;if(close&&selected>=0&&selected!==4&&selected!==0&&selected!==1&&selected!==2&&selected!==3)targetOffset=P.quaternionRotateVector(quaternion,basePosition(selected));requestFrame();}
 function cancelPointer(){if(!pointer)return;const id=pointer.id;quaternion=pointer.startQuaternion.slice();pointer=null;try{if(scene.hasPointerCapture(id))scene.releasePointerCapture(id);}catch{}suppressUntil=performance.now()+P.GESTURE.suppressClickMs;requestFrame();}
 function hitTest(x,y){const b=scene.getBoundingClientRect();return projected.map((p,i)=>({...p,i})).filter(p=>!p.hidden&&Math.hypot(x-b.left-p.x,y-b.top-p.y)<=p.radius).sort((a,b)=>centers[b.i][2]-centers[a.i][2])[0]?.i;}
 function bindInput(){
@@ -969,7 +1107,7 @@ function bindInput(){
   scene.addEventListener('pointerleave',()=>labels.forEach(label=>label.classList.remove('is-hovered')));
   scene.addEventListener('pointerdown',event=>{
     // The in-world teaching buttons and links own their own taps; do not reinterpret them as planet hits.
-    if(event.target.closest('#peace-encounter,#joy-world,#love-world,#stability-world'))return;
+    if(event.target.closest('#peace-encounter,#joy-world,#love-world,#stability-world,#ember-world'))return;
     if(!ready||event.button!==0||!event.isPrimary||pointer)return;
     stopInertia();const now=performance.now();pointer={id:event.pointerId,startX:event.clientX,startY:event.clientY,startTime:now,startQuaternion:quaternion.slice(),currentQuaternion:quaternion.slice(),samples:[],dragging:false,hit:event.target.closest('[data-planet]')?Number(event.target.closest('[data-planet]').dataset.planet):hitTest(event.clientX,event.clientY)};
     P.addPointerSample(pointer,event.clientX,event.clientY,now);scene.setPointerCapture(event.pointerId);orbitSpeed=0;requestFrame();
@@ -1006,6 +1144,6 @@ async function init(){
   new IntersectionObserver(entries=>{sceneVisible=entries[0].isIntersecting;orbitSpeed=0;lastTime=0;if(!sceneVisible&&raf){cancelAnimationFrame(raf);raf=0;}if(sceneVisible)requestFrame();}).observe(scene);
   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;fallback(Error('Graphics context interrupted'));});
   canvas.addEventListener('webglcontextrestored',()=>location.reload());
-  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null})});
+  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null})});
 }
 init().catch(fallback);

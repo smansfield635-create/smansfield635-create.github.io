@@ -1,0 +1,134 @@
+{
+  "schema": "H_EARTH_CPU_RECONSTRUCTION_EVIDENCE_MANIFEST_v1",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2964,
+  "files": [
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/README.md",
+      "sha256": "e077367054a2b51705ebddd5694d1d588fda8b5bf493658725daa0f238f974d2"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/direct-reconstruction.json",
+      "sha256": "b97985b36e272b456a0703817f65197a75ed1b9d5a624ffdf6a0296195eb886c"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/domain-audit.json",
+      "sha256": "e6c96f51dbc0a2bc38697c5aaf25abaa960466910c77a3fd1f90e80ab28764d6"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/domain-audit.py",
+      "sha256": "08bc6be10f61fc550e9400098f29a2d70c742421810f9c7cf954460910604699"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/independent-mesh-review.py",
+      "sha256": "66aecbd4a22c130104e958e4ec0f261fb94c9a4605fae09ec33daa4ce80d0c7d"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/independent-review.json",
+      "sha256": "b9db6dc66faff7363d485b4106eb149ca2506397b0915dbc59e34ad62c5b4dd4"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/match-surface.py",
+      "sha256": "fe346048161430e5db591eb2301c3dbc154c9c42dc960b3cfe71405322a9d4bf"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/nominal-normals.py",
+      "sha256": "e0e09816c0cb6453ac5ab54306ceeee0126209a6225184b8e74a58673afe5e13"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/reconstruct-direct.mjs",
+      "sha256": "331e21b7e1ae8fad782fca086b57c964bc1145e60210fea96423231cfb89288f"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/reconstruct.mjs",
+      "sha256": "824fb905698c465deb5186aa2f252abdae10d1db2b34b0cf0143ed44f5bb29b0"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/reconstruction.json",
+      "sha256": "db558fbba89211ab4b5064744aad9c8c0843f70343f235f312e4142151bffefd"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-paths.txt",
+      "sha256": "60a644a0ca30c52cd67cc887f4e6ed93325c9c39dccf6f4a07ea0d00c4ed87a9"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/surface-match.json",
+      "sha256": "e801d6afa23ee7c39a8593aaa60305196eb4718c9d212424b9054e0ecb42e4a9"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/surface-samples.json",
+      "sha256": "1698ab6a21abae0265c0327602b2abfa98e3c6d07427a83ab234c9d9cb60ccca"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/upload-replay.json",
+      "sha256": "479c1b96343a2e687aa30567a9dc0c4e95c41e56ef989937b0519c3063d781ee"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/upload-replay.mjs",
+      "sha256": "ec1825b977ef791f0a23c7ecc09c7bced7004c37c6148e89c94b0ce94acdb92e"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/README.md",
+      "sha256": "4286539b3ddf74d71a7c13fc68fc4560639772146a72db8ace69fa162909e1e7"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/attribute-p.py",
+      "sha256": "c40d695ab8f9f4f50d52dbf56781aed173570143e6d6287675d1d5cb5eccb4f5"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/attribution-result.json",
+      "sha256": "a38a647db5345fab11b15923d415f399701952518de6f4447af10036af3f1724"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/full-p-result.json",
+      "sha256": "4ea8235cac03798c43c12f8b23130a9ac6aa0be9d764e64c256595b79a0c40ab"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/full-p-screen.py",
+      "sha256": "0ec661436a4e353eced1f24adf1d3085f736c1b74d85cff1ba381729d364e55a"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/identity-model.py",
+      "sha256": "b209ec3d1e2ecc1ecfbc96b61afbf5f2639f1f10df399c65a7e88c8ed233be37"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/mesh-independent-review.json",
+      "sha256": "0f401105d9745c4e9e9fcc6705c35b5f1613cfaeb3abf3694e6f0ede7050d610"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/reconstruct.py",
+      "sha256": "f7701727a49fcbcb3e095db92ef9a570129a1b5cdc21c249ed0388ec8d448702"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/result.json",
+      "sha256": "a3672a9acaa961520edeab987cb4866e73c413d4c62ad2968f27e95ed4e9dae4"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/source-fields-result.json",
+      "sha256": "c21f0c26f372668958fe442412b79b2cec991e452e64a5889230a31083e3a55d"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/source-fields.py",
+      "sha256": "b0aa9b3fef57d225ab16dcf7b0369ac15823dfc2adb645cc898dc0623e51c5c4"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/verify-mesh.py",
+      "sha256": "8dbf47c7a84df212b314690c37ba853e6485fa2a4be0c032e6541b60f21f1c62"
+    }
+  ],
+  "productChanged": false,
+  "newGpuRuns": 0,
+  "repairQualified": false,
+  "reviewRoles": [
+    "material_cpu: material evaluator and independent mesh polygon clipping",
+    "mesh_review: original-module/upload replay and independent source/domain/association review"
+  ],
+  "classification": {
+    "observation": "CPU nominal emulator differs from archived incoming material",
+    "dependency": "blocks CPU source-split appearance qualification only",
+    "candidateInvalidation": false,
+    "recovery": "CPU source and uncertainty investigation with existing captures",
+    "automaticRetry": false
+  }
+}

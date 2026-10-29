@@ -1,0 +1,44 @@
+{
+  "schema": "H_EARTH_CAPTURE_SOURCE_MESH_ASSOCIATION_v1",
+  "result": "ALL_CAPTURE_BOXES_INTERSECT_SOURCE_MESH",
+  "sourcePackage": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+  "method": "Linear-program feasibility of exact Float32 triangle barycentric point inside measured .625-bin coordinate box. No ideal-camera-ray assumption. All intersecting triangles retained.",
+  "terrainTriangles": 21890,
+  "minimumTerrainTriangleAreaMeters2": 0.1468375186272606,
+  "groups": [
+    {
+      "pose": "inland-seam-near",
+      "samples": 1107,
+      "unmatched": 0,
+      "uniqueTriangleMatches": 1100,
+      "ambiguousTriangleMatches": 7,
+      "maximumCandidateCount": 2,
+      "selectedSourceTriangles": 4,
+      "selectedTriangleAreaRangeMeters2": [
+        8674.495371252706,
+        12462.737017708358
+      ],
+      "unmatchedPixels": []
+    },
+    {
+      "pose": "inland-seam-far",
+      "samples": 1377,
+      "unmatched": 0,
+      "uniqueTriangleMatches": 1298,
+      "ambiguousTriangleMatches": 79,
+      "maximumCandidateCount": 4,
+      "selectedSourceTriangles": 45,
+      "selectedTriangleAreaRangeMeters2": [
+        5.597477038021785,
+        8680.106895294164
+      ],
+      "unmatchedPixels": []
+    }
+  ],
+  "limits": [
+    "Scalar measurement intervals remain the declared instrument arithmetic model, not a new formal GPU interpolation bound.",
+    "Ambiguous mesh membership is retained; no arbitrary single-triangle selection.",
+    "Mesh areas established for source triangles, not pixel quadrature or qualified full transport domain.",
+    "Cross-primitive T-junction adjacency/protection and selected triangle retirement need separate checks."
+  ]
+}

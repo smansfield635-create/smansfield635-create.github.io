@@ -1,0 +1,18 @@
+{
+  "result": "INDEPENDENT_POLYGON_CLIPPING_MATCH",
+  "bufferHashes": {
+    "positions": true,
+    "normals": true,
+    "coastDistances": true,
+    "indices": true
+  },
+  "samples": 2484,
+  "unique": 2398,
+  "ambiguous": 86,
+  "candidateSetDifferences": [],
+  "method": "Independent double-precision polygon clipping of the barycentric unit triangle against six measured XYZ box half-planes. Tests all bounding-box candidates without LP solver or numerical padding.",
+  "limits": [
+    "Verifies source box association and upload hashes, not GPU readback or mesh package construction.",
+    "Measurement uncertainty model inherited, not newly certified."
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "schema": "H_EARTH_CPU_PACKAGE_RECONSTRUCTION_v1",
+  "result": "CAPTURE_PACKAGE_IDENTITY_MATCH",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "assetSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+  "rawModuleSha256": "95a4d661a238c7e3155093cd681e16d35a72b43c4b6c6d638713cb20f28a4876",
+  "packetModuleSha256": "f586afa2ae1ec2ce6c6d923445258997d1959f3e5102d66653aa96efb029fc27",
+  "method": "Exact source slices for hash/draw ranges/planting/evaluator, contract IDs resolved from authenticated asset sourceAuthorities. No replacement validator. Original source slices executed using Node vm.",
+  "sourceSliceHashes": [
+    "09a32d116cd0ffe9becc583d74ced2db69520d796c68f2bf6c3e7df620b4a0de",
+    "d6fc23d8be18da259610b62254cb622c73f4cd8704e4d93a7d941e9354a8364d",
+    "6051c5d8032a9432ce1e6896a26f572efa7c2074980e448ac3b5f6bda0c29ea8",
+    "53063a48d77a89fea4b6f25f7fb80675e27c5d9312ecf5c03a13e8100a55a34f"
+  ],
+  "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+  "contentDigest": "fnv1a32:4f1b7ff2",
+  "vertexCount": 141373,
+  "triangleCount": 122222,
+  "indexCount": 366666,
+  "validation": {
+    "eligible": true,
+    "status": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_PASS",
+    "issues": []
+  },
+  "typedBufferHashes": {
+    "positions": {
+      "sha256": "342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83",
+      "bytes": 1696476
+    },
+    "normals": {
+      "sha256": "ab86b3e331ea9e16a3e3c7a1633f211eb5276ec57b37eca122a8c342944ed542",
+      "bytes": 1696476
+    },
+    "baseColorsLinear": {
+      "sha256": "cac5af288c75c09fe6dec04e2859aa7f0334e025d3c33d8ca2b2e6d3f554e2d4",
+      "bytes": 2261968
+    },
+    "materialParameters": {
+      "sha256": "fd4bc29e92d58a87c48018d668894b0aec4573c9f16f9815251d6db068442d6d",
+      "bytes": 2261968
+    },
+    "materialModelCodes": {
+      "sha256": "59c70c3f46cacf1f964a738b6fbb2a2f6013b0b6b56d6ccc15ca8b8ce67b700e",
+      "bytes": 141373
+    },
+    "surfaceClassCodes": {
+      "sha256": "3c9534d4055ff2e75612d974c4aaf0623b6e1db273466d522bb7d28c9b020a6d",
+      "bytes": 141373
+    },
+    "primitiveIndices": {
+      "sha256": "9187372a7eac8087f42240f08e52efde72aa602fddcb07d1c762f9fc572f51d6",
+      "bytes": 282746
+    },
+    "roleCodes": {
+      "sha256": "4eb771a011987f35f13dae35a12ae7693b4b84adcb39e06e40a6b30aacdf1f92",
+      "bytes": 141373
+    },
+    "indices": {
+      "sha256": "483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c",
+      "bytes": 1466664
+    }
+  },
+  "limits": [
+    "Reproduces canonical package and source validation; renderer post-upload index/normal/coast mutations still require replay.",
+    "CPU reconstruction, no new GPU or performance claim."
+  ]
+}

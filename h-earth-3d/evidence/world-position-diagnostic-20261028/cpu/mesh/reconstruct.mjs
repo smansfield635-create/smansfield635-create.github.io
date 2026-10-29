@@ -1,0 +1,19 @@
+import fs from 'node:fs';import zlib from 'node:zlib';import crypto from 'node:crypto';import vm from 'node:vm';
+const packetSource=fs.readFileSync('/tmp/verified-planting-packet.mjs','utf8');
+const pc=vm.createContext({});vm.runInContext(packetSource.slice(packetSource.indexOf('export const H_EARTH_VERIFIED_PLANTING_PACKET'),packetSource.indexOf('const encoded =')).replaceAll('export ','')+';globalThis.trees=H_EARTH_VERIFIED_PLANTING_TREES;globalThis.packet=H_EARTH_VERIFIED_PLANTING_PACKET;',pc);
+const H_EARTH_VERIFIED_PLANTING_TREES=pc.trees,H_EARTH_VERIFIED_PLANTING_PACKET=pc.packet;
+const packed=fs.readFileSync('/tmp/base-world.json.gz');
+const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+if(sha(packed)!=='48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a')throw Error('SOURCE_ASSET_DIGEST');
+const unpacked=zlib.gunzipSync(packed);if(unpacked.length!==51163475)throw Error('SOURCE_ASSET_LENGTH');
+const {raw,canonical}=JSON.parse(unpacked);
+const source=fs.readFileSync('/tmp/raw-package.js','utf8');
+function cut(start,end){const a=source.indexOf(start),b=source.indexOf(end,a);if(a<0||b<a)throw Error(start);return source.slice(a,b).replaceAll('export ','');}
+const slices=[cut('const finite =','export const H_EARTH_RUN_8E_R2_MATERIAL_MODEL'),cut('function createHashWriter()','function buildHEarthRun8ER2ImmutableLiveRenderPackage'),cut('function* evaluatePackageChecks','export async function evaluateHEarthRun8ER2ImmutableLiveRenderPackageAsync'),cut('export function applyHEarthVerifiedPlantingPackage','let cachedDeferredPackage =')];
+const auth=raw.sourceAuthorities;
+const context=vm.createContext({TextEncoder,performance,console,raw,canonical,H_EARTH_VERIFIED_PLANTING_TREES,H_EARTH_VERIFIED_PLANTING_PACKET,H_EARTH_RUN_8E_R2_CONTRACT_ID:auth.run8ER2ContractId,H_EARTH_RUN_8E_PACKET_002_TRANSFER_CONTRACT_ID:auth.packet002TransferContractId,H_EARTH_RUN_8C_SUCCESSOR_SURFACE_MATERIAL_CONTRACT_ID:auth.run8CMaterialContractId,H_EARTH_ATMOSPHERE_STATE_CONTRACT_ID:auth.atmosphereContractId});
+vm.runInContext(slices.join('\n')+'\nglobalThis.result=applyHEarthVerifiedPlantingPackage(raw,{canonicalBase:canonical});globalThis.validation=evaluateHEarthRun8ER2ImmutableLiveRenderPackage(result);',context);
+const p=context.result;if(p.contentDigest!=='fnv1a32:4f1b7ff2')throw Error('CAPTURE_PACKAGE_MISMATCH:'+p.contentDigest);
+fs.writeFileSync('/tmp/mesh-cpu/package.json',JSON.stringify(p));
+const hashes={};for(const [name,vals] of Object.entries(p.buffers)){let typed=name==='indices'?new Uint32Array(vals):['materialModelCodes','surfaceClassCodes','roleCodes'].includes(name)?new Uint8Array(vals):name==='primitiveIndices'?new Uint16Array(vals):new Float32Array(vals);fs.writeFileSync('/tmp/mesh-cpu/'+name+'.bin',Buffer.from(typed.buffer));hashes[name]={sha256:sha(Buffer.from(typed.buffer)),bytes:typed.byteLength};}
+const report={schema:'H_EARTH_CPU_PACKAGE_RECONSTRUCTION_v1',result:'CAPTURE_PACKAGE_IDENTITY_MATCH',sourceHead:'cb57c275b95d0d48883bc4da4dcfcf17cbec5060',assetSha256:sha(packed),rawModuleSha256:sha(source),packetModuleSha256:sha(fs.readFileSync('/tmp/verified-planting-packet.mjs')),method:'Exact source slices for hash/draw ranges/planting/evaluator, contract IDs resolved from authenticated asset sourceAuthorities. No replacement validator. Original source slices executed using Node vm.',sourceSliceHashes:slices.map(s=>sha(s)),packageIdentity:p.packageIdentity,contentDigest:p.contentDigest,vertexCount:p.vertexCount,triangleCount:p.triangleCount,indexCount:p.indexCount,validation:context.validation,typedBufferHashes:hashes,limits:['Reproduces canonical package and source validation; renderer post-upload index/normal/coast mutations still require replay.','CPU reconstruction, no new GPU or performance claim.']};fs.writeFileSync('/tmp/mesh-cpu/reconstruction.json',JSON.stringify(report,null,2));console.log(JSON.stringify(report,null,2));

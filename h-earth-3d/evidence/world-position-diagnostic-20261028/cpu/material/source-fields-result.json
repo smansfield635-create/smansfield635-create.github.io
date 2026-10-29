@@ -1,0 +1,148 @@
+{
+  "schema": "H_EARTH_CPU_SOURCE_NOISE_REPLAY_SCREEN_v1",
+  "result": "COORDINATE_CONDITIONED_SCREEN_COMPATIBLE_NOT_CERTIFIED",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "coordinateHalfWidthMeters": 0.0390625,
+  "groups": [
+    {
+      "pose": "inland-seam-near",
+      "field": "macro",
+      "samples": 1107,
+      "strictFloat32NominalOutsideArchivedInterval": 0,
+      "coordinateBoxEnvelopeDisjointCount": 0,
+      "nominalAbsoluteCodeErrorMedianMax": [
+        0.25612908601760687,
+        0.5725337266922043
+      ],
+      "coordinateEnvelopeWidthMedianMax": [
+        0.0003090798854827881,
+        0.0017047524452209473
+      ],
+      "maximumDisjointGapCodes": 0.0,
+      "float64NominalAbsoluteCodeErrorMedianMax": [
+        13.479670736450158,
+        40.97212619331984
+      ]
+    },
+    {
+      "pose": "inland-seam-near",
+      "field": "meso",
+      "samples": 1107,
+      "strictFloat32NominalOutsideArchivedInterval": 6,
+      "coordinateBoxEnvelopeDisjointCount": 0,
+      "nominalAbsoluteCodeErrorMedianMax": [
+        0.28138910233974745,
+        1.2574597299098913
+      ],
+      "coordinateEnvelopeWidthMedianMax": [
+        0.00426405668258667,
+        0.00992351770401001
+      ],
+      "maximumDisjointGapCodes": 0.0,
+      "float64NominalAbsoluteCodeErrorMedianMax": [
+        62.99292208732607,
+        158.08850302479922
+      ]
+    },
+    {
+      "pose": "inland-seam-near",
+      "field": "detail",
+      "samples": 1107,
+      "strictFloat32NominalOutsideArchivedInterval": 201,
+      "coordinateBoxEnvelopeDisjointCount": 0,
+      "nominalAbsoluteCodeErrorMedianMax": [
+        0.4463140368461632,
+        2.9473409056663464
+      ],
+      "coordinateEnvelopeWidthMedianMax": [
+        0.012282580137252808,
+        0.03646576404571533
+      ],
+      "maximumDisjointGapCodes": 0.0,
+      "float64NominalAbsoluteCodeErrorMedianMax": [
+        74.0557622716565,
+        240.48416265581278
+      ]
+    },
+    {
+      "pose": "inland-seam-far",
+      "field": "macro",
+      "samples": 1377,
+      "strictFloat32NominalOutsideArchivedInterval": 0,
+      "coordinateBoxEnvelopeDisjointCount": 0,
+      "nominalAbsoluteCodeErrorMedianMax": [
+        0.23054036498069252,
+        0.5603931248188074
+      ],
+      "coordinateEnvelopeWidthMedianMax": [
+        0.00043341517448425293,
+        0.0011001229286193848
+      ],
+      "maximumDisjointGapCodes": 0.0,
+      "float64NominalAbsoluteCodeErrorMedianMax": [
+        64.14034487923232,
+        77.04338627710307
+      ]
+    },
+    {
+      "pose": "inland-seam-far",
+      "field": "meso",
+      "samples": 1377,
+      "strictFloat32NominalOutsideArchivedInterval": 1,
+      "coordinateBoxEnvelopeDisjointCount": 0,
+      "nominalAbsoluteCodeErrorMedianMax": [
+        0.24985954165459207,
+        1.052948296070093
+      ],
+      "coordinateEnvelopeWidthMedianMax": [
+        0.0026318132877349854,
+        0.006897926330566406
+      ],
+      "maximumDisjointGapCodes": 0.0,
+      "float64NominalAbsoluteCodeErrorMedianMax": [
+        61.98286005674985,
+        182.70190190918493
+      ]
+    },
+    {
+      "pose": "inland-seam-far",
+      "field": "detail",
+      "samples": 1377,
+      "strictFloat32NominalOutsideArchivedInterval": 239,
+      "coordinateBoxEnvelopeDisjointCount": 0,
+      "nominalAbsoluteCodeErrorMedianMax": [
+        0.43054476380347734,
+        3.132934778928754
+      ],
+      "coordinateEnvelopeWidthMedianMax": [
+        0.01096111536026001,
+        0.03513661026954651
+      ],
+      "maximumDisjointGapCodes": 0.0,
+      "float64NominalAbsoluteCodeErrorMedianMax": [
+        59.08134300817325,
+        220.40068619445663
+      ]
+    }
+  ],
+  "firstCounterexamples": [],
+  "inputReceipts": {
+    "identity": "9f508de29fcc479e5cbe9c848bc9bb8b466cb0e161bbbab5aa5cacd15fc4ab36",
+    "world": "f1b1fdc21c55ecc458c7bf5443a9478f27b1c327a2b3fc22563f1b6f463fd939"
+  },
+  "method": [
+    "Implement source hash21/noise2 using NumPy Float32 and explicit nonfused operations.",
+    "Use each captured XZ decoded center for nominal prediction; use .625-bin coordinate boxes for input uncertainty.",
+    "Transform coordinate interval endpoints with Float32 scale/offset; split at integer grid crossings and evaluate all subcell corners. For fixed lattice hashes the mathematical bilinear-in-monotone-smoothstep range has corner extrema.",
+    "Compare against inherited +/-1RGB8-code archived factor intervals; no fitted epsilon or rejected-point removal.",
+    "Float64 implementation supplied as a separate contrast, not presumed truth."
+  ],
+  "limits": [
+    "Corner envelopes are for the strict CPU operation model and spatial uncertainty; they do not certify every Float32 rounding interior extremum.",
+    "GLSL dot/mix contraction, intermediate rounding and implementation arithmetic can differ from this CPU model. Hash fract amplifies arithmetic differences.",
+    "A mismatch establishes this CPU emulator is inadequate; it does not identify the GPU defect or invalidate byte-calibrated captures.",
+    "Source noise cell inputs use measured interpolated shader position, not ideal surface-ray reconstruction.",
+    "No GPU, product mutation, fine-reference field or candidate appearance claimed."
+  ]
+}

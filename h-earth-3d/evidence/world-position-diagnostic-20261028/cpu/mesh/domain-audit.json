@@ -1,0 +1,69 @@
+{
+  "schema": "H_EARTH_SELECTED_SOURCE_DOMAIN_AUDIT_v1",
+  "selectedTriangles": 47,
+  "worldVertexBounds": [
+    [
+      -360.031494140625,
+      14.088285446166992,
+      -1098.5472412109375
+    ],
+    [
+      -152.1759796142578,
+      24.89270782470703,
+      -688.0262451171875
+    ]
+  ],
+  "maximumAuthoringZ": -687.999971978356,
+  "geologyRetirementDisjoint": true,
+  "retirementBasis": "Exact geological-runtime-bridge.v1.js rectangles z[-440,-224] and[-568,-440], requiring triangles wholly inside. Selected triangles wholly z<-568. Other suppression functions are vegetation/rock/tree spans; ordinary TERRAIN/FAR_LAND source spans retained.",
+  "selectedSeamLinks": [
+    {
+      "nearTriangleOffset": 126,
+      "farTriangleOffset": 73857,
+      "overlapMeters": 8.010857144570826,
+      "maxResidualMeters": 0.0,
+      "toleranceMeters": 0.00017548317555338144
+    },
+    {
+      "nearTriangleOffset": 132,
+      "farTriangleOffset": 73854,
+      "overlapMeters": 8.017562823208085,
+      "maxResidualMeters": 0.0,
+      "toleranceMeters": 0.00017548301548231393
+    },
+    {
+      "nearTriangleOffset": 138,
+      "farTriangleOffset": 73851,
+      "overlapMeters": 2.798110409337818,
+      "maxResidualMeters": 4.4185807553614655e-05,
+      "toleranceMeters": 0.0001754827972035855
+    },
+    {
+      "nearTriangleOffset": 138,
+      "farTriangleOffset": 73875,
+      "overlapMeters": 2.8552604436272437,
+      "maxResidualMeters": 4.4185807553614655e-05,
+      "toleranceMeters": 0.0001754827972035855
+    },
+    {
+      "nearTriangleOffset": 138,
+      "farTriangleOffset": 73905,
+      "overlapMeters": 2.3715983160919523,
+      "maxResidualMeters": 1.950422175265153e-05,
+      "toleranceMeters": 0.0001754827972035855
+    },
+    {
+      "nearTriangleOffset": 144,
+      "farTriangleOffset": 73902,
+      "overlapMeters": 8.02407345370309,
+      "maxResidualMeters": 0.0,
+      "toleranceMeters": 0.0001754825352691114
+    }
+  ],
+  "method": "Source-indexed boundary edges, overlapping projected segment intervals; same source Float32-scale tolerance as seam normal reconciliation. Links retained as candidate topology evidence, not new render geometry.",
+  "limits": [
+    "Partial selected neighborhood only, not closed integration domain.",
+    "Tolerance-qualified near/far adjacency does not make microgap disappear or prove continuous reconstructed correction.",
+    "No area integration or fine-reference design qualified."
+  ]
+}

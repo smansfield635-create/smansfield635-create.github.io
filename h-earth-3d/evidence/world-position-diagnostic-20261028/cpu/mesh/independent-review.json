@@ -1,0 +1,38 @@
+{
+  "schema": "H_EARTH_INDEPENDENT_MESH_REVIEW_v1",
+  "result": "PASS_WITH_STATED_LIMITS",
+  "reviewer": "independent West mesh review",
+  "checks": {
+    "exactSourceCommit": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "sourceFilesByteComparedToGit": 716,
+    "positionsEqualPackageFloat32": true,
+    "indicesEqualPackageUint32": true,
+    "sourceTriangles": 21890,
+    "minimumSourceAreaMeters2": 0.1468375186272606,
+    "independentPolygonClippingSamples": 2484,
+    "candidateSetDisagreements": 0,
+    "ambiguitiesRetained": 86,
+    "selectedTriangles": 47,
+    "maximumAuthoringZ": -687.9999719783559,
+    "geologicalRetirementDisjointIncluding001MeterAllowance": true,
+    "originalModuleReplayRerunByReviewer": true,
+    "originalValidatorEligible": true,
+    "allNineBuffersMatch": true,
+    "uploadReplayRerunByReviewer": true,
+    "seamReceiptExactlyMatchesAllEightCapturedViews": true,
+    "matchedSeamVertices": 349,
+    "maximumSeamResidualMeters": 5.042651046467775e-05,
+    "uploadHashesVerified": true,
+    "otherSuppressionScopesInspected": "P2_GRASS; P2_ROCK; eight explicit oasis BARK/CANOPY spans; disjoint from TERRAIN/FAR_LAND",
+    "candidateSeamLinksReviewed": 6
+  },
+  "limits": [
+    "Source replay is not hardware buffer readback.",
+    "Declared .625-bin scalar interval model is conditional, not proof of GPU interpolation error bounds.",
+    "86 ambiguous memberships retained; no arbitrary triangle assignment.",
+    "Positive triangle source areas are not pixel weights or a quadrature scheme.",
+    "Six tolerance-qualified seam links are candidate local adjacency only; no closed conservative transport domain certified.",
+    "Zero contact-distance placeholder does not reconstruct contact fields.",
+    "No product repair, deployment, GPU run or new capture authorized by this review."
+  ]
+}

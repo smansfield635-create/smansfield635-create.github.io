@@ -1,0 +1,22 @@
+{
+  "schema": "H_EARTH_ORIGINAL_MODULE_CPU_RECONSTRUCTION_v1",
+  "result": "EXACT_ORIGINAL_MODULE_REPLAY_MATCH",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "assetSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+  "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+  "contentDigest": "fnv1a32:4f1b7ff2",
+  "vertexCount": 141373,
+  "triangleCount": 122222,
+  "indexCount": 366666,
+  "validation": {
+    "eligible": true,
+    "status": "RUN_8E_R2_IMMUTABLE_LIVE_RENDER_PACKAGE_PASS",
+    "issues": []
+  },
+  "allNineBuffersEqualToSourceSliceReplay": true,
+  "method": "Unmodified original ES module applyHEarthVerifiedPlantingPackage and original validator imported from exact detached source tree. No stubbed implementation or substituted validation.",
+  "limits": [
+    "Source package identity and generated buffers, not hardware readback.",
+    "Actual renderer retirement/replacement support is separate."
+  ]
+}

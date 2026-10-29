@@ -21,7 +21,14 @@
     "NOMINAL_RAY_AREA_REFINEMENT_REJECTED_735_CONTRADICTIONS",
     "COUPLED_PAIRED_RESIDUAL_DESIGN_FORMULATED",
     "CONSERVATIVE_GAMUT_LIMITED_TRANSPORT_ALGEBRA_100_CASES_PASS",
-    "INDEPENDENT_250_BOUNDARY_CASES_PASS_AFTER_ZERO_FLUX_FIX"
+    "INDEPENDENT_250_BOUNDARY_CASES_PASS_AFTER_ZERO_FLUX_FIX",
+    "ORIGINAL_SCENE_PACKAGE_4F1B7FF2_CPU_REPLAY_MATCH",
+    "UPLOAD_NORMAL_COAST_SEAM_REPLAY_MATCH",
+    "2484_MESH_BOX_ASSOCIATIONS_INDEPENDENTLY_VERIFIED",
+    "2484_CAPTURE_CONDITIONED_MATERIAL_SAMPLES_PASS",
+    "7452_COORDINATE_CONDITIONED_SOURCE_FIELDS_COMPATIBLE",
+    "FULL_INCOMING_MATERIAL_NOMINAL_REPLAY_NOT_QUALIFIED",
+    "FIXED_FACTOR_SUBSTITUTIONS_DO_NOT_EXPLAIN_INCOMING_ERROR"
   ],
   "run": {
     "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
@@ -42,7 +49,7 @@
     "completionClaimed": true,
     "conclusion": "success"
   },
-  "exactlyOneNextAction": "Materialize the immutable scene geometry and complete source material evaluator on CPU; first reproduce package4f1b7ff2 uploaded positions/topology and archived material samples, then define/recompute P(c,f0),D(c,f0) with explicit camera/detail handling. Only then run the fixed near/far appearance screen with actual mesh area/protection bounds. Reuse existing captures; no GPU launch is needed for source extraction.",
+  "exactlyOneNextAction": "Resolve the full incoming-material CPU replay discrepancy using existing captures and immutable source: baseline has 458/2484 pixels beyond one display code; fixed substitutions of captured triFine/variation/macro/meso do not explain it. Bound or independently reproduce sampler/mip/LOD, derivative/helper-lane and remaining input uncertainty without parameter fitting or widening tolerances. Only after baseline replay qualifies define P(c,f0), D(c,f0), closed mesh transport/protection integration and fixed near/far appearance screen. Reuse existing captures; no GPU launch.",
   "stopCondition": "NO_GPU_OR_PRODUCT_MUTATION_UNTIL_SOURCE_SPLIT_MESH_AREA_AND_OFFLINE_APPEARANCE_ARE_QUALIFIED",
   "productChanged": false,
   "authorityEffect": "NONE_CONTINUATION_ONLY",
@@ -57,6 +64,12 @@
     "offlineDesign": "offline/design.json",
     "offlineReview": "offline/independent-review.json",
     "algebraOnlyPass": true,
-    "sourceSceneEvaluatorComplete": false
+    "sourceSceneEvaluatorComplete": false,
+    "cpuMesh": "cpu/mesh/direct-reconstruction.json",
+    "cpuMeshReview": "cpu/mesh/independent-review.json",
+    "cpuMaterial": "cpu/material/result.json",
+    "cpuMaterialNominal": "cpu/material/full-p-result.json",
+    "cpuAttribution": "cpu/material/attribution-result.json",
+    "sourceMeshReconstructed": true
   }
 }

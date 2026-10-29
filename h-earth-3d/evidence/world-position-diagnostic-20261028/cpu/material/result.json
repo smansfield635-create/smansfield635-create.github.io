@@ -1,0 +1,180 @@
+{
+  "schema": "H_EARTH_CPU_CAPTURE_CONDITIONED_MATERIAL_RECONSTRUCTION_v1",
+  "result": "CAPTURE_CONDITIONED_RECONSTRUCTION_PASS",
+  "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "groups": [
+    {
+      "pose": "inland-seam-near",
+      "samples": 1107,
+      "sourceReconstructionIntervalFailures": {
+        "fertile_from_noise": 0,
+        "moist_from_fields": 0,
+        "dry_from_fields": 0,
+        "target_from_factors": 0,
+        "weight_from_factors": 0,
+        "result_from_measured_boundary": 0,
+        "result_from_source_reconstruction": 0
+      },
+      "preciseHeightDryIntervalFailures": 0,
+      "preciseIdentityTargetIntervalFailures": 0,
+      "preciseIdentityResultIntervalFailures": 0,
+      "preciseGroundcoverToneIntervalFailures": 0,
+      "identityTargetNominalErrors": {
+        "linearRGBMaxAbs": [
+          0.0027300145968794376,
+          0.0021451184250865785,
+          0.0016944495503970758
+        ],
+        "linearRGBMeanAbs": [
+          0.001187970445943611,
+          0.000955383394248918,
+          0.0007348378617734461
+        ],
+        "displayCodeMaxAbs": [
+          0.5465695206937653,
+          0.5494473214563413,
+          0.5736888392912789
+        ]
+      },
+      "identityResultNominalErrors": {
+        "linearRGBMaxAbs": [
+          0.00245029649185749,
+          0.001996302976132708,
+          0.0016312482792915362
+        ],
+        "linearRGBMeanAbs": [
+          0.0010268389210515544,
+          0.0007722114898485274,
+          0.0005683557308333629
+        ],
+        "displayCodeMaxAbs": [
+          0.6458729601209541,
+          0.6343981084122419,
+          0.6868244065419873
+        ]
+      },
+      "groundcoverToneNominalErrors": {
+        "linearRGBMaxAbs": [
+          0.0013676084166971275,
+          0.0013365789121360244,
+          0.0010331026833284018
+        ],
+        "linearRGBMeanAbs": [
+          0.000626697911220082,
+          0.0006559911815560462,
+          0.0004812655247562767
+        ],
+        "displayCodeMaxAbs": [
+          0.5420252486228634,
+          0.520482589230042,
+          0.513965679397117
+        ]
+      },
+      "groundcoverToneIntervalMaximumWidth": [
+        0.0007325313434792396,
+        0.0005534998001515551,
+        0.00036532643206206583
+      ]
+    },
+    {
+      "pose": "inland-seam-far",
+      "samples": 1377,
+      "sourceReconstructionIntervalFailures": {
+        "fertile_from_noise": 0,
+        "moist_from_fields": 0,
+        "dry_from_fields": 0,
+        "target_from_factors": 0,
+        "weight_from_factors": 0,
+        "result_from_measured_boundary": 0,
+        "result_from_source_reconstruction": 0
+      },
+      "preciseHeightDryIntervalFailures": 0,
+      "preciseIdentityTargetIntervalFailures": 0,
+      "preciseIdentityResultIntervalFailures": 0,
+      "preciseGroundcoverToneIntervalFailures": 0,
+      "identityTargetNominalErrors": {
+        "linearRGBMaxAbs": [
+          0.0027412957911755464,
+          0.0022271988765086292,
+          0.0017478690711561218
+        ],
+        "linearRGBMeanAbs": [
+          0.0012547529556513812,
+          0.0010309340644841904,
+          0.0007395912201322455
+        ],
+        "displayCodeMaxAbs": [
+          0.5504557195199311,
+          0.5538781126786319,
+          0.5883298346474106
+        ]
+      },
+      "identityResultNominalErrors": {
+        "linearRGBMaxAbs": [
+          0.0026682414849825697,
+          0.002120932423230748,
+          0.0016507916903022724
+        ],
+        "linearRGBMeanAbs": [
+          0.001069876937352955,
+          0.0008865148436850336,
+          0.0006344823921319144
+        ],
+        "displayCodeMaxAbs": [
+          0.6644516881123366,
+          0.6411057231246815,
+          0.6806509385406514
+        ]
+      },
+      "groundcoverToneNominalErrors": {
+        "linearRGBMaxAbs": [
+          0.0013579858210861218,
+          0.0013792382572419132,
+          0.0010578185457340156
+        ],
+        "linearRGBMeanAbs": [
+          0.0006363858253867472,
+          0.0006335257515887373,
+          0.0004463273812469556
+        ],
+        "displayCodeMaxAbs": [
+          0.5187285836480982,
+          0.5297607084173848,
+          0.5260802833444274
+        ]
+      },
+      "groundcoverToneIntervalMaximumWidth": [
+        0.0007262184184749776,
+        0.0005465486326159952,
+        0.00035992764735774674
+      ]
+    }
+  ],
+  "inputHashes": {
+    "/tmp/hearth-identity-diagnostic/cb57c275b95d0d48883bc4da4dcfcf17cbec5060.renderer.js": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+    "/workspace/scratch/9baa27da97f1/resident-renderer.js": "b4bda2b8953b5bcc3cd65e101a447a878c2d033ec683af53a93ff211c13cdf70",
+    "/tmp/old-diagnostic/receipt.json": "9f508de29fcc479e5cbe9c848bc9bb8b466cb0e161bbbab5aa5cacd15fc4ab36",
+    "/tmp/diagnostic/receipt.json": "f1b1fdc21c55ecc458c7bf5443a9478f27b1c327a2b3fc22563f1b6f463fd939",
+    "/tmp/hearth-ledger/capture/receipt.json": "a8ae5ad168472584dbc37734539c77cc227ec2f4d89c9ad99dd2f7ecd30aa5ef",
+    "/tmp/material-cpu/identity-model.py": "b209ec3d1e2ecc1ecfbc96b61afbf5f2639f1f10df399c65a7e88c8ed233be37"
+  },
+  "sourceTargetBlockExactMatch": true,
+  "ledgerIncomingEqualsBaselineIdentityResultFullFrame": true,
+  "fullCounterfactualEvaluatorComplete": false,
+  "missingForFullPAndFineReference": [
+    "Approved soil texture bytes, source texture upload/mipmap/filter/repeat and derivative-driven LOD policy",
+    "Microrelief-derived shading normal and therefore triplanar weights; geometry normal alone is insufficient",
+    "Source triCoarse, triMicro, broad/medium/grain and per-fragment derivative state not exposed by the 20 archived identity factors",
+    "Fully enumerated fine-source substitution contract, including P and camera-dependent nearMaterial and relief envelopes",
+    "Actual source mesh topology, interpolation and post-overlay branches"
+  ],
+  "limits": [
+    "All interval agreement uses the inherited +/-1RGB8-code convention and .625-bin precise shader-scalar intervals. These are conditional arithmetic bounds, not new empirical GPU error certification.",
+    "This calculator consumes archived intermediate factors; it does not reconstruct those factors independently from mesh/texture source.",
+    "Resident groundcover weight/final image is not baseline weight/final evidence. Only exact common target block plus matched input-factor capture is reused.",
+    "Nominal errors reflect quantized inputs and outputs; zero nominal error is not required for conditional interval consistency.",
+    "No fine-neutral reference, transported correction, render comparison or visual acceptance established.",
+    "No new GPU run or product mutation."
+  ]
+}

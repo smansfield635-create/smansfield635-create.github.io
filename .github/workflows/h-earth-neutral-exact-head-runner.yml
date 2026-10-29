@@ -1243,6 +1243,9 @@ jobs:
           fetch-depth: 1
           path: tooling
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/
 
       - name: Verify immutable tooling checkout
         working-directory: tooling
@@ -1312,6 +1315,11 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh
+            /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

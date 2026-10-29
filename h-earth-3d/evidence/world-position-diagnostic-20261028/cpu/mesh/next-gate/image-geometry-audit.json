@@ -1,0 +1,103 @@
+{
+  "schema": "H_EARTH_POSITION_IMAGE_TRIANGLE_AREA_NONQUALIFICATION_V1",
+  "result": "IMAGE_DERIVED_MESH_REJECTED_FOR_SOURCE_AREA",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "worldArchiveSha256": "36bda9bb3fe0d3711fe1ef557c07505c2e93316de4a39f1321b50e8ab4cce4a3",
+  "positionHalfWidthMetersXYZ": [
+    0.0390625,
+    0.000152587890625,
+    0.0390625
+  ],
+  "observedPixelComponents": 6,
+  "totalPseudoFaces": 4320,
+  "nominalZeroFaces": 24,
+  "facesWithNonpositiveConservativeLowerAreaBound": 3974,
+  "records": [
+    {
+      "pose": "inland-seam-near",
+      "pixelColumnStart": 128,
+      "observedVertices": 369,
+      "pseudoFaces": 640,
+      "nominalAreaSumMetersSquared": 26.160708628171193,
+      "nominalZeroAreaFaces": 24,
+      "nonpositiveConservativeLowerBoundFaces": 640,
+      "conservativeUncertainAreaFraction": 1.0,
+      "sumMaxAllowableAreaMetersSquared": 82.52258547278032,
+      "minimumObservedWithinRowEdgeMeters": 0.0,
+      "sourceImageNotExactMesh": true
+    },
+    {
+      "pose": "inland-seam-near",
+      "pixelColumnStart": 260,
+      "observedVertices": 369,
+      "pseudoFaces": 640,
+      "nominalAreaSumMetersSquared": 51.2777743037341,
+      "nominalZeroAreaFaces": 0,
+      "nonpositiveConservativeLowerBoundFaces": 566,
+      "conservativeUncertainAreaFraction": 0.884375,
+      "sumMaxAllowableAreaMetersSquared": 133.74058412308946,
+      "minimumObservedWithinRowEdgeMeters": 0.000732421875,
+      "sourceImageNotExactMesh": true
+    },
+    {
+      "pose": "inland-seam-near",
+      "pixelColumnStart": 392,
+      "observedVertices": 369,
+      "pseudoFaces": 640,
+      "nominalAreaSumMetersSquared": 64.63891086620988,
+      "nominalZeroAreaFaces": 0,
+      "nonpositiveConservativeLowerBoundFaces": 550,
+      "conservativeUncertainAreaFraction": 0.859375,
+      "sumMaxAllowableAreaMetersSquared": 158.71167505058548,
+      "minimumObservedWithinRowEdgeMeters": 0.0009765625,
+      "sourceImageNotExactMesh": true
+    },
+    {
+      "pose": "inland-seam-far",
+      "pixelColumnStart": 128,
+      "observedVertices": 459,
+      "pseudoFaces": 800,
+      "nominalAreaSumMetersSquared": 44.47158981696676,
+      "nominalZeroAreaFaces": 0,
+      "nonpositiveConservativeLowerBoundFaces": 725,
+      "conservativeUncertainAreaFraction": 0.90625,
+      "sumMaxAllowableAreaMetersSquared": 118.53294004297285,
+      "minimumObservedWithinRowEdgeMeters": 0.002685546875,
+      "sourceImageNotExactMesh": true
+    },
+    {
+      "pose": "inland-seam-far",
+      "pixelColumnStart": 260,
+      "observedVertices": 459,
+      "pseudoFaces": 800,
+      "nominalAreaSumMetersSquared": 46.91112225889715,
+      "nominalZeroAreaFaces": 0,
+      "nonpositiveConservativeLowerBoundFaces": 748,
+      "conservativeUncertainAreaFraction": 0.935,
+      "sumMaxAllowableAreaMetersSquared": 120.51670698196156,
+      "minimumObservedWithinRowEdgeMeters": 0.003662109375,
+      "sourceImageNotExactMesh": true
+    },
+    {
+      "pose": "inland-seam-far",
+      "pixelColumnStart": 392,
+      "observedVertices": 459,
+      "pseudoFaces": 800,
+      "nominalAreaSumMetersSquared": 71.22722951272507,
+      "nominalZeroAreaFaces": 0,
+      "nonpositiveConservativeLowerBoundFaces": 745,
+      "conservativeUncertainAreaFraction": 0.93125,
+      "sumMaxAllowableAreaMetersSquared": 161.42370134960933,
+      "minimumObservedWithinRowEdgeMeters": 0.06251191979230349,
+      "sourceImageNotExactMesh": true
+    }
+  ],
+  "interpretation": [
+    "Exact source triangle areas must be taken from approved uploaded Float32 positions and index buffers.",
+    "The per-channel captured coordinate cells are too wide relative to many lateral sample spacings; pseudo-mesh area can collapse to zero.",
+    "The error interval is a safe conservative bound obtained from two uncertain 3D edges and their cross-product. It is not a measured hardware error distribution.",
+    "Failing this pseudo-geometry does not invalidate the calibrated captures or the qualified 47 source triangle membership evidence.",
+    "No real geometry modified, GPU executed or material repair accepted."
+  ]
+}

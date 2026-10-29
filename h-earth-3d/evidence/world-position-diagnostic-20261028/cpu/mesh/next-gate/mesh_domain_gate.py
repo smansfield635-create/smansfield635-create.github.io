@@ -10,7 +10,7 @@ from collections import defaultdict
 from pathlib import Path
 import numpy as np
 from scipy.spatial import cKDTree
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, Point
 from shapely.strtree import STRtree
 
 SOURCE_HEAD='cb57c275b95d0d48883bc4da4dcfcf17cbec5060'
@@ -149,11 +149,27 @@ def no_duplicate_projected_area(verts, offsets, groups, active, eps=1e-12):
     return overlaps
 
 def select_support(verts,offsets,samples,physical_radius=48.):
+    """Source-triangle XZ footprint within fixed 48m of a real witness.
+
+    A very large original FAR triangle can contain the witness despite its
+    centroid being >48m away. The center-to-farthest-vertex bound is only a
+    conservative KD prefilter; exact planar Polygon.distance decides inclusion.
+    Neither screenshot triangles nor a widened radius are permitted.
+    """
     anchors=np.array([s['world'] for s in samples],dtype=float)[:,[0,2]]
     require(len(anchors)==2484,'SAMPLE_ANCHORS')
     centers=verts.mean(axis=1)[:,[0,2]]
-    dist,_=cKDTree(anchors).query(centers)
-    active=set(np.where(dist<=physical_radius)[0].tolist())
+    face_radius=np.linalg.norm(verts[:,:,[0,2]]-centers[:,None,:],axis=2).max(axis=1)
+    tree=cKDTree(anchors)
+    dist,_=tree.query(centers)
+    active=set()
+    for i in np.where(dist<=physical_radius+face_radius)[0]:
+        poly=Polygon(verts[i][:,[0,2]])
+        require(poly.is_valid and poly.area>0,'PROJECTED_DEGENERATE_SOURCE_FACE')
+        for j in tree.query_ball_point(centers[i],r=physical_radius+face_radius[i]):
+            if poly.distance(Point(anchors[j]))<=physical_radius:
+                active.add(int(i))
+                break
     mapoffs={int(k):i for i,k in enumerate(offsets)}
     seeds={mapoffs[int(o)] for s in samples for o in s['candidateOffsets']}
     require(seeds.issubset(active),'SOURCE_SEED_OUTSIDE_SUPPORT')
@@ -261,6 +277,7 @@ def inspect(root,out,physical_radius=48.,influence_radius=40.):
     distances=boundary_distance(pos,offsets,vids,boundary,active,seeds,neighbors,verts,sealed)
     report={'schema':'H_EARTH_ORIGINAL_SOURCE_MESH_DOMAIN_GATE_v1','sourceHead':SOURCE_HEAD,'parentDiagnosticHead':WORLD_HEAD,
         'activeTerrainSourceTriangles':len(offsets),'activeOriginalFaces':len(active),'sourceTriangleAreasPositive':True,'witnessSamples':len(samples),
+        'supportSelection':'SOURCE_POLYGON_XZ_DISTANCE_WITHIN_FIXED_48M_OF_ARCHIVED_WITNESS','retainedSourceSeedFaces':len(seeds),
         'sampleTrianglesAllRetained':len(seeds),'sourceTriangleAreaTotalInCandidateSupport':float(areas[list(active)].sum()),
         'protectedActiveSourceFaces':int(protectedActive),'nearFarSeamLinksFound':len(links),'partialSourceSeamEdges':partial[:60],
         'sourceProjectedNearFarOverlaps':overlaps[:60], 'boundaryDistance':distances,
@@ -279,4 +296,8 @@ if __name__=='__main__':
         r=inspect(a.mesh_dir,a.report)
         print(json.dumps(r,indent=2));raise SystemExit(0 if r['closureQualified'] else 2)
     except (ValueError,AssertionError,FileNotFoundError) as e:
-        print(json.dumps({'result':'FAIL_CLOSED','error':str(e)}));raise SystemExit(2)
+        failure={'schema':'H_EARTH_ORIGINAL_SOURCE_MESH_DOMAIN_GATE_FAILURE_v1',
+                 'result':'FAIL_CLOSED','closureQualified':False,'error':str(e),
+                 'sourceHead':SOURCE_HEAD,'noSourceGeometryMutation':True}
+        Path(a.report).write_text(json.dumps(failure,indent=2)+'\\n')
+        print(json.dumps(failure));raise SystemExit(2)

@@ -1,0 +1,220 @@
+{
+  "schema": "H_EARTH_INDEPENDENT_HELPER_LANE_REVIEW_v1",
+  "result": "HELPER_LANE_ATTRIBUTION_PLAUSIBLE_NOT_CERTIFIED",
+  "sample": [
+    400,
+    496
+  ],
+  "uniqueSourceTriangleOffset": 73902,
+  "sourceTriangleVertices": [
+    [
+      -172.68740844726562,
+      14.325920104980469,
+      -740.6695556640625
+    ],
+    [
+      -184.00650024414062,
+      14.377983093261719,
+      -736.0260009765625
+    ],
+    [
+      -192.00706481933594,
+      14.991758346557617,
+      -736.027099609375
+    ]
+  ],
+  "neighbors": [
+    {
+      "pixel": [
+        400,
+        495
+      ],
+      "world": [
+        -188.0625,
+        14.812744140625,
+        -736.6875
+      ],
+      "sourceTriangleOffsets": [
+        73902
+      ],
+      "sourcePrimitives": [
+        "H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION"
+      ]
+    },
+    {
+      "pixel": [
+        401,
+        495
+      ],
+      "world": [
+        -188.0,
+        14.811279296875,
+        -736.75
+      ],
+      "sourceTriangleOffsets": [
+        73902
+      ],
+      "sourcePrimitives": [
+        "H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION"
+      ]
+    },
+    {
+      "pixel": [
+        400,
+        496
+      ],
+      "world": [
+        -188.125,
+        14.743408203125,
+        -736.3125
+      ],
+      "sourceTriangleOffsets": [
+        73902
+      ],
+      "sourcePrimitives": [
+        "H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION"
+      ]
+    },
+    {
+      "pixel": [
+        401,
+        496
+      ],
+      "world": [
+        -188.0625,
+        14.7421875,
+        -736.3125
+      ],
+      "sourceTriangleOffsets": [
+        73902
+      ],
+      "sourcePrimitives": [
+        "H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION"
+      ]
+    },
+    {
+      "pixel": [
+        400,
+        497
+      ],
+      "world": [
+        -188.25,
+        14.692626953125,
+        -735.5
+      ],
+      "sourceTriangleOffsets": [
+        144
+      ],
+      "sourcePrimitives": [
+        "H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001"
+      ]
+    },
+    {
+      "pixel": [
+        401,
+        497
+      ],
+      "world": [
+        -188.1875,
+        14.687255859375,
+        -735.625
+      ],
+      "sourceTriangleOffsets": [
+        144
+      ],
+      "sourcePrimitives": [
+        "H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001"
+      ]
+    }
+  ],
+  "visibleQuadWorld": [
+    [
+      [
+        -188.125,
+        14.743408203125,
+        -736.3125
+      ],
+      [
+        -188.0625,
+        14.7421875,
+        -736.3125
+      ]
+    ],
+    [
+      [
+        -188.25,
+        14.692626953125,
+        -735.5
+      ],
+      [
+        -188.1875,
+        14.687255859375,
+        -735.625
+      ]
+    ]
+  ],
+  "sameTriangleNominalHelperWorld": [
+    [
+      [
+        -188.15152992497084,
+        14.74242821395094,
+        -736.2909088734353
+      ],
+      [
+        -188.05953830119796,
+        14.741061678265588,
+        -736.3232791481041
+      ]
+    ],
+    [
+      [
+        -188.21267597594866,
+        14.673777554247824,
+        -735.8735702040211
+      ],
+      [
+        -188.12118377987406,
+        14.672390528713606,
+        -735.905605924544
+      ]
+    ]
+  ],
+  "visibleQuadDerivatives": {
+    "duDx": [
+      0.01749921124250875,
+      -6.083273262902367e-07
+    ],
+    "duDy": [
+      -0.035005220223425226,
+      0.22746642108594983
+    ],
+    "lod": 5.880609790688827
+  },
+  "sameTriangleNominalDerivatives": {
+    "duDx": [
+      0.02575655244673669,
+      -0.009064014554866162
+    ],
+    "duDy": [
+      -0.01712894685484656,
+      0.11681669178054221
+    ],
+    "lod": 4.91766339735771
+  },
+  "nominalTargetMinusMeasuredWorld": [
+    -0.02652992497084483,
+    -0.0009799891740591704,
+    0.021591126564658225
+  ],
+  "backwardVisibleRowDerivativeUV": [
+    -0.017508111587382302,
+    0.10496194347365417
+  ],
+  "limits": [
+    "Nominal uploaded-matrix inverse and infinite triangle-plane extrapolation only; no GPU helper readback.",
+    "Earlier ideal-ray screen failed coordinate-box compatibility for many samples; these absolute helper coordinates are not certified replacements.",
+    "Visible adjacent row belongs to distinct source primitive, so using visible world coordinates as same-primitive helper values is not justified.",
+    "Derivative and LOD attribution only; no arbitrary parameter fit, incoming color evaluator replacement, GPU run or product repair.",
+    "GPU derivative choice, mip generation and rounding remain unqualified."
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "schema": "H_EARTH_SEAM_STENCIL_ATTRIBUTION_v1",
+  "result": "ATTRIBUTION_ONLY_NOT_BASELINE_QUALIFICATION",
+  "groups": [
+    {
+      "pose": "inland-seam-near",
+      "samples": 1107,
+      "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+        [
+          0.2785797119140625,
+          0.25150299072265625,
+          0.24488449096679688
+        ],
+        [
+          0.7026443481445312,
+          0.67047119140625,
+          0.563201904296875
+        ]
+      ],
+      "incomingAnyChannelBeyondOneCodeCount": 0,
+      "mipLevelRange": [
+        5.163020610809326,
+        8.0
+      ],
+      "factorChecks": {
+        "variation": {
+          "nominalCodeErrorMedianMax": [
+            0.2704925537109375,
+            1.3733444213867188
+          ],
+          "outsideOneCodeCount": 8
+        },
+        "triFine": {
+          "nominalCodeErrorMedianMax": [
+            0.5660171508789062,
+            3.584136962890625
+          ],
+          "outsideOneCodeCount": 300
+        },
+        "near": {
+          "nominalCodeErrorMedianMax": [
+            0.0,
+            0.538909912109375
+          ],
+          "outsideOneCodeCount": 0
+        },
+        "slopeResponse": {
+          "nominalCodeErrorMedianMax": [
+            0.0,
+            0.0
+          ],
+          "outsideOneCodeCount": 0
+        },
+        "rock": {
+          "nominalCodeErrorMedianMax": [
+            0.23842430114746094,
+            0.489990234375
+          ],
+          "outsideOneCodeCount": 0
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "samples": 1377,
+      "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+        [
+          0.2497711181640625,
+          0.254608154296875,
+          0.23871612548828125
+        ],
+        [
+          0.7599411010742188,
+          0.8361663818359375,
+          0.7235260009765625
+        ]
+      ],
+      "incomingAnyChannelBeyondOneCodeCount": 0,
+      "mipLevelRange": [
+        4.767772674560547,
+        8.0
+      ],
+      "factorChecks": {
+        "variation": {
+          "nominalCodeErrorMedianMax": [
+            0.2840423583984375,
+            1.4876861572265625
+          ],
+          "outsideOneCodeCount": 15
+        },
+        "triFine": {
+          "nominalCodeErrorMedianMax": [
+            0.6200714111328125,
+            3.81683349609375
+          ],
+          "outsideOneCodeCount": 447
+        },
+        "near": {
+          "nominalCodeErrorMedianMax": [
+            0.132904052734375,
+            0.538787841796875
+          ],
+          "outsideOneCodeCount": 0
+        },
+        "slopeResponse": {
+          "nominalCodeErrorMedianMax": [
+            0.0,
+            0.0
+          ],
+          "outsideOneCodeCount": 0
+        },
+        "rock": {
+          "nominalCodeErrorMedianMax": [
+            0.24773597717285156,
+            0.4996471405029297
+          ],
+          "outsideOneCodeCount": 0
+        }
+      }
+    }
+  ],
+  "exceptions": [
+    {
+      "pose": "inland-seam-near",
+      "normals": "float32",
+      "triWeights": "float32",
+      "palette": "float32",
+      "P": "float32",
+      "exceptions": []
+    },
+    {
+      "pose": "inland-seam-far",
+      "normals": "float32",
+      "triWeights": "float32",
+      "palette": "float32",
+      "P": "float32",
+      "exceptions": []
+    }
+  ],
+  "change": "Only texture dY at far quad top row496 columns400:401 uses preceding visible-row difference, because actual lower visible partner is across source near/far seam. No fitted coefficient or LOD bias.",
+  "limits": [
+    "This is a diagnostic backward stencil, not exact implicit GPU helper-lane data.",
+    "Changing the single failed sample neighborhood cannot establish whole-scene evaluator validity.",
+    "Original nominal result and exception remain preserved.",
+    "No product edit or GPU run."
+  ]
+}

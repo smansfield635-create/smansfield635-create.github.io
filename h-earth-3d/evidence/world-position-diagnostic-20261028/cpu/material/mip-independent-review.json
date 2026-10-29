@@ -1,0 +1,160 @@
+{
+  "result": "FIXED_MIP_SCRIPT_REVIEW_PASS_CONDITIONAL_ONLY",
+  "method": "Independent integer quotient/remainder recursion using four explicit strided pixel slices; no np.mean/rint for generation. Exact ties handled by quotient parity.",
+  "levels": [
+    {
+      "level": 1,
+      "halfUpMeanRGB": [
+        103.79205322265625,
+        87.3936767578125,
+        61.96368408203125
+      ],
+      "halfEvenMeanRGB": [
+        103.6678466796875,
+        87.27008056640625,
+        61.83837890625
+      ],
+      "halfUpMinusHalfEvenRange": [
+        0,
+        1
+      ]
+    },
+    {
+      "level": 2,
+      "halfUpMeanRGB": [
+        103.921142578125,
+        87.514892578125,
+        62.091064453125
+      ],
+      "halfEvenMeanRGB": [
+        103.67529296875,
+        87.273681640625,
+        61.839599609375
+      ],
+      "halfUpMinusHalfEvenRange": [
+        0,
+        1
+      ]
+    },
+    {
+      "level": 3,
+      "halfUpMeanRGB": [
+        104.046875,
+        87.6259765625,
+        62.21484375
+      ],
+      "halfEvenMeanRGB": [
+        103.6943359375,
+        87.2744140625,
+        61.8388671875
+      ],
+      "halfUpMinusHalfEvenRange": [
+        0,
+        2
+      ]
+    },
+    {
+      "level": 4,
+      "halfUpMeanRGB": [
+        104.1796875,
+        87.73828125,
+        62.3671875
+      ],
+      "halfEvenMeanRGB": [
+        103.69140625,
+        87.25,
+        61.7890625
+      ],
+      "halfUpMinusHalfEvenRange": [
+        0,
+        2
+      ]
+    },
+    {
+      "level": 5,
+      "halfUpMeanRGB": [
+        104.34375,
+        87.828125,
+        62.515625
+      ],
+      "halfEvenMeanRGB": [
+        103.703125,
+        87.265625,
+        61.71875
+      ],
+      "halfUpMinusHalfEvenRange": [
+        0,
+        2
+      ]
+    },
+    {
+      "level": 6,
+      "halfUpMeanRGB": [
+        104.375,
+        88.0,
+        62.5625
+      ],
+      "halfEvenMeanRGB": [
+        103.75,
+        87.375,
+        61.8125
+      ],
+      "halfUpMinusHalfEvenRange": [
+        0,
+        1
+      ]
+    },
+    {
+      "level": 7,
+      "halfUpMeanRGB": [
+        104.5,
+        88.25,
+        62.5
+      ],
+      "halfEvenMeanRGB": [
+        104.0,
+        87.5,
+        62.0
+      ],
+      "halfUpMinusHalfEvenRange": [
+        0,
+        1
+      ]
+    },
+    {
+      "level": 8,
+      "halfUpMeanRGB": [
+        105.0,
+        88.0,
+        63.0
+      ],
+      "halfEvenMeanRGB": [
+        104.0,
+        88.0,
+        62.0
+      ],
+      "halfUpMinusHalfEvenRange": [
+        0,
+        1
+      ]
+    }
+  ],
+  "halfUpLastRGB": [
+    105,
+    88,
+    63
+  ],
+  "halfEvenLastRGB": [
+    104,
+    88,
+    62
+  ],
+  "scriptReview": [
+    "All four replacements preserve source P expression and captured input values.",
+    "Baseline recursive half-up uses equivalent integer quarter means and should reproduce baseline exactly.",
+    "Direct base-image box reshaping has correct axes.",
+    "Unquantized model intentionally not RGBA8.",
+    "Model-specific report retains signed errors and count; original baseline output files disabled."
+  ],
+  "qualification": "Compatibility with selected CPU mip rules only; actual browser mip bytes, implicit LOD and helper-lane inputs are unmeasured. Conditional envelope over enumerated models is not proven to include hardware or all implementations. No GPU equivalence, fine-reference qualification or appearance acceptance."
+}

@@ -41,3 +41,17 @@ Required source and measured inputs:
 - `/tmp/h-earth-scene-cb57`: exact detached source tree used by parent's original-module mesh reconstruction.
 
 The field and full-P scripts use these fixed paths intentionally. Preserve input receipts and exact images when relocating; adapt paths explicitly. No observed composite color is replaced by an invented mean. No new GPU run, product edit, appearance acceptance, fine-reference qualification or release occurred.
+
+## Follow-up: mip arithmetic and source-primitive derivatives
+
+The original 458-failure result remains unchanged. `mip-attribution.py` compares four declared arithmetic models without fitting shader values. Recursive half-up gives 458 failures, recursive round-even gives one, unquantized recursion gives 25, and direct-base box round-even gives 135. Independent integer quotient/remainder arithmetic confirms the accumulated rounding difference: the final half-up mip is RGB [105,88,63], while half-even is [104,88,62]. These are CPU models; the capture did not include GPU mip bytes.
+
+`source-audit-v2.json` identifies an unintended NumPy Int64-to-Float64 promotion in the normal perturbation orientation. `replay-v2.py` explicitly corrects it to Float32 and declares the round-even mip model, leaving the original script and outputs intact. Its one retained exception is far pixel (400,496), on source FAR triangle 73902. Independent source geometry places its visible lower quad partner on NEAR triangle 144. Visible-neighbor texture derivatives therefore mix distinct primitives. The corresponding model LOD is about 5.88, versus about 4.92 using extrapolated source-triangle helper positions.
+
+`helper-attribution.py` is only a one-quad backward-stencil experiment. It is not the qualifying uniform model. `primitive-lod-screen.py` instead applies one source-triangle quad derivative rule to all 2,484 samples and every retained triangle membership, including all 86 ambiguous samples. All candidates are within one output code: maximum channel error is 0.8281. It retains measured center UVs and uses the uploaded source projection only for nominal same-primitive derivatives. This is conditional source-model compatibility, not proof of hardware equivalence. The earlier failed absolute-ray screen still applies; no projected coordinate is promoted to certified measured position.
+
+Reproduce the new evidence with `python mip-attribution.py`, `python replay-v2.py`, `python helper-attribution.py`, and `python primitive-lod-screen.py`. The last three instrument the preserved baseline in memory with explicit substitutions. The mesh sibling contains `helper-lane-review.py` and its independent review. Source expression audit, mip arithmetic review and uniform-derivative review are preserved separately.
+
+Independent forward-projection/perspective-barycentric verification covers all 2,575 candidate memberships with maximum LOD disagreement below 2.77e-11. Ambiguity is propagated through LOD only: nominal normals and the procedural palette are not independently enumerated over all memberships. Consequently this is not full all-candidate material qualification.
+
+The observed baseline mismatch is localized to the emulator's mip/derivative assumptions; this does not identify the cause of the visible terrain band. A source fine-reference contract, protected closed mesh integration domain, and candidate appearance comparison are still outstanding. No product shader change, GPU dispatch, publication or appearance acceptance was performed.

@@ -1,0 +1,38 @@
+{
+  "schema": "H_EARTH_SOURCE_PRIMITIVE_LOD_SCREEN_v1",
+  "result": "CONDITIONAL_SOURCE_MODEL_SCREEN_NOT_GPU_EQUIVALENCE",
+  "groups": [
+    {
+      "pose": "inland-seam-near",
+      "samples": 1107,
+      "anyCandidateBeyondOneCode": 0,
+      "allCandidatesBeyondOneCode": 0,
+      "maximumErrorAcrossAllCandidates": [
+        0.5950164794921875,
+        0.7031402587890625,
+        0.5544586181640625
+      ],
+      "exceptions": []
+    },
+    {
+      "pose": "inland-seam-far",
+      "samples": 1377,
+      "anyCandidateBeyondOneCode": 0,
+      "allCandidatesBeyondOneCode": 0,
+      "maximumErrorAcrossAllCandidates": [
+        0.6553497314453125,
+        0.8280181884765625,
+        0.672821044921875
+      ],
+      "exceptions": []
+    }
+  ],
+  "method": "Uniform rule for all2484 samples and every retained source-triangle membership: extrapolate that source triangle to all four quad lanes with immutable uploaded projection, compute inverse-planet UV at each lane, then source-primitive finite derivatives and model LOD. Keep measured center UV, original source palette and round-even mips. No exception-specific stencil and no arbitrary selection among86 ambiguous memberships.",
+  "limits": [
+    "Absolute nominal ray coordinates previously failed measured-box compatibility; this derivative-only use is an explicit approximation, not certified hardware interpolation.",
+    "Round-even mip bytes and implicit LOD algorithm are model assumptions, not hardware readback.",
+    "Other procedural normal derivatives remain nominal visible-neighbor approximations.",
+    "Passing this descriptive one-code screen does not qualify fine-reference split, conservative integration, product appearance or GPU equivalence.",
+    "No GPU/product mutation."
+  ]
+}

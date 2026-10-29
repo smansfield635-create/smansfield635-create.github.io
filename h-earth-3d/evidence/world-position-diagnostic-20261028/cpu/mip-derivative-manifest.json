@@ -1,0 +1,85 @@
+{
+  "schema": "H_EARTH_CPU_MIP_DERIVATIVE_EVIDENCE_v1",
+  "parentCommit": "0822c358293f2a55f4cc8a215c4b8e8a420b238a",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "operationId": "H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001",
+  "lockGeneration": 2964,
+  "result": "CONDITIONAL_CPU_SCREEN_COMPATIBLE",
+  "samples": 2484,
+  "lodMemberships": 2575,
+  "maximumDisplayCodeError": 0.8280181884765625,
+  "allWithinUnchangedOneCodeScreen": true,
+  "sourceSceneEvaluatorComplete": false,
+  "gpuEquivalence": false,
+  "repairQualified": false,
+  "productChanged": false,
+  "newGpuRuns": 0,
+  "supersession": "Original baseline model/results preserved; new version corrects Float32 orientation and declares alternative mip/derivative models. No tolerance widening or sample rejection.",
+  "limits": [
+    "All memberships propagated through LOD only, not full normal/palette uncertainty.",
+    "Exact hardware generated mip bytes and derivative arithmetic not captured.",
+    "No cause of actual visible terrain band established by emulator correction."
+  ],
+  "files": [
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/README.md",
+      "sha256": "8b63e714973c12b70813fc8fd5486a59a46fefc09ac48c58b2cab8503485793d"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/mip-attribution.py",
+      "sha256": "e90d804a7e7217b3d81aaae8bcc9f6a2ad855153370d677f9e810a258ca53694"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/mip-attribution-result.json",
+      "sha256": "9529721a8fd4d72c11f57a8a8bf80ac33c774fc7e8f60065ce0a37a42e012773"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/mip-independent-review.json",
+      "sha256": "3872473647f84106f3afc58722ca230ae2adb3a81c22b8b7ab52fdba4818dd8b"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/source-audit-v2.json",
+      "sha256": "7effc38c781873355de3f49f45b6f685e1df885d2d807120c1a0671c692d5c96"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/replay-v2.py",
+      "sha256": "e3d1b9530f8cbe0b5a07b795c7da060c877f3bea6ba699e6ddf75bb152005848"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/replay-v2-result.json",
+      "sha256": "a72b2727218e9b653d1e524b767f05412cc065685f7127542c1a5bbff5a04cce"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/helper-attribution.py",
+      "sha256": "35f012c4a40ab6bb9c7847f87ec8fa13b887ecba6237aaddc3986be19a5fde87"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/helper-attribution-result.json",
+      "sha256": "0d157e1328e5d6daa4505175aeb53c019847ae2f53e5a54bc83d24866f3a5ed9"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/primitive-lod-screen.py",
+      "sha256": "6067cb592b77ea5cc2972d8ec47fd11addbfb2c5d08f1d037b9e3354e1d36c7d"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/primitive-lod-result.json",
+      "sha256": "20d0b91be2e7d9a80384e7ea1236435fe363a08e2d9a05b690c831c5791a4b50"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/primitive-lod-independent-review.json",
+      "sha256": "2dee67dc7f8e6561b2e834015c773a3fa62f56efb0a8f5ef3578e60aba5b232b"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/material/review-primitive-lod.py",
+      "sha256": "711fe9c2f9be17c57eaac57fb2f344a16931b0ff8640cc61e75fa265b0bf92a8"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/helper-lane-review.py",
+      "sha256": "764cfd91bbc96450efd8cb97905024ce4b5ff6570b61a3051b5d51dc7d8b2755"
+    },
+    {
+      "path": "h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/helper-lane-review.json",
+      "sha256": "4e20adbaef919de755bfe12a0f37e1387ba443725d5ca2c89bf44ff5a921db52"
+    }
+  ]
+}

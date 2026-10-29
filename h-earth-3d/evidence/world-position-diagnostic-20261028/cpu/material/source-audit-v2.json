@@ -1,0 +1,75 @@
+{
+  "schema": "H_EARTH_FULL_P_SOURCE_AUDIT_V2",
+  "result": "NOMINAL_IMPLEMENTATION_PRECISION_GAP_FOUND_NO_SOURCE_EQUATION_OMISSION_IN_SELECTED_DOMAIN",
+  "sourceSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "scriptSha256": "0ec661436a4e353eced1f24adf1d3085f736c1b74d85cff1ba381729d364e55a",
+  "scope": "Audit ordinary TERRAIN/FAR_LAND incoming palette before identity for frozen2484 samples; not full final lighting or arbitrary scene primitives. No parameter fitting, baseline mutation or GPU execution.",
+  "equationMatches": [
+    "hash21/noise2 constants and lattice structure; nonfused CPU lowering explicitly conditional",
+    "All broad/medium/grain/macro/meso/detail coordinate scales and offsets",
+    "Microrelief four frequencies, amplitudes, nearDetail; footprint, slope and distance envelopes",
+    "perturbTerrainNormal cross-product and determinant orientation; 22-degree deviation constants",
+    "Lowland/rising/exposed regime coefficients and palette colors",
+    "Triplanar zy/xz/xy axes, .115 scale, 3.35/9.7 multipliers, offsets and power4 weights",
+    "nearMaterial, variation, rockExposure, shelteredSoil, weathering/fracture and groundedSoil expressions",
+    "Ordinary-soil wetness, region, coverage, texture authority, earth tint and broad tonal factor",
+    "clearingLocalXZ inverse sphere formula for selected horizontal distance>0.0001",
+    "Explicit pow(textureRGB,2.2)*.75, after sampling RGBA8; no implicit sRGB storage conversion coded"
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "implementation_precision_gap",
+      "description": "perturb() orientation np.where(det<0,-1,1) is int64, promoting product with Float32 gradient to Float64. Both-pose runtime dtype probe confirms shading normal, weights, triCoarse/triFine, variation, palette and P are Float64; p,n,height,envelope,UV,tex are Float32. This contradicts any interpretation that the whole P replay is strict Float32. Noise/hash calls themselves cast to Float32.",
+      "action": "Future deterministic correction should explicitly type orientation branches as np.float32 and audit every operation dtype; do not fit outputs. Existing result remains nominal and unqualified."
+    },
+    {
+      "id": "F2",
+      "severity": "declared_sampler_approximation",
+      "description": "CPU recursive 2x2 RGBA8 box-average with floor(mean+.5) is a chosen mip model. Source calls gl.generateMipmap; source does not prescribe this rounding. Bilinear interpolation CPU fractions also promote to double before final Float32 cast. Max Euclidean gradient LOD is a model, not measured hardware LOD.",
+      "action": "Parent investigating generated-mip arithmetic; no alternative tuned here."
+    },
+    {
+      "id": "F3",
+      "severity": "conditional_derivative_model",
+      "description": "Visible same-quad neighbors may not match helper lanes for another primitive. PNG dimensions529x980 mean Y reversal preserves even quad membership. dy sign reversal alone is harmless: both determinant and gradient reverse, preserving sign(det)*gradient; fwidth and LOD norms use absolute values. Odd last-column derivative fallback does not touch selected columns128..400."
+    },
+    {
+      "id": "F4",
+      "severity": "domain_restriction",
+      "description": "Nominal normal generation flips all negative-Y normals, whereas source flips only exact FAR_LAND or specified back-facing primitive62002. Selected domain is ordinary terrain/far with parent association evidence; generic extrapolation is invalid. Captured slopeResponse agrees exactly, but this is not a general normal certification."
+    },
+    {
+      "id": "F5",
+      "severity": "inactive_general_case_differences",
+      "description": "CPU omits geologicalEarthRock palette/texture branches, treats coastal factors as saturated1, skips zero-horizontal inverse-projection branch, and uses1e-30 rather than source1e-5 normal/triweight degeneracy clamps. These do not activate for the established selected ordinary-soil domain with coast>595m, nonzero normals and distant horizontal coordinates. Source lighting and posttexture relief changes occur after palette output and do not change pre-identity incoming P."
+    },
+    {
+      "id": "F6",
+      "severity": "provenance_enforcement_gap",
+      "description": "Full-P script loads verified capture image hashes but does not itself enforce renderer/soil/normal source hashes at startup (soil hash is reported). Standalone reproduction depends on earlier source-check and parent normal provenance. No actual mismatch observed in this audit."
+    }
+  ],
+  "textureSetup": {
+    "dimensions": [
+      256,
+      256
+    ],
+    "mode": "RGBA",
+    "pngChunks": [
+      "IHDR",
+      "IDAT",
+      "IDAT",
+      "IEND"
+    ],
+    "alphaMinMax": [
+      255,
+      255
+    ],
+    "sha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce",
+    "source": "woodland-clearing assets order leaf,bark,soil. Soil index2 uses texStorage2D9levels RGBA8, DOM Image upload, generateMipmap, LINEAR_MIPMAP_LINEAR min, LINEAR mag, REPEAT axes. Renderer has no UNPACK_FLIP_Y_WEBGL, UNPACK_PREMULTIPLY_ALPHA_WEBGL or UNPACK_COLORSPACE_CONVERSION_WEBGL changes.",
+    "decodeAssessment": "No ICC/gamma/sRGB metadata and all pixels opaque: asset provides no evidence for tagged-color conversion or alpha-premultiplication mismatch. Default DOM image upload versus Pillow remains a platform boundary, not identified error."
+  },
+  "attributionReminder": "Archived triFine/variation substitutions scarcely alter incoming errors; intermediate triFine mismatch does not establish cause.",
+  "changes": "Audit scripts/report only. Baseline model/results unchanged."
+}

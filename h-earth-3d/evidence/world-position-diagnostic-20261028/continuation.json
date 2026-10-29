@@ -28,7 +28,12 @@
     "2484_CAPTURE_CONDITIONED_MATERIAL_SAMPLES_PASS",
     "7452_COORDINATE_CONDITIONED_SOURCE_FIELDS_COMPATIBLE",
     "FULL_INCOMING_MATERIAL_NOMINAL_REPLAY_NOT_QUALIFIED",
-    "FIXED_FACTOR_SUBSTITUTIONS_DO_NOT_EXPLAIN_INCOMING_ERROR"
+    "FIXED_FACTOR_SUBSTITUTIONS_DO_NOT_EXPLAIN_INCOMING_ERROR",
+    "CPU_MIP_ROUNDING_ATTRIBUTION_458_TO_1",
+    "FLOAT32_ORIENTATION_PROMOTION_CORRECTED_IN_VERSIONED_MODEL",
+    "SINGLE_REMAINING_EXCEPTION_LOCALIZED_TO_CROSS_PRIMITIVE_DERIVATIVE",
+    "UNIFORM_SOURCE_PRIMITIVE_LOD_ALL_2484_SAMPLES_WITHIN_ONE_CODE",
+    "INDEPENDENT_2575_MEMBERSHIP_LOD_REVIEW_PASS"
   ],
   "run": {
     "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
@@ -49,7 +54,7 @@
     "completionClaimed": true,
     "conclusion": "success"
   },
-  "exactlyOneNextAction": "Resolve the full incoming-material CPU replay discrepancy using existing captures and immutable source: baseline has 458/2484 pixels beyond one display code; fixed substitutions of captured triFine/variation/macro/meso do not explain it. Bound or independently reproduce sampler/mip/LOD, derivative/helper-lane and remaining input uncertainty without parameter fitting or widening tolerances. Only after baseline replay qualifies define P(c,f0), D(c,f0), closed mesh transport/protection integration and fixed near/far appearance screen. Reuse existing captures; no GPU launch.",
+  "exactlyOneNextAction": "Use the capture-compatible conditional CPU model to define the explicit source coarse/fine reference f0 and recompute P(c,f0),D(c,f0), carrying sampler-model and normal/geometry ambiguity explicitly. Establish a protected closed mesh integration domain before the fixed near/far candidate appearance screen. The uniform source-primitive LOD screen resolves the observed nominal discrepancy (all2484 samples within one code, max0.8281), but propagates ambiguity through LOD only and is not GPU-equivalence or repair qualification. Reuse existing captures; no GPU launch or product mutation.",
   "stopCondition": "NO_GPU_OR_PRODUCT_MUTATION_UNTIL_SOURCE_SPLIT_MESH_AREA_AND_OFFLINE_APPEARANCE_ARE_QUALIFIED",
   "productChanged": false,
   "authorityEffect": "NONE_CONTINUATION_ONLY",
@@ -70,6 +75,12 @@
     "cpuMaterial": "cpu/material/result.json",
     "cpuMaterialNominal": "cpu/material/full-p-result.json",
     "cpuAttribution": "cpu/material/attribution-result.json",
-    "sourceMeshReconstructed": true
+    "sourceMeshReconstructed": true,
+    "cpuMipAttribution": "cpu/material/mip-attribution-result.json",
+    "cpuSourceAudit": "cpu/material/source-audit-v2.json",
+    "cpuPrimitiveLod": "cpu/material/primitive-lod-result.json",
+    "cpuPrimitiveLodReview": "cpu/material/primitive-lod-independent-review.json",
+    "incomingMaterialNominalScreenPass": true,
+    "incomingMaterialScreenQualification": "CONDITIONAL_MODEL_ONLY_LOD_MEMBERSHIP_PROPAGATED"
   }
 }

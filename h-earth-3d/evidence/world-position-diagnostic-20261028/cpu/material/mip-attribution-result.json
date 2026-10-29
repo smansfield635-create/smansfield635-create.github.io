@@ -1,0 +1,670 @@
+{
+  "schema": "H_EARTH_FIXED_MIP_MODEL_ATTRIBUTION_v1",
+  "result": "ATTRIBUTION_ONLY_NOT_GPU_QUALIFICATION",
+  "baselineScriptSha256": "0ec661436a4e353eced1f24adf1d3085f736c1b74d85cff1ba381729d364e55a",
+  "models": [
+    {
+      "model": "recursive_round_half_up",
+      "groups": [
+        {
+          "pose": "inland-seam-near",
+          "samples": 1107,
+          "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+            [
+              0.5526592559396164,
+              0.4140793132829401,
+              0.5486988784906259
+            ],
+            [
+              1.420399531582703,
+              1.329681763035154,
+              1.2910553080005513
+            ]
+          ],
+          "incomingAnyChannelBeyondOneCodeCount": 286,
+          "mipLevelRange": [
+            5.163020610809326,
+            8.0
+          ],
+          "factorChecks": {
+            "variation": {
+              "nominalCodeErrorMedianMax": [
+                0.2704862976325444,
+                1.373349331538762
+              ],
+              "outsideOneCodeCount": 8
+            },
+            "triFine": {
+              "nominalCodeErrorMedianMax": [
+                0.5660205631677542,
+                3.5841507302841933
+              ],
+              "outsideOneCodeCount": 300
+            },
+            "near": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.538909912109375
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "slopeResponse": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.0
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "rock": {
+              "nominalCodeErrorMedianMax": [
+                0.23842430114746094,
+                0.489990234375
+              ],
+              "outsideOneCodeCount": 0
+            }
+          }
+        },
+        {
+          "pose": "inland-seam-far",
+          "samples": 1377,
+          "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+            [
+              0.5240145367895224,
+              0.44958759697298945,
+              0.441207678319671
+            ],
+            [
+              1.3495812601408659,
+              1.50636305687037,
+              1.2338824646422353
+            ]
+          ],
+          "incomingAnyChannelBeyondOneCodeCount": 172,
+          "mipLevelRange": [
+            4.9848856925964355,
+            8.0
+          ],
+          "factorChecks": {
+            "variation": {
+              "nominalCodeErrorMedianMax": [
+                0.28404773214846557,
+                1.487689864500112
+              ],
+              "outsideOneCodeCount": 15
+            },
+            "triFine": {
+              "nominalCodeErrorMedianMax": [
+                0.6200727892956053,
+                3.81685335463294
+              ],
+              "outsideOneCodeCount": 447
+            },
+            "near": {
+              "nominalCodeErrorMedianMax": [
+                0.132904052734375,
+                0.538787841796875
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "slopeResponse": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.0
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "rock": {
+              "nominalCodeErrorMedianMax": [
+                0.24773597717285156,
+                0.4996471405029297
+              ],
+              "outsideOneCodeCount": 0
+            }
+          }
+        }
+      ],
+      "signedErrors": [
+        {
+          "pose": "inland-seam-near",
+          "signedMedian": [
+            0.5526592559396164,
+            0.4030549026730341,
+            0.5486988784906259
+          ],
+          "signedMin": [
+            -0.5245049261062604,
+            -0.5210552888190136,
+            -0.4352586837588177
+          ],
+          "signedMax": [
+            1.420399531582703,
+            1.329681763035154,
+            1.2910553080005513
+          ]
+        },
+        {
+          "pose": "inland-seam-far",
+          "signedMedian": [
+            0.5231957319972622,
+            0.44099890408506326,
+            0.441207678319671
+          ],
+          "signedMin": [
+            -0.7745318805090733,
+            -0.4898761326151089,
+            -0.3512985040674721
+          ],
+          "signedMax": [
+            1.3495812601408659,
+            1.50636305687037,
+            1.2338824646422353
+          ]
+        }
+      ],
+      "lastMipCode": [
+        105.0,
+        88.0,
+        63.0
+      ]
+    },
+    {
+      "model": "recursive_round_half_even",
+      "groups": [
+        {
+          "pose": "inland-seam-near",
+          "samples": 1107,
+          "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+            [
+              0.2785793964389853,
+              0.25150615948564337,
+              0.24488567559025398
+            ],
+            [
+              0.7026456426405616,
+              0.6704641456106941,
+              0.5631993582128274
+            ]
+          ],
+          "incomingAnyChannelBeyondOneCodeCount": 0,
+          "mipLevelRange": [
+            5.163020610809326,
+            8.0
+          ],
+          "factorChecks": {
+            "variation": {
+              "nominalCodeErrorMedianMax": [
+                0.2704862976325444,
+                1.373349331538762
+              ],
+              "outsideOneCodeCount": 8
+            },
+            "triFine": {
+              "nominalCodeErrorMedianMax": [
+                0.5660205631677542,
+                3.5841507302841933
+              ],
+              "outsideOneCodeCount": 300
+            },
+            "near": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.538909912109375
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "slopeResponse": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.0
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "rock": {
+              "nominalCodeErrorMedianMax": [
+                0.23842430114746094,
+                0.489990234375
+              ],
+              "outsideOneCodeCount": 0
+            }
+          }
+        },
+        {
+          "pose": "inland-seam-far",
+          "samples": 1377,
+          "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+            [
+              0.24983210961070768,
+              0.25473761150043117,
+              0.2381219722992256
+            ],
+            [
+              1.4904098122673304,
+              0.8361663644319322,
+              0.5673971117181082
+            ]
+          ],
+          "incomingAnyChannelBeyondOneCodeCount": 1,
+          "mipLevelRange": [
+            4.9848856925964355,
+            8.0
+          ],
+          "factorChecks": {
+            "variation": {
+              "nominalCodeErrorMedianMax": [
+                0.28404773214846557,
+                1.487689864500112
+              ],
+              "outsideOneCodeCount": 15
+            },
+            "triFine": {
+              "nominalCodeErrorMedianMax": [
+                0.6200727892956053,
+                3.81685335463294
+              ],
+              "outsideOneCodeCount": 447
+            },
+            "near": {
+              "nominalCodeErrorMedianMax": [
+                0.132904052734375,
+                0.538787841796875
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "slopeResponse": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.0
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "rock": {
+              "nominalCodeErrorMedianMax": [
+                0.24773597717285156,
+                0.4996471405029297
+              ],
+              "outsideOneCodeCount": 0
+            }
+          }
+        }
+      ],
+      "signedErrors": [
+        {
+          "pose": "inland-seam-near",
+          "signedMedian": [
+            -0.049771164677594015,
+            0.017375209283841286,
+            0.035611155019751095
+          ],
+          "signedMin": [
+            -0.7026456426405616,
+            -0.6704641456106941,
+            -0.5631993582128274
+          ],
+          "signedMax": [
+            0.5463967845312254,
+            0.5892041012002522,
+            0.5528951817258871
+          ]
+        },
+        {
+          "pose": "inland-seam-far",
+          "signedMedian": [
+            0.018475059197925248,
+            0.040703441875393764,
+            0.004888732713411059
+          ],
+          "signedMin": [
+            -1.4904098122673304,
+            -0.6715279317799911,
+            -0.5386764921369291
+          ],
+          "signedMax": [
+            0.7599402350400624,
+            0.8361663644319322,
+            0.5673971117181082
+          ]
+        }
+      ],
+      "lastMipCode": [
+        104.0,
+        88.0,
+        62.0
+      ]
+    },
+    {
+      "model": "recursive_unquantized",
+      "groups": [
+        {
+          "pose": "inland-seam-near",
+          "samples": 1107,
+          "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+            [
+              0.27207268638424864,
+              0.30469301031276075,
+              0.24826163746111263
+            ],
+            [
+              1.0806716713103128,
+              1.1086148786940413,
+              0.8548469401778078
+            ]
+          ],
+          "incomingAnyChannelBeyondOneCodeCount": 20,
+          "mipLevelRange": [
+            5.163020610809326,
+            8.0
+          ],
+          "factorChecks": {
+            "variation": {
+              "nominalCodeErrorMedianMax": [
+                0.2704862976325444,
+                1.373349331538762
+              ],
+              "outsideOneCodeCount": 8
+            },
+            "triFine": {
+              "nominalCodeErrorMedianMax": [
+                0.5660205631677542,
+                3.5841507302841933
+              ],
+              "outsideOneCodeCount": 300
+            },
+            "near": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.538909912109375
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "slopeResponse": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.0
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "rock": {
+              "nominalCodeErrorMedianMax": [
+                0.23842430114746094,
+                0.489990234375
+              ],
+              "outsideOneCodeCount": 0
+            }
+          }
+        },
+        {
+          "pose": "inland-seam-far",
+          "samples": 1377,
+          "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+            [
+              0.2433952728799511,
+              0.2505526728984506,
+              0.23684068683851933
+            ],
+            [
+              1.2012118910354275,
+              1.0640169460420168,
+              0.7200994972941004
+            ]
+          ],
+          "incomingAnyChannelBeyondOneCodeCount": 5,
+          "mipLevelRange": [
+            4.9848856925964355,
+            8.0
+          ],
+          "factorChecks": {
+            "variation": {
+              "nominalCodeErrorMedianMax": [
+                0.28404773214846557,
+                1.487689864500112
+              ],
+              "outsideOneCodeCount": 15
+            },
+            "triFine": {
+              "nominalCodeErrorMedianMax": [
+                0.6200727892956053,
+                3.81685335463294
+              ],
+              "outsideOneCodeCount": 447
+            },
+            "near": {
+              "nominalCodeErrorMedianMax": [
+                0.132904052734375,
+                0.538787841796875
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "slopeResponse": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.0
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "rock": {
+              "nominalCodeErrorMedianMax": [
+                0.24773597717285156,
+                0.4996471405029297
+              ],
+              "outsideOneCodeCount": 0
+            }
+          }
+        }
+      ],
+      "signedErrors": [
+        {
+          "pose": "inland-seam-near",
+          "signedMedian": [
+            -0.19213498081406044,
+            -0.20742863891777574,
+            -0.019848253263134552
+          ],
+          "signedMin": [
+            -1.0806716713103128,
+            -1.1086148786940413,
+            -0.7043369093253915
+          ],
+          "signedMax": [
+            0.6879070230164928,
+            0.882521229996371,
+            0.8548469401778078
+          ]
+        },
+        {
+          "pose": "inland-seam-far",
+          "signedMedian": [
+            -0.11883286669277027,
+            -0.1439303055758785,
+            -0.04739021993312065
+          ],
+          "signedMin": [
+            -1.2012118910354275,
+            -1.0640169460420168,
+            -0.7200994972941004
+          ],
+          "signedMax": [
+            0.830357940657592,
+            0.6948227227550916,
+            0.6894032117319568
+          ]
+        }
+      ],
+      "lastMipCode": [
+        103.67066955566406,
+        87.2667236328125,
+        61.83927917480469
+      ]
+    },
+    {
+      "model": "direct_box_round_half_even",
+      "groups": [
+        {
+          "pose": "inland-seam-near",
+          "samples": 1107,
+          "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+            [
+              0.30077793205833814,
+              0.3357045758610866,
+              0.2521767454321875
+            ],
+            [
+              1.2284060326197306,
+              1.33265803474616,
+              0.8081078347789941
+            ]
+          ],
+          "incomingAnyChannelBeyondOneCodeCount": 112,
+          "mipLevelRange": [
+            5.163020610809326,
+            8.0
+          ],
+          "factorChecks": {
+            "variation": {
+              "nominalCodeErrorMedianMax": [
+                0.2704862976325444,
+                1.373349331538762
+              ],
+              "outsideOneCodeCount": 8
+            },
+            "triFine": {
+              "nominalCodeErrorMedianMax": [
+                0.5660205631677542,
+                3.5841507302841933
+              ],
+              "outsideOneCodeCount": 300
+            },
+            "near": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.538909912109375
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "slopeResponse": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.0
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "rock": {
+              "nominalCodeErrorMedianMax": [
+                0.23842430114746094,
+                0.489990234375
+              ],
+              "outsideOneCodeCount": 0
+            }
+          }
+        },
+        {
+          "pose": "inland-seam-far",
+          "samples": 1377,
+          "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+            [
+              0.2694785745070618,
+              0.28315029317577967,
+              0.23857597198187364
+            ],
+            [
+              1.4127326721517335,
+              1.2725016557334925,
+              0.740595723769772
+            ]
+          ],
+          "incomingAnyChannelBeyondOneCodeCount": 23,
+          "mipLevelRange": [
+            4.9848856925964355,
+            8.0
+          ],
+          "factorChecks": {
+            "variation": {
+              "nominalCodeErrorMedianMax": [
+                0.28404773214846557,
+                1.487689864500112
+              ],
+              "outsideOneCodeCount": 15
+            },
+            "triFine": {
+              "nominalCodeErrorMedianMax": [
+                0.6200727892956053,
+                3.81685335463294
+              ],
+              "outsideOneCodeCount": 447
+            },
+            "near": {
+              "nominalCodeErrorMedianMax": [
+                0.132904052734375,
+                0.538787841796875
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "slopeResponse": {
+              "nominalCodeErrorMedianMax": [
+                0.0,
+                0.0
+              ],
+              "outsideOneCodeCount": 0
+            },
+            "rock": {
+              "nominalCodeErrorMedianMax": [
+                0.24773597717285156,
+                0.4996471405029297
+              ],
+              "outsideOneCodeCount": 0
+            }
+          }
+        }
+      ],
+      "signedErrors": [
+        {
+          "pose": "inland-seam-near",
+          "signedMedian": [
+            -0.16273121921609857,
+            -0.2307764087381372,
+            0.06838017021667042
+          ],
+          "signedMin": [
+            -1.2284060326197306,
+            -1.33265803474616,
+            -0.5631993582128274
+          ],
+          "signedMax": [
+            0.9346466680693908,
+            1.0148394874914572,
+            0.8081078347789941
+          ]
+        },
+        {
+          "pose": "inland-seam-far",
+          "signedMedian": [
+            -0.1379900371411935,
+            -0.15347380640912434,
+            0.017515250084841227
+          ],
+          "signedMin": [
+            -1.4127326721517335,
+            -1.2725016557334925,
+            -0.5386764921369291
+          ],
+          "signedMax": [
+            0.9069603009201757,
+            0.7890831460052112,
+            0.740595723769772
+          ]
+        }
+      ],
+      "lastMipCode": [
+        104.0,
+        87.0,
+        62.0
+      ]
+    }
+  ],
+  "method": "Four predetermined standard box-average/rounding arithmetic models; same shader, coordinates, normals, LOD and one-code descriptive screen. No fitted bias, tolerance or shader parameter.",
+  "limits": [
+    "Original source invokes generateMipmap; captured mip bytes are unavailable. These alternatives do not establish the hardware generation algorithm.",
+    "Unquantized levels are a diagnostic reference, not RGBA8 hardware storage.",
+    "Agreement would qualify neither GPU equivalence nor the fine-reference split.",
+    "No new GPU run or product mutation."
+  ]
+}

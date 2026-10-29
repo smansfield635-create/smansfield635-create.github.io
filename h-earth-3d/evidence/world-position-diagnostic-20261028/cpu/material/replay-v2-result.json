@@ -1,0 +1,184 @@
+{
+  "schema": "H_EARTH_CPU_MATERIAL_REPLAY_V2_SCREEN_v1",
+  "result": "CPU_MODEL_SCREEN_ONLY_NOT_GPU_EQUIVALENCE",
+  "groups": [
+    {
+      "pose": "inland-seam-near",
+      "samples": 1107,
+      "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+        [
+          0.2785797119140625,
+          0.25150299072265625,
+          0.24488449096679688
+        ],
+        [
+          0.7026443481445312,
+          0.67047119140625,
+          0.563201904296875
+        ]
+      ],
+      "incomingAnyChannelBeyondOneCodeCount": 0,
+      "mipLevelRange": [
+        5.163020610809326,
+        8.0
+      ],
+      "factorChecks": {
+        "variation": {
+          "nominalCodeErrorMedianMax": [
+            0.2704925537109375,
+            1.3733444213867188
+          ],
+          "outsideOneCodeCount": 8
+        },
+        "triFine": {
+          "nominalCodeErrorMedianMax": [
+            0.5660171508789062,
+            3.584136962890625
+          ],
+          "outsideOneCodeCount": 300
+        },
+        "near": {
+          "nominalCodeErrorMedianMax": [
+            0.0,
+            0.538909912109375
+          ],
+          "outsideOneCodeCount": 0
+        },
+        "slopeResponse": {
+          "nominalCodeErrorMedianMax": [
+            0.0,
+            0.0
+          ],
+          "outsideOneCodeCount": 0
+        },
+        "rock": {
+          "nominalCodeErrorMedianMax": [
+            0.23842430114746094,
+            0.489990234375
+          ],
+          "outsideOneCodeCount": 0
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "samples": 1377,
+      "incomingNominalDisplayCodeErrorMedianMaxByChannel": [
+        [
+          0.2498321533203125,
+          0.25473785400390625,
+          0.23812103271484375
+        ],
+        [
+          1.4904098510742188,
+          0.8361663818359375,
+          0.5673980712890625
+        ]
+      ],
+      "incomingAnyChannelBeyondOneCodeCount": 1,
+      "mipLevelRange": [
+        4.9848856925964355,
+        8.0
+      ],
+      "factorChecks": {
+        "variation": {
+          "nominalCodeErrorMedianMax": [
+            0.2840423583984375,
+            1.4876861572265625
+          ],
+          "outsideOneCodeCount": 15
+        },
+        "triFine": {
+          "nominalCodeErrorMedianMax": [
+            0.6200714111328125,
+            3.81683349609375
+          ],
+          "outsideOneCodeCount": 447
+        },
+        "near": {
+          "nominalCodeErrorMedianMax": [
+            0.132904052734375,
+            0.538787841796875
+          ],
+          "outsideOneCodeCount": 0
+        },
+        "slopeResponse": {
+          "nominalCodeErrorMedianMax": [
+            0.0,
+            0.0
+          ],
+          "outsideOneCodeCount": 0
+        },
+        "rock": {
+          "nominalCodeErrorMedianMax": [
+            0.24773597717285156,
+            0.4996471405029297
+          ],
+          "outsideOneCodeCount": 0
+        }
+      }
+    }
+  ],
+  "textureSha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce",
+  "implementation": "Same source-expression emulator with explicit Float32 perturb orientation and recursive round-to-even RGBA8 box mip model. Sampler choice is an attribution model, not captured GPU bytes.",
+  "limits": [
+    "One nominal model; no parameter or mip-offset tuning.",
+    "Quantized XYZ centers alone produce higher-frequency noise error; source field coordinate intervals are handled separately in source-fields.py.",
+    "Visible neighboring values may differ from GPU helper-lane values at triangle boundaries.",
+    "Nominal plane-selected normals retain ambiguous geometry uncertainty and are not certified exact per-fragment normals.",
+    "Browser mip rounding, implicit LOD, image upload orientation/color conversion and shader operation contraction are not independently reproduced.",
+    "No inference that this mismatch invalidates the source or capture. It rejects this nominal emulator as sufficient appearance evidence.",
+    "P(c,f0) and transported blend are not evaluated until baseline replay is qualified.",
+    "No GPU or product mutation."
+  ],
+  "baselineScriptSha256": "0ec661436a4e353eced1f24adf1d3085f736c1b74d85cff1ba381729d364e55a",
+  "changes": {
+    "np.floor(a.astype(float).reshape(h//2,2,w//2,2,4).mean((1,3))+.5)": "np.rint(a.astype(float).reshape(h//2,2,w//2,2,4).mean((1,3)))",
+    "np.where(det<0,-1,1)": "np.where(det<0,F(-1),F(1))",
+    "np.where(det<0,F(-1),F(1))[...,None]*grad)": "np.where(det<0,F(-1),F(1))[...,None]*grad).astype(F)"
+  },
+  "dtypeAndExceptions": [
+    {
+      "pose": "inland-seam-near",
+      "normals": "float32",
+      "triWeights": "float32",
+      "palette": "float32",
+      "P": "float32",
+      "exceptions": []
+    },
+    {
+      "pose": "inland-seam-far",
+      "normals": "float32",
+      "triWeights": "float32",
+      "palette": "float32",
+      "P": "float32",
+      "exceptions": [
+        {
+          "x": 400,
+          "y": 496,
+          "error": [
+            1.4904098510742188,
+            0.6715316772460938,
+            0.01396942138671875
+          ],
+          "predicted": [
+            107.50959014892578,
+            94.3284683227539,
+            68.01396942138672
+          ],
+          "observed": [
+            109.0,
+            95.0,
+            68.0
+          ],
+          "world": [
+            -188.125,
+            14.743408203125,
+            -736.3125
+          ],
+          "lod": 5.880585670471191
+        }
+      ]
+    }
+  ]
+}

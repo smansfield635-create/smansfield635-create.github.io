@@ -1566,6 +1566,50 @@
       "scopeHash": "0f6d0bba7134123341d796d4ef5be053fc6e995d3845b639fcf539db8f4efbdd",
       "state": "ADMITTED_LOCKED"
     },
+    "0fa11352e71024d6e674e599c045180b4ada1393855111883bacb7e6ab74544e": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a",
+          "lockGeneration": 2980,
+          "lockScope": "H_EARTH:NATURAL_SAND_EARTH_BLEND_20261029",
+          "operationId": "H_EARTH_NATURAL_SAND_EARTH_BLEND_20261029_001",
+          "procedureLocatorDigest": "e7cead0900443b4b5e9705c5afd2b5ca3a5fb0bc68e502b12df01a8299b77058",
+          "requestDigest": "c89a3cb2df638eb821b07584b5f21922a8b8d969f1aef8587a1fa4375619a105",
+          "scopeHash": "0fa11352e71024d6e674e599c045180b4ada1393855111883bacb7e6ab74544e"
+        },
+        "bindingDigest": "24cf3b2c3c5f67eb3b29b84ff502dc27af57c7c5294c189bdaab2c39c0791010",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "423b6d308de1f1e7d4f557393eb695b78df2c9eb33f3470fefed5346d6f7ec2e",
+          "commentId": 6511345530,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40976271129,
+          "workflowSha": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a"
+        },
+        "lineageAnchorCommitSha": "eb5321393b2504cd122f4bfc93c981b03ae865f5",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a",
+      "lockGeneration": 2980,
+      "lockScope": "H_EARTH:NATURAL_SAND_EARTH_BLEND_20261029",
+      "operationId": "H_EARTH_NATURAL_SAND_EARTH_BLEND_20261029_001",
+      "procedureLocatorDigest": "e7cead0900443b4b5e9705c5afd2b5ca3a5fb0bc68e502b12df01a8299b77058",
+      "released": false,
+      "requestDigest": "c89a3cb2df638eb821b07584b5f21922a8b8d969f1aef8587a1fa4375619a105",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0fa11352e71024d6e674e599c045180b4ada1393855111883bacb7e6ab74544e",
+      "state": "ADMITTED_LOCKED"
+    },
     "0faf1fc693e77d00999271a450734a320f5e93551f408a7834bdcf7cf172a882": {
       "governingHead": "ccd2d1f0d07111c7952423fdb7fab8ec471452cb",
       "lockGeneration": 1169,
@@ -23171,7 +23215,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2979,
+  "lockGeneration": 2980,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

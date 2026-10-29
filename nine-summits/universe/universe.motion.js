@@ -83,7 +83,7 @@ let width=1,height=1, viewWidth=3, viewHeight=3, zoom=1,targetZoom=1, offset=[0,
 // Gesture quaternions and release physics remain owned by the shared Compass module.
 const ORBIT_RADIANS_PER_SECOND=.08;
 let orbitPhase=0, orbitSpeed=0, motionPaused=false, sceneVisible=true, windowFocused=true, pageActive=true;
-let ready=false, reduced=media.matches, receipt={status:'loading'}, disposed=false;
+let ready=false, reduced=media.matches, receipt={status:'loading'}, disposed=false, teachingRevealVersion=0;
 const $=s=>document.querySelector(s);
 const color=hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
 function requestFrame(){if(!raf && ready && !disposed && !document.hidden && sceneVisible && pageActive)raf=requestAnimationFrame(render);}
@@ -93,7 +93,7 @@ $('#toggle-motion').addEventListener('click',()=>{motionPaused=!motionPaused;orb
 function stopInertia(){if(inertia){quaternion=P.constellationReleaseQuaternionAt(inertia,Math.min(inertia.durationMs,performance.now()-inertia.startedAt));inertia=null;}}
 function choose(index,scroll=true){
   if(pointer?.dragging || performance.now()<suppressUntil)return;
-  stopInertia();$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; selected=index; close=false; targetZoom=1;targetOffset=[0,0,0];panel.style.setProperty('--world-accent',summits[index][2]);scene.style.setProperty('--world-accent',summits[index][2]);
+  stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; selected=index; close=false; targetZoom=1;targetOffset=[0,0,0];panel.style.setProperty('--world-accent',summits[index][2]);scene.style.setProperty('--world-accent',summits[index][2]);
   const [begin,summit]=summits[index], teaching=teachings[index];
   $('#reflection-path').textContent=`Summit ${index+1} of 9 · ${begin} → ${summit}`;
   $('#reflection-title').textContent=teaching.title;
@@ -110,7 +110,7 @@ function choose(index,scroll=true){
   if(scroll){panel.scrollIntoView({behavior:reduced?'instant':'smooth',block:'nearest'});panel.focus({preventScroll:true});}
 }
 function returnToAll(){
-  stopInertia();$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];panel.style.removeProperty('--world-accent');scene.style.removeProperty('--world-accent');
+  stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];panel.style.removeProperty('--world-accent');scene.style.removeProperty('--world-accent');
   panel.hidden=true;returnButton.hidden=true;status.textContent='All nine summits. One path. Your orientation is preserved.';
   $('#summit-teaching').hidden=true;approach.setAttribute('aria-expanded','false');
   labels.forEach(el=>el.setAttribute('aria-pressed','false'));requestFrame();
@@ -126,7 +126,7 @@ approach.addEventListener('click',()=>{
   $('#scene-note').textContent=`${summits[selected][0]} → ${summits[selected][1]} · Return to all nine to keep exploring`;
   const teaching=$('#summit-teaching');teaching.hidden=false;
   status.textContent=`${summits[selected][1]} teaching opened.`;
-  const openedIndex=selected;const reveal=()=>{if(selected!==openedIndex||teaching.hidden)return;teaching.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});teaching.focus({preventScroll:true});};if(reduced)reveal();else setTimeout(reveal,520);
+  const openedIndex=selected,openedVersion=++teachingRevealVersion;const reveal=()=>{if(selected!==openedIndex||teachingRevealVersion!==openedVersion||teaching.hidden)return;teaching.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});teaching.focus({preventScroll:true});};if(reduced)reveal();else setTimeout(reveal,520);
 });
 $('#reset-view').addEventListener('click',()=>{if(!ready)return;cancelPointer();stopInertia();quaternion=[0,0,0,1];returnToAll();});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&selected>=0){returnToAll();event.preventDefault();}});

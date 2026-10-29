@@ -4,7 +4,7 @@
   "builderSelfApproval": false,
   "reviewer": "independent qualification_packet agent",
   "sourceSha256": {
-    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "25e867aff71e4b681a218999fae9bcefff9af7007dd50806c5b32228fd53f5da",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "43d8931db8a15e40b8cb22103f254f61bd20bb06f54f721e257a1c3f791acb45",
     "tools/h-earth-ground-material-comparison.v1.mjs": "b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509",
     "tools/h-earth-ground-material-comparison.v1.test.mjs": "3493aa1f688c100bb119f7aa87219c1c674c446033d7044b1598e90dd5897e44"
   },
@@ -24,10 +24,11 @@
     "reviewer": "independent qualification_packet agent",
     "checks": [
       "reopened only",
-      "same repository PR6979 exact branch base main",
+      "same repository PR6979 exact branch and original integration base",
       "first attempt",
       "intent source hashes and workflow identity",
       "product scene unchanged; four frames one run"
-    ]
+    ],
+    "additionalEvidence": "Retargeting to main produced mergeable_state dirty; no neutral runner launched. Original integration base is mergeable=true. Only two workflow base filters changed and were independently reviewed."
   }
 }

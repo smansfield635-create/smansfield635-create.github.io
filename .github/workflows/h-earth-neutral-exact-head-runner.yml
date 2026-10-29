@@ -3,7 +3,7 @@ name: H-Earth Neutral Exact Head Runner
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main]
+    branches: [main, h-earth/corrected-material-integration-20261029]
     paths:
       - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
       - 'tools/h-earth-ground-material-comparison.v1.mjs'
@@ -2306,7 +2306,7 @@ jobs:
       ${{ github.event_name == 'pull_request' && github.event.action == 'reopened' && github.event.pull_request.number == 6979 &&
           github.event.pull_request.head.repo.full_name == github.repository &&
           github.event.pull_request.head.ref == 'h-earth/corrected-material-production-qualification-20261029' &&
-          github.event.pull_request.base.ref == 'main' }}
+          github.event.pull_request.base.ref == 'h-earth/corrected-material-integration-20261029' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:

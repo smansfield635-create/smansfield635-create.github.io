@@ -40,7 +40,11 @@
     "PUBLISHED_PRODUCT_UNCHANGED_NO_GPU_RERUN",
     "MESH_GATE_V2_SEALED_BOTH_SIDES_FIX_COMMITTED_6AF33E9",
     "MESH_GATE_V2_10_TESTS_PASS",
-    "V1_SEALED_EDGE_LOOP_SHADOWING_DEFECT_CORRECTED_NOT_ERASED"
+    "V1_SEALED_EDGE_LOOP_SHADOWING_DEFECT_CORRECTED_NOT_ERASED",
+    "MESH_GATE_V2_GAMUT_LIMITER_REJECTED_ADVERSARIAL_WITNESS",
+    "MESH_GATE_V3_GROSS_FLUX_FIX_COMMITTED_F92B8518",
+    "MESH_GATE_V3_12_TESTS_AND_10000_RANDOM_DENSE_CASES_PASS",
+    "EXACT_FROZEN_BASE_WORLD_BINARY_AVAILABLE_GITHUB_BLOB_BUT_NOT_MATERIALIZED"
   ],
   "run": {
     "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
@@ -61,8 +65,8 @@
     "completionClaimed": true,
     "conclusion": "success"
   },
-  "exactlyOneNextAction": "Materialize the already frozen original source scene cb57c275 and reconstruct the original 141373-vertex/366666-index uploaded mesh using committed cpu/mesh/{reconstruct.mjs,reconstruct-direct.mjs,upload-replay.mjs,match-surface.py}. Verify exact position/index hashes, 2484 sample positions and all 2575 candidate memberships, then execute cpu/mesh/next-gate/mesh_domain_gate.py against the original uploaded buffers, independently checking T-junction seam coverage, overlap, physical area, protected cuts and 40m witness-to-cut margin. Treat any failed assertion as a bounded model/domain repair, not a source geometry mutation. Only after mesh closure proceed to full paired P(c,f0),D(c,f0) and fixed 1m↔2m physical-area appearance/retention screen. Preserve failed pseudo-mesh evidence. No GPU rerun/product mutation/merge/deploy.",
-  "stopCondition": "NO_GPU_OR_PRODUCT_MUTATION_UNTIL_ORIGINAL_SOURCE_MESH_CLOSED_AND_PAIRED_F0_AND_OFFLINE_APPEARANCE_QUALIFIED",
+  "exactlyOneNextAction": "Recover the exact 11736235-byte frozen canonical-base-world.v1.json.gz blob (Git blob 3d11947ad94f98736035cbdf0e021e5f324659fb, SHA-256 48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a) through authorized binary-preserving Git checkout or independently hashed existing source artifact; do not substitute mismatched Gen2824 candidate or incomplete Git bundles. After exact hash verification use original committed CPU reconstruct.mjs/reconstruct-direct.mjs/upload-replay.mjs and match-surface.py to regenerate uploaded buffers and run V3 mesh_domain_gate.py, followed by independent actual-mesh closure check. Preserve all 2484 witnesses/2575 memberships. Only after closure qualify full paired f0 composition and real 1m/2m appearance. No GPU/product mutation.",
+  "stopCondition": "NO_GPU_OR_PRODUCT_MUTATION_UNTIL_EXACT_FROZEN_SOURCE_ASSET_AND_ORIGINAL_SOURCE_MESH_CLOSED_AND_PAIRED_F0_APPEARANCE_QUALIFIED",
   "productChanged": false,
   "authorityEffect": "NONE_CONTINUATION_ONLY",
   "evidence": {
@@ -91,9 +95,9 @@
     "incomingMaterialScreenQualification": "CONDITIONAL_MODEL_ONLY_LOD_MEMBERSHIP_PROPAGATED",
     "sourceMeshGate": {
       "path": "cpu/mesh/next-gate/mesh_domain_gate.py",
-      "sourceCommit": "6af33e910513dbdb2b3cf1f41c90bf85d2f882cf",
+      "sourceCommit": "f92b8518c558cca7c195cc42e84c0e021f17e9f0",
       "testPath": "cpu/mesh/next-gate/test_mesh_gate.py",
-      "testsPassed": 10,
+      "testsPassed": 12,
       "imageAuditPath": "cpu/mesh/next-gate/image-geometry-audit.json",
       "imagePseudoFaces": 4320,
       "nominalZeroAreaFaces": 24,
@@ -103,9 +107,15 @@
       "fullMaterialF0Qualified": false,
       "productChanged": false,
       "textureAssetSha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce",
-      "gateVersion": "V2_SEALED_BOTH_SIDES_NO_EDGE_SHADOWING",
+      "gateVersion": "V3_GROSS_RGB_FLUX_CAPACITIES",
       "originalV1Commit": "dff636de93d6e143cee38ed203b091b6d7fe3a77",
-      "independentReviewLimit": "10 synthetic/reproduction tests passed; no actual uploaded source mesh buffers in current runtime; acceptance blocked pending original source materialization"
+      "independentReviewLimit": "10 synthetic/reproduction tests passed; no actual uploaded source mesh buffers in current runtime; acceptance blocked pending original source materialization",
+      "randomDenseGamutTrials": 10000,
+      "netLimiterRegression": "SEED1_TRIAL1_REPRODUCED_POST_GAMUT_ON_V2",
+      "sourceAssetCustodyPath": "cpu/mesh/next-gate/source-asset-custody.json",
+      "exactFrozenAssetBlob": "3d11947ad94f98736035cbdf0e021e5f324659fb",
+      "exactFrozenAssetSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+      "sourceAssetTransfer": "UNAVAILABLE_GITHUB_CONNECTED_UTF8_ONLY"
     }
   }
 }

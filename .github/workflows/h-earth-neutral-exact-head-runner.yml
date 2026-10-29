@@ -2303,15 +2303,42 @@ jobs:
 
   corrected-material-production:
     if: >-
-      ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=corrected-material-production-v1' &&
-          github.ref == 'refs/heads/h-earth/corrected-material-production-qualification-20261029' }}
+      ${{ github.event_name == 'pull_request' && github.event.action == 'reopened' && github.event.pull_request.number == 6979 &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/corrected-material-production-qualification-20261029' &&
+          github.event.pull_request.base.ref == 'main' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
+      - name: Check out immutable PR launch checkpoint
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: dispatch
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /h-earth-3d/evidence/corrected-material-production-qualification-20261029/dispatch-intent.json
+      - name: Resolve frozen tooling identity from launch intent
+        id: intent
+        env:
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        shell: bash
+        run: |
+          test "$RUN_ATTEMPT" = 1
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const p=JSON.parse(fs.readFileSync('dispatch/h-earth-3d/evidence/corrected-material-production-qualification-20261029/dispatch-intent.json'));
+          assert.match(p.toolingHead,/^[a-f0-9]{40}$/);
+          assert.equal(p.launchTransport,'SAME_REPOSITORY_PR_EXACT_HEAD');
+          assert.equal(p.pullRequest,6979);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`tooling_head=${p.toolingHead}\n`);
+          NODE
       - name: Check out exact candidate tooling
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_sha }}
+          ref: ${{ steps.intent.outputs.tooling_head }}
           path: tooling
           persist-credentials: false
           sparse-checkout-cone-mode: false
@@ -2346,22 +2373,13 @@ jobs:
             /js/
             /css/
             /lib/
-      - name: Check out immutable dispatch checkpoint
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.sha }}
-          path: dispatch
-          persist-credentials: false
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /h-earth-3d/evidence/corrected-material-production-qualification-20261029/dispatch-intent.json
       - name: Validate fixed explicit launch and exact checkout identities
         env:
-          TARGET_SHA: ${{ inputs.target_sha }}
-          WORKFLOW_SHA: ${{ github.sha }}
-          ROUTE_PATH: ${{ inputs.route_path }}
-          EXERCISE: ${{ inputs.exercise_vegetation_residency }}
-          TIMING_SHIM: ${{ inputs.apply_timing_shim }}
+          TARGET_SHA: ${{ steps.intent.outputs.tooling_head }}
+          WORKFLOW_SHA: ${{ github.event.pull_request.head.sha }}
+          ROUTE_PATH: /showroom/globe/h-earth/
+          EXERCISE: 'false'
+          TIMING_SHIM: 'false'
           RUN_ATTEMPT: ${{ github.run_attempt }}
         shell: bash
         run: |

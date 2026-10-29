@@ -4,7 +4,7 @@
   "builderSelfApproval": false,
   "reviewer": "independent qualification_packet agent",
   "sourceSha256": {
-    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "49c86fc67f824685a91dd7ce1108a1f13c215a8651a572f8b964060fa63cceb5",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "25e867aff71e4b681a218999fae9bcefff9af7007dd50806c5b32228fd53f5da",
     "tools/h-earth-ground-material-comparison.v1.mjs": "b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509",
     "tools/h-earth-ground-material-comparison.v1.test.mjs": "3493aa1f688c100bb119f7aa87219c1c674c446033d7044b1598e90dd5897e44"
   },
@@ -18,5 +18,16 @@
     "Four fixed candidate-only reference-lit poses; real atlas HTTP byte hashes; no atlas interception or correction reinjection.",
     "Exact product scene and source guards; explicit first-attempt dispatch; frameCap 4; runBudget 1."
   ],
-  "acceptance": "No visual, performance, merge, or publication acceptance."
+  "acceptance": "No visual, performance, merge, or publication acceptance.",
+  "transportRecoveryReview": {
+    "result": "PASS",
+    "reviewer": "independent qualification_packet agent",
+    "checks": [
+      "reopened only",
+      "same repository PR6979 exact branch base main",
+      "first attempt",
+      "intent source hashes and workflow identity",
+      "product scene unchanged; four frames one run"
+    ]
+  }
 }

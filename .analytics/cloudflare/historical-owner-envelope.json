@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-29T14:27:37Z",
+  "generatedAt": "2026-10-29T15:27:36Z",
   "window": {
-    "start": "2026-07-31T14:27:37Z",
-    "end": "2026-10-29T14:27:37Z"
+    "start": "2026-07-31T15:27:36Z",
+    "end": "2026-10-29T15:27:36Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,11 +17,11 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4358,
+    "pageLoads": 4428,
     "visits": 1317,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4358,
+        "pageLoads": 4428,
         "visits": 1317
       }
     },
@@ -35,7 +35,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 967,
+        "pageLoads": 987,
         "visits": 727
       },
       "/laws/": {
@@ -75,7 +75,7 @@
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 100,
+        "pageLoads": 110,
         "visits": 0
       },
       "/evidence/readiness/": {
@@ -195,7 +195,7 @@
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
-        "pageLoads": 40,
+        "pageLoads": 70,
         "visits": 0
       },
       "/characters/": {
@@ -214,6 +214,10 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
@@ -222,11 +226,11 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/about/": {
-        "pageLoads": 40,
+      "/campaigns/consider-the-energy/secret-of-life-edition/": {
+        "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/consider-the-energy/secret-of-life-edition/": {
+      "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -317,7 +321,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3041,
+        "pageLoads": 3111,
         "visits": 0
       },
       "www.google.com": {

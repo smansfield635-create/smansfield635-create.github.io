@@ -179,6 +179,17 @@ main{position:relative;max-width:none;min-height:100svh}
 .scene[data-stage=approach] .explore-worlds,.scene[data-stage=encounter] .explore-worlds,.scene[data-stage=return] .explore-worlds{pointer-events:none}
 @media(max-width:600px){.topbar{padding:17px 22px;font-size:10px}.topbar .brand{font-size:9px}.intro{top:82px;left:23px;max-width:calc(100vw - 46px)}.intro h1{font-size:clamp(34px,9vw,42px);line-height:1.07;margin:14px 0 10px}.intro .eyebrow{font-size:9px;letter-spacing:.17em}.intro .invitation{font-size:17px;margin:0 0 7px}.intro .intro-copy{font-size:12px;max-width:266px;line-height:1.45;margin:0 0 14px}.explore-worlds{font-size:11px;padding:10px 17px;min-height:43px}.scene{min-height:650px}.heart-glow{width:330px;height:380px}}
 @media(max-width:350px){.intro{top:78px;left:19px}.intro h1{font-size:32px}.intro .intro-copy{max-width:240px}}
+/* Bound one-repair: interstellar depth and diamond radiance; no extraneous controls. */
+.scene{background:
+ radial-gradient(ellipse 35% 21% at 61% 57%,rgba(126,177,206,.15),transparent 90%),
+ radial-gradient(ellipse 33% 40% at 75% 68%,rgba(17,121,154,.32),transparent 85%),
+ radial-gradient(ellipse 40% 33% at 38% 60%,rgba(78,53,144,.21),transparent 90%),
+ radial-gradient(ellipse 53% 44% at 67% 39%,rgba(30,39,105,.20),transparent 95%),
+ linear-gradient(148deg,#02050f 9%,#06152c 64%,#020914 100%)}
+.heart-glow{width:clamp(320px,55vw,760px);height:clamp(390px,65vw,860px);
+ background:radial-gradient(ellipse,rgba(208,241,255,.46),rgba(72,163,232,.30) 18%,rgba(198,131,239,.16) 35%,rgba(57,120,222,.07) 52%,transparent 75%);
+ filter:blur(32px)}
+@media(max-width:600px){.heart-glow{width:420px;height:430px}}
 @media(prefers-reduced-motion:reduce){.intro,.planet-label{transition:none!important}}
 
 </style>

@@ -145,6 +145,11 @@ function startPeaceFlight(){
   status.textContent='Traveling toward the world of Peace.';
   updateMotionControl();requestFrame();
 }
+$('#explore-worlds').addEventListener('click',()=>{
+ const list=$('#path-list');list.open=true;
+ list.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});
+ list.querySelector('summary')?.focus({preventScroll:true});
+});
 $('#peace-return').addEventListener('click',returnToAll);
 
 document.querySelectorAll('[data-summit]').forEach(el=>el.addEventListener('click',()=>choose(Number(el.dataset.summit))));
@@ -200,18 +205,18 @@ function buildGeometry(K){
   receipt={status:'ready',geometryKernel:'/showroom/globe/h-earth/render/geometry-kernel.js',westAdmitted:true,primitiveCount:admitted.frame.primitiveCount,triangleCount:0,physics:'/assets/compass/compass.orbit-physics.js',heartContourSource:'nine-summits-of-love/index.html@171a74bc3f1f170c36079b00407fb569b56992bf'};
   return admitted.frame.primitives.map((primitive,meshIndex)=>{
     const g=primitive.geometry, data=[];
-    g.indices.forEach((index,j)=>{const p=g.vertices[index],n=meshIndex===0?g.faceNormals[Math.floor(j/3)]:g.normals[index];data.push(p.x,p.y,p.z,n.x,n.y,n.z);});
+    g.indices.forEach((index,j)=>{const p=g.vertices[index],n=meshIndex===0?g.faceNormals[Math.floor(j/3)]:g.normals[index];data.push(p.x,p.y,p.z,n.x,n.y,n.z,(Math.sin((Math.floor(j/3)+1)*78.233)*43758.5453)%1);});
     receipt.triangleCount+=g.indices.length/3;
     const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);
     return {buffer,count:g.indices.length};
   });
 }
-const vertexSource=`attribute vec3 aPosition;attribute vec3 aNormal;
+const vertexSource=`attribute vec3 aPosition;attribute vec3 aNormal;attribute float aFacet;
 uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ;uniform vec2 uView;
-varying vec3 vWorld,vNormal,vLocal;
-void main(){vec3 world=aPosition*uRadius+uCenter;vec3 view=world-uOffset;float perspective=uCameraZ/max(.48,uCameraZ-view.z);gl_Position=vec4(view.xy/uView*uZoom*perspective,-view.z/20.0,1.0);vWorld=world;vNormal=aNormal;vLocal=aPosition;}`;
+varying vec3 vWorld,vNormal,vLocal;varying float vFacet;
+void main(){vFacet=abs(aFacet);vec3 world=aPosition*uRadius+uCenter;vec3 view=world-uOffset;float perspective=uCameraZ/max(.48,uCameraZ-view.z);gl_Position=vec4(view.xy/uView*uZoom*perspective,-view.z/20.0,1.0);vWorld=world;vNormal=aNormal;vLocal=aPosition;}`;
 const fragmentSource=`precision mediump float;
-varying vec3 vWorld,vNormal,vLocal;
+varying vec3 vWorld,vNormal,vLocal;varying float vFacet;
 uniform vec3 uColor;
 uniform float uHeart,uSelected,uWorld,uAtmosphere,uTime;
 float hash3(vec3 p) {
@@ -249,12 +254,20 @@ void main() {
    return;
  }
  if(uHeart>.5) {
-   float facet=max(0.,dot(n,normalize(vec3(-.5,.8,1.))));
-   float glint=pow(max(0.,dot(n,normalize(vec3(.35,.65,1.)))),14.);
-   vec3 ember=vec3(.86,.24,.075), pearl=vec3(1.,.92,.68);
-   material=mix(ember,pearl,clamp(.19+facet*.72,0.,1.));
-   material+=vec3(.75,.45,.16)*glint*.35;
-   rough=.14;glow=.22;metal=.3;
+    vec3 key=normalize(vec3(-.6,.62,1.));
+    vec3 fill=normalize(vec3(.8,-.3,.8));
+    float facet=clamp(dot(n,key)*.5+.5,0.,1.);
+    float side=clamp(dot(n,fill)*.5+.5,0.,1.);
+    float fresnel=pow(1.-clamp(abs(dot(n,vec3(0.,0.,1.))),0.,1.),1.9);
+    float grain=fbm(vLocal*8.1+vec3(uTime*.019,0.,0.));
+    float prism=pow(max(0.,dot(reflect(-key,n),vec3(0.,0.,1.))),19.);
+    float facets=fract(vFacet*9.731+grain*.08);
+    vec3 glass=mix(vec3(.035,.15,.24),vec3(.31,.59,.65),facet*.62+facets*.30);
+    glass=mix(glass,vec3(.82,.62,.35),clamp(max(0.,side-.55)*.42+facets*.16,0.,.4));
+    float glowline=pow(max(0.,dot(reflect(-key,n),vec3(0.,0.,1.))),14.);
+    glass+=vec3(.24,.49,.55)*fresnel*.45+vec3(.3,.49,.65)*glowline*.5;
+    glass+=vec3(.08,.12,.16);
+    gl_FragColor=vec4(glass,1.);return;
  } else {
    float a=fbm(p*4.4+uWorld*3.11);
    float b=fbm(p*11.3+vec3(4.3,7.7,2.9)*uWorld);
@@ -313,18 +326,69 @@ void main() {
 }`;
 function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;}
 let loc={};
+// Depth-based starfield is an actual WebGL point cloud, not a CSS wallpaper.
+let starProgram=null,starBuffer=null,starCount=0,starLocation={};
+const starVertexSource=`attribute vec3 aStar;attribute float aSeed;
+uniform float uClock,uPixelRatio;
+varying float vSeed;
+void main(){
+ float depth=.38+aStar.z*.62;
+ vec2 drift=vec2(sin(uClock*.036+depth*3.4),cos(uClock*.027+depth*2.1))*depth*.009;
+ gl_Position=vec4(aStar.xy+drift,.94,1.);
+ gl_PointSize=min(3.8,(1.+depth*1.3)*uPixelRatio*(.88+.12*sin(uClock*.46+aSeed*24.)));
+ vSeed=aSeed;
+}`;
+const starFragmentSource=`precision mediump float;
+varying float vSeed;
+void main(){
+ float d=length(gl_PointCoord-.5);
+ float a=(1.-smoothstep(.12,.49,d))*(.23+.55*vSeed);
+ vec3 c=mix(vec3(.45,.69,.87),vec3(1.,.81,.55),smoothstep(.72,.99,vSeed));
+ gl_FragColor=vec4(c,a);
+}`;
+function setupStars(){
+ starProgram=gl.createProgram();const vs=shader(gl.VERTEX_SHADER,starVertexSource),fs=shader(gl.FRAGMENT_SHADER,starFragmentSource);
+ gl.attachShader(starProgram,vs);gl.attachShader(starProgram,fs);gl.linkProgram(starProgram);
+ gl.deleteShader(vs);gl.deleteShader(fs);if(!gl.getProgramParameter(starProgram,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(starProgram));
+ for(const name of ['aStar','aSeed'])starLocation[name]=gl.getAttribLocation(starProgram,name);
+ for(const name of ['uClock','uPixelRatio'])starLocation[name]=gl.getUniformLocation(starProgram,name);
+ let seed=2970;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
+ const points=[];for(let i=0;i<870;i++){
+    const x=random()*2-1,y=random()*2-1,z=random(),lum=random();
+    points.push(x,y,z,lum);
+ }
+ starCount=points.length/4;starBuffer=gl.createBuffer();
+ gl.bindBuffer(gl.ARRAY_BUFFER,starBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(points),gl.STATIC_DRAW);
+}
+function drawStars(){
+ gl.useProgram(starProgram);gl.bindBuffer(gl.ARRAY_BUFFER,starBuffer);
+ gl.vertexAttribPointer(starLocation.aStar,3,gl.FLOAT,false,16,0);gl.enableVertexAttribArray(starLocation.aStar);
+ gl.vertexAttribPointer(starLocation.aSeed,1,gl.FLOAT,false,16,12);gl.enableVertexAttribArray(starLocation.aSeed);
+ gl.uniform1f(starLocation.uClock,reduced?0:universeClock);gl.uniform1f(starLocation.uPixelRatio,Math.min(devicePixelRatio||1,2));
+ gl.disable(gl.DEPTH_TEST);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
+ gl.drawArrays(gl.POINTS,0,starCount);gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);
+}
 function setupGL(){
   gl=canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'low-power'});if(!gl)throw Error('WebGL unavailable');
   program=gl.createProgram();const vs=shader(gl.VERTEX_SHADER,vertexSource),fs=shader(gl.FRAGMENT_SHADER,fragmentSource);gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);gl.deleteShader(vs);gl.deleteShader(fs);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));gl.useProgram(program);
-  for(const name of ['aPosition','aNormal'])loc[name]=gl.getAttribLocation(program,name);
+  for(const name of ['aPosition','aNormal','aFacet'])loc[name]=gl.getAttribLocation(program,name);
   for(const name of ['uCenter','uOffset','uRadius','uZoom','uView','uColor','uHeart','uSelected','uWorld','uCameraZ','uAtmosphere','uTime'])loc[name]=gl.getUniformLocation(program,name);
-  gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);
+  gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);setupStars();
 }
-function basePosition(i){const a=Math.PI/2-i*Math.PI*2/9+orbitPhase;return [Math.cos(a)*(width<600?2.02:2.75),Math.sin(a)*(width<600?2.55:1.7),Math.sin(a*2)*.45];}
+const ARRIVAL_CONSTELLATION=Object.freeze([
+ [-1.43,.34,-1.95],[1.3,.98,-2.15],[1.92,.28,-.9],[1.66,-.63,.05],
+ [2.05,-1.42,2.35],[-1.15,-1.12,-.65],[-2.22,-.78,-1.65],[-2.18,.12,-1.95],[-.68,1.18,-2.5]
+]);
+function basePosition(i){
+ const b=ARRIVAL_CONSTELLATION[i];
+ // Perspective-correct signed depth: nearer bodies are monumental, not equal-size orbit markers.
+ const a=orbitPhase*(.22 + .05*(i%4));
+ return [b[0]*Math.cos(a)-b[2]*Math.sin(a)*.06,b[1]+Math.sin(orbitPhase*.6+i*.95)*.033,b[2]+Math.sin(a)*b[0]*.045];
+}
 function project(center){const s=cameraZ/Math.max(.48,cameraZ-center[2]+offset[2]);return {x:width/2+(center[0]-offset[0])/viewWidth*zoom*s*width/2,y:height/2-(center[1]-offset[1])/viewHeight*zoom*s*height/2,scale:s*zoom*width/(2*viewWidth)};}
-function radius(i){return [.28,.3,.29,.26,.28,.27,.3,.25,.27][i];}
+function radius(i){return [.27,.36,.32,.3,1.30,.28,.37,.29,.29][i];}
 function draw(mesh,center,r,c,isHeart,isSelected,worldIndex=-1,atmosphere=false){
-  gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.vertexAttribPointer(loc.aPosition,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(loc.aNormal,3,gl.FLOAT,false,24,12);gl.enableVertexAttribArray(loc.aPosition);gl.enableVertexAttribArray(loc.aNormal);
+  gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.vertexAttribPointer(loc.aPosition,3,gl.FLOAT,false,28,0);gl.vertexAttribPointer(loc.aNormal,3,gl.FLOAT,false,28,12);gl.vertexAttribPointer(loc.aFacet,1,gl.FLOAT,false,28,24);gl.enableVertexAttribArray(loc.aPosition);gl.enableVertexAttribArray(loc.aNormal);gl.enableVertexAttribArray(loc.aFacet);
   gl.uniform3fv(loc.uCenter,center);gl.uniform1f(loc.uRadius,r);gl.uniform3fv(loc.uColor,c);gl.uniform1f(loc.uHeart,isHeart?1:0);gl.uniform1f(loc.uSelected,isSelected?1:0);gl.uniform1f(loc.uWorld,worldIndex);gl.uniform1f(loc.uAtmosphere,atmosphere?1:0);gl.drawArrays(gl.TRIANGLES,0,mesh.count);
 }
 
@@ -399,10 +463,11 @@ function render(time){
   zoom+=(targetZoom-zoom)*settle;offset=offset.map((v,i)=>v+(targetOffset[i]-v)*settle);
   const moving=Math.abs(zoom-targetZoom)>.0001||offset.some((v,i)=>Math.abs(v-targetOffset[i])>.0001);
   if(!moving){zoom=targetZoom;offset=targetOffset.slice();}
-  gl.viewport(0,0,canvas.width,canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
+  gl.viewport(0,0,canvas.width,canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);drawStars();gl.useProgram(program);
   gl.uniform2f(loc.uView,viewWidth,viewHeight);gl.uniform3fv(loc.uOffset,offset);gl.uniform1f(loc.uZoom,zoom);gl.uniform1f(loc.uCameraZ,cameraZ);gl.uniform1f(loc.uTime,reduced?0:universeClock);
   centers=summits.map((_,i)=>P.quaternionRotateVector(quaternion,basePosition(i)));
-  draw(meshes[0],[0,0,0],1.42*(1-.38*smooth),[1,.7,.3],true,false);
+  const heartPosition=[width<600?-.48:-.64,width<600?-.42:-.12,-.18];
+  draw(meshes[0],heartPosition,1.23*(1-.38*smooth),[.76,.9,.96],true,false);
   projected=centers.map((center,i)=>{
     draw(meshes[i+1],center,radius(i)*(i===4?1+3.1*smooth:1),color(summits[i][2]),false,i===selected,i);
     const p=project(center),label=labels[i];
@@ -418,13 +483,19 @@ function render(time){
     draw(meshes[5],centers[4],radius(4)*(1+3.1*smooth)*1.095,color(summits[4][2]),false,true,4,true);
     gl.depthMask(true);gl.disable(gl.BLEND);
   }
-  const heart=project([0,0,0]), glow=$('.heart-glow');glow.style.left=heart.x+'px';glow.style.top=heart.y+'px';glow.style.transform=`translate(-50%,-50%) scale(${zoom})`;
+  const heart=project(heartPosition), glow=$('.heart-glow');glow.style.left=heart.x+'px';glow.style.top=heart.y+'px';glow.style.transform=`translate(-50%,-50%) scale(${zoom})`;
   if(inertia||moving||orbitActive||flight!==flightTarget||(selected===4&&flight>.02&&!reduced&&windowFocused&&pageActive&&sceneVisible))requestFrame();else lastTime=0;
 }
 function resize(){if(!gl)return;const b=scene.getBoundingClientRect();width=b.width;height=b.height;labelSizes=labels.map(el=>({width:el.offsetWidth||96,height:el.offsetHeight||44}));const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);viewWidth=width<600?2.85:Math.max(3.9,width/height*2.5);viewHeight=viewWidth*height/width;if(close&&selected>=0&&selected!==4)targetOffset=P.quaternionRotateVector(quaternion,basePosition(selected));requestFrame();}
 function cancelPointer(){if(!pointer)return;const id=pointer.id;quaternion=pointer.startQuaternion.slice();pointer=null;try{if(scene.hasPointerCapture(id))scene.releasePointerCapture(id);}catch{}suppressUntil=performance.now()+P.GESTURE.suppressClickMs;requestFrame();}
 function hitTest(x,y){const b=scene.getBoundingClientRect();return projected.map((p,i)=>({...p,i})).filter(p=>!p.hidden&&Math.hypot(x-b.left-p.x,y-b.top-p.y)<=p.radius).sort((a,b)=>centers[b.i][2]-centers[a.i][2])[0]?.i;}
 function bindInput(){
+  scene.addEventListener('pointermove',event=>{
+    if(pointer||selected>=0||!ready)return;
+    const i=hitTest(event.clientX,event.clientY);
+    labels.forEach((label,k)=>label.classList.toggle('is-hovered',i===k));
+  });
+  scene.addEventListener('pointerleave',()=>labels.forEach(label=>label.classList.remove('is-hovered')));
   scene.addEventListener('pointerdown',event=>{
     // The in-world teaching buttons and links own their own taps; do not reinterpret them as planet hits.
     if(event.target.closest('#peace-encounter'))return;

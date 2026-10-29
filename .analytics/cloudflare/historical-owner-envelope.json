@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-29T04:29:40Z",
+  "generatedAt": "2026-10-29T05:26:55Z",
   "window": {
-    "start": "2026-07-31T04:29:40Z",
-    "end": "2026-10-29T04:29:40Z"
+    "start": "2026-07-31T05:26:55Z",
+    "end": "2026-10-29T05:26:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -78,6 +78,10 @@
         "pageLoads": 60,
         "visits": 10
       },
+      "/index.html": {
+        "pageLoads": 110,
+        "visits": 0
+      },
       "/evidence/readiness/": {
         "pageLoads": 20,
         "visits": 0
@@ -88,10 +92,6 @@
       },
       "/evidence/": {
         "pageLoads": 90,
-        "visits": 0
-      },
-      "/index.html": {
-        "pageLoads": 110,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {

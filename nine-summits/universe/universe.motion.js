@@ -76,7 +76,7 @@ const scene=document.querySelector('#universe-scene'), canvas=document.querySele
 const panel=document.querySelector('#reflection'), status=document.querySelector('#status');
 const approach=document.querySelector('#approach'), returnButton=document.querySelector('#return-view');
 const media=matchMedia('(prefers-reduced-motion: reduce)');
-let P, gl, program, meshes=[], labels=[], centers=[], projected=[], selected=-1, close=false;
+let P, gl, program, meshes=[], labels=[], labelSizes=[], centers=[], projected=[], selected=-1, close=false;
 let quaternion=[0,0,0,1], pointer=null, inertia=null, suppressUntil=0, raf=0, lastTime=0;
 let width=1,height=1, viewWidth=3, viewHeight=3, zoom=1,targetZoom=1, offset=[0,0,0],targetOffset=[0,0,0];
 // Ambient traversal uses the Compass delta-time clock and its slow 0.08 rad/s cadence.
@@ -114,7 +114,7 @@ function returnToAll(){
   panel.hidden=true;returnButton.hidden=true;status.textContent='All nine summits. One path. Your orientation is preserved.';
   $('#summit-teaching').hidden=true;approach.setAttribute('aria-expanded','false');
   labels.forEach(el=>el.setAttribute('aria-pressed','false'));requestFrame();
-  if(prior>=0){const target=ready?labels[prior]:$(`[data-summit="${prior}"]`);target?.focus({preventScroll:true});}
+  if(prior>=0){const target=ready?labels[prior]:$(`[data-summit="${prior}"]`);target?.focus({preventScroll:true});scene.scrollIntoView({behavior:reduced?'instant':'smooth',block:'center'});}
 }
 document.querySelectorAll('[data-summit]').forEach(el=>el.addEventListener('click',()=>choose(Number(el.dataset.summit))));
 returnButton.addEventListener('click',returnToAll);
@@ -285,6 +285,42 @@ function draw(mesh,center,r,c,isHeart,isSelected,worldIndex=-1){
   gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.vertexAttribPointer(loc.aPosition,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(loc.aNormal,3,gl.FLOAT,false,24,12);gl.enableVertexAttribArray(loc.aPosition);gl.enableVertexAttribArray(loc.aNormal);
   gl.uniform3fv(loc.uCenter,center);gl.uniform1f(loc.uRadius,r);gl.uniform3fv(loc.uColor,c);gl.uniform1f(loc.uHeart,isHeart?1:0);gl.uniform1f(loc.uSelected,isSelected?1:0);gl.uniform1f(loc.uWorld,worldIndex);gl.drawArrays(gl.TRIANGLES,0,mesh.count);
 }
+
+function placeLabels(){
+  const items=projected.map((p,i)=>{
+    if(p.hidden)return null;
+    const size=labelSizes[i]||{width:94,height:43};
+    const side=(centers[i][0]>=0)?1:-1;
+    return {i,x:Math.max(size.width/2+7,Math.min(width-size.width/2-7,p.x)),
+      y:Math.max(size.height/2+7,Math.min(height-size.height/2-7,p.y+radius(i)*p.scale+10)),
+      desiredY:p.y+radius(i)*p.scale+10,
+      w:size.width,h:size.height,side};
+  });
+  for(let pass=0;pass<10;pass++){
+    let moved=false;
+    for(let i=0;i<items.length;i++)for(let j=i+1;j<items.length;j++){
+      const a=items[i],b=items[j];if(!a||!b)continue;
+      const ox=(a.w+b.w)/2+8-Math.abs(a.x-b.x);
+      const oy=(a.h+b.h)/2+6-Math.abs(a.y-b.y);
+      if(ox<=0||oy<=0)continue;
+      const direction=a.y===b.y?(a.i<b.i?-1:1):Math.sign(a.y-b.y);
+      const shift=Math.min(15,oy/2+1);
+      a.y+=direction*shift;b.y-=direction*shift;
+      a.x-=a.side*Math.min(3,ox*.06);b.x+=b.side*Math.min(3,ox*.06);
+      moved=true;
+    }
+    for(const item of items){if(!item)continue;
+      item.x=Math.max(item.w/2+7,Math.min(width-item.w/2-7,item.x));
+      item.y=Math.max(item.h/2+7,Math.min(height-item.h/2-7,item.y));
+    }
+    if(!moved)break;
+  }
+  items.forEach((item,i)=>{
+    if(!item)return;
+    labels[i].style.transform="translate("+item.x.toFixed(2)+"px,"+item.y.toFixed(2)+"px) translate(-50%,-50%)";
+  });
+}
+
 function render(time){
   raf=0;if(!ready||disposed)return;const dt=lastTime?Math.min(.05,(time-lastTime)/1000):1/60;lastTime=time;
   if(inertia){const elapsed=Math.min(inertia.durationMs,time-inertia.startedAt);quaternion=P.constellationReleaseQuaternionAt(inertia,elapsed);if(elapsed>=inertia.durationMs)inertia=null;}
@@ -300,18 +336,18 @@ function render(time){
   draw(meshes[0],[0,0,0],1,[1,.7,.3],true,false);
   projected=centers.map((center,i)=>{
     draw(meshes[i+1],center,radius(i),color(summits[i][2]),false,i===selected,i);
-    const p=project(center), label=labels[i], labelY=p.y+radius(i)*p.scale+7;
-    label.style.transform=`translate(${p.x}px,${labelY}px) translateX(-50%)`;
+    const p=project(center),label=labels[i];
     const obscured=center[2]<-.1&&Math.hypot(center[0],center[1])<.75;
     const hidden=close&&i!==selected||obscured;
     label.style.visibility=hidden?'hidden':'visible';label.tabIndex=hidden?-1:0;
     label.style.opacity=String(Math.max(.68,Math.min(1,.86+center[2]*.1)));label.style.zIndex=String(Math.round(center[2]*10)+40);
     return {...p,radius:Math.max(22,radius(i)*p.scale),hidden};
   });
+  placeLabels();
   const heart=project([0,0,0]), glow=$('.heart-glow');glow.style.left=heart.x+'px';glow.style.top=heart.y+'px';glow.style.transform=`translate(-50%,-50%) scale(${zoom})`;
   if(inertia||moving||orbitActive)requestFrame();else lastTime=0;
 }
-function resize(){if(!gl)return;const b=scene.getBoundingClientRect();width=b.width;height=b.height;const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);viewWidth=width<600?2.85:Math.max(3.9,width/height*2.5);viewHeight=viewWidth*height/width;if(close&&selected>=0)targetOffset=P.quaternionRotateVector(quaternion,basePosition(selected));requestFrame();}
+function resize(){if(!gl)return;const b=scene.getBoundingClientRect();width=b.width;height=b.height;labelSizes=labels.map(el=>({width:el.offsetWidth||96,height:el.offsetHeight||44}));const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);viewWidth=width<600?2.85:Math.max(3.9,width/height*2.5);viewHeight=viewWidth*height/width;if(close&&selected>=0)targetOffset=P.quaternionRotateVector(quaternion,basePosition(selected));requestFrame();}
 function cancelPointer(){if(!pointer)return;const id=pointer.id;quaternion=pointer.startQuaternion.slice();pointer=null;try{if(scene.hasPointerCapture(id))scene.releasePointerCapture(id);}catch{}suppressUntil=performance.now()+P.GESTURE.suppressClickMs;requestFrame();}
 function hitTest(x,y){const b=scene.getBoundingClientRect();return projected.map((p,i)=>({...p,i})).filter(p=>!p.hidden&&Math.hypot(x-b.left-p.x,y-b.top-p.y)<=p.radius).sort((a,b)=>centers[b.i][2]-centers[a.i][2])[0]?.i;}
 function bindInput(){

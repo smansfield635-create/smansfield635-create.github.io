@@ -6272,6 +6272,50 @@
       "scopeHash": "50a03ce7d4831bf70929c7c99ec03ee8aa2ff151d643182c2b1158d2ef28ac41",
       "state": "ADMITTED_LOCKED"
     },
+    "50b013501e7c657e8c48f79c04da648370128a93ce884befd9c6ffc5be6ce9f6": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "87cc903b5af4895c2b7c0b0a06d292832bf6f9b4",
+          "lockGeneration": 2968,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:CSSDA_AWARD_READY_VISUAL_UX_RENEWAL:20261029",
+          "operationId": "NINE_SUMMITS_CSSDA_AWARD_READY_RENEWAL_20261029_001",
+          "procedureLocatorDigest": "0baa99a7b9bfeb2b386a6854457caac69428fed663429ff1eb5b2172ddac9098",
+          "requestDigest": "3d978eba78953a462184d8dae6f6764edc785fe5b8221044ef8f394b639963e9",
+          "scopeHash": "50b013501e7c657e8c48f79c04da648370128a93ce884befd9c6ffc5be6ce9f6"
+        },
+        "bindingDigest": "f3fb8afb61cba789559d05ee9aaa04eddce27d91ff2271c395becf3fb9587711",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "294236776bf10c628b1066d4dbfad7c37453e6ff1f0a69c45cef9c2ce7da000f",
+          "commentId": 6501471438,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40905501214,
+          "workflowSha": "87cc903b5af4895c2b7c0b0a06d292832bf6f9b4"
+        },
+        "lineageAnchorCommitSha": "3a2629cdb6ffe7d4f1369b35b0fc6fc0e47c9d53",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "87cc903b5af4895c2b7c0b0a06d292832bf6f9b4",
+      "lockGeneration": 2968,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:CSSDA_AWARD_READY_VISUAL_UX_RENEWAL:20261029",
+      "operationId": "NINE_SUMMITS_CSSDA_AWARD_READY_RENEWAL_20261029_001",
+      "procedureLocatorDigest": "0baa99a7b9bfeb2b386a6854457caac69428fed663429ff1eb5b2172ddac9098",
+      "released": false,
+      "requestDigest": "3d978eba78953a462184d8dae6f6764edc785fe5b8221044ef8f394b639963e9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "50b013501e7c657e8c48f79c04da648370128a93ce884befd9c6ffc5be6ce9f6",
+      "state": "ADMITTED_LOCKED"
+    },
     "50c73ae11a9cfedc57792087330ff37cac0f05efa0235b09e9302f726f66b337": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -22819,7 +22863,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2967,
+  "lockGeneration": 2968,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

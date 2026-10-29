@@ -1,0 +1,245 @@
+{
+  "constructionProcedure": {
+    "bridgeOutputFingerprintDomain": {
+      "head": "69ddfa53d39aa7c940334e6cba6d0cd8c23a4d2d",
+      "operationId": "H_EARTH_CORRECTED_MATERIAL_PRODUCT_INTEGRATION_20261029_001",
+      "paths": [
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "showroom/globe/h-earth/vegetation-prototype/route.js",
+        "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+        "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+        "h-earth-3d/evidence/corrected-material-integration-20261029/**"
+      ]
+    },
+    "canonicalInputSchemas": [
+      "REPOSITORY_OPERATION_REQUEST_v1",
+      "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+    ],
+    "canonicalOutputSchemas": [
+      "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+      "H_EARTH_CORRECTED_MATERIAL_INTEGRATION_v1"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "GOVERNING_HEAD_MISMATCH",
+      "ACTIVE_SCOPE_ALREADY_LOCKED",
+      "DECLARED_PATH_VIOLATION",
+      "SELECTED_QUALIFICATION_FAILURE",
+      "PASS"
+    ],
+    "evaluationToolingHeadBindingRule": "Reuse exact candidate0137d0d and saved captured atlas; full-file production integration from hash-identical pinned renderer. Localized358-face support unchanged; no claim of global visual qualification.",
+    "exactAllowedRepositoryPaths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+      "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+      "h-earth-3d/evidence/corrected-material-integration-20261029/**"
+    ],
+    "exactBranchAndCommitSequence": [
+      {
+        "action": "Authentic admission then create h-earth/corrected-material-integration-20261029 from0137d0deb7abde6beca110c107b789e0221706ff.",
+        "step": 1
+      },
+      {
+        "action": "Stage full-file renderer integration using frozen atlas assets at production paths; preserve contact refresh fix and add proper texture disposal; update renderer import cache identity in active route.",
+        "step": 2
+      },
+      {
+        "action": "Verify exact source and asset custody, unchanged support, no live refinement call and disjoint geology; independent review and selected local tests.",
+        "step": 3
+      },
+      {
+        "action": "Commit bounded draft with production delta and durable evidence; create draft PR. Stop without GPU, merge or publication.",
+        "step": 4
+      }
+    ],
+    "exactGoverningHead": "69ddfa53d39aa7c940334e6cba6d0cd8c23a4d2d",
+    "exactTestRunnerCommand": "node --test h-earth-3d/evidence/corrected-material-integration-20261029/integration.test.mjs",
+    "independentVerifierDefinition": {
+      "builderMaySelfDeclarePass": false,
+      "repairAuthority": false,
+      "required": [
+        "EXACT_SOURCE_PARENT_AND_ATTRIBUTE_CUSTODY",
+        "SAVED_ATLAS_BYTES_AND_358_FACE_SUPPORT_UNCHANGED",
+        "ACTIVE_ROUTE_AND_REPLACEMENT_COVERAGE",
+        "ASSET_LOAD_AND_DISPOSAL_LIFECYCLE",
+        "FULL_FILE_PRODUCTION_SOURCE_PARSE_AND_TESTS",
+        "NO_GLOBAL_VISUAL_OR_PUBLICATION_CLAIM"
+      ],
+      "role": "WEST_INDEPENDENT_REVIEW"
+    },
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "priorAttemptInspectionLimits": {
+      "allowed": "Reuse all saved comparison evidence and closed edge-input decision; inspect integration direct dependencies only.",
+      "forbidden": "No repeated numerical solve, new palette experiments, geometry qualification sweep or GPU run."
+    },
+    "procedureId": "H_EARTH_CORRECTED_MATERIAL_PRODUCT_INTEGRATION_20261029_001_PROCEDURE",
+    "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "workflowAndArtifactPackagingPaths": {
+      "artifactPaths": [
+        "h-earth-3d/evidence/corrected-material-integration-20261029/**"
+      ],
+      "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+    }
+  },
+  "operationRequest": {
+    "allowedPaths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+      "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+      "h-earth-3d/evidence/corrected-material-integration-20261029/**"
+    ],
+    "artifactPaths": [
+      "h-earth-3d/evidence/corrected-material-integration-20261029/**"
+    ],
+    "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+    "errorPrecedence": [
+      "GOVERNING_HEAD_MISMATCH",
+      "ACTIVE_SCOPE_ALREADY_LOCKED",
+      "DECLARED_PATH_VIOLATION",
+      "SELECTED_QUALIFICATION_FAILURE",
+      "PASS"
+    ],
+    "exactGoverningHead": "69ddfa53d39aa7c940334e6cba6d0cd8c23a4d2d",
+    "exactTestCommand": "node --test h-earth-3d/evidence/corrected-material-integration-20261029/integration.test.mjs",
+    "executingRole": {
+      "mayDeploy": false,
+      "mayMerge": false,
+      "mayMutateControlPlane": false,
+      "mayMutateDiagnosticTooling": false,
+      "mayMutateProduct": true,
+      "role": "SOUTH_BUILDER",
+      "scopeExpansionAllowed": false
+    },
+    "fingerprintDomain": {
+      "head": "69ddfa53d39aa7c940334e6cba6d0cd8c23a4d2d",
+      "operationId": "H_EARTH_CORRECTED_MATERIAL_PRODUCT_INTEGRATION_20261029_001",
+      "paths": [
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "showroom/globe/h-earth/vegetation-prototype/route.js",
+        "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+        "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+        "h-earth-3d/evidence/corrected-material-integration-20261029/**"
+      ]
+    },
+    "functionalCoordination": {
+      "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+      "authorityEffect": "NONE",
+      "functionalBearing": {
+        "bearings": [
+          "N",
+          "E",
+          "S",
+          "W",
+          "N"
+        ],
+        "exemptionReason": null,
+        "mode": "ROUTE"
+      },
+      "primitiveRequirements": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+    },
+    "independentVerifier": {
+      "builderMaySelfDeclarePass": false,
+      "repairAuthority": false,
+      "required": [
+        "EXACT_SOURCE_PARENT_AND_ATTRIBUTE_CUSTODY",
+        "SAVED_ATLAS_BYTES_AND_358_FACE_SUPPORT_UNCHANGED",
+        "ACTIVE_ROUTE_AND_REPLACEMENT_COVERAGE",
+        "ASSET_LOAD_AND_DISPOSAL_LIFECYCLE",
+        "FULL_FILE_PRODUCTION_SOURCE_PARSE_AND_TESTS",
+        "NO_GLOBAL_VISUAL_OR_PUBLICATION_CLAIM"
+      ],
+      "role": "WEST_INDEPENDENT_REVIEW"
+    },
+    "intakeCompletenessReceipt": {
+      "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+      "receiptDigest": "1d9b22622e044a55e89b6aa8470ed000ca7c56438552ebd395ee5b18a68206df",
+      "receiptId": "H_EARTH_CORRECTED_MATERIAL_PRODUCT_INTEGRATION_20261029_001_COMPLETE",
+      "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+      "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+      "unresolvedMaterialQuestions": []
+    },
+    "lockScope": "H_EARTH:CORRECTED_MATERIAL_PRODUCT_INTEGRATION_20261029",
+    "operationId": "H_EARTH_CORRECTED_MATERIAL_PRODUCT_INTEGRATION_20261029_001",
+    "prohibitedPaths": [
+      "TERRAIN_GEOMETRY_VALUE_OR_TOPOLOGY_CHANGE",
+      "PALETTE_RETUNE_OR_ATLAS_SUPPORT_EXPANSION",
+      "UNRELATED_PRODUCT_OR_CONTROL_PLANE_MUTATION",
+      "DIRECT_MAIN_WRITE_MERGE_DEPLOY_PUBLICATION",
+      "NEW_GPU_RUN"
+    ],
+    "projectId": "H_EARTH",
+    "requestingAuthority": {
+      "intent": "Prepare a draft production integration of the saved localized material candidate, preserve palette and exact 358 source-face support, verify active-consumer coverage and resource lifecycle. No global smoothing, publication or new GPU run in this operation.",
+      "mayDeploy": false,
+      "mayMerge": false,
+      "mayMutateProduct": true,
+      "principal": "OWNER",
+      "scopeExpansionAllowed": false,
+      "source": "Owner current conversation: Proceed after completed shared-edge decision and proposal to move to candidate integration and terrain coverage."
+    },
+    "requiredInputs": [
+      {
+        "id": "OWNER_PROCEED_WITH_INTEGRATION",
+        "resolved": true
+      },
+      {
+        "id": "SAVED_LOCALIZED_CANDIDATE_AND_CLOSED_SHARED_EDGE_CHECK",
+        "resolved": true
+      },
+      {
+        "id": "UNCHANGED_MAIN_SOURCE_AND_EXACT_ASSETS",
+        "resolved": true
+      }
+    ],
+    "requiredOutputs": [
+      "FULL_FILE_DRAFT_PRODUCTION_INTEGRATION",
+      "EXACT_358_FACE_COVERAGE_AND_ROUTE_CALL_GRAPH_PROOF",
+      "ASSET_HASH_AND_RESOURCE_LIFECYCLE_TESTS",
+      "INDEPENDENT_INTEGRATION_REVIEW",
+      "DRAFT_PR_AND_DURABLE_CONTINUATION"
+    ],
+    "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+    "stopConditions": [
+      "NO_PRODUCT_WRITE_OR_BRANCH_BEFORE_AUTHENTIC_ADMISSION",
+      "EXACT_SOURCE_OR_ASSET_DRIFT_FAILS_CLOSED",
+      "NO_PALETTE_RETUNE_OR_SUPPORT_EXPANSION",
+      "NO_GPU_MERGE_DEPLOY_PUBLICATION"
+    ],
+    "subjectIdentity": {
+      "baseline": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+      "constructionBase": "0137d0deb7abde6beca110c107b789e0221706ff",
+      "expectedArtifact": "draft-production-integration-evidence",
+      "frameCeiling": 0,
+      "frozenApplication": "d=w*(Lh-Lsource-c);12mXZ original-boundary taper;tau72m2;3m material field;separate indexed domains",
+      "frozenPoses": [
+        "inland-seam-near",
+        "inland-seam-far",
+        "protected-meadow",
+        "protected-coast"
+      ],
+      "modes": [
+        "reference-lit"
+      ],
+      "qualifiedPacketSha256": "5bfce62703c70fd5b68e894fca8634e5206c1ca681d7a127c192312a8e06aa3c",
+      "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+      "savedCaptureRun": 40939354824,
+      "sourceIssue": 6911
+    },
+    "terminalDispositions": [
+      "PASS_CLOSED",
+      "FAIL_CLOSED",
+      "REJECTED_CLOSED",
+      "WITHDRAWN",
+      "SUPERSEDED"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  },
+  "schema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1"
+}

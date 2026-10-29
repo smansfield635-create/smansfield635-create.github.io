@@ -1,0 +1,49 @@
+{
+  "role": "EAST_ELARA_READ_ONLY_SOURCE_ANALYSIS",
+  "source": {
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "head": "3754eca67a9162fd4b8fc93d2f0d05111e8d236b",
+    "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "blob": "ac3c1edab6fd1b2468fbe0925fc2ec32277ba05a",
+    "sha256": "09dd5b802f37eaf4b5ff6afac6f6c839ee3d94b8ae34e0cb231273982cbdad4e"
+  },
+  "mutationPerformed": false,
+  "imageEvidenceRead": [
+    "run40730251323/baseline-inland-seam-far-reference-lit.png",
+    "run40730251323/candidate-inland-seam-far-reference-lit.png"
+  ],
+  "observed": "Far composed-target image retains broad curved olive/tan region despite lighter incoming-luminance-preserving composition. Historical footprint rejection and source inventory reused; no repeated stage attribution.",
+  "sourceMechanism": {
+    "originalDominantField": "78% rotated/warped noise at.018 (55.6m cells);22% resident meso at.082 (12.2m cells)",
+    "interpolation": "noise2 uses cubic Hermite interpolation with continuous first derivatives at lattice boundaries. Visible broad contour does not establish an actual discontinuity.",
+    "proposal": "Replace separate rotated/warped field with resident meso/detail fields: groundcoverOrganic=mesoField; groundcoverPatch=smoothstep(.20,.66,groundcoverOrganic*.78+detailField*.22). Remove unused domain calculations and rejected composed-target block.",
+    "preserve": [
+      "Original groundcoverTone construction",
+      "Original smoothstep thresholds and weight nonlinear attenuation",
+      "Suitability and protection",
+      "Physical world, actual vegetation, roots, water, navigation",
+      "All unrelated material stages"
+    ],
+    "whyDifferent": "Eliminates independent55m spatial ownership. Existing12.2m/3.45m material signals retain approximately similar scalar variation while greatly reducing long-range autocorrelation in sampled grid. No amplitude/threshold/endpoint-only or footprint adjustment."
+  },
+  "risks": [
+    "Meso field also drives groundcoverDry and other material expressions; substitution couples coverage with tone and existing material variation. Correlation could strengthen local color contrast rather than reduce it.",
+    "Restoring original independent dark endpoint reintroduces darkening and attenuation of incoming soil texture. No inference that original endpoint is sufficient to preserve aesthetics.",
+    "Higher spatial frequencies may create horizon shimmer, aliasing, chatter or busy mottling. CPU field correlation does not measure projection or GPU precision.",
+    "Sample mean weight and high-weight area increase; candidate can darken the ground despite unchanged coefficients.",
+    "Other independently unresolved straight/curved classes remain open."
+  ],
+  "acceptance": [
+    "Exact reversal to approved Gen2928 source after removing only new spatial-field replacement",
+    "Same frozen four poses; original baseline bytes; lit and after-groundcover modes",
+    "Broad contour absent, no replacement chatter/mottling, no meadow/coast regression",
+    "Healthy controls require actual image review; technical PASS is not visual acceptance",
+    "No map-wide/owner acceptance or production advancement inferred"
+  ],
+  "scopeLimits": [
+    "Synthetic scalar field, not actual visible geometry or pixel sampling",
+    "GPU float/hash precision differs; no GLSL execution claimed",
+    "Suitability/protection fixed to1, no tone or later-layer evaluation",
+    "No visual, healthy-control, map-wide, performance or owner acceptance"
+  ]
+}

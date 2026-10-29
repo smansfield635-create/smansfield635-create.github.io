@@ -1,0 +1,12 @@
+{
+  "operationId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001",
+  "generation": 2955,
+  "governingHead": "50ed04ad17de834e96e96d6a28985a125b17aa8a",
+  "observedMain": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+  "observedLockHead": "a2d54b916535bf45f6d8abdeca2cfd21e171b7e9",
+  "activeLockReleased": false,
+  "inheritedCandidate": "1e4eeaaec018b92e7eeade9ba17b773a4ea4ccef",
+  "relevantMainDelta": [],
+  "result": "CARRY_FORWARD_DISJOINT_MAIN_MOVEMENT",
+  "newGenerationCreated": false
+}

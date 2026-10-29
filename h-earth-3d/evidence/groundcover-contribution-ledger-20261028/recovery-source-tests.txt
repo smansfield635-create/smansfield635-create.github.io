@@ -1,0 +1,52 @@
+✔ exact immutable pair and recovered four poses are frozen (9.095909ms)
+✔ renderer normal mode executes identical draw while hidden mode suppresses only that draw (0.436615ms)
+✔ instrumentation refuses missing or duplicate anchors (0.658954ms)
+✔ frame accepts matched source pose at saved resolution (0.430107ms)
+✔ frame rejects stale navigation, wrong camera, resolution and pose (0.650477ms)
+✔ CLI rejects arbitrary inputs and overlapping output (0.503964ms)
+✔ workflow isolates fixed mode and preserves fixed full checkout guards (1.25897ms)
+✔ heading compares equivalent finite angles while rejecting real drift (0.232289ms)
+✔ real archived projected camera differs from navigation and passes only with packet projection (0.588134ms)
+✔ asset readiness rejects asynchronous partial scenes and failed assets (0.853632ms)
+✔ wrong checkout identity fails before browser loading and preserves failure receipt (30.789821ms)
+✔ collection instance proximity uses placement rather than inherited original anchor (0.213761ms)
+✔ raw PNG capture rejects changed frames, empty data and wrong dimensions (3.129741ms)
+✔ five finite observer views never claim accepted traversal or inherit support (1.040225ms)
+✔ ordinary preservation poses still reject ineligible navigation (0.7278ms)
+✔ three local patch views are finite ordinary navigation inputs (0.943789ms)
+✔ Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections (12.618285ms)
+✔ Gen2928 four-source survey preserves Gen2925 and stays under twenty frames (1.676435ms)
+✔ two distinct source-bound cameras and nine factor modes stay under twenty-frame cap (2.253842ms)
+✔ eighteen frames require exact factor mode IDs, two cameras and matched assets (2.847964ms)
+✔ no product change: overlay only allowed with published SHA; all vegetation draw guards preserved (1.070091ms)
+✔ footprint candidate reverses to the immutable approved shader and derivatives precede branches (8.664281ms)
+✔ original near-field result and protected zero influence remain exact (1.222954ms)
+✔ finite bounded factor and smooth onset for anisotropic world footprints (10.20512ms)
+✔ sampled helper reproduces the original approved nonlinear patch factor (6.656478ms)
+✔ footprint instrumentation binds approved baseline and reads actual candidate activation (29.085922ms)
+✔ footprint paired captures reject wrong identity, mode, visibility, assets and camera (5.209241ms)
+✔ four-tap footprint integration improves dense-reference RMS over one center sample (39.242903ms)
+ℹ {"sampleCount":80,"denseTapsPerFootprint":1024,"centerRms":0.023357691609318373,"filteredRms":0.00297173781752535,"precision":"JS_DOUBLE_NOT_GPU"}
+✔ preserved baseline pins all twelve original frame hashes (11.109904ms)
+✔ composed target changes only the marked endpoint and retains exact approved source elsewhere (13.79874ms)
+✔ source-derived composed endpoint retains luminance, soil variation and protected zero weight (17.114958ms)
+ℹ {"sampleCount":1000,"maxLinearLuminanceError":8.326672684688674e-17,"maxChannel":0.24756981809214312,"domain":"SAMPLED_POSITIVE_SOIL_TONE_DOMAIN_JS_DOUBLE_NOT_GPU","chromaticBandRemovalProven":false}
+✔ duration normalization retains unknown fields, physical identity and malformed metadata (0.905885ms)
+✔ composed workflow binds the admitted branch, exact head and sixteen matched images (0.472804ms)
+✔ saved 24-image failed receipt has only the known timing mismatch and passes corrected identity (151.359633ms)
+✔ resident field replaces only independent domain support and restores exact approved source (12.301348ms)
+✔ source-derived resident support is bounded, monotone and retains original protected weight formula (4.287282ms)
+✔ resident workflow captures same frozen poses and only the admitted branch (1.310175ms)
+✔ contribution ledger freezes eight frames and exact rejected-source bytes without changing shader (13.057057ms)
+✔ contribution ledger enforces exact modes, source, resource identity, scene state and frame custody (161.357227ms)
+✔ contribution profile permits only one shared frozen scene plus distinct output (128.344385ms)
+✔ contribution workflow uses exactly two checkouts and never renders a baseline (1.140595ms)
+✔ contribution failure receipt binds frozen source rather than historical diagnostic defaults (166.733007ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1096.437342

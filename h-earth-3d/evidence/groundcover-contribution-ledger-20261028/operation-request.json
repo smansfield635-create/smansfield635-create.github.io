@@ -1,0 +1,197 @@
+{
+  "allowedPaths": [
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/groundcover-contribution-ledger-20261028/**"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/groundcover-contribution-ledger-20261028/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+  "exactTestCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateProduct": true,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+    "operationId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001",
+    "paths": [
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-contribution-ledger-20261028/**"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_UNCHANGED_RENDERER_HASH",
+      "FROZEN_POSE_ASSET_AND_FRAME_CUSTODY",
+      "CORRECT_COLOR_TRANSFER_AND_SIGNED_CONTRIBUTION_IDENTITY",
+      "NO_CLIPPED_OR_QUANTIZED_FALSE_PRECISION",
+      "NO_SHADER_REPAIR_OR_RELEASE_INFERENCE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "63927751301444a447b666b2cb61d89d3c2be8aec28c6d14f3377feec6fb835b",
+    "receiptId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+  "operationId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001",
+  "prohibitedPaths": [
+    "VEGETATION_ROOT_OR_TREE_OR_GRASS_ASSET_MUTATION",
+    "PHYSICAL_GEOMETRY_OR_G_WORLD_ELEVATION_MUTATION",
+    "PRECOMPUTED_WORLD_ASSET_OR_LOADER_MUTATION",
+    "NAVIGATION_OR_CONTACT_SUPPORT_MUTATION",
+    "WATER_OCEAN_COAST_SHORELINE_EDIT",
+    "SOURCE_MATERIAL_PALETTE_GLOBAL_FLATTENING",
+    "PROTECTED_MEADOW_TREE_FOOTHILL_COLOR_DEGRADATION",
+    "GEOGRAPHIC_CAMERA_GUESS_AS_USER_TELEMETRY",
+    "ANY_PATH_OUTSIDE_DECLARED_SCOPE",
+    "DIRECT_MAIN_WRITE",
+    "PRODUCT_RENDERER_MUTATION"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Diagnostic-only signed RGB contribution ledger at existing frozen near/far bands. Product renderer unchanged. Reuse source-matched saved evidence; capture only missing before/target/raw-weight and matched after outputs. No shader repair or release.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner: Proceed accordingly, conserve work credits, provide links and pause during lengthy Actions."
+  },
+  "requiredInputs": [
+    {
+      "id": "GEN2917_STAGE_FIRST_CAUSE_40411050366",
+      "resolved": true
+    },
+    {
+      "id": "GEN2925_REMOVAL_CONFIRMATION_40442633983",
+      "resolved": true
+    },
+    {
+      "id": "GEN2928_APPROVED_BASELINE",
+      "resolved": true
+    },
+    {
+      "id": "GEN2940_SMOOTHSTEP_INSUFFICIENT",
+      "resolved": true
+    },
+    {
+      "id": "GEN2944_TINT_REJECTED",
+      "resolved": true
+    },
+    {
+      "id": "ACTIVE_CONSUMER_SOURCE_INVENTORY",
+      "resolved": true
+    },
+    {
+      "id": "OW01_AND_EXPERIENCE_ANCHOR_PRESERVATION",
+      "resolved": true
+    },
+    {
+      "id": "RUN40719150366_TIMING_ONLY_PAIR_MISMATCH_AND_VISUAL_REJECTION",
+      "resolved": true
+    },
+    {
+      "id": "GEN2955_REJECTED_AND_AUTHENTICALLY_CLOSED",
+      "resolved": true
+    },
+    {
+      "id": "EAST_SPATIAL_FIELD_SOURCE_AUDIT",
+      "resolved": true
+    },
+    {
+      "id": "GEN2956_REJECTED_CLOSED_AND_NEXT_EVIDENCE_GAP",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "EXACT_UNCHANGED_PRODUCT_SOURCE",
+    "EIGHT_SOURCE_BOUND_FRAMES_TWO_FROZEN_POSES_FOUR_MODES",
+    "SIGNED_LINEAR_RGB_TRANSECT_CONTRIBUTIONS_AND_RECONSTRUCTION_RESIDUAL",
+    "EXPLICIT_QUANTIZATION_CLIPPING_LIMITS",
+    "NAMED_REMAINING_MECHANISM_OR_EXACT_EVIDENCE_GAP",
+    "INDEPENDENT_REVIEW_NO_REPAIR_ACCEPTANCE_INFERRED"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "NO_WRITE_BEFORE_AUTHENTIC_ADMISSION",
+    "NO_PRODUCT_SHADER_GEOMETRY_VEGETATION_WATER_NAVIGATION_CHANGE",
+    "NO_NEW_POSE_OR_STAGE_REATTRIBUTION",
+    "FAIL_CLOSED_ON_SOURCE_FRAME_ASSET_OR_RECONSTRUCTION_MISMATCH",
+    "SEND_LONG_RUNNING_ACTION_LINK_AND_PAUSE_FOR_OWNER",
+    "NO_MERGE_DEPLOY_OR_OWNER_KEEP_INFERENCE"
+  ],
+  "subjectIdentity": {
+    "activePredecessorLockGeneration": 2956,
+    "continuationHead": "1e39f93a07eb2cc5156483b899094937ba2149db",
+    "currentDiagnosticPR": 6947,
+    "currentExactGpuHead": "7882a91c4ff8ed1652df8453ce3772a863a7e109",
+    "currentGpuRun": 40734434775,
+    "governingHead": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+    "healthyControl": "MEADOW_TREES_SHORTER_FOOTHILLS",
+    "ownerDirectiveComment": 6472173332,
+    "ownerScreenshot1": "30108.jpg",
+    "ownerScreenshot2": "30106.jpg",
+    "precomputedWorldSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "predecessorClosureComment": 6476170316,
+    "predecessorOperation": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+    "principalDefect": "SOURCE_PROVEN_GROUNDCOVER_INLAND_BANDS_WITH_OWNER_STRAIGHT_CURVED_CLASSES_STILL_OPEN",
+    "publishedReferenceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "publishedShaderSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+    "sourceDiagnosisCorrection": "Resident field REJECTED; coarse-noise sufficiency disproven. Quantify actual projected P,T,w contributions before any next shader hypothesis.",
+    "sourceIssue": 6911
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+}

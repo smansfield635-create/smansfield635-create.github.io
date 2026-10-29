@@ -1,0 +1,44 @@
+{
+  "schema": "H_EARTH_CONTRIBUTION_LEDGER_ANALYSIS_PLAN_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_CONTRIBUTION_LEDGER_20261028_001",
+  "generation": 2957,
+  "frozenSceneHead": "1e39f93a07eb2cc5156483b899094937ba2149db",
+  "rendererSha256": "b4bda2b8953b5bcc3cd65e101a447a878c2d033ec683af53a93ff211c13cdf70",
+  "frames": 8,
+  "modes": [
+    "before-groundcover-unlit",
+    "groundcover-tone-color",
+    "groundcover-weight-raw",
+    "after-groundcover-unlit"
+  ],
+  "imageDimensions": [
+    529,
+    980
+  ],
+  "coordinates": "zero-based PNG pixels",
+  "transects": {
+    "xCenters": [
+      132,
+      264,
+      396
+    ],
+    "halfWidth": 4,
+    "verticalLagPixels": 16,
+    "inland-seam-near": {
+      "yStart": 260,
+      "yEnd": 940
+    },
+    "inland-seam-far": {
+      "yStart": 470,
+      "yEnd": 940
+    }
+  },
+  "samplingRule": "At each y and each of9 x positions, compute signed RGB decomposition between y and y+16, staying inside declared range. Aggregate resulting per-pixel contributions across width; never average P,T,w first because covariance would violate the identity. Retain all sampled rows, not just favorable points.",
+  "identity": "deltaC=(1-meanW)*deltaP+meanW*deltaT+deltaW*(meanT-meanP)",
+  "colorDecode": "Color modes: linear=(byte/255)^2.2/1.12. Raw weight: byte/255. Use conservative byte +/-1 intervals for non-saturated samples, explicitly assuming at most one output-code combined rounding/dither error; this is an uncertainty model, not proved GPU float equivalence. DITHER is not disabled. Exclude saturated0/255 color samples from finite inversion and dominance conclusions; report them as censored.",
+  "reconstruction": "Compute Cpred=(1-w)P+wT per eligible pixel, compare observed decoded C. Propagate P,T,w output-code intervals by corner evaluation; compare to observed C interval with1e-7 linear-albedo numerical tolerance. Quantization/dither uncertainty is not random and does not shrink by averaging. Report residual and fraction outside assumed intervals; unresolved mismatch prevents causal inference.",
+  "interpretation": "Report signed contributions, absolute magnitudes, cancellations and uncertainty by transect. Name dominant term only when evidence exceeds bounds consistently. No map-wide repair, visual acceptance or temporal aliasing claim.",
+  "scope": "Diagnostic response overlay only; product bytes unchanged.",
+  "executionPreference": "User monitors lengthy Actions; provide exact run link and pause.",
+  "pixelEligibility": "Require alpha255 in all four PNGs and equal raw-weight R/G/B channels at each sampled pixel. Report and exclude any failing pixel. Saturated color endpoints are censored; weight endpoints retain bounded[0,1] factor intervals. Do not infer dominance from censored or otherwise ineligible samples."
+}

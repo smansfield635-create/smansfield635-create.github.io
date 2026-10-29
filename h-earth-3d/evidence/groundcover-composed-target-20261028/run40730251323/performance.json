@@ -1,0 +1,15 @@
+{
+  "baseline": {
+    "softwareGpuFinishSamples": 96,
+    "softwareGpuFinishMedianMs": 8.049999999988358,
+    "cpuSubmitSamples": 96,
+    "cpuSubmitMedianMs": 7.9500000000116415
+  },
+  "candidate": {
+    "softwareGpuFinishSamples": 96,
+    "softwareGpuFinishMedianMs": 5.149999999994179,
+    "cpuSubmitSamples": 96,
+    "cpuSubmitMedianMs": 5.149999999994179
+  },
+  "physicalAndroidPerformanceProven": false
+}

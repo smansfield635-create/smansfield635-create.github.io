@@ -1,0 +1,206 @@
+{
+  "sourceRun": 40719150366,
+  "artifactId": 12831100038,
+  "artifactSha256": "31c666f5e2392f2b63bd968c05f8b73d61137e6bdb0c62fad638cc5745c8d65d",
+  "candidateHead": "1e4eeaaec018b92e7eeade9ba17b773a4ea4ccef",
+  "rawReceiptSha256": "90364d9030ad097703eb441f7bba7e93574d98cdb370e27d1ce850adf6de58f0",
+  "rawResult": "INCOMPLETE_OR_FAILED",
+  "rawErrors": [
+    "Error: FOOTPRINT_PAIR_MISMATCH\n    at validateFootprintSet (file:///home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/tooling/tools/h-earth-ground-material-comparison.v1.mjs:97:169)\n    at run (file:///home/runner/work/smansfield635-create.github.io/smansfield635-create.github.io/tooling/tools/h-earth-ground-material-comparison.v1.mjs:255:25)"
+  ],
+  "images": [
+    {
+      "path": "baseline-inland-seam-near-reference-lit.png",
+      "sha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a",
+      "bytes": 527204,
+      "label": "baseline",
+      "pose": "inland-seam-near",
+      "mode": "reference-lit"
+    },
+    {
+      "path": "baseline-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "96195fac6da4fca401c64d2ce31a034cd7d628620409f772114616b78354ff3a",
+      "bytes": 448663,
+      "label": "baseline",
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "path": "baseline-inland-seam-near-footprint-activation-raw.png",
+      "sha256": "9b610c4adbd998de71ba5d19a88884fbba79197a9dcd2954f403b7abcf991b31",
+      "bytes": 19272,
+      "label": "baseline",
+      "pose": "inland-seam-near",
+      "mode": "footprint-activation-raw"
+    },
+    {
+      "path": "baseline-inland-seam-far-reference-lit.png",
+      "sha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc",
+      "bytes": 336543,
+      "label": "baseline",
+      "pose": "inland-seam-far",
+      "mode": "reference-lit"
+    },
+    {
+      "path": "baseline-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a",
+      "bytes": 293375,
+      "label": "baseline",
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "path": "baseline-inland-seam-far-footprint-activation-raw.png",
+      "sha256": "dd52f605105fc0445738c5b211fff3a9e13f292530f9df304c98c1deca3590a5",
+      "bytes": 19295,
+      "label": "baseline",
+      "pose": "inland-seam-far",
+      "mode": "footprint-activation-raw"
+    },
+    {
+      "path": "baseline-protected-meadow-reference-lit.png",
+      "sha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b",
+      "bytes": 355748,
+      "label": "baseline",
+      "pose": "protected-meadow",
+      "mode": "reference-lit"
+    },
+    {
+      "path": "baseline-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "dea2132ddb7662475bcadfbcef2ea5dd67dea9a0be5e1669c4c8e77407d7d4dc",
+      "bytes": 338501,
+      "label": "baseline",
+      "pose": "protected-meadow",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "path": "baseline-protected-meadow-footprint-activation-raw.png",
+      "sha256": "034f052e353147a911cc8a93468784a2be1c947e02420969b3ad5425c22f82a3",
+      "bytes": 54868,
+      "label": "baseline",
+      "pose": "protected-meadow",
+      "mode": "footprint-activation-raw"
+    },
+    {
+      "path": "baseline-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+      "bytes": 165848,
+      "label": "baseline",
+      "pose": "protected-coast",
+      "mode": "reference-lit"
+    },
+    {
+      "path": "baseline-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7",
+      "bytes": 174638,
+      "label": "baseline",
+      "pose": "protected-coast",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "path": "baseline-protected-coast-footprint-activation-raw.png",
+      "sha256": "b3978a4d50ad68b9f7fd1415ac9c0d8b00d660c3600bedd10fd3a8afe1dcaa01",
+      "bytes": 30323,
+      "label": "baseline",
+      "pose": "protected-coast",
+      "mode": "footprint-activation-raw"
+    },
+    {
+      "path": "candidate-inland-seam-near-reference-lit.png",
+      "sha256": "6dde0379ba131abaa12972dfa1a9908d6281d9b3264f48b784d649ebaba3aa1d",
+      "bytes": 526609,
+      "label": "candidate",
+      "pose": "inland-seam-near",
+      "mode": "reference-lit"
+    },
+    {
+      "path": "candidate-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "a5694b6c4d803dab47264ee8c60ea89e54c12fc5e736bcb59df23a61516cee40",
+      "bytes": 448015,
+      "label": "candidate",
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "path": "candidate-inland-seam-near-footprint-activation-raw.png",
+      "sha256": "9b610c4adbd998de71ba5d19a88884fbba79197a9dcd2954f403b7abcf991b31",
+      "bytes": 19272,
+      "label": "candidate",
+      "pose": "inland-seam-near",
+      "mode": "footprint-activation-raw"
+    },
+    {
+      "path": "candidate-inland-seam-far-reference-lit.png",
+      "sha256": "d8da828f67d6a166142c908839a58014daab9b9ad0d914debc24a7c23fb45d84",
+      "bytes": 335763,
+      "label": "candidate",
+      "pose": "inland-seam-far",
+      "mode": "reference-lit"
+    },
+    {
+      "path": "candidate-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "1e5851e2a57097b068dabab4ee4840354377cdfe37f2e7159db28d0790d3710a",
+      "bytes": 292936,
+      "label": "candidate",
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "path": "candidate-inland-seam-far-footprint-activation-raw.png",
+      "sha256": "dd52f605105fc0445738c5b211fff3a9e13f292530f9df304c98c1deca3590a5",
+      "bytes": 19295,
+      "label": "candidate",
+      "pose": "inland-seam-far",
+      "mode": "footprint-activation-raw"
+    },
+    {
+      "path": "candidate-protected-meadow-reference-lit.png",
+      "sha256": "a129a4cd3df7cce728418446fd3b3d5ceefbf56552bef3b89ae84feb26223c69",
+      "bytes": 355768,
+      "label": "candidate",
+      "pose": "protected-meadow",
+      "mode": "reference-lit"
+    },
+    {
+      "path": "candidate-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "c479b8f9f50117225d17517952fa7e11c6d735f4a59e715b5f15a034e7db28da",
+      "bytes": 338494,
+      "label": "candidate",
+      "pose": "protected-meadow",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "path": "candidate-protected-meadow-footprint-activation-raw.png",
+      "sha256": "034f052e353147a911cc8a93468784a2be1c947e02420969b3ad5425c22f82a3",
+      "bytes": 54868,
+      "label": "candidate",
+      "pose": "protected-meadow",
+      "mode": "footprint-activation-raw"
+    },
+    {
+      "path": "candidate-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+      "bytes": 165848,
+      "label": "candidate",
+      "pose": "protected-coast",
+      "mode": "reference-lit"
+    },
+    {
+      "path": "candidate-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7",
+      "bytes": 174638,
+      "label": "candidate",
+      "pose": "protected-coast",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "path": "candidate-protected-coast-footprint-activation-raw.png",
+      "sha256": "b3978a4d50ad68b9f7fd1415ac9c0d8b00d660c3600bedd10fd3a8afe1dcaa01",
+      "bytes": 30323,
+      "label": "candidate",
+      "pose": "protected-coast",
+      "mode": "footprint-activation-raw"
+    }
+  ],
+  "verifiedImageCount": 24
+}

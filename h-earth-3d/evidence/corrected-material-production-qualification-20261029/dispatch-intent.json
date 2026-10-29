@@ -1,14 +1,14 @@
 {
   "operationId": "H_EARTH_CORRECTED_MATERIAL_PRODUCTION_QUALIFICATION_20261029_001",
   "lockGeneration": 2974,
-  "toolingHead": "40fbc68ab9b1a9c76fdce54783606610d6063015",
+  "toolingHead": "a95564d5110a795090c50e65ae5bd6d61968d2af",
   "sceneHead": "4639908eab7bc5b8872a85231b3330678988c259",
   "profile": "CORRECTED_MATERIAL_PRODUCTION_V1",
   "frameCap": 4,
   "runBudget": 1,
   "automaticRetry": false,
   "sourceSha256": {
-    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "25e867aff71e4b681a218999fae9bcefff9af7007dd50806c5b32228fd53f5da",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "43d8931db8a15e40b8cb22103f254f61bd20bb06f54f721e257a1c3f791acb45",
     "tools/h-earth-ground-material-comparison.v1.mjs": "b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509",
     "tools/h-earth-ground-material-comparison.v1.test.mjs": "3493aa1f688c100bb119f7aa87219c1c674c446033d7044b1598e90dd5897e44"
   },
@@ -20,5 +20,6 @@
   },
   "launchTransport": "SAME_REPOSITORY_PR_EXACT_HEAD",
   "pullRequest": 6979,
-  "launchEvent": "reopened"
+  "launchEvent": "reopened",
+  "baseBranch": "h-earth/corrected-material-integration-20261029"
 }

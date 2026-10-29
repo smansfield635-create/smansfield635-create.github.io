@@ -3,7 +3,7 @@ name: H-Earth Neutral Exact Head Runner
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main]
+    branches: [main, h-earth/corrected-material-integration-20261029]
     paths:
       - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
       - 'tools/h-earth-ground-material-comparison.v1.mjs'
@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=groundcover-residual-transfer-v1' && inputs.route_query != 'qualification=identity-blend-diagnostic-v1' && inputs.route_query != 'qualification=identity-fertile-transition-v1' && inputs.route_query != 'qualification=world-position-diagnostic-v1' && inputs.route_query != 'qualification=corrected-material-application-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=groundcover-residual-transfer-v1' && inputs.route_query != 'qualification=identity-blend-diagnostic-v1' && inputs.route_query != 'qualification=identity-fertile-transition-v1' && inputs.route_query != 'qualification=world-position-diagnostic-v1' && inputs.route_query != 'qualification=corrected-material-application-v1' && inputs.route_query != 'qualification=corrected-material-production-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -2298,5 +2298,158 @@ jobs:
         with:
           name: h-earth-corrected-material-application-${{ github.run_id }}
           path: ${{ runner.temp }}/corrected-material-application
+          if-no-files-found: error
+          retention-days: 90
+
+  corrected-material-production:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'reopened' && github.event.pull_request.number == 6979 &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/corrected-material-production-qualification-20261029' &&
+          github.event.pull_request.base.ref == 'h-earth/corrected-material-integration-20261029' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out immutable PR launch checkpoint
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: dispatch
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /h-earth-3d/evidence/corrected-material-production-qualification-20261029/dispatch-intent.json
+      - name: Resolve frozen tooling identity from launch intent
+        id: intent
+        env:
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        shell: bash
+        run: |
+          test "$RUN_ATTEMPT" = 1
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const p=JSON.parse(fs.readFileSync('dispatch/h-earth-3d/evidence/corrected-material-production-qualification-20261029/dispatch-intent.json'));
+          assert.match(p.toolingHead,/^[a-f0-9]{40}$/);
+          assert.equal(p.launchTransport,'SAME_REPOSITORY_PR_EXACT_HEAD');
+          assert.equal(p.pullRequest,6979);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`tooling_head=${p.toolingHead}\n`);
+          NODE
+      - name: Check out exact candidate tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.intent.outputs.tooling_head }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Check out approved immutable diagnostic scene
+        uses: actions/checkout@v4
+        with:
+          ref: 4639908eab7bc5b8872a85231b3330678988c259
+          path: scene
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/*/
+            /tools/
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/
+            /h-earth-3d/
+            /assets/
+            /shared/
+            /js/
+            /css/
+            /lib/
+      - name: Validate fixed explicit launch and exact checkout identities
+        env:
+          TARGET_SHA: ${{ steps.intent.outputs.tooling_head }}
+          WORKFLOW_SHA: ${{ github.event.pull_request.head.sha }}
+          ROUTE_PATH: /showroom/globe/h-earth/
+          EXERCISE: 'false'
+          TIMING_SHIM: 'false'
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$RUN_ATTEMPT" = 1
+          test "$ROUTE_PATH" = /showroom/globe/h-earth/
+          test "$EXERCISE" = false
+          test "$TIMING_SHIM" = false
+          test "$(git -C tooling rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git -C scene rev-parse HEAD)" = 4639908eab7bc5b8872a85231b3330678988c259
+          test "$(git -C dispatch rev-parse HEAD)" = "$WORKFLOW_SHA"
+          test "$(git -C tooling rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)" = "$(git -C dispatch rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          import {createHash} from 'node:crypto';
+          const dir='h-earth-3d/evidence/corrected-material-production-qualification-20261029/';
+          const read=p=>JSON.parse(fs.readFileSync(p));
+          const intent=read('dispatch/'+dir+'dispatch-intent.json');
+          assert.equal(intent.operationId,'H_EARTH_CORRECTED_MATERIAL_PRODUCTION_QUALIFICATION_20261029_001');
+          assert.equal(intent.lockGeneration,2974);
+          assert.equal(intent.toolingHead,process.env.TARGET_SHA);
+          assert.equal(intent.sceneHead,'4639908eab7bc5b8872a85231b3330678988c259');
+          assert.equal(intent.profile,'CORRECTED_MATERIAL_PRODUCTION_V1');
+          assert.equal(intent.frameCap,4);assert.equal(intent.runBudget,1);assert.equal(intent.automaticRetry,false);
+          const admission=read('tooling/'+dir+'admission-receipt.json');
+          assert.equal(admission.operationId,intent.operationId);assert.equal(admission.lockGeneration,2974);
+          assert.equal(admission.result,'ADMITTED_AND_LOCKED');assert.equal(admission.workflowRun,40953083823);
+          const review=read('tooling/'+dir+'independent-source-review.json');
+          assert.equal(review.result,'PASS');assert.equal(review.builderSelfApproval,false);
+          assert.equal(review.operationId,intent.operationId);
+          for(const [p,hash] of Object.entries(intent.sourceSha256)){
+            assert.equal(createHash('sha256').update(fs.readFileSync('tooling/'+p)).digest('hex'),hash);
+            assert.equal(review.sourceSha256[p],hash);
+          }
+          assert.deepEqual(Object.keys(intent.sourceSha256).sort(),[
+            '.github/workflows/h-earth-neutral-exact-head-runner.yml',
+            'tools/h-earth-ground-material-comparison.v1.mjs',
+            'tools/h-earth-ground-material-comparison.v1.test.mjs'
+          ].sort());
+          for(const [p,hash] of Object.entries(intent.productSha256)){
+            assert.equal(createHash('sha256').update(fs.readFileSync('scene/'+p)).digest('hex'),hash);
+          }
+          assert.equal(Object.keys(intent.productSha256).length,4);
+          NODE
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate production profile and source lifecycle
+        working-directory: tooling
+        run: |
+          set -euo pipefail
+          mkdir -p "${{ runner.temp }}/corrected-material-production"
+          node --test tools/h-earth-ground-material-comparison.v1.test.mjs h-earth-3d/evidence/corrected-material-integration-20261029/integration.test.mjs 2>&1 | tee "${{ runner.temp }}/corrected-material-production/source-tests.tap"
+      - name: Install fixed Chromium tooling
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture four production candidate frames with real atlas loading
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: CORRECTED_MATERIAL_PRODUCTION_V1
+        run: |
+          timeout 2400s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../scene --candidate-dir ../scene --output "${{ runner.temp }}/corrected-material-production"
+      - name: Preserve comparison evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-corrected-material-production-${{ github.run_id }}
+          path: ${{ runner.temp }}/corrected-material-production
           if-no-files-found: error
           retention-days: 90

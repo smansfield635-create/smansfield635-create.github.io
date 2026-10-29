@@ -1,0 +1,48 @@
+{
+  "facts": {
+    "schema": "FAILURE_DISPOSITION_NORMALIZED_FACTS_v1",
+    "failureClass": "EXECUTION_CAPABILITY_UNAVAILABLE",
+    "observationSource": "ROOM_LOCAL_EXECUTION",
+    "dependencyRelationship": "DECLARED_DIRECT_DEPENDENCY",
+    "authorityState": "VALID_UNCHANGED",
+    "selectedForOperation": true,
+    "candidatePresent": true,
+    "candidateBytesStable": true,
+    "scopeStable": true,
+    "negativeProductAssertion": false,
+    "completedEvidenceValid": true,
+    "sameAuthorityRepairMechanicallyProvable": true,
+    "canonicalDurableEvidenceConfirmed": true,
+    "uniqueUnresolvedInformation": false,
+    "firstMissingCheckpoint": "Four-frame production qualification launch"
+  },
+  "receipt": {
+    "schema": "FAILURE_DISPOSITION_RECEIPT_v1",
+    "result": "CLASSIFIED",
+    "failureClass": "EXECUTION_CAPABILITY_UNAVAILABLE",
+    "observationSource": "ROOM_LOCAL_EXECUTION",
+    "dependencyRelationship": "DECLARED_DIRECT_DEPENDENCY",
+    "authorityState": "VALID_UNCHANGED",
+    "selectedForOperation": true,
+    "candidateEffect": "PRESERVE",
+    "blockingScope": "CURRENT_EXECUTION_SURFACE_ONLY",
+    "blockingDisposition": "BLOCKED_LOCAL_NONPROPAGATING",
+    "recoveryDisposition": "REPAIR_SAME_AUTHORITY",
+    "retryBudget": 0,
+    "preserveCompletedEvidence": true,
+    "resumeFromCheckpoint": null,
+    "propagationAllowed": false,
+    "propagationScope": "NONE",
+    "notificationDisposition": "NOT_APPLICABLE",
+    "authorityCreated": false,
+    "dependencyEdgeCreated": false,
+    "classificationReason": "EXECUTION_SURFACE_FAILURE_DOES_NOT_INVALIDATE_CANDIDATE"
+  },
+  "observations": [
+    "Browser submission and readback timed out after300s.",
+    "GitHub Actions workflow_dispatch history contains no production qualification run.",
+    "Existing PR-specific runner precedent: groundcover mapwide and Gen2969.",
+    "Native dispatch bridge fixes workflow ref to main; production qualification job exists only on reviewed branch."
+  ],
+  "recovery": "Same registered workflow; explicit PR6979 reopen only; same product4639908; four frames; one attempt."
+}

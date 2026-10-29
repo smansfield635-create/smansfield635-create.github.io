@@ -617,7 +617,13 @@ test('identity profile fixes one source,20 modes and one submission without chan
  assert.throws(()=>parseArgs(['--baseline-dir','a','--candidate-dir','b','--output','out']),/ONE_FROZEN_SCENE/);`;
  execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'IDENTITY_BLEND_DIAGNOSTIC_V1'},encoding:'utf8'});
  const runner=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
- assert.ok(runner.includes('submissionCount:(correctedCapture||worldCapture||identityCapture)?1:12'));assert.ok(runner.includes('while(stable<2)'));
+ const expression=runner.match(/submissionCount:\(([^)]+)\)\?1:12/);
+ assert.ok(expression,'bounded submission-count expression is present');
+ const flags=['productionCapture','correctedCapture','worldCapture','identityCapture'];
+ assert.deepEqual(expression[1].split('||').sort(),[...flags].sort());
+ const count=new Function(...flags,`return (${expression[1]})?1:12`);
+ for(let mask=0;mask<16;mask++)assert.equal(count(...flags.map((_,i)=>Boolean(mask&(1<<i)))),mask===0?12:1);
+ assert.ok(runner.includes('while(stable<2)'));
 });
 
 test('identity evidence validator rejects missing modes, drift,wrong source and timing expansion',async()=>{
@@ -645,7 +651,7 @@ test('identity workflow requires explicit reviewed immutable launch and cannot l
 });
 
 test('fertile transition is an exact approved-source endpoint change and its overlay preserves both actual modes',()=>{
- const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const source=diagnostic.reconstructFootprintBaseline(footprintShader).replace(diagnostic.FERTILE_ORIGINAL_EXPRESSION,diagnostic.FERTILE_CANDIDATE_EXPRESSION);
  const baseline=diagnostic.reconstructFertileBaseline(source);
  assert.equal(baseline,diagnostic.reconstructFootprintBaseline(footprintShader));
  assert.ok(source.includes(diagnostic.ORIGINAL_RESIDUAL_COMPOSITION));
@@ -713,3 +719,36 @@ test('corrected profile requires eight paired frozen reference views',()=>{asser
 test('corrected profile fails closed on custody, support and pairing drift',()=>{for(const change of [v=>v[0].grassHidden=true,v=>v[0].sourceHead='0'.repeat(40),v=>v[0].mode='after-groundcover-unlit',v=>v[1].correctedReceipt.applied=0,v=>v[1].lastFrame.cameraPosition.x++,v=>v[1].instrumentation[0].observedSha256='a'.repeat(64),v=>v[1].pose={...v[1].pose,pitch:2}]){const views=correctedFixture();change(views);assert.throws(()=>validateCorrectedSet(views));}});
 
 test('corrected profile checks consumed attribute custody and baseline/canvas isolation',()=>{for(const mutate of [v=>v[1].correctedReceipt.attributeHashes.normals='0'.repeat(64),v=>delete v[1].correctedReceipt.attributeHashes,v=>v[0].correctedReceipt={applied:1},v=>v[1].canvas.height++]){const views=correctedFixture();mutate(views);assert.throws(()=>validateCorrectedSet(views));}});
+
+
+test('production profile pins exact integrated scene with four candidate-only frozen views',async()=>{
+ const {execFileSync}=await import('node:child_process');const url=new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url).href;
+ const script=`import assert from 'node:assert/strict';import {HEADS,PRODUCTION_HEAD,FOOTPRINT_POSES,parseArgs} from ${JSON.stringify(url)};assert.deepEqual(HEADS,{candidate:PRODUCTION_HEAD});assert.equal(PRODUCTION_HEAD,'4639908eab7bc5b8872a85231b3330678988c259');assert.equal(FOOTPRINT_POSES.length,4);parseArgs(['--baseline-dir','scene','--candidate-dir','scene','--output','out']);assert.throws(()=>parseArgs(['--baseline-dir','a','--candidate-dir','b','--output','out']),/ONE_FROZEN_SCENE/);`;
+ execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'CORRECTED_MATERIAL_PRODUCTION_V1'},encoding:'utf8'});
+});
+test('production instrumentation preserves shader and atlases, only exposes camera and mode receipt',()=>{
+ const source=fs.readFileSync(process.env.PRODUCTION_RENDERER_SOURCE??new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const route=fs.readFileSync(process.env.PRODUCTION_ROUTE_SOURCE??new URL('../showroom/globe/h-earth/vegetation-prototype/route.js',import.meta.url),'utf8');
+ const observed=diagnostic.instrumentProductionRenderer(source),marker="\n    if(globalThis.__groundcoverFactorMode!==0)throw Error('PRODUCTION_REFERENCE_MODE_ONLY');globalThis.__groundcoverFactorModeApplied=0;";
+ assert.equal(observed.split(marker).length,2);assert.equal(observed.replace(marker,''),source);
+ assert.equal(diagnostic.instrumentProductionRoute(route),instrumentRoute(route));
+ assert.throws(()=>diagnostic.instrumentProductionRenderer(source+' '),/PRODUCTION_RENDERER_HASH/);assert.throws(()=>diagnostic.instrumentProductionRoute(route+' '),/PRODUCTION_ROUTE_HASH/);
+ assert.ok(source.includes('new URL("./corrected-material-v1/",import.meta.url).href'));
+});
+test('production atlas network validator rejects missing duplicate HTTP and digest failures',()=>{
+ const responses=Object.entries(diagnostic.PRODUCTION_ATLASES).map(([path,sha256])=>({path,sha256,status:200,bytes:100}));
+ assert.equal(diagnostic.validateProductionAtlasResponses(responses),true);
+ for(const change of [v=>v.pop(),v=>v.push({...v[0]}),v=>v[1].path=v[0].path,v=>v[0].status=404,v=>v[0].sha256='a'.repeat(64),v=>v[0].bytes=0]){const v=structuredClone(responses);change(v);assert.throws(()=>diagnostic.validateProductionAtlasResponses(v));}
+});
+const productionFixture=()=>FOOTPRINT_POSES.map(pose=>{
+ const camera={x:pose.x,y:pose.y??2,z:pose.z},state={position:{...camera},yawDegrees:pose.yaw,pitchDegrees:pose.pitch,verticalFovDegrees:56,sequence:10001,...(pose.diagnosticObserver?{diagnosticObserver:true,accepted:false,terrainSupported:false,geologicalPhysicalSupport:false}:{})};
+ const vegetation={schema:'H_EARTH_SINGLE_OWNER_WOODLAND_v1',installedRootCount:1,rootOwnerCount:1,gpuAllocationVerified:true,gpuUploadCount:1,gpuRequestedBytes:16,gpuObservedBufferBytes:16,gpuAllocatedBytes:16,gpuUploadedBytes:16,allocationGlError:0,uploadGlError:0,disposed:false};
+ const resources={singleOwnerVegetation:vegetation,treeCollection:{queue:{loading:false,failures:{}},entries:[]},jacaranda:{focusId:'tree',state:'READY',ready:true,targetAnchor:{x:0,z:0}}};
+ const sig=assetReadiness(resources,camera).signature+'|'+diagnostic.footprintVegetationReadiness(resources).signature;
+ return {label:'candidate',pose,state,lastFrame:{cameraPosition:{...camera},navigationSequence:10001,frameSequence:1},expectedCameraPosition:{...camera},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000},resources,assetSignature:sig,mode:'reference-lit',modeId:0,diagnosticApplied:0,grassHidden:false,sourceHead:diagnostic.PRODUCTION_HEAD,rendererHash:diagnostic.PRODUCTION_RENDERER_SHA256,cpuSubmitMilliseconds:[1],softwareGpuFinishMilliseconds:[1],instrumentation:[{path:'/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',sourceSha256:diagnostic.PRODUCTION_RENDERER_SHA256,observedSha256:'b'.repeat(64)},{path:'/showroom/globe/h-earth/vegetation-prototype/route.js',sourceSha256:diagnostic.PRODUCTION_ROUTE_SHA256,observedSha256:'c'.repeat(64)}],correctedReceipt:correctedFixture()[1].correctedReceipt};
+});
+test('production view validator enforces exact support custody camera visibility and residency',()=>{
+ assert.equal(diagnostic.validateProductionSet(productionFixture()),true);
+ assert.throws(()=>diagnostic.validateProductionSet(productionFixture().slice(1)),/FRAME_CAP/);
+ for(const mutate of [v=>v.label='baseline',v=>v.modeId=1,v=>v.sourceHead='a'.repeat(40),v=>v.rendererHash='a'.repeat(64),v=>v.grassHidden=true,v=>v.correctedReceipt.applied=357,v=>v.correctedReceipt.retired=1,v=>v.correctedReceipt.attributeHashes.normals='a'.repeat(64),v=>v.lastFrame.cameraPosition.y++,v=>v.instrumentation[1].sourceSha256='a'.repeat(64),v=>v.resources.singleOwnerVegetation.gpuObservedBufferBytes=0,v=>v.cpuSubmitMilliseconds.push(2)]){const views=productionFixture();mutate(views[0]);assert.throws(()=>diagnostic.validateProductionSet(views));}
+});

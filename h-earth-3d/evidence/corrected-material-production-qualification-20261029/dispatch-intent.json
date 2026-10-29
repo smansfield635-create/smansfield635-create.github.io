@@ -1,0 +1,26 @@
+{
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_PRODUCTION_QUALIFICATION_20261029_001",
+  "lockGeneration": 2974,
+  "toolingHead": "a26dc41964ae334a5ce73a637bcc96a0b4d43807",
+  "sceneHead": "4639908eab7bc5b8872a85231b3330678988c259",
+  "profile": "CORRECTED_MATERIAL_PRODUCTION_V1",
+  "frameCap": 4,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "b42d1b3b1c140d1c191d18c62032fea641d5d89c15784dd4b187bcc6801df863",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "28dee4ce36921cfa3802b0f67f8007eb9a634308ca9db62a66c6466d3a60ebc2"
+  },
+  "productSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "a2ab977a3ea620f7bf87b3bdfb4e6a720cf7801f2ecbb670b4ac2dfccacf917d",
+    "showroom/globe/h-earth/vegetation-prototype/route.js": "e776883f16ac36f00b51356fe8e78ac6ae2d0f6ce28016f776068b3d76831cb5",
+    "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7",
+    "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f"
+  },
+  "launchTransport": "SAME_REPOSITORY_PR_EXACT_HEAD",
+  "pullRequest": 6979,
+  "launchEvent": "reopened",
+  "baseBranch": "h-earth/corrected-material-integration-20261029",
+  "preGpuRepairOfRun": 40956693983
+}

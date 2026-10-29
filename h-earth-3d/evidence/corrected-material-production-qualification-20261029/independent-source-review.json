@@ -1,0 +1,41 @@
+{
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_PRODUCTION_QUALIFICATION_20261029_001",
+  "result": "PASS",
+  "builderSelfApproval": false,
+  "reviewer": "independent qualification_packet agent",
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "b42d1b3b1c140d1c191d18c62032fea641d5d89c15784dd4b187bcc6801df863",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "28dee4ce36921cfa3802b0f67f8007eb9a634308ca9db62a66c6466d3a60ebc2"
+  },
+  "validation": {
+    "productionFocusedTests": "4/4 PASS",
+    "integrationLifecycleTests": "10/10 PASS",
+    "syntax": "PASS",
+    "historicalSuite": "workflow pre-GPU gate pending"
+  },
+  "findings": [
+    "Four fixed candidate-only reference-lit poses; real atlas HTTP byte hashes; no atlas interception or correction reinjection.",
+    "Exact product scene and source guards; explicit first-attempt dispatch; frameCap 4; runBudget 1."
+  ],
+  "acceptance": "No visual, performance, merge, or publication acceptance.",
+  "transportRecoveryReview": {
+    "result": "PASS",
+    "reviewer": "independent qualification_packet agent",
+    "checks": [
+      "reopened only",
+      "same repository PR6979 exact branch and original integration base",
+      "first attempt",
+      "intent source hashes and workflow identity",
+      "product scene unchanged; four frames one run"
+    ],
+    "additionalEvidence": "Retargeting to main produced mergeable_state dirty; no neutral runner launched. Original integration base is mergeable=true. Only two workflow base filters changed and were independently reviewed."
+  },
+  "preGpuRepairReview": {
+    "result": "PASS",
+    "reviewer": "independent qualification_packet agent",
+    "test": "Extracted exact identity test PASS including16 truth-table cases and identity-profile subprocess",
+    "workflow": "Logging-only change; prior launch guards unchanged",
+    "gpuFramesConsumed": 0
+  }
+}

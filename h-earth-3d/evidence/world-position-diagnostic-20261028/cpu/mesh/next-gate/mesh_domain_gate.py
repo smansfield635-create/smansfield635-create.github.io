@@ -199,20 +199,19 @@ def protected_faces(verts):
     positions=np.concatenate([verts,verts.mean(axis=1,keepdims=True)],axis=1)
     return np.any(source_protected(positions[...,[0,2]]),axis=1)
 
-def boundary_distance(positions,offsets,vids,boundary,active,seeds,neighbors,verts,sealed,samples):
-    """Exact source-edge cut census and conservative real-witness 3D clearance.
+def boundary_distance(positions,offsets,vids,boundary,active,seeds,neighbors,verts,sealed,samples,influence_radius=40.):
+    """Keep frozen source boundaries separate from newly artificial support cuts.
 
-    Original open boundaries and artificial indexed-support cuts are separate
-    evidence classes. Never count all three edges of a partially selected face
-    when only its actual indexed shared edge crosses the support boundary.
-    A cross-primitive seam whose neighbor was omitted is unqualified, not a
-    silent connection. All archived witness positions, not face centroids,
-    determine the physical 40m screen. No geometry is moved or trimmed.
+    Do not turn an original world boundary into an invented 40m repair-cut
+    failure. Source edges close to archived witnesses still require independent
+    boundary evidence. Artificial cuts retain the unchanged 40m fail-closed
+    requirement; neither class may be suppressed to manufacture closure.
     """
     require(bool(samples),'MISSING_ACTUAL_CUT_WITNESSES')
     witnesses=np.asarray([s['world'] for s in samples],dtype=float)
     require(witnesses.ndim==2 and witnesses.shape[1]==3 and np.all(np.isfinite(witnesses)),
             'INVALID_ACTUAL_CUT_WITNESSES')
+    require(influence_radius==40.,'UNAUTHORIZED_INFLUENCE_RADIUS_DRIFT')
     segments={}
     def record(a,b,kind):
         a,b=sorted((int(a),int(b)))
@@ -236,33 +235,53 @@ def boundary_distance(positions,offsets,vids,boundary,active,seeds,neighbors,ver
                 raise ValueError('UNKNOWN_SOURCE_ADJACENCY_KIND')
     if not segments:
         return {'status':'MISSING_BOUNDARY_EVIDENCE','cutEdges':0,
+                'artificialCutClearanceQualified':False,
+                'originalBoundaryRequiresIndependentQualification':True,
                 'unresolvedCrossPrimitiveCuts':len(unresolved_seam)}
     cut=list(segments.values())
-    A=np.stack([a for a,b,k in cut])
-    B=np.stack([b for a,b,k in cut])
-    v=B-A
-    denom=np.maximum(np.sum(v*v,axis=-1),1e-30)
-    def distances(points):
+    original=[e for e in cut if e[2]=='original-source-boundary']
+    artificial=[e for e in cut if e[2]=='artificial-indexed-cut']
+    require(len(original)+len(artificial)==len(cut),'UNCLASSIFIED_SOURCE_CUT_EDGE')
+    def min_distances(points,edges):
+        if not edges:return None
+        A=np.stack([a for a,b,k in edges])
+        B=np.stack([b for a,b,k in edges])
+        v=B-A
+        denominator=np.maximum(np.sum(v*v,axis=-1),1e-30)
         best=np.full(len(points),np.inf)
         for lo in range(0,len(points),100):
-            x=points[lo:lo+100,None,:]
-            t=np.clip(np.sum((x-A)*v,axis=-1)/denom,0,1)
-            d=np.linalg.norm(x-(A+t[...,None]*v),axis=-1)
+            z=points[lo:lo+100,None,:]
+            t=np.clip(np.sum((z-A)*v,axis=-1)/denominator,0,1)
+            d=np.linalg.norm(z-(A+t[...,None]*v),axis=-1)
             best[lo:lo+100]=d.min(axis=1)
         return best
-    actual=distances(witnesses)
-    centroids=distances(verts[sorted(seeds)].mean(axis=1))
-    kinds=[k for a,b,k in cut]
-    return {'status':'MEASURED_UNQUALIFIED_IF_WITHIN_INFLUENCE',
-            'minimumActualWitnessToCutMeters':float(actual.min()),
-            'medianActualWitnessToCutMeters':float(np.median(actual)),
-            'minimumWitnessSourceCentroidToCutMeters':float(centroids.min()),
-            'medianMeters':float(np.median(centroids)),
-            'seedCount':len(seeds),
-            'witnessCount':len(witnesses),
+    actual_original=min_distances(witnesses,original)
+    actual_artificial=min_distances(witnesses,artificial)
+    actual_all=min_distances(witnesses,cut)
+    centroids=verts[sorted(seeds)].mean(axis=1)
+    centroid_all=min_distances(centroids,cut)
+    original_min=float(actual_original.min()) if actual_original is not None else None
+    artificial_min=float(actual_artificial.min()) if actual_artificial is not None else None
+    original_review=(original_min is not None and original_min<influence_radius)
+    artificial_qualified=(artificial_min is None or artificial_min>=influence_radius)
+    return {'status':'SOURCE_BOUNDARY_REVIEW_REQUIRED' if original_review else
+                     ('ARTIFICIAL_CUT_TOO_CLOSE' if not artificial_qualified else 'MEASURED'),
+            'minimumActualWitnessToCutMeters':float(actual_all.min()),
+            'medianActualWitnessToCutMeters':float(np.median(actual_all)),
+            'minimumWitnessSourceCentroidToCutMeters':float(centroid_all.min()),
+            'medianMeters':float(np.median(centroid_all)),
+            'minimumOriginalSourceBoundaryWitnessDistanceMeters':original_min,
+            'minimumArtificialCutWitnessDistanceMeters':artificial_min,
+            'originalBoundaryRequiresIndependentQualification':bool(original_review),
+            'artificialCutClearanceQualified':bool(artificial_qualified),
+            'artificialCutClearanceDisposition':'NO_ARTIFICIAL_CUT_PRESENT' if artificial_min is None else
+                 ('PASS_40M' if artificial_qualified else 'FAIL_BELOW_40M'),
+            'sourceBoundaryQualificationDisposition':'INDEPENDENT_REVIEW_REQUIRED' if original_review else
+                 ('NO_ORIGINAL_BOUNDARY_IN_DOMAIN' if original_min is None else 'NO_LOCAL_BOUNDARY_INFLUENCE'),
+            'seedCount':len(seeds),'witnessCount':len(witnesses),
             'cutEdges':len(cut),
-            'originalSourceBoundaryEdges':kinds.count('original-source-boundary'),
-            'artificialIndexedCutEdges':kinds.count('artificial-indexed-cut'),
+            'originalSourceBoundaryEdges':len(original),
+            'artificialIndexedCutEdges':len(artificial),
             'unresolvedCrossPrimitiveCuts':len(unresolved_seam)}
 
 def transport(Q,L,area,links,protected,step=0.5):
@@ -314,14 +333,14 @@ def inspect(root,out,physical_radius=48.,influence_radius=40.):
     overlaps=no_duplicate_projected_area(verts,offsets,groups,active)
     guards=protected_faces(verts)
     protectedActive=sum(bool(guards[i]) for i in active)
-    distances=boundary_distance(pos,offsets,vids,boundary,active,seeds,neighbors,verts,sealed,samples)
+    distances=boundary_distance(pos,offsets,vids,boundary,active,seeds,neighbors,verts,sealed,samples,influence_radius)
     report={'schema':'H_EARTH_ORIGINAL_SOURCE_MESH_DOMAIN_GATE_v1','sourceHead':SOURCE_HEAD,'parentDiagnosticHead':WORLD_HEAD,
         'activeTerrainSourceTriangles':len(offsets),'activeOriginalFaces':len(active),'sourceTriangleAreasPositive':True,'witnessSamples':len(samples),
         'supportSelection':'SOURCE_POLYGON_XZ_DISTANCE_WITHIN_FIXED_48M_OF_ARCHIVED_WITNESS','retainedSourceSeedFaces':len(seeds),
         'sampleTrianglesAllRetained':len(seeds),'sourceTriangleAreaTotalInCandidateSupport':float(areas[list(active)].sum()),
         'protectedActiveSourceFaces':int(protectedActive),'nearFarSeamLinksFound':len(links),'partialSourceSeamEdges':partial[:60],
         'sourceProjectedNearFarOverlaps':overlaps[:60], 'boundaryDistance':distances,
-        'closureQualified':bool(not partial and not overlaps and distances.get('minimumActualWitnessToCutMeters',0)>=influence_radius and not distances.get('unresolvedCrossPrimitiveCuts',0)),
+        'closureQualified':bool(not partial and not overlaps and distances.get('artificialCutClearanceQualified',False) and not distances.get('originalBoundaryRequiresIndependentQualification',True) and not distances.get('unresolvedCrossPrimitiveCuts',0)),
         'influenceRadiusMeters':influence_radius,'supportRadiusMeters':physical_radius,
         'limitations':['Physical source upload positions/indices are required and checked by exact hashes; no screen-derived geometry substituted.',
              'A face-centered candidate support with no-flux perimeter does not by itself certify every protected or camera-dependent shader role.',

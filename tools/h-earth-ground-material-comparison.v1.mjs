@@ -13,6 +13,10 @@ export const DIAGNOSTIC_STAGE_MEANINGS=Object.freeze(Object.fromEntries(DIAGNOST
 export const SEARCH_PROVENANCE=Object.freeze({kind:'PUBLISHED_RENDERER_KNOWN_INLAND_BAND_PLUS_HEALTHY_COAST_CONTROL',exactScreenshotMatchProven:false,operationId:'H_EARTH_GROUNDCOVER_FACTOR_GPU_DIAGNOSTIC_20261026_001',priorStageAttributionRun:40411050366,expectedPublishedRendererSha256:'7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2'});
 export const RENDERER_SHA256='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2';
 export const MATERIAL_BASELINE_HEAD='60b3c07f0216645119a1b92b16dac82cae739145';
+const productionCapture=process.env.H_EARTH_COMPARISON_PROFILE==='CORRECTED_MATERIAL_PRODUCTION_V1';
+export const PRODUCTION_HEAD='4639908eab7bc5b8872a85231b3330678988c259';
+export const PRODUCTION_RENDERER_SHA256='a2ab977a3ea620f7bf87b3bdfb4e6a720cf7801f2ecbb670b4ac2dfccacf917d';
+export const PRODUCTION_ROUTE_SHA256='e776883f16ac36f00b51356fe8e78ac6ae2d0f6ce28016f776068b3d76831cb5';
 const correctedCapture=process.env.H_EARTH_COMPARISON_PROFILE==='CORRECTED_MATERIAL_APPLICATION_V1';
 const worldCapture=process.env.H_EARTH_COMPARISON_PROFILE==='WORLD_POSITION_DIAGNOSTIC_V1';
 const identityCapture=process.env.H_EARTH_COMPARISON_PROFILE==='IDENTITY_BLEND_DIAGNOSTIC_V1';
@@ -29,11 +33,11 @@ const footprintCapture=process.env.H_EARTH_COMPARISON_PROFILE==='GROUNDCOVER_FOO
 export const FOOTPRINT_BASELINE_HEAD='cb57c275b95d0d48883bc4da4dcfcf17cbec5060';
 export const FOOTPRINT_BASELINE_SHA256='fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec';
 const pairedCapture=footprintCapture||composedCapture||residentCapture||residualCapture||fertileCapture;
-const resourceCapture=correctedCapture||pairedCapture||contributionCapture||identityCapture||worldCapture;
+const resourceCapture=productionCapture||correctedCapture||pairedCapture||contributionCapture||identityCapture||worldCapture;
 const candidateCapture=pairedCapture||process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
-export const HEADS=Object.freeze({baseline:(correctedCapture||identityCapture||worldCapture)?IDENTITY_SOURCE_HEAD:contributionCapture?CONTRIBUTION_SOURCE_HEAD:pairedCapture?FOOTPRINT_BASELINE_HEAD:MATERIAL_BASELINE_HEAD,candidate:(correctedCapture||identityCapture||worldCapture)?IDENTITY_SOURCE_HEAD:contributionCapture?CONTRIBUTION_SOURCE_HEAD:candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD});
+export const HEADS=Object.freeze(productionCapture?{candidate:PRODUCTION_HEAD}:{baseline:(correctedCapture||identityCapture||worldCapture)?IDENTITY_SOURCE_HEAD:contributionCapture?CONTRIBUTION_SOURCE_HEAD:pairedCapture?FOOTPRINT_BASELINE_HEAD:MATERIAL_BASELINE_HEAD,candidate:(correctedCapture||identityCapture||worldCapture)?IDENTITY_SOURCE_HEAD:contributionCapture?CONTRIBUTION_SOURCE_HEAD:candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD});
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
 {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
 {name:'inland-seam-mid',x:-200,z:-704,y:18.272624,yaw:0,pitch:-4,diagnosticObserver:true},
@@ -424,13 +428,13 @@ export function footprintVegetationReadiness(resources){
  return {ready,signature:JSON.stringify(normalizeVegetationIdentity(Object.fromEntries(keys.map(k=>[k,r[k]]))))};
 }
 export function assertCheckout(dir,expected){const head=execFileSync('git',['-C',dir,'rev-parse','HEAD'],{encoding:'utf8'}).trim();if(head!==expected)throw Error('CHECKOUT_HEAD_MISMATCH');if(execFileSync('git',['-C',dir,'status','--porcelain','--untracked-files=no'],{encoding:'utf8'}).trim())throw Error('CHECKOUT_TRACKED_BYTES_CHANGED');}
-export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(!['--baseline-dir','--candidate-dir','--output'].includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==3)throw Error('CLI_INCOMPLETE');if(correctedCapture||contributionCapture||identityCapture||worldCapture){if(a['--baseline-dir']!==a['--candidate-dir']||a['--output']===a['--candidate-dir'])throw Error('CONTRIBUTION_REQUIRES_ONE_FROZEN_SCENE_AND_DISTINCT_OUTPUT');}else if(new Set(Object.values(a)).size!==3)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
+export function parseArgs(argv){const a={};for(let i=0;i<argv.length;i+=2){if(!['--baseline-dir','--candidate-dir','--output'].includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==3)throw Error('CLI_INCOMPLETE');if(productionCapture||correctedCapture||contributionCapture||identityCapture||worldCapture){if(a['--baseline-dir']!==a['--candidate-dir']||a['--output']===a['--candidate-dir'])throw Error('CONTRIBUTION_REQUIRES_ONE_FROZEN_SCENE_AND_DISTINCT_OUTPUT');}else if(new Set(Object.values(a)).size!==3)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GROUNDCOVER_FOOTPRINT_V1','GROUNDCOVER_COMPOSED_TARGET_V1','GROUNDCOVER_RESIDENT_FIELD_V1','GROUNDCOVER_CONTRIBUTION_LEDGER_V1','GROUNDCOVER_RESIDUAL_TRANSFER_V1','IDENTITY_BLEND_DIAGNOSTIC_V1','IDENTITY_FERTILE_TRANSITION_V1','WORLD_POSITION_DIAGNOSTIC_V1','CORRECTED_MATERIAL_APPLICATION_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=correctedCapture?FOOTPRINT_POSES:worldCapture?WORLD_POSES:identityCapture?IDENTITY_POSES:contributionCapture?CONTRIBUTION_POSES:pairedCapture?FOOTPRINT_POSES:profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES;
-  const modes=correctedCapture?['reference-lit']:worldCapture?WORLD_MODES:identityCapture?IDENTITY_MODES:contributionCapture?CONTRIBUTION_MODES:(composedCapture||residentCapture||residualCapture||fertileCapture)?COMPOSED_MODES:footprintCapture?FOOTPRINT_MODES:profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES;
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GROUNDCOVER_FOOTPRINT_V1','GROUNDCOVER_COMPOSED_TARGET_V1','GROUNDCOVER_RESIDENT_FIELD_V1','GROUNDCOVER_CONTRIBUTION_LEDGER_V1','GROUNDCOVER_RESIDUAL_TRANSFER_V1','IDENTITY_BLEND_DIAGNOSTIC_V1','IDENTITY_FERTILE_TRANSITION_V1','WORLD_POSITION_DIAGNOSTIC_V1','CORRECTED_MATERIAL_APPLICATION_V1','CORRECTED_MATERIAL_PRODUCTION_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=(productionCapture||correctedCapture)?FOOTPRINT_POSES:worldCapture?WORLD_POSES:identityCapture?IDENTITY_POSES:contributionCapture?CONTRIBUTION_POSES:pairedCapture?FOOTPRINT_POSES:profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES;
+  const modes=(productionCapture||correctedCapture)?['reference-lit']:worldCapture?WORLD_MODES:identityCapture?IDENTITY_MODES:contributionCapture?CONTRIBUTION_MODES:(composedCapture||residentCapture||residualCapture||fertileCapture)?COMPOSED_MODES:footprintCapture?FOOTPRINT_MODES:profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES;
   if(residualCapture&&poses.length*modes.length!==8)throw Error('RESIDUAL_FRAME_CAP_INVALID');
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
@@ -443,6 +447,7 @@ export async function run(argv){
   if(identityCapture)Object.assign(receipt,{heads:{candidate:IDENTITY_SOURCE_HEAD},repairOperationId:'H_EARTH_IDENTITY_BLEND_DIAGNOSTIC_20261028_001',baselineProductSha256:null,sourceProductSha256:IDENTITY_RENDERER_SHA256,noBaselineCapture:true,frameCap:20,performanceClaims:false,measuredSubmissionsPerMode:1,settledFramesPerMode:2,colorTransform:'P_C_T_ORIGINAL_EXPOSURE_1.12_GAMMA_1_OVER_2.2_OTHER_CHANNELS_RAW',stageMeanings:Object.fromEntries(IDENTITY_MODES.map((m,i)=>[m,i<3?'Environmental identity boundary linear color encoded with original exposure/gamma':'Raw packed identity factors; see diagnostic-contract.json'])),searchProvenance:{kind:'FROZEN_APPROVED_NEAR_FAR_IDENTITY_INTERNALS',exactScreenshotMatchProven:false},contributionAttributionProven:false});
   if(worldCapture)Object.assign(receipt,{schema:'H_EARTH_WORLD_POSITION_CAPTURE_v1',heads:{candidate:IDENTITY_SOURCE_HEAD},repairOperationId:'H_EARTH_WORLD_POSITION_DIAGNOSTIC_20261028_001',sourceProductSha256:IDENTITY_RENDERER_SHA256,baselineProductSha256:null,noBaselineCapture:true,frameCap:8,runBudget:1,automaticRetry:false,performanceClaims:false,measuredSubmissionsPerMode:1,encoding:WORLD_ENCODING,colorTransform:'RAW_RGB_OPAQUE_ALPHA_NO_GAMMA_NO_EXPOSURE',calibrationRegion:{x:0,y:979,width:16,height:1,origin:'PNG_TOP_LEFT'},stageMeanings:Object.fromEntries(WORLD_MODES.map(m=>[m,'Encoded interpolated highp terrain scalar'])),searchProvenance:{kind:'FROZEN_APPROVED_NEAR_FAR_WORLD_COORDINATES',exactScreenshotMatchProven:false}});
   if(correctedCapture)Object.assign(receipt,{repairOperationId:'H_EARTH_CORRECTED_MATERIAL_RENDERER_20261029_001',baselineProductSha256:FOOTPRINT_BASELINE_SHA256,sourceProductSha256:FOOTPRINT_BASELINE_SHA256,frameCap:8,runBudget:1,automaticRetry:false,performanceClaims:false,measuredSubmissionsPerMode:1,stageMeanings:{'reference-lit':'Original final lighting and visible physical vegetation; candidate adds frozen corrected material only'},searchProvenance:{kind:'FROZEN_NEAR_FAR_AND_PROTECTED_CONTROLS'},visualQualification:false});
+  if(productionCapture)Object.assign(receipt,{heads:{candidate:PRODUCTION_HEAD},repairOperationId:'H_EARTH_CORRECTED_MATERIAL_PRODUCTION_QUALIFICATION_20261029_001',sourceProductSha256:PRODUCTION_RENDERER_SHA256,baselineProductSha256:FOOTPRINT_BASELINE_SHA256,noBaselineCapture:true,archivedComparisonRun:40939354824,frameCap:4,runBudget:1,automaticRetry:false,performanceClaims:false,measuredSubmissionsPerMode:1,stageMeanings:{'reference-lit':'Production renderer and actual production atlas HTTP loading; frozen saved poses with physical vegetation visible'},searchProvenance:{kind:'FROZEN_NEAR_FAR_AND_PROTECTED_CONTROLS'},visualQualification:false});
   const correctedDir=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../h-earth-3d/evidence/corrected-material-application-20261029');
   const correctedManifest=correctedCapture?JSON.parse(fs.readFileSync(path.join(correctedDir,'atlas-manifest.json'))):null;
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
@@ -451,7 +456,12 @@ export async function run(argv){
   const onTerm=()=>interrupt('SIGTERM'),onInt=()=>interrupt('SIGINT');
   process.once('SIGTERM',onTerm);process.once('SIGINT',onInt);persist();
   try{
-    if(correctedCapture||worldCapture||identityCapture){
+    if(productionCapture){
+      assertCheckout(a['--candidate-dir'],PRODUCTION_HEAD);
+      const frozenRenderer=fs.readFileSync(path.join(a['--candidate-dir'],RENDERER),'utf8');instrumentProductionRenderer(frozenRenderer);
+      instrumentProductionRoute(fs.readFileSync(path.join(a['--candidate-dir'],ROUTE),'utf8'));
+      receipt.sceneIdentity={result:'EXACT_PRODUCTION_CANDIDATE_NO_BASELINE_RENDER',sourceHead:PRODUCTION_HEAD,rendererSha256:sha(frozenRenderer),routeSha256:PRODUCTION_ROUTE_SHA256,toolingHead:execFileSync('git',['-C',path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),'rev-parse','HEAD'],{encoding:'utf8'}).trim()};persist();
+    }else if(correctedCapture||worldCapture||identityCapture){
       assertCheckout(a['--candidate-dir'],IDENTITY_SOURCE_HEAD);
       const frozenRenderer=fs.readFileSync(path.join(a['--candidate-dir'],RENDERER),'utf8');(correctedCapture?(source=>instrumentCorrectedComparisonRenderer(source,correctedManifest,true)):worldCapture?instrumentWorldRenderer:instrumentIdentityRenderer)(frozenRenderer);
       receipt.sceneIdentity={result:correctedCapture?'ONE_FROZEN_SCENE_TWO_PRESENTATIONS':'EXACT_FROZEN_SCENE_IDENTITY_NO_BASELINE_RENDER',sourceHead:IDENTITY_SOURCE_HEAD,rendererSha256:sha(frozenRenderer),toolingHead:execFileSync('git',['-C',path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),'rev-parse','HEAD'],{encoding:'utf8'}).trim()};persist();
@@ -473,9 +483,11 @@ export async function run(argv){
       let listening=false;for(let n=0;n<50;n++){try{const r=await fetch(base+ROOT);if(r.ok){listening=true;break;}}catch{}await new Promise(r=>setTimeout(r,100));}if(!listening)throw Error('SERVER_UNAVAILABLE:'+serverError.join(';'));
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
       await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';globalThis.normalizeVegetationIdentity='+normalizeVegetationIdentity.toString()+';globalThis.__footprintVegetationReadiness='+footprintVegetationReadiness.toString()+';' });
+      const atlasResponses=[],atlasPending=[];
+      if(productionCapture)page.on('response',response=>{const pathname=new URL(response.url()).pathname;if(!Object.hasOwn(PRODUCTION_ATLASES,pathname))return;atlasPending.push((async()=>{try{const bytes=await response.body();atlasResponses.push({path:pathname,status:response.status(),sha256:sha(bytes),bytes:bytes.length});}catch(error){runRecord.errors.push('ATLAS_RESPONSE:'+String(error));}})());});
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
       if(correctedCapture&&label==='candidate')for(const atlas of correctedManifest.atlases){const bytes=fs.readFileSync(path.join(correctedDir,atlas.file));if(sha(bytes)!==atlas.sha256)throw Error('CORRECTED_ATLAS_CUSTODY');await page.route(url=>url.pathname===ASSET_PREFIX+atlas.file,route=>route.fulfill({status:200,contentType:'image/png',body:bytes}));}
-      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,correctedCapture?(source=>instrumentCorrectedComparisonRenderer(source,correctedManifest,label==='candidate')):worldCapture?instrumentWorldRenderer:identityCapture?instrumentIdentityRenderer:fertileCapture?instrumentFertileRenderer:residualCapture?instrumentResidualRenderer:contributionCapture?instrumentContributionRenderer:residentCapture?instrumentResidentRenderer:composedCapture?instrumentComposedRenderer:footprintCapture?(source=>instrumentFootprintRenderer(source,{baseline:label==='baseline'})):profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer]]){
+      for(const [pathname,transform] of [[ROUTE,productionCapture?instrumentProductionRoute:instrumentRoute],[RENDERER,productionCapture?instrumentProductionRenderer:correctedCapture?(source=>instrumentCorrectedComparisonRenderer(source,correctedManifest,label==='candidate')):worldCapture?instrumentWorldRenderer:identityCapture?instrumentIdentityRenderer:fertileCapture?instrumentFertileRenderer:residualCapture?instrumentResidualRenderer:contributionCapture?instrumentContributionRenderer:residentCapture?instrumentResidentRenderer:composedCapture?instrumentComposedRenderer:footprintCapture?(source=>instrumentFootprintRenderer(source,{baseline:label==='baseline'})):profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer]]){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
         await page.route(url=>url.pathname===pathname,route=>route.fulfill({status:200,contentType:'text/javascript',body:transformed}));
       }
@@ -490,7 +502,7 @@ export async function run(argv){
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
       let sequence=10000,previousFrame=0;
       for(const pose of poses)for(const mode of modes){
-        const hidden=!((correctedCapture||pairedCapture)&&mode==='reference-lit');await page.evaluate(value=>{globalThis.__groundcoverFactorMode=value;},MODE_ID_BY_NAME.get(mode));
+        const hidden=!((productionCapture||correctedCapture||pairedCapture)&&mode==='reference-lit');await page.evaluate(value=>{globalThis.__groundcoverFactorMode=value;},MODE_ID_BY_NAME.get(mode));
         const settleDeadline=Date.now()+180000;let stable=0,signature=null;
         while(stable<2){
           const settled=await page.evaluate(async({pose,hidden,sequence,footprint})=>{
@@ -511,7 +523,7 @@ export async function run(argv){
           const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas');
           const expectedPacket=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
           return {state,expectedCameraPosition:expectedPacket.camera.position,lastFrame:gpu.frameRecords.at(-1),canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},cpuSubmitMilliseconds:costs,softwareGpuFinishMilliseconds:finishedCosts,resources:gpu.resources,grassHidden:hidden,diagnosticApplied:globalThis.__groundcoverFactorModeApplied,correctedReceipt:globalThis.__hEarthCorrectedMaterialReceipt??null,worldPacket:globalThis.__preciseWorldEnabled?expectedPacket:null,worldActualPacket:globalThis.__preciseWorldActualPacket??null};
-        },{pose,hidden,sequence:++sequence,measureGpu:resourceCapture,submissionCount:(correctedCapture||worldCapture||identityCapture)?1:12});
+        },{pose,hidden,sequence:++sequence,measureGpu:resourceCapture,submissionCount:(productionCapture||correctedCapture||worldCapture||identityCapture)?1:12});
         receipt.lastAttempt={label,pose,mode,...view};persist();
         if(view.diagnosticApplied!==MODE_ID_BY_NAME.get(mode))throw Error('DIAGNOSTIC_MODE_NOT_APPLIED');
         const assets=assetReadiness(view.resources,view.lastFrame.cameraPosition);if(resourceCapture){const vegetation=footprintVegetationReadiness(view.resources);assets.ready=assets.ready&&vegetation.ready;assets.signature+='|'+vegetation.signature;}if(!assets.ready||assets.signature!==signature)throw Error('ASSETS_CHANGED_DURING_CAPTURE');view.assetSignature=assets.signature;
@@ -522,12 +534,13 @@ export async function run(argv){
         if(footprintCapture&&mode==='footprint-activation-raw'){view.activationSamples=await page.evaluate(()=>{const c=document.querySelector('#h-earth-functional-landscape-canvas'),gl=c.getContext('webgl2'),out=[];for(const y of [260,270,280,290,300])for(const x of [240,264,288]){const p=new Uint8Array(4);gl.readPixels(x,c.height-1-y,1,1,gl.RGBA,gl.UNSIGNED_BYTE,p);out.push({x,y,rgba:[...p]});}return out;});}
         receipt.views.push({label,pose,mode,instrumentation:runRecord.instrumentation,...view,modeId:MODE_ID_BY_NAME.get(mode),sourceHead:HEADS[label],rendererHash:receipt.sourceProductSha256,captureMethod:'PRESERVED_WEBGL_CANVAS_PNG',imageWidth:529,imageHeight:980,image:name,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
       }
+      if(productionCapture){await Promise.all(atlasPending);validateProductionAtlasResponses(atlasResponses);runRecord.productionAtlasResponses=atlasResponses;persist();}
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(correctedCapture)validateCorrectedSet(receipt.views);else if(worldCapture)validateWorldSet(receipt.views);else if(identityCapture)validateIdentitySet(receipt.views);else if(residualCapture||fertileCapture)validateResidualSet(receipt.views,HEADS.candidate,receipt.sourceProductSha256);else if(contributionCapture)validateContributionSet(receipt.views);else if(composedCapture||residentCapture)validateComposedSet(receipt.views);else if(footprintCapture)validateFootprintSet(receipt.views);else validateDiagnosticSet(receipt.views,poses,modes);
+    if(productionCapture)validateProductionSet(receipt.views);else if(correctedCapture)validateCorrectedSet(receipt.views);else if(worldCapture)validateWorldSet(receipt.views);else if(identityCapture)validateIdentitySet(receipt.views);else if(residualCapture||fertileCapture)validateResidualSet(receipt.views,HEADS.candidate,receipt.sourceProductSha256);else if(contributionCapture)validateContributionSet(receipt.views);else if(composedCapture||residentCapture)validateComposedSet(receipt.views);else if(footprintCapture)validateFootprintSet(receipt.views);else validateDiagnosticSet(receipt.views,poses,modes);
     if(residualCapture||fertileCapture)receipt.coastPixelParity=await validateResidualCoastPixels(receipt.views,out);
-    receipt.result=correctedCapture?'CORRECTED_MATERIAL_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':worldCapture?'WORLD_POSITION_CAPTURE_COMPLETE_CALIBRATED_ANALYSIS_PENDING':fertileCapture?'FERTILE_CAPTURE_COMPLETE_COAST_PARITY_VERIFIED_VISUAL_REVIEW_PENDING':identityCapture?'IDENTITY_CAPTURE_COMPLETE_ANALYSIS_PENDING':residualCapture?'RESIDUAL_CAPTURE_COMPLETE_COAST_PARITY_VERIFIED_VISUAL_REVIEW_PENDING':contributionCapture?'CONTRIBUTION_LEDGER_CAPTURE_COMPLETE_ANALYSIS_PENDING':residentCapture?'RESIDENT_FIELD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':composedCapture?'COMPOSED_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':footprintCapture?'FOOTPRINT_CAPTURE_COMPLETE_VISUAL_AND_ACTIVATION_REVIEW_PENDING':'DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';
+    receipt.result=productionCapture?'PRODUCTION_MATERIAL_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':correctedCapture?'CORRECTED_MATERIAL_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':worldCapture?'WORLD_POSITION_CAPTURE_COMPLETE_CALIBRATED_ANALYSIS_PENDING':fertileCapture?'FERTILE_CAPTURE_COMPLETE_COAST_PARITY_VERIFIED_VISUAL_REVIEW_PENDING':identityCapture?'IDENTITY_CAPTURE_COMPLETE_ANALYSIS_PENDING':residualCapture?'RESIDUAL_CAPTURE_COMPLETE_COAST_PARITY_VERIFIED_VISUAL_REVIEW_PENDING':contributionCapture?'CONTRIBUTION_LEDGER_CAPTURE_COMPLETE_ANALYSIS_PENDING':residentCapture?'RESIDENT_FIELD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':composedCapture?'COMPOSED_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING':footprintCapture?'FOOTPRINT_CAPTURE_COMPLETE_VISUAL_AND_ACTIVATION_REVIEW_PENDING':'DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}
   finally{persist();server?.kill();if(browser)await browser.close();process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInt);}
   return receipt;
@@ -590,6 +603,45 @@ export function validateCorrectedSet(views){
   if(!pair[0].canvas||!pair[1].canvas||pair[0].canvas.width!==pair[1].canvas.width||pair[0].canvas.height!==pair[1].canvas.height)throw Error('CORRECTED_CANVAS_MISMATCH');
   const expectedAttributes={positions:'342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83',indices:'483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c',normals:'7d31e73c97939ad978982aeb5191d3ae8b99582eb32300aff9d569cae7e24b1b',coastDistances:'7f99de4403127ddcc48affe5206003c93049e0d19d276981db794ea1fa8cf49b'};
   if(Object.entries(expectedAttributes).some(([k,v])=>pair[1].correctedReceipt.attributeHashes?.[k]!==v))throw Error('CORRECTED_ATTRIBUTE_RECEIPT');
+ }
+ return true;
+}
+
+export const PRODUCTION_ATLASES=Object.freeze({
+ '/showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png':'b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7',
+ '/showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png':'78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f'
+});
+export function instrumentProductionRoute(source){
+ if(sha(source)!==PRODUCTION_ROUTE_SHA256)throw Error('PRODUCTION_ROUTE_HASH');
+ return instrumentRoute(source);
+}
+export function instrumentProductionRenderer(source){
+ if(sha(source)!==PRODUCTION_RENDERER_SHA256)throw Error('PRODUCTION_RENDERER_HASH');
+ const draw='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
+ return replaceExactlyOnce(source,draw,draw+"\n    if(globalThis.__groundcoverFactorMode!==0)throw Error('PRODUCTION_REFERENCE_MODE_ONLY');globalThis.__groundcoverFactorModeApplied=0;");
+}
+export function validateProductionAtlasResponses(responses){
+ if(!Array.isArray(responses)||responses.length!==2)throw Error('PRODUCTION_ATLAS_RESPONSE_COUNT');
+ for(const [path,hash] of Object.entries(PRODUCTION_ATLASES)){
+  const matches=responses.filter(v=>v.path===path);
+  if(matches.length!==1||matches[0].status!==200||matches[0].sha256!==hash||!Number.isInteger(matches[0].bytes)||matches[0].bytes<=0)throw Error('PRODUCTION_ATLAS_HTTP_OR_HASH');
+ }
+ return true;
+}
+export function validateProductionSet(views){
+ if(views.length!==4)throw Error('PRODUCTION_FRAME_CAP');
+ for(const pose of FOOTPRINT_POSES){
+  const matches=views.filter(v=>v.pose?.name===pose.name);if(matches.length!==1)throw Error('PRODUCTION_POSE_COUNT');const v=matches[0];
+  if(JSON.stringify(v.pose)!==JSON.stringify(pose)||v.label!=='candidate'||v.mode!=='reference-lit'||v.modeId!==0||v.diagnosticApplied!==0||v.grassHidden!==false||v.sourceHead!==PRODUCTION_HEAD||v.rendererHash!==PRODUCTION_RENDERER_SHA256)throw Error('PRODUCTION_SOURCE_OR_MODE');
+  const renderer=v.instrumentation?.find(x=>x.path===RENDERER),route=v.instrumentation?.find(x=>x.path===ROUTE);
+  if(!renderer||renderer.sourceSha256!==PRODUCTION_RENDERER_SHA256||!/^[a-f0-9]{64}$/.test(renderer.observedSha256)||!route||route.sourceSha256!==PRODUCTION_ROUTE_SHA256||!/^[a-f0-9]{64}$/.test(route.observedSha256))throw Error('PRODUCTION_INSTRUMENTATION_CUSTODY');
+  if(v.correctedReceipt?.applied!==358||v.correctedReceipt?.retired!==0)throw Error('PRODUCTION_CORRECTION_SUPPORT');
+  const expected={positions:'342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83',indices:'483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c',normals:'7d31e73c97939ad978982aeb5191d3ae8b99582eb32300aff9d569cae7e24b1b',coastDistances:'7f99de4403127ddcc48affe5206003c93049e0d19d276981db794ea1fa8cf49b'};
+  if(Object.entries(expected).some(([k,x])=>v.correctedReceipt.attributeHashes?.[k]!==x))throw Error('PRODUCTION_ATTRIBUTE_CUSTODY');
+  validateFrame(v,pose,v.state?.sequence);
+  const assets=assetReadiness(v.resources,v.lastFrame.cameraPosition),vegetation=footprintVegetationReadiness(v.resources);
+  if(!assets.ready||!vegetation.ready||assets.signature+'|'+vegetation.signature!==normalizeAssetSignature(v.assetSignature))throw Error('PRODUCTION_RESOURCES_CHANGED');
+  if(v.cpuSubmitMilliseconds?.length!==1||v.softwareGpuFinishMilliseconds?.length!==1)throw Error('PRODUCTION_SUBMISSION_COUNT');
  }
  return true;
 }

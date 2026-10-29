@@ -1230,7 +1230,7 @@ jobs:
           TIMING_SHIM: ${{ inputs.apply_timing_shim }}
         run: |
           set -euo pipefail
-          test "$TARGET_SHA" = 'ee8463c17b9df9fc0c9f534792fa7235fa836443'
+          test "$TARGET_SHA" = '31c98af65c35208e4d6311bac8f177d80e87a3f8'
           test "$ROUTE_PATH" = '/showroom/globe/h-earth/'
           test "$ROUTE_QUERY" = 'qualification=h-earth-original-indexed-mesh-v1'
           test "$EXERCISE" = 'false'
@@ -1239,7 +1239,7 @@ jobs:
       - name: Checkout exact committed source-recovery tooling
         uses: actions/checkout@v4
         with:
-          ref: ee8463c17b9df9fc0c9f534792fa7235fa836443
+          ref: 31c98af65c35208e4d6311bac8f177d80e87a3f8
           fetch-depth: 1
           path: tooling
           persist-credentials: false
@@ -1252,9 +1252,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 'ee8463c17b9df9fc0c9f534792fa7235fa836443'
+          test "$(git rev-parse HEAD)" = '31c98af65c35208e4d6311bac8f177d80e87a3f8'
           test "$(git config --get remote.origin.url)" != ''
-          test "$(git hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh)" = 661595489af17db36ea65a9b4e57d22e203ebc12
+          test "$(git hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh)" = 13030af0417d298e4140bf82055b686b9b45ce56
           test "$(git hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 2033596bf75ccd3dbd9664a55460df037e4be2b1
 
       - name: Install pinned Node and Python runtimes
@@ -1291,7 +1291,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/h-earth-source-native"
-          printf 'schema=H_EARTH_ORIGINAL_INDEXED_MESH_QUALIFICATION_V1\nresult=%s\nrun_id=%s\ndiagnostic_sha=ee8463c17b9df9fc0c9f534792fa7235fa836443\nsource_sha=cb57c275b95d0d48883bc4da4dcfcf17cbec5060\noriginal_asset_sha256=48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a\n' "$JOB_STATUS" "$RUN_ID" > "$RUNNER_TEMP/h-earth-source-native/qualification-invocation.txt"
+          printf 'schema=H_EARTH_ORIGINAL_INDEXED_MESH_QUALIFICATION_V1\nresult=%s\nrun_id=%s\ndiagnostic_sha=31c98af65c35208e4d6311bac8f177d80e87a3f8\nsource_sha=cb57c275b95d0d48883bc4da4dcfcf17cbec5060\noriginal_asset_sha256=48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a\n' "$JOB_STATUS" "$RUN_ID" > "$RUNNER_TEMP/h-earth-source-native/qualification-invocation.txt"
 
       - name: Upload exact source and failed-or-qualified mesh receipts
         if: always()
@@ -1304,7 +1304,7 @@ jobs:
 
   # Gen2965: source-only CI verification for precisely the tooling PR branch.
   original-indexed-mesh-static-test:
-    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/source-native-mesh-qualification-20261028' }}
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/source-native-archive-repair-20261029' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     permissions:
@@ -1323,7 +1323,7 @@ jobs:
       - name: Checkout immutable source bootstrap for PR test
         uses: actions/checkout@v4
         with:
-          ref: ee8463c17b9df9fc0c9f534792fa7235fa836443
+          ref: 31c98af65c35208e4d6311bac8f177d80e87a3f8
           fetch-depth: 1
           path: source-tooling
           persist-credentials: false
@@ -1344,15 +1344,15 @@ jobs:
           assert workflow.splitlines().count('  original-indexed-mesh-static-test:') == 1
           assert "inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1'" in workflow
           assert "inputs.route_query == 'qualification=h-earth-original-indexed-mesh-v1'" in workflow
-          assert "ref: ee8463c17b9df9fc0c9f534792fa7235fa836443" in workflow
-          assert "test \"$TARGET_SHA\" = 'ee8463c17b9df9fc0c9f534792fa7235fa836443'" in workflow
+          assert "ref: 31c98af65c35208e4d6311bac8f177d80e87a3f8" in workflow
+          assert "test \"$TARGET_SHA\" = '31c98af65c35208e4d6311bac8f177d80e87a3f8'" in workflow
           assert 'if: always()' in workflow
           assert "recover-original-mesh.sh --mesh" in workflow
           assert "numpy==2.2.6 scipy==1.15.3 shapely==2.1.2 Pillow==11.3.0" in workflow
           assert '  original-indexed-mesh-recovery:' in workflow
           print('PASS:FIXED_ORIGINAL_INDEXED_MESH_WORKFLOW_STATIC_GUARDS')
           PY
-          test "$(git -C source-tooling rev-parse HEAD)" = ee8463c17b9df9fc0c9f534792fa7235fa836443
-          test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh)" = 661595489af17db36ea65a9b4e57d22e203ebc12
+          test "$(git -C source-tooling rev-parse HEAD)" = 31c98af65c35208e4d6311bac8f177d80e87a3f8
+          test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh)" = 13030af0417d298e4140bf82055b686b9b45ce56
           bash -n source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py

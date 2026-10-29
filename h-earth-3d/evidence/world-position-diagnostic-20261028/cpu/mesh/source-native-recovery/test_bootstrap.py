@@ -23,6 +23,37 @@ class Bootstrap(unittest.TestCase):
             p=subprocess.run(['bash',str(SCRIPT),'--asset',d+'/out'],cwd=d,capture_output=True,text=True)
             self.assertEqual(p.returncode,2)
             self.assertIn('NOT_A_REPOSITORY',p.stderr)
+    def test_frozen_archive_absent_root_package(self):
+        # Regression for run 40885973120: the frozen commit lacks package.json.
+        # Reproduce Git archive's exact missing-path failure with a fresh toy tree.
+        import io
+        import tarfile
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            asset='showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz'
+            (root/asset).parent.mkdir(parents=True)
+            (root/asset).write_bytes(b'known-gzip-test-placeholder')
+            (root/'h-earth-3d').mkdir()
+            (root/'h-earth-3d/replay.mjs').write_text('export const world = true;\\n')
+            for cmd in (['git','init','-q'],['git','add','.'],
+                        ['git','-c','user.name=CI','-c','user.email=ci@example.com','commit','-qm','fixture']):
+                subprocess.run(cmd,cwd=root,check=True,capture_output=True)
+            old=subprocess.run(['git','archive','--format=tar','HEAD',
+                                'h-earth-3d/replay.mjs','package.json',asset],
+                               cwd=root,capture_output=True)
+            self.assertNotEqual(old.returncode,0)
+            self.assertIn("pathspec 'package.json' did not match",old.stderr.decode())
+            new=subprocess.run(['git','archive','--format=tar','HEAD',
+                                'h-earth-3d/replay.mjs',asset],
+                               cwd=root,capture_output=True)
+            self.assertEqual(new.returncode,0,new.stderr.decode())
+            with tarfile.open(fileobj=io.BytesIO(new.stdout),mode='r:') as archive:
+                names=archive.getnames()
+                self.assertIn(asset,names)
+                self.assertIn('h-earth-3d/replay.mjs',names)
+            source=SCRIPT.read_text()
+            self.assertIn('paths+=("$ASSET")',source)
+            self.assertNotIn('paths+=(package.json "$ASSET")',source)
     def test_no_product_write_or_bypass(self):
         s=SCRIPT.read_text()
         for forbidden in ['git push','git reset','git checkout -f','git commit','gh api','curl ','wget ','git apply ','git merge ']:

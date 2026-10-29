@@ -1,0 +1,65 @@
+{
+  "source": {
+    "repository": "smansfield635-create/smansfield635-create.github.io",
+    "head": "3754eca67a9162fd4b8fc93d2f0d05111e8d236b",
+    "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "blob": "ac3c1edab6fd1b2468fbe0925fc2ec32277ba05a",
+    "sha256": "09dd5b802f37eaf4b5ff6afac6f6c839ee3d94b8ae34e0cb231273982cbdad4e"
+  },
+  "provenance": "Values copied without rerun from the prior observed East source-field calculation in this assignment. Packaged script adds source-clause verification; script has not been rerun in this packaging step.",
+  "method": {
+    "execution": "MANUAL_NUMPY_FLOAT64_TRANSLATION",
+    "sourceExtractedExecutableGLSL": false,
+    "gridShape": [
+      512,
+      512
+    ],
+    "xInclusive": [
+      -500,
+      11
+    ],
+    "zInclusive": [
+      -800,
+      -289
+    ],
+    "stepMetres": 1,
+    "suitability": 1,
+    "protection": 1,
+    "correlation": "Mean Pearson correlation along X and Z over valid overlapping cells",
+    "standardDeviation": "population"
+  },
+  "results": [
+    {
+      "field": "original",
+      "meanWeight": 0.4062634175903469,
+      "stdWeight": 0.2251798802381511,
+      "lowWeightFraction": 0.12104415893554688,
+      "highWeightFraction": 0.28385162353515625,
+      "meanXZCorrelationAtMetres": {
+        "5": 0.9597828996189259,
+        "10": 0.8730227357082321,
+        "20": 0.6974388021718341,
+        "40": 0.4003577583871999
+      }
+    },
+    {
+      "field": "resident_meso_detail",
+      "meanWeight": 0.43436996280709217,
+      "stdWeight": 0.22254618587141153,
+      "lowWeightFraction": 0.09781646728515625,
+      "highWeightFraction": 0.3469429016113281,
+      "meanXZCorrelationAtMetres": {
+        "5": 0.6774879180998389,
+        "10": 0.2847461673708437,
+        "20": -0.001965213085039891,
+        "40": 0.005562430824770934
+      }
+    }
+  ],
+  "limits": [
+    "Synthetic scalar field, not actual visible geometry or pixel sampling",
+    "GPU float/hash precision differs; no GLSL execution claimed",
+    "Suitability/protection fixed to1, no tone or later-layer evaluation",
+    "No visual, healthy-control, map-wide, performance or owner acceptance"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+  "generation": 2956,
+  "governingHead": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+  "inheritedCandidate": "3754eca67a9162fd4b8fc93d2f0d05111e8d236b",
+  "relevantMainDelta": [],
+  "comparisonFrom": "50ed04ad17de834e96e96d6a28985a125b17aa8a",
+  "predecessorClosureCommit": "6464255590941b5b83f929d6bca88d97d396d898",
+  "admissionCommit": "f0914b953f3e22f558aae0bc262ccf153e31db47",
+  "result": "NEW_BOUNDED_EXPERIMENT_AFTER_REJECTED_CLOSED",
+  "inheritedEvidence": "Both rejected experiments and proven timing-only normalization retained unchanged.",
+  "authorityEffect": "NONE_EVIDENCE_ONLY"
+}

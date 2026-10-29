@@ -1,0 +1,1756 @@
+{
+  "receiptId": "H_EARTH_AUTOMATIC_PREFLIGHT_779294361E766F3B28F4_v1",
+  "activationId": "H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_ACTIVATION_v1",
+  "activationStatus": "ACTIVATED",
+  "dependenciesVerified": false,
+  "taskText": "",
+  "mutationIntentDetected": false,
+  "pathClassification": {
+    "normalizedPaths": [
+      "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+    ],
+    "classifications": [
+      {
+        "repositoryPath": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "classification": "REGISTERED_H_EARTH_PATH",
+        "registered": true,
+        "insideScopeRoot": true,
+        "resolvedNodeIds": [
+          "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+          "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE"
+        ]
+      }
+    ],
+    "hEarthPaths": [
+      "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+    ],
+    "outsidePaths": []
+  },
+  "operationInput": {
+    "operationId": "AUTO_PREFLIGHT_7908EFB4B104322FEC12",
+    "operationClass": "READ_ONLY_INSPECTION",
+    "requestedAction": "AUTOMATIC_H_EARTH_PREFLIGHT",
+    "requestedMutation": false,
+    "requestedPaths": [
+      "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"
+    ],
+    "declaredAffectedNodeIds": [
+      "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+      "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE"
+    ],
+    "declaredAffectedRelationIds": [],
+    "declaredCompositeUnitIds": [],
+    "assertedOccurrences": [],
+    "assertedAuthority": [],
+    "assertedLifecycleTransitions": [],
+    "assertedCardinalRoles": [],
+    "instructionSources": [
+      "H_EARTH_REPOSITORY_REGISTRY_GITHUB_TOOL_INSTRUCTION_v1"
+    ],
+    "evidenceReferences": [],
+    "requestedDispositionContext": {
+      "allowReviewRequired": true,
+      "requireExactOccurrenceForReadOnly": false,
+      "separateAuthorityAvailable": false
+    }
+  },
+  "scopePreview": {
+    "valid": true,
+    "dependenciesVerified": false,
+    "affectedNodeIds": [
+      "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+      "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE"
+    ],
+    "affectedRelationIds": [],
+    "affectedCompositeUnitIds": [],
+    "occurrence": {
+      "resolutionId": "H_EARTH_REPOSITORY_REGISTRY_OPERATION_OCCURRENCE_RESOLUTION_v1",
+      "pathResults": [
+        {
+          "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+          "resolved": true,
+          "nodeIds": [
+            "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+            "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE"
+          ],
+          "occurrences": [
+            {
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "gitBlobSha": null,
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+              "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "gitBlobSha": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+              "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+              "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+            }
+          ]
+        }
+      ],
+      "assertedOccurrenceResults": [],
+      "resolvedPaths": [
+        {
+          "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+          "resolved": true,
+          "nodeIds": [
+            "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+            "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE"
+          ],
+          "occurrences": [
+            {
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "gitBlobSha": null,
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+              "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "gitBlobSha": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+              "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+              "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+            }
+          ]
+        }
+      ],
+      "resolvedOccurrences": [
+        {
+          "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+          "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+          "gitBlobSha": null,
+          "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+          "existenceStatus": "PRESENT",
+          "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+          "occurrenceClass": "CANDIDATE"
+        },
+        {
+          "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+          "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+          "gitBlobSha": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+          "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+          "existenceStatus": "PRESENT",
+          "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+          "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+        }
+      ],
+      "failureCodes": [],
+      "stoppingCondition": {
+        "pathAndOccurrenceResolutionComplete": true,
+        "advanceBeyondTarget4B4": false,
+        "nextAuthorizedSubtarget": "4B-5"
+      }
+    },
+    "scope": {
+      "scopeResolutionId": "H_EARTH_REPOSITORY_REGISTRY_AFFECTED_SCOPE_CLOSURE_v1",
+      "seedNodeIds": [
+        "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+        "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE"
+      ],
+      "affectedNodeIds": [
+        "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+        "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE"
+      ],
+      "affectedRelationIds": [],
+      "nodes": [
+        {
+          "nodeId": "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+          "nodeType": "BOUNDARY_PACKET",
+          "nodeSubtype": "C3C3R5_PR1215_SCOPE_RECONCILIATION",
+          "displayName": "H-Earth C3C3R5 PR1215 Scope Reconciliation",
+          "description": "Registers the 20 exact PR #1215 paths present in the frozen subject tree but unresolved by the first native preflight.",
+          "repositoryPaths": [
+            "/h-earth-3d/docs/H_EARTH_C3C3R3_OBJECTIVE_VISIBLE_REPAIR_AND_COMPARATIVE_ACCEPTANCE_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R4_PLANETARY_WORLD_FRAME_CONSTRUCTION_CONTRACT_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_D11_MACRO_COMPOSITION_OCEAN_REVEAL_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_D12_VISUAL_EXPERIENTIAL_CLOSURE_PROTOCOL_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_LIVE_TERRAIN_GRID_AND_LAYERED_COLOR_COMPOSITION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_MATERIAL_TOPOLOGY_COMPOSITION_AUDIT_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_PLANET_RELATIVE_CAMERA_INTEGRATION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_REGION_TO_PLANET_TRANSFORM_RECONSTRUCTION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_REMAINING_LAYER_CLOSURE_CYCLE_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_RENDERER_WORLD_SPACE_HORIZON_RECONCILIATION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_SELECTED_LIVE_RENDERER_AUTHORITY_RECONCILIATION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_DEEP_CHANGE_DISCOVERY_MANIFEST_v1.md",
+            "/h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs",
+            "/h-earth-3d/validation/h-earth.c3c3r5.deep-layer-closure.browser.harness.mjs",
+            "/h-earth-3d/validation/h-earth.c3c3r5.visual-audit-capture.browser.mjs",
+            "/showroom/globe/h-earth/render/h-earth.c3c3r5.remaining-layer-provenance.audit.mjs",
+            "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+            "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+            "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+            "/showroom/globe/h-earth/render/planetary-world-frame.js"
+          ],
+          "repositoryOccurrences": [
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R3_OBJECTIVE_VISIBLE_REPAIR_AND_COMPARATIVE_ACCEPTANCE_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R4_PLANETARY_WORLD_FRAME_CONSTRUCTION_CONTRACT_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_D11_MACRO_COMPOSITION_OCEAN_REVEAL_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_D12_VISUAL_EXPERIENTIAL_CLOSURE_PROTOCOL_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_LIVE_TERRAIN_GRID_AND_LAYERED_COLOR_COMPOSITION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_MATERIAL_TOPOLOGY_COMPOSITION_AUDIT_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_PLANET_RELATIVE_CAMERA_INTEGRATION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_REGION_TO_PLANET_TRANSFORM_RECONSTRUCTION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_REMAINING_LAYER_CLOSURE_CYCLE_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_RENDERER_WORLD_SPACE_HORIZON_RECONCILIATION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_SELECTED_LIVE_RENDERER_AUTHORITY_RECONCILIATION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_DEEP_CHANGE_DISCOVERY_MANIFEST_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/validation/h-earth.c3c3r5.deep-layer-closure.browser.harness.mjs",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/validation/h-earth.c3c3r5.visual-audit-capture.browser.mjs",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/h-earth.c3c3r5.remaining-layer-provenance.audit.mjs",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/planetary-world-frame.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            }
+          ],
+          "evidenceClass": "EXACT_SUBJECT_TREE_AND_NATIVE_PREFLIGHT_EVIDENCE",
+          "evidenceReferences": [
+            "EVIDENCE_H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_v1"
+          ],
+          "authorityClass": "AUDIT_ONLY",
+          "authorityPosture": "READ_ONLY_PREFLIGHT_SCOPE_RECONCILIATION",
+          "authoritySource": [
+            "NATIVE_REQUESTED_PATH_UNRESOLVED_RECEIPT",
+            "CONNECTED_GITHUB_EXACT_SUBJECT_TREE"
+          ],
+          "authorityScope": [
+            "EXACT_PR1215_PATH_RESOLUTION",
+            "AUTOMATIC_REPOSITORY_PREFLIGHT_SCOPE"
+          ],
+          "authorityLimitations": [
+            "DOES_NOT_REDEFINE_PRODUCT_OR_RENDERER_AUTHORITY",
+            "DOES_NOT_AUTHORIZE_MUTATION_MERGE_DEPLOYMENT_OR_RELEASE"
+          ],
+          "parentRelations": [],
+          "childRelations": [],
+          "peerRelations": [],
+          "upstreamBoundaries": [],
+          "downstreamBoundaries": [],
+          "cardinalRole": "NONE",
+          "cardinalStatus": "NONE",
+          "cardinalCompleteness": "NOT_APPLICABLE",
+          "orderingRules": [],
+          "dependencyRelations": [],
+          "allowedMutationScope": "READ_ONLY_PREFLIGHT_PATH_REGISTRATION_ONLY",
+          "prohibitedMutations": [
+            "PRODUCT_MUTATION",
+            "CONSTRUCTION",
+            "MERGE",
+            "DEPLOYMENT",
+            "RELEASE"
+          ],
+          "requiredValidations": [
+            "ALL_20_PATHS_RESOLVE",
+            "IDENTICAL_PR1215_NATIVE_PREFLIGHT_RERUN"
+          ],
+          "stoppingBoundaries": [
+            "STOP_IF_ANY_PATH_REMAINS_UNRESOLVED"
+          ],
+          "currentIdentityReferences": [
+            "PUBLIC_PR_1215",
+            "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45"
+          ],
+          "lifecycleStatus": "CANDIDATE",
+          "unresolvedFields": []
+        },
+        {
+          "nodeId": "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE",
+          "nodeType": "BOUNDARY_PACKET",
+          "nodeSubtype": "EXISTING_LIVE_GPU_PATH_RECOGNITION_SCOPE",
+          "displayName": "H-Earth HC05 Live GPU Path Recognition",
+          "description": "Recognizes exactly the current R3A live-renderer contract and active CP2 persistent-renderer paths so automatic H-Earth preflight can resolve them without granting mutation authority.",
+          "repositoryPaths": [
+            "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+            "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+            "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.hc05-live-gpu-path-recognition.js"
+          ],
+          "repositoryOccurrences": [
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "path": "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+              "gitBlobSha": "8c6ec02d0873cafeb596c9ae34ad3b580b09a489",
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+              "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+              "gitBlobSha": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+              "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "path": "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.hc05-live-gpu-path-recognition.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "ABSENT",
+              "fetchbackStatus": "VERIFIED_ABSENT_AT_GOVERNING_MAIN_BEFORE_GENERATION_889",
+              "occurrenceClass": "AUTHORIZED_REGISTRY_PREREQUISITE_NOT_YET_MATERIALIZED_AT_GOVERNING_MAIN"
+            }
+          ],
+          "evidenceClass": "EXISTING_RUNTIME_PATH_RECOGNITION_WITH_EXACT_BLOB_CUSTODY",
+          "evidenceReferences": [
+            "EVIDENCE_H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_v1"
+          ],
+          "lifecycleStatus": "AUDIT_ONLY_PATH_RECOGNITION_REGISTERED",
+          "authorityClass": "AUDIT_ONLY",
+          "authorityPosture": "READ_ONLY_EXISTING_RUNTIME_PATH_RECOGNITION",
+          "registrationEffect": "PATH_RESOLUTION_ONLY",
+          "authoritySource": [
+            "CURRENT_USER_DIRECTED_HC05_SEQUENCE",
+            "HC05_GENERATION_888_NATIVE_PREFLIGHT_STOP",
+            "REGISTRY_PREREQUISITE_GENERATION_889"
+          ],
+          "authorityScope": [
+            "EXACT_PATH_RESOLUTION",
+            "EXACT_EXISTING_OCCURRENCE_IDENTITY",
+            "AUTOMATIC_H_EARTH_PREFLIGHT_RESOLUTION"
+          ],
+          "authorityLimitations": [
+            "NO_PRODUCT_MUTATION",
+            "NO_RUNTIME_SOURCE_MUTATION",
+            "NO_RENDERER_AUTHORITY",
+            "NO_PACKAGE_IDENTITY_AUTHORITY",
+            "NO_TERRAIN_GEOMETRY_CAMERA_NAVIGATION_OR_GAMEPLAY_AUTHORITY",
+            "NO_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY"
+          ],
+          "parentRelations": [],
+          "childRelations": [],
+          "peerRelations": [],
+          "upstreamBoundaries": [],
+          "downstreamBoundaries": [],
+          "cardinalRole": "NONE",
+          "cardinalStatus": "NONE",
+          "cardinalCompleteness": "NOT_APPLICABLE",
+          "orderingRules": [
+            "EXISTING_RUNTIME_OCCURRENCE_PRECEDES_REGISTRY_RECOGNITION",
+            "REGISTRY_RECOGNITION_PRECEDES_FRESH_HC05_PREFLIGHT_RETRY"
+          ],
+          "dependencyRelations": [],
+          "allowedMutationScope": "NONE_REGISTRATION_IS_READ_ONLY_PATH_RECOGNITION",
+          "prohibitedMutations": [
+            "R3A_SOURCE_MUTATION_FROM_REGISTRY_AUTHORITY",
+            "CP2_SOURCE_MUTATION_FROM_REGISTRY_AUTHORITY",
+            "HC05_PRODUCT_MUTATION_FROM_REGISTRY_AUTHORITY"
+          ],
+          "requiredValidations": [
+            "EXACT_TWO_RUNTIME_PATHS",
+            "EXACT_R3A_BLOB",
+            "EXACT_CP2_BLOB",
+            "PREDECESSOR_REGISTRY_IDENTITY_PRESERVED",
+            "AUTOMATIC_H_EARTH_PREFLIGHT_NO_UNREGISTERED_STOP"
+          ],
+          "stoppingBoundaries": [
+            "STOP_ON_RUNTIME_BLOB_DRIFT",
+            "STOP_ON_PATH_OUTSIDE_EXACT_SCOPE",
+            "STOP_ON_AUTHORITY_EXPANSION",
+            "STOP_BEFORE_PRODUCT_OR_RUNTIME_MUTATION"
+          ],
+          "currentIdentityReferences": [
+            "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "R3A_BLOB=8c6ec02d0873cafeb596c9ae34ad3b580b09a489",
+            "CP2_BLOB=98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "REGISTRY_GEN=889"
+          ],
+          "unresolvedFields": []
+        }
+      ],
+      "relations": [],
+      "compositeUnits": [],
+      "failureCodes": [],
+      "stoppingCondition": {
+        "affectedNodeAndRelationClosureComplete": true,
+        "advanceBeyondTarget4B5": false,
+        "nextAuthorizedSubtarget": "4B-6"
+      }
+    },
+    "composite": {
+      "expansionId": "H_EARTH_REPOSITORY_REGISTRY_COMPOSITE_MEMBERSHIP_EXPANSION_v1",
+      "affectedNodeIds": [
+        "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+        "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE"
+      ],
+      "affectedRelationIds": [],
+      "nodes": [
+        {
+          "nodeId": "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+          "nodeType": "BOUNDARY_PACKET",
+          "nodeSubtype": "C3C3R5_PR1215_SCOPE_RECONCILIATION",
+          "displayName": "H-Earth C3C3R5 PR1215 Scope Reconciliation",
+          "description": "Registers the 20 exact PR #1215 paths present in the frozen subject tree but unresolved by the first native preflight.",
+          "repositoryPaths": [
+            "/h-earth-3d/docs/H_EARTH_C3C3R3_OBJECTIVE_VISIBLE_REPAIR_AND_COMPARATIVE_ACCEPTANCE_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R4_PLANETARY_WORLD_FRAME_CONSTRUCTION_CONTRACT_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_D11_MACRO_COMPOSITION_OCEAN_REVEAL_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_D12_VISUAL_EXPERIENTIAL_CLOSURE_PROTOCOL_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_LIVE_TERRAIN_GRID_AND_LAYERED_COLOR_COMPOSITION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_MATERIAL_TOPOLOGY_COMPOSITION_AUDIT_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_PLANET_RELATIVE_CAMERA_INTEGRATION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_REGION_TO_PLANET_TRANSFORM_RECONSTRUCTION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_REMAINING_LAYER_CLOSURE_CYCLE_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_RENDERER_WORLD_SPACE_HORIZON_RECONCILIATION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_C3C3R5_SELECTED_LIVE_RENDERER_AUTHORITY_RECONCILIATION_v1.md",
+            "/h-earth-3d/docs/H_EARTH_DEEP_CHANGE_DISCOVERY_MANIFEST_v1.md",
+            "/h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs",
+            "/h-earth-3d/validation/h-earth.c3c3r5.deep-layer-closure.browser.harness.mjs",
+            "/h-earth-3d/validation/h-earth.c3c3r5.visual-audit-capture.browser.mjs",
+            "/showroom/globe/h-earth/render/h-earth.c3c3r5.remaining-layer-provenance.audit.mjs",
+            "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+            "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+            "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+            "/showroom/globe/h-earth/render/planetary-world-frame.js"
+          ],
+          "repositoryOccurrences": [
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R3_OBJECTIVE_VISIBLE_REPAIR_AND_COMPARATIVE_ACCEPTANCE_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R4_PLANETARY_WORLD_FRAME_CONSTRUCTION_CONTRACT_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_D11_MACRO_COMPOSITION_OCEAN_REVEAL_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_D12_VISUAL_EXPERIENTIAL_CLOSURE_PROTOCOL_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_LIVE_TERRAIN_GRID_AND_LAYERED_COLOR_COMPOSITION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_MATERIAL_TOPOLOGY_COMPOSITION_AUDIT_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_PLANET_RELATIVE_CAMERA_INTEGRATION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_REGION_TO_PLANET_TRANSFORM_RECONSTRUCTION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_REMAINING_LAYER_CLOSURE_CYCLE_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_RENDERER_WORLD_SPACE_HORIZON_RECONCILIATION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_SELECTED_LIVE_RENDERER_AUTHORITY_RECONCILIATION_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/docs/H_EARTH_DEEP_CHANGE_DISCOVERY_MANIFEST_v1.md",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/validation/h-earth.c3c3r5.deep-layer-closure.browser.harness.mjs",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/h-earth-3d/validation/h-earth.c3c3r5.visual-audit-capture.browser.mjs",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/h-earth.c3c3r5.remaining-layer-provenance.audit.mjs",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+              "path": "/showroom/globe/h-earth/render/planetary-world-frame.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+              "occurrenceClass": "CANDIDATE"
+            }
+          ],
+          "evidenceClass": "EXACT_SUBJECT_TREE_AND_NATIVE_PREFLIGHT_EVIDENCE",
+          "evidenceReferences": [
+            "EVIDENCE_H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_v1"
+          ],
+          "authorityClass": "AUDIT_ONLY",
+          "authorityPosture": "READ_ONLY_PREFLIGHT_SCOPE_RECONCILIATION",
+          "authoritySource": [
+            "NATIVE_REQUESTED_PATH_UNRESOLVED_RECEIPT",
+            "CONNECTED_GITHUB_EXACT_SUBJECT_TREE"
+          ],
+          "authorityScope": [
+            "EXACT_PR1215_PATH_RESOLUTION",
+            "AUTOMATIC_REPOSITORY_PREFLIGHT_SCOPE"
+          ],
+          "authorityLimitations": [
+            "DOES_NOT_REDEFINE_PRODUCT_OR_RENDERER_AUTHORITY",
+            "DOES_NOT_AUTHORIZE_MUTATION_MERGE_DEPLOYMENT_OR_RELEASE"
+          ],
+          "parentRelations": [],
+          "childRelations": [],
+          "peerRelations": [],
+          "upstreamBoundaries": [],
+          "downstreamBoundaries": [],
+          "cardinalRole": "NONE",
+          "cardinalStatus": "NONE",
+          "cardinalCompleteness": "NOT_APPLICABLE",
+          "orderingRules": [],
+          "dependencyRelations": [],
+          "allowedMutationScope": "READ_ONLY_PREFLIGHT_PATH_REGISTRATION_ONLY",
+          "prohibitedMutations": [
+            "PRODUCT_MUTATION",
+            "CONSTRUCTION",
+            "MERGE",
+            "DEPLOYMENT",
+            "RELEASE"
+          ],
+          "requiredValidations": [
+            "ALL_20_PATHS_RESOLVE",
+            "IDENTICAL_PR1215_NATIVE_PREFLIGHT_RERUN"
+          ],
+          "stoppingBoundaries": [
+            "STOP_IF_ANY_PATH_REMAINS_UNRESOLVED"
+          ],
+          "currentIdentityReferences": [
+            "PUBLIC_PR_1215",
+            "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45"
+          ],
+          "lifecycleStatus": "CANDIDATE",
+          "unresolvedFields": []
+        },
+        {
+          "nodeId": "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE",
+          "nodeType": "BOUNDARY_PACKET",
+          "nodeSubtype": "EXISTING_LIVE_GPU_PATH_RECOGNITION_SCOPE",
+          "displayName": "H-Earth HC05 Live GPU Path Recognition",
+          "description": "Recognizes exactly the current R3A live-renderer contract and active CP2 persistent-renderer paths so automatic H-Earth preflight can resolve them without granting mutation authority.",
+          "repositoryPaths": [
+            "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+            "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+            "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.hc05-live-gpu-path-recognition.js"
+          ],
+          "repositoryOccurrences": [
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "path": "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+              "gitBlobSha": "8c6ec02d0873cafeb596c9ae34ad3b580b09a489",
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+              "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+              "gitBlobSha": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "PRESENT",
+              "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+              "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+            },
+            {
+              "repository": "smansfield635-create/smansfield635-create.github.io",
+              "refType": "COMMIT",
+              "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+              "path": "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.hc05-live-gpu-path-recognition.js",
+              "gitBlobSha": null,
+              "contentSha256": null,
+              "byteCount": null,
+              "existenceStatus": "ABSENT",
+              "fetchbackStatus": "VERIFIED_ABSENT_AT_GOVERNING_MAIN_BEFORE_GENERATION_889",
+              "occurrenceClass": "AUTHORIZED_REGISTRY_PREREQUISITE_NOT_YET_MATERIALIZED_AT_GOVERNING_MAIN"
+            }
+          ],
+          "evidenceClass": "EXISTING_RUNTIME_PATH_RECOGNITION_WITH_EXACT_BLOB_CUSTODY",
+          "evidenceReferences": [
+            "EVIDENCE_H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_v1"
+          ],
+          "lifecycleStatus": "AUDIT_ONLY_PATH_RECOGNITION_REGISTERED",
+          "authorityClass": "AUDIT_ONLY",
+          "authorityPosture": "READ_ONLY_EXISTING_RUNTIME_PATH_RECOGNITION",
+          "registrationEffect": "PATH_RESOLUTION_ONLY",
+          "authoritySource": [
+            "CURRENT_USER_DIRECTED_HC05_SEQUENCE",
+            "HC05_GENERATION_888_NATIVE_PREFLIGHT_STOP",
+            "REGISTRY_PREREQUISITE_GENERATION_889"
+          ],
+          "authorityScope": [
+            "EXACT_PATH_RESOLUTION",
+            "EXACT_EXISTING_OCCURRENCE_IDENTITY",
+            "AUTOMATIC_H_EARTH_PREFLIGHT_RESOLUTION"
+          ],
+          "authorityLimitations": [
+            "NO_PRODUCT_MUTATION",
+            "NO_RUNTIME_SOURCE_MUTATION",
+            "NO_RENDERER_AUTHORITY",
+            "NO_PACKAGE_IDENTITY_AUTHORITY",
+            "NO_TERRAIN_GEOMETRY_CAMERA_NAVIGATION_OR_GAMEPLAY_AUTHORITY",
+            "NO_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY"
+          ],
+          "parentRelations": [],
+          "childRelations": [],
+          "peerRelations": [],
+          "upstreamBoundaries": [],
+          "downstreamBoundaries": [],
+          "cardinalRole": "NONE",
+          "cardinalStatus": "NONE",
+          "cardinalCompleteness": "NOT_APPLICABLE",
+          "orderingRules": [
+            "EXISTING_RUNTIME_OCCURRENCE_PRECEDES_REGISTRY_RECOGNITION",
+            "REGISTRY_RECOGNITION_PRECEDES_FRESH_HC05_PREFLIGHT_RETRY"
+          ],
+          "dependencyRelations": [],
+          "allowedMutationScope": "NONE_REGISTRATION_IS_READ_ONLY_PATH_RECOGNITION",
+          "prohibitedMutations": [
+            "R3A_SOURCE_MUTATION_FROM_REGISTRY_AUTHORITY",
+            "CP2_SOURCE_MUTATION_FROM_REGISTRY_AUTHORITY",
+            "HC05_PRODUCT_MUTATION_FROM_REGISTRY_AUTHORITY"
+          ],
+          "requiredValidations": [
+            "EXACT_TWO_RUNTIME_PATHS",
+            "EXACT_R3A_BLOB",
+            "EXACT_CP2_BLOB",
+            "PREDECESSOR_REGISTRY_IDENTITY_PRESERVED",
+            "AUTOMATIC_H_EARTH_PREFLIGHT_NO_UNREGISTERED_STOP"
+          ],
+          "stoppingBoundaries": [
+            "STOP_ON_RUNTIME_BLOB_DRIFT",
+            "STOP_ON_PATH_OUTSIDE_EXACT_SCOPE",
+            "STOP_ON_AUTHORITY_EXPANSION",
+            "STOP_BEFORE_PRODUCT_OR_RUNTIME_MUTATION"
+          ],
+          "currentIdentityReferences": [
+            "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "R3A_BLOB=8c6ec02d0873cafeb596c9ae34ad3b580b09a489",
+            "CP2_BLOB=98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "REGISTRY_GEN=889"
+          ],
+          "unresolvedFields": []
+        }
+      ],
+      "relations": [],
+      "compositeUnits": [],
+      "compositeProjection": [],
+      "failureCodes": [],
+      "stoppingCondition": {
+        "compositeMembershipExpansionComplete": true,
+        "advanceBeyondTarget4B6": false,
+        "nextAuthorizedSubtarget": "4B-7"
+      }
+    }
+  },
+  "validatorReceipt": {
+    "receiptId": "AUTO_PREFLIGHT_7908EFB4B104322FEC12_VALIDATION_RECEIPT_v1",
+    "contractIdentity": {
+      "contractId": "H_EARTH_REPOSITORY_REGISTRY_PACKAGE_AWARE_VALIDATOR_CONTRACT_v1",
+      "contractVersion": 1
+    },
+    "registryIdentity": {
+      "registryId": "H_EARTH_REPOSITORY_REGISTRY_CANDIDATE_v1",
+      "registryVersion": "1.0.0-candidate.1",
+      "schemaId": "H_EARTH_REPOSITORY_REGISTRY_SCHEMA_v1",
+      "schemaVersion": 1,
+      "candidateGitBlobSha": "10ab7b203e03fde419e526d0cce2c0af42860911"
+    },
+    "operationIdentity": {
+      "operationId": "AUTO_PREFLIGHT_7908EFB4B104322FEC12",
+      "operationClass": "READ_ONLY_INSPECTION",
+      "requestedAction": "AUTOMATIC_H_EARTH_PREFLIGHT",
+      "requestedMutation": false
+    },
+    "resolvedPaths": [
+      {
+        "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "resolved": true,
+        "nodeIds": [
+          "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+          "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE"
+        ],
+        "occurrences": [
+          {
+            "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "gitBlobSha": null,
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+            "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "gitBlobSha": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+            "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+          }
+        ]
+      }
+    ],
+    "resolvedOccurrences": [
+      {
+        "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+        "gitBlobSha": null,
+        "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+        "existenceStatus": "PRESENT",
+        "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+        "occurrenceClass": "CANDIDATE"
+      },
+      {
+        "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+        "gitBlobSha": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+        "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+        "existenceStatus": "PRESENT",
+        "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+        "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+      }
+    ],
+    "affectedNodes": [
+      {
+        "nodeId": "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+        "nodeType": "BOUNDARY_PACKET",
+        "nodeSubtype": "C3C3R5_PR1215_SCOPE_RECONCILIATION",
+        "repositoryPaths": [
+          "/h-earth-3d/docs/H_EARTH_C3C3R3_OBJECTIVE_VISIBLE_REPAIR_AND_COMPARATIVE_ACCEPTANCE_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R4_PLANETARY_WORLD_FRAME_CONSTRUCTION_CONTRACT_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R5_D11_MACRO_COMPOSITION_OCEAN_REVEAL_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R5_D12_VISUAL_EXPERIENTIAL_CLOSURE_PROTOCOL_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R5_LIVE_TERRAIN_GRID_AND_LAYERED_COLOR_COMPOSITION_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R5_MATERIAL_TOPOLOGY_COMPOSITION_AUDIT_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R5_PLANET_RELATIVE_CAMERA_INTEGRATION_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R5_REGION_TO_PLANET_TRANSFORM_RECONSTRUCTION_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R5_REMAINING_LAYER_CLOSURE_CYCLE_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R5_RENDERER_WORLD_SPACE_HORIZON_RECONCILIATION_v1.md",
+          "/h-earth-3d/docs/H_EARTH_C3C3R5_SELECTED_LIVE_RENDERER_AUTHORITY_RECONCILIATION_v1.md",
+          "/h-earth-3d/docs/H_EARTH_DEEP_CHANGE_DISCOVERY_MANIFEST_v1.md",
+          "/h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs",
+          "/h-earth-3d/validation/h-earth.c3c3r5.deep-layer-closure.browser.harness.mjs",
+          "/h-earth-3d/validation/h-earth.c3c3r5.visual-audit-capture.browser.mjs",
+          "/showroom/globe/h-earth/render/h-earth.c3c3r5.remaining-layer-provenance.audit.mjs",
+          "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+          "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+          "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+          "/showroom/globe/h-earth/render/planetary-world-frame.js"
+        ],
+        "authorityClass": "AUDIT_ONLY",
+        "cardinalRole": "NONE",
+        "cardinalStatus": "NONE",
+        "lifecycleStatus": "CANDIDATE"
+      },
+      {
+        "nodeId": "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE",
+        "nodeType": "BOUNDARY_PACKET",
+        "nodeSubtype": "EXISTING_LIVE_GPU_PATH_RECOGNITION_SCOPE",
+        "repositoryPaths": [
+          "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+          "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+          "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.hc05-live-gpu-path-recognition.js"
+        ],
+        "authorityClass": "AUDIT_ONLY",
+        "cardinalRole": "NONE",
+        "cardinalStatus": "NONE",
+        "lifecycleStatus": "AUDIT_ONLY_PATH_RECOGNITION_REGISTERED"
+      }
+    ],
+    "affectedRelations": [],
+    "affectedCompositeUnits": [],
+    "cardinalParticipation": [],
+    "authorityProjection": [
+      {
+        "nodeId": "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+        "nodeType": "BOUNDARY_PACKET",
+        "nodeSubtype": "C3C3R5_PR1215_SCOPE_RECONCILIATION",
+        "authorityClass": "AUDIT_ONLY",
+        "authorityPosture": "READ_ONLY_PREFLIGHT_SCOPE_RECONCILIATION",
+        "authoritySource": [
+          "NATIVE_REQUESTED_PATH_UNRESOLVED_RECEIPT",
+          "CONNECTED_GITHUB_EXACT_SUBJECT_TREE"
+        ],
+        "authorityScope": [
+          "EXACT_PR1215_PATH_RESOLUTION",
+          "AUTOMATIC_REPOSITORY_PREFLIGHT_SCOPE"
+        ],
+        "authorityLimitations": [
+          "DOES_NOT_REDEFINE_PRODUCT_OR_RENDERER_AUTHORITY",
+          "DOES_NOT_AUTHORIZE_MUTATION_MERGE_DEPLOYMENT_OR_RELEASE"
+        ],
+        "allowedMutationScope": "READ_ONLY_PREFLIGHT_PATH_REGISTRATION_ONLY"
+      },
+      {
+        "nodeId": "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE",
+        "nodeType": "BOUNDARY_PACKET",
+        "nodeSubtype": "EXISTING_LIVE_GPU_PATH_RECOGNITION_SCOPE",
+        "authorityClass": "AUDIT_ONLY",
+        "authorityPosture": "READ_ONLY_EXISTING_RUNTIME_PATH_RECOGNITION",
+        "authoritySource": [
+          "CURRENT_USER_DIRECTED_HC05_SEQUENCE",
+          "HC05_GENERATION_888_NATIVE_PREFLIGHT_STOP",
+          "REGISTRY_PREREQUISITE_GENERATION_889"
+        ],
+        "authorityScope": [
+          "EXACT_PATH_RESOLUTION",
+          "EXACT_EXISTING_OCCURRENCE_IDENTITY",
+          "AUTOMATIC_H_EARTH_PREFLIGHT_RESOLUTION"
+        ],
+        "authorityLimitations": [
+          "NO_PRODUCT_MUTATION",
+          "NO_RUNTIME_SOURCE_MUTATION",
+          "NO_RENDERER_AUTHORITY",
+          "NO_PACKAGE_IDENTITY_AUTHORITY",
+          "NO_TERRAIN_GEOMETRY_CAMERA_NAVIGATION_OR_GAMEPLAY_AUTHORITY",
+          "NO_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY"
+        ],
+        "allowedMutationScope": "NONE_REGISTRATION_IS_READ_ONLY_PATH_RECOGNITION"
+      }
+    ],
+    "evidenceProjection": [
+      {
+        "evidenceId": "EVIDENCE_H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_v1",
+        "resolved": true,
+        "evidenceClass": "EXACT_SUBJECT_TREE_AND_NATIVE_PREFLIGHT_EVIDENCE",
+        "sourceKind": "CONNECTED_GITHUB_EXACT_TREE_PLUS_NATIVE_PREFLIGHT_RECEIPT",
+        "sourceIdOrPath": "PUBLIC_PR_1215",
+        "sourceOccurrenceOrRevision": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+        "assertionScope": [
+          "EXACT_PATH_EXISTENCE",
+          "READ_ONLY_PREFLIGHT_PATH_RESOLUTION"
+        ],
+        "evidenceLimitations": [
+          "PATH_REGISTRATION_ONLY",
+          "NO_PRODUCT_AUTHORITY",
+          "NO_CONSTRUCTION_AUTHORITY",
+          "NO_MERGE_OR_DEPLOYMENT_AUTHORITY"
+        ]
+      },
+      {
+        "evidenceId": "EVIDENCE_H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_v1",
+        "resolved": true,
+        "evidenceClass": "EXISTING_RUNTIME_PATH_RECOGNITION_WITH_EXACT_BLOB_CUSTODY",
+        "sourceKind": "HC05_NATIVE_PREFLIGHT_STOP_PLUS_EXACT_MAIN_FETCHBACK",
+        "sourceIdOrPath": "ISSUE_781",
+        "sourceOccurrenceOrRevision": "MAIN=eb9a1730f201ba8a8c3822b65ecb984592de38bd;HC05_GEN=888;REGISTRY_GEN=889;R3A=8c6ec02d0873cafeb596c9ae34ad3b580b09a489;CP2=98c6e1f9b9fe4510157367600b85b9d31228056b;PREFLIGHT_RUN=31341611737",
+        "assertionScope": [
+          "EXACT_R3A_LIVE_RENDERER_CONTRACT_PATH",
+          "EXACT_CP2_PERSISTENT_RENDERER_PATH",
+          "EXACT_EXISTING_MAIN_BLOB_IDENTITIES",
+          "AUTOMATIC_H_EARTH_PREFLIGHT_PATH_RESOLUTION"
+        ],
+        "evidenceLimitations": [
+          "NO_RUNTIME_SOURCE_MUTATION_AUTHORITY",
+          "NO_RENDERER_OR_PACKAGE_IDENTITY_MUTATION_AUTHORITY",
+          "NO_TERRAIN_GEOMETRY_CAMERA_NAVIGATION_OR_GAMEPLAY_AUTHORITY",
+          "NO_PRODUCT_CANONICALIZATION_AUTHORITY",
+          "NO_MERGE_DEPLOYMENT_RELEASE_OR_PUBLICATION_AUTHORITY"
+        ]
+      }
+    ],
+    "lifecycleProjection": [
+      {
+        "nodeId": "H_EARTH_C3C3R5_PR1215_SCOPE_RECONCILIATION_PACKAGE",
+        "lifecycleStatus": "CANDIDATE",
+        "cardinalRole": "NONE",
+        "cardinalStatus": "NONE",
+        "cardinalCompleteness": "NOT_APPLICABLE",
+        "unresolvedFields": [],
+        "repositoryOccurrences": [
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R3_OBJECTIVE_VISIBLE_REPAIR_AND_COMPARATIVE_ACCEPTANCE_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R4_PLANETARY_WORLD_FRAME_CONSTRUCTION_CONTRACT_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_D11_MACRO_COMPOSITION_OCEAN_REVEAL_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_D12_VISUAL_EXPERIENTIAL_CLOSURE_PROTOCOL_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_LIVE_TERRAIN_GRID_AND_LAYERED_COLOR_COMPOSITION_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_MATERIAL_TOPOLOGY_COMPOSITION_AUDIT_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_PLANET_RELATIVE_CAMERA_INTEGRATION_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_REGION_TO_PLANET_TRANSFORM_RECONSTRUCTION_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_REMAINING_LAYER_CLOSURE_CYCLE_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_RENDERER_WORLD_SPACE_HORIZON_RECONCILIATION_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_C3C3R5_SELECTED_LIVE_RENDERER_AUTHORITY_RECONCILIATION_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/docs/H_EARTH_DEEP_CHANGE_DISCOVERY_MANIFEST_v1.md",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/validation/h-earth.c3c3.regional-boundary-closure.browser.harness.mjs",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/validation/h-earth.c3c3r5.deep-layer-closure.browser.harness.mjs",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/h-earth-3d/validation/h-earth.c3c3r5.visual-audit-capture.browser.mjs",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/showroom/globe/h-earth/render/h-earth.c3c3r5.remaining-layer-provenance.audit.mjs",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.js",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "commitSha": "67205433ea080bf1e9fff7b2c96c4b1a71cbdc45",
+            "path": "/showroom/globe/h-earth/render/planetary-world-frame.js",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_BY_CONNECTED_GITHUB_EXACT_SUBJECT_TREE",
+            "occurrenceClass": "CANDIDATE"
+          }
+        ]
+      },
+      {
+        "nodeId": "H_EARTH_HC05_LIVE_GPU_PATH_RECOGNITION_SCOPE",
+        "lifecycleStatus": "AUDIT_ONLY_PATH_RECOGNITION_REGISTERED",
+        "cardinalRole": "NONE",
+        "cardinalStatus": "NONE",
+        "cardinalCompleteness": "NOT_APPLICABLE",
+        "unresolvedFields": [],
+        "repositoryOccurrences": [
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "path": "/showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js",
+            "gitBlobSha": "8c6ec02d0873cafeb596c9ae34ad3b580b09a489",
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+            "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+            "gitBlobSha": "98c6e1f9b9fe4510157367600b85b9d31228056b",
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "PRESENT",
+            "fetchbackStatus": "VERIFIED_PRESENT_AT_GOVERNING_MAIN",
+            "occurrenceClass": "EXISTING_LIVE_GPU_IDENTITY_CONSUMER_READ_ONLY_RECOGNITION"
+          },
+          {
+            "repository": "smansfield635-create/smansfield635-create.github.io",
+            "refType": "COMMIT",
+            "refName": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "commitSha": "eb9a1730f201ba8a8c3822b65ecb984592de38bd",
+            "path": "/h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.hc05-live-gpu-path-recognition.js",
+            "gitBlobSha": null,
+            "contentSha256": null,
+            "byteCount": null,
+            "existenceStatus": "ABSENT",
+            "fetchbackStatus": "VERIFIED_ABSENT_AT_GOVERNING_MAIN_BEFORE_GENERATION_889",
+            "occurrenceClass": "AUTHORIZED_REGISTRY_PREREQUISITE_NOT_YET_MATERIALIZED_AT_GOVERNING_MAIN"
+          }
+        ]
+      }
+    ],
+    "unresolvedFields": [],
+    "permittedMutations": [],
+    "prohibitedMutations": [
+      "CONSTRUCTION",
+      "CP2_SOURCE_MUTATION_FROM_REGISTRY_AUTHORITY",
+      "DEPLOYMENT",
+      "HC05_PRODUCT_MUTATION_FROM_REGISTRY_AUTHORITY",
+      "MERGE",
+      "PRODUCT_MUTATION",
+      "R3A_SOURCE_MUTATION_FROM_REGISTRY_AUTHORITY",
+      "RELEASE"
+    ],
+    "requiredValidations": [
+      "ALL_20_PATHS_RESOLVE",
+      "AUTOMATIC_H_EARTH_PREFLIGHT_NO_UNREGISTERED_STOP",
+      "EXACT_CP2_BLOB",
+      "EXACT_R3A_BLOB",
+      "EXACT_TWO_RUNTIME_PATHS",
+      "IDENTICAL_PR1215_NATIVE_PREFLIGHT_RERUN",
+      "PREDECESSOR_REGISTRY_IDENTITY_PRESERVED"
+    ],
+    "stoppingBoundaries": [
+      "STOP_BEFORE_PRODUCT_OR_RUNTIME_MUTATION",
+      "STOP_IF_ANY_PATH_REMAINS_UNRESOLVED",
+      "STOP_ON_AUTHORITY_EXPANSION",
+      "STOP_ON_PATH_OUTSIDE_EXACT_SCOPE",
+      "STOP_ON_RUNTIME_BLOB_DRIFT"
+    ],
+    "failureCodes": [],
+    "derivationTrace": [
+      {
+        "sequence": 1,
+        "step": "VALIDATE_INPUT_SHAPE",
+        "result": "PASS"
+      },
+      {
+        "sequence": 2,
+        "step": "VERIFY_REGISTRY_IDENTITY",
+        "result": "PASS"
+      },
+      {
+        "sequence": 3,
+        "step": "RESOLVE_PATHS_AND_OCCURRENCES",
+        "result": "PATHS=1;FAILURES=0"
+      },
+      {
+        "sequence": 4,
+        "step": "RESOLVE_AFFECTED_NODES",
+        "result": "NODES=2;FAILURES=0"
+      },
+      {
+        "sequence": 5,
+        "step": "EXPAND_RELATIONS_AND_COMPOSITES",
+        "result": "RELATIONS=0;COMPOSITES=0"
+      },
+      {
+        "sequence": 6,
+        "step": "PROJECT_CARDINAL_STRUCTURE",
+        "result": "CARDINAL_RECORDS=0;FAILURES=0"
+      },
+      {
+        "sequence": 7,
+        "step": "PROJECT_AUTHORITY_AND_EVIDENCE",
+        "result": "AUTHORITY=2;EVIDENCE=2"
+      },
+      {
+        "sequence": 8,
+        "step": "PROJECT_LIFECYCLE",
+        "result": "LIFECYCLE=2;UNRESOLVED=0"
+      },
+      {
+        "sequence": 9,
+        "step": "COMPARE_DECLARED_AND_DERIVED_SCOPE",
+        "result": "EXACT_MATCH"
+      },
+      {
+        "sequence": 10,
+        "step": "EVALUATE_MUTATION_LIMITS",
+        "result": "PROHIBITED=8;FAILURES=0"
+      },
+      {
+        "sequence": 11,
+        "step": "EVALUATE_STOPPING_BOUNDARIES",
+        "result": "STOPPING_BOUNDARIES=5"
+      },
+      {
+        "sequence": 12,
+        "step": "CLASSIFY_FAILURES",
+        "result": "FAILURES=0"
+      },
+      {
+        "sequence": 13,
+        "step": "CALCULATE_FINAL_DISPOSITION",
+        "result": "PASS"
+      },
+      {
+        "sequence": 14,
+        "step": "EMIT_DETERMINISTIC_RECEIPT",
+        "result": "RECEIPT_EMITTED"
+      }
+    ],
+    "finalDisposition": "PASS"
+  },
+  "finalDisposition": "PASS",
+  "mutationMayProceed": false,
+  "continuation": "READ_ONLY_CONTINUATION_PERMITTED",
+  "boundaries": {
+    "readOnlyPreflight": true,
+    "sourceAuthorityCreated": false,
+    "mutationAuthorityCreated": false,
+    "mergeAuthorityCreated": false,
+    "canonicalizationAuthorityCreated": false
+  }
+}

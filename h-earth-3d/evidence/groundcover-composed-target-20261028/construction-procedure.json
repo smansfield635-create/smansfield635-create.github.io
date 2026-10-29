@@ -1,0 +1,94 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "50ed04ad17de834e96e96d6a28985a125b17aa8a",
+    "operationId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json",
+      "h-earth-3d/evidence/groundcover-composed-target-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/groundcover-composed-target-20261028.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_GROUNDCOVER_FOOTPRINT_CONTINUITY_RECEIPT_v1",
+    "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Approved Gen2928 baseline cb57c275b95d0d48883bc4da4dcfcf17cbec5060 renderer fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec, frozen existing poses, exact candidate source. Reuse verified baseline bytes; no old source qualification promoted to successor.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+    "h-earth-3d/experience-anchor/receipts/groundcover-footprint-continuity-20261028.json",
+    "h-earth-3d/evidence/groundcover-composed-target-20261028/**",
+    "h-earth-3d/experience-anchor/receipts/groundcover-composed-target-20261028.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Authentically supersede active Gen2953 against current main; preserve original branch and all failed evidence.",
+      "step": 1
+    },
+    {
+      "action": "Use successor branch h-earth/groundcover-composed-target-20261028 retaining predecessor evidence and harness; repair only exact generationMs identity leaf and validate saved artifact.",
+      "step": 2
+    },
+    {
+      "action": "Remove rejected footprint blocks from product; build one shared incoming-soil-relative groundcover chroma endpoint normalized to retain incoming soil luminance, keeping original weight/suitability/protection and all other source bytes.",
+      "step": 3
+    },
+    {
+      "action": "Run source-derived consumer and numerical tests and exact fixed-pose GPU comparison against preserved baseline; independent West checks results. Reject persistent band or control damage.",
+      "step": 4
+    },
+    {
+      "action": "Save truthful inventory, code, test and visual outcome. No merge or deployment; physical owner acceptance remains separate.",
+      "step": 5
+    }
+  ],
+  "exactGoverningHead": "50ed04ad17de834e96e96d6a28985a125b17aa8a",
+  "exactTestRunnerCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_SOURCE_AND_IMAGE_CUSTODY",
+      "TIMING_ONLY_NORMALIZATION_PHYSICAL_NEGATIVES",
+      "ALL_ACTIVE_CONSUMERS",
+      "SOIL_LUMINANCE_AND_VARIATION_PRESERVATION",
+      "FIXED_GPU_BAND_AND_HEALTHY_CONTROLS",
+      "NO_RELEASE_OR_PHYSICAL_DEVICE_ACCEPTANCE_INFERRED"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse fixed Gen2928 baseline frames and captured 24-image failed footprint artifact. Inspect composed incoming soil, target chroma and spatial weight. One bounded replacement of groundcover target preserving incoming luminance and variation.",
+    "forbidden": "No unchanged rerun, camera hunting, amplitude reduction, threshold widening, footprint adjustment, regional tint overlay, or geometry/vegetation change."
+  },
+  "procedureId": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/groundcover-footprint-continuity-20261028/**",
+      "h-earth-3d/evidence/groundcover-composed-target-20261028/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

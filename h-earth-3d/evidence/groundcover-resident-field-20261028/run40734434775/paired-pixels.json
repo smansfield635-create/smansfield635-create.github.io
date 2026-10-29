@@ -1,0 +1,92 @@
+{
+  "sourceHeads": {
+    "baseline": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "candidate": "7882a91c4ff8ed1652df8453ce3772a863a7e109"
+  },
+  "rawResult": "RESIDENT_FIELD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING",
+  "verifiedImageCount": 16,
+  "pairs": [
+    {
+      "pose": "inland-seam-near",
+      "mode": "reference-lit",
+      "changedPixels": 384804,
+      "pixelsOver3": 361997,
+      "maxChannelDelta": 36,
+      "meanAbsoluteChannelDelta": 5.133443925774468,
+      "baselineImage": "baseline-inland-seam-near-reference-lit.png",
+      "candidateImage": "candidate-inland-seam-near-reference-lit.png"
+    },
+    {
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit",
+      "changedPixels": 384994,
+      "pixelsOver3": 361761,
+      "maxChannelDelta": 35,
+      "meanAbsoluteChannelDelta": 5.503949821894731,
+      "baselineImage": "baseline-inland-seam-near-after-groundcover-unlit.png",
+      "candidateImage": "candidate-inland-seam-near-after-groundcover-unlit.png"
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "reference-lit",
+      "changedPixels": 259305,
+      "pixelsOver3": 177196,
+      "maxChannelDelta": 36,
+      "meanAbsoluteChannelDelta": 2.158558054601803,
+      "baselineImage": "baseline-inland-seam-far-reference-lit.png",
+      "candidateImage": "candidate-inland-seam-far-reference-lit.png"
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit",
+      "changedPixels": 259099,
+      "pixelsOver3": 178654,
+      "maxChannelDelta": 35,
+      "meanAbsoluteChannelDelta": 2.256078083407276,
+      "baselineImage": "baseline-inland-seam-far-after-groundcover-unlit.png",
+      "candidateImage": "candidate-inland-seam-far-after-groundcover-unlit.png"
+    },
+    {
+      "pose": "protected-meadow",
+      "mode": "reference-lit",
+      "changedPixels": 129140,
+      "pixelsOver3": 22453,
+      "maxChannelDelta": 9,
+      "meanAbsoluteChannelDelta": 0.3984774249964636,
+      "baselineImage": "baseline-protected-meadow-reference-lit.png",
+      "candidateImage": "candidate-protected-meadow-reference-lit.png"
+    },
+    {
+      "pose": "protected-meadow",
+      "mode": "after-groundcover-unlit",
+      "changedPixels": 165242,
+      "pixelsOver3": 131850,
+      "maxChannelDelta": 24,
+      "meanAbsoluteChannelDelta": 1.4580353124236463,
+      "baselineImage": "baseline-protected-meadow-after-groundcover-unlit.png",
+      "candidateImage": "candidate-protected-meadow-after-groundcover-unlit.png"
+    },
+    {
+      "pose": "protected-coast",
+      "mode": "reference-lit",
+      "changedPixels": 0,
+      "pixelsOver3": 0,
+      "maxChannelDelta": 0,
+      "meanAbsoluteChannelDelta": 0.0,
+      "baselineImage": "baseline-protected-coast-reference-lit.png",
+      "candidateImage": "candidate-protected-coast-reference-lit.png"
+    },
+    {
+      "pose": "protected-coast",
+      "mode": "after-groundcover-unlit",
+      "changedPixels": 0,
+      "pixelsOver3": 0,
+      "maxChannelDelta": 0,
+      "meanAbsoluteChannelDelta": 0.0,
+      "baselineImage": "baseline-protected-coast-after-groundcover-unlit.png",
+      "candidateImage": "candidate-protected-coast-after-groundcover-unlit.png"
+    }
+  ],
+  "visualAcceptanceInferred": false,
+  "ownerAcceptance": false
+}

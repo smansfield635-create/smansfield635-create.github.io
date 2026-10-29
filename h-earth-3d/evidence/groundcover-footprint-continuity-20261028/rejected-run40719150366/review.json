@@ -1,0 +1,167 @@
+{
+  "disposition": "REJECT",
+  "reason": "BROAD_INLAND_BAND_PERSISTS",
+  "rawHarnessResultPreserved": "INCOMPLETE_OR_FAILED",
+  "timingDefect": "entranceGrass.slopeRepair.generationMs",
+  "pairs": [
+    {
+      "pose": "inland-seam-near",
+      "mode": "reference-lit",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 5474,
+      "maxChannelDelta": 30
+    },
+    {
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 5473,
+      "maxChannelDelta": 29
+    },
+    {
+      "pose": "inland-seam-near",
+      "mode": "footprint-activation-raw",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "reference-lit",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 7485,
+      "maxChannelDelta": 29
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 7502,
+      "maxChannelDelta": 32
+    },
+    {
+      "pose": "inland-seam-far",
+      "mode": "footprint-activation-raw",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    {
+      "pose": "protected-meadow",
+      "mode": "reference-lit",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 5,
+      "maxChannelDelta": 1
+    },
+    {
+      "pose": "protected-meadow",
+      "mode": "after-groundcover-unlit",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 18,
+      "maxChannelDelta": 1
+    },
+    {
+      "pose": "protected-meadow",
+      "mode": "footprint-activation-raw",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    {
+      "pose": "protected-coast",
+      "mode": "reference-lit",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    {
+      "pose": "protected-coast",
+      "mode": "after-groundcover-unlit",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    },
+    {
+      "pose": "protected-coast",
+      "mode": "footprint-activation-raw",
+      "signatureDifferences": [
+        [
+          ".entranceGrass.slopeRepair.generationMs",
+          433.20000000001164,
+          433.5
+        ]
+      ],
+      "changedPixels": 0,
+      "maxChannelDelta": 0
+    }
+  ],
+  "ownerAcceptance": false,
+  "mapWideRepair": false,
+  "newGpuRun": false
+}

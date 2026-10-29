@@ -1,0 +1,19 @@
+{
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+  "generation": 2956,
+  "candidateHead": "7882a91c4ff8ed1652df8453ce3772a863a7e109",
+  "run": 40734434775,
+  "technicalCapture": "PASS",
+  "visualRepair": "REJECT",
+  "independentReviewer": "/root/west_review",
+  "verifiedImages": 16,
+  "inlandNear": "Broad dark olive coverage remains beneath horizon; no clean continuity repair.",
+  "inlandFar": "Large region redistributed, but sweeping tan/olive band persists with more closely spaced horizon stripes in lit and albedo.",
+  "coast": "PIXEL_IDENTICAL_BOTH_MODES",
+  "meadow": "Lit view nearly preserved; foreground albedo redistributed. Owner acceptance not established.",
+  "temporalAliasingProven": false,
+  "shaderPromotionAllowed": false,
+  "ownerAcceptance": false,
+  "mapWideRepair": false,
+  "nextAction": "At the existing frozen near/far bands, quantify the incoming-soil, target-color and weight contributions from source-matched archived intermediates before selecting another shader candidate. See next-evidence-gap.json; acquire only missing diagnostic values under resolved scope. No camera hunt, repeated stage attribution or blind tuning."
+}

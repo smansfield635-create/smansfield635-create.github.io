@@ -1,0 +1,129 @@
+{
+  "run": 40734434775,
+  "job": 122979051882,
+  "artifact": 12837402038,
+  "artifactSha256": "aee6311ffaf9de2c3191bbd416331e7c59735b6e4ab2316640e24933ae59141c",
+  "heads": {
+    "baseline": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "candidate": "7882a91c4ff8ed1652df8453ce3772a863a7e109"
+  },
+  "rawReceiptSha256": "61479f5800315e0461a95e72d1e79d4cbb53a8fe6d529bf1f0a1079aa414864e",
+  "rawReceiptStoredLosslessly": "receipt.json.gz",
+  "rawResult": "RESIDENT_FIELD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING",
+  "images": [
+    {
+      "name": "baseline-inland-seam-near-reference-lit.png",
+      "sha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a",
+      "label": "baseline",
+      "pose": "inland-seam-near",
+      "mode": "reference-lit"
+    },
+    {
+      "name": "baseline-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "96195fac6da4fca401c64d2ce31a034cd7d628620409f772114616b78354ff3a",
+      "label": "baseline",
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "name": "baseline-inland-seam-far-reference-lit.png",
+      "sha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc",
+      "label": "baseline",
+      "pose": "inland-seam-far",
+      "mode": "reference-lit"
+    },
+    {
+      "name": "baseline-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a",
+      "label": "baseline",
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "name": "baseline-protected-meadow-reference-lit.png",
+      "sha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b",
+      "label": "baseline",
+      "pose": "protected-meadow",
+      "mode": "reference-lit"
+    },
+    {
+      "name": "baseline-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "dea2132ddb7662475bcadfbcef2ea5dd67dea9a0be5e1669c4c8e77407d7d4dc",
+      "label": "baseline",
+      "pose": "protected-meadow",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "name": "baseline-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+      "label": "baseline",
+      "pose": "protected-coast",
+      "mode": "reference-lit"
+    },
+    {
+      "name": "baseline-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7",
+      "label": "baseline",
+      "pose": "protected-coast",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "name": "candidate-inland-seam-near-reference-lit.png",
+      "sha256": "472fb14cf5aebdccb0788d5f0f1609791e69e739985a61592e5986b4a88d9fae",
+      "label": "candidate",
+      "pose": "inland-seam-near",
+      "mode": "reference-lit"
+    },
+    {
+      "name": "candidate-inland-seam-near-after-groundcover-unlit.png",
+      "sha256": "105bb89a1a17c1e741d8a797cfbc698cd19a77d694849fd9ce4b9e94deacfb4a",
+      "label": "candidate",
+      "pose": "inland-seam-near",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "name": "candidate-inland-seam-far-reference-lit.png",
+      "sha256": "f456cc21dd254c2550b390952c26f6b4fda23bd411f30d12ad01cd1c4185f85b",
+      "label": "candidate",
+      "pose": "inland-seam-far",
+      "mode": "reference-lit"
+    },
+    {
+      "name": "candidate-inland-seam-far-after-groundcover-unlit.png",
+      "sha256": "08e33723c27bcf2e4c4941f6fa538c88cb3a14b5629de4675f0476c0233f8aac",
+      "label": "candidate",
+      "pose": "inland-seam-far",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "name": "candidate-protected-meadow-reference-lit.png",
+      "sha256": "94596d6cbf001f380f6d76e433d26e7b6d5d4be4749450d2d2793cca2208d3b5",
+      "label": "candidate",
+      "pose": "protected-meadow",
+      "mode": "reference-lit"
+    },
+    {
+      "name": "candidate-protected-meadow-after-groundcover-unlit.png",
+      "sha256": "7c4376e2ca99e406b1c20329c9e787a14beac8bb6d84ba9875fbfb8601b2a8b1",
+      "label": "candidate",
+      "pose": "protected-meadow",
+      "mode": "after-groundcover-unlit"
+    },
+    {
+      "name": "candidate-protected-coast-reference-lit.png",
+      "sha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+      "label": "candidate",
+      "pose": "protected-coast",
+      "mode": "reference-lit"
+    },
+    {
+      "name": "candidate-protected-coast-after-groundcover-unlit.png",
+      "sha256": "946a4ecd76ba02d2cbf0a12967d0366d762696aecf2fbfd8177fe51d479120e7",
+      "label": "candidate",
+      "pose": "protected-coast",
+      "mode": "after-groundcover-unlit"
+    }
+  ],
+  "imageCount": 16,
+  "visualAcceptanceInferred": false
+}

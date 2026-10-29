@@ -1,0 +1,49 @@
+{
+  "schema": "H_EARTH_RESIDENT_FIELD_INDEPENDENT_SOURCE_REVIEW_v1",
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+  "lockGeneration": 2956,
+  "reviewer": "WEST_SOREN",
+  "nativeTask": "/root/west_review",
+  "reviewType": "INDEPENDENT_SOURCE_AND_EXECUTED_TEST_READBACK",
+  "result": "PASS_FOR_BOUNDED_GPU_EXPERIMENT",
+  "parentHead": "3754eca67a9162fd4b8fc93d2f0d05111e8d236b",
+  "branch": "h-earth/groundcover-resident-field-20261028",
+  "reviewedFileSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "b4bda2b8953b5bcc3cd65e101a447a878c2d033ec683af53a93ff211c13cdf70",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "377de3b2bf848aa5fe22e8c4128d4262e7af4a048b07d5b4911b2c655d1f6132",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "7165119bf666363baea7d850aea01c2b657ae2e39aca8b9973044e97641904b4",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "c5ae42bb7498ca6f4525b967d7aff3c842c5f6dc296d7a4bff90efb2be86359a"
+  },
+  "baselineRendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "sourceChecks": [
+    "REVERSING_SINGLE_RESIDENT_FIELD_BLOCK_RESTORES_EXACT_APPROVED_RENDERER",
+    "REJECTED_COMPOSED_BLOCK_REMOVED",
+    "ORIGINAL_TONE_WEIGHT_FORMULA_SUITABILITY_PROTECTION_BYTES_RETAINED",
+    "ARCHIVED_COMPOSED_RENDERER_MATCHES_PARENT_3754ECA",
+    "NO_GEOMETRY_VEGETATION_ROOTS_WATER_NAVIGATION_CHANGE",
+    "NARROW_TIMING_NORMALIZATION_AND_PHYSICAL_NEGATIVES_RETAINED",
+    "FOUR_FROZEN_POSES_TWO_MODES_SIXTEEN_MATCHED_FRAMES",
+    "EIGHT_HASH_PINNED_BASELINE_FRAMES_REUSED",
+    "CANDIDATE_RESOURCES_CAMERA_VIEWPORT_SCENE_CUSTODY_CHECKS_RETAINED",
+    "EXACT_ADMITTED_BRANCH_GUARD_AND_IMMUTABLE_PR_HEAD_BINDING"
+  ],
+  "executedTests": {
+    "command": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs",
+    "passed": 42,
+    "failed": 0,
+    "gitDiffCheck": "PASS"
+  },
+  "limits": [
+    "GPU_SHADER_AND_RUNTIME_EXECUTION_PENDING",
+    "WEIGHT_FORMULA_UNCHANGED_BUT_WEIGHT_VALUES_AND_DISTRIBUTION_CHANGE",
+    "DARK_ENDPOINT_CAN_STILL_SUPPRESS_SOIL_VARIATION",
+    "HIGHER_FREQUENCIES_MAY_CREATE_MOTTLING_OR_HORIZON_ALIASING",
+    "MESO_FIELD_ALSO_DRIVES_DRY_TONE_SO_WEIGHT_AND_TONE_BECOME_MORE_CORRELATED",
+    "REJECT_PERSISTENT_BAND_REPLACEMENT_MOTTLING_STRIPES_OR_HEALTHY_CONTROL_DAMAGE",
+    "NO_MAPWIDE_OR_OWNER_ACCEPTANCE_FROM_FOUR_POSES"
+  ],
+  "visualAcceptance": false,
+  "ownerAcceptance": false,
+  "mergeAuthorized": false,
+  "deploymentAuthorized": false
+}

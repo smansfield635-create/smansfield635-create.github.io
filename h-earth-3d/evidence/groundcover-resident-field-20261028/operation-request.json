@@ -1,0 +1,196 @@
+{
+  "allowedPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/groundcover-resident-field-20261028/**",
+    "h-earth-3d/experience-anchor/receipts/groundcover-resident-field-20261028.json"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/groundcover-resident-field-20261028/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+  "exactTestCommand": "node --test tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateProduct": true,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+    "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/groundcover-resident-field-20261028/**",
+      "h-earth-3d/experience-anchor/receipts/groundcover-resident-field-20261028.json"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_SOURCE_AND_IMAGE_CUSTODY",
+      "ALL_ACTIVE_CONSUMERS",
+      "ORIGINAL_TONE_WEIGHT_SUITABILITY_PROTECTION",
+      "FROZEN_GPU_NO_BROAD_BAND_NO_REPLACEMENT_MOTTLING_OR_CHATTER",
+      "HEALTHY_CONTROLS",
+      "NO_RELEASE_OR_OWNER_ACCEPTANCE_INFERRED"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "a1d7c5b6dd97ad9536e87ade53422a0b59ba4e0e15567a3901fd06e433e7d412",
+    "receiptId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:GROUNDCOVER_CONTINUITY:20261028",
+  "operationId": "H_EARTH_GROUNDCOVER_RESIDENT_FIELD_20261028_001",
+  "prohibitedPaths": [
+    "VEGETATION_ROOT_OR_TREE_OR_GRASS_ASSET_MUTATION",
+    "PHYSICAL_GEOMETRY_OR_G_WORLD_ELEVATION_MUTATION",
+    "PRECOMPUTED_WORLD_ASSET_OR_LOADER_MUTATION",
+    "NAVIGATION_OR_CONTACT_SUPPORT_MUTATION",
+    "WATER_OCEAN_COAST_SHORELINE_EDIT",
+    "SOURCE_MATERIAL_PALETTE_GLOBAL_FLATTENING",
+    "PROTECTED_MEADOW_TREE_FOOTHILL_COLOR_DEGRADATION",
+    "GEOGRAPHIC_CAMERA_GUESS_AS_USER_TELEMETRY",
+    "ANY_PATH_OUTSIDE_DECLARED_SCOPE",
+    "DIRECT_MAIN_WRITE"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Carry proven validator and rejected evidence forward. Restore original tone; replace independent 55.6m groundcover field with resident meso/detail fields. Preserve thresholds, weight, suitability, protection and physical world. One frozen-view experiment, no release.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner current session: Proceed accordingly after durable Gen2955 visual rejection and next spatial-pattern checkpoint."
+  },
+  "requiredInputs": [
+    {
+      "id": "GEN2917_STAGE_FIRST_CAUSE_40411050366",
+      "resolved": true
+    },
+    {
+      "id": "GEN2925_REMOVAL_CONFIRMATION_40442633983",
+      "resolved": true
+    },
+    {
+      "id": "GEN2928_APPROVED_BASELINE",
+      "resolved": true
+    },
+    {
+      "id": "GEN2940_SMOOTHSTEP_INSUFFICIENT",
+      "resolved": true
+    },
+    {
+      "id": "GEN2944_TINT_REJECTED",
+      "resolved": true
+    },
+    {
+      "id": "ACTIVE_CONSUMER_SOURCE_INVENTORY",
+      "resolved": true
+    },
+    {
+      "id": "OW01_AND_EXPERIENCE_ANCHOR_PRESERVATION",
+      "resolved": true
+    },
+    {
+      "id": "RUN40719150366_TIMING_ONLY_PAIR_MISMATCH_AND_VISUAL_REJECTION",
+      "resolved": true
+    },
+    {
+      "id": "GEN2955_REJECTED_AND_AUTHENTICALLY_CLOSED",
+      "resolved": true
+    },
+    {
+      "id": "EAST_SPATIAL_FIELD_SOURCE_AUDIT",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "EXACT_ORIGINAL_TONE_WEIGHT_SUITABILITY_PROTECTION_PRESERVATION",
+    "ONE_RESIDENT_MESO_DETAIL_COVERAGE_FIELD",
+    "SOURCE_DERIVED_FIELD_STATISTICS",
+    "FROZEN_GPU_COMPARISON_AND_EXPLICIT_KEEP_OR_REJECT",
+    "INDEPENDENT_WEST_REVIEW_NO_OWNER_ACCEPTANCE_INFERENCE"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "NO_WRITE_BEFORE_AUTHENTIC_ADMISSION",
+    "NO_GEOMETRY_ROOTS_VEGETATION_WATER_NAVIGATION_CHANGE",
+    "NO_GLOBAL_PALETTE_FLATTENING_OR_REGIONAL_TINT",
+    "REJECT_IF_BROAD_BAND_PERSISTS_OR_MOTTLING_CHATTER_OR_HEALTHY_CONTROLS_REGRESS",
+    "STRAIGHT_AND_CURVED_CLASSES_REMAIN_SEPARATE",
+    "NO_MERGE_DEPLOY_OR_OWNER_KEEP_INFERENCE"
+  ],
+  "subjectIdentity": {
+    "activePredecessorLockGeneration": 2955,
+    "continuationHead": "3754eca67a9162fd4b8fc93d2f0d05111e8d236b",
+    "currentDiagnosticPR": 6946,
+    "currentExactGpuHead": "952361071fccb98a1e6b69ca7213aeec6e8db613",
+    "currentGpuRun": 40730251323,
+    "governingHead": "704a9a9435cb421ca9b7a525c5a7f4509634629a",
+    "healthyControl": "MEADOW_TREES_SHORTER_FOOTHILLS",
+    "ownerDirectiveComment": 6472173332,
+    "ownerScreenshot1": "30108.jpg",
+    "ownerScreenshot2": "30106.jpg",
+    "precomputedWorldSha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "predecessorClosureComment": 6475567905,
+    "predecessorOperation": "H_EARTH_GROUNDCOVER_COMPOSED_TARGET_20261028_001",
+    "principalDefect": "SOURCE_PROVEN_GROUNDCOVER_INLAND_BANDS_WITH_OWNER_STRAIGHT_CURVED_CLASSES_STILL_OPEN",
+    "publishedReferenceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "publishedShaderSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+    "sourceDiagnosisCorrection": "Composed endpoint REJECTED: broad contour persists. Independent 55.6m noise dominates patch ownership. Test existing meso/detail fields as coverage driver; no strength or threshold change.",
+    "sourceIssue": 6911
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+}

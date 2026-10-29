@@ -1,0 +1,197 @@
+{
+  "allowedPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+    "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+    ".github/ai-router/publication-surfaces/h-earth.json",
+    "h-earth-3d/evidence/corrected-material-publication-20261029/**",
+    ".github/ai-entry/workflow-dispatch-request.json"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/corrected-material-publication-20261029/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "63370ff14e46800b6087e7913f4e1724bef9f855",
+  "exactTestCommand": "INTEGRATION_RENDERER=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js INTEGRATION_ROUTE=showroom/globe/h-earth/vegetation-prototype/route.js node --test h-earth-3d/evidence/corrected-material-publication-20261029/integration.test.mjs",
+  "executingRole": {
+    "mayDeploy": true,
+    "mayMerge": true,
+    "mayMutateControlPlane": false,
+    "mayMutateDiagnosticTooling": false,
+    "mayMutateProduct": true,
+    "role": "SOUTH_BOUNDED_ADOPTION_AND_RELEASE",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "63370ff14e46800b6087e7913f4e1724bef9f855",
+    "operationId": "H_EARTH_CORRECTED_MATERIAL_PUBLICATION_20261029_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+      "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+      ".github/ai-router/publication-surfaces/h-earth.json",
+      "h-earth-3d/evidence/corrected-material-publication-20261029/**",
+      ".github/ai-entry/workflow-dispatch-request.json"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_VERIFIED_FOUR_BLOB_ADOPTION_FROM_4639908",
+      "CURRENT_MAIN_DIRECT_DEPENDENCY_PARITY",
+      "NO_EXPERIMENTAL_ANCESTRY_OR_TOOLING_MERGE",
+      "PUBLICATION_MANIFEST_EXISTING_SCHEMA_AND_MARKER_CHECKS",
+      "EXACT_PAYLOAD_PREFLIGHT_PASS_BEFORE_PUBLICATION",
+      "LIVE_RELEASE_MARKER_AND_FOUR_ASSET_SHA256_READBACK",
+      "LOCALIZED_SCOPE_AND_INHERITED_LIMITS_TRUTHFUL"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "2993d05114be78e63e8412846fa676b037793ea70a5f5d8ad9b781ce36512b98",
+    "receiptId": "H_EARTH_CORRECTED_MATERIAL_PUBLICATION_20261029_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:CORRECTED_MATERIAL_PUBLICATION_20261029",
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_PUBLICATION_20261029_001",
+  "prohibitedPaths": [
+    "QUALIFIED_PRODUCT_BYTE_CHANGE_BEYOND_EXACT_FOUR_BLOB_ADOPTION",
+    "NUMERICAL_RESOLVE_PALETTE_RETUNE_GEOMETRY_OR_SUPPORT_EXPANSION",
+    "EXPERIMENTAL_BRANCH_TOOLING_OR_WORKFLOW_MERGE",
+    "UNREGISTERED_PUBLICATION_OR_GENERIC_DISPATCH_TRANSPORT",
+    "UNRELATED_PRODUCT_OR_CONTROL_PLANE_MUTATION",
+    "NEW_GPU_CAPTURE_OR_BLIND_RETRY"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Adopt the exact source-qualified and four-view GPU-qualified localized material integration onto a clean current-main branch, then merge and publish through registered exact-payload preflight and exact-head Pages deployment; verify live release identity and four asset hashes. Preserve all qualified product bytes and scoped limits.",
+    "mayDeploy": true,
+    "mayMerge": true,
+    "mayMutateProduct": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner current conversation authorizes proceeding with publication preparation after completed production-loading equivalence evidence; continuing authorization includes bounded adoption, registered preflight, merge, exact-head Pages deployment and live verification."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_PROCEED_WITH_PUBLICATION_PREPARATION",
+      "resolved": true
+    },
+    {
+      "id": "GEN2973_EXACT_VERIFIED_INTEGRATION_BLOBS",
+      "resolved": true
+    },
+    {
+      "id": "GEN2974_RUN40958319118_SOURCE74_PASS_AND_FOUR_VIEW_EQUIVALENCE",
+      "resolved": true
+    },
+    {
+      "id": "CURRENT_MAIN_SOURCE_AND_DIRECT_DEPENDENCY_PARITY",
+      "resolved": true
+    },
+    {
+      "id": "EXISTING_PREFLIGHT_PAGES_AND_NATIVE_DISPATCH_BRIDGE",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "CLEAN_MAIN_DERIVED_FOUR_BLOB_ADOPTION_PR",
+    "INDEPENDENT_EXACT_COPY_AND_SCOPE_REVIEW",
+    "DECLARATIVE_H_EARTH_SURFACE_MARKERS_AND_SEPARATE_ASSET_HASH_EVIDENCE",
+    "PREFLIGHT_PASS_EXACT_PAYLOAD",
+    "MERGED_APPROVED_COMMIT_AND_EXPLICIT_PAGES_DEPLOYMENT",
+    "LIVE_EXACT_HEAD_VERIFIED_AND_FOUR_ASSET_SHA256_MATCH",
+    "DURABLE_PUBLICATION_RECEIPT_WITH_SCOPE_LIMITS"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "NO_BRANCH_OR_REPOSITORY_WRITE_BEFORE_AUTHENTIC_ADMISSION",
+    "RELEVANT_MAIN_SOURCE_OR_DEPENDENCY_DRIFT_REQUIRES_RECONCILIATION",
+    "EXACT_ADOPTED_BLOB_OR_ASSET_HASH_MISMATCH_FAILS_CLOSED",
+    "PREFLIGHT_FAILURE_STOPS_BEFORE_PRODUCTION_DEPLOYMENT",
+    "DEPLOY_ONLY_APPROVED_CURRENT_MAIN_EXACT_HEAD",
+    "LIVE_MARKER_OR_ASSET_HASH_MISMATCH_IS_DEPLOYMENT_NOT_PROVEN",
+    "NO_GLOBAL_REPAIR_OR_PHYSICAL_ANDROID_PERFORMANCE_CLAIM"
+  ],
+  "subjectIdentity": {
+    "adoptionSourceHead": "4639908eab7bc5b8872a85231b3330678988c259",
+    "constructionBase": "63370ff14e46800b6087e7913f4e1724bef9f855",
+    "dispatchRule": "Reuse registered native bridge carriers only for PUBLICATION_FAST_PREFLIGHT and PAGES_EXACT_HEAD_DEPLOY; fresh current-main carrier, request file only, never merge carrier.",
+    "inheritedLimits": {
+      "canonicalPackageMutated": false,
+      "globalRepairProven": false,
+      "packageUploadedOnce": false,
+      "physicalAndroidPerformanceProven": false,
+      "resourceIdentityStable": false
+    },
+    "newGpuFrameCeiling": 0,
+    "qualifiedCaptureRun": 40958319118,
+    "qualifiedToolingHead": "a26dc41964ae334a5ce73a637bcc96a0b4d43807",
+    "qualifiedViews": [
+      "inland-seam-near",
+      "inland-seam-far",
+      "protected-meadow",
+      "protected-coast"
+    ],
+    "sourceBlobs": {
+      "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png": "3a5220e90c91d511e2f554023dc16823affd0058",
+      "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png": "4fc4e24098c144d251f949a58a520bfd27983ad7",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "1648bf21ada92aceac2cb1848884f15dfe3dfd3d",
+      "showroom/globe/h-earth/vegetation-prototype/route.js": "42a0ed4e764fa91334723e04373c407949d156bd"
+    },
+    "sourceIssue": 6911,
+    "sourceSha256": {
+      "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f",
+      "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "a2ab977a3ea620f7bf87b3bdfb4e6a720cf7801f2ecbb670b4ac2dfccacf917d",
+      "showroom/globe/h-earth/vegetation-prototype/route.js": "e776883f16ac36f00b51356fe8e78ac6ae2d0f6ce28016f776068b3d76831cb5"
+    },
+    "supportFaces": 358,
+    "surfaceId": "h-earth",
+    "surfaceManifestRule": "Use existing includes/excludes schema only; add renderer/route markers. Do not invent manifest hash fields. Separately hash live renderer, route and both PNG bytes.",
+    "targetBranch": "h-earth/corrected-material-publication-20261029"
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/pages-exact-head-deploy-v3.yml"
+}

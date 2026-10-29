@@ -84,11 +84,14 @@ let width=1,height=1, viewWidth=3, viewHeight=3, zoom=1,targetZoom=1, offset=[0,
 const ORBIT_RADIANS_PER_SECOND=.08;
 let orbitPhase=0, orbitSpeed=0, motionPaused=false, sceneVisible=true, windowFocused=true, pageActive=true;
 let ready=false, reduced=media.matches, receipt={status:'loading'}, disposed=false, teachingRevealVersion=0;
+// Gen2970 one-world proof: dedicated spatial encounter; the public Gen2968 page is untouched.
+let flight=0,flightTarget=0,cameraZ=9,flightStage='arrival',universeClock=0;
+const peaceOverlay=$('#peace-encounter');
 const $=s=>document.querySelector(s);
 const color=hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
 function requestFrame(){if(!raf && ready && !disposed && !document.hidden && sceneVisible && pageActive)raf=requestAnimationFrame(render);}
-function orbitCanMove(){return !reduced&&!motionPaused&&!pointer&&!inertia&&selected<0&&sceneVisible&&windowFocused&&pageActive&&!document.hidden;}
-function updateMotionControl(){const button=$('#toggle-motion');button.disabled=reduced||!ready;button.textContent=reduced?'Reduced motion':motionPaused?'Resume motion':'Pause motion';button.setAttribute('aria-pressed',String(motionPaused));}
+function orbitCanMove(){return !reduced&&!motionPaused&&!pointer&&!inertia&&selected<0&&flight<.001&&sceneVisible&&windowFocused&&pageActive&&!document.hidden;}
+function updateMotionControl(){const button=$('#toggle-motion');button.disabled=reduced||!ready;button.textContent=reduced?'Reduced motion':motionPaused?'Resume motion':selected===4?'World in focus':'Pause motion';button.setAttribute('aria-pressed',String(motionPaused));}
 $('#toggle-motion').addEventListener('click',()=>{motionPaused=!motionPaused;orbitSpeed=0;lastTime=0;updateMotionControl();requestFrame();});
 function stopInertia(){if(inertia){quaternion=P.constellationReleaseQuaternionAt(inertia,Math.min(inertia.durationMs,performance.now()-inertia.startedAt));inertia=null;}}
 function choose(index,scroll=true){
@@ -106,21 +109,35 @@ function choose(index,scroll=true){
   approach.setAttribute('aria-expanded','false');
   labels.forEach((el,i)=>el.setAttribute('aria-pressed',String(i===index)));
   status.textContent=`${begin} leads to ${summit}.`;
+  if(index===4&&ready){startPeaceFlight();return;}
   requestFrame();
   if(scroll){panel.scrollIntoView({behavior:reduced?'instant':'smooth',block:'nearest'});panel.focus({preventScroll:true});}
 }
 function returnToAll(){
+  if(selected===4&&(flight>.002||flightTarget>0)){flightTarget=0;flightStage='return';peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');scene.dataset.stage='return';document.documentElement.classList.remove('universe-encounter');updateMotionControl();requestFrame();return;}
   stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];panel.style.removeProperty('--world-accent');scene.style.removeProperty('--world-accent');
   panel.hidden=true;returnButton.hidden=true;status.textContent='All nine summits. One path. Your orientation is preserved.';
   $('#summit-teaching').hidden=true;approach.setAttribute('aria-expanded','false');
   labels.forEach(el=>el.setAttribute('aria-pressed','false'));requestFrame();
   if(prior>=0){const target=ready?labels[prior]:$(`[data-summit="${prior}"]`);target?.focus({preventScroll:true});scene.scrollIntoView({behavior:reduced?'instant':'smooth',block:'center'});}
 }
+
+function startPeaceFlight(){
+  // Initiating from an on-page list moves to the actual scene, not away from it.
+  panel.hidden=true;close=true;flightTarget=1;flightStage='approach';
+  scene.dataset.stage='approach';scene.scrollIntoView({behavior:'instant',block:'start'});
+  peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');
+  $('#scene-note').textContent='Approaching Forgiveness — Peace';
+  status.textContent='Traveling toward the world of Peace.';
+  updateMotionControl();requestFrame();
+}
+$('#peace-return').addEventListener('click',returnToAll);
+
 document.querySelectorAll('[data-summit]').forEach(el=>el.addEventListener('click',()=>choose(Number(el.dataset.summit))));
 returnButton.addEventListener('click',returnToAll);
 $('#return-from-teaching').addEventListener('click',returnToAll);
 approach.addEventListener('click',()=>{
-  if(selected<0)return;stopInertia();close=true;
+  if(selected<0)return;if(selected===4){startPeaceFlight();return;}stopInertia();close=true;
   if(ready){targetOffset=centers[selected].map(value=>value*(width<600?.12:.20));targetZoom=width<600?1.08:1.27;requestFrame();}
   approach.disabled=true;approach.textContent='Exploring this summit';approach.setAttribute('aria-expanded','true');
   $('#scene-note').textContent=`${summits[selected][0]} → ${summits[selected][1]} · Return to all nine to keep exploring`;
@@ -162,7 +179,7 @@ function heartDescriptor(K){
   return K.constructHEarthTriangleMesh({primitiveId:'universe-diamond-heart',vertices,indices,expectedClosure:'CLOSED_REQUIRED',semanticRole:'ILLUMINATED_CENTRAL_HEART'});
 }
 function buildGeometry(K){
-  const results=[heartDescriptor(K),...summits.map((p,i)=>K.constructHEarthEllipsoidMesh({primitiveId:`universe-planet-${i}`,center:K.createHEarthVector3(0,0,0),radii:K.createHEarthVector3(1,1,1),longitudeSampleCount:24,latitudeSampleCount:13,semanticRole:`${p[0]}_TO_${p[1]}`}))];
+  const results=[heartDescriptor(K),...summits.map((p,i)=>K.constructHEarthEllipsoidMesh({primitiveId:`universe-planet-${i}`,center:K.createHEarthVector3(0,0,0),radii:K.createHEarthVector3(1,1,1),longitudeSampleCount:i===4?72:24,latitudeSampleCount:i===4?40:13,semanticRole:`${p[0]}_TO_${p[1]}`}))];
   for(const result of results)if(!result.valid||K.hasHEarthBlockingIssues(result.issues))throw Error('Geometry construction: '+result.issues.map(x=>x.code).join(','));
   const admitted=K.admitHEarthPrimitiveBatch(results.map(x=>x.primitiveRecord),{frameId:'nine-summits-universe-first-slice'});
   if(!admitted.valid||!K.isHEarthAggregateFrameAdmissionRecord(admitted.frame)||K.hasHEarthBlockingIssues(admitted.issues))throw Error('Geometry admission failed');
@@ -176,13 +193,13 @@ function buildGeometry(K){
   });
 }
 const vertexSource=`attribute vec3 aPosition;attribute vec3 aNormal;
-uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom;uniform vec2 uView;
+uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ;uniform vec2 uView;
 varying vec3 vWorld,vNormal,vLocal;
-void main(){vec3 world=aPosition*uRadius+uCenter;vec3 view=world-uOffset;float perspective=9.0/(9.0-view.z);gl_Position=vec4(view.xy/uView*uZoom*perspective,-view.z/20.0,1.0);vWorld=world;vNormal=aNormal;vLocal=aPosition;}`;
+void main(){vec3 world=aPosition*uRadius+uCenter;vec3 view=world-uOffset;float perspective=uCameraZ/max(.48,uCameraZ-view.z);gl_Position=vec4(view.xy/uView*uZoom*perspective,-view.z/20.0,1.0);vWorld=world;vNormal=aNormal;vLocal=aPosition;}`;
 const fragmentSource=`precision mediump float;
 varying vec3 vWorld,vNormal,vLocal;
 uniform vec3 uColor;
-uniform float uHeart,uSelected,uWorld;
+uniform float uHeart,uSelected,uWorld,uAtmosphere,uTime;
 float hash3(vec3 p) {
  p=fract(p*.1031);
  p+=dot(p,p.yzx+33.33);
@@ -209,6 +226,14 @@ void main() {
  float rough=.65, glow=0., grain=0., metal=.05;
  vec3 p=normalize(vLocal);
  vec3 material=uColor;
+ if(uAtmosphere>.5){
+   float fresnel=pow(1.0-max(0.0,dot(n,vec3(0.,0.,1.))),2.8);
+   float cloud=fbm(p*7.5+vec3(uTime*.025,-uTime*.017,0.));
+   float haze=smoothstep(.43,.78,cloud);
+   vec3 air=mix(vec3(.11,.56,.66),vec3(.67,.92,.91),haze);
+   gl_FragColor=vec4(air*(.55+1.5*fresnel),clamp(.09+.72*fresnel+.16*haze,0.,.88));
+   return;
+ }
  if(uHeart>.5) {
    float facet=max(0.,dot(n,normalize(vec3(-.5,.8,1.))));
    float glint=pow(max(0.,dot(n,normalize(vec3(.35,.65,1.)))),14.);
@@ -237,9 +262,12 @@ void main() {
      material=mix(vec3(.16,.09,.075),vec3(.79,.40,.22),smoothstep(.10,.35,fault));
      material*=.76+.38*c;rough=.81;metal=.13;
    } else if(uWorld<4.5) { // Forgiveness: sea glass and soft tidal layers
-     float tidal=smoothstep(.29,.72,a*.75+b*.28);
-     material=mix(vec3(.10,.32,.34),vec3(.69,.84,.73),tidal);
-     rough=.3;glow=.045;
+     float coast=fbm(p*7.8+vec3(a*.35,0.,b*.38));
+     float deep=smoothstep(.32,.67,coast*.75+a*.32);
+     float cap=smoothstep(.58,.76,fbm(p*16.0+vec3(0.,uTime*.02,0.)));
+     material=mix(vec3(.025,.13,.19),vec3(.12,.61,.62),deep);
+     material=mix(material,vec3(.72,.92,.82),cap*.73);
+     rough=.27;glow=.055;
    } else if(uWorld<5.5) { // Self-control: disciplined blue-violet polar facets
      vec3 tile=floor(p*8.5+vec3(a*.8));
      grain=hash3(tile);
@@ -275,15 +303,15 @@ function setupGL(){
   gl=canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'low-power'});if(!gl)throw Error('WebGL unavailable');
   program=gl.createProgram();const vs=shader(gl.VERTEX_SHADER,vertexSource),fs=shader(gl.FRAGMENT_SHADER,fragmentSource);gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);gl.deleteShader(vs);gl.deleteShader(fs);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));gl.useProgram(program);
   for(const name of ['aPosition','aNormal'])loc[name]=gl.getAttribLocation(program,name);
-  for(const name of ['uCenter','uOffset','uRadius','uZoom','uView','uColor','uHeart','uSelected','uWorld'])loc[name]=gl.getUniformLocation(program,name);
+  for(const name of ['uCenter','uOffset','uRadius','uZoom','uView','uColor','uHeart','uSelected','uWorld','uCameraZ','uAtmosphere','uTime'])loc[name]=gl.getUniformLocation(program,name);
   gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);
 }
 function basePosition(i){const a=Math.PI/2-i*Math.PI*2/9+orbitPhase;return [Math.cos(a)*(width<600?2.02:2.75),Math.sin(a)*(width<600?2.55:1.7),Math.sin(a*2)*.45];}
-function project(center){const s=9/(9-center[2]+offset[2]);return {x:width/2+(center[0]-offset[0])/viewWidth*zoom*s*width/2,y:height/2-(center[1]-offset[1])/viewHeight*zoom*s*height/2,scale:s*zoom*width/(2*viewWidth)};}
+function project(center){const s=cameraZ/Math.max(.48,cameraZ-center[2]+offset[2]);return {x:width/2+(center[0]-offset[0])/viewWidth*zoom*s*width/2,y:height/2-(center[1]-offset[1])/viewHeight*zoom*s*height/2,scale:s*zoom*width/(2*viewWidth)};}
 function radius(i){return [.28,.3,.29,.26,.28,.27,.3,.25,.27][i];}
-function draw(mesh,center,r,c,isHeart,isSelected,worldIndex=-1){
+function draw(mesh,center,r,c,isHeart,isSelected,worldIndex=-1,atmosphere=false){
   gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.vertexAttribPointer(loc.aPosition,3,gl.FLOAT,false,24,0);gl.vertexAttribPointer(loc.aNormal,3,gl.FLOAT,false,24,12);gl.enableVertexAttribArray(loc.aPosition);gl.enableVertexAttribArray(loc.aNormal);
-  gl.uniform3fv(loc.uCenter,center);gl.uniform1f(loc.uRadius,r);gl.uniform3fv(loc.uColor,c);gl.uniform1f(loc.uHeart,isHeart?1:0);gl.uniform1f(loc.uSelected,isSelected?1:0);gl.uniform1f(loc.uWorld,worldIndex);gl.drawArrays(gl.TRIANGLES,0,mesh.count);
+  gl.uniform3fv(loc.uCenter,center);gl.uniform1f(loc.uRadius,r);gl.uniform3fv(loc.uColor,c);gl.uniform1f(loc.uHeart,isHeart?1:0);gl.uniform1f(loc.uSelected,isSelected?1:0);gl.uniform1f(loc.uWorld,worldIndex);gl.uniform1f(loc.uAtmosphere,atmosphere?1:0);gl.drawArrays(gl.TRIANGLES,0,mesh.count);
 }
 
 function placeLabels(){
@@ -327,27 +355,55 @@ function render(time){
   const orbitActive=orbitCanMove();
   if(orbitActive){orbitSpeed+=(ORBIT_RADIANS_PER_SECOND-orbitSpeed)*(1-Math.exp(-P.GESTURE.settleSpeed*dt));orbitPhase=(orbitPhase+orbitSpeed*dt)%(Math.PI*2);}else orbitSpeed=0;
   const settle=reduced?1:1-Math.exp(-P.GESTURE.settleSpeed*dt);
+  const flightStep=reduced?1:Math.min(1,dt/.95);
+  flight+=(flightTarget-flight)*flightStep;
+  if(Math.abs(flight-flightTarget)<.0006)flight=flightTarget;
+  const smooth=flight*flight*(3-2*flight);
+  cameraZ=9-4.6*smooth;
+  if(!reduced&&sceneVisible)universeClock+=dt;
+  if(selected===4&&flight>.01){
+    const focus=P.quaternionRotateVector(quaternion,basePosition(4));
+    targetOffset=[focus[0]*smooth-.18*smooth,focus[1]*smooth,focus[2]*smooth];
+    targetZoom=1+2.6*smooth;
+  }
+  if(selected===4&&flight===1&&flightStage==='approach'){
+    flightStage='encounter';scene.dataset.stage='encounter';peaceOverlay.classList.add('is-visible');peaceOverlay.setAttribute('aria-hidden','false');
+    document.documentElement.classList.add('universe-encounter');
+    $('#scene-note').textContent='Forgiveness → Peace · A world to explore';status.textContent='Arrived at the world of Peace.';
+  }
+  if(selected===4&&flight===0&&flightStage==='return'){
+    selected=-1;close=false;flightStage='arrival';targetZoom=1;targetOffset=[0,0,0];
+    scene.dataset.stage='arrival';panel.hidden=true;returnButton.hidden=true;
+    labels.forEach(el=>el.setAttribute('aria-pressed','false'));
+    $('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore';
+    status.textContent='Returned to the universe.';updateMotionControl();
+  }
   zoom+=(targetZoom-zoom)*settle;offset=offset.map((v,i)=>v+(targetOffset[i]-v)*settle);
   const moving=Math.abs(zoom-targetZoom)>.0001||offset.some((v,i)=>Math.abs(v-targetOffset[i])>.0001);
   if(!moving){zoom=targetZoom;offset=targetOffset.slice();}
   gl.viewport(0,0,canvas.width,canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
-  gl.uniform2f(loc.uView,viewWidth,viewHeight);gl.uniform3fv(loc.uOffset,offset);gl.uniform1f(loc.uZoom,zoom);
+  gl.uniform2f(loc.uView,viewWidth,viewHeight);gl.uniform3fv(loc.uOffset,offset);gl.uniform1f(loc.uZoom,zoom);gl.uniform1f(loc.uCameraZ,cameraZ);gl.uniform1f(loc.uTime,reduced?0:universeClock);
   centers=summits.map((_,i)=>P.quaternionRotateVector(quaternion,basePosition(i)));
-  draw(meshes[0],[0,0,0],1,[1,.7,.3],true,false);
+  draw(meshes[0],[0,0,0],1.42*(1-.38*smooth),[1,.7,.3],true,false);
   projected=centers.map((center,i)=>{
-    draw(meshes[i+1],center,radius(i),color(summits[i][2]),false,i===selected,i);
+    draw(meshes[i+1],center,radius(i)*(i===4?1+3.1*smooth:1),color(summits[i][2]),false,i===selected,i);
     const p=project(center),label=labels[i];
     const obscured=center[2]<-.1&&Math.hypot(center[0],center[1])<.75;
-    const hidden=close&&i!==selected||obscured;
+    const hidden=flight>.16||close&&i!==selected||obscured;
     label.style.visibility=hidden?'hidden':'visible';label.tabIndex=hidden?-1:0;
     label.style.opacity=String(Math.max(.68,Math.min(1,.86+center[2]*.1)));label.style.zIndex=String(Math.round(center[2]*10)+40);
     return {...p,radius:Math.max(22,radius(i)*p.scale),hidden};
   });
   placeLabels();
+  if(flight>.08&&selected===4){
+    gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);
+    draw(meshes[5],centers[4],radius(4)*(1+3.1*smooth)*1.095,color(summits[4][2]),false,true,4,true);
+    gl.depthMask(true);gl.disable(gl.BLEND);
+  }
   const heart=project([0,0,0]), glow=$('.heart-glow');glow.style.left=heart.x+'px';glow.style.top=heart.y+'px';glow.style.transform=`translate(-50%,-50%) scale(${zoom})`;
-  if(inertia||moving||orbitActive)requestFrame();else lastTime=0;
+  if(inertia||moving||orbitActive||flight!==flightTarget||selected===4&&flight>.02&&!reduced)requestFrame();else lastTime=0;
 }
-function resize(){if(!gl)return;const b=scene.getBoundingClientRect();width=b.width;height=b.height;labelSizes=labels.map(el=>({width:el.offsetWidth||96,height:el.offsetHeight||44}));const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);viewWidth=width<600?2.85:Math.max(3.9,width/height*2.5);viewHeight=viewWidth*height/width;if(close&&selected>=0)targetOffset=P.quaternionRotateVector(quaternion,basePosition(selected));requestFrame();}
+function resize(){if(!gl)return;const b=scene.getBoundingClientRect();width=b.width;height=b.height;labelSizes=labels.map(el=>({width:el.offsetWidth||96,height:el.offsetHeight||44}));const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);viewWidth=width<600?2.85:Math.max(3.9,width/height*2.5);viewHeight=viewWidth*height/width;if(close&&selected>=0&&selected!==4)targetOffset=P.quaternionRotateVector(quaternion,basePosition(selected));requestFrame();}
 function cancelPointer(){if(!pointer)return;const id=pointer.id;quaternion=pointer.startQuaternion.slice();pointer=null;try{if(scene.hasPointerCapture(id))scene.releasePointerCapture(id);}catch{}suppressUntil=performance.now()+P.GESTURE.suppressClickMs;requestFrame();}
 function hitTest(x,y){const b=scene.getBoundingClientRect();return projected.map((p,i)=>({...p,i})).filter(p=>!p.hidden&&Math.hypot(x-b.left-p.x,y-b.top-p.y)<=p.radius).sort((a,b)=>centers[b.i][2]-centers[a.i][2])[0]?.i;}
 function bindInput(){
@@ -383,10 +439,10 @@ async function init(){
   const K=await import('../../showroom/globe/h-earth/render/geometry-kernel.js');
   setupGL();meshes=buildGeometry(K);
   summits.forEach(([begin,summit],i)=>{const el=document.createElement('button');el.type='button';el.className='planet-label';el.dataset.planet=i;el.setAttribute('aria-label',`${begin} leads to ${summit}`);el.setAttribute('aria-pressed','false');el.innerHTML=`<strong>${begin}</strong><span>${summit}</span>`;el.addEventListener('click',event=>{if(event.detail===0)choose(i);});$('#planet-labels').append(el);labels.push(el);});
-  ready=true;updateMotionControl();scene.classList.add('ready');resize();bindInput();new ResizeObserver(resize).observe(scene);
+  ready=true;scene.dataset.stage='arrival';updateMotionControl();scene.classList.add('ready');resize();bindInput();new ResizeObserver(resize).observe(scene);
   new IntersectionObserver(entries=>{sceneVisible=entries[0].isIntersecting;orbitSpeed=0;lastTime=0;if(!sceneVisible&&raf){cancelAnimationFrame(raf);raf=0;}if(sceneVisible)requestFrame();}).observe(scene);
   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;fallback(Error('Graphics context interrupted'));});
   canvas.addEventListener('webglcontextrestored',()=>location.reload());
-  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,quaternion:quaternion.slice(),selected,close,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError()})});
+  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError()})});
 }
 init().catch(fallback);

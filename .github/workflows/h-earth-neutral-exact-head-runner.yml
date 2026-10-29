@@ -1322,8 +1322,8 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           workflow=Path('.github/workflows/h-earth-neutral-exact-head-runner.yml').read_text()
-          assert workflow.count('  original-indexed-mesh-recovery:') == 1
-          assert workflow.count('  original-indexed-mesh-static-test:') == 1
+          assert workflow.splitlines().count('  original-indexed-mesh-recovery:') == 1
+          assert workflow.splitlines().count('  original-indexed-mesh-static-test:') == 1
           assert "inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1'" in workflow
           assert "inputs.route_query == 'qualification=h-earth-original-indexed-mesh-v1'" in workflow
           assert "ref: ee8463c17b9df9fc0c9f534792fa7235fa836443" in workflow

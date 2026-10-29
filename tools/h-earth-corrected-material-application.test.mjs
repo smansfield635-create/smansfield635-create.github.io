@@ -13,3 +13,21 @@ const sourcePath=process.env.H_EARTH_FROZEN_RENDERER;
 test('pinned transform modifies only main fragment compilation; shadow/other FS literal unchanged',()=>{assert.ok(sourcePath,'H_EARTH_FROZEN_RENDERER is required for qualified source-transform tests');const source=fs.readFileSync(sourcePath,'utf8'),out=instrumentCorrectedRenderer(source,fixture().manifest);const extract=(s,n)=>s.match(new RegExp('const '+n+' = `([\\s\\S]*?)`;'))?.[1];assert.equal(extract(out,'FS'),extract(source,'FS'));const line=out.split('\n').find(l=>l.includes("'GF')"));assert.ok(line.includes('FS.replace'));const expr=line.slice(line.indexOf('FS.replace'),line.lastIndexOf(", 'GF')"));const main=vm.runInNewContext(expr,{FS:extract(source,'FS')});assert.equal((main.match(/palette\+=\(encoded/g)||[]).length,1);assert.ok(main.indexOf('palette+=(encoded')>main.indexOf('H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN'));assert.ok(main.indexOf('palette+=(encoded')<main.indexOf('H_EARTH_BROAD_GROUNDCOVER_V1_END'));assert.ok(out.includes('await verifyAttributeCustody(specifications,uploadViews.indices)'));assert.ok(out.includes('globalThis.__hEarthCorrectedMaterialReceipt'));assert.ok(out.includes('gl.vertexAttribI4ui(11,0,0,0,0)'));assert.equal(out.split('resources.corrected.remap(').length,2);assert.throws(()=>instrumentCorrectedRenderer(source,{...fixture().manifest,stepMeters:1}),/MANIFEST_CONTRACT/);});
 const mesh=process.env.H_EARTH_FROZEN_MESH;
 test('actual post-seam normal/coast bytes match numerical custody',{skip:!mesh},async()=>{const load=(name,T)=>{const b=fs.readFileSync(`${mesh}/upload-${name}.bin`);return new T(b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength));};const spec=['positions','normals','coastDistances'].map(n=>[n,load(n,Float32Array)]);const hashes=await verifyAttributeCustody(spec,load('indices',Uint32Array));assert.equal(Object.keys(hashes).length,4);spec[1][1][0]+=.001;await assert.rejects(verifyAttributeCustody(spec,load('indices',Uint32Array)),/ATTRIBUTE_CUSTODY:normals/);});
+
+test('successive contact refreshes update originals and duplicates using frozen source mapping',()=>{
+ const f=fixture();f.spec.push(['contactDistances',new Float32Array([1,2,3,4]),9,1,5126,false]);
+ const r=preparePresentation(f.spec,f.indices,f.manifest);
+ f.indices[0]=3;f.manifest.charts[0].sourceOffset=3;
+ for(const values of [[10,20,30,40],[5,6,7,8]]){
+  const input=new Float32Array(values),out=r.expandAttribute('contactDistances',input);
+  assert.deepEqual([...out],[...values,...values.slice(0,3)]);assert.deepEqual([...input],values);
+ }
+ for(const bad of [new Float32Array(3),new Float64Array(4),[1,2,3,4]])assert.throws(()=>r.expandAttribute('contactDistances',bad),/ATTRIBUTE_REFRESH/);
+ assert.throws(()=>r.expandAttribute('unknown',new Float32Array(4)),/ATTRIBUTE_REFRESH/);
+});
+test('pinned refinement refresh uploads expanded contact values to the original contact buffer',()=>{
+ const source=fs.readFileSync(sourcePath,'utf8'),out=instrumentCorrectedRenderer(source,fixture().manifest);
+ const pattern=/const contactBuffer=resources.buffers.find\(entry=>entry.name==='contactDistances'\).buffer;\s*gl.bindBuffer\(gl.ARRAY_BUFFER,contactBuffer\);\s*gl.bufferSubData\(gl.ARRAY_BUFFER,0,resources.corrected.expandAttribute\('contactDistances',contactField.packageDistances\)\);/;
+ assert.match(out,pattern);assert.equal(out.includes('gl.bufferSubData(gl.ARRAY_BUFFER,0,contactField.packageDistances);'),false);
+ assert.equal(out.split("resources.corrected.expandAttribute('contactDistances'").length,2);
+});

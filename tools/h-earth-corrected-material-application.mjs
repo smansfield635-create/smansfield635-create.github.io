@@ -19,6 +19,7 @@ export function preparePresentation(specifications,canonicalIndices,manifest){
  if(!(positions instanceof Float32Array)||positions.length%3||!(canonicalIndices instanceof Uint32Array)||canonicalIndices.length%3)throw Error('CORRECTED_SOURCE_SHAPE');
  if(!Array.isArray(manifest.charts)||manifest.stepMeters!==.25||manifest.atlases?.length!==2)throw Error('CORRECTED_MANIFEST_CONTRACT');
  const count=positions.length/3,charts=manifest.charts,extra=charts.length*3,total=count+extra;
+ const duplicateSources=new Uint32Array(extra);
  const map=new Map(),uv=new Float32Array(total*2),ids=new Uint8Array(total);let next=count;
  for(const chart of charts){
   const o=chart.sourceOffset;
@@ -28,20 +29,26 @@ export function preparePresentation(specifications,canonicalIndices,manifest){
   const replacements=[];
   for(let j=0;j<3;j++){
    const src=canonicalIndices[o+j];if(src>=count)throw Error('CORRECTED_VERTEX_RANGE');
-   const target=next++;replacements.push(target);ids[target]=chart.atlasIndex+1;
+   const target=next++;duplicateSources[target-count]=src;replacements.push(target);ids[target]=chart.atlasIndex+1;
    uv[target*2]=((positions[src*3]-chart.originXZ[0])/manifest.stepMeters+chart.atlasX+.5)/atlas.width;
    uv[target*2+1]=((positions[src*3+2]-chart.originXZ[1])/manifest.stepMeters+chart.atlasY+.5)/atlas.height;
   }
   map.set(o,replacements);
  }
+ const attributeContracts=new Map(specifications.map(([name,data,,size])=>[name,{Type:data.constructor,size}]));
+ function expandAttribute(name,data){
+  const contract=attributeContracts.get(name);
+  if(!contract||!(data instanceof contract.Type)||data.length!==count*contract.size)throw Error('CORRECTED_ATTRIBUTE_REFRESH:'+name);
+  const {size}=contract,out=new contract.Type(total*size);out.set(data);
+  for(let j=0;j<duplicateSources.length;j++){
+   const src=duplicateSources[j];out.set(data.subarray(src*size,(src+1)*size),(count+j)*size);
+  }
+  return out;
+ }
  const expanded=specifications.map(([name,data,location,size,type,integer])=>{
   if(location===10||location===11)throw Error('CORRECTED_ATTRIBUTE_LOCATION');
   if(data.length!==count*size)throw Error('CORRECTED_ATTRIBUTE_LENGTH:'+name);
-  const out=new data.constructor(total*size);out.set(data);let target=count;
-  for(const chart of charts)for(let j=0;j<3;j++){
-   const src=canonicalIndices[chart.sourceOffset+j];out.set(data.subarray(src*size,(src+1)*size),target++*size);
-  }
-  return [name,out,location,size,type,integer];
+  return [name,expandAttribute(name,data),location,size,type,integer];
  });
  // WebGL enums are stable; no geometry/attribute value changes, only duplicate vertices.
  expanded.push(['correctedUV',uv,10,2,0x1406,false],['correctedAtlas',ids,11,1,0x1401,true]);
@@ -55,7 +62,7 @@ export function preparePresentation(specifications,canonicalIndices,manifest){
   }
   return {indices:out,applied,retired};
  }
- return {specifications:expanded,remap,originalVertexCount:count,addedVertexCount:extra};
+ return {specifications:expanded,remap,expandAttribute,originalVertexCount:count,addedVertexCount:extra};
 }
 async function loadAtlases(gl,manifest,prefix){
  const textures=[];
@@ -84,6 +91,7 @@ export function instrumentCorrectedRenderer(source,manifest){
  replace("createShader(gl.FRAGMENT_SHADER, FS, 'GF')",`createShader(gl.FRAGMENT_SHADER, ${fragmentExpression}, 'GF')`);
  replace('    rendererTiming.phases.shadersAndVertexSetup=performance.now()-shaderStarted;',`    gl.vertexAttribI4ui(11,0,0,0,0);\n    const correctedCustody=await verifyAttributeCustody(specifications,uploadViews.indices);\n    const corrected=preparePresentation(specifications,uploadViews.indices,CORRECTED_MANIFEST);\n    specifications.splice(0,specifications.length,...corrected.specifications);resources.corrected=corrected;\n    resources.correctedTextures=await loadAtlases(gl,CORRECTED_MANIFEST,${JSON.stringify(ASSET_PREFIX)});\n    rendererTiming.phases.shadersAndVertexSetup=performance.now()-shaderStarted;`);
  replace("    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, resources.woodlandSuppressedIndices,resources.indexBuffer,'indices');","    const correctedIndices=resources.corrected.remap(resources.woodlandSuppressedIndices);resources.correctedReceipt=Object.freeze({applied:correctedIndices.applied,retired:correctedIndices.retired,attributeHashes:correctedCustody});globalThis.__hEarthCorrectedMaterialReceipt=resources.correctedReceipt;\n    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, resources.indexBuffer); await uploadChunked(gl.ELEMENT_ARRAY_BUFFER, correctedIndices.indices,resources.indexBuffer,'indices');");
+ replace('gl.bufferSubData(gl.ARRAY_BUFFER,0,contactField.packageDistances);',"gl.bufferSubData(gl.ARRAY_BUFFER,0,resources.corrected.expandAttribute('contactDistances',contactField.packageDistances));");
  replace('// SHORELINE_SOIL_END binding\n    bindClearingTextures();',"// SHORELINE_SOIL_END binding\n    for(let i=0;i<2;i++){gl.activeTexture(gl.TEXTURE13+i);gl.bindTexture(gl.TEXTURE_2D,resources.correctedTextures[i]);gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,i===0?'uCorrectedNear':'uCorrectedFar'),13+i);}gl.activeTexture(gl.TEXTURE0);\n    bindClearingTextures();");
  return `const CORRECTED_MANIFEST=${JSON.stringify(manifest)};\n${verifyAttributeCustody.toString()}\n${preparePresentation.toString()}\n${loadAtlases.toString()}\n`+out;
 }

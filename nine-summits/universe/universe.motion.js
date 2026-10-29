@@ -108,7 +108,7 @@ function choose(index,scroll=true){
     joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');
     loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
     stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');emberOverlay.classList.remove('is-visible');emberOverlay.setAttribute('aria-hidden','true');
-    document.documentElement.classList.remove('universe-joy','universe-love','universe-stability','universe-ember');joyFocusReturn=null;loveFocusReturn=null;stabilityFocusReturn=null;emberFocusReturn=null;
+    document.documentElement.classList.remove('universe-joy','universe-love','universe-stability','universe-ember','universe-peace');joyFocusReturn=null;loveFocusReturn=null;stabilityFocusReturn=null;emberFocusReturn=null;
     scene.dataset.stage='arrival';document.documentElement.classList.remove('universe-encounter','universe-approaching');
     peaceFocusReturn=null;
   }
@@ -142,7 +142,7 @@ function choose(index,scroll=true){
 }
 function returnToAll(){
   if((selected===4||selected===0||selected===1||selected===2||selected===3)&&(flight>.002||flightTarget>0)){flightTarget=0;flightStage='return';peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
-    stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');emberOverlay.classList.remove('is-visible');emberOverlay.setAttribute('aria-hidden','true');scene.dataset.stage='return';document.documentElement.classList.remove('universe-encounter','universe-joy','universe-love','universe-stability','universe-ember');updateMotionControl();requestFrame();return;}
+    stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');emberOverlay.classList.remove('is-visible');emberOverlay.setAttribute('aria-hidden','true');peaceOverlay.style.opacity='0';peaceOverlay.style.pointerEvents='none';scene.dataset.stage='return';document.documentElement.classList.remove('universe-encounter','universe-joy','universe-love','universe-stability','universe-ember','universe-peace');updateMotionControl();requestFrame();return;}
   stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];panel.style.removeProperty('--world-accent');scene.style.removeProperty('--world-accent');
   panel.hidden=true;returnButton.hidden=true;status.textContent='All nine summits. One path. Your orientation is preserved.';
   $('#summit-teaching').hidden=true;approach.setAttribute('aria-expanded','false');
@@ -151,12 +151,11 @@ function returnToAll(){
 }
 
 function startPeaceFlight(){
-  // Initiating from an on-page list moves to the actual scene, not away from it.
-  panel.hidden=true;close=true;flightTarget=1;flightStage='approach';
-  scene.dataset.stage='approach';scene.scrollIntoView({behavior:'instant',block:'start'});
+  panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';
+  if(!peaceGL){try{setupPeaceWorld();}catch(error){console.error('Forgiveness world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;approach.hidden=true;$('#summit-teaching').hidden=false;status.textContent='The Quiet Ocean is unavailable. Read the complete Peace teaching below.';panel.focus({preventScroll:true});return;}}
+  scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});
   peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');
-  $('#scene-note').textContent='Approaching Forgiveness — Peace';
-  status.textContent='Traveling toward the world of Peace.';
+  $('#scene-note').textContent='Approaching Forgiveness — Peace';status.textContent='Traveling toward The Quiet Ocean.';
   updateMotionControl();requestFrame();
 }
 $('#explore-worlds').addEventListener('click',()=>{
@@ -745,6 +744,135 @@ function drawEmberWorld(t){if(!emberGL)return;
  drawMesh(emberGround,0);drawMesh(emberSpurs,1);drawMesh(emberFaults,2);
 }
 
+
+/* WORLD 05 — FORGIVENESS → PEACE / The Quiet Ocean.
+ * An actual coastal horizon, five independent islands, sandy shore, cloud banks
+ * and waves; no enlarged texture sphere masquerades as a world encounter. */
+let peaceGL=null,peaceProgram=null,peaceSkyProgram=null,peaceOcean=null,peaceIslands=null,peaceShore=null,peaceRocks=null,peaceSkyBuffer=null,peaceLoc={},peaceSkyLoc={};
+const peaceCanvas=document.querySelector('#peace-world-canvas'),peaceHud=document.querySelector('#peace-world-hud');
+const peaceVertex=`precision highp float;
+attribute vec3 aPosition,aNormal;uniform vec2 uViewport;uniform float uTime,uKind;
+varying vec3 vPos,vNormal;varying float vFog;
+void main(){
+ vec3 p=aPosition;
+ if(uKind<.5){p.y+=.095*sin(p.z*.47-uTime*.70+p.x*.21)+.060*sin(p.x*.85+uTime*.48+p.z*.13);}
+ vec3 eye=p-vec3(0.,3.25,-8.0);float depth=max(.7,eye.z);
+ gl_Position=vec4(eye.x*1.8/uViewport.x,(eye.y+eye.z*.025)*1.8,eye.z*.998-.32,depth);
+ vPos=p;vNormal=aNormal;vFog=depth;
+}`;
+const peaceFragment=`precision highp float;
+uniform float uTime,uKind;varying vec3 vPos,vNormal;varying float vFog;
+float hash2(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(hash2(i),hash2(i+vec2(1.,0.)),f.x),mix(hash2(i+vec2(0.,1.)),hash2(i+vec2(1.,1.)),f.x),f.y);}
+void main(){
+ vec3 n=normalize(vNormal),sun=normalize(vec3(-.58,.66,-.44));
+ float lam=max(0.,dot(n,sun));vec3 col;
+ if(uKind<.5){
+  vec2 q=vPos.xz;float wave=sin(q.y*.89-uTime*.75+sin(q.x*.16+uTime*.21))*.5+.5;
+  float swell=noise2(q*.24+vec2(uTime*.013,-uTime*.035));
+  float caustic=pow(max(0.,sin(q.x*.78+q.y*.27-uTime*.68)*sin(q.y*.50-q.x*.15+uTime*.36)),5.);
+  float horizon=clamp(vFog/95.,0.,1.);
+  col=mix(vec3(.012,.13,.19),vec3(.17,.38,.39),clamp(.30*wave+.30*swell+.21*lam,0.,1.));
+  col+=vec3(.31,.24,.11)*caustic*(.13+max(0.,1.-vFog/110.)*.25);
+  float glint=pow(max(0.,sin(q.x*.26+uTime*.21)*sin(q.y*.12-uTime*.30)),14.);
+  col+=vec3(.24,.35,.26)*glint*(.24+.46*horizon);
+  float foam=1.-smoothstep(.08,.55,abs(sin(q.y*.2-uTime*.26+sin(q.x*.07)*.48)));
+  col+=vec3(.035,.083,.081)*foam*.4;
+ }else if(uKind<1.5){
+  float grain=noise2(vPos.xz*.18)*.18+noise2(vPos.xz*.93)*.07;
+  float wet=clamp((1.3-vPos.y)*.45,0.,1.);
+  col=mix(vec3(.42,.46,.36),vec3(.64,.58,.44),clamp(.35+grain,0.,1.));
+  col=mix(col,vec3(.21,.39,.36),wet*.48);
+  col*=.59+.55*lam;
+ }else if(uKind<2.5){
+  float grain=noise2(vPos.xy*.31+vPos.z*.04)*.17;
+  col=mix(vec3(.13,.20,.22),vec3(.39,.41,.34),clamp(lam*.83+grain,0.,1.));
+  col+=vec3(.035,.055,.038)*sin(vPos.y*2.9+vPos.x*.21)*.25;
+ }else{
+  float pulse=sin(vPos.z*.54-uTime*.62+vPos.x*.21);
+  col=mix(vec3(.18,.46,.42),vec3(.79,.86,.69),clamp(.5+.5*pulse,0.,1.));
+  col*=.62+.24*lam;
+ }
+ float fog=clamp((vFog-27.)/105.,0.,.78);
+ col=mix(col,vec3(.44,.61,.59),fog);
+ gl_FragColor=vec4(pow(max(col,vec3(.001)),vec3(.87)),1.);
+}`;
+const peaceSkyVertex=`precision mediump float;attribute vec2 aXY;varying vec2 vUv;void main(){vUv=aXY*.5+.5;gl_Position=vec4(aXY,0.,1.);}`;
+const peaceSkyFragment=`precision highp float;uniform float uTime,uAspect;varying vec2 vUv;
+float hash2(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+return mix(mix(hash2(i),hash2(i+vec2(1.,0.)),f.x),mix(hash2(i+vec2(0.,1.)),hash2(i+vec2(1.,1.)),f.x),f.y);}
+void main(){vec2 uv=vUv;
+ vec3 sky=mix(vec3(.61,.75,.69),vec3(.045,.18,.31),smoothstep(.19,1.,uv.y));
+ float sun=length((uv-vec2(.68,.42))*vec2(uAspect,1.));
+ sky+=vec3(.92,.66,.38)*(.17*exp(-sun*4.)+.56*exp(-sun*24.));
+ float farCloud=noise2(vec2(uv.x*12.5-uTime*.004,uv.y*55.+sin(uv.x*6.)*.9));
+ float nearCloud=noise2(vec2(uv.x*22.-uTime*.009,uv.y*84.+sin(uv.x*9.)*1.4));
+ float strata=(smoothstep(.53,.76,farCloud)*.31+smoothstep(.58,.85,nearCloud)*.19);
+ float band=exp(-pow((uv.y-.48)/.16,2.));
+ sky=mix(sky,vec3(.83,.88,.79),min(.37,strata*band));
+ float horizonGlow=exp(-pow((uv.y-.36)/.095,2.));sky+=vec3(.17,.21,.13)*horizonGlow;
+ gl_FragColor=vec4(pow(max(sky,vec3(.001)),vec3(.91)),1.);
+}`;
+function peaceCompile(type,source){const s=peaceGL.createShader(type);peaceGL.shaderSource(s,source);peaceGL.compileShader(s);if(!peaceGL.getShaderParameter(s,peaceGL.COMPILE_STATUS))throw Error('Peace shader: '+peaceGL.getShaderInfoLog(s));return s;}
+function peaceLink(v,f){const p=peaceGL.createProgram(),a=peaceCompile(peaceGL.VERTEX_SHADER,v),b=peaceCompile(peaceGL.FRAGMENT_SHADER,f);peaceGL.attachShader(p,a);peaceGL.attachShader(p,b);peaceGL.linkProgram(p);peaceGL.deleteShader(a);peaceGL.deleteShader(b);if(!peaceGL.getProgramParameter(p,peaceGL.LINK_STATUS))throw Error('Peace program: '+peaceGL.getProgramInfoLog(p));return p;}
+function peaceTri(o,a,b,c){const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]];
+ const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];const len=Math.hypot(...n)||1;const norm=n.map(x=>x/len);if(norm[1]<0)for(let i=0;i<3;i++)norm[i]=-norm[i];for(const p of [a,b,c])o.push(...p,...norm);}
+function peaceQuad(o,a,b,c,d){peaceTri(o,a,b,c);peaceTri(o,b,d,c);}
+function peaceOceanMesh(){const out=[],nx=96,nz=128;for(let z=0;z<nz;z++)for(let x=0;x<nx;x++){
+ const x0=-52+104*x/nx,x1=-52+104*(x+1)/nx,z0=0+125*z/nz,z1=0+125*(z+1)/nz;
+ peaceQuad(out,[x0,-1.35,z0],[x1,-1.35,z0],[x0,-1.35,z1],[x1,-1.35,z1]);}
+ return new Float32Array(out);}
+const PEACE_ISLANDS=[[-20,22,12,5.1],[-4,43,14,6.0],[24,35,14,6.2],[-26,75,21,7.8],[18,92,22,8.2],[4,110,24,7.8]];
+function peaceIslandHeight(cx,cz,r,ang,seed){const wrinkle=1.+.22*Math.sin(ang*3.+seed)+.12*Math.cos(ang*7.-seed*.67);
+ return (r*wrinkle);}
+function peaceIslandMesh(){const out=[],rings=13,sides=60;
+ for(let k=0;k<PEACE_ISLANDS.length;k++){const [cx,cz,rad,height]=PEACE_ISLANDS[k];
+  const point=(r,a)=>{const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5),x=cx+edge*r*Math.cos(t),z=cz+edge*r*.67*Math.sin(t);
+   const slope=Math.pow(Math.max(0,1.-r*r),1.4),ridges=Math.sin(t*3.+k*2.1)*.13+Math.sin(t*7.-k*1.7)*.055;
+   const y=-1.3+height*(.56*slope+Math.max(0,1.-r)*r*ridges*.87+.052*Math.sin(x*.41+z*.18)*(r*(1-r)));
+   return [x,y,z];};
+  for(let ring=0;ring<rings;ring++)for(let side=0;side<sides;side++){
+   const r0=ring/rings,r1=(ring+1)/rings;
+   peaceQuad(out,point(r0,side),point(r0,side+1),point(r1,side),point(r1,side+1));
+  }
+ }
+ return new Float32Array(out);}
+function peaceShoreMesh(){const out=[],sides=96;
+ for(let k=0;k<PEACE_ISLANDS.length;k++){const [cx,cz,rad]=PEACE_ISLANDS[k];for(let side=0;side<sides;side++){
+  const mk=(r,a)=>{const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5);return [cx+edge*r*Math.cos(t),-1.28,cz+edge*r*.67*Math.sin(t)];};
+  peaceQuad(out,mk(.95,side),mk(.95,side+1),mk(1.08,side),mk(1.08,side+1));
+ }}return new Float32Array(out);}
+function peaceRocksMesh(){const out=[],rocks=[[-17,1.7,2.7],[18,2.2,3.8],[-31,8.2,5.5],[29,11.5,6.4]];
+ for(let i=0;i<rocks.length;i++){const [cx,cz,rad]=rocks[i];const sides=9;
+ const ring=(s,a)=>{const t=2*Math.PI*a/sides,r=rad*s*(1+.18*Math.sin(t*3.1+i));return [cx+r*Math.cos(t),-1.25+rad*(1-s)*.85,cz+r*.7*Math.sin(t)];};
+ for(let s=0;s<2;s++)for(let a=0;a<sides;a++)peaceQuad(out,ring(s*.47+.05,a),ring(s*.47+.05,a+1),ring((s+1)*.47+.05,a),ring((s+1)*.47+.05,a+1));
+ }return new Float32Array(out);}
+function setupPeaceWorld(){if(peaceGL)return;
+ peaceGL=peaceCanvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power'});
+ if(!peaceGL)throw Error('Peace coast WebGL unavailable');
+ peaceProgram=peaceLink(peaceVertex,peaceFragment);peaceSkyProgram=peaceLink(peaceSkyVertex,peaceSkyFragment);
+ for(const n of ['aPosition','aNormal'])peaceLoc[n]=peaceGL.getAttribLocation(peaceProgram,n);
+ for(const n of ['uViewport','uTime','uKind'])peaceLoc[n]=peaceGL.getUniformLocation(peaceProgram,n);
+ peaceSkyLoc.aXY=peaceGL.getAttribLocation(peaceSkyProgram,'aXY');for(const n of ['uAspect','uTime'])peaceSkyLoc[n]=peaceGL.getUniformLocation(peaceSkyProgram,n);
+ const upload=data=>{const b=peaceGL.createBuffer();peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,b);peaceGL.bufferData(peaceGL.ARRAY_BUFFER,data,peaceGL.STATIC_DRAW);return{buffer:b,count:data.length/6};};
+ peaceOcean=upload(peaceOceanMesh());peaceIslands=upload(peaceIslandMesh());peaceShore=upload(peaceShoreMesh());peaceRocks=upload(peaceRocksMesh());
+ peaceSkyBuffer=peaceGL.createBuffer();peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,peaceSkyBuffer);peaceGL.bufferData(peaceGL.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),peaceGL.STATIC_DRAW);
+ peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.clearColor(.04,.14,.19,1.);
+}
+function drawPeaceWorld(t){if(!peaceGL)return;
+ const r=peaceCanvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.3),w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));
+ if(peaceCanvas.width!==w||peaceCanvas.height!==h){peaceCanvas.width=w;peaceCanvas.height=h;}
+ peaceGL.viewport(0,0,w,h);peaceGL.clear(peaceGL.COLOR_BUFFER_BIT|peaceGL.DEPTH_BUFFER_BIT);
+ peaceGL.disable(peaceGL.DEPTH_TEST);peaceGL.useProgram(peaceSkyProgram);peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,peaceSkyBuffer);
+ peaceGL.vertexAttribPointer(peaceSkyLoc.aXY,2,peaceGL.FLOAT,false,0,0);peaceGL.enableVertexAttribArray(peaceSkyLoc.aXY);
+ peaceGL.uniform1f(peaceSkyLoc.uTime,t);peaceGL.uniform1f(peaceSkyLoc.uAspect,w/h);peaceGL.drawArrays(peaceGL.TRIANGLES,0,3);
+ peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.useProgram(peaceProgram);peaceGL.uniform2f(peaceLoc.uViewport,w/h,1);peaceGL.uniform1f(peaceLoc.uTime,t);
+ const draw=(mesh,kind)=>{peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,mesh.buffer);peaceGL.vertexAttribPointer(peaceLoc.aPosition,3,peaceGL.FLOAT,false,24,0);peaceGL.enableVertexAttribArray(peaceLoc.aPosition);peaceGL.vertexAttribPointer(peaceLoc.aNormal,3,peaceGL.FLOAT,false,24,12);peaceGL.enableVertexAttribArray(peaceLoc.aNormal);peaceGL.uniform1f(peaceLoc.uKind,kind);peaceGL.drawArrays(peaceGL.TRIANGLES,0,mesh.count);};
+ draw(peaceOcean,0);draw(peaceShore,1);draw(peaceIslands,2);draw(peaceRocks,3);
+}
+
 const vertexSource=`attribute vec3 aPosition;attribute vec3 aNormal;attribute float aFacet;
 uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ;uniform vec2 uView;
 varying vec3 vWorld,vNormal,vLocal;varying float vFacet;
@@ -1000,7 +1128,7 @@ function render(time){
   if(orbitActive){orbitSpeed+=(ORBIT_RADIANS_PER_SECOND-orbitSpeed)*(1-Math.exp(-P.GESTURE.settleSpeed*dt));orbitPhase=(orbitPhase+orbitSpeed*dt)%(Math.PI*2);}else orbitSpeed=0;
   const settle=reduced?1:1-Math.exp(-P.GESTURE.settleSpeed*dt);
   const flightStep=reduced?1:Math.min(1,dt/.95);
-  if(selected===0||selected===1||selected===2||selected===3){if(reduced)flight=flightTarget;else{const delta=flightTarget-flight;flight=Math.abs(delta)<.00001?flightTarget:Math.max(0,Math.min(1,flight+Math.sign(delta)*Math.min(Math.abs(delta),dt/3.4)));}}
+  if(selected===0||selected===1||selected===2||selected===3||selected===4){if(reduced)flight=flightTarget;else{const delta=flightTarget-flight;flight=Math.abs(delta)<.00001?flightTarget:Math.max(0,Math.min(1,flight+Math.sign(delta)*Math.min(Math.abs(delta),dt/3.4)));}}
   else flight+=(flightTarget-flight)*flightStep;
   if(Math.abs(flight-flightTarget)<.0006)flight=flightTarget;
   const smooth=flight*flight*(3-2*flight);
@@ -1011,6 +1139,12 @@ function render(time){
     targetOffset=[focus[0]*smooth-.18*smooth,focus[1]*smooth,focus[2]*smooth];
     targetZoom=1+2.6*smooth;
   }
+  if(selected===4&&flight>.55){
+    peaceOverlay.classList.add('is-visible');peaceOverlay.setAttribute('aria-hidden',flightStage==='encounter'?'false':'true');
+    peaceOverlay.style.opacity=String(Math.max(0,Math.min(1,(flight-.55)/.36)));
+    peaceOverlay.style.pointerEvents=flightStage==='encounter'?'auto':'none';
+    drawPeaceWorld(reduced?0:universeClock);
+  }else if(selected===4&&flight<=.55){peaceOverlay.style.opacity='0';peaceOverlay.style.pointerEvents='none';}
   if(selected===3&&flight>.55){
     emberOverlay.classList.add('is-visible');emberOverlay.setAttribute('aria-hidden',flightStage==='encounter'?'false':'true');
     emberOverlay.style.opacity=String(Math.max(0,Math.min(1,(flight-.55)/.36)));
@@ -1053,15 +1187,15 @@ function render(time){
   }
   if(selected===4&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';peaceOverlay.classList.add('is-visible');peaceOverlay.setAttribute('aria-hidden','false');
-    document.documentElement.classList.add('universe-encounter');
-    $('#scene-note').textContent='Forgiveness → Peace · A world to explore';status.textContent='Arrived at the world of Peace.';
+    document.documentElement.classList.add('universe-encounter','universe-peace');peaceOverlay.style.opacity='1';peaceOverlay.style.pointerEvents='auto';
+    $('#scene-note').textContent='Forgiveness → Peace · The Quiet Ocean';status.textContent='Arrived at the world of Peace.';
     // The new encounter precedes the path list in DOM order: move focus to its readable landmark.
-    peaceOverlay.focus({preventScroll:true});
+    peaceHud.focus({preventScroll:true});
   }
   if((selected===4||selected===0||selected===1||selected===2||selected===3)&&flight===0&&flightStage==='return'){
     const wasJoy=selected===0,wasLove=selected===1,wasStability=selected===2,wasEmber=selected===3;
     selected=-1;close=false;flightStage='arrival';targetZoom=1;targetOffset=[0,0,0];
-    scene.dataset.stage='arrival';panel.hidden=true;returnButton.hidden=true;document.documentElement.classList.remove('universe-approaching');joyOverlay.classList.remove('is-visible');joyOverlay.style.opacity='0';loveOverlay.classList.remove('is-visible');loveOverlay.style.opacity='0';stabilityOverlay.classList.remove('is-visible');stabilityOverlay.style.opacity='0';emberOverlay.classList.remove('is-visible');emberOverlay.style.opacity='0';
+    scene.dataset.stage='arrival';panel.hidden=true;returnButton.hidden=true;document.documentElement.classList.remove('universe-approaching','universe-encounter','universe-peace');peaceOverlay.classList.remove('is-visible');peaceOverlay.style.opacity='0';peaceOverlay.style.pointerEvents='none';joyOverlay.classList.remove('is-visible');joyOverlay.style.opacity='0';loveOverlay.classList.remove('is-visible');loveOverlay.style.opacity='0';stabilityOverlay.classList.remove('is-visible');stabilityOverlay.style.opacity='0';emberOverlay.classList.remove('is-visible');emberOverlay.style.opacity='0';
     labels.forEach(el=>el.setAttribute('aria-pressed','false'));
     $('#scene-note').textContent='Drag to turn the universe · Choose a planet to explore';
     status.textContent='Returned to the universe.';updateMotionControl();
@@ -1144,6 +1278,6 @@ async function init(){
   new IntersectionObserver(entries=>{sceneVisible=entries[0].isIntersecting;orbitSpeed=0;lastTime=0;if(!sceneVisible&&raf){cancelAnimationFrame(raf);raf=0;}if(sceneVisible)requestFrame();}).observe(scene);
   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;fallback(Error('Graphics context interrupted'));});
   canvas.addEventListener('webglcontextrestored',()=>location.reload());
-  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null})});
+  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null})});
 }
 init().catch(fallback);

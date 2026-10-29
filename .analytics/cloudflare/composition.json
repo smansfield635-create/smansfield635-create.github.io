@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-29T10:26:36Z",
+  "generatedAt": "2026-10-29T11:25:46Z",
   "window": {
-    "start": "2026-09-29T10:26:36Z",
-    "end": "2026-10-29T10:26:36Z"
+    "start": "2026-09-29T11:25:46Z",
+    "end": "2026-10-29T11:25:46Z"
   },
   "dimensions": {
     "requestPath": [
@@ -253,23 +253,23 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1774,
-        "visits": 1643
+        "pageLoads": 1787,
+        "visits": 1659
       },
       {
         "value": "CN",
-        "pageLoads": 41,
-        "visits": 41
-      },
-      {
-        "value": "CA",
-        "pageLoads": 14,
-        "visits": 14
+        "pageLoads": 42,
+        "visits": 42
       },
       {
         "value": "BR",
-        "pageLoads": 14,
-        "visits": 4
+        "pageLoads": 23,
+        "visits": 13
+      },
+      {
+        "value": "CA",
+        "pageLoads": 13,
+        "visits": 13
       },
       {
         "value": "IN",
@@ -278,11 +278,6 @@
       },
       {
         "value": "PK",
-        "pageLoads": 1,
-        "visits": 1
-      },
-      {
-        "value": "EG",
         "pageLoads": 1,
         "visits": 1
       },

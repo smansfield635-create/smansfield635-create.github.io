@@ -19,9 +19,10 @@ class MeshGate(unittest.TestCase):
  def test_exact_junction_no_area_overlap(self):
   v,i,g=self.fixture();o,vid,verts,area,n,b=topo(v,i,g)
   self.assertEqual(len(b),9)
-  links,partial=continuous_source_seam(v,b,g,o,n,require_complete=True)
+  links,partial,sealed=continuous_source_seam(v,b,g,o,n,require_complete=True)
   self.assertEqual(len(links),2)
   self.assertEqual(len(partial),0)
+  self.assertEqual(len(sealed),3)
   self.assertAlmostEqual(sum(x[2] for x in links),10)
   self.assertEqual(len(no_duplicate_projected_area(verts,o,g,{0,1,2})),0)
   self.assertAlmostEqual(area.sum(),100.)
@@ -30,6 +31,18 @@ class MeshGate(unittest.TestCase):
   o,vid,verts,area,n,b=topo(v,i,g)
   with self.assertRaisesRegex(ValueError,'PARTIAL_NEAR_FAR_SEAM'):
    continuous_source_seam(v,b,g,o,n,require_complete=True)
+ def test_far_partial_seam_rejected(self):
+  v,i,g=self.fixture();v[1,0]=9.0
+  o,vid,verts,area,n,b=topo(v,i,g)
+  with self.assertRaisesRegex(ValueError,'PARTIAL_NEAR_FAR_SEAM'):
+   continuous_source_seam(v,b,g,o,n,require_complete=True)
+ def test_sealed_edge_not_counted_as_open_cut(self):
+  from mesh_domain_gate import boundary_distance
+  v,i,g=self.fixture();o,vid,verts,area,n,b=topo(v,i,g)
+  links,partial,sealed=continuous_source_seam(v,b,g,o,n,require_complete=True)
+  a=boundary_distance(v,o,vid,b,{0,1,2},{0,1},n,verts,sealed)
+  b2=boundary_distance(v,o,vid,b,{0,1,2},{0,1},n,verts,set())
+  self.assertEqual(b2['cutEdges']-a['cutEdges'],3)
  def test_overlapping_near_far_fails(self):
   v,i,g=self.fixture();v[5,2]=2.0
   o,vid,verts,area,n,b=topo(v,i,g)

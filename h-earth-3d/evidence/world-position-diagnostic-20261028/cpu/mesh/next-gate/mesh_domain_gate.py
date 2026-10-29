@@ -78,12 +78,12 @@ def continuous_source_seam(positions,boundary,groups,offsets,neighbors,require_c
     Returns uncovered-near lengths to distinguish source seam from zero flux.
     """
     near=[e for e in boundary if e[1]=='NEAR'];far=[e for e in boundary if e[1]=='FAR']
-    if not near or not far:return [],[]
+    if not near or not far:return [],[],set()
     # Three-dimensional tolerance-based bounding-query: only true projected
     # potential overlaps are considered, never closest arbitrary segments.
     from shapely.geometry import LineString
     lines=[LineString([positions[c,[0,2]],positions[d,[0,2]]]) for _,_,c,d,_ in far]
-    st=STRtree(lines);links=[];partial=[]
+    st=STRtree(lines);links=[];partial=[];sealed=set();farcovered=defaultdict(list)
     for nf,_,a,b,nearlen in near:
         A,B=positions[[a,b]];axis=(B-A)/nearlen
         intervals=[]
@@ -100,24 +100,38 @@ def continuous_source_seam(positions,boundary,groups,offsets,neighbors,require_c
                 if nf==ff:raise ValueError('SELF_SEAM_CONNECTION')
                 links.append((int(nf),int(ff),float(hi-lo),res,tol))
                 intervals.append((lo,hi))
+                faraxis=(D-C)/farlen
+                tnear0=float(np.dot(A-C,faraxis));tnear1=float(np.dot(B-C,faraxis))
+                farlo=max(0.,min(tnear0,tnear1));farhi=min(farlen,max(tnear0,tnear1))
+                require(farhi-farlo>0,'INVALID_FAR_SEGMENT_OVERLAP')
+                farcovered[(int(ff),int(c),int(d),float(farlen))].append((farlo,farhi))
         if intervals:
             intervals.sort();end=0.;union=0.;overlap=0.
-            for a,b in intervals:
-                if a<end-1e-6:overlap+=min(end,b)-a
-                if b>end:union+=b-max(a,end);end=b
+            for ulo,uhi in intervals:
+                if ulo<end-1e-6:overlap+=min(end,uhi)-ulo
+                if uhi>end:union+=uhi-max(ulo,end);end=uhi
             if overlap>max(1e-6,nearlen*1e-5):raise ValueError('DUPLICATE_CROSS_SEAM_COVERAGE')
-            if nearlen-union>max(1e-6,nearlen*1e-5):partial.append((int(nf),nearlen,union))
+            if nearlen-union>max(1e-6,nearlen*1e-5):partial.append(('NEAR',int(nf),nearlen,union))
+            else:sealed.add((int(nf),int(a),int(b)))
+    for (face,c,d,length),intervals in farcovered.items():
+        intervals.sort();end=0.;union=0.;overlap=0.
+        for lo,hi in intervals:
+            if lo<end-1e-6:overlap+=min(end,hi)-lo
+            if hi>end:union+=hi-max(lo,end);end=hi
+        if overlap>max(1e-6,length*1e-5):raise ValueError('DUPLICATE_FAR_SEAM_COVERAGE')
+        if length-union>max(1e-6,length*1e-5):partial.append(('FAR',face,length,union))
+        else:sealed.add((face,c,d))
     if require_complete and partial:raise ValueError('UNRESOLVED_PARTIAL_NEAR_FAR_SEAM')
     # preserve paired symmetric links; not a geometric weld.
     for n,f,l,*_ in links:
         neighbors[n].append((f,l,'seam'));neighbors[f].append((n,l,'seam'))
-    return links,partial
+    return links,partial,sealed
 
-def no_duplicate_projected_area(verts, offsets, groups, active, eps=1e-4):
+def no_duplicate_projected_area(verts, offsets, groups, active, eps=1e-12):
     """Reject any 2D overlap across NEAR/FAR source triangles (not a seam edge).
     Fail-closed rather than choosing a layer or silently double-counting mass.
-    The epsilon is a diagnostic minimum-report threshold, never an acceptance
-    relaxation for the source geometry; caller must check every reported touch.
+    The tiny epsilon suppresses floating point slivers only; it must not be
+    enlarged to force a pass. All physical overlap remains an explicit failure.
     """
     active=sorted(active)
     faces=[];types=[]
@@ -169,7 +183,7 @@ def protected_faces(verts):
     positions=np.concatenate([verts,verts.mean(axis=1,keepdims=True)],axis=1)
     return np.any(source_protected(positions[...,[0,2]]),axis=1)
 
-def boundary_distance(positions,offsets,vids,boundary,active,seeds,neighbors,verts):
+def boundary_distance(positions,offsets,vids,boundary,active,seeds,neighbors,verts,sealed):
     """Conservative source-boundary screen using complete 3D edge segments.
 
     Nearest source-edge point is <= shortest real surface route distance, so
@@ -178,7 +192,7 @@ def boundary_distance(positions,offsets,vids,boundary,active,seeds,neighbors,ver
     """
     cut=[]
     for i,grp,a,b,l in boundary:
-        if i in active:cut.append((positions[a],positions[b]))
+        if i in active and (i,a,b) not in sealed and (i,b,a) not in sealed:cut.append((positions[a],positions[b]))
     for i in active:
         # Common source-index edges crossing into an omitted neighbor.
         if any(j not in active for j,_,_ in neighbors.get(i,[])):
@@ -231,11 +245,11 @@ def inspect(root,out,physical_radius=48.,influence_radius=40.):
     pos,idx,package,samples=load_original(root);groups=active_offsets(package)
     offsets,vids,verts,areas,neighbors,boundary=topo(pos,idx,groups)
     active,seeds=select_support(verts,offsets,samples,physical_radius)
-    links,partial=continuous_source_seam(pos,boundary,groups,offsets,neighbors)
+    links,partial,sealed=continuous_source_seam(pos,boundary,groups,offsets,neighbors)
     overlaps=no_duplicate_projected_area(verts,offsets,groups,active)
     guards=protected_faces(verts)
     protectedActive=sum(bool(guards[i]) for i in active)
-    distances=boundary_distance(pos,offsets,vids,boundary,active,seeds,neighbors,verts)
+    distances=boundary_distance(pos,offsets,vids,boundary,active,seeds,neighbors,verts,sealed)
     report={'schema':'H_EARTH_ORIGINAL_SOURCE_MESH_DOMAIN_GATE_v1','sourceHead':SOURCE_HEAD,'parentDiagnosticHead':WORLD_HEAD,
         'activeTerrainSourceTriangles':len(offsets),'activeOriginalFaces':len(active),'sourceTriangleAreasPositive':True,'witnessSamples':len(samples),
         'sampleTrianglesAllRetained':len(seeds),'sourceTriangleAreaTotalInCandidateSupport':float(areas[list(active)].sum()),

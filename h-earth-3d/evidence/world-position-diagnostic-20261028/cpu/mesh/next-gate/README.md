@@ -22,9 +22,11 @@ The complete new, unchanged, source-bound world-coordinate archive is included i
    `h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/README.md` (branch `33e752c7`).
 2. Re-run the **already committed** `reconstruct.mjs`, `reconstruct-direct.mjs`, `upload-replay.mjs`, `match-surface.py` against the same frozen source. The original 2,484 witness associations must retain all 2,575 memberships, including 86 ambiguous locations.
 3. Run `python mesh_domain_gate.py --mesh-dir /tmp/mesh-cpu --report ./source-mesh-gate-result.json` using NumPy, SciPy and Shapely. Compare with the committed `cpu/mesh/domain-audit.json` (47 seed triangles and six verified near/far candidate links). A result failing to close the physical domain remains a **failed research gate**, not permission to widen tolerances or change rendering.
-4. Run `python test_mesh_gate.py` (eight fixture/functional tests) and `python audit_image_geometry.py --archive ./h-earth-world-position-original-40790969812.zip --report ./image-geometry-audit.json` (verified source images and quantization-based no-go report).
+4. Run `python test_mesh_gate.py` (ten fixture/functional tests) and `python audit_image_geometry.py --archive ./h-earth-world-position-original-40790969812.zip --report ./image-geometry-audit.json` (verified source images and quantization-based no-go report).
 
 ## Acceptance law
+
+A v2 independent seam audit corrected a near-edge loop-variable shadowing defect in the provisional gate, added near- and far-side partial-seam rejection and checks that verified sealed edges no longer count as open cut edges. Ten tests pass in the corrected version. The previous version remains preserved in Git history; do not use it for source-mesh acceptance.
 
 The **mesh-domain** gate needs every selected source triangle from the original uploaded indices, positive Float32-source 3D area, nonoverlapping active terrain faces, source-indexed adjacency, verified near/far T-junction overlaps, protected/no-flux estate/oasis/route/grove zones and adequate influence-radius distance from artificial cuts. Ambiguous memberships may not be dropped. Candidate transport uses symmetric paired flux and one RGB gamut limiter, not clamping, and must maintain area-weighted RGB integral exactly. The conserved computation remains separate from material texture and appearance gates.
 

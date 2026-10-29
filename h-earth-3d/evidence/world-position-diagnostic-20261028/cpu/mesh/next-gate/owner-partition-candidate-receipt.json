@@ -1,0 +1,37 @@
+{
+  "schema": "H_EARTH_GEN2969_SOURCE_OWNER_CANDIDATE_v1",
+  "result": "NEAR_PRIORITY_CLIPPED_SOURCE_CANDIDATE_REVIEW_REQUIRED",
+  "candidatePolicy": "NEAR_LOCAL_SOURCE_OVER_FAR_CONTINUATION_DRAFT_v1",
+  "policyAccepted": false,
+  "materialOwnerPromoted": false,
+  "scientificClosure": false,
+  "originalAssetVerified": true,
+  "sourceFaces": 22,
+  "rawPositivePairs": 18,
+  "archivedWitnesses": 2484,
+  "memberships": 2575,
+  "artificialCutClearanceMeters": 48.19317335779048,
+  "originalBoundaryReviewRequired": true,
+  "partialSeamCount": 2,
+  "statistics": {
+    "sourceOverlapXZ": 0.0005452013574540615,
+    "uniqueUnionXZ": 1365.488405060023,
+    "clippedAreaXZ": 1365.4884050600233,
+    "areaErrorXZ": 2.2737367544323206e-13,
+    "maxResidualCrossOwnerXZ": 2.768248425649311e-17,
+    "sourceArea3D": 1368.2476321952925,
+    "sourceWeightedBaseColorRGBA": [
+      148.556497844969,
+      181.0558817339397,
+      94.44447443342752,
+      1368.2476321952925
+    ],
+    "farClippedAreaXZ": 0.0005452013572266878
+  },
+  "prohibitedConclusions": [
+    "NO_AUTOMATIC_SHORELINE_LAND_FILL",
+    "NO_PRODUCT_PIXEL_PROOF",
+    "NO_FULL_SOURCE_MASS_FLUX_ACCEPTANCE",
+    "NO_RELEASE"
+  ]
+}

@@ -35,6 +35,22 @@ class TestOwnerPartition(unittest.TestCase):
         ar,c=affine_integral(p,xyz,np.tile([0.2,0.4,0.6,1.],(3,1)))
         self.assertAlmostEqual(ar,2*np.sqrt(2))
         np.testing.assert_allclose(c,ar*np.array([0.2,0.4,0.6,1.]),rtol=1e-13)
+    def test_original_double_owned_area_not_conserved_by_clip(self):
+        p,_=clip(self.near,self.far)
+        self.assertGreater(sum(q.area for q in {**self.near,**self.far}.values()),sum(q.area for q in p.values()))
+    def test_competing_owner_materials_are_not_equal(self):
+        p,_=clip(self.near,self.far)
+        shape_near=np.array([[0.,0.,0.],[2.,0.,0.],[2.,0.,2.]])
+        shape_far=np.array([[1.,0.,0.],[3.,0.,0.],[3.,0.,2.]])
+        col_near=np.tile([0.2,0.4,0.6,1.],(3,1))
+        col_far=np.tile([0.8,0.1,0.1,1.],(3,1))
+        _,n=affine_integral(p[1],shape_near,col_near)
+        _,f=affine_integral(p[2],shape_far,col_far)
+        self.assertNotAlmostEqual(n[0]/p[1].area,f[0]/p[2].area)
+    def test_alpha_integral_tracks_physical_area(self):
+        xyz=np.array([[0.,0.,0.],[2.,1.,0.],[0.,0.,2.]])
+        ar,col=affine_integral(Polygon([(0,0),(2,0),(0,2)]),xyz,np.tile([0.1,0.2,0.3,1.],(3,1)))
+        self.assertAlmostEqual(ar,col[3])
     def test_witness_mismatch_fails(self):
         with self.assertRaisesRegex(ValueError,'WITNESS_DRIFT'):
             must(2483==2484,'WITNESS_DRIFT')

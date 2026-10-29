@@ -1,0 +1,83 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "228820fb198dea82466811eff1bc040532cbd8a6",
+    "operationId": "H_EARTH_OWNER_BOUNDARY_SURVEY_COMPLETION_20261029_001",
+    "paths": [
+      "tools/h-earth-owner-boundary-survey-completion.v1.mjs",
+      "tools/h-earth-owner-boundary-survey-completion.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/experience-anchor/evidence/owner-boundary-survey-completion-20261029/**"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_OWNER_BOUNDARY_SURVEY_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact current diagnostic branch and immutable production scene50b337, accepted helpera26. Separate completion profile with five missing headings only. Original12frame job disabled for completion launch. Exact reviewed hashes and authentic new admission required.",
+  "exactAllowedRepositoryPaths": [
+    "tools/h-earth-owner-boundary-survey-completion.v1.mjs",
+    "tools/h-earth-owner-boundary-survey-completion.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/experience-anchor/evidence/owner-boundary-survey-completion-20261029/**"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Obtain fresh bounded completion admission; original2977run remains stopped and its seven frames preserved.",
+      "step": 1
+    },
+    {
+      "action": "On existing draftPR6984 add separate five-direction completion tool and test. Normalize expected yaw exactly as production nav, preserve all other guards; no product changes.",
+      "step": 2
+    },
+    {
+      "action": "Independent review and local tests; freeze tooling and hashes. Extend existing neutral runner with distinct completion job, guard previous job with explicit ORIGINAL_SURVEY title and completion job with SURVEY_COMPLETION title so only one admitted execution can run.",
+      "step": 3
+    },
+    {
+      "action": "Bind completion intent to exact tooling,scene,admission,and predecessor artifact. Reopen existing same-repositoryPR once for five missing views. Return monitor link without polling.",
+      "step": 4
+    },
+    {
+      "action": "Inspect five new and seven saved images. Stop with visual-match finding or no match; never treat capture completion as repair.",
+      "step": 5
+    }
+  ],
+  "exactGoverningHead": "228820fb198dea82466811eff1bc040532cbd8a6",
+  "exactTestRunnerCommand": "node --test tools/h-earth-owner-boundary-survey-completion.v1.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_NAVIGATION_ANGLE_NORMALIZATION",
+      "SEVEN_SAVED_FRAMES_PRESERVED_FIVE_ONLY_CAPTURE",
+      "IMMUTABLE_PRODUCT_AND_HELPER_CUSTODY",
+      "VEGETATION_CAMERA_FRAME_GUARDS_UNCHANGED",
+      "ONE_RUN_NO_AUTOMATIC_RETRY"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Read existing seven images and receipt; normalize signed yaw validator and capture only five missing views.",
+    "forbidden": "No repeat of seven frames, material edits, pipeline rewrite, unbounded retry, global repair claim."
+  },
+  "procedureId": "H_EARTH_OWNER_BOUNDARY_SURVEY_COMPLETION_20261029_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/experience-anchor/evidence/owner-boundary-survey-completion-20261029/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

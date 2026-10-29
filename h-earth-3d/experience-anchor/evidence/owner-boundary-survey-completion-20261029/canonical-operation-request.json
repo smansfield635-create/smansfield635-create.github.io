@@ -1,0 +1,186 @@
+{
+  "allowedPaths": [
+    "tools/h-earth-owner-boundary-survey-completion.v1.mjs",
+    "tools/h-earth-owner-boundary-survey-completion.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/experience-anchor/evidence/owner-boundary-survey-completion-20261029/**"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/experience-anchor/evidence/owner-boundary-survey-completion-20261029/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "228820fb198dea82466811eff1bc040532cbd8a6",
+  "exactTestCommand": "node --test tools/h-earth-owner-boundary-survey-completion.v1.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateDiagnosticTooling": true,
+    "mayMutateProduct": false,
+    "role": "SOUTH_DIAGNOSTIC_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "228820fb198dea82466811eff1bc040532cbd8a6",
+    "operationId": "H_EARTH_OWNER_BOUNDARY_SURVEY_COMPLETION_20261029_001",
+    "paths": [
+      "tools/h-earth-owner-boundary-survey-completion.v1.mjs",
+      "tools/h-earth-owner-boundary-survey-completion.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/experience-anchor/evidence/owner-boundary-survey-completion-20261029/**"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_NAVIGATION_ANGLE_NORMALIZATION",
+      "SEVEN_SAVED_FRAMES_PRESERVED_FIVE_ONLY_CAPTURE",
+      "IMMUTABLE_PRODUCT_AND_HELPER_CUSTODY",
+      "VEGETATION_CAMERA_FRAME_GUARDS_UNCHANGED",
+      "ONE_RUN_NO_AUTOMATIC_RETRY"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "4684d3522ed4719fd337e870b268ce33c26b9c419c9bdb96eff84582e608a3d3",
+    "receiptId": "H_EARTH_OWNER_BOUNDARY_SURVEY_COMPLETION_20261029_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:OWNER_BOUNDARY_SURVEY_COMPLETION_20261029",
+  "operationId": "H_EARTH_OWNER_BOUNDARY_SURVEY_COMPLETION_20261029_001",
+  "prohibitedPaths": [
+    "PRODUCT_RENDERER_ROUTE_ATLAS_GEOMETRY_OR_VEGETATION_MUTATION",
+    "NEW_CONTROL_PLANE_OR_EXECUTION_CAPABILITY",
+    "DIRECT_MAIN_MERGE_DEPLOY_PUBLICATION",
+    "AUTOMATIC_GPU_RETRY"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Complete only five missing survey directions after a proven angle-normalization harness defect. Preserve seven captured frames and frozen production scene. No retry of original12-frame run and no product mutation.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": false,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner reports failure and continuing authorization to resolve terrain boundary. Run40970342621 failed SURVEY_POSE at210 because navigation normalizes210to-150. Existing run budget consumed; this request explicitly admits a separate five-frame completion budget, not inherited authority."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_FAILURE_CONTINUATION",
+      "resolved": true
+    },
+    {
+      "id": "EXACT_FAILED_ASSERTION_AND_NAV_SOURCE_NORMALIZATION",
+      "resolved": true
+    },
+    {
+      "id": "SEVEN_SAVED_FRAME_HASHES_AND_CAMERA_RECEIPTS",
+      "resolved": true
+    },
+    {
+      "id": "FROZEN_PRODUCTION_SCENE_AND_QUALIFIED_HELPERS",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "FIVE_MISSING_REFERENCE_LIT_FRAMES",
+    "ANGLE_NORMALIZATION_REGRESSION_TESTS",
+    "INDEPENDENT_REVIEW_AND_FAILURE_CLASSIFICATION",
+    "PRESERVED_SEVEN_FRAME_PROVENANCE",
+    "COMBINED_SURVEY_VISUAL_REVIEW_PENDING"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "AUTHENTIC_ADMISSION_BEFORE_REPOSITORY_WRITES",
+    "FIVE_MISSING_HEADINGS_ONLY_ONE_EXECUTION",
+    "NO_RECAPTURE_OF_SAVED_SEVEN",
+    "STOP_ON_SCENE_DRIFT_SUPPORT_OR_NEW_ASSERTION_FAILURE",
+    "NO_PRODUCT_MUTATION_OR_REPAIR_CLAIM"
+  ],
+  "subjectIdentity": {
+    "automaticRetry": false,
+    "cameraAnchor": {
+      "x": 140.1713950862869,
+      "z": -365.406512359563
+    },
+    "cameraBinding": "REPORT_CAPTURE_POSITION_NOT_PROVEN_SCREENSHOT_POSE",
+    "constructionBase": "e517f7cbde76f445ddf3f229bea10d2c5815df75",
+    "frameCeiling": 5,
+    "heightBinding": "ACTUAL_NAVIGATION_RESOLVED_EYE_HEIGHT",
+    "launchTransport": "SAME_REPOSITORY_PR_EXACT_HEAD",
+    "pitchDegrees": -14,
+    "predecessorRun": 40970342621,
+    "preservedArtifact": 12939683587,
+    "preservedArtifactSha256": "d42784b3fce283cffe9d581fe7668574d001dccb0092c85449186e55f9f475c5",
+    "preservedHeadings": [
+      0,
+      30,
+      60,
+      90,
+      120,
+      150,
+      180
+    ],
+    "priorOperationDisposition": "EXECUTION_STOPPED_BUDGET_CONSUMED_EVIDENCE_PRESERVED_NO_FURTHER_ORIGINAL_SURVEY_RUN",
+    "profile": "OWNER_BOUNDARY_SURVEY_COMPLETION_V1",
+    "rendererSha256": "a2ab977a3ea620f7bf87b3bdfb4e6a720cf7801f2ecbb670b4ac2dfccacf917d",
+    "runBudget": 1,
+    "sceneHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+    "sourceIssue": 6911,
+    "targetBranch": "h-earth/owner-boundary-survey-20261029",
+    "vegetationPreserved": true,
+    "viewport": {
+      "height": 688,
+      "pixelRatio": 1,
+      "width": 384
+    },
+    "yawDegrees": [
+      210,
+      240,
+      270,
+      300,
+      330
+    ]
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+}

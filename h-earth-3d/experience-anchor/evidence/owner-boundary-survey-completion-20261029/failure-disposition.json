@@ -1,0 +1,41 @@
+{
+  "facts": {
+    "schema": "FAILURE_DISPOSITION_NORMALIZED_FACTS_v1",
+    "failureClass": "EVIDENCE_OR_TEST_FAILURE",
+    "observationSource": "CANONICAL_REPOSITORY_EVIDENCE",
+    "dependencyRelationship": "CHANGED_BYTE",
+    "authorityState": "VALID_UNCHANGED",
+    "selectedForOperation": true,
+    "candidatePresent": true,
+    "candidateBytesStable": true,
+    "scopeStable": true,
+    "negativeProductAssertion": false,
+    "completedEvidenceValid": true,
+    "sameAuthorityRepairMechanicallyProvable": true,
+    "canonicalDurableEvidenceConfirmed": true,
+    "uniqueUnresolvedInformation": true
+  },
+  "receipt": {
+    "schema": "FAILURE_DISPOSITION_RECEIPT_v1",
+    "result": "CLASSIFIED",
+    "failureClass": "EVIDENCE_OR_TEST_FAILURE",
+    "observationSource": "CANONICAL_REPOSITORY_EVIDENCE",
+    "dependencyRelationship": "CHANGED_BYTE",
+    "authorityState": "VALID_UNCHANGED",
+    "selectedForOperation": true,
+    "candidateEffect": "PRESERVE_UNPROVEN",
+    "blockingScope": "CURRENT_OPERATION",
+    "blockingDisposition": "BLOCKING_CURRENT_OPERATION",
+    "recoveryDisposition": "REPAIR_SAME_AUTHORITY",
+    "retryBudget": 0,
+    "preserveCompletedEvidence": true,
+    "resumeFromCheckpoint": null,
+    "propagationAllowed": true,
+    "propagationScope": "PROVEN_DEPENDENCY_EDGE_ONLY",
+    "notificationDisposition": "NOT_APPLICABLE",
+    "authorityCreated": false,
+    "dependencyEdgeCreated": false,
+    "classificationReason": "SELECTED_EVIDENCE_FAILURE_REQUIRES_BOUNDED_REPAIR"
+  },
+  "executionBudgetNote": "Original one-run budget consumed. Separate five-missing-frame completion admission requested. No original rerun."
+}

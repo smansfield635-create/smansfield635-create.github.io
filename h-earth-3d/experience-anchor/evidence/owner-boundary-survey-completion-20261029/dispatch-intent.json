@@ -1,0 +1,29 @@
+{
+  "schema": "H_EARTH_OWNER_BOUNDARY_SURVEY_COMPLETION_DISPATCH_v1",
+  "operationId": "H_EARTH_OWNER_BOUNDARY_SURVEY_COMPLETION_20261029_001",
+  "lockGeneration": 2979,
+  "toolingHead": "bc672e779bcabfd0effaad1619fff3cfd6424ffb",
+  "sceneHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+  "supportHead": "a26dc41964ae334a5ce73a637bcc96a0b4d43807",
+  "profile": "OWNER_BOUNDARY_SURVEY_COMPLETION_V1",
+  "pullRequest": 6984,
+  "launchTransport": "SAME_REPOSITORY_PR_EXACT_HEAD",
+  "frameCap": 5,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "sourceSha256": {
+    "tools/h-earth-owner-boundary-survey-completion.v1.mjs": "e83566e461d3dd8a49f7504642c0fcbe61a49fb939bb12a78e7480603cb2cc54",
+    "tools/h-earth-owner-boundary-survey-completion.v1.test.mjs": "bcedcced389f12f4e602e4163e4729ffbb925e2f9ae32d077bdb9e678b7a2c94",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "ae9b9c5bc3fe537bc76afab8ffd0caad4b80faadddab7b44545869d09a182528"
+  },
+  "predecessorArtifact": 12939683587,
+  "preservedHeadings": [
+    0,
+    30,
+    60,
+    90,
+    120,
+    150,
+    180
+  ]
+}

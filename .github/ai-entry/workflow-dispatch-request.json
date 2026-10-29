@@ -1,9 +1,11 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "h-earth-gen2966-original-indexed-mesh-20261029-a",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "31c98af65c35208e4d6311bac8f177d80e87a3f8",
+    "route_path": "/showroom/globe/h-earth/",
+    "route_query": "qualification=h-earth-original-indexed-mesh-v1",
+    "exercise_vegetation_residency": false
   }
 }

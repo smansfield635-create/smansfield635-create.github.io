@@ -4,9 +4,9 @@
   "builderSelfApproval": false,
   "reviewer": "independent qualification_packet agent",
   "sourceSha256": {
-    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "43d8931db8a15e40b8cb22103f254f61bd20bb06f54f721e257a1c3f791acb45",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "b42d1b3b1c140d1c191d18c62032fea641d5d89c15784dd4b187bcc6801df863",
     "tools/h-earth-ground-material-comparison.v1.mjs": "b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509",
-    "tools/h-earth-ground-material-comparison.v1.test.mjs": "3493aa1f688c100bb119f7aa87219c1c674c446033d7044b1598e90dd5897e44"
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "28dee4ce36921cfa3802b0f67f8007eb9a634308ca9db62a66c6466d3a60ebc2"
   },
   "validation": {
     "productionFocusedTests": "4/4 PASS",
@@ -30,5 +30,12 @@
       "product scene unchanged; four frames one run"
     ],
     "additionalEvidence": "Retargeting to main produced mergeable_state dirty; no neutral runner launched. Original integration base is mergeable=true. Only two workflow base filters changed and were independently reviewed."
+  },
+  "preGpuRepairReview": {
+    "result": "PASS",
+    "reviewer": "independent qualification_packet agent",
+    "test": "Extracted exact identity test PASS including16 truth-table cases and identity-profile subprocess",
+    "workflow": "Logging-only change; prior launch guards unchanged",
+    "gpuFramesConsumed": 0
   }
 }

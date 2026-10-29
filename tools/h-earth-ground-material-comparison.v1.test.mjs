@@ -617,7 +617,13 @@ test('identity profile fixes one source,20 modes and one submission without chan
  assert.throws(()=>parseArgs(['--baseline-dir','a','--candidate-dir','b','--output','out']),/ONE_FROZEN_SCENE/);`;
  execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'IDENTITY_BLEND_DIAGNOSTIC_V1'},encoding:'utf8'});
  const runner=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
- assert.ok(runner.includes('submissionCount:(correctedCapture||worldCapture||identityCapture)?1:12'));assert.ok(runner.includes('while(stable<2)'));
+ const expression=runner.match(/submissionCount:\(([^)]+)\)\?1:12/);
+ assert.ok(expression,'bounded submission-count expression is present');
+ const flags=['productionCapture','correctedCapture','worldCapture','identityCapture'];
+ assert.deepEqual(expression[1].split('||').sort(),[...flags].sort());
+ const count=new Function(...flags,`return (${expression[1]})?1:12`);
+ for(let mask=0;mask<16;mask++)assert.equal(count(...flags.map((_,i)=>Boolean(mask&(1<<i)))),mask===0?12:1);
+ assert.ok(runner.includes('while(stable<2)'));
 });
 
 test('identity evidence validator rejects missing modes, drift,wrong source and timing expansion',async()=>{

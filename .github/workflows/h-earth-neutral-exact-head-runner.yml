@@ -2430,7 +2430,10 @@ jobs:
           node-version: 22
       - name: Validate production profile and source lifecycle
         working-directory: tooling
-        run: node --test tools/h-earth-ground-material-comparison.v1.test.mjs h-earth-3d/evidence/corrected-material-integration-20261029/integration.test.mjs
+        run: |
+          set -euo pipefail
+          mkdir -p "${{ runner.temp }}/corrected-material-production"
+          node --test tools/h-earth-ground-material-comparison.v1.test.mjs h-earth-3d/evidence/corrected-material-integration-20261029/integration.test.mjs 2>&1 | tee "${{ runner.temp }}/corrected-material-production/source-tests.tap"
       - name: Install fixed Chromium tooling
         working-directory: tooling
         run: |

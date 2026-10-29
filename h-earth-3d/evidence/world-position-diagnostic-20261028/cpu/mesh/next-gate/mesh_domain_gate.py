@@ -199,31 +199,71 @@ def protected_faces(verts):
     positions=np.concatenate([verts,verts.mean(axis=1,keepdims=True)],axis=1)
     return np.any(source_protected(positions[...,[0,2]]),axis=1)
 
-def boundary_distance(positions,offsets,vids,boundary,active,seeds,neighbors,verts,sealed):
-    """Conservative source-boundary screen using complete 3D edge segments.
+def boundary_distance(positions,offsets,vids,boundary,active,seeds,neighbors,verts,sealed,samples):
+    """Exact source-edge cut census and conservative real-witness 3D clearance.
 
-    Nearest source-edge point is <= shortest real surface route distance, so
-    minimum Euclidean distance >= radius is a sufficient (not necessary)
-    condition that a witness is outside the artificial cut's influence area.
+    Original open boundaries and artificial indexed-support cuts are separate
+    evidence classes. Never count all three edges of a partially selected face
+    when only its actual indexed shared edge crosses the support boundary.
+    A cross-primitive seam whose neighbor was omitted is unqualified, not a
+    silent connection. All archived witness positions, not face centroids,
+    determine the physical 40m screen. No geometry is moved or trimmed.
     """
-    cut=[]
-    for i,grp,a,b,l in boundary:
-        if i in active and (i,a,b) not in sealed and (i,b,a) not in sealed:cut.append((positions[a],positions[b]))
-    for i in active:
-        # Common source-index edges crossing into an omitted neighbor.
-        if any(j not in active for j,_,_ in neighbors.get(i,[])):
-            ids=vids[i];edgepairs=[(int(ids[k]),int(ids[(k+1)%3])) for k in range(3)]
-            for a,b in edgepairs:cut.append((positions[a],positions[b]))
-    if not cut:return {'status':'MISSING_BOUNDARY_EVIDENCE'}
-    A=np.stack([a for a,b in cut]);B=np.stack([b for a,b in cut]);v=B-A
-    centers=verts[list(seeds)].mean(axis=1)
-    best=np.full(len(centers),np.inf)
-    # Query all observed cut edges; fully vectorized in bounded chunks.
-    for lo in range(0,len(centers),100):
-        x=centers[lo:lo+100,None,:];t=np.clip(np.sum((x-A)*v,axis=-1)/np.maximum(np.sum(v*v,axis=-1),1e-30),0,1)
-        d=np.linalg.norm(x-(A+t[...,None]*v),axis=-1)
-        best[lo:lo+100]=d.min(axis=1)
-    return {'minimumWitnessSourceCentroidToCutMeters':float(best.min()),'medianMeters':float(np.median(best)),'seedCount':len(seeds),'cutEdges':len(cut)}
+    require(bool(samples),'MISSING_ACTUAL_CUT_WITNESSES')
+    witnesses=np.asarray([s['world'] for s in samples],dtype=float)
+    require(witnesses.ndim==2 and witnesses.shape[1]==3 and np.all(np.isfinite(witnesses)),
+            'INVALID_ACTUAL_CUT_WITNESSES')
+    segments={}
+    def record(a,b,kind):
+        a,b=sorted((int(a),int(b)))
+        segments[(a,b,kind)]=(positions[a],positions[b],kind)
+    for i,group,a,b,length in boundary:
+        if i in active and (i,a,b) not in sealed and (i,b,a) not in sealed:
+            record(a,b,'original-source-boundary')
+    unresolved_seam=set()
+    for i in sorted(active):
+        for j,length,kind in neighbors.get(i,[]):
+            if j in active:
+                continue
+            if kind=='indexed':
+                shared=set(map(int,vids[i])) & set(map(int,vids[j]))
+                require(len(shared)==2,'INVALID_INDEXED_SUPPORT_CROSSING')
+                a,b=sorted(shared)
+                record(a,b,'artificial-indexed-cut')
+            elif kind=='seam':
+                unresolved_seam.add((min(i,j),max(i,j)))
+            else:
+                raise ValueError('UNKNOWN_SOURCE_ADJACENCY_KIND')
+    if not segments:
+        return {'status':'MISSING_BOUNDARY_EVIDENCE','cutEdges':0,
+                'unresolvedCrossPrimitiveCuts':len(unresolved_seam)}
+    cut=list(segments.values())
+    A=np.stack([a for a,b,k in cut])
+    B=np.stack([b for a,b,k in cut])
+    v=B-A
+    denom=np.maximum(np.sum(v*v,axis=-1),1e-30)
+    def distances(points):
+        best=np.full(len(points),np.inf)
+        for lo in range(0,len(points),100):
+            x=points[lo:lo+100,None,:]
+            t=np.clip(np.sum((x-A)*v,axis=-1)/denom,0,1)
+            d=np.linalg.norm(x-(A+t[...,None]*v),axis=-1)
+            best[lo:lo+100]=d.min(axis=1)
+        return best
+    actual=distances(witnesses)
+    centroids=distances(verts[sorted(seeds)].mean(axis=1))
+    kinds=[k for a,b,k in cut]
+    return {'status':'MEASURED_UNQUALIFIED_IF_WITHIN_INFLUENCE',
+            'minimumActualWitnessToCutMeters':float(actual.min()),
+            'medianActualWitnessToCutMeters':float(np.median(actual)),
+            'minimumWitnessSourceCentroidToCutMeters':float(centroids.min()),
+            'medianMeters':float(np.median(centroids)),
+            'seedCount':len(seeds),
+            'witnessCount':len(witnesses),
+            'cutEdges':len(cut),
+            'originalSourceBoundaryEdges':kinds.count('original-source-boundary'),
+            'artificialIndexedCutEdges':kinds.count('artificial-indexed-cut'),
+            'unresolvedCrossPrimitiveCuts':len(unresolved_seam)}
 
 def transport(Q,L,area,links,protected,step=0.5):
     """One implicit-free bounded RGB finite-volume transport step, no clipping.
@@ -274,14 +314,14 @@ def inspect(root,out,physical_radius=48.,influence_radius=40.):
     overlaps=no_duplicate_projected_area(verts,offsets,groups,active)
     guards=protected_faces(verts)
     protectedActive=sum(bool(guards[i]) for i in active)
-    distances=boundary_distance(pos,offsets,vids,boundary,active,seeds,neighbors,verts,sealed)
+    distances=boundary_distance(pos,offsets,vids,boundary,active,seeds,neighbors,verts,sealed,samples)
     report={'schema':'H_EARTH_ORIGINAL_SOURCE_MESH_DOMAIN_GATE_v1','sourceHead':SOURCE_HEAD,'parentDiagnosticHead':WORLD_HEAD,
         'activeTerrainSourceTriangles':len(offsets),'activeOriginalFaces':len(active),'sourceTriangleAreasPositive':True,'witnessSamples':len(samples),
         'supportSelection':'SOURCE_POLYGON_XZ_DISTANCE_WITHIN_FIXED_48M_OF_ARCHIVED_WITNESS','retainedSourceSeedFaces':len(seeds),
         'sampleTrianglesAllRetained':len(seeds),'sourceTriangleAreaTotalInCandidateSupport':float(areas[list(active)].sum()),
         'protectedActiveSourceFaces':int(protectedActive),'nearFarSeamLinksFound':len(links),'partialSourceSeamEdges':partial[:60],
         'sourceProjectedNearFarOverlaps':overlaps[:60], 'boundaryDistance':distances,
-        'closureQualified':bool(not partial and not overlaps and distances.get('minimumWitnessSourceCentroidToCutMeters',0)>=influence_radius),
+        'closureQualified':bool(not partial and not overlaps and distances.get('minimumActualWitnessToCutMeters',0)>=influence_radius and not distances.get('unresolvedCrossPrimitiveCuts',0)),
         'influenceRadiusMeters':influence_radius,'supportRadiusMeters':physical_radius,
         'limitations':['Physical source upload positions/indices are required and checked by exact hashes; no screen-derived geometry substituted.',
              'A face-centered candidate support with no-flux perimeter does not by itself certify every protected or camera-dependent shader role.',

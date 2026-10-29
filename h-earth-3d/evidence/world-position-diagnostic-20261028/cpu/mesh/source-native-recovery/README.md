@@ -17,8 +17,8 @@ Existing precedent: the fixed H-Earth GitHub Actions runner already checked out 
 Check out an immutable diagnostic candidate that contains this script plus the existing committed `cpu/mesh/` reconstruction sources. Node 22 and Python3 with NumPy, SciPy, Shapely 2+, and Pillow are required. `git` must be able to fetch the source commits from `origin`; no browser/GPU credentials are needed.
 
 ```
-bash h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/recover-original-mesh.sh --asset /tmp/h-earth-verified-asset
-bash h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/recover-original-mesh.sh --mesh /tmp/h-earth-mesh-replay
+bash h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh --asset /tmp/h-earth-verified-asset
+bash h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh --mesh /tmp/h-earth-mesh-replay
 ```
 
 `--asset` verifies the exact source bytes, `--mesh` additionally reconstructs the original immutable package from those bytes, independently replays original modules and upload normal/coast operations, checks position and index SHA-256, and then runs the corrected v3 2D closure gate with the archived 2,484 sample witnesses and all 2,575 candidate memberships. It does not assume that the gate will pass: a real near/far seam or support failure is evidence to retain, not a reason to tune thresholds. Each execution requires a **new output directory** and refuses to overwrite existing output.

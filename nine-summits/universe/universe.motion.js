@@ -122,6 +122,7 @@ function choose(index,scroll=true){
   approach.setAttribute('aria-expanded','false');
   labels.forEach((el,i)=>el.setAttribute('aria-pressed',String(i===index)));
   status.textContent=`${begin} leads to ${summit}.`;
+  updateMotionControl();
   if(index===4&&ready){startPeaceFlight();return;}
   requestFrame();
   if(scroll){panel.scrollIntoView({behavior:reduced?'instant':'smooth',block:'nearest'});panel.focus({preventScroll:true});}
@@ -425,6 +426,8 @@ function cancelPointer(){if(!pointer)return;const id=pointer.id;quaternion=point
 function hitTest(x,y){const b=scene.getBoundingClientRect();return projected.map((p,i)=>({...p,i})).filter(p=>!p.hidden&&Math.hypot(x-b.left-p.x,y-b.top-p.y)<=p.radius).sort((a,b)=>centers[b.i][2]-centers[a.i][2])[0]?.i;}
 function bindInput(){
   scene.addEventListener('pointerdown',event=>{
+    // The in-world teaching buttons and links own their own taps; do not reinterpret them as planet hits.
+    if(event.target.closest('#peace-encounter'))return;
     if(!ready||event.button!==0||!event.isPrimary||pointer)return;
     stopInertia();const now=performance.now();pointer={id:event.pointerId,startX:event.clientX,startY:event.clientY,startTime:now,startQuaternion:quaternion.slice(),currentQuaternion:quaternion.slice(),samples:[],dragging:false,hit:event.target.closest('[data-planet]')?Number(event.target.closest('[data-planet]').dataset.planet):hitTest(event.clientX,event.clientY)};
     P.addPointerSample(pointer,event.clientX,event.clientY,now);scene.setPointerCapture(event.pointerId);orbitSpeed=0;requestFrame();

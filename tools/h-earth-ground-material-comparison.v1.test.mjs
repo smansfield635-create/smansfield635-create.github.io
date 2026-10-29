@@ -617,7 +617,7 @@ test('identity profile fixes one source,20 modes and one submission without chan
  assert.throws(()=>parseArgs(['--baseline-dir','a','--candidate-dir','b','--output','out']),/ONE_FROZEN_SCENE/);`;
  execFileSync(process.execPath,['--input-type=module','-e',script],{env:{...process.env,H_EARTH_COMPARISON_PROFILE:'IDENTITY_BLEND_DIAGNOSTIC_V1'},encoding:'utf8'});
  const runner=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
- assert.ok(runner.includes('submissionCount:worldCapture?1:identityCapture?1:12'));assert.ok(runner.includes('while(stable<2)'));
+ assert.ok(runner.includes('submissionCount:(correctedCapture||worldCapture||identityCapture)?1:12'));assert.ok(runner.includes('while(stable<2)'));
 });
 
 test('identity evidence validator rejects missing modes, drift,wrong source and timing expansion',async()=>{
@@ -706,3 +706,10 @@ test('world evidence rejects source, calibration, masks and camera drift',async(
  assert.equal(diagnostic.validateWorldSet(views),true);assert.throws(()=>diagnostic.validateWorldSet(views.slice(1)),/FRAME_CAP/);
  for(const mutate of [v=>v.mode='wrong',v=>v.sourceHead='a'.repeat(40),v=>v.worldData.calibration[0]^=1,v=>v.worldData.terrainMaskSha256='bad',v=>v.worldPacket.camera.position.x++,v=>v.worldData.validPixels=0,v=>v.cpuSubmitMilliseconds.push(1)]){const bad=structuredClone(views);mutate(bad[1]);assert.throws(()=>diagnostic.validateWorldSet(bad));}
 });
+
+import {validateCorrectedSet,FOOTPRINT_POSES,FOOTPRINT_BASELINE_HEAD,FOOTPRINT_BASELINE_SHA256} from './h-earth-ground-material-comparison.v1.mjs';
+const correctedFixture=()=>FOOTPRINT_POSES.flatMap(pose=>['baseline','candidate'].map(label=>({label,pose,mode:'reference-lit',modeId:0,diagnosticApplied:0,grassHidden:false,sourceHead:FOOTPRINT_BASELINE_HEAD,rendererHash:FOOTPRINT_BASELINE_SHA256,instrumentation:[{path:'/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',sourceSha256:FOOTPRINT_BASELINE_SHA256,observedSha256:label==='baseline'?'a'.repeat(64):'b'.repeat(64)}],assetSignature:'[]',lastFrame:{cameraPosition:{x:pose.x,y:pose.y??0,z:pose.z}},canvas:{width:960,height:540},correctedReceipt:label==='candidate'?{applied:358,retired:0,attributeHashes:{positions:'342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83',indices:'483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c',normals:'7d31e73c97939ad978982aeb5191d3ae8b99582eb32300aff9d569cae7e24b1b',coastDistances:'7f99de4403127ddcc48affe5206003c93049e0d19d276981db794ea1fa8cf49b'}}:null})));
+test('corrected profile requires eight paired frozen reference views',()=>{assert.equal(validateCorrectedSet(correctedFixture()),true);assert.throws(()=>validateCorrectedSet(correctedFixture().slice(1)),/FRAME_CAP/);});
+test('corrected profile fails closed on custody, support and pairing drift',()=>{for(const change of [v=>v[0].grassHidden=true,v=>v[0].sourceHead='0'.repeat(40),v=>v[0].mode='after-groundcover-unlit',v=>v[1].correctedReceipt.applied=0,v=>v[1].lastFrame.cameraPosition.x++,v=>v[1].instrumentation[0].observedSha256='a'.repeat(64),v=>v[1].pose={...v[1].pose,pitch:2}]){const views=correctedFixture();change(views);assert.throws(()=>validateCorrectedSet(views));}});
+
+test('corrected profile checks consumed attribute custody and baseline/canvas isolation',()=>{for(const mutate of [v=>v[1].correctedReceipt.attributeHashes.normals='0'.repeat(64),v=>delete v[1].correctedReceipt.attributeHashes,v=>v[0].correctedReceipt={applied:1},v=>v[1].canvas.height++]){const views=correctedFixture();mutate(views);assert.throws(()=>validateCorrectedSet(views));}});

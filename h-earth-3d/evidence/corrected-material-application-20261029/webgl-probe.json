@@ -1,0 +1,30 @@
+{
+  "disabledIntegerAttributeError": 1282,
+  "repairedDisabledIntegerAttributeError": 0,
+  "fullMainShaderCompileLink": true,
+  "unchangedGlobalCoverShaderCompileLink": false,
+  "unchangedGlobalCoverShaderError": "ERROR: 0:78: 'patch' : Illegal use of reserved word\nERROR: 0:78: 'patch' : syntax error\n\u0000",
+  "pngTopRowMapsToLowV": true,
+  "linearDataTexelCenters": true,
+  "textureProbePixels": [
+    255,
+    0,
+    0,
+    255,
+    0,
+    255,
+    0,
+    255,
+    0,
+    0,
+    255,
+    255,
+    255,
+    255,
+    255,
+    255
+  ],
+  "renderer": "WebKit WebGL",
+  "maxAttributes": 16,
+  "maxTextureSize": 8192
+}

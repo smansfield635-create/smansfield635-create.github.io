@@ -93,7 +93,7 @@ for record in \
   read -r file blob <<< "$record"
   [[ "$(git -C "$REPO" hash-object "$REPO/$PREFIX/cpu/mesh/$file")" == "$blob" ]] || fail "SOURCE_EVIDENCE_BLOB_DRIFT:$file"
 done
-[[ "$(git -C "$REPO" hash-object "$REPO/$PREFIX/cpu/mesh/next-gate/mesh_domain_gate.py")" == 20fd0ef7acc1e4bcbc9ea2d2c29a8c34b9169d78 ]] || fail SOURCE_MESH_GATE_VERSION_BINDING_MISMATCH
+[[ "$(git -C "$REPO" hash-object "$REPO/$PREFIX/cpu/mesh/next-gate/mesh_domain_gate.py")" == 10b5623b09c552930e54a1c1071c37535a831971 ]] || fail SOURCE_MESH_GATE_VERSION_BINDING_MISMATCH
 for file in reconstruct.mjs reconstruct-direct.mjs upload-replay.mjs surface-samples.json; do
   cp "$REPO/$PREFIX/cpu/mesh/$file" "$OUT/mesh/" || fail "MESH_SOURCE_COPY:$file"
 done

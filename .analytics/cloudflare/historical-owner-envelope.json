@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-29T16:28:45Z",
+  "generatedAt": "2026-10-29T17:25:14Z",
   "window": {
-    "start": "2026-07-31T16:28:45Z",
-    "end": "2026-10-29T16:28:45Z"
+    "start": "2026-07-31T17:25:14Z",
+    "end": "2026-10-29T17:25:14Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,30 +17,22 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4428,
-    "visits": 1317,
+    "pageLoads": 4398,
+    "visits": 1307,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4428,
-        "visits": 1317
+        "pageLoads": 4398,
+        "visits": 1307
       }
     },
     "byPath": {
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 101,
-        "visits": 10
-      },
-      "/gauges/h-earth/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/": {
-        "pageLoads": 987,
-        "visits": 727
-      },
       "/laws/": {
         "pageLoads": 260,
         "visits": 90
+      },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 91,
+        "visits": 10
       },
       "/products/education/": {
         "pageLoads": 270,
@@ -57,6 +49,10 @@
       "/laws/categories/structure/": {
         "pageLoads": 10,
         "visits": 0
+      },
+      "/": {
+        "pageLoads": 977,
+        "visits": 717
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
@@ -114,6 +110,10 @@
         "pageLoads": 20,
         "visits": 20
       },
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
       "/showroom/": {
         "pageLoads": 40,
         "visits": 10
@@ -125,10 +125,6 @@
       "/build/": {
         "pageLoads": 20,
         "visits": 0
-      },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -198,6 +194,10 @@
         "pageLoads": 70,
         "visits": 0
       },
+      "/campaigns/consider-the-energy/": {
+        "pageLoads": 220,
+        "visits": 20
+      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
@@ -217,10 +217,6 @@
       "/campaigns/wave/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
-        "visits": 20
       },
       "/about/": {
         "pageLoads": 40,
@@ -321,12 +317,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3111,
+        "pageLoads": 3091,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 767,
-        "visits": 767
+        "pageLoads": 757,
+        "visits": 757
       },
       "(none)": {
         "pageLoads": 540,

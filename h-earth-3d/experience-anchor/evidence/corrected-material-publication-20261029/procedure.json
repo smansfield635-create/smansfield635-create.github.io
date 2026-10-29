@@ -1,0 +1,97 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "63370ff14e46800b6087e7913f4e1724bef9f855",
+    "operationId": "H_EARTH_CORRECTED_MATERIAL_PUBLICATION_20261029_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+      "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+      ".github/ai-router/publication-surfaces/h-earth.json",
+      "h-earth-3d/evidence/corrected-material-publication-20261029/**",
+      ".github/ai-entry/workflow-dispatch-request.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_CORRECTED_MATERIAL_PUBLICATION_v1",
+    "PUBLICATION_PREFLIGHT_RECEIPT_v1",
+    "LIVE_EXACT_HEAD_VERIFIED"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact four adopted product blob identities and hashes from4639908 remain immutable. Source74 tests and run40958319118 four-view pixel equality carry forward only with unchanged relevant dependencies. Current-main adoption is clean; publication preflight and exact-head Pages use existing registered workflows, with exact payload and live marker verification.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+    "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+    ".github/ai-router/publication-surfaces/h-earth.json",
+    "h-earth-3d/evidence/corrected-material-publication-20261029/**",
+    ".github/ai-entry/workflow-dispatch-request.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "After authentic admission create h-earth/corrected-material-publication-20261029 from exact governing main 63370ff14e46800b6087e7913f4e1724bef9f855. Recheck direct dependency parity; preserve source qualifications where bytes are unchanged.",
+      "step": 1
+    },
+    {
+      "action": "Adopt only the four exact verified Git blobs from 4639908eab7bc5b8872a85231b3330678988c259 into the clean main-derived tree. Add scoped provenance, receipt and unchanged integration tests under publication evidence. Preserve unrelated main files. Do not merge diagnostic or experimental branch ancestry.",
+      "step": 2
+    },
+    {
+      "action": "Update h-earth publication manifest only through its existing declarative includes/excludes schema to check renderer and route identity markers; keep live binary/source SHA verification separate. Run exact-copy/scope/source tests and independent review.",
+      "step": 3
+    },
+    {
+      "action": "Invoke registered PUBLICATION_FAST_PREFLIGHT against the exact adoption candidate and h-earth surface through direct native dispatch or the existing same-repository PR bridge. Preserve PREFLIGHT_PASS and monitoring link. Carrier branch is fresh from current main, contains only its admitted dispatch request, and is never merged.",
+      "step": 4
+    },
+    {
+      "action": "After applicable checks and exact payload preflight pass, merge only the approved clean adoption PR. Recheck current main, qualified product hashes and direct dependencies; use registered PAGES_EXACT_HEAD_DEPLOY with current-main target and h-earth surface. Deployment workflow rechecks preflight before Pages mutation.",
+      "step": 5
+    },
+    {
+      "action": "Verify public .well-known/dgb-release.json target SHA and h-earth surface, registered declared surface checks, and independent live SHA256 for renderer/route/near/far atlas. Preserve exact release evidence and bounded coverage limits. Stop on localized failed assertion; no blind rerun or product retune.",
+      "step": 6
+    }
+  ],
+  "exactGoverningHead": "63370ff14e46800b6087e7913f4e1724bef9f855",
+  "exactTestRunnerCommand": "INTEGRATION_RENDERER=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js INTEGRATION_ROUTE=showroom/globe/h-earth/vegetation-prototype/route.js node --test h-earth-3d/evidence/corrected-material-publication-20261029/integration.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_VERIFIED_FOUR_BLOB_ADOPTION_FROM_4639908",
+      "CURRENT_MAIN_DIRECT_DEPENDENCY_PARITY",
+      "NO_EXPERIMENTAL_ANCESTRY_OR_TOOLING_MERGE",
+      "PUBLICATION_MANIFEST_EXISTING_SCHEMA_AND_MARKER_CHECKS",
+      "EXACT_PAYLOAD_PREFLIGHT_PASS_BEFORE_PUBLICATION",
+      "LIVE_RELEASE_MARKER_AND_FOUR_ASSET_SHA256_READBACK",
+      "LOCALIZED_SCOPE_AND_INHERITED_LIMITS_TRUTHFUL"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse source and GPU qualification, exact four-view image parity, real atlas HTTP/hash proof, independent review and closed seam checks. Inspect adoption diff, main direct dependencies, payload assembly and live identity only.",
+    "forbidden": "No repeated numerical solve, new GPU comparison, palette or geometry retune, support expansion, diagnostic ancestry merge, unregistered release mechanism or repeated unchanged failed carrier."
+  },
+  "procedureId": "H_EARTH_CORRECTED_MATERIAL_PUBLICATION_20261029_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/corrected-material-publication-20261029/**"
+    ],
+    "workflowPath": ".github/workflows/pages-exact-head-deploy-v3.yml"
+  }
+}

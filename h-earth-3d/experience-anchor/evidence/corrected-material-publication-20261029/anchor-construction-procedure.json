@@ -1,0 +1,76 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "63370ff14e46800b6087e7913f4e1724bef9f855",
+    "operationId": "H_EARTH_CORRECTED_MATERIAL_ANCHOR_EVIDENCE_20261029_001",
+    "paths": [
+      "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/**",
+      "h-earth-3d/experience-anchor/receipts/corrected-material-publication-20261029.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Existing anchor gate and workflow-applicability code at governing main are immutable. All four product blob identities remain those of qualified candidate88b5; evidence-only correction cannot change payload behavior.",
+  "exactAllowedRepositoryPaths": [
+    "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/**",
+    "h-earth-3d/experience-anchor/receipts/corrected-material-publication-20261029.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Obtain authentic admission for this noncompeting evidence-only scope; preserve Gen2975 publication candidate and authority.",
+      "step": 1
+    },
+    {
+      "action": "Independently compare saved visual evidence and unchanged world/interaction source contracts against all11 anchor invariants. Stop if unsupported; do not declare physical Android performance or global repair.",
+      "step": 2
+    },
+    {
+      "action": "On the existing PR6980 branch copy six existing publication evidence files byte-for-byte to the declared anchor evidence directory, add truthful review and this admission provenance, and add the exact four-file anchor acceptance receipt. Original evidence path deletions remain under Gen2975 allowedPaths.",
+      "step": 3
+    },
+    {
+      "action": "Verify exact changed paths, unchanged four product blobs, existing anchor gate and workflow applicability. Preserve review. Return candidate to Gen2975 for applicable qualification and publication; this operation grants no merge or deployment authority.",
+      "step": 4
+    }
+  ],
+  "exactGoverningHead": "63370ff14e46800b6087e7913f4e1724bef9f855",
+  "exactTestRunnerCommand": "BASE_SHA=63370ff14e46800b6087e7913f4e1724bef9f855 HEAD_SHA=HEAD node tools/h-earth-experience-anchor-gate.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "ALL_11_ANCHOR_INVARIANTS_SUPPORTED_WITH_TRUTHFUL_CONTINUITY_REUSE",
+      "EXACT_FOUR_PRODUCT_BLOBS_UNCHANGED",
+      "ALL_EVIDENCE_PATHS_EXIST_AND_HASH_CUSTODY_PRESERVED",
+      "EXISTING_ANCHOR_GATE_PASS",
+      "EXISTING_WORKFLOW_APPLICABILITY_CLASSIFICATION",
+      "NO_GATE_OR_REGISTRY_MUTATION"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Existing failed assertion, anchor source/proxy, unchanged interaction and continuity source, saved captures, exact paths and hashes.",
+    "forbidden": "No gate mutation, registry expansion, new policy, product retune, new GPU comparison or blind retry."
+  },
+  "procedureId": "H_EARTH_CORRECTED_MATERIAL_ANCHOR_EVIDENCE_20261029_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-experience-anchor-gate.yml"
+  }
+}

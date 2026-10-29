@@ -1,7 +1,7 @@
 /** Gen2795 measured preparation and input-confirmed public entry; isolated diagnostic replay. */
 import {prepareHEarthRun8ER2CanonicalLiveRenderPackage} from '../render/live-render-package.run8e-r2.canonical.js?cb=meadow-distribution-20261006';
 import {createHEarthRun8ER3AFrameUniformPacket} from '../render/live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
-import {createHEarthRun8ER3CPersistentRenderer} from '../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
+import {createHEarthRun8ER3CPersistentRenderer} from '../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?rev=gen2973-corrected-material-v1';
 import {installHEarthRun8ER3D2PointerTouchIntake,resolveHEarthNavigationBoundaryFeedback} from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2780-stable-planting-v1';
 
 import {createFramePresenter} from '../render/performance-scheduling.v1.js?rev=gen2795-performance-v1';
@@ -165,7 +165,9 @@ function markReady(){
   status.textContent=diagnosticReplay?'Isolated comparison captured · physical-device review remains separate.':'Ready · Drag to look · Two-finger slide or mouse wheel to move · Pinch to zoom';
   window.dispatchEvent(new CustomEvent('h-earth-run8e-ready',{detail:{type:'H_EARTH_RUN8E_READY',prototype:'single-owner-v1',mode:diagnosticReplay?'diagnostic-replay':'manual-public',timestamp:new Date().toISOString()}}));
 }
-function failRoute(error){if(terminalFailure)return;terminalFailure=error;interactiveReady=false;presenter?.cancel();canvas.style.pointerEvents='none';loader?.fail(error);root.dataset.run8eReady='false';root.dataset.worldFirstFrameReady='false';root.dataset.run8eError='true';root.dataset.singleOwnerPrototype='failed';status.textContent=error.message;}
+function failRoute(error){if(terminalFailure)return;terminalFailure=error;interactiveReady=false;presenter?.cancel();renderer?.disposeCorrectedMaterial();canvas.style.pointerEvents='none';loader?.fail(error);root.dataset.run8eReady='false';root.dataset.worldFirstFrameReady='false';root.dataset.run8eError='true';root.dataset.singleOwnerPrototype='failed';status.textContent=error.message;}
+
+window.addEventListener('pagehide',event=>{if(!event.persisted){presenter?.cancel();renderer?.disposeCorrectedMaterial();}});
 
 canvas.addEventListener('webglcontextlost',()=>failRoute(Error('GRAPHICS_CONTEXT_LOST:Reload to create a new graphics session.')));
 
@@ -249,4 +251,5 @@ try{
   failRoute(error);
   console.error(error);
 }
+
 

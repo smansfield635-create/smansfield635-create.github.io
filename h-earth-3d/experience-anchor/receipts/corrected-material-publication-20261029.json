@@ -1,0 +1,70 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_ANCHOR_EVIDENCE_20261029_001",
+  "parentPublicationOperation": "H_EARTH_CORRECTED_MATERIAL_PUBLICATION_20261029_001",
+  "parentPublicationGeneration": 2975,
+  "reviewedProductCandidate": "88b5c29d60a68dc4a4e51cf24dfcbc023d32b8a5",
+  "qualifiedProductSource": "4639908eab7bc5b8872a85231b3330678988c259",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/qualification-result.json",
+    "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/anchor-review.md"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/integration.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/anchor-review.md"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/receipts/groundcover-band-continuity-20261026.json",
+    "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/anchor-review.md"
+  ],
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "a2ab977a3ea620f7bf87b3bdfb4e6a720cf7801f2ecbb670b4ac2dfccacf917d"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "e776883f16ac36f00b51356fe8e78ac6ae2d0f6ce28016f776068b3d76831cb5"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+      "sha256": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+      "sha256": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f"
+    }
+  ],
+  "reviewBasis": "Bounded preservation review of exact four qualified product blobs against hard anchor visual proxy, saved four candidate captures, unchanged source contracts, and accepted groundcover-band-continuity-20261026 precedent. This receipt preserves existing experience invariants; it is not a fresh global traversal or physical-device certification.",
+  "independentReview": {
+    "role": "NORTH_WEST",
+    "task": "/root/qualification_packet",
+    "result": "PASS_BOUNDED_ANCHOR_PRESERVATION"
+  },
+  "limitations": [
+    "Four frozen reference-lit views only; no new whole-world, planetary/regional traversal, Android interaction or performance test.",
+    "resourceIdentityStable=false and packageUploadedOnce=false are inherited in both archived and current candidate; these diagnostics are not certified passed. canonicalPackageMutated=false.",
+    "Existing broad terrain boundary and environment defects are not declared resolved.",
+    "No new GPU capture or retune was performed for this anchor review."
+  ],
+  "releaseAuthorizedByThisReceipt": false,
+  "lockGeneration": 2976
+}

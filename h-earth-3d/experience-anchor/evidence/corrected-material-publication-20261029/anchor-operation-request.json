@@ -1,0 +1,162 @@
+{
+  "allowedPaths": [
+    "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/**",
+    "h-earth-3d/experience-anchor/receipts/corrected-material-publication-20261029.json"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "63370ff14e46800b6087e7913f4e1724bef9f855",
+  "exactTestCommand": "BASE_SHA=63370ff14e46800b6087e7913f4e1724bef9f855 HEAD_SHA=HEAD node tools/h-earth-experience-anchor-gate.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateDiagnosticTooling": false,
+    "mayMutateProduct": false,
+    "mayWriteAcceptanceEvidence": true,
+    "role": "SOUTH_BOUNDED_ANCHOR_EVIDENCE",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "63370ff14e46800b6087e7913f4e1724bef9f855",
+    "operationId": "H_EARTH_CORRECTED_MATERIAL_ANCHOR_EVIDENCE_20261029_001",
+    "paths": [
+      "h-earth-3d/experience-anchor/evidence/corrected-material-publication-20261029/**",
+      "h-earth-3d/experience-anchor/receipts/corrected-material-publication-20261029.json"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "ALL_11_ANCHOR_INVARIANTS_SUPPORTED_WITH_TRUTHFUL_CONTINUITY_REUSE",
+      "EXACT_FOUR_PRODUCT_BLOBS_UNCHANGED",
+      "ALL_EVIDENCE_PATHS_EXIST_AND_HASH_CUSTODY_PRESERVED",
+      "EXISTING_ANCHOR_GATE_PASS",
+      "EXISTING_WORKFLOW_APPLICABILITY_CLASSIFICATION",
+      "NO_GATE_OR_REGISTRY_MUTATION"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "a9c339d3193a22568c70d48504c9c29bad1faa068db6e590d5729e2eea9272f5",
+    "receiptId": "H_EARTH_CORRECTED_MATERIAL_ANCHOR_EVIDENCE_20261029_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:CORRECTED_MATERIAL_ANCHOR_EVIDENCE_20261029",
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_ANCHOR_EVIDENCE_20261029_001",
+  "prohibitedPaths": [
+    "PRODUCT_BYTES",
+    "GATE_OR_REGISTRY_OR_WORKFLOW_MUTATION",
+    "NEW_AUTHORITY_OR_POLICY_CLASS",
+    "UNSUPPORTED_INVARIANT_CLAIM",
+    "NEW_GPU_CAPTURE",
+    "MERGE_OR_DEPLOYMENT_BY_THIS_EVIDENCE_OPERATION"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Complete the required experience-anchor acceptance evidence for already authorized corrected-material publication. Preserve tested product bytes. Use the existing designated anchor evidence directory, exact receipt schema and gates. This complementary evidence scope does not replace or enlarge Gen2975 product or publication authority.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": false,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner continuing instructions to investigate and resolve the publication bottleneck and proceed; required anchor evidence is necessary to complete that authorized release."
+  },
+  "requiredInputs": [
+    {
+      "id": "GEN2975_APPROVED_PUBLICATION_SCOPE",
+      "resolved": true
+    },
+    {
+      "id": "EXACT_CANDIDATE_88B5_AND_PREFLIGHT40960563661_PASS",
+      "resolved": true
+    },
+    {
+      "id": "ANCHOR_MANIFEST_AND_GATE_SOURCE",
+      "resolved": true
+    },
+    {
+      "id": "SAVED_SOURCE_AND_GPU_QUALIFICATION",
+      "resolved": true
+    },
+    {
+      "id": "OWNER_CONTINUATION",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "EXACT_ANCHOR_RECEIPT_WITH_ALL_SUPPORTED_INVARIANTS",
+    "EVIDENCE_CUSTODY_IN_EXISTING_ANCHOR_EVIDENCE_NAMESPACE",
+    "INDEPENDENT_REVIEW",
+    "EXISTING_ANCHOR_GATE_PASS",
+    "UNCHANGED_FOUR_PRODUCT_BLOBS"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "NO_REPOSITORY_WRITE_BEFORE_AUTHENTIC_ADMISSION",
+    "STOP_IF_ANY_ANCHOR_INVARIANT_UNSUPPORTED",
+    "STOP_ON_PRODUCT_BLOB_CHANGE",
+    "NO_GATE_WAIVER",
+    "PUBLICATION_REMAINS_GEN2975_AND_SELECTED_GATES_REQUIRED"
+  ],
+  "subjectIdentity": {
+    "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+    "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+    "candidateHead": "88b5c29d60a68dc4a4e51cf24dfcbc023d32b8a5",
+    "evidenceCustody": "Copy the six existing publication evidence files byte-for-byte into the existing anchor evidence namespace; old-path removal uses the original Gen2975 allowed evidence scope. Add review, this admission provenance and the exact receipt. No source qualification restart.",
+    "parentGeneration": 2975,
+    "parentPublicationOperation": "H_EARTH_CORRECTED_MATERIAL_PUBLICATION_20261029_001",
+    "preflightRun": 40960563661,
+    "pullRequest": 6980,
+    "sourceBlobs": {
+      "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png": "3a5220e90c91d511e2f554023dc16823affd0058",
+      "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png": "4fc4e24098c144d251f949a58a520bfd27983ad7",
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "1648bf21ada92aceac2cb1848884f15dfe3dfd3d",
+      "showroom/globe/h-earth/vegetation-prototype/route.js": "42a0ed4e764fa91334723e04373c407949d156bd"
+    },
+    "targetBranch": "h-earth/corrected-material-publication-20261029"
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-experience-anchor-gate.yml"
+}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-29T12:35:32Z",
+  "generatedAt": "2026-10-29T13:26:47Z",
   "window": {
-    "start": "2026-07-31T12:35:32Z",
-    "end": "2026-10-29T12:35:32Z"
+    "start": "2026-07-31T13:26:47Z",
+    "end": "2026-10-29T13:26:47Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4428,
-    "visits": 1317,
+    "pageLoads": 4348,
+    "visits": 1287,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4428,
-        "visits": 1317
+        "pageLoads": 4348,
+        "visits": 1287
       }
     },
     "byPath": {
@@ -39,19 +39,15 @@
         "visits": 727
       },
       "/laws/": {
-        "pageLoads": 260,
-        "visits": 90
+        "pageLoads": 200,
+        "visits": 60
       },
       "/products/education/": {
         "pageLoads": 270,
         "visits": 70
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 110,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
+        "pageLoads": 100,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -321,12 +317,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3111,
+        "pageLoads": 3061,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 767,
-        "visits": 767
+        "pageLoads": 737,
+        "visits": 737
       },
       "(none)": {
         "pageLoads": 540,

@@ -37,7 +37,10 @@
     "EXACT_SOURCE_MESH_GATE_CODE_AND_EVIDENCE_COMMITTED_DFF636DE",
     "SOURCE_MESH_GATE_EIGHT_FIXTURE_TESTS_PASS",
     "SCREEN_PSEUDOMESH_AREA_NONQUALIFICATION_3974_OF_4320",
-    "PUBLISHED_PRODUCT_UNCHANGED_NO_GPU_RERUN"
+    "PUBLISHED_PRODUCT_UNCHANGED_NO_GPU_RERUN",
+    "MESH_GATE_V2_SEALED_BOTH_SIDES_FIX_COMMITTED_6AF33E9",
+    "MESH_GATE_V2_10_TESTS_PASS",
+    "V1_SEALED_EDGE_LOOP_SHADOWING_DEFECT_CORRECTED_NOT_ERASED"
   ],
   "run": {
     "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
@@ -88,9 +91,9 @@
     "incomingMaterialScreenQualification": "CONDITIONAL_MODEL_ONLY_LOD_MEMBERSHIP_PROPAGATED",
     "sourceMeshGate": {
       "path": "cpu/mesh/next-gate/mesh_domain_gate.py",
-      "sourceCommit": "dff636de93d6e143cee38ed203b091b6d7fe3a77",
+      "sourceCommit": "6af33e910513dbdb2b3cf1f41c90bf85d2f882cf",
       "testPath": "cpu/mesh/next-gate/test_mesh_gate.py",
-      "testsPassed": 8,
+      "testsPassed": 10,
       "imageAuditPath": "cpu/mesh/next-gate/image-geometry-audit.json",
       "imagePseudoFaces": 4320,
       "nominalZeroAreaFaces": 24,
@@ -99,7 +102,10 @@
       "sourceMeshAreaClosed": false,
       "fullMaterialF0Qualified": false,
       "productChanged": false,
-      "textureAssetSha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce"
+      "textureAssetSha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce",
+      "gateVersion": "V2_SEALED_BOTH_SIDES_NO_EDGE_SHADOWING",
+      "originalV1Commit": "dff636de93d6e143cee38ed203b091b6d7fe3a77",
+      "independentReviewLimit": "10 synthetic/reproduction tests passed; no actual uploaded source mesh buffers in current runtime; acceptance blocked pending original source materialization"
     }
   }
 }

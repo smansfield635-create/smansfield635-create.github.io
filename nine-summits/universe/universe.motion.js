@@ -86,8 +86,8 @@ let orbitPhase=0, orbitSpeed=0, motionPaused=false, sceneVisible=true, windowFoc
 let ready=false, reduced=media.matches, receipt={status:'loading'}, disposed=false, teachingRevealVersion=0;
 // Gen2970 one-world proof: dedicated spatial encounter; the public Gen2968 page is untouched.
 let flight=0,flightTarget=0,cameraZ=9,flightStage='arrival',universeClock=0;
-const peaceOverlay=$('#peace-encounter');
 const $=s=>document.querySelector(s);
+const peaceOverlay=$('#peace-encounter');
 const color=hex=>[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255);
 function requestFrame(){if(!raf && ready && !disposed && !document.hidden && sceneVisible && pageActive)raf=requestAnimationFrame(render);}
 function orbitCanMove(){return !reduced&&!motionPaused&&!pointer&&!inertia&&selected<0&&flight<.001&&sceneVisible&&windowFocused&&pageActive&&!document.hidden;}

@@ -12,7 +12,12 @@
     "CHANGED_GLSL_COMPILED",
     "INDEPENDENT_SOURCE_REVIEW_PASS",
     "EXACT_CANDIDATE_AND_DISPATCH_COMMITTED",
-    "ONE_RUN_LAUNCHED"
+    "ONE_RUN_LAUNCHED",
+    "RUN40790969812_SUCCESS_FIRST_ATTEMPT",
+    "EIGHT_RAW_FRAMES_HASH_CALIBRATION_POSE_ASSET_VERIFIED",
+    "INDEPENDENT_CAPTURE_REVIEW_PASS",
+    "2484_ARCHIVED_HEIGHT_SAMPLES_RECONCILED",
+    "PER_PIXEL_AREA_LIMIT_RECORDED"
   ],
   "run": {
     "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
@@ -22,7 +27,7 @@
     "dispatchHead": "e9e09129e9f5f2ff352b031f085a2359482d1c90",
     "runId": 40790969812,
     "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40790969812",
-    "observedStatus": "in_progress",
+    "observedStatus": "completed",
     "runAttempt": 1,
     "createdAt": "2026-10-28T23:58:38Z",
     "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
@@ -30,10 +35,20 @@
     "captureFrameLimit": 8,
     "automaticRetry": false,
     "launchCount": 1,
-    "completionClaimed": false
+    "completionClaimed": true,
+    "conclusion": "success"
   },
-  "exactlyOneNextAction": "After owner reports completion retrieve run40790969812 artifacts, verify source/hash/pose/calibration and analyze world coordinates against preserved material evidence.",
-  "stopCondition": "STOP_AFTER_LAUNCH_NO_POLLING_NO_AUTOMATIC_RETRY",
+  "exactlyOneNextAction": "Using these existing captures and exact scene source, establish interval-bounded surface neighborhoods and source-defined full ecological coarse/detail composition; screen mean/detail preservation offline before proposing any further GPU run.",
+  "stopCondition": "NO_NEW_GPU_RUN_OR_PRODUCT_REPAIR_WITHOUT_QUALIFIED_SOURCE_DESIGN_AND_APPLICABLE_SCOPE",
   "productChanged": false,
-  "authorityEffect": "NONE_CONTINUATION_ONLY"
+  "authorityEffect": "NONE_CONTINUATION_ONLY",
+  "evidence": {
+    "archive": "run-40790969812-raw.zip",
+    "archiveSha256": "36bda9bb3fe0d3711fe1ef557c07505c2e93316de4a39f1321b50e8ab4cce4a3",
+    "review": "capture-independent-review.json",
+    "analysis": "world-material-analysis.json",
+    "areaWeightsQualified": false,
+    "repairQualified": false,
+    "chamberSynchronization": "UNVERIFIED"
+  }
 }

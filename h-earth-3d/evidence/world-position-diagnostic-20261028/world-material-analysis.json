@@ -1,0 +1,123 @@
+{
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "run": 40790969812,
+  "groups": [
+    {
+      "pose": "inland-seam-near",
+      "samples": 1107,
+      "heightDryIntervalMismatches": 0,
+      "sampleRanges": {
+        "x": [
+          -211.875,
+          -181.625
+        ],
+        "y": [
+          16.287353515625,
+          17.51025390625
+        ],
+        "z": [
+          -856.6875,
+          -755.6875
+        ],
+        "coast": [
+          620.0,
+          620.0
+        ]
+      },
+      "centerWitness": [
+        {
+          "pixel": [
+            264,
+            270
+          ],
+          "world": [
+            -200.0,
+            16.871826171875,
+            -794.1875,
+            620.0
+          ]
+        },
+        {
+          "pixel": [
+            264,
+            286
+          ],
+          "world": [
+            -200.0,
+            16.546630859375,
+            -767.5625,
+            620.0
+          ]
+        }
+      ]
+    },
+    {
+      "pose": "inland-seam-far",
+      "samples": 1377,
+      "heightDryIntervalMismatches": 0,
+      "sampleRanges": {
+        "x": [
+          -215.5625,
+          -179.625
+        ],
+        "y": [
+          14.60205078125,
+          16.613525390625
+        ],
+        "z": [
+          -794.25,
+          -689.0
+        ],
+        "coast": [
+          595.0,
+          620.0
+        ]
+      },
+      "centerWitness": [
+        {
+          "pixel": [
+            264,
+            481
+          ],
+          "world": [
+            -200.0,
+            15.857177734375,
+            -743.25,
+            620.0
+          ]
+        },
+        {
+          "pixel": [
+            264,
+            497
+          ],
+          "world": [
+            -200.0,
+            15.3466796875,
+            -720.6875,
+            620.0
+          ]
+        }
+      ]
+    }
+  ],
+  "schema": "H_EARTH_WORLD_MATERIAL_RECONCILIATION_v1",
+  "archiveSha256": "ad2eb7e12002942b364377ffc6661de1cf5c4cede2a264c1a0309b2650277ff1",
+  "archiveArtifactId": 12854046080,
+  "positionHalfWidthMeters": {
+    "x": 0.0390625,
+    "y": 0.000152587890625,
+    "z": 0.0390625,
+    "coast": 0.0390625
+  },
+  "interpretation": [
+    "All2484 previously frozen material samples agree with measured world height under archived +/-1-code heightDry intervals.",
+    "All sampled coast distances are595..620m, beyond the coastal identity and groundcover suitability ramps; those ramps cannot vary across these samples.620 is the shader varying value, not an independently measured true coastline distance.",
+    "The far-center weight-driven witness spans world z -743.25 to -720.6875, nominal22.5625m, at x -200.0. This locates the previously established patch-amplitude contribution; it is not a new independent weight measurement.",
+    "The full coupled composition and source-defined coarse/detail separation remain required. No repair candidate is qualified."
+  ],
+  "nextAction": "Using these existing captures and exact scene source, establish interval-bounded surface neighborhoods and source-defined full ecological coarse/detail composition; screen mean/detail preservation offline before proposing any further GPU run.",
+  "productChanged": false,
+  "gpuRerun": false,
+  "chamberSynchronization": "UNVERIFIED"
+}

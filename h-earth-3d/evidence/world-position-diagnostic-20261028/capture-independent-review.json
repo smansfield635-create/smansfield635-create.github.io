@@ -1,0 +1,569 @@
+{
+  "schema": "H_EARTH_INDEPENDENT_WORLD_CAPTURE_REVIEW_v1",
+  "result": "CAPTURE_CUSTODY_AND_BYTE_CALIBRATION_PASS_AREA_WEIGHTS_NOT_QUALIFIED",
+  "runId": 40790969812,
+  "checks": [
+    {
+      "check": "archive_sha256",
+      "pass": true
+    },
+    {
+      "check": "scene_head",
+      "pass": true
+    },
+    {
+      "check": "renderer_source_hash",
+      "pass": true
+    },
+    {
+      "check": "tooling_head",
+      "pass": true
+    },
+    {
+      "check": "eight_frames_no_errors",
+      "pass": true
+    },
+    {
+      "check": "budget_no_retry",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:sha256",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:dimensions",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:opacity",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:calibration",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:range",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:count",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:minmax",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:actual_camera_equals_expected",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:source_head",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-x.png:renderer_hash",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:sha256",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:dimensions",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:opacity",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:calibration",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:range",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:count",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:minmax",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:same_mask",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:actual_camera_equals_expected",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:source_head",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-y.png:renderer_hash",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:sha256",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:dimensions",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:opacity",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:calibration",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:range",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:count",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:minmax",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:same_mask",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:actual_camera_equals_expected",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:source_head",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-world-z.png:renderer_hash",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:sha256",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:dimensions",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:opacity",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:calibration",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:range",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:count",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:minmax",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:same_mask",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:actual_camera_equals_expected",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:source_head",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-near-coast-distance.png:renderer_hash",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:sha256",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:dimensions",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:opacity",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:calibration",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:range",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:count",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:minmax",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:actual_camera_equals_expected",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:source_head",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-x.png:renderer_hash",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:sha256",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:dimensions",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:opacity",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:calibration",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:range",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:count",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:minmax",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:same_mask",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:actual_camera_equals_expected",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:source_head",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-y.png:renderer_hash",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:sha256",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:dimensions",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:opacity",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:calibration",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:range",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:count",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:minmax",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:same_mask",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:actual_camera_equals_expected",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:source_head",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-world-z.png:renderer_hash",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:sha256",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:dimensions",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:opacity",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:calibration",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:range",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:count",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:minmax",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:same_mask",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:actual_camera_equals_expected",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:source_head",
+      "pass": true
+    },
+    {
+      "check": "candidate-inland-seam-far-coast-distance.png:renderer_hash",
+      "pass": true
+    },
+    {
+      "check": "stable_asset_signature",
+      "pass": true
+    }
+  ],
+  "frames": [
+    {
+      "image": "candidate-inland-seam-near-world-x.png",
+      "validPixels": 392589,
+      "range": [
+        -502.6875,
+        6.6875
+      ]
+    },
+    {
+      "image": "candidate-inland-seam-near-world-y.png",
+      "validPixels": 392589,
+      "range": [
+        15.41455078125,
+        55.8916015625
+      ]
+    },
+    {
+      "image": "candidate-inland-seam-near-world-z.png",
+      "validPixels": 392589,
+      "range": [
+        -2604.5625,
+        -730.4375
+      ]
+    },
+    {
+      "image": "candidate-inland-seam-near-coast-distance.png",
+      "validPixels": 392589,
+      "range": [
+        620.0,
+        620.0
+      ]
+    },
+    {
+      "image": "candidate-inland-seam-far-world-x.png",
+      "validPixels": 286403,
+      "range": [
+        -612.8125,
+        222.6875
+      ]
+    },
+    {
+      "image": "candidate-inland-seam-far-world-y.png",
+      "validPixels": 286403,
+      "range": [
+        13.8671875,
+        63.155517578125
+      ]
+    },
+    {
+      "image": "candidate-inland-seam-far-world-z.png",
+      "validPixels": 286403,
+      "range": [
+        -2976.5625,
+        -659.8125
+      ]
+    },
+    {
+      "image": "candidate-inland-seam-far-coast-distance.png",
+      "validPixels": 286403,
+      "range": [
+        543.875,
+        620.0
+      ]
+    }
+  ],
+  "coordinateHalfWidthsMeters": [
+    0.0390625,
+    0.000152587890625,
+    0.0390625
+  ],
+  "perPixelTriangleAreaScreen": [
+    {
+      "pose": "inland-seam-near",
+      "column": 132,
+      "triangles": 320,
+      "nominalAreaM2MinMedianMax": [
+        0.0,
+        0.020699913600784124,
+        0.1857254931622052
+      ],
+      "areaLowerBoundZeroCount": 160,
+      "relativeIntervalWidthMedian": 2.8749213274275394,
+      "absoluteIntervalWidthMaxM2": 0.3852610228514565
+    },
+    {
+      "pose": "inland-seam-near",
+      "column": 264,
+      "triangles": 320,
+      "nominalAreaM2MinMedianMax": [
+        0.00020599365234375,
+        0.041033029208294394,
+        0.4807855697409261
+      ],
+      "areaLowerBoundZeroCount": 79,
+      "relativeIntervalWidthMedian": 2.494289377561733,
+      "absoluteIntervalWidthMaxM2": 0.6456380277275084
+    },
+    {
+      "pose": "inland-seam-near",
+      "column": 396,
+      "triangles": 320,
+      "nominalAreaM2MinMedianMax": [
+        0.0003411968959808029,
+        0.04886710290288687,
+        0.4924457338337243
+      ],
+      "areaLowerBoundZeroCount": 5,
+      "relativeIntervalWidthMedian": 2.7341802838132345,
+      "absoluteIntervalWidthMaxM2": 0.6443134356332915
+    },
+    {
+      "pose": "inland-seam-far",
+      "column": 132,
+      "triangles": 400,
+      "nominalAreaM2MinMedianMax": [
+        0.0008434191271387466,
+        0.0449674423155959,
+        0.5078461299475584
+      ],
+      "areaLowerBoundZeroCount": 25,
+      "relativeIntervalWidthMedian": 2.4674728391463074,
+      "absoluteIntervalWidthMaxM2": 0.7044356530988852
+    },
+    {
+      "pose": "inland-seam-far",
+      "column": 264,
+      "triangles": 400,
+      "nominalAreaM2MinMedianMax": [
+        0.00112152099609375,
+        0.041153410581079436,
+        0.2657768607800356
+      ],
+      "areaLowerBoundZeroCount": 26,
+      "relativeIntervalWidthMedian": 2.480597858945145,
+      "absoluteIntervalWidthMaxM2": 0.35765352809479345
+    },
+    {
+      "pose": "inland-seam-far",
+      "column": 396,
+      "triangles": 400,
+      "nominalAreaM2MinMedianMax": [
+        0.010303022055202738,
+        0.06646527465935076,
+        0.49253072673203935
+      ],
+      "areaLowerBoundZeroCount": 15,
+      "relativeIntervalWidthMedian": 1.924546641603106,
+      "absoluteIntervalWidthMaxM2": 0.6149199304092866
+    }
+  ],
+  "limits": [
+    "All reported head identities are verified against artifact receipt and requested immutable identities, not independently fetched source bytes.",
+    "Calibration uses the declared same framebuffer/presentation path; numerical bounds conditional on declared .625-bin arithmetic allowance.",
+    "Area screen uses one right/down triangle per sampled cell, not complete visible world surface quadrature. Conservative independent coordinate interval products overbound shared-anchor errors.",
+    "Some per-pixel area intervals can include zero; precise decoded positions alone do not qualify positive area weights or conservative world-space transport.",
+    "Archived material image alignment and source equation preservation need separate reconciliation. No shader repair, visual acceptance, performance or publication claim."
+  ],
+  "archivedIdentityDiagnosticReconciliation": [
+    {
+      "pose": "inland-seam-near",
+      "archivedFrames": 10,
+      "newFrames": 4,
+      "checks": {
+        "pose": true,
+        "state_except_sequence": true,
+        "actual_camera_position": true,
+        "expected_camera_position": true,
+        "asset_signature": true,
+        "source_head": true,
+        "renderer_source_hash": true,
+        "canvas": true
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "archivedFrames": 10,
+      "newFrames": 4,
+      "checks": {
+        "pose": true,
+        "state_except_sequence": true,
+        "actual_camera_position": true,
+        "expected_camera_position": true,
+        "asset_signature": true,
+        "source_head": true,
+        "renderer_source_hash": true,
+        "canvas": true
+      }
+    }
+  ]
+}

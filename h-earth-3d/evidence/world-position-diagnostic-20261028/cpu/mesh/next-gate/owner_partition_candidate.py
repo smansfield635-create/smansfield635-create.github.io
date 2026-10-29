@@ -5,7 +5,7 @@ Clips only FAR continuation against existing NEAR land in the overlap cluster.
 Outputs exact 2D and source-affine 3D numerical witnesses, NEVER a product pass.
 """
 import argparse, hashlib, json, zipfile
-from mesh_domain_gate import source_protected, transport
+from mesh_domain_gate import protected_faces, transport
 from pathlib import Path
 import numpy as np
 from shapely.geometry import Polygon
@@ -81,7 +81,7 @@ def local_source_flux(pieces,triangles,colors,near_source_ids=()):
         q=integral[:3]/area
         must(np.all(np.isfinite(q)) and np.all(q>=0) and np.all(q<=1),'SOURCE_RGB_OUTSIDE_GAMUT')
         areas.append(area);Q.append(q)
-        protected.append(bool(np.any(source_protected(xyz[:,[0,2]]))))
+        protected.append(bool(protected_faces(xyz[None,:,:])[0]))
     near_source_ids=set(near_source_ids)
     links=[];physical_cross_primitive=0;maximum_mismatch=0.;total_length=0.
     for i,a in enumerate(ids):

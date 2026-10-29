@@ -1,0 +1,137 @@
+{
+  "schema": "H_EARTH_CORRECTED_MATERIAL_PRODUCTION_QUALIFICATION_v1",
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_PRODUCTION_QUALIFICATION_20261029_001",
+  "lockGeneration": 2974,
+  "result": "PASS_FIXED_VIEW_PRODUCTION_PARITY",
+  "runId": 40958319118,
+  "artifactId": 12934776485,
+  "artifactZipSha256": "8a2f7d1de0fbb22846066ef3b73e6d9c2fc5b224ad6f7dbf1eb24636e611c827",
+  "archivedRunId": 40939354824,
+  "archivedZipSha256": "f671a1e1d9fb72f3a8c1ff1d4d634a04fc23e67551b6d06e4b4a9680143acc51",
+  "sceneHead": "4639908eab7bc5b8872a85231b3330678988c259",
+  "toolingHead": "a26dc41964ae334a5ce73a637bcc96a0b4d43807",
+  "launchHead": "95d17c1a7c094192cd871b49652f6627009b3c34",
+  "sourceTests": {
+    "pass": 74,
+    "fail": 0
+  },
+  "atlasResponses": [
+    {
+      "path": "/showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+      "status": 200,
+      "sha256": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7",
+      "bytes": 111249
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+      "status": 200,
+      "sha256": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f",
+      "bytes": 666907
+    }
+  ],
+  "views": [
+    {
+      "pose": "inland-seam-near",
+      "imageSha256": "aed112d4c8bad11cd2e14c573a58fd63ab18ae475b702cfb51e066f59ff5cccc",
+      "grassHidden": false,
+      "applied": 358,
+      "retired": 0,
+      "comparisons": {
+        "baseline": {
+          "decodedPixelsIdentical": false,
+          "changedPixels": 309965,
+          "maximumChannelDifference": 18,
+          "imageSha256": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a"
+        },
+        "candidate": {
+          "decodedPixelsIdentical": true,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0,
+          "imageSha256": "aed112d4c8bad11cd2e14c573a58fd63ab18ae475b702cfb51e066f59ff5cccc"
+        }
+      }
+    },
+    {
+      "pose": "inland-seam-far",
+      "imageSha256": "eb4123a04c125ed33b20fff812cc2c382b1ae4d55c8b2d834c6b46c957317728",
+      "grassHidden": false,
+      "applied": 358,
+      "retired": 0,
+      "comparisons": {
+        "baseline": {
+          "decodedPixelsIdentical": false,
+          "changedPixels": 274236,
+          "maximumChannelDifference": 20,
+          "imageSha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc"
+        },
+        "candidate": {
+          "decodedPixelsIdentical": true,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0,
+          "imageSha256": "eb4123a04c125ed33b20fff812cc2c382b1ae4d55c8b2d834c6b46c957317728"
+        }
+      }
+    },
+    {
+      "pose": "protected-meadow",
+      "imageSha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b",
+      "grassHidden": false,
+      "applied": 358,
+      "retired": 0,
+      "comparisons": {
+        "baseline": {
+          "decodedPixelsIdentical": true,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0,
+          "imageSha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b"
+        },
+        "candidate": {
+          "decodedPixelsIdentical": true,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0,
+          "imageSha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b"
+        }
+      }
+    },
+    {
+      "pose": "protected-coast",
+      "imageSha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+      "grassHidden": false,
+      "applied": 358,
+      "retired": 0,
+      "comparisons": {
+        "baseline": {
+          "decodedPixelsIdentical": true,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0,
+          "imageSha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56"
+        },
+        "candidate": {
+          "decodedPixelsIdentical": true,
+          "changedPixels": 0,
+          "maximumChannelDifference": 0,
+          "imageSha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56"
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "scope": "Four frozen reference-lit views, software GPU; actual production atlas loading. No baseline recapture.",
+  "ownerVisualAcceptanceCreated": false,
+  "physicalAndroidPerformanceProven": false,
+  "publicationPerformed": false,
+  "nextAction": "Prepare bounded adoption of verified production integration using exact product files and preserved qualification; no further material experimentation or GPU rerun required for this parity checkpoint.",
+  "independentReview": {
+    "result": "PASS_FIXED_VIEW_PRODUCTION_PARITY",
+    "reviewer": "qualification_packet",
+    "checks": [
+      "Both ZIP hashes and all image byte hashes verified",
+      "All four decoded RGBA arrays identical to archived candidate",
+      "Meadow and coast identical to archived baseline",
+      "validateProductionSet and validateProductionAtlasResponses passed",
+      "74 tests passed with no failures or skips",
+      "GitHub run success attempt1 verified"
+    ],
+    "scope": "Four frozen views only; no world-wide, physical-device, merge or publication claim."
+  }
+}

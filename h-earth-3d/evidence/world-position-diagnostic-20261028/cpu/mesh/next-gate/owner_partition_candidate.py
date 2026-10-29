@@ -5,6 +5,7 @@ Clips only FAR continuation against existing NEAR land in the overlap cluster.
 Outputs exact 2D and source-affine 3D numerical witnesses, NEVER a product pass.
 """
 import argparse, hashlib, json, zipfile
+from mesh_domain_gate import source_protected, transport
 from pathlib import Path
 import numpy as np
 from shapely.geometry import Polygon
@@ -17,6 +18,7 @@ IDX_SHA='483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c'
 NEAR='H_EARTH_RUN_8B_SUCCESSOR_TERRAIN_MOUNTAIN_NEUTRAL_PRIMITIVE_001'
 FAR='H_EARTH_WORLD_MANIFOLD:FAR_LAND_CONTINUATION'
 POLICY='NEAR_LOCAL_SOURCE_OVER_FAR_CONTINUATION_DRAFT_v1'
+GATE_BLOB='10b5623b09c552930e54a1c1071c37535a831971'
 
 def must(test,why):
     if not test: raise ValueError('FAIL_CLOSED:'+why)
@@ -49,6 +51,87 @@ def affine_integral(poly,xyz,colors):
     area3=poly.area*np.sqrt(1+h[0]**2+h[1]**2)
     center=poly.centroid
     return area3,area3*np.array([center.x,center.y,1.])@c
+
+def float32_source_tolerance(xyz_a,xyz_b):
+    """Reuses original mesh gate's Float32-scale cross-primitive seam tolerance."""
+    magnitude=float(np.max(np.abs(np.concatenate((xyz_a,xyz_b)))))
+    return max(1e-6,2*magnitude*2**-23)
+
+def affine_height(xyz,points):
+    basis=np.column_stack((xyz[:,[0,2]],np.ones(3)))
+    must(abs(np.linalg.det(basis))>1e-12,'DEGENERATE_XZ_SOURCE_FACE')
+    h=np.linalg.solve(basis,xyz[:,1])
+    return np.asarray(points,dtype=float) @ h
+
+def local_source_flux(pieces,triangles,colors,near_source_ids=()):
+    """One *local* 3D mass/flux calculation, NOT a global shader or owner proof.
+
+    Edges exist only where the source-clipped polygons share a real 2D line
+    with uploaded source-height agreement at its actual endpoints and midpoint.
+    External region/shoreline flux and material-field P/D remain unqualified.
+    """
+    ids=sorted(pieces)
+    must(len(ids)>0,'NO_SOURCE_FRAGMENTS')
+    areas=[];Q=[];protected=[]
+    for key in ids:
+        xyz=np.asarray(triangles[key],float)
+        rgba=np.asarray(colors[key],float)
+        area,integral=affine_integral(pieces[key],xyz,rgba)
+        must(area>0 and np.isfinite(area),'EMPTY_CLIPPED_3D_AREA')
+        q=integral[:3]/area
+        must(np.all(np.isfinite(q)) and np.all(q>=0) and np.all(q<=1),'SOURCE_RGB_OUTSIDE_GAMUT')
+        areas.append(area);Q.append(q)
+        protected.append(bool(np.any(source_protected(xyz[:,[0,2]]))))
+    near_source_ids=set(near_source_ids)
+    links=[];physical_cross_primitive=0;maximum_mismatch=0.;total_length=0.
+    for i,a in enumerate(ids):
+        for j in range(i+1,len(ids)):
+            b=ids[j]
+            common=pieces[a].boundary.intersection(pieces[b].boundary)
+            length=common.length
+            if length<=1e-7:continue
+            # A shared point is not a physical flux edge. Actual length is
+            # used, with strict unmodified source plane-height verification.
+            def each_line(g):
+                if g.geom_type=='LineString' and g.length>1e-7:
+                    yield g
+                elif hasattr(g,'geoms'):
+                    for part in g.geoms:yield from each_line(part)
+            for segment in each_line(common):
+                xyz_a=np.asarray(triangles[a],float)
+                xyz_b=np.asarray(triangles[b],float)
+                sample_points=[segment.interpolate(0),segment.interpolate(.5,normalized=True),segment.interpolate(segment.length)]
+                coord=np.array([[pt.x,pt.y,1.] for pt in sample_points])
+                mismatch=float(np.max(np.abs(affine_height(xyz_a,coord)-affine_height(xyz_b,coord))))
+                tol=float32_source_tolerance(xyz_a,xyz_b)
+                must(mismatch<=tol,'DISCONNECTED_3D_SOURCE_CONTACT')
+                maximum_mismatch=max(maximum_mismatch,mismatch)
+            links.append((i,j,float(length)))
+            total_length+=float(length)
+            if (a in near_source_ids)!=(b in near_source_ids):physical_cross_primitive+=1
+    must(bool(links),'NO_PHYSICAL_SOURCE_LINKS')
+    before=np.sum(np.asarray(areas)[:,None]*np.asarray(Q),axis=0)
+    afterQ,afterL,receipt=transport(np.asarray(Q),np.asarray(Q),np.asarray(areas),links,np.asarray(protected,dtype=bool))
+    after=np.sum(np.asarray(areas)[:,None]*afterQ,axis=0)
+    mismatch=float(np.max(np.abs(before-after)))
+    must(mismatch<=1e-9,'LOCAL_RGB_FLUX_NOT_CONSERVED')
+    must(float(np.min(afterQ))>=-1e-11 and float(np.max(afterQ))<=1.+1e-11,'LOCAL_FLUX_RGB_GAMUT')
+    if np.any(protected):must(np.max(np.abs(afterQ[np.array(protected)]-np.asarray(Q)[np.array(protected)]))<1e-12,'LOCAL_PROTECTED_FLUX')
+    return {'result':'LOCAL_SOURCE_FACE_FLUX_MECHANISM_PASS_WITH_GLOBAL_BOUNDARY_HELD',
+            'graphSource':'SHARED_CLIPPED_ORIGINAL_SOURCE_BOUNDARIES_ONLY',
+            'connectedInternalEdges':len(links),
+            'crossPrimitiveInternalEdges':physical_cross_primitive,
+            'sharedPlanarEdgeLengthMeters':total_length,
+            'maxHeightMismatchMeters':maximum_mismatch,
+            'sourceFloat32ToleranceLaw':'max(1e-6,2*maxAbsoluteSourceXYZ*2**-23)',
+            'maxRGBMassConservationError':mismatch,
+            'transportReportedMassError':receipt['massError'],
+            'appliedTransportEdges':receipt['fluxEdges'],
+            'minimumRGB':float(np.min(afterQ)), 'maximumRGB':float(np.max(afterQ)),
+            'protectedSourceFaces':sum(protected),
+            'externalDomainFluxQualified':False,'globalPhysicalClosure':False,
+            'sourceMaterialOwnerAccepted':False,'fullP_D_f0Evaluated':False,
+            'noLandWaterSeamSynthesized':True}
 
 def audit(archive_path):
     raw=Path(archive_path).read_bytes();must(digest(raw)==ARTIFACT_SHA,'ARTIFACT_SHA_DRIFT')
@@ -110,6 +193,12 @@ def audit(archive_path):
         for off,p in counter.items():
             a,c=affine_integral(p,triangle(off),color[indices[off:off+3]])
             far_area+=a;far_rgba+=c
+        # Original gate itself is never silently replaced or weakened.
+        gate=Path(__file__).with_name('mesh_domain_gate.py').read_bytes()
+        blob=hashlib.sha1(b'blob '+str(len(gate)).encode()+b'\0'+gate).hexdigest()
+        must(blob==GATE_BLOB,'ORIGINAL_MESH_GATE_BLOB_DRIFT')
+        local_flux=local_source_flux(pieces,{i:triangle(i) for i in pieces},
+                                     {i:color[indices[i:i+3]] for i in pieces},near_source_ids=near_ids)
         stats.update(sourceArea3D=area3,sourceWeightedBaseColorRGBA=rgba.tolist(),farClippedAreaXZ=before_far-after_far,
             originalDoubleCountedSourceArea3D=orig_area,
             originalDoubleCountedSourceWeightedRGBA=orig_rgba.tolist(),
@@ -129,6 +218,7 @@ def audit(archive_path):
           'artificialCutClearanceMeters':report['boundaryDistance']['minimumArtificialCutWitnessDistanceMeters'],
           'originalBoundaryReviewRequired':report['boundaryDistance']['originalBoundaryRequiresIndependentQualification'],
           'partialSeamCount':len(report['partialSourceSeamEdges']), 'statistics':stats,
+          'localFluxQualification':local_flux,
           'prohibitedConclusions':['NO_AUTOMATIC_SHORELINE_LAND_FILL','NO_PRODUCT_PIXEL_PROOF','NO_FULL_SOURCE_MASS_FLUX_ACCEPTANCE','NO_MATERIAL_INTEGRAL_INVARIANCE','NO_RELEASE']}
 
 if __name__=='__main__':

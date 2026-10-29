@@ -1,0 +1,49 @@
+{
+  "schema": "H_EARTH_SOURCE_NATIVE_ARCHIVE_FAILURE_AND_REPAIR_v1",
+  "runId": 40885973120,
+  "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40885973120",
+  "runConclusion": "failure",
+  "artifactId": 12902168523,
+  "artifactSha256": "3a0e9185a78ef4f2c129d29416d2427be71149236314116109e88c3a439de584",
+  "asset": {
+    "path": "original-mesh/world.gz",
+    "length": 11736235,
+    "sha256": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "status": "INDEPENDENTLY_VERIFIED_FROM_DOWNLOADED_ACTIONS_ARTIFACT"
+  },
+  "firstFailedAssertion": "FAIL_CLOSED:FROZEN_SOURCE_MATERIALIZATION",
+  "stderr": [
+    "fatal: pathspec 'package.json' did not match any files",
+    "tar: This does not look like a tar archive"
+  ],
+  "originalSourceCommit": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "rootPackageJsonPresent": false,
+  "preservedSourcePaths": 716,
+  "incorrectSourceArchiveExtra": [
+    "package.json"
+  ],
+  "correctedSourceArchiveExtras": [
+    "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz"
+  ],
+  "reproduction": {
+    "result": "PASS",
+    "method": "Fresh isolated Git repo without root package.json; git archive with package.json fails, without package.json produces readable tar and required file members",
+    "noProductMutation": true
+  },
+  "repair": {
+    "script": "recover-original-mesh.sh",
+    "scriptGitBlob": "13030af0417d298e4140bf82055b686b9b45ce56",
+    "test": "test_bootstrap.py",
+    "testGitBlob": "ea6c407d5082dc0930cf408b1e77aa5051537f51",
+    "sourceCommit": "103f5e11af962a25548cbc6f8a71110c9637adb4",
+    "testCommit": "49d9bc405c591288492180955c83570f69223104"
+  },
+  "qualification": {
+    "actualMeshReconstructed": false,
+    "actualMeshGateRun": false,
+    "materialAppearanceQualified": false,
+    "sourceIntegrityPreserved": true
+  },
+  "nextAction": "Requalify fixed existing runner with new exact diagnostic branch commit after canonical delta authorization, then perform ONE CPU-only original mesh source replay with preserved artifact; no blind replay or GPU",
+  "noProductMutation": true
+}

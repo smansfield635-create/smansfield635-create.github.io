@@ -1320,6 +1320,16 @@ jobs:
             /.github/workflows/h-earth-neutral-exact-head-runner.yml
             /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh
             /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
+      - name: Checkout immutable source bootstrap for PR test
+        uses: actions/checkout@v4
+        with:
+          ref: ee8463c17b9df9fc0c9f534792fa7235fa836443
+          fetch-depth: 1
+          path: source-tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -1342,5 +1352,7 @@ jobs:
           assert '  original-indexed-mesh-recovery:' in workflow
           print('PASS:FIXED_ORIGINAL_INDEXED_MESH_WORKFLOW_STATIC_GUARDS')
           PY
-          bash -n h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh
-          python3 h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
+          test "$(git -C source-tooling rev-parse HEAD)" = ee8463c17b9df9fc0c9f534792fa7235fa836443
+          test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh)" = 661595489af17db36ea65a9b4e57d22e203ebc12
+          bash -n source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/recover-original-mesh.sh
+          python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py

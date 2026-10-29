@@ -18,3 +18,14 @@ python3 owner_partition_candidate.py --artifact /path/to/h-earth-gen2969-cpu-mes
 ```
 
 Requires Python with NumPy and Shapely 2. The checked-in receipt records a local execution against the exact immutable artifact, not a GitHub-hosted CI result. Return `NEAR_PRIORITY_CLIPPED_SOURCE_CANDIDATE_REVIEW_REQUIRED` is an evidence state only; `policyAccepted=false`, `materialOwnerPromoted=false`, `scientificClosure=false`. Source owner policy requires independent geometric/source/material review before any material transport, mesh repair, GPU use or publication.
+
+
+## Material-budget adversarial qualification — source-policy HELD
+
+This exact candidate has now been replayed locally against the unchanged artifact with **11/11 focused tests PASS**. These tests and the source file have been read back at Git blobs `10d728bacfa8b3f833e3410b999a4141a79c2e4a` and `5ca289737f075de89c073d1a480e688500e0f4f7`. This does **not** mean the hosted PR test or production visual audit passed.
+
+The unpartitioned pair of original sources double-owns 0.0005452013574540615 m² of projected area. Original summed source 3D area over the 22 triangles is **1368.2481917250432 m²**. NEAR-first disjoint clipping retains **1368.2476321952925 m²**, a subtraction of **0.0005595297507170471 m²** of duplicated FAR source 3D area. Its removed FAR weighted baseColorLinear RGBA integral is approximately `[0.000057775089914, 0.000070484783208, 0.000037858403175, 0.000559529750717]`. The *counterfactual* FAR-first partition yields **1368.2476458335018 m²**, and the maximum difference between the two candidates' weighted RGB source integrals is **0.000045288119736**. Both represent the same union in XZ but do **not** have invariant material integrals.
+
+This is the exact outstanding condition: `SOURCE_MATERIAL_OWNER_PRECEDENCE_NOT_AUTHORIZED`. Neither double-counted source totals nor the candidate clipped values are independently validated physical flux/mass conservation targets. The canonical G_WORLD semantic classifier establishes LAND/COASTAL_SOIL versus shoreline WATER, but no accepted per-triangle NEAR/FAR material owner has been established. Camera weights, draw order, and near/far height coincidence may not serve as hidden ownership authority.
+
+Accept the source-only geometric *method* for further examination, not the priority policy. Keep `policyAccepted=false`, `materialOwnerPromoted=false`, `scientificClosure=false` and `sourceSingleOwnerMaterialConservationQualified=false` until a verified static owner contract and full source-field/flux plus coast-protection evidence exist. Do not promote to runtime source, alter an epsilon/radius or call a material blur correction complete. No rerun of identical Gen2969 CPU artifact is needed.

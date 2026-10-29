@@ -10,6 +10,8 @@ on:
       - 'tools/h-earth-ground-material-comparison.v1.test.mjs'
       - 'tools/h-earth-owner-boundary-survey.v1.mjs'
       - 'tools/h-earth-owner-boundary-survey.v1.test.mjs'
+      - 'tools/h-earth-owner-boundary-survey-completion.v1.mjs'
+      - 'tools/h-earth-owner-boundary-survey-completion.v1.test.mjs'
   workflow_dispatch:
     inputs:
       target_sha:
@@ -1370,7 +1372,7 @@ jobs:
 
   owner-boundary-survey:
     if: >-
-      ${{ github.event_name == 'pull_request' && github.event.action == 'reopened' && github.event.pull_request.number == 6984 &&
+      ${{ github.event_name == 'pull_request' && github.event.action == 'reopened' && github.event.pull_request.number == 6984 && startsWith(github.event.pull_request.title, 'ORIGINAL_SURVEY:') &&
           github.event.pull_request.head.repo.full_name == github.repository &&
           github.event.pull_request.head.ref == 'h-earth/owner-boundary-survey-20261029' && github.event.pull_request.base.ref == 'main' }}
     runs-on: ubuntu-24.04
@@ -1467,5 +1469,109 @@ jobs:
         with:
           name: h-earth-owner-boundary-survey-${{ github.run_id }}
           path: ${{ runner.temp }}/owner-boundary-survey
+          if-no-files-found: error
+          retention-days: 90
+
+  owner-boundary-survey-completion:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'reopened' && github.event.pull_request.number == 6984 && startsWith(github.event.pull_request.title, 'SURVEY_COMPLETION:') &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/owner-boundary-survey-20261029' && github.event.pull_request.base.ref == 'main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out immutable launch checkpoint
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: dispatch
+          persist-credentials: false
+          sparse-checkout: h-earth-3d/experience-anchor/evidence/owner-boundary-survey-completion-20261029
+      - name: Resolve frozen tooling identity
+        id: intent
+        env:
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          test "$RUN_ATTEMPT" = 1
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const p=JSON.parse(fs.readFileSync('dispatch/h-earth-3d/experience-anchor/evidence/owner-boundary-survey-completion-20261029/dispatch-intent.json'));
+          assert.match(p.toolingHead,/^[a-f0-9]{40}$/);
+          assert.equal(p.pullRequest,6984);
+          assert.equal(p.launchTransport,'SAME_REPOSITORY_PR_EXACT_HEAD');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`tooling_head=${p.toolingHead}\n`);
+          NODE
+      - name: Check out frozen diagnostic tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.intent.outputs.tooling_head }}
+          path: tooling
+          persist-credentials: false
+      - name: Check out immutable production scene
+        uses: actions/checkout@v4
+        with:
+          ref: 50b337ff7bbfb6fce4876e1037ac96d5faff65a6
+          path: scene
+          persist-credentials: false
+      - name: Check out accepted capture helper
+        uses: actions/checkout@v4
+        with:
+          ref: a26dc41964ae334a5ce73a637bcc96a0b4d43807
+          path: support
+          persist-credentials: false
+          sparse-checkout: tools
+      - name: Validate immutable launch and reuse qualified helper
+        env:
+          TARGET_SHA: ${{ steps.intent.outputs.tooling_head }}
+          WORKFLOW_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git -C tooling rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git -C dispatch rev-parse HEAD)" = "$WORKFLOW_SHA"
+          test "$(git -C scene rev-parse HEAD)" = 50b337ff7bbfb6fce4876e1037ac96d5faff65a6
+          test "$(git -C support rev-parse HEAD)" = a26dc41964ae334a5ce73a637bcc96a0b4d43807
+          test "$(git -C tooling rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)" = "$(git -C dispatch rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+          const dir='h-earth-3d/experience-anchor/evidence/owner-boundary-survey-completion-20261029/';
+          const read=p=>JSON.parse(fs.readFileSync(p));const hash=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const i=read('dispatch/'+dir+'dispatch-intent.json');
+          assert.equal(i.operationId,'H_EARTH_OWNER_BOUNDARY_SURVEY_COMPLETION_20261029_001');assert.equal(i.lockGeneration,2979);
+          assert.equal(i.toolingHead,process.env.TARGET_SHA);assert.equal(i.sceneHead,'50b337ff7bbfb6fce4876e1037ac96d5faff65a6');
+          assert.equal(i.profile,'OWNER_BOUNDARY_SURVEY_COMPLETION_V1');assert.equal(i.frameCap,5);assert.equal(i.runBudget,1);assert.equal(i.automaticRetry,false);
+          const a=read('tooling/'+dir+'admission-receipt.json');assert.equal(a.result,'ADMITTED_AND_LOCKED');assert.equal(a.lockGeneration,2979);assert.equal(a.operationId,i.operationId);assert.equal(a.workflowRun,40972425036);
+          const w=read('tooling/'+dir+'independent-source-review.json');assert.equal(w.result,'PASS');assert.equal(w.builderSelfApproval,false);assert.equal(w.operationId,i.operationId);
+          assert.deepEqual(Object.keys(i.sourceSha256).sort(),['tools/h-earth-owner-boundary-survey-completion.v1.mjs','tools/h-earth-owner-boundary-survey-completion.v1.test.mjs','.github/workflows/h-earth-neutral-exact-head-runner.yml'].sort());
+          for(const [p,h] of Object.entries(i.sourceSha256)){assert.equal(hash('tooling/'+p),h);assert.equal(w.sourceSha256[p],h);}
+          assert.equal(hash('support/tools/h-earth-ground-material-comparison.v1.mjs'),'b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509');
+          const helpers={'h-earth-ground-material-comparison.v1.mjs':'b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509','h-earth-corrected-material-application.mjs':'070ad7daf51bbf41c2f4223ad9ba3a0143bde6aa3f7439df603c4a2718f50558','h-earth-world-position-overlay.mjs':'d61880ba98d81eae5d7cc6503f10f34d5aaa37819f4ba4a22218d87e711ca797','h-earth-groundcover-factor-overlay.mjs':'e9a872402371087e49031bca2ca27d0f37c9ab1012df50a5ebbf63617a3bf9e1'};
+          for(const [p,h] of Object.entries(helpers)){assert.equal(hash('support/tools/'+p),h);fs.copyFileSync('support/tools/'+p,'tooling/tools/'+p);}
+          NODE
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test bounded survey
+        working-directory: tooling
+        env:
+          H_EARTH_NAVIGATION_SOURCE: ../scene/showroom/globe/h-earth/functional-landscape/navigation.js
+        run: |
+          mkdir -p "${{ runner.temp }}/owner-boundary-survey-completion"
+          set -o pipefail
+          node --test tools/h-earth-owner-boundary-survey-completion.v1.test.mjs 2>&1 | tee "${{ runner.temp }}/owner-boundary-survey-completion/source-tests.tap"
+      - name: Install fixed browser tooling
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture five missing production views
+        working-directory: tooling
+        run: timeout 2400s node tools/h-earth-owner-boundary-survey-completion.v1.mjs --scene-dir ../scene --output "${{ runner.temp }}/owner-boundary-survey-completion"
+      - name: Preserve evidence on success or failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-owner-boundary-survey-completion-${{ github.run_id }}
+          path: ${{ runner.temp }}/owner-boundary-survey-completion
           if-no-files-found: error
           retention-days: 90

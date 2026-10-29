@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-28T23:24:16Z",
+  "generatedAt": "2026-10-29T00:49:32Z",
   "window30d": {
-    "start": "2026-09-28T23:24:16Z",
-    "end": "2026-10-28T23:24:16Z"
+    "start": "2026-09-29T00:49:32Z",
+    "end": "2026-10-29T00:49:32Z"
   },
   "daily": [
-    {
-      "date": "2026-09-29",
-      "pageLoads": 40
-    },
     {
       "date": "2026-09-30",
       "pageLoads": 30
@@ -20,7 +16,7 @@
     },
     {
       "date": "2026-10-02",
-      "pageLoads": 10
+      "pageLoads": 30
     },
     {
       "date": "2026-10-03",
@@ -36,7 +32,7 @@
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 210
+      "pageLoads": 200
     },
     {
       "date": "2026-10-07",
@@ -44,7 +40,7 @@
     },
     {
       "date": "2026-10-08",
-      "pageLoads": 70
+      "pageLoads": 100
     },
     {
       "date": "2026-10-09",
@@ -80,11 +76,11 @@
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 60
+      "pageLoads": 50
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 40
+      "pageLoads": 50
     },
     {
       "date": "2026-10-19",
@@ -92,11 +88,11 @@
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 34
+      "pageLoads": 30
     },
     {
       "date": "2026-10-21",
-      "pageLoads": 60
+      "pageLoads": 68
     },
     {
       "date": "2026-10-22",
@@ -124,19 +120,23 @@
     },
     {
       "date": "2026-10-28",
-      "pageLoads": 29
+      "pageLoads": 30
+    },
+    {
+      "date": "2026-10-29",
+      "pageLoads": 0
     }
   ],
   "summary": {
-    "pageLoads": 1854,
-    "botPageLoads": 885,
-    "nonBotPageLoads": 969
+    "pageLoads": 1879,
+    "botPageLoads": 873,
+    "nonBotPageLoads": 1006
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1648,
-      "visits": 1648
+      "pageLoads": 1633,
+      "visits": 1633
     },
     {
       "host": "diamondgatebridge.com",
@@ -167,13 +167,13 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 709,
-      "visits": 649
+      "pageLoads": 688,
+      "visits": 618
     },
     {
       "path": "/analytics/",
-      "pageLoads": 611,
-      "visits": 611
+      "pageLoads": 571,
+      "visits": 571
     },
     {
       "path": "/",
@@ -182,8 +182,8 @@
     },
     {
       "path": "/build/",
-      "pageLoads": 54,
-      "visits": 54
+      "pageLoads": 64,
+      "visits": 64
     },
     {
       "path": "/about/",
@@ -201,9 +201,9 @@
       "visits": 30
     },
     {
-      "path": "/evidence/agentic-frontier/",
-      "pageLoads": 25,
-      "visits": 21
+      "path": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
+      "pageLoads": 28,
+      "visits": 28
     }
   ],
   "ownerMeasurement": {

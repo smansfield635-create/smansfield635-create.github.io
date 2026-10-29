@@ -1,0 +1,48 @@
+{
+  "schema": "H_EARTH_PUBLICATION_GATE_RECONCILIATION_v1",
+  "productCandidate": "88b5c29d60a68dc4a4e51cf24dfcbc023d32b8a5",
+  "publicationOperationGeneration": 2975,
+  "evidenceOperationGeneration": 2976,
+  "admission": {
+    "comment": 6509270677,
+    "run": 40962076021,
+    "result": "ADMITTED_AND_LOCKED"
+  },
+  "preflight": {
+    "run": 40960563661,
+    "targetSha": "88b5c29d60a68dc4a4e51cf24dfcbc023d32b8a5",
+    "result": "PREFLIGHT_PASS",
+    "artifact": 12936430423,
+    "artifactSha256": "81f385f565abe6f9d1a47a90e597b29d928c6667052bcef112e28734bf95954b"
+  },
+  "repairs": [
+    "Preserve six original evidence blobs byte-for-byte in existing experience-anchor evidence namespace; their original historical contents are not rewritten.",
+    "Add independently reviewed11-invariant anchor receipt with exact four product SHA256 values.",
+    "No product, workflow, gate or registry changes."
+  ],
+  "priorChecks": {
+    "registry": {
+      "job": 123751113725,
+      "assertion": "REQUESTED_PATH_UNRESOLVED",
+      "selectedBy": "Six evidence paths only; explicitDependencyPaths empty. Existing applicability selector recognizes new evidence destination as administrative. Reevaluate final net diff."
+    },
+    "anchor": {
+      "job": 123751113035,
+      "assertion": "EXPERIENCE_CHANGE_WITHOUT_ANCHOR_RECEIPT",
+      "disposition": "REAL_SELECTED_BLOCKER_REPAIRED_BY_EXACT_RECEIPT_REQUIRES_GATE_PASS"
+    },
+    "historicalCoast": {
+      "job": 123751113515,
+      "disposition": "ADVISORY_HISTORICAL_SNAPSHOT_MISMATCH",
+      "reason": "Six failures compare unmodified material,live-render-package,gpu-upload-views,shoreline,distant-context,navigation to historical108dd921/5763b582 snapshots. No changed product byte in failed exact-blob assertions."
+    },
+    "cp3d": {
+      "job": 123751113112,
+      "assertion": "VERIFIED_PLANTING_TEMPLATE_LAYOUT:BARK",
+      "disposition": "ADVISORY_EXISTING_HARNESS_DEPENDENCY_INCOMPATIBILITY",
+      "reason": "Failure in unchanged live-render-package:744 during NODE package construction before changed renderer or route import and before browser capture. Not claimed passed; actual route/renderer production qualification run40958319118 and publication runtime preflight40960563661 passed."
+    }
+  },
+  "independentReview": "/root/qualification_packet",
+  "authorityEffect": "NONE_EVIDENCE_ONLY"
+}

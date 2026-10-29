@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-29T05:26:55Z",
+  "generatedAt": "2026-10-29T06:38:30Z",
   "window": {
-    "start": "2026-07-31T05:26:55Z",
-    "end": "2026-10-29T05:26:55Z"
+    "start": "2026-07-31T06:38:30Z",
+    "end": "2026-10-29T06:38:30Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,17 +17,17 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4448,
+    "pageLoads": 4428,
     "visits": 1317,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4448,
+        "pageLoads": 4428,
         "visits": 1317
       }
     },
     "byPath": {
       "/showroom/globe/h-earth/": {
-        "pageLoads": 111,
+        "pageLoads": 101,
         "visits": 10
       },
       "/gauges/h-earth/": {
@@ -46,12 +46,12 @@
         "pageLoads": 270,
         "visits": 70
       },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 500,
-        "visits": 0
-      },
       "/laws/research/methods-and-models/": {
         "pageLoads": 110,
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
@@ -60,10 +60,6 @@
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -92,6 +88,10 @@
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 490,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -182,13 +182,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -321,7 +321,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3131,
+        "pageLoads": 3111,
         "visits": 0
       },
       "www.google.com": {

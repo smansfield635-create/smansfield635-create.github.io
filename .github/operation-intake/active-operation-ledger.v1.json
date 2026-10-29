@@ -4060,6 +4060,50 @@
       "scopeHash": "3338e9d7b1340348e84a47c8170eb9c12a57ed8d42d2fa320ed2dde5d5110a07",
       "state": "ADMITTED_LOCKED"
     },
+    "33485f20ac68aea17ab03200bef216895f45aefdf109c5c9e40f03155cb88d44": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e9446ac393d72409f98c837f4ec341a782e8cfe8",
+          "lockGeneration": 2970,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:FLAGSHIP_ONE_WORLD_VISUAL_PROOF:20261029",
+          "operationId": "NINE_SUMMITS_FLAGSHIP_ONE_WORLD_VISUAL_PROOF_20261029_001",
+          "procedureLocatorDigest": "2978704264a1454ffd5c6531eb1695a76b1cf064d3eebfa01083aa6581714519",
+          "requestDigest": "003abc8cff4a710eb670d3f7cf628e8cc69d179c31e59481d3154b9c83401f12",
+          "scopeHash": "33485f20ac68aea17ab03200bef216895f45aefdf109c5c9e40f03155cb88d44"
+        },
+        "bindingDigest": "9b9a15847571879e6db18f03cedffd8a8b3f275d947aa96e44445e3d8f2819aa",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "4aef475a7e5035ba894f722d3de10e3577e706ac9e4b3716983bd55a6f26df33",
+          "commentId": 6503416632,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40919312894,
+          "workflowSha": "e9446ac393d72409f98c837f4ec341a782e8cfe8"
+        },
+        "lineageAnchorCommitSha": "dce7299612c4fe13551e7e43e7291a6acf7df941",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e9446ac393d72409f98c837f4ec341a782e8cfe8",
+      "lockGeneration": 2970,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:FLAGSHIP_ONE_WORLD_VISUAL_PROOF:20261029",
+      "operationId": "NINE_SUMMITS_FLAGSHIP_ONE_WORLD_VISUAL_PROOF_20261029_001",
+      "procedureLocatorDigest": "2978704264a1454ffd5c6531eb1695a76b1cf064d3eebfa01083aa6581714519",
+      "released": false,
+      "requestDigest": "003abc8cff4a710eb670d3f7cf628e8cc69d179c31e59481d3154b9c83401f12",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "33485f20ac68aea17ab03200bef216895f45aefdf109c5c9e40f03155cb88d44",
+      "state": "ADMITTED_LOCKED"
+    },
     "3351fa3ef6fac7bd7187ecbd20f5b92c87a15c4d921e2bd82fb58f2bf9c4bb20": {
       "governingHead": "8a04a9f94a65e82c9ed3df50af999cfcb33d068b",
       "lockGeneration": 1371,
@@ -22863,7 +22907,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2969,
+  "lockGeneration": 2970,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

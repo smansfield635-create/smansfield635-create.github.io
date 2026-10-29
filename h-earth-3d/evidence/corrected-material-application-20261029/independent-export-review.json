@@ -1,0 +1,131 @@
+{
+  "result": "PASS_BOUNDED_ENCODED_MASS_CHECK",
+  "domainIntegrals": [
+    {
+      "group": "NEAR",
+      "pitch": 1.5,
+      "quadratureSamples": 20096,
+      "original3DArea": 10060.246790634432,
+      "integratedAtlasRGB": [
+        0.04094245807082303,
+        0.03104319463459037,
+        0.08251361671927923
+      ],
+      "normalizedMeanRGB": [
+        4.069727007983376e-06,
+        3.0857289369372105e-06,
+        8.201947570122746e-06
+      ],
+      "pass1eMinus5": true
+    },
+    {
+      "group": "NEAR",
+      "pitch": 0.75,
+      "quadratureSamples": 80384,
+      "original3DArea": 10060.246790634432,
+      "integratedAtlasRGB": [
+        0.030609393138872537,
+        0.03254980401185604,
+        0.08058108473037982
+      ],
+      "normalizedMeanRGB": [
+        3.0426085737149407e-06,
+        3.235487626621468e-06,
+        8.009851687276364e-06
+      ],
+      "pass1eMinus5": true
+    },
+    {
+      "group": "FAR",
+      "pitch": 1.5,
+      "quadratureSamples": 416579,
+      "original3DArea": 81986.36276263156,
+      "integratedAtlasRGB": [
+        -0.06610409535583273,
+        -0.11610861745729295,
+        -0.12272088105318701
+      ],
+      "normalizedMeanRGB": [
+        -8.062815952357654e-07,
+        -1.416194273594656e-06,
+        -1.4968450473707536e-06
+      ],
+      "pass1eMinus5": true
+    },
+    {
+      "group": "FAR",
+      "pitch": 0.75,
+      "quadratureSamples": 1658458,
+      "original3DArea": 81986.36276263156,
+      "integratedAtlasRGB": [
+        -0.0812785160527767,
+        -0.12253945279697609,
+        -0.09996467097166284
+      ],
+      "normalizedMeanRGB": [
+        -9.913662871970033e-07,
+        -1.4946321396371075e-06,
+        -1.2192841297409718e-06
+      ],
+      "pass1eMinus5": true
+    }
+  ],
+  "witnessChecks": [
+    {
+      "pose": "inland-seam-near",
+      "memberships": 1114,
+      "maxDisplayCodeError": 0.2194639389633295
+    },
+    {
+      "pose": "inland-seam-far",
+      "memberships": 1461,
+      "maxDisplayCodeError": 0.21694052714477152
+    }
+  ],
+  "sourceInspection": [
+    "Original indexed sourceOffset selects chart, source normal/coast/height interpolated on original parent.",
+    "Source f0, savedL32 and fine correction constant reused; no diffusion solve.",
+    "Texture centers lie on0.25m grid; renderer must address half-texel centers and correct imageY orientation with linear color data/no mipmaps.",
+    "Export sample gate does not test continuous atlas integral; independent review supplies that below."
+  ],
+  "limits": [
+    "Independent atlas integration uses original source-face centroid subdivision at1.5/.75m; actual WebGL filtering/addressing not executed.",
+    "Chart quantization/interpolation need not preserve exact continuity or zero correction on arbitrary boundary segments; separate qualification needed.",
+    "No healthy/protected/GPU/visual acceptance.",
+    "Sampled fidelity and quadrature-qualified encoded mass do not prove full-scene correctness."
+  ],
+  "edgeSampleCheck": [
+    {
+      "group": "NEAR",
+      "edgeSamples": 16368,
+      "maxSharedParentEdgeLinearJump": 0.0,
+      "maxPerimeterLinearCorrection": 0.0
+    },
+    {
+      "group": "FAR",
+      "edgeSamples": 2739,
+      "maxSharedParentEdgeLinearJump": 0.0,
+      "maxPerimeterLinearCorrection": 0.0
+    }
+  ],
+  "massResult": "PASS_BOUNDED_ENCODED_MASS_CHECK",
+  "firstFailedInvariant": null,
+  "piecewisePolynomialTraceCheck": [
+    {
+      "group": "NEAR",
+      "bilinearEdgeCellPieces": 21488,
+      "threeDistinctInteriorChecksPerPiece": true,
+      "maxEdgeTraceDifference": 0.0,
+      "maxExteriorTrace": 0.0
+    },
+    {
+      "group": "FAR",
+      "bilinearEdgeCellPieces": 23409,
+      "threeDistinctInteriorChecksPerPiece": true,
+      "maxEdgeTraceDifference": 0.0,
+      "maxExteriorTrace": 1.3877787807814457e-17
+    }
+  ],
+  "traceConclusion": "All original indexed edge traces agree at three distinct points per bilinear-grid segment; each trace restriction is degree<=2, so this checks full trace polynomial equality in ideal CPU bilinear arithmetic up to stated floating tolerance.",
+  "repairedPaddingInspection": "Interior identity retained; padding consults original same-index vertex-neighbour star, rejecting overlapping strict neighbour interiors. No global coordinate owner search; original multi-domain ownership remains unqualified."
+}

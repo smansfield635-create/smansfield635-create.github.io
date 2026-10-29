@@ -1,0 +1,65 @@
+{
+  "result": "CAPTURE_CUSTODY_PASS_VISIBLE_PARTIAL_IMPROVEMENT_NOT_COMPLETE_REPAIR",
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_RENDERER_20261029_001",
+  "runId": 40939354824,
+  "artifactSha256": "f671a1e1d9fb72f3a8c1ff1d4d634a04fc23e67551b6d06e4b4a9680143acc51",
+  "receiptSha256": "08f38c86d4a8870a2381943cd0023d22a93ea44991c41a264935106cfaf6006e",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "toolingHead": "3e2c347a930003532a1452b3f549d564b7c5edd9",
+  "verification": [
+    "Artifact hash matches provided expected digest.",
+    "All8PNG hashes/byte counts/dimensions match receipt; all exact529x980 decoded images reviewed via full-size side-by-side pairs.",
+    "Existing validateCorrectedSet passes: frozen poses/reference-lit/grass visible, source and instrumentation custody, camera/asset/canvas parity, baseline no correction receipt,4actual consumed attribute hashes and358applied/0retired candidate parents.",
+    "Independently checked expected vs actual camera equality and exact pair dimensions.",
+    "Protected meadow and coast PNGs are byte-identical and pixel-identical baseline/candidate.",
+    "Receipt errors empty; outcome capture-complete with visual review pending.",
+    "No fresh GitHubAPI request: API workflow success/exact dispatch identity supplied by root, not independently reverified in this saved-artifact review."
+  ],
+  "pixelComparisons": [
+    {
+      "pose": "inland-seam-near",
+      "samePngBytes": false,
+      "sameDecodedPixels": false,
+      "changedPixels": 309965,
+      "maxChannelCodeChange": 18,
+      "meanAbsoluteChannelCodeChange": 0.9733594382932758
+    },
+    {
+      "pose": "inland-seam-far",
+      "samePngBytes": false,
+      "sameDecodedPixels": false,
+      "changedPixels": 274236,
+      "maxChannelCodeChange": 20,
+      "meanAbsoluteChannelCodeChange": 0.8118552524979746
+    },
+    {
+      "pose": "protected-meadow",
+      "samePngBytes": true,
+      "sameDecodedPixels": true,
+      "changedPixels": 0,
+      "maxChannelCodeChange": 0,
+      "meanAbsoluteChannelCodeChange": 0.0
+    },
+    {
+      "pose": "protected-coast",
+      "samePngBytes": true,
+      "sameDecodedPixels": true,
+      "changedPixels": 0,
+      "maxChannelCodeChange": 0,
+      "meanAbsoluteChannelCodeChange": 0.0
+    }
+  ],
+  "visualAssessment": {
+    "near": "Broad horizontal dark/light striping just below the horizon is visibly softer and less sharply separated in the candidate. Foreground fine texture remains visible and horizon geometry appears unchanged in this pair. Multiple thinner distant bands remain; this is partial improvement, not elimination.",
+    "far": "Candidate softens the broad slanted tonal transitions across the upper ground and the transition into the foreground. Several diagonal/horizontal tonal bands remain plainly visible, especially near the horizon and upper middle ground. No full groundcover-band repair claim is justified.",
+    "controls": "Protected meadow and protected coast show no change, supported by exact image equality rather than visual judgement alone."
+  },
+  "conclusion": "The bounded material correction visibly reduces prominent band contrast in both frozen inland views while leaving the two captured controls exactly unchanged. Retain as a promising isolated diagnostic candidate; residual bands prevent declaring complete resolution.",
+  "limits": [
+    "Four fixed poses only; no mapwide appearance, navigation continuity, moving-camera temporal stability or other healthy controls tested.",
+    "SoftwareGPU capture does not prove physical-device performance.",
+    "No product merge/publication, owner visual acceptance, source-domain overlap/seam closure or microscopic mesh repair established.",
+    "Image change magnitude is descriptive, not a preregistered band severity/quality score.",
+    "Full-resolution PNGs substantiate this limited visual judgement; no extrapolation to uncaptured regions."
+  ]
+}

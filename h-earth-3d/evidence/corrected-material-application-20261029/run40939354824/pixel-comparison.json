@@ -1,0 +1,22 @@
+[
+  {
+    "pose": "inland-seam-near",
+    "changedPixels": 309965,
+    "maxRGBCodeDifference": 18
+  },
+  {
+    "pose": "inland-seam-far",
+    "changedPixels": 274236,
+    "maxRGBCodeDifference": 20
+  },
+  {
+    "pose": "protected-meadow",
+    "changedPixels": 0,
+    "maxRGBCodeDifference": 0
+  },
+  {
+    "pose": "protected-coast",
+    "changedPixels": 0,
+    "maxRGBCodeDifference": 0
+  }
+]

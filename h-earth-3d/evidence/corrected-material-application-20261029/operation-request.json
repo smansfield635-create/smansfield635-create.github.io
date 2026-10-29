@@ -1,0 +1,165 @@
+{
+  "allowedPaths": [
+    "tools/h-earth-corrected-material-application.mjs",
+    "tools/h-earth-corrected-material-application.test.mjs",
+    "tools/h-earth-corrected-material-export.py",
+    "tools/h-earth-ground-material-comparison.v1.mjs",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "h-earth-3d/evidence/corrected-material-application-20261029/**"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/corrected-material-application-20261029/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "085e49201c2bf833ce547cc13108dc87c1a3bf25",
+  "exactTestCommand": "node --test tools/h-earth-corrected-material-application.test.mjs tools/h-earth-ground-material-comparison.v1.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateDiagnosticTooling": true,
+    "mayMutateProduct": false,
+    "role": "SOUTH_BUILDER",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "085e49201c2bf833ce547cc13108dc87c1a3bf25",
+    "operationId": "H_EARTH_CORRECTED_MATERIAL_RENDERER_20261029_001",
+    "paths": [
+      "tools/h-earth-corrected-material-application.mjs",
+      "tools/h-earth-corrected-material-application.test.mjs",
+      "tools/h-earth-corrected-material-export.py",
+      "tools/h-earth-ground-material-comparison.v1.mjs",
+      "tools/h-earth-ground-material-comparison.v1.test.mjs",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+      "h-earth-3d/evidence/corrected-material-application-20261029/**"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_SOURCE_PARENT_AND_ATTRIBUTE_CUSTODY",
+      "EXPORTED_APPLICATION_MATCHES_FROZEN_NUMERICS_WITHIN_ONE_DISPLAY_CODE",
+      "ZERO_OUTSIDE_SUPPORT_NO_PALETTE_GAIN_OR_GEOMETRY_CHANGE",
+      "FROZEN_POSES_ASSETS_AND_HEALTHY_CONTROLS",
+      "ONE_RUN_MAX_EIGHT_FRAMES_NO_RETRY",
+      "NO_VISUAL_ACCEPTANCE_OR_PUBLICATION_CLAIM"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "1d9b22622e044a55e89b6aa8470ed000ca7c56438552ebd395ee5b18a68206df",
+    "receiptId": "H_EARTH_CORRECTED_MATERIAL_RENDERER_20261029_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:CORRECTED_MATERIAL_RENDERER_COMPARISON_20261029",
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_RENDERER_20261029_001",
+  "prohibitedPaths": [
+    "PRODUCT_RENDERER_DISK_OR_TERRAIN_GEOMETRY_MUTATION",
+    "PARAMETER_SWEEP_PALETTE_GAIN_RETUNE",
+    "SOURCE_OWNER_PRECEDENCE_OR_MERGING_PRIMITIVE_DOMAINS",
+    "NEW_EXECUTION_TRANSPORT_CONTROL_PLANE_CHANGE",
+    "DIRECT_MAIN_WRITE_MERGE_DEPLOY_PUBLICATION"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Implement one isolated in-memory renderer candidate for the qualified fixed material application, qualify exact-source export/runtime fidelity, then at most one eight-frame frozen-view comparison including healthy controls. Product disk source unchanged.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": false,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner current conversation: Proceed accordingly after numerical PASS and proposal of isolated renderer candidate plus visual comparison."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_RENDERER_COMPARISON_AUTHORIZATION",
+      "resolved": true
+    },
+    {
+      "id": "QUALIFIED_SAVED_APPLICATION_AND_INDEPENDENT_REVIEW",
+      "resolved": true
+    },
+    {
+      "id": "EXACT_APPROVED_SOURCE_AND_REGISTERED_RUNNER_PRECEDENT",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "ISOLATED_SOURCE_BOUND_RENDERER_APPLICATION_AND_EXPORT",
+    "CPU_EXPORT_FIDELITY_AND_NO_CHANGE_TESTS",
+    "IMMUTABLE_DRAFT_CANDIDATE",
+    "AT_MOST_ONE_EIGHT_FRAME_COMPARISON_AND_MONITOR_LINK",
+    "HASHED_EVIDENCE_AND_CONTINUATION"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "NO_REPOSITORY_WRITE_OR_BRANCH_BEFORE_AUTHENTIC_ADMISSION",
+    "EXPORT_OR_SOURCE_IDENTITY_FAILURE_BLOCKS_GPU",
+    "NO_PRODUCT_DISK_RENDERER_MUTATION",
+    "MAX_ONE_EIGHT_FRAME_COMPARISON_NO_AUTO_RETRY",
+    "RETURN_VERIFIED_RUN_URL_EXACT_SHA_FRAMES_ARTIFACT_AND_YIELD"
+  ],
+  "subjectIdentity": {
+    "baseline": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "constructionBase": "4268b742faa9bb155ee309edb5782b24bbbb1aa4",
+    "expectedArtifact": "h-earth-corrected-material-application-${run_id}",
+    "frameCeiling": 8,
+    "frozenApplication": "d=w*(Lh-Lsource-c);12mXZ original-boundary taper;tau72m2;3m material field;separate indexed domains",
+    "frozenPoses": [
+      "inland-seam-near",
+      "inland-seam-far",
+      "protected-meadow",
+      "protected-coast"
+    ],
+    "modes": [
+      "reference-lit"
+    ],
+    "qualifiedEvidenceComment": 6505151944,
+    "qualifiedPacketSha256": "5bfce62703c70fd5b68e894fca8634e5206c1ca681d7a127c192312a8e06aa3c",
+    "rendererSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+    "sourceIssue": 6911
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+}

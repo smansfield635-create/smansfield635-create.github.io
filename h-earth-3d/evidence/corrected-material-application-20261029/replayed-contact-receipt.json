@@ -1,0 +1,49 @@
+{
+  "sourceSha256": "fa6acc426c75c3b2292b3ed76a756157698d8e7a5562511ad7ced5af58e25dec",
+  "stats": {
+    "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+    "saturationMeters": 64,
+    "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+    "terrainTriangles": 20736,
+    "oceanTriangles": 17696,
+    "overlapTests": 62308,
+    "contactSegments": 434,
+    "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+    "patchTriangles": 0,
+    "packageVertices": 10573,
+    "patchVertices": 0,
+    "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+    "contactTrianglesWithoutVertexSignChange": 0,
+    "initializationMilliseconds": 471.873386
+  },
+  "seam": {
+    "schema": "H_EARTH_NEAR_FAR_SEAM_PRESENTATION_v1",
+    "matchedVertices": 349,
+    "maxPositionResidualMeters": 0.00005042651046467775,
+    "sourceBuffersMutated": false,
+    "geometryChanged": false,
+    "vegetationSupportChanged": false,
+    "gpuBufferCountDelta": 0,
+    "gpuByteLengthDelta": 0
+  },
+  "contactSha256": "562dd3259768b741e2bf8e91efb019b43d60dea360b79e412675e91e3c29fe5f",
+  "captureComparison": {
+    "views": 8,
+    "nonTimingFieldsMatched": [
+      "coordinateSpace",
+      "saturationMeters",
+      "interpolation",
+      "terrainTriangles",
+      "oceanTriangles",
+      "overlapTests",
+      "contactSegments",
+      "maximumPlaneResidualMeters",
+      "patchTriangles",
+      "packageVertices",
+      "patchVertices",
+      "maximumSampledZeroContourAttributeResidualMeters",
+      "contactTrianglesWithoutVertexSignChange"
+    ],
+    "allMatched": true
+  }
+}

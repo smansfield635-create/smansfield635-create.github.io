@@ -1,0 +1,58 @@
+{
+  "result": "PASS",
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_RENDERER_20261029_001",
+  "lockGeneration": 2971,
+  "builderSelfApproval": false,
+  "reviewer": "paired_review independent West functional reviewer",
+  "scope": "Bounded source/export/runtime preparation review; not GPU scene or visual acceptance.",
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "7345bb614d1bd1be01d1b1edb50d68ea8379d2d5f557152134a6774fa0eaefca",
+    "tools/h-earth-corrected-material-application.mjs": "90c26602dde3633706667e41d181ba6a31a76ecd8515833292ec8aff38848439",
+    "tools/h-earth-corrected-material-application.test.mjs": "3bddd2658d3aaafe880048d3a19f7ba74a7e895b2dc16be90e0a4659232f25e8",
+    "tools/h-earth-corrected-material-export.py": "a815d50133c4d9cc4eaeb6e2346a80a06fda60d7708c64addf818da7525c1402",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "36b6c372c8b2603e5f2a3e6003022bc867b46b1556d75ff8d155b73e165f2b99",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "6e8235a03433d5f5b7b4b81df27bc0a70e5aee5770e36c61ec097cc47e003bd5",
+    "h-earth-3d/evidence/corrected-material-application-20261029/atlas-manifest.json": "565592e2c0a9ba6f811ee91e6c7d1bce1259f84c2a5951f9c2ca3d4e8414a14e",
+    "h-earth-3d/evidence/corrected-material-application-20261029/near-atlas.png": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7",
+    "h-earth-3d/evidence/corrected-material-application-20261029/far-atlas.png": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f"
+  },
+  "evidence": [
+    "7 application node tests passed with pinned full renderer and actual uploaded mesh fixtures; no skips.",
+    "3 corrected comparator profile tests passed including receipt hash, baseline isolation and canvas checks.",
+    "Full instantiated modified main VS/FS compiled and linked in local Chromium1194 WebGL2.",
+    "2x2PNG imageBitmap RGB8 linear-data upload confirmed top image row maps lowV and half-texel centers sample expected colors.",
+    "Integer disabled attribute11 probe reproduced INVALID_OPERATION1282; added generic integer zero initialization and confirmed repaired probe error0.",
+    "Independent encoded atlas1.5/.75m integration normalized mean<=1e-5 each domain.",
+    "44,897 edge-grid polynomial segments checked at3distinct interior points: shared trace difference0, exterior <=1.39e-17.",
+    "Reviewed fixed branch/profile, exact tooling/scene/dispatch identity and source-hash checks, one attempt, eight frozen frames, artifact preservation.",
+    "Searched frozen render/source tree for literal TEXTURE13/TEXTURE14 and TEXTURE0+13/14 uses: none. Main renderer existing dynamic clearingtexture bindings use0+3+i and caller list must remain scoped.",
+    "Extra unchanged global-cover program compile probe FAILED reserved word patch; this is frozen baseline source, not correction code.",
+    "Read final parent source-tests.txt:67 tests,67 pass,0 fail,0skip."
+  ],
+  "reviewerEdits": [
+    "Added runtime consumed-attribute SHA256 custody and global receipt.",
+    "Added shape/chart/location guards and disabled integer attribute initialization.",
+    "Added unit tests and tightened comparator receipt/canvas validation."
+  ],
+  "limits": [
+    "No complete scene startup, eight-frame capture, visual improvement, healthy-view acceptance or full product test performed.",
+    "Baseline and candidate still must prove runtime attribute hashes, counts, frame custody and source identity during the bounded job.",
+    "Export checks use ideal CPU bilinear sampling; actual full-scene GPU interpolation still must be evaluated.",
+    "Local WebGL probe uses original scene helper modules and local browser paths; those inputs must be supplied to replay the archived probe.",
+    "Full legacy comparator regression suite is parent-owned and not claimed rerun here."
+  ],
+  "firstUnresolvedCheckpoint": "Bounded eight-frame actual baseline/candidate scene capture and visual review; no scene job performed by reviewer.",
+  "legacyShaderAdvisory": {
+    "result": "FAILED_COMPILE_OUTSIDE_SELECTED_ROUTE",
+    "error": "GLOBAL_COVER_PATCH_LOD_VS reserved identifier patch on Chromium1194",
+    "reachabilityEvidence": [
+      "Pinned index.html122 data-route points vegetation-prototype/route.js (bootstrap module).",
+      "Comparator ROUTE is same vegetation-prototype/route.js.",
+      "Pinned route190 creates deferred renderer with SINGLE_OWNER_WOODLAND_V1;197\u2013198 calls prepareReplacementVegetation.",
+      "Renderer1811 rejects legacy prepareVegetationResidency under that strategy; uploadGlobalCover is invoked only in its legacy preparation path.",
+      "Renderer3038 draws resources.singleOwnerVegetation when strategy is truthy, else drawGlobalCover.",
+      "Renderer2897/2914 also reject legacy batch preparation/materialization under replacement strategy."
+    ],
+    "disposition": "Advisory frozen legacy shader defect, not selected dependency blocker. No baseline shader edit made."
+  }
+}

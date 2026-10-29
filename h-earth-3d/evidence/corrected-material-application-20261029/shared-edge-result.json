@@ -1,0 +1,73 @@
+{
+  "schema": "H_EARTH_SHARED_EDGE_INPUTS_v1",
+  "links": 348,
+  "totalLinkedMeters": 2088.4898506417453,
+  "maxErrorsNormalCoastContact": [
+    2.9639499743439046e-08,
+    2.6233342168779927e-05,
+    1.4833188330953817e-06
+  ],
+  "comparison": "overlap endpoints and midpoint; attributes are linear along each paired segment, so endpoint difference bounds apply to whole segment",
+  "worstWitnesses": [
+    {
+      "near": [
+        7760,
+        7857
+      ],
+      "far": [
+        14515,
+        14516
+      ],
+      "length": 7.606424890304115,
+      "maxErrors": [
+        2.9639499743439046e-08,
+        2.9071293106142093e-07,
+        3.303613915761616e-08
+      ],
+      "nearContactRange": [
+        5.714739799499512,
+        -2.2233879566192627
+      ]
+    },
+    {
+      "near": [
+        679,
+        776
+      ],
+      "far": [
+        14717,
+        14718
+      ],
+      "length": 6.707736199915356,
+      "maxErrors": [
+        2.631066309266572e-08,
+        2.6233342168779927e-05,
+        0.0
+      ],
+      "nearContactRange": [
+        64.0,
+        64.0
+      ]
+    },
+    {
+      "near": [
+        6984,
+        7081
+      ],
+      "far": [
+        14534,
+        14535
+      ],
+      "length": 7.058859727159165,
+      "maxErrors": [
+        1.042148700669543e-09,
+        4.0303424952981004e-07,
+        1.4833188330953817e-06
+      ],
+      "nearContactRange": [
+        64.0,
+        61.71529006958008
+      ]
+    }
+  ]
+}

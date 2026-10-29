@@ -1,0 +1,30 @@
+{
+  "schema": "H_EARTH_CORRECTED_CAPTURE_CUSTODY_v1",
+  "runId": 40939354824,
+  "runConclusion": "success",
+  "runAttempt": 1,
+  "runUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40939354824",
+  "artifactId": 12925523920,
+  "artifactSha256": "f671a1e1d9fb72f3a8c1ff1d4d634a04fc23e67551b6d06e4b4a9680143acc51",
+  "dispatchHead": "83ff2dd3e8090071e6628d615f95fe855f584f55",
+  "toolingHead": "3e2c347a930003532a1452b3f549d564b7c5edd9",
+  "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "receiptRawSha256": "08f38c86d4a8870a2381943cd0023d22a93ea44991c41a264935106cfaf6006e",
+  "imageCount": 8,
+  "files": {
+    "candidate-protected-coast-reference-lit.png": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+    "pixel-comparison.json": "ee37c95323092a4d604a00db9d3e71f855682604ef4b7096d576364d395818fb",
+    "candidate-inland-seam-near-reference-lit.png": "aed112d4c8bad11cd2e14c573a58fd63ab18ae475b702cfb51e066f59ff5cccc",
+    "baseline-inland-seam-near-reference-lit.png": "2d2142d93483f804c92569c0e7630948b51a133e27fd4d56a01237bafe8d5e4a",
+    "inland-seam-near-pair.png": "3340049d4c9d18a59659f4e1f4ceb38d5f3d6f2596e5c740eb126ec794dc60d0",
+    "baseline-protected-coast-reference-lit.png": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+    "candidate-inland-seam-far-reference-lit.png": "eb4123a04c125ed33b20fff812cc2c382b1ae4d55c8b2d834c6b46c957317728",
+    "baseline-inland-seam-far-reference-lit.png": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc",
+    "receipt.json.gz": "d3260c130061079dddb375fae85214e50ed5443f73d510381e94970801de39f4",
+    "baseline-protected-meadow-reference-lit.png": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b",
+    "inland-seam-far-pair.png": "aeefd9c657646d368a10ecdb75e69a4348d3a488d2d3645584b7ee5267e27fc5",
+    "candidate-protected-meadow-reference-lit.png": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b"
+  },
+  "newGpuRuns": 0,
+  "newTransportSolves": 0
+}

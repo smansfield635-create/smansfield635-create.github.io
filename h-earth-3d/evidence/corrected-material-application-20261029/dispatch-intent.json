@@ -1,0 +1,38 @@
+{
+  "schema": "H_EARTH_CORRECTED_MATERIAL_DISPATCH_INTENT_v1",
+  "operationId": "H_EARTH_CORRECTED_MATERIAL_RENDERER_20261029_001",
+  "lockGeneration": 2971,
+  "toolingHead": "3e2c347a930003532a1452b3f549d564b7c5edd9",
+  "sceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "profile": "CORRECTED_MATERIAL_APPLICATION_V1",
+  "frameCap": 8,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "poses": [
+    "inland-seam-near",
+    "inland-seam-far",
+    "protected-meadow",
+    "protected-coast"
+  ],
+  "modes": [
+    "reference-lit"
+  ],
+  "presentations": [
+    "baseline",
+    "candidate"
+  ],
+  "sourceQualification": "PASS",
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "7345bb614d1bd1be01d1b1edb50d68ea8379d2d5f557152134a6774fa0eaefca",
+    "tools/h-earth-corrected-material-application.mjs": "90c26602dde3633706667e41d181ba6a31a76ecd8515833292ec8aff38848439",
+    "tools/h-earth-corrected-material-application.test.mjs": "3bddd2658d3aaafe880048d3a19f7ba74a7e895b2dc16be90e0a4659232f25e8",
+    "tools/h-earth-corrected-material-export.py": "a815d50133c4d9cc4eaeb6e2346a80a06fda60d7708c64addf818da7525c1402",
+    "tools/h-earth-ground-material-comparison.v1.mjs": "36b6c372c8b2603e5f2a3e6003022bc867b46b1556d75ff8d155b73e165f2b99",
+    "tools/h-earth-ground-material-comparison.v1.test.mjs": "6e8235a03433d5f5b7b4b81df27bc0a70e5aee5770e36c61ec097cc47e003bd5",
+    "h-earth-3d/evidence/corrected-material-application-20261029/atlas-manifest.json": "565592e2c0a9ba6f811ee91e6c7d1bce1259f84c2a5951f9c2ca3d4e8414a14e",
+    "h-earth-3d/evidence/corrected-material-application-20261029/near-atlas.png": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7",
+    "h-earth-3d/evidence/corrected-material-application-20261029/far-atlas.png": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f"
+  },
+  "expectedArtifact": "h-earth-corrected-material-application-${run_id}",
+  "yieldAfterVerifiedLaunch": true
+}

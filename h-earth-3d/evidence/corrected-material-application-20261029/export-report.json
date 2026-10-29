@@ -1,0 +1,44 @@
+{
+  "schema": "H_EARTH_CORRECTED_EXPORT_FIDELITY_v1",
+  "thresholdCodes": 1,
+  "groups": [
+    {
+      "group": "NEAR",
+      "sourceEdgeTestSamples": 4082,
+      "maxSourceEdgeDisplayError": 0.22585972109999375,
+      "maxSourceEdgeLinearError": 0.0004824158398989073,
+      "bytes": 111249
+    },
+    {
+      "group": "FAR",
+      "sourceEdgeTestSamples": 572,
+      "maxSourceEdgeDisplayError": 0.2220489302144557,
+      "maxSourceEdgeLinearError": 0.0004774730172691184,
+      "bytes": 666907
+    }
+  ],
+  "witnesses": [
+    {
+      "pose": "inland-seam-near",
+      "memberships": 1114,
+      "maxDisplayError": 0.2194639389633295,
+      "nativeOutOfGamut": 0
+    },
+    {
+      "pose": "inland-seam-far",
+      "memberships": 1461,
+      "maxDisplayError": 0.21694052714477152,
+      "nativeOutOfGamut": 0
+    }
+  ],
+  "newTransportSolves": 0,
+  "gpuRuns": 0,
+  "result": "PASS_EXPORT_SAMPLE_GATE_RENDERER_UNIMPLEMENTED",
+  "limits": [
+    "Atlas range/edge/witness tests are sampled, not full-scene visual/GPU fidelity.",
+    "Original per-parent source identity required in renderer; coordinate-only lookup prohibited.",
+    "SignedRGB8 quantization can add small sampled mass error; continuous functional conservation does not transfer automatically to encoded atlas.",
+    "No mipmaps; two-cell chart gutters extend only through shared-index neighbours; original triangle interiors retain source identity.",
+    "Texture export does not implement renderer or authorize capture."
+  ]
+}

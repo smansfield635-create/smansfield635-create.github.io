@@ -1,0 +1,33 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import {preparePresentation,instrumentCorrectedRenderer,verifyAttributeCustody} from './h-earth-corrected-material-application.mjs';
+const fixture=()=>({spec:[['positions',new Float32Array([0,0,0,1,0,0,0,0,1,1,0,1]),0,3,5126,false],['normals',new Float32Array([0,1,0,0,1,0,0,1,0,0,1,0]),1,3,5126,false],['codes',new Uint8Array([4,5,6,7]),4,1,5121,true]],indices:new Uint32Array([0,1,2,1,3,2]),manifest:{schema:'H_EARTH_CORRECTED_MATERIAL_ATLAS_v1',stepMeters:.25,boundaryWidthMeters:12,atlases:[{width:32,height:32},{width:32,height:32}],charts:[{sourceOffset:0,atlasIndex:0,originXZ:[-.5,-.5],atlasX:0,atlasY:0,width:9,height:9}]}});
+test('duplicate chart vertices preserve every typed source attribute, order and unmodified triangle',()=>{const f=fixture(),before=f.spec.map(s=>s[1].slice()),r=preparePresentation(f.spec,f.indices,f.manifest),out=r.remap(f.indices);assert.deepEqual([...out.indices],[4,5,6,1,3,2]);assert.equal(out.applied,1);assert.equal(out.retired,0);for(let k=0;k<f.spec.length;k++){const size=f.spec[k][3],v=r.specifications[k][1];assert.equal(v.constructor,f.spec[k][1].constructor);assert.deepEqual(v.slice(0,4*size),before[k]);for(let j=0;j<3;j++)assert.deepEqual(v.slice((4+j)*size,(5+j)*size),before[k].slice(j*size,(j+1)*size));assert.deepEqual(f.spec[k][1],before[k]);}assert.deepEqual([...f.indices],[0,1,2,1,3,2]);assert.equal(r.specifications.at(-2)[1][8],2.5/32);assert.deepEqual([...r.specifications.at(-1)[1]],[0,0,0,0,1,1,1]);});
+test('retired triangles remain retired and index drift fails closed',()=>{const f=fixture(),r=preparePresentation(f.spec,f.indices,f.manifest);const a=new Uint32Array([0,0,0,1,3,2]);assert.deepEqual(r.remap(a),{indices:a,applied:0,retired:1});assert.throws(()=>r.remap(new Uint32Array([0,2,1,1,3,2])),/INDEX_DRIFT/);assert.throws(()=>r.remap(new Uint16Array(f.indices)),/INDEX_LENGTH/);});
+test('invalid chart identities, bounds, vertex indices and attribute lengths fail closed',()=>{for(const mutate of [f=>f.manifest.charts.push({...f.manifest.charts[0]}),f=>f.manifest.charts[0].sourceOffset=1,f=>f.manifest.charts[0].atlasIndex=2,f=>f.manifest.charts[0].originXZ=[NaN,0],f=>f.manifest.charts[0].width=100,f=>f.indices[0]=99,f=>f.spec[1][1]=new Float32Array(3),f=>f.spec[1][2]=10]){const f=fixture();mutate(f);assert.throws(()=>preparePresentation(f.spec,f.indices,f.manifest),/CORRECTED_/);}});
+test('custody rejects wrong bytes before presentation expansion',async()=>{const f=fixture();await assert.rejects(verifyAttributeCustody(f.spec,f.indices),/ATTRIBUTE_CUSTODY:positions/);});
+test('source transform rejects drift and malformed manifest',()=>{assert.throws(()=>instrumentCorrectedRenderer('changed',fixture().manifest),/SOURCE_HASH/);});
+const sourcePath=process.env.H_EARTH_FROZEN_RENDERER;
+test('pinned transform modifies only main fragment compilation; shadow/other FS literal unchanged',()=>{assert.ok(sourcePath,'H_EARTH_FROZEN_RENDERER is required for qualified source-transform tests');const source=fs.readFileSync(sourcePath,'utf8'),out=instrumentCorrectedRenderer(source,fixture().manifest);const extract=(s,n)=>s.match(new RegExp('const '+n+' = `([\\s\\S]*?)`;'))?.[1];assert.equal(extract(out,'FS'),extract(source,'FS'));const line=out.split('\n').find(l=>l.includes("'GF')"));assert.ok(line.includes('FS.replace'));const expr=line.slice(line.indexOf('FS.replace'),line.lastIndexOf(", 'GF')"));const main=vm.runInNewContext(expr,{FS:extract(source,'FS')});assert.equal((main.match(/palette\+=\(encoded/g)||[]).length,1);assert.ok(main.indexOf('palette+=(encoded')>main.indexOf('H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN'));assert.ok(main.indexOf('palette+=(encoded')<main.indexOf('H_EARTH_BROAD_GROUNDCOVER_V1_END'));assert.ok(out.includes('await verifyAttributeCustody(specifications,uploadViews.indices)'));assert.ok(out.includes('globalThis.__hEarthCorrectedMaterialReceipt'));assert.ok(out.includes('gl.vertexAttribI4ui(11,0,0,0,0)'));assert.equal(out.split('resources.corrected.remap(').length,2);assert.throws(()=>instrumentCorrectedRenderer(source,{...fixture().manifest,stepMeters:1}),/MANIFEST_CONTRACT/);});
+const mesh=process.env.H_EARTH_FROZEN_MESH;
+test('actual post-seam normal/coast bytes match numerical custody',{skip:!mesh},async()=>{const load=(name,T)=>{const b=fs.readFileSync(`${mesh}/upload-${name}.bin`);return new T(b.buffer.slice(b.byteOffset,b.byteOffset+b.byteLength));};const spec=['positions','normals','coastDistances'].map(n=>[n,load(n,Float32Array)]);const hashes=await verifyAttributeCustody(spec,load('indices',Uint32Array));assert.equal(Object.keys(hashes).length,4);spec[1][1][0]+=.001;await assert.rejects(verifyAttributeCustody(spec,load('indices',Uint32Array)),/ATTRIBUTE_CUSTODY:normals/);});
+
+test('successive contact refreshes update originals and duplicates using frozen source mapping',()=>{
+ const f=fixture();f.spec.push(['contactDistances',new Float32Array([1,2,3,4]),9,1,5126,false]);
+ const r=preparePresentation(f.spec,f.indices,f.manifest);
+ f.indices[0]=3;f.manifest.charts[0].sourceOffset=3;
+ for(const values of [[10,20,30,40],[5,6,7,8]]){
+  const input=new Float32Array(values),out=r.expandAttribute('contactDistances',input);
+  assert.deepEqual([...out],[...values,...values.slice(0,3)]);assert.deepEqual([...input],values);
+ }
+ for(const bad of [new Float32Array(3),new Float64Array(4),[1,2,3,4]])assert.throws(()=>r.expandAttribute('contactDistances',bad),/ATTRIBUTE_REFRESH/);
+ assert.throws(()=>r.expandAttribute('unknown',new Float32Array(4)),/ATTRIBUTE_REFRESH/);
+});
+test('pinned refinement refresh uploads expanded contact values to the original contact buffer',()=>{
+ const source=fs.readFileSync(sourcePath,'utf8'),out=instrumentCorrectedRenderer(source,fixture().manifest);
+ const pattern=/const contactBuffer=resources.buffers.find\(entry=>entry.name==='contactDistances'\).buffer;\s*gl.bindBuffer\(gl.ARRAY_BUFFER,contactBuffer\);\s*gl.bufferSubData\(gl.ARRAY_BUFFER,0,resources.corrected.expandAttribute\('contactDistances',contactField.packageDistances\)\);/;
+ assert.match(out,pattern);assert.equal(out.includes('gl.bufferSubData(gl.ARRAY_BUFFER,0,contactField.packageDistances);'),false);
+ assert.equal(out.split("resources.corrected.expandAttribute('contactDistances'").length,2);
+});

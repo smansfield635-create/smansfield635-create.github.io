@@ -1,0 +1,15 @@
+# Saved interface evidence: 2026-10-29
+
+Continues candidate 8b2da2873a5cf79de0e7f7bbf6dd0800ca2c31cd under existing operation H_EARTH_CORRECTED_MATERIAL_RENDERER_20261029_001. AI entry router: read-only PASS, agent NOT_REQUIRED. No runtime edit or new render in this checkpoint.
+
+Reused frozen source cb57c275b95d0d48883bc4da4dcfcf17cbec5060 and capture 40939354824. All eight recorded views have refinementResourceCreated=false and refinementDrawCallCount=0. Therefore refinement and its contact-refresh bug did not cause this eight-frame comparison. This does not establish the state of the owner's separate phone screenshots.
+
+The saved uploaded near/far interface contains 349 matching far boundary vertices out of 420 total far boundary vertices; 71 are unmatched. Unmatched does not itself establish a defect: their boundary ownership/location has not been classified here. Independent paired review reproduced the 349 matches and numerical maxima, confirmed opposite normal Y signs, and independently verified all eight inactive-refinement receipts. Comparing them with the nearest indexed near boundary edge gives maximum position residual 0.000050426510464677765 m; raw sign-adjusted normal component error 2.9639499743439046e-8; coast-distance error 0.000026233342168779927 m. These are consistent with Float32 rounding. Exact file hashes are in boundary-inputs.json. The check is vertex-level, not full-segment or final-fragment-color certification. Contact buffers were not included in this saved binary input set.
+
+Source trace: terrain-seam-normal.v1.js interpolates near boundary normals/coast/contact onto matching far vertices at initial upload. In world-renderer.js both ordinary near and far enter the shared worldSoilTerrain path; the earlier far-only base tint is overwritten by base=palette, so that earlier tint alone is not evidence of a final palette mismatch. Geological soil reconciles five input channels over a 12 m rim; refinement fades elevation but directly samples normal/coast. These source facts do not certify all final shading interfaces.
+
+Decision: no further palette flattening or speculative boundary edit is justified by this check. Natural variation is acceptable under the owner's criterion. Do not treat residual soft bands as a failed repair. Preserve the candidate and saved richer composition. The localized correction still covers only 358 source faces; global continuity is not claimed.
+
+Next engineering action, if qualifying all interfaces: compare final material inputs along complete shared edge segments, including contact and geometric branch selection, using existing data where available. Record missing inputs explicitly before proposing a bounded capture. Do not repeat the inactive refinement hypothesis or launch a broad render sweep.
+
+Reproduce: python boundary-inputs.py <saved-mesh-directory> <capture-receipt.json> <output.json>. Uses NumPy. Existing captures predate the contact synchronization repair. No merge, publication or new GPU run; Chamber synchronization remains unverified.

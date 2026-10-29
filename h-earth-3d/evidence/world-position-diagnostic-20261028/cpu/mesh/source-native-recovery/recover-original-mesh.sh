@@ -80,7 +80,8 @@ SOURCE_PATHS="$REPO/$PREFIX/cpu/mesh/source-paths.txt"
 [[ -f "$SOURCE_PATHS" ]] || fail 'SOURCE_PATHS_MISSING'
 mapfile -t paths < "$SOURCE_PATHS"
 [[ "${#paths[@]}" -eq 716 ]] || fail 'SOURCE_PATH_COUNT'
-paths+=(package.json "$ASSET")
+# The frozen source tree has NO root package.json. Preserve only pinned entries.
+paths+=("$ASSET")
 echo "ARCHIVE_SOURCE_FILE_COUNT:${#paths[@]}"
 git -C "$REPO" archive --format=tar "$SOURCE" "${paths[@]}" | tar -xf - -C "$OUT/scene" || fail 'FROZEN_SOURCE_MATERIALIZATION'
 cmp -s "$OUT/world.gz" "$OUT/scene/$ASSET" || fail 'FROZEN_ARCHIVE_ASSET_MISMATCH'

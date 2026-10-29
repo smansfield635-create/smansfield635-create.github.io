@@ -62,6 +62,21 @@ def inspect(archive):
             area=float(poly.intersection(polygons[j]).area)
             if area>1e-12:
                 overlaps.append({"a":int(offsets[active[i]]),"b":int(offsets[active[j]]),"areaXZ":area})
+    gap=[]
+    for o in overlaps:
+        a,b=o["a"],o["b"]
+        u=positions[indices[a:a+3]]
+        v=positions[indices[b:b+3]]
+        shape=Polygon(u[:,[0,2]]).intersection(Polygon(v[:,[0,2]]))
+        center=shape.centroid
+        def height(face):
+            aa,bb,cc=face
+            coeff=np.linalg.solve(
+                np.array([[aa[0]-cc[0],bb[0]-cc[0]],[aa[2]-cc[2],bb[2]-cc[2]]]),
+                np.array([center.x-cc[0],center.y-cc[2]]))
+            return float(coeff[0]*aa[1]+coeff[1]*bb[1]+(1-coeff.sum())*cc[1])
+        gap.append({"a":a,"b":b,"abs3DHeightDifferenceMeters":abs(height(u)-height(v)),
+                    "overlapCenterXZ":[center.x,center.y],"areaXZ":o["areaXZ"]})
     return {
         "schema":"H_EARTH_ORIGINAL_INDEXED_MESH_PHYSICAL_SUPPORT_AUDIT_v1",
         "result":"SOURCE_SUPPORT_RECONCILED_NOT_CLOSURE_QUALIFIED",
@@ -81,6 +96,10 @@ def inspect(archive):
         "totalOverlapXZSquareMeters":sum(o["areaXZ"] for o in overlaps),
         "maxOverlapXZSquareMeters":max((o["areaXZ"] for o in overlaps),default=0),
         "overlaps":overlaps,
+        "overlapHeightWitnesses":gap,
+        "maximumSourceOverlapHeightGapMeters":max((x["abs3DHeightDifferenceMeters"] for x in gap),default=0),
+        "sourceOverlapCenterZRange":[min((x["overlapCenterXZ"][1] for x in gap),default=None),
+                                     max((x["overlapCenterXZ"][1] for x in gap),default=None)],
         "noSourceGeometryChanged":True,"noGPURun":True,
         "limits":["Exact 48m source-polygon support is an independently evaluated selector, not an accepted replacement yet.","Cross primitive projected overlaps and 40m source-cut influence remain independent fail-closed conditions.","This does not qualify P(c,f0), D(c,f0), or physical 1m/2m color conservation."]
     }

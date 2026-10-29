@@ -126,6 +126,16 @@ h1 {font-size:clamp(34px,4.5vw,66px);letter-spacing:-.035em;
  .planet-label,.quiet-button,.path-grid button{transition:none!important}
 }
 
+
+/* Gen2970 visual prototype; not a public release. */
+main{position:relative;max-width:none}
+.intro{position:absolute;top:22px;left:15px;right:15px;z-index:5;pointer-events:none;padding:0;transition:opacity .6s ease}
+.intro h1{font-size:clamp(34px,6vw,70px);color:#fff7ea;text-shadow:0 5px 35px #020711}
+.scene{height:max(710px,calc(100svh - 56px));background:radial-gradient(ellipse at 50% 70%,#16445570,transparent 51%),radial-gradient(ellipse at 70% 40%,#4c275b55,transparent 50%),#030b1c}
+.scene::before{opacity:.75;background-size:129px 153px,241px 213px}
+.heart-glow{width:min(70vw,570px);height:min(70vw,570px);filter:blur(28px)}
+.universe-encounter .intro{opacity:0}
+.scene[data-stage=approach] .planet-label,.scene[data-stage=encounter] .planet-label,.scene[data-stage=return] .planet-label{visibility:hidden!important}
 </style>
 <script defer src="/assets/compass/compass.orbit-physics.js?cb=nine-summits-physics-20261006"></script>
 <script type="module" src="./universe.motion.js?cb=flagship-gen2970-ec7bee09"></script>

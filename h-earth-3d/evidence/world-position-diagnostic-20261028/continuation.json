@@ -33,7 +33,11 @@
     "FLOAT32_ORIENTATION_PROMOTION_CORRECTED_IN_VERSIONED_MODEL",
     "SINGLE_REMAINING_EXCEPTION_LOCALIZED_TO_CROSS_PRIMITIVE_DERIVATIVE",
     "UNIFORM_SOURCE_PRIMITIVE_LOD_ALL_2484_SAMPLES_WITHIN_ONE_CODE",
-    "INDEPENDENT_2575_MEMBERSHIP_LOD_REVIEW_PASS"
+    "INDEPENDENT_2575_MEMBERSHIP_LOD_REVIEW_PASS",
+    "EXACT_SOURCE_MESH_GATE_CODE_AND_EVIDENCE_COMMITTED_DFF636DE",
+    "SOURCE_MESH_GATE_EIGHT_FIXTURE_TESTS_PASS",
+    "SCREEN_PSEUDOMESH_AREA_NONQUALIFICATION_3974_OF_4320",
+    "PUBLISHED_PRODUCT_UNCHANGED_NO_GPU_RERUN"
   ],
   "run": {
     "schema": "H_EARTH_WORLD_POSITION_LAUNCH_RECEIPT_v1",
@@ -54,8 +58,8 @@
     "completionClaimed": true,
     "conclusion": "success"
   },
-  "exactlyOneNextAction": "Use the capture-compatible conditional CPU model to define the explicit source coarse/fine reference f0 and recompute P(c,f0),D(c,f0), carrying sampler-model and normal/geometry ambiguity explicitly. Establish a protected closed mesh integration domain before the fixed near/far candidate appearance screen. The uniform source-primitive LOD screen resolves the observed nominal discrepancy (all2484 samples within one code, max0.8281), but propagates ambiguity through LOD only and is not GPU-equivalence or repair qualification. Reuse existing captures; no GPU launch or product mutation.",
-  "stopCondition": "NO_GPU_OR_PRODUCT_MUTATION_UNTIL_SOURCE_SPLIT_MESH_AREA_AND_OFFLINE_APPEARANCE_ARE_QUALIFIED",
+  "exactlyOneNextAction": "Materialize the already frozen original source scene cb57c275 and reconstruct the original 141373-vertex/366666-index uploaded mesh using committed cpu/mesh/{reconstruct.mjs,reconstruct-direct.mjs,upload-replay.mjs,match-surface.py}. Verify exact position/index hashes, 2484 sample positions and all 2575 candidate memberships, then execute cpu/mesh/next-gate/mesh_domain_gate.py against the original uploaded buffers, independently checking T-junction seam coverage, overlap, physical area, protected cuts and 40m witness-to-cut margin. Treat any failed assertion as a bounded model/domain repair, not a source geometry mutation. Only after mesh closure proceed to full paired P(c,f0),D(c,f0) and fixed 1m↔2m physical-area appearance/retention screen. Preserve failed pseudo-mesh evidence. No GPU rerun/product mutation/merge/deploy.",
+  "stopCondition": "NO_GPU_OR_PRODUCT_MUTATION_UNTIL_ORIGINAL_SOURCE_MESH_CLOSED_AND_PAIRED_F0_AND_OFFLINE_APPEARANCE_QUALIFIED",
   "productChanged": false,
   "authorityEffect": "NONE_CONTINUATION_ONLY",
   "evidence": {
@@ -81,6 +85,21 @@
     "cpuPrimitiveLod": "cpu/material/primitive-lod-result.json",
     "cpuPrimitiveLodReview": "cpu/material/primitive-lod-independent-review.json",
     "incomingMaterialNominalScreenPass": true,
-    "incomingMaterialScreenQualification": "CONDITIONAL_MODEL_ONLY_LOD_MEMBERSHIP_PROPAGATED"
+    "incomingMaterialScreenQualification": "CONDITIONAL_MODEL_ONLY_LOD_MEMBERSHIP_PROPAGATED",
+    "sourceMeshGate": {
+      "path": "cpu/mesh/next-gate/mesh_domain_gate.py",
+      "sourceCommit": "dff636de93d6e143cee38ed203b091b6d7fe3a77",
+      "testPath": "cpu/mesh/next-gate/test_mesh_gate.py",
+      "testsPassed": 8,
+      "imageAuditPath": "cpu/mesh/next-gate/image-geometry-audit.json",
+      "imagePseudoFaces": 4320,
+      "nominalZeroAreaFaces": 24,
+      "facesWithoutPositiveConservativeLowerBound": 3974,
+      "sourceUploadedMeshAvailableInConversation": false,
+      "sourceMeshAreaClosed": false,
+      "fullMaterialF0Qualified": false,
+      "productChanged": false,
+      "textureAssetSha256": "494ad35121ec33c7de85635e5564cae127b4a3a265414da36e4de7e0c64d9cce"
+    }
   }
 }

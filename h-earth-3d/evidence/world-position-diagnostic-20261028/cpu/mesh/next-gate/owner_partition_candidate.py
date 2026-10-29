@@ -92,15 +92,44 @@ def audit(archive_path):
             a,c=affine_integral(p,triangle(off),color[indices[off:off+3]])
             area3+=a;rgba+=c
         must(all(np.isfinite(rgba)) and np.isfinite(area3) and area3>0,'MATERIAL_INTEGRAL_INVALID')
-        stats.update(sourceArea3D=area3,sourceWeightedBaseColorRGBA=rgba.tolist(),farClippedAreaXZ=before_far-after_far)
+        # Double-owned original triangles are not a conserved physical domain.
+        # Account explicitly for removed duplicate FAR mass/color, rather than
+        # misreporting the 2D union as original 3D material conservation.
+        orig_area=0.;orig_rgba=np.zeros(4)
+        for off,p in {**near,**far}.items():
+            a,c=affine_integral(p,triangle(off),color[indices[off:off+3]])
+            orig_area+=a;orig_rgba+=c
+        removed_area=orig_area-area3;removed_color=orig_rgba-rgba
+        must(removed_area>0 and np.all(np.isfinite(removed_color)),'DUPLICATE_3D_MASS_ACCOUNTING_INVALID')
+        must(abs(float(removed_color[3])-removed_area)<1e-9,'RGBA_ALPHA_AREA_MASS_MISMATCH')
+        # Independent counterfactual: FAR kept while only NEAR overlap is
+        # clipped. Material integrals MUST remain distinguishable and HELD.
+        far_union=unary_union(list(far.values()))
+        counter={**{i:p.difference(far_union) for i,p in near.items()},**far}
+        far_area=0.;far_rgba=np.zeros(4)
+        for off,p in counter.items():
+            a,c=affine_integral(p,triangle(off),color[indices[off:off+3]])
+            far_area+=a;far_rgba+=c
+        stats.update(sourceArea3D=area3,sourceWeightedBaseColorRGBA=rgba.tolist(),farClippedAreaXZ=before_far-after_far,
+            originalDoubleCountedSourceArea3D=orig_area,
+            originalDoubleCountedSourceWeightedRGBA=orig_rgba.tolist(),
+            removedDuplicateFarSourceArea3D=removed_area,
+            removedDuplicateFarWeightedRGBA=removed_color.tolist(),
+            farPriorityCounterfactualArea3D=far_area,
+            farPriorityCounterfactualWeightedRGBA=far_rgba.tolist(),
+            nearVsFarMaximumWeightedColorDifference=float(np.max(np.abs(rgba[:3]-far_rgba[:3]))),
+            originalSourceMassConservationClaimed=False,
+            sourceSingleOwnerMaterialConservationQualified=False)
         return {'schema':'H_EARTH_GEN2969_SOURCE_OWNER_CANDIDATE_v1','result':'NEAR_PRIORITY_CLIPPED_SOURCE_CANDIDATE_REVIEW_REQUIRED',
           'candidatePolicy':POLICY,'policyAccepted':False,'materialOwnerPromoted':False,'scientificClosure':False,
+          'firstUnresolvedAssertion':'SOURCE_MATERIAL_OWNER_PRECEDENCE_NOT_AUTHORIZED',
+          'materialOwnerInvariance':False,'sourceMaterialConservation':'HELD_UNTIL_OWNER_AUTHORITY_AND_PHYSICAL_FLUX',
           'originalAssetVerified':True,'sourceFaces':len(near_ids)+len(far_ids),'rawPositivePairs':len(overlaps),
           'archivedWitnesses':len(samples),'memberships':sum(len(s['candidateOffsets']) for s in samples),
           'artificialCutClearanceMeters':report['boundaryDistance']['minimumArtificialCutWitnessDistanceMeters'],
           'originalBoundaryReviewRequired':report['boundaryDistance']['originalBoundaryRequiresIndependentQualification'],
           'partialSeamCount':len(report['partialSourceSeamEdges']), 'statistics':stats,
-          'prohibitedConclusions':['NO_AUTOMATIC_SHORELINE_LAND_FILL','NO_PRODUCT_PIXEL_PROOF','NO_FULL_SOURCE_MASS_FLUX_ACCEPTANCE','NO_RELEASE']}
+          'prohibitedConclusions':['NO_AUTOMATIC_SHORELINE_LAND_FILL','NO_PRODUCT_PIXEL_PROOF','NO_FULL_SOURCE_MASS_FLUX_ACCEPTANCE','NO_MATERIAL_INTEGRAL_INVARIANCE','NO_RELEASE']}
 
 if __name__=='__main__':
     ap=argparse.ArgumentParser();ap.add_argument('--artifact',required=True);ap.add_argument('--report',required=True)

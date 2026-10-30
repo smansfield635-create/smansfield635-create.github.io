@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-30T01:26:31Z",
+  "generatedAt": "2026-10-30T02:30:53Z",
   "window30d": {
-    "start": "2026-09-30T01:26:31Z",
-    "end": "2026-10-30T01:26:31Z"
+    "start": "2026-09-30T02:30:53Z",
+    "end": "2026-10-30T02:30:53Z"
   },
   "daily": [
     {
@@ -24,11 +24,11 @@
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 140
+      "pageLoads": 180
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 210
+      "pageLoads": 140
     },
     {
       "date": "2026-10-07",
@@ -56,7 +56,7 @@
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 30
+      "pageLoads": 20
     },
     {
       "date": "2026-10-14",
@@ -72,11 +72,11 @@
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 60
+      "pageLoads": 50
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 40
+      "pageLoads": 60
     },
     {
       "date": "2026-10-19",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 40
+      "pageLoads": 39
     },
     {
       "date": "2026-10-23",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 10
+      "pageLoads": 15
     }
   ],
   "summary": {
-    "pageLoads": 1861,
-    "botPageLoads": 859,
-    "nonBotPageLoads": 1002
+    "pageLoads": 1865,
+    "botPageLoads": 860,
+    "nonBotPageLoads": 1005
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1664,
-      "visits": 1664
+      "pageLoads": 1668,
+      "visits": 1668
     },
     {
       "host": "diamondgatebridge.com",
@@ -162,13 +162,13 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 716,
-      "visits": 654
+      "pageLoads": 706,
+      "visits": 644
     },
     {
       "path": "/analytics/",
-      "pageLoads": 585,
-      "visits": 585
+      "pageLoads": 565,
+      "visits": 565
     },
     {
       "path": "/",
@@ -177,8 +177,8 @@
     },
     {
       "path": "/build/",
-      "pageLoads": 58,
-      "visits": 58
+      "pageLoads": 79,
+      "visits": 79
     },
     {
       "path": "/showroom/globe/audralia/",
@@ -186,19 +186,19 @@
       "visits": 43
     },
     {
+      "path": "/about-this-underdog/",
+      "pageLoads": 40,
+      "visits": 20
+    },
+    {
+      "path": "/meet-sean-mansfield/",
+      "pageLoads": 40,
+      "visits": 30
+    },
+    {
       "path": "/about/",
       "pageLoads": 40,
       "visits": 40
-    },
-    {
-      "path": "/nine-summits/universe/",
-      "pageLoads": 37,
-      "visits": 37
-    },
-    {
-      "path": "/gauges/",
-      "pageLoads": 30,
-      "visits": 0
     }
   ],
   "ownerMeasurement": {

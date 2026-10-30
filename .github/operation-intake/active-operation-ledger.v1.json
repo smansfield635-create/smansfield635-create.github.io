@@ -10944,6 +10944,50 @@
       "scopeHash": "788a8eaf511aed04d6bdc81212ee5d48aeea378f19b91647b02179619457ad79",
       "state": "ADMITTED_LOCKED"
     },
+    "78a7b43fca09b44c5befa6720154e5895c7901000c1151ccd9b632a2ea496f36": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "14e5a5ef3f1e2d8a4958e917f240804db38887cc",
+          "lockGeneration": 3004,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_V11_MOTION_SEPARATION:20261030",
+          "operationId": "NINE_SUMMITS_PEACE_V11_MOTION_SEPARATION_20261030_001",
+          "procedureLocatorDigest": "af98df851e15e1f4a91ef72078e0a8c9ceeb20824316a51ff57ab8a62c585706",
+          "requestDigest": "5b2469a4d31727ef362cfaf99e6b17256378b8006cbc01cf2d6390554a357057",
+          "scopeHash": "78a7b43fca09b44c5befa6720154e5895c7901000c1151ccd9b632a2ea496f36"
+        },
+        "bindingDigest": "2d2b2e22d72f6a27c5c324e7c2286fc58c79abb0c6a15c407cdbae6264367cd8",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "f55a1b2fb37d1db1a13cb2cefdae090d2cfd3e1c6c5170de75e574b94f736f00",
+          "commentId": 6533462806,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7016,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41128522112,
+          "workflowSha": "14e5a5ef3f1e2d8a4958e917f240804db38887cc"
+        },
+        "lineageAnchorCommitSha": "605fe62a82cb51ecb8012776f17dfc544cfd481f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "14e5a5ef3f1e2d8a4958e917f240804db38887cc",
+      "lockGeneration": 3004,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_V11_MOTION_SEPARATION:20261030",
+      "operationId": "NINE_SUMMITS_PEACE_V11_MOTION_SEPARATION_20261030_001",
+      "procedureLocatorDigest": "af98df851e15e1f4a91ef72078e0a8c9ceeb20824316a51ff57ab8a62c585706",
+      "released": false,
+      "requestDigest": "5b2469a4d31727ef362cfaf99e6b17256378b8006cbc01cf2d6390554a357057",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "78a7b43fca09b44c5befa6720154e5895c7901000c1151ccd9b632a2ea496f36",
+      "state": "ADMITTED_LOCKED"
+    },
     "78b5460f9b2cf3ddcbaee05d8f27dfbc0d1589efe72226bae418ab07139c2bd5": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -23919,7 +23963,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3003,
+  "lockGeneration": 3004,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

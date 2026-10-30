@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-30T15:24:45Z",
+  "generatedAt": "2026-10-30T16:26:38Z",
   "window30d": {
-    "start": "2026-09-30T15:24:45Z",
-    "end": "2026-10-30T15:24:45Z"
+    "start": "2026-09-30T16:26:38Z",
+    "end": "2026-10-30T16:26:38Z"
   },
   "daily": [
     {
@@ -40,7 +40,7 @@
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 30
+      "pageLoads": 50
     },
     {
       "date": "2026-10-10",
@@ -64,7 +64,7 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 90
+      "pageLoads": 100
     },
     {
       "date": "2026-10-16",
@@ -80,11 +80,11 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 40
+      "pageLoads": 50
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 30
+      "pageLoads": 60
     },
     {
       "date": "2026-10-21",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 37
+      "pageLoads": 36
     },
     {
       "date": "2026-10-23",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 50
+      "pageLoads": 51
     }
   ],
   "summary": {
     "pageLoads": 1888,
-    "botPageLoads": 862,
-    "nonBotPageLoads": 1026
+    "botPageLoads": 863,
+    "nonBotPageLoads": 1025
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1683,
-      "visits": 1683
+      "pageLoads": 1653,
+      "visits": 1653
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 145,
+      "pageLoads": 155,
       "visits": 0
     },
     {
@@ -167,28 +167,23 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 723,
-      "visits": 660
+      "pageLoads": 633,
+      "visits": 570
     },
     {
       "path": "/analytics/",
-      "pageLoads": 587,
-      "visits": 587
+      "pageLoads": 618,
+      "visits": 618
     },
     {
       "path": "/",
-      "pageLoads": 119,
+      "pageLoads": 129,
       "visits": 97
     },
     {
-      "path": "/build/",
-      "pageLoads": 60,
-      "visits": 60
-    },
-    {
       "path": "/showroom/globe/audralia/",
-      "pageLoads": 43,
-      "visits": 43
+      "pageLoads": 53,
+      "visits": 53
     },
     {
       "path": "/nine-summits/universe/",
@@ -201,9 +196,14 @@
       "visits": 41
     },
     {
-      "path": "/gauges/",
+      "path": "/coherence-diagnostic/",
       "pageLoads": 30,
       "visits": 0
+    },
+    {
+      "path": "/build/",
+      "pageLoads": 30,
+      "visits": 30
     }
   ],
   "ownerMeasurement": {

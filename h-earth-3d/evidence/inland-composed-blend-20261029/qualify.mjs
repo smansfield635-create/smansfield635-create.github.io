@@ -135,7 +135,7 @@ export async function run(argv){
  const a=parseArgs(argv),out=a['--output'],candidateHead=process.env.EXACT_CANDIDATE_SHA;
  const binding=JSON.parse(fs.readFileSync(path.join(a['--candidate-dir'],BINDING_PATH),'utf8'));validateBinding(binding,candidateHead);
  fs.mkdirSync(out,{recursive:true});
- const receipt={schema:'H_EARTH_NATURAL_MATERIAL_BLEND_v1',operationId:OPERATION,lockGeneration:2982,profile:PROFILE,result:'INCOMPLETE',baselineHead:BASELINE_HEAD,candidateHead,frameCap:12,runBudget:1,automaticRetry:false,ownerVisualAcceptance:false,physicalAndroidAcceptance:false,exactOwnerScreenshotReproduced:false,releaseAuthorized:false,scenes:[],errors:[]};
+ const receipt={schema:'H_EARTH_NATURAL_MATERIAL_BLEND_v1',operationId:OPERATION,lockGeneration:2984,profile:PROFILE,result:'INCOMPLETE',baselineHead:BASELINE_HEAD,candidateHead,frameCap:12,runBudget:1,automaticRetry:false,ownerVisualAcceptance:false,physicalAndroidAcceptance:false,exactOwnerScreenshotReproduced:false,releaseAuthorized:false,scenes:[],errors:[]};
  const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
  persist();
  try{

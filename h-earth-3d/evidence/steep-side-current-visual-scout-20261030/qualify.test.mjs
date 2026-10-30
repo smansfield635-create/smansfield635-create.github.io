@@ -20,8 +20,8 @@ function header(w=529,h=980){
  const f={navigationSequence:2,frameSequence:4};return {frame:f,value:{before:{...f},after:{...f},dataUrl:'data:image/png;base64,'+b.toString('base64')}};
 }
 test('authentic admitted generation and fixed product head',()=>{
- assert.equal(admit.result,'ADMITTED_AND_LOCKED');assert.equal(admit.lockGeneration,3003);
- assert.equal(admit.operationId,'H_EARTH_STEEP_SIDE_CURRENT_VISUAL_SCOUT_20261030_001');
+ assert.equal(admit.result,'ADMITTED_AND_LOCKED');assert.equal(admit.lockGeneration,3005);
+ assert.equal(admit.operationId,'H_EARTH_STEEP_SIDE_CURRENT_SCOUT_HASH_REPAIR_20261030_001');
  assert.equal(validateHead(CANDIDATE_HEAD),true);assert.throws(()=>validateHead('0'.repeat(40)),/FROZEN_CURRENT_HEAD/);
 });
 test('exact three source cameras and independent areas',()=>{

@@ -17294,50 +17294,6 @@
       "scopeHash": "be41619b853bc3dee037024d037ef1cdbf63dea10aea183813df43757988d5b7",
       "state": "ADMITTED_LOCKED"
     },
-    "bf70e592d5945dfed6e849346e02be8d730e5f1903619304038322793c62837d": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a",
-          "lockGeneration": 2981,
-          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_FIRST_OWNER_RELEASE:20261029",
-          "operationId": "NINE_SUMMITS_PEACE_FIRST_OWNER_SHIP_AS_IS_20261029_001",
-          "procedureLocatorDigest": "0e7f2b86e15bbdb67729eccbbc3ccc30f9e6bd264bffb3cfb672a7c94d1f2302",
-          "requestDigest": "4c10e7af61fc1d6376fd7e32940aeae4b32cc2a5103c10539033311cb5f8c1fd",
-          "scopeHash": "bf70e592d5945dfed6e849346e02be8d730e5f1903619304038322793c62837d"
-        },
-        "bindingDigest": "0a7f7c7b5baa5f1a41d9e9c17f7da6a5b93cddd4e6ca51619e2451ac7c2787cd",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "9b01adf91c496dcefc7350da72853168acbcc0347e6ced7cf1d424375930ef46",
-          "commentId": 6511452913,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6961,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 40977083524,
-          "workflowSha": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a"
-        },
-        "lineageAnchorCommitSha": "e813534dc2c2c9872d27d32983b054ddd6b33a4e",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a",
-      "lockGeneration": 2981,
-      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_FIRST_OWNER_RELEASE:20261029",
-      "operationId": "NINE_SUMMITS_PEACE_FIRST_OWNER_SHIP_AS_IS_20261029_001",
-      "procedureLocatorDigest": "0e7f2b86e15bbdb67729eccbbc3ccc30f9e6bd264bffb3cfb672a7c94d1f2302",
-      "released": false,
-      "requestDigest": "4c10e7af61fc1d6376fd7e32940aeae4b32cc2a5103c10539033311cb5f8c1fd",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "bf70e592d5945dfed6e849346e02be8d730e5f1903619304038322793c62837d",
-      "state": "ADMITTED_LOCKED"
-    },
     "bf7503f65660de95e6d18a151ff8bd7008f82e46fdcd7a534adb7e31e99c9637": {
       "governingHead": "7f832b749617b0360ad6bbfafadc37508d328dc3",
       "lockGeneration": 1379,
@@ -92202,6 +92158,51 @@
       "requestDigest": "6b003620229a9547bceda9585026c7662777aa1d0a8e6a9036a6be9c7afd4163",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "1545aa5e999ea747b89d5c284e7e901f9822ef783a38db8d7afcc7e50c95c03e",
+      "state": "TERMINAL",
+      "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a",
+          "lockGeneration": 2981,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_FIRST_OWNER_RELEASE:20261029",
+          "operationId": "NINE_SUMMITS_PEACE_FIRST_OWNER_SHIP_AS_IS_20261029_001",
+          "procedureLocatorDigest": "0e7f2b86e15bbdb67729eccbbc3ccc30f9e6bd264bffb3cfb672a7c94d1f2302",
+          "requestDigest": "4c10e7af61fc1d6376fd7e32940aeae4b32cc2a5103c10539033311cb5f8c1fd",
+          "scopeHash": "bf70e592d5945dfed6e849346e02be8d730e5f1903619304038322793c62837d"
+        },
+        "bindingDigest": "0a7f7c7b5baa5f1a41d9e9c17f7da6a5b93cddd4e6ca51619e2451ac7c2787cd",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "9b01adf91c496dcefc7350da72853168acbcc0347e6ced7cf1d424375930ef46",
+          "commentId": 6511452913,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40977083524,
+          "workflowSha": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a"
+        },
+        "lineageAnchorCommitSha": "e813534dc2c2c9872d27d32983b054ddd6b33a4e",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a",
+      "lockGeneration": 2981,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_FIRST_OWNER_RELEASE:20261029",
+      "operationId": "NINE_SUMMITS_PEACE_FIRST_OWNER_SHIP_AS_IS_20261029_001",
+      "procedureLocatorDigest": "0e7f2b86e15bbdb67729eccbbc3ccc30f9e6bd264bffb3cfb672a7c94d1f2302",
+      "released": true,
+      "requestDigest": "4c10e7af61fc1d6376fd7e32940aeae4b32cc2a5103c10539033311cb5f8c1fd",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "bf70e592d5945dfed6e849346e02be8d730e5f1903619304038322793c62837d",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
     }

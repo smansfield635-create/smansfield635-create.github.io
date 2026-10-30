@@ -944,22 +944,28 @@ function updatePeaceCinema(){
 }
 
 function drawPeaceSourceWater(now,force=false){
- // About-native source pixels with forward traveling phase. The water never
- // reverses as one sheet; perspective increases movement toward the foreground.
+ // Directional traveling water: overlapping source-pixel tiles carry phase
+ // across X and depth through Y. No full-width row translates as one rocking sheet.
  if(!peaceWaterContext||!peaceWaterCanvas||!peaceBaseSource?.complete||!peaceWaterMaskSource?.complete)return;
  if(reduced){peaceWaterContext.clearRect(0,0,960,540);return;}
  if(!force&&peaceWaterLast&&now-peaceWaterLast<42)return;peaceWaterLast=now;
  const c=peaceWaterContext,t=Math.max(0,(now-(peaceMotionStartedAt||now))*.001);
  c.clearRect(0,0,960,540);c.save();
+ const stepX=48,overlap=5;
  for(let y=226;y<540;y+=4){
   const depth=Math.max(0,Math.min(1,(y-226)/314));
-  const forward=t*(.35+1.05*depth);
-  const crest=Math.sin(y*.048-t*.95)*1.72*(.25+.75*depth);
-  const cross=Math.sin(y*.089-t*1.62)*.82*depth;
-  const shift=forward+crest+cross;
-  const dy=Math.sin(y*.032-t*.68)*.22*depth;
-  c.globalAlpha=.40+.34*depth;
-  peaceDrawWrappedSlice(c,peaceBaseSource,0,y,960,4,shift,y+dy,960,4.8);
+  const amplitude=.42+2.45*Math.pow(depth,1.35);
+  const forward=t*(.28+.88*depth);
+  c.globalAlpha=.38+.34*depth;
+  for(let x=0;x<960;x+=stepX){
+   const sx=Math.max(0,x-overlap),sw=Math.min(960-sx,stepX+overlap*2);
+   const phaseA=x*.031+y*.018-t*1.18;
+   const phaseB=x*.017-y*.043-t*.71;
+   const phaseC=x*.022+y*.034-t*.86;
+   const dx=forward+Math.sin(phaseA)*amplitude*.68+Math.sin(phaseB)*amplitude*.27;
+   const dy=(Math.sin(phaseC)*.30+Math.sin(phaseB*.63)*.12)*depth;
+   c.drawImage(peaceBaseSource,sx,y,sw,4,sx+dx,y+dy,sw+1.6,4.8);
+  }
  }
  c.globalCompositeOperation='destination-in';
  c.globalAlpha=1;c.drawImage(peaceWaterMaskSource,0,0,960,540);

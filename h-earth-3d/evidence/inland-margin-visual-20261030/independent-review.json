@@ -2,59 +2,32 @@
   "schema": "H_EARTH_INLAND_MARGIN_VISUAL_INDEPENDENT_REVIEW_v1",
   "result": "PASS_SOURCE_READY_FOR_PAIRED_COMPARISON",
   "builderSelfApproval": false,
-  "reviewer": "WEST_INDEPENDENT_HARNESS_REVIEW",
-  "operationId": "H_EARTH_INLAND_MARGIN_CAMERA_REPAIR_20261030_001",
-  "lockGeneration": 2996,
+  "reviewer": "NATIVE_INDEPENDENT_AGENT:/root/coverage_review",
+  "operationId": "H_EARTH_REMAINING_MARGIN_COVERAGE_20261030_001",
+  "lockGeneration": 2998,
   "sourceSha256": {
-    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "123c66502bb754e6587563e09d9b588ab36b4184218f57b1a026c6a75ac1ad24",
-    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.mjs": "91f76624f798abe9e4ff3254483859310da9d9c5cf0d712c36b1145cece4a008",
-    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.test.mjs": "188c15a745cf6098c99ba0b3482fe12f26f3cfd29a9542e167c9bc7e5ee04219",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "fcb3a21a9bed789337a9760898485115c5fa016095f9efed51c387bf9e6e3e46",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.mjs": "6ccc00df92455ef5af5ae2d2f980ab8b9ab495c628c32d75a255fd1cc0c452de",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.test.mjs": "29e8ac0b8300d4fc6c47db816fe5adb2ad1069d6431c49c9f80e06ef46cc5a03",
     "h-earth-3d/evidence/inland-margin-visual-20261030/product-binding.json": "9202fef3b01dd01021801199428c06ae05679c12d9f062385261d8988df48967",
-    "h-earth-3d/evidence/inland-margin-visual-20261030/admission.json": "0d1d1b6cac4e8af4f4660b5b10951eecc1cdf000d93e16edc04f3c19af0b5d0b"
+    "h-earth-3d/evidence/inland-margin-visual-20261030/admission.json": "89313f5cdae82a73e273ed219f6a6714f02b000fc11382cc38332c48265cb876",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/coverage-plan.json": "e72e589dc8c94c457f36a1ddf94b8afe78d44c64b8b2466fd5c132b4f0086dba"
   },
   "validation": {
-    "testsPassed": 14,
+    "testsPassed": 16,
     "testsFailed": 0,
-    "stagedHarnessAndFinalAdmissionByteIdentical": true,
-    "fixedBaselineHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
-    "fixedCandidateHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
-    "twelveFramesOneAttemptNoAutomaticRetry": true,
-    "fourInlandViewsTwoGroundControls": true,
-    "allNineAssetWarmupAndPairedCameraRootIdentity": true,
-    "helperHttpAndActiveFullMaterialReceiptRequired": true,
-    "expectedCorrectionBytes": 75272,
-    "encoding": "RGBA16F_DELTA_A_B_LINEAR_NO_MIPMAPS",
-    "baselineMarginMustBeAbsent": true,
-    "browserAndCaptureGlErrorsFail": true,
-    "closedFiveSourceHashSetAndExactTestPath": true,
-    "fixedBranchReopenedOnly": true,
-    "sourceGeometryCloseSideCameraSanityChecked": true,
-    "sceneProductMutation": false,
-    "actualNavigationModuleRegressionPass": true,
-    "bothSceneNavigationPreflightBeforeBrowser": true,
-    "wrongNavigationSourceHashFails": true,
-    "productCandidateUnchanged": true,
-    "closeDiagnosticEyeY": 16.77975559234619,
-    "sideDiagnosticEyeY": 18.126469612121582,
-    "diagnosticCamerasMakeNoWalkingSupportClaim": true
+    "threeFixedHeadings": true,
+    "fifteenUniqueCrossings": true,
+    "runtimeReconciledEyeAndAll16MatrixElementsRequired": true,
+    "sixFramesOneAttempt": true,
+    "frozenSourceAndPairedRoots": true,
+    "realNavigationRegression": true,
+    "productBindingUnchanged": true
   },
   "limits": [
-    "Source readiness only: no new browser execution or image review occurred in this review.",
-    "Archived near/far world poses are retained, but the new viewport is not a claim of exact archived screenshots.",
-    "Archived near pose views another portion of repaired window; close/side views target the center transition.",
-    "Ground visibility of each new captured frame must be judged after capture; readiness and receipt validity alone do not prove a visible ground control.",
-    "No physical Android performance, owner visual acceptance, merge or publication approval."
-  ],
-  "priorFailure": {
-    "run": 41008907967,
-    "assertion": "POSE_INELIGIBLE",
-    "cause": "Close and side cameras were incorrectly declared walking poses outside actual navigation z[-400,-80]. Prior mock view tests did not exercise real navigation.",
-    "repair": "Declare both diagnosticObserver with frozen source height plus2.25m; validate every pose against each exact checkout navigation module before browser start; real-module regression included.",
-    "reviewerAcknowledgment": "Previous terrain-height review omitted navigation eligibility. This review explicitly verifies the missing dependency."
-  },
-  "admissionReference": {
-    "workflowRun": 41010225092,
-    "receiptComment": 6515948761,
-    "requestComment": 6515942863
-  }
+    "No GPU execution or perceptual acceptance from source review.",
+    "Actual target visibility must be judged from captured evidence.",
+    "Prior protected control images preserved in Gen2996, not recaptured.",
+    "No merge or publication authority."
+  ]
 }

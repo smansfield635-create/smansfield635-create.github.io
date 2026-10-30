@@ -1,9 +1,7 @@
 {
-  "schema": "CANONICAL_ADMISSION_REFERENCE_v1",
-  "result": "ADMITTED_AND_LOCKED",
-  "operationId": "H_EARTH_INLAND_MARGIN_CAMERA_REPAIR_20261030_001",
-  "lockGeneration": 2996,
-  "workflowRun": 41010225092,
-  "requestComment": 6515942863,
-  "receiptComment": 6515948761
+  "operationId": "H_EARTH_REMAINING_MARGIN_COVERAGE_20261030_001",
+  "lockGeneration": 2998,
+  "workflowRun": 41082591539,
+  "receiptComment": 6526772915,
+  "result": "ADMITTED_AND_LOCKED"
 }

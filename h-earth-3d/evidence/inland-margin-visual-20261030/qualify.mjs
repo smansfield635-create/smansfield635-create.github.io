@@ -1,4 +1,4 @@
-/** Paired habitat material comparison: four frozen edge poses and two protected controls. */
+/** Six-frame remaining-boundary capture; prior controls retained in Gen2996 evidence. */
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -8,18 +8,12 @@ import {assertCheckout,comparisonState,instrumentRoute,assetReadiness,footprintV
 export const BASELINE_HEAD='260c66540b4471bb3d50cbc28cf82d160b732b19';
 export const CANDIDATE_HEAD='3ea149e5b56e8cc0d5aac192bce0cdd47da7e626';
 const ADMISSION=JSON.parse(fs.readFileSync(new URL('./admission.json',import.meta.url)));
-export const PROFILE='INLAND_MARGIN_VISUAL_V1';
-export const OPERATION='H_EARTH_INLAND_MARGIN_CAMERA_REPAIR_20261030_001';
+export const PROFILE='INLAND_REMAINING_MARGIN_COVERAGE_V1';
+export const OPERATION='H_EARTH_REMAINING_MARGIN_COVERAGE_20261030_001';
 export const VIEWPORT=Object.freeze({width:384,height:688});
 export const TARGET=Object.freeze({x:-189,z:-736});
-export const POSES=Object.freeze([
- {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
- {name:'inland-seam-far',x:-200,z:-656,y:18.793665,yaw:0,pitch:-2,diagnosticObserver:true},
- {name:'inland-close',x:-189,z:-724,y:16.77975559234619,yaw:0,pitch:-15,diagnosticObserver:true},
- {name:'inland-side',x:-204,z:-736,y:18.126469612121582,yaw:90,pitch:-12,diagnosticObserver:true},
- {name:'protected-grove',x:-139.40268,z:-210.74617,y:30,yaw:0,pitch:-80,diagnosticObserver:true},
- {name:'protected-meadow',x:-52,z:-208,yaw:136,pitch:-15}
-].map(Object.freeze));
+export const COVERAGE_PLAN=JSON.parse(fs.readFileSync(new URL('./coverage-plan.json',import.meta.url)));
+export const POSES=Object.freeze(COVERAGE_PLAN.poses.map(Object.freeze));
 export const WARMUP_POSE=Object.freeze({name:'protected-meadow',x:-52,z:-208,yaw:136,pitch:-15});
 export const CAPTURE_STEPS=Object.freeze([
  Object.freeze({pose:WARMUP_POSE,sequence:9999,capture:false}),
@@ -56,7 +50,14 @@ export function expectedNavigationYaw(requested){
 export function matchesCanonicalHeading(actual,requested){
  return Number.isFinite(actual)&&Number.isFinite(requested)&&actual>=-180&&actual<=180&&actual===expectedNavigationYaw(requested);
 }
+export function validateCoverageCamera(v,pose){
+ const c=v.worldPacket?.camera,p=c?.localAuthoringPosition,m=c?.viewProjectionMatrix;
+ if(!p||!Number.isFinite(p.y)||Math.abs(p.y-pose.expectedReconciledY)>1e-8||p.x!==pose.x||p.z!==pose.z)throw Error('COVERAGE_RECONCILED_EYE');
+ if(!Array.isArray(m)||m.length!==16||m.some((x,i)=>!Number.isFinite(x)||Math.abs(x-pose.viewProjectionMatrix[i])>1e-8))throw Error('COVERAGE_PROJECTION_MATRIX');
+ return true;
+}
 export function validateView(v,pose,sequence){
+ validateCoverageCamera(v,pose);
  if(v.state?.position?.x!==pose.x||v.state.position.z!==pose.z||!matchesCanonicalHeading(v.state.yawDegrees,pose.yaw)||v.state.pitchDegrees!==pose.pitch||v.state.verticalFovDegrees!==56||!Number.isFinite(v.state.position.y)||(v.state.diagnosticObserver===true)!==(pose.diagnosticObserver===true)||(pose.diagnosticObserver===true&&v.state.position.y!==pose.y))throw Error('SURVEY_POSE');
  if(v.state.sequence!==sequence||v.lastFrame?.navigationSequence!==sequence||!Number.isInteger(v.lastFrame.frameSequence)||v.lastFrame.frameSequence<1)throw Error('SURVEY_FRAME');
  for(const k of ['x','y','z'])if(!Number.isFinite(v.expectedCameraPosition?.[k])||!Number.isFinite(v.lastFrame.cameraPosition?.[k])||Math.abs(v.expectedCameraPosition[k]-v.lastFrame.cameraPosition[k])>1e-8)throw Error('SURVEY_CAMERA');
@@ -71,7 +72,7 @@ export function decodeCapture(capture,frame){
  const b=Buffer.from(capture.dataUrl.split(',')[1],'base64');if(b.length<1024||!b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))||b.toString('ascii',12,16)!=='IHDR'||b.readUInt32BE(16)!==384||b.readUInt32BE(20)!==688)throw Error('SURVEY_PNG_DIMENSIONS');return b;
 }
 export function validateSet(views){
- if(views.length!==6)throw Error('SURVEY_FRAME_CAP');
+ if(views.length!==3)throw Error('SURVEY_FRAME_CAP');
  if(views.some(v=>v.assetSignature!==views[0].assetSignature))throw Error('SURVEY_ASSET_IDENTITY_DRIFT');
  for(const pose of POSES){const a=views.filter(v=>v.pose?.name===pose.name);if(a.length!==1||JSON.stringify(a[0].pose)!==JSON.stringify(pose))throw Error('SURVEY_POSE_SET');validateView(a[0],pose,a[0].state.sequence);}
  return true;
@@ -99,7 +100,7 @@ export async function preflightNavigation(dir,expected){
 }
 export async function captureScene({dir,out,head,label,expected}){
  fs.mkdirSync(out,{recursive:true});
- const receipt={lockGeneration:ADMISSION.lockGeneration,admissionRun:ADMISSION.workflowRun,target:TARGET,sourceEdge:{kind:'FULL_MATERIAL_INLAND',bounds:[-213,-759,-165,-711],centerProfileX:-189},schema:'H_EARTH_MATERIAL_MARGIN_SCENE_v1',profile:PROFILE,operationId:OPERATION,result:'INCOMPLETE',sceneHead:head,label,poses:POSES,viewport:VIEWPORT,frameCap:6,runBudget:1,automaticRetry:false,exactScreenshotMatchProven:false,rootCauseProven:false,productMutation:false,comparisonCandidate:label==='candidate',rendererResponseTransformed:false,physicalVegetationPreserved:true,actualVegetationPixelVisibilityAsserted:false,physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,views:[],errors:[]};
+ const receipt={lockGeneration:ADMISSION.lockGeneration,admissionRun:ADMISSION.workflowRun,target:TARGET,sourceEdge:{kind:'FULL_MATERIAL_INLAND',bounds:[-213,-759,-165,-711],centerProfileX:-189},schema:'H_EARTH_MATERIAL_MARGIN_SCENE_v1',profile:PROFILE,operationId:OPERATION,result:'INCOMPLETE',sceneHead:head,label,poses:POSES,viewport:VIEWPORT,frameCap:3,runBudget:1,automaticRetry:false,exactScreenshotMatchProven:false,rootCauseProven:false,productMutation:false,comparisonCandidate:label==='candidate',rendererResponseTransformed:false,physicalVegetationPreserved:true,actualVegetationPixelVisibilityAsserted:false,physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,views:[],errors:[]};
  const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
  let server,browser;persist();
  try{
@@ -137,7 +138,7 @@ export async function captureScene({dir,out,head,label,expected}){
   }
   await Promise.all(pending);validateProductionAtlasResponses(responses.filter(r=>Object.hasOwn(PRODUCTION_ATLASES,r.path)));const rendererResponses=responses.filter(r=>r.path===RENDERER);if(rendererResponses.length!==1||rendererResponses[0].sha256!==expected.rendererSha256||rendererResponses[0].status!==200)throw Error('SURVEY_RENDERER_HTTP_CUSTODY');receipt.productResponses=responses;
   validateHttp(responses,label,expected);
-  validateSet(receipt.views);assertCheckout(dir,head);if(receipt.errors.length)throw Error('SURVEY_BROWSER_ERRORS');receipt.result='SIX_LIT_FRAMES_CAPTURED_REQUIRES_PAIRED_REVIEW';
+  validateSet(receipt.views);assertCheckout(dir,head);if(receipt.errors.length)throw Error('SURVEY_BROWSER_ERRORS');receipt.result='THREE_LIT_FRAMES_CAPTURED_REQUIRES_PAIRED_REVIEW';
  }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}
  finally{persist();await browser?.close();if(server&&server.exitCode===null){const exited=new Promise(resolve=>server.once('exit',resolve));server.kill();await exited;}}
  return receipt;
@@ -148,6 +149,7 @@ export function validatePair(before,after){
  for(let i=0;i<POSES.length;i++){
   const a=before.views[i],b=after.views[i];
   if(JSON.stringify(a.pose)!==JSON.stringify(b.pose)||JSON.stringify(a.state)!==JSON.stringify(b.state)||JSON.stringify(a.expectedCameraPosition)!==JSON.stringify(b.expectedCameraPosition))throw Error('PAIR_CAMERA');
+  if(JSON.stringify(a.worldPacket.camera)!==JSON.stringify(b.worldPacket.camera))throw Error('PAIR_WORLD_CAMERA');
   if(a.assetSignature!==b.assetSignature)throw Error('PAIR_VEGETATION');
  }
  return true;
@@ -165,7 +167,7 @@ export async function run(argv){
  const before=await captureScene({dir:a['--baseline-dir'],out:path.join(a['--output'],'baseline'),head:BASELINE_HEAD,label:'baseline',expected:binding.baseline});
  const after=await captureScene({dir:a['--candidate-dir'],out:path.join(a['--output'],'candidate'),head:candidateHead,label:'candidate',expected:binding.candidate});
  validatePair(before,after);
- const result={schema:'H_EARTH_MATERIAL_MARGIN_COMPARISON_v1',result:'TWELVE_PAIRED_FRAMES_CAPTURED_REQUIRES_VISUAL_REVIEW',operationId:OPERATION,baselineHead:BASELINE_HEAD,candidateHead,frameCap:12,runBudget:1,automaticRetry:false,ownerVisualAcceptance:false,releaseAuthorized:false,images:[...before.views,...after.views].map(v=>({image:v.image,sha256:v.imageSha256}))};
+ const result={schema:'H_EARTH_MATERIAL_MARGIN_COMPARISON_v1',result:'SIX_PAIRED_FRAMES_CAPTURED_REQUIRES_VISUAL_REVIEW',operationId:OPERATION,baselineHead:BASELINE_HEAD,candidateHead,frameCap:6,runBudget:1,automaticRetry:false,ownerVisualAcceptance:false,releaseAuthorized:false,images:[...before.views,...after.views].map(v=>({image:v.image,sha256:v.imageSha256}))};
  fs.writeFileSync(path.join(a['--output'],'comparison.json'),JSON.stringify(result,null,2)+'\n');return result;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{console.error(e);process.exitCode=1;});

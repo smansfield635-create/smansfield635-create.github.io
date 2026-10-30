@@ -1382,7 +1382,7 @@ jobs:
           path: dispatch
           persist-credentials: false
           sparse-checkout: h-earth-3d/evidence/inland-margin-visual-20261030
-      - name: Bind one fixed twelve-frame paired comparison
+      - name: Bind one fixed six-frame paired comparison
         id: intent
         env:
           RUN_ATTEMPT: ${{ github.run_attempt }}
@@ -1391,9 +1391,9 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';import assert from 'node:assert/strict';
           const i=JSON.parse(fs.readFileSync('dispatch/h-earth-3d/evidence/inland-margin-visual-20261030/dispatch-intent.json'));
-          assert.equal(i.operationId,'H_EARTH_INLAND_MARGIN_CAMERA_REPAIR_20261030_001');
-          assert.equal(i.lockGeneration,2996);assert.equal(i.admissionRun,41010225092);
-          assert.equal(i.frameCap,12);assert.equal(i.runBudget,1);assert.equal(i.automaticRetry,false);
+          assert.equal(i.operationId,'H_EARTH_REMAINING_MARGIN_COVERAGE_20261030_001');
+          assert.equal(i.lockGeneration,2998);assert.equal(i.admissionRun,41082591539);
+          assert.equal(i.frameCap,6);assert.equal(i.runBudget,1);assert.equal(i.automaticRetry,false);
           assert.equal(i.sceneHead,'260c66540b4471bb3d50cbc28cf82d160b732b19');assert.equal(i.candidateHead,'3ea149e5b56e8cc0d5aac192bce0cdd47da7e626');
           assert.match(i.toolingHead,/^[a-f0-9]{40}$/);
           fs.appendFileSync(process.env.GITHUB_OUTPUT,`tooling_head=${i.toolingHead}\n`);
@@ -1435,7 +1435,7 @@ jobs:
           const i=JSON.parse(fs.readFileSync('dispatch/'+base+'dispatch-intent.json'));
           const review=JSON.parse(fs.readFileSync('tooling/'+base+'independent-review.json'));
           assert.equal(review.result,'PASS_SOURCE_READY_FOR_PAIRED_COMPARISON');assert.equal(review.builderSelfApproval,false);
-          assert.deepEqual(Object.keys(i.sourceSha256).sort(),['.github/workflows/h-earth-neutral-exact-head-runner.yml',base+'qualify.mjs',base+'qualify.test.mjs',base+'product-binding.json',base+'admission.json'].sort());
+          assert.deepEqual(Object.keys(i.sourceSha256).sort(),['.github/workflows/h-earth-neutral-exact-head-runner.yml',base+'qualify.mjs',base+'qualify.test.mjs',base+'product-binding.json',base+'admission.json',base+'coverage-plan.json'].sort());
           for(const [p,h]of Object.entries(i.sourceSha256)){assert.equal(hash('tooling/'+p),h);assert.equal(review.sourceSha256[p],h);}
           const helpers={'h-earth-ground-material-comparison.v1.mjs':'b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509','h-earth-corrected-material-application.mjs':'070ad7daf51bbf41c2f4223ad9ba3a0143bde6aa3f7439df603c4a2718f50558','h-earth-world-position-overlay.mjs':'d61880ba98d81eae5d7cc6503f10f34d5aaa37819f4ba4a22218d87e711ca797','h-earth-groundcover-factor-overlay.mjs':'e9a872402371087e49031bca2ca27d0f37c9ab1012df50a5ebbf63617a3bf9e1'};
           for(const[p,h]of Object.entries(helpers)){assert.equal(hash('support/tools/'+p),h);fs.copyFileSync('support/tools/'+p,'tooling/tools/'+p);}
@@ -1451,7 +1451,7 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
           npx playwright install --with-deps chromium
-      - name: Compare frozen edge views and protected controls
+      - name: Capture remaining fifteen boundary locations in six images
         working-directory: tooling
         run: timeout 3300s node h-earth-3d/evidence/inland-margin-visual-20261030/qualify.mjs --baseline-dir ../scene --candidate-dir ../candidate --output "${{ runner.temp }}/inland-margin-visual"
       - name: Preserve inspection on every result

@@ -1,0 +1,30 @@
+{
+  "admissionAuthorityCreated": false,
+  "artifactDigests": {
+    "canonicalConstructionProcedure": "524ed44d8f66d80aa9146fa33200ed32ba8d3a5458044fe2383a5e8b975a0534",
+    "canonicalIntakeComment": "e6b20eb502b1c97752c68dac5305d6db81972e0b134fd9d6e5ad9cb2374042a3",
+    "canonicalIntakeEnvelope": "b53f408ff1a313a04d2d341a94eb431aae5c711d7879a478160d27f235e36e12",
+    "canonicalOperationRequest": "5a129ca2a64676e27aa30430b6b8d2e18a9d9383e835be040dac725d31419fe7"
+  },
+  "authorityEffect": "NONE_PACKET_COMPILATION_ONLY",
+  "claimAuthorityCreated": false,
+  "commentDigest": "e6b20eb502b1c97752c68dac5305d6db81972e0b134fd9d6e5ad9cb2374042a3",
+  "deploymentAuthorityCreated": false,
+  "envelopeDigest": "4c7463057b40896fab9026f5534441ebf8491ffa330f95c2a911749e25d8b11b",
+  "governingHead": "410e7fc049aabc9e6a34b6f170dc03fefd77b454",
+  "lockScope": "H_EARTH:REMAINING_MARGIN_COVERAGE_20261030",
+  "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+  "mergeAuthorityCreated": false,
+  "mutationAuthorityCreated": false,
+  "operationId": "H_EARTH_REMAINING_MARGIN_COVERAGE_20261030_001",
+  "procedureDigest": "2b643528191e2cd7e54c9acf4da28785d9469df3a843c9fc943fcd40b0b6f34a",
+  "publicationAuthorityCreated": false,
+  "releaseAuthorityCreated": false,
+  "requestDigest": "6b42147ab9eb1481c1bc74ee712eaa4c9c2ff104ecacf291f4f6c547f3a88079",
+  "result": "PACKET_READY",
+  "schema": "CANONICAL_PACKET_READY_RECEIPT_v1",
+  "scientificAuthorityCreated": false,
+  "semanticValidator": "tools/operation-intake/repository-operation-intake-gate.v1.mjs#prepare",
+  "submissionReady": true,
+  "transportSchema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1"
+}

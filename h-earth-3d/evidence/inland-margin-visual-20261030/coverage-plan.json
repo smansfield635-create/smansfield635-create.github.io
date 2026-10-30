@@ -1,0 +1,252 @@
+{
+  "schema": "H_EARTH_REMAINING_BOUNDARY_CAMERA_PREFLIGHT_v1",
+  "frozenCandidate": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "frozenBaseline": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+  "viewport": {
+    "width": 384,
+    "height": 688
+  },
+  "fov": 56,
+  "priorSixMatrixMaximumErrors": [
+    1.1368683772161603e-13,
+    2.2737367544323206e-13,
+    1.7053025658242404e-13,
+    4.718003765447065e-12,
+    6.423306331271306e-12,
+    1.4210854715202004e-14
+  ],
+  "requestedEye": [
+    -189,
+    16.77975559234619,
+    -724
+  ],
+  "expectedReconciledEye": [
+    -189,
+    17.43697988986969,
+    -724
+  ],
+  "reconciliationDeltaY": 0.6572242975234985,
+  "poses": [
+    {
+      "name": "inland-remaining-west-arc",
+      "x": -189,
+      "y": 16.77975559234619,
+      "z": -724,
+      "expectedReconciledY": 17.43697988986969,
+      "yaw": -74.187,
+      "pitch": -4.494,
+      "diagnosticObserver": true,
+      "crossingCount": 13,
+      "sourceIds": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        31,
+        32
+      ],
+      "sourceCentersXZ": [
+        [
+          -206,
+          -727.92176866525
+        ],
+        [
+          -205.5,
+          -727.96116710275
+        ],
+        [
+          -205,
+          -728
+        ],
+        [
+          -204.5,
+          -728.0289543878
+        ],
+        [
+          -204,
+          -728.0447242861
+        ],
+        [
+          -203.5,
+          -728.0489058845
+        ],
+        [
+          -203,
+          -728.04329763415
+        ],
+        [
+          -202.5,
+          -728.0285744298
+        ],
+        [
+          -202,
+          -728.0039334443
+        ],
+        [
+          -201.9435302808,
+          -728
+        ],
+        [
+          -201.5,
+          -727.97084754835
+        ],
+        [
+          -199.5,
+          -727.7698754982
+        ],
+        [
+          -199,
+          -727.7560510524
+        ]
+      ],
+      "allNinePointProfilesInsideEightPixelBorder": true,
+      "minimumTwoMetreSpanPixels": 71.41241514406076,
+      "minimumQuarterMetreSpacingPixels": 8.640464196889639,
+      "pixelBounds": [
+        [
+          122.83889778127534,
+          326.2606648369723
+        ],
+        [
+          298.64975081188356,
+          382.0454476726672
+        ]
+      ],
+      "viewProjectionMatrix": [
+        0.9182226485004253,
+        -0.1426636120167957,
+        -0.9591851458524339,
+        -0.9591611665235291,
+        -0.005175586071319497,
+        1.8748055285170002,
+        -0.07927471043496737,
+        -0.07927272859197952,
+        -3.242110401495704,
+        -0.04339771310243306,
+        -0.2715315405464362,
+        -0.27152475234277507,
+        -2173.7461499541887,
+        -89.8270142334595,
+        -377.06085308622403,
+        -376.55143293264877
+      ]
+    },
+    {
+      "name": "inland-remaining-west-tip",
+      "x": -189,
+      "y": 16.77975559234619,
+      "z": -724,
+      "expectedReconciledY": 17.43697988986969,
+      "yaw": -51.606,
+      "pitch": -12.539,
+      "diagnosticObserver": true,
+      "crossingCount": 1,
+      "sourceIds": [
+        42
+      ],
+      "sourceCentersXZ": [
+        [
+          -195,
+          -728.77572419355
+        ]
+      ],
+      "allNinePointProfilesInsideEightPixelBorder": true,
+      "minimumTwoMetreSpanPixels": 137.63397589839576,
+      "minimumQuarterMetreSpacingPixels": 15.167862200643924,
+      "pixelBounds": [
+        [
+          119.38489246680746,
+          332.79095712712837
+        ],
+        [
+          254.9314310851665,
+          356.67080616731045
+        ]
+      ],
+      "viewProjectionMatrix": [
+        2.092766220999739,
+        -0.3208639833194179,
+        -0.7649833576004106,
+        -0.7649642332555249,
+        -0.0036107991722894263,
+        1.8352787697836546,
+        -0.21851139581058024,
+        -0.21850593309396893,
+        -2.6409763309747327,
+        -0.25676872637433895,
+        -0.6058904469830647,
+        -0.6058752999112285,
+        -1516.5356523615592,
+        -277.33233037942523,
+        -580.105924988448,
+        -579.5914287715259
+      ]
+    },
+    {
+      "name": "inland-remaining-southeast",
+      "x": -189,
+      "y": 16.77975559234619,
+      "z": -724,
+      "expectedReconciledY": 17.43697988986969,
+      "yaw": 31.663,
+      "pitch": -3.122,
+      "diagnosticObserver": true,
+      "crossingCount": 1,
+      "sourceIds": [
+        182
+      ],
+      "sourceCentersXZ": [
+        [
+          -171.7553826098,
+          -752
+        ]
+      ],
+      "allNinePointProfilesInsideEightPixelBorder": true,
+      "minimumTwoMetreSpanPixels": 12.722903311000008,
+      "minimumQuarterMetreSpacingPixels": 1.5119513604724921,
+      "pixelBounds": [
+        [
+          186.1094399701154,
+          342.1343535484838
+        ],
+        [
+          198.23100032635233,
+          345.99958875363757
+        ]
+      ],
+      "viewProjectionMatrix": [
+        2.8680651820704095,
+        0.052940882662130796,
+        0.5241801469198288,
+        0.52416704257996,
+        0.004339693255733896,
+        1.8778040675883811,
+        -0.055711892329839086,
+        -0.05571049954994058,
+        1.7687913254125904,
+        -0.09044989853832337,
+        -0.8498125439637606,
+        -0.8497912989157246,
+        1822.6711674082364,
+        -86.97371471325971,
+        -515.7810866874318,
+        -515.2681985713659
+      ]
+    }
+  ],
+  "allMissingCrossingsCovered": true,
+  "limits": [
+    "Projection preflight, not GPU visibility or depth ownership proof.",
+    "Exactly fixed already-reconciled close-eye position; no new terrain-clearance assumption.",
+    "Diagnostic observers outside walking domain; no navigation expansion.",
+    "CPU source-math transcription tested against all six frozen matrices.",
+    "Three new poses paired baseline/candidate would require six new frames; none launched."
+  ]
+}

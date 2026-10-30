@@ -3,17 +3,17 @@
   "result": "PASS_SOURCE_READY_FOR_PAIRED_COMPARISON",
   "builderSelfApproval": false,
   "reviewer": "WEST_INDEPENDENT_HARNESS_REVIEW",
-  "operationId": "H_EARTH_INLAND_MARGIN_VISUAL_20261030_001",
-  "lockGeneration": 2995,
+  "operationId": "H_EARTH_INLAND_MARGIN_CAMERA_REPAIR_20261030_001",
+  "lockGeneration": 2996,
   "sourceSha256": {
-    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "965cad44793f5b375a29c565d7eaf7a2cbce75164d8263b64bb236a78f3fff61",
-    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.mjs": "f77e394111731b0acede7575e4e1030d5b7aa7b8de7efdf964d2273208bf4679",
-    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.test.mjs": "a7ff442fdda9eff12d6991decb3f36cedfa61579cf01cffda5a580431546f239",
-    "h-earth-3d/evidence/inland-margin-visual-20261030/product-binding.json": "418efe3ccdaaa2e5052a3802e3be448eee88bb680cf9630face3859188a1596b",
-    "h-earth-3d/evidence/inland-margin-visual-20261030/admission.json": "8a98190c34139885016e6b2af92a47c1d68267ace3911337bdc554386779514f"
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "123c66502bb754e6587563e09d9b588ab36b4184218f57b1a026c6a75ac1ad24",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.mjs": "91f76624f798abe9e4ff3254483859310da9d9c5cf0d712c36b1145cece4a008",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.test.mjs": "188c15a745cf6098c99ba0b3482fe12f26f3cfd29a9542e167c9bc7e5ee04219",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/product-binding.json": "9202fef3b01dd01021801199428c06ae05679c12d9f062385261d8988df48967",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/admission.json": "0d1d1b6cac4e8af4f4660b5b10951eecc1cdf000d93e16edc04f3c19af0b5d0b"
   },
   "validation": {
-    "testsPassed": 13,
+    "testsPassed": 14,
     "testsFailed": 0,
     "stagedHarnessAndFinalAdmissionByteIdentical": true,
     "fixedBaselineHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
@@ -29,7 +29,14 @@
     "closedFiveSourceHashSetAndExactTestPath": true,
     "fixedBranchReopenedOnly": true,
     "sourceGeometryCloseSideCameraSanityChecked": true,
-    "sceneProductMutation": false
+    "sceneProductMutation": false,
+    "actualNavigationModuleRegressionPass": true,
+    "bothSceneNavigationPreflightBeforeBrowser": true,
+    "wrongNavigationSourceHashFails": true,
+    "productCandidateUnchanged": true,
+    "closeDiagnosticEyeY": 16.77975559234619,
+    "sideDiagnosticEyeY": 18.126469612121582,
+    "diagnosticCamerasMakeNoWalkingSupportClaim": true
   },
   "limits": [
     "Source readiness only: no new browser execution or image review occurred in this review.",
@@ -37,5 +44,17 @@
     "Archived near pose views another portion of repaired window; close/side views target the center transition.",
     "Ground visibility of each new captured frame must be judged after capture; readiness and receipt validity alone do not prove a visible ground control.",
     "No physical Android performance, owner visual acceptance, merge or publication approval."
-  ]
+  ],
+  "priorFailure": {
+    "run": 41008907967,
+    "assertion": "POSE_INELIGIBLE",
+    "cause": "Close and side cameras were incorrectly declared walking poses outside actual navigation z[-400,-80]. Prior mock view tests did not exercise real navigation.",
+    "repair": "Declare both diagnosticObserver with frozen source height plus2.25m; validate every pose against each exact checkout navigation module before browser start; real-module regression included.",
+    "reviewerAcknowledgment": "Previous terrain-height review omitted navigation eligibility. This review explicitly verifies the missing dependency."
+  },
+  "admissionReference": {
+    "workflowRun": 41010225092,
+    "receiptComment": 6515948761,
+    "requestComment": 6515942863
+  }
 }

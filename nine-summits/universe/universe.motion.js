@@ -771,6 +771,218 @@ function drawEmberWorld(t){if(!emberGL)return;
 /* WORLD 05 — FORGIVENESS → PEACE / The Quiet Ocean.
  * An actual coastal horizon, five independent islands, sandy shore, cloud banks
  * and waves; no enlarged texture sphere masquerades as a world encounter. */
+
+/* Gen2999 About-native Peace: source-controlled ORIGINAL Diamond Gate SVG coast.
+ * This is a composed art environment plus source-local 2D water and the separate
+ * H-Earth WEST-admitted true-geometry near field, NOT image-only photogrammetry.
+ * No third-party network image dependency. Other eight worlds untouched. */
+const PEACE_CINEMA_IMAGE='./peace.environment.svg?cb=peace-v9-directional-advection';
+let peaceWaterCanvas=null,peaceWaterContext=null,peaceWaterLast=0;
+let peaceCloudCanvas=null,peaceCloudContext=null,peaceCloudLast=0,peaceGeometryScheduled=false;
+let peaceCinemaState='loading',peaceCinemaLayer=null,peaceCinemaPhoto=null,peaceCinemaLastX=0,peaceCinemaLastY=0;
+let peaceBaseSource=null,peaceCloudSource=null,peaceWaterMaskSource=null,peaceLayerSourcesPromise=null,peaceMotionStartedAt=0;
+const peaceCinemaPreload=new Image();
+peaceCinemaPreload.decoding='async';
+peaceCinemaPreload.fetchPriority='high';
+peaceCinemaPreload.onload=()=>{
+ if(peaceCinemaState==='error')return;
+ peaceCinemaState='ready';
+ // Display readiness belongs to the actual staged image, not just its preloader.
+ if(peaceCinemaLayer&&peaceCinemaPhoto?.complete&&peaceCinemaPhoto.naturalWidth>0)
+  peaceCinemaLayer.classList.add('peace-cinema-ready');
+};
+peaceCinemaPreload.onerror=()=>{
+ // A separately staged photo may have loaded even if the preload request failed.
+ if(peaceCinemaLayer&&peaceCinemaPhoto?.complete&&peaceCinemaPhoto.naturalWidth>0){
+  peaceCinemaState='ready';peaceCinemaLayer.classList.add('peace-cinema-ready');return;
+ }
+ peaceCinemaState='error';
+ if(peaceCinemaLayer){peaceCinemaLayer.remove();peaceCinemaLayer=null;}
+ peaceCinemaPhoto=null;
+ // The active class hides the fallback canvas. It MUST be cleared on failure.
+ peaceOverlay.classList.remove('peace-cinema-active');
+ // Preserve the real geometry/teaching fallback when off-network.
+ setTimeout(()=>{if(!peaceGL&&peaceCanvas){try{setupPeaceGLFallback();}catch(error){console.error('Peace fallback:',error);}}},0);
+};
+peaceCinemaPreload.src=PEACE_CINEMA_IMAGE;
+function ensurePeaceCinema(){
+ if(peaceCinemaLayer||peaceCinemaState==='error')return;
+ const style=document.createElement('style');
+ style.textContent=`
+ #peace-encounter .peace-cinema-stage{position:absolute;inset:0;overflow:hidden;z-index:1;pointer-events:none;
+ background:#113f5d;isolation:isolate;opacity:1}
+ #peace-encounter .peace-cinema-image,#peace-encounter .peace-cinema-clouds,#peace-encounter .peace-cinema-water{display:block;position:absolute;inset:0;width:100%;height:100%;
+ object-fit:cover;object-position:50% 50%;max-width:none;max-height:none;
+ transform-origin:50% 50%;transform:translate3d(calc(var(--peace-look-x,0px)*.35),calc(var(--peace-look-y,0px)*.35),0) scale(var(--peace-arrival-scale,1.22));
+ transition:transform .18s linear;opacity:0}
+ #peace-encounter .peace-cinema-image{z-index:0;filter:saturate(1.08) contrast(1.04) blur(1px);transition:transform .18s linear,filter 1.1s ease}
+ #peace-encounter .peace-cinema-clouds{z-index:1;pointer-events:none;mix-blend-mode:normal}
+ #peace-encounter .peace-cinema-water{z-index:2;pointer-events:none;mix-blend-mode:normal}
+ #peace-encounter .peace-cinema-ready .peace-cinema-image,#peace-encounter .peace-cinema-ready .peace-cinema-clouds,#peace-encounter .peace-cinema-ready .peace-cinema-water{opacity:1}
+ #peace-encounter .peace-cinema-ready .peace-cinema-image{filter:saturate(1.08) contrast(1.04) blur(0)}
+ #peace-encounter.peace-cinema-active #peace-world-canvas{position:absolute;inset:0;z-index:3;opacity:.64;pointer-events:none}
+ #peace-encounter .peace-cinema-stage{z-index:1}
+ #peace-encounter .peace-cinema-light{position:absolute;inset:0;z-index:4;opacity:.84;mix-blend-mode:screen;
+ background:radial-gradient(ellipse at 20% 22%,rgba(255,240,184,.18),transparent 45%),linear-gradient(125deg,rgba(14,88,132,.22),transparent 42%);}
+ #peace-encounter .peace-cinema-vignette{position:absolute;inset:0;z-index:5;
+ background:linear-gradient(180deg,rgba(4,19,32,.14),transparent 23%,transparent 50%,rgba(3,12,21,.62) 100%);}
+ #peace-encounter .peace-cinema-veil{position:absolute;inset:-5%;z-index:6;
+ background:radial-gradient(ellipse at 50% 54%,rgba(221,244,249,.9) 0%,rgba(198,232,243,.33) 46%,rgba(166,216,232,0) 80%);
+ opacity:var(--peace-atmos-opacity,0);transform:scale(var(--peace-atmos-scale,1));}
+ #peace-encounter.peace-cinema-active #peace-world-canvas{opacity:.64;pointer-events:none;}
+ #peace-encounter .peace-world-hud{z-index:9;}
+ #peace-encounter .peace-horizon-mark{z-index:9;}
+ @media(prefers-reduced-motion:reduce){#peace-encounter .peace-cinema-image,#peace-encounter .peace-cinema-clouds,#peace-encounter .peace-cinema-water{transition:none;transform:scale(1.08)!important}}
+ `;
+ peaceOverlay.appendChild(style);
+ const layer=document.createElement('div');layer.className='peace-cinema-stage';layer.setAttribute('aria-hidden','true');
+ layer.innerHTML='<div class="peace-cinema-light"></div><div class="peace-cinema-vignette"></div><div class="peace-cinema-veil"></div>';
+ const photo=document.createElement('img');photo.className='peace-cinema-image';photo.alt='';photo.decoding='async';
+ photo.onload=()=>{
+  if(photo.naturalWidth>0&&peaceCinemaState!=='error'){
+   peaceCinemaState='ready';layer.classList.add('peace-cinema-ready');
+  }
+ };
+ photo.onerror=()=>{if(peaceCinemaState!=='error')peaceCinemaPreload.onerror();};
+ photo.src=PEACE_CINEMA_IMAGE;layer.prepend(photo);peaceCinemaPhoto=photo;
+ const clouds=document.createElement('canvas');clouds.className='peace-cinema-clouds';clouds.width=960;clouds.height=540;
+ clouds.setAttribute('aria-hidden','true');layer.insertBefore(clouds,photo.nextSibling);peaceCloudCanvas=clouds;
+ peaceCloudContext=clouds.getContext('2d',{alpha:true});
+ const water=document.createElement('canvas');water.className='peace-cinema-water';water.width=960;water.height=540;
+ water.setAttribute('aria-hidden','true');layer.insertBefore(water,clouds.nextSibling);peaceWaterCanvas=water;
+ peaceWaterContext=water.getContext('2d',{alpha:true});
+ peaceOverlay.insertBefore(layer,peaceCanvas);peaceCinemaLayer=layer;
+ if(!reduced)loadPeaceCinemaSourceLayers();
+ if(peaceCinemaState==='ready')layer.classList.add('peace-cinema-ready');
+ peaceOverlay.classList.add('peace-cinema-active');
+ peaceOverlay.addEventListener('pointermove',event=>{
+  if(reduced||!peaceCinemaLayer)return;
+  const rect=peaceOverlay.getBoundingClientRect();peaceCinemaLastX=((event.clientX-rect.left)/Math.max(1,rect.width)-.5)*26;
+  peaceCinemaLastY=((event.clientY-rect.top)/Math.max(1,rect.height)-.5)*12;
+ },{passive:true});
+ peaceOverlay.addEventListener('pointerleave',()=>{peaceCinemaLastX=peaceCinemaLastY=0;},{passive:true});
+}
+function peaceLoadImage(src){
+ return new Promise((resolve,reject)=>{
+  const image=new Image();image.decoding='async';
+  image.onload=()=>image.naturalWidth>0?resolve(image):reject(Error('Peace source layer empty'));
+  image.onerror=()=>reject(Error('Peace source layer failed'));
+  image.src=src;
+ });
+}
+function peaceLayerHref(doc,id){
+ const node=doc.getElementById(id);
+ return node?.getAttribute('href')||node?.getAttributeNS('http://www.w3.org/1999/xlink','href')||'';
+}
+function loadPeaceCinemaSourceLayers(){
+ if(reduced||peaceCinemaState==='error')return Promise.resolve(false);
+ if(peaceLayerSourcesPromise)return peaceLayerSourcesPromise;
+ peaceLayerSourcesPromise=fetch(PEACE_CINEMA_IMAGE,{cache:'force-cache'})
+  .then(response=>{if(!response.ok)throw Error('Peace source asset HTTP '+response.status);return response.text();})
+  .then(text=>{
+   const doc=new DOMParser().parseFromString(text,'image/svg+xml');
+   const baseHref=peaceLayerHref(doc,'peace-base');
+   const cloudHref=peaceLayerHref(doc,'peace-cloud-layer');
+   const waterMaskHref=peaceLayerHref(doc,'peace-water-mask');
+   if(!baseHref||!cloudHref||!waterMaskHref)throw Error('Peace source layers missing');
+   return Promise.all([peaceLoadImage(baseHref),peaceLoadImage(cloudHref),peaceLoadImage(waterMaskHref)]);
+  })
+  .then(([base,cloud,waterMask])=>{
+   peaceBaseSource=base;peaceCloudSource=cloud;peaceWaterMaskSource=waterMask;
+   peaceMotionStartedAt=performance.now();peaceCloudLast=peaceWaterLast=0;
+   drawPeaceSourceClouds(peaceMotionStartedAt,true);
+   drawPeaceSourceWater(peaceMotionStartedAt,true);
+   if(peaceCinemaPhoto)peaceCinemaPhoto.src=base.src;
+   return true;
+  })
+  .catch(error=>{console.warn('Peace directional source layers:',error);return false;});
+ return peaceLayerSourcesPromise;
+}
+function peaceDrawWrappedSlice(context,image,sx,sy,sw,sh,dx,dy,dw,dh){
+ const width=960;
+ const offset=((dx%width)+width)%width;
+ context.drawImage(image,sx,sy,sw,sh,offset,dy,dw,dh);
+ context.drawImage(image,sx,sy,sw,sh,offset-width,dy,dw,dh);
+ if(offset+dw<width)context.drawImage(image,sx,sy,sw,sh,offset+width,dy,dw,dh);
+}
+function drawPeaceSourceClouds(now,force=false){
+ if(!peaceCloudContext||!peaceCloudCanvas||!peaceCloudSource?.complete)return;
+ if(reduced){peaceCloudContext.clearRect(0,0,960,540);return;}
+ if(!force&&peaceCloudLast&&now-peaceCloudLast<42)return;peaceCloudLast=now;
+ const c=peaceCloudContext,t=Math.max(0,(now-(peaceMotionStartedAt||now))*.001);
+ c.clearRect(0,0,960,540);c.save();
+ // Every cloud strip has positive net velocity. Low-frequency shear changes form
+ // while the whole atmosphere continues forward instead of ping-ponging.
+ for(let y=0;y<410;y+=12){
+  const depth=Math.max(0,Math.min(1,y/410));
+  const speed=2.8+3.6*depth;
+  const shear=Math.sin(y*.033+t*.11)*1.15+Math.sin(y*.071-t*.07)*.55;
+  const drift=t*speed+shear;
+  const dy=y+Math.sin(y*.025+t*.09)*.28;
+  c.globalAlpha=.86;
+  peaceDrawWrappedSlice(c,peaceCloudSource,0,y,960,14,drift,dy,960,14.4);
+ }
+ c.restore();
+}
+function updatePeaceCinema(){
+ if(!peaceCinemaLayer||peaceCinemaState==='error')return;
+ if(peaceCinemaState==='ready'){
+  const now=performance.now();
+  if(!reduced)loadPeaceCinemaSourceLayers();
+  drawPeaceSourceClouds(now);
+  drawPeaceSourceWater(now);
+ }
+ const f=Math.max(0,Math.min(1,(flight-.55)/.45)),ease=f*f*(3.-2.*f);
+ const entering=Math.max(0,1.-ease);
+ const scale=1.32-.24*ease;
+ const x=reduced?0:peaceCinemaLastX*ease,y=reduced?0:peaceCinemaLastY*ease;
+ peaceCinemaLayer.style.setProperty('--peace-arrival-scale',scale.toFixed(4));
+ peaceCinemaLayer.style.setProperty('--peace-look-x',x.toFixed(2)+'px');
+ peaceCinemaLayer.style.setProperty('--peace-look-y',y.toFixed(2)+'px');
+ peaceCinemaLayer.style.setProperty('--peace-atmos-opacity',(entering*entering*.86).toFixed(3));
+ peaceCinemaLayer.style.setProperty('--peace-atmos-scale',(1.16-.16*ease).toFixed(3));
+}
+
+function drawPeaceSourceWater(now,force=false){
+ // Directional traveling water: overlapping source-pixel tiles carry phase
+ // across X and depth through Y. No full-width row translates as one rocking sheet.
+ if(!peaceWaterContext||!peaceWaterCanvas||!peaceBaseSource?.complete||!peaceWaterMaskSource?.complete)return;
+ if(reduced){peaceWaterContext.clearRect(0,0,960,540);return;}
+ if(!force&&peaceWaterLast&&now-peaceWaterLast<42)return;peaceWaterLast=now;
+ const c=peaceWaterContext,t=Math.max(0,(now-(peaceMotionStartedAt||now))*.001);
+ c.clearRect(0,0,960,540);c.save();
+ const stepX=48,overlap=5;
+ for(let y=226;y<540;y+=4){
+  const depth=Math.max(0,Math.min(1,(y-226)/314));
+  const amplitude=.42+2.45*Math.pow(depth,1.35);
+  const forward=t*(.28+.88*depth);
+  c.globalAlpha=.38+.34*depth;
+  for(let x=0;x<960;x+=stepX){
+   const sx=Math.max(0,x-overlap),sw=Math.min(960-sx,stepX+overlap*2);
+   const phaseA=x*.031+y*.018-t*1.18;
+   const phaseB=x*.017-y*.043-t*.71;
+   const phaseC=x*.022+y*.034-t*.86;
+   const dx=forward+Math.sin(phaseA)*amplitude*.68+Math.sin(phaseB)*amplitude*.27;
+   const dy=(Math.sin(phaseC)*.30+Math.sin(phaseB*.63)*.12)*depth;
+   c.drawImage(peaceBaseSource,sx,y,sw,4,sx+dx,y+dy,sw+1.6,4.8);
+  }
+ }
+ c.globalCompositeOperation='destination-in';
+ c.globalAlpha=1;c.drawImage(peaceWaterMaskSource,0,0,960,540);
+ c.restore();
+}
+function schedulePeaceRealGeometry(){
+ // The art appears first; the exact existing H-Earth construction runs after
+ // the transition rather than synchronously in the user's Begin click.
+ if(peaceGeometryScheduled||peaceGL)return;
+ peaceGeometryScheduled=true;
+ setTimeout(()=>{
+  if(selected!==4||peaceGL){peaceGeometryScheduled=false;return;}
+  try{setupPeaceGLFallback();}catch(error){console.error('Peace admitted geometry:',error);}
+  peaceGeometryScheduled=false;requestFrame();
+ },reduced?160:3700);
+}
+let peaceKernelFacade=null;
 let peaceGL=null,peaceProgram=null,peaceSkyProgram=null,peaceOcean=null,peaceIslands=null,peaceShore=null,peaceRocks=null,peaceSkyBuffer=null,peaceLoc={},peaceSkyLoc={};
 const peaceCanvas=document.querySelector('#peace-world-canvas'),peaceHud=document.querySelector('#peace-world-hud');
 const peaceVertex=`precision highp float;
@@ -788,112 +1000,246 @@ uniform float uTime,uKind;varying vec3 vPos,vNormal;varying float vFog;
 float hash2(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
  return mix(mix(hash2(i),hash2(i+vec2(1.,0.)),f.x),mix(hash2(i+vec2(0.,1.)),hash2(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){float s=0.;s+=.54*noise2(p);s+=.27*noise2(p*2.17+13.);s+=.13*noise2(p*4.41+7.);return s/.94;}
+float reefDistance(vec2 q){
+ float d=100.;vec2 v;
+ v=vec2((q.x+20.)/12.,(q.y-22.)/8.04); d=min(d,length(v)-1.);
+ v=vec2((q.x+4.)/14.,(q.y-43.)/9.38); d=min(d,length(v)-1.);
+ v=vec2((q.x-24.)/14.,(q.y-35.)/9.38); d=min(d,length(v)-1.);
+ v=vec2((q.x+26.)/21.,(q.y-75.)/14.07); d=min(d,length(v)-1.);
+ v=vec2((q.x-18.)/22.,(q.y-92.)/14.74); d=min(d,length(v)-1.);
+ v=vec2((q.x-4.)/24.,(q.y-110.)/16.08); d=min(d,length(v)-1.);
+ return d;
+}
 void main(){
- vec3 n=normalize(vNormal),sun=normalize(vec3(-.58,.66,-.44));
- float lam=max(0.,dot(n,sun));vec3 col;
+ vec3 n=normalize(vNormal);vec3 sun=normalize(vec3(-.57,.8,-.36));
+ float lit=max(0.,dot(n,sun));vec3 col;
  if(uKind<.5){
-  vec2 q=vPos.xz;float wave=sin(q.y*.89-uTime*.75+sin(q.x*.16+uTime*.21))*.5+.5;
-  float swell=noise2(q*.24+vec2(uTime*.013,-uTime*.035));
-  float caustic=pow(max(0.,sin(q.x*.78+q.y*.27-uTime*.68)*sin(q.y*.50-q.x*.15+uTime*.36)),5.);
-  float horizon=clamp(vFog/95.,0.,1.);
-  col=mix(vec3(.012,.13,.19),vec3(.17,.38,.39),clamp(.30*wave+.30*swell+.21*lam,0.,1.));
-  col+=vec3(.31,.24,.11)*caustic*(.13+max(0.,1.-vFog/110.)*.25);
-  float glint=pow(max(0.,sin(q.x*.26+uTime*.21)*sin(q.y*.12-uTime*.30)),14.);
-  col+=vec3(.24,.35,.26)*glint*(.24+.46*horizon);
-  float foam=1.-smoothstep(.08,.55,abs(sin(q.y*.2-uTime*.26+sin(q.x*.07)*.48)));
-  col+=vec3(.035,.083,.081)*foam*.4;
+  // Bathymetry, pale coral shelves and a deep-blue open channel are world-coordinate bound.
+  vec2 q=vPos.xz;
+  float d=reefDistance(q);
+  float irregular=fbm(q*.10)-.5;
+  float shallow=1.-smoothstep(-.05,1.75,d+.19*irregular);
+  float reef=fbm(q*.35+vec2(5.,11.));
+  vec3 deep=vec3(.017,.23,.40);
+  vec3 shelf=mix(vec3(.040,.45,.60),vec3(.085,.75,.68),shallow*.9);
+  col=mix(deep,shelf,shallow);
+  float patch=smoothstep(.49,.72,reef)*shallow;
+  col=mix(col,vec3(.032,.24,.27),patch*.58);
+  float sand=(1.-smoothstep(.03,.14,abs(d+.12*irregular)))*shallow;
+  col+=vec3(.23,.22,.12)*sand*.45;
+  float wave=.5+.5*sin(q.y*.54-uTime*.66+sin(q.x*.13+q.y*.09));
+  float rip=noise2(q*.46+vec2(uTime*.031,-uTime*.043));
+  col+=vec3(.065,.10,.11)*(wave*.15+rip*.18);
+  float glint=pow(max(0.,.48*wave+.52*rip-.53),5.);
+  col+=vec3(.72,.75,.60)*glint*.42;
+  float foam=(1.-smoothstep(.025,.13,abs(d+.02*sin(q.x*.9+uTime*.2))))*.19;
+  col+=vec3(.45,.58,.50)*foam;
  }else if(uKind<1.5){
-  float grain=noise2(vPos.xz*.18)*.18+noise2(vPos.xz*.93)*.07;
-  float wet=clamp((1.3-vPos.y)*.45,0.,1.);
-  col=mix(vec3(.42,.46,.36),vec3(.64,.58,.44),clamp(.35+grain,0.,1.));
-  col=mix(col,vec3(.21,.39,.36),wet*.48);
-  col*=.59+.55*lam;
+  // Sand to wet-rock transition gives beaches clear boundaries around cliffs.
+  float sediment=fbm(vPos.xz*.66);
+  col=mix(vec3(.43,.46,.37),vec3(.88,.83,.62),.54+.46*sediment);
+  col=mix(col,vec3(.14,.47,.47),smoothstep(.36,.72,sediment)*.20);
+  col*=.72+.30*lit;
  }else if(uKind<2.5){
-  float grain=noise2(vPos.xy*.31+vPos.z*.04)*.17;
-  col=mix(vec3(.13,.20,.22),vec3(.39,.41,.34),clamp(lam*.83+grain,0.,1.));
-  col+=vec3(.035,.055,.038)*sin(vPos.y*2.9+vPos.x*.21)*.25;
+  // Triplanar, height-independent stone variation prevents vertical painted bands.
+  float grainX=fbm(vPos.yz*.57+vec2(4.,11.));
+  float grainY=fbm(vPos.xz*.53+vec2(9.,3.));
+  float grainZ=fbm(vPos.xy*.61+vec2(2.,17.));
+  float fine=noise2(vPos.xy*2.33+vPos.z*.61);
+  vec3 stoneN=normalize(n+vec3(grainX-.5,grainY-.5,grainZ-.5)*.78);
+  float rockLam=max(0.,dot(stoneN,sun));
+  float erosion=.40*grainX+.24*grainY+.36*grainZ;
+  float veins=1.-smoothstep(.05,.26,abs(sin(vPos.x*.61+vPos.y*.57+vPos.z*.63+erosion*5.3)));
+  float rockLight=clamp(.35+.63*rockLam+.20*erosion-.12*veins,0.,1.);
+  vec3 limestone=mix(vec3(.18,.22,.21),vec3(.74,.72,.62),rockLight);
+  limestone*=.86+.23*fine;
+  limestone=mix(limestone,vec3(.11,.14,.15),veins*.18);
+  // Physically added canopy crowns have upward faces and occupy upper shelves.
+  // Keep the vertical cliff walls limestone, with scattered vegetation in fissures.
+  float highland=smoothstep(4.2,10.0,vPos.y+1.3);
+  float cap=smoothstep(.05,.52,n.y)*highland;
+  float niche=smoothstep(.67,.79,erosion)*highland;
+  float canopy=clamp(cap*.94+niche*.21,0.,.95);
+  float leafDetail=fbm(vPos.xy*1.34+vPos.z*.41);
+  vec3 leaves=mix(vec3(.024,.12,.035),vec3(.27,.43,.085),leafDetail);
+  leaves*=.65+.42*rockLam;
+  col=mix(limestone,leaves,canopy);
+  col*=.79+.27*rockLam;
  }else{
-  float pulse=sin(vPos.z*.54-uTime*.62+vPos.x*.21);
-  col=mix(vec3(.18,.46,.42),vec3(.79,.86,.69),clamp(.5+.5*pulse,0.,1.));
-  col*=.62+.24*lam;
+  float grain=fbm(vPos.xz*.72+vPos.y*.18);
+  col=mix(vec3(.14,.19,.20),vec3(.45,.47,.43),clamp(.42+.38*lit+.20*grain,0.,1.));
  }
- float fog=clamp((vFog-27.)/105.,0.,.78);
- col=mix(col,vec3(.44,.61,.59),fog);
- gl_FragColor=vec4(pow(max(col,vec3(.001)),vec3(.87)),1.);
+ float fog=clamp((vFog-44.)/125.,0.,.67);
+ col=mix(col,vec3(.40,.62,.68),fog);
+ gl_FragColor=vec4(pow(max(col,vec3(.001)),vec3(.90)),1.);
 }`;
 const peaceSkyVertex=`precision mediump float;attribute vec2 aXY;varying vec2 vUv;void main(){vUv=aXY*.5+.5;gl_Position=vec4(aXY,0.,1.);}`;
 const peaceSkyFragment=`precision highp float;uniform float uTime,uAspect;varying vec2 vUv;
 float hash2(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
 return mix(mix(hash2(i),hash2(i+vec2(1.,0.)),f.x),mix(hash2(i+vec2(0.,1.)),hash2(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){return .52*noise2(p)+.28*noise2(p*2.11+7.)+.14*noise2(p*4.3+11.);}
 void main(){vec2 uv=vUv;
- vec3 sky=mix(vec3(.61,.75,.69),vec3(.045,.18,.31),smoothstep(.19,1.,uv.y));
- float sun=length((uv-vec2(.68,.42))*vec2(uAspect,1.));
- sky+=vec3(.92,.66,.38)*(.17*exp(-sun*4.)+.56*exp(-sun*24.));
- float farCloud=noise2(vec2(uv.x*12.5-uTime*.004,uv.y*55.+sin(uv.x*6.)*.9));
- float nearCloud=noise2(vec2(uv.x*22.-uTime*.009,uv.y*84.+sin(uv.x*9.)*1.4));
- float strata=(smoothstep(.53,.76,farCloud)*.31+smoothstep(.58,.85,nearCloud)*.19);
- float band=exp(-pow((uv.y-.48)/.16,2.));
- sky=mix(sky,vec3(.83,.88,.79),min(.37,strata*band));
- float horizonGlow=exp(-pow((uv.y-.36)/.095,2.));sky+=vec3(.17,.21,.13)*horizonGlow;
- gl_FragColor=vec4(pow(max(sky,vec3(.001)),vec3(.91)),1.);
+ vec3 sky=mix(vec3(.68,.84,.83),vec3(.035,.26,.46),smoothstep(.17,.96,uv.y));
+ float sun=length((uv-vec2(.77,.56))*vec2(uAspect,1.));
+ sky+=vec3(1.0,.79,.47)*(.12*exp(-sun*4.)+.29*exp(-sun*25.));
+ vec2 drift=vec2(uTime*.0017,-uTime*.0005);
+ float warp=fbm(vec2(uv.x*3.7,uv.y*4.2)+drift);
+ float field=fbm(vec2(uv.x*5.+warp*.65,uv.y*10.7-warp*.7)+drift);
+ float small=noise2(vec2(uv.x*17.4,uv.y*28.)+drift*3.);
+ float cloud=smoothstep(.44,.66,field*.82+small*.18);
+ float atmospheric=exp(-pow((uv.y-.60)/.23,2.));
+ sky=mix(sky,vec3(.94,.95,.91),cloud*atmospheric*.78);
+ sky+=vec3(.16,.23,.17)*exp(-pow((uv.y-.33)/.085,2.));
+ gl_FragColor=vec4(pow(max(sky,vec3(.001)),vec3(.93)),1.);
 }`;
 function peaceCompile(type,source){const s=peaceGL.createShader(type);peaceGL.shaderSource(s,source);peaceGL.compileShader(s);if(!peaceGL.getShaderParameter(s,peaceGL.COMPILE_STATUS))throw Error('Peace shader: '+peaceGL.getShaderInfoLog(s));return s;}
 function peaceLink(v,f){const p=peaceGL.createProgram(),a=peaceCompile(peaceGL.VERTEX_SHADER,v),b=peaceCompile(peaceGL.FRAGMENT_SHADER,f);peaceGL.attachShader(p,a);peaceGL.attachShader(p,b);peaceGL.linkProgram(p);peaceGL.deleteShader(a);peaceGL.deleteShader(b);if(!peaceGL.getProgramParameter(p,peaceGL.LINK_STATUS))throw Error('Peace program: '+peaceGL.getProgramInfoLog(p));return p;}
-function peaceTri(o,a,b,c){const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]];
- const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];const len=Math.hypot(...n)||1;const norm=n.map(x=>x/len);if(norm[1]<0)for(let i=0;i<3;i++)norm[i]=-norm[i];for(const p of [a,b,c])o.push(...p,...norm);}
-function peaceQuad(o,a,b,c,d){peaceTri(o,a,b,c);peaceTri(o,b,d,c);}
-function peaceOceanMesh(){const out=[],nx=96,nz=128;for(let z=0;z<nz;z++)for(let x=0;x<nx;x++){
- const x0=-52+104*x/nx,x1=-52+104*(x+1)/nx,z0=0+125*z/nz,z1=0+125*(z+1)/nz;
- peaceQuad(out,[x0,-1.35,z0],[x1,-1.35,z0],[x0,-1.35,z1],[x1,-1.35,z1]);}
- return new Float32Array(out);}
-const PEACE_ISLANDS=[[-20,22,12,5.1],[-4,43,14,6.0],[24,35,14,6.2],[-26,75,21,7.8],[18,92,22,8.2],[4,110,24,7.8]];
-function peaceIslandHeight(cx,cz,r,ang,seed){const wrinkle=1.+.22*Math.sin(ang*3.+seed)+.12*Math.cos(ang*7.-seed*.67);
- return (r*wrinkle);}
-function peaceIslandMesh(){const out=[],rings=13,sides=60;
- for(let k=0;k<PEACE_ISLANDS.length;k++){const [cx,cz,rad,height]=PEACE_ISLANDS[k];
-  const point=(r,a)=>{const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5),x=cx+edge*r*Math.cos(t),z=cz+edge*r*.67*Math.sin(t);
-   const slope=Math.pow(Math.max(0,1.-r*r),1.4),ridges=Math.sin(t*3.+k*2.1)*.13+Math.sin(t*7.-k*1.7)*.055;
-   const y=-1.3+height*(.56*slope+Math.max(0,1.-r)*r*ridges*.87+.052*Math.sin(x*.41+z*.18)*(r*(1-r)));
-   return [x,y,z];};
-  for(let ring=0;ring<rings;ring++)for(let side=0;side<sides;side++){
-   const r0=ring/rings,r1=(ring+1)/rings;
-   peaceQuad(out,point(r0,side),point(r0,side+1),point(r1,side),point(r1,side+1));
+/* Peace geometry is constructed and West-admitted through the existing H-Earth kernel.
+ * Destination GLSL, scene navigation and all other worlds remain unchanged. */
+// PALAWAN REFERENCE: steep, vegetated limestone towers framing protected channels.
+// Coordinates and polygon topology remain the same source-controlled Peace island layout.
+const PEACE_ISLANDS=[[-20,22,12,9],[-4,43,14,12],[24,35,14,11],[-26,75,21,17],[18,92,22,19],[4,110,24,17]];
+function peaceIslandHeight(cx,cz,r,ang,seed){
+ const teeth=1.+.13*Math.sin(ang*3.+seed)+.09*Math.cos(ang*7.-seed*.67)+.046*Math.sin(ang*11.+seed*.41);
+ return r*teeth;
+}
+function peaceBuildKernelMeshes(K){
+ if(!K)throw Error('Peace geometry kernel unavailable');
+ const constructed=[];
+ const add=(id,kind,positions,indices)=>{
+  const result=K.constructHEarthTriangleMesh({primitiveId:'nine-summits-peace-'+id,
+   vertices:positions.map(p=>K.createHEarthVector3(p[0],p[1],p[2])),indices,
+   normalMode:'FACE',expectedClosure:'OPEN_ALLOWED',semanticRole:'FORGIVENESS_PEACE_'+id.toUpperCase()});
+  if(!result.valid||K.hasHEarthBlockingIssues(result.issues))
+   throw Error('Peace kernel construction failed: '+id+': '+result.issues.map(e=>e.code).join(','));
+  constructed.push({kind,record:result.primitiveRecord});
+ };
+ // Indexed shared-vertex ocean; wave movement remains in the existing shader.
+ {const positions=[],indices=[],nx=48,nz=64;
+  for(let iz=0;iz<=nz;iz++)for(let ix=0;ix<=nx;ix++)positions.push([-52+104*ix/nx,-1.35,125*iz/nz]);
+  for(let iz=0;iz<nz;iz++)for(let ix=0;ix<nx;ix++){
+   const a=iz*(nx+1)+ix,b=a+1,c=a+nx+1,d=c+1;
+   indices.push(a,c,b,b,c,d);
+  }
+  add('open-ocean',0,positions,indices);
+ }
+ for(let k=0;k<PEACE_ISLANDS.length;k++){
+  const [cx,cz,rad,height]=PEACE_ISLANDS[k],sides=56,rings=12;
+  const point=(r,a)=>{
+   const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5);
+   const x=cx+edge*r*Math.cos(t),z=cz+edge*r*.67*Math.sin(t);
+   // Asymmetric crown and eroded buttresses: high walls retain height close to water,
+   // rather than tapering from a radial apex. Narrow ledges and pinnacle ridges form cliffs.
+   const theta=.46+k*.77,u=(x-cx)/rad,v=(z-cz)/(rad*.67);
+   const ridge=u*Math.cos(theta)+v*Math.sin(theta);
+   const valley=-u*Math.sin(theta)+v*Math.cos(theta);
+   const crown=.56+.24*Math.sin(valley*3.1+k*1.7)+.13*Math.sin(ridge*6.8+valley*3.9);
+   const pinnacles=.095*Math.pow(.5+.5*Math.sin(t*5.+k*2.3+Math.sin(t*9.)),3.);
+   const ledges=.048*Math.sin(t*17.+k*1.9+r*11.)+.030*Math.cos(t*29.-r*19.);
+   const core=(.68+.16*Math.sin(k*1.3)+crown*.18+pinnacles+ledges);
+   const coastT=Math.min(1.,Math.max(0.,(r-.78)/.205));
+   const wall=1.-coastT*coastT*(3.-2.*coastT);
+   const crags=(.038*Math.sin(t*23.+r*17.)+.025*Math.sin(t*37.-r*8.))*(1.-r);
+   const y=-1.33+height*Math.max(0.,wall*(core+crags));
+   return [x,y,z];
+  };
+  const positions=[point(0,0)],indices=[];
+  for(let ring=1;ring<=rings;ring++)for(let side=0;side<sides;side++)positions.push(point(ring/rings,side));
+  for(let side=0;side<sides;side++)indices.push(0,1+(side+1)%sides,1+side);
+  for(let ring=1;ring<rings;ring++)for(let side=0;side<sides;side++){
+   const a=1+(ring-1)*sides+side,b=1+(ring-1)*sides+(side+1)%sides,c=1+ring*sides+side,d=1+ring*sides+(side+1)%sides;
+   indices.push(a,b,c,b,d,c);
+  }
+  // Small source-built canopy crowns on the upper karst shelves, not a wallpaper texture.
+  // These triangles remain part of the SAME West-admitted island mesh.
+  const frac=x=>x-Math.floor(x);
+  for(let clump=0;clump<46;clump++){
+   const a=2.*Math.PI*frac((clump+1)*.61803398875+k*.217);
+   const rr=.14+.54*frac((clump+3)*.754877666+k*.133);
+   const foot=point(rr,a),size=.68+.48*frac((clump+7)*.414213562+k*.287);
+   const crownHeight=size*(.65+.38*frac(clump*.193+k*.119));
+   const offset=positions.length;
+   positions.push([foot[0],foot[1]+crownHeight,foot[2]]);
+   for(let petal=0;petal<7;petal++){
+    const theta=petal*2.*Math.PI/7.,radial=size*(.85+.15*Math.sin(petal*3.7+clump));
+    positions.push([foot[0]+Math.cos(theta)*radial,foot[1]+crownHeight*.12,foot[2]+Math.sin(theta)*radial]);
+   }
+   for(let petal=0;petal<7;petal++)indices.push(offset,offset+1+petal,offset+1+(petal+1)%7);
+  }
+  add('island-'+k,2,positions,indices);
+  // Explicit open annular shore strips.
+  {const positions=[],indices=[],shoreSides=96;
+   const mk=(r,a)=>{const t=a*Math.PI*2/shoreSides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5);
+    return [cx+edge*r*Math.cos(t),-1.28,cz+edge*r*.67*Math.sin(t)];};
+   for(const r of [.95,1.08])for(let side=0;side<shoreSides;side++)positions.push(mk(r,side));
+   for(let side=0;side<shoreSides;side++){
+    const a=side,b=(side+1)%shoreSides,c=shoreSides+side,d=shoreSides+(side+1)%shoreSides;
+    indices.push(a,b,c,b,d,c);
+   }
+   add('shore-'+k,1,positions,indices);
   }
  }
- return new Float32Array(out);}
-function peaceShoreMesh(){const out=[],sides=96;
- for(let k=0;k<PEACE_ISLANDS.length;k++){const [cx,cz,rad]=PEACE_ISLANDS[k];for(let side=0;side<sides;side++){
-  const mk=(r,a)=>{const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5);return [cx+edge*r*Math.cos(t),-1.28,cz+edge*r*.67*Math.sin(t)];};
-  peaceQuad(out,mk(.95,side),mk(.95,side+1),mk(1.08,side),mk(1.08,side+1));
- }}return new Float32Array(out);}
-function peaceRocksMesh(){const out=[],rocks=[[-17,1.7,2.7],[18,2.2,3.8],[-31,8.2,5.5],[29,11.5,6.4]];
- for(let i=0;i<rocks.length;i++){const [cx,cz,rad]=rocks[i];const sides=9;
- const ring=(s,a)=>{const t=2*Math.PI*a/sides,r=rad*s*(1+.18*Math.sin(t*3.1+i));return [cx+r*Math.cos(t),-1.25+rad*(1-s)*.85,cz+r*.7*Math.sin(t)];};
- for(let s=0;s<2;s++)for(let a=0;a<sides;a++)peaceQuad(out,ring(s*.47+.05,a),ring(s*.47+.05,a+1),ring((s+1)*.47+.05,a),ring((s+1)*.47+.05,a+1));
- }return new Float32Array(out);}
-function setupPeaceWorld(){if(peaceGL)return;
- peaceGL=peaceCanvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power'});
+ const rocks=[[-17,1.7,2.7],[18,2.2,3.8],[-31,8.2,5.5],[29,11.5,6.4]];
+ for(let i=0;i<rocks.length;i++){
+  const [cx,cz,rad]=rocks[i],sides=9,positions=[],indices=[];
+  const ring=(s,a)=>{const t=2*Math.PI*a/sides,r=rad*s*(1+.18*Math.sin(t*3.1+i));
+   return [cx+r*Math.cos(t),-1.25+rad*(1.-s)*.85,cz+r*.7*Math.sin(t)];};
+  for(const rr of [.05,.52,.99])for(let a=0;a<sides;a++)positions.push(ring(rr,a));
+  for(let rr=0;rr<2;rr++)for(let a=0;a<sides;a++){
+   const A=rr*sides+a,B=rr*sides+(a+1)%sides,C=(rr+1)*sides+a,D=(rr+1)*sides+(a+1)%sides;
+   indices.push(A,B,C,B,D,C);
+  }
+  add('rock-'+i,3,positions,indices);
+ }
+ const admitted=K.admitHEarthPrimitiveBatch(constructed.map(v=>v.record),{frameId:'nine-summits-peace-coast-v1'});
+ if(!admitted.valid||!K.isHEarthAggregateFrameAdmissionRecord(admitted.frame)||K.hasHEarthBlockingIssues(admitted.issues))
+  throw Error('Peace coast kernel admission failed: '+(admitted.issues||[]).map(e=>e.code).join(','));
+ if(admitted.frame.primitives.length!==17)throw Error('Peace kernel primitive count mismatch');
+ const batches=[[],[],[],[]];
+ for(let i=0;i<admitted.frame.primitives.length;i++){
+  const g=admitted.frame.primitives[i].geometry,kind=constructed[i].kind,vertices=batches[kind];
+  g.indices.forEach((index,j)=>{
+   const p=g.vertices[index],n=g.faceNormals[Math.floor(j/3)],sign=n.y<0?-1:1;
+   vertices.push(p.x,p.y,p.z,n.x*sign,n.y*sign,n.z*sign);
+  });
+ }
+ return batches.map(x=>new Float32Array(x));
+}
+function setupPeaceWorld(){
+ ensurePeaceCinema();
+ if(peaceCinemaState==='error'){setupPeaceGLFallback();return;}
+ schedulePeaceRealGeometry();
+}
+function setupPeaceGLFallback(){if(peaceGL)return;
+ peaceGL=peaceCanvas.getContext('webgl',{alpha:true,antialias:false,powerPreference:'low-power'});
  if(!peaceGL)throw Error('Peace coast WebGL unavailable');
  peaceProgram=peaceLink(peaceVertex,peaceFragment);peaceSkyProgram=peaceLink(peaceSkyVertex,peaceSkyFragment);
  for(const n of ['aPosition','aNormal'])peaceLoc[n]=peaceGL.getAttribLocation(peaceProgram,n);
  for(const n of ['uViewport','uTime','uKind'])peaceLoc[n]=peaceGL.getUniformLocation(peaceProgram,n);
  peaceSkyLoc.aXY=peaceGL.getAttribLocation(peaceSkyProgram,'aXY');for(const n of ['uAspect','uTime'])peaceSkyLoc[n]=peaceGL.getUniformLocation(peaceSkyProgram,n);
  const upload=data=>{const b=peaceGL.createBuffer();peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,b);peaceGL.bufferData(peaceGL.ARRAY_BUFFER,data,peaceGL.STATIC_DRAW);return{buffer:b,count:data.length/6};};
- peaceOcean=upload(peaceOceanMesh());peaceIslands=upload(peaceIslandMesh());peaceShore=upload(peaceShoreMesh());peaceRocks=upload(peaceRocksMesh());
+ const groups=peaceBuildKernelMeshes(peaceKernelFacade);
+ peaceOcean=upload(groups[0]);peaceShore=upload(groups[1]);peaceIslands=upload(groups[2]);peaceRocks=upload(groups[3]);
  peaceSkyBuffer=peaceGL.createBuffer();peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,peaceSkyBuffer);peaceGL.bufferData(peaceGL.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),peaceGL.STATIC_DRAW);
- peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.clearColor(.04,.14,.19,1.);
+ peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.clearColor(0,0,0,0);
 }
-function drawPeaceWorld(t){if(!peaceGL)return;
+function drawPeaceWorld(t){
+ updatePeaceCinema();
+ if(!peaceGL)return;
  const r=peaceCanvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.3),w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));
  if(peaceCanvas.width!==w||peaceCanvas.height!==h){peaceCanvas.width=w;peaceCanvas.height=h;}
  peaceGL.viewport(0,0,w,h);peaceGL.clear(peaceGL.COLOR_BUFFER_BIT|peaceGL.DEPTH_BUFFER_BIT);
+ if(peaceCinemaState==='error'){
  peaceGL.disable(peaceGL.DEPTH_TEST);peaceGL.useProgram(peaceSkyProgram);peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,peaceSkyBuffer);
  peaceGL.vertexAttribPointer(peaceSkyLoc.aXY,2,peaceGL.FLOAT,false,0,0);peaceGL.enableVertexAttribArray(peaceSkyLoc.aXY);
  peaceGL.uniform1f(peaceSkyLoc.uTime,t);peaceGL.uniform1f(peaceSkyLoc.uAspect,w/h);peaceGL.drawArrays(peaceGL.TRIANGLES,0,3);
+ }
  peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.useProgram(peaceProgram);peaceGL.uniform2f(peaceLoc.uViewport,w/h,1);peaceGL.uniform1f(peaceLoc.uTime,t);
  const draw=(mesh,kind)=>{peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,mesh.buffer);peaceGL.vertexAttribPointer(peaceLoc.aPosition,3,peaceGL.FLOAT,false,24,0);peaceGL.enableVertexAttribArray(peaceLoc.aPosition);peaceGL.vertexAttribPointer(peaceLoc.aNormal,3,peaceGL.FLOAT,false,24,12);peaceGL.enableVertexAttribArray(peaceLoc.aNormal);peaceGL.uniform1f(peaceLoc.uKind,kind);peaceGL.drawArrays(peaceGL.TRIANGLES,0,mesh.count);};
- draw(peaceOcean,0);draw(peaceShore,1);draw(peaceIslands,2);draw(peaceRocks,3);
+ if(peaceCinemaState==='error'){draw(peaceOcean,0);draw(peaceShore,1);draw(peaceIslands,2);}
+ draw(peaceRocks,3);
 }
 
 
@@ -1747,6 +2093,7 @@ function fallback(error){cancelPointer();stopInertia();if(raf)cancelAnimationFra
 async function init(){
   P=globalThis.DGB_COMPASS_ORBIT_PHYSICS;if(!P)throw Error('Shared Compass physics unavailable');
   const K=await import('../../showroom/globe/h-earth/render/geometry-kernel.js');
+  peaceKernelFacade=K;
   setupGL();meshes=buildGeometry(K);
   summits.forEach(([begin,summit],i)=>{const el=document.createElement('button');el.type='button';el.className='planet-label';el.dataset.planet=i;el.setAttribute('aria-label',`${begin} leads to ${summit}`);el.setAttribute('aria-pressed','false');el.innerHTML=`<strong>${begin}</strong><span>${summit}</span>`;el.addEventListener('click',event=>{if(event.detail===0)choose(i);});$('#planet-labels').append(el);labels.push(el);});
   try{setupJoyWorld();}catch(error){console.error('Gratitude world:',error);}

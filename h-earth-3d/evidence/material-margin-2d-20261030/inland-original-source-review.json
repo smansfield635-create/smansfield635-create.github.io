@@ -1,0 +1,13 @@
+{
+  "sampleStepMeters": 0.25,
+  "actualSourceReevaluated": true,
+  "originalAtlasSampled": true,
+  "uniqueOwnerPoints": 37249,
+  "ambiguousPoints": 0,
+  "activeMaxGradientBefore": 9.4222664336469,
+  "activeMaxGradientAfter": 6.781332856743904,
+  "globalMaxGradientBefore": 9.4222664336469,
+  "globalMaxGradientAfter": 7.660190193645699,
+  "maxDisplayChange": 8.638338354915518,
+  "limits": "Finite differences on quarter-metre original-source grid, not continuous derivative certificate or GPU equivalence."
+}

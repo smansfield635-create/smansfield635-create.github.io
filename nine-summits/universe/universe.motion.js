@@ -906,7 +906,7 @@ function loadPeaceCinemaSourceLayers(){
  * Both systems retain the canonical art source and reduced-motion fallback. */
 function peaceBuildCloudBanks(image){
  const cols=[
-  {x:0,w:410,fade:[0,300/410,1],opacity:[1,1,0]},
+  {x:0,w:410,fade:[0,270/410,1],opacity:[1,1,0]},
   {x:270,w:440,fade:[0,140/440,310/440,1],opacity:[0,1,1,0]},
   {x:580,w:380,fade:[0,130/380,1],opacity:[0,1,1]}
  ];

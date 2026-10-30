@@ -19793,6 +19793,50 @@
       "scopeHash": "d2c757765753b1d9f9e2c7c3ea3a451d017e170d5848097ac67ca879f7f7aca6",
       "state": "ADMITTED_LOCKED"
     },
+    "d30994964b20e0115171c45d292365e7e7eb1d3c67ff639ac048e9e95c0009cb": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "410e7fc049aabc9e6a34b6f170dc03fefd77b454",
+          "lockGeneration": 2998,
+          "lockScope": "H_EARTH:REMAINING_MARGIN_COVERAGE_20261030",
+          "operationId": "H_EARTH_REMAINING_MARGIN_COVERAGE_20261030_001",
+          "procedureLocatorDigest": "2b643528191e2cd7e54c9acf4da28785d9469df3a843c9fc943fcd40b0b6f34a",
+          "requestDigest": "6b42147ab9eb1481c1bc74ee712eaa4c9c2ff104ecacf291f4f6c547f3a88079",
+          "scopeHash": "d30994964b20e0115171c45d292365e7e7eb1d3c67ff639ac048e9e95c0009cb"
+        },
+        "bindingDigest": "957defe8b8361bcedb51ecdb8bab18358a672fa992c883fe01b82c3920f1730c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e6b20eb502b1c97752c68dac5305d6db81972e0b134fd9d6e5ad9cb2374042a3",
+          "commentId": 6526759580,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41082591539,
+          "workflowSha": "410e7fc049aabc9e6a34b6f170dc03fefd77b454"
+        },
+        "lineageAnchorCommitSha": "ef5553b02abc10e2e2969e90b098b99f12d1af7b",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "410e7fc049aabc9e6a34b6f170dc03fefd77b454",
+      "lockGeneration": 2998,
+      "lockScope": "H_EARTH:REMAINING_MARGIN_COVERAGE_20261030",
+      "operationId": "H_EARTH_REMAINING_MARGIN_COVERAGE_20261030_001",
+      "procedureLocatorDigest": "2b643528191e2cd7e54c9acf4da28785d9469df3a843c9fc943fcd40b0b6f34a",
+      "released": false,
+      "requestDigest": "6b42147ab9eb1481c1bc74ee712eaa4c9c2ff104ecacf291f4f6c547f3a88079",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d30994964b20e0115171c45d292365e7e7eb1d3c67ff639ac048e9e95c0009cb",
+      "state": "ADMITTED_LOCKED"
+    },
     "d33df8943d856a2d72ec0aa3c7e3f2f7f03abe5486f64f5ad3d10b84f26e4f3c": {
       "governingHead": "0617cacd92b3709df1691d1f50b5358cb4aafa4e",
       "lockGeneration": 1589,
@@ -23831,7 +23875,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2997,
+  "lockGeneration": 2998,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

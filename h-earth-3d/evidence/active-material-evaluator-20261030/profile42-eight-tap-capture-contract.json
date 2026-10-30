@@ -489,13 +489,20 @@
       "Existing protected controls remain valid; no new baseline/control rerun unless direct dependency changes"
     ],
     "executionBudget": {
-      "maxVerifiedRenders": 1,
+      "maxAuthorizedWorkflowRuns": 1,
+      "maxCameraSceneInitializationSessions": 1,
+      "maxPerStageDrawPasses": 8,
+      "maximumObservedRasterTapsPerStage": 8,
+      "maximumNewFullFramePNGs": 0,
+      "noSourceWorldRebuild": true,
+      "noNewControls": true,
       "fullWorldRescan": false,
       "gpuNotYetLaunched": true,
       "doNotPoll": true,
       "returnVerifiedGitHubActionsRunUrlImmediatelyIfAuthorizedAndStarted": true
     },
-    "authority": "NONE_TECHNICAL_CONTRACT_ONLY"
+    "authority": "NONE_TECHNICAL_CONTRACT_ONLY",
+    "profileScope": "Eight physically distinct framebuffer taps, two bilinear virtual points, one frozen candidate camera. Multiple controlled stage-pass draws may be necessary inside one bounded capture session, never misrepresent one pass as all checkpoints."
   },
   "firstUnresolvedAssertion": "EXACT_EIGHT_VISIBLE_FRAGMENTS_SOURCE_P_PRELIGHT_AND_DEPTH_NOT_OBSERVED",
   "claimLimits": [

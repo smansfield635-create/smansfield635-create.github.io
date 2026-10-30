@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "nine-summits-peace-cinema-gen2997-eda18747",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7010,
+  "requestBranch": "ai-dispatch-request-peace-cinema-gen2997-eda18747",
+  "requestCommit": "1a00d5c541b4f3178e32eb364431429aa379c19c",
+  "requestCommitParent": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "eda187475487b9ecd3bc46c1fe299c56b21c5f26",
+    "surface_id": "nine-summits-universe"
+  },
+  "bridgeRunId": "41011415641",
+  "dispatchedRunId": 41011428638,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/41011428638",
+  "dispatchedRunHeadSha": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+  "dispatchedAt": "2026-10-30T05:59:03.484Z",
+  "resolvedAt": "2026-10-30T05:59:07.202Z"
+}

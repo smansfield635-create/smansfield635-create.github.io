@@ -772,14 +772,12 @@ function drawEmberWorld(t){if(!emberGL)return;
  * An actual coastal horizon, five independent islands, sandy shore, cloud banks
  * and waves; no enlarged texture sphere masquerades as a world encounter. */
 
-/* The Peace arrival uses a licensed, high-detail photographic plate with actual
- * CSS parallax/atmospheric passage. This is 2.5D—not a claim that a still photo
- * is navigable photogrammetry. The original WEST-admitted WebGL coast remains
- * an honest offline fallback if the image fails. Unsplash photo by XT7 Core:
- * https://unsplash.com/photos/stunning-tropical-islands-and-calm-ocean-waters-eFf1cHTOG8o
- * License: https://unsplash.com/license (site can use the image; not resale).
- * All new DOM/CSS is local to #peace-encounter, not other eight worlds. */
-const PEACE_CINEMA_IMAGE='https://images.unsplash.com/photo-1744069729070-f946b4fba608?auto=format&fit=crop&w=2400&q=86';
+/* Gen2999 About-native Peace: source-controlled ORIGINAL Diamond Gate SVG coast.
+ * This is a composed art environment plus source-local 2D water and the separate
+ * H-Earth WEST-admitted true-geometry near field, NOT image-only photogrammetry.
+ * No third-party network image dependency. Other eight worlds untouched. */
+const PEACE_CINEMA_IMAGE='./peace.environment.svg';
+let peaceWaterCanvas=null,peaceWaterContext=null,peaceWaterLast=0,peaceGeometryScheduled=false;
 let peaceCinemaState='loading',peaceCinemaLayer=null,peaceCinemaPhoto=null,peaceCinemaLastX=0,peaceCinemaLastY=0;
 const peaceCinemaPreload=new Image();
 peaceCinemaPreload.decoding='async';
@@ -811,11 +809,16 @@ function ensurePeaceCinema(){
  style.textContent=`
  #peace-encounter .peace-cinema-stage{position:absolute;inset:0;overflow:hidden;z-index:1;pointer-events:none;
  background:#113f5d;isolation:isolate;opacity:1}
- #peace-encounter .peace-cinema-image{display:block;position:absolute;inset:-8%;width:116%;height:116%;
- object-fit:cover;object-position:50% 47%;max-width:none;max-height:none;
- transform-origin:50% 48%;transform:translate3d(calc(var(--peace-look-x,0px)*.35),calc(var(--peace-look-y,0px)*.35),0) scale(var(--peace-arrival-scale,1.22));
- transition:transform .18s linear,filter 1.2s ease;filter:saturate(1.1) contrast(1.025) blur(2px);opacity:0;}
- #peace-encounter .peace-cinema-ready .peace-cinema-image{opacity:1;filter:saturate(1.1) contrast(1.025) blur(0)}
+ #peace-encounter .peace-cinema-image,#peace-encounter .peace-cinema-water{display:block;position:absolute;inset:0;width:100%;height:100%;
+ object-fit:cover;object-position:50% 50%;max-width:none;max-height:none;
+ transform-origin:50% 50%;transform:translate3d(calc(var(--peace-look-x,0px)*.35),calc(var(--peace-look-y,0px)*.35),0) scale(var(--peace-arrival-scale,1.22));
+ transition:transform .18s linear;opacity:0}
+ #peace-encounter .peace-cinema-image{z-index:0;filter:saturate(1.08) contrast(1.04) blur(1px);transition:transform .18s linear,filter 1.1s ease}
+ #peace-encounter .peace-cinema-water{z-index:1;pointer-events:none;mix-blend-mode:screen}
+ #peace-encounter .peace-cinema-ready .peace-cinema-image,#peace-encounter .peace-cinema-ready .peace-cinema-water{opacity:1}
+ #peace-encounter .peace-cinema-ready .peace-cinema-image{filter:saturate(1.08) contrast(1.04) blur(0)}
+ #peace-encounter.peace-cinema-active #peace-world-canvas{position:absolute;inset:0;z-index:2;opacity:.64;pointer-events:none}
+ #peace-encounter .peace-cinema-stage{z-index:1}
  #peace-encounter .peace-cinema-light{position:absolute;inset:0;z-index:2;opacity:.84;mix-blend-mode:screen;
  background:radial-gradient(ellipse at 20% 22%,rgba(255,240,184,.18),transparent 45%),linear-gradient(125deg,rgba(14,88,132,.22),transparent 42%);}
  #peace-encounter .peace-cinema-vignette{position:absolute;inset:0;z-index:3;
@@ -827,10 +830,10 @@ function ensurePeaceCinema(){
  background:repeating-linear-gradient(90deg,transparent 0 84px,rgba(233,254,248,.018) 86px,transparent 92px);
  opacity:.35;animation:peace-water-light 19s linear infinite;}
  @keyframes peace-water-light{from{transform:translateX(-2%)}to{transform:translateX(2%)}}
- #peace-encounter.peace-cinema-active #peace-world-canvas{opacity:0;pointer-events:none;}
+ #peace-encounter.peace-cinema-active #peace-world-canvas{opacity:.64;pointer-events:none;}
  #peace-encounter .peace-world-hud{z-index:9;}
  #peace-encounter .peace-horizon-mark{z-index:9;}
- @media(prefers-reduced-motion:reduce){#peace-encounter .peace-cinema-image{transition:none;transform:scale(1.08)!important}
+ @media(prefers-reduced-motion:reduce){#peace-encounter .peace-cinema-image,#peace-encounter .peace-cinema-water{transition:none;transform:scale(1.08)!important}
  #peace-encounter .peace-cinema-motion{animation:none}}
  `;
  peaceOverlay.appendChild(style);
@@ -844,6 +847,9 @@ function ensurePeaceCinema(){
  };
  photo.onerror=()=>{if(peaceCinemaState!=='error')peaceCinemaPreload.onerror();};
  photo.src=PEACE_CINEMA_IMAGE;layer.prepend(photo);peaceCinemaPhoto=photo;
+ const water=document.createElement('canvas');water.className='peace-cinema-water';water.width=960;water.height=1400;
+ water.setAttribute('aria-hidden','true');layer.insertBefore(water,photo.nextSibling);peaceWaterCanvas=water;
+ peaceWaterContext=water.getContext('2d',{alpha:true});
  peaceOverlay.insertBefore(layer,peaceCanvas);peaceCinemaLayer=layer;
  if(peaceCinemaState==='ready')layer.classList.add('peace-cinema-ready');
  peaceOverlay.classList.add('peace-cinema-active');
@@ -856,6 +862,7 @@ function ensurePeaceCinema(){
 }
 function updatePeaceCinema(){
  if(!peaceCinemaLayer||peaceCinemaState==='error')return;
+ if(peaceCinemaState==='ready')drawPeaceSourceWater(performance.now());
  const f=Math.max(0,Math.min(1,(flight-.55)/.45)),ease=f*f*(3.-2.*f);
  const entering=Math.max(0,1.-ease);
  const scale=1.32-.24*ease;
@@ -867,6 +874,38 @@ function updatePeaceCinema(){
  peaceCinemaLayer.style.setProperty('--peace-atmos-scale',(1.16-.16*ease).toFixed(3));
 }
 
+function drawPeaceSourceWater(now){
+ // About-native: redraw only the original source pixels of the lagoon.
+ // This is source-local shimmer, not a moving rectangle or new invented water.
+ if(!peaceWaterContext||!peaceWaterCanvas||!peaceCinemaPhoto?.complete||!peaceCinemaPhoto.naturalWidth)return;
+ if(reduced){peaceWaterContext.clearRect(0,0,960,1400);return;}
+ if(peaceWaterLast&&now-peaceWaterLast<46)return;peaceWaterLast=now;
+ const c=peaceWaterContext,t=now*.001;
+ c.clearRect(0,0,960,1400);c.save();
+ c.beginPath();c.moveTo(0,820);c.lineTo(960,823);c.lineTo(960,1119);c.lineTo(782,951);
+ c.lineTo(753,939);c.lineTo(728,1030);c.lineTo(602,1400);c.lineTo(446,1400);
+ c.lineTo(390,1120);c.lineTo(338,1046);c.lineTo(266,959);c.lineTo(231,953);
+ c.lineTo(154,1034);c.lineTo(0,1138);c.closePath();c.clip();
+ // Reference coordinates: exactly the SVG's 960x1400 source. No image/object drift.
+ for(let y=820;y<1400;y+=5){
+  const depth=(y-820)/580;
+  const shift=Math.sin(t*1.14+y*.041)*1.9+Math.sin(t*.7-y*.084)*.9;
+  c.globalAlpha=.20+.13*depth;
+  c.drawImage(peaceCinemaPhoto,0,y,960,5,shift*(.2+depth),y,960,5.7);
+ }
+ c.restore();
+}
+function schedulePeaceRealGeometry(){
+ // The art appears first; the exact existing H-Earth construction runs after
+ // the transition rather than synchronously in the user's Begin click.
+ if(peaceGeometryScheduled||peaceGL)return;
+ peaceGeometryScheduled=true;
+ setTimeout(()=>{
+  if(selected!==4||peaceGL){peaceGeometryScheduled=false;return;}
+  try{setupPeaceGLFallback();}catch(error){console.error('Peace admitted geometry:',error);}
+  peaceGeometryScheduled=false;requestFrame();
+ },reduced?160:3700);
+}
 let peaceKernelFacade=null;
 let peaceGL=null,peaceProgram=null,peaceSkyProgram=null,peaceOcean=null,peaceIslands=null,peaceShore=null,peaceRocks=null,peaceSkyBuffer=null,peaceLoc={},peaceSkyLoc={};
 const peaceCanvas=document.querySelector('#peace-world-canvas'),peaceHud=document.querySelector('#peace-world-hud');
@@ -1094,11 +1133,11 @@ function peaceBuildKernelMeshes(K){
 }
 function setupPeaceWorld(){
  ensurePeaceCinema();
- if(peaceCinemaState!=='error')return;
- setupPeaceGLFallback();
+ if(peaceCinemaState==='error'){setupPeaceGLFallback();return;}
+ schedulePeaceRealGeometry();
 }
 function setupPeaceGLFallback(){if(peaceGL)return;
- peaceGL=peaceCanvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power'});
+ peaceGL=peaceCanvas.getContext('webgl',{alpha:true,antialias:false,powerPreference:'low-power'});
  if(!peaceGL)throw Error('Peace coast WebGL unavailable');
  peaceProgram=peaceLink(peaceVertex,peaceFragment);peaceSkyProgram=peaceLink(peaceSkyVertex,peaceSkyFragment);
  for(const n of ['aPosition','aNormal'])peaceLoc[n]=peaceGL.getAttribLocation(peaceProgram,n);
@@ -1108,21 +1147,23 @@ function setupPeaceGLFallback(){if(peaceGL)return;
  const groups=peaceBuildKernelMeshes(peaceKernelFacade);
  peaceOcean=upload(groups[0]);peaceShore=upload(groups[1]);peaceIslands=upload(groups[2]);peaceRocks=upload(groups[3]);
  peaceSkyBuffer=peaceGL.createBuffer();peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,peaceSkyBuffer);peaceGL.bufferData(peaceGL.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),peaceGL.STATIC_DRAW);
- peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.clearColor(.04,.14,.19,1.);
+ peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.clearColor(0,0,0,0);
 }
 function drawPeaceWorld(t){
  updatePeaceCinema();
- if(peaceCinemaState!=='error')return;
  if(!peaceGL)return;
  const r=peaceCanvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.3),w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));
  if(peaceCanvas.width!==w||peaceCanvas.height!==h){peaceCanvas.width=w;peaceCanvas.height=h;}
  peaceGL.viewport(0,0,w,h);peaceGL.clear(peaceGL.COLOR_BUFFER_BIT|peaceGL.DEPTH_BUFFER_BIT);
+ if(peaceCinemaState==='error'){
  peaceGL.disable(peaceGL.DEPTH_TEST);peaceGL.useProgram(peaceSkyProgram);peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,peaceSkyBuffer);
  peaceGL.vertexAttribPointer(peaceSkyLoc.aXY,2,peaceGL.FLOAT,false,0,0);peaceGL.enableVertexAttribArray(peaceSkyLoc.aXY);
  peaceGL.uniform1f(peaceSkyLoc.uTime,t);peaceGL.uniform1f(peaceSkyLoc.uAspect,w/h);peaceGL.drawArrays(peaceGL.TRIANGLES,0,3);
+ }
  peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.useProgram(peaceProgram);peaceGL.uniform2f(peaceLoc.uViewport,w/h,1);peaceGL.uniform1f(peaceLoc.uTime,t);
  const draw=(mesh,kind)=>{peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,mesh.buffer);peaceGL.vertexAttribPointer(peaceLoc.aPosition,3,peaceGL.FLOAT,false,24,0);peaceGL.enableVertexAttribArray(peaceLoc.aPosition);peaceGL.vertexAttribPointer(peaceLoc.aNormal,3,peaceGL.FLOAT,false,24,12);peaceGL.enableVertexAttribArray(peaceLoc.aNormal);peaceGL.uniform1f(peaceLoc.uKind,kind);peaceGL.drawArrays(peaceGL.TRIANGLES,0,mesh.count);};
- draw(peaceOcean,0);draw(peaceShore,1);draw(peaceIslands,2);draw(peaceRocks,3);
+ if(peaceCinemaState==='error'){draw(peaceOcean,0);draw(peaceShore,1);draw(peaceIslands,2);}
+ draw(peaceRocks,3);
 }
 
 

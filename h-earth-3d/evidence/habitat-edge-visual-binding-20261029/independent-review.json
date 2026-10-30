@@ -1,0 +1,33 @@
+{
+  "schema": "H_EARTH_HABITAT_EDGE_VISUAL_BINDING_INDEPENDENT_REVIEW_v1",
+  "operationId": "H_EARTH_HABITAT_EDGE_VISUAL_BINDING_20261029_001",
+  "lockGeneration": 2986,
+  "admissionRun": 40986142933,
+  "reviewer": "WEST_INDEPENDENT_REVIEW",
+  "result": "PASS_SOURCE_READY_FOR_FOUR_FRAME_INSPECTION",
+  "builderSelfApproval": false,
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "38926d91063f2d9d2e769055862f160323adfba4729846d05d61d3f02768fd34",
+    "h-earth-3d/evidence/habitat-edge-visual-binding-20261029/qualify.mjs": "c444c825f7385ed50bf78f3b1a50713b6eb53d847c6fb7028fe2036a8e1d9042",
+    "h-earth-3d/evidence/habitat-edge-visual-binding-20261029/qualify.test.mjs": "a83447d9bf536681a1cb91e223fcb512be770bfa60bf12b2a63cf3d07b48f13d",
+    "h-earth-3d/evidence/habitat-edge-visual-binding-20261029/source-edge.json": "9348fc6e76d5c040ed6903deb86e6398d3e4869889175afc706a14f04a7b0a3f"
+  },
+  "verification": [
+    "9 selected Node tests passed",
+    "Four fixed supported-navigation poses horizontally aim at the declared coastal edge; no diagnostic observer or synthetic elevation override",
+    "Approach/close/side/reverse distances11.8646m/5.8646m/12m/12.1354m with negative pitches and56degree verticalFOV; actual navigation and camera packets must validate at runtime",
+    "Successful all-nine imported-tree and2914527-root warm-up retained before four PNG captures",
+    "Strict same-frame PNG, viewport, pose, asset-signature and HTTP shader/atlas custody guards retained",
+    "Scene fixed to50b337ff7bbfb6fce4876e1037ac96d5faff65a6; renderer and route source hashes checked and scene checkout rechecked at completion",
+    "Only route observation globals exposed; no renderer interception or grass hiding",
+    "Support fixed toa26dc41964ae334a5ce73a637bcc96a0b4d43807 and four helper SHA256 values validated",
+    "Original main workflow prefix byte-identical; new job isolated by exact branch/title/reopened event; four-hash review binding, one attempt and always-preserved artifact inspected",
+    "source-edge.json retains source-backed target and ordinary terrain role evidence; no photograph identity prerequisite introduced"
+  ],
+  "limits": [
+    "Actual edge visibility and native supported camera resolution remain pending this capture",
+    "Source coverage jump is not itself a visual conclusion",
+    "The selected saved scene is immutable; current-main source-edge provenance is preserved separately and does not imply current-main deployment",
+    "No product mutation, candidate filter, merge, publication or repair claim authorized by this review"
+  ]
+}

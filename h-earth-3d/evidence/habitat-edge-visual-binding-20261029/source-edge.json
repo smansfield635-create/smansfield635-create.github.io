@@ -1,0 +1,79 @@
+{
+  "head": "e11fb87cf564744cb346bb8dae7b129e8cfc295c",
+  "target": {
+    "name": "coastal-internal-occupancy-edge",
+    "worldXZ": [
+      165.6666666666667,
+      -270.1354166666667
+    ],
+    "panel": "coastal",
+    "column": 131,
+    "rows": [
+      12,
+      13
+    ],
+    "atlasValues": [
+      0,
+      244
+    ],
+    "worldZCenters": [
+      -270.6302083333333,
+      -269.640625
+    ],
+    "coverageJump": 0.9568627450980393,
+    "centerSpacingMeters": 0.9895833333333334,
+    "materialReplacementCoefficientJump": 0.6506666666666667
+  },
+  "finalInstalledProof": {
+    "source": "vegetation-single-owner.prototype.v1.js:buildCavernGrassSoilHabitat",
+    "expression": "offset=z*width+size+x; pixels[offset]=max(old,value)",
+    "bounds": "x in[0,191], size192,width576 => only columns192..383 writable",
+    "conclusion": "Coastal panel columns384..575 is byte-identical after runtime entrance additions. No need reconstruct ravine changes to qualify this coastal edge.",
+    "shader": "At target x>88 excludes ravine and x>-69 excludes woodland; coastal exterior edge distance12.86458m exceeds maximum shader fade width7m, so final coverage equals sampled coastal texel exactly."
+  },
+  "groundEvidence": {
+    "source": "/tmp/mesh-cpu/upload-positions.bin and upload-indices.bin",
+    "packageIdentity": "H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2",
+    "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "qualification": "Mesh evidence uses previous authenticated immutable package; verify current package identity before capture; no synthetic geometry.",
+    "primitiveIndex": 0,
+    "roleCode": 1,
+    "points": [
+      {
+        "xz": [
+          165.6666667,
+          -270.63020833
+        ],
+        "offset": 33816,
+        "y": 5.936006,
+        "shaderSlope": 0.01784527,
+        "coast": 146.35269
+      },
+      {
+        "xz": [
+          165.6666667,
+          -269.640625
+        ],
+        "offset": 33819,
+        "y": 6.191596,
+        "shaderSlope": 0.02517492,
+        "coast": 145.37851
+      }
+    ],
+    "targetY": 6.064614,
+    "geologicalOverride": "Absent: x165.67>geological xMax96",
+    "protected": "Outside oasis[-18,-204,34,-131], estate[18,-210,132,-125], grove center(-139.40268,-210.74617), approach segment(48,-144)\u2192(0,-96)."
+  },
+  "camera": {
+    "x": 165.6666667,
+    "z": -282,
+    "terrainY": 5.221939,
+    "eyeY": 7.471939,
+    "yawDegrees": 180,
+    "pitchDegrees": -6.76,
+    "verticalFovDegrees": 56,
+    "targetDistanceMeters": 11.8645833,
+    "note": "Normal supported navigation preferable; diagnosticObserver exact eyeY if needed. Existing yaw0 points toward decreasing Z."
+  },
+  "implementationImplication": "This source-backed internal transition is untouched by Q smoothing since habitat stage runs after it. A material-only world-metre filter of habitat coverage or full habitat contribution can soften it while leaving installed roots and terrain untouched. Preserve soil photographic detail explicitly; direct full base blur would lose grain. Endpoint amplitudes should remain away from transition. Root to choose bounded shader composition."
+}

@@ -4737,6 +4737,50 @@
       "scopeHash": "39ed4fe935f9398bfa5535681a6362d729aade0df7119464e24eaf8473202225",
       "state": "ADMITTED_LOCKED"
     },
+    "39ede5d15bd9f02707d020b8fe0abff7f37d932f6d9968f21701fa52e1fa2131": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+          "lockGeneration": 2987,
+          "lockScope": "H_EARTH:HABITAT_MATERIAL_BLEND_20261029",
+          "operationId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001",
+          "procedureLocatorDigest": "b1993df1c91b860900f04250e9ab207f33626ae8b0571282f1dbfad8389be9bf",
+          "requestDigest": "df565432bbdf9fa5ffe4c48bc2418f9174141bd9ead58599fab90c0fd458e556",
+          "scopeHash": "39ede5d15bd9f02707d020b8fe0abff7f37d932f6d9968f21701fa52e1fa2131"
+        },
+        "bindingDigest": "285e3a786d7067dc676c082af8496a3b1e502a84567139075177a0aa3fe0a7a7",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "04c1d8978bb195876b28c8e5b1438f1e0dab4f283258ed1fef18df85afe24ec2",
+          "commentId": 6512997141,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40988429590,
+          "workflowSha": "bad4bb1a4671e5da76508aa753ece069810c8e0c"
+        },
+        "lineageAnchorCommitSha": "593b814b5ec444ed3b08fc4615d8b75a3a1bbe0a",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+      "lockGeneration": 2987,
+      "lockScope": "H_EARTH:HABITAT_MATERIAL_BLEND_20261029",
+      "operationId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001",
+      "procedureLocatorDigest": "b1993df1c91b860900f04250e9ab207f33626ae8b0571282f1dbfad8389be9bf",
+      "released": false,
+      "requestDigest": "df565432bbdf9fa5ffe4c48bc2418f9174141bd9ead58599fab90c0fd458e556",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "39ede5d15bd9f02707d020b8fe0abff7f37d932f6d9968f21701fa52e1fa2131",
+      "state": "ADMITTED_LOCKED"
+    },
     "39f2877f74288d2df31f1bf51fe8ff2a76435d0f118e5c44b6380e1b23159a6f": {
       "governingHead": "82c8eae2a9ba67e2a1c7acf3885e193015069532",
       "lockGeneration": 1685,
@@ -23435,7 +23479,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2986,
+  "lockGeneration": 2987,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

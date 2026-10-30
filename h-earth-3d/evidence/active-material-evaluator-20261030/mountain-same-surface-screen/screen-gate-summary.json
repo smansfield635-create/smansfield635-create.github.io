@@ -1,0 +1,61 @@
+{
+  "schema": "H_EARTH_GEN3000_MOUNTAIN_SAME_SURFACE_SOURCE_SCREEN_RECEIPT_v1",
+  "date": "2026-10-30",
+  "status": "HISTORICAL_MOUNTAIN_CAMERA_NEGATIVE__OWNER_CURRENT_DEFECTS_OPEN",
+  "sourceProductHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "frozenCurrentCandidate": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "evidenceOnly": true,
+  "originalArchiveRuns": [
+    40609718590,
+    40613605067
+  ],
+  "historicalOriginalMeshZipSha256": "5bfce62703c70fd5b68e894fca8634e5206c1ca681d7a127c192312a8e06aa3c",
+  "originalEightStageZipSha256": "df23ee1d2b697ba09c3e805b42d790708900c04dd80d3b153953589bf4eda539",
+  "originalRidgeZipSha256": "08783a00f26d39a8145c58f5a7b8e35d4967c3f0bdb513e2b4da976436332d38",
+  "sourceCamera": {
+    "x": 88.00614407254056,
+    "y": 29.26418157783337,
+    "z": -260.0181529415971,
+    "yaw": 118,
+    "pitch": -13,
+    "fovDegrees": 56,
+    "viewport": [
+      529,
+      980
+    ]
+  },
+  "screen": {
+    "selectedPairs": 354,
+    "rayResolved": 354,
+    "sameSourceTerrainRole": 354,
+    "preliminaryContinuous": 305,
+    "preliminaryRejected": 49,
+    "underPointOneMetres": 273,
+    "pointOneToOneMetres": 0,
+    "oneToFiveMetres": 32,
+    "highContrastAtMeaningfulSpan": 0,
+    "contrastThresholdRGB8Norm": 20
+  },
+  "heuristicLimit": "This is a bounded screen of archived original pixels, not a proof all terrain is free of seams or a current-GPU defect match.",
+  "historicalRidgeStatus": "FOREGROUND_BACKGROUND_OCCLUSION_NOT_SAME_SURFACE_ALBEDO_SEAM",
+  "presentCandidateMountainCoverage": false,
+  "gen2998MountainCameraCoverage": false,
+  "ownerPriority": [
+    "STRAIGHT_HALF_PLANE_MATERIAL_BORDER",
+    "CURVED_WEDGE_BARE_SOIL_MATERIAL_BORDER"
+  ],
+  "ownerPhotosNotMatched": [
+    "30106.jpg",
+    "30108.jpg"
+  ],
+  "noNewGpu": true,
+  "noProductMutation": true,
+  "noMerge": true,
+  "noPublication": true,
+  "portableLibraryPath": "/H-Earth/H-Earth-Gen3000-mountain-source-screen-20261030.zip",
+  "portableArchiveSha256": "c060052e5ecabf57f292a90e0f923e1fa57b649a4527c8051d4e2e317588d109",
+  "portableFullReportSha256": "bd7520c9449bee01e14b3f1fa3e5ae82da45160761b3b10876f31e526ed916ce",
+  "sourceScriptSha256": "f45994e8464c5cc44fe380a18024b8b7c6315ff01dbe989dd83168a96ae8a4a3",
+  "testsPassed": 5,
+  "nextAction": "Obtain separately admitted exact CURRENT-head source-registered views actually reproducing the owner's straight and curved high-foothill same-surface color cuts; collect depth/role/material-stage and meadow/coast controls before any correction."
+}

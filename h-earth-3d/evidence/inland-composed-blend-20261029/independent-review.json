@@ -1,0 +1,42 @@
+{
+  "schema": "H_EARTH_INLAND_COMPOSED_BLEND_INDEPENDENT_REVIEW_v1",
+  "operationId": "H_EARTH_INLAND_COMPOSED_BLEND_20261029_001",
+  "lockGeneration": 2984,
+  "admissionRun": 40981962767,
+  "result": "PASS_SOURCE_READY_FOR_BOUNDED_VISUAL_COMPARISON",
+  "builderSelfApproval": false,
+  "reviewer": "WEST_INDEPENDENT_REVIEW",
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "e8c1ca8b923672ec14aa3e082346bd73bab84bf3cf4fdd5e3bd0e089b5f80b85",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/blend.test.mjs": "c2d95ecb04b62bdbba2e147964fbd0d180c39ddbbbb936380cc7a732cc060659",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/product-binding.json": "33dc0265e66399f9b3630d01315dfcdd385638aec3ba3100a72754ee974cf8c8",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/qualify.mjs": "8eef8c98cada356aa445f303ae468f127478682108bb1d1061be06039b78f7f1",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/qualify.test.mjs": "5587855b437d2993dd38d1b21eb805b2d742ff92eff7050615ea9717f79f54cb",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/warmup.test.mjs": "b9a3f22a33e7301469a3a885307b04464d7dfdd959d5a17c098e0976fe956d40",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "b55e26ea7cfdc73df298f6756a1e85615aa4069f64dcd6a3a2baa681cb23cd30",
+    "showroom/globe/h-earth/vegetation-prototype/route.js": "e8405e00e6a40d16fabb6b03f4f24364ffd4ed5b0aeffd5fe4720f8ee83747e8"
+  },
+  "evidenceSha256": {
+    "inland-prototype/report.json": "4a0d3db43c054b80fd893d250a7f0408a745d30e2297a5982ae4e4a0c1cb23f8",
+    "inland-prototype/shader-report.json": "466d3baccab41519ced127ef6f161a8147bead6291b0569503b197b5443add61",
+    "inland-prototype/full-compile-report.json": "4538c7058c65425c5c2c42ad4f7315d68d3536756668cb5705340fb42e59e37c",
+    "inland/west-review.json": "7c940559d003f4352bcbcbb67c6124554b722c53943b346c2f39baee7205ef9e"
+  },
+  "verification": [
+    "21 selected Node tests passed",
+    "Previously successful warm-up and twelve-image capture algorithm byte-identical after explicit operation/profile/path/generation substitutions",
+    "Both capture regression test files unchanged",
+    "Original main workflow prefix unchanged; new job isolated to exact branch, title prefix and reopened event",
+    "Workflow exact-head outputs, fixed baseline/helper refs, single-attempt guard, sorted eight-file review hash list and artifact preservation inspected",
+    "Product renderer equals prior independently reviewed source; baseline reconstruction and route-only cache revision checks pass",
+    "CPU report copied without change and limited to archived witnesses",
+    "NORTH numerical GLSL parity and full vertex/fragment-plus-atlas link reports inspected; bounded context is Mesa OpenGL ES3.2",
+    "Receipt generation mismatch corrected to2984 before final hash binding"
+  ],
+  "limits": [
+    "GPU comparison and owner-visible boundary improvement pending",
+    "No publication or merge authorization supplied by this review",
+    "Physical Android performance unmeasured",
+    "No global final-color range or physical conservation claim"
+  ]
+}

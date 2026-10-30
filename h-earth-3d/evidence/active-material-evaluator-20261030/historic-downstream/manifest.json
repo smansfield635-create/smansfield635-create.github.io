@@ -1,0 +1,42 @@
+{
+  "schema": "H_EARTH_GEN3000_DOWNSTREAM_GATE_PACKET_v1",
+  "status": "PASS_RESEARCH_ONLY",
+  "files": {
+    "contact-field.cjs": {
+      "sha256": "9d016d9ac66bb1beb2386fef4a82d013e338eb0b12e49f319fdd5c8a71c53ea5",
+      "bytes": 2373
+    },
+    "prove_later.py": {
+      "sha256": "68d542cbc86a9800f82695e14067cfc690006176c73b95841ea74cbb8d09faa9",
+      "bytes": 6597
+    },
+    "independent_review.py": {
+      "sha256": "1697f33aa891c4e6709b48896dde90a2792cca8614c9b9d8de7e4d1df1efbb5d",
+      "bytes": 2203
+    },
+    "test_post_margin.py": {
+      "sha256": "d1ac597089b0b5701d94ca8d94dd615eeaa958502866b2efa7d4664099960ed6",
+      "bytes": 1614
+    },
+    "contact-replay.json": {
+      "sha256": "706bdfae39f5f16c4740449de1e33b9f36c936a9fc509ba73336a0f3f2a6c389",
+      "bytes": 1709
+    },
+    "historic-far-post-margin-gates.json": {
+      "sha256": "9f59a1abae526b6714a2e4e8ff1aa8f02f14e4e1493efc04d67aa2e6f5820e3a",
+      "bytes": 4823
+    },
+    "independent-review.json": {
+      "sha256": "f4eb6b7f9ed6b09fa8121e364c3d1e2410074c2ec762a9ded854b04b606d8c1b",
+      "bytes": 949
+    },
+    "tests.log": {
+      "sha256": "54ea0c78cadf322ac889140e7b03280d3f1e8996bf5097947e5ab21270571b14",
+      "bytes": 1428
+    },
+    "README.md": {
+      "sha256": "d878894e2a10e796bb48b0dfeeb266df1f66d13878f5ebfd3433b6c9ab3b67e3",
+      "bytes": 5785
+    }
+  }
+}

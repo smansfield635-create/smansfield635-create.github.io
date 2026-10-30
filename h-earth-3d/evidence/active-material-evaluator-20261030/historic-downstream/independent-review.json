@@ -1,0 +1,37 @@
+{
+  "schema": "H_EARTH_GEN3000_HISTORIC_STAGE_GUARDS_INDEPENDENT_v1",
+  "result": "INDEPENDENT_SOURCE_INEQUALITIES_PASS",
+  "checked": [
+    {
+      "witness": 0,
+      "exactWorld": [
+        -188.875,
+        14.75439453125,
+        -736.0625
+      ],
+      "manorDistanceMeters": 624.8682017283725,
+      "contactDistanceMeters": 64.0,
+      "siteBminEdgeMeters": -360.0625,
+      "hillsideDeltaMeters": -528.0625,
+      "allLaterStagesSourceInactive": true
+    },
+    {
+      "witness": 1,
+      "exactWorld": [
+        -189.0625,
+        14.73388671875,
+        -734.5625
+      ],
+      "manorDistanceMeters": 623.5953778793586,
+      "contactDistanceMeters": 64.0,
+      "siteBminEdgeMeters": -358.5625,
+      "hillsideDeltaMeters": -526.5625,
+      "allLaterStagesSourceInactive": true
+    }
+  ],
+  "retainedCases": 2,
+  "cameraDepthVisibility": "UNQUALIFIED",
+  "nodeOrGpuEquivalence": false,
+  "newGpu": false,
+  "productModified": false
+}

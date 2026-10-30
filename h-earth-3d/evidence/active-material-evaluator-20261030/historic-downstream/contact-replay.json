@@ -1,0 +1,82 @@
+{
+  "source": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "elapsedMs": 489,
+  "stats": {
+    "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+    "saturationMeters": 64,
+    "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+    "terrainTriangles": 20736,
+    "oceanTriangles": 17696,
+    "overlapTests": 62308,
+    "contactSegments": 434,
+    "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+    "patchTriangles": 0,
+    "packageVertices": 10573,
+    "patchVertices": 0,
+    "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+    "contactTrianglesWithoutVertexSignChange": 0,
+    "initializationMilliseconds": 488.453975
+  },
+  "samples": [
+    {
+      "offset": 144,
+      "ids": [
+        24,
+        121,
+        25
+      ],
+      "world": [
+        [
+          -192.00706481933594,
+          14.991758346557617,
+          -736.027099609375
+        ],
+        [
+          -192.00697326660156,
+          14.807866096496582,
+          -728.0264282226562
+        ],
+        [
+          -184.00650024414062,
+          14.377983093261719,
+          -736.0260009765625
+        ]
+      ],
+      "contact": [
+        64,
+        64,
+        64
+      ]
+    },
+    {
+      "offset": 73902,
+      "ids": [
+        14742,
+        14740,
+        14741
+      ],
+      "world": [
+        [
+          -172.68740844726562,
+          14.325920104980469,
+          -740.6695556640625
+        ],
+        [
+          -184.00650024414062,
+          14.377983093261719,
+          -736.0260009765625
+        ],
+        [
+          -192.00706481933594,
+          14.991758346557617,
+          -736.027099609375
+        ]
+      ],
+      "contact": [
+        64,
+        64,
+        64
+      ]
+    }
+  ]
+}

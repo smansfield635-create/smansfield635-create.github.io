@@ -1,0 +1,18 @@
+test_active_domain_is_not_universally_zero (test_post_margin.TestSourceGates.test_active_domain_is_not_universally_zero) ... ok
+test_contact_saturation (test_post_margin.TestSourceGates.test_contact_saturation) ... ok
+test_fail_open_contact (test_post_margin.TestSourceGates.test_fail_open_contact) ... ok
+test_near_far_both (test_post_margin.TestSourceGates.test_near_far_both) ... ok
+test_no_habitat_and_gravel (test_post_margin.TestSourceGates.test_no_habitat_and_gravel) ... ok
+test_no_hillside_and_sand (test_post_margin.TestSourceGates.test_no_hillside_and_sand) ... ok
+test_no_manor (test_post_margin.TestSourceGates.test_no_manor) ... ok
+test_no_shoreline_litter (test_post_margin.TestSourceGates.test_no_shoreline_litter) ... ok
+test_no_site_b (test_post_margin.TestSourceGates.test_no_site_b) ... ok
+test_original_contact_source_result (test_post_margin.TestSourceGates.test_original_contact_source_result) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.003s
+
+OK
+{"result": "PASS_CONDITIONAL_CPU_ALL_POST_MARGIN_STAGE_MASKS_INACTIVE", "witnesses": 2, "allStagesOff": true, "sourceAlternatives": 2}
+{"result": "PASS_CONDITIONAL_CPU_ALL_POST_MARGIN_STAGE_MASKS_INACTIVE", "witnesses": 2, "allStagesOff": true, "sourceAlternatives": 2}
+{"result": "PASS_CONDITIONAL_CPU_ALL_POST_MARGIN_STAGE_MASKS_INACTIVE", "witnesses": 2, "allStagesOff": true, "sourceAlternatives": 2}

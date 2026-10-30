@@ -779,7 +779,7 @@ function drawEmberWorld(t){if(!emberGL)return;
 const PEACE_CINEMA_IMAGE='./peace.environment.svg?cb=peace-v9-directional-advection';
 let peaceWaterCanvas=null,peaceWaterContext=null,peaceWaterLast=0;
 let peaceCloudCanvas=null,peaceCloudContext=null,peaceCloudLast=0,peaceGeometryScheduled=false;
-let peaceCloudBanks=[],peaceSafeWaterMask=null;
+let peaceCloudBanks=[],peaceSafeWaterMask=null,peaceWaveFieldCanvas=null,peaceWaveFieldContext=null,peaceWaveFieldPixels=null;
 let peaceCinemaState='loading',peaceCinemaLayer=null,peaceCinemaPhoto=null,peaceCinemaLastX=0,peaceCinemaLastY=0;
 let peaceBaseSource=null,peaceCloudSource=null,peaceWaterMaskSource=null,peaceLayerSourcesPromise=null,peaceMotionStartedAt=0;
 const peaceCinemaPreload=new Image();
@@ -1012,6 +1012,34 @@ function drawPeaceSourceWater(now,force=false){
  if(!force&&peaceWaterLast&&now-peaceWaterLast<42)return;peaceWaterLast=now;
  const t=Math.max(0,(now-(peaceMotionStartedAt||now))*.001);
  c.clearRect(0,0,960,540);c.save();c.lineCap='round';
+ // Dynamic directional reflection field is an optical layer, not moving
+ // geography. Half-resolution sampling bounds the per-frame mobile cost.
+ if(!peaceWaveFieldCanvas){
+  peaceWaveFieldCanvas=document.createElement('canvas');
+  peaceWaveFieldCanvas.width=480;peaceWaveFieldCanvas.height=270;
+  peaceWaveFieldContext=peaceWaveFieldCanvas.getContext('2d',{alpha:true});
+  if(peaceWaveFieldContext)peaceWaveFieldPixels=peaceWaveFieldContext.createImageData(480,270);
+ }
+ if(peaceWaveFieldContext&&peaceWaveFieldPixels){
+  const pixels=peaceWaveFieldPixels.data;
+  // Superpose two wave trains with slowly evolving cross-current. Each
+  // location changes its highlight without translating source image pixels.
+  for(let py=116;py<270;py++){
+   const yy=py*2,depth=Math.max(0,Math.min(1,(yy-226)/314));
+   for(let px=0;px<480;px++){
+    const xx=px*2;
+    const p1=Math.sin(xx*.078+yy*.019-t*1.24+Math.sin(xx*.018+yy*.041+t*.43)*.39);
+    const p2=Math.sin(xx*.036-yy*.064-t*.71);
+    const wave=Math.max(0,p1*.7+p2*.3);
+    const alpha=Math.min(.2,(.045+.15*depth)*wave*wave*wave);
+    const k=(py*480+px)*4;
+    pixels[k]=205;pixels[k+1]=245;pixels[k+2]=247;
+    pixels[k+3]=Math.round(alpha*255);
+   }
+  }
+  peaceWaveFieldContext.putImageData(peaceWaveFieldPixels,0,0);
+  c.drawImage(peaceWaveFieldCanvas,0,0,960,540);
+ }
  // Deterministic spatially coherent crests move toward the near water.
  // The original coast, islands and sea-color pixels remain unchanged.
  const fract=v=>v-Math.floor(v);

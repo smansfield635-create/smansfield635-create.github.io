@@ -1420,8 +1420,26 @@ void main() {
    }
  }
  float halfLambert=.22+.83*diffuse;
+ // World 05 only: camera-side sea-glass bounce reveals the near hemisphere
+ // while preserving the opposing night side and other eight world materials.
+ float peaceNearFace=(uHeart<.5&&uWorld>3.5&&uWorld<4.5&&uAtmosphere<.5)?1.:0.;
+ float peaceViewFill=max(0.,dot(n,normalize(vec3(-.28,.38,1.))));
+ halfLambert=max(halfLambert,peaceNearFace*(.30+.38*peaceViewFill));
  float spec=pow(max(0.,dot(reflect(-light,n),vec3(0.,0.,1.))),mix(8.,44.,1.-rough));
  vec3 shaded=material*halfLambert;
+ if(peaceNearFace>.5){
+   // Peace only: offshore topography and irregular pale mineral shelves.
+   float formation=noise3(p*5.1+vec3(4.2,1.6,7.3));
+   float fine=noise3(p*21.4+vec3(2.4,6.2,1.9));
+   float shelf=smoothstep(.27,.72,formation*.78+fine*.22);
+   float coast=1.-smoothstep(.025,.13,abs(formation-.54));
+   vec3 depth=mix(vec3(.08,.24,.31),vec3(.30,.65,.62),shelf);
+   depth=mix(depth,vec3(.68,.86,.78),coast*(.26+.24*fine));
+   float fill=.65+.30*max(0.,dot(n,normalize(vec3(-.36,.7,.55))));
+   shaded=mix(shaded,max(shaded,depth*fill),.91);
+   float fresnel=pow(1.-abs(n.z),2.4);
+   shaded+=vec3(.025,.11,.14)*fresnel*.45;
+ }
  shaded+=mix(vec3(.22,.14,.08),vec3(.91,.86,.77),metal)*spec*(.08+.42*(1.-rough));
  shaded+=material*rim*(.17+glow);
  shaded+=material*glow;
@@ -1489,7 +1507,7 @@ function setupGL(){
 }
 const ARRIVAL_CONSTELLATION=Object.freeze([
  [-1.35,.30,-3.4],[1.1,1.04,-2.0],[1.88,.29,-1.3],[1.62,-.67,-.4],
- [2.05,-1.42,2.35],[-1.26,-1.19,-2.1],[-2.1,-.78,-3.3],[-2.20,.07,-3.9],[-.81,1.12,-3.7]
+ [1.80,-1.53,-.25],[-1.26,-1.19,-2.1],[-2.1,-.78,-3.3],[-2.20,.07,-3.9],[-.81,1.12,-3.7]
 ]);
 function basePosition(i){
  const b=ARRIVAL_CONSTELLATION[i];
@@ -1498,7 +1516,7 @@ function basePosition(i){
  return [b[0]*Math.cos(a)-b[2]*Math.sin(a)*.06,b[1]+Math.sin(orbitPhase*.6+i*.95)*.033,b[2]+Math.sin(a)*b[0]*.045];
 }
 function project(center){const s=cameraZ/Math.max(.48,cameraZ-center[2]+offset[2]);return {x:width/2+(center[0]-offset[0])/viewWidth*zoom*s*width/2,y:height/2-(center[1]-offset[1])/viewHeight*zoom*s*height/2,scale:s*zoom*width/(2*viewWidth)};}
-function radius(i){return [.26,.44,.34,.28,1.30,.27,.31,.22,.23][i];}
+function radius(i){return [.26,.44,.34,.28,.94,.27,.31,.22,.23][i];}
 function draw(mesh,center,r,c,isHeart,isSelected,worldIndex=-1,atmosphere=false){
   gl.bindBuffer(gl.ARRAY_BUFFER,mesh.buffer);gl.vertexAttribPointer(loc.aPosition,3,gl.FLOAT,false,28,0);gl.vertexAttribPointer(loc.aNormal,3,gl.FLOAT,false,28,12);gl.vertexAttribPointer(loc.aFacet,1,gl.FLOAT,false,28,24);gl.enableVertexAttribArray(loc.aPosition);gl.enableVertexAttribArray(loc.aNormal);gl.enableVertexAttribArray(loc.aFacet);
   gl.uniform3fv(loc.uCenter,center);gl.uniform1f(loc.uRadius,r);gl.uniform3fv(loc.uColor,c);gl.uniform1f(loc.uHeart,isHeart?1:0);gl.uniform1f(loc.uSelected,isSelected?1:0);gl.uniform1f(loc.uWorld,worldIndex);gl.uniform1f(loc.uAtmosphere,atmosphere?1:0);gl.drawArrays(gl.TRIANGLES,0,mesh.count);

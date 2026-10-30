@@ -851,7 +851,7 @@ function peaceBuildKernelMeshes(K){
  const add=(id,kind,positions,indices)=>{
   const result=K.constructHEarthTriangleMesh({primitiveId:'nine-summits-peace-'+id,
    vertices:positions.map(p=>K.createHEarthVector3(p[0],p[1],p[2])),indices,
-   expectedClosure:'OPEN_ALLOWED',semanticRole:'FORGIVENESS_PEACE_'+id.toUpperCase()});
+   normalMode:'FACE',expectedClosure:'OPEN_ALLOWED',semanticRole:'FORGIVENESS_PEACE_'+id.toUpperCase()});
   if(!result.valid||K.hasHEarthBlockingIssues(result.issues))
    throw Error('Peace kernel construction failed: '+id+': '+result.issues.map(e=>e.code).join(','));
   constructed.push({kind,record:result.primitiveRecord});

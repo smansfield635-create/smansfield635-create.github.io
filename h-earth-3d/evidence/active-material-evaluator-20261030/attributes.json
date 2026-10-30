@@ -1,0 +1,643 @@
+{
+  "schema": "H_EARTH_SOURCE_ATTRIBUTE_RECONSTRUCTION_v1",
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "priorGeometryCommit": "854aed7bf1a59070a897aafad78acdba454c6b4f",
+  "rendererSha256": "10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c",
+  "rendererSlices": {
+    "contactGenerator": "cc1572e2ad24fa9fa23ba7e5a55ea32112f60a06a835f9bb962f57d2827dc091",
+    "soilAttributes": "fdbe62902cd0b60271562ffb83a4f22446a899538f24e52873e739f9ae866d96"
+  },
+  "result": "SOURCE_ATTRIBUTE_RECONSTRUCTION_PASS",
+  "contactStats": {
+    "coordinateSpace": "UPLOADED_WORLD_XZ_METERS",
+    "saturationMeters": 64,
+    "interpolation": "PER_VERTEX_LINEAR_APPROXIMATION",
+    "terrainTriangles": 20736,
+    "oceanTriangles": 17696,
+    "overlapTests": 62308,
+    "contactSegments": 434,
+    "maximumPlaneResidualMeters": 1.3510026430907374e-14,
+    "patchTriangles": 0,
+    "packageVertices": 10573,
+    "patchVertices": 0,
+    "maximumSampledZeroContourAttributeResidualMeters": 1.484348515034148,
+    "contactTrianglesWithoutVertexSignChange": 0
+  },
+  "seamReceipt": {
+    "schema": "H_EARTH_NEAR_FAR_SEAM_PRESENTATION_v1",
+    "matchedVertices": 349,
+    "maxPositionResidualMeters": 0.00005042651046467775,
+    "sourceBuffersMutated": false,
+    "geometryChanged": false,
+    "vegetationSupportChanged": false,
+    "gpuBufferCountDelta": 0,
+    "gpuByteLengthDelta": 0
+  },
+  "states": {
+    "raw-upload": {
+      "positions": {
+        "file": "raw-upload.positions.bin",
+        "type": "Float32Array",
+        "length": 424119,
+        "min": -6799.703125,
+        "max": 6999.67626953125,
+        "sha256": "342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83"
+      },
+      "indices": {
+        "file": "raw-upload.indices.bin",
+        "type": "Uint32Array",
+        "length": 366666,
+        "min": 0,
+        "max": 141372,
+        "sha256": "483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c"
+      },
+      "normals": {
+        "file": "raw-upload.normals.bin",
+        "type": "Float32Array",
+        "length": 424119,
+        "min": -1,
+        "max": 1,
+        "sha256": "b9358dc5faf7540e256deb8f4caacb2d9326759866b38a2349f1b46ebc385e98"
+      },
+      "baseColorsLinear": {
+        "file": "raw-upload.baseColorsLinear.bin",
+        "type": "Float32Array",
+        "length": 565492,
+        "min": 0.004776953253895044,
+        "max": 1,
+        "sha256": "cabcdc78ed5d70ba6740a92037c0c1829b62b424ee68acb5c6f0c0f4f82e7d51"
+      },
+      "materialParameters": {
+        "file": "raw-upload.materialParameters.bin",
+        "type": "Float32Array",
+        "length": 565492,
+        "min": -12.375212669372559,
+        "max": 4.2366461753845215,
+        "sha256": "2551e80b6f260ee3bbd08bf139270b61307121ae21bf57471c4fb6d9d62d8c31"
+      },
+      "materialModelCodes": {
+        "file": "raw-upload.materialModelCodes.bin",
+        "type": "Uint8Array",
+        "length": 141373,
+        "min": 0,
+        "max": 1,
+        "sha256": "59c70c3f46cacf1f964a738b6fbb2a2f6013b0b6b56d6ccc15ca8b8ce67b700e"
+      },
+      "surfaceClassCodes": {
+        "file": "raw-upload.surfaceClassCodes.bin",
+        "type": "Uint8Array",
+        "length": 141373,
+        "min": 0,
+        "max": 255,
+        "sha256": "3c9534d4055ff2e75612d974c4aaf0623b6e1db273466d522bb7d28c9b020a6d"
+      },
+      "primitiveIndices": {
+        "file": "raw-upload.primitiveIndices.bin",
+        "type": "Uint16Array",
+        "length": 141373,
+        "min": 0,
+        "max": 21,
+        "sha256": "9187372a7eac8087f42240f08e52efde72aa602fddcb07d1c762f9fc572f51d6"
+      },
+      "roleCodes": {
+        "file": "raw-upload.roleCodes.bin",
+        "type": "Uint8Array",
+        "length": 141373,
+        "min": 1,
+        "max": 5,
+        "sha256": "c8896173a410644b0fbb7cb8894d2f9f08781fc7216fb28e04a1f367741cb749"
+      },
+      "coastDistances": {
+        "file": "raw-upload.coastDistances.bin",
+        "type": "Float32Array",
+        "length": 141373,
+        "min": -214.95993041992188,
+        "max": 620,
+        "sha256": "a2358aa5be06d5730960f8c90d5cfdf0ba31e18826b45a50cc9089d87c87d2ab"
+      },
+      "contactDistances": {
+        "file": "raw-upload.contactDistances.bin",
+        "type": "Float32Array",
+        "length": 141373,
+        "min": -64,
+        "max": 64,
+        "sha256": "6ed9e595222bf1abb11605a0bb8be49b83ebb023b95842e259bdc507f612c006"
+      }
+    },
+    "base-gpu": {
+      "positions": {
+        "file": "base-gpu.positions.bin",
+        "type": "Float32Array",
+        "length": 424119,
+        "min": -6799.703125,
+        "max": 6999.67626953125,
+        "sha256": "342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83"
+      },
+      "indices": {
+        "file": "base-gpu.indices.bin",
+        "type": "Uint32Array",
+        "length": 366666,
+        "min": 0,
+        "max": 141372,
+        "sha256": "483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c"
+      },
+      "normals": {
+        "file": "base-gpu.normals.bin",
+        "type": "Float32Array",
+        "length": 424119,
+        "min": -1,
+        "max": 1,
+        "sha256": "7d31e73c97939ad978982aeb5191d3ae8b99582eb32300aff9d569cae7e24b1b"
+      },
+      "baseColorsLinear": {
+        "file": "base-gpu.baseColorsLinear.bin",
+        "type": "Float32Array",
+        "length": 565492,
+        "min": 0.004776953253895044,
+        "max": 1,
+        "sha256": "cabcdc78ed5d70ba6740a92037c0c1829b62b424ee68acb5c6f0c0f4f82e7d51"
+      },
+      "materialParameters": {
+        "file": "base-gpu.materialParameters.bin",
+        "type": "Float32Array",
+        "length": 565492,
+        "min": -12.375212669372559,
+        "max": 4.2366461753845215,
+        "sha256": "2551e80b6f260ee3bbd08bf139270b61307121ae21bf57471c4fb6d9d62d8c31"
+      },
+      "materialModelCodes": {
+        "file": "base-gpu.materialModelCodes.bin",
+        "type": "Uint8Array",
+        "length": 141373,
+        "min": 0,
+        "max": 1,
+        "sha256": "59c70c3f46cacf1f964a738b6fbb2a2f6013b0b6b56d6ccc15ca8b8ce67b700e"
+      },
+      "surfaceClassCodes": {
+        "file": "base-gpu.surfaceClassCodes.bin",
+        "type": "Uint8Array",
+        "length": 141373,
+        "min": 0,
+        "max": 255,
+        "sha256": "3c9534d4055ff2e75612d974c4aaf0623b6e1db273466d522bb7d28c9b020a6d"
+      },
+      "primitiveIndices": {
+        "file": "base-gpu.primitiveIndices.bin",
+        "type": "Uint16Array",
+        "length": 141373,
+        "min": 0,
+        "max": 21,
+        "sha256": "9187372a7eac8087f42240f08e52efde72aa602fddcb07d1c762f9fc572f51d6"
+      },
+      "roleCodes": {
+        "file": "base-gpu.roleCodes.bin",
+        "type": "Uint8Array",
+        "length": 141373,
+        "min": 1,
+        "max": 5,
+        "sha256": "c8896173a410644b0fbb7cb8894d2f9f08781fc7216fb28e04a1f367741cb749"
+      },
+      "coastDistances": {
+        "file": "base-gpu.coastDistances.bin",
+        "type": "Float32Array",
+        "length": 141373,
+        "min": -214.95993041992188,
+        "max": 620,
+        "sha256": "7f99de4403127ddcc48affe5206003c93049e0d19d276981db794ea1fa8cf49b"
+      },
+      "contactDistances": {
+        "file": "base-gpu.contactDistances.bin",
+        "type": "Float32Array",
+        "length": 141373,
+        "min": -64,
+        "max": 64,
+        "sha256": "562dd3259768b741e2bf8e91efb019b43d60dea360b79e412675e91e3c29fe5f"
+      }
+    },
+    "ERODED_TERRAIN-support": {
+      "positions": {
+        "file": "ERODED_TERRAIN-support.positions.bin",
+        "type": "Float32Array",
+        "length": 74892,
+        "min": -568.0189208984375,
+        "max": 96.01061248779297,
+        "sha256": "7b0f6ba9fba968df17897cb156232bbed03d54d3221962af6b52953a4face3d3"
+      },
+      "indices": {
+        "file": "ERODED_TERRAIN-support.indices.bin",
+        "type": "Uint32Array",
+        "length": 146646,
+        "min": 0,
+        "max": 24963,
+        "sha256": "be624994823c88b49f32c14599251e60d0ef9084367cd19b9998ed1df6c05d9c"
+      },
+      "normals": {
+        "file": "ERODED_TERRAIN-support.normals.bin",
+        "type": "Float32Array",
+        "length": 74892,
+        "min": -0.9206984639167786,
+        "max": 0.9999998211860657,
+        "sha256": "f32c70f3a037cdfad6a00c7ddcca5fa32ea600d1816eb1883474a04bc1fbc428"
+      },
+      "baseColorsLinear": {
+        "file": "ERODED_TERRAIN-support.baseColorsLinear.bin",
+        "type": "Float32Array",
+        "length": 99856,
+        "min": 0.07609181106090546,
+        "max": 1,
+        "sha256": "8f7d0347d73977ddb576637645077537dc3cb3a7358d584ef4828347aa0b90b3"
+      },
+      "materialParameters": {
+        "file": "ERODED_TERRAIN-support.materialParameters.bin",
+        "type": "Float32Array",
+        "length": 99856,
+        "min": -0.15323099493980408,
+        "max": 0.8899999856948853,
+        "sha256": "bd9622d37a8b20201808b5e1938c6acaf6aaf82660659ebe21b64498c5b5b90a"
+      },
+      "coastDistances": {
+        "file": "ERODED_TERRAIN-support.coastDistances.bin",
+        "type": "Float32Array",
+        "length": 24964,
+        "min": 100.56453704833984,
+        "max": 470.60028076171875,
+        "sha256": "98a2e8505523d101863963eaa63f1ec4389286cf9c6ed63647c70f0ab0f692f6"
+      },
+      "contactDistances": {
+        "file": "ERODED_TERRAIN-support.contactDistances.bin",
+        "type": "Float32Array",
+        "length": 24964,
+        "min": 25.98628807067871,
+        "max": 140,
+        "sha256": "b6ce3ea36fd5e90eddf90b5a004e41be90e600feb8050b6277b5d5f61600547e"
+      },
+      "materialModelCodes": {
+        "file": "ERODED_TERRAIN-support.materialModelCodes.bin",
+        "type": "Uint8Array",
+        "length": 24964,
+        "min": 0,
+        "max": 0,
+        "sha256": "c147da359217a05aa2ff481525a97c427312b99c587d679b8f2344b3c90c260d"
+      },
+      "surfaceClassCodes": {
+        "file": "ERODED_TERRAIN-support.surfaceClassCodes.bin",
+        "type": "Uint8Array",
+        "length": 24964,
+        "min": 255,
+        "max": 255,
+        "sha256": "4507b4549adcf2c7ab69b3e3d772eb196e65995c39f7210f08566111351791b4"
+      },
+      "primitiveIndices": {
+        "file": "ERODED_TERRAIN-support.primitiveIndices.bin",
+        "type": "Uint16Array",
+        "length": 24964,
+        "min": 62000,
+        "max": 62000,
+        "sha256": "b339c26acdeadf0e62023a04eb5b48a43bf1b913a03b6f5c711d2f911201fde5"
+      },
+      "roleCodes": {
+        "file": "ERODED_TERRAIN-support.roleCodes.bin",
+        "type": "Uint8Array",
+        "length": 24964,
+        "min": 1,
+        "max": 1,
+        "sha256": "f6fa2ddacce9b924d72b97fe0667bd0753a7dd8014aa2e4737f57e56d6867852"
+      }
+    },
+    "ERODED_TERRAIN-gpu": {
+      "positions": {
+        "file": "ERODED_TERRAIN-gpu.positions.bin",
+        "type": "Float32Array",
+        "length": 74892,
+        "min": -568.0189208984375,
+        "max": 96.01061248779297,
+        "sha256": "7b0f6ba9fba968df17897cb156232bbed03d54d3221962af6b52953a4face3d3"
+      },
+      "indices": {
+        "file": "ERODED_TERRAIN-gpu.indices.bin",
+        "type": "Uint32Array",
+        "length": 146646,
+        "min": 0,
+        "max": 24963,
+        "sha256": "be624994823c88b49f32c14599251e60d0ef9084367cd19b9998ed1df6c05d9c"
+      },
+      "normals": {
+        "file": "ERODED_TERRAIN-gpu.normals.bin",
+        "type": "Float32Array",
+        "length": 74892,
+        "min": -0.9206984639167786,
+        "max": 0.9999998211860657,
+        "sha256": "f32c70f3a037cdfad6a00c7ddcca5fa32ea600d1816eb1883474a04bc1fbc428"
+      },
+      "baseColorsLinear": {
+        "file": "ERODED_TERRAIN-gpu.baseColorsLinear.bin",
+        "type": "Float32Array",
+        "length": 99856,
+        "min": 0.07609181106090546,
+        "max": 1,
+        "sha256": "8f7d0347d73977ddb576637645077537dc3cb3a7358d584ef4828347aa0b90b3"
+      },
+      "materialParameters": {
+        "file": "ERODED_TERRAIN-gpu.materialParameters.bin",
+        "type": "Float32Array",
+        "length": 99856,
+        "min": -0.15323099493980408,
+        "max": 0.8899999856948853,
+        "sha256": "bd9622d37a8b20201808b5e1938c6acaf6aaf82660659ebe21b64498c5b5b90a"
+      },
+      "coastDistances": {
+        "file": "ERODED_TERRAIN-gpu.coastDistances.bin",
+        "type": "Float32Array",
+        "length": 24964,
+        "min": 100.56453704833984,
+        "max": 470.60028076171875,
+        "sha256": "f7232f7015d0197958e14c8ae23877778284038d5fea999ca0f8306a4fe48053"
+      },
+      "contactDistances": {
+        "file": "ERODED_TERRAIN-gpu.contactDistances.bin",
+        "type": "Float32Array",
+        "length": 24964,
+        "min": 25.98628807067871,
+        "max": 140,
+        "sha256": "b6ce3ea36fd5e90eddf90b5a004e41be90e600feb8050b6277b5d5f61600547e"
+      },
+      "materialModelCodes": {
+        "file": "ERODED_TERRAIN-gpu.materialModelCodes.bin",
+        "type": "Uint8Array",
+        "length": 24964,
+        "min": 0,
+        "max": 0,
+        "sha256": "c147da359217a05aa2ff481525a97c427312b99c587d679b8f2344b3c90c260d"
+      },
+      "surfaceClassCodes": {
+        "file": "ERODED_TERRAIN-gpu.surfaceClassCodes.bin",
+        "type": "Uint8Array",
+        "length": 24964,
+        "min": 255,
+        "max": 255,
+        "sha256": "4507b4549adcf2c7ab69b3e3d772eb196e65995c39f7210f08566111351791b4"
+      },
+      "primitiveIndices": {
+        "file": "ERODED_TERRAIN-gpu.primitiveIndices.bin",
+        "type": "Uint16Array",
+        "length": 24964,
+        "min": 62000,
+        "max": 62000,
+        "sha256": "b339c26acdeadf0e62023a04eb5b48a43bf1b913a03b6f5c711d2f911201fde5"
+      },
+      "roleCodes": {
+        "file": "ERODED_TERRAIN-gpu.roleCodes.bin",
+        "type": "Uint8Array",
+        "length": 24964,
+        "min": 1,
+        "max": 1,
+        "sha256": "f6fa2ddacce9b924d72b97fe0667bd0753a7dd8014aa2e4737f57e56d6867852"
+      }
+    },
+    "MOUNTAIN_OVERBURDEN-support": {
+      "positions": {
+        "file": "MOUNTAIN_OVERBURDEN-support.positions.bin",
+        "type": "Float32Array",
+        "length": 135,
+        "min": -260.0123291015625,
+        "max": 48.002525329589844,
+        "sha256": "82a9c9cde6b3fb5efc4eef695dd5401d19a0841405497f0fb7eac2b6de3f3c0c"
+      },
+      "indices": {
+        "file": "MOUNTAIN_OVERBURDEN-support.indices.bin",
+        "type": "Uint32Array",
+        "length": 192,
+        "min": 0,
+        "max": 44,
+        "sha256": "828a57af53612dd6d461f79366e3ad7ee80eecf433d8b068aeb8bb854c3bf7a6"
+      },
+      "normals": {
+        "file": "MOUNTAIN_OVERBURDEN-support.normals.bin",
+        "type": "Float32Array",
+        "length": 135,
+        "min": -0.5518513917922974,
+        "max": 0.9761517643928528,
+        "sha256": "569b366e380806c7b319cc565c85493653ee409eb5ad35e2f5ff855edb46ed25"
+      },
+      "baseColorsLinear": {
+        "file": "MOUNTAIN_OVERBURDEN-support.baseColorsLinear.bin",
+        "type": "Float32Array",
+        "length": 180,
+        "min": 0.0852697417140007,
+        "max": 1,
+        "sha256": "7d7be141ec697546135ade05249d89d26502b3ac4b3108c0f9c6cd2ca7e3e3c4"
+      },
+      "materialParameters": {
+        "file": "MOUNTAIN_OVERBURDEN-support.materialParameters.bin",
+        "type": "Float32Array",
+        "length": 180,
+        "min": 0.02500000037252903,
+        "max": 0.8899999856948853,
+        "sha256": "cb44accfa49b4bc3f46a12d2ff37569432edc893441bc196eafc9ae41c4fc07d"
+      },
+      "coastDistances": {
+        "file": "MOUNTAIN_OVERBURDEN-support.coastDistances.bin",
+        "type": "Float32Array",
+        "length": 45,
+        "min": 140,
+        "max": 140,
+        "sha256": "10f28ff781e5a0253d015e639cf84e13a3b99c553da21420e40b9b71536885b1"
+      },
+      "contactDistances": {
+        "file": "MOUNTAIN_OVERBURDEN-support.contactDistances.bin",
+        "type": "Float32Array",
+        "length": 45,
+        "min": 140,
+        "max": 140,
+        "sha256": "10f28ff781e5a0253d015e639cf84e13a3b99c553da21420e40b9b71536885b1"
+      },
+      "materialModelCodes": {
+        "file": "MOUNTAIN_OVERBURDEN-support.materialModelCodes.bin",
+        "type": "Uint8Array",
+        "length": 45,
+        "min": 0,
+        "max": 0,
+        "sha256": "8a1020634191c27b63d3c2aa45b723f696ddf2743ca8996a33ed0e47ddd7fc07"
+      },
+      "surfaceClassCodes": {
+        "file": "MOUNTAIN_OVERBURDEN-support.surfaceClassCodes.bin",
+        "type": "Uint8Array",
+        "length": 45,
+        "min": 255,
+        "max": 255,
+        "sha256": "3c957521573a740f064e6cc16004521d6f587919f5966426c37213b3e7a9a972"
+      },
+      "primitiveIndices": {
+        "file": "MOUNTAIN_OVERBURDEN-support.primitiveIndices.bin",
+        "type": "Uint16Array",
+        "length": 45,
+        "min": 62000,
+        "max": 62000,
+        "sha256": "c3f80b12a8474a1d0d697178131e4f01d69d658281cb519be901d330ffaeeffb"
+      },
+      "roleCodes": {
+        "file": "MOUNTAIN_OVERBURDEN-support.roleCodes.bin",
+        "type": "Uint8Array",
+        "length": 45,
+        "min": 1,
+        "max": 1,
+        "sha256": "0692c63c7217f704f37fe5c0fb3637f1c9e0fdfc927fdacfd808e797e564609c"
+      }
+    },
+    "MOUNTAIN_OVERBURDEN-gpu": {
+      "positions": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.positions.bin",
+        "type": "Float32Array",
+        "length": 135,
+        "min": -260.0123291015625,
+        "max": 48.002525329589844,
+        "sha256": "82a9c9cde6b3fb5efc4eef695dd5401d19a0841405497f0fb7eac2b6de3f3c0c"
+      },
+      "indices": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.indices.bin",
+        "type": "Uint32Array",
+        "length": 192,
+        "min": 0,
+        "max": 44,
+        "sha256": "828a57af53612dd6d461f79366e3ad7ee80eecf433d8b068aeb8bb854c3bf7a6"
+      },
+      "normals": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.normals.bin",
+        "type": "Float32Array",
+        "length": 135,
+        "min": -0.5518513917922974,
+        "max": 0.9761517643928528,
+        "sha256": "569b366e380806c7b319cc565c85493653ee409eb5ad35e2f5ff855edb46ed25"
+      },
+      "baseColorsLinear": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.baseColorsLinear.bin",
+        "type": "Float32Array",
+        "length": 180,
+        "min": 0.0852697417140007,
+        "max": 1,
+        "sha256": "7d7be141ec697546135ade05249d89d26502b3ac4b3108c0f9c6cd2ca7e3e3c4"
+      },
+      "materialParameters": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.materialParameters.bin",
+        "type": "Float32Array",
+        "length": 180,
+        "min": 0.02500000037252903,
+        "max": 0.8899999856948853,
+        "sha256": "cb44accfa49b4bc3f46a12d2ff37569432edc893441bc196eafc9ae41c4fc07d"
+      },
+      "coastDistances": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.coastDistances.bin",
+        "type": "Float32Array",
+        "length": 45,
+        "min": 143.95860290527344,
+        "max": 158.3804473876953,
+        "sha256": "50ca68811a5b0a9b73f27507a4040e0abe8b673b22033283ac42fbec469d02aa"
+      },
+      "contactDistances": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.contactDistances.bin",
+        "type": "Float32Array",
+        "length": 45,
+        "min": 140,
+        "max": 140,
+        "sha256": "10f28ff781e5a0253d015e639cf84e13a3b99c553da21420e40b9b71536885b1"
+      },
+      "materialModelCodes": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.materialModelCodes.bin",
+        "type": "Uint8Array",
+        "length": 45,
+        "min": 0,
+        "max": 0,
+        "sha256": "8a1020634191c27b63d3c2aa45b723f696ddf2743ca8996a33ed0e47ddd7fc07"
+      },
+      "surfaceClassCodes": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.surfaceClassCodes.bin",
+        "type": "Uint8Array",
+        "length": 45,
+        "min": 255,
+        "max": 255,
+        "sha256": "3c957521573a740f064e6cc16004521d6f587919f5966426c37213b3e7a9a972"
+      },
+      "primitiveIndices": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.primitiveIndices.bin",
+        "type": "Uint16Array",
+        "length": 45,
+        "min": 62000,
+        "max": 62000,
+        "sha256": "c3f80b12a8474a1d0d697178131e4f01d69d658281cb519be901d330ffaeeffb"
+      },
+      "roleCodes": {
+        "file": "MOUNTAIN_OVERBURDEN-gpu.roleCodes.bin",
+        "type": "Uint8Array",
+        "length": 45,
+        "min": 1,
+        "max": 1,
+        "sha256": "0692c63c7217f704f37fe5c0fb3637f1c9e0fdfc927fdacfd808e797e564609c"
+      }
+    }
+  },
+  "rimChanges": {
+    "ERODED_TERRAIN": {
+      "normals": {
+        "vertices": 4353,
+        "maxAbsoluteDelta": 0.4389554560184479
+      },
+      "baseColorsLinear": {
+        "vertices": 3607,
+        "maxAbsoluteDelta": 0.014486327767372131
+      },
+      "materialParameters": {
+        "vertices": 4353,
+        "maxAbsoluteDelta": 0.5809309743344784
+      },
+      "coastDistances": {
+        "vertices": 4353,
+        "maxAbsoluteDelta": 330.60028076171875
+      },
+      "contactDistances": {
+        "vertices": 4353,
+        "maxAbsoluteDelta": 114.01371192932129
+      }
+    },
+    "MOUNTAIN_OVERBURDEN": {
+      "normals": {
+        "vertices": 0,
+        "maxAbsoluteDelta": 0
+      },
+      "baseColorsLinear": {
+        "vertices": 0,
+        "maxAbsoluteDelta": 0
+      },
+      "materialParameters": {
+        "vertices": 0,
+        "maxAbsoluteDelta": 0
+      },
+      "coastDistances": {
+        "vertices": 0,
+        "maxAbsoluteDelta": 0
+      },
+      "contactDistances": {
+        "vertices": 0,
+        "maxAbsoluteDelta": 0
+      }
+    }
+  },
+  "gpuCoastChanges": {
+    "ERODED_TERRAIN": {
+      "vertices": 24218,
+      "maxAbsoluteDelta": 315.7969665527344
+    },
+    "MOUNTAIN_OVERBURDEN": {
+      "vertices": 45,
+      "maxAbsoluteDelta": 18.380447387695312
+    }
+  },
+  "rawSourceArraysUnchanged": true,
+  "limits": [
+    "Replays exact source arithmetic; not GPU hardware readback or complete shader equivalence.",
+    "Contact uses original unretired TERRAIN and open ocean with null refinement, exactly as captured; it is not a rebuilt active/freshwater contact field.",
+    "Generated initial coast/contact=140 is native behavior, not a substituted placeholder.",
+    "Base fields describe original indexed vertices before corrected atlas vertex duplication; duplicated attributes inherit these values, but corrected UV/atlas lookup is not reconstructed here.",
+    "Generated soil only; rock/water/vegetation material attributes not evaluated.",
+    "Full material coefficients remain unresolved: resident texture values, source derivatives and downstream composition still required."
+  ]
+}

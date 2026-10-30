@@ -19,11 +19,15 @@ The downstream algebra evaluator carries **RGB A and RGB B** and preserves stage
 
 Three declared synthetic camera states evaluate four native shader distance envelopes on the same supported triangle hits. Their differences establish camera-input dependence, not complete material-coefficient or pixel differences. These are CPU sensitivity inputs, not navigation-qualified capture poses. No GPU run was launched.
 
+## Attribute follow-up
+
+The next source-attribute checkpoint is now implemented in [ATTRIBUTES.md](ATTRIBUTES.md). It reconstructs raw upload, base seam, generated rim and final GPU coast attributes. The geometry results below remain unchanged.
+
 ## Explicit remaining work
 
-**Complete material coefficients remain unresolved for all grid points.** Geometry support does not supply rendered rim normals, coast/contact fields, source micro-normal derivatives, corrected atlases, shoreline coverage, litter footprints or habitat texture values. Unknown stages return `UNRESOLVED` with null coefficients; they are never assumed to have zero influence. Dynamic refinement and final lighting are outside this snapshot.
+**Complete material coefficients remain unresolved for all grid points.** The attribute follow-up now supplies rendered rim normals, coast/contact fields, base colors and material parameters. Source micro-normal derivatives, corrected atlas sampling, shoreline coverage, litter footprints and habitat texture values remain unresolved. Unknown stages return `UNRESOLVED` with null coefficients; they are never assumed to have zero influence. Dynamic refinement and final lighting are outside this snapshot.
 
-The next bounded evaluator increment is to reconstruct the renderer's actual soil attributes for surviving near terrain and eroded/overburden meshes, including rim reconciliation, then supply the resident fields and derivative inputs to the ordered material stages. Carry forward these geometry results. Do not repeat original-mesh recovery or the 48-unit specimen capture. No broader correction texture can be justified by this checkpoint alone.
+The next bounded evaluator increment is to supply resident fields and derivative inputs to the ordered material stages, using the reconstructed attributes. Carry forward these geometry results. Do not repeat original-mesh recovery or the 48-unit specimen capture. No broader correction texture can be justified by this checkpoint alone.
 
 ## Reproduce
 

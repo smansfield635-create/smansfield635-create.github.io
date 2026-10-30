@@ -1,0 +1,21 @@
+{
+  "reviewer": "native independent /root/coverage_review",
+  "role": "WEST_INDEPENDENT_REVIEW",
+  "result": "PASS_SOURCE_ATTRIBUTE_CHECKPOINT",
+  "testsPassed": 16,
+  "testsFailed": 0,
+  "sourceModuleHashesVerifiedAgainstCandidate": 65,
+  "independentReconstruction": "attributes.json and all66 binary buffers byte-for-byte identical",
+  "reviewedHashes": {
+    "attributes.mjs": "604e2c3b66df000e387e6800282315190bfa179431537e146eeabfc32876a925",
+    "attributes.test.mjs": "d2f8d5269fa01bb7e90ca4e1128e076fc78eed351cff4a90825bba488ca51617",
+    "prepare-attributes.py": "678b0c42e796d9f17861e5543f3cc5326f250bd5e141affe3428194768524ca6",
+    "attribute-manifest.json": "e4f5c5f1774b7e2aa16625f9daab9bed90a66d8be92991e17af3522fb32e9732",
+    "attributes.json": "802f2be0acb094a9bde755113af277c8ab1f97f87752066139f670e927b8a20b"
+  },
+  "completeMaterialCoefficients": "UNRESOLVED",
+  "hardwareReadback": false,
+  "productMutation": false,
+  "gpuExecuted": false,
+  "nextAction": "Supply resident texture fields, atlas addressing and derivative inputs to ordered material evaluation; carry forward geometry and native attributes."
+}

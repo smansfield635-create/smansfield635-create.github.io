@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "nine-summits-gen2994-peace-material-preflight-b6c9ff7e",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7009,
+  "requestBranch": "ai-dispatch-request-nine-summits-gen2994-qualification-b6c9ff7e",
+  "requestCommit": "28cad23538c7e9079b47118b64d5cf3e6531f15f",
+  "requestCommitParent": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "b6c9ff7eb4f58963f29e9ef159ccf26b64ea7169",
+    "surface_id": "nine-summits-universe"
+  },
+  "bridgeRunId": "41009329348",
+  "dispatchedRunId": 41009340745,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/41009340745",
+  "dispatchedRunHeadSha": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+  "dispatchedAt": "2026-10-30T05:36:08.109Z",
+  "resolvedAt": "2026-10-30T05:36:11.894Z"
+}

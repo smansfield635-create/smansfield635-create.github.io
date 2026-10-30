@@ -41,7 +41,42 @@
       ],
       "value": 9.74875428219815
     },
-    "qualification": "SAVED_IMAGE_PROFILE_NOT_THE_GEN3000_ZERO_SAND_RANK"
+    "qualification": "SAVED_IMAGE_PROFILE_NOT_THE_GEN3000_ZERO_SAND_RANK",
+    "originalUploadSourceContext": {
+      "originalArchiveRun": 40909501175,
+      "originalAssetId": 12913811096,
+      "evidenceClass": "INDEPENDENT_ORIGINAL_UPLOAD_TRIANGLE_INTERPOLATION_NOT_ACTIVE_RENDERER_SHORELINE_CONTACT",
+      "sourceRoot": "original-mesh/mesh/upload-positions.bin;upload-indices.bin;upload-coastDistances.bin",
+      "profile42": {
+        "nativeXZ": [
+          -195,
+          -728.77572419355
+        ],
+        "nearFaceIndexWithinTerrainSpan": 47,
+        "interpolatedWorldY": 15.05888557434082,
+        "interpolatedCoastDistance": 620,
+        "barycentricWeights": [
+          0.09359920024871826,
+          0.3740994334220886,
+          0.5323013663291931
+        ]
+      },
+      "profile22": {
+        "nativeXZ": [
+          -203.5,
+          -728.0489058845
+        ],
+        "nearFaceIndexWithinTerrainSpan": 45,
+        "interpolatedWorldY": 15.661113739013672,
+        "interpolatedCoastDistance": 620,
+        "barycentricWeights": [
+          0.002620100975036621,
+          0.43652310967445374,
+          0.5608567595481873
+        ]
+      },
+      "limitation": "Positive inland coast distance and original terrain support do not independently reconstruct active shader contactDistance, verify full sand gain=1, or establish raster surface ownership."
+    }
   },
   "nextAction": "Recover the original classification.intermediates.npz without a full re-evaluation; verify all seven SHA256 hashes, execute select_zero_sand.py once, then inspect first ranked segment for continuous sand absence, ocean/depth ownership and protected environment context. If impossible, explicitly seek a bounded source-only re-materialization authority, not new GPU or shader change.",
   "noNewGpu": true,

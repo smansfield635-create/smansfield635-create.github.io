@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-30T09:27:31Z",
+  "generatedAt": "2026-10-30T10:25:57Z",
   "window": {
-    "start": "2026-08-01T09:27:31Z",
-    "end": "2026-10-30T09:27:31Z"
+    "start": "2026-08-01T10:25:57Z",
+    "end": "2026-10-30T10:25:57Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,21 +17,21 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4358,
-    "visits": 1297,
+    "pageLoads": 4138,
+    "visits": 1197,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4358,
-        "visits": 1297
+        "pageLoads": 4138,
+        "visits": 1197
       }
     },
     "byPath": {
       "/laws/": {
-        "pageLoads": 240,
-        "visits": 80
+        "pageLoads": 170,
+        "visits": 50
       },
       "/laws/research/methods-and-models/": {
-        "pageLoads": 110,
+        "pageLoads": 70,
         "visits": 0
       },
       "/laws/categories/structure/": {
@@ -39,31 +39,31 @@
         "visits": 0
       },
       "/laws/test/reverse-audit/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 0
       },
-      "/": {
-        "pageLoads": 977,
-        "visits": 717
-      },
-      "/laws/research/evidence-and-sources/": {
-        "pageLoads": 20,
+      "/laws/test/result-and-record/": {
+        "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/flow/cycles/": {
-        "pageLoads": 30,
+      "/laws/research/findings-and-boundaries/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 81,
         "visits": 10
       },
+      "/": {
+        "pageLoads": 907,
+        "visits": 647
+      },
       "/showroom/globe/audralia/": {
-        "pageLoads": 160,
-        "visits": 10
+        "pageLoads": 180,
+        "visits": 20
       },
       "/governance/": {
-        "pageLoads": 60,
+        "pageLoads": 70,
         "visits": 10
       },
       "/index.html": {
@@ -71,7 +71,7 @@
         "visits": 0
       },
       "/evidence/readiness/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/build/intake/": {
@@ -79,11 +79,11 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 90,
+        "pageLoads": 60,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 490,
+        "pageLoads": 470,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -98,8 +98,16 @@
         "pageLoads": 50,
         "visits": 20
       },
+      "/elara/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/research/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/coherence-diagnostic/": {
-        "pageLoads": 20,
+        "pageLoads": 10,
         "visits": 0
       },
       "/showroom/": {
@@ -114,19 +122,11 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/": {
         "pageLoads": 20,
         "visits": 20
       },
       "/compass-composite/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -148,6 +148,10 @@
       },
       "/showroom/globe/audralia/disposition/": {
         "pageLoads": 10,
+        "visits": 0
+      },
+      "/laws/categories/flow/cycles/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/gauges/": {
@@ -184,6 +188,10 @@
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/research/evidence-and-sources/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/evidence/agentic-frontier/": {
@@ -275,8 +283,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
+        "pageLoads": 270,
+        "visits": 80
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
@@ -291,12 +299,12 @@
         "visits": 0
       },
       "/home/": {
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 20,
+        "visits": 20
       },
       "/governance-bridge/": {
-        "pageLoads": 150,
-        "visits": 120
+        "pageLoads": 160,
+        "visits": 130
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -317,18 +325,22 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3061,
+        "pageLoads": 2941,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 747,
-        "visits": 747
+        "pageLoads": 637,
+        "visits": 637
       },
       "(none)": {
         "pageLoads": 540,
         "visits": 540
       },
       "raw.githack.com": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "com.google.android.googlequicksearchbox": {
         "pageLoads": 10,
         "visits": 10
       }

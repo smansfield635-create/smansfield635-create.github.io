@@ -1,0 +1,195 @@
+{
+  "schema": "H_EARTH_GEN3000_VISUAL_TARGET_TRIAGE_v1",
+  "status": "PROFILE42_DEPRIORITIZED__HISTORICAL_FAR_ALBEDO_BAND_RETAINED_AS_REFERENCE",
+  "priorEvidenceHead": "32e725544642479aa752c46ef8c09f70c14069e7",
+  "ownerDirective": {
+    "issueComment": 6470960274,
+    "region": "Steep undeveloped foothill side; protect developed meadow/lower hills",
+    "classes": [
+      "curved tan/olive cutoff",
+      "ruler-straight half-plane cutoff"
+    ],
+    "photoBytesAvailableHere": false
+  },
+  "rejectedPrimaryTarget": {
+    "name": "Gen2998 west-tip profile42",
+    "captureRun": 41083373434,
+    "artifactId": 12991506650,
+    "source": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "sourceXZ": [
+      -195,
+      -728.77572419355
+    ],
+    "originalMeasuredLumaJumpAcrossPoint25m": 2.443062889707576,
+    "candidateMeasuredLumaJumpAcrossPoint25m": 2.437188570549535,
+    "sourceEightTapDelta": "Only one actual pixel red channel changed 145->144",
+    "disposition": "Weak source-gradient specimen, not independently established as owner-visible broad or straight cutoff; keep existing eight-tap capture contract dormant"
+  },
+  "historicalReference": {
+    "sourceRun": 40734434775,
+    "artifactId": 12837402038,
+    "zipSHA256": "aee6311ffaf9de2c3191bbd416331e7c59735b6e4ab2316640e24933ae59141c",
+    "manifestCommit": "1e39f93a07eb2cc5156483b899094937ba2149db",
+    "manifestGitBlob": "083c55e19c61890e797ce89c33cf977869bdbe93",
+    "baselineHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "rejectedCandidateHead": "7882a91c4ff8ed1652df8453ce3772a863a7e109",
+    "view": "inland-seam-far",
+    "viewport": [
+      529,
+      980
+    ],
+    "mode": "after-groundcover-unlit (diagnostic gamma-encoded albedo)",
+    "verifiedSha": {
+      "baselineUnlit": "309416fd0e6dba1ea1b82e1d6b06258392c58c45a5835e45b537d4e1b2162c2a",
+      "baselineLit": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc",
+      "rejectedUnlit": "08e33723c27bcf2e4c4941f6fa538c88cb3a14b5629de4675f0476c0233f8aac",
+      "rejectedLit": "f456cc21dd254c2550b390952c26f6b4fda23bd411f30d12ad01cd1c4185f85b"
+    },
+    "exactTopLeftPixelPair": [
+      [
+        392,
+        496
+      ],
+      [
+        392,
+        497
+      ]
+    ],
+    "rgb": {
+      "baselineUnlit": [
+        [
+          140,
+          121,
+          94
+        ],
+        [
+          131,
+          116,
+          90
+        ]
+      ],
+      "baselineLit": [
+        [
+          149,
+          126,
+          93
+        ],
+        [
+          140,
+          122,
+          90
+        ]
+      ],
+      "rejectedUnlit": [
+        [
+          124,
+          112,
+          89
+        ],
+        [
+          116,
+          108,
+          86
+        ]
+      ],
+      "rejectedLit": [
+        [
+          132,
+          118,
+          89
+        ],
+        [
+          125,
+          114,
+          86
+        ]
+      ]
+    },
+    "measuredDisplayLumaSecondMinusFirst": {
+      "baselineUnlit": -5.7782,
+      "baselineLit": -4.9908,
+      "rejectedUnlit": -4.7782,
+      "rejectedLit": -4.5656
+    },
+    "exploratoryROI": {
+      "xHalfOpen": [
+        132,
+        397
+      ],
+      "upperYHalfOpen": [
+        480,
+        499
+      ],
+      "lowerYHalfOpen": [
+        560,
+        600
+      ],
+      "channelWeights": [
+        0.2126,
+        0.7152,
+        0.0722
+      ],
+      "medianUpperMinusLower": {
+        "baselineUnlit": 16.4028,
+        "baselineLit": 15.5432,
+        "rejectedUnlit": 10.765,
+        "rejectedLit": 11.3398
+      },
+      "method": "Separate row bands, descriptive only; not a physical derivative nor same world point"
+    },
+    "matchingPriorConditionalSourceWitness": {
+      "issueComment": 6514145809,
+      "pixelPair": [
+        [
+          392,
+          496
+        ],
+        [
+          392,
+          497
+        ]
+      ],
+      "world": [
+        [
+          -188.875,
+          14.75439453125,
+          -736.0625
+        ],
+        [
+          -189.0625,
+          14.73388671875,
+          -734.5625
+        ]
+      ],
+      "firstSourceMembershipOffsets": [
+        144,
+        73902
+      ],
+      "secondSourceMembershipOffsets": [
+        144
+      ],
+      "priorIdentityWeights": [
+        0.554636,
+        0.502014
+      ],
+      "priorGroundcoverWeights": [
+        0.225679,
+        0.281742
+      ],
+      "important": "Historical native/source chart-matched conditional evidence, NOT an independently verified GPU fragment/owner or current-material equality"
+    },
+    "historicalDisposition": "Gen2956 independent visual review REJECT: broad tan/olive region and repeated horizon stripes persist"
+  },
+  "nextAction": "Use archived source-correlated far contour as material-stage positive reference; preserve current-source mismatch and ambiguous original source membership. Determine which already-derived native P/T/w and atlas residual witnesses survive under CURRENT Gen2998 product before any new registered GPU job. Do not pursue weak profile42's pixel inspection by default.",
+  "limitations": [
+    "Original owner photos 30106/30108 not physically inspected here",
+    "Old scene and current candidate product differ; cannot claim owner photo or current product same pixel",
+    "No unique cause from lit/unlit RGB8 alone",
+    "Later underlying texture, raster owner/depth and current-shader stage remain unqualified",
+    "No original shader changes, GPU/census, publication or owner KEEP"
+  ],
+  "noProductMutation": true,
+  "noNewGPU": true,
+  "noNewCensus": true,
+  "noMerge": true
+}

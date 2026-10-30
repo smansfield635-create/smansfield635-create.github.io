@@ -23,3 +23,13 @@ The source sampler and independent replay scripts are preserved unchanged in ori
 ## Current boundary
 
 No runtime renderer from these rejected operators; no GPU run, deployment, or visual acceptance. Next construction protects full interior regions and native interface geometry, using a confirmed source-defined boundary. Coastal habitat is a narrower affine factor; its improvement cannot close the separate inland coefficients task. Coverage metrics alone are insufficient for renderer integration: evaluate full composed coefficients and protection masks first.
+
+## Source-contour successor checkpoint
+
+The authenticated habitat fixture is included as compressed JSON. Run `python3 unpack_habitat_fixture.py` before the coastal scripts; this verifies the original atlas/baseline byte hashes and extracts the minimal manifest parameters. `signed_distance_habitat.py` requires NumPy, SciPy and contourpy and generates the dense replay NPZ. Run it before `adaptive_habitat.py`, then the independent adaptive review. The fixture's manifest intentionally contains only the numerical layout/bounds; original complete manifest custody remains recorded.
+
+The fixed6m source-contour candidate is rejected: the known coastal dark interval is only about5.7m thick, so its proposed6m dark core does not exist. The selected edge was unchanged. Baking other corrected edges to the existing192² R8 panel moved2,741 continuous-core samples despite preserving stored core texels; the bilinear support extended10.373m.
+
+The adaptive prototype admits that edge and preserves its peak, but is also NOT qualified. Independent quarter-cell tests detect2,667 changes inside geometrically predefined cores, with maximum coverage error0.006114. Defining a new frozen mask from the resulting changed pixels hides rather than fixes this failure. The worst gradient over active field points also increases from0.188423 to0.209677 per metre. Do not promote central-profile improvement or unchanged extrema as a complete transition repair.
+
+The next construction step is specifically to constrain each correction basis function's entire interpolation footprint against the predeclared source cores, then independently verify preservation and transition gradients. Reuse this fixture and test; do not repeat source recovery, choose another exact phone pose, or start another endpoint/width sweep. The complete habitat affine composition is verified separately for arbitrary incoming coefficients including the existing atlas; this algebra does not establish final-lit visual success. Runtime integration remains blocked by the actual numerical failures.

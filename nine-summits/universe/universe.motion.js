@@ -1432,6 +1432,11 @@ void main() {
    float shoreRim=pow(1.-abs(dot(n,vec3(0.,0.,1.))),2.);
    shaded+=vec3(.018,.071,.085)*(.38+.52*tidalVariation);
    shaded+=vec3(.035,.11,.12)*shoreRim*.42;
+   // Peace near-face sky bounce: reveal coastal mineral variation without lighting the night side.
+   float visibleFace=smoothstep(-.15,.85,dot(n,vec3(0.,0.,1.)));
+   float organic=fbm(p*7.6+vec3(.9,1.3,2.1));
+   vec3 secondarySky=vec3(.055,.19,.205)*(.56+.44*organic);
+   shaded=mix(shaded,max(shaded,secondarySky),visibleFace*.8);
  }
  shaded+=mix(vec3(.22,.14,.08),vec3(.91,.86,.77),metal)*spec*(.08+.42*(1.-rough));
  shaded+=material*rim*(.17+glow);

@@ -1,0 +1,12 @@
+{
+  "sourceMatched": true,
+  "nativeMismatchDisables": true,
+  "baselineMismatchDisables": true,
+  "unrelatedRavineChangesPreserved": true,
+  "inputArraysUnchanged": true,
+  "correctionHash": "f957fc37c275ecb6f806ca9fcfbbaaac1e211f0c0325b4043975cde5fc98fff0",
+  "correctionBytes": 11570,
+  "syntaxChecked": true,
+  "webglExecuted": false,
+  "visualAccepted": false
+}

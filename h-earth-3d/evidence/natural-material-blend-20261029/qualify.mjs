@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {assertCheckout,comparisonState,instrumentRoute,assetReadiness,footprintVegetationReadiness,normalizeVegetationIdentity,PRODUCTION_RENDERER_SHA256,PRODUCTION_ROUTE_SHA256,PRODUCTION_ATLASES,validateProductionAtlasResponses} from '../../../tools/h-earth-ground-material-comparison.v1.mjs';
 export const BASELINE_HEAD='50b337ff7bbfb6fce4876e1037ac96d5faff65a6';
 export const PROFILE='NATURAL_SAND_EARTH_BLEND_V1';
-export const OPERATION='H_EARTH_NATURAL_SAND_EARTH_BLEND_20261029_001';
+export const OPERATION='H_EARTH_NATURAL_BLEND_CAPTURE_RECOVERY_20261029_001';
 export const VIEWPORT=Object.freeze({width:384,height:688});
 export const POSES=Object.freeze([
  {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
@@ -17,6 +17,13 @@ export const POSES=Object.freeze([
  {name:'protected-meadow',x:-52,z:-208,yaw:136,pitch:-15},
  {name:'protected-coast',x:0,z:-110,yaw:170,pitch:-8}
 ].map(Object.freeze));
+// Production loads imported trees only within 180m. Prime all nine at an existing
+// supported pose, without taking an extra image or weakening residency checks.
+export const WARMUP_POSE=POSES.find(p=>p.name==='protected-meadow');
+export const CAPTURE_STEPS=Object.freeze([
+ Object.freeze({pose:WARMUP_POSE,sequence:9999,capture:false}),
+ ...POSES.map((pose,i)=>Object.freeze({pose,sequence:10001+i,capture:true}))
+]);
 export const BINDING_PATH='h-earth-3d/evidence/natural-material-blend-20261029/product-binding.json';
 export const ROOT='/showroom/globe/h-earth/';
 export const RENDERER=ROOT+'render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
@@ -93,13 +100,14 @@ export async function captureScene({dir,out,head,label,expected}){
   await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
   await page.mouse.move(170,350);await page.mouse.down();await page.mouse.move(220,350,{steps:8});await page.mouse.up();await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled);await page.click('[data-enter]');
   await page.evaluate(async()=>{const urls=[...new Set(performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x)))];if(urls.length!==1)throw Error('SURVEY_NAV_IDENTITY');const url=urls[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
-  let sequence=10000,previousFrame=0;
-  for(const pose of POSES){
-   const seq=++sequence,deadline=Date.now()+180000;let signature=null,stable=0;
+  let previousFrame=0;
+  for(const step of CAPTURE_STEPS){
+   const {pose,sequence:seq}=step,deadline=Date.now()+180000;let signature=null,stable=0;
    while(stable<2){
-    const settled=await page.evaluate(async({pose,seq})=>{const state=__groundComparisonState(__groundComparisonNav,pose,seq,'OWNER_BOUNDARY_SURVEY_SETTLE');__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas'),packet=__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:seq});const a=__surveyReadiness(gpu.resources,packet.camera.position);return {...a,frame:gpu.frameRecords.at(-1)};},{pose,seq});
-    receipt.lastSettle={pose,...settled};persist();stable=settled.ready&&settled.frame.navigationSequence===seq&&settled.signature===signature?stable+1:0;signature=settled.signature;if(Date.now()>deadline)throw Error('SURVEY_ASSETS_NOT_SETTLED');if(stable<2)await new Promise(r=>setTimeout(r,250));
+    const settled=await page.evaluate(async({pose,seq})=>{const state=__groundComparisonState(__groundComparisonNav,pose,seq,'OWNER_BOUNDARY_SURVEY_SETTLE');__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas'),packet=__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:seq});const a=__surveyReadiness(gpu.resources,packet.camera.position);return {...a,frame:gpu.frameRecords.at(-1),importedAssets:[gpu.resources.jacaranda,...gpu.resources.treeCollection.entries].map(e=>({id:e.focusId??e.id,state:e.state,ready:e.ready})),queue:gpu.resources.treeCollection.queue};},{pose,seq});
+    receipt.lastSettle={pose,capture:step.capture,...settled};persist();stable=settled.ready&&settled.frame.navigationSequence===seq&&settled.signature===signature?stable+1:0;signature=settled.signature;if(Date.now()>deadline)throw Error((step.capture?'SURVEY':'WARMUP')+'_ASSETS_NOT_SETTLED:'+settled.importedAssets.filter(e=>e.state!=='READY'||e.ready!==true).map(e=>e.id+':'+e.state).join(','));if(stable<2)await new Promise(r=>setTimeout(r,250));
    }
+   if(!step.capture){receipt.warmup={...receipt.lastSettle,result:'ALL_NINE_READY_NO_IMAGE_CAPTURED',navigationSequence:seq};persist();continue;}
    const v=await page.evaluate(async({pose,seq})=>{const state=__groundComparisonState(__groundComparisonNav,pose,seq,'OWNER_BOUNDARY_SURVEY_CAPTURE');__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);const canvas=document.querySelector('#h-earth-functional-landscape-canvas'),gl=canvas.getContext('webgl2');if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('SURVEY_CANVAS');gl.finish();const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),packet=__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:seq});const before=gpu.frameRecords.at(-1),dataUrl=canvas.toDataURL('image/png'),after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);return {state,worldPacket:packet,expectedCameraPosition:packet.camera.position,lastFrame:before,canvas:{width:canvas.width,height:canvas.height,cssWidth:canvas.clientWidth,cssHeight:canvas.clientHeight},resources:gpu.resources,capture:{before,after,dataUrl}};},{pose,seq});
    Object.assign(v,{pose,assetSignature:signature,grassHidden:false,rendererResponseTransformed:false});validateView(v,pose,seq);if(v.lastFrame.frameSequence<=previousFrame)throw Error('SURVEY_FRAME_NOT_ADVANCED');previousFrame=v.lastFrame.frameSequence;
    const bytes=decodeCapture(v.capture,v.lastFrame);delete v.capture;const image=pose.name+'.png';fs.writeFileSync(path.join(out,image),bytes);receipt.views.push({...v,image,imageSha256:sha(bytes),imageBytes:bytes.length});persist();
@@ -127,7 +135,7 @@ export async function run(argv){
  const a=parseArgs(argv),out=a['--output'],candidateHead=process.env.EXACT_CANDIDATE_SHA;
  const binding=JSON.parse(fs.readFileSync(path.join(a['--candidate-dir'],BINDING_PATH),'utf8'));validateBinding(binding,candidateHead);
  fs.mkdirSync(out,{recursive:true});
- const receipt={schema:'H_EARTH_NATURAL_MATERIAL_BLEND_v1',operationId:OPERATION,lockGeneration:2980,profile:PROFILE,result:'INCOMPLETE',baselineHead:BASELINE_HEAD,candidateHead,frameCap:12,runBudget:1,automaticRetry:false,ownerVisualAcceptance:false,physicalAndroidAcceptance:false,exactOwnerScreenshotReproduced:false,releaseAuthorized:false,scenes:[],errors:[]};
+ const receipt={schema:'H_EARTH_NATURAL_MATERIAL_BLEND_v1',operationId:OPERATION,lockGeneration:2982,profile:PROFILE,result:'INCOMPLETE',baselineHead:BASELINE_HEAD,candidateHead,frameCap:12,runBudget:1,automaticRetry:false,ownerVisualAcceptance:false,physicalAndroidAcceptance:false,exactOwnerScreenshotReproduced:false,releaseAuthorized:false,scenes:[],errors:[]};
  const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
  persist();
  try{

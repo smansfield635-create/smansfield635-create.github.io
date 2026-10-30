@@ -831,17 +831,30 @@ void main(){
   col=mix(col,vec3(.14,.47,.47),smoothstep(.36,.72,sediment)*.20);
   col*=.72+.30*lit;
  }else if(uKind<2.5){
-  // Rock fractures use height, exposure and geological grain, not green painted domes.
-  float strata=sin(vPos.y*2.38+fbm(vPos.xz*.24)*5.2);
-  float fracture=fbm(vPos.xz*.22+vec2(vPos.y*.095,vPos.y*.024));
-  float grit=fbm(vPos.xz*1.09+vPos.y*.17);
-  vec3 limestone=mix(vec3(.23,.27,.28),vec3(.57,.57,.49),clamp(.33+.52*lit+.19*fracture,0.,1.));
-  limestone+=vec3(.06,.055,.04)*strata*.18;
-  limestone=mix(limestone,vec3(.065,.19,.075),smoothstep(.54,.75,grit+fracture*.18)*(.40+.27*max(0.,n.y)));
-  float canopy=smoothstep(.36,.70,n.y)*smoothstep(1.5,8.0,vPos.y+1.3);
-  vec3 leaves=mix(vec3(.035,.13,.048),vec3(.15,.36,.095),grit);
-  col=mix(limestone,leaves,canopy*.87);
-  col*=.72+.43*lit;
+  // Triplanar, height-independent stone variation prevents vertical painted bands.
+  float grainX=fbm(vPos.yz*.57+vec2(4.,11.));
+  float grainY=fbm(vPos.xz*.53+vec2(9.,3.));
+  float grainZ=fbm(vPos.xy*.61+vec2(2.,17.));
+  float fine=noise2(vPos.xy*2.33+vPos.z*.61);
+  vec3 stoneN=normalize(n+vec3(grainX-.5,grainY-.5,grainZ-.5)*.78);
+  float rockLam=max(0.,dot(stoneN,sun));
+  float erosion=.40*grainX+.24*grainY+.36*grainZ;
+  float veins=1.-smoothstep(.05,.26,abs(sin(vPos.x*.61+vPos.y*.57+vPos.z*.63+erosion*5.3)));
+  float rockLight=clamp(.35+.63*rockLam+.20*erosion-.12*veins,0.,1.);
+  vec3 limestone=mix(vec3(.18,.22,.21),vec3(.74,.72,.62),rockLight);
+  limestone*=.86+.23*fine;
+  limestone=mix(limestone,vec3(.11,.14,.15),veins*.18);
+  // Physically added canopy crowns have upward faces and occupy upper shelves.
+  // Keep the vertical cliff walls limestone, with scattered vegetation in fissures.
+  float highland=smoothstep(4.2,10.0,vPos.y+1.3);
+  float cap=smoothstep(.05,.52,n.y)*highland;
+  float niche=smoothstep(.67,.79,erosion)*highland;
+  float canopy=clamp(cap*.94+niche*.21,0.,.95);
+  float leafDetail=fbm(vPos.xy*1.34+vPos.z*.41);
+  vec3 leaves=mix(vec3(.024,.12,.035),vec3(.27,.43,.085),leafDetail);
+  leaves*=.65+.42*rockLam;
+  col=mix(limestone,leaves,canopy);
+  col*=.79+.27*rockLam;
  }else{
   float grain=fbm(vPos.xz*.72+vPos.y*.18);
   col=mix(vec3(.14,.19,.20),vec3(.45,.47,.43),clamp(.42+.38*lit+.20*grain,0.,1.));
@@ -902,7 +915,7 @@ function peaceBuildKernelMeshes(K){
   add('open-ocean',0,positions,indices);
  }
  for(let k=0;k<PEACE_ISLANDS.length;k++){
-  const [cx,cz,rad,height]=PEACE_ISLANDS[k],sides=72,rings=15;
+  const [cx,cz,rad,height]=PEACE_ISLANDS[k],sides=56,rings=12;
   const point=(r,a)=>{
    const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5);
    const x=cx+edge*r*Math.cos(t),z=cz+edge*r*.67*Math.sin(t);
@@ -912,8 +925,8 @@ function peaceBuildKernelMeshes(K){
    const ridge=u*Math.cos(theta)+v*Math.sin(theta);
    const valley=-u*Math.sin(theta)+v*Math.cos(theta);
    const crown=.56+.24*Math.sin(valley*3.1+k*1.7)+.13*Math.sin(ridge*6.8+valley*3.9);
-   const pinnacles=.22*Math.pow(.5+.5*Math.sin(t*5.+k*2.3+Math.sin(t*9.)),3.);
-   const ledges=.07*Math.sin(t*17.+k*1.9+r*11.)+.045*Math.cos(t*29.-r*19.);
+   const pinnacles=.095*Math.pow(.5+.5*Math.sin(t*5.+k*2.3+Math.sin(t*9.)),3.);
+   const ledges=.048*Math.sin(t*17.+k*1.9+r*11.)+.030*Math.cos(t*29.-r*19.);
    const core=(.68+.16*Math.sin(k*1.3)+crown*.18+pinnacles+ledges);
    const coastT=Math.min(1.,Math.max(0.,(r-.78)/.205));
    const wall=1.-coastT*coastT*(3.-2.*coastT);
@@ -927,6 +940,22 @@ function peaceBuildKernelMeshes(K){
   for(let ring=1;ring<rings;ring++)for(let side=0;side<sides;side++){
    const a=1+(ring-1)*sides+side,b=1+(ring-1)*sides+(side+1)%sides,c=1+ring*sides+side,d=1+ring*sides+(side+1)%sides;
    indices.push(a,b,c,b,d,c);
+  }
+  // Small source-built canopy crowns on the upper karst shelves, not a wallpaper texture.
+  // These triangles remain part of the SAME West-admitted island mesh.
+  const frac=x=>x-Math.floor(x);
+  for(let clump=0;clump<46;clump++){
+   const a=2.*Math.PI*frac((clump+1)*.61803398875+k*.217);
+   const rr=.14+.54*frac((clump+3)*.754877666+k*.133);
+   const foot=point(rr,a),size=.68+.48*frac((clump+7)*.414213562+k*.287);
+   const crownHeight=size*(.65+.38*frac(clump*.193+k*.119));
+   const offset=positions.length;
+   positions.push([foot[0],foot[1]+crownHeight,foot[2]]);
+   for(let petal=0;petal<7;petal++){
+    const theta=petal*2.*Math.PI/7.,radial=size*(.85+.15*Math.sin(petal*3.7+clump));
+    positions.push([foot[0]+Math.cos(theta)*radial,foot[1]+crownHeight*.12,foot[2]+Math.sin(theta)*radial]);
+   }
+   for(let petal=0;petal<7;petal++)indices.push(offset,offset+1+petal,offset+1+(petal+1)%7);
   }
   add('island-'+k,2,positions,indices);
   // Explicit open annular shore strips.

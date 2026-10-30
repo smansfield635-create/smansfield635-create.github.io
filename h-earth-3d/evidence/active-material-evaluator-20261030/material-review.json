@@ -1,0 +1,52 @@
+{
+  "schema": "H_EARTH_ORDERED_MATERIAL_INDEPENDENT_REVIEW_v1",
+  "reviewerRole": "WEST_INDEPENDENT_REVIEW",
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "baseCheckpoint": "ed3e708a2c9e1bf098a3675b8806a2cc34312e95",
+  "verdict": "PASS_CONDITIONAL_CPU_MODEL_ONLY",
+  "reviewedHashes": {
+    "material_stages.py": "82219d5b23243e2ad4b41156f4ba0b2c450b685f62dd6659f91e4d47303bd635",
+    "test_material_stages.py": "4bed2f4c59dc667f2acd18377f7a5b2fb953fbd0201161ec24ffe41a3ce0dd92",
+    "build_material_inputs.py": "6f6a2fb74519dacb9039f6d1c71ee047ea91ac480995bd407be9e34477c1938f",
+    "prepare-material.py": "5f773607de7072a52f44e3245ae3055d5878dd96bad841d974d1154448d00e3d",
+    "ordered-source-manifest.json": "3648fee9823a209fd43701356657e29a5fa57d1032d208f67167309b2f9558b4",
+    "ordered-material.json": "1061514104b5f5dc7bfbe562cd4bf2b9768634b780ec71071ff82f32f1b68de2",
+    "independent_material_checks.py": "770618816284bc83fd953d028ff2c18f607f627d2d6d917f0403afc694b56490",
+    "material.test.mjs": "beb2bb4a903e09ddfbcbbad468ac9e837471109538d4e1de7ae6c77fc17e3ad1",
+    "test_material_replay.py": "af93f86a9056dc216ab10ce95b9894a1dbd68f2eec0e41381ccb317b1ca33a1e"
+  },
+  "fullLoaderReplay": {
+    "result": "BYTE_FOR_BYTE_IDENTICAL",
+    "replayedReportSha256": "1061514104b5f5dc7bfbe562cd4bf2b9768634b780ec71071ff82f32f1b68de2",
+    "recordCount": 18,
+    "capturedCameraParentPlaneLanes": 15,
+    "syntheticSourceProbes": 3,
+    "capturedSelectedLanesOutsideParent": 1
+  },
+  "tests": {
+    "nodeSuitePassed": 25,
+    "nodeSuiteFailed": 0,
+    "pythonRegressionsWithinSuite": 18,
+    "nativeHelperCases": 1000,
+    "nativeFoothillMaxDifference": 6.38378239159465e-15,
+    "nativeHillsideMaxDifference": 1.887379141862766e-15,
+    "randomSubstrateCompositions": 1000,
+    "maxAffineDifference": 1.1102230246251565e-16,
+    "finalAffectedNodeTestsPassed": 3
+  },
+  "reviewedRepairs": [
+    "Cast source triangles to binary64 before camera replay; prior float32 reconstruction could drift.",
+    "Bind newly consumed rendered-beach helper to frozen source hash.",
+    "Evaluate fields, attributes, atlas and margin at the same selected pixel-center lane.",
+    "Record nested manor derivative uncertainty; do not claim GLSL hardware equivalence.",
+    "Identify selected-lane parent extrapolation explicitly; one captured-camera lane has EXTRAPOLATED_PARENT_PLANE status and is not promoted to visible source support."
+  ],
+  "remainingLimits": [
+    "P is symbolic materialMarginSubstrate; exact soil filtering, final RGB and lighting remain unresolved.",
+    "CPU binary64 noise and parent-plane derivatives are conditional models, not GPU equality.",
+    "One captured-camera lane has explicit EXTRAPOLATED_PARENT_PLANE status; coefficients there are extrapolated-parent values, not established raster-owner values. Other helper extrapolation remains explicitly counted.",
+    "Three generated/far probes are synthetic, not captured camera or landscape coverage evidence.",
+    "No product mutation, expanded correction, GPU run, merge, publication or visual acceptance is established."
+  ],
+  "recommendation": "Persist checkpoint; next assess conditional coefficient contributions across bounded source profiles without claiming final pixels or changing product."
+}

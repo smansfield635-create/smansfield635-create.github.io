@@ -1,0 +1,12 @@
+{
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "moduleHashes": {
+    "showroom/globe/h-earth/render/rendered-beach-signal.v1.js": "e51cbf64b6cc9feeaf699d1f68871bbea055522bf623ef2b24c3c6e1b182ef34",
+    "showroom/globe/h-earth/render/hillside-shoreline-field.v1.js": "4353dbcd28e31ca41c0de8eb3dd3e9607ee996ff02ae669d5fd3595c18d104a8",
+    "showroom/globe/h-earth/render/foothill-meadow-field.v1.js": "a2961c0507d679ea998a78708127a84d41d8b3a3387831c9fb13cf0dcaa115fb",
+    "showroom/globe/h-earth/render/landscape-coherence-field.v1.js": "54aa2bf97e19fc63631cd3f7ece0a6d4c3a8d13222afa9a66fef2666d3e1a7b1",
+    "showroom/globe/h-earth/render/habitat-material-presentation.v1.js": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a",
+    "showroom/globe/h-earth/render/material-margin-field.v1.js": "3392761baed50091c1f5d628cbe9a10df1e819743648835955a3d40ed4ebff19",
+    "showroom/globe/h-earth/render/planetary-world-frame.js": "85919813d2fa53a702cac877dc70559175dc8effe479d7b8c595f7d6f6565869"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "H_EARTH_INDEPENDENT_MATERIAL_ALGEBRA_CHECK_v1",
+  "seed": 73000,
+  "nativeHelperCases": 1000,
+  "foothillMaxDifference": 6.38378239159465e-15,
+  "hillsideMaxDifference": 1.887379141862766e-15,
+  "randomSubstrateCompositions": 1000,
+  "maxAffineDifference": 1.1102230246251565e-16,
+  "helperHashes": {
+    "foothill-meadow-field.v1.js": "a2961c0507d679ea998a78708127a84d41d8b3a3387831c9fb13cf0dcaa115fb",
+    "hillside-shoreline-field.v1.js": "4353dbcd28e31ca41c0de8eb3dd3e9607ee996ff02ae669d5fd3595c18d104a8"
+  },
+  "modelSha256": "82219d5b23243e2ad4b41156f4ba0b2c450b685f62dd6659f91e4d47303bd635",
+  "scope": "NATIVE_HELPER_COMPARISON_AND_ORDERED_TRACE_COMPOSITION_ONLY",
+  "limits": [
+    "Trace composition independently checks algebra, not each procedural operand.",
+    "Native helper binary64 agreement does not prove GLSL highp equality.",
+    "Full equations separately reviewed against frozen renderer and helper GLSL."
+  ]
+}

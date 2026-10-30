@@ -27,7 +27,11 @@ The next source-attribute checkpoint is now implemented in [ATTRIBUTES.md](ATTRI
 
 [INPUTS.md](INPUTS.md) now records the reproduced final habitat/mask fields, native atlas addressing and captured parent-plane camera inputs. Geometry and attribute evidence carry forward.
 
-## Explicit remaining work
+## Ordered material follow-up
+
+[MATERIAL.md](MATERIAL.md) records the implemented conditional RGB coefficient evaluator from the symbolic pre-identity soil substrate through all downstream color stages. Its source-model results and remaining hardware/visibility limits supersede the ordered-composition gap below; previous checkpoint reports remain immutable evidence.
+
+## Original checkpoint boundary (historical)
 
 **Complete material coefficients remain unresolved for all grid points.** The attribute follow-up now supplies rendered rim normals, coast/contact fields, base colors and material parameters. Actual shoreline/habitat textures and native atlas addressing are now supplied by the texture follow-up. Ordered stage composition, general camera derivatives and exact soil mip sampling remain unresolved. Unknown stages return `UNRESOLVED` with null coefficients; they are never assumed to have zero influence. Dynamic refinement and final lighting are outside this snapshot.
 

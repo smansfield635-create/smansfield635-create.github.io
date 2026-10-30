@@ -1,0 +1,76 @@
+{
+  "sigmaMeters": 2,
+  "supportRadiusMeters": 6,
+  "sourceSHA256": "56227147b4e2b03e06c0bc674b3d198f70d38f18e970c1a40a1c51c3ec5efbe1",
+  "panels": [
+    {
+      "panel": "woodland",
+      "maxGradientBefore": 0.37647058823529417,
+      "maxGradientAfter": 0.16025479798381545,
+      "meanGradientBefore": 0.015105966761340952,
+      "meanGradientAfter": 0.013448405357274498,
+      "sourceZerosRaised": 6668,
+      "range": [
+        0.0,
+        0.9833309384125565
+      ]
+    },
+    {
+      "panel": "ravine",
+      "maxGradientBefore": 0.4974093264248705,
+      "maxGradientAfter": 0.20123210767690963,
+      "meanGradientBefore": 0.013840831690852876,
+      "meanGradientAfter": 0.01178519896927065,
+      "sourceZerosRaised": 3406,
+      "range": [
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "panel": "coastal",
+      "maxGradientBefore": 1.0105263157894737,
+      "maxGradientAfter": 0.19955205961713743,
+      "meanGradientBefore": 0.012577180603572373,
+      "meanGradientAfter": 0.010449044589195901,
+      "sourceZerosRaised": 3159,
+      "range": [
+        0.0,
+        1.0
+      ]
+    }
+  ],
+  "exampleSourceEdge": {
+    "panel": "coastal",
+    "axis": "z",
+    "worldXZ": [
+      165.66666666666674,
+      -270.1354166666667
+    ],
+    "texel": [
+      131,
+      12
+    ],
+    "coverageJump": 0.9568627450980393,
+    "distanceFromReportedCamera": 98.62347835769243,
+    "beforePair": [
+      0.0,
+      0.9568627450980393
+    ],
+    "afterPair": [
+      0.3999747834422456,
+      0.5871730854466699
+    ],
+    "afterJump": 0.18719830200442433
+  },
+  "limitation": "Presentation convolution fills zero holes; existing protected masks must gate coverage delta before product adoption. Root/admission array unchanged.",
+  "status": "OFFLINE_DESIGN_ONLY_NOT_PRODUCT_OR_VISUAL_ACCEPTANCE",
+  "applicationPlan": {
+    "mask": "Separate presentation texture; native root/admission map unchanged",
+    "kernel": "World-space Gaussian sigma2m, support6m, independent atlas panels",
+    "protectedRegions": "Blend signed coverage difference through existing grove/oasis/estate/route protections; preserve native coverage where protection is zero",
+    "roughness": "Keep native habitat coverage for existing roughness term",
+    "detail": "Sample original soil texture normally; do not blur final image or native soil albedo",
+    "acceptance": "First inspect exact source edge in4lit views; do not infer visible success from gradient reduction"
+  }
+}

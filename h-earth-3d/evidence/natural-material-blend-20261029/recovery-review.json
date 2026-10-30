@@ -1,0 +1,28 @@
+{
+  "schema": "H_EARTH_NATURAL_BLEND_CAPTURE_RECOVERY_REVIEW_v1",
+  "result": "PASS_SOURCE_READY_FOR_BOUNDED_VISUAL_COMPARISON",
+  "builderSelfApproval": false,
+  "reviewer": "Independent native agent /root/review_recovery",
+  "operationId": "H_EARTH_NATURAL_BLEND_CAPTURE_RECOVERY_20261029_001",
+  "lockGeneration": 2982,
+  "admissionRun": 40978939123,
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "156efdb6440afeff3cc5ea51b4cac1977410658b43cb88da1d0bd1006373d115",
+    "h-earth-3d/evidence/natural-material-blend-20261029/blend.test.mjs": "23954037f257e7ff9b43a33536fd2481ac02bd2d4c9c14fd725497c58bbccb2a",
+    "h-earth-3d/evidence/natural-material-blend-20261029/product-binding.json": "66c3632eaf2c127a44b028f33e65dd56749d1f3a40e9337557a06699db5caf2f",
+    "h-earth-3d/evidence/natural-material-blend-20261029/qualify.mjs": "7be832b5ee2b8ca644372baf10eb748ed07fbb26c37daaf79ec08a9337da33dc",
+    "h-earth-3d/evidence/natural-material-blend-20261029/qualify.test.mjs": "5587855b437d2993dd38d1b21eb805b2d742ff92eff7050615ea9717f79f54cb",
+    "h-earth-3d/evidence/natural-material-blend-20261029/warmup.test.mjs": "b9a3f22a33e7301469a3a885307b04464d7dfdd959d5a17c098e0976fe956d40",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "b0cfed4d512cb76ee9986ffe9ebbed6f8ad577b98aa0bebb4db480af9dec03ab",
+    "showroom/globe/h-earth/vegetation-prototype/route.js": "04fc6b367c806417aa06edcd29e02f3e7b932b26efdd7e91bc60dfa358fed42d"
+  },
+  "testsPassed": 23,
+  "productCandidateHead": "f28fe92dfda5abd90155850e7879a73c78a0889e",
+  "findings": [
+    "Baseline failed before images; candidate not executed.",
+    "Actual production lazy-loading queue reproduces four IDLE distant models.",
+    "Existing meadow warmup loads all four sequentially.",
+    "All9/root/frame/pair safeguards retained; six poses and12images unchanged."
+  ],
+  "visualAcceptance": false
+}

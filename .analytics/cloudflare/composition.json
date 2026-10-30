@@ -1,36 +1,31 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-30T13:27:25Z",
+  "generatedAt": "2026-10-30T14:27:34Z",
   "window": {
-    "start": "2026-09-30T13:27:25Z",
-    "end": "2026-10-30T13:27:25Z"
+    "start": "2026-09-30T14:27:34Z",
+    "end": "2026-10-30T14:27:34Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 703,
-        "visits": 640
+        "pageLoads": 723,
+        "visits": 660
       },
       {
         "value": "/analytics/",
-        "pageLoads": 556,
-        "visits": 556
+        "pageLoads": 596,
+        "visits": 596
       },
       {
         "value": "/",
-        "pageLoads": 119,
-        "visits": 97
+        "pageLoads": 109,
+        "visits": 87
       },
       {
         "value": "/build/",
         "pageLoads": 60,
         "visits": 60
-      },
-      {
-        "value": "/showroom/globe/audralia/",
-        "pageLoads": 43,
-        "visits": 43
       },
       {
         "value": "/nine-summits/universe/",
@@ -48,14 +43,19 @@
         "visits": 0
       },
       {
-        "value": "/meet-sean-mansfield/",
-        "pageLoads": 30,
-        "visits": 30
-      },
-      {
         "value": "/evidence/agentic-frontier/",
         "pageLoads": 25,
         "visits": 21
+      },
+      {
+        "value": "/showroom/globe/audralia/",
+        "pageLoads": 23,
+        "visits": 23
+      },
+      {
+        "value": "/release-proof/",
+        "pageLoads": 22,
+        "visits": 22
       },
       {
         "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
@@ -68,6 +68,11 @@
         "visits": 0
       },
       {
+        "value": "/meet-sean-mansfield/",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
         "value": "/instruments/operations-chamber/",
         "pageLoads": 20,
         "visits": 20
@@ -76,11 +81,6 @@
         "value": "/products/education/",
         "pageLoads": 13,
         "visits": 13
-      },
-      {
-        "value": "/release-proof/",
-        "pageLoads": 12,
-        "visits": 12
       },
       {
         "value": "/preflight/app/",
@@ -221,8 +221,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1682,
-        "visits": 1682
+        "pageLoads": 1702,
+        "visits": 1702
       },
       {
         "value": "diamondgatebridge.com",
@@ -253,8 +253,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1824,
-        "visits": 1689
+        "pageLoads": 1804,
+        "visits": 1669
       },
       {
         "value": "CN",
@@ -295,13 +295,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1481,
+        "pageLoads": 1501,
         "visits": 1429
       },
       {
         "value": "mobile",
-        "pageLoads": 308,
-        "visits": 256
+        "pageLoads": 338,
+        "visits": 286
       },
       {
         "value": "tablet",
@@ -459,8 +459,8 @@
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1937,
-        "visits": 1772
+        "pageLoads": 1887,
+        "visits": 1742
       }
     ]
   }

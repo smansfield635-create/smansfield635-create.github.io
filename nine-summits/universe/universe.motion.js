@@ -915,8 +915,8 @@ function peaceBuildCloudBanks(image){
   {y:180,h:230,fade:[0,100/230,1],opacity:[0,1,1]}
  ];
  const velocities=[
-  [[.54,-.06],[-.26,.03],[.38,-.04]],
-  [[-.42,.05],[.22,-.025],[-.51,.04]]
+  [[2.25,-.22],[-1.25,.12],[1.85,-.18]],
+  [[-1.80,.18],[1.00,-.11],[-2.10,.17]]
  ];
  const banks=[];
  for(let row=0;row<rows.length;row++)for(let col=0;col<cols.length;col++){
@@ -1031,7 +1031,7 @@ function drawPeaceSourceWater(now,force=false){
     const p1=Math.sin(xx*.078+yy*.019-t*1.24+Math.sin(xx*.018+yy*.041+t*.43)*.39);
     const p2=Math.sin(xx*.036-yy*.064-t*.71);
     const wave=Math.max(0,p1*.7+p2*.3);
-    const alpha=Math.min(.2,(.045+.15*depth)*wave*wave*wave);
+    const alpha=Math.min(.34,(.12+.32*depth)*wave*wave);
     const k=(py*480+px)*4;
     pixels[k]=205;pixels[k+1]=245;pixels[k+2]=247;
     pixels[k+3]=Math.round(alpha*255);

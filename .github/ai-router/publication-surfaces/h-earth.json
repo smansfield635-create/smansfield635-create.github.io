@@ -6,7 +6,7 @@
     {
       "path": "/showroom/globe/h-earth/index.html",
       "includes": [
-        "<title>Gratitude · Live Interactive World</title>",
+        "<title>Gratitude \u00b7 Live Interactive World</title>",
         "id=\"h-earth-functional-landscape-route\"",
         "data-route=\"./vegetation-prototype/route.js?rev=gen2795-performance-v1\"",
         "data-run8e-ready=\"false\"",
@@ -35,7 +35,7 @@
       "path": "/showroom/globe/h-earth/arrival-loader.js",
       "includes": [
         "H_EARTH_ARRIVAL_LOADER_23949_v1",
-        "H-Earth · live world initialization",
+        "H-Earth \u00b7 live world initialization",
         "Entering the coast.",
         "h-earth-renderer-startup-receipt",
         "READY_PUBLISHED",
@@ -47,7 +47,7 @@
     {
       "path": "/showroom/globe/h-earth/custody/index.html",
       "includes": [
-        "<title>H-Earth · Renderer Custody Route</title>",
+        "<title>H-Earth \u00b7 Renderer Custody Route</title>",
         "CUSTODY ROUTE ACTIVE",
         "public-live-gpu-integration.run8e-r3e.custody-route.js?v=dedicated-custody-v2"
       ],
@@ -84,15 +84,26 @@
         "primitive?.metadata?.archetypeId!=='HIGHLAND_CONIFER_SAPLING'",
         "for(let pi=0;pi<drawablePrimitives.length;pi++)",
         "new URL(\"./corrected-material-v1/\",import.meta.url).href",
-        "function disposeCorrectedMaterial()"
+        "function disposeCorrectedMaterial()",
+        "habitat-material-presentation.v1.js",
+        "habitatColorCoverage"
       ],
       "excludes": []
     },
     {
       "path": "/showroom/globe/h-earth/vegetation-prototype/route.js",
       "includes": [
-        "gen2973-corrected-material-v1",
+        "gen2987-habitat-material-blend-v1",
         "renderer?.disposeCorrectedMaterial()"
+      ],
+      "excludes": []
+    },
+    {
+      "path": "/showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+      "includes": [
+        "buildHabitatMaterialPresentation",
+        "H_EARTH_HABITAT_MATERIAL_PRESENTATION_v1",
+        "sigmaMeters:2,supportMeters:6"
       ],
       "excludes": []
     }

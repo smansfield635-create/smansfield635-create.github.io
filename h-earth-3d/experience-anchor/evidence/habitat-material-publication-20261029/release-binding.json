@@ -1,0 +1,30 @@
+{
+  "acceptedHead": "9ffe7fae03ff8f46e5cd1de1e388f6cebef9aeea",
+  "adoptionBase": "1cf965f9c5fd393359682107638d45f6498bde92",
+  "governingHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+  "disjointMainChange": [
+    "nine-summits/universe/universe.motion.js"
+  ],
+  "productFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+      "sha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "365aec75bffae1c95c19c4bc9cab9869720893a04bcb32eadad46e7f6b14267f"
+    }
+  ],
+  "ownerAcceptanceComment": 6513359705,
+  "artifactId": 12948702650,
+  "artifactZipSha256": "ced3a78f4c9212411bd0a1b6f0ae5e85b66908059eae397ef2c57556a447874f",
+  "artifactRun": 40989116335,
+  "visualDisposition": "KEEP_BOUNDED_SEAM",
+  "oasisVisual": "INCONCLUSIVE_FLAT_TEAL",
+  "oasisProtection": "SOURCE_SUPPORTED",
+  "newCapturePerformed": false
+}

@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-30T04:29:19Z",
+  "generatedAt": "2026-10-30T05:26:06Z",
   "window": {
-    "start": "2026-09-30T04:29:19Z",
-    "end": "2026-10-30T04:29:19Z"
+    "start": "2026-09-30T05:26:06Z",
+    "end": "2026-10-30T05:26:06Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 720,
-        "visits": 658
+        "pageLoads": 722,
+        "visits": 659
       },
       {
         "value": "/analytics/",
@@ -128,6 +128,11 @@
         "visits": 2
       },
       {
+        "value": "/campaigns/wave/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
         "value": "/site-guide/",
         "pageLoads": 2,
         "visits": 2
@@ -159,11 +164,6 @@
       },
       {
         "value": "/laws/scientific-law/battery-heldout-study/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/campaigns/wave/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -226,13 +226,13 @@
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 144,
+        "pageLoads": 145,
         "visits": 0
       },
       {
         "value": "bing.com",
-        "pageLoads": 33,
-        "visits": 33
+        "pageLoads": 34,
+        "visits": 34
       },
       {
         "value": "www.google.com",
@@ -248,8 +248,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1815,
-        "visits": 1681
+        "pageLoads": 1817,
+        "visits": 1682
       },
       {
         "value": "CN",
@@ -285,8 +285,8 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1471,
-        "visits": 1420
+        "pageLoads": 1473,
+        "visits": 1421
       },
       {
         "value": "mobile",
@@ -307,8 +307,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 517,
-        "visits": 435
+        "pageLoads": 519,
+        "visits": 436
       },
       {
         "value": "ChromeMobile",
@@ -369,8 +369,8 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 236,
-        "visits": 225
+        "pageLoads": 238,
+        "visits": 226
       },
       {
         "value": "MacOSX",
@@ -391,8 +391,8 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 1016,
-        "visits": 872
+        "pageLoads": 1018,
+        "visits": 873
       },
       {
         "value": "1",
@@ -403,12 +403,12 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1817,
-        "visits": 1712
+        "pageLoads": 1818,
+        "visits": 1713
       },
       {
         "value": "routing-apis",
-        "pageLoads": 34,
+        "pageLoads": 35,
         "visits": 0
       },
       {
@@ -425,8 +425,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1787,
-        "visits": 1706
+        "pageLoads": 1789,
+        "visits": 1707
       },
       {
         "value": "cache",
@@ -442,15 +442,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1877,
-        "visits": 1733
+        "pageLoads": 1879,
+        "visits": 1734
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1877,
-        "visits": 1733
+        "pageLoads": 1879,
+        "visits": 1734
       }
     ]
   }

@@ -1364,3 +1364,103 @@ jobs:
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
           test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 10b5623b09c552930e54a1c1071c37535a831971
           (cd source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate && python3 -m unittest test_mesh_gate -v)
+
+  natural-sand-earth-blend:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'reopened' &&
+          startsWith(github.event.pull_request.title, 'NATURAL_BLEND_RECOVERY:') &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/natural-sand-earth-blend-20261029' &&
+          github.event.pull_request.base.ref == 'main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - name: Read immutable launch intent
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: dispatch
+          persist-credentials: false
+          sparse-checkout: h-earth-3d/evidence/natural-material-blend-20261029
+      - name: Bind fixed candidate and single execution
+        id: intent
+        env:
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          test "$RUN_ATTEMPT" = 1
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'; import assert from 'node:assert/strict';
+          const i=JSON.parse(fs.readFileSync('dispatch/h-earth-3d/evidence/natural-material-blend-20261029/dispatch-intent.json'));
+          assert.equal(i.operationId,'H_EARTH_NATURAL_BLEND_CAPTURE_RECOVERY_20261029_001');
+          assert.equal(i.lockGeneration,2982); assert.equal(i.admissionRun,40978939123);
+          assert.equal(i.frameCap,12); assert.equal(i.runBudget,1); assert.equal(i.automaticRetry,false);
+          assert.equal(i.candidateHead,'f28fe92dfda5abd90155850e7879a73c78a0889e');
+          assert.match(i.toolingHead,/^[a-f0-9]{40}$/);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,`tooling_head=${i.toolingHead}\ncandidate_head=${i.candidateHead}\n`);
+          NODE
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.intent.outputs.tooling_head }}
+          path: tooling
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.intent.outputs.candidate_head }}
+          path: candidate
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 50b337ff7bbfb6fce4876e1037ac96d5faff65a6
+          path: baseline
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: a26dc41964ae334a5ce73a637bcc96a0b4d43807
+          path: support
+          persist-credentials: false
+          sparse-checkout: tools
+      - name: Verify reviewed bytes and restore accepted capture helpers
+        env:
+          TARGET_SHA: ${{ steps.intent.outputs.tooling_head }}
+        run: |
+          test "$(git -C tooling rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git -C candidate rev-parse HEAD)" = f28fe92dfda5abd90155850e7879a73c78a0889e
+          test "$(git -C baseline rev-parse HEAD)" = 50b337ff7bbfb6fce4876e1037ac96d5faff65a6
+          test "$(git -C support rev-parse HEAD)" = a26dc41964ae334a5ce73a637bcc96a0b4d43807
+          test "$(git -C tooling rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)" = "$(git -C dispatch rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+          const hash=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const i=JSON.parse(fs.readFileSync('dispatch/h-earth-3d/evidence/natural-material-blend-20261029/dispatch-intent.json'));
+          const review=JSON.parse(fs.readFileSync('tooling/h-earth-3d/evidence/natural-material-blend-20261029/recovery-review.json'));
+          assert.equal(review.result,'PASS_SOURCE_READY_FOR_BOUNDED_VISUAL_COMPARISON');
+          assert.equal(review.builderSelfApproval,false);
+          assert.deepEqual(Object.keys(i.sourceSha256).sort(),[".github/workflows/h-earth-neutral-exact-head-runner.yml", "h-earth-3d/evidence/natural-material-blend-20261029/blend.test.mjs", "h-earth-3d/evidence/natural-material-blend-20261029/product-binding.json", "h-earth-3d/evidence/natural-material-blend-20261029/qualify.mjs", "h-earth-3d/evidence/natural-material-blend-20261029/qualify.test.mjs", "h-earth-3d/evidence/natural-material-blend-20261029/warmup.test.mjs", "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js", "showroom/globe/h-earth/vegetation-prototype/route.js"]);
+          for(const [p,h] of Object.entries(i.sourceSha256)){assert.equal(hash('tooling/'+p),h);assert.equal(review.sourceSha256[p],h);}
+          const helpers={'h-earth-ground-material-comparison.v1.mjs':'b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509','h-earth-corrected-material-application.mjs':'070ad7daf51bbf41c2f4223ad9ba3a0143bde6aa3f7439df603c4a2718f50558','h-earth-world-position-overlay.mjs':'d61880ba98d81eae5d7cc6503f10f34d5aaa37819f4ba4a22218d87e711ca797','h-earth-groundcover-factor-overlay.mjs':'e9a872402371087e49031bca2ca27d0f37c9ab1012df50a5ebbf63617a3bf9e1'};
+          for(const [p,h] of Object.entries(helpers)){assert.equal(hash('support/tools/'+p),h);fs.copyFileSync('support/tools/'+p,'tooling/tools/'+p);}
+          NODE
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test material continuity and guards
+        working-directory: tooling
+        run: node --test h-earth-3d/evidence/natural-material-blend-20261029/blend.test.mjs h-earth-3d/evidence/natural-material-blend-20261029/qualify.test.mjs h-earth-3d/evidence/natural-material-blend-20261029/warmup.test.mjs
+      - name: Install fixed browser
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture twelve paired final-material views
+        working-directory: tooling
+        env:
+          EXACT_CANDIDATE_SHA: ${{ steps.intent.outputs.candidate_head }}
+        run: timeout 3000s node h-earth-3d/evidence/natural-material-blend-20261029/qualify.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/natural-material-blend"
+      - name: Preserve comparison on every result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-natural-material-blend-${{ github.run_id }}
+          path: ${{ runner.temp }}/natural-material-blend
+          if-no-files-found: error
+          retention-days: 90

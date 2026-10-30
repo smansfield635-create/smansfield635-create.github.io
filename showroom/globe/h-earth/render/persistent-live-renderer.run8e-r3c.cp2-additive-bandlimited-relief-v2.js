@@ -1205,6 +1205,42 @@ void main(){
     vec3 drySand=vec3(0.57758045,0.47353148,0.28314874);
     vec3 sand=mix(mix(wetSand,dampSand,smoothstep(2.0,14.0,inlandMeters)),drySand,smoothstep(10.0,24.0,inlandMeters));
     sand*=0.965+0.07*grain;
+    // H_EARTH_NATURAL_DRY_SAND_BLEND_V1_BEGIN
+    // Presentation only: raw beach/contact fields and planting eligibility
+    // retain their existing law. Feather only the dry sand-to-earth join.
+    float drySandT=clamp((inlandMeters-10.0)/40.0,0.0,1.0);
+    float drySandEnvelope=4.0*drySandT*(1.0-drySandT);
+    float drySandWarp=
+      2.25*(2.0*noise2(world*0.055+vec2(19.7,-31.1))-1.0)+
+      0.75*(2.0*noise2(world*0.19+vec2(-43.2,7.8))-1.0);
+    float drySandWeight=1.0-smoothstep(
+      10.0,50.0,inlandMeters+drySandEnvelope*drySandWarp
+    );
+    // The same accepted grove, oasis, estate and approach protections used
+    // by the underlying groundcover also protect this final material stage.
+    float drySandOasisX=max(max(-18.0-world.x,0.0),world.x-34.0);
+    float drySandOasisZ=max(max(-204.0-world.y,0.0),world.y+131.0);
+    float drySandEstateX=max(max(18.0-world.x,0.0),world.x-132.0);
+    float drySandEstateZ=max(max(-210.0-world.y,0.0),world.y+125.0);
+    float drySandRouteT=clamp((world.y-world.x+192.0)/96.0,0.0,1.0);
+    float drySandRouteDistance=distance(
+      world,vec2(48.0-48.0*drySandRouteT,-144.0+48.0*drySandRouteT)
+    );
+    float drySandProtection=
+      smoothstep(0.0,12.0,length(vec2(drySandOasisX,drySandOasisZ)))*
+      smoothstep(0.0,10.0,length(vec2(drySandEstateX,drySandEstateZ)))*
+      smoothstep(4.0,9.0,drySandRouteDistance)*
+      smoothstep(22.0,42.0,distance(world,vec2(-139.40268,-210.74617)));
+    float naturalSandCoverage=hillsideSandCoverage(
+      world,slope,renderedBeachCoverage(
+        min(inlandMeters,10.0),vCoastDistanceMeters,vWorldPosition.y,slope
+      )*drySandWeight
+    );
+    sandCoverage=mix(sandCoverage,naturalSandCoverage,drySandProtection);
+    // Existing grain crosses the mixed belt; no blur or third palette.
+    float drySandGrainCarry=4.0*drySandWeight*(1.0-drySandWeight)*drySandProtection;
+    sand*=1.0+0.06*drySandGrainCarry*(2.0*grain-1.0);
+    // H_EARTH_NATURAL_DRY_SAND_BLEND_V1_END
     palette=mix(palette,sand,sandCoverage);
     presentationContact*=1.0-0.85*sandCoverage;
     presentationHighlight*=1.0-0.70*sandCoverage;

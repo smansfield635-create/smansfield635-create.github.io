@@ -1,0 +1,25 @@
+{
+  "schema": "H_EARTH_NATURAL_BLEND_INDEPENDENT_REVIEW_v1",
+  "operationId": "H_EARTH_NATURAL_SAND_EARTH_BLEND_20261029_001",
+  "result": "PASS_SOURCE_READY_FOR_BOUNDED_VISUAL_COMPARISON",
+  "reviewer": "west_review",
+  "builderSelfApproval": false,
+  "testsPassed": 19,
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "b0cfed4d512cb76ee9986ffe9ebbed6f8ad577b98aa0bebb4db480af9dec03ab",
+    "showroom/globe/h-earth/vegetation-prototype/route.js": "04fc6b367c806417aa06edcd29e02f3e7b932b26efdd7e91bc60dfa358fed42d",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "e4995a2c41dbc7737a7a3059e312d112972a4b5502e01f695ed9005fad195d9e",
+    "h-earth-3d/evidence/natural-material-blend-20261029/blend.test.mjs": "23954037f257e7ff9b43a33536fd2481ac02bd2d4c9c14fd725497c58bbccb2a",
+    "h-earth-3d/evidence/natural-material-blend-20261029/qualify.mjs": "b661806f95da3592a53dc0e020d3e7d95b2db5b803df14a116d7abad80c04694",
+    "h-earth-3d/evidence/natural-material-blend-20261029/qualify.test.mjs": "5587855b437d2993dd38d1b21eb805b2d742ff92eff7050615ea9717f79f54cb",
+    "h-earth-3d/evidence/natural-material-blend-20261029/product-binding.json": "66c3632eaf2c127a44b028f33e65dd56749d1f3a40e9337557a06699db5caf2f"
+  },
+  "findings": [
+    "Declared block removal restores exact production renderer; route token reversal restores original route.",
+    "Wet/soil endpoints and protected masks preserved; geometry roots atlas unchanged.",
+    "Twelve-frame capture retains exact scene custody, resources and paired camera guards.",
+    "Workflow exact seven-path guard and accepted helper head verified."
+  ],
+  "visualAcceptance": false,
+  "limitation": "Wider dry sand could lighten transition. Actual images determine acceptance; source checks do not establish owner boundary fixed."
+}

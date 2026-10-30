@@ -1391,8 +1391,8 @@ jobs:
           node --input-type=module <<'NODE'
           import fs from 'node:fs';import assert from 'node:assert/strict';
           const i=JSON.parse(fs.readFileSync('dispatch/h-earth-3d/evidence/inland-margin-visual-20261030/dispatch-intent.json'));
-          assert.equal(i.operationId,'H_EARTH_INLAND_MARGIN_VISUAL_20261030_001');
-          assert.equal(i.lockGeneration,2995);assert.equal(i.admissionRun,41008594123);
+          assert.equal(i.operationId,'H_EARTH_INLAND_MARGIN_CAMERA_REPAIR_20261030_001');
+          assert.equal(i.lockGeneration,2996);assert.equal(i.admissionRun,41010225092);
           assert.equal(i.frameCap,12);assert.equal(i.runBudget,1);assert.equal(i.automaticRetry,false);
           assert.equal(i.sceneHead,'260c66540b4471bb3d50cbc28cf82d160b732b19');assert.equal(i.candidateHead,'3ea149e5b56e8cc0d5aac192bce0cdd47da7e626');
           assert.match(i.toolingHead,/^[a-f0-9]{40}$/);

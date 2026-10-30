@@ -1,0 +1,14 @@
+{
+  "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+  "canonicalResult": "ADMITTED_AND_LOCKED",
+  "lockGeneration": 3000,
+  "requestComment": 6527836027,
+  "receiptComment": 6527846342,
+  "workflowRun": 41090149861,
+  "governingHead": "410e7fc049aabc9e6a34b6f170dc03fefd77b454",
+  "allowedPaths": [
+    "h-earth-3d/evidence/active-material-evaluator-20261030/**"
+  ],
+  "productMutation": false,
+  "gpuRunBudget": 0
+}

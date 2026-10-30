@@ -1,0 +1,73 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "410e7fc049aabc9e6a34b6f170dc03fefd77b454",
+    "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+    "paths": [
+      "h-earth-3d/evidence/active-material-evaluator-20261030/**"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_ACTIVE_MATERIAL_EVALUATION_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Frozen candidate 3ea149e5b56e8cc0d5aac192bce0cdd47da7e626; frozen baseline260c66540b4471bb3d50cbc28cf82d160b732b19; separate immutable tooling head and exact reviewed hashes; accepted helpers pinned.",
+  "exactAllowedRepositoryPaths": [
+    "h-earth-3d/evidence/active-material-evaluator-20261030/**"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Compile and obtain authentic admission; no inherited capture authority.",
+      "step": 1
+    },
+    {
+      "action": "Create isolated branch from exact governing head; full-file source-only evaluator and pinned source manifest.",
+      "step": 2
+    },
+    {
+      "action": "Execute local CPU census and coefficient checks; independently review direct dependencies and explicit gaps.",
+      "step": 3
+    },
+    {
+      "action": "Commit bounded evidence and preserve continuation; no GPU, product mutation, merge or publication.",
+      "step": 4
+    }
+  ],
+  "exactGoverningHead": "410e7fc049aabc9e6a34b6f170dc03fefd77b454",
+  "exactTestRunnerCommand": "node --test h-earth-3d/evidence/active-material-evaluator-20261030/*.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_SOURCE_AND_ARTIFACT_HASHES",
+      "COORDINATE_RECONCILIATION",
+      "RETIREMENT_AND_GENERATED_SURFACE_CENSUS",
+      "RGB_AFFINE_COMPOSITION_AND_EXPLICIT_UNSUPPORTED_STAGES",
+      "NO_RUNTIME_ASSET_OR_GPU_CHANGE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse original mesh and frozen candidate source, local image proof, consumer census; source-only CPU execution.",
+    "forbidden": "No material tuning, new renderer writes, GPU captures, ownership redesign or expanded correction texture."
+  },
+  "procedureId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/active-material-evaluator-20261030/**"
+    ],
+    "workflowPath": ".github/workflows/canonical-operation-intake-transport-v1.yml"
+  }
+}

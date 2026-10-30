@@ -1,0 +1,143 @@
+{
+  "allowedPaths": [
+    "h-earth-3d/evidence/active-material-evaluator-20261030/**"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/evidence/active-material-evaluator-20261030/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "410e7fc049aabc9e6a34b6f170dc03fefd77b454",
+  "exactTestCommand": "node --test h-earth-3d/evidence/active-material-evaluator-20261030/*.test.mjs",
+  "executingRole": {
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateControlPlane": false,
+    "mayMutateDiagnosticTooling": true,
+    "mayMutateProduct": false,
+    "role": "SOUTH_SOURCE_EVALUATOR",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "410e7fc049aabc9e6a34b6f170dc03fefd77b454",
+    "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+    "paths": [
+      "h-earth-3d/evidence/active-material-evaluator-20261030/**"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "EXACT_SOURCE_AND_ARTIFACT_HASHES",
+      "COORDINATE_RECONCILIATION",
+      "RETIREMENT_AND_GENERATED_SURFACE_CENSUS",
+      "RGB_AFFINE_COMPOSITION_AND_EXPLICIT_UNSUPPORTED_STAGES",
+      "NO_RUNTIME_ASSET_OR_GPU_CHANGE"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "0000000000000000000000000000000000000000000000000000000000000000",
+    "receiptId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:ACTIVE_MATERIAL_EVALUATOR_20261030",
+  "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+  "prohibitedPaths": [
+    "PRODUCT_OR_ASSET_MUTATION",
+    "WORKFLOW_OR_CONTROL_PLANE_CHANGE",
+    "MERGE_DEPLOY_PUBLICATION",
+    "GPU_EXECUTION",
+    "EXPANDED_CORRECTION_TEXTURE"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Build and execute source-only active-surface material evaluator from frozen source: reconcile coordinates, retire original triangles, enumerate generated surfaces, RGB affine coefficients and camera-dependent support. No product change or GPU execution.",
+    "mayDeploy": false,
+    "mayMerge": false,
+    "mayMutateProduct": false,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner: Okay, proceed with the next lawful action. Continuation issue6911 comment6527759857."
+  },
+  "requiredInputs": [
+    {
+      "id": "FROZEN_SOURCE_AND_ORIGINAL_UPLOAD",
+      "resolved": true
+    },
+    {
+      "id": "PRIOR_CAPTURE_RECEIPT",
+      "resolved": true
+    },
+    {
+      "id": "SOURCE_APPLICABILITY_REVIEW_6527759857",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "REPRODUCIBLE_SOURCE_EVALUATOR",
+    "QUALIFIED_ACTIVE_SURFACE_CENSUS",
+    "RGB_COEFFICIENT_CHECKS",
+    "EXPLICIT_COVERAGE_GAPS_AND_NEXT_MATERIAL_BOUNDARY",
+    "INDEPENDENT_REVIEW"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "AUTHENTIC_ADMISSION_BEFORE_REPOSITORY_WRITES",
+    "SOURCE_IDENTITY_MISMATCH_FAILS_CLOSED",
+    "UNSUPPORTED_MATERIAL_STAGES_REPORTED_NOT_GUESSED",
+    "NO_GLOBAL_VISUAL_ACCEPTANCE",
+    "INDEPENDENT_REVIEW_BEFORE_FINAL_COMMIT"
+  ],
+  "subjectIdentity": {
+    "baselineHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+    "candidateHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "constructionBase": "410e7fc049aabc9e6a34b6f170dc03fefd77b454",
+    "continuationComment": 6527759857,
+    "gpuRunBudget": 0,
+    "originalArtifact": 12913811096,
+    "pairedCaptureArtifact": 12991506650,
+    "sourceIssue": 6911,
+    "targetBranch": "h-earth/active-material-evaluator-20261030"
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/canonical-operation-intake-transport-v1.yml"
+}

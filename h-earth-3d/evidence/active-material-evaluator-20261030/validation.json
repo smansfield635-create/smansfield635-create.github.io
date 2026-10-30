@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "tests": 10,
+  "failed": 0,
+  "skipped": 0,
+  "seed": 3000,
+  "randomAffineCases": 10000,
+  "python": "3.12.14",
+  "numpy": "2.3.5",
+  "shapely": "2.1.2",
+  "scope": "source geometry and affine operand tests; full material coefficients unresolved"
+}

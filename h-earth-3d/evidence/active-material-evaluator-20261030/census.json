@@ -1,0 +1,215 @@
+{
+  "schema": "H_EARTH_ACTIVE_SURFACE_CENSUS_v1",
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "localNavigationRectangle": [
+    -256,
+    -400,
+    256,
+    -80
+  ],
+  "gridStep": 2,
+  "gridPointCount": 40960,
+  "surfaceRows": [
+    {
+      "name": "original-near",
+      "triangles": 17678,
+      "nondegenerateXZTriangles": 17678,
+      "gridPointsWithSupport": 31456,
+      "triangleHits": 31544,
+      "interiorHits": 31276,
+      "hook": true
+    },
+    {
+      "name": "original-far",
+      "triangles": 1154,
+      "nondegenerateXZTriangles": 1154,
+      "gridPointsWithSupport": 0,
+      "triangleHits": 0,
+      "interiorHits": 0,
+      "hook": true
+    },
+    {
+      "name": "ERODED_TERRAIN",
+      "triangles": 48882,
+      "nondegenerateXZTriangles": 48882,
+      "gridPointsWithSupport": 9472,
+      "triangleHits": 9472,
+      "interiorHits": 9450,
+      "hook": true
+    },
+    {
+      "name": "MOUNTAIN_OVERBURDEN",
+      "triangles": 64,
+      "nondegenerateXZTriangles": 64,
+      "gridPointsWithSupport": 32,
+      "triangleHits": 32,
+      "interiorHits": 32,
+      "hook": true
+    },
+    {
+      "name": "NATURAL_CLIFF_FACE",
+      "triangles": 4483,
+      "nondegenerateXZTriangles": 4483,
+      "gridPointsWithSupport": 6,
+      "triangleHits": 12,
+      "interiorHits": 12,
+      "hook": false
+    },
+    {
+      "name": "CAVERN_PHYSICAL_SHELL",
+      "triangles": 592,
+      "nondegenerateXZTriangles": 592,
+      "gridPointsWithSupport": 45,
+      "triangleHits": 90,
+      "interiorHits": 90,
+      "hook": false
+    },
+    {
+      "name": "FRESHWATER_RIVER",
+      "triangles": 2821,
+      "nondegenerateXZTriangles": 2800,
+      "gridPointsWithSupport": 526,
+      "triangleHits": 526,
+      "interiorHits": 526,
+      "hook": false
+    },
+    {
+      "name": "OASIS_WATER",
+      "triangles": 515,
+      "nondegenerateXZTriangles": 515,
+      "gridPointsWithSupport": 209,
+      "triangleHits": 209,
+      "interiorHits": 209,
+      "hook": false
+    }
+  ],
+  "hookEligibleLayerClasses": {
+    "single-layer": 40960
+  },
+  "nonHookSurfacePoints": 782,
+  "examplesUnresolvedLayers": [],
+  "cameraSensitivity": {
+    "scope": "SYNTHETIC_DISTANCE_OPERANDS_ONLY_NOT_COMPLETE_MATERIAL_OR_VALIDATED_CAMERA_POSES",
+    "localCameraInputs": [
+      [
+        0,
+        2,
+        -160
+      ],
+      [
+        40,
+        2,
+        -300
+      ],
+      [
+        -160,
+        2,
+        -350
+      ]
+    ],
+    "worldCameraInputs": [
+      [
+        0.0,
+        1.969523664796725,
+        -160.00075803475107
+      ],
+      [
+        40.00018701434492,
+        1.8909518664004281,
+        -300.0014026075869
+      ],
+      [
+        -160.00073951614527,
+        1.8236896489397623,
+        -350.0016176915678
+      ]
+    ],
+    "triangleHitCount": 41048,
+    "envelopes": {
+      "nearDetail": {
+        "maxSpread": 1.0,
+        "triangleHitsSpreadAbove1e-6": 40697,
+        "minByCamera": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maxByCamera": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "microDistanceEnvelope": {
+        "maxSpread": 1.0,
+        "triangleHitsSpreadAbove1e-6": 41048,
+        "minByCamera": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maxByCamera": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "nearMaterial": {
+        "maxSpread": 1.0,
+        "triangleHitsSpreadAbove1e-6": 38991,
+        "minByCamera": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maxByCamera": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "soilReliefDistance": {
+        "maxSpread": 1.0,
+        "triangleHitsSpreadAbove1e-6": 40283,
+        "minByCamera": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "maxByCamera": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    }
+  },
+  "materialCoefficients": {
+    "status": "UNRESOLVED",
+    "missing": [
+      "ecological-source-attributes",
+      "corrected-atlas",
+      "margin",
+      "manor",
+      "site-b",
+      "bank-sand",
+      "shoreline-root-texture",
+      "woodland-litter",
+      "habitat",
+      "bank-gravel"
+    ],
+    "coefficients": null
+  },
+  "limits": [
+    "Native unprojected vertex interpolation matches CPU authoring surface convention, not inverse projection of every GPU interpolated point.",
+    "Generated mesh positions match construction; renderer rim attributes, micro normals and later material fields remain unresolved.",
+    "Water/rock are retained as separate candidate layers, never silently chosen as terrain.",
+    "Dynamic refinement, nonterrain props, depth visibility, full material values and lighting are not reconstructed.",
+    "Captured refinement absence does not generalize to other camera states.",
+    "Grid centers are correlated support samples, not continuous area or complete boundary coverage.",
+    "Multiple layers remain unresolved; no highest/lowest depth winner selected.",
+    "Native unprojected vertices resolve the previous coordinate-space caveat for this CPU grid.",
+    "Distance envelope changes prove camera operand dependence, not visible differences or complete coefficient dependence.",
+    "All complete material coefficients remain unresolved until actual source/rim attributes, resident textures and camera derivatives are supplied."
+  ]
+}

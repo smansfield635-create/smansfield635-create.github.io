@@ -1,0 +1,22 @@
+{
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "originalArtifact": 12913811096,
+  "originalZipSha256": "e1eb8a2fdbaacce663783440e2189b17e487eacb6c13fd50907d07cdb640bc4a",
+  "moduleHashes": {
+    "h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs": "dbe490ca0aa7c0861dac8b1f4c9dd557220075ddb7a09652a40238ab778ebfdf",
+    "h-earth-3d/terrain/h-earth.geological-portal-interface.v1.mjs": "3e2433367453ec929be41c45ba76fdac0525af9f43233a185de4a6dfe206269c",
+    "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js": "643299799415d366ef775c3fe97e9bc13039669e92360e1337e96ac45a691e5a",
+    "showroom/globe/h-earth/render/geometry-kernel.east.js": "9a04f56868cf875894b75915c4ce99d710c46afb40a1448f32ac27d5a93bd9a7",
+    "showroom/globe/h-earth/render/geometry-kernel.north.js": "f19f7da12932e5b4a3772431d0e1ae4be912ce35542159af9e735454c31aeae0",
+    "showroom/globe/h-earth/render/geometry-kernel.south.js": "6f3191df8cac81437217daf585c7a13b30e0e0625b64a822df16afe7e123e877",
+    "showroom/globe/h-earth/render/geometry-kernel.sweep.v1.js": "fc4e100a1b687942f4feef4e32f95e81dfdf445a6550f275b064597ef60c791b",
+    "showroom/globe/h-earth/render/planetary-world-frame.js": "85919813d2fa53a702cac877dc70559175dc8effe479d7b8c595f7d6f6565869"
+  },
+  "meshHashes": {
+    "package.json": "5161d80dde506d13372b44fe992aa16511e675d49e42a65e3a4b7f5cb36edf9f",
+    "upload-positions.bin": "342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83",
+    "upload-indices.bin": "483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c"
+  },
+  "captureReceiptSha256": "45e2dfac82947f8c43adb3428d384aadd60a8534d6a80a7d1395a461715c9954",
+  "rendererSha256": "10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c"
+}

@@ -1,0 +1,23 @@
+{
+  "reviewer": "native independent /root/coverage_review",
+  "role": "WEST_INDEPENDENT_REVIEW",
+  "result": "PASS_SOURCE_ONLY_CHECKPOINT",
+  "testsPassed": 10,
+  "testsFailed": 0,
+  "sourceModuleHashesVerifiedAgainstCandidate": 8,
+  "independentReconstruction": "geometry.json, census.json and all24 binary intermediates byte-for-byte identical",
+  "reviewedHashes": {
+    "prepare.py": "f0b59d67060a74db6bdd99bd1468fad7df510b160fc8affc291113098602f8e0",
+    "evaluate.mjs": "f54160df2711fff6f4f0d5354c70287ed3942c238e24af5f7611c2ca65fa2a85",
+    "census.py": "5940030c4b48bdc8e66f93da344dbecd8cec821fc5104d7fa0d2bf23756a4675",
+    "evaluate.test.mjs": "1ecd4dfbd7fc333bd72ffa024ac85213eff75e3cb7e58af9e1ce96b46be28a30",
+    "source-manifest.json": "90a53c9fdaed26167bd1c196cbe0313a09aaf4497484c0d26fccb095d47ed037",
+    "geometry.json": "ce80962ed3c06afb8c2314ff243bf95f4e2023f129d4fe91f95624d9518666a5",
+    "census.json": "a151dc6aa370165109c8085ea037f771b49b18d50643ee312f9ce0a88a1d7a49"
+  },
+  "completeMaterialCoefficients": "UNRESOLVED",
+  "visualAcceptance": false,
+  "productMutation": false,
+  "gpuExecuted": false,
+  "nextAction": "Reconstruct actual surviving/replacement soil attributes and resident fields; preserve geometry checkpoint."
+}

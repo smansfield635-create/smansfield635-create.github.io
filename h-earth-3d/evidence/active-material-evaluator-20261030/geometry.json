@@ -1,0 +1,243 @@
+{
+  "schema": "H_EARTH_ACTIVE_MATERIAL_EVALUATION_v1",
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "scope": "SOURCE_GEOMETRY_AND_AFFINE_OPERANDS_NOT_FINAL_RENDERED_MATERIAL",
+  "retiredTriangles": 3058,
+  "generatedMeshes": 6,
+  "maxCoordinateRoundTripError": 1.1641532182693481e-10,
+  "surfaces": [
+    {
+      "name": "original-near",
+      "role": "TERRAIN",
+      "roleCode": 1,
+      "correctionHook": true,
+      "originalTriangles": 20736,
+      "vertices": 141373,
+      "triangles": 17678,
+      "files": {
+        "local": {
+          "file": "original-near.local.bin",
+          "sha256": "3f0d60b9e3c97335a9423d248ea16b6dae4ddd92d42cf67b8ce5a14f9d695812",
+          "type": "Float64Array"
+        },
+        "upload": {
+          "file": "original-near.upload.bin",
+          "sha256": "342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83",
+          "type": "Float32Array"
+        },
+        "indices": {
+          "file": "original-near.indices.bin",
+          "sha256": "fd0b6d2b6f253baaf86208c81dc0e9143735f23c99e46650714d3f912cf81cb4",
+          "type": "Uint32Array"
+        }
+      }
+    },
+    {
+      "name": "original-far",
+      "role": "LAND_SURFACE",
+      "roleCode": 5,
+      "correctionHook": true,
+      "originalTriangles": 1154,
+      "vertices": 141373,
+      "triangles": 1154,
+      "files": {
+        "local": {
+          "file": "original-far.local.bin",
+          "sha256": "3f0d60b9e3c97335a9423d248ea16b6dae4ddd92d42cf67b8ce5a14f9d695812",
+          "type": "Float64Array"
+        },
+        "upload": {
+          "file": "original-far.upload.bin",
+          "sha256": "342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83",
+          "type": "Float32Array"
+        },
+        "indices": {
+          "file": "original-far.indices.bin",
+          "sha256": "dfdae8169685d1813c22f055b2ef51e57cf62a185caea7fec47706e578e38cd0",
+          "type": "Uint32Array"
+        }
+      }
+    },
+    {
+      "name": "ERODED_TERRAIN",
+      "role": "ERODED_TERRAIN",
+      "primitive": 62000,
+      "roleCode": 1,
+      "correctionHook": true,
+      "vertices": 24964,
+      "triangles": 48882,
+      "files": {
+        "local": {
+          "file": "ERODED_TERRAIN.local.bin",
+          "sha256": "2fa632bba86c8f6a65722fa0139c990e90f4f454489afd201b2253d8f11b59f6",
+          "type": "Float64Array"
+        },
+        "upload": {
+          "file": "ERODED_TERRAIN.upload.bin",
+          "sha256": "7b0f6ba9fba968df17897cb156232bbed03d54d3221962af6b52953a4face3d3",
+          "type": "Float32Array"
+        },
+        "indices": {
+          "file": "ERODED_TERRAIN.indices.bin",
+          "sha256": "be624994823c88b49f32c14599251e60d0ef9084367cd19b9998ed1df6c05d9c",
+          "type": "Uint32Array"
+        }
+      }
+    },
+    {
+      "name": "MOUNTAIN_OVERBURDEN",
+      "role": "MOUNTAIN_OVERBURDEN",
+      "primitive": 62000,
+      "roleCode": 1,
+      "correctionHook": true,
+      "vertices": 45,
+      "triangles": 64,
+      "files": {
+        "local": {
+          "file": "MOUNTAIN_OVERBURDEN.local.bin",
+          "sha256": "4d5f7fe56515730eadf45acc85e8830b853dee6ce7e81b6296adfbe8ef7a7088",
+          "type": "Float64Array"
+        },
+        "upload": {
+          "file": "MOUNTAIN_OVERBURDEN.upload.bin",
+          "sha256": "82a9c9cde6b3fb5efc4eef695dd5401d19a0841405497f0fb7eac2b6de3f3c0c",
+          "type": "Float32Array"
+        },
+        "indices": {
+          "file": "MOUNTAIN_OVERBURDEN.indices.bin",
+          "sha256": "828a57af53612dd6d461f79366e3ad7ee80eecf433d8b068aeb8bb854c3bf7a6",
+          "type": "Uint32Array"
+        }
+      }
+    },
+    {
+      "name": "NATURAL_CLIFF_FACE",
+      "role": "NATURAL_CLIFF_FACE",
+      "primitive": 62001,
+      "roleCode": 1,
+      "correctionHook": false,
+      "vertices": 2579,
+      "triangles": 4483,
+      "files": {
+        "local": {
+          "file": "NATURAL_CLIFF_FACE.local.bin",
+          "sha256": "38f2378bdcd4c3685fe46ca5940339e878b375a53c202ace6ed5ca9e192cab59",
+          "type": "Float64Array"
+        },
+        "upload": {
+          "file": "NATURAL_CLIFF_FACE.upload.bin",
+          "sha256": "a2b7e2c9dee05fee653b707afd2b00ad15d5310217942404cc59035a32d8182c",
+          "type": "Float32Array"
+        },
+        "indices": {
+          "file": "NATURAL_CLIFF_FACE.indices.bin",
+          "sha256": "35934559789962352e5033d7ba7d899101ea3ce8bc91d6f5cf1db12ebc6099eb",
+          "type": "Uint32Array"
+        }
+      }
+    },
+    {
+      "name": "CAVERN_PHYSICAL_SHELL",
+      "role": "CAVERN_PHYSICAL_SHELL",
+      "primitive": 62001,
+      "roleCode": 5,
+      "correctionHook": false,
+      "vertices": 306,
+      "triangles": 592,
+      "files": {
+        "local": {
+          "file": "CAVERN_PHYSICAL_SHELL.local.bin",
+          "sha256": "6861924304a6d29be07308a556ec90a39fead257c44eb54c6f9ce6bcb760e335",
+          "type": "Float64Array"
+        },
+        "upload": {
+          "file": "CAVERN_PHYSICAL_SHELL.upload.bin",
+          "sha256": "7024f354d039cc32b8bec8ae9439f05d8fd56afbe4ddcf4a4c612ffc1999e5fd",
+          "type": "Float32Array"
+        },
+        "indices": {
+          "file": "CAVERN_PHYSICAL_SHELL.indices.bin",
+          "sha256": "2d86aef4fe3e8d8fb794238657a12dbc3147e69f185d7c5e51a4fe189b89f65e",
+          "type": "Uint32Array"
+        }
+      }
+    },
+    {
+      "name": "FRESHWATER_RIVER",
+      "role": "FRESHWATER_RIVER",
+      "primitive": 62000,
+      "roleCode": 4,
+      "correctionHook": false,
+      "vertices": 2064,
+      "triangles": 2821,
+      "files": {
+        "local": {
+          "file": "FRESHWATER_RIVER.local.bin",
+          "sha256": "534ea0e09bcbe63b7f02a05c3b1a3f2af1131f44ca77701e8c5e57409a215f3a",
+          "type": "Float64Array"
+        },
+        "upload": {
+          "file": "FRESHWATER_RIVER.upload.bin",
+          "sha256": "3282cc5c3e95f4a855909f251d5e4c7b81fb80fc1af8dd99f669652f365e2925",
+          "type": "Float32Array"
+        },
+        "indices": {
+          "file": "FRESHWATER_RIVER.indices.bin",
+          "sha256": "f2d3cf19169b21b4dafc593e8f48cd81cd4c69aa0b22ea1ffdebd6dfdcd4408d",
+          "type": "Uint32Array"
+        }
+      }
+    },
+    {
+      "name": "OASIS_WATER",
+      "role": "OASIS_WATER",
+      "primitive": 62000,
+      "roleCode": 4,
+      "correctionHook": false,
+      "vertices": 324,
+      "triangles": 515,
+      "files": {
+        "local": {
+          "file": "OASIS_WATER.local.bin",
+          "sha256": "167133f6593071fb0b0102c2410e52d7a8abda7112d641533ec00b39b6610111",
+          "type": "Float64Array"
+        },
+        "upload": {
+          "file": "OASIS_WATER.upload.bin",
+          "sha256": "4a0958f37b3d49b36a5460ef58d7b844909dcfa67f34e30841824f22efd20c4a",
+          "type": "Float32Array"
+        },
+        "indices": {
+          "file": "OASIS_WATER.indices.bin",
+          "sha256": "75ea3299fdbe1b31283e70867c3d4211137cb8cd073e7874a737be63fa990547",
+          "type": "Uint32Array"
+        }
+      }
+    }
+  ],
+  "retirementOffsetsSha256": "740874bcad5731aa73656c07feed8442fcf7d7d51ab118a572bf108c8097b18c",
+  "refinementCaptured": false,
+  "materialStatus": {
+    "status": "UNRESOLVED",
+    "missing": [
+      "ecological-source-attributes",
+      "corrected-atlas",
+      "margin",
+      "manor",
+      "site-b",
+      "bank-sand",
+      "shoreline-root-texture",
+      "woodland-litter",
+      "habitat",
+      "bank-gravel"
+    ],
+    "coefficients": null
+  },
+  "limits": [
+    "Native unprojected vertex interpolation matches CPU authoring surface convention, not inverse projection of every GPU interpolated point.",
+    "Generated mesh positions match construction; renderer rim attributes, micro normals and later material fields remain unresolved.",
+    "Water/rock are retained as separate candidate layers, never silently chosen as terrain.",
+    "Dynamic refinement, nonterrain props, depth visibility, full material values and lighting are not reconstructed.",
+    "Captured refinement absence does not generalize to other camera states."
+  ]
+}

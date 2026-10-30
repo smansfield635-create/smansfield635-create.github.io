@@ -1,0 +1,19 @@
+{
+  "operation": "H_EARTH_MATERIAL_MARGIN_2D_20261030_001",
+  "generation": 2992,
+  "admissionComment": 6514608029,
+  "admissionRun": 41000273974,
+  "base": "dd0537705077c1c0e8b704f47feebf6f58babb2e",
+  "sourceBaseline": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+  "pairedInputSha256": "08b0c3ae8e1cc3c318b7fa1ada6d01e75370f5423745f2250db6354805b3fdef",
+  "files": {
+    "README.md": "59dc733fc97a86184ea8892c89c8e3b8e87b232f7a00e6e1df15e42c503660b6",
+    "dense_source_coefficients.py": "6b098fb174e784d8d166041e4bdd5242d030365a141f790b8be4e6043b437ff3",
+    "independent_source_retention.py": "2e621521b15dc3d76fad6a5a674fe12420ead5e1a278e50268b84791a8e8b13d",
+    "field.py": "dd2482addd02cb39d37e26601bb8618a5ef4f1053091d30bde368ec4a9c8eaca",
+    "independent_adversarial.py": "62413822b4290a84613fa89a3cfff9bda98d0e24972e7273f4fb0be8e666e47f",
+    "test_field.py": "eeb00b8d61fd64da088ad1984e3b53081753b88e3fdcf3ad9d99c5a9d7c73b64",
+    "independent_anchored_review.py": "2fe952ea87f20ae13edcf62686729fcf08873a0587ac49406ad62828a828b8b7",
+    "results.json": "24cf55e90d7331e028ef255c422805c91bb4f6244c614cfa02cd43b0690a4f03"
+  }
+}

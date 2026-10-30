@@ -1,0 +1,38 @@
+{
+  "schema": "H_EARTH_GEN3003_STATIC_SOURCE_GUARD_REVIEW_v1",
+  "result": "PASS_STATIC_SOURCE_READY_FOR_ONE_GPU_SCOUT",
+  "operationId": "H_EARTH_STEEP_SIDE_CURRENT_VISUAL_SCOUT_20261030_001",
+  "admissionRun": 41127094339,
+  "lockGeneration": 3003,
+  "frozenCandidate": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "reviewMode": "SEPARATE_IMMUTABLE_GITHUB_SOURCE_READBACK_AND_PURE_JS_PARSE_GATES",
+  "builderSelfApproval": false,
+  "sourceBlobIds": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "8b4583d6c32b36b5f1fe454d5d0e2fb14941d7eb",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/qualify.mjs": "f48799ef6c7515035ad93ef1ce4c97331fb6f185",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/qualify.test.mjs": "6998e336a9ecec87f26b0a703632e94465dec436",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/coverage-plan.json": "0db091a0c6589bd0b6db3da41f102bf3c9dba556",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/admission.json": "5b9240b0146796560469e54b9301e7a3d76e8b7f",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/product-binding.json": "25729e5e560e2978e4852d97ff19c784d6a83fbb"
+  },
+  "stage": "STATIC_ONLY_BEFORE_FIRST_GPU",
+  "sourceAssertions": {
+    "sourceFilesReadBack": 6,
+    "sourceAndUnitTestParsePass": true,
+    "declaredUnitTestCases": 12,
+    "actualNodeUnitTestsRun": false,
+    "frozenRunnerJobOccurrences": 1,
+    "oneShotRunAttemptGuard": true,
+    "candidateHeadPinned": true,
+    "threeFrameCap": true,
+    "livePhotoMatchEstablished": false,
+    "productChanged": false
+  },
+  "limits": [
+    "Static readback and language syntax checks do NOT equal executed Node tests or actual GPU runtime success.",
+    "No independent model instance was invoked; separate deterministic source guard method, not independent human approval.",
+    "Current-source camera Y and visible material cutoffs are not measured until exact current product GPU capture.",
+    "Owner photo comparison and physical-device KEEP/REJECT remain future gates."
+  ],
+  "authorityEffect": "NONE_STATIC_REVIEW_NOT_GPU_OR_PRODUCT_APPROVAL"
+}

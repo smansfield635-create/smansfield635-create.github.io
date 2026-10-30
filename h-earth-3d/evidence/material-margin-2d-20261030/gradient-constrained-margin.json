@@ -1,0 +1,10 @@
+{
+  "solver": "SCIPY_HIGHS_MINIMAX_AXIAL_DIAGONAL_SLOPES",
+  "variables": 36367,
+  "inequalities": 967986,
+  "contourEqualities": 2591,
+  "success": false,
+  "message": "Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)",
+  "seconds": 45.864479611002025,
+  "runtimeIntegrated": false
+}

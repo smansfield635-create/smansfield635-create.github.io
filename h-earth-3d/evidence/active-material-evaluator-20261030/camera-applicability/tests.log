@@ -1,0 +1,17 @@
+test_group_extent (test_scope.Tests.test_group_extent) ... ok
+test_known_current_archive (test_scope.Tests.test_known_current_archive) ... ok
+test_known_historic_archive (test_scope.Tests.test_known_historic_archive) ... ok
+test_known_mountain_archive (test_scope.Tests.test_known_mountain_archive) ... ok
+test_margin_source_guard (test_scope.Tests.test_margin_source_guard) ... ok
+test_meadow_coast_control_outside_margin (test_scope.Tests.test_meadow_coast_control_outside_margin) ... ok
+test_mountain_outside_atlas (test_scope.Tests.test_mountain_outside_atlas) ... ok
+test_mountain_outside_margin (test_scope.Tests.test_mountain_outside_margin) ... ok
+test_observer_origin_outside_margin (test_scope.Tests.test_observer_origin_outside_margin) ... ok
+test_reject_expansion_into_mountain (test_scope.Tests.test_reject_expansion_into_mountain) ... ok
+test_reject_historical_exclusion (test_scope.Tests.test_reject_historical_exclusion) ... ok
+test_true_historical_support (test_scope.Tests.test_true_historical_support) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.049s
+
+OK

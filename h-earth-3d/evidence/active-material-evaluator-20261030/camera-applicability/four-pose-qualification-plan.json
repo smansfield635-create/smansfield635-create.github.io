@@ -1,0 +1,151 @@
+{
+  "schema": "H_EARTH_FOUR_POSE_FROZEN_REVIEW_PLAN_v1",
+  "status": "CANDIDATE_SOURCE_SCOPE_FAIL_HOLD_GPU",
+  "requestedByOwner": "Proceed accordingly",
+  "geographicPriority": "High steep undeveloped foothills, straight/curved tan-olive cuts",
+  "photographicExactMatchProven": false,
+  "scenario": "Future candidate qualifying baseline-vs-candidate paired frames, source and camera pinned",
+  "poses": [
+    {
+      "id": "historic_far",
+      "sourceArchive": "40734434775",
+      "archivedSceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+      "historicPose": {
+        "name": "inland-seam-far",
+        "x": -200,
+        "z": -656,
+        "y": 18.793665,
+        "yaw": 0,
+        "pitch": -2,
+        "diagnosticObserver": true
+      },
+      "historicalSourceCameraPosition": {
+        "x": -200.00886048352547,
+        "y": 18.233716260117944,
+        "z": -656.0290623859635
+      },
+      "referenceLitImageSha256": "cbff8d7e3212b6c09594d10d5ddd4a16d32d74f565101a31e3ba2c6faa0e41bc",
+      "viewport": [
+        529,
+        980
+      ],
+      "worldReference": [
+        [
+          -188.875,
+          14.75439453125,
+          -736.0625
+        ],
+        [
+          -189.0625,
+          14.73388671875,
+          -734.5625
+        ]
+      ],
+      "role": "LOCAL_MATERIAL_MARGIN_POSITIVE_REFERENCE",
+      "limitations": [
+        "Historical source, NOT candidate 3ea source capture",
+        "Camera must be re-qualified for exact candidate worldPacket and all relevant owner/depth masks"
+      ]
+    },
+    {
+      "id": "high_foothill",
+      "sourceArchive": "40613605067",
+      "archivedSceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+      "historicPose": {
+        "name": "source-mountain-diagonal-material-edge",
+        "x": 88,
+        "z": -260,
+        "yaw": 118,
+        "pitch": -13
+      },
+      "historicalSourceCameraPosition": {
+        "x": 88.00614407254056,
+        "y": 29.26418157783337,
+        "z": -260.0181529415971
+      },
+      "referenceLitImageSha256": "d1ce1ce1f23a20e8ae58a428ee24d9a5b52d2b01f7accad148616f9f6ad2ae17",
+      "viewport": [
+        529,
+        980
+      ],
+      "worldReference": [
+        [
+          130.24184641886296,
+          null,
+          -250.0
+        ]
+      ],
+      "role": "USER_PRIORITY_STEEP_UNDEVELOPED_SECTOR_PROVISIONAL_SOURCE_REFERENCE",
+      "limitations": [
+        "Historical source, NOT candidate 3ea source capture",
+        "Camera must be re-qualified for exact candidate worldPacket and all relevant owner/depth masks"
+      ]
+    },
+    {
+      "id": "protected_meadow",
+      "sourceArchive": "40734434775",
+      "archivedSceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+      "historicPose": {
+        "name": "protected-meadow",
+        "x": -52,
+        "z": -208,
+        "yaw": 136,
+        "pitch": -15
+      },
+      "historicalSourceCameraPosition": {
+        "x": -52.003583993236504,
+        "y": 28.911152624583337,
+        "z": -208.01433597294601
+      },
+      "referenceLitImageSha256": "da0f2d86a16ac8154671f8e63817e32d8e95f600f117c5161c83255d565e1f1b",
+      "viewport": [
+        529,
+        980
+      ],
+      "worldReference": null,
+      "role": "UNMODIFIED_HEALTHY_MEADOW_VEGETATION_CONTROL",
+      "limitations": [
+        "Historical source, NOT candidate 3ea source capture",
+        "Camera must be re-qualified for exact candidate worldPacket and all relevant owner/depth masks"
+      ]
+    },
+    {
+      "id": "protected_coast",
+      "sourceArchive": "40734434775",
+      "archivedSceneHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+      "historicPose": {
+        "name": "protected-coast",
+        "x": 0,
+        "z": -110,
+        "yaw": 170,
+        "pitch": -8
+      },
+      "historicalSourceCameraPosition": {
+        "x": 0,
+        "y": 7.977773761784192,
+        "z": -110.0020919321026
+      },
+      "referenceLitImageSha256": "704962bb05b10a4d13783236d4fcc33f29935d32c93113d22de0141c81d9fa56",
+      "viewport": [
+        529,
+        980
+      ],
+      "worldReference": null,
+      "role": "UNMODIFIED_SHORELINE_COAST_CONTROL",
+      "limitations": [
+        "Historical source, NOT candidate 3ea source capture",
+        "Camera must be re-qualified for exact candidate worldPacket and all relevant owner/depth masks"
+      ]
+    }
+  ],
+  "proposedCapture": [
+    "lit full viewport at each pose; historical far prelighting final material only when independently justified, no stale after-groundcover proxy"
+  ],
+  "proposedFrameBudget": {
+    "baseCandidateLit": 8,
+    "optionalHistoricalPreLit": 2
+  },
+  "noPresentAuthorization": true,
+  "noNewGpu": true,
+  "noPublication": true
+}

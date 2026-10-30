@@ -1,0 +1,31 @@
+{
+  "schema": "H_EARTH_GEN3000_CURRENT_CAMERA_GATE_PACKET_v1",
+  "files": {
+    "source_camera_gate.py": {
+      "sha256": "f1a982c10776e44fe21ba1b3ccaffa14e14cecb937c804231d805d9cc0877721",
+      "bytes": 9245
+    },
+    "test_scope.py": {
+      "sha256": "5bb76997e7ebba1b22b0d0f1894e2108a176a6ff4a92762b68026ee9c2b5a9bb",
+      "bytes": 3037
+    },
+    "README.md": {
+      "sha256": "462c30dca872b7f152ef0420eab9010a0372c9391d97954ed04fd0ec6930088c",
+      "bytes": 3633
+    },
+    "source-applicability-review.json": {
+      "sha256": "6dc8580fe9b31bbcb95be7450662ab82ecb60dba34a42d023c74fc03ee7edee8",
+      "bytes": 10532
+    },
+    "four-pose-qualification-plan.json": {
+      "sha256": "183c0e21eb2a4d0b0bbf32c9a2b78d7d91cef8f4e2876e9b79d7a695c066953d",
+      "bytes": 4669
+    },
+    "tests.log": {
+      "sha256": "3b46f7e185cc4efa8e1a453bc2ed2a4aa8217ce039e2de1124af8ea84a4b48fd",
+      "bytes": 1127
+    }
+  },
+  "sourceCandidate": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "gpuRun": false
+}

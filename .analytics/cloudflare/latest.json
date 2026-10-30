@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_BRIDGE_V3",
-  "generatedAt": "2026-10-30T10:25:57Z",
+  "generatedAt": "2026-10-30T11:24:36Z",
   "window": {
-    "start": "2026-08-01T10:25:57Z",
-    "end": "2026-10-30T10:25:57Z"
+    "start": "2026-08-01T11:24:36Z",
+    "end": "2026-10-30T11:24:36Z"
   },
   "chunkDays": 1,
   "accounts": [
@@ -1088,17 +1088,17 @@
         {
           "count": 10,
           "dimensions": {
+            "datetimeHour": "2026-08-29T19:00:00Z"
+          }
+        },
+        {
+          "count": 10,
+          "dimensions": {
             "datetimeHour": "2026-08-29T20:00:00Z"
           }
         },
         {
           "count": 20,
-          "dimensions": {
-            "datetimeHour": "2026-08-29T22:00:00Z"
-          }
-        },
-        {
-          "count": 10,
           "dimensions": {
             "datetimeHour": "2026-08-29T23:00:00Z"
           }
@@ -1116,7 +1116,7 @@
           }
         },
         {
-          "count": 50,
+          "count": 20,
           "dimensions": {
             "datetimeHour": "2026-08-30T04:00:00Z"
           }
@@ -1224,19 +1224,19 @@
           }
         },
         {
-          "count": 10,
+          "count": 20,
           "dimensions": {
             "datetimeHour": "2026-09-01T12:00:00Z"
           }
         },
         {
-          "count": 50,
+          "count": 20,
           "dimensions": {
             "datetimeHour": "2026-09-01T13:00:00Z"
           }
         },
         {
-          "count": 10,
+          "count": 50,
           "dimensions": {
             "datetimeHour": "2026-09-01T16:00:00Z"
           }
@@ -1250,19 +1250,31 @@
         {
           "count": 10,
           "dimensions": {
+            "datetimeHour": "2026-09-01T21:00:00Z"
+          }
+        },
+        {
+          "count": 10,
+          "dimensions": {
             "datetimeHour": "2026-09-01T23:00:00Z"
           }
         },
         {
-          "count": 10,
+          "count": 20,
           "dimensions": {
-            "datetimeHour": "2026-09-02T02:00:00Z"
+            "datetimeHour": "2026-09-02T00:00:00Z"
           }
         },
         {
-          "count": 10,
+          "count": 20,
           "dimensions": {
             "datetimeHour": "2026-09-02T03:00:00Z"
+          }
+        },
+        {
+          "count": 20,
+          "dimensions": {
+            "datetimeHour": "2026-09-02T04:00:00Z"
           }
         },
         {
@@ -2112,27 +2124,21 @@
           }
         },
         {
-          "count": 20,
+          "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-09-17T17:00:00Z"
-          }
-        },
-        {
-          "count": 40,
-          "dimensions": {
-            "datetimeHour": "2026-09-17T18:00:00Z"
+            "datetimeHour": "2026-09-17T14:00:00Z"
           }
         },
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-09-17T19:00:00Z"
+            "datetimeHour": "2026-09-17T16:00:00Z"
           }
         },
         {
-          "count": 30,
+          "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-09-17T20:00:00Z"
+            "datetimeHour": "2026-09-17T18:00:00Z"
           }
         },
         {
@@ -2148,7 +2154,7 @@
           }
         },
         {
-          "count": 10,
+          "count": 30,
           "dimensions": {
             "datetimeHour": "2026-09-17T23:00:00Z"
           }
@@ -2166,15 +2172,15 @@
           }
         },
         {
-          "count": 10,
+          "count": 20,
           "dimensions": {
             "datetimeHour": "2026-09-18T03:00:00Z"
           }
         },
         {
-          "count": 30,
+          "count": 20,
           "dimensions": {
-            "datetimeHour": "2026-09-18T05:00:00Z"
+            "datetimeHour": "2026-09-18T04:00:00Z"
           }
         },
         {
@@ -2552,17 +2558,17 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-09-23T15:00:00Z"
+            "datetimeHour": "2026-09-23T14:00:00Z"
           }
         },
         {
-          "count": 10,
+          "count": 50,
           "dimensions": {
             "datetimeHour": "2026-09-23T19:00:00Z"
           }
         },
         {
-          "count": 10,
+          "count": 20,
           "dimensions": {
             "datetimeHour": "2026-09-23T20:00:00Z"
           }
@@ -2570,17 +2576,17 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-09-23T21:00:00Z"
+            "datetimeHour": "2026-09-24T00:00:00Z"
           }
         },
         {
-          "count": 30,
+          "count": 20,
           "dimensions": {
-            "datetimeHour": "2026-09-23T23:00:00Z"
+            "datetimeHour": "2026-09-24T01:00:00Z"
           }
         },
         {
-          "count": 50,
+          "count": 10,
           "dimensions": {
             "datetimeHour": "2026-09-24T03:00:00Z"
           }
@@ -2664,7 +2670,7 @@
           }
         },
         {
-          "count": 20,
+          "count": 10,
           "dimensions": {
             "datetimeHour": "2026-09-26T14:00:00Z"
           }
@@ -2672,43 +2678,13 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-09-26T17:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-09-26T18:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-09-26T19:00:00Z"
-          }
-        },
-        {
-          "count": 30,
-          "dimensions": {
             "datetimeHour": "2026-09-26T23:00:00Z"
           }
         },
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-09-27T01:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-09-27T03:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-09-27T05:00:00Z"
+            "datetimeHour": "2026-09-27T02:00:00Z"
           }
         },
         {
@@ -2780,25 +2756,13 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-02T18:00:00Z"
+            "datetimeHour": "2026-10-02T23:00:00Z"
           }
         },
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-03T01:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-10-03T04:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-10-03T05:00:00Z"
+            "datetimeHour": "2026-10-03T09:00:00Z"
           }
         },
         {
@@ -3104,19 +3068,25 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-11T18:00:00Z"
+            "datetimeHour": "2026-10-11T17:00:00Z"
           }
         },
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-11T21:00:00Z"
+            "datetimeHour": "2026-10-11T20:00:00Z"
           }
         },
         {
-          "count": 20,
+          "count": 10,
           "dimensions": {
             "datetimeHour": "2026-10-11T23:00:00Z"
+          }
+        },
+        {
+          "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-10-12T09:00:00Z"
           }
         },
         {
@@ -3170,11 +3140,35 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-14T14:00:00Z"
+            "datetimeHour": "2026-10-14T20:00:00Z"
+          }
+        },
+        {
+          "count": 20,
+          "dimensions": {
+            "datetimeHour": "2026-10-14T22:00:00Z"
+          }
+        },
+        {
+          "count": 20,
+          "dimensions": {
+            "datetimeHour": "2026-10-14T23:00:00Z"
+          }
+        },
+        {
+          "count": 30,
+          "dimensions": {
+            "datetimeHour": "2026-10-15T00:00:00Z"
           }
         },
         {
           "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-10-15T01:00:00Z"
+          }
+        },
+        {
+          "count": 20,
           "dimensions": {
             "datetimeHour": "2026-10-15T02:00:00Z"
           }
@@ -3182,13 +3176,7 @@
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-15T05:00:00Z"
-          }
-        },
-        {
-          "count": 10,
-          "dimensions": {
-            "datetimeHour": "2026-10-15T09:00:00Z"
+            "datetimeHour": "2026-10-15T03:00:00Z"
           }
         },
         {
@@ -3246,27 +3234,27 @@
           }
         },
         {
-          "count": 10,
+          "count": 20,
           "dimensions": {
             "datetimeHour": "2026-10-17T20:00:00Z"
           }
         },
         {
-          "count": 30,
+          "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-17T23:00:00Z"
-          }
-        },
-        {
-          "count": 20,
-          "dimensions": {
-            "datetimeHour": "2026-10-18T00:00:00Z"
+            "datetimeHour": "2026-10-17T21:00:00Z"
           }
         },
         {
           "count": 10,
           "dimensions": {
-            "datetimeHour": "2026-10-18T01:00:00Z"
+            "datetimeHour": "2026-10-17T23:00:00Z"
+          }
+        },
+        {
+          "count": 10,
+          "dimensions": {
+            "datetimeHour": "2026-10-18T00:00:00Z"
           }
         },
         {
@@ -3339,12 +3327,6 @@
           "count": 10,
           "dimensions": {
             "datetimeHour": "2026-10-22T05:00:00Z"
-          }
-        },
-        {
-          "count": 1,
-          "dimensions": {
-            "datetimeHour": "2026-10-22T10:00:00Z"
           }
         },
         {
@@ -4395,6 +4377,12 @@
           "count": 1,
           "dimensions": {
             "datetimeHour": "2026-10-30T09:00:00Z"
+          }
+        },
+        {
+          "count": 1,
+          "dimensions": {
+            "datetimeHour": "2026-10-30T10:00:00Z"
           }
         }
       ]

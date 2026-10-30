@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-30T06:37:05Z",
+  "generatedAt": "2026-10-30T07:26:56Z",
   "window30d": {
-    "start": "2026-09-30T06:37:05Z",
-    "end": "2026-10-30T06:37:05Z"
+    "start": "2026-09-30T07:26:56Z",
+    "end": "2026-10-30T07:26:56Z"
   },
   "daily": [
     {
@@ -12,11 +12,11 @@
     },
     {
       "date": "2026-10-02",
-      "pageLoads": 20
+      "pageLoads": 10
     },
     {
       "date": "2026-10-03",
-      "pageLoads": 70
+      "pageLoads": 40
     },
     {
       "date": "2026-10-04",
@@ -28,27 +28,27 @@
     },
     {
       "date": "2026-10-06",
-      "pageLoads": 230
+      "pageLoads": 210
     },
     {
       "date": "2026-10-07",
-      "pageLoads": 90
+      "pageLoads": 70
     },
     {
       "date": "2026-10-08",
-      "pageLoads": 110
+      "pageLoads": 90
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 30
+      "pageLoads": 70
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 100
+      "pageLoads": 70
     },
     {
       "date": "2026-10-12",
@@ -56,7 +56,7 @@
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-14",
@@ -76,7 +76,7 @@
     },
     {
       "date": "2026-10-18",
-      "pageLoads": 40
+      "pageLoads": 20
     },
     {
       "date": "2026-10-19",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 45
+      "pageLoads": 44
     },
     {
       "date": "2026-10-23",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 40
+      "pageLoads": 41
     }
   ],
   "summary": {
-    "pageLoads": 1886,
-    "botPageLoads": 851,
-    "nonBotPageLoads": 1035
+    "pageLoads": 1756,
+    "botPageLoads": 821,
+    "nonBotPageLoads": 935
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1642,
-      "visits": 1642
+      "pageLoads": 1662,
+      "visits": 1662
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 135,
+      "pageLoads": 145,
       "visits": 0
     },
     {
@@ -154,6 +154,11 @@
       "visits": 19
     },
     {
+      "host": "l.instagram.com",
+      "pageLoads": 10,
+      "visits": 10
+    },
+    {
       "host": "www.facebook.com",
       "pageLoads": 2,
       "visits": 2
@@ -161,19 +166,19 @@
   ],
   "topPages": [
     {
-      "path": "/showroom/globe/h-earth/",
-      "pageLoads": 672,
-      "visits": 629
+      "path": "/analytics/",
+      "pageLoads": 666,
+      "visits": 666
     },
     {
-      "path": "/analytics/",
-      "pageLoads": 626,
-      "visits": 626
+      "path": "/showroom/globe/h-earth/",
+      "pageLoads": 632,
+      "visits": 569
     },
     {
       "path": "/",
-      "pageLoads": 109,
-      "visits": 87
+      "pageLoads": 139,
+      "visits": 117
     },
     {
       "path": "/build/",
@@ -181,14 +186,14 @@
       "visits": 60
     },
     {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 53,
+      "visits": 53
+    },
+    {
       "path": "/about/",
       "pageLoads": 51,
       "visits": 51
-    },
-    {
-      "path": "/showroom/globe/audralia/",
-      "pageLoads": 43,
-      "visits": 43
     },
     {
       "path": "/nine-summits/universe/",

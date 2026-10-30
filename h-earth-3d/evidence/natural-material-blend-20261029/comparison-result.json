@@ -1,0 +1,45 @@
+{
+  "schema": "H_EARTH_NATURAL_BLEND_VISUAL_REVIEW_v1",
+  "run": 40979464974,
+  "artifact": 12944811326,
+  "artifactSha256": "6abdd4a80c5ec3bbd004597885470d4c7a3ed092786dff79ec8fda0ff77f58d9",
+  "launchHead": "00fbb1c4aeb773b5e0339f2d120f8e9c2e5dd7ae",
+  "toolingHead": "a0bde12b9ea0eda55871f39bdd18eb7d43d8a4a4",
+  "candidateHead": "f28fe92dfda5abd90155850e7879a73c78a0889e",
+  "baselineHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+  "captureResult": "PASS_TWELVE_HASH_VERIFIED_MATCHED_FRAMES",
+  "browserErrors": [],
+  "warmup": "ALL_NINE_READY_BOTH_SCENES",
+  "visualResult": "REQUESTED_INLAND_BOUNDARY_IMPROVEMENT_NOT_ESTABLISHED",
+  "unchangedPairs": [
+    "inland-seam-near",
+    "inland-seam-far",
+    "owner-approach",
+    "owner-lateral"
+  ],
+  "changedPairs": [
+    {
+      "pose": "protected-meadow",
+      "changedPixels": 41127,
+      "totalPixels": 264192,
+      "maxChannelDelta": 29
+    },
+    {
+      "pose": "protected-coast",
+      "changedPixels": 32149,
+      "totalPixels": 264192,
+      "maxChannelDelta": 6
+    }
+  ],
+  "independentReview": {
+    "reviewer": "Native WEST agent /root/review_recovery",
+    "result": "CAPTURE_PASS_VISUAL_REPAIR_UNPROVEN",
+    "imagesInspected": 12
+  },
+  "sourceFinding": "Final sand-stage adjustment retains native coast/elevation/slope gates and protection masks; it is not a general terrain-material transition correction. Exact per-pixel zero-contribution cause not proven.",
+  "candidateDisposition": "HOLD_NOT_QUALIFIED_FOR_PUBLICATION_AS_BOUNDARY_REPAIR",
+  "nextAction": "Bind next bounded correction to the inland material transition using existing source and owner evidence; demonstrate evaluated expression changes in target region before spending another GPU run; preserve texture relief vegetation and protected controls.",
+  "newOwnerMetadataRequired": false,
+  "productMutation": false,
+  "publication": false
+}

@@ -8,7 +8,7 @@ import {assertCheckout,comparisonState,instrumentRoute,assetReadiness,footprintV
 export const CANDIDATE_HEAD='3ea149e5b56e8cc0d5aac192bce0cdd47da7e626';
 const ADMISSION=JSON.parse(fs.readFileSync(new URL('./admission.json',import.meta.url)));
 export const PROFILE='STEEP_SIDE_CURRENT_VISUAL_SCOUT_V1';
-export const OPERATION='H_EARTH_STEEP_SIDE_CURRENT_VISUAL_SCOUT_20261030_001';
+export const OPERATION='H_EARTH_STEEP_SIDE_CURRENT_SCOUT_HASH_REPAIR_20261030_001';
 export const VIEWPORT=Object.freeze({width:529,height:980});
 export const TARGET=Object.freeze({x:145,z:-240});
 export const COVERAGE_PLAN=JSON.parse(fs.readFileSync(new URL('./coverage-plan.json',import.meta.url)));

@@ -1,0 +1,39 @@
+{
+  "baseline": {
+    "head": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+    "rendererSha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+    "routeSha256": "365aec75bffae1c95c19c4bc9cab9869720893a04bcb32eadad46e7f6b14267f",
+    "presentationSha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a"
+  },
+  "candidate": {
+    "head": "e413211d78c27b66ee59ef390dd98bf01847a062",
+    "rendererSha256": "1a44545b111340e7a50064106d2c8a5b8b31b821ceb0640a73d7d06e2df86fc0",
+    "routeSha256": "1db6829212123438a8e4e29fa8a0080ce4c42381f8ac515cea3fddce7b5d6a43",
+    "presentationSha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a",
+    "marginSha256": "801eb7896140cfbc65780335fee8ddb8bed5287f81e23b3e62c88764ba30dff7",
+    "marginReceipt": {
+      "schema": "H_EARTH_MATERIAL_MARGIN_FIELD_v1",
+      "status": "SOURCE_MATCHED_COMPARISON_CANDIDATE",
+      "worldBounds": [
+        144,
+        -282,
+        188,
+        -250
+      ],
+      "stepMeters": 0.5,
+      "encoding": "RG8_SIGNED_MAGNITUDE_SCALE1024",
+      "filter": "LINEAR_LEVEL_ZERO_NO_MIPMAPS",
+      "protectedCoreDefinition": "PREDECLARED_BILINEAR_SOURCE_WIDTH_FIELDS",
+      "rootAdmissionChanged": false,
+      "nativeRoughnessChanged": false,
+      "visualAcceptance": false,
+      "scope": "ONE_VERIFIED_COASTAL_WINDOW_NOT_GLOBAL_REPAIR",
+      "uploadedBytes": 11570,
+      "textureUploadCount": 1,
+      "perFrameUploadBytes": 0,
+      "sourceNativeSha256": "e3a4559ebcf6ccf5142203dd97d05d4f70e20e31338691a2c4138f4c448f816a",
+      "sourceBaselineSha256": "09cb95c3d9579b879e14d6719dda264e341250eb667a623db7ce28e9fc18e47f",
+      "correctionSha256": "f957fc37c275ecb6f806ca9fcfbbaaac1e211f0c0325b4043975cde5fc98fff0"
+    }
+  }
+}

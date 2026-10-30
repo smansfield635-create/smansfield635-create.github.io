@@ -1,0 +1,19 @@
+{
+  "schema": "H_EARTH_FIXED_COMPARISON_DISPATCH_INTENT_v1",
+  "operationId": "H_EARTH_MATERIAL_MARGIN_VISUAL_20261030_001",
+  "lockGeneration": 2993,
+  "admissionRun": 41005225327,
+  "sceneHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+  "candidateHead": "e413211d78c27b66ee59ef390dd98bf01847a062",
+  "toolingHead": "3f3045705c5b757c0065557e2a392715e3049738",
+  "frameCap": 12,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "627e184fe00da03ec3f86de5c0d1b2c31e15b1985d7d9ff64b75035e43efd018",
+    "h-earth-3d/evidence/material-margin-visual-20261030/qualify.mjs": "93db2326ba874450d53eef862ca2599977627afa3a9316edc45798698c7371e2",
+    "h-earth-3d/evidence/material-margin-visual-20261030/qualify.test.mjs": "a9a6d5cc6ac170a815d2f73bf2bf2e38be140979bbe5b328fcb0a08df1a4c2df",
+    "h-earth-3d/evidence/material-margin-visual-20261030/product-binding.json": "7d3fe22399fd266eeb8656c15074819e2f3cd0b53f29d1bb03ebb7688a660652",
+    "h-earth-3d/evidence/material-margin-visual-20261030/admission.json": "5d45f484037cd0defc5da77579ac06d3de75ac12dec468c9df9aa08dc55dc91e"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "sourceMatch": true,
+  "mismatchDisables": true,
+  "correctionHashVerified": true,
+  "allOriginalAttributesBound": true,
+  "atlasHashesBound": true,
+  "bytes": 75272,
+  "syntaxPass": true,
+  "webglExecuted": false,
+  "visualAccepted": false,
+  "receipt": {
+    "schema": "H_EARTH_FULL_MATERIAL_MARGIN_v1",
+    "status": "SOURCE_MATCHED_COMPARISON_CANDIDATE",
+    "sourceRendererSha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+    "correctionSha256": "b3133bdccff6f6d936285d8ea27ea30ddc9b5897366303fc3d9874d97da2e28f",
+    "worldBounds": [
+      -213,
+      -759,
+      -165,
+      -711
+    ],
+    "stepMeters": 0.5,
+    "encoding": "RGBA16F_DELTA_A_B_LINEAR_NO_MIPMAPS",
+    "uploadedBytes": 75272,
+    "textureUploadCount": 1,
+    "perFrameUploadBytes": 0,
+    "rootAdmissionChanged": false,
+    "nativeRoughnessChanged": false,
+    "visualAcceptance": false,
+    "scope": "ONE_INLAND_SOURCE_WINDOW_NOT_GLOBAL_REPAIR"
+  }
+}

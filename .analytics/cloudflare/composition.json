@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-30T21:24:43Z",
+  "generatedAt": "2026-10-30T22:24:15Z",
   "window": {
-    "start": "2026-09-30T21:24:43Z",
-    "end": "2026-10-30T21:24:43Z"
+    "start": "2026-09-30T22:24:15Z",
+    "end": "2026-10-30T22:24:15Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
         "pageLoads": 722,
-        "visits": 659
+        "visits": 653
       },
       {
         "value": "/analytics/",
@@ -34,8 +34,8 @@
       },
       {
         "value": "/showroom/globe/audralia/",
-        "pageLoads": 43,
-        "visits": 43
+        "pageLoads": 42,
+        "visits": 42
       },
       {
         "value": "/about/",
@@ -58,11 +58,6 @@
         "visits": 20
       },
       {
-        "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
-        "pageLoads": 21,
-        "visits": 21
-      },
-      {
         "value": "/about-this-underdog/",
         "pageLoads": 20,
         "visits": 0
@@ -73,14 +68,19 @@
         "visits": 20
       },
       {
+        "value": "/release-proof/",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
+        "value": "/showroom/globe/audralia/cloud-continuity-qa-v1.html",
+        "pageLoads": 20,
+        "visits": 20
+      },
+      {
         "value": "/products/education/",
         "pageLoads": 13,
         "visits": 13
-      },
-      {
-        "value": "/release-proof/",
-        "pageLoads": 12,
-        "visits": 12
       },
       {
         "value": "/preflight/app/",
@@ -221,18 +221,18 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1673,
-        "visits": 1673
+        "pageLoads": 1674,
+        "visits": 1674
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 145,
+        "pageLoads": 151,
         "visits": 0
       },
       {
         "value": "bing.com",
-        "pageLoads": 38,
-        "visits": 38
+        "pageLoads": 37,
+        "visits": 37
       },
       {
         "value": "www.google.com",
@@ -253,7 +253,7 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1816,
+        "pageLoads": 1822,
         "visits": 1681
       },
       {
@@ -290,7 +290,7 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1472,
+        "pageLoads": 1478,
         "visits": 1420
       },
       {
@@ -312,8 +312,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 522,
-        "visits": 439
+        "pageLoads": 520,
+        "visits": 438
       },
       {
         "value": "ChromeMobile",
@@ -322,8 +322,8 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 108,
-        "visits": 102
+        "pageLoads": 114,
+        "visits": 100
       },
       {
         "value": "MobileSafari",
@@ -332,8 +332,8 @@
       },
       {
         "value": "Firefox",
-        "pageLoads": 58,
-        "visits": 54
+        "pageLoads": 60,
+        "visits": 57
       },
       {
         "value": "Unknown",
@@ -374,7 +374,7 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 242,
+        "pageLoads": 248,
         "visits": 230
       },
       {
@@ -396,7 +396,7 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 1024,
+        "pageLoads": 1030,
         "visits": 879
       },
       {
@@ -413,7 +413,7 @@
       },
       {
         "value": "routing-apis",
-        "pageLoads": 35,
+        "pageLoads": 41,
         "visits": 0
       },
       {
@@ -430,7 +430,7 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1788,
+        "pageLoads": 1794,
         "visits": 1706
       },
       {
@@ -447,14 +447,14 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1878,
+        "pageLoads": 1884,
         "visits": 1733
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1878,
+        "pageLoads": 1884,
         "visits": 1733
       }
     ]

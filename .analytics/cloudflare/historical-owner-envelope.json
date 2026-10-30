@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-30T21:24:43Z",
+  "generatedAt": "2026-10-30T22:24:15Z",
   "window": {
-    "start": "2026-08-01T21:24:43Z",
-    "end": "2026-10-30T21:24:43Z"
+    "start": "2026-08-01T22:24:15Z",
+    "end": "2026-10-30T22:24:15Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4328,
-    "visits": 1297,
+    "pageLoads": 4318,
+    "visits": 1287,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4328,
-        "visits": 1297
+        "pageLoads": 4318,
+        "visits": 1287
       }
     },
     "byPath": {
@@ -31,8 +31,8 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 210,
-        "visits": 80
+        "pageLoads": 200,
+        "visits": 70
       },
       "/laws/test/reverse-audit/": {
         "pageLoads": 60,
@@ -150,20 +150,12 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/instruments/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/laws/categories/structure/interfaces.html": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -172,6 +164,14 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/instruments/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/structure/boundaries.html": {
@@ -194,13 +194,13 @@
         "pageLoads": 220,
         "visits": 20
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,
@@ -321,8 +321,8 @@
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 747,
-        "visits": 747
+        "pageLoads": 737,
+        "visits": 737
       },
       "(none)": {
         "pageLoads": 540,

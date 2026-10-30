@@ -1428,15 +1428,17 @@ void main() {
  float spec=pow(max(0.,dot(reflect(-light,n),vec3(0.,0.,1.))),mix(8.,44.,1.-rough));
  vec3 shaded=material*halfLambert;
  if(peaceNearFace>.5){
-   float tidalVariation=fbm(p*8.4+vec3(2.3,1.7,3.1));
-   float shoreRim=pow(1.-abs(dot(n,vec3(0.,0.,1.))),2.);
-   shaded+=vec3(.018,.071,.085)*(.38+.52*tidalVariation);
-   shaded+=vec3(.035,.11,.12)*shoreRim*.42;
-   // Peace near-face sky bounce: reveal coastal mineral variation without lighting the night side.
-   float visibleFace=smoothstep(-.15,.85,dot(n,vec3(0.,0.,1.)));
-   float organic=fbm(p*7.6+vec3(.9,1.3,2.1));
-   vec3 secondarySky=vec3(.055,.19,.205)*(.56+.44*organic);
-   shaded=mix(shaded,max(shaded,secondarySky),visibleFace*.8);
+   // Peace only: offshore topography and irregular pale mineral shelves.
+   float formation=noise3(p*5.1+vec3(4.2,1.6,7.3));
+   float fine=noise3(p*21.4+vec3(2.4,6.2,1.9));
+   float shelf=smoothstep(.27,.72,formation*.78+fine*.22);
+   float coast=1.-smoothstep(.025,.13,abs(formation-.54));
+   vec3 depth=mix(vec3(.08,.24,.31),vec3(.30,.65,.62),shelf);
+   depth=mix(depth,vec3(.68,.86,.78),coast*(.26+.24*fine));
+   float fill=.65+.30*max(0.,dot(n,normalize(vec3(-.36,.7,.55))));
+   shaded=mix(shaded,max(shaded,depth*fill),.91);
+   float fresnel=pow(1.-abs(n.z),2.4);
+   shaded+=vec3(.025,.11,.14)*fresnel*.45;
  }
  shaded+=mix(vec3(.22,.14,.08),vec3(.91,.86,.77),metal)*spec*(.08+.42*(1.-rough));
  shaded+=material*rim*(.17+glow);
@@ -1505,7 +1507,7 @@ function setupGL(){
 }
 const ARRIVAL_CONSTELLATION=Object.freeze([
  [-1.35,.30,-3.4],[1.1,1.04,-2.0],[1.88,.29,-1.3],[1.62,-.67,-.4],
- [2.05,-1.42,2.35],[-1.26,-1.19,-2.1],[-2.1,-.78,-3.3],[-2.20,.07,-3.9],[-.81,1.12,-3.7]
+ [1.80,-1.53,-.25],[-1.26,-1.19,-2.1],[-2.1,-.78,-3.3],[-2.20,.07,-3.9],[-.81,1.12,-3.7]
 ]);
 function basePosition(i){
  const b=ARRIVAL_CONSTELLATION[i];

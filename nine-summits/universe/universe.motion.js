@@ -771,6 +771,86 @@ function drawEmberWorld(t){if(!emberGL)return;
 /* WORLD 05 — FORGIVENESS → PEACE / The Quiet Ocean.
  * An actual coastal horizon, five independent islands, sandy shore, cloud banks
  * and waves; no enlarged texture sphere masquerades as a world encounter. */
+
+/* The Peace arrival uses a licensed, high-detail photographic plate with actual
+ * CSS parallax/atmospheric passage. This is 2.5D—not a claim that a still photo
+ * is navigable photogrammetry. The original WEST-admitted WebGL coast remains
+ * an honest offline fallback if the image fails. Unsplash photo by XT7 Core:
+ * https://unsplash.com/photos/stunning-tropical-islands-and-calm-ocean-waters-eFf1cHTOG8o
+ * License: https://unsplash.com/license (site can use the image; not resale).
+ * All new DOM/CSS is local to #peace-encounter, not other eight worlds. */
+const PEACE_CINEMA_IMAGE='https://images.unsplash.com/photo-1744069729070-f946b4fba608?auto=format&fit=crop&w=2400&q=86';
+let peaceCinemaState='loading',peaceCinemaLayer=null,peaceCinemaPhoto=null,peaceCinemaLastX=0,peaceCinemaLastY=0;
+const peaceCinemaPreload=new Image();
+peaceCinemaPreload.decoding='async';
+peaceCinemaPreload.fetchPriority='high';
+peaceCinemaPreload.onload=()=>{
+ peaceCinemaState='ready';
+ if(peaceCinemaLayer)peaceCinemaLayer.classList.add('peace-cinema-ready');
+};
+peaceCinemaPreload.onerror=()=>{
+ peaceCinemaState='error';
+ if(peaceCinemaLayer){peaceCinemaLayer.remove();peaceCinemaLayer=null;}
+ // Preserve the real geometry/teaching fallback when off-network.
+ setTimeout(()=>{if(!peaceGL&&peaceCanvas){try{setupPeaceGLFallback();}catch(error){console.error('Peace fallback:',error);}}},0);
+};
+peaceCinemaPreload.src=PEACE_CINEMA_IMAGE;
+function ensurePeaceCinema(){
+ if(peaceCinemaLayer||peaceCinemaState==='error')return;
+ const style=document.createElement('style');
+ style.textContent=`
+ #peace-encounter .peace-cinema-stage{position:absolute;inset:0;overflow:hidden;z-index:1;pointer-events:none;
+ background:#113f5d;isolation:isolate;opacity:1}
+ #peace-encounter .peace-cinema-image{display:block;position:absolute;inset:-8%;width:116%;height:116%;
+ object-fit:cover;object-position:50% 47%;max-width:none;max-height:none;
+ transform-origin:50% 48%;transform:translate3d(calc(var(--peace-look-x,0px)*.35),calc(var(--peace-look-y,0px)*.35),0) scale(var(--peace-arrival-scale,1.22));
+ transition:transform .18s linear,filter 1.2s ease;filter:saturate(1.1) contrast(1.025) blur(2px);opacity:0;}
+ #peace-encounter .peace-cinema-ready .peace-cinema-image{opacity:1;filter:saturate(1.1) contrast(1.025) blur(0)}
+ #peace-encounter .peace-cinema-light{position:absolute;inset:0;z-index:2;opacity:.84;mix-blend-mode:screen;
+ background:radial-gradient(ellipse at 20% 22%,rgba(255,240,184,.18),transparent 45%),linear-gradient(125deg,rgba(14,88,132,.22),transparent 42%);}
+ #peace-encounter .peace-cinema-vignette{position:absolute;inset:0;z-index:3;
+ background:linear-gradient(180deg,rgba(4,19,32,.14),transparent 23%,transparent 50%,rgba(3,12,21,.62) 100%);}
+ #peace-encounter .peace-cinema-veil{position:absolute;inset:-5%;z-index:4;
+ background:radial-gradient(ellipse at 50% 54%,rgba(221,244,249,.9) 0%,rgba(198,232,243,.33) 46%,rgba(166,216,232,0) 80%);
+ opacity:var(--peace-atmos-opacity,0);transform:scale(var(--peace-atmos-scale,1));}
+ #peace-encounter .peace-cinema-motion{position:absolute;inset:0;z-index:3;pointer-events:none;
+ background:repeating-linear-gradient(90deg,transparent 0 84px,rgba(233,254,248,.018) 86px,transparent 92px);
+ opacity:.35;animation:peace-water-light 19s linear infinite;}
+ @keyframes peace-water-light{from{transform:translateX(-2%)}to{transform:translateX(2%)}}
+ #peace-encounter.peace-cinema-active #peace-world-canvas{opacity:0;pointer-events:none;}
+ #peace-encounter .peace-world-hud{z-index:9;}
+ #peace-encounter .peace-horizon-mark{z-index:9;}
+ @media(prefers-reduced-motion:reduce){#peace-encounter .peace-cinema-image{transition:none;transform:scale(1.08)!important}
+ #peace-encounter .peace-cinema-motion{animation:none}}
+ `;
+ peaceOverlay.appendChild(style);
+ const layer=document.createElement('div');layer.className='peace-cinema-stage';layer.setAttribute('aria-hidden','true');
+ layer.innerHTML='<div class="peace-cinema-light"></div><div class="peace-cinema-motion"></div><div class="peace-cinema-vignette"></div><div class="peace-cinema-veil"></div>';
+ const photo=document.createElement('img');photo.className='peace-cinema-image';photo.alt='';photo.decoding='async';
+ photo.src=PEACE_CINEMA_IMAGE;layer.prepend(photo);peaceCinemaPhoto=photo;
+ peaceOverlay.insertBefore(layer,peaceCanvas);peaceCinemaLayer=layer;
+ if(peaceCinemaState==='ready')layer.classList.add('peace-cinema-ready');
+ peaceOverlay.classList.add('peace-cinema-active');
+ peaceOverlay.addEventListener('pointermove',event=>{
+  if(reduced||!peaceCinemaLayer)return;
+  const rect=peaceOverlay.getBoundingClientRect();peaceCinemaLastX=((event.clientX-rect.left)/Math.max(1,rect.width)-.5)*26;
+  peaceCinemaLastY=((event.clientY-rect.top)/Math.max(1,rect.height)-.5)*12;
+ },{passive:true});
+ peaceOverlay.addEventListener('pointerleave',()=>{peaceCinemaLastX=peaceCinemaLastY=0;},{passive:true});
+}
+function updatePeaceCinema(){
+ if(!peaceCinemaLayer||peaceCinemaState==='error')return;
+ const f=Math.max(0,Math.min(1,(flight-.55)/.45)),ease=f*f*(3.-2.*f);
+ const entering=Math.max(0,1.-ease);
+ const scale=1.32-.24*ease;
+ const x=reduced?0:peaceCinemaLastX*ease,y=reduced?0:peaceCinemaLastY*ease;
+ peaceCinemaLayer.style.setProperty('--peace-arrival-scale',scale.toFixed(4));
+ peaceCinemaLayer.style.setProperty('--peace-look-x',x.toFixed(2)+'px');
+ peaceCinemaLayer.style.setProperty('--peace-look-y',y.toFixed(2)+'px');
+ peaceCinemaLayer.style.setProperty('--peace-atmos-opacity',(entering*entering*.86).toFixed(3));
+ peaceCinemaLayer.style.setProperty('--peace-atmos-scale',(1.16-.16*ease).toFixed(3));
+}
+
 let peaceKernelFacade=null;
 let peaceGL=null,peaceProgram=null,peaceSkyProgram=null,peaceOcean=null,peaceIslands=null,peaceShore=null,peaceRocks=null,peaceSkyBuffer=null,peaceLoc={},peaceSkyLoc={};
 const peaceCanvas=document.querySelector('#peace-world-canvas'),peaceHud=document.querySelector('#peace-world-hud');
@@ -996,7 +1076,12 @@ function peaceBuildKernelMeshes(K){
  }
  return batches.map(x=>new Float32Array(x));
 }
-function setupPeaceWorld(){if(peaceGL)return;
+function setupPeaceWorld(){
+ ensurePeaceCinema();
+ if(peaceCinemaState!=='error')return;
+ setupPeaceGLFallback();
+}
+function setupPeaceGLFallback(){if(peaceGL)return;
  peaceGL=peaceCanvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power'});
  if(!peaceGL)throw Error('Peace coast WebGL unavailable');
  peaceProgram=peaceLink(peaceVertex,peaceFragment);peaceSkyProgram=peaceLink(peaceSkyVertex,peaceSkyFragment);
@@ -1009,7 +1094,10 @@ function setupPeaceWorld(){if(peaceGL)return;
  peaceSkyBuffer=peaceGL.createBuffer();peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,peaceSkyBuffer);peaceGL.bufferData(peaceGL.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),peaceGL.STATIC_DRAW);
  peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.clearColor(.04,.14,.19,1.);
 }
-function drawPeaceWorld(t){if(!peaceGL)return;
+function drawPeaceWorld(t){
+ updatePeaceCinema();
+ if(peaceCinemaState!=='error')return;
+ if(!peaceGL)return;
  const r=peaceCanvas.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,1.3),w=Math.max(1,Math.round(r.width*dpr)),h=Math.max(1,Math.round(r.height*dpr));
  if(peaceCanvas.width!==w||peaceCanvas.height!==h){peaceCanvas.width=w;peaceCanvas.height=h;}
  peaceGL.viewport(0,0,w,h);peaceGL.clear(peaceGL.COLOR_BUFFER_BIT|peaceGL.DEPTH_BUFFER_BIT);

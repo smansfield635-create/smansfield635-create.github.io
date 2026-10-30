@@ -1,0 +1,12 @@
+import fs from 'node:fs';import zlib from 'node:zlib';import crypto from 'node:crypto';import assert from 'node:assert/strict';
+const code=fs.readFileSync(new URL('./material-margin-field.v1.js',import.meta.url),'utf8');
+const {buildMaterialMarginField}=await import('data:text/javascript;base64,'+Buffer.from(code).toString('base64'));
+const fixture=JSON.parse(fs.readFileSync('material-margin-2d-evidence/habitat-source-fixture.json','utf8'));
+const raw=name=>new Uint8Array(zlib.inflateSync(Buffer.from(fixture.files[name].data,'base64')));
+const habitat={...fixture.manifest,pixels:raw('native-atlas.bin')};const presentation={pixels:raw('sigma2-atlas.bin')};const before=Buffer.from(habitat.pixels);const bp=Buffer.from(presentation.pixels);
+const result=buildMaterialMarginField(habitat,presentation);assert.equal(result.receipt.status,'SOURCE_MATCHED_COMPARISON_CANDIDATE');assert.equal(result.width,89);assert.equal(result.height,65);assert.equal(result.pixels.length,11570);assert.equal(crypto.createHash('sha256').update(result.pixels).digest('hex'),result.receipt.correctionSha256);assert.deepEqual(before,Buffer.from(habitat.pixels));assert.deepEqual(bp,Buffer.from(presentation.pixels));
+habitat.pixels[384]^=1;assert.equal(buildMaterialMarginField(habitat,presentation).receipt.status,'INACTIVE_SOURCE_MISMATCH');habitat.pixels[384]^=1;
+presentation.pixels[384]^=1;assert.equal(buildMaterialMarginField(habitat,presentation).receipt.status,'INACTIVE_SOURCE_MISMATCH');presentation.pixels[384]^=1;
+habitat.pixels[192]^=1;assert.equal(buildMaterialMarginField(habitat,presentation).receipt.status,'SOURCE_MATCHED_COMPARISON_CANDIDATE');
+const fallback=buildMaterialMarginField({},{});assert.equal(fallback.pixels.length,2);assert.equal(fallback.pixels[0]+fallback.pixels[1],0);
+const report={sourceMatched:true,nativeMismatchDisables:true,baselineMismatchDisables:true,unrelatedRavineChangesPreserved:true,inputArraysUnchanged:true,correctionHash:result.receipt.correctionSha256,correctionBytes:result.pixels.length,syntaxChecked:true,webglExecuted:false,visualAccepted:false};fs.writeFileSync('margin-renderer-candidate/runtime-test.json',JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify(report));

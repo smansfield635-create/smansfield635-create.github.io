@@ -1,0 +1,715 @@
+{
+  "dense-source-coefficients.json": {
+    "schema": "H_EARTH_DENSE_SOURCE_COEFFICIENTS_v1",
+    "domains": [
+      {
+        "name": "near",
+        "pose": "inland-seam-near",
+        "bounds": [
+          -235.0,
+          -833.0,
+          -187.0,
+          -785.0
+        ],
+        "shape": [
+          97,
+          97
+        ],
+        "uniqueSupported": 9409,
+        "multipleOwners": 0,
+        "noOwner": 0,
+        "quadUnsafe": 0,
+        "coastRange": [
+          620.0,
+          620.0
+        ],
+        "microEnvelopeRange": [
+          0.0,
+          0.0
+        ],
+        "sourceOffsets": [
+          74736,
+          74739,
+          74742
+        ]
+      },
+      {
+        "name": "far",
+        "pose": "inland-seam-far",
+        "bounds": [
+          -213.0,
+          -759.0,
+          -165.0,
+          -711.0
+        ],
+        "shape": [
+          97,
+          97
+        ],
+        "uniqueSupported": 9409,
+        "multipleOwners": 0,
+        "noOwner": 0,
+        "quadUnsafe": 0,
+        "coastRange": [
+          594.1226806640625,
+          620.0
+        ],
+        "microEnvelopeRange": [
+          0.0,
+          0.7200000286102295
+        ],
+        "sourceOffsets": [
+          126,
+          129,
+          132,
+          135,
+          138,
+          141,
+          144,
+          147,
+          150,
+          153,
+          156,
+          159,
+          162,
+          165,
+          702,
+          705,
+          708,
+          711,
+          714,
+          717,
+          720,
+          723,
+          726,
+          729,
+          732,
+          735,
+          738,
+          741,
+          1278,
+          1281,
+          1284,
+          1287,
+          1290,
+          1293,
+          1296,
+          1299,
+          1302,
+          1305,
+          1308,
+          1311,
+          1314,
+          1317,
+          1854,
+          1857,
+          1860,
+          1863,
+          1866,
+          1869,
+          1872,
+          1875,
+          1878,
+          1881,
+          1884,
+          1887,
+          1890,
+          73845,
+          73848,
+          73851,
+          73854,
+          73857,
+          73875,
+          73878,
+          73881,
+          73884,
+          73887,
+          73890,
+          73893,
+          73896,
+          73899,
+          73902,
+          73905,
+          74736,
+          74739,
+          74742
+        ]
+      }
+    ],
+    "witnessChecks": [
+      {
+        "pose": "inland-seam-near",
+        "memberships": 1114,
+        "coefficientMaxError": [
+          0.0,
+          0.00010387350917043237,
+          6.825599522913839e-05,
+          3.860607327810239e-05
+        ],
+        "maxReferenceColorLinearError": 0.00010387350917043237,
+        "microEnvelopeNonzero": 502,
+        "scope": "Archived center+nominal normals, independent source-parent derivative model; source offsets retained, not owner selection."
+      },
+      {
+        "pose": "inland-seam-far",
+        "memberships": 1461,
+        "coefficientMaxError": [
+          0.0,
+          3.8818890440800446e-05,
+          2.8461145773261975e-05,
+          1.672629732721309e-05
+        ],
+        "maxReferenceColorLinearError": 3.8818890440800446e-05,
+        "microEnvelopeNonzero": 578,
+        "scope": "Archived center+nominal normals, independent source-parent derivative model; source offsets retained, not owner selection."
+      }
+    ],
+    "gridStepMeters": 0.5,
+    "limits": [
+      "Pose-bound CPU field model; no GPU or 2-D repair qualification.",
+      "Current source near/far seam normal/coast reconciliation applied with unmodified module; contact placeholder is not consumed by this coefficient model.",
+      "Micro-normal helper derivatives use parent-triangle camera rays; inherited native model used captured visible-neighbor derivatives.",
+      "P remains an independent original-texture input; no dense texture P or texture averaging introduced.",
+      "Original TERRAIN and FAR_LAND indexed support only; all XZ multiple owners excluded rather than visually selecting one.",
+      "No geological replacement/retirement or later overlays/lighting modeled.",
+      "Source Float32 noise transcription and operation order inherit existing non-GPU-equivalence limits."
+    ],
+    "inputHashes": {
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense_source_coefficients.py": "6b098fb174e784d8d166041e4bdd5242d030365a141f790b8be4e6043b437ff3",
+      "/workspace/scratch/a96b8ab32ba2/recovered/paired/ecological.py": "256649466fd006603dc8d46185adfad09e295e4e669bd940e5653e9cf29eaec7",
+      "/workspace/scratch/a96b8ab32ba2/recovered/paired/input/material-cpu/source-fields.py": "b0aa9b3fef57d225ab16dcf7b0369ac15823dfc2adb645cc898dc0623e51c5c4",
+      "/workspace/scratch/a96b8ab32ba2/recovered/paired/input/material-cpu/full-p-screen.py": "0ec661436a4e353eced1f24adf1d3085f736c1b74d85cff1ba381729d364e55a",
+      "/workspace/scratch/a96b8ab32ba2/repo/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/presentation-seam-receipt.json": "549495e9c1fdc2c76cc05b51d13072badbcaa28b3d3db7836ad5dafd48acf205",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/terrain-seam-normal.v1.mjs": "62a96acb6f9299ab79591aaa8fa5c7f8209b92aaf4b26289720509b96007f739",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/upload-coastDistances.bin": "7f99de4403127ddcc48affe5206003c93049e0d19d276981db794ea1fa8cf49b",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/presentation-coastDistances.bin": "7f99de4403127ddcc48affe5206003c93049e0d19d276981db794ea1fa8cf49b",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/upload-positions.bin": "342a2a788009410bf48a6b5889a55cad4afd97552ff02b72f98b1308f7f84b83",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/upload-normals.bin": "7d31e73c97939ad978982aeb5191d3ae8b99582eb32300aff9d569cae7e24b1b",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/presentation-normals.bin": "7d31e73c97939ad978982aeb5191d3ae8b99582eb32300aff9d569cae7e24b1b",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/package.json": "5161d80dde506d13372b44fe992aa16511e675d49e42a65e3a4b7f5cb36edf9f",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/upload-indices.bin": "483f7693f29225e52fa90700837015741e78edb291de9adb785a8db3a74d616c",
+      "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/dense-input/world-receipt.json": "f1b1fdc21c55ecc458c7bf5443a9478f27b1c327a2b3fc22563f1b6f463fd939"
+    }
+  },
+  "independent_adversarial.json": {
+    "sourceSha256": "11beb507fb9bb8abfbb85434a1b4a893238b31c068d24fa79db8e5a98bb5b521",
+    "invalidPayloadInfluence": {
+      "max": 3.433270863821558e-05,
+      "worldXZ": [
+        5.0,
+        5.0
+      ],
+      "distanceToInvalid": 7.0710678118654755,
+      "weights": [
+        0.05078078557620229,
+        0.05078078557620229
+      ]
+    },
+    "narrowChromatic": {
+      "changed": 0,
+      "maxDelta": 0.0,
+      "report": {
+        "ridgeCells": 284,
+        "acceptedRidgeCells": 0,
+        "oppositeRidgeCells": 284,
+        "changedCells": 0,
+        "activeCells": 0,
+        "outsideExact": true,
+        "coefficientEnvelopePass": true,
+        "radiusMeters": 6.0,
+        "stepMeters": 0.5,
+        "locatorThresholdCodesPerMeter": 1.0
+      }
+    },
+    "detectorInvalidPayloadCases": [
+      {
+        "angleRadians": 0.4,
+        "offsetMeters": 6.0,
+        "changedAcceptedRidgeCells": 1,
+        "maxValidOutputDelta": 0.04958462768133737
+      },
+      {
+        "angleRadians": 0.8,
+        "offsetMeters": 7.0,
+        "changedAcceptedRidgeCells": 2,
+        "maxValidOutputDelta": 0.048086189931115145
+      }
+    ]
+  },
+  "source-result.json": [
+    {
+      "ridgeCells": 1558,
+      "acceptedRidgeCells": 73,
+      "oppositeRidgeCells": 1485,
+      "changedCells": 0,
+      "activeCells": 0,
+      "outsideExact": true,
+      "coefficientEnvelopePass": true,
+      "radiusMeters": 6.0,
+      "stepMeters": 0.5,
+      "locatorThresholdCodesPerMeter": 1.0,
+      "side": "near",
+      "beforeGradientPercentiles": [
+        1.2749169816362598,
+        2.342507449249594,
+        2.8340357903499642,
+        3.511952848564989,
+        4.341813312183138
+      ],
+      "afterGradientPercentiles": [
+        1.2749169816362598,
+        2.342507449249594,
+        2.8340357903499642,
+        3.511952848564989,
+        4.341813312183138
+      ],
+      "maxDisplayChange": 0.0
+    },
+    {
+      "ridgeCells": 1756,
+      "acceptedRidgeCells": 122,
+      "oppositeRidgeCells": 1634,
+      "changedCells": 0,
+      "activeCells": 0,
+      "outsideExact": true,
+      "coefficientEnvelopePass": true,
+      "radiusMeters": 6.0,
+      "stepMeters": 0.5,
+      "locatorThresholdCodesPerMeter": 1.0,
+      "side": "far",
+      "beforeGradientPercentiles": [
+        1.7463490624302764,
+        3.7110617922366664,
+        4.852043317714174,
+        7.1586716899284575,
+        9.012592813428922
+      ],
+      "afterGradientPercentiles": [
+        1.7463490624302764,
+        3.7110617922366664,
+        4.852043317714174,
+        7.1586716899284575,
+        9.012592813428922
+      ],
+      "maxDisplayChange": 0.0
+    }
+  ],
+  "anchored-source-result.json": [
+    {
+      "operator": "ANCHORED_2D_MARGIN",
+      "radiusMeters": 6.0,
+      "stepMeters": 0.5,
+      "ridgeCells": 1594,
+      "anchorCells": 17,
+      "changedCells": 4744,
+      "solver": "SPARSE_DIRICHLET_DIRECT",
+      "equationResidualMax": 6.938893903907228e-16,
+      "outsideExact": true,
+      "anchorsExact": true,
+      "coefficientEnvelopePass": true,
+      "side": "near",
+      "beforeGradientPercentiles": [
+        1.2749169816362598,
+        2.342507449249594,
+        2.8340357903499642,
+        3.511952848564989,
+        4.341813312183138
+      ],
+      "afterGradientPercentiles": [
+        0.618246796197288,
+        0.9005516864595704,
+        1.0582118725216068,
+        1.583941451778675,
+        3.3245701085620785
+      ],
+      "maxDisplayChange": 4.911214347745414
+    },
+    {
+      "operator": "ANCHORED_2D_MARGIN",
+      "radiusMeters": 6.0,
+      "stepMeters": 0.5,
+      "ridgeCells": 1811,
+      "anchorCells": 12,
+      "changedCells": 4749,
+      "solver": "SPARSE_DIRICHLET_DIRECT",
+      "equationResidualMax": 1.1657341758564144e-15,
+      "outsideExact": true,
+      "anchorsExact": true,
+      "coefficientEnvelopePass": true,
+      "side": "far",
+      "beforeGradientPercentiles": [
+        1.7463490624302764,
+        3.7110617922366664,
+        4.852043317714174,
+        7.1586716899284575,
+        9.012592813428922
+      ],
+      "afterGradientPercentiles": [
+        1.0220896041438594,
+        1.6188736087030753,
+        1.9147839281492542,
+        3.243300913031292,
+        7.557376358603532
+      ],
+      "maxDisplayChange": 8.61072395578907
+    }
+  ],
+  "rejected-zero-effect.json": [
+    {
+      "ridgeCells": 1558,
+      "acceptedRidgeCells": 73,
+      "oppositeRidgeCells": 1485,
+      "changedCells": 0,
+      "activeCells": 0,
+      "outsideExact": true,
+      "coefficientEnvelopePass": true,
+      "radiusMeters": 6.0,
+      "stepMeters": 0.5,
+      "locatorThresholdCodesPerMeter": 1.0,
+      "side": "near",
+      "beforeGradientPercentiles": [
+        1.2749169816362598,
+        2.342507449249594,
+        2.8340357903499642,
+        3.511952848564989,
+        4.341813312183138
+      ],
+      "afterGradientPercentiles": [
+        1.2749169816362598,
+        2.342507449249594,
+        2.8340357903499642,
+        3.511952848564989,
+        4.341813312183138
+      ],
+      "maxDisplayChange": 0.0
+    },
+    {
+      "ridgeCells": 1756,
+      "acceptedRidgeCells": 122,
+      "oppositeRidgeCells": 1634,
+      "changedCells": 0,
+      "activeCells": 0,
+      "outsideExact": true,
+      "coefficientEnvelopePass": true,
+      "radiusMeters": 6.0,
+      "stepMeters": 0.5,
+      "locatorThresholdCodesPerMeter": 1.0,
+      "side": "far",
+      "beforeGradientPercentiles": [
+        1.7463490624302764,
+        3.7110617922366664,
+        4.852043317714174,
+        7.1586716899284575,
+        9.012592813428922
+      ],
+      "afterGradientPercentiles": [
+        1.7463490624302764,
+        3.7110617922366664,
+        4.852043317714174,
+        7.1586716899284575,
+        9.012592813428922
+      ],
+      "maxDisplayChange": 0.0
+    }
+  ],
+  "independent_source_retention.json": {
+    "sourceSha256": "dd2482addd02cb39d37e26601bb8618a5ef4f1053091d30bde368ec4a9c8eaca",
+    "records": [
+      {
+        "side": "near",
+        "model": "Current coefficient fixed-reference color; not GPU/actual per-fragment texture",
+        "solverResidual": 6.938893903907228e-16,
+        "centralSupportedCells": 2401,
+        "centralMobileCells": 2396,
+        "centralAnchors": 5,
+        "outsideSupportExact": true,
+        "originalAnchorsExact": true,
+        "thresholds": [
+          {
+            "baselinePercentile": 10,
+            "direction": "dark",
+            "fixedBaselineDisplayLuminance": 113.91752408981975,
+            "baselineCells": 241,
+            "candidateCells": 214,
+            "retainedBaselineCells": 145,
+            "baselineComponents": {
+              "count": 3,
+              "largestCells": 128
+            },
+            "candidateComponents": {
+              "count": 1,
+              "largestCells": 214
+            }
+          },
+          {
+            "baselinePercentile": 20,
+            "direction": "dark",
+            "fixedBaselineDisplayLuminance": 114.49413633026734,
+            "baselineCells": 481,
+            "candidateCells": 542,
+            "retainedBaselineCells": 375,
+            "baselineComponents": {
+              "count": 3,
+              "largestCells": 458
+            },
+            "candidateComponents": {
+              "count": 2,
+              "largestCells": 540
+            }
+          },
+          {
+            "baselinePercentile": 80,
+            "direction": "light",
+            "fixedBaselineDisplayLuminance": 119.2454762044152,
+            "baselineCells": 481,
+            "candidateCells": 358,
+            "retainedBaselineCells": 329,
+            "baselineComponents": {
+              "count": 2,
+              "largestCells": 469
+            },
+            "candidateComponents": {
+              "count": 1,
+              "largestCells": 358
+            }
+          },
+          {
+            "baselinePercentile": 90,
+            "direction": "light",
+            "fixedBaselineDisplayLuminance": 120.80823238517944,
+            "baselineCells": 241,
+            "candidateCells": 120,
+            "retainedBaselineCells": 113,
+            "baselineComponents": {
+              "count": 4,
+              "largestCells": 236
+            },
+            "candidateComponents": {
+              "count": 1,
+              "largestCells": 120
+            }
+          }
+        ],
+        "centralRange": {
+          "baseline": [
+            112.41484754687887,
+            123.47265295059965
+          ],
+          "candidate": [
+            112.54663518497871,
+            123.25470509896317
+          ]
+        }
+      },
+      {
+        "side": "far",
+        "model": "Current coefficient fixed-reference color; not GPU/actual per-fragment texture",
+        "solverResidual": 1.1657341758564144e-15,
+        "centralSupportedCells": 2401,
+        "centralMobileCells": 2395,
+        "centralAnchors": 6,
+        "outsideSupportExact": true,
+        "originalAnchorsExact": true,
+        "thresholds": [
+          {
+            "baselinePercentile": 10,
+            "direction": "dark",
+            "fixedBaselineDisplayLuminance": 122.85797341113354,
+            "baselineCells": 241,
+            "candidateCells": 64,
+            "retainedBaselineCells": 64,
+            "baselineComponents": {
+              "count": 2,
+              "largestCells": 148
+            },
+            "candidateComponents": {
+              "count": 2,
+              "largestCells": 63
+            }
+          },
+          {
+            "baselinePercentile": 20,
+            "direction": "dark",
+            "fixedBaselineDisplayLuminance": 124.77309208100051,
+            "baselineCells": 481,
+            "candidateCells": 245,
+            "retainedBaselineCells": 233,
+            "baselineComponents": {
+              "count": 2,
+              "largestCells": 470
+            },
+            "candidateComponents": {
+              "count": 3,
+              "largestCells": 226
+            }
+          },
+          {
+            "baselinePercentile": 80,
+            "direction": "light",
+            "fixedBaselineDisplayLuminance": 136.5287533257192,
+            "baselineCells": 481,
+            "candidateCells": 66,
+            "retainedBaselineCells": 63,
+            "baselineComponents": {
+              "count": 1,
+              "largestCells": 481
+            },
+            "candidateComponents": {
+              "count": 2,
+              "largestCells": 65
+            }
+          },
+          {
+            "baselinePercentile": 90,
+            "direction": "light",
+            "fixedBaselineDisplayLuminance": 137.347246625353,
+            "baselineCells": 241,
+            "candidateCells": 16,
+            "retainedBaselineCells": 16,
+            "baselineComponents": {
+              "count": 4,
+              "largestCells": 194
+            },
+            "candidateComponents": {
+              "count": 2,
+              "largestCells": 15
+            }
+          }
+        ],
+        "centralRange": {
+          "baseline": [
+            120.49646746140604,
+            139.38253131069325
+          ],
+          "candidate": [
+            120.49646746140604,
+            139.38253131069325
+          ]
+        }
+      }
+    ],
+    "interpretation": "Fixed threshold area is descriptive, not a visual acceptance threshold. Exact extrema retention does not establish preservation of whole patch interiors; inspect these reductions before runtime qualification."
+  },
+  "independent_anchored_review.json": {
+    "sourceSha256": "dd2482addd02cb39d37e26601bb8618a5ef4f1053091d30bde368ec4a9c8eaca",
+    "cases": {
+      "narrow_gray": {
+        "operator": "ANCHORED_2D_MARGIN",
+        "radiusMeters": 6.0,
+        "stepMeters": 0.5,
+        "ridgeCells": 276,
+        "anchorCells": 345,
+        "changedCells": 1375,
+        "solver": "SPARSE_DIRICHLET_DIRECT",
+        "equationResidualMax": 6.106226635438361e-16,
+        "outsideExact": true,
+        "anchorsExact": true,
+        "coefficientEnvelopePass": true,
+        "insideAnchoredCells": 97,
+        "centralPixelChange": 0.0,
+        "maximumCodeChange": 23.27157352311687
+      },
+      "narrow_chroma": {
+        "operator": "ANCHORED_2D_MARGIN",
+        "radiusMeters": 6.0,
+        "stepMeters": 0.5,
+        "ridgeCells": 276,
+        "anchorCells": 345,
+        "changedCells": 1375,
+        "solver": "SPARSE_DIRICHLET_DIRECT",
+        "equationResidualMax": 6.106226635438361e-16,
+        "outsideExact": true,
+        "anchorsExact": true,
+        "coefficientEnvelopePass": true,
+        "insideAnchoredCells": 97,
+        "centralPixelChange": 0.0,
+        "maximumCodeChange": 12.997119297926716
+      },
+      "circle": {
+        "operator": "ANCHORED_2D_MARGIN",
+        "radiusMeters": 6.0,
+        "stepMeters": 0.5,
+        "ridgeCells": 228,
+        "anchorCells": 168,
+        "changedCells": 2924,
+        "solver": "SPARSE_DIRICHLET_DIRECT",
+        "equationResidualMax": 1.2212453270876722e-15,
+        "outsideExact": true,
+        "anchorsExact": true,
+        "coefficientEnvelopePass": true,
+        "insideAnchoredCells": 36,
+        "centralPixelChange": 0.0,
+        "maximumCodeChange": 21.558810635132403
+      },
+      "corner": {
+        "operator": "ANCHORED_2D_MARGIN",
+        "radiusMeters": 6.0,
+        "stepMeters": 0.5,
+        "ridgeCells": 135,
+        "anchorCells": 218,
+        "changedCells": 1384,
+        "solver": "SPARSE_DIRICHLET_DIRECT",
+        "equationResidualMax": 7.216449660063518e-16,
+        "outsideExact": true,
+        "anchorsExact": true,
+        "coefficientEnvelopePass": true,
+        "insideAnchoredCells": 141,
+        "centralPixelChange": 0.013463859607747028,
+        "maximumCodeChange": 27.81759136558928
+      },
+      "overlap": {
+        "operator": "ANCHORED_2D_MARGIN",
+        "radiusMeters": 6.0,
+        "stepMeters": 0.5,
+        "ridgeCells": 311,
+        "anchorCells": 343,
+        "changedCells": 2236,
+        "solver": "SPARSE_DIRICHLET_DIRECT",
+        "equationResidualMax": 6.661338147750939e-16,
+        "outsideExact": true,
+        "anchorsExact": true,
+        "coefficientEnvelopePass": true,
+        "insideAnchoredCells": 195,
+        "centralPixelChange": 0.018677035302026454,
+        "maximumCodeChange": 26.99582228234081
+      },
+      "straight": {
+        "operator": "ANCHORED_2D_MARGIN",
+        "radiusMeters": 6.0,
+        "stepMeters": 0.5,
+        "ridgeCells": 138,
+        "anchorCells": 276,
+        "changedCells": 1094,
+        "solver": "SPARSE_DIRICHLET_DIRECT",
+        "equationResidualMax": 7.771561172376096e-16,
+        "outsideExact": true,
+        "anchorsExact": true,
+        "coefficientEnvelopePass": true,
+        "insideAnchoredCells": 194,
+        "centralPixelChange": 0.04840529286564381,
+        "maximumCodeChange": 17.471038288877068
+      }
+    },
+    "invalidPayloadIndependence": {
+      "validOutputExact": true,
+      "ridgeMaskExact": true,
+      "anchorMaskExact": true
+    },
+    "textureResponseError": 3.312237636943216e-17,
+    "constant": {
+      "unchanged": true
+    },
+    "linear": {
+      "unchanged": true
+    }
+  },
+  "disposition": {
+    "firstOperator": "REJECTED_REAL_SOURCE_ZERO_EFFECT_AND_INVALID_PAYLOAD_LEAK",
+    "pointAnchoredOperator": "REJECTED_PATCH_INTERIOR_AREA_LOSS",
+    "runtimeCandidate": false,
+    "visualAcceptance": false,
+    "deployed": false,
+    "retainedContribution": "Dense source sampler with current presentation normals and existing atlas; independently proven interior retention counterexample."
+  }
+}

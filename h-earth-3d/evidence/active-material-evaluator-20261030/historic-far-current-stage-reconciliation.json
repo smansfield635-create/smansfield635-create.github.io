@@ -1,0 +1,314 @@
+{
+  "schema": "H_EARTH_GEN3000_HISTORIC_FAR_CURRENT_MATERIAL_RECONCILIATION_v1",
+  "result": "HISTORIC_SOURCE_COUPLED_MATERIAL_CHANGE_QUALIFIED__CURRENT_SAVED_CAMERA_OUTSIDE_FRUSTUM__CURRENT_ATLAS_MARGIN_VALUES_HELD",
+  "authority": {
+    "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+    "lockGeneration": 3000,
+    "admissionIssueComment": 6527846342,
+    "scope": "h-earth-3d/evidence/active-material-evaluator-20261030/**",
+    "authorityEffect": "NONE_DIAGNOSTIC_SOURCE_ONLY"
+  },
+  "provenance": {
+    "originalRenderer": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "originalRendererGitBlob": "2ae6c42f6febaada2cb2a240844b9ed8e",
+    "frozenCurrentCandidate": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "currentRendererGitBlob": "2367aea63563b33ad7159a1feb7ac26fbc631792",
+    "pairedMaterialLibraryId": "libfile_d3ed0ec133c881919ccbf87efba38e5d",
+    "pairedMaterialZipSHA256": "08b0c3ae8e1cc3c318b7fa1ada6d01e75370f5423745f2250db6354805b3fdef",
+    "historicalImageRun": 40734434775,
+    "historicalImageArtifact": 12837402038,
+    "historicalImageZipSHA256": "aee6311ffaf9de2c3191bbd416331e7c59735b6e4ab2316640e24933ae59141c",
+    "currentImageRun": 41083373434,
+    "currentImageArtifact": 12991506650,
+    "currentImageZipSHA256": "c1ae9fd42efba75bcda13c49caac13539bbb3aed41f812e05a0d6f59f3eb1756",
+    "currentWorldPacketSourceCommit": "11a4fd07b30be7f663ac6d698434ce32ebea875e",
+    "bothPNGZIPsCRCverified": true,
+    "upstreamSoilBlockByteEqualExceptPassiveSubstrateCapture": true,
+    "environmentalIdentityGroundcoverBlockByteEqual": true
+  },
+  "historicalWitness": {
+    "pose": "inland-seam-far",
+    "topLeftPixels": [
+      [
+        392,
+        496
+      ],
+      [
+        392,
+        497
+      ]
+    ],
+    "worldPositions": [
+      [
+        -188.875,
+        14.75439453125,
+        -736.0625
+      ],
+      [
+        -189.0625,
+        14.73388671875,
+        -734.5625
+      ]
+    ],
+    "observedOldBaselineUnlitRGBA8RGB": [
+      [
+        140,
+        121,
+        94
+      ],
+      [
+        131,
+        116,
+        90
+      ]
+    ],
+    "nativeSourceFirstPixelOffsets": [
+      144,
+      73902
+    ],
+    "nativeSourceSecondPixelOffsets": [
+      144
+    ],
+    "nativeSourceMemberCase": [
+      {
+        "offsets": [
+          144,
+          144
+        ],
+        "sameTriangle": true,
+        "deltaQ": [
+          -0.0327371209859848,
+          -0.015984654426574707,
+          -0.007692903280258179
+        ],
+        "deltaP": [
+          0.00023150444030762,
+          -0.00017592310905456543,
+          0.00007061660289764404
+        ],
+        "signedContributions": {
+          "incomingSoil": [
+            0.00008149092825405245,
+            -0.00006192597186967966,
+            0.00002485746067172725
+          ],
+          "identityTarget": [
+            -0.014497153526482303,
+            -0.005739035808684759,
+            -0.0017311329253269447
+          ],
+          "identityWeight": [
+            -0.009416013065543887,
+            -0.0060085182736824855,
+            -0.003977668404085733
+          ],
+          "groundcoverTarget": [
+            -0.000844167261093709,
+            -0.0007006221550143188,
+            -0.0004706169155765938
+          ],
+          "groundcoverWeight": [
+            -0.008061265407741658,
+            -0.003474539063965665,
+            -0.0015383325431983508
+          ]
+        },
+        "maxSignedIdentityPlusGroundcoverClosureError": 1.3153357798778575e-8,
+        "oldWeightIdentity": [
+          0.5546356439590454,
+          0.5020143985748291
+        ],
+        "oldWeightGroundcover": [
+          0.2256794273853302,
+          0.2817423641681671
+        ],
+        "oldP": [
+          [
+            0.13277962803840637,
+            0.09897492080926895,
+            0.0482359454035759
+          ],
+          [
+            0.133011132478714,
+            0.09879899770021439,
+            0.04830656200647354
+          ]
+        ]
+      },
+      {
+        "offsets": [
+          73902,
+          144
+        ],
+        "sameTriangle": false,
+        "deltaQ": [
+          -0.03254130482673645,
+          -0.015645131468772888,
+          -0.00763915479183197
+        ],
+        "signedContributions": {
+          "incomingSoil": [
+            0.00028137344646834034,
+            0.0002846307756679906,
+            0.00007971670667308352
+          ],
+          "identityTarget": [
+            -0.014497153526482303,
+            -0.005739035808684759,
+            -0.0017311329253269447
+          ],
+          "identityWeight": [
+            -0.009427162763443086,
+            -0.006027849644302058,
+            -0.003980728521725621
+          ],
+          "groundcoverTarget": [
+            -0.000844167261093709,
+            -0.0007006221550143188,
+            -0.0004706169155765938
+          ],
+          "groundcoverWeight": [
+            -0.008054177014491515,
+            -0.003462248199417317,
+            -0.0015363868899420652
+          ]
+        },
+        "maxSignedClosureError": 1.7707694179025513e-8
+      }
+    ],
+    "sourceConclusion": "Original native same-triangle red delta Q comes chiefly from identity target+weight and groundcover weight, not raw P change, under conditional CPU shader-source model. The first source location is ambiguous; no unique GPU depth owner proved.",
+    "referenceOldNativeMaxDisplayChannelDelta": 9.042495727539062,
+    "existingAtlasAddedHistoricalProxy": "Issue #6911 comment 6514145809 independently reports old native 9.04249 to atlas-adjusted 9.09518 output-code proxy at same original conditional witness; not current Gen2998+margin pixel truth."
+  },
+  "currentComposedTransport": {
+    "orderedChain": "native P -> identity -> groundcover -> correctedAtlas offset -> materialMargin DeltaA*originalP+DeltaB -> later overlays -> lighting/fog/presentation",
+    "atlasManifestGitBlob": "2367aea63563b33ad7159a1feb7ac26fbc631792",
+    "atlasSourceSHA256": {
+      "near": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7",
+      "far": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f"
+    },
+    "chartBindings": [
+      {
+        "offset": 144,
+        "group": "NEAR",
+        "atlasFile": "near-atlas.png",
+        "originXZ": [
+          -192.75,
+          -736.75
+        ],
+        "atlasPixelOffset": [
+          684,
+          0
+        ],
+        "sourceIndexFirstTexel": [
+          699.5,
+          2.75
+        ],
+        "sourceIndexSecondTexel": [
+          698.75,
+          8.75
+        ]
+      },
+      {
+        "offset": 73902,
+        "group": "FAR",
+        "atlasFile": "far-atlas.png",
+        "originXZ": [
+          -192.75,
+          -741.25
+        ],
+        "atlasPixelOffset": [
+          2008,
+          0
+        ],
+        "sourceIndexFirstTexel": [
+          2023.5,
+          20.75
+        ],
+        "secondSourceMembershipAbsent": true
+      }
+    ],
+    "atlasNumericalValuesVerifiedAtBothExactPoints": false,
+    "marginCandidateSource": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "marginWidthHeight": [
+      97,
+      97
+    ],
+    "marginWorldBounds": [
+      -213,
+      -759,
+      -165,
+      -711
+    ],
+    "marginSampleUV": [
+      [
+        0.5025773195876289,
+        0.47809278350515466
+      ],
+      [
+        0.49871134020618557,
+        0.509020618556701
+      ]
+    ],
+    "marginTexelValuesVerifiedAtExactTwoPoints": false,
+    "applicationLaw": "paletteAfterEcology+atlasCorrection+marginDelta.x*materialMarginSubstrate+marginDelta.yzw",
+    "originalSoilPNotInvertedFromLitRGB8": true
+  },
+  "existingCurrentSavedFrames": {
+    "cameraCount": 3,
+    "cameraNames": [
+      "inland-remaining-west-arc",
+      "inland-remaining-west-tip",
+      "inland-remaining-southeast"
+    ],
+    "imageDimensions": [
+      384,
+      688
+    ],
+    "witnessProjection": {
+      "inland-remaining-west-arc": [
+        {
+          "clipX": 11.86292097643208,
+          "visible": false
+        },
+        {
+          "clipX": 11.096347018107918,
+          "visible": false
+        }
+      ],
+      "inland-remaining-west-tip": [
+        {
+          "clipX": 4.202647404121113,
+          "visible": false
+        },
+        {
+          "clipX": 4.034343878559419,
+          "visible": false
+        }
+      ],
+      "inland-remaining-southeast": [
+        {
+          "clipX": -2.009321375896636,
+          "visible": false
+        },
+        {
+          "clipX": -2.0802755010257377,
+          "visible": false
+        }
+      ]
+    },
+    "allBothWitnessPointsOutsideAllThreeSavedViewports": true,
+    "method": "Exact saved Gen2998 candidate worldPacket camera viewProjectionMatrix, column-major WebGL transform and source world positions; clip W positive but |NDC.x|>1 for both endpoints in every frame.",
+    "noDepthClaim": true,
+    "noPresentDayPixelComparisonPossible": true
+  },
+  "firstUnresolvedAssertion": "CURRENT_ATLAS_MARGIN_TEXELS_AND_VISIBLE_GROUND_OWNER_AT_HISTORIC_FAR_WITNESS_UNVERIFIED",
+  "nextOneAction": "Reuse current pinned atlas and 97x97 correction-field bytes from existing exact source artifacts, not GPU; sample signed original field at all historical witness memberships and compare bounded full source A*P+B. Only after stage composition determines whether this is still a candidate repair class seek independently admitted current exact-pose GPU capture with full depth/owner controls.",
+  "regressionBoundaries": [
+    "All original source pairings retained; no chosen owner",
+    "Historical source Q ends before current atlas/margin and later overlays",
+    "Current Gen2998 images do not cover the original far witness; no visual continuity claim",
+    "Later material and lighting remain unqualified",
+    "No product, GPU, new census, scope or release"
+  ]
+}

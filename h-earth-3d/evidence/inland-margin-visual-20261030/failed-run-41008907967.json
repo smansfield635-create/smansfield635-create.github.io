@@ -1,0 +1,30 @@
+{
+  "schema": "H_EARTH_COMPARISON_FAILURE_REPAIR_v1",
+  "failedRun": 41008907967,
+  "artifactId": 12957062417,
+  "artifactSha256": "ed1327d679023f2501248eaa74d726fb5aa7872f51ec91fe8a35baeb64e69434",
+  "failureClass": "EVIDENCE_OR_TEST_FAILURE",
+  "error": "POSE_INELIGIBLE",
+  "failedPose": "inland-close",
+  "capturedBaselineViews": [
+    "inland-seam-near",
+    "inland-seam-far"
+  ],
+  "candidateStarted": false,
+  "candidateHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "candidateChanged": false,
+  "walkDomain": {
+    "xMin": -256,
+    "xMax": 256,
+    "zMin": -400,
+    "zMax": -80
+  },
+  "repair": "Declare the two outside-walkdomain cameras as diagnostic observers with original-source terrain height+2.25m; preflight both frozen navigation sources and all camera domains before first browser.",
+  "navigationSha256": "a8db77dc0d43dd630392256558af184dca9aa18f096ed1d2150954c4e260e584",
+  "freshAdmission": {
+    "generation": 2996,
+    "run": 41010225092,
+    "receiptComment": 6515948761
+  },
+  "visualAcceptance": false
+}

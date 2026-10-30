@@ -7122,50 +7122,6 @@
       "scopeHash": "54bcf36eaf2e3997c99c829ccbdfb4c27d73f542bf5b574f0f7b13bed0613419",
       "state": "ADMITTED_LOCKED"
     },
-    "553129724f539d551adefa4f909181565ccc6131165aa2119cdfb4408b0f7fb7": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
-          "lockGeneration": 2997,
-          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_CINEMATIC_DESTINATION_20261030",
-          "operationId": "NINE_SUMMITS_PEACE_CINEMATIC_ARRIVAL_20261030_001",
-          "procedureLocatorDigest": "f22fc6d1fce7b28c4bde65eaab56d7ce996a6657e67d8c88665df59a71a032b3",
-          "requestDigest": "91d3acaac0439215c7e71ef3a54d6da7c5f4ffb067e2510a43a91457da279bda",
-          "scopeHash": "553129724f539d551adefa4f909181565ccc6131165aa2119cdfb4408b0f7fb7"
-        },
-        "bindingDigest": "0b6077221744da54706f766f8f210dcaaf765e85683f38160fab77eb7d20d930",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "32ce91ca987641d6654e32f0a3e1f70e5454bc74500e2b3b875c38f1d5740389",
-          "commentId": 6516086372,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6961,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41011256602,
-          "workflowSha": "e47558bf0180b922712ab2a3ba8f0fce9f800462"
-        },
-        "lineageAnchorCommitSha": "aa8a9b293aaf13b3562f387d663aa4b34b6f22eb",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
-      "lockGeneration": 2997,
-      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_CINEMATIC_DESTINATION_20261030",
-      "operationId": "NINE_SUMMITS_PEACE_CINEMATIC_ARRIVAL_20261030_001",
-      "procedureLocatorDigest": "f22fc6d1fce7b28c4bde65eaab56d7ce996a6657e67d8c88665df59a71a032b3",
-      "released": false,
-      "requestDigest": "91d3acaac0439215c7e71ef3a54d6da7c5f4ffb067e2510a43a91457da279bda",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "553129724f539d551adefa4f909181565ccc6131165aa2119cdfb4408b0f7fb7",
-      "state": "ADMITTED_LOCKED"
-    },
     "55eb0061b59c172bdb7c2c98c7a7d460ac0ff698ce2a2394b6fd0e0d53be6e7b": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -92823,6 +92779,51 @@
       "scopeHash": "1cdcda703dad66a5ba9e164ede3aca45eef3fc79d0352dece1a68fd2f295caeb",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+          "lockGeneration": 2997,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_CINEMATIC_DESTINATION_20261030",
+          "operationId": "NINE_SUMMITS_PEACE_CINEMATIC_ARRIVAL_20261030_001",
+          "procedureLocatorDigest": "f22fc6d1fce7b28c4bde65eaab56d7ce996a6657e67d8c88665df59a71a032b3",
+          "requestDigest": "91d3acaac0439215c7e71ef3a54d6da7c5f4ffb067e2510a43a91457da279bda",
+          "scopeHash": "553129724f539d551adefa4f909181565ccc6131165aa2119cdfb4408b0f7fb7"
+        },
+        "bindingDigest": "0b6077221744da54706f766f8f210dcaaf765e85683f38160fab77eb7d20d930",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "32ce91ca987641d6654e32f0a3e1f70e5454bc74500e2b3b875c38f1d5740389",
+          "commentId": 6516086372,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41011256602,
+          "workflowSha": "e47558bf0180b922712ab2a3ba8f0fce9f800462"
+        },
+        "lineageAnchorCommitSha": "aa8a9b293aaf13b3562f387d663aa4b34b6f22eb",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+      "lockGeneration": 2997,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_CINEMATIC_DESTINATION_20261030",
+      "operationId": "NINE_SUMMITS_PEACE_CINEMATIC_ARRIVAL_20261030_001",
+      "procedureLocatorDigest": "f22fc6d1fce7b28c4bde65eaab56d7ce996a6657e67d8c88665df59a71a032b3",
+      "released": true,
+      "requestDigest": "91d3acaac0439215c7e71ef3a54d6da7c5f4ffb067e2510a43a91457da279bda",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "553129724f539d551adefa4f909181565ccc6131165aa2119cdfb4408b0f7fb7",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

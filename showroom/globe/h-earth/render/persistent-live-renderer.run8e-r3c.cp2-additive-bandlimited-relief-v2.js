@@ -704,6 +704,273 @@ ${RENDERED_BEACH_GLSL}
 ${HILLSIDE_SHORELINE_GLSL}
 ${LANDSCAPE_COHERENCE_GLSL}
 ${FOOTHILL_MEADOW_GLSL}
+// H_EARTH_INLAND_REFERENCE_V1_BEGIN
+vec3 inlandBroadReference(vec3 referencePosition,vec3 referenceNormal,float referenceCoast){
+  float slope=1.0-clamp(referenceNormal.y,0.0,1.0);
+    vec2 world=referencePosition.xz;
+    float broad=noise2(world*0.035);
+    float medium=noise2(world*0.13+vec2(17.0,-9.0));
+    float grain=0.5;
+    float macroField=noise2(world*0.018+vec2(5.0,-11.0));
+    float mesoField=noise2(world*0.082+vec2(-13.0,7.0));
+    float detailField=0.5;
+    float elevationMix=smoothstep(-1.0,34.0,referencePosition.y);
+    float slopeResponse=smoothstep(0.025,0.58,slope);
+    
+    float curvatureResponse=0.0;
+    
+    
+    float lowlandWeight=(1.0-smoothstep(5.0,24.0,referencePosition.y))*(1.0-smoothstep(0.10,0.42,slope));
+    float risingWeight=smoothstep(3.0,30.0,referencePosition.y)*(1.0-smoothstep(0.34,0.66,slope));
+    float exposedWeight=clamp(smoothstep(0.18,0.62,slope)*0.82+curvatureResponse*0.18,0.0,1.0);
+    float regimeTotal=max(lowlandWeight+risingWeight+exposedWeight,0.00001);
+    lowlandWeight/=regimeTotal;
+    risingWeight/=regimeTotal;
+    exposedWeight/=regimeTotal;
+    vec3 lowland=vec3(0.27,0.30,0.18);
+    vec3 rising=vec3(0.34,0.32,0.20);
+    vec3 exposed=vec3(0.29,0.28,0.25);
+    vec3 palette=lowland*lowlandWeight+rising*risingWeight+exposed*exposedWeight;
+
+    
+    
+    
+    vec3 triWeight=pow(abs(referenceNormal),vec3(4.0));
+    triWeight/=max(triWeight.x+triWeight.y+triWeight.z,0.00001);
+    vec2 triX=referencePosition.zy*0.115;
+    vec2 triY=referencePosition.xz*0.115;
+    vec2 triZ=referencePosition.xy*0.115;
+    float triCoarse=
+      noise2(triX+vec2(13.1,-7.7))*triWeight.x+
+      noise2(triY+vec2(-19.3,11.9))*triWeight.y+
+      noise2(triZ+vec2(31.7,23.5))*triWeight.z;
+    float triFine=0.5;
+    float triMicro=0.5;
+    float nearMaterial=0.0;
+    float triMaterial=clamp(triCoarse*0.56+triFine*0.31+triMicro*0.13*nearMaterial,0.0,1.0);
+    float materialVariation=clamp(
+      broad*0.24+medium*0.16+grain*0.04+macroField*0.08+triMaterial*0.48,
+      0.0,1.0
+    );
+    float rockExposure=clamp(
+      smoothstep(0.16,0.68,slope)*0.72+
+      curvatureResponse*0.18+
+      elevationMix*0.10,
+      0.0,1.0
+    );
+    float shelteredSoil=clamp(
+      (1.0-rockExposure)*(0.58+0.42*(1.0-slopeResponse))*
+      (0.78+0.22*materialVariation),
+      0.0,1.0
+    );
+    vec3 soilTone=mix(lowland,rising,elevationMix);
+    float weathering=clamp(
+      noise2(world*0.061+vec2(57.0,-83.0))*0.52+
+      triCoarse*0.30+triFine*0.18,
+      0.0,1.0
+    );
+    float fracture=clamp(abs(triFine-triCoarse)*1.75+abs(triMicro-0.5)*0.38*nearMaterial,0.0,1.0);
+    vec3 exposedRock=mix(vec3(0.175,0.185,0.178),vec3(0.355,0.335,0.285),weathering);
+    
+    
+    float mountainContactEdge=min(min(world.x+120.0,96.0-world.x),min(world.y+376.0,-224.0-world.y));
+    float mountainContact=smoothstep(0.0,12.0,mountainContactEdge);
+    exposedRock*=mix(0.82,1.13,fracture);
+    vec3 groundedSoil=mix(soilTone,vec3(0.285,0.255,0.165),triCoarse*0.30);
+    groundedSoil=mix(groundedSoil,vec3(0.205,0.235,0.135),shelteredSoil*(1.0-weathering)*0.22);
+    palette=mix(palette,groundedSoil,shelteredSoil*0.46);
+    palette=mix(palette,exposedRock,rockExposure*(0.62+0.20*fracture));
+    palette*=mix(0.89,1.11,materialVariation);
+    palette*=mix(0.94,1.06,triMicro*nearMaterial);
+    
+
+    float terrainWetness=clamp((1.0-elevationMix)*0.12+macroField*0.06,0.0,0.18);
+    if(uClearingEnabled==1){
+      
+      
+      float worldSoilSlope=1.0-smoothstep(0.16,0.59,slope);
+      float worldSoilRock=1.0-smoothstep(0.22,0.66,rockExposure);
+      float worldSoilCoast=smoothstep(2.0,29.0,referenceCoast);
+      float worldSoilEligibility=clamp(
+        worldSoilSlope*worldSoilRock*worldSoilCoast,0.0,1.0
+      );
+      
+      float worldSoilRegion=clamp(
+        macroField*0.48+mesoField*0.34+medium*0.18,0.0,1.0
+      );
+      float worldSoilPatchiness=mix(
+        0.88,1.0,smoothstep(0.10,0.92,worldSoilRegion)
+      );
+      float worldSoilCoverage=worldSoilEligibility*
+        worldSoilPatchiness*mix(0.94,1.0,shelteredSoil);
+      float worldSoilWeight=worldSoilCoverage;
+      if(worldSoilWeight>0.001){
+        
+        
+        vec3 worldSoilReference=vec3(0.10645195702908333,0.07287885330703674,0.03416460327775737);
+        
+        
+        
+        float worldSoilMoisture=clamp(
+          terrainWetness*0.70+(1.0-elevationMix)*0.18+
+          (macroField-0.5)*0.12,0.0,1.0
+        );
+        vec3 worldSoilEarthTint=mix(
+          vec3(1.14,1.06,0.90),
+          vec3(0.85,0.92,1.08),
+          worldSoilMoisture
+        );
+        worldSoilEarthTint=mix(
+          worldSoilEarthTint,vec3(1.10,1.12,1.08),
+          elevationMix*0.33
+        );
+        float worldSoilBroadTonal=mix(0.91,1.09,worldSoilRegion);
+        vec3 worldSoilActualAlbedo=
+          worldSoilReference*worldSoilEarthTint*worldSoilBroadTonal;
+        
+        
+        
+        float worldSoilCoastalAlbedoMix=smoothstep(
+          18.0,78.0,max(0.0,referenceCoast)
+        );
+        float worldSoilAlbedoAuthority=mix(
+          0.14,0.98,worldSoilCoastalAlbedoMix
+        );
+        vec3 worldSoilFinal=mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority);
+        palette=mix(palette,worldSoilFinal,worldSoilWeight);
+      }
+    }
+    
+    
+    
+    
+    
+    {
+      float inlandIdentity=smoothstep(
+        28.0,66.0,max(0.0,referenceCoast)
+      );
+      float identityNoise=noise2(world*0.023+vec2(41.0,-26.0));
+      float basinDistance=length(
+        (world-vec2(2.0,-179.0))/vec2(80.0,72.0)
+      );
+      
+      float shelteredBasin=1.0-smoothstep(
+        0.58,1.36,basinDistance+(identityNoise-0.5)*0.34
+      );
+      float fertilePatch=smoothstep(
+        0.42,0.68,
+        macroField*0.47+mesoField*0.38+detailField*0.15
+      );
+      float moistShelter=clamp(
+        shelteredBasin*0.70+
+        (1.0-slopeResponse)*fertilePatch*0.43,
+        0.0,1.0
+      );
+      float upperDry=smoothstep(
+        8.0,30.0,referencePosition.y
+      )*(1.0-moistShelter*0.74);
+      float mineralExposure=clamp(
+        rockExposure*0.78+smoothstep(0.25,0.58,slope)*0.45,
+        0.0,1.0
+      );
+      float coastalEarth=1.0-smoothstep(
+        48.0,112.0,max(0.0,referenceCoast)
+      );
+      
+      
+      
+      vec3 compactEarth=vec3(0.390,0.248,0.148);
+      vec3 coastalSilt=vec3(0.520,0.440,0.270);
+      vec3 fertileEarth=vec3(0.300,0.235,0.155);
+      vec3 shelteredEarth=vec3(0.235,0.188,0.130);
+      vec3 dryFoothill=vec3(0.480,0.315,0.140);
+      vec3 erodedMineral=vec3(0.355,0.333,0.305);
+      vec3 identityBase=mix(
+        compactEarth,coastalSilt,coastalEarth*0.74
+      );
+      identityBase=mix(
+        identityBase,fertileEarth,fertilePatch*0.83
+      );
+      identityBase=mix(
+        identityBase,shelteredEarth,moistShelter*0.88
+      );
+      identityBase=mix(
+        identityBase,dryFoothill,upperDry*0.82
+      );
+      identityBase=mix(
+        identityBase,erodedMineral,mineralExposure*0.92
+      );
+      identityBase*=0.86+0.22*materialVariation+
+        0.06*triFine*nearMaterial;
+      
+      float protectedGrove=1.0-smoothstep(
+        22.0,42.0,distance(world,vec2(-139.40268,-210.74617))
+      );
+      
+      
+      
+      float identityContrast=clamp(
+        0.48+0.10*abs(fertilePatch-0.5)*2.0+
+        0.08*mineralExposure,0.0,0.66
+      );
+      float identityWeight=inlandIdentity*
+        (1.0-protectedGrove)*identityContrast;
+      palette=mix(palette,identityBase,identityWeight);
+      
+      
+      
+      
+      
+      float groundcoverOasisX=max(max(-18.0-world.x,0.0),world.x-34.0);
+      float groundcoverOasisZ=max(max(-204.0-world.y,0.0),world.y+131.0);
+      float groundcoverEstateX=max(max(18.0-world.x,0.0),world.x-132.0);
+      float groundcoverEstateZ=max(max(-210.0-world.y,0.0),world.y+125.0);
+      
+      float groundcoverRouteT=clamp((world.y-world.x+192.0)/96.0,0.0,1.0);
+      float groundcoverRouteDistance=distance(
+        world,vec2(48.0-48.0*groundcoverRouteT,-144.0+48.0*groundcoverRouteT)
+      );
+      float groundcoverProtection=
+        smoothstep(0.0,12.0,length(vec2(groundcoverOasisX,groundcoverOasisZ)))*
+        smoothstep(0.0,10.0,length(vec2(groundcoverEstateX,groundcoverEstateZ)))*
+        smoothstep(4.0,9.0,groundcoverRouteDistance)*
+        (1.0-protectedGrove);
+      
+      
+      float groundcoverDomainX=(0.8*world.x-0.6*world.y)*0.018+5.0+0.65*(broad-0.5);
+      float groundcoverDomainZ=(0.6*world.x+0.8*world.y)*0.018-11.0+0.65*(macroField-0.5);
+      float groundcoverOrganic=noise2(vec2(groundcoverDomainX,groundcoverDomainZ));
+      float groundcoverPatch=smoothstep(
+        0.20,0.66,groundcoverOrganic*0.78+mesoField*0.22
+      );
+      float groundcoverSuitability=
+        smoothstep(28.0,72.0,max(0.0,referenceCoast))*
+        (1.0-smoothstep(0.12,0.42,slope))*
+        (1.0-smoothstep(0.18,0.58,rockExposure));
+      float groundcoverPatchContinuity=smoothstep(0.30,0.85,groundcoverPatch);
+      float groundcoverWeight=0.88*groundcoverPatch*
+        (1.0-0.25*groundcoverPatchContinuity)*
+        groundcoverSuitability*groundcoverProtection;
+      float groundcoverMoisture=clamp(
+        0.20+0.55*moistShelter+0.25*terrainWetness,0.0,1.0
+      );
+      float groundcoverDry=clamp(
+        (1.0-groundcoverMoisture)*(0.18+0.28*mesoField)+
+        slopeResponse*0.20,0.0,0.65
+      );
+      vec3 groundcoverTone=mix(
+        vec3(0.110,0.118,0.075),vec3(0.075,0.090,0.055),groundcoverMoisture
+      );
+      groundcoverTone=mix(
+        groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
+      );
+      groundcoverTone*=0.88+0.24*materialVariation;
+      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      
+    }
+  return palette;
+}
+// H_EARTH_INLAND_REFERENCE_V1_END
 void main(){
   vec2 localXZ=vec2(0.0);
   float clearingType=vMaterialModelCode==0u&&vMaterialParameters.w>1.5?vMaterialParameters.z:0.0;
@@ -1151,6 +1418,26 @@ void main(){
       );
       groundcoverTone*=0.88+0.24*materialVariation;
       palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // H_EARTH_INLAND_COMPOSED_BLEND_V1_BEGIN
+      // Filter the complete broad reference; carry native Q-Q0 detail unchanged.
+      // Neighbor heights use the center tangent plane, not new geometry.
+      float inlandBlendEnvelope=groundcoverProtection*
+        smoothstep(112.0,144.0,vCoastDistanceMeters)*
+        (1.0-smoothstep(0.12,0.42,slope))*
+        (1.0-smoothstep(0.18,0.58,rockExposure));
+      if(inlandBlendEnvelope>0.0){
+        vec3 inlandQ0=inlandBroadReference(vWorldPosition,geometricNormal,vCoastDistanceMeters);
+        float inlandNy=max(geometricNormal.y,0.1);
+        vec3 inlandDx=vec3(12.0,-12.0*geometricNormal.x/inlandNy,0.0);
+        vec3 inlandDz=vec3(0.0,-12.0*geometricNormal.z/inlandNy,12.0);
+        vec3 inlandFiltered=0.5*inlandQ0+0.125*(
+          inlandBroadReference(vWorldPosition-inlandDx,geometricNormal,vCoastDistanceMeters)+
+          inlandBroadReference(vWorldPosition+inlandDx,geometricNormal,vCoastDistanceMeters)+
+          inlandBroadReference(vWorldPosition-inlandDz,geometricNormal,vCoastDistanceMeters)+
+          inlandBroadReference(vWorldPosition+inlandDz,geometricNormal,vCoastDistanceMeters));
+        palette+=inlandBlendEnvelope*(inlandFiltered-inlandQ0);
+      }
+      // H_EARTH_INLAND_COMPOSED_BLEND_V1_END
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END

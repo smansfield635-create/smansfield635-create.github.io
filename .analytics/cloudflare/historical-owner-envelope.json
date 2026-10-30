@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-30T12:34:34Z",
+  "generatedAt": "2026-10-30T13:27:25Z",
   "window": {
-    "start": "2026-08-01T12:34:34Z",
-    "end": "2026-10-30T12:34:34Z"
+    "start": "2026-08-01T13:27:25Z",
+    "end": "2026-10-30T13:27:25Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4388,
-    "visits": 1327,
+    "pageLoads": 4358,
+    "visits": 1297,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4388,
-        "visits": 1327
+        "pageLoads": 4358,
+        "visits": 1297
       }
     },
     "byPath": {
@@ -43,7 +43,7 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 967,
+        "pageLoads": 977,
         "visits": 717
       },
       "/laws/research/evidence-and-sources/": {
@@ -55,7 +55,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 91,
+        "pageLoads": 81,
         "visits": 10
       },
       "/showroom/globe/audralia/": {
@@ -63,7 +63,7 @@
         "visits": 10
       },
       "/governance/": {
-        "pageLoads": 80,
+        "pageLoads": 60,
         "visits": 10
       },
       "/index.html": {
@@ -111,7 +111,7 @@
         "visits": 0
       },
       "/build/": {
-        "pageLoads": 40,
+        "pageLoads": 20,
         "visits": 0
       },
       "/compass-isolated-clone/": {
@@ -159,7 +159,7 @@
         "visits": 0
       },
       "/laws/categories/reality/": {
-        "pageLoads": 50,
+        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
@@ -203,7 +203,7 @@
         "visits": 20
       },
       "/door/": {
-        "pageLoads": 10,
+        "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
@@ -238,7 +238,11 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/explore/frontier/": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -271,8 +275,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 270,
-        "visits": 80
+        "pageLoads": 260,
+        "visits": 70
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 10,
@@ -287,12 +291,12 @@
         "visits": 0
       },
       "/home/": {
-        "pageLoads": 20,
-        "visits": 20
+        "pageLoads": 10,
+        "visits": 10
       },
       "/governance-bridge/": {
-        "pageLoads": 160,
-        "visits": 130
+        "pageLoads": 150,
+        "visits": 120
       },
       "/analytics/": {
         "pageLoads": 40,
@@ -317,18 +321,14 @@
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 767,
-        "visits": 767
+        "pageLoads": 747,
+        "visits": 747
       },
       "(none)": {
         "pageLoads": 540,
         "visits": 540
       },
       "raw.githack.com": {
-        "pageLoads": 10,
-        "visits": 10
-      },
-      "com.google.android.googlequicksearchbox": {
         "pageLoads": 10,
         "visits": 10
       }

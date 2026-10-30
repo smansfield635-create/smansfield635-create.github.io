@@ -1,0 +1,24 @@
+{
+  "schema": "H_EARTH_GEN3000_CAMERA_SHORTLIST_MANIFEST_v1",
+  "files": {
+    "test_steep_side_camera_plan.py": {
+      "sha256": "89532221d40bc2583f043108097a100a941982fb1570feb6ea0dc661709b2a3c",
+      "bytes": 1933
+    },
+    "steep_camera_plan.json": {
+      "sha256": "268dd9bf057dd3bfe6a9a75ed6b06d4ebb48e85a661df655a8b09aa8ad2573b9",
+      "bytes": 3695
+    },
+    "steep_side_camera_plan.py": {
+      "sha256": "48b2d51982b39c016c8c5e48d303cf057a14aff81abd659e27793738277bee4b",
+      "bytes": 5041
+    },
+    "README.md": {
+      "sha256": "fdec2861c3ece47cd919278885496441931b464829b4161c5c5b4a9ab16fa2e6",
+      "bytes": 5665
+    }
+  },
+  "execution": "SOURCE_ONLY",
+  "gpuDispatched": false,
+  "productChanged": false
+}

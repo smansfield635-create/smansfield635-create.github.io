@@ -1,0 +1,76 @@
+{
+  "schema": "H_EARTH_INLAND_COMPOSED_BLEND_WEST_VISUAL_REVIEW_v1",
+  "operationGeneration": 2984,
+  "workflowRun": 40982658000,
+  "artifactId": 12945683021,
+  "artifactSha256": "b1c385005dae98465a03b9fbb5f1fa2409c0ad827f660310da71dcc75d05e720",
+  "reviewer": "WEST_INDEPENDENT_REVIEW",
+  "actualImagesInspected": 12,
+  "hashesVerified": true,
+  "result": "RETAIN_BOUNDED_CANDIDATE_OWNER_SHARP_CONTOUR_UNRESOLVED",
+  "findings": {
+    "inland-seam-near": "Subtle broad tonal softening; foreground grain remains plainly visible. No conspicuous new discontinuity or loss of horizon shape observed.",
+    "inland-seam-far": "Broad middle-distance tonal bands appear softer and less contrasty. Foreground texture remains. Improvement is modest at this captured resolution.",
+    "owner-approach": "Small broad shading changes, with existing grain and horizon preserved. This frame does not reproduce a recognizable sharp owner contour.",
+    "owner-lateral": "Subtle smoothing of broad middle-distance tonal variation; fine visible texture retained. Exact reported contour not demonstrated.",
+    "protected-meadow": "Visually unchanged; PNG byte-identical. Grass, bank, water and shoreline appearance retained.",
+    "protected-coast": "Visually unchanged; PNG byte-identical. Beach and water appearance retained."
+  },
+  "disposition": "Keep exact candidate as a bounded inland broad-transition improvement for owner review; do not claim the specific sharp boundary fixed or authorize publication from this review.",
+  "limits": [
+    "Visual evidence is limited to six frozen poses at384x688; all-image success is not a global fix.",
+    "Detail preservation observed in the visible fine texture; this is not a quantitative spectral or physical-device performance proof.",
+    "The reported sharp winding contour is not independently reproduced in these frames."
+  ],
+  "nextCheckpoint": "Present the actual paired inland images with the exact candidate identity for owner KEEP/ONE_REPAIR/REJECT disposition; retain unresolved sharp-contour claim explicitly.",
+  "images": [
+    {
+      "path": "/tmp/inland-result/baseline/inland-seam-near.png",
+      "sha256": "9bffc6add0b160dfef61f53c1f066886740d12db1874c892adf54958a5a23120"
+    },
+    {
+      "path": "/tmp/inland-result/candidate/inland-seam-near.png",
+      "sha256": "4867aa3fdb16542bb7d84b2014775d3320a207e0413a0d415adb1a6e623be380"
+    },
+    {
+      "path": "/tmp/inland-result/baseline/inland-seam-far.png",
+      "sha256": "79dd8df1462d34ac41231184b4db5a3bd9752dd9126d28aa39948756f4a9eb97"
+    },
+    {
+      "path": "/tmp/inland-result/candidate/inland-seam-far.png",
+      "sha256": "65f2434a21f90b3970d252eabb8502781cdba469fb590a9b12d5120d2c622042"
+    },
+    {
+      "path": "/tmp/inland-result/baseline/owner-approach.png",
+      "sha256": "862361d7b67e6747eba4f64a6d49769da8975cfdcfb3e35342b9f87ab346e8ec"
+    },
+    {
+      "path": "/tmp/inland-result/candidate/owner-approach.png",
+      "sha256": "ddbb89b6677e1146ad1f14b28ae12a774ddefc8cfb9eafb1cbc7b381eaf516ae"
+    },
+    {
+      "path": "/tmp/inland-result/baseline/owner-lateral.png",
+      "sha256": "6a215e02fe9229217bc3fa434fb69e456880bcc37d4fa20cc13312106bf1b6f9"
+    },
+    {
+      "path": "/tmp/inland-result/candidate/owner-lateral.png",
+      "sha256": "07558c65643579f0832f1859b7ca48c69c7d0873d2c4b23a3ddcbca80fc99395"
+    },
+    {
+      "path": "/tmp/inland-result/baseline/protected-meadow.png",
+      "sha256": "ccf449a76652d344494bd37d6cbde28d829183bed57c8a52bd046989ab200146"
+    },
+    {
+      "path": "/tmp/inland-result/candidate/protected-meadow.png",
+      "sha256": "ccf449a76652d344494bd37d6cbde28d829183bed57c8a52bd046989ab200146"
+    },
+    {
+      "path": "/tmp/inland-result/baseline/protected-coast.png",
+      "sha256": "bc91a0a715e5a2fccde9df3752ce139138f203f58437cdbd109c4ac5820f3e79"
+    },
+    {
+      "path": "/tmp/inland-result/candidate/protected-coast.png",
+      "sha256": "bc91a0a715e5a2fccde9df3752ce139138f203f58437cdbd109c4ac5820f3e79"
+    }
+  ]
+}

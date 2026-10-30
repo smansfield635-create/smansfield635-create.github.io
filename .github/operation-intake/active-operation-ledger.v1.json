@@ -10212,6 +10212,50 @@
       "scopeHash": "7514c09859cffc07a70bcb5d0aebf9eb7b036a812b05192a73ff6b1f2de8ad8d",
       "state": "ADMITTED_LOCKED"
     },
+    "754f41d2cebc1581ebf10195c082260b854a8bb8c7122c0e32fca6b2c0661280": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d55e322ed9b5172caf7e503383c3c1dd9557fc1e",
+          "lockGeneration": 2986,
+          "lockScope": "H_EARTH:HABITAT_EDGE_VISUAL_BINDING_20261029",
+          "operationId": "H_EARTH_HABITAT_EDGE_VISUAL_BINDING_20261029_001",
+          "procedureLocatorDigest": "903bba4a54376d0b8eddbcb61c0ce5e64eec15185620d283238a9843b8130c44",
+          "requestDigest": "ed282416f181e4523680939dcb6e9dc07de9ba6181c188a551de809906285422",
+          "scopeHash": "754f41d2cebc1581ebf10195c082260b854a8bb8c7122c0e32fca6b2c0661280"
+        },
+        "bindingDigest": "817a7bb777640aab97792f676e0ebc633b5fcb0381662044e43c2ab4dd138ea2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e610a088c52c2c92b4ab24c8c81914da51905c5c69e51b048f6a527761455fd7",
+          "commentId": 6512680182,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40986142933,
+          "workflowSha": "d55e322ed9b5172caf7e503383c3c1dd9557fc1e"
+        },
+        "lineageAnchorCommitSha": "b74faeebc0615d6f5d2bb62757fef3bc0f7ececb",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d55e322ed9b5172caf7e503383c3c1dd9557fc1e",
+      "lockGeneration": 2986,
+      "lockScope": "H_EARTH:HABITAT_EDGE_VISUAL_BINDING_20261029",
+      "operationId": "H_EARTH_HABITAT_EDGE_VISUAL_BINDING_20261029_001",
+      "procedureLocatorDigest": "903bba4a54376d0b8eddbcb61c0ce5e64eec15185620d283238a9843b8130c44",
+      "released": false,
+      "requestDigest": "ed282416f181e4523680939dcb6e9dc07de9ba6181c188a551de809906285422",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "754f41d2cebc1581ebf10195c082260b854a8bb8c7122c0e32fca6b2c0661280",
+      "state": "ADMITTED_LOCKED"
+    },
     "75508a963f93e61cfd2d9a19abb78f2137d2a3d7c6a56352d429c7dd1a5e8dde": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -23391,7 +23435,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2985,
+  "lockGeneration": 2986,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

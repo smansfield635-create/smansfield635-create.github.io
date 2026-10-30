@@ -1,3 +1,7 @@
+# Current status: bounded renderer candidate prepared
+
+See [CANDIDATE.md](CANDIDATE.md) for the current implementation, independent numeric/code checks and remaining visual qualification. The earlier no-runtime statements below describe the preserved rejected prototypes, not the current branch.
+
 # Two-dimensional material-margin construction — not a visual repair
 
 Operation `H_EARTH_MATERIAL_MARGIN_2D_20261030_001`, admission generation2992, [authentic receipt](https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6911#issuecomment-6514608029). Construction base `dd0537705077c1c0e8b704f47feebf6f58babb2e` has unchanged H-Earth product bytes from published260c665.

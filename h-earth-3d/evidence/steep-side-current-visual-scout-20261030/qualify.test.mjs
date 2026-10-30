@@ -96,7 +96,7 @@ test('source poses never claim photographed material-border reproduction',()=>{
 
 test('Gen3003 regression: immutable source Git blobs and inherited helper SHA-256 are distinct custody domains',()=>{
  const workflow=readFileSync(new URL('../../../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
- const section=workflow.split('  # Gen3003: precisely three lit current product images, no general agent execution.')[1];
+ const section=workflow.split('  # Gen3005: recovery of verified pre-GPU SHA-domain failure, exactly three lit current-product images.')[1];
  assert.ok(section,'GEN3003_JOB_MISSING');
  assert.ok(section.includes("const gitBlob=p=>execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim();"));
  assert.ok(section.includes("const sha256=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');"));

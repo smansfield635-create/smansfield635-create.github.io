@@ -1,0 +1,36 @@
+✔ native renderer slice corruption is rejected (8.555588ms)
+✔ real contact and captured seam are reconstructed (0.699194ms)
+✔ attribute geometry matches prior independent geometry checkpoint (0.716611ms)
+✔ GPU coast is distinct while every other generated support attribute stays equal (0.609407ms)
+✔ every emitted buffer has expected bytes and finite values (616.263381ms)
+✔ native rim uses raw source at boundary and preserves interior (23.347727ms)
+✔ source classification algebra, eligibility and adjacency regressions (2588.674728ms)
+✔ independent symmetric attribution proof across 1000 traces (1177.041266ms)
+✔ RGB composition reproduces direct Site B for 10000 seeded operand sets (136.685289ms)
+✔ zero and full masks preserve protected input or replace exactly (1.370167ms)
+✔ channel gain counterexample cannot use shared scalar A (0.212174ms)
+✔ missing textures remain unresolved rather than zero coverage (0.276896ms)
+✔ wrong stage order, duplicate and undeclared stages rejected (4.790115ms)
+✔ nonfinite operands and invalid masks rejected (0.298017ms)
+✔ source hash mutation fails closed (1.5379ms)
+✔ generated rock and water never enter soil correction (4.518963ms)
+✔ exact source coordinate inverse round trips boundaries and Float32 (8.394589ms)
+✔ layer census distinguishes edges, coheight overlaps and separated layers (426.096915ms)
+✔ ordered stage and fixture regressions (1295.81176ms)
+✔ ordered source helper custody is exact and rejects a changed byte (3.282678ms)
+✔ independent native helper and affine replay (1001.527555ms)
+✔ sand segment clipping, continuous bound and contact gate regressions (475.104815ms)
+✔ installed habitat reproduces captured root and texel counters (3.63759ms)
+✔ all resident/atlas/decoded input outputs match committed hashes (113.180384ms)
+✔ native atlas remapping preserves retirement and rejects parent drift (10.07462ms)
+✔ CPU bilinear filtering and ray-plane derivatives have analytic controls (369.336211ms)
+✔ captured witnesses use actual viewport and disclose extrapolated helpers (1.752956ms)
+✔ asset transport is local-only and rejects paths outside prepared source (0.812546ms)
+ℹ tests 28
+ℹ suites 0
+ℹ pass 28
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4070.173793

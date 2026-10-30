@@ -1,0 +1,160 @@
+{
+  "schema": "H_EARTH_SAND_SEGMENT_INDEPENDENT_GEOMETRY_v1",
+  "scope": "All nondegenerate retained census triangles intersected independently using GEOS; original ocean omitted from census; no GPU/visibility/repair acceptance.",
+  "surfaceInventory": [
+    "original-near",
+    "original-far",
+    "ERODED_TERRAIN",
+    "MOUNTAIN_OVERBURDEN",
+    "NATURAL_CLIFF_FACE",
+    "CAVERN_PHYSICAL_SHELL",
+    "FRESHWATER_RIVER",
+    "OASIS_WATER"
+  ],
+  "openOceanIntersections": [
+    {
+      "piece": 0,
+      "triangleWithinSpan": 5703,
+      "pieceFraction": [
+        0.0,
+        0.9999790200170863
+      ],
+      "terrainMinusOceanYEndpoints": [
+        0.06039864454777248,
+        -0.06831306935159659
+      ]
+    },
+    {
+      "piece": 0,
+      "triangleWithinSpan": 5926,
+      "pieceFraction": [
+        0.9999790200170863,
+        1.0
+      ],
+      "terrainMinusOceanYEndpoints": [
+        -0.06831306935159659,
+        -0.06831576857889128
+      ]
+    },
+    {
+      "piece": 1,
+      "triangleWithinSpan": 5926,
+      "pieceFraction": [
+        0.0,
+        0.9999999999999998
+      ],
+      "terrainMinusOceanYEndpoints": [
+        -0.06831576857889035,
+        -0.10718849678611507
+      ]
+    }
+  ],
+  "intersections": [
+    {
+      "surface": "original-near",
+      "triangleIndex": 11397,
+      "correctionHook": true,
+      "interval": [
+        0.0,
+        0.4999996992120117
+      ],
+      "endpointInputs": [
+        {
+          "world": [
+            -165.0000196607288,
+            0.022941488541774885,
+            -129.00002038950157
+          ],
+          "normal": [
+            -0.03654737169553436,
+            0.996063865838976,
+            0.06995087421769888
+          ],
+          "contactDistance": 0.590059013315438,
+          "coastDistance": 12.943865069496999
+        },
+        {
+          "world": [
+            -164.99997067384155,
+            -0.10543955699045963,
+            -127.99997901914914
+          ],
+          "normal": [
+            -0.043859860131865276,
+            0.9955716141411546,
+            0.06926924959094105
+          ],
+          "contactDistance": -0.2398661896357344,
+          "coastDistance": 12.025767232683904
+        }
+      ],
+      "slopeUpperBound": 0.0033737736281402864,
+      "worldYMax": 0.022941488541774885,
+      "protectionOuterClearances": {
+        "grove": 43.660123592303506,
+        "oasis": 135.01362419414423,
+        "estate": 172.99997067384155,
+        "route": 159.0743555084908
+      },
+      "thresholds": [
+        {
+          "contact": 0,
+          "t": 0.35548905868377767
+        }
+      ]
+    },
+    {
+      "surface": "original-near",
+      "triangleIndex": 11588,
+      "correctionHook": true,
+      "interval": [
+        0.4999996992120117,
+        1.0
+      ],
+      "endpointInputs": [
+        {
+          "world": [
+            -164.99997067384152,
+            -0.10543955699045868,
+            -127.99997901914912
+          ],
+          "normal": [
+            -0.043859860131865186,
+            0.9955716141411545,
+            0.069269249590941
+          ],
+          "contactDistance": -0.239866189635735,
+          "coastDistance": 12.025767232683902
+        },
+        {
+          "world": [
+            -164.9999551564983,
+            -0.14403608491051317,
+            -126.99996780338186
+          ],
+          "normal": [
+            -0.04278423738448059,
+            0.9958223634330434,
+            0.06401724595765419
+          ],
+          "contactDistance": -1.112783000904236,
+          "coastDistance": 11.032056453512356
+        }
+      ],
+      "slopeUpperBound": 0.0033737736281402864,
+      "worldYMax": -0.10543955699045868,
+      "protectionOuterClearances": {
+        "grove": 44.614972214280485,
+        "oasis": 135.0305801661539,
+        "estate": 172.99995515649832,
+        "route": 158.88681665174653
+      },
+      "thresholds": [
+        {
+          "contact": -1,
+          "t": 0.9353987302708224
+        }
+      ]
+    }
+  ]
+}

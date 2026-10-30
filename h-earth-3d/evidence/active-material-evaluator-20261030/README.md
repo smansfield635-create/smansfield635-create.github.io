@@ -35,6 +35,10 @@ The next source-attribute checkpoint is now implemented in [ATTRIBUTES.md](ATTRI
 
 [CLASSIFICATION.md](CLASSIFICATION.md) records the 40,960-center conditional coefficient census, deterministic edge ranking, independent review and bounded next action. This is source evidence, not visual acceptance.
 
+## Sand boundary trace follow-up
+
+[SAND_TRACE.md](SAND_TRACE.md) explains the strongest ranked pair as a native water-contact sand fade, checks continuous terrain/protected context and separately intersects the original ocean omitted from the census. This pair does not establish an inland repair target.
+
 ## Original checkpoint boundary (historical)
 
 **Complete material coefficients remain unresolved for all grid points.** The attribute follow-up now supplies rendered rim normals, coast/contact fields, base colors and material parameters. Actual shoreline/habitat textures and native atlas addressing are now supplied by the texture follow-up. Ordered stage composition, general camera derivatives and exact soil mip sampling remain unresolved. Unknown stages return `UNRESOLVED` with null coefficients; they are never assumed to have zero influence. Dynamic refinement and final lighting are outside this snapshot.

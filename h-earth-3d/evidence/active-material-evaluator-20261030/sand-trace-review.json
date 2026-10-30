@@ -1,0 +1,31 @@
+{
+  "schema": "H_EARTH_SAND_TRACE_INDEPENDENT_REVIEW_v1",
+  "verdict": "PASS_BOUNDED_NATIVE_CONTACT_GATE_TRACE",
+  "reviewedHashes": {
+    "trace_sand.py": "c88825fcea1b41a9a640e2fbe28687effd88d320de3edb08f06e3b805eaad5de",
+    "sand-trace.json": "cc2a387f5d91e34354b39fcbf0555392766513e9f6b2d5cccae5bc909c297d96",
+    "independent-sand-geometry.json": "96dd116b13af036df419c37efae1c0593edfcfbcf59948aca90fae462e2363f1",
+    "test_sand_trace.py": "5983649b131e677a87f21ce538a3facd6b5e8dd1acf72994b1916d8cc03b73fd"
+  },
+  "scope": {
+    "independentGeometryMethod": "GEOS polygon-line intersections, independent from candidate affine halfspace clipper",
+    "retainedTriangleIntersections": 2,
+    "uploadedOceanIntersections": 3,
+    "sourceAttributeAndSandGateQueriesVerified": 72,
+    "maximumNumericDifference": 5.684341886080802e-14,
+    "fullMaterialModelReplayed": false
+  },
+  "findings": [
+    "Sand coverage equals native smoothstep(-1,0,interpolated contact) throughout the two retained terrain pieces.",
+    "Analytic conservative slope and height bounds prove other coverage factors equal one; all protected outer-fringe clearances positive.",
+    "Uploaded original ocean co-support spans the full segment within binary64 tolerance; terrain-ocean relative height changes sign.",
+    "Interpolated contact zero is not identical to geometric terrain-ocean height crossing; native contact field is a vertex-sampled signed distance interpolated in the shader.",
+    "Evidence identifies the existing shoreline contact mechanism and does not establish a defect or repair target."
+  ],
+  "limits": [
+    "No GPU, depth visibility, walkability, actual substrate RGB, final lighting or visual acceptance.",
+    "All geometry is affine native-array reconstruction in binary64, not exact rational or GPU arithmetic.",
+    "Independent source attribute and sand-gain replay covers72 reported parent queries; it does not reproduce all material coefficients.",
+    "No mutation, correction, merge, deployment or publication permission."
+  ]
+}

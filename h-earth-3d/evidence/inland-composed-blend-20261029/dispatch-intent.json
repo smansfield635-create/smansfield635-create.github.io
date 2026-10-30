@@ -1,0 +1,24 @@
+{
+  "schema": "H_EARTH_INLAND_BLEND_DISPATCH_INTENT_v1",
+  "operationId": "H_EARTH_INLAND_COMPOSED_BLEND_20261029_001",
+  "lockGeneration": 2984,
+  "admissionRun": 40981962767,
+  "candidateHead": "e11fb87cf564744cb346bb8dae7b129e8cfc295c",
+  "toolingHead": "e11fb87cf564744cb346bb8dae7b129e8cfc295c",
+  "baselineHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+  "frameCap": 12,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "e8c1ca8b923672ec14aa3e082346bd73bab84bf3cf4fdd5e3bd0e089b5f80b85",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/blend.test.mjs": "c2d95ecb04b62bdbba2e147964fbd0d180c39ddbbbb936380cc7a732cc060659",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/product-binding.json": "33dc0265e66399f9b3630d01315dfcdd385638aec3ba3100a72754ee974cf8c8",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/qualify.mjs": "8eef8c98cada356aa445f303ae468f127478682108bb1d1061be06039b78f7f1",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/qualify.test.mjs": "5587855b437d2993dd38d1b21eb805b2d742ff92eff7050615ea9717f79f54cb",
+    "h-earth-3d/evidence/inland-composed-blend-20261029/warmup.test.mjs": "b9a3f22a33e7301469a3a885307b04464d7dfdd959d5a17c098e0976fe956d40",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "b55e26ea7cfdc73df298f6756a1e85615aa4069f64dcd6a3a2baa681cb23cd30",
+    "showroom/globe/h-earth/vegetation-prototype/route.js": "e8405e00e6a40d16fabb6b03f4f24364ffd4ed5b0aeffd5fe4720f8ee83747e8"
+  },
+  "pullRequest": 6990,
+  "launchTransport": "SAME_REPOSITORY_PR_EXACT_HEAD"
+}

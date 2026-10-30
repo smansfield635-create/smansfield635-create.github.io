@@ -1,0 +1,26 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "h-earth-gen3005-terminal-close-6534355626",
+  "capabilityId": "REMOTE_OPERATION_TERMINAL_CLOSURE",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7022,
+  "requestBranch": "ai-dispatch-request-hearth-gen3005-close-6534355626",
+  "requestCommit": "2d0d12118decc263cf6c817b68e63c6a59a70674",
+  "requestCommitParent": "a029824df5c79dd9501224f1ae8c14f6d110bc7b",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "a029824df5c79dd9501224f1ae8c14f6d110bc7b",
+  "workflow": "remote-operation-terminal-closure-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "request_json": "REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1\n{\"schema\":\"REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_v1\",\"repository\":\"smansfield635-create/smansfield635-create.github.io\",\"operationId\":\"H_EARTH_STEEP_SIDE_CURRENT_SCOUT_HASH_REPAIR_20261030_001\",\"lockScope\":\"H_EARTH:STEEP_SIDE_CURRENT_VISUAL_SCOUT_20261030\",\"lockGeneration\":3005,\"terminalDisposition\":\"FAIL_CLOSED\"}",
+    "router_callback_issue": "7022",
+    "router_callback_repository": "smansfield635-create/smansfield635-create.github.io"
+  },
+  "bridgeRunId": "41134820306",
+  "dispatchedRunId": 41134835483,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/41134835483",
+  "dispatchedRunHeadSha": "a029824df5c79dd9501224f1ae8c14f6d110bc7b",
+  "dispatchedAt": "2026-10-30T21:57:57.462Z",
+  "resolvedAt": "2026-10-30T21:58:03.784Z"
+}

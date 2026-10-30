@@ -779,7 +779,7 @@ function drawEmberWorld(t){if(!emberGL)return;
 const PEACE_CINEMA_IMAGE='./peace.environment.svg?cb=peace-v9-directional-advection';
 let peaceWaterCanvas=null,peaceWaterContext=null,peaceWaterLast=0;
 let peaceCloudCanvas=null,peaceCloudContext=null,peaceCloudLast=0,peaceGeometryScheduled=false;
-let peaceCloudBanks=[],peaceSafeWaterMask=null,peaceWaveFieldCanvas=null,peaceWaveFieldContext=null,peaceWaveFieldPixels=null;
+let peaceCloudBanks=[],peaceSafeWaterMask=null,peaceSafeSkyMask=null,peaceWaveFieldCanvas=null,peaceWaveFieldContext=null,peaceWaveFieldPixels=null,peaceWaveSourcePixels=null,peaceWaveMaskPixels=null;
 let peaceCinemaState='loading',peaceCinemaLayer=null,peaceCinemaPhoto=null,peaceCinemaLastX=0,peaceCinemaLastY=0;
 let peaceBaseSource=null,peaceCloudSource=null,peaceWaterMaskSource=null,peaceLayerSourcesPromise=null,peaceMotionStartedAt=0;
 const peaceCinemaPreload=new Image();
@@ -816,20 +816,14 @@ function ensurePeaceCinema(){
  object-fit:cover;object-position:50% 50%;max-width:none;max-height:none;
  transform-origin:50% 50%;transform:scale(var(--peace-arrival-scale,1.22));
  transition:transform .18s linear;opacity:0}
- #peace-encounter .peace-cinema-image{z-index:0;filter:saturate(1.08) contrast(1.04) blur(1px);transition:transform .18s linear,filter 1.1s ease}
+ #peace-encounter .peace-cinema-image{z-index:0;filter:none;transition:transform .18s linear}
  #peace-encounter .peace-cinema-clouds{z-index:1;pointer-events:none;mix-blend-mode:normal}
  #peace-encounter .peace-cinema-water{z-index:2;pointer-events:none;mix-blend-mode:normal}
  #peace-encounter .peace-cinema-ready .peace-cinema-image,#peace-encounter .peace-cinema-ready .peace-cinema-clouds,#peace-encounter .peace-cinema-ready .peace-cinema-water{opacity:1}
- #peace-encounter .peace-cinema-ready .peace-cinema-image{filter:saturate(1.08) contrast(1.04) blur(0)}
+ #peace-encounter .peace-cinema-ready .peace-cinema-image{filter:none}
  #peace-encounter.peace-cinema-active #peace-world-canvas{position:absolute;inset:0;z-index:3;opacity:.64;pointer-events:none}
  #peace-encounter .peace-cinema-stage{z-index:1}
- #peace-encounter .peace-cinema-light{position:absolute;inset:0;z-index:4;opacity:.84;mix-blend-mode:screen;
- background:radial-gradient(ellipse at 20% 22%,rgba(255,240,184,.18),transparent 45%),linear-gradient(125deg,rgba(14,88,132,.22),transparent 42%);}
- #peace-encounter .peace-cinema-vignette{position:absolute;inset:0;z-index:5;
- background:linear-gradient(180deg,rgba(4,19,32,.14),transparent 23%,transparent 50%,rgba(3,12,21,.62) 100%);}
- #peace-encounter .peace-cinema-veil{position:absolute;inset:-5%;z-index:6;
- background:radial-gradient(ellipse at 50% 54%,rgba(221,244,249,.9) 0%,rgba(198,232,243,.33) 46%,rgba(166,216,232,0) 80%);
- opacity:var(--peace-atmos-opacity,0);transform:scale(var(--peace-atmos-scale,1));}
+ /* V11 LAND_LOCK: no full-frame light, glow, veil or moving luminance overlays. */
  #peace-encounter.peace-cinema-active #peace-world-canvas{opacity:.64;pointer-events:none;}
  #peace-encounter .peace-world-hud{z-index:9;}
  #peace-encounter .peace-horizon-mark{z-index:9;}
@@ -837,7 +831,7 @@ function ensurePeaceCinema(){
  `;
  peaceOverlay.appendChild(style);
  const layer=document.createElement('div');layer.className='peace-cinema-stage';layer.setAttribute('aria-hidden','true');
- layer.innerHTML='<div class="peace-cinema-light"></div><div class="peace-cinema-vignette"></div><div class="peace-cinema-veil"></div>';
+ layer.innerHTML=''; // no global optical overlays over geography
  const photo=document.createElement('img');photo.className='peace-cinema-image';photo.alt='';photo.decoding='async';
  photo.onload=()=>{
   if(photo.naturalWidth>0&&peaceCinemaState!=='error'){
@@ -888,8 +882,10 @@ function loadPeaceCinemaSourceLayers(){
    peaceBaseSource=base;peaceCloudSource=cloud;peaceWaterMaskSource=waterMask;
    // Cloud motions are coherent source-image regions; the land image never moves.
    peaceCloudBanks=peaceBuildCloudBanks(cloud);
-   // Strict, eroded water interior: no moving pixels may touch land boundaries.
-   peaceSafeWaterMask=peaceBuildSafeWaterMask(waterMask);
+   peaceSafeSkyMask=peaceBuildSafeSkyMask();
+   // Independent exclusion of land plus matte+seawater checks; fail closed.
+   peaceSafeWaterMask=peaceBuildSafeWaterMask(waterMask,base);
+   peaceWaveFieldCanvas=peaceWaveFieldContext=peaceWaveFieldPixels=peaceWaveSourcePixels=peaceWaveMaskPixels=null;
    peaceMotionStartedAt=performance.now();peaceCloudLast=peaceWaterLast=0;
    drawPeaceSourceClouds(peaceMotionStartedAt,true);
    drawPeaceSourceWater(peaceMotionStartedAt,true);
@@ -904,6 +900,20 @@ function loadPeaceCinemaSourceLayers(){
  * Water is animated only as masked optical wave highlights; source pixels
  * are never translated, stretched or copied onto land.
  * Both systems retain the canonical art source and reduced-motion fallback. */
+/* Fixed sky custody: sky objects may not illuminate or cover geology. The
+ * conservative source-space skyline is intentionally inset above mountains. */
+function peaceBuildSafeSkyMask(){
+ const canvas=document.createElement('canvas');canvas.width=960;canvas.height=540;
+ const g=canvas.getContext('2d');if(!g)return null;
+ const skyline=[[0,18],[35,20],[80,40],[120,65],[180,73],[220,78],
+  [260,83],[300,100],[325,119],[350,134],[375,143],[400,135],
+  [430,147],[460,164],[490,165],[530,170],[570,169],[610,171],
+  [635,175],[660,182],[700,189],[760,197],[820,205],[900,201],[960,197]];
+ g.beginPath();g.moveTo(0,0);g.lineTo(960,0);
+ for(let i=skyline.length-1;i>=0;i--)g.lineTo(skyline[i][0],skyline[i][1]);
+ g.closePath();g.fillStyle='#fff';g.fill();
+ return canvas;
+}
 function peaceBuildCloudBanks(image){
  const cols=[
   {x:0,w:410,fade:[0,270/410,1],opacity:[1,1,0]},
@@ -936,38 +946,55 @@ function peaceBuildCloudBanks(image){
  }
  return banks;
 }
-function peaceBuildSafeWaterMask(image){
+/* Source-bound sea custody; original coast and mountains are immutable.
+ * The source water matte was NOT sufficient on its own: it included rocky
+ * islands and foreground vegetation. Explicit land exclusions, a static
+ * seawater-color predicate, and a four-pixel interior neighborhood all
+ * must agree. Missing source assets mean no water effect, never land motion. */
+function peaceBuildSafeWaterMask(image,base){
+ if(!image?.complete||!base?.complete)return null;
  const w=960,h=540;
- const source=document.createElement('canvas');source.width=w;source.height=h;
- const g=source.getContext('2d',{willReadFrequently:true});
- if(!g)return null;
- g.drawImage(image,0,0,w,h);
- const original=g.getImageData(0,0,w,h).data;
- const pixel=(x,y)=>(Math.max(0,Math.min(h-1,y))*w+Math.max(0,Math.min(w-1,x)))*4;
- const top=pixel(480,30),bottom=pixel(480,480);
- // Historical source uses alpha as its water matte. Accept grayscale if an
- // opaque exporter was used; never treat opaque black as water by default.
- const grayscaleMask=original[top+3]>225&&original[bottom+3]>225;
- const strength=(x,y)=>{
-  const i=pixel(x,y);
-  return grayscaleMask?(.2126*original[i]+.7152*original[i+1]+.0722*original[i+2]):original[i+3];
- };
- if(strength(480,30)>80)return null;
- const out=g.createImageData(w,h);
- for(let y=232;y<h-6;y++)for(let x=6;x<w-6;x++){
-  if(strength(x,y)<232||strength(x-6,y)<210||strength(x+6,y)<210||
-     strength(x,y-6)<210||strength(x,y+6)<210||
-     strength(x-4,y-4)<205||strength(x+4,y-4)<205||
-     strength(x-4,y+4)<205||strength(x+4,y+4)<205)continue;
-  const i=(y*w+x)*4;
-  out.data[i]=255;out.data[i+1]=255;out.data[i+2]=255;out.data[i+3]=255;
+ const matte=document.createElement('canvas');matte.width=w;matte.height=h;
+ const ctx=matte.getContext('2d',{willReadFrequently:true});if(!ctx)return null;
+ ctx.drawImage(image,0,0,w,h);
+ const input=ctx.getImageData(0,0,w,h).data;
+ ctx.clearRect(0,0,w,h);
+ ctx.drawImage(base,0,0,w,h);
+ const original=ctx.getImageData(0,0,w,h).data;
+ const land=document.createElement('canvas');land.width=w;land.height=h;
+ const lc=land.getContext('2d',{willReadFrequently:true});if(!lc)return null;
+ const protectedRegions=[
+  [[0,0],[355,0],[355,346],[302,388],[215,445],[0,540]],
+  [[488,399],[502,331],[540,292],[554,264],[579,247],[613,248],[645,272],[671,307],[659,359],[624,393],[515,406]],
+  [[645,402],[660,350],[686,334],[726,339],[747,371],[729,401],[676,408]],
+  [[737,338],[728,283],[744,257],[773,249],[802,270],[812,316],[793,339]],
+  [[804,346],[811,274],[843,256],[871,269],[883,323],[861,350]],
+  [[868,402],[884,360],[906,334],[944,303],[960,290],[960,540],[828,540]],
+  [[461,540],[452,491],[483,454],[532,440],[565,459],[603,499],[628,540]],
+  [[401,540],[408,507],[428,483],[456,465],[480,488],[480,540]]
+ ];
+ lc.fillStyle='#fff';
+ for(const region of protectedRegions){lc.beginPath();lc.moveTo(...region[0]);for(let k=1;k<region.length;k++)lc.lineTo(...region[k]);lc.closePath();lc.fill();}
+ const protectedAlpha=lc.getImageData(0,0,w,h).data;
+ const valid=new Uint8Array(w*h);
+ for(let y=242;y<528;y++)for(let x=5;x<955;x++){
+  const k=y*w+x,i=k*4;
+  if(protectedAlpha[i+3]!==0||input[i+3]<95)continue;
+  const r=original[i],g=original[i+1],b=original[i+2];
+  if(r<155&&g>r*1.12&&b>r*1.13&&b>g*.60&&g-r>12)valid[k]=1;
  }
- const mask=document.createElement('canvas');mask.width=w;mask.height=h;
- const m=mask.getContext('2d');
- if(!m)return null;
- m.putImageData(out,0,0);
- return mask;
+ const out=ctx.createImageData(w,h);
+ for(let y=247;y<522;y++)for(let x=10;x<950;x++){
+  const k=y*w+x;
+  if(!valid[k]||!valid[k-4]||!valid[k+4]||!valid[k-4*w]||!valid[k+4*w])continue;
+  const i=k*4;out.data[i]=out.data[i+1]=out.data[i+2]=out.data[i+3]=255;
+ }
+ const safe=document.createElement('canvas');safe.width=w;safe.height=h;
+ const sc=safe.getContext('2d');if(!sc)return null;
+ sc.putImageData(out,0,0);
+ return safe;
 }
+
 function drawPeaceSourceClouds(now,force=false){
  if(!peaceCloudContext||!peaceCloudCanvas||!peaceCloudSource?.complete)return;
  if(reduced){peaceCloudContext.clearRect(0,0,960,540);return;}
@@ -983,6 +1010,8 @@ function drawPeaceSourceClouds(now,force=false){
   const dy=bank.vy*t+Math.sin(bank.phase*.73+t*.075)*.22;
   c.drawImage(bank.image,bank.x+dx,bank.y+dy);
  }
+ if(peaceSafeSkyMask){c.globalCompositeOperation='destination-in';c.globalAlpha=1;c.drawImage(peaceSafeSkyMask,0,0,960,540);}
+ else c.clearRect(0,0,960,540);
  c.restore();
 }
 function updatePeaceCinema(){
@@ -994,7 +1023,6 @@ function updatePeaceCinema(){
   drawPeaceSourceWater(now);
  }
  const f=Math.max(0,Math.min(1,(flight-.55)/.45)),ease=f*f*(3.-2.*f);
- const entering=Math.max(0,1.-ease);
  const scale=1.32-.24*ease;
  // V11 fixed frame: scrolling, pointer movement and ambient weather cannot
  // translate the landscape. Only the deliberate enter/return camera zoom
@@ -1002,72 +1030,62 @@ function updatePeaceCinema(){
  peaceCinemaLayer.style.setProperty('--peace-arrival-scale',scale.toFixed(4));
  peaceCinemaLayer.style.setProperty('--peace-look-x','0px');
  peaceCinemaLayer.style.setProperty('--peace-look-y','0px');
- peaceCinemaLayer.style.setProperty('--peace-atmos-opacity',(entering*entering*.86).toFixed(3));
- peaceCinemaLayer.style.setProperty('--peace-atmos-scale',(1.16-.16*ease).toFixed(3));
+ // No atmosphere-wide transparency or luminance animation is permitted.
 }
+/* Actual source-texture advection inside verified water, never a screen
+ * shine or any new light. Neighboring source texels follow spatial waves;
+ * all land/background RGB values remain unmodified by this pass. */
 function drawPeaceSourceWater(now,force=false){
  if(!peaceWaterContext||!peaceWaterCanvas)return;
  const c=peaceWaterContext;
- if(reduced||!peaceSafeWaterMask){c.clearRect(0,0,960,540);return;}
+ if(reduced||!peaceSafeWaterMask||!peaceBaseSource){c.clearRect(0,0,960,540);return;}
  if(!force&&peaceWaterLast&&now-peaceWaterLast<42)return;peaceWaterLast=now;
  const t=Math.max(0,(now-(peaceMotionStartedAt||now))*.001);
- c.clearRect(0,0,960,540);c.save();c.lineCap='round';
- // Dynamic directional reflection field is an optical layer, not moving
- // geography. Half-resolution sampling bounds the per-frame mobile cost.
  if(!peaceWaveFieldCanvas){
   peaceWaveFieldCanvas=document.createElement('canvas');
   peaceWaveFieldCanvas.width=480;peaceWaveFieldCanvas.height=270;
   peaceWaveFieldContext=peaceWaveFieldCanvas.getContext('2d',{alpha:true});
-  if(peaceWaveFieldContext)peaceWaveFieldPixels=peaceWaveFieldContext.createImageData(480,270);
- }
- if(peaceWaveFieldContext&&peaceWaveFieldPixels){
-  const pixels=peaceWaveFieldPixels.data;
-  // Superpose two wave trains with slowly evolving cross-current. Each
-  // location changes its highlight without translating source image pixels.
-  for(let py=116;py<270;py++){
-   const yy=py*2,depth=Math.max(0,Math.min(1,(yy-226)/314));
-   for(let px=0;px<480;px++){
-    const xx=px*2;
-    const p1=Math.sin(xx*.078+yy*.019-t*1.24+Math.sin(xx*.018+yy*.041+t*.43)*.39);
-    const p2=Math.sin(xx*.036-yy*.064-t*.71);
-    const wave=Math.max(0,p1*.7+p2*.3);
-    const alpha=Math.min(.34,(.12+.32*depth)*wave*wave);
-    const k=(py*480+px)*4;
-    pixels[k]=205;pixels[k+1]=245;pixels[k+2]=247;
-    pixels[k+3]=Math.round(alpha*255);
-   }
+  const source=document.createElement('canvas');source.width=480;source.height=270;
+  const ctx=source.getContext('2d',{willReadFrequently:true});
+  const matte=document.createElement('canvas');matte.width=480;matte.height=270;
+  const mx=matte.getContext('2d',{willReadFrequently:true});
+  if(peaceWaveFieldContext&&ctx&&mx){
+   ctx.drawImage(peaceBaseSource,0,0,480,270);
+   mx.drawImage(peaceSafeWaterMask,0,0,480,270);
+   peaceWaveSourcePixels=ctx.getImageData(0,0,480,270).data;
+   peaceWaveMaskPixels=mx.getImageData(0,0,480,270).data;
+   peaceWaveFieldPixels=peaceWaveFieldContext.createImageData(480,270);
   }
-  peaceWaveFieldContext.putImageData(peaceWaveFieldPixels,0,0);
-  c.drawImage(peaceWaveFieldCanvas,0,0,960,540);
  }
- // Deterministic spatially coherent crests move toward the near water.
- // The original coast, islands and sea-color pixels remain unchanged.
- const fract=v=>v-Math.floor(v);
- for(let i=0;i<240;i++){
-  const a=fract(Math.sin((i+1)*127.1)*43758.5453);
-  const b=fract(Math.sin((i+1)*311.7)*24634.6345);
-  const phase=fract(Math.sin((i+1)*74.7)*32718.329);
-  const initialDepth=a;
-  const speed=1.4+initialDepth*8.0;
-  const y=233+((a*307+t*speed)%307),depth=(y-233)/307;
-  const x=9+b*942+Math.sin(phase*6.283+t*(.12+.07*depth))*2.5;
-  const length=(9+depth*46)*(.55+.85*phase);
-  const crest=1.2+depth*3.0;
-  const glint=.032+depth*.085;
-  c.lineWidth=.65+depth*1.0;
-  c.strokeStyle=i%5===0?'rgba(9,101,129,'+(glint*.56).toFixed(4)+')':
-   'rgba(196,249,248,'+(glint*(.56+.44*phase)).toFixed(4)+')';
-  c.beginPath();
-  c.moveTo(x-length*.5,y+.2*crest);
-  c.quadraticCurveTo(x,y-crest,x+length*.5,y+.2*crest);
-  c.stroke();
+ c.clearRect(0,0,960,540);
+ if(!peaceWaveFieldContext||!peaceWaveSourcePixels||!peaceWaveMaskPixels||!peaceWaveFieldPixels)return;
+ const out=peaceWaveFieldPixels.data,src=peaceWaveSourcePixels,mask=peaceWaveMaskPixels,w=480,h=270;
+ out.fill(0);
+ for(let y=120;y<263;y++){
+  const depth=Math.min(1,Math.max(0,(y-120)/143));
+  const amplitude=.65+depth*1.65;
+  for(let x=5;x<475;x++){
+   const k=(y*w+x)*4;
+   if(mask[k+3]<240)continue;
+   // Two interacting spatial wave trains displace SOURCE water texture.
+   // No time-varying RGB multiplier, bloom or illumination is applied.
+   const p=x*.12+y*.052-t*(.85+.35*depth);
+   const q=x*.047-y*.115-t*.62;
+   const sx=Math.round(x+amplitude*(Math.sin(p)*.72+Math.sin(q)*.28));
+   const sy=Math.round(y+(.4+.7*depth)*(Math.sin(q)*.75+Math.sin(p*.61)*.25));
+   if(sx<3||sx>=w-3||sy<118||sy>=h-3)continue;
+   const j=(sy*w+sx)*4;
+   if(mask[j+3]<240)continue;
+   out[k]=src[j];out[k+1]=src[j+1];out[k+2]=src[j+2];out[k+3]=255;
+  }
  }
- // The source-derived interior water mask is eroded away from shorelines.
- // Masking wave highlights (not copied image pixels) prevents land mirages.
- c.globalCompositeOperation='destination-in';c.globalAlpha=1;
+ peaceWaveFieldContext.putImageData(peaceWaveFieldPixels,0,0);
+ c.save();c.drawImage(peaceWaveFieldCanvas,0,0,960,540);
+ c.globalCompositeOperation='destination-in';
  c.drawImage(peaceSafeWaterMask,0,0,960,540);
  c.restore();
 }
+
 function schedulePeaceRealGeometry(){
  // The art appears first; the exact existing H-Earth construction runs after
  // the transition rather than synchronously in the user's Begin click.

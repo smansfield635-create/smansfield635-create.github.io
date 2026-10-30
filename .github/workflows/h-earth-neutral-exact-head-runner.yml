@@ -1370,7 +1370,7 @@ jobs:
     if: >-
       ${{ github.event_name == 'pull_request' && github.event.action == 'reopened' &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.pull_request.head.ref == 'h-earth/steep-side-current-visual-scout-hash-repair-20261030' &&
+          github.event.pull_request.head.ref == 'h-earth/steep-side-current-visual-scout-test-callback-repair-20261030' &&
           github.event.pull_request.base.ref == 'main' &&
           startsWith(github.event.pull_request.title, 'STEEP_SIDE_CURRENT_VISUAL_SCOUT:') }}
     runs-on: ubuntu-24.04
@@ -1398,8 +1398,8 @@ jobs:
           import fs from 'node:fs';import assert from 'node:assert/strict';
           const i=JSON.parse(fs.readFileSync('dispatch/h-earth-3d/evidence/steep-side-current-visual-scout-20261030/dispatch-intent.json'));
           assert.equal(i.schema,'H_EARTH_STEEP_SIDE_FIXED_SCOUT_DISPATCH_v1');
-          assert.equal(i.operationId,'H_EARTH_STEEP_SIDE_CURRENT_SCOUT_HASH_REPAIR_20261030_001');
-          assert.equal(i.lockGeneration,3005);assert.equal(i.admissionRun,41131028668);
+          assert.equal(i.operationId,'H_EARTH_STEEP_SIDE_CURRENT_SCOUT_TEST_CALLBACK_REPAIR_20261030_001');
+          assert.equal(i.lockGeneration,3006);assert.equal(i.admissionRun,41135934071);
           assert.equal(i.candidateHead,'3ea149e5b56e8cc0d5aac192bce0cdd47da7e626');
           assert.deepEqual(i.cameraIds,['west_flank','central_approach','east_oblique']);
           assert.equal(i.frameCap,3);assert.equal(i.runBudget,1);assert.equal(i.automaticRetry,false);

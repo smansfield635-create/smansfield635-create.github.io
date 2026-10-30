@@ -1,0 +1,14 @@
+{
+  "operationId": "H_EARTH_STEEP_SIDE_CURRENT_SCOUT_OBSERVER_HEADING_REPAIR_20261030_001",
+  "lockGeneration": 3007,
+  "workflowRun": 41140007355,
+  "receiptComment": 6535069437,
+  "result": "ADMITTED_AND_LOCKED",
+  "failedPredecessor": {
+    "operationId": "H_EARTH_STEEP_SIDE_CURRENT_SCOUT_TEST_CALLBACK_REPAIR_20261030_001",
+    "lockGeneration": 3006,
+    "failedRun": 41136487049,
+    "partialGpuArtifact": 13017093256,
+    "terminalReceiptComment": 6534925524
+  }
+}

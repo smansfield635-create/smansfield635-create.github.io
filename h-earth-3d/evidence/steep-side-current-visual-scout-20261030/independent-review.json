@@ -1,0 +1,47 @@
+{
+  "schema": "H_EARTH_GEN3007_STATIC_SOURCE_GUARD_REVIEW_v1",
+  "result": "PASS_STATIC_SOURCE_READY_FOR_ONE_GPU_SCOUT",
+  "operationId": "H_EARTH_STEEP_SIDE_CURRENT_SCOUT_OBSERVER_HEADING_REPAIR_20261030_001",
+  "admissionRun": 41140007355,
+  "lockGeneration": 3007,
+  "frozenCandidate": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "reviewMode": "SEPARATE_IMMUTABLE_GITHUB_SOURCE_READBACK_AND_PURE_JS_PARSE_GATES",
+  "builderSelfApproval": false,
+  "sourceBlobIds": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "fd52af6b14ffee03e583e8443342d07406109fdf",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/qualify.mjs": "aa8c2f0fc2bf083d525cdf5668f7e88571d28a65",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/qualify.test.mjs": "c49442ecb03d07df6e66f97719fa3cb2201434df",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/coverage-plan.json": "0db091a0c6589bd0b6db3da41f102bf3c9dba556",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/admission.json": "1f764b8512391184c80dd9fb89e07c076d766974",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/product-binding.json": "25729e5e560e2978e4852d97ff19c784d6a83fbb"
+  },
+  "stage": "STATIC_SOURCE_READBACK_PASS_TEST_AND_GPU_PENDING",
+  "sourceAssertions": {
+    "sourceFilesReadBack": 6,
+    "sourceAndUnitTestParsePass": true,
+    "declaredUnitTestCases": 14,
+    "actualNodeUnitTestsRun": false,
+    "frozenRunnerJobOccurrences": 1,
+    "oneShotRunAttemptGuard": true,
+    "failedGen3003HelperHashMismatchFixed": true,
+    "sourceBlobAndHelperSha256Distinguished": true,
+    "currentProductSourceUnchanged": true,
+    "candidateHeadPinned": true,
+    "threeFrameCap": true,
+    "livePhotoMatchEstablished": false,
+    "productChanged": false,
+    "gen3005StructuredCloneCallbackRepaired": true,
+    "gen3006CanonicalAdmissionAuthenticated": true,
+    "gen3006FailureSourceLocated": true,
+    "rawObserverAbove180AndAlteredYawRegressionPresent": true,
+    "gen3007CanonicalAdmissionAuthenticated": true
+  },
+  "limits": [
+    "Exact source readback and compilation guards only; 14 Node tests are not reported as run or passed.",
+    "Gen3006 consumed its prior GPU budget, preserved one genuine west_flank image and closed FAIL_CLOSED.",
+    "No owner-photo defect correspondence, renderer defect cause, independent visual judgement or new GPU frame is asserted.",
+    "Only Gen3007 is admitted for one three-pose diagnostic and no automatic retry.",
+    "Production, merges, deployment, publication and release remain unauthorized."
+  ],
+  "authorityEffect": "NONE_STATIC_REVIEW_NOT_GPU_OR_PRODUCT_APPROVAL"
+}

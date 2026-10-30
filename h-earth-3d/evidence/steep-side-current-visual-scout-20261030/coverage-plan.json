@@ -1,0 +1,109 @@
+{
+  "schema": "H_EARTH_STEEP_SIDE_CURRENT_SCOUT_CAMERA_PLAN_v1",
+  "sourcePlanHead": "c7f6d8db2793872f00e79debdece53e07ae54684",
+  "currentSourceProofHead": "fc0b9270339e3b11e56a0bffb46cb8709cb09a3b",
+  "frozenCandidate": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "sourceBasedOnly": true,
+  "ownerPhotoMatch": false,
+  "poses": [
+    {
+      "id": "west_flank",
+      "historicalNativeTerrainOnly": true,
+      "cameraXZ": [
+        110,
+        -310
+      ],
+      "sourceCameraY": 8.346905947403934,
+      "yawDegrees": 153.434948822922,
+      "pitchDegrees": 20.264510304722066,
+      "verticalFovDegrees": 56,
+      "viewport": [
+        529,
+        980
+      ],
+      "targetXZ": [
+        145,
+        -240
+      ],
+      "targetSurfaceXYZ": [
+        145,
+        36.24194177261537,
+        -240
+      ],
+      "targetSourceSlope": 0.37046317164913967,
+      "targetSourceTriangle": 12036,
+      "horizontalTargetDistance": 78.26237921249263,
+      "sampledRayMinTerrainClearance": 2.397306563603637,
+      "raySamples": 39,
+      "eyeHeightAboveSourceSurface": 1.65,
+      "candidateCurrentSceneRecheckRequired": true,
+      "ownerPhotoMatch": false
+    },
+    {
+      "id": "central_approach",
+      "historicalNativeTerrainOnly": true,
+      "cameraXZ": [
+        150,
+        -318
+      ],
+      "sourceCameraY": 6.664072396290289,
+      "yawDegrees": 183.66778805553142,
+      "pitchDegrees": 21.366480780222314,
+      "verticalFovDegrees": 56,
+      "viewport": [
+        529,
+        980
+      ],
+      "targetXZ": [
+        145,
+        -240
+      ],
+      "targetSurfaceXYZ": [
+        145,
+        36.24194177261537,
+        -240
+      ],
+      "targetSourceSlope": 0.37046317164913967,
+      "targetSourceTriangle": 12036,
+      "horizontalTargetDistance": 78.16009211867653,
+      "sampledRayMinTerrainClearance": 2.3694094572855136,
+      "raySamples": 39,
+      "eyeHeightAboveSourceSurface": 1.65,
+      "candidateCurrentSceneRecheckRequired": true,
+      "ownerPhotoMatch": false
+    },
+    {
+      "id": "east_oblique",
+      "historicalNativeTerrainOnly": true,
+      "cameraXZ": [
+        210,
+        -310
+      ],
+      "sourceCameraY": 6.9798827293496615,
+      "yawDegrees": 199.6538240580533,
+      "pitchDegrees": 11.103789511233805,
+      "verticalFovDegrees": 56,
+      "viewport": [
+        529,
+        980
+      ],
+      "targetXZ": [
+        185,
+        -240
+      ],
+      "targetSurfaceXYZ": [
+        185,
+        20.568021852993443,
+        -240
+      ],
+      "targetSourceSlope": 0.27775592646767067,
+      "targetSourceTriangle": 12046,
+      "horizontalTargetDistance": 74.33034373659252,
+      "sampledRayMinTerrainClearance": 1.9987894395692898,
+      "raySamples": 39,
+      "eyeHeightAboveSourceSurface": 1.65,
+      "candidateCurrentSceneRecheckRequired": true,
+      "ownerPhotoMatch": false
+    }
+  ]
+}

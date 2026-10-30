@@ -1,0 +1,57 @@
+{
+  "schema": "H_EARTH_HABITAT_MATERIAL_PRODUCT_SOURCE_RESULT_v1",
+  "operationId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001",
+  "authorityGeneration": 2987,
+  "result": "SOURCE_TESTS_PASS_VISUAL_COMPARISON_REQUIRED",
+  "sourceTests": {
+    "passed": 8,
+    "failed": 0
+  },
+  "syntaxChecksPassed": 3,
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/habitat-material-presentation.v1.js": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+    "showroom/globe/h-earth/vegetation-prototype/route.js": "365aec75bffae1c95c19c4bc9cab9869720893a04bcb32eadad46e7f6b14267f",
+    "h-earth-3d/evidence/habitat-material-blend-20261029/product.test.mjs": "78788c5607c6793b3269915bb4a2f73768fb07796c622f84cd5edfec3afbd3e1"
+  },
+  "fixedFilter": {
+    "sigmaMeters": 2,
+    "supportMetersPerAxis": 6,
+    "separable": true,
+    "panelIsolation": true
+  },
+  "nativeAtlasSha256": "56227147b4e2b03e06c0bc674b3d198f70d38f18e970c1a40a1c51c3ec5efbe1",
+  "offlinePresentationAtlasSha256": "cdcad7b7da59a873221f41c4c81b724979f048b5c69523bc51affedb1637e764",
+  "coastalTarget": {
+    "column": 131,
+    "rows": [
+      12,
+      13
+    ],
+    "nativeBytes": [
+      0,
+      244
+    ],
+    "presentationBytes": [
+      102,
+      150
+    ],
+    "coverageJumpBefore": 0.9568627450980393,
+    "coverageJumpAfter": 0.18823529411764706
+  },
+  "preservation": [
+    "native atlas bytes",
+    "root admission and placement",
+    "native roughness coverage",
+    "original soil sampling",
+    "existing protection expressions",
+    "geometry"
+  ],
+  "limitations": [
+    "Offline atlas test excludes runtime entrance additions in ravine; production helper consumes final installed atlas after additions. Coastal panel is unchanged by entrance additions.",
+    "Source tests do not establish actual rendered improvement, Android performance or whole-map closure."
+  ],
+  "gpuExecutionPerformed": false,
+  "visualAcceptance": false,
+  "published": false
+}

@@ -1,0 +1,96 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+    "operationId": "H_EARTH_HABITAT_MATERIAL_PUBLICATION_20261029_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      ".github/ai-router/publication-surfaces/h-earth.json",
+      "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/**",
+      "h-earth-3d/experience-anchor/receipts/habitat-material-publication-20261029.json",
+      ".github/ai-entry/workflow-dispatch-request.json"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+    "PUBLICATION_PREFLIGHT_RECEIPT_v1",
+    "LIVE_EXACT_HEAD_VERIFIED"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact accepted9ffe three product blobs and same main bad4bb1. Reuse18tests and actual image review40989116335. Existing gates and exact-head preflight/deployment only.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    ".github/ai-router/publication-surfaces/h-earth.json",
+    "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/**",
+    "h-earth-3d/experience-anchor/receipts/habitat-material-publication-20261029.json",
+    ".github/ai-entry/workflow-dispatch-request.json"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "After admission create clean current-main publication branch; preserve accepted and prior inland candidates separately.",
+      "step": 1
+    },
+    {
+      "action": "Copy exact three product Git blobs from9ffe; add source/GPU/owner acceptance and all11anchor preservation evidence in existing anchor namespace. Retain oasis visual limitation.",
+      "step": 2
+    },
+    {
+      "action": "Update existing h-earth declarative manifest for accepted route/helper/renderer markers; independent source/protection/anchor review and selected gates.",
+      "step": 3
+    },
+    {
+      "action": "Run registered PUBLICATION_FAST_PREFLIGHT against exact clean adoption; return monitor link during expensive execution.",
+      "step": 4
+    },
+    {
+      "action": "After selected gates pass merge exact approved adoption; use PAGES_EXACT_HEAD_DEPLOY for current main; verify live release marker, surface and three product hashes.",
+      "step": 5
+    },
+    {
+      "action": "Preserve release evidence; stop on localized failure, no blind retry or inferred global/device certification.",
+      "step": 6
+    }
+  ],
+  "exactGoverningHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+  "exactTestRunnerCommand": "BASE_SHA=bad4bb1a4671e5da76508aa753ece069810c8e0c HEAD_SHA=HEAD node tools/h-earth-experience-anchor-gate.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "THREE_PRODUCT_BYTES_IDENTICAL_TO_ACCEPTED_CANDIDATE",
+      "DIRECT_DEPENDENCIES_UNCHANGED",
+      "ALL_11_ANCHOR_INVARIANTS_TRUTHFUL_CONTINUITY_REUSE",
+      "OASIS_VISUAL_LIMIT_RETAINED_PROTECTION_SOURCE_REVIEWED",
+      "EXISTING_MANIFEST_GATES_AND_PREFLIGHT",
+      "LIVE_EXACT_HEAD_AND_THREE_PRODUCT_HASHES"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Review exact adoption, source protection and existing anchor continuity evidence. Reuse completed captures.",
+    "forbidden": "No product retune, new GPU comparison, diagnostic workflow merge or blind retry."
+  },
+  "procedureId": "H_EARTH_HABITAT_MATERIAL_PUBLICATION_20261029_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/**"
+    ],
+    "workflowPath": ".github/workflows/pages-exact-head-deploy-v3.yml"
+  }
+}

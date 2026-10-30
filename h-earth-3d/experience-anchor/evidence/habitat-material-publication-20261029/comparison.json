@@ -1,0 +1,62 @@
+{
+  "schema": "H_EARTH_HABITAT_MATERIAL_COMPARISON_v1",
+  "result": "TWELVE_PAIRED_FRAMES_CAPTURED_REQUIRES_VISUAL_REVIEW",
+  "operationId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001",
+  "baselineHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+  "candidateHead": "9ffe7fae03ff8f46e5cd1de1e388f6cebef9aeea",
+  "frameCap": 12,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "ownerVisualAcceptance": false,
+  "releaseAuthorized": false,
+  "images": [
+    {
+      "image": "edge-approach.png",
+      "sha256": "d21d5cad865bec42a5927ea4864bd2828c4dfa42457aed46de86d01a68ca1136"
+    },
+    {
+      "image": "edge-close.png",
+      "sha256": "8b8e98c2afa7d35faf999aabcf403e88aff6b15607200c215dd212af783d4bb8"
+    },
+    {
+      "image": "edge-side.png",
+      "sha256": "2f05d9e8daa627ec0ccbd1d9ed88a6798332b5273459a0daf9fd4e6fc0d025b7"
+    },
+    {
+      "image": "edge-reverse.png",
+      "sha256": "0baa410b53909c93ad3c1630735349f35e3cef7caf58683e963051bbec31b11e"
+    },
+    {
+      "image": "protected-grove.png",
+      "sha256": "90774c6c65113201b49feeab5478dc9535e3d1a097b09e0774e5438e0d8ad7d1"
+    },
+    {
+      "image": "protected-oasis.png",
+      "sha256": "2e4d9f229a6bc8bf7e9e428e3b8a81e7dfa981e2adbfc0bbde5999dae692e177"
+    },
+    {
+      "image": "edge-approach.png",
+      "sha256": "0d034e0fb601e6531f2653275ce5a3840aaed2faaecb146cf78cc35d457b9342"
+    },
+    {
+      "image": "edge-close.png",
+      "sha256": "03cb792d230b14a25d0bfc858caa2e3190aabc451e5d504e2920cee30c1eba99"
+    },
+    {
+      "image": "edge-side.png",
+      "sha256": "452bcccf17d212fb09482ec99bbe06ccef3505882cb237b2f9af9643507bed72"
+    },
+    {
+      "image": "edge-reverse.png",
+      "sha256": "a712f6f90331c4a6e58df5d3b2d26e0109d517f1ece45c2d30bece7ed5556ac2"
+    },
+    {
+      "image": "protected-grove.png",
+      "sha256": "90774c6c65113201b49feeab5478dc9535e3d1a097b09e0774e5438e0d8ad7d1"
+    },
+    {
+      "image": "protected-oasis.png",
+      "sha256": "2e4d9f229a6bc8bf7e9e428e3b8a81e7dfa981e2adbfc0bbde5999dae692e177"
+    }
+  ]
+}

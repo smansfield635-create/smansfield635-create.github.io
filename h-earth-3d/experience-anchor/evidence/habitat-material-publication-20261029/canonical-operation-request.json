@@ -1,0 +1,168 @@
+{
+  "allowedPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    ".github/ai-router/publication-surfaces/h-earth.json",
+    "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/**",
+    "h-earth-3d/experience-anchor/receipts/habitat-material-publication-20261029.json",
+    ".github/ai-entry/workflow-dispatch-request.json"
+  ],
+  "artifactPaths": [
+    "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/**"
+  ],
+  "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+  "errorPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "exactGoverningHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+  "exactTestCommand": "BASE_SHA=bad4bb1a4671e5da76508aa753ece069810c8e0c HEAD_SHA=HEAD node tools/h-earth-experience-anchor-gate.mjs",
+  "executingRole": {
+    "mayDeploy": true,
+    "mayMerge": true,
+    "mayMutateControlPlane": false,
+    "mayMutateDiagnosticTooling": false,
+    "mayMutateProduct": true,
+    "role": "SOUTH_BOUNDED_ADOPTION_AND_RELEASE",
+    "scopeExpansionAllowed": false
+  },
+  "fingerprintDomain": {
+    "head": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+    "operationId": "H_EARTH_HABITAT_MATERIAL_PUBLICATION_20261029_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      ".github/ai-router/publication-surfaces/h-earth.json",
+      "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/**",
+      "h-earth-3d/experience-anchor/receipts/habitat-material-publication-20261029.json",
+      ".github/ai-entry/workflow-dispatch-request.json"
+    ]
+  },
+  "functionalCoordination": {
+    "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+    "authorityEffect": "NONE",
+    "functionalBearing": {
+      "bearings": [
+        "N",
+        "E",
+        "S",
+        "W",
+        "N"
+      ],
+      "exemptionReason": null,
+      "mode": "ROUTE"
+    },
+    "primitiveRequirements": [
+      "N",
+      "E",
+      "S",
+      "W"
+    ],
+    "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+  },
+  "independentVerifier": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "THREE_PRODUCT_BYTES_IDENTICAL_TO_ACCEPTED_CANDIDATE",
+      "DIRECT_DEPENDENCIES_UNCHANGED",
+      "ALL_11_ANCHOR_INVARIANTS_TRUTHFUL_CONTINUITY_REUSE",
+      "OASIS_VISUAL_LIMIT_RETAINED_PROTECTION_SOURCE_REVIEWED",
+      "EXISTING_MANIFEST_GATES_AND_PREFLIGHT",
+      "LIVE_EXACT_HEAD_AND_THREE_PRODUCT_HASHES"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "intakeCompletenessReceipt": {
+    "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+    "receiptDigest": "59c8ff142d91904c5cc091c8406b1ca5317b05627f487c10277fb441ca07cb09",
+    "receiptId": "H_EARTH_HABITAT_MATERIAL_PUBLICATION_20261029_001_COMPLETE",
+    "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+    "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+    "unresolvedMaterialQuestions": []
+  },
+  "lockScope": "H_EARTH:HABITAT_MATERIAL_PUBLICATION_20261029",
+  "operationId": "H_EARTH_HABITAT_MATERIAL_PUBLICATION_20261029_001",
+  "prohibitedPaths": [
+    "ACCEPTED_THREE_PRODUCT_FILE_BYTES_CHANGED",
+    "DIAGNOSTIC_WORKFLOW_OR_EXPERIMENTAL_ANCESTRY_MERGE",
+    "NEW_GPU_CAPTURE_OR_BLIND_RETRY",
+    "UNRELATED_PRODUCT_OR_CONTROL_PLANE_MUTATION",
+    "UNSUPPORTED_OASIS_OR_GLOBAL_VISUAL_CLAIM"
+  ],
+  "projectId": "H_EARTH",
+  "requestingAuthority": {
+    "intent": "Publish exact owner-accepted habitat blend by clean three-file adoption, truthful anchor preservation evidence and existing manifest/preflight/deployment. Preserve tested product bytes.",
+    "mayDeploy": true,
+    "mayMerge": true,
+    "mayMutateProduct": true,
+    "principal": "OWNER",
+    "scopeExpansionAllowed": false,
+    "source": "Owner accepted reviewed repair and instructed Proceed accordingly after next stage stated release readiness and publication qualification; follow existing publication precedent."
+  },
+  "requiredInputs": [
+    {
+      "id": "OWNER_ACCEPTANCE_AND_PROCEED",
+      "resolved": true
+    },
+    {
+      "id": "EXACT_SOURCE_AND_12_FRAME_REVIEW",
+      "resolved": true
+    },
+    {
+      "id": "CURRENT_MAIN_UNCHANGED",
+      "resolved": true
+    },
+    {
+      "id": "EXISTING_ANCHOR_AND_PUBLICATION_PRECEDENT",
+      "resolved": true
+    }
+  ],
+  "requiredOutputs": [
+    "CLEAN_EXACT_THREE_FILE_ADOPTION",
+    "TRUTHFUL_ANCHOR_RECEIPT_AND_INDEPENDENT_REVIEW",
+    "EXISTING_MANIFEST_AND_PREFLIGHT_PASS",
+    "MERGE_EXPLICIT_DEPLOY_LIVE_EXACT_HEAD_VERIFY"
+  ],
+  "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+  "stopConditions": [
+    "NO_BRANCH_OR_REPOSITORY_WRITE_BEFORE_AUTHENTIC_ADMISSION",
+    "RELEVANT_MAIN_SOURCE_OR_DEPENDENCY_DRIFT_REQUIRES_RECONCILIATION",
+    "EXACT_ADOPTED_BLOB_OR_ASSET_HASH_MISMATCH_FAILS_CLOSED",
+    "PREFLIGHT_FAILURE_STOPS_BEFORE_PRODUCTION_DEPLOYMENT",
+    "DEPLOY_ONLY_APPROVED_CURRENT_MAIN_EXACT_HEAD",
+    "LIVE_MARKER_OR_ASSET_HASH_MISMATCH_IS_DEPLOYMENT_NOT_PROVEN",
+    "NO_GLOBAL_REPAIR_OR_PHYSICAL_ANDROID_PERFORMANCE_CLAIM"
+  ],
+  "subjectIdentity": {
+    "adoptionSourceHead": "9ffe7fae03ff8f46e5cd1de1e388f6cebef9aeea",
+    "artifactId": 12948702650,
+    "constructionBase": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+    "dispatchRule": "Existing native bridge for PUBLICATION_FAST_PREFLIGHT and PAGES_EXACT_HEAD_DEPLOY only; fresh current-main carrier never merged.",
+    "inheritedLimits": {
+      "globalRepairProven": false,
+      "oasisGroundVisualVerification": "INCONCLUSIVE_FLAT_TEAL_CONTROL",
+      "physicalAndroidPerformanceProven": false
+    },
+    "newGpuFrameCeiling": 0,
+    "ownerAcceptanceComment": 6513359705,
+    "qualifiedCaptureRun": 40989116335,
+    "reviewComment": 6513320171,
+    "sourceIssue": 6911,
+    "surfaceId": "h-earth",
+    "targetBranch": "h-earth/habitat-material-publication-20261029"
+  },
+  "terminalDispositions": [
+    "PASS_CLOSED",
+    "FAIL_CLOSED",
+    "REJECTED_CLOSED",
+    "WITHDRAWN",
+    "SUPERSEDED"
+  ],
+  "workflowPath": ".github/workflows/pages-exact-head-deploy-v3.yml"
+}

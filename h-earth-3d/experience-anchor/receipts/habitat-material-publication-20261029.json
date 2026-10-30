@@ -1,0 +1,56 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "operationId": "H_EARTH_HABITAT_MATERIAL_PUBLICATION_20261029_001",
+  "lockGeneration": 2989,
+  "qualifiedProductSource": "9ffe7fae03ff8f46e5cd1de1e388f6cebef9aeea",
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "sha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d"
+    },
+    {
+      "path": "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+      "sha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "365aec75bffae1c95c19c4bc9cab9869720893a04bcb32eadad46e7f6b14267f"
+    }
+  ],
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/comparison.json",
+    "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/anchor-review.md",
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg"
+  ],
+  "interactionEvidence": [
+    "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/anchor-review.md"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/receipts/corrected-material-publication-20261029.json",
+    "h-earth-3d/experience-anchor/evidence/habitat-material-publication-20261029/anchor-review.md"
+  ],
+  "reviewBasis": "Exact product bytes, saved paired images, controlling proxy and unchanged source-contract preservation; independent West review.",
+  "limitations": [
+    "Oasis protected ground visually inconclusive; protection supported by source only.",
+    "No new global traversal or physical Android/performance certification.",
+    "Bounded habitat seam improvement only; other terrain defects not declared resolved."
+  ],
+  "releaseAuthorizedByThisReceipt": false
+}

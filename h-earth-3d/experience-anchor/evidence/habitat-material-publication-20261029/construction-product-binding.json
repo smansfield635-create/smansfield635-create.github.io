@@ -1,0 +1,12 @@
+{
+  "baseline": {
+    "head": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+    "rendererSha256": "a2ab977a3ea620f7bf87b3bdfb4e6a720cf7801f2ecbb670b4ac2dfccacf917d",
+    "routeSha256": "e776883f16ac36f00b51356fe8e78ac6ae2d0f6ce28016f776068b3d76831cb5"
+  },
+  "candidate": {
+    "rendererSha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+    "routeSha256": "365aec75bffae1c95c19c4bc9cab9869720893a04bcb32eadad46e7f6b14267f",
+    "presentationSha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a"
+  }
+}

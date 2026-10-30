@@ -1,0 +1,153 @@
+{
+  "schema": "H_EARTH_NATURAL_MATERIAL_BLEND_SCENE_v1",
+  "result": "SIX_LIT_FRAMES_CAPTURED_REQUIRES_PAIRED_REVIEW",
+  "sceneHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+  "poses": [
+    {
+      "name": "edge-approach",
+      "x": 165.6666667,
+      "z": -282,
+      "yaw": 180,
+      "pitch": -6.765
+    },
+    {
+      "name": "edge-close",
+      "x": 165.6666667,
+      "z": -276,
+      "yaw": 180,
+      "pitch": -15.299
+    },
+    {
+      "name": "edge-side",
+      "x": 153.6666667,
+      "z": -270.1354167,
+      "yaw": 90,
+      "pitch": -11.024
+    },
+    {
+      "name": "edge-reverse",
+      "x": 165.6666667,
+      "z": -258,
+      "yaw": 0,
+      "pitch": -31.249
+    },
+    {
+      "name": "protected-grove",
+      "x": -139.40268,
+      "z": -210.74617,
+      "y": 30,
+      "yaw": 0,
+      "pitch": -80,
+      "diagnosticObserver": true
+    },
+    {
+      "name": "protected-oasis",
+      "x": 8,
+      "z": -167,
+      "y": 18,
+      "yaw": 0,
+      "pitch": -80,
+      "diagnosticObserver": true
+    }
+  ],
+  "errors": [],
+  "sourceSha256": {
+    "renderer": "a2ab977a3ea620f7bf87b3bdfb4e6a720cf7801f2ecbb670b4ac2dfccacf917d",
+    "route": "e776883f16ac36f00b51356fe8e78ac6ae2d0f6ce28016f776068b3d76831cb5"
+  },
+  "ownerVisualAcceptance": false,
+  "releaseAuthorized": false,
+  "originalReceiptSha256": "1321bc831288bf9fc88d93cf22639c6ccdded0902b7d2835bce76da030867ced",
+  "sourceArtifactId": 12948702650,
+  "receiptForm": "BOUNDED_EXTRACT_ORIGINAL_IN_ARTIFACT",
+  "views": [
+    {
+      "pose": {
+        "name": "edge-approach",
+        "x": 165.6666667,
+        "z": -282,
+        "yaw": 180,
+        "pitch": -6.765
+      },
+      "image": "edge-approach.png",
+      "imageSha256": "d21d5cad865bec42a5927ea4864bd2828c4dfa42457aed46de86d01a68ca1136",
+      "imageBytes": 313505,
+      "grassHidden": false,
+      "rendererResponseTransformed": false
+    },
+    {
+      "pose": {
+        "name": "edge-close",
+        "x": 165.6666667,
+        "z": -276,
+        "yaw": 180,
+        "pitch": -15.299
+      },
+      "image": "edge-close.png",
+      "imageSha256": "8b8e98c2afa7d35faf999aabcf403e88aff6b15607200c215dd212af783d4bb8",
+      "imageBytes": 341884,
+      "grassHidden": false,
+      "rendererResponseTransformed": false
+    },
+    {
+      "pose": {
+        "name": "edge-side",
+        "x": 153.6666667,
+        "z": -270.1354167,
+        "yaw": 90,
+        "pitch": -11.024
+      },
+      "image": "edge-side.png",
+      "imageSha256": "2f05d9e8daa627ec0ccbd1d9ed88a6798332b5273459a0daf9fd4e6fc0d025b7",
+      "imageBytes": 248463,
+      "grassHidden": false,
+      "rendererResponseTransformed": false
+    },
+    {
+      "pose": {
+        "name": "edge-reverse",
+        "x": 165.6666667,
+        "z": -258,
+        "yaw": 0,
+        "pitch": -31.249
+      },
+      "image": "edge-reverse.png",
+      "imageSha256": "0baa410b53909c93ad3c1630735349f35e3cef7caf58683e963051bbec31b11e",
+      "imageBytes": 278927,
+      "grassHidden": false,
+      "rendererResponseTransformed": false
+    },
+    {
+      "pose": {
+        "name": "protected-grove",
+        "x": -139.40268,
+        "z": -210.74617,
+        "y": 30,
+        "yaw": 0,
+        "pitch": -80,
+        "diagnosticObserver": true
+      },
+      "image": "protected-grove.png",
+      "imageSha256": "90774c6c65113201b49feeab5478dc9535e3d1a097b09e0774e5438e0d8ad7d1",
+      "imageBytes": 461828,
+      "grassHidden": false,
+      "rendererResponseTransformed": false
+    },
+    {
+      "pose": {
+        "name": "protected-oasis",
+        "x": 8,
+        "z": -167,
+        "y": 18,
+        "yaw": 0,
+        "pitch": -80,
+        "diagnosticObserver": true
+      },
+      "image": "protected-oasis.png",
+      "imageSha256": "2e4d9f229a6bc8bf7e9e428e3b8a81e7dfa981e2adbfc0bbde5999dae692e177",
+      "imageBytes": 9421,
+      "grassHidden": false,
+      "rendererResponseTransformed": false
+    }
+  ]
+}

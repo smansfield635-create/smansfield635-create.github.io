@@ -3,20 +3,20 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath,pathToFileURL} from 'node:url';
 import {assertCheckout,comparisonState,instrumentRoute,assetReadiness,footprintVegetationReadiness,normalizeVegetationIdentity,PRODUCTION_RENDERER_SHA256,PRODUCTION_ROUTE_SHA256,PRODUCTION_ATLASES,validateProductionAtlasResponses} from '../../../tools/h-earth-ground-material-comparison.v1.mjs';
 export const BASELINE_HEAD='260c66540b4471bb3d50cbc28cf82d160b732b19';
 export const CANDIDATE_HEAD='3ea149e5b56e8cc0d5aac192bce0cdd47da7e626';
 const ADMISSION=JSON.parse(fs.readFileSync(new URL('./admission.json',import.meta.url)));
 export const PROFILE='INLAND_MARGIN_VISUAL_V1';
-export const OPERATION='H_EARTH_INLAND_MARGIN_VISUAL_20261030_001';
+export const OPERATION='H_EARTH_INLAND_MARGIN_CAMERA_REPAIR_20261030_001';
 export const VIEWPORT=Object.freeze({width:384,height:688});
 export const TARGET=Object.freeze({x:-189,z:-736});
 export const POSES=Object.freeze([
  {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
  {name:'inland-seam-far',x:-200,z:-656,y:18.793665,yaw:0,pitch:-2,diagnosticObserver:true},
- {name:'inland-close',x:-189,z:-724,yaw:0,pitch:-15},
- {name:'inland-side',x:-204,z:-736,yaw:90,pitch:-12},
+ {name:'inland-close',x:-189,z:-724,y:16.77975559234619,yaw:0,pitch:-15,diagnosticObserver:true},
+ {name:'inland-side',x:-204,z:-736,y:18.126469612121582,yaw:90,pitch:-12,diagnosticObserver:true},
  {name:'protected-grove',x:-139.40268,z:-210.74617,y:30,yaw:0,pitch:-80,diagnosticObserver:true},
  {name:'protected-meadow',x:-52,z:-208,yaw:136,pitch:-15}
 ].map(Object.freeze));
@@ -32,6 +32,14 @@ export const ROUTE=ROOT+'vegetation-prototype/route.js';
 export const PRESENTATION=ROOT+'render/habitat-material-presentation.v1.js';
 export const MARGIN=ROOT+'render/material-margin-field.v1.js';
 const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+export function validateNavigationDomain(nav,poses=[WARMUP_POSE,...POSES]){
+ if(typeof nav.isHEarthPositionInsideTraversalDomain!=='function')throw Error('NAVIGATION_DOMAIN_API');
+ for(const pose of poses){
+  if(pose.diagnosticObserver===true){if(!['x','y','z','yaw','pitch'].every(k=>Number.isFinite(pose[k])))throw Error('DIAGNOSTIC_POSE_INVALID:'+pose.name);}
+  else if(!nav.isHEarthPositionInsideTraversalDomain(pose.x,pose.z))throw Error('POSE_OUTSIDE_NAVIGATION_DOMAIN:'+pose.name);
+ }
+ return true;
+}
 export function parseArgs(argv){
  const a={};for(let i=0;i<argv.length;i+=2){if(!['--baseline-dir','--candidate-dir','--output'].includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('EDGE_CLI_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}
  if(Object.keys(a).length!==3||new Set(Object.values(a)).size!==3||['--baseline-dir','--candidate-dir'].some(k=>a['--output'].startsWith(a[k]+path.sep)))throw Error('EDGE_DIRECTORIES');return a;
@@ -83,6 +91,12 @@ export function validateHttp(responses,label,expected){
  return true;
 }
 export function validateHeads(before,after){if(before!==BASELINE_HEAD||after!==CANDIDATE_HEAD)throw Error('FROZEN_SCENE_HEAD');return true;}
+export async function preflightNavigation(dir,expected){
+ const navigationFile=path.join(dir,ROOT,'functional-landscape/navigation.js');
+ if(sha(fs.readFileSync(navigationFile))!==expected.navigationSha256)throw Error('NAVIGATION_SOURCE_CUSTODY');
+ validateNavigationDomain(await import(pathToFileURL(navigationFile).href));
+ return {navigationSha256:expected.navigationSha256,posesChecked:CAPTURE_STEPS.length};
+}
 export async function captureScene({dir,out,head,label,expected}){
  fs.mkdirSync(out,{recursive:true});
  const receipt={lockGeneration:ADMISSION.lockGeneration,admissionRun:ADMISSION.workflowRun,target:TARGET,sourceEdge:{kind:'FULL_MATERIAL_INLAND',bounds:[-213,-759,-165,-711],centerProfileX:-189},schema:'H_EARTH_MATERIAL_MARGIN_SCENE_v1',profile:PROFILE,operationId:OPERATION,result:'INCOMPLETE',sceneHead:head,label,poses:POSES,viewport:VIEWPORT,frameCap:6,runBudget:1,automaticRetry:false,exactScreenshotMatchProven:false,rootCauseProven:false,productMutation:false,comparisonCandidate:label==='candidate',rendererResponseTransformed:false,physicalVegetationPreserved:true,actualVegetationPixelVisibilityAsserted:false,physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,views:[],errors:[]};
@@ -111,7 +125,7 @@ export async function captureScene({dir,out,head,label,expected}){
   await page.evaluate(async()=>{const urls=[...new Set(performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x)))];if(urls.length!==1)throw Error('SURVEY_NAV_IDENTITY');const url=urls[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
   let previousFrame=0;
   for(const step of CAPTURE_STEPS){
-   const {pose,sequence:seq}=step,deadline=Date.now()+180000;let signature=null,stable=0;
+   const {pose,sequence:seq}=step,deadline=Date.now()+180000;let signature=null,stable=0;receipt.attemptedPose=pose;persist();
    while(stable<2){
     const settled=await page.evaluate(async({pose,seq})=>{const state=__groundComparisonState(__groundComparisonNav,pose,seq,'OWNER_BOUNDARY_SURVEY_SETTLE');__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),canvas=document.querySelector('#h-earth-functional-landscape-canvas'),packet=__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:seq});const a=__surveyReadiness(gpu.resources,packet.camera.position);return {...a,frame:gpu.frameRecords.at(-1),importedAssets:[gpu.resources.jacaranda,...gpu.resources.treeCollection.entries].map(e=>({id:e.focusId??e.id,state:e.state,ready:e.ready})),queue:gpu.resources.treeCollection.queue};},{pose,seq});
     receipt.lastSettle={pose,capture:step.capture,...settled};persist();stable=settled.ready&&settled.frame.navigationSequence===seq&&settled.signature===signature?stable+1:0;signature=settled.signature;if(Date.now()>deadline)throw Error((step.capture?'SURVEY':'WARMUP')+'_ASSETS_NOT_SETTLED:'+settled.importedAssets.filter(e=>e.state!=='READY'||e.ready!==true).map(e=>e.id+':'+e.state).join(','));if(stable<2)await new Promise(r=>setTimeout(r,250));
@@ -142,6 +156,12 @@ export async function run(argv){
  const a=parseArgs(argv),binding=JSON.parse(fs.readFileSync(new URL('./product-binding.json',import.meta.url)));
  const candidateHead=execFileSync('git',['-C',a['--candidate-dir'],'rev-parse','HEAD'],{encoding:'utf8'}).trim();
  validateHeads(execFileSync('git',['-C',a['--baseline-dir'],'rev-parse','HEAD'],{encoding:'utf8'}).trim(),candidateHead);
+ fs.mkdirSync(a['--output'],{recursive:true});
+ const preflight={result:'CHECKING_BOTH_SCENES_BEFORE_BROWSER',scenes:{}};
+ const savePreflight=()=>fs.writeFileSync(path.join(a['--output'],'preflight.json'),JSON.stringify(preflight,null,2)+'\n');
+ savePreflight();
+ try{for(const label of ['baseline','candidate']){preflight.scenes[label]=await preflightNavigation(a['--'+label+'-dir'],binding[label]);savePreflight();}preflight.result='BOTH_SCENE_POSES_PREFLIGHT_PASS';savePreflight();}
+ catch(e){preflight.result='FAILED_BEFORE_BROWSER';preflight.error=e.message;savePreflight();throw e;}
  const before=await captureScene({dir:a['--baseline-dir'],out:path.join(a['--output'],'baseline'),head:BASELINE_HEAD,label:'baseline',expected:binding.baseline});
  const after=await captureScene({dir:a['--candidate-dir'],out:path.join(a['--output'],'candidate'),head:candidateHead,label:'candidate',expected:binding.candidate});
  validatePair(before,after);

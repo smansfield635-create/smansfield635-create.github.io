@@ -1,0 +1,124 @@
+{
+  "schema": "H_EARTH_GEN3000_STEEP_SIDE_SOURCE_CAMERA_SHORTLIST_v1",
+  "sourceReference": "ORIGINAL_NATIVE_MESH_20261029_ARCHIVE_NOT_CURRENT_VISIBLE_GPU",
+  "sourceArchiveSha256": "5bfce62703c70fd5b68e894fca8634e5206c1ca681d7a127c192312a8e06aa3c",
+  "testedProductCandidate": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "poses": [
+    {
+      "id": "west_flank",
+      "historicalNativeTerrainOnly": true,
+      "cameraXZ": [
+        110.0,
+        -310.0
+      ],
+      "sourceCameraY": 8.346905947403934,
+      "yawDegrees": 153.434948822922,
+      "pitchDegrees": 20.264510304722066,
+      "verticalFovDegrees": 56,
+      "viewport": [
+        529,
+        980
+      ],
+      "targetXZ": [
+        145.0,
+        -240.0
+      ],
+      "targetSurfaceXYZ": [
+        145.0,
+        36.24194177261537,
+        -240.0
+      ],
+      "targetSourceSlope": 0.37046317164913967,
+      "targetSourceTriangle": 12036,
+      "horizontalTargetDistance": 78.26237921249263,
+      "sampledRayMinTerrainClearance": 2.397306563603637,
+      "raySamples": 39,
+      "eyeHeightAboveSourceSurface": 1.65,
+      "candidateCurrentSceneRecheckRequired": true,
+      "ownerPhotoMatch": false
+    },
+    {
+      "id": "central_approach",
+      "historicalNativeTerrainOnly": true,
+      "cameraXZ": [
+        150.0,
+        -318.0
+      ],
+      "sourceCameraY": 6.664072396290289,
+      "yawDegrees": 183.66778805553142,
+      "pitchDegrees": 21.366480780222314,
+      "verticalFovDegrees": 56,
+      "viewport": [
+        529,
+        980
+      ],
+      "targetXZ": [
+        145.0,
+        -240.0
+      ],
+      "targetSurfaceXYZ": [
+        145.0,
+        36.24194177261537,
+        -240.0
+      ],
+      "targetSourceSlope": 0.37046317164913967,
+      "targetSourceTriangle": 12036,
+      "horizontalTargetDistance": 78.16009211867653,
+      "sampledRayMinTerrainClearance": 2.3694094572855136,
+      "raySamples": 39,
+      "eyeHeightAboveSourceSurface": 1.65,
+      "candidateCurrentSceneRecheckRequired": true,
+      "ownerPhotoMatch": false
+    },
+    {
+      "id": "east_oblique",
+      "historicalNativeTerrainOnly": true,
+      "cameraXZ": [
+        210.0,
+        -310.0
+      ],
+      "sourceCameraY": 6.9798827293496615,
+      "yawDegrees": 199.6538240580533,
+      "pitchDegrees": 11.103789511233805,
+      "verticalFovDegrees": 56,
+      "viewport": [
+        529,
+        980
+      ],
+      "targetXZ": [
+        185.0,
+        -240.0
+      ],
+      "targetSurfaceXYZ": [
+        185.0,
+        20.568021852993443,
+        -240.0
+      ],
+      "targetSourceSlope": 0.27775592646767067,
+      "targetSourceTriangle": 12046,
+      "horizontalTargetDistance": 74.33034373659252,
+      "sampledRayMinTerrainClearance": 1.9987894395692898,
+      "raySamples": 39,
+      "eyeHeightAboveSourceSurface": 1.65,
+      "candidateCurrentSceneRecheckRequired": true,
+      "ownerPhotoMatch": false
+    }
+  ],
+  "protectedPreviouslyPreservedCameras": [
+    "protected-meadow",
+    "protected-coast"
+  ],
+  "originalRidgeExcluded": "x88,z-260,yaw118,pitch-13 was a foreground/background occlusion edge",
+  "purpose": "Coverage hypotheses for the undeveloped higher foothills, NOT reproduction of either owner screenshot",
+  "ownerDefectsStillUnlocated": [
+    "straight 180-degree ground material cutoff",
+    "curved tan/olive wedge"
+  ],
+  "limits": [
+    "No current candidate GPU visibility",
+    "No owner image/world correspondence",
+    "Original uploaded mesh: generated patches/current depth owner must be rechecked",
+    "LOS uses 39 native mesh centerline height samples, not pixel depth rasterization",
+    "No new canonical admission, GPU dispatch, product mutation, merge or publication"
+  ]
+}

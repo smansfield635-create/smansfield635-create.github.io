@@ -1,6 +1,7 @@
+import {comparisonState} from '../../../tools/h-earth-ground-material-comparison.v1.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {BASELINE_HEAD,POSES,VIEWPORT,CAPTURE_STEPS,WARMUP_POSE,parseArgs,surveyReadiness,expectedNavigationYaw,matchesCanonicalHeading,validateView,decodeCapture,validateSet,validatePair,validateMaterial,validateHttp,validateHeads,CANDIDATE_HEAD,PRESENTATION,MARGIN} from './qualify.mjs';
+import {BASELINE_HEAD,POSES,VIEWPORT,CAPTURE_STEPS,WARMUP_POSE,parseArgs,surveyReadiness,expectedNavigationYaw,matchesCanonicalHeading,validateView,decodeCapture,validateSet,validatePair,validateMaterial,validateHttp,validateHeads,validateNavigationDomain,CANDIDATE_HEAD,PRESENTATION,MARGIN} from './qualify.mjs';
 const clone=structuredClone;
 const binding=()=>({baseline:{head:BASELINE_HEAD,rendererSha256:'a2ab977a3ea620f7bf87b3bdfb4e6a720cf7801f2ecbb670b4ac2dfccacf917d',routeSha256:'e776883f16ac36f00b51356fe8e78ac6ae2d0f6ce28016f776068b3d76831cb5'},candidate:{rendererSha256:'1'.repeat(64),routeSha256:'2'.repeat(64)}});
 const head='3'.repeat(40);
@@ -25,9 +26,9 @@ test('canonical signed headings retain all full rotations',()=>{
  assert.equal(matchesCanonicalHeading(210,210),false);assert.equal(matchesCanonicalHeading(-149,210),false);assert.throws(()=>expectedNavigationYaw(NaN),/NONFINITE/);
 });
 test('four source-targeted poses plus two protected controls and diagnostic versus supported-camera roles are retained',()=>{
- assert.equal(POSES.length,6);assert.equal(new Set(POSES.map(p=>p.name )).size,6);assert.equal(POSES.filter(p=>p.diagnosticObserver).length,3);assert.deepEqual(VIEWPORT,{width:384,height:688});
+ assert.equal(POSES.length,6);assert.equal(new Set(POSES.map(p=>p.name )).size,6);assert.equal(POSES.filter(p=>p.diagnosticObserver).length,5);assert.deepEqual(VIEWPORT,{width:384,height:688});
  assert.equal(validateSet(scene().views),true);
- const bad=scene();bad.views[2].state.diagnosticObserver=true;assert.throws(()=>validateSet(bad.views),/SURVEY_POSE/);
+ const bad=scene();bad.views[5].state.diagnosticObserver=true;assert.throws(()=>validateSet(bad.views),/SURVEY_POSE/);
  const wrongHeight=scene();wrongHeight.views[0].state.position.x+=1;assert.throws(()=>validateSet(wrongHeight.views),/SURVEY_POSE/);
 });
 test('missing, extra, duplicate and altered pose frames fail closed',()=>{
@@ -71,7 +72,7 @@ test('one noncapture warmup precedes exactly six fixed views',()=>{
 test('paired cameras, roots and warmup are mandatory',()=>{
  const a={views:POSES.map(view),warmup:{result:'ALL_NINE_READY_NO_IMAGE_CAPTURED'}},b=clone(a);
  assert.equal(validatePair(a,b),true);
- b.views[2].state.position.y+=1;assert.throws(()=>validatePair(a,b),/PAIR_CAMERA/);
+ b.views[5].state.position.y+=1;assert.throws(()=>validatePair(a,b),/PAIR_CAMERA/);
  const c=clone(a);c.warmup.result='PENDING';assert.throws(()=>validatePair(a,c),/PAIR_WARMUP/);
  const e=clone(a);e.views.forEach(v=>{v.resources.singleOwnerVegetation.controlRoots=[{x:1}];v.assetSignature=surveyReadiness(v.resources,v.expectedCameraPosition).signature});assert.throws(()=>validatePair(a,e),/PAIR_VEGETATION/);
 });
@@ -87,4 +88,14 @@ test('helper HTTP identity is checked for both scenes',()=>{
  const expected={presentationSha256:'p',marginSha256:'m'},p={path:PRESENTATION,status:200,sha256:'p'},m={path:MARGIN,status:200,sha256:'m'};
  assert.equal(validateHttp([p],'baseline',expected),true);assert.equal(validateHttp([p,m],'candidate',expected),true);
  assert.throws(()=>validateHttp([],'baseline',expected));assert.throws(()=>validateHttp([p],'candidate',expected));assert.throws(()=>validateHttp([p,m],'baseline',expected));assert.throws(()=>validateHttp([p,p,m],'candidate',expected));
+});
+
+test('real navigation rejects old walking poses and accepts explicitly declared diagnostic cameras',async()=>{
+ const nav=await import('../../../showroom/globe/h-earth/functional-landscape/navigation.js');
+ assert.equal(nav.isHEarthPositionInsideTraversalDomain(-189,-724),false);
+ assert.equal(nav.isHEarthPositionInsideTraversalDomain(-204,-736),false);
+ assert.throws(()=>validateNavigationDomain(nav,[{name:'old-close',x:-189,z:-724,yaw:0,pitch:-15}]),/POSE_OUTSIDE_NAVIGATION_DOMAIN:old-close/);
+ assert.throws(()=>validateNavigationDomain(nav,[{name:'old-side',x:-204,z:-736,yaw:90,pitch:-12}]),/POSE_OUTSIDE_NAVIGATION_DOMAIN:old-side/);
+ assert.equal(validateNavigationDomain(nav),true);assert.throws(()=>validateNavigationDomain(nav,[{...POSES[2],y:undefined}]),/DIAGNOSTIC_POSE_INVALID/);
+ for(const name of ['inland-close','inland-side']){const pose=POSES.find(p=>p.name===name);assert.equal(pose.diagnosticObserver,true);assert.ok(Number.isFinite(pose.y));const state=comparisonState(nav,pose,123,'TEST_INSPECTION');assert.equal(state.diagnosticObserver,true);assert.equal(state.terrainSupported,false);assert.equal(state.accepted,false);assert.equal(state.position.y,pose.y);}
 });

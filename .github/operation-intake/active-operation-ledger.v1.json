@@ -16570,50 +16570,6 @@
       "scopeHash": "b04e0ce61d8b5262b8160fe29fe64116bcdf896180e461625aac5e846dca2c89",
       "state": "ADMITTED_LOCKED"
     },
-    "b0b96416fbfe2ff1399677e2e3167b70515753a5de26af4649d38dbdf6f7a673": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "d82e18dcdde4954188d2a2903d1bf83263d46c65",
-          "lockGeneration": 3001,
-          "lockScope": "NINE_SUMMITS_UNIVERSE:READONLY_VIDEO_INSPECTION_20261030",
-          "operationId": "NINE_SUMMITS_PEACE_READONLY_VIDEO_INSPECTION_20261030_001",
-          "procedureLocatorDigest": "6459c1aaf50ad0019d385d927eca620f9d29c17534513867a7cc17ee48034734",
-          "requestDigest": "141f7e10e943237792b902652d914ea5212c1a552ab10ad46609c601a4b2a4bc",
-          "scopeHash": "b0b96416fbfe2ff1399677e2e3167b70515753a5de26af4649d38dbdf6f7a673"
-        },
-        "bindingDigest": "fcb6c7cc0e349101b55be59f87cd8770a60897abdd0dd91b1f24eda3d29cc962",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "93bc9ea364a92edb553f24149aeab01da7783d01336033ac9fa64d339f9038c3",
-          "commentId": 6530861363,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6961,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41109781211,
-          "workflowSha": "d82e18dcdde4954188d2a2903d1bf83263d46c65"
-        },
-        "lineageAnchorCommitSha": "0613cdedf9d000fd9d58e864857dbd4d2a4cfc10",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "d82e18dcdde4954188d2a2903d1bf83263d46c65",
-      "lockGeneration": 3001,
-      "lockScope": "NINE_SUMMITS_UNIVERSE:READONLY_VIDEO_INSPECTION_20261030",
-      "operationId": "NINE_SUMMITS_PEACE_READONLY_VIDEO_INSPECTION_20261030_001",
-      "procedureLocatorDigest": "6459c1aaf50ad0019d385d927eca620f9d29c17534513867a7cc17ee48034734",
-      "released": false,
-      "requestDigest": "141f7e10e943237792b902652d914ea5212c1a552ab10ad46609c601a4b2a4bc",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "b0b96416fbfe2ff1399677e2e3167b70515753a5de26af4649d38dbdf6f7a673",
-      "state": "ADMITTED_LOCKED"
-    },
     "b0c3b4458f6035a7665533ae7e5027d36302e4c2f0303dba4818584e57d41101": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -93002,6 +92958,51 @@
       "scopeHash": "fda29e48580455cb7b7bb458df28089f9e37a78584bc940532082f91026c19ef",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d82e18dcdde4954188d2a2903d1bf83263d46c65",
+          "lockGeneration": 3001,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:READONLY_VIDEO_INSPECTION_20261030",
+          "operationId": "NINE_SUMMITS_PEACE_READONLY_VIDEO_INSPECTION_20261030_001",
+          "procedureLocatorDigest": "6459c1aaf50ad0019d385d927eca620f9d29c17534513867a7cc17ee48034734",
+          "requestDigest": "141f7e10e943237792b902652d914ea5212c1a552ab10ad46609c601a4b2a4bc",
+          "scopeHash": "b0b96416fbfe2ff1399677e2e3167b70515753a5de26af4649d38dbdf6f7a673"
+        },
+        "bindingDigest": "fcb6c7cc0e349101b55be59f87cd8770a60897abdd0dd91b1f24eda3d29cc962",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "93bc9ea364a92edb553f24149aeab01da7783d01336033ac9fa64d339f9038c3",
+          "commentId": 6530861363,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41109781211,
+          "workflowSha": "d82e18dcdde4954188d2a2903d1bf83263d46c65"
+        },
+        "lineageAnchorCommitSha": "0613cdedf9d000fd9d58e864857dbd4d2a4cfc10",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d82e18dcdde4954188d2a2903d1bf83263d46c65",
+      "lockGeneration": 3001,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:READONLY_VIDEO_INSPECTION_20261030",
+      "operationId": "NINE_SUMMITS_PEACE_READONLY_VIDEO_INSPECTION_20261030_001",
+      "procedureLocatorDigest": "6459c1aaf50ad0019d385d927eca620f9d29c17534513867a7cc17ee48034734",
+      "released": true,
+      "requestDigest": "141f7e10e943237792b902652d914ea5212c1a552ab10ad46609c601a4b2a4bc",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "b0b96416fbfe2ff1399677e2e3167b70515753a5de26af4649d38dbdf6f7a673",
+      "state": "TERMINAL",
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

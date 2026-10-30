@@ -771,6 +771,7 @@ function drawEmberWorld(t){if(!emberGL)return;
 /* WORLD 05 — FORGIVENESS → PEACE / The Quiet Ocean.
  * An actual coastal horizon, five independent islands, sandy shore, cloud banks
  * and waves; no enlarged texture sphere masquerades as a world encounter. */
+let peaceKernelFacade=null;
 let peaceGL=null,peaceProgram=null,peaceSkyProgram=null,peaceOcean=null,peaceIslands=null,peaceShore=null,peaceRocks=null,peaceSkyBuffer=null,peaceLoc={},peaceSkyLoc={};
 const peaceCanvas=document.querySelector('#peace-world-canvas'),peaceHud=document.querySelector('#peace-world-hud');
 const peaceVertex=`precision highp float;
@@ -840,38 +841,85 @@ void main(){vec2 uv=vUv;
 }`;
 function peaceCompile(type,source){const s=peaceGL.createShader(type);peaceGL.shaderSource(s,source);peaceGL.compileShader(s);if(!peaceGL.getShaderParameter(s,peaceGL.COMPILE_STATUS))throw Error('Peace shader: '+peaceGL.getShaderInfoLog(s));return s;}
 function peaceLink(v,f){const p=peaceGL.createProgram(),a=peaceCompile(peaceGL.VERTEX_SHADER,v),b=peaceCompile(peaceGL.FRAGMENT_SHADER,f);peaceGL.attachShader(p,a);peaceGL.attachShader(p,b);peaceGL.linkProgram(p);peaceGL.deleteShader(a);peaceGL.deleteShader(b);if(!peaceGL.getProgramParameter(p,peaceGL.LINK_STATUS))throw Error('Peace program: '+peaceGL.getProgramInfoLog(p));return p;}
-function peaceTri(o,a,b,c){const u=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],v=[c[0]-a[0],c[1]-a[1],c[2]-a[2]];
- const n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];const len=Math.hypot(...n)||1;const norm=n.map(x=>x/len);if(norm[1]<0)for(let i=0;i<3;i++)norm[i]=-norm[i];for(const p of [a,b,c])o.push(...p,...norm);}
-function peaceQuad(o,a,b,c,d){peaceTri(o,a,b,c);peaceTri(o,b,d,c);}
-function peaceOceanMesh(){const out=[],nx=96,nz=128;for(let z=0;z<nz;z++)for(let x=0;x<nx;x++){
- const x0=-52+104*x/nx,x1=-52+104*(x+1)/nx,z0=0+125*z/nz,z1=0+125*(z+1)/nz;
- peaceQuad(out,[x0,-1.35,z0],[x1,-1.35,z0],[x0,-1.35,z1],[x1,-1.35,z1]);}
- return new Float32Array(out);}
+/* Peace geometry is constructed and West-admitted through the existing H-Earth kernel.
+ * Destination GLSL, scene navigation and all other worlds remain unchanged. */
 const PEACE_ISLANDS=[[-20,22,12,5.1],[-4,43,14,6.0],[24,35,14,6.2],[-26,75,21,7.8],[18,92,22,8.2],[4,110,24,7.8]];
-function peaceIslandHeight(cx,cz,r,ang,seed){const wrinkle=1.+.22*Math.sin(ang*3.+seed)+.12*Math.cos(ang*7.-seed*.67);
- return (r*wrinkle);}
-function peaceIslandMesh(){const out=[],rings=13,sides=60;
- for(let k=0;k<PEACE_ISLANDS.length;k++){const [cx,cz,rad,height]=PEACE_ISLANDS[k];
-  const point=(r,a)=>{const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5),x=cx+edge*r*Math.cos(t),z=cz+edge*r*.67*Math.sin(t);
+function peaceIslandHeight(cx,cz,r,ang,seed){const wrinkle=1.+.22*Math.sin(ang*3.+seed)+.12*Math.cos(ang*7.-seed*.67);return r*wrinkle;}
+function peaceBuildKernelMeshes(K){
+ if(!K)throw Error('Peace geometry kernel unavailable');
+ const constructed=[];
+ const add=(id,kind,positions,indices)=>{
+  const result=K.constructHEarthTriangleMesh({primitiveId:'nine-summits-peace-'+id,
+   vertices:positions.map(p=>K.createHEarthVector3(p[0],p[1],p[2])),indices,
+   expectedClosure:'OPEN_ALLOWED',semanticRole:'FORGIVENESS_PEACE_'+id.toUpperCase()});
+  if(!result.valid||K.hasHEarthBlockingIssues(result.issues))
+   throw Error('Peace kernel construction failed: '+id+': '+result.issues.map(e=>e.code).join(','));
+  constructed.push({kind,record:result.primitiveRecord});
+ };
+ // Indexed shared-vertex ocean; wave movement remains in the existing shader.
+ {const positions=[],indices=[],nx=48,nz=64;
+  for(let iz=0;iz<=nz;iz++)for(let ix=0;ix<=nx;ix++)positions.push([-52+104*ix/nx,-1.35,125*iz/nz]);
+  for(let iz=0;iz<nz;iz++)for(let ix=0;ix<nx;ix++){
+   const a=iz*(nx+1)+ix,b=a+1,c=a+nx+1,d=c+1;
+   indices.push(a,c,b,b,c,d);
+  }
+  add('open-ocean',0,positions,indices);
+ }
+ for(let k=0;k<PEACE_ISLANDS.length;k++){
+  const [cx,cz,rad,height]=PEACE_ISLANDS[k],sides=60,rings=13;
+  const point=(r,a)=>{
+   const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5);
+   const x=cx+edge*r*Math.cos(t),z=cz+edge*r*.67*Math.sin(t);
    const slope=Math.pow(Math.max(0,1.-r*r),1.4),ridges=Math.sin(t*3.+k*2.1)*.13+Math.sin(t*7.-k*1.7)*.055;
-   const y=-1.3+height*(.56*slope+Math.max(0,1.-r)*r*ridges*.87+.052*Math.sin(x*.41+z*.18)*(r*(1-r)));
-   return [x,y,z];};
-  for(let ring=0;ring<rings;ring++)for(let side=0;side<sides;side++){
-   const r0=ring/rings,r1=(ring+1)/rings;
-   peaceQuad(out,point(r0,side),point(r0,side+1),point(r1,side),point(r1,side+1));
+   const y=-1.3+height*(.56*slope+Math.max(0,1.-r)*r*ridges*.87+.052*Math.sin(x*.41+z*.18)*(r*(1.-r)));
+   return [x,y,z];
+  };
+  const positions=[point(0,0)],indices=[];
+  for(let ring=1;ring<=rings;ring++)for(let side=0;side<sides;side++)positions.push(point(ring/rings,side));
+  for(let side=0;side<sides;side++)indices.push(0,1+(side+1)%sides,1+side);
+  for(let ring=1;ring<rings;ring++)for(let side=0;side<sides;side++){
+   const a=1+(ring-1)*sides+side,b=1+(ring-1)*sides+(side+1)%sides,c=1+ring*sides+side,d=1+ring*sides+(side+1)%sides;
+   indices.push(a,b,c,b,d,c);
+  }
+  add('island-'+k,2,positions,indices);
+  // Explicit open annular shore strips.
+  {const positions=[],indices=[],shoreSides=96;
+   const mk=(r,a)=>{const t=a*Math.PI*2/shoreSides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5);
+    return [cx+edge*r*Math.cos(t),-1.28,cz+edge*r*.67*Math.sin(t)];};
+   for(const r of [.95,1.08])for(let side=0;side<shoreSides;side++)positions.push(mk(r,side));
+   for(let side=0;side<shoreSides;side++){
+    const a=side,b=(side+1)%shoreSides,c=shoreSides+side,d=shoreSides+(side+1)%shoreSides;
+    indices.push(a,b,c,b,d,c);
+   }
+   add('shore-'+k,1,positions,indices);
   }
  }
- return new Float32Array(out);}
-function peaceShoreMesh(){const out=[],sides=96;
- for(let k=0;k<PEACE_ISLANDS.length;k++){const [cx,cz,rad]=PEACE_ISLANDS[k];for(let side=0;side<sides;side++){
-  const mk=(r,a)=>{const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5);return [cx+edge*r*Math.cos(t),-1.28,cz+edge*r*.67*Math.sin(t)];};
-  peaceQuad(out,mk(.95,side),mk(.95,side+1),mk(1.08,side),mk(1.08,side+1));
- }}return new Float32Array(out);}
-function peaceRocksMesh(){const out=[],rocks=[[-17,1.7,2.7],[18,2.2,3.8],[-31,8.2,5.5],[29,11.5,6.4]];
- for(let i=0;i<rocks.length;i++){const [cx,cz,rad]=rocks[i];const sides=9;
- const ring=(s,a)=>{const t=2*Math.PI*a/sides,r=rad*s*(1+.18*Math.sin(t*3.1+i));return [cx+r*Math.cos(t),-1.25+rad*(1-s)*.85,cz+r*.7*Math.sin(t)];};
- for(let s=0;s<2;s++)for(let a=0;a<sides;a++)peaceQuad(out,ring(s*.47+.05,a),ring(s*.47+.05,a+1),ring((s+1)*.47+.05,a),ring((s+1)*.47+.05,a+1));
- }return new Float32Array(out);}
+ const rocks=[[-17,1.7,2.7],[18,2.2,3.8],[-31,8.2,5.5],[29,11.5,6.4]];
+ for(let i=0;i<rocks.length;i++){
+  const [cx,cz,rad]=rocks[i],sides=9,positions=[],indices=[];
+  const ring=(s,a)=>{const t=2*Math.PI*a/sides,r=rad*s*(1+.18*Math.sin(t*3.1+i));
+   return [cx+r*Math.cos(t),-1.25+rad*(1.-s)*.85,cz+r*.7*Math.sin(t)];};
+  for(const rr of [.05,.52,.99])for(let a=0;a<sides;a++)positions.push(ring(rr,a));
+  for(let rr=0;rr<2;rr++)for(let a=0;a<sides;a++){
+   const A=rr*sides+a,B=rr*sides+(a+1)%sides,C=(rr+1)*sides+a,D=(rr+1)*sides+(a+1)%sides;
+   indices.push(A,B,C,B,D,C);
+  }
+  add('rock-'+i,3,positions,indices);
+ }
+ const admitted=K.admitHEarthPrimitiveBatch(constructed.map(v=>v.record),{frameId:'nine-summits-peace-coast-v1'});
+ if(!admitted.valid||!K.isHEarthAggregateFrameAdmissionRecord(admitted.frame)||K.hasHEarthBlockingIssues(admitted.issues))
+  throw Error('Peace coast kernel admission failed: '+(admitted.issues||[]).map(e=>e.code).join(','));
+ if(admitted.frame.primitives.length!==17)throw Error('Peace kernel primitive count mismatch');
+ const batches=[[],[],[],[]];
+ for(let i=0;i<admitted.frame.primitives.length;i++){
+  const g=admitted.frame.primitives[i].geometry,kind=constructed[i].kind,vertices=batches[kind];
+  g.indices.forEach((index,j)=>{
+   const p=g.vertices[index],n=g.faceNormals[Math.floor(j/3)],sign=n.y<0?-1:1;
+   vertices.push(p.x,p.y,p.z,n.x*sign,n.y*sign,n.z*sign);
+  });
+ }
+ return batches.map(x=>new Float32Array(x));
+}
 function setupPeaceWorld(){if(peaceGL)return;
  peaceGL=peaceCanvas.getContext('webgl',{alpha:false,antialias:false,powerPreference:'low-power'});
  if(!peaceGL)throw Error('Peace coast WebGL unavailable');
@@ -880,7 +928,8 @@ function setupPeaceWorld(){if(peaceGL)return;
  for(const n of ['uViewport','uTime','uKind'])peaceLoc[n]=peaceGL.getUniformLocation(peaceProgram,n);
  peaceSkyLoc.aXY=peaceGL.getAttribLocation(peaceSkyProgram,'aXY');for(const n of ['uAspect','uTime'])peaceSkyLoc[n]=peaceGL.getUniformLocation(peaceSkyProgram,n);
  const upload=data=>{const b=peaceGL.createBuffer();peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,b);peaceGL.bufferData(peaceGL.ARRAY_BUFFER,data,peaceGL.STATIC_DRAW);return{buffer:b,count:data.length/6};};
- peaceOcean=upload(peaceOceanMesh());peaceIslands=upload(peaceIslandMesh());peaceShore=upload(peaceShoreMesh());peaceRocks=upload(peaceRocksMesh());
+ const groups=peaceBuildKernelMeshes(peaceKernelFacade);
+ peaceOcean=upload(groups[0]);peaceShore=upload(groups[1]);peaceIslands=upload(groups[2]);peaceRocks=upload(groups[3]);
  peaceSkyBuffer=peaceGL.createBuffer();peaceGL.bindBuffer(peaceGL.ARRAY_BUFFER,peaceSkyBuffer);peaceGL.bufferData(peaceGL.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),peaceGL.STATIC_DRAW);
  peaceGL.enable(peaceGL.DEPTH_TEST);peaceGL.clearColor(.04,.14,.19,1.);
 }
@@ -1747,6 +1796,7 @@ function fallback(error){cancelPointer();stopInertia();if(raf)cancelAnimationFra
 async function init(){
   P=globalThis.DGB_COMPASS_ORBIT_PHYSICS;if(!P)throw Error('Shared Compass physics unavailable');
   const K=await import('../../showroom/globe/h-earth/render/geometry-kernel.js');
+  peaceKernelFacade=K;
   setupGL();meshes=buildGeometry(K);
   summits.forEach(([begin,summit],i)=>{const el=document.createElement('button');el.type='button';el.className='planet-label';el.dataset.planet=i;el.setAttribute('aria-label',`${begin} leads to ${summit}`);el.setAttribute('aria-pressed','false');el.innerHTML=`<strong>${begin}</strong><span>${summit}</span>`;el.addEventListener('click',event=>{if(event.detail===0)choose(i);});$('#planet-labels').append(el);labels.push(el);});
   try{setupJoyWorld();}catch(error){console.error('Gratitude world:',error);}

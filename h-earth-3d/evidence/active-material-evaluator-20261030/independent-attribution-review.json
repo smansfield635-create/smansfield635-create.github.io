@@ -1,0 +1,20 @@
+{
+  "schema": "H_EARTH_SYMMETRIC_ATTRIBUTION_ALGEBRA_REVIEW_v1",
+  "seed": 60003000,
+  "randomCases": 1000,
+  "stagesPerCase": 15,
+  "marginAdditiveStageIndex": 3,
+  "maxCoefficientSumError": 8.881784197001252e-16,
+  "maxCubeBoundError": 0,
+  "adversarialCases": [
+    "CONSTANT_DOWNSTREAM_GAIN_ATTENUATES_WITHOUT_OWN_INJECTION",
+    "FULL_REPLACEMENT_ERASES_ALL_UPSTREAM_AND_MARGIN_INFLUENCE",
+    "OPPOSING_STAGE_INJECTIONS_CANCEL_SIGNED"
+  ],
+  "result": "PASS_ALGEBRA_ONLY",
+  "limits": [
+    "This verifies the midpoint-product allocation, not model source operands.",
+    "Bound assumes the SAME symbolic substrate at both ends in [0,1]^3.",
+    "Real neighboring substrates may differ and this does not bound their final color difference."
+  ]
+}

@@ -1,0 +1,35 @@
+✔ native renderer slice corruption is rejected (110.292562ms)
+✔ real contact and captured seam are reconstructed (0.751433ms)
+✔ attribute geometry matches prior independent geometry checkpoint (17.022664ms)
+✔ GPU coast is distinct while every other generated support attribute stays equal (14.763692ms)
+✔ every emitted buffer has expected bytes and finite values (2147.580961ms)
+✔ native rim uses raw source at boundary and preserves interior (82.809313ms)
+✔ source classification algebra, eligibility and adjacency regressions (3206.220469ms)
+✔ independent symmetric attribution proof across 1000 traces (1114.886826ms)
+✔ RGB composition reproduces direct Site B for 10000 seeded operand sets (203.023783ms)
+✔ zero and full masks preserve protected input or replace exactly (3.344895ms)
+✔ channel gain counterexample cannot use shared scalar A (0.685138ms)
+✔ missing textures remain unresolved rather than zero coverage (0.692881ms)
+✔ wrong stage order, duplicate and undeclared stages rejected (1.423431ms)
+✔ nonfinite operands and invalid masks rejected (0.632542ms)
+✔ source hash mutation fails closed (1.000768ms)
+✔ generated rock and water never enter soil correction (0.358716ms)
+✔ exact source coordinate inverse round trips boundaries and Float32 (3.971592ms)
+✔ layer census distinguishes edges, coheight overlaps and separated layers (1947.416781ms)
+✔ ordered stage and fixture regressions (513.7999ms)
+✔ ordered source helper custody is exact and rejects a changed byte (2.540058ms)
+✔ independent native helper and affine replay (728.224119ms)
+✔ installed habitat reproduces captured root and texel counters (6.35267ms)
+✔ all resident/atlas/decoded input outputs match committed hashes (134.099752ms)
+✔ native atlas remapping preserves retirement and rejects parent drift (4.711804ms)
+✔ CPU bilinear filtering and ray-plane derivatives have analytic controls (820.892681ms)
+✔ captured witnesses use actual viewport and disclose extrapolated helpers (1.078359ms)
+✔ asset transport is local-only and rejects paths outside prepared source (1.163605ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4533.147986

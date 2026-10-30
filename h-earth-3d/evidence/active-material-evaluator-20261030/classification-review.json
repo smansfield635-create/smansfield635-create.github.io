@@ -1,0 +1,1188 @@
+{
+  "schema": "H_EARTH_CONDITIONAL_CLASSIFICATION_INDEPENDENT_REVIEW_v1",
+  "verdict": "PASS_BOUNDED_CONDITIONAL_SOURCE_CLASSIFICATION",
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "reviewedHashes": {
+    "classify_material.py": "facaa3157edc4bc12bdffa49ca4f01e1ac8acee40df1e03c7d64006c24f0af05",
+    "test_classification.py": "986fdfc71f245e80df66e8d7c81edd8774cc696a6f0790b63c4fcf1f83a9ef50",
+    "classification.json": "fbea66904b490c2852e8b99cfd5e5a32af9e102c4cc9ef5466cdfa96ef30db8b"
+  },
+  "reviewScope": {
+    "fullCensusModelReplay": false,
+    "allDeclaredArrayHashesVerified": true,
+    "allGridNeighborEdgesReranked": 81504,
+    "eligibleEdgesReranked": 77644,
+    "top20OrderingIdentical": true,
+    "stratifiedCentersRequested": 256,
+    "distinctTopEndpoints": 39,
+    "distinctSourceQueriesReplayed": 294,
+    "sourceQueriesEvaluated": 294,
+    "sourceQueriesExcluded": 0,
+    "topEdgeCameraPairsReplayed": 60
+  },
+  "observedUnboundArrayHashes": {
+    "coords": "471834a62bc6fb9a9f3962b6af7650b17ec6c930e904cd30901dc6089b7526ea",
+    "owners": "499a2609e6cfcf716b50ed0e65d5611af1b6cec01ae1ee264f210bc4728ec1df"
+  },
+  "commonPhaseChecks": [
+    {
+      "rank": 1,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4058434444394206,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.4058434444394206,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.4058434444394206,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.4058434444394206,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 2,
+      "adaptiveSelectedLanes": [
+        3,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 3,
+          "score": 0.4057284932579331,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 3,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.40570113301538513,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.40570113301538513,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.40570113301538513,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.40570113301538513,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 4,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4055736165531391,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.4055736165531391,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.4055736165531391,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.4055736165531391,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 5,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4054025249164561,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.4054025249164561,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.4054025249164561,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.4054025249164561,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 6,
+      "adaptiveSelectedLanes": [
+        3,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 3,
+          "score": 0.40538345702647305,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 7,
+      "adaptiveSelectedLanes": [
+        3,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 3,
+          "score": 0.40527920130447054,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 8,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4052756307444319,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.4052756307444319,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.4052756307444319,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.4052756307444319,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 9,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4050447797883586,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.4050447797883586,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.4050447797883586,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.4050447797883586,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 10,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4050030144741633,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.4050030144741633,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.4050030144741633,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.4050030144741633,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 11,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.40488135076469345,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.40488135076469345,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.40488135076469345,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.40488135076469345,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 12,
+      "adaptiveSelectedLanes": [
+        3,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 3,
+          "score": 0.40480730709180607,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 13,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.40476631758333215,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.40476631758333215,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.40476631758333215,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.40476631758333215,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 14,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4046947051697147,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.4046947051697147,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.4046947051697147,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.4046947051697147,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 15,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4045735148869397,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.4045735148869397,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.4045735148869397,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.4045735148869397,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 16,
+      "adaptiveSelectedLanes": [
+        3,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 3,
+          "score": 0.4044291578454459,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 17,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.40435654750663275,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 18,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.40425132251122486,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.40425132251122486,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.40425132251122486,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.40425132251122486,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 19,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4041612732185728,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    },
+    {
+      "rank": 20,
+      "adaptiveSelectedLanes": [
+        0,
+        0
+      ],
+      "status": "COMMON_CONTAINED_PHASES_EVALUATED",
+      "commonPhases": [
+        {
+          "lane": 0,
+          "score": 0.4039558779573103,
+          "driver": "sand"
+        },
+        {
+          "lane": 1,
+          "score": 0.4039558779573103,
+          "driver": "sand"
+        },
+        {
+          "lane": 2,
+          "score": 0.4039558779573103,
+          "driver": "sand"
+        },
+        {
+          "lane": 3,
+          "score": 0.4039558779573103,
+          "driver": "sand"
+        }
+      ],
+      "scoreSpread": 0.0,
+      "drivers": [
+        "sand"
+      ]
+    }
+  ],
+  "protectedContextChecks": [
+    {
+      "rank": 1,
+      "endpoints": [
+        {
+          "gridIndex": 34605,
+          "worldXZ": [
+            -165.0000196607288,
+            -129.00002038950157
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 34861,
+          "worldXZ": [
+            -164.9999551564983,
+            -126.99996780338186
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 2,
+      "endpoints": [
+        {
+          "gridIndex": 40673,
+          "worldXZ": [
+            195.00000576963154,
+            -83.00000373862751
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40929,
+          "worldXZ": [
+            194.99995661002274,
+            -80.99998254950845
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 3,
+      "endpoints": [
+        {
+          "gridIndex": 39016,
+          "worldXZ": [
+            -47.00000107270098,
+            -95.00000467279727
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 39272,
+          "worldXZ": [
+            -46.99998925939518,
+            -92.99998287475523
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 4,
+      "endpoints": [
+        {
+          "gridIndex": 40316,
+          "worldXZ": [
+            -7.0000000257626835,
+            -85.00001408827652
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40572,
+          "worldXZ": [
+            -6.999997006175718,
+            -82.99998259093725
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 5,
+      "endpoints": [
+        {
+          "gridIndex": 39423,
+          "worldXZ": [
+            254.999997120253,
+            -93.00000001801753
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 39679,
+          "worldXZ": [
+            254.99994898941628,
+            -90.9999830707132
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 6,
+      "endpoints": [
+        {
+          "gridIndex": 40732,
+          "worldXZ": [
+            -199.00003249293874,
+            -81.00001225168715
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40733,
+          "worldXZ": [
+            -196.99996180330322,
+            -80.99998301325174
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 7,
+      "endpoints": [
+        {
+          "gridIndex": 40187,
+          "worldXZ": [
+            247.00000813860484,
+            -87.00000274149495
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40188,
+          "worldXZ": [
+            248.9999529836675,
+            -86.99998449706949
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 8,
+      "endpoints": [
+        {
+          "gridIndex": 37411,
+          "worldXZ": [
+            -185.00000837793343,
+            -107.00000483300013
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 37412,
+          "worldXZ": [
+            -182.99993247033046,
+            -106.9999608299103
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 9,
+      "endpoints": [
+        {
+          "gridIndex": 36900,
+          "worldXZ": [
+            -183.00000752040216,
+            -111.00000446419916
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 36901,
+          "worldXZ": [
+            -180.99994833526682,
+            -110.999967187423
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 10,
+      "endpoints": [
+        {
+          "gridIndex": 40157,
+          "worldXZ": [
+            187.00000442396606,
+            -87.00000242822793
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40413,
+          "worldXZ": [
+            186.99995963943246,
+            -84.99998315299064
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 11,
+      "endpoints": [
+        {
+          "gridIndex": 38758,
+          "worldXZ": [
+            -51.00000596123069,
+            -97.00001829164276
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 39014,
+          "worldXZ": [
+            -50.999987022789306,
+            -94.99997931846217
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 12,
+      "endpoints": [
+        {
+          "gridIndex": 40055,
+          "worldXZ": [
+            -17.00000088673795,
+            -87.00001145787496
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40311,
+          "worldXZ": [
+            -16.99999604874586,
+            -84.99998670735016
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 13,
+      "endpoints": [
+        {
+          "gridIndex": 40674,
+          "worldXZ": [
+            197.0000153131488,
+            -83.00000789888874
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40930,
+          "worldXZ": [
+            196.99996615353865,
+            -80.99998670976927
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 14,
+      "endpoints": [
+        {
+          "gridIndex": 40606,
+          "worldXZ": [
+            61.00000464928094,
+            -83.00000896326732
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40607,
+          "worldXZ": [
+            62.99998231359431,
+            -82.99998015782957
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 15,
+      "endpoints": [
+        {
+          "gridIndex": 38944,
+          "worldXZ": [
+            -191.0000088531284,
+            -95.00000439925998
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 38945,
+          "worldXZ": [
+            -188.99994155657444,
+            -94.99996963137531
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 16,
+      "endpoints": [
+        {
+          "gridIndex": 38433,
+          "worldXZ": [
+            -189.00000415244614,
+            -98.9999997718197
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 38434,
+          "worldXZ": [
+            -186.99993685588163,
+            -98.99996500392787
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 17,
+      "endpoints": [
+        {
+          "gridIndex": 37922,
+          "worldXZ": [
+            -187.00001808091497,
+            -103.00000807786446
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 37923,
+          "worldXZ": [
+            -184.99992545075276,
+            -102.99995734842982
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 18,
+      "endpoints": [
+        {
+          "gridIndex": 40606,
+          "worldXZ": [
+            61.00000464928094,
+            -83.00000896326732
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40862,
+          "worldXZ": [
+            60.99997755196595,
+            -80.99997387633994
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 19,
+      "endpoints": [
+        {
+          "gridIndex": 40317,
+          "worldXZ": [
+            -4.999998724292471,
+            -85.0000222275183
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 40573,
+          "worldXZ": [
+            -4.999995704706729,
+            -82.99999073017666
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    },
+    {
+      "rank": 20,
+      "endpoints": [
+        {
+          "gridIndex": 39275,
+          "worldXZ": [
+            -41.000006245192075,
+            -93.0000197836306
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        },
+        {
+          "gridIndex": 39531,
+          "worldXZ": [
+            -40.99998974667565,
+            -90.99998187378428
+          ],
+          "protectedCores": [],
+          "nativeGroundcoverProtectionWeight": 1.0,
+          "inProtectionFringe": false
+        }
+      ],
+      "anyProtectedCore": false,
+      "anyProtectionFringe": false,
+      "repairPermission": "NONE_BY_CLASSIFICATION"
+    }
+  ],
+  "maximumErrors": {
+    "edgeRankScore": 5.551115123125783e-17,
+    "allEligibleEdgeCoefficientConservation": 1.1102230246251565e-16,
+    "sampledCoefficients": 0.0,
+    "sampledTracesAndOperands": 0.0,
+    "independentPropagatedAttribution": 0.0,
+    "cameraPairScore": 0.0
+  },
+  "algebraProof": {
+    "randomCandidateVsIndependentCases": 1000,
+    "maxDifference": 2.220446049250313e-16,
+    "regressionTestsPassed": 8
+  },
+  "limits": [
+    "Reranking full intermediate arrays does not independently re-execute the model at every40960 center.",
+    "Source replay covers256 predetermined stratified centers and all distinct top20 edge endpoints only.",
+    "Scores hold one symbolic substrate equal across each pair; actual soil variation and final color remain unresolved.",
+    "Synthetic parent-plane differentials are not GPU/raster derivatives or visible-owner proof.",
+    "Shared-edge parents, nonsoil co-support, extrapolated helpers and declared manor uncertainty excluded from ranking.",
+    "Protection context checks endpoints only; segment crossing of a protected region is not evaluated.",
+    "No product, correction texture, GPU, publication or visual acceptance."
+  ]
+}

@@ -3,7 +3,8 @@
     "head": "260c66540b4471bb3d50cbc28cf82d160b732b19",
     "rendererSha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
     "routeSha256": "365aec75bffae1c95c19c4bc9cab9869720893a04bcb32eadad46e7f6b14267f",
-    "presentationSha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a"
+    "presentationSha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a",
+    "navigationSha256": "a8db77dc0d43dd630392256558af184dca9aa18f096ed1d2150954c4e260e584"
   },
   "candidate": {
     "head": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
@@ -31,6 +32,7 @@
       "nativeRoughnessChanged": false,
       "visualAcceptance": false,
       "scope": "ONE_INLAND_SOURCE_WINDOW_NOT_GLOBAL_REPAIR"
-    }
+    },
+    "navigationSha256": "a8db77dc0d43dd630392256558af184dca9aa18f096ed1d2150954c4e260e584"
   }
 }

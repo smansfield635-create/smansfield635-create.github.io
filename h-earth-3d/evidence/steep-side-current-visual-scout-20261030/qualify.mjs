@@ -34,7 +34,7 @@ export function validateNavigationDomain(nav,poses=[WARMUP_POSE,...POSES]){
  return true;
 }
 export function parseArgs(argv){
- const a={};for(let i=0;i<argv.length;i+=2){if(!['--candidate-dir','--output'].includes(argv[i]||!argv[i+1]||a[argv[i]])throw Error('EDGE_CLI_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}
+ const a={};for(let i=0;i<argv.length;i+=2){if(!['--candidate-dir','--output'].includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('EDGE_CLI_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}
  if(Object.keys(a).length!==2||a['--output']===a['--candidate-dir']||a['--output'].startsWith(a['--candidate-dir']+path.sep))throw Error('SCOUT_DIRECTORIES');return a;
 }
 export function surveyReadiness(resources,camera){

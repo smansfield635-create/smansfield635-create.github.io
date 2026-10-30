@@ -1,0 +1,507 @@
+{
+  "schema": "H_EARTH_GEN3000_PROFILE42_EIGHT_TAP_SOURCE_PREFLIGHT_v1",
+  "status": "EXACT_ORIGINAL_IMAGE_TAP_RECONSTRUCTION_PASS__FUTURE_SHADER_CAPTURE_NOT_ADMITTED",
+  "projectId": "H_EARTH",
+  "priorAuthority": {
+    "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+    "generation": 3000,
+    "grantedScope": "h-earth-3d/evidence/active-material-evaluator-20261030/**",
+    "noGpuAuthority": true
+  },
+  "sourceContract": {
+    "originalBaselineHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+    "frozenCandidateHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "rendererGitBlob": "2367aea63563b33ad7159a1feb7ac26fbc631792",
+    "rendererSHA256": "10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c"
+  },
+  "archiveCustody": {
+    "savedRun": 41083373434,
+    "artifactId": 12991506650,
+    "zipSHA256": "c1ae9fd42efba75bcda13c49caac13539bbb3aed41f812e05a0d6f59f3eb1756",
+    "baselinePngSHA256": "65b2e9e47b75484054ff6b1673857d117f9f9490f4c66f52e285d8ef9ed3e7b3",
+    "candidatePngSHA256": "2e6829c10fbb14dc51828bdf2af3e8390dc6cd3be1dfcaa7af2f86dddf00ecc6",
+    "measuredSourceGitBlob": "b1c9f9f4f37cd3a844110fb8bbdd4e11c38ac2be",
+    "cameraCustodyGitBlob": "6ba5bb91d20963606ada00ce2296497bfea1bcbc"
+  },
+  "viewport": {
+    "width": 384,
+    "height": 688,
+    "coordinateConvention": "Measurement image top-left continuous projected coordinates; PIL array index is projected XY minus 0.5; GL readPixels rows are bottom-left zero indexed, glY = 687 - topRow",
+    "sampleSpacingMetres": 0.25
+  },
+  "savedCamera": {
+    "pose": {
+      "name": "inland-remaining-west-tip",
+      "x": -189,
+      "y": 16.77975559234619,
+      "z": -724,
+      "expectedReconciledY": 17.43697988986969,
+      "yaw": -51.606,
+      "pitch": -12.539,
+      "diagnosticObserver": true,
+      "crossingCount": 1,
+      "sourceIds": [
+        42
+      ],
+      "sourceCentersXZ": [
+        [
+          -195,
+          -728.77572419355
+        ]
+      ],
+      "allNinePointProfilesInsideEightPixelBorder": true,
+      "minimumTwoMetreSpanPixels": 137.63397589839576,
+      "minimumQuarterMetreSpacingPixels": 15.167862200643924,
+      "pixelBounds": [
+        [
+          119.38489246680746,
+          332.79095712712837
+        ],
+        [
+          254.9314310851665,
+          356.67080616731045
+        ]
+      ],
+      "viewProjectionMatrix": [
+        2.092766220999739,
+        -0.3208639833194179,
+        -0.7649833576004106,
+        -0.7649642332555249,
+        -0.0036107991722894263,
+        1.8352787697836546,
+        -0.21851139581058024,
+        -0.21850593309396893,
+        -2.6409763309747327,
+        -0.25676872637433895,
+        -0.6058904469830647,
+        -0.6058752999112285,
+        -1516.5356523615592,
+        -277.33233037942523,
+        -580.105924988448,
+        -579.5914287715259
+      ]
+    },
+    "viewProjectionMatrix": [
+      2.092766220999739,
+      -0.3208639833194179,
+      -0.7649833576004105,
+      -0.7649642332555248,
+      -0.0036107991722894267,
+      1.8352787697836541,
+      -0.2185113958105802,
+      -0.2185059330939689,
+      -2.6409763309747327,
+      -0.2567687263743389,
+      -0.6058904469830646,
+      -0.6058752999112283,
+      -1516.5356523615592,
+      -277.33233037942523,
+      -580.1059249884479,
+      -579.5914287715258
+    ],
+    "worldPacketCanonicalSha256": "689a4c7898d07bfe049f1bf0de048f2f4d4f078e23a8fab39710b4c694e16da8",
+    "exactCandidateCamera": {
+      "position": {
+        "x": -189.00774665520828,
+        "y": 16.770408345910255,
+        "z": -724.029675017835
+      },
+      "target": {
+        "x": -202.77758401572248,
+        "y": 12.837164110154845,
+        "z": -734.935811511335
+      },
+      "up": {
+        "x": -0.00044999976194859225,
+        "y": 0.9999984129907826,
+        "z": -0.0017238086119088932
+      },
+      "localAuthoringPosition": {
+        "x": -189,
+        "y": 17.43697988986969,
+        "z": -724
+      },
+      "localAuthoringTarget": {
+        "x": -202.77116367301903,
+        "y": 13.529105957422328,
+        "z": -734.9125419778812
+      },
+      "verticalFovDegrees": 56,
+      "nearPlane": 0.25,
+      "farPlane": 20000,
+      "viewMatrix": [
+        0.6210661607263881,
+        -0.17060640621140588,
+        0.7649642332555248,
+        0,
+        -0.0010715698469256274,
+        0.9758350316220447,
+        0.2185059330939689,
+        0,
+        -0.7837574087296703,
+        -0.1365263535689415,
+        0.6058752999112283,
+        0,
+        -450.05933570876346,
+        -147.46021576739764,
+        579.5914287715258,
+        1
+      ],
+      "projectionMatrix": [
+        3.369634917078845,
+        0,
+        0,
+        0,
+        0,
+        1.880726465346332,
+        0,
+        0,
+        0,
+        0,
+        -1.000025000312504,
+        -1,
+        0,
+        0,
+        -0.5000062500781259,
+        0
+      ],
+      "viewProjectionMatrix": [
+        2.092766220999739,
+        -0.3208639833194179,
+        -0.7649833576004105,
+        -0.7649642332555248,
+        -0.0036107991722894267,
+        1.8352787697836541,
+        -0.2185113958105802,
+        -0.2185059330939689,
+        -2.6409763309747327,
+        -0.2567687263743389,
+        -0.6058904469830646,
+        -0.6058752999112283,
+        -1516.5356523615592,
+        -277.33233037942523,
+        -580.1059249884479,
+        -579.5914287715258
+      ]
+    },
+    "sourceMode": "DIAGNOSTIC_OBSERVER_NOT_PHYSICAL_WALKABILITY"
+  },
+  "profile": {
+    "profileId": 42,
+    "sourceXZ": [
+      -195,
+      -728.77572419355
+    ],
+    "steepestQuarterMetreInterval": [
+      4,
+      5
+    ],
+    "samplePoints": [
+      {
+        "virtualPoint": "A",
+        "projectedXYTopLeftPixelCenters": [
+          191.99995382748972,
+          343.9906114294505
+        ],
+        "imageArrayCoordinateXY": [
+          191.49995382748972,
+          343.4906114294505
+        ],
+        "bilinearTaps": [
+          {
+            "tap": "NW",
+            "pixelTopLeftZeroIndex": [
+              191,
+              343
+            ],
+            "glReadPixelsBottomLeftZeroIndex": [
+              191,
+              344
+            ],
+            "bilinearWeight": 0.25471780502376273,
+            "baselineRGB8": [
+              141,
+              120,
+              88
+            ],
+            "candidateRGB8": [
+              141,
+              120,
+              88
+            ]
+          },
+          {
+            "tap": "NE",
+            "pixelTopLeftZeroIndex": [
+              192,
+              343
+            ],
+            "glReadPixelsBottomLeftZeroIndex": [
+              192,
+              344
+            ],
+            "bilinearWeight": 0.2546707655257413,
+            "baselineRGB8": [
+              141,
+              120,
+              88
+            ],
+            "candidateRGB8": [
+              141,
+              120,
+              88
+            ]
+          },
+          {
+            "tap": "SW",
+            "pixelTopLeftZeroIndex": [
+              191,
+              344
+            ],
+            "glReadPixelsBottomLeftZeroIndex": [
+              191,
+              343
+            ],
+            "bilinearWeight": 0.24532836748651823,
+            "baselineRGB8": [
+              142,
+              121,
+              89
+            ],
+            "candidateRGB8": [
+              142,
+              121,
+              89
+            ]
+          },
+          {
+            "tap": "SE",
+            "pixelTopLeftZeroIndex": [
+              192,
+              344
+            ],
+            "glReadPixelsBottomLeftZeroIndex": [
+              192,
+              343
+            ],
+            "bilinearWeight": 0.24528306196397773,
+            "baselineRGB8": [
+              142,
+              121,
+              89
+            ],
+            "candidateRGB8": [
+              142,
+              121,
+              89
+            ]
+          }
+        ],
+        "baseline": {
+          "rgb8Interpolated": [
+            141.4906114294505,
+            120.4906114294505,
+            88.4906114294505
+          ],
+          "weightedDisplayLuma": 122.64481142945048
+        },
+        "candidate": {
+          "rgb8Interpolated": [
+            141.4906114294505,
+            120.4906114294505,
+            88.4906114294505
+          ],
+          "weightedDisplayLuma": 122.64481142945048
+        }
+      },
+      {
+        "virtualPoint": "B",
+        "projectedXYTopLeftPixelCenters": [
+          208.56051397150202,
+          341.04339714578987
+        ],
+        "imageArrayCoordinateXY": [
+          208.06051397150202,
+          340.54339714578987
+        ],
+        "bilinearTaps": [
+          {
+            "tap": "NW",
+            "pixelTopLeftZeroIndex": [
+              208,
+              340
+            ],
+            "glReadPixelsBottomLeftZeroIndex": [
+              208,
+              347
+            ],
+            "bilinearWeight": 0.42897200210271985,
+            "baselineRGB8": [
+              144,
+              123,
+              90
+            ],
+            "candidateRGB8": [
+              144,
+              123,
+              90
+            ]
+          },
+          {
+            "tap": "NE",
+            "pixelTopLeftZeroIndex": [
+              209,
+              340
+            ],
+            "glReadPixelsBottomLeftZeroIndex": [
+              209,
+              347
+            ],
+            "bilinearWeight": 0.027630852107412313,
+            "baselineRGB8": [
+              145,
+              123,
+              90
+            ],
+            "candidateRGB8": [
+              144,
+              123,
+              90
+            ]
+          },
+          {
+            "tap": "SW",
+            "pixelTopLeftZeroIndex": [
+              208,
+              341
+            ],
+            "glReadPixelsBottomLeftZeroIndex": [
+              208,
+              346
+            ],
+            "bilinearWeight": 0.5105140263952616,
+            "baselineRGB8": [
+              144,
+              123,
+              90
+            ],
+            "candidateRGB8": [
+              144,
+              123,
+              90
+            ]
+          },
+          {
+            "tap": "SE",
+            "pixelTopLeftZeroIndex": [
+              209,
+              341
+            ],
+            "glReadPixelsBottomLeftZeroIndex": [
+              209,
+              346
+            ],
+            "bilinearWeight": 0.032883119394606336,
+            "baselineRGB8": [
+              144,
+              123,
+              90
+            ],
+            "candidateRGB8": [
+              144,
+              123,
+              90
+            ]
+          }
+        ],
+        "baseline": {
+          "rgb8Interpolated": [
+            144.02763085210742,
+            123,
+            90.00000000000001
+          ],
+          "weightedDisplayLuma": 125.08787431915805
+        },
+        "candidate": {
+          "rgb8Interpolated": [
+            144,
+            123,
+            90.00000000000001
+          ],
+          "weightedDisplayLuma": 125.08200000000001
+        }
+      }
+    ]
+  },
+  "reconstructedProof": {
+    "baselineLumaSlopeLevelsPerMetre": 9.772251558830249,
+    "candidateLumaSlopeLevelsPerMetre": 9.748754282198092,
+    "slopeReductionPercent": 0.24044895376157394,
+    "existingCorrectionChangedRasterPixels": 1,
+    "changedPixels": [
+      {
+        "pixelTopLeft": [
+          209,
+          340
+        ],
+        "glPixel": [
+          209,
+          347
+        ],
+        "before": [
+          145,
+          123,
+          90
+        ],
+        "after": [
+          144,
+          123,
+          90
+        ]
+      }
+    ],
+    "noNewCapture": true
+  },
+  "nextSeparateEngineeringOperation": {
+    "purpose": "Capture source-grounded native fragment P/prelight/end-color and layer owner on EIGHT existing tap pixels, same saved candidate scene/camera, rather than recomputing the 48m source or changing renderer disk bytes",
+    "requiresFreshCanonicalAdmission": true,
+    "exactSourceHeadRequired": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "boundedViewerPoseCount": 1,
+    "proposedReadback": "Same immutable captured frame and 8 tap pixels; preserve actual 384x688 camera; if stage probe changes GLSL, assert byte source identity before interception and preserve draw, depth, derivatives and alpha semantics. No full-frame image sweep; no persistent product file changes.",
+    "necessaryOrderedCheckpoints": [
+      "pre-identity materialMarginSubstrate P in linear RGB",
+      "post environmental identity palette",
+      "post groundcover palette",
+      "post corrected atlas palette",
+      "post materialMarginCorrection palette",
+      "post later overlays final base before lighting",
+      "pre-tonemap pre-fog lit linear RGB and final displayed RGBA8",
+      "per-tap visible raster primitive/role, world position, depth, alpha and all co-covered surfaces"
+    ],
+    "requiredGates": [
+      "Exact original shader byte/hash and saved worldPacket/camera/viewProjection identity",
+      "GLSL probe stage anchor unique; stage injection reversible, no source file mutation",
+      "All eight real tap pixel owners, depth and alpha disclosed; if any tap is vegetation/water or unresolved blend, no terrain stage attribution",
+      "Actual soil texture mip/filter and highp derivative behavior either observed or marked UNSUPPORTED; no silent base-level assumption",
+      "RGBA16F linear-stage readback only when supported/validated (EXT_color_buffer_float); otherwise fail rather than treating gamma-encoded RGBA8 as physical linear P",
+      "Untouched final-color probe reproduces the saved candidate eight exact RGB8 tap values; otherwise fail parity",
+      "Reconstruction of both original bilinear luma values and quarter-metre slope from 8 pixel probes within recorded framebuffer quantization",
+      "Existing protected controls remain valid; no new baseline/control rerun unless direct dependency changes"
+    ],
+    "executionBudget": {
+      "maxVerifiedRenders": 1,
+      "fullWorldRescan": false,
+      "gpuNotYetLaunched": true,
+      "doNotPoll": true,
+      "returnVerifiedGitHubActionsRunUrlImmediatelyIfAuthorizedAndStarted": true
+    },
+    "authority": "NONE_TECHNICAL_CONTRACT_ONLY"
+  },
+  "firstUnresolvedAssertion": "EXACT_EIGHT_VISIBLE_FRAGMENTS_SOURCE_P_PRELIGHT_AND_DEPTH_NOT_OBSERVED",
+  "claimLimits": [
+    "Only one archived source interval: not a mapwide high-foothill contour",
+    "Largest sampled derivative is a 2.44 display-level difference over 0.25 metres, not independently a harsh visible 180-degree band",
+    "Original soil P at the actual eight frame fragments is unknown and cannot be solved from final RGB8",
+    "No authorized GPU capture, new runner, shader mutation, material fix, production merge or release"
+  ]
+}

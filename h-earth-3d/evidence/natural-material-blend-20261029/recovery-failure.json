@@ -1,0 +1,16 @@
+{
+  "schema": "H_EARTH_CAPTURE_FAILURE_v1",
+  "run": 40977160597,
+  "artifact": 12944065673,
+  "artifactSha256": "d413716685fe0146db91736a2be987695b471d4ac73ebd4884b5c2d9f04ea91d",
+  "failedPhase": "baseline first pose",
+  "capturedImages": 0,
+  "candidateExecuted": false,
+  "failureClass": "EVIDENCE_OR_TEST_FAILURE",
+  "candidateEffect": "PRESERVE_UNPROVEN",
+  "exactAssertion": "SURVEY_ASSETS_NOT_SETTLED",
+  "cause": "All9 strict requirement before camera requested four distant lazy-loaded models",
+  "repair": "Non-capture warmup at existing protected-meadow; unchanged residency gates and12image budget",
+  "originalRunBudgetConsumed": true,
+  "recoveryAdmission": 40978939123
+}

@@ -14882,6 +14882,50 @@
       "scopeHash": "a3efca2fc5f7073a7384d3aa10783eb9da27aec041ae343237f2198f68067173",
       "state": "ADMITTED_LOCKED"
     },
+    "a44cef596ffcf4e954e1ab3aad0f0e92560c662ad42fa51a7bf270b245da239b": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+          "lockGeneration": 2990,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_KERNEL_BACKED_COAST_PILOT:20261029",
+          "operationId": "NINE_SUMMITS_PEACE_KERNEL_BACKED_SINGLE_WORLD_PILOT_20261029_001",
+          "procedureLocatorDigest": "6e99e2ffe0d261456d6e8776db465a72216b9b6906c550435d98138cca701cb2",
+          "requestDigest": "f6c902db3b759c9ef9a2b4b5e318c600fca8b41e3bd5a46fa827e516a793560c",
+          "scopeHash": "a44cef596ffcf4e954e1ab3aad0f0e92560c662ad42fa51a7bf270b245da239b"
+        },
+        "bindingDigest": "70a712a36dc3086b52242cc5135225621d0ae65356493c794ac8de1089a3c86e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "96419c170d591f314da3bbd7fc302b5b7f2f59e834bbd48f03eab9dd6a7dabd8",
+          "commentId": 6514128911,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40996778249,
+          "workflowSha": "260c66540b4471bb3d50cbc28cf82d160b732b19"
+        },
+        "lineageAnchorCommitSha": "7869dbe0d41e9aa90a5faceb70f58ec4b83e6729",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+      "lockGeneration": 2990,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_KERNEL_BACKED_COAST_PILOT:20261029",
+      "operationId": "NINE_SUMMITS_PEACE_KERNEL_BACKED_SINGLE_WORLD_PILOT_20261029_001",
+      "procedureLocatorDigest": "6e99e2ffe0d261456d6e8776db465a72216b9b6906c550435d98138cca701cb2",
+      "released": false,
+      "requestDigest": "f6c902db3b759c9ef9a2b4b5e318c600fca8b41e3bd5a46fa827e516a793560c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a44cef596ffcf4e954e1ab3aad0f0e92560c662ad42fa51a7bf270b245da239b",
+      "state": "ADMITTED_LOCKED"
+    },
     "a4579d64d95a2c890d424f36299b52aade4912839b457772172e94e2e2d62d40": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -23479,7 +23523,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2989,
+  "lockGeneration": 2990,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

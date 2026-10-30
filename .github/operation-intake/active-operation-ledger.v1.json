@@ -14495,6 +14495,50 @@
       "scopeHash": "9d09d5182bc7910355d432d73fa67b07efff19985391b9f0315673fa13aca02c",
       "state": "ADMITTED_LOCKED"
     },
+    "9d249acb9b5b0dd0182ba10bb7bfcd3fbd6aa2cb4d3db0eb41f1a85c1c17ab16": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "eed628b2e27351a283e24a9bd68c23a01ad4675a",
+          "lockGeneration": 3009,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_V12_MATERIAL_DECOMPOSITION:20261030",
+          "operationId": "NINE_SUMMITS_PEACE_V12_MATERIAL_DECOMPOSITION_20261030_001",
+          "procedureLocatorDigest": "46eef3d5f20936a69785cca3f763237a898a539efcc4f771f0c53056d539d48b",
+          "requestDigest": "8f74caf66fc3178a1b6841ab2b927f2733c762a0117f676e4b78c2aa3285f0c8",
+          "scopeHash": "9d249acb9b5b0dd0182ba10bb7bfcd3fbd6aa2cb4d3db0eb41f1a85c1c17ab16"
+        },
+        "bindingDigest": "5cb438a2109c2afc3366149b7e5f6ed811c57f4e6564a72fea0b40cbd67d40e2",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "8120f37bc272db7bdfc815c0d2a3dee31f725ffb00207afec6261b8e8038d5e1",
+          "commentId": 6536071206,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7016,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41147241759,
+          "workflowSha": "eed628b2e27351a283e24a9bd68c23a01ad4675a"
+        },
+        "lineageAnchorCommitSha": "b041a0abc2bd8d2f2b9bd3d246b56b50606b3d39",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "eed628b2e27351a283e24a9bd68c23a01ad4675a",
+      "lockGeneration": 3009,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_V12_MATERIAL_DECOMPOSITION:20261030",
+      "operationId": "NINE_SUMMITS_PEACE_V12_MATERIAL_DECOMPOSITION_20261030_001",
+      "procedureLocatorDigest": "46eef3d5f20936a69785cca3f763237a898a539efcc4f771f0c53056d539d48b",
+      "released": false,
+      "requestDigest": "8f74caf66fc3178a1b6841ab2b927f2733c762a0117f676e4b78c2aa3285f0c8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9d249acb9b5b0dd0182ba10bb7bfcd3fbd6aa2cb4d3db0eb41f1a85c1c17ab16",
+      "state": "ADMITTED_LOCKED"
+    },
     "9dddf7da98478eaf8a997d8b6e4dc4cf92b5ec9016f05359a3fe89c19cae0465": {
       "governingHead": "80d4f819075aec3a89536edb3886b319b640ce19",
       "lockGeneration": 98,
@@ -23875,7 +23919,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3008,
+  "lockGeneration": 3009,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

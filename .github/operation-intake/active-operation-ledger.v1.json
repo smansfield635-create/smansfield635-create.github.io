@@ -14457,6 +14457,50 @@
       "scopeHash": "9f1d2174ee77a07aeac8a5a42e6c7f95747ef9ea3dc70addb1a67b88fa808695",
       "state": "ADMITTED_LOCKED"
     },
+    "9f52f67c7fd04ea7ae6a80e6975b6f0fe6e75ca96a4d22a6055d9cdd07fcb039": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+          "lockGeneration": 2991,
+          "lockScope": "H_EARTH:MATERIAL_MARGIN_PROTOTYPE_20261030",
+          "operationId": "H_EARTH_MATERIAL_MARGIN_PROTOTYPE_20261030_001",
+          "procedureLocatorDigest": "213030aafe82035b20f6ca1d854da576dc625328b23d4bf68d59b90651f5c676",
+          "requestDigest": "660b7e3fbf5a3a58572636661aa03d4264e0d02cb143878e8e589d05b8790061",
+          "scopeHash": "9f52f67c7fd04ea7ae6a80e6975b6f0fe6e75ca96a4d22a6055d9cdd07fcb039"
+        },
+        "bindingDigest": "2c725a203f024edef904262df2bc217de40a4af63bf907ee48524f460588288f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "5567442e38e033df57b7492994a4a3d894b8d04864ab193aa91a8586a2a671c6",
+          "commentId": 6514299693,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40998065073,
+          "workflowSha": "dd0537705077c1c0e8b704f47feebf6f58babb2e"
+        },
+        "lineageAnchorCommitSha": "6e7624594ddaba1d87e9b82ee3151c7cde1cd0f2",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+      "lockGeneration": 2991,
+      "lockScope": "H_EARTH:MATERIAL_MARGIN_PROTOTYPE_20261030",
+      "operationId": "H_EARTH_MATERIAL_MARGIN_PROTOTYPE_20261030_001",
+      "procedureLocatorDigest": "213030aafe82035b20f6ca1d854da576dc625328b23d4bf68d59b90651f5c676",
+      "released": false,
+      "requestDigest": "660b7e3fbf5a3a58572636661aa03d4264e0d02cb143878e8e589d05b8790061",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "9f52f67c7fd04ea7ae6a80e6975b6f0fe6e75ca96a4d22a6055d9cdd07fcb039",
+      "state": "ADMITTED_LOCKED"
+    },
     "9f6cfc331bf5d4aee92c7d6ea6cc57d3f9c76873c98ef6f8766e9657ecc660ec": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -23523,7 +23567,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2990,
+  "lockGeneration": 2991,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

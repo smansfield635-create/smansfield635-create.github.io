@@ -2615,6 +2615,50 @@
       "scopeHash": "1bf76066179782f0a2835a486ccc69d4e157964228b327ce7f07a5654b755be7",
       "state": "ADMITTED_LOCKED"
     },
+    "1cdcda703dad66a5ba9e164ede3aca45eef3fc79d0352dece1a68fd2f295caeb": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+          "lockGeneration": 2988,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_REPAIR_OWNER_DIRECTED_LIVE_REVIEW_RELEASE:20261029",
+          "operationId": "NINE_SUMMITS_PEACE_REPAIR_OWNER_LIVE_REVIEW_RELEASE_20261029_001",
+          "procedureLocatorDigest": "7351f7b78437436ed5c808e8f84fd3bb9536a695da9e2c131ab3e2a122416fec",
+          "requestDigest": "cadd025fbf9c465b9c3a5420d9dca0ba43146d0b1a13d24d38939d418136a06b",
+          "scopeHash": "1cdcda703dad66a5ba9e164ede3aca45eef3fc79d0352dece1a68fd2f295caeb"
+        },
+        "bindingDigest": "b66c80f296d8886c4f2cc8b4f3479d0a4f47c0d10798ffca4e58f21b08e07f42",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "bb9bcb996771b3642859aabee2684787ec6a5c54458e0063fdcf04d1f318bfd2",
+          "commentId": 6513385763,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40991289581,
+          "workflowSha": "bad4bb1a4671e5da76508aa753ece069810c8e0c"
+        },
+        "lineageAnchorCommitSha": "d25f86dcbe9dedc360257fd2dea69780c2654b4e",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+      "lockGeneration": 2988,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_REPAIR_OWNER_DIRECTED_LIVE_REVIEW_RELEASE:20261029",
+      "operationId": "NINE_SUMMITS_PEACE_REPAIR_OWNER_LIVE_REVIEW_RELEASE_20261029_001",
+      "procedureLocatorDigest": "7351f7b78437436ed5c808e8f84fd3bb9536a695da9e2c131ab3e2a122416fec",
+      "released": false,
+      "requestDigest": "cadd025fbf9c465b9c3a5420d9dca0ba43146d0b1a13d24d38939d418136a06b",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1cdcda703dad66a5ba9e164ede3aca45eef3fc79d0352dece1a68fd2f295caeb",
+      "state": "ADMITTED_LOCKED"
+    },
     "1d9d8d95d3f6a61a708cf328302c426749126870c51f0e81d18fbda94c0cd952": {
       "governingHead": "0e21f21314d3c453880da19605e3ce2566964b78",
       "lockGeneration": 1686,
@@ -23479,7 +23523,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2987,
+  "lockGeneration": 2988,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

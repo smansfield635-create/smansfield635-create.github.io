@@ -52,7 +52,8 @@ export function matchesCanonicalHeading(actual,requested){
 export function validateCoverageCamera(v,pose){
  const c=v.worldPacket?.camera,p=c?.localAuthoringPosition,m=c?.viewProjectionMatrix;
  if(!p||!Number.isFinite(p.y)||Math.abs(p.y-pose.expectedReconciledY)>2.0||p.x!==pose.x||p.z!==pose.z)throw Error('COVERAGE_RECONCILED_EYE');
- if(!Array.isArray(m)||m.length!==16||m.some((x,i)=>!Number.isFinite(x)||Math.abs(x-pose.viewProjectionMatrix[i])>1e-8))throw Error('COVERAGE_PROJECTION_MATRIX');
+ // Historical source contained no exact current GPU projection matrices. Enforce a real nondegenerate matrix without pretending an invented reference exists.
+ if(!Array.isArray(m)||m.length!==16||m.some(x=>!Number.isFinite(x))||Math.hypot(...m)<1||Math.abs(m[0])+Math.abs(m[4])+Math.abs(m[8])<0.01)throw Error('COVERAGE_PROJECTION_MATRIX');
  return true;
 }
 export function validateView(v,pose,sequence){

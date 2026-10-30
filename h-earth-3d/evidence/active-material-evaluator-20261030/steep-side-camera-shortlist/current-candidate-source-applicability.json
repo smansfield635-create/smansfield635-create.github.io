@@ -1,0 +1,120 @@
+{
+  "schema": "H_EARTH_GEN3000_CURRENT_CANDIDATE_CAMERA_SOURCE_APPLICABILITY_v1",
+  "status": "CURRENT_FROZEN_SOURCE_CENTERLINE_GEOMETRY_PARITY_PASS__GPU_VISUAL_DEFECT_REPRODUCTION_HELD",
+  "recordedDate": "2026-10-30",
+  "branch": "h-earth/active-material-evaluator-20261030",
+  "priorExactHead": "c7f6d8db2793872f00e79debdece53e07ae54684",
+  "frozenCandidate": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "archivedOriginal": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+  "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+  "existingAuthority": "SOURCE_ONLY_EVIDENCE_NO_GPU_NO_PRODUCT",
+  "sourceComparison": {
+    "comparison": "Direct immutable connected-GitHub file blob readback at archivedOriginal and frozenCandidate",
+    "allFiveGitBlobsEqual": true,
+    "files": {
+      "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js": "cf293b9e3f19ae40395df24bdd74d10ca6da3273",
+      "showroom/globe/h-earth/functional-landscape/navigation.js": "3912671a7d6fe380a3605e33fd6547e2f672f319",
+      "showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js": "98ef78138aa6104f707832eabfa64bf1958a7312",
+      "h-earth-3d/terrain/h-earth.geological-formation-successor.v1.mjs": "fad56b7709f90fb7e274155dfc3ff66677c7cb97",
+      "showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.manifest.json": "9f5e9fc755c543b50e311bd49a7d5cadc5ff4d23"
+    },
+    "pinnedBaseWorldBinarySha256FromIdenticalManifest": "48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",
+    "note": "Manifest identity verified; no new independent binary download/readback or GPU pixel probe."
+  },
+  "runtimeGeology": {
+    "source": "showroom/globe/h-earth/functional-landscape/geological-runtime-bridge.v1.js",
+    "retirementAndReplacementBounds": [
+      {
+        "xMin": -120,
+        "xMax": 96,
+        "zMin": -440,
+        "zMax": -224
+      },
+      {
+        "xMin": -304,
+        "xMax": 96,
+        "zMin": -568,
+        "zMax": -440
+      }
+    ],
+    "nativeConstructionBoundsNotUsed": "Source generator's default patch x40..176 is overridden by runtime bridge; do NOT confuse constructor default with active runtime bounds",
+    "maxReplacementAndRetirementX": 96,
+    "sourceStringAssertionsPassed": 3,
+    "generatedPhysicalOtherClassesNotGloballyExcluded": true
+  },
+  "cameraPlan": {
+    "source": "h-earth-3d/evidence/active-material-evaluator-20261030/steep-side-camera-shortlist/steep_camera_plan.json",
+    "originalMeshArchiveSha256": "5bfce62703c70fd5b68e894fca8634e5206c1ca681d7a127c192312a8e06aa3c",
+    "allThreeCameraToCenterTargetXStrictlyGreaterThan96": true,
+    "minimumCameraOrCenterlineTargetX": 110,
+    "poses": [
+      {
+        "id": "west_flank",
+        "cameraXZ": [
+          110,
+          -310
+        ],
+        "targetXZ": [
+          145,
+          -240
+        ],
+        "sourceRayMinimumClearanceMeters": 2.397306563603637
+      },
+      {
+        "id": "central_approach",
+        "cameraXZ": [
+          150,
+          -318
+        ],
+        "targetXZ": [
+          145,
+          -240
+        ],
+        "sourceRayMinimumClearanceMeters": 2.3694094572855136
+      },
+      {
+        "id": "east_oblique",
+        "cameraXZ": [
+          210,
+          -310
+        ],
+        "targetXZ": [
+          185,
+          -240
+        ],
+        "sourceRayMinimumClearanceMeters": 1.9987894395692898
+      }
+    ],
+    "sourceCenterlineNoRuntimePatchOverlap": true,
+    "offAxisFrustumRuntimePatchOverlapUnknown": true
+  },
+  "currentGeoEvidence": {
+    "source": "h-earth-3d/evidence/active-material-evaluator-20261030/geometry.json",
+    "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "retiredOriginalTriangles": 3058,
+    "generatedMeshes": 6,
+    "geometrySourcePassNotPixelDepth": true
+  },
+  "limitations": [
+    "Source centerline parity DOES NOT prove accepted terrain-supported navigation pose on candidate hardware.",
+    "GPU visible ownership and entire viewport off-axis patch/water/foliage overlap remain unresolved.",
+    "Original precomputed artifact identity persists despite canonical G_world source changes; do not infer unbaked source geometry matches current GPU.",
+    "No captured current image reproduces either owner straight half-plane or curved wedge material color defect.",
+    "No GPU authorization, product or workflow mutation, merge, publication or perceptual acceptance."
+  ],
+  "nextLegalBoundary": {
+    "action": "SEPARATE_CANONICAL_READ_ONLY_EXACT_HEAD_DIAGNOSTIC_ADMISSION_AND_REGISTERED_CAPTURE",
+    "target": "First capture up to three source-hypothesis camera views grass-visible at exact frozen current product only after independent candidate eye/scene source check; STOP if owner defect classes are not reproduced. Stage/depth/native masks only for accepted visible targets.",
+    "prohibited": [
+      "BROAD_SHADER_TINT",
+      "INFER_OWNER_PHOTO_CAMERA",
+      "INHERIT_GEN3000_GPU_AUTHORITY",
+      "AUTOMATED_MERGE_OR_DEPLOY"
+    ]
+  },
+  "gpuRunExecuted": false,
+  "productMutation": false,
+  "workflowDispatch": false,
+  "merge": false,
+  "publication": false
+}

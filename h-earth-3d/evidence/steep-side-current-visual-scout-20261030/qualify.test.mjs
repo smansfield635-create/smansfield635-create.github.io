@@ -93,3 +93,17 @@ test('source poses never claim photographed material-border reproduction',()=>{
  assert.ok(sourcePlan.poses.every(p=>p.candidateCurrentSceneRecheckRequired));
  assert.equal(POSES.filter(p=>p.name.includes('ridge')).length,0);
 });
+
+test('Gen3003 regression: immutable source Git blobs and inherited helper SHA-256 are distinct custody domains',()=>{
+ const workflow=readFileSync(new URL('../../../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ const section=workflow.split('  # Gen3003: precisely three lit current product images, no general agent execution.')[1];
+ assert.ok(section,'GEN3003_JOB_MISSING');
+ assert.ok(section.includes("const gitBlob=p=>execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim();"));
+ assert.ok(section.includes("const sha256=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');"));
+ assert.ok(section.includes("assert.equal(gitBlob('tooling/'+p),h)"));
+ assert.ok(section.includes("assert.equal(sha256('support/tools/'+p),h)"));
+ assert.equal(section.includes("assert.equal(gitBlob('support/tools/'+p),h)"),false);
+ assert.equal(section.includes("assert.equal(sha256('tooling/'+p),h)"),false);
+ const expected=['b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509','070ad7daf51bbf41c2f4223ad9ba3a0143bde6aa3f7439df603c4a2718f50558','d61880ba98d81eae5d7cc6503f10f34d5aaa37819f4ba4a22218d87e711ca797','e9a872402371087e49031bca2ca27d0f37c9ab1012df50a5ebbf63617a3bf9e1'];
+ for(const h of expected) assert.ok(section.includes(h),'PINNED_HELPER_SHA256_MISSING');
+});

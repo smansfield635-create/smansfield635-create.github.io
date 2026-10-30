@@ -1,0 +1,56 @@
+{
+  "schema": "H_EARTH_GEN3000_ZERO_SAND_PAIR_SELECTION_CHECKPOINT_v1",
+  "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+  "lockGeneration": 3000,
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "classificationCommit": "6d73b6012b40e9ddd7fa7ce84db7bcd979fcdab9",
+  "sandTraceCommit": "49e2c2a951c2a77040b35a35e1d842b06b55c34e",
+  "classificationFileGitBlob": "bec22fb0fe480ac7f4e26c37e8e25de827cd90d9",
+  "independentClassificationReviewBlob": "52c3dafe93836b78c78e8bf3959d80c00f9aaa68",
+  "sourceCensusCenters": 40960,
+  "originalEligibleSameOwnerEdges": 77644,
+  "savedTop20AllSandDriven": true,
+  "dryCandidateConditionalScoreUpperBoundPerMetre": 0.4039558779573103,
+  "selectionCriterion": "Both original endpoints have exactly zero native sand coverage: sand stage gain equals [1,1,1] and bias equals [0,0,0], with original endpoint eligibility and same-surface-owner constraints preserved.",
+  "result": "BLOCKED_EXACT_RETAINED_INTERMEDIATE_NOT_PERSISTED",
+  "firstFailedAssertion": "RETAINED_CENSUS_INTERMEDIATES_ABSENT_NO_RERUN",
+  "missingFile": "classification.intermediates.npz",
+  "originalRawArraySha256": {
+    "coefficients": "261889b042500c6d92ba25e7653cdf9d6cca465757b374453b9f8a8897f350cb",
+    "orderedContributions": "6cbfccebce15cf123d14692abc9d1841d6a36fbc435c8fc6ce2f61a7e06ef285",
+    "localOperands": "9bb11062cb1f2c62299740468d06460e643d25e783b4af15d031929d2ca799b2",
+    "eligible": "1d37f28b96fd024d6c9691da1a2ffc7bc5b0d6683e4d0d3093408e8cf1e76bdd",
+    "world": "9d4ff632107fb865bc0a7cd40200a391b1df5c1b8a5fc3bee2074aaad73202d0",
+    "coords": "471834a62bc6fb9a9f3962b6af7650b17ec6c930e904cd30901dc6089b7526ea",
+    "owners": "499a2609e6cfcf716b50ed0e65d5611af1b6cec01ae1ee264f210bc4728ec1df"
+  },
+  "candidateSelected": false,
+  "sourceScript": "select_zero_sand.py",
+  "regressionTests": "test_zero_sand.py",
+  "testStatus": "EIGHT_LOCAL_PROTOTYPE_REGRESSIONS_PASSED; COMMITTED_EXACT_HEAD_TESTS_NOT_HOSTED",
+  "separateSavedVisualEvidence": {
+    "run": 41083373434,
+    "artifactId": 12991506650,
+    "sourceBranch": "h-earth/inland-margin-visual-20261030",
+    "profileCount": 15,
+    "highestRemainingAfterMaxSlope": {
+      "profile": 42,
+      "worldXZ": [
+        -195,
+        -728.77572419355
+      ],
+      "value": 9.74875428219815
+    },
+    "qualification": "SAVED_IMAGE_PROFILE_NOT_THE_GEN3000_ZERO_SAND_RANK"
+  },
+  "nextAction": "Recover the original classification.intermediates.npz without a full re-evaluation; verify all seven SHA256 hashes, execute select_zero_sand.py once, then inspect first ranked segment for continuous sand absence, ocean/depth ownership and protected environment context. If impossible, explicitly seek a bounded source-only re-materialization authority, not new GPU or shader change.",
+  "noNewGpu": true,
+  "noNewCpuCensus": true,
+  "noProductMutation": true,
+  "releaseAuthority": false,
+  "limits": [
+    "Top20 global rankings do not contain a validated zero-sand candidate; selecting one without all preserved arrays would invent a rank.",
+    "Zero sand at endpoints does not establish interior zero sand or visible inland ownership.",
+    "The saved 15 Gen2998 margins are a separate GPU evidence set, not a substitute for Gen3000 all-census ranking."
+  ]
+}

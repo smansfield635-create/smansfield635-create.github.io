@@ -114,7 +114,7 @@
   ],
   "gpuSamplingModel": {
     "atlas": "RGB8 normalized no mip, LINEAR CLAMP, no vertical flip; (rgb8-128)/1024",
-    "margin": "half-float decode and LINEAR CLAMP, uv=(q*96+0.5)/97; q=(world.xy-[-213,-759])/48",
+    "margin": "half-float decode and LINEAR CLAMP, uv=(q*96+0.5)/97; q=(world.xz-[-213,-759])/48",
     "precision": "CPU float64 interpolation, not certified hardware rounding"
   },
   "stageEquation": "preLater=Q_native+atlasDelta+marginDeltaA*P_original+marginDeltaB",

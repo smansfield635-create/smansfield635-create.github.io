@@ -1,0 +1,33 @@
+{
+  "schema": "H_EARTH_INLAND_MARGIN_VISUAL_INDEPENDENT_REVIEW_v1",
+  "result": "PASS_SOURCE_READY_FOR_PAIRED_COMPARISON",
+  "builderSelfApproval": false,
+  "reviewer": "NATIVE_INDEPENDENT_AGENT:/root/coverage_review",
+  "operationId": "H_EARTH_REMAINING_MARGIN_COVERAGE_20261030_001",
+  "lockGeneration": 2998,
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "fcb3a21a9bed789337a9760898485115c5fa016095f9efed51c387bf9e6e3e46",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.mjs": "6ccc00df92455ef5af5ae2d2f980ab8b9ab495c628c32d75a255fd1cc0c452de",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.test.mjs": "29e8ac0b8300d4fc6c47db816fe5adb2ad1069d6431c49c9f80e06ef46cc5a03",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/product-binding.json": "9202fef3b01dd01021801199428c06ae05679c12d9f062385261d8988df48967",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/admission.json": "89313f5cdae82a73e273ed219f6a6714f02b000fc11382cc38332c48265cb876",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/coverage-plan.json": "e72e589dc8c94c457f36a1ddf94b8afe78d44c64b8b2466fd5c132b4f0086dba"
+  },
+  "validation": {
+    "testsPassed": 16,
+    "testsFailed": 0,
+    "threeFixedHeadings": true,
+    "fifteenUniqueCrossings": true,
+    "runtimeReconciledEyeAndAll16MatrixElementsRequired": true,
+    "sixFramesOneAttempt": true,
+    "frozenSourceAndPairedRoots": true,
+    "realNavigationRegression": true,
+    "productBindingUnchanged": true
+  },
+  "limits": [
+    "No GPU execution or perceptual acceptance from source review.",
+    "Actual target visibility must be judged from captured evidence.",
+    "Prior protected control images preserved in Gen2996, not recaptured.",
+    "No merge or publication authority."
+  ]
+}

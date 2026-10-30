@@ -191,5 +191,28 @@
   "noProductMutation": true,
   "noNewGPU": true,
   "noNewCensus": true,
-  "noMerge": true
+  "noMerge": true,
+  "currentSourceContinuity": {
+    "frozenBaselineSource": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "frozenCandidateSource": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "baselineRendererGitBlob": "2ae6c42f6febaada2cb2a240844b9ed8e",
+    "candidateRendererGitBlob": "2367aea63563b33ad7159a1feb7ac26fbc631792",
+    "worldSoilPreIdentitySegment": {
+      "baselineBytes": 4807,
+      "candidateBytes": 4849,
+      "onlyCodeDifference": "New single passive capture line: vec3 materialMarginSubstrate=palette;",
+      "sourceIdenticalAfterRemovingThatLine": true
+    },
+    "environmentalIdentityWithGroundcoverSegment": {
+      "baselineBytes": 5966,
+      "candidateBytes": 5966,
+      "byteIdentical": true
+    },
+    "groundcoverBlock": {
+      "baselineBytes": 2756,
+      "candidateBytes": 2756,
+      "byteIdentical": true
+    },
+    "limits": "This proves upstream shader SOURCE FORMULA equality, NOT same scene inputs, exact pixel depth/material, atlas/rig/procedural floating values, or final output. Candidate adds new post-stage correction and code outside these blocks, so do not import historic RGB as current RGB."
+  }
 }

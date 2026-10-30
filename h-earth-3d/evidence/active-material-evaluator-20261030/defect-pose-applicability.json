@@ -1,0 +1,659 @@
+{
+  "schema": "H_EARTH_GEN3000_DEFECT_POSE_APPLICABILITY_v1",
+  "result": "ORIGINAL_ZERO_SAND_RANK_NOT_APPLICABLE_TO_FROZEN_HIGH_FOOTHILL_DEFECT",
+  "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+  "authorityGeneration": 3000,
+  "originalSourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "sourceReceipts": {
+    "orderedMaterial": {
+      "ref": "49e2c2a951c2a77040b35a35e1d842b06b55c34e",
+      "gitBlob": "ebb5f2cad7e7a433eef799548d946adac6e9eb5e",
+      "recordCount": 18
+    },
+    "measuredDefect": {
+      "ref": "11a4fd07b30be7f663ac6d698434ce32ebea875e",
+      "gitBlob": "b1c9f9f4f37cd3a844110fb8bbdd4e11c38ac2be",
+      "run": 41083373434,
+      "artifact": 12991506650
+    },
+    "sourceCensus": {
+      "gitBlob": "bec22fb0fe480ac7f4e26c37e8e25de827cd90d9",
+      "sourceRef": "49e2c2a951c2a77040b35a35e1d842b06b55c34e",
+      "bounds": [
+        -256,
+        -400,
+        256,
+        -80
+      ]
+    }
+  },
+  "frozenDefectSamples": 15,
+  "frozenDefectZRange": [
+    -752,
+    -727.7560510524
+  ],
+  "localCensusZRange": [
+    -400,
+    -80
+  ],
+  "minimumZSeparationMetres": 327.75605105240004,
+  "worstSavedSlope": {
+    "id": 42,
+    "view": "inland-remaining-west-tip",
+    "sourceXZ": [
+      -195,
+      -728.77572419355
+    ],
+    "sourceEvaluatedWorld": [
+      -195.01268283960584,
+      15.06028488633788,
+      -728.7934957424611
+    ],
+    "sourceExtrapolatedParentLane": false,
+    "afterQuarterMetreMaxSlope": 9.74875428219815,
+    "beforeQuarterMetreMaxSlope": 9.772251558830305,
+    "sourceGroundcoverWeight": 0,
+    "sourceIdentityWeight": 0.5827358476845277,
+    "sourceWoodlandLitterWeight": 0,
+    "sourceHabitatWeight": 0,
+    "sourceSteepBankWeight": 0,
+    "sourceSandWeight": 0,
+    "sourceCorrectedAtlasDeltaRGB": [
+      -0.013501970206603542,
+      -0.0048828125,
+      -0.001953125
+    ],
+    "sourceMaterialMarginDeltaA": [
+      -0.0019977604549147082,
+      -0.0019977604549147082,
+      -0.0019977604549147082
+    ],
+    "sourceMaterialMarginDeltaB": [
+      -0.0003612443765200142,
+      -0.00031908784792833943,
+      -9.936868268626588e-7
+    ]
+  },
+  "stageSummary": {
+    "woodlandLitterNonzero": 0,
+    "habitatNonzero": 0,
+    "steepBankNonzero": 0,
+    "sandNonzero": 0,
+    "groundcoverNonzero": 7,
+    "environmentalIdentityNonzero": 15,
+    "correctedAtlasRGBNonzero": 15,
+    "materialMarginNonzero": 15
+  },
+  "sampleAttribution": [
+    {
+      "id": 17,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -206,
+        -727.92176866525
+      ],
+      "sourceEvaluatedWorld": [
+        -206.08550274212578,
+        15.82834118292548,
+        -727.9501598960659
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 2.122518445645028,
+      "beforeQuarterMetreMaxSlope": 2.2917700318219545,
+      "sourceGroundcoverWeight": 0.03731820230214145,
+      "sourceIdentityWeight": 0.5718108443606618,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.015430312132902371,
+        -0.0078125,
+        -0.00390625
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.0013910803277936892,
+        0.0013910803277936892,
+        0.0013910803277936892
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0003950039947492566,
+        -0.0002508871008739388,
+        -0.0000934653449976928
+      ]
+    },
+    {
+      "id": 18,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -205.5,
+        -727.96116710275
+      ],
+      "sourceEvaluatedWorld": [
+        -205.4187000037738,
+        15.784618621937964,
+        -727.9303021511291
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 3.8939298009928507,
+      "beforeQuarterMetreMaxSlope": 3.6847550130508466,
+      "sourceGroundcoverWeight": 0.02611381237733551,
+      "sourceIdentityWeight": 0.5694383687769486,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.0163293053058986,
+        -0.0078125,
+        -0.00390625
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.003993129706345497,
+        0.003993129706345497,
+        0.003993129706345497
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0008845773457938405,
+        -0.0007459062660803994,
+        -0.0003351206900886081
+      ]
+    },
+    {
+      "id": 19,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -205,
+        -728
+      ],
+      "sourceEvaluatedWorld": [
+        -204.98467204709365,
+        15.756941877282362,
+        -727.9838182602481
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 3.7693902349639075,
+      "beforeQuarterMetreMaxSlope": 3.759116037359263,
+      "sourceGroundcoverWeight": 0.019367895402078776,
+      "sourceIdentityWeight": 0.5677747127979802,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.01654223051052628,
+        -0.008729730510526279,
+        -0.00390625
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.004995120999082803,
+        0.004995120999082803,
+        0.004995120999082803
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0009500481410946768,
+        -0.0002885948185344458,
+        -0.0003626090994270957
+      ]
+    },
+    {
+      "id": 20,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -204.5,
+        -728.0289543878
+      ],
+      "sourceEvaluatedWorld": [
+        -204.5701664523607,
+        15.730582244652204,
+        -728.0347167000406
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 4.392505352816045,
+      "beforeQuarterMetreMaxSlope": 5.9648852643238115,
+      "sourceGroundcoverWeight": 0.013208508244349233,
+      "sourceIdentityWeight": 0.5649804105387295,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.016737175332196055,
+        -0.0087890625,
+        -0.00390625
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.004945209202384742,
+        0.004945209202384742,
+        0.004945209202384742
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.001049445694036498,
+        -0.0002609309247722995,
+        -0.0003940783458657231
+      ]
+    },
+    {
+      "id": 21,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -204,
+        -728.0447242861
+      ],
+      "sourceEvaluatedWorld": [
+        -204.00091328119962,
+        15.693505913670245,
+        -728.0368674271127
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 6.059174263509647,
+      "beforeQuarterMetreMaxSlope": 6.165375747071096,
+      "sourceGroundcoverWeight": 0.005718823788877774,
+      "sourceIdentityWeight": 0.5573602972445758,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.017578125,
+        -0.0087890625,
+        -0.00390625
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.004225140397059784,
+        0.004225140397059784,
+        0.004225140397059784
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.001150717359345932,
+        -0.0009655596793560067,
+        -0.0008345808196237796
+      ]
+    },
+    {
+      "id": 22,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -203.5,
+        -728.0489058845
+      ],
+      "sourceEvaluatedWorld": [
+        -203.46877832223547,
+        15.658847148703959,
+        -728.0388779158056
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 4.028409082808025,
+      "beforeQuarterMetreMaxSlope": 6.3415197031258685,
+      "sourceGroundcoverWeight": 0.0012352704471200744,
+      "sourceIdentityWeight": 0.54543277320982,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.017729992532958094,
+        -0.0087890625,
+        -0.00390625
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.0034780672155310666,
+        0.0034780672155310666,
+        0.0034780672155310666
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0015614150119084276,
+        -0.0012275482439604334,
+        -0.0009866062713682175
+      ]
+    },
+    {
+      "id": 23,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -203,
+        -728.04329763415
+      ],
+      "sourceEvaluatedWorld": [
+        -202.97024575486665,
+        15.62637695897217,
+        -728.0407614494328
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 3.872244515216323,
+      "beforeQuarterMetreMaxSlope": 5.714631560467126,
+      "sourceGroundcoverWeight": 0,
+      "sourceIdentityWeight": 0.5321232849528574,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.0185546875,
+        -0.0087890625,
+        -0.004003527033671836
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.003073540474826613,
+        0.003073540474826613,
+        0.003073540474826613
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0006762469220641316,
+        -0.0010226227666568174,
+        -0.0008259256427353473
+      ]
+    },
+    {
+      "id": 24,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -202.5,
+        -728.0285744298
+      ],
+      "sourceEvaluatedWorld": [
+        -202.50898713475803,
+        15.595857707636421,
+        -728.0217604271855
+      ],
+      "sourceExtrapolatedParentLane": true,
+      "afterQuarterMetreMaxSlope": 5.449658186985175,
+      "beforeQuarterMetreMaxSlope": 6.089310179984977,
+      "sourceGroundcoverWeight": 0,
+      "sourceIdentityWeight": 0.5212958413191376,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.0185546875,
+        -0.009648572411328868,
+        -0.00487975679142523
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.002788995325872763,
+        0.002788995325872763,
+        0.002788995325872763
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0008443143240615008,
+        -0.00017670541393791903,
+        0.00004203622691257895
+      ]
+    },
+    {
+      "id": 25,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -202,
+        -728.0039334443
+      ],
+      "sourceEvaluatedWorld": [
+        -201.93744910831276,
+        15.5582046189545,
+        -727.9839503968121
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 4.598913938477665,
+      "beforeQuarterMetreMaxSlope": 5.251398034745421,
+      "sourceGroundcoverWeight": 0,
+      "sourceIdentityWeight": 0.5091924211037016,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.0185546875,
+        -0.009765625,
+        -0.0048828125
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.002416274870122189,
+        0.002416274870122189,
+        0.002416274870122189
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.00118415518946416,
+        -0.00024695566389008026,
+        0.00004034546687166174
+      ]
+    },
+    {
+      "id": 26,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -201.9435302808,
+        -728
+      ],
+      "sourceEvaluatedWorld": [
+        -201.93236520787622,
+        15.558113091182726,
+        -728.0043279277314
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 4.318555097206797,
+      "beforeQuarterMetreMaxSlope": 6.001465207672709,
+      "sourceGroundcoverWeight": 0,
+      "sourceIdentityWeight": 0.5093498062476414,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.0185546875,
+        -0.009765625,
+        -0.0048828125
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.002301080498259984,
+        0.002301080498259984,
+        0.002301080498259984
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0012538424044292124,
+        -0.0002946679941173439,
+        0.000010187031510272331
+      ]
+    },
+    {
+      "id": 27,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -201.5,
+        -727.97084754835
+      ],
+      "sourceEvaluatedWorld": [
+        -201.53029337293776,
+        15.531689134569529,
+        -727.9872671321742
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 6.844541793787471,
+      "beforeQuarterMetreMaxSlope": 7.212315618283412,
+      "sourceGroundcoverWeight": 0,
+      "sourceIdentityWeight": 0.5011111588696293,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.0185546875,
+        -0.009765625,
+        -0.0048828125
+      ],
+      "sourceMaterialMarginDeltaA": [
+        0.0019354082239166016,
+        0.0019354082239166016,
+        0.0019354082239166016
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.00170541931844636,
+        -0.000529702520591703,
+        -0.00011453636603430995
+      ]
+    },
+    {
+      "id": 31,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -199.5,
+        -727.7698754982
+      ],
+      "sourceEvaluatedWorld": [
+        -199.5053766296574,
+        15.390526784373746,
+        -727.7647122349078
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 5.846478649761423,
+      "beforeQuarterMetreMaxSlope": 6.205497567561508,
+      "sourceGroundcoverWeight": 0,
+      "sourceIdentityWeight": 0.5298955774250946,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.020430581766460787,
+        -0.009765625,
+        -0.0048828125
+      ],
+      "sourceMaterialMarginDeltaA": [
+        -0.000011321811741823941,
+        -0.000011321811741823941,
+        -0.000011321811741823941
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0010287055897910402,
+        -0.0005798539657427349,
+        -0.00007650829243625276
+      ]
+    },
+    {
+      "id": 32,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -199,
+        -727.7560510524
+      ],
+      "sourceEvaluatedWorld": [
+        -198.9989873976947,
+        15.350917011479332,
+        -727.7602315737226
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 5.837624507377541,
+      "beforeQuarterMetreMaxSlope": 7.814393734896271,
+      "sourceGroundcoverWeight": 0,
+      "sourceIdentityWeight": 0.5538309873332217,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.020467845466454165,
+        -0.009765625,
+        -0.0048826502281836826
+      ],
+      "sourceMaterialMarginDeltaA": [
+        -0.0007265193500701648,
+        -0.0007265193500701648,
+        -0.0007265193500701648
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0015791724547217843,
+        -0.0008273212256841811,
+        -0.00020088991744291102
+      ]
+    },
+    {
+      "id": 42,
+      "view": "inland-remaining-west-tip",
+      "sourceXZ": [
+        -195,
+        -728.77572419355
+      ],
+      "sourceEvaluatedWorld": [
+        -195.01268283960584,
+        15.06028488633788,
+        -728.7934957424611
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 9.74875428219815,
+      "beforeQuarterMetreMaxSlope": 9.772251558830305,
+      "sourceGroundcoverWeight": 0,
+      "sourceIdentityWeight": 0.5827358476845277,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        -0.013501970206603542,
+        -0.0048828125,
+        -0.001953125
+      ],
+      "sourceMaterialMarginDeltaA": [
+        -0.0019977604549147082,
+        -0.0019977604549147082,
+        -0.0019977604549147082
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0003612443765200142,
+        -0.00031908784792833943,
+        -9.936868268626588e-7
+      ]
+    },
+    {
+      "id": 182,
+      "view": "inland-remaining-southeast",
+      "sourceXZ": [
+        -171.7553826098,
+        -752
+      ],
+      "sourceEvaluatedWorld": [
+        -171.9497651405917,
+        14.929891524361947,
+        -751.7323576377854
+      ],
+      "sourceExtrapolatedParentLane": false,
+      "afterQuarterMetreMaxSlope": 1.8316664987826812,
+      "beforeQuarterMetreMaxSlope": 1.8575254391920453,
+      "sourceGroundcoverWeight": 0.18652985653700888,
+      "sourceIdentityWeight": 0.4949338114343041,
+      "sourceWoodlandLitterWeight": 0,
+      "sourceHabitatWeight": 0,
+      "sourceSteepBankWeight": 0,
+      "sourceSandWeight": 0,
+      "sourceCorrectedAtlasDeltaRGB": [
+        0.0185546875,
+        0.008008750268535092,
+        0.00390625
+      ],
+      "sourceMaterialMarginDeltaA": [
+        -0.00014890473503443002,
+        -0.00014890473503443002,
+        -0.00014890473503443002
+      ],
+      "sourceMaterialMarginDeltaB": [
+        -0.0005990388701379725,
+        -0.0001083226887250434,
+        -0.00010186453823678956
+      ]
+    }
+  ],
+  "sourceWoodlandRule": "if -180<x<-24 and -380<z<-190; original material_stages.py; zero at all 15 frozen high-foothill positions",
+  "interpretation": "The strongest preliminary woodland-litter edge is a plausible authored ecotone inside Gen3000's separate local navigation rectangle, but cannot explain the frozen high-foothill artifact at z~-728. Source-only matching is not raster ownership or pixel shader proof.",
+  "nextAction": "Source-only inspect existing post-margin high-foothill palette/substrate P, original corrected atlas, environmental identity and source changes along stored 15 frozen profiles, emphasizing profile42 where groundcover weight is zero; do not use the unrelated z~-306 woodland-litter transition as the material-band correction target.",
+  "held": [
+    "FULL_GPU_VISIBLE_FRAGMENT_RGB",
+    "P_SUBSTRATE_MIP_FILTERING",
+    "HARDWARE_DERIVATIVE_HELPERS",
+    "DEPTH_OWNER_PIXEL_MAPPING",
+    "MAP_WIDE_VISUAL_ACCEPTANCE",
+    "SOURCE_MATERIAL_REPAIR_AUTHORITY"
+  ],
+  "noGPU": true,
+  "noNewCensus": true,
+  "noProductMutation": true,
+  "noPublication": true
+}

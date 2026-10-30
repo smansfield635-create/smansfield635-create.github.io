@@ -6162,6 +6162,50 @@
       "scopeHash": "49784da7dbcc05734c55b2c1005f30db5ae77541b087181e461d62f739df8387",
       "state": "ADMITTED_LOCKED"
     },
+    "49e1df6d502c59330508bcb3bc45f8fdf894ede082a1ce9275b148fb240a4a82": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ae9a9114f0733c8cc9e47859b0bdd47a4aef3151",
+          "lockGeneration": 2994,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_PALAWAN_MATERIAL_PERFORMANCE_SINGLE_WORLD:20261030",
+          "operationId": "NINE_SUMMITS_PEACE_PALAWAN_MATERIAL_AND_PERFORMANCE_REFINEMENT_20261030_001",
+          "procedureLocatorDigest": "ff091adb73854341a5482e7aeb06b0e90b5988c1582dc1ed26e77b931d697a9c",
+          "requestDigest": "1acc45270dc87cb06c3b7a6469f29f2fda641316cc3ccc5108563721c6e7e237",
+          "scopeHash": "49e1df6d502c59330508bcb3bc45f8fdf894ede082a1ce9275b148fb240a4a82"
+        },
+        "bindingDigest": "f41f76322f4a9fff0a2c9cd8261d92c3c14a4628da25d1c00b2b933f009b8211",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "036d4c4d65b304ec0272e437756618139dc1c7fe3f863a087d3d74ad6d704ccd",
+          "commentId": 6515683593,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41008321381,
+          "workflowSha": "ae9a9114f0733c8cc9e47859b0bdd47a4aef3151"
+        },
+        "lineageAnchorCommitSha": "13347f47c4d735580301d5e55d2528a8ac059638",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ae9a9114f0733c8cc9e47859b0bdd47a4aef3151",
+      "lockGeneration": 2994,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_PALAWAN_MATERIAL_PERFORMANCE_SINGLE_WORLD:20261030",
+      "operationId": "NINE_SUMMITS_PEACE_PALAWAN_MATERIAL_AND_PERFORMANCE_REFINEMENT_20261030_001",
+      "procedureLocatorDigest": "ff091adb73854341a5482e7aeb06b0e90b5988c1582dc1ed26e77b931d697a9c",
+      "released": false,
+      "requestDigest": "1acc45270dc87cb06c3b7a6469f29f2fda641316cc3ccc5108563721c6e7e237",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "49e1df6d502c59330508bcb3bc45f8fdf894ede082a1ce9275b148fb240a4a82",
+      "state": "ADMITTED_LOCKED"
+    },
     "49e657cfa595b11d5ffbd96b8572ebb5b7eb511c9d39ce9d64b8b551792d8c4d": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -23655,7 +23699,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2993,
+  "lockGeneration": 2994,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

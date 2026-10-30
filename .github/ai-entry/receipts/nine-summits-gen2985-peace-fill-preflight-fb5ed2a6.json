@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "nine-summits-gen2985-peace-fill-preflight-fb5ed2a6",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6994,
+  "requestBranch": "ai-dispatch-request-nine-summits-gen2985-peace-fill-preflight-fb5ed2a6",
+  "requestCommit": "8fbff78fcb09fb833f2e4cc3e8be3f3625e83e46",
+  "requestCommitParent": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "fb5ed2a64be3364c9e683e81e701480fdac49588",
+    "surface_id": "nine-summits-universe"
+  },
+  "bridgeRunId": "40987860491",
+  "dispatchedRunId": 40987874379,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40987874379",
+  "dispatchedRunHeadSha": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+  "dispatchedAt": "2026-10-30T01:47:04.640Z",
+  "resolvedAt": "2026-10-30T01:47:08.331Z"
+}

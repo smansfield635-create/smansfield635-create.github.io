@@ -1,0 +1,406 @@
+{
+  "schema": "H_EARTH_GEN3000_FROZEN_PROFILE42_MATERIAL_RESIDUAL_v1",
+  "operationId": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+  "lockGeneration": 3000,
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "result": "BOUNDED_PAIRED_IMAGE_CORRECTION_TOO_SMALL_AT_PROFILE42__UNIQUE_SOURCE_CAUSE_HELD",
+  "inputs": {
+    "orderedMaterial": {
+      "ref": "49e2c2a951c2a77040b35a35e1d842b06b55c34e",
+      "gitBlob": "ebb5f2cad7e7a433eef799548d946adac6e9eb5e"
+    },
+    "measuredProfiles": {
+      "ref": "11a4fd07b30be7f663ac6d698434ce32ebea875e",
+      "gitBlob": "b1c9f9f4f37cd3a844110fb8bbdd4e11c38ac2be"
+    },
+    "captureArtifact": {
+      "run": 41083373434,
+      "artifactId": 12991506650,
+      "zipSha256": "c1ae9fd42efba75bcda13c49caac13539bbb3aed41f812e05a0d6f59f3eb1756",
+      "sixPngHashVerified": true
+    },
+    "reproductionScriptBlob": "c883c2a995be64a3160f4810851cf1fb39d45964"
+  },
+  "stagePresenceAtSourceQueryCenters": {
+    "identity": 15,
+    "groundcover": 7,
+    "atlas": 15,
+    "margin": 15,
+    "habitat": 0,
+    "litter": 0,
+    "sand": 0,
+    "steepBank": 0
+  },
+  "worstResidualProfile": {
+    "id": 42,
+    "sourceXZ": [
+      -195,
+      -728.77572419355
+    ],
+    "view": "inland-remaining-west-tip",
+    "afterSlope": 9.74875428219815,
+    "beforeSlope": 9.772251558830305,
+    "imageLumaCorrectionMaximum": 0.0729291471602096,
+    "unchangedSamples": 5,
+    "largestResidualIndex": 4,
+    "largestResidualPixelPoints": [
+      [
+        191.99995382748972,
+        343.9906114294505
+      ],
+      [
+        208.56051397150202,
+        341.04339714578987
+      ]
+    ],
+    "beforeAtResidual": 9.772251558830305,
+    "afterAtResidual": 9.74875428219815,
+    "imageCorrectionAtResidual": [
+      0,
+      -0.005874319158039043
+    ],
+    "sourceEvaluatedWorld": [
+      -195.01268283960584,
+      15.06028488633788,
+      -728.7934957424611
+    ],
+    "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY",
+    "A": [
+      0.4152663918605576,
+      0.4152663918605576,
+      0.4152663918605576
+    ],
+    "B": [
+      0.23053281546380489,
+      0.15337253304146167,
+      0.0891225933783706
+    ],
+    "identity": 0.5827358476845277,
+    "groundcover": 0,
+    "atlas": [
+      -0.013501970206603542,
+      -0.0048828125,
+      -0.001953125
+    ],
+    "marginA": [
+      -0.0019977604549147082,
+      -0.0019977604549147082,
+      -0.0019977604549147082
+    ],
+    "marginB": [
+      -0.0003612443765200142,
+      -0.00031908784792833943,
+      -9.936868268626588e-7
+    ],
+    "habitat": 0,
+    "litter": 0,
+    "sand": 0,
+    "steepBank": 0,
+    "marginOnlyPreLightingSourceRGBUncertaintyForPIn0To1": [
+      {
+        "channel": "R",
+        "minimum": -0.0023590048314347223,
+        "maximum": -0.0003612443765200142
+      },
+      {
+        "channel": "G",
+        "minimum": -0.0023168483028430478,
+        "maximum": -0.00031908784792833943
+      },
+      {
+        "channel": "B",
+        "minimum": -0.001998754141741571,
+        "maximum": -9.936868268626588e-7
+      }
+    ],
+    "relativeMaxSlopeReductionPct": 0.24044895376156988,
+    "originalLumaProfile": [
+      124.04986655370877,
+      124.082,
+      122.43147033953309,
+      122.32482000693358,
+      122.64481142945048,
+      125.08787431915806,
+      123.84943604571343,
+      125.12371701824165,
+      125.86196347602193
+    ],
+    "candidateLumaProfile": [
+      124.04986655370877,
+      124.082,
+      122.43147033953309,
+      122.32482000693358,
+      122.64481142945048,
+      125.08200000000002,
+      123.77650689855322,
+      125.08748755661988,
+      125.85290035809727
+    ],
+    "sourceOnlyDirectPaletteRangeForPIn0To1": [
+      [
+        0.23053281546380489,
+        0.6457992073243625
+      ],
+      [
+        0.15337253304146167,
+        0.5686389249020193
+      ],
+      [
+        0.0891225933783706,
+        0.5043889852389282
+      ]
+    ]
+  },
+  "archivedSixImageDifference": {
+    "imageWidth": 384,
+    "imageHeight": 688,
+    "sourceVerifiedZipSha256": "c1ae9fd42efba75bcda13c49caac13539bbb3aed41f812e05a0d6f59f3eb1756",
+    "poses": [
+      {
+        "pose": "inland-remaining-west-arc",
+        "unchangedPixels": 150319,
+        "changedPixels": 113873,
+        "maxAbsoluteRGBChannelCodeDelta": 3,
+        "meanAbsoluteRGBChannelCodeDelta": 0.3909240249515504,
+        "skyRows0to200Unchanged": true
+      },
+      {
+        "pose": "inland-remaining-west-tip",
+        "unchangedPixels": 130998,
+        "changedPixels": 133194,
+        "maxAbsoluteRGBChannelCodeDelta": 3,
+        "meanAbsoluteRGBChannelCodeDelta": 0.4048015584625323,
+        "skyRows0to200Unchanged": true
+      },
+      {
+        "pose": "inland-remaining-southeast",
+        "unchangedPixels": 221517,
+        "changedPixels": 42675,
+        "maxAbsoluteRGBChannelCodeDelta": 9,
+        "meanAbsoluteRGBChannelCodeDelta": 0.17713253997093023,
+        "skyRows0to200Unchanged": true
+      }
+    ]
+  },
+  "all15ProfileSampleCorrections": [
+    {
+      "id": 17,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -206,
+        -727.92176866525
+      ],
+      "groundcover": 0.03731820230214145,
+      "identity": 0.5718108443606618,
+      "afterSlope": 2.122518445645028,
+      "peakObservedLumaCorrection": 0.3752929892029897,
+      "unchangedLumaSamples": 5,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 18,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -205.5,
+        -727.96116710275
+      ],
+      "groundcover": 0.02611381237733551,
+      "identity": 0.5694383687769486,
+      "afterSlope": 3.8939298009928507,
+      "peakObservedLumaCorrection": 0.08908031861685117,
+      "unchangedLumaSamples": 4,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 19,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -205,
+        -728
+      ],
+      "groundcover": 0.019367895402078776,
+      "identity": 0.5677747127979802,
+      "afterSlope": 3.7693902349639075,
+      "peakObservedLumaCorrection": 0.30478408885116437,
+      "unchangedLumaSamples": 3,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 20,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -204.5,
+        -728.0289543878
+      ],
+      "groundcover": 0.013208508244349233,
+      "identity": 0.5649804105387295,
+      "afterSlope": 4.392505352816045,
+      "peakObservedLumaCorrection": 0.7904006202584526,
+      "unchangedLumaSamples": 3,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 21,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -204,
+        -728.0447242861
+      ],
+      "groundcover": 0.005718823788877774,
+      "identity": 0.5573602972445758,
+      "afterSlope": 6.059174263509647,
+      "peakObservedLumaCorrection": 0.7784345073944365,
+      "unchangedLumaSamples": 1,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 22,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -203.5,
+        -728.0489058845
+      ],
+      "groundcover": 0.0012352704471200744,
+      "identity": 0.54543277320982,
+      "afterSlope": 4.028409082808025,
+      "peakObservedLumaCorrection": 0.9814206938489036,
+      "unchangedLumaSamples": 1,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 23,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -203,
+        -728.04329763415
+      ],
+      "groundcover": 0,
+      "identity": 0.5321232849528574,
+      "afterSlope": 3.872244515216323,
+      "peakObservedLumaCorrection": 1,
+      "unchangedLumaSamples": 0,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 24,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -202.5,
+        -728.0285744298
+      ],
+      "groundcover": 0,
+      "identity": 0.5212958413191376,
+      "afterSlope": 5.449658186985175,
+      "peakObservedLumaCorrection": 1.0000000000000284,
+      "unchangedLumaSamples": 0,
+      "support": "EXTRAPOLATED_PARENT_PLANE"
+    },
+    {
+      "id": 25,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -202,
+        -728.0039334443
+      ],
+      "groundcover": 0,
+      "identity": 0.5091924211037016,
+      "afterSlope": 4.598913938477665,
+      "peakObservedLumaCorrection": 1,
+      "unchangedLumaSamples": 1,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 26,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -201.9435302808,
+        -728
+      ],
+      "groundcover": 0,
+      "identity": 0.5093498062476414,
+      "afterSlope": 4.318555097206797,
+      "peakObservedLumaCorrection": 0.9999999999999858,
+      "unchangedLumaSamples": 1,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 27,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -201.5,
+        -727.97084754835
+      ],
+      "groundcover": 0,
+      "identity": 0.5011111588696293,
+      "afterSlope": 6.844541793787471,
+      "peakObservedLumaCorrection": 1.0000000000000142,
+      "unchangedLumaSamples": 0,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 31,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -199.5,
+        -727.7698754982
+      ],
+      "groundcover": 0,
+      "identity": 0.5298955774250946,
+      "afterSlope": 5.846478649761423,
+      "peakObservedLumaCorrection": 0.9765120116327068,
+      "unchangedLumaSamples": 1,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 32,
+      "view": "inland-remaining-west-arc",
+      "sourceXZ": [
+        -199,
+        -727.7560510524
+      ],
+      "groundcover": 0,
+      "identity": 0.5538309873332217,
+      "afterSlope": 5.837624507377541,
+      "peakObservedLumaCorrection": 1,
+      "unchangedLumaSamples": 0,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 42,
+      "view": "inland-remaining-west-tip",
+      "sourceXZ": [
+        -195,
+        -728.77572419355
+      ],
+      "groundcover": 0,
+      "identity": 0.5827358476845277,
+      "afterSlope": 9.74875428219815,
+      "peakObservedLumaCorrection": 0.0729291471602096,
+      "unchangedLumaSamples": 5,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    },
+    {
+      "id": 182,
+      "view": "inland-remaining-southeast",
+      "sourceXZ": [
+        -171.7553826098,
+        -752
+      ],
+      "groundcover": 0.18652985653700888,
+      "identity": 0.4949338114343041,
+      "afterSlope": 1.8316664987826812,
+      "peakObservedLumaCorrection": 0.23921632324285724,
+      "unchangedLumaSamples": 4,
+      "support": "PARENT_TRIANGLE_INTERIOR_CPU_ONLY"
+    }
+  ],
+  "insufficiency": "Source stage coefficients A*P+B apply at one selected camera parent-plane lane per sample. The nine image profile positions are distinct pixels along a 2m transect. Neither the complete original pre-identity soil substrate P at both extreme-slope pixels nor actual raster depth/fragment owner, GPU soil texture mip/filtering, highp derivatives and lighting were captured. Thus one cannot mathematically distinguish substrate/identity/atlas/lighting causes of the remaining slope from these records alone.",
+  "firstMissingEvidence": "EXACT_PROFILE42_MAX_SLOPE_INTERVAL_PIXEL_STAGE_P_AND_PRELIGHT_COLOR_NOT_CAPTURED",
+  "nextAction": "Read existing indexed instrumented captures for materialMarginSubstrate P and prelighting palette at profile42 slope endpoints; if absent, preserve an explicit minimal two-pixel material-stage capture contract under separate canonical authorization, no GPU execution until authorized and user can monitor the verified run.",
+  "scientificClosure": false,
+  "finalPixelCauseQualified": false,
+  "ownerVisualApproval": false,
+  "noNewGpu": true,
+  "noNewCensus": true,
+  "noProductMutation": true
+}

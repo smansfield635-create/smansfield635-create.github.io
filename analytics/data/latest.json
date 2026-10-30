@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-30T14:27:34Z",
+  "generatedAt": "2026-10-30T15:24:45Z",
   "window30d": {
-    "start": "2026-09-30T14:27:34Z",
-    "end": "2026-10-30T14:27:34Z"
+    "start": "2026-09-30T15:24:45Z",
+    "end": "2026-10-30T15:24:45Z"
   },
   "daily": [
     {
@@ -36,19 +36,19 @@
     },
     {
       "date": "2026-10-08",
-      "pageLoads": 90
+      "pageLoads": 70
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 50
+      "pageLoads": 30
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 50
+      "pageLoads": 80
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 90
+      "pageLoads": 70
     },
     {
       "date": "2026-10-12",
@@ -56,11 +56,11 @@
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-14",
-      "pageLoads": 80
+      "pageLoads": 70
     },
     {
       "date": "2026-10-15",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 49
+      "pageLoads": 50
     }
   ],
   "summary": {
-    "pageLoads": 1887,
-    "botPageLoads": 861,
+    "pageLoads": 1888,
+    "botPageLoads": 862,
     "nonBotPageLoads": 1026
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1702,
-      "visits": 1702
+      "pageLoads": 1683,
+      "visits": 1683
     },
     {
       "host": "diamondgatebridge.com",
@@ -172,18 +172,23 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 596,
-      "visits": 596
+      "pageLoads": 587,
+      "visits": 587
     },
     {
       "path": "/",
-      "pageLoads": 109,
-      "visits": 87
+      "pageLoads": 119,
+      "visits": 97
     },
     {
       "path": "/build/",
       "pageLoads": 60,
       "visits": 60
+    },
+    {
+      "path": "/showroom/globe/audralia/",
+      "pageLoads": 43,
+      "visits": 43
     },
     {
       "path": "/nine-summits/universe/",
@@ -199,11 +204,6 @@
       "path": "/gauges/",
       "pageLoads": 30,
       "visits": 0
-    },
-    {
-      "path": "/evidence/agentic-frontier/",
-      "pageLoads": 25,
-      "visits": 21
     }
   ],
   "ownerMeasurement": {

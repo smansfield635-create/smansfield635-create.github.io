@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-30T20:24:14Z",
+  "generatedAt": "2026-10-30T21:24:43Z",
   "window30d": {
-    "start": "2026-09-30T20:24:14Z",
-    "end": "2026-10-30T20:24:14Z"
+    "start": "2026-09-30T21:24:43Z",
+    "end": "2026-10-30T21:24:43Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-22",
-      "pageLoads": 32
+      "pageLoads": 30
     },
     {
       "date": "2026-10-23",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 55
+      "pageLoads": 57
     }
   ],
   "summary": {
-    "pageLoads": 1828,
-    "botPageLoads": 823,
-    "nonBotPageLoads": 1005
+    "pageLoads": 1878,
+    "botPageLoads": 854,
+    "nonBotPageLoads": 1024
   },
   "referrers": [
     {
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 723,
-      "visits": 660
+      "pageLoads": 722,
+      "visits": 659
     },
     {
       "path": "/analytics/",
@@ -186,14 +186,14 @@
       "visits": 60
     },
     {
+      "path": "/nine-summits/universe/",
+      "pageLoads": 43,
+      "visits": 42
+    },
+    {
       "path": "/showroom/globe/audralia/",
       "pageLoads": 43,
       "visits": 43
-    },
-    {
-      "path": "/nine-summits/universe/",
-      "pageLoads": 42,
-      "visits": 41
     },
     {
       "path": "/about/",

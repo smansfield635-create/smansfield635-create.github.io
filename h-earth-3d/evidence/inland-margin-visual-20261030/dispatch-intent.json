@@ -1,0 +1,19 @@
+{
+  "schema": "H_EARTH_FIXED_COMPARISON_DISPATCH_INTENT_v1",
+  "operationId": "H_EARTH_INLAND_MARGIN_VISUAL_20261030_001",
+  "lockGeneration": 2995,
+  "admissionRun": 41008594123,
+  "sceneHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+  "candidateHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "toolingHead": "ec5f78cadc706f5d7c7f1b0f9ec3110fa4cd1fea",
+  "frameCap": 12,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "965cad44793f5b375a29c565d7eaf7a2cbce75164d8263b64bb236a78f3fff61",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.mjs": "f77e394111731b0acede7575e4e1030d5b7aa7b8de7efdf964d2273208bf4679",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/qualify.test.mjs": "a7ff442fdda9eff12d6991decb3f36cedfa61579cf01cffda5a580431546f239",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/product-binding.json": "418efe3ccdaaa2e5052a3802e3be448eee88bb680cf9630face3859188a1596b",
+    "h-earth-3d/evidence/inland-margin-visual-20261030/admission.json": "8a98190c34139885016e6b2af92a47c1d68267ace3911337bdc554386779514f"
+  }
+}

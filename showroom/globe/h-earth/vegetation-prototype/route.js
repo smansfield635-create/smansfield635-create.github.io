@@ -1,7 +1,7 @@
 /** Gen2795 measured preparation and input-confirmed public entry; isolated diagnostic replay. */
 import {prepareHEarthRun8ER2CanonicalLiveRenderPackage} from '../render/live-render-package.run8e-r2.canonical.js?cb=meadow-distribution-20261006';
 import {createHEarthRun8ER3AFrameUniformPacket} from '../render/live-renderer-contract.run8e-r3a.js?cb=meadow-distribution-20261006&rev=gen2780-stable-planting-v1';
-import {createHEarthRun8ER3CPersistentRenderer} from '../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?rev=gen2992-material-margin-local-candidate';
+import {createHEarthRun8ER3CPersistentRenderer} from '../render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js?rev=gen2992-full-material-inland-margin';
 import {installHEarthRun8ER3D2PointerTouchIntake,resolveHEarthNavigationBoundaryFeedback} from '../diagnostic/run8e-r3d/pointer-touch-intake.js?cb=gen2780-stable-planting-v1';
 
 import {createFramePresenter} from '../render/performance-scheduling.v1.js?rev=gen2795-performance-v1';

@@ -1,0 +1,21 @@
+{
+  "schema": "H_EARTH_HABITAT_MATERIAL_BLEND_DISPATCH_INTENT_v1",
+  "operationId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001",
+  "lockGeneration": 2987,
+  "admissionRun": 40988429590,
+  "toolingHead": "9ffe7fae03ff8f46e5cd1de1e388f6cebef9aeea",
+  "sceneHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+  "frameCap": 12,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "sourceSha256": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "f206f01ee0b70161b360ae636a6968de8154dcf354282227315b3aa23ae2e8df",
+    "h-earth-3d/evidence/habitat-material-blend-20261029/qualify.mjs": "8fca3b8db72dddde37021065195ec86197a40e5fea62a149668dc53d2ffd3126",
+    "h-earth-3d/evidence/habitat-material-blend-20261029/qualify.test.mjs": "b8a1aedb67134178e860f75f892cf36dab56c2f61611e09a3ef93e111765bc69",
+    "h-earth-3d/evidence/habitat-material-blend-20261029/product.test.mjs": "78788c5607c6793b3269915bb4a2f73768fb07796c622f84cd5edfec3afbd3e1",
+    "h-earth-3d/evidence/habitat-material-blend-20261029/product-binding.json": "f8d074e7cac20d46d663b8817fe0b4db3dc6e8fdd13d49e7966990ace2669fed",
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+    "showroom/globe/h-earth/render/habitat-material-presentation.v1.js": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a",
+    "showroom/globe/h-earth/vegetation-prototype/route.js": "365aec75bffae1c95c19c4bc9cab9869720893a04bcb32eadad46e7f6b14267f"
+  }
+}

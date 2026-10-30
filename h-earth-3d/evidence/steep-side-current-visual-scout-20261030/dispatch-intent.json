@@ -1,0 +1,38 @@
+{
+  "schema": "H_EARTH_STEEP_SIDE_FIXED_SCOUT_DISPATCH_v1",
+  "operationId": "H_EARTH_STEEP_SIDE_CURRENT_SCOUT_OBSERVER_HEADING_REPAIR_20261030_001",
+  "lockGeneration": 3007,
+  "admissionRun": 41140007355,
+  "admissionComment": 6535069437,
+  "candidateHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "toolingHead": "57c5055107760b57e6c31d32324db4db71dc9ca4",
+  "sourceBlobIds": {
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "fd52af6b14ffee03e583e8443342d07406109fdf",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/qualify.mjs": "aa8c2f0fc2bf083d525cdf5668f7e88571d28a65",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/qualify.test.mjs": "c49442ecb03d07df6e66f97719fa3cb2201434df",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/coverage-plan.json": "0db091a0c6589bd0b6db3da41f102bf3c9dba556",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/admission.json": "1f764b8512391184c80dd9fb89e07c076d766974",
+    "h-earth-3d/evidence/steep-side-current-visual-scout-20261030/product-binding.json": "25729e5e560e2978e4852d97ff19c784d6a83fbb"
+  },
+  "cameraIds": [
+    "west_flank",
+    "central_approach",
+    "east_oblique"
+  ],
+  "sourceCameraPlan": "c7f6d8db2793872f00e79debdece53e07ae54684",
+  "currentSourceProof": "fc0b9270339e3b11e56a0bffb46cb8709cb09a3b",
+  "frameCap": 3,
+  "runBudget": 1,
+  "automaticRetry": false,
+  "productMutationAllowed": false,
+  "ownerPhotoMatchProven": false,
+  "reviewStatus": "GEN3007_STATIC_SOURCE_REVIEW_PASS_NODE_AND_GPU_PENDING",
+  "scoutOnly": true,
+  "releaseAuthorized": false,
+  "failurePredecessor": {
+    "operationId": "H_EARTH_STEEP_SIDE_CURRENT_SCOUT_TEST_CALLBACK_REPAIR_20261030_001",
+    "failedRun": 41136487049,
+    "partialImageArtifact": 13017093256,
+    "terminalComment": 6534925524
+  }
+}

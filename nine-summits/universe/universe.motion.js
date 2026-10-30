@@ -785,12 +785,22 @@ const peaceCinemaPreload=new Image();
 peaceCinemaPreload.decoding='async';
 peaceCinemaPreload.fetchPriority='high';
 peaceCinemaPreload.onload=()=>{
+ if(peaceCinemaState==='error')return;
  peaceCinemaState='ready';
- if(peaceCinemaLayer)peaceCinemaLayer.classList.add('peace-cinema-ready');
+ // Display readiness belongs to the actual staged image, not just its preloader.
+ if(peaceCinemaLayer&&peaceCinemaPhoto?.complete&&peaceCinemaPhoto.naturalWidth>0)
+  peaceCinemaLayer.classList.add('peace-cinema-ready');
 };
 peaceCinemaPreload.onerror=()=>{
+ // A separately staged photo may have loaded even if the preload request failed.
+ if(peaceCinemaLayer&&peaceCinemaPhoto?.complete&&peaceCinemaPhoto.naturalWidth>0){
+  peaceCinemaState='ready';peaceCinemaLayer.classList.add('peace-cinema-ready');return;
+ }
  peaceCinemaState='error';
  if(peaceCinemaLayer){peaceCinemaLayer.remove();peaceCinemaLayer=null;}
+ peaceCinemaPhoto=null;
+ // The active class hides the fallback canvas. It MUST be cleared on failure.
+ peaceOverlay.classList.remove('peace-cinema-active');
  // Preserve the real geometry/teaching fallback when off-network.
  setTimeout(()=>{if(!peaceGL&&peaceCanvas){try{setupPeaceGLFallback();}catch(error){console.error('Peace fallback:',error);}}},0);
 };
@@ -827,6 +837,12 @@ function ensurePeaceCinema(){
  const layer=document.createElement('div');layer.className='peace-cinema-stage';layer.setAttribute('aria-hidden','true');
  layer.innerHTML='<div class="peace-cinema-light"></div><div class="peace-cinema-motion"></div><div class="peace-cinema-vignette"></div><div class="peace-cinema-veil"></div>';
  const photo=document.createElement('img');photo.className='peace-cinema-image';photo.alt='';photo.decoding='async';
+ photo.onload=()=>{
+  if(photo.naturalWidth>0&&peaceCinemaState!=='error'){
+   peaceCinemaState='ready';layer.classList.add('peace-cinema-ready');
+  }
+ };
+ photo.onerror=()=>{if(peaceCinemaState!=='error')peaceCinemaPreload.onerror();};
  photo.src=PEACE_CINEMA_IMAGE;layer.prepend(photo);peaceCinemaPhoto=photo;
  peaceOverlay.insertBefore(layer,peaceCanvas);peaceCinemaLayer=layer;
  if(peaceCinemaState==='ready')layer.classList.add('peace-cinema-ready');

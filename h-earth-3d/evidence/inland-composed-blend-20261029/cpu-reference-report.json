@@ -1,0 +1,52 @@
+{
+  "schema": "H_EARTH_COMPLETE_REFERENCE_KERNEL_CPU_PROTOTYPE_v1",
+  "radiusMeters": 12,
+  "kernel": "5tap 0.5 center + 0.125 four cardinals",
+  "source": "Exact existing Float32 source transcription with qualified f0 substitutions",
+  "groups": [
+    {
+      "pose": "inland-seam-near",
+      "memberships": 1114,
+      "centerPMaxDifference": 0.0,
+      "centerQMaxDifference": 0.0,
+      "nonzeroDeltaMemberships": 1114,
+      "maxLinearDelta": 0.02651384472846985,
+      "candidateLinearRange": [
+        0.08021319657564163,
+        0.27937406301498413
+      ],
+      "candidateOutsideLinearUnitRange": 0,
+      "broadGradientEdges": 971,
+      "broadGradientMeanBefore": 0.003297119401395321,
+      "broadGradientMeanAfter": 0.002318697515875101,
+      "broadGradientMaxBefore": 0.024560503661632538,
+      "broadGradientMaxAfter": 0.013224189169704914,
+      "nativeDetailCarryMaxError": 1.4901161193847656e-08
+    },
+    {
+      "pose": "inland-seam-far",
+      "memberships": 1461,
+      "centerPMaxDifference": 0.0,
+      "centerQMaxDifference": 0.0,
+      "nonzeroDeltaMemberships": 1461,
+      "maxLinearDelta": 0.026069074869155884,
+      "candidateLinearRange": [
+        0.08771011978387833,
+        0.28719884157180786
+      ],
+      "candidateOutsideLinearUnitRange": 0,
+      "broadGradientEdges": 1224,
+      "broadGradientMeanBefore": 0.002466260688379407,
+      "broadGradientMeanAfter": 0.001342425006441772,
+      "broadGradientMaxBefore": 0.013476763851940632,
+      "broadGradientMaxAfter": 0.007314590737223625,
+      "nativeDetailCarryMaxError": 1.4901161193847656e-08
+    }
+  ],
+  "limits": [
+    "Existing source normal/sampler assumptions retained.",
+    "Neighbors use center tangent plane and constant normal/coast; no geometry reconstruction or physical conservation.",
+    "Gradient stats cover archived sampled adjacent image pixels only, not full world.",
+    "No actual-image acceptance or GPU execution."
+  ]
+}

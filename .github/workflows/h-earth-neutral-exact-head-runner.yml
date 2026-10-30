@@ -1434,17 +1434,18 @@ jobs:
           test "$(git -C support rev-parse HEAD)" = a26dc41964ae334a5ce73a637bcc96a0b4d43807
           test "$(git -C tooling rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)" = "$(git -C dispatch rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)"
           node --input-type=module <<'NODE'
-          import fs from 'node:fs';import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';
-          const hash=p=>execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim();
+          import fs from 'node:fs';import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';import {createHash} from 'node:crypto';
+          const gitBlob=p=>execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim();
+          const sha256=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
           const b='h-earth-3d/evidence/steep-side-current-visual-scout-20261030/';
           const i=JSON.parse(fs.readFileSync('dispatch/'+b+'dispatch-intent.json'));
           const review=JSON.parse(fs.readFileSync('tooling/'+b+'independent-review.json'));
           assert.equal(review.result,'PASS_STATIC_SOURCE_READY_FOR_ONE_GPU_SCOUT');
           assert.equal(review.builderSelfApproval,false);
           assert.deepEqual(Object.keys(i.sourceBlobIds).sort(),['.github/workflows/h-earth-neutral-exact-head-runner.yml',b+'qualify.mjs',b+'qualify.test.mjs',b+'coverage-plan.json',b+'admission.json',b+'product-binding.json'].sort());
-          for(const[p,h]of Object.entries(i.sourceBlobIds)){assert.equal(hash('tooling/'+p),h);assert.equal(review.sourceBlobIds[p],h);}
+          for(const[p,h]of Object.entries(i.sourceBlobIds)){assert.equal(gitBlob('tooling/'+p),h);assert.equal(review.sourceBlobIds[p],h);}
           const helpers={'h-earth-ground-material-comparison.v1.mjs':'b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509','h-earth-corrected-material-application.mjs':'070ad7daf51bbf41c2f4223ad9ba3a0143bde6aa3f7439df603c4a2718f50558','h-earth-world-position-overlay.mjs':'d61880ba98d81eae5d7cc6503f10f34d5aaa37819f4ba4a22218d87e711ca797','h-earth-groundcover-factor-overlay.mjs':'e9a872402371087e49031bca2ca27d0f37c9ab1012df50a5ebbf63617a3bf9e1'};
-          for(const[p,h]of Object.entries(helpers)){assert.equal(hash('support/tools/'+p),h);fs.copyFileSync('support/tools/'+p,'tooling/tools/'+p);}
+          for(const[p,h]of Object.entries(helpers)){assert.equal(sha256('support/tools/'+p),h);fs.copyFileSync('support/tools/'+p,'tooling/tools/'+p);}
           NODE
       - uses: actions/setup-node@v4
         with:

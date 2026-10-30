@@ -56,7 +56,7 @@ test('candidate pose-set rejects omitted duplicated and altered views',()=>{
  const views=POSES.map(frame);assert.equal(validateSet(views),true);
  assert.throws(()=>validateSet(views.slice(1)),/SURVEY_FRAME_CAP/);
  assert.throws(()=>validateSet([...views,views[0]]),/SURVEY_FRAME_CAP/);
- const dupe=views.map(copy);dupe[1]=dupe[2];assert.throws(()=>validateSet(dupe),/SURVEY_POSE_SET/);
+ const dupe=views.map(view=>copy(view));dupe[1]=dupe[2];assert.throws(()=>validateSet(dupe),/SURVEY_POSE_SET/);
 });
 test('image bytes are genuine required dimension and one unchanged GPU frame',()=>{
  const c=header();assert.equal(decodeCapture(c.value,c.frame).length,1024);

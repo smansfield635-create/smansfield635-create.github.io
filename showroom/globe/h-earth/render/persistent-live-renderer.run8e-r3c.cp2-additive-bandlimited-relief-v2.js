@@ -105,6 +105,7 @@ import {FOOTHILL_MEADOW_GLSL} from './foothill-meadow-field.v1.js';
 import {loadPrecomputedGrass} from './precomputed-grass.v1.js';
 import {loadPrecomputedOasisSoil} from './precomputed-oasis-soil.v1.js';
 import {buildHabitatMaterialPresentation,HABITAT_MATERIAL_PROTECTION_GLSL} from './habitat-material-presentation.v1.js';
+import {buildMaterialMarginField,MATERIAL_MARGIN_GLSL} from './material-margin-field.v1.js';
 import {WOODLAND_HABITAT,buildWoodlandHabitatField,habitatSmooth,habitatSlopeWeight} from './woodland-habitat-field.v1.js';
 import {createSingleOwnerVegetation} from './vegetation-single-owner.prototype.v1.js';
 import {RENDERED_BEACH_GLSL,createRenderedBeachProvider,createPilotCoverageOwner} from './rendered-beach-signal.v1.js?rev=gen2782-rendered-landscape-v1';
@@ -598,6 +599,7 @@ float noise2(vec2 p){
              mix(hash21(i+vec2(0.0,1.0)),hash21(i+vec2(1.0,1.0)),f.x),f.y);
 }
 ${HABITAT_MATERIAL_PROTECTION_GLSL}
+${MATERIAL_MARGIN_GLSL}
 // Fade nonzero atlas edge texels to the surrounding soil in world metres.
 // Sampling stays inside its own panel; roots and habitat interiors are unchanged.
 float habitatEdgeWeight(float x,float z,vec4 bounds,float width){
@@ -1299,7 +1301,7 @@ void main(){
     if(all(greaterThan(coastalUv,vec2(0.0)))&&all(lessThan(coastalUv,vec2(1.0)))){
       coastalUv=clamp(coastalUv,vec2(uHabitatHalfTexel),vec2(1.0-uHabitatHalfTexel))*uHabitatAtlasScale+vec2(2.0*uHabitatAtlasScale.x,0.0);
       habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
-      habitatMaterialCoverage=max(habitatMaterialCoverage,texture(uHabitatMaterialPresentation,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
+      habitatMaterialCoverage=max(habitatMaterialCoverage,(texture(uHabitatMaterialPresentation,coastalUv).r+materialMarginCorrection(vWorldPosition.xz))*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
     }
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
     vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
@@ -2070,6 +2072,13 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
       resources.habitatMaterialPresentation={texture:materialTexture,receipt:materialHabitat.receipt};
       counters.habitatMaterialTextureUploadCount++;counters.habitatMaterialUploadedBytes+=materialHabitat.pixels.byteLength;
       gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uHabitatMaterialPresentation'),12);
+      const marginField=buildMaterialMarginField(installedHabitat,materialHabitat);
+      const marginTexture=createTexture();gl.activeTexture(gl.TEXTURE0+15);gl.bindTexture(gl.TEXTURE_2D,marginTexture);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT,1);gl.texImage2D(gl.TEXTURE_2D,0,gl.RG8,marginField.width,marginField.height,0,gl.RG,gl.UNSIGNED_BYTE,marginField.pixels);gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+      resources.materialMarginCorrection={texture:marginTexture,receipt:marginField.receipt};
+      gl.uniform1i(gl.getUniformLocation(resources.geometryProgram,'uMaterialMarginCorrection'),15);
+
 
 
       resources.singleOwnerTiming={groundAdmissionMilliseconds,gpuPreparationMilliseconds:performance.now()-gpuStarted,soilMaskMilliseconds,generationMs,loading:presentation.loading,preparationMs:performance.now()-started,includesAcceptedOasisSoilPreparation:true};
@@ -3126,6 +3135,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     bindClearingTextures();
     if(resources.woodlandHabitat){gl.activeTexture(gl.TEXTURE0+10);gl.bindTexture(gl.TEXTURE_2D,resources.woodlandHabitat.texture);gl.activeTexture(gl.TEXTURE0);}
     if(resources.habitatMaterialPresentation){gl.activeTexture(gl.TEXTURE0+12);gl.bindTexture(gl.TEXTURE_2D,resources.habitatMaterialPresentation.texture);gl.activeTexture(gl.TEXTURE0);}
+    if(resources.materialMarginCorrection){gl.activeTexture(gl.TEXTURE0+15);gl.bindTexture(gl.TEXTURE_2D,resources.materialMarginCorrection.texture);gl.activeTexture(gl.TEXTURE0);}
     gl.uniformMatrix4fv(resources.uniforms.viewProjection, false, new Float32Array(packet.camera.viewProjectionMatrix));
     gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);
     const patch=resources.refinement;
@@ -3225,6 +3235,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
     return {
       woodlandHabitat:resources.woodlandHabitat?{...resources.woodlandHabitat.receipt,textureUploadCount:counters.woodlandHabitatTextureUploadCount,uploadedBytes:counters.woodlandHabitatUploadedBytes,perFrameUploadBytes:0}:null,
       habitatMaterialPresentation:resources.habitatMaterialPresentation?{...resources.habitatMaterialPresentation.receipt,textureUploadCount:counters.habitatMaterialTextureUploadCount,uploadedBytes:counters.habitatMaterialUploadedBytes,perFrameUploadBytes:0}:null,
+      materialMarginCorrection:resources.materialMarginCorrection?.receipt??null,
       terrainSeamPresentation:resources.terrainSeamPresentation??null,
       rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
       presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
@@ -3341,7 +3352,7 @@ export async function createHEarthRun8ER3CPersistentRenderer({ canvas, width = 6
   return Object.freeze({
     rendererId: H_EARTH_RUN_8E_R3C_RENDERER_ID,
     presentationProfileId: H_EARTH_GRATITUDE_REGION_CP2_PRESENTATION_PROFILE_ID,
-    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{if(resources.habitatMaterialPresentation){gl.deleteTexture(resources.habitatMaterialPresentation.texture);resources.habitatMaterialPresentation=null;}resources.treeCollection?.dispose();resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
+    disposePlantingPilot:()=>{try{resources.singleOwnerVegetation?.dispose();resources.plantingPilot?.dispose();}finally{if(resources.materialMarginCorrection){gl.deleteTexture(resources.materialMarginCorrection.texture);resources.materialMarginCorrection=null;}if(resources.habitatMaterialPresentation){gl.deleteTexture(resources.habitatMaterialPresentation.texture);resources.habitatMaterialPresentation=null;}resources.treeCollection?.dispose();resources.jacaranda?.dispose();disposeCavernShadow();for(const p of [...(resources.cavernPalmMeshes??[]),...(resources.cavernIvyMeshes??[]),...(resources.cavernUnderstoryMeshes??[]),...(resources.oasisTreeMeshes??[])]){for(const b of p.buffers)gl.deleteBuffer(b);gl.deleteBuffer(p.indexBuffer);gl.deleteVertexArray(p.vao);}resources.cavernPalmMeshes=[];resources.cavernIvyMeshes=[];resources.cavernUnderstoryMeshes=[];resources.oasisTreeMeshes=[];vegetationTrace?.dispose();}},
     disposeCorrectedMaterial,
     getVegetationTrace,getVegetationProbe,
     initialize:observeStartupFailure("initialize",initialize), activateInitialRefinement, prepareReplacementVegetation:observeStartupFailure("prepareReplacementVegetation",prepareReplacementVegetation), prepareVegetationResidency, prepareNextVegetationBatch, materializeNextVegetationBatch, renderFrame, presentColorFrame, captureColorFrame, captureDepthSummary, getResourceReceipt

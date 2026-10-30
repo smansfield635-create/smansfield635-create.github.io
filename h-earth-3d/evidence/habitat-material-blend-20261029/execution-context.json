@@ -1,0 +1,20 @@
+{
+  "classification": "RUNTIME_OR_AUTHORITY",
+  "agentMode": "REQUIRED",
+  "selectedGateClasses": [
+    "CANONICAL_INTAKE",
+    "PROJECT_ROUTE",
+    "DIRECT_DEPENDENCY_QUALIFICATION",
+    "PRODUCT_OR_AUTHORITY_SPECIFIC_VERIFIER"
+  ],
+  "candidatePaths": "Exact paths admitted by canonical Gen2987; workflow nonregistration does not require new persistent registry per AI_ENTRYPOINT candidateScopeRecognition",
+  "northEastTask": "/root/north_east_review",
+  "southTask": "/root/north_east_review",
+  "westTask": "/root/west_review",
+  "northReturn": "/root",
+  "experienceAnchor": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "preserved": "Canonical embodied world, geometry, navigation, direct look/travel, UI and continuity unchanged; material color delta only",
+  "upgradeAccepted": false,
+  "visualComparison": "PENDING",
+  "releaseAuthorized": false
+}

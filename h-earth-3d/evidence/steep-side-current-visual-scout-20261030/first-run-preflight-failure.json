@@ -1,0 +1,49 @@
+{
+  "schema": "H_EARTH_GEN3003_FIRST_GPU_RUN_PREFLIGHT_FAILURE_v1",
+  "result": "FAILURE_LOCALIZED_REPAIR_APPLIED_RERUN_NOT_AUTHORIZED",
+  "operationId": "H_EARTH_STEEP_SIDE_CURRENT_VISUAL_SCOUT_20261030_001",
+  "generation": 3003,
+  "admissionRun": 41127094339,
+  "admissionReceiptComment": 6533286180,
+  "failedRun": 41129164086,
+  "failedJob": 124315357510,
+  "failedStep": "Require reviewed source hashes and restore accepted helpers",
+  "failureClass": "EVIDENCE_OR_TEST_FAILURE",
+  "observationSource": "CANONICAL_REPOSITORY_EVIDENCE",
+  "dependencyRelationship": "CHANGED_BYTE",
+  "authorityState": "VALID_UNCHANGED_AT_SOURCE_SCOPE_BUT_GPU_RUN_BUDGET_ONE_CONSUMED",
+  "error": {
+    "assertion": "assert.equal(hash('support/tools/'+p),h)",
+    "actualGitBlobSHA1": "5731968dcb75c2de79f86f1e9f581d75f4d26352",
+    "expectedSHA256": "b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509",
+    "rootCause": "The new diagnostic used git hash-object output as if it were a SHA-256 digest for inherited helper source. Source blobs are SHA-1 IDs; helper custody digests are SHA-256 hex."
+  },
+  "confirmedBeforeFailure": {
+    "dispatchIntent": "PASS",
+    "canonicalLockAndFrameCap": "PASS",
+    "threeImmutableCheckouts": "PASS",
+    "sourceDigestGate": "FAILED",
+    "nodeTests": "SKIPPED",
+    "browserInstallation": "SKIPPED",
+    "GPUFrameCapture": "SKIPPED",
+    "artifactCount": 0
+  },
+  "repair": {
+    "commit": "363fb3d7d5f95621fee958c713e9e124464d9ec3",
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml",
+    "mechanism": "Use gitBlob() for sourceBlobIds and sha256() for inherited helper digests; no helper content or product code mutation.",
+    "regressionTestCommit": "2873eb2eb95fa3a8e350f77eebbd4a0cc29c4e06",
+    "newRegressionTest": "Gen3003 regression: immutable source Git blobs and inherited helper SHA-256 are distinct custody domains",
+    "declaredTests": 13
+  },
+  "closureBoundaries": [
+    "No GPU was launched; no current visual acceptance exists.",
+    "First one-run workflow attempt did occur; no silent repeat of it.",
+    "Review and dispatch-intent source snapshots were pinned to pre-repair workflow and must be explicitly reconciled before a new run.",
+    "Fresh execution entitlement/explicit canonical continuation is required for any additional GPU workflow invocation.",
+    "Preserve frozen product 3ea149e5b56e8cc0d5aac192bce0cdd47da7e626 and all healthy meadow/coast controls."
+  ],
+  "productChanged": false,
+  "merge": false,
+  "publication": false
+}

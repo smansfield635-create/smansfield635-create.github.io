@@ -1,0 +1,14 @@
+{
+  "operationId": "H_EARTH_STEEP_SIDE_CURRENT_SCOUT_TEST_CALLBACK_REPAIR_20261030_001",
+  "lockGeneration": 3006,
+  "workflowRun": 41135934071,
+  "receiptComment": 6534521770,
+  "result": "ADMITTED_AND_LOCKED",
+  "sourceComment": 6534514340,
+  "failedPredecessor": {
+    "operationId": "H_EARTH_STEEP_SIDE_CURRENT_SCOUT_HASH_REPAIR_20261030_001",
+    "lockGeneration": 3005,
+    "failedRun": 41131368436,
+    "terminalReceiptComment": 6534428160
+  }
+}

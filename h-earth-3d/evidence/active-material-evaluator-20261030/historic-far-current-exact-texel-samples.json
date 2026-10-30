@@ -1,0 +1,219 @@
+{
+  "schema": "H_EARTH_GEN3000_PINNED_HISTORIC_CURRENT_TEXELS_v1",
+  "result": "PASS_CONDITIONAL_CPU_PRE_LATER_COMPOSITION_ONLY",
+  "operation": "H_EARTH_ACTIVE_MATERIAL_EVALUATOR_20261030_001",
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "predecessor": "b26911690dedc23ac5696a503f071ab3416bc012",
+  "source": {
+    "pairedMaterialZipSha256": "08b0c3ae8e1cc3c318b7fa1ada6d01e75370f5423745f2250db6354805b3fdef",
+    "nearAtlas": {
+      "path": "showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+      "bytes": 111249,
+      "sha256": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7",
+      "gitBlob": "4fc4e24098c144d251f949a58a520bfd27983ad7",
+      "size": [
+        4096,
+        114
+      ]
+    },
+    "farAtlas": {
+      "path": "showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+      "bytes": 666907,
+      "sha256": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f",
+      "gitBlob": "3a5220e90c91d511e2f554023dc16823affd0058",
+      "size": [
+        4096,
+        2248
+      ]
+    },
+    "margin": {
+      "path": "showroom/globe/h-earth/render/material-margin-field.v1.js",
+      "gitBlob": "757a889f26d1dafc42b21f774c3a1dfbfb16c53a",
+      "moduleSha256": "3392761baed50091c1f5d628cbe9a10df1e819743648835955a3d40ed4ebff19",
+      "dataSha256": "b3133bdccff6f6d936285d8ea27ea30ddc9b5897366303fc3d9874d97da2e28f",
+      "bytes": 75272,
+      "size": [
+        97,
+        97,
+        4
+      ],
+      "format": "RGBA16F_LE"
+    },
+    "allTextureBinarySha256IndependentlyVerified": true,
+    "localOriginalPairedZipCRC": true
+  },
+  "historicalWitnesses": [
+    {
+      "pixel": [
+        392,
+        496
+      ],
+      "world": [
+        -188.875,
+        14.75439453125,
+        -736.0625
+      ],
+      "sourceOffset": [
+        144,
+        73902
+      ],
+      "atlasTexelNear": [
+        699.5,
+        2.75
+      ],
+      "atlasTexelFar": [
+        2023.5,
+        20.75
+      ],
+      "atlasDeltaNear": [
+        0,
+        0,
+        0
+      ],
+      "atlasDeltaFar": [
+        0,
+        0,
+        0
+      ],
+      "marginRGBA": [
+        -0.0024498701095581055,
+        0.001468658447265625,
+        0.00034971535205841064,
+        -0.00011877529323101044
+      ]
+    },
+    {
+      "pixel": [
+        392,
+        497
+      ],
+      "world": [
+        -189.0625,
+        14.73388671875,
+        -734.5625
+      ],
+      "sourceOffset": [
+        144
+      ],
+      "atlasTexelNear": [
+        698.75,
+        8.75
+      ],
+      "atlasDeltaNear": [
+        -0.00018310546875,
+        0,
+        0
+      ],
+      "marginRGBA": [
+        -0.028717041015625,
+        0.025276660919189453,
+        0.013026237487792969,
+        0.006198525428771973
+      ]
+    }
+  ],
+  "gpuSamplingModel": {
+    "atlas": "RGB8 normalized no mip, LINEAR CLAMP, no vertical flip; (rgb8-128)/1024",
+    "margin": "half-float decode and LINEAR CLAMP, uv=(q*96+0.5)/97; q=(world.xy-[-213,-759])/48",
+    "precision": "CPU float64 interpolation, not certified hardware rounding"
+  },
+  "stageEquation": "preLater=Q_native+atlasDelta+marginDeltaA*P_original+marginDeltaB",
+  "caseResults": [
+    {
+      "sourceOffsets": [
+        144,
+        144
+      ],
+      "Pleft": [
+        0.13277962803840637,
+        0.09897492080926895,
+        0.0482359454035759
+      ],
+      "Pright": [
+        0.133011132478714,
+        0.09879899770021439,
+        0.04830656200647354
+      ],
+      "nativeDelta": [
+        -0.0327371209859848,
+        -0.015984654426574707,
+        -0.007692903280258179
+      ],
+      "atlasDelta": [
+        -0.00018310546875,
+        0,
+        0
+      ],
+      "marginDelta": [
+        0.020313609166887403,
+        0.01008178296656137,
+        0.005048251000389747
+      ],
+      "preLaterDelta": [
+        -0.0126066172878474,
+        -0.005902871460013337,
+        -0.0026446522798684313
+      ],
+      "redDifferenceReductionFraction": 0.614913684888648
+    },
+    {
+      "sourceOffsets": [
+        73902,
+        144
+      ],
+      "Pleft": [
+        0.13221178948879242,
+        0.09799040108919144,
+        0.04808009788393974
+      ],
+      "Pright": [
+        0.133011132478714,
+        0.09879899770021439,
+        0.04830656200647354
+      ],
+      "nativeDelta": [
+        -0.03254130482673645,
+        -0.015645131468772888,
+        -0.00763915479183197
+      ],
+      "atlasDelta": [
+        -0.00018310546875,
+        0,
+        0
+      ],
+      "marginDelta": [
+        0.02031221803619765,
+        0.010079371021126882,
+        0.005047869194209742
+      ],
+      "preLaterDelta": [
+        -0.012412192259288801,
+        -0.0055657604476460065,
+        -0.002591285597622228
+      ],
+      "redDifferenceReductionFraction": 0.6185711567075594
+    }
+  ],
+  "replay": {
+    "packetLibraryPath": "/H-Earth/H-Earth-Gen3000-exact-witness-material-20261030.zip",
+    "packetSHA256": "6e472b56dd2cf45f437b54359cecb3b60a39a402b8cc295052a79d7744c78b31",
+    "primaryScript": "historic_current_texels.py",
+    "independentTest": "test_historic_current_texels.py",
+    "tests": 8,
+    "failures": 0,
+    "fullSourceUsage": "python3 historic_current_texels.py PAIRED_ZIP CANDIDATE_CHECKOUT OUTPUT_JSON"
+  },
+  "uncertainty": [
+    "Historical source first pixel has two valid source-triangle memberships; both retained",
+    "No saved current candidate camera shows these world points; current raster depth owner unproved",
+    "This source comparison ends BEFORE downstream material overlays, lighting, fog and presentation",
+    "Source P comes from original conditional CPU emulator; hardware soil mips and derivatives remain unverified",
+    "Reduction fraction is only two-point conditional linear-RGB contrast, not the old 31.7% metric or product acceptance"
+  ],
+  "next": "Check later material stages at these exact points under current source and camera/ownership ambiguity; only after source classification warrants, separately qualify a camera that actually covers the owner-visible hard-boundary region.",
+  "gpuExecuted": false,
+  "productChanged": false,
+  "merge": false,
+  "publication": false,
+  "authorityEffect": "NONE_EVIDENCE_ONLY"
+}

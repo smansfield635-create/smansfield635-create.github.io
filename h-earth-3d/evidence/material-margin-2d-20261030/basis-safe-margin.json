@@ -1,0 +1,53 @@
+{
+  "schema": "H_EARTH_BILINEAR_BASIS_CORE_GUARD_v1",
+  "sourceSha256": "e518b25622bd437f85cdb873495ba9b8f991d8df51a76b9e0b62a9c62c828888",
+  "inputSha256": "345b12d18f658d1353570122de1981ee3867c312de84727d77d3421eaaff0814",
+  "encoding": "RG8_SIGNED_MAGNITUDE_SCALE1024_ZERO_EXACT",
+  "safeVertices": 36367,
+  "changedVertices": 34565,
+  "suppressedUnsafeVertices": 6683,
+  "checks": [
+    {
+      "cellFraction": 0.125,
+      "predefinedCoreWitnesses": 552125,
+      "leaks": 0,
+      "maxLeak": 0.0
+    },
+    {
+      "cellFraction": 0.25,
+      "predefinedCoreWitnesses": 551673,
+      "leaks": 0,
+      "maxLeak": 0.0
+    },
+    {
+      "cellFraction": 0.5,
+      "predefinedCoreWitnesses": 551620,
+      "leaks": 0,
+      "maxLeak": 0.0
+    },
+    {
+      "cellFraction": 0.75,
+      "predefinedCoreWitnesses": 552025,
+      "leaks": 0,
+      "maxLeak": 0.0
+    },
+    {
+      "cellFraction": 0.875,
+      "predefinedCoreWitnesses": 552163,
+      "leaks": 0,
+      "maxLeak": 0.0
+    }
+  ],
+  "globalCoreSupportProof": "Each nonzero basis has four incident cells; both original bilinear inequalities strictly hold at every corner, hence throughout each cell. No core definition changed.",
+  "activeGradientMaxBaseline": 0.18842262557288425,
+  "activeGradientMaxCandidate": 0.20991077829536167,
+  "selectedGradientMaxBaseline": 0.1902167182661763,
+  "selectedGradientMaxCandidate": 0.18933928341065911,
+  "selectedProfileMaxChange": 0.02604166666656435,
+  "quantizationMaxError": 0.00048825515614170367,
+  "coreGuardPass": true,
+  "runtimeIntegrated": false,
+  "visualAcceptance": false,
+  "transitionGuardPass": false,
+  "disposition": "CORE_SUPPORT_REPAIRED_TRANSITION_REVIEW_REQUIRED"
+}

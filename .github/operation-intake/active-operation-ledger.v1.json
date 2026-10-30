@@ -4879,6 +4879,50 @@
       "scopeHash": "3a358beac8437d020fbce25e4368895784a2c34fe7a8721f39614c076c3ca264",
       "state": "ADMITTED_LOCKED"
     },
+    "3a7ab1956839261b6267a95b6b1eb6485fe1f00a2b7c38bb4b68fbaed095fe6f": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+          "lockGeneration": 2996,
+          "lockScope": "H_EARTH:INLAND_MARGIN_CAMERA_REPAIR_20261030",
+          "operationId": "H_EARTH_INLAND_MARGIN_CAMERA_REPAIR_20261030_001",
+          "procedureLocatorDigest": "cf229621317959865bc39ee0dee8f50b0afd5ae6d6eb156bdc904b9432bf91fe",
+          "requestDigest": "521e8d5e7b48e51ab40b7587c227aa30575cf9b37f6472398cfd0ff62b0a514a",
+          "scopeHash": "3a7ab1956839261b6267a95b6b1eb6485fe1f00a2b7c38bb4b68fbaed095fe6f"
+        },
+        "bindingDigest": "8d0439d1402ad6454a5f8d1fcd10f83eb1ffe5f793c6e82c4b6b0eec10e9651c",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "13695467d6eef052c5ca4bb7fcdab49d65ebbbbb1c12179c68c378fcc16b152d",
+          "commentId": 6515942863,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41010225092,
+          "workflowSha": "e47558bf0180b922712ab2a3ba8f0fce9f800462"
+        },
+        "lineageAnchorCommitSha": "36b9b793de254dd8373a457a5254180ce5647510",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e47558bf0180b922712ab2a3ba8f0fce9f800462",
+      "lockGeneration": 2996,
+      "lockScope": "H_EARTH:INLAND_MARGIN_CAMERA_REPAIR_20261030",
+      "operationId": "H_EARTH_INLAND_MARGIN_CAMERA_REPAIR_20261030_001",
+      "procedureLocatorDigest": "cf229621317959865bc39ee0dee8f50b0afd5ae6d6eb156bdc904b9432bf91fe",
+      "released": false,
+      "requestDigest": "521e8d5e7b48e51ab40b7587c227aa30575cf9b37f6472398cfd0ff62b0a514a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "3a7ab1956839261b6267a95b6b1eb6485fe1f00a2b7c38bb4b68fbaed095fe6f",
+      "state": "ADMITTED_LOCKED"
+    },
     "3abaa1a7d0c05c6ed4f86b67df768588a8d5c45e5992d7c6f8a6c91fdd3eb27d": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -23743,7 +23787,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2995,
+  "lockGeneration": 2996,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

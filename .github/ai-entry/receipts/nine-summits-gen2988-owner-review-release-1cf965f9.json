@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "nine-summits-gen2988-owner-review-release-1cf965f9",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 6997,
+  "requestBranch": "ai-dispatch-request-nine-summits-gen2988-owner-review-release-1cf965f9",
+  "requestCommit": "3843cd6c83dee56ab5c3c40e3c0e7b1762f330f0",
+  "requestCommitParent": "1cf965f9c5fd393359682107638d45f6498bde92",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "1cf965f9c5fd393359682107638d45f6498bde92",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "1cf965f9c5fd393359682107638d45f6498bde92",
+    "surface_id": "nine-summits-universe"
+  },
+  "bridgeRunId": "40991465398",
+  "dispatchedRunId": 40991482259,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/40991482259",
+  "dispatchedRunHeadSha": "1cf965f9c5fd393359682107638d45f6498bde92",
+  "dispatchedAt": "2026-10-30T02:24:17.426Z",
+  "resolvedAt": "2026-10-30T02:24:21.453Z"
+}

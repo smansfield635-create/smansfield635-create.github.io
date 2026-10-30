@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-30T00:51:20Z",
+  "generatedAt": "2026-10-30T01:26:31Z",
   "window": {
-    "start": "2026-08-01T00:51:20Z",
-    "end": "2026-10-30T00:51:20Z"
+    "start": "2026-08-01T01:26:31Z",
+    "end": "2026-10-30T01:26:31Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -110,6 +110,14 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -121,14 +129,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/compass-composite/": {
         "pageLoads": 20,

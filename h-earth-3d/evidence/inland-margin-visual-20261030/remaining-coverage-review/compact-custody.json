@@ -1,0 +1,1234 @@
+{
+  "baseline": {
+    "sceneHead": "260c66540b4471bb3d50cbc28cf82d160b732b19",
+    "result": "THREE_LIT_FRAMES_CAPTURED_REQUIRES_PAIRED_REVIEW",
+    "errors": [],
+    "sourceSha256": {
+      "renderer": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+      "route": "365aec75bffae1c95c19c4bc9cab9869720893a04bcb32eadad46e7f6b14267f"
+    },
+    "productResponses": [
+      {
+        "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "status": 200,
+        "sha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+        "bytes": 303530
+      },
+      {
+        "path": "/showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+        "status": 200,
+        "sha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a",
+        "bytes": 3188
+      },
+      {
+        "path": "/showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+        "status": 200,
+        "sha256": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7",
+        "bytes": 111249
+      },
+      {
+        "path": "/showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+        "status": 200,
+        "sha256": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f",
+        "bytes": 666907
+      }
+    ],
+    "views": [
+      {
+        "pose": {
+          "name": "inland-remaining-west-arc",
+          "x": -189,
+          "y": 16.77975559234619,
+          "z": -724,
+          "expectedReconciledY": 17.43697988986969,
+          "yaw": -74.187,
+          "pitch": -4.494,
+          "diagnosticObserver": true,
+          "crossingCount": 13,
+          "sourceIds": [
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            31,
+            32
+          ],
+          "sourceCentersXZ": [
+            [
+              -206,
+              -727.92176866525
+            ],
+            [
+              -205.5,
+              -727.96116710275
+            ],
+            [
+              -205,
+              -728
+            ],
+            [
+              -204.5,
+              -728.0289543878
+            ],
+            [
+              -204,
+              -728.0447242861
+            ],
+            [
+              -203.5,
+              -728.0489058845
+            ],
+            [
+              -203,
+              -728.04329763415
+            ],
+            [
+              -202.5,
+              -728.0285744298
+            ],
+            [
+              -202,
+              -728.0039334443
+            ],
+            [
+              -201.9435302808,
+              -728
+            ],
+            [
+              -201.5,
+              -727.97084754835
+            ],
+            [
+              -199.5,
+              -727.7698754982
+            ],
+            [
+              -199,
+              -727.7560510524
+            ]
+          ],
+          "allNinePointProfilesInsideEightPixelBorder": true,
+          "minimumTwoMetreSpanPixels": 71.41241514406076,
+          "minimumQuarterMetreSpacingPixels": 8.640464196889639,
+          "pixelBounds": [
+            [
+              122.83889778127534,
+              326.2606648369723
+            ],
+            [
+              298.64975081188356,
+              382.0454476726672
+            ]
+          ],
+          "viewProjectionMatrix": [
+            0.9182226485004253,
+            -0.1426636120167957,
+            -0.9591851458524339,
+            -0.9591611665235291,
+            -0.005175586071319497,
+            1.8748055285170002,
+            -0.07927471043496737,
+            -0.07927272859197952,
+            -3.242110401495704,
+            -0.04339771310243306,
+            -0.2715315405464362,
+            -0.27152475234277507,
+            -2173.7461499541887,
+            -89.8270142334595,
+            -377.06085308622403,
+            -376.55143293264877
+          ]
+        },
+        "state": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "position": {
+            "x": -189,
+            "y": 16.77975559234619,
+            "z": -724
+          },
+          "yawDegrees": -74.187,
+          "pitchDegrees": -4.494,
+          "verticalFovDegrees": 56,
+          "sequence": 10001,
+          "action": "OWNER_BOUNDARY_SURVEY_CAPTURE",
+          "accepted": false,
+          "terrainSupported": false,
+          "geologicalPhysicalSupport": false,
+          "diagnosticObserver": true,
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "image": "inland-remaining-west-arc.png",
+        "imageSha256": "345f57472950a4b395d4807b57e8c0eec74789d4bbdbad177ed98639d8d9c4dd",
+        "imageBytes": 206580,
+        "materialMarginCorrection": null,
+        "installedRoots": 2914527,
+        "camera": {
+          "position": {
+            "x": -189.00774665520828,
+            "y": 16.770408345910255,
+            "z": -724.029675017835
+          },
+          "target": {
+            "x": -206.27332447377614,
+            "y": 15.343443293357268,
+            "z": -728.9173121583515
+          },
+          "up": {
+            "x": -0.00044999976194859225,
+            "y": 0.9999984129907826,
+            "z": -0.0017238086119088932
+          },
+          "localAuthoringPosition": {
+            "x": -189,
+            "y": 17.43697988986969,
+            "z": -724
+          },
+          "localAuthoringTarget": {
+            "x": -206.265565510692,
+            "y": 16.026595319411783,
+            "z": -728.8898939619809
+          },
+          "verticalFovDegrees": 56,
+          "nearPlane": 0.25,
+          "farPlane": 20000,
+          "viewMatrix": [
+            0.27249914934299097,
+            -0.07585558806422414,
+            0.9591611665235291,
+            0,
+            -0.0015359486112537799,
+            0.9968517820435723,
+            0.07927272859197952,
+            0,
+            -0.9621547975607717,
+            -0.023074973369102587,
+            0.27152475234277507,
+            0,
+            -645.0984167265875,
+            -47.76187068592029,
+            376.5514329326488,
+            1
+          ],
+          "projectionMatrix": [
+            3.369634917078845,
+            0,
+            0,
+            0,
+            0,
+            1.880726465346332,
+            0,
+            0,
+            0,
+            0,
+            -1.000025000312504,
+            -1,
+            0,
+            0,
+            -0.5000062500781259,
+            0
+          ],
+          "viewProjectionMatrix": [
+            0.9182226485004251,
+            -0.14266361201679567,
+            -0.9591851458524339,
+            -0.9591611665235291,
+            -0.005175586071319497,
+            1.8748055285169998,
+            -0.07927471043496737,
+            -0.07927272859197952,
+            -3.2421104014957036,
+            -0.04339771310243305,
+            -0.2715315405464362,
+            -0.27152475234277507,
+            -2173.7461499541887,
+            -89.82701423345947,
+            -377.0608530862241,
+            -376.5514329326488
+          ]
+        },
+        "worldPacketCanonicalSha256": "f5948b7b29383a3422c259d4af1263e66036818192a2780f0a61d14bb8807621"
+      },
+      {
+        "pose": {
+          "name": "inland-remaining-west-tip",
+          "x": -189,
+          "y": 16.77975559234619,
+          "z": -724,
+          "expectedReconciledY": 17.43697988986969,
+          "yaw": -51.606,
+          "pitch": -12.539,
+          "diagnosticObserver": true,
+          "crossingCount": 1,
+          "sourceIds": [
+            42
+          ],
+          "sourceCentersXZ": [
+            [
+              -195,
+              -728.77572419355
+            ]
+          ],
+          "allNinePointProfilesInsideEightPixelBorder": true,
+          "minimumTwoMetreSpanPixels": 137.63397589839576,
+          "minimumQuarterMetreSpacingPixels": 15.167862200643924,
+          "pixelBounds": [
+            [
+              119.38489246680746,
+              332.79095712712837
+            ],
+            [
+              254.9314310851665,
+              356.67080616731045
+            ]
+          ],
+          "viewProjectionMatrix": [
+            2.092766220999739,
+            -0.3208639833194179,
+            -0.7649833576004106,
+            -0.7649642332555249,
+            -0.0036107991722894263,
+            1.8352787697836546,
+            -0.21851139581058024,
+            -0.21850593309396893,
+            -2.6409763309747327,
+            -0.25676872637433895,
+            -0.6058904469830647,
+            -0.6058752999112285,
+            -1516.5356523615592,
+            -277.33233037942523,
+            -580.105924988448,
+            -579.5914287715259
+          ]
+        },
+        "state": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "position": {
+            "x": -189,
+            "y": 16.77975559234619,
+            "z": -724
+          },
+          "yawDegrees": -51.606,
+          "pitchDegrees": -12.539,
+          "verticalFovDegrees": 56,
+          "sequence": 10002,
+          "action": "OWNER_BOUNDARY_SURVEY_CAPTURE",
+          "accepted": false,
+          "terrainSupported": false,
+          "geologicalPhysicalSupport": false,
+          "diagnosticObserver": true,
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "image": "inland-remaining-west-tip.png",
+        "imageSha256": "65b2e9e47b75484054ff6b1673857d117f9f9490f4c66f52e285d8ef9ed3e7b3",
+        "imageBytes": 263746,
+        "materialMarginCorrection": null,
+        "installedRoots": 2914527,
+        "camera": {
+          "position": {
+            "x": -189.00774665520828,
+            "y": 16.770408345910255,
+            "z": -724.029675017835
+          },
+          "target": {
+            "x": -202.77758401572248,
+            "y": 12.837164110154845,
+            "z": -734.935811511335
+          },
+          "up": {
+            "x": -0.00044999976194859225,
+            "y": 0.9999984129907826,
+            "z": -0.0017238086119088932
+          },
+          "localAuthoringPosition": {
+            "x": -189,
+            "y": 17.43697988986969,
+            "z": -724
+          },
+          "localAuthoringTarget": {
+            "x": -202.77116367301903,
+            "y": 13.529105957422328,
+            "z": -734.9125419778812
+          },
+          "verticalFovDegrees": 56,
+          "nearPlane": 0.25,
+          "farPlane": 20000,
+          "viewMatrix": [
+            0.6210661607263881,
+            -0.17060640621140588,
+            0.7649642332555248,
+            0,
+            -0.0010715698469256274,
+            0.9758350316220447,
+            0.2185059330939689,
+            0,
+            -0.7837574087296703,
+            -0.1365263535689415,
+            0.6058752999112283,
+            0,
+            -450.05933570876346,
+            -147.46021576739764,
+            579.5914287715258,
+            1
+          ],
+          "projectionMatrix": [
+            3.369634917078845,
+            0,
+            0,
+            0,
+            0,
+            1.880726465346332,
+            0,
+            0,
+            0,
+            0,
+            -1.000025000312504,
+            -1,
+            0,
+            0,
+            -0.5000062500781259,
+            0
+          ],
+          "viewProjectionMatrix": [
+            2.092766220999739,
+            -0.3208639833194179,
+            -0.7649833576004105,
+            -0.7649642332555248,
+            -0.0036107991722894267,
+            1.8352787697836541,
+            -0.2185113958105802,
+            -0.2185059330939689,
+            -2.6409763309747327,
+            -0.2567687263743389,
+            -0.6058904469830646,
+            -0.6058752999112283,
+            -1516.5356523615592,
+            -277.33233037942523,
+            -580.1059249884479,
+            -579.5914287715258
+          ]
+        },
+        "worldPacketCanonicalSha256": "689a4c7898d07bfe049f1bf0de048f2f4d4f078e23a8fab39710b4c694e16da8"
+      },
+      {
+        "pose": {
+          "name": "inland-remaining-southeast",
+          "x": -189,
+          "y": 16.77975559234619,
+          "z": -724,
+          "expectedReconciledY": 17.43697988986969,
+          "yaw": 31.663,
+          "pitch": -3.122,
+          "diagnosticObserver": true,
+          "crossingCount": 1,
+          "sourceIds": [
+            182
+          ],
+          "sourceCentersXZ": [
+            [
+              -171.7553826098,
+              -752
+            ]
+          ],
+          "allNinePointProfilesInsideEightPixelBorder": true,
+          "minimumTwoMetreSpanPixels": 12.722903311000008,
+          "minimumQuarterMetreSpacingPixels": 1.5119513604724921,
+          "pixelBounds": [
+            [
+              186.1094399701154,
+              342.1343535484838
+            ],
+            [
+              198.23100032635233,
+              345.99958875363757
+            ]
+          ],
+          "viewProjectionMatrix": [
+            2.8680651820704095,
+            0.052940882662130796,
+            0.5241801469198288,
+            0.52416704257996,
+            0.004339693255733896,
+            1.8778040675883811,
+            -0.055711892329839086,
+            -0.05571049954994058,
+            1.7687913254125904,
+            -0.09044989853832337,
+            -0.8498125439637606,
+            -0.8497912989157246,
+            1822.6711674082364,
+            -86.97371471325971,
+            -515.7810866874318,
+            -515.2681985713659
+          ]
+        },
+        "state": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "position": {
+            "x": -189,
+            "y": 16.77975559234619,
+            "z": -724
+          },
+          "yawDegrees": 31.663,
+          "pitchDegrees": -3.122,
+          "verticalFovDegrees": 56,
+          "sequence": 10003,
+          "action": "OWNER_BOUNDARY_SURVEY_CAPTURE",
+          "accepted": false,
+          "terrainSupported": false,
+          "geologicalPhysicalSupport": false,
+          "diagnosticObserver": true,
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "image": "inland-remaining-southeast.png",
+        "imageSha256": "c7498eb20c1293591695b5b1f914104767a3e4f4ff29d216d70b3e4919279438",
+        "imageBytes": 191829,
+        "materialMarginCorrection": null,
+        "installedRoots": 2914527,
+        "camera": {
+          "position": {
+            "x": -189.00774665520828,
+            "y": 16.770408345910255,
+            "z": -724.029675017835
+          },
+          "target": {
+            "x": -179.57236292078287,
+            "y": 15.767579288396519,
+            "z": -739.3265295472239
+          },
+          "up": {
+            "x": -0.00044999976194859225,
+            "y": 0.9999984129907826,
+            "z": -0.0017238086119088932
+          },
+          "localAuthoringPosition": {
+            "x": -189,
+            "y": 17.43697988986969,
+            "z": -724
+          },
+          "localAuthoringTarget": {
+            "x": -179.56542529669656,
+            "y": 16.456659938041984,
+            "z": -739.2979663014348
+          },
+          "verticalFovDegrees": 56,
+          "nearPlane": 0.25,
+          "farPlane": 20000,
+          "viewMatrix": [
+            0.8511501253544558,
+            0.0281491666319386,
+            -0.52416704257996,
+            0,
+            0.0012878823262835845,
+            0.9984461335490313,
+            0.05571049954994058,
+            0,
+            0.5249207611327714,
+            -0.048093064145650344,
+            0.8497912989157246,
+            0,
+            540.9105770391055,
+            -46.244744419674916,
+            515.2681985713659,
+            1
+          ],
+          "projectionMatrix": [
+            3.369634917078845,
+            0,
+            0,
+            0,
+            0,
+            1.880726465346332,
+            0,
+            0,
+            0,
+            0,
+            -1.000025000312504,
+            -1,
+            0,
+            0,
+            -0.5000062500781259,
+            0
+          ],
+          "viewProjectionMatrix": [
+            2.86806518207041,
+            0.052940882662130796,
+            0.5241801469198288,
+            0.52416704257996,
+            0.004339693255733896,
+            1.8778040675883816,
+            -0.055711892329839086,
+            -0.05571049954994058,
+            1.7687913254125904,
+            -0.09044989853832339,
+            -0.8498125439637606,
+            -0.8497912989157246,
+            1822.6711674082364,
+            -86.97371471325972,
+            -515.7810866874318,
+            -515.2681985713659
+          ]
+        },
+        "worldPacketCanonicalSha256": "c340bbc5071f6dee65132dfecd6ca15849c831f861b4ab3113523927b21a0d14"
+      }
+    ]
+  },
+  "candidate": {
+    "sceneHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "result": "THREE_LIT_FRAMES_CAPTURED_REQUIRES_PAIRED_REVIEW",
+    "errors": [],
+    "sourceSha256": {
+      "renderer": "10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c",
+      "route": "3ed89c3287221789ba8eefef59300675e0bf104f0ecc83358bb1772b4a203d7b"
+    },
+    "productResponses": [
+      {
+        "path": "/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "status": 200,
+        "sha256": "10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c",
+        "bytes": 305211
+      },
+      {
+        "path": "/showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+        "status": 200,
+        "sha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a",
+        "bytes": 3188
+      },
+      {
+        "path": "/showroom/globe/h-earth/render/material-margin-field.v1.js",
+        "status": 200,
+        "sha256": "3392761baed50091c1f5d628cbe9a10df1e819743648835955a3d40ed4ebff19",
+        "bytes": 149190
+      },
+      {
+        "path": "/showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png",
+        "status": 200,
+        "sha256": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7",
+        "bytes": 111249
+      },
+      {
+        "path": "/showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png",
+        "status": 200,
+        "sha256": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f",
+        "bytes": 666907
+      }
+    ],
+    "views": [
+      {
+        "pose": {
+          "name": "inland-remaining-west-arc",
+          "x": -189,
+          "y": 16.77975559234619,
+          "z": -724,
+          "expectedReconciledY": 17.43697988986969,
+          "yaw": -74.187,
+          "pitch": -4.494,
+          "diagnosticObserver": true,
+          "crossingCount": 13,
+          "sourceIds": [
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            31,
+            32
+          ],
+          "sourceCentersXZ": [
+            [
+              -206,
+              -727.92176866525
+            ],
+            [
+              -205.5,
+              -727.96116710275
+            ],
+            [
+              -205,
+              -728
+            ],
+            [
+              -204.5,
+              -728.0289543878
+            ],
+            [
+              -204,
+              -728.0447242861
+            ],
+            [
+              -203.5,
+              -728.0489058845
+            ],
+            [
+              -203,
+              -728.04329763415
+            ],
+            [
+              -202.5,
+              -728.0285744298
+            ],
+            [
+              -202,
+              -728.0039334443
+            ],
+            [
+              -201.9435302808,
+              -728
+            ],
+            [
+              -201.5,
+              -727.97084754835
+            ],
+            [
+              -199.5,
+              -727.7698754982
+            ],
+            [
+              -199,
+              -727.7560510524
+            ]
+          ],
+          "allNinePointProfilesInsideEightPixelBorder": true,
+          "minimumTwoMetreSpanPixels": 71.41241514406076,
+          "minimumQuarterMetreSpacingPixels": 8.640464196889639,
+          "pixelBounds": [
+            [
+              122.83889778127534,
+              326.2606648369723
+            ],
+            [
+              298.64975081188356,
+              382.0454476726672
+            ]
+          ],
+          "viewProjectionMatrix": [
+            0.9182226485004253,
+            -0.1426636120167957,
+            -0.9591851458524339,
+            -0.9591611665235291,
+            -0.005175586071319497,
+            1.8748055285170002,
+            -0.07927471043496737,
+            -0.07927272859197952,
+            -3.242110401495704,
+            -0.04339771310243306,
+            -0.2715315405464362,
+            -0.27152475234277507,
+            -2173.7461499541887,
+            -89.8270142334595,
+            -377.06085308622403,
+            -376.55143293264877
+          ]
+        },
+        "state": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "position": {
+            "x": -189,
+            "y": 16.77975559234619,
+            "z": -724
+          },
+          "yawDegrees": -74.187,
+          "pitchDegrees": -4.494,
+          "verticalFovDegrees": 56,
+          "sequence": 10001,
+          "action": "OWNER_BOUNDARY_SURVEY_CAPTURE",
+          "accepted": false,
+          "terrainSupported": false,
+          "geologicalPhysicalSupport": false,
+          "diagnosticObserver": true,
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "image": "inland-remaining-west-arc.png",
+        "imageSha256": "ab2d81f03f2dc469fc1d3a7b7003d0a24fa3b36c5b960db77543174eaec1dbc4",
+        "imageBytes": 206276,
+        "materialMarginCorrection": {
+          "schema": "H_EARTH_FULL_MATERIAL_MARGIN_v1",
+          "status": "SOURCE_MATCHED_COMPARISON_CANDIDATE",
+          "sourceRendererSha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+          "correctionSha256": "b3133bdccff6f6d936285d8ea27ea30ddc9b5897366303fc3d9874d97da2e28f",
+          "worldBounds": [
+            -213,
+            -759,
+            -165,
+            -711
+          ],
+          "stepMeters": 0.5,
+          "encoding": "RGBA16F_DELTA_A_B_LINEAR_NO_MIPMAPS",
+          "uploadedBytes": 75272,
+          "textureUploadCount": 1,
+          "perFrameUploadBytes": 0,
+          "rootAdmissionChanged": false,
+          "nativeRoughnessChanged": false,
+          "visualAcceptance": false,
+          "scope": "ONE_INLAND_SOURCE_WINDOW_NOT_GLOBAL_REPAIR"
+        },
+        "installedRoots": 2914527,
+        "camera": {
+          "position": {
+            "x": -189.00774665520828,
+            "y": 16.770408345910255,
+            "z": -724.029675017835
+          },
+          "target": {
+            "x": -206.27332447377614,
+            "y": 15.343443293357268,
+            "z": -728.9173121583515
+          },
+          "up": {
+            "x": -0.00044999976194859225,
+            "y": 0.9999984129907826,
+            "z": -0.0017238086119088932
+          },
+          "localAuthoringPosition": {
+            "x": -189,
+            "y": 17.43697988986969,
+            "z": -724
+          },
+          "localAuthoringTarget": {
+            "x": -206.265565510692,
+            "y": 16.026595319411783,
+            "z": -728.8898939619809
+          },
+          "verticalFovDegrees": 56,
+          "nearPlane": 0.25,
+          "farPlane": 20000,
+          "viewMatrix": [
+            0.27249914934299097,
+            -0.07585558806422414,
+            0.9591611665235291,
+            0,
+            -0.0015359486112537799,
+            0.9968517820435723,
+            0.07927272859197952,
+            0,
+            -0.9621547975607717,
+            -0.023074973369102587,
+            0.27152475234277507,
+            0,
+            -645.0984167265875,
+            -47.76187068592029,
+            376.5514329326488,
+            1
+          ],
+          "projectionMatrix": [
+            3.369634917078845,
+            0,
+            0,
+            0,
+            0,
+            1.880726465346332,
+            0,
+            0,
+            0,
+            0,
+            -1.000025000312504,
+            -1,
+            0,
+            0,
+            -0.5000062500781259,
+            0
+          ],
+          "viewProjectionMatrix": [
+            0.9182226485004251,
+            -0.14266361201679567,
+            -0.9591851458524339,
+            -0.9591611665235291,
+            -0.005175586071319497,
+            1.8748055285169998,
+            -0.07927471043496737,
+            -0.07927272859197952,
+            -3.2421104014957036,
+            -0.04339771310243305,
+            -0.2715315405464362,
+            -0.27152475234277507,
+            -2173.7461499541887,
+            -89.82701423345947,
+            -377.0608530862241,
+            -376.5514329326488
+          ]
+        },
+        "worldPacketCanonicalSha256": "f5948b7b29383a3422c259d4af1263e66036818192a2780f0a61d14bb8807621"
+      },
+      {
+        "pose": {
+          "name": "inland-remaining-west-tip",
+          "x": -189,
+          "y": 16.77975559234619,
+          "z": -724,
+          "expectedReconciledY": 17.43697988986969,
+          "yaw": -51.606,
+          "pitch": -12.539,
+          "diagnosticObserver": true,
+          "crossingCount": 1,
+          "sourceIds": [
+            42
+          ],
+          "sourceCentersXZ": [
+            [
+              -195,
+              -728.77572419355
+            ]
+          ],
+          "allNinePointProfilesInsideEightPixelBorder": true,
+          "minimumTwoMetreSpanPixels": 137.63397589839576,
+          "minimumQuarterMetreSpacingPixels": 15.167862200643924,
+          "pixelBounds": [
+            [
+              119.38489246680746,
+              332.79095712712837
+            ],
+            [
+              254.9314310851665,
+              356.67080616731045
+            ]
+          ],
+          "viewProjectionMatrix": [
+            2.092766220999739,
+            -0.3208639833194179,
+            -0.7649833576004106,
+            -0.7649642332555249,
+            -0.0036107991722894263,
+            1.8352787697836546,
+            -0.21851139581058024,
+            -0.21850593309396893,
+            -2.6409763309747327,
+            -0.25676872637433895,
+            -0.6058904469830647,
+            -0.6058752999112285,
+            -1516.5356523615592,
+            -277.33233037942523,
+            -580.105924988448,
+            -579.5914287715259
+          ]
+        },
+        "state": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "position": {
+            "x": -189,
+            "y": 16.77975559234619,
+            "z": -724
+          },
+          "yawDegrees": -51.606,
+          "pitchDegrees": -12.539,
+          "verticalFovDegrees": 56,
+          "sequence": 10002,
+          "action": "OWNER_BOUNDARY_SURVEY_CAPTURE",
+          "accepted": false,
+          "terrainSupported": false,
+          "geologicalPhysicalSupport": false,
+          "diagnosticObserver": true,
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "image": "inland-remaining-west-tip.png",
+        "imageSha256": "2e6829c10fbb14dc51828bdf2af3e8390dc6cd3be1dfcaa7af2f86dddf00ecc6",
+        "imageBytes": 263346,
+        "materialMarginCorrection": {
+          "schema": "H_EARTH_FULL_MATERIAL_MARGIN_v1",
+          "status": "SOURCE_MATCHED_COMPARISON_CANDIDATE",
+          "sourceRendererSha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+          "correctionSha256": "b3133bdccff6f6d936285d8ea27ea30ddc9b5897366303fc3d9874d97da2e28f",
+          "worldBounds": [
+            -213,
+            -759,
+            -165,
+            -711
+          ],
+          "stepMeters": 0.5,
+          "encoding": "RGBA16F_DELTA_A_B_LINEAR_NO_MIPMAPS",
+          "uploadedBytes": 75272,
+          "textureUploadCount": 1,
+          "perFrameUploadBytes": 0,
+          "rootAdmissionChanged": false,
+          "nativeRoughnessChanged": false,
+          "visualAcceptance": false,
+          "scope": "ONE_INLAND_SOURCE_WINDOW_NOT_GLOBAL_REPAIR"
+        },
+        "installedRoots": 2914527,
+        "camera": {
+          "position": {
+            "x": -189.00774665520828,
+            "y": 16.770408345910255,
+            "z": -724.029675017835
+          },
+          "target": {
+            "x": -202.77758401572248,
+            "y": 12.837164110154845,
+            "z": -734.935811511335
+          },
+          "up": {
+            "x": -0.00044999976194859225,
+            "y": 0.9999984129907826,
+            "z": -0.0017238086119088932
+          },
+          "localAuthoringPosition": {
+            "x": -189,
+            "y": 17.43697988986969,
+            "z": -724
+          },
+          "localAuthoringTarget": {
+            "x": -202.77116367301903,
+            "y": 13.529105957422328,
+            "z": -734.9125419778812
+          },
+          "verticalFovDegrees": 56,
+          "nearPlane": 0.25,
+          "farPlane": 20000,
+          "viewMatrix": [
+            0.6210661607263881,
+            -0.17060640621140588,
+            0.7649642332555248,
+            0,
+            -0.0010715698469256274,
+            0.9758350316220447,
+            0.2185059330939689,
+            0,
+            -0.7837574087296703,
+            -0.1365263535689415,
+            0.6058752999112283,
+            0,
+            -450.05933570876346,
+            -147.46021576739764,
+            579.5914287715258,
+            1
+          ],
+          "projectionMatrix": [
+            3.369634917078845,
+            0,
+            0,
+            0,
+            0,
+            1.880726465346332,
+            0,
+            0,
+            0,
+            0,
+            -1.000025000312504,
+            -1,
+            0,
+            0,
+            -0.5000062500781259,
+            0
+          ],
+          "viewProjectionMatrix": [
+            2.092766220999739,
+            -0.3208639833194179,
+            -0.7649833576004105,
+            -0.7649642332555248,
+            -0.0036107991722894267,
+            1.8352787697836541,
+            -0.2185113958105802,
+            -0.2185059330939689,
+            -2.6409763309747327,
+            -0.2567687263743389,
+            -0.6058904469830646,
+            -0.6058752999112283,
+            -1516.5356523615592,
+            -277.33233037942523,
+            -580.1059249884479,
+            -579.5914287715258
+          ]
+        },
+        "worldPacketCanonicalSha256": "689a4c7898d07bfe049f1bf0de048f2f4d4f078e23a8fab39710b4c694e16da8"
+      },
+      {
+        "pose": {
+          "name": "inland-remaining-southeast",
+          "x": -189,
+          "y": 16.77975559234619,
+          "z": -724,
+          "expectedReconciledY": 17.43697988986969,
+          "yaw": 31.663,
+          "pitch": -3.122,
+          "diagnosticObserver": true,
+          "crossingCount": 1,
+          "sourceIds": [
+            182
+          ],
+          "sourceCentersXZ": [
+            [
+              -171.7553826098,
+              -752
+            ]
+          ],
+          "allNinePointProfilesInsideEightPixelBorder": true,
+          "minimumTwoMetreSpanPixels": 12.722903311000008,
+          "minimumQuarterMetreSpacingPixels": 1.5119513604724921,
+          "pixelBounds": [
+            [
+              186.1094399701154,
+              342.1343535484838
+            ],
+            [
+              198.23100032635233,
+              345.99958875363757
+            ]
+          ],
+          "viewProjectionMatrix": [
+            2.8680651820704095,
+            0.052940882662130796,
+            0.5241801469198288,
+            0.52416704257996,
+            0.004339693255733896,
+            1.8778040675883811,
+            -0.055711892329839086,
+            -0.05571049954994058,
+            1.7687913254125904,
+            -0.09044989853832337,
+            -0.8498125439637606,
+            -0.8497912989157246,
+            1822.6711674082364,
+            -86.97371471325971,
+            -515.7810866874318,
+            -515.2681985713659
+          ]
+        },
+        "state": {
+          "contractId": "H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_PROPOSAL_RUN_6F_v1",
+          "position": {
+            "x": -189,
+            "y": 16.77975559234619,
+            "z": -724
+          },
+          "yawDegrees": 31.663,
+          "pitchDegrees": -3.122,
+          "verticalFovDegrees": 56,
+          "sequence": 10003,
+          "action": "OWNER_BOUNDARY_SURVEY_CAPTURE",
+          "accepted": false,
+          "terrainSupported": false,
+          "geologicalPhysicalSupport": false,
+          "diagnosticObserver": true,
+          "canonicalCameraStateAuthority": false,
+          "collisionOrPhysicsClaim": false
+        },
+        "image": "inland-remaining-southeast.png",
+        "imageSha256": "d075c651c41de41ac1f2645abc573e6acfd082975f83323f3ad3bc7dc968f93d",
+        "imageBytes": 191325,
+        "materialMarginCorrection": {
+          "schema": "H_EARTH_FULL_MATERIAL_MARGIN_v1",
+          "status": "SOURCE_MATCHED_COMPARISON_CANDIDATE",
+          "sourceRendererSha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+          "correctionSha256": "b3133bdccff6f6d936285d8ea27ea30ddc9b5897366303fc3d9874d97da2e28f",
+          "worldBounds": [
+            -213,
+            -759,
+            -165,
+            -711
+          ],
+          "stepMeters": 0.5,
+          "encoding": "RGBA16F_DELTA_A_B_LINEAR_NO_MIPMAPS",
+          "uploadedBytes": 75272,
+          "textureUploadCount": 1,
+          "perFrameUploadBytes": 0,
+          "rootAdmissionChanged": false,
+          "nativeRoughnessChanged": false,
+          "visualAcceptance": false,
+          "scope": "ONE_INLAND_SOURCE_WINDOW_NOT_GLOBAL_REPAIR"
+        },
+        "installedRoots": 2914527,
+        "camera": {
+          "position": {
+            "x": -189.00774665520828,
+            "y": 16.770408345910255,
+            "z": -724.029675017835
+          },
+          "target": {
+            "x": -179.57236292078287,
+            "y": 15.767579288396519,
+            "z": -739.3265295472239
+          },
+          "up": {
+            "x": -0.00044999976194859225,
+            "y": 0.9999984129907826,
+            "z": -0.0017238086119088932
+          },
+          "localAuthoringPosition": {
+            "x": -189,
+            "y": 17.43697988986969,
+            "z": -724
+          },
+          "localAuthoringTarget": {
+            "x": -179.56542529669656,
+            "y": 16.456659938041984,
+            "z": -739.2979663014348
+          },
+          "verticalFovDegrees": 56,
+          "nearPlane": 0.25,
+          "farPlane": 20000,
+          "viewMatrix": [
+            0.8511501253544558,
+            0.0281491666319386,
+            -0.52416704257996,
+            0,
+            0.0012878823262835845,
+            0.9984461335490313,
+            0.05571049954994058,
+            0,
+            0.5249207611327714,
+            -0.048093064145650344,
+            0.8497912989157246,
+            0,
+            540.9105770391055,
+            -46.244744419674916,
+            515.2681985713659,
+            1
+          ],
+          "projectionMatrix": [
+            3.369634917078845,
+            0,
+            0,
+            0,
+            0,
+            1.880726465346332,
+            0,
+            0,
+            0,
+            0,
+            -1.000025000312504,
+            -1,
+            0,
+            0,
+            -0.5000062500781259,
+            0
+          ],
+          "viewProjectionMatrix": [
+            2.86806518207041,
+            0.052940882662130796,
+            0.5241801469198288,
+            0.52416704257996,
+            0.004339693255733896,
+            1.8778040675883816,
+            -0.055711892329839086,
+            -0.05571049954994058,
+            1.7687913254125904,
+            -0.09044989853832339,
+            -0.8498125439637606,
+            -0.8497912989157246,
+            1822.6711674082364,
+            -86.97371471325972,
+            -515.7810866874318,
+            -515.2681985713659
+          ]
+        },
+        "worldPacketCanonicalSha256": "c340bbc5071f6dee65132dfecd6ca15849c831f861b4ab3113523927b21a0d14"
+      }
+    ]
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "schema": "H_EARTH_COASTAL_SIGNED_DISTANCE_CORE_PROTOTYPE_v1",
+  "parameters": {
+    "stepMeters": 0.5,
+    "halfBandMeters": 6.0,
+    "endpointDistanceMeters": 6.25,
+    "rejectedSpanTaperMeters": 6.0,
+    "outerShoulderMeters": [
+      4,
+      6
+    ]
+  },
+  "source": "Authenticated final coastal habitat panel; baseline exact current sigma2 output",
+  "gridShape": [
+    381,
+    1793
+  ],
+  "contours": 17,
+  "vertices": 9298,
+  "qualifiedVertices": 3036,
+  "rejectedThinUnsupportedVertices": 6262,
+  "changedCells": 23541,
+  "wholeCoreExact": true,
+  "outsideSupportExact": true,
+  "maxChangedSourceBoundaryDistance": 5.9999171316780835,
+  "nativeTopology": {
+    "highComponents": 3,
+    "lowComponents": 16,
+    "enclosedLowHoles": 15,
+    "highCells": 344037
+  },
+  "baselineTopology": {
+    "highComponents": 3,
+    "lowComponents": 12,
+    "enclosedLowHoles": 11,
+    "highCells": 345448
+  },
+  "candidateTopology": {
+    "highComponents": 3,
+    "lowComponents": 12,
+    "enclosedLowHoles": 11,
+    "highCells": 345486
+  },
+  "selectedEdgeProfile": {
+    "x": 165.6666666667,
+    "native": {
+      "center": -270.11311048497464,
+      "width10to90": 0.8273565573805399
+    },
+    "baseline": {
+      "center": -270.10449218750284,
+      "width10to90": null
+    },
+    "candidate": {
+      "center": -270.1184397273345,
+      "width10to90": null
+    },
+    "maxGradientPerMeterBaseline": 0.19021671826621844,
+    "maxGradientPerMeterCandidate": 0.18974495061183094,
+    "maxAdjacentHalfMeterBaseline": 0.09510835913310633,
+    "maxAdjacentHalfMeterCandidate": 0.09487247530587978
+  },
+  "affineStageIdentityError": 2.396086801192965e-16,
+  "r8Roundtrip": {
+    "changedTexels": 1015,
+    "originalTexelCoresAndOutsideExact": true,
+    "denseWholeCoreMaxErrorAfterBilinear": 0.03063025210084136,
+    "denseChangedBeyond6m": 2741,
+    "maxChangedDistanceMeters": 10.37296538210379,
+    "topology": {
+      "highComponents": 3,
+      "lowComponents": 12,
+      "enclosedLowHoles": 11,
+      "highCells": 345439
+    },
+    "selectedEdge": {
+      "center": -270.10449218750284,
+      "width10to90": null
+    },
+    "selectedMaxGradientPerMeter": 0.19021671826621844,
+    "selectedMaxHalfMeterStep": 0.09510835913310633
+  },
+  "disposition": "REJECT_SELECTED_EDGE_UNCHANGED_AND_R8_CORE_LEAK_IF_NONZERO",
+  "limits": [
+    "Only coastal panel. Woodland/ravine and inland coefficient mechanism unchanged/open.",
+    "Subtexel contour is extracted from the .5m bilinear field; not exact analytic bilinear-isocurve geometry.",
+    "Nearest-segment query uses12 nearest midpoints; source contour segments are <=.7072m.",
+    "Local two-sided normal endpoint reach protects narrow features conservatively; no claim that all morphological topology cases are solved.",
+    "Partial taper regions retain baseline/native mixture and do not promise exact native halfcoverage contour.",
+    "Final shader applies geographic protections and max-panel overlap. This prototype has not executed those final composed masks or GPU lighting.",
+    "No product source edit, publication or visual qualification."
+  ],
+  "inputHashes": {
+    "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/region-core/signed_distance_habitat.py": "6c1b11b6140cbfc95c6dde2f7f3fe7c200767c75242285f9f035892385ed4fea",
+    "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/habitat-core-input/native-atlas.bin": "56227147b4e2b03e06c0bc674b3d198f70d38f18e970c1a40a1c51c3ec5efbe1",
+    "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/habitat-core-input/sigma2-atlas.bin": "cdcad7b7da59a873221f41c4c81b724979f048b5c69523bc51affedb1637e764",
+    "/workspace/scratch/a96b8ab32ba2/boundary-reconciliation/habitat-core-input/manifest-habitat.json": "b5d081b169ed54763f3a67e26a2a2431234b6587d7042e7884768ff81e2ad2a3"
+  }
+}

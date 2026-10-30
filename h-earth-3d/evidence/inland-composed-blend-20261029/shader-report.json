@@ -1,0 +1,36 @@
+{
+  "context": "OpenGL ES 3.2 Mesa 25.2.8-0ubuntu0.24.04.2",
+  "helperCompile": true,
+  "samples": [
+    {
+      "pose": "inland-seam-near",
+      "count": 1114,
+      "maxAbsDifference": 1.9371509552001953e-07,
+      "meanAbsDifference": 1.0165963182373616e-08,
+      "p99AbsDifference": 5.960464477539063e-08,
+      "seconds": 0.17931509017944336
+    },
+    {
+      "pose": "inland-seam-far",
+      "count": 1461,
+      "maxAbsDifference": 3.2782554626464844e-07,
+      "meanAbsDifference": 1.0886041401647617e-08,
+      "p99AbsDifference": 5.960464477539063e-08,
+      "seconds": 0.18451857566833496
+    }
+  ],
+  "kernelSamples": [
+    {
+      "pose": "inland-seam-near",
+      "count": 1114,
+      "maxAbsDifference": 1.043081283569336e-07,
+      "meanAbsDifference": 8.451570998602165e-09
+    },
+    {
+      "pose": "inland-seam-far",
+      "count": 1461,
+      "maxAbsDifference": 1.564621925354004e-07,
+      "meanAbsDifference": 8.57930171349608e-09
+    }
+  ]
+}

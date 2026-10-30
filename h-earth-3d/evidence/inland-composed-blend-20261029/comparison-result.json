@@ -1,0 +1,56 @@
+{
+  "schema": "H_EARTH_INLAND_COMPOSED_BLEND_RESULT_v1",
+  "operationId": "H_EARTH_INLAND_COMPOSED_BLEND_20261029_001",
+  "lockGeneration": 2984,
+  "runId": 40982658000,
+  "artifactId": 12945683021,
+  "artifactSha256": "b1c385005dae98465a03b9fbb5f1fa2409c0ad827f660310da71dcc75d05e720",
+  "candidateHead": "e11fb87cf564744cb346bb8dae7b129e8cfc295c",
+  "baselineHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+  "capture": "PASS_TWELVE_IMAGES_HASH_VERIFIED",
+  "cameraAndVegetationIdentity": "PASS",
+  "warmup": "PASS_BOTH_ALL_NINE_READY",
+  "pairs": [
+    {
+      "pose": "inland-seam-near",
+      "changedPixels": 182013,
+      "maximumChannelDifference": 10,
+      "byteIdentical": false
+    },
+    {
+      "pose": "inland-seam-far",
+      "changedPixels": 131837,
+      "maximumChannelDifference": 13,
+      "byteIdentical": false
+    },
+    {
+      "pose": "owner-approach",
+      "changedPixels": 101480,
+      "maximumChannelDifference": 6,
+      "byteIdentical": false
+    },
+    {
+      "pose": "owner-lateral",
+      "changedPixels": 188304,
+      "maximumChannelDifference": 10,
+      "byteIdentical": false
+    },
+    {
+      "pose": "protected-meadow",
+      "changedPixels": 0,
+      "maximumChannelDifference": 0,
+      "byteIdentical": true
+    },
+    {
+      "pose": "protected-coast",
+      "changedPixels": 0,
+      "maximumChannelDifference": 0,
+      "byteIdentical": true
+    }
+  ],
+  "visualAssessment": "Modest broad transition smoothing in inland views; fine texture remains visible. Both protected images byte identical. Exact owner-reported sharp contour absent from baseline views, so its repair is not established.",
+  "disposition": "RETAIN_CANDIDATE_HOLD_PUBLICATION",
+  "ownerVisualAcceptance": false,
+  "releaseAuthorized": false,
+  "nextAction": "Use existing owner video/image and scene source to identify the missing sharp contour and its active material consumer before another product change or GPU comparison. No repeat of these six poses as proof of that defect."
+}

@@ -1,0 +1,183 @@
+{
+  "head": "e11fb87cf564744cb346bb8dae7b129e8cfc295c",
+  "scope": "read-only source attribution; no GPU or product mutation",
+  "ownerEvidence": {
+    "photo": "owner-evidence/30292.jpg",
+    "video": "owner-evidence/30291.mp4",
+    "observation": "Sharp winding brown/olive contour, photographic grain remains on both sides; viewed photo and video frame10s. Image alone does not identify material stage."
+  },
+  "ownerXZ": [
+    140.171395,
+    -365.406512
+  ],
+  "postQ": [
+    {
+      "stage": "corrected-material atlas",
+      "mechanism": "flat per-triangle atlas selector; prebuilt corrected delta after Q",
+      "risk": "sparse charts need per-hit source triangle identity; no source proof owner contour lies here"
+    },
+    {
+      "stage": "manor",
+      "bounds": "center(80,-172), envelope radius30",
+      "mechanism": "smooth radial/ring palette and presentation terms",
+      "ownerDistance": 202.55
+    },
+    {
+      "stage": "siteB",
+      "bounds": [
+        -120,
+        -376,
+        96,
+        -224
+      ],
+      "mechanism": "smooth 12m interior envelope",
+      "ownerPointWeight": 0
+    },
+    {
+      "stage": "sand/steep-bank",
+      "lines": [
+        1484,
+        1497
+      ],
+      "mechanism": "continuous smoothstep of interpolated contact/coast distances; contact>=38 gives exactly0",
+      "risk": "attribute discontinuity across distinct source meshes can survive continuous shader; need actual adjacent triangle attributes"
+    },
+    {
+      "stage": "shoreline soil",
+      "bounds": [
+        -18,
+        -204,
+        34,
+        -131
+      ],
+      "mechanism": "hard rectangle sample with no shader exterior feather; internal texture",
+      "ownerPointWeight": 0
+    },
+    {
+      "stage": "litter",
+      "bounds": [
+        -180,
+        -380,
+        -24,
+        -190
+      ],
+      "mechanism": "hard guard, smooth crown/radial interior fields",
+      "ownerPointWeight": 0
+    },
+    {
+      "stage": "habitat",
+      "lines": [
+        1566,
+        1587
+      ],
+      "mechanism": "base=(1-.68*h)*base+.68*h*landscapeCoverPalette*.72; three R8 LINEAR panels; exterior fades only",
+      "bounds": {
+        "woodland": [
+          -213,
+          -298,
+          -69,
+          -154
+        ],
+        "ravine": [
+          -298,
+          -570,
+          88,
+          -154
+        ],
+        "coastal": [
+          -448,
+          -283,
+          448,
+          -93
+        ]
+      },
+      "ownerPointWeight": 0,
+      "minimumOwnerHorizontalDistanceToAnyPanel": 52.171395,
+      "proof": "For x=140.171395,z=-365.406512, all three bounds predicates false. All fragments within52.171395m XZ disk also outside every panel. Does not exclude distant visible contour."
+    }
+  ],
+  "actualDiscontinuities": [
+    {
+      "source": "woodland-habitat-field.v1.js",
+      "expression": "ravineHabitatWeight: return distance<=6?0:shoulders*boundary*(.64+.04*noise)",
+      "proof": "At distance6, shoulders=1; limit rises from0 to~.64..68*boundary. Raster then chamfer ramp diagonal..1.05*diagonal:~.073m for original206x192m/192 grid.",
+      "qualification": "Actual deployed atlas is precomputed and expanded/resampled/raised; original generator is not exact final pixel attribution."
+    },
+    {
+      "source": "vegetation-single-owner.prototype.v1.js buildCavernGrassSoilHabitat",
+      "expression": "for occupied eligible texel: pixel=max(old,round(255*min(1,count/(density*dx*dz))))",
+      "proof": "Independent occupied-cell raises; no interior feather; LINEAR filter spreads jump over one texel, actual ravine2.0104x2.1667m.",
+      "qualification": "Only touched entrance cells; must inspect final atlas to locate jumps."
+    },
+    {
+      "source": "render.js3048+1027+1300",
+      "expression": "62001 only NATURAL_CLIFF_FACE/CAVERN_PHYSICAL_SHELL; ecological excluded when62001",
+      "proof": "Discrete palette path; eroded terrain/mountain overburden are62000 role1 and DO receive Q.",
+      "qualification": "No evidence photo crosses cliff/shell."
+    }
+  ],
+  "notProven": "No exact source-to-owner contour identity established; no repair claimed.",
+  "inspectableNextStep": {
+    "action": "Obtain exact pinned precomputed atlas tail and produce world-space internal-edge map; intersect high-gradient edge segments with owner-coordinate view rays from already captured12 headings using their existing depth/world/primitive outputs. This separates habitat internal edges from contact/material-boundary edges without more owner requests or another blind palette edit.",
+    "asset": "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz",
+    "compressedSha256": "4a2ff2a135984d67d68d3df7c3212236894c75b66826f256a60130c87b73e800",
+    "rawSha256": "bb5bdea6223aaea0422bac76f73da46d0370e51d81b3fdb280c970c408879a97",
+    "atlasOffset": 148654376,
+    "atlasBytes": 110592,
+    "layout": "192 rows x576; woodland cols0..191, ravine192..383, coastal384..575",
+    "fallback": "If existing12pose run has only PNG, reproduce CPU ray hits from bound uploaded surface arrays; record primitive/triangle, contact/coast on both sides of candidate edges. No broad-pose screenshot sweep establishes attribution."
+  },
+  "sourceAuditUpdate": {
+    "liveRendererSha256": "a2ab977a3ea620f7bf87b3bdfb4e6a720cf7801f2ecbb670b4ac2dfccacf917d",
+    "liveRouteSha256": "e776883f16ac36f00b51356fe8e78ac6ae2d0f6ce28016f776068b3d76831cb5",
+    "liveMatchesComparisonBaseline": true,
+    "videoSha256": "f14d9356bc7f9d264153cb347fb677fc51e30f866735d721faefa33f30a1d4b0",
+    "videoCreationTimeUTC": "2026-10-29T22:32:08Z",
+    "precomputedAtlasHashesVerified": true,
+    "precomputedAtlasStatistics": [
+      {
+        "panel": "woodland",
+        "nonzeroTexels": 20371,
+        "nearestNonzeroCenterMeters": 234.9144882292324,
+        "maxAdjacentCoverageJump": 0.2823529411764706,
+        "adjacentJumpsOverHalf": 0,
+        "stepMeters": [
+          0.75,
+          0.75
+        ]
+      },
+      {
+        "panel": "ravine",
+        "nonzeroTexels": 9391,
+        "nearestNonzeroCenterMeters": 81.83319938830105,
+        "maxAdjacentCoverageJump": 1.0,
+        "adjacentJumpsOverHalf": 947,
+        "stepMeters": [
+          2.0104166666666665,
+          2.1666666666666665
+        ]
+      },
+      {
+        "panel": "coastal",
+        "nonzeroTexels": 21789,
+        "nearestNonzeroCenterMeters": 92.08721852952185,
+        "maxAdjacentCoverageJump": 1.0,
+        "adjacentJumpsOverHalf": 669,
+        "stepMeters": [
+          4.666666666666667,
+          0.9895833333333334
+        ]
+      }
+    ],
+    "edgeInventoryCount": 1616,
+    "edgeInventorySha256": "a9d94e2d1c772257eae9cf4266b0692e55fe4deb26f66c3eb74fff4932f80f98",
+    "limits": [
+      "Precomputed atlas precedes entrance-grass coverage updates; do not label it the final GPU texture.",
+      "Live HTTP bytes prove current server source, not historical phone cache.",
+      "Owner view pitch/FOV and exact frame source identity remain unbound.",
+      "Hard atlas gradients are a real source lead, not proven attribution of owner screenshot."
+    ],
+    "decision": "NO_SPECULATIVE_PRODUCT_EDIT_OR_DUPLICATE_GPU",
+    "nextDiscriminatingAction": "Trace the nearest recorded habitat edge through the final installed texture and existing source mesh/camera evidence; if no owner-view match can be established, explicitly retain the source-to-image binding gap rather than claiming cause."
+  }
+}

@@ -789,62 +789,98 @@ uniform float uTime,uKind;varying vec3 vPos,vNormal;varying float vFog;
 float hash2(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
  return mix(mix(hash2(i),hash2(i+vec2(1.,0.)),f.x),mix(hash2(i+vec2(0.,1.)),hash2(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){float s=0.;s+=.54*noise2(p);s+=.27*noise2(p*2.17+13.);s+=.13*noise2(p*4.41+7.);return s/.94;}
+float reefDistance(vec2 q){
+ float d=100.;vec2 v;
+ v=vec2((q.x+20.)/12.,(q.y-22.)/8.04); d=min(d,length(v)-1.);
+ v=vec2((q.x+4.)/14.,(q.y-43.)/9.38); d=min(d,length(v)-1.);
+ v=vec2((q.x-24.)/14.,(q.y-35.)/9.38); d=min(d,length(v)-1.);
+ v=vec2((q.x+26.)/21.,(q.y-75.)/14.07); d=min(d,length(v)-1.);
+ v=vec2((q.x-18.)/22.,(q.y-92.)/14.74); d=min(d,length(v)-1.);
+ v=vec2((q.x-4.)/24.,(q.y-110.)/16.08); d=min(d,length(v)-1.);
+ return d;
+}
 void main(){
- vec3 n=normalize(vNormal),sun=normalize(vec3(-.58,.66,-.44));
- float lam=max(0.,dot(n,sun));vec3 col;
+ vec3 n=normalize(vNormal);vec3 sun=normalize(vec3(-.57,.8,-.36));
+ float lit=max(0.,dot(n,sun));vec3 col;
  if(uKind<.5){
-  vec2 q=vPos.xz;float wave=sin(q.y*.89-uTime*.75+sin(q.x*.16+uTime*.21))*.5+.5;
-  float swell=noise2(q*.24+vec2(uTime*.013,-uTime*.035));
-  float caustic=pow(max(0.,sin(q.x*.78+q.y*.27-uTime*.68)*sin(q.y*.50-q.x*.15+uTime*.36)),5.);
-  float horizon=clamp(vFog/95.,0.,1.);
-  col=mix(vec3(.012,.13,.19),vec3(.17,.38,.39),clamp(.30*wave+.30*swell+.21*lam,0.,1.));
-  col+=vec3(.31,.24,.11)*caustic*(.13+max(0.,1.-vFog/110.)*.25);
-  float glint=pow(max(0.,sin(q.x*.26+uTime*.21)*sin(q.y*.12-uTime*.30)),14.);
-  col+=vec3(.24,.35,.26)*glint*(.24+.46*horizon);
-  float foam=1.-smoothstep(.08,.55,abs(sin(q.y*.2-uTime*.26+sin(q.x*.07)*.48)));
-  col+=vec3(.035,.083,.081)*foam*.4;
+  // Bathymetry, pale coral shelves and a deep-blue open channel are world-coordinate bound.
+  vec2 q=vPos.xz;
+  float d=reefDistance(q);
+  float irregular=fbm(q*.10)-.5;
+  float shallow=1.-smoothstep(-.05,1.75,d+.19*irregular);
+  float reef=fbm(q*.35+vec2(5.,11.));
+  vec3 deep=vec3(.017,.23,.40);
+  vec3 shelf=mix(vec3(.040,.45,.60),vec3(.085,.75,.68),shallow*.9);
+  col=mix(deep,shelf,shallow);
+  float patch=smoothstep(.49,.72,reef)*shallow;
+  col=mix(col,vec3(.032,.24,.27),patch*.58);
+  float sand=(1.-smoothstep(.03,.14,abs(d+.12*irregular)))*shallow;
+  col+=vec3(.23,.22,.12)*sand*.45;
+  float wave=.5+.5*sin(q.y*.54-uTime*.66+sin(q.x*.13+q.y*.09));
+  float rip=noise2(q*.46+vec2(uTime*.031,-uTime*.043));
+  col+=vec3(.065,.10,.11)*(wave*.15+rip*.18);
+  float glint=pow(max(0.,.48*wave+.52*rip-.53),5.);
+  col+=vec3(.72,.75,.60)*glint*.42;
+  float foam=(1.-smoothstep(.025,.13,abs(d+.02*sin(q.x*.9+uTime*.2))))*.19;
+  col+=vec3(.45,.58,.50)*foam;
  }else if(uKind<1.5){
-  float grain=noise2(vPos.xz*.18)*.18+noise2(vPos.xz*.93)*.07;
-  float wet=clamp((1.3-vPos.y)*.45,0.,1.);
-  col=mix(vec3(.42,.46,.36),vec3(.64,.58,.44),clamp(.35+grain,0.,1.));
-  col=mix(col,vec3(.21,.39,.36),wet*.48);
-  col*=.59+.55*lam;
+  // Sand to wet-rock transition gives beaches clear boundaries around cliffs.
+  float sediment=fbm(vPos.xz*.66);
+  col=mix(vec3(.43,.46,.37),vec3(.88,.83,.62),.54+.46*sediment);
+  col=mix(col,vec3(.14,.47,.47),smoothstep(.36,.72,sediment)*.20);
+  col*=.72+.30*lit;
  }else if(uKind<2.5){
-  float grain=noise2(vPos.xy*.31+vPos.z*.04)*.17;
-  col=mix(vec3(.13,.20,.22),vec3(.39,.41,.34),clamp(lam*.83+grain,0.,1.));
-  col+=vec3(.035,.055,.038)*sin(vPos.y*2.9+vPos.x*.21)*.25;
+  // Rock fractures use height, exposure and geological grain, not green painted domes.
+  float strata=sin(vPos.y*2.38+fbm(vPos.xz*.24)*5.2);
+  float fracture=fbm(vPos.xz*.22+vec2(vPos.y*.095,vPos.y*.024));
+  float grit=fbm(vPos.xz*1.09+vPos.y*.17);
+  vec3 limestone=mix(vec3(.23,.27,.28),vec3(.57,.57,.49),clamp(.33+.52*lit+.19*fracture,0.,1.));
+  limestone+=vec3(.06,.055,.04)*strata*.18;
+  limestone=mix(limestone,vec3(.065,.19,.075),smoothstep(.54,.75,grit+fracture*.18)*(.40+.27*max(0.,n.y)));
+  float canopy=smoothstep(.36,.70,n.y)*smoothstep(1.5,8.0,vPos.y+1.3);
+  vec3 leaves=mix(vec3(.035,.13,.048),vec3(.15,.36,.095),grit);
+  col=mix(limestone,leaves,canopy*.87);
+  col*=.72+.43*lit;
  }else{
-  float pulse=sin(vPos.z*.54-uTime*.62+vPos.x*.21);
-  col=mix(vec3(.18,.46,.42),vec3(.79,.86,.69),clamp(.5+.5*pulse,0.,1.));
-  col*=.62+.24*lam;
+  float grain=fbm(vPos.xz*.72+vPos.y*.18);
+  col=mix(vec3(.14,.19,.20),vec3(.45,.47,.43),clamp(.42+.38*lit+.20*grain,0.,1.));
  }
- float fog=clamp((vFog-27.)/105.,0.,.78);
- col=mix(col,vec3(.44,.61,.59),fog);
- gl_FragColor=vec4(pow(max(col,vec3(.001)),vec3(.87)),1.);
+ float fog=clamp((vFog-44.)/125.,0.,.67);
+ col=mix(col,vec3(.40,.62,.68),fog);
+ gl_FragColor=vec4(pow(max(col,vec3(.001)),vec3(.90)),1.);
 }`;
 const peaceSkyVertex=`precision mediump float;attribute vec2 aXY;varying vec2 vUv;void main(){vUv=aXY*.5+.5;gl_Position=vec4(aXY,0.,1.);}`;
 const peaceSkyFragment=`precision highp float;uniform float uTime,uAspect;varying vec2 vUv;
 float hash2(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float noise2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
 return mix(mix(hash2(i),hash2(i+vec2(1.,0.)),f.x),mix(hash2(i+vec2(0.,1.)),hash2(i+vec2(1.,1.)),f.x),f.y);}
+float fbm(vec2 p){return .52*noise2(p)+.28*noise2(p*2.11+7.)+.14*noise2(p*4.3+11.);}
 void main(){vec2 uv=vUv;
- vec3 sky=mix(vec3(.61,.75,.69),vec3(.045,.18,.31),smoothstep(.19,1.,uv.y));
- float sun=length((uv-vec2(.68,.42))*vec2(uAspect,1.));
- sky+=vec3(.92,.66,.38)*(.17*exp(-sun*4.)+.56*exp(-sun*24.));
- float farCloud=noise2(vec2(uv.x*12.5-uTime*.004,uv.y*55.+sin(uv.x*6.)*.9));
- float nearCloud=noise2(vec2(uv.x*22.-uTime*.009,uv.y*84.+sin(uv.x*9.)*1.4));
- float strata=(smoothstep(.53,.76,farCloud)*.31+smoothstep(.58,.85,nearCloud)*.19);
- float band=exp(-pow((uv.y-.48)/.16,2.));
- sky=mix(sky,vec3(.83,.88,.79),min(.37,strata*band));
- float horizonGlow=exp(-pow((uv.y-.36)/.095,2.));sky+=vec3(.17,.21,.13)*horizonGlow;
- gl_FragColor=vec4(pow(max(sky,vec3(.001)),vec3(.91)),1.);
+ vec3 sky=mix(vec3(.68,.84,.83),vec3(.035,.26,.46),smoothstep(.17,.96,uv.y));
+ float sun=length((uv-vec2(.77,.56))*vec2(uAspect,1.));
+ sky+=vec3(1.0,.79,.47)*(.12*exp(-sun*4.)+.29*exp(-sun*25.));
+ vec2 drift=vec2(uTime*.0017,-uTime*.0005);
+ float warp=fbm(vec2(uv.x*3.7,uv.y*4.2)+drift);
+ float field=fbm(vec2(uv.x*5.+warp*.65,uv.y*10.7-warp*.7)+drift);
+ float small=noise2(vec2(uv.x*17.4,uv.y*28.)+drift*3.);
+ float cloud=smoothstep(.44,.66,field*.82+small*.18);
+ float atmospheric=exp(-pow((uv.y-.60)/.23,2.));
+ sky=mix(sky,vec3(.94,.95,.91),cloud*atmospheric*.78);
+ sky+=vec3(.16,.23,.17)*exp(-pow((uv.y-.33)/.085,2.));
+ gl_FragColor=vec4(pow(max(sky,vec3(.001)),vec3(.93)),1.);
 }`;
 function peaceCompile(type,source){const s=peaceGL.createShader(type);peaceGL.shaderSource(s,source);peaceGL.compileShader(s);if(!peaceGL.getShaderParameter(s,peaceGL.COMPILE_STATUS))throw Error('Peace shader: '+peaceGL.getShaderInfoLog(s));return s;}
 function peaceLink(v,f){const p=peaceGL.createProgram(),a=peaceCompile(peaceGL.VERTEX_SHADER,v),b=peaceCompile(peaceGL.FRAGMENT_SHADER,f);peaceGL.attachShader(p,a);peaceGL.attachShader(p,b);peaceGL.linkProgram(p);peaceGL.deleteShader(a);peaceGL.deleteShader(b);if(!peaceGL.getProgramParameter(p,peaceGL.LINK_STATUS))throw Error('Peace program: '+peaceGL.getProgramInfoLog(p));return p;}
 /* Peace geometry is constructed and West-admitted through the existing H-Earth kernel.
  * Destination GLSL, scene navigation and all other worlds remain unchanged. */
-const PEACE_ISLANDS=[[-20,22,12,5.1],[-4,43,14,6.0],[24,35,14,6.2],[-26,75,21,7.8],[18,92,22,8.2],[4,110,24,7.8]];
-function peaceIslandHeight(cx,cz,r,ang,seed){const wrinkle=1.+.22*Math.sin(ang*3.+seed)+.12*Math.cos(ang*7.-seed*.67);return r*wrinkle;}
+// PALAWAN REFERENCE: steep, vegetated limestone towers framing protected channels.
+// Coordinates and polygon topology remain the same source-controlled Peace island layout.
+const PEACE_ISLANDS=[[-20,22,12,9],[-4,43,14,12],[24,35,14,11],[-26,75,21,17],[18,92,22,19],[4,110,24,17]];
+function peaceIslandHeight(cx,cz,r,ang,seed){
+ const teeth=1.+.13*Math.sin(ang*3.+seed)+.09*Math.cos(ang*7.-seed*.67)+.046*Math.sin(ang*11.+seed*.41);
+ return r*teeth;
+}
 function peaceBuildKernelMeshes(K){
  if(!K)throw Error('Peace geometry kernel unavailable');
  const constructed=[];
@@ -866,12 +902,23 @@ function peaceBuildKernelMeshes(K){
   add('open-ocean',0,positions,indices);
  }
  for(let k=0;k<PEACE_ISLANDS.length;k++){
-  const [cx,cz,rad,height]=PEACE_ISLANDS[k],sides=60,rings=13;
+  const [cx,cz,rad,height]=PEACE_ISLANDS[k],sides=72,rings=15;
   const point=(r,a)=>{
    const t=a*Math.PI*2/sides,edge=peaceIslandHeight(cx,cz,rad,t,k*1.9+.5);
    const x=cx+edge*r*Math.cos(t),z=cz+edge*r*.67*Math.sin(t);
-   const slope=Math.pow(Math.max(0,1.-r*r),1.4),ridges=Math.sin(t*3.+k*2.1)*.13+Math.sin(t*7.-k*1.7)*.055;
-   const y=-1.3+height*(.56*slope+Math.max(0,1.-r)*r*ridges*.87+.052*Math.sin(x*.41+z*.18)*(r*(1.-r)));
+   // Asymmetric crown and eroded buttresses: high walls retain height close to water,
+   // rather than tapering from a radial apex. Narrow ledges and pinnacle ridges form cliffs.
+   const theta=.46+k*.77,u=(x-cx)/rad,v=(z-cz)/(rad*.67);
+   const ridge=u*Math.cos(theta)+v*Math.sin(theta);
+   const valley=-u*Math.sin(theta)+v*Math.cos(theta);
+   const crown=.56+.24*Math.sin(valley*3.1+k*1.7)+.13*Math.sin(ridge*6.8+valley*3.9);
+   const pinnacles=.22*Math.pow(.5+.5*Math.sin(t*5.+k*2.3+Math.sin(t*9.)),3.);
+   const ledges=.07*Math.sin(t*17.+k*1.9+r*11.)+.045*Math.cos(t*29.-r*19.);
+   const core=(.68+.16*Math.sin(k*1.3)+crown*.18+pinnacles+ledges);
+   const coastT=Math.min(1.,Math.max(0.,(r-.78)/.205));
+   const wall=1.-coastT*coastT*(3.-2.*coastT);
+   const crags=(.038*Math.sin(t*23.+r*17.)+.025*Math.sin(t*37.-r*8.))*(1.-r);
+   const y=-1.33+height*Math.max(0.,wall*(core+crags));
    return [x,y,z];
   };
   const positions=[point(0,0)],indices=[];

@@ -9443,6 +9443,50 @@
       "scopeHash": "6e248928443243527a0d7af88e6ecea3be9a81f484e34200b27287e80b061dae",
       "state": "ADMITTED_LOCKED"
     },
+    "6eda3fca6a95fbf551fee5f160ac7dcf45e292f4375ca67ce6fba061940f9960": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "d55e322ed9b5172caf7e503383c3c1dd9557fc1e",
+          "lockGeneration": 2985,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_ORBIT_FILL_AND_OCCLUSION:20261029",
+          "operationId": "NINE_SUMMITS_PEACE_ORBIT_FILL_AND_OCCLUSION_PILOT_20261029_001",
+          "procedureLocatorDigest": "eef0a2429efd738308dca17cf8a2ca4cf933931288e1016fa01308fa4bcccaff",
+          "requestDigest": "335612ff71827c8002d787a913a5a6f9280cdf1e8c4750cd9501242e89a2cfaa",
+          "scopeHash": "6eda3fca6a95fbf551fee5f160ac7dcf45e292f4375ca67ce6fba061940f9960"
+        },
+        "bindingDigest": "e7ed85890127e25e8a18522593ef622536e2f791f3a34beaecc57abb3d312a27",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d6bd0f0e3fa383dd3dd6fe04731b2ad0298aeae2793275006abeb4c217845fe5",
+          "commentId": 6512488584,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 40984703933,
+          "workflowSha": "d55e322ed9b5172caf7e503383c3c1dd9557fc1e"
+        },
+        "lineageAnchorCommitSha": "643b7218e0ca7d8e582ffde8e204fefeec26ad0d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "d55e322ed9b5172caf7e503383c3c1dd9557fc1e",
+      "lockGeneration": 2985,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:PEACE_ORBIT_FILL_AND_OCCLUSION:20261029",
+      "operationId": "NINE_SUMMITS_PEACE_ORBIT_FILL_AND_OCCLUSION_PILOT_20261029_001",
+      "procedureLocatorDigest": "eef0a2429efd738308dca17cf8a2ca4cf933931288e1016fa01308fa4bcccaff",
+      "released": false,
+      "requestDigest": "335612ff71827c8002d787a913a5a6f9280cdf1e8c4750cd9501242e89a2cfaa",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6eda3fca6a95fbf551fee5f160ac7dcf45e292f4375ca67ce6fba061940f9960",
+      "state": "ADMITTED_LOCKED"
+    },
     "6f2fef67354a1d562b10d03859496356e9ab853b881305609a907d96ddf8bf05": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -23347,7 +23391,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 2984,
+  "lockGeneration": 2985,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

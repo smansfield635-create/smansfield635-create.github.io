@@ -1,0 +1,62 @@
+{
+  "schema": "H_EARTH_NATURAL_MATERIAL_BLEND_CONSTRUCTION_v1",
+  "operationId": "H_EARTH_NATURAL_SAND_EARTH_BLEND_20261029_001",
+  "lockGeneration": 2980,
+  "admission": {
+    "result": "ADMITTED_AND_LOCKED",
+    "workflowRun": 40976271129,
+    "receiptUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6911#issuecomment-6511352637",
+    "note": "Reference to authentic canonical return; not a replacement admission receipt."
+  },
+  "base": "52de3da396f2ed3c496fc9771d34fc1dcca2d79a",
+  "ownerDirection": "Blend the visible hard transition naturally; preserve existing environment. Existing30292image is acceptance reference; twelve-view survey did not disprove defect.",
+  "ownerImageSha256": "8fb873e9bb939b1f5a524edc9449fb4c137c71c9d096e0d8ce69dfabdef13f2b",
+  "implementation": "Final sand-to-earth material layer only: dry10–50m feather with bounded3m world-space warp, endpoint-zero warp, existing grain in mixed belt, unchanged sand colors and soil source. Exact existing grove/oasis/estate/approach protection law.",
+  "sourceFinding": "Later sand layer can overwrite earlier358-face corrected material. Hillside treatment is zero at owner-reported coordinate. Neither finding establishes filmed-boundary causality.",
+  "preserved": [
+    "geometry",
+    "water-contact field",
+    "CPU beach and planting law",
+    "all vegetation roots",
+    "atlas assets",
+    "normals and relief",
+    "navigation",
+    "audio",
+    "same-world experience"
+  ],
+  "northReview": {
+    "agent": "context_review",
+    "result": "SUPPORT_BOUNDED_CONSTRUCTION_AND_DELTA_COMPARISON",
+    "basis": [
+      "D02_ENVIRONMENTAL_TRANSITION_NOT_BLEND_COHERENT",
+      "S01_SEAMLESS_WORLD_CONTINUATION_BLEND",
+      "D03_SUBTROPICAL_IDENTITY",
+      "S04_LOCAL_FIELDS"
+    ],
+    "unrelatedRequalificationRequired": false
+  },
+  "eastReview": {
+    "agent": "blend_review",
+    "result": "FINAL_SAND_STAGE_CANDIDATE_DEFINED_NOT_VISUALLY_PROVEN"
+  },
+  "southBuilder": "root",
+  "qualificationBuilder": "comparison_builder",
+  "tests": {
+    "passed": 19,
+    "failed": 0,
+    "mode": "LOCAL_SOURCE_AND_GUARDS_NO_GPU"
+  },
+  "sourceSha256": {
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js": "b0cfed4d512cb76ee9986ffe9ebbed6f8ad577b98aa0bebb4db480af9dec03ab",
+    "showroom/globe/h-earth/vegetation-prototype/route.js": "04fc6b367c806417aa06edcd29e02f3e7b932b26efdd7e91bc60dfa358fed42d",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml": "e4995a2c41dbc7737a7a3059e312d112972a4b5502e01f695ed9005fad195d9e",
+    "h-earth-3d/evidence/natural-material-blend-20261029/blend.test.mjs": "23954037f257e7ff9b43a33536fd2481ac02bd2d4c9c14fd725497c58bbccb2a",
+    "h-earth-3d/evidence/natural-material-blend-20261029/qualify.mjs": "b661806f95da3592a53dc0e020d3e7d95b2db5b803df14a116d7abad80c04694",
+    "h-earth-3d/evidence/natural-material-blend-20261029/qualify.test.mjs": "5587855b437d2993dd38d1b21eb805b2d742ff92eff7050615ea9717f79f54cb",
+    "h-earth-3d/evidence/natural-material-blend-20261029/product-binding.json": "66c3632eaf2c127a44b028f33e65dd56749d1f3a40e9337557a06699db5caf2f"
+  },
+  "visualAcceptance": false,
+  "ownerAcceptance": false,
+  "publication": false,
+  "nextAction": "One admitted12-frame paired GPU comparison through existing neutral PR runner; return actual run link and yield without polling. Review affected and healthy images after completion. No passing-test-only fix claim."
+}

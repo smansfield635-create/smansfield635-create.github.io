@@ -1,0 +1,86 @@
+{
+  "bridgeOutputFingerprintDomain": {
+    "head": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+    "operationId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001",
+    "paths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "h-earth-3d/evidence/habitat-material-blend-20261029/**",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+    ]
+  },
+  "canonicalInputSchemas": [
+    "REPOSITORY_OPERATION_REQUEST_v1",
+    "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+  ],
+  "canonicalOutputSchemas": [
+    "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+    "H_EARTH_NATURAL_MATERIAL_BLEND_v1"
+  ],
+  "errorCodeAndValidationPrecedence": [
+    "GOVERNING_HEAD_MISMATCH",
+    "ACTIVE_SCOPE_ALREADY_LOCKED",
+    "DECLARED_PATH_VIOLATION",
+    "SELECTED_QUALIFICATION_FAILURE",
+    "PASS"
+  ],
+  "evaluationToolingHeadBindingRule": "Exact reviewed immutable tooling and product; unchanged baseline50b337ff7bbfb6fce4876e1037ac96d5faff65a6; fixed existing support helpers and all9warmup. Explicit candidate paths admitted without new persistent registration.",
+  "exactAllowedRepositoryPaths": [
+    "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+    "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+    "showroom/globe/h-earth/vegetation-prototype/route.js",
+    "h-earth-3d/evidence/habitat-material-blend-20261029/**",
+    ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  ],
+  "exactBranchAndCommitSequence": [
+    {
+      "action": "Compile canonical packet and obtain admission before writes; keep prior candidates frozen.",
+      "step": 1
+    },
+    {
+      "action": "Implement separate presentation mask after runtime habitat installation and signed protected color correction; full-file replacement only.",
+      "step": 2
+    },
+    {
+      "action": "Run focused mathematical/source tests and independent West review; immutable exact candidate.",
+      "step": 3
+    },
+    {
+      "action": "Launch one paired comparison using existing fixed reopened PR runner, four edge plus two protected poses, twelve images, all9warmup; return monitor link.",
+      "step": 4
+    },
+    {
+      "action": "Review actual images after completion. No merge or publication under this construction scope.",
+      "step": 5
+    }
+  ],
+  "exactGoverningHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+  "exactTestRunnerCommand": "node --test h-earth-3d/evidence/habitat-material-blend-20261029/*.test.mjs",
+  "independentVerifierDefinition": {
+    "builderMaySelfDeclarePass": false,
+    "repairAuthority": false,
+    "required": [
+      "POST_ENTRANCE_FINAL_INSTALLED_FIELD",
+      "PANEL_ISOLATION_WORLD_METRE_KERNEL",
+      "NATIVE_ROOT_ROUGHNESS_GEOMETRY_UNCHANGED",
+      "PROTECTION_SIGNED_DELTA_GATE",
+      "NONZERO_TARGET_EFFECT",
+      "PAIRED_FROZEN_POSES_ALL_NINE_WARMUP"
+    ],
+    "role": "WEST_INDEPENDENT_REVIEW"
+  },
+  "operationClass": "RUNTIME_OR_AUTHORITY",
+  "priorAttemptInspectionLimits": {
+    "allowed": "Reuse source-edge review40986560002 and exact four views. Add two directly relevant protected controls.",
+    "forbidden": "No broad sweep, no original screenshot prerequisite, no unrelated redesign or parameter search."
+  },
+  "procedureId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001_PROCEDURE",
+  "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+  "workflowAndArtifactPackagingPaths": {
+    "artifactPaths": [
+      "h-earth-3d/evidence/habitat-material-blend-20261029/**"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  }
+}

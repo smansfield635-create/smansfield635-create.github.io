@@ -1,0 +1,251 @@
+{
+  "constructionProcedure": {
+    "bridgeOutputFingerprintDomain": {
+      "head": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+      "operationId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001",
+      "paths": [
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+        "showroom/globe/h-earth/vegetation-prototype/route.js",
+        "h-earth-3d/evidence/habitat-material-blend-20261029/**",
+        ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+      ]
+    },
+    "canonicalInputSchemas": [
+      "REPOSITORY_OPERATION_REQUEST_v1",
+      "REPOSITORY_CONSTRUCTION_PROCEDURE_v1"
+    ],
+    "canonicalOutputSchemas": [
+      "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+      "H_EARTH_NATURAL_MATERIAL_BLEND_v1"
+    ],
+    "errorCodeAndValidationPrecedence": [
+      "GOVERNING_HEAD_MISMATCH",
+      "ACTIVE_SCOPE_ALREADY_LOCKED",
+      "DECLARED_PATH_VIOLATION",
+      "SELECTED_QUALIFICATION_FAILURE",
+      "PASS"
+    ],
+    "evaluationToolingHeadBindingRule": "Exact reviewed immutable tooling and product; unchanged baseline50b337ff7bbfb6fce4876e1037ac96d5faff65a6; fixed existing support helpers and all9warmup. Explicit candidate paths admitted without new persistent registration.",
+    "exactAllowedRepositoryPaths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "h-earth-3d/evidence/habitat-material-blend-20261029/**",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+    ],
+    "exactBranchAndCommitSequence": [
+      {
+        "action": "Compile canonical packet and obtain admission before writes; keep prior candidates frozen.",
+        "step": 1
+      },
+      {
+        "action": "Implement separate presentation mask after runtime habitat installation and signed protected color correction; full-file replacement only.",
+        "step": 2
+      },
+      {
+        "action": "Run focused mathematical/source tests and independent West review; immutable exact candidate.",
+        "step": 3
+      },
+      {
+        "action": "Launch one paired comparison using existing fixed reopened PR runner, four edge plus two protected poses, twelve images, all9warmup; return monitor link.",
+        "step": 4
+      },
+      {
+        "action": "Review actual images after completion. No merge or publication under this construction scope.",
+        "step": 5
+      }
+    ],
+    "exactGoverningHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+    "exactTestRunnerCommand": "node --test h-earth-3d/evidence/habitat-material-blend-20261029/*.test.mjs",
+    "independentVerifierDefinition": {
+      "builderMaySelfDeclarePass": false,
+      "repairAuthority": false,
+      "required": [
+        "POST_ENTRANCE_FINAL_INSTALLED_FIELD",
+        "PANEL_ISOLATION_WORLD_METRE_KERNEL",
+        "NATIVE_ROOT_ROUGHNESS_GEOMETRY_UNCHANGED",
+        "PROTECTION_SIGNED_DELTA_GATE",
+        "NONZERO_TARGET_EFFECT",
+        "PAIRED_FROZEN_POSES_ALL_NINE_WARMUP"
+      ],
+      "role": "WEST_INDEPENDENT_REVIEW"
+    },
+    "operationClass": "RUNTIME_OR_AUTHORITY",
+    "priorAttemptInspectionLimits": {
+      "allowed": "Reuse source-edge review40986560002 and exact four views. Add two directly relevant protected controls.",
+      "forbidden": "No broad sweep, no original screenshot prerequisite, no unrelated redesign or parameter search."
+    },
+    "procedureId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001_PROCEDURE",
+    "schema": "REPOSITORY_CONSTRUCTION_PROCEDURE_v1",
+    "workflowAndArtifactPackagingPaths": {
+      "artifactPaths": [
+        "h-earth-3d/evidence/habitat-material-blend-20261029/**"
+      ],
+      "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+    }
+  },
+  "operationRequest": {
+    "allowedPaths": [
+      "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+      "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+      "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "h-earth-3d/evidence/habitat-material-blend-20261029/**",
+      ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+    ],
+    "artifactPaths": [
+      "h-earth-3d/evidence/habitat-material-blend-20261029/**"
+    ],
+    "constructionProcedureLocator": "INLINE_CANONICAL_TRANSPORT_ENVELOPE:constructionProcedure",
+    "errorPrecedence": [
+      "GOVERNING_HEAD_MISMATCH",
+      "ACTIVE_SCOPE_ALREADY_LOCKED",
+      "DECLARED_PATH_VIOLATION",
+      "SELECTED_QUALIFICATION_FAILURE",
+      "PASS"
+    ],
+    "exactGoverningHead": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+    "exactTestCommand": "node --test h-earth-3d/evidence/habitat-material-blend-20261029/*.test.mjs",
+    "executingRole": {
+      "mayDeploy": false,
+      "mayMerge": false,
+      "mayMutateControlPlane": false,
+      "mayMutateDiagnosticTooling": true,
+      "mayMutateProduct": true,
+      "role": "SOUTH_PRODUCT_BUILDER",
+      "scopeExpansionAllowed": false
+    },
+    "fingerprintDomain": {
+      "head": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+      "operationId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001",
+      "paths": [
+        "showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js",
+        "showroom/globe/h-earth/render/habitat-material-presentation.v1.js",
+        "showroom/globe/h-earth/vegetation-prototype/route.js",
+        "h-earth-3d/evidence/habitat-material-blend-20261029/**",
+        ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+      ]
+    },
+    "functionalCoordination": {
+      "applicabilityClass": "MATERIAL_GOVERNED_ENGINEERING",
+      "authorityEffect": "NONE",
+      "functionalBearing": {
+        "bearings": [
+          "N",
+          "E",
+          "S",
+          "W",
+          "N"
+        ],
+        "exemptionReason": null,
+        "mode": "ROUTE"
+      },
+      "primitiveRequirements": [
+        "N",
+        "E",
+        "S",
+        "W"
+      ],
+      "schema": "FUNCTIONAL_BEARING_COORDINATION_v1"
+    },
+    "independentVerifier": {
+      "builderMaySelfDeclarePass": false,
+      "repairAuthority": false,
+      "required": [
+        "POST_ENTRANCE_FINAL_INSTALLED_FIELD",
+        "PANEL_ISOLATION_WORLD_METRE_KERNEL",
+        "NATIVE_ROOT_ROUGHNESS_GEOMETRY_UNCHANGED",
+        "PROTECTION_SIGNED_DELTA_GATE",
+        "NONZERO_TARGET_EFFECT",
+        "PAIRED_FROZEN_POSES_ALL_NINE_WARMUP"
+      ],
+      "role": "WEST_INDEPENDENT_REVIEW"
+    },
+    "intakeCompletenessReceipt": {
+      "authorityEffect": "NONE_BY_INTAKE_COMPLETENESS_RECEIPT",
+      "receiptDigest": "3e9c4eeb96c07b77e30eb42461354c1add9e01a0f6c5977d3248bd595d6576fb",
+      "receiptId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001_COMPLETE",
+      "result": "COMPLETE_NO_QUESTIONS_REQUIRED",
+      "schema": "INTAKE_COMPLETENESS_RECEIPT_v1",
+      "unresolvedMaterialQuestions": []
+    },
+    "lockScope": "H_EARTH:HABITAT_MATERIAL_BLEND_20261029",
+    "operationId": "H_EARTH_HABITAT_MATERIAL_BLEND_20261029_001",
+    "prohibitedPaths": [
+      "GEOMETRY_VEGETATION_ROOT_OR_NATIVE_HABITAT_MUTATION",
+      "SOIL_TEXTURE_BLUR_OR_ATLAS_ASSET_CHANGE",
+      "UNRELATED_PRODUCT_OR_CONTROL_PLANE_CHANGE",
+      "MERGE_DEPLOY_PUBLICATION",
+      "AUTOMATIC_GPU_RETRY"
+    ],
+    "projectId": "H_EARTH",
+    "requestingAuthority": {
+      "intent": "Implement and compare selected material-only habitat edge repair.",
+      "mayDeploy": false,
+      "mayMerge": false,
+      "mayMutateProduct": true,
+      "principal": "OWNER",
+      "scopeExpansionAllowed": false,
+      "source": "Proceed accordingly after explicit deterministic implementation/comparison plan; prior original-photo prerequisite removed."
+    },
+    "requiredInputs": [
+      {
+        "id": "FOUR_LIT_VIEWS_REVIEWED",
+        "resolved": true
+      },
+      {
+        "id": "EXACT_BASELINE_SOURCE",
+        "resolved": true
+      },
+      {
+        "id": "SELECTED_OFFLINE_FILTER",
+        "resolved": true
+      },
+      {
+        "id": "OWNER_PROCEED_IMPLEMENTATION",
+        "resolved": true
+      }
+    ],
+    "requiredOutputs": [
+      "FULL_FILE_PRODUCT_CANDIDATE",
+      "KERNEL_PROTECTION_AND_SOURCE_TESTS",
+      "INDEPENDENT_WEST_REVIEW",
+      "TWELVE_PAIRED_FRAMES_MONITOR_LINK"
+    ],
+    "schema": "REPOSITORY_OPERATION_REQUEST_v1",
+    "stopConditions": [
+      "AUTHENTIC_ADMISSION_BEFORE_REPOSITORY_WRITE",
+      "SOURCE_AND_KERNEL_TESTS_BEFORE_GPU",
+      "INDEPENDENT_REVIEW_BEFORE_RUN",
+      "TWELVE_IMAGES_ONE_RUN",
+      "RETURN_MONITOR_LINK_NO_EXPENSIVE_POLLING"
+    ],
+    "subjectIdentity": {
+      "automaticRetry": false,
+      "capturePlan": "Four frozen source-edge poses plus protected grove and oasis controls, paired baseline and candidate; all nine asset warmup.",
+      "change": "Separate final-installed habitat presentation coverage, independent per-panel Gaussian in world metres. Signed difference gated by native grove/oasis/estate/route protection. Native roots, native roughness coverage, terrain, soil texture unchanged.",
+      "constructionBase": "bad4bb1a4671e5da76508aa753ece069810c8e0c",
+      "frameCeiling": 12,
+      "inspectionArtifact": 12947482625,
+      "inspectionReviewComment": 6512882358,
+      "inspectionRun": 40986560002,
+      "priorCandidateDisposition": "FROZEN_SEPARATE_UNPUBLISHED_NO_FURTHER_PRODUCT_WRITES",
+      "priorInlandCandidate": "e11fb87cf564744cb346bb8dae7b129e8cfc295c",
+      "runBudget": 1,
+      "sceneHead": "50b337ff7bbfb6fce4876e1037ac96d5faff65a6",
+      "sigmaMeters": 2,
+      "sourceIssue": 6911,
+      "supportRadiusMeters": 6,
+      "targetBranch": "h-earth/habitat-material-blend-20261029"
+    },
+    "terminalDispositions": [
+      "PASS_CLOSED",
+      "FAIL_CLOSED",
+      "REJECTED_CLOSED",
+      "WITHDRAWN",
+      "SUPERSEDED"
+    ],
+    "workflowPath": ".github/workflows/h-earth-neutral-exact-head-runner.yml"
+  },
+  "schema": "CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1"
+}

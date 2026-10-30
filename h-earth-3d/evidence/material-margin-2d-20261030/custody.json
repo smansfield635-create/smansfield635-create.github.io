@@ -7,13 +7,24 @@
   "sourceBaseline": "260c66540b4471bb3d50cbc28cf82d160b732b19",
   "pairedInputSha256": "08b0c3ae8e1cc3c318b7fa1ada6d01e75370f5423745f2250db6354805b3fdef",
   "files": {
-    "README.md": "59dc733fc97a86184ea8892c89c8e3b8e87b232f7a00e6e1df15e42c503660b6",
+    "unpack_habitat_fixture.py": "284da54a27d9dd999a40f77a60ac9f305eb6c7e4d0b40e7323c49b27501ce1f8",
+    "habitat-source-fixture.json": "d9137889c362572f121f6803785de709db187ada380798b3e06266d7991236a3",
+    "README.md": "169fb55aca9df0fec1b5a9634cf71a7c5fd2471d64c472d6e3bb99cda58f8560",
+    "signed_distance_habitat.py": "6c1b11b6140cbfc95c6dde2f7f3fe7c200767c75242285f9f035892385ed4fea",
     "dense_source_coefficients.py": "6b098fb174e784d8d166041e4bdd5242d030365a141f790b8be4e6043b437ff3",
     "independent_source_retention.py": "2e621521b15dc3d76fad6a5a674fe12420ead5e1a278e50268b84791a8e8b13d",
     "field.py": "dd2482addd02cb39d37e26601bb8618a5ef4f1053091d30bde368ec4a9c8eaca",
+    "adaptive_habitat.py": "8cc87ded17fc3b97664761f34cde731b1c95034cec629011ccf95bb2eb7cb1f6",
     "independent_adversarial.py": "62413822b4290a84613fa89a3cfff9bda98d0e24972e7273f4fb0be8e666e47f",
     "test_field.py": "eeb00b8d61fd64da088ad1984e3b53081753b88e3fdcf3ad9d99c5a9d7c73b64",
+    "signed-distance-habitat.json": "a992bebeac4d25422517762f6eea78cf09e1036891478485d69f1f3dfa8beb62",
+    "compose_coefficients.py": "25927debb31d5e7d169caba6017a31822bad8334a1dca5aa2e702270e1fa88c9",
     "independent_anchored_review.py": "2fe952ea87f20ae13edcf62686729fcf08873a0587ac49406ad62828a828b8b7",
-    "results.json": "24cf55e90d7331e028ef255c422805c91bb4f6244c614cfa02cd43b0690a4f03"
-  }
+    "adaptive-habitat.json": "e7a9e56893534314310ad3a5a52a0eac209229635179ee4361da81be5cca4254",
+    "independent-adaptive-review.json": "1b3cadc48ab5c9327c60bae299bb428071ed44b271bb0a23ebabc7b65a6dc85f",
+    "results.json": "24cf55e90d7331e028ef255c422805c91bb4f6244c614cfa02cd43b0690a4f03",
+    "independent_adaptive_review.py": "3e1becae137076dbc47fc1faf519060715117260d49ecfdaf9af8e66e75aab2f"
+  },
+  "finalDisposition": "REJECTED_PROTOTYPES_NO_RUNTIME_INTEGRATION",
+  "quantizedAdaptiveCorrection": "NOT_RUN_NO_PASS_CLAIM_FLOAT64_CORE_FAILURE_ALREADY_BLOCKS_INTEGRATION"
 }

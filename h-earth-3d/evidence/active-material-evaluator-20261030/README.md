@@ -23,11 +23,15 @@ Three declared synthetic camera states evaluate four native shader distance enve
 
 The next source-attribute checkpoint is now implemented in [ATTRIBUTES.md](ATTRIBUTES.md). It reconstructs raw upload, base seam, generated rim and final GPU coast attributes. The geometry results below remain unchanged.
 
+## Texture and camera follow-up
+
+[INPUTS.md](INPUTS.md) now records the reproduced final habitat/mask fields, native atlas addressing and captured parent-plane camera inputs. Geometry and attribute evidence carry forward.
+
 ## Explicit remaining work
 
-**Complete material coefficients remain unresolved for all grid points.** The attribute follow-up now supplies rendered rim normals, coast/contact fields, base colors and material parameters. Source micro-normal derivatives, corrected atlas sampling, shoreline coverage, litter footprints and habitat texture values remain unresolved. Unknown stages return `UNRESOLVED` with null coefficients; they are never assumed to have zero influence. Dynamic refinement and final lighting are outside this snapshot.
+**Complete material coefficients remain unresolved for all grid points.** The attribute follow-up now supplies rendered rim normals, coast/contact fields, base colors and material parameters. Actual shoreline/habitat textures and native atlas addressing are now supplied by the texture follow-up. Ordered stage composition, general camera derivatives and exact soil mip sampling remain unresolved. Unknown stages return `UNRESOLVED` with null coefficients; they are never assumed to have zero influence. Dynamic refinement and final lighting are outside this snapshot.
 
-The next bounded evaluator increment is to supply resident fields and derivative inputs to the ordered material stages, using the reconstructed attributes. Carry forward these geometry results. Do not repeat original-mesh recovery or the 48-unit specimen capture. No broader correction texture can be justified by this checkpoint alone.
+The next bounded evaluator increment is to implement ordered material-stage evaluation using the reconstructed attributes and texture inputs, retaining explicit mip/derivative limits. Carry forward these geometry results. Do not repeat original-mesh recovery or the 48-unit specimen capture. No broader correction texture can be justified by this checkpoint alone.
 
 ## Reproduce
 

@@ -1,0 +1,4742 @@
+{
+  "schema": "H_EARTH_NATIVE_ATLAS_INPUTS_v1",
+  "sourceHead": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+  "preparePresentationSha256": "651575c1bc5de9c6c586c53c101695812ae72cdc96f365000f5ee230336c3bb9",
+  "originalVertices": 141373,
+  "addedVertices": 1074,
+  "appliedCharts": 358,
+  "retiredCharts": 0,
+  "manifest": {
+    "schema": "H_EARTH_CORRECTED_MATERIAL_ATLAS_v1",
+    "sourceHead": "cb57c275b95d0d48883bc4da4dcfcf17cbec5060",
+    "stepMeters": 0.25,
+    "atlasWidth": 4096,
+    "decode": "(rgb*255-128)/1024",
+    "mipmaps": false,
+    "filter": "LINEAR",
+    "boundaryWidthMeters": 12,
+    "charts": [
+      {
+        "sourceOffset": 90,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -264.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 0,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 93,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -264.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 38,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 96,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 76,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 99,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 114,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 102,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 152,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 105,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 190,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 108,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 228,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 111,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 266,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 114,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 304,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 117,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 342,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 120,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 380,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 123,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 418,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 126,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 456,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 129,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 494,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 132,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 532,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 135,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 570,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 138,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 608,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 141,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 646,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 144,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 684,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 147,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 722,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 150,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 760,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 153,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 798,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 156,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 836,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 159,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 874,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 162,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 912,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 165,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 950,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 168,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 988,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 171,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1026,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 174,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1064,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 177,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1102,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 180,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -144.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1140,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 183,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -144.75,
+          -736.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1178,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 666,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -264.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1216,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 669,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -264.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1254,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 672,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1292,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 675,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1330,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 678,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1368,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 681,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1406,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 684,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1444,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 687,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1482,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 690,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1520,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 693,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1558,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 696,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1596,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 699,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1634,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 702,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1672,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 705,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1710,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 708,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1748,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 711,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1786,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 714,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1824,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 717,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1862,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 720,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1900,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 723,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1938,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 726,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1976,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 729,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2014,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 732,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2052,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 735,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2090,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 738,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2128,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 741,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2166,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 744,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2204,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 747,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2242,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 750,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2280,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 753,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2318,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 756,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -144.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2356,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 759,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -144.75,
+          -728.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2394,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1242,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -264.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2432,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1245,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -264.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2470,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1248,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2508,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1251,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2546,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1254,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2584,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1257,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2622,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1260,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2660,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1263,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2698,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1266,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2736,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1269,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2774,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1272,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2812,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1275,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2850,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1278,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2888,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1281,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2926,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1284,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2964,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1287,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3002,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1290,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3040,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1293,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3078,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1296,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3116,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1299,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3154,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1302,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3192,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1305,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3230,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1308,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3268,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1311,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3306,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1314,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3344,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1317,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3382,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1320,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3420,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1323,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3458,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1326,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3496,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1329,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3534,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1332,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -144.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3572,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1335,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -144.75,
+          -720.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3610,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1818,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -264.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3648,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1821,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -264.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3686,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1824,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3724,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1827,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3762,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1830,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3800,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1833,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3838,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1836,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3876,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1839,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3914,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1842,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3952,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1845,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3990,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1848,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 4028,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 1851,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 0,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1854,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 38,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1857,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 76,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1860,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 114,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1863,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 152,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1866,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 190,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1869,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 228,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1872,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 266,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1875,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 304,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1878,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 342,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1881,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 380,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1884,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 418,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1887,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 456,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1890,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 494,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1893,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 532,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1896,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 570,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1899,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 608,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1902,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 646,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1905,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 684,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 1908,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -144.75,
+          -712.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 722,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2400,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 760,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2403,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 798,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2406,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 836,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2409,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 874,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2412,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 912,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2415,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 950,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2418,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 988,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2421,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1026,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2424,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1064,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2427,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1102,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2430,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1140,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2433,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1178,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2436,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1216,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2439,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1254,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2442,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1292,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2445,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1330,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2448,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1368,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2451,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1406,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2454,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1444,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2457,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1482,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2460,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1520,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2463,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1558,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2466,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1596,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2469,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1634,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2472,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1672,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2475,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1710,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2478,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1748,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2481,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -704.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1786,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2976,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1824,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2979,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1862,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2982,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1900,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2985,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1938,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2988,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1976,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2991,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2014,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2994,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2052,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 2997,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2090,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3000,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2128,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3003,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2166,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3006,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2204,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3009,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2242,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3012,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2280,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3015,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2318,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3018,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2356,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3021,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2394,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3024,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2432,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3027,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2470,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3030,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2508,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3033,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2546,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3036,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2584,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3039,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2622,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3042,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2660,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3045,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2698,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3048,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2736,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3051,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2774,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3054,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2812,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3057,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -696.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2850,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3552,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2888,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3555,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2926,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3558,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2964,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3561,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3002,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3564,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3040,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3567,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3078,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3570,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3116,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3573,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3154,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3576,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3192,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3579,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3230,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3582,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3268,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3585,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3306,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3588,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3344,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3591,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3382,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3594,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3420,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3597,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3458,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3600,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3496,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3603,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3534,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3606,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3572,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3609,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3610,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3612,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3648,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3615,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3686,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3618,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3724,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3621,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3762,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3624,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3800,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3627,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3838,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3630,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3876,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 3633,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -688.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3914,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 4128,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3952,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 4131,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3990,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 4134,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 4028,
+        "atlasY": 38
+      },
+      {
+        "sourceOffset": 4137,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 0,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4140,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 38,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4143,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 76,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4146,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 114,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4149,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 152,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4152,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 190,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4155,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 228,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4158,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 266,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4161,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 304,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4164,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 342,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4167,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 380,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4170,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 418,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4173,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 456,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4176,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 494,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4179,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 532,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4182,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 570,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4185,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 608,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4188,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 646,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4191,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 684,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4194,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 722,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4197,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 760,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4200,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 798,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4203,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 836,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4206,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -152.75,
+          -680.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 874,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4704,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 912,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4707,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -256.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 950,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4710,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 988,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4713,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1026,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4716,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1064,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4719,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1102,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4722,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1140,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4725,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1178,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4728,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1216,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4731,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1254,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4734,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1292,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4737,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1330,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4740,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1368,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4743,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1406,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4746,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1444,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4749,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1482,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4752,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1520,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4755,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1558,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4758,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1596,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4761,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1634,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4764,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1672,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4767,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1710,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4770,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1748,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4773,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1786,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 4776,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -160.75,
+          -672.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1824,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5286,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1862,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5289,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -248.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1900,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5292,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1938,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5295,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 1976,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5298,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2014,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5301,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2052,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5304,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2090,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5307,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2128,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5310,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2166,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5313,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2204,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5316,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2242,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5319,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2280,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5322,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2318,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5325,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2356,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5328,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2394,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5331,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2432,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5334,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2470,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5337,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2508,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5340,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2546,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5343,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2584,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5346,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -168.75,
+          -664.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2622,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5868,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2660,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5871,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -240.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2698,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5874,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2736,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5877,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2774,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5880,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2812,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5883,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2850,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5886,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2888,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5889,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2926,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5892,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 2964,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5895,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3002,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5898,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3040,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5901,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3078,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5904,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3116,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5907,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3154,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5910,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3192,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5913,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3230,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 5916,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -176.75,
+          -656.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3268,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6450,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3306,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6453,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -232.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3344,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6456,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3382,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6459,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -224.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3420,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6462,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3458,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6465,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -216.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3496,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6468,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3534,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6471,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -208.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3572,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6474,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3610,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6477,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -200.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3648,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6480,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3686,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6483,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -192.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3724,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 6486,
+        "group": "NEAR",
+        "atlasIndex": 0,
+        "originXZ": [
+          -184.75,
+          -648.75
+        ],
+        "width": 38,
+        "height": 38,
+        "atlasX": 3762,
+        "atlasY": 76
+      },
+      {
+        "sourceOffset": 73827,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -258.25,
+          -739.25
+        ],
+        "width": 34,
+        "height": 16,
+        "atlasX": 0,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73830,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -254.25,
+          -739.25
+        ],
+        "width": 21,
+        "height": 16,
+        "atlasX": 34,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73833,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -256.75,
+          -737.25
+        ],
+        "width": 31,
+        "height": 8,
+        "atlasX": 55,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73836,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -258.25,
+          -737.25
+        ],
+        "width": 22,
+        "height": 8,
+        "atlasX": 86,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73839,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -251.25,
+          -739.25
+        ],
+        "width": 11,
+        "height": 16,
+        "atlasX": 108,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73842,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -251.25,
+          -739.25
+        ],
+        "width": 111,
+        "height": 16,
+        "atlasX": 119,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73845,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -251.25,
+          -754
+        ],
+        "width": 201,
+        "height": 68,
+        "atlasX": 230,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73848,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -225,
+          -754
+        ],
+        "width": 115,
+        "height": 75,
+        "atlasX": 431,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73851,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -225,
+          -738.5
+        ],
+        "width": 115,
+        "height": 13,
+        "atlasX": 546,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73854,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -225,
+          -738.5
+        ],
+        "width": 103,
+        "height": 13,
+        "atlasX": 661,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73857,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -225,
+          -738.5
+        ],
+        "width": 71,
+        "height": 13,
+        "atlasX": 764,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73860,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -225,
+          -738.5
+        ],
+        "width": 39,
+        "height": 13,
+        "atlasX": 835,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73863,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -232.75,
+          -738.5
+        ],
+        "width": 38,
+        "height": 13,
+        "atlasX": 874,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73866,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -240.75,
+          -738.5
+        ],
+        "width": 69,
+        "height": 13,
+        "atlasX": 912,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73869,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -248.75,
+          -738.5
+        ],
+        "width": 101,
+        "height": 13,
+        "atlasX": 981,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73872,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -250,
+          -738.5
+        ],
+        "width": 106,
+        "height": 13,
+        "atlasX": 1082,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73875,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -202.5,
+          -754
+        ],
+        "width": 36,
+        "height": 75,
+        "atlasX": 1188,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73878,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -202.5,
+          -754
+        ],
+        "width": 123,
+        "height": 75,
+        "atlasX": 1224,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73881,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -202.5,
+          -765.75
+        ],
+        "width": 205,
+        "height": 104,
+        "atlasX": 1347,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73884,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -173.25,
+          -765.75
+        ],
+        "width": 111,
+        "height": 122,
+        "atlasX": 1552,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73887,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -173.25,
+          -741.25
+        ],
+        "width": 111,
+        "height": 24,
+        "atlasX": 1663,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73890,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -173.25,
+          -741.25
+        ],
+        "width": 88,
+        "height": 24,
+        "atlasX": 1774,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73893,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -173.25,
+          -741.25
+        ],
+        "width": 56,
+        "height": 24,
+        "atlasX": 1862,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73896,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -176.75,
+          -741.25
+        ],
+        "width": 38,
+        "height": 24,
+        "atlasX": 1918,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73899,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -184.75,
+          -741.25
+        ],
+        "width": 52,
+        "height": 24,
+        "atlasX": 1956,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73902,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -192.75,
+          -741.25
+        ],
+        "width": 84,
+        "height": 24,
+        "atlasX": 2008,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73905,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -195,
+          -741.25
+        ],
+        "width": 93,
+        "height": 24,
+        "atlasX": 2092,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73908,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -152.75,
+          -765.75
+        ],
+        "width": 30,
+        "height": 122,
+        "atlasX": 2185,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73911,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -152.75,
+          -765.75
+        ],
+        "width": 47,
+        "height": 122,
+        "atlasX": 2215,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73914,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -146.75,
+          -744
+        ],
+        "width": 23,
+        "height": 35,
+        "atlasX": 2262,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73917,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -147,
+          -744
+        ],
+        "width": 15,
+        "height": 35,
+        "atlasX": 2285,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73920,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -152.75,
+          -765.75
+        ],
+        "width": 129,
+        "height": 122,
+        "atlasX": 2300,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73923,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -152.75,
+          -774
+        ],
+        "width": 207,
+        "height": 126,
+        "atlasX": 2429,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 73944,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -142.5,
+          -744
+        ],
+        "width": 88,
+        "height": 35,
+        "atlasX": 2636,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 74706,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -384.75,
+          -961.25
+        ],
+        "width": 540,
+        "height": 894,
+        "atlasX": 2724,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 74709,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -299.25,
+          -774.75
+        ],
+        "width": 198,
+        "height": 158,
+        "atlasX": 3264,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 74712,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -299.25,
+          -774.75
+        ],
+        "width": 170,
+        "height": 158,
+        "atlasX": 3462,
+        "atlasY": 0
+      },
+      {
+        "sourceOffset": 74733,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -429.25,
+          -1061.25
+        ],
+        "width": 718,
+        "height": 1294,
+        "atlasX": 0,
+        "atlasY": 894
+      },
+      {
+        "sourceOffset": 74736,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -360.75,
+          -1061.25
+        ],
+        "width": 639,
+        "height": 1294,
+        "atlasX": 718,
+        "atlasY": 894
+      },
+      {
+        "sourceOffset": 74739,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -360.75,
+          -1082.5
+        ],
+        "width": 639,
+        "height": 1320,
+        "atlasX": 1357,
+        "atlasY": 894
+      },
+      {
+        "sourceOffset": 74742,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -290.5,
+          -1082.5
+        ],
+        "width": 557,
+        "height": 1320,
+        "atlasX": 1996,
+        "atlasY": 894
+      },
+      {
+        "sourceOffset": 74745,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -290.5,
+          -1099.25
+        ],
+        "width": 557,
+        "height": 1340,
+        "atlasX": 2553,
+        "atlasY": 894
+      },
+      {
+        "sourceOffset": 74748,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -219.25,
+          -1099.25
+        ],
+        "width": 473,
+        "height": 1340,
+        "atlasX": 3110,
+        "atlasY": 894
+      },
+      {
+        "sourceOffset": 74751,
+        "group": "FAR",
+        "atlasIndex": 1,
+        "originXZ": [
+          -219.25,
+          -1111
+        ],
+        "width": 473,
+        "height": 1354,
+        "atlasX": 3583,
+        "atlasY": 894
+      }
+    ],
+    "atlases": [
+      {
+        "file": "near-atlas.png",
+        "width": 4096,
+        "height": 114,
+        "sha256": "b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7"
+      },
+      {
+        "file": "far-atlas.png",
+        "width": 4096,
+        "height": 2248,
+        "sha256": "78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f"
+      }
+    ],
+    "inputHashes": {}
+  },
+  "buffers": {
+    "uv": {
+      "file": "atlas-uv.bin",
+      "type": "Float32Array",
+      "sha256": "9b5d7c836f430a5e50cae2d229cd84f4fdd5597864b1b60cdc498e3a72616c90",
+      "length": 284894
+    },
+    "atlasIds": {
+      "file": "atlas-atlasIds.bin",
+      "type": "Uint8Array",
+      "sha256": "bda615cab59e3ebaa0b154cddf23d3c347fedc46f4c534eda883c0149e164e47",
+      "length": 142447
+    },
+    "indices": {
+      "file": "atlas-indices.bin",
+      "type": "Uint32Array",
+      "sha256": "06a4c7387a4415ed4a0e800d81cdaaac98dacbc0c017e9a09549c2f621fed2dc",
+      "length": 366666
+    },
+    "margin": {
+      "file": "atlas-margin.bin",
+      "type": "Uint16Array",
+      "sha256": "b3133bdccff6f6d936285d8ea27ea30ddc9b5897366303fc3d9874d97da2e28f",
+      "length": 37636
+    }
+  },
+  "margin": {
+    "schema": "H_EARTH_FULL_MATERIAL_MARGIN_v1",
+    "status": "SOURCE_MATCHED_COMPARISON_CANDIDATE",
+    "sourceRendererSha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+    "correctionSha256": "b3133bdccff6f6d936285d8ea27ea30ddc9b5897366303fc3d9874d97da2e28f",
+    "worldBounds": [
+      -213,
+      -759,
+      -165,
+      -711
+    ],
+    "stepMeters": 0.5,
+    "encoding": "RGBA16F_DELTA_A_B_LINEAR_NO_MIPMAPS",
+    "uploadedBytes": 75272,
+    "textureUploadCount": 1,
+    "perFrameUploadBytes": 0,
+    "rootAdmissionChanged": false,
+    "nativeRoughnessChanged": false,
+    "visualAcceptance": false,
+    "scope": "ONE_INLAND_SOURCE_WINDOW_NOT_GLOBAL_REPAIR"
+  },
+  "limits": [
+    "Geological retirement applied; nonsoil vegetation/rock index suppression is outside this soil input checkpoint.",
+    "No GPU upload, depth ownership or hardware sampling equivalence asserted.",
+    "Duplicated native attributes verified unchanged; UV and atlas IDs use original Float32 writes."
+  ]
+}

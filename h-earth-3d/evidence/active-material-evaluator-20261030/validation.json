@@ -1,6 +1,6 @@
 {
   "result": "PASS",
-  "tests": 16,
+  "tests": 22,
   "failed": 0,
   "skipped": 0,
   "seed": 3000,
@@ -8,5 +8,5 @@
   "python": "3.12.14",
   "numpy": "2.3.5",
   "shapely": "2.1.2",
-  "scope": "source geometry, native attribute replay and affine operand tests; full material coefficients unresolved"
+  "scope": "geometry, native attributes, resident fields, atlas addressing and CPU camera/texture input tests; full material coefficients unresolved"
 }

@@ -1,0 +1,26 @@
+{
+  "result": "PASS_RESIDENT_TEXTURE_ATLAS_CAMERA_INPUTS",
+  "reviewer": "native independent /root/coverage_review",
+  "testsPassed": 22,
+  "testsFailed": 0,
+  "independentReplay": "all13 output artifacts byte-for-byte identical",
+  "moduleHashesVerifiedAgainstCandidate": 78,
+  "assetHashesVerifiedAgainstCandidate": 7,
+  "maxQuadReprojectionResidualPixels": 1.41e-10,
+  "reviewedHashes": {
+    "resident-fields.mjs": "feefbeeac26999a98a3d90663df9a0b0d44e0638d4efdf4692cde8f2d6fb1d70",
+    "atlas-inputs.mjs": "ebeb2a120ad1fe79919eb4ca2709de26a53e9353e3bd0de6c0a4d354a9c2806e",
+    "sampling.py": "ea70471443947d4c77e536e56dc9aeddd6e60fe3734e216246ed265833aaa6e2",
+    "prepare-textures.py": "7a05b02b20290c6f480a353fd571905fd4b382620db1472199a661eeb3c9f6f2",
+    "texture-manifest.json": "b109582eaf56bd885251a29972978c093707e394896a295b8624ef4aae75e084",
+    "texture-inputs.test.mjs": "f94b8c16edcfad82328ddc76337ccf90e51f04ee0dceae5e3837b7a984faedb0",
+    "resident-fields.json": "1f0c0d39adf5d71c8c0f62bd9fe968322d039fdb40fcf4ae2484084952bfdda7",
+    "atlas-inputs.json": "58ed58c58023593ad5b27eedc3b8efa48d62cbcbe51110e4ef3a91690de304c3",
+    "sampling-inputs.json": "0b8a1d019334e2e6cea30bfab73ca1a2e3247977e64353882e75670c8bd7ef67"
+  },
+  "fullMaterialCoefficients": "UNRESOLVED",
+  "hardwareMipSampling": "UNRESOLVED",
+  "hardwareDerivativeEquivalence": "UNRESOLVED",
+  "gpuExecuted": false,
+  "productMutation": false
+}

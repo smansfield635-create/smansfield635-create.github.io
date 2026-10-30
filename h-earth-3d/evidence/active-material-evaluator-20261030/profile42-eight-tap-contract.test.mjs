@@ -72,7 +72,11 @@ export function verify(c){
   assert.equal(c.nextSeparateEngineeringOperation.requiresFreshCanonicalAdmission,true);
   assert.equal(c.nextSeparateEngineeringOperation.boundedViewerPoseCount,1);
   assert.equal(c.nextSeparateEngineeringOperation.executionBudget.gpuNotYetLaunched,true);
-  assert.equal(c.nextSeparateEngineeringOperation.executionBudget.maxVerifiedRenders,1);
+  assert.equal(c.nextSeparateEngineeringOperation.executionBudget.maxAuthorizedWorkflowRuns,1);
+  assert.equal(c.nextSeparateEngineeringOperation.executionBudget.maxCameraSceneInitializationSessions,1);
+  assert.equal(c.nextSeparateEngineeringOperation.executionBudget.maxPerStageDrawPasses,8);
+  assert.equal(c.nextSeparateEngineeringOperation.executionBudget.maximumObservedRasterTapsPerStage,8);
+  assert.equal(c.nextSeparateEngineeringOperation.executionBudget.maximumNewFullFramePNGs,0);
   for(const stage of ['pre-identity materialMarginSubstrate P in linear RGB','per-tap visible raster primitive/role, world position, depth, alpha and all co-covered surfaces']) {
     assert.ok(c.nextSeparateEngineeringOperation.necessaryOrderedCheckpoints.includes(stage));
   }

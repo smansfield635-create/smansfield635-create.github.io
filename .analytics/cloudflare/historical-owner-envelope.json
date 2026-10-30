@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-30T03:29:26Z",
+  "generatedAt": "2026-10-30T04:29:19Z",
   "window": {
-    "start": "2026-08-01T03:29:26Z",
-    "end": "2026-10-30T03:29:26Z"
+    "start": "2026-08-01T04:29:19Z",
+    "end": "2026-10-30T04:29:19Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -50,17 +50,25 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 81,
-        "visits": 10
-      },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 30,
         "visits": 0
       },
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 81,
+        "visits": 10
+      },
       "/showroom/globe/audralia/": {
         "pageLoads": 160,
         "visits": 10
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
+        "visits": 0
       },
       "/build/intake/": {
         "pageLoads": 10,
@@ -70,16 +78,8 @@
         "pageLoads": 90,
         "visits": 0
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
       "/index.html": {
         "pageLoads": 110,
-        "visits": 0
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
@@ -202,6 +202,10 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/door/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
         "visits": 0
@@ -216,10 +220,6 @@
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/door/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/hearth/jeeves/": {

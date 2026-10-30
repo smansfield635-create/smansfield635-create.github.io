@@ -776,9 +776,11 @@ function drawEmberWorld(t){if(!emberGL)return;
  * This is a composed art environment plus source-local 2D water and the separate
  * H-Earth WEST-admitted true-geometry near field, NOT image-only photogrammetry.
  * No third-party network image dependency. Other eight worlds untouched. */
-const PEACE_CINEMA_IMAGE='./peace.environment.svg';
-let peaceWaterCanvas=null,peaceWaterContext=null,peaceWaterLast=0,peaceGeometryScheduled=false;
+const PEACE_CINEMA_IMAGE='./peace.environment.svg?cb=peace-v9-directional-advection';
+let peaceWaterCanvas=null,peaceWaterContext=null,peaceWaterLast=0;
+let peaceCloudCanvas=null,peaceCloudContext=null,peaceCloudLast=0,peaceGeometryScheduled=false;
 let peaceCinemaState='loading',peaceCinemaLayer=null,peaceCinemaPhoto=null,peaceCinemaLastX=0,peaceCinemaLastY=0;
+let peaceBaseSource=null,peaceCloudSource=null,peaceWaterMaskSource=null,peaceLayerSourcesPromise=null,peaceMotionStartedAt=0;
 const peaceCinemaPreload=new Image();
 peaceCinemaPreload.decoding='async';
 peaceCinemaPreload.fetchPriority='high';
@@ -809,36 +811,32 @@ function ensurePeaceCinema(){
  style.textContent=`
  #peace-encounter .peace-cinema-stage{position:absolute;inset:0;overflow:hidden;z-index:1;pointer-events:none;
  background:#113f5d;isolation:isolate;opacity:1}
- #peace-encounter .peace-cinema-image,#peace-encounter .peace-cinema-water{display:block;position:absolute;inset:0;width:100%;height:100%;
+ #peace-encounter .peace-cinema-image,#peace-encounter .peace-cinema-clouds,#peace-encounter .peace-cinema-water{display:block;position:absolute;inset:0;width:100%;height:100%;
  object-fit:cover;object-position:50% 50%;max-width:none;max-height:none;
  transform-origin:50% 50%;transform:translate3d(calc(var(--peace-look-x,0px)*.35),calc(var(--peace-look-y,0px)*.35),0) scale(var(--peace-arrival-scale,1.22));
  transition:transform .18s linear;opacity:0}
  #peace-encounter .peace-cinema-image{z-index:0;filter:saturate(1.08) contrast(1.04) blur(1px);transition:transform .18s linear,filter 1.1s ease}
- #peace-encounter .peace-cinema-water{z-index:1;pointer-events:none;mix-blend-mode:screen}
- #peace-encounter .peace-cinema-ready .peace-cinema-image,#peace-encounter .peace-cinema-ready .peace-cinema-water{opacity:1}
+ #peace-encounter .peace-cinema-clouds{z-index:1;pointer-events:none;mix-blend-mode:normal}
+ #peace-encounter .peace-cinema-water{z-index:2;pointer-events:none;mix-blend-mode:normal}
+ #peace-encounter .peace-cinema-ready .peace-cinema-image,#peace-encounter .peace-cinema-ready .peace-cinema-clouds,#peace-encounter .peace-cinema-ready .peace-cinema-water{opacity:1}
  #peace-encounter .peace-cinema-ready .peace-cinema-image{filter:saturate(1.08) contrast(1.04) blur(0)}
- #peace-encounter.peace-cinema-active #peace-world-canvas{position:absolute;inset:0;z-index:2;opacity:.64;pointer-events:none}
+ #peace-encounter.peace-cinema-active #peace-world-canvas{position:absolute;inset:0;z-index:3;opacity:.64;pointer-events:none}
  #peace-encounter .peace-cinema-stage{z-index:1}
- #peace-encounter .peace-cinema-light{position:absolute;inset:0;z-index:2;opacity:.84;mix-blend-mode:screen;
+ #peace-encounter .peace-cinema-light{position:absolute;inset:0;z-index:4;opacity:.84;mix-blend-mode:screen;
  background:radial-gradient(ellipse at 20% 22%,rgba(255,240,184,.18),transparent 45%),linear-gradient(125deg,rgba(14,88,132,.22),transparent 42%);}
- #peace-encounter .peace-cinema-vignette{position:absolute;inset:0;z-index:3;
+ #peace-encounter .peace-cinema-vignette{position:absolute;inset:0;z-index:5;
  background:linear-gradient(180deg,rgba(4,19,32,.14),transparent 23%,transparent 50%,rgba(3,12,21,.62) 100%);}
- #peace-encounter .peace-cinema-veil{position:absolute;inset:-5%;z-index:4;
+ #peace-encounter .peace-cinema-veil{position:absolute;inset:-5%;z-index:6;
  background:radial-gradient(ellipse at 50% 54%,rgba(221,244,249,.9) 0%,rgba(198,232,243,.33) 46%,rgba(166,216,232,0) 80%);
  opacity:var(--peace-atmos-opacity,0);transform:scale(var(--peace-atmos-scale,1));}
- #peace-encounter .peace-cinema-motion{position:absolute;inset:0;z-index:3;pointer-events:none;
- background:repeating-linear-gradient(90deg,transparent 0 84px,rgba(233,254,248,.018) 86px,transparent 92px);
- opacity:.35;animation:peace-water-light 19s linear infinite;}
- @keyframes peace-water-light{from{transform:translateX(-2%)}to{transform:translateX(2%)}}
  #peace-encounter.peace-cinema-active #peace-world-canvas{opacity:.64;pointer-events:none;}
  #peace-encounter .peace-world-hud{z-index:9;}
  #peace-encounter .peace-horizon-mark{z-index:9;}
- @media(prefers-reduced-motion:reduce){#peace-encounter .peace-cinema-image,#peace-encounter .peace-cinema-water{transition:none;transform:scale(1.08)!important}
- #peace-encounter .peace-cinema-motion{animation:none}}
+ @media(prefers-reduced-motion:reduce){#peace-encounter .peace-cinema-image,#peace-encounter .peace-cinema-clouds,#peace-encounter .peace-cinema-water{transition:none;transform:scale(1.08)!important}}
  `;
  peaceOverlay.appendChild(style);
  const layer=document.createElement('div');layer.className='peace-cinema-stage';layer.setAttribute('aria-hidden','true');
- layer.innerHTML='<div class="peace-cinema-light"></div><div class="peace-cinema-motion"></div><div class="peace-cinema-vignette"></div><div class="peace-cinema-veil"></div>';
+ layer.innerHTML='<div class="peace-cinema-light"></div><div class="peace-cinema-vignette"></div><div class="peace-cinema-veil"></div>';
  const photo=document.createElement('img');photo.className='peace-cinema-image';photo.alt='';photo.decoding='async';
  photo.onload=()=>{
   if(photo.naturalWidth>0&&peaceCinemaState!=='error'){
@@ -847,10 +845,14 @@ function ensurePeaceCinema(){
  };
  photo.onerror=()=>{if(peaceCinemaState!=='error')peaceCinemaPreload.onerror();};
  photo.src=PEACE_CINEMA_IMAGE;layer.prepend(photo);peaceCinemaPhoto=photo;
- const water=document.createElement('canvas');water.className='peace-cinema-water';water.width=960;water.height=1400;
- water.setAttribute('aria-hidden','true');layer.insertBefore(water,photo.nextSibling);peaceWaterCanvas=water;
+ const clouds=document.createElement('canvas');clouds.className='peace-cinema-clouds';clouds.width=960;clouds.height=540;
+ clouds.setAttribute('aria-hidden','true');layer.insertBefore(clouds,photo.nextSibling);peaceCloudCanvas=clouds;
+ peaceCloudContext=clouds.getContext('2d',{alpha:true});
+ const water=document.createElement('canvas');water.className='peace-cinema-water';water.width=960;water.height=540;
+ water.setAttribute('aria-hidden','true');layer.insertBefore(water,clouds.nextSibling);peaceWaterCanvas=water;
  peaceWaterContext=water.getContext('2d',{alpha:true});
  peaceOverlay.insertBefore(layer,peaceCanvas);peaceCinemaLayer=layer;
+ if(!reduced)loadPeaceCinemaSourceLayers();
  if(peaceCinemaState==='ready')layer.classList.add('peace-cinema-ready');
  peaceOverlay.classList.add('peace-cinema-active');
  peaceOverlay.addEventListener('pointermove',event=>{
@@ -860,9 +862,76 @@ function ensurePeaceCinema(){
  },{passive:true});
  peaceOverlay.addEventListener('pointerleave',()=>{peaceCinemaLastX=peaceCinemaLastY=0;},{passive:true});
 }
+function peaceLoadImage(src){
+ return new Promise((resolve,reject)=>{
+  const image=new Image();image.decoding='async';
+  image.onload=()=>image.naturalWidth>0?resolve(image):reject(Error('Peace source layer empty'));
+  image.onerror=()=>reject(Error('Peace source layer failed'));
+  image.src=src;
+ });
+}
+function peaceLayerHref(doc,id){
+ const node=doc.getElementById(id);
+ return node?.getAttribute('href')||node?.getAttributeNS('http://www.w3.org/1999/xlink','href')||'';
+}
+function loadPeaceCinemaSourceLayers(){
+ if(reduced||peaceCinemaState==='error')return Promise.resolve(false);
+ if(peaceLayerSourcesPromise)return peaceLayerSourcesPromise;
+ peaceLayerSourcesPromise=fetch(PEACE_CINEMA_IMAGE,{cache:'force-cache'})
+  .then(response=>{if(!response.ok)throw Error('Peace source asset HTTP '+response.status);return response.text();})
+  .then(text=>{
+   const doc=new DOMParser().parseFromString(text,'image/svg+xml');
+   const baseHref=peaceLayerHref(doc,'peace-base');
+   const cloudHref=peaceLayerHref(doc,'peace-cloud-layer');
+   const waterMaskHref=peaceLayerHref(doc,'peace-water-mask');
+   if(!baseHref||!cloudHref||!waterMaskHref)throw Error('Peace source layers missing');
+   return Promise.all([peaceLoadImage(baseHref),peaceLoadImage(cloudHref),peaceLoadImage(waterMaskHref)]);
+  })
+  .then(([base,cloud,waterMask])=>{
+   peaceBaseSource=base;peaceCloudSource=cloud;peaceWaterMaskSource=waterMask;
+   peaceMotionStartedAt=performance.now();peaceCloudLast=peaceWaterLast=0;
+   drawPeaceSourceClouds(peaceMotionStartedAt,true);
+   drawPeaceSourceWater(peaceMotionStartedAt,true);
+   if(peaceCinemaPhoto)peaceCinemaPhoto.src=base.src;
+   return true;
+  })
+  .catch(error=>{console.warn('Peace directional source layers:',error);return false;});
+ return peaceLayerSourcesPromise;
+}
+function peaceDrawWrappedSlice(context,image,sx,sy,sw,sh,dx,dy,dw,dh){
+ const width=960;
+ const offset=((dx%width)+width)%width;
+ context.drawImage(image,sx,sy,sw,sh,offset,dy,dw,dh);
+ context.drawImage(image,sx,sy,sw,sh,offset-width,dy,dw,dh);
+ if(offset+dw<width)context.drawImage(image,sx,sy,sw,sh,offset+width,dy,dw,dh);
+}
+function drawPeaceSourceClouds(now,force=false){
+ if(!peaceCloudContext||!peaceCloudCanvas||!peaceCloudSource?.complete)return;
+ if(reduced){peaceCloudContext.clearRect(0,0,960,540);return;}
+ if(!force&&peaceCloudLast&&now-peaceCloudLast<42)return;peaceCloudLast=now;
+ const c=peaceCloudContext,t=Math.max(0,(now-(peaceMotionStartedAt||now))*.001);
+ c.clearRect(0,0,960,540);c.save();
+ // Every cloud strip has positive net velocity. Low-frequency shear changes form
+ // while the whole atmosphere continues forward instead of ping-ponging.
+ for(let y=0;y<410;y+=12){
+  const depth=Math.max(0,Math.min(1,y/410));
+  const speed=2.8+3.6*depth;
+  const shear=Math.sin(y*.033+t*.11)*1.15+Math.sin(y*.071-t*.07)*.55;
+  const drift=t*speed+shear;
+  const dy=y+Math.sin(y*.025+t*.09)*.28;
+  c.globalAlpha=.86;
+  peaceDrawWrappedSlice(c,peaceCloudSource,0,y,960,14,drift,dy,960,14.4);
+ }
+ c.restore();
+}
 function updatePeaceCinema(){
  if(!peaceCinemaLayer||peaceCinemaState==='error')return;
- if(peaceCinemaState==='ready')drawPeaceSourceWater(performance.now());
+ if(peaceCinemaState==='ready'){
+  const now=performance.now();
+  if(!reduced)loadPeaceCinemaSourceLayers();
+  drawPeaceSourceClouds(now);
+  drawPeaceSourceWater(now);
+ }
  const f=Math.max(0,Math.min(1,(flight-.55)/.45)),ease=f*f*(3.-2.*f);
  const entering=Math.max(0,1.-ease);
  const scale=1.32-.24*ease;
@@ -874,25 +943,26 @@ function updatePeaceCinema(){
  peaceCinemaLayer.style.setProperty('--peace-atmos-scale',(1.16-.16*ease).toFixed(3));
 }
 
-function drawPeaceSourceWater(now){
- // About-native: redraw only the original source pixels of the lagoon.
- // This is source-local shimmer, not a moving rectangle or new invented water.
- if(!peaceWaterContext||!peaceWaterCanvas||!peaceCinemaPhoto?.complete||!peaceCinemaPhoto.naturalWidth)return;
- if(reduced){peaceWaterContext.clearRect(0,0,960,1400);return;}
- if(peaceWaterLast&&now-peaceWaterLast<46)return;peaceWaterLast=now;
- const c=peaceWaterContext,t=now*.001;
- c.clearRect(0,0,960,1400);c.save();
- c.beginPath();c.moveTo(0,820);c.lineTo(960,823);c.lineTo(960,1119);c.lineTo(782,951);
- c.lineTo(753,939);c.lineTo(728,1030);c.lineTo(602,1400);c.lineTo(446,1400);
- c.lineTo(390,1120);c.lineTo(338,1046);c.lineTo(266,959);c.lineTo(231,953);
- c.lineTo(154,1034);c.lineTo(0,1138);c.closePath();c.clip();
- // Reference coordinates: exactly the SVG's 960x1400 source. No image/object drift.
- for(let y=820;y<1400;y+=5){
-  const depth=(y-820)/580;
-  const shift=Math.sin(t*1.14+y*.041)*1.9+Math.sin(t*.7-y*.084)*.9;
-  c.globalAlpha=.20+.13*depth;
-  c.drawImage(peaceCinemaPhoto,0,y,960,5,shift*(.2+depth),y,960,5.7);
+function drawPeaceSourceWater(now,force=false){
+ // About-native source pixels with forward traveling phase. The water never
+ // reverses as one sheet; perspective increases movement toward the foreground.
+ if(!peaceWaterContext||!peaceWaterCanvas||!peaceBaseSource?.complete||!peaceWaterMaskSource?.complete)return;
+ if(reduced){peaceWaterContext.clearRect(0,0,960,540);return;}
+ if(!force&&peaceWaterLast&&now-peaceWaterLast<42)return;peaceWaterLast=now;
+ const c=peaceWaterContext,t=Math.max(0,(now-(peaceMotionStartedAt||now))*.001);
+ c.clearRect(0,0,960,540);c.save();
+ for(let y=226;y<540;y+=4){
+  const depth=Math.max(0,Math.min(1,(y-226)/314));
+  const forward=t*(.35+1.05*depth);
+  const crest=Math.sin(y*.048-t*.95)*1.72*(.25+.75*depth);
+  const cross=Math.sin(y*.089-t*1.62)*.82*depth;
+  const shift=forward+crest+cross;
+  const dy=Math.sin(y*.032-t*.68)*.22*depth;
+  c.globalAlpha=.40+.34*depth;
+  peaceDrawWrappedSlice(c,peaceBaseSource,0,y,960,4,shift,y+dy,960,4.8);
  }
+ c.globalCompositeOperation='destination-in';
+ c.globalAlpha=1;c.drawImage(peaceWaterMaskSource,0,0,960,540);
  c.restore();
 }
 function schedulePeaceRealGeometry(){

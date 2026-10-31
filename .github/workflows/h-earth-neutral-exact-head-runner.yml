@@ -1480,6 +1480,8 @@ jobs:
           test "$(git -C candidate hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 2367aea63563b33ad7159a1feb7ac26fbc631792
           printf '%s  %s\n' '10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c' candidate/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js | sha256sum --check --status
           git -C tooling fetch --no-tags --depth=1 origin 29ee1b13b9bb0327ef00565ce545b90eeefaa860
+          git -C tooling fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
+          git -C tooling cat-file -e 39ed43d987d5f62c1368e7c309faa1a1b3d731b6^{commit}
           node --input-type=module <<'NODE'
           import {execFileSync} from 'node:child_process';import assert from 'node:assert/strict';
           const changed=execFileSync('git',['-C','tooling','diff','--name-only','29ee1b13b9bb0327ef00565ce545b90eeefaa860','HEAD'],{encoding:'utf8'}).trim().split('\n').filter(Boolean).sort();
@@ -1516,7 +1518,7 @@ jobs:
 
   gen3029-hard-boundary-source-static:
     if: >-
-      ${{ github.event_name == 'pull_request' && github.event.action == 'opened' &&
+      ${{ github.event_name == 'pull_request' && contains(fromJSON('["opened","synchronize"]'), github.event.action) &&
           github.event.pull_request.head.repo.full_name == github.repository &&
           github.event.pull_request.head.ref == 'h-earth/gen3029-hard-boundary-source-stages-20261031' &&
           startsWith(github.event.pull_request.title, 'GEN3029 HARD BOUNDARY STAGE:') }}
@@ -1538,4 +1540,6 @@ jobs:
           set -euo pipefail
           node --check tools/h-earth-ground-material-comparison.v1.mjs
           node --check tools/h-earth-groundcover-factor-overlay.mjs
+          git fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
+          git cat-file -e 39ed43d987d5f62c1368e7c309faa1a1b3d731b6^{commit}
           node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs

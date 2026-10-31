@@ -100,59 +100,6 @@ jobs:
           fs.appendFileSync(process.env.GITHUB_OUTPUT, `severity=${receipt.severity}\n`);
           NODE
 
-      # Bounded read-only Gen3011 qualification; remove after evidence is captured.
-      - name: Gen3011 exact Gen3010 canonical admission branch challenge
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/h-earth/gen3011-admitted-candidate-path-preflight-repair-20261030' }}
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          readonly repo=smansfield635-create/smansfield635-create.github.io
-          readonly gen3010_branch=h-earth/gen3010-natural-grass-support-fringe-20261030
-          readonly expected=cb124b8784cf684754d17dcfa54bc0269145bd21
-          observed="$(gh api "/repos/$repo/git/ref/heads/$gen3010_branch" --jq '.object.sha')"
-          test "$observed" = "$expected"
-          git cat-file -e "$observed^{commit}"
-          git worktree add --detach --no-checkout "$RUNNER_TEMP/gen3010-readonly-worktree" "$observed" >/dev/null
-          test "$(git -C "$RUNNER_TEMP/gen3010-readonly-worktree" rev-parse HEAD)" = "$expected"
-          export GEN3010_SHA="$observed"
-          node <<'NODE'
-          const fs=require('node:fs'),path=require('node:path');
-          const repo='smansfield635-create/smansfield635-create.github.io';
-          const branch='h-earth/gen3010-natural-grass-support-fringe-20261030';
-          const sha=process.env.GEN3010_SHA,dir=process.env.RUNNER_TEMP;
-          const event={pull_request:{head:{ref:branch,sha,repo:{full_name:repo}},
-            base:{repo:{full_name:repo}}}};
-          fs.writeFileSync(path.join(dir,'gen3010-genuine-event.json'),JSON.stringify(event));
-          event.pull_request.head.ref='h-earth/gen3010-foreign-grass-support-fringe-20261030';
-          fs.writeFileSync(path.join(dir,'gen3010-foreign-event.json'),JSON.stringify(event));
-          NODE
-          selector="$GITHUB_WORKSPACE/tools/workflow-applicability-gate.v1.mjs"
-          test -s "$selector"
-          cd "$RUNNER_TEMP/gen3010-readonly-worktree"
-          GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$RUNNER_TEMP/gen3010-genuine-event.json" \
-            node "$selector" --path h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs \
-            --output "$RUNNER_TEMP/gen3010-genuine-result.json" >/dev/null
-          GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$RUNNER_TEMP/gen3010-foreign-event.json" \
-            node "$selector" --path h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs \
-            --output "$RUNNER_TEMP/gen3010-foreign-result.json" >/dev/null
-          node <<'NODE'
-          const fs=require('node:fs'),path=require('node:path');
-          const root=process.env.RUNNER_TEMP;
-          const a=JSON.parse(fs.readFileSync(path.join(root,'gen3010-genuine-result.json'),'utf8'));
-          const b=JSON.parse(fs.readFileSync(path.join(root,'gen3010-foreign-result.json'),'utf8'));
-          if(a.result!=='NOT_APPLICABLE'||a.verifiedAdmission?.lockGeneration!==3010||
-             a.verifiedAdmission?.operationId!=='H_EARTH_NATURAL_GRASS_SUPPORT_FRINGE_20261030_001'||
-             !a.admittedCandidatePaths?.includes('h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs'))
-            throw Error('GEN3010_GENUINE_GITHUB_ADMISSION_POSITIVE_FAILED:'+JSON.stringify({result:a.result,verifiedAdmission:a.verifiedAdmission}));
-          if(b.result!=='SELECTED'||b.severity!=='SELECTED_BLOCKER'||b.verifiedAdmission!==null||
-             !b.ambiguousAuthorityPaths?.includes('h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs'))
-            throw Error('GEN3010_FOREIGN_BRANCH_MUST_FAIL_CLOSED:'+JSON.stringify({result:b.result,severity:b.severity}));
-          console.log('GEN3011_REAL_GITHUB_SOURCE_REPLAY_PASS genuine=NOT_APPLICABLE foreign=SELECTED_BLOCKER');
-          NODE
-
       - name: Record neutral non-applicability
         if: ${{ steps.applicability.outputs.selected != 'true' }}
         shell: bash

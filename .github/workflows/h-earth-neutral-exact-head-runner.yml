@@ -89,7 +89,13 @@ jobs:
             sector_blob="$(git hash-object "$sector")"
             rock_blob="$(git hash-object "$rock")"
             tree_blob="$(git hash-object "$tree")"
-            test "$sector_blob" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03
+            # Gen3010 retains the separately accepted Gen2854 A08 sector revision.
+            # Exact candidate only; historical and unknown heads keep the old guard.
+            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ]; then
+              test "$sector_blob" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
+            else
+              test "$sector_blob" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03
+            fi
             test "$rock_blob" = 77e7038d27862a39c31676d1d9a1ee9a84d5f267
             test "$tree_blob" = 3958513dec53aa27f4216388a190f772e71fb9b0
             printf '%s  %s\n' '48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a' 'showroom/globe/h-earth/render/assets/h-earth-canonical-base-world.v1.json.gz' | sha256sum --check --status
@@ -299,6 +305,58 @@ jobs:
                 browserDrawExecuted:false,ownerVisualAcceptance:false,
                 releaseAuthorized:false
               }' > /tmp/h-earth-exact-evidence/modern-source-binding.json
+            elif [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ]; then
+              # Gen3010 is a saved-grass asset delta, not a Gen2694 URL-cache candidate.
+              # Verify exact new asset bytes, root census, loader binding and grammar.
+              node --check showroom/globe/h-earth/render/precomputed-grass.v1.js
+              node --check h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs
+              node --check h-earth-3d/evidence/vegetation-support-fringe-20261030/compile.mjs
+              node --check h-earth-3d/evidence/vegetation-support-fringe-20261030/writeback-fixed.mjs
+              node --input-type=module > /tmp/h-earth-exact-evidence/modern-source-binding.json <<'NODE'
+          import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import {createHash} from 'node:crypto';
+          const manifestPath='showroom/globe/h-earth/render/assets/precomputed-grass.v1.json';
+          const compressedPath='showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz';
+          const loaderPath='showroom/globe/h-earth/render/precomputed-grass.v1.js';
+          const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+          const manifestBytes=fs.readFileSync(manifestPath);
+          const m=JSON.parse(manifestBytes.toString('utf8'));
+          const compressed=fs.readFileSync(compressedPath);
+          const loader=fs.readFileSync(loaderPath,'utf8');
+          assert.equal(m.schema,'H_EARTH_PRECOMPUTED_GRASS_v1');
+          assert.equal(m.rootCount,2879698);
+          assert.equal(m.stride,52);
+          assert.equal(m.rawBytes,149854888);
+          assert.equal(m.compressedBytes,65030739);
+          assert.equal(m.habitat.width,576);
+          assert.equal(m.habitat.height,192);
+          assert.equal(m.rawBytes,m.rootCount*m.stride+m.habitat.width*m.habitat.height);
+          assert.equal(m.receipt.contactCount,m.rootCount);
+          assert.equal(m.tiles.length,8303);
+          assert.equal(m.tiles.reduce((n,t)=>n+t.count,0),m.rootCount);
+          assert(m.tiles.every(t=>Number.isInteger(t.count)&&t.count>=0&&t.count<=1600));
+          assert.equal(sha(manifestBytes),'b89713280767ad083d4b2deadafebc7f296300fd84c6677f4e5d7f14a2010b9c');
+          assert.equal(compressed.byteLength,m.compressedBytes);
+          assert.equal(sha(compressed),'03dc3b07e53d8425d4a3e29e32d6511bdc4cddcb30ea5a2e27ca78c8e5cc2851');
+          assert.equal(m.compressedSha256,'03dc3b07e53d8425d4a3e29e32d6511bdc4cddcb30ea5a2e27ca78c8e5cc2851');
+          assert.equal(m.rawSha256,'351c8a09bce94af2c022303a4b86f303e991a1db291e393b780b5ae5773f9728');
+          assert(loader.includes("const MANIFEST_SHA256='b89713280767ad083d4b2deadafebc7f296300fd84c6677f4e5d7f14a2010b9c';"));
+          assert(loader.includes('manifest.rootCount!==2879698'));
+          console.log(JSON.stringify({
+            schema:'H_EARTH_GEN3010_SAVED_GRASS_SOURCE_BINDING_v1',
+            result:'SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE',
+            candidateHead:'7e79679f69658e32ebf4c772cdc8ffa59b04fafe',
+            manifestSha256:sha(manifestBytes),
+            gzipSha256:sha(compressed),
+            rootCount:m.rootCount,tiles:m.tiles.length,
+            historicalGen2694CacheChain:'NOT_APPLICABLE_NEW_SAVED_GRASS_ASSET_REVISION',
+            originalRootRecordsIndependentlyCompared:false,
+            browserDrawExecuted:false,ownerVisualAcceptance:false,
+            releaseAuthorized:false
+          }));
+          NODE
+              jq -e '.schema=="H_EARTH_GEN3010_SAVED_GRASS_SOURCE_BINDING_v1" and .result=="SOURCE_VERIFIED_NOT_BROWSER_ACCEPTANCE" and .rootCount==2879698 and .tiles==8303 and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
             else
             node h-earth-3d/validation/h-earth.four-tree-fine-grass.v1.mjs --source-binding-only > /tmp/h-earth-exact-evidence/modern-source-binding.json
             jq -e '.schema=="H_EARTH_GEN2694_SOURCE_CHAIN_STATIC_QUALIFICATION_v1" and .result=="PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" and .canonicalWorldBinaryUnchanged==true and .ownerVisualAcceptance==false and .releaseAuthorized==false' /tmp/h-earth-exact-evidence/modern-source-binding.json >/dev/null
@@ -308,7 +366,7 @@ jobs:
               result:"MODERN_PROTECTED_IDENTITIES_VERIFIED",
               exactCandidateSha:$target,
               historicalValidator:{candidateHead:"35e7fc09a9fdae8df7fb9d0f1f90913f9b1d1fba",disposition:"HISTORICAL_WOODLAND_20261006_NOT_APPLICABLE",executed:false},
-              modernSource:{sectorGitBlob:$sector,rockSidecarGitBlob:$rock,treeTrialGitBlob:$tree,worldBinarySha256:"48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",sourceBindingResult:(if $target=="05200380887d06d841a3e8e4c627a6eb3dc24e2e" then "GEN2735_SOURCE_TESTS_36_OF_36_PASS_NO_VISUAL_CLAIM" elif $target=="828b25664903ee0723846f133012abc3d5fd7db6" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="1cc3c27d7aaa20b084ad1cf0f2e3495136de377c" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="3ed7790c7cdec94c8f72552c4a49b06225a2f766" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="e2f4c97729f99fe51c0f87c080813ba39198ae2e" then "GEN2753_SOURCE_TESTS_39_OF_39_PASS_NO_VISUAL_CLAIM" elif $target=="f2cdeb5cb0846a6daf1c11851dbacf7577ec6fa2" then "GEN2756_SOURCE_TESTS_39_OF_39_PASS_NO_VISUAL_CLAIM" elif $target=="2a8950dbaadb01563ef69a316d0a91dab31b2e6e" then "SITE_B_KERNEL_SOURCE_TESTS_42_OF_42_PASS_NO_VISUAL_CLAIM" elif $target=="1f5b40c81d52fc78de68ee51cbe0c2e52f8cf69b" then "SITE_B_SHADER_REPAIR_SOURCE_TESTS_41_OF_41_PASS_NO_VISUAL_CLAIM" elif $target=="a7da573bfa9b57f42e1fa10ffc014229493f4b0e" then "SITE_B_RECOVERY_SOURCE_TESTS_41_OF_41_PASS_NO_VISUAL_CLAIM" elif $target=="89f93441de79c0ddc814af2c670627cf942f024e" then "GEN2735_CAVERN_SOURCE_TESTS_15_OF_15_PASS_NO_VISUAL_CLAIM" else "PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" end)},
+              modernSource:{sectorGitBlob:$sector,rockSidecarGitBlob:$rock,treeTrialGitBlob:$tree,worldBinarySha256:"48f754ca1b11b8fe7eeb0e8d4573f6b6cb544cf438322a115eb52c44d3b29d5a",sourceBindingResult:(if $target=="7e79679f69658e32ebf4c772cdc8ffa59b04fafe" then "GEN3010_NATIVE_SAVED_GRASS_STATIC_SOURCE_PASS_NO_VISUAL_CLAIM" elif $target=="05200380887d06d841a3e8e4c627a6eb3dc24e2e" then "GEN2735_SOURCE_TESTS_36_OF_36_PASS_NO_VISUAL_CLAIM" elif $target=="828b25664903ee0723846f133012abc3d5fd7db6" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="1cc3c27d7aaa20b084ad1cf0f2e3495136de377c" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="3ed7790c7cdec94c8f72552c4a49b06225a2f766" then "GEN2735_SOURCE_TESTS_38_OF_38_PASS_NO_VISUAL_CLAIM" elif $target=="e2f4c97729f99fe51c0f87c080813ba39198ae2e" then "GEN2753_SOURCE_TESTS_39_OF_39_PASS_NO_VISUAL_CLAIM" elif $target=="f2cdeb5cb0846a6daf1c11851dbacf7577ec6fa2" then "GEN2756_SOURCE_TESTS_39_OF_39_PASS_NO_VISUAL_CLAIM" elif $target=="2a8950dbaadb01563ef69a316d0a91dab31b2e6e" then "SITE_B_KERNEL_SOURCE_TESTS_42_OF_42_PASS_NO_VISUAL_CLAIM" elif $target=="1f5b40c81d52fc78de68ee51cbe0c2e52f8cf69b" then "SITE_B_SHADER_REPAIR_SOURCE_TESTS_41_OF_41_PASS_NO_VISUAL_CLAIM" elif $target=="a7da573bfa9b57f42e1fa10ffc014229493f4b0e" then "SITE_B_RECOVERY_SOURCE_TESTS_41_OF_41_PASS_NO_VISUAL_CLAIM" elif $target=="89f93441de79c0ddc814af2c670627cf942f024e" then "GEN2735_CAVERN_SOURCE_TESTS_15_OF_15_PASS_NO_VISUAL_CLAIM" else "PASS_STATIC_ONLY_NOT_VISUAL_ACCEPTANCE" end)},
               actualBrowserExecution:false,visualPixelAcceptance:false,productionMutation:false
             }' > /tmp/h-earth-exact-evidence/woodland-meadow-distribution-mechanical.json
           fi

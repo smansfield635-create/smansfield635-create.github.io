@@ -1,7 +1,7 @@
 {
   "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
   "surfaceId": "nine-summits-universe",
-  "description": "Nine Summits Universe live source smoke: nine teaching relationships plus Peace-first cinematic selection. These assertions do not certify artistic quality or the complete journey.",
+  "description": "Nine Summits Universe live source smoke: nine teaching relationships plus book-first Gratitude selection. These assertions do not certify artistic quality or the complete journey.",
   "checks": [
     {
       "path": "/nine-summits/universe/index.html",
@@ -22,7 +22,7 @@
       "includes": [
         "DGB_COMPASS_ORBIT_PHYSICS",
         "admitHEarthPrimitiveBatch",
-        "Joy begins with noticing.",
+        "Gratitude begins with seeing.",
         "DGB_UNIVERSE",
         "const teachings"
       ],
@@ -54,7 +54,7 @@
     ],
     "interactions": [
       {
-        "name": "Begin with Peace from primary hero",
+        "name": "Begin with Gratitude from primary hero",
         "action": {
           "type": "click",
           "selector": "#explore-worlds"
@@ -67,7 +67,7 @@
           {
             "type": "textContains",
             "selector": "#scene-note",
-            "value": "Peace"
+            "value": "Gratitude"
           }
         ],
         "timeoutMs": 7500
@@ -87,10 +87,10 @@
         "timeoutMs": 5000
       },
       {
-        "name": "Switch to Gratitude and Joy",
+        "name": "Select the approved Gratitude summit",
         "action": {
           "type": "click",
-          "selector": "[data-summit=\"0\"]"
+          "selector": "[data-summit=\"4\"]"
         },
         "assertions": [
           {

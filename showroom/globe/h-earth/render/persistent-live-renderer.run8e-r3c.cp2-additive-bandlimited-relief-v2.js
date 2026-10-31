@@ -1301,10 +1301,25 @@ void main(){
       habitatCoverage=max(habitatCoverage,texture(uWoodlandHabitat,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
       habitatMaterialCoverage=max(habitatMaterialCoverage,texture(uHabitatMaterialPresentation,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
     }
+    // H_EARTH_GEN3030_HABITAT_SOIL_RELATIVE_C1_BEGIN
+    // The installed R8 habitat is still the sole root/roughness authority.
+    // Its separate world-space material presentation is used only for soil color.
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
-    vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
     float habitatColorCoverage=clamp(habitatCoverage+habitatMaterialProtection(vWorldPosition.xz)*(habitatMaterialCoverage-habitatCoverage),0.0,1.0);
-    base=mix(base,habitatSoil,habitatColorCoverage*.68);
+    // Cubic Hermite occupancy has zero slope at both material-support endpoints.
+    // Do not reintroduce a direct raw-mask step or a darker absolute soil palette.
+    float habitatAlbedoC1=habitatColorCoverage*habitatColorCoverage*(3.0-2.0*habitatColorCoverage);
+    vec3 nativeSoilAlbedo=base;
+    vec3 habitatSoilPigment=landscapeCoverPalette(vWorldPosition.xz,foothillDry);
+    // Express ecological soil hue relative to the actual already-shaded ground.
+    // Retaining its luminance preserves existing grain, mineral relief and
+    // sun/terrain response instead of painting a dark olive occupancy silhouette.
+    const vec3 soilLuminanceWeights=vec3(0.2126,0.7152,0.0722);
+    float nativeSoilLuminance=max(dot(nativeSoilAlbedo,soilLuminanceWeights),0.0);
+    float habitatPigmentLuminance=max(dot(habitatSoilPigment,soilLuminanceWeights),0.0001);
+    vec3 habitatSoilRelative=habitatSoilPigment*(nativeSoilLuminance/habitatPigmentLuminance);
+    base=mix(nativeSoilAlbedo,habitatSoilRelative,habitatAlbedoC1*.68);
+    // H_EARTH_GEN3030_HABITAT_SOIL_RELATIVE_C1_END
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
     // the geographic window fades well before the existing oasis bounds.

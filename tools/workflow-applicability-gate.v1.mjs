@@ -177,6 +177,17 @@ function verifyCanonicalLockPair(lock, packet, comment, expectedGeneration) {
     identity.requestDigest === lock.requestDigest &&
     identity.procedureLocatorDigest === lock.procedureLocatorDigest;
 }
+/* The branch name is derived from the canonical operation ID and its admitted
+ * lock generation. Gen-prefixed aliases must not borrow the same lock. */
+function admittedHEarthBranch(operationId, generation) {
+  if (!Number.isSafeInteger(generation) || generation < 1 ||
+      typeof operationId !== 'string') return null;
+  const match = /^H_EARTH_([A-Z][A-Z0-9_]*)_(20[0-9]{6})_([0-9]{3})$/.exec(operationId);
+  if (!match) return null;
+  return 'h-earth/gen' + generation + '-' + match[1].toLowerCase().replaceAll('_', '-') +
+    '-' + match[2];
+}
+
 async function authenticatedCandidateScope(changedPaths) {
   const none = Object.freeze({ paths: [], operationId: null, lockGeneration: null });
   const ambiguous = changedPaths.filter(isAmbiguousHEarthAuthorityScope);
@@ -226,6 +237,14 @@ async function authenticatedCandidateScope(changedPaths) {
         lock.released === false);
     if (candidates.length !== 1) return none;
     const lock = candidates[0][1];
+    // Active admission MUST be tied to one deterministic branch ref, not just
+    // a matching gen number. An unrelated branch must never borrow the lock.
+    const admittedBranch = admittedHEarthBranch(lock.operationId, generation);
+    if (!admittedBranch || branch !== admittedBranch) return none;
+    const candidateRef = await getJson('https://api.github.com/repos/' + expectedRepository +
+      '/git/ref/heads/' + admittedBranch);
+    if (candidateRef?.ref !== 'refs/heads/' + admittedBranch ||
+        candidateRef.object?.sha !== candidateHead) return none;
     const inv = lock.authorityProvenance?.invocation;
     if (inv?.repository !== expectedRepository || !Number.isInteger(inv.commentId)) return none;
     const comment = await getJson('https://api.github.com/repos/' + expectedRepository +
@@ -354,6 +373,18 @@ function runSelfTest() {
   });
   assert(explicitWithNovel.result === 'SELECTED', 'CONTROL_PLANE_DEPENDENCY_STILL_SELECTED');
 
+  const canonicalGen3010 = 'H_EARTH_NATURAL_GRASS_SUPPORT_FRINGE_20261030_001';
+  const canonicalGen3010Branch = 'h-earth/gen3010-natural-grass-support-fringe-20261030';
+  assert(admittedHEarthBranch(canonicalGen3010, 3010) === canonicalGen3010Branch,
+    'CANONICAL_GEN3010_BRANCH_DERIVATION');
+  assert(admittedHEarthBranch(canonicalGen3010, 3010) !==
+    'h-earth/gen3010-foreign-grass-support-fringe-20261030',
+    'FOREIGN_GEN3010_BRANCH_CANNOT_BORROW_LOCK');
+  assert(admittedHEarthBranch('OTHER_PROJECT_NATURAL_GRASS_SUPPORT_FRINGE_20261030_001', 3010)
+    === null, 'FOREIGN_PROJECT_CANNOT_BORROW_LOCK');
+  assert(admittedHEarthBranch(canonicalGen3010, 3011) !== canonicalGen3010Branch,
+    'WRONG_GENERATION_CANNOT_BORROW_BRANCH');
+
   // Canonical provenance and digest checks are part of the admission verifier,
   // not just a caller-supplied candidate-path flag.
   const ownerRequest = {
@@ -439,7 +470,7 @@ function runSelfTest() {
   return {
     schema: 'WORKFLOW_APPLICABILITY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
-    assertions: 29,
+    assertions: 33,
     regression: 'RUN_34773289185_AUDRALIA_THREE_PATH_FALSE_BLOCK',
     historicalRegressionDisposition: historicalAudraliaRegression.result,
     selectedFixture: 'H_EARTH_REGISTRY_EXPLICIT_DEPENDENCY',

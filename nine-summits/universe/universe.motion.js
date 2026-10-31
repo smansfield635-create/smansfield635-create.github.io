@@ -974,7 +974,28 @@ function peaceBuildSafeSkyMask(image){
 function peaceBuildSafeWaterMask(image,base){
  const data=peaceMaterialRaster(image);
  if(!data||!base?.complete)return null;
+ // The source water matte includes opaque rock/haze beneath the owner's
+ // circled far-left midridge. Restrict ONLY that fixed source-art precinct:
+ // no time-dependent RGB sampling may move its terrain through the water layer.
+ // Genuine cyan water survives via the frozen base-image material signal.
+ const originalBase=peaceMaterialRaster(base);
+ if(!originalBase)return null;
+ const smooth=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};
+ for(let y=98;y<159;y++)for(let x=200;x<280;x++){
+  const k=(y*480+x)*4;
+  if(data[k+3]<1)continue;
+  const d=Math.hypot((x-240)/40,(y-125)/28);
+  const ridgeGuard=1-smooth(.78,1.14,d);
+  if(ridgeGuard<=0)continue;
+  const red=originalBase[k],green=originalBase[k+1],blue=originalBase[k+2];
+  const genuineWater=Math.min(smooth(75,120,blue-red),smooth(52,88,green-red));
+  data[k+3]=Math.round(data[k+3]*(1-ridgeGuard*(1-genuineWater)));
+ }
  const alpha=(x,y)=>data[(y*480+x)*4+3];
+ // These source points were FALSE water over owner-marked immobile land/haze.
+ for(const [x,y] of [[217,114],[222,120],[228,127],[245,116],[256,120]]){
+  if(alpha(x,y)>8)throw Error('GRATITUDE_MIDRIDGE_WATER_TERRAIN_GUARD_FAILED:'+x+','+y+':'+alpha(x,y));
+ }
  // Fail closed if sky, protected mountains, foreground or islands receive water.
  for(const [x,y] of [[80,100],[45,180],[268,120],[290,160],[348,133],[437,153],[200,250]]){
   if(alpha(x,y)>8)throw Error('PEACE_V12_WATER_LAND_GUARD_FAILED:'+x+','+y);

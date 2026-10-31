@@ -5703,50 +5703,6 @@
       "scopeHash": "435014bbea9e255294a5354396f4f348d1a5aa3df8d8c2cb0e58e86d20b123a4",
       "state": "ADMITTED_LOCKED"
     },
-    "43e15147630078a22223a719ea15471634c031e693080ecb734f0f779c73814c": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "1a7cde24b3d277651eb4a39ddf65f83c61bfd38f",
-          "lockGeneration": 3018,
-          "lockScope": "CONTROL_PLANE:H_EARTH_GEN3010_NATIVE_PHYSICAL_CENSUS_CORRECTED_RECHECK_20261030",
-          "operationId": "H_EARTH_GEN3010_NATIVE_PHYSICAL_CENSUS_CORRECTED_RECHECK_20261030_001",
-          "procedureLocatorDigest": "571f33a30edf688ab0f7b8a35d7cc7e0ad48dea2fa57b007b728ea749eb230d2",
-          "requestDigest": "ac64d75ed562a4560a438afeeec125cad10dbeb46c88064d6279aa03bfe0eb3f",
-          "scopeHash": "43e15147630078a22223a719ea15471634c031e693080ecb734f0f779c73814c"
-        },
-        "bindingDigest": "1c6e281ad497abb0c56897b1c2e3cff63c75d1bff011a4d0aa31598220074c04",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "4237a854510572a6e9bd36a971008f3154ecd1f1ad0b29aaeca9cf13dfff93a0",
-          "commentId": 6538432464,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6911,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41164669357,
-          "workflowSha": "1a7cde24b3d277651eb4a39ddf65f83c61bfd38f"
-        },
-        "lineageAnchorCommitSha": "9d2b166fcd9b586f8e9e9045ed158467424775e2",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "1a7cde24b3d277651eb4a39ddf65f83c61bfd38f",
-      "lockGeneration": 3018,
-      "lockScope": "CONTROL_PLANE:H_EARTH_GEN3010_NATIVE_PHYSICAL_CENSUS_CORRECTED_RECHECK_20261030",
-      "operationId": "H_EARTH_GEN3010_NATIVE_PHYSICAL_CENSUS_CORRECTED_RECHECK_20261030_001",
-      "procedureLocatorDigest": "571f33a30edf688ab0f7b8a35d7cc7e0ad48dea2fa57b007b728ea749eb230d2",
-      "released": false,
-      "requestDigest": "ac64d75ed562a4560a438afeeec125cad10dbeb46c88064d6279aa03bfe0eb3f",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "43e15147630078a22223a719ea15471634c031e693080ecb734f0f779c73814c",
-      "state": "ADMITTED_LOCKED"
-    },
     "447b22e77152d5d13c8bb9394d7fe9e16c263f66a6b8d1050c7f02e8b6379b15": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -93721,6 +93677,51 @@
       "scopeHash": "d29cce53eb87bd1ed67025aba519c6c8801042b55444fb98e7db9fba85d04de3",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1a7cde24b3d277651eb4a39ddf65f83c61bfd38f",
+          "lockGeneration": 3018,
+          "lockScope": "CONTROL_PLANE:H_EARTH_GEN3010_NATIVE_PHYSICAL_CENSUS_CORRECTED_RECHECK_20261030",
+          "operationId": "H_EARTH_GEN3010_NATIVE_PHYSICAL_CENSUS_CORRECTED_RECHECK_20261030_001",
+          "procedureLocatorDigest": "571f33a30edf688ab0f7b8a35d7cc7e0ad48dea2fa57b007b728ea749eb230d2",
+          "requestDigest": "ac64d75ed562a4560a438afeeec125cad10dbeb46c88064d6279aa03bfe0eb3f",
+          "scopeHash": "43e15147630078a22223a719ea15471634c031e693080ecb734f0f779c73814c"
+        },
+        "bindingDigest": "1c6e281ad497abb0c56897b1c2e3cff63c75d1bff011a4d0aa31598220074c04",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "4237a854510572a6e9bd36a971008f3154ecd1f1ad0b29aaeca9cf13dfff93a0",
+          "commentId": 6538432464,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41164669357,
+          "workflowSha": "1a7cde24b3d277651eb4a39ddf65f83c61bfd38f"
+        },
+        "lineageAnchorCommitSha": "9d2b166fcd9b586f8e9e9045ed158467424775e2",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1a7cde24b3d277651eb4a39ddf65f83c61bfd38f",
+      "lockGeneration": 3018,
+      "lockScope": "CONTROL_PLANE:H_EARTH_GEN3010_NATIVE_PHYSICAL_CENSUS_CORRECTED_RECHECK_20261030",
+      "operationId": "H_EARTH_GEN3010_NATIVE_PHYSICAL_CENSUS_CORRECTED_RECHECK_20261030_001",
+      "procedureLocatorDigest": "571f33a30edf688ab0f7b8a35d7cc7e0ad48dea2fa57b007b728ea749eb230d2",
+      "released": true,
+      "requestDigest": "ac64d75ed562a4560a438afeeec125cad10dbeb46c88064d6279aa03bfe0eb3f",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "43e15147630078a22223a719ea15471634c031e693080ecb734f0f779c73814c",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

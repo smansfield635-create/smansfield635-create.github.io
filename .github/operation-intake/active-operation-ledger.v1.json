@@ -22244,43 +22244,60 @@
     "e927256688f4ed710712eb584ba268c44697da00db206cae73d6d5bd6b4b0e30": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "95508db26f170a3660db6b28adf52f091b285543",
-          "lockGeneration": 3023,
+          "governingHead": "a6abbdeffd30cc1e216ad0fa9edab7aa7ec7b852",
+          "lockGeneration": 3026,
           "lockScope": "NINE_SUMMITS_UNIVERSE:BOOK_FIRST_GRATITUDE_REBIND:20261031",
-          "operationId": "NINE_SUMMITS_BOOK_FIRST_GRATITUDE_REBIND_AND_SKYLINE_MASK_20261031_001",
-          "procedureLocatorDigest": "68920813acb46a960564f4d33f38a0344860ea896cba0849454872387c8fd7ec",
-          "requestDigest": "de3c42ed0481e8a520f81717ef5465c93f534bad8ffeb54d251d13d9273b83c4",
+          "operationId": "NINE_SUMMITS_BOOK_FIRST_GRATITUDE_REBIND_AFTER_MANIFEST_20261031_002",
+          "procedureLocatorDigest": "702db5b66d60a0023b292a93f47621a7081363e69b4ee48ba34399e9eec31e6b",
+          "requestDigest": "dfe6ce7a026990ac085e8272159412c87c5ec8b6cb9ef167440ab61d701f5c6c",
           "scopeHash": "e927256688f4ed710712eb584ba268c44697da00db206cae73d6d5bd6b4b0e30"
         },
-        "bindingDigest": "3c5d1c56946a98f6834c5c11fc04abe31120e29624695aaaa17440b97a8c053a",
+        "bindingDigest": "33aee42e308cee36808effc5ef74f098c95bd6a1a919fc58a84f9cb507f6f00a",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "a51f0c005ab0850c481ac332bac532cd552146f8f7f074abe0ddf6f2cb07baa8",
-          "commentId": 6547071565,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
+          "commentBodySha256": "b11f45b7d2841d0d35a2002e62cce4cd39a54fc51dda3a64b97d7063288e0977",
+          "commentId": 6547636020,
+          "eventAction": "created",
+          "eventName": "issue_comment",
           "issueNumber": 6961,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 41226920736,
-          "workflowSha": "95508db26f170a3660db6b28adf52f091b285543"
+          "workflowRunId": 41231030846,
+          "workflowSha": "a6abbdeffd30cc1e216ad0fa9edab7aa7ec7b852"
         },
-        "lineageAnchorCommitSha": "e14ee259381c662b0f59b74aa27c36590c7a8e6f",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "c0d9e323530cd08950dd3c7c57fb0592a744d598",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "95508db26f170a3660db6b28adf52f091b285543",
-      "lockGeneration": 3023,
+      "governingHead": "a6abbdeffd30cc1e216ad0fa9edab7aa7ec7b852",
+      "lockGeneration": 3026,
       "lockScope": "NINE_SUMMITS_UNIVERSE:BOOK_FIRST_GRATITUDE_REBIND:20261031",
-      "operationId": "NINE_SUMMITS_BOOK_FIRST_GRATITUDE_REBIND_AND_SKYLINE_MASK_20261031_001",
-      "procedureLocatorDigest": "68920813acb46a960564f4d33f38a0344860ea896cba0849454872387c8fd7ec",
+      "operationId": "NINE_SUMMITS_BOOK_FIRST_GRATITUDE_REBIND_AFTER_MANIFEST_20261031_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "95508db26f170a3660db6b28adf52f091b285543",
+        "lockGeneration": 3023,
+        "lockScope": "NINE_SUMMITS_UNIVERSE:BOOK_FIRST_GRATITUDE_REBIND:20261031",
+        "operationId": "NINE_SUMMITS_BOOK_FIRST_GRATITUDE_REBIND_AND_SKYLINE_MASK_20261031_001",
+        "preservedEvidenceRefs": [
+          "issue:6961#issuecomment-6547076482",
+          "pr:7055",
+          "pr:7060",
+          "run:41230423509",
+          "issue:6961#issuecomment-6547589030"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "NINE_SUMMITS_GEN3023_TO_MANIFEST_PARITY_SUCCESSOR_20261031_001"
+      },
+      "procedureLocatorDigest": "702db5b66d60a0023b292a93f47621a7081363e69b4ee48ba34399e9eec31e6b",
       "released": false,
-      "requestDigest": "de3c42ed0481e8a520f81717ef5465c93f534bad8ffeb54d251d13d9273b83c4",
+      "requestDigest": "dfe6ce7a026990ac085e8272159412c87c5ec8b6cb9ef167440ab61d701f5c6c",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "e927256688f4ed710712eb584ba268c44697da00db206cae73d6d5bd6b4b0e30",
       "state": "ADMITTED_LOCKED"
@@ -24051,7 +24068,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3025,
+  "lockGeneration": 3026,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -94034,6 +94051,69 @@
       "scopeHash": "8d2fd1f87c40b42a9a93ef69e154639dea575f2d9f1ed45f65d9026aa13c7f59",
       "state": "TERMINAL",
       "terminalDisposition": "WITHDRAWN"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "95508db26f170a3660db6b28adf52f091b285543",
+          "lockGeneration": 3023,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:BOOK_FIRST_GRATITUDE_REBIND:20261031",
+          "operationId": "NINE_SUMMITS_BOOK_FIRST_GRATITUDE_REBIND_AND_SKYLINE_MASK_20261031_001",
+          "procedureLocatorDigest": "68920813acb46a960564f4d33f38a0344860ea896cba0849454872387c8fd7ec",
+          "requestDigest": "de3c42ed0481e8a520f81717ef5465c93f534bad8ffeb54d251d13d9273b83c4",
+          "scopeHash": "e927256688f4ed710712eb584ba268c44697da00db206cae73d6d5bd6b4b0e30"
+        },
+        "bindingDigest": "3c5d1c56946a98f6834c5c11fc04abe31120e29624695aaaa17440b97a8c053a",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "a51f0c005ab0850c481ac332bac532cd552146f8f7f074abe0ddf6f2cb07baa8",
+          "commentId": 6547071565,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41226920736,
+          "workflowSha": "95508db26f170a3660db6b28adf52f091b285543"
+        },
+        "lineageAnchorCommitSha": "e14ee259381c662b0f59b74aa27c36590c7a8e6f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "95508db26f170a3660db6b28adf52f091b285543",
+      "lockGeneration": 3023,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:BOOK_FIRST_GRATITUDE_REBIND:20261031",
+      "operationId": "NINE_SUMMITS_BOOK_FIRST_GRATITUDE_REBIND_AND_SKYLINE_MASK_20261031_001",
+      "procedureLocatorDigest": "68920813acb46a960564f4d33f38a0344860ea896cba0849454872387c8fd7ec",
+      "released": true,
+      "requestDigest": "de3c42ed0481e8a520f81717ef5465c93f534bad8ffeb54d251d13d9273b83c4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "e927256688f4ed710712eb584ba268c44697da00db206cae73d6d5bd6b4b0e30",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:6961#issuecomment-6547076482",
+          "pr:7055",
+          "pr:7060",
+          "run:41230423509",
+          "issue:6961#issuecomment-6547589030"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "a6abbdeffd30cc1e216ad0fa9edab7aa7ec7b852",
+        "successorLockGeneration": 3026,
+        "successorLockScope": "NINE_SUMMITS_UNIVERSE:BOOK_FIRST_GRATITUDE_REBIND:20261031",
+        "successorOperationId": "NINE_SUMMITS_BOOK_FIRST_GRATITUDE_REBIND_AFTER_MANIFEST_20261031_002",
+        "transitionId": "NINE_SUMMITS_GEN3023_TO_MANIFEST_PARITY_SUCCESSOR_20261031_001"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

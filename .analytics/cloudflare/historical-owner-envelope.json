@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-31T05:23:55Z",
+  "generatedAt": "2026-10-31T06:30:38Z",
   "window": {
-    "start": "2026-08-02T05:23:55Z",
-    "end": "2026-10-31T05:23:55Z"
+    "start": "2026-08-02T06:30:38Z",
+    "end": "2026-10-31T06:30:38Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,26 +17,26 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4286,
+    "pageLoads": 4266,
     "visits": 1262,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4286,
+        "pageLoads": 4266,
         "visits": 1262
       }
     },
     "byPath": {
       "/laws/research/methods-and-models/": {
-        "pageLoads": 110,
-        "visits": 0
-      },
-      "/laws/test/reverse-audit/": {
-        "pageLoads": 60,
+        "pageLoads": 100,
         "visits": 0
       },
       "/laws/": {
         "pageLoads": 180,
         "visits": 50
+      },
+      "/laws/test/reverse-audit/": {
+        "pageLoads": 60,
+        "visits": 0
       },
       "/": {
         "pageLoads": 972,
@@ -44,10 +44,6 @@
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/laws/categories/structure/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -174,13 +170,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -317,7 +313,7 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3024,
+        "pageLoads": 3004,
         "visits": 0
       },
       "www.google.com": {

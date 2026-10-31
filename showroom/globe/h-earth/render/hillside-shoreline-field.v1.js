@@ -11,11 +11,23 @@ export function hillsideSandCoverage({x,z,shaderSlope,rawSandCoverage}){
  return rawSandCoverage*(1-hillsideWeight(x,z)*smooth(.012,.065,shaderSlope));
 }
 export function hillsideDry(x,y,z){return hillsideWeight(x,z)*smooth(18,42,y);}
+/** Gen3010: additive dry-ground support proposal only; roots still require
+ * the offline native-terrain/water/material admission gate and census.
+ * The existing coastal, sand and GLSL hillside laws remain untouched.
+ */
+export function hillsideFringeWeight(x,z){
+ if(!Number.isFinite(x)||!Number.isFinite(z))throw Error('HILLSIDE_FRINGE_POINT_INVALID');
+ const lateral=smooth(140,158,x)*(1-smooth(240,258,x));
+ if(lateral<=0)return 0;
+ const origin=coastalDivide(x)-48;
+ const warp=2.5*Math.sin(.073*x+.051*z)+1.5*Math.sin(.121*x-.039*z);
+ return .72*lateral*smooth(origin-14+warp,origin+4+warp,z);
+}
 export function hillsideDensity({x,y,z,shaderSlope,contactDistance,sandCoverage}){
  if(sandCoverage>.12||contactDistance<=0)return 0;
  const bank=smooth(.012,.065,shaderSlope),shore=smooth(2,6+10*(1-bank),contactDistance);
  const elevation=24-16*smooth(20,38,y)-6.5*smooth(38,50,y);
- return hillsideWeight(x,z)*shore*(1-smooth(0,.12,sandCoverage))*elevation*(1-.7*smooth(.18,.46,shaderSlope));
+ return Math.max(hillsideWeight(x,z),hillsideFringeWeight(x,z))*shore*(1-smooth(0,.12,sandCoverage))*elevation*(1-.7*smooth(.18,.46,shaderSlope));
 }
 export const HILLSIDE_SHORELINE_GLSL=`
 float hillsideDivide(float x){

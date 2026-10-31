@@ -1585,6 +1585,7 @@ jobs:
           test "$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 91aa866e3a6b216c6d260e855f4a7e7cd9b7930b
           test "$(git -C product hash-object showroom/globe/h-earth/render/habitat-material-presentation.v1.js)" = 3fc89b5fa6b41455445efc5c3a08346508f119aa
           git -C tooling fetch --no-tags --depth=1 origin 38b3e14972c8ac96554b72cb4958371579e4dbfe
+          git -C tooling fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
           node --input-type=module <<'NODE'
           import assert from 'node:assert/strict';
           import {execFileSync} from 'node:child_process';
@@ -1662,6 +1663,7 @@ jobs:
           test "$(git -C candidate hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 91aa866e3a6b216c6d260e855f4a7e7cd9b7930b
           test "$(git -C baseline hash-object showroom/globe/h-earth/render/habitat-material-presentation.v1.js)" = 3fc89b5fa6b41455445efc5c3a08346508f119aa
           test "$(git -C candidate hash-object showroom/globe/h-earth/render/habitat-material-presentation.v1.js)" = 3fc89b5fa6b41455445efc5c3a08346508f119aa
+          git -C tooling fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
           node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
           node --check tooling/tools/h-earth-groundcover-factor-overlay.mjs
           (cd tooling && node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs)

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-10-31T07:25:19Z",
+  "generatedAt": "2026-10-31T08:24:37Z",
   "window": {
-    "start": "2026-10-01T07:25:19Z",
-    "end": "2026-10-31T07:25:19Z"
+    "start": "2026-10-01T08:24:37Z",
+    "end": "2026-10-31T08:24:37Z"
   },
   "dimensions": {
     "requestPath": [
@@ -113,6 +113,11 @@
         "visits": 2
       },
       {
+        "value": "/site-guide/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
         "value": "/showroom/globe/",
         "pageLoads": 2,
         "visits": 2
@@ -133,22 +138,17 @@
         "visits": 2
       },
       {
-        "value": "/laws/scientific-law/battery-heldout-study/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/site-guide/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
         "value": "/explore/frontier/vision/",
         "pageLoads": 2,
         "visits": 2
       },
       {
         "value": "/governance-bridge/",
+        "pageLoads": 2,
+        "visits": 2
+      },
+      {
+        "value": "/laws/scientific-law/battery-heldout-study/",
         "pageLoads": 2,
         "visits": 2
       },

@@ -68,7 +68,10 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$EVENT_NAME" == "pull_request" ]]; then
-            git diff --name-only "$BASE_SHA" "$HEAD_SHA" > /tmp/all-changed-paths.txt
+            # Exclude commits made only on main: the PR owns merge-base..HEAD, not BASE..HEAD.
+            merge_base="$(git merge-base "$BASE_SHA" "$HEAD_SHA")"
+            test -n "$merge_base"
+            git diff --name-only "$merge_base" "$HEAD_SHA" > /tmp/all-changed-paths.txt
           elif [[ -n "${BEFORE_SHA:-}" && ! "$BEFORE_SHA" =~ ^0+$ ]]; then
             git diff --name-only "$BEFORE_SHA" "$CURRENT_SHA" > /tmp/all-changed-paths.txt
           else

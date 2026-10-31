@@ -290,6 +290,40 @@ main{position:relative;max-width:none;min-height:100svh}
 .scene[data-stage=approach] .peace-world-hud,.scene[data-stage=return] .peace-world-hud{opacity:0;visibility:hidden;pointer-events:none}
 @media(max-width:600px){.peace-world-hud{left:22px;right:20px;bottom:34px}.peace-world-hud h2{font-size:36px}.peace-world-hud p:not(.peace-label){font-size:13px;line-height:1.47}.peace-label{font-size:9px}.peace-horizon-mark{top:62px;right:22px;font-size:8px}.peace-actions{gap:8px}.peace-actions button{font-size:12px;padding:9px 15px}}
 @media(prefers-reduced-motion:reduce){.peace-world{transition:none}}
+/* Peace V12: presentation-only teaching legibility; original cinematic source and copy remain untouched. */
+#peace-encounter .peace-world-hud{
+  background:linear-gradient(110deg,rgba(4,22,32,.96),rgba(7,29,42,.91));
+  border:1px solid rgba(218,252,243,.19);
+  border-radius:18px;
+  padding:clamp(18px,2.4vw,28px);
+  -webkit-backdrop-filter:blur(12px);
+  backdrop-filter:blur(12px);
+  box-shadow:0 18px 50px rgba(0,9,17,.48);
+  text-shadow:0 1px 5px rgba(0,7,13,.75);
+}
+#peace-encounter .peace-world-hud p:not(.peace-label){color:#eefcf7}
+#peace-encounter .peace-world-hud .peace-reflection{
+  background:rgba(174,239,225,.08);
+  border-left:3px solid #adebd9;
+  border-radius:0 8px 8px 0;
+  padding:9px 12px 9px 14px;
+  color:#f7fff9;
+  font-weight:500;
+}
+#peace-encounter .peace-world-hud .peace-label{color:#d5fff2}
+#peace-encounter .peace-actions a{color:#f5fffa;text-decoration-thickness:1px;text-underline-offset:4px}
+@media(max-width:600px){
+  #peace-encounter .peace-world-hud{left:16px;right:16px;bottom:20px;padding:17px 18px 18px;border-radius:16px}
+  #peace-encounter .peace-world-hud h2{font-size:clamp(30px,8vw,36px);line-height:1.08;margin-bottom:10px}
+  #peace-encounter .peace-world-hud p:not(.peace-label){font-size:14px;line-height:1.5;margin-bottom:10px}
+  #peace-encounter .peace-world-hud .peace-label{font-size:10px;margin-bottom:8px}
+  #peace-encounter .peace-actions{gap:10px;margin-top:12px}
+  #peace-encounter .peace-actions a{font-size:13px}
+}
+@media(max-width:350px){
+  #peace-encounter .peace-world-hud{left:12px;right:12px;bottom:14px;padding:14px 15px 15px}
+  #peace-encounter .peace-world-hud h2{font-size:29px}
+}
 
 /* World 06 — distinctive dual-biome saddle, no hard hemispheric split. */
 .balance-world{position:absolute;inset:0;z-index:7;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .95s ease,visibility .95s;background:#131b34}

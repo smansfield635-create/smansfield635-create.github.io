@@ -21110,50 +21110,6 @@
       "scopeHash": "dbbeba2060708db9871252b21583e1c29df1ec4ab2d56d65ae10234def97dbb5",
       "state": "ADMITTED_LOCKED"
     },
-    "dc63354527b9966dddd82a90261dedf8dd4b9515d540ba9ce6dc9294129d4952": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "e66c7679fd727f281f003d894a97458e72420372",
-          "lockGeneration": 3033,
-          "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_MIDRIDGE_WATER_MASK:20261031",
-          "operationId": "NINE_SUMMITS_GRATITUDE_MIDRIDGE_WATER_MASK_TERRAIN_PROTECTION_20261031_001",
-          "procedureLocatorDigest": "3c426746b6541f36992014a585a33f2bf0e962b235430e91db867954467613ad",
-          "requestDigest": "99f8365de19b46b42baf6896e69f9b6edaab619df9a07c933a0ec8f2ca87ffe7",
-          "scopeHash": "dc63354527b9966dddd82a90261dedf8dd4b9515d540ba9ce6dc9294129d4952"
-        },
-        "bindingDigest": "01f7c606cc05c01b08928088980b969dd05954743d61ab9a7ff5e7c65cf2ae7d",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "fb57b5ee7166bb482652878bd2a9e5e666db34a90771fd83ef49315b850174ff",
-          "commentId": 6550290574,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6961,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41250594259,
-          "workflowSha": "e66c7679fd727f281f003d894a97458e72420372"
-        },
-        "lineageAnchorCommitSha": "d47ed5a834233a81c556ab20794cffd6a6875a4d",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "e66c7679fd727f281f003d894a97458e72420372",
-      "lockGeneration": 3033,
-      "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_MIDRIDGE_WATER_MASK:20261031",
-      "operationId": "NINE_SUMMITS_GRATITUDE_MIDRIDGE_WATER_MASK_TERRAIN_PROTECTION_20261031_001",
-      "procedureLocatorDigest": "3c426746b6541f36992014a585a33f2bf0e962b235430e91db867954467613ad",
-      "released": false,
-      "requestDigest": "99f8365de19b46b42baf6896e69f9b6edaab619df9a07c933a0ec8f2ca87ffe7",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "dc63354527b9966dddd82a90261dedf8dd4b9515d540ba9ce6dc9294129d4952",
-      "state": "ADMITTED_LOCKED"
-    },
     "dcb8807096524221b4c75b2299492770d174ab0ff0a4b784d9a12ee75e6388fa": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -94427,6 +94383,51 @@
       "requestDigest": "d96fe109022fd0be2414b1541790b1ad76ea045e56600213cedc3f2a8542878e",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "db0aa5b715e46e0412b76b428d73bfd482248fc8b9f0f5b93def83119eae60eb",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e66c7679fd727f281f003d894a97458e72420372",
+          "lockGeneration": 3033,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_MIDRIDGE_WATER_MASK:20261031",
+          "operationId": "NINE_SUMMITS_GRATITUDE_MIDRIDGE_WATER_MASK_TERRAIN_PROTECTION_20261031_001",
+          "procedureLocatorDigest": "3c426746b6541f36992014a585a33f2bf0e962b235430e91db867954467613ad",
+          "requestDigest": "99f8365de19b46b42baf6896e69f9b6edaab619df9a07c933a0ec8f2ca87ffe7",
+          "scopeHash": "dc63354527b9966dddd82a90261dedf8dd4b9515d540ba9ce6dc9294129d4952"
+        },
+        "bindingDigest": "01f7c606cc05c01b08928088980b969dd05954743d61ab9a7ff5e7c65cf2ae7d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "fb57b5ee7166bb482652878bd2a9e5e666db34a90771fd83ef49315b850174ff",
+          "commentId": 6550290574,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41250594259,
+          "workflowSha": "e66c7679fd727f281f003d894a97458e72420372"
+        },
+        "lineageAnchorCommitSha": "d47ed5a834233a81c556ab20794cffd6a6875a4d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e66c7679fd727f281f003d894a97458e72420372",
+      "lockGeneration": 3033,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_MIDRIDGE_WATER_MASK:20261031",
+      "operationId": "NINE_SUMMITS_GRATITUDE_MIDRIDGE_WATER_MASK_TERRAIN_PROTECTION_20261031_001",
+      "procedureLocatorDigest": "3c426746b6541f36992014a585a33f2bf0e962b235430e91db867954467613ad",
+      "released": true,
+      "requestDigest": "99f8365de19b46b42baf6896e69f9b6edaab619df9a07c933a0ec8f2ca87ffe7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "dc63354527b9966dddd82a90261dedf8dd4b9515d540ba9ce6dc9294129d4952",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

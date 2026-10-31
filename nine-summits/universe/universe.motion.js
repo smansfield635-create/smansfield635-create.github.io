@@ -194,7 +194,25 @@ function startCanopyFlight(){panel.hidden=true;close=true;flight=0;flightTarget=
 function startBalanceFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!balanceGL){try{setupBalanceWorld();}catch(error){console.error('Self-Control world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Twin Equilibrium is unavailable. Read the complete Balance teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Self-Control — Balance';status.textContent='Traveling toward The Twin Equilibrium.';updateMotionControl();requestFrame();}
 function startEmberFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!emberGL){try{setupEmberWorld();}catch(error){console.error('Accountability world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Ember Canyons are unavailable. Read the complete Character teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Accountability — Character';status.textContent='Traveling toward the Ember Canyons.';updateMotionControl();requestFrame();}
 function startStabilityFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!stabilityGL){try{setupStabilityWorld();}catch(error){console.error('Dependability world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Great Basalt Terraces are unavailable. Read the complete Stability teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Dependability — Stability';status.textContent='Traveling toward the Great Basalt Terraces.';updateMotionControl();requestFrame();}
-function startJoyFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Gratitude — Joy';status.textContent='Traveling toward the Dawn Archipelago.';updateMotionControl();requestFrame();}
+function startJoyFlight(){
+ panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';
+ // Gen3020: no renderer must never produce an empty cinematic encounter.
+ if(!joyGL||!joyProgram||!joySkyProgram){
+   try{setupJoyWorld();}
+   catch(error){
+     console.error('Gratitude world:',error);
+     flightTarget=0;flightStage='arrival';close=false;
+     panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;
+     status.textContent='The Dawn Archipelago is unavailable. Read the complete Joy teaching below.';
+     panel.focus({preventScroll:true});return;
+   }
+ }
+ scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');
+ scene.scrollIntoView({behavior:'instant',block:'start'});
+ $('#scene-note').textContent='Approaching Gratitude — Joy';
+ status.textContent='Traveling toward the Dawn Archipelago.';
+ updateMotionControl();requestFrame();
+}
 
 document.querySelectorAll('[data-summit]').forEach(el=>el.addEventListener('click',()=>choose(Number(el.dataset.summit))));
 returnButton.addEventListener('click',returnToAll);
@@ -227,88 +245,177 @@ function buildGeometry(K){
    One-world proof: no external photos, no new public dependencies. */
 let joyGL=null,joyProgram=null,joySkyProgram=null,joyMesh=null,joyOcean=null,joySkyBuffer=null,joyLocation={},joySkyLocation={};
 const joyWorldCanvas=document.querySelector('#joy-world-canvas');
-const joyVertexSource=`precision mediump float;attribute vec3 aPosition;attribute vec3 aNormal;uniform vec2 uViewport;uniform float uTime;varying vec3 vWorld,vNormal;varying float vDepth;
+const joyVertexSource=`precision mediump float;
+attribute vec3 aPosition,aNormal;
+uniform vec2 uViewport;
+uniform float uTime,uKind;
+varying vec3 vWorld,vNormal;
+varying float vDepth;
 void main(){
  vec3 p=aPosition;
- if(p.y<.01){p.y+=.028*sin(p.x*1.1+uTime*.72)+.018*sin(p.z*.77+uTime*.48);}
+ // Gen3020: ONLY the water surface is animated. Island/shore vertices are immutable.
+ if(uKind<.5){
+   p.y=.018*sin(p.x*1.12+uTime*.66)*sin(p.z*.45-uTime*.16)
+      +.016*sin(p.z*.88-uTime*.43)
+      +.009*sin(p.x*.46+p.z*.63+uTime*.31);
+ }
  vec3 cam=p-vec3(0.,1.58,-7.);
  float d=max(.5,cam.z);
  float f=1.83;
  gl_Position=vec4(cam.x*f/uViewport.x,(cam.y+cam.z*.058)*f,cam.z*.996-.22,d);
  vWorld=p;vNormal=aNormal;vDepth=d;
 }`;
-const joyFragmentSource=`precision mediump float;uniform float uTime,uKind;varying vec3 vWorld,vNormal;varying float vDepth;
-float rand(vec2 q){return fract(sin(dot(q,vec2(127.1,311.7)))*43758.5453123);}
-float wave(vec2 p){return sin(p.x*1.9+uTime*.67)*.5+sin(p.y*1.5-uTime*.43)*.32+sin((p.x+p.y)*2.9+uTime*.23)*.18;}
+const joyFragmentSource=`precision mediump float;
+uniform float uTime,uKind;
+varying vec3 vWorld,vNormal;
+varying float vDepth;
+float jhash(vec2 q){return fract(sin(dot(q,vec2(127.1,311.7)))*43758.5453);}
+float jnoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(jhash(i),jhash(i+vec2(1.,0.)),f.x),
+            mix(jhash(i+vec2(0.,1.)),jhash(i+vec2(1.,1.)),f.x),f.y);}
 void main(){
- vec3 sun=normalize(vec3(-.33,.62,-.73));
+ // Fixed solar direction means no counterfeit time-varying land brightness.
+ vec3 sun=normalize(vec3(-.46,.78,-.42));
  vec3 n=normalize(vNormal);
  vec3 c;
  if(uKind<.5){
-   float w=wave(vWorld.xz);
-   float sunset=pow(max(0.,dot(normalize(vec3(vWorld.x*.08,.2,vWorld.z*.08+.38)),sun)),5.);
-   float streak=pow(max(0.,sin(vWorld.x*.75-vWorld.z*.3+uTime*.23)*.5+.5),16.);
-   c=mix(vec3(.018,.18,.25),vec3(.16,.43,.46),clamp(.5+.24*w,0.,1.));
-   c+=vec3(.92,.53,.19)*pow(max(0.,.6+sunset),2.)*.46;
-   c+=vec3(1.,.76,.35)*(streak*.10 + .16*pow(max(0.,sin(vWorld.z*.65+uTime*.25)),22.));
-   c+=vec3(.13,.21,.18)*clamp((vWorld.z-4.)/48.,0.,1.);
+   // Water receives all wave/time terms. Islands never evaluate uTime.
+   float w1=sin(vWorld.x*1.12+uTime*.66)*sin(vWorld.z*.45-uTime*.16);
+   float w2=sin(vWorld.z*.88-uTime*.43);
+   float w3=sin(vWorld.x*.46+vWorld.z*.63+uTime*.31);
+   float dx=.020*sin(vWorld.z*.45-uTime*.16)*cos(vWorld.x*1.12+uTime*.66)
+            +.0041*cos(vWorld.x*.46+vWorld.z*.63+uTime*.31);
+   float dz=.0081*cos(vWorld.z*.45-uTime*.16)*sin(vWorld.x*1.12+uTime*.66)
+            +.0141*cos(vWorld.z*.88-uTime*.43)
+            +.0057*cos(vWorld.x*.46+vWorld.z*.63+uTime*.31);
+   vec3 wn=normalize(vec3(-dx,1.,-dz));
+   float laneWidth=1.0+max(vWorld.z,0.)*.145;
+   float lane=exp(-pow((vWorld.x+1.)/laneWidth,2.));
+   float glitter=pow(clamp(.5+.5*sin(vWorld.x*2.5+vWorld.z*.42+uTime*.77)
+              *sin(vWorld.z*2.2-vWorld.x*.35-uTime*.53),0.,1.),9.);
+   float glint=lane*glitter;
+   float nearCoast=min(abs(length((vWorld.xz-vec2(-9.1,1.9))/vec2(7.,5.))-1.),
+                      abs(length((vWorld.xz-vec2(8.7,3.1))/vec2(7.3,5.8))-1.));
+   nearCoast=min(nearCoast,abs(length((vWorld.xz-vec2(-2.3,11.9))/vec2(4.1,3.7))-1.));
+   nearCoast=min(nearCoast,abs(length((vWorld.xz-vec2(4.6,16.8))/vec2(3.1,3.6))-1.));
+   float foam=(1.-smoothstep(.02,.115,nearCoast))*(.4+.6*jnoise(vWorld.xz*1.55+vec2(uTime*.17,0.)));
+   float dawn=clamp((vWorld.z+2.)/68.,0.,1.);
+   c=mix(vec3(.012,.14,.21),vec3(.085,.30,.32),dawn*.67);
+   c+=vec3(.028,.079,.076)*(.50+.50*(.6*w1+.3*w2+.1*w3));
+   // Fine solar glints on water only, no full-screen pulsing.
+   c+=vec3(.92,.66,.38)*glint*.43;
+   c+=vec3(.72,.88,.73)*foam*.22;
+   float ripples=pow(clamp(.5+.5*(.54*w1+.3*w2+.16*w3),0.,1.),7.);
+   c+=vec3(.29,.38,.30)*ripples*.22;
  }else{
-   float slope=max(0.,dot(n,sun));
-   float level=vWorld.y;
-   vec3 sand=vec3(.72,.49,.27),rock=vec3(.24,.25,.27),grass=vec3(.27,.32,.21);
-   float fractures=rand(floor(vWorld.xz*3.4))*.19;
-   c=mix(sand,rock,smoothstep(.38,1.5,level));
-   c=mix(c,grass,smoothstep(1.15,2.3,level)*.74);
-   c*=.54+.76*slope+fractures;
-   c+=vec3(.46,.21,.075)*pow(max(0.,dot(n,sun)),12.)*.22;
+   float slope=clamp(n.y,0.,1.);
+   float light=.31+.78*max(0.,dot(n,sun));
+   vec2 uv=vWorld.xz;
+   float grain=jnoise(uv*.62);
+   float large=jnoise(uv*.115+vec2(3.,7.));
+   float fine=jnoise(uv*2.5+vec2(11.,4.));
+   float height=vWorld.y;
+   float beach=1.-smoothstep(.08,.45,height+grain*.14);
+   float cliff=1.-smoothstep(.22,.72,slope);
+   vec3 paleSand=mix(vec3(.54,.35,.17),vec3(.79,.56,.32),large);
+   vec3 weatheredStone=mix(vec3(.17,.22,.24),vec3(.48,.40,.29),grain);
+   vec3 moss=mix(vec3(.17,.24,.18),vec3(.42,.42,.21),large);
+   c=mix(paleSand,weatheredStone,smoothstep(.28,1.25,height)*.77+cliff*.28);
+   c=mix(c,moss,smoothstep(.32,.90,height)*(.39+.49*large)*(1.-cliff*.67));
+   c=mix(c,paleSand,clamp(beach*.78,0.,1.));
+   c*=light*(.88+.22*fine);
+   c+=vec3(.30,.19,.08)*pow(max(0.,dot(n,sun)),12.)*.12;
  }
- float fog=clamp((vDepth-15.)/56.,0.,.73);
- c=mix(c,vec3(.88,.52,.45),fog*.5);
- c=pow(max(c,vec3(.002)),vec3(.87));
- gl_FragColor=vec4(c,1.);
+ float fog=clamp((vDepth-17.)/85.,0.,.65);
+ c=mix(c,vec3(.65,.43,.35),fog*.38);
+ gl_FragColor=vec4(pow(max(c,vec3(.002)),vec3(.91)),1.);
 }`;
 const joySkyVertex=`precision mediump float;attribute vec2 aXY;varying vec2 vUv;void main(){vUv=aXY*.5+.5;gl_Position=vec4(aXY,0.,1.);}`;
-const joySkyFragment=`precision mediump float;uniform float uTime,uAspect;varying vec2 vUv;
-float h(vec2 q){return fract(sin(dot(q,vec2(127.1,311.7)))*43758.54);}
-float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+const joySkyFragment=`precision mediump float;
+uniform float uTime,uAspect;
+varying vec2 vUv;
+float jhash(vec2 q){return fract(sin(dot(q,vec2(127.1,311.7)))*43758.5453);}
+float jnoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+ return mix(mix(jhash(i),jhash(i+vec2(1.,0.)),f.x),
+            mix(jhash(i+vec2(0.,1.)),jhash(i+vec2(1.,1.)),f.x),f.y);}
+float jbank(vec2 p){return jnoise(p)*.63+jnoise(p*2.16+vec2(5.,9.))*.28+jnoise(p*4.12-vec2(4.,3.))*.09;}
 void main(){
- vec2 p=vUv;float elev=clamp(p.y,0.,1.);
- vec3 sky=mix(vec3(.98,.55,.36),vec3(.23,.28,.53),smoothstep(.18,.89,elev));
- sky=mix(vec3(.42,.19,.35),sky,smoothstep(0.,.29,elev));
- float dusk=smoothstep(.28,.025,abs(p.y-.50));sky+=vec3(.30,.13,.07)*dusk;
- vec2 sun=(p-vec2(.53,.68))*vec2(uAspect,1.);
+ vec2 p=vUv;
+ float elev=clamp(p.y,0.,1.);
+ vec3 sky=mix(vec3(.98,.56,.32),vec3(.19,.26,.49),smoothstep(.20,.96,elev));
+ sky=mix(vec3(.39,.19,.31),sky,smoothstep(.02,.27,elev));
+ sky+=vec3(.22,.092,.044)*(1.-smoothstep(.08,.27,abs(elev-.48)));
+ vec2 sun=(p-vec2(.51,.655))*vec2(uAspect,1.);
  float sd=length(sun);
- sky+=vec3(1.,.55,.23)*(.55*exp(-sd*6.)+.28*exp(-sd*28.));
- sky=mix(sky,vec3(1.,.92,.68),1.-smoothstep(.028,.044,sd));
- float cloud=n(vec2(p.x*uAspect*4.2,p.y*7.3)+vec2(uTime*.012,0.));
- cloud=.60*cloud+.30*n(p*vec2(uAspect*13.,16.)+vec2(3.,uTime*.009));
- float stripe=smoothstep(.30,.64,cloud)*smoothstep(.24,.35,p.y)*(1.-smoothstep(.71,.85,p.y));
- sky=mix(sky,mix(vec3(.31,.31,.52),vec3(1.,.79,.67),p.y),stripe*.52);
- gl_FragColor=vec4(pow(sky,vec3(.93)),1.);
+ sky+=vec3(.92,.54,.28)*(.53*exp(-sd*5.4)+.25*exp(-sd*19.));
+ sky=mix(sky,vec3(1.,.90,.69),1.-smoothstep(.024,.041,sd));
+ // Three depth-dependent, independently moving carriers. All clouds stay in sky.
+ float cloudRegion=smoothstep(.24,.37,p.y)*(1.-smoothstep(.77,.94,p.y));
+ vec2 nearP=vec2(p.x*uAspect*5.7+uTime*.037,p.y*9.6-uTime*.007);
+ vec2 midP =vec2(p.x*uAspect*11.2-uTime*.024,p.y*15.8+uTime*.004);
+ vec2 farP =vec2(p.x*uAspect*18.4+uTime*.013,p.y*23.0-uTime*.003);
+ float nearBank=smoothstep(.49,.68,jbank(nearP))*cloudRegion;
+ float midBank=smoothstep(.51,.71,jbank(midP))*cloudRegion*.72;
+ float farBank=smoothstep(.52,.73,jbank(farP))*cloudRegion*.42;
+ sky=mix(sky,mix(vec3(.38,.34,.49),vec3(1.,.75,.56),elev),nearBank*.59);
+ sky=mix(sky,mix(vec3(.45,.39,.54),vec3(1.,.83,.66),elev),midBank*.45);
+ sky=mix(sky,mix(vec3(.37,.37,.55),vec3(.91,.76,.65),elev),farBank*.25);
+ gl_FragColor=vec4(pow(max(sky,vec3(.002)),vec3(.94)),1.);
 }`;
 function joyCompile(type,source){const sh=joyGL.createShader(type);joyGL.shaderSource(sh,source);joyGL.compileShader(sh);if(!joyGL.getShaderParameter(sh,joyGL.COMPILE_STATUS))throw Error('Joy shader: '+joyGL.getShaderInfoLog(sh));return sh;}
 function joyLink(vs,fs){const pr=joyGL.createProgram(),a=joyCompile(joyGL.VERTEX_SHADER,vs),b=joyCompile(joyGL.FRAGMENT_SHADER,fs);joyGL.attachShader(pr,a);joyGL.attachShader(pr,b);joyGL.linkProgram(pr);joyGL.deleteShader(a);joyGL.deleteShader(b);if(!joyGL.getProgramParameter(pr,joyGL.LINK_STATUS))throw Error('Joy link: '+joyGL.getProgramInfoLog(pr));return pr;}
 function joyBuildIslands(){
- const verts=[],normals=[];
- const islands=[[-7.8,1.,6.8,4.9,1.2],[8.2,3.5,7.4,6.,1.35],[-2.7,16.5,4.4,3.9,1.25],[6.1,21.,5.8,5.6,1.9],[-10.,27.,5.,4.5,1.7],[12.,33.,6.,6.,2.0],[-13.,38.,6.,5.5,1.45]];
- for(const [cx,cz,rx,rz,height] of islands){
-  const steps=40,rings=8;
-  let nodes=[];
+ // One distinct archipelago system: fixed shores, asymmetric silhouettes and smooth relief.
+ // Triangles/normals are constructed only at setup; per-frame geometry is immutable.
+ const verts=[];
+ const islands=[
+  [-9.1,1.9,7.0,5.0,1.95],[8.7,3.1,7.3,5.8,1.85],
+  [-2.3,11.9,4.1,3.7,1.39],[4.6,16.8,3.1,3.6,1.45],
+  [-7.4,21.0,5.6,4.8,2.15],[9.5,25.7,5.9,5.2,2.65],
+  [-1.7,29.5,3.7,3.9,1.20],[-11.9,33.2,5.1,4.6,1.80],
+  [12.8,38.0,6.7,5.1,1.98],[1.7,43.0,5.3,5.2,1.82]
+ ];
+ for(let islandIndex=0;islandIndex<islands.length;islandIndex++){
+  const [cx,cz,rx,rz,height]=islands[islandIndex];
+  const steps=64,rings=17;
+  const nodes=[];
+  const normalSums=[];
   for(let j=0;j<=rings;j++){
-   const t=j/rings,arr=[];
+   const t=j/rings;
    for(let i=0;i<steps;i++){
     const ang=2*Math.PI*i/steps;
-    const wrinkle=1+.13*Math.sin(ang*5+cx)+.085*Math.cos(ang*9+cz);
-    const radial=t*wrinkle;
-    const x=cx+Math.cos(ang)*rx*radial,z=cz+Math.sin(ang)*rz*radial;
-    const ridge=.63+.23*Math.sin(2.3*x+.37*z)+.12*Math.sin(z*3.12-x*.61)+.08*Math.cos(x*4.7+z*2.0);
-    const y=.012+height*Math.pow(Math.max(0.,1-Math.pow(t,3.1)),.79)*Math.max(.36,ridge);
-    arr.push([x,y,z]);
+    const seam=1+.11*Math.sin(ang*3.4+islandIndex*.9)
+                +.074*Math.cos(ang*7.1+cz*.16)
+                +.032*Math.sin(ang*11.8+cx*.3);
+    const radial=t*seam;
+    const x=cx+Math.cos(ang)*rx*radial;
+    const z=cz+Math.sin(ang)*rz*radial;
+    const large=.79+.22*Math.sin(x*.37+z*.23+islandIndex)
+                 +.075*Math.cos(z*.72-x*.31);
+    const sculpt=.10*Math.sin(x*1.27+z*.51)+.068*Math.cos(z*1.81-x*.68);
+    const ridge=.19*Math.pow(Math.max(0,Math.sin(x*.51-z*.33+islandIndex*.91)),3.); 
+    const dome=Math.pow(Math.max(0,1-Math.pow(t,2.17)),.89);
+    // Shallow shore at y=.012, no p.y mask to drive any animation.
+    const y=.012+height*dome*Math.max(.40,large+sculpt+ridge);
+    nodes.push([x,y,z]);normalSums.push([0,0,0]);
    }
-   nodes.push(arr);
   }
-  function tri(a,b,c){const ab=[b[0]-a[0],b[1]-a[1],b[2]-a[2]],ac=[c[0]-a[0],c[1]-a[1],c[2]-a[2]];let nx=ab[1]*ac[2]-ab[2]*ac[1],ny=ab[2]*ac[0]-ab[0]*ac[2],nz=ab[0]*ac[1]-ab[1]*ac[0];const len=Math.hypot(nx,ny,nz)||1;let norm=[nx/len,ny/len,nz/len];if(norm[1]<0)norm=norm.map(v=>-v);for(const v of [a,b,c]){verts.push(...v,...norm)}}
-  for(let j=0;j<rings;j++)for(let i=0;i<steps;i++){const k=(i+1)%steps;tri(nodes[j][i],nodes[j+1][i],nodes[j+1][k]);tri(nodes[j][i],nodes[j+1][k],nodes[j][k]);}
+  const faces=[];
+  function face(a,b,c){
+    const A=nodes[a],B=nodes[b],C=nodes[c];
+    const e1=[B[0]-A[0],B[1]-A[1],B[2]-A[2]];
+    const e2=[C[0]-A[0],C[1]-A[1],C[2]-A[2]];
+    let n=[e1[1]*e2[2]-e1[2]*e2[1],e1[2]*e2[0]-e1[0]*e2[2],e1[0]*e2[1]-e1[1]*e2[0]];
+    if(n[1]<0)n=n.map(v=>-v);
+    for(const id of [a,b,c])for(let k=0;k<3;k++)normalSums[id][k]+=n[k];
+    faces.push([a,b,c]);
+  }
+  for(let j=0;j<rings;j++)for(let i=0;i<steps;i++){
+    const k=(i+1)%steps,a=j*steps+i,b=(j+1)*steps+i;
+    face(a,b,(j+1)*steps+k);face(a,(j+1)*steps+k,j*steps+k);
+  }
+  const normals=normalSums.map(n=>{const len=Math.hypot(...n)||1;return [n[0]/len,n[1]/len,n[2]/len];});
+  for(const faceIds of faces)for(const i of faceIds)verts.push(...nodes[i],...normals[i]);
  }
  return new Float32Array(verts);
 }
@@ -317,7 +424,7 @@ function joyBuildOcean(){
  // Continuous 3D ocean mesh with correct depth and physically coherent wave phase.
  for(let iz=0;iz<48;iz++)for(let ix=0;ix<18;ix++){
    const x0=-32+ix*64/18,x1=-32+(ix+1)*64/18;
-   const z0=-3+iz*79/48,z1=-3+(iz+1)*79/48;
+   const z0=-5.4+iz*82/48,z1=-5.4+(iz+1)*82/48;
    tri([x0,0,z0],[x1,0,z0],[x0,0,z1]);tri([x1,0,z0],[x1,0,z1],[x0,0,z1]);
  }
  return new Float32Array(data);

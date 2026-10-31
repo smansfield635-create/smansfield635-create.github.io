@@ -8,6 +8,8 @@ import {fileURLToPath} from 'node:url';
 import {visibleSurface,groundAdmission,materials,cover,geology,habitatModule} from '../hillside-shoreline-continuity-v1/support-fixture.mjs';
 import {HILLSIDE_SHORELINE,hillsideDensity,hillsideFringeWeight} from '../../../showroom/globe/h-earth/render/hillside-shoreline-field.v1.js';
 import {buildCavernEntranceGrass} from '../../../showroom/globe/h-earth/render/cavern-entrance-grass.v1.js';
+import {runtimePlantingBaselineTiles} from '../../../showroom/globe/h-earth/render/vegetation-single-owner.prototype.v1.js';
+import {oasisBankTiles} from '../../../showroom/globe/h-earth/render/oasis-bank-field.v1.js';
 import {buildCavernPalmPlacement} from '../../../showroom/globe/h-earth/render/cavern-palm-placement.v1.js';
 
 const ROOT=new URL('../../../',import.meta.url);
@@ -17,7 +19,7 @@ const read=p=>fs.readFileSync(new URL(p,ROOT));
 const MANIFEST_SHA='9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf';
 const RAW_SHA='bb5bdea6223aaea0422bac76f73da46d0370e51d81b3fdb280c970c408879a97';
 const COMPRESSED_SHA='4a2ff2a135984d67d68d3df7c3212236894c75b66826f256a60130c87b73e800';
-const N=2858738,STRIDE=52,MAX_SAVED=2912956,MAX_TILE=1600,RUNTIME_COUNT=55789;
+const N=2858738,STRIDE=52,MAX_SAVED=2912956,MAX_TILE=1600,RUNTIME_COUNT=54218,OASIS_COUNT=1571,COMBINED_EXTRA=55789;
 const BOUNDS=[140,-302,258,-244],STEP=.14,SEP=.075;
 const f=Math.fround;
 const hash=habitatModule.habitatHash;
@@ -77,19 +79,41 @@ for(const t of manifest.tiles){
 }
 assert.equal(offset,N*STRIDE);
 assert.equal(baselineCount,N);
+const originalRecipeCount=manifest.tiles.reduce((sum,t)=>sum+t.baselineCount,0);
+assert.equal(originalRecipeCount,1474843,'FROZEN_RUNTIME_RECIPE_PREFIX_CHANGED');
+// Oasis banks are installed physical roots, but their baselineCount=0 protects
+// the entrance planting recipe from unrelated offline additions.
+const bankTiles=oasisBankTiles(N);
+let oasisCount=0;
+for(const t of bankTiles){
+ assert.equal(t.baselineCount,0,'OASIS_BASELINE_MUST_BE_ZERO');
+ assert.equal(t.packed.length,t.count*4,'OASIS_PACKED_COUNT_MISMATCH');
+ for(let i=0;i<t.count;i++){
+  place(t.packed[i*4],t.packed[i*4+2]);
+  oasisCount++;
+ }
+}
+assert.equal(oasisCount,OASIS_COUNT,'OASIS_BANK_IDENTITY_CHANGED');
 const originalTileCounts=new Map(manifest.tiles.map(t=>[t.id,t.count]));
 for(let x=148;x<=248;x+=4)assert.equal(originalTileCounts.get(tile(x,-276))||0,0,
  'UNEXPECTED_FROZEN_TILE_SUPPORT_CHANGED:'+x);
 const nativeRuntime=await buildCavernEntranceGrass({
- existingTiles:packedTiles,
+ existingTiles:runtimePlantingBaselineTiles([...packedTiles,...bankTiles]),
  visibleSurface:{...visibleSurface,admitGround:groundAdmission},
  geology,
  palms:buildCavernPalmPlacement(geology).receipt.placements
 });
 let runtimeCount=0;
 for(const t of nativeRuntime.tiles)for(const p of t.roots){place(p.x,p.z);runtimeCount++;}
+assert.equal(manifest.receipt?.terrainRuntimeBaseline?.rootCount,RUNTIME_COUNT,
+ 'FROZEN_RUNTIME_MANIFEST_REFERENCE_CHANGED');
 assert.equal(runtimeCount,RUNTIME_COUNT,'RUNTIME_VEGETATION_IDENTITY_CHANGED');
 assert.equal(nativeRuntime.receipt?.contactCount,runtimeCount,'RUNTIME_RECEIPT_MISMATCH');
+const runtimeSnapshot=JSON.stringify(nativeRuntime,(key,value)=>/Ms$|Milliseconds$/.test(key)?undefined:value)+'\n';
+const runtimeSha256=sha(Buffer.from(runtimeSnapshot));
+assert.equal(runtimeSha256,manifest.receipt?.terrainRuntimeBaseline?.sha256,
+ 'FROZEN_NATIVE_RUNTIME_RECIPE_SHA_MISMATCH');
+assert.equal(runtimeCount+oasisCount,COMBINED_EXTRA,'COMBINED_RUNTIME_AND_OASIS_IDENTITY_CHANGED');
 const baselineTileCounts=new Map(tileCounts);
 const rejection={};
 const reject=code=>{rejection[code]=(rejection[code]||0)+1;return null;};
@@ -164,8 +188,11 @@ const report={
  schema:'H_EARTH_GEN3010_ADDITIVE_FRINGE_DRY_RUN_v1',
  result:'SOURCE_ADMITTED_DRY_RUN_REQUIRES_ASSET_BUILD_AND_GPU_REVIEW',
  frozenManifestSha256:MANIFEST_SHA,frozenRawSha256:RAW_SHA,
- originalSavedRoots:N,originalRuntimeRoots:runtimeCount,proposedAddedRoots:added,
- proposedSavedRoots:N+added,proposedCombinedRoots:N+runtimeCount+added,
+ originalSavedRoots:N,originalRuntimeRecipePrefixRoots:originalRecipeCount,
+ originalRuntimeRoots:runtimeCount,originalOasisBankRoots:oasisCount,
+ originalCombinedExtraRoots:runtimeCount+oasisCount,
+ nativeRuntimeSha256:runtimeSha256,proposedAddedRoots:added,
+ proposedSavedRoots:N+added,proposedCombinedRoots:N+runtimeCount+oasisCount+added,
  originalTileCount:manifest.tiles.length,affectedTiles:additionsPerTile.size,
  proposedAddedRootsInPreviouslyEmptyRow:newEmptyRow,
  maximumCombinedTileRoots:maxCombinedTile,

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-31T13:23:42Z",
+  "generatedAt": "2026-10-31T14:24:33Z",
   "window": {
-    "start": "2026-08-02T13:23:42Z",
-    "end": "2026-10-31T13:23:42Z"
+    "start": "2026-08-02T14:24:33Z",
+    "end": "2026-10-31T14:24:33Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4336,
-    "visits": 1282,
+    "pageLoads": 4263,
+    "visits": 1261,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4336,
-        "visits": 1282
+        "pageLoads": 4263,
+        "visits": 1261
       }
     },
     "byPath": {
@@ -31,7 +31,7 @@
         "visits": 0
       },
       "/laws/": {
-        "pageLoads": 190,
+        "pageLoads": 180,
         "visits": 50
       },
       "/laws/test/reverse-audit/": {
@@ -39,8 +39,8 @@
         "visits": 0
       },
       "/": {
-        "pageLoads": 1012,
-        "visits": 742
+        "pageLoads": 971,
+        "visits": 711
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
@@ -50,16 +50,12 @@
         "pageLoads": 30,
         "visits": 0
       },
-      "/showroom/globe/h-earth/observatory/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 510,
-        "visits": 0
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 72,
+        "visits": 10
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 180,
+        "pageLoads": 160,
         "visits": 10
       },
       "/governance/": {
@@ -67,7 +63,7 @@
         "visits": 10
       },
       "/index.html": {
-        "pageLoads": 100,
+        "pageLoads": 110,
         "visits": 0
       },
       "/evidence/readiness/": {
@@ -79,11 +75,19 @@
         "visits": 0
       },
       "/evidence/": {
-        "pageLoads": 110,
+        "pageLoads": 90,
+        "visits": 0
+      },
+      "/showroom/globe/h-earth/awards/": {
+        "pageLoads": 490,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
         "pageLoads": 10,
+        "visits": 10
+      },
+      "/products/": {
+        "pageLoads": 40,
         "visits": 10
       },
       "/developer/": {
@@ -95,11 +99,11 @@
         "visits": 0
       },
       "/showroom/": {
-        "pageLoads": 30,
+        "pageLoads": 40,
         "visits": 10
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/build/": {
@@ -122,7 +126,11 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/inspection/compass/brain-v9/": {
+      "/inspection/compass/brain-v10-g1-1/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
+      "/inspection/compass/brain-v10-continuous/": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -186,6 +194,10 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/campaigns/wave/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/": {
         "pageLoads": 220,
         "visits": 20
@@ -205,14 +217,6 @@
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
-      },
-      "/campaigns/wave/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 54,
-        "visits": 10
       },
       "/showroom/globe/hearth/jeeves/": {
         "pageLoads": 10,
@@ -257,10 +261,6 @@
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
         "visits": 0
-      },
-      "/products/": {
-        "pageLoads": 30,
-        "visits": 10
       },
       "/products/archcoin/receivable/": {
         "pageLoads": 50,
@@ -313,16 +313,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3054,
+        "pageLoads": 3002,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 742,
-        "visits": 742
+        "pageLoads": 711,
+        "visits": 711
       },
       "(none)": {
-        "pageLoads": 530,
-        "visits": 530
+        "pageLoads": 540,
+        "visits": 540
       },
       "raw.githack.com": {
         "pageLoads": 10,

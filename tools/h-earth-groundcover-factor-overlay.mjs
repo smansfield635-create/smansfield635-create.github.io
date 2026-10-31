@@ -82,3 +82,49 @@ export function verifyFramePairs(views,poseNames,selectedModes=MODES_MINIMUM){
  }
  return true;
 }
+
+/**
+ * Gen3029: source-only diagnostic extension for the exact Gen3008 renderer.
+ * It does NOT modify the checked-out H-Earth renderer or alter historic factor modes.
+ * The added modes expose the material albedo immediately before/after the
+ * later habitat-color overlay, independent of physical grass geometry.
+ */
+export const GEN3008_HABITAT_STAGE_MODES=Object.freeze([
+ 'before-habitat-unlit','after-habitat-unlit'
+]);
+export const GEN3008_FROZEN_RENDERER_SHA256='10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c';
+
+export function transformGen3008HabitatStages(original,{strictHash=true}={}){
+ const originSha256=hash(original);
+ if(strictHash&&originSha256!==GEN3008_FROZEN_RENDERER_SHA256)
+   throw Error('GEN3008_FROZEN_RENDERER_SOURCE_MISMATCH:'+originSha256);
+ const standard=transformPublishedRenderer(original,{strictHash:false});
+ let source=standard.source;
+ const start=source.indexOf('const FS = '),end=source.indexOf('// Ordered screen-door coverage',start);
+ if(start<0||end<=start)throw Error('GEN3008_FRAGMENT_SCOPE_MISSING');
+ let frag=source.slice(start,end);
+ frag=once(frag,'  float probeGCSeen=0.0;',
+   '  float probeGCSeen=0.0;\\n  float probeHabitatSeen=0.0;\\n  vec3 probeHabitatBefore=vec3(0.0),probeHabitatAfter=vec3(0.0);'.replaceAll('\\n','\n'));
+ const blend='    base=mix(base,habitatSoil,habitatColorCoverage*.68);';
+ frag=once(frag,blend,[
+  '    probeHabitatSeen=1.0;',
+  '    probeHabitatBefore=base;',
+  '    probeHabitatAfter=mix(base,habitatSoil,habitatColorCoverage*.68);',
+  blend
+ ].join('\n'));
+ frag=once(frag,'    if(m==1||m==2||m==3||m==12||m==13){',
+   '    if(m==1||m==2||m==3||m==12||m==13||m==15||m==16){');
+ frag=once(frag,'      if(m==12)albedo=probeGCSeen>0.5?probeGCTone:base;',
+  [
+  '      if(m==12)albedo=probeGCSeen>0.5?probeGCTone:base;',
+  '      if(m==15)albedo=probeHabitatSeen>0.5?probeHabitatBefore:base;',
+  '      if(m==16)albedo=probeHabitatSeen>0.5?probeHabitatAfter:base;'
+  ].join('\n'));
+ source=source.slice(0,start)+frag+source.slice(end);
+ source=once(source,'mode>=15','mode>=17');
+ return Object.freeze({
+   originalSha256:originSha256,instrumentedSha256:hash(source),source,
+   modeCount:17,sourceTarget:'FROZEN_GEN3008_ONLY',
+   physicalGrassPixelRendering:false,productDiskMutation:false
+ });
+}

@@ -1037,7 +1037,7 @@ function drawPeaceSourceWater(now,force=false){
   }
  }
  if(!peaceWaveFieldContext||!peaceWaveSourcePixels||!peaceWaveFieldPixels)return;
- const t=Math.max(0,(now-(peaceMotionStartedAt||now))*.001);
+ const t=Math.max(0,(now-(peaceMotionStartedAt||now))*.001)*.75;
  const W=480,H=270,out=peaceWaveFieldPixels.data,src=peaceWaveSourcePixels,mask=peaceSafeWaterMask;
  out.fill(0);
  for(let y=108;y<H;y++){

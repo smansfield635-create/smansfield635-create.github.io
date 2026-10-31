@@ -182,7 +182,13 @@ jobs:
           node --input-type=module - "$OUT/stdout.log" <<'NODE'
           import fs from 'node:fs';
           import assert from 'node:assert/strict';
-          const file=process.argv[2],obj=JSON.parse(fs.readFileSync(file,'utf8'));
+          const output=fs.readFileSync(process.argv[2],'utf8');
+          const marker='"schema": "H_EARTH_GEN3010_ADDITIVE_FRINGE_DRY_RUN_v1"';
+          const markerAt=output.indexOf(marker);
+          assert(markerAt>0,'CENSUS_REPORT_MARKER_NOT_FOUND_AFTER_SOURCE_STAGES');
+          const rootAt=output.lastIndexOf('{',markerAt);
+          assert(rootAt>=0,'CENSUS_REPORT_OBJECT_START_NOT_FOUND');
+          const obj=JSON.parse(output.slice(rootAt));
           assert.equal(obj.schema,'H_EARTH_GEN3010_ADDITIVE_FRINGE_DRY_RUN_v1');
           assert.equal(obj.result,'SOURCE_ADMITTED_DRY_RUN_REQUIRES_ASSET_BUILD_AND_GPU_REVIEW');
           assert.equal(obj.originalSavedRoots,2858738);

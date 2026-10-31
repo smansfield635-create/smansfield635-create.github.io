@@ -18686,50 +18686,6 @@
       "scopeHash": "c893a337f5e1360cbb875fbc8e8778c4eb7e3f7d1916bedd61f356c5881fd8e3",
       "state": "ADMITTED_LOCKED"
     },
-    "c8a65a142097f410cd6bfbdf8fbdbe4ee4945cf24b1a32c87ca7b8828f4adc1c": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "7e57f0d45e8f9f0fcffc80a2959239f88fd12404",
-          "lockGeneration": 3012,
-          "lockScope": "CONTROL_PLANE:H_EARTH_GEN3011_PR7037_AUTHORIZED_ADOPTION_20261030",
-          "operationId": "H_EARTH_GEN3011_PREFLIGHT_PR7037_ADOPTION_20261030_001",
-          "procedureLocatorDigest": "5a39be5052b8f6a30500145f4a1797d995f5929c853f7f8b005b5b121001fae8",
-          "requestDigest": "99b98e98e12a9a7739caf2322e40c65929287d5786f3b9f9d8a7cea9f612e374",
-          "scopeHash": "c8a65a142097f410cd6bfbdf8fbdbe4ee4945cf24b1a32c87ca7b8828f4adc1c"
-        },
-        "bindingDigest": "82ae8f3bd3ecc5d168ff5ad72631b18932cd77fd351e11deb35e8875ad6992b6",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "d08739d396d65b0be6ad43a1f34c7f974c7c52bee3ead62e20a68ec5a0ba2450",
-          "commentId": 6537155669,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 7035,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41155404972,
-          "workflowSha": "7e57f0d45e8f9f0fcffc80a2959239f88fd12404"
-        },
-        "lineageAnchorCommitSha": "d585699743abd0e4f556ce7ef6b6e54bdac3a75b",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "7e57f0d45e8f9f0fcffc80a2959239f88fd12404",
-      "lockGeneration": 3012,
-      "lockScope": "CONTROL_PLANE:H_EARTH_GEN3011_PR7037_AUTHORIZED_ADOPTION_20261030",
-      "operationId": "H_EARTH_GEN3011_PREFLIGHT_PR7037_ADOPTION_20261030_001",
-      "procedureLocatorDigest": "5a39be5052b8f6a30500145f4a1797d995f5929c853f7f8b005b5b121001fae8",
-      "released": false,
-      "requestDigest": "99b98e98e12a9a7739caf2322e40c65929287d5786f3b9f9d8a7cea9f612e374",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "c8a65a142097f410cd6bfbdf8fbdbe4ee4945cf24b1a32c87ca7b8828f4adc1c",
-      "state": "ADMITTED_LOCKED"
-    },
     "c9005fbc309aaefe510f46c5fdff940ea249f73319c90864e1eb577c8032fe0b": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -93495,6 +93451,51 @@
       "scopeHash": "9d249acb9b5b0dd0182ba10bb7bfcd3fbd6aa2cb4d3db0eb41f1a85c1c17ab16",
       "state": "TERMINAL",
       "terminalDisposition": "SUPERSEDED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "7e57f0d45e8f9f0fcffc80a2959239f88fd12404",
+          "lockGeneration": 3012,
+          "lockScope": "CONTROL_PLANE:H_EARTH_GEN3011_PR7037_AUTHORIZED_ADOPTION_20261030",
+          "operationId": "H_EARTH_GEN3011_PREFLIGHT_PR7037_ADOPTION_20261030_001",
+          "procedureLocatorDigest": "5a39be5052b8f6a30500145f4a1797d995f5929c853f7f8b005b5b121001fae8",
+          "requestDigest": "99b98e98e12a9a7739caf2322e40c65929287d5786f3b9f9d8a7cea9f612e374",
+          "scopeHash": "c8a65a142097f410cd6bfbdf8fbdbe4ee4945cf24b1a32c87ca7b8828f4adc1c"
+        },
+        "bindingDigest": "82ae8f3bd3ecc5d168ff5ad72631b18932cd77fd351e11deb35e8875ad6992b6",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d08739d396d65b0be6ad43a1f34c7f974c7c52bee3ead62e20a68ec5a0ba2450",
+          "commentId": 6537155669,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7035,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41155404972,
+          "workflowSha": "7e57f0d45e8f9f0fcffc80a2959239f88fd12404"
+        },
+        "lineageAnchorCommitSha": "d585699743abd0e4f556ce7ef6b6e54bdac3a75b",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "7e57f0d45e8f9f0fcffc80a2959239f88fd12404",
+      "lockGeneration": 3012,
+      "lockScope": "CONTROL_PLANE:H_EARTH_GEN3011_PR7037_AUTHORIZED_ADOPTION_20261030",
+      "operationId": "H_EARTH_GEN3011_PREFLIGHT_PR7037_ADOPTION_20261030_001",
+      "procedureLocatorDigest": "5a39be5052b8f6a30500145f4a1797d995f5929c853f7f8b005b5b121001fae8",
+      "released": true,
+      "requestDigest": "99b98e98e12a9a7739caf2322e40c65929287d5786f3b9f9d8a7cea9f612e374",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "c8a65a142097f410cd6bfbdf8fbdbe4ee4945cf24b1a32c87ca7b8828f4adc1c",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

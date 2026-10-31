@@ -1,0 +1,37 @@
+{
+  "constant": [],
+  "linear": [],
+  "narrow_gray": [
+    {
+      "center": -0.9749999999999996,
+      "opposed": true,
+      "before": 400.0000000000088,
+      "after": 0.0,
+      "wouldNumericallyRetain": false
+    },
+    {
+      "center": 0.9750000000000005,
+      "opposed": true,
+      "before": 400.0000000000088,
+      "after": 0.0,
+      "wouldNumericallyRetain": false
+    }
+  ],
+  "narrow_chroma_patch_on_gentle_ramp": [
+    {
+      "center": -0.9749999999999996,
+      "opposed": false,
+      "before": 400.0999999999945,
+      "after": 0.1874932313472728,
+      "wouldNumericallyRetain": true
+    },
+    {
+      "center": 0.9750000000000005,
+      "opposed": false,
+      "before": 400.0999999999945,
+      "after": 0.1874932492461352,
+      "wouldNumericallyRetain": true
+    }
+  ],
+  "reverseMaxError": 5.551115123125783e-16
+}

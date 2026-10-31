@@ -12818,50 +12818,6 @@
       "scopeHash": "8ccf90290f81bb5fe5d0b2da4883ee4b228d626aaf61de02d7f683386641f467",
       "state": "ADMITTED_LOCKED"
     },
-    "8d2fd1f87c40b42a9a93ef69e154639dea575f2d9f1ed45f65d9026aa13c7f59": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "479525e0ce5c1cd2f06bd7e70f469a733dc30936",
-          "lockGeneration": 3020,
-          "lockScope": "NINE_SUMMITS_UNIVERSE:JOY_HIGH_FIDELITY_SINGLE_WORLD:20261031",
-          "operationId": "NINE_SUMMITS_JOY_SINGLE_WORLD_HIGH_FIDELITY_PILOT_20261031_001",
-          "procedureLocatorDigest": "84d93000040038221cc4499f7b35a4c7000eac39e7a7b705101995f69f1a5eb2",
-          "requestDigest": "44428543968296de3ed036a12e639a7349ae4ca0085f2dcbe9b764d126b2d45a",
-          "scopeHash": "8d2fd1f87c40b42a9a93ef69e154639dea575f2d9f1ed45f65d9026aa13c7f59"
-        },
-        "bindingDigest": "0de43060c3fea70c2723fcde224cd002811a733a59c3ce3017c8bbd76ec2000e",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "e72ceee8f8b52f64f06c4b5b10ea5ef3c5cdaaaae62ed6e1269cf3f20e9f071e",
-          "commentId": 6545406737,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6961,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41215086562,
-          "workflowSha": "479525e0ce5c1cd2f06bd7e70f469a733dc30936"
-        },
-        "lineageAnchorCommitSha": "59b6323023a7c0ecaaac89b21f8bd358fa82be00",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "479525e0ce5c1cd2f06bd7e70f469a733dc30936",
-      "lockGeneration": 3020,
-      "lockScope": "NINE_SUMMITS_UNIVERSE:JOY_HIGH_FIDELITY_SINGLE_WORLD:20261031",
-      "operationId": "NINE_SUMMITS_JOY_SINGLE_WORLD_HIGH_FIDELITY_PILOT_20261031_001",
-      "procedureLocatorDigest": "84d93000040038221cc4499f7b35a4c7000eac39e7a7b705101995f69f1a5eb2",
-      "released": false,
-      "requestDigest": "44428543968296de3ed036a12e639a7349ae4ca0085f2dcbe9b764d126b2d45a",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "8d2fd1f87c40b42a9a93ef69e154639dea575f2d9f1ed45f65d9026aa13c7f59",
-      "state": "ADMITTED_LOCKED"
-    },
     "8d9b6e0cb2e72893914eb40f6f2603f6eebcf9eeb6cdacdc79164d60c4f416c5": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -93901,6 +93857,51 @@
       "scopeHash": "801384d437f5a4f8302e359bfe7ace19e6577a2f84d0c483f4288f52a89c7ab8",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "479525e0ce5c1cd2f06bd7e70f469a733dc30936",
+          "lockGeneration": 3020,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:JOY_HIGH_FIDELITY_SINGLE_WORLD:20261031",
+          "operationId": "NINE_SUMMITS_JOY_SINGLE_WORLD_HIGH_FIDELITY_PILOT_20261031_001",
+          "procedureLocatorDigest": "84d93000040038221cc4499f7b35a4c7000eac39e7a7b705101995f69f1a5eb2",
+          "requestDigest": "44428543968296de3ed036a12e639a7349ae4ca0085f2dcbe9b764d126b2d45a",
+          "scopeHash": "8d2fd1f87c40b42a9a93ef69e154639dea575f2d9f1ed45f65d9026aa13c7f59"
+        },
+        "bindingDigest": "0de43060c3fea70c2723fcde224cd002811a733a59c3ce3017c8bbd76ec2000e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e72ceee8f8b52f64f06c4b5b10ea5ef3c5cdaaaae62ed6e1269cf3f20e9f071e",
+          "commentId": 6545406737,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41215086562,
+          "workflowSha": "479525e0ce5c1cd2f06bd7e70f469a733dc30936"
+        },
+        "lineageAnchorCommitSha": "59b6323023a7c0ecaaac89b21f8bd358fa82be00",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "479525e0ce5c1cd2f06bd7e70f469a733dc30936",
+      "lockGeneration": 3020,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:JOY_HIGH_FIDELITY_SINGLE_WORLD:20261031",
+      "operationId": "NINE_SUMMITS_JOY_SINGLE_WORLD_HIGH_FIDELITY_PILOT_20261031_001",
+      "procedureLocatorDigest": "84d93000040038221cc4499f7b35a4c7000eac39e7a7b705101995f69f1a5eb2",
+      "released": true,
+      "requestDigest": "44428543968296de3ed036a12e639a7349ae4ca0085f2dcbe9b764d126b2d45a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "8d2fd1f87c40b42a9a93ef69e154639dea575f2d9f1ed45f65d9026aa13c7f59",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

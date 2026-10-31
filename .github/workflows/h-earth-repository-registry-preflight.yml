@@ -103,6 +103,48 @@ jobs:
           fs.appendFileSync(process.env.GITHUB_OUTPUT, `severity=${receipt.severity}\n`);
           NODE
 
+      - name: Gen3014 one-shot divergent-main candidate-path proof (remove after PASS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          old_main=c1021804764488e051b760ae8ce784c801cfb6ad
+          candidate=cb124b8784cf684754d17dcfa54bc0269145bd21
+          original_base=eed628b2e27351a283e24a9bd68c23a01ad4675a
+          git cat-file -e "$old_main^{commit}"
+          git cat-file -e "$candidate^{commit}"
+          common="$(git merge-base "$old_main" "$candidate")"
+          test "$common" = "$original_base"
+          mapfile -t actual < <(git diff --name-only "$common" "$candidate")
+          expected=(
+            h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs
+            h-earth-3d/validation/h-earth.vegetation-support-fringe-20261030.test.mjs
+            showroom/globe/h-earth/render/hillside-shoreline-field.v1.js
+          )
+          test "${#actual[@]}" -eq 3
+          for i in 0 1 2; do test "${actual[$i]}" = "${expected[$i]}"; done
+          mapfile -t direct < <(git diff --name-only "$old_main" "$candidate")
+          test "${#direct[@]}" -eq 12
+          printf '%s\n' "${direct[@]}" | grep -Fxq '.github/workflows/h-earth-repository-registry-preflight.yml'
+          printf '%s\n' "${direct[@]}" | grep -Fxq 'tools/workflow-applicability-gate.v1.mjs'
+          printf '%s\n' "${direct[@]}" | grep -Fxq '.analytics/cloudflare/composition.json'
+          node --input-type=module <<'NODE'
+          import {evaluateWorkflowApplicability} from './tools/workflow-applicability-gate.v1.mjs';
+          const paths=[
+            'h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs',
+            'h-earth-3d/validation/h-earth.vegetation-support-fringe-20261030.test.mjs',
+            'showroom/globe/h-earth/render/hillside-shoreline-field.v1.js'
+          ];
+          const authenticated=paths.slice(0,2);
+          const good=evaluateWorkflowApplicability({changedPaths:paths,authenticatedCandidatePaths:authenticated});
+          const denied=evaluateWorkflowApplicability({changedPaths:[...paths,'h-earth-3d/unadmitted-control.mjs'],authenticatedCandidatePaths:authenticated});
+          if(good.result!=='NOT_APPLICABLE'||good.admittedCandidatePaths.length!==2||
+             denied.result!=='SELECTED'||denied.severity!=='SELECTED_BLOCKER'||
+             !denied.ambiguousAuthorityPaths.includes('h-earth-3d/unadmitted-control.mjs')) {
+            throw Error('GEN3014_CANDIDATE_SCOPE_OR_FOREIGN_FAIL_CLOSED_ASSERTION');
+          }
+          console.log('GEN3014_DIVERGENT_PR_DIFF_PROOF_PASS actual=3 injected_main_only=9 foreign=SELECTED_BLOCKER');
+          NODE
+
       - name: Record neutral non-applicability
         if: ${{ steps.applicability.outputs.selected != 'true' }}
         shell: bash

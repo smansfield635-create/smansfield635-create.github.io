@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-31T00:42:52Z",
+  "generatedAt": "2026-10-31T01:24:35Z",
   "window": {
-    "start": "2026-08-02T00:42:52Z",
-    "end": "2026-10-31T00:42:52Z"
+    "start": "2026-08-02T01:24:35Z",
+    "end": "2026-10-31T01:24:35Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -50,13 +50,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/flow/cycles/": {
-        "pageLoads": 30,
-        "visits": 0
-      },
       "/showroom/globe/h-earth/": {
         "pageLoads": 81,
         "visits": 10
+      },
+      "/laws/categories/flow/cycles/": {
+        "pageLoads": 30,
+        "visits": 0
       },
       "/showroom/globe/audralia/": {
         "pageLoads": 160,
@@ -106,6 +106,14 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -117,14 +125,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/compass-composite/": {
         "pageLoads": 20,

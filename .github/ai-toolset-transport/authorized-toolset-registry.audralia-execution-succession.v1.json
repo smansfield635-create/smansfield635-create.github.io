@@ -887,6 +887,132 @@
       "continuationRule": "REUSE_EXISTING_GEN2894_ADMISSION; CONTINUE_ONLY_FROM_COMMAND_EXECUTED_AND_PASSED_WITH_WRITEBACK_PERFORMED_TRUE_AND_NEW_EXACT_CANDIDATE_HEAD",
       "terminationRule": "ONE_ADMISSION_BOUND_FAST_FORWARD_COMMIT_MAXIMUM; NO_MAIN_MERGE_DEPLOYMENT_RELEASE_OR_VISUAL_ACCEPTANCE",
       "descriptorActivationStatus": "ACTIVE_CERTIFIED"
+    },
+    {
+      "schema": "AUTHORIZED_TOOLSET_DESCRIPTOR_v1",
+      "descriptorId": "H_EARTH_GEN3010_NATURAL_GRASS_FRINGE_WRITEBACK_DESCRIPTOR_V1",
+      "operationId": "H_EARTH_NATURAL_GRASS_SUPPORT_FRINGE_20261030_001",
+      "operationClass": "H_EARTH_GEN3010_NATURAL_GRASS_FRINGE_THREE_FILE_WRITEBACK",
+      "projectId": "H_EARTH",
+      "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
+      "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
+      "toolId": "H_EARTH_GEN3010_NATURAL_GRASS_FRINGE_FIXED_COMPILER_V1",
+      "exactToolingHead": "8209a0d5d393494998c27daf32fda19d5cb0a6c6",
+      "toolingMaterialization": {
+        "mode": "BOUNDED_SPARSE_INDEX",
+        "sparsePaths": [
+          "h-earth-3d",
+          "showroom/globe/h-earth"
+        ],
+        "sparseIndexEntryLimitExclusive": 25000
+      },
+      "commandSpecification": {
+        "executable": "node",
+        "scriptPath": "h-earth-3d/evidence/vegetation-support-fringe-20261030/writeback-fixed.mjs",
+        "fixedArguments": [],
+        "inputArgumentBindings": [],
+        "outputArgumentBindings": [
+          {
+            "argument": "--receipt",
+            "runtimeValue": "COMMAND_PAYLOAD_RECEIPT_PATH"
+          }
+        ],
+        "shell": false,
+        "extraArgumentsAllowed": false,
+        "environmentOverridesAllowed": false,
+        "streamOutput": true
+      },
+      "canonicalInputSchema": {
+        "schemaId": "H_EARTH_GEN3010_FIXED_GRASS_FRINGE_WRITEBACK_INPUT_v1",
+        "required": [
+          "executionHolder"
+        ],
+        "allowed": [
+          "executionHolder"
+        ],
+        "properties": {
+          "executionHolder": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9_.:-]{2,127}$"
+          }
+        }
+      },
+      "canonicalOutputSchema": {
+        "schemaId": "REGISTERED_GENERATOR_WRITEBACK_RECEIPT_v1",
+        "required": [
+          "schema",
+          "result",
+          "operationId",
+          "descriptorId",
+          "targetBranchRef",
+          "expectedBranchHead",
+          "candidateHead",
+          "changedPaths",
+          "fastForwardOnly",
+          "childCommandGitHubTokenExposed",
+          "mainMutationPerformed",
+          "mergePerformed",
+          "deploymentPerformed",
+          "releasePerformed"
+        ]
+      },
+      "allowedBackends": [
+        {
+          "backendId": "GITHUB_ACTIONS_CLEAN_EXECUTION",
+          "priority": 100,
+          "requirements": [
+            "EXACT_TOOLING_HEAD_FETCHABLE",
+            "NODE_22_AVAILABLE",
+            "COMMAND_RECEIPT_ARTIFACT_UPLOAD"
+          ]
+        }
+      ],
+      "transportId": "AI_ROOM_ISSUE_COMMENT_EXECUTION_TRANSPORT_V1",
+      "workflowPath": ".github/workflows/ai-room-execution-transport.yml",
+      "writebackSpecification": {
+        "mode": "FAST_FORWARD_EXACT_BRANCH",
+        "targetBranchRef": "refs/heads/h-earth/gen3010-natural-grass-support-fringe-20261030",
+        "expectedBranchHead": "8209a0d5d393494998c27daf32fda19d5cb0a6c6",
+        "commitMessage": "Gen3010: install exact staged grass fringe binary, manifest and loader",
+        "fastForwardOnly": true,
+        "requireChangedPaths": true
+      },
+      "allowedMutationPaths": [
+        "showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz",
+        "showroom/globe/h-earth/render/assets/precomputed-grass.v1.json",
+        "showroom/globe/h-earth/render/precomputed-grass.v1.js"
+      ],
+      "prohibitedPaths": [
+        ".github/",
+        "AI_ENTRYPOINT.json",
+        "tools/",
+        "showroom/globe/audralia/",
+        "showroom/globe/h-earth/index.html",
+        "showroom/globe/h-earth/functional-landscape/"
+      ],
+      "prohibitedSideEffects": [
+        "ARBITRARY_COMMAND",
+        "UNDECLARED_PATH_MUTATION",
+        "MAIN_MUTATION",
+        "MERGE",
+        "DEPLOYMENT",
+        "RELEASE",
+        "GENERAL_AGENT_EXECUTION",
+        "THIRD_PARTY_PROVIDER_SELECTION"
+      ],
+      "expectedReceiptSchema": "COMMAND_EXECUTION_RECEIPT_v1",
+      "receiptValidationCommand": "node tools/ai-room-transport/command-receipt-validator.v1.mjs --descriptor <DESCRIPTOR.json> --receipt <COMMAND_RECEIPT.json> --output <VALIDATION_RESULT.json>",
+      "successDisposition": "RETURN_EXACT_GEN3010_NATURAL_GRASS_FRINGE_CANDIDATE_FOR_SOURCE_AND_GPU_QUALIFICATION",
+      "failureDispositions": {
+        "WRITEBACK_REMOTE_HEAD_MISMATCH": "STOP_WITHOUT_PUSH",
+        "UNAUTHORIZED_PATH_MUTATED": "STOP_WITHOUT_PUSH",
+        "COMMAND_EXECUTED_AND_FAILED": "PRESERVE_STAGED_ARTIFACT_AND_RETURN_FIRST_ASSERTION",
+        "COMMAND_NOT_EXECUTED_FAIL_CLOSED": "PRESERVE_PRODUCT_BRANCH_AND_STOP",
+        "MISSING_OR_INVALID_RECEIPT": "STOP"
+      },
+      "continuationRule": "REUSE_GEN3010_ACTIVE_PRODUCT_ADMISSION; ONLY_CONTINUE_FROM_COMMAND_EXECUTED_AND_PASSED_WITH_WRITEBACK_PERFORMED_TRUE_AND_NEW_EXACT_CANDIDATE_HEAD",
+      "terminationRule": "ONE_ADMISSION_BOUND_FAST_FORWARD_COMMIT_MAXIMUM; NO_MAIN_MERGE_DEPLOYMENT_RELEASE_OWNER_ACCEPTANCE",
+      "descriptorActivationStatus": "ACTIVE_CERTIFIED"
     }
   ]
 }

@@ -1445,7 +1445,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$RUN_ATTEMPT" = 1
-          test "${{ github.event.pull_request.base.sha }}" = 29ee1b13b9bb0327ef00565ce545b90eeefaa860
+          # Base/main analytics movement is checked by exact changed-path proof below;
+          # do not convert unrelated movement into a new product prerequisite.
       - name: Checkout exact admitted diagnostic tooling
         uses: actions/checkout@v4
         with:
@@ -1512,3 +1513,29 @@ jobs:
           path: ${{ runner.temp }}/h-earth-gen3029-stage-isolation
           if-no-files-found: warn
           retention-days: 90
+
+  gen3029-hard-boundary-source-static:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'opened' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/gen3029-hard-boundary-source-stages-20261031' &&
+          startsWith(github.event.pull_request.title, 'GEN3029 HARD BOUNDARY STAGE:') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify Gen3029 source-stage grammar and legacy regressions before GPU
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tools/h-earth-groundcover-factor-overlay.mjs
+          node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs

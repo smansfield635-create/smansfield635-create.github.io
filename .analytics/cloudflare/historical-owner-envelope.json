@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-31T04:24:32Z",
+  "generatedAt": "2026-10-31T05:23:55Z",
   "window": {
-    "start": "2026-08-02T04:24:32Z",
-    "end": "2026-10-31T04:24:32Z"
+    "start": "2026-08-02T05:23:55Z",
+    "end": "2026-10-31T05:23:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4292,
-    "visits": 1264,
+    "pageLoads": 4286,
+    "visits": 1262,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4292,
-        "visits": 1264
+        "pageLoads": 4286,
+        "visits": 1262
       }
     },
     "byPath": {
@@ -39,8 +39,8 @@
         "visits": 50
       },
       "/": {
-        "pageLoads": 974,
-        "visits": 714
+        "pageLoads": 972,
+        "visits": 712
       },
       "/laws/research/evidence-and-sources/": {
         "pageLoads": 20,
@@ -55,7 +55,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 78,
+        "pageLoads": 74,
         "visits": 10
       },
       "/showroom/globe/audralia/": {
@@ -65,6 +65,10 @@
       "/governance/": {
         "pageLoads": 60,
         "visits": 10
+      },
+      "/index.html": {
+        "pageLoads": 110,
+        "visits": 0
       },
       "/evidence/readiness/": {
         "pageLoads": 20,
@@ -76,10 +80,6 @@
       },
       "/evidence/": {
         "pageLoads": 90,
-        "visits": 0
-      },
-      "/index.html": {
-        "pageLoads": 110,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
@@ -317,12 +317,12 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 3028,
+        "pageLoads": 3024,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 714,
-        "visits": 714
+        "pageLoads": 712,
+        "visits": 712
       },
       "(none)": {
         "pageLoads": 540,

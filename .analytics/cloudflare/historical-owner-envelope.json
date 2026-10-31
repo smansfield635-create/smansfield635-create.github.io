@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-10-31T02:26:41Z",
+  "generatedAt": "2026-10-31T03:24:31Z",
   "window": {
-    "start": "2026-08-02T02:26:41Z",
-    "end": "2026-10-31T02:26:41Z"
+    "start": "2026-08-02T03:24:31Z",
+    "end": "2026-10-31T03:24:31Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -274,13 +274,13 @@
         "pageLoads": 40,
         "visits": 0
       },
-      "/products/archcoin/allocation/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 260,
         "visits": 70
+      },
+      "/products/archcoin/allocation/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -298,12 +298,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/governance-bridge/governance/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/analytics/": {
         "pageLoads": 40,
+        "visits": 0
+      },
+      "/governance-bridge/governance/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {

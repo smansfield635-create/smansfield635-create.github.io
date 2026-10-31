@@ -133,65 +133,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      # GEN3017 TEMP: single authenticated read-only physical census only.
-      # Remove all four steps after the one-shot result; never adopt this instrumentation.
-      - name: GEN3017 TEMP checkout immutable Gen3010 source
-        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3017-readonly-census-once-20261030' && github.event.pull_request.head.repo.full_name == github.repository
-        uses: actions/checkout@v4
-        with:
-          ref: cb124b8784cf684754d17dcfa54bc0269145bd21
-          path: gen3010-census-immutable
-          fetch-depth: 1
-          persist-credentials: false
-
-      - name: GEN3017 TEMP pin Node 22 for exact physical census
-        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3017-readonly-census-once-20261030' && github.event.pull_request.head.repo.full_name == github.repository
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: GEN3017 TEMP execute one-shot full-root physical admission
-        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3017-readonly-census-once-20261030' && github.event.pull_request.head.repo.full_name == github.repository
-        shell: bash
-        env:
-          NODE_OPTIONS: --max-old-space-size=5120
-        run: |
-          set -euo pipefail
-          C="$GITHUB_WORKSPACE/gen3010-census-immutable"
-          OUT=/tmp/gen3017-native-census
-          mkdir -p "$OUT"
-          test "$(node --version | cut -d. -f1)" = v22
-          test "$(git -C "$C" rev-parse HEAD)" = cb124b8784cf684754d17dcfa54bc0269145bd21
-          test "$(git -C "$C" rev-parse HEAD:h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs)" = d0d3c13138dab02e8c6fc35d3d87bfdf9fbd9806
-          test "$(git -C "$C" rev-parse HEAD:showroom/globe/h-earth/render/assets/precomputed-grass.v1.json)" = 2479a2cb678b4fcac5583129fb5aaf8f73da1e54
-          test "$(git -C "$C" rev-parse HEAD:showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz)" = 26f496e0305e769a4df4be6044ae449a2dd9a0c9
-          test "$(stat -c %s "$C/showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz")" = 64564514
-          test "$(sha256sum "$C/showroom/globe/h-earth/render/assets/precomputed-grass.v1.json" | cut -d' ' -f1)" = 9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf
-          test "$(sha256sum "$C/showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz" | cut -d' ' -f1)" = 4a2ff2a135984d67d68d3df7c3212236894c75b66826f256a60130c87b73e800
-          test -z "$(git -C "$C" status --porcelain --untracked-files=no)"
-          echo "GEN3017_EXACT_SOURCE_AND_COMPRESSED_ASSET_MATCH"
-          rc=0
-          (cd "$C" && timeout --signal=TERM --kill-after=10s 1500s node h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs > "$OUT/stdout.log" 2> "$OUT/stderr.log") || rc=$?
-          printf '%s\n' "$rc" > "$OUT/exit-code.txt"
-          sha256sum "$OUT/stdout.log" "$OUT/stderr.log" > "$OUT/output-hashes.txt"
-          echo "GEN3017_CENSUS_PROCESS_EXIT=$rc"
-          tail -n 90 "$OUT/stdout.log" || true
-          tail -n 40 "$OUT/stderr.log" || true
-          test -z "$(git -C "$C" status --porcelain --untracked-files=no)"
-          if [ "$rc" -ne 0 ]; then echo "GEN3017_CENSUS_FIRST_FAILED_RUNTIME_PRESERVED"; exit "$rc"; fi
-          grep -Fq '"schema": "H_EARTH_GEN3010_ADDITIVE_FRINGE_DRY_RUN_v1"' "$OUT/stdout.log"
-          grep -Fq '"result": "SOURCE_ADMITTED_DRY_RUN_REQUIRES_ASSET_BUILD_AND_GPU_REVIEW"' "$OUT/stdout.log"
-          echo "GEN3017_NATIVE_ROOT_CENSUS_SOURCE_PASS"
-
-      - name: GEN3017 TEMP upload bounded census evidence
-        if: always() && github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3017-readonly-census-once-20261030' && github.event.pull_request.head.repo.full_name == github.repository
-        uses: actions/upload-artifact@v4
-        with:
-          name: h-earth-gen3017-native-census-evidence
-          path: /tmp/gen3017-native-census/
-          if-no-files-found: warn
-          retention-days: 90
-
   audralia-diagnostic-premutation-preflight:
     if: >-
       ${{

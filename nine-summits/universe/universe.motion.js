@@ -781,7 +781,7 @@ function drawEmberWorld(t){if(!emberGL)return;
 const PEACE_CINEMA_IMAGE='./peace.environment.svg?cb=peace-v12-material-separation';
 let peaceWaterCanvas=null,peaceWaterContext=null,peaceWaterLast=0;
 let peaceCloudCanvas=null,peaceCloudContext=null,peaceCloudLast=0,peaceGeometryScheduled=false;
-let peaceCloudBanks=null,peaceSafeWaterMask=null,peaceSafeSkyMask=null;
+let peaceCloudBanks=null,peaceSafeWaterMask=null,peaceSafeSkyMask=null,peaceSkyMotionClearance=null;
 let peaceCloudOutputCanvas=null,peaceCloudOutputContext=null,peaceCloudOutputPixels=null;
 let peaceWaveFieldCanvas=null,peaceWaveFieldContext=null,peaceWaveFieldPixels=null,peaceWaveSourcePixels=null;
 let peaceCinemaState='loading',peaceCinemaLayer=null,peaceCinemaPhoto=null,peaceCinemaLastX=0,peaceCinemaLastY=0;
@@ -886,7 +886,7 @@ function loadPeaceCinemaSourceLayers(){
    peaceCloudBanks=peaceBuildCloudBanks(cloud);
    peaceSafeSkyMask=peaceBuildSafeSkyMask(skyMask);
    peaceSafeWaterMask=peaceBuildSafeWaterMask(waterMask,base);
-   if(!peaceCloudBanks||!peaceSafeSkyMask||!peaceSafeWaterMask)
+   if(!peaceCloudBanks||!peaceSafeSkyMask||!peaceSafeWaterMask||!peaceSkyMotionClearance)
     throw Error('PEACE_V12_MATERIAL_BOUNDARY_INVALID');
    peaceCloudOutputCanvas=peaceCloudOutputContext=peaceCloudOutputPixels=null;
    peaceWaveFieldCanvas=peaceWaveFieldContext=peaceWaveFieldPixels=peaceWaveSourcePixels=null;
@@ -942,6 +942,27 @@ function peaceBuildSafeSkyMask(image){
   const mountainGuard=1-center*nearHorizon;
   safe[k+3]=Math.round(original[k+3]*matteConfidence*mountainGuard);
  }
+ // Separate STATIC source-mask clearance from the changing cloud material.
+ // 2-pass L1 distance to non-sky pixels, measured once on source load, gives
+ // high ridges a feathered still-air buffer without erasing nearby low haze.
+ // The physical land layer and the approved foreground water never enter here.
+ const cloudH=116,clearance=new Uint8Array(W*cloudH);
+ for(let y=0;y<cloudH;y++)for(let x=0;x<W;x++){
+  const i=y*W+x;
+  clearance[i]=original[i*4+3]>=245?255:0;
+ }
+ for(let y=0;y<cloudH;y++)for(let x=0;x<W;x++){
+  const i=y*W+x;if(!clearance[i])continue;
+  const above=y?clearance[i-W]+1:255,left=x?clearance[i-1]+1:255;
+  clearance[i]=Math.min(255,clearance[i],above,left);
+ }
+ for(let y=cloudH-1;y>=0;y--)for(let x=W-1;x>=0;x--){
+  const i=y*W+x;if(!clearance[i])continue;
+  const below=y<cloudH-1?clearance[i+W]+1:0;
+  const right=x<W-1?clearance[i+1]+1:255;
+  clearance[i]=Math.min(255,clearance[i],below,right);
+ }
+ peaceSkyMotionClearance=clearance;
  // Source-space negative challenge; these points lie below the protected
  // center mountain-safe horizon. No time-varying overlay is admitted here.
  for(const [x,y] of [[175,115],[210,115],[250,115],[295,115]]){
@@ -975,7 +996,9 @@ function drawPeaceSourceClouds(now,force=false){
  if(!force&&peaceCloudLast&&now-peaceCloudLast<46)return;
  peaceCloudLast=now;
  peaceCloudFieldInit();if(!peaceCloudOutputPixels)return;
- const t=reduced?0:Math.max(0,(now-(peaceMotionStartedAt||now))*.001);
+ // Distant cloud masses travel more slowly than the already accepted near water.
+ // Phase remains zero at entry, so we preserve the same initial camera/cloud pose.
+ const t=(reduced?0:Math.max(0,(now-(peaceMotionStartedAt||now))*.001))*.42;
  const src=peaceCloudBanks,sky=peaceSafeSkyMask,out=peaceCloudOutputPixels.data;
  out.fill(0);
  const W=480,H=270;
@@ -1027,7 +1050,10 @@ function drawPeaceSourceClouds(now,force=false){
    // This SOURCE-SPACE transition does not alter the water renderer or base art.
    // A smoothly held low cloud retains its presence without making terrain
    // appear to translate as the upper cloud carriers pass over it.
-   const skyMotion=1-smooth(36,66,y);
+   // Keep a buffer of still source haze around mountain silhouettes; moving
+   // clouds retain distinct depth above them, rather than shearing over rock.
+   const ridgeClearance=smooth(4,16,peaceSkyMotionClearance[y*W+x]);
+   const skyMotion=(1-smooth(25,56,y))*ridgeClearance;
    const heldAlpha=src[k+3]*limit/255*(1-skyMotion);
    let movingAlpha=0,movingR=0,movingG=0,movingB=0;
    if(skyMotion>0&&alphaSum>=2&&weightSum>=.0001){

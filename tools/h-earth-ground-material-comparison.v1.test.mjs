@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
+import {HEADS,POSES,GEN3008_STAGE_POSES,GEN3008_STAGE_MODES,GEN3008_FROZEN_SOURCE_HEAD,GEN3008_STAGE_RENDERER_SHA256,instrumentGen3008StageRenderer,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
 
 const fixture=()=>({state:{position:{x:18,y:24,z:-226},yawDegrees:-150,pitchDegrees:-14,verticalFovDegrees:56,sequence:10001},lastFrame:{navigationSequence:10001,frameSequence:21,cameraPosition:{x:18,y:24,z:-226}},expectedCameraPosition:{x:18,y:24,z:-226},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}});
 test('exact immutable pair and recovered four poses are frozen',()=>{assert.equal(HEADS.baseline,'60b3c07f0216645119a1b92b16dac82cae739145');assert.equal(HEADS.candidate,'60b3c07f0216645119a1b92b16dac82cae739145');assert.deepEqual(POSES.slice(0,4).map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[['river-overlook',18,-226,210,-14],['bare-mountain',88,-260,95,-10],['coast-oblique',0,-110,170,-8],['foothill-west',-52,-208,180,-12]]);});
@@ -118,4 +118,22 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  assert.equal(diagnostic.DIAGNOSTIC_MODES.length,9);
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
+});
+
+test('Gen3029 exact Gen3008 stage plan has two frozen defects and two protected controls',()=>{
+ assert.equal(GEN3008_FROZEN_SOURCE_HEAD,'3ea149e5b56e8cc0d5aac192bce0cdd47da7e626');
+ assert.equal(GEN3008_STAGE_RENDERER_SHA256,'10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c');
+ assert.deepEqual(GEN3008_STAGE_POSES.map(p=>p.name),['west_flank','central_approach','foothill-west','coast-oblique']);
+ assert.deepEqual(GEN3008_STAGE_POSES.slice(0,2).map(p=>[p.x,p.z,p.yaw]),[
+  [110,-310,153.434948822922],[150,-318,183.66778805553142]
+ ]);
+ assert.ok(GEN3008_STAGE_POSES.slice(0,2).every(p=>p.diagnosticObserver===true&&p.y>0));
+ assert.ok(GEN3008_STAGE_POSES.slice(2).every(p=>p.diagnosticObserver!==true));
+ assert.deepEqual(GEN3008_STAGE_MODES,[
+  'final-unlit','before-groundcover-unlit','after-groundcover-unlit',
+  'before-habitat-unlit','after-habitat-unlit'
+ ]);
+ assert.equal(GEN3008_STAGE_MODES.length*GEN3008_STAGE_POSES.length,20);
+ assert.throws(()=>instrumentGen3008StageRenderer('changed'),/GEN3008_STAGE_RENDERER_HASH_MISMATCH/);
+ assert.deepEqual(POSES.slice(0,4).map(p=>p.name),['river-overlook','bare-mountain','coast-oblique','foothill-west']);
 });

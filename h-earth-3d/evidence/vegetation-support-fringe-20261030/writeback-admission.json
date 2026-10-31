@@ -1,0 +1,32 @@
+{
+  "branchCreationAuthorized": true,
+  "errorCode": null,
+  "field": null,
+  "gateId": "REPOSITORY_OPERATION_INTAKE_AND_SINGLE_FLIGHT_LOCK_v1",
+  "implementationInferenceAuthorized": false,
+  "lock": {
+    "acquisitionCommitSha": "f4aae20c7c9b331239cd0484717eff70e67a8595",
+    "authorityProvenanceBound": true,
+    "committedLedgerBlobSha": "892ca70c69873522f3368820c55b185452ee4011",
+    "contentTransport": "GIT_BLOB_FALLBACK",
+    "lockAcquired": true,
+    "lockGeneration": 3010,
+    "lockScope": "H_EARTH:NATURAL_GRASS_SUPPORT_FRINGE_20261030",
+    "observedBranchHead": "44d794178c2f90a5a94eee0e8ce7345bce36df39",
+    "observedLedgerBlobSha": "fe2f37ded111b7ff62769b65a9c3b6fe5957b0e8",
+    "operationId": "H_EARTH_NATURAL_GRASS_SUPPORT_FRINGE_20261030_001",
+    "result": "ADMITTED_AND_LOCKED",
+    "schema": "REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1",
+    "scopeHash": "877c5b22198d9f112c1aa26392eea44317a229992e067eee6a0b527ccdbba5a3"
+  },
+  "operationId": "H_EARTH_NATURAL_GRASS_SUPPORT_FRINGE_20261030_001",
+  "operationStarted": true,
+  "procedureLocatorDigest": "78ec283844cd49f3a944696fb44b80abec693984f854d80e0f88ea5e7257feed",
+  "projectId": "H_EARTH",
+  "repositoryWritesAuthorized": true,
+  "requestDigest": "f90fd505980c68bdffe65c354693d6d7fb56a463c6a0d6fe76ad049e0b75f04b",
+  "result": "ADMITTED_AND_LOCKED",
+  "schema": "REPOSITORY_OPERATION_ADMISSION_RECEIPT_v1",
+  "sourceDocument": null,
+  "workflowExecutionAuthorized": true
+}

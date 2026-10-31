@@ -946,12 +946,20 @@ function drawPeaceSourceClouds(now,force=false){
   for(let x=0;x<W;x++){
    const k=(y*W+x)*4,limit=sky[k+3];
    if(limit<=2)continue;
-   // Three coherent weather domains, continuous shear across boundaries.
-   const l=Math.max(0,Math.min(1,(x-165)/65));
-   const r=Math.max(0,Math.min(1,(x-325)/60));
-   const vx=1.15*(1-l)-.83*l*(1-r)+.73*r;
-   const dx=vx*t+1.05*Math.sin(y*.083+t*.35)+.55*Math.sin(x*.053-y*.038+t*.29);
-   const dy=.075*t+.75*Math.sin(x*.052+t*.21)+.5*Math.sin(y*.07-t*.26);
+   // Readable layered cloud advection: three coherent weather masses have
+   // independent wind, while smooth transition bands prevent torn edges.
+   // Vertical depth makes lower/near clouds travel farther than high clouds.
+   const edgeL=Math.max(0,Math.min(1,(x-145)/80));
+   const edgeR=Math.max(0,Math.min(1,(x-310)/85));
+   const l=edgeL*edgeL*(3-2*edgeL),r=edgeR*edgeR*(3-2*edgeR);
+   const depth=.62+.60*y/116;
+   const wind=2.80*(1-l)-2.40*l*(1-r)+1.80*r;
+   const broadShear=(1.75+.75*depth)*Math.sin(y*.047+x*.008+t*.34);
+   const fineShear=1.15*Math.sin(x*.026-y*.041+t*.24);
+   const dx=wind*t*depth+broadShear+fineShear;
+   const updraft=(-.14*(1-l)+.11*l*(1-r)-.07*r)*t*depth;
+   const dy=updraft+1.15*Math.sin(x*.041+y*.012+t*.26)
+     +.62*Math.sin(x*.019-y*.071-t*.37);
    const sx=x-dx,sy=y-dy;
    const x0=Math.floor(sx),y0=Math.floor(sy);
    if(x0<0||x0>=W-1||y0<0||y0>=H-1)continue;
@@ -960,8 +968,9 @@ function drawPeaceSourceClouds(now,force=false){
    const w00=(1-fx)*(1-fy),w10=fx*(1-fy),w01=(1-fx)*fy,w11=fx*fy;
    const a=src[p+3]*w00+src[q+3]*w10+src[z+3]*w01+src[zq+3]*w11;
    if(a<2)continue;
-   // Material silhouette evolves under local shear, not horizontal strip sliding.
-   const evolution=.975+.025*Math.sin(x*.073+y*.049+t*.33);
+   // Slow edge morphology, not global brightness animation or flashing.
+   // Alpha changes exist only where original cloud material and sky custody do.
+   const evolution=.945+.055*Math.sin(x*.038+y*.059-t*.21);
    out[k]=src[p]*w00+src[q]*w10+src[z]*w01+src[zq]*w11;
    out[k+1]=src[p+1]*w00+src[q+1]*w10+src[z+1]*w01+src[zq+1]*w11;
    out[k+2]=src[p+2]*w00+src[q+2]*w10+src[z+2]*w01+src[zq+2]*w11;

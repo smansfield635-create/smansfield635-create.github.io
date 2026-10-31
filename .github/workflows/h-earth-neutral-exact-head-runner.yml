@@ -1422,3 +1422,109 @@ jobs:
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
           test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 10b5623b09c552930e54a1c1071c37535a831971
           (cd source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate && python3 -m unittest test_mesh_gate -v)
+
+  # Gen3008: inherited admission expectation repair, exactly three lit current-product images.
+  steep-side-current-visual-scout:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'reopened' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/steep-side-current-visual-scout-admission-test-fix-20261030' &&
+          github.event.pull_request.base.ref == 'main' &&
+          startsWith(github.event.pull_request.title, 'STEEP_SIDE_CURRENT_VISUAL_SCOUT:') }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - name: Read immutable dispatch intent
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: dispatch
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /h-earth-3d/evidence/steep-side-current-visual-scout-20261030/dispatch-intent.json
+      - name: Bind admitted one-shot source and three camera names
+        id: intent
+        env:
+          ATTEMPT: ${{ github.run_attempt }}
+        shell: bash
+        run: |
+          test "$ATTEMPT" = 1
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import assert from 'node:assert/strict';
+          const i=JSON.parse(fs.readFileSync('dispatch/h-earth-3d/evidence/steep-side-current-visual-scout-20261030/dispatch-intent.json'));
+          assert.equal(i.schema,'H_EARTH_STEEP_SIDE_FIXED_SCOUT_DISPATCH_v1');
+          assert.equal(i.operationId,'H_EARTH_STEEP_SIDE_CURRENT_SCOUT_ADMISSION_TEST_EXPECTATION_REPAIR_20261030_001');
+          assert.equal(i.lockGeneration,3008);assert.equal(i.admissionRun,41142565884);
+          assert.equal(i.candidateHead,'3ea149e5b56e8cc0d5aac192bce0cdd47da7e626');
+          assert.deepEqual(i.cameraIds,['west_flank','central_approach','east_oblique']);
+          assert.equal(i.frameCap,3);assert.equal(i.runBudget,1);assert.equal(i.automaticRetry,false);
+          assert.equal(i.ownerPhotoMatchProven,false);assert.equal(i.productMutationAllowed,false);
+          assert.match(i.toolingHead,/^[0-9a-f]{40}$/);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT,'tooling_head='+i.toolingHead+'\n');
+          NODE
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.intent.outputs.tooling_head }}
+          path: tooling
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 3ea149e5b56e8cc0d5aac192bce0cdd47da7e626
+          path: candidate
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: a26dc41964ae334a5ce73a637bcc96a0b4d43807
+          path: support
+          persist-credentials: false
+          sparse-checkout: tools
+      - name: Require reviewed source hashes and restore accepted helpers
+        env:
+          TOOL_HEAD: ${{ steps.intent.outputs.tooling_head }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C tooling rev-parse HEAD)" = "$TOOL_HEAD"
+          test "$(git -C candidate rev-parse HEAD)" = 3ea149e5b56e8cc0d5aac192bce0cdd47da7e626
+          test "$(git -C support rev-parse HEAD)" = a26dc41964ae334a5ce73a637bcc96a0b4d43807
+          test "$(git -C tooling rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)" = "$(git -C dispatch rev-parse HEAD:.github/workflows/h-earth-neutral-exact-head-runner.yml)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';import assert from 'node:assert/strict';import {execFileSync} from 'node:child_process';import {createHash} from 'node:crypto';
+          const gitBlob=p=>execFileSync('git',['hash-object',p],{encoding:'utf8'}).trim();
+          const sha256=p=>createHash('sha256').update(fs.readFileSync(p)).digest('hex');
+          const b='h-earth-3d/evidence/steep-side-current-visual-scout-20261030/';
+          const i=JSON.parse(fs.readFileSync('dispatch/'+b+'dispatch-intent.json'));
+          const review=JSON.parse(fs.readFileSync('tooling/'+b+'independent-review.json'));
+          assert.equal(review.result,'PASS_STATIC_SOURCE_READY_FOR_ONE_GPU_SCOUT');
+          assert.equal(review.builderSelfApproval,false);
+          assert.deepEqual(Object.keys(i.sourceBlobIds).sort(),['.github/workflows/h-earth-neutral-exact-head-runner.yml',b+'qualify.mjs',b+'qualify.test.mjs',b+'coverage-plan.json',b+'admission.json',b+'product-binding.json'].sort());
+          for(const[p,h]of Object.entries(i.sourceBlobIds)){assert.equal(gitBlob('tooling/'+p),h);assert.equal(review.sourceBlobIds[p],h);}
+          const helpers={'h-earth-ground-material-comparison.v1.mjs':'b7d61c3359e21b793d24bed01b73493549a427cb390cec779d0adf9265b50509','h-earth-corrected-material-application.mjs':'070ad7daf51bbf41c2f4223ad9ba3a0143bde6aa3f7439df603c4a2718f50558','h-earth-world-position-overlay.mjs':'d61880ba98d81eae5d7cc6503f10f34d5aaa37819f4ba4a22218d87e711ca797','h-earth-groundcover-factor-overlay.mjs':'e9a872402371087e49031bca2ca27d0f37c9ab1012df50a5ebbf63617a3bf9e1'};
+          for(const[p,h]of Object.entries(helpers)){assert.equal(sha256('support/tools/'+p),h);fs.copyFileSync('support/tools/'+p,'tooling/tools/'+p);}
+          NODE
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test current camera, renderer, vegetation and frame invariants
+        working-directory: tooling
+        run: node --test h-earth-3d/evidence/steep-side-current-visual-scout-20261030/qualify.test.mjs
+      - name: Install approved Playwright browser
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1 pngjs@7.0.0
+          npx playwright install --with-deps chromium
+      - name: Capture three exact current product grass-visible images
+        working-directory: tooling
+        run: timeout 3300s node h-earth-3d/evidence/steep-side-current-visual-scout-20261030/qualify.mjs --candidate-dir ../candidate --output "${{ runner.temp }}/steep-side-scout"
+      - name: Preserve bounded partial or complete evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-steep-side-current-scout-${{ github.run_id }}
+          path: ${{ runner.temp }}/steep-side-scout
+          if-no-files-found: warn
+          retention-days: 90
+

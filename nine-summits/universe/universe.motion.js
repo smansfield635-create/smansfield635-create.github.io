@@ -942,39 +942,53 @@ function drawPeaceSourceClouds(now,force=false){
  const src=peaceCloudBanks,sky=peaceSafeSkyMask,out=peaceCloudOutputPixels.data;
  out.fill(0);
  const W=480,H=270;
+ // Each original-art cloud carrier retains its own source-space footprint.
+ // Independent winds move those footprints; soft membership at source coordinates
+ // keeps their contours coherent instead of shearing the destination screen.
+ const winds=[2.80,-2.40,1.80],lifts=[-.14,.11,-.07];
+ const curlXScale=[1,-.78,.65],curlYScale=[.84,-.72,1.05];
+ const smooth=(a,b,v)=>{const u=Math.max(0,Math.min(1,(v-a)/(b-a)));return u*u*(3-2*u);};
  for(let y=0;y<116;y++){
+  const depth=.62+.60*y/116;
   for(let x=0;x<W;x++){
    const k=(y*W+x)*4,limit=sky[k+3];
    if(limit<=2)continue;
-   // Readable layered cloud advection: three coherent weather masses have
-   // independent wind, while smooth transition bands prevent torn edges.
-   // Vertical depth makes lower/near clouds travel farther than high clouds.
-   const edgeL=Math.max(0,Math.min(1,(x-145)/80));
-   const edgeR=Math.max(0,Math.min(1,(x-310)/85));
-   const l=edgeL*edgeL*(3-2*edgeL),r=edgeR*edgeR*(3-2*edgeR);
-   const depth=.62+.60*y/116;
-   const wind=2.80*(1-l)-2.40*l*(1-r)+1.80*r;
-   const broadShear=(1.75+.75*depth)*Math.sin(y*.047+x*.008+t*.34);
-   const fineShear=1.15*Math.sin(x*.026-y*.041+t*.24);
-   const dx=wind*t*depth+broadShear+fineShear;
-   const updraft=(-.14*(1-l)+.11*l*(1-r)-.07*r)*t*depth;
-   const dy=updraft+1.15*Math.sin(x*.041+y*.012+t*.26)
-     +.62*Math.sin(x*.019-y*.071-t*.37);
-   const sx=x-dx,sy=y-dy;
-   const x0=Math.floor(sx),y0=Math.floor(sy);
-   if(x0<0||x0>=W-1||y0<0||y0>=H-1)continue;
-   const fx=sx-x0,fy=sy-y0;
-   const p=(y0*W+x0)*4,q=p+4,z=p+4*W,zq=z+4;
-   const w00=(1-fx)*(1-fy),w10=fx*(1-fy),w01=(1-fx)*fy,w11=fx*fy;
-   const a=src[p+3]*w00+src[q+3]*w10+src[z+3]*w01+src[zq+3]*w11;
-   if(a<2)continue;
-   // Slow edge morphology, not global brightness animation or flashing.
-   // Alpha changes exist only where original cloud material and sky custody do.
+   // Preserve the accepted V12 initial cloud pose exactly at t=0.
+   const staticX=(1.75+.75*depth)*Math.sin(y*.047+x*.008)
+     +1.15*Math.sin(x*.026-y*.041);
+   const staticY=1.15*Math.sin(x*.041+y*.012)
+     +.62*Math.sin(x*.019-y*.071);
+   // Low-amplitude evolving curl is zero at t=0 and never acts on scenery.
+   const cx=x*.021+y*.017,cy=x*.015-y*.028;
+   const curlX=.52*(Math.sin(cx+t*.19)-Math.sin(cx));
+   const curlY=.38*(Math.sin(cy+t*.16)-Math.sin(cy));
+   let alphaSum=0,weightSum=0,redSum=0,greenSum=0,blueSum=0;
+   for(let i=0;i<3;i++){
+    const sx=x-staticX-winds[i]*t*depth-curlX*curlXScale[i];
+    const sy=y-staticY-lifts[i]*t*depth-curlY*curlYScale[i];
+    // Membership follows the sampled ORIGINAL material rather than
+    // destination x. The overlapping seams are deliberately feathered.
+    const left=smooth(145,225,sx),right=smooth(310,395,sx);
+    const weight=i===0?1-left:i===1?left*(1-right):left*right;
+    if(weight<=.0001)continue;
+    weightSum+=weight;
+    const x0=Math.floor(sx),y0=Math.floor(sy);
+    if(x0<0||x0>=W-1||y0<0||y0>=H-1)continue;
+    const fx=sx-x0,fy=sy-y0;
+    const p=(y0*W+x0)*4,q=p+4,z=p+4*W,zq=z+4;
+    const w00=(1-fx)*(1-fy),w10=fx*(1-fy),w01=(1-fx)*fy,w11=fx*fy;
+    const a=src[p+3]*w00+src[q+3]*w10+src[z+3]*w01+src[zq+3]*w11;
+    if(a<1)continue;
+    const wa=weight*a;
+    alphaSum+=wa;
+    redSum+=wa*(src[p]*w00+src[q]*w10+src[z]*w01+src[zq]*w11);
+    greenSum+=wa*(src[p+1]*w00+src[q+1]*w10+src[z+1]*w01+src[zq+1]*w11);
+    blueSum+=wa*(src[p+2]*w00+src[q+2]*w10+src[z+2]*w01+src[zq+2]*w11);
+   }
+   if(alphaSum<2||weightSum<.0001)continue;
    const evolution=.945+.055*Math.sin(x*.038+y*.059-t*.21);
-   out[k]=src[p]*w00+src[q]*w10+src[z]*w01+src[zq]*w11;
-   out[k+1]=src[p+1]*w00+src[q+1]*w10+src[z+1]*w01+src[zq+1]*w11;
-   out[k+2]=src[p+2]*w00+src[q+2]*w10+src[z+2]*w01+src[zq+2]*w11;
-   out[k+3]=Math.min(255,a*limit/255*evolution);
+   out[k]=redSum/alphaSum;out[k+1]=greenSum/alphaSum;out[k+2]=blueSum/alphaSum;
+   out[k+3]=Math.min(255,alphaSum/weightSum*limit/255*evolution);
   }
  }
  peaceCloudOutputContext.putImageData(peaceCloudOutputPixels,0,0);

@@ -971,6 +971,9 @@ function drawPeaceSourceClouds(now,force=false){
  peaceCloudOutputContext.putImageData(peaceCloudOutputPixels,0,0);
  peaceCloudContext.clearRect(0,0,960,540);
  peaceCloudContext.drawImage(peaceCloudOutputCanvas,0,0,960,540);
+ if(!peaceSkyMaskSource)throw Error('PEACE_V12_SKY_MATTE_MISSING');
+ peaceCloudContext.save();peaceCloudContext.globalCompositeOperation='destination-in';
+ peaceCloudContext.drawImage(peaceSkyMaskSource,0,0,960,540);peaceCloudContext.restore();
 }
 function updatePeaceCinema(){
  if(!peaceCinemaLayer||peaceCinemaState==='error')return;
@@ -1034,6 +1037,9 @@ function drawPeaceSourceWater(now,force=false){
  peaceWaveFieldContext.putImageData(peaceWaveFieldPixels,0,0);
  c.clearRect(0,0,960,540);
  c.drawImage(peaceWaveFieldCanvas,0,0,960,540);
+ if(!peaceWaterMaskSource)throw Error('PEACE_V12_WATER_MATTE_MISSING');
+ c.save();c.globalCompositeOperation='destination-in';
+ c.drawImage(peaceWaterMaskSource,0,0,960,540);c.restore();
 }
 function schedulePeaceRealGeometry(){
  // The art appears first; the exact existing H-Earth construction runs after

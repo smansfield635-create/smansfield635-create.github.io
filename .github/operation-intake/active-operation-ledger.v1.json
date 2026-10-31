@@ -21003,6 +21003,50 @@
       "scopeHash": "dabba37df9bed6555ac482b45dace1858093a62d8cf9912caf559fdf20799610",
       "state": "ADMITTED_LOCKED"
     },
+    "db0aa5b715e46e0412b76b428d73bfd482248fc8b9f0f5b93def83119eae60eb": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c3a60da70487bfb2e0c8be66eba2c0a06888e40f",
+          "lockGeneration": 3031,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_RIDGE_CLOUD_OPTICAL:20261031",
+          "operationId": "NINE_SUMMITS_GRATITUDE_RIDGE_CLOUD_OPTICAL_DECOUPLING_20261031_001",
+          "procedureLocatorDigest": "d2f31895d7da22b7539d36e852eccfb89361afd70cd2dc1c7ec11dbf8b5a738d",
+          "requestDigest": "d96fe109022fd0be2414b1541790b1ad76ea045e56600213cedc3f2a8542878e",
+          "scopeHash": "db0aa5b715e46e0412b76b428d73bfd482248fc8b9f0f5b93def83119eae60eb"
+        },
+        "bindingDigest": "c0bdf7349f0e781b0f81ae234c2b4c70891fa936f8c509f76794aaf48d3ded05",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c7f6b1c9a8a9b727ba2afaa37d4c4b2eb1d73bbfdfda87ffbf5b1de281fdf6fb",
+          "commentId": 6549325685,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41243457002,
+          "workflowSha": "c3a60da70487bfb2e0c8be66eba2c0a06888e40f"
+        },
+        "lineageAnchorCommitSha": "56a5fef08b3e0a38cc58e526599d2b78d855fd81",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "c3a60da70487bfb2e0c8be66eba2c0a06888e40f",
+      "lockGeneration": 3031,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_RIDGE_CLOUD_OPTICAL:20261031",
+      "operationId": "NINE_SUMMITS_GRATITUDE_RIDGE_CLOUD_OPTICAL_DECOUPLING_20261031_001",
+      "procedureLocatorDigest": "d2f31895d7da22b7539d36e852eccfb89361afd70cd2dc1c7ec11dbf8b5a738d",
+      "released": false,
+      "requestDigest": "d96fe109022fd0be2414b1541790b1ad76ea045e56600213cedc3f2a8542878e",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "db0aa5b715e46e0412b76b428d73bfd482248fc8b9f0f5b93def83119eae60eb",
+      "state": "ADMITTED_LOCKED"
+    },
     "dba5223c9bb83585b89475b37864dded65890a1172f4b52ef5e6737ebe3f55bb": {
       "governingHead": "ef83a4c5a687eabf5f28ce56a33472c94d660a5c",
       "lockGeneration": 1710,
@@ -23963,7 +24007,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3030,
+  "lockGeneration": 3031,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -354,6 +354,72 @@ function runSelfTest() {
   });
   assert(explicitWithNovel.result === 'SELECTED', 'CONTROL_PLANE_DEPENDENCY_STILL_SELECTED');
 
+  // Canonical provenance and digest checks are part of the admission verifier,
+  // not just a caller-supplied candidate-path flag.
+  const ownerRequest = {
+    schema: 'REPOSITORY_OPERATION_REQUEST_v1', operationClass: 'RUNTIME_OR_AUTHORITY',
+    projectId: 'H_EARTH', operationId: 'H_EARTH_EXACT_ADMISSION_FIXTURE',
+    lockScope: 'H_EARTH:EXACT_ADMISSION_FIXTURE',
+    exactGoverningHead: 'a'.repeat(40),
+    allowedPaths: ['h-earth-3d/evidence/fixture/**']
+  };
+  const ownerProcedure = {
+    schema: 'REPOSITORY_CONSTRUCTION_PROCEDURE_v1',
+    operationClass: 'RUNTIME_OR_AUTHORITY', exactGoverningHead: ownerRequest.exactGoverningHead,
+    exactAllowedRepositoryPaths: ownerRequest.allowedPaths
+  };
+  const ownerPacket = {schema: 'CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1',
+    operationRequest: ownerRequest, constructionProcedure: ownerProcedure};
+  const ownerComment = {
+    body: admissionMarker + JSON.stringify(ownerPacket),
+    user: {login: 'smansfield635-create'}, author_association: 'OWNER',
+    issue_url: 'https://api.github.com/repos/' + expectedRepository + '/issues/999'
+  };
+  const requestDigest = sha256(JSON.stringify(stable(ownerRequest)));
+  const procedureDigest = sha256(JSON.stringify(stable(ownerProcedure)));
+  const ownerLock = {
+    schema: 'REPOSITORY_OPERATION_LOCK_v1',
+    state: 'ADMITTED_LOCKED', released: false, lockGeneration: 3010,
+    operationId: ownerRequest.operationId, lockScope: ownerRequest.lockScope,
+    governingHead: ownerRequest.exactGoverningHead,
+    scopeHash: sha256(ownerRequest.lockScope), requestDigest, procedureLocatorDigest: procedureDigest,
+    authorityProvenance: {
+      schema: 'REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1', origin: 'CANONICAL_INTAKE',
+      authorityIdentity: {
+        operationId: ownerRequest.operationId, lockGeneration: 3010,
+        scopeHash: sha256(ownerRequest.lockScope), governingHead: ownerRequest.exactGoverningHead,
+        requestDigest, procedureLocatorDigest: procedureDigest
+      },
+      invocation: {
+        schema: 'REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1',
+        repository: expectedRepository, marker: 'CANONICAL_OPERATION_INTAKE_REQUEST_V1',
+        commentAuthorAssociation: 'OWNER', commentAuthorLogin: 'smansfield635-create',
+        issueNumber: 999, commentId: 4567, commentBodySha256: sha256(ownerComment.body)
+      }
+    }
+  };
+  assert(verifyCanonicalLockPair(ownerLock, ownerPacket, ownerComment, 3010),
+    'AUTHENTIC_MATCHING_LOCK_AND_OWNER_PACKET_ACCEPTED');
+  assert(!verifyCanonicalLockPair({...ownerLock, released: true}, ownerPacket, ownerComment, 3010),
+    'CLOSED_LOCK_REJECTED');
+  assert(!verifyCanonicalLockPair(ownerLock, ownerPacket, ownerComment, 3011),
+    'GENERATION_MISMATCH_REJECTED');
+  assert(!verifyCanonicalLockPair(ownerLock, ownerPacket,
+    {...ownerComment, body: ownerComment.body + 'tamper'}, 3010),
+    'OWNER_COMMENT_DIGEST_TAMPER_REJECTED');
+  assert(!verifyCanonicalLockPair(ownerLock,
+    {...ownerPacket, operationRequest: {...ownerRequest, allowedPaths: ['h-earth-3d/**']}},
+    ownerComment, 3010), 'FORGED_PATH_SCOPE_REJECTED');
+  assert(!verifyCanonicalLockPair(ownerLock, ownerPacket,
+    {...ownerComment, author_association: 'CONTRIBUTOR'}, 3010),
+    'UNAUTHORIZED_COMMENT_AUTHOR_REJECTED');
+  assert(allWithinAdmission(['h-earth-3d/evidence/fixture/dry-run.mjs'],
+    ownerRequest.allowedPaths), 'EXACT_ADMITTED_CANDIDATE_GLOB_ACCEPTED');
+  assert(!allWithinAdmission(['h-earth-3d/evidence/foreign.mjs'],
+    ownerRequest.allowedPaths), 'UNADMITTED_SIBLING_SCOPE_REJECTED');
+  assert(!allWithinAdmission(['h-earth-3d/registry/authority.json'],
+    ownerRequest.allowedPaths), 'UNDECLARED_DURABLE_AUTHORITY_REJECTED');
+
   const workflowSelfChange = evaluateWorkflowApplicability({
     changedPaths: ['.github/workflows/h-earth-repository-registry-preflight.yml']
   });
@@ -373,7 +439,7 @@ function runSelfTest() {
   return {
     schema: 'WORKFLOW_APPLICABILITY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
-    assertions: 20,
+    assertions: 29,
     regression: 'RUN_34773289185_AUDRALIA_THREE_PATH_FALSE_BLOCK',
     historicalRegressionDisposition: historicalAudraliaRegression.result,
     selectedFixture: 'H_EARTH_REGISTRY_EXPLICIT_DEPENDENCY',

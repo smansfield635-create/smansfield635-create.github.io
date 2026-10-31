@@ -1,19 +1,30 @@
 /* Universe first slice. Geometry: H-Earth kernel; motion: unchanged Compass physics.
  * Heart contour and dome proportions: nine-summits-of-love/index.html at 171a74bc.
  * Planet lighting is a visual metaphor; no physical simulation claims. */
+// Public summit identity is book-authored. Physical legacy slots stay stable for the renderers.
+// Original book order is deliberately distinct from the legacy orbital order.
+const BOOK_ORDER_SLOTS=Object.freeze([4,1,2,3,7,0,5,6,8]);
+const BOOK_ORDINAL_BY_SLOT=Object.freeze(['VI','II','III','IV','I','VII','VIII','V','IX']);
+const BOOK_PAIR_BY_SLOT=Object.freeze([
+  ['Forgiveness','Resentment'],['Generosity','Greed'],['Dependability','Irresponsibility'],
+  ['Accountability','Blame'],['Gratitude','Entitlement'],['Self-Control','Impulsivity'],
+  ['Patience','Instant gratification'],['Humility','Arrogance'],['Purity','Pettiness']
+]);
 const summits = [
-  ['Gratitude','Joy','#d5aa66'],['Generosity','Love','#cb7584'],['Dependability','Stability','#749cab'],
-  ['Accountability','Character','#b88360'],['Forgiveness','Peace','#a3b8aa'],['Self-Control','Balance','#8e8ead'],
-  ['Patience','Structure','#9caa7d'],['Humility','Dignity','#ba9cae'],['Purity','Free Will','#b8c9d2']
+  ['Forgiveness','Resentment','#a3b8aa'],['Generosity','Greed','#cb7584'],['Dependability','Irresponsibility','#749cab'],
+  ['Accountability','Blame','#b88360'],['Gratitude','Entitlement','#d5aa66'],['Self-Control','Impulsivity','#8e8ead'],
+  ['Patience','Instant gratification','#9caa7d'],['Humility','Arrogance','#ba9cae'],['Purity','Pettiness','#b8c9d2']
 ];
+// Former procedural Joy slot 0 is a book-only Forgiveness portal pending its own approved environment.
+const BOOK_ONLY_SUMMIT_SLOT=0;
 // Teaching text follows the nine relationships on the book page; examples invite reflection.
 const teachings = [
   {
-    "title": "Joy begins with noticing.",
-    "intro": "Gratitude makes room for joy in what is already here.",
-    "teaching": "Joy does not begin with having everything. It begins with recognizing what is already alive, valuable, and worth receiving.",
-    "choice": "After a difficult day, fear can narrow your attention to what is missing. Choosing love can begin with noticing one kindness without pretending the difficulty has disappeared.",
-    "question": "What is worth appreciating in your life today?"
+    "title": "Peace leaves room for truth.",
+    "intro": "Forgiveness releases the fight without erasing what happened.",
+    "teaching": "Forgiveness does not erase truth. It ends the unnecessary war so truth, boundaries, and repair can occupy the same room.",
+    "choice": "You can choose to stop feeding resentment while keeping an honest boundary. Forgiveness does not require pretending trust has already been restored.",
+    "question": "What would peace look like while keeping an honest boundary?"
   },
   {
     "title": "Love becomes something we give.",
@@ -37,11 +48,11 @@ const teachings = [
     "question": "What can you take responsibility for and begin to repair?"
   },
   {
-    "title": "Peace leaves room for truth.",
-    "intro": "Forgiveness releases the fight without erasing what happened.",
-    "teaching": "Forgiveness does not erase truth. It ends the unnecessary war so truth, boundaries, and repair can occupy the same room.",
-    "choice": "You can choose to stop feeding resentment while keeping an honest boundary. Forgiveness does not require pretending trust has already been restored.",
-    "question": "What would peace look like while keeping an honest boundary?"
+    "title": "Gratitude begins with seeing.",
+    "intro": "Gratitude recognizes value without assuming it was owed.",
+    "teaching": "Gratitude does not deny what is missing or difficult. It notices what remains worthy of care, recognizing gifts that entitlement has begun to treat as guarantees.",
+    "choice": "When disappointment narrows your attention, name a kindness, relationship, or opportunity you did not create alone. Appreciating its value does not erase the difficulty; it gives you somewhere truthful to begin.",
+    "question": "What in your life still deserves gratitude, even when today is difficult?"
   },
   {
     "title": "Feel deeply. Choose deliberately.",
@@ -122,21 +133,21 @@ function choose(index,scroll=true){
       ?active:labels[index]||document.querySelector(`[data-summit="${index}"]`);
     if(index===4)peaceFocusReturn=stored;else if(index===1)loveFocusReturn=stored;else if(index===2)stabilityFocusReturn=stored;else if(index===3)emberFocusReturn=stored;else if(index===5)balanceFocusReturn=stored;else if(index===6)canopyFocusReturn=stored;else if(index===7)highlandsFocusReturn=stored;else if(index===8)opalFocusReturn=stored;else joyFocusReturn=stored;
   }
-  teachingRevealVersion++;$('#scene-note').textContent='Begin with Peace · or turn the universe and explore all nine'; selected=index; close=false; targetZoom=1;targetOffset=[0,0,0];panel.style.setProperty('--world-accent',summits[index][2]);scene.style.setProperty('--world-accent',summits[index][2]);
-  const [begin,summit]=summits[index], teaching=teachings[index];
-  $('#reflection-path').textContent=`Summit ${index+1} of 9 · ${begin} → ${summit}`;
+  teachingRevealVersion++;$('#scene-note').textContent='Begin with Gratitude · or turn the universe and explore all nine'; selected=index; close=false; targetZoom=1;targetOffset=[0,0,0];panel.style.setProperty('--world-accent',summits[index][2]);scene.style.setProperty('--world-accent',summits[index][2]);
+  const [summit,opposing]=summits[index], teaching=teachings[index];
+  $('#reflection-path').textContent=`Summit ${BOOK_ORDINAL_BY_SLOT[index]} of IX · ${summit} / ${opposing}`;
   $('#reflection-title').textContent=teaching.title;
   $('#reflection-copy').textContent=teaching.intro;
   $('#teaching-copy').textContent=teaching.teaching;
   $('#teaching-choice').textContent=teaching.choice;
   $('#reflection-question').textContent=teaching.question;
-  $('#summit-teaching').hidden=ready;
+  $('#summit-teaching').hidden=ready&&index!==BOOK_ONLY_SUMMIT_SLOT;
   panel.hidden=false;returnButton.hidden=false;
   labels.forEach((el,i)=>el.setAttribute('aria-pressed',String(i===index)));
-  status.textContent=`${begin} leads to ${summit}.`;
+  status.textContent=`Summit ${BOOK_ORDINAL_BY_SLOT[index]}: ${summit} stands against ${opposing}.`;
   updateMotionControl();
   if(index===4&&ready){startPeaceFlight();return;}
-  if(index===0&&ready){startJoyFlight();return;}
+  if(index===BOOK_ONLY_SUMMIT_SLOT&&ready){status.textContent='Summit VI — Forgiveness. Explore the complete teaching while its distinct environment is developed.';requestFrame();if(scroll){panel.scrollIntoView({behavior:reduced?'instant':'smooth',block:'nearest'});panel.focus({preventScroll:true});}return;}
   if(index===1&&ready){startLoveFlight();return;}
   if(index===2&&ready){startStabilityFlight();return;}
   if(index===3&&ready){startEmberFlight();return;}
@@ -150,7 +161,7 @@ function choose(index,scroll=true){
 function returnToAll(){
   if((selected===4||selected===0||selected===1||selected===2||selected===3||selected===5||selected===6||selected===7||selected===8)&&(flight>.002||flightTarget>0)){flightTarget=0;flightStage='return';peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');joyOverlay.classList.remove('is-visible');joyOverlay.setAttribute('aria-hidden','true');loveOverlay.classList.remove('is-visible');loveOverlay.setAttribute('aria-hidden','true');
     stabilityOverlay.classList.remove('is-visible');stabilityOverlay.setAttribute('aria-hidden','true');emberOverlay.classList.remove('is-visible');emberOverlay.setAttribute('aria-hidden','true');balanceOverlay.classList.remove('is-visible');balanceOverlay.setAttribute('aria-hidden','true');canopyOverlay.classList.remove('is-visible');canopyOverlay.setAttribute('aria-hidden','true');highlandsOverlay.classList.remove('is-visible');highlandsOverlay.setAttribute('aria-hidden','true');opalOverlay.classList.remove('is-visible');opalOverlay.setAttribute('aria-hidden','true');peaceOverlay.style.opacity='0';peaceOverlay.style.pointerEvents='none';scene.dataset.stage='return';document.documentElement.classList.remove('universe-encounter','universe-joy','universe-love','universe-stability','universe-ember','universe-peace','universe-balance','universe-canopy','universe-highlands','universe-opal');updateMotionControl();requestFrame();return;}
-  stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Begin with Peace · or turn the universe and explore all nine'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];panel.style.removeProperty('--world-accent');scene.style.removeProperty('--world-accent');
+  stopInertia();teachingRevealVersion++;$('#scene-note').textContent='Begin with Gratitude · or turn the universe and explore all nine'; const prior=selected; selected=-1;close=false;targetZoom=1;targetOffset=[0,0,0];panel.style.removeProperty('--world-accent');scene.style.removeProperty('--world-accent');
   panel.hidden=true;returnButton.hidden=true;status.textContent='All nine summits. One path. Your orientation is preserved.';
   $('#summit-teaching').hidden=true;
   labels.forEach(el=>el.setAttribute('aria-pressed','false'));requestFrame();
@@ -159,10 +170,10 @@ function returnToAll(){
 
 function startPeaceFlight(){
   panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';
-  if(!peaceGL){try{setupPeaceWorld();}catch(error){console.error('Forgiveness world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Quiet Ocean is unavailable. Read the complete Peace teaching below.';panel.focus({preventScroll:true});return;}}
+  if(!peaceGL){try{setupPeaceWorld();}catch(error){console.error('Gratitude world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Golden Lagoon is unavailable. Read the complete Gratitude teaching below.';panel.focus({preventScroll:true});return;}}
   scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});
   peaceOverlay.classList.remove('is-visible');peaceOverlay.setAttribute('aria-hidden','true');
-  $('#scene-note').textContent='Approaching Forgiveness — Peace';status.textContent='Traveling toward The Quiet Ocean.';
+  $('#scene-note').textContent='Approaching Summit I — Gratitude';status.textContent='Traveling toward The Golden Lagoon.';
   updateMotionControl();requestFrame();
 }
 function openWorldList(){
@@ -170,12 +181,12 @@ function openWorldList(){
  list.scrollIntoView({behavior:reduced?'instant':'smooth',block:'start'});
  list.querySelector('summary')?.focus({preventScroll:true});
 }
-function beginWithPeace(){
+function beginWithGratitude(){
   if(selected!==4){choose(4,!ready);return;}
   if(ready)startPeaceFlight();
   else{panel.hidden=false;$('#summit-teaching').hidden=false;panel.scrollIntoView({behavior:'instant',block:'nearest'});panel.focus({preventScroll:true});}
 }
-$('#explore-worlds').addEventListener('click',beginWithPeace);
+$('#explore-worlds').addEventListener('click',beginWithGratitude);
 $('#view-all-worlds').addEventListener('click',openWorldList);
 $('#peace-return').addEventListener('click',returnToAll);
 $('#joy-return').addEventListener('click',returnToAll);
@@ -186,15 +197,15 @@ $('#balance-return').addEventListener('click',returnToAll);
 $('#canopy-return').addEventListener('click',returnToAll);
 $('#highlands-return').addEventListener('click',returnToAll);
 $('#opal-return').addEventListener('click',returnToAll);
-function startLoveFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!loveGL){try{setupLoveWorld();}catch(error){console.error('Generosity world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Living Constellation is unavailable. Read the complete Love teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Generosity — Love';status.textContent='Traveling toward the Living Constellation.';updateMotionControl();requestFrame();}
-function startHighlandsFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!highlandsGL){try{setupHighlandsWorld();}catch(error){console.error('Humility world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Quiet Highlands are unavailable. Read the complete Dignity teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Humility — Dignity';status.textContent='Traveling toward The Quiet Highlands.';updateMotionControl();requestFrame();}
-function startOpalFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!opalGL){try{setupOpalWorld();}catch(error){console.error('Opal Passage world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Opal Passage is unavailable. Read the complete Free Will teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Purity — Free Will';status.textContent='Traveling toward The Opal Passage.';updateMotionControl();requestFrame();}
+function startLoveFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!loveGL){try{setupLoveWorld();}catch(error){console.error('Generosity world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Living Constellation is unavailable. Read the complete Love teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit II — Generosity';status.textContent='Traveling toward the Living Constellation.';updateMotionControl();requestFrame();}
+function startHighlandsFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!highlandsGL){try{setupHighlandsWorld();}catch(error){console.error('Humility world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Quiet Highlands are unavailable. Read the complete Dignity teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit V — Humility';status.textContent='Traveling toward The Quiet Highlands.';updateMotionControl();requestFrame();}
+function startOpalFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!opalGL){try{setupOpalWorld();}catch(error){console.error('Opal Passage world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Opal Passage is unavailable. Read the complete Free Will teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit IX — Purity';status.textContent='Traveling toward The Opal Passage.';updateMotionControl();requestFrame();}
 
-function startCanopyFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!canopyGL){try{setupCanopyWorld();}catch(error){console.error('Patience world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Ancient Canopy is unavailable. Read the complete Structure teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Patience — Structure';status.textContent='Traveling toward The Ancient Canopy.';updateMotionControl();requestFrame();}
-function startBalanceFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!balanceGL){try{setupBalanceWorld();}catch(error){console.error('Self-Control world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Twin Equilibrium is unavailable. Read the complete Balance teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Self-Control — Balance';status.textContent='Traveling toward The Twin Equilibrium.';updateMotionControl();requestFrame();}
-function startEmberFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!emberGL){try{setupEmberWorld();}catch(error){console.error('Accountability world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Ember Canyons are unavailable. Read the complete Character teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Accountability — Character';status.textContent='Traveling toward the Ember Canyons.';updateMotionControl();requestFrame();}
-function startStabilityFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!stabilityGL){try{setupStabilityWorld();}catch(error){console.error('Dependability world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Great Basalt Terraces are unavailable. Read the complete Stability teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Dependability — Stability';status.textContent='Traveling toward the Great Basalt Terraces.';updateMotionControl();requestFrame();}
-function startJoyFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Gratitude — Joy';status.textContent='Traveling toward the Dawn Archipelago.';updateMotionControl();requestFrame();}
+function startCanopyFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!canopyGL){try{setupCanopyWorld();}catch(error){console.error('Patience world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Ancient Canopy is unavailable. Read the complete Structure teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit VIII — Patience';status.textContent='Traveling toward The Ancient Canopy.';updateMotionControl();requestFrame();}
+function startBalanceFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!balanceGL){try{setupBalanceWorld();}catch(error){console.error('Self-Control world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Twin Equilibrium is unavailable. Read the complete Balance teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit VII — Self-Control';status.textContent='Traveling toward The Twin Equilibrium.';updateMotionControl();requestFrame();}
+function startEmberFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!emberGL){try{setupEmberWorld();}catch(error){console.error('Accountability world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Ember Canyons are unavailable. Read the complete Character teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit IV — Accountability';status.textContent='Traveling toward the Ember Canyons.';updateMotionControl();requestFrame();}
+function startStabilityFlight(){panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';if(!stabilityGL){try{setupStabilityWorld();}catch(error){console.error('Dependability world:',error);flightTarget=0;flightStage='arrival';close=false;panel.hidden=false;returnButton.hidden=false;$('#summit-teaching').hidden=false;status.textContent='The Great Basalt Terraces are unavailable. Read the complete Stability teaching below.';panel.focus({preventScroll:true});return;}}scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Summit III — Dependability';status.textContent='Traveling toward the Great Basalt Terraces.';updateMotionControl();requestFrame();}
+function startJoyFlight(){throw Error('UNAPPROVED_PROCEDURAL_JOY_SCENE_DISABLED');panel.hidden=true;close=true;flight=0;flightTarget=1;flightStage='approach';scene.dataset.stage='approach';document.documentElement.classList.add('universe-approaching');scene.scrollIntoView({behavior:'instant',block:'start'});$('#scene-note').textContent='Approaching Gratitude — Joy';status.textContent='Traveling toward the Dawn Archipelago.';updateMotionControl();requestFrame();}
 
 document.querySelectorAll('[data-summit]').forEach(el=>el.addEventListener('click',()=>choose(Number(el.dataset.summit))));
 returnButton.addEventListener('click',returnToAll);
@@ -903,7 +914,42 @@ function peaceMaterialRaster(image){
  return g.getImageData(0,0,480,270).data;
 }
 function peaceBuildCloudBanks(image){return peaceMaterialRaster(image);}
-function peaceBuildSafeSkyMask(image){return peaceMaterialRaster(image);}
+function peaceBuildSafeSkyMask(image){
+ const original=peaceMaterialRaster(image);
+ if(!original)return null;
+ const W=480,H=270,safe=new Uint8ClampedArray(original);
+ // Source-material sky matte is not sufficient near remote mountains.
+ // Erode its sky/land membership by 4 source pixels to avoid moving
+ // an opaque cloud texel across a protected ridge or cliff silhouette.
+ const threshold=192,radius=4;
+ const smooth=(a,b,v)=>{const t=Math.max(0,Math.min(1,(v-a)/(b-a)));return t*t*(3-2*t);};
+ for(let y=0;y<116;y++)for(let x=0;x<W;x++){
+  const k=(y*W+x)*4;
+  if(original[k+3]<threshold){safe[k+3]=0;continue;}
+  let minAlpha=255;
+  for(let oy=-radius;oy<=radius;oy++)for(let ox=-radius;ox<=radius;ox++){
+   const yy=y+oy,xx=x+ox;
+   if(xx<0||xx>=W||yy<0||yy>=H){minAlpha=0;continue;}
+   minAlpha=Math.min(minAlpha,original[(yy*W+xx)*4+3]);
+  }
+  const matteConfidence=smooth(192,250,minAlpha);
+  // The center-background panorama has distant mountain spires beneath
+  // translucent haze. Keep their high-frequency contours fully still:
+  // fade animated clouds out before the uncertain horizon rather than
+  // freezing cloud motion elsewhere or translating any scenic RGB.
+  const center=smooth(86,145,x)*(1-smooth(325,397,x));
+  const nearHorizon=smooth(61,107,y);
+  const mountainGuard=1-center*nearHorizon;
+  safe[k+3]=Math.round(original[k+3]*matteConfidence*mountainGuard);
+ }
+ // Source-space negative challenge; these points lie below the protected
+ // center mountain-safe horizon. No time-varying overlay is admitted here.
+ for(const [x,y] of [[175,115],[210,115],[250,115],[295,115]]){
+  const alpha=safe[(y*W+x)*4+3];
+  if(alpha>1)throw Error('GRATITUDE_SKY_MOUNTAIN_GUARD_FAILED:'+x+','+y+':'+alpha);
+ }
+ return safe;
+}
 function peaceBuildSafeWaterMask(image,base){
  const data=peaceMaterialRaster(image);
  if(!data||!base?.complete)return null;
@@ -2053,48 +2099,48 @@ function render(time){
     loveOverlay.style.pointerEvents=flightStage==='encounter'?'auto':'none';
     drawLoveWorld(reduced?0:universeClock);
   }else if(selected===1&&flight<=.55){loveOverlay.style.opacity='0';loveOverlay.style.pointerEvents='none';}
-  if(selected===0&&flight>.55){
+  if(false&&selected===0&&flight>.55){
     joyOverlay.classList.add('is-visible');joyOverlay.setAttribute('aria-hidden',flightStage==='encounter'?'false':'true');
     joyOverlay.style.opacity=String(Math.max(0,Math.min(1,(flight-.55)/.36)));
     joyOverlay.style.pointerEvents=flightStage==='encounter'?'auto':'none';
     drawJoyWorld(reduced?0:universeClock);
   }else if(selected===0&&flight<=.55){joyOverlay.style.opacity='0';joyOverlay.style.pointerEvents='none';}
-  if(selected===0&&flight===1&&flightStage==='approach'){
+  if(false&&selected===0&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';joyOverlay.classList.add('is-visible');joyOverlay.setAttribute('aria-hidden','false');joyOverlay.style.opacity='1';joyOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-joy');
     $('#scene-note').textContent='Gratitude → Joy · The Dawn Archipelago';status.textContent='Arrived at the world of Joy.';joyHud.focus({preventScroll:true});
   }
   if(selected===3&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';emberOverlay.classList.add('is-visible');emberOverlay.setAttribute('aria-hidden','false');emberOverlay.style.opacity='1';emberOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-ember');
-    $('#scene-note').textContent='Accountability → Character · The Ember Canyons';status.textContent='Arrived at the world of Character.';emberHud.focus({preventScroll:true});
+    $('#scene-note').textContent='Accountability → Character · The Ember Canyons';status.textContent='Arrived at Summit IV, Accountability.';emberHud.focus({preventScroll:true});
   }
   if(selected===2&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';stabilityOverlay.classList.add('is-visible');stabilityOverlay.setAttribute('aria-hidden','false');stabilityOverlay.style.opacity='1';stabilityOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-stability');
-    $('#scene-note').textContent='Dependability → Stability · The Great Basalt Terraces';status.textContent='Arrived at the world of Stability.';stabilityHud.focus({preventScroll:true});
+    $('#scene-note').textContent='Dependability → Stability · The Great Basalt Terraces';status.textContent='Arrived at Summit III, Dependability.';stabilityHud.focus({preventScroll:true});
   }
   if(selected===1&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';loveOverlay.classList.add('is-visible');loveOverlay.setAttribute('aria-hidden','false');loveOverlay.style.opacity='1';loveOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-love');
-    $('#scene-note').textContent='Generosity → Love · The Living Constellation';status.textContent='Arrived at the world of Love.';loveHud.focus({preventScroll:true});
+    $('#scene-note').textContent='Generosity → Love · The Living Constellation';status.textContent='Arrived at Summit II, Generosity.';loveHud.focus({preventScroll:true});
   }
   if(selected===8&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';opalOverlay.classList.add('is-visible');opalOverlay.setAttribute('aria-hidden','false');opalOverlay.style.opacity='1';opalOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-opal');
-    $('#scene-note').textContent='Purity → Free Will · The Opal Passage';status.textContent='Arrived at the world of Free Will.';opalHud.focus({preventScroll:true});
+    $('#scene-note').textContent='Purity → Free Will · The Opal Passage';status.textContent='Arrived at Summit IX, Purity.';opalHud.focus({preventScroll:true});
   }
   if(selected===7&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';highlandsOverlay.classList.add('is-visible');highlandsOverlay.setAttribute('aria-hidden','false');highlandsOverlay.style.opacity='1';highlandsOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-highlands');
-    $('#scene-note').textContent='Humility → Dignity · The Quiet Highlands';status.textContent='Arrived at the world of Dignity.';highlandsHud.focus({preventScroll:true});
+    $('#scene-note').textContent='Humility → Dignity · The Quiet Highlands';status.textContent='Arrived at Summit V, Humility.';highlandsHud.focus({preventScroll:true});
   }
   if(selected===6&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';canopyOverlay.classList.add('is-visible');canopyOverlay.setAttribute('aria-hidden','false');canopyOverlay.style.opacity='1';canopyOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-canopy');
-    $('#scene-note').textContent='Patience → Structure · The Ancient Canopy';status.textContent='Arrived at the world of Structure.';canopyHud.focus({preventScroll:true});
+    $('#scene-note').textContent='Patience → Structure · The Ancient Canopy';status.textContent='Arrived at Summit VIII, Patience.';canopyHud.focus({preventScroll:true});
   }
   if(selected===5&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';balanceOverlay.classList.add('is-visible');balanceOverlay.setAttribute('aria-hidden','false');balanceOverlay.style.opacity='1';balanceOverlay.style.pointerEvents='auto';document.documentElement.classList.add('universe-balance');
-    $('#scene-note').textContent='Self-Control → Balance · The Twin Equilibrium';status.textContent='Arrived at the world of Balance.';balanceHud.focus({preventScroll:true});
+    $('#scene-note').textContent='Self-Control → Balance · The Twin Equilibrium';status.textContent='Arrived at Summit VII, Self-Control.';balanceHud.focus({preventScroll:true});
   }
   if(selected===4&&flight===1&&flightStage==='approach'){
     flightStage='encounter';scene.dataset.stage='encounter';peaceOverlay.classList.add('is-visible');peaceOverlay.setAttribute('aria-hidden','false');
     document.documentElement.classList.add('universe-encounter','universe-peace');peaceOverlay.style.opacity='1';peaceOverlay.style.pointerEvents='auto';
-    $('#scene-note').textContent='Forgiveness → Peace · The Quiet Ocean';status.textContent='Arrived at the world of Peace.';
+    $('#scene-note').textContent='Summit I — Gratitude · The Golden Lagoon';status.textContent='Arrived at Summit I, Gratitude.';
     // The new encounter precedes the path list in DOM order: move focus to its readable landmark.
     peaceHud.focus({preventScroll:true});
   }
@@ -2103,7 +2149,7 @@ function render(time){
     selected=-1;close=false;flightStage='arrival';targetZoom=1;targetOffset=[0,0,0];
     scene.dataset.stage='arrival';panel.hidden=true;returnButton.hidden=true;document.documentElement.classList.remove('universe-approaching','universe-encounter','universe-peace','universe-balance','universe-canopy','universe-highlands','universe-opal');peaceOverlay.classList.remove('is-visible');peaceOverlay.style.opacity='0';peaceOverlay.style.pointerEvents='none';balanceOverlay.classList.remove('is-visible');balanceOverlay.style.opacity='0';balanceOverlay.style.pointerEvents='none';canopyOverlay.classList.remove('is-visible');canopyOverlay.style.opacity='0';canopyOverlay.style.pointerEvents='none';highlandsOverlay.classList.remove('is-visible');highlandsOverlay.style.opacity='0';highlandsOverlay.style.pointerEvents='none';opalOverlay.classList.remove('is-visible');opalOverlay.style.opacity='0';opalOverlay.style.pointerEvents='none';joyOverlay.classList.remove('is-visible');joyOverlay.style.opacity='0';loveOverlay.classList.remove('is-visible');loveOverlay.style.opacity='0';stabilityOverlay.classList.remove('is-visible');stabilityOverlay.style.opacity='0';emberOverlay.classList.remove('is-visible');emberOverlay.style.opacity='0';
     labels.forEach(el=>el.setAttribute('aria-pressed','false'));
-    $('#scene-note').textContent='Begin with Peace · or turn the universe and explore all nine';
+    $('#scene-note').textContent='Begin with Gratitude · or turn the universe and explore all nine';
     status.textContent='Returned to the universe.';updateMotionControl();
     const saved=wasOpal?opalFocusReturn:wasJoy?joyFocusReturn:wasLove?loveFocusReturn:wasStability?stabilityFocusReturn:wasEmber?emberFocusReturn:wasBalance?balanceFocusReturn:wasCanopy?canopyFocusReturn:wasHighlands?highlandsFocusReturn:peaceFocusReturn;const restore=saved?.isConnected?saved:(labels[wasOpal?8:wasJoy?0:wasLove?1:wasStability?2:wasEmber?3:wasBalance?5:wasCanopy?6:wasHighlands?7:4]||document.querySelector(`[data-summit="${wasOpal?8:wasJoy?0:wasLove?1:wasStability?2:wasEmber?3:wasBalance?5:wasCanopy?6:wasHighlands?7:4}"]`));
     peaceFocusReturn=null;joyFocusReturn=null;loveFocusReturn=null;stabilityFocusReturn=null;emberFocusReturn=null;balanceFocusReturn=null;canopyFocusReturn=null;highlandsFocusReturn=null;opalFocusReturn=null;restore?.focus({preventScroll:true});
@@ -2179,12 +2225,12 @@ async function init(){
   const K=await import('../../showroom/globe/h-earth/render/geometry-kernel.js');
   peaceKernelFacade=K;
   setupGL();meshes=buildGeometry(K);
-  summits.forEach(([begin,summit],i)=>{const el=document.createElement('button');el.type='button';el.className='planet-label';el.dataset.planet=i;el.setAttribute('aria-label',`${begin} leads to ${summit}`);el.setAttribute('aria-pressed','false');el.innerHTML=`<strong>${begin}</strong><span>${summit}</span>`;el.addEventListener('click',event=>{if(event.detail===0)choose(i);});$('#planet-labels').append(el);labels.push(el);});
-  try{setupJoyWorld();}catch(error){console.error('Gratitude world:',error);}
+  summits.forEach(([summit,opposing],i)=>{const el=document.createElement('button');el.type='button';el.className='planet-label';el.dataset.planet=i;el.setAttribute('aria-label',`Summit ${BOOK_ORDINAL_BY_SLOT[i]} ${summit}; opposing pull ${opposing}`);el.setAttribute('aria-pressed','false');el.innerHTML=`<strong>${summit}</strong><span>${opposing}</span>`;el.addEventListener('click',event=>{if(event.detail===0)choose(i);});$('#planet-labels').append(el);labels.push(el);});
+  // The prior procedural Joy renderer is unqualified and must not initialize for any public summit.
   ready=true;scene.dataset.stage='arrival';updateMotionControl();scene.classList.add('ready');resize();bindInput();new ResizeObserver(resize).observe(scene);
   new IntersectionObserver(entries=>{sceneVisible=entries[0].isIntersecting;orbitSpeed=0;lastTime=0;if(!sceneVisible&&raf){cancelAnimationFrame(raf);raf=0;}if(sceneVisible)requestFrame();}).observe(scene);
   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;fallback(Error('Graphics context interrupted'));});
   canvas.addEventListener('webglcontextrestored',()=>location.reload());
-  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
+  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,bookSummitOrder:BOOK_ORDER_SLOTS.map(i=>summits[i][0]),bookPairOrder:BOOK_ORDER_SLOTS.map(i=>BOOK_PAIR_BY_SLOT[i]),selectedBookOrdinal:selected>=0?BOOK_ORDINAL_BY_SLOT[selected]:null,selectedSummit:selected>=0?summits[selected][0]:null,approvedTropicalSlot:4,proceduralJoyAvailable:false,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
 }
 init().catch(fallback);

@@ -11698,50 +11698,6 @@
       "scopeHash": "8132ef3b3d75f3c357864a490f155d6ee345e69d1f1fe1c036c4cc5c62c2b4ba",
       "state": "ADMITTED_LOCKED"
     },
-    "814587ebc748791e614f5e588a28a71eb1ab7077f71c20e28fd315d597e2adee": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "c1021804764488e051b760ae8ce784c801cfb6ad",
-          "lockGeneration": 3013,
-          "lockScope": "NINE_SUMMITS_UNIVERSE:ONE_CLICK_PLANET_ENTRY_AND_TEXT_FALLBACK:20261030",
-          "operationId": "NINE_SUMMITS_ONE_CLICK_PLANET_ENTRY_FALLBACK_REPAIR_20261030_001",
-          "procedureLocatorDigest": "1ee0330e40b298c7347d0602b1f5ef1cc4d799a60afa8eb4219059c860fc450b",
-          "requestDigest": "99026d3bb9378ead850c542d272119ba0a43b81635b4a098da56fa90f469f8d7",
-          "scopeHash": "814587ebc748791e614f5e588a28a71eb1ab7077f71c20e28fd315d597e2adee"
-        },
-        "bindingDigest": "4b9b06290d9cab46cd3f7f4e0e13b5265c8d3231a65941d6a49be48c7292dee3",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "229be54414ff3e161ec29700f6f4325b03fa6620232593d566d7d02111a86130",
-          "commentId": 6537416863,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6961,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41157306651,
-          "workflowSha": "c1021804764488e051b760ae8ce784c801cfb6ad"
-        },
-        "lineageAnchorCommitSha": "1ddf88d9b4b6f775b6c8fb952f4c5801912ab358",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "c1021804764488e051b760ae8ce784c801cfb6ad",
-      "lockGeneration": 3013,
-      "lockScope": "NINE_SUMMITS_UNIVERSE:ONE_CLICK_PLANET_ENTRY_AND_TEXT_FALLBACK:20261030",
-      "operationId": "NINE_SUMMITS_ONE_CLICK_PLANET_ENTRY_FALLBACK_REPAIR_20261030_001",
-      "procedureLocatorDigest": "1ee0330e40b298c7347d0602b1f5ef1cc4d799a60afa8eb4219059c860fc450b",
-      "released": false,
-      "requestDigest": "99026d3bb9378ead850c542d272119ba0a43b81635b4a098da56fa90f469f8d7",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "814587ebc748791e614f5e588a28a71eb1ab7077f71c20e28fd315d597e2adee",
-      "state": "ADMITTED_LOCKED"
-    },
     "81c34ff8db9109c9ab62cbad3dd263d865952fdd5e87d7af1b3071585c046f1a": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -93541,6 +93497,51 @@
       "scopeHash": "8442993d66c2a1c4eff4000e4912c237f05d304f71dbb3da08caf0264ebd1a47",
       "state": "TERMINAL",
       "terminalDisposition": "MUTATION_CLOSED_EVIDENCE_CONTINUES"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "c1021804764488e051b760ae8ce784c801cfb6ad",
+          "lockGeneration": 3013,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:ONE_CLICK_PLANET_ENTRY_AND_TEXT_FALLBACK:20261030",
+          "operationId": "NINE_SUMMITS_ONE_CLICK_PLANET_ENTRY_FALLBACK_REPAIR_20261030_001",
+          "procedureLocatorDigest": "1ee0330e40b298c7347d0602b1f5ef1cc4d799a60afa8eb4219059c860fc450b",
+          "requestDigest": "99026d3bb9378ead850c542d272119ba0a43b81635b4a098da56fa90f469f8d7",
+          "scopeHash": "814587ebc748791e614f5e588a28a71eb1ab7077f71c20e28fd315d597e2adee"
+        },
+        "bindingDigest": "4b9b06290d9cab46cd3f7f4e0e13b5265c8d3231a65941d6a49be48c7292dee3",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "229be54414ff3e161ec29700f6f4325b03fa6620232593d566d7d02111a86130",
+          "commentId": 6537416863,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41157306651,
+          "workflowSha": "c1021804764488e051b760ae8ce784c801cfb6ad"
+        },
+        "lineageAnchorCommitSha": "1ddf88d9b4b6f775b6c8fb952f4c5801912ab358",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "c1021804764488e051b760ae8ce784c801cfb6ad",
+      "lockGeneration": 3013,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:ONE_CLICK_PLANET_ENTRY_AND_TEXT_FALLBACK:20261030",
+      "operationId": "NINE_SUMMITS_ONE_CLICK_PLANET_ENTRY_FALLBACK_REPAIR_20261030_001",
+      "procedureLocatorDigest": "1ee0330e40b298c7347d0602b1f5ef1cc4d799a60afa8eb4219059c860fc450b",
+      "released": true,
+      "requestDigest": "99026d3bb9378ead850c542d272119ba0a43b81635b4a098da56fa90f469f8d7",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "814587ebc748791e614f5e588a28a71eb1ab7077f71c20e28fd315d597e2adee",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

@@ -1022,10 +1022,25 @@ function drawPeaceSourceClouds(now,force=false){
     greenSum+=wa*(src[p+1]*w00+src[q+1]*w10+src[z+1]*w01+src[zq+1]*w11);
     blueSum+=wa*(src[p+2]*w00+src[q+2]*w10+src[z+2]*w01+src[zq+2]*w11);
    }
-   if(alphaSum<2||weightSum<.0001)continue;
-   const evolution=.945+.055*Math.sin(x*.038+y*.059-t*.21);
-   out[k]=redSum/alphaSum;out[k+1]=greenSum/alphaSum;out[k+2]=blueSum/alphaSum;
-   out[k+3]=Math.min(255,alphaSum/weightSum*limit/255*evolution);
+   // Keep the upper clouds independently alive, but hold original source
+   // cloud/haze pixels still beside the first landforms and far mountain band.
+   // This SOURCE-SPACE transition does not alter the water renderer or base art.
+   // A smoothly held low cloud retains its presence without making terrain
+   // appear to translate as the upper cloud carriers pass over it.
+   const skyMotion=1-smooth(36,66,y);
+   const heldAlpha=src[k+3]*limit/255*(1-skyMotion);
+   let movingAlpha=0,movingR=0,movingG=0,movingB=0;
+   if(skyMotion>0&&alphaSum>=2&&weightSum>=.0001){
+    const evolution=.945+.055*Math.sin(x*.038+y*.059-t*.21);
+    movingAlpha=Math.min(255,alphaSum/weightSum*limit/255*evolution)*skyMotion;
+    movingR=redSum/alphaSum;movingG=greenSum/alphaSum;movingB=blueSum/alphaSum;
+   }
+   const combinedAlpha=movingAlpha+heldAlpha;
+   if(combinedAlpha<2)continue;
+   out[k]=(movingR*movingAlpha+src[k]*heldAlpha)/combinedAlpha;
+   out[k+1]=(movingG*movingAlpha+src[k+1]*heldAlpha)/combinedAlpha;
+   out[k+2]=(movingB*movingAlpha+src[k+2]*heldAlpha)/combinedAlpha;
+   out[k+3]=Math.min(255,combinedAlpha);
   }
  }
  peaceCloudOutputContext.putImageData(peaceCloudOutputPixels,0,0);

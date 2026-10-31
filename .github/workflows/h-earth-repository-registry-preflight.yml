@@ -133,6 +133,83 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      # GEN3018 TEMP: one separately admitted read-only corrected-census execution.
+      # Restore exact preceding workflow blob after this single source-bound test.
+      - name: GEN3018 TEMP checkout immutable corrected Gen3010 source
+        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3018-corrected-native-census-once-20261030' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/checkout@v4
+        with:
+          ref: 28631733073e98bb2e8690e9e0273d7cf3eec71e
+          path: gen3010-corrected-census-immutable
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: GEN3018 TEMP pin Node 22 for corrected physical census
+        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3018-corrected-native-census-once-20261030' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: GEN3018 TEMP execute corrected full-root census once
+        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3018-corrected-native-census-once-20261030' && github.event.pull_request.head.repo.full_name == github.repository
+        shell: bash
+        env:
+          NODE_OPTIONS: --max-old-space-size=5120
+        run: |
+          set -euo pipefail
+          C="$GITHUB_WORKSPACE/gen3010-corrected-census-immutable"
+          OUT=/tmp/gen3018-corrected-native-census
+          mkdir -p "$OUT"
+          test "$(node --version | cut -d. -f1)" = v22
+          test "$(git -C "$C" rev-parse HEAD)" = 28631733073e98bb2e8690e9e0273d7cf3eec71e
+          test "$(git -C "$C" rev-parse HEAD:h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs)" = a6bce7818721f968a93947bc13d2672a855e1a45
+          test "$(git -C "$C" rev-parse HEAD:showroom/globe/h-earth/render/assets/precomputed-grass.v1.json)" = 2479a2cb678b4fcac5583129fb5aaf8f73da1e54
+          test "$(git -C "$C" rev-parse HEAD:showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz)" = 26f496e0305e769a4df4be6044ae449a2dd9a0c9
+          test "$(stat -c %s "$C/showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz")" = 64564514
+          test "$(sha256sum "$C/showroom/globe/h-earth/render/assets/precomputed-grass.v1.json" | cut -d' ' -f1)" = 9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf
+          test "$(sha256sum "$C/showroom/globe/h-earth/render/assets/precomputed-grass.v1.bin.gz" | cut -d' ' -f1)" = 4a2ff2a135984d67d68d3df7c3212236894c75b66826f256a60130c87b73e800
+          test -z "$(git -C "$C" status --porcelain --untracked-files=no)"
+          echo "GEN3018_EXACT_CORRECTED_SOURCE_AND_GZIP_MATCH"
+          rc=0
+          (cd "$C" && timeout --signal=TERM --kill-after=10s 1500s node h-earth-3d/evidence/vegetation-support-fringe-20261030/dry-run.mjs > "$OUT/stdout.log" 2> "$OUT/stderr.log") || rc=$?
+          printf '%s\n' "$rc" > "$OUT/exit-code.txt"
+          sha256sum "$OUT/stdout.log" "$OUT/stderr.log" > "$OUT/output-hashes.txt"
+          echo "GEN3018_CORRECTED_CENSUS_PROCESS_EXIT=$rc"
+          tail -n 90 "$OUT/stdout.log" || true
+          tail -n 40 "$OUT/stderr.log" || true
+          test -z "$(git -C "$C" status --porcelain --untracked-files=no)"
+          if [ "$rc" -ne 0 ]; then echo "GEN3018_FIRST_NEGATIVE_ASSERTION_PRESERVED"; exit "$rc"; fi
+          node --input-type=module - "$OUT/stdout.log" <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const file=process.argv[2],obj=JSON.parse(fs.readFileSync(file,'utf8'));
+          assert.equal(obj.schema,'H_EARTH_GEN3010_ADDITIVE_FRINGE_DRY_RUN_v1');
+          assert.equal(obj.result,'SOURCE_ADMITTED_DRY_RUN_REQUIRES_ASSET_BUILD_AND_GPU_REVIEW');
+          assert.equal(obj.originalSavedRoots,2858738);
+          assert.equal(obj.originalRuntimeRecipePrefixRoots,1474843);
+          assert.equal(obj.originalRuntimeRoots,54218);
+          assert.equal(obj.originalOasisBankRoots,1571);
+          assert.equal(obj.originalCombinedExtraRoots,55789);
+          assert.equal(obj.nativeRuntimeSha256,'9d4ce18e694b697e1d8534bb628e531a1e376cc0bca2a0f6409976ed1819f55d');
+          assert(obj.proposedAddedRoots>0);
+          assert(obj.proposedAddedRootsInPreviouslyEmptyRow>0);
+          assert(obj.proposedSavedRoots<=2912956);
+          assert(obj.maximumCombinedTileRoots<=1600);
+          assert.match(obj.proposedRootRecordsSha256,/^[a-f0-9]{64}$/);
+          assert.equal(obj.gpuEvidence,'NOT_RUN');
+          assert.equal(obj.ownerAcceptance,'NOT_CLAIMED');
+          console.log('GEN3018_CORRECTED_NATIVE_CENSUS_PASS added='+obj.proposedAddedRoots+' sha256='+obj.proposedRootRecordsSha256);
+          NODE
+
+      - name: GEN3018 TEMP upload original bounded stdout and failure
+        if: always() && github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3018-corrected-native-census-once-20261030' && github.event.pull_request.head.repo.full_name == github.repository
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3018-corrected-census-evidence
+          path: /tmp/gen3018-corrected-native-census/
+          if-no-files-found: warn
+          retention-days: 90
+
   audralia-diagnostic-premutation-preflight:
     if: >-
       ${{

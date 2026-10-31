@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-10-31T22:23:42Z",
+  "generatedAt": "2026-10-31T23:23:12Z",
   "window30d": {
-    "start": "2026-10-01T22:23:42Z",
-    "end": "2026-10-31T22:23:42Z"
+    "start": "2026-10-01T23:23:12Z",
+    "end": "2026-10-31T23:23:12Z"
   },
   "daily": [
     {
@@ -16,7 +16,7 @@
     },
     {
       "date": "2026-10-04",
-      "pageLoads": 90
+      "pageLoads": 70
     },
     {
       "date": "2026-10-05",
@@ -28,11 +28,11 @@
     },
     {
       "date": "2026-10-07",
-      "pageLoads": 80
+      "pageLoads": 70
     },
     {
       "date": "2026-10-08",
-      "pageLoads": 70
+      "pageLoads": 130
     },
     {
       "date": "2026-10-09",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-23",
-      "pageLoads": 34
+      "pageLoads": 42
     },
     {
       "date": "2026-10-24",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-10-31",
-      "pageLoads": 38
+      "pageLoads": 40
     }
   ],
   "summary": {
-    "pageLoads": 1823,
-    "botPageLoads": 864,
-    "nonBotPageLoads": 959
+    "pageLoads": 1723,
+    "botPageLoads": 844,
+    "nonBotPageLoads": 879
   },
   "referrers": [
     {
@@ -140,7 +140,7 @@
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 119,
+      "pageLoads": 109,
       "visits": 0
     },
     {
@@ -167,13 +167,13 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 696,
-      "visits": 639
+      "pageLoads": 665,
+      "visits": 628
     },
     {
       "path": "/analytics/",
-      "pageLoads": 589,
-      "visits": 589
+      "pageLoads": 609,
+      "visits": 609
     },
     {
       "path": "/",
@@ -181,14 +181,14 @@
       "visits": 80
     },
     {
-      "path": "/build/",
+      "path": "/nine-summits/universe/",
       "pageLoads": 60,
-      "visits": 60
+      "visits": 59
     },
     {
-      "path": "/nine-summits/universe/",
-      "pageLoads": 59,
-      "visits": 58
+      "path": "/build/",
+      "pageLoads": 50,
+      "visits": 50
     },
     {
       "path": "/about/",

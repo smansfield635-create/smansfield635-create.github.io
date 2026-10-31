@@ -135,7 +135,7 @@ jobs:
 
       # GEN3021 TEMP — admitted, one-shot staging-only exact Gen3010 compiler.
       - name: GEN3021 TEMP checkout pinned Gen3010 compiler source
-        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3021-fringe-asset-stage-once-20261031' && github.event.pull_request.head.repo.full_name == github.repository
+        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3021-fringe-asset-stage-corrected-once-20261031' && github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/checkout@v4
         with:
           ref: 70f76bf12acfd4f0ca923edd41acefad28ce32e8
@@ -144,13 +144,13 @@ jobs:
           persist-credentials: false
 
       - name: GEN3021 TEMP use Node22 for exact staged compiler
-        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3021-fringe-asset-stage-once-20261031' && github.event.pull_request.head.repo.full_name == github.repository
+        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3021-fringe-asset-stage-corrected-once-20261031' && github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
       - name: GEN3021 TEMP execute staged grass compiler once
-        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3021-fringe-asset-stage-once-20261031' && github.event.pull_request.head.repo.full_name == github.repository
+        if: github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3021-fringe-asset-stage-corrected-once-20261031' && github.event.pull_request.head.repo.full_name == github.repository
         shell: bash
         env:
           NODE_OPTIONS: --max-old-space-size=5120
@@ -202,7 +202,7 @@ jobs:
           sha256sum "$OUT/precomputed-grass.v1.bin.gz" "$OUT/precomputed-grass.v1.json" "$OUT/precomputed-grass.v1.js" "$OUT/compiler-report.json" > "$OUT/staged-file-hashes.txt"
 
       - name: GEN3021 TEMP upload staging artifact and first failure
-        if: always() && github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3021-fringe-asset-stage-once-20261031' && github.event.pull_request.head.repo.full_name == github.repository
+        if: always() && github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3021-fringe-asset-stage-corrected-once-20261031' && github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/upload-artifact@v4
         with:
           name: h-earth-gen3021-fringe-staged-assets

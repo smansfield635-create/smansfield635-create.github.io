@@ -1,11 +1,11 @@
 import {fetchStartupAsset} from './precomputed-oasis-soil.v1.js';
 import {GRASS_CONTINUITY_ALLOCATION as allocation} from './grass-continuity-supplement.v1.js';
 /** Lossless, hash-bound output of the accepted ground-admission compiler. */
-const MANIFEST_SHA256='9d452a0906094e6e5ed828753e547ef24269afa173896453637b77832c6c3edf';
+const MANIFEST_SHA256='b89713280767ad083d4b2deadafebc7f296300fd84c6677f4e5d7f14a2010b9c';
 const fail=reason=>{throw Error('PRECOMPUTED_GRASS_'+reason);};
 const sha=async bytes=>Array.from(new Uint8Array(await globalThis.crypto.subtle.digest('SHA-256',bytes)),x=>x.toString(16).padStart(2,'0')).join('');
 export async function decodePrecomputedGrass(manifest,bytes,{yieldControl=async()=>{},onProgress=()=>{}}={}){
- if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==2858738||manifest.stride!==52||manifest.receipt?.contactCount!==2858738)fail('IDENTITY_MISMATCH');
+ if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==2879698||manifest.stride!==52||manifest.receipt?.contactCount!==2879698)fail('IDENTITY_MISMATCH');
  if(bytes.byteLength!==manifest.rawBytes||await sha(bytes)!==manifest.rawSha256)fail('DATA_INTEGRITY');
  const h=manifest.habitat;
  if(h?.width!==576||h.height!==192||h.size!==192||bytes.byteLength!==manifest.rootCount*52+h.width*h.height)fail('LAYOUT_MISMATCH');
@@ -32,7 +32,7 @@ export function takePrecomputedGrassPlan(presentation){
  const plan=packedPlans.get(presentation);packedPlans.delete(presentation);return plan;
 }
 async function decodePackedGrass(manifest,bytes,{yieldControl=async()=>{},onProgress=()=>{}}={}){
- if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==2858738||manifest.stride!==52||manifest.receipt?.contactCount!==2858738)fail('IDENTITY_MISMATCH');
+ if(manifest.schema!=='H_EARTH_PRECOMPUTED_GRASS_v1'||manifest.rootCount!==2879698||manifest.stride!==52||manifest.receipt?.contactCount!==2879698)fail('IDENTITY_MISMATCH');
  if(bytes.byteLength!==manifest.rawBytes||await sha(bytes)!==manifest.rawSha256)fail('DATA_INTEGRITY');
  const h=manifest.habitat;
  if(h?.width!==576||h.height!==192||h.size!==192||bytes.byteLength!==manifest.rootCount*52+h.width*h.height)fail('LAYOUT_MISMATCH');

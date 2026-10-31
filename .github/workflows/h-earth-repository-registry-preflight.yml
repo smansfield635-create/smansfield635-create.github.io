@@ -84,6 +84,8 @@ jobs:
       - name: Decide whole-estate workflow applicability
         id: applicability
         shell: bash
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           node tools/workflow-applicability-gate.v1.mjs \

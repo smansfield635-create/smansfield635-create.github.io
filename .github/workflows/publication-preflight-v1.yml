@@ -194,6 +194,94 @@ jobs:
           NODE
           test -s "$SCREENSHOT"
 
+      - name: Capture Nine Summits native orbit framebuffer
+        if: ${{ steps.surface.outputs.runtime == 'true' && inputs.surface_id == 'nine-summits-universe' }}
+        env:
+          STAGE: ${{ runner.temp }}/pages-site
+          EVIDENCE_DIR: ${{ runner.temp }}
+          TARGET_SHA: ${{ steps.resolve.outputs.target_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium || find /opt/hostedtoolcache/setup-chrome -type f -name chrome 2>/dev/null | head -1)"
+          test -n "$CHROME_PATH"
+          export NINE_MOTION_BLOB="$(git hash-object nine-summits/universe/universe.motion.js)"
+          export NINE_INDEX_BLOB="$(git hash-object nine-summits/universe/index.html)"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import crypto from 'node:crypto';
+          import {spawn} from 'node:child_process';
+          import puppeteer from 'puppeteer-core';
+          
+          const stage=process.env.STAGE,output=process.env.EVIDENCE_DIR,chrome=process.env.CHROME_PATH;
+          const url='http://127.0.0.1:4173/nine-summits/universe/';
+          const sha=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+          const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+          const server=spawn('python3',['-m','http.server','4173','--bind','127.0.0.1','--directory',stage],{stdio:'ignore'});
+          let browser;
+          async function capture(label){
+            const page=await browser.newPage(),errors=[];
+            page.on('pageerror',e=>errors.push('PAGE:'+e.message));
+            page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon.ico'))errors.push('CONSOLE:'+m.text());});
+            await page.setViewport({width:960,height:720,deviceScaleFactor:1});
+            await page.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'reduce'}]);
+            await page.evaluateOnNewDocument(()=>{
+              const originalDraw=WebGLRenderingContext.prototype.drawArrays;
+              WebGLRenderingContext.prototype.drawArrays=function(...args){
+                const result=originalDraw.apply(this,args);
+                if(this.canvas?.id==='universe-canvas')window.__cp06OrbitDraws=(window.__cp06OrbitDraws||0)+1;
+                return result;
+              };
+              const originalRAF=window.requestAnimationFrame;
+              window.requestAnimationFrame=function(callback){return originalRAF.call(this,time=>{
+                const before=window.__cp06OrbitDraws||0,result=callback(time);
+                if((window.__cp06OrbitDraws||0)>before&&!window.__cp06OrbitEvidence&&!window.__cp06OrbitError){
+                  try{
+                    const canvas=document.querySelector('#universe-canvas'),gl=canvas?.getContext('webgl');
+                    if(!canvas||canvas.width<120||canvas.height<120||!gl||gl.isContextLost())throw Error('NATIVE_WEBGL1_CANVAS_MISSING');
+                    const data=new Uint8Array(canvas.width*canvas.height*4);
+                    gl.readPixels(0,0,canvas.width,canvas.height,gl.RGBA,gl.UNSIGNED_BYTE,data);
+                    const error=gl.getError();let nonzero=0;
+                    for(let i=0;i<data.length;i+=64)if(data[i]||data[i+1]||data[i+2]||data[i+3])nonzero++;
+                    if(error!==gl.NO_ERROR||nonzero<100)throw Error('FRAMEBUFFER_INVALID:'+error+':'+nonzero);
+                    const png=canvas.toDataURL('image/png');
+                    if(!png.startsWith('data:image/png;base64,'))throw Error('CANVAS_PNG_INVALID');
+                    window.__cp06OrbitEvidence={png,width:canvas.width,height:canvas.height,drawCalls:(window.__cp06OrbitDraws||0)-before,nonzeroSamples:nonzero,glError:error,glVersion:gl.getParameter(gl.VERSION),glslVersion:gl.getParameter(gl.SHADING_LANGUAGE_VERSION),contextLost:gl.isContextLost(),sourceReadback:window.DGB_UNIVERSE?.readback?.()?.status??null,stage:document.querySelector('#universe-scene')?.dataset.stage??null};
+                  }catch(e){window.__cp06OrbitError=String(e);}
+                }
+                return result;
+              });};
+            });
+            try{
+              await page.goto(url,{waitUntil:'domcontentloaded',timeout:45000});
+              await page.waitForSelector('#universe-scene.ready',{timeout:30000});
+              await page.waitForFunction(()=>Boolean(window.__cp06OrbitEvidence||window.__cp06OrbitError),{timeout:15000});
+              const got=await page.evaluate(()=>({evidence:window.__cp06OrbitEvidence,error:window.__cp06OrbitError}));
+              if(got.error)throw Error(got.error);
+              const {png,...proof}=got.evidence??{};
+              if(!png||!proof.glVersion?.includes('WebGL 1.0')||!proof.glslVersion?.includes('WebGL GLSL ES 1.0')||proof.drawCalls<10||proof.sourceReadback!=='ready'||proof.stage!=='arrival'||errors.length)throw Error('NINE_NATIVE_FRAME_INVALID:'+JSON.stringify({...proof,errors}));
+              const bytes=Buffer.from(png.slice('data:image/png;base64,'.length),'base64');
+              if(bytes.length<4096||bytes.subarray(0,8).toString('hex')!=='89504e470d0a1a0a'||bytes.readUInt32BE(16)!==proof.width||bytes.readUInt32BE(20)!==proof.height)throw Error('NINE_PNG_BYTES_INVALID');
+              const file='nine-summits-orbit-'+label+'.png';fs.writeFileSync(output+'/'+file,bytes);
+              return {...proof,file,bytes:bytes.length,sha256:sha(bytes),pageErrorCount:errors.length};
+            }finally{await page.close();}
+          }
+          try{
+            let listening=false;
+            for(let i=0;i<30;i++){try{if((await fetch(url)).ok){listening=true;break;}}catch{}await sleep(150);}
+            if(!listening)throw Error('NINE_LOCAL_SERVER_NOT_READY');
+            browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--ignore-gpu-blocklist','--enable-webgl','--use-gl=angle','--use-angle=swiftshader']});
+            fs.mkdirSync(output,{recursive:true});
+            const a=await capture('a'),b=await capture('b');
+            if(a.sha256!==b.sha256)throw Error('NINE_REDUCED_MOTION_PIXEL_REPEAT_MISMATCH');
+            const receipt={schema:'DGB_CP06_NINE_ORBIT_NATIVE_WEBGL1_CAPTURE_v1',result:'GPU_CAPTURE_PASS',targetSha:process.env.TARGET_SHA,sourceBlobs:{motion:process.env.NINE_MOTION_BLOB,index:process.env.NINE_INDEX_BLOB},method:'READ_PIXELS_AND_SAME_FRAME_CANVAS_PNG',frameControl:'TWO_INDEPENDENT_REDUCED_MOTION_SAME_SOURCE_VIEWS',frames:[a,b],deploymentPerformed:false,productMutationPerformed:false,ownerVisualAcceptance:false};
+            fs.writeFileSync(output+'/nine-summits-orbit-receipt.json',JSON.stringify(receipt,null,2)+'\n');
+            console.log(JSON.stringify({result:receipt.result,frameCount:2,webgl:a.glVersion,pngSha256:a.sha256}));
+          }finally{if(browser)await browser.close();server.kill('SIGTERM');}
+          NODE
+          test -s "$EVIDENCE_DIR/nine-summits-orbit-receipt.json"
+          test -s "$EVIDENCE_DIR/nine-summits-orbit-a.png"
+          test -s "$EVIDENCE_DIR/nine-summits-orbit-b.png"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -201,5 +289,8 @@ jobs:
           path: |
             ${{ runner.temp }}/publication-preflight-receipt.json
             ${{ runner.temp }}/publication-preflight-screenshot.png
+            ${{ runner.temp }}/nine-summits-orbit-a.png
+            ${{ runner.temp }}/nine-summits-orbit-b.png
+            ${{ runner.temp }}/nine-summits-orbit-receipt.json
           if-no-files-found: error
           retention-days: 90

@@ -1422,3 +1422,173 @@ jobs:
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
           test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 10b5623b09c552930e54a1c1071c37535a831971
           (cd source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate && python3 -m unittest test_mesh_gate -v)
+
+  # Gen3042: the existing first-party exact-head comparison runner; one PR-open
+  # attempt only, no product mutation and no W1 diagnostic replay.
+  gen3042-soil-triad-gpu-once:
+    if: >-
+      ${{ github.event_name == 'pull_request' &&
+          github.event.action == 'opened' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/gen3042-soil-triad-gpu-recovery-20261101-002' &&
+          startsWith(github.event.pull_request.title, 'GEN3042 SOIL TRIAD:') &&
+          github.event.pull_request.base.ref == 'main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact Gen3042 tooling
+        shell: bash
+        env:
+          EXACT_SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git clone --quiet --no-checkout --filter=blob:none --depth=1 "https://github.com/${GITHUB_REPOSITORY}.git" tooling
+          git -C tooling sparse-checkout set --no-cone \
+            '/tools/' \
+            '/.github/workflows/h-earth-neutral-exact-head-runner.yml' \
+            '/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'
+          git -C tooling fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"
+          git -C tooling checkout --quiet --detach "$EXACT_SOURCE_SHA"
+          test "$(git -C tooling rev-parse HEAD)" = "$EXACT_SOURCE_SHA"
+      - name: Checkout exact baseline
+        shell: bash
+        env:
+          EXACT_SOURCE_SHA: 28da29ce01f26bf5eb73db2d75b09741b22ab40b
+        run: |
+          set -euo pipefail
+          git clone --quiet --no-checkout --filter=blob:none --depth=1 "https://github.com/${GITHUB_REPOSITORY}.git" baseline
+          git -C baseline sparse-checkout set --no-cone \
+            '/showroom/globe/h-earth/' \
+            '/h-earth-3d/control-plane/run-8/' \
+            '/h-earth-3d/integration/' \
+            '/h-earth-3d/environment/' \
+            '/h-earth-3d/terrain/' \
+            '/h-earth-3d/objects/' \
+            '/h-earth-3d/cells/' \
+            '/h-earth-3d/zones/' \
+            '/h-earth-3d/validation/' \
+            '/h-earth-3d/h-earth.matrix.js'
+          git -C baseline fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"
+          git -C baseline checkout --quiet --detach "$EXACT_SOURCE_SHA"
+          test "$(git -C baseline rev-parse HEAD)" = "$EXACT_SOURCE_SHA"
+      - name: Checkout exact Gen3037 groundcover candidate
+        shell: bash
+        env:
+          EXACT_SOURCE_SHA: 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+        run: |
+          set -euo pipefail
+          git clone --quiet --no-checkout --filter=blob:none --depth=1 "https://github.com/${GITHUB_REPOSITORY}.git" candidate
+          git -C candidate sparse-checkout set --no-cone \
+            '/showroom/globe/h-earth/' \
+            '/h-earth-3d/control-plane/run-8/' \
+            '/h-earth-3d/integration/' \
+            '/h-earth-3d/environment/' \
+            '/h-earth-3d/terrain/' \
+            '/h-earth-3d/objects/' \
+            '/h-earth-3d/cells/' \
+            '/h-earth-3d/zones/' \
+            '/h-earth-3d/validation/' \
+            '/h-earth-3d/h-earth.matrix.js'
+          git -C candidate fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"
+          git -C candidate checkout --quiet --detach "$EXACT_SOURCE_SHA"
+          test "$(git -C candidate rev-parse HEAD)" = "$EXACT_SOURCE_SHA"
+      - name: Gen3042 pre-habitat resource evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="${{ runner.temp }}/h-earth-gen3042-checkout-evidence"
+          mkdir -p "$evidence"
+          {
+            printf 'schema=H_EARTH_GEN3042_PRE_HABITAT_CHECKOUT_RESOURCE_v1\n'
+            printf 'tooling_head=%s\n' "$(git -C tooling rev-parse HEAD)"
+            printf 'baseline_head=%s\n' "$(git -C baseline rev-parse HEAD)"
+            printf 'groundcover_head=%s\n' "$(git -C candidate rev-parse HEAD)"
+            date -u '+observed_utc=%Y-%m-%dT%H:%M:%SZ'
+            printf '\nfilesystem_available_bytes\n'
+            df -B1 "$GITHUB_WORKSPACE"
+            printf '\nfilesystem_human\n'
+            df -h "$GITHUB_WORKSPACE"
+            printf '\nsource_worktree_sizes\n'
+            du -sh tooling baseline candidate
+            printf '\nrunner_memory\n'
+            free -m
+          } > "$evidence/pre-habitat.txt"
+      - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3042-soil-triad-pre-habitat-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-gen3042-checkout-evidence/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Checkout exact Gen3030 habitat candidate
+        shell: bash
+        env:
+          EXACT_SOURCE_SHA: cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
+        run: |
+          set -euo pipefail
+          git clone --quiet --no-checkout --filter=blob:none --depth=1 "https://github.com/${GITHUB_REPOSITORY}.git" habitat
+          git -C habitat sparse-checkout set --no-cone \
+            '/showroom/globe/h-earth/' \
+            '/h-earth-3d/control-plane/run-8/' \
+            '/h-earth-3d/integration/' \
+            '/h-earth-3d/environment/' \
+            '/h-earth-3d/terrain/' \
+            '/h-earth-3d/objects/' \
+            '/h-earth-3d/cells/' \
+            '/h-earth-3d/zones/' \
+            '/h-earth-3d/validation/' \
+            '/h-earth-3d/h-earth.matrix.js'
+          git -C habitat fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"
+          git -C habitat checkout --quiet --detach "$EXACT_SOURCE_SHA"
+          test "$(git -C habitat rev-parse HEAD)" = "$EXACT_SOURCE_SHA"
+      - name: Require exact renderer blobs and clean source checkouts
+        shell: bash
+        run: |
+          set -euo pipefail
+          file=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          test "$(git -C baseline rev-parse HEAD)" = 28da29ce01f26bf5eb73db2d75b09741b22ab40b
+          test "$(git -C candidate rev-parse HEAD)" = 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+          test "$(git -C habitat rev-parse HEAD)" = cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
+          test "$(git -C baseline hash-object "$file")" = 85ee835060d5106a670077a5f4352b7ad202b49b
+          test "$(git -C candidate hash-object "$file")" = 40034a16c36a43cb02682564784328ddb7ac48a7
+          test "$(git -C habitat hash-object "$file")" = 03bc45e034e9894494d9120782c714ae78890ab8
+          test -z "$(git -C baseline status --porcelain --untracked-files=no)"
+          test -z "$(git -C candidate status --porcelain --untracked-files=no)"
+          test -z "$(git -C habitat status --porcelain --untracked-files=no)"
+      - name: Pin Node 22 before comparator source qualification
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Node22 exact-head comparator and product-source regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          (cd tooling && node --test tools/h-earth-ground-material-comparison.v1.test.mjs)
+          (cd candidate && node --test h-earth-3d/validation/h-earth.groundcover-soil-relative-endpoint-20261031.test.mjs)
+          (cd habitat && node --test h-earth-3d/validation/h-earth.habitat-soil-color-continuity-20261031.test.mjs)
+      - name: Install first-party Chromium driver
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture 36 real stage-aligned WebGL images from independent products
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN3042_SOIL_TRIAD_AB_V1
+        run: |
+          timeout 3000s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../baseline \
+            --candidate-dir ../candidate \
+            --habitat-dir ../habitat \
+            --output "${{ runner.temp }}/h-earth-gen3042-soil-triad"
+      - name: Preserve exact receipts and PNG images even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3042-soil-triad-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-gen3042-soil-triad/
+          if-no-files-found: warn
+          retention-days: 30

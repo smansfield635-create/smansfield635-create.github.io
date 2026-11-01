@@ -119,3 +119,93 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
 });
+
+/* Gen3042 exact-head comparison: only the historical positive inland band plus
+   two healthy controls; source-matched independent candidates, no stacked shader. */
+test('Gen3042 frozen sources and three prior poses are independently pinned',async()=>{
+ const t=await import('./h-earth-ground-material-comparison.v1.mjs');
+ assert.deepEqual(t.GEN3042_HEADS,{
+  baseline:'28da29ce01f26bf5eb73db2d75b09741b22ab40b',
+  candidate:'724efeb1db3d3e8e5309a9aa779acefb7c53fed9',
+  habitat:'cb15de477f9b8e39b9dc688ecc452ba44e42e6c1'
+ });
+ assert.deepEqual(t.GEN3042_BLOBS,{
+  baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',
+  candidate:'40034a16c36a43cb02682564784328ddb7ac48a7',
+  habitat:'03bc45e034e9894494d9120782c714ae78890ab8'
+ });
+ assert.deepEqual(t.GEN3042_POSES.map(p=>p.name),['inland-seam-near','coast-oblique','foothill-west']);
+ assert.deepEqual(t.GEN3042_MODES,['reference-lit','before-groundcover-unlit','after-groundcover-unlit','groundcover-weight-raw']);
+ assert.equal(t.GEN3042_POSES.length*t.GEN3042_MODES.length*Object.keys(t.GEN3042_HEADS).length,36);
+ assert.equal(t.GEN3042_POSES[0].diagnosticObserver,true);
+});
+test('Gen3042 full 36-frame source/camera/unchanged-stage custody rejects corruption',async()=>{
+ const t=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const ids={'reference-lit':0,'before-groundcover-unlit':2,'after-groundcover-unlit':3,'groundcover-weight-raw':11};
+ const views=t.GEN3042_POSES.flatMap(pose=>t.GEN3042_MODES.flatMap(mode=>
+  Object.keys(t.GEN3042_HEADS).map(label=>({
+   label,pose,mode,modeId:ids[mode],diagnosticApplied:ids[mode],
+   grassHidden:mode!=='reference-lit',imageWidth:529,imageHeight:980,
+   imageSha256:(['before-groundcover-unlit','groundcover-weight-raw'].includes(mode)?'d':label==='baseline'?'a':label==='candidate'?'b':'c').repeat(64),
+   rendererHash:'a'.repeat(64),sourceHead:t.GEN3042_HEADS[label],
+   assetSignature:'same-assets',state:{position:{x:pose.x,y:pose.y??2,z:pose.z}},
+   lastFrame:{cameraPosition:{x:1,y:2,z:3}}
+  }))));
+ assert.equal(t.validateGen3042(views).images,36);
+ assert.throws(()=>t.validateGen3042(views.slice(1)),/FRAME_CENSUS/);
+ const drift=structuredClone(views);drift[4].imageSha256='e'.repeat(64);
+ assert.throws(()=>t.validateGen3042(drift),/UNCHANGED_STAGE_DIFF|STAGE_INVALID/);
+ const moved=structuredClone(views);moved[2].lastFrame.cameraPosition.x=4;
+ assert.throws(()=>t.validateGen3042(moved),/CAMERA_ASSET_MISMATCH/);
+ const missing=structuredClone(views);missing[0].sourceHead='wrong';
+ assert.throws(()=>t.validateGen3042(missing),/SOURCE_STAGE_INVALID/);
+});
+test('Gen3042 triad CLI and PR-open one-shot job are closed to extra source refs',async()=>{
+ const {spawnSync}=await import('node:child_process');
+ const moduleBody="import {parseArgs,HEADS,GEN3042_PROFILE} from './tools/h-earth-ground-material-comparison.v1.mjs';"+
+ "if(!GEN3042_PROFILE||Object.keys(HEADS).length!==3)process.exit(12);"+
+ "const a=parseArgs(['--baseline-dir','/tmp/base','--candidate-dir','/tmp/green','--habitat-dir','/tmp/hab','--output','/tmp/out']);"+
+ "if(Object.keys(a).length!==4)process.exit(13);"+
+ "try{parseArgs(['--baseline-dir','/tmp/base','--candidate-dir','/tmp/green','--output','/tmp/out']);process.exit(14);}catch(e){if(!String(e).includes('CLI_INCOMPLETE'))process.exit(15);}";
+ const run=spawnSync(process.execPath,['--input-type=module','-e',moduleBody],{
+  cwd:new URL('../',import.meta.url).pathname,encoding:'utf8',
+  env:{...process.env,H_EARTH_COMPARISON_PROFILE:'GEN3042_SOIL_TRIAD_AB_V1'}
+ });
+ assert.equal(run.status,0,run.stderr||run.stdout);
+ const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ const i=y.indexOf('  gen3042-soil-triad-gpu-once:');assert.ok(i>=0);
+ const block=y.slice(i);
+ for(const h of Object.values((await import('./h-earth-ground-material-comparison.v1.mjs')).GEN3042_HEADS))assert.ok(block.includes('EXACT_SOURCE_SHA: '+h));
+ assert.ok(block.includes("github.event.action == 'opened'"));
+ assert.ok(block.includes('GEN3042_SOIL_TRIAD_AB_V1'));
+ assert.ok(block.includes('if: always()'));
+ assert.equal(block.includes("github.event.action == 'reopened'"),false);
+});
+
+test('Gen3043 preserves resource evidence before fourth bounded checkout',()=>{
+ const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ const block=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
+ const names=['Gen3042 tooling','baseline','Gen3037 groundcover candidate','Gen3030 habitat candidate'];
+ for(const name of names){
+  const anchor='      - name: Checkout exact '+name+'\n';
+  const a=block.indexOf(anchor);assert.ok(a>=0,'missing checkout '+name);
+  const b=block.indexOf('\n      - name:',a+anchor.length);
+  const chunk=block.slice(a,b<0?undefined:b);
+  assert.ok(chunk.includes('git clone --quiet --no-checkout --filter=blob:none --depth=1'),name+' must defer all blob materialization');
+  assert.ok(chunk.includes('sparse-checkout set --no-cone'),name+' must select paths before checkout');
+  assert.ok(chunk.includes('fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"'),name+' must fetch filtered exact head');
+  assert.ok(chunk.includes('checkout --quiet --detach "$EXACT_SOURCE_SHA"'),name+' must materialize only exact head');
+  for(const required of name==='Gen3042 tooling'?["/tools/","/.github/workflows/h-earth-neutral-exact-head-runner.yml","/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"]:["/showroom/globe/h-earth/","/h-earth-3d/control-plane/run-8/","/h-earth-3d/integration/","/h-earth-3d/environment/","/h-earth-3d/terrain/","/h-earth-3d/objects/","/h-earth-3d/cells/","/h-earth-3d/zones/","/h-earth-3d/validation/","/h-earth-3d/h-earth.matrix.js"]){
+    assert.ok(chunk.includes(required),name+' missing required source coverage '+required);
+  }
+ }
+ const capture=block.indexOf('      - name: Gen3042 pre-habitat resource evidence');
+ const upload=block.indexOf('      - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout');
+ const habitat=block.indexOf('      - name: Checkout exact Gen3030 habitat candidate');
+ assert.ok(capture>=0&&upload>capture&&habitat>upload,'durable resource evidence must precede habitat checkout');
+ assert.ok(block.includes('df -B1 "$GITHUB_WORKSPACE"'));
+ assert.ok(block.includes('du -sh tooling baseline candidate'));
+ assert.ok(block.includes('if-no-files-found: error'));
+ assert.ok(block.includes("github.event.action == 'opened'"),'one-shot trigger must remain unchanged');
+ assert.ok(!block.includes("github.event.action == 'reopened'"),'no automatic retry');
+});

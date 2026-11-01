@@ -188,6 +188,26 @@ function admittedHEarthBranch(operationId, generation) {
     '-' + match[2];
 }
 
+/* A PR description is an UNTRUSTED operation locator, never admission.
+ * The sole matching owner-signed packet and live lock supply authority. */
+function singleHearthPrOperationLocator(body) {
+  if (typeof body !== 'string') return null;
+  const ids = [...new Set(body.match(/\bH_EARTH_[A-Z][A-Z0-9_]*_20[0-9]{6}_[0-9]{3}\b/g) || [])];
+  return ids.length === 1 ? ids[0] : null;
+}
+function admittedCandidateBranch(lock, packet, observedBranch, prOperationLocator, fromPr) {
+  const canonical = admittedHEarthBranch(lock.operationId, lock.lockGeneration);
+  if (observedBranch === canonical) return canonical;
+  // An explicitly named branch must match the ORIGINAL authenticated intake;
+  // a copied operation ID in an arbitrary PR never grants scope.
+  const named = packet.operationRequest?.subjectIdentity?.newCandidateBranch;
+  if (!fromPr || prOperationLocator !== lock.operationId ||
+      typeof named !== 'string' ||
+      !/^h-earth\/[a-z0-9][a-z0-9/_-]*$/.test(named) ||
+      observedBranch !== named) return null;
+  return named;
+}
+
 async function authenticatedCandidateScope(changedPaths) {
   const none = Object.freeze({ paths: [], operationId: null, lockGeneration: null });
   const ambiguous = changedPaths.filter(isAmbiguousHEarthAuthorityScope);
@@ -203,7 +223,11 @@ async function authenticatedCandidateScope(changedPaths) {
     const branch = fromPr ? event.pull_request?.head?.ref : String(event.ref || '').replace(/^refs\/heads\//, '');
     const candidateHead = fromPr ? event.pull_request?.head?.sha : event.after;
     const branchIdentity = /^h-earth\/gen([0-9]+)-[a-z0-9-]+$/.exec(branch || '');
-    if (!branchIdentity || !isSha(candidateHead)) return none;
+    // Noncanonical names are permitted ONLY when independently bound by the
+    // original owner intake; PR body text selects a candidate, not an authority.
+    const prOperationLocator = fromPr && !branchIdentity
+      ? singleHearthPrOperationLocator(event.pull_request?.body) : null;
+    if ((!branchIdentity && !prOperationLocator) || !isSha(candidateHead)) return none;
     // Current workflow checkout must actually contain the branch candidate.
     execFileSync('git', ['merge-base', '--is-ancestor', candidateHead, 'HEAD'], {stdio: 'ignore'});
     const headers = {Accept: 'application/vnd.github+json',
@@ -226,25 +250,19 @@ async function authenticatedCandidateScope(changedPaths) {
     const ledger = JSON.parse(await rawResponse.text());
     if (ledger?.schema !== 'REPOSITORY_ACTIVE_OPERATION_LEDGER_v1' ||
         !ledger.activeScopes || typeof ledger.activeScopes !== 'object') return none;
-    const generation = Number(branchIdentity[1]);
-    if (!Number.isSafeInteger(generation) || generation < 1) return none;
+    const generation = branchIdentity ? Number(branchIdentity[1]) : null;
+    if (branchIdentity && (!Number.isSafeInteger(generation) || generation < 1)) return none;
     const candidates = Object.entries(ledger.activeScopes)
       .filter(([key, lock]) =>
-        lock?.lockGeneration === generation &&
+        (branchIdentity ? lock?.lockGeneration === generation :
+          lock?.operationId === prOperationLocator) &&
         lock.lockScope?.startsWith('H_EARTH:') &&
         key === lock.scopeHash &&
         ['ADMITTED_LOCKED', 'EXECUTING'].includes(lock.state) &&
         lock.released === false);
     if (candidates.length !== 1) return none;
     const lock = candidates[0][1];
-    // Active admission MUST be tied to one deterministic branch ref, not just
-    // a matching gen number. An unrelated branch must never borrow the lock.
-    const admittedBranch = admittedHEarthBranch(lock.operationId, generation);
-    if (!admittedBranch || branch !== admittedBranch) return none;
-    const candidateRef = await getJson('https://api.github.com/repos/' + expectedRepository +
-      '/git/ref/heads/' + admittedBranch);
-    if (candidateRef?.ref !== 'refs/heads/' + admittedBranch ||
-        candidateRef.object?.sha !== candidateHead) return none;
+    if (!Number.isSafeInteger(lock.lockGeneration) || lock.lockGeneration < 1) return none;
     const inv = lock.authorityProvenance?.invocation;
     if (inv?.repository !== expectedRepository || !Number.isInteger(inv.commentId)) return none;
     const comment = await getJson('https://api.github.com/repos/' + expectedRepository +
@@ -252,7 +270,16 @@ async function authenticatedCandidateScope(changedPaths) {
     if (!String(comment.body || '').startsWith(admissionMarker)) return none;
     const packet = JSON.parse(comment.body.slice(admissionMarker.length));
     if (packet.schema !== 'CANONICAL_OPERATION_INTAKE_TRANSPORT_REQUEST_v1' ||
-        !verifyCanonicalLockPair(lock, packet, comment, generation)) return none;
+        !verifyCanonicalLockPair(lock, packet, comment, lock.lockGeneration)) return none;
+    // Only now may the owner-signed exact branch name replace the legacy
+    // generated name. Require the live GitHub ref to match the PR head SHA.
+    const admittedBranch = admittedCandidateBranch(
+      lock, packet, branch, prOperationLocator, fromPr);
+    if (!admittedBranch) return none;
+    const candidateRef = await getJson('https://api.github.com/repos/' + expectedRepository +
+      '/git/ref/heads/' + admittedBranch);
+    if (candidateRef?.ref !== 'refs/heads/' + admittedBranch ||
+        candidateRef.object?.sha !== candidateHead) return none;
     const allowed = packet.operationRequest.allowedPaths;
     if (!allWithinAdmission(changedPaths, allowed)) return none;
     // Do not give registry/control-plane changes a product-candidate exemption.
@@ -260,7 +287,7 @@ async function authenticatedCandidateScope(changedPaths) {
     execFileSync('git', ['merge-base', '--is-ancestor', lock.governingHead, candidateHead],
       {stdio: 'ignore'});
     return Object.freeze({ paths: ambiguous, operationId: lock.operationId,
-      lockGeneration: generation });
+      lockGeneration: lock.lockGeneration });
   } catch {
     // Missing network, Git objects, authority, or malformed evidence = fail closed.
     return none;
@@ -385,6 +412,33 @@ function runSelfTest() {
   assert(admittedHEarthBranch(canonicalGen3010, 3011) !== canonicalGen3010Branch,
     'WRONG_GENERATION_CANNOT_BORROW_BRANCH');
 
+  // Gen3044: an admitted named branch is not an exception based on its
+  // human-readable label. The original owner-signed packet must bind it.
+  const namedOperation='H_EARTH_SOIL_SUBSTRATE_COMPOSITION_A03_A04_20261101_001';
+  const namedBranch='h-earth/a03-a04-common-soil-substrate-20261101-001';
+  const namedLock={operationId:namedOperation,lockGeneration:3044};
+  const namedPacket={operationRequest:{subjectIdentity:{newCandidateBranch:namedBranch}}};
+  const namedBody='Authority: `'+namedOperation+'`';
+  assert(singleHearthPrOperationLocator(namedBody)===namedOperation,
+    'GEN3044_PR_BODY_OPERATION_LOCATOR_ONLY');
+  assert(singleHearthPrOperationLocator(namedBody+' `H_EARTH_OTHER_OPERATION_20261101_002`')===null,
+    'AMBIGUOUS_PR_OPERATION_ID_FAILS_CLOSED');
+  assert(admittedCandidateBranch(namedLock,namedPacket,namedBranch,
+    singleHearthPrOperationLocator(namedBody),true)===namedBranch,
+    'AUTHENTIC_GEN3044_NAMED_BRANCH_ONLY');
+  assert(admittedCandidateBranch(namedLock,namedPacket,'h-earth/foreign',
+    namedOperation,true)===null,'FOREIGN_PR_BRANCH_CANNOT_BORROW_LOCK');
+  assert(admittedCandidateBranch(namedLock,namedPacket,namedBranch,
+    'H_EARTH_OTHER_OPERATION_20261101_002',true)===null,
+    'FORGED_OPERATION_LOCATOR_CANNOT_BORROW_LOCK');
+  assert(admittedCandidateBranch(namedLock,{operationRequest:{subjectIdentity:{}}},
+    namedBranch,namedOperation,true)===null,'UNBOUND_BRANCH_FAILS_CLOSED');
+  assert(admittedCandidateBranch(namedLock,namedPacket,namedBranch,
+    namedOperation,false)===null,'PUSH_MAY_NOT_BORROW_PR_BRANCH_BINDING');
+  assert(admittedCandidateBranch({operationId:canonicalGen3010,lockGeneration:3010},
+    {operationRequest:{}},canonicalGen3010Branch,null,false)===canonicalGen3010Branch,
+    'LEGACY_CANONICAL_GEN_BRANCH_UNCHANGED');
+
   // Canonical provenance and digest checks are part of the admission verifier,
   // not just a caller-supplied candidate-path flag.
   const ownerRequest = {
@@ -470,7 +524,7 @@ function runSelfTest() {
   return {
     schema: 'WORKFLOW_APPLICABILITY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
-    assertions: 33,
+    assertions: 41,
     regression: 'RUN_34773289185_AUDRALIA_THREE_PATH_FALSE_BLOCK',
     historicalRegressionDisposition: historicalAudraliaRegression.result,
     selectedFixture: 'H_EARTH_REGISTRY_EXPLICIT_DEPENDENCY',

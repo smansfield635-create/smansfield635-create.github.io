@@ -153,7 +153,7 @@ test('Gen3042 full 36-frame source/camera/unchanged-stage custody rejects corrup
   }))));
  assert.equal(t.validateGen3042(views).images,36);
  assert.throws(()=>t.validateGen3042(views.slice(1)),/FRAME_CENSUS/);
- const drift=structuredClone(views);drift[1].imageSha256='e'.repeat(64);
+ const drift=structuredClone(views);drift[4].imageSha256='e'.repeat(64);
  assert.throws(()=>t.validateGen3042(drift),/UNCHANGED_STAGE_DIFF|STAGE_INVALID/);
  const moved=structuredClone(views);moved[2].lastFrame.cameraPosition.x=4;
  assert.throws(()=>t.validateGen3042(moved),/CAMERA_ASSET_MISMATCH/);

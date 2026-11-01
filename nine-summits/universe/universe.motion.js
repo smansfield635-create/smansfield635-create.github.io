@@ -1813,9 +1813,27 @@ function drawOpalWorld(t){if(!opalGL)return;const r=opalCanvas.getBoundingClient
 }
 
 const vertexSource=`attribute vec3 aPosition;attribute vec3 aNormal;attribute float aFacet;
-uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ;uniform vec2 uView;
+uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ;uniform mediump float uWorld,uAtmosphere;uniform vec2 uView;
 varying vec3 vWorld,vNormal,vLocal;varying float vFacet;
-void main(){vFacet=abs(aFacet);vec3 world=aPosition*uRadius+uCenter;vec3 view=world-uOffset;float perspective=uCameraZ/max(.48,uCameraZ-view.z);gl_Position=vec4(view.xy/uView*uZoom*perspective,-view.z/20.0,1.0);vWorld=world;vNormal=aNormal;vLocal=aPosition;}`;
+float gratitudeTectonic(vec3 p){
+ vec3 q=p+vec3(.12*sin(p.y*6.2+p.z*3.8),.10*sin(p.z*8.0-p.x*4.0),.13*sin(p.x*5.3+p.y*7.3));
+ return .40*sin(q.x*9.8+q.z*3.2)+.28*cos(q.y*11.1-q.z*5.3)
+       +.20*sin(q.z*12.5+q.x*4.9+q.y*3.1)+.12*sin((q.x+q.y)*18.1-q.z*3.5);
+}
+void main(){
+ vFacet=abs(aFacet);
+ vec3 local=aPosition;
+ // Only book Summit I (legacy slot 4) receives rocky island relief.
+ if(uWorld>3.5&&uWorld<4.5&&uAtmosphere<.5){
+  float shelf=.5+.5*gratitudeTectonic(normalize(local));
+  float land=smoothstep(.59,.72,shelf);
+  local*=1.0+.014*land+.033*land*land;
+ }
+ vec3 world=local*uRadius+uCenter;vec3 view=world-uOffset;
+ float perspective=uCameraZ/max(.48,uCameraZ-view.z);
+ gl_Position=vec4(view.xy/uView*uZoom*perspective,-view.z/20.0,1.0);
+ vWorld=world;vNormal=aNormal;vLocal=aPosition;
+}`;
 const fragmentSource=`precision mediump float;
 varying vec3 vWorld,vNormal,vLocal;varying float vFacet;
 uniform vec3 uColor;
@@ -1838,6 +1856,13 @@ float fbm(vec3 p) {
  for(int k=0;k<3;k++){r+=amp*noise3(p);p=p*2.07+vec3(13.4,7.1,19.2);amp*=.5;}
  return r;
 }
+// Shared macro geography with the summit-I-only vertex displacement.
+// Warped, crossed ridges form archipelagos rather than parallel latitude bands.
+float gratitudeTectonic(vec3 p){
+ vec3 q=p+vec3(.12*sin(p.y*6.2+p.z*3.8),.10*sin(p.z*8.0-p.x*4.0),.13*sin(p.x*5.3+p.y*7.3));
+ return .40*sin(q.x*9.8+q.z*3.2)+.28*cos(q.y*11.1-q.z*5.3)
+       +.20*sin(q.z*12.5+q.x*4.9+q.y*3.1)+.12*sin((q.x+q.y)*18.1-q.z*3.5);
+}
 void main() {
  vec3 n=normalize(vNormal);
  vec3 light=normalize(-vWorld+vec3(-.2,.25,.15));
@@ -1847,6 +1872,17 @@ void main() {
  vec3 p=normalize(vLocal);
  vec3 material=uColor;
  if(uAtmosphere>.5){
+   if(uWorld>3.5&&uWorld<4.5){
+     // A thin, transparent layer above Gratitude's real surface: humidity and cloud banks.
+     // Time only advects this atmosphere; the rock/ocean surface stays still.
+     float bank=fbm(p*7.2+vec3(uTime*.006,-uTime*.003,4.1));
+     float wisps=fbm(p*13.1+vec3(3.1,uTime*.004,-1.2));
+     float moisture=smoothstep(.53,.72,bank*.78+wisps*.22);
+     float airRim=pow(1.0-max(0.0,n.z),3.0);
+     vec3 lagoonAir=mix(vec3(.085,.39,.49),vec3(.84,.95,.90),moisture);
+     gl_FragColor=vec4(lagoonAir*(.53+.78*airRim),clamp(.035+.33*airRim+.22*moisture,0.,.55));
+     return;
+   }
    float fresnel=pow(1.0-max(0.0,dot(n,vec3(0.,0.,1.))),2.8);
    float cloud=fbm(p*7.5+vec3(uTime*.025,-uTime*.017,0.));
    float haze=smoothstep(.43,.78,cloud);
@@ -1913,13 +1949,27 @@ void main() {
      material=mix(vec3(.08,.039,.043),vec3(.53,.24,.13),smoothstep(.25,.81,basin));
      material+=vec3(.30,.075,.017)*fault*.4;
      rough=.91;metal=.06;
-   } else if(uWorld<4.5) { // Forgiveness: sea glass and soft tidal layers
-     float coast=fbm(p*7.8+vec3(a*.35,0.,b*.38));
-     float deep=smoothstep(.32,.67,coast*.75+a*.32);
-     float cap=smoothstep(.58,.76,fbm(p*16.0+vec3(0.,uTime*.02,0.)));
-     material=mix(vec3(.025,.13,.19),vec3(.12,.61,.62),deep);
-     material=mix(material,vec3(.72,.92,.82),cap*.73);
-     rough=.27;glow=.055;
+   } else if(uWorld<4.5) { // Gratitude, book Summit I: Golden Lagoon planetary archipelago
+     // Layer ONE: a recognizable world seen from orbit. Its accepted entered
+     // Golden Lagoon is layer TWO, rendered by the unchanged encounter system.
+     float macro=.5+.5*gratitudeTectonic(p);
+     float coastalNoise=fbm(p*17.3+vec3(7.2,1.5,-3.8));
+     float shelf=clamp(macro+.060*(coastalNoise-.48),0.,1.);
+     float islands=smoothstep(.58,.69,shelf);
+     float shallows=smoothstep(.37,.59,shelf);
+     float reef=smoothstep(.45,.56,shelf)*(1.-smoothstep(.61,.70,shelf));
+     vec3 abyss=vec3(.008,.075,.135);
+     vec3 ocean=mix(abyss,vec3(.025,.23,.31),smoothstep(.22,.47,shelf));
+     ocean=mix(ocean,vec3(.045,.61,.58),shallows*.88);
+     ocean=mix(ocean,vec3(.25,.82,.72),reef*.58);
+     float canopy=fbm(p*14.7+vec3(1.9,8.3,-4.1));
+     float limestone=smoothstep(.59,.79,fbm(p*19.5+vec3(3.7,-1.8,5.1)));
+     vec3 tropic=mix(vec3(.69,.64,.50),vec3(.115,.33,.15),smoothstep(.36,.72,canopy)*.86);
+     tropic=mix(tropic,vec3(.87,.81,.64),limestone*.68);
+     material=mix(ocean,tropic,islands);
+     // The coast remains crisp, not glassy: low specular, real rock relief
+     // and atmospheric depth on a separately drawn transparent outer shell.
+     rough=.84;metal=.012;glow=reef*.017;
    } else if(uWorld<5.5) { // Self-control: opposed but continuous basin and ridge geology
      float waveline=p.x+.35*sin(p.y*3.8+sin(p.z*2.7))+.15*sin(p.z*6.2);
      float biome=smoothstep(-.26,.29,waveline);
@@ -1959,25 +2009,18 @@ void main() {
    }
  }
  float halfLambert=.22+.83*diffuse;
- // World 05 only: camera-side sea-glass bounce reveals the near hemisphere
- // while preserving the opposing night side and other eight world materials.
- float peaceNearFace=(uHeart<.5&&uWorld>3.5&&uWorld<4.5&&uAtmosphere<.5)?1.:0.;
- float peaceViewFill=max(0.,dot(n,normalize(vec3(-.28,.38,1.))));
- halfLambert=max(halfLambert,peaceNearFace*(.30+.38*peaceViewFill));
+ // Gratitude receives a diffuse tropical daylight fill, not glass reflections.
+ // The source-material coastline remains visible on the near hemisphere.
+ float gratitudeNearFace=(uHeart<.5&&uWorld>3.5&&uWorld<4.5&&uAtmosphere<.5)?1.:0.;
+ float gratitudeViewFill=max(0.,dot(n,normalize(vec3(-.34,.54,1.0))));
+ halfLambert=max(halfLambert,gratitudeNearFace*(.56+.28*gratitudeViewFill));
  float spec=pow(max(0.,dot(reflect(-light,n),vec3(0.,0.,1.))),mix(8.,44.,1.-rough));
  vec3 shaded=material*halfLambert;
- if(peaceNearFace>.5){
-   // Peace only: offshore topography and irregular pale mineral shelves.
-   float formation=noise3(p*5.1+vec3(4.2,1.6,7.3));
-   float fine=noise3(p*21.4+vec3(2.4,6.2,1.9));
-   float shelf=smoothstep(.27,.72,formation*.78+fine*.22);
-   float coast=1.-smoothstep(.025,.13,abs(formation-.54));
-   vec3 depth=mix(vec3(.08,.24,.31),vec3(.30,.65,.62),shelf);
-   depth=mix(depth,vec3(.68,.86,.78),coast*(.26+.24*fine));
-   float fill=.65+.30*max(0.,dot(n,normalize(vec3(-.36,.7,.55))));
-   shaded=mix(shaded,max(shaded,depth*fill),.91);
-   float fresnel=pow(1.-abs(n.z),2.4);
-   shaded+=vec3(.025,.11,.14)*fresnel*.45;
+ if(gratitudeNearFace>.5){
+   float coastRelief=smoothstep(.15,.72,abs(gratitudeTectonic(p)));
+   shaded*=.94+.08*coastRelief;
+   float atmosphereEdge=pow(1.-abs(n.z),2.4);
+   shaded+=vec3(.018,.065,.085)*atmosphereEdge*.27;
  }
  shaded+=mix(vec3(.22,.14,.08),vec3(.91,.86,.77),metal)*spec*(.08+.42*(1.-rough));
  shaded+=material*rim*(.17+glow);
@@ -2235,6 +2278,16 @@ function render(time){
     return {...p,radius:Math.max(22,radius(i)*p.scale),hidden};
   });
   placeLabels();
+  // First-layer Gratitude planet: its own thin atmosphere, visible in orbit.
+  // The existing selected-world atmosphere pass takes over during approach.
+  if(!(selected===4&&flight>.08)){
+    gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+    gl.depthMask(false);
+    const gratitudeAtmosphereScale=selected===4?1+3.1*smooth:1;
+    draw(meshes[5],centers[4],radius(4)*gratitudeAtmosphereScale*1.095,
+         color(summits[4][2]),false,selected===4,4,true);
+    gl.depthMask(true);gl.disable(gl.BLEND);
+  }
   if(flight>.08&&(selected===4||selected===0||selected===1||selected===2||selected===3||selected===5||selected===6||selected===7||selected===8)){
     gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);gl.depthMask(false);
     const k=selected;draw(meshes[k+1],centers[k],radius(k)*(1+3.1*smooth)*1.095,color(summits[k][2]),false,true,k,true);
@@ -2282,7 +2335,7 @@ function bindInput(){
   window.addEventListener('pagehide',()=>{pageActive=false;orbitSpeed=0;lastTime=0;cancelPointer();stopInertia();if(raf)cancelAnimationFrame(raf);raf=0;});
   window.addEventListener('pageshow',()=>{pageActive=true;lastTime=0;requestFrame();});
 }
-function fallback(error){cancelPointer();stopInertia();if(raf)cancelAnimationFrame(raf);raf=0;$('#planet-labels').hidden=true;canvas.hidden=true;$('.heart-glow').hidden=true;ready=false;updateMotionControl();receipt={...receipt,status:'fallback',error:String(error.message||error)};scene.classList.remove('ready');$('.loading').textContent='The nine summits are available below.';$('#path-list').open=true;status.textContent='Explore the summit teachings below, or continue to the book.';$('#reset-view').disabled=true;console.error('Universe:',error);}
+function fallback(error){cancelPointer();stopInertia();if(raf)cancelAnimationFrame(raf);raf=0;$('#planet-labels').hidden=true;canvas.hidden=true;$('.heart-glow').hidden=true;ready=false;updateMotionControl();receipt={...receipt,status:'fallback',error:String(error.message||error)};scene.classList.remove('ready');$('.loading').textContent='The nine summits are available below.';$('#path-list').open=true;status.textContent='Explore the summit teachings below, or continue to the book.';$('#reset-view').disabled=true;console.error('Universe startup failed: '+String(error?.stack||error?.message||error));}
 async function init(){
   P=globalThis.DGB_COMPASS_ORBIT_PHYSICS;if(!P)throw Error('Shared Compass physics unavailable');
   const K=await import('../../showroom/globe/h-earth/render/geometry-kernel.js');
@@ -2294,6 +2347,6 @@ async function init(){
   new IntersectionObserver(entries=>{sceneVisible=entries[0].isIntersecting;orbitSpeed=0;lastTime=0;if(!sceneVisible&&raf){cancelAnimationFrame(raf);raf=0;}if(sceneVisible)requestFrame();}).observe(scene);
   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;fallback(Error('Graphics context interrupted'));});
   canvas.addEventListener('webglcontextrestored',()=>location.reload());
-  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,bookSummitOrder:BOOK_ORDER_SLOTS.map(i=>summits[i][0]),bookPairOrder:BOOK_ORDER_SLOTS.map(i=>BOOK_PAIR_BY_SLOT[i]),selectedBookOrdinal:selected>=0?BOOK_ORDINAL_BY_SLOT[selected]:null,selectedSummit:selected>=0?summits[selected][0]:null,approvedTropicalSlot:4,gratitudeCameraContract:'FIXED_PANORAMA_1_08_ALL_FLIGHT',proceduralJoyAvailable:false,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
+  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,bookSummitOrder:BOOK_ORDER_SLOTS.map(i=>summits[i][0]),bookPairOrder:BOOK_ORDER_SLOTS.map(i=>BOOK_PAIR_BY_SLOT[i]),selectedBookOrdinal:selected>=0?BOOK_ORDINAL_BY_SLOT[selected]:null,selectedSummit:selected>=0?summits[selected][0]:null,approvedTropicalSlot:4,planetIdentityLayer:{slot:4,summit:'Gratitude',planet:'GOLDEN_LAGOON_ARCHIPELAGO_PLANET_V1',environment:'GOLDEN_LAGOON_ENTERED_GEN3034_UNCHANGED',contrast:'ENTITLEMENT_FUTURE_ONLY'},gratitudeCameraContract:'FIXED_PANORAMA_1_08_ALL_FLIGHT',proceduralJoyAvailable:false,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
 }
 init().catch(fallback);

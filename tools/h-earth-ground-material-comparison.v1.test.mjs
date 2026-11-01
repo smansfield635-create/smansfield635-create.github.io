@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import {HEADS,POSES,GEN3037_W1_HEADS,GEN3037_W1_RENDERER_BLOBS,GEN3037_W1_POSES,GEN3037_W1_MODES,w1GrassHidden,validateW1Pairs,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
 
 const fixture=()=>({state:{position:{x:18,y:24,z:-226},yawDegrees:-150,pitchDegrees:-14,verticalFovDegrees:56,sequence:10001},lastFrame:{navigationSequence:10001,frameSequence:21,cameraPosition:{x:18,y:24,z:-226}},expectedCameraPosition:{x:18,y:24,z:-226},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}});
@@ -69,7 +70,12 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
- const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ // Gen2928 tested its own original renderer; current Gen3037 source is not that historical fixture.
+ const historical='39ed43d987d5f62c1368e7c309faa1a1b3d731b6';
+ const historicalPath='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+ const shader=execFileSync('git',['show',historical+':'+historicalPath],{encoding:'utf8'});
+ const blob=execFileSync('git',['hash-object','--stdin'],{input:shader,encoding:'utf8'}).trim();
+ assert.equal(blob,'2ae6c42f6febaada2cb2a240844b9fddc5b9ed8e');
  const digest=diagnostic.verifyExactMaterialCandidate(shader);
  assert.match(digest,/^[0-9a-f]{64}$/);
  assert.equal(shader.split(diagnostic.CANDIDATE_BLEND_EXPRESSION).length,2);

@@ -187,9 +187,9 @@ test('Gen3042 preserves resource evidence before fourth independent full-tree ch
  const block=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
  const names=['Gen3042 tooling','baseline','Gen3037 groundcover candidate','Gen3030 habitat candidate'];
  for(const name of names){
-  const anchor='      - name: Checkout exact '+name+'\\n';
+  const anchor='      - name: Checkout exact '+name+'\n';
   const a=block.indexOf(anchor);assert.ok(a>=0,'missing checkout '+name);
-  const b=block.indexOf('\\n      - name:',a+anchor.length);
+  const b=block.indexOf('\n      - name:',a+anchor.length);
   const chunk=block.slice(a,b<0?undefined:b);
   assert.ok(chunk.includes('filter: blob:none'),name+' has no bounded blob filter');
   assert.ok(!chunk.includes('sparse-checkout:'),name+' must retain complete source tree');

@@ -779,6 +779,11 @@ function drawEmberWorld(t){if(!emberGL)return;
  * H-Earth WEST-admitted true-geometry near field, NOT image-only photogrammetry.
  * No third-party network image dependency. Other eight worlds untouched. */
 const PEACE_CINEMA_IMAGE='./peace.environment.svg?cb=peace-v12-material-separation';
+// The mountain, shore, and distant terrain are IMMOBILE. The camera's former
+// flight-driven 1.32→1.08 zoom was translating the entire landscape during
+// the Gratitude arrival. Use the already accepted settled framing from the
+// first visible panorama frame onward; only independent sky/water may move.
+const PEACE_CINEMA_FIXED_SCALE=1.08;
 let peaceWaterCanvas=null,peaceWaterContext=null,peaceWaterLast=0;
 let peaceCloudCanvas=null,peaceCloudContext=null,peaceCloudLast=0,peaceGeometryScheduled=false;
 let peaceCloudBanks=null,peaceSafeWaterMask=null,peaceSafeSkyMask=null,peaceSkyMotionClearance=null;
@@ -818,9 +823,9 @@ function ensurePeaceCinema(){
  background:#113f5d;isolation:isolate;opacity:1}
  #peace-encounter .peace-cinema-image,#peace-encounter .peace-cinema-clouds,#peace-encounter .peace-cinema-water{display:block;position:absolute;inset:0;width:100%;height:100%;
  object-fit:cover;object-position:50% 50%;max-width:none;max-height:none;
- transform-origin:50% 50%;transform:scale(var(--peace-arrival-scale,1.22));
- transition:transform .18s linear;opacity:0}
- #peace-encounter .peace-cinema-image{z-index:0;filter:none;transition:transform .18s linear}
+ transform-origin:50% 50%;transform:scale(${PEACE_CINEMA_FIXED_SCALE});
+ transition:none;opacity:0}
+ #peace-encounter .peace-cinema-image{z-index:0;filter:none;transition:none}
  #peace-encounter .peace-cinema-clouds{z-index:1;pointer-events:none;mix-blend-mode:normal}
  #peace-encounter .peace-cinema-water{z-index:2;pointer-events:none;mix-blend-mode:normal}
  #peace-encounter .peace-cinema-ready .peace-cinema-image,#peace-encounter .peace-cinema-ready .peace-cinema-clouds,#peace-encounter .peace-cinema-ready .peace-cinema-water{opacity:1}
@@ -1105,14 +1110,10 @@ function updatePeaceCinema(){
   drawPeaceSourceClouds(now);
   drawPeaceSourceWater(now);
  }
- const f=Math.max(0,Math.min(1,(flight-.55)/.45)),ease=f*f*(3.-2.*f);
- const scale=1.32-.24*ease;
- // V11 fixed frame: scrolling, pointer movement and ambient weather cannot
- // translate the landscape. Only the deliberate enter/return camera zoom
- // transforms all registered source layers together.
- peaceCinemaLayer.style.setProperty('--peace-arrival-scale',scale.toFixed(4));
- peaceCinemaLayer.style.setProperty('--peace-look-x','0px');
- peaceCinemaLayer.style.setProperty('--peace-look-y','0px');
+ // Gen3034 immobile panorama contract: do not recompute camera scale from
+ // flight, approach, return, scrolling, pointer or the animation clock.
+ // All three source layers stay at 1.08 for their entire visible lifetime.
+ // Cloud and masked water texture animations are unaffected.
  // No atmosphere-wide transparency or luminance animation is permitted.
 }
 /* Actual source-texture advection inside verified water, never a screen
@@ -2293,6 +2294,6 @@ async function init(){
   new IntersectionObserver(entries=>{sceneVisible=entries[0].isIntersecting;orbitSpeed=0;lastTime=0;if(!sceneVisible&&raf){cancelAnimationFrame(raf);raf=0;}if(sceneVisible)requestFrame();}).observe(scene);
   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;fallback(Error('Graphics context interrupted'));});
   canvas.addEventListener('webglcontextrestored',()=>location.reload());
-  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,bookSummitOrder:BOOK_ORDER_SLOTS.map(i=>summits[i][0]),bookPairOrder:BOOK_ORDER_SLOTS.map(i=>BOOK_PAIR_BY_SLOT[i]),selectedBookOrdinal:selected>=0?BOOK_ORDINAL_BY_SLOT[selected]:null,selectedSummit:selected>=0?summits[selected][0]:null,approvedTropicalSlot:4,proceduralJoyAvailable:false,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
+  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,bookSummitOrder:BOOK_ORDER_SLOTS.map(i=>summits[i][0]),bookPairOrder:BOOK_ORDER_SLOTS.map(i=>BOOK_PAIR_BY_SLOT[i]),selectedBookOrdinal:selected>=0?BOOK_ORDINAL_BY_SLOT[selected]:null,selectedSummit:selected>=0?summits[selected][0]:null,approvedTropicalSlot:4,gratitudeCameraContract:'FIXED_PANORAMA_1_08_ALL_FLIGHT',proceduralJoyAvailable:false,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
 }
 init().catch(fallback);

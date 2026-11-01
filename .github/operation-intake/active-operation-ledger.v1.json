@@ -5557,50 +5557,6 @@
       "scopeHash": "400c8d96cbd9198eb07bf06ba6c102ab41f3827be4d1847d004b536132454764",
       "state": "ADMITTED_LOCKED"
     },
-    "405d39d717695da5f8da24fe288eb4e41e0b8ba7996ddf12c9b04654be2c4cb8": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "5129013d1c8b7735e9b1926f9346f5008bff349f",
-          "lockGeneration": 3034,
-          "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_LOCKED_CAMERA_SOURCE_VERSION:20261031",
-          "operationId": "NINE_SUMMITS_GRATITUDE_LOCKED_CAMERA_SOURCE_VERSION_20261031_001",
-          "procedureLocatorDigest": "8a9380b6de1074e55e7143577deadb2964017286d9611405efbee74626a644ca",
-          "requestDigest": "f251393bb66b682575301b56d194d54c1b1b94d1676d4a22a788bb160d59e8ec",
-          "scopeHash": "405d39d717695da5f8da24fe288eb4e41e0b8ba7996ddf12c9b04654be2c4cb8"
-        },
-        "bindingDigest": "3f1df88c9ba22b51a5f0c674914eb2bc853aa4916acf20b1b36d39b75aea83e3",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "e7f53fb030a9bdf4e5fbf8c0d5884dea7fadd1e5cf641b0ba3dff78ba3e5bb47",
-          "commentId": 6550830294,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6961,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41254518172,
-          "workflowSha": "5129013d1c8b7735e9b1926f9346f5008bff349f"
-        },
-        "lineageAnchorCommitSha": "84ebe40fbef7d2a2b4d3ee69795c006c333253c4",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "5129013d1c8b7735e9b1926f9346f5008bff349f",
-      "lockGeneration": 3034,
-      "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_LOCKED_CAMERA_SOURCE_VERSION:20261031",
-      "operationId": "NINE_SUMMITS_GRATITUDE_LOCKED_CAMERA_SOURCE_VERSION_20261031_001",
-      "procedureLocatorDigest": "8a9380b6de1074e55e7143577deadb2964017286d9611405efbee74626a644ca",
-      "released": false,
-      "requestDigest": "f251393bb66b682575301b56d194d54c1b1b94d1676d4a22a788bb160d59e8ec",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "405d39d717695da5f8da24fe288eb4e41e0b8ba7996ddf12c9b04654be2c4cb8",
-      "state": "ADMITTED_LOCKED"
-    },
     "40e439a5fed8b06b19dce51a9edca53617a65fbae8ba6521d66fcf1bf47de741": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -94472,6 +94428,51 @@
       "requestDigest": "99f8365de19b46b42baf6896e69f9b6edaab619df9a07c933a0ec8f2ca87ffe7",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "dc63354527b9966dddd82a90261dedf8dd4b9515d540ba9ce6dc9294129d4952",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "5129013d1c8b7735e9b1926f9346f5008bff349f",
+          "lockGeneration": 3034,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_LOCKED_CAMERA_SOURCE_VERSION:20261031",
+          "operationId": "NINE_SUMMITS_GRATITUDE_LOCKED_CAMERA_SOURCE_VERSION_20261031_001",
+          "procedureLocatorDigest": "8a9380b6de1074e55e7143577deadb2964017286d9611405efbee74626a644ca",
+          "requestDigest": "f251393bb66b682575301b56d194d54c1b1b94d1676d4a22a788bb160d59e8ec",
+          "scopeHash": "405d39d717695da5f8da24fe288eb4e41e0b8ba7996ddf12c9b04654be2c4cb8"
+        },
+        "bindingDigest": "3f1df88c9ba22b51a5f0c674914eb2bc853aa4916acf20b1b36d39b75aea83e3",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "e7f53fb030a9bdf4e5fbf8c0d5884dea7fadd1e5cf641b0ba3dff78ba3e5bb47",
+          "commentId": 6550830294,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41254518172,
+          "workflowSha": "5129013d1c8b7735e9b1926f9346f5008bff349f"
+        },
+        "lineageAnchorCommitSha": "84ebe40fbef7d2a2b4d3ee69795c006c333253c4",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "5129013d1c8b7735e9b1926f9346f5008bff349f",
+      "lockGeneration": 3034,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_LOCKED_CAMERA_SOURCE_VERSION:20261031",
+      "operationId": "NINE_SUMMITS_GRATITUDE_LOCKED_CAMERA_SOURCE_VERSION_20261031_001",
+      "procedureLocatorDigest": "8a9380b6de1074e55e7143577deadb2964017286d9611405efbee74626a644ca",
+      "released": true,
+      "requestDigest": "f251393bb66b682575301b56d194d54c1b1b94d1676d4a22a788bb160d59e8ec",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "405d39d717695da5f8da24fe288eb4e41e0b8ba7996ddf12c9b04654be2c4cb8",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
     }

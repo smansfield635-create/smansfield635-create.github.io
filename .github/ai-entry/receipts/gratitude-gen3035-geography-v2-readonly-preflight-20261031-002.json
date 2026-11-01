@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "gratitude-gen3035-geography-v2-readonly-preflight-20261031-002",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7091,
+  "requestBranch": "ai-dispatch-request-gen3035-geographic-planet-final-preflight-20261031",
+  "requestCommit": "bd77bc5cdb108ca3c7d5790503e000b44701a1af",
+  "requestCommitParent": "cb2e704b78bfbd83443cc37203dca4ec6b6b4be6",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "cb2e704b78bfbd83443cc37203dca4ec6b6b4be6",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "d2dbf8999ecad7bb103581e85e0d6e655c51efe1",
+    "surface_id": "nine-summits-universe"
+  },
+  "bridgeRunId": "41262456609",
+  "dispatchedRunId": 41262466431,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/41262466431",
+  "dispatchedRunHeadSha": "cb2e704b78bfbd83443cc37203dca4ec6b6b4be6",
+  "dispatchedAt": "2026-11-01T01:46:27.891Z",
+  "resolvedAt": "2026-11-01T01:46:31.533Z"
+}

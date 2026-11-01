@@ -3281,6 +3281,50 @@
       "scopeHash": "26a170fff6651c3fdfe56ca2d95114a3f0b168dfd8cf361da6f856f5032b72d2",
       "state": "ADMITTED_LOCKED"
     },
+    "277545396a2ab7b90319e1833167e8e8bdf2130a226079fc6437cf10a533ff25": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "58aff6b25ecadd6ec611bbcb19e2a73a85cd482b",
+          "lockGeneration": 3036,
+          "lockScope": "H_EARTH:TOOLING:GEN3030_SOIL_PIGMENT_REVISED_AB:20261031",
+          "operationId": "H_EARTH_SOIL_PIGMENT_REVISED_MATCHED_AB_TOOLING_20261031_001",
+          "procedureLocatorDigest": "266473e2afafd746f4c86e56477534449916a29dd70a34b433ec7766a49e8a1e",
+          "requestDigest": "b1aec50dfabb31b224d26a07da58034f367230ac90fb6b76eb9438c337a1d8db",
+          "scopeHash": "277545396a2ab7b90319e1833167e8e8bdf2130a226079fc6437cf10a533ff25"
+        },
+        "bindingDigest": "b1158476a32148b7be4869b96fbe93166da354db5b7b8cb89e826a0593dfcae9",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d7fb22d88ded83ef98921a279a3569e5f348004678690887cff1932ff55dc55b",
+          "commentId": 6551660825,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41260444143,
+          "workflowSha": "58aff6b25ecadd6ec611bbcb19e2a73a85cd482b"
+        },
+        "lineageAnchorCommitSha": "5a902888e94a34cc0664ba0f3bc44699880f6d4f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "58aff6b25ecadd6ec611bbcb19e2a73a85cd482b",
+      "lockGeneration": 3036,
+      "lockScope": "H_EARTH:TOOLING:GEN3030_SOIL_PIGMENT_REVISED_AB:20261031",
+      "operationId": "H_EARTH_SOIL_PIGMENT_REVISED_MATCHED_AB_TOOLING_20261031_001",
+      "procedureLocatorDigest": "266473e2afafd746f4c86e56477534449916a29dd70a34b433ec7766a49e8a1e",
+      "released": false,
+      "requestDigest": "b1aec50dfabb31b224d26a07da58034f367230ac90fb6b76eb9438c337a1d8db",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "277545396a2ab7b90319e1833167e8e8bdf2130a226079fc6437cf10a533ff25",
+      "state": "ADMITTED_LOCKED"
+    },
     "297d84dc3c4b5e2e9b3d9bb1feeb246e78d141f73363939bf45b7dd7a742a5ca": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -24007,7 +24051,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3035,
+  "lockGeneration": 3036,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

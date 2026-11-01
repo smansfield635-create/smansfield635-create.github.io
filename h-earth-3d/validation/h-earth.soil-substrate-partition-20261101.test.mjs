@@ -25,7 +25,7 @@ const PATCHES=[
 ];
 const gitBlob=s=>{
   const body=Buffer.from(s,'utf8');
-  return crypto.createHash('sha1').update(Buffer.from('blob '+body.length+'\\0'.replace('\\0','\0'))).update(body).digest('hex');
+  return crypto.createHash('sha1').update(Buffer.from('blob '+body.length+String.fromCharCode(0))).update(body).digest('hex');
 };
 const clamp=(x,lo,hi)=>Math.min(hi,Math.max(lo,x));
 const luma=v=>v[0]*0.2126+v[1]*0.7152+v[2]*0.0722;

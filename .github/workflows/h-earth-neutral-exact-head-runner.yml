@@ -1422,3 +1422,92 @@ jobs:
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
           test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 10b5623b09c552930e54a1c1071c37535a831971
           (cd source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate && python3 -m unittest test_mesh_gate -v)
+
+  # Gen3042: the existing first-party exact-head comparison runner; one PR-open
+  # attempt only, no product mutation and no W1 diagnostic replay.
+  gen3042-soil-triad-gpu-once:
+    if: >-
+      ${{ github.event_name == 'pull_request' &&
+          github.event.action == 'opened' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/gen3042-gen3042-soil-triad-positive-band-qualification-20261101' &&
+          startsWith(github.event.pull_request.title, 'GEN3042 SOIL TRIAD:') &&
+          github.event.pull_request.base.ref == 'main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact Gen3042 tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Checkout exact baseline
+        uses: actions/checkout@v4
+        with:
+          ref: 28da29ce01f26bf5eb73db2d75b09741b22ab40b
+          path: baseline
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Checkout exact Gen3037 groundcover candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+          path: candidate
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Checkout exact Gen3030 habitat candidate
+        uses: actions/checkout@v4
+        with:
+          ref: cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
+          path: habitat
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Require exact renderer blobs and clean source checkouts
+        shell: bash
+        run: |
+          set -euo pipefail
+          file=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          test "$(git -C baseline rev-parse HEAD)" = 28da29ce01f26bf5eb73db2d75b09741b22ab40b
+          test "$(git -C candidate rev-parse HEAD)" = 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+          test "$(git -C habitat rev-parse HEAD)" = cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
+          test "$(git -C baseline hash-object "$file")" = 85ee835060d5106a670077a5f4352b7ad202b49b
+          test "$(git -C candidate hash-object "$file")" = 40034a16c36a43cb02682564784328ddb7ac48a7
+          test "$(git -C habitat hash-object "$file")" = 03bc45e034e9894494d9120782c714ae78890ab8
+          test -z "$(git -C baseline status --porcelain --untracked-files=no)"
+          test -z "$(git -C candidate status --porcelain --untracked-files=no)"
+          test -z "$(git -C habitat status --porcelain --untracked-files=no)"
+      - name: Node22 exact-head comparator and product-source regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          (cd tooling && node --test tools/h-earth-ground-material-comparison.v1.test.mjs)
+          (cd candidate && node --test h-earth-3d/validation/h-earth.groundcover-soil-relative-endpoint-20261031.test.mjs)
+          (cd habitat && node --test h-earth-3d/validation/h-earth.habitat-soil-color-continuity-20261031.test.mjs)
+      - name: Install first-party Chromium driver
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture 36 real stage-aligned WebGL images from independent products
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN3042_SOIL_TRIAD_AB_V1
+        run: |
+          timeout 3000s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../baseline \
+            --candidate-dir ../candidate \
+            --habitat-dir ../habitat \
+            --output "${{ runner.temp }}/h-earth-gen3042-soil-triad"
+      - name: Preserve exact receipts and PNG images even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3042-soil-triad-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-gen3042-soil-triad/
+          if-no-files-found: warn
+          retention-days: 30

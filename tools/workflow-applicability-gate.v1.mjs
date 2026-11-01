@@ -158,7 +158,8 @@ function verifyCanonicalLockPair(lock, packet, comment, expectedGeneration) {
       request?.schema !== 'REPOSITORY_OPERATION_REQUEST_v1' ||
       procedure?.schema !== 'REPOSITORY_CONSTRUCTION_PROCEDURE_v1' ||
       procedure.operationClass !== 'RUNTIME_OR_AUTHORITY' ||
-      request.operationClass !== 'RUNTIME_OR_AUTHORITY' ||
+      (Object.hasOwn(request, 'operationClass') &&
+       request.operationClass !== 'RUNTIME_OR_AUTHORITY') ||
       request.projectId !== 'H_EARTH' ||
       lock.operationId !== request.operationId ||
       request.lockScope !== lock.lockScope ||
@@ -498,6 +499,43 @@ function runSelfTest() {
   };
   assert(verifyCanonicalLockPair(ownerLock, ownerPacket, ownerComment, 3010),
     'AUTHENTIC_MATCHING_LOCK_AND_OWNER_PACKET_ACCEPTED');
+
+  // Gen3044's owner-authenticated request omits optional operationClass.
+  // Rebind the synthetic owner's digests to challenge the class check itself.
+  function reboundClassFixture(operationRequest) {
+    const packet = {...ownerPacket, operationRequest};
+    const comment = {...ownerComment, body: admissionMarker + JSON.stringify(packet)};
+    const digest = sha256(JSON.stringify(stable(operationRequest)));
+    const lock = {
+      ...ownerLock, requestDigest: digest,
+      authorityProvenance: {
+        ...ownerLock.authorityProvenance,
+        authorityIdentity: {
+          ...ownerLock.authorityProvenance.authorityIdentity,
+          requestDigest: digest
+        },
+        invocation: {
+          ...ownerLock.authorityProvenance.invocation,
+          commentBodySha256: sha256(comment.body)
+        }
+      }
+    };
+    return {packet, comment, lock};
+  }
+  const {operationClass: omittedClass, ...optionalClassRequest} = ownerRequest;
+  const absentClass = reboundClassFixture(optionalClassRequest);
+  assert(verifyCanonicalLockPair(absentClass.lock, absentClass.packet,
+    absentClass.comment, 3010), 'GEN3044_OPTIONAL_REQUEST_CLASS_ABSENT_ACCEPTED');
+  const wrongClass = reboundClassFixture({
+    ...optionalClassRequest, operationClass: 'SOURCE_READBACK'
+  });
+  assert(!verifyCanonicalLockPair(wrongClass.lock, wrongClass.packet,
+    wrongClass.comment, 3010), 'EXPLICIT_WRONG_REQUEST_CLASS_REJECTED');
+  const nullClass = reboundClassFixture({
+    ...optionalClassRequest, operationClass: null
+  });
+  assert(!verifyCanonicalLockPair(nullClass.lock, nullClass.packet,
+    nullClass.comment, 3010), 'EXPLICIT_NULL_REQUEST_CLASS_REJECTED');
   assert(!verifyCanonicalLockPair({...ownerLock, released: true}, ownerPacket, ownerComment, 3010),
     'CLOSED_LOCK_REJECTED');
   assert(!verifyCanonicalLockPair(ownerLock, ownerPacket, ownerComment, 3011),
@@ -537,7 +575,7 @@ function runSelfTest() {
   return {
     schema: 'WORKFLOW_APPLICABILITY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
-    assertions: 44,
+    assertions: 47,
     regression: 'RUN_34773289185_AUDRALIA_THREE_PATH_FALSE_BLOCK',
     historicalRegressionDisposition: historicalAudraliaRegression.result,
     selectedFixture: 'H_EARTH_REGISTRY_EXPLICIT_DEPENDENCY',

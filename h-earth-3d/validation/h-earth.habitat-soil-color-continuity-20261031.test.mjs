@@ -82,7 +82,6 @@ test('source-bound filtered material support preserves native root identity',()=
  assert.ok(helper.includes("sigmaMeters:2,supportMeters:6"));
  assert.ok(source.includes('float habitatSupportC1=habitatSupport*habitatSupport*(3.0-2.0*habitatSupport);'));
 });
-});
 
 test('C1 membership endpoints and original coast-zero mask are preserved',()=>{
  const h=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);};
@@ -92,7 +91,7 @@ test('C1 membership endpoints and original coast-zero mask are preserved',()=>{
  assert.ok((h(1)-h(1-eps))/eps<0.001);
  let last=0;
  for(let i=0;i<=1000;i++){const v=h(i/1000);assert.ok(v>=last-1e-12);assert.ok(v>=0&&v<=1);last=v;}
- const soil=[.2,.3,.1];for(const ratio of [.92,.95,1])assert.deepEqual(soil.map(v=>v*(1-h(0)*.68*(1-ratio))),soil);
+ const soil=[.2,.3,.1];for(const target of [[.18,.27,.09],[.16,.28,.10]])assert.deepEqual(soil.map((v,k)=>v*(1-h(0)*.68)+target[k]*h(0)*.68),soil);
 });
 
 test('no shader, geographic, foliage, water or navigation reconstruction accompanies soil correction',()=>{

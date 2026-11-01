@@ -1302,9 +1302,32 @@ void main(){
       habitatMaterialCoverage=max(habitatMaterialCoverage,texture(uHabitatMaterialPresentation,coastalUv).r*habitatEdgeWeight(vWorldPosition.x,vWorldPosition.z,uCoastalHabitatBounds,habitatEdgeWidth));
     }
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
+    // Gen3030: ground material must keep its own soil color family and grain.
+    // One bounded ONE_REPAIR: restore ecological soil pigment while retaining
+    // the native soil albedo, triplanar grain, and existing world-space
+    // panel-local filtered habitat coverage. Installed vegetation is untouched.
     vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
     float habitatColorCoverage=clamp(habitatCoverage+habitatMaterialProtection(vWorldPosition.xz)*(habitatMaterialCoverage-habitatCoverage),0.0,1.0);
-    base=mix(base,habitatSoil,habitatColorCoverage*.68);
+    float soilLuma=dot(base,vec3(0.2126,0.7152,0.0722));
+    float habitatLuma=dot(habitatSoil,vec3(0.2126,0.7152,0.0722));
+    // Match the accepted local soil brightness BEFORE blending pigment; this
+    // is a source-relative material composition, not absolute green paint.
+    vec3 soilFamilyPigment=clamp(
+      habitatSoil*(soilLuma/max(habitatLuma,0.001)),
+      base*0.84,base*1.13
+    );
+    // Natural dried slopes keep native soil hue; sheltered organic soils
+    // acquire modest ecology-derived color, not a uniform scalar overlay.
+    float organicPigmentBlend=clamp(0.10+0.22*(1.0-foothillDry),0.10,0.32);
+    float soilMoistureShade=clamp(
+      0.83+0.08*foothillDry-0.18*terrainWetnessForLighting,0.79,0.92
+    );
+    vec3 soilRelativeHabitat=mix(base,soilFamilyPigment,organicPigmentBlend)*soilMoistureShade;
+    // Existing 2m Gaussian habitat-presentation field and protected native
+    // regions provide real world-metre support; C1 zero-slope endpoints.
+    float habitatSupport=clamp(habitatColorCoverage,0.0,1.0);
+    float habitatSupportC1=habitatSupport*habitatSupport*(3.0-2.0*habitatSupport);
+    base=mix(base,soilRelativeHabitat,habitatSupportC1*.68);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
     // the geographic window fades well before the existing oasis bounds.

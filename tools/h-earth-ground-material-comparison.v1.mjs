@@ -201,7 +201,35 @@ export async function run(argv){
       await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
       await page.mouse.move(270,350);await page.mouse.down();await page.mouse.move(320,350,{steps:8});await page.mouse.up();
       await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled);await page.click('[data-enter]');
-      if(GEN3037_W1_PROFILE)await page.waitForFunction(()=>document.getElementById('h-earth-loading-screen')?.dataset.mode==='entered'&&document.getElementById('h-earth-functional-landscape-route')?.dataset.run8eReady==='true',null,{timeout:30000});
+      if(GEN3037_W1_PROFILE){
+        // The public loader records "entered" in its internal receipt and hides the
+        // shell; it deliberately leaves shell.dataset.mode at its prior "ready" value.
+        // Match the verified native-entry gate, never synthesize readiness.
+        try{
+          await page.waitForFunction(()=>{
+            const shell=document.getElementById('h-earth-loading-screen');
+            const root=document.getElementById('h-earth-functional-landscape-route');
+            return shell?.hidden===true&&
+              window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'&&
+              root?.dataset.run8eReady==='true'&&root?.dataset.run8eError!=='true';
+          },null,{timeout:30000});
+        }catch(error){
+          const observed=await page.evaluate(()=>{
+            const shell=document.getElementById('h-earth-loading-screen');
+            const root=document.getElementById('h-earth-functional-landscape-route');
+            const gpu=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+            return {shellMode:shell?.dataset.mode??null,shellHidden:shell?.hidden??null,
+              loaderReceiptMode:window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode??null,
+              rootReady:root?.dataset.run8eReady??null,rootError:root?.dataset.run8eError??null,
+              rootPrototype:root?.dataset.singleOwnerPrototype??null,
+              gpuPresentations:Number(gpu?.counters?.gpuFramebufferPresentationCount)||0};
+          });
+          receipt.entryCheck={label,observed,failedAt:'AUTHENTIC_POST_ENTER_GATE',
+            error:String(error?.message??error)};
+          persist();
+          throw Error('GEN3037_W1_AUTHENTIC_POST_ENTER_NOT_OBSERVED:'+JSON.stringify(observed),{cause:error});
+        }
+      }
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
       let sequence=10000,previousFrame=0;
       for(const pose of poses)for(const mode of modes){

@@ -2101,7 +2101,7 @@ function gratitudeTerrainAtlas(){
    red+=8*erosion*.32;green+=8*erosion*.55;blue+=8*erosion*.69;
   }else{
    landPixels++;
-   elevation=clamp(field*.91+.045*erosion);
+   elevation=clamp(field*.91+.045*erosion+.085*fbm(u*106-4.1,v*118+7.3)*smooth(.08,.38,field));
    const beach=1-smooth(.012,.055,elevation);
    const uplands=smooth(.29,.75,elevation);
    const groove=clamp(.5+.26*erosion+.13*coastal);
@@ -2116,6 +2116,18 @@ function gratitudeTerrainAtlas(){
   data[k+1]=Math.round(Math.max(0,Math.min(255,green)));
   data[k+2]=Math.round(Math.max(0,Math.min(255,blue)));
   data[k+3]=Math.round(255*elevation);
+ }
+ // Baked terrain hillshade adds real static ridge relief to island interiors.
+ // This runs once during atlas construction: nothing about the land animates.
+ for(let y=2;y<H-2;y++)for(let x=2;x<W-2;x++){
+  const k=(y*W+x)*4;
+  if(data[k+3]<27)continue;
+  const left=data[k-8+3]/255,right=data[k+8+3]/255;
+  const lower=data[k-2*W*4+3]/255,upper=data[k+2*W*4+3]/255;
+  const light=Math.max(.72,Math.min(1.18,.96+4.3*(left-right)+2.4*(lower-upper)));
+  data[k]=Math.max(0,Math.min(255,Math.round(data[k]*light)));
+  data[k+1]=Math.max(0,Math.min(255,Math.round(data[k+1]*light)));
+  data[k+2]=Math.max(0,Math.min(255,Math.round(data[k+2]*light)));
  }
  // A failure to create real land and deep ocean must block, not turn into a generic ball.
  if(landPixels<W*H*.035||landPixels>W*H*.25||oceanPixels<W*H*.7)

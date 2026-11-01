@@ -1,0 +1,67 @@
+{
+  "admissionIssueComment": 6552942407,
+  "authority": "ADMITTED_AND_LOCKED",
+  "branch": "h-earth/gen3037-groundcover-soil-relative-endpoint-20261031",
+  "claimCeiling": "BOUNDED_REVERSIBLE_SOURCE_CANDIDATE_ONLY; ONE_GROUNDCOVER_BAND_CAUSE_HISTORICALLY_PROVEN; NOT_ANDROID_WHOLE_WORLD_ACCEPTED",
+  "firstSourceCommit": "ab8b8e2e76ba2af28351ed35484d7402839d9f09",
+  "generation": 3037,
+  "localTests": {
+    "gpu": "NOT_RUN",
+    "independentWest": "PENDING",
+    "nativeNode": "PENDING_AFTER_REPOSITORY_CANDIDATE",
+    "ownerVisualKeep": false,
+    "pythonSourceModel": {
+      "failed": 0,
+      "passed": 8
+    }
+  },
+  "mainBaseline": "eb1987b6a44fd5d6b0ec4a37f23d744e1455d4ca",
+  "mainInterveningChange": "4469c5c4680a487ee9e79ec522de86d52bedfed0",
+  "mainMovementDifferential": "DISJOINT_ONLY_CLOUDFLARE_AND_ANALYTICS_DATA",
+  "mergeAuthorized": false,
+  "newRendererBlob": "40034a16c36a43cb02682564784328ddb7ac48a7",
+  "operationId": "H_EARTH_GROUNDCOVER_SOIL_RELATIVE_ENDPOINT_REPAIR_20261031_001",
+  "originalRendererBlob": "85ee835060d5106a670077a5f4352b7ad202b49b",
+  "positiveHistoricProof": [
+    "issuecomment-6428986452",
+    "issuecomment-6433023611"
+  ],
+  "productionChanged": false,
+  "releaseAuthorized": false,
+  "schema": "H_EARTH_GROUNDCOVER_SOIL_RELATIVE_ENDPOINT_SOURCE_VERIFICATION_v1",
+  "scope": "GROUND_COVER_PIGMENT_ENDPOINT_ONLY",
+  "sourceRepair": {
+    "location": "H_EARTH_BROAD_GROUNDCOVER_V1",
+    "operation": "replace only absolute olive groundcover endpoint with local soil-relative spectral tint",
+    "unchanged": [
+      "groundcoverPatch",
+      "groundcoverWeight",
+      "groundcoverProtection",
+      "groundcoverSuitability",
+      "habitat presentation",
+      "geometry",
+      "roots",
+      "navigation",
+      "water",
+      "beach"
+    ]
+  },
+  "w1SourceModel": {
+    "conditionalL2Candidate": 0.0096144462,
+    "conditionalL2Original": 0.111980017,
+    "isFinalGPUProof": false,
+    "pointA": [
+      126,
+      27.3842590362,
+      -235
+    ],
+    "pointB": [
+      128,
+      30.1898739652,
+      -235
+    ],
+    "sameTriangle": 12031,
+    "weightA": 0.3972283962,
+    "weightB": 0.0698902067
+  }
+}

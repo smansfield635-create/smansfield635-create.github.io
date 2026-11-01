@@ -4008,6 +4008,50 @@
       "scopeHash": "3247db7cb30d3344340929400296ca7fe563cde8a58b63f33ef0218445e58665",
       "state": "ADMITTED_LOCKED"
     },
+    "32496f15f709ec3fc601dbb0b7806182adb33a0eb676c3d7c91d8fcb9eba08a0": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "28da29ce01f26bf5eb73db2d75b09741b22ab40b",
+          "lockGeneration": 3042,
+          "lockScope": "H_EARTH:QUALIFICATION_TOOLING:SOIL_TRIAD_POSITIVE_BAND:20261101",
+          "operationId": "H_EARTH_GEN3042_SOIL_TRIAD_POSITIVE_BAND_QUALIFICATION_20261101_001",
+          "procedureLocatorDigest": "983f7d22b4ecf890abbc96a5b87c73ac89552c2a6722f52082493b4e03503555",
+          "requestDigest": "0581edc5b1d5f0bf5b56c072a1f12b77545cc0e16ec147aa4b441803376cba37",
+          "scopeHash": "32496f15f709ec3fc601dbb0b7806182adb33a0eb676c3d7c91d8fcb9eba08a0"
+        },
+        "bindingDigest": "389404a05bf303ae2e40bcb893ac53bab829fd3f48328450034f48c694454f4b",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "75d1803c4fd1c4593b736213b08c4bbdba0b6afe3c5bbb3d97b819c92cf9f18f",
+          "commentId": 6562497300,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41339886673,
+          "workflowSha": "28da29ce01f26bf5eb73db2d75b09741b22ab40b"
+        },
+        "lineageAnchorCommitSha": "cd85aa8c7b4978bb4f26ef9d6a0a7e9cec04bced",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "28da29ce01f26bf5eb73db2d75b09741b22ab40b",
+      "lockGeneration": 3042,
+      "lockScope": "H_EARTH:QUALIFICATION_TOOLING:SOIL_TRIAD_POSITIVE_BAND:20261101",
+      "operationId": "H_EARTH_GEN3042_SOIL_TRIAD_POSITIVE_BAND_QUALIFICATION_20261101_001",
+      "procedureLocatorDigest": "983f7d22b4ecf890abbc96a5b87c73ac89552c2a6722f52082493b4e03503555",
+      "released": false,
+      "requestDigest": "0581edc5b1d5f0bf5b56c072a1f12b77545cc0e16ec147aa4b441803376cba37",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "32496f15f709ec3fc601dbb0b7806182adb33a0eb676c3d7c91d8fcb9eba08a0",
+      "state": "ADMITTED_LOCKED"
+    },
     "3259641491bdc282624a47d53f73ce793a0569b4b1192cf52a76203e4fa4fca3": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -24183,7 +24227,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3041,
+  "lockGeneration": 3042,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

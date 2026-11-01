@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
+import {execFileSync} from 'node:child_process';
+import {HEADS,POSES,GEN3037_W1_HEADS,GEN3037_W1_RENDERER_BLOBS,GEN3037_W1_POSES,GEN3037_W1_MODES,w1GrassHidden,validateW1Pairs,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
 
 const fixture=()=>({state:{position:{x:18,y:24,z:-226},yawDegrees:-150,pitchDegrees:-14,verticalFovDegrees:56,sequence:10001},lastFrame:{navigationSequence:10001,frameSequence:21,cameraPosition:{x:18,y:24,z:-226}},expectedCameraPosition:{x:18,y:24,z:-226},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}});
 test('exact immutable pair and recovered four poses are frozen',()=>{assert.equal(HEADS.baseline,'60b3c07f0216645119a1b92b16dac82cae739145');assert.equal(HEADS.candidate,'60b3c07f0216645119a1b92b16dac82cae739145');assert.deepEqual(POSES.slice(0,4).map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[['river-overlook',18,-226,210,-14],['bare-mountain',88,-260,95,-10],['coast-oblique',0,-110,170,-8],['foothill-west',-52,-208,180,-12]]);});
@@ -69,7 +70,12 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
- const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ // Gen2928 tested its own original renderer; current Gen3037 source is not that historical fixture.
+ const historical='39ed43d987d5f62c1368e7c309faa1a1b3d731b6';
+ const historicalPath='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+ const shader=execFileSync('git',['show',historical+':'+historicalPath],{encoding:'utf8'});
+ const blob=execFileSync('git',['hash-object','--stdin'],{input:shader,encoding:'utf8'}).trim();
+ assert.equal(blob,'2ae6c42f6febaada2cb2a240844b9fddc5b9ed8e');
  const digest=diagnostic.verifyExactMaterialCandidate(shader);
  assert.match(digest,/^[0-9a-f]{64}$/);
  assert.equal(shader.split(diagnostic.CANDIDATE_BLEND_EXPRESSION).length,2);
@@ -118,4 +124,79 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  assert.equal(diagnostic.DIAGNOSTIC_MODES.length,9);
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
+});
+
+/* Gen3040: source-registered W1 exact-foreground witness; old profile tests above unchanged. */
+test('GEN3037_W1 exact baseline, candidate, camera and stage law are frozen',()=>{
+ assert.deepEqual(GEN3037_W1_HEADS,{baseline:'eb1987b6a44fd5d6b0ec4a37f23d744e1455d4ca',candidate:'724efeb1db3d3e8e5309a9aa779acefb7c53fed9'});
+ assert.deepEqual(GEN3037_W1_RENDERER_BLOBS,{baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',candidate:'40034a16c36a43cb02682564784328ddb7ac48a7'});
+ assert.equal(GEN3037_W1_POSES.length,1);
+ assert.deepEqual(GEN3037_W1_POSES.map(p=>[p.name,p.x,p.y,p.z,p.yaw,p.pitch,p.diagnosticObserver]),
+  [['w1-original-terrain-triangle-12031',110,28.7371950557,-248,127.4053566314,2.8085230114,true]]);
+ assert.deepEqual(GEN3037_W1_MODES,['reference-lit','before-groundcover-unlit','after-groundcover-unlit','groundcover-weight-raw']);
+ assert.deepEqual(GEN3037_W1_MODES.map(w1GrassHidden),[false,true,true,true]);
+ assert.throws(()=>w1GrassHidden('synthetic-other-view'),/W1_UNREGISTERED_STAGE/);
+});
+test('GEN3037_W1 camera remains unaccepted diagnostic observer, not fake navigation',()=>{
+ const nav={H_EARTH_FUNCTIONAL_LANDSCAPE_NAVIGATION_CONTRACT_ID:'w1-test',auditResolvePosition(){throw Error('INVALID_NAVIGATION_CALL');}};
+ const p=GEN3037_W1_POSES[0],s=comparisonState(nav,p,10002,'W1_PROBE');
+ assert.equal(s.accepted,false);assert.equal(s.terrainSupported,false);
+ assert.equal(s.collisionOrPhysicsClaim,false);assert.equal(s.canonicalCameraStateAuthority,false);
+ const v={state:s,lastFrame:{navigationSequence:10002,frameSequence:80,cameraPosition:{...s.position}},
+  expectedCameraPosition:{...s.position},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}};
+ assert.equal(validateFrame(v,p,10002),true);
+ for(const mutate of [x=>x.state.position.y++,x=>x.state.accepted=true,x=>x.state.yawDegrees++,x=>x.lastFrame.cameraPosition.x++,x=>x.canvas.height--]){
+  const bad=structuredClone(v);mutate(bad);assert.throws(()=>validateFrame(bad,p,10002));
+ }
+});
+test('GEN3037_W1 8 real same-camera source-stage frames require exact paired custody',()=>{
+ const pose=GEN3037_W1_POSES[0],ids={'reference-lit':0,'before-groundcover-unlit':2,'after-groundcover-unlit':3,'groundcover-weight-raw':11};
+ const make=()=>Object.entries(GEN3037_W1_HEADS).flatMap(([label,sourceHead])=>GEN3037_W1_MODES.map(mode=>({
+  label,sourceHead,pose,mode,modeId:ids[mode],diagnosticApplied:ids[mode],grassHidden:w1GrassHidden(mode),
+  rendererHash:GEN3037_W1_RENDERER_BLOBS[label],imageSha256:label+'-'+mode,image:label+'-'+mode+'.png',
+  imageWidth:529,imageHeight:980,assetSignature:'original-assets',
+  state:{position:{x:pose.x,y:pose.y,z:pose.z}},
+  lastFrame:{cameraPosition:{x:pose.x,y:pose.y,z:pose.z}}
+ })));
+ assert.equal(validateW1Pairs(make()).length,4);
+ for(const mutate of [
+  frames=>frames.pop(),
+  frames=>frames[0].grassHidden=true,
+  frames=>frames[2].diagnosticApplied=14,
+  frames=>frames[4].sourceHead='wrong',
+  frames=>frames[4].lastFrame.cameraPosition.x+=0.01,
+  frames=>frames[4].assetSignature='changed',
+  frames=>frames[4].imageSha256='',
+  frames=>frames[0].imageHeight=979,
+  frames=>frames[7].mode='wrong'
+ ]){const bad=structuredClone(make());mutate(bad);assert.throws(()=>validateW1Pairs(bad));}
+});
+test('GEN3037_W1 workflow binds only exact two products and reuses fixed capture, never merges',()=>{
+ const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ assert.ok(y.includes('gen3040-w1-source-static:'));
+ assert.ok(y.includes('gen3040-w1-gpu-once:'));
+ assert.ok(y.includes('h-earth/gen3040-gen3037-w1-foreground-matched-ab-tooling-20261101'));
+ assert.ok(y.includes('ref: '+GEN3037_W1_HEADS.baseline));
+ assert.ok(y.includes('ref: '+GEN3037_W1_HEADS.candidate));
+ assert.ok(y.includes('GEN3037_W1_FOREGROUND_AB_V1'));
+ assert.ok(y.includes('ref: ${{ github.event.pull_request.head.sha }}'));
+ assert.ok(y.includes('if: always()'));
+});
+
+test('GEN3037_W1 authentic post-Enter condition follows real loader receipt, never nonexistent DOM mode',()=>{
+ const loader=fs.readFileSync(new URL('../showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js',import.meta.url),'utf8');
+ const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+ const accepted=fs.readFileSync(new URL('./publication-live-verify.mjs',import.meta.url),'utf8');
+ assert.ok(loader.includes("mode='entered';shell.hidden=true;"),'loader changes internal mode and hides shell');
+ assert.ok(!loader.includes("mode='entered';shell.dataset.mode=mode;"),'loader does not set entered DOM mode');
+ assert.ok(accepted.includes("H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'"),'reuse established publication verifier');
+ for(const marker of [
+  "window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'",
+  "shell?.hidden===true",
+  "root?.dataset.run8eReady==='true'",
+  "root?.dataset.run8eError!=='true'",
+  "GEN3037_W1_AUTHENTIC_POST_ENTER_NOT_OBSERVED"
+ ])assert.ok(comparator.includes(marker),'missing authentic entry gate: '+marker);
+ assert.ok(!comparator.includes("dataset.mode==='entered'"),'do not wait for nonexistent DOM entered mode');
+ assert.ok(!comparator.includes('root.dataset.run8eReady='));
 });

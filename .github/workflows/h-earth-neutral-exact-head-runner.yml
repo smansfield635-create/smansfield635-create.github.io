@@ -1472,18 +1472,18 @@ jobs:
           evidence="${{ runner.temp }}/h-earth-gen3042-checkout-evidence"
           mkdir -p "$evidence"
           {
-            printf 'schema=H_EARTH_GEN3042_PRE_HABITAT_CHECKOUT_RESOURCE_v1\\n'
-            printf 'tooling_head=%s\\n' "$(git -C tooling rev-parse HEAD)"
-            printf 'baseline_head=%s\\n' "$(git -C baseline rev-parse HEAD)"
-            printf 'groundcover_head=%s\\n' "$(git -C candidate rev-parse HEAD)"
+            printf 'schema=H_EARTH_GEN3042_PRE_HABITAT_CHECKOUT_RESOURCE_v1\n'
+            printf 'tooling_head=%s\n' "$(git -C tooling rev-parse HEAD)"
+            printf 'baseline_head=%s\n' "$(git -C baseline rev-parse HEAD)"
+            printf 'groundcover_head=%s\n' "$(git -C candidate rev-parse HEAD)"
             date -u '+observed_utc=%Y-%m-%dT%H:%M:%SZ'
-            printf '\\nfilesystem_available_bytes\\n'
+            printf '\nfilesystem_available_bytes\n'
             df -B1 "$GITHUB_WORKSPACE"
-            printf '\\nfilesystem_human\\n'
+            printf '\nfilesystem_human\n'
             df -h "$GITHUB_WORKSPACE"
-            printf '\\nsource_worktree_sizes\\n'
+            printf '\nsource_worktree_sizes\n'
             du -sh tooling baseline candidate
-            printf '\\nrunner_memory\\n'
+            printf '\nrunner_memory\n'
             free -m
           } > "$evidence/pre-habitat.txt"
       - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout

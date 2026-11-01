@@ -197,10 +197,12 @@ function singleHearthPrOperationLocator(body) {
 }
 function admittedCandidateBranch(lock, packet, observedBranch, prOperationLocator, fromPr) {
   const canonical = admittedHEarthBranch(lock.operationId, lock.lockGeneration);
-  if (observedBranch === canonical) return canonical;
-  // An explicitly named branch must match the ORIGINAL authenticated intake;
-  // a copied operation ID in an arbitrary PR never grants scope.
   const named = packet.operationRequest?.subjectIdentity?.newCandidateBranch;
+  // An explicit branch in the ORIGINAL authenticated intake takes precedence,
+  // including over a generated alias for the same operation and generation.
+  if (named != null && (typeof named !== 'string' || observedBranch !== named)) return null;
+  if (observedBranch === canonical) return canonical;
+  // A copied operation ID in an arbitrary PR never grants scope.
   if (!fromPr || prOperationLocator !== lock.operationId ||
       typeof named !== 'string' ||
       !/^h-earth\/[a-z0-9][a-z0-9/_-]*$/.test(named) ||
@@ -426,6 +428,17 @@ function runSelfTest() {
   assert(admittedCandidateBranch(namedLock,namedPacket,namedBranch,
     singleHearthPrOperationLocator(namedBody),true)===namedBranch,
     'AUTHENTIC_GEN3044_NAMED_BRANCH_ONLY');
+  const generatedAlias=admittedHEarthBranch(namedOperation,namedLock.lockGeneration);
+  assert(admittedCandidateBranch(namedLock,namedPacket,generatedAlias,null,true)===null,
+    'UNDECLARED_GEN3044_GENERATED_ALIAS_FAILS_CLOSED');
+  assert(admittedCandidateBranch(namedLock,
+    {operationRequest:{subjectIdentity:{newCandidateBranch:generatedAlias}}},
+    generatedAlias,null,true)===generatedAlias,
+    'EXPLICIT_CANONICAL_BRANCH_PRESERVED');
+  assert(admittedCandidateBranch(namedLock,
+    {operationRequest:{subjectIdentity:{newCandidateBranch:7}}},
+    generatedAlias,null,true)===null,
+    'MALFORMED_EXPLICIT_BRANCH_FAILS_CLOSED');
   assert(admittedCandidateBranch(namedLock,namedPacket,'h-earth/foreign',
     namedOperation,true)===null,'FOREIGN_PR_BRANCH_CANNOT_BORROW_LOCK');
   assert(admittedCandidateBranch(namedLock,namedPacket,namedBranch,
@@ -524,7 +537,7 @@ function runSelfTest() {
   return {
     schema: 'WORKFLOW_APPLICABILITY_SELF_TEST_RECEIPT_v1',
     result: 'PASS',
-    assertions: 41,
+    assertions: 44,
     regression: 'RUN_34773289185_AUDRALIA_THREE_PATH_FALSE_BLOCK',
     historicalRegressionDisposition: historicalAudraliaRegression.result,
     selectedFixture: 'H_EARTH_REGISTRY_EXPLICIT_DEPENDENCY',

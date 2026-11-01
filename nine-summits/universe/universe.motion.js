@@ -1864,11 +1864,11 @@ void main() {
      // Near-colorless humid upper atmosphere, not a saturated cyan outer ring.
      // Only this separate shell moves; its planet surface remains immobile.
      float wisps=fbm(p*6.4+vec3(uTime*.003,-uTime*.002,4.1));
-     float cloud=smoothstep(.52,.70,wisps);
+     float cloud=smoothstep(.62,.82,wisps);
      float airRim=pow(1.0-max(0.,n.z),4.0);
-     vec3 air=mix(vec3(.37,.61,.64),vec3(.86,.93,.91),cloud);
-     gl_FragColor=vec4(air*(.37+.38*airRim),
-       clamp(.009+.22*airRim+.12*cloud,0.,.30));
+     vec3 air=mix(vec3(.46,.62,.64),vec3(.86,.93,.91),cloud);
+     gl_FragColor=vec4(air*(.32+.30*airRim),
+       clamp(.008+.10*airRim+.045*cloud,0.,.16));
      return;
    }
    float fresnel=pow(1.0-max(0.0,dot(n,vec3(0.,0.,1.))),2.8);
@@ -1988,7 +1988,7 @@ void main() {
  // Give this one geographic world coherent subdued daylight, not a shiny enamel highlight.
  float gratitudeNearFace=(uHeart<.5&&uWorld>3.5&&uWorld<4.5&&uAtmosphere<.5)?1.:0.;
  float dayLight=max(0.,dot(n,normalize(vec3(-.58,.76,1.))));
- halfLambert=mix(halfLambert,.26+.79*dayLight,gratitudeNearFace);
+ halfLambert=mix(halfLambert,.37+.78*dayLight,gratitudeNearFace);
  float spec=pow(max(0.,dot(reflect(-light,n),vec3(0.,0.,1.))),mix(8.,44.,1.-rough));
  vec3 shaded=material*halfLambert;
  if(gratitudeNearFace>.5){

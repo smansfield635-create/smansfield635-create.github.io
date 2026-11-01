@@ -1439,59 +1439,61 @@ jobs:
       contents: read
     steps:
       - name: Checkout exact Gen3042 tooling
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          path: tooling
-          persist-credentials: false
-          fetch-depth: 1
-          filter: blob:none
-          sparse-checkout: |
-            /tools/
-            /.github/workflows/h-earth-neutral-exact-head-runner.yml
-            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
-          sparse-checkout-cone-mode: false
+        shell: bash
+        env:
+          EXACT_SOURCE_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git clone --quiet --no-checkout --filter=blob:none --depth=1 "https://github.com/${GITHUB_REPOSITORY}.git" tooling
+          git -C tooling sparse-checkout set --no-cone \
+            '/tools/' \
+            '/.github/workflows/h-earth-neutral-exact-head-runner.yml' \
+            '/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'
+          git -C tooling fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"
+          git -C tooling checkout --quiet --detach "$EXACT_SOURCE_SHA"
+          test "$(git -C tooling rev-parse HEAD)" = "$EXACT_SOURCE_SHA"
       - name: Checkout exact baseline
-        uses: actions/checkout@v4
-        with:
-          ref: 28da29ce01f26bf5eb73db2d75b09741b22ab40b
-          path: baseline
-          persist-credentials: false
-          fetch-depth: 1
-          filter: blob:none
-          sparse-checkout: |
-            /showroom/globe/h-earth/
-            /h-earth-3d/control-plane/run-8/
-            /h-earth-3d/integration/
-            /h-earth-3d/environment/
-            /h-earth-3d/terrain/
-            /h-earth-3d/objects/
-            /h-earth-3d/cells/
-            /h-earth-3d/validation/
-            /h-earth-3d/h-earth.matrix.js
-          sparse-checkout-cone-mode: false
+        shell: bash
+        env:
+          EXACT_SOURCE_SHA: 28da29ce01f26bf5eb73db2d75b09741b22ab40b
+        run: |
+          set -euo pipefail
+          git clone --quiet --no-checkout --filter=blob:none --depth=1 "https://github.com/${GITHUB_REPOSITORY}.git" baseline
+          git -C baseline sparse-checkout set --no-cone \
+            '/showroom/globe/h-earth/' \
+            '/h-earth-3d/control-plane/run-8/' \
+            '/h-earth-3d/integration/' \
+            '/h-earth-3d/environment/' \
+            '/h-earth-3d/terrain/' \
+            '/h-earth-3d/objects/' \
+            '/h-earth-3d/cells/' \
+            '/h-earth-3d/zones/' \
+            '/h-earth-3d/validation/' \
+            '/h-earth-3d/h-earth.matrix.js'
+          git -C baseline fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"
+          git -C baseline checkout --quiet --detach "$EXACT_SOURCE_SHA"
+          test "$(git -C baseline rev-parse HEAD)" = "$EXACT_SOURCE_SHA"
       - name: Checkout exact Gen3037 groundcover candidate
-        uses: actions/checkout@v4
-        with:
-          ref: 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
-          path: candidate
-          persist-credentials: false
-          fetch-depth: 1
-          filter: blob:none
-          sparse-checkout: |
-            /showroom/globe/h-earth/
-            /h-earth-3d/control-plane/run-8/
-            /h-earth-3d/integration/
-            /h-earth-3d/environment/
-            /h-earth-3d/terrain/
-            /h-earth-3d/objects/
-            /h-earth-3d/cells/
-            /h-earth-3d/validation/
-            /h-earth-3d/h-earth.matrix.js
-          sparse-checkout-cone-mode: false
-      # Gen3042 postmortem: preserve a small, completed resource receipt *before*
-      # the fourth full-tree checkout. This remains available if the runner
-      # terminates before the final if:always() artifact step can execute.
+        shell: bash
+        env:
+          EXACT_SOURCE_SHA: 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+        run: |
+          set -euo pipefail
+          git clone --quiet --no-checkout --filter=blob:none --depth=1 "https://github.com/${GITHUB_REPOSITORY}.git" candidate
+          git -C candidate sparse-checkout set --no-cone \
+            '/showroom/globe/h-earth/' \
+            '/h-earth-3d/control-plane/run-8/' \
+            '/h-earth-3d/integration/' \
+            '/h-earth-3d/environment/' \
+            '/h-earth-3d/terrain/' \
+            '/h-earth-3d/objects/' \
+            '/h-earth-3d/cells/' \
+            '/h-earth-3d/zones/' \
+            '/h-earth-3d/validation/' \
+            '/h-earth-3d/h-earth.matrix.js'
+          git -C candidate fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"
+          git -C candidate checkout --quiet --detach "$EXACT_SOURCE_SHA"
+          test "$(git -C candidate rev-parse HEAD)" = "$EXACT_SOURCE_SHA"
       - name: Gen3042 pre-habitat resource evidence
         shell: bash
         run: |
@@ -1521,24 +1523,26 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Checkout exact Gen3030 habitat candidate
-        uses: actions/checkout@v4
-        with:
-          ref: cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
-          path: habitat
-          persist-credentials: false
-          fetch-depth: 1
-          filter: blob:none
-          sparse-checkout: |
-            /showroom/globe/h-earth/
-            /h-earth-3d/control-plane/run-8/
-            /h-earth-3d/integration/
-            /h-earth-3d/environment/
-            /h-earth-3d/terrain/
-            /h-earth-3d/objects/
-            /h-earth-3d/cells/
-            /h-earth-3d/validation/
-            /h-earth-3d/h-earth.matrix.js
-          sparse-checkout-cone-mode: false
+        shell: bash
+        env:
+          EXACT_SOURCE_SHA: cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
+        run: |
+          set -euo pipefail
+          git clone --quiet --no-checkout --filter=blob:none --depth=1 "https://github.com/${GITHUB_REPOSITORY}.git" habitat
+          git -C habitat sparse-checkout set --no-cone \
+            '/showroom/globe/h-earth/' \
+            '/h-earth-3d/control-plane/run-8/' \
+            '/h-earth-3d/integration/' \
+            '/h-earth-3d/environment/' \
+            '/h-earth-3d/terrain/' \
+            '/h-earth-3d/objects/' \
+            '/h-earth-3d/cells/' \
+            '/h-earth-3d/zones/' \
+            '/h-earth-3d/validation/' \
+            '/h-earth-3d/h-earth.matrix.js'
+          git -C habitat fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"
+          git -C habitat checkout --quiet --detach "$EXACT_SOURCE_SHA"
+          test "$(git -C habitat rev-parse HEAD)" = "$EXACT_SOURCE_SHA"
       - name: Require exact renderer blobs and clean source checkouts
         shell: bash
         run: |
@@ -1553,6 +1557,10 @@ jobs:
           test -z "$(git -C baseline status --porcelain --untracked-files=no)"
           test -z "$(git -C candidate status --porcelain --untracked-files=no)"
           test -z "$(git -C habitat status --porcelain --untracked-files=no)"
+      - name: Pin Node 22 before comparator source qualification
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Node22 exact-head comparator and product-source regression
         shell: bash
         run: |

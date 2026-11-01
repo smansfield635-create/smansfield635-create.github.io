@@ -175,7 +175,7 @@ test('Gen3042 triad CLI and PR-open one-shot job are closed to extra source refs
  const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
  const i=y.indexOf('  gen3042-soil-triad-gpu-once:');assert.ok(i>=0);
  const block=y.slice(i);
- for(const h of Object.values((await import('./h-earth-ground-material-comparison.v1.mjs')).GEN3042_HEADS))assert.ok(block.includes('ref: '+h));
+ for(const h of Object.values((await import('./h-earth-ground-material-comparison.v1.mjs')).GEN3042_HEADS))assert.ok(block.includes('EXACT_SOURCE_SHA: '+h));
  assert.ok(block.includes("github.event.action == 'opened'"));
  assert.ok(block.includes('GEN3042_SOIL_TRIAD_AB_V1'));
  assert.ok(block.includes('if: always()'));
@@ -191,10 +191,11 @@ test('Gen3043 preserves resource evidence before fourth bounded checkout',()=>{
   const a=block.indexOf(anchor);assert.ok(a>=0,'missing checkout '+name);
   const b=block.indexOf('\n      - name:',a+anchor.length);
   const chunk=block.slice(a,b<0?undefined:b);
-  assert.ok(chunk.includes('filter: blob:none'),name+' has no bounded blob filter');
-  assert.ok(chunk.includes('sparse-checkout: |'),name+' requires bounded sparse checkout');
-  assert.ok(chunk.includes('sparse-checkout-cone-mode: false'),name+' must use explicit path patterns');
-  for(const required of name==='Gen3042 tooling'?["/tools/","/.github/workflows/h-earth-neutral-exact-head-runner.yml","/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"]:["/showroom/globe/h-earth/","/h-earth-3d/control-plane/run-8/","/h-earth-3d/integration/","/h-earth-3d/environment/","/h-earth-3d/terrain/","/h-earth-3d/objects/","/h-earth-3d/cells/","/h-earth-3d/validation/","/h-earth-3d/h-earth.matrix.js"]){
+  assert.ok(chunk.includes('git clone --quiet --no-checkout --filter=blob:none --depth=1'),name+' must defer all blob materialization');
+  assert.ok(chunk.includes('sparse-checkout set --no-cone'),name+' must select paths before checkout');
+  assert.ok(chunk.includes('fetch --quiet --no-tags --depth=1 --filter=blob:none origin "$EXACT_SOURCE_SHA"'),name+' must fetch filtered exact head');
+  assert.ok(chunk.includes('checkout --quiet --detach "$EXACT_SOURCE_SHA"'),name+' must materialize only exact head');
+  for(const required of name==='Gen3042 tooling'?["/tools/","/.github/workflows/h-earth-neutral-exact-head-runner.yml","/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js"]:["/showroom/globe/h-earth/","/h-earth-3d/control-plane/run-8/","/h-earth-3d/integration/","/h-earth-3d/environment/","/h-earth-3d/terrain/","/h-earth-3d/objects/","/h-earth-3d/cells/","/h-earth-3d/zones/","/h-earth-3d/validation/","/h-earth-3d/h-earth.matrix.js"]){
     assert.ok(chunk.includes(required),name+' missing required source coverage '+required);
   }
  }

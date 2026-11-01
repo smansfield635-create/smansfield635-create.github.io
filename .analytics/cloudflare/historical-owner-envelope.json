@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-01T19:23:41Z",
+  "generatedAt": "2026-11-01T20:24:42Z",
   "window": {
-    "start": "2026-08-03T19:23:41Z",
-    "end": "2026-11-01T19:23:41Z"
+    "start": "2026-08-03T20:24:42Z",
+    "end": "2026-11-01T20:24:42Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -38,20 +38,8 @@
         "pageLoads": 960,
         "visits": 700
       },
-      "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
-      },
-      "/index.html": {
-        "pageLoads": 110,
-        "visits": 0
-      },
       "/laws/": {
         "pageLoads": 100,
-        "visits": 0
-      },
-      "/evidence/readiness/": {
-        "pageLoads": 20,
         "visits": 0
       },
       "/build/intake/": {
@@ -60,6 +48,18 @@
       },
       "/evidence/": {
         "pageLoads": 90,
+        "visits": 0
+      },
+      "/governance/": {
+        "pageLoads": 60,
+        "visits": 10
+      },
+      "/index.html": {
+        "pageLoads": 110,
+        "visits": 0
+      },
+      "/evidence/readiness/": {
+        "pageLoads": 20,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
@@ -94,6 +94,10 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -110,10 +114,6 @@
         "pageLoads": 20,
         "visits": 20
       },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
@@ -126,16 +126,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/": {
@@ -190,13 +190,13 @@
         "pageLoads": 220,
         "visits": 20
       },
-      "/campaigns/consider-the-energy/jen-leney/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/characters/": {
         "pageLoads": 60,
         "visits": 30
+      },
+      "/campaigns/consider-the-energy/jen-leney/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/characters/legacy-dossiers.html": {
         "pageLoads": 10,

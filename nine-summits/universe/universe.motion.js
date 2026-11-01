@@ -1813,7 +1813,7 @@ function drawOpalWorld(t){if(!opalGL)return;const r=opalCanvas.getBoundingClient
 }
 
 const vertexSource=`attribute vec3 aPosition;attribute vec3 aNormal;attribute float aFacet;
-uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ,uWorld,uAtmosphere;uniform vec2 uView;
+uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ;uniform mediump float uWorld,uAtmosphere;uniform vec2 uView;
 varying vec3 vWorld,vNormal,vLocal;varying float vFacet;
 float gratitudeTectonic(vec3 p){
  vec3 q=p+vec3(.12*sin(p.y*6.2+p.z*3.8),.10*sin(p.z*8.0-p.x*4.0),.13*sin(p.x*5.3+p.y*7.3));

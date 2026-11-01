@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
+import {execFileSync} from 'node:child_process';
+import {HEADS,POSES,GEN3008_STAGE_POSES,GEN3008_STAGE_MODES,GEN3008_FROZEN_SOURCE_HEAD,GEN3008_STAGE_RENDERER_SHA256,instrumentGen3008StageRenderer,GEN3030_AB_POSES,GEN3030_AB_MODES,GEN3030_AB_BASELINE_HEAD,GEN3030_AB_CANDIDATE_HEAD,instrumentGen3030ABRenderer,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
 
 const fixture=()=>({state:{position:{x:18,y:24,z:-226},yawDegrees:-150,pitchDegrees:-14,verticalFovDegrees:56,sequence:10001},lastFrame:{navigationSequence:10001,frameSequence:21,cameraPosition:{x:18,y:24,z:-226}},expectedCameraPosition:{x:18,y:24,z:-226},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}});
 test('exact immutable pair and recovered four poses are frozen',()=>{assert.equal(HEADS.baseline,'60b3c07f0216645119a1b92b16dac82cae739145');assert.equal(HEADS.candidate,'60b3c07f0216645119a1b92b16dac82cae739145');assert.deepEqual(POSES.slice(0,4).map(p=>[p.name,p.x,p.z,p.yaw,p.pitch]),[['river-overlook',18,-226,210,-14],['bare-mountain',88,-260,95,-10],['coast-oblique',0,-110,170,-8],['foothill-west',-52,-208,180,-12]]);});
@@ -69,7 +70,13 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
- const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ // Historical Gen2928 verifier must inspect the exact historical candidate,
+ // not the current Gen3029 tooling checkout's newer renderer bytes.
+ const historical='39ed43d987d5f62c1368e7c309faa1a1b3d731b6';
+ const historicalPath='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+ const shader=execFileSync('git',['show',historical+':'+historicalPath],{encoding:'utf8'});
+ const blob=execFileSync('git',['hash-object','--stdin'],{input:shader,encoding:'utf8'}).trim();
+ assert.equal(blob,'2ae6c42f6febaada2cb2a240844b9fddc5b9ed8e');
  const digest=diagnostic.verifyExactMaterialCandidate(shader);
  assert.match(digest,/^[0-9a-f]{64}$/);
  assert.equal(shader.split(diagnostic.CANDIDATE_BLEND_EXPRESSION).length,2);
@@ -118,4 +125,32 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  assert.equal(diagnostic.DIAGNOSTIC_MODES.length,9);
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
+});
+
+test('Gen3029 exact Gen3008 stage plan has two frozen defects and two protected controls',()=>{
+ assert.equal(GEN3008_FROZEN_SOURCE_HEAD,'3ea149e5b56e8cc0d5aac192bce0cdd47da7e626');
+ assert.equal(GEN3008_STAGE_RENDERER_SHA256,'10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c');
+ assert.deepEqual(GEN3008_STAGE_POSES.map(p=>p.name),['west_flank','central_approach','foothill-west','coast-oblique']);
+ assert.deepEqual(GEN3008_STAGE_POSES.slice(0,2).map(p=>[p.x,p.z,p.yaw]),[
+  [110,-310,153.434948822922],[150,-318,183.66778805553142]
+ ]);
+ assert.ok(GEN3008_STAGE_POSES.slice(0,2).every(p=>p.diagnosticObserver===true&&p.y>0));
+ assert.ok(GEN3008_STAGE_POSES.slice(2).every(p=>p.diagnosticObserver!==true));
+ assert.deepEqual(GEN3008_STAGE_MODES,[
+  'final-unlit','before-groundcover-unlit','after-groundcover-unlit',
+  'before-habitat-unlit','after-habitat-unlit'
+ ]);
+ assert.equal(GEN3008_STAGE_MODES.length*GEN3008_STAGE_POSES.length,20);
+ assert.throws(()=>instrumentGen3008StageRenderer('changed'),/GEN3008_STAGE_RENDERER_HASH_MISMATCH/);
+ assert.deepEqual(POSES.slice(0,4).map(p=>p.name),['river-overlook','bare-mountain','coast-oblique','foothill-west']);
+});
+
+test('Gen3036 exact baseline and Gen3030 revised candidate reuse original defect and healthy cameras',()=>{
+ assert.equal(GEN3030_AB_BASELINE_HEAD,'c3a60da70487bfb2e0c8be66eba2c0a06888e40f');
+ assert.equal(GEN3030_AB_CANDIDATE_HEAD,'cb15de477f9b8e39b9dc688ecc452ba44e42e6c1');
+ assert.deepEqual(GEN3030_AB_POSES.map(p=>p.name),['west_flank','central_approach','foothill-west','coast-oblique']);
+ assert.deepEqual(GEN3030_AB_MODES,['reference-lit','before-habitat-unlit','after-habitat-unlit']);
+ assert.equal(GEN3030_AB_POSES.length*GEN3030_AB_MODES.length*2,24);
+ assert.ok(GEN3030_AB_POSES.slice(0,2).every(p=>p.diagnosticObserver===true&&Number.isFinite(p.y)));
+ assert.throws(()=>instrumentGen3030ABRenderer('unbound','candidate'),/GEN3030_AB_RENDERER_BLOB_MISMATCH/);
 });

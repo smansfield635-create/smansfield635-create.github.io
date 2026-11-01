@@ -1545,15 +1545,15 @@ jobs:
           node --test tools/h-earth-ground-material-comparison.v1.test.mjs tools/h-earth-groundcover-factor-overlay.test.mjs
 
 
-  # Gen3032: source-qualified reuse of the successful Gen3029 five-file
+  # Gen3036 revised: source-qualified reuse of the successful Gen3029 five-file
   # neutral capture lane. Product stays immutable, no automatic GPU on open.
-  gen3032-soil-ab-source-static:
+  gen3036-revised-soil-source-static:
     if: >-
       ${{ github.event_name == 'pull_request' &&
           contains(fromJSON('["opened","synchronize"]'), github.event.action) &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.pull_request.head.ref == 'h-earth/gen3032-habitat-soil-fixed-ab-tooling-20261031' &&
-          startsWith(github.event.pull_request.title,'GEN3032 SOIL COMPARISON') &&
+          github.event.pull_request.head.ref == 'h-earth/gen3036-revised-soil-ab-tooling-20261031' &&
+          startsWith(github.event.pull_request.title,'GEN3036 REVISED SOIL A/B:') &&
           github.event.pull_request.base.ref == 'main' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -1570,7 +1570,7 @@ jobs:
       - name: Checkout immutable Gen3030 product candidate
         uses: actions/checkout@v4
         with:
-          ref: afa3fb1a5107b92e4681a4905b3398137a4eaff9
+          ref: cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
           path: product
           fetch-depth: 1
           persist-credentials: false
@@ -1581,8 +1581,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C product rev-parse HEAD)" = afa3fb1a5107b92e4681a4905b3398137a4eaff9
-          test "$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 91aa866e3a6b216c6d260e855f4a7e7cd9b7930b
+          test "$(git -C product rev-parse HEAD)" = cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
+          test "$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 03bc45e034e9894494d9120782c714ae78890ab8
           test "$(git -C product hash-object showroom/globe/h-earth/render/habitat-material-presentation.v1.js)" = 3fc89b5fa6b41455445efc5c3a08346508f119aa
           git -C tooling fetch --no-tags --depth=1 origin 38b3e14972c8ac96554b72cb4958371579e4dbfe
           git -C tooling fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
@@ -1612,13 +1612,13 @@ jobs:
 
   # One expensive A/B only on an owner-authorized PR reopen after static pass.
   # No run retries, merges, Pages deployment, or alteration of product bytes.
-  gen3032-soil-ab-gpu-once:
+  gen3036-revised-soil-gpu-once:
     if: >-
       ${{ github.event_name == 'pull_request' &&
           github.event.action == 'reopened' &&
           github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.pull_request.head.ref == 'h-earth/gen3032-habitat-soil-fixed-ab-tooling-20261031' &&
-          startsWith(github.event.pull_request.title,'GEN3032 SOIL COMPARISON') &&
+          github.event.pull_request.head.ref == 'h-earth/gen3036-revised-soil-ab-tooling-20261031' &&
+          startsWith(github.event.pull_request.title,'GEN3036 REVISED SOIL A/B:') &&
           github.event.pull_request.base.ref == 'main' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 55
@@ -1646,7 +1646,7 @@ jobs:
           persist-credentials: false
       - uses: actions/checkout@v4
         with:
-          ref: afa3fb1a5107b92e4681a4905b3398137a4eaff9
+          ref: cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
           path: candidate
           fetch-depth: 1
           persist-credentials: false
@@ -1658,9 +1658,9 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git -C baseline rev-parse HEAD)" = c3a60da70487bfb2e0c8be66eba2c0a06888e40f
-          test "$(git -C candidate rev-parse HEAD)" = afa3fb1a5107b92e4681a4905b3398137a4eaff9
+          test "$(git -C candidate rev-parse HEAD)" = cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
           test "$(git -C baseline hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
-          test "$(git -C candidate hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 91aa866e3a6b216c6d260e855f4a7e7cd9b7930b
+          test "$(git -C candidate hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 03bc45e034e9894494d9120782c714ae78890ab8
           test "$(git -C baseline hash-object showroom/globe/h-earth/render/habitat-material-presentation.v1.js)" = 3fc89b5fa6b41455445efc5c3a08346508f119aa
           test "$(git -C candidate hash-object showroom/globe/h-earth/render/habitat-material-presentation.v1.js)" = 3fc89b5fa6b41455445efc5c3a08346508f119aa
           git -C tooling fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
@@ -1678,12 +1678,12 @@ jobs:
         env:
           H_EARTH_COMPARISON_PROFILE: GEN3030_HABITAT_SOIL_AB_V1
         run: |
-          timeout 2900s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/h-earth-gen3030-soil-fixed-ab"
+          timeout 2900s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/h-earth-gen3036-revised-soil-fixed-ab"
       - name: Preserve images, SHA256 and partial receipt even if qualification fails
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-gen3030-soil-fixed-ab-${{ github.run_id }}
-          path: ${{ runner.temp }}/h-earth-gen3030-soil-fixed-ab
+          name: h-earth-gen3036-revised-soil-fixed-ab-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-gen3036-revised-soil-fixed-ab
           if-no-files-found: warn
           retention-days: 90

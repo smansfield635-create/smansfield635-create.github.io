@@ -71,10 +71,10 @@ test('Gen3029 adds exactly two habitat snapshots without changing original fifte
  assert.throws(()=>transformGen3008HabitatStages(withHabitat.replace(habitat,habitat+'\\n'+habitat),{strictHash:false}),/NON_UNIQUE_SOURCE_ANCHOR/);
 });
 
-test('Gen3032 exact source A/B exposes true before/after habitat material with no product edits',()=>{
+test('Gen3036 revised exact source A/B exposes true before/after habitat material with no product edits',()=>{
  assert.deepEqual(GEN3030_HABITAT_AB_MODES,['before-habitat-unlit','after-habitat-unlit']);
  assert.equal(GEN3030_HABITAT_BASELINE_BLOB,'85ee835060d5106a670077a5f4352b7ad202b49b');
- assert.equal(GEN3030_HABITAT_CANDIDATE_BLOB,'91aa866e3a6b216c6d260e855f4a7e7cd9b7930b');
+ assert.equal(GEN3030_HABITAT_CANDIDATE_BLOB,'03bc45e034e9894494d9120782c714ae78890ab8');
  const gamma='  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));';
  const blendB='    base=mix(base,habitatSoil,habitatColorCoverage*.68);';
  const blendC='    base=mix(base,soilRelativeHabitat,habitatSupportC1*.68);';

@@ -145,9 +145,9 @@ test('Gen3029 exact Gen3008 stage plan has two frozen defects and two protected 
  assert.deepEqual(POSES.slice(0,4).map(p=>p.name),['river-overlook','bare-mountain','coast-oblique','foothill-west']);
 });
 
-test('Gen3032 exact baseline and Gen3030 candidate reuse original defect and healthy cameras',()=>{
+test('Gen3036 exact baseline and Gen3030 revised candidate reuse original defect and healthy cameras',()=>{
  assert.equal(GEN3030_AB_BASELINE_HEAD,'c3a60da70487bfb2e0c8be66eba2c0a06888e40f');
- assert.equal(GEN3030_AB_CANDIDATE_HEAD,'afa3fb1a5107b92e4681a4905b3398137a4eaff9');
+ assert.equal(GEN3030_AB_CANDIDATE_HEAD,'cb15de477f9b8e39b9dc688ecc452ba44e42e6c1');
  assert.deepEqual(GEN3030_AB_POSES.map(p=>p.name),['west_flank','central_approach','foothill-west','coast-oblique']);
  assert.deepEqual(GEN3030_AB_MODES,['reference-lit','before-habitat-unlit','after-habitat-unlit']);
  assert.equal(GEN3030_AB_POSES.length*GEN3030_AB_MODES.length*2,24);

@@ -132,7 +132,7 @@ export function transformGen3008HabitatStages(original,{strictHash=true}={}){
 /* Gen3032: exact immutable source A/B; reuse Gen3029 presentation probes only. */
 export const GEN3030_HABITAT_AB_MODES=GEN3008_HABITAT_STAGE_MODES;
 export const GEN3030_HABITAT_BASELINE_BLOB='85ee835060d5106a670077a5f4352b7ad202b49b';
-export const GEN3030_HABITAT_CANDIDATE_BLOB='91aa866e3a6b216c6d260e855f4a7e7cd9b7930b';
+export const GEN3030_HABITAT_CANDIDATE_BLOB='03bc45e034e9894494d9120782c714ae78890ab8';
 export function transformGen3030HabitatAB(original,{label,strictHash=true}={}){
  if(!['baseline','candidate'].includes(label))throw Error('GEN3030_AB_LABEL_INVALID');
  const bytes=Buffer.from(original,'utf8');

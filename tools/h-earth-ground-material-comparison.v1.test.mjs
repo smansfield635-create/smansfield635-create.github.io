@@ -141,7 +141,7 @@ test('Gen3042 frozen sources and three prior poses are independently pinned',asy
 });
 test('Gen3042 full 36-frame source/camera/unchanged-stage custody rejects corruption',async()=>{
  const t=await import('./h-earth-ground-material-comparison.v1.mjs');
- const ids={'reference-lit':0,'before-groundcover-unlit':2,'after-groundcover-unlit':3,'groundcover-weight-raw':7};
+ const ids={'reference-lit':0,'before-groundcover-unlit':2,'after-groundcover-unlit':3,'groundcover-weight-raw':11};
  const views=t.GEN3042_POSES.flatMap(pose=>t.GEN3042_MODES.flatMap(mode=>
   Object.keys(t.GEN3042_HEADS).map(label=>({
    label,pose,mode,modeId:ids[mode],diagnosticApplied:ids[mode],

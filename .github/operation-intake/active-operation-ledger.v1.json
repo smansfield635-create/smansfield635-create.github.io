@@ -6844,6 +6844,50 @@
       "scopeHash": "50d00de3be6c02e2ce552c75cf0077218d931102ed4817ef2c702780cd8e7eec",
       "state": "ADMITTED_LOCKED"
     },
+    "511bb38d6969e885753b2d5d47a70d8766cef36609313c77f04addb5fa403da2": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "eb1987b6a44fd5d6b0ec4a37f23d744e1455d4ca",
+          "lockGeneration": 3037,
+          "lockScope": "H_EARTH:SOIL_MATERIAL:GROUNDCOVER_PIGMENT_ENDPOINT:20261031",
+          "operationId": "H_EARTH_GROUNDCOVER_SOIL_RELATIVE_ENDPOINT_REPAIR_20261031_001",
+          "procedureLocatorDigest": "0bfabeb5394c152b76c15f3b6f124862c2584b7f93fa8509d54d242112211ebd",
+          "requestDigest": "6912b3bbfc4a91709f767e08a935b59c42ab236d5d27ae7b108610c460884d87",
+          "scopeHash": "511bb38d6969e885753b2d5d47a70d8766cef36609313c77f04addb5fa403da2"
+        },
+        "bindingDigest": "5a09f042c0745c5669265d9f18d788b4006d230d82361cfe4cba1a21d75a6e5f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1e3149311e2526cf25cc210b93390d6ee5cf1b3c449ca20c5349b5d45f2e24ea",
+          "commentId": 6552937869,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41269812272,
+          "workflowSha": "4469c5c4680a487ee9e79ec522de86d52bedfed0"
+        },
+        "lineageAnchorCommitSha": "7a02ef7ee4d9f952ffa81a27c10027e929e45dfe",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "eb1987b6a44fd5d6b0ec4a37f23d744e1455d4ca",
+      "lockGeneration": 3037,
+      "lockScope": "H_EARTH:SOIL_MATERIAL:GROUNDCOVER_PIGMENT_ENDPOINT:20261031",
+      "operationId": "H_EARTH_GROUNDCOVER_SOIL_RELATIVE_ENDPOINT_REPAIR_20261031_001",
+      "procedureLocatorDigest": "0bfabeb5394c152b76c15f3b6f124862c2584b7f93fa8509d54d242112211ebd",
+      "released": false,
+      "requestDigest": "6912b3bbfc4a91709f767e08a935b59c42ab236d5d27ae7b108610c460884d87",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "511bb38d6969e885753b2d5d47a70d8766cef36609313c77f04addb5fa403da2",
+      "state": "ADMITTED_LOCKED"
+    },
     "511c7eadbeb82f058825b668a4864e160d63c698c38d56a13054524816900167": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -24051,7 +24095,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3036,
+  "lockGeneration": 3037,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

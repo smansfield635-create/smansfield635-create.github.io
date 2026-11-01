@@ -119,3 +119,65 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
 });
+
+/* Gen3042 exact-head comparison: only the historical positive inland band plus
+   two healthy controls; source-matched independent candidates, no stacked shader. */
+test('Gen3042 frozen sources and three prior poses are independently pinned',async()=>{
+ const t=await import('./h-earth-ground-material-comparison.v1.mjs');
+ assert.deepEqual(t.GEN3042_HEADS,{
+  baseline:'28da29ce01f26bf5eb73db2d75b09741b22ab40b',
+  candidate:'724efeb1db3d3e8e5309a9aa779acefb7c53fed9',
+  habitat:'cb15de477f9b8e39b9dc688ecc452ba44e42e6c1'
+ });
+ assert.deepEqual(t.GEN3042_BLOBS,{
+  baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',
+  candidate:'40034a16c36a43cb02682564784328ddb7ac48a7',
+  habitat:'03bc45e034e9894494d9120782c714ae78890ab8'
+ });
+ assert.deepEqual(t.GEN3042_POSES.map(p=>p.name),['inland-seam-near','coast-oblique','foothill-west']);
+ assert.deepEqual(t.GEN3042_MODES,['reference-lit','before-groundcover-unlit','after-groundcover-unlit','groundcover-weight-raw']);
+ assert.equal(t.GEN3042_POSES.length*t.GEN3042_MODES.length*Object.keys(t.GEN3042_HEADS).length,36);
+ assert.equal(t.GEN3042_POSES[0].diagnosticObserver,true);
+});
+test('Gen3042 full 36-frame source/camera/unchanged-stage custody rejects corruption',async()=>{
+ const t=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const ids={'reference-lit':0,'before-groundcover-unlit':2,'after-groundcover-unlit':3,'groundcover-weight-raw':7};
+ const views=t.GEN3042_POSES.flatMap(pose=>t.GEN3042_MODES.flatMap(mode=>
+  Object.keys(t.GEN3042_HEADS).map(label=>({
+   label,pose,mode,modeId:ids[mode],diagnosticApplied:ids[mode],
+   grassHidden:mode!=='reference-lit',imageWidth:529,imageHeight:980,
+   imageSha256:(['before-groundcover-unlit','groundcover-weight-raw'].includes(mode)?'d':label==='baseline'?'a':label==='candidate'?'b':'c').repeat(64),
+   rendererHash:'a'.repeat(64),sourceHead:t.GEN3042_HEADS[label],
+   assetSignature:'same-assets',state:{position:{x:pose.x,y:pose.y??2,z:pose.z}},
+   lastFrame:{cameraPosition:{x:1,y:2,z:3}}
+  }))));
+ assert.equal(t.validateGen3042(views).images,36);
+ assert.throws(()=>t.validateGen3042(views.slice(1)),/FRAME_CENSUS/);
+ const drift=structuredClone(views);drift[1].imageSha256='e'.repeat(64);
+ assert.throws(()=>t.validateGen3042(drift),/UNCHANGED_STAGE_DIFF|STAGE_INVALID/);
+ const moved=structuredClone(views);moved[2].lastFrame.cameraPosition.x=4;
+ assert.throws(()=>t.validateGen3042(moved),/CAMERA_ASSET_MISMATCH/);
+ const missing=structuredClone(views);missing[0].sourceHead='wrong';
+ assert.throws(()=>t.validateGen3042(missing),/SOURCE_STAGE_INVALID/);
+});
+test('Gen3042 triad CLI and PR-open one-shot job are closed to extra source refs',async()=>{
+ const {spawnSync}=await import('node:child_process');
+ const moduleBody="import {parseArgs,HEADS,GEN3042_PROFILE} from './tools/h-earth-ground-material-comparison.v1.mjs';"+
+ "if(!GEN3042_PROFILE||Object.keys(HEADS).length!==3)process.exit(12);"+
+ "const a=parseArgs(['--baseline-dir','/tmp/base','--candidate-dir','/tmp/green','--habitat-dir','/tmp/hab','--output','/tmp/out']);"+
+ "if(Object.keys(a).length!==4)process.exit(13);"+
+ "try{parseArgs(['--baseline-dir','/tmp/base','--candidate-dir','/tmp/green','--output','/tmp/out']);process.exit(14);}catch(e){if(!String(e).includes('CLI_INCOMPLETE'))process.exit(15);}";
+ const run=spawnSync(process.execPath,['--input-type=module','-e',moduleBody],{
+  cwd:new URL('../',import.meta.url).pathname,encoding:'utf8',
+  env:{...process.env,H_EARTH_COMPARISON_PROFILE:'GEN3042_SOIL_TRIAD_AB_V1'}
+ });
+ assert.equal(run.status,0,run.stderr||run.stdout);
+ const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ const i=y.indexOf('  gen3042-soil-triad-gpu-once:');assert.ok(i>=0);
+ const block=y.slice(i);
+ for(const h of Object.values((await import('./h-earth-ground-material-comparison.v1.mjs')).GEN3042_HEADS))assert.ok(block.includes('ref: '+h));
+ assert.ok(block.includes("github.event.action == 'opened'"));
+ assert.ok(block.includes('GEN3042_SOIL_TRIAD_AB_V1'));
+ assert.ok(block.includes('if: always()'));
+ assert.equal(block.includes("github.event.action == 'reopened'"),false);
+});

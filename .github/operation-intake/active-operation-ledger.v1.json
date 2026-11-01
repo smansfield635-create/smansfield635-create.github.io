@@ -9839,6 +9839,50 @@
       "scopeHash": "6f88bd1be54bad5df30dcb03dec510731da948a139965c9449bee6dfe7b7d45e",
       "state": "ADMITTED_LOCKED"
     },
+    "6ff1cd67af8efdf242a83dab4203a591e7f3c818bbfb9881d169acbd636c4e7e": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "4485c69e09f6d18b9130ff682d60e8d699bd6d3c",
+          "lockGeneration": 3039,
+          "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_G2_DEVELOPED_HEMISPHERE_PILOT:20261031",
+          "operationId": "NINE_SUMMITS_GRATITUDE_G2_DEVELOPED_HEMISPHERE_PILOT_20261031_001",
+          "procedureLocatorDigest": "2a5688db4775605345d5642a6de4027825bedd7bbc9e9480ae135c266eae60c3",
+          "requestDigest": "60ea40cfc9bca7df127524c5cd030540682880f3af220ad26b3131f8376c01e8",
+          "scopeHash": "6ff1cd67af8efdf242a83dab4203a591e7f3c818bbfb9881d169acbd636c4e7e"
+        },
+        "bindingDigest": "3e3adb4b549333b3d24239159d199f9b8bb51bd121f340a57547d75b3f191766",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "2db9b609f477d938ff6ee5804b4e07a1fabddc204d9164864932964ac3ec73d8",
+          "commentId": 6553443075,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6961,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41273514611,
+          "workflowSha": "4485c69e09f6d18b9130ff682d60e8d699bd6d3c"
+        },
+        "lineageAnchorCommitSha": "d8ae846279f6ec9d142d34bcd12daf8d98530787",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "4485c69e09f6d18b9130ff682d60e8d699bd6d3c",
+      "lockGeneration": 3039,
+      "lockScope": "NINE_SUMMITS_UNIVERSE:GRATITUDE_G2_DEVELOPED_HEMISPHERE_PILOT:20261031",
+      "operationId": "NINE_SUMMITS_GRATITUDE_G2_DEVELOPED_HEMISPHERE_PILOT_20261031_001",
+      "procedureLocatorDigest": "2a5688db4775605345d5642a6de4027825bedd7bbc9e9480ae135c266eae60c3",
+      "released": false,
+      "requestDigest": "60ea40cfc9bca7df127524c5cd030540682880f3af220ad26b3131f8376c01e8",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "6ff1cd67af8efdf242a83dab4203a591e7f3c818bbfb9881d169acbd636c4e7e",
+      "state": "ADMITTED_LOCKED"
+    },
     "704258863dfee99baa6e4cba5c851773cd0996429834cd92e1ee5755530adfaf": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -24095,7 +24139,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3038,
+  "lockGeneration": 3039,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

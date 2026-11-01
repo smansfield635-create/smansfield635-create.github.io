@@ -1422,3 +1422,135 @@ jobs:
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
           test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 10b5623b09c552930e54a1c1071c37535a831971
           (cd source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate && python3 -m unittest test_mesh_gate -v)
+
+  # Gen3040: one source-pinned W1 foreground visual witness; old qualification jobs preserved.
+  gen3040-w1-source-static:
+    if: >-
+      ${{ github.event_name == 'pull_request' &&
+          contains(fromJSON('["opened","synchronize"]'), github.event.action) &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/gen3040-gen3037-w1-foreground-matched-ab-tooling-20261101' &&
+          startsWith(github.event.pull_request.title,'GEN3040 W1 FOREGROUND A/B:') &&
+          github.event.pull_request.base.ref == 'main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted Gen3040 tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          fetch-depth: 1
+          persist-credentials: false
+      - name: Checkout exact unmodified Gen3037 soil candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+          path: product
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Assert exact declared three-file tooling delta and source bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C product rev-parse HEAD)" = 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+          test "$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 40034a16c36a43cb02682564784328ddb7ac48a7
+          git -C tooling fetch --no-tags --depth=1 origin 57ee195b73e785df9c9d118c4b4fb0332793b5cc
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          import {execFileSync} from 'node:child_process';
+          const changed=execFileSync('git',['-C','tooling','diff','--name-only','57ee195b73e785df9c9d118c4b4fb0332793b5cc','HEAD'],{encoding:'utf8'}).trim().split('\n').filter(Boolean).sort();
+          assert.deepEqual(changed,[
+            '.github/workflows/h-earth-neutral-exact-head-runner.yml',
+            'tools/h-earth-ground-material-comparison.v1.mjs',
+            'tools/h-earth-ground-material-comparison.v1.test.mjs'
+          ]);
+          NODE
+      - name: Run exact Node22 comparator and soil-product regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.test.mjs
+          (cd tooling && node --test tools/h-earth-ground-material-comparison.v1.test.mjs)
+          (cd product && node --test h-earth-3d/validation/h-earth.groundcover-soil-relative-endpoint-20261031.test.mjs h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs)
+
+  # One expensive read-only witness run only after the static source review.
+  # Never auto-retry on opening or source synchronization; no product merge or deployment.
+  gen3040-w1-gpu-once:
+    if: >-
+      ${{ github.event_name == 'pull_request' &&
+          github.event.action == 'reopened' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/gen3040-gen3037-w1-foreground-matched-ab-tooling-20261101' &&
+          startsWith(github.event.pull_request.title,'GEN3040 W1 FOREGROUND A/B:') &&
+          github.event.pull_request.base.ref == 'main' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    steps:
+      - name: Require first attempt and no product mutation
+        shell: bash
+        env:
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          set -euo pipefail
+          test "$RUN_ATTEMPT" = 1
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: eb1987b6a44fd5d6b0ec4a37f23d744e1455d4ca
+          path: baseline
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+          path: candidate
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Require frozen Gen3037 baseline/candidate hashes and Node22 tests before GPU
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C baseline rev-parse HEAD)" = eb1987b6a44fd5d6b0ec4a37f23d744e1455d4ca
+          test "$(git -C candidate rev-parse HEAD)" = 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+          test "$(git -C baseline hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
+          test "$(git -C candidate hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 40034a16c36a43cb02682564784328ddb7ac48a7
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.test.mjs
+          (cd tooling && node --test tools/h-earth-ground-material-comparison.v1.test.mjs)
+          (cd candidate && node --test h-earth-3d/validation/h-earth.groundcover-soil-relative-endpoint-20261031.test.mjs h-earth-3d/validation/h-earth.east-a-environmental-identity.v1.test.mjs)
+      - name: Install unchanged bounded Playwright Chromium
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture only original W1 with paired real baseline/candidate source-stage images
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN3037_W1_FOREGROUND_AB_V1
+        run: |
+          timeout 2900s node tools/h-earth-ground-material-comparison.v1.mjs --baseline-dir ../baseline --candidate-dir ../candidate --output "${{ runner.temp }}/h-earth-gen3037-w1-material-ab"
+      - name: Preserve images, camera/hashes and partial receipt even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3037-w1-material-ab-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-gen3037-w1-material-ab
+          if-no-files-found: warn
+          retention-days: 90

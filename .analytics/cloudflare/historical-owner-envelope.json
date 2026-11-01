@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-01T05:23:58Z",
+  "generatedAt": "2026-11-01T06:31:03Z",
   "window": {
-    "start": "2026-08-03T05:23:58Z",
-    "end": "2026-11-01T05:23:58Z"
+    "start": "2026-08-03T06:31:03Z",
+    "end": "2026-11-01T06:31:03Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,19 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4090,
-    "visits": 1220,
+    "pageLoads": 4060,
+    "visits": 1200,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4090,
-        "visits": 1220
+        "pageLoads": 4060,
+        "visits": 1200
       }
     },
     "byPath": {
-      "/laws/": {
-        "pageLoads": 130,
-        "visits": 20
-      },
       "/showroom/globe/h-earth/": {
         "pageLoads": 70,
         "visits": 10
@@ -48,6 +44,10 @@
       },
       "/index.html": {
         "pageLoads": 110,
+        "visits": 0
+      },
+      "/laws/": {
+        "pageLoads": 100,
         "visits": 0
       },
       "/evidence/readiness/": {
@@ -162,13 +162,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
         "visits": 0
+      },
+      "/laws/categories/structure/boundaries.html": {
+        "pageLoads": 10,
+        "visits": 10
       },
       "/laws/categories/integrity/accountability/": {
         "pageLoads": 40,
@@ -312,13 +312,13 @@
       }
     },
     "byReferer": {
-      "www.google.com": {
-        "pageLoads": 670,
-        "visits": 670
-      },
       "diamondgatebridge.com": {
-        "pageLoads": 2870,
+        "pageLoads": 2860,
         "visits": 0
+      },
+      "www.google.com": {
+        "pageLoads": 650,
+        "visits": 650
       },
       "(none)": {
         "pageLoads": 540,

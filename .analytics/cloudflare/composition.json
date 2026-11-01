@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-01T05:23:58Z",
+  "generatedAt": "2026-11-01T06:31:03Z",
   "window": {
-    "start": "2026-10-02T05:23:58Z",
-    "end": "2026-11-01T05:23:58Z"
+    "start": "2026-10-02T06:31:03Z",
+    "end": "2026-11-01T06:31:03Z"
   },
   "dimensions": {
     "requestPath": [
@@ -113,27 +113,7 @@
         "visits": 6
       },
       {
-        "value": "/products/",
-        "pageLoads": 3,
-        "visits": 2
-      },
-      {
         "value": "/site-guide/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/showroom/globe/",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/index.html",
-        "pageLoads": 2,
-        "visits": 2
-      },
-      {
-        "value": "/products/nutrition/",
         "pageLoads": 2,
         "visits": 2
       },
@@ -148,9 +128,9 @@
         "visits": 2
       },
       {
-        "value": "/laws/scientific-law/battery-heldout-study/",
+        "value": "/products/",
         "pageLoads": 2,
-        "visits": 2
+        "visits": 1
       },
       {
         "value": "/governance/",
@@ -163,12 +143,32 @@
         "visits": 0
       },
       {
+        "value": "/showroom/globe/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/index.html",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/products/nutrition/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
         "value": "/preflight/",
         "pageLoads": 1,
         "visits": 1
       },
       {
         "value": "/home/",
+        "pageLoads": 1,
+        "visits": 1
+      },
+      {
+        "value": "/laws/scientific-law/battery-heldout-study/",
         "pageLoads": 1,
         "visits": 1
       },
@@ -186,8 +186,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1709,
-        "visits": 1709
+        "pageLoads": 1704,
+        "visits": 1704
       },
       {
         "value": "diamondgatebridge.com",
@@ -223,8 +223,8 @@
       },
       {
         "value": "CN",
-        "pageLoads": 35,
-        "visits": 35
+        "pageLoads": 30,
+        "visits": 30
       },
       {
         "value": "CA",
@@ -260,8 +260,8 @@
       },
       {
         "value": "mobile",
-        "pageLoads": 289,
-        "visits": 257
+        "pageLoads": 284,
+        "visits": 252
       },
       {
         "value": "tablet",
@@ -302,8 +302,8 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 46,
-        "visits": 37
+        "pageLoads": 41,
+        "visits": 32
       },
       {
         "value": "Safari",
@@ -354,15 +354,15 @@
       },
       {
         "value": "Unknown",
-        "pageLoads": 46,
-        "visits": 37
+        "pageLoads": 41,
+        "visits": 32
       }
     ],
     "bot": [
       {
         "value": "0",
-        "pageLoads": 982,
-        "visits": 864
+        "pageLoads": 977,
+        "visits": 859
       },
       {
         "value": "1",
@@ -373,8 +373,8 @@
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1840,
-        "visits": 1752
+        "pageLoads": 1835,
+        "visits": 1747
       },
       {
         "value": "routing-apis",
@@ -390,8 +390,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1802,
-        "visits": 1747
+        "pageLoads": 1797,
+        "visits": 1742
       },
       {
         "value": "cache",
@@ -407,15 +407,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1880,
-        "visits": 1762
+        "pageLoads": 1875,
+        "visits": 1757
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1880,
-        "visits": 1762
+        "pageLoads": 1875,
+        "visits": 1757
       }
     ]
   }

@@ -1146,13 +1146,16 @@ void main(){
         (1.0-groundcoverMoisture)*(0.18+0.28*mesoField)+
         slopeResponse*0.20,0.0,0.65
       );
-      vec3 groundcoverTone=mix(
-        vec3(0.110,0.118,0.075),vec3(0.075,0.090,0.055),groundcoverMoisture
+      // Soil-relative ecological pigment: inherit the current earth material,
+      // including native grain, instead of painting a fixed dark olive color.
+      // Preserve all existing material eligibility, protected cores and roots.
+      vec3 groundcoverSoilTint=mix(
+        vec3(0.965,0.975,0.945),vec3(0.890,0.960,0.900),groundcoverMoisture
       );
-      groundcoverTone=mix(
-        groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
+      groundcoverSoilTint=mix(
+        groundcoverSoilTint,vec3(1.015,0.990,0.965),groundcoverDry
       );
-      groundcoverTone*=0.88+0.24*materialVariation;
+      vec3 groundcoverTone=palette*groundcoverSoilTint;
       palette=mix(palette,groundcoverTone,groundcoverWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }

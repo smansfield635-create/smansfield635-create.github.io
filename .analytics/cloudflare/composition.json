@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-01T02:27:31Z",
+  "generatedAt": "2026-11-01T03:28:09Z",
   "window": {
-    "start": "2026-10-02T02:27:31Z",
-    "end": "2026-11-01T02:27:31Z"
+    "start": "2026-10-02T03:28:09Z",
+    "end": "2026-11-01T03:28:09Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 715,
-        "visits": 659
+        "pageLoads": 713,
+        "visits": 657
       },
       {
         "value": "/analytics/",
@@ -24,8 +24,8 @@
       },
       {
         "value": "/nine-summits/universe/",
-        "pageLoads": 65,
-        "visits": 64
+        "pageLoads": 69,
+        "visits": 68
       },
       {
         "value": "/build/",
@@ -206,8 +206,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1688,
-        "visits": 1688
+        "pageLoads": 1689,
+        "visits": 1689
       },
       {
         "value": "diamondgatebridge.com",
@@ -216,8 +216,8 @@
       },
       {
         "value": "bing.com",
-        "pageLoads": 37,
-        "visits": 37
+        "pageLoads": 38,
+        "visits": 38
       },
       {
         "value": "www.google.com",
@@ -238,8 +238,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1789,
-        "visits": 1681
+        "pageLoads": 1791,
+        "visits": 1683
       },
       {
         "value": "CN",
@@ -275,13 +275,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1504,
-        "visits": 1448
+        "pageLoads": 1505,
+        "visits": 1449
       },
       {
         "value": "mobile",
-        "pageLoads": 284,
-        "visits": 252
+        "pageLoads": 285,
+        "visits": 253
       },
       {
         "value": "tablet",
@@ -292,18 +292,18 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 883,
-        "visits": 883
+        "pageLoads": 881,
+        "visits": 881
       },
       {
         "value": "Chrome",
-        "pageLoads": 486,
-        "visits": 415
+        "pageLoads": 489,
+        "visits": 418
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 179,
-        "visits": 166
+        "pageLoads": 180,
+        "visits": 167
       },
       {
         "value": "Edge",
@@ -349,18 +349,18 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1134,
-        "visits": 1134
+        "pageLoads": 1133,
+        "visits": 1133
       },
       {
         "value": "Windows",
-        "pageLoads": 239,
-        "visits": 223
+        "pageLoads": 241,
+        "visits": 225
       },
       {
         "value": "Android",
-        "pageLoads": 232,
-        "visits": 189
+        "pageLoads": 233,
+        "visits": 190
       },
       {
         "value": "MacOSX",
@@ -381,20 +381,20 @@
     "bot": [
       {
         "value": "0",
-        "pageLoads": 975,
-        "visits": 857
+        "pageLoads": 979,
+        "visits": 861
       },
       {
         "value": "1",
-        "pageLoads": 883,
-        "visits": 883
+        "pageLoads": 881,
+        "visits": 881
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1818,
-        "visits": 1730
+        "pageLoads": 1820,
+        "visits": 1732
       },
       {
         "value": "routing-apis",
@@ -410,8 +410,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1780,
-        "visits": 1725
+        "pageLoads": 1782,
+        "visits": 1727
       },
       {
         "value": "cache",
@@ -427,15 +427,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1858,
-        "visits": 1740
+        "pageLoads": 1860,
+        "visits": 1742
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1858,
-        "visits": 1740
+        "pageLoads": 1860,
+        "visits": 1742
       }
     ]
   }

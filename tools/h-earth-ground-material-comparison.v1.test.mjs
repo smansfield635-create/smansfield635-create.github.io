@@ -182,3 +182,21 @@ test('GEN3037_W1 workflow binds only exact two products and reuses fixed capture
  assert.ok(y.includes('ref: ${{ github.event.pull_request.head.sha }}'));
  assert.ok(y.includes('if: always()'));
 });
+
+test('GEN3037_W1 authentic post-Enter condition follows real loader receipt, never nonexistent DOM mode',()=>{
+ const loader=fs.readFileSync(new URL('../showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js',import.meta.url),'utf8');
+ const comparator=fs.readFileSync(new URL('./h-earth-ground-material-comparison.v1.mjs',import.meta.url),'utf8');
+ const accepted=fs.readFileSync(new URL('./publication-live-verify.mjs',import.meta.url),'utf8');
+ assert.ok(loader.includes("mode='entered';shell.hidden=true;"),'loader changes internal mode and hides shell');
+ assert.ok(!loader.includes("mode='entered';shell.dataset.mode=mode;"),'loader does not set entered DOM mode');
+ assert.ok(accepted.includes("H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'"),'reuse established publication verifier');
+ for(const marker of [
+  "window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'",
+  "shell?.hidden===true",
+  "root?.dataset.run8eReady==='true'",
+  "root?.dataset.run8eError!=='true'",
+  "GEN3037_W1_AUTHENTIC_POST_ENTER_NOT_OBSERVED"
+ ])assert.ok(comparator.includes(marker),'missing authentic entry gate: '+marker);
+ assert.ok(!comparator.includes("dataset.mode==='entered'"),'do not wait for nonexistent DOM entered mode');
+ assert.ok(!comparator.includes('root.dataset.run8eReady='));
+});

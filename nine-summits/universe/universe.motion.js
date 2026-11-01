@@ -228,7 +228,12 @@ function buildGeometry(K){
   receipt={status:'ready',geometryKernel:'/showroom/globe/h-earth/render/geometry-kernel.js',westAdmitted:true,primitiveCount:admitted.frame.primitiveCount,triangleCount:0,physics:'/assets/compass/compass.orbit-physics.js',heartContourSource:'nine-summits-of-love/index.html@171a74bc3f1f170c36079b00407fb569b56992bf'};
   return admitted.frame.primitives.map((primitive,meshIndex)=>{
     const g=primitive.geometry, data=[];
-    g.indices.forEach((index,j)=>{const p=g.vertices[index],n=meshIndex===0?g.faceNormals[Math.floor(j/3)]:g.normals[index];data.push(p.x,p.y,p.z,n.x,n.y,n.z,(Math.sin((Math.floor(j/3)+1)*78.233)*43758.5453)%1);});
+    g.indices.forEach((index,j)=>{
+      const p=g.vertices[index],n=meshIndex===0?g.faceNormals[Math.floor(j/3)]:g.normals[index];
+      const lift=meshIndex===5?1+.033*Math.pow(gratitudeHeightAt(p),1.35):1;
+      data.push(p.x*lift,p.y*lift,p.z*lift,n.x,n.y,n.z,
+        (Math.sin((Math.floor(j/3)+1)*78.233)*43758.5453)%1);
+    });
     receipt.triangleCount+=g.indices.length/3;
     const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);
     return {buffer,count:g.indices.length};
@@ -1813,23 +1818,12 @@ function drawOpalWorld(t){if(!opalGL)return;const r=opalCanvas.getBoundingClient
 }
 
 const vertexSource=`attribute vec3 aPosition;attribute vec3 aNormal;attribute float aFacet;
-uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ;uniform mediump float uWorld,uAtmosphere;uniform vec2 uView;
+uniform vec3 uCenter,uOffset;uniform float uRadius,uZoom,uCameraZ;uniform vec2 uView;
 varying vec3 vWorld,vNormal,vLocal;varying float vFacet;
-float gratitudeTectonic(vec3 p){
- vec3 q=p+vec3(.12*sin(p.y*6.2+p.z*3.8),.10*sin(p.z*8.0-p.x*4.0),.13*sin(p.x*5.3+p.y*7.3));
- return .40*sin(q.x*9.8+q.z*3.2)+.28*cos(q.y*11.1-q.z*5.3)
-       +.20*sin(q.z*12.5+q.x*4.9+q.y*3.1)+.12*sin((q.x+q.y)*18.1-q.z*3.5);
-}
 void main(){
  vFacet=abs(aFacet);
- vec3 local=aPosition;
- // Only book Summit I (legacy slot 4) receives rocky island relief.
- if(uWorld>3.5&&uWorld<4.5&&uAtmosphere<.5){
-  float shelf=.5+.5*gratitudeTectonic(normalize(local));
-  float land=smoothstep(.59,.72,shelf);
-  local*=1.0+.014*land+.033*land*land;
- }
- vec3 world=local*uRadius+uCenter;vec3 view=world-uOffset;
+ vec3 world=aPosition*uRadius+uCenter;
+ vec3 view=world-uOffset;
  float perspective=uCameraZ/max(.48,uCameraZ-view.z);
  gl_Position=vec4(view.xy/uView*uZoom*perspective,-view.z/20.0,1.0);
  vWorld=world;vNormal=aNormal;vLocal=aPosition;
@@ -1837,6 +1831,7 @@ void main(){
 const fragmentSource=`precision mediump float;
 varying vec3 vWorld,vNormal,vLocal;varying float vFacet;
 uniform vec3 uColor;
+uniform sampler2D uGratitudeAtlas;
 uniform float uHeart,uSelected,uWorld,uAtmosphere,uTime;
 float hash3(vec3 p) {
  p=fract(p*.1031);
@@ -1856,13 +1851,6 @@ float fbm(vec3 p) {
  for(int k=0;k<3;k++){r+=amp*noise3(p);p=p*2.07+vec3(13.4,7.1,19.2);amp*=.5;}
  return r;
 }
-// Shared macro geography with the summit-I-only vertex displacement.
-// Warped, crossed ridges form archipelagos rather than parallel latitude bands.
-float gratitudeTectonic(vec3 p){
- vec3 q=p+vec3(.12*sin(p.y*6.2+p.z*3.8),.10*sin(p.z*8.0-p.x*4.0),.13*sin(p.x*5.3+p.y*7.3));
- return .40*sin(q.x*9.8+q.z*3.2)+.28*cos(q.y*11.1-q.z*5.3)
-       +.20*sin(q.z*12.5+q.x*4.9+q.y*3.1)+.12*sin((q.x+q.y)*18.1-q.z*3.5);
-}
 void main() {
  vec3 n=normalize(vNormal);
  vec3 light=normalize(-vWorld+vec3(-.2,.25,.15));
@@ -1873,14 +1861,14 @@ void main() {
  vec3 material=uColor;
  if(uAtmosphere>.5){
    if(uWorld>3.5&&uWorld<4.5){
-     // A thin, transparent layer above Gratitude's real surface: humidity and cloud banks.
-     // Time only advects this atmosphere; the rock/ocean surface stays still.
-     float bank=fbm(p*7.2+vec3(uTime*.006,-uTime*.003,4.1));
-     float wisps=fbm(p*13.1+vec3(3.1,uTime*.004,-1.2));
-     float moisture=smoothstep(.53,.72,bank*.78+wisps*.22);
-     float airRim=pow(1.0-max(0.0,n.z),3.0);
-     vec3 lagoonAir=mix(vec3(.085,.39,.49),vec3(.84,.95,.90),moisture);
-     gl_FragColor=vec4(lagoonAir*(.53+.78*airRim),clamp(.035+.33*airRim+.22*moisture,0.,.55));
+     // Near-colorless humid upper atmosphere, not a saturated cyan outer ring.
+     // Only this separate shell moves; its planet surface remains immobile.
+     float wisps=fbm(p*6.4+vec3(uTime*.003,-uTime*.002,4.1));
+     float cloud=smoothstep(.52,.70,wisps);
+     float airRim=pow(1.0-max(0.,n.z),4.0);
+     vec3 air=mix(vec3(.37,.61,.64),vec3(.86,.93,.91),cloud);
+     gl_FragColor=vec4(air*(.37+.38*airRim),
+       clamp(.009+.22*airRim+.12*cloud,0.,.30));
      return;
    }
    float fresnel=pow(1.0-max(0.0,dot(n,vec3(0.,0.,1.))),2.8);
@@ -1949,27 +1937,15 @@ void main() {
      material=mix(vec3(.08,.039,.043),vec3(.53,.24,.13),smoothstep(.25,.81,basin));
      material+=vec3(.30,.075,.017)*fault*.4;
      rough=.91;metal=.06;
-   } else if(uWorld<4.5) { // Gratitude, book Summit I: Golden Lagoon planetary archipelago
-     // Layer ONE: a recognizable world seen from orbit. Its accepted entered
-     // Golden Lagoon is layer TWO, rendered by the unchanged encounter system.
-     float macro=.5+.5*gratitudeTectonic(p);
-     float coastalNoise=fbm(p*17.3+vec3(7.2,1.5,-3.8));
-     float shelf=clamp(macro+.060*(coastalNoise-.48),0.,1.);
-     float islands=smoothstep(.58,.69,shelf);
-     float shallows=smoothstep(.37,.59,shelf);
-     float reef=smoothstep(.45,.56,shelf)*(1.-smoothstep(.61,.70,shelf));
-     vec3 abyss=vec3(.008,.075,.135);
-     vec3 ocean=mix(abyss,vec3(.025,.23,.31),smoothstep(.22,.47,shelf));
-     ocean=mix(ocean,vec3(.045,.61,.58),shallows*.88);
-     ocean=mix(ocean,vec3(.25,.82,.72),reef*.58);
-     float canopy=fbm(p*14.7+vec3(1.9,8.3,-4.1));
-     float limestone=smoothstep(.59,.79,fbm(p*19.5+vec3(3.7,-1.8,5.1)));
-     vec3 tropic=mix(vec3(.69,.64,.50),vec3(.115,.33,.15),smoothstep(.36,.72,canopy)*.86);
-     tropic=mix(tropic,vec3(.87,.81,.64),limestone*.68);
-     material=mix(ocean,tropic,islands);
-     // The coast remains crisp, not glassy: low specular, real rock relief
-     // and atmospheric depth on a separately drawn transparent outer shell.
-     rough=.84;metal=.012;glow=reef*.017;
+   } else if(uWorld<4.5) { // Gratitude: genuine discrete tropical island geography
+     // The atlas is generated once with real separate land/ocean membership.
+     // It is not thresholded sinusoidal color bands painted on a sphere.
+     float longitude=atan(p.z,p.x);
+     vec2 uv=vec2(fract(.5+longitude/6.28318530718),
+                   clamp(.5+asin(clamp(p.y,-1.,1.))/3.14159265359,0.,1.));
+     vec4 geography=texture2D(uGratitudeAtlas,uv);
+     material=geography.rgb;
+     rough=.96;metal=0.;glow=0.;
    } else if(uWorld<5.5) { // Self-control: opposed but continuous basin and ridge geology
      float waveline=p.x+.35*sin(p.y*3.8+sin(p.z*2.7))+.15*sin(p.z*6.2);
      float biome=smoothstep(-.26,.29,waveline);
@@ -2009,18 +1985,15 @@ void main() {
    }
  }
  float halfLambert=.22+.83*diffuse;
- // Gratitude receives a diffuse tropical daylight fill, not glass reflections.
- // The source-material coastline remains visible on the near hemisphere.
+ // Give this one geographic world coherent subdued daylight, not a shiny enamel highlight.
  float gratitudeNearFace=(uHeart<.5&&uWorld>3.5&&uWorld<4.5&&uAtmosphere<.5)?1.:0.;
- float gratitudeViewFill=max(0.,dot(n,normalize(vec3(-.34,.54,1.0))));
- halfLambert=max(halfLambert,gratitudeNearFace*(.56+.28*gratitudeViewFill));
+ float dayLight=max(0.,dot(n,normalize(vec3(-.58,.76,1.))));
+ halfLambert=mix(halfLambert,.26+.79*dayLight,gratitudeNearFace);
  float spec=pow(max(0.,dot(reflect(-light,n),vec3(0.,0.,1.))),mix(8.,44.,1.-rough));
  vec3 shaded=material*halfLambert;
  if(gratitudeNearFace>.5){
-   float coastRelief=smoothstep(.15,.72,abs(gratitudeTectonic(p)));
-   shaded*=.94+.08*coastRelief;
-   float atmosphereEdge=pow(1.-abs(n.z),2.4);
-   shaded+=vec3(.018,.065,.085)*atmosphereEdge*.27;
+   float atmosphereEdge=pow(1.-abs(n.z),3.2);
+   shaded+=vec3(.012,.031,.039)*atmosphereEdge*.15;
  }
  shaded+=mix(vec3(.22,.14,.08),vec3(.91,.86,.77),metal)*spec*(.08+.42*(1.-rough));
  shaded+=material*rim*(.17+glow);
@@ -2080,11 +2053,104 @@ function drawStars(){
  gl.disable(gl.DEPTH_TEST);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE);
  gl.drawArrays(gl.POINTS,0,starCount);gl.disable(gl.BLEND);gl.enable(gl.DEPTH_TEST);
 }
+
+// Gen3035 one-repair: deterministic ocean-and-island geography atlas.
+// Geology is computed ONCE, then sampled as a genuine geographic texture.
+// Unlike the rejected swirling marble, land is separate from connected ocean;
+// reefs exist only as a bounded near-coast material, not global neon swirls.
+const GRATITUDE_ATLAS_W=1024,GRATITUDE_ATLAS_H=512;
+let gratitudeAtlasPixels=null,gratitudeAtlasTexture=null;
+function gratitudeTerrainAtlas(){
+ const W=GRATITUDE_ATLAS_W,H=GRATITUDE_ATLAS_H,data=new Uint8Array(W*H*4);
+ const groups=[
+  [.688,.405,.055,.026,-.38],[.720,.424,.048,.028,-.75],
+  [.748,.446,.057,.032,.26],[.783,.459,.040,.024,-.50],
+  [.815,.562,.038,.064,-.45],[.838,.599,.045,.026,.38],
+  [.674,.610,.038,.027,.31],[.625,.634,.021,.018,-.43],
+  [.875,.355,.043,.023,.48],[.904,.382,.027,.020,-.39],
+  [.550,.495,.034,.023,.90],[.585,.483,.026,.021,.24],
+  [.202,.502,.075,.038,.40],[.264,.556,.041,.065,-.35],
+  [.323,.352,.046,.032,.30],[.376,.620,.056,.028,-.50]
+ ].map(([cx,cy,rx,ry,rot])=>({cx,cy,rx,ry,co:Math.cos(rot),si:Math.sin(rot)}));
+ const clamp=v=>Math.max(0,Math.min(1,v));
+ const mix=(a,b,t)=>a+(b-a)*t;
+ const smooth=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t);};
+ const hash=(x,y)=>{let n=(Math.imul(x|0,374761393)+Math.imul(y|0,668265263))|0;n=Math.imul(n^(n>>>13),1274126177);return((n^(n>>>16))>>>0)/4294967295;};
+ const noise=(x,y)=>{const ix=Math.floor(x),iy=Math.floor(y);let u=x-ix,v=y-iy;u=u*u*(3-2*u);v=v*v*(3-2*v);return 2*mix(mix(hash(ix,iy),hash(ix+1,iy),u),mix(hash(ix,iy+1),hash(ix+1,iy+1),u),v)-1;};
+ const fbm=(x,y)=>.58*noise(x,y)+.28*noise(x*2.06+15.7,y*2.06-3.1)+.14*noise(x*4.11-4.6,y*4.11+8.4);
+ let landPixels=0,oceanPixels=0;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+  const u=(x+.5)/W,v=(y+.5)/H;
+  const coastal=fbm(u*35,v*41),erosion=fbm(u*92+9.1,v*93-3.8);
+  let field=-.8;
+  for(const island of groups){
+   let dx=u-island.cx;dx-=Math.round(dx);
+   const dy=v-island.cy;
+   const xx=(dx*island.co-dy*island.si)/island.rx;
+   const yy=(dx*island.si+dy*island.co)/island.ry;
+   field=Math.max(field,1-Math.hypot(xx,yy)+.37*coastal+.14*erosion);
+  }
+  const k=(y*W+x)*4;let red,green,blue,elevation=0;
+  if(field<=0){
+   oceanPixels++;
+   const shelf=smooth(-.38,-.03,field);
+   const reef=smooth(-.16,-.025,field)*(1-smooth(-.01,.025,field));
+   red=mix(7,14,shelf*.8);green=mix(34,80,shelf*.8);blue=mix(53,98,shelf*.8);
+   red=mix(red,28,shelf*.8);green=mix(green,135,shelf*.8);blue=mix(blue,139,shelf*.8);
+   red=mix(red,79,reef*.48);green=mix(green,172,reef*.48);blue=mix(blue,168,reef*.48);
+   red+=8*erosion*.32;green+=8*erosion*.55;blue+=8*erosion*.69;
+  }else{
+   landPixels++;
+   elevation=clamp(field*.91+.045*erosion);
+   const beach=1-smooth(.012,.055,elevation);
+   const uplands=smooth(.29,.75,elevation);
+   const groove=clamp(.5+.26*erosion+.13*coastal);
+   const canopy=smooth(-.2,.50,coastal+groove*.44);
+   red=mix(36,75,canopy);green=mix(96,133,canopy);blue=mix(55,75,canopy);
+   red=mix(red,116,uplands*.66);green=mix(green,129,uplands*.66);blue=mix(blue,104,uplands*.66);
+   const ridges=smooth(.35,.82,fbm(u*100+4,v*105-3)*.5+.5);
+   red=mix(red,181,ridges*uplands*.53);green=mix(green,173,ridges*uplands*.53);blue=mix(blue,153,ridges*uplands*.53);
+   red=mix(red,198,beach*.83);green=mix(green,189,beach*.83);blue=mix(blue,161,beach*.83);
+  }
+  data[k]=Math.round(Math.max(0,Math.min(255,red)));
+  data[k+1]=Math.round(Math.max(0,Math.min(255,green)));
+  data[k+2]=Math.round(Math.max(0,Math.min(255,blue)));
+  data[k+3]=Math.round(255*elevation);
+ }
+ // A failure to create real land and deep ocean must block, not turn into a generic ball.
+ if(landPixels<W*H*.035||landPixels>W*H*.25||oceanPixels<W*H*.7)
+  throw Error('GRATITUDE_PLANET_ATLAS_GEOGRAPHY_INVALID');
+ const texture=gl.createTexture();if(!texture)throw Error('GRATITUDE_PLANET_ATLAS_ALLOC_FAILED');
+ gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,texture);
+ gl.pixelStorei(gl.UNPACK_ALIGNMENT,4);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+ gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);
+ gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,W,H,0,gl.RGBA,gl.UNSIGNED_BYTE,data);
+ gl.generateMipmap(gl.TEXTURE_2D);
+ if(gl.getError()!==gl.NO_ERROR)throw Error('GRATITUDE_PLANET_ATLAS_GL_UPLOAD_FAILED');
+ gratitudeAtlasPixels=data;gratitudeAtlasTexture=texture;
+ return {width:W,height:H,landFraction:landPixels/(W*H)};
+}
+function gratitudeHeightAt(p){
+ if(!gratitudeAtlasPixels)return 0;
+ const u=(.5+Math.atan2(p.z,p.x)/(Math.PI*2)+1)%1;
+ const v=Math.max(0,Math.min(1,.5+Math.asin(Math.max(-1,Math.min(1,p.y)))/Math.PI));
+ const x=Math.min(GRATITUDE_ATLAS_W-1,Math.floor(u*GRATITUDE_ATLAS_W));
+ const y=Math.min(GRATITUDE_ATLAS_H-1,Math.floor(v*GRATITUDE_ATLAS_H));
+ return gratitudeAtlasPixels[(y*GRATITUDE_ATLAS_W+x)*4+3]/255;
+}
+
 function setupGL(){
   gl=canvas.getContext('webgl',{alpha:true,antialias:true,powerPreference:'low-power'});if(!gl)throw Error('WebGL unavailable');
   program=gl.createProgram();const vs=shader(gl.VERTEX_SHADER,vertexSource),fs=shader(gl.FRAGMENT_SHADER,fragmentSource);gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);gl.deleteShader(vs);gl.deleteShader(fs);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));gl.useProgram(program);
   for(const name of ['aPosition','aNormal','aFacet'])loc[name]=gl.getAttribLocation(program,name);
   for(const name of ['uCenter','uOffset','uRadius','uZoom','uView','uColor','uHeart','uSelected','uWorld','uCameraZ','uAtmosphere','uTime'])loc[name]=gl.getUniformLocation(program,name);
+  const geographyUniform=gl.getUniformLocation(program,'uGratitudeAtlas');
+  if(geographyUniform===null)throw Error('GRATITUDE_GEOGRAPHIC_SHADER_UNBOUND');
+  gl.uniform1i(geographyUniform,0);
+  gratitudeTerrainAtlas();
   gl.enable(gl.DEPTH_TEST);gl.clearColor(0,0,0,0);setupStars();
 }
 const ARRIVAL_CONSTELLATION=Object.freeze([
@@ -2347,6 +2413,6 @@ async function init(){
   new IntersectionObserver(entries=>{sceneVisible=entries[0].isIntersecting;orbitSpeed=0;lastTime=0;if(!sceneVisible&&raf){cancelAnimationFrame(raf);raf=0;}if(sceneVisible)requestFrame();}).observe(scene);
   canvas.addEventListener('webglcontextlost',event=>{event.preventDefault();if(raf)cancelAnimationFrame(raf);raf=0;fallback(Error('Graphics context interrupted'));});
   canvas.addEventListener('webglcontextrestored',()=>location.reload());
-  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,bookSummitOrder:BOOK_ORDER_SLOTS.map(i=>summits[i][0]),bookPairOrder:BOOK_ORDER_SLOTS.map(i=>BOOK_PAIR_BY_SLOT[i]),selectedBookOrdinal:selected>=0?BOOK_ORDINAL_BY_SLOT[selected]:null,selectedSummit:selected>=0?summits[selected][0]:null,approvedTropicalSlot:4,planetIdentityLayer:{slot:4,summit:'Gratitude',planet:'GOLDEN_LAGOON_ARCHIPELAGO_PLANET_V1',environment:'GOLDEN_LAGOON_ENTERED_GEN3034_UNCHANGED',contrast:'ENTITLEMENT_FUTURE_ONLY'},gratitudeCameraContract:'FIXED_PANORAMA_1_08_ALL_FLIGHT',proceduralJoyAvailable:false,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
+  globalThis.DGB_UNIVERSE=Object.freeze({readback:()=>({...receipt,bookSummitOrder:BOOK_ORDER_SLOTS.map(i=>summits[i][0]),bookPairOrder:BOOK_ORDER_SLOTS.map(i=>BOOK_PAIR_BY_SLOT[i]),selectedBookOrdinal:selected>=0?BOOK_ORDINAL_BY_SLOT[selected]:null,selectedSummit:selected>=0?summits[selected][0]:null,approvedTropicalSlot:4,planetIdentityLayer:{slot:4,summit:'Gratitude',planet:'GOLDEN_LAGOON_GEOGRAPHIC_ARCHIPELAGO_V2',atlas:[1024,512],surfaceLaw:'COHERENT_OCEAN_ISLAND_REEF_MATTE',review:'ONE_REPAIR_CANDIDATE_UNPUBLISHED',environment:'GOLDEN_LAGOON_ENTERED_GEN3034_UNCHANGED',contrast:'ENTITLEMENT_FUTURE_ONLY'},gratitudeCameraContract:'FIXED_PANORAMA_1_08_ALL_FLIGHT',proceduralJoyAvailable:false,quaternion:quaternion.slice(),selected,close,flight,flightStage,cameraZ,orbitPhase,orbitSpeed,motionPaused,orbitActive:orbitCanMove(),sceneVisible,reducedMotion:reduced,inertiaActive:Boolean(inertia),pointerActive:Boolean(pointer),zoom,canvasSize:[canvas.width,canvas.height],glError:gl?.getError(),world02WebGL:Boolean(loveGL),world02GLError:loveGL?.getError()??null,world03WebGL:Boolean(stabilityGL),world03GLError:stabilityGL?.getError()??null,world04WebGL:Boolean(emberGL),world04GLError:emberGL?.getError()??null,world05WebGL:Boolean(peaceGL),world05GLError:peaceGL?.getError()??null,world06WebGL:Boolean(balanceGL),world06GLError:balanceGL?.getError()??null,world07WebGL:Boolean(canopyGL),world07GLError:canopyGL?.getError()??null,world08WebGL:Boolean(highlandsGL),world08GLError:highlandsGL?.getError()??null,world09WebGL:Boolean(opalGL),world09GLError:opalGL?.getError()??null})});
 }
 init().catch(fallback);

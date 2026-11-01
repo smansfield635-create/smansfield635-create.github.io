@@ -181,3 +181,26 @@ test('Gen3042 triad CLI and PR-open one-shot job are closed to extra source refs
  assert.ok(block.includes('if: always()'));
  assert.equal(block.includes("github.event.action == 'reopened'"),false);
 });
+
+test('Gen3042 preserves resource evidence before fourth independent full-tree checkout',()=>{
+ const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ const block=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
+ const names=['Gen3042 tooling','baseline','Gen3037 groundcover candidate','Gen3030 habitat candidate'];
+ for(const name of names){
+  const anchor='      - name: Checkout exact '+name+'\\n';
+  const a=block.indexOf(anchor);assert.ok(a>=0,'missing checkout '+name);
+  const b=block.indexOf('\\n      - name:',a+anchor.length);
+  const chunk=block.slice(a,b<0?undefined:b);
+  assert.ok(chunk.includes('filter: blob:none'),name+' has no bounded blob filter');
+  assert.ok(!chunk.includes('sparse-checkout:'),name+' must retain complete source tree');
+ }
+ const capture=block.indexOf('      - name: Gen3042 pre-habitat resource evidence');
+ const upload=block.indexOf('      - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout');
+ const habitat=block.indexOf('      - name: Checkout exact Gen3030 habitat candidate');
+ assert.ok(capture>=0&&upload>capture&&habitat>upload,'durable resource evidence must precede habitat checkout');
+ assert.ok(block.includes('df -B1 "$GITHUB_WORKSPACE"'));
+ assert.ok(block.includes('du -sh tooling baseline candidate'));
+ assert.ok(block.includes('if-no-files-found: error'));
+ assert.ok(block.includes("github.event.action == 'opened'"),'one-shot trigger must remain unchanged');
+ assert.ok(!block.includes("github.event.action == 'reopened'"),'no automatic retry');
+});

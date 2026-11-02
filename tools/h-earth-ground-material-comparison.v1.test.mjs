@@ -237,7 +237,7 @@ test('Gen3074 ravine source binding and stage boundary',async()=>{
  const pathname=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
  const original=fs.readFileSync(pathname,'utf8');
  const transformed=overlay.transformRavineHabitatRenderer(original);
- assert.equal(transformed.originalSha256,overlay.PUBLISHED_RENDERER_SHA256);
+ assert.equal(transformed.originalSha256,overlay.RAVINE_HABITAT_SOURCE_SHA256);
  assert.equal(transformed.productDiskMutation,false);
  assert.equal(transformed.modeCount,10);
  assert.ok(transformed.source.includes('uRavineHabitatProbeMode'));

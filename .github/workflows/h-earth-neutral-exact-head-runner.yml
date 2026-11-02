@@ -1808,11 +1808,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C tooling rev-parse HEAD)" = "$TOOLING_HEAD"
-          test "$(git -C product rev-parse HEAD)" = 11afdc5278564728ea9eef6ffb525601ce4362a7
-          test "$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b49b
+          actual_tooling="$(git -C tooling rev-parse HEAD)"
+          actual_product="$(git -C product rev-parse HEAD)"
+          actual_blob="$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
+          echo "GEN3074_PREFLIGHT_TOOLING actual=$actual_tooling expected=$TOOLING_HEAD"
+          echo "GEN3074_PREFLIGHT_PRODUCT actual=$actual_product expected=11afdc5278564728ea9eef6ffb525601ce4362a7"
+          echo "GEN3074_PREFLIGHT_BLOB actual=$actual_blob expected=85ee835060d5106a670077a5f4352b49b"
+          [[ "$actual_tooling" == "$TOOLING_HEAD" ]] || { echo GEN3074_TOOLING_HEAD_DRIFT; exit 51; }
+          [[ "$actual_product" == 11afdc5278564728ea9eef6ffb525601ce4362a7 ]] || { echo GEN3074_PRODUCT_HEAD_DRIFT; exit 52; }
+          [[ "$actual_blob" == 85ee835060d5106a670077a5f4352b49b ]] || { echo GEN3074_PRODUCT_BLOB_DRIFT; exit 53; }
           for dir in tooling product; do
-            test -z "$(git -C "$dir" status --porcelain --untracked-files=no)"
+            tracked="$(git -C "$dir" status --porcelain --untracked-files=no)"
+            printf 'GEN3074_PREFLIGHT_TRACKED_STATUS %s=%s\n' "$dir" "$tracked"
+            if [[ -n "$tracked" ]]; then echo "GEN3074_CHECKOUT_DIRTY:$dir"; exit 54; fi
             bytes="$(du -sb "$dir" | cut -f1)"
             if (( bytes > 2147483648 )); then echo "GEN3074_SPARSE_TREE_OVER_BUDGET:$dir:$bytes"; exit 43; fi
           done

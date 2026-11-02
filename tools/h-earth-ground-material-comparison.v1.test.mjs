@@ -269,3 +269,27 @@ test('Gen3074 emitted-triangle observer is derived, detached and fail-closed',as
  assert.throws(()=>m.deriveRavineEmittedSurfaceObserver(()=>null,{name:'ravine-west',x:-298,z:-546}),/SURFACE_NOT_AVAILABLE/);
  assert.throws(()=>m.deriveRavineEmittedSurfaceObserver((x,z)=>({y:z>-546&&z< -540?30:10,role:'ERODED_TERRAIN'}),{name:'ravine-west',x:-298,z:-546}),/RAY_OCCLUDED/);
 });
+
+test('Gen3074 pixel stage contract keeps roles, IDs and source projection fail-closed',async()=>{
+ const mod=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const overlay=await import('./h-earth-groundcover-factor-overlay.mjs');
+ assert.equal(mod.RAVINE_PIXEL_PROFILE,'RAVINE_VERIFIED_OBSERVER_PIXEL_STAGES_V1');
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const transformed=mod.instrumentRavineHabitatRenderer(source);
+ for(const marker of [
+  'uniform vec3 uRavineExpectedTargetWorld;',
+  'length(vWorldPosition-uRavineExpectedTargetWorld)',
+  'globalThis.__ravineProjectTarget',
+  'globalThis.__ravineReadGeometryPixel',
+  'gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer)',
+  "if(mode>0&&(!target||![target.x,target.y,target.z].every(Number.isFinite)))",
+  'globalThis.__ravinePublishedGeologicalSurfaceAt'
+ ])assert.ok(transformed.includes(marker),marker);
+ assert.equal(overlay.RAVINE_HABITAT_PROBE_MODES.length,10);
+ assert.equal(mod.RAVINE_HABITAT_CAPTURE_CEILING.maximumFrames,20);
+ assert.equal(mod.RAVINE_HABITAT_TARGET.ownerPhotoMatchEstablished,false);
+ const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: RAVINE_VERIFIED_OBSERVER_PIXEL_STAGES_V1'));
+ assert.ok(yaml.includes('assert.equal(p.views.length,20);'));
+ assert.ok(yaml.includes('assert(p.pixelAttribution.firstHit.every(x=>x.firstHitPass===true));'));
+});

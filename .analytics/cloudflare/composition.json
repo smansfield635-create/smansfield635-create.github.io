@@ -1,9 +1,9 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-02T21:25:44Z",
+  "generatedAt": "2026-11-02T22:24:55Z",
   "window": {
-    "start": "2026-10-03T21:25:44Z",
-    "end": "2026-11-02T21:25:44Z"
+    "start": "2026-10-03T22:24:55Z",
+    "end": "2026-11-02T22:24:55Z"
   },
   "dimensions": {
     "requestPath": [
@@ -141,28 +141,23 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1741,
-        "visits": 1741
+        "pageLoads": 1721,
+        "visits": 1721
       },
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 125,
+        "pageLoads": 105,
         "visits": 0
       },
       {
-        "value": "www.google.com",
-        "pageLoads": 24,
-        "visits": 24
-      },
-      {
         "value": "bing.com",
-        "pageLoads": 18,
-        "visits": 18
+        "pageLoads": 38,
+        "visits": 38
       },
       {
-        "value": "l.instagram.com",
-        "pageLoads": 10,
-        "visits": 10
+        "value": "www.google.com",
+        "pageLoads": 14,
+        "visits": 14
       },
       {
         "value": "www.facebook.com",
@@ -178,8 +173,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1767,
-        "visits": 1642
+        "pageLoads": 1807,
+        "visits": 1712
       },
       {
         "value": "CN",
@@ -192,19 +187,9 @@
         "visits": 24
       },
       {
-        "value": "CR",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
-        "value": "CL",
-        "pageLoads": 10,
-        "visits": 10
-      },
-      {
         "value": "BR",
-        "pageLoads": 10,
-        "visits": 0
+        "pageLoads": 20,
+        "visits": 10
       },
       {
         "value": "MX",
@@ -220,17 +205,17 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1561,
-        "visits": 1478
+        "pageLoads": 1541,
+        "visits": 1488
       },
       {
         "value": "mobile",
-        "pageLoads": 300,
-        "visits": 268
+        "pageLoads": 280,
+        "visits": 248
       },
       {
         "value": "tablet",
-        "pageLoads": 70,
+        "pageLoads": 60,
         "visits": 40
       }
     ],

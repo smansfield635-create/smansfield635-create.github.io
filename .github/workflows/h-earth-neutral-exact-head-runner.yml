@@ -1836,10 +1836,10 @@ jobs:
           set -euo pipefail
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Read actual emitted triangles and derive two detached observers
+      - name: Read 20 exact WebGL2 first-hit material stage pixels from verified observers
         working-directory: tooling
         env:
-          H_EARTH_COMPARISON_PROFILE: RAVINE_EMITTED_SURFACE_OBSERVER_PREFLIGHT_V1
+          H_EARTH_COMPARISON_PROFILE: RAVINE_VERIFIED_OBSERVER_PIXEL_STAGES_V1
         shell: bash
         run: |
           set -euo pipefail
@@ -1850,21 +1850,24 @@ jobs:
             import fs from "node:fs";
             import assert from "node:assert/strict";
             const p=JSON.parse(fs.readFileSync(process.argv[1]+"/receipt.json","utf8"));
-            assert.equal(p.result,"TWO_EMITTED_TRIANGLE_OBSERVERS_DERIVED_GPU_FIRST_HIT_UNPROVEN");
-            assert.equal(p.views.length,0);
+            assert(["SUPPORTED_AT_VIEW","NOT_SUPPORTED_AT_VIEW"].includes(p.result));
+            assert.equal(p.views.length,20);
             assert.equal(p.ravineObserverPreflight.candidates.length,2);
             assert(p.ravineObserverPreflight.candidates.every(c=>
               c.sourceDerived===true&&c.diagnosticObserver===true&&
               c.firstHitAttributionAvailable===false&&c.ownerPhotoCorrespondence===false));
             assert.equal(p.productDiskMutation,false);
+            assert.equal(p.pixelAttribution.firstHitPixelReadback,true);
+            assert.equal(p.pixelAttribution.firstHit.length,2);
+            assert(p.pixelAttribution.firstHit.every(x=>x.firstHitPass===true));
             assert.equal(p.releaseAuthorized,false);
-            console.log("GEN3074_EMITTED_SURFACE_OBSERVERS_VERIFIED_FIRST_HIT_STILL_PENDING");
+            console.log("GEN3074_RAVINE_PIXEL_STAGE_FIRST_HIT_VALIDATED:"+p.result);
           ' "${{ runner.temp }}/h-earth-ravine-emitted-triangle-observer"
       - name: Preserve observer receipt including fail-closed errors
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: h-earth-ravine-observer-gen3074-${{ github.run_id }}-${{ github.run_attempt }}
+          name: h-earth-ravine-pixel-attribution-gen3074-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/h-earth-ravine-emitted-triangle-observer/
           if-no-files-found: warn
           retention-days: 30

@@ -6454,6 +6454,50 @@
       "scopeHash": "4648268e99ee7e662f6aab7a5071fd5ab31b2920e9d3fab2f431915aa290f74a",
       "state": "ADMITTED_LOCKED"
     },
+    "4692f767fdabe476f86b3176ff6c49a75bbcc88664c3c69943cae0d71030f2be": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "80b8684dcf49fbb1353593c75242bc582108d0cb",
+          "lockGeneration": 3079,
+          "lockScope": "H_EARTH:DIAGNOSTIC_TOOLING:WEST_FLANK_SAME_SURFACE_MATERIAL:20261102",
+          "operationId": "H_EARTH_OWNER_WEST_FLANK_MATERIAL_PIXEL_ATTRIBUTION_20261102_001",
+          "procedureLocatorDigest": "15690f4df3348593fbc886514f2d075edb98eacaf09629e19c5319828420e7af",
+          "requestDigest": "8806af5944ff1a7ff2f12ae31b05faf82bc0e7375dca5afaa2e7da7dbef89634",
+          "scopeHash": "4692f767fdabe476f86b3176ff6c49a75bbcc88664c3c69943cae0d71030f2be"
+        },
+        "bindingDigest": "114f4956a8bf74a796ef97df3e6a9e44b17535dd5bc2200aa2e00593131e58bf",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0b8097f1d6158e78ffc53f558007a3f48d8737da20e42eb45a549be7d0050384",
+          "commentId": 6591533007,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41548867338,
+          "workflowSha": "80b8684dcf49fbb1353593c75242bc582108d0cb"
+        },
+        "lineageAnchorCommitSha": "2a6220b02ca737f60cae76b0fa4c42dc5e8c9c9f",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "80b8684dcf49fbb1353593c75242bc582108d0cb",
+      "lockGeneration": 3079,
+      "lockScope": "H_EARTH:DIAGNOSTIC_TOOLING:WEST_FLANK_SAME_SURFACE_MATERIAL:20261102",
+      "operationId": "H_EARTH_OWNER_WEST_FLANK_MATERIAL_PIXEL_ATTRIBUTION_20261102_001",
+      "procedureLocatorDigest": "15690f4df3348593fbc886514f2d075edb98eacaf09629e19c5319828420e7af",
+      "released": false,
+      "requestDigest": "8806af5944ff1a7ff2f12ae31b05faf82bc0e7375dca5afaa2e7da7dbef89634",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4692f767fdabe476f86b3176ff6c49a75bbcc88664c3c69943cae0d71030f2be",
+      "state": "ADMITTED_LOCKED"
+    },
     "46d8820d7d8b789c333aa292935c616171ea4fef6507fc3d9984e92b115aaa8c": {
       "governingHead": "4d5ef78ac7fae24da2a0e9d941607af870e1056e",
       "lockGeneration": 1614,
@@ -25723,7 +25767,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3078,
+  "lockGeneration": 3079,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

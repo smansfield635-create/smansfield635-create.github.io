@@ -248,3 +248,24 @@ test('Gen3074 ravine source binding and stage boundary',async()=>{
  assert.match(m.instrumentRavineHabitatRenderer(original),/groundComparisonHideGrass/);
  assert.throws(()=>overlay.transformRavineHabitatRenderer(original+'\n'),/SOURCE_HASH_MISMATCH/);
 });
+
+test('Gen3074 emitted-triangle observer is derived, detached and fail-closed',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const plane=()=>({y:10,role:'ERODED_TERRAIN'});
+ const p=m.deriveRavineEmittedSurfaceObserver(plane,{name:'ravine-west',x:-298,z:-546});
+ assert.deepEqual([p.referenceTarget.x,p.referenceTarget.y,p.referenceTarget.z],[-298,10,-546]);
+ assert.equal(p.pitch,-42);
+ assert.equal(p.ray.raySamples.length,25);
+ assert.equal(p.ray.raySamples.at(-1).clearance,0);
+ assert.equal(p.diagnosticObserver,true);
+ assert.equal(p.sourceDerived,true);
+ assert.equal(p.navigationEligible,false);
+ assert.equal(p.firstHitAttributionAvailable,false);
+ assert.equal(p.requiresGpuFirstHitReadback,true);
+ assert.equal(p.ownerPhotoCorrespondence,false);
+ const q=m.deriveRavineEmittedSurfaceObserver(plane,{name:'outside-habitat-control',x:-304,z:-546});
+ assert.equal(q.referenceTarget.x,-304);
+ assert.throws(()=>m.deriveRavineEmittedSurfaceObserver(plane,{name:'ravine-west',x:-297,z:-546}),/TARGET_NOT_FROZEN/);
+ assert.throws(()=>m.deriveRavineEmittedSurfaceObserver(()=>null,{name:'ravine-west',x:-298,z:-546}),/SURFACE_NOT_AVAILABLE/);
+ assert.throws(()=>m.deriveRavineEmittedSurfaceObserver((x,z)=>({y:z>-546&&z< -540?30:10,role:'ERODED_TERRAIN'}),{name:'ravine-west',x:-298,z:-546}),/RAY_OCCLUDED/);
+});

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import {HEADS,POSES,comparisonState,instrumentRoute,instrumentRenderer,validateFrame,parseArgs,sameHeading,assetReadiness,decodeCanvasCapture} from './h-earth-ground-material-comparison.v1.mjs';
 
 const fixture=()=>({state:{position:{x:18,y:24,z:-226},yawDegrees:-150,pitchDegrees:-14,verticalFovDegrees:56,sequence:10001},lastFrame:{navigationSequence:10001,frameSequence:21,cameraPosition:{x:18,y:24,z:-226}},expectedCameraPosition:{x:18,y:24,z:-226},canvas:{width:529,height:980,cssWidth:540,cssHeight:1000}});
@@ -69,7 +70,12 @@ test('three local patch views are finite ordinary navigation inputs',()=>{assert
 
 const diagnostic=await import('./h-earth-ground-material-comparison.v1.mjs');
 test('Gen2928 bounded provisional high-patch blend is exact source-reversible, monotonic and keeps protections',()=>{
- const shader=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ // Preserve the historical Gen2928 source identity, never test today's unrelated renderer.
+ const historical='39ed43d987d5f62c1368e7c309faa1a1b3d731b6';
+ const historicalPath='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+ const shader=execFileSync('git',['show',historical+':'+historicalPath],{encoding:'utf8'});
+ const blob=execFileSync('git',['hash-object','--stdin'],{input:shader,encoding:'utf8'}).trim();
+ assert.equal(blob,'2ae6c42f6febaada2cb2a240844b9fddc5b9ed8e');
  const digest=diagnostic.verifyExactMaterialCandidate(shader);
  assert.match(digest,/^[0-9a-f]{64}$/);
  assert.equal(shader.split(diagnostic.CANDIDATE_BLEND_EXPRESSION).length,2);
@@ -118,4 +124,105 @@ test('no product change: overlay only allowed with published SHA; all vegetation
  assert.equal(diagnostic.DIAGNOSTIC_MODES.length,9);
  const source='resources.singleOwnerVegetation?.draw(packet);';
  assert.equal(instrumentRenderer(source),'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
+});
+
+/* Gen3042 exact-head comparison: only the historical positive inland band plus
+   two healthy controls; source-matched independent candidates, no stacked shader. */
+test('Gen3042 frozen sources and three prior poses are independently pinned',async()=>{
+ const t=await import('./h-earth-ground-material-comparison.v1.mjs');
+ assert.deepEqual(t.GEN3042_HEADS,{
+  baseline:'28da29ce01f26bf5eb73db2d75b09741b22ab40b',
+  candidate:'724efeb1db3d3e8e5309a9aa779acefb7c53fed9',
+  habitat:'cb15de477f9b8e39b9dc688ecc452ba44e42e6c1'
+ });
+ assert.deepEqual(t.GEN3042_BLOBS,{
+  baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',
+  candidate:'40034a16c36a43cb02682564784328ddb7ac48a7',
+  habitat:'03bc45e034e9894494d9120782c714ae78890ab8'
+ });
+ assert.deepEqual(t.GEN3042_POSES.map(p=>p.name),['inland-seam-near','coast-oblique','foothill-west']);
+ assert.deepEqual(t.GEN3042_MODES,['reference-lit','before-groundcover-unlit','after-groundcover-unlit','groundcover-weight-raw']);
+ assert.equal(t.GEN3042_POSES.length*t.GEN3042_MODES.length*Object.keys(t.GEN3042_HEADS).length,36);
+ assert.equal(t.GEN3042_POSES[0].diagnosticObserver,true);
+});
+test('Gen3042 full 36-frame source/camera/unchanged-stage custody rejects corruption',async()=>{
+ const t=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const ids={'reference-lit':0,'before-groundcover-unlit':2,'after-groundcover-unlit':3,'groundcover-weight-raw':11};
+ const views=t.GEN3042_POSES.flatMap(pose=>t.GEN3042_MODES.flatMap(mode=>
+  Object.keys(t.GEN3042_HEADS).map(label=>({
+   label,pose,mode,modeId:ids[mode],diagnosticApplied:ids[mode],
+   grassHidden:mode!=='reference-lit',imageWidth:529,imageHeight:980,
+   imageSha256:(['before-groundcover-unlit','groundcover-weight-raw'].includes(mode)?'d':label==='baseline'?'a':label==='candidate'?'b':'c').repeat(64),
+   rendererHash:'a'.repeat(64),sourceHead:t.GEN3042_HEADS[label],
+   assetSignature:'same-assets',state:{position:{x:pose.x,y:pose.y??2,z:pose.z}},
+   lastFrame:{cameraPosition:{x:1,y:2,z:3}}
+  }))));
+ assert.equal(t.validateGen3042(views).images,36);
+ assert.throws(()=>t.validateGen3042(views.slice(1)),/FRAME_CENSUS/);
+ const drift=structuredClone(views);drift[4].imageSha256='e'.repeat(64);
+ assert.throws(()=>t.validateGen3042(drift),/UNCHANGED_STAGE_DIFF|STAGE_INVALID/);
+ const moved=structuredClone(views);moved[2].lastFrame.cameraPosition.x=4;
+ assert.throws(()=>t.validateGen3042(moved),/CAMERA_ASSET_MISMATCH/);
+ const missing=structuredClone(views);missing[0].sourceHead='wrong';
+ assert.throws(()=>t.validateGen3042(missing),/SOURCE_STAGE_INVALID/);
+});
+
+test('Gen3059 source-only triad preserves CLI and disables consumed GPU event',async()=>{
+ const {spawnSync}=await import('node:child_process');
+ const code="import {parseArgs,HEADS,GEN3042_PROFILE} from './tools/h-earth-ground-material-comparison.v1.mjs';"+
+ "if(!GEN3042_PROFILE||Object.keys(HEADS).length!==3)process.exit(12);"+
+ "const a=parseArgs(['--baseline-dir','/tmp/base','--candidate-dir','/tmp/green','--habitat-dir','/tmp/hab','--output','/tmp/out']);"+
+ "if(Object.keys(a).length!==4)process.exit(13);";
+ const run=spawnSync(process.execPath,['--input-type=module','-e',code],{
+  cwd:new URL('../',import.meta.url).pathname,encoding:'utf8',
+  env:{...process.env,H_EARTH_COMPARISON_PROFILE:'GEN3042_SOIL_TRIAD_AB_V1'}
+ });
+ assert.equal(run.status,0,run.stderr||run.stdout);
+ const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ const b=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
+ assert.equal(b.split('if: ${{ false }}').length,2);
+ assert.equal(b.includes("github.event.action == 'reopened'"),false);
+});
+
+test('Gen3059 preserves four independent SHA-filtered sparse product trees and receipts',()=>{
+ const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ const b=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
+ const roots=[['Gen3042 tooling','tooling','tools .github/workflows'],['baseline','baseline','showroom/globe/h-earth h-earth-3d'],['Gen3037 groundcover candidate','candidate','showroom/globe/h-earth h-earth-3d'],['Gen3030 habitat candidate','habitat','showroom/globe/h-earth h-earth-3d']];
+ for(const [name,dir,paths] of roots){
+  const i=b.indexOf('      - name: Checkout exact '+name+'\n');assert.ok(i>=0);
+  const n=b.indexOf('\n      - name:',i+8);
+  const step=b.slice(i,n<0?undefined:n);
+  assert.ok(step.includes('git -C '+dir+' sparse-checkout init --cone --sparse-index'));
+  assert.ok(step.includes('git -C '+dir+' sparse-checkout set '+paths));
+  assert.ok(step.includes('git -C '+dir+' -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin'));
+  assert.ok(step.includes('git -C '+dir+' checkout --detach FETCH_HEAD'));
+  assert.ok(step.includes('git -C '+dir+' rev-parse HEAD'));
+  assert.ok(step.includes('status --porcelain --untracked-files=no'));
+  assert.ok(!step.includes('uses: actions/checkout@v4'));
+ }
+ assert.equal((b.match(/sparse-checkout set/g)||[]).length,4);
+ assert.ok(b.includes('INSUFFICIENT_FREE_BYTES_BEFORE_HABITAT'));
+ assert.ok(b.includes('INSUFFICIENT_GPU_HEADROOM_BYTES'));
+ assert.ok(b.includes('SPARSE_WORKTREE_OVER_BUDGET'));
+ const receipt=b.indexOf('      - name: Gen3042 pre-habitat resource evidence');
+ const upload=b.indexOf('      - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout');
+ const fourth=b.indexOf('      - name: Checkout exact Gen3030 habitat candidate');
+ assert.ok(receipt>=0&&upload>receipt&&fourth>upload);
+ assert.ok(b.includes('      - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout\n        if: always()'));
+ assert.ok(b.includes('post-habitat.txt'));
+});
+
+test('Gen3059 retains exact renderer blobs and native Node before Chromium',()=>{
+ const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ const b=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
+ for(const sha of ['28da29ce01f26bf5eb73db2d75b09741b22ab40b','724efeb1db3d3e8e5309a9aa779acefb7c53fed9','cb15de477f9b8e39b9dc688ecc452ba44e42e6c1'])assert.ok(b.includes('FROZEN_SHA: '+sha));
+ for(const sha of ['85ee835060d5106a670077a5f4352b7ad202b49b','40034a16c36a43cb02682564784328ddb7ac48a7','03bc45e034e9894494d9120782c714ae78890ab8'])assert.ok(b.includes(sha));
+ const native=b.indexOf('Node22 exact-head comparator and product-source regression');
+ const chromium=b.indexOf('Install first-party Chromium driver');
+ const gpu=b.indexOf('Capture 36 real stage-aligned WebGL images');
+ assert.ok(native>=0&&chromium>native&&gpu>chromium);
+ assert.ok(b.includes('if: always()'));
+ assert.ok(b.includes('h-earth-gen3042-checkout-evidence/'));
+ assert.ok(b.includes('GEN3042_SOIL_TRIAD_AB_V1'));
+ assert.ok(b.includes('39ed43d987d5f62c1368e7c309faa1a1b3d731b6'));
 });

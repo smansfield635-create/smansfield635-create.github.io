@@ -16,10 +16,28 @@ export const GEN3042_PROFILE=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3042_S
 export const GEN3042_HEADS=Object.freeze({baseline:'28da29ce01f26bf5eb73db2d75b09741b22ab40b',candidate:'724efeb1db3d3e8e5309a9aa779acefb7c53fed9',habitat:'cb15de477f9b8e39b9dc688ecc452ba44e42e6c1'});
 export const GEN3042_BLOBS=Object.freeze({baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',candidate:'40034a16c36a43cb02682564784328ddb7ac48a7',habitat:'03bc45e034e9894494d9120782c714ae78890ab8'});
 export const GEN3042_MODES=Object.freeze(['reference-lit','before-groundcover-unlit','after-groundcover-unlit','groundcover-weight-raw']);
+// Explicit, closed-world G1 diagnostic, independent from the legacy survey.
+export const G1_BASELINE_PROFILE='G1_SOIL_BASELINE_ONLY_V1';
+export const G1_A03_PROFILE='G1_SOIL_A03_CANDIDATE_ONLY_V1';
+export const G1_PROFILE=[G1_BASELINE_PROFILE,G1_A03_PROFILE].includes(process.env.H_EARTH_COMPARISON_PROFILE);
+export const G1_HEADS=Object.freeze({
+ baseline:'7a21f465fc58cc1dbdda02a3807a4bf344440589',
+ candidate:'7d55ca9707bfef75a9ddf9fb078747ba79eef19a'
+});
+export const G1_BLOBS=Object.freeze({
+ baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',
+ candidate:'62dc1e62f417f2b8eb7b4b08240f231d52d0c54e'
+});
+export const G1_POSES=Object.freeze([Object.freeze({
+ name:'G1-straight-mask-source-probe',x:132,y:12.988637259823408,z:-165,
+ yaw:11.309932474020213,pitch:0.9839390159552497,diagnosticObserver:true
+})]);
+export const G1_MODES=GEN3042_MODES;
+export const G1_ACTIVE_LABEL=process.env.H_EARTH_COMPARISON_PROFILE===G1_A03_PROFILE?'candidate':'baseline';
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
-export const HEADS=Object.freeze(GEN3042_PROFILE?GEN3042_HEADS:{baseline:MATERIAL_BASELINE_HEAD,candidate:candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD});
+export const HEADS=Object.freeze(G1_PROFILE?{[G1_ACTIVE_LABEL]:G1_HEADS[G1_ACTIVE_LABEL]}:(GEN3042_PROFILE?GEN3042_HEADS:{baseline:MATERIAL_BASELINE_HEAD,candidate:candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD}));
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
 {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
 {name:'inland-seam-mid',x:-200,z:-704,y:18.272624,yaw:0,pitch:-4,diagnosticObserver:true},
@@ -67,6 +85,19 @@ export function instrumentDiagnosticRenderer(source){
  if(sha(source)!==RENDERER_SHA256)throw Error('DIAGNOSTIC_SOURCE_HASH_MISMATCH');
  return instrumentRenderer(transformPublishedRenderer(source).source);
 }
+export function instrumentG1(source,label,dir){
+ if(!G1_PROFILE||!['baseline','candidate'].includes(label)||
+   label!==G1_ACTIVE_LABEL)throw Error('G1_LABEL_PROFILE_UNBOUND');
+ const actual=execFileSync('git',['-C',dir,'hash-object',RENDERER.slice(1)],{encoding:'utf8'}).trim();
+ if(actual!==G1_BLOBS[label])throw Error('G1_RENDERER_BLOB_MISMATCH:'+label+':'+actual);
+ if(label==='candidate'){
+  if(source.includes('palette=mix(palette,groundcoverTone,groundcoverWeight);'))throw Error('G1_A03_LEGACY_ANCHOR_PRESENT');
+  return instrumentRenderer(transformPublishedRenderer(source,{strictHash:false,variant:'A03_A04'}).source);
+ }
+ if(source.split('palette=mix(palette,groundcoverTone,groundcoverWeight);').length!==2)
+   throw Error('G1_BASELINE_ANCHOR_MISSING');
+ return instrumentRenderer(transformPublishedRenderer(source,{strictHash:false}).source);
+}
 export function instrumentGen3042(source,label,dir){
  if(!GEN3042_BLOBS[label]||source.split('palette=mix(palette,groundcoverTone,groundcoverWeight);').length!==2)throw Error('GEN3042_SOURCE_UNBOUND');
  const actual=execFileSync('git',['-C',dir,'hash-object',RENDERER.slice(1)],{encoding:'utf8'}).trim();
@@ -110,6 +141,32 @@ export function validateGen3042(views){
  }
  return {poses:poses.map(p=>p.name),modes,labels,images:views.length,sourceStagesVerified:true};
 }
+export function validateG1Set(views,labels=Object.keys(HEADS)){
+ if(!G1_PROFILE)throw Error('G1_PROFILE_NOT_SELECTED');
+ if(views.length!==4*labels.length)throw Error('G1_FRAME_CENSUS');
+ for(const label of labels){
+  const group=views.filter(v=>v.label===label);
+  if(group.length!==4)throw Error('G1_LABEL_FRAME_CENSUS:'+label);
+  const ref=group[0];
+  for(const mode of G1_MODES){
+   const items=group.filter(v=>v.mode===mode);
+   if(items.length!==1)throw Error('G1_MODE_CARDINALITY:'+mode);
+   const v=items[0];
+   if(v.sourceHead!==G1_HEADS[label]||v.modeId!==MODE_ID_BY_NAME.get(mode)||
+     v.diagnosticApplied!==v.modeId||v.rendererHash!==ref.rendererHash||
+     v.grassHidden!==(mode!=='reference-lit')||
+     v.imageWidth!==529||v.imageHeight!==980||
+     !/^[a-f0-9]{64}$/.test(v.imageSha256||'')||
+     v.assetSignature!==ref.assetSignature||
+     JSON.stringify(v.state.position)!==JSON.stringify(ref.state.position)||
+     JSON.stringify(v.lastFrame.cameraPosition)!==JSON.stringify(ref.lastFrame.cameraPosition))
+      throw Error('G1_SOURCE_FRAME_STAGE_DRIFT:'+label+':'+mode);
+  }
+ }
+ return {result:'G1_CAPTURE_MECHANICAL_COMPLETE_VISUAL_REVIEW_REQUIRED',
+   images:views.length,labels,ownerImageCorrespondence:false,
+   runtimeDepthOrPrimitiveIdCaptured:false,physicalDevicePerformanceProven:false};
+}
 export function validateDiagnosticSet(views,poses=DIAGNOSTIC_POSES,modes=DIAGNOSTIC_MODES){
  if(views.length!==poses.length*modes.length)throw Error('DIAGNOSTIC_INCOMPLETE');
  for(const pose of poses){
@@ -151,16 +208,17 @@ export function decodeCanvasCapture(capture,expectedFrame){
   return bytes;
 }
 export function assertCheckout(dir,expected){const head=execFileSync('git',['-C',dir,'rev-parse','HEAD'],{encoding:'utf8'}).trim();if(head!==expected)throw Error('CHECKOUT_HEAD_MISMATCH');if(execFileSync('git',['-C',dir,'status','--porcelain','--untracked-files=no'],{encoding:'utf8'}).trim())throw Error('CHECKOUT_TRACKED_BYTES_CHANGED');}
-export function parseArgs(argv){const a={},keys=GEN3042_PROFILE?['--baseline-dir','--candidate-dir','--habitat-dir','--output']:['--baseline-dir','--candidate-dir','--output'];for(let i=0;i<argv.length;i+=2){if(!keys.includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==keys.length||keys.some(k=>!a[k]))throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==keys.length)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
+export function parseArgs(argv){const a={},keys=G1_PROFILE?['--'+G1_ACTIVE_LABEL+'-dir','--output']:(GEN3042_PROFILE?['--baseline-dir','--candidate-dir','--habitat-dir','--output']:['--baseline-dir','--candidate-dir','--output']);for(let i=0;i<argv.length;i+=2){if(!keys.includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==keys.length||keys.some(k=>!a[k]))throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==keys.length)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=GEN3042_PROFILE?GEN3042_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES);
-  const modes=GEN3042_PROFILE?GEN3042_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES);
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=G1_PROFILE?G1_POSES:(GEN3042_PROFILE?GEN3042_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
+  const modes=G1_PROFILE?G1_MODES:(GEN3042_PROFILE?GEN3042_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES));
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:GEN3042_PROFILE?'H_EARTH_GEN3042_SOIL_TRIAD_POSITIVE_BAND_QUALIFICATION_20261101_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:GEN3042_PROFILE?null:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:GEN3042_PROFILE?null:RENDERER_SHA256,sourceRenderers:{},gen3042ClaimCeiling:'HISTORIC_INLAND_BAND_ONLY_OWNER_ANDROID_STRAIGHT_AND_CURVED_NOT_CLOSED',colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
-  const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
+  if(G1_PROFILE){receipt.g1EvidenceClass='SOURCE_DERIVED_G1_OBSERVER_NOT_OWNER_WITNESS';receipt.firstHitDepthReadback=false;receipt.ownerPhotoClassMatchProven=false;receipt.claimCeiling='SOURCE_PINNED_G1_DIAGNOSTIC_ONLY_VISUAL_REVIEW_PENDING';receipt.repairOperationId=null;receipt.diagnosticAdmissionIdentity=null;receipt.baselineProductSha256=null;receipt.sourceProductSha256=null;receipt.gen3042ClaimCeiling=null;receipt.searchProvenance={kind:'G1_SOURCE_DERIVED_ESTATE_PROTECTION_TRANSITION',sourceReceipt:'6561935591',ownerClassCorrespondence:false};}
+   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
   let browser=null,server=null;
   const interrupt=signal=>{receipt.result='INTERRUPTED';receipt.errors.push(signal);persist();server?.kill();process.exit(signal==='SIGTERM'?143:130);};
   const onTerm=()=>interrupt('SIGTERM'),onInt=()=>interrupt('SIGINT');
@@ -169,7 +227,7 @@ export async function run(argv){
     for(const label of Object.keys(HEADS))assertCheckout(a['--'+label+'-dir'],HEADS[label]);
     const {chromium}=await import('playwright');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-    for(const [index,label] of (GEN3042_PROFILE?Object.keys(HEADS):['candidate']).entries()){
+    for(const [index,label] of ((GEN3042_PROFILE||G1_PROFILE)?Object.keys(HEADS):['candidate']).entries()){
       const dir=a['--'+label+'-dir'],port=18767+index,base='http://127.0.0.1:'+port;
       const runRecord={label,head:HEADS[label],errors:[],instrumentation:[],startedAt:new Date().toISOString()};receipt.runs.push(runRecord);persist();
       server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
@@ -178,7 +236,7 @@ export async function run(argv){
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
       await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
-      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,GEN3042_PROFILE?(src=>instrumentGen3042(src,label,dir)):(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer)]]){
+      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,G1_PROFILE?(src=>instrumentG1(src,label,dir)):(GEN3042_PROFILE?(src=>instrumentGen3042(src,label,dir)):(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer))]]){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
         await page.route(url=>url.pathname===pathname,route=>route.fulfill({status:200,contentType:'text/javascript',body:transformed}));
       }
@@ -190,14 +248,14 @@ export async function run(argv){
       await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
       await page.mouse.move(270,350);await page.mouse.down();await page.mouse.move(320,350,{steps:8});await page.mouse.up();
       await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled);await page.click('[data-enter]');
-       if(GEN3042_PROFILE)await page.waitForFunction(()=>{
+       if(GEN3042_PROFILE||G1_PROFILE)await page.waitForFunction(()=>{
          const shell=document.getElementById('h-earth-loading-screen'),root=document.getElementById('h-earth-functional-landscape-route');
          return shell?.hidden===true&&window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'&&root?.dataset.run8eReady==='true'&&root?.dataset.run8eError!=='true';
        },null,{timeout:30000});
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
       let sequence=10000,previousFrame=0;
       for(const pose of poses)for(const mode of modes){
-        const hidden=GEN3042_PROFILE?mode!=='reference-lit':true;await page.evaluate(value=>{globalThis.__groundcoverFactorMode=value;},MODE_ID_BY_NAME.get(mode));
+        const hidden=(GEN3042_PROFILE||G1_PROFILE)?mode!=='reference-lit':true;await page.evaluate(value=>{globalThis.__groundcoverFactorMode=value;},MODE_ID_BY_NAME.get(mode));
         const settleDeadline=Date.now()+180000;let stable=0,signature=null;
         while(stable<2){
           const settled=await page.evaluate(async({pose,hidden,sequence})=>{
@@ -230,7 +288,8 @@ export async function run(argv){
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(GEN3042_PROFILE){receipt.triad=validateGen3042(receipt.views);receipt.result='GEN3042_SOIL_TRIAD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING';}
+    if(G1_PROFILE){receipt.g1=validateG1Set(receipt.views);receipt.result='G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED';}
+     else if(GEN3042_PROFILE){receipt.triad=validateGen3042(receipt.views);receipt.result='GEN3042_SOIL_TRIAD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING';}
     else{validateDiagnosticSet(receipt.views,poses,modes);receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';}
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}
   finally{persist();server?.kill();if(browser)await browser.close();process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInt);}

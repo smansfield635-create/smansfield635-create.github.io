@@ -1,0 +1,130 @@
+/** Diamond Gate Graphics Engine E4-A: world-independent material bindings.
+ * Uses accepted E1 device for GPU ownership and E2's beforeDraw hook; no scene,
+ * frame scheduler, consumer shaders, asset loader or color-management claim.
+ * RGB math is linear numeric; straight alpha; canvas transfer conversion not provided.
+ */
+const KINDS = new Set(['UNLIT','TEXTURED','LIT']);
+const finite = x => typeof x === 'number' && Number.isFinite(x);
+const vec = (a,n,label,lower=-Infinity,upper=Infinity) => {
+  if (!Array.isArray(a) || a.length !== n || !a.every(x=>finite(x) && x>=lower && x<=upper))
+    throw new TypeError(label+'_INVALID');
+  return [...a];
+};
+const matrix = (a,label) => {
+  if ((!Array.isArray(a) && !(a instanceof Float32Array) && !(a instanceof Float64Array)) || a.length!==16 || !Array.from(a).every(finite))
+    throw new TypeError(label+'_INVALID');
+  return new Float32Array(a);
+};
+function normalMatrix(model) {
+  // Column-major inverse transpose of the upper-left 3x3, valid for nonuniform scale.
+  const a=model[0],b=model[4],c=model[8],d=model[1],e=model[5],f=model[9],g=model[2],h=model[6],i=model[10];
+  const A=e*i-f*h,B=f*g-d*i,C=d*h-e*g;
+  const determinant=a*A+b*B+c*C;
+  if (!finite(determinant)||Math.abs(determinant)<1e-12) throw new TypeError('NORMAL_MATRIX_SINGULAR');
+  // adjugate of row-major 3x3 transposed, written as column-major normal matrix
+  const inv=[A,(c*h-b*i),(b*f-c*e),B,(a*i-c*g),(c*d-a*f),C,(b*g-a*h),(a*e-b*d)].map(x=>x/determinant);
+  // inv is row-major inverse, and column-major representation of inverse-transpose
+  return new Float32Array(inv);
+}
+const shader = (kind,backend) => {
+  const two=backend==='WEBGL2';
+  const head=two?'#version 300 es\n':'';
+  const vIn=two?'in':'attribute', vOut=two?'out':'varying', fIn=two?'in':'varying';
+  const fragOut=two?'out vec4 outColor;\n':'', write=two?'outColor':'gl_FragColor';
+  const tex=two?'texture':'texture2D';
+  const vertexSource = head+
+    `${vIn} vec3 aPosition;\nuniform mat4 uMVP;\n`+
+    (kind==='TEXTURED'?`${vIn} vec2 aUV;\n${vOut} vec2 vUV;\n`:'')+
+    (kind==='LIT'?`${vIn} vec3 aNormal;\n${vOut} vec3 vNormal;\nuniform mat3 uNormalMatrix;\n`:'')+
+    `void main(){gl_Position=uMVP*vec4(aPosition,1.0);`+
+    (kind==='TEXTURED'?'vUV=aUV;':'')+
+    (kind==='LIT'?'vNormal=normalize(uNormalMatrix*aNormal);':'')+'}\n';
+  const fragmentSource = head+'precision highp float;\n'+
+    (kind==='TEXTURED'?`${fIn} vec2 vUV;\nuniform sampler2D uTexture;\n`:'')+
+    (kind==='LIT'?`${fIn} vec3 vNormal;\nuniform vec3 uLightDirection;\nuniform vec3 uLightColor;\nuniform float uLightIntensity;\nuniform float uAmbient;\n`:'')+
+    'uniform vec4 uBaseColor;\n'+fragOut+
+    `void main(){vec4 c=uBaseColor;`+
+    (kind==='TEXTURED'?`c*=${tex}(uTexture,vUV);`:'')+
+    (kind==='LIT'?'float lambert=max(dot(normalize(vNormal),uLightDirection),0.0);c.rgb*=clamp(vec3(uAmbient)+uLightColor*(uLightIntensity*lambert),0.0,1.0);':'')+
+    `${write}=clamp(c,0.0,1.0);}\n`;
+  return {vertexSource,fragmentSource};
+};
+export function createNativeMaterialLibrary(device) {
+  if (!device || !['WEBGL1','WEBGL2'].includes(device.backend) || !device.gl ||
+      typeof device.createProgram!=='function' || typeof device.createTexture2D!=='function' ||
+      typeof device.status!=='function') throw new TypeError('E1_DEVICE_REQUIRED');
+  const gl=device.gl, programs=new Map(), materials=new WeakSet(), ownedTextures=new WeakSet();
+  let disposed=false;
+  function ready(){
+    if(disposed)throw new Error('MATERIAL_LIBRARY_DISPOSED');
+    const s=device.status();
+    if(s.disposed)throw new Error('DEVICE_DISPOSED');
+    if(s.lost || s.restorationError || gl.isContextLost?.())throw new Error('GRAPHICS_CONTEXT_NOT_READY');
+  }
+  function createTexture2D(spec){ready();const record=device.createTexture2D(spec);ownedTextures.add(record);return record;}
+  function createMaterial({kind='UNLIT',baseColor=[1,1,1,1],texture=null,textureEncoding='LINEAR_RGBA8',light=null}={}){
+    ready();if(!KINDS.has(kind))throw new TypeError('MATERIAL_KIND_INVALID');
+    const color=vec(baseColor,4,'BASE_COLOR',0,1);
+    if(textureEncoding!=='LINEAR_RGBA8')throw new TypeError('TEXTURE_ENCODING_UNSUPPORTED');
+    if(kind==='TEXTURED'){
+      if(!texture || !ownedTextures.has(texture) || !texture.gpu)throw new TypeError('LIBRARY_OWNED_TEXTURE_REQUIRED');
+    }else if(texture!==null)throw new TypeError('TEXTURE_NOT_ALLOWED');
+    let lighting=null;
+    if(kind==='LIT'){
+      const l=light??{};
+      const direction=vec(l.direction??[0,0,1],3,'LIGHT_DIRECTION');
+      const norm=Math.hypot(...direction);
+      if(norm<1e-12)throw new TypeError('LIGHT_DIRECTION_ZERO');
+      const ambient=l.ambient??0.15,intensity=l.intensity??0.85;
+      if(!finite(ambient)||ambient<0||ambient>1)throw new TypeError('AMBIENT_INVALID');
+      if(!finite(intensity)||intensity<0||intensity>1)throw new TypeError('LIGHT_INTENSITY_INVALID');
+      lighting=Object.freeze({direction:Object.freeze(direction.map(x=>x/norm)),color:Object.freeze(vec(l.color??[1,1,1],3,'LIGHT_COLOR',0,1)),ambient,intensity});
+    }else if(light!==null)throw new TypeError('LIGHT_NOT_ALLOWED');
+    const material=Object.freeze({kind,baseColor:Object.freeze(color),texture,textureEncoding,light:lighting});
+    materials.add(material);return material;
+  }
+  function makeDrawBinding(material,{modelMatrix,modelViewProjection}={}){
+    ready();if(!material || !materials.has(material))throw new TypeError('FOREIGN_MATERIAL');
+    const mvp=matrix(modelViewProjection,'MVP_MATRIX');
+    const normal=material.kind==='LIT'?normalMatrix(matrix(modelMatrix,'MODEL_MATRIX')):null;
+    let program=programs.get(material.kind);
+    if(!program){program=device.createProgram(shader(material.kind,device.backend));programs.set(material.kind,program);}
+    const glTexture=material.texture;
+    return Object.freeze({program,beforeDraw(context,programHandle){
+      ready();if(context!==gl || programHandle!==program.gpu)throw new TypeError('MATERIAL_PROGRAM_CONTEXT_MISMATCH');
+      // Resolve and validate every required uniform BEFORE any GL-state mutation.
+      // A missing later uniform must not leave partially-applied E4 material state.
+      if(material.kind==='TEXTURED' && !glTexture.gpu)throw new Error('MATERIAL_TEXTURE_UNAVAILABLE');
+      const uniformNames=['uMVP','uBaseColor',
+        ...(material.kind==='TEXTURED'?['uTexture']:[]),
+        ...(material.kind==='LIT'?['uNormalMatrix','uLightDirection','uLightColor','uLightIntensity','uAmbient']:[])];
+      const uniformLocations=new Map();
+      for(const name of uniformNames){
+        const location=context.getUniformLocation(programHandle,name);
+        if(location===null)throw new Error('MATERIAL_UNIFORM_MISSING:'+name);
+        uniformLocations.set(name,location);
+      }
+      context.uniformMatrix4fv(uniformLocations.get('uMVP'),false,mvp);
+      context.uniform4fv(uniformLocations.get('uBaseColor'),material.baseColor);
+      if(material.kind==='TEXTURED'){
+        context.activeTexture(context.TEXTURE0);
+        context.bindTexture(context.TEXTURE_2D,glTexture.gpu);
+        context.uniform1i(uniformLocations.get('uTexture'),0);
+        // E2/E1 do not expose afterDraw. Texture unit 0 binding survives until next draw/frame.
+      }
+      if(material.kind==='LIT'){
+        const values=[['uNormalMatrix',normal,'uniformMatrix3fv'],['uLightDirection',material.light.direction,'uniform3fv'],
+          ['uLightColor',material.light.color,'uniform3fv'],['uLightIntensity',material.light.intensity,'uniform1f'],
+          ['uAmbient',material.light.ambient,'uniform1f']];
+        for(const [name,value,method] of values){
+          if(method==='uniformMatrix3fv')context[method](uniformLocations.get(name),false,value);
+          else context[method](uniformLocations.get(name),value);
+        }
+      }
+    }});
+  }
+  return Object.freeze({createTexture2D,createMaterial,makeDrawBinding,
+    status(){return Object.freeze({backend:device.backend,materialKinds:[...KINDS],compiledPrograms:programs.size,disposed,deviceLost:Boolean(device.status().lost)});},
+    dispose(){disposed=true;programs.clear();} // E1 owns underlying GPU objects.
+  });
+}

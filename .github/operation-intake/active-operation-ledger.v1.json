@@ -886,50 +886,6 @@
       "scopeHash": "07e9979bbbaaef838730736b040ed4f669d287051dcf77446ced8bb5f69be39a",
       "state": "ADMITTED_LOCKED"
     },
-    "083d728411d9a719f794ea784e0c5bb31dcb5065ad70076d05108f7886516bb6": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "0f4b0c38559c72ef1a9205a30d849c592d50d83b",
-          "lockGeneration": 3054,
-          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_GRAPHICS_NATIVE_GPU_EXACT_PATH_REGISTRATION",
-          "operationId": "DGB_GRAPHICS_NATIVE_GPU_EXACT_PATH_REGISTRATION_20261101_001",
-          "procedureLocatorDigest": "f688f7c8878539e414884bce5f032fb9bbbb26e4762ea0dc647d4d4042d7d576",
-          "requestDigest": "2f9c33e0fc482732c80a708bd2781b916533d5a931de14397c926b167e44ec38",
-          "scopeHash": "083d728411d9a719f794ea784e0c5bb31dcb5065ad70076d05108f7886516bb6"
-        },
-        "bindingDigest": "a1da9437f4d50e452e3c4dc0ba6be0b78af3c350ee4d7d7322ef4eb440a7c379",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "c1e224fed45f3b75eceb4dc168234b9b619a286c2fd3a5f095091ef54f2cb99e",
-          "commentId": 6566101853,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 7108,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41366756666,
-          "workflowSha": "0f4b0c38559c72ef1a9205a30d849c592d50d83b"
-        },
-        "lineageAnchorCommitSha": "1604d7225b26b863464ceb1a694a2e365f0b26ee",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "0f4b0c38559c72ef1a9205a30d849c592d50d83b",
-      "lockGeneration": 3054,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_GRAPHICS_NATIVE_GPU_EXACT_PATH_REGISTRATION",
-      "operationId": "DGB_GRAPHICS_NATIVE_GPU_EXACT_PATH_REGISTRATION_20261101_001",
-      "procedureLocatorDigest": "f688f7c8878539e414884bce5f032fb9bbbb26e4762ea0dc647d4d4042d7d576",
-      "released": false,
-      "requestDigest": "2f9c33e0fc482732c80a708bd2781b916533d5a931de14397c926b167e44ec38",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "083d728411d9a719f794ea784e0c5bb31dcb5065ad70076d05108f7886516bb6",
-      "state": "ADMITTED_LOCKED"
-    },
     "086025523ab871abffe9d0575040892e606ae65e5191ee527c70fd54e762f41f": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -95402,6 +95358,51 @@
       "scopeHash": "6ff1cd67af8efdf242a83dab4203a591e7f3c818bbfb9881d169acbd636c4e7e",
       "state": "TERMINAL",
       "terminalDisposition": "REJECTED_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0f4b0c38559c72ef1a9205a30d849c592d50d83b",
+          "lockGeneration": 3054,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_GRAPHICS_NATIVE_GPU_EXACT_PATH_REGISTRATION",
+          "operationId": "DGB_GRAPHICS_NATIVE_GPU_EXACT_PATH_REGISTRATION_20261101_001",
+          "procedureLocatorDigest": "f688f7c8878539e414884bce5f032fb9bbbb26e4762ea0dc647d4d4042d7d576",
+          "requestDigest": "2f9c33e0fc482732c80a708bd2781b916533d5a931de14397c926b167e44ec38",
+          "scopeHash": "083d728411d9a719f794ea784e0c5bb31dcb5065ad70076d05108f7886516bb6"
+        },
+        "bindingDigest": "a1da9437f4d50e452e3c4dc0ba6be0b78af3c350ee4d7d7322ef4eb440a7c379",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c1e224fed45f3b75eceb4dc168234b9b619a286c2fd3a5f095091ef54f2cb99e",
+          "commentId": 6566101853,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41366756666,
+          "workflowSha": "0f4b0c38559c72ef1a9205a30d849c592d50d83b"
+        },
+        "lineageAnchorCommitSha": "1604d7225b26b863464ceb1a694a2e365f0b26ee",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0f4b0c38559c72ef1a9205a30d849c592d50d83b",
+      "lockGeneration": 3054,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_GRAPHICS_NATIVE_GPU_EXACT_PATH_REGISTRATION",
+      "operationId": "DGB_GRAPHICS_NATIVE_GPU_EXACT_PATH_REGISTRATION_20261101_001",
+      "procedureLocatorDigest": "f688f7c8878539e414884bce5f032fb9bbbb26e4762ea0dc647d4d4042d7d576",
+      "released": true,
+      "requestDigest": "2f9c33e0fc482732c80a708bd2781b916533d5a931de14397c926b167e44ec38",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "083d728411d9a719f794ea784e0c5bb31dcb5065ad70076d05108f7886516bb6",
+      "state": "TERMINAL",
+      "terminalDisposition": "WITHDRAWN"
     }
   ]
 }

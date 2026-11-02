@@ -104,3 +104,95 @@ export function verifyFramePairs(views,poseNames,selectedModes=MODES_MINIMUM){
  }
  return true;
 }
+
+// Gen3074: read-only ravine habitat stage interception. Existing factor and G1
+// modes above are unchanged. Never install this transform in production.
+export const RAVINE_HABITAT_PROBE_MODES=Object.freeze([
+  'reference-lit',
+  'native-habitat-occupancy',
+  'filtered-material-habitat-occupancy',
+  'effective-habitat-color-weight',
+  'before-habitat-unlit',
+  'after-habitat-unlit',
+  'first-hit-role-byte',
+  'first-hit-primitive-24bit',
+  'material-minus-native-signed-occupancy',
+  'final-lit-without-habitat-color'
+]);
+export const RAVINE_HABITAT_SOURCE_SHA256='2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d';
+export function transformRavineHabitatRenderer(original){
+  const sourceHash=hash(original);
+  if(sourceHash!==RAVINE_HABITAT_SOURCE_SHA256)throw Error('RAVINE_RENDERER_SOURCE_HASH_MISMATCH:'+sourceHash);
+  const begin=original.indexOf('const FS = \`#version 300 es');
+  const end=original.indexOf('// Ordered screen-door coverage',begin);
+  if(begin<0||end<=begin)throw Error('RAVINE_FRAGMENT_SCOPE_NOT_IDENTIFIED');
+  let fs=original.slice(begin,end);
+  fs=once(fs,'out vec4 outColor;',[
+    'uniform int uRavineHabitatProbeMode;',
+    'uniform vec3 uRavineExpectedTargetWorld;',
+    'out vec4 outColor;'
+  ].join('\n'));
+  fs=once(fs,'  vec3 base=max(vBaseColor.rgb,vec3(0.004));',[
+    '  vec3 base=max(vBaseColor.rgb,vec3(0.004));',
+    '  float ravineNativeHabitat=0.0,ravineFilteredMaterial=0.0,ravineEffectiveColorWeight=0.0;',
+    '  vec3 ravineBeforeHabitat=base,ravineAfterHabitat=base;'
+  ].join('\n'));
+  fs=once(fs,'    base=mix(base,habitatSoil,habitatColorCoverage*.68);',[
+    '    ravineNativeHabitat=habitatCoverage;',
+    '    ravineFilteredMaterial=habitatMaterialCoverage;',
+    '    ravineEffectiveColorWeight=habitatColorCoverage*.68;',
+    '    ravineBeforeHabitat=base;',
+    '    ravineAfterHabitat=mix(base,habitatSoil,habitatColorCoverage*.68);',
+    '    if(uRavineHabitatProbeMode!=9)base=ravineAfterHabitat;'
+  ].join('\n'));
+  fs=once(fs,'  outColor=vec4(lit,outputAlpha);',[
+    '  if(uRavineHabitatProbeMode>0){',
+    '    int m=uRavineHabitatProbeMode;',
+    '    if(m==1)lit=vec3(clamp(ravineNativeHabitat,0.0,1.0));',
+    '    else if(m==2)lit=vec3(clamp(ravineFilteredMaterial,0.0,1.0));',
+    '    else if(m==3)lit=vec3(clamp(ravineEffectiveColorWeight,0.0,1.0));',
+    '    else if(m==4||m==5){',
+    '      vec3 albedo=(m==4)?ravineBeforeHabitat:ravineAfterHabitat;',
+    '      lit=pow(clamp(albedo*1.12,0.0,1.0),vec3(1.0/2.2));',
+    '    }else if(m==6)lit=vec3(float(vRoleCode&255u)/255.0,clamp(length(vWorldPosition-uRavineExpectedTargetWorld)/2.0,0.0,1.0),0.0);',
+    '    else if(m==7)lit=vec3(float((vPrimitiveIndex>>16u)&255u),float((vPrimitiveIndex>>8u)&255u),float(vPrimitiveIndex&255u))/255.0;',
+    '    else if(m==8){',
+    '      float difference=ravineFilteredMaterial-ravineNativeHabitat;',
+    '      lit=vec3(max(difference,0.0),max(-difference,0.0),0.0);',
+    '    }',
+    '  }',
+    '  outColor=vec4(lit,uRavineHabitatProbeMode>0?1.0:outputAlpha);'
+  ].join('\n'));
+  let source=original.slice(0,begin)+fs+original.slice(end);
+  const draw='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
+  source=once(source,draw,[draw,
+    "    {const mode=globalThis.__ravineHabitatProbeMode??0;",
+    "      if(!Number.isInteger(mode)||mode<0||mode>=10)throw Error('RAVINE_HABITAT_PROBE_MODE_INVALID');",
+    "      const location=gl.getUniformLocation(resources.geometryProgram,'uRavineHabitatProbeMode');",
+    "      if(location===null)throw Error('RAVINE_HABITAT_PROBE_UNIFORM_MISSING');",
+    "      gl.uniform1i(location,mode);globalThis.__ravineHabitatProbeModeApplied=mode;",
+    "      const target=globalThis.__ravineExpectedLocalTarget;",
+    "      if(mode>0&&(!target||![target.x,target.y,target.z].every(Number.isFinite)))throw Error('RAVINE_TARGET_WORLD_UNBOUND');",
+    "      if(target){const projected=regionToHEarthPlanetPoint(target);const t=gl.getUniformLocation(resources.geometryProgram,'uRavineExpectedTargetWorld');if(t===null)throw Error('RAVINE_TARGET_UNIFORM_MISSING');gl.uniform3f(t,projected.x,projected.y,projected.z);}",
+    "      globalThis.__ravineProjectTarget=(targetPoint,packet)=>{",
+    "        const projected=regionToHEarthPlanetPoint(targetPoint),m=packet.camera.viewProjectionMatrix,p=[projected.x,projected.y,projected.z,1];",
+    "        const clip=[0,1,2,3].map(i=>m[i]*p[0]+m[4+i]*p[1]+m[8+i]*p[2]+m[12+i]);",
+    "        if(!(clip[3]>0)||clip.some(v=>!Number.isFinite(v)))throw Error('RAVINE_PROJECTED_TARGET_NOT_VISIBLE');",
+    "        const ndc=[clip[0]/clip[3],clip[1]/clip[3],clip[2]/clip[3]];",
+    "        if(Math.abs(ndc[0])>0.99||Math.abs(ndc[1])>0.99||Math.abs(ndc[2])>1)throw Error('RAVINE_PROJECTED_TARGET_OUTSIDE_VIEW');",
+    "        return {x:Math.floor((ndc[0]*.5+.5)*width),y:Math.floor((ndc[1]*.5+.5)*height),ndc,clipW:clip[3],projected};};",
+    "      globalThis.__ravineReadGeometryPixel=(x,y)=>{",
+    "        if(!Number.isInteger(x)||!Number.isInteger(y)||x<0||y<0||x>=width||y>=height)throw Error('RAVINE_PIXEL_OUT_OF_BOUNDS');",
+    "        const rgba=new Uint8Array(4);gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);gl.readPixels(x,y,1,1,gl.RGBA,gl.UNSIGNED_BYTE,rgba);",
+    "        const err=gl.getError();gl.bindFramebuffer(gl.FRAMEBUFFER,null);if(err!==gl.NO_ERROR)throw Error('RAVINE_GPU_READPIXELS_ERROR:'+err);return [...rgba];};",
+    "      }"
+  ].join('\n'));
+  return Object.freeze({
+    originalSha256:sourceHash,instrumentedSha256:hash(source),source,
+    modeCount:RAVINE_HABITAT_PROBE_MODES.length,productDiskMutation:false,
+    ownerPhotoCorrespondence:false,firstHitClassificationRequiresRenderedPixel:true,
+    rawSourceFieldDefinition:'UPLOADED_NATIVE_R8_HABITAT_ATLAS',
+    filteredSourceFieldDefinition:'UPLOADED_GAUSSIAN_MATERIAL_R8_ATLAS',
+    gpuTextureSampling:'GL_LINEAR_FOR_BOTH'
+  });
+}

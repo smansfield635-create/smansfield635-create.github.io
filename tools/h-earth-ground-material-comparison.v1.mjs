@@ -3,7 +3,102 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {transformPublishedRenderer,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
+import {transformPublishedRenderer,transformRavineHabitatRenderer,RAVINE_HABITAT_PROBE_MODES,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
+
+// Gen3074 is a distinct source-only extension. It does not select any
+// historical comparison/G1 profile, nor authorize a fabricated camera pose.
+export const RAVINE_HABITAT_TARGET=Object.freeze({
+  schema:'H_EARTH_RAVINE_SOURCE_TARGET_v1',
+  exactRendererBlob:'85ee835060d5106a670077a5f4352b49b',
+  publishedSourceHead:'11afdc5278564728ea9eef6ffb525601ce4362a7',
+  z:-546,xStart:-304,xEnd:-292,ravineWestEdge:-298,
+  withinNavigableDomain:false,
+  ownerPhotoMatchEstablished:false,
+  cameraPoseQualified:false
+});
+export const RAVINE_HABITAT_MODES=RAVINE_HABITAT_PROBE_MODES;
+export const RAVINE_HABITAT_CAPTURE_CEILING=Object.freeze({
+  maximumPoses:2,maximumModesPerPose:10,maximumFrames:20,
+  cameraRequirement:'EXACT_SOURCE_DERIVED_OBSERVER_WITH_FIRST_HIT_AND_WORLD_COORDINATES',
+  status:'REQUIRES_CAMERA_AND_PIXEL_READBACK_QUALIFICATION'
+});
+// Observer provenance comes from the actual emitted ERODED_TERRAIN and
+// MOUNTAIN_OVERBURDEN triangles, never from the walkable-domain resolver.
+// A source-derived proposal is not a pixel first-hit certificate.
+export function deriveRavineEmittedSurfaceObserver(sampleSurfaceAt,{name,x,z}){
+  if(typeof sampleSurfaceAt!=='function'||!Number.isFinite(x)||!Number.isFinite(z)||
+     !['ravine-west','outside-habitat-control'].includes(name)||
+     z!==RAVINE_HABITAT_TARGET.z||
+     (name==='ravine-west'&&x!==RAVINE_HABITAT_TARGET.ravineWestEdge)||
+     (name==='outside-habitat-control'&&x!==RAVINE_HABITAT_TARGET.xStart+2))
+    throw Error('RAVINE_OBSERVER_TARGET_NOT_FROZEN');
+  const sample=(sx,sz)=>{
+    const result=sampleSurfaceAt(sx,sz);
+    if(!result||!Number.isFinite(result.y)||
+       !['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN'].includes(result.role))
+      throw Error('RAVINE_EMITTED_TRIANGLE_SURFACE_NOT_AVAILABLE');
+    return result;
+  };
+  const hit=sample(x,z);
+  // Six metres is the frozen source material-filter support, and -42 degrees
+  // is the published navigation camera's lower pitch bound. This is a detached
+  // observer, not a traversable camera or a claim that the photograph matches.
+  const horizontalDistance=6,pitch=-42,yaw=0;
+  const rise=horizontalDistance*Math.tan(-pitch*Math.PI/180);
+  const camera={x,y:hit.y+rise,z:z+horizontalDistance};
+  const raySamples=[];
+  for(let i=0;i<=24;i++){
+    const t=i/24,point={x,y:camera.y-rise*t,z:camera.z-horizontalDistance*t};
+    const terrain=sample(point.x,point.z),clearance=point.y-terrain.y;
+    if(i===0&&clearance<1.6||i>0&&i<24&&clearance<0.06)
+      throw Error('RAVINE_OBSERVER_RAY_OCCLUDED');
+    if(i===24&&Math.abs(clearance)>1e-6)
+      throw Error('RAVINE_OBSERVER_FINAL_HIT_MISMATCH');
+    raySamples.push({t,clearance,role:terrain.role});
+  }
+  return Object.freeze({name,x:camera.x,y:camera.y,z:camera.z,yaw,pitch,
+    diagnosticObserver:true,sourceDerived:true,sourceEvidenceId:'ACTUAL_EMITTED_GEOLOGICAL_TRIANGLES',
+    referenceTarget:{x,y:hit.y,z,role:hit.role},
+    ray:{horizontalDistance,rise,raySamples},
+    firstHitAttributionAvailable:false,
+    navigationEligible:false,canonicalCameraStateAuthority:false,
+    ownerPhotoCorrespondence:false,requiresGpuFirstHitReadback:true});
+}
+export function instrumentRavineHabitatRenderer(original){
+  const injected=instrumentRenderer(transformRavineHabitatRenderer(original).source);
+  return replaceExactlyOnce(injected,
+    'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);',
+    'globalThis.__ravinePublishedGeologicalSurfaceAt=(x,z)=>resources.geologicalRuntime?.sampleSurfaceAt(x,z)??null;'+
+    'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
+}
+export function validateRavineHabitatCapture(views,poses){
+  if(!Array.isArray(poses)||poses.length!==2||
+     !Array.isArray(views)||views.length!==poses.length*RAVINE_HABITAT_MODES.length)
+    throw Error('RAVINE_CAPTURE_CENSUS_INCOMPLETE');
+  for(const pose of poses){
+    if(!pose||pose.sourceDerived!==true||!pose.firstHitAttributionAvailable||
+       !pose.sourceEvidenceId||!['x','y','z','yaw','pitch'].every(k=>Number.isFinite(pose[k])))
+      throw Error('RAVINE_CAMERA_NOT_SOURCE_DERIVED');
+    const group=views.filter(v=>v.pose?.name===pose.name);
+    if(group.length!==RAVINE_HABITAT_MODES.length||
+       new Set(group.map(v=>v.mode)).size!==RAVINE_HABITAT_MODES.length)
+      throw Error('RAVINE_MODES_INCOMPLETE');
+    const reference=group[0];
+    for(const mode of RAVINE_HABITAT_MODES){
+      const v=group.find(x=>x.mode===mode);
+      if(!v||v.sourceHead!==RAVINE_HABITAT_TARGET.publishedSourceHead||
+         v.sourceRendererBlob!==RAVINE_HABITAT_TARGET.exactRendererBlob||
+         v.rendererHash!==reference.rendererHash||v.assetSignature!==reference.assetSignature||
+         JSON.stringify(v.lastFrame?.cameraPosition)!==JSON.stringify(reference.lastFrame?.cameraPosition)||
+         v.diagnosticApplied!==RAVINE_HABITAT_MODES.indexOf(mode)||
+         !/^[a-f0-9]{64}$/.test(v.imageSha256||''))
+        throw Error('RAVINE_STAGE_SOURCE_CAMERA_IDENTITY_MISMATCH');
+    }
+  }
+  return Object.freeze({result:'STAGE_MECHANICAL_ONLY_VISUAL_ATTRIBUTION_UNPROVEN',
+    modes:RAVINE_HABITAT_MODES.length,views:views.length,ownerPhotoMatch:false,
+    productionMutation:false,releaseAuthorized:false});
+}
 
 export const DIAGNOSTIC_MODES=Object.freeze(MODES_MINIMUM.map(i=>MODES[i]));
 const MODE_ID_BY_NAME=new Map(MODES.map((name,index)=>[name,index]));
@@ -17,6 +112,11 @@ export const GEN3042_HEADS=Object.freeze({baseline:'28da29ce01f26bf5eb73db2d75b0
 export const GEN3042_BLOBS=Object.freeze({baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',candidate:'40034a16c36a43cb02682564784328ddb7ac48a7',habitat:'03bc45e034e9894494d9120782c714ae78890ab8'});
 export const GEN3042_MODES=Object.freeze(['reference-lit','before-groundcover-unlit','after-groundcover-unlit','groundcover-weight-raw']);
 // Explicit, closed-world G1 diagnostic, independent from the legacy survey.
+export const RAVINE_OBSERVER_PROFILE='RAVINE_EMITTED_SURFACE_OBSERVER_PREFLIGHT_V1';
+export const RAVINE_PIXEL_PROFILE='RAVINE_VERIFIED_OBSERVER_PIXEL_STAGES_V1';
+export const RAVINE_PIXEL_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===RAVINE_PIXEL_PROFILE;
+export const RAVINE_OBSERVER_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===RAVINE_OBSERVER_PROFILE;
+export const RAVINE_ANY_ACTIVE=RAVINE_PIXEL_ACTIVE||RAVINE_OBSERVER_ACTIVE;
 export const G1_BASELINE_PROFILE='G1_SOIL_BASELINE_ONLY_V1';
 export const G1_A03_PROFILE='G1_SOIL_A03_CANDIDATE_ONLY_V1';
 // Additive use of the existing comparator at the prior GPU-positive inland FAR band.
@@ -45,7 +145,7 @@ export const G1_ACTIVE_LABEL=[G1_A03_PROFILE,INLAND_BAND_A03_PROFILE].includes(p
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
-export const HEADS=Object.freeze(G1_PROFILE?{[G1_ACTIVE_LABEL]:G1_HEADS[G1_ACTIVE_LABEL]}:(GEN3042_PROFILE?GEN3042_HEADS:{baseline:MATERIAL_BASELINE_HEAD,candidate:candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD}));
+export const HEADS=Object.freeze(RAVINE_ANY_ACTIVE?{baseline:RAVINE_HABITAT_TARGET.publishedSourceHead}:(G1_PROFILE?{[G1_ACTIVE_LABEL]:G1_HEADS[G1_ACTIVE_LABEL]}:(GEN3042_PROFILE?GEN3042_HEADS:{baseline:MATERIAL_BASELINE_HEAD,candidate:candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD})));
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
 {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
 {name:'inland-seam-mid',x:-200,z:-704,y:18.272624,yaw:0,pitch:-4,diagnosticObserver:true},
@@ -216,13 +316,13 @@ export function decodeCanvasCapture(capture,expectedFrame){
   return bytes;
 }
 export function assertCheckout(dir,expected){const head=execFileSync('git',['-C',dir,'rev-parse','HEAD'],{encoding:'utf8'}).trim();if(head!==expected)throw Error('CHECKOUT_HEAD_MISMATCH');if(execFileSync('git',['-C',dir,'status','--porcelain','--untracked-files=no'],{encoding:'utf8'}).trim())throw Error('CHECKOUT_TRACKED_BYTES_CHANGED');}
-export function parseArgs(argv){const a={},keys=G1_PROFILE?['--'+G1_ACTIVE_LABEL+'-dir','--output']:(GEN3042_PROFILE?['--baseline-dir','--candidate-dir','--habitat-dir','--output']:['--baseline-dir','--candidate-dir','--output']);for(let i=0;i<argv.length;i+=2){if(!keys.includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==keys.length||keys.some(k=>!a[k]))throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==keys.length)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
+export function parseArgs(argv){const a={},keys=RAVINE_ANY_ACTIVE?['--baseline-dir','--output']:(G1_PROFILE?['--'+G1_ACTIVE_LABEL+'-dir','--output']:(GEN3042_PROFILE?['--baseline-dir','--candidate-dir','--habitat-dir','--output']:['--baseline-dir','--candidate-dir','--output']));for(let i=0;i<argv.length;i+=2){if(!keys.includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==keys.length||keys.some(k=>!a[k]))throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==keys.length)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=G1_PROFILE?G1_POSES:(GEN3042_PROFILE?GEN3042_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
-  const modes=G1_PROFILE?G1_MODES:(GEN3042_PROFILE?GEN3042_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES));
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE,RAVINE_OBSERVER_PROFILE,RAVINE_PIXEL_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=RAVINE_ANY_ACTIVE?[]:(G1_PROFILE?G1_POSES:(GEN3042_PROFILE?GEN3042_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES)));
+  const modes=RAVINE_ANY_ACTIVE?[]:(G1_PROFILE?G1_MODES:(GEN3042_PROFILE?GEN3042_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES)));
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:GEN3042_PROFILE?'H_EARTH_GEN3042_SOIL_TRIAD_POSITIVE_BAND_QUALIFICATION_20261101_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:GEN3042_PROFILE?null:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:GEN3042_PROFILE?null:RENDERER_SHA256,sourceRenderers:{},gen3042ClaimCeiling:'HISTORIC_INLAND_BAND_ONLY_OWNER_ANDROID_STRAIGHT_AND_CURVED_NOT_CLOSED',colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   if(G1_PROFILE){receipt.g1EvidenceClass=INLAND_BAND_PROFILE?'GPU_POSITIVE_INLAND_FAR_BAND_NOT_OWNER_PHOTO':'SOURCE_DERIVED_G1_OBSERVER_NOT_OWNER_WITNESS';receipt.firstHitDepthReadback=false;receipt.ownerPhotoClassMatchProven=false;receipt.claimCeiling=INLAND_BAND_PROFILE?'PROVEN_INLAND_BAND_MATERIAL_RESPONSE_ONLY_OWNER_STRAIGHT_AND_CURVED_NOT_PROVEN':'SOURCE_PINNED_G1_DIAGNOSTIC_ONLY_VISUAL_REVIEW_PENDING';receipt.repairOperationId=null;receipt.diagnosticAdmissionIdentity=null;receipt.baselineProductSha256=null;receipt.sourceProductSha256=null;receipt.gen3042ClaimCeiling=null;receipt.searchProvenance=INLAND_BAND_PROFILE?{kind:'GEN2917_GEN2925_GPU_POSITIVE_INLAND_BAND',sourceRun:40411050366,sourceReceipt:'6428986452',ownerClassCorrespondence:false}:{kind:'G1_SOURCE_DERIVED_ESTATE_PROTECTION_TRANSITION',sourceReceipt:'6561935591',ownerClassCorrespondence:false};}
@@ -235,16 +335,16 @@ export async function run(argv){
     for(const label of Object.keys(HEADS))assertCheckout(a['--'+label+'-dir'],HEADS[label]);
     const {chromium}=await import('playwright');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-    for(const [index,label] of ((GEN3042_PROFILE||G1_PROFILE)?Object.keys(HEADS):['candidate']).entries()){
+    for(const [index,label] of ((RAVINE_ANY_ACTIVE||GEN3042_PROFILE||G1_PROFILE)?Object.keys(HEADS):['candidate']).entries()){
       const dir=a['--'+label+'-dir'],port=18767+index,base='http://127.0.0.1:'+port;
       const runRecord={label,head:HEADS[label],errors:[],instrumentation:[],startedAt:new Date().toISOString()};receipt.runs.push(runRecord);persist();
       server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
       const serverError=[];server.on('error',e=>serverError.push(e.message));
       let listening=false;for(let n=0;n<50;n++){try{const r=await fetch(base+ROOT);if(r.ok){listening=true;break;}}catch{}await new Promise(r=>setTimeout(r,100));}if(!listening)throw Error('SERVER_UNAVAILABLE:'+serverError.join(';'));
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
-      await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
+      await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'+(RAVINE_ANY_ACTIVE?'const RAVINE_HABITAT_TARGET='+JSON.stringify(RAVINE_HABITAT_TARGET)+';globalThis.__deriveRavineEmittedSurfaceObserver='+deriveRavineEmittedSurfaceObserver.toString()+';globalThis.__ravineHabitatProbeMode=0;':'')});
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
-      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,G1_PROFILE?(src=>instrumentG1(src,label,dir)):(GEN3042_PROFILE?(src=>instrumentGen3042(src,label,dir)):(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer))]]){
+      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,RAVINE_ANY_ACTIVE?instrumentRavineHabitatRenderer:(G1_PROFILE?(src=>instrumentG1(src,label,dir)):(GEN3042_PROFILE?(src=>instrumentGen3042(src,label,dir)):(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer)))]]){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
         await page.route(url=>url.pathname===pathname,route=>route.fulfill({status:200,contentType:'text/javascript',body:transformed}));
       }
@@ -260,6 +360,108 @@ export async function run(argv){
          const shell=document.getElementById('h-earth-loading-screen'),root=document.getElementById('h-earth-functional-landscape-route');
          return shell?.hidden===true&&window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'&&root?.dataset.run8eReady==='true'&&root?.dataset.run8eError!=='true';
        },null,{timeout:30000});
+      if(RAVINE_ANY_ACTIVE){
+        await page.waitForFunction(()=>typeof globalThis.__ravinePublishedGeologicalSurfaceAt==='function',null,{timeout:30000});
+        const probe=await page.evaluate(()=>{
+          const at=globalThis.__ravinePublishedGeologicalSurfaceAt;
+          const derive=globalThis.__deriveRavineEmittedSurfaceObserver;
+          if(typeof at!=='function'||typeof derive!=='function')
+            throw Error('RAVINE_SAMPLER_OR_DERIVATION_MISSING');
+          const candidates=[
+            {name:'ravine-west',x:-298,z:-546},
+            {name:'outside-habitat-control',x:-302,z:-546}
+          ].map(q=>derive(at,q));
+          const live=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt();
+          if(!live?.resources?.geologicalFormation?.physicalNavigationInstalled)
+            throw Error('RAVINE_LIVE_EMITTED_FORMATION_NOT_INSTALLED');
+          return {schema:'RAVINE_EMITTED_SURFACE_OBSERVER_EVIDENCE_v1',
+            result:'TWO_EMITTED_TRIANGLE_OBSERVERS_DERIVED_GPU_FIRST_HIT_UNPROVEN',
+            provenance:'EXACT_INSTALLED_GEOLOGICAL_RUNTIME_EMITTED_TRIANGLE_SAMPLER',
+            candidates,geologicalFormation:live.resources.geologicalFormation,
+            observerOnly:true,firstHitPixelReadback:false,ownerPhotoCorrespondence:false,
+            productMutation:false,releaseAuthorized:false};
+        });
+        receipt.ravineObserverPreflight=probe;
+
+        if(RAVINE_PIXEL_ACTIVE){
+      await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
+          let sequence=22000;const evidence=[];
+          for(const pose of probe.candidates){
+            for(let mode=0;mode<RAVINE_HABITAT_MODES.length;mode++){
+              const v=await page.evaluate(({pose,mode,sequence})=>{
+                globalThis.__ravineHabitatProbeMode=mode;
+                globalThis.__ravineExpectedLocalTarget=pose.referenceTarget;
+                globalThis.__groundComparisonHideGrass=true;
+                const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3074_PIXEL');
+                globalThis.__HEarthAuditPresent(state);
+                const canvas=document.querySelector('#h-earth-functional-landscape-canvas');
+                if(!canvas||!globalThis.__ravineProjectTarget||!globalThis.__ravineReadGeometryPixel)
+                  throw Error('RAVINE_GPU_STAGE_INSTRUMENTATION_MISSING');
+                const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
+                const pixel=globalThis.__ravineProjectTarget(pose.referenceTarget,packet);
+                const rgba=globalThis.__ravineReadGeometryPixel(pixel.x,pixel.y);
+                const live=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),before=live.frameRecords.at(-1);
+                const dataUrl=canvas.toDataURL('image/png');
+                const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
+                return {pixel,rgba,camera:packet.camera.position,localCamera:packet.camera.localAuthoringPosition,
+                  applied:globalThis.__ravineHabitatProbeModeApplied,geology:live.resources?.geologicalFormation,
+                  before,after,dataUrl};
+              },{pose,mode,sequence:++sequence});
+              if(v.applied!==mode)throw Error('RAVINE_MODE_NOT_APPLIED:'+mode);
+              if(v.before?.navigationSequence!==sequence||v.after?.navigationSequence!==sequence||
+                 v.before?.frameSequence!==v.after?.frameSequence)
+                throw Error('RAVINE_FRAME_CORRESPONDENCE_MISMATCH');
+              if(!v.geology?.physicalNavigationInstalled||v.geology?.attachedMeshCount<2)
+                throw Error('RAVINE_GEOLOGY_NOT_INSTALLED_AT_CAPTURE');
+              const png=decodeCanvasCapture({before:v.before,after:v.after,dataUrl:v.dataUrl},v.before);
+              const name=pose.name+'-'+RAVINE_HABITAT_MODES[mode]+'.png';
+              fs.writeFileSync(path.join(out,name),png);
+              receipt.views.push({pose:{name:pose.name,sourceDerived:true,sourceEvidenceId:pose.sourceEvidenceId,
+                firstHitAttributionAvailable:false},mode:RAVINE_HABITAT_MODES[mode],
+                diagnosticApplied:mode,sourceHead:HEADS[label],
+                sourceRendererBlob:RAVINE_HABITAT_TARGET.exactRendererBlob,
+                rendererHash:runRecord.instrumentation.find(x=>x.path===RENDERER)?.sourceSha256,
+                camera:v.camera,localCamera:v.localCamera,pixel:v.pixel,rgba:v.rgba,
+                frame:v.after,sourceTarget:pose.referenceTarget,firstHitPixelReadback:true,
+                assetSignature:JSON.stringify(v.geology),image:name,imageSha256:sha(png),imageBytes:png.length});
+              persist();
+            }
+            const group=receipt.views.filter(v=>v.pose.name===pose.name);
+            if(group.length!==10||group.some(v=>v.camera.x!==group[0].camera.x||
+               v.camera.y!==group[0].camera.y||v.camera.z!==group[0].camera.z||
+               v.pixel.x!==group[0].pixel.x||v.pixel.y!==group[0].pixel.y||
+               v.assetSignature!==group[0].assetSignature))
+              throw Error('RAVINE_CAMERA_PIXEL_OR_SOURCE_DRIFT');
+            const rgba=mode=>group.find(x=>x.mode===mode).rgba;
+            const role=rgba('first-hit-role-byte'),id=rgba('first-hit-primitive-24bit');
+            const primitive=((id[0]<<16)|(id[1]<<8)|id[2])>>>0;
+            const distance=role[1]*2/255,firstHitPass=role[0]===1&&primitive===62000&&distance<=0.65;
+            const before=rgba('before-habitat-unlit'),after=rgba('after-habitat-unlit');
+            const lit=rgba('reference-lit'),counter=rgba('final-lit-without-habitat-color');
+            const unlitDelta=before.slice(0,3).map((v,i)=>after[i]-v);
+            const finalDelta=lit.slice(0,3).map((v,i)=>v-counter[i]);
+            const effect=Math.max(...unlitDelta.map(Math.abs),...finalDelta.map(Math.abs));
+            const result=!firstHitPass?'INSTRUMENTATION_GAP':effect>=2?'SUPPORTED_AT_VIEW':'NOT_SUPPORTED_AT_VIEW';
+            evidence.push({name:pose.name,result,roleCode:role[0],primitive,worldDistanceMeters:distance,
+              firstHitPass,unlitDelta,finalDelta,effectiveHabitatWeight:rgba('effective-habitat-color-weight')[0]/255,
+              pixel:group[0].pixel,camera:group[0].camera,sourceTarget:pose.referenceTarget});
+            receipt.pixelAttribution={schema:'RAVINE_HABITAT_PIXEL_ATTRIBUTION_v1',
+              result,firstHit:evidence,firstHitPixelReadback:true,
+              mapWideAcceptance:false,ownerPhotoCorrespondence:false,publicationAuthorized:false};
+            persist();
+            if(!firstHitPass)throw Error('RAVINE_FIRST_HIT_NOT_SOURCE_BOUND:'+pose.name);
+          }
+          receipt.result=evidence.every(x=>x.result==='SUPPORTED_AT_VIEW')?'SUPPORTED_AT_VIEW':
+            evidence.some(x=>x.result==='NOT_SUPPORTED_AT_VIEW')?'NOT_SUPPORTED_AT_VIEW':'INSTRUMENTATION_GAP';
+          receipt.pixelAttribution={...receipt.pixelAttribution,result:receipt.result,modeCount:10,captureCount:receipt.views.length};
+          persist();
+        }else receipt.result=probe.result;
+        runRecord.completedAt=new Date().toISOString();persist();
+        await context.close();server.kill();server=null;
+        assertCheckout(dir,HEADS[label]);
+        if(errors.length)throw Error('RAVINE_OBSERVER_BROWSER_ERRORS:'+errors.join(';'));
+        continue;
+      }
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
       let sequence=10000,previousFrame=0;
       for(const pose of poses)for(const mode of modes){
@@ -296,7 +498,8 @@ export async function run(argv){
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(G1_PROFILE){receipt.g1=validateG1Set(receipt.views);receipt.result=INLAND_BAND_PROFILE?'INLAND_BAND_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED':'G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED';}
+    if(RAVINE_ANY_ACTIVE){if(!receipt.ravineObserverPreflight||(RAVINE_OBSERVER_ACTIVE&&receipt.views.length!==0))throw Error('RAVINE_OBSERVER_RECEIPT_INCOMPLETE');}
+     else if(G1_PROFILE){receipt.g1=validateG1Set(receipt.views);receipt.result=INLAND_BAND_PROFILE?'INLAND_BAND_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED':'G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED';}
      else if(GEN3042_PROFILE){receipt.triad=validateGen3042(receipt.views);receipt.result='GEN3042_SOIL_TRIAD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING';}
     else{validateDiagnosticSet(receipt.views,poses,modes);receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';}
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}

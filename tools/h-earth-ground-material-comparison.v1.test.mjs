@@ -226,3 +226,70 @@ test('Gen3059 retains exact renderer blobs and native Node before Chromium',()=>
  assert.ok(b.includes('GEN3042_SOIL_TRIAD_AB_V1'));
  assert.ok(b.includes('39ed43d987d5f62c1368e7c309faa1a1b3d731b6'));
 });
+
+test('Gen3074 ravine source binding and stage boundary',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const overlay=await import('./h-earth-groundcover-factor-overlay.mjs');
+ assert.deepEqual([m.RAVINE_HABITAT_TARGET.ravineWestEdge,m.RAVINE_HABITAT_TARGET.z],[-298,-546]);
+ assert.equal(m.RAVINE_HABITAT_TARGET.cameraPoseQualified,false);
+ assert.equal(m.RAVINE_HABITAT_MODES.length,10);
+ assert.throws(()=>m.validateRavineHabitatCapture([],[]),/RAVINE_CAPTURE_CENSUS_INCOMPLETE/);
+ const pathname=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
+ const original=fs.readFileSync(pathname,'utf8');
+ const transformed=overlay.transformRavineHabitatRenderer(original);
+ assert.equal(transformed.originalSha256,overlay.RAVINE_HABITAT_SOURCE_SHA256);
+ assert.equal(transformed.productDiskMutation,false);
+ assert.equal(transformed.modeCount,10);
+ assert.ok(transformed.source.includes('uRavineHabitatProbeMode'));
+ assert.ok(transformed.source.includes('ravineNativeHabitat=habitatCoverage;'));
+ assert.ok(transformed.source.includes('ravineFilteredMaterial=habitatMaterialCoverage;'));
+ assert.ok(transformed.source.includes('ravineBeforeHabitat=base;'));
+ assert.ok(transformed.source.includes('if(uRavineHabitatProbeMode!=9)base=ravineAfterHabitat;'));
+ assert.match(m.instrumentRavineHabitatRenderer(original),/groundComparisonHideGrass/);
+ assert.throws(()=>overlay.transformRavineHabitatRenderer(original+'\n'),/SOURCE_HASH_MISMATCH/);
+});
+
+test('Gen3074 emitted-triangle observer is derived, detached and fail-closed',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const plane=()=>({y:10,role:'ERODED_TERRAIN'});
+ const p=m.deriveRavineEmittedSurfaceObserver(plane,{name:'ravine-west',x:-298,z:-546});
+ assert.deepEqual([p.referenceTarget.x,p.referenceTarget.y,p.referenceTarget.z],[-298,10,-546]);
+ assert.equal(p.pitch,-42);
+ assert.equal(p.ray.raySamples.length,25);
+ assert.equal(p.ray.raySamples.at(-1).clearance,0);
+ assert.equal(p.diagnosticObserver,true);
+ assert.equal(p.sourceDerived,true);
+ assert.equal(p.navigationEligible,false);
+ assert.equal(p.firstHitAttributionAvailable,false);
+ assert.equal(p.requiresGpuFirstHitReadback,true);
+ assert.equal(p.ownerPhotoCorrespondence,false);
+ const q=m.deriveRavineEmittedSurfaceObserver(plane,{name:'outside-habitat-control',x:-302,z:-546});
+ assert.equal(q.referenceTarget.x,-302);
+ assert.throws(()=>m.deriveRavineEmittedSurfaceObserver(plane,{name:'ravine-west',x:-297,z:-546}),/TARGET_NOT_FROZEN/);
+ assert.throws(()=>m.deriveRavineEmittedSurfaceObserver(()=>null,{name:'ravine-west',x:-298,z:-546}),/SURFACE_NOT_AVAILABLE/);
+ assert.throws(()=>m.deriveRavineEmittedSurfaceObserver((x,z)=>({y:z>-546&&z< -540?30:10,role:'ERODED_TERRAIN'}),{name:'ravine-west',x:-298,z:-546}),/RAY_OCCLUDED/);
+});
+
+test('Gen3074 pixel stage contract keeps roles, IDs and source projection fail-closed',async()=>{
+ const mod=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const overlay=await import('./h-earth-groundcover-factor-overlay.mjs');
+ assert.equal(mod.RAVINE_PIXEL_PROFILE,'RAVINE_VERIFIED_OBSERVER_PIXEL_STAGES_V1');
+ const source=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const transformed=mod.instrumentRavineHabitatRenderer(source);
+ for(const marker of [
+  'uniform vec3 uRavineExpectedTargetWorld;',
+  'length(vWorldPosition-uRavineExpectedTargetWorld)',
+  'globalThis.__ravineProjectTarget',
+  'globalThis.__ravineReadGeometryPixel',
+  'gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer)',
+  "if(mode>0&&(!target||![target.x,target.y,target.z].every(Number.isFinite)))",
+  'globalThis.__ravinePublishedGeologicalSurfaceAt'
+ ])assert.ok(transformed.includes(marker),marker);
+ assert.equal(overlay.RAVINE_HABITAT_PROBE_MODES.length,10);
+ assert.equal(mod.RAVINE_HABITAT_CAPTURE_CEILING.maximumFrames,20);
+ assert.equal(mod.RAVINE_HABITAT_TARGET.ownerPhotoMatchEstablished,false);
+ const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ assert.ok(yaml.includes('H_EARTH_COMPARISON_PROFILE: RAVINE_VERIFIED_OBSERVER_PIXEL_STAGES_V1'));
+ assert.ok(yaml.includes('assert.equal(p.views.length,20);'));
+ assert.ok(yaml.includes('assert(p.pixelAttribution.firstHit.every(x=>x.firstHitPass===true));'));
+});

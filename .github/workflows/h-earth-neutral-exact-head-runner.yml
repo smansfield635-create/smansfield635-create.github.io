@@ -3,7 +3,7 @@ name: H-Earth Neutral Exact Head Runner
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main]
+    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102']
     paths:
       - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
       - 'tools/h-earth-ground-material-comparison.v1.mjs'
@@ -1715,5 +1715,159 @@ jobs:
         with:
           name: h-earth-inland-band-a03-match-${{ github.run_id }}
           path: ${{ runner.temp }}/h-earth-inland-band-a03-match
+          if-no-files-found: warn
+          retention-days: 30
+
+  ravine-habitat-source-only-gen3074:
+    if: >-
+      ${{ github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize') &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/ravine-habitat-color-attribution-20261102' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout frozen source with only admitted test and renderer files
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: true
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-ground-material-comparison.v1.test.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Exact source binding and Node tests before GPU admission
+        shell: bash
+        env:
+          EXACT_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          observed_head="$(git rev-parse HEAD)"
+          observed_blob="$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
+          observed_status="$(git status --porcelain --untracked-files=no)"
+          printf 'GEN3074_HEAD actual=%s expected=%s\n' "$observed_head" "$EXACT_HEAD"
+          printf 'GEN3074_RENDERER_BLOB actual=%s expected=%s\n' "$observed_blob" 85ee835060d5106a670077a5f4352b49b
+          printf 'GEN3074_TRACKED_STATUS=%s\n' "$observed_status"
+          if [[ "$observed_head" != "$EXACT_HEAD" ]]; then echo 'FAIL_HEAD_MISMATCH'; exit 51; fi
+          echo 'GEN3074_HEAD_PASS'
+          if [[ "$observed_blob" != 85ee835060d5106a670077a5f4352b7ad202b49b ]]; then echo 'FAIL_RENDERER_BLOB_MISMATCH'; exit 52; fi
+          echo 'GEN3074_RENDERER_PASS'
+          if [[ -n "$observed_status" ]]; then echo 'FAIL_TRACKED_STATUS_NOT_CLEAN'; exit 53; fi
+          echo 'GEN3074_CHECKOUT_PASS'
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tools/h-earth-groundcover-factor-overlay.mjs
+          node --check tools/h-earth-ground-material-comparison.v1.test.mjs
+          node --test --test-name-pattern=Gen3074 tools/h-earth-ground-material-comparison.v1.test.mjs
+          echo 'GEN3074_SOURCE_ONLY_PASS_NO_GPU_NO_PRODUCTION_MUTATION'
+
+  ravine-emitted-triangle-preflight-gen3074:
+    needs: ravine-habitat-source-only-gen3074
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'synchronize' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/ravine-habitat-color-attribution-20261102' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted tooling only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /tools/h-earth-ground-material-comparison.v1.test.mjs
+      - name: Checkout exact published product for read-only observer
+        uses: actions/checkout@v4
+        with:
+          ref: 11afdc5278564728ea9eef6ffb525601ce4362a7
+          path: product
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/h-earth/
+            /h-earth-3d/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fail closed on exact source or resource drift
+        env:
+          TOOLING_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_tooling="$(git -C tooling rev-parse HEAD)"
+          actual_product="$(git -C product rev-parse HEAD)"
+          actual_blob="$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
+          echo "GEN3074_PREFLIGHT_TOOLING actual=$actual_tooling expected=$TOOLING_HEAD"
+          echo "GEN3074_PREFLIGHT_PRODUCT actual=$actual_product expected=11afdc5278564728ea9eef6ffb525601ce4362a7"
+          echo "GEN3074_PREFLIGHT_BLOB actual=$actual_blob expected=85ee835060d5106a670077a5f4352b49b"
+          [[ "$actual_tooling" == "$TOOLING_HEAD" ]] || { echo GEN3074_TOOLING_HEAD_DRIFT; exit 51; }
+          [[ "$actual_product" == 11afdc5278564728ea9eef6ffb525601ce4362a7 ]] || { echo GEN3074_PRODUCT_HEAD_DRIFT; exit 52; }
+          [[ "$actual_blob" == 85ee835060d5106a670077a5f4352b7ad202b49b ]] || { echo GEN3074_PRODUCT_BLOB_DRIFT; exit 53; }
+          for dir in tooling product; do
+            tracked="$(git -C "$dir" status --porcelain --untracked-files=no)"
+            printf 'GEN3074_PREFLIGHT_TRACKED_STATUS %s=%s\n' "$dir" "$tracked"
+            if [[ -n "$tracked" ]]; then echo "GEN3074_CHECKOUT_DIRTY:$dir"; exit 54; fi
+            bytes="$(du -sb "$dir" | cut -f1)"
+            if (( bytes > 2147483648 )); then echo "GEN3074_SPARSE_TREE_OVER_BUDGET:$dir:$bytes"; exit 43; fi
+          done
+          space="$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -1 | tr -d ' ')"
+          if (( space < 8589934592 )); then echo "GEN3074_GPU_HEADROOM_INSUFFICIENT:$space"; exit 44; fi
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-groundcover-factor-overlay.mjs
+          echo 'GEN3074_EXACT_SOURCE_AND_RESOURCE_PREFLIGHT_PASS'
+      - name: Install existing Playwright Chromium only
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Read 20 exact WebGL2 first-hit material stage pixels from verified observers
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: RAVINE_VERIFIED_OBSERVER_PIXEL_STAGES_V1
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 1500s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../product \
+            --output "${{ runner.temp }}/h-earth-ravine-emitted-triangle-observer"
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import assert from "node:assert/strict";
+            const p=JSON.parse(fs.readFileSync(process.argv[1]+"/receipt.json","utf8"));
+            assert(["SUPPORTED_AT_VIEW","NOT_SUPPORTED_AT_VIEW"].includes(p.result));
+            assert.equal(p.views.length,20);
+            assert.equal(p.ravineObserverPreflight.candidates.length,2);
+            assert(p.ravineObserverPreflight.candidates.every(c=>
+              c.sourceDerived===true&&c.diagnosticObserver===true&&
+              c.firstHitAttributionAvailable===false&&c.ownerPhotoCorrespondence===false));
+            assert.equal(p.productDiskMutation,false);
+            assert.equal(p.pixelAttribution.firstHitPixelReadback,true);
+            assert.equal(p.pixelAttribution.firstHit.length,2);
+            assert(p.pixelAttribution.firstHit.every(x=>x.firstHitPass===true));
+            assert.equal(p.releaseAuthorized,false);
+            console.log("GEN3074_RAVINE_PIXEL_STAGE_FIRST_HIT_VALIDATED:"+p.result);
+          ' "${{ runner.temp }}/h-earth-ravine-emitted-triangle-observer"
+      - name: Preserve observer receipt including fail-closed errors
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-ravine-pixel-attribution-gen3074-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-ravine-emitted-triangle-observer/
           if-no-files-found: warn
           retention-days: 30

@@ -74,6 +74,10 @@ export function createNativeWebGLDevice(canvas, {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[definition.filter]);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, definition.width, definition.height, 0,
         gl.RGBA, gl.UNSIGNED_BYTE, definition.pixels);
+      if (typeof gl.getError === 'function') {
+        const error = gl.getError();
+        if (error !== gl.NO_ERROR) throw new Error('TEXTURE_UPLOAD_GL_ERROR:' + error);
+      }
       return texture;
     } catch (error) {
       if (texture) gl.deleteTexture(texture);

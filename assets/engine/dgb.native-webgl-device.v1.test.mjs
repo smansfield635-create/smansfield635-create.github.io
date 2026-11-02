@@ -2,9 +2,9 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createNativeWebGLDevice } from './dgb.native-webgl-device.v1.mjs';
 
-function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkFail = false, fboIncomplete = false, textureFail = false } = {}) {
+function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkFail = false, fboIncomplete = false, textureFail = false, fboIncompleteAfter = 0, uploadGlError = false } = {}) {
   const log = [], handlers = new Map();
-  let contextLost = false, id = 0;
+  let contextLost = false, id = 0, framebufferChecks = 0;
   const bindings = { texture: null, framebuffer: null, renderbuffer: null, unpack: 4 };
   const obj = type => ({ type, id: ++id });
   const gl = {
@@ -17,7 +17,7 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
     MAX_RENDERBUFFER_SIZE: 25, FRAMEBUFFER: 26, FRAMEBUFFER_BINDING: 27,
     COLOR_ATTACHMENT0: 28, DEPTH_ATTACHMENT: 29, FRAMEBUFFER_COMPLETE: 30,
     FRAMEBUFFER_INCOMPLETE_ATTACHMENT: 31, RENDERBUFFER: 32,
-    RENDERBUFFER_BINDING: 33, DEPTH_COMPONENT16: 34,
+    RENDERBUFFER_BINDING: 33, DEPTH_COMPONENT16: 34, NO_ERROR: 0, INVALID_OPERATION: 98,
     createShader() { log.push('createShader'); return obj('shader'); },
     shaderSource() {}, compileShader() {}, getShaderParameter() { return !compileFail; },
     getShaderInfoLog() { return 'mock compile error'; }, deleteShader() { log.push('deleteShader'); },
@@ -42,11 +42,12 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
     texImage2D(_target, _level, _format, width, height, _border, _format2, _type, pixels) {
       log.push('texImage2D:' + width + 'x' + height + ':' + (pixels?.byteLength ?? 'null'));
     },
+    getError() { return uploadGlError ? this.INVALID_OPERATION : this.NO_ERROR; },
     deleteTexture() { log.push('deleteTexture'); },
     createFramebuffer() { log.push('createFramebuffer'); return obj('framebuffer'); },
     bindFramebuffer(_target, handle) { bindings.framebuffer = handle; log.push('bindFramebuffer'); },
     framebufferTexture2D() { log.push('framebufferTexture2D'); },
-    checkFramebufferStatus() { return fboIncomplete ? this.FRAMEBUFFER_INCOMPLETE_ATTACHMENT : this.FRAMEBUFFER_COMPLETE; },
+    checkFramebufferStatus() { framebufferChecks++; return (fboIncomplete || (fboIncompleteAfter > 0 && framebufferChecks >= fboIncompleteAfter)) ? this.FRAMEBUFFER_INCOMPLETE_ATTACHMENT : this.FRAMEBUFFER_COMPLETE; },
     deleteFramebuffer() { log.push('deleteFramebuffer'); },
     createRenderbuffer() { log.push('createRenderbuffer'); return obj('renderbuffer'); },
     bindRenderbuffer(_target, handle) { bindings.renderbuffer = handle; },
@@ -218,5 +219,31 @@ test('failed texture allocation does not leave a tracked resource', () => {
   const d = createNativeWebGLDevice(canvas);
   assert.throws(() => d.createTexture2D({ width: 2, height: 2 }), /TEXTURE_ALLOCATION_FAILED/);
   assert.equal(d.status().textures, 0);
+  d.dispose();
+});
+
+test('failed target resize preserves existing native framebuffer and size', () => {
+  const { canvas, gl, log } = fakeCanvas({ fboIncompleteAfter: 2 });
+  const d = createNativeWebGLDevice(canvas);
+  const target = d.createRenderTarget({ width: 4, height: 4 });
+  const original = target.gpu, originalColor = target.colorTexture.gpu;
+  d.bindRenderTarget(target);
+  assert.throws(() => d.resizeRenderTarget(target, 9, 7), /FRAMEBUFFER_INCOMPLETE/);
+  assert.equal(target.gpu, original);
+  assert.equal(target.colorTexture.gpu, originalColor);
+  assert.equal(target.width, 4); assert.equal(target.height, 4);
+  assert.equal(gl.getParameter(gl.FRAMEBUFFER_BINDING), original);
+  assert.equal(d.status().estimatedTextureBytes, 64);
+  assert.equal(log.filter(x => x === 'deleteFramebuffer').length, 1);
+  d.dispose();
+  assert.equal(log.filter(x => x === 'deleteFramebuffer').length, 2);
+});
+
+test('native GL texture upload errors fail closed with no resource registry leak', () => {
+  const { canvas, log } = fakeCanvas({ uploadGlError: true });
+  const d = createNativeWebGLDevice(canvas);
+  assert.throws(() => d.createTexture2D({ width: 2, height: 2 }), /TEXTURE_UPLOAD_GL_ERROR/);
+  assert.equal(d.status().textures, 0);
+  assert.equal(log.filter(x => x === 'deleteTexture').length, 1);
   d.dispose();
 });

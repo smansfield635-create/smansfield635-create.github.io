@@ -411,7 +411,7 @@ export function verifyExactDispatchIssuanceEvidence({repository,lock,recovery,so
   const r=EXACT_DISPATCH_ISSUANCE_RECOVERIES.find(value=>value.lockGeneration===recovery?.lockGeneration);
   if(!r||canonical(r)!==canonical(recovery)||canonical(authorityIdentity(r))!==canonical(authorityIdentity(lock)))throw err('AUTHORITY_PROVENANCE_MISSING','dispatchRecovery','dispatch-recovery','EXACT_IDENTITY_MISMATCH');
   if(source?.id!==r.sourceCommentId||source?.issue_url!==`https://api.github.com/repos/${repository}/issues/${r.issueNumber}`||source?.user?.login!=='smansfield635-create'||source?.author_association!=='OWNER'||markerFromBody(source?.body)!==CANONICAL_MARKER||sha(source.body)!==r.sourceBodySha256)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','dispatch-recovery','SOURCE_MISMATCH');
-  verifyCanonicalSourceComment(lock,source.body);
+  verifyCanonicalIntakeBody(lock,source.body);
   if(receipt?.id!==r.receiptCommentId||receipt?.issue_url!==source.issue_url||receipt?.user?.login!=='github-actions[bot]'||!botReceiptMatches(lock,[receipt],'CANONICAL_INTAKE',r.workflowRunId))throw err('AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND','receipt','dispatch-recovery');
   if(run?.id!==r.workflowRunId||run?.event!=='workflow_dispatch'||run?.path!==CANONICAL_DISPATCH_WORKFLOW||run?.repository?.full_name!==repository||!run?.actor?.login)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','workflowRun','dispatch-recovery','RUN_MISMATCH');
   if(commit?.sha!==r.issuanceCommitSha||commit?.commit?.message!==`Acquire operation lock ${r.lockGeneration}: ${r.operationId}`||commit?.parents?.length!==1||commit.parents[0]?.sha!==r.issuanceParentSha||commit?.files?.length!==1||commit.files[0]?.filename!==LEDGER_PATH||commit.files[0]?.sha!==r.issuanceLedgerBlobSha)throw err('AUTHORITY_LEDGER_LINEAGE_UNTRUSTED','commit','dispatch-recovery','ISSUANCE_COMMIT_MISMATCH');
@@ -434,7 +434,7 @@ async function verifyLegacyAuthority({repository,token,lock}){
   if(!recovery)throw err('AUTHORITY_PROVENANCE_MISSING','authorityProvenance','authority-provenance','NOT_IN_FROZEN_LEGACY_SNAPSHOT');
   const source=await fetchComment(repository,token,recovery.sourceCommentId);
   if(source?.id!==recovery.sourceCommentId||source?.issue_url?.split('/').pop()!==String(recovery.issueNumber)||!TRUSTED_ASSOCIATIONS.has(source?.author_association)||markerFromBody(source?.body)!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','authority-provenance','RECOVERED_SOURCE_COMMENT_MISMATCH');
-  verifyCanonicalSourceComment(lock,source.body);
+  verifyCanonicalIntakeBody(lock,source.body);
   const receipt=await fetchComment(repository,token,recovery.receiptCommentId);
   if(receipt?.id!==recovery.receiptCommentId||receipt?.issue_url?.split('/').pop()!==String(recovery.issueNumber)||receipt?.user?.login!=='github-actions[bot]'||!botReceiptMatches(lock,[receipt],'CANONICAL_INTAKE',recovery.workflowRunId))throw err('AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND','issue.comments','authority-provenance','RECOVERED_BOT_RECEIPT_MISMATCH');
   return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:'RECOVERED_LEGACY_CANONICAL_INTAKE',authorityIdentity:authorityIdentity(lock),issueNumber:recovery.issueNumber,commentId:recovery.sourceCommentId,receiptCommentId:recovery.receiptCommentId,workflowRunId:recovery.workflowRunId});
@@ -474,7 +474,7 @@ export function verifyExactGen2051HistoricalState({corruptCommit,restorationComm
   if(parentLedger?.lockGeneration!==2050||parentLedger?.activeScopes?.[r.scopeHash]!==undefined)fail('PARENT_AUTHORITY_STATE_MISMATCH');
   const row=restoredLedger?.activeScopes?.[r.scopeHash];
   if(!row||sha(canonical(row))!==r.restoredRowSha256)fail('RESTORED_AUTHORITY_ROW_MISMATCH');
-  try{verifyCanonicalSourceComment(row,sourceComment.body)}catch{fail('RESTORED_SOURCE_BINDING_MISMATCH')}
+  try{verifyCanonicalIntakeBody(row,sourceComment.body)}catch{fail('RESTORED_SOURCE_BINDING_MISMATCH')}
   const expected={...parentLedger,lockGeneration:2051,activeScopes:{...parentLedger.activeScopes,[r.scopeHash]:row}};
   if(canonical(restoredLedger)!==canonical(expected))fail('RESTORED_LEDGER_TRANSITION_MISMATCH');
   return stable({result:'EXACT_GEN2051_MATERIALIZATION_RECOVERED',corruptCommitSha:r.corruptCommitSha,parentCommitSha:r.corruptParentSha,restorationCommitSha:r.restorationCommitSha,restorationLedgerBlobSha:r.restorationLedgerBlobSha,sourceCommentId:r.sourceCommentId});
@@ -520,7 +520,7 @@ export function verifyExactGen2055Gen2062TerminalState({recovery,corruptCommit,r
     if(sha(canonical(core))!==bindingDigest)fail(`${kind.toUpperCase()}_PROVENANCE_BINDING_MISMATCH`);
     if(comment?.id!==id||comment?.issue_url!==`https://api.github.com/repos/smansfield635-create/smansfield635-create.github.io/issues/${r.issueNumber}`||comment?.user?.login!==owner||comment?.author_association!=='OWNER'||typeof comment?.body!=='string'||sha(comment.body)!==provenance.source.commentBodySha256||markerFromBody(comment.body)!==marker)fail(`${kind.toUpperCase()}_SOURCE_AUTHENTICATION_FAILED`);
   }
-  try{verifyCanonicalSourceComment(tail,intakeComment.body)}catch{fail('INTAKE_REQUEST_PROCEDURE_MISMATCH')}
+  try{verifyCanonicalIntakeBody(tail,intakeComment.body)}catch{fail('INTAKE_REQUEST_PROCEDURE_MISMATCH')}
   let closure;
   try{closure=parseMarkedJson(closureComment.body,'REMOTE_OPERATION_TERMINAL_CLOSURE_REQUEST_V1')}catch{fail('CLOSURE_SOURCE_PAYLOAD_INVALID')}
   const request=closure?.closureRequest||closure?.invocation?.closureRequest;
@@ -750,7 +750,7 @@ export async function verifyCanonicalLockRefLineage({repository,token,branchHead
 
 async function fetchComment(repository,token,commentId){return req(`${base(repository)}/issues/comments/${commentId}`,{headers:H(token)},[200],'AUTHORITY_SOURCE_COMMENT')}
 async function fetchIssueComments(repository,token,issueNumber){const all=[];for(let page=1;;page++){const values=await req(`${base(repository)}/issues/${issueNumber}/comments?per_page=100&page=${page}`,{headers:H(token)},[200],'AUTHORITY_ISSUE_COMMENTS');if(!Array.isArray(values))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','issue.comments','authority-provenance');all.push(...values);if(values.length<100)break}return all}
-function verifyCanonicalSourceComment(lock,body){const envelope=parseMarkedJson(body,CANONICAL_MARKER),request=envelope?.operationRequest,procedure=envelope?.constructionProcedure;if(!request||!procedure)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','canonical-envelope','authority-provenance');const expected=authorityIdentity(lock);if(request.operationId!==expected.operationId||canonScope(request.lockScope)!==expected.lockScope||request.exactGoverningHead!==expected.governingHead)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','ROW_IDENTITY_MISMATCH');if(sha(canonical(request))!==expected.requestDigest||sha(canonical(procedure))!==expected.procedureLocatorDigest)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','REQUEST_OR_PROCEDURE_DIGEST_MISMATCH')}
+function verifyCanonicalIntakeBody(lock,body){const envelope=parseMarkedJson(body,CANONICAL_MARKER),request=envelope?.operationRequest,procedure=envelope?.constructionProcedure;if(!request||!procedure)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','canonical-envelope','authority-provenance');const expected=authorityIdentity(lock);if(request.operationId!==expected.operationId||canonScope(request.lockScope)!==expected.lockScope||request.exactGoverningHead!==expected.governingHead)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','ROW_IDENTITY_MISMATCH');if(sha(canonical(request))!==expected.requestDigest||sha(canonical(procedure))!==expected.procedureLocatorDigest)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','operationRequest','authority-provenance','REQUEST_OR_PROCEDURE_DIGEST_MISMATCH')}
 function parseSuccessorReceiptComment(body){if(typeof body!=='string'||!body.startsWith('REMOTE_OPERATION_SUCCESSOR_RECEIPT_V1'))return null;const match=body.match(/```json\s*([\s\S]*?)\s*```/);if(!match)return null;try{return JSON.parse(match[1])}catch{return null}}
 function botReceiptMatches(lock,comments,origin,runId){if(origin==='CANONICAL_INTAKE'){const op=`operationId = ${lock.operationId}`,gen=`lockGeneration = ${lock.lockGeneration}`,run=`workflowRun = ${runId}`;return comments.some(c=>c?.user?.login==='github-actions[bot]'&&typeof c.body==='string'&&c.body.includes('CANONICAL_OPERATION_INTAKE_RETURN_V1')&&c.body.includes('canonicalResult = ADMITTED_AND_LOCKED')&&c.body.includes(op)&&c.body.includes(gen)&&c.body.includes(run))}return comments.some(c=>{if(c?.user?.login!=='github-actions[bot]')return false;const r=parseSuccessorReceiptComment(c.body);if(!r||r.result!=='SUCCESSOR_ADMITTED_PREDECESSOR_SUPERSEDED')return false;const s=r.successor||{};return s.operationId===lock.operationId&&canonScope(s.lockScope)===canonScope(lock.lockScope)&&s.lockGeneration===lock.lockGeneration&&s.governingHead===lock.governingHead&&s.requestDigest===lock.requestDigest&&s.procedureLocatorDigest===lock.procedureLocatorDigest})}
 
@@ -768,7 +768,7 @@ export async function verifyRemoteAuthorityProvenance({repository,token,lock,bra
     if(!checkpointBound){
       const comment=await fetchComment(repository,token,s.commentId);
       if(comment?.id!==s.commentId||comment?.issue_url!==`https://api.github.com/repos/${repository}/issues/${s.issueNumber}`||comment?.user?.login!==s.authorLogin||comment?.author_association!==s.authorAssociation||sha(comment?.body||'')!==s.commentBodySha256||markerFromBody(comment?.body)!==s.marker||s.marker!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','authority-provenance','OWNER_CONNECTOR_SOURCE_COMMENT_MISMATCH');
-      verifyCanonicalSourceComment(lock,comment.body);
+      verifyCanonicalIntakeBody(lock,comment.body);
     } else if(s.marker!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','independentAuthorityProvenance.source.marker','authority-provenance','OWNER_CONNECTOR_SOURCE_MARKER_MISMATCH');
     return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:p.transportId,authorityIdentity:owner.authorityIdentity,issueNumber:s.issueNumber,commentId:s.commentId,sourceCommentReadback:owner.sourceCommentReadback,lineage});
   }
@@ -779,7 +779,7 @@ export async function verifyRemoteAuthorityProvenance({repository,token,lock,bra
     if(p.origin!=='CANONICAL_INTAKE'||inv.eventName!=='workflow_dispatch'||inv.commentId!==null||inv.marker!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','invocation','owner-pr-provenance','UNEXPECTED_SOURCE_CLASS');
     const evidence=await readOwnerPrDispatchProof({repository,token,operationId:lock.operationId,expectedCurrentMain:lock.governingHead,runId:inv.workflowRunId,issueNumber:inv.issueNumber});
     if(evidence.proof.sourcePr!==inv.sourcePr||evidence.proof.requestCommit!==inv.requestCommit||evidence.proof.bridgeRunId!==inv.bridgeRunId||sha(evidence.body)!==inv.commentBodySha256)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','invocation','owner-pr-provenance','READBACK_IDENTITY_MISMATCH');
-    verifyCanonicalSourceComment(lock,evidence.body);
+    verifyCanonicalIntakeBody(lock,evidence.body);
     await authenticateDispatchRun({repository,token,runId:inv.workflowRunId,runAttempt:inv.workflowRunAttempt,workflowSha:inv.workflowSha,sourceLogin:inv.dispatchActorLogin});
     const comments=await fetchIssueComments(repository,token,inv.issueNumber);
     if(!botReceiptMatches(lock,comments,p.origin,inv.workflowRunId))throw err('AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND','issue.comments','authority-provenance');
@@ -787,7 +787,7 @@ export async function verifyRemoteAuthorityProvenance({repository,token,lock,bra
   }
   const comment=await fetchComment(repository,token,inv.commentId);
   if(comment?.id!==inv.commentId||comment?.issue_url?.split('/').pop()!==String(inv.issueNumber)||comment?.user?.login!==inv.commentAuthorLogin||comment?.author_association!==inv.commentAuthorAssociation||sha(comment?.body||'')!==inv.commentBodySha256||markerFromBody(comment?.body)!==inv.marker)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment','authority-provenance','SOURCE_COMMENT_MISMATCH');
-  if(p.origin==='CANONICAL_INTAKE'){if(inv.marker!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','marker','authority-provenance');verifyCanonicalSourceComment(lock,comment.body)}else{if(!SUCCESSOR_MARKERS.has(inv.marker))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','marker','authority-provenance');for(const value of [lock.operationId,lock.lockScope,lock.governingHead])if(!comment.body.includes(value))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment.body','authority-provenance','SUCCESSOR_ROW_NOT_BOUND_TO_SOURCE')}
+  if(p.origin==='CANONICAL_INTAKE'){if(inv.marker!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','marker','authority-provenance');verifyCanonicalIntakeBody(lock,comment.body)}else{if(!SUCCESSOR_MARKERS.has(inv.marker))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','marker','authority-provenance');for(const value of [lock.operationId,lock.lockScope,lock.governingHead])if(!comment.body.includes(value))throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','comment.body','authority-provenance','SUCCESSOR_ROW_NOT_BOUND_TO_SOURCE')}
   if(inv.eventName==='workflow_dispatch')await authenticateDispatchRun({repository,token,runId:inv.workflowRunId,runAttempt:inv.workflowRunAttempt,workflowSha:inv.workflowSha,sourceLogin:inv.dispatchActorLogin});
   const comments=await fetchIssueComments(repository,token,inv.issueNumber);if(!botReceiptMatches(lock,comments,p.origin,inv.workflowRunId))throw err('AUTHORITY_WORKFLOW_RECEIPT_NOT_FOUND','issue.comments','authority-provenance');
   return stable({result:'AUTHENTICATED_CANONICAL_AUTHORITY',origin:p.origin,authorityIdentity:bound.authorityIdentity,issueNumber:inv.issueNumber,commentId:inv.commentId,workflowRunId:inv.workflowRunId,lineage});
@@ -802,8 +802,8 @@ export async function acquireRemote(a) {
       const event=JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH,'utf8'));
       const body=event?.inputs?.request_json;
       if(typeof body!=='string'||sha(body)!==authorityInvocation.commentBodySha256)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','body','remote-lock','OWNER_PR_BODY_MISMATCH');
-      verifyCanonicalSourceComment(x.lock,body);
-    }else verifyCanonicalSourceComment(x.lock,(await fetchComment(a.repository,a.token,authorityInvocation.commentId)).body);
+      verifyCanonicalIntakeBody(x.lock,body);
+    }else verifyCanonicalIntakeBody(x.lock,(await fetchComment(a.repository,a.token,authorityInvocation.commentId)).body);
   }
   if(!x.acquired)return stable({schema:'REPOSITORY_OPERATION_REMOTE_LOCK_RECEIPT_v1',result:x.result,errorCode:x.errorCode,operationId:a.operationId,lockScope:canonScope(a.lockScope),scopeHash:x.scopeHash,activeOperationId:x.activeOperationId,lockGeneration:x.lockGeneration,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,contentTransport:o.contentTransport,lockAcquired:false});
   if(a.readyFile){fs.mkdirSync(path.dirname(path.resolve(a.readyFile)),{recursive:true});fs.writeFileSync(path.resolve(a.readyFile),text({operationId:a.operationId,observedLedgerBlobSha:o.blob,observedBranchHead:o.head,lockGeneration:x.lock.lockGeneration}))}

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-01T23:23:44Z",
+  "generatedAt": "2026-11-02T00:45:34Z",
   "window": {
-    "start": "2026-08-03T23:23:44Z",
-    "end": "2026-11-01T23:23:44Z"
+    "start": "2026-08-04T00:45:34Z",
+    "end": "2026-11-02T00:45:34Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,19 +17,15 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4060,
+    "pageLoads": 4050,
     "visits": 1200,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4060,
+        "pageLoads": 4050,
         "visits": 1200
       }
     },
     "byPath": {
-      "/showroom/globe/h-earth/": {
-        "pageLoads": 70,
-        "visits": 10
-      },
       "/": {
         "pageLoads": 960,
         "visits": 700
@@ -122,12 +118,20 @@
         "pageLoads": 10,
         "visits": 10
       },
-      "/showroom/globe/audralia/disposition/": {
-        "pageLoads": 10,
-        "visits": 0
+      "/showroom/globe/h-earth/": {
+        "pageLoads": 60,
+        "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
         "pageLoads": 60,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/diagnostic/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
         "visits": 0
       },
       "/laws/categories/flow/cycles/": {
@@ -152,10 +156,6 @@
       },
       "/laws/categories/flow/handoffs/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
         "visits": 0
       },
       "/instruments/": {
@@ -202,16 +202,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/campaigns/wave/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/door/": {
@@ -226,19 +226,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/showroom/story/invitation/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
       "/prelude/": {
         "pageLoads": 20,
         "visits": 0
       },
-      "/showroom/story/timeline/": {
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },
-      "/door/canonical-object.html": {
+      "/showroom/story/invitation/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/showroom/story/timeline/": {
         "pageLoads": 10,
         "visits": 0
       },
@@ -312,13 +312,13 @@
       }
     },
     "byReferer": {
-      "diamondgatebridge.com": {
-        "pageLoads": 2860,
-        "visits": 0
-      },
       "www.google.com": {
         "pageLoads": 650,
         "visits": 650
+      },
+      "diamondgatebridge.com": {
+        "pageLoads": 2850,
+        "visits": 0
       },
       "(none)": {
         "pageLoads": 540,

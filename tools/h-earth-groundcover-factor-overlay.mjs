@@ -119,7 +119,7 @@ export const RAVINE_HABITAT_PROBE_MODES=Object.freeze([
   'material-minus-native-signed-occupancy',
   'final-lit-without-habitat-color'
 ]);
-export const RAVINE_HABITAT_SOURCE_SHA256=PUBLISHED_RENDERER_SHA256;
+export const RAVINE_HABITAT_SOURCE_SHA256='2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d';
 export function transformRavineHabitatRenderer(original){
   const sourceHash=hash(original);
   if(sourceHash!==RAVINE_HABITAT_SOURCE_SHA256)throw Error('RAVINE_RENDERER_SOURCE_HASH_MISMATCH:'+sourceHash);

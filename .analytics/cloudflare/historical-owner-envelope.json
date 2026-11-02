@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-02T17:24:29Z",
+  "generatedAt": "2026-11-02T18:27:29Z",
   "window": {
-    "start": "2026-08-04T17:24:29Z",
-    "end": "2026-11-02T17:24:29Z"
+    "start": "2026-08-04T18:27:29Z",
+    "end": "2026-11-02T18:27:29Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -122,6 +122,10 @@
         "pageLoads": 10,
         "visits": 10
       },
+      "/showroom/globe/audralia/disposition/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 20,
         "visits": 0
@@ -130,20 +134,16 @@
         "pageLoads": 60,
         "visits": 0
       },
-      "/showroom/globe/audralia/diagnostic/": {
-        "pageLoads": 10,
+      "/laws/categories/reality/": {
+        "pageLoads": 60,
         "visits": 0
       },
-      "/showroom/globe/audralia/disposition/": {
+      "/showroom/globe/audralia/diagnostic/": {
         "pageLoads": 10,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/laws/categories/reality/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/structure/interfaces.html": {
@@ -294,12 +294,12 @@
         "pageLoads": 150,
         "visits": 120
       },
-      "/analytics/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/governance-bridge/governance/": {
         "pageLoads": 20,
+        "visits": 0
+      },
+      "/analytics/": {
+        "pageLoads": 40,
         "visits": 0
       },
       "/prototypes/abc-roofing/": {

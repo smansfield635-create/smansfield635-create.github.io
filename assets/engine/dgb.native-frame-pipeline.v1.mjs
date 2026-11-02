@@ -167,6 +167,7 @@ export function createNativeFramePipeline(device) {
         setPass(cmd.pass, frame.depthMode); setCull(cmd.cull);
         device.draw({ program: cmd.program, mesh: cmd.mesh, first: cmd.first, count: cmd.count,
           beforeDraw: cmd.beforeDraw ?? undefined });
+        if (gl.isContextLost?.()) throw new Error('GRAPHICS_CONTEXT_LOST_DURING_FRAME');
         executed++;
       }
       let presentation = frame.target === null ? 'DIRECT' : 'OFFSCREEN_ONLY';
@@ -182,6 +183,7 @@ export function createNativeFramePipeline(device) {
           if (location !== null) context.uniform1i(location, 0);
         } });
         gl.bindTexture(gl.TEXTURE_2D, null);
+        if (gl.isContextLost?.()) throw new Error('GRAPHICS_CONTEXT_LOST_DURING_FRAME');
         presentation = 'OFFSCREEN_PRESENTED';
       }
       completedFrames++; lastPresentation = presentation; lastError = null;

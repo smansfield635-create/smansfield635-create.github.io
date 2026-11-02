@@ -19,7 +19,11 @@ export const GEN3042_MODES=Object.freeze(['reference-lit','before-groundcover-un
 // Explicit, closed-world G1 diagnostic, independent from the legacy survey.
 export const G1_BASELINE_PROFILE='G1_SOIL_BASELINE_ONLY_V1';
 export const G1_A03_PROFILE='G1_SOIL_A03_CANDIDATE_ONLY_V1';
-export const G1_PROFILE=[G1_BASELINE_PROFILE,G1_A03_PROFILE].includes(process.env.H_EARTH_COMPARISON_PROFILE);
+// Additive use of the existing comparator at the prior GPU-positive inland FAR band.
+export const INLAND_BAND_BASELINE_PROFILE='INLAND_BAND_BASELINE_ONLY_V1';
+export const INLAND_BAND_A03_PROFILE='INLAND_BAND_A03_CANDIDATE_ONLY_V1';
+export const INLAND_BAND_PROFILE=[INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE].includes(process.env.H_EARTH_COMPARISON_PROFILE);
+export const G1_PROFILE=[G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE].includes(process.env.H_EARTH_COMPARISON_PROFILE);
 export const G1_HEADS=Object.freeze({
  baseline:'7a21f465fc58cc1dbdda02a3807a4bf344440589',
  candidate:'7d55ca9707bfef75a9ddf9fb078747ba79eef19a'
@@ -28,12 +32,16 @@ export const G1_BLOBS=Object.freeze({
  baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',
  candidate:'62dc1e62f417f2b8eb7b4b08240f231d52d0c54e'
 });
-export const G1_POSES=Object.freeze([Object.freeze({
+export const G1_POSES=Object.freeze(INLAND_BAND_PROFILE?[Object.freeze({
+ // Source-derived positive inland band from Gen2917/Gen2925, not an owner-photo camera.
+ name:'inland-seam-near',x:-200,y:18.361431,z:-728,
+ yaw:0,pitch:-14,diagnosticObserver:true
+})]:[Object.freeze({
  name:'G1-straight-mask-source-probe',x:132,y:12.988637259823408,z:-165,
  yaw:11.309932474020213,pitch:0.9839390159552497,diagnosticObserver:true
 })]);
 export const G1_MODES=GEN3042_MODES;
-export const G1_ACTIVE_LABEL=process.env.H_EARTH_COMPARISON_PROFILE===G1_A03_PROFILE?'candidate':'baseline';
+export const G1_ACTIVE_LABEL=[G1_A03_PROFILE,INLAND_BAND_A03_PROFILE].includes(process.env.H_EARTH_COMPARISON_PROFILE)?'candidate':'baseline';
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
@@ -212,12 +220,12 @@ export function parseArgs(argv){const a={},keys=G1_PROFILE?['--'+G1_ACTIVE_LABEL
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
   const poses=G1_PROFILE?G1_POSES:(GEN3042_PROFILE?GEN3042_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
   const modes=G1_PROFILE?G1_MODES:(GEN3042_PROFILE?GEN3042_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES));
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:GEN3042_PROFILE?'H_EARTH_GEN3042_SOIL_TRIAD_POSITIVE_BAND_QUALIFICATION_20261101_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:GEN3042_PROFILE?null:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:GEN3042_PROFILE?null:RENDERER_SHA256,sourceRenderers:{},gen3042ClaimCeiling:'HISTORIC_INLAND_BAND_ONLY_OWNER_ANDROID_STRAIGHT_AND_CURVED_NOT_CLOSED',colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
-  if(G1_PROFILE){receipt.g1EvidenceClass='SOURCE_DERIVED_G1_OBSERVER_NOT_OWNER_WITNESS';receipt.firstHitDepthReadback=false;receipt.ownerPhotoClassMatchProven=false;receipt.claimCeiling='SOURCE_PINNED_G1_DIAGNOSTIC_ONLY_VISUAL_REVIEW_PENDING';receipt.repairOperationId=null;receipt.diagnosticAdmissionIdentity=null;receipt.baselineProductSha256=null;receipt.sourceProductSha256=null;receipt.gen3042ClaimCeiling=null;receipt.searchProvenance={kind:'G1_SOURCE_DERIVED_ESTATE_PROTECTION_TRANSITION',sourceReceipt:'6561935591',ownerClassCorrespondence:false};}
+  if(G1_PROFILE){receipt.g1EvidenceClass=INLAND_BAND_PROFILE?'GPU_POSITIVE_INLAND_FAR_BAND_NOT_OWNER_PHOTO':'SOURCE_DERIVED_G1_OBSERVER_NOT_OWNER_WITNESS';receipt.firstHitDepthReadback=false;receipt.ownerPhotoClassMatchProven=false;receipt.claimCeiling=INLAND_BAND_PROFILE?'PROVEN_INLAND_BAND_MATERIAL_RESPONSE_ONLY_OWNER_STRAIGHT_AND_CURVED_NOT_PROVEN':'SOURCE_PINNED_G1_DIAGNOSTIC_ONLY_VISUAL_REVIEW_PENDING';receipt.repairOperationId=null;receipt.diagnosticAdmissionIdentity=null;receipt.baselineProductSha256=null;receipt.sourceProductSha256=null;receipt.gen3042ClaimCeiling=null;receipt.searchProvenance=INLAND_BAND_PROFILE?{kind:'GEN2917_GEN2925_GPU_POSITIVE_INLAND_BAND',sourceRun:40411050366,sourceReceipt:'6428986452',ownerClassCorrespondence:false}:{kind:'G1_SOURCE_DERIVED_ESTATE_PROTECTION_TRANSITION',sourceReceipt:'6561935591',ownerClassCorrespondence:false};}
    const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
   let browser=null,server=null;
   const interrupt=signal=>{receipt.result='INTERRUPTED';receipt.errors.push(signal);persist();server?.kill();process.exit(signal==='SIGTERM'?143:130);};
@@ -288,7 +296,7 @@ export async function run(argv){
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(G1_PROFILE){receipt.g1=validateG1Set(receipt.views);receipt.result='G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED';}
+    if(G1_PROFILE){receipt.g1=validateG1Set(receipt.views);receipt.result=INLAND_BAND_PROFILE?'INLAND_BAND_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED':'G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED';}
      else if(GEN3042_PROFILE){receipt.triad=validateGen3042(receipt.views);receipt.result='GEN3042_SOIL_TRIAD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING';}
     else{validateDiagnosticSet(receipt.views,poses,modes);receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';}
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}

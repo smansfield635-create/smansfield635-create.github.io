@@ -366,6 +366,149 @@ export async function run(argv){
          const shell=document.getElementById('h-earth-loading-screen'),root=document.getElementById('h-earth-functional-landscape-route');
          return shell?.hidden===true&&window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'&&root?.dataset.run8eReady==='true'&&root?.dataset.run8eError!=='true';
        },null,{timeout:30000});
+
+      if(WEST_FLANK_ACTIVE){
+      await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
+          let sequence=22000;const evidence=[];
+          for(const pose of probe.candidates){
+            for(let mode=0;mode<RAVINE_HABITAT_MODES.length;mode++){
+              const v=await page.evaluate(({pose,mode,sequence})=>{
+                globalThis.__ravineHabitatProbeMode=mode;
+                globalThis.__ravineExpectedLocalTarget=pose.referenceTarget;
+                globalThis.__groundComparisonHideGrass=true;
+                const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,sequence,'GEN3074_PIXEL');
+                globalThis.__HEarthAuditPresent(state);
+                const canvas=document.querySelector('#h-earth-functional-landscape-canvas');
+                if(!canvas||!globalThis.__ravineProjectTarget||!globalThis.__ravineReadGeometryPixel)
+                  throw Error('RAVINE_GPU_STAGE_INSTRUMENTATION_MISSING');
+                const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:sequence});
+                const pixel=globalThis.__ravineProjectTarget(pose.referenceTarget,packet);
+                const rgba=globalThis.__ravineReadGeometryPixel(pixel.x,pixel.y);
+                const live=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),before=live.frameRecords.at(-1);
+                const dataUrl=canvas.toDataURL('image/png');
+                const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
+                return {pixel,rgba,camera:packet.camera.position,localCamera:packet.camera.localAuthoringPosition,
+                  applied:globalThis.__ravineHabitatProbeModeApplied,geology:live.resources?.geologicalFormation,
+                  before,after,dataUrl};
+              },{pose,mode,sequence:++sequence});
+              if(v.applied!==mode)throw Error('RAVINE_MODE_NOT_APPLIED:'+mode);
+              if(v.before?.navigationSequence!==sequence||v.after?.navigationSequence!==sequence||
+                 v.before?.frameSequence!==v.after?.frameSequence)
+                throw Error('RAVINE_FRAME_CORRESPONDENCE_MISMATCH');
+              if(!v.geology?.physicalNavigationInstalled||v.geology?.attachedMeshCount<2)
+                throw Error('RAVINE_GEOLOGY_NOT_INSTALLED_AT_CAPTURE');
+              const png=decodeCanvasCapture({before:v.before,after:v.after,dataUrl:v.dataUrl},v.before);
+              const name=pose.name+'-'+RAVINE_HABITAT_MODES[mode]+'.png';
+              fs.writeFileSync(path.join(out,name),png);
+              receipt.views.push({pose:{name:pose.name,sourceDerived:true,sourceEvidenceId:pose.sourceEvidenceId,
+                firstHitAttributionAvailable:false},mode:RAVINE_HABITAT_MODES[mode],
+                diagnosticApplied:mode,sourceHead:HEADS[label],
+                sourceRendererBlob:RAVINE_HABITAT_TARGET.exactRendererBlob,
+                rendererHash:runRecord.instrumentation.find(x=>x.path===RENDERER)?.sourceSha256,
+                camera:v.camera,localCamera:v.localCamera,pixel:v.pixel,rgba:v.rgba,
+                frame:v.after,sourceTarget:pose.referenceTarget,firstHitPixelReadback:true,
+                assetSignature:JSON.stringify(v.geology),image:name,imageSha256:sha(png),imageBytes:png.length});
+              persist();
+            }
+            const group=receipt.views.filter(v=>v.pose.name===pose.name);
+            if(group.length!==10||group.some(v=>v.camera.x!==group[0].camera.x||
+               v.camera.y!==group[0].camera.y||v.camera.z!==group[0].camera.z||
+               v.pixel.x!==group[0].pixel.x||v.pixel.y!==group[0].pixel.y||
+               v.assetSignature!==group[0].assetSignature))
+              throw Error('RAVINE_CAMERA_PIXEL_OR_SOURCE_DRIFT');
+            const rgba=mode=>group.find(x=>x.mode===mode).rgba;
+            const role=rgba('first-hit-role-byte'),id=rgba('first-hit-primitive-24bit');
+            const primitive=((id[0]<<16)|(id[1]<<8)|id[2])>>>0;
+            const distance=role[1]*2/255,firstHitPass=role[0]===1&&primitive===62000&&distance<=0.65;
+            const before=rgba('before-habitat-unlit'),after=rgba('after-habitat-unlit');
+            const lit=rgba('reference-lit'),counter=rgba('final-lit-without-habitat-color');
+            const unlitDelta=before.slice(0,3).map((v,i)=>after[i]-v);
+            const finalDelta=lit.slice(0,3).map((v,i)=>v-counter[i]);
+            const effect=Math.max(...unlitDelta.map(Math.abs),...finalDelta.map(Math.abs));
+            const result=!firstHitPass?'INSTRUMENTATION_GAP':effect>=2?'SUPPORTED_AT_VIEW':'NOT_SUPPORTED_AT_VIEW';
+            evidence.push({name:pose.name,result,roleCode:role[0],primitive,worldDistanceMeters:distance,
+              firstHitPass,unlitDelta,finalDelta,effectiveHabitatWeight:rgba('effective-habitat-color-weight')[0]/255,
+              pixel:group[0].pixel,camera:group[0].camera,sourceTarget:pose.referenceTarget});
+            receipt.pixelAttribution={schema:'RAVINE_HABITAT_PIXEL_ATTRIBUTION_v1',
+              result,firstHit:evidence,firstHitPixelReadback:true,
+              mapWideAcceptance:false,ownerPhotoCorrespondence:false,publicationAuthorized:false};
+            persist();
+            if(!firstHitPass)throw Error('RAVINE_FIRST_HIT_NOT_SOURCE_BOUND:'+pose.name);
+          }
+          receipt.result=evidence.every(x=>x.result==='SUPPORTED_AT_VIEW')?'SUPPORTED_AT_VIEW':
+            evidence.some(x=>x.result==='NOT_SUPPORTED_AT_VIEW')?'NOT_SUPPORTED_AT_VIEW':'INSTRUMENTATION_GAP';
+          receipt.pixelAttribution={...receipt.pixelAttribution,result:receipt.result,modeCount:10,captureCount:receipt.views.length};
+          persist();
+        }else receipt.result=probe.result;
+        runRecord.completedAt=new Date().toISOString();persist();
+        await context.close();server.kill();server=null;
+        assertCheckout(dir,HEADS[label]);
+        if(errors.length)throw Error('RAVINE_OBSERVER_BROWSER_ERRORS:'+errors.join(';'));
+        continue;
+      }
+      await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
+        const pose=WEST_FLANK_FROZEN_POSE;
+        let seq=24000;
+        const stageRows=[];
+        for(let mode=0;mode<WEST_FLANK_STAGE_MODES.length;mode++){
+          const sample=await page.evaluate(async ({pose,mode,seq,target,pixels})=>{
+            globalThis.__ravineHabitatProbeMode=mode;
+            globalThis.__ravineExpectedLocalTarget=target;
+            globalThis.__groundComparisonHideGrass=false;
+            const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,seq,'GEN3079_WEST_FLANK_STAGE');
+            globalThis.__HEarthAuditPresent(state);
+            const canvas=document.querySelector('#h-earth-functional-landscape-canvas');
+            if(!canvas||canvas.width!==529||canvas.height!==980)throw Error('WEST_FLANK_VIEWPORT_DRIFT');
+            const receipt=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+            const before=receipt.frameRecords.at(-1);
+            const rgba=pixels.map(p=>globalThis.__ravineReadGeometryPixel(p.x,canvas.height-1-p.y));
+            const dataUrl=canvas.toDataURL('image/png');
+            const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
+            return {state,rgba,before,after,dataUrl,modeApplied:globalThis.__ravineHabitatProbeModeApplied,
+              asset:receipt.resources?.geologicalFormation};
+          },{pose,mode,seq:++seq,target:WEST_FLANK_SOURCE_TARGET,pixels:WEST_FLANK_PIXELS});
+          if(sample.modeApplied!==mode)throw Error('WEST_FLANK_MODE_NOT_APPLIED:'+mode);
+          if(sample.before?.navigationSequence!==seq||sample.after?.navigationSequence!==seq||
+             sample.before?.frameSequence!==sample.after?.frameSequence)
+            throw Error('WEST_FLANK_FRAME_MISMATCH:'+mode);
+          if(!sample.asset?.physicalNavigationInstalled)throw Error('WEST_FLANK_GEOMETRY_NOT_LOADED');
+          const png=decodeCanvasCapture({before:sample.before,after:sample.after,dataUrl:sample.dataUrl},sample.before);
+          const name='west_flank-'+String(mode).padStart(2,'0')+'-'+WEST_FLANK_STAGE_MODES[mode]+'.png';
+          fs.writeFileSync(path.join(out,name),png);
+          stageRows.push({mode,stage:WEST_FLANK_STAGE_MODES[mode],rgba:sample.rgba,
+            sourceFrame:sample.after.frameSequence,sourceNavigation:sample.after.navigationSequence,
+            frameCamera:sample.after.cameraPosition,sourceHead:HEADS[label],
+            image:name,imageSha256:sha(png),imageBytes:png.length});
+          receipt.westFlankPixelStages={schema:'H_EARTH_WEST_FLANK_PIXEL_STAGES_GEN3079_v1',
+            status:'STAGES_CAPTURED_SAME_TRIANGLE_NOT_VERIFIED',camera:pose,
+            targets:WEST_FLANK_PIXELS,stageRows,originalSourceTriangle11650NotRevalidated:true,
+            noOwnerAndroidPhotoMatch:true,healthyControlNotVerified:true,productMutation:false};
+          persist();
+        }
+        if(stageRows.length!==16||stageRows.some(q=>q.rgba.length!==2||
+           q.rgba.some(p=>p.length!==4)||q.sourceHead!==HEADS[label]))
+          throw Error('WEST_FLANK_STAGE_CENSUS_INCOMPLETE');
+        const firstHitRole=stageRows[6].rgba.map(p=>p[0]);
+        const firstHitPrimitive=stageRows[7].rgba.map(p=>(p[0]<<16)|(p[1]<<8)|p[2]);
+        const sameGeom=firstHitRole.every(v=>v===1)&&firstHitPrimitive[0]===firstHitPrimitive[1];
+        const delta=(before,after)=>before.rgba.map((px,i)=>after.rgba[i].slice(0,3).map((c,j)=>c-px[j]));
+        receipt.westFlankPixelStages={...receipt.westFlankPixelStages,
+          sameUploadedPrimitiveClass:sameGeom,exactOriginalTriangleIdentityProven:false,
+          actualRoleCodes:firstHitRole,actualPrimitiveCodes:firstHitPrimitive,
+          worldSoilDelta:delta(stageRows[10],stageRows[11]),
+          environmentalIdentityDelta:delta(stageRows[12],stageRows[13]),
+          groundcoverDelta:delta(stageRows[14],stageRows[15]),
+          habitatDelta:delta(stageRows[4],stageRows[5]),
+          litWithoutHabitatDelta:delta(stageRows[9],stageRows[0]),
+          status:sameGeom?'PIXEL_STAGE_READBACK_COMPLETE_TRIANGLE_ID_PENDING':'FIRST_HIT_CLASS_DISAGREEMENT'};
+        receipt.result=receipt.westFlankPixelStages.status;
+        persist();
+        if(!sameGeom)throw Error('WEST_FLANK_PIXEL_FIRST_HIT_ROLE_OR_PRIMITIVE_MISMATCH');
+        runRecord.completedAt=new Date().toISOString();
+        await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);
+        if(errors.length)throw Error('WEST_FLANK_BROWSER_ERRORS:'+errors.join(';'));
+        continue;
+      }
       if(RAVINE_ANY_ACTIVE){
         await page.waitForFunction(()=>typeof globalThis.__ravinePublishedGeologicalSurfaceAt==='function',null,{timeout:30000});
         const probe=await page.evaluate(()=>{
@@ -504,7 +647,8 @@ export async function run(argv){
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(RAVINE_ANY_ACTIVE){if(!receipt.ravineObserverPreflight||(RAVINE_OBSERVER_ACTIVE&&receipt.views.length!==0))throw Error('RAVINE_OBSERVER_RECEIPT_INCOMPLETE');}
+    if(WEST_FLANK_ACTIVE){if(!receipt.westFlankPixelStages||receipt.westFlankPixelStages.stageRows.length!==16)throw Error('WEST_FLANK_RECEIPT_INCOMPLETE');}
+    else if(RAVINE_ANY_ACTIVE){if(!receipt.ravineObserverPreflight||(RAVINE_OBSERVER_ACTIVE&&receipt.views.length!==0))throw Error('RAVINE_OBSERVER_RECEIPT_INCOMPLETE');}
      else if(G1_PROFILE){receipt.g1=validateG1Set(receipt.views);receipt.result=INLAND_BAND_PROFILE?'INLAND_BAND_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED':'G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED';}
      else if(GEN3042_PROFILE){receipt.triad=validateGen3042(receipt.views);receipt.result='GEN3042_SOIL_TRIAD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING';}
     else{validateDiagnosticSet(receipt.views,poses,modes);receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';}

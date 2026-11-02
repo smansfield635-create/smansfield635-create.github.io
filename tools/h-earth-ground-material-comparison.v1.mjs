@@ -30,7 +30,7 @@ export function deriveRavineEmittedSurfaceObserver(sampleSurfaceAt,{name,x,z}){
      !['ravine-west','outside-habitat-control'].includes(name)||
      z!==RAVINE_HABITAT_TARGET.z||
      (name==='ravine-west'&&x!==RAVINE_HABITAT_TARGET.ravineWestEdge)||
-     (name==='outside-habitat-control'&&x!==RAVINE_HABITAT_TARGET.xStart))
+     (name==='outside-habitat-control'&&x!==RAVINE_HABITAT_TARGET.xStart+2))
     throw Error('RAVINE_OBSERVER_TARGET_NOT_FROZEN');
   const sample=(sx,sz)=>{
     const result=sampleSurfaceAt(sx,sz);

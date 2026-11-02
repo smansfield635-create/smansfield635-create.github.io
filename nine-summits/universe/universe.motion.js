@@ -2154,7 +2154,12 @@ function render(time){
   if(!reduced&&sceneVisible)universeClock+=dt;
   if((selected===4||selected===0||selected===1||selected===2||selected===3||selected===5||selected===6||selected===7||selected===8)&&flight>.01){
     const focus=P.quaternionRotateVector(quaternion,basePosition(selected));
-    targetOffset=[focus[0]*smooth-.18*smooth,focus[1]*smooth,focus[2]*smooth];
+    // Gratitude's large approach mesh was growing faster than the original
+    // smoothstep camera pan, clipping its limb before focus reached the world.
+    // Move that existing camera target earlier; no change at orbit or arrival.
+    const gratitudeFocusLead=selected===4?Math.min(1,flight/.32):0;
+    const focusEase=selected===4?gratitudeFocusLead*gratitudeFocusLead*(3-2*gratitudeFocusLead):smooth;
+    targetOffset=[focus[0]*focusEase-.18*smooth,focus[1]*focusEase,focus[2]*focusEase];
     targetZoom=1+2.6*smooth;
   }
   if(selected===8&&flight>.55){
@@ -2266,8 +2271,13 @@ function render(time){
   gl.viewport(0,0,canvas.width,canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);drawStars();gl.useProgram(program);
   gl.uniform2f(loc.uView,viewWidth,viewHeight);gl.uniform3fv(loc.uOffset,offset);gl.uniform1f(loc.uZoom,zoom);gl.uniform1f(loc.uCameraZ,cameraZ);gl.uniform1f(loc.uTime,reduced?0:universeClock);
   centers=summits.map((_,i)=>P.quaternionRotateVector(quaternion,basePosition(i)));
-  const heartPosition=[width<600?-.35:.38,width<600?-.37:-.14,.40];
-  draw(meshes[0],heartPosition,(width<600?1.90:1.72)*(1-.38*smooth),[.76,.9,.96],true,false);
+  // As Gratitude becomes the visual focus, the central heart retreats as one
+  // object; keep its full original location/scale at orbit and for all other worlds.
+  const heartDeparture=selected===4?Math.max(0,Math.min(1,(flight-.04)/.27)):0;
+  const heartRetreat=heartDeparture*heartDeparture*(3-2*heartDeparture);
+  const heartPosition=[(width<600?-.35:.38)-.95*heartRetreat,
+                       (width<600?-.37:-.14)+.24*heartRetreat,.40];
+  draw(meshes[0],heartPosition,(width<600?1.90:1.72)*(1-.38*smooth)*(1-.62*heartRetreat),[.76,.9,.96],true,false);
   projected=centers.map((center,i)=>{
     draw(meshes[i+1],center,radius(i)*((i===4&&selected===4||i===0&&selected===0||i===1&&selected===1||i===2&&selected===2||i===3&&selected===3||i===5&&selected===5||i===6&&selected===6||i===7&&selected===7||i===8&&selected===8)?1+3.1*smooth:1),color(summits[i][2]),false,i===selected,i);
     const p=project(center),label=labels[i];

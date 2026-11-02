@@ -1602,3 +1602,118 @@ jobs:
             ${{ runner.temp }}/h-earth-gen3042-checkout-evidence/
           if-no-files-found: warn
           retention-days: 30
+
+  inland-positive-band-a03-matched-once:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'opened' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/inland-proven-band-a03-profile-20261102' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact already-qualified comparator and inland profile
+        uses: actions/checkout@v4
+        with:
+          ref: 9d751b867a08c5d074c4a36dcaaa92a02667f97f
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /tools/h-earth-inland-band-a03-profile.v1.test.mjs
+      - name: Checkout original frozen inland terrain source
+        uses: actions/checkout@v4
+        with:
+          ref: 7a21f465fc58cc1dbdda02a3807a4bf344440589
+          path: baseline
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/h-earth/
+            /h-earth-3d/
+      - name: Checkout frozen normalized-soil A03 source
+        uses: actions/checkout@v4
+        with:
+          ref: 7d55ca9707bfef75a9ddf9fb078747ba79eef19a
+          path: candidate
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/h-earth/
+            /h-earth-3d/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate source blobs and run new exact-profile tests before Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C tooling rev-parse HEAD)" = 9d751b867a08c5d074c4a36dcaaa92a02667f97f
+          test "$(git -C baseline rev-parse HEAD)" = 7a21f465fc58cc1dbdda02a3807a4bf344440589
+          test "$(git -C candidate rev-parse HEAD)" = 7d55ca9707bfef75a9ddf9fb078747ba79eef19a
+          test "$(git -C tooling hash-object tools/h-earth-ground-material-comparison.v1.mjs)" = 011be2b872da6085baf812b00a7f8de76763195d
+          test "$(git -C tooling hash-object tools/h-earth-groundcover-factor-overlay.mjs)" = 4918f2d52de8898e482830f93f74d94e89125666
+          test "$(git -C tooling hash-object tools/h-earth-inland-band-a03-profile.v1.test.mjs)" = 61db8e50f4bcc9ebc8a73f20440f82941cfc81ee
+          test "$(git -C baseline hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
+          test "$(git -C candidate hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 62dc1e62f417f2b8eb7b4b08240f231d52d0c54e
+          for dir in tooling baseline candidate; do test -z "$(git -C "$dir" status --porcelain --untracked-files=no)"; done
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-groundcover-factor-overlay.mjs
+          node --test tooling/tools/h-earth-inland-band-a03-profile.v1.test.mjs
+          mkdir -p "${{ runner.temp }}/h-earth-inland-band-a03-match/baseline" "${{ runner.temp }}/h-earth-inland-band-a03-match/candidate"
+          { df -h "$GITHUB_WORKSPACE"; du -sh tooling baseline candidate; free -m; } > "${{ runner.temp }}/h-earth-inland-band-a03-match/resource-preflight.txt"
+          for dir in tooling baseline candidate; do
+            bytes="$(du -sb "$dir" | cut -f1)"
+            if (( bytes > 2147483648 )); then echo "SOURCE_TREE_OVER_2GB:$dir:$bytes"; exit 42; fi
+          done
+          available="$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -n 1 | tr -d ' ')"
+          if (( available < 8589934592 )); then echo "INSUFFICIENT_FREE_BYTES:$available"; exit 43; fi
+      - name: Install existing Chromium comparison dependency
+        working-directory: tooling
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture four baseline and four candidate frames at previously proven inland band
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          H_EARTH_COMPARISON_PROFILE=INLAND_BAND_BASELINE_ONLY_V1 timeout 1300s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../baseline --output "${{ runner.temp }}/h-earth-inland-band-a03-match/baseline"
+          H_EARTH_COMPARISON_PROFILE=INLAND_BAND_A03_CANDIDATE_ONLY_V1 timeout 1300s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --candidate-dir ../candidate --output "${{ runner.temp }}/h-earth-inland-band-a03-match/candidate"
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import assert from "node:assert/strict";
+            const root=process.argv[1],receipts=["baseline","candidate"].map(p=>JSON.parse(fs.readFileSync(root+"/"+p+"/receipt.json","utf8")));
+            const [baseline,candidate]=receipts;
+            const expectedModes=["reference-lit","before-groundcover-unlit","after-groundcover-unlit","groundcover-weight-raw"];
+            for(const [i,r] of receipts.entries()){
+              assert.equal(r.result,"INLAND_BAND_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED");
+              assert.equal(r.views.length,4);assert.equal(r.g1.images,4);
+              assert.equal(r.ownerVisualAcceptance,false);assert.equal(r.releaseAuthorized,false);
+              assert.equal(r.productDiskMutation,false);
+              assert.deepEqual(r.views.map(v=>v.mode),expectedModes);
+              assert(r.views.every(v=>v.pose.name==="inland-seam-near"&&v.imageWidth===529&&v.imageHeight===980));
+              assert(r.views.every(v=>fs.existsSync(root+"/"+(i?"candidate":"baseline")+"/"+v.image)));
+            }
+            assert.deepEqual(baseline.poses,candidate.poses);
+            assert.deepEqual(baseline.modes,candidate.modes);
+            assert.deepEqual(Object.keys(baseline.heads),["baseline"]);
+            assert.deepEqual(Object.keys(candidate.heads),["candidate"]);
+            assert(baseline.views.every(v=>v.sourceHead==="7a21f465fc58cc1dbdda02a3807a4bf344440589"));
+            assert(candidate.views.every(v=>v.sourceHead==="7d55ca9707bfef75a9ddf9fb078747ba79eef19a"));
+            console.log("INLAND_MATCHED_EIGHT_FRAMES_MECHANICAL_PASS_OWNER_CLASS_UNQUALIFIED");
+          ' "${{ runner.temp }}/h-earth-inland-band-a03-match"
+      - name: Preserve both source-positive inland sets and receipts even after failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-inland-band-a03-match-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-inland-band-a03-match
+          if-no-files-found: warn
+          retention-days: 30

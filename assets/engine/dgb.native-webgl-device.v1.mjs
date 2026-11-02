@@ -15,6 +15,8 @@ export function createNativeWebGLDevice(canvas, {
 
   const programs = new Set();
   const meshes = new Set();
+  const textures = new Set();
+  const targets = new Set();
   let lost = false, disposed = false, restorationError = null;
   const assertActive = () => {
     if (disposed) throw new Error('DEVICE_DISPOSED');
@@ -25,6 +27,141 @@ export function createNativeWebGLDevice(canvas, {
     if (!set.has(item)) throw new Error(`${kind}_NOT_OWNED_BY_DEVICE`);
     if (!item.gpu) throw new Error(`${kind}_NOT_RESIDENT`);
   };
+
+  // Resource records retain their definitions; raw GPU handles never survive context loss.
+  const byteSize = (width, height, components = 4) => {
+    const bytes = width * height * components;
+    if (!Number.isSafeInteger(bytes)) throw new RangeError('RESOURCE_BYTE_SIZE_INVALID');
+    return bytes;
+  };
+  function validateImageSize(width, height, withDepth = false) {
+    if (!Number.isSafeInteger(width) || !Number.isSafeInteger(height) || width < 1 || height < 1) {
+      throw new TypeError('RESOURCE_SIZE_INVALID');
+    }
+    byteSize(width, height);
+    const textureLimit = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+    if (!Number.isInteger(textureLimit) || textureLimit < 1) throw new Error('TEXTURE_LIMIT_UNAVAILABLE');
+    if (width > textureLimit || height > textureLimit) throw new RangeError('TEXTURE_SIZE_LIMIT_EXCEEDED');
+    if (withDepth) {
+      const depthLimit = gl.getParameter(gl.MAX_RENDERBUFFER_SIZE);
+      if (!Number.isInteger(depthLimit) || depthLimit < 1) throw new Error('RENDERBUFFER_LIMIT_UNAVAILABLE');
+      if (width > depthLimit || height > depthLimit) throw new RangeError('RENDERBUFFER_SIZE_LIMIT_EXCEEDED');
+    }
+  }
+  function validateTextureDefinition({ width, height, pixels = null, filter = 'NEAREST' } = {}) {
+    validateImageSize(width, height);
+    if (filter !== 'NEAREST' && filter !== 'LINEAR') throw new TypeError('TEXTURE_FILTER_UNSUPPORTED');
+    if (pixels !== null && !(pixels instanceof Uint8Array || pixels instanceof Uint8ClampedArray)) {
+      throw new TypeError('RGBA8_PIXELS_REQUIRED');
+    }
+    if (pixels !== null && pixels.byteLength !== byteSize(width, height)) {
+      throw new RangeError('RGBA8_PIXEL_LENGTH_MISMATCH');
+    }
+    return { width, height, filter, pixels: pixels === null ? null : new Uint8Array(pixels) };
+  }
+  function allocateTexture(definition) {
+    const priorTexture = gl.getParameter(gl.TEXTURE_BINDING_2D);
+    const priorAlignment = gl.getParameter(gl.UNPACK_ALIGNMENT);
+    let texture = null;
+    try {
+      texture = gl.createTexture();
+      if (!texture) throw new Error('TEXTURE_ALLOCATION_FAILED');
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl[definition.filter]);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[definition.filter]);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, definition.width, definition.height, 0,
+        gl.RGBA, gl.UNSIGNED_BYTE, definition.pixels);
+      return texture;
+    } catch (error) {
+      if (texture) gl.deleteTexture(texture);
+      throw error;
+    } finally {
+      gl.bindTexture(gl.TEXTURE_2D, priorTexture);
+      gl.pixelStorei(gl.UNPACK_ALIGNMENT, priorAlignment);
+    }
+  }
+  function createTexture2D(specification) {
+    assertActive();
+    const definition = validateTextureDefinition(specification);
+    const record = { definition, gpu: allocateTexture(definition) };
+    textures.add(record);
+    return record;
+  }
+  function releaseTargetParts(framebuffer, depthBuffer, colorTexture) {
+    if (framebuffer) gl.deleteFramebuffer(framebuffer);
+    if (depthBuffer) gl.deleteRenderbuffer(depthBuffer);
+    if (colorTexture) gl.deleteTexture(colorTexture);
+  }
+  function allocateTargetParts(definition) {
+    const oldFramebuffer = gl.getParameter(gl.FRAMEBUFFER_BINDING);
+    const oldRenderbuffer = gl.getParameter(gl.RENDERBUFFER_BINDING);
+    let colorTexture = null, framebuffer = null, depthBuffer = null;
+    try {
+      colorTexture = allocateTexture({ width: definition.width, height: definition.height,
+        pixels: null, filter: 'NEAREST' });
+      framebuffer = gl.createFramebuffer();
+      if (!framebuffer) throw new Error('FRAMEBUFFER_ALLOCATION_FAILED');
+      gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTexture, 0);
+      if (definition.depth) {
+        depthBuffer = gl.createRenderbuffer();
+        if (!depthBuffer) throw new Error('RENDERBUFFER_ALLOCATION_FAILED');
+        gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
+        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, definition.width, definition.height);
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
+      }
+      if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
+        throw new Error('FRAMEBUFFER_INCOMPLETE');
+      }
+      return { framebuffer, colorTexture, depthBuffer };
+    } catch (error) {
+      releaseTargetParts(framebuffer, depthBuffer, colorTexture);
+      throw error;
+    } finally {
+      gl.bindRenderbuffer(gl.RENDERBUFFER, oldRenderbuffer);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, oldFramebuffer);
+    }
+  }
+  function createRenderTarget({ width, height, depth = true } = {}) {
+    assertActive();
+    if (typeof depth !== 'boolean') throw new TypeError('RENDER_TARGET_DEPTH_INVALID');
+    validateImageSize(width, height, depth);
+    const definition = { width, height, depth };
+    const parts = allocateTargetParts(definition);
+    const record = { definition, width, height, gpu: parts.framebuffer,
+      colorTexture: { gpu: parts.colorTexture }, depthGpu: parts.depthBuffer };
+    targets.add(record);
+    return record;
+  }
+  function bindRenderTarget(target = null) {
+    assertActive();
+    if (target !== null) requireOwned(targets, target, 'RENDER_TARGET');
+    gl.bindFramebuffer(gl.FRAMEBUFFER, target === null ? null : target.gpu);
+    gl.viewport(0, 0, target === null ? canvas.width : target.width,
+      target === null ? canvas.height : target.height);
+  }
+  function resizeRenderTarget(target, width, height) {
+    assertActive();
+    requireOwned(targets, target, 'RENDER_TARGET');
+    validateImageSize(width, height, target.definition.depth);
+    if (width === target.width && height === target.height) return target;
+    const bound = gl.getParameter(gl.FRAMEBUFFER_BINDING) === target.gpu;
+    const replacement = allocateTargetParts({ width, height, depth: target.definition.depth });
+    const previous = { framebuffer: target.gpu, depthBuffer: target.depthGpu,
+      colorTexture: target.colorTexture.gpu };
+    target.definition = { width, height, depth: target.definition.depth };
+    target.width = width;
+    target.height = height;
+    target.gpu = replacement.framebuffer;
+    target.colorTexture.gpu = replacement.colorTexture;
+    target.depthGpu = replacement.depthBuffer;
+    if (bound) bindRenderTarget(target);
+    releaseTargetParts(previous.framebuffer, previous.depthBuffer, previous.colorTexture);
+    return target;
+  }
   function shader(type, source) {
     if (typeof source !== 'string' || !source.trim()) throw new TypeError('SHADER_SOURCE_REQUIRED');
     const out = gl.createShader(type);
@@ -165,6 +302,8 @@ export function createNativeWebGLDevice(canvas, {
   }
   function destroyResources() {
     if (!lost && !gl.isContextLost?.()) {
+      for (const target of targets) releaseTargetParts(target.gpu, target.depthGpu, target.colorTexture.gpu);
+      for (const texture of textures) if (texture.gpu) gl.deleteTexture(texture.gpu);
       for (const mesh of meshes) {
         if (mesh.gpu) {
           for (const attr of mesh.gpu.attributes) gl.deleteBuffer(attr.buffer);
@@ -173,6 +312,10 @@ export function createNativeWebGLDevice(canvas, {
       }
       for (const program of programs) if (program.gpu) gl.deleteProgram(program.gpu);
     }
+    for (const target of targets) {
+      target.gpu = null; target.colorTexture.gpu = null; target.depthGpu = null;
+    }
+    for (const texture of textures) texture.gpu = null;
     for (const mesh of meshes) mesh.gpu = null;
     for (const program of programs) program.gpu = null;
   }
@@ -186,6 +329,12 @@ export function createNativeWebGLDevice(canvas, {
     try {
       for (const p of programs) p.gpu = linkProgram(p.definition);
       for (const m of meshes) m.gpu = uploadMesh(m.definition);
+      for (const t of textures) t.gpu = allocateTexture(t.definition);
+      for (const target of targets) {
+        const next = allocateTargetParts(target.definition);
+        target.gpu = next.framebuffer; target.colorTexture.gpu = next.colorTexture;
+        target.depthGpu = next.depthBuffer;
+      }
     } catch (error) {
       restorationError = error;
       destroyResources();
@@ -197,6 +346,10 @@ export function createNativeWebGLDevice(canvas, {
     lost = true;
     for (const p of programs) p.gpu = null;
     for (const m of meshes) m.gpu = null;
+    for (const t of textures) t.gpu = null;
+    for (const target of targets) {
+      target.gpu = null; target.colorTexture.gpu = null; target.depthGpu = null;
+    }
   }
   function onContextRestored() {
     try { recover(); } catch (_) { /* fail closed; status exposes error */ }
@@ -208,12 +361,28 @@ export function createNativeWebGLDevice(canvas, {
     destroyResources();
     programs.clear();
     meshes.clear();
+    textures.clear();
+    targets.clear();
     disposed = true;
     canvas.removeEventListener?.('webglcontextlost', onContextLost, false);
     canvas.removeEventListener?.('webglcontextrestored', onContextRestored, false);
   }
   return Object.freeze({
-    backend, gl, createProgram, createMesh, draw, viewport, recover, dispose,
-    status() { return Object.freeze({ backend, lost, disposed, restorationError: restorationError?.message ?? null, programs: programs.size, meshes: meshes.size }); }
+    backend, gl, createProgram, createMesh, createTexture2D, createRenderTarget,
+    bindRenderTarget, resizeRenderTarget, draw, viewport, recover, dispose,
+    status() {
+      const estimatedTextureBytes = [...textures].reduce((n, t) => n + byteSize(t.definition.width, t.definition.height), 0) +
+        [...targets].reduce((n, t) => n + byteSize(t.width, t.height), 0);
+      const estimatedRenderbufferBytes = [...targets].reduce((n, t) =>
+        n + (t.definition.depth ? byteSize(t.width, t.height, 2) : 0), 0);
+      const estimatedMeshBytes = [...meshes].reduce((n, m) =>
+        n + m.definition.attributes.reduce((sum, a) => sum + a.data.byteLength, 0) +
+        (m.definition.indices?.byteLength ?? 0), 0);
+      return Object.freeze({ backend, lost, disposed, restorationError: restorationError?.message ?? null,
+        programs: programs.size, meshes: meshes.size, textures: textures.size + targets.size,
+        renderTargets: targets.size, estimatedTextureBytes, estimatedRenderbufferBytes,
+        estimatedTotalResourceBytes: estimatedTextureBytes + estimatedRenderbufferBytes + estimatedMeshBytes,
+        memoryBasis: 'ENGINE_OWNED_ALLOCATION_ESTIMATE_NOT_VRAM_TOTAL' });
+    }
   });
 }

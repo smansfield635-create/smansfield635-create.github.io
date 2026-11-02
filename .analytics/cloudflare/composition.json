@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-02T02:27:31Z",
+  "generatedAt": "2026-11-02T03:27:51Z",
   "window": {
-    "start": "2026-10-03T02:27:31Z",
-    "end": "2026-11-02T02:27:31Z"
+    "start": "2026-10-03T03:27:51Z",
+    "end": "2026-11-02T03:27:51Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 738,
-        "visits": 682
+        "pageLoads": 737,
+        "visits": 681
       },
       {
         "value": "/analytics/",
@@ -19,8 +19,8 @@
       },
       {
         "value": "/",
-        "pageLoads": 99,
-        "visits": 87
+        "pageLoads": 100,
+        "visits": 88
       },
       {
         "value": "/nine-summits/universe/",
@@ -237,8 +237,8 @@
       },
       {
         "value": "Chrome",
-        "pageLoads": 498,
-        "visits": 427
+        "pageLoads": 497,
+        "visits": 426
       },
       {
         "value": "ChromeMobile",
@@ -247,8 +247,8 @@
       },
       {
         "value": "Edge",
-        "pageLoads": 109,
-        "visits": 96
+        "pageLoads": 110,
+        "visits": 97
       },
       {
         "value": "Firefox",

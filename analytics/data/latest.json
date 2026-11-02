@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-02T02:27:31Z",
+  "generatedAt": "2026-11-02T03:27:51Z",
   "window30d": {
-    "start": "2026-10-03T02:27:31Z",
-    "end": "2026-11-02T02:27:31Z"
+    "start": "2026-10-03T03:27:51Z",
+    "end": "2026-11-02T03:27:51Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-25",
-      "pageLoads": 62
+      "pageLoads": 60
     },
     {
       "date": "2026-10-26",
@@ -124,7 +124,7 @@
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 2
+      "pageLoads": 4
     }
   ],
   "summary": {
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 738,
-      "visits": 682
+      "pageLoads": 737,
+      "visits": 681
     },
     {
       "path": "/analytics/",
@@ -177,8 +177,8 @@
     },
     {
       "path": "/",
-      "pageLoads": 99,
-      "visits": 87
+      "pageLoads": 100,
+      "visits": 88
     },
     {
       "path": "/nine-summits/universe/",

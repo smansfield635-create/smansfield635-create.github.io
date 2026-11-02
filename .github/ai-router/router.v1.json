@@ -347,7 +347,10 @@
         "assets/build/build-engine.v3.mjs",
         "assets/build/build-companion.js",
         "tools/build-companion-matrix-v3-browser.test.mjs",
-        "tools/build-companion-v4-browser.test.mjs","assets/build/build-companion.css","tools/build-companion-v4-sufficiency-browser.test.mjs","build/intake/index.html"
+        "tools/build-companion-v4-browser.test.mjs",
+        "assets/build/build-companion.css",
+        "tools/build-companion-v4-sufficiency-browser.test.mjs",
+        "build/intake/index.html"
       ],
       "entrypoint": ".github/ai-router/projects/build/entrypoint.v1.json",
       "priority": 100
@@ -534,7 +537,9 @@
       "ownedPathPrefixes": [],
       "ownedExactPaths": [
         "assets/engine/dgb.native-webgl-device.v1.mjs",
-        "assets/engine/dgb.native-webgl-device.v1.test.mjs"
+        "assets/engine/dgb.native-webgl-device.v1.test.mjs",
+        "assets/engine/dgb.native-frame-pipeline.v1.mjs",
+        "assets/engine/dgb.native-frame-pipeline.v1.test.mjs"
       ],
       "entrypoint": ".github/ai-router/projects/diamond-gate-graphics-engine/entrypoint.v1.json",
       "priority": 100

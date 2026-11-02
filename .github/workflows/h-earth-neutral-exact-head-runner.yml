@@ -1816,7 +1816,7 @@ jobs:
           echo "GEN3074_PREFLIGHT_BLOB actual=$actual_blob expected=85ee835060d5106a670077a5f4352b49b"
           [[ "$actual_tooling" == "$TOOLING_HEAD" ]] || { echo GEN3074_TOOLING_HEAD_DRIFT; exit 51; }
           [[ "$actual_product" == 11afdc5278564728ea9eef6ffb525601ce4362a7 ]] || { echo GEN3074_PRODUCT_HEAD_DRIFT; exit 52; }
-          [[ "$actual_blob" == 85ee835060d5106a670077a5f4352b49b ]] || { echo GEN3074_PRODUCT_BLOB_DRIFT; exit 53; }
+          [[ "$actual_blob" == 85ee835060d5106a670077a5f4352b7ad202b49b ]] || { echo GEN3074_PRODUCT_BLOB_DRIFT; exit 53; }
           for dir in tooling product; do
             tracked="$(git -C "$dir" status --porcelain --untracked-files=no)"
             printf 'GEN3074_PREFLIGHT_TRACKED_STATUS %s=%s\n' "$dir" "$tracked"

@@ -161,3 +161,16 @@ test('mid-frame context loss aborts queue and restores a clean frame boundary',(
   assert.equal(pipe.endFrame().submitted,0);
   assert.equal(pipe.status().lastError,null);
 });
+
+test('context lost inside draw fails instead of falsely claiming a completed frame',()=>{
+  const f=fixture(),pipe=createNativeFramePipeline(f.device);
+  f.setDraw(()=>f.lose());
+  pipe.beginFrame(spec());
+  pipe.submit({program:f.program('A'),mesh:f.mesh('A')});
+  assert.throws(()=>pipe.endFrame(),/GRAPHICS_CONTEXT_LOST_DURING_FRAME/);
+  assert.equal(pipe.status().lastPresentation,'ABORTED');
+  assert.equal(pipe.status().completedFrames,0);
+  f.restore();f.setDraw(null);
+  pipe.beginFrame(spec());pipe.endFrame();
+  assert.equal(pipe.status().completedFrames,1);
+});

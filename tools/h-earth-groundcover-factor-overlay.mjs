@@ -196,3 +196,58 @@ export function transformRavineHabitatRenderer(original){
     gpuTextureSampling:'GL_LINEAR_FOR_BOTH'
   });
 }
+
+// Gen3079: frozen west-flank pixel-class diagnostic only. All preceding Gen3074
+// modes preserve their source meaning. The six new modes capture ordered
+// procedural soil stages; these are color-stage readings, not triangle IDs.
+export const WEST_FLANK_STAGE_MODES=Object.freeze([
+  ...RAVINE_HABITAT_PROBE_MODES,
+  'before-world-soil','after-world-soil',
+  'before-environmental-identity','after-environmental-identity',
+  'before-groundcover','after-groundcover'
+]);
+export function transformWestFlankMaterialRenderer(original){
+  const inherited=transformRavineHabitatRenderer(original);
+  let source=inherited.source;
+  const begin=source.indexOf('const FS = \`#version 300 es');
+  const end=source.indexOf('// Ordered screen-door coverage',begin);
+  if(begin<0||end<=begin)throw Error('WEST_FLANK_FRAGMENT_SCOPE_INVALID');
+  let fs=source.slice(begin,end);
+  fs=once(fs,'  vec3 ravineBeforeHabitat=base,ravineAfterHabitat=base;',[
+    '  vec3 ravineBeforeHabitat=base,ravineAfterHabitat=base;',
+    '  vec3 westBeforeSoil=base,westAfterSoil=base;',
+    '  vec3 westBeforeIdentity=base,westAfterIdentity=base;',
+    '  vec3 westBeforeGroundcover=base,westAfterGroundcover=base;'
+  ].join('\n'));
+  fs=once(fs,'        palette=mix(palette,worldSoilFinal,worldSoilWeight);',[
+    '        westBeforeSoil=palette;',
+    '        palette=mix(palette,worldSoilFinal,worldSoilWeight);',
+    '        westAfterSoil=palette;'
+  ].join('\n'));
+  fs=once(fs,'      palette=mix(palette,identityBase,identityWeight);',[
+    '      westBeforeIdentity=palette;',
+    '      palette=mix(palette,identityBase,identityWeight);',
+    '      westAfterIdentity=palette;'
+  ].join('\n'));
+  fs=once(fs,'      palette=mix(palette,groundcoverTone,groundcoverWeight);',[
+    '      westBeforeGroundcover=palette;',
+    '      palette=mix(palette,groundcoverTone,groundcoverWeight);',
+    '      westAfterGroundcover=palette;'
+  ].join('\n'));
+  fs=once(fs,'  outColor=vec4(lit,uRavineHabitatProbeMode>0?1.0:outputAlpha);',[
+    '  if(uRavineHabitatProbeMode>=10){',
+    '    int m=uRavineHabitatProbeMode;',
+    '    vec3 stage=m==10?westBeforeSoil:m==11?westAfterSoil:',
+    '      m==12?westBeforeIdentity:m==13?westAfterIdentity:',
+    '      m==14?westBeforeGroundcover:westAfterGroundcover;',
+    '    lit=pow(clamp(stage*1.12,0.0,1.0),vec3(1.0/2.2));',
+    '  }',
+    '  outColor=vec4(lit,uRavineHabitatProbeMode>0?1.0:outputAlpha);'
+  ].join('\n'));
+  source=source.slice(0,begin)+fs+source.slice(end);
+  source=once(source,'mode<0||mode>=10','mode<0||mode>=16');
+  return Object.freeze({...inherited,source,
+    instrumentedSha256:hash(source),modeCount:WEST_FLANK_STAGE_MODES.length,
+    ownerPhotoCorrespondence:false,sameTriangleProven:false,
+    productDiskMutation:false,releaseAuthorized:false});
+}

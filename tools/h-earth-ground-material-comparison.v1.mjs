@@ -3,7 +3,56 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {transformPublishedRenderer,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
+import {transformPublishedRenderer,transformRavineHabitatRenderer,RAVINE_HABITAT_PROBE_MODES,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
+
+// Gen3074 is a distinct source-only extension. It does not select any
+// historical comparison/G1 profile, nor authorize a fabricated camera pose.
+export const RAVINE_HABITAT_TARGET=Object.freeze({
+  schema:'H_EARTH_RAVINE_SOURCE_TARGET_v1',
+  exactRendererBlob:'85ee835060d5106a670077a5f4352b49b',
+  publishedSourceHead:'11afdc5278564728ea9eef6ffb525601ce4362a7',
+  z:-546,xStart:-304,xEnd:-292,ravineWestEdge:-298,
+  withinNavigableDomain:false,
+  ownerPhotoMatchEstablished:false,
+  cameraPoseQualified:false
+});
+export const RAVINE_HABITAT_MODES=RAVINE_HABITAT_PROBE_MODES;
+export const RAVINE_HABITAT_CAPTURE_CEILING=Object.freeze({
+  maximumPoses:2,maximumModesPerPose:10,maximumFrames:20,
+  cameraRequirement:'EXACT_SOURCE_DERIVED_OBSERVER_WITH_FIRST_HIT_AND_WORLD_COORDINATES',
+  status:'REQUIRES_CAMERA_AND_PIXEL_READBACK_QUALIFICATION'
+});
+export function instrumentRavineHabitatRenderer(original){
+  return instrumentRenderer(transformRavineHabitatRenderer(original).source);
+}
+export function validateRavineHabitatCapture(views,poses){
+  if(!Array.isArray(poses)||poses.length!==2||
+     !Array.isArray(views)||views.length!==poses.length*RAVINE_HABITAT_MODES.length)
+    throw Error('RAVINE_CAPTURE_CENSUS_INCOMPLETE');
+  for(const pose of poses){
+    if(!pose||pose.sourceDerived!==true||!pose.firstHitAttributionAvailable||
+       !pose.sourceEvidenceId||!['x','y','z','yaw','pitch'].every(k=>Number.isFinite(pose[k])))
+      throw Error('RAVINE_CAMERA_NOT_SOURCE_DERIVED');
+    const group=views.filter(v=>v.pose?.name===pose.name);
+    if(group.length!==RAVINE_HABITAT_MODES.length||
+       new Set(group.map(v=>v.mode)).size!==RAVINE_HABITAT_MODES.length)
+      throw Error('RAVINE_MODES_INCOMPLETE');
+    const reference=group[0];
+    for(const mode of RAVINE_HABITAT_MODES){
+      const v=group.find(x=>x.mode===mode);
+      if(!v||v.sourceHead!==RAVINE_HABITAT_TARGET.publishedSourceHead||
+         v.sourceRendererBlob!==RAVINE_HABITAT_TARGET.exactRendererBlob||
+         v.rendererHash!==reference.rendererHash||v.assetSignature!==reference.assetSignature||
+         JSON.stringify(v.lastFrame?.cameraPosition)!==JSON.stringify(reference.lastFrame?.cameraPosition)||
+         v.diagnosticApplied!==RAVINE_HABITAT_MODES.indexOf(mode)||
+         !/^[a-f0-9]{64}$/.test(v.imageSha256||''))
+        throw Error('RAVINE_STAGE_SOURCE_CAMERA_IDENTITY_MISMATCH');
+    }
+  }
+  return Object.freeze({result:'STAGE_MECHANICAL_ONLY_VISUAL_ATTRIBUTION_UNPROVEN',
+    modes:RAVINE_HABITAT_MODES.length,views:views.length,ownerPhotoMatch:false,
+    productionMutation:false,releaseAuthorized:false});
+}
 
 export const DIAGNOSTIC_MODES=Object.freeze(MODES_MINIMUM.map(i=>MODES[i]));
 const MODE_ID_BY_NAME=new Map(MODES.map((name,index)=>[name,index]));

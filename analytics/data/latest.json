@@ -1,18 +1,18 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-02T12:29:51Z",
+  "generatedAt": "2026-11-02T13:24:48Z",
   "window30d": {
-    "start": "2026-10-03T12:29:51Z",
-    "end": "2026-11-02T12:29:51Z"
+    "start": "2026-10-03T13:24:48Z",
+    "end": "2026-11-02T13:24:48Z"
   },
   "daily": [
     {
       "date": "2026-10-04",
-      "pageLoads": 50
+      "pageLoads": 90
     },
     {
       "date": "2026-10-05",
-      "pageLoads": 70
+      "pageLoads": 140
     },
     {
       "date": "2026-10-06",
@@ -36,11 +36,11 @@
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 70
+      "pageLoads": 80
     },
     {
       "date": "2026-10-12",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-13",
@@ -56,11 +56,11 @@
     },
     {
       "date": "2026-10-16",
-      "pageLoads": 120
+      "pageLoads": 90
     },
     {
       "date": "2026-10-17",
-      "pageLoads": 40
+      "pageLoads": 60
     },
     {
       "date": "2026-10-18",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-25",
-      "pageLoads": 73
+      "pageLoads": 82
     },
     {
       "date": "2026-10-26",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-02",
-      "pageLoads": 13
+      "pageLoads": 14
     }
   ],
   "summary": {
     "pageLoads": 1899,
-    "botPageLoads": 924,
-    "nonBotPageLoads": 975
+    "botPageLoads": 914,
+    "nonBotPageLoads": 985
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1729,
-      "visits": 1729
+      "pageLoads": 1669,
+      "visits": 1669
     },
     {
       "host": "diamondgatebridge.com",
@@ -144,14 +144,14 @@
       "visits": 0
     },
     {
-      "host": "bing.com",
-      "pageLoads": 38,
-      "visits": 38
+      "host": "www.google.com",
+      "pageLoads": 34,
+      "visits": 34
     },
     {
-      "host": "www.google.com",
-      "pageLoads": 14,
-      "visits": 14
+      "host": "bing.com",
+      "pageLoads": 18,
+      "visits": 18
     },
     {
       "host": "www.facebook.com",
@@ -168,7 +168,7 @@
     {
       "path": "/showroom/globe/h-earth/",
       "pageLoads": 739,
-      "visits": 686
+      "visits": 676
     },
     {
       "path": "/analytics/",

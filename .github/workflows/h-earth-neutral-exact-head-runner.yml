@@ -1422,3 +1422,100 @@ jobs:
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
           test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 10b5623b09c552930e54a1c1071c37535a831971
           (cd source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate && python3 -m unittest test_mesh_gate -v)
+
+  # G1: separately admitted single baseline-only source-derived GPU observation.
+  # This uses the existing comparison tool; it is not a new runner or A03 trial.
+  g1-baseline-four-frame-once:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'opened' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/g1-baseline-four-frame-20261102' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout frozen G1 comparator tooling
+        uses: actions/checkout@v4
+        with:
+          ref: 94e014cf17c21b1bd865fcb67383d934fea8bba4
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+      - name: Checkout frozen G1 baseline product only
+        uses: actions/checkout@v4
+        with:
+          ref: 7a21f465fc58cc1dbdda02a3807a4bf344440589
+          path: baseline
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/h-earth/
+            /h-earth-3d/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact source identities and bounded resource headroom
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C tooling rev-parse HEAD)" = 94e014cf17c21b1bd865fcb67383d934fea8bba4
+          test "$(git -C baseline rev-parse HEAD)" = 7a21f465fc58cc1dbdda02a3807a4bf344440589
+          test "$(git -C tooling hash-object tools/h-earth-ground-material-comparison.v1.mjs)" = 8872cd649cec7480c99255828d536c3d6e3473d7
+          test "$(git -C tooling hash-object tools/h-earth-groundcover-factor-overlay.mjs)" = 4918f2d52de8898e482830f93f74d94e89125666
+          test "$(git -C baseline hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
+          test -z "$(git -C tooling status --porcelain --untracked-files=no)"
+          test -z "$(git -C baseline status --porcelain --untracked-files=no)"
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-groundcover-factor-overlay.mjs
+          mkdir -p "${{ runner.temp }}/h-earth-g1-baseline-four-frame"
+          { df -h "$GITHUB_WORKSPACE"; du -sh tooling baseline; free -m; } > "${{ runner.temp }}/h-earth-g1-baseline-four-frame/resource-preflight.txt"
+          for dir in tooling baseline; do
+            bytes="$(du -sb "$dir" | cut -f1)"
+            if (( bytes > 2147483648 )); then echo "SPARSE_TREE_OVER_2GB:$dir:$bytes"; exit 42; fi
+          done
+          available="$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -n 1 | tr -d ' ')"
+          if (( available < 8589934592 )); then echo "INSUFFICIENT_FREE_BYTES:$available"; exit 43; fi
+      - name: Install existing Chromium capture dependency
+        working-directory: tooling
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture only four source-derived G1 baseline WebGL2 frames
+        working-directory: tooling
+        shell: bash
+        env:
+          H_EARTH_COMPARISON_PROFILE: G1_SOIL_BASELINE_ONLY_V1
+        run: |
+          set -euo pipefail
+          timeout 1500s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../baseline \
+            --output "${{ runner.temp }}/h-earth-g1-baseline-four-frame"
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import assert from "node:assert/strict";
+            const p=process.argv[1];
+            const r=JSON.parse(fs.readFileSync(p,"utf8"));
+            assert.equal(r.profile,"G1_SOIL_BASELINE_ONLY_V1");
+            assert.equal(r.result,"G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED");
+            assert.equal(r.views.length,4);
+            assert.equal(r.g1.images,4);
+            assert.equal(r.ownerVisualAcceptance,false);
+            assert.equal(r.releaseAuthorized,false);
+            assert.equal(r.productDiskMutation,false);
+            assert.deepEqual(Object.keys(r.heads),["baseline"]);
+            assert(r.views.every(v=>v.sourceHead==="7a21f465fc58cc1dbdda02a3807a4bf344440589"));
+            assert(r.views.every(v=>fs.existsSync(process.argv[2]+"/"+v.image)));
+          ' "${{ runner.temp }}/h-earth-g1-baseline-four-frame/receipt.json" "${{ runner.temp }}/h-earth-g1-baseline-four-frame"
+      - name: Preserve baseline-only images and receipt even after failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-g1-baseline-four-frame-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-g1-baseline-four-frame
+          if-no-files-found: warn
+          retention-days: 30

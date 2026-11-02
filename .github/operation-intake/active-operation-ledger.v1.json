@@ -1104,6 +1104,50 @@
       "scopeHash": "093f59029b2298f1ed352a014e58d42aadbe2d7f63c20980b74aeeb1ef9a45ba",
       "state": "ADMITTED_LOCKED"
     },
+    "097a311253f22c6271693e3808e2ed5324d2ca6f2d3d6880feb0194f3c8316e6": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "0f4b0c38559c72ef1a9205a30d849c592d50d83b",
+          "lockGeneration": 3056,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_GRAPHICS_NATIVE_GPU_ATOMIC_SOURCE_BOOTSTRAP",
+          "operationId": "DGB_GRAPHICS_NATIVE_GPU_ATOMIC_SOURCE_BOOTSTRAP_20261101_001",
+          "procedureLocatorDigest": "6cab459d31f653779807cfd0bae2f743152d6cea039c83470a42000360f068a3",
+          "requestDigest": "f1936ff64ac3569813a44646f454e068c433ad40f36b68d3a6dc90b34fb2c1fd",
+          "scopeHash": "097a311253f22c6271693e3808e2ed5324d2ca6f2d3d6880feb0194f3c8316e6"
+        },
+        "bindingDigest": "74ec6f55d917e7eae6c420a33bc1c7a023cc0d4abeaba07825c06dbf6b030564",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "6e6c87f6d606191ad4ee7d7b683fde81227b853e92410173cc9ffaff8ab7e476",
+          "commentId": 6566369483,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41368737184,
+          "workflowSha": "0f4b0c38559c72ef1a9205a30d849c592d50d83b"
+        },
+        "lineageAnchorCommitSha": "757734f5f69cc9a14e309047881af2b39fa4575b",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "0f4b0c38559c72ef1a9205a30d849c592d50d83b",
+      "lockGeneration": 3056,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_GRAPHICS_NATIVE_GPU_ATOMIC_SOURCE_BOOTSTRAP",
+      "operationId": "DGB_GRAPHICS_NATIVE_GPU_ATOMIC_SOURCE_BOOTSTRAP_20261101_001",
+      "procedureLocatorDigest": "6cab459d31f653779807cfd0bae2f743152d6cea039c83470a42000360f068a3",
+      "released": false,
+      "requestDigest": "f1936ff64ac3569813a44646f454e068c433ad40f36b68d3a6dc90b34fb2c1fd",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "097a311253f22c6271693e3808e2ed5324d2ca6f2d3d6880feb0194f3c8316e6",
+      "state": "ADMITTED_LOCKED"
+    },
     "09bf95ed0b631e0161641a0ac2b0ed7e1b4e154372645434a7dd54cfcf5a508f": {
       "governingHead": "ecbcf817c50b54ce5bf2d22f8512be7cb9e7b0c9",
       "lockGeneration": 349,
@@ -24755,7 +24799,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3055,
+  "lockGeneration": 3056,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

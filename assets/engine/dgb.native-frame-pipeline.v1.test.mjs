@@ -146,3 +146,18 @@ test('context loss and device disposal are fail-closed, restored device resumes'
   f.dispose();
   assert.throws(()=>pipe.beginFrame(spec()),/DEVICE_DISPOSED/);
 });
+
+test('mid-frame context loss aborts queue and restores a clean frame boundary',()=>{
+  const f=fixture(),pipe=createNativeFramePipeline(f.device);
+  pipe.beginFrame(spec());
+  pipe.submit({program:f.program('A'),mesh:f.mesh('A')});
+  f.lose();
+  assert.throws(()=>pipe.endFrame(),/GRAPHICS_CONTEXT_NOT_READY/);
+  assert.equal(pipe.status().active,false);
+  assert.equal(pipe.status().lastPresentation,'ABORTED');
+  assert.equal(f.log.some(x=>x[0]==='draw'),false);
+  f.restore();
+  pipe.beginFrame(spec());
+  assert.equal(pipe.endFrame().submitted,0);
+  assert.equal(pipe.status().lastError,null);
+});

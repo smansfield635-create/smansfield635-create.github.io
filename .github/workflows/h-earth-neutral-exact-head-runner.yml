@@ -1766,3 +1766,97 @@ jobs:
           node --check tools/h-earth-ground-material-comparison.v1.test.mjs
           node --test --test-name-pattern=Gen3074 tools/h-earth-ground-material-comparison.v1.test.mjs
           echo 'GEN3074_SOURCE_ONLY_PASS_NO_GPU_NO_PRODUCTION_MUTATION'
+
+  ravine-emitted-triangle-preflight-gen3074:
+    needs: ravine-habitat-source-only-gen3074
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'synchronize' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/ravine-habitat-color-attribution-20261102' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted tooling only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /tools/h-earth-ground-material-comparison.v1.test.mjs
+      - name: Checkout exact published product for read-only observer
+        uses: actions/checkout@v4
+        with:
+          ref: 11afdc5278564728ea9eef6ffb525601ce4362a7
+          path: product
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/h-earth/
+            /h-earth-3d/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fail closed on exact source or resource drift
+        env:
+          TOOLING_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C tooling rev-parse HEAD)" = "$TOOLING_HEAD"
+          test "$(git -C product rev-parse HEAD)" = 11afdc5278564728ea9eef6ffb525601ce4362a7
+          test "$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b49b
+          for dir in tooling product; do
+            test -z "$(git -C "$dir" status --porcelain --untracked-files=no)"
+            bytes="$(du -sb "$dir" | cut -f1)"
+            if (( bytes > 2147483648 )); then echo "GEN3074_SPARSE_TREE_OVER_BUDGET:$dir:$bytes"; exit 43; fi
+          done
+          space="$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -1 | tr -d ' ')"
+          if (( space < 8589934592 )); then echo "GEN3074_GPU_HEADROOM_INSUFFICIENT:$space"; exit 44; fi
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-groundcover-factor-overlay.mjs
+          echo 'GEN3074_EXACT_SOURCE_AND_RESOURCE_PREFLIGHT_PASS'
+      - name: Install existing Playwright Chromium only
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Read actual emitted triangles and derive two detached observers
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: RAVINE_EMITTED_SURFACE_OBSERVER_PREFLIGHT_V1
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 1500s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../product \
+            --output "${{ runner.temp }}/h-earth-ravine-emitted-triangle-observer"
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import assert from "node:assert/strict";
+            const p=JSON.parse(fs.readFileSync(process.argv[1]+"/receipt.json","utf8"));
+            assert.equal(p.result,"TWO_EMITTED_TRIANGLE_OBSERVERS_DERIVED_GPU_FIRST_HIT_UNPROVEN");
+            assert.equal(p.views.length,0);
+            assert.equal(p.ravineObserverPreflight.candidates.length,2);
+            assert(p.ravineObserverPreflight.candidates.every(c=>
+              c.sourceDerived===true&&c.diagnosticObserver===true&&
+              c.firstHitAttributionAvailable===false&&c.ownerPhotoCorrespondence===false));
+            assert.equal(p.productDiskMutation,false);
+            assert.equal(p.releaseAuthorized,false);
+            console.log("GEN3074_EMITTED_SURFACE_OBSERVERS_VERIFIED_FIRST_HIT_STILL_PENDING");
+          ' "${{ runner.temp }}/h-earth-ravine-emitted-triangle-observer"
+      - name: Preserve observer receipt including fail-closed errors
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-ravine-observer-gen3074-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-ravine-emitted-triangle-observer/
+          if-no-files-found: warn
+          retention-days: 30

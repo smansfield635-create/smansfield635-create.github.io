@@ -10,11 +10,9 @@ const load=async profile=>{
  finally{if(before===undefined)delete process.env.H_EARTH_COMPARISON_PROFILE;else process.env.H_EARTH_COMPARISON_PROFILE=before;}
 };
 const original={
- baseline:'7a21f465fc58cc1dbdda02a3807a35d939f5a7eae429041ed2ed27707d3ebf',
+ baseline:'7a21f465fc58cc1dbdda02a3807a4bf344440589',
  candidate:'7d55ca9707bfef75a9ddf9fb078747ba79eef19a'
 };
-// The authoritative baseline head is the full original Git commit, not the archived ZIP digest.
-original.baseline='7a21f465fc58cc1dbdda02a3807a4bf344440589';
 const modes=['reference-lit','before-groundcover-unlit','after-groundcover-unlit','groundcover-weight-raw'];
 test('frozen inland observer reuses already positive Gen2917/Gen2925 view',async()=>{
  const m=await load('INLAND_BAND_BASELINE_ONLY_V1');

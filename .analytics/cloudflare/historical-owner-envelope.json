@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-02T00:45:34Z",
+  "generatedAt": "2026-11-02T01:23:54Z",
   "window": {
-    "start": "2026-08-04T00:45:34Z",
-    "end": "2026-11-02T00:45:34Z"
+    "start": "2026-08-04T01:23:54Z",
+    "end": "2026-11-02T01:23:54Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,25 +17,25 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4050,
-    "visits": 1200,
+    "pageLoads": 4070,
+    "visits": 1190,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4050,
-        "visits": 1200
+        "pageLoads": 4070,
+        "visits": 1190
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 960,
-        "visits": 700
+        "pageLoads": 970,
+        "visits": 690
       },
       "/showroom/globe/audralia/": {
         "pageLoads": 160,
         "visits": 10
       },
       "/laws/": {
-        "pageLoads": 100,
+        "pageLoads": 110,
         "visits": 0
       },
       "/build/intake/": {
@@ -47,8 +47,8 @@
         "visits": 0
       },
       "/governance/": {
-        "pageLoads": 60,
-        "visits": 10
+        "pageLoads": 50,
+        "visits": 0
       },
       "/index.html": {
         "pageLoads": 110,
@@ -86,6 +86,14 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
+        "pageLoads": 20,
+        "visits": 0
+      },
+      "/build/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -97,14 +105,6 @@
       "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
-      },
-      "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/": {
-        "pageLoads": 20,
-        "visits": 0
       },
       "/compass-composite/": {
         "pageLoads": 20,
@@ -147,11 +147,11 @@
         "visits": 0
       },
       "/laws/categories/reality/": {
-        "pageLoads": 60,
+        "pageLoads": 50,
         "visits": 0
       },
       "/laws/categories/reality/measure.html": {
-        "pageLoads": 30,
+        "pageLoads": 20,
         "visits": 0
       },
       "/laws/categories/flow/handoffs/": {
@@ -162,9 +162,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/laws/categories/structure/boundaries.html": {
+      "/laws/categories/reality/limits.html": {
         "pageLoads": 10,
-        "visits": 10
+        "visits": 0
+      },
+      "/laws/categories/structure/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/laws/categories/integrity/": {
         "pageLoads": 20,
@@ -275,8 +279,8 @@
         "visits": 0
       },
       "/products/education/": {
-        "pageLoads": 260,
-        "visits": 70
+        "pageLoads": 270,
+        "visits": 80
       },
       "/analytics-owner-device/": {
         "pageLoads": 30,
@@ -287,8 +291,8 @@
         "visits": 0
       },
       "/home/": {
-        "pageLoads": 10,
-        "visits": 10
+        "pageLoads": 20,
+        "visits": 20
       },
       "/governance-bridge/": {
         "pageLoads": 150,
@@ -317,12 +321,12 @@
         "visits": 650
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2850,
+        "pageLoads": 2880,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 540,
-        "visits": 540
+        "pageLoads": 530,
+        "visits": 530
       },
       "raw.githack.com": {
         "pageLoads": 10,

@@ -3,7 +3,7 @@ name: H-Earth Neutral Exact Head Runner
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102']
+    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102', 'h-earth/ravine-habitat-color-attribution-20261102']
     paths:
       - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
       - 'tools/h-earth-ground-material-comparison.v1.mjs'
@@ -1869,5 +1869,107 @@ jobs:
         with:
           name: h-earth-ravine-pixel-attribution-gen3074-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/h-earth-ravine-emitted-triangle-observer/
+          if-no-files-found: warn
+          retention-days: 30
+
+  west-flank-owner-class-gen3079:
+    if: >-
+      ${{ github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize') &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          github.event.pull_request.head.ref == 'h-earth/west-flank-material-pixel-gen3079-20261102' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout immutable diagnostic tools
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /tools/h-earth-ground-material-comparison.v1.test.mjs
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+      - name: Checkout exact published product, read-only
+        uses: actions/checkout@v4
+        with:
+          ref: 11afdc5278564728ea9eef6ffb525601ce4362a7
+          path: product
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/h-earth/
+            /h-earth-3d/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Exact source and Gen3079 stage regression
+        env:
+          EXACT_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tool_head="$(git -C tooling rev-parse HEAD)"
+          product_head="$(git -C product rev-parse HEAD)"
+          tool_blob="$(git -C tooling hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
+          product_blob="$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
+          echo "GEN3079_TOOL=$tool_head PRODUCT=$product_head BLOB=$product_blob"
+          [[ "$tool_head" == "$EXACT_HEAD" ]] || { echo GEN3079_TOOL_HEAD_DRIFT; exit 51; }
+          [[ "$product_head" == 11afdc5278564728ea9eef6ffb525601ce4362a7 ]] || { echo GEN3079_PRODUCT_HEAD_DRIFT; exit 52; }
+          [[ "$tool_blob" == 85ee835060d5106a670077a5f4352b7ad202b49b && "$product_blob" == "$tool_blob" ]] || { echo GEN3079_RENDERER_DRIFT; exit 53; }
+          for dir in tooling product; do
+            test -z "$(git -C "$dir" status --porcelain --untracked-files=no)" || { echo GEN3079_DIRTY; exit 54; }
+            bytes="$(du -sb "$dir" | cut -f1)"
+            if (( bytes > 2147483648 )); then echo GEN3079_SPARSE_BUDGET; exit 55; fi
+          done
+          free="$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -1 | tr -d ' ')"
+          if (( free < 8589934592 )); then echo GEN3079_HEADROOM; exit 56; fi
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-groundcover-factor-overlay.mjs
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.test.mjs
+          (cd tooling && node --test --test-name-pattern='Gen3074|WEST_FLANK' tools/h-earth-ground-material-comparison.v1.test.mjs)
+          echo GEN3079_NODE22_SOURCE_PASS
+      - name: Install existing Chromium Playwright substrate
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Frozen west-flank stage pixel capture with triangle hold
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: WEST_FLANK_OWNER_CLASS_MATERIAL_STAGES_V1
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 1500s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../product \
+            --output "${{ runner.temp }}/h-earth-west-flank-gen3079"
+          node --input-type=module -e '
+            import fs from "node:fs"; import assert from "node:assert/strict";
+            const r=JSON.parse(fs.readFileSync(process.argv[1]+"/receipt.json","utf8"));
+            assert.equal(r.result,"PIXEL_STAGE_READBACK_COMPLETE_TRIANGLE_ID_PENDING");
+            assert.equal(r.westFlankPixelStages.stageRows.length,16);
+            assert.equal(r.westFlankPixelStages.targets.length,2);
+            assert.equal(r.westFlankPixelStages.actualRoleCodes.join(","),"1,1");
+            assert.equal(r.westFlankPixelStages.exactOriginalTriangleIdentityProven,false);
+            assert.equal(r.westFlankPixelStages.noOwnerAndroidPhotoMatch,true);
+            assert.equal(r.westFlankPixelStages.healthyControlNotVerified,true);
+            assert.equal(r.productDiskMutation,false);
+            assert.equal(r.releaseAuthorized,false);
+            console.log("GEN3079_STAGE_CAPTURED_CAUSAL_HOLD:"+r.result);
+          ' "${{ runner.temp }}/h-earth-west-flank-gen3079"
+      - name: Preserve west-flank receipt and images on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-owner-west-flank-material-stage-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-west-flank-gen3079/
           if-no-files-found: warn
           retention-days: 30

@@ -12923,6 +12923,50 @@
       "scopeHash": "858e4ae75d0f74722bc34a122711309729eafbfd69183c5f8e81a57255b76dd6",
       "state": "ADMITTED_LOCKED"
     },
+    "85dc7ee3f23498b60e9f3b28a54202fdf847cde8d91d60b31c4fb0672bbccab1": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "11afdc5278564728ea9eef6ffb525601ce4362a7",
+          "lockGeneration": 3070,
+          "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:E3_SCENE_SPATIAL_CAMERA_SOFTWARE_20261102",
+          "operationId": "DGB_GRAPHICS_ENGINE_E3_SCENE_SPATIAL_CAMERA_SOFTWARE_20261102_001_REBIND_11afdc52",
+          "procedureLocatorDigest": "95e1f2e46d1e557d665c1113e358b6fa59ff1a19d9e9412bb8567c28e2c70ed2",
+          "requestDigest": "c44a3215fa0e6684a643fa215fccebd7fe1b3798fd36de9a3e7ed08ebdb34c0d",
+          "scopeHash": "85dc7ee3f23498b60e9f3b28a54202fdf847cde8d91d60b31c4fb0672bbccab1"
+        },
+        "bindingDigest": "a58618b8ecfad2acb2d6236474bc1a67fe052917fd5b9877d173450a5e2903b1",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "aabb3f4397be328cebadc63b7a3f5a9471bcc7156d2beef4780fbe20b4d1fbcd",
+          "commentId": 6589082086,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41530049533,
+          "workflowSha": "11afdc5278564728ea9eef6ffb525601ce4362a7"
+        },
+        "lineageAnchorCommitSha": "0f8f2803da14d6505727f50af7f77370ec25f20d",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "11afdc5278564728ea9eef6ffb525601ce4362a7",
+      "lockGeneration": 3070,
+      "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:E3_SCENE_SPATIAL_CAMERA_SOFTWARE_20261102",
+      "operationId": "DGB_GRAPHICS_ENGINE_E3_SCENE_SPATIAL_CAMERA_SOFTWARE_20261102_001_REBIND_11afdc52",
+      "procedureLocatorDigest": "95e1f2e46d1e557d665c1113e358b6fa59ff1a19d9e9412bb8567c28e2c70ed2",
+      "released": false,
+      "requestDigest": "c44a3215fa0e6684a643fa215fccebd7fe1b3798fd36de9a3e7ed08ebdb34c0d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "85dc7ee3f23498b60e9f3b28a54202fdf847cde8d91d60b31c4fb0672bbccab1",
+      "state": "ADMITTED_LOCKED"
+    },
     "85e15b1afd5aed4402f50c631e038a36eff3270139e49c648546f77c8eef00be": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -25327,7 +25371,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3069,
+  "lockGeneration": 3070,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

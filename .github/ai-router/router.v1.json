@@ -527,6 +527,17 @@
       "ownedExactPaths": [],
       "entrypoint": ".github/ai-router/projects/diamondgate-preflight/entrypoint.v1.json",
       "priority": 100
+    },
+    {
+      "projectId": "DIAMOND_GATE_GRAPHICS_ENGINE",
+      "status": "ACTIVE_REGISTERED_PROJECT",
+      "ownedPathPrefixes": [],
+      "ownedExactPaths": [
+        "assets/engine/dgb.native-webgl-device.v1.mjs",
+        "assets/engine/dgb.native-webgl-device.v1.test.mjs"
+      ],
+      "entrypoint": ".github/ai-router/projects/diamond-gate-graphics-engine/entrypoint.v1.json",
+      "priority": 100
     }
   ],
   "unregisteredPathPolicy": {

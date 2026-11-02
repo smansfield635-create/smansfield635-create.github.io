@@ -2190,6 +2190,50 @@
       "scopeHash": "1397301660e51f2f55e5076b4ebc1d84cf3e077f9c9956191dc62ba90fe92eb4",
       "state": "ADMITTED_LOCKED"
     },
+    "14408c4beca42662d1380dfff965749c2977c3f40425635af644ac5bf71c3db3": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "b06ea5ce0cdaaea3de15b94e8b624e1b1ef28a8f",
+          "lockGeneration": 3074,
+          "lockScope": "H_EARTH:DIAGNOSTIC_TOOLING:RAVINE_HABITAT_FINAL_COLOR:20261102",
+          "operationId": "H_EARTH_RAVINE_HABITAT_FINAL_COLOR_COMPARATOR_20261102_001",
+          "procedureLocatorDigest": "bc05d0d888681e2a292a02f0268f7a2f827eb6e7261f60f3911cda6572c3f5ff",
+          "requestDigest": "99260a174a1eb82b88b3b621bc9a41c5374291258cd6428866e72e2bb503bc77",
+          "scopeHash": "14408c4beca42662d1380dfff965749c2977c3f40425635af644ac5bf71c3db3"
+        },
+        "bindingDigest": "98204641e07979aedfaed95cf399a208ec1816a05ca0363e4b28b50b312ba0e3",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "47197f7ed944a7a811bae02b6e7e0b63b3159d861544d1e128f1315e2f9a8a65",
+          "commentId": 6590486131,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41540631991,
+          "workflowSha": "b06ea5ce0cdaaea3de15b94e8b624e1b1ef28a8f"
+        },
+        "lineageAnchorCommitSha": "13de0bb05c58d5f8f7ba7bafb856a2d422b44391",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "b06ea5ce0cdaaea3de15b94e8b624e1b1ef28a8f",
+      "lockGeneration": 3074,
+      "lockScope": "H_EARTH:DIAGNOSTIC_TOOLING:RAVINE_HABITAT_FINAL_COLOR:20261102",
+      "operationId": "H_EARTH_RAVINE_HABITAT_FINAL_COLOR_COMPARATOR_20261102_001",
+      "procedureLocatorDigest": "bc05d0d888681e2a292a02f0268f7a2f827eb6e7261f60f3911cda6572c3f5ff",
+      "released": false,
+      "requestDigest": "99260a174a1eb82b88b3b621bc9a41c5374291258cd6428866e72e2bb503bc77",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "14408c4beca42662d1380dfff965749c2977c3f40425635af644ac5bf71c3db3",
+      "state": "ADMITTED_LOCKED"
+    },
     "147dc7c04b0ab95c257cf99e988904dac93874d34af5d35be4a69b8cfe1dcf2b": {
       "governingHead": "3e91d0f94a762d99c5a614e528612db40827fa19",
       "lockGeneration": 247,
@@ -25503,7 +25547,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3073,
+  "lockGeneration": 3074,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

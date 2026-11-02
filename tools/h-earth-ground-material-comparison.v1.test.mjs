@@ -226,3 +226,25 @@ test('Gen3059 retains exact renderer blobs and native Node before Chromium',()=>
  assert.ok(b.includes('GEN3042_SOIL_TRIAD_AB_V1'));
  assert.ok(b.includes('39ed43d987d5f62c1368e7c309faa1a1b3d731b6'));
 });
+
+test('Gen3074 ravine source binding and stage boundary',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const overlay=await import('./h-earth-groundcover-factor-overlay.mjs');
+ assert.deepEqual([m.RAVINE_HABITAT_TARGET.ravineWestEdge,m.RAVINE_HABITAT_TARGET.z],[-298,-546]);
+ assert.equal(m.RAVINE_HABITAT_TARGET.cameraPoseQualified,false);
+ assert.equal(m.RAVINE_HABITAT_MODES.length,10);
+ assert.throws(()=>m.validateRavineHabitatCapture([],[]),/RAVINE_CAPTURE_CENSUS_INCOMPLETE/);
+ const pathname=new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url);
+ const original=fs.readFileSync(pathname,'utf8');
+ const transformed=overlay.transformRavineHabitatRenderer(original);
+ assert.equal(transformed.originalSha256,overlay.PUBLISHED_RENDERER_SHA256);
+ assert.equal(transformed.productDiskMutation,false);
+ assert.equal(transformed.modeCount,10);
+ assert.ok(transformed.source.includes('uRavineHabitatProbeMode'));
+ assert.ok(transformed.source.includes('ravineNativeHabitat=habitatCoverage;'));
+ assert.ok(transformed.source.includes('ravineFilteredMaterial=habitatMaterialCoverage;'));
+ assert.ok(transformed.source.includes('ravineBeforeHabitat=base;'));
+ assert.ok(transformed.source.includes('if(uRavineHabitatProbeMode!=9)base=ravineAfterHabitat;'));
+ assert.match(m.instrumentRavineHabitatRenderer(original),/groundComparisonHideGrass/);
+ assert.throws(()=>overlay.transformRavineHabitatRenderer(original+'\n'),/SOURCE_HASH_MISMATCH/);
+});

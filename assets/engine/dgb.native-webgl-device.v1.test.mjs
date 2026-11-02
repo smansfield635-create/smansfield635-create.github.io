@@ -100,6 +100,19 @@ test('WebGL1 unindexed drawArrays and invalid external handle fail closed', () =
   d.dispose();
 });
 
+
+test('afterDraw callback runs in draw finally on success or failure, preserving original error', () => {
+  const {canvas,gl}=fakeCanvas(),d=createNativeWebGLDevice(canvas);
+  const p=d.createProgram(shader),m=d.createMesh({attributes:[attrib],vertexCount:3});
+  const events=[];
+  d.draw({program:p,mesh:m,beforeDraw(){events.push('before');},afterDraw(){events.push('after');}});
+  assert.deepEqual(events,['before','after']);
+  assert.throws(()=>d.draw({program:p,mesh:m,afterDraw:5}),/AFTER_DRAW_INVALID/);
+  gl.drawArrays=()=>{events.push('failure');throw Error('DRAW_FAILED');};
+  assert.throws(()=>d.draw({program:p,mesh:m,afterDraw(){events.push('cleanup');}}),/DRAW_FAILED/);
+  assert.deepEqual(events,['before','after','failure','cleanup']);
+});
+
 test('WebGL1 refuses uint32 indices without extension and releases buffers', () => {
   const {canvas,log}=fakeCanvas(); const d=createNativeWebGLDevice(canvas);
   assert.throws(()=>d.createMesh({attributes:[attrib],indices:new Uint32Array([0,1,2]),vertexCount:3}),/EXTENSION_REQUIRED/);

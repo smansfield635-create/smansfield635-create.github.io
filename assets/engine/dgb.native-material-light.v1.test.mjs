@@ -4,8 +4,9 @@ import {createNativeMaterialLibrary} from './dgb.native-material-light.v1.mjs';
 
 const ID=[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
 const makeDevice=(backend='WEBGL1')=>{
-  const calls=[];let lost=false,disposed=false;
-  const gl={TEXTURE0:33984,TEXTURE_2D:3553,isContextLost:()=>lost,
+  const calls=[];let lost=false,disposed=false,active=33984;const bindings=new Map();
+  const gl={TEXTURE0:33984,TEXTURE_2D:3553,ACTIVE_TEXTURE:34016,TEXTURE_BINDING_2D:32873,isContextLost:()=>lost,
+    getParameter(key){if(key===this.ACTIVE_TEXTURE)return active;if(key===this.TEXTURE_BINDING_2D)return bindings.get(active)??null;return null;},
     getUniformLocation:(program,name)=>({program,name}),
     uniformMatrix4fv:(...args)=>calls.push(['m4',...args]),
     uniformMatrix3fv:(...args)=>calls.push(['m3',...args]),
@@ -13,8 +14,8 @@ const makeDevice=(backend='WEBGL1')=>{
     uniform3fv:(...args)=>calls.push(['v3',...args]),
     uniform1f:(...args)=>calls.push(['f',...args]),
     uniform1i:(...args)=>calls.push(['i',...args]),
-    activeTexture:(...args)=>calls.push(['active',...args]),
-    bindTexture:(...args)=>calls.push(['texture',...args])};
+    activeTexture:(...args)=>{active=args[0];calls.push(['active',...args]);},
+    bindTexture:(...args)=>{bindings.set(active,args[1]);calls.push(['texture',...args]);}};
   let programs=0;
   const device={backend,gl,status:()=>({lost,disposed}),
     createProgram:({vertexSource,fragmentSource})=>{
@@ -122,6 +123,22 @@ test('lost context blocks binding and recovery uses new E1 GPU program handle',(
   f.setLost(false);b.program.gpu={newNative:true};b.beforeDraw(f.gl,b.program.gpu);
   assert.ok(f.calls.some(x=>x[0]==='m4'));
   f.setDisposed(true);assert.throws(()=>bind(lib,m),/DEVICE_DISPOSED/);
+});
+
+
+test('E4 afterDraw restores texture unit zero and previously active texture unit',()=>{
+ const f=makeDevice(),lib=createNativeMaterialLibrary(f.device);
+ const original={gpu:'original-native-texture'};
+ f.gl.activeTexture(f.gl.TEXTURE0);f.gl.bindTexture(f.gl.TEXTURE_2D,original);
+ f.gl.activeTexture(f.gl.TEXTURE0+3);
+ const tex=lib.createTexture2D({width:1,height:1,pixels:new Uint8Array([255,255,255,255])});
+ const binding=bind(lib,lib.createMaterial({kind:'TEXTURED',texture:tex}));
+ binding.beforeDraw(f.gl,binding.program.gpu);
+ assert.equal(f.gl.getParameter(f.gl.TEXTURE_BINDING_2D),tex.gpu);
+ binding.afterDraw(f.gl,binding.program.gpu);
+ assert.equal(f.gl.getParameter(f.gl.ACTIVE_TEXTURE),f.gl.TEXTURE0+3);
+ f.gl.activeTexture(f.gl.TEXTURE0);
+ assert.equal(f.gl.getParameter(f.gl.TEXTURE_BINDING_2D),original);
 });
 
 test('missing material uniforms produce explicit failures',()=>{

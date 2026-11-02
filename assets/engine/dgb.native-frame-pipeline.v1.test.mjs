@@ -21,7 +21,7 @@ function fixture({ backend='WEBGL1', defaultDepth=true }={}) {
     bindRenderTarget(target){if(target!==null && target.owned!==true)throw new Error('RENDER_TARGET_NOT_OWNED_BY_DEVICE');log.push(['target',target?.name??'canvas']);},
     createProgram(definition){log.push(['createProgram']);return {gpu:++serial,definition};},
     createMesh(definition){log.push(['createMesh']);return {gpu:++serial,definition};},
-    draw(cmd){if(onDraw)onDraw(cmd);log.push(['draw',cmd.program.name??'present',cmd.mesh.name??'quad']);cmd.beforeDraw?.(gl,cmd.program.gpu);return {backend};}
+    draw(cmd){if(onDraw)onDraw(cmd);log.push(['draw',cmd.program.name??'present',cmd.mesh.name??'quad']);cmd.beforeDraw?.(gl,cmd.program.gpu);cmd.afterDraw?.(gl,cmd.program.gpu);return {backend};}
   };
   const program=name=>({name,gpu:{},definition:{}});
   const mesh=name=>({name,gpu:{},definition:{vertexCount:3}});
@@ -61,6 +61,18 @@ test('invalid frame descriptor rejected before GL calls, including missing depth
   for(const v of bad){const old=f.log.length;assert.throws(()=>pipe.beginFrame(v));assert.equal(f.log.length,old);}
   assert.throws(()=>pipe.beginFrame(spec(f.target({owned:false}))),/RENDER_TARGET_NOT_OWNED/);
   assert.equal(f.log.length,0);
+});
+
+
+test('E2 validates and forwards afterDraw callback with its matching draw',()=>{
+  const f=fixture();const pipe=createNativeFramePipeline(f.device),program=f.program('E5'),mesh=f.mesh('E5');
+  const calls=[];
+  f.setDraw(null);
+  pipe.beginFrame(spec());
+  assert.throws(()=>pipe.submit({program,mesh,afterDraw:42}),/AFTER_DRAW_INVALID/);
+  pipe.submit({program,mesh,beforeDraw:()=>calls.push('before'),afterDraw:()=>calls.push('after')});
+  pipe.endFrame();
+  assert.deepEqual(calls,['before','after']);
 });
 
 test('depth disabled permits color-only framebuffer and never clears depth',()=>{

@@ -263,8 +263,8 @@ test('Gen3074 emitted-triangle observer is derived, detached and fail-closed',as
  assert.equal(p.firstHitAttributionAvailable,false);
  assert.equal(p.requiresGpuFirstHitReadback,true);
  assert.equal(p.ownerPhotoCorrespondence,false);
- const q=m.deriveRavineEmittedSurfaceObserver(plane,{name:'outside-habitat-control',x:-304,z:-546});
- assert.equal(q.referenceTarget.x,-304);
+ const q=m.deriveRavineEmittedSurfaceObserver(plane,{name:'outside-habitat-control',x:-302,z:-546});
+ assert.equal(q.referenceTarget.x,-302);
  assert.throws(()=>m.deriveRavineEmittedSurfaceObserver(plane,{name:'ravine-west',x:-297,z:-546}),/TARGET_NOT_FROZEN/);
  assert.throws(()=>m.deriveRavineEmittedSurfaceObserver(()=>null,{name:'ravine-west',x:-298,z:-546}),/SURFACE_NOT_AVAILABLE/);
  assert.throws(()=>m.deriveRavineEmittedSurfaceObserver((x,z)=>({y:z>-546&&z< -540?30:10,role:'ERODED_TERRAIN'}),{name:'ravine-west',x:-298,z:-546}),/RAY_OCCLUDED/);

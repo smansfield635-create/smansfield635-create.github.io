@@ -36,9 +36,9 @@ export function verifyOwnerPrBridgeProof({
   if (receipt.schema !== 'AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1' || receipt.result !== RECEIPT_RESULT || receipt.capabilityId !== CAPABILITY || receipt.repository !== REPO) fail('BRIDGE_RECEIPT_INVALID');
   if (receipt.workflow !== INTAKE_WORKFLOW.replace('.github/workflows/','') || receipt.ref !== 'main') fail('WRONG_DISPATCH_TARGET');
   if (receipt.requestParentWasCurrent !== true || receipt.currentMainSha !== expectedCurrentMain || receipt.requestCommitParent !== expectedCurrentMain) fail('PARENT_OR_MAIN_MISMATCH');
-  if (!numeric(receipt.transportPullRequest ||  !numeric(receipt.bridgeRunId ||  !numeric(receipt.dispatchedRunId) fail('BRIDGE_IDENTITY_INVALID');
+  if (!numeric(receipt.transportPullRequest) || !numeric(receipt.bridgeRunId) || !numeric(receipt.dispatchedRunId)) fail('BRIDGE_IDENTITY_INVALID');
   if (receipt.inputs?.request_json !== body || receipt.inputs?.router_callback_issue !== callbackIssue || receipt.inputs?.router_callback_repository !== REPO) fail('BRIDGE_INPUTS_MISMATCH');
-  if (!sha40(receipt.requestCommit) || !receipt.requestBranch?.startsWith(PREFIX))) fail('REQUEST_COMMIT_OR_BRANCH_INVALID');
+  if (!sha40(receipt.requestCommit) || !receipt.requestBranch?.startsWith(PREFIX)) fail('REQUEST_COMMIT_OR_BRANCH_INVALID');
 
   if (pr.number !== receipt.transportPullRequest || pr.user?.login !== OWNER || pr.head?.repo?.full_name !== REPO || pr.base?.repo?.full_name !== REPO || pr.base?.ref !== 'main') fail('PR_OWNER_OR_REPOSITORY_INVALID');
   if (pr.head?.ref !== receipt.requestBranch || pr.head?.sha !== receipt.requestCommit || pr.merged !== false) fail('PR_REQUEST_HEAD_INVALID');

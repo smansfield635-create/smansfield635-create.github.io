@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-02T20:24:14Z",
+  "generatedAt": "2026-11-02T21:25:44Z",
   "window": {
-    "start": "2026-08-04T20:24:14Z",
-    "end": "2026-11-02T20:24:14Z"
+    "start": "2026-08-04T21:25:44Z",
+    "end": "2026-11-02T21:25:44Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -226,19 +226,19 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/prelude/": {
-        "pageLoads": 20,
-        "visits": 0
-      },
-      "/door/canonical-object.html": {
-        "pageLoads": 10,
-        "visits": 0
-      },
       "/showroom/story/invitation/": {
         "pageLoads": 20,
         "visits": 0
       },
+      "/prelude/": {
+        "pageLoads": 20,
+        "visits": 0
+      },
       "/showroom/story/timeline/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/door/canonical-object.html": {
         "pageLoads": 10,
         "visits": 0
       },

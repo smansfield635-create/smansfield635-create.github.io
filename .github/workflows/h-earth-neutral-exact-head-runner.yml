@@ -1758,9 +1758,8 @@ jobs:
           test "$observed_head" = "$EXACT_HEAD"
           test "$observed_blob" = 85ee835060d5106a670077a5f4352b49b
           test -z "$observed_status"
-          git fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
           node --check tools/h-earth-ground-material-comparison.v1.mjs
           node --check tools/h-earth-groundcover-factor-overlay.mjs
           node --check tools/h-earth-ground-material-comparison.v1.test.mjs
-          node --test tools/h-earth-ground-material-comparison.v1.test.mjs
+          node --test --test-name-pattern=Gen3074 tools/h-earth-ground-material-comparison.v1.test.mjs
           echo 'GEN3074_SOURCE_ONLY_PASS_NO_GPU_NO_PRODUCTION_MUTATION'

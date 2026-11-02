@@ -1425,10 +1425,11 @@ jobs:
 
   # Gen3042: the existing first-party exact-head comparison runner; one PR-open
   # attempt only, no product mutation and no W1 diagnostic replay.
+  # Gen3055 separately admitted diagnosed checkout replay: one new PR-reopen event only.
   gen3042-soil-triad-gpu-once:
     if: >-
       ${{ github.event_name == 'pull_request' &&
-          github.event.action == 'opened' &&
+          github.event.action == 'reopened' &&
           github.event.pull_request.head.repo.full_name == github.repository &&
           github.event.pull_request.head.ref == 'h-earth/gen3042-gen3042-soil-triad-positive-band-qualification-20261101' &&
           startsWith(github.event.pull_request.title, 'GEN3042 SOIL TRIAD:') &&

@@ -22,8 +22,54 @@ export const RAVINE_HABITAT_CAPTURE_CEILING=Object.freeze({
   cameraRequirement:'EXACT_SOURCE_DERIVED_OBSERVER_WITH_FIRST_HIT_AND_WORLD_COORDINATES',
   status:'REQUIRES_CAMERA_AND_PIXEL_READBACK_QUALIFICATION'
 });
+// Observer provenance comes from the actual emitted ERODED_TERRAIN and
+// MOUNTAIN_OVERBURDEN triangles, never from the walkable-domain resolver.
+// A source-derived proposal is not a pixel first-hit certificate.
+export function deriveRavineEmittedSurfaceObserver(sampleSurfaceAt,{name,x,z}){
+  if(typeof sampleSurfaceAt!=='function'||!Number.isFinite(x)||!Number.isFinite(z)||
+     !['ravine-west','outside-habitat-control'].includes(name)||
+     z!==RAVINE_HABITAT_TARGET.z||
+     (name==='ravine-west'&&x!==RAVINE_HABITAT_TARGET.ravineWestEdge)||
+     (name==='outside-habitat-control'&&x!==RAVINE_HABITAT_TARGET.xStart))
+    throw Error('RAVINE_OBSERVER_TARGET_NOT_FROZEN');
+  const sample=(sx,sz)=>{
+    const result=sampleSurfaceAt(sx,sz);
+    if(!result||!Number.isFinite(result.y)||
+       !['ERODED_TERRAIN','MOUNTAIN_OVERBURDEN'].includes(result.role))
+      throw Error('RAVINE_EMITTED_TRIANGLE_SURFACE_NOT_AVAILABLE');
+    return result;
+  };
+  const hit=sample(x,z);
+  // Six metres is the frozen source material-filter support, and -42 degrees
+  // is the published navigation camera's lower pitch bound. This is a detached
+  // observer, not a traversable camera or a claim that the photograph matches.
+  const horizontalDistance=6,pitch=-42,yaw=0;
+  const rise=horizontalDistance*Math.tan(-pitch*Math.PI/180);
+  const camera={x,y:hit.y+rise,z:z+horizontalDistance};
+  const raySamples=[];
+  for(let i=0;i<=24;i++){
+    const t=i/24,point={x,y:camera.y-rise*t,z:camera.z-horizontalDistance*t};
+    const terrain=sample(point.x,point.z),clearance=point.y-terrain.y;
+    if(i===0&&clearance<1.6||i>0&&i<24&&clearance<0.06)
+      throw Error('RAVINE_OBSERVER_RAY_OCCLUDED');
+    if(i===24&&Math.abs(clearance)>1e-6)
+      throw Error('RAVINE_OBSERVER_FINAL_HIT_MISMATCH');
+    raySamples.push({t,clearance,role:terrain.role});
+  }
+  return Object.freeze({name,x:camera.x,y:camera.y,z:camera.z,yaw,pitch,
+    diagnosticObserver:true,sourceDerived:true,sourceEvidenceId:'ACTUAL_EMITTED_GEOLOGICAL_TRIANGLES',
+    referenceTarget:{x,y:hit.y,z,role:hit.role},
+    ray:{horizontalDistance,rise,raySamples},
+    firstHitAttributionAvailable:false,
+    navigationEligible:false,canonicalCameraStateAuthority:false,
+    ownerPhotoCorrespondence:false,requiresGpuFirstHitReadback:true});
+}
 export function instrumentRavineHabitatRenderer(original){
-  return instrumentRenderer(transformRavineHabitatRenderer(original).source);
+  const injected=instrumentRenderer(transformRavineHabitatRenderer(original).source);
+  return replaceExactlyOnce(injected,
+    'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);',
+    'globalThis.__ravinePublishedGeologicalSurfaceAt=(x,z)=>resources.geologicalRuntime?.sampleSurfaceAt(x,z)??null;'+
+    'if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet);');
 }
 export function validateRavineHabitatCapture(views,poses){
   if(!Array.isArray(poses)||poses.length!==2||

@@ -357,6 +357,35 @@ export async function run(argv){
          const shell=document.getElementById('h-earth-loading-screen'),root=document.getElementById('h-earth-functional-landscape-route');
          return shell?.hidden===true&&window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'&&root?.dataset.run8eReady==='true'&&root?.dataset.run8eError!=='true';
        },null,{timeout:30000});
+      if(RAVINE_OBSERVER_ACTIVE){
+        await page.waitForFunction(()=>typeof globalThis.__ravinePublishedGeologicalSurfaceAt==='function',null,{timeout:30000});
+        const probe=await page.evaluate(()=>{
+          const at=globalThis.__ravinePublishedGeologicalSurfaceAt;
+          const derive=globalThis.__deriveRavineEmittedSurfaceObserver;
+          if(typeof at!=='function'||typeof derive!=='function')
+            throw Error('RAVINE_SAMPLER_OR_DERIVATION_MISSING');
+          const candidates=[
+            {name:'ravine-west',x:-298,z:-546},
+            {name:'outside-habitat-control',x:-302,z:-546}
+          ].map(q=>derive(at,q));
+          const live=globalThis.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt();
+          if(!live?.resources?.geologicalFormation?.physicalNavigationInstalled)
+            throw Error('RAVINE_LIVE_EMITTED_FORMATION_NOT_INSTALLED');
+          return {schema:'RAVINE_EMITTED_SURFACE_OBSERVER_EVIDENCE_v1',
+            result:'TWO_EMITTED_TRIANGLE_OBSERVERS_DERIVED_GPU_FIRST_HIT_UNPROVEN',
+            provenance:'EXACT_INSTALLED_GEOLOGICAL_RUNTIME_EMITTED_TRIANGLE_SAMPLER',
+            candidates,geologicalFormation:live.resources.geologicalFormation,
+            observerOnly:true,firstHitPixelReadback:false,ownerPhotoCorrespondence:false,
+            productMutation:false,releaseAuthorized:false};
+        });
+        receipt.ravineObserverPreflight=probe;
+        receipt.result=probe.result;
+        runRecord.completedAt=new Date().toISOString();persist();
+        await context.close();server.kill();server=null;
+        assertCheckout(dir,HEADS[label]);
+        if(errors.length)throw Error('RAVINE_OBSERVER_BROWSER_ERRORS:'+errors.join(';'));
+        continue;
+      }
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
       let sequence=10000,previousFrame=0;
       for(const pose of poses)for(const mode of modes){
@@ -393,7 +422,8 @@ export async function run(argv){
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(G1_PROFILE){receipt.g1=validateG1Set(receipt.views);receipt.result=INLAND_BAND_PROFILE?'INLAND_BAND_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED':'G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED';}
+    if(RAVINE_OBSERVER_ACTIVE){if(!receipt.ravineObserverPreflight||receipt.views.length!==0)throw Error('RAVINE_OBSERVER_RECEIPT_INCOMPLETE');}
+     else if(G1_PROFILE){receipt.g1=validateG1Set(receipt.views);receipt.result=INLAND_BAND_PROFILE?'INLAND_BAND_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED':'G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED';}
      else if(GEN3042_PROFILE){receipt.triad=validateGen3042(receipt.views);receipt.result='GEN3042_SOIL_TRIAD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING';}
     else{validateDiagnosticSet(receipt.views,poses,modes);receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';}
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}

@@ -5,9 +5,17 @@ export const MODES=Object.freeze(['reference-lit','final-unlit','before-groundco
 export const MODES_MINIMUM=Object.freeze([0,1,2,3,5,6,7,11,13]);
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
 function once(source,needle,replacement){if(source.split(needle).length!==2)throw Error('NON_UNIQUE_SOURCE_ANCHOR:'+needle.slice(0,90));return source.replace(needle,replacement);}
-export function transformPublishedRenderer(original,{strictHash=true}={}){
+export const G1_A03_BLEND_EXPRESSION=[
+ '      palette=(',
+ '        ecologicalSoilSubstrate+',
+ '        identityWeight*ecologicalIdentityTarget+',
+ '        groundcoverWeight*ecologicalGroundcoverTarget',
+ '      )/ecologicalDenominator;'
+].join('\n');
+export function transformPublishedRenderer(original,{strictHash=true,variant='legacy'}={}){
+ if(!['legacy','A03_A04'].includes(variant))throw Error('G1_VARIANT_INVALID');
  const originalSha256=hash(original);
- if(strictHash&&originalSha256!==PUBLISHED_RENDERER_SHA256)throw Error('PUBLISHED_RENDERER_HASH_MISMATCH:'+originalSha256);
+ if(strictHash){if(variant!=='legacy')throw Error('G1_EXPLICIT_SOURCE_BINDING_REQUIRED');if(originalSha256!==PUBLISHED_RENDERER_SHA256)throw Error('PUBLISHED_RENDERER_HASH_MISMATCH:'+originalSha256);}
  const start=original.indexOf('const FS = '),end=original.indexOf('// Ordered screen-door coverage',start);
  if(start<0||end<=start)throw Error('FRAGMENT_SCOPE_NOT_IDENTIFIED');
  let fs=original.slice(start,end);
@@ -18,22 +26,36 @@ export function transformPublishedRenderer(original,{strictHash=true}={}){
  '  float probeGCOrganic=0.0,probeGCPatch=0.0,probeGCSuitability=0.0,probeGCProtection=0.0;',
  '  float probeGCCoast=0.0,probeGCSlope=0.0,probeGCRock=0.0,probeGCWeight=0.0;',
  '  vec3 probeGCBefore=vec3(0.0),probeGCAfter=vec3(0.0),probeGCTone=vec3(0.0);'].join('\n'));
- const originalBlend='      palette=mix(palette,groundcoverTone,groundcoverWeight);';
- fs=once(fs,originalBlend,[
- '      probeGCSeen=1.0;',
- '      probeGCOrganic=groundcoverOrganic;',
- '      probeGCPatch=groundcoverPatch;',
- '      probeGCSuitability=groundcoverSuitability;',
- '      probeGCProtection=groundcoverProtection;',
- '      probeGCCoast=smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters));',
- '      probeGCSlope=1.0-smoothstep(0.12,0.42,slope);',
- '      probeGCRock=1.0-smoothstep(0.18,0.58,rockExposure);',
- '      probeGCWeight=groundcoverWeight;',
- '      probeGCBefore=palette;',
- '      probeGCTone=groundcoverTone;',
- '      probeGCAfter=mix(palette,groundcoverTone,groundcoverWeight);',
- '      if(uGroundcoverFactorMode==13||uGroundcoverFactorMode==14)groundcoverWeight=0.0;',
- originalBlend].join('\n'));
+  const originalBlend='      palette=mix(palette,groundcoverTone,groundcoverWeight);';
+  // Preserve all existing legacy instrumentation byte semantics. The A03
+  // branch captures the post-normalization palette rather than a removed mix.
+  const a03=variant==='A03_A04';
+  const blend=a03?G1_A03_BLEND_EXPRESSION:originalBlend;
+  const common=[
+    '      probeGCSeen=1.0;',
+    '      probeGCOrganic=groundcoverOrganic;',
+    '      probeGCPatch=groundcoverPatch;',
+    '      probeGCSuitability=groundcoverSuitability;',
+    '      probeGCProtection=groundcoverProtection;',
+    '      probeGCCoast=smoothstep(28.0,72.0,max(0.0,vCoastDistanceMeters));',
+    '      probeGCSlope=1.0-smoothstep(0.12,0.42,slope);',
+    '      probeGCRock=1.0-smoothstep(0.18,0.58,rockExposure);',
+    '      probeGCWeight=groundcoverWeight;'
+  ];
+  const before=a03?
+    '      probeGCBefore=(ecologicalSoilSubstrate+identityWeight*ecologicalIdentityTarget)/(1.0+identityWeight);':
+    '      probeGCBefore=palette;';
+  const after=a03?[
+    '      probeGCTone=ecologicalGroundcoverTarget;',
+    blend,
+    '      probeGCAfter=palette;'
+  ]:[
+    '      probeGCTone=groundcoverTone;',
+    '      probeGCAfter=mix(palette,groundcoverTone,groundcoverWeight);',
+    '      if(uGroundcoverFactorMode==13||uGroundcoverFactorMode==14)groundcoverWeight=0.0;',
+    blend
+  ];
+  fs=once(fs,blend,[...common,before,...after].join('\n'));
  const gamma='  lit=pow(clamp(lit*1.12,0.0,1.0),vec3(1.0/2.2));';
  fs=once(fs,gamma,[gamma,
  '  if(worldSoilTerrain&&uGroundcoverFactorMode>0){',

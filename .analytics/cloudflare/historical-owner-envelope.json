@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-02T19:24:58Z",
+  "generatedAt": "2026-11-02T20:24:14Z",
   "window": {
-    "start": "2026-08-04T19:24:58Z",
-    "end": "2026-11-02T19:24:58Z"
+    "start": "2026-08-04T20:24:14Z",
+    "end": "2026-11-02T20:24:14Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,22 +17,34 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4070,
+    "pageLoads": 4050,
     "visits": 1200,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4070,
+        "pageLoads": 4050,
         "visits": 1200
       }
     },
     "byPath": {
       "/showroom/globe/audralia/": {
-        "pageLoads": 180,
+        "pageLoads": 160,
         "visits": 10
       },
       "/": {
         "pageLoads": 960,
         "visits": 700
+      },
+      "/laws/": {
+        "pageLoads": 100,
+        "visits": 0
+      },
+      "/build/intake/": {
+        "pageLoads": 10,
+        "visits": 0
+      },
+      "/evidence/": {
+        "pageLoads": 90,
+        "visits": 0
       },
       "/governance/": {
         "pageLoads": 60,
@@ -42,20 +54,8 @@
         "pageLoads": 110,
         "visits": 0
       },
-      "/laws/": {
-        "pageLoads": 100,
-        "visits": 0
-      },
       "/evidence/readiness/": {
         "pageLoads": 20,
-        "visits": 0
-      },
-      "/build/intake/": {
-        "pageLoads": 10,
-        "visits": 0
-      },
-      "/evidence/": {
-        "pageLoads": 90,
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
@@ -90,6 +90,10 @@
         "pageLoads": 40,
         "visits": 10
       },
+      "/compass-isolated-clone-gen345/": {
+        "pageLoads": 10,
+        "visits": 10
+      },
       "/compass-isolated-clone/": {
         "pageLoads": 20,
         "visits": 20
@@ -105,10 +109,6 @@
       "/compass-composite/": {
         "pageLoads": 20,
         "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
       },
       "/showroom/globe/h-earth/": {
         "pageLoads": 60,
@@ -126,16 +126,16 @@
         "pageLoads": 10,
         "visits": 0
       },
+      "/showroom/globe/hearth/diagnostic/": {
+        "pageLoads": 60,
+        "visits": 0
+      },
       "/laws/categories/flow/cycles/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/gauges/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/showroom/globe/hearth/diagnostic/": {
-        "pageLoads": 60,
         "visits": 0
       },
       "/laws/categories/reality/": {
@@ -313,16 +313,16 @@
     },
     "byReferer": {
       "diamondgatebridge.com": {
-        "pageLoads": 2870,
+        "pageLoads": 2850,
         "visits": 0
       },
       "www.google.com": {
-        "pageLoads": 660,
-        "visits": 660
+        "pageLoads": 650,
+        "visits": 650
       },
       "(none)": {
-        "pageLoads": 530,
-        "visits": 530
+        "pageLoads": 540,
+        "visits": 540
       },
       "raw.githack.com": {
         "pageLoads": 10,

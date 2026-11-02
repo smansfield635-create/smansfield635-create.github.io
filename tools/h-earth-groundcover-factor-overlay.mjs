@@ -129,7 +129,7 @@ export function transformRavineHabitatRenderer(original){
   let fs=original.slice(begin,end);
   fs=once(fs,'out vec4 outColor;',[
     'uniform int uRavineHabitatProbeMode;',
-    'uniform vec3 uRavineExpectedTargetWorld;'
+    'uniform vec3 uRavineExpectedTargetWorld;',
     'out vec4 outColor;'
   ].join('\n'));
   fs=once(fs,'  vec3 base=max(vBaseColor.rgb,vec3(0.004));',[

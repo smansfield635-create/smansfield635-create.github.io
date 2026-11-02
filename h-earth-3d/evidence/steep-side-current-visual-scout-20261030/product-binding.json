@@ -1,0 +1,33 @@
+{
+  "candidate": {
+    "head": "3ea149e5b56e8cc0d5aac192bce0cdd47da7e626",
+    "rendererSha256": "10f73ef961299e5834f3956d6a08771edd050beebf5fa6a29cb31dc8130f935c",
+    "routeSha256": "3ed89c3287221789ba8eefef59300675e0bf104f0ecc83358bb1772b4a203d7b",
+    "presentationSha256": "60474ea6e4464c463fe0c41dabeceb9f0890d47845ea370cc132ce12c725351a",
+    "marginSha256": "3392761baed50091c1f5d628cbe9a10df1e819743648835955a3d40ed4ebff19",
+    "marginReceipt": {
+      "schema": "H_EARTH_FULL_MATERIAL_MARGIN_v1",
+      "status": "SOURCE_MATCHED_COMPARISON_CANDIDATE",
+      "sourceRendererSha256": "2052a512f15a3851e95d47f00ddc65dd632c146cfa949178d5e05941c176b39d",
+      "correctionSha256": "b3133bdccff6f6d936285d8ea27ea30ddc9b5897366303fc3d9874d97da2e28f",
+      "worldBounds": [
+        -213,
+        -759,
+        -165,
+        -711
+      ],
+      "stepMeters": 0.5,
+      "encoding": "RGBA16F_DELTA_A_B_LINEAR_NO_MIPMAPS",
+      "uploadedBytes": 75272,
+      "textureUploadCount": 1,
+      "perFrameUploadBytes": 0,
+      "rootAdmissionChanged": false,
+      "nativeRoughnessChanged": false,
+      "visualAcceptance": false,
+      "scope": "ONE_INLAND_SOURCE_WINDOW_NOT_GLOBAL_REPAIR"
+    },
+    "navigationSha256": "a8db77dc0d43dd630392256558af184dca9aa18f096ed1d2150954c4e260e584"
+  },
+  "sourcePriorPlan": "c7f6d8db2793872f00e79debdece53e07ae54684",
+  "currentSourceProof": "fc0b9270339e3b11e56a0bffb46cb8709cb09a3b"
+}

@@ -294,7 +294,7 @@ async function readOwnerPrDispatchProof({repository,token,operationId,expectedCu
   if(typeof body!=='string'||markerFromBody(body)!==CANONICAL_MARKER)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','body','owner-pr-provenance','SOURCE_BODY_INVALID');
   const prNumber=receipt?.transportPullRequest,commit=receipt?.requestCommit,bridgeRunId=receipt?.bridgeRunId;
   if(!Number.isInteger(prNumber)||prNumber<1||typeof commit!=='string'||!/^[0-9a-f]{40}$/.test(commit)||!Number.isInteger(bridgeRunId)||bridgeRunId<1)throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','receipt','owner-pr-provenance','BRIDGE_IDS_INVALID');
-  const [pr,requestCommit,changedFiles,requestFileRaw,bridgeRun,intakeRun]=await Promise.all([
+  const [pr,requestCommit,changedFiles,requestFileRaw,bridgeRunInitial,intakeRun]=await Promise.all([
     req(base(repository)+'/pulls/'+prNumber,{headers:H(token)},[200],'OWNER_PR_READBACK'),
     req(base(repository)+'/commits/'+commit,{headers:H(token)},[200],'OWNER_PR_COMMIT'),
     req(base(repository)+'/pulls/'+prNumber+'/files?per_page=100',{headers:H(token)},[200],'OWNER_PR_FILES'),
@@ -302,6 +302,14 @@ async function readOwnerPrDispatchProof({repository,token,operationId,expectedCu
     req(base(repository)+'/actions/runs/'+bridgeRunId,{headers:H(token)},[200],'OWNER_PR_BRIDGE_RUN'),
     req(base(repository)+'/actions/runs/'+runId,{headers:H(token)},[200],'OWNER_PR_INTAKE_RUN')
   ]);
+  // The receipt is written before the bridge job finishes. Do not classify a
+  // still-running authenticated bridge as a failed bridge. Require terminal
+  // GitHub success; never accept unknown or failed conclusions.
+  let bridgeRun=bridgeRunInitial;
+  for(let attempt=0;bridgeRun?.conclusion==null&&attempt<30;attempt++){
+    await new Promise(resolve=>setTimeout(resolve,1000));
+    bridgeRun=await req(base(repository)+'/actions/runs/'+bridgeRunId,{headers:H(token)},[200],'OWNER_PR_BRIDGE_TERMINAL_READBACK');
+  }
   if(requestFileRaw?.encoding!=='base64'||typeof requestFileRaw.content!=='string')throw err('AUTHORITY_EVENT_NOT_AUTHENTICATED','requestFile','owner-pr-provenance','REQUEST_FILE_ENCODING');
   const requestFile={ref:commit,path:'.github/ai-entry/workflow-dispatch-request.json',content:Buffer.from(requestFileRaw.content.replace(/\s/g,''),'base64').toString('utf8')};
   let proof;try{

@@ -3,7 +3,7 @@ name: H-Earth Neutral Exact Head Runner
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main]
+    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102']
     paths:
       - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
       - 'tools/h-earth-ground-material-comparison.v1.mjs'

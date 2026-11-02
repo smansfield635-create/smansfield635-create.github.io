@@ -1520,6 +1520,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Proven Gen3036 historical fixture is immutable, distinct from current soil products.
+          git -C tooling fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
           node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
           (cd tooling && node --test tools/h-earth-ground-material-comparison.v1.test.mjs)
           (cd candidate && node --test h-earth-3d/validation/h-earth.groundcover-soil-relative-endpoint-20261031.test.mjs)

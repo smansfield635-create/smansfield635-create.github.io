@@ -7,11 +7,11 @@ function fixture({ backend='WEBGL1', defaultDepth=true }={}) {
   let lost=false, disposed=false, onDraw=null;
   const gl={
     CCW:1, CULL_FACE:2, BACK:3, FRONT:4, DEPTH_TEST:5, BLEND:6, LEQUAL:7,
-    FUNC_ADD:8, SRC_ALPHA:9, ONE_MINUS_SRC_ALPHA:10,
+    FUNC_ADD:8, SRC_ALPHA:9, ONE_MINUS_SRC_ALPHA:10, ONE:11,
     COLOR_BUFFER_BIT:16, DEPTH_BUFFER_BIT:32, TEXTURE0:64, TEXTURE_2D:65,
     getContextAttributes(){return {depth:defaultDepth};}, isContextLost(){return lost;}
   };
-  for (const fn of ['frontFace','disable','enable','cullFace','depthMask','depthFunc','blendEquation','blendFunc',
+  for (const fn of ['frontFace','disable','enable','cullFace','depthMask','depthFunc','blendEquation','blendFuncSeparate',
     'colorMask','clearColor','clearDepth','clear','activeTexture','bindTexture','uniform1i'])
     gl[fn]=(...args)=>log.push([fn,...args]);
   gl.getUniformLocation=()=>1;
@@ -95,7 +95,7 @@ test('opaque insertion and transparent stable far-to-near ordering',()=>{
   const result=pipe.endFrame();
   assert.deepEqual(f.log.filter(x=>x[0]==='draw').map(x=>x[1]),['opaque1','opaque2','far1','far2','near']);
   assert.equal(result.executed,5);
-  assert.equal(f.log.some(x=>x[0]==='blendFunc'&&x[1]===f.gl.SRC_ALPHA&&x[2]===f.gl.ONE_MINUS_SRC_ALPHA),true);
+  assert.equal(f.log.some(x=>x[0]==='blendFuncSeparate'&&x[1]===f.gl.SRC_ALPHA&&x[2]===f.gl.ONE_MINUS_SRC_ALPHA&&x[3]===f.gl.ONE&&x[4]===f.gl.ONE_MINUS_SRC_ALPHA),true);
   assert.equal(f.log.some(x=>x[0]==='depthMask'&&x[1]===false),true);
 });
 

@@ -1427,45 +1427,58 @@ jobs:
   # attempt only, no product mutation and no W1 diagnostic replay.
   # Gen3055 separately admitted diagnosed checkout replay: one new PR-reopen event only.
   gen3042-soil-triad-gpu-once:
-    if: >-
-      ${{ github.event_name == 'pull_request' &&
-          github.event.action == 'reopened' &&
-          github.event.pull_request.head.repo.full_name == github.repository &&
-          github.event.pull_request.head.ref == 'h-earth/gen3042-gen3042-soil-triad-positive-band-qualification-20261101' &&
-          startsWith(github.event.pull_request.title, 'GEN3042 SOIL TRIAD:') &&
-          github.event.pull_request.base.ref == 'main' }}
+    # Gen3055 one-shot replay exhausted by cancelled run 41368340561; rebind only under new authority.
+    if: ${{ false }}
     runs-on: ubuntu-24.04
     timeout-minutes: 55
     permissions:
       contents: read
     steps:
       - name: Checkout exact Gen3042 tooling
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-          path: tooling
-          persist-credentials: false
-          fetch-depth: 1
-          filter: blob:none
+        shell: bash
+        env:
+          FROZEN_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p tooling
+          git -C tooling init -q
+          git -C tooling remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C tooling -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_SHA"
+          git -C tooling sparse-checkout init --cone --sparse-index
+          git -C tooling sparse-checkout set tools .github/workflows
+          git -C tooling checkout --detach FETCH_HEAD
+          test "$(git -C tooling rev-parse HEAD)" = "$FROZEN_SHA"
+          test -z "$(git -C tooling status --porcelain --untracked-files=no)"
       - name: Checkout exact baseline
-        uses: actions/checkout@v4
-        with:
-          ref: 28da29ce01f26bf5eb73db2d75b09741b22ab40b
-          path: baseline
-          persist-credentials: false
-          fetch-depth: 1
-          filter: blob:none
+        shell: bash
+        env:
+          FROZEN_SHA: 28da29ce01f26bf5eb73db2d75b09741b22ab40b
+        run: |
+          set -euo pipefail
+          mkdir -p baseline
+          git -C baseline init -q
+          git -C baseline remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C baseline -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_SHA"
+          git -C baseline sparse-checkout init --cone --sparse-index
+          git -C baseline sparse-checkout set showroom/globe/h-earth h-earth-3d
+          git -C baseline checkout --detach FETCH_HEAD
+          test "$(git -C baseline rev-parse HEAD)" = "$FROZEN_SHA"
+          test -z "$(git -C baseline status --porcelain --untracked-files=no)"
       - name: Checkout exact Gen3037 groundcover candidate
-        uses: actions/checkout@v4
-        with:
-          ref: 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
-          path: candidate
-          persist-credentials: false
-          fetch-depth: 1
-          filter: blob:none
-      # Gen3042 postmortem: preserve a small, completed resource receipt *before*
-      # the fourth full-tree checkout. This remains available if the runner
-      # terminates before the final if:always() artifact step can execute.
+        shell: bash
+        env:
+          FROZEN_SHA: 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+        run: |
+          set -euo pipefail
+          mkdir -p candidate
+          git -C candidate init -q
+          git -C candidate remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C candidate -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_SHA"
+          git -C candidate sparse-checkout init --cone --sparse-index
+          git -C candidate sparse-checkout set showroom/globe/h-earth h-earth-3d
+          git -C candidate checkout --detach FETCH_HEAD
+          test "$(git -C candidate rev-parse HEAD)" = "$FROZEN_SHA"
+          test -z "$(git -C candidate status --porcelain --untracked-files=no)"
       - name: Gen3042 pre-habitat resource evidence
         shell: bash
         run: |
@@ -1486,8 +1499,24 @@ jobs:
             du -sh tooling baseline candidate
             printf '\nrunner_memory\n'
             free -m
+            printf '\nsparse_checkout_paths\n'
+            for dir in tooling baseline candidate; do
+              printf "%s\n" "$dir"
+              git -C "$dir" sparse-checkout list
+            done
+            printf '\nsparse_tree_sizes_bytes\n'
+            du -sb tooling baseline candidate
+            max_tree_bytes=2147483648
+            for dir in tooling baseline candidate; do
+              bytes=$(du -sb "$dir" | cut -f1)
+              if (( bytes > max_tree_bytes )); then printf "SPARSE_WORKTREE_OVER_BUDGET tree=%s bytes=%s max=%s\n" "$dir" "$bytes" "$max_tree_bytes"; exit 42; fi
+            done
+            free_bytes=$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -n 1 | tr -d " ")
+            if (( free_bytes < 12884901888 )); then printf "INSUFFICIENT_FREE_BYTES_BEFORE_HABITAT=%s required=12884901888\n" "$free_bytes"; exit 43; fi
+            printf 'SPARSE_PRE_HABITAT_CAPACITY_OK\n'
           } > "$evidence/pre-habitat.txt"
       - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: h-earth-gen3042-soil-triad-pre-habitat-${{ github.run_id }}-${{ github.run_attempt }}
@@ -1495,13 +1524,20 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Checkout exact Gen3030 habitat candidate
-        uses: actions/checkout@v4
-        with:
-          ref: cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
-          path: habitat
-          persist-credentials: false
-          fetch-depth: 1
-          filter: blob:none
+        shell: bash
+        env:
+          FROZEN_SHA: cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
+        run: |
+          set -euo pipefail
+          mkdir -p habitat
+          git -C habitat init -q
+          git -C habitat remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C habitat -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_SHA"
+          git -C habitat sparse-checkout init --cone --sparse-index
+          git -C habitat sparse-checkout set showroom/globe/h-earth h-earth-3d
+          git -C habitat checkout --detach FETCH_HEAD
+          test "$(git -C habitat rev-parse HEAD)" = "$FROZEN_SHA"
+          test -z "$(git -C habitat status --porcelain --untracked-files=no)"
       - name: Require exact renderer blobs and clean source checkouts
         shell: bash
         run: |
@@ -1516,6 +1552,21 @@ jobs:
           test -z "$(git -C baseline status --porcelain --untracked-files=no)"
           test -z "$(git -C candidate status --porcelain --untracked-files=no)"
           test -z "$(git -C habitat status --porcelain --untracked-files=no)"
+          evidence="${{ runner.temp }}/h-earth-gen3042-checkout-evidence"
+          mkdir -p "$evidence"
+          {
+            date -u '+post_habitat_utc=%Y-%m-%dT%H:%M:%SZ'
+            df -B1 "$GITHUB_WORKSPACE"
+            du -sb tooling baseline candidate habitat
+          } > "$evidence/post-habitat.txt"
+          max_tree_bytes=2147483648
+          for dir in tooling baseline candidate habitat; do
+            bytes=$(du -sb "$dir" | cut -f1)
+            if (( bytes > max_tree_bytes )); then printf "SPARSE_WORKTREE_OVER_BUDGET tree=%s bytes=%s\n" "$dir" "$bytes" >> "$evidence/post-habitat.txt"; exit 44; fi
+          done
+          free_bytes=$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -n 1 | tr -d " ")
+          if (( free_bytes < 8589934592 )); then printf "INSUFFICIENT_GPU_HEADROOM_BYTES=%s required=8589934592\n" "$free_bytes" >> "$evidence/post-habitat.txt"; exit 45; fi
+          printf "SPARSE_POST_HABITAT_CAPACITY_OK\n" >> "$evidence/post-habitat.txt"
       - name: Node22 exact-head comparator and product-source regression
         shell: bash
         run: |
@@ -1546,6 +1597,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: h-earth-gen3042-soil-triad-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/h-earth-gen3042-soil-triad/
+          path: |
+            ${{ runner.temp }}/h-earth-gen3042-soil-triad/
+            ${{ runner.temp }}/h-earth-gen3042-checkout-evidence/
           if-no-files-found: warn
           retention-days: 30

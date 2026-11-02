@@ -166,59 +166,63 @@ test('Gen3042 full 36-frame source/camera/unchanged-stage custody rejects corrup
  const missing=structuredClone(views);missing[0].sourceHead='wrong';
  assert.throws(()=>t.validateGen3042(missing),/SOURCE_STAGE_INVALID/);
 });
-test('Gen3042 triad CLI and Gen3055 replay guard are closed to extra source refs',async()=>{
+
+test('Gen3059 source-only triad preserves CLI and disables consumed GPU event',async()=>{
  const {spawnSync}=await import('node:child_process');
- const moduleBody="import {parseArgs,HEADS,GEN3042_PROFILE} from './tools/h-earth-ground-material-comparison.v1.mjs';"+
+ const code="import {parseArgs,HEADS,GEN3042_PROFILE} from './tools/h-earth-ground-material-comparison.v1.mjs';"+
  "if(!GEN3042_PROFILE||Object.keys(HEADS).length!==3)process.exit(12);"+
  "const a=parseArgs(['--baseline-dir','/tmp/base','--candidate-dir','/tmp/green','--habitat-dir','/tmp/hab','--output','/tmp/out']);"+
- "if(Object.keys(a).length!==4)process.exit(13);"+
- "try{parseArgs(['--baseline-dir','/tmp/base','--candidate-dir','/tmp/green','--output','/tmp/out']);process.exit(14);}catch(e){if(!String(e).includes('CLI_INCOMPLETE'))process.exit(15);}";
- const run=spawnSync(process.execPath,['--input-type=module','-e',moduleBody],{
+ "if(Object.keys(a).length!==4)process.exit(13);";
+ const run=spawnSync(process.execPath,['--input-type=module','-e',code],{
   cwd:new URL('../',import.meta.url).pathname,encoding:'utf8',
   env:{...process.env,H_EARTH_COMPARISON_PROFILE:'GEN3042_SOIL_TRIAD_AB_V1'}
  });
  assert.equal(run.status,0,run.stderr||run.stdout);
  const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
- const i=y.indexOf('  gen3042-soil-triad-gpu-once:');assert.ok(i>=0);
- const block=y.slice(i);
- for(const h of Object.values((await import('./h-earth-ground-material-comparison.v1.mjs')).GEN3042_HEADS))assert.ok(block.includes('ref: '+h));
- assert.ok(block.includes("github.event.action == 'reopened'"));
- assert.ok(block.includes('GEN3042_SOIL_TRIAD_AB_V1'));
- assert.ok(block.includes('if: always()'));
- assert.equal(block.includes("github.event.action == 'opened'"),false);
+ const b=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
+ assert.equal(b.split('if: ${{ false }}').length,2);
+ assert.equal(b.includes("github.event.action == 'reopened'"),false);
 });
 
-test('Gen3042 preserves resource evidence before fourth independent full-tree checkout',()=>{
- const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
- const block=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
- const names=['Gen3042 tooling','baseline','Gen3037 groundcover candidate','Gen3030 habitat candidate'];
- for(const name of names){
-  const anchor='      - name: Checkout exact '+name+'\n';
-  const a=block.indexOf(anchor);assert.ok(a>=0,'missing checkout '+name);
-  const b=block.indexOf('\n      - name:',a+anchor.length);
-  const chunk=block.slice(a,b<0?undefined:b);
-  assert.ok(chunk.includes('filter: blob:none'),name+' has no bounded blob filter');
-  assert.ok(!chunk.includes('sparse-checkout:'),name+' must retain complete source tree');
- }
- const capture=block.indexOf('      - name: Gen3042 pre-habitat resource evidence');
- const upload=block.indexOf('      - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout');
- const habitat=block.indexOf('      - name: Checkout exact Gen3030 habitat candidate');
- assert.ok(capture>=0&&upload>capture&&habitat>upload,'durable resource evidence must precede habitat checkout');
- assert.ok(block.includes('df -B1 "$GITHUB_WORKSPACE"'));
- assert.ok(block.includes('du -sh tooling baseline candidate'));
- assert.ok(block.includes('if-no-files-found: error'));
- assert.ok(block.includes("github.event.action == 'reopened'"),'separately admitted Gen3055 replay trigger must be exact');
- assert.ok(!block.includes("github.event.action == 'opened'"),'consumed Gen3042 initial PR opening must not re-trigger');
-});
-
-test('Gen3055 replay retains three source identities and pre-habitat evidence',()=>{
+test('Gen3059 preserves four independent SHA-filtered sparse product trees and receipts',()=>{
  const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
  const b=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
- assert.equal(b.split("github.event.action == 'reopened'").length,2);
- assert.ok(b.includes('Gen3042 pre-habitat resource evidence'));
- assert.ok(b.includes('git -C tooling fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6'));
- assert.ok(b.includes('Preserve Gen3042 pre-habitat resource evidence before fourth checkout'));
- for(const sha of ['28da29ce01f26bf5eb73db2d75b09741b22ab40b','724efeb1db3d3e8e5309a9aa779acefb7c53fed9','cb15de477f9b8e39b9dc688ecc452ba44e42e6c1'])assert.ok(b.includes('ref: '+sha));
- assert.ok(b.includes('Capture 36 real stage-aligned WebGL images from independent products'));
+ const roots=[['Gen3042 tooling','tooling','tools .github/workflows'],['baseline','baseline','showroom/globe/h-earth h-earth-3d'],['Gen3037 groundcover candidate','candidate','showroom/globe/h-earth h-earth-3d'],['Gen3030 habitat candidate','habitat','showroom/globe/h-earth h-earth-3d']];
+ for(const [name,dir,paths] of roots){
+  const i=b.indexOf('      - name: Checkout exact '+name+'\n');assert.ok(i>=0);
+  const n=b.indexOf('\n      - name:',i+8);
+  const step=b.slice(i,n<0?undefined:n);
+  assert.ok(step.includes('git -C '+dir+' sparse-checkout init --cone --sparse-index'));
+  assert.ok(step.includes('git -C '+dir+' sparse-checkout set '+paths));
+  assert.ok(step.includes('git -C '+dir+' -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin'));
+  assert.ok(step.includes('git -C '+dir+' checkout --detach FETCH_HEAD'));
+  assert.ok(step.includes('git -C '+dir+' rev-parse HEAD'));
+  assert.ok(step.includes('status --porcelain --untracked-files=no'));
+  assert.ok(!step.includes('uses: actions/checkout@v4'));
+ }
+ assert.equal((b.match(/sparse-checkout set/g)||[]).length,4);
+ assert.ok(b.includes('INSUFFICIENT_FREE_BYTES_BEFORE_HABITAT'));
+ assert.ok(b.includes('INSUFFICIENT_GPU_HEADROOM_BYTES'));
+ assert.ok(b.includes('SPARSE_WORKTREE_OVER_BUDGET'));
+ const receipt=b.indexOf('      - name: Gen3042 pre-habitat resource evidence');
+ const upload=b.indexOf('      - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout');
+ const fourth=b.indexOf('      - name: Checkout exact Gen3030 habitat candidate');
+ assert.ok(receipt>=0&&upload>receipt&&fourth>upload);
+ assert.ok(b.includes('      - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout\n        if: always()'));
+ assert.ok(b.includes('post-habitat.txt'));
+});
+
+test('Gen3059 retains exact renderer blobs and native Node before Chromium',()=>{
+ const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ const b=y.slice(y.indexOf('  gen3042-soil-triad-gpu-once:'));
+ for(const sha of ['28da29ce01f26bf5eb73db2d75b09741b22ab40b','724efeb1db3d3e8e5309a9aa779acefb7c53fed9','cb15de477f9b8e39b9dc688ecc452ba44e42e6c1'])assert.ok(b.includes('FROZEN_SHA: '+sha));
+ for(const sha of ['85ee835060d5106a670077a5f4352b7ad202b49b','40034a16c36a43cb02682564784328ddb7ac48a7','03bc45e034e9894494d9120782c714ae78890ab8'])assert.ok(b.includes(sha));
+ const native=b.indexOf('Node22 exact-head comparator and product-source regression');
+ const chromium=b.indexOf('Install first-party Chromium driver');
+ const gpu=b.indexOf('Capture 36 real stage-aligned WebGL images');
+ assert.ok(native>=0&&chromium>native&&gpu>chromium);
  assert.ok(b.includes('if: always()'));
+ assert.ok(b.includes('h-earth-gen3042-checkout-evidence/'));
+ assert.ok(b.includes('GEN3042_SOIL_TRIAD_AB_V1'));
+ assert.ok(b.includes('39ed43d987d5f62c1368e7c309faa1a1b3d731b6'));
 });

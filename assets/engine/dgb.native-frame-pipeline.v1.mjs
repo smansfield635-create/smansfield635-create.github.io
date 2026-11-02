@@ -46,8 +46,15 @@ export function createNativeFramePipeline(device) {
 
   function assertReady() {
     const s = device.status();
-    if (s.disposed) throw new Error('DEVICE_DISPOSED');
-    if (s.lost || s.restorationError || gl.isContextLost?.()) throw new Error('GRAPHICS_CONTEXT_NOT_READY');
+    if (s.disposed || s.lost || s.restorationError || gl.isContextLost?.()) {
+      const error = new Error(s.disposed ? 'DEVICE_DISPOSED' : 'GRAPHICS_CONTEXT_NOT_READY');
+      if (active) {
+        active = null;
+        lastError = error.message;
+        lastPresentation = 'ABORTED';
+      }
+      throw error;
+    }
   }
   function inspectFrame(input) {
     if (!input || typeof input !== 'object' || Array.isArray(input)) throw new TypeError('FRAME_DESCRIPTOR_REQUIRED');

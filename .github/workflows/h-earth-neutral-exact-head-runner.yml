@@ -1720,7 +1720,7 @@ jobs:
 
   ravine-habitat-source-only-gen3074:
     if: >-
-      ${{ github.event_name == 'pull_request' && github.event.action == 'opened' &&
+      ${{ github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize') &&
           github.event.pull_request.head.repo.full_name == github.repository &&
           github.event.pull_request.head.ref == 'h-earth/ravine-habitat-color-attribution-20261102' }}
     runs-on: ubuntu-24.04
@@ -1749,9 +1749,15 @@ jobs:
           EXACT_HEAD: ${{ github.event.pull_request.head.sha }}
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$EXACT_HEAD"
-          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b49b
-          test -z "$(git status --porcelain --untracked-files=no)"
+          observed_head="$(git rev-parse HEAD)"
+          observed_blob="$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
+          observed_status="$(git status --porcelain --untracked-files=no)"
+          printf 'GEN3074_HEAD actual=%s expected=%s\n' "$observed_head" "$EXACT_HEAD"
+          printf 'GEN3074_RENDERER_BLOB actual=%s expected=%s\n' "$observed_blob" 85ee835060d5106a670077a5f4352b49b
+          printf 'GEN3074_TRACKED_STATUS=%s\n' "$observed_status"
+          test "$observed_head" = "$EXACT_HEAD"
+          test "$observed_blob" = 85ee835060d5106a670077a5f4352b49b
+          test -z "$observed_status"
           git fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
           node --check tools/h-earth-ground-material-comparison.v1.mjs
           node --check tools/h-earth-groundcover-factor-overlay.mjs

@@ -112,6 +112,8 @@ export const GEN3042_HEADS=Object.freeze({baseline:'28da29ce01f26bf5eb73db2d75b0
 export const GEN3042_BLOBS=Object.freeze({baseline:'85ee835060d5106a670077a5f4352b7ad202b49b',candidate:'40034a16c36a43cb02682564784328ddb7ac48a7',habitat:'03bc45e034e9894494d9120782c714ae78890ab8'});
 export const GEN3042_MODES=Object.freeze(['reference-lit','before-groundcover-unlit','after-groundcover-unlit','groundcover-weight-raw']);
 // Explicit, closed-world G1 diagnostic, independent from the legacy survey.
+export const RAVINE_OBSERVER_PROFILE='RAVINE_EMITTED_SURFACE_OBSERVER_PREFLIGHT_V1';
+export const RAVINE_OBSERVER_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===RAVINE_OBSERVER_PROFILE;
 export const G1_BASELINE_PROFILE='G1_SOIL_BASELINE_ONLY_V1';
 export const G1_A03_PROFILE='G1_SOIL_A03_CANDIDATE_ONLY_V1';
 // Additive use of the existing comparator at the prior GPU-positive inland FAR band.
@@ -140,7 +142,7 @@ export const G1_ACTIVE_LABEL=[G1_A03_PROFILE,INLAND_BAND_A03_PROFILE].includes(p
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
-export const HEADS=Object.freeze(G1_PROFILE?{[G1_ACTIVE_LABEL]:G1_HEADS[G1_ACTIVE_LABEL]}:(GEN3042_PROFILE?GEN3042_HEADS:{baseline:MATERIAL_BASELINE_HEAD,candidate:candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD}));
+export const HEADS=Object.freeze(RAVINE_OBSERVER_ACTIVE?{baseline:RAVINE_HABITAT_TARGET.publishedSourceHead}:(G1_PROFILE?{[G1_ACTIVE_LABEL]:G1_HEADS[G1_ACTIVE_LABEL]}:(GEN3042_PROFILE?GEN3042_HEADS:{baseline:MATERIAL_BASELINE_HEAD,candidate:candidateCapture?candidateHead:MATERIAL_BASELINE_HEAD})));
 export const POSES=Object.freeze([{name:'river-overlook',x:18,z:-226,yaw:210,pitch:-14},{name:'bare-mountain',x:88,z:-260,yaw:95,pitch:-10},{name:'coast-oblique',x:0,z:-110,yaw:170,pitch:-8},{name:'foothill-west',x:-52,z:-208,yaw:180,pitch:-12},
 {name:'inland-seam-near',x:-200,z:-728,y:18.361431,yaw:0,pitch:-14,diagnosticObserver:true},
 {name:'inland-seam-mid',x:-200,z:-704,y:18.272624,yaw:0,pitch:-4,diagnosticObserver:true},
@@ -311,13 +313,13 @@ export function decodeCanvasCapture(capture,expectedFrame){
   return bytes;
 }
 export function assertCheckout(dir,expected){const head=execFileSync('git',['-C',dir,'rev-parse','HEAD'],{encoding:'utf8'}).trim();if(head!==expected)throw Error('CHECKOUT_HEAD_MISMATCH');if(execFileSync('git',['-C',dir,'status','--porcelain','--untracked-files=no'],{encoding:'utf8'}).trim())throw Error('CHECKOUT_TRACKED_BYTES_CHANGED');}
-export function parseArgs(argv){const a={},keys=G1_PROFILE?['--'+G1_ACTIVE_LABEL+'-dir','--output']:(GEN3042_PROFILE?['--baseline-dir','--candidate-dir','--habitat-dir','--output']:['--baseline-dir','--candidate-dir','--output']);for(let i=0;i<argv.length;i+=2){if(!keys.includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==keys.length||keys.some(k=>!a[k]))throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==keys.length)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
+export function parseArgs(argv){const a={},keys=RAVINE_OBSERVER_ACTIVE?['--baseline-dir','--output']:(G1_PROFILE?['--'+G1_ACTIVE_LABEL+'-dir','--output']:(GEN3042_PROFILE?['--baseline-dir','--candidate-dir','--habitat-dir','--output']:['--baseline-dir','--candidate-dir','--output']));for(let i=0;i<argv.length;i+=2){if(!keys.includes(argv[i])||!argv[i+1]||a[argv[i]])throw Error('CLI_NOT_CLOSED');a[argv[i]]=path.resolve(argv[i+1]);}if(Object.keys(a).length!==keys.length||keys.some(k=>!a[k]))throw Error('CLI_INCOMPLETE');if(new Set(Object.values(a)).size!==keys.length)throw Error('DIRECTORIES_NOT_DISTINCT');return a;}
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
-  const poses=G1_PROFILE?G1_POSES:(GEN3042_PROFILE?GEN3042_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES));
-  const modes=G1_PROFILE?G1_MODES:(GEN3042_PROFILE?GEN3042_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES));
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE,RAVINE_OBSERVER_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  const poses=RAVINE_OBSERVER_ACTIVE?[]:(G1_PROFILE?G1_POSES:(GEN3042_PROFILE?GEN3042_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES)));
+  const modes=RAVINE_OBSERVER_ACTIVE?[]:(G1_PROFILE?G1_MODES:(GEN3042_PROFILE?GEN3042_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES)));
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
   const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:GEN3042_PROFILE?'H_EARTH_GEN3042_SOIL_TRIAD_POSITIVE_BAND_QUALIFICATION_20261101_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:GEN3042_PROFILE?null:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:GEN3042_PROFILE?null:RENDERER_SHA256,sourceRenderers:{},gen3042ClaimCeiling:'HISTORIC_INLAND_BAND_ONLY_OWNER_ANDROID_STRAIGHT_AND_CURVED_NOT_CLOSED',colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   if(G1_PROFILE){receipt.g1EvidenceClass=INLAND_BAND_PROFILE?'GPU_POSITIVE_INLAND_FAR_BAND_NOT_OWNER_PHOTO':'SOURCE_DERIVED_G1_OBSERVER_NOT_OWNER_WITNESS';receipt.firstHitDepthReadback=false;receipt.ownerPhotoClassMatchProven=false;receipt.claimCeiling=INLAND_BAND_PROFILE?'PROVEN_INLAND_BAND_MATERIAL_RESPONSE_ONLY_OWNER_STRAIGHT_AND_CURVED_NOT_PROVEN':'SOURCE_PINNED_G1_DIAGNOSTIC_ONLY_VISUAL_REVIEW_PENDING';receipt.repairOperationId=null;receipt.diagnosticAdmissionIdentity=null;receipt.baselineProductSha256=null;receipt.sourceProductSha256=null;receipt.gen3042ClaimCeiling=null;receipt.searchProvenance=INLAND_BAND_PROFILE?{kind:'GEN2917_GEN2925_GPU_POSITIVE_INLAND_BAND',sourceRun:40411050366,sourceReceipt:'6428986452',ownerClassCorrespondence:false}:{kind:'G1_SOURCE_DERIVED_ESTATE_PROTECTION_TRANSITION',sourceReceipt:'6561935591',ownerClassCorrespondence:false};}
@@ -330,7 +332,7 @@ export async function run(argv){
     for(const label of Object.keys(HEADS))assertCheckout(a['--'+label+'-dir'],HEADS[label]);
     const {chromium}=await import('playwright');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-    for(const [index,label] of ((GEN3042_PROFILE||G1_PROFILE)?Object.keys(HEADS):['candidate']).entries()){
+    for(const [index,label] of ((RAVINE_OBSERVER_ACTIVE||GEN3042_PROFILE||G1_PROFILE)?Object.keys(HEADS):['candidate']).entries()){
       const dir=a['--'+label+'-dir'],port=18767+index,base='http://127.0.0.1:'+port;
       const runRecord={label,head:HEADS[label],errors:[],instrumentation:[],startedAt:new Date().toISOString()};receipt.runs.push(runRecord);persist();
       server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});

@@ -5,6 +5,136 @@ import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {transformPublishedRenderer,transformRavineHabitatRenderer,transformWestFlankMaterialRenderer,transformNearFarStraightRenderer,WEST_FLANK_STAGE_MODES,NEAR_FAR_STRAIGHT_STAGE_MODES,RAVINE_HABITAT_PROBE_MODES,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
 
+
+// REV2 G1 prerequisite: source-only closure. This never runs WebGL or upgrades
+// an archival source witness into an actual GPU first-hit observation.
+export const REV2_G1_STATIC_PREFLIGHT=Object.freeze({
+ schema:'H_EARTH_REV2_G1_STATIC_PREFLIGHT_v1',
+ baseline:'7a21f465fc58cc1dbdda02a3807a4bf344440589',
+ product:'11afdc5278564728ea9eef6ffb525601ce4362a7',
+ governing:'8371931a761944bf08c3bc517a56f0e3d2a3d7fa',
+ blobs:Object.freeze({
+  'showroom/globe/h-earth/index.html':'c86274de31cfacea8b1f7e0ad742462bba46e6f6',
+  'showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js':'59c77d100d793f9dd28e9db7bd357ef078de0165',
+  'showroom/globe/h-earth/vegetation-prototype/route.js':'8e8df594b8968f6bb17f32dc4ed7025bd2488bd0',
+  'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js':'85ee835060d5106a670077a5f4352b7ad202b49b',
+  'showroom/globe/h-earth/render/planetary-world-frame.js':'0938daa8586715c3636b373894bd7e6e28c1ea91',
+  'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js':'d360e92c575be0c52254f454e7f57c1b87693b13',
+  'showroom/globe/h-earth/functional-landscape/navigation.js':'3912671a7d6fe380a3605e33fd6547e2f672f319',
+  'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js':'98ef78138aa6104f707832eabfa64bf1958a7312',
+  'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js':'dbab15717f754b2dc9cedd75ab6835d3f4328a15',
+  'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js':'4f929cd467edb447e2116de745d9b02c28daf219',
+  'h-earth-3d/environment/h-earth.atmosphere-state.js':'d3c8472529b4b8e5b34a3aa100240ca69bf4fef1',
+  'showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js':'ca4b239cfa9332a41b4adb7ccc76530beea10e77',
+  'showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png':'4fc4e24098c144d251f949a58a520bfd27983ad7',
+  'showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png':'3a5220e90c91d511e2f554023dc16823affd0058'
+ }),
+ atlases:Object.freeze({
+  'showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png':'b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7',
+  'showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png':'78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f'
+ }),
+ baselineToProduct:Object.freeze([
+  '.analytics/cloudflare/composition.json','.analytics/cloudflare/historical-owner-envelope.json',
+  '.analytics/cloudflare/latest.json','.analytics/cloudflare/owner-heartbeats.json',
+  '.analytics/cloudflare/reporting-methodology.json','.analytics/cloudflare/status.txt',
+  '.github/ai-router/projects/diamond-gate-graphics-engine/entrypoint.v1.json',
+  '.github/ai-router/router.v1.json','.github/workflows/publication-preflight-v1.yml',
+  'analytics/data/latest.json',
+  'assets/engine/dgb.native-frame-pipeline.v1.mjs','assets/engine/dgb.native-frame-pipeline.v1.test.mjs',
+  'assets/engine/dgb.native-webgl-device.v1.mjs','assets/engine/dgb.native-webgl-device.v1.test.mjs',
+  'tools/operation-intake/owner-pr-bridge-proof.v1.mjs','tools/operation-intake/owner-pr-bridge-proof.v1.test.mjs',
+  'tools/operation-intake/repository-operation-lock-manager.v1.mjs','tools/workflow-applicability-gate.v1.mjs'
+ ]),
+ baselineToGoverning:Object.freeze([
+  '.analytics/cloudflare/composition.json','.analytics/cloudflare/historical-owner-envelope.json',
+  '.analytics/cloudflare/latest.json','.analytics/cloudflare/owner-heartbeats.json',
+  '.analytics/cloudflare/reporting-methodology.json','.analytics/cloudflare/status.txt',
+  '.github/ai-router/projects/diamond-gate-graphics-engine/entrypoint.v1.json',
+  '.github/ai-router/router.v1.json','.github/workflows/publication-preflight-v1.yml',
+  '.github/workflows/remote-operation-terminal-closure-v1.yml','analytics/data/latest.json',
+  'assets/engine/dgb.native-frame-pipeline.v1.mjs','assets/engine/dgb.native-frame-pipeline.v1.test.mjs',
+  'assets/engine/dgb.native-material-light.v1.mjs','assets/engine/dgb.native-material-light.v1.test.mjs',
+  'assets/engine/dgb.native-scene-spatial.v1.mjs','assets/engine/dgb.native-scene-spatial.v1.test.mjs',
+  'assets/engine/dgb.native-webgl-device.v1.mjs','assets/engine/dgb.native-webgl-device.v1.test.mjs',
+  'nine-summits/universe/universe.motion.js',
+  'tools/operation-intake/owner-pr-bridge-proof.v1.mjs','tools/operation-intake/owner-pr-bridge-proof.v1.test.mjs',
+  'tools/operation-intake/repository-operation-lock-manager.v1.mjs','tools/workflow-applicability-gate.v1.mjs'
+ ])
+});
+export function validateRev2G1StaticEvidence(evidence){
+ const c=REV2_G1_STATIC_PREFLIGHT,failed=(code)=>{throw Error('REV2_G1_'+code);};
+ if(!evidence||evidence.baseline!==c.baseline||evidence.product!==c.product||
+    evidence.governing!==c.governing)failed('EXACT_HEAD_DRIFT');
+ const samePaths=(actual,expected)=>Array.isArray(actual)&&actual.length===expected.length&&
+    new Set(actual).size===actual.length&&actual.every(s=>expected.includes(s));
+ if(!samePaths(evidence.baselineToProduct,c.baselineToProduct)||
+    !samePaths(evidence.baselineToGoverning,c.baselineToGoverning))
+   failed('TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED');
+ for(const [file,want] of Object.entries(c.blobs)){
+   if(['baseline','product','governing'].some(ref=>evidence.blobs?.[ref]?.[file]!==want))
+     failed('SOURCE_OR_ASSET_BLOB_DRIFT:'+file);
+ }
+ for(const [file,want] of Object.entries(c.atlases))
+   if(evidence.atlasDigests?.[file]!==want)failed('ASSET_SHA256_DRIFT:'+file);
+ if(evidence.importMapCount!==36||evidence.importMapTargetsLocal!==true||
+    evidence.importMapPathsExist!==true||evidence.newEngineRuntimeImport!==false)
+   failed('IMPORT_GRAPH_UNCLOSED');
+ if(evidence.cameraContractBlob!==c.blobs['showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js']||
+    evidence.planetaryFrameBlob!==c.blobs['showroom/globe/h-earth/render/planetary-world-frame.js']||
+    evidence.navigationBlob!==c.blobs['showroom/globe/h-earth/functional-landscape/navigation.js'])
+   failed('CAMERA_SOURCE_CONTRACT_DRIFT');
+ return Object.freeze({schema:c.schema,result:'G1_SOURCE_DEPENDENCY_ASSET_CAMERA_PARITY_SOURCE_ONLY_PASS',
+   baseline:c.baseline,product:c.product,governing:c.governing,
+   verifiedBlobPaths:Object.keys(c.blobs).length,importMapCount:36,atlasCount:2,
+   actualG1CameraUniformReadback:false,g1TwelveFirstHitsMeasured:false,
+   float32FramebufferCalibrated:false,gpuExecuted:false,productionMutation:false,
+   gpuAuthorizationCreated:false,ownerVisualAcceptanceCreated:false});
+}
+// The adapter reads committed git objects and locally materialized immutable
+// product assets. A shallow checkout without all three exact commits fails closed.
+export function collectRev2G1StaticPreflight(productDirectory){
+ const c=REV2_G1_STATIC_PREFLIGHT;
+ if(typeof productDirectory!=='string'||!productDirectory.trim())throw Error('REV2_G1_PRODUCT_DIRECTORY_REQUIRED');
+ const dir=path.resolve(productDirectory);
+ const git=(...args)=>execFileSync('git',['-C',dir,...args],{encoding:'utf8',timeout:10000,maxBuffer:2097152}).trim();
+ if(git('rev-parse','HEAD')!==c.product)throw Error('REV2_G1_PRODUCT_HEAD_DRIFT');
+ if(git('status','--porcelain','--untracked-files=no'))throw Error('REV2_G1_PRODUCT_CHECKOUT_DIRTY');
+ for(const ref of [c.baseline,c.product,c.governing])git('cat-file','-e',ref+'^{commit}');
+ const changed=ref=>git('diff','--name-only',c.baseline,ref).split('\n').filter(Boolean);
+ const blobs={baseline:{},product:{},governing:{}};
+ for(const refName of Object.keys(blobs)){
+   const ref=c[refName];
+   for(const file of Object.keys(c.blobs))
+     blobs[refName][file]=git('rev-parse',ref+':'+file);
+ }
+ const atlasDigests={};
+ for(const file of Object.keys(c.atlases))
+   atlasDigests[file]=crypto.createHash('sha256').update(fs.readFileSync(path.join(dir,file))).digest('hex');
+ const html=fs.readFileSync(path.join(dir,'showroom/globe/h-earth/index.html'),'utf8');
+ const open='<script type="importmap">',start=html.indexOf(open),end=html.indexOf('</script>',start);
+ if(start<0||end<0)throw Error('REV2_G1_IMPORT_MAP_MISSING');
+ const importMap=JSON.parse(html.slice(start+open.length,end)).imports;
+ if(!importMap||typeof importMap!=='object'||Array.isArray(importMap))throw Error('REV2_G1_IMPORT_MAP_INVALID');
+ const targets=Object.values(importMap);
+ const local=targets.every(v=>typeof v==='string'&&v.startsWith('/showroom/globe/h-earth/')&&!v.includes('..'));
+ let exist=local;
+ if(local)for(const u of new Set(targets)){
+   const f=u.slice(1).split('?')[0];
+   try{git('cat-file','-e',c.product+':'+f);}catch{exist=false;break;}
+ }
+ const sourceFiles=Object.keys(c.blobs).filter(f=>f.endsWith('.js')||f.endsWith('.html'));
+ const engineImport=sourceFiles.some(f=>/\b(?:import|from)\b[^\n]*dgb\.native-/.test(fs.readFileSync(path.join(dir,f),'utf8')));
+ return validateRev2G1StaticEvidence({
+  baseline:c.baseline,product:c.product,governing:c.governing,
+  baselineToProduct:changed(c.product),baselineToGoverning:changed(c.governing),
+  blobs,atlasDigests,importMapCount:targets.length,importMapTargetsLocal:local,
+  importMapPathsExist:exist,newEngineRuntimeImport:engineImport,
+  cameraContractBlob:blobs.product['showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'],
+  planetaryFrameBlob:blobs.product['showroom/globe/h-earth/render/planetary-world-frame.js'],
+  navigationBlob:blobs.product['showroom/globe/h-earth/functional-landscape/navigation.js']
+ });
+}
+
 // Gen3074 is a distinct source-only extension. It does not select any
 // historical comparison/G1 profile, nor authorize a fabricated camera pose.
 export const RAVINE_HABITAT_TARGET=Object.freeze({

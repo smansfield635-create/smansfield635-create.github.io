@@ -7093,6 +7093,50 @@
       "scopeHash": "4be33844f22e0a05877065663274d4eb31836828ce03652505e251a79207064f",
       "state": "ADMITTED_LOCKED"
     },
+    "4c554e557789fa1cd7ad8c89b1a679b486ef3a0ec228d65debb74fc59eea96a7": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "1bf69477cf95e14c8d467373c16474304c975f7b",
+          "lockGeneration": 3086,
+          "lockScope": "SHOWROOM_GLOBE:ZIONTS:E6_TONE_PRESERVING_OPTIN_20261102",
+          "operationId": "ZIONTS_E6_TONE_PRESERVING_OPTIN_DUAL_PASS_20261102_001",
+          "procedureLocatorDigest": "b82399cdde3ba170accfa5ef7f26d71529e66c57c3b9b086c9c3479122cb4565",
+          "requestDigest": "38f6d1ad278f7b2159fc67cf8c6e9cf967598ac7aa0022545eaf858704248eba",
+          "scopeHash": "4c554e557789fa1cd7ad8c89b1a679b486ef3a0ec228d65debb74fc59eea96a7"
+        },
+        "bindingDigest": "dfbcc3cc28a45c4625d539ebd80ef260ede1cbdd226bdda4c2eda1f313ba2790",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "654e9d1fb308d63a868c4dc6a8c69bbd00e6ea67f414419c7f00b8bcd9226806",
+          "commentId": 6595075004,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 3461,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41575341795,
+          "workflowSha": "1bf69477cf95e14c8d467373c16474304c975f7b"
+        },
+        "lineageAnchorCommitSha": "e25d7879e952a6c479d0c44dc06a27256ddf2a75",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "1bf69477cf95e14c8d467373c16474304c975f7b",
+      "lockGeneration": 3086,
+      "lockScope": "SHOWROOM_GLOBE:ZIONTS:E6_TONE_PRESERVING_OPTIN_20261102",
+      "operationId": "ZIONTS_E6_TONE_PRESERVING_OPTIN_DUAL_PASS_20261102_001",
+      "procedureLocatorDigest": "b82399cdde3ba170accfa5ef7f26d71529e66c57c3b9b086c9c3479122cb4565",
+      "released": false,
+      "requestDigest": "38f6d1ad278f7b2159fc67cf8c6e9cf967598ac7aa0022545eaf858704248eba",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "4c554e557789fa1cd7ad8c89b1a679b486ef3a0ec228d65debb74fc59eea96a7",
+      "state": "ADMITTED_LOCKED"
+    },
     "4c8ebe4a58daa3f054ab0e21962928f569e1f83c5aa711fa9b9664a18c201294": {
       "governingHead": "14c57c639e868d7e8e8a2fb9a94a5928b960e7d5",
       "lockGeneration": 664,
@@ -26004,7 +26048,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3085,
+  "lockGeneration": 3086,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

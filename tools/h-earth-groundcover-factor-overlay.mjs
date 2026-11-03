@@ -503,5 +503,5 @@ export function createRev2Rgba32fTarget(gl,{width=529,height=980}={}){
  };
  return Object.freeze({width,height,framebuffer,capture,dispose,
   schema:'H_EARTH_REV2_RGBA32F_TARGET_SOURCE_v1',
-  calibrated:false,gpuExecuted:false,productionMutation:false});
+  calibrationNotYetBound:true,sourceOnlyTransport:true,productionMutation:false});
 }

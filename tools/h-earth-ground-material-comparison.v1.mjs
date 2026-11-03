@@ -33,42 +33,17 @@ export const REV2_G1_STATIC_PREFLIGHT=Object.freeze({
   'showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png':'b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7',
   'showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png':'78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f'
  }),
- baselineToProduct:Object.freeze([
-  '.analytics/cloudflare/composition.json','.analytics/cloudflare/historical-owner-envelope.json',
-  '.analytics/cloudflare/latest.json','.analytics/cloudflare/owner-heartbeats.json',
-  '.analytics/cloudflare/reporting-methodology.json','.analytics/cloudflare/status.txt',
-  '.github/ai-router/projects/diamond-gate-graphics-engine/entrypoint.v1.json',
-  '.github/ai-router/router.v1.json','.github/workflows/publication-preflight-v1.yml',
-  'analytics/data/latest.json',
-  'assets/engine/dgb.native-frame-pipeline.v1.mjs','assets/engine/dgb.native-frame-pipeline.v1.test.mjs',
-  'assets/engine/dgb.native-webgl-device.v1.mjs','assets/engine/dgb.native-webgl-device.v1.test.mjs',
-  'tools/operation-intake/owner-pr-bridge-proof.v1.mjs','tools/operation-intake/owner-pr-bridge-proof.v1.test.mjs',
-  'tools/operation-intake/repository-operation-lock-manager.v1.mjs','tools/workflow-applicability-gate.v1.mjs'
- ]),
- baselineToGoverning:Object.freeze([
-  '.analytics/cloudflare/composition.json','.analytics/cloudflare/historical-owner-envelope.json',
-  '.analytics/cloudflare/latest.json','.analytics/cloudflare/owner-heartbeats.json',
-  '.analytics/cloudflare/reporting-methodology.json','.analytics/cloudflare/status.txt',
-  '.github/ai-router/projects/diamond-gate-graphics-engine/entrypoint.v1.json',
-  '.github/ai-router/router.v1.json','.github/workflows/publication-preflight-v1.yml',
-  '.github/workflows/remote-operation-terminal-closure-v1.yml','analytics/data/latest.json',
-  'assets/engine/dgb.native-frame-pipeline.v1.mjs','assets/engine/dgb.native-frame-pipeline.v1.test.mjs',
-  'assets/engine/dgb.native-material-light.v1.mjs','assets/engine/dgb.native-material-light.v1.test.mjs',
-  'assets/engine/dgb.native-scene-spatial.v1.mjs','assets/engine/dgb.native-scene-spatial.v1.test.mjs',
-  'assets/engine/dgb.native-webgl-device.v1.mjs','assets/engine/dgb.native-webgl-device.v1.test.mjs',
-  'nine-summits/universe/universe.motion.js',
-  'tools/operation-intake/owner-pr-bridge-proof.v1.mjs','tools/operation-intake/owner-pr-bridge-proof.v1.test.mjs',
-  'tools/operation-intake/repository-operation-lock-manager.v1.mjs','tools/workflow-applicability-gate.v1.mjs'
- ])
+ baselineToProductFingerprint:Object.freeze({count:18,sha256:'b61e6533fd4247e85d9db544874d8bd84b46a34e9f9c63f64b5c05ff53b92798'}),
+ baselineToGoverningFingerprint:Object.freeze({count:24,sha256:'ded60b56bfeb616e9de06662ce9d2231899ae4d86fae5d27db243c2b1a75fee7'})
 });
 export function validateRev2G1StaticEvidence(evidence){
  const c=REV2_G1_STATIC_PREFLIGHT,failed=(code)=>{throw Error('REV2_G1_'+code);};
  if(!evidence||evidence.baseline!==c.baseline||evidence.product!==c.product||
     evidence.governing!==c.governing)failed('EXACT_HEAD_DRIFT');
- const samePaths=(actual,expected)=>Array.isArray(actual)&&actual.length===expected.length&&
-    new Set(actual).size===actual.length&&actual.every(s=>expected.includes(s));
- if(!samePaths(evidence.baselineToProduct,c.baselineToProduct)||
-    !samePaths(evidence.baselineToGoverning,c.baselineToGoverning))
+ const sameFingerprint=(actual,expected)=>actual?.count===expected.count&&
+    actual?.sha256===expected.sha256;
+ if(!sameFingerprint(evidence.baselineToProductFingerprint,c.baselineToProductFingerprint)||
+    !sameFingerprint(evidence.baselineToGoverningFingerprint,c.baselineToGoverningFingerprint))
    failed('TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED');
  for(const [file,want] of Object.entries(c.blobs)){
    if(['baseline','product','governing'].some(ref=>evidence.blobs?.[ref]?.[file]!==want))
@@ -97,6 +72,16 @@ export function isRev2G1LocalImportTarget(value){
    (value.startsWith('/showroom/globe/h-earth/')||value.startsWith('/h-earth-3d/'))&&
    !value.includes('..')&&!/[\r\n]/.test(value)&&
    /\.m?js(?:\?.*)?$/.test(value);
+}
+// Verify the exact complete Git delta without disclosing unrelated
+// historical control-plane filenames in the public diagnostic source.
+export function fingerprintRev2PathDelta(paths){
+ if(!Array.isArray(paths)||paths.some(p=>typeof p!=='string'||!p||/[\r\n]/.test(p)))
+   throw Error('REV2_G1_CHANGED_PATHS_INVALID');
+ const sorted=[...paths].sort();
+ if(new Set(sorted).size!==sorted.length)throw Error('REV2_G1_CHANGED_PATHS_DUPLICATE');
+ return Object.freeze({count:sorted.length,
+   sha256:crypto.createHash('sha256').update(sorted.join('\n'),'utf8').digest('hex')});
 }
 export function collectRev2G1StaticPreflight(productDirectory){
  const c=REV2_G1_STATIC_PREFLIGHT;
@@ -132,7 +117,8 @@ export function collectRev2G1StaticPreflight(productDirectory){
  const engineImport=sourceFiles.some(f=>/\b(?:import|from)\b[^\n]*dgb\.native-/.test(fs.readFileSync(path.join(dir,f),'utf8')));
  return validateRev2G1StaticEvidence({
   baseline:c.baseline,product:c.product,governing:c.governing,
-  baselineToProduct:changed(c.product),baselineToGoverning:changed(c.governing),
+  baselineToProductFingerprint:fingerprintRev2PathDelta(changed(c.product)),
+   baselineToGoverningFingerprint:fingerprintRev2PathDelta(changed(c.governing)),
   blobs,atlasDigests,importMapCount:targets.length,importMapTargetsLocal:local,
   importMapPathsExist:exist,newEngineRuntimeImport:engineImport,
   cameraContractBlob:blobs.product['showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'],

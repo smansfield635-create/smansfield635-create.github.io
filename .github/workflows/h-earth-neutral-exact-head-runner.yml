@@ -3,7 +3,7 @@ name: H-Earth Neutral Exact Head Runner
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102', 'h-earth/ravine-habitat-color-attribution-20261102', 'h-earth/west-flank-material-pixel-gen3079-20261102']
+    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102', 'h-earth/ravine-habitat-color-attribution-20261102', 'h-earth/west-flank-material-pixel-gen3079-20261102', 'h-earth/straight-near-far-baseline-gen3084-20261102']
     paths:
       - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
       - 'tools/h-earth-ground-material-comparison.v1.mjs'

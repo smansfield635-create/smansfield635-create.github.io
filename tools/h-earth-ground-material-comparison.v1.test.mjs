@@ -322,3 +322,46 @@ test('WEST_FLANK Gen3079 exact two-pixel and six-stage lineage is pinned',async(
  const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
  assert.ok(yaml.includes('WEST_FLANK_OWNER_CLASS_MATERIAL_STAGES_V1'));
 });
+
+test('NEAR_FAR_STRAIGHT Gen3084 is fixed, single-pose, first-hit/depth source-bound and cannot alter Gen3079 semantics',async()=>{
+  const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+  assert.equal(m.NEAR_FAR_STRAIGHT_PROFILE,'SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1');
+  assert.equal(m.NEAR_FAR_STRAIGHT_SOURCE_BINDING.predecessorHead,'069f35028039f543fa39dfd255b70ac5fcac9c92');
+  assert.equal(m.NEAR_FAR_STRAIGHT_SOURCE_BINDING.rendererBlob,'85ee835060d5106a670077a5f4352b49b');
+  assert.equal(m.NEAR_FAR_STRAIGHT_SOURCE_BINDING.ownerPhotoCorrespondence,false);
+  assert.deepEqual([m.NEAR_FAR_STRAIGHT_POSE.x,m.NEAR_FAR_STRAIGHT_POSE.y,m.NEAR_FAR_STRAIGHT_POSE.z],[-383.7,10.2049596,-460]);
+  assert.equal(m.NEAR_FAR_STRAIGHT_POSE.diagnosticObserver,true);
+  assert.equal(m.NEAR_FAR_STRAIGHT_STATIONS.length,15);
+  assert.deepEqual(m.NEAR_FAR_STRAIGHT_STATIONS.map(q=>q.z),[-457,-456,-455,-454,-453,-450,-448,-445,-440,-435,-425,-415,-405,-395,-385]);
+  for(const station of m.NEAR_FAR_STRAIGHT_STATIONS){
+    for(const [side,role,primitive] of [['far',5,8],['near',1,0]]){
+      const witness=station[side];
+      assert.equal(witness.role,role);
+      assert.equal(witness.primitive,primitive);
+      assert.equal(witness.world.length,3);
+      assert.equal(witness.pixel.length,2);
+      assert.ok(witness.world.every(Number.isFinite));
+      assert.ok(witness.pixel.every((v,i)=>Number.isInteger(v)&&v>=0&&v<[529,980][i]));
+    }
+  }
+  const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+  const unchanged=o.transformWestFlankMaterialRenderer(original);
+  const straight=o.transformNearFarStraightRenderer(original);
+  assert.equal(o.WEST_FLANK_STAGE_MODES.length,16);
+  assert.equal(o.WEST_FLANK_STAGE_MODES[8],'material-minus-native-signed-occupancy');
+  assert.equal(o.NEAR_FAR_STRAIGHT_STAGE_MODES[8],'first-hit-depth-24bit');
+  assert.equal(straight.modeCount,16);
+  assert.equal(straight.productDiskMutation,false);
+  assert.equal(straight.ownerPhotoCorrespondence,false);
+  assert.match(straight.source,/gl_FragCoord\.z/);
+  assert.ok(!unchanged.source.includes('packed=floor(d*16777215.0+0.5)'));
+  assert.ok(unchanged.source.includes('float difference=ravineFilteredMaterial-ravineNativeHabitat;'));
+  assert.ok(m.instrumentRenderer(straight.source).includes('if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet)'));
+  assert.throws(()=>o.transformNearFarStraightRenderer(original+'\n'),/SOURCE_HASH_MISMATCH/);
+  const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+  assert.ok(y.includes('SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1'));
+  assert.ok(y.includes('h-earth/straight-near-far-baseline-gen3084-20261102'));
+  assert.ok(y.includes('11afdc5278564728ea9eef6ffb525601ce4362a7'));
+  assert.ok(y.includes('85ee835060d5106a670077a5f4352b49b'));
+});

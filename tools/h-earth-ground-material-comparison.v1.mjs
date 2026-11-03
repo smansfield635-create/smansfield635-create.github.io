@@ -3,7 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {transformPublishedRenderer,transformRavineHabitatRenderer,transformWestFlankMaterialRenderer,WEST_FLANK_STAGE_MODES,RAVINE_HABITAT_PROBE_MODES,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
+import {transformPublishedRenderer,transformRavineHabitatRenderer,transformWestFlankMaterialRenderer,transformNearFarStraightRenderer,WEST_FLANK_STAGE_MODES,NEAR_FAR_STRAIGHT_STAGE_MODES,RAVINE_HABITAT_PROBE_MODES,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
 
 // Gen3074 is a distinct source-only extension. It does not select any
 // historical comparison/G1 profile, nor authorize a fabricated camera pose.
@@ -118,11 +118,58 @@ export const RAVINE_PIXEL_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===RAVINE
 export const RAVINE_OBSERVER_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===RAVINE_OBSERVER_PROFILE;
 export const WEST_FLANK_PROFILE='WEST_FLANK_OWNER_CLASS_MATERIAL_STAGES_V1';
 export const WEST_FLANK_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===WEST_FLANK_PROFILE;
-export const RAVINE_ANY_ACTIVE=RAVINE_PIXEL_ACTIVE||RAVINE_OBSERVER_ACTIVE||WEST_FLANK_ACTIVE;
+export const NEAR_FAR_STRAIGHT_PROFILE='SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1';
+export const NEAR_FAR_STRAIGHT_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===NEAR_FAR_STRAIGHT_PROFILE;
+export const RAVINE_ANY_ACTIVE=RAVINE_PIXEL_ACTIVE||RAVINE_OBSERVER_ACTIVE||WEST_FLANK_ACTIVE||NEAR_FAR_STRAIGHT_ACTIVE;
 export const WEST_FLANK_FROZEN_POSE=Object.freeze({name:'west_flank',x:110,y:8.346905947403934,z:-310,yaw:153.434948822922,pitch:20.264510304722066,diagnosticObserver:true,ownerPhotoMatch:false,sourceHead:'3ea149e5b56e8cc0d5aac192bce0cdd47da7e626'});
 export const WEST_FLANK_PIXELS=Object.freeze([{x:300,y:625},{x:300,y:650}].map(Object.freeze));
 export const WEST_FLANK_SOURCE_TARGET=Object.freeze({x:145,y:36.24194177261537,z:-240});
 export const WEST_FLANK_STAGE_SOURCE_BINDING=Object.freeze({frozenGen3008PlanHead:'aaddea3ad332d347041a5476d97ab27b6e0e7367',sourceProductHead:'11afdc5278564728ea9eef6ffb525601ce4362a7',currentRendererBlob:'85ee835060d5106a670077a5f4352b7ad202b49b',originalNearGroundTriangle11650FromHistoricalReconstruction:true,actualCurrentTriangleProven:false,ownerPhonePhotoMatch:false,healthyControlProven:false});
+
+/* Gen3084: immutable, source-derived, 15/15 original indexed near/FAR
+   ray witnesses from SHA256 a40f8f4c6e9241163bd658220f92bb468f3dc9a5c83533f5a573dcdb036ceb04.
+   NOT an owner-Android camera. No product geometry or camera mutation. */
+export const NEAR_FAR_STRAIGHT_POSE=Object.freeze({
+ name:'source_near_far_straight',x:-383.7,y:10.2049596,z:-460,
+ yaw:359.73555981837995,pitch:-4.270974533345992,
+ sourceLookTarget:Object.freeze({x:-384,y:5.3506466,z:-395}),
+ diagnosticObserver:true,sourceDerived:true,ownerPhotoMatch:false,
+ navigationEligible:false,firstHitGpuUnverified:true
+});
+export const NEAR_FAR_STRAIGHT_SOURCE_BINDING=Object.freeze({
+ sourcePackage:'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2',
+ archiveSha256:'5bfce62703c70fd5b68e894fca8634e5206c1ca681d7a127c192312a8e06aa3c',
+ preflightJsonSha256:'a40f8f4c6e9241163bd658220f92bb468f3dc9a5c83533f5a573dcdb036ceb04',
+ predecessorHead:'069f35028039f543fa39dfd255b70ac5fcac9c92',
+ productHead:'11afdc5278564728ea9eef6ffb525601ce4362a7',
+ rendererBlob:'85ee835060d5106a670077a5f4352b49b',
+ pairedSourceStations:15,viewport:[529,980],
+ originalSourceNearRole:1,originalSourceNearPrimitive:0,
+ originalSourceFarRole:5,originalSourceFarPrimitive:8,
+ ownerPhotoCorrespondence:false,productMutation:false
+});
+export const NEAR_FAR_STRAIGHT_STATIONS=Object.freeze([
+ {z:-457,far:[496,930],near:[201,928],fw:[-384.50044,8.48292,-456.99907],nw:[-383.50056,8.49218,-456.99833]},
+ {z:-456,far:[439,813],near:[215,810],fw:[-384.50127,8.45492,-456.00062],nw:[-383.49947,8.46978,-455.99841]},
+ {z:-455,far:[404,742],near:[224,740],fw:[-384.50255,8.42101,-454.99196],nw:[-383.50089,8.43613,-454.99785]},
+ {z:-454,far:[380,695],near:[230,693],fw:[-384.49827,8.38773,-454.00051],nw:[-383.50203,8.40258,-454.00024]},
+ {z:-453,far:[363,661],near:[234,659],fw:[-384.49678,8.35431,-453.00562],nw:[-383.50055,8.36888,-452.99671]},
+ {z:-450,far:[333,599],near:[242,598],fw:[-384.50331,8.25353,-450.00825],nw:[-383.50517,8.26895,-450.02593]},
+ {z:-448,far:[321,575],near:[245,574],fw:[-384.50663,8.17698,-447.97718],nw:[-383.50632,8.20235,-448.04456]},
+ {z:-445,far:[309,553],near:[248,551],fw:[-384.50449,8.04815,-445.05982],nw:[-383.50612,8.06595,-444.94870]},
+ {z:-440,far:[296,530],near:[251,529],fw:[-384.49609,7.80927,-439.87481],nw:[-383.50857,7.84763,-440.00814]},
+ {z:-435,far:[289,518],near:[252,517],fw:[-384.49491,7.56575,-435.07020],nw:[-383.48746,7.57671,-434.90928]},
+ {z:-425,far:[281,505],near:[255,505],fw:[-384.52305,6.94591,-424.43026],nw:[-383.51872,7.00513,-425.07200]},
+ {z:-415,far:[276,500],near:[256,499],fw:[-384.48401,6.38566,-415.66904],nw:[-383.51253,6.31239,-414.23334]},
+ {z:-405,far:[273,496],near:[256,496],fw:[-384.50092,5.66085,-404.43622],nw:[-383.47696,5.75017,-405.52378]},
+ {z:-395,far:[271,493],near:[257,493],fw:[-384.50089,5.06614,-394.54126],nw:[-383.50584,5.13079,-395.36027]},
+ {z:-385,far:[270,490],near:[257,490],fw:[-384.53245,4.58578,-385.30633],nw:[-383.47716,4.62062,-385.76460]}
+].map(q=>Object.freeze({
+ z:q.z,
+ far:Object.freeze({pixel:Object.freeze(q.far),world:Object.freeze(q.fw),role:5,primitive:8}),
+ near:Object.freeze({pixel:Object.freeze(q.near),world:Object.freeze(q.nw),role:1,primitive:0})
+})));
+
 export const G1_BASELINE_PROFILE='G1_SOIL_BASELINE_ONLY_V1';
 export const G1_A03_PROFILE='G1_SOIL_A03_CANDIDATE_ONLY_V1';
 // Additive use of the existing comparator at the prior GPU-positive inland FAR band.
@@ -326,7 +373,7 @@ export function parseArgs(argv){const a={},keys=RAVINE_ANY_ACTIVE?['--baseline-d
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE,RAVINE_OBSERVER_PROFILE,RAVINE_PIXEL_PROFILE,WEST_FLANK_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE,RAVINE_OBSERVER_PROFILE,RAVINE_PIXEL_PROFILE,WEST_FLANK_PROFILE,NEAR_FAR_STRAIGHT_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
   const poses=RAVINE_ANY_ACTIVE?[]:(G1_PROFILE?G1_POSES:(GEN3042_PROFILE?GEN3042_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES)));
   const modes=RAVINE_ANY_ACTIVE?[]:(G1_PROFILE?G1_MODES:(GEN3042_PROFILE?GEN3042_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES)));
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
@@ -350,7 +397,7 @@ export async function run(argv){
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
       await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'+(RAVINE_ANY_ACTIVE?'const RAVINE_HABITAT_TARGET='+JSON.stringify(RAVINE_HABITAT_TARGET)+';globalThis.__deriveRavineEmittedSurfaceObserver='+deriveRavineEmittedSurfaceObserver.toString()+';globalThis.__ravineHabitatProbeMode=0;':'')});
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
-      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,WEST_FLANK_ACTIVE?(src=>instrumentRenderer(transformWestFlankMaterialRenderer(src).source)):(RAVINE_ANY_ACTIVE?instrumentRavineHabitatRenderer:(G1_PROFILE?(src=>instrumentG1(src,label,dir)):(GEN3042_PROFILE?(src=>instrumentGen3042(src,label,dir)):(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer))))]]){
+      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,NEAR_FAR_STRAIGHT_ACTIVE?(src=>instrumentRenderer(transformNearFarStraightRenderer(src).source)):(WEST_FLANK_ACTIVE?(src=>instrumentRenderer(transformWestFlankMaterialRenderer(src).source)):(RAVINE_ANY_ACTIVE?instrumentRavineHabitatRenderer:(G1_PROFILE?(src=>instrumentG1(src,label,dir)):(GEN3042_PROFILE?(src=>instrumentGen3042(src,label,dir)):(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer)))))]] ){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
         await page.route(url=>url.pathname===pathname,route=>route.fulfill({status:200,contentType:'text/javascript',body:transformed}));
       }
@@ -366,6 +413,112 @@ export async function run(argv){
          const shell=document.getElementById('h-earth-loading-screen'),root=document.getElementById('h-earth-functional-landscape-route');
          return shell?.hidden===true&&window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'&&root?.dataset.run8eReady==='true'&&root?.dataset.run8eError!=='true';
        },null,{timeout:30000});
+
+
+      // Gen3084 separate, already-admitted diagnostic: ONE unchanged published
+      // baseline pose, 16 staged frames, 30 source-pinned first-hit pixels.
+      // Nothing in this branch is permitted to capture the A03 candidate.
+      if(NEAR_FAR_STRAIGHT_ACTIVE){
+        await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
+        const pose=NEAR_FAR_STRAIGHT_POSE;
+        const samples=NEAR_FAR_STRAIGHT_STATIONS.flatMap((station,i)=>[
+          {...station.far,side:'far',station:i,z:station.z},
+          {...station.near,side:'near',station:i,z:station.z}
+        ]);
+        let seq=308400,rows=[];
+        for(let mode=0;mode<NEAR_FAR_STRAIGHT_STAGE_MODES.length;mode++){
+          const sampled=await page.evaluate(({pose,mode,seq,samples})=>{
+            globalThis.__ravineHabitatProbeMode=mode;
+            globalThis.__ravineExpectedLocalTarget={x:-384.00515163,y:5.39056176,z:-400.00536627};
+            globalThis.__groundComparisonHideGrass=false;
+            const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,seq,'GEN3084_NEAR_FAR_STRAIGHT');
+            globalThis.__HEarthAuditPresent(state);
+            const canvas=document.querySelector('#h-earth-functional-landscape-canvas');
+            if(!canvas||canvas.width!==529||canvas.height!==980)throw Error('NEAR_FAR_VIEWPORT_MISMATCH');
+            const packet=globalThis.__HEarthAuditPacket({
+              deferVegetation:true,navigationState:state,
+              viewport:{width:canvas.width,height:canvas.height,pixelRatio:1},frameSequence:seq
+            });
+            if(!packet?.camera?.localAuthoringPosition||!globalThis.__ravineProjectTarget)
+              throw Error('NEAR_FAR_CAMERA_READBACK_UNAVAILABLE');
+            const actualLocal=packet.camera.localAuthoringPosition;
+            const projected=samples.map(sample=>{
+              const point={x:sample.world[0],y:sample.world[1],z:sample.world[2]};
+              const hit=globalThis.__ravineProjectTarget(point,packet);
+              return {screen:[hit.x,canvas.height-1-hit.y],expectedDepth:(hit.ndc[2]+1)/2};
+            });
+            const receipt=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+            const before=receipt.frameRecords.at(-1);
+            const rgba=samples.map(sample=>globalThis.__ravineReadGeometryPixel(sample.pixel[0],canvas.height-1-sample.pixel[1]));
+            const dataUrl=canvas.toDataURL('image/png');
+            const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
+            return {rgba,projected,actualLocal,before,after,dataUrl,
+              modeApplied:globalThis.__ravineHabitatProbeModeApplied,
+              asset:receipt.resources?.geologicalFormation};
+          },{pose,mode,seq:++seq,samples});
+          if(sampled.modeApplied!==mode)throw Error('NEAR_FAR_MODE_NOT_APPLIED:'+mode);
+          if(sampled.before?.navigationSequence!==seq||sampled.after?.navigationSequence!==seq||
+             sampled.before?.frameSequence!==sampled.after?.frameSequence)
+            throw Error('NEAR_FAR_FRAME_CHANGED:'+mode);
+          if(!sampled.asset?.physicalNavigationInstalled)throw Error('NEAR_FAR_SOURCE_GEOMETRY_NOT_INSTALLED');
+          if(!['x','y','z'].every(k=>Number.isFinite(sampled.actualLocal[k])&&Math.abs(sampled.actualLocal[k]-pose[k])<0.01))
+            throw Error('NEAR_FAR_ACTUAL_GPU_CAMERA_DRIFT');
+          if(sampled.projected.length!==30||sampled.projected.some((p,i)=>
+            Math.abs(p.screen[0]-samples[i].pixel[0])>3||Math.abs(p.screen[1]-samples[i].pixel[1])>3||
+            !Number.isFinite(p.expectedDepth)||p.expectedDepth<0||p.expectedDepth>1))
+            throw Error('NEAR_FAR_SOURCE_PROJECTED_PIXEL_OR_DEPTH_DRIFT');
+          const png=decodeCanvasCapture({before:sampled.before,after:sampled.after,dataUrl:sampled.dataUrl},sampled.before);
+          const name='source_near_far_straight-'+String(mode).padStart(2,'0')+'-'+NEAR_FAR_STRAIGHT_STAGE_MODES[mode]+'.png';
+          fs.writeFileSync(path.join(out,name),png);
+          rows.push({mode,stage:NEAR_FAR_STRAIGHT_STAGE_MODES[mode],
+            sourceHead:HEADS[label],rgba:sampled.rgba,projected:sampled.projected,
+            actualLocalCamera:sampled.actualLocal,frameCamera:sampled.after.cameraPosition,
+            frameSequence:sampled.after.frameSequence,image:name,imageSha256:sha(png),imageBytes:png.length});
+          receipt.nearFarStraight={
+            schema:'H_EARTH_SOURCE_NEAR_FAR_STRAIGHT_BASELINE_STAGE_RECEIPT_v1',
+            result:'IN_PROGRESS',operationId:'H_EARTH_STRAIGHT_NEAR_FAR_BASELINE_WEBGL_20261102_001',
+            sourcePlan:NEAR_FAR_STRAIGHT_SOURCE_BINDING,sourcePose:pose,
+            sourceStationCount:15,originalSourceMatches:30,frames:rows.length,
+            sourceFirstHitsExpectedOnly:true,ownerPhonePhotoMatch:false,
+            candidateGpu:false,productMutation:false,publicationAuthorized:false
+          };
+          persist();
+        }
+        if(rows.length!==16||rows.some(r=>r.rgba.length!==30||r.sourceHead!==HEADS[label]||
+           JSON.stringify(r.actualLocalCamera)!==JSON.stringify(rows[0].actualLocalCamera)||
+           JSON.stringify(r.frameCamera)!==JSON.stringify(rows[0].frameCamera)))
+          throw Error('NEAR_FAR_STAGE_OR_CAMERA_CENSUS_INVALID');
+        const role=rows[6].rgba.map(q=>q[0]);
+        const primitive=rows[7].rgba.map(q=>((q[0]<<16)|(q[1]<<8)|q[2])>>>0);
+        const measuredDepth=rows[8].rgba.map(q=>((q[0]<<16)|(q[1]<<8)|q[2])/16777215);
+        const depthResidual=measuredDepth.map((v,i)=>Math.abs(v-rows[8].projected[i].expectedDepth));
+        const mismatched=samples.flatMap((p,i)=>
+          role[i]!==p.role||primitive[i]!==p.primitive||depthResidual[i]>0.005
+          ? [{station:p.station,side:p.side,role:role[i],expectedRole:p.role,
+              primitive:primitive[i],expectedPrimitive:p.primitive,depthResidual:depthResidual[i]}]:[]);
+        const lit=rows[0].rgba;
+        const perStation=NEAR_FAR_STRAIGHT_STATIONS.map((p,i)=>({
+          z:p.z,farPixel:p.far.pixel,nearPixel:p.near.pixel,
+          farLit:lit[2*i].slice(0,3),nearLit:lit[2*i+1].slice(0,3),
+          litFarMinusNear:lit[2*i].slice(0,3).map((v,k)=>v-lit[2*i+1][k])
+        }));
+        receipt.nearFarStraight={...receipt.nearFarStraight,
+          rows,actualSourceRoles:role,actualSourcePrimitives:primitive,
+          actualDepth24:measuredDepth,sourceDepthResiduals:depthResidual,
+          mismatchCount:mismatched.length,mismatched,
+          perStation,sourceFirstHitsExpectedOnly:false,
+          result:mismatched.length?'INSTRUMENTATION_GAP':'STAGES_CAPTURED_VISUAL_REVIEW_REQUIRED',
+          ownerStraightCutoffVisuallyProven:false,ownerCurvedWedgeProven:false,
+          finalLitVisualClassificationRequired:true};
+        receipt.result=receipt.nearFarStraight.result;
+        persist();
+        if(mismatched.length)throw Error('NEAR_FAR_FIRST_HIT_OR_DEPTH_MISMATCH');
+        runRecord.completedAt=new Date().toISOString();
+        await context.close();server.kill();server=null;
+        assertCheckout(dir,HEADS[label]);
+        if(errors.length)throw Error('NEAR_FAR_BROWSER_ERRORS:'+errors.join(';'));
+        continue;
+      }
 
       if(WEST_FLANK_ACTIVE){
       await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});

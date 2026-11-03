@@ -94,12 +94,50 @@ export function createNativeWebGLDevice(canvas, {
     textures.add(record);
     return record;
   }
-  function releaseTargetParts(framebuffer, depthBuffer, colorTexture) {
+  // Shadow-ready render targets retain the existing color attachment, allowing
+  // WebGL1 and WebGL2 to use the same complete FBO and E2 frame contract.
+  // Depth texture sampling is opt-in; legacy targets retain a depth16 renderbuffer.
+  function releaseTargetParts(framebuffer, depthBuffer, colorTexture, depthIsTexture = false) {
     if (framebuffer) gl.deleteFramebuffer(framebuffer);
-    if (depthBuffer) gl.deleteRenderbuffer(depthBuffer);
+    if (depthBuffer) {
+      if (depthIsTexture) gl.deleteTexture(depthBuffer);
+      else gl.deleteRenderbuffer(depthBuffer);
+    }
     if (colorTexture) gl.deleteTexture(colorTexture);
   }
+  function allocateDepthTexture(definition) {
+    const oldBinding = gl.getParameter(gl.TEXTURE_BINDING_2D);
+    let depthTexture = null;
+    try {
+      depthTexture = gl.createTexture();
+      if (!depthTexture) throw new Error('DEPTH_TEXTURE_ALLOCATION_FAILED');
+      gl.bindTexture(gl.TEXTURE_2D, depthTexture);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      const format = backend === 'WEBGL2' ? gl.DEPTH_COMPONENT16 : gl.DEPTH_COMPONENT;
+      gl.texImage2D(gl.TEXTURE_2D, 0, format, definition.width, definition.height,
+        0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
+      if (typeof gl.getError === 'function') {
+        const error = gl.getError();
+        if (error !== gl.NO_ERROR) throw new Error('DEPTH_TEXTURE_UPLOAD_GL_ERROR:' + error);
+      }
+      return depthTexture;
+    } catch (error) {
+      if (depthTexture) gl.deleteTexture(depthTexture);
+      throw error;
+    } finally {
+      gl.bindTexture(gl.TEXTURE_2D, oldBinding);
+    }
+  }
   function allocateTargetParts(definition) {
+    // Capability is checked BEFORE provisional GPU allocation; do not silently
+    // degrade a sampleable depth request to a non-sampleable renderbuffer.
+    if (definition.depthTexture && backend === 'WEBGL1' &&
+        !gl.getExtension?.('WEBGL_depth_texture')) {
+      throw new Error('WEBGL1_DEPTH_TEXTURE_EXTENSION_REQUIRED');
+    }
     const oldFramebuffer = gl.getParameter(gl.FRAMEBUFFER_BINDING);
     const oldRenderbuffer = gl.getParameter(gl.RENDERBUFFER_BINDING);
     let colorTexture = null, framebuffer = null, depthBuffer = null;
@@ -111,32 +149,44 @@ export function createNativeWebGLDevice(canvas, {
       gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTexture, 0);
       if (definition.depth) {
-        depthBuffer = gl.createRenderbuffer();
-        if (!depthBuffer) throw new Error('RENDERBUFFER_ALLOCATION_FAILED');
-        gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
-        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, definition.width, definition.height);
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
+        if (definition.depthTexture) {
+          depthBuffer = allocateDepthTexture(definition);
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT,
+            gl.TEXTURE_2D, depthBuffer, 0);
+        } else {
+          depthBuffer = gl.createRenderbuffer();
+          if (!depthBuffer) throw new Error('RENDERBUFFER_ALLOCATION_FAILED');
+          gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
+          gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16,
+            definition.width, definition.height);
+          gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
+        }
       }
       if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) {
         throw new Error('FRAMEBUFFER_INCOMPLETE');
       }
       return { framebuffer, colorTexture, depthBuffer };
     } catch (error) {
-      releaseTargetParts(framebuffer, depthBuffer, colorTexture);
+      releaseTargetParts(framebuffer, depthBuffer, colorTexture, definition.depthTexture);
       throw error;
     } finally {
       gl.bindRenderbuffer(gl.RENDERBUFFER, oldRenderbuffer);
       gl.bindFramebuffer(gl.FRAMEBUFFER, oldFramebuffer);
     }
   }
-  function createRenderTarget({ width, height, depth = true } = {}) {
+  function createRenderTarget({ width, height, depth = true, depthTexture = false } = {}) {
     assertActive();
     if (typeof depth !== 'boolean') throw new TypeError('RENDER_TARGET_DEPTH_INVALID');
-    validateImageSize(width, height, depth);
-    const definition = { width, height, depth };
+    if (typeof depthTexture !== 'boolean' || (depthTexture && !depth)) {
+      throw new TypeError('RENDER_TARGET_DEPTH_TEXTURE_INVALID');
+    }
+    validateImageSize(width, height, depth && !depthTexture);
+    const definition = { width, height, depth, depthTexture };
     const parts = allocateTargetParts(definition);
     const record = { definition, width, height, gpu: parts.framebuffer,
-      colorTexture: { gpu: parts.colorTexture }, depthGpu: parts.depthBuffer };
+      colorTexture: { gpu: parts.colorTexture },
+      depthGpu: parts.depthBuffer,
+      depthTexture: depthTexture ? { gpu: parts.depthBuffer } : null };
     targets.add(record);
     return record;
   }
@@ -150,20 +200,25 @@ export function createNativeWebGLDevice(canvas, {
   function resizeRenderTarget(target, width, height) {
     assertActive();
     requireOwned(targets, target, 'RENDER_TARGET');
-    validateImageSize(width, height, target.definition.depth);
+    validateImageSize(width, height, target.definition.depth && !target.definition.depthTexture);
     if (width === target.width && height === target.height) return target;
     const bound = gl.getParameter(gl.FRAMEBUFFER_BINDING) === target.gpu;
-    const replacement = allocateTargetParts({ width, height, depth: target.definition.depth });
+    const definition = { width, height, depth: target.definition.depth,
+      depthTexture: target.definition.depthTexture };
+    // A failed allocation must not replace or release any existing handles.
+    const replacement = allocateTargetParts(definition);
     const previous = { framebuffer: target.gpu, depthBuffer: target.depthGpu,
       colorTexture: target.colorTexture.gpu };
-    target.definition = { width, height, depth: target.definition.depth };
+    target.definition = definition;
     target.width = width;
     target.height = height;
     target.gpu = replacement.framebuffer;
     target.colorTexture.gpu = replacement.colorTexture;
     target.depthGpu = replacement.depthBuffer;
+    if (target.depthTexture) target.depthTexture.gpu = replacement.depthBuffer;
     if (bound) bindRenderTarget(target);
-    releaseTargetParts(previous.framebuffer, previous.depthBuffer, previous.colorTexture);
+    releaseTargetParts(previous.framebuffer, previous.depthBuffer,
+      previous.colorTexture, definition.depthTexture);
     return target;
   }
   function shader(type, source) {
@@ -319,7 +374,8 @@ export function createNativeWebGLDevice(canvas, {
   }
   function destroyResources() {
     if (!lost && !gl.isContextLost?.()) {
-      for (const target of targets) releaseTargetParts(target.gpu, target.depthGpu, target.colorTexture.gpu);
+      for (const target of targets) releaseTargetParts(target.gpu, target.depthGpu,
+        target.colorTexture.gpu, target.definition.depthTexture);
       for (const texture of textures) if (texture.gpu) gl.deleteTexture(texture.gpu);
       for (const mesh of meshes) {
         if (mesh.gpu) {
@@ -331,6 +387,7 @@ export function createNativeWebGLDevice(canvas, {
     }
     for (const target of targets) {
       target.gpu = null; target.colorTexture.gpu = null; target.depthGpu = null;
+      if (target.depthTexture) target.depthTexture.gpu = null;
     }
     for (const texture of textures) texture.gpu = null;
     for (const mesh of meshes) mesh.gpu = null;
@@ -351,6 +408,7 @@ export function createNativeWebGLDevice(canvas, {
         const next = allocateTargetParts(target.definition);
         target.gpu = next.framebuffer; target.colorTexture.gpu = next.colorTexture;
         target.depthGpu = next.depthBuffer;
+        if (target.depthTexture) target.depthTexture.gpu = next.depthBuffer;
       }
     } catch (error) {
       restorationError = error;
@@ -366,6 +424,7 @@ export function createNativeWebGLDevice(canvas, {
     for (const t of textures) t.gpu = null;
     for (const target of targets) {
       target.gpu = null; target.colorTexture.gpu = null; target.depthGpu = null;
+      if (target.depthTexture) target.depthTexture.gpu = null;
     }
   }
   function onContextRestored() {
@@ -389,14 +448,16 @@ export function createNativeWebGLDevice(canvas, {
     bindRenderTarget, resizeRenderTarget, draw, viewport, recover, dispose,
     status() {
       const estimatedTextureBytes = [...textures].reduce((n, t) => n + byteSize(t.definition.width, t.definition.height), 0) +
-        [...targets].reduce((n, t) => n + byteSize(t.width, t.height), 0);
+        [...targets].reduce((n, t) => n + byteSize(t.width, t.height) +
+          (t.definition.depthTexture ? byteSize(t.width, t.height, 2) : 0), 0);
       const estimatedRenderbufferBytes = [...targets].reduce((n, t) =>
-        n + (t.definition.depth ? byteSize(t.width, t.height, 2) : 0), 0);
+        n + (t.definition.depth && !t.definition.depthTexture ? byteSize(t.width, t.height, 2) : 0), 0);
       const estimatedMeshBytes = [...meshes].reduce((n, m) =>
         n + m.definition.attributes.reduce((sum, a) => sum + a.data.byteLength, 0) +
         (m.definition.indices?.byteLength ?? 0), 0);
       return Object.freeze({ backend, lost, disposed, restorationError: restorationError?.message ?? null,
-        programs: programs.size, meshes: meshes.size, textures: textures.size + targets.size,
+        programs: programs.size, meshes: meshes.size, textures: textures.size + targets.size +
+          [...targets].filter(t => t.definition.depthTexture).length,
         renderTargets: targets.size, estimatedTextureBytes, estimatedRenderbufferBytes,
         estimatedTotalResourceBytes: estimatedTextureBytes + estimatedRenderbufferBytes + estimatedMeshBytes,
         memoryBasis: 'ENGINE_OWNED_ALLOCATION_ESTIMATE_NOT_VRAM_TOTAL' });

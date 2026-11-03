@@ -2302,7 +2302,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           path: tooling
-          fetch-depth: 12
+          fetch-depth: 32
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -2354,7 +2354,7 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git -C tooling rev-parse HEAD)" = "$EXPECTED_TOOLING_HEAD"
-          git -C tooling merge-base --is-ancestor 9ab65ca90daee3c2b8bb8b5551cedc8d1d69c987 HEAD
+          git -C tooling merge-base --is-ancestor 9ab65ca90daee3c2b8bb8b5551cedc8d1d69c987 HEAD || { echo REV2_EXACT_PREDECESSOR_ANCESTRY_UNAVAILABLE; exit 52; }
           while IFS= read -r changed; do
             case "$changed" in
               tools/h-earth-ground-material-comparison.v1.mjs|tools/h-earth-groundcover-factor-overlay.mjs|tools/h-earth-ground-material-comparison.v1.test.mjs|.github/workflows/h-earth-neutral-exact-head-runner.yml) ;;

@@ -141,6 +141,189 @@ export function collectRev2G1StaticPreflight(productDirectory){
  });
 }
 
+
+// REV2 numeric interpretation is independent of GPU dispatch. No values may be
+// inferred from RGB8 PNGs; calibrated RGBA32F samples only.
+export const REV2_NUMERIC_MODES=Object.freeze([
+ 'role_primitive_depth_valid','corrected_normal_slope',
+ 'exposure_eligibility_weight_authority','pre_soil_and_shelter','K_and_region',
+ 'uv_ddx','ddy_lod_valid','implicit_T_coast',
+ ...Array.from({length:9},(_,i)=>'fixed_lod_'+i),'post_soil_C'
+]);
+export const REV2_NUMERIC_SEAMS=Object.freeze([
+ [330,838,-457],[317,700,-456],[308,605,-455],[301,536,-454],
+ [296,484,-453],[287,382,-450],[283,340,-448],[279,298,-445],
+ [274,254,-440],[271,228,-435],[268,200,-425],[266,184,-415],
+ [265,175,-405],[265,168,-395],[264,161,-385]
+].map(([x,y,z])=>Object.freeze({x,y,z,topLeft:true})));
+export const REV2_G1_FIXED_PIXELS=Object.freeze(
+ [128,264,400].flatMap(x=>[250,430,610,790].map(y=>Object.freeze({x,y})))
+);
+export const REV2_CAPTURE_LIMITS=Object.freeze({
+ poses:2,channels:4,modesPerPose:18,modeDraws:36,
+ floatCalibrationDraws:2,referenceParityDraws:2,
+ maximumGpuDrawReadbacks:40,warmupFramesPerPose:60,
+ maximumWarmupFrames:120,maximumSubmittedFrames:160,
+ width:529,height:980,float32RoundtripCeiling:0.000002,
+ linearReconstructionCeiling:0.0001,firstHitDepthCeiling:0.005,
+ observationPixelsPerStation:32,controlEdgesPerStation:30,
+ seamCount:15,g1ControlPixels:12
+});
+export function rev2GlY(y,height=REV2_CAPTURE_LIMITS.height){
+ if(!Number.isInteger(y)||y<0||y>=height||height!==980)
+   throw Error('REV2_PIXEL_ORIGIN_INVALID');
+ return height-1-y;
+}
+export function rev2StationPixelSpan(station){
+ if(!station||!REV2_NUMERIC_SEAMS.some(s=>s.x===station.x&&s.y===station.y&&s.z===station.z))
+   throw Error('REV2_UNFROZEN_STATION');
+ if(station.x-16<0||station.x+15>=529)throw Error('REV2_PIXEL_SPAN_INVALID');
+ return Object.freeze({x:station.x-16,y:rev2GlY(station.y),width:32,height:1,
+  topLeftCenter:station.x,crossingLeftIndex:15,crossingRightIndex:16});
+}
+export function validateRev2FrameBudget(accounting){
+ const c=REV2_CAPTURE_LIMITS;
+ if(!accounting||!Array.isArray(accounting.poses)||accounting.poses.length!==2||
+    accounting.poses.some(q=>!q||!Number.isInteger(q.warmup)||q.warmup<0||
+      q.warmup>c.warmupFramesPerPose||q.modes!==18)||
+    !Number.isInteger(accounting.floatCalibrationDraws)||accounting.floatCalibrationDraws!==2||
+    !Number.isInteger(accounting.referenceParityDraws)||accounting.referenceParityDraws!==2||
+    !Number.isInteger(accounting.totalFrameSubmissions)||
+    accounting.totalFrameSubmissions<0)throw Error('REV2_GPU_ACCOUNTING_INCOMPLETE');
+ const warm=accounting.poses.reduce((n,q)=>n+q.warmup,0),numeric=36,total=warm+numeric+2+2;
+ if(warm>120||numeric+2+2!==40||total>160||accounting.totalFrameSubmissions!==total)
+   throw Error('REV2_GPU_PASS_OR_FRAME_CEILING');
+ return Object.freeze({result:'REV2_GPU_ACCOUNTING_VALID',totalFrameSubmissions:total,
+  warmupFrames:warm,numericDraws:numeric,calibrationDraws:2,parityDraws:2});
+}
+const rev2Bound=REV2_CAPTURE_LIMITS.float32RoundtripCeiling;
+const rev2Interval=(v,e=rev2Bound)=>{
+ if(!Number.isFinite(v)||!Number.isFinite(e)||e<0)throw Error('REV2_UNCALIBRATED_COMPONENT');
+ return Object.freeze([v-e,v+e]);
+};
+const rev2Add=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+const rev2Neg=a=>[-a[1],-a[0]];
+const rev2Sub=(a,b)=>rev2Add(a,rev2Neg(b));
+const rev2Mul=(a,b)=>{
+ const v=[a[0]*b[0],a[0]*b[1],a[1]*b[0],a[1]*b[1]];
+ return [Math.min(...v),Math.max(...v)];
+};
+function rev2Power(t){
+ if(t[0]<0||t[1]>1+rev2Bound)throw Error('REV2_TEXTURE_RANGE_INVALID');
+ return [Math.pow(Math.max(0,t[0]),2.2),Math.pow(Math.min(1,t[1]),2.2)];
+}
+export function decodeRev2FloatPixel(rows,{calibratedError=rev2Bound}={}){
+ if(!Array.isArray(rows)||rows.length!==18||
+    rows.some(x=>!Array.isArray(x)||x.length!==4||x.some(v=>!Number.isFinite(v))))
+   throw Error('REV2_RGBA32F_NUMERIC_ROWS_INCOMPLETE');
+ if(!Number.isFinite(calibratedError)||calibratedError<0||
+    calibratedError>rev2Bound)throw Error('REV2_FLOAT_CALIBRATION_UNPROVEN');
+ const first=rows[0],valid=Math.abs(first[3]-1)<=rev2Bound;
+ if(!Number.isInteger(first[0])||!Number.isInteger(first[1])||
+    first[2]<0||first[2]>1||!valid||
+    !((first[0]===1&&first[1]===0)||(first[0]===5&&first[1]===8)))
+   throw Error('REV2_FIRST_HIT_ROLE_PRIMITIVE_INVALID');
+ const p=rows[3].slice(0,3),k=rows[4].slice(0,3),
+       w=rows[2][2],a=rows[2][3],c=rows[17].slice(0,3);
+ if(w<0||w>1||a<0||a>1||p.some(v=>v<0)||k.some(v=>v<0)||
+    c.some(v=>v<0)||Math.abs(rows[17][3]-1)>rev2Bound)
+   throw Error('REV2_SOIL_NUMERIC_RANGE_INVALID');
+ const active=w>0.001;
+ if(active && (Math.abs(rows[6][3]-1)>rev2Bound||
+   rows.slice(8,17).some(v=>Math.abs(v[3]-1)>rev2Bound)||
+   rows[7].slice(0,3).some(t=>t<0||t>1)))
+   throw Error('REV2_TEXTURE_OR_DERIVATIVE_UNOBSERVED');
+ if(!active){
+  if(Math.abs(rows[6][3])>rev2Bound||
+     rows.slice(8,17).some(v=>Math.abs(v[3])>rev2Bound))
+   throw Error('REV2_W_ZERO_TEXTURE_MUST_REMAIN_UNOBSERVED');
+  return Object.freeze({role:first[0],primitive:first[1],depth:first[2],
+   p,w,a,k,c,t:null,active:false,error:calibratedError,
+   reason:'NO_ORIGINAL_IMPLICIT_T_OR_DERIVATIVES_AT_ZERO_WEIGHT'});
+ }
+ return Object.freeze({role:first[0],primitive:first[1],depth:first[2],
+  p,w,a,k,c,t:rows[7].slice(0,3),active:true,error:calibratedError,
+  lods:rows.slice(8,17).map(v=>v.slice(0,3)),estimatedLod:rows[6][2],
+  driverSelectedMipKnown:false});
+}
+function rev2Evaluate(sample,tSample){
+ const e=sample.error;
+ const w=rev2Interval(sample.w,e),a=rev2Interval(sample.a,e);
+ return [0,1,2].map(i=>{
+  const p=rev2Interval(sample.p[i],e),k=rev2Interval(sample.k[i],e);
+  const t=rev2Power(rev2Interval(tSample.t[i],tSample.error));
+  return rev2Add(p,rev2Mul(rev2Mul(w,a),rev2Sub(rev2Mul(t,k),p)));
+ });
+}
+function rev2Signed(intervals){
+ const value=intervals.map(q=>(q[0]+q[1])/2);
+ const errors=intervals.map(q=>(q[1]-q[0])/2);
+ return Object.freeze({value,errors,norm:value.reduce((n,v)=>n+Math.abs(v),0),
+  numericErrorBound:errors.reduce((n,v)=>n+v,0)});
+}
+function rev2MeanPair(a,b){
+ return a.map((v,i)=>rev2Mul(rev2Add(v,b[i]),[0.5,0.5]));
+}
+export function computeRev2SignedAttribution(left,right){
+ if(!left||!right||left.active!==true||right.active!==true)
+   throw Error('REV2_TEXTURE_UNOBSERVED_NO_COUNTERFACTUAL');
+ const ll=rev2Evaluate(left,left),lr=rev2Evaluate(left,right);
+ const rl=rev2Evaluate(right,left),rr=rev2Evaluate(right,right);
+ const tex=rev2MeanPair(lr.map((v,i)=>rev2Sub(v,ll[i])),
+                           rr.map((v,i)=>rev2Sub(v,rl[i])));
+ const other=rev2MeanPair(rl.map((v,i)=>rev2Sub(v,ll[i])),
+                             rr.map((v,i)=>rev2Sub(v,lr[i])));
+ const reconstruction=tex.map((v,i)=>rev2Add(v,other[i]));
+ const observed=left.c.map((v,i)=>rev2Sub(rev2Interval(right.c[i],right.error),
+                                             rev2Interval(v,left.error)));
+ const tol=REV2_CAPTURE_LIMITS.linearReconstructionCeiling;
+ for(let i=0;i<3;i++){
+  const ideal=right.c[i]-left.c[i];
+  if(ideal<reconstruction[i][0]-tol||ideal>reconstruction[i][1]+tol)
+    throw Error('REV2_SIGNED_RECONSTRUCTION_FAIL');
+ }
+ for(const [point,actual] of [[left,ll],[right,rr]]){
+  for(let i=0;i<3;i++)
+    if(point.c[i]<actual[i][0]-tol||point.c[i]>actual[i][1]+tol)
+      throw Error('REV2_ORIGINAL_C_RECONSTRUCTION_FAIL');
+ }
+ return Object.freeze({texture:rev2Signed(tex),nonTexture:rev2Signed(other),
+  observed:rev2Signed(observed),reconstructed:rev2Signed(reconstruction),
+  separability:'COMPOSED_P_W_A_K_VS_IMPLICIT_TEXTURE_NOT_ISOLATED_NORMAL',
+  mipSelectionKnown:false});
+}
+export function classifyRev2Station(crossing,controls){
+ if(!crossing||!Array.isArray(controls)||controls.length!==30||
+    controls.some(x=>!x||!x.texture||!x.nonTexture))
+   throw Error('REV2_STATION_CONTROLS_INCOMPLETE');
+ const threshold=key=>{
+  const norm=controls.map(c=>c[key].norm);
+  if(norm.some(v=>!Number.isFinite(v)||v<0))throw Error('REV2_CONTROL_NONFINITE');
+  return norm.sort((a,b)=>a-b)[28]; // 29th ascending of 30, nearest rank p95
+ };
+ const classify=key=>{
+  const factor=crossing[key],control=threshold(key);
+  if(!factor||!Number.isFinite(factor.norm)||!Number.isFinite(factor.numericErrorBound)||
+     factor.numericErrorBound<0)throw Error('REV2_CROSSING_NONFINITE');
+  return Object.freeze({supported:factor.norm>factor.numericErrorBound&&
+    factor.norm>control,controlP95:control,numericErrorBound:factor.numericErrorBound,
+    signedRgb:factor.value,norm:factor.norm});
+ };
+ const t=classify('texture'),n=classify('nonTexture');
+ const result=t.supported&&n.supported?'BOTH_CONTRIBUTE':
+   t.supported?'TEXTURE_SAMPLING_SUPPORTED':
+   n.supported?'NON_TEXTURE_BLEND_FACTORS_SUPPORTED':'UNRESOLVED';
+ return Object.freeze({result,texture:t,nonTexture:n,controlCount:30,
+  comparison:'STRICTLY_ABOVE_NUMERIC_BOUND_AND_29TH_ASCENDING_CONTROL'});
+}
+export function rev2ValidateSameRoleControl(left,right,{depthCeiling=0.005}={}){
+ if(!left||!right||left.role!==right.role||left.primitive!==right.primitive||
+    !Number.isFinite(left.depth)||!Number.isFinite(right.depth)||
+    Math.abs(right.depth-left.depth)>depthCeiling)
+   throw Error('REV2_CONTROL_FIRST_HIT_OR_DEPTH_MISMATCH');
+ return true;
+}
+
 // Gen3074 is a distinct source-only extension. It does not select any
 // historical comparison/G1 profile, nor authorize a fabricated camera pose.
 export const RAVINE_HABITAT_TARGET=Object.freeze({

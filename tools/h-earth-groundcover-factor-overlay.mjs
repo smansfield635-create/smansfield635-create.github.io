@@ -317,7 +317,7 @@ export function transformRev2WorldSoilNumericRenderer(original){
   '  vec2 rev2DDX=dFdx(rev2UV),rev2DDY=dFdy(rev2UV);',
   '  bool rev2DerivativeFinite=!any(isnan(vec4(rev2DDX,rev2DDY))) && !any(isinf(vec4(rev2DDX,rev2DDY)));',
   '  vec3 rev2P=vec3(0.0),rev2C=vec3(0.0),rev2T=vec3(0.0),rev2K=vec3(0.0);',
-  '  float rev2W=0.0,rev2A=0.0,rev2E=0.0,rev2Region=0.0,rev2Shelter=0.0;',
+  '  float rev2W=0.0,rev2A=0.0,rev2E=0.0,rev2Region=0.0,rev2Shelter=0.0,rev2RockExposure=0.0;',
   '  bool rev2SampledOriginalT=false;'
  ].join('\n'));
  fs=once(fs,'    if(uClearingEnabled==1){\n      // The approved earth texture',[
@@ -333,6 +333,10 @@ export function transformRev2WorldSoilNumericRenderer(original){
   '        ).rgb;',
   '        if(!geologicalEarthRock){rev2T=worldSoilTexel;rev2SampledOriginalT=true;}',
   '        if(geologicalEarthRock){'
+ ].join('\n'));
+ fs=once(fs,'    float shelteredSoil=clamp(',[
+  '    rev2RockExposure=rockExposure;',
+  '    float shelteredSoil=clamp('
  ].join('\n'));
  fs=once(fs,'        vec3 worldSoilActualAlbedo=',[
   '        rev2K=0.75*worldSoilEarthTint*worldSoilBroadTonal;',
@@ -356,7 +360,7 @@ export function transformRev2WorldSoilNumericRenderer(original){
   '    vec4 channels=vec4(0.0);',
   '    if(m==1)channels=vec4(float(vRoleCode),float(vPrimitiveIndex),gl_FragCoord.z,ordinary?1.0:0.0);',
   '    else if(m==2)channels=vec4(geometricNormal,slope);',
-  '    else if(m==3)channels=vec4(rockExposure,rev2E,rev2W,rev2A);',
+  '    else if(m==3)channels=vec4(rev2RockExposure,rev2E,rev2W,rev2A);',
   '    else if(m==4)channels=vec4(rev2P,rev2Shelter);',
   '    else if(m==5)channels=vec4(rev2K,rev2Region);',
   '    else if(m==6&&validT)channels=vec4(rev2UV,rev2DDX);',

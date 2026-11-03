@@ -505,3 +505,51 @@ export function createRev2Rgba32fTarget(gl,{width=529,height=980}={}){
   schema:'H_EARTH_REV2_RGBA32F_TARGET_SOURCE_v1',
   calibrationNotYetBound:true,sourceOnlyTransport:true,productionMutation:false});
 }
+
+
+// REV2 source-only native renderer bridge. Mode 19 is reserved strictly for
+// float roundtrip calibration and is not one of the 18 scientific channels.
+export const REV2_FLOAT_SENTINEL=Object.freeze([0.125,0.25,0.5,1.0]);
+export function validateRev2FloatCalibration(samples){
+ if(!Array.isArray(samples)||!samples.length||
+    samples.some(p=>!(p instanceof Float32Array)||p.length!==4||
+      [...p].some(x=>!Number.isFinite(x))))
+  throw Error('REV2_FLOAT_CALIBRATION_READBACK_INVALID');
+ const e=0.000002;
+ if(!samples.some(p=>REV2_FLOAT_SENTINEL.every((v,i)=>Math.abs(p[i]-v)<=e)))
+  throw Error('REV2_FLOAT_CALIBRATION_ROUNDTRIP_FAIL');
+ return Object.freeze({result:'REV2_FLOAT_ROUNDTRIP_SOURCE_CHECK_PASS',
+  precisionCeiling:e,firstHitCount:samples.length,actualGpuRunClaimed:false});
+}
+export function transformRev2WorldSoilNumericRuntime(original){
+ const shader=transformRev2WorldSoilNumericRenderer(original);
+ let source=shader.source;
+ const exact=(before,after,label)=>{
+  if(source.split(before).length!==2)throw Error('REV2_NATIVE_ANCHOR_NOT_UNIQUE:'+label);
+  source=source.replace(before,after);
+ };
+ exact("    else if(m==18)channels=vec4(rev2C,ordinary?1.0:0.0);",
+  "    else if(m==18)channels=vec4(rev2C,ordinary?1.0:0.0);\n    else if(m==19)channels=vec4(0.125,0.25,0.5,1.0);",
+  'CALIBRATION_MODE');
+ exact('export async function createHEarthRun8ER3CPersistentRenderer',
+  'const rev2CreateFloatTarget='+createRev2Rgba32fTarget.toString()+';\n'+
+  'const rev2ValidateCalibration='+validateRev2FloatCalibration.toString()
+    .replace('REV2_FLOAT_SENTINEL','[0.125,0.25,0.5,1.0]')+';\n'+
+  'export async function createHEarthRun8ER3CPersistentRenderer',
+  'FACTORY');
+ exact("  if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');",
+  "  if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');\n"+
+  "  const rev2Probe={mode:0,target:null,total:0,calibration:[false,false],parity:[false,false],"+
+  "seen:[new Set(),new Set()],terminal:false};",
+  'CONTEXT');
+ exact('gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.viewport(0, 0, width, height);',
+  'gl.bindFramebuffer(gl.FRAMEBUFFER, rev2Probe.mode>0 ? rev2Probe.target.framebuffer : resources.geometryFramebuffer); gl.viewport(0, 0, width, height);',
+  'NATIVE_FRAMEBUFFER');
+ exact('gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);',
+  'gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);'+
+  "\n    if(rev2Probe.mode>0){const rev2Location=gl.getUniformLocation(resources.geometryProgram,'uRev2NumericMode');"+
+  "if(rev2Location===null)throw Error('REV2_MODE_UNIFORM_UNAVAILABLE');"+
+  "gl.uniform1i(rev2Location,rev2Probe.mode);"+
+  "if(gl.getError()!==gl.NO_ERROR)throw Error('REV2_MODE_UNIFORM_GL_ERROR');}",
+  'NATIVE_MODE');
+ const api=String.raw

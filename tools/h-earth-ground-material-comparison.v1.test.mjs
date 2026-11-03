@@ -587,3 +587,94 @@ test('REV2 source-pinned 18-channel shader probe retains original disabled outpu
  assert(src.includes('uniform highp int uRev2NumericMode;'));
  assert.throws(()=>o.transformRev2WorldSoilNumericRenderer(original+'\n'),/SOURCE_HASH_MISMATCH/);
 });
+
+
+test('REV2 floating diagnostic target enforces float extension, FBO, readback and complete GL state restoration',async()=>{
+ const {createRev2Rgba32fTarget:create}=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const fake=(options={})=>{
+  const operations=[],state={fb:'originalFBO',rb:'originalDepth',active:0,
+   textures:new Map([[0,'originalTexture']]),viewport:[4,8,529,980],error:0};
+  const gl={};
+  for(const name of ['FRAMEBUFFER','FRAMEBUFFER_BINDING','RENDERBUFFER','RENDERBUFFER_BINDING',
+   'ACTIVE_TEXTURE','VIEWPORT','TEXTURE_2D','TEXTURE_BINDING_2D','TEXTURE0','RGBA32F',
+   'RGBA','FLOAT','DEPTH_COMPONENT24','DEPTH_ATTACHMENT','COLOR_ATTACHMENT0',
+   'TEXTURE_MIN_FILTER','TEXTURE_MAG_FILTER','NEAREST','FRAMEBUFFER_COMPLETE','NO_ERROR'])
+   gl[name]=name==='TEXTURE0'||name==='NO_ERROR'?0:name;
+  gl.getExtension=n=>n==='EXT_color_buffer_float'&&options.extension!==false?{}:null;
+  gl.getError=()=>{const e=state.error;state.error=0;return e;};
+  gl.getParameter=n=>{
+   switch(n){
+    case gl.FRAMEBUFFER_BINDING:return state.fb;
+    case gl.RENDERBUFFER_BINDING:return state.rb;
+    case gl.ACTIVE_TEXTURE:return state.active;
+    case gl.TEXTURE_BINDING_2D:return state.textures.get(state.active)??null;
+    case gl.VIEWPORT:return [...state.viewport];
+    default:throw Error('MOCK_UNKNOWN_PARAMETER:'+n);
+   }
+  };
+  gl.activeTexture=n=>{state.active=n;};
+  gl.bindTexture=(target,texture)=>{state.textures.set(state.active,texture);};
+  gl.bindFramebuffer=(target,fb)=>{state.fb=fb;};
+  gl.bindRenderbuffer=(target,rb)=>{state.rb=rb;};
+  gl.viewport=(...v)=>{state.viewport=[...v];};
+  gl.createTexture=()=>({kind:'floatColor'});
+  gl.createFramebuffer=()=>({kind:'floatFBO'});
+  gl.createRenderbuffer=()=>({kind:'depth24'});
+  gl.texStorage2D=(...args)=>{operations.push(['texStorage2D',...args]);};
+  gl.texParameteri=()=>{};
+  gl.renderbufferStorage=(...args)=>{operations.push(['renderbufferStorage',...args]);};
+  gl.framebufferTexture2D=(...args)=>{operations.push(['framebufferTexture2D',...args]);};
+  gl.framebufferRenderbuffer=(...args)=>{operations.push(['framebufferRenderbuffer',...args]);};
+  gl.checkFramebufferStatus=()=>options.complete===false?'INCOMPLETE':gl.FRAMEBUFFER_COMPLETE;
+  gl.readPixels=(x,y,w,h,format,type,target)=>{
+   operations.push(['readPixels',x,y,w,h,format,type,target.constructor.name]);
+   target.fill(options.nonfinite===true?NaN:0.125);
+   if(options.readError===true)state.error=1280;
+  };
+  gl.deleteTexture=()=>{operations.push(['deleteTexture']);};
+  gl.deleteRenderbuffer=()=>{operations.push(['deleteRenderbuffer']);};
+  gl.deleteFramebuffer=()=>{operations.push(['deleteFramebuffer']);};
+  return {gl,state,operations};
+ };
+ for(const options of [{extension:false},{complete:false}]){
+  const mock=fake(options);
+  assert.throws(()=>create(mock.gl),/REV2_FLOAT_(EXT_COLOR_BUFFER_FLOAT_UNAVAILABLE|FRAMEBUFFER_INCOMPLETE)/);
+  assert.equal(mock.state.fb,'originalFBO');
+  assert.deepEqual(mock.state.viewport,[4,8,529,980]);
+ }
+ assert.throws(()=>create(fake().gl,{width:528}),/REV2_FLOAT_VIEWPORT_NOT_FROZEN/);
+ assert.throws(()=>create({}),/REV2_FLOAT_WEBGL2_INTERFACE_INCOMPLETE/);
+ const m=fake(),target=create(m.gl);
+ assert.equal(target.schema,'H_EARTH_REV2_RGBA32F_TARGET_SOURCE_v1');
+ assert.equal(target.sourceOnlyTransport,true);
+ assert.equal(target.calibrationNotYetBound,true);
+ assert.equal(target.width,529);assert.equal(target.height,980);
+ assert.equal(m.state.fb,'originalFBO');
+ assert.deepEqual(m.state.viewport,[4,8,529,980]);
+ assert(m.operations.some(v=>v[0]==='texStorage2D'&&v[3]==='RGBA32F'));
+ assert(m.operations.some(v=>v[0]==='renderbufferStorage'&&v[2]==='DEPTH_COMPONENT24'));
+ const captured=target.capture(()=>{},[[2,3,2,1],[5,6,1,1]]);
+ assert.equal(captured.length,2);
+ assert(captured[0] instanceof Float32Array);
+ assert.deepEqual([...captured[0]],Array(8).fill(0.125));
+ assert(m.operations.some(v=>v[0]==='readPixels'&&v[5]==='RGBA'&&v[6]==='FLOAT'&&v[7]==='Float32Array'));
+ assert.equal(m.state.fb,'originalFBO');
+ assert.deepEqual(m.state.viewport,[4,8,529,980]);
+ assert.equal(m.state.textures.get(0),'originalTexture');
+ assert.throws(()=>target.capture(()=>{},[[528,0,2,1]]),/REV2_FLOAT_PIXEL_BOUNDS/);
+ assert.throws(()=>target.capture(()=>m.gl.bindFramebuffer(m.gl.FRAMEBUFFER,'wrong'),[[0,0,1,1]]),/REV2_FLOAT_DRAW_FRAMEBUFFER_DRIFT/);
+ assert.throws(()=>target.capture(()=>m.gl.viewport(1,2,529,980),[[0,0,1,1]]),/REV2_FLOAT_DRAW_VIEWPORT_DRIFT/);
+ assert.throws(()=>target.capture(()=>{throw Error('DRAW_FAILED');},[[0,0,1,1]]),/DRAW_FAILED/);
+ assert.equal(m.state.fb,'originalFBO');
+ assert.deepEqual(m.state.viewport,[4,8,529,980]);
+ assert.throws(()=>target.capture(null,[[0,0,1,1]]),/REV2_FLOAT_CAPTURE_ARGUMENTS/);
+ target.dispose();
+ assert(m.operations.some(v=>v[0]==='deleteFramebuffer'));
+ assert.throws(()=>target.capture(()=>{},[[0,0,1,1]]),/REV2_FLOAT_DISPOSED/);
+ for(const bad of [{nonfinite:true,error:/READPIXELS_NONFINITE/},{readError:true,error:/READPIXELS_GL_ERROR/}]){
+  const x=fake(bad),t=create(x.gl);
+  assert.throws(()=>t.capture(()=>{},[[0,0,1,1]]),bad.error);
+  assert.equal(x.state.fb,'originalFBO');
+  t.dispose();
+ }
+});

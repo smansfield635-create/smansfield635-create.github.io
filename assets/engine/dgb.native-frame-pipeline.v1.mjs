@@ -22,10 +22,21 @@ function requireDevice(device) {
 const vertex1 = `attribute vec2 aPosition; attribute vec2 aUV;
 varying vec2 vUV;
 void main() { vUV = aUV; gl_Position = vec4(aPosition, 0.0, 1.0); }`;
+const srgbTransfer = `
+vec3 encodeSRGB(vec3 linearColor) {
+  vec3 v = clamp(linearColor, 0.0, 1.0);
+  vec3 low = 12.92 * v;
+  vec3 high = 1.055 * pow(v, vec3(1.0 / 2.4)) - 0.055;
+  return mix(low, high, step(vec3(0.0031308), v));
+}`;
 const fragment1 = `precision mediump float;
 varying vec2 vUV;
 uniform sampler2D uColor;
-void main() { gl_FragColor = texture2D(uColor, vUV); }`;
+uniform float uOutputSRGB;
+${srgbTransfer}
+void main() { vec4 color = texture2D(uColor, vUV);
+  if (uOutputSRGB > 0.5) color.rgb = encodeSRGB(color.rgb);
+  gl_FragColor = color; }`;
 const vertex2 = `#version 300 es
 in vec2 aPosition; in vec2 aUV;
 out vec2 vUV;
@@ -34,8 +45,12 @@ const fragment2 = `#version 300 es
 precision mediump float;
 in vec2 vUV;
 uniform sampler2D uColor;
+uniform float uOutputSRGB;
 out vec4 color;
-void main() { color = texture(uColor, vUV); }`;
+${srgbTransfer}
+void main() { vec4 sampleColor = texture(uColor, vUV);
+  if (uOutputSRGB > 0.5) sampleColor.rgb = encodeSRGB(sampleColor.rgb);
+  color = sampleColor; }`;
 
 export function createNativeFramePipeline(device) {
   requireDevice(device);
@@ -154,10 +169,12 @@ export function createNativeFramePipeline(device) {
     submitted++;
     return submitted;
   }
-  function endFrame({ presentToCanvas = true } = {}) {
+  function endFrame({ presentToCanvas = true, presentationEncoding = 'LINEAR' } = {}) {
     assertReady();
     if (!active) throw new Error('FRAME_NOT_ACTIVE');
     if (typeof presentToCanvas !== 'boolean') throw new TypeError('PRESENTATION_OPTION_INVALID');
+    if (presentationEncoding !== 'LINEAR' && presentationEncoding !== 'SRGB') throw new TypeError('PRESENTATION_ENCODING_INVALID');
+    if (presentationEncoding === 'SRGB' && (!active.target || !presentToCanvas)) throw new TypeError('SRGB_REQUIRES_OFFSCREEN_CANVAS_PRESENTATION');
     const frame = active;
     active = null;
     let result;
@@ -178,12 +195,25 @@ export function createNativeFramePipeline(device) {
         gl.disable(gl.DEPTH_TEST); gl.depthMask(false); gl.disable(gl.CULL_FACE); gl.disable(gl.BLEND);
         gl.colorMask(true, true, true, true);
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, frame.target.colorTexture.gpu);
-        device.draw({ program, mesh, beforeDraw: (context, handle) => {
-          const location = context.getUniformLocation(handle, 'uColor');
-          if (location !== null) context.uniform1i(location, 0);
-        } });
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        let presenterFailed = false;
+        try {
+          gl.bindTexture(gl.TEXTURE_2D, frame.target.colorTexture.gpu);
+          device.draw({ program, mesh, beforeDraw: (context, handle) => {
+            const location = context.getUniformLocation(handle, 'uColor');
+            const encodingLocation = context.getUniformLocation(handle, 'uOutputSRGB');
+            if (location === null || encodingLocation === null) throw new Error('PRESENTATION_UNIFORM_MISSING');
+            context.uniform1i(location, 0);
+            context.uniform1f(encodingLocation, presentationEncoding === 'SRGB' ? 1 : 0);
+          } });
+        } catch (error) {
+          presenterFailed = true;
+          throw error;
+        } finally {
+          // A failed presenter must not leave its sampled offscreen texture bound.
+          // Preserve the primary render error if cleanup also fails.
+          try { gl.bindTexture(gl.TEXTURE_2D, null); }
+          catch (error) { if (!presenterFailed) throw error; }
+        }
         if (gl.isContextLost?.()) throw new Error('GRAPHICS_CONTEXT_LOST_DURING_FRAME');
         presentation = 'OFFSCREEN_PRESENTED';
       }

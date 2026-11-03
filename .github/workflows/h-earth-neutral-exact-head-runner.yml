@@ -3,7 +3,7 @@ name: H-Earth Neutral Exact Head Runner
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102', 'h-earth/ravine-habitat-color-attribution-20261102', 'h-earth/west-flank-material-pixel-gen3079-20261102']
+    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102', 'h-earth/ravine-habitat-color-attribution-20261102', 'h-earth/west-flank-material-pixel-gen3079-20261102', 'h-earth/straight-near-far-baseline-gen3084-20261102']
     paths:
       - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
       - 'tools/h-earth-ground-material-comparison.v1.mjs'
@@ -2095,5 +2095,195 @@ jobs:
         with:
           name: h-earth-straight-near-far-baseline-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/h-earth-straight-near-far-gen3084/
+          if-no-files-found: warn
+          retention-days: 30
+
+
+  gen3087-planetary-near-far-source-only:
+    if: >-
+      ${{ github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize') && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth-gen3087-planetary-near-far-source-camera' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted Gen3087 tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 15
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /tools/h-earth-ground-material-comparison.v1.test.mjs
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Bounded Gen3087 source-only preflight (NO GPU)
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD" || { echo GEN3087_HEAD_DRIFT; exit 51; }
+          git merge-base --is-ancestor 558ddc927296afb14574e3ee05a65b165f65467b HEAD || { echo GEN3087_PREDECESSOR_DRIFT; exit 52; }
+          renderer_path=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          tree_blob="$(git rev-parse "HEAD:$renderer_path")"
+          checkout_blob="$(git hash-object "$renderer_path")"
+          checkout_raw="$(git hash-object --no-filters "$renderer_path")"
+          printf 'GEN3087_RENDERER_DIAG tree=%s checkout=%s raw=%s expected=%s\\n' "$tree_blob" "$checkout_blob" "$checkout_raw" 85ee835060d5106a670077a5f4352b7ad202b49b
+          test "$tree_blob" = 85ee835060d5106a670077a5f4352b7ad202b49b && test "$checkout_blob" = "$tree_blob" && test "$checkout_raw" = "$tree_blob" || { echo GEN3087_RENDERER_DRIFT; exit 53; }
+          while IFS= read -r changed; do
+            case "$changed" in
+              tools/h-earth-ground-material-comparison.v1.mjs|tools/h-earth-groundcover-factor-overlay.mjs|tools/h-earth-ground-material-comparison.v1.test.mjs|.github/workflows/h-earth-neutral-exact-head-runner.yml) ;;
+              *) echo "GEN3087_OUT_OF_SCOPE:$changed"; exit 54 ;;
+            esac
+          done < <(git diff --name-only 558ddc927296afb14574e3ee05a65b165f65467b HEAD)
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tools/h-earth-groundcover-factor-overlay.mjs
+          node --check tools/h-earth-ground-material-comparison.v1.test.mjs
+          node --test --test-name-pattern='Gen3074|WEST_FLANK|NEAR_FAR_STRAIGHT|GEN3087' tools/h-earth-ground-material-comparison.v1.test.mjs
+          echo GEN3087_SOURCE_ONLY_NODE22_QUALIFICATION_PASS
+      - name: Confirm no new WebGL run on this checkpoint
+        run: |
+          echo GEN3087_GPU_EXECUTION_NOT_DISPATCHED
+
+# Gen3087 one-shot exact-source GPU baseline; this new job stays disabled
+  # until one explicit, exact predecessor-bound workflow update.
+  # Gen3084's failed GPU run is terminal and is never called.
+  gen3087-planetary-near-far-gpu-one-shot:
+    needs: gen3087-planetary-near-far-source-only
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'synchronize' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth-gen3087-planetary-near-far-source-camera' && github.event.before == 'fe7f62f7a1999c503a371e790e78966050bbe67a' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact Gen3087 comparator branch (read-only)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+          fetch-depth: 15
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /tools/h-earth-ground-material-comparison.v1.test.mjs
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+      - name: Checkout unchanged published product (read-only)
+        uses: actions/checkout@v4
+        with:
+          ref: 11afdc5278564728ea9eef6ffb525601ce4362a7
+          path: product
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/h-earth/
+            /h-earth-3d/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fail closed on source, admission, profile, disk, and lineage drift before browser
+        env:
+          EXPECTED_TOOL_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C tooling rev-parse HEAD)" = "$EXPECTED_TOOL_HEAD" || { echo GEN3087_GPU_HEAD_DRIFT; exit 51; }
+          test "$(git -C product rev-parse HEAD)" = 11afdc5278564728ea9eef6ffb525601ce4362a7 || { echo GEN3087_GPU_PRODUCT_HEAD_DRIFT; exit 52; }
+          git -C tooling merge-base --is-ancestor 558ddc927296afb14574e3ee05a65b165f65467b HEAD || { echo GEN3087_GPU_PREDECESSOR_DRIFT; exit 53; }
+          renderer_path=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          for dir in tooling product; do
+            blob="$(git -C "$dir" rev-parse "HEAD:$renderer_path")"
+            local_blob="$(git -C "$dir" hash-object "$renderer_path")"
+            printf 'GEN3087_GPU_SOURCE_%s tree=%s local=%s\n' "$dir" "$blob" "$local_blob"
+            [[ "$blob" == 85ee835060d5106a670077a5f4352b7ad202b49b && "$local_blob" == "$blob" ]] || { echo GEN3087_GPU_PUBLISHED_RENDERER_DRIFT; exit 54; }
+            test -z "$(git -C "$dir" status --porcelain --untracked-files=no)" || { echo "GEN3087_GPU_DIRTY_CHECKOUT:$dir"; exit 55; }
+            bytes="$(du -sb "$dir" | cut -f1)"
+            (( bytes < 2147483648 )) || { echo "GEN3087_GPU_SPARSE_BUDGET:$dir"; exit 56; }
+          done
+          while IFS= read -r changed; do
+            case "$changed" in
+              tools/h-earth-ground-material-comparison.v1.mjs|tools/h-earth-groundcover-factor-overlay.mjs|tools/h-earth-ground-material-comparison.v1.test.mjs|.github/workflows/h-earth-neutral-exact-head-runner.yml) ;;
+              *) echo "GEN3087_GPU_OUT_OF_SCOPE:$changed"; exit 57 ;;
+            esac
+          done < <(git -C tooling diff --name-only 558ddc927296afb14574e3ee05a65b165f65467b HEAD)
+          free="$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -1 | tr -d ' ')"
+          (( free >= 8589934592 )) || { echo "GEN3087_GPU_HEADROOM_INSUFFICIENT:$free"; exit 58; }
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-groundcover-factor-overlay.mjs
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.test.mjs
+          (cd tooling && node --test --test-name-pattern='Gen3074|WEST_FLANK|NEAR_FAR_STRAIGHT|GEN3087' tools/h-earth-ground-material-comparison.v1.test.mjs)
+          (cd tooling && H_EARTH_COMPARISON_PROFILE=SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1 node --input-type=module -e '
+            import assert from "node:assert/strict";
+            import {HEADS,NEAR_FAR_STRAIGHT_ACTIVE,NEAR_FAR_STRAIGHT_POSE,NEAR_FAR_STRAIGHT_STATIONS,NEAR_FAR_STRAIGHT_SOURCE_BINDING} from "./tools/h-earth-ground-material-comparison.v1.mjs";
+            import {NEAR_FAR_STRAIGHT_STAGE_MODES} from "./tools/h-earth-groundcover-factor-overlay.mjs";
+            assert.equal(NEAR_FAR_STRAIGHT_ACTIVE,true);
+            assert.deepEqual(HEADS,{baseline:"11afdc5278564728ea9eef6ffb525601ce4362a7"});
+            assert.equal(NEAR_FAR_STRAIGHT_SOURCE_BINDING.successorAdmittedGeneration,3087);
+            assert.equal(NEAR_FAR_STRAIGHT_SOURCE_BINDING.preflightJsonSha256,"a8df23deded300604ae018044a8064ec67e12c99c4e911ea2ab0d2f2dac07cee");
+            assert.equal(NEAR_FAR_STRAIGHT_POSE.y,12);
+            assert.equal(NEAR_FAR_STRAIGHT_POSE.yaw,180.26444018162007);
+            assert.equal(NEAR_FAR_STRAIGHT_POSE.pitch,-25);
+            assert.equal(NEAR_FAR_STRAIGHT_STATIONS.length,15);
+            assert.equal(NEAR_FAR_STRAIGHT_STAGE_MODES.length,16);
+            assert.equal(NEAR_FAR_STRAIGHT_STAGE_MODES[6],"first-hit-role-byte");
+            assert.equal(NEAR_FAR_STRAIGHT_STAGE_MODES[7],"first-hit-primitive-24bit");
+            assert.equal(NEAR_FAR_STRAIGHT_STAGE_MODES[8],"first-hit-depth-24bit");
+            console.log("GEN3087_CAMERA_30_FIRST_HITS_16_STAGES_PRE_GPU_PASS");
+          ')
+      - name: Install existing Playwright Chromium substrate
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: ONE immutable 16-stage spherical camera-corrected source baseline (no A03)
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 1500s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../product \
+            --output "${{ runner.temp }}"/h-earth-gen3087-spherical-near-far-gpu
+          node --input-type=module -e '
+            import fs from "node:fs";import assert from "node:assert/strict";
+            const p=JSON.parse(fs.readFileSync(process.argv[1]+"/receipt.json","utf8"));
+            assert.equal(p.result,"STAGES_CAPTURED_VISUAL_REVIEW_REQUIRED");
+            assert.equal(p.nearFarStraight.schema,"H_EARTH_SOURCE_NEAR_FAR_PLANETARY_BASELINE_STAGE_RECEIPT_v1");
+            assert.equal(p.nearFarStraight.operationId,"H_EARTH_STRAIGHT_NEAR_FAR_PLANETARY_BASELINE_WEBGL_20261102_001");
+            assert.equal(p.nearFarStraight.frames,16);
+            assert.equal(p.nearFarStraight.sourceStationCount,15);
+            assert.equal(p.nearFarStraight.originalSourceMatches,30);
+            assert.equal(p.nearFarStraight.planetarySourceMatches,30);
+            assert.equal(p.nearFarStraight.mismatchCount,0);
+            assert.equal(p.nearFarStraight.actualR3aCameraAndGpuUniformReadbackVerified,true);
+            assert.equal(p.nearFarStraight.sourceFirstHitsExpectedOnly,false);
+            assert.equal(p.nearFarStraight.rows.length,16);
+            assert(p.nearFarStraight.rows.every(x=>x.rgba.length===30&&x.r3aProjectionVerified===true&&x.gpuUniformReadbackVerified===true));
+            assert.equal(p.nearFarStraight.ownerStraightCutoffVisuallyProven,false);
+            assert.equal(p.nearFarStraight.ownerCurvedWedgeProven,false);
+            assert.equal(p.nearFarStraight.candidateGpu,false);
+            assert.equal(p.productDiskMutation,false);
+            assert.equal(p.releaseAuthorized,false);
+            console.log("GEN3087_GPU_BASELINE_MECHANICAL_PASS_VISUAL_CUTOFF_PENDING");
+          ' "${{ runner.temp }}"/h-earth-gen3087-spherical-near-far-gpu
+      - name: Preserve all Gen3087 receipts and rendered stage PNGs, including failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3087-planetary-baseline-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}//h-earth-gen3087-spherical-near-far-gpu/
           if-no-files-found: warn
           retention-days: 30

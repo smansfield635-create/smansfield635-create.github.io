@@ -126,49 +126,111 @@ export const WEST_FLANK_PIXELS=Object.freeze([{x:300,y:625},{x:300,y:650}].map(O
 export const WEST_FLANK_SOURCE_TARGET=Object.freeze({x:145,y:36.24194177261537,z:-240});
 export const WEST_FLANK_STAGE_SOURCE_BINDING=Object.freeze({frozenGen3008PlanHead:'aaddea3ad332d347041a5476d97ab27b6e0e7367',sourceProductHead:'11afdc5278564728ea9eef6ffb525601ce4362a7',currentRendererBlob:'85ee835060d5106a670077a5f4352b7ad202b49b',originalNearGroundTriangle11650FromHistoricalReconstruction:true,actualCurrentTriangleProven:false,ownerPhonePhotoMatch:false,healthyControlProven:false});
 
-/* Gen3084: immutable, source-derived, 15/15 original indexed near/FAR
-   ray witnesses from SHA256 a40f8f4c6e9241163bd658220f92bb468f3dc9a5c83533f5a573dcdb036ceb04.
-   NOT an owner-Android camera. No product geometry or camera mutation. */
+/* Gen3087: successor to terminal Gen3084 (FAIL_CLOSED). These 30
+   spherical, original-indexed-mesh FIRST-HIT WITNESSES come from immutable
+   Gen3085 source-only archive SHA256 bb5c825f4323895802ad7fa0ccb1e204f69d4cdc07e25402ed8e2815d07e5569;
+   complete 30-row receipt SHA256 a8df23deded300604ae018044a8064ec67e12c99c4e911ea2ab0d2f2dac07cee.
+   Spherical source qualification is NOT GPU pixel, Android-camera or material proof. */
 export const NEAR_FAR_STRAIGHT_POSE=Object.freeze({
- name:'source_near_far_straight',x:-383.7,y:10.2049596,z:-460,
- yaw:359.73555981837995,pitch:-4.270974533345992,
- sourceLookTarget:Object.freeze({x:-384,y:5.3506466,z:-395}),
+ name:'source_near_far_straight_planetary',x:-383.7,y:12,z:-460,
+ yaw:180.26444018162007,pitch:-25,sourceLookDistanceMetres:18,
  diagnosticObserver:true,sourceDerived:true,ownerPhotoMatch:false,
  navigationEligible:false,firstHitGpuUnverified:true
 });
 export const NEAR_FAR_STRAIGHT_SOURCE_BINDING=Object.freeze({
  sourcePackage:'H_EARTH_RUN_8E_R2_LIVE_RENDER_PACKAGE_4F1B7FF2',
  archiveSha256:'5bfce62703c70fd5b68e894fca8634e5206c1ca681d7a127c192312a8e06aa3c',
- preflightJsonSha256:'a40f8f4c6e9241163bd658220f92bb468f3dc9a5c83533f5a573dcdb036ceb04',
- predecessorHead:'069f35028039f543fa39dfd255b70ac5fcac9c92',
+ sourceArchiveSha256:'bb5c825f4323895802ad7fa0ccb1e204f69d4cdc07e25402ed8e2815d07e5569',
+ preflightJsonSha256:'a8df23deded300604ae018044a8064ec67e12c99c4e911ea2ab0d2f2dac07cee',
+ historicalPreflightJsonSha256:'a40f8f4c6e9241163bd658220f92bb468f3dc9a5c83533f5a573dcdb036ceb04',
+ predecessorHead:'558ddc927296afb14574e3ee05a65b165f65467b',
+ inheritedGen3079Head:'069f35028039f543fa39dfd255b70ac5fcac9c92',
  productHead:'11afdc5278564728ea9eef6ffb525601ce4362a7',
  rendererBlob:'85ee835060d5106a670077a5f4352b49b',
- pairedSourceStations:15,viewport:[529,980],
+ planetaryFrameBlob:'0938daa8586715c3636b373894bd7e6e28c1ea91',
+ r3aCameraContractBlob:'d360e92c575be0c52254f454e7f57c1b87693b13',
+ navigationBlob:'3912671a7d6fe380a3605e33fd6547e2f672f319',
+ planetaryRadiusMetres:420000,
+ expectedPlanetaryPosition:Object.freeze([-383.7108327689559,11.572814426966943,-460.01298690049447]),
+ expectedPlanetaryTarget:Object.freeze([-383.77918166282757,3.983175041677896,-443.69112993191413]),
+ expectedPlanetaryUp:Object.freeze([-0.0009135711188464994,0.9999989829205522,-0.001095237723923351]),
+ pairedSourceStations:15,sourceFirstHitCount:30,viewport:Object.freeze([529,980]),
  originalSourceNearRole:1,originalSourceNearPrimitive:0,
  originalSourceFarRole:5,originalSourceFarPrimitive:8,
- ownerPhotoCorrespondence:false,productMutation:false
+ sourceFirstHitMaxErrorMetres:0.565815,sourceFirstHitErrorCeilingMetres:1.5,
+ priorFailedGpuRun:41570553401,priorTerminalGeneration:3084,
+ successorAdmittedGeneration:3087,
+ ownerPhotoCorrespondence:false,productMutation:false,
+ gpuFrameEvidence:false
 });
 export const NEAR_FAR_STRAIGHT_STATIONS=Object.freeze([
- {z:-457,far:[496,930],near:[201,928],fw:[-384.50044,8.48292,-456.99907],nw:[-383.50056,8.49218,-456.99833]},
- {z:-456,far:[439,813],near:[215,810],fw:[-384.50127,8.45492,-456.00062],nw:[-383.49947,8.46978,-455.99841]},
- {z:-455,far:[404,742],near:[224,740],fw:[-384.50255,8.42101,-454.99196],nw:[-383.50089,8.43613,-454.99785]},
- {z:-454,far:[380,695],near:[230,693],fw:[-384.49827,8.38773,-454.00051],nw:[-383.50203,8.40258,-454.00024]},
- {z:-453,far:[363,661],near:[234,659],fw:[-384.49678,8.35431,-453.00562],nw:[-383.50055,8.36888,-452.99671]},
- {z:-450,far:[333,599],near:[242,598],fw:[-384.50331,8.25353,-450.00825],nw:[-383.50517,8.26895,-450.02593]},
- {z:-448,far:[321,575],near:[245,574],fw:[-384.50663,8.17698,-447.97718],nw:[-383.50632,8.20235,-448.04456]},
- {z:-445,far:[309,553],near:[248,551],fw:[-384.50449,8.04815,-445.05982],nw:[-383.50612,8.06595,-444.94870]},
- {z:-440,far:[296,530],near:[251,529],fw:[-384.49609,7.80927,-439.87481],nw:[-383.50857,7.84763,-440.00814]},
- {z:-435,far:[289,518],near:[252,517],fw:[-384.49491,7.56575,-435.07020],nw:[-383.48746,7.57671,-434.90928]},
- {z:-425,far:[281,505],near:[255,505],fw:[-384.52305,6.94591,-424.43026],nw:[-383.51872,7.00513,-425.07200]},
- {z:-415,far:[276,500],near:[256,499],fw:[-384.48401,6.38566,-415.66904],nw:[-383.51253,6.31239,-414.23334]},
- {z:-405,far:[273,496],near:[256,496],fw:[-384.50092,5.66085,-404.43622],nw:[-383.47696,5.75017,-405.52378]},
- {z:-395,far:[271,493],near:[257,493],fw:[-384.50089,5.06614,-394.54126],nw:[-383.50584,5.13079,-395.36027]},
- {z:-385,far:[270,490],near:[257,490],fw:[-384.53245,4.58578,-385.30633],nw:[-383.47716,4.62062,-385.76460]}
-].map(q=>Object.freeze({
- z:q.z,
- far:Object.freeze({pixel:Object.freeze(q.far),world:Object.freeze(q.fw),role:5,primitive:8}),
- near:Object.freeze({pixel:Object.freeze(q.near),world:Object.freeze(q.nw),role:1,primitive:0})
+ {z:-457,far:{pixel:[436,909],world:[-384.5,8.48294,-457],depth:0.940610946729,triangle:24558},near:{pixel:[217,909],world:[-383.5,8.49223,-457],depth:0.940496273266,triangle:6528}},
+ {z:-456,far:{pixel:[404,763],world:[-384.5,8.45491,-456],depth:0.951249077008,triangle:24559},near:{pixel:[225,761],world:[-383.5,8.46982,-456],depth:0.951149153088,triangle:6720}},
+ {z:-455,far:{pixel:[382,661],world:[-384.5,8.4213,-455],depth:0.958671749413,triangle:24559},near:{pixel:[230,660],world:[-383.5,8.43622,-455],depth:0.958599924299,triangle:6720}},
+ {z:-454,far:{pixel:[366,587],world:[-384.5,8.3877,-454],depth:0.964133205191,triangle:24559},near:{pixel:[234,586],world:[-383.5,8.40261,-454],depth:0.964079138341,triangle:6720}},
+ {z:-453,far:{pixel:[354,530],world:[-384.5,8.35409,-453],depth:0.968320062051,triangle:24559},near:{pixel:[237,528],world:[-383.5,8.36901,-453],depth:0.968277867915,triangle:6720}},
+ {z:-450,far:{pixel:[329,417],world:[-384.5,8.25328,-450],depth:0.976537978232,triangle:24559},near:{pixel:[243,416],world:[-383.5,8.26819,-450],depth:0.976514846664,triangle:6720}},
+ {z:-448,far:{pixel:[319,371],world:[-384.5,8.17815,-448],depth:0.980003239718,triangle:24560},near:{pixel:[245,369],world:[-383.5,8.20088,-448],depth:0.97998113317,triangle:6912}},
+ {z:-445,far:{pixel:[308,323],world:[-384.5,8.04562,-445],depth:0.983639627733,triangle:24560},near:{pixel:[248,322],world:[-383.5,8.06835,-445],depth:0.983624829268,triangle:6912}},
+ {z:-440,far:{pixel:[297,274],world:[-384.5,7.81576,-440],depth:0.987448345544,triangle:24561},near:{pixel:[250,272],world:[-383.5,7.84738,-440],depth:0.987437257348,triangle:7104}},
+ {z:-435,far:{pixel:[290,244],world:[-384.5,7.56192,-435],depth:0.989823700666,triangle:24552},near:{pixel:[252,243],world:[-383.5,7.58127,-435],depth:0.989818565784,triangle:7104}},
+ {z:-425,far:{pixel:[281,211],world:[-384.5,6.98059,-425],depth:0.992626030617,triangle:24543},near:{pixel:[254,210],world:[-383.5,7.00119,-425],depth:0.992623217005,triangle:7296}},
+ {z:-415,far:{pixel:[277,193],world:[-384.5,6.34169,-415],depth:0.994222647278,triangle:24545},near:{pixel:[255,193],world:[-383.5,6.36265,-415],depth:0.994220898351,triangle:7680}},
+ {z:-405,far:{pixel:[274,182],world:[-384.5,5.69648,-405],depth:0.995251960139,triangle:24546},near:{pixel:[256,182],world:[-383.5,5.7166,-405],depth:0.995250810074,triangle:7872}},
+ {z:-395,far:{pixel:[271,173],world:[-384.5,5.09283,-395],depth:0.995969392576,triangle:24547},near:{pixel:[257,173],world:[-383.5,5.10996,-395],depth:0.99596864572,triangle:8064}},
+ {z:-385,far:{pixel:[270,166],world:[-384.5,4.57033,-385],depth:0.99649721531,triangle:24541},near:{pixel:[257,166],world:[-383.5,4.58148,-385],depth:0.996496775669,triangle:8256}}
+].map(q=>Object.freeze({z:q.z,
+ far:Object.freeze({...q.far,pixel:Object.freeze(q.far.pixel),world:Object.freeze(q.far.world),role:5,primitive:8}),
+ near:Object.freeze({...q.near,pixel:Object.freeze(q.near.pixel),world:Object.freeze(q.near.world),role:1,primitive:0})
 })));
+export function validateNearFarPlanetaryPacket(packet,pose=NEAR_FAR_STRAIGHT_POSE,binding=NEAR_FAR_STRAIGHT_SOURCE_BINDING){
+ const close=(a,b,t)=>Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<=t;
+ const vector=(object,expected,t)=>object&&expected.every((v,i)=>close(object[['x','y','z'][i]],v,t));
+ const c=packet?.camera,n=packet?.navigationState;
+ if(packet?.status!=='RUN_8E_R3A_FRAME_UNIFORM_PACKET_COMPLETE'||
+    packet?.singleSphericalPresentationManifold!==true||
+    packet?.cameraAndWorldSharePlanetaryFrame!==true||
+    packet?.successorTerrainCameraReconciled!==true||
+    packet?.worldRecenteredForCamera!==false||
+    packet?.planetRelativeUp!==true)
+   throw Error('NEAR_FAR_R3A_PLANETARY_FRAME_INVALID');
+ if(!packet?.viewport||packet.viewport.width!==529||packet.viewport.height!==980||
+    packet.viewport.pixelRatio!==1||!Number.isInteger(packet.frameSequence)||
+    packet.frameSequence!==packet.navigationSequence)
+   throw Error('NEAR_FAR_R3A_FRAME_VIEWPORT_INVALID');
+ if(!n||!close(n.yawDegrees,pose.yaw,1e-9)||!close(n.pitchDegrees,pose.pitch,1e-9)||
+    !vector(n.position,[pose.x,pose.y,pose.z],1e-9))
+   throw Error('NEAR_FAR_R3A_NAVIGATION_POSE_MISMATCH');
+ if(!close(packet.navigationCameraY,pose.y,1e-9)||
+    !close(packet.presentationCameraY,pose.y,1e-6)||
+    !close(packet.r3aPresentationCameraYDelta,0,1e-6))
+   throw Error('NEAR_FAR_R3A_CAMERA_HEIGHT_RECONCILED_DRIFT');
+ if(!c||!vector(c.localAuthoringPosition,[pose.x,pose.y,pose.z],1e-6)||
+    !vector(c.position,binding.expectedPlanetaryPosition,1e-4)||
+    !vector(c.target,binding.expectedPlanetaryTarget,1e-4)||
+    !vector(c.up,binding.expectedPlanetaryUp,1e-6)||
+    !close(packet.projectedCameraY,c.position.y,1e-6)||
+    !close(c.verticalFovDegrees,56,1e-9)||
+    !close(c.nearPlane,.25,1e-9)||c.farPlane<20000)
+   throw Error('NEAR_FAR_R3A_CAMERA_PROJECTION_DRIFT');
+ if(!Array.isArray(c.viewProjectionMatrix)||c.viewProjectionMatrix.length!==16||
+    !c.viewProjectionMatrix.every(Number.isFinite))
+   throw Error('NEAR_FAR_R3A_MATRIX_NOT_AVAILABLE');
+ return true;
+}
+export function validateNearFarGpuUniforms(uniforms,packet,observedFrame){
+ const close=(a,b,t)=>Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<=t;
+ const target=packet?.camera?.position,view=packet?.camera?.viewProjectionMatrix;
+ if(!uniforms||uniforms.error!==0||
+    !Array.isArray(uniforms.camera)||uniforms.camera.length!==3||
+    ![target?.x,target?.y,target?.z].every((v,i)=>close(uniforms.camera[i],v,0.001))||
+    !Array.isArray(uniforms.viewProjection)||uniforms.viewProjection.length!==16||
+    !uniforms.viewProjection.every((v,i)=>close(v,view?.[i],0.02))||
+    !observedFrame?.cameraPosition||
+    ![target?.x,target?.y,target?.z].every((v,i)=>close(observedFrame.cameraPosition[['x','y','z'][i]],v,1e-6)))
+   throw Error('NEAR_FAR_GPU_CAMERA_UNIFORM_READBACK_MISMATCH');
+ return true;
+}
 
 export const G1_BASELINE_PROFILE='G1_SOIL_BASELINE_ONLY_V1';
 export const G1_A03_PROFILE='G1_SOIL_A03_CANDIDATE_ONLY_V1';
@@ -415,9 +477,9 @@ export async function run(argv){
        },null,{timeout:30000});
 
 
-      // Gen3084 separate, already-admitted diagnostic: ONE unchanged published
+      // Gen3087 successor of terminal Gen3084: ONE unchanged published
       // baseline pose, 16 staged frames, 30 source-pinned first-hit pixels.
-      // Nothing in this branch is permitted to capture the A03 candidate.
+      // No prior Gen3084 GPU rerun and no A03 candidate capture.
       if(NEAR_FAR_STRAIGHT_ACTIVE){
         await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
         const pose=NEAR_FAR_STRAIGHT_POSE;
@@ -425,13 +487,13 @@ export async function run(argv){
           {...station.far,side:'far',station:i,z:station.z},
           {...station.near,side:'near',station:i,z:station.z}
         ]);
-        let seq=308400,rows=[];
+        let seq=308700,rows=[];
         for(let mode=0;mode<NEAR_FAR_STRAIGHT_STAGE_MODES.length;mode++){
           const sampled=await page.evaluate(({pose,mode,seq,samples})=>{
             globalThis.__ravineHabitatProbeMode=mode;
             globalThis.__ravineExpectedLocalTarget={x:-384.00515163,y:5.39056176,z:-400.00536627};
             globalThis.__groundComparisonHideGrass=false;
-            const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,seq,'GEN3084_NEAR_FAR_STRAIGHT');
+            const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,seq,'GEN3087_NEAR_FAR_PLANETARY');
             globalThis.__HEarthAuditPresent(state);
             const canvas=document.querySelector('#h-earth-functional-landscape-canvas');
             if(!canvas||canvas.width!==529||canvas.height!==980)throw Error('NEAR_FAR_VIEWPORT_MISMATCH');
@@ -442,6 +504,24 @@ export async function run(argv){
             if(!packet?.camera?.localAuthoringPosition||!globalThis.__ravineProjectTarget)
               throw Error('NEAR_FAR_CAMERA_READBACK_UNAVAILABLE');
             const actualLocal=packet.camera.localAuthoringPosition;
+            // Packet: R3A CPU source truth; GPU readback below independently
+            // verifies the bound geometry program's actual camera uniforms.
+            const cameraAudit={
+              status:packet.status,frameSequence:packet.frameSequence,
+              navigationSequence:packet.navigationSequence,
+              navigationCameraY:packet.navigationCameraY,
+              presentationCameraY:packet.presentationCameraY,
+              r3aPresentationCameraYDelta:packet.r3aPresentationCameraYDelta,
+              projectedCameraY:packet.projectedCameraY,
+              successorTerrainCameraReconciled:packet.successorTerrainCameraReconciled,
+              singleSphericalPresentationManifold:packet.singleSphericalPresentationManifold,
+              cameraAndWorldSharePlanetaryFrame:packet.cameraAndWorldSharePlanetaryFrame,
+              planetRelativeUp:packet.planetRelativeUp,
+              worldRecenteredForCamera:packet.worldRecenteredForCamera,
+              viewport:packet.viewport,camera:packet.camera,
+              navigationState:{position:state.position,yawDegrees:state.yawDegrees,pitchDegrees:state.pitchDegrees}
+            };
+            const gpuUniform=globalThis.__nearFarGpuUniformReadback?.()??null;
             const projected=samples.map(sample=>{
               const point={x:sample.world[0],y:sample.world[1],z:sample.world[2]};
               const hit=globalThis.__ravineProjectTarget(point,packet);
@@ -452,11 +532,13 @@ export async function run(argv){
             const rgba=samples.map(sample=>globalThis.__ravineReadGeometryPixel(sample.pixel[0],canvas.height-1-sample.pixel[1]));
             const dataUrl=canvas.toDataURL('image/png');
             const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
-            return {rgba,projected,actualLocal,before,after,dataUrl,
+            return {rgba,projected,actualLocal,cameraAudit,gpuUniform,before,after,dataUrl,
               modeApplied:globalThis.__ravineHabitatProbeModeApplied,
               asset:receipt.resources?.geologicalFormation};
           },{pose,mode,seq:++seq,samples});
           if(sampled.modeApplied!==mode)throw Error('NEAR_FAR_MODE_NOT_APPLIED:'+mode);
+          validateNearFarPlanetaryPacket(sampled.cameraAudit,pose);
+          validateNearFarGpuUniforms(sampled.gpuUniform,sampled.cameraAudit,sampled.after);
           if(sampled.before?.navigationSequence!==seq||sampled.after?.navigationSequence!==seq||
              sampled.before?.frameSequence!==sampled.after?.frameSequence)
             throw Error('NEAR_FAR_FRAME_CHANGED:'+mode);
@@ -464,8 +546,9 @@ export async function run(argv){
           if(!['x','y','z'].every(k=>Number.isFinite(sampled.actualLocal[k])&&Math.abs(sampled.actualLocal[k]-pose[k])<0.01))
             throw Error('NEAR_FAR_ACTUAL_GPU_CAMERA_DRIFT');
           if(sampled.projected.length!==30||sampled.projected.some((p,i)=>
-            Math.abs(p.screen[0]-samples[i].pixel[0])>3||Math.abs(p.screen[1]-samples[i].pixel[1])>3||
-            !Number.isFinite(p.expectedDepth)||p.expectedDepth<0||p.expectedDepth>1))
+            Math.abs(p.screen[0]-samples[i].pixel[0])>1||Math.abs(p.screen[1]-samples[i].pixel[1])>1||
+            !Number.isFinite(p.expectedDepth)||p.expectedDepth<0||p.expectedDepth>1||
+            Math.abs(p.expectedDepth-samples[i].depth)>0.001))
             throw Error('NEAR_FAR_SOURCE_PROJECTED_PIXEL_OR_DEPTH_DRIFT');
           const png=decodeCanvasCapture({before:sampled.before,after:sampled.after,dataUrl:sampled.dataUrl},sampled.before);
           const name='source_near_far_straight-'+String(mode).padStart(2,'0')+'-'+NEAR_FAR_STRAIGHT_STAGE_MODES[mode]+'.png';
@@ -473,12 +556,15 @@ export async function run(argv){
           rows.push({mode,stage:NEAR_FAR_STRAIGHT_STAGE_MODES[mode],
             sourceHead:HEADS[label],rgba:sampled.rgba,projected:sampled.projected,
             actualLocalCamera:sampled.actualLocal,frameCamera:sampled.after.cameraPosition,
+            actualGpuCameraUniform:sampled.gpuUniform.camera,
+            r3aProjectionVerified:true,gpuUniformReadbackVerified:true,
             frameSequence:sampled.after.frameSequence,image:name,imageSha256:sha(png),imageBytes:png.length});
           receipt.nearFarStraight={
-            schema:'H_EARTH_SOURCE_NEAR_FAR_STRAIGHT_BASELINE_STAGE_RECEIPT_v1',
-            result:'IN_PROGRESS',operationId:'H_EARTH_STRAIGHT_NEAR_FAR_BASELINE_WEBGL_20261102_001',
+            schema:'H_EARTH_SOURCE_NEAR_FAR_PLANETARY_BASELINE_STAGE_RECEIPT_v1',
+            result:'IN_PROGRESS',operationId:'H_EARTH_STRAIGHT_NEAR_FAR_PLANETARY_BASELINE_WEBGL_20261102_001',
             sourcePlan:NEAR_FAR_STRAIGHT_SOURCE_BINDING,sourcePose:pose,
-            sourceStationCount:15,originalSourceMatches:30,frames:rows.length,
+            sourceStationCount:15,originalSourceMatches:30,planetarySourceMatches:30,frames:rows.length,
+            sphericalSourceOnlyArchiveVerified:true,actualR3aCameraAndGpuUniformReadbackVerified:true,
             sourceFirstHitsExpectedOnly:true,ownerPhonePhotoMatch:false,
             candidateGpu:false,productMutation:false,publicationAuthorized:false
           };
@@ -499,6 +585,8 @@ export async function run(argv){
         const lit=rows[0].rgba;
         const perStation=NEAR_FAR_STRAIGHT_STATIONS.map((p,i)=>({
           z:p.z,farPixel:p.far.pixel,nearPixel:p.near.pixel,
+          farSourceTriangle:p.far.triangle,nearSourceTriangle:p.near.triangle,
+          sourceTriangleIdentityGpuProven:false,
           farLit:lit[2*i].slice(0,3),nearLit:lit[2*i+1].slice(0,3),
           litFarMinusNear:lit[2*i].slice(0,3).map((v,k)=>v-lit[2*i+1][k])
         }));

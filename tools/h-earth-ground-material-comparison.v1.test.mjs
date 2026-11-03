@@ -323,28 +323,41 @@ test('WEST_FLANK Gen3079 exact two-pixel and six-stage lineage is pinned',async(
  assert.ok(yaml.includes('WEST_FLANK_OWNER_CLASS_MATERIAL_STAGES_V1'));
 });
 
-test('NEAR_FAR_STRAIGHT Gen3084 is fixed, single-pose, first-hit/depth source-bound and cannot alter Gen3079 semantics',async()=>{
+test('NEAR_FAR_STRAIGHT Gen3087 retains inherited profiles and binds 30 spherical indexed first hits',async()=>{
   const m=await import('./h-earth-ground-material-comparison.v1.mjs');
   const o=await import('./h-earth-groundcover-factor-overlay.mjs');
   assert.equal(m.NEAR_FAR_STRAIGHT_PROFILE,'SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1');
-  assert.equal(m.NEAR_FAR_STRAIGHT_SOURCE_BINDING.predecessorHead,'069f35028039f543fa39dfd255b70ac5fcac9c92');
-  assert.equal(m.NEAR_FAR_STRAIGHT_SOURCE_BINDING.rendererBlob,'85ee835060d5106a670077a5f4352b49b');
-  assert.equal(m.NEAR_FAR_STRAIGHT_SOURCE_BINDING.ownerPhotoCorrespondence,false);
-  assert.deepEqual([m.NEAR_FAR_STRAIGHT_POSE.x,m.NEAR_FAR_STRAIGHT_POSE.y,m.NEAR_FAR_STRAIGHT_POSE.z],[-383.7,10.2049596,-460]);
-  assert.equal(m.NEAR_FAR_STRAIGHT_POSE.diagnosticObserver,true);
+  const b=m.NEAR_FAR_STRAIGHT_SOURCE_BINDING,p=m.NEAR_FAR_STRAIGHT_POSE;
+  assert.equal(b.predecessorHead,'558ddc927296afb14574e3ee05a65b165f65467b');
+  assert.equal(b.inheritedGen3079Head,'069f35028039f543fa39dfd255b70ac5fcac9c92');
+  assert.equal(b.rendererBlob,'85ee835060d5106a670077a5f4352b49b');
+  assert.equal(b.sourceArchiveSha256,'bb5c825f4323895802ad7fa0ccb1e204f69d4cdc07e25402ed8e2815d07e5569');
+  assert.equal(b.preflightJsonSha256,'a8df23deded300604ae018044a8064ec67e12c99c4e911ea2ab0d2f2dac07cee');
+  assert.equal(b.ownerPhotoCorrespondence,false);
+  assert.equal(b.priorFailedGpuRun,41570553401);
+  assert.deepEqual([p.x,p.y,p.z,p.yaw,p.pitch,p.sourceLookDistanceMetres],
+    [-383.7,12,-460,180.26444018162007,-25,18]);
+  assert.equal(p.diagnosticObserver,true);
   assert.equal(m.NEAR_FAR_STRAIGHT_STATIONS.length,15);
   assert.deepEqual(m.NEAR_FAR_STRAIGHT_STATIONS.map(q=>q.z),[-457,-456,-455,-454,-453,-450,-448,-445,-440,-435,-425,-415,-405,-395,-385]);
+  assert.deepEqual([m.NEAR_FAR_STRAIGHT_STATIONS[0].far.pixel,m.NEAR_FAR_STRAIGHT_STATIONS[0].near.pixel,
+    m.NEAR_FAR_STRAIGHT_STATIONS.at(-1).far.pixel,m.NEAR_FAR_STRAIGHT_STATIONS.at(-1).near.pixel],
+    [[436,909],[217,909],[270,166],[257,166]]);
   for(const station of m.NEAR_FAR_STRAIGHT_STATIONS){
     for(const [side,role,primitive] of [['far',5,8],['near',1,0]]){
-      const witness=station[side];
-      assert.equal(witness.role,role);
-      assert.equal(witness.primitive,primitive);
-      assert.equal(witness.world.length,3);
-      assert.equal(witness.pixel.length,2);
-      assert.ok(witness.world.every(Number.isFinite));
-      assert.ok(witness.pixel.every((v,i)=>Number.isInteger(v)&&v>=0&&v<[529,980][i]));
+      const w=station[side];
+      assert.equal(w.role,role);
+      assert.equal(w.primitive,primitive);
+      assert.ok(Number.isInteger(w.triangle)&&w.triangle>=0);
+      assert.equal(w.world.length,3);
+      assert.equal(w.pixel.length,2);
+      assert.ok(w.world.every(Number.isFinite));
+      assert.ok(w.pixel.every((v,i)=>Number.isInteger(v)&&v>=0&&v<[529,980][i]));
+      assert.ok(Number.isFinite(w.depth)&&w.depth>0&&w.depth<1);
     }
   }
+  assert.equal(b.sourceFirstHitCount,30);
+  assert.equal(b.sourceFirstHitMaxErrorMetres< b.sourceFirstHitErrorCeilingMetres,true);
   const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
   const unchanged=o.transformWestFlankMaterialRenderer(original);
   const straight=o.transformNearFarStraightRenderer(original);
@@ -355,13 +368,48 @@ test('NEAR_FAR_STRAIGHT Gen3084 is fixed, single-pose, first-hit/depth source-bo
   assert.equal(straight.productDiskMutation,false);
   assert.equal(straight.ownerPhotoCorrespondence,false);
   assert.match(straight.source,/gl_FragCoord\.z/);
+  assert.match(straight.source,/__nearFarGpuUniformReadback/);
+  assert.match(straight.source,/gl\.getUniform\(resources\.geometryProgram/);
   assert.ok(!unchanged.source.includes('packed=floor(d*16777215.0+0.5)'));
+  assert.ok(!unchanged.source.includes('__nearFarGpuUniformReadback'));
   assert.ok(unchanged.source.includes('float difference=ravineFilteredMaterial-ravineNativeHabitat;'));
   assert.ok(m.instrumentRenderer(straight.source).includes('if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet)'));
   assert.throws(()=>o.transformNearFarStraightRenderer(original+'\n'),/SOURCE_HASH_MISMATCH/);
   const y=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
   assert.ok(y.includes('SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1'));
-  assert.ok(y.includes('h-earth/straight-near-far-baseline-gen3084-20261102'));
+  assert.ok(y.includes('h-earth-gen3087-planetary-near-far-source-camera'));
   assert.ok(y.includes('11afdc5278564728ea9eef6ffb525601ce4362a7'));
   assert.ok(y.includes('85ee835060d5106a670077a5f4352b49b'));
+});
+test('GEN3087 R3A camera and actual GPU uniform gates reject a wrong source observer before stage inference',async()=>{
+  const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+  const p=m.NEAR_FAR_STRAIGHT_POSE,b=m.NEAR_FAR_STRAIGHT_SOURCE_BINDING;
+  const xyz=a=>({x:a[0],y:a[1],z:a[2]});
+  const packet={
+    status:'RUN_8E_R3A_FRAME_UNIFORM_PACKET_COMPLETE',
+    frameSequence:308701,navigationSequence:308701,
+    successorTerrainCameraReconciled:true,
+    singleSphericalPresentationManifold:true,cameraAndWorldSharePlanetaryFrame:true,
+    worldRecenteredForCamera:false,planetRelativeUp:true,
+    navigationCameraY:12,presentationCameraY:12,r3aPresentationCameraYDelta:0,
+    projectedCameraY:b.expectedPlanetaryPosition[1],
+    viewport:{width:529,height:980,pixelRatio:1},
+    navigationState:{position:{x:p.x,y:p.y,z:p.z},yawDegrees:p.yaw,pitchDegrees:p.pitch},
+    camera:{
+      position:xyz(b.expectedPlanetaryPosition),target:xyz(b.expectedPlanetaryTarget),
+      up:xyz(b.expectedPlanetaryUp),localAuthoringPosition:{x:p.x,y:p.y,z:p.z},
+      verticalFovDegrees:56,nearPlane:.25,farPlane:20000,
+      viewProjectionMatrix:Array.from({length:16},(_,i)=>i/16)
+    }
+  };
+  assert.equal(m.validateNearFarPlanetaryPacket(packet),true);
+  const gpu={error:0,camera:[...b.expectedPlanetaryPosition],
+    viewProjection:packet.camera.viewProjectionMatrix.slice()};
+  assert.equal(m.validateNearFarGpuUniforms(gpu,packet,{cameraPosition:packet.camera.position}),true);
+  assert.throws(()=>m.validateNearFarPlanetaryPacket({...packet,navigationState:{...packet.navigationState,yawDegrees:359.73555981837995}}),/NAVIGATION_POSE_MISMATCH/);
+  assert.throws(()=>m.validateNearFarPlanetaryPacket({...packet,navigationCameraY:10.2049596}),/CAMERA_HEIGHT_RECONCILED_DRIFT/);
+  assert.throws(()=>m.validateNearFarPlanetaryPacket({...packet,cameraAndWorldSharePlanetaryFrame:false}),/PLANETARY_FRAME_INVALID/);
+  assert.throws(()=>m.validateNearFarPlanetaryPacket({...packet,camera:{...packet.camera,target:{x:0,y:0,z:0}}}),/CAMERA_PROJECTION_DRIFT/);
+  assert.throws(()=>m.validateNearFarGpuUniforms({...gpu,camera:[0,0,0]},packet,{cameraPosition:packet.camera.position}),/GPU_CAMERA_UNIFORM_READBACK_MISMATCH/);
+  assert.throws(()=>m.validateNearFarGpuUniforms(null,packet,{cameraPosition:packet.camera.position}),/GPU_CAMERA_UNIFORM_READBACK_MISMATCH/);
 });

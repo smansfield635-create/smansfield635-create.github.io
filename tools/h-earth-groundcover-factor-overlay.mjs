@@ -252,7 +252,7 @@ export function transformWestFlankMaterialRenderer(original){
     productDiskMutation:false,releaseAuthorized:false});
 }
  
-// Gen3084 is one source-pinned near/FAR straight-join baseline only.
+// Gen3087 camera-corrected successor: one source-pinned planetary baseline.
 // Mode 8 is fragment depth on this NEW profile; Gen3074/Gen3079 mode 8
 // and every inherited diagnostic remain byte-for-byte unchanged.
 export const NEAR_FAR_STRAIGHT_STAGE_MODES=Object.freeze(
@@ -268,13 +268,24 @@ export function transformNearFarStraightRenderer(original){
   ].join('\n');
   const next=[
     '    else if(m==8){',
-    '      // Gen3084 read-only fragment depth, RGB24 in geometry FBO.',
+    '      // Gen3087 unchanged read-only fragment depth, RGB24 in geometry FBO.',
     '      float d=clamp(gl_FragCoord.z,0.0,1.0);',
     '      float packed=floor(d*16777215.0+0.5);',
     '      lit=vec3(floor(packed/65536.0),floor(mod(packed,65536.0)/256.0),mod(packed,256.0))/255.0;',
     '    }'
   ].join('\n');
-  const source=once(inherited.source,old,next);
+  let source=once(inherited.source,old,next);
+  // Actual geometry-program GPU uniform readback: not the reconstructed CPU
+  // frame packet alone. Add only to this comparator profile.
+  const anchor='gl.uniform3f(resources.uniforms.cameraPosition, packet.camera.position.x, packet.camera.position.y, packet.camera.position.z);';
+  source=once(source,anchor,[anchor,
+    '    globalThis.__nearFarGpuUniformReadback=()=>{',
+    '      const camera=gl.getUniform(resources.geometryProgram,resources.uniforms.cameraPosition);',
+    '      const view=gl.getUniform(resources.geometryProgram,resources.uniforms.viewProjection);',
+    '      const error=gl.getError();',
+    '      return {camera:camera?Array.from(camera):null,viewProjection:view?Array.from(view):null,error};',
+    '    };'
+  ].join('\n'));
   return Object.freeze({...inherited,source,instrumentedSha256:hash(source),
     modeCount:NEAR_FAR_STRAIGHT_STAGE_MODES.length,
     sourcePoseOnly:true,ownerPhotoCorrespondence:false,

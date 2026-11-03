@@ -2056,7 +2056,7 @@ jobs:
             console.log("GEN3084_FROZEN_SOURCE_CONTRACT_PASS");
           ')
       - name: Install existing Chromium substrate once
-        if: ${{ github.event.action == 'opened' }}
+        if: ${{ github.event.action == 'synchronize' && github.event.before == '0b6e10a315f5fae0eca457ca66ebb30e78d151db' }}
         working-directory: tooling
         shell: bash
         run: |
@@ -2064,7 +2064,7 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
       - name: Capture one source-derived near/FAR baseline, max 16 frames
-        if: ${{ github.event.action == 'opened' }}
+        if: ${{ github.event.action == 'synchronize' && github.event.before == '0b6e10a315f5fae0eca457ca66ebb30e78d151db' }}
         working-directory: tooling
         env:
           H_EARTH_COMPARISON_PROFILE: SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1

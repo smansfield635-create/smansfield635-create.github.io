@@ -460,3 +460,18 @@ test('REV2 G1 static preflight requires exact product/G1/governing source and re
  }
  assert.throws(()=>m.collectRev2G1StaticPreflight(''),/PRODUCT_DIRECTORY_REQUIRED/);
 });
+
+test('REV2 import-map guard accepts both frozen local roots and rejects unknown source roots',async()=>{
+ const {isRev2G1LocalImportTarget:isLocal}=await import('./h-earth-ground-material-comparison.v1.mjs');
+ for(const path of [
+  '/showroom/globe/h-earth/render/landscape-coherence-field.v1.js?rev=sha-fixed',
+  '/h-earth-3d/terrain/h-earth.gen2514-qualified-terrain-field.js?rev=sha-fixed'
+ ])assert.equal(isLocal(path),true);
+ for(const path of [
+  'https://example.test/renderer.js','//example.test/renderer.js',
+  '/showroom/globe/h-earth/../../analytics/data/latest.json',
+  '/assets/engine/dgb.native-frame-pipeline.v1.mjs',
+  '/analytics/data/latest.json','/showroom/globe/h-earth/render/far-atlas.png',
+  '/h-earth-3d/source.js\nattack',''
+ ])assert.equal(isLocal(path),false);
+});

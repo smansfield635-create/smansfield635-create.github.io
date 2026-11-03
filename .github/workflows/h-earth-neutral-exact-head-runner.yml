@@ -2310,6 +2310,7 @@ jobs:
             /tools/h-earth-ground-material-comparison.v1.test.mjs
             /tools/h-earth-groundcover-factor-overlay.mjs
             /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
       - name: Checkout frozen diagnostic product
         uses: actions/checkout@v4
         with:

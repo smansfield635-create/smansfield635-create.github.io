@@ -221,3 +221,92 @@ test('E6 opt-in shader does not mutate default LIT GLSL or E4 legacy material bi
   assert.equal(f.calls.filter(x=>x[0]==='m4').length,1);
   assert.equal(f.calls.filter(x=>x[0]==='m3').length,1);
 });
+
+test('E7 PBR metallic-roughness creates world-space GGX shaders and uniforms on both WebGL tiers',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const f=makeDevice(backend),lib=createNativeMaterialLibrary(f.device);
+    const material=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS',baseColor:[0.6,0.4,0.2,0.7],
+      metallic:0.8,roughness:0.24,light:{direction:[0,0,2],ambient:0.12,intensity:0.85}});
+    assert.equal(material.metallic,0.8);assert.equal(material.roughness,0.24);
+    assert.ok(Object.isFrozen(material));
+    const b=bind(lib,material,{cameraPosition:[0,0,5]});
+    const {vertexSource,fragmentSource}=b.program.definition;
+    assert.match(vertexSource,/vWorldPosition/);
+    assert.match(fragmentSource,/uMetallic/);
+    assert.match(fragmentSource,/uRoughness/);
+    assert.match(fragmentSource,/vec3 specularTerm/);
+    assert.match(fragmentSource,/float D=/);
+    assert.match(fragmentSource,/vec3 kd=/);
+    assert.doesNotMatch(fragmentSource,/uSkyColor|uShininess/);
+    if(backend==='WEBGL2'){
+      assert.match(vertexSource,/^#version 300 es/);
+      assert.match(fragmentSource,/out vec4 outColor/);
+      assert.doesNotMatch(fragmentSource,/gl_FragColor/);
+    }else{
+      assert.match(vertexSource,/attribute vec3 aPosition/);
+      assert.match(fragmentSource,/gl_FragColor/);
+      assert.doesNotMatch(fragmentSource,/#version 300 es/);
+    }
+    b.beforeDraw(f.gl,b.program.gpu);
+    const scalar=new Map(f.calls.filter(x=>x[0]==='f').map(x=>[x[1].name,x[2]]));
+    assert.equal(scalar.get('uMetallic'),0.8);
+    assert.equal(scalar.get('uRoughness'),0.24);
+    assert.deepEqual(f.calls.filter(x=>x[0]==='v3').find(x=>x[1].name==='uCameraPosition')[2],[0,0,5]);
+    assert.equal(f.calls.filter(x=>x[0]==='m4').length,2);
+    assert.equal(f.calls.filter(x=>x[0]==='m3').length,1);
+    assert.equal(lib.status().compiledPrograms,1);
+  }
+});
+
+test('E7 PBR bounded inputs reject before GPU allocation; legacy modes reject stray PBR parameters',()=>{
+  const f=makeDevice(),lib=createNativeMaterialLibrary(f.device);
+  for(const value of [-0.01,1.01,NaN,Infinity,'1'])
+    assert.throws(()=>lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS',metallic:value}),/METALLIC_INVALID/);
+  for(const value of [0,0.044,1.01,NaN,Infinity,'0.5'])
+    assert.throws(()=>lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS',roughness:value}),/ROUGHNESS_INVALID/);
+  assert.throws(()=>lib.createMaterial({kind:'LIT',metallic:0}),/PBR_PARAMETERS_NOT_ALLOWED/);
+  assert.throws(()=>lib.createMaterial({kind:'UNLIT',roughness:0.5}),/PBR_PARAMETERS_NOT_ALLOWED/);
+  assert.equal(f.programCount(),0);
+  const m=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS'});
+  assert.equal(m.metallic,0);assert.equal(m.roughness,0.5);
+  assert.throws(()=>bind(lib,m),/CAMERA_POSITION_INVALID/);
+  assert.throws(()=>bind(lib,m,{cameraPosition:[NaN,0,2]}),/CAMERA_POSITION_INVALID/);
+  assert.throws(()=>bind(lib,m,{cameraPosition:[0,0,2],modelMatrix:Array(16).fill(0)}),/NORMAL_MATRIX_SINGULAR/);
+  assert.equal(f.programCount(),0);
+});
+
+test('E7 PBR pre-resolves late uniforms without GL mutation and preserves program cache per material kind',()=>{
+  const f=makeDevice(),lib=createNativeMaterialLibrary(f.device);
+  const a=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS',metallic:0.2,roughness:0.8});
+  const b=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS',metallic:1,roughness:0.15});
+  const ba=bind(lib,a,{cameraPosition:[0,0,4]}),bb=bind(lib,b,{cameraPosition:[0,0,4]});
+  assert.equal(ba.program,bb.program);
+  assert.equal(f.programCount(),1);
+  const count=f.calls.length;
+  f.gl.getUniformLocation=(_p,name)=>name==='uRoughness'?null:{name};
+  assert.throws(()=>ba.beforeDraw(f.gl,ba.program.gpu),/MATERIAL_UNIFORM_MISSING:uRoughness/);
+  assert.equal(f.calls.length,count,'late uniform failure must make no GL calls');
+  f.gl.getUniformLocation=(_p,name)=>({name});
+  bb.beforeDraw(f.gl,bb.program.gpu);
+  assert.equal(f.calls.filter(x=>x[0]==='f').find(x=>x[1].name==='uRoughness')[2],0.15);
+  f.setLost(true);
+  assert.throws(()=>bb.beforeDraw(f.gl,bb.program.gpu),/GRAPHICS_CONTEXT_NOT_READY/);
+  f.setLost(false);
+  bb.program.gpu={restored:true};
+  bb.beforeDraw(f.gl,bb.program.gpu);
+});
+
+test('E7 opt-in PBR never adds PBR uniforms to existing four material shader kinds',()=>{
+  const f=makeDevice(),lib=createNativeMaterialLibrary(f.device);
+  const texture=lib.createTexture2D({width:1,height:1,pixels:new Uint8Array([255,255,255,255])});
+  for(const [kind,extra] of [
+    ['UNLIT',{}],['TEXTURED',{texture}],['LIT',{}],['LIT_SPECULAR',{}]
+  ]){
+    const m=lib.createMaterial({kind,...extra});
+    const options=kind==='LIT_SPECULAR'?{cameraPosition:[0,0,4]}:{};
+    const s=bind(lib,m,options).program.definition;
+    assert.doesNotMatch(s.vertexSource,/uMetallic|uRoughness/);
+    assert.doesNotMatch(s.fragmentSource,/uMetallic|uRoughness|specularTerm/);
+  }
+  assert.deepEqual(lib.status().materialKinds,['UNLIT','TEXTURED','LIT','LIT_SPECULAR','PBR_METALLIC_ROUGHNESS']);
+});

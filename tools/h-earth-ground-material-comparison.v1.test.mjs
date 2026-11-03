@@ -678,3 +678,49 @@ test('REV2 floating diagnostic target enforces float extension, FBO, readback an
   t.dispose();
  }
 });
+
+
+test('REV2 native float mode and calibration bridge preserves pinned renderer syntax and fails closed on drift',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const result=o.transformRev2WorldSoilNumericRuntime(original),source=result.source;
+ assert.equal(result.nativeRenderFrameBound,true);
+ assert.equal(result.modeZeroDefaultUnchanged,true);
+ assert.equal(result.maximumSubmittedDiagnosticDraws,40);
+ assert.equal(result.numericModeCount,18);
+ assert.equal(result.calibrationMode,19);
+ assert.equal(result.productionMutation,false);
+ assert.equal(result.gpuExecuted,false);
+ assert(source.includes('const rev2Probe={mode:0,target:null,total:0'));
+ assert(source.includes("rev2Probe.mode>0 ? rev2Probe.target.framebuffer : resources.geometryFramebuffer"));
+ assert(source.includes("gl.uniform1i(rev2Location,rev2Probe.mode)"));
+ assert(source.includes('function captureRev2FloatMode(packet,pose,mode,regions)'));
+ assert(source.includes('function captureRev2OriginalParity(packet,pose)'));
+ assert(source.includes('function getRev2DiagnosticAccounting()'));
+ assert(source.includes('REV2_CAMERA_GPU_UNIFORM_DRIFT'));
+ assert(source.includes('REV2_GPU_DRAW_BUDGET_EXHAUSTED'));
+ assert(source.includes('REV2_CALIBRATION_ORDER_INVALID'));
+ assert(source.includes('REV2_PARITY_PRECONDITION'));
+ assert(source.includes('REV2_FLOAT_CALIBRATION_ROUNDTRIP_FAIL'));
+ assert(source.includes('else if(m==19)channels=vec4(0.125,0.25,0.5,1.0);'));
+ assert(source.includes('}else outColor=vec4(lit,outputAlpha);'));
+ assert(source.includes('palette=mix(palette,worldSoilFinal,worldSoilWeight);'));
+ assert(source.includes('getVegetationTrace,getVegetationProbe,'));
+ assert(!original.includes('captureRev2FloatMode'));
+ assert(!original.includes('rev2Probe.mode'));
+ assert.throws(()=>o.transformRev2WorldSoilNumericRuntime(original+'\n'),/SOURCE_HASH_MISMATCH/);
+ assert.equal(execFileSync(process.execPath,['--input-type=module','--check'],{
+  input:source,encoding:'utf8',maxBuffer:1024*1024}).trim(),'');
+});
+test('REV2 roundtrip calibration rejects out of tolerance, malformed and nonfinite Float32 samples',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const valid=new Float32Array(o.REV2_FLOAT_SENTINEL);
+ const yes=o.validateRev2FloatCalibration([valid]);
+ assert.equal(yes.result,'REV2_FLOAT_ROUNDTRIP_SOURCE_CHECK_PASS');
+ assert.equal(yes.precisionCeiling,0.000002);
+ assert.equal(yes.actualGpuRunClaimed,false);
+ assert.throws(()=>o.validateRev2FloatCalibration([]),/CALIBRATION_READBACK_INVALID/);
+ assert.throws(()=>o.validateRev2FloatCalibration([[0.125,0.25,0.5,1]]),/CALIBRATION_READBACK_INVALID/);
+ assert.throws(()=>o.validateRev2FloatCalibration([new Float32Array([0.125,0.25,NaN,1])]),/CALIBRATION_READBACK_INVALID/);
+ assert.throws(()=>o.validateRev2FloatCalibration([new Float32Array([0.125,0.25,0.50001,1])]),/CALIBRATION_ROUNDTRIP_FAIL/);
+});

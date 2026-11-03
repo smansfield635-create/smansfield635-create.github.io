@@ -1,6 +1,10 @@
 name: Publication Fast Preflight v1
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/publication-preflight-v1.yml
   workflow_dispatch:
     inputs:
       target_sha:
@@ -16,11 +20,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: publication-preflight-${{ inputs.surface_id }}-${{ inputs.target_sha }}
+  group: publication-preflight-${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.event.pull_request.head.sha) || format('{0}-{1}', inputs.surface_id, inputs.target_sha) }}
   cancel-in-progress: false
 
 jobs:
   preflight:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
       - name: Require canonical main dispatch and valid target SHA
@@ -294,3 +299,124 @@ jobs:
             ${{ runner.temp }}/nine-summits-orbit-receipt.json
           if-no-files-found: error
           retention-days: 90
+
+  nine-summits-active-motion-webgl1-pr:
+    name: Nine Summits fixed native WebGL1 active-motion qualification
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Materialize exact PR candidate with existing native cone sparse index
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${#TARGET_SHA}" -eq 40
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$TARGET_SHA"
+          git sparse-checkout init --cone --sparse-index
+          git sparse-checkout set -- nine-summits/universe assets/compass showroom/globe/h-earth/render
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git config --bool index.sparse)" = true
+          sparse_entries="$(git ls-files --sparse | wc -l | tr -d '[:space:]')"
+          materialized_files="$(find . -type f -not -path './.git/*' | wc -l | tr -d '[:space:]')"
+          test "$sparse_entries" -lt 20000
+          test "$materialized_files" -lt 20000
+      - name: Set up exact browser qualification runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install pinned Chrome and Puppeteer driver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+      - name: Install pinned Puppeteer
+        run: npm install --no-save --no-package-lock puppeteer-core@24.15.0
+      - name: Capture active motion and Generosity on authentic WebGL1
+        shell: bash
+        run: |
+          set -euo pipefail
+          export CHROME_PATH="$(command -v google-chrome || command -v chrome || command -v chromium)"
+          test -n "$CHROME_PATH"
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs/promises';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import http from 'node:http';
+          import {execFileSync} from 'node:child_process';
+          import puppeteer from 'puppeteer-core';
+          const expected={
+            'nine-summits/universe/universe.motion.js':'ef70da6a08131c4e734b5ce81aa4e6fd66c6e175',
+            'nine-summits/universe/index.html':'d101d2d5245bae023fb4d8161463f34cae4a0400',
+            'assets/compass/compass.orbit-physics.js':'6e721a0c846a42292b6d3f7329378bec28b4ddf4',
+            'showroom/globe/h-earth/render/geometry-kernel.js':'91eabcc240b54ef01a52d59a237dff629d90a722'
+          };
+          const output=process.env.RUNNER_TEMP+'/nine-active-webgl1';
+          const receipt={schema:'DGB_NINE_SUMMITS_ACTIVE_MOTION_WEBGL1_PR_QUALIFICATION_v1',result:'FAIL_CLOSED',sourceBlobs:{},captures:[],checks:[],errors:[],missingRequests:[],productMutationPerformed:false,publicationPerformed:false,orbitalSeamTested:false};
+          let browser,server;
+          const ensure=(value,label)=>{if(!value)throw Error(label);receipt.checks.push(label);};
+          const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+          await fs.mkdir(output,{recursive:true});
+          try {
+            for(const [file,want] of Object.entries(expected)){
+              const got=execFileSync('git',['hash-object',file],{encoding:'utf8'}).trim();
+              ensure(got===want,'SOURCE_BLOB_MATCH:'+file);receipt.sourceBlobs[file]=got;
+            }
+            server=http.createServer(async(req,res)=>{
+              try {
+                const url=new URL(req.url,'http://127.0.0.1');
+                let rel=decodeURIComponent(url.pathname).replace(/^\/+/,'');
+                if(!rel||rel.endsWith('/'))rel+='index.html';
+                const file=path.resolve(process.cwd(),rel);
+                if(!file.startsWith(process.cwd()+path.sep))throw Error('INVALID_PATH');
+                const bytes=await fs.readFile(file);
+                res.writeHead(200,{'content-type':file.endsWith('.html')?'text/html':file.endsWith('.js')?'text/javascript':file.endsWith('.svg')?'image/svg+xml':'application/octet-stream'});
+                res.end(bytes);
+              }catch(error){res.writeHead(404).end('Not found');}
+            });
+            await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});
+            browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage','--ignore-gpu-blocklist','--enable-unsafe-swiftshader','--use-angle=swiftshader','--use-gl=angle']});
+            const url='http://127.0.0.1:'+server.address().port+'/nine-summits/universe/';
+            for(const [width,height] of [[960,720],[390,760],[768,1024]]){
+              const page=await browser.newPage(),errors=[],label=width+'x'+height;
+              page.on('pageerror',e=>errors.push('PAGE:'+String(e)));page.on('response',res=>{if(res.status()>=400)receipt.missingRequests.push({viewport:label,status:res.status(),url:res.url()});});
+              page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon.ico'))errors.push('CONSOLE:'+m.text());});
+              await page.setViewport({width,height,deviceScaleFactor:1});
+              await page.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'no-preference'}]);
+              await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
+              await page.waitForSelector('#universe-scene.ready',{timeout:30000});
+              await page.evaluate(()=>{globalThis.__DGB_QUALIFIED_READBACK=()=>{const r=globalThis.DGB_UNIVERSE?.readback?.();if(!r)throw Error('GPU_READBACK_UNAVAILABLE');if(r.glError!==0||(r.world02GLError!=null&&r.world02GLError!==0)||(r.world02WebGL&&r.world02GLError!==0)){globalThis.__DGB_FIRST_GPU_ERROR??={glError:r.glError,world02GLError:r.world02GLError,selected:r.selected,flightStage:r.flightStage};}if(globalThis.__DGB_FIRST_GPU_ERROR)throw Error('GPU_ERROR_LATCHED:'+JSON.stringify(globalThis.__DGB_FIRST_GPU_ERROR));return r;};});
+              await page.evaluate(()=>document.querySelector('#universe-scene')?.scrollIntoView({block:'center',behavior:'instant'}));
+              await page.bringToFront();
+              await page.waitForFunction(()=>globalThis.__DGB_QUALIFIED_READBACK?.()?.orbitActive===true,{timeout:15000});
+              const state=()=>page.evaluate(()=>{const r=globalThis.__DGB_QUALIFIED_READBACK?.(),gl=document.querySelector('#universe-canvas')?.getContext('webgl');return {phase:r?.orbitPhase,active:r?.orbitActive,paused:r?.motionPaused,selected:r?.selected,ordinal:r?.selectedBookOrdinal,flight:r?.flightStage,flightProgress:r?.flight,sceneVisible:r?.sceneVisible,loveGL:r?.world02WebGL,loveError:r?.world02GLError,glVersion:gl?.getParameter(gl.VERSION),glError:r?.glError,lost:gl?.isContextLost(),loveVisible:document.querySelector('#love-world')?.classList.contains('is-visible')};});
+              const shot=async(name)=>{const bytes=await page.screenshot({type:'png',fullPage:false}),file=label+'-'+name+'.png';await fs.writeFile(path.join(output,file),bytes);receipt.captures.push({viewport:label,state:name,file,sha256:sha(bytes),readback:await state()});};
+              const a=await state();ensure(a.glVersion?.includes('WebGL 1.0')&&a.glError===0&&!a.lost,label+':WEBGL1_READY');await shot('orbit-before');
+              await new Promise(resolve=>setTimeout(resolve,1100));const b=await state();ensure(b.phase>a.phase+.001&&b.active,label+':ORBIT_ADVANCES');await shot('orbit-after');
+              await page.click('#toggle-motion');await new Promise(resolve=>setTimeout(resolve,250));const c=await state();await new Promise(resolve=>setTimeout(resolve,500));const d=await state();ensure(c.paused===true&&!d.active&&Math.abs(c.phase-d.phase)<1e-8,label+':PAUSE_HOLDS');
+              await page.click('#toggle-motion');await page.waitForFunction(()=>globalThis.__DGB_QUALIFIED_READBACK?.()?.orbitActive===true,{timeout:10000});await new Promise(resolve=>setTimeout(resolve,700));const e=await state();ensure(e.phase>d.phase,label+':RESUME_ADVANCES');
+              await page.click('#path-list summary');await page.click('button[data-summit="1"]');await page.waitForFunction(()=>globalThis.__DGB_QUALIFIED_READBACK?.()?.selected===1,{timeout:12000});const f=await state();receipt.generositySelectedReadback={viewport:label,state:f,consoleErrors:errors.slice(0,12)};await shot('generosity-selected');ensure(f.ordinal==='II',label+':BOOK_ORDER_II');ensure(f.loveGL===true,label+':GENEROSITY_WEBGL1_INITIALIZATION:'+JSON.stringify(receipt.generositySelectedReadback).slice(0,700));ensure(!f.active,label+':ORBIT_PAUSED_ON_ENTRY');await shot('generosity-approach');
+              await new Promise(resolve=>setTimeout(resolve,4000));receipt.generosityMidFlightReadback=await state();try{await page.waitForFunction(()=>globalThis.__DGB_QUALIFIED_READBACK?.()?.flightStage==='encounter',{timeout:90000});}catch(error){receipt.generosityApproachTimeoutReadback=await state();throw error;}const g=await state();ensure(g.loveVisible===true&&g.loveError===0,label+':GENEROSITY_ENCOUNTER');await shot('generosity-encounter');
+              await page.click('#love-return');receipt.generosityReturnStartedReadback=await state();await new Promise(resolve=>setTimeout(resolve,3500));receipt.generosityReturnMidFlightReadback=await state();try{await page.waitForFunction(()=>globalThis.__DGB_QUALIFIED_READBACK?.()?.selected===-1,{timeout:90000});}catch(error){receipt.generosityReturnTimeoutReadback=await state();throw error;}ensure((await state()).selected===-1,label+':RETURN_TO_NINE');await shot('return');
+              ensure(errors.length===0,label+':NO_PAGE_ERRORS');await page.close();
+            }
+            receipt.result='PASS';
+          }catch(error){receipt.errors.push(String(error?.stack||error));process.exitCode=1;}
+          finally{
+            if(browser)try{await browser.close();}catch{}
+            if(server)await new Promise(resolve=>server.close(resolve));
+            await fs.writeFile(path.join(output,'qualification-receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+            console.log(JSON.stringify({result:receipt.result,checks:receipt.checks.length,captures:receipt.captures.length,errors:receipt.errors.slice(0,1)}));
+          }
+          NODE
+      - name: Preserve GPU screenshots and fail-closed receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nine-summits-active-webgl1-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/nine-active-webgl1
+          if-no-files-found: warn
+          retention-days: 30

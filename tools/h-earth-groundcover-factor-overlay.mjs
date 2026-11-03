@@ -303,7 +303,7 @@ export const REV2_WORLD_SOIL_NUMERIC_MODES=Object.freeze([
 ]);
 export function transformRev2WorldSoilNumericRenderer(original){
  const sourceHash=hash(original);
- if(sourceHash!=='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2')
+ if(sourceHash!==RAVINE_HABITAT_SOURCE_SHA256)
    throw Error('REV2_PUBLISHED_RENDERER_SOURCE_HASH_MISMATCH:'+sourceHash);
  const start=original.indexOf('const FS = '+String.fromCharCode(96)+'#version 300 es');
  const end=original.indexOf('// Ordered screen-door coverage',start);

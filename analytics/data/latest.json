@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-03T16:25:50Z",
+  "generatedAt": "2026-11-03T19:25:58Z",
   "window30d": {
-    "start": "2026-10-04T16:25:50Z",
-    "end": "2026-11-03T16:25:50Z"
+    "start": "2026-10-04T19:25:58Z",
+    "end": "2026-11-03T19:25:58Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-26",
-      "pageLoads": 41
+      "pageLoads": 38
     },
     {
       "date": "2026-10-27",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-11-03",
-      "pageLoads": 21
+      "pageLoads": 24
     }
   ],
   "summary": {
-    "pageLoads": 1846,
-    "botPageLoads": 919,
-    "nonBotPageLoads": 927
+    "pageLoads": 1816,
+    "botPageLoads": 918,
+    "nonBotPageLoads": 898
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1696,
-      "visits": 1696
+      "pageLoads": 1667,
+      "visits": 1667
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 105,
+      "pageLoads": 96,
       "visits": 0
     },
     {
@@ -155,8 +155,8 @@
     },
     {
       "host": "www.facebook.com",
-      "pageLoads": 2,
-      "visits": 2
+      "pageLoads": 10,
+      "visits": 10
     },
     {
       "host": "github.com",
@@ -167,28 +167,28 @@
   "topPages": [
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 674,
-      "visits": 631
+      "pageLoads": 673,
+      "visits": 630
     },
     {
       "path": "/analytics/",
-      "pageLoads": 642,
-      "visits": 642
+      "pageLoads": 641,
+      "visits": 641
     },
     {
       "path": "/",
-      "pageLoads": 90,
-      "visits": 78
+      "pageLoads": 93,
+      "visits": 73
     },
     {
       "path": "/nine-summits/universe/",
-      "pageLoads": 75,
-      "visits": 74
+      "pageLoads": 77,
+      "visits": 76
     },
     {
       "path": "/build/",
-      "pageLoads": 60,
-      "visits": 60
+      "pageLoads": 50,
+      "visits": 50
     },
     {
       "path": "/about/",

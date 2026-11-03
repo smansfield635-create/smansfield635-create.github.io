@@ -428,3 +428,23 @@ test('E9 restores shadow texture after a sampler uniform exception',()=>{
   f.gl.activeTexture(f.gl.TEXTURE0+1);
   assert.equal(f.gl.getParameter(f.gl.TEXTURE_BINDING_2D),original);
 });
+
+
+test('E9 E4 receiver rejects superseded same-target caster receipts before GL state writes',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const f=e9Fixture(backend),lib=createNativeMaterialLibrary(f.device);
+    const material=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS'});
+    const first=f.cast();
+    const binding=bind(lib,material,{cameraPosition:[0,0,4],shadow:{pass:first}});
+    const second=f.cast();
+    const before=f.calls.length;
+    assert.throws(()=>bind(lib,material,{cameraPosition:[0,0,4],shadow:{pass:first}}),
+      /SHADOW_PASS_STALE_TARGET/);
+    assert.throws(()=>binding.beforeDraw(f.gl,binding.program.gpu),
+      /SHADOW_PASS_STALE_TARGET/);
+    assert.equal(f.calls.length,before);
+    const replacement=bind(lib,material,{cameraPosition:[0,0,4],shadow:{pass:second}});
+    replacement.beforeDraw(f.gl,replacement.program.gpu);
+    replacement.afterDraw(f.gl,replacement.program.gpu);
+  }
+});

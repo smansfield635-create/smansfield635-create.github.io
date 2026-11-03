@@ -345,3 +345,54 @@ test('E9 aborted caster draw leaves no active frame and permits a clean retry',(
   f.setDraw(null);
   assert.equal(p.renderShadowDepth(descriptor).executed,1);
 });
+
+
+test('E9 only latest same-target shadow pass remains valid, failed overwrite invalidates both',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const f=e9EnableMatrices(fixture({backend})),p=createNativeFramePipeline(f.device),t=e9Target(f);
+    const mesh=f.mesh('caster');
+    const spec=(lightViewProjection,casters=[{mesh,modelMatrix:E9_ID}])=>({
+      target:t,lightViewProjection,casters,cull:'NONE'});
+    const first=p.renderShadowDepth(spec(E9_ID));
+    assert.equal(inspectNativeShadowPass(first,f.device).lightViewProjection[12],0);
+    const shifted=[...E9_ID];shifted[12]=0.4;
+    const second=p.renderShadowDepth(spec(shifted));
+    assert.throws(()=>inspectNativeShadowPass(first,f.device),/SHADOW_PASS_STALE_TARGET/);
+    assert.ok(Math.abs(inspectNativeShadowPass(second,f.device).lightViewProjection[12]-0.4)<1e-6);
+    // An invalid descriptor is rejected before any target mutation and must
+    // not invalidate an otherwise current pass.
+    assert.throws(()=>p.renderShadowDepth(spec([1,2])),/SHADOW_LIGHT_MATRIX_INVALID/);
+    assert.ok(Math.abs(inspectNativeShadowPass(second,f.device).lightViewProjection[12]-0.4)<1e-6);
+    f.setDraw(()=>{throw new Error('CASTER_GPU_FAILED');});
+    assert.throws(()=>p.renderShadowDepth(spec(E9_ID)),/CASTER_GPU_FAILED/);
+    assert.throws(()=>inspectNativeShadowPass(second,f.device),/SHADOW_PASS_STALE_TARGET/);
+    f.setDraw(null);
+    const recovered=p.renderShadowDepth(spec(E9_ID));
+    assert.equal(inspectNativeShadowPass(recovered,f.device).lightViewProjection[0],1);
+    assert.throws(()=>inspectNativeShadowPass(second,f.device),/SHADOW_PASS_STALE_TARGET/);
+  }
+});
+
+test('E9 inspection cannot mutate private light-space matrix provenance',()=>{
+  const f=e9EnableMatrices(fixture()),p=createNativeFramePipeline(f.device),t=e9Target(f);
+  const input=[...E9_ID];
+  const receipt=p.renderShadowDepth({target:t,lightViewProjection:input,casters:[]});
+  input[0]=13;
+  const inspected=inspectNativeShadowPass(receipt,f.device);
+  assert.equal(inspected.lightViewProjection[0],1);
+  inspected.lightViewProjection[0]=11;
+  inspected.lightViewProjection[12]=9;
+  const again=inspectNativeShadowPass(receipt,f.device);
+  assert.notEqual(again.lightViewProjection,inspected.lightViewProjection);
+  assert.equal(again.lightViewProjection[0],1);
+  assert.equal(again.lightViewProjection[12],0);
+});
+
+test('E9 normal E2 frame invalidates a shadow receipt when reusing sampleable target',()=>{
+  const f=e9EnableMatrices(fixture()),p=createNativeFramePipeline(f.device),t=e9Target(f);
+  const old=p.renderShadowDepth({target:t,lightViewProjection:E9_ID,casters:[]});
+  p.beginFrame({target:t,clear:{color:[0,0,0,1],depth:1},depthMode:'TEST_WRITE',cull:'NONE'});
+  assert.throws(()=>inspectNativeShadowPass(old,f.device),/SHADOW_PASS_STALE_TARGET/);
+  assert.equal(p.endFrame({presentToCanvas:false}).presentation,'OFFSCREEN_ONLY');
+  assert.throws(()=>inspectNativeShadowPass(old,f.device),/SHADOW_PASS_STALE_TARGET/);
+});

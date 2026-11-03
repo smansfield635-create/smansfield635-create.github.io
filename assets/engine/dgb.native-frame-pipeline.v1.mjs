@@ -6,6 +6,9 @@ const instances = new WeakMap();
 // E9 receipts cannot be fabricated: only a completed native depth pass can
 // authorize E4 to sample an E1-owned depth texture on the same device.
 const shadowPasses = new WeakMap();
+// Only the latest completed caster pass can describe a target's current depth contents.
+// A new E2 frame to that sampleable target invalidates prior receipts before GL writes.
+const latestShadowPassByTarget = new WeakMap();
 const shadowMatrix = (value, label) => {
   if ((!Array.isArray(value) && !(value instanceof Float32Array) && !(value instanceof Float64Array)) ||
       value.length !== 16 || !Array.from(value).every(x => typeof x === 'number' && Number.isFinite(x)))
@@ -35,12 +38,14 @@ export function inspectNativeShadowPass(pass, device) {
   const state = device.status();
   if (state.disposed || state.lost || state.restorationError || device.gl.isContextLost?.())
     throw new Error('GRAPHICS_CONTEXT_NOT_READY');
-  if (!record.target.gpu || record.target.gpu !== record.framebuffer ||
+  if (latestShadowPassByTarget.get(record.target) !== pass ||
+      !record.target.gpu || record.target.gpu !== record.framebuffer ||
       !record.target.definition?.depthTexture || !record.target.depthTexture?.gpu ||
       record.target.depthTexture.gpu !== record.depthTexture)
     throw new Error('SHADOW_PASS_STALE_TARGET');
+  // Never export the mutable private matrix to callers or E4 bindings.
   return Object.freeze({ depthTexture: record.depthTexture,
-    lightViewProjection: record.lightViewProjection });
+    lightViewProjection: new Float32Array(record.lightViewProjection) });
 }
 const passes = new Set(['OPAQUE', 'TRANSPARENT']);
 const culls = new Set(['NONE', 'BACK', 'FRONT']);
@@ -168,6 +173,9 @@ export function createNativeFramePipeline(device) {
     assertReady();
     if (active) throw new Error('FRAME_ALREADY_ACTIVE');
     const spec = inspectFrame(specification);
+    // A new frame can clear/write a sampleable depth map. Invalidate its old
+    // caster receipt before binding/clear, including any partially failed frame.
+    if (spec.target?.definition?.depthTexture) latestShadowPassByTarget.delete(spec.target);
     // E1 verifies render-target device ownership before touching the context.
     device.bindRenderTarget(spec.target);
     try {
@@ -319,6 +327,7 @@ export function createNativeFramePipeline(device) {
         submitted: result.submitted, executed: result.executed, presentation: result.presentation });
       shadowPasses.set(receipt, { device, target, framebuffer: target.gpu,
         depthTexture: target.depthTexture.gpu, lightViewProjection: light });
+      latestShadowPassByTarget.set(target, receipt);
       return receipt;
     } catch (error) {
       if (active) {

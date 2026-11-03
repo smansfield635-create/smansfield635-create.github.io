@@ -20,7 +20,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: publication-preflight-${{ inputs.surface_id }}-${{ inputs.target_sha }}
+  group: publication-preflight-${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.event.pull_request.head.sha) || format('{0}-{1}', inputs.surface_id, inputs.target_sha) }}
   cancel-in-progress: false
 
 jobs:
@@ -391,7 +391,7 @@ jobs:
               await page.evaluate(()=>document.querySelector('#universe-scene')?.scrollIntoView({block:'center',behavior:'instant'}));
               await page.bringToFront();
               await page.waitForFunction(()=>globalThis.DGB_UNIVERSE?.readback?.()?.orbitActive===true,{timeout:15000});
-              const state=()=>page.evaluate(()=>{const r=globalThis.DGB_UNIVERSE?.readback?.(),gl=document.querySelector('#universe-canvas')?.getContext('webgl');return {phase:r?.orbitPhase,active:r?.orbitActive,paused:r?.motionPaused,selected:r?.selected,ordinal:r?.selectedBookOrdinal,flight:r?.flightStage,flightProgress:r?.flight,sceneVisible:r?.sceneVisible,loveGL:r?.world02WebGL,loveError:r?.world02GLError,glVersion:gl?.getParameter(gl.VERSION),glError:gl?.getError(),lost:gl?.isContextLost(),loveVisible:document.querySelector('#love-world')?.classList.contains('is-visible')};});
+              const state=()=>page.evaluate(()=>{const r=globalThis.DGB_UNIVERSE?.readback?.(),gl=document.querySelector('#universe-canvas')?.getContext('webgl');return {phase:r?.orbitPhase,active:r?.orbitActive,paused:r?.motionPaused,selected:r?.selected,ordinal:r?.selectedBookOrdinal,flight:r?.flightStage,flightProgress:r?.flight,sceneVisible:r?.sceneVisible,loveGL:r?.world02WebGL,loveError:r?.world02GLError,glVersion:gl?.getParameter(gl.VERSION),glError:r?.glError,lost:gl?.isContextLost(),loveVisible:document.querySelector('#love-world')?.classList.contains('is-visible')};});
               const shot=async(name)=>{const bytes=await page.screenshot({type:'png',fullPage:false}),file=label+'-'+name+'.png';await fs.writeFile(path.join(output,file),bytes);receipt.captures.push({viewport:label,state:name,file,sha256:sha(bytes),readback:await state()});};
               const a=await state();ensure(a.glVersion?.includes('WebGL 1.0')&&a.glError===0&&!a.lost,label+':WEBGL1_READY');await shot('orbit-before');
               await new Promise(resolve=>setTimeout(resolve,1100));const b=await state();ensure(b.phase>a.phase+.001&&b.active,label+':ORBIT_ADVANCES');await shot('orbit-after');

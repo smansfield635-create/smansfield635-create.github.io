@@ -384,3 +384,121 @@ export function transformRev2WorldSoilNumericRenderer(original){
   driverSelectedMipObserved:false,noOriginalTWhenWZero:true,
   requiresRgba32f:true,productionMutation:false,gpuExecuted:false});
 }
+
+
+// REV2 diagnostic-only floating color/depth target. This function is NOT
+// called by the production renderer or current GPU runner. It is a bounded
+// construction prerequisite for separately verified mode-draw integration.
+export function createRev2Rgba32fTarget(gl,{width=529,height=980}={}){
+ const fail=reason=>{throw Error('REV2_FLOAT_'+reason);};
+ const required=['getExtension','getError','getParameter','activeTexture','bindTexture',
+  'createTexture','texStorage2D','texParameteri','createFramebuffer','bindFramebuffer',
+  'framebufferTexture2D','createRenderbuffer','bindRenderbuffer','renderbufferStorage',
+  'framebufferRenderbuffer','checkFramebufferStatus','viewport','readPixels'];
+ if(!gl||required.some(n=>typeof gl[n]!=='function'))fail('WEBGL2_INTERFACE_INCOMPLETE');
+ if(width!==529||height!==980)fail('VIEWPORT_NOT_FROZEN');
+ if(gl.getError()!==gl.NO_ERROR)fail('PREEXISTING_GL_ERROR');
+ if(!gl.getExtension('EXT_color_buffer_float'))fail('EXT_COLOR_BUFFER_FLOAT_UNAVAILABLE');
+ const saved=()=>({
+  framebuffer:gl.getParameter(gl.FRAMEBUFFER_BINDING),
+  renderbuffer:gl.getParameter(gl.RENDERBUFFER_BINDING),
+  activeTexture:gl.getParameter(gl.ACTIVE_TEXTURE),
+  viewport:[...gl.getParameter(gl.VIEWPORT)]
+ });
+ const restore=s=>{
+  gl.bindFramebuffer(gl.FRAMEBUFFER,s.framebuffer);
+  gl.bindRenderbuffer(gl.RENDERBUFFER,s.renderbuffer);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D,s.texture0);
+  gl.activeTexture(s.activeTexture);
+  gl.viewport(...s.viewport);
+ };
+ const initial=saved();
+ gl.activeTexture(gl.TEXTURE0);
+ initial.texture0=gl.getParameter(gl.TEXTURE_BINDING_2D);
+ let texture=null,depth=null,framebuffer=null,disposed=false;
+ try{
+  texture=gl.createTexture();
+  depth=gl.createRenderbuffer();
+  framebuffer=gl.createFramebuffer();
+  if(!texture||!depth||!framebuffer)fail('ALLOCATE_FAILED');
+  gl.bindTexture(gl.TEXTURE_2D,texture);
+  gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA32F,width,height);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+  gl.bindRenderbuffer(gl.RENDERBUFFER,depth);
+  gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT24,width,height);
+  gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,texture,0);
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,depth);
+  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)
+    fail('FRAMEBUFFER_INCOMPLETE');
+  if(gl.getError()!==gl.NO_ERROR)fail('FRAMEBUFFER_GL_ERROR');
+ }catch(error){
+  // Never leave an incomplete diagnostic attachment installed.
+  if(framebuffer)gl.deleteFramebuffer?.(framebuffer);
+  if(depth)gl.deleteRenderbuffer?.(depth);
+  if(texture)gl.deleteTexture?.(texture);
+  throw error;
+ }finally{restore(initial);}
+ const bind=()=>{
+  if(disposed)fail('DISPOSED');
+  gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);
+  gl.viewport(0,0,width,height);
+  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)
+   fail('FRAMEBUFFER_INCOMPLETE');
+  if(gl.getError()!==gl.NO_ERROR)fail('BIND_GL_ERROR');
+ };
+ const checkReadState=()=>{
+  if(gl.getParameter(gl.FRAMEBUFFER_BINDING)!==framebuffer)
+   fail('DRAW_FRAMEBUFFER_DRIFT');
+  const viewport=[...gl.getParameter(gl.VIEWPORT)];
+  if(viewport.length!==4||viewport.some((v,i)=>v!==[0,0,width,height][i]))
+   fail('DRAW_VIEWPORT_DRIFT');
+ };
+ const read=(x,y,w,h)=>{
+  if(![x,y,w,h].every(Number.isInteger)||w<1||h<1||x<0||y<0||
+     x+w>width||y+h>height)fail('PIXEL_BOUNDS');
+  checkReadState();
+  const floats=new Float32Array(w*h*4);
+  gl.readPixels(x,y,w,h,gl.RGBA,gl.FLOAT,floats);
+  if(gl.getError()!==gl.NO_ERROR)fail('READPIXELS_GL_ERROR');
+  if(floats.some(v=>!Number.isFinite(v)))fail('READPIXELS_NONFINITE');
+  return floats;
+ };
+ const capture=(draw,regions)=>{
+  if(typeof draw!=='function'||!Array.isArray(regions)||regions.length<1||
+     regions.some(r=>!r||!Array.isArray(r)||r.length!==4))fail('CAPTURE_ARGUMENTS');
+  const prior=saved();
+  try{
+   bind();
+   draw();
+   return Object.freeze(regions.map(([x,y,w,h])=>read(x,y,w,h)));
+  }finally{
+   // Draw code may have changed the active texture; recover the original
+   // binding without changing the published renderer's persistent resources.
+   gl.activeTexture(gl.TEXTURE0);
+   prior.texture0=gl.getParameter(gl.TEXTURE_BINDING_2D);
+   restore(prior);
+  }
+ };
+ const dispose=()=>{
+  if(disposed)return;
+  const prior=saved();
+  try{
+   gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+   gl.deleteFramebuffer(framebuffer);
+   gl.deleteRenderbuffer(depth);
+   gl.deleteTexture(texture);
+   disposed=true;
+  }finally{
+   // Caller must not delete while the diagnostic target is actively bound.
+   gl.bindFramebuffer(gl.FRAMEBUFFER,prior.framebuffer===framebuffer?null:prior.framebuffer);
+   gl.bindRenderbuffer(gl.RENDERBUFFER,prior.renderbuffer===depth?null:prior.renderbuffer);
+   gl.viewport(...prior.viewport);
+  }
+ };
+ return Object.freeze({width,height,framebuffer,capture,dispose,
+  schema:'H_EARTH_REV2_RGBA32F_TARGET_SOURCE_v1',
+  calibrated:false,gpuExecuted:false,productionMutation:false});
+}

@@ -277,7 +277,7 @@ export function createNativeWebGLDevice(canvas, {
     const actualCount = count === null ? max - first : count;
     if (!Number.isInteger(actualCount) || actualCount <= 0 || first + actualCount > max) throw new TypeError('DRAW_RANGE_INVALID');
     const enabled = [];
-    let drawError = null;
+    let drawFailed = false;
     gl.useProgram(program.gpu);
     try {
       for (const attr of mesh.gpu.attributes) {
@@ -297,15 +297,18 @@ export function createNativeWebGLDevice(canvas, {
         gl.drawElements(mode, actualCount, mesh.gpu.indexType, first * size);
       } else gl.drawArrays(mode, first, actualCount);
     } catch (error) {
-      drawError = error;
+      drawFailed = true;
       throw error;
     } finally {
-      let cleanupError = null;
-      // Preserve the primary draw failure; always release material state on draw failure.
+      let cleanupError, cleanupFailed = false;
+      // Cleanup failures never mask the primary draw exception; attempt every attribute release.
       try { if (afterDraw && !gl.isContextLost?.()) afterDraw(gl, program.gpu); }
-      catch (error) { cleanupError = error; }
-      finally { for (const loc of enabled) gl.disableVertexAttribArray(loc); }
-      if (cleanupError && !drawError) throw cleanupError;
+      catch (error) { cleanupError = error; cleanupFailed = true; }
+      for (const loc of enabled) {
+        try { gl.disableVertexAttribArray(loc); }
+        catch (error) { if (!cleanupFailed) { cleanupError = error; cleanupFailed = true; } }
+      }
+      if (cleanupFailed && !drawFailed) throw cleanupError;
     }
     return { backend, indexed: Boolean(mesh.gpu.index), verticesOrIndices: actualCount };
   }

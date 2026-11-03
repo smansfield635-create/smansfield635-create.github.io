@@ -3,7 +3,7 @@
  * frame scheduler, consumer shaders, asset loader or color-management claim.
  * RGB math is linear numeric; straight alpha; canvas transfer conversion not provided.
  */
-const KINDS = new Set(['UNLIT','TEXTURED','LIT']);
+const KINDS = new Set(['UNLIT','TEXTURED','LIT','LIT_SPECULAR']);
 const finite = x => typeof x === 'number' && Number.isFinite(x);
 const vec = (a,n,label,lower=-Infinity,upper=Infinity) => {
   if (!Array.isArray(a) || a.length !== n || !a.every(x=>finite(x) && x>=lower && x<=upper))
@@ -32,20 +32,30 @@ const shader = (kind,backend) => {
   const vIn=two?'in':'attribute', vOut=two?'out':'varying', fIn=two?'in':'varying';
   const fragOut=two?'out vec4 outColor;\n':'', write=two?'outColor':'gl_FragColor';
   const tex=two?'texture':'texture2D';
+  const lit=kind==='LIT'||kind==='LIT_SPECULAR',specular=kind==='LIT_SPECULAR';
   const vertexSource = head+
     `${vIn} vec3 aPosition;\nuniform mat4 uMVP;\n`+
     (kind==='TEXTURED'?`${vIn} vec2 aUV;\n${vOut} vec2 vUV;\n`:'')+
-    (kind==='LIT'?`${vIn} vec3 aNormal;\n${vOut} vec3 vNormal;\nuniform mat3 uNormalMatrix;\n`:'')+
+    (lit?`${vIn} vec3 aNormal;\n${vOut} vec3 vNormal;\nuniform mat3 uNormalMatrix;\n`:'')+
+    (specular?`${vOut} vec3 vWorldPosition;\nuniform mat4 uModel;\n`:'')+
     `void main(){gl_Position=uMVP*vec4(aPosition,1.0);`+
     (kind==='TEXTURED'?'vUV=aUV;':'')+
-    (kind==='LIT'?'vNormal=normalize(uNormalMatrix*aNormal);':'')+'}\n';
+    (lit?'vNormal=normalize(uNormalMatrix*aNormal);':'')+
+    (specular?'vWorldPosition=(uModel*vec4(aPosition,1.0)).xyz;':'')+'}\n';
   const fragmentSource = head+'precision highp float;\n'+
     (kind==='TEXTURED'?`${fIn} vec2 vUV;\nuniform sampler2D uTexture;\n`:'')+
-    (kind==='LIT'?`${fIn} vec3 vNormal;\nuniform vec3 uLightDirection;\nuniform vec3 uLightColor;\nuniform float uLightIntensity;\nuniform float uAmbient;\n`:'')+
+    (lit?`${fIn} vec3 vNormal;\nuniform vec3 uLightDirection;\nuniform vec3 uLightColor;\nuniform float uLightIntensity;\nuniform float uAmbient;\n`:'')+
+    (specular?`${fIn} vec3 vWorldPosition;\nuniform vec3 uCameraPosition;\nuniform vec3 uSkyColor;\nuniform vec3 uGroundColor;\nuniform float uFillIntensity;\nuniform float uSpecularStrength;\nuniform float uShininess;\n`:'')+
     'uniform vec4 uBaseColor;\n'+fragOut+
     `void main(){vec4 c=uBaseColor;`+
     (kind==='TEXTURED'?`c*=${tex}(uTexture,vUV);`:'')+
     (kind==='LIT'?'float lambert=max(dot(normalize(vNormal),uLightDirection),0.0);c.rgb*=clamp(vec3(uAmbient)+uLightColor*(uLightIntensity*lambert),0.0,1.0);':'')+
+    (specular?'vec3 n=normalize(vNormal);vec3 l=normalize(uLightDirection);float ndl=max(dot(n,l),0.0);'+
+      'float sky=clamp(n.y*0.5+0.5,0.0,1.0);vec3 fill=mix(uGroundColor,uSkyColor,sky)*uFillIntensity;'+
+      'vec3 v=normalize(uCameraPosition-vWorldPosition);vec3 h=normalize(l+v);'+
+      'float highlight=ndl>0.0?pow(max(dot(n,h),0.0),uShininess)*uSpecularStrength:0.0;'+
+      'c.rgb=c.rgb*clamp(vec3(uAmbient)+fill+uLightColor*(uLightIntensity*ndl),0.0,1.0)'+
+      '+uLightColor*(uLightIntensity*highlight);':'')+
     `${write}=clamp(c,0.0,1.0);}\n`;
   return {vertexSource,fragmentSource};
 };
@@ -70,7 +80,7 @@ export function createNativeMaterialLibrary(device) {
       if(!texture || !ownedTextures.has(texture) || !texture.gpu)throw new TypeError('LIBRARY_OWNED_TEXTURE_REQUIRED');
     }else if(texture!==null)throw new TypeError('TEXTURE_NOT_ALLOWED');
     let lighting=null;
-    if(kind==='LIT'){
+    if(kind==='LIT'||kind==='LIT_SPECULAR'){
       const l=light??{};
       const direction=vec(l.direction??[0,0,1],3,'LIGHT_DIRECTION');
       const norm=Math.hypot(...direction);
@@ -78,15 +88,29 @@ export function createNativeMaterialLibrary(device) {
       const ambient=l.ambient??0.15,intensity=l.intensity??0.85;
       if(!finite(ambient)||ambient<0||ambient>1)throw new TypeError('AMBIENT_INVALID');
       if(!finite(intensity)||intensity<0||intensity>1)throw new TypeError('LIGHT_INTENSITY_INVALID');
-      lighting=Object.freeze({direction:Object.freeze(direction.map(x=>x/norm)),color:Object.freeze(vec(l.color??[1,1,1],3,'LIGHT_COLOR',0,1)),ambient,intensity});
+      const extra={};
+      if(kind==='LIT_SPECULAR'){
+        const fillIntensity=l.fillIntensity??0.45,specularStrength=l.specularStrength??0.55,shininess=l.shininess??48;
+        if(!finite(fillIntensity)||fillIntensity<0||fillIntensity>1)throw new TypeError('FILL_INTENSITY_INVALID');
+        if(!finite(specularStrength)||specularStrength<0||specularStrength>1)throw new TypeError('SPECULAR_STRENGTH_INVALID');
+        if(!finite(shininess)||shininess<1||shininess>256)throw new TypeError('SHININESS_INVALID');
+        extra.skyColor=Object.freeze(vec(l.skyColor??[0.24,0.36,0.55],3,'SKY_COLOR',0,1));
+        extra.groundColor=Object.freeze(vec(l.groundColor??[0.16,0.10,0.07],3,'GROUND_COLOR',0,1));
+        extra.fillIntensity=fillIntensity;extra.specularStrength=specularStrength;extra.shininess=shininess;
+      }
+      lighting=Object.freeze({direction:Object.freeze(direction.map(x=>x/norm)),color:Object.freeze(vec(l.color??[1,1,1],3,'LIGHT_COLOR',0,1)),ambient,intensity,...extra});
     }else if(light!==null)throw new TypeError('LIGHT_NOT_ALLOWED');
     const material=Object.freeze({kind,baseColor:Object.freeze(color),texture,textureEncoding,light:lighting});
     materials.add(material);return material;
   }
-  function makeDrawBinding(material,{modelMatrix,modelViewProjection}={}){
+  function makeDrawBinding(material,{modelMatrix,modelViewProjection,cameraPosition}={}){
     ready();if(!material || !materials.has(material))throw new TypeError('FOREIGN_MATERIAL');
     const mvp=matrix(modelViewProjection,'MVP_MATRIX');
-    const normal=material.kind==='LIT'?normalMatrix(matrix(modelMatrix,'MODEL_MATRIX')):null;
+    const lit=material.kind==='LIT'||material.kind==='LIT_SPECULAR';
+    const model=lit?matrix(modelMatrix,'MODEL_MATRIX'):null;
+    const normal=lit?normalMatrix(model):null;
+    // In world space, cameraPosition is required for correct view-dependent highlights.
+    const camera=material.kind==='LIT_SPECULAR'?vec(cameraPosition,3,'CAMERA_POSITION'):null;
     let program=programs.get(material.kind);
     if(!program){program=device.createProgram(shader(material.kind,device.backend));programs.set(material.kind,program);}
     const glTexture=material.texture;
@@ -98,7 +122,8 @@ export function createNativeMaterialLibrary(device) {
       if(material.kind==='TEXTURED' && !glTexture.gpu)throw new Error('MATERIAL_TEXTURE_UNAVAILABLE');
       const uniformNames=['uMVP','uBaseColor',
         ...(material.kind==='TEXTURED'?['uTexture']:[]),
-        ...(material.kind==='LIT'?['uNormalMatrix','uLightDirection','uLightColor','uLightIntensity','uAmbient']:[])];
+        ...(lit?['uNormalMatrix','uLightDirection','uLightColor','uLightIntensity','uAmbient']:[]),
+        ...(material.kind==='LIT_SPECULAR'?['uModel','uCameraPosition','uSkyColor','uGroundColor','uFillIntensity','uSpecularStrength','uShininess']:[])];
       const uniformLocations=new Map();
       for(const name of uniformNames){
         const location=context.getUniformLocation(programHandle,name);
@@ -115,12 +140,18 @@ export function createNativeMaterialLibrary(device) {
         context.bindTexture(context.TEXTURE_2D,glTexture.gpu);
         context.uniform1i(uniformLocations.get('uTexture'),0);
       }
-      if(material.kind==='LIT'){
+      if(lit){
         const values=[['uNormalMatrix',normal,'uniformMatrix3fv'],['uLightDirection',material.light.direction,'uniform3fv'],
           ['uLightColor',material.light.color,'uniform3fv'],['uLightIntensity',material.light.intensity,'uniform1f'],
           ['uAmbient',material.light.ambient,'uniform1f']];
+        if(material.kind==='LIT_SPECULAR')values.push(
+          ['uModel',model,'uniformMatrix4fv'],['uCameraPosition',camera,'uniform3fv'],
+          ['uSkyColor',material.light.skyColor,'uniform3fv'],['uGroundColor',material.light.groundColor,'uniform3fv'],
+          ['uFillIntensity',material.light.fillIntensity,'uniform1f'],
+          ['uSpecularStrength',material.light.specularStrength,'uniform1f'],
+          ['uShininess',material.light.shininess,'uniform1f']);
         for(const [name,value,method] of values){
-          if(method==='uniformMatrix3fv')context[method](uniformLocations.get(name),false,value);
+          if(method==='uniformMatrix3fv'||method==='uniformMatrix4fv')context[method](uniformLocations.get(name),false,value);
           else context[method](uniformLocations.get(name),value);
         }
       }

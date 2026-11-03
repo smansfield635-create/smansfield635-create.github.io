@@ -52,6 +52,7 @@ jobs:
             /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
             /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs
             /tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
+            /tools/operation-intake/owner-pr-bridge-proof.v1.mjs
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -109,6 +110,7 @@ jobs:
             /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.mjs
             /tools/operation-intake/remote-operation-terminal-closure-bridge.v1.test.mjs
             /tools/operation-intake/repository-operation-lock-manager.v1.remote-receipt.test.mjs
+            /tools/operation-intake/owner-pr-bridge-proof.v1.mjs
       - uses: actions/setup-node@v4
         with:
           node-version: 22

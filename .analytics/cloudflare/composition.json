@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-03T15:26:15Z",
+  "generatedAt": "2026-11-03T16:25:50Z",
   "window": {
-    "start": "2026-10-04T15:26:15Z",
-    "end": "2026-11-03T15:26:15Z"
+    "start": "2026-10-04T16:25:50Z",
+    "end": "2026-11-03T16:25:50Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 675,
-        "visits": 632
+        "pageLoads": 674,
+        "visits": 631
       },
       {
         "value": "/analytics/",
-        "pageLoads": 641,
-        "visits": 641
+        "pageLoads": 642,
+        "visits": 642
       },
       {
         "value": "/",

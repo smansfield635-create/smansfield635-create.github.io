@@ -98,6 +98,19 @@ test('submit requires active E2 pipeline and matrix binder, forwards uniforms wi
  assert.equal(packets.length,1);packets[0].beforeDraw({tag:'GL'},{tag:'program'});
  near(bound.modelMatrix[14],-4);assert.ok(bound.modelViewProjection instanceof Float32Array);assert.equal(legacyCalled,1);
 });
+
+test('E3 forwards scoped afterDraw to the E2 command without changing matrix callbacks',()=>{
+ const {s,cam}=base(),n=s.createNode({position:[0,0,-5]}),calls=[],submitted=[];
+ const spec=draw();
+ assert.throws(()=>s.setRenderable(n,{...spec,afterDraw:5}),/AFTER_DRAW_INVALID/);
+ s.setRenderable(n,{...spec,beforeDraw:()=>calls.push('before'),afterDraw:()=>calls.push('after')});
+ const pipeline={status:()=>({active:true}),submit:cmd=>submitted.push(cmd)};
+ assert.equal(s.submit(pipeline,cam,{bindMatrices:()=>calls.push('matrix')}).submitted,1);
+ assert.equal(submitted.length,1);
+ submitted[0].beforeDraw({},{});submitted[0].afterDraw({},{});
+ assert.deepEqual(calls,['matrix','before','after']);
+});
+
 test('remove subtree, camera visibility and dispose fail closed',()=>{
  const {s,cam}=base(),root=s.createNode({position:[0,0,-5]}),child=s.createNode({parent:root});s.setRenderable(child,draw());
  assert.equal(s.collect(cam).visible,1);s.removeNode(root);assert.equal(s.collect(cam).visible,0);

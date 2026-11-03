@@ -123,7 +123,7 @@ export function createNativeSpatialScene() {
   }
   function setVisibility(node,visible){const d=get(node);if(typeof visible!=='boolean')throw new TypeError('VISIBILITY_INVALID');d.visible=visible;return node;}
   function setLayers(node,layers){get(node).layers=mask(layers);return node;}
-  function setRenderable(node,{program,mesh,pass='OPAQUE',cull='NONE',bounds,first=0,count=null,beforeDraw=null}={}){
+  function setRenderable(node,{program,mesh,pass='OPAQUE',cull='NONE',bounds,first=0,count=null,beforeDraw=null,afterDraw=null}={}){
     const d=get(node);
     if(d.camera)throw new TypeError('CAMERA_NOT_RENDERABLE');
     if(!['OPAQUE','TRANSPARENT'].includes(pass)||!['NONE','BACK','FRONT'].includes(cull))throw new TypeError('DRAW_SETTINGS_INVALID');
@@ -132,7 +132,8 @@ export function createNativeSpatialScene() {
     const center=vec(bounds.center,3,'BOUNDING_CENTER');
     if(!Number.isInteger(first)||first<0||count!==null&&(!Number.isInteger(count)||count<1))throw new TypeError('DRAW_RANGE_INVALID');
     if(beforeDraw!==null&&typeof beforeDraw!=='function')throw new TypeError('BEFORE_DRAW_INVALID');
-    d.renderable={program,mesh,pass,cull,bounds:{center,radius:bounds.radius},first,count,beforeDraw};return node;
+    if(afterDraw!==null&&typeof afterDraw!=='function')throw new TypeError('AFTER_DRAW_INVALID');
+    d.renderable={program,mesh,pass,cull,bounds:{center,radius:bounds.radius},first,count,beforeDraw,afterDraw};return node;
   }
   function removeNode(node){const d=get(node);removeFrom(d.parent===null?roots:get(d.parent).children,node);function remove(n){const x=internals.get(n);for(const c of x.children)remove(c);all.delete(n);internals.delete(n);}remove(node);}
   function collect(cameraNode){
@@ -153,7 +154,7 @@ export function createNativeSpatialScene() {
       if(!inside(planes6,center,radius)){culled++;continue;}
       const md=multiply(view,m),mvp=multiply(proj,md),local=transformPoint(md,sphere.center);
       const r=d.renderable;
-      sceneCommands.push(Object.freeze({node:n,pass:r.pass,cull:r.cull,program:r.program,mesh:r.mesh,first:r.first,count:r.count,beforeDraw:r.beforeDraw,depthKey:r.pass==='TRANSPARENT'?Math.max(0,-local[2]):null,modelMatrix:detached(m),modelViewProjection:detached(mvp)}));
+      sceneCommands.push(Object.freeze({node:n,pass:r.pass,cull:r.cull,program:r.program,mesh:r.mesh,first:r.first,count:r.count,beforeDraw:r.beforeDraw,afterDraw:r.afterDraw,depthKey:r.pass==='TRANSPARENT'?Math.max(0,-local[2]):null,modelMatrix:detached(m),modelViewProjection:detached(mvp)}));
     }
     collectionCount++;
     return Object.freeze({viewMatrix:detached(view),projectionMatrix:detached(proj),viewProjectionMatrix:detached(vp),commands:Object.freeze(sceneCommands),considered,culled,visible:sceneCommands.length});
@@ -163,11 +164,11 @@ export function createNativeSpatialScene() {
     if(typeof bindMatrices!=='function')throw new TypeError('MATRIX_BINDING_REQUIRED');
     const result=collect(cameraNode);
     for(const command of result.commands){
-      const {program,mesh,first,count,pass,cull,depthKey,modelMatrix,modelViewProjection,beforeDraw}=command;
+      const {program,mesh,first,count,pass,cull,depthKey,modelMatrix,modelViewProjection,beforeDraw,afterDraw}=command;
       pipeline.submit({program,mesh,first,count,pass,cull,depthKey,beforeDraw(gl,programHandle){
         bindMatrices({gl,programHandle,modelMatrix:new Float32Array(modelMatrix),viewMatrix:new Float32Array(result.viewMatrix),projectionMatrix:new Float32Array(result.projectionMatrix),modelViewProjection:new Float32Array(modelViewProjection)});
         if(beforeDraw)beforeDraw(gl,programHandle);
-      }});
+      },afterDraw});
     }
     return Object.freeze({submitted:result.visible,considered:result.considered,culled:result.culled});
   }

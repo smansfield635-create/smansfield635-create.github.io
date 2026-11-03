@@ -138,7 +138,7 @@ export function createNativeFramePipeline(device) {
     if (!active) throw new Error('FRAME_NOT_ACTIVE');
     if (!input || typeof input !== 'object' || Array.isArray(input)) throw new TypeError('DRAW_DESCRIPTOR_REQUIRED');
     const { pass = 'OPAQUE', program, mesh, first = 0, count = null,
-      beforeDraw = null, depthKey = null, cull = active.cull } = input;
+      beforeDraw = null, afterDraw = null, depthKey = null, cull = active.cull } = input;
     if (!passes.has(pass)) throw new TypeError('DRAW_PASS_INVALID');
     if (!culls.has(cull)) throw new TypeError('FACE_CULL_INVALID');
     if (!program?.gpu || !mesh?.gpu) throw new TypeError('DRAW_GPU_RESOURCES_REQUIRED');
@@ -147,9 +147,10 @@ export function createNativeFramePipeline(device) {
     const n = count === null ? max - first : count;
     if (!Number.isInteger(n) || n < 1 || !Number.isInteger(max) || first + n > max) throw new TypeError('DRAW_RANGE_INVALID');
     if (beforeDraw !== null && typeof beforeDraw !== 'function') throw new TypeError('BEFORE_DRAW_INVALID');
+    if (afterDraw !== null && typeof afterDraw !== 'function') throw new TypeError('AFTER_DRAW_INVALID');
     if (pass === 'TRANSPARENT' && (!numeric(depthKey) || depthKey < 0)) throw new TypeError('TRANSPARENT_DEPTH_KEY_REQUIRED');
     if (pass === 'OPAQUE' && depthKey !== null) throw new TypeError('OPAQUE_DEPTH_KEY_FORBIDDEN');
-    active.commands.push({ pass, program, mesh, first, count, beforeDraw, cull, depthKey, order: active.commands.length });
+    active.commands.push({ pass, program, mesh, first, count, beforeDraw, afterDraw, cull, depthKey, order: active.commands.length });
     submitted++;
     return submitted;
   }
@@ -166,7 +167,7 @@ export function createNativeFramePipeline(device) {
       for (const cmd of ordered) {
         setPass(cmd.pass, frame.depthMode); setCull(cmd.cull);
         device.draw({ program: cmd.program, mesh: cmd.mesh, first: cmd.first, count: cmd.count,
-          beforeDraw: cmd.beforeDraw ?? undefined });
+          beforeDraw: cmd.beforeDraw ?? undefined, afterDraw: cmd.afterDraw ?? undefined });
         if (gl.isContextLost?.()) throw new Error('GRAPHICS_CONTEXT_LOST_DURING_FRAME');
         executed++;
       }

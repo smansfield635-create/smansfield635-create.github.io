@@ -90,6 +90,7 @@ export function createNativeMaterialLibrary(device) {
     let program=programs.get(material.kind);
     if(!program){program=device.createProgram(shader(material.kind,device.backend));programs.set(material.kind,program);}
     const glTexture=material.texture;
+    let priorTextureState = null;
     return Object.freeze({program,beforeDraw(context,programHandle){
       ready();if(context!==gl || programHandle!==program.gpu)throw new TypeError('MATERIAL_PROGRAM_CONTEXT_MISMATCH');
       // Resolve and validate every required uniform BEFORE any GL-state mutation.
@@ -107,10 +108,12 @@ export function createNativeMaterialLibrary(device) {
       context.uniformMatrix4fv(uniformLocations.get('uMVP'),false,mvp);
       context.uniform4fv(uniformLocations.get('uBaseColor'),material.baseColor);
       if(material.kind==='TEXTURED'){
+        const active=context.getParameter?.(context.ACTIVE_TEXTURE) ?? context.TEXTURE0;
         context.activeTexture(context.TEXTURE0);
+        const previous=context.getParameter?.(context.TEXTURE_BINDING_2D) ?? null;
+        priorTextureState={active,previous};
         context.bindTexture(context.TEXTURE_2D,glTexture.gpu);
         context.uniform1i(uniformLocations.get('uTexture'),0);
-        // E2/E1 do not expose afterDraw. Texture unit 0 binding survives until next draw/frame.
       }
       if(material.kind==='LIT'){
         const values=[['uNormalMatrix',normal,'uniformMatrix3fv'],['uLightDirection',material.light.direction,'uniform3fv'],
@@ -121,6 +124,14 @@ export function createNativeMaterialLibrary(device) {
           else context[method](uniformLocations.get(name),value);
         }
       }
+    },afterDraw(context,programHandle){
+      if(material.kind!=='TEXTURED'||priorTextureState===null)return;
+      if(context!==gl||programHandle!==program.gpu)throw new TypeError('MATERIAL_PROGRAM_CONTEXT_MISMATCH');
+      if(context.isContextLost?.()){priorTextureState=null;return;}
+      const snapshot=priorTextureState;priorTextureState=null;
+      context.activeTexture(context.TEXTURE0);
+      try { context.bindTexture(context.TEXTURE_2D,snapshot.previous); }
+      finally { context.activeTexture(snapshot.active); }
     }});
   }
   return Object.freeze({createTexture2D,createMaterial,makeDrawBinding,

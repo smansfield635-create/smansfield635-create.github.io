@@ -267,15 +267,17 @@ export function createNativeWebGLDevice(canvas, {
     meshes.add(record);
     return record;
   }
-  function draw({ program, mesh, mode = gl.TRIANGLES, first = 0, count = null, beforeDraw } = {}) {
+  function draw({ program, mesh, mode = gl.TRIANGLES, first = 0, count = null, beforeDraw, afterDraw } = {}) {
     assertActive();
     requireOwned(programs, program, 'PROGRAM');
     requireOwned(meshes, mesh, 'MESH');
+    if (afterDraw != null && typeof afterDraw !== 'function') throw new TypeError('AFTER_DRAW_INVALID');
     if (!Number.isInteger(first) || first < 0) throw new TypeError('FIRST_VERTEX_INVALID');
     const max = mesh.definition.indices ? mesh.definition.indices.length : mesh.definition.vertexCount;
     const actualCount = count === null ? max - first : count;
     if (!Number.isInteger(actualCount) || actualCount <= 0 || first + actualCount > max) throw new TypeError('DRAW_RANGE_INVALID');
     const enabled = [];
+    let drawFailed = false;
     gl.useProgram(program.gpu);
     try {
       for (const attr of mesh.gpu.attributes) {
@@ -294,8 +296,19 @@ export function createNativeWebGLDevice(canvas, {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.gpu.index);
         gl.drawElements(mode, actualCount, mesh.gpu.indexType, first * size);
       } else gl.drawArrays(mode, first, actualCount);
+    } catch (error) {
+      drawFailed = true;
+      throw error;
     } finally {
-      for (const loc of enabled) gl.disableVertexAttribArray(loc);
+      let cleanupError, cleanupFailed = false;
+      // Cleanup failures never mask the primary draw exception; attempt every attribute release.
+      try { if (afterDraw && !gl.isContextLost?.()) afterDraw(gl, program.gpu); }
+      catch (error) { cleanupError = error; cleanupFailed = true; }
+      for (const loc of enabled) {
+        try { gl.disableVertexAttribArray(loc); }
+        catch (error) { if (!cleanupFailed) { cleanupError = error; cleanupFailed = true; } }
+      }
+      if (cleanupFailed && !drawFailed) throw cleanupError;
     }
     return { backend, indexed: Boolean(mesh.gpu.index), verticesOrIndices: actualCount };
   }

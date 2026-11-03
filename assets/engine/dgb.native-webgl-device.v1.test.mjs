@@ -100,6 +100,19 @@ test('WebGL1 unindexed drawArrays and invalid external handle fail closed', () =
   d.dispose();
 });
 
+
+test('afterDraw callback runs in draw finally on success or failure, preserving original error', () => {
+  const {canvas,gl}=fakeCanvas(),d=createNativeWebGLDevice(canvas);
+  const p=d.createProgram(shader),m=d.createMesh({attributes:[attrib],vertexCount:3});
+  const events=[];
+  d.draw({program:p,mesh:m,beforeDraw(){events.push('before');},afterDraw(){events.push('after');}});
+  assert.deepEqual(events,['before','after']);
+  assert.throws(()=>d.draw({program:p,mesh:m,afterDraw:5}),/AFTER_DRAW_INVALID/);
+  gl.drawArrays=()=>{events.push('failure');throw Error('DRAW_FAILED');};
+  assert.throws(()=>d.draw({program:p,mesh:m,afterDraw(){events.push('cleanup');}}),/DRAW_FAILED/);
+  assert.deepEqual(events,['before','after','failure','cleanup']);
+});
+
 test('WebGL1 refuses uint32 indices without extension and releases buffers', () => {
   const {canvas,log}=fakeCanvas(); const d=createNativeWebGLDevice(canvas);
   assert.throws(()=>d.createMesh({attributes:[attrib],indices:new Uint32Array([0,1,2]),vertexCount:3}),/EXTENSION_REQUIRED/);
@@ -245,5 +258,39 @@ test('native GL texture upload errors fail closed with no resource registry leak
   assert.throws(() => d.createTexture2D({ width: 2, height: 2 }), /TEXTURE_UPLOAD_GL_ERROR/);
   assert.equal(d.status().textures, 0);
   assert.equal(log.filter(x => x === 'deleteTexture').length, 1);
+  d.dispose();
+});
+
+
+test('E5 source repair: cleanup failure cannot mask primary draw exception', () => {
+  const {canvas,gl}=fakeCanvas(),d=createNativeWebGLDevice(canvas);
+  const p=d.createProgram(shader),m=d.createMesh({attributes:[attrib],vertexCount:3});
+  const calls=[];
+  gl.drawArrays=()=>{calls.push('draw');throw Error('PRIMARY_DRAW_FAILURE');};
+  gl.disableVertexAttribArray=()=>{calls.push('disable');throw Error('ATTRIBUTE_CLEANUP_FAILURE');};
+  assert.throws(()=>d.draw({program:p,mesh:m,afterDraw(){calls.push('after');throw Error('CALLBACK_CLEANUP_FAILURE');}}),/PRIMARY_DRAW_FAILURE/);
+  assert.deepEqual(calls,['draw','after','disable']);
+  d.dispose();
+});
+
+test('E5 source repair: falsy primary exception retained even if cleanup throws', () => {
+  const {canvas,gl}=fakeCanvas(),d=createNativeWebGLDevice(canvas);
+  const p=d.createProgram(shader),m=d.createMesh({attributes:[attrib],vertexCount:3});
+  gl.drawArrays=()=>{throw null;};
+  gl.disableVertexAttribArray=()=>{throw Error('ATTRIBUTE_CLEANUP_FAILURE');};
+  let seen=Symbol('not-thrown');try{d.draw({program:p,mesh:m});}catch(error){seen=error;}
+  assert.equal(seen,null);
+  d.dispose();
+});
+
+test('E5 source repair: clean draw reports first cleanup exception and releases all attributes', () => {
+  const {canvas,gl}=fakeCanvas(),d=createNativeWebGLDevice(canvas);
+  const second={...attrib,name:'a_secondary'};
+  gl.getAttribLocation=(_program,name)=>name==='a_position'?0:name==='a_secondary'?1:-1;
+  const p=d.createProgram(shader),m=d.createMesh({attributes:[attrib,second],vertexCount:3});
+  const calls=[];
+  gl.disableVertexAttribArray=(loc)=>{calls.push('disable:'+loc);throw Error('DISABLE_FAILED:'+loc);};
+  assert.throws(()=>d.draw({program:p,mesh:m,afterDraw(){calls.push('after');throw Error('AFTERDRAW_FAILURE');}}),/AFTERDRAW_FAILURE/);
+  assert.deepEqual(calls,['after','disable:0','disable:1']);
   d.dispose();
 });

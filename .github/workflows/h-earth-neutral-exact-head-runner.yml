@@ -2097,3 +2097,52 @@ jobs:
           path: ${{ runner.temp }}/h-earth-straight-near-far-gen3084/
           if-no-files-found: warn
           retention-days: 30
+
+
+  gen3087-planetary-near-far-source-only:
+    if: >-
+      ${{ github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize') && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth-gen3087-planetary-near-far-source-camera' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact admitted Gen3087 tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          fetch-depth: 15
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /tools/h-earth-ground-material-comparison.v1.test.mjs
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Bounded Gen3087 source-only preflight (NO GPU)
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD" || { echo GEN3087_HEAD_DRIFT; exit 51; }
+          git merge-base --is-ancestor 558ddc927296afb14574e3ee05a65b165f65467b HEAD || { echo GEN3087_PREDECESSOR_DRIFT; exit 52; }
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b49b || { echo GEN3087_RENDERER_DRIFT; exit 53; }
+          while IFS= read -r changed; do
+            case "$changed" in
+              tools/h-earth-ground-material-comparison.v1.mjs|tools/h-earth-groundcover-factor-overlay.mjs|tools/h-earth-ground-material-comparison.v1.test.mjs|.github/workflows/h-earth-neutral-exact-head-runner.yml) ;;
+              *) echo "GEN3087_OUT_OF_SCOPE:$changed"; exit 54 ;;
+            esac
+          done < <(git diff --name-only 558ddc927296afb14574e3ee05a65b165f65467b HEAD)
+          node --check tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tools/h-earth-groundcover-factor-overlay.mjs
+          node --check tools/h-earth-ground-material-comparison.v1.test.mjs
+          node --test --test-name-pattern='Gen3074|WEST_FLANK|NEAR_FAR_STRAIGHT|GEN3087' tools/h-earth-ground-material-comparison.v1.test.mjs
+          echo GEN3087_SOURCE_ONLY_NODE22_QUALIFICATION_PASS
+      - name: Confirm no new WebGL run on this checkpoint
+        run: |
+          echo GEN3087_GPU_EXECUTION_NOT_DISPATCHED

@@ -1989,6 +1989,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           path: tooling
           persist-credentials: false
+          fetch-depth: 12
           sparse-checkout-cone-mode: false
           sparse-checkout: |
             /tools/h-earth-ground-material-comparison.v1.mjs

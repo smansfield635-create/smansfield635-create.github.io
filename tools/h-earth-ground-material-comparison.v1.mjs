@@ -116,7 +116,7 @@ export function collectRev2G1StaticPreflight(productDirectory){
  const importMap=JSON.parse(html.slice(start+open.length,end)).imports;
  if(!importMap||typeof importMap!=='object'||Array.isArray(importMap))throw Error('REV2_G1_IMPORT_MAP_INVALID');
  const targets=Object.values(importMap);
- const local=targets.every(v=>typeof v==='string'&&v.startsWith('/showroom/globe/h-earth/')&&!v.includes('..'));
+ const local=targets.every(v=>typeof v==='string'&&(v.startsWith('/showroom/globe/h-earth/')||v.startsWith('/h-earth-3d/'))&&!v.includes('..'));
  let exist=local;
  if(local)for(const u of new Set(targets)){
    const f=u.slice(1).split('?')[0];

@@ -373,7 +373,7 @@ jobs:
                 const file=path.resolve(process.cwd(),rel);
                 if(!file.startsWith(process.cwd()+path.sep))throw Error('INVALID_PATH');
                 const bytes=await fs.readFile(file);
-                res.writeHead(200,{'content-type':file.endsWith('.html')?'text/html':file.endsWith('.js')?'text/javascript':'application/octet-stream'});
+                res.writeHead(200,{'content-type':file.endsWith('.html')?'text/html':file.endsWith('.js')?'text/javascript':file.endsWith('.svg')?'image/svg+xml':'application/octet-stream'});
                 res.end(bytes);
               }catch(error){res.writeHead(404).end('Not found');}
             });

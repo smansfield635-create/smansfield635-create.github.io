@@ -3371,6 +3371,50 @@
       "scopeHash": "24ab5ffc877f1d8aed90337bf0a1528f069d20bea15ab4eec78db2127a982a1a",
       "state": "ADMITTED_LOCKED"
     },
+    "24ba64533fa9e410247bc7af22fa201420ac19627ee8cb31212abdf9c111b922": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "29fffc25b9885f67934731e3c2f408e93839e8aa",
+          "lockGeneration": 3088,
+          "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:E7_PBR_METALLIC_ROUGHNESS_20261103",
+          "operationId": "DGB_GRAPHICS_ENGINE_E7_PBR_METALLIC_ROUGHNESS_20261103_001",
+          "procedureLocatorDigest": "f414f9c68a5b1c2635ff9b9c3ada5ee9c8abc62c77a595317ffb28f14df4042f",
+          "requestDigest": "38613d1a38740b699afe1bee91e5a0d47c1473106310664e3bbf1b40fc44a0af",
+          "scopeHash": "24ba64533fa9e410247bc7af22fa201420ac19627ee8cb31212abdf9c111b922"
+        },
+        "bindingDigest": "7f13df4a028001972e726ac541ee64c01cba32754df308247833c5b1bde47985",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "176beb69f8a4e35435d2a2fa7079b9f8ee22413ec8ca11f931855206cc3c7d87",
+          "commentId": 6596054715,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41582868060,
+          "workflowSha": "29fffc25b9885f67934731e3c2f408e93839e8aa"
+        },
+        "lineageAnchorCommitSha": "8887339d2c81cd9723eedc6d4fb13cdaa5f8120a",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "29fffc25b9885f67934731e3c2f408e93839e8aa",
+      "lockGeneration": 3088,
+      "lockScope": "DIAMOND_GATE_GRAPHICS_ENGINE:E7_PBR_METALLIC_ROUGHNESS_20261103",
+      "operationId": "DGB_GRAPHICS_ENGINE_E7_PBR_METALLIC_ROUGHNESS_20261103_001",
+      "procedureLocatorDigest": "f414f9c68a5b1c2635ff9b9c3ada5ee9c8abc62c77a595317ffb28f14df4042f",
+      "released": false,
+      "requestDigest": "38613d1a38740b699afe1bee91e5a0d47c1473106310664e3bbf1b40fc44a0af",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "24ba64533fa9e410247bc7af22fa201420ac19627ee8cb31212abdf9c111b922",
+      "state": "ADMITTED_LOCKED"
+    },
     "24fa9c5a47aaa63c03b39c5a0cea1aa722dbca6fae7694318b115a0faeb4b0f6": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -25899,7 +25943,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3087,
+  "lockGeneration": 3088,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -1,3 +1,5 @@
+import { inspectNativeShadowPass } from './dgb.native-frame-pipeline.v1.mjs';
+
 /** Diamond Gate Graphics Engine E4-A: world-independent material bindings.
  * Uses accepted E1 device for GPU ownership and E2's beforeDraw hook; no scene,
  * frame scheduler, consumer shaders, asset loader or color-management claim.
@@ -26,7 +28,7 @@ function normalMatrix(model) {
   // inv is row-major inverse, and column-major representation of inverse-transpose
   return new Float32Array(inv);
 }
-const shader = (kind,backend) => {
+const shader = (kind,backend,shadowed=false) => {
   const two=backend==='WEBGL2';
   const head=two?'#version 300 es\n':'';
   const vIn=two?'in':'attribute', vOut=two?'out':'varying', fIn=two?'in':'varying';
@@ -34,20 +36,24 @@ const shader = (kind,backend) => {
   const tex=two?'texture':'texture2D';
   const pbr=kind==='PBR_METALLIC_ROUGHNESS';
   const lit=kind==='LIT'||kind==='LIT_SPECULAR'||pbr,specular=kind==='LIT_SPECULAR';
+  if (shadowed && !pbr) throw new TypeError('SHADOW_PBR_ONLY');
   const vertexSource = head+
     `${vIn} vec3 aPosition;\nuniform mat4 uMVP;\n`+
     (kind==='TEXTURED'?`${vIn} vec2 aUV;\n${vOut} vec2 vUV;\n`:'')+
     (lit?`${vIn} vec3 aNormal;\n${vOut} vec3 vNormal;\nuniform mat3 uNormalMatrix;\n`:'')+
     ((specular||pbr)?`${vOut} vec3 vWorldPosition;\nuniform mat4 uModel;\n`:'')+
+    (shadowed?`${vOut} vec4 vShadowClip;\nuniform mat4 uShadowViewProjection;\n`:'')+
     `void main(){gl_Position=uMVP*vec4(aPosition,1.0);`+
     (kind==='TEXTURED'?'vUV=aUV;':'')+
     (lit?'vNormal=normalize(uNormalMatrix*aNormal);':'')+
-    ((specular||pbr)?'vWorldPosition=(uModel*vec4(aPosition,1.0)).xyz;':'')+'}\n';
+    ((specular||pbr)?'vWorldPosition=(uModel*vec4(aPosition,1.0)).xyz;':'')+
+    (shadowed?'vShadowClip=uShadowViewProjection*uModel*vec4(aPosition,1.0);':'')+'}\n';
   const fragmentSource = head+'precision highp float;\n'+
     (kind==='TEXTURED'?`${fIn} vec2 vUV;\nuniform sampler2D uTexture;\n`:'')+
     (lit?`${fIn} vec3 vNormal;\nuniform vec3 uLightDirection;\nuniform vec3 uLightColor;\nuniform float uLightIntensity;\nuniform float uAmbient;\n`:'')+
     (specular?`${fIn} vec3 vWorldPosition;\nuniform vec3 uCameraPosition;\nuniform vec3 uSkyColor;\nuniform vec3 uGroundColor;\nuniform float uFillIntensity;\nuniform float uSpecularStrength;\nuniform float uShininess;\n`:'')+
     (pbr?`${fIn} vec3 vWorldPosition;\nuniform vec3 uCameraPosition;\nuniform float uMetallic;\nuniform float uRoughness;\n`:'')+
+    (shadowed?`${fIn} vec4 vShadowClip;\nuniform sampler2D uShadowMap;\nuniform float uShadowBias;\n`:'')+
     'uniform vec4 uBaseColor;\n'+fragOut+
     `void main(){vec4 c=uBaseColor;`+
     (kind==='TEXTURED'?`c*=${tex}(uTexture,vUV);`:'')+
@@ -59,7 +65,7 @@ const shader = (kind,backend) => {
       'c.rgb=c.rgb*clamp(vec3(uAmbient)+fill+uLightColor*(uLightIntensity*ndl),0.0,1.0)'+
       '+uLightColor*(uLightIntensity*highlight);':'')+
     // Bounded direct-lit microfacet model: GGX NDF, Smith-Schlick masking,
-    // Schlick Fresnel and energy-aware Lambert diffuse. No IBL or shadow claim.
+    // Schlick Fresnel and energy-aware Lambert diffuse. E9 shadows are opt-in only.
     (pbr?'vec3 n=normalize(vNormal);vec3 l=normalize(uLightDirection);'+
       'vec3 v=normalize(uCameraPosition-vWorldPosition);vec3 h=normalize(l+v);'+
       'float ndl=max(dot(n,l),0.0);float ndv=max(dot(n,v),0.0);'+
@@ -75,7 +81,13 @@ const shader = (kind,backend) => {
       'vec3 kd=(vec3(1.0)-F)*(1.0-uMetallic);'+
       'vec3 diffuse=kd*c.rgb*(1.0/3.14159265);'+
       'vec3 specularTerm=D*gv*glf*F/max(4.0*ndl*ndv,0.0001);'+
+      (shadowed?'float shadowVisibility=1.0;'+
+        'if(vShadowClip.w>0.0){vec3 s=vShadowClip.xyz/vShadowClip.w*0.5+0.5;'+
+        'if(s.x>=0.0&&s.x<=1.0&&s.y>=0.0&&s.y<=1.0&&s.z>=0.0&&s.z<=1.0){'+
+        `float mapDepth=${tex}(uShadowMap,s.xy).r;`+
+        'if(s.z-uShadowBias>mapDepth)shadowVisibility=0.0;}}':'')+
       'c.rgb=(diffuse+specularTerm)*uLightColor*(uLightIntensity*ndl)'+
+      (shadowed?'*shadowVisibility':'')+
       '+vec3(uAmbient)*c.rgb*(1.0-uMetallic);':'')+
     `${write}=clamp(c,0.0,1.0);}\n`;
   return {vertexSource,fragmentSource};
@@ -130,7 +142,7 @@ export function createNativeMaterialLibrary(device) {
     const material=Object.freeze({kind,baseColor:Object.freeze(color),texture,textureEncoding,light:lighting,...(pbr?{metallic:metal,roughness:rough}:{})});
     materials.add(material);return material;
   }
-  function makeDrawBinding(material,{modelMatrix,modelViewProjection,cameraPosition}={}){
+  function makeDrawBinding(material,{modelMatrix,modelViewProjection,cameraPosition,shadow=null}={}){
     ready();if(!material || !materials.has(material))throw new TypeError('FOREIGN_MATERIAL');
     const mvp=matrix(modelViewProjection,'MVP_MATRIX');
     const pbr=material.kind==='PBR_METALLIC_ROUGHNESS';
@@ -139,20 +151,34 @@ export function createNativeMaterialLibrary(device) {
     const normal=lit?normalMatrix(model):null;
     // In world space, cameraPosition is required for correct view-dependent highlights.
     const camera=(material.kind==='LIT_SPECULAR'||pbr)?vec(cameraPosition,3,'CAMERA_POSITION'):null;
-    let program=programs.get(material.kind);
-    if(!program){program=device.createProgram(shader(material.kind,device.backend));programs.set(material.kind,program);}
+    const shadowed=shadow!==null;
+    if(shadowed && (!pbr || typeof shadow!=='object' || Array.isArray(shadow)))
+      throw new TypeError('SHADOW_PBR_ONLY');
+    const shadowBias=shadowed?(shadow.bias??0.001):null;
+    if(shadowed && (!finite(shadowBias)||shadowBias<0||shadowBias>0.05))
+      throw new TypeError('SHADOW_BIAS_INVALID');
+    const shadowPass=shadowed?shadow.pass:null;
+    if(shadowed)inspectNativeShadowPass(shadowPass,device);
+    const key=material.kind+(shadowed?':SHADOW':'');
+    let program=programs.get(key);
+    if(!program){program=device.createProgram(shader(material.kind,device.backend,shadowed));programs.set(key,program);}
     const glTexture=material.texture;
-    let priorTextureState = null;
+    let priorTextureState = null, priorShadowTextureState = null;
     return Object.freeze({program,beforeDraw(context,programHandle){
       ready();if(context!==gl || programHandle!==program.gpu)throw new TypeError('MATERIAL_PROGRAM_CONTEXT_MISMATCH');
       // Resolve and validate every required uniform BEFORE any GL-state mutation.
       // A missing later uniform must not leave partially-applied E4 material state.
       if(material.kind==='TEXTURED' && !glTexture.gpu)throw new Error('MATERIAL_TEXTURE_UNAVAILABLE');
+      // A resized or restored E1 target invalidates the previous caster receipt.
+      // Check before uniforms and any texture-unit state changes.
+      const shadowData=shadowed?inspectNativeShadowPass(shadowPass,device):null;
+      priorShadowTextureState=null;
       const uniformNames=['uMVP','uBaseColor',
         ...(material.kind==='TEXTURED'?['uTexture']:[]),
         ...(lit?['uNormalMatrix','uLightDirection','uLightColor','uLightIntensity','uAmbient']:[]),
         ...(material.kind==='LIT_SPECULAR'?['uModel','uCameraPosition','uSkyColor','uGroundColor','uFillIntensity','uSpecularStrength','uShininess']:[]),
-        ...(pbr?['uModel','uCameraPosition','uMetallic','uRoughness']:[])];
+        ...(pbr?['uModel','uCameraPosition','uMetallic','uRoughness']:[]),
+        ...(shadowed?['uShadowViewProjection','uShadowMap','uShadowBias']:[])];
       const uniformLocations=new Map();
       for(const name of uniformNames){
         const location=context.getUniformLocation(programHandle,name);
@@ -188,14 +214,35 @@ export function createNativeMaterialLibrary(device) {
           else context[method](uniformLocations.get(name),value);
         }
       }
+      if(shadowed){
+        context.uniformMatrix4fv(uniformLocations.get('uShadowViewProjection'),false,shadowData.lightViewProjection);
+        context.uniform1f(uniformLocations.get('uShadowBias'),shadowBias);
+        // Reserve unit one; E1/E2 default canvas presenter owns unit zero.
+        const active=context.getParameter(context.ACTIVE_TEXTURE);
+        context.activeTexture(context.TEXTURE0+1);
+        const previous=context.getParameter(context.TEXTURE_BINDING_2D);
+        priorShadowTextureState={active,previous};
+        context.bindTexture(context.TEXTURE_2D,shadowData.depthTexture);
+        context.uniform1i(uniformLocations.get('uShadowMap'),1);
+        context.activeTexture(active);
+      }
     },afterDraw(context,programHandle){
-      if(material.kind!=='TEXTURED'||priorTextureState===null)return;
+      if((material.kind!=='TEXTURED'||priorTextureState===null) &&
+         (!shadowed||priorShadowTextureState===null))return;
       if(context!==gl||programHandle!==program.gpu)throw new TypeError('MATERIAL_PROGRAM_CONTEXT_MISMATCH');
-      if(context.isContextLost?.()){priorTextureState=null;return;}
-      const snapshot=priorTextureState;priorTextureState=null;
-      context.activeTexture(context.TEXTURE0);
-      try { context.bindTexture(context.TEXTURE_2D,snapshot.previous); }
-      finally { context.activeTexture(snapshot.active); }
+      if(context.isContextLost?.()){priorTextureState=null;priorShadowTextureState=null;return;}
+      if(priorShadowTextureState){
+        const snapshot=priorShadowTextureState;priorShadowTextureState=null;
+        context.activeTexture(context.TEXTURE0+1);
+        try {context.bindTexture(context.TEXTURE_2D,snapshot.previous);}
+        finally {context.activeTexture(snapshot.active);}
+      }
+      if(priorTextureState){
+        const snapshot=priorTextureState;priorTextureState=null;
+        context.activeTexture(context.TEXTURE0);
+        try {context.bindTexture(context.TEXTURE_2D,snapshot.previous);}
+        finally {context.activeTexture(snapshot.active);}
+      }
     }});
   }
   return Object.freeze({createTexture2D,createMaterial,makeDrawBinding,

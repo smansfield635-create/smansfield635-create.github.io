@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createNativeFramePipeline } from './dgb.native-frame-pipeline.v1.mjs';
+import { createNativeFramePipeline, inspectNativeShadowPass } from './dgb.native-frame-pipeline.v1.mjs';
 
 function fixture({ backend='WEBGL1', defaultDepth=true }={}) {
   const log=[];
@@ -265,4 +265,83 @@ test('E5-B successful draw surfaces presenter unbind failure',()=>{
   pipe.beginFrame(spec(t));
   assert.throws(()=>pipe.endFrame({presentationEncoding:'SRGB'}),/BIND_CLEANUP_FAILED/);
   assert.equal(pipe.status().lastPresentation,'ABORTED');
+});
+
+const E9_ID=[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
+const e9Target=f=>{
+  const t=f.target({name:'E9-shadow-depth'});
+  t.definition.depthTexture=true;t.depthTexture={gpu:t.depthGpu};
+  return t;
+};
+const e9EnableMatrices=f=>{
+  f.gl.uniformMatrix4fv=(...args)=>f.log.push(['matrix4',...args]);
+  return f;
+};
+
+test('E9 opt-in native shadow caster runs depth-only offscreen and authenticates WebGL1 and WebGL2 receipts',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const f=e9EnableMatrices(fixture({backend})),p=createNativeFramePipeline(f.device);
+    const target=e9Target(f),mesh=f.mesh('caster');
+    let compiled=null;
+    const old=f.device.createProgram;
+    f.device.createProgram=source=>{compiled=source;return old(source);};
+    const result=p.renderShadowDepth({target,lightViewProjection:E9_ID,
+      casters:[{mesh,modelMatrix:E9_ID}],cull:'NONE'});
+    assert.deepEqual({executed:result.executed,presentation:result.presentation},
+      {executed:1,presentation:'OFFSCREEN_ONLY'});
+    assert.ok(f.log.some(x=>x[0]==='matrix4'));
+    assert.equal(f.log.filter(x=>x[0]==='draw').length,1);
+    assert.deepEqual(f.log.filter(x=>x[0]==='target').map(x=>x[1]),['E9-shadow-depth','canvas']);
+    assert.match(compiled.vertexSource,/uLightViewProjection\*uModel/);
+    assert.match(compiled.fragmentSource,backend==='WEBGL2'?/out vec4 outColor/:/gl_FragColor/);
+    const check=inspectNativeShadowPass(result,f.device);
+    assert.equal(check.depthTexture,target.depthGpu);
+    assert.equal(check.lightViewProjection.length,16);
+    assert.equal(p.status().active,false);
+  }
+});
+
+test('E9 caster validation is atomic before any framebuffer mutation',()=>{
+  const f=e9EnableMatrices(fixture()),p=createNativeFramePipeline(f.device),t=e9Target(f);
+  const good={target:t,lightViewProjection:E9_ID,casters:[{mesh:f.mesh('caster'),modelMatrix:E9_ID}]};
+  const bad=[
+    {...good,target:f.target()},
+    {...good,lightViewProjection:[1,2]},
+    {...good,casters:null},
+    {...good,casters:[{mesh:f.mesh('caster'),modelMatrix:[1,2]}]},
+    {...good,casters:[{mesh:f.mesh('caster'),modelMatrix:E9_ID,cull:'SIDE'}]},
+    {...good,clearDepth:2},
+    {...good,cull:'SIDE'}
+  ];
+  for(const descriptor of bad){
+    const before=f.log.length;
+    assert.throws(()=>p.renderShadowDepth(descriptor));
+    assert.equal(f.log.length,before,'invalid E9 caster mutated GL');
+    assert.equal(p.status().active,false);
+  }
+});
+
+test('E9 receipt fails closed across devices, depth resize, context loss and restores',()=>{
+  const f=e9EnableMatrices(fixture()),p=createNativeFramePipeline(f.device),t=e9Target(f);
+  const pass=p.renderShadowDepth({target:t,lightViewProjection:E9_ID,casters:[]});
+  assert.equal(pass.executed,0);
+  assert.throws(()=>inspectNativeShadowPass({},f.device),/SHADOW_PASS_FOREIGN_OR_UNVERIFIED/);
+  assert.throws(()=>inspectNativeShadowPass(pass,fixture().device),/SHADOW_PASS_FOREIGN_OR_UNVERIFIED/);
+  f.lose();
+  assert.throws(()=>inspectNativeShadowPass(pass,f.device),/GRAPHICS_CONTEXT_NOT_READY/);
+  f.restore();
+  t.depthTexture.gpu={reallocated:true};
+  assert.throws(()=>inspectNativeShadowPass(pass,f.device),/SHADOW_PASS_STALE_TARGET/);
+});
+
+test('E9 aborted caster draw leaves no active frame and permits a clean retry',()=>{
+  const f=e9EnableMatrices(fixture()),p=createNativeFramePipeline(f.device),t=e9Target(f);
+  const descriptor={target:t,lightViewProjection:E9_ID,
+    casters:[{mesh:f.mesh('caster'),modelMatrix:E9_ID}]};
+  f.setDraw(()=>{throw new Error('CASTER_GPU_FAILED');});
+  assert.throws(()=>p.renderShadowDepth(descriptor),/CASTER_GPU_FAILED/);
+  assert.equal(p.status().active,false);
+  assert.equal(p.status().lastPresentation,'ABORTED');
+  f.setDraw(null);
+  assert.equal(p.renderShadowDepth(descriptor).executed,1);
 });

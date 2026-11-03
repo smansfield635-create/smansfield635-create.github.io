@@ -3,6 +3,45 @@
  * E1 owns programs, meshes, render targets, context recovery and disposal.
  */
 const instances = new WeakMap();
+// E9 receipts cannot be fabricated: only a completed native depth pass can
+// authorize E4 to sample an E1-owned depth texture on the same device.
+const shadowPasses = new WeakMap();
+const shadowMatrix = (value, label) => {
+  if ((!Array.isArray(value) && !(value instanceof Float32Array) && !(value instanceof Float64Array)) ||
+      value.length !== 16 || !Array.from(value).every(x => typeof x === 'number' && Number.isFinite(x)))
+    throw new TypeError(label + '_INVALID');
+  return new Float32Array(value);
+};
+const shadowVertex1 = `attribute vec3 aPosition;
+uniform mat4 uLightViewProjection;
+uniform mat4 uModel;
+void main(){gl_Position=uLightViewProjection*uModel*vec4(aPosition,1.0);}`;
+const shadowFragment1 = `precision mediump float;
+void main(){gl_FragColor=vec4(1.0);}`;
+const shadowVertex2 = `#version 300 es
+in vec3 aPosition;
+uniform mat4 uLightViewProjection;
+uniform mat4 uModel;
+void main(){gl_Position=uLightViewProjection*uModel*vec4(aPosition,1.0);}`;
+const shadowFragment2 = `#version 300 es
+precision mediump float;
+out vec4 outColor;
+void main(){outColor=vec4(1.0);}`;
+
+/** Internal E2/E4 cross-module shadow provenance gate; never trusts a caller's texture handle. */
+export function inspectNativeShadowPass(pass, device) {
+  const record = shadowPasses.get(pass);
+  if (!record || record.device !== device) throw new TypeError('SHADOW_PASS_FOREIGN_OR_UNVERIFIED');
+  const state = device.status();
+  if (state.disposed || state.lost || state.restorationError || device.gl.isContextLost?.())
+    throw new Error('GRAPHICS_CONTEXT_NOT_READY');
+  if (!record.target.gpu || record.target.gpu !== record.framebuffer ||
+      !record.target.definition?.depthTexture || !record.target.depthTexture?.gpu ||
+      record.target.depthTexture.gpu !== record.depthTexture)
+    throw new Error('SHADOW_PASS_STALE_TARGET');
+  return Object.freeze({ depthTexture: record.depthTexture,
+    lightViewProjection: record.lightViewProjection });
+}
 const passes = new Set(['OPAQUE', 'TRANSPARENT']);
 const culls = new Set(['NONE', 'BACK', 'FRONT']);
 const depths = new Set(['TEST_WRITE', 'OFF']);
@@ -58,6 +97,7 @@ export function createNativeFramePipeline(device) {
   const gl = device.gl;
   let active = null, presenter = null, lastError = null, lastPresentation = null;
   let completedFrames = 0, submitted = 0, executed = 0;
+  let shadowCasterProgram = null;
 
   function assertReady() {
     const s = device.status();
@@ -228,7 +268,70 @@ export function createNativeFramePipeline(device) {
       try { if (!gl.isContextLost?.()) { device.bindRenderTarget(null); resetState(); } } catch {}
     }
   }
-  const api = Object.freeze({ beginFrame, submit, endFrame,
+  /**
+   * E9 opt-in directional-light caster pass. The E1 depth texture remains
+   * device-owned; the returned branded frame is accepted by E4 receivers.
+   * All descriptor validation completes before any framebuffer state changes.
+   */
+  function renderShadowDepth({ target, lightViewProjection, casters, clearDepth = 1, cull = 'BACK' } = {}) {
+    assertReady();
+    if (active) throw new Error('FRAME_ALREADY_ACTIVE');
+    if (!target || !target.gpu || !target.definition?.depthTexture ||
+        !target.depthTexture?.gpu || target.depthTexture.gpu !== target.depthGpu)
+      throw new TypeError('SAMPLEABLE_SHADOW_TARGET_REQUIRED');
+    if (!numeric(clearDepth) || clearDepth < 0 || clearDepth > 1) throw new TypeError('SHADOW_CLEAR_DEPTH_INVALID');
+    if (!culls.has(cull)) throw new TypeError('FACE_CULL_INVALID');
+    const light = shadowMatrix(lightViewProjection, 'SHADOW_LIGHT_MATRIX');
+    if (!Array.isArray(casters)) throw new TypeError('SHADOW_CASTERS_REQUIRED');
+    const draws = casters.map((item, index) => {
+      if (!item || typeof item !== 'object' || !item.mesh?.gpu ||
+          !Number.isInteger(item.mesh.definition?.vertexCount) ||
+          item.mesh.definition.vertexCount < 1)
+        throw new TypeError('SHADOW_CASTER_MESH_INVALID:' + index);
+      const model = shadowMatrix(item.modelMatrix, 'SHADOW_MODEL_MATRIX');
+      return { mesh: item.mesh, model, cull: item.cull ?? cull };
+    });
+    for (const item of draws) if (!culls.has(item.cull)) throw new TypeError('FACE_CULL_INVALID');
+    if (!shadowCasterProgram) {
+      const webgl2 = device.backend === 'WEBGL2';
+      shadowCasterProgram = device.createProgram({
+        vertexSource: webgl2 ? shadowVertex2 : shadowVertex1,
+        fragmentSource: webgl2 ? shadowFragment2 : shadowFragment1
+      });
+    }
+    try {
+      beginFrame({ target, depthMode: 'TEST_WRITE', cull,
+        clear: { color: [0,0,0,1], depth: clearDepth } });
+      for (const item of draws) {
+        submit({ program: shadowCasterProgram, mesh: item.mesh, cull: item.cull,
+          beforeDraw(context, handle) {
+            const lightLocation = context.getUniformLocation(handle, 'uLightViewProjection');
+            const modelLocation = context.getUniformLocation(handle, 'uModel');
+            if (lightLocation === null || modelLocation === null)
+              throw new Error('SHADOW_CASTER_UNIFORM_MISSING');
+            context.uniformMatrix4fv(lightLocation, false, light);
+            context.uniformMatrix4fv(modelLocation, false, item.model);
+          } });
+      }
+      const result = endFrame({ presentToCanvas: false });
+      if (result.presentation !== 'OFFSCREEN_ONLY') throw new Error('SHADOW_PASS_PRESENTATION_INVALID');
+      const receipt = Object.freeze({ backend: device.backend,
+        submitted: result.submitted, executed: result.executed, presentation: result.presentation });
+      shadowPasses.set(receipt, { device, target, framebuffer: target.gpu,
+        depthTexture: target.depthTexture.gpu, lightViewProjection: light });
+      return receipt;
+    } catch (error) {
+      if (active) {
+        active = null;
+        lastError = error.message;
+        lastPresentation = 'ABORTED';
+        try { if (!gl.isContextLost?.()) { device.bindRenderTarget(null); resetState(); } } catch {}
+      }
+      throw error;
+    }
+  }
+
+  const api = Object.freeze({ beginFrame, submit, endFrame, renderShadowDepth,
     status() { const s = device.status(); return Object.freeze({ backend: device.backend, active: Boolean(active),
       completedFrames, submitted, executed, lastError, lastPresentation,
       deviceLost: Boolean(s.lost), deviceDisposed: Boolean(s.disposed) }); }

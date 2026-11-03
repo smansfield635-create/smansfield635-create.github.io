@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-03T05:25:13Z",
+  "generatedAt": "2026-11-03T06:33:07Z",
   "window30d": {
-    "start": "2026-10-04T05:25:13Z",
-    "end": "2026-11-03T05:25:13Z"
+    "start": "2026-10-04T06:33:07Z",
+    "end": "2026-11-03T06:33:07Z"
   },
   "daily": [
     {
@@ -24,7 +24,7 @@
     },
     {
       "date": "2026-10-09",
-      "pageLoads": 30
+      "pageLoads": 40
     },
     {
       "date": "2026-10-10",
@@ -64,11 +64,11 @@
     },
     {
       "date": "2026-10-19",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 30
+      "pageLoads": 50
     },
     {
       "date": "2026-10-21",
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-26",
-      "pageLoads": 39
+      "pageLoads": 38
     },
     {
       "date": "2026-10-27",
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-03",
-      "pageLoads": 9
+      "pageLoads": 11
     }
   ],
   "summary": {
-    "pageLoads": 1832,
+    "pageLoads": 1833,
     "botPageLoads": 907,
-    "nonBotPageLoads": 925
+    "nonBotPageLoads": 926
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1682,
-      "visits": 1682
+      "pageLoads": 1663,
+      "visits": 1663
     },
     {
       "host": "diamondgatebridge.com",
@@ -172,23 +172,23 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 629,
-      "visits": 629
-    },
-    {
-      "path": "/",
-      "pageLoads": 88,
-      "visits": 76
-    },
-    {
-      "path": "/nine-summits/universe/",
-      "pageLoads": 75,
-      "visits": 74
+      "pageLoads": 619,
+      "visits": 619
     },
     {
       "path": "/build/",
-      "pageLoads": 60,
-      "visits": 60
+      "pageLoads": 90,
+      "visits": 90
+    },
+    {
+      "path": "/nine-summits/universe/",
+      "pageLoads": 85,
+      "visits": 84
+    },
+    {
+      "path": "/",
+      "pageLoads": 79,
+      "visits": 67
     },
     {
       "path": "/about/",
@@ -196,14 +196,14 @@
       "visits": 41
     },
     {
+      "path": "/meet-sean-mansfield/",
+      "pageLoads": 40,
+      "visits": 30
+    },
+    {
       "path": "/showroom/globe/audralia/",
       "pageLoads": 40,
       "visits": 40
-    },
-    {
-      "path": "/gauges/",
-      "pageLoads": 30,
-      "visits": 0
     }
   ],
   "ownerMeasurement": {

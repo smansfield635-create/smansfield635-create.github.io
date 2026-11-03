@@ -293,3 +293,32 @@ test('Gen3074 pixel stage contract keeps roles, IDs and source projection fail-c
  assert.ok(yaml.includes('assert.equal(p.views.length,20);'));
  assert.ok(yaml.includes('assert(p.pixelAttribution.firstHit.every(x=>x.firstHitPass===true));'));
 });
+
+test('WEST_FLANK Gen3079 exact two-pixel and six-stage lineage is pinned',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ assert.equal(m.WEST_FLANK_PROFILE,'WEST_FLANK_OWNER_CLASS_MATERIAL_STAGES_V1');
+ assert.deepEqual([m.WEST_FLANK_FROZEN_POSE.x,m.WEST_FLANK_FROZEN_POSE.y,m.WEST_FLANK_FROZEN_POSE.z],[110,8.346905947403934,-310]);
+ assert.deepEqual([m.WEST_FLANK_FROZEN_POSE.yaw,m.WEST_FLANK_FROZEN_POSE.pitch],[153.434948822922,20.264510304722066]);
+ assert.deepEqual(m.WEST_FLANK_PIXELS.map(p=>[p.x,p.y]),[[300,625],[300,650]]);
+ assert.equal(m.WEST_FLANK_STAGE_SOURCE_BINDING.ownerPhonePhotoMatch,false);
+ assert.equal(m.WEST_FLANK_STAGE_SOURCE_BINDING.actualCurrentTriangleProven,false);
+ assert.equal(o.WEST_FLANK_STAGE_MODES.length,16);
+ assert.deepEqual(o.WEST_FLANK_STAGE_MODES.slice(10),[
+  'before-world-soil','after-world-soil','before-environmental-identity',
+  'after-environmental-identity','before-groundcover','after-groundcover']);
+ const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const source=o.transformWestFlankMaterialRenderer(original);
+ assert.equal(source.modeCount,16);
+ assert.equal(source.productDiskMutation,false);
+ assert.equal(source.ownerPhotoCorrespondence,false);
+ for(const anchor of ['westBeforeSoil=palette;','westAfterSoil=palette;',
+  'westBeforeIdentity=palette;','westAfterIdentity=palette;',
+  'westBeforeGroundcover=palette;','westAfterGroundcover=palette;',
+  'uRavineHabitatProbeMode>=10','mode<0||mode>=16',
+  'uRavineExpectedTargetWorld'])
+  assert.ok(source.source.includes(anchor),anchor);
+ assert.ok(m.instrumentRenderer(source.source).includes('if(!globalThis.__groundComparisonHideGrass)resources.singleOwnerVegetation?.draw(packet)'));
+ const yaml=fs.readFileSync(new URL('../.github/workflows/h-earth-neutral-exact-head-runner.yml',import.meta.url),'utf8');
+ assert.ok(yaml.includes('WEST_FLANK_OWNER_CLASS_MATERIAL_STAGES_V1'));
+});

@@ -3,7 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
-import {transformPublishedRenderer,transformRavineHabitatRenderer,RAVINE_HABITAT_PROBE_MODES,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
+import {transformPublishedRenderer,transformRavineHabitatRenderer,transformWestFlankMaterialRenderer,WEST_FLANK_STAGE_MODES,RAVINE_HABITAT_PROBE_MODES,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
 
 // Gen3074 is a distinct source-only extension. It does not select any
 // historical comparison/G1 profile, nor authorize a fabricated camera pose.
@@ -116,7 +116,13 @@ export const RAVINE_OBSERVER_PROFILE='RAVINE_EMITTED_SURFACE_OBSERVER_PREFLIGHT_
 export const RAVINE_PIXEL_PROFILE='RAVINE_VERIFIED_OBSERVER_PIXEL_STAGES_V1';
 export const RAVINE_PIXEL_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===RAVINE_PIXEL_PROFILE;
 export const RAVINE_OBSERVER_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===RAVINE_OBSERVER_PROFILE;
-export const RAVINE_ANY_ACTIVE=RAVINE_PIXEL_ACTIVE||RAVINE_OBSERVER_ACTIVE;
+export const WEST_FLANK_PROFILE='WEST_FLANK_OWNER_CLASS_MATERIAL_STAGES_V1';
+export const WEST_FLANK_ACTIVE=process.env.H_EARTH_COMPARISON_PROFILE===WEST_FLANK_PROFILE;
+export const RAVINE_ANY_ACTIVE=RAVINE_PIXEL_ACTIVE||RAVINE_OBSERVER_ACTIVE||WEST_FLANK_ACTIVE;
+export const WEST_FLANK_FROZEN_POSE=Object.freeze({name:'west_flank',x:110,y:8.346905947403934,z:-310,yaw:153.434948822922,pitch:20.264510304722066,diagnosticObserver:true,ownerPhotoMatch:false,sourceHead:'3ea149e5b56e8cc0d5aac192bce0cdd47da7e626'});
+export const WEST_FLANK_PIXELS=Object.freeze([{x:300,y:625},{x:300,y:650}].map(Object.freeze));
+export const WEST_FLANK_SOURCE_TARGET=Object.freeze({x:145,y:36.24194177261537,z:-240});
+export const WEST_FLANK_STAGE_SOURCE_BINDING=Object.freeze({frozenGen3008PlanHead:'aaddea3ad332d347041a5476d97ab27b6e0e7367',sourceProductHead:'11afdc5278564728ea9eef6ffb525601ce4362a7',currentRendererBlob:'85ee835060d5106a670077a5f4352b7ad202b49b',originalNearGroundTriangle11650FromHistoricalReconstruction:true,actualCurrentTriangleProven:false,ownerPhonePhotoMatch:false,healthyControlProven:false});
 export const G1_BASELINE_PROFILE='G1_SOIL_BASELINE_ONLY_V1';
 export const G1_A03_PROFILE='G1_SOIL_A03_CANDIDATE_ONLY_V1';
 // Additive use of the existing comparator at the prior GPU-positive inland FAR band.
@@ -320,7 +326,7 @@ export function parseArgs(argv){const a={},keys=RAVINE_ANY_ACTIVE?['--baseline-d
 export async function run(argv){
   const a=parseArgs(argv),out=a['--output'];fs.mkdirSync(out,{recursive:true});
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
-  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE,RAVINE_OBSERVER_PROFILE,RAVINE_PIXEL_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
+  if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3042_SOIL_TRIAD_AB_V1',G1_BASELINE_PROFILE,G1_A03_PROFILE,INLAND_BAND_BASELINE_PROFILE,INLAND_BAND_A03_PROFILE,RAVINE_OBSERVER_PROFILE,RAVINE_PIXEL_PROFILE,WEST_FLANK_PROFILE].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
   const poses=RAVINE_ANY_ACTIVE?[]:(G1_PROFILE?G1_POSES:(GEN3042_PROFILE?GEN3042_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES)));
   const modes=RAVINE_ANY_ACTIVE?[]:(G1_PROFILE?G1_MODES:(GEN3042_PROFILE?GEN3042_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES)));
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
@@ -344,7 +350,7 @@ export async function run(argv){
       const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});const page=await context.newPage();page.setDefaultTimeout(30000);
       await page.addInitScript({content:'globalThis.__groundcoverFactorMode=0;globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'+(RAVINE_ANY_ACTIVE?'const RAVINE_HABITAT_TARGET='+JSON.stringify(RAVINE_HABITAT_TARGET)+';globalThis.__deriveRavineEmittedSurfaceObserver='+deriveRavineEmittedSurfaceObserver.toString()+';globalThis.__ravineHabitatProbeMode=0;':'')});
       const errors=runRecord.errors;page.on('pageerror',e=>errors.push('PAGE:'+e.message));page.on('console',m=>{if(m.type()==='error')errors.push('CONSOLE:'+m.text());});page.on('response',r=>{if(r.status()>=400)errors.push('HTTP:'+r.status()+':'+r.url());});page.on('requestfailed',r=>errors.push('REQUEST:'+r.url()+':'+r.failure()?.errorText));
-      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,RAVINE_ANY_ACTIVE?instrumentRavineHabitatRenderer:(G1_PROFILE?(src=>instrumentG1(src,label,dir)):(GEN3042_PROFILE?(src=>instrumentGen3042(src,label,dir)):(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer)))]]){
+      for(const [pathname,transform] of [[ROUTE,instrumentRoute],[RENDERER,WEST_FLANK_ACTIVE?(src=>instrumentRenderer(transformWestFlankMaterialRenderer(src).source)):(RAVINE_ANY_ACTIVE?instrumentRavineHabitatRenderer:(G1_PROFILE?(src=>instrumentG1(src,label,dir)):(GEN3042_PROFILE?(src=>instrumentGen3042(src,label,dir)):(profile==='MAPWIDE_CANDIDATE_V1'?instrumentCandidateRenderer:instrumentDiagnosticRenderer))))]]){
         const original=fs.readFileSync(path.join(dir,pathname),'utf8'),transformed=transform(original);runRecord.instrumentation.push({path:pathname,sourceSha256:sha(original),observedSha256:sha(transformed)});
         await page.route(url=>url.pathname===pathname,route=>route.fulfill({status:200,contentType:'text/javascript',body:transformed}));
       }
@@ -360,6 +366,71 @@ export async function run(argv){
          const shell=document.getElementById('h-earth-loading-screen'),root=document.getElementById('h-earth-functional-landscape-route');
          return shell?.hidden===true&&window.H_EARTH_STARTUP_LOADER?.getReceipt?.()?.mode==='entered'&&root?.dataset.run8eReady==='true'&&root?.dataset.run8eError!=='true';
        },null,{timeout:30000});
+
+      if(WEST_FLANK_ACTIVE){
+      await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
+        const pose=WEST_FLANK_FROZEN_POSE;
+        let seq=24000;
+        const stageRows=[];
+        for(let mode=0;mode<WEST_FLANK_STAGE_MODES.length;mode++){
+          const sample=await page.evaluate(async ({pose,mode,seq,target,pixels})=>{
+            globalThis.__ravineHabitatProbeMode=mode;
+            globalThis.__ravineExpectedLocalTarget=target;
+            globalThis.__groundComparisonHideGrass=false;
+            const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,seq,'GEN3079_WEST_FLANK_STAGE');
+            globalThis.__HEarthAuditPresent(state);
+            const canvas=document.querySelector('#h-earth-functional-landscape-canvas');
+            if(!canvas||canvas.width!==529||canvas.height!==980)throw Error('WEST_FLANK_VIEWPORT_DRIFT');
+            const receipt=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+            const before=receipt.frameRecords.at(-1);
+            const rgba=pixels.map(p=>globalThis.__ravineReadGeometryPixel(p.x,canvas.height-1-p.y));
+            const dataUrl=canvas.toDataURL('image/png');
+            const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
+            return {state,rgba,before,after,dataUrl,modeApplied:globalThis.__ravineHabitatProbeModeApplied,
+              asset:receipt.resources?.geologicalFormation};
+          },{pose,mode,seq:++seq,target:WEST_FLANK_SOURCE_TARGET,pixels:WEST_FLANK_PIXELS});
+          if(sample.modeApplied!==mode)throw Error('WEST_FLANK_MODE_NOT_APPLIED:'+mode);
+          if(sample.before?.navigationSequence!==seq||sample.after?.navigationSequence!==seq||
+             sample.before?.frameSequence!==sample.after?.frameSequence)
+            throw Error('WEST_FLANK_FRAME_MISMATCH:'+mode);
+          if(!sample.asset?.physicalNavigationInstalled)throw Error('WEST_FLANK_GEOMETRY_NOT_LOADED');
+          const png=decodeCanvasCapture({before:sample.before,after:sample.after,dataUrl:sample.dataUrl},sample.before);
+          const name='west_flank-'+String(mode).padStart(2,'0')+'-'+WEST_FLANK_STAGE_MODES[mode]+'.png';
+          fs.writeFileSync(path.join(out,name),png);
+          stageRows.push({mode,stage:WEST_FLANK_STAGE_MODES[mode],rgba:sample.rgba,
+            sourceFrame:sample.after.frameSequence,sourceNavigation:sample.after.navigationSequence,
+            frameCamera:sample.after.cameraPosition,sourceHead:HEADS[label],
+            image:name,imageSha256:sha(png),imageBytes:png.length});
+          receipt.westFlankPixelStages={schema:'H_EARTH_WEST_FLANK_PIXEL_STAGES_GEN3079_v1',
+            status:'STAGES_CAPTURED_SAME_TRIANGLE_NOT_VERIFIED',camera:pose,
+            targets:WEST_FLANK_PIXELS,stageRows,originalSourceTriangle11650NotRevalidated:true,
+            noOwnerAndroidPhotoMatch:true,healthyControlNotVerified:true,productMutation:false};
+          persist();
+        }
+        if(stageRows.length!==16||stageRows.some(q=>q.rgba.length!==2||
+           q.rgba.some(p=>p.length!==4)||q.sourceHead!==HEADS[label]))
+          throw Error('WEST_FLANK_STAGE_CENSUS_INCOMPLETE');
+        const firstHitRole=stageRows[6].rgba.map(p=>p[0]);
+        const firstHitPrimitive=stageRows[7].rgba.map(p=>(p[0]<<16)|(p[1]<<8)|p[2]);
+        const sameGeom=firstHitRole.every(v=>v===1)&&firstHitPrimitive[0]===firstHitPrimitive[1];
+        const delta=(before,after)=>before.rgba.map((px,i)=>after.rgba[i].slice(0,3).map((c,j)=>c-px[j]));
+        receipt.westFlankPixelStages={...receipt.westFlankPixelStages,
+          sameUploadedPrimitiveClass:sameGeom,exactOriginalTriangleIdentityProven:false,
+          actualRoleCodes:firstHitRole,actualPrimitiveCodes:firstHitPrimitive,
+          worldSoilDelta:delta(stageRows[10],stageRows[11]),
+          environmentalIdentityDelta:delta(stageRows[12],stageRows[13]),
+          groundcoverDelta:delta(stageRows[14],stageRows[15]),
+          habitatDelta:delta(stageRows[4],stageRows[5]),
+          litWithoutHabitatDelta:delta(stageRows[9],stageRows[0]),
+          status:sameGeom?'PIXEL_STAGE_READBACK_COMPLETE_TRIANGLE_ID_PENDING':'FIRST_HIT_CLASS_DISAGREEMENT'};
+        receipt.result=receipt.westFlankPixelStages.status;
+        persist();
+        if(!sameGeom)throw Error('WEST_FLANK_PIXEL_FIRST_HIT_ROLE_OR_PRIMITIVE_MISMATCH');
+        runRecord.completedAt=new Date().toISOString();
+        await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);
+        if(errors.length)throw Error('WEST_FLANK_BROWSER_ERRORS:'+errors.join(';'));
+        continue;
+      }
       if(RAVINE_ANY_ACTIVE){
         await page.waitForFunction(()=>typeof globalThis.__ravinePublishedGeologicalSurfaceAt==='function',null,{timeout:30000});
         const probe=await page.evaluate(()=>{
@@ -498,7 +569,8 @@ export async function run(argv){
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(RAVINE_ANY_ACTIVE){if(!receipt.ravineObserverPreflight||(RAVINE_OBSERVER_ACTIVE&&receipt.views.length!==0))throw Error('RAVINE_OBSERVER_RECEIPT_INCOMPLETE');}
+    if(WEST_FLANK_ACTIVE){if(!receipt.westFlankPixelStages||receipt.westFlankPixelStages.stageRows.length!==16)throw Error('WEST_FLANK_RECEIPT_INCOMPLETE');}
+    else if(RAVINE_ANY_ACTIVE){if(!receipt.ravineObserverPreflight||(RAVINE_OBSERVER_ACTIVE&&receipt.views.length!==0))throw Error('RAVINE_OBSERVER_RECEIPT_INCOMPLETE');}
      else if(G1_PROFILE){receipt.g1=validateG1Set(receipt.views);receipt.result=INLAND_BAND_PROFILE?'INLAND_BAND_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED':'G1_SOURCE_DERIVED_CAPTURE_COMPLETE_OWNER_CLASS_UNQUALIFIED';}
      else if(GEN3042_PROFILE){receipt.triad=validateGen3042(receipt.views);receipt.result='GEN3042_SOIL_TRIAD_CAPTURE_COMPLETE_VISUAL_REVIEW_PENDING';}
     else{validateDiagnosticSet(receipt.views,poses,modes);receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';}

@@ -165,3 +165,59 @@ test('missing late uniforms and lost texture handles cause zero GL state mutatio
   assert.throws(()=>binding.beforeDraw(f.gl,binding.program.gpu),/MATERIAL_TEXTURE_UNAVAILABLE/);
   assert.equal(f.calls.length,baseline,'missing texture handle partially mutated GPU state');
 });
+
+test('E6 opt-in surface shader generates view-position-dependent highlight and hemisphere fill on both WebGL dialects',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const f=makeDevice(backend),lib=createNativeMaterialLibrary(f.device);
+    const material=lib.createMaterial({kind:'LIT_SPECULAR',baseColor:[0.45,0.32,0.19,0.8],light:{direction:[0.4,0.2,1],ambient:0.08,intensity:0.9,shininess:48,specularStrength:0.5,fillIntensity:0.42}});
+    const b=lib.makeDrawBinding(material,{modelMatrix:ID,modelViewProjection:ID,cameraPosition:[0,0,4]});
+    const {vertexSource,fragmentSource}=b.program.definition;
+    assert.match(vertexSource,/uModel/);assert.match(vertexSource,/vWorldPosition/);
+    assert.match(fragmentSource,/uCameraPosition/);assert.match(fragmentSource,/uShininess/);
+    assert.match(fragmentSource,/uSkyColor/);assert.match(fragmentSource,/highlight/);
+    if(backend==='WEBGL2') assert.match(fragmentSource,/#version 300 es/);
+    else assert.doesNotMatch(fragmentSource,/#version 300 es/);
+    b.beforeDraw(f.gl,b.program.gpu);
+    assert.equal(f.calls.filter(x=>x[0]==='m4').length,2);
+    assert.equal(f.calls.filter(x=>x[0]==='m3').length,1);
+    const bound=f.calls.filter(x=>x[0]==='v3').find(x=>x[1].name==='uCameraPosition');
+    assert.deepEqual(bound[2],[0,0,4]);
+    assert.equal(lib.status().compiledPrograms,1);
+  }
+});
+
+test('E6 surface material requires correct camera, optional bounded highlights and linear fill colors',()=>{
+  const f=makeDevice(),lib=createNativeMaterialLibrary(f.device);
+  const cases=[
+    [{shininess:0},/SHININESS_INVALID/], [{shininess:257},/SHININESS_INVALID/],
+    [{specularStrength:-0.1},/SPECULAR_STRENGTH_INVALID/],
+    [{specularStrength:1.1},/SPECULAR_STRENGTH_INVALID/],
+    [{fillIntensity:2},/FILL_INTENSITY_INVALID/],
+    [{skyColor:[2,0,0]},/SKY_COLOR_INVALID/],
+    [{groundColor:[1,1]},/GROUND_COLOR_INVALID/]
+  ];
+  for(const [light,re] of cases)assert.throws(()=>lib.createMaterial({kind:'LIT_SPECULAR',light}),re);
+  const m=lib.createMaterial({kind:'LIT_SPECULAR'});
+  assert.throws(()=>bind(lib,m),/CAMERA_POSITION_INVALID/);
+  assert.throws(()=>bind(lib,m,{cameraPosition:[0,NaN,4]}),/CAMERA_POSITION_INVALID/);
+  assert.throws(()=>bind(lib,m,{cameraPosition:[0,0,4],modelMatrix:[1]}),/MODEL_MATRIX_INVALID/);
+  const b=bind(lib,m,{cameraPosition:[0,0,4]});
+  assert.ok(lib.status().materialKinds.includes('LIT_SPECULAR'));
+  assert.equal(m.light.shininess,48);
+  assert.ok(Object.isFrozen(m.light.skyColor));
+  const count=f.calls.length;
+  f.gl.getUniformLocation=(_p,name)=>name==='uCameraPosition'?null:{name};
+  assert.throws(()=>b.beforeDraw(f.gl,b.program.gpu),/MATERIAL_UNIFORM_MISSING:uCameraPosition/);
+  assert.equal(f.calls.length,count,'no GL mutation before all uniforms validated');
+});
+
+test('E6 opt-in shader does not mutate default LIT GLSL or E4 legacy material bindings',()=>{
+  const f=makeDevice(),lib=createNativeMaterialLibrary(f.device);
+  const legacy=lib.createMaterial({kind:'LIT',light:{ambient:.2,intensity:.7}});
+  const b=bind(lib,legacy);b.beforeDraw(f.gl,b.program.gpu);
+  const fragment=b.program.definition.fragmentSource;
+  assert.match(fragment,/float lambert=max\(dot\(normalize\(vNormal\),uLightDirection\),0\.0\)/);
+  assert.doesNotMatch(fragment,/uCameraPosition|uSkyColor|uShininess/);
+  assert.equal(f.calls.filter(x=>x[0]==='m4').length,1);
+  assert.equal(f.calls.filter(x=>x[0]==='m3').length,1);
+});

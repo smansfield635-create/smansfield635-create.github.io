@@ -756,6 +756,50 @@
       "scopeHash": "06681f4dc124d453a667e81dee83051362c6cbc60c61235e5f2a04be64e363f4",
       "state": "ADMITTED_LOCKED"
     },
+    "0683f8fa88ac41c6634715b3559c0b0736fb39de4b42966fd3b32c6649e9093c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "ff2706e18db2d1dc247ebcbd502919153223b6ac",
+          "lockGeneration": 3094,
+          "lockScope": "SHOWROOM_GLOBE:ZIONTS:E9_GEOLOGY_MATERIAL_FIDELITY_20261103",
+          "operationId": "ZIONTS_E9_GEOLOGY_MATERIAL_SURFACE_FIDELITY_20261103_001",
+          "procedureLocatorDigest": "639c19de9ead03351f02faa1a086811523b6af44c2e2d395ae62380c89f76f97",
+          "requestDigest": "ae8a364071967cd14b8215724c843bf169054300ee98abce17d4350fd7cbdee9",
+          "scopeHash": "0683f8fa88ac41c6634715b3559c0b0736fb39de4b42966fd3b32c6649e9093c"
+        },
+        "bindingDigest": "d0b2955d435cf1ea4a8f156f07b81f6c1a6b27df287a642d1db3bc31e00430ee",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "c50938ecbb107765d9737a95a82c316232f70d0ce098b8ee2947edd6872b7f1b",
+          "commentId": 6618406159,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 3461,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41741673093,
+          "workflowSha": "ff2706e18db2d1dc247ebcbd502919153223b6ac"
+        },
+        "lineageAnchorCommitSha": "8d4e3a7767f7fd3c0d191506ea0d5f85d5e5be5c",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "ff2706e18db2d1dc247ebcbd502919153223b6ac",
+      "lockGeneration": 3094,
+      "lockScope": "SHOWROOM_GLOBE:ZIONTS:E9_GEOLOGY_MATERIAL_FIDELITY_20261103",
+      "operationId": "ZIONTS_E9_GEOLOGY_MATERIAL_SURFACE_FIDELITY_20261103_001",
+      "procedureLocatorDigest": "639c19de9ead03351f02faa1a086811523b6af44c2e2d395ae62380c89f76f97",
+      "released": false,
+      "requestDigest": "ae8a364071967cd14b8215724c843bf169054300ee98abce17d4350fd7cbdee9",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "0683f8fa88ac41c6634715b3559c0b0736fb39de4b42966fd3b32c6649e9093c",
+      "state": "ADMITTED_LOCKED"
+    },
     "07b8e302d02d2e7521e9ecd9a198e399207727382766a45b68e0d338797b63e7": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -26031,7 +26075,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3093,
+  "lockGeneration": 3094,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

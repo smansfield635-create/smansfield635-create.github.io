@@ -413,9 +413,14 @@ export function createRev2Rgba32fTarget(gl,{width=529,height=980}={}){
   gl.activeTexture(s.activeTexture);
   gl.viewport(...s.viewport);
  };
- const initial=saved();
- gl.activeTexture(gl.TEXTURE0);
- initial.texture0=gl.getParameter(gl.TEXTURE_BINDING_2D);
+ const snapshot=()=>{
+  const state=saved();
+  gl.activeTexture(gl.TEXTURE0);
+  state.texture0=gl.getParameter(gl.TEXTURE_BINDING_2D);
+  gl.activeTexture(state.activeTexture);
+  return state;
+ };
+ const initial=snapshot();
  let texture=null,depth=null,framebuffer=null,disposed=false;
  try{
   texture=gl.createTexture();
@@ -469,7 +474,7 @@ export function createRev2Rgba32fTarget(gl,{width=529,height=980}={}){
  const capture=(draw,regions)=>{
   if(typeof draw!=='function'||!Array.isArray(regions)||regions.length<1||
      regions.some(r=>!r||!Array.isArray(r)||r.length!==4))fail('CAPTURE_ARGUMENTS');
-  const prior=saved();
+  const prior=snapshot();
   try{
    bind();
    draw();
@@ -477,8 +482,6 @@ export function createRev2Rgba32fTarget(gl,{width=529,height=980}={}){
   }finally{
    // Draw code may have changed the active texture; recover the original
    // binding without changing the published renderer's persistent resources.
-   gl.activeTexture(gl.TEXTURE0);
-   prior.texture0=gl.getParameter(gl.TEXTURE_BINDING_2D);
    restore(prior);
   }
  };

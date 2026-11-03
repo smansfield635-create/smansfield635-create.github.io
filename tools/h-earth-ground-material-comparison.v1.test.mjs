@@ -413,3 +413,50 @@ test('GEN3087 R3A camera and actual GPU uniform gates reject a wrong source obse
   assert.throws(()=>m.validateNearFarGpuUniforms({...gpu,camera:[0,0,0]},packet,{cameraPosition:packet.camera.position}),/GPU_CAMERA_UNIFORM_READBACK_MISMATCH/);
   assert.throws(()=>m.validateNearFarGpuUniforms(null,packet,{cameraPosition:packet.camera.position}),/GPU_CAMERA_UNIFORM_READBACK_MISMATCH/);
 });
+
+test('REV2 G1 static preflight requires exact product/G1/governing source and rejects all drift',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs'),c=m.REV2_G1_STATIC_PREFLIGHT;
+ const sample=()=>({
+  baseline:c.baseline,product:c.product,governing:c.governing,
+  baselineToProduct:[...c.baselineToProduct],baselineToGoverning:[...c.baselineToGoverning],
+  blobs:{baseline:{...c.blobs},product:{...c.blobs},governing:{...c.blobs}},
+  atlasDigests:{...c.atlases},
+  importMapCount:36,importMapTargetsLocal:true,importMapPathsExist:true,
+  newEngineRuntimeImport:false,
+  cameraContractBlob:c.blobs['showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'],
+  planetaryFrameBlob:c.blobs['showroom/globe/h-earth/render/planetary-world-frame.js'],
+  navigationBlob:c.blobs['showroom/globe/h-earth/functional-landscape/navigation.js']
+ });
+ const receipt=m.validateRev2G1StaticEvidence(sample());
+ assert.equal(receipt.result,'G1_SOURCE_DEPENDENCY_ASSET_CAMERA_PARITY_SOURCE_ONLY_PASS');
+ assert.equal(receipt.verifiedBlobPaths,14);
+ assert.equal(receipt.atlasCount,2);
+ assert.equal(receipt.gpuExecuted,false);
+ assert.equal(receipt.gpuAuthorizationCreated,false);
+ assert.equal(receipt.actualG1CameraUniformReadback,false);
+ assert.equal(receipt.g1TwelveFirstHitsMeasured,false);
+ assert.equal(receipt.float32FramebufferCalibrated,false);
+ assert.equal(receipt.ownerVisualAcceptanceCreated,false);
+ for(const [mutate,error] of [
+  [x=>{x.baseline='0'.repeat(40);},/EXACT_HEAD_DRIFT/],
+  [x=>{x.product='0'.repeat(40);},/EXACT_HEAD_DRIFT/],
+  [x=>{x.governing='0'.repeat(40);},/EXACT_HEAD_DRIFT/],
+  [x=>{x.baselineToProduct.push('showroom/globe/h-earth/render/new-file.js');},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
+  [x=>{x.baselineToGoverning.pop();},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
+  [x=>{x.baselineToProduct[0]=x.baselineToProduct[1];},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
+  [x=>{x.blobs.product['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js']='0'.repeat(40);},/SOURCE_OR_ASSET_BLOB_DRIFT/],
+  [x=>{delete x.blobs.baseline['showroom/globe/h-earth/render/planetary-world-frame.js'];},/SOURCE_OR_ASSET_BLOB_DRIFT/],
+  [x=>{x.blobs.governing['showroom/globe/h-earth/functional-landscape/navigation.js']='0'.repeat(40);},/SOURCE_OR_ASSET_BLOB_DRIFT/],
+  [x=>{x.atlasDigests['showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png']='0'.repeat(64);},/ASSET_SHA256_DRIFT/],
+  [x=>{x.importMapCount=35;},/IMPORT_GRAPH_UNCLOSED/],
+  [x=>{x.importMapTargetsLocal=false;},/IMPORT_GRAPH_UNCLOSED/],
+  [x=>{x.importMapPathsExist=false;},/IMPORT_GRAPH_UNCLOSED/],
+  [x=>{x.newEngineRuntimeImport=true;},/IMPORT_GRAPH_UNCLOSED/],
+  [x=>{x.cameraContractBlob='0'.repeat(40);},/CAMERA_SOURCE_CONTRACT_DRIFT/],
+  [x=>{x.planetaryFrameBlob='0'.repeat(40);},/CAMERA_SOURCE_CONTRACT_DRIFT/],
+  [x=>{x.navigationBlob='0'.repeat(40);},/CAMERA_SOURCE_CONTRACT_DRIFT/]
+ ]){
+  const v=sample();mutate(v);assert.throws(()=>m.validateRev2G1StaticEvidence(v),error);
+ }
+ assert.throws(()=>m.collectRev2G1StaticPreflight(''),/PRODUCT_DIRECTORY_REQUIRED/);
+});

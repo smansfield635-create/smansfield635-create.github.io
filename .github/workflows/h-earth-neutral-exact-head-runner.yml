@@ -2131,7 +2131,12 @@ jobs:
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD" || { echo GEN3087_HEAD_DRIFT; exit 51; }
           git merge-base --is-ancestor 558ddc927296afb14574e3ee05a65b165f65467b HEAD || { echo GEN3087_PREDECESSOR_DRIFT; exit 52; }
-          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b49b || { echo GEN3087_RENDERER_DRIFT; exit 53; }
+          renderer_path=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          tree_blob="$(git rev-parse "HEAD:$renderer_path")"
+          checkout_blob="$(git hash-object "$renderer_path")"
+          checkout_raw="$(git hash-object --no-filters "$renderer_path")"
+          printf 'GEN3087_RENDERER_DIAG tree=%s checkout=%s raw=%s expected=%s\\n' "$tree_blob" "$checkout_blob" "$checkout_raw" 85ee835060d5106a670077a5f4352b7ad202b49b
+          test "$tree_blob" = 85ee835060d5106a670077a5f4352b7ad202b49b && test "$checkout_blob" = "$tree_blob" && test "$checkout_raw" = "$tree_blob" || { echo GEN3087_RENDERER_DRIFT; exit 53; }
           while IFS= read -r changed; do
             case "$changed" in
               tools/h-earth-ground-material-comparison.v1.mjs|tools/h-earth-groundcover-factor-overlay.mjs|tools/h-earth-ground-material-comparison.v1.test.mjs|.github/workflows/h-earth-neutral-exact-head-runner.yml) ;;

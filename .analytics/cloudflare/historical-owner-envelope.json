@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-03T14:24:56Z",
+  "generatedAt": "2026-11-03T15:26:15Z",
   "window": {
-    "start": "2026-08-05T14:24:56Z",
-    "end": "2026-11-03T14:24:56Z"
+    "start": "2026-08-05T15:26:15Z",
+    "end": "2026-11-03T15:26:15Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -202,16 +202,16 @@
         "pageLoads": 220,
         "visits": 20
       },
+      "/about/": {
+        "pageLoads": 40,
+        "visits": 0
+      },
       "/door/": {
         "pageLoads": 20,
         "visits": 0
       },
       "/campaigns/consider-the-energy/jen-leney/": {
         "pageLoads": 10,
-        "visits": 0
-      },
-      "/about/": {
-        "pageLoads": 40,
         "visits": 0
       },
       "/campaigns/consider-the-energy/secret-of-life-edition/": {
@@ -266,13 +266,13 @@
         "pageLoads": 50,
         "visits": 0
       },
-      "/products/archcoin/contract/": {
-        "pageLoads": 40,
-        "visits": 0
-      },
       "/products/education/": {
         "pageLoads": 260,
         "visits": 70
+      },
+      "/products/archcoin/contract/": {
+        "pageLoads": 40,
+        "visits": 0
       },
       "/products/archcoin/allocation/": {
         "pageLoads": 10,

@@ -4,11 +4,10 @@
 // One passive planet, one authored approach, one authored return. No planetary navigation authority.
 
 import {createNativeWebGLDevice} from "../../../assets/engine/dgb.native-webgl-device.v1.mjs";
-import {createNativeMaterialLibrary} from "../../../assets/engine/dgb.native-material-light.v1.mjs";
-
 // Opt-in pilot. The default path and original authored shader remain unchanged.
 // This flag is a candidate preview selector, not production adoption authority.
 const E6_LIGHTING_PREVIEW=new URL(globalThis.location?.href??"https://invalid.local/").searchParams.get("dgbLighting")==="E6";
+let createPreviewMaterialLibrary=null;
 
 const CONTRACT="ZIONTS_PASSIVE_ROTATING_PLANET_NARRATIVE_v1";
 const TRAVERSAL_CONTRACT="ZIONTS_BOUNDED_CINEMATIC_WITNESS_TRAVERSAL_v1";
@@ -70,7 +69,7 @@ function createResources(){
       // The original authored color pass is retained in full. The shared E6
       // material adds only view-dependent highlight energy, never substitutes
       // its generic albedo for ZIONTS's mineral, grain and strata shader.
-      const library=createNativeMaterialLibrary(device);
+      const library=createPreviewMaterialLibrary(device);
       const material=library.createMaterial({kind:"LIT_SPECULAR",baseColor:[0,0,0,1],light:{
         direction:[.78,.48,.66],color:[.89,.55,.39],ambient:0,intensity:.78,
         skyColor:[0,0,0],groundColor:[0,0,0],fillIntensity:0,
@@ -157,11 +156,17 @@ function onContextRestored(){
     document.documentElement.dataset.ziontsRenderer="ready";exposeStatus();start();
   }catch(error){fail(error?.message||"CONTEXT_RESTORE_FAILED")}
 }
-function initRenderer(){
+async function initRenderer(){
   canvas=document.getElementById("ziontsPlanet");
   if(!canvas)return fail("PLANET_CANVAS_MISSING");
   canvas.setAttribute("aria-hidden","true");canvas.style.pointerEvents="none";
   try{
+    // Load E4 only when requested: the default ZIONTS route depends solely on
+    // the already accepted E1 device and keeps its original rendering intact.
+    if(E6_LIGHTING_PREVIEW){
+      const module=await import("../../../assets/engine/dgb.native-material-light.v1.mjs");
+      createPreviewMaterialLibrary=module.createNativeMaterialLibrary;
+    }
     resources=createResources();
     // Own listeners follow the device's listeners so native GPU recovery runs first.
     canvas.addEventListener("webglcontextlost",onContextLost,false);

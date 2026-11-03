@@ -2328,7 +2328,7 @@ jobs:
             /showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js
             /showroom/globe/h-earth/functional-landscape/navigation.js
             /showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
-            /h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+            h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
             /h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
             /h-earth-3d/environment/h-earth.atmosphere-state.js
             /showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js

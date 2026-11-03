@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createNativeMaterialLibrary} from './dgb.native-material-light.v1.mjs';
+import {createNativeFramePipeline} from './dgb.native-frame-pipeline.v1.mjs';
 
 const ID=[1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1];
 const makeDevice=(backend='WEBGL1')=>{
@@ -309,4 +310,141 @@ test('E7 opt-in PBR never adds PBR uniforms to existing four material shader kin
     assert.doesNotMatch(s.fragmentSource,/uMetallic|uRoughness|specularTerm/);
   }
   assert.deepEqual(lib.status().materialKinds,['UNLIT','TEXTURED','LIT','LIT_SPECULAR','PBR_METALLIC_ROUGHNESS']);
+});
+
+function e9Fixture(backend='WEBGL1'){
+  const f=makeDevice(backend),gl=f.gl;
+  Object.assign(gl,{
+    CCW:1,CULL_FACE:2,BACK:3,FRONT:4,DEPTH_TEST:5,BLEND:6,LEQUAL:7,
+    FUNC_ADD:8,SRC_ALPHA:9,ONE_MINUS_SRC_ALPHA:10,ONE:11,
+    COLOR_BUFFER_BIT:16,DEPTH_BUFFER_BIT:32,
+    getContextAttributes(){return {depth:true};}
+  });
+  for(const name of ['frontFace','disable','enable','cullFace','depthMask','depthFunc',
+    'blendEquation','blendFuncSeparate','colorMask','clearColor','clearDepth','clear']){
+    gl[name]=(...args)=>f.calls.push([name,...args]);
+  }
+  f.device.bindRenderTarget=t=>{
+    if(t!==null && t.owned!==true)throw new Error('RENDER_TARGET_NOT_OWNED_BY_DEVICE');
+    f.calls.push(['target',t?.name??'canvas']);
+  };
+  f.device.createMesh=spec=>({gpu:{},definition:spec});
+  f.device.draw=cmd=>{
+    try{cmd.beforeDraw?.(gl,cmd.program.gpu);}
+    finally{cmd.afterDraw?.(gl,cmd.program.gpu);}
+  };
+  const depthGpu={ownedDepth:true};
+  const target={name:'e9-depth',owned:true,gpu:{},colorTexture:{gpu:{}},
+    depthGpu,depthTexture:{gpu:depthGpu},definition:{depth:true,depthTexture:true},
+    width:16,height:16};
+  const mesh={gpu:{},definition:{vertexCount:3}};
+  const pipe=createNativeFramePipeline(f.device);
+  const cast=(modelMatrix=ID)=>pipe.renderShadowDepth({target,lightViewProjection:ID,
+    casters:[{mesh,modelMatrix}],cull:'NONE'});
+  return {...f,target,pipe,cast};
+}
+
+test('E9 PBR receiver uses authentic E2 depth receipt and dialect-specific depth comparison',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const f=e9Fixture(backend),pass=f.cast();
+    const lib=createNativeMaterialLibrary(f.device);
+    const material=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS',metallic:0.2,roughness:0.65,
+      light:{direction:[0,0,1],ambient:0.08,intensity:0.9}});
+    const legacy=bind(lib,material,{cameraPosition:[0,0,4]});
+    const receiver=bind(lib,material,{cameraPosition:[0,0,4],shadow:{pass,bias:0.002}});
+    assert.notEqual(receiver.program,legacy.program);
+    assert.doesNotMatch(legacy.program.definition.fragmentSource,/uShadowMap/);
+    assert.match(receiver.program.definition.fragmentSource,/uShadowMap/);
+    assert.match(receiver.program.definition.fragmentSource,/shadowVisibility/);
+    assert.match(receiver.program.definition.fragmentSource,backend==='WEBGL2'
+      ?/texture\(uShadowMap,s.xy\)/:/texture2D\(uShadowMap,s.xy\)/);
+    assert.match(receiver.program.definition.vertexSource,/uShadowViewProjection\*uModel/);
+    const original={previousUnitOne:true};
+    f.gl.activeTexture(f.gl.TEXTURE0+1);
+    f.gl.bindTexture(f.gl.TEXTURE_2D,original);
+    f.gl.activeTexture(f.gl.TEXTURE0+3);
+    receiver.beforeDraw(f.gl,receiver.program.gpu);
+    assert.equal(f.gl.getParameter(f.gl.ACTIVE_TEXTURE),f.gl.TEXTURE0+3);
+    f.gl.activeTexture(f.gl.TEXTURE0+1);
+    assert.equal(f.gl.getParameter(f.gl.TEXTURE_BINDING_2D),f.target.depthGpu);
+    f.gl.activeTexture(f.gl.TEXTURE0+3);
+    receiver.afterDraw(f.gl,receiver.program.gpu);
+    assert.equal(f.gl.getParameter(f.gl.ACTIVE_TEXTURE),f.gl.TEXTURE0+3);
+    f.gl.activeTexture(f.gl.TEXTURE0+1);
+    assert.equal(f.gl.getParameter(f.gl.TEXTURE_BINDING_2D),original);
+    assert.ok(f.calls.some(x=>x[0]==='i' && x[2]===1));
+    assert.equal(lib.status().compiledPrograms,2);
+  }
+});
+
+test('E9 rejects forged, foreign and stale shadow frames before material GL writes',()=>{
+  const f=e9Fixture(),lib=createNativeMaterialLibrary(f.device);
+  const material=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS'});
+  assert.throws(()=>bind(lib,material,{cameraPosition:[0,0,3],
+    shadow:{pass:{}}}),/SHADOW_PASS_FOREIGN_OR_UNVERIFIED/);
+  assert.throws(()=>bind(lib,material,{cameraPosition:[0,0,3],
+    shadow:{pass:f.cast(),bias:-0.001}}),/SHADOW_BIAS_INVALID/);
+  assert.throws(()=>bind(lib,lib.createMaterial(),{shadow:{pass:f.cast()}}),/SHADOW_PBR_ONLY/);
+  const pass=f.cast();
+  const receiver=bind(lib,material,{cameraPosition:[0,0,3],shadow:{pass}});
+  const original=f.calls.length;
+  f.target.depthTexture.gpu={resized:true};
+  assert.throws(()=>receiver.beforeDraw(f.gl,receiver.program.gpu),/SHADOW_PASS_STALE_TARGET/);
+  assert.equal(f.calls.length,original);
+});
+
+test('E9 missing shadow uniform fails atomically and caster movement produces new frame receipts',()=>{
+  const f=e9Fixture(),lib=createNativeMaterialLibrary(f.device);
+  const material=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS'});
+  const first=f.cast(),shifted=[...ID];shifted[12]=0.3;
+  const second=f.cast(shifted);
+  assert.notEqual(first,second);
+  const receiver=bind(lib,material,{cameraPosition:[0,0,4],shadow:{pass:second}});
+  const before=f.calls.length;
+  const old=f.gl.getUniformLocation;
+  f.gl.getUniformLocation=(_p,name)=>name==='uShadowBias'?null:{name};
+  assert.throws(()=>receiver.beforeDraw(f.gl,receiver.program.gpu),/MATERIAL_UNIFORM_MISSING:uShadowBias/);
+  assert.equal(f.calls.length,before,'shadow uniform failure partially mutated state');
+  f.gl.getUniformLocation=old;
+  receiver.beforeDraw(f.gl,receiver.program.gpu);
+  receiver.afterDraw(f.gl,receiver.program.gpu);
+  assert.ok(f.calls.some(x=>x[0]==='m4' && x[1]?.name==='uShadowViewProjection'));
+});
+
+test('E9 restores shadow texture after a sampler uniform exception',()=>{
+  const f=e9Fixture(),lib=createNativeMaterialLibrary(f.device);
+  const material=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS'});
+  const receiver=bind(lib,material,{cameraPosition:[0,0,4],shadow:{pass:f.cast()}});
+  const original={saved:true};
+  f.gl.activeTexture(f.gl.TEXTURE0+1);
+  f.gl.bindTexture(f.gl.TEXTURE_2D,original);
+  f.gl.activeTexture(f.gl.TEXTURE0+2);
+  const originalUniform1i=f.gl.uniform1i;
+  f.gl.uniform1i=()=>{throw new Error('SAMPLER_UPLOAD_FAILED');};
+  assert.throws(()=>receiver.beforeDraw(f.gl,receiver.program.gpu),/SAMPLER_UPLOAD_FAILED/);
+  receiver.afterDraw(f.gl,receiver.program.gpu);
+  f.gl.uniform1i=originalUniform1i;
+  assert.equal(f.gl.getParameter(f.gl.ACTIVE_TEXTURE),f.gl.TEXTURE0+2);
+  f.gl.activeTexture(f.gl.TEXTURE0+1);
+  assert.equal(f.gl.getParameter(f.gl.TEXTURE_BINDING_2D),original);
+});
+
+
+test('E9 E4 receiver rejects superseded same-target caster receipts before GL state writes',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const f=e9Fixture(backend),lib=createNativeMaterialLibrary(f.device);
+    const material=lib.createMaterial({kind:'PBR_METALLIC_ROUGHNESS'});
+    const first=f.cast();
+    const binding=bind(lib,material,{cameraPosition:[0,0,4],shadow:{pass:first}});
+    const second=f.cast();
+    const before=f.calls.length;
+    assert.throws(()=>bind(lib,material,{cameraPosition:[0,0,4],shadow:{pass:first}}),
+      /SHADOW_PASS_STALE_TARGET/);
+    assert.throws(()=>binding.beforeDraw(f.gl,binding.program.gpu),
+      /SHADOW_PASS_STALE_TARGET/);
+    assert.equal(f.calls.length,before);
+    const replacement=bind(lib,material,{cameraPosition:[0,0,4],shadow:{pass:second}});
+    replacement.beforeDraw(f.gl,replacement.program.gpu);
+    replacement.afterDraw(f.gl,replacement.program.gpu);
+  }
 });

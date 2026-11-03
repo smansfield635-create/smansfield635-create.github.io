@@ -419,16 +419,7 @@ export async function run(argv){
       // baseline pose, 16 staged frames, 30 source-pinned first-hit pixels.
       // Nothing in this branch is permitted to capture the A03 candidate.
       if(NEAR_FAR_STRAIGHT_ACTIVE){
-        await page.evaluate(async()=>{
-          const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\\/navigation\\.js\\?/.test(x));
-          const unique=[...new Set(urls)];
-          if(unique.length!==1)throw Error('NEAR_FAR_NAV_MODULE_AMBIGUOUS:'+JSON.stringify(unique));
-          const url=unique[0];
-          let src=await(await fetch(url)).text();
-          src=src.replace(/from\\s*(['"])(\\.[^'"]+)\\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));
-          src+='\\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';
-          globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));
-        });
+        await page.evaluate(async()=>{const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));const unique=[...new Set(urls)];if(unique.length!==1)throw Error('NAVIGATION_MODULE_IDENTITY_AMBIGUOUS:'+JSON.stringify(unique));const url=unique[0];let src=await(await fetch(url)).text();src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,url).href));src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));});
         const pose=NEAR_FAR_STRAIGHT_POSE;
         const samples=NEAR_FAR_STRAIGHT_STATIONS.flatMap((station,i)=>[
           {...station.far,side:'far',station:i,z:station.z},

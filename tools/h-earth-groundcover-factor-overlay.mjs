@@ -261,13 +261,13 @@ export const NEAR_FAR_STRAIGHT_STAGE_MODES=Object.freeze(
 export function transformNearFarStraightRenderer(original){
   const inherited=transformWestFlankMaterialRenderer(original);
   const old=[
-    '    }else if(m==8){',
+    '    else if(m==8){',
     '      float difference=ravineFilteredMaterial-ravineNativeHabitat;',
     '      lit=vec3(max(difference,0.0),max(-difference,0.0),0.0);',
     '    }'
   ].join('\n');
   const next=[
-    '    }else if(m==8){',
+    '    else if(m==8){',
     '      // Gen3084 read-only fragment depth, RGB24 in geometry FBO.',
     '      float d=clamp(gl_FragCoord.z,0.0,1.0);',
     '      float packed=floor(d*16777215.0+0.5);',

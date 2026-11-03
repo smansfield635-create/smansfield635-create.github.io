@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createNativeWebGLDevice } from './dgb.native-webgl-device.v1.mjs';
 
-function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkFail = false, fboIncomplete = false, textureFail = false, fboIncompleteAfter = 0, uploadGlError = false } = {}) {
+function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkFail = false, fboIncomplete = false, textureFail = false, fboIncompleteAfter = 0, uploadGlError = false, depthTexture = false } = {}) {
   const log = [], handlers = new Map();
   let contextLost = false, id = 0, framebufferChecks = 0;
   const bindings = { texture: null, framebuffer: null, renderbuffer: null, unpack: 4 };
@@ -17,7 +17,7 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
     MAX_RENDERBUFFER_SIZE: 25, FRAMEBUFFER: 26, FRAMEBUFFER_BINDING: 27,
     COLOR_ATTACHMENT0: 28, DEPTH_ATTACHMENT: 29, FRAMEBUFFER_COMPLETE: 30,
     FRAMEBUFFER_INCOMPLETE_ATTACHMENT: 31, RENDERBUFFER: 32,
-    RENDERBUFFER_BINDING: 33, DEPTH_COMPONENT16: 34, NO_ERROR: 0, INVALID_OPERATION: 98,
+    RENDERBUFFER_BINDING: 33, DEPTH_COMPONENT16: 34, DEPTH_COMPONENT: 35, NO_ERROR: 0, INVALID_OPERATION: 98,
     createShader() { log.push('createShader'); return obj('shader'); },
     shaderSource() {}, compileShader() {}, getShaderParameter() { return !compileFail; },
     getShaderInfoLog() { return 'mock compile error'; }, deleteShader() { log.push('deleteShader'); },
@@ -26,7 +26,7 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
     getProgramInfoLog() { return 'mock link error'; }, deleteProgram() { log.push('deleteProgram'); },
     createBuffer() { log.push('createBuffer'); return obj('buffer'); },
     bindBuffer() {}, bufferData() { log.push('bufferData'); }, deleteBuffer() { log.push('deleteBuffer'); },
-    getExtension(n) { return n === 'OES_element_index_uint' && uint32 ? {} : null; },
+    getExtension(n) { return (n === 'OES_element_index_uint' && uint32) || (n === 'WEBGL_depth_texture' && depthTexture) ? {} : null; },
     getParameter(p) {
       if (p === this.MAX_TEXTURE_SIZE || p === this.MAX_RENDERBUFFER_SIZE) return 1024;
       if (p === this.TEXTURE_BINDING_2D) return bindings.texture;
@@ -41,6 +41,9 @@ function fakeCanvas({ webgl2 = false, uint32 = false, compileFail = false, linkF
     texParameteri() { log.push('texParameteri'); },
     texImage2D(_target, _level, _format, width, height, _border, _format2, _type, pixels) {
       log.push('texImage2D:' + width + 'x' + height + ':' + (pixels?.byteLength ?? 'null'));
+      if (_format === this.DEPTH_COMPONENT || _format === this.DEPTH_COMPONENT16) {
+        log.push('depthTexImage2D:' + _format + ':' + _format2 + ':' + _type);
+      }
     },
     getError() { return uploadGlError ? this.INVALID_OPERATION : this.NO_ERROR; },
     deleteTexture() { log.push('deleteTexture'); },
@@ -293,4 +296,112 @@ test('E5 source repair: clean draw reports first cleanup exception and releases 
   assert.throws(()=>d.draw({program:p,mesh:m,afterDraw(){calls.push('after');throw Error('AFTERDRAW_FAILURE');}}),/AFTERDRAW_FAILURE/);
   assert.deepEqual(calls,['after','disable:0','disable:1']);
   d.dispose();
+});
+
+
+test('E8 WebGL1 depth texture capability fails closed before allocating any GPU resources', () => {
+  const {canvas,log}=fakeCanvas();
+  const device=createNativeWebGLDevice(canvas);
+  assert.throws(()=>device.createRenderTarget({width:5,height:4,depthTexture:true}),
+    /WEBGL1_DEPTH_TEXTURE_EXTENSION_REQUIRED/);
+  assert.equal(log.filter(x=>x==='createTexture').length,0);
+  assert.equal(log.filter(x=>x==='createFramebuffer').length,0);
+  assert.equal(device.status().renderTargets,0);
+  device.dispose();
+});
+
+test('E8 WebGL1 depth-texture target samples DEPTH_COMPONENT16 storage via extension', () => {
+  const {canvas,gl,log}=fakeCanvas({depthTexture:true});
+  const previous={external:true};gl.bindTexture(gl.TEXTURE_2D,previous);
+  const device=createNativeWebGLDevice(canvas);
+  const target=device.createRenderTarget({width:3,height:5,depthTexture:true});
+  assert.equal(target.definition.depthTexture,true);
+  assert.equal(target.definition.depth,true);
+  assert.equal(target.depthGpu,target.depthTexture.gpu);
+  assert.equal(gl.getParameter(gl.TEXTURE_BINDING_2D),previous);
+  assert(log.includes('depthTexImage2D:'+gl.DEPTH_COMPONENT+':'+gl.DEPTH_COMPONENT+':'+gl.UNSIGNED_SHORT));
+  assert.equal(log.filter(x=>x==='framebufferTexture2D').length,2);
+  assert.equal(log.filter(x=>x==='createRenderbuffer').length,0);
+  assert.equal(device.status().estimatedTextureBytes,3*5*6);
+  assert.equal(device.status().estimatedRenderbufferBytes,0);
+  assert.equal(device.status().textures,2);
+  const oldDepth=target.depthTexture.gpu,oldFbo=target.gpu;
+  device.bindRenderTarget(target);
+  device.resizeRenderTarget(target,7,9);
+  assert.notEqual(target.depthTexture.gpu,oldDepth);
+  assert.equal(target.depthTexture.gpu,target.depthGpu);
+  assert.notEqual(target.gpu,oldFbo);
+  assert.equal(gl.getParameter(gl.FRAMEBUFFER_BINDING),target.gpu);
+  assert.equal(device.status().estimatedTextureBytes,7*9*6);
+  device.dispose();
+  assert.equal(log.filter(x=>x==='deleteTexture').length,4);
+  assert.equal(log.filter(x=>x==='deleteFramebuffer').length,2);
+  assert.equal(log.filter(x=>x==='deleteRenderbuffer').length,0);
+});
+
+test('E8 WebGL2 native depth16 texture does not require WebGL1 extension and survives context restore', () => {
+  const {canvas,gl,log}=fakeCanvas({webgl2:true});
+  const device=createNativeWebGLDevice(canvas,{backend:'WEBGL2'});
+  const target=device.createRenderTarget({width:6,height:4,depthTexture:true});
+  assert(log.includes('depthTexImage2D:'+gl.DEPTH_COMPONENT16+':'+gl.DEPTH_COMPONENT+':'+gl.UNSIGNED_SHORT));
+  const oldDepth=target.depthTexture.gpu,oldColor=target.colorTexture.gpu,oldFrame=target.gpu;
+  canvas.trigger('webglcontextlost');
+  assert.equal(target.depthTexture.gpu,null);
+  assert.equal(target.depthGpu,null);
+  assert.equal(device.status().lost,true);
+  canvas.trigger('webglcontextrestored');
+  assert.equal(device.status().lost,false);
+  assert.notEqual(target.depthTexture.gpu,oldDepth);
+  assert.notEqual(target.colorTexture.gpu,oldColor);
+  assert.notEqual(target.gpu,oldFrame);
+  assert.equal(target.depthGpu,target.depthTexture.gpu);
+  assert.equal(device.status().estimatedTextureBytes,6*4*6);
+  device.dispose();
+  assert.equal(log.filter(x=>x==='deleteRenderbuffer').length,0);
+});
+
+test('E8 failed depth-texture framebuffer construction releases two provisional textures', () => {
+  const {canvas,log}=fakeCanvas({webgl2:true,fboIncomplete:true});
+  const device=createNativeWebGLDevice(canvas,{backend:'WEBGL2'});
+  assert.throws(()=>device.createRenderTarget({width:4,height:4,depthTexture:true}),/FRAMEBUFFER_INCOMPLETE/);
+  assert.equal(device.status().renderTargets,0);
+  assert.equal(log.filter(x=>x==='deleteFramebuffer').length,1);
+  assert.equal(log.filter(x=>x==='deleteTexture').length,2);
+  assert.equal(log.filter(x=>x==='deleteRenderbuffer').length,0);
+  device.dispose();
+});
+
+test('E8 failed shadow-depth resize preserves original framebuffer, depth sampler and dimensions', () => {
+  const {canvas,gl,log}=fakeCanvas({webgl2:true,fboIncompleteAfter:2});
+  const device=createNativeWebGLDevice(canvas,{backend:'WEBGL2'});
+  const target=device.createRenderTarget({width:4,height:4,depthTexture:true});
+  const frame=target.gpu,depth=target.depthGpu,color=target.colorTexture.gpu;
+  device.bindRenderTarget(target);
+  assert.throws(()=>device.resizeRenderTarget(target,9,7),/FRAMEBUFFER_INCOMPLETE/);
+  assert.equal(target.gpu,frame);
+  assert.equal(target.depthGpu,depth);
+  assert.equal(target.depthTexture.gpu,depth);
+  assert.equal(target.colorTexture.gpu,color);
+  assert.equal(target.width,4);assert.equal(target.height,4);
+  assert.equal(gl.getParameter(gl.FRAMEBUFFER_BINDING),frame);
+  assert.equal(device.status().estimatedTextureBytes,4*4*6);
+  assert.equal(log.filter(x=>x==='deleteTexture').length,2);
+  device.dispose();
+  assert.equal(log.filter(x=>x==='deleteTexture').length,4);
+});
+
+test('E8 malformed depth-texture requests do not mutate GPU state and defaults remain legacy renderbuffers', () => {
+  const {canvas,log}=fakeCanvas();
+  const device=createNativeWebGLDevice(canvas);
+  for(const opts of [{depthTexture:'yes'}, {depthTexture:1}, {depthTexture:true,depth:false}]) {
+    assert.throws(()=>device.createRenderTarget({width:4,height:4,...opts}),/RENDER_TARGET_DEPTH_TEXTURE_INVALID/);
+  }
+  assert.equal(log.filter(x=>x==='createTexture').length,0);
+  const legacy=device.createRenderTarget({width:4,height:4});
+  assert.equal(legacy.depthTexture,null);
+  assert(legacy.depthGpu);
+  assert.equal(legacy.definition.depthTexture,false);
+  assert.equal(device.status().estimatedRenderbufferBytes,4*4*2);
+  device.dispose();
+  assert.equal(log.filter(x=>x==='deleteRenderbuffer').length,1);
 });

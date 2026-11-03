@@ -3,7 +3,7 @@ name: H-Earth Neutral Exact Head Runner
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102', 'h-earth/ravine-habitat-color-attribution-20261102']
+    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102', 'h-earth/ravine-habitat-color-attribution-20261102', 'h-earth/west-flank-material-pixel-gen3079-20261102']
     paths:
       - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
       - 'tools/h-earth-ground-material-comparison.v1.mjs'
@@ -1971,5 +1971,118 @@ jobs:
         with:
           name: h-earth-owner-west-flank-material-stage-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/h-earth-west-flank-gen3079/
+          if-no-files-found: warn
+          retention-days: 30
+
+
+  near-far-straight-baseline-gen3084:
+    if: >-
+      ${{ github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/straight-near-far-baseline-gen3084-20261102' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 42
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout immutable admitted diagnostic branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /tools/h-earth-ground-material-comparison.v1.test.mjs
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+      - name: Checkout unchanged published H-Earth
+        uses: actions/checkout@v4
+        with:
+          ref: 11afdc5278564728ea9eef6ffb525601ce4362a7
+          path: product
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/h-earth/
+            /h-earth-3d/
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Gen3084 source, scope, profile and regression gate before browser
+        env:
+          EXACT_HEAD: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C tooling rev-parse HEAD)" = "$EXACT_HEAD" || { echo GEN3084_TOOL_HEAD_DRIFT; exit 51; }
+          test "$(git -C product rev-parse HEAD)" = 11afdc5278564728ea9eef6ffb525601ce4362a7 || { echo GEN3084_PRODUCT_HEAD_DRIFT; exit 52; }
+          git -C tooling merge-base --is-ancestor 069f35028039f543fa39dfd255b70ac5fcac9c92 HEAD || { echo GEN3084_PREDECESSOR_DRIFT; exit 53; }
+          for dir in tooling product; do
+            test -z "$(git -C "$dir" status --porcelain --untracked-files=no)" || { echo GEN3084_DIRTY_CHECKOUT; exit 54; }
+            bytes="$(du -sb "$dir" | cut -f1)"
+            if (( bytes > 2147483648 )); then echo GEN3084_SPARSE_CHECKOUT_BUDGET; exit 55; fi
+          done
+          free="$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -1 | tr -d ' ')"
+          if (( free < 8589934592 )); then echo GEN3084_NO_DISK_HEADROOM; exit 56; fi
+          b1="$(git -C tooling hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
+          b2="$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
+          test "$b1" = 85ee835060d5106a670077a5f4352b49b && test "$b2" = "$b1" || { echo GEN3084_PUBLISHED_RENDERER_BLOB_DRIFT; exit 57; }
+          while IFS= read -r changed; do
+            case "$changed" in
+              tools/h-earth-ground-material-comparison.v1.mjs|tools/h-earth-groundcover-factor-overlay.mjs|tools/h-earth-ground-material-comparison.v1.test.mjs|.github/workflows/h-earth-neutral-exact-head-runner.yml) ;;
+              *) echo "GEN3084_OUT_OF_SCOPE:$changed"; exit 58;;
+            esac
+          done < <(git -C tooling diff --name-only 069f35028039f543fa39dfd255b70ac5fcac9c92 HEAD)
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-groundcover-factor-overlay.mjs
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.test.mjs
+          (cd tooling && node --test --test-name-pattern='Gen3074|WEST_FLANK|NEAR_FAR_STRAIGHT' tools/h-earth-ground-material-comparison.v1.test.mjs)
+          (cd tooling && H_EARTH_COMPARISON_PROFILE=SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1 node --input-type=module -e '
+            import assert from "node:assert/strict";
+            import {HEADS,NEAR_FAR_STRAIGHT_ACTIVE,NEAR_FAR_STRAIGHT_STATIONS} from "./tools/h-earth-ground-material-comparison.v1.mjs";
+            assert.equal(NEAR_FAR_STRAIGHT_ACTIVE,true);
+            assert.deepEqual(HEADS,{baseline:"11afdc5278564728ea9eef6ffb525601ce4362a7"});
+            assert.equal(NEAR_FAR_STRAIGHT_STATIONS.length,15);
+            console.log("GEN3084_FROZEN_SOURCE_CONTRACT_PASS");
+          ')
+      - name: Install existing Chromium substrate once
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture one source-derived near/FAR baseline, max 16 frames
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 1500s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../product \
+            --output "${{ runner.temp }}/h-earth-straight-near-far-gen3084"
+          node --input-type=module -e '
+            import fs from "node:fs"; import assert from "node:assert/strict";
+            const r=JSON.parse(fs.readFileSync(process.argv[1]+"/receipt.json","utf8"));
+            assert.equal(r.result,"STAGES_CAPTURED_VISUAL_REVIEW_REQUIRED");
+            assert.equal(r.nearFarStraight.frames,16);
+            assert.equal(r.nearFarStraight.sourceStationCount,15);
+            assert.equal(r.nearFarStraight.originalSourceMatches,30);
+            assert.equal(r.nearFarStraight.mismatchCount,0);
+            assert.equal(r.nearFarStraight.ownerStraightCutoffVisuallyProven,false);
+            assert.equal(r.nearFarStraight.ownerCurvedWedgeProven,false);
+            assert.equal(r.nearFarStraight.candidateGpu,false);
+            assert.equal(r.productDiskMutation,false);
+            assert.equal(r.releaseAuthorized,false);
+            console.log("GEN3084_BASELINE_CAPTURED_VISUAL_REVIEW_PENDING");
+          ' "${{ runner.temp }}/h-earth-straight-near-far-gen3084"
+      - name: Preserve Gen3084 PNG stages and receipt, even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-straight-near-far-baseline-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-straight-near-far-gen3084/
           if-no-files-found: warn
           retention-days: 30

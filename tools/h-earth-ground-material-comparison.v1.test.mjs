@@ -418,7 +418,8 @@ test('REV2 G1 static preflight requires exact product/G1/governing source and re
  const m=await import('./h-earth-ground-material-comparison.v1.mjs'),c=m.REV2_G1_STATIC_PREFLIGHT;
  const sample=()=>({
   baseline:c.baseline,product:c.product,governing:c.governing,
-  baselineToProduct:[...c.baselineToProduct],baselineToGoverning:[...c.baselineToGoverning],
+  baselineToProductFingerprint:{...c.baselineToProductFingerprint},
+   baselineToGoverningFingerprint:{...c.baselineToGoverningFingerprint},
   blobs:{baseline:{...c.blobs},product:{...c.blobs},governing:{...c.blobs}},
   atlasDigests:{...c.atlases},
   importMapCount:36,importMapTargetsLocal:true,importMapPathsExist:true,
@@ -441,9 +442,9 @@ test('REV2 G1 static preflight requires exact product/G1/governing source and re
   [x=>{x.baseline='0'.repeat(40);},/EXACT_HEAD_DRIFT/],
   [x=>{x.product='0'.repeat(40);},/EXACT_HEAD_DRIFT/],
   [x=>{x.governing='0'.repeat(40);},/EXACT_HEAD_DRIFT/],
-  [x=>{x.baselineToProduct.push('showroom/globe/h-earth/render/new-file.js');},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
-  [x=>{x.baselineToGoverning.pop();},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
-  [x=>{x.baselineToProduct[0]=x.baselineToProduct[1];},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
+  [x=>{x.baselineToProductFingerprint.sha256='0'.repeat(64);},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
+  [x=>{x.baselineToGoverningFingerprint.count--;},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
+  [x=>{delete x.baselineToProductFingerprint.sha256;},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
   [x=>{x.blobs.product['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js']='0'.repeat(40);},/SOURCE_OR_ASSET_BLOB_DRIFT/],
   [x=>{delete x.blobs.baseline['showroom/globe/h-earth/render/planetary-world-frame.js'];},/SOURCE_OR_ASSET_BLOB_DRIFT/],
   [x=>{x.blobs.governing['showroom/globe/h-earth/functional-landscape/navigation.js']='0'.repeat(40);},/SOURCE_OR_ASSET_BLOB_DRIFT/],
@@ -458,6 +459,14 @@ test('REV2 G1 static preflight requires exact product/G1/governing source and re
  ]){
   const v=sample();mutate(v);assert.throws(()=>m.validateRev2G1StaticEvidence(v),error);
  }
+  // Exact-set fingerprint is order-independent and duplicate-sensitive.
+  const fp=m.fingerprintRev2PathDelta;
+  const paths=['scene/render.js','scene/material.js','scene/ground.js'];
+  assert.deepEqual(fp(paths),fp([...paths].reverse()));
+  assert.notEqual(fp(paths).sha256,fp(['scene/render.js','scene/material.js','scene/wrong.js']).sha256);
+  assert.throws(()=>fp([...paths,paths[0]]),/CHANGED_PATHS_DUPLICATE/);
+  assert.throws(()=>fp(['scene/render.js','bad\\npath']),/CHANGED_PATHS_INVALID/);
+  assert.throws(()=>fp(null),/CHANGED_PATHS_INVALID/);
  assert.throws(()=>m.collectRev2G1StaticPreflight(''),/PRODUCT_DIRECTORY_REQUIRED/);
 });
 

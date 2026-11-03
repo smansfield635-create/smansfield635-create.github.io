@@ -291,3 +291,92 @@ export function transformNearFarStraightRenderer(original){
     sourcePoseOnly:true,ownerPhotoCorrespondence:false,
     productDiskMutation:false,releaseAuthorized:false});
 }
+
+
+// REV2 exact-published-source GPU numeric probe (source construction only).
+// Debug-disabled shader output, sampling, soil blend and draw order stay intact.
+export const REV2_WORLD_SOIL_NUMERIC_MODES=Object.freeze([
+ 'role_primitive_depth_valid','corrected_normal_slope',
+ 'exposure_eligibility_weight_authority','pre_soil_and_shelter','K_and_region',
+ 'uv_ddx','ddy_lod_valid','implicit_T_coast',
+ ...Array.from({length:9},(_,i)=>'fixed_lod_'+i),'post_soil_C'
+]);
+export function transformRev2WorldSoilNumericRenderer(original){
+ const sourceHash=hash(original);
+ if(sourceHash!=='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2')
+   throw Error('REV2_PUBLISHED_RENDERER_SOURCE_HASH_MISMATCH:'+sourceHash);
+ const start=original.indexOf('const FS = '+String.fromCharCode(96)+'#version 300 es');
+ const end=original.indexOf('// Ordered screen-door coverage',start);
+ if(start<0||end<=start)throw Error('REV2_FRAGMENT_SCOPE_INVALID');
+ let fs=original.slice(start,end);
+ fs=once(fs,'out vec4 outColor;','uniform highp int uRev2NumericMode;\nout vec4 outColor;');
+ fs=once(fs,'void main(){',[
+  'void main(){',
+  '  // REV2: evaluate implicit UV derivatives before divergent soil branch.',
+  '  vec2 rev2UV=clearingLocalXZ(vWorldPosition)*0.28;',
+  '  vec2 rev2DDX=dFdx(rev2UV),rev2DDY=dFdy(rev2UV);',
+  '  bool rev2DerivativeFinite=!any(isnan(vec4(rev2DDX,rev2DDY))) && !any(isinf(vec4(rev2DDX,rev2DDY)));',
+  '  vec3 rev2P=vec3(0.0),rev2C=vec3(0.0),rev2T=vec3(0.0),rev2K=vec3(0.0);',
+  '  float rev2W=0.0,rev2A=0.0,rev2E=0.0,rev2Region=0.0,rev2Shelter=0.0;',
+  '  bool rev2SampledOriginalT=false;'
+ ].join('\n'));
+ fs=once(fs,'    if(uClearingEnabled==1){\n      // The approved earth texture',[
+  '    rev2P=palette;rev2C=palette;rev2Shelter=shelteredSoil;',
+  '    if(uClearingEnabled==1){',
+  '      // The approved earth texture'
+ ].join('\n'));
+ fs=once(fs,'      float worldSoilWeight=worldSoilCoverage;',[
+  '      float worldSoilWeight=worldSoilCoverage;',
+  '      rev2W=worldSoilWeight;rev2E=worldSoilEligibility;rev2Region=worldSoilRegion;'
+ ].join('\n'));
+ fs=once(fs,'        ).rgb;\n        if(geologicalEarthRock){',[
+  '        ).rgb;',
+  '        if(!geologicalEarthRock){rev2T=worldSoilTexel;rev2SampledOriginalT=true;}',
+  '        if(geologicalEarthRock){'
+ ].join('\n'));
+ fs=once(fs,'        vec3 worldSoilActualAlbedo=',[
+  '        rev2K=0.75*worldSoilEarthTint*worldSoilBroadTonal;',
+  '        vec3 worldSoilActualAlbedo='
+ ].join('\n'));
+ fs=once(fs,'        vec3 worldSoilFinal=mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority);',[
+  '        rev2P=palette;rev2A=worldSoilAlbedoAuthority;',
+  '        vec3 worldSoilFinal=mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority);'
+ ].join('\n'));
+ fs=once(fs,'    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_BEGIN',[
+  '    rev2C=palette;',
+  '    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_BEGIN'
+ ].join('\n'));
+ const output=[
+  '  if(uRev2NumericMode>0){',
+  '    int m=uRev2NumericMode;',
+  '    bool ordinary=worldSoilTerrain&&!geologicalEarthRock;',
+  '    bool validT=ordinary&&rev2SampledOriginalT&&rev2W>0.001&&rev2DerivativeFinite;',
+  '    float derivativeMagnitude=max(length(rev2DDX*256.0),length(rev2DDY*256.0));',
+  '    float estimatedLod=clamp(log2(max(derivativeMagnitude,1.0)),0.0,8.0);',
+  '    vec4 channels=vec4(0.0);',
+  '    if(m==1)channels=vec4(float(vRoleCode),float(vPrimitiveIndex),gl_FragCoord.z,ordinary?1.0:0.0);',
+  '    else if(m==2)channels=vec4(geometricNormal,slope);',
+  '    else if(m==3)channels=vec4(rockExposure,rev2E,rev2W,rev2A);',
+  '    else if(m==4)channels=vec4(rev2P,rev2Shelter);',
+  '    else if(m==5)channels=vec4(rev2K,rev2Region);',
+  '    else if(m==6&&validT)channels=vec4(rev2UV,rev2DDX);',
+  '    else if(m==7)channels=validT?vec4(rev2DDY,estimatedLod,1.0):vec4(0.0);',
+  '    else if(m==8&&validT)channels=vec4(rev2T,vCoastDistanceMeters);',
+  '    else if(m>=9&&m<=17&&validT){',
+  '      vec3 explicitLod=textureLod(uClearingSoil,rev2UV,float(m-9)).rgb;',
+  '      channels=vec4(explicitLod,1.0);',
+  '    }',
+  '    else if(m==18)channels=vec4(rev2C,ordinary?1.0:0.0);',
+  '    outColor=channels;',
+  '  }else outColor=vec4(lit,outputAlpha);'
+ ].join('\n');
+ fs=once(fs,'  outColor=vec4(lit,outputAlpha);',output);
+ const instrumented=original.slice(0,start)+fs+original.slice(end);
+ if(!instrumented.includes('palette=mix(palette,worldSoilFinal,worldSoilWeight);'))
+   throw Error('REV2_ORIGINAL_WORLD_SOIL_BLEND_LOST');
+ return Object.freeze({source:instrumented,originalSha256:sourceHash,
+  instrumentedSha256:hash(instrumented),numericModeCount:REV2_WORLD_SOIL_NUMERIC_MODES.length,
+  noSourceWrite:true,debugDisabledOriginalOutputRetained:true,
+  driverSelectedMipObserved:false,noOriginalTWhenWZero:true,
+  requiresRgba32f:true,productionMutation:false,gpuExecuted:false});
+}

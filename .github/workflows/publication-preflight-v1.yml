@@ -315,6 +315,7 @@ jobs:
           sparse-checkout: |
             nine-summits/universe/index.html
             nine-summits/universe/universe.motion.js
+            nine-summits/universe/peace.environment.svg
             assets/compass/compass.orbit-physics.js
             showroom/globe/h-earth/render/geometry-kernel.js
             showroom/globe/h-earth/render/geometry-kernel.north.js
@@ -351,7 +352,7 @@ jobs:
             'showroom/globe/h-earth/render/geometry-kernel.js':'91eabcc240b54ef01a52d59a237dff629d90a722'
           };
           const output=process.env.RUNNER_TEMP+'/nine-active-webgl1';
-          const receipt={schema:'DGB_NINE_SUMMITS_ACTIVE_MOTION_WEBGL1_PR_QUALIFICATION_v1',result:'FAIL_CLOSED',sourceBlobs:{},captures:[],checks:[],errors:[],productMutationPerformed:false,publicationPerformed:false,orbitalSeamTested:false};
+          const receipt={schema:'DGB_NINE_SUMMITS_ACTIVE_MOTION_WEBGL1_PR_QUALIFICATION_v1',result:'FAIL_CLOSED',sourceBlobs:{},captures:[],checks:[],errors:[],missingRequests:[],productMutationPerformed:false,publicationPerformed:false,orbitalSeamTested:false};
           let browser,server;
           const ensure=(value,label)=>{if(!value)throw Error(label);receipt.checks.push(label);};
           const sha=b=>crypto.createHash('sha256').update(b).digest('hex');
@@ -378,7 +379,7 @@ jobs:
             const url='http://127.0.0.1:'+server.address().port+'/nine-summits/universe/';
             for(const [width,height] of [[960,720],[390,760],[768,1024]]){
               const page=await browser.newPage(),errors=[],label=width+'x'+height;
-              page.on('pageerror',e=>errors.push('PAGE:'+String(e)));
+              page.on('pageerror',e=>errors.push('PAGE:'+String(e)));page.on('response',res=>{if(res.status()>=400)receipt.missingRequests.push({viewport:label,status:res.status(),url:res.url()});});
               page.on('console',m=>{if(m.type()==='error'&&!m.text().includes('favicon.ico'))errors.push('CONSOLE:'+m.text());});
               await page.setViewport({width,height,deviceScaleFactor:1});
               await page.emulateMediaFeatures([{name:'prefers-reduced-motion',value:'no-preference'}]);
@@ -393,7 +394,7 @@ jobs:
               await new Promise(resolve=>setTimeout(resolve,1100));const b=await state();ensure(b.phase>a.phase+.001&&b.active,label+':ORBIT_ADVANCES');await shot('orbit-after');
               await page.click('#toggle-motion');await new Promise(resolve=>setTimeout(resolve,250));const c=await state();await new Promise(resolve=>setTimeout(resolve,500));const d=await state();ensure(c.paused===true&&!d.active&&Math.abs(c.phase-d.phase)<1e-8,label+':PAUSE_HOLDS');
               await page.click('#toggle-motion');await page.waitForFunction(()=>globalThis.DGB_UNIVERSE?.readback?.()?.orbitActive===true,{timeout:10000});await new Promise(resolve=>setTimeout(resolve,700));const e=await state();ensure(e.phase>d.phase,label+':RESUME_ADVANCES');
-              await page.click('#path-list summary');await page.click('button[data-summit="1"]');await page.waitForFunction(()=>globalThis.DGB_UNIVERSE?.readback?.()?.selected===1,{timeout:12000});const f=await state();receipt.generositySelectedReadback={viewport:label,state:f,consoleErrors:errors.slice(0,12)};await shot('generosity-selected');ensure(f.ordinal===2,label+':BOOK_ORDER_2');ensure(f.loveGL===true,label+':GENEROSITY_WEBGL1_INITIALIZATION:'+JSON.stringify(receipt.generositySelectedReadback).slice(0,700));ensure(!f.active,label+':ORBIT_PAUSED_ON_ENTRY');await shot('generosity-approach');
+              await page.click('#path-list summary');await page.click('button[data-summit="1"]');await page.waitForFunction(()=>globalThis.DGB_UNIVERSE?.readback?.()?.selected===1,{timeout:12000});const f=await state();receipt.generositySelectedReadback={viewport:label,state:f,consoleErrors:errors.slice(0,12)};await shot('generosity-selected');ensure(f.ordinal==='II',label+':BOOK_ORDER_II');ensure(f.loveGL===true,label+':GENEROSITY_WEBGL1_INITIALIZATION:'+JSON.stringify(receipt.generositySelectedReadback).slice(0,700));ensure(!f.active,label+':ORBIT_PAUSED_ON_ENTRY');await shot('generosity-approach');
               await page.waitForFunction(()=>globalThis.DGB_UNIVERSE?.readback?.()?.flightStage==='encounter',{timeout:25000});const g=await state();ensure(g.loveVisible===true&&g.loveError===0,label+':GENEROSITY_ENCOUNTER');await shot('generosity-encounter');
               await page.click('#love-return');await page.waitForFunction(()=>globalThis.DGB_UNIVERSE?.readback?.()?.selected===-1,{timeout:12000});ensure((await state()).selected===-1,label+':RETURN_TO_NINE');await shot('return');
               ensure(errors.length===0,label+':NO_PAGE_ERRORS');await page.close();

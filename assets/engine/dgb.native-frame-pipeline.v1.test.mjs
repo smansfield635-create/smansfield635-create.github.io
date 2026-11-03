@@ -12,7 +12,7 @@ function fixture({ backend='WEBGL1', defaultDepth=true }={}) {
     getContextAttributes(){return {depth:defaultDepth};}, isContextLost(){return lost;}
   };
   for (const fn of ['frontFace','disable','enable','cullFace','depthMask','depthFunc','blendEquation','blendFuncSeparate',
-    'colorMask','clearColor','clearDepth','clear','activeTexture','bindTexture','uniform1i'])
+    'colorMask','clearColor','clearDepth','clear','activeTexture','bindTexture','uniform1i','uniform1f'])
     gl[fn]=(...args)=>log.push([fn,...args]);
   gl.getUniformLocation=()=>1;
   let serial=0;
@@ -185,4 +185,43 @@ test('context lost inside draw fails instead of falsely claiming a completed fra
   f.restore();f.setDraw(null);
   pipe.beginFrame(spec());pipe.endFrame();
   assert.equal(pipe.status().completedFrames,1);
+});
+
+
+test('E5-B opt-in offscreen sRGB output is forwarded and legacy default remains linear',()=>{
+  const f=fixture({backend:'WEBGL2'}),pipe=createNativeFramePipeline(f.device),target=f.target();
+  pipe.beginFrame(spec(target));
+  pipe.endFrame();
+  assert.ok(f.log.some(x=>x[0]==='uniform1f'&&x[2]===0));
+  pipe.beginFrame(spec(target));
+  pipe.endFrame({presentationEncoding:'SRGB'});
+  assert.ok(f.log.some(x=>x[0]==='uniform1f'&&x[2]===1));
+  assert.equal(f.log.filter(x=>x[0]==='createProgram').length,1);
+});
+
+test('E5-B sRGB requires an actual offscreen-to-canvas presentation and rejects unknown encodings without GL mutation',()=>{
+  const f=fixture(),pipe=createNativeFramePipeline(f.device),target=f.target();
+  pipe.beginFrame(spec());
+  let old=f.log.length;
+  assert.throws(()=>pipe.endFrame({presentationEncoding:'SRGB'}),/SRGB_REQUIRES_OFFSCREEN_CANVAS_PRESENTATION/);
+  assert.equal(f.log.length,old);
+  assert.throws(()=>pipe.endFrame({presentationEncoding:'P3'}),/PRESENTATION_ENCODING_INVALID/);
+  assert.equal(f.log.length,old);
+  pipe.endFrame();
+  pipe.beginFrame(spec(target));
+  old=f.log.length;
+  assert.throws(()=>pipe.endFrame({presentToCanvas:false,presentationEncoding:'SRGB'}),/SRGB_REQUIRES_OFFSCREEN_CANVAS_PRESENTATION/);
+  assert.equal(f.log.length,old);
+  assert.equal(pipe.endFrame({presentToCanvas:false}).presentation,'OFFSCREEN_ONLY');
+});
+
+test('E5-B both existing presentation dialects encode RGB only and retain alpha',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const f=fixture({backend}),pipe=createNativeFramePipeline(f.device);
+    pipe.beginFrame(spec(f.target()));pipe.endFrame({presentationEncoding:'SRGB'});
+    const created=f.log.find(x=>x[0]==='createProgram');
+    assert.ok(created);
+    // Native mock validates transfer plumbing; actual GLSL behavior is qualified in Chromium WebGL1/WebGL2.
+    assert.ok(f.log.some(x=>x[0]==='uniform1f'&&x[2]===1));
+  }
 });

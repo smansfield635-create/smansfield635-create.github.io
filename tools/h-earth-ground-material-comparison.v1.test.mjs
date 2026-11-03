@@ -465,7 +465,7 @@ test('REV2 G1 static preflight requires exact product/G1/governing source and re
   assert.deepEqual(fp(paths),fp([...paths].reverse()));
   assert.notEqual(fp(paths).sha256,fp(['scene/render.js','scene/material.js','scene/wrong.js']).sha256);
   assert.throws(()=>fp([...paths,paths[0]]),/CHANGED_PATHS_DUPLICATE/);
-  assert.throws(()=>fp(['scene/render.js','bad\\npath']),/CHANGED_PATHS_INVALID/);
+  assert.throws(()=>fp(['scene/render.js','bad\npath']),/CHANGED_PATHS_INVALID/);
   assert.throws(()=>fp(null),/CHANGED_PATHS_INVALID/);
  assert.throws(()=>m.collectRev2G1StaticPreflight(''),/PRODUCT_DIRECTORY_REQUIRED/);
 });

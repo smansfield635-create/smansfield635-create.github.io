@@ -475,3 +475,79 @@ test('REV2 import-map guard accepts both frozen local roots and rejects unknown 
   '/h-earth-3d/source.js\nattack',''
  ])assert.equal(isLocal(path),false);
 });
+
+test('REV2 frozen mode order, station windows and frame ceilings reject drift',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ assert.deepEqual(m.REV2_NUMERIC_MODES.slice(0,8),[
+  'role_primitive_depth_valid','corrected_normal_slope','exposure_eligibility_weight_authority',
+  'pre_soil_and_shelter','K_and_region','uv_ddx','ddy_lod_valid','implicit_T_coast']);
+ assert.equal(m.REV2_NUMERIC_MODES.length,18);
+ assert.deepEqual(m.REV2_NUMERIC_MODES.slice(8,17),Array.from({length:9},(_,i)=>'fixed_lod_'+i));
+ assert.equal(m.REV2_NUMERIC_SEAMS.length,15);
+ assert.deepEqual(m.REV2_NUMERIC_SEAMS.map(s=>s.z),[-457,-456,-455,-454,-453,-450,-448,-445,-440,-435,-425,-415,-405,-395,-385]);
+ assert.equal(m.REV2_G1_FIXED_PIXELS.length,12);
+ assert.deepEqual(m.REV2_G1_FIXED_PIXELS[0],{x:128,y:250});
+ assert.deepEqual(m.REV2_G1_FIXED_PIXELS.at(-1),{x:400,y:790});
+ assert.deepEqual([m.rev2GlY(0),m.rev2GlY(979)],[979,0]);
+ assert.deepEqual(m.rev2StationPixelSpan(m.REV2_NUMERIC_SEAMS[0]),{
+  x:314,y:141,width:32,height:1,topLeftCenter:330,crossingLeftIndex:15,crossingRightIndex:16});
+ assert.throws(()=>m.rev2GlY(-1),/PIXEL_ORIGIN_INVALID/);
+ assert.throws(()=>m.rev2StationPixelSpan({x:330,y:838,z:0}),/UNFROZEN_STATION/);
+ const valid={poses:[{warmup:40,modes:18},{warmup:45,modes:18}],
+  floatCalibrationDraws:2,referenceParityDraws:2,totalFrameSubmissions:125};
+ assert.equal(m.validateRev2FrameBudget(valid).result,'REV2_GPU_ACCOUNTING_VALID');
+ for(const invalid of [
+  {...valid,totalFrameSubmissions:126},
+  {...valid,poses:[{warmup:61,modes:18},{warmup:45,modes:18}],totalFrameSubmissions:146},
+  {...valid,poses:[{warmup:60,modes:18},{warmup:61,modes:18}],totalFrameSubmissions:161},
+  {...valid,poses:[{warmup:40,modes:17},{warmup:45,modes:18}]},
+  {...valid,floatCalibrationDraws:3}
+ ])assert.throws(()=>m.validateRev2FrameBudget(invalid),/REV2_GPU_/);
+});
+test('REV2 signed texture/nontexture decomposition reconstructs C, keeps sign and fails on zero/threshold',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const make=({role=1,primitive=0,p=[.25,.29,.31],w=.7,a=.8,k=[.8,.9,1],t=[.3,.4,.5],depth=.92,error=0.000001}={})=>{
+  const rows=Array.from({length:18},()=>[0,0,0,0]);
+  rows[0]=[role,primitive,depth,1];rows[1]=[0,1,0,.2];
+  rows[2]=[.2,.9,w,a];rows[3]=[...p,.3];rows[4]=[...k,.55];
+  rows[5]=[.3,.6,.0002,.001];rows[6]=[.001,.0002,1.3,w>0.001?1:0];
+  rows[7]=w>0.001?[...t,12]:[0,0,0,0];
+  for(let i=8;i<17;i++)rows[i]=w>0.001?[...t,1]:[0,0,0,0];
+  const c=w>0.001?p.map((v,i)=>v+w*a*(Math.pow(t[i],2.2)*k[i]-v)):p;
+  rows[17]=[...c,1];
+  return m.decodeRev2FloatPixel(rows,{calibratedError:error});
+ };
+ const left=make(),texRight=make({t:[.65,.55,.2]});
+ const tr=m.computeRev2SignedAttribution(left,texRight);
+ assert(tr.texture.norm>0.01);assert(tr.nonTexture.norm<0.00001);
+ assert.deepEqual(tr.texture.value.map(Math.sign),[1,1,-1]);
+ assert.equal(tr.mipSelectionKnown,false);
+ const nonRight=make({p:[.4,.32,.2],w:.55,a:.72,k:[.94,.8,.92]});
+ const nr=m.computeRev2SignedAttribution(left,nonRight);
+ assert(nr.nonTexture.norm>0.01);assert(nr.texture.norm<0.00001);
+ const both=m.computeRev2SignedAttribution(left,make({p:[.4,.32,.2],t:[.65,.55,.2]}));
+ assert(both.texture.norm>0.01&&both.nonTexture.norm>0.01);
+ const control=Array.from({length:30},()=>({texture:{norm:.001},nonTexture:{norm:.001}}));
+ assert.equal(m.classifyRev2Station(both,control).result,'BOTH_CONTRIBUTE');
+ assert.equal(m.classifyRev2Station(tr,control).result,'TEXTURE_SAMPLING_SUPPORTED');
+ assert.equal(m.classifyRev2Station(nr,control).result,'NON_TEXTURE_BLEND_FACTORS_SUPPORTED');
+ assert.equal(m.classifyRev2Station({texture:{...tr.texture,norm:.001,numericErrorBound:.001},
+  nonTexture:{...nr.nonTexture,norm:.001,numericErrorBound:0}},control).result,'UNRESOLVED');
+ assert.throws(()=>m.classifyRev2Station(tr,control.slice(0,29)),/CONTROLS_INCOMPLETE/);
+ assert.throws(()=>m.classifyRev2Station(tr,control.map((q,i)=>i===0?{texture:{norm:NaN},nonTexture:q.nonTexture}:q)),/CONTROL_NONFINITE/);
+ const zero=make({w:0});
+ assert.equal(zero.active,false);assert.equal(zero.t,null);
+ assert.throws(()=>m.computeRev2SignedAttribution(left,zero),/TEXTURE_UNOBSERVED/);
+ assert.equal(m.rev2ValidateSameRoleControl(left,texRight),true);
+ assert.throws(()=>m.rev2ValidateSameRoleControl(left,make({role:5,primitive:8})),/CONTROL_FIRST_HIT_OR_DEPTH_MISMATCH/);
+ assert.throws(()=>m.rev2ValidateSameRoleControl(left,make({depth:.934})),/CONTROL_FIRST_HIT_OR_DEPTH_MISMATCH/);
+ const bogusRows=Array.from({length:18},()=>[0,0,0,0]);
+ bogusRows[0]=[1,0,.9,1];bogusRows[2]=[.2,.9,.7,.8];
+ bogusRows[3]=[.2,.2,.2,.2];bogusRows[4]=[.8,.8,.8,.8];bogusRows[6][3]=1;
+ for(let i=8;i<17;i++)bogusRows[i][3]=1;
+ bogusRows[7]=[.3,.3,.3,2];bogusRows[17]=[.9,.9,.9,1];
+ const bad=m.decodeRev2FloatPixel(bogusRows,{calibratedError:0.000001});
+ assert.throws(()=>m.computeRev2SignedAttribution(left,bad),/RECONSTRUCTION_FAIL/);
+ assert.throws(()=>m.decodeRev2FloatPixel(bogusRows.slice(0,17),{calibratedError:.000001}),/ROWS_INCOMPLETE/);
+ assert.throws(()=>m.decodeRev2FloatPixel(bogusRows,{calibratedError:.000003}),/CALIBRATION_UNPROVEN/);
+});

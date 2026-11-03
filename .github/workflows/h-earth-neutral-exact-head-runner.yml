@@ -2158,7 +2158,7 @@ jobs:
   gen3087-planetary-near-far-gpu-one-shot:
     needs: gen3087-planetary-near-far-source-only
     if: >-
-      ${{ github.event_name == 'pull_request' && github.event.action == 'synchronize' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth-gen3087-planetary-near-far-source-camera' && github.event.before == '0000000000000000000000000000000000000000' }}
+      ${{ github.event_name == 'pull_request' && github.event.action == 'synchronize' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth-gen3087-planetary-near-far-source-camera' && github.event.before == 'fe7f62f7a1999c503a371e790e78966050bbe67a' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 42
     permissions:

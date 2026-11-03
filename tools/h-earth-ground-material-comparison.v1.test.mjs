@@ -551,3 +551,30 @@ test('REV2 signed texture/nontexture decomposition reconstructs C, keeps sign an
  assert.throws(()=>m.decodeRev2FloatPixel(bogusRows.slice(0,17),{calibratedError:.000001}),/ROWS_INCOMPLETE/);
  assert.throws(()=>m.decodeRev2FloatPixel(bogusRows,{calibratedError:.000003}),/CALIBRATION_UNPROVEN/);
 });
+
+test('REV2 source-pinned 18-channel shader probe retains original disabled output',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const t=o.transformRev2WorldSoilNumericRenderer(original),src=t.source;
+ assert.deepEqual(o.REV2_WORLD_SOIL_NUMERIC_MODES,m.REV2_NUMERIC_MODES);
+ assert.equal(t.numericModeCount,18);assert.equal(t.requiresRgba32f,true);
+ assert.equal(t.gpuExecuted,false);assert.equal(t.productionMutation,false);
+ assert.equal(t.driverSelectedMipObserved,false);
+ const a=original.indexOf('const FS = '),b=original.indexOf('// Ordered screen-door coverage',a);
+ const c=src.indexOf('const FS = '),d=src.indexOf('// Ordered screen-door coverage',c);
+ assert.equal(src.slice(0,c),original.slice(0,a));
+ assert.equal(src.slice(d),original.slice(b));
+ assert(src.indexOf('vec2 rev2DDX=dFdx')<src.indexOf('if(worldSoilTerrain){'));
+ assert(src.includes('palette=mix(palette,worldSoilFinal,worldSoilWeight);'));
+ assert(src.includes('vec3 worldSoilTexel=texture('));
+ assert(src.includes('if(!geologicalEarthRock){rev2T=worldSoilTexel;rev2SampledOriginalT=true;}'));
+ assert(src.includes('bool validT=ordinary&&rev2SampledOriginalT&&rev2W>0.001&&rev2DerivativeFinite;'));
+ assert(src.includes('textureLod(uClearingSoil,rev2UV,float(m-9)).rgb'));
+ assert(src.includes('if(uRev2NumericMode>0){'));
+ assert(src.includes('else outColor=vec4(lit,outputAlpha);'));
+ assert(src.includes('rev2RockExposure=rockExposure;'));
+ assert(src.includes('channels=vec4(rev2RockExposure,rev2E,rev2W,rev2A);'));
+ assert(src.includes('uniform highp int uRev2NumericMode;'));
+ assert.throws(()=>o.transformRev2WorldSoilNumericRenderer(original+'\n'),/SOURCE_HASH_MISMATCH/);
+});

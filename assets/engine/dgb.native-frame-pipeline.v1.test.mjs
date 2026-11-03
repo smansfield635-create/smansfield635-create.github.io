@@ -225,3 +225,44 @@ test('E5-B both existing presentation dialects encode RGB only and retain alpha'
     assert.ok(f.log.some(x=>x[0]==='uniform1f'&&x[2]===1));
   }
 });
+
+
+test('E5-B missing presentation uniform aborts and unbinds texture in both WebGL dialects',()=>{
+  for(const backend of ['WEBGL1','WEBGL2']){
+    const f=fixture({backend}),pipe=createNativeFramePipeline(f.device),t=f.target();
+    f.gl.getUniformLocation=(_handle,name)=>name==='uOutputSRGB'?null:1;
+    pipe.beginFrame(spec(t));
+    assert.throws(()=>pipe.endFrame({presentationEncoding:'SRGB'}),/PRESENTATION_UNIFORM_MISSING/);
+    assert.equal(pipe.status().lastPresentation,'ABORTED');
+    const binds=f.log.filter(x=>x[0]==='bindTexture');
+    assert.equal(binds.at(-1)[2],null);
+    f.gl.getUniformLocation=()=>1;
+    pipe.beginFrame(spec(t));
+    assert.equal(pipe.endFrame({presentationEncoding:'SRGB'}).presentation,'OFFSCREEN_PRESENTED');
+  }
+});
+
+test('E5-B cleanup errors do not mask primary presenter error',()=>{
+  const f=fixture(),pipe=createNativeFramePipeline(f.device),t=f.target();
+  const originalBind=f.gl.bindTexture;
+  f.gl.getUniformLocation=(_handle,name)=>name==='uOutputSRGB'?null:1;
+  f.gl.bindTexture=(target,texture)=>{
+    if(texture===null)throw new Error('BIND_CLEANUP_FAILED');
+    originalBind(target,texture);
+  };
+  pipe.beginFrame(spec(t));
+  assert.throws(()=>pipe.endFrame({presentationEncoding:'SRGB'}),/PRESENTATION_UNIFORM_MISSING/);
+  assert.equal(pipe.status().lastPresentation,'ABORTED');
+});
+
+test('E5-B successful draw surfaces presenter unbind failure',()=>{
+  const f=fixture(),pipe=createNativeFramePipeline(f.device),t=f.target();
+  const originalBind=f.gl.bindTexture;
+  f.gl.bindTexture=(target,texture)=>{
+    if(texture===null)throw new Error('BIND_CLEANUP_FAILED');
+    originalBind(target,texture);
+  };
+  pipe.beginFrame(spec(t));
+  assert.throws(()=>pipe.endFrame({presentationEncoding:'SRGB'}),/BIND_CLEANUP_FAILED/);
+  assert.equal(pipe.status().lastPresentation,'ABORTED');
+});

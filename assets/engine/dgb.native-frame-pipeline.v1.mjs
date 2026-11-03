@@ -195,15 +195,25 @@ export function createNativeFramePipeline(device) {
         gl.disable(gl.DEPTH_TEST); gl.depthMask(false); gl.disable(gl.CULL_FACE); gl.disable(gl.BLEND);
         gl.colorMask(true, true, true, true);
         gl.activeTexture(gl.TEXTURE0);
-        gl.bindTexture(gl.TEXTURE_2D, frame.target.colorTexture.gpu);
-        device.draw({ program, mesh, beforeDraw: (context, handle) => {
-          const location = context.getUniformLocation(handle, 'uColor');
-          const encodingLocation = context.getUniformLocation(handle, 'uOutputSRGB');
-          if (location === null || encodingLocation === null) throw new Error('PRESENTATION_UNIFORM_MISSING');
-          context.uniform1i(location, 0);
-          context.uniform1f(encodingLocation, presentationEncoding === 'SRGB' ? 1 : 0);
-        } });
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        let presenterFailed = false;
+        try {
+          gl.bindTexture(gl.TEXTURE_2D, frame.target.colorTexture.gpu);
+          device.draw({ program, mesh, beforeDraw: (context, handle) => {
+            const location = context.getUniformLocation(handle, 'uColor');
+            const encodingLocation = context.getUniformLocation(handle, 'uOutputSRGB');
+            if (location === null || encodingLocation === null) throw new Error('PRESENTATION_UNIFORM_MISSING');
+            context.uniform1i(location, 0);
+            context.uniform1f(encodingLocation, presentationEncoding === 'SRGB' ? 1 : 0);
+          } });
+        } catch (error) {
+          presenterFailed = true;
+          throw error;
+        } finally {
+          // A failed presenter must not leave its sampled offscreen texture bound.
+          // Preserve the primary render error if cleanup also fails.
+          try { gl.bindTexture(gl.TEXTURE_2D, null); }
+          catch (error) { if (!presenterFailed) throw error; }
+        }
         if (gl.isContextLost?.()) throw new Error('GRAPHICS_CONTEXT_LOST_DURING_FRAME');
         presentation = 'OFFSCREEN_PRESENTED';
       }

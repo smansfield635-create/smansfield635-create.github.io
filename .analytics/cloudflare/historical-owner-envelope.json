@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-03T10:25:12Z",
+  "generatedAt": "2026-11-03T11:24:48Z",
   "window": {
-    "start": "2026-08-05T10:25:12Z",
-    "end": "2026-11-03T10:25:12Z"
+    "start": "2026-08-05T11:24:48Z",
+    "end": "2026-11-03T11:24:48Z"
   },
   "knownOwnerFootprint": {
     "country": "US",

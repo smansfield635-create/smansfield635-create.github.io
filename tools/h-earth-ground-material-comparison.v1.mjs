@@ -92,6 +92,12 @@ export function validateRev2G1StaticEvidence(evidence){
 }
 // The adapter reads committed git objects and locally materialized immutable
 // product assets. A shallow checkout without all three exact commits fails closed.
+export function isRev2G1LocalImportTarget(value){
+ return typeof value==='string'&&
+   (value.startsWith('/showroom/globe/h-earth/')||value.startsWith('/h-earth-3d/'))&&
+   !value.includes('..')&&!/[\r\n]/.test(value)&&
+   /\.m?js(?:\?.*)?$/.test(value);
+}
 export function collectRev2G1StaticPreflight(productDirectory){
  const c=REV2_G1_STATIC_PREFLIGHT;
  if(typeof productDirectory!=='string'||!productDirectory.trim())throw Error('REV2_G1_PRODUCT_DIRECTORY_REQUIRED');
@@ -116,7 +122,7 @@ export function collectRev2G1StaticPreflight(productDirectory){
  const importMap=JSON.parse(html.slice(start+open.length,end)).imports;
  if(!importMap||typeof importMap!=='object'||Array.isArray(importMap))throw Error('REV2_G1_IMPORT_MAP_INVALID');
  const targets=Object.values(importMap);
- const local=targets.every(v=>typeof v==='string'&&(v.startsWith('/showroom/globe/h-earth/')||v.startsWith('/h-earth-3d/'))&&!v.includes('..'));
+ const local=targets.every(isRev2G1LocalImportTarget);
  let exist=local;
  if(local)for(const u of new Set(targets)){
    const f=u.slice(1).split('?')[0];

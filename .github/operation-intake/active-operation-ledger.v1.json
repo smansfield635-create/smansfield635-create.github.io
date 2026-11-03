@@ -3245,50 +3245,6 @@
       "scopeHash": "22915677617813b00eaed5bce76b46f5e50b209e8312f9cb56000dc56fcad4a7",
       "state": "ADMITTED_LOCKED"
     },
-    "238153afdf6f46b14a817724bf57bb29ea3ce6a5c559f93d8f3b2856b4f6f137": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "8dc2694ac1f44229702fa71aba6d748be9556348",
-          "lockGeneration": 3087,
-          "lockScope": "H_EARTH:DIAGNOSTIC_TOOLING:NEAR_FAR_PLANETARY_BASELINE:20261102",
-          "operationId": "H_EARTH_STRAIGHT_NEAR_FAR_PLANETARY_BASELINE_WEBGL_20261102_001",
-          "procedureLocatorDigest": "66621ed565e2f65655741290c77bdc5d7f6d91b5b78c8e4cbd4bafe771e029aa",
-          "requestDigest": "4e2a54ef2c17a5bf3dedc009de0c245e901dd3892e77e1b5b0343d916e0a5f0a",
-          "scopeHash": "238153afdf6f46b14a817724bf57bb29ea3ce6a5c559f93d8f3b2856b4f6f137"
-        },
-        "bindingDigest": "0b30e098b8a44f650d85b5639126f213f97666bd178972f98340c1c9587e33ac",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "03e073d7786a4ddd07b471f52a7d865f49a89a407c210ebbd82c6622a2052f95",
-          "commentId": 6595445847,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 6911,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41578202252,
-          "workflowSha": "8dc2694ac1f44229702fa71aba6d748be9556348"
-        },
-        "lineageAnchorCommitSha": "7e4013e4878d84ff59e4ca4890d40c9c496c58a0",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "8dc2694ac1f44229702fa71aba6d748be9556348",
-      "lockGeneration": 3087,
-      "lockScope": "H_EARTH:DIAGNOSTIC_TOOLING:NEAR_FAR_PLANETARY_BASELINE:20261102",
-      "operationId": "H_EARTH_STRAIGHT_NEAR_FAR_PLANETARY_BASELINE_WEBGL_20261102_001",
-      "procedureLocatorDigest": "66621ed565e2f65655741290c77bdc5d7f6d91b5b78c8e4cbd4bafe771e029aa",
-      "released": false,
-      "requestDigest": "4e2a54ef2c17a5bf3dedc009de0c245e901dd3892e77e1b5b0343d916e0a5f0a",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "238153afdf6f46b14a817724bf57bb29ea3ce6a5c559f93d8f3b2856b4f6f137",
-      "state": "ADMITTED_LOCKED"
-    },
     "23e3e4f589e2cb85c88882f994f099e16b45eee4ee97cd7b377e61be2f646306": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -96851,6 +96807,51 @@
       "scopeHash": "0e00f071a0e2c5f5ef4026fd8fb6b690ff1a919a7605dfaf374673ec9615a312",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8dc2694ac1f44229702fa71aba6d748be9556348",
+          "lockGeneration": 3087,
+          "lockScope": "H_EARTH:DIAGNOSTIC_TOOLING:NEAR_FAR_PLANETARY_BASELINE:20261102",
+          "operationId": "H_EARTH_STRAIGHT_NEAR_FAR_PLANETARY_BASELINE_WEBGL_20261102_001",
+          "procedureLocatorDigest": "66621ed565e2f65655741290c77bdc5d7f6d91b5b78c8e4cbd4bafe771e029aa",
+          "requestDigest": "4e2a54ef2c17a5bf3dedc009de0c245e901dd3892e77e1b5b0343d916e0a5f0a",
+          "scopeHash": "238153afdf6f46b14a817724bf57bb29ea3ce6a5c559f93d8f3b2856b4f6f137"
+        },
+        "bindingDigest": "0b30e098b8a44f650d85b5639126f213f97666bd178972f98340c1c9587e33ac",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "03e073d7786a4ddd07b471f52a7d865f49a89a407c210ebbd82c6622a2052f95",
+          "commentId": 6595445847,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41578202252,
+          "workflowSha": "8dc2694ac1f44229702fa71aba6d748be9556348"
+        },
+        "lineageAnchorCommitSha": "7e4013e4878d84ff59e4ca4890d40c9c496c58a0",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8dc2694ac1f44229702fa71aba6d748be9556348",
+      "lockGeneration": 3087,
+      "lockScope": "H_EARTH:DIAGNOSTIC_TOOLING:NEAR_FAR_PLANETARY_BASELINE:20261102",
+      "operationId": "H_EARTH_STRAIGHT_NEAR_FAR_PLANETARY_BASELINE_WEBGL_20261102_001",
+      "procedureLocatorDigest": "66621ed565e2f65655741290c77bdc5d7f6d91b5b78c8e4cbd4bafe771e029aa",
+      "released": true,
+      "requestDigest": "4e2a54ef2c17a5bf3dedc009de0c245e901dd3892e77e1b5b0343d916e0a5f0a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "238153afdf6f46b14a817724bf57bb29ea3ce6a5c559f93d8f3b2856b4f6f137",
+      "state": "TERMINAL",
+      "terminalDisposition": "FAIL_CLOSED"
     }
   ]
 }

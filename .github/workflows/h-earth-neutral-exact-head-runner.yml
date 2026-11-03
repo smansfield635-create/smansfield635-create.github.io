@@ -1977,7 +1977,7 @@ jobs:
 
   near-far-straight-baseline-gen3084:
     if: >-
-      ${{ github.event_name == 'pull_request' && github.event.action == 'opened' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/straight-near-far-baseline-gen3084-20261102' }}
+      ${{ github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize') && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/straight-near-far-baseline-gen3084-20261102' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 42
     permissions:
@@ -2028,7 +2028,15 @@ jobs:
           if (( free < 8589934592 )); then echo GEN3084_NO_DISK_HEADROOM; exit 56; fi
           b1="$(git -C tooling hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
           b2="$(git -C product hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)"
-          test "$b1" = 85ee835060d5106a670077a5f4352b49b && test "$b2" = "$b1" || { echo GEN3084_PUBLISHED_RENDERER_BLOB_DRIFT; exit 57; }
+          # Gen3084 exact failed check: expose both actual local hashes and Git
+          # tree object identities. This second run is DIAGNOSTIC ONLY.
+          render_path=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          t1="$(git -C tooling rev-parse "HEAD:$render_path")"
+          t2="$(git -C product rev-parse "HEAD:$render_path")"
+          printf 'GEN3084_HASH_DIAG tooling_local=%s product_local=%s tooling_tree=%s product_tree=%s expected=%s\\n' "$b1" "$b2" "$t1" "$t2" 85ee835060d5106a670077a5f4352b7ad202b49b
+          git -C tooling check-attr -a -- "$render_path" || true
+          git -C product check-attr -a -- "$render_path" || true
+          test "$b1" = 85ee835060d5106a670077a5f4352b7ad202b49b && test "$b2" = "$b1" || { echo GEN3084_PUBLISHED_RENDERER_BLOB_DRIFT; exit 57; }
           while IFS= read -r changed; do
             case "$changed" in
               tools/h-earth-ground-material-comparison.v1.mjs|tools/h-earth-groundcover-factor-overlay.mjs|tools/h-earth-ground-material-comparison.v1.test.mjs|.github/workflows/h-earth-neutral-exact-head-runner.yml) ;;
@@ -2048,6 +2056,7 @@ jobs:
             console.log("GEN3084_FROZEN_SOURCE_CONTRACT_PASS");
           ')
       - name: Install existing Chromium substrate once
+        if: ${{ github.event.action == 'opened' }}
         working-directory: tooling
         shell: bash
         run: |
@@ -2055,6 +2064,7 @@ jobs:
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
       - name: Capture one source-derived near/FAR baseline, max 16 frames
+        if: ${{ github.event.action == 'opened' }}
         working-directory: tooling
         env:
           H_EARTH_COMPARISON_PROFILE: SOURCE_NEAR_FAR_STRAIGHT_BASELINE_V1

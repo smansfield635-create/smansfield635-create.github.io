@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-04T08:27:26Z",
+  "generatedAt": "2026-11-04T09:25:58Z",
   "window": {
-    "start": "2026-08-06T08:27:26Z",
-    "end": "2026-11-04T08:27:26Z"
+    "start": "2026-08-06T09:25:58Z",
+    "end": "2026-11-04T09:25:58Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,18 +17,18 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4050,
-    "visits": 1200,
+    "pageLoads": 3970,
+    "visits": 1110,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4050,
-        "visits": 1200
+        "pageLoads": 3970,
+        "visits": 1110
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 960,
-        "visits": 700
+        "pageLoads": 930,
+        "visits": 680
       },
       "/showroom/globe/audralia/": {
         "pageLoads": 160,
@@ -63,7 +63,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 490,
+        "pageLoads": 440,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -83,7 +83,7 @@
         "visits": 0
       },
       "/showroom/": {
-        "pageLoads": 40,
+        "pageLoads": 30,
         "visits": 10
       },
       "/h-earth-live-6d18e158/showroom/globe/h-earth/index.html": {
@@ -94,22 +94,6 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/compass-isolated-clone/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/compass-composite/": {
-        "pageLoads": 20,
-        "visits": 20
-      },
-      "/compass-isolated-clone-gen345/": {
-        "pageLoads": 10,
-        "visits": 10
-      },
       "/inspection/compass/brain-v10-g1-1/": {
         "pageLoads": 10,
         "visits": 10
@@ -119,7 +103,7 @@
         "visits": 10
       },
       "/showroom/globe/h-earth/": {
-        "pageLoads": 60,
+        "pageLoads": 150,
         "visits": 10
       },
       "/showroom/globe/hearth/diagnostic/": {
@@ -195,7 +179,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
+        "pageLoads": 210,
         "visits": 20
       },
       "/door/": {
@@ -313,16 +297,16 @@
     },
     "byReferer": {
       "www.google.com": {
-        "pageLoads": 650,
-        "visits": 650
+        "pageLoads": 630,
+        "visits": 630
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2850,
+        "pageLoads": 2860,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 540,
-        "visits": 540
+        "pageLoads": 470,
+        "visits": 470
       },
       "raw.githack.com": {
         "pageLoads": 10,

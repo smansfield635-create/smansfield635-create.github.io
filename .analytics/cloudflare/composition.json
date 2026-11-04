@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-04T11:25:41Z",
+  "generatedAt": "2026-11-04T12:28:54Z",
   "window": {
-    "start": "2026-10-05T11:25:41Z",
-    "end": "2026-11-04T11:25:41Z"
+    "start": "2026-10-05T12:28:54Z",
+    "end": "2026-11-04T12:28:54Z"
   },
   "dimensions": {
     "requestPath": [
       {
-        "value": "/showroom/globe/h-earth/",
-        "pageLoads": 657,
-        "visits": 614
+        "value": "/analytics/",
+        "pageLoads": 638,
+        "visits": 638
       },
       {
-        "value": "/analytics/",
-        "pageLoads": 648,
-        "visits": 648
+        "value": "/showroom/globe/h-earth/",
+        "pageLoads": 627,
+        "visits": 584
       },
       {
         "value": "/",
@@ -29,8 +29,8 @@
       },
       {
         "value": "/about/",
-        "pageLoads": 41,
-        "visits": 41
+        "pageLoads": 51,
+        "visits": 51
       },
       {
         "value": "/showroom/globe/audralia/",
@@ -116,8 +116,8 @@
     "refererHost": [
       {
         "value": "(none)",
-        "pageLoads": 1655,
-        "visits": 1655
+        "pageLoads": 1625,
+        "visits": 1625
       },
       {
         "value": "diamondgatebridge.com",
@@ -126,13 +126,18 @@
       },
       {
         "value": "bing.com",
-        "pageLoads": 27,
-        "visits": 27
+        "pageLoads": 17,
+        "visits": 17
       },
       {
         "value": "www.google.com",
         "pageLoads": 14,
         "visits": 14
+      },
+      {
+        "value": "l.instagram.com",
+        "pageLoads": 10,
+        "visits": 10
       },
       {
         "value": "www.facebook.com",
@@ -149,7 +154,7 @@
       {
         "value": "US",
         "pageLoads": 1681,
-        "visits": 1635
+        "visits": 1625
       },
       {
         "value": "CN",
@@ -254,18 +259,18 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1150,
-        "visits": 1150
+        "pageLoads": 1130,
+        "visits": 1130
       },
       {
         "value": "Windows",
-        "pageLoads": 234,
-        "visits": 221
+        "pageLoads": 244,
+        "visits": 231
       },
       {
         "value": "Android",
-        "pageLoads": 196,
-        "visits": 173
+        "pageLoads": 206,
+        "visits": 183
       },
       {
         "value": "MacOSX",
@@ -286,13 +291,13 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 912,
-        "visits": 912
+        "pageLoads": 892,
+        "visits": 892
       },
       {
         "value": "0",
-        "pageLoads": 851,
-        "visits": 795
+        "pageLoads": 871,
+        "visits": 805
       }
     ],
     "navigationType": [

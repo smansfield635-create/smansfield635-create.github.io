@@ -2425,6 +2425,50 @@
       "scopeHash": "175a7e083dd13cd000b5601aaf940c5b0b3b367b0ebe256b43b71e5a47552265",
       "state": "ADMITTED_LOCKED"
     },
+    "17a2ad02c5f6de38296eca4a1cf42c7e9b5e5ddae304cea53e8a0b8986ded091": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8347ec608d17d0091b9871f03399cd4eb55e1e43",
+          "lockGeneration": 3099,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:PUBLICATION_SURFACE:PERSONAL_TRAINING_V4",
+          "operationId": "REPOSITORY_PERSONAL_TRAINING_PUBLICATION_MANIFEST_20261104_001",
+          "procedureLocatorDigest": "72ae063b4e55492461e44b67d0141c142a8de25caf76779e23b3b52b74ea9b76",
+          "requestDigest": "1b62c092f6d9df32c9b06300e1f5929659aebeaef877dd300911b83664d2eae5",
+          "scopeHash": "17a2ad02c5f6de38296eca4a1cf42c7e9b5e5ddae304cea53e8a0b8986ded091"
+        },
+        "bindingDigest": "60aaadcf645c27133492b3d7a8d87b51815d5a50871f0eff908eafc98a6e9e07",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "75d69dafc16bbe846b2deab95176bf4706654f7f7d677dff3e317e0a055e44df",
+          "commentId": 6640009130,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7164,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41897042157,
+          "workflowSha": "8347ec608d17d0091b9871f03399cd4eb55e1e43"
+        },
+        "lineageAnchorCommitSha": "2024d87ee86781194fca82d2d950e05571b4a683",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8347ec608d17d0091b9871f03399cd4eb55e1e43",
+      "lockGeneration": 3099,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:PUBLICATION_SURFACE:PERSONAL_TRAINING_V4",
+      "operationId": "REPOSITORY_PERSONAL_TRAINING_PUBLICATION_MANIFEST_20261104_001",
+      "procedureLocatorDigest": "72ae063b4e55492461e44b67d0141c142a8de25caf76779e23b3b52b74ea9b76",
+      "released": false,
+      "requestDigest": "1b62c092f6d9df32c9b06300e1f5929659aebeaef877dd300911b83664d2eae5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "17a2ad02c5f6de38296eca4a1cf42c7e9b5e5ddae304cea53e8a0b8986ded091",
+      "state": "ADMITTED_LOCKED"
+    },
     "18965398d20b7bb87e40a3c84c9a9b9299fe5c3abf539de3f9437b113918fcb1": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -26251,7 +26295,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3098,
+  "lockGeneration": 3099,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

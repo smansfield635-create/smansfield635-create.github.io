@@ -731,3 +731,114 @@ test('REV2 roundtrip calibration rejects out of tolerance, malformed and nonfini
  assert.throws(()=>o.validateRev2FloatCalibration(valid.map((p,i)=>i===5?new Float32Array([0.125,0.25,NaN,1]):p)),/CALIBRATION_READBACK_INVALID/);
  assert.throws(()=>o.validateRev2FloatCalibration(valid.map((p,i)=>i===5?new Float32Array([0.125,0.25,0.50001,1]):p)),/CALIBRATION_ROUNDTRIP_FAIL/);
 });
+
+
+test('REV2 native frame accounting binds 2 ordered poses, full 40 diagnostics and actual counter increments',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ let native=20,ledger,observed=0;
+ ledger=o.createRev2NativeFrameLedger({
+  getFrameCount:()=>native,
+  submitNativeFrame:packet=>{assert(packet?.camera);ledger.assertNativeEntry();native++;observed++;}
+ });
+ const submit=(pose,kind,mode)=>ledger.submit({pose,kind,mode,packet:{camera:true}});
+ for(let i=0;i<2;i++)submit(0,'WARMUP',0);
+ submit(0,'CALIBRATION',19);
+ for(let m=1;m<=18;m++)submit(0,'NUMERIC',m);
+ submit(0,'PARITY',0);
+ for(let i=0;i<3;i++)submit(1,'WARMUP',0);
+ submit(1,'CALIBRATION',19);
+ for(let m=1;m<=18;m++)submit(1,'NUMERIC',m);
+ const last=submit(1,'PARITY',0);
+ assert.equal(last.schema,'H_EARTH_REV2_NATIVE_FRAME_LEDGER_v1');
+ assert.equal(last.complete,true);
+ assert.equal(last.diagnosticDraws,40);
+ assert.equal(last.submitted,45);
+ assert.equal(last.initialNativeFrameCount,20);
+ assert.equal(last.lastNativeFrameCount,65);
+ assert.deepEqual(last.warmups,[2,3]);
+ assert.deepEqual(last.numericModes,[18,18]);
+ assert.deepEqual(last.calibrations,[true,true]);
+ assert.deepEqual(last.parities,[true,true]);
+ assert.equal(last.totalCeiling,160);
+ assert.equal(last.diagnosticCeiling,40);
+ assert.equal(observed,45);
+ assert.equal(last.actualGpuEvidenceClaimed,false);
+ assert.throws(()=>submit(0,'WARMUP',0),/REV2_NATIVE_FRAME_POSE_COMPLETE/);
+});
+test('REV2 native frame ledger fails closed on unowned, out-of-order, incomplete and over-budget renders',async()=>{
+ const {createRev2NativeFrameLedger:create}=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const make=({extra=0,noEntry=false,corrupt=false}={})=>{
+  let count=7,ledger;
+  ledger=create({getFrameCount:()=>corrupt?NaN:count,submitNativeFrame:()=>{
+   if(!noEntry)ledger.assertNativeEntry();
+   count+=1+extra;
+  }});
+  return {ledger,submit:(pose,kind,mode)=>ledger.submit({pose,kind,mode,packet:{}}),
+   advance:()=>{count++;}};
+ };
+ assert.throws(()=>create(),/REV2_NATIVE_FRAME_BINDING_MISSING/);
+ {
+  const m=make();assert.throws(()=>m.ledger.assertNativeEntry(),/UNOWNED_OR_REENTRANT_RENDER/);
+  assert.equal(m.ledger.snapshot().terminal,true);
+ }
+ {
+  const m=make();assert.throws(()=>m.submit(1,'WARMUP',0),/POSE_ORDER/);
+ }
+ {
+  const m=make();assert.throws(()=>m.submit(0,'NUMERIC',1),/NUMERIC_MODE_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'CALIBRATION',19);
+  assert.throws(()=>m.submit(0,'CALIBRATION',19),/CALIBRATION_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'CALIBRATION',19);
+  assert.throws(()=>m.submit(0,'WARMUP',0),/WARMUP_LIMIT_OR_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'CALIBRATION',19);
+  assert.throws(()=>m.submit(0,'NUMERIC',2),/NUMERIC_MODE_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'CALIBRATION',19);
+  assert.throws(()=>m.submit(0,'PARITY',0),/PARITY_PRECONDITION/);
+ }
+ {
+  const m=make();for(let i=0;i<60;i++)m.submit(0,'WARMUP',0);
+  assert.equal(m.ledger.snapshot().warmups[0],60);
+  assert.throws(()=>m.submit(0,'WARMUP',0),/WARMUP_LIMIT_OR_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'WARMUP',0);m.advance();
+  assert.throws(()=>m.submit(0,'WARMUP',0),/NATIVE_COUNTER_DRIFT/);
+ }
+ {
+  const m=make({extra:1});assert.throws(()=>m.submit(0,'WARMUP',0),/NATIVE_FRAME_COUNT_NOT_ONE/);
+ }
+ {
+  const m=make({noEntry:true});assert.throws(()=>m.submit(0,'WARMUP',0),/NATIVE_RENDER_NOT_ENTERED/);
+ }
+ {
+  const m=make({corrupt:true});assert.throws(()=>m.submit(0,'WARMUP',0),/COUNTER_INVALID/);
+ }
+});
+test('REV2 runtime source transform enforces native renderer entry guard and exposes warmup receipt',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const result=o.transformRev2WorldSoilNumericRuntime(original),source=result.source;
+ assert.equal(result.maximumSubmittedFrames,160);
+ assert.equal(result.maximumWarmupFramesPerPose,60);
+ assert.equal(result.nativeCounterBound,true);
+ assert(source.includes('const rev2FrameLedgerFactory='));
+ assert(source.includes('if(rev2Probe.ledger)rev2Probe.ledger.assertNativeEntry();'));
+ assert(source.includes('getFrameCount:()=>counters.frameCount'));
+ assert(source.includes("submitNativeFrame:packet=>renderFrame(packet)"));
+ assert(source.includes('function captureRev2Warmup(packet,pose)'));
+ assert(source.includes('captureRev2Warmup,captureRev2FloatMode'));
+ assert(source.includes("kind:mode===19?'CALIBRATION':'NUMERIC'"));
+ assert(source.includes("kind:'PARITY',mode:0,packet"));
+ assert(source.includes('warmupFramesPerPose:native?.warmups'));
+ assert(source.includes('firstHitRolesMeasured:false'));
+ assert.equal(execFileSync(process.execPath,['--input-type=module','--check'],{
+  input:source,encoding:'utf8',maxBuffer:1024*1024}).trim(),'');
+});

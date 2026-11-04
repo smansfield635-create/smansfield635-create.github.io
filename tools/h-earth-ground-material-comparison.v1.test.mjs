@@ -842,3 +842,125 @@ test('REV2 runtime source transform enforces native renderer entry guard and exp
  assert.equal(execFileSync(process.execPath,['--input-type=module','--check'],{
   input:source,encoding:'utf8',maxBuffer:1024*1024}).trim(),'');
 });
+
+
+function rev2FrozenSyntheticReadbacks(m,pose=0){
+ const plan=m.rev2FrozenReadbackPlan(),c=m.REV2_G1_STATIC_PREFLIGHT;
+ const g1={pose,productHead:c.product,
+  rendererBlob:c.blobs['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'],
+  origin:'TOP_LEFT',observations:m.REV2_G1_FIXED_PIXELS.map(({x,y})=>({x,y,role:1,primitive:0,depth:.9,ordinary:1}))};
+ const syntheticRows=right=>{
+  const p=[.25,.29,.31],k=[.8,.9,1],w=.7,a=.8,t=right?[.65,.55,.2]:[.3,.4,.5],
+   rows=Array.from({length:18},()=>[0,0,0,0]);
+  rows[0]=[1,0,.9,1];rows[1]=[0,1,0,.2];rows[2]=[.2,.9,w,a];
+  rows[3]=[...p,.3];rows[4]=[...k,.55];rows[5]=[.3,.6,.0002,.001];
+  rows[6]=[.001,.0002,1.3,1];rows[7]=[...t,12];
+  for(let i=8;i<17;i++)rows[i]=[...t,1];
+  rows[17]=[...p.map((v,i)=>v+w*a*(Math.pow(t[i],2.2)*k[i]-v)),1];
+  return rows;
+ };
+ const left=syntheticRows(false),right=syntheticRows(true);
+ const captures=Array.from({length:18},(_,j)=>{
+  const mode=j+1;
+  const rgbaFloat32=plan.regions.map((r,i)=>{
+   if(i<12)return new Float32Array(mode===1?[1,0,.9,1]:[0,0,0,0]);
+   const pixels=new Float32Array(32*4);
+   for(let k=0;k<32;k++)pixels.set((k>=16?right:left)[j],k*4);
+   return pixels;
+  });
+  return {pose,mode,regions:plan.regions.map(r=>[...r]),rgbaFloat32,
+   sourceCameraUniformVerified:true};
+ });
+ return {plan,g1,captures};
+}
+test('REV2 frozen G1 and 15 seam windows assemble 30 controls each without GPU success claims',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const {plan,g1,captures}=rev2FrozenSyntheticReadbacks(m);
+ assert.equal(plan.schema,'H_EARTH_REV2_FROZEN_READBACK_PLAN_v1');
+ assert.equal(plan.g1Count,12);assert.equal(plan.seamCount,15);
+ assert.equal(plan.regions.length,27);
+ assert.deepEqual(plan.regions[0],[128,729,1,1]);
+ assert.deepEqual(plan.regions[11],[400,189,1,1]);
+ assert.deepEqual(plan.regions[12],[314,141,32,1]);
+ assert.deepEqual(plan.regions[26],[248,818,32,1]);
+ assert.equal(m.validateRev2FrozenModeCapture(captures[0],{pose:0,mode:1}).sourceCameraUniformVerified,true);
+ const g=m.compareRev2G1FirstHits(captures[0],g1,{pose:0});
+ assert.equal(g.matchedCount,12);
+ assert.equal(g.result,'REFERENCE_NUMERIC_COMPARISON_ONLY');
+ assert.equal(g.independentReferenceAuthenticated,false);
+ assert.equal(g.gpuEvidenceAuthenticated,false);
+ const analyzed=m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0});
+ assert.equal(analyzed.stationCount,15);
+ assert.equal(analyzed.controlsPerStation,30);
+ assert.equal(analyzed.totalWithinRoleControls,450);
+ assert.equal(analyzed.stations.length,15);
+ assert(analyzed.stations.every(s=>s.controlCount===30&&s.crossingIndex===15&&s.result.result==='TEXTURE_SAMPLING_SUPPORTED'));
+ assert.equal(analyzed.hardwareEvidenceAuthenticated,false);
+ assert.equal(analyzed.ownerVisualAcceptance,false);
+});
+test('REV2 frozen first-hit, origin, camera and within-role controls reject missing or false evidence',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const capture=()=>rev2FrozenSyntheticReadbacks(m);
+ const one=()=>capture().captures[0];
+ {
+  const q=one();q.regions[0][1]=250;
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/REGION_ORDER_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const q=one();[q.regions[0],q.regions[1]]=[q.regions[1],q.regions[0]];
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/REGION_ORDER_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const q=one();q.rgbaFloat32[13]=new Float32Array(127);
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/PIXEL_FORMAT_OR_COVERAGE_INVALID/);
+ }
+ {
+  const q=one();q.sourceCameraUniformVerified=false;
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/CAPTURE_OR_CAMERA_INCOMPLETE/);
+ }
+ {
+  const q=one();q.rgbaFloat32[0]=new Float32Array([1,0,.9,NaN]);
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/PIXEL_FORMAT_OR_COVERAGE_INVALID/);
+ }
+ {
+  const {g1,captures}=capture();g1.observations[0].role=5;
+  assert.throws(()=>m.compareRev2G1FirstHits(captures[0],g1,{pose:0}),/ROLE_PRIMITIVE_DEPTH_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const {g1,captures}=capture();g1.observations[1].primitive=8;
+  assert.throws(()=>m.compareRev2G1FirstHits(captures[0],g1,{pose:0}),/ROLE_PRIMITIVE_DEPTH_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const {g1,captures}=capture();g1.observations[1].depth=.7;
+  assert.throws(()=>m.compareRev2G1FirstHits(captures[0],g1,{pose:0}),/ROLE_PRIMITIVE_DEPTH_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const {g1,captures}=capture();g1.productHead='false-head';
+  assert.throws(()=>m.compareRev2G1FirstHits(captures[0],g1,{pose:0}),/INDEPENDENT_REFERENCE_REQUIRED/);
+ }
+ {
+  const {g1,captures}=capture();g1.observations.pop();
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/INDEPENDENT_REFERENCE_REQUIRED/);
+ }
+ {
+  const {g1,captures}=capture();captures[0].rgbaFloat32[12][15*4]=5;
+  captures[0].rgbaFloat32[12][15*4+1]=8;
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/CROSSING_UNINTERPRETABLE/);
+ }
+ {
+  const {g1,captures}=capture();captures[0].rgbaFloat32[12][5*4]=5;
+  captures[0].rgbaFloat32[12][5*4+1]=8;
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/CONTROL_UNINTERPRETABLE/);
+ }
+ {
+  const {g1,captures}=capture();captures.pop();
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/EIGHTEEN_MODES_REQUIRED/);
+ }
+ {
+  const {g1,captures}=capture();captures[7].mode=1;
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/CAPTURE_OR_CAMERA_INCOMPLETE/);
+ }
+ const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const bridge=(await import('./h-earth-groundcover-factor-overlay.mjs')).transformRev2WorldSoilNumericRuntime(original);
+ assert(bridge.source.includes('sourceCameraUniformVerified:true'));
+});

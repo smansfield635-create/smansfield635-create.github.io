@@ -399,6 +399,9 @@ export function createRev2Rgba32fTarget(gl,{width=529,height=980}={}){
  if(width!==529||height!==980)fail('VIEWPORT_NOT_FROZEN');
  if(gl.getError()!==gl.NO_ERROR)fail('PREEXISTING_GL_ERROR');
  if(!gl.getExtension('EXT_color_buffer_float'))fail('EXT_COLOR_BUFFER_FLOAT_UNAVAILABLE');
+ // The pinned native renderer blends translucent ranges; RGBA32F blending
+ // raises INVALID_OPERATION without EXT_float_blend (Khronos WebGL extension).
+ if(!gl.getExtension('EXT_float_blend'))fail('EXT_FLOAT_BLEND_UNAVAILABLE');
  const saved=()=>({
   framebuffer:gl.getParameter(gl.FRAMEBUFFER_BINDING),
   renderbuffer:gl.getParameter(gl.RENDERBUFFER_BINDING),

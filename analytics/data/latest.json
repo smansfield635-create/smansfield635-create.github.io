@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-04T01:23:20Z",
+  "generatedAt": "2026-11-04T02:27:39Z",
   "window30d": {
-    "start": "2026-10-05T01:23:20Z",
-    "end": "2026-11-04T01:23:20Z"
+    "start": "2026-10-05T02:27:39Z",
+    "end": "2026-11-04T02:27:39Z"
   },
   "daily": [
     {
@@ -36,7 +36,7 @@
     },
     {
       "date": "2026-10-13",
-      "pageLoads": 40
+      "pageLoads": 30
     },
     {
       "date": "2026-10-14",
@@ -64,11 +64,11 @@
     },
     {
       "date": "2026-10-20",
-      "pageLoads": 50
+      "pageLoads": 30
     },
     {
       "date": "2026-10-21",
-      "pageLoads": 60
+      "pageLoads": 70
     },
     {
       "date": "2026-10-22",
@@ -88,11 +88,11 @@
     },
     {
       "date": "2026-10-26",
-      "pageLoads": 0
+      "pageLoads": 60
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 55
+      "pageLoads": 33
     },
     {
       "date": "2026-10-28",
@@ -124,29 +124,24 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 1
+      "pageLoads": 2
     }
   ],
   "summary": {
-    "pageLoads": 1828,
+    "pageLoads": 1817,
     "botPageLoads": 924,
-    "nonBotPageLoads": 904
+    "nonBotPageLoads": 893
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1659,
-      "visits": 1659
+      "pageLoads": 1668,
+      "visits": 1668
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 126,
+      "pageLoads": 96,
       "visits": 0
-    },
-    {
-      "host": "www.google.com",
-      "pageLoads": 44,
-      "visits": 44
     },
     {
       "host": "bing.com",
@@ -154,9 +149,9 @@
       "visits": 28
     },
     {
-      "host": "l.instagram.com",
-      "pageLoads": 10,
-      "visits": 10
+      "host": "www.google.com",
+      "pageLoads": 14,
+      "visits": 14
     },
     {
       "host": "www.facebook.com",
@@ -171,14 +166,19 @@
   ],
   "topPages": [
     {
-      "path": "/showroom/globe/h-earth/",
-      "pageLoads": 650,
-      "visits": 587
+      "path": "/analytics/",
+      "pageLoads": 660,
+      "visits": 660
     },
     {
-      "path": "/analytics/",
-      "pageLoads": 630,
-      "visits": 630
+      "path": "/showroom/globe/h-earth/",
+      "pageLoads": 659,
+      "visits": 616
+    },
+    {
+      "path": "/",
+      "pageLoads": 93,
+      "visits": 73
     },
     {
       "path": "/nine-summits/universe/",
@@ -186,29 +186,24 @@
       "visits": 76
     },
     {
-      "path": "/build/",
-      "pageLoads": 60,
-      "visits": 60
-    },
-    {
-      "path": "/",
-      "pageLoads": 53,
-      "visits": 43
-    },
-    {
-      "path": "/meet-sean-mansfield/",
-      "pageLoads": 40,
-      "visits": 30
-    },
-    {
-      "path": "/nine-summits-of-love/",
-      "pageLoads": 40,
-      "visits": 30
+      "path": "/about/",
+      "pageLoads": 41,
+      "visits": 41
     },
     {
       "path": "/showroom/globe/audralia/",
       "pageLoads": 40,
       "visits": 40
+    },
+    {
+      "path": "/gauges/",
+      "pageLoads": 30,
+      "visits": 0
+    },
+    {
+      "path": "/build/",
+      "pageLoads": 30,
+      "visits": 30
     }
   ],
   "ownerMeasurement": {

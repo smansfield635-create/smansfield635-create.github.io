@@ -194,7 +194,10 @@ export function verifyGen3096AdmissionEvidence({source,ledger,lockRefHead}={}) {
   }catch{return failure('ADMISSION_EVIDENCE_INVALID');}
 }
 async function fetchJson(url) {
-  const res=await fetch(url,{headers:{'Accept':'application/vnd.github+json'}});
+  const token=process.env.GITHUB_TOKEN??process.env.GH_TOKEN??null;
+  const headers={'Accept':'application/vnd.github+json',
+    ...(token?{'Authorization':'Bearer '+token}:{})};
+  const res=await fetch(url,{headers});
   if(!res.ok)error('GITHUB_PROVENANCE_FETCH_FAILED_'+res.status);
   return res.json();
 }
@@ -211,8 +214,15 @@ export async function verifyGen3096LiveAdmission(paths,taskText,mutationIntent) 
   const head=ref?.object?.sha;
   if(!/^[a-f0-9]{40}$/.test(head??''))error('GEN3096_LEDGER_HEAD_INVALID');
   const doc=await fetchJson(root+'/contents/.github/operation-intake/active-operation-ledger.v1.json?ref='+head);
-  if(doc?.encoding!=='base64'||typeof doc.content!=='string')error('GEN3096_LEDGER_BLOB_INVALID');
-  const ledger=JSON.parse(Buffer.from(doc.content.replace(/\s/g,''),'base64').toString('utf8'));
+  if(!/^[a-f0-9]{40}$/.test(doc?.sha??''))error('GEN3096_LEDGER_BLOB_ID_INVALID');
+  // The canonical ledger exceeds GitHub Contents API's 1 MB inline limit.
+  // Reuse the existing owner-connector intake's immutable Git Blob fallback.
+  const blob=doc.encoding==='base64'&&typeof doc.content==='string'&&doc.content.trim()
+    ? doc
+    : await fetchJson(root+'/git/blobs/'+doc.sha);
+  if(blob?.encoding!=='base64'||typeof blob.content!=='string')
+    error('GEN3096_LEDGER_BLOB_INVALID');
+  const ledger=JSON.parse(Buffer.from(blob.content.replace(/\s/g,''),'base64').toString('utf8'));
   const proof=verifyGen3096AdmissionEvidence({source,ledger,lockRefHead:head});
   if(!proof.eligible)error('GEN3096_ADMISSION_AUTHENTICATION_FAILED:'+proof.reason);
   return proof;

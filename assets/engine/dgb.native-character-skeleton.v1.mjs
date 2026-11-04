@@ -1,5 +1,6 @@
-/** Diamond Gate Character Animation Trial 01 — off-repository E5 skeleton feasibility.
- * Pure CPU forward kinematics. NO GPU, skinning, IK, glTF, runtime integration or source admission.
+/** Diamond Gate Graphics Engine E10 — native character skeleton foundation (Gen3104).
+ * Source candidate admitted under DGB_E10_CHARACTER_FOUNDATION_ATOMIC_SOURCE_BOOTSTRAP_20261104_001.
+ * Pure CPU forward kinematics only; no GPU, skinning, IK, animation clips, glTF, consumer runtime integration, merge, or deployment authority.
  * Convention: right handed, +Y up, column-major downstream E3, unit quaternions [x,y,z,w].
  */
 const finite = n => typeof n === 'number' && Number.isFinite(n);

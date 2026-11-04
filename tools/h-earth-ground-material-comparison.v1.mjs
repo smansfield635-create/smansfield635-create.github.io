@@ -1126,3 +1126,104 @@ export async function run(argv){
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{console.error(e);process.exitCode=1;});
 
+
+
+// REV2 source-only evidence transport contract. All 18 numeric modes must
+// read the SAME 12 G1 locations and 15 exact 32-pixel seam windows. This
+// cannot certify GPU evidence, an original camera, or G1 reference custody.
+export function rev2FrozenReadbackPlan(){
+ const g1=REV2_G1_FIXED_PIXELS.map(({x,y})=>Object.freeze([x,rev2GlY(y),1,1]));
+ const seam=REV2_NUMERIC_SEAMS.map(s=>{
+  const r=rev2StationPixelSpan(s);return Object.freeze([r.x,r.y,r.width,r.height]);
+ });
+ return Object.freeze({schema:'H_EARTH_REV2_FROZEN_READBACK_PLAN_v1',
+  viewport:Object.freeze([529,980]),g1Count:12,seamCount:15,
+  regions:Object.freeze([...g1,...seam])});
+}
+export function validateRev2FrozenModeCapture(capture,{pose,mode}={}){
+ const fail=code=>{throw Error('REV2_READBACK_'+code);};
+ if(!Number.isInteger(pose)||pose<0||pose>1||
+    !Number.isInteger(mode)||mode<1||mode>18)fail('POSE_OR_MODE_INVALID');
+ const plan=rev2FrozenReadbackPlan();
+ if(!capture||capture.pose!==pose||capture.mode!==mode||
+    capture.sourceCameraUniformVerified!==true||
+    !Array.isArray(capture.regions)||!Array.isArray(capture.rgbaFloat32)||
+    capture.regions.length!==plan.regions.length||
+    capture.rgbaFloat32.length!==plan.regions.length)fail('CAPTURE_OR_CAMERA_INCOMPLETE');
+ for(let i=0;i<plan.regions.length;i++){
+  const expected=plan.regions[i],got=capture.regions[i],pixels=capture.rgbaFloat32[i];
+  if(!Array.isArray(got)||got.length!==4||got.some((v,j)=>v!==expected[j]))
+   fail('REGION_ORDER_OR_ORIGIN_MISMATCH');
+  if(!(pixels instanceof Float32Array)||pixels.length!==expected[2]*expected[3]*4||
+     pixels.some(v=>!Number.isFinite(v)))fail('PIXEL_FORMAT_OR_COVERAGE_INVALID');
+ }
+ return Object.freeze({schema:'H_EARTH_REV2_FROZEN_MODE_READBACK_v1',
+  pose,mode,capture,sourceCameraUniformVerified:true,
+  hardwareEvidenceAuthenticated:false});
+}
+export function compareRev2G1FirstHits(mode1,reference,{pose}={}){
+ const fail=code=>{throw Error('REV2_G1_FIRST_HIT_'+code);};
+ const read=validateRev2FrozenModeCapture(mode1,{pose,mode:1});
+ const plan=rev2FrozenReadbackPlan();
+ if(!reference||reference.pose!==pose||
+    reference.productHead!==REV2_G1_STATIC_PREFLIGHT.product||
+    reference.rendererBlob!==REV2_G1_STATIC_PREFLIGHT.blobs['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js']||
+    reference.origin!=='TOP_LEFT'||!Array.isArray(reference.observations)||
+    reference.observations.length!==12)fail('INDEPENDENT_REFERENCE_REQUIRED');
+ const matched=[];
+ for(let i=0;i<12;i++){
+  const expected=reference.observations[i],p=read.capture.rgbaFloat32[i],
+   frozen=REV2_G1_FIXED_PIXELS[i];
+  if(!expected||expected.x!==frozen.x||expected.y!==frozen.y||
+     !Number.isInteger(expected.role)||!Number.isInteger(expected.primitive)||
+     expected.role<0||expected.primitive<0||
+     expected.role>16777216||expected.primitive>16777216||
+     !Number.isFinite(expected.depth)||expected.depth<0||expected.depth>1||
+     ![0,1].includes(expected.ordinary))fail('REFERENCE_VALUE_INVALID');
+  if(!Number.isInteger(p[0])||!Number.isInteger(p[1])||
+     p[0]!==expected.role||p[1]!==expected.primitive||
+     p[2]<0||p[2]>1||Math.abs(p[2]-expected.depth)>REV2_CAPTURE_LIMITS.firstHitDepthCeiling||
+     Math.abs(p[3]-expected.ordinary)>REV2_CAPTURE_LIMITS.float32RoundtripCeiling)
+   fail('ROLE_PRIMITIVE_DEPTH_OR_ORIGIN_MISMATCH');
+  matched.push(Object.freeze({x:frozen.x,y:frozen.y,role:p[0],
+    primitive:p[1],depth:p[2],ordinary:p[3]}));
+ }
+ return Object.freeze({schema:'H_EARTH_REV2_G1_FIRST_HIT_COMPARISON_v1',
+  pose,matchedCount:12,matched:Object.freeze(matched),
+  result:'REFERENCE_NUMERIC_COMPARISON_ONLY',
+  independentReferenceAuthenticated:false,
+  gpuEvidenceAuthenticated:false,ownerVisualAcceptance:false});
+}
+export function analyzeRev2FrozenSeamControls(captures,reference,{pose}={}){
+ const fail=code=>{throw Error('REV2_SEAM_'+code);};
+ if(!Array.isArray(captures)||captures.length!==18)fail('EIGHTEEN_MODES_REQUIRED');
+ const modes=captures.map((r,i)=>validateRev2FrozenModeCapture(r,{pose,mode:i+1}));
+ const firstHits=compareRev2G1FirstHits(captures[0],reference,{pose});
+ const stations=REV2_NUMERIC_SEAMS.map((station,j)=>{
+  const pixels=Array.from({length:32},(_,i)=>{
+   const rows=modes.map(r=>Array.from(r.capture.rgbaFloat32[12+j].subarray(i*4,i*4+4)));
+   return decodeRev2FloatPixel(rows);
+  });
+  const paired=(i)=>{
+   const left=pixels[i],right=pixels[i+1];
+   rev2ValidateSameRoleControl(left,right);
+   return computeRev2SignedAttribution(left,right);
+  };
+  let crossing;
+  try{crossing=paired(15);}catch(e){fail('CROSSING_UNINTERPRETABLE_'+e.message);}
+  const controls=[];
+  for(let i=0;i<31;i++){
+   if(i===15)continue;
+   try{controls.push(paired(i));}catch(e){fail('CONTROL_UNINTERPRETABLE_'+e.message);}
+  }
+  if(controls.length!==30)fail('CONTROL_COUNT_INVALID');
+  const result=classifyRev2Station(crossing,controls);
+  return Object.freeze({station,topLeft:true,width:32,crossingIndex:15,
+    controlCount:30,result,authenticatedGpuObservation:false});
+ });
+ return Object.freeze({schema:'H_EARTH_REV2_SEAM_CONTROL_SOURCE_VALIDATION_v1',
+  pose,firstHits,stationCount:stations.length,controlsPerStation:30,
+  totalWithinRoleControls:stations.length*30,stations:Object.freeze(stations),
+  sourceNumericsValidated:true,hardwareEvidenceAuthenticated:false,
+  ownerVisualAcceptance:false});
+}

@@ -572,3 +572,87 @@ export function transformRev2WorldSoilNumericRuntime(original){
    maximumSubmittedDiagnosticDraws:40,requiresRgba32f:true,
    productionMutation:false,gpuExecuted:false});
 }
+
+// Diagnostic-only native frame ledger: exactly one native renderFrame
+// invocation and one increment of the renderer's own counters.frameCount
+// per admitted submission. Never infer a GPU draw from a synthetic receipt.
+export function createRev2NativeFrameLedger({getFrameCount,submitNativeFrame}={}){
+ if(typeof getFrameCount!=='function'||typeof submitNativeFrame!=='function')
+  throw Error('REV2_NATIVE_FRAME_BINDING_MISSING');
+ let initial=null,last=null,submitted=0,diagnosticDraws=0,terminal=false,pending=null;
+ const warmups=[0,0],modes=[0,0],calibrations=[false,false],parities=[false,false];
+ const fail=code=>{terminal=true;throw Error('REV2_NATIVE_FRAME_'+code);};
+ const current=()=>{
+  const n=getFrameCount();
+  if(!Number.isSafeInteger(n)||n<0)fail('COUNTER_INVALID');
+  return n;
+ };
+ const snapshot=()=>Object.freeze({
+  schema:'H_EARTH_REV2_NATIVE_FRAME_LEDGER_v1',
+  started:initial!==null,
+  initialNativeFrameCount:initial,lastNativeFrameCount:last,
+  submitted,diagnosticDraws,warmups:Object.freeze([...warmups]),
+  numericModes:Object.freeze([...modes]),
+  calibrations:Object.freeze([...calibrations]),
+  parities:Object.freeze([...parities]),
+  totalCeiling:160,diagnosticCeiling:40,warmupCeilingPerPose:60,
+  complete:parities[0]&&parities[1]&&diagnosticDraws===40&&
+   submitted===40+warmups[0]+warmups[1]&&!terminal,
+  terminal,actualGpuEvidenceClaimed:false
+ });
+ const assertNativeEntry=()=>{
+  if(terminal||initial===null||!pending||pending.entered)
+   fail('UNOWNED_OR_REENTRANT_RENDER');
+  pending.entered=true;
+ };
+ const submit=({pose,kind,mode,packet}={})=>{
+  if(terminal)fail('TERMINAL');
+  if(!Number.isInteger(pose)||(pose!==0&&pose!==1)||
+     !['WARMUP','CALIBRATION','NUMERIC','PARITY'].includes(kind))
+   fail('SUBMISSION_CLASS_INVALID');
+  if(pose===1&&!parities[0])fail('POSE_ORDER');
+  if(pose===0&&parities[0])fail('POSE_COMPLETE');
+  if(initial===null){
+   if(pose!==0)fail('FIRST_POSE_NOT_ZERO');
+   initial=current();
+   last=initial;
+  }
+  if(current()!==last)fail('NATIVE_COUNTER_DRIFT');
+  if(submitted>=160)fail('TOTAL_FRAME_CEILING');
+  if(kind==='WARMUP'){
+   if(mode!==0||calibrations[pose]||warmups[pose]>=60)
+    fail('WARMUP_LIMIT_OR_ORDER');
+  }else{
+   if(diagnosticDraws>=40)fail('DIAGNOSTIC_DRAW_CEILING');
+   if(kind==='CALIBRATION'){
+    if(mode!==19||calibrations[pose]||modes[pose]!==0||parities[pose])
+     fail('CALIBRATION_ORDER');
+   }else if(kind==='NUMERIC'){
+    if(!calibrations[pose]||parities[pose]||mode!==modes[pose]+1||
+       mode<1||mode>18)fail('NUMERIC_MODE_ORDER');
+   }else if(mode!==0||!calibrations[pose]||modes[pose]!==18||parities[pose])
+    fail('PARITY_PRECONDITION');
+  }
+  if(pending)fail('REENTRANT_SUBMISSION');
+  const before=last;
+  pending={entered:false,pose,kind,mode};
+  try{
+   submitNativeFrame(packet);
+   if(!pending.entered)fail('NATIVE_RENDER_NOT_ENTERED');
+   const after=current();
+   if(after!==before+1)fail('NATIVE_FRAME_COUNT_NOT_ONE');
+   last=after;
+   submitted++;
+   if(kind==='WARMUP')warmups[pose]++;
+   else{
+    diagnosticDraws++;
+    if(kind==='CALIBRATION')calibrations[pose]=true;
+    else if(kind==='NUMERIC')modes[pose]++;
+    else parities[pose]=true;
+   }
+   return snapshot();
+  }catch(error){terminal=true;throw error;}
+  finally{pending=null;}
+ };
+ return Object.freeze({submit,assertNativeEntry,snapshot});
+}

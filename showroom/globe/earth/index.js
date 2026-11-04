@@ -20,7 +20,7 @@ let canvas=null,gl=null,resources=null,raf=0,last=0,angle=.35,orbitReturnAngle=.
 
 function exposeStatus(){window.DGBZiontsRoute=Object.freeze({status(){return Object.freeze({contract:CONTRACT,traversalContract:TRAVERSAL_CONTRACT,route:ROUTE,parent:PARENT,publicBody:"ZIONTS",renderer:state.renderer,webglVersion:state.webglVersion,initialized:state.initialized,reducedMotion:state.reducedMotion,frameCount:state.frameCount,contextLossCount:state.contextLossCount,contextRestoreCount:state.contextRestoreCount,failureReason:state.failureReason,passiveRotation:state.passiveRotation,inputAuthority:state.inputAuthority,generatedImage:state.generatedImage,audraliaRuntimeImport:state.audraliaRuntimeImport,storyIndex:state.storyIndex,storyCount:state.storyCount,witnessState:state.witnessState,cameraZ:state.cameraZ,cameraX:state.cameraX,cameraY:state.cameraY,witnessBlend:state.witnessBlend,lightingPreview:state.lightingPreview,groundEngine:false,inspectableWorld:false,planetaryNavigation:false})}})}
 function markDocument(){const markers={page:"zionts-public-child-route",route:ROUTE,contract:CONTRACT,witnessTraversalContract:TRAVERSAL_CONTRACT,publicBody:"ZIONTS",parent:PARENT,groundEngine:"false",inspectableWorld:"false",planetInputAuthority:"none",generatedImage:"false",audraliaIdentity:"false",witnessState:state.witnessState};for(const [key,value] of Object.entries(markers)){document.documentElement.dataset[key]=String(value);if(document.body)document.body.dataset[key]=String(value)}}
-function setWitnessState(next){state.witnessState=next;document.documentElement.dataset.witnessState=next;if(document.body)document.body.dataset.witnessState=next;const close=document.querySelector("[data-close-witness]");if(close)close.setAttribute("aria-hidden",String(next!==WITNESS.CLOSE));exposeStatus()}
+function setWitnessState(next){state.witnessState=next;document.documentElement.dataset.witnessState=next;if(document.body)document.body.dataset.witnessState=next;const close=document.querySelector("[data-close-witness]");if(close)close.setAttribute("aria-hidden",String(next!==WITNESS.CLOSE));const returnButton=document.querySelector("[data-return-orbit]");if(returnButton)returnButton.tabIndex=next===WITNESS.CLOSE?0:-1;const action=document.querySelector("[data-witness-action]");if(action)action.disabled=next!==WITNESS.ORBIT;exposeStatus()}
 function fail(reason){state.failureReason=String(reason||"RENDERER_FAILURE");state.initialized=false;document.documentElement.dataset.ziontsRenderer="failed";exposeStatus()}
 const PLANET_MESH=Object.freeze({lat:160,lon:240});
 const PIXEL_BUDGET=Object.freeze({mobileOrbit:1500000,mobileClose:2300000,wideOrbit:2800000,wideClose:4300000});
@@ -162,7 +162,7 @@ void main(){
   vec3 scarAxis=normalize(vec3(-.17,.20,.965));
   float scarBearing=atan(p.y-.20,p.x+.17);
   float scarEdge=1.0+.13*sin(3.0*scarBearing+.6)+.065*sin(7.0*scarBearing-1.2)+.035*sin(11.0*scarBearing+.9);
-  float scarArc=acos(clamp(dot(normalize(p),scarAxis),-1.0,1.0))/(.43*scarEdge);
+  float scarArc=sqrt(max(0.0,2.0*(1.0-dot(normalize(p),scarAxis))))/(.43*scarEdge);
   float floorMix=1.0-smoothstep(.37,.89,scarArc);
   float wallMix=smoothstep(.72,.93,scarArc)*(1.0-smoothstep(1.02,1.21,scarArc));
   float rimMix=exp(-pow((scarArc-1.045)/.15,2.0));
@@ -200,8 +200,8 @@ void main(){
   try{
     const program=device.createProgram({vertexSource:vs,fragmentSource:fs});
     const mesh=buildSphere();
-    // The source winding produces inward normals on the crater mesh. Preserve
-    // the original bytes in default mode; the E6 pilot corrects shading only.
+    // The source winding produces inward normals; Gen3095 reverses shading
+    // consistently in both default and opt-in material paths.
     const shadingNormals=Float32Array.from(mesh.normals,component=>-component);
     const gpuMesh=device.createMesh({
       attributes:[
@@ -333,5 +333,5 @@ function initStory(){const root=document.querySelector("[data-story-carousel]");
 function initTraversal(){document.querySelector("[data-planet-approach]")?.addEventListener("click",beginApproach);document.querySelector("[data-witness-action]")?.addEventListener("click",beginApproach);document.querySelector("[data-return-orbit]")?.addEventListener("click",beginReturn)}
 function onReducedMotion(){state.reducedMotion=REDUCED.matches;if(state.reducedMotion&&cameraTween){const tw=cameraTween;cameraTween=null;applyPose(tw.to);finishCamera(tw.done)}exposeStatus();start()}
 function onVisibility(){visible=!document.hidden;if(visible)start();else if(raf){cancelAnimationFrame(raf);raf=0}}
-function init(){markDocument();initStory();initTraversal();initRenderer();REDUCED.addEventListener?.("change",onReducedMotion);document.addEventListener("visibilitychange",onVisibility);addEventListener("resize",()=>{if(gl&&resources)draw()},{passive:true});exposeStatus()}
+function init(){markDocument();setWitnessState(WITNESS.ORBIT);initStory();initTraversal();initRenderer();REDUCED.addEventListener?.("change",onReducedMotion);document.addEventListener("visibilitychange",onVisibility);addEventListener("resize",()=>{if(gl&&resources)draw()},{passive:true});exposeStatus()}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();

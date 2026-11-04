@@ -573,7 +573,8 @@ export function transformRev2WorldSoilNumericRuntime(original){
  return Object.freeze({source,originalSha256:shader.originalSha256,
    instrumentedSha256:hash(source),numericModeCount:18,calibrationMode:19,
    nativeRenderFrameBound:true,modeZeroDefaultUnchanged:true,
-   maximumSubmittedDiagnosticDraws:40,maximumSubmittedFrames:160,\n   maximumWarmupFramesPerPose:60,nativeCounterBound:true,requiresRgba32f:true,
+   maximumSubmittedDiagnosticDraws:40,maximumSubmittedFrames:160,
+   maximumWarmupFramesPerPose:60,nativeCounterBound:true,requiresRgba32f:true,
    productionMutation:false,gpuExecuted:false});
 }
 

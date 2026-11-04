@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { GEN3096_OPERATION_ID, GEN3096_SCOPED_TEST_PATHS, verifyGen3096LiveAdmission } from '../h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen3096-admitted-candidate-scope.js';
+const GEN3096_OPERATION_ID = 'H_EARTH_SPATIAL_FRAME_SELECTION_20261104_001';
 
 const LEGACY_RELATIVE = 'tools/repository-ai-entry-router.v3-legacy.mjs';
 const STATIC_VERIFIER = 'tools/static-editorial-micro-verifier.v1.mjs';
@@ -218,6 +218,7 @@ let gen3096ProofFailure=null;
 // Gen3096 lock may recognize the three exact test paths for this operation.
 if(parsed.task===GEN3096_OPERATION_ID && parsed.mutationIntent) {
   try {
+    const { GEN3096_SCOPED_TEST_PATHS, verifyGen3096LiveAdmission } = await import('../h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen3096-admitted-candidate-scope.js');
     const proof=await verifyGen3096LiveAdmission(paths,parsed.task,parsed.mutationIntent);
     const exactTests=new Set(GEN3096_SCOPED_TEST_PATHS.map(p=>p.slice(1)));
     let promoted=0;

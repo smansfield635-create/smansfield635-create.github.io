@@ -254,8 +254,8 @@ const receipt={
   ...routeReceipt,
   schema:'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3',
   mutationIntent:true,
-  ...(gen3096ScopeProof?{gen3096AdmissionProvenance:gen3096ScopeProof}:{})
-  ,...(gen3096ProofFailure?{gen3096ProvenanceFailure:gen3096ProofFailure}:{})
+  ...(gen3096ScopeProof ? {gen3096AdmissionProvenance:gen3096ScopeProof} : {}),
+  ...(gen3096ProofFailure ? {gen3096ProvenanceFailure:gen3096ProofFailure} : {}),
   pageMutationClassification:{
     schema:'PAGE_MUTATION_CLASSIFICATION_RECEIPT_v1',
     instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1',

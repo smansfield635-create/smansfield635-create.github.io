@@ -3,7 +3,7 @@ name: H-Earth Neutral Exact Head Runner
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102', 'h-earth/ravine-habitat-color-attribution-20261102', 'h-earth/west-flank-material-pixel-gen3079-20261102', 'h-earth/straight-near-far-baseline-gen3084-20261102']
+    branches: [main, 'h-earth/inland-proven-band-a03-profile-20261102', 'h-earth/ravine-habitat-color-attribution-20261102', 'h-earth/west-flank-material-pixel-gen3079-20261102', 'h-earth/straight-near-far-baseline-gen3084-20261102', 'h-earth-gen3087-planetary-near-far-source-camera']
     paths:
       - '.github/workflows/h-earth-neutral-exact-head-runner.yml'
       - 'tools/h-earth-ground-material-comparison.v1.mjs'
@@ -2285,5 +2285,100 @@ jobs:
         with:
           name: h-earth-gen3087-planetary-baseline-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}//h-earth-gen3087-spherical-near-far-gpu/
+          if-no-files-found: warn
+          retention-days: 30
+
+# REV2 generation 3093: static source/asset prerequisite only, no WebGL.
+  rev2-g1-static-source-only:
+    if: >-
+      ${{ github.event_name == 'pull_request' && (github.event.action == 'opened' || github.event.action == 'synchronize') && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/near-far-worldsoil-factor-20261103-001' && github.event.pull_request.base.ref == 'h-earth-gen3087-planetary-near-far-source-camera' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact REV2 tooling
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: tooling
+          fetch-depth: 96
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/h-earth-ground-material-comparison.v1.mjs
+            /tools/h-earth-ground-material-comparison.v1.test.mjs
+            /tools/h-earth-groundcover-factor-overlay.mjs
+            /.github/workflows/h-earth-neutral-exact-head-runner.yml
+            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+      - name: Checkout frozen diagnostic product
+        uses: actions/checkout@v4
+        with:
+          ref: 11afdc5278564728ea9eef6ffb525601ce4362a7
+          path: product
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /showroom/globe/h-earth/index.html
+            /showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js
+            /showroom/globe/h-earth/vegetation-prototype/route.js
+            /showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+            /showroom/globe/h-earth/render/planetary-world-frame.js
+            /showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js
+            /showroom/globe/h-earth/functional-landscape/navigation.js
+            /showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js
+            h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js
+            /h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js
+            /h-earth-3d/environment/h-earth.atmosphere-state.js
+            /showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js
+            /showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png
+            /showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Fetch only fixed G1 baseline and governing commits
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C product rev-parse HEAD)" = 11afdc5278564728ea9eef6ffb525601ce4362a7
+          git -C product -c protocol.version=2 fetch --no-tags --depth=1 origin 7a21f465fc58cc1dbdda02a3807a4bf344440589
+          git -C product -c protocol.version=2 fetch --no-tags --depth=1 origin 8371931a761944bf08c3bc517a56f0e3d2a3d7fa
+          git -C product cat-file -e 7a21f465fc58cc1dbdda02a3807a4bf344440589^{commit}
+          git -C product cat-file -e 8371931a761944bf08c3bc517a56f0e3d2a3d7fa^{commit}
+      - name: Source-only Node22 and G1 preflight (zero GPU)
+        env:
+          EXPECTED_TOOLING_HEAD: ${{ github.event.pull_request.head.sha }}
+          RECEIPT_DIR: ${{ runner.temp }}/h-earth-rev2-g1-source-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git -C tooling rev-parse HEAD)" = "$EXPECTED_TOOLING_HEAD"
+          git -C tooling merge-base --is-ancestor 9ab65ca90daee3c2b8bb8b5551cedc8d1d69c987 HEAD || { echo REV2_EXACT_PREDECESSOR_ANCESTRY_UNAVAILABLE; exit 52; }
+          while IFS= read -r changed; do
+            case "$changed" in
+              tools/h-earth-ground-material-comparison.v1.mjs|tools/h-earth-groundcover-factor-overlay.mjs|tools/h-earth-ground-material-comparison.v1.test.mjs|.github/workflows/h-earth-neutral-exact-head-runner.yml) ;;
+              *) echo "REV2_OUT_OF_SCOPE:$changed"; exit 64 ;;
+            esac
+          done < <(git -C tooling diff --name-only 9ab65ca90daee3c2b8bb8b5551cedc8d1d69c987 HEAD)
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          node --check tooling/tools/h-earth-groundcover-factor-overlay.mjs
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.test.mjs
+          (cd tooling && node --test --test-name-pattern='REV2' tools/h-earth-ground-material-comparison.v1.test.mjs)
+          mkdir -p "$RECEIPT_DIR"
+          node --input-type=module -e '
+            import fs from "node:fs";
+            import {collectRev2G1StaticPreflight} from "./tooling/tools/h-earth-ground-material-comparison.v1.mjs";
+            const receipt=collectRev2G1StaticPreflight("product");
+            fs.writeFileSync(process.env.RECEIPT_DIR+"/receipt.json",JSON.stringify(receipt,null,2)+"\n");
+            console.log(receipt.result);
+            if(receipt.gpuAuthorizationCreated||receipt.gpuExecuted)throw Error("REV2_SOURCE_ONLY_AUTHORITY_VIOLATION");
+          '
+      - name: Preserve source-only G1 result even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-rev2-g1-source-only-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-rev2-g1-source-only/
           if-no-files-found: warn
           retention-days: 30

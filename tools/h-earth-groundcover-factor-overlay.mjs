@@ -291,3 +291,373 @@ export function transformNearFarStraightRenderer(original){
     sourcePoseOnly:true,ownerPhotoCorrespondence:false,
     productDiskMutation:false,releaseAuthorized:false});
 }
+
+
+// REV2 exact-published-source GPU numeric probe (source construction only).
+// Debug-disabled shader output, sampling, soil blend and draw order stay intact.
+export const REV2_WORLD_SOIL_NUMERIC_MODES=Object.freeze([
+ 'role_primitive_depth_valid','corrected_normal_slope',
+ 'exposure_eligibility_weight_authority','pre_soil_and_shelter','K_and_region',
+ 'uv_ddx','ddy_lod_valid','implicit_T_coast',
+ ...Array.from({length:9},(_,i)=>'fixed_lod_'+i),'post_soil_C'
+]);
+export function transformRev2WorldSoilNumericRenderer(original){
+ const sourceHash=hash(original);
+ if(sourceHash!==RAVINE_HABITAT_SOURCE_SHA256)
+   throw Error('REV2_PUBLISHED_RENDERER_SOURCE_HASH_MISMATCH:'+sourceHash);
+ const start=original.indexOf('const FS = '+String.fromCharCode(96)+'#version 300 es');
+ const end=original.indexOf('// Ordered screen-door coverage',start);
+ if(start<0||end<=start)throw Error('REV2_FRAGMENT_SCOPE_INVALID');
+ let fs=original.slice(start,end);
+ fs=once(fs,'out vec4 outColor;','uniform highp int uRev2NumericMode;\nout vec4 outColor;');
+ fs=once(fs,'void main(){',[
+  'void main(){',
+  '  // REV2: evaluate implicit UV derivatives before divergent soil branch.',
+  '  vec2 rev2UV=clearingLocalXZ(vWorldPosition)*0.28;',
+  '  vec2 rev2DDX=dFdx(rev2UV),rev2DDY=dFdy(rev2UV);',
+  '  bool rev2DerivativeFinite=!any(isnan(vec4(rev2DDX,rev2DDY))) && !any(isinf(vec4(rev2DDX,rev2DDY)));',
+  '  vec3 rev2P=vec3(0.0),rev2C=vec3(0.0),rev2T=vec3(0.0),rev2K=vec3(0.0);',
+  '  float rev2W=0.0,rev2A=0.0,rev2E=0.0,rev2Region=0.0,rev2Shelter=0.0,rev2RockExposure=0.0;',
+  '  bool rev2SampledOriginalT=false;'
+ ].join('\n'));
+ fs=once(fs,'    if(uClearingEnabled==1){\n      // The approved earth texture',[
+  '    rev2P=palette;rev2C=palette;rev2Shelter=shelteredSoil;',
+  '    if(uClearingEnabled==1){',
+  '      // The approved earth texture'
+ ].join('\n'));
+ fs=once(fs,'      float worldSoilWeight=worldSoilCoverage;',[
+  '      float worldSoilWeight=worldSoilCoverage;',
+  '      rev2W=worldSoilWeight;rev2E=worldSoilEligibility;rev2Region=worldSoilRegion;'
+ ].join('\n'));
+ fs=once(fs,'        ).rgb;\n        if(geologicalEarthRock){',[
+  '        ).rgb;',
+  '        if(!geologicalEarthRock){rev2T=worldSoilTexel;rev2SampledOriginalT=true;}',
+  '        if(geologicalEarthRock){'
+ ].join('\n'));
+ fs=once(fs,'    float shelteredSoil=clamp(',[
+  '    rev2RockExposure=rockExposure;',
+  '    float shelteredSoil=clamp('
+ ].join('\n'));
+ fs=once(fs,'        vec3 worldSoilActualAlbedo=',[
+  '        rev2K=0.75*worldSoilEarthTint*worldSoilBroadTonal;',
+  '        vec3 worldSoilActualAlbedo='
+ ].join('\n'));
+ fs=once(fs,'        vec3 worldSoilFinal=mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority);',[
+  '        rev2P=palette;rev2A=worldSoilAlbedoAuthority;',
+  '        vec3 worldSoilFinal=mix(palette,worldSoilActualAlbedo,worldSoilAlbedoAuthority);'
+ ].join('\n'));
+ fs=once(fs,'    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_BEGIN',[
+  '    rev2C=palette;',
+  '    // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_BEGIN'
+ ].join('\n'));
+ const output=[
+  '  if(uRev2NumericMode>0){',
+  '    int m=uRev2NumericMode;',
+  '    bool ordinary=worldSoilTerrain&&!geologicalEarthRock;',
+  '    bool validT=ordinary&&rev2SampledOriginalT&&rev2W>0.001&&rev2DerivativeFinite;',
+  '    float derivativeMagnitude=max(length(rev2DDX*256.0),length(rev2DDY*256.0));',
+  '    float estimatedLod=clamp(log2(max(derivativeMagnitude,1.0)),0.0,8.0);',
+  '    vec4 channels=vec4(0.0);',
+  '    if(m==1)channels=vec4(float(vRoleCode),float(vPrimitiveIndex),gl_FragCoord.z,ordinary?1.0:0.0);',
+  '    else if(m==2)channels=vec4(geometricNormal,slope);',
+  '    else if(m==3)channels=vec4(rev2RockExposure,rev2E,rev2W,rev2A);',
+  '    else if(m==4)channels=vec4(rev2P,rev2Shelter);',
+  '    else if(m==5)channels=vec4(rev2K,rev2Region);',
+  '    else if(m==6&&validT)channels=vec4(rev2UV,rev2DDX);',
+  '    else if(m==7)channels=validT?vec4(rev2DDY,estimatedLod,1.0):vec4(0.0);',
+  '    else if(m==8&&validT)channels=vec4(rev2T,vCoastDistanceMeters);',
+  '    else if(m>=9&&m<=17&&validT){',
+  '      vec3 explicitLod=textureLod(uClearingSoil,rev2UV,float(m-9)).rgb;',
+  '      channels=vec4(explicitLod,1.0);',
+  '    }',
+  '    else if(m==18)channels=vec4(rev2C,ordinary?1.0:0.0);',
+  '    outColor=channels;',
+  '  }else outColor=vec4(lit,outputAlpha);'
+ ].join('\n');
+ fs=once(fs,'  outColor=vec4(lit,outputAlpha);',output);
+ const instrumented=original.slice(0,start)+fs+original.slice(end);
+ if(!instrumented.includes('palette=mix(palette,worldSoilFinal,worldSoilWeight);'))
+   throw Error('REV2_ORIGINAL_WORLD_SOIL_BLEND_LOST');
+ return Object.freeze({source:instrumented,originalSha256:sourceHash,
+  instrumentedSha256:hash(instrumented),numericModeCount:REV2_WORLD_SOIL_NUMERIC_MODES.length,
+  noSourceWrite:true,debugDisabledOriginalOutputRetained:true,
+  driverSelectedMipObserved:false,noOriginalTWhenWZero:true,
+  requiresRgba32f:true,productionMutation:false,gpuExecuted:false});
+}
+
+
+// REV2 diagnostic-only floating color/depth target. This function is NOT
+// called by the production renderer or current GPU runner. It is a bounded
+// construction prerequisite for separately verified mode-draw integration.
+export function createRev2Rgba32fTarget(gl,{width=529,height=980}={}){
+ const fail=reason=>{throw Error('REV2_FLOAT_'+reason);};
+ const required=['getExtension','getError','getParameter','activeTexture','bindTexture',
+  'createTexture','texStorage2D','texParameteri','createFramebuffer','bindFramebuffer',
+  'framebufferTexture2D','createRenderbuffer','bindRenderbuffer','renderbufferStorage',
+  'framebufferRenderbuffer','checkFramebufferStatus','viewport','readPixels'];
+ if(!gl||required.some(n=>typeof gl[n]!=='function'))fail('WEBGL2_INTERFACE_INCOMPLETE');
+ if(width!==529||height!==980)fail('VIEWPORT_NOT_FROZEN');
+ if(gl.getError()!==gl.NO_ERROR)fail('PREEXISTING_GL_ERROR');
+ if(!gl.getExtension('EXT_color_buffer_float'))fail('EXT_COLOR_BUFFER_FLOAT_UNAVAILABLE');
+ // The pinned native renderer blends translucent ranges; RGBA32F blending
+ // raises INVALID_OPERATION without EXT_float_blend (Khronos WebGL extension).
+ if(!gl.getExtension('EXT_float_blend'))fail('EXT_FLOAT_BLEND_UNAVAILABLE');
+ const saved=()=>({
+  framebuffer:gl.getParameter(gl.FRAMEBUFFER_BINDING),
+  renderbuffer:gl.getParameter(gl.RENDERBUFFER_BINDING),
+  activeTexture:gl.getParameter(gl.ACTIVE_TEXTURE),
+  viewport:[...gl.getParameter(gl.VIEWPORT)]
+ });
+ const restore=s=>{
+  gl.bindFramebuffer(gl.FRAMEBUFFER,s.framebuffer);
+  gl.bindRenderbuffer(gl.RENDERBUFFER,s.renderbuffer);
+  gl.activeTexture(gl.TEXTURE0);
+  gl.bindTexture(gl.TEXTURE_2D,s.texture0);
+  gl.activeTexture(s.activeTexture);
+  gl.viewport(...s.viewport);
+ };
+ const snapshot=()=>{
+  const state=saved();
+  gl.activeTexture(gl.TEXTURE0);
+  state.texture0=gl.getParameter(gl.TEXTURE_BINDING_2D);
+  gl.activeTexture(state.activeTexture);
+  return state;
+ };
+ const initial=snapshot();
+ let texture=null,depth=null,framebuffer=null,disposed=false;
+ try{
+  texture=gl.createTexture();
+  depth=gl.createRenderbuffer();
+  framebuffer=gl.createFramebuffer();
+  if(!texture||!depth||!framebuffer)fail('ALLOCATE_FAILED');
+  gl.bindTexture(gl.TEXTURE_2D,texture);
+  gl.texStorage2D(gl.TEXTURE_2D,1,gl.RGBA32F,width,height);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);
+  gl.bindRenderbuffer(gl.RENDERBUFFER,depth);
+  gl.renderbufferStorage(gl.RENDERBUFFER,gl.DEPTH_COMPONENT24,width,height);
+  gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);
+  gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,texture,0);
+  gl.framebufferRenderbuffer(gl.FRAMEBUFFER,gl.DEPTH_ATTACHMENT,gl.RENDERBUFFER,depth);
+  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)
+    fail('FRAMEBUFFER_INCOMPLETE');
+  if(gl.getError()!==gl.NO_ERROR)fail('FRAMEBUFFER_GL_ERROR');
+ }catch(error){
+  // Never leave an incomplete diagnostic attachment installed.
+  if(framebuffer)gl.deleteFramebuffer?.(framebuffer);
+  if(depth)gl.deleteRenderbuffer?.(depth);
+  if(texture)gl.deleteTexture?.(texture);
+  throw error;
+ }finally{restore(initial);}
+ const bind=()=>{
+  if(disposed)fail('DISPOSED');
+  gl.bindFramebuffer(gl.FRAMEBUFFER,framebuffer);
+  gl.viewport(0,0,width,height);
+  if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE)
+   fail('FRAMEBUFFER_INCOMPLETE');
+  if(gl.getError()!==gl.NO_ERROR)fail('BIND_GL_ERROR');
+ };
+ const checkReadState=()=>{
+  if(gl.getParameter(gl.FRAMEBUFFER_BINDING)!==framebuffer)
+   fail('DRAW_FRAMEBUFFER_DRIFT');
+  const viewport=[...gl.getParameter(gl.VIEWPORT)];
+  if(viewport.length!==4||viewport.some((v,i)=>v!==[0,0,width,height][i]))
+   fail('DRAW_VIEWPORT_DRIFT');
+ };
+ const read=(x,y,w,h)=>{
+  if(![x,y,w,h].every(Number.isInteger)||w<1||h<1||x<0||y<0||
+     x+w>width||y+h>height)fail('PIXEL_BOUNDS');
+  checkReadState();
+  const floats=new Float32Array(w*h*4);
+  gl.readPixels(x,y,w,h,gl.RGBA,gl.FLOAT,floats);
+  if(gl.getError()!==gl.NO_ERROR)fail('READPIXELS_GL_ERROR');
+  if(floats.some(v=>!Number.isFinite(v)))fail('READPIXELS_NONFINITE');
+  return floats;
+ };
+ const capture=(draw,regions)=>{
+  if(typeof draw!=='function'||!Array.isArray(regions)||regions.length<1||
+     regions.some(r=>!r||!Array.isArray(r)||r.length!==4))fail('CAPTURE_ARGUMENTS');
+  const prior=snapshot();
+  try{
+   bind();
+   draw();
+   return Object.freeze(regions.map(([x,y,w,h])=>read(x,y,w,h)));
+  }finally{
+   // Draw code may have changed the active texture; recover the original
+   // binding without changing the published renderer's persistent resources.
+   restore(prior);
+  }
+ };
+ const dispose=()=>{
+  if(disposed)return;
+  const prior=saved();
+  try{
+   gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+   gl.deleteFramebuffer(framebuffer);
+   gl.deleteRenderbuffer(depth);
+   gl.deleteTexture(texture);
+   disposed=true;
+  }finally{
+   // Caller must not delete while the diagnostic target is actively bound.
+   gl.bindFramebuffer(gl.FRAMEBUFFER,prior.framebuffer===framebuffer?null:prior.framebuffer);
+   gl.bindRenderbuffer(gl.RENDERBUFFER,prior.renderbuffer===depth?null:prior.renderbuffer);
+   gl.viewport(...prior.viewport);
+  }
+ };
+ return Object.freeze({width,height,framebuffer,capture,dispose,
+  schema:'H_EARTH_REV2_RGBA32F_TARGET_SOURCE_v1',
+  calibrationNotYetBound:true,sourceOnlyTransport:true,productionMutation:false});
+}
+
+
+// REV2 source-only native renderer bridge. Mode 19 is reserved strictly for
+// float roundtrip calibration and is not one of the 18 scientific channels.
+export const REV2_FLOAT_SENTINEL=Object.freeze([0.125,0.25,0.5,1.0]);
+export function validateRev2FloatCalibration(samples){
+ // Every one of the twelve frozen G1 sites must preserve the float
+ // sentinel. A single good site must never qualify an entire framebuffer.
+ if(!Array.isArray(samples)||samples.length!==12||
+    samples.some(p=>!(p instanceof Float32Array)||p.length!==4||
+      [...p].some(x=>!Number.isFinite(x))))
+  throw Error('REV2_FLOAT_CALIBRATION_READBACK_INVALID');
+ const e=0.000002;
+ if(!samples.every(p=>REV2_FLOAT_SENTINEL.every((v,i)=>Math.abs(p[i]-v)<=e)))
+  throw Error('REV2_FLOAT_CALIBRATION_ROUNDTRIP_FAIL');
+ return Object.freeze({result:'REV2_FLOAT_ROUNDTRIP_SOURCE_CHECK_PASS',
+  precisionCeiling:e,calibratedPixelCount:samples.length,
+  g1FirstHitRolesVerified:false,actualGpuRunClaimed:false});
+}
+export function transformRev2WorldSoilNumericRuntime(original){
+ const shader=transformRev2WorldSoilNumericRenderer(original);
+ let source=shader.source;
+ const exact=(before,after,label)=>{
+  if(source.split(before).length!==2)throw Error('REV2_NATIVE_ANCHOR_NOT_UNIQUE:'+label);
+  source=source.replace(before,after);
+ };
+ exact("    else if(m==18)channels=vec4(rev2C,ordinary?1.0:0.0);",
+  "    else if(m==18)channels=vec4(rev2C,ordinary?1.0:0.0);\n    else if(m==19)channels=vec4(0.125,0.25,0.5,1.0);",
+  'CALIBRATION_MODE');
+ exact('export async function createHEarthRun8ER3CPersistentRenderer',
+  'const rev2CreateFloatTarget='+createRev2Rgba32fTarget.toString()+';\n'+
+  'const rev2FrameLedgerFactory='+createRev2NativeFrameLedger.toString()+';\n'+
+  'const rev2ValidateCalibration='+validateRev2FloatCalibration.toString()
+    .replace('REV2_FLOAT_SENTINEL','[0.125,0.25,0.5,1.0]')+';\n'+
+  'export async function createHEarthRun8ER3CPersistentRenderer',
+  'FACTORY');
+ exact("  if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');",
+  "  if (!gl) throw new Error('R3C_WEBGL2_CONTEXT_UNAVAILABLE');\n"+
+  "  const rev2Probe={mode:0,target:null,total:0,calibration:[false,false],parity:[false,false],"+
+  "seen:[new Set(),new Set()],terminal:false,ledger:null};",
+  'CONTEXT');
+ exact('gl.bindFramebuffer(gl.FRAMEBUFFER, resources.geometryFramebuffer); gl.viewport(0, 0, width, height);',
+  'gl.bindFramebuffer(gl.FRAMEBUFFER, rev2Probe.mode>0 ? rev2Probe.target.framebuffer : resources.geometryFramebuffer); gl.viewport(0, 0, width, height);',
+  'NATIVE_FRAMEBUFFER');
+ exact('gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);',
+  'gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);'+
+  "\n    if(rev2Probe.mode>0){const rev2Location=gl.getUniformLocation(resources.geometryProgram,'uRev2NumericMode');"+
+  "if(rev2Location===null)throw Error('REV2_MODE_UNIFORM_UNAVAILABLE');"+
+  "gl.uniform1i(rev2Location,rev2Probe.mode);"+
+  "if(gl.getError()!==gl.NO_ERROR)throw Error('REV2_MODE_UNIFORM_GL_ERROR');}",
+  'NATIVE_MODE');
+ const api="\n  // All methods below are only present in the transformed diagnostic module.\n  function rev2CheckPose(pose){\n    if(!initialized||rev2Probe.terminal||rev2Probe.ledger?.snapshot().terminal)throw Error('REV2_RUNTIME_NOT_ADMITTED');\n    if(!Number.isInteger(pose)||pose<0||pose>1)throw Error('REV2_POSE_UNFROZEN');\n    if(width!==529||height!==980)throw Error('REV2_VIEWPORT_NOT_FROZEN');\n  }\n  function rev2CheckCamera(packet){\n    if(typeof gl.getUniform!=='function')throw Error('REV2_CAMERA_GPU_READBACK_UNAVAILABLE');\n    const c=gl.getUniform(resources.geometryProgram,resources.uniforms.cameraPosition);\n    const m=gl.getUniform(resources.geometryProgram,resources.uniforms.viewProjection);\n    if(!c||c.length!==3||!m||m.length!==16||\n       !packet?.camera?.position||!Array.isArray(packet.camera.viewProjectionMatrix))\n      throw Error('REV2_CAMERA_GPU_READBACK_INCOMPLETE');\n    const p=packet.camera.position,expected=[p.x,p.y,p.z];\n    if(expected.some((x,i)=>!Number.isFinite(x)||Math.abs(c[i]-x)>0.0002)||\n       packet.camera.viewProjectionMatrix.some((x,i)=>!Number.isFinite(x)||Math.abs(m[i]-x)>0.0002))\n      throw Error('REV2_CAMERA_GPU_UNIFORM_DRIFT');\n  }\n  function rev2Ledger(){\n    if(!rev2Probe.ledger){\n      rev2Probe.ledger=rev2FrameLedgerFactory({\n        getFrameCount:()=>counters.frameCount,\n        submitNativeFrame:packet=>renderFrame(packet)\n      });\n    }\n    return rev2Probe.ledger;\n  }\n  function captureRev2Warmup(packet,pose){\n    rev2CheckPose(pose);\n    if(rev2Probe.mode!==0)throw Error('REV2_WARMUP_MODE_INVALID');\n    try{\n      const receipt=rev2Ledger().submit({pose,kind:'WARMUP',mode:0,packet});\n      rev2CheckCamera(packet);\n      return Object.freeze({pose,warmupCount:receipt.warmups[pose],\n        submitted:receipt.submitted,lastNativeFrameCount:receipt.lastNativeFrameCount,\n        ownerVisualAcceptance:false});\n    }catch(error){rev2Probe.terminal=true;throw error;}\n  }\n  function captureRev2FloatMode(packet,pose,mode,regions){\n    rev2CheckPose(pose);\n    if(!Number.isInteger(mode)||mode<1||mode>19)throw Error('REV2_MODE_OUT_OF_SCOPE');\n    if(mode===19){\n      if(rev2Probe.calibration[pose]||rev2Probe.seen[pose].size||rev2Probe.parity[pose])\n        throw Error('REV2_CALIBRATION_ORDER_INVALID');\n      regions=[128,264,400].flatMap(x=>[250,430,610,790].map(y=>[x,979-y,1,1]));\n    }else if(!rev2Probe.calibration[pose]||rev2Probe.seen[pose].has(mode)||\n              rev2Probe.parity[pose])throw Error('REV2_NUMERIC_MODE_ORDER_OR_DUPLICATE');\n    else if(!Array.isArray(regions)||!regions.length)throw Error('REV2_MODE_REGIONS_MISSING');\n    if(rev2Probe.total>=40)throw Error('REV2_GPU_DRAW_BUDGET_EXHAUSTED');\n    if(!rev2Probe.target)rev2Probe.target=rev2CreateFloatTarget(gl,{width,height});\n    rev2Probe.mode=mode;\n    try{\n      const capture=rev2Probe.target.capture(()=>{\n        rev2Ledger().submit({pose,kind:mode===19?'CALIBRATION':'NUMERIC',mode,packet});\n        rev2CheckCamera(packet);\n      },regions);\n      rev2Probe.total=rev2Probe.ledger.snapshot().diagnosticDraws;\n      if(mode===19){\n        rev2ValidateCalibration(capture);\n        rev2Probe.calibration[pose]=true;\n      }else rev2Probe.seen[pose].add(mode);\n      return Object.freeze({pose,mode,regions,rgbaFloat32:capture,\n        sourceCameraUniformVerified:true,\n        calibratedWitness:mode===19,firstHitClaimed:false});\n    }catch(error){rev2Probe.terminal=true;throw error;}\n    finally{\n      rev2Probe.mode=0;\n      gl.useProgram(resources.geometryProgram);\n      const loc=gl.getUniformLocation(resources.geometryProgram,'uRev2NumericMode');\n      if(loc!==null)gl.uniform1i(loc,0);\n    }\n  }\n  function captureRev2OriginalParity(packet,pose){\n    rev2CheckPose(pose);\n    if(!rev2Probe.calibration[pose]||rev2Probe.seen[pose].size!==18||\n       rev2Probe.parity[pose])throw Error('REV2_PARITY_PRECONDITION');\n    if(rev2Probe.total>=40)throw Error('REV2_GPU_DRAW_BUDGET_EXHAUSTED');\n    const priorFB=gl.getParameter(gl.FRAMEBUFFER_BINDING);\n    const priorViewport=[...gl.getParameter(gl.VIEWPORT)];\n    try{\n      rev2Ledger().submit({pose,kind:'PARITY',mode:0,packet});\n      rev2Probe.total=rev2Probe.ledger.snapshot().diagnosticDraws;\n      rev2CheckCamera(packet);\n      gl.bindFramebuffer(gl.FRAMEBUFFER,resources.geometryFramebuffer);\n      const pixels=[];\n      for(const x of [128,264,400])for(const y of [250,430,610,790]){\n        const bytes=new Uint8Array(4);\n        gl.readPixels(x,979-y,1,1,gl.RGBA,gl.UNSIGNED_BYTE,bytes);\n        if(gl.getError()!==gl.NO_ERROR)throw Error('REV2_PARITY_READPIXELS_GL_ERROR');\n        pixels.push([...bytes]);\n      }\n      rev2Probe.parity[pose]=true;\n      return Object.freeze({pose,mode:0,rawRgba8:pixels,\n        comparisonToUninstrumentedPending:true,ownerVisualAcceptance:false});\n    }catch(error){rev2Probe.terminal=true;throw error;}\n    finally{\n      gl.bindFramebuffer(gl.FRAMEBUFFER,priorFB);\n      gl.viewport(...priorViewport);\n    }\n  }\n  function getRev2DiagnosticAccounting(){\n    const p=rev2Probe;\n    const native=p.ledger?.snapshot()??null;\n    return Object.freeze({schema:'REV2_SOURCE_BOUND_NATIVE_GPU_ACCOUNTING_v2',\n      diagnosticDraws:p.total,totalNativeFrameSubmissions:native?.submitted??0,\n      warmupFramesPerPose:native?.warmups??[0,0],\n      nativeInitialFrameCount:native?.initialNativeFrameCount??null,\n      nativeLastFrameCount:native?.lastNativeFrameCount??null,\n      calibrations:native?.calibrations??[false,false],\n      numericModes:native?.numericModes??[0,0],\n      referenceParity:native?.parities??[false,false],\n      complete:native?.complete===true,\n      terminal:p.terminal||native?.terminal===true,\n      firstHitRolesMeasured:false,actualGpuEvidenceNotYetSubmitted:true});\n  }\n";
+
+ exact('function renderFrame(packet) {',
+  'function renderFrame(packet) {\n    if(rev2Probe.ledger)rev2Probe.ledger.assertNativeEntry();',
+  'NATIVE_FRAME_OWNERSHIP');
+ exact('  // Observation only: serialize caught startup failures for the existing remote verifier.',
+  api+'  // Observation only: serialize caught startup failures for the existing remote verifier.',
+  'DIAGNOSTIC_API');
+ exact('    disposeCorrectedMaterial,\n    getVegetationTrace,getVegetationProbe,',
+  '    disposeCorrectedMaterial,\n    captureRev2Warmup,captureRev2FloatMode,captureRev2OriginalParity,getRev2DiagnosticAccounting,\n    getVegetationTrace,getVegetationProbe,',
+  'PUBLIC_METHODS');
+ return Object.freeze({source,originalSha256:shader.originalSha256,
+   instrumentedSha256:hash(source),numericModeCount:18,calibrationMode:19,
+   nativeRenderFrameBound:true,modeZeroDefaultUnchanged:true,
+   maximumSubmittedDiagnosticDraws:40,maximumSubmittedFrames:160,
+   maximumWarmupFramesPerPose:60,nativeCounterBound:true,requiresRgba32f:true,
+   productionMutation:false,gpuExecuted:false});
+}
+
+// Diagnostic-only native frame ledger: exactly one native renderFrame
+// invocation and one increment of the renderer's own counters.frameCount
+// per admitted submission. Never infer a GPU draw from a synthetic receipt.
+export function createRev2NativeFrameLedger({getFrameCount,submitNativeFrame}={}){
+ if(typeof getFrameCount!=='function'||typeof submitNativeFrame!=='function')
+  throw Error('REV2_NATIVE_FRAME_BINDING_MISSING');
+ let initial=null,last=null,submitted=0,diagnosticDraws=0,terminal=false,pending=null;
+ const warmups=[0,0],modes=[0,0],calibrations=[false,false],parities=[false,false];
+ const fail=code=>{terminal=true;throw Error('REV2_NATIVE_FRAME_'+code);};
+ const current=()=>{
+  const n=getFrameCount();
+  if(!Number.isSafeInteger(n)||n<0)fail('COUNTER_INVALID');
+  return n;
+ };
+ const snapshot=()=>Object.freeze({
+  schema:'H_EARTH_REV2_NATIVE_FRAME_LEDGER_v1',
+  started:initial!==null,
+  initialNativeFrameCount:initial,lastNativeFrameCount:last,
+  submitted,diagnosticDraws,warmups:Object.freeze([...warmups]),
+  numericModes:Object.freeze([...modes]),
+  calibrations:Object.freeze([...calibrations]),
+  parities:Object.freeze([...parities]),
+  totalCeiling:160,diagnosticCeiling:40,warmupCeilingPerPose:60,
+  complete:parities[0]&&parities[1]&&diagnosticDraws===40&&
+   submitted===40+warmups[0]+warmups[1]&&!terminal,
+  terminal,actualGpuEvidenceClaimed:false
+ });
+ const assertNativeEntry=()=>{
+  if(terminal||initial===null||!pending||pending.entered)
+   fail('UNOWNED_OR_REENTRANT_RENDER');
+  pending.entered=true;
+ };
+ const submit=({pose,kind,mode,packet}={})=>{
+  if(terminal)fail('TERMINAL');
+  if(!Number.isInteger(pose)||(pose!==0&&pose!==1)||
+     !['WARMUP','CALIBRATION','NUMERIC','PARITY'].includes(kind))
+   fail('SUBMISSION_CLASS_INVALID');
+  if(pose===1&&!parities[0])fail('POSE_ORDER');
+  if(pose===0&&parities[0])fail('POSE_COMPLETE');
+  if(initial===null){
+   if(pose!==0)fail('FIRST_POSE_NOT_ZERO');
+   initial=current();
+   last=initial;
+  }
+  if(current()!==last)fail('NATIVE_COUNTER_DRIFT');
+  if(submitted>=160)fail('TOTAL_FRAME_CEILING');
+  if(kind==='WARMUP'){
+   if(mode!==0||calibrations[pose]||warmups[pose]>=60)
+    fail('WARMUP_LIMIT_OR_ORDER');
+  }else{
+   if(diagnosticDraws>=40)fail('DIAGNOSTIC_DRAW_CEILING');
+   if(kind==='CALIBRATION'){
+    if(mode!==19||calibrations[pose]||modes[pose]!==0||parities[pose])
+     fail('CALIBRATION_ORDER');
+   }else if(kind==='NUMERIC'){
+    if(!calibrations[pose]||parities[pose]||mode!==modes[pose]+1||
+       mode<1||mode>18)fail('NUMERIC_MODE_ORDER');
+   }else if(mode!==0||!calibrations[pose]||modes[pose]!==18||parities[pose])
+    fail('PARITY_PRECONDITION');
+  }
+  if(pending)fail('REENTRANT_SUBMISSION');
+  const before=last;
+  pending={entered:false,pose,kind,mode};
+  try{
+   submitNativeFrame(packet);
+   if(!pending.entered)fail('NATIVE_RENDER_NOT_ENTERED');
+   const after=current();
+   if(after!==before+1)fail('NATIVE_FRAME_COUNT_NOT_ONE');
+   last=after;
+   submitted++;
+   if(kind==='WARMUP')warmups[pose]++;
+   else{
+    diagnosticDraws++;
+    if(kind==='CALIBRATION')calibrations[pose]=true;
+    else if(kind==='NUMERIC')modes[pose]++;
+    else parities[pose]=true;
+   }
+   return snapshot();
+  }catch(error){terminal=true;throw error;}
+  finally{pending=null;}
+ };
+ return Object.freeze({submit,assertNativeEntry,snapshot});
+}

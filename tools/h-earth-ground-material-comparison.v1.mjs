@@ -5,6 +5,311 @@ import {spawn,execFileSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {transformPublishedRenderer,transformRavineHabitatRenderer,transformWestFlankMaterialRenderer,transformNearFarStraightRenderer,WEST_FLANK_STAGE_MODES,NEAR_FAR_STRAIGHT_STAGE_MODES,RAVINE_HABITAT_PROBE_MODES,MODES,MODES_MINIMUM} from './h-earth-groundcover-factor-overlay.mjs';
 
+
+// REV2 G1 prerequisite: source-only closure. This never runs WebGL or upgrades
+// an archival source witness into an actual GPU first-hit observation.
+export const REV2_G1_STATIC_PREFLIGHT=Object.freeze({
+ schema:'H_EARTH_REV2_G1_STATIC_PREFLIGHT_v1',
+ baseline:'7a21f465fc58cc1dbdda02a3807a4bf344440589',
+ product:'11afdc5278564728ea9eef6ffb525601ce4362a7',
+ governing:'8371931a761944bf08c3bc517a56f0e3d2a3d7fa',
+ blobs:Object.freeze({
+  'showroom/globe/h-earth/index.html':'c86274de31cfacea8b1f7e0ad742462bba46e6f6',
+  'showroom/globe/h-earth/vegetation-prototype/bootstrap.v1.js':'59c77d100d793f9dd28e9db7bd357ef078de0165',
+  'showroom/globe/h-earth/vegetation-prototype/route.js':'8e8df594b8968f6bb17f32dc4ed7025bd2488bd0',
+  'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js':'85ee835060d5106a670077a5f4352b7ad202b49b',
+  'showroom/globe/h-earth/render/planetary-world-frame.js':'0938daa8586715c3636b373894bd7e6e28c1ea91',
+  'showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js':'d360e92c575be0c52254f454e7f57c1b87693b13',
+  'showroom/globe/h-earth/functional-landscape/navigation.js':'3912671a7d6fe380a3605e33fd6547e2f672f319',
+  'showroom/globe/h-earth/render/live-render-package.run8e-r2.canonical.js':'98ef78138aa6104f707832eabfa64bf1958a7312',
+  'h-earth-3d/control-plane/run-8/recovery/h-earth.run8e-r3.live-gpu-presentation-recovery.js':'dbab15717f754b2dc9cedd75ab6835d3f4328a15',
+  'h-earth-3d/terrain/h-earth.successor-terrain-field.run8b.js':'4f929cd467edb447e2116de745d9b02c28daf219',
+  'h-earth-3d/environment/h-earth.atmosphere-state.js':'d3c8472529b4b8e5b34a3aa100240ca69bf4fef1',
+  'showroom/globe/h-earth/render/gpu-upload-views.run8e-r2d.js':'ca4b239cfa9332a41b4adb7ccc76530beea10e77',
+  'showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png':'4fc4e24098c144d251f949a58a520bfd27983ad7',
+  'showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png':'3a5220e90c91d511e2f554023dc16823affd0058'
+ }),
+ atlases:Object.freeze({
+  'showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png':'b955d44ec908cdc1ea3ca18fc51f6dc513bbad5d5d8823da95a78e9c9bc83da7',
+  'showroom/globe/h-earth/render/corrected-material-v1/far-atlas.png':'78a1031c9cdcf9d9649bede330e50f18b192ccba40d49ec5af1f293fc70a8d5f'
+ }),
+ baselineToProductFingerprint:Object.freeze({count:18,sha256:'b61e6533fd4247e85d9db544874d8bd84b46a34e9f9c63f64b5c05ff53b92798'}),
+ baselineToGoverningFingerprint:Object.freeze({count:24,sha256:'ded60b56bfeb616e9de06662ce9d2231899ae4d86fae5d27db243c2b1a75fee7'})
+});
+export function validateRev2G1StaticEvidence(evidence){
+ const c=REV2_G1_STATIC_PREFLIGHT,failed=(code)=>{throw Error('REV2_G1_'+code);};
+ if(!evidence||evidence.baseline!==c.baseline||evidence.product!==c.product||
+    evidence.governing!==c.governing)failed('EXACT_HEAD_DRIFT');
+ const sameFingerprint=(actual,expected)=>actual?.count===expected.count&&
+    actual?.sha256===expected.sha256;
+ if(!sameFingerprint(evidence.baselineToProductFingerprint,c.baselineToProductFingerprint)||
+    !sameFingerprint(evidence.baselineToGoverningFingerprint,c.baselineToGoverningFingerprint))
+   failed('TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED');
+ for(const [file,want] of Object.entries(c.blobs)){
+   if(['baseline','product','governing'].some(ref=>evidence.blobs?.[ref]?.[file]!==want))
+     failed('SOURCE_OR_ASSET_BLOB_DRIFT:'+file);
+ }
+ for(const [file,want] of Object.entries(c.atlases))
+   if(evidence.atlasDigests?.[file]!==want)failed('ASSET_SHA256_DRIFT:'+file);
+ if(evidence.importMapCount!==36||evidence.importMapTargetsLocal!==true||
+    evidence.importMapPathsExist!==true||evidence.newEngineRuntimeImport!==false)
+   failed('IMPORT_GRAPH_UNCLOSED');
+ if(evidence.cameraContractBlob!==c.blobs['showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js']||
+    evidence.planetaryFrameBlob!==c.blobs['showroom/globe/h-earth/render/planetary-world-frame.js']||
+    evidence.navigationBlob!==c.blobs['showroom/globe/h-earth/functional-landscape/navigation.js'])
+   failed('CAMERA_SOURCE_CONTRACT_DRIFT');
+ return Object.freeze({schema:c.schema,result:'G1_SOURCE_DEPENDENCY_ASSET_CAMERA_PARITY_SOURCE_ONLY_PASS',
+   baseline:c.baseline,product:c.product,governing:c.governing,
+   verifiedBlobPaths:Object.keys(c.blobs).length,importMapCount:36,atlasCount:2,
+   actualG1CameraUniformReadback:false,g1TwelveFirstHitsMeasured:false,
+   float32FramebufferCalibrated:false,gpuExecuted:false,productionMutation:false,
+   gpuAuthorizationCreated:false,ownerVisualAcceptanceCreated:false});
+}
+// The adapter reads committed git objects and locally materialized immutable
+// product assets. A shallow checkout without all three exact commits fails closed.
+export function isRev2G1LocalImportTarget(value){
+ return typeof value==='string'&&
+   (value.startsWith('/showroom/globe/h-earth/')||value.startsWith('/h-earth-3d/'))&&
+   !value.includes('..')&&!/[\r\n]/.test(value)&&
+   /\.m?js(?:\?.*)?$/.test(value);
+}
+// Verify the exact complete Git delta without disclosing unrelated
+// historical control-plane filenames in the public diagnostic source.
+export function fingerprintRev2PathDelta(paths){
+ if(!Array.isArray(paths)||paths.some(p=>typeof p!=='string'||!p||/[\r\n]/.test(p)))
+   throw Error('REV2_G1_CHANGED_PATHS_INVALID');
+ const sorted=[...paths].sort();
+ if(new Set(sorted).size!==sorted.length)throw Error('REV2_G1_CHANGED_PATHS_DUPLICATE');
+ return Object.freeze({count:sorted.length,
+   sha256:crypto.createHash('sha256').update(sorted.join('\n'),'utf8').digest('hex')});
+}
+export function collectRev2G1StaticPreflight(productDirectory){
+ const c=REV2_G1_STATIC_PREFLIGHT;
+ if(typeof productDirectory!=='string'||!productDirectory.trim())throw Error('REV2_G1_PRODUCT_DIRECTORY_REQUIRED');
+ const dir=path.resolve(productDirectory);
+ const git=(...args)=>execFileSync('git',['-C',dir,...args],{encoding:'utf8',timeout:10000,maxBuffer:2097152}).trim();
+ if(git('rev-parse','HEAD')!==c.product)throw Error('REV2_G1_PRODUCT_HEAD_DRIFT');
+ if(git('status','--porcelain','--untracked-files=no'))throw Error('REV2_G1_PRODUCT_CHECKOUT_DIRTY');
+ for(const ref of [c.baseline,c.product,c.governing])git('cat-file','-e',ref+'^{commit}');
+ const changed=ref=>git('diff','--name-only',c.baseline,ref).split('\n').filter(Boolean);
+ const blobs={baseline:{},product:{},governing:{}};
+ for(const refName of Object.keys(blobs)){
+   const ref=c[refName];
+   for(const file of Object.keys(c.blobs))
+     blobs[refName][file]=git('rev-parse',ref+':'+file);
+ }
+ const atlasDigests={};
+ for(const file of Object.keys(c.atlases))
+   atlasDigests[file]=crypto.createHash('sha256').update(fs.readFileSync(path.join(dir,file))).digest('hex');
+ const html=fs.readFileSync(path.join(dir,'showroom/globe/h-earth/index.html'),'utf8');
+ const open='<script type="importmap">',start=html.indexOf(open),end=html.indexOf('</script>',start);
+ if(start<0||end<0)throw Error('REV2_G1_IMPORT_MAP_MISSING');
+ const importMap=JSON.parse(html.slice(start+open.length,end)).imports;
+ if(!importMap||typeof importMap!=='object'||Array.isArray(importMap))throw Error('REV2_G1_IMPORT_MAP_INVALID');
+ const targets=Object.values(importMap);
+ const local=targets.every(isRev2G1LocalImportTarget);
+ let exist=local;
+ if(local)for(const u of new Set(targets)){
+   const f=u.slice(1).split('?')[0];
+   try{git('cat-file','-e',c.product+':'+f);}catch{exist=false;break;}
+ }
+ const sourceFiles=Object.keys(c.blobs).filter(f=>f.endsWith('.js')||f.endsWith('.html'));
+ const engineImport=sourceFiles.some(f=>/\b(?:import|from)\b[^\n]*dgb\.native-/.test(fs.readFileSync(path.join(dir,f),'utf8')));
+ return validateRev2G1StaticEvidence({
+  baseline:c.baseline,product:c.product,governing:c.governing,
+  baselineToProductFingerprint:fingerprintRev2PathDelta(changed(c.product)),
+   baselineToGoverningFingerprint:fingerprintRev2PathDelta(changed(c.governing)),
+  blobs,atlasDigests,importMapCount:targets.length,importMapTargetsLocal:local,
+  importMapPathsExist:exist,newEngineRuntimeImport:engineImport,
+  cameraContractBlob:blobs.product['showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'],
+  planetaryFrameBlob:blobs.product['showroom/globe/h-earth/render/planetary-world-frame.js'],
+  navigationBlob:blobs.product['showroom/globe/h-earth/functional-landscape/navigation.js']
+ });
+}
+
+
+// REV2 numeric interpretation is independent of GPU dispatch. No values may be
+// inferred from RGB8 PNGs; calibrated RGBA32F samples only.
+export const REV2_NUMERIC_MODES=Object.freeze([
+ 'role_primitive_depth_valid','corrected_normal_slope',
+ 'exposure_eligibility_weight_authority','pre_soil_and_shelter','K_and_region',
+ 'uv_ddx','ddy_lod_valid','implicit_T_coast',
+ ...Array.from({length:9},(_,i)=>'fixed_lod_'+i),'post_soil_C'
+]);
+export const REV2_NUMERIC_SEAMS=Object.freeze([
+ [330,838,-457],[317,700,-456],[308,605,-455],[301,536,-454],
+ [296,484,-453],[287,382,-450],[283,340,-448],[279,298,-445],
+ [274,254,-440],[271,228,-435],[268,200,-425],[266,184,-415],
+ [265,175,-405],[265,168,-395],[264,161,-385]
+].map(([x,y,z])=>Object.freeze({x,y,z,topLeft:true})));
+export const REV2_G1_FIXED_PIXELS=Object.freeze(
+ [128,264,400].flatMap(x=>[250,430,610,790].map(y=>Object.freeze({x,y})))
+);
+export const REV2_CAPTURE_LIMITS=Object.freeze({
+ poses:2,channels:4,modesPerPose:18,modeDraws:36,
+ floatCalibrationDraws:2,referenceParityDraws:2,
+ maximumGpuDrawReadbacks:40,warmupFramesPerPose:60,
+ maximumWarmupFrames:120,maximumSubmittedFrames:160,
+ width:529,height:980,float32RoundtripCeiling:0.000002,
+ linearReconstructionCeiling:0.0001,firstHitDepthCeiling:0.005,
+ observationPixelsPerStation:32,controlEdgesPerStation:30,
+ seamCount:15,g1ControlPixels:12
+});
+export function rev2GlY(y,height=REV2_CAPTURE_LIMITS.height){
+ if(!Number.isInteger(y)||y<0||y>=height||height!==980)
+   throw Error('REV2_PIXEL_ORIGIN_INVALID');
+ return height-1-y;
+}
+export function rev2StationPixelSpan(station){
+ if(!station||!REV2_NUMERIC_SEAMS.some(s=>s.x===station.x&&s.y===station.y&&s.z===station.z))
+   throw Error('REV2_UNFROZEN_STATION');
+ if(station.x-16<0||station.x+15>=529)throw Error('REV2_PIXEL_SPAN_INVALID');
+ return Object.freeze({x:station.x-16,y:rev2GlY(station.y),width:32,height:1,
+  topLeftCenter:station.x,crossingLeftIndex:15,crossingRightIndex:16});
+}
+export function validateRev2FrameBudget(accounting){
+ const c=REV2_CAPTURE_LIMITS;
+ if(!accounting||!Array.isArray(accounting.poses)||accounting.poses.length!==2||
+    accounting.poses.some(q=>!q||!Number.isInteger(q.warmup)||q.warmup<0||
+      q.warmup>c.warmupFramesPerPose||q.modes!==18)||
+    !Number.isInteger(accounting.floatCalibrationDraws)||accounting.floatCalibrationDraws!==2||
+    !Number.isInteger(accounting.referenceParityDraws)||accounting.referenceParityDraws!==2||
+    !Number.isInteger(accounting.totalFrameSubmissions)||
+    accounting.totalFrameSubmissions<0)throw Error('REV2_GPU_ACCOUNTING_INCOMPLETE');
+ const warm=accounting.poses.reduce((n,q)=>n+q.warmup,0),numeric=36,total=warm+numeric+2+2;
+ if(warm>120||numeric+2+2!==40||total>160||accounting.totalFrameSubmissions!==total)
+   throw Error('REV2_GPU_PASS_OR_FRAME_CEILING');
+ return Object.freeze({result:'REV2_GPU_ACCOUNTING_VALID',totalFrameSubmissions:total,
+  warmupFrames:warm,numericDraws:numeric,calibrationDraws:2,parityDraws:2});
+}
+const rev2Bound=REV2_CAPTURE_LIMITS.float32RoundtripCeiling;
+const rev2Interval=(v,e=rev2Bound)=>{
+ if(!Number.isFinite(v)||!Number.isFinite(e)||e<0)throw Error('REV2_UNCALIBRATED_COMPONENT');
+ return Object.freeze([v-e,v+e]);
+};
+const rev2Add=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+const rev2Neg=a=>[-a[1],-a[0]];
+const rev2Sub=(a,b)=>rev2Add(a,rev2Neg(b));
+const rev2Mul=(a,b)=>{
+ const v=[a[0]*b[0],a[0]*b[1],a[1]*b[0],a[1]*b[1]];
+ return [Math.min(...v),Math.max(...v)];
+};
+function rev2Power(t){
+ if(t[0]<0||t[1]>1+rev2Bound)throw Error('REV2_TEXTURE_RANGE_INVALID');
+ return [Math.pow(Math.max(0,t[0]),2.2),Math.pow(Math.min(1,t[1]),2.2)];
+}
+export function decodeRev2FloatPixel(rows,{calibratedError=rev2Bound}={}){
+ if(!Array.isArray(rows)||rows.length!==18||
+    rows.some(x=>!Array.isArray(x)||x.length!==4||x.some(v=>!Number.isFinite(v))))
+   throw Error('REV2_RGBA32F_NUMERIC_ROWS_INCOMPLETE');
+ if(!Number.isFinite(calibratedError)||calibratedError<0||
+    calibratedError>rev2Bound)throw Error('REV2_FLOAT_CALIBRATION_UNPROVEN');
+ const first=rows[0],valid=Math.abs(first[3]-1)<=rev2Bound;
+ if(!Number.isInteger(first[0])||!Number.isInteger(first[1])||
+    first[2]<0||first[2]>1||!valid||
+    !((first[0]===1&&first[1]===0)||(first[0]===5&&first[1]===8)))
+   throw Error('REV2_FIRST_HIT_ROLE_PRIMITIVE_INVALID');
+ const p=rows[3].slice(0,3),k=rows[4].slice(0,3),
+       w=rows[2][2],a=rows[2][3],c=rows[17].slice(0,3);
+ if(w<0||w>1||a<0||a>1||p.some(v=>v<0)||k.some(v=>v<0)||
+    c.some(v=>v<0)||Math.abs(rows[17][3]-1)>rev2Bound)
+   throw Error('REV2_SOIL_NUMERIC_RANGE_INVALID');
+ const active=w>0.001;
+ if(active && (Math.abs(rows[6][3]-1)>rev2Bound||
+   rows.slice(8,17).some(v=>Math.abs(v[3]-1)>rev2Bound)||
+   rows[7].slice(0,3).some(t=>t<0||t>1)))
+   throw Error('REV2_TEXTURE_OR_DERIVATIVE_UNOBSERVED');
+ if(!active){
+  if(Math.abs(rows[6][3])>rev2Bound||
+     rows.slice(8,17).some(v=>Math.abs(v[3])>rev2Bound))
+   throw Error('REV2_W_ZERO_TEXTURE_MUST_REMAIN_UNOBSERVED');
+  return Object.freeze({role:first[0],primitive:first[1],depth:first[2],
+   p,w,a,k,c,t:null,active:false,error:calibratedError,
+   reason:'NO_ORIGINAL_IMPLICIT_T_OR_DERIVATIVES_AT_ZERO_WEIGHT'});
+ }
+ return Object.freeze({role:first[0],primitive:first[1],depth:first[2],
+  p,w,a,k,c,t:rows[7].slice(0,3),active:true,error:calibratedError,
+  lods:rows.slice(8,17).map(v=>v.slice(0,3)),estimatedLod:rows[6][2],
+  driverSelectedMipKnown:false});
+}
+function rev2Evaluate(sample,tSample){
+ const e=sample.error;
+ const w=rev2Interval(sample.w,e),a=rev2Interval(sample.a,e);
+ return [0,1,2].map(i=>{
+  const p=rev2Interval(sample.p[i],e),k=rev2Interval(sample.k[i],e);
+  const t=rev2Power(rev2Interval(tSample.t[i],tSample.error));
+  return rev2Add(p,rev2Mul(rev2Mul(w,a),rev2Sub(rev2Mul(t,k),p)));
+ });
+}
+function rev2Signed(intervals){
+ const value=intervals.map(q=>(q[0]+q[1])/2);
+ const errors=intervals.map(q=>(q[1]-q[0])/2);
+ return Object.freeze({value,errors,norm:value.reduce((n,v)=>n+Math.abs(v),0),
+  numericErrorBound:errors.reduce((n,v)=>n+v,0)});
+}
+function rev2MeanPair(a,b){
+ return a.map((v,i)=>rev2Mul(rev2Add(v,b[i]),[0.5,0.5]));
+}
+export function computeRev2SignedAttribution(left,right){
+ if(!left||!right||left.active!==true||right.active!==true)
+   throw Error('REV2_TEXTURE_UNOBSERVED_NO_COUNTERFACTUAL');
+ const ll=rev2Evaluate(left,left),lr=rev2Evaluate(left,right);
+ const rl=rev2Evaluate(right,left),rr=rev2Evaluate(right,right);
+ const tex=rev2MeanPair(lr.map((v,i)=>rev2Sub(v,ll[i])),
+                           rr.map((v,i)=>rev2Sub(v,rl[i])));
+ const other=rev2MeanPair(rl.map((v,i)=>rev2Sub(v,ll[i])),
+                             rr.map((v,i)=>rev2Sub(v,lr[i])));
+ const reconstruction=tex.map((v,i)=>rev2Add(v,other[i]));
+ const observed=left.c.map((v,i)=>rev2Sub(rev2Interval(right.c[i],right.error),
+                                             rev2Interval(v,left.error)));
+ const tol=REV2_CAPTURE_LIMITS.linearReconstructionCeiling;
+ for(let i=0;i<3;i++){
+  const ideal=right.c[i]-left.c[i];
+  if(ideal<reconstruction[i][0]-tol||ideal>reconstruction[i][1]+tol)
+    throw Error('REV2_SIGNED_RECONSTRUCTION_FAIL');
+ }
+ for(const [point,actual] of [[left,ll],[right,rr]]){
+  for(let i=0;i<3;i++)
+    if(point.c[i]<actual[i][0]-tol||point.c[i]>actual[i][1]+tol)
+      throw Error('REV2_ORIGINAL_C_RECONSTRUCTION_FAIL');
+ }
+ return Object.freeze({texture:rev2Signed(tex),nonTexture:rev2Signed(other),
+  observed:rev2Signed(observed),reconstructed:rev2Signed(reconstruction),
+  separability:'COMPOSED_P_W_A_K_VS_IMPLICIT_TEXTURE_NOT_ISOLATED_NORMAL',
+  mipSelectionKnown:false});
+}
+export function classifyRev2Station(crossing,controls){
+ if(!crossing||!Array.isArray(controls)||controls.length!==30||
+    controls.some(x=>!x||!x.texture||!x.nonTexture))
+   throw Error('REV2_STATION_CONTROLS_INCOMPLETE');
+ const threshold=key=>{
+  const norm=controls.map(c=>c[key].norm);
+  if(norm.some(v=>!Number.isFinite(v)||v<0))throw Error('REV2_CONTROL_NONFINITE');
+  return norm.sort((a,b)=>a-b)[28]; // 29th ascending of 30, nearest rank p95
+ };
+ const classify=key=>{
+  const factor=crossing[key],control=threshold(key);
+  if(!factor||!Number.isFinite(factor.norm)||!Number.isFinite(factor.numericErrorBound)||
+     factor.numericErrorBound<0)throw Error('REV2_CROSSING_NONFINITE');
+  return Object.freeze({supported:factor.norm>factor.numericErrorBound&&
+    factor.norm>control,controlP95:control,numericErrorBound:factor.numericErrorBound,
+    signedRgb:factor.value,norm:factor.norm});
+ };
+ const t=classify('texture'),n=classify('nonTexture');
+ const result=t.supported&&n.supported?'BOTH_CONTRIBUTE':
+   t.supported?'TEXTURE_SAMPLING_SUPPORTED':
+   n.supported?'NON_TEXTURE_BLEND_FACTORS_SUPPORTED':'UNRESOLVED';
+ return Object.freeze({result,texture:t,nonTexture:n,controlCount:30,
+  comparison:'STRICTLY_ABOVE_NUMERIC_BOUND_AND_29TH_ASCENDING_CONTROL'});
+}
+export function rev2ValidateSameRoleControl(left,right,{depthCeiling=0.005}={}){
+ if(!left||!right||left.role!==right.role||left.primitive!==right.primitive||
+    !Number.isFinite(left.depth)||!Number.isFinite(right.depth)||
+    Math.abs(right.depth-left.depth)>depthCeiling)
+   throw Error('REV2_CONTROL_FIRST_HIT_OR_DEPTH_MISMATCH');
+ return true;
+}
+
 // Gen3074 is a distinct source-only extension. It does not select any
 // historical comparison/G1 profile, nor authorize a fabricated camera pose.
 export const RAVINE_HABITAT_TARGET=Object.freeze({
@@ -821,3 +1126,104 @@ export async function run(argv){
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))run(process.argv.slice(2)).catch(e=>{console.error(e);process.exitCode=1;});
 
+
+
+// REV2 source-only evidence transport contract. All 18 numeric modes must
+// read the SAME 12 G1 locations and 15 exact 32-pixel seam windows. This
+// cannot certify GPU evidence, an original camera, or G1 reference custody.
+export function rev2FrozenReadbackPlan(){
+ const g1=REV2_G1_FIXED_PIXELS.map(({x,y})=>Object.freeze([x,rev2GlY(y),1,1]));
+ const seam=REV2_NUMERIC_SEAMS.map(s=>{
+  const r=rev2StationPixelSpan(s);return Object.freeze([r.x,r.y,r.width,r.height]);
+ });
+ return Object.freeze({schema:'H_EARTH_REV2_FROZEN_READBACK_PLAN_v1',
+  viewport:Object.freeze([529,980]),g1Count:12,seamCount:15,
+  regions:Object.freeze([...g1,...seam])});
+}
+export function validateRev2FrozenModeCapture(capture,{pose,mode}={}){
+ const fail=code=>{throw Error('REV2_READBACK_'+code);};
+ if(!Number.isInteger(pose)||pose<0||pose>1||
+    !Number.isInteger(mode)||mode<1||mode>18)fail('POSE_OR_MODE_INVALID');
+ const plan=rev2FrozenReadbackPlan();
+ if(!capture||capture.pose!==pose||capture.mode!==mode||
+    capture.sourceCameraUniformVerified!==true||
+    !Array.isArray(capture.regions)||!Array.isArray(capture.rgbaFloat32)||
+    capture.regions.length!==plan.regions.length||
+    capture.rgbaFloat32.length!==plan.regions.length)fail('CAPTURE_OR_CAMERA_INCOMPLETE');
+ for(let i=0;i<plan.regions.length;i++){
+  const expected=plan.regions[i],got=capture.regions[i],pixels=capture.rgbaFloat32[i];
+  if(!Array.isArray(got)||got.length!==4||got.some((v,j)=>v!==expected[j]))
+   fail('REGION_ORDER_OR_ORIGIN_MISMATCH');
+  if(!(pixels instanceof Float32Array)||pixels.length!==expected[2]*expected[3]*4||
+     pixels.some(v=>!Number.isFinite(v)))fail('PIXEL_FORMAT_OR_COVERAGE_INVALID');
+ }
+ return Object.freeze({schema:'H_EARTH_REV2_FROZEN_MODE_READBACK_v1',
+  pose,mode,capture,sourceCameraUniformVerified:true,
+  hardwareEvidenceAuthenticated:false});
+}
+export function compareRev2G1FirstHits(mode1,reference,{pose}={}){
+ const fail=code=>{throw Error('REV2_G1_FIRST_HIT_'+code);};
+ const read=validateRev2FrozenModeCapture(mode1,{pose,mode:1});
+ const plan=rev2FrozenReadbackPlan();
+ if(!reference||reference.pose!==pose||
+    reference.productHead!==REV2_G1_STATIC_PREFLIGHT.product||
+    reference.rendererBlob!==REV2_G1_STATIC_PREFLIGHT.blobs['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js']||
+    reference.origin!=='TOP_LEFT'||!Array.isArray(reference.observations)||
+    reference.observations.length!==12)fail('INDEPENDENT_REFERENCE_REQUIRED');
+ const matched=[];
+ for(let i=0;i<12;i++){
+  const expected=reference.observations[i],p=read.capture.rgbaFloat32[i],
+   frozen=REV2_G1_FIXED_PIXELS[i];
+  if(!expected||expected.x!==frozen.x||expected.y!==frozen.y||
+     !Number.isInteger(expected.role)||!Number.isInteger(expected.primitive)||
+     expected.role<0||expected.primitive<0||
+     expected.role>16777216||expected.primitive>16777216||
+     !Number.isFinite(expected.depth)||expected.depth<0||expected.depth>1||
+     ![0,1].includes(expected.ordinary))fail('REFERENCE_VALUE_INVALID');
+  if(!Number.isInteger(p[0])||!Number.isInteger(p[1])||
+     p[0]!==expected.role||p[1]!==expected.primitive||
+     p[2]<0||p[2]>1||Math.abs(p[2]-expected.depth)>REV2_CAPTURE_LIMITS.firstHitDepthCeiling||
+     Math.abs(p[3]-expected.ordinary)>REV2_CAPTURE_LIMITS.float32RoundtripCeiling)
+   fail('ROLE_PRIMITIVE_DEPTH_OR_ORIGIN_MISMATCH');
+  matched.push(Object.freeze({x:frozen.x,y:frozen.y,role:p[0],
+    primitive:p[1],depth:p[2],ordinary:p[3]}));
+ }
+ return Object.freeze({schema:'H_EARTH_REV2_G1_FIRST_HIT_COMPARISON_v1',
+  pose,matchedCount:12,matched:Object.freeze(matched),
+  result:'REFERENCE_NUMERIC_COMPARISON_ONLY',
+  independentReferenceAuthenticated:false,
+  gpuEvidenceAuthenticated:false,ownerVisualAcceptance:false});
+}
+export function analyzeRev2FrozenSeamControls(captures,reference,{pose}={}){
+ const fail=code=>{throw Error('REV2_SEAM_'+code);};
+ if(!Array.isArray(captures)||captures.length!==18)fail('EIGHTEEN_MODES_REQUIRED');
+ const modes=captures.map((r,i)=>validateRev2FrozenModeCapture(r,{pose,mode:i+1}));
+ const firstHits=compareRev2G1FirstHits(captures[0],reference,{pose});
+ const stations=REV2_NUMERIC_SEAMS.map((station,j)=>{
+  const pixels=Array.from({length:32},(_,i)=>{
+   const rows=modes.map(r=>Array.from(r.capture.rgbaFloat32[12+j].subarray(i*4,i*4+4)));
+   return decodeRev2FloatPixel(rows);
+  });
+  const paired=(i)=>{
+   const left=pixels[i],right=pixels[i+1];
+   rev2ValidateSameRoleControl(left,right);
+   return computeRev2SignedAttribution(left,right);
+  };
+  let crossing;
+  try{crossing=paired(15);}catch(e){fail('CROSSING_UNINTERPRETABLE_'+e.message);}
+  const controls=[];
+  for(let i=0;i<31;i++){
+   if(i===15)continue;
+   try{controls.push(paired(i));}catch(e){fail('CONTROL_UNINTERPRETABLE_'+e.message);}
+  }
+  if(controls.length!==30)fail('CONTROL_COUNT_INVALID');
+  const result=classifyRev2Station(crossing,controls);
+  return Object.freeze({station,topLeft:true,width:32,crossingIndex:15,
+    controlCount:30,result,authenticatedGpuObservation:false});
+ });
+ return Object.freeze({schema:'H_EARTH_REV2_SEAM_CONTROL_SOURCE_VALIDATION_v1',
+  pose,firstHits,stationCount:stations.length,controlsPerStation:30,
+  totalWithinRoleControls:stations.length*30,stations:Object.freeze(stations),
+  sourceNumericsValidated:true,hardwareEvidenceAuthenticated:false,
+  ownerVisualAcceptance:false});
+}

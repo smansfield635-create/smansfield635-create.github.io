@@ -413,3 +413,554 @@ test('GEN3087 R3A camera and actual GPU uniform gates reject a wrong source obse
   assert.throws(()=>m.validateNearFarGpuUniforms({...gpu,camera:[0,0,0]},packet,{cameraPosition:packet.camera.position}),/GPU_CAMERA_UNIFORM_READBACK_MISMATCH/);
   assert.throws(()=>m.validateNearFarGpuUniforms(null,packet,{cameraPosition:packet.camera.position}),/GPU_CAMERA_UNIFORM_READBACK_MISMATCH/);
 });
+
+test('REV2 G1 static preflight requires exact product/G1/governing source and rejects all drift',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs'),c=m.REV2_G1_STATIC_PREFLIGHT;
+ const sample=()=>({
+  baseline:c.baseline,product:c.product,governing:c.governing,
+  baselineToProductFingerprint:{...c.baselineToProductFingerprint},
+   baselineToGoverningFingerprint:{...c.baselineToGoverningFingerprint},
+  blobs:{baseline:{...c.blobs},product:{...c.blobs},governing:{...c.blobs}},
+  atlasDigests:{...c.atlases},
+  importMapCount:36,importMapTargetsLocal:true,importMapPathsExist:true,
+  newEngineRuntimeImport:false,
+  cameraContractBlob:c.blobs['showroom/globe/h-earth/render/live-renderer-contract.run8e-r3a.js'],
+  planetaryFrameBlob:c.blobs['showroom/globe/h-earth/render/planetary-world-frame.js'],
+  navigationBlob:c.blobs['showroom/globe/h-earth/functional-landscape/navigation.js']
+ });
+ const receipt=m.validateRev2G1StaticEvidence(sample());
+ assert.equal(receipt.result,'G1_SOURCE_DEPENDENCY_ASSET_CAMERA_PARITY_SOURCE_ONLY_PASS');
+ assert.equal(receipt.verifiedBlobPaths,14);
+ assert.equal(receipt.atlasCount,2);
+ assert.equal(receipt.gpuExecuted,false);
+ assert.equal(receipt.gpuAuthorizationCreated,false);
+ assert.equal(receipt.actualG1CameraUniformReadback,false);
+ assert.equal(receipt.g1TwelveFirstHitsMeasured,false);
+ assert.equal(receipt.float32FramebufferCalibrated,false);
+ assert.equal(receipt.ownerVisualAcceptanceCreated,false);
+ for(const [mutate,error] of [
+  [x=>{x.baseline='0'.repeat(40);},/EXACT_HEAD_DRIFT/],
+  [x=>{x.product='0'.repeat(40);},/EXACT_HEAD_DRIFT/],
+  [x=>{x.governing='0'.repeat(40);},/EXACT_HEAD_DRIFT/],
+  [x=>{x.baselineToProductFingerprint.sha256='0'.repeat(64);},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
+  [x=>{x.baselineToGoverningFingerprint.count--;},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
+  [x=>{delete x.baselineToProductFingerprint.sha256;},/TRANSITIVE_DEPENDENCY_DELTA_UNCLOSED/],
+  [x=>{x.blobs.product['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js']='0'.repeat(40);},/SOURCE_OR_ASSET_BLOB_DRIFT/],
+  [x=>{delete x.blobs.baseline['showroom/globe/h-earth/render/planetary-world-frame.js'];},/SOURCE_OR_ASSET_BLOB_DRIFT/],
+  [x=>{x.blobs.governing['showroom/globe/h-earth/functional-landscape/navigation.js']='0'.repeat(40);},/SOURCE_OR_ASSET_BLOB_DRIFT/],
+  [x=>{x.atlasDigests['showroom/globe/h-earth/render/corrected-material-v1/near-atlas.png']='0'.repeat(64);},/ASSET_SHA256_DRIFT/],
+  [x=>{x.importMapCount=35;},/IMPORT_GRAPH_UNCLOSED/],
+  [x=>{x.importMapTargetsLocal=false;},/IMPORT_GRAPH_UNCLOSED/],
+  [x=>{x.importMapPathsExist=false;},/IMPORT_GRAPH_UNCLOSED/],
+  [x=>{x.newEngineRuntimeImport=true;},/IMPORT_GRAPH_UNCLOSED/],
+  [x=>{x.cameraContractBlob='0'.repeat(40);},/CAMERA_SOURCE_CONTRACT_DRIFT/],
+  [x=>{x.planetaryFrameBlob='0'.repeat(40);},/CAMERA_SOURCE_CONTRACT_DRIFT/],
+  [x=>{x.navigationBlob='0'.repeat(40);},/CAMERA_SOURCE_CONTRACT_DRIFT/]
+ ]){
+  const v=sample();mutate(v);assert.throws(()=>m.validateRev2G1StaticEvidence(v),error);
+ }
+  // Exact-set fingerprint is order-independent and duplicate-sensitive.
+  const fp=m.fingerprintRev2PathDelta;
+  const paths=['scene/render.js','scene/material.js','scene/ground.js'];
+  assert.deepEqual(fp(paths),fp([...paths].reverse()));
+  assert.notEqual(fp(paths).sha256,fp(['scene/render.js','scene/material.js','scene/wrong.js']).sha256);
+  assert.throws(()=>fp([...paths,paths[0]]),/CHANGED_PATHS_DUPLICATE/);
+  assert.throws(()=>fp(['scene/render.js','bad\npath']),/CHANGED_PATHS_INVALID/);
+  assert.throws(()=>fp(null),/CHANGED_PATHS_INVALID/);
+ assert.throws(()=>m.collectRev2G1StaticPreflight(''),/PRODUCT_DIRECTORY_REQUIRED/);
+});
+
+test('REV2 import-map guard accepts both frozen local roots and rejects unknown source roots',async()=>{
+ const {isRev2G1LocalImportTarget:isLocal}=await import('./h-earth-ground-material-comparison.v1.mjs');
+ for(const path of [
+  '/showroom/globe/h-earth/render/landscape-coherence-field.v1.js?rev=sha-fixed',
+  '/h-earth-3d/terrain/h-earth.gen2514-qualified-terrain-field.js?rev=sha-fixed'
+ ])assert.equal(isLocal(path),true);
+ for(const path of [
+  'https://example.test/renderer.js','//example.test/renderer.js',
+  '/showroom/globe/h-earth/../../analytics/data/latest.json',
+  '/assets/engine/dgb.native-frame-pipeline.v1.mjs',
+  '/analytics/data/latest.json','/showroom/globe/h-earth/render/far-atlas.png',
+  '/h-earth-3d/source.js\nattack',''
+ ])assert.equal(isLocal(path),false);
+});
+
+test('REV2 frozen mode order, station windows and frame ceilings reject drift',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ assert.deepEqual(m.REV2_NUMERIC_MODES.slice(0,8),[
+  'role_primitive_depth_valid','corrected_normal_slope','exposure_eligibility_weight_authority',
+  'pre_soil_and_shelter','K_and_region','uv_ddx','ddy_lod_valid','implicit_T_coast']);
+ assert.equal(m.REV2_NUMERIC_MODES.length,18);
+ assert.deepEqual(m.REV2_NUMERIC_MODES.slice(8,17),Array.from({length:9},(_,i)=>'fixed_lod_'+i));
+ assert.equal(m.REV2_NUMERIC_SEAMS.length,15);
+ assert.deepEqual(m.REV2_NUMERIC_SEAMS.map(s=>s.z),[-457,-456,-455,-454,-453,-450,-448,-445,-440,-435,-425,-415,-405,-395,-385]);
+ assert.equal(m.REV2_G1_FIXED_PIXELS.length,12);
+ assert.deepEqual(m.REV2_G1_FIXED_PIXELS[0],{x:128,y:250});
+ assert.deepEqual(m.REV2_G1_FIXED_PIXELS.at(-1),{x:400,y:790});
+ assert.deepEqual([m.rev2GlY(0),m.rev2GlY(979)],[979,0]);
+ assert.deepEqual(m.rev2StationPixelSpan(m.REV2_NUMERIC_SEAMS[0]),{
+  x:314,y:141,width:32,height:1,topLeftCenter:330,crossingLeftIndex:15,crossingRightIndex:16});
+ assert.throws(()=>m.rev2GlY(-1),/PIXEL_ORIGIN_INVALID/);
+ assert.throws(()=>m.rev2StationPixelSpan({x:330,y:838,z:0}),/UNFROZEN_STATION/);
+ const valid={poses:[{warmup:40,modes:18},{warmup:45,modes:18}],
+  floatCalibrationDraws:2,referenceParityDraws:2,totalFrameSubmissions:125};
+ assert.equal(m.validateRev2FrameBudget(valid).result,'REV2_GPU_ACCOUNTING_VALID');
+ for(const invalid of [
+  {...valid,totalFrameSubmissions:126},
+  {...valid,poses:[{warmup:61,modes:18},{warmup:45,modes:18}],totalFrameSubmissions:146},
+  {...valid,poses:[{warmup:60,modes:18},{warmup:61,modes:18}],totalFrameSubmissions:161},
+  {...valid,poses:[{warmup:40,modes:17},{warmup:45,modes:18}]},
+  {...valid,floatCalibrationDraws:3}
+ ])assert.throws(()=>m.validateRev2FrameBudget(invalid),/REV2_GPU_/);
+});
+test('REV2 signed texture/nontexture decomposition reconstructs C, keeps sign and fails on zero/threshold',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const make=({role=1,primitive=0,p=[.25,.29,.31],w=.7,a=.8,k=[.8,.9,1],t=[.3,.4,.5],depth=.92,error=0.000001}={})=>{
+  const rows=Array.from({length:18},()=>[0,0,0,0]);
+  rows[0]=[role,primitive,depth,1];rows[1]=[0,1,0,.2];
+  rows[2]=[.2,.9,w,a];rows[3]=[...p,.3];rows[4]=[...k,.55];
+  rows[5]=[.3,.6,.0002,.001];rows[6]=[.001,.0002,1.3,w>0.001?1:0];
+  rows[7]=w>0.001?[...t,12]:[0,0,0,0];
+  for(let i=8;i<17;i++)rows[i]=w>0.001?[...t,1]:[0,0,0,0];
+  const c=w>0.001?p.map((v,i)=>v+w*a*(Math.pow(t[i],2.2)*k[i]-v)):p;
+  rows[17]=[...c,1];
+  return m.decodeRev2FloatPixel(rows,{calibratedError:error});
+ };
+ const left=make(),texRight=make({t:[.65,.55,.2]});
+ const tr=m.computeRev2SignedAttribution(left,texRight);
+ assert(tr.texture.norm>0.01);assert(tr.nonTexture.norm<0.00001);
+ assert.deepEqual(tr.texture.value.map(Math.sign),[1,1,-1]);
+ assert.equal(tr.mipSelectionKnown,false);
+ const nonRight=make({p:[.4,.32,.2],w:.55,a:.72,k:[.94,.8,.92]});
+ const nr=m.computeRev2SignedAttribution(left,nonRight);
+ assert(nr.nonTexture.norm>0.01);assert(nr.texture.norm<0.00001);
+ const both=m.computeRev2SignedAttribution(left,make({p:[.4,.32,.2],t:[.65,.55,.2]}));
+ assert(both.texture.norm>0.01&&both.nonTexture.norm>0.01);
+ const control=Array.from({length:30},()=>({texture:{norm:.001},nonTexture:{norm:.001}}));
+ assert.equal(m.classifyRev2Station(both,control).result,'BOTH_CONTRIBUTE');
+ assert.equal(m.classifyRev2Station(tr,control).result,'TEXTURE_SAMPLING_SUPPORTED');
+ assert.equal(m.classifyRev2Station(nr,control).result,'NON_TEXTURE_BLEND_FACTORS_SUPPORTED');
+ assert.equal(m.classifyRev2Station({texture:{...tr.texture,norm:.001,numericErrorBound:.001},
+  nonTexture:{...nr.nonTexture,norm:.001,numericErrorBound:0}},control).result,'UNRESOLVED');
+ assert.throws(()=>m.classifyRev2Station(tr,control.slice(0,29)),/CONTROLS_INCOMPLETE/);
+ assert.throws(()=>m.classifyRev2Station(tr,control.map((q,i)=>i===0?{texture:{norm:NaN},nonTexture:q.nonTexture}:q)),/CONTROL_NONFINITE/);
+ const zero=make({w:0});
+ assert.equal(zero.active,false);assert.equal(zero.t,null);
+ assert.throws(()=>m.computeRev2SignedAttribution(left,zero),/TEXTURE_UNOBSERVED/);
+ assert.equal(m.rev2ValidateSameRoleControl(left,texRight),true);
+ assert.throws(()=>m.rev2ValidateSameRoleControl(left,make({role:5,primitive:8})),/CONTROL_FIRST_HIT_OR_DEPTH_MISMATCH/);
+ assert.throws(()=>m.rev2ValidateSameRoleControl(left,make({depth:.934})),/CONTROL_FIRST_HIT_OR_DEPTH_MISMATCH/);
+ const bogusRows=Array.from({length:18},()=>[0,0,0,0]);
+ bogusRows[0]=[1,0,.9,1];bogusRows[2]=[.2,.9,.7,.8];
+ bogusRows[3]=[.2,.2,.2,.2];bogusRows[4]=[.8,.8,.8,.8];bogusRows[6][3]=1;
+ for(let i=8;i<17;i++)bogusRows[i][3]=1;
+ bogusRows[7]=[.3,.3,.3,2];bogusRows[17]=[.9,.9,.9,1];
+ const bad=m.decodeRev2FloatPixel(bogusRows,{calibratedError:0.000001});
+ assert.throws(()=>m.computeRev2SignedAttribution(left,bad),/RECONSTRUCTION_FAIL/);
+ assert.throws(()=>m.decodeRev2FloatPixel(bogusRows.slice(0,17),{calibratedError:.000001}),/ROWS_INCOMPLETE/);
+ assert.throws(()=>m.decodeRev2FloatPixel(bogusRows,{calibratedError:.000003}),/CALIBRATION_UNPROVEN/);
+});
+
+test('REV2 source-pinned 18-channel shader probe retains original disabled output',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const t=o.transformRev2WorldSoilNumericRenderer(original),src=t.source;
+ assert.deepEqual(o.REV2_WORLD_SOIL_NUMERIC_MODES,m.REV2_NUMERIC_MODES);
+ assert.equal(t.numericModeCount,18);assert.equal(t.requiresRgba32f,true);
+ assert.equal(t.gpuExecuted,false);assert.equal(t.productionMutation,false);
+ assert.equal(t.driverSelectedMipObserved,false);
+ const a=original.indexOf('const FS = '),b=original.indexOf('// Ordered screen-door coverage',a);
+ const c=src.indexOf('const FS = '),d=src.indexOf('// Ordered screen-door coverage',c);
+ assert.equal(src.slice(0,c),original.slice(0,a));
+ assert.equal(src.slice(d),original.slice(b));
+ assert(src.indexOf('vec2 rev2DDX=dFdx')<src.indexOf('if(worldSoilTerrain){'));
+ assert(src.includes('palette=mix(palette,worldSoilFinal,worldSoilWeight);'));
+ assert(src.includes('vec3 worldSoilTexel=texture('));
+ assert(src.includes('if(!geologicalEarthRock){rev2T=worldSoilTexel;rev2SampledOriginalT=true;}'));
+ assert(src.includes('bool validT=ordinary&&rev2SampledOriginalT&&rev2W>0.001&&rev2DerivativeFinite;'));
+ assert(src.includes('textureLod(uClearingSoil,rev2UV,float(m-9)).rgb'));
+ assert(src.includes('if(uRev2NumericMode>0){'));
+ assert(src.includes('else outColor=vec4(lit,outputAlpha);'));
+ assert(src.includes('rev2RockExposure=rockExposure;'));
+ assert(src.includes('channels=vec4(rev2RockExposure,rev2E,rev2W,rev2A);'));
+ assert(src.includes('uniform highp int uRev2NumericMode;'));
+ assert.throws(()=>o.transformRev2WorldSoilNumericRenderer(original+'\n'),/SOURCE_HASH_MISMATCH/);
+});
+
+
+test('REV2 floating diagnostic target enforces float extension, FBO, readback and complete GL state restoration',async()=>{
+ const {createRev2Rgba32fTarget:create}=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const fake=(options={})=>{
+  const operations=[],state={fb:'originalFBO',rb:'originalDepth',active:0,
+   textures:new Map([[0,'originalTexture']]),viewport:[4,8,529,980],error:0};
+  const gl={};
+  for(const name of ['FRAMEBUFFER','FRAMEBUFFER_BINDING','RENDERBUFFER','RENDERBUFFER_BINDING',
+   'ACTIVE_TEXTURE','VIEWPORT','TEXTURE_2D','TEXTURE_BINDING_2D','TEXTURE0','RGBA32F',
+   'RGBA','FLOAT','DEPTH_COMPONENT24','DEPTH_ATTACHMENT','COLOR_ATTACHMENT0',
+   'TEXTURE_MIN_FILTER','TEXTURE_MAG_FILTER','NEAREST','FRAMEBUFFER_COMPLETE','NO_ERROR'])
+   gl[name]=name==='TEXTURE0'||name==='NO_ERROR'?0:name;
+  gl.getExtension=n=>(n==='EXT_color_buffer_float'&&options.extension!==false)||
+    (n==='EXT_float_blend'&&options.blend!==false)?{}:null;
+  gl.getError=()=>{const e=state.error;state.error=0;return e;};
+  gl.getParameter=n=>{
+   switch(n){
+    case gl.FRAMEBUFFER_BINDING:return state.fb;
+    case gl.RENDERBUFFER_BINDING:return state.rb;
+    case gl.ACTIVE_TEXTURE:return state.active;
+    case gl.TEXTURE_BINDING_2D:return state.textures.get(state.active)??null;
+    case gl.VIEWPORT:return [...state.viewport];
+    default:throw Error('MOCK_UNKNOWN_PARAMETER:'+n);
+   }
+  };
+  gl.activeTexture=n=>{state.active=n;};
+  gl.bindTexture=(target,texture)=>{state.textures.set(state.active,texture);};
+  gl.bindFramebuffer=(target,fb)=>{state.fb=fb;};
+  gl.bindRenderbuffer=(target,rb)=>{state.rb=rb;};
+  gl.viewport=(...v)=>{state.viewport=[...v];};
+  gl.createTexture=()=>({kind:'floatColor'});
+  gl.createFramebuffer=()=>({kind:'floatFBO'});
+  gl.createRenderbuffer=()=>({kind:'depth24'});
+  gl.texStorage2D=(...args)=>{operations.push(['texStorage2D',...args]);};
+  gl.texParameteri=()=>{};
+  gl.renderbufferStorage=(...args)=>{operations.push(['renderbufferStorage',...args]);};
+  gl.framebufferTexture2D=(...args)=>{operations.push(['framebufferTexture2D',...args]);};
+  gl.framebufferRenderbuffer=(...args)=>{operations.push(['framebufferRenderbuffer',...args]);};
+  gl.checkFramebufferStatus=()=>options.complete===false?'INCOMPLETE':gl.FRAMEBUFFER_COMPLETE;
+  gl.readPixels=(x,y,w,h,format,type,target)=>{
+   operations.push(['readPixels',x,y,w,h,format,type,target.constructor.name]);
+   target.fill(options.nonfinite===true?NaN:0.125);
+   if(options.readError===true)state.error=1280;
+  };
+  gl.deleteTexture=()=>{operations.push(['deleteTexture']);};
+  gl.deleteRenderbuffer=()=>{operations.push(['deleteRenderbuffer']);};
+  gl.deleteFramebuffer=()=>{operations.push(['deleteFramebuffer']);};
+  return {gl,state,operations};
+ };
+ for(const options of [{extension:false},{blend:false},{complete:false}]){
+  const mock=fake(options);
+  assert.throws(()=>create(mock.gl),/REV2_FLOAT_(EXT_COLOR_BUFFER_FLOAT_UNAVAILABLE|EXT_FLOAT_BLEND_UNAVAILABLE|FRAMEBUFFER_INCOMPLETE)/);
+  assert.equal(mock.state.fb,'originalFBO');
+  assert.deepEqual(mock.state.viewport,[4,8,529,980]);
+ }
+ assert.throws(()=>create(fake().gl,{width:528}),/REV2_FLOAT_VIEWPORT_NOT_FROZEN/);
+ assert.throws(()=>create({}),/REV2_FLOAT_WEBGL2_INTERFACE_INCOMPLETE/);
+ const m=fake(),target=create(m.gl);
+ assert.equal(target.schema,'H_EARTH_REV2_RGBA32F_TARGET_SOURCE_v1');
+ assert.equal(target.sourceOnlyTransport,true);
+ assert.equal(target.calibrationNotYetBound,true);
+ assert.equal(target.width,529);assert.equal(target.height,980);
+ assert.equal(m.state.fb,'originalFBO');
+ assert.deepEqual(m.state.viewport,[4,8,529,980]);
+ assert(m.operations.some(v=>v[0]==='texStorage2D'&&v[3]==='RGBA32F'));
+ assert(m.operations.some(v=>v[0]==='renderbufferStorage'&&v[2]==='DEPTH_COMPONENT24'));
+ const captured=target.capture(()=>{},[[2,3,2,1],[5,6,1,1]]);
+ assert.equal(captured.length,2);
+ assert(captured[0] instanceof Float32Array);
+ assert.deepEqual([...captured[0]],Array(8).fill(0.125));
+ assert(m.operations.some(v=>v[0]==='readPixels'&&v[5]==='RGBA'&&v[6]==='FLOAT'&&v[7]==='Float32Array'));
+ assert.equal(m.state.fb,'originalFBO');
+ assert.deepEqual(m.state.viewport,[4,8,529,980]);
+ assert.equal(m.state.textures.get(0),'originalTexture');
+ assert.throws(()=>target.capture(()=>{},[[528,0,2,1]]),/REV2_FLOAT_PIXEL_BOUNDS/);
+ assert.throws(()=>target.capture(()=>m.gl.bindFramebuffer(m.gl.FRAMEBUFFER,'wrong'),[[0,0,1,1]]),/REV2_FLOAT_DRAW_FRAMEBUFFER_DRIFT/);
+ assert.throws(()=>target.capture(()=>m.gl.viewport(1,2,529,980),[[0,0,1,1]]),/REV2_FLOAT_DRAW_VIEWPORT_DRIFT/);
+ assert.throws(()=>target.capture(()=>{throw Error('DRAW_FAILED');},[[0,0,1,1]]),/DRAW_FAILED/);
+ assert.equal(m.state.fb,'originalFBO');
+ assert.deepEqual(m.state.viewport,[4,8,529,980]);
+ assert.throws(()=>target.capture(null,[[0,0,1,1]]),/REV2_FLOAT_CAPTURE_ARGUMENTS/);
+ target.dispose();
+ assert(m.operations.some(v=>v[0]==='deleteFramebuffer'));
+ assert.throws(()=>target.capture(()=>{},[[0,0,1,1]]),/REV2_FLOAT_DISPOSED/);
+ for(const bad of [{nonfinite:true,error:/READPIXELS_NONFINITE/},{readError:true,error:/READPIXELS_GL_ERROR/}]){
+  const x=fake(bad),t=create(x.gl);
+  assert.throws(()=>t.capture(()=>{},[[0,0,1,1]]),bad.error);
+  assert.equal(x.state.fb,'originalFBO');
+  t.dispose();
+ }
+});
+
+
+test('REV2 native float mode and calibration bridge preserves pinned renderer syntax and fails closed on drift',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const result=o.transformRev2WorldSoilNumericRuntime(original),source=result.source;
+ assert.equal(result.nativeRenderFrameBound,true);
+ assert.equal(result.modeZeroDefaultUnchanged,true);
+ assert.equal(result.maximumSubmittedDiagnosticDraws,40);
+ assert.equal(result.numericModeCount,18);
+ assert.equal(result.calibrationMode,19);
+ assert.equal(result.productionMutation,false);
+ assert.equal(result.gpuExecuted,false);
+ assert(source.includes('const rev2Probe={mode:0,target:null,total:0'));
+ assert(source.includes("rev2Probe.mode>0 ? rev2Probe.target.framebuffer : resources.geometryFramebuffer"));
+ assert(source.includes("gl.uniform1i(rev2Location,rev2Probe.mode)"));
+ assert(source.includes('function captureRev2FloatMode(packet,pose,mode,regions)'));
+ assert(source.includes('function captureRev2OriginalParity(packet,pose)'));
+ assert(source.includes('function getRev2DiagnosticAccounting()'));
+ assert(source.includes('REV2_CAMERA_GPU_UNIFORM_DRIFT'));
+ assert(source.includes('REV2_GPU_DRAW_BUDGET_EXHAUSTED'));
+ assert(source.includes('REV2_CALIBRATION_ORDER_INVALID'));
+ assert(source.includes('REV2_PARITY_PRECONDITION'));
+ assert(source.includes('REV2_FLOAT_CALIBRATION_ROUNDTRIP_FAIL'));
+ assert(source.includes('g1FirstHitRolesVerified:false'));
+ assert(source.includes('calibratedPixelCount:samples.length'));
+ assert(source.includes('else if(m==19)channels=vec4(0.125,0.25,0.5,1.0);'));
+ assert(source.includes('}else outColor=vec4(lit,outputAlpha);'));
+ assert(source.includes('palette=mix(palette,worldSoilFinal,worldSoilWeight);'));
+ assert(source.includes('getVegetationTrace,getVegetationProbe,'));
+ assert(!original.includes('captureRev2FloatMode'));
+ assert(!original.includes('rev2Probe.mode'));
+ assert.throws(()=>o.transformRev2WorldSoilNumericRuntime(original+'\n'),/SOURCE_HASH_MISMATCH/);
+ assert.equal(execFileSync(process.execPath,['--input-type=module','--check'],{
+  input:source,encoding:'utf8',maxBuffer:1024*1024}).trim(),'');
+});
+test('REV2 roundtrip calibration rejects out of tolerance, malformed and nonfinite Float32 samples',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const valid=Array.from({length:12},()=>new Float32Array(o.REV2_FLOAT_SENTINEL));
+ const yes=o.validateRev2FloatCalibration(valid);
+ assert.equal(yes.result,'REV2_FLOAT_ROUNDTRIP_SOURCE_CHECK_PASS');
+ assert.equal(yes.precisionCeiling,0.000002);
+ assert.equal(yes.calibratedPixelCount,12);
+ assert.equal(yes.g1FirstHitRolesVerified,false);
+ assert.equal(yes.actualGpuRunClaimed,false);
+ assert.throws(()=>o.validateRev2FloatCalibration([]),/CALIBRATION_READBACK_INVALID/);
+ assert.throws(()=>o.validateRev2FloatCalibration(valid.slice(0,11)),/CALIBRATION_READBACK_INVALID/);
+ assert.throws(()=>o.validateRev2FloatCalibration([...valid,valid[0]]),/CALIBRATION_READBACK_INVALID/);
+ assert.throws(()=>o.validateRev2FloatCalibration(valid.map((p,i)=>i===5?[...p]:p)),/CALIBRATION_READBACK_INVALID/);
+ assert.throws(()=>o.validateRev2FloatCalibration(valid.map((p,i)=>i===5?new Float32Array([0.125,0.25,NaN,1]):p)),/CALIBRATION_READBACK_INVALID/);
+ assert.throws(()=>o.validateRev2FloatCalibration(valid.map((p,i)=>i===5?new Float32Array([0.125,0.25,0.50001,1]):p)),/CALIBRATION_ROUNDTRIP_FAIL/);
+});
+
+
+test('REV2 native frame accounting binds 2 ordered poses, full 40 diagnostics and actual counter increments',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ let native=20,ledger,observed=0;
+ ledger=o.createRev2NativeFrameLedger({
+  getFrameCount:()=>native,
+  submitNativeFrame:packet=>{assert(packet?.camera);ledger.assertNativeEntry();native++;observed++;}
+ });
+ const submit=(pose,kind,mode)=>ledger.submit({pose,kind,mode,packet:{camera:true}});
+ for(let i=0;i<2;i++)submit(0,'WARMUP',0);
+ submit(0,'CALIBRATION',19);
+ for(let m=1;m<=18;m++)submit(0,'NUMERIC',m);
+ submit(0,'PARITY',0);
+ for(let i=0;i<3;i++)submit(1,'WARMUP',0);
+ submit(1,'CALIBRATION',19);
+ for(let m=1;m<=18;m++)submit(1,'NUMERIC',m);
+ const last=submit(1,'PARITY',0);
+ assert.equal(last.schema,'H_EARTH_REV2_NATIVE_FRAME_LEDGER_v1');
+ assert.equal(last.complete,true);
+ assert.equal(last.diagnosticDraws,40);
+ assert.equal(last.submitted,45);
+ assert.equal(last.initialNativeFrameCount,20);
+ assert.equal(last.lastNativeFrameCount,65);
+ assert.deepEqual(last.warmups,[2,3]);
+ assert.deepEqual(last.numericModes,[18,18]);
+ assert.deepEqual(last.calibrations,[true,true]);
+ assert.deepEqual(last.parities,[true,true]);
+ assert.equal(last.totalCeiling,160);
+ assert.equal(last.diagnosticCeiling,40);
+ assert.equal(observed,45);
+ assert.equal(last.actualGpuEvidenceClaimed,false);
+ assert.throws(()=>submit(0,'WARMUP',0),/REV2_NATIVE_FRAME_POSE_COMPLETE/);
+});
+test('REV2 native frame ledger fails closed on unowned, out-of-order, incomplete and over-budget renders',async()=>{
+ const {createRev2NativeFrameLedger:create}=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const make=({extra=0,noEntry=false,corrupt=false}={})=>{
+  let count=7,ledger;
+  ledger=create({getFrameCount:()=>corrupt?NaN:count,submitNativeFrame:()=>{
+   if(!noEntry)ledger.assertNativeEntry();
+   count+=1+extra;
+  }});
+  return {ledger,submit:(pose,kind,mode)=>ledger.submit({pose,kind,mode,packet:{}}),
+   advance:()=>{count++;}};
+ };
+ assert.throws(()=>create(),/REV2_NATIVE_FRAME_BINDING_MISSING/);
+ {
+  const m=make();assert.throws(()=>m.ledger.assertNativeEntry(),/UNOWNED_OR_REENTRANT_RENDER/);
+  assert.equal(m.ledger.snapshot().terminal,true);
+ }
+ {
+  const m=make();assert.throws(()=>m.submit(1,'WARMUP',0),/POSE_ORDER/);
+ }
+ {
+  const m=make();assert.throws(()=>m.submit(0,'NUMERIC',1),/NUMERIC_MODE_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'CALIBRATION',19);
+  assert.throws(()=>m.submit(0,'CALIBRATION',19),/CALIBRATION_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'CALIBRATION',19);
+  assert.throws(()=>m.submit(0,'WARMUP',0),/WARMUP_LIMIT_OR_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'CALIBRATION',19);
+  assert.throws(()=>m.submit(0,'NUMERIC',2),/NUMERIC_MODE_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'CALIBRATION',19);
+  assert.throws(()=>m.submit(0,'PARITY',0),/PARITY_PRECONDITION/);
+ }
+ {
+  const m=make();for(let i=0;i<60;i++)m.submit(0,'WARMUP',0);
+  assert.equal(m.ledger.snapshot().warmups[0],60);
+  assert.throws(()=>m.submit(0,'WARMUP',0),/WARMUP_LIMIT_OR_ORDER/);
+ }
+ {
+  const m=make();m.submit(0,'WARMUP',0);m.advance();
+  assert.throws(()=>m.submit(0,'WARMUP',0),/NATIVE_COUNTER_DRIFT/);
+ }
+ {
+  const m=make({extra:1});assert.throws(()=>m.submit(0,'WARMUP',0),/NATIVE_FRAME_COUNT_NOT_ONE/);
+ }
+ {
+  const m=make({noEntry:true});assert.throws(()=>m.submit(0,'WARMUP',0),/NATIVE_RENDER_NOT_ENTERED/);
+ }
+ {
+  const m=make({corrupt:true});assert.throws(()=>m.submit(0,'WARMUP',0),/COUNTER_INVALID/);
+ }
+});
+test('REV2 runtime source transform enforces native renderer entry guard and exposes warmup receipt',async()=>{
+ const o=await import('./h-earth-groundcover-factor-overlay.mjs');
+ const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const result=o.transformRev2WorldSoilNumericRuntime(original),source=result.source;
+ assert.equal(result.maximumSubmittedFrames,160);
+ assert.equal(result.maximumWarmupFramesPerPose,60);
+ assert.equal(result.nativeCounterBound,true);
+ assert(source.includes('const rev2FrameLedgerFactory='));
+ assert(source.includes('if(rev2Probe.ledger)rev2Probe.ledger.assertNativeEntry();'));
+ assert(source.includes('getFrameCount:()=>counters.frameCount'));
+ assert(source.includes("submitNativeFrame:packet=>renderFrame(packet)"));
+ assert(source.includes('function captureRev2Warmup(packet,pose)'));
+ assert(source.includes('captureRev2Warmup,captureRev2FloatMode'));
+ assert(source.includes("kind:mode===19?'CALIBRATION':'NUMERIC'"));
+ assert(source.includes("kind:'PARITY',mode:0,packet"));
+ assert(source.includes('warmupFramesPerPose:native?.warmups'));
+ assert(source.includes('firstHitRolesMeasured:false'));
+ assert.equal(execFileSync(process.execPath,['--input-type=module','--check'],{
+  input:source,encoding:'utf8',maxBuffer:1024*1024}).trim(),'');
+});
+
+
+function rev2FrozenSyntheticReadbacks(m,pose=0){
+ const plan=m.rev2FrozenReadbackPlan(),c=m.REV2_G1_STATIC_PREFLIGHT;
+ const g1={pose,productHead:c.product,
+  rendererBlob:c.blobs['showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'],
+  origin:'TOP_LEFT',observations:m.REV2_G1_FIXED_PIXELS.map(({x,y})=>({x,y,role:1,primitive:0,depth:.9,ordinary:1}))};
+ const syntheticRows=right=>{
+  const p=[.25,.29,.31],k=[.8,.9,1],w=.7,a=.8,t=right?[.65,.55,.2]:[.3,.4,.5],
+   rows=Array.from({length:18},()=>[0,0,0,0]);
+  rows[0]=[1,0,.9,1];rows[1]=[0,1,0,.2];rows[2]=[.2,.9,w,a];
+  rows[3]=[...p,.3];rows[4]=[...k,.55];rows[5]=[.3,.6,.0002,.001];
+  rows[6]=[.001,.0002,1.3,1];rows[7]=[...t,12];
+  for(let i=8;i<17;i++)rows[i]=[...t,1];
+  rows[17]=[...p.map((v,i)=>v+w*a*(Math.pow(t[i],2.2)*k[i]-v)),1];
+  return rows;
+ };
+ const left=syntheticRows(false),right=syntheticRows(true);
+ const captures=Array.from({length:18},(_,j)=>{
+  const mode=j+1;
+  const rgbaFloat32=plan.regions.map((r,i)=>{
+   if(i<12)return new Float32Array(mode===1?[1,0,.9,1]:[0,0,0,0]);
+   const pixels=new Float32Array(32*4);
+   for(let k=0;k<32;k++)pixels.set((k>=16?right:left)[j],k*4);
+   return pixels;
+  });
+  return {pose,mode,regions:plan.regions.map(r=>[...r]),rgbaFloat32,
+   sourceCameraUniformVerified:true};
+ });
+ return {plan,g1,captures};
+}
+test('REV2 frozen G1 and 15 seam windows assemble 30 controls each without GPU success claims',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const {plan,g1,captures}=rev2FrozenSyntheticReadbacks(m);
+ assert.equal(plan.schema,'H_EARTH_REV2_FROZEN_READBACK_PLAN_v1');
+ assert.equal(plan.g1Count,12);assert.equal(plan.seamCount,15);
+ assert.equal(plan.regions.length,27);
+ assert.deepEqual(plan.regions[0],[128,729,1,1]);
+ assert.deepEqual(plan.regions[11],[400,189,1,1]);
+ assert.deepEqual(plan.regions[12],[314,141,32,1]);
+ assert.deepEqual(plan.regions[26],[248,818,32,1]);
+ assert.equal(m.validateRev2FrozenModeCapture(captures[0],{pose:0,mode:1}).sourceCameraUniformVerified,true);
+ const g=m.compareRev2G1FirstHits(captures[0],g1,{pose:0});
+ assert.equal(g.matchedCount,12);
+ assert.equal(g.result,'REFERENCE_NUMERIC_COMPARISON_ONLY');
+ assert.equal(g.independentReferenceAuthenticated,false);
+ assert.equal(g.gpuEvidenceAuthenticated,false);
+ const analyzed=m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0});
+ assert.equal(analyzed.stationCount,15);
+ assert.equal(analyzed.controlsPerStation,30);
+ assert.equal(analyzed.totalWithinRoleControls,450);
+ assert.equal(analyzed.stations.length,15);
+ assert(analyzed.stations.every(s=>s.controlCount===30&&s.crossingIndex===15&&s.result.result==='TEXTURE_SAMPLING_SUPPORTED'));
+ assert.equal(analyzed.hardwareEvidenceAuthenticated,false);
+ assert.equal(analyzed.ownerVisualAcceptance,false);
+});
+test('REV2 frozen first-hit, origin, camera and within-role controls reject missing or false evidence',async()=>{
+ const m=await import('./h-earth-ground-material-comparison.v1.mjs');
+ const capture=()=>rev2FrozenSyntheticReadbacks(m);
+ const one=()=>capture().captures[0];
+ {
+  const q=one();q.regions[0][1]=250;
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/REGION_ORDER_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const q=one();[q.regions[0],q.regions[1]]=[q.regions[1],q.regions[0]];
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/REGION_ORDER_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const q=one();q.rgbaFloat32[13]=new Float32Array(127);
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/PIXEL_FORMAT_OR_COVERAGE_INVALID/);
+ }
+ {
+  const q=one();q.sourceCameraUniformVerified=false;
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/CAPTURE_OR_CAMERA_INCOMPLETE/);
+ }
+ {
+  const q=one();q.rgbaFloat32[0]=new Float32Array([1,0,.9,NaN]);
+  assert.throws(()=>m.validateRev2FrozenModeCapture(q,{pose:0,mode:1}),/PIXEL_FORMAT_OR_COVERAGE_INVALID/);
+ }
+ {
+  const {g1,captures}=capture();g1.observations[0].role=5;
+  assert.throws(()=>m.compareRev2G1FirstHits(captures[0],g1,{pose:0}),/ROLE_PRIMITIVE_DEPTH_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const {g1,captures}=capture();g1.observations[1].primitive=8;
+  assert.throws(()=>m.compareRev2G1FirstHits(captures[0],g1,{pose:0}),/ROLE_PRIMITIVE_DEPTH_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const {g1,captures}=capture();g1.observations[1].depth=.7;
+  assert.throws(()=>m.compareRev2G1FirstHits(captures[0],g1,{pose:0}),/ROLE_PRIMITIVE_DEPTH_OR_ORIGIN_MISMATCH/);
+ }
+ {
+  const {g1,captures}=capture();g1.productHead='false-head';
+  assert.throws(()=>m.compareRev2G1FirstHits(captures[0],g1,{pose:0}),/INDEPENDENT_REFERENCE_REQUIRED/);
+ }
+ {
+  const {g1,captures}=capture();g1.observations.pop();
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/INDEPENDENT_REFERENCE_REQUIRED/);
+ }
+ {
+  const {g1,captures}=capture();captures[0].rgbaFloat32[12][15*4]=5;
+  captures[0].rgbaFloat32[12][15*4+1]=8;
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/CROSSING_UNINTERPRETABLE/);
+ }
+ {
+  const {g1,captures}=capture();captures[0].rgbaFloat32[12][5*4]=5;
+  captures[0].rgbaFloat32[12][5*4+1]=8;
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/CONTROL_UNINTERPRETABLE/);
+ }
+ {
+  const {g1,captures}=capture();captures.pop();
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/EIGHTEEN_MODES_REQUIRED/);
+ }
+ {
+  const {g1,captures}=capture();captures[7].mode=1;
+  assert.throws(()=>m.analyzeRev2FrozenSeamControls(captures,g1,{pose:0}),/CAPTURE_OR_CAMERA_INCOMPLETE/);
+ }
+ const original=fs.readFileSync(new URL('../showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js',import.meta.url),'utf8');
+ const bridge=(await import('./h-earth-groundcover-factor-overlay.mjs')).transformRev2WorldSoilNumericRuntime(original);
+ assert(bridge.source.includes('sourceCameraUniformVerified:true'));
+});

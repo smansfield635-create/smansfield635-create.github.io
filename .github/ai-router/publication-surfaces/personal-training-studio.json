@@ -1,0 +1,46 @@
+{
+  "schema": "PUBLICATION_SURFACE_VERIFICATION_v1",
+  "surfaceId": "personal-training-studio",
+  "description": "Generic browser-local progressive training application. Employer script and private lesson pack are not in public deployment; first use imports private pack into local browser storage.",
+  "checks": [
+    {
+      "path": "/products/education/personal-training/index.html",
+      "includes": [
+        "<title>Personal Training Studio",
+        "One learning action at a time.",
+        "Import private lesson pack",
+        "Understand",
+        "Hear & echo",
+        "Reconstruct",
+        "Put in order",
+        "Recall from cues",
+        "Independent delivery",
+        "personal-training-studio-pack-v4",
+        "localStorage",
+        "<script id=\"privatePack\" type=\"application/json\"></script>"
+      ],
+      "excludes": [
+        "Everything Breaks",
+        "everythingbreaks",
+        "Insignia Staffing",
+        "Senior Coverage Specialist",
+        "149.88",
+        "179.00"
+      ]
+    }
+  ],
+  "runtime": {
+    "enabled": true,
+    "path": "/products/education/personal-training/",
+    "timeoutMs": 20000,
+    "readySelector": "#main .panel",
+    "binding": {
+      "mode": "direct-document",
+      "path": "/products/education/personal-training/"
+    },
+    "failOnConsoleErrors": true,
+    "failOnPageErrors": true,
+    "ignoreConsoleErrorIncludes": [],
+    "interactions": []
+  }
+}

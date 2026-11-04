@@ -25553,6 +25553,50 @@
       "scopeHash": "f54587a999ee440a2453ba47011d2d9598d7a882bb5ff39ca4ae51e6a5aa374c",
       "state": "ADMITTED_LOCKED"
     },
+    "f54fa87303bc2127c18a91ec4578504b6911dcc95662695b1a2fa4b6c512d09c": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "a508c32482b67410aaa15b5111e87a0fa5dae906",
+          "lockGeneration": 3096,
+          "lockScope": "H_EARTH:SPATIAL_FRAME_SELECTION:20261104:V1",
+          "operationId": "H_EARTH_SPATIAL_FRAME_SELECTION_20261104_001",
+          "procedureLocatorDigest": "e3ea97110f019a42eeb0a17fab2969841c301d6423ad3f44c4a5f9e921075c7c",
+          "requestDigest": "ea18d94375c8c72cfaabf3ad3b8d59593d2dd855c435ee7b22ba87a184f6dc04",
+          "scopeHash": "f54fa87303bc2127c18a91ec4578504b6911dcc95662695b1a2fa4b6c512d09c"
+        },
+        "bindingDigest": "cba47fbb392fec83e131679131781317aea25a0c6f3e879606865d4a2a925a65",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "5b0aefc7380a4df479b53ff69111563a9189695e09705c8ebec4f4c604e6f0fc",
+          "commentId": 6637365749,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41877645218,
+          "workflowSha": "a508c32482b67410aaa15b5111e87a0fa5dae906"
+        },
+        "lineageAnchorCommitSha": "4f0d8934f3b8014a3249eed624d196d22926df90",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "a508c32482b67410aaa15b5111e87a0fa5dae906",
+      "lockGeneration": 3096,
+      "lockScope": "H_EARTH:SPATIAL_FRAME_SELECTION:20261104:V1",
+      "operationId": "H_EARTH_SPATIAL_FRAME_SELECTION_20261104_001",
+      "procedureLocatorDigest": "e3ea97110f019a42eeb0a17fab2969841c301d6423ad3f44c4a5f9e921075c7c",
+      "released": false,
+      "requestDigest": "ea18d94375c8c72cfaabf3ad3b8d59593d2dd855c435ee7b22ba87a184f6dc04",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f54fa87303bc2127c18a91ec4578504b6911dcc95662695b1a2fa4b6c512d09c",
+      "state": "ADMITTED_LOCKED"
+    },
     "f6baaffd068d29c6ed617d487f17afe40bb7b9d5a77c8d5fdaca064a4928af75": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -26119,7 +26163,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3095,
+  "lockGeneration": 3096,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -600,7 +600,8 @@ test('REV2 floating diagnostic target enforces float extension, FBO, readback an
    'RGBA','FLOAT','DEPTH_COMPONENT24','DEPTH_ATTACHMENT','COLOR_ATTACHMENT0',
    'TEXTURE_MIN_FILTER','TEXTURE_MAG_FILTER','NEAREST','FRAMEBUFFER_COMPLETE','NO_ERROR'])
    gl[name]=name==='TEXTURE0'||name==='NO_ERROR'?0:name;
-  gl.getExtension=n=>n==='EXT_color_buffer_float'&&options.extension!==false?{}:null;
+  gl.getExtension=n=>(n==='EXT_color_buffer_float'&&options.extension!==false)||
+    (n==='EXT_float_blend'&&options.blend!==false)?{}:null;
   gl.getError=()=>{const e=state.error;state.error=0;return e;};
   gl.getParameter=n=>{
    switch(n){
@@ -636,9 +637,9 @@ test('REV2 floating diagnostic target enforces float extension, FBO, readback an
   gl.deleteFramebuffer=()=>{operations.push(['deleteFramebuffer']);};
   return {gl,state,operations};
  };
- for(const options of [{extension:false},{complete:false}]){
+ for(const options of [{extension:false},{blend:false},{complete:false}]){
   const mock=fake(options);
-  assert.throws(()=>create(mock.gl),/REV2_FLOAT_(EXT_COLOR_BUFFER_FLOAT_UNAVAILABLE|FRAMEBUFFER_INCOMPLETE)/);
+  assert.throws(()=>create(mock.gl),/REV2_FLOAT_(EXT_COLOR_BUFFER_FLOAT_UNAVAILABLE|EXT_FLOAT_BLEND_UNAVAILABLE|FRAMEBUFFER_INCOMPLETE)/);
   assert.equal(mock.state.fb,'originalFBO');
   assert.deepEqual(mock.state.viewport,[4,8,529,980]);
  }

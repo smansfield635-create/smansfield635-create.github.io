@@ -511,15 +511,18 @@ export function createRev2Rgba32fTarget(gl,{width=529,height=980}={}){
 // float roundtrip calibration and is not one of the 18 scientific channels.
 export const REV2_FLOAT_SENTINEL=Object.freeze([0.125,0.25,0.5,1.0]);
 export function validateRev2FloatCalibration(samples){
- if(!Array.isArray(samples)||!samples.length||
+ // Every one of the twelve frozen G1 sites must preserve the float
+ // sentinel. A single good site must never qualify an entire framebuffer.
+ if(!Array.isArray(samples)||samples.length!==12||
     samples.some(p=>!(p instanceof Float32Array)||p.length!==4||
       [...p].some(x=>!Number.isFinite(x))))
   throw Error('REV2_FLOAT_CALIBRATION_READBACK_INVALID');
  const e=0.000002;
- if(!samples.some(p=>REV2_FLOAT_SENTINEL.every((v,i)=>Math.abs(p[i]-v)<=e)))
+ if(!samples.every(p=>REV2_FLOAT_SENTINEL.every((v,i)=>Math.abs(p[i]-v)<=e)))
   throw Error('REV2_FLOAT_CALIBRATION_ROUNDTRIP_FAIL');
  return Object.freeze({result:'REV2_FLOAT_ROUNDTRIP_SOURCE_CHECK_PASS',
-  precisionCeiling:e,firstHitCount:samples.length,actualGpuRunClaimed:false});
+  precisionCeiling:e,calibratedPixelCount:samples.length,
+  g1FirstHitRolesVerified:false,actualGpuRunClaimed:false});
 }
 export function transformRev2WorldSoilNumericRuntime(original){
  const shader=transformRev2WorldSoilNumericRenderer(original);

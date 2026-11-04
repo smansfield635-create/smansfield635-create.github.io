@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { GEN3096_OPERATION_ID, GEN3096_SCOPED_TEST_PATHS, verifyGen3096LiveAdmission } from '../h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen3096-admitted-candidate-scope.js';
 
 const LEGACY_RELATIVE = 'tools/repository-ai-entry-router.v3-legacy.mjs';
 const STATIC_VERIFIER = 'tools/static-editorial-micro-verifier.v1.mjs';
@@ -209,8 +210,40 @@ if (!parsed.mutationIntent) {
 const classification=classifyPageMutation(paths,parsed.task);
 const proportionalBypass = classification.mutationClass==='STATIC_EDITORIAL_MICRO' || classification.mutationClass==='BOUNDED_PAGE_RELEASE';
 const legacy=runLegacy(root,proportionalBypass?stripMutationOnlyArgs(argv):stripOutputArg(argv));
-const routeReceipt=parseLegacyReceipt(legacy);
-const blocked=legacy.status!==0||routeReceipt.disposition!=='PASS';
+const rawRouteReceipt=parseLegacyReceipt(legacy);
+let routeReceipt=rawRouteReceipt;
+let gen3096ScopeProof=null;
+let gen3096ProofFailure=null;
+// Legacy routing owns no general tools/ prefix. Only an authenticated active
+// Gen3096 lock may recognize the three exact test paths for this operation.
+if(parsed.task===GEN3096_OPERATION_ID && parsed.mutationIntent) {
+  try {
+    const proof=await verifyGen3096LiveAdmission(paths,parsed.task,parsed.mutationIntent);
+    const exactTests=new Set(GEN3096_SCOPED_TEST_PATHS.map(p=>p.slice(1)));
+    let promoted=0;
+    const routes=rawRouteReceipt.routes.map(route=>{
+      if(!exactTests.has(route.path)){
+        if(route.projectId!=='H_EARTH'||route.disposition!=='PASS')
+          throw new Error('GEN3096_NONTEST_ROUTE_NOT_H_EARTH_PASS');
+        return route;
+      }
+      if(route.routeClass!=='UNREGISTERED'||route.disposition!=='BLOCK')
+        throw new Error('GEN3096_LEGACY_TEST_ROUTE_CHANGED');
+      promoted+=1;
+      return {...route,routeClass:'AUTHENTIC_GEN3096_ADMITTED_TEST_PATH',
+        projectId:'H_EARTH',disposition:'PASS'};
+    });
+    if(routes.length!==8||promoted!==3)
+      throw new Error('GEN3096_EIGHT_PATH_ROUTER_COUNT_MISMATCH');
+    gen3096ScopeProof=proof;
+    routeReceipt={...rawRouteReceipt,routes,disposition:'PASS',
+      legacyDisposition:rawRouteReceipt.disposition,
+      admittedCandidateScopeRecognition:'GEN3096_EXACT_EIGHT_PATHS_ONLY'};
+  }catch(error){
+    gen3096ProofFailure=String(error.code??error.message??'GEN3096_PROVENANCE_INVALID');
+  }
+}
+const blocked=(legacy.status!==0&&!gen3096ScopeProof)||routeReceipt.disposition!=='PASS';
 const isStatic = classification.mutationClass==='STATIC_EDITORIAL_MICRO';
 const passResult = isStatic ? 'PASS_STATIC_EDITORIAL_MICRO' : 'PASS_BOUNDED_PAGE_RELEASE';
 const executionResult = isStatic ? 'NOT_REQUIRED_STATIC_EDITORIAL_MICRO' : 'NOT_REQUIRED_BOUNDED_PAGE_RELEASE';
@@ -221,6 +254,8 @@ const receipt={
   ...routeReceipt,
   schema:'REPOSITORY_AI_ENTRY_ROUTER_RECEIPT_v3',
   mutationIntent:true,
+  ...(gen3096ScopeProof?{gen3096AdmissionProvenance:gen3096ScopeProof}:{})
+  ,...(gen3096ProofFailure?{gen3096ProvenanceFailure:gen3096ProofFailure}:{})
   pageMutationClassification:{
     schema:'PAGE_MUTATION_CLASSIFICATION_RECEIPT_v1',
     instrumentId:'PAGE_MUTATION_CLASSIFICATION_INSTRUMENT_v1',

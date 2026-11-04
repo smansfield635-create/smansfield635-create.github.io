@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-04T15:24:41Z",
+  "generatedAt": "2026-11-04T16:24:52Z",
   "window30d": {
-    "start": "2026-10-05T15:24:41Z",
-    "end": "2026-11-04T15:24:41Z"
+    "start": "2026-10-05T16:24:52Z",
+    "end": "2026-11-04T16:24:52Z"
   },
   "daily": [
     {
@@ -124,19 +124,19 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 13
+      "pageLoads": 14
     }
   ],
   "summary": {
-    "pageLoads": 1756,
-    "botPageLoads": 905,
+    "pageLoads": 1757,
+    "botPageLoads": 906,
     "nonBotPageLoads": 851
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1728,
-      "visits": 1728
+      "pageLoads": 1649,
+      "visits": 1649
     },
     {
       "host": "diamondgatebridge.com",
@@ -172,8 +172,8 @@
     },
     {
       "path": "/analytics/",
-      "pageLoads": 641,
-      "visits": 641
+      "pageLoads": 642,
+      "visits": 642
     },
     {
       "path": "/",

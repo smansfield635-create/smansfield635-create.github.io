@@ -2302,7 +2302,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           path: tooling
-          fetch-depth: 32
+          fetch-depth: 96
           persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |

@@ -16378,6 +16378,50 @@
       "scopeHash": "a3efca2fc5f7073a7384d3aa10783eb9da27aec041ae343237f2198f68067173",
       "state": "ADMITTED_LOCKED"
     },
+    "a41ac5bbb4a207d55978bb0c4e8373dbeae0adde82578e73cade6d74d5123a4b": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "abb71cd206a38872c18f2c9c08d705b204f6d8ab",
+          "lockGeneration": 3095,
+          "lockScope": "SHOWROOM_GLOBE:ZIONTS:SCARRED_WITNESS_PHASE2_REDESIGN_20261104",
+          "operationId": "ZIONTS_SCARRED_WITNESS_PHASE2_REDESIGN_20261104_001",
+          "procedureLocatorDigest": "acdd0867d6bde5fc20459fc276b76e84b44887ca8375f1b94cf97a50feb99489",
+          "requestDigest": "fd07049d7b1ee7cb43a686a66bef184b5dd2d2084cb3e99a7498ea5c72ff2c1a",
+          "scopeHash": "a41ac5bbb4a207d55978bb0c4e8373dbeae0adde82578e73cade6d74d5123a4b"
+        },
+        "bindingDigest": "6dcc458226139d1e2eb4a1dd9d528301ef7ce6b92446b4a38272dc362caca3a8",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "0585211705041935703b0b57b02fa04439facbec14cb96ebc6eef15569fdaf48",
+          "commentId": 6633718962,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 3461,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41851406609,
+          "workflowSha": "abb71cd206a38872c18f2c9c08d705b204f6d8ab"
+        },
+        "lineageAnchorCommitSha": "0cd42f42fad05195d14973b42377432fcbee2d2e",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "abb71cd206a38872c18f2c9c08d705b204f6d8ab",
+      "lockGeneration": 3095,
+      "lockScope": "SHOWROOM_GLOBE:ZIONTS:SCARRED_WITNESS_PHASE2_REDESIGN_20261104",
+      "operationId": "ZIONTS_SCARRED_WITNESS_PHASE2_REDESIGN_20261104_001",
+      "procedureLocatorDigest": "acdd0867d6bde5fc20459fc276b76e84b44887ca8375f1b94cf97a50feb99489",
+      "released": false,
+      "requestDigest": "fd07049d7b1ee7cb43a686a66bef184b5dd2d2084cb3e99a7498ea5c72ff2c1a",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a41ac5bbb4a207d55978bb0c4e8373dbeae0adde82578e73cade6d74d5123a4b",
+      "state": "ADMITTED_LOCKED"
+    },
     "a44cef596ffcf4e954e1ab3aad0f0e92560c662ad42fa51a7bf270b245da239b": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -26075,7 +26119,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3094,
+  "lockGeneration": 3095,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

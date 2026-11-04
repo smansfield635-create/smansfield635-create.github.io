@@ -3721,6 +3721,50 @@
       "scopeHash": "277545396a2ab7b90319e1833167e8e8bdf2130a226079fc6437cf10a533ff25",
       "state": "ADMITTED_LOCKED"
     },
+    "279d59670423b3d0733e8960b53a1984a831198d7b59240f87437342cddf40fe": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "8347ec608d17d0091b9871f03399cd4eb55e1e43",
+          "lockGeneration": 3097,
+          "lockScope": "EDUCATION:PERSONAL_TRAINING:PUBLIC_SAFE_SHELL_V4",
+          "operationId": "EDUCATION_PERSONAL_TRAINING_GENERIC_SHELL_20261104_001",
+          "procedureLocatorDigest": "fb6414af9e760e2d79b6f22905b229f3364e4df2b60270b6247c4f58147e41ea",
+          "requestDigest": "407ef5f3d5c4be556faedcdc7415d2b52e614c28b40d10c7bfd560dad04961a4",
+          "scopeHash": "279d59670423b3d0733e8960b53a1984a831198d7b59240f87437342cddf40fe"
+        },
+        "bindingDigest": "45cd2c324357a8317232da2cc36247eee7f57c77c6074389173c100b73ce15c9",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "d5b02e262c46c9899b48b122018414f1ff8c7852af265b1eaf83cb2d18fca95b",
+          "commentId": 6639675130,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7164,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41894684299,
+          "workflowSha": "8347ec608d17d0091b9871f03399cd4eb55e1e43"
+        },
+        "lineageAnchorCommitSha": "13046c83c387579e38f82718a2ecca9100191076",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "8347ec608d17d0091b9871f03399cd4eb55e1e43",
+      "lockGeneration": 3097,
+      "lockScope": "EDUCATION:PERSONAL_TRAINING:PUBLIC_SAFE_SHELL_V4",
+      "operationId": "EDUCATION_PERSONAL_TRAINING_GENERIC_SHELL_20261104_001",
+      "procedureLocatorDigest": "fb6414af9e760e2d79b6f22905b229f3364e4df2b60270b6247c4f58147e41ea",
+      "released": false,
+      "requestDigest": "407ef5f3d5c4be556faedcdc7415d2b52e614c28b40d10c7bfd560dad04961a4",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "279d59670423b3d0733e8960b53a1984a831198d7b59240f87437342cddf40fe",
+      "state": "ADMITTED_LOCKED"
+    },
     "297d84dc3c4b5e2e9b3d9bb1feeb246e78d141f73363939bf45b7dd7a742a5ca": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -26163,7 +26207,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3096,
+  "lockGeneration": 3097,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

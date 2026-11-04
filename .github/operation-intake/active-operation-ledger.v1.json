@@ -992,6 +992,50 @@
       "scopeHash": "086025523ab871abffe9d0575040892e606ae65e5191ee527c70fd54e762f41f",
       "state": "ADMITTED_LOCKED"
     },
+    "08c982e37ad1d30b83653bb49b8592dd8580ff7d6d98c0d54856c61d1750f32d": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "479543a9f37a609138edcd9c1cf443fd51bdf1c4",
+          "lockGeneration": 3106,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_E10_CHARACTER_SKINNING_ATOMIC_SOURCE_BOOTSTRAP_20261104",
+          "operationId": "DGB_E10_CHARACTER_SKINNING_ATOMIC_SOURCE_BOOTSTRAP_20261104_001",
+          "procedureLocatorDigest": "01f5df9c78150d5552be51d0949eef3151aea895aaeb09a6860a3ac06588d4aa",
+          "requestDigest": "457e850ea6bdef4a1a9cf7b04087347bd82ec004d69c7c59011efd8cef2fa732",
+          "scopeHash": "08c982e37ad1d30b83653bb49b8592dd8580ff7d6d98c0d54856c61d1750f32d"
+        },
+        "bindingDigest": "1c508e94e8aa15b9903719a5e3fffd0ba611e7f88c38eee6a3aaa2d75310cbd5",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "686c088cc67a654b31dc09972e78133256d74a4ce707999cb0e45fb051a81f99",
+          "commentId": 6644673338,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41932105791,
+          "workflowSha": "479543a9f37a609138edcd9c1cf443fd51bdf1c4"
+        },
+        "lineageAnchorCommitSha": "cb81ebe212d651a659d3f9bdd2ece8619c724248",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "479543a9f37a609138edcd9c1cf443fd51bdf1c4",
+      "lockGeneration": 3106,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_E10_CHARACTER_SKINNING_ATOMIC_SOURCE_BOOTSTRAP_20261104",
+      "operationId": "DGB_E10_CHARACTER_SKINNING_ATOMIC_SOURCE_BOOTSTRAP_20261104_001",
+      "procedureLocatorDigest": "01f5df9c78150d5552be51d0949eef3151aea895aaeb09a6860a3ac06588d4aa",
+      "released": false,
+      "requestDigest": "457e850ea6bdef4a1a9cf7b04087347bd82ec004d69c7c59011efd8cef2fa732",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "08c982e37ad1d30b83653bb49b8592dd8580ff7d6d98c0d54856c61d1750f32d",
+      "state": "ADMITTED_LOCKED"
+    },
     "08e56fd88a3fb60792990d5287e6e83fc0d7a7116302f8f4e78c8f11c926a7d0": {
       "governingHead": "23214cf857c1591c1b6eac34a12af1e346882a95",
       "lockGeneration": 1567,
@@ -26383,7 +26427,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3105,
+  "lockGeneration": 3106,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

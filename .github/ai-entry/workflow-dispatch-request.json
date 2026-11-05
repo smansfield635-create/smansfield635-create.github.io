@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "everything-breaks-v13-candidate-preflight-8d32adf-20261105",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "8d32adf9235a3d314f53aabc8b0d15fa0feb3f49",
+    "surface_id": "personal-training-studio"
   }
 }

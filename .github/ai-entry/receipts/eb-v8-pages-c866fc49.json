@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "eb-v8-pages-c866fc49",
+  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7189,
+  "requestBranch": "ai-dispatch-request-eb-v8-pages-c866fc49",
+  "requestCommit": "75275459deb04a0d3c0cfd60df1e45c4470aa2c3",
+  "requestCommitParent": "c866fc49b239c1ebc81f2a23380a351f07d0ad2a",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "c866fc49b239c1ebc81f2a23380a351f07d0ad2a",
+  "workflow": "pages-exact-head-deploy-v3.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "c866fc49b239c1ebc81f2a23380a351f07d0ad2a",
+    "surface_id": "personal-training-studio"
+  },
+  "bridgeRunId": "41943549000",
+  "dispatchedRunId": 41943566286,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/41943566286",
+  "dispatchedRunHeadSha": "c866fc49b239c1ebc81f2a23380a351f07d0ad2a",
+  "dispatchedAt": "2026-11-05T00:44:29.410Z",
+  "resolvedAt": "2026-11-05T00:44:33.403Z"
+}

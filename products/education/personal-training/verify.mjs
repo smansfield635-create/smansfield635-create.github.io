@@ -107,6 +107,24 @@ check('V13 Interaction mistakes remain separate from required Memorization maste
  x.act('inspection-track','memorization');assert.equal(x.evaluate('pendingStageMisses(1)'),0);
 });
 
+
+check('V13 both source tracks have independent saved cursors and accurate listening provenance',()=>{
+ const x=harness();
+ x.evaluate("progress.stages[1].phase=2;progress.stages[1].part=5;section='script';stage=1;phase=2;part=5;render()");
+ x.act('phase-next');
+ assert.equal(x.evaluate('progress.stages[1].phase'),2);
+ assert.equal(x.evaluate('progress.interactionCursor.phase'),3);
+ x.act('inspection-track','memorization');
+ assert.equal(x.evaluate('phase'),2);assert.equal(x.evaluate('part'),5);
+ x.act('inspection-track','interaction');
+ assert.equal(x.evaluate('phase'),3);assert.equal(x.evaluate('part'),0);
+ x.evaluate("phase=1;part=5;render()");
+ assert.match(x.main.innerHTML,/Interaction example · Representative turn 15/);
+ assert.doesNotMatch(x.main.innerHTML,/Original Memorization track · verbatim source/);
+ const backup=x.evaluate("parseProgressBackup({schema:'EVERYTHING_BREAKS_PROGRESS_BACKUP_v1',state:progress})");
+ assert.equal(backup.stages[1].phase,2);assert.equal(backup.interactionCursor.phase,3);
+});
+
 const passed=checks.filter(x=>x.result==='PASS').length;
 const result={schema:'EVERYTHING_BREAKS_V13_ACTIVE_INSPECTION_VERIFICATION_v1',result:passed===checks.length?'PASS':'FAIL',passed,total:checks.length,checks};
 console.log(JSON.stringify(result,null,2));

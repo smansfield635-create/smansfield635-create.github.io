@@ -1,16 +1,16 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-05T16:27:36Z",
+  "generatedAt": "2026-11-05T17:23:57Z",
   "window": {
-    "start": "2026-10-06T16:27:36Z",
-    "end": "2026-11-05T16:27:36Z"
+    "start": "2026-10-06T17:23:57Z",
+    "end": "2026-11-05T17:23:57Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 651,
-        "visits": 651
+        "pageLoads": 641,
+        "visits": 641
       },
       {
         "value": "/showroom/globe/h-earth/",
@@ -29,8 +29,13 @@
       },
       {
         "value": "/products/education/personal-training/",
-        "pageLoads": 46,
-        "visits": 46
+        "pageLoads": 51,
+        "visits": 51
+      },
+      {
+        "value": "/products/education/personal-training/course.html",
+        "pageLoads": 44,
+        "visits": 44
       },
       {
         "value": "/about/",
@@ -41,11 +46,6 @@
         "value": "/showroom/globe/audralia/",
         "pageLoads": 40,
         "visits": 40
-      },
-      {
-        "value": "/products/education/personal-training/course.html",
-        "pageLoads": 39,
-        "visits": 39
       },
       {
         "value": "/meet-sean-mansfield/",
@@ -190,13 +190,13 @@
     "deviceType": [
       {
         "value": "desktop",
-        "pageLoads": 1403,
-        "visits": 1388
+        "pageLoads": 1401,
+        "visits": 1386
       },
       {
         "value": "mobile",
-        "pageLoads": 238,
-        "visits": 206
+        "pageLoads": 240,
+        "visits": 208
       },
       {
         "value": "tablet",
@@ -207,18 +207,18 @@
     "userAgentBrowser": [
       {
         "value": "ChromeHeadless",
-        "pageLoads": 914,
-        "visits": 914
+        "pageLoads": 908,
+        "visits": 908
       },
       {
         "value": "Chrome",
-        "pageLoads": 327,
-        "visits": 316
+        "pageLoads": 329,
+        "visits": 318
       },
       {
         "value": "ChromeMobile",
-        "pageLoads": 158,
-        "visits": 146
+        "pageLoads": 160,
+        "visits": 148
       },
       {
         "value": "Edge",
@@ -227,8 +227,8 @@
       },
       {
         "value": "Firefox",
-        "pageLoads": 60,
-        "visits": 59
+        "pageLoads": 62,
+        "visits": 61
       },
       {
         "value": "MobileSafari",
@@ -259,18 +259,18 @@
     "userAgentOS": [
       {
         "value": "Linux",
-        "pageLoads": 1093,
-        "visits": 1093
+        "pageLoads": 1059,
+        "visits": 1059
       },
       {
         "value": "Windows",
-        "pageLoads": 232,
-        "visits": 217
+        "pageLoads": 234,
+        "visits": 209
       },
       {
         "value": "Android",
-        "pageLoads": 191,
-        "visits": 169
+        "pageLoads": 173,
+        "visits": 161
       },
       {
         "value": "MacOSX",
@@ -291,24 +291,24 @@
     "bot": [
       {
         "value": "1",
-        "pageLoads": 914,
-        "visits": 914
+        "pageLoads": 908,
+        "visits": 908
       },
       {
         "value": "0",
-        "pageLoads": 757,
-        "visits": 700
+        "pageLoads": 743,
+        "visits": 686
       }
     ],
     "navigationType": [
       {
         "value": "navigate",
-        "pageLoads": 1645,
-        "visits": 1614
+        "pageLoads": 1705,
+        "visits": 1654
       },
       {
         "value": "routing-apis",
-        "pageLoads": 25,
+        "pageLoads": 15,
         "visits": 0
       },
       {
@@ -320,8 +320,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1638,
-        "visits": 1612
+        "pageLoads": 1668,
+        "visits": 1632
       },
       {
         "value": "cache",
@@ -337,15 +337,15 @@
     "requestHost": [
       {
         "value": "diamondgatebridge.com",
-        "pageLoads": 1553,
-        "visits": 1498
+        "pageLoads": 1741,
+        "visits": 1664
       }
     ],
     "siteTag": [
       {
         "value": "2599e14d0b404cc095e40d92300679b7",
-        "pageLoads": 1681,
-        "visits": 1624
+        "pageLoads": 1651,
+        "visits": 1594
       }
     ]
   }

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-05T16:27:36Z",
+  "generatedAt": "2026-11-05T17:23:57Z",
   "window30d": {
-    "start": "2026-10-06T16:27:36Z",
-    "end": "2026-11-05T16:27:36Z"
+    "start": "2026-10-06T17:23:57Z",
+    "end": "2026-11-05T17:23:57Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-28",
-      "pageLoads": 19
+      "pageLoads": 18
     },
     {
       "date": "2026-10-29",
@@ -124,13 +124,13 @@
     },
     {
       "date": "2026-11-05",
-      "pageLoads": 70
+      "pageLoads": 81
     }
   ],
   "summary": {
-    "pageLoads": 1671,
-    "botPageLoads": 914,
-    "nonBotPageLoads": 757
+    "pageLoads": 1651,
+    "botPageLoads": 908,
+    "nonBotPageLoads": 743
   },
   "referrers": [
     {
@@ -167,8 +167,8 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 651,
-      "visits": 651
+      "pageLoads": 641,
+      "visits": 641
     },
     {
       "path": "/showroom/globe/h-earth/",
@@ -187,8 +187,13 @@
     },
     {
       "path": "/products/education/personal-training/",
-      "pageLoads": 46,
-      "visits": 46
+      "pageLoads": 51,
+      "visits": 51
+    },
+    {
+      "path": "/products/education/personal-training/course.html",
+      "pageLoads": 44,
+      "visits": 44
     },
     {
       "path": "/about/",
@@ -199,11 +204,6 @@
       "path": "/showroom/globe/audralia/",
       "pageLoads": 40,
       "visits": 40
-    },
-    {
-      "path": "/products/education/personal-training/course.html",
-      "pageLoads": 39,
-      "visits": 39
     }
   ],
   "ownerMeasurement": {

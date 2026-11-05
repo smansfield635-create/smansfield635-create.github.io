@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E10 — Off-product diagnostic quadruped browser lab</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,sans-serif;background:#101c29;color:#f1f5fa}
+*{box-sizing:border-box}body{margin:0;padding:clamp(12px,3vw,28px)}
+main{max-width:1000px;margin:auto}h1{font-size:clamp(1.3rem,4vw,2rem)}
+p{line-height:1.5}canvas{display:block;width:100%;height:auto;aspect-ratio:4/3;background:#06101d;border:1px solid #667991;border-radius:8px}
+.controls{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+button{font:inherit;color:#fff;background:#294d67;border:1px solid #7ca2ba;border-radius:6px;padding:10px 15px}
+button:focus-visible{outline:3px solid #ffd18c;outline-offset:3px}
+.output{font-family:ui-monospace,monospace;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<main>
+<h1>E10 — Character animation engineering lab</h1>
+<p>Diagnostic quadruped built from explicit E10 test fixture geometry. This is <strong>not a rabbit or production-ready character</strong>. WebGL uses the adopted E1–E4 engine. No production environment is modified.</p>
+<canvas id="stage" width="720" height="540" aria-label="WebGL diagnostic quadruped changing its planted feet and legs through a fixed animation loop"></canvas>
+<div class="controls"><button id="toggle" type="button">Pause</button><button id="step" type="button">Next sampled pose</button></div>
+<p class="output" id="status" role="status" aria-live="polite">Initializing native WebGL…</p>
+<p>Reduced-motion mode starts paused and preserves the manual step control. Real browser inspection is required before claiming visual qualification.</p>
+</main>
+<script type="module">
+import {createE10DiagnosticBrowserLab} from './dgb.native-character-browser-lab.v1.mjs';
+const canvas=document.getElementById('stage'),status=document.getElementById('status');
+const toggle=document.getElementById('toggle'),step=document.getElementById('step');
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)');
+let lab=null,playing=!reduce.matches,index=0,lastPaint=-Infinity,raf=0,ended=false;
+function announce(message){status.textContent=message;}
+function sizeCanvas(){
+ const ratio=Math.min(2,window.devicePixelRatio||1);
+ const width=Math.max(1,Math.round(canvas.clientWidth*ratio));
+ const height=Math.max(1,Math.round(width*.75));
+ if(canvas.width!==width||canvas.height!==height){canvas.width=width;canvas.height=height;}
+}
+function render(){
+ if(!lab)return;
+ sizeCanvas();
+ const receipt=lab.renderIndex(index);
+ announce('Real '+receipt.backend+' draw: phase '+(index+1)+'/'+lab.frameCount+
+    ', submitted '+receipt.drawn+' draw; resident meshes '+receipt.resourceMeshes+'.');
+}
+function setPlay(next){playing=next;toggle.textContent=playing?'Pause':'Play';}
+try{
+ sizeCanvas();
+ try{lab=createE10DiagnosticBrowserLab(canvas,{backend:'WEBGL2'});}
+ catch(error){
+  if(!String(error.message).includes('WEBGL2_CONTEXT_UNAVAILABLE'))throw error;
+  lab=createE10DiagnosticBrowserLab(canvas,{backend:'WEBGL1'});
+ }
+ setPlay(!reduce.matches);
+ render();
+}catch(error){setPlay(false);announce('LAB_INIT_FAILED: '+String(error.message));}
+toggle.addEventListener('click',()=>{if(!lab)return;setPlay(!playing);if(!playing)render();});
+step.addEventListener('click',()=>{if(!lab)return;setPlay(false);index=(index+1)%lab.frameCount;try{render();}catch(error){announce('LAB_DRAW_FAILED: '+String(error.message));}});
+reduce.addEventListener?.('change',event=>{if(event.matches)setPlay(false);});
+canvas.addEventListener('webglcontextlost',()=>{setPlay(false);announce('WebGL context lost; animation suspended.');});
+canvas.addEventListener('webglcontextrestored',()=>{try{render();}catch(error){announce('LAB_RESTORE_FAILED: '+String(error.message));}});
+function tick(now){
+ if(ended)return;
+ if(lab&&playing&&!document.hidden&&now-lastPaint>125){
+  lastPaint=now;index=(index+1)%lab.frameCount;
+  try{render();}catch(error){setPlay(false);announce('LAB_DRAW_FAILED: '+String(error.message));}
+ }
+ raf=requestAnimationFrame(tick);
+}
+raf=requestAnimationFrame(tick);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&lab&&!playing)try{render();}catch{}});
+window.addEventListener('pagehide',()=>{ended=true;cancelAnimationFrame(raf);lab?.dispose();},{once:true});
+</script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-05T09:26:55Z",
+  "generatedAt": "2026-11-05T10:25:04Z",
   "window": {
-    "start": "2026-08-07T09:26:55Z",
-    "end": "2026-11-05T09:26:55Z"
+    "start": "2026-08-07T10:25:04Z",
+    "end": "2026-11-05T10:25:04Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4290,
-    "visits": 1280,
+    "pageLoads": 4050,
+    "visits": 1200,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4290,
-        "visits": 1280
+        "pageLoads": 4050,
+        "visits": 1200
       }
     },
     "byPath": {
@@ -63,7 +63,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 480,
+        "pageLoads": 490,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -195,7 +195,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 300,
+        "pageLoads": 220,
         "visits": 20
       },
       "/door/": {
@@ -250,13 +250,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/campaigns/rob/": {
-        "pageLoads": 100,
-        "visits": 0
-      },
       "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 120,
-        "visits": 110
+        "pageLoads": 40,
+        "visits": 30
+      },
+      "/campaigns/rob/": {
+        "pageLoads": 10,
+        "visits": 0
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -317,12 +317,12 @@
         "visits": 650
       },
       "diamondgatebridge.com": {
-        "pageLoads": 3010,
+        "pageLoads": 2850,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 620,
-        "visits": 620
+        "pageLoads": 540,
+        "visits": 540
       },
       "raw.githack.com": {
         "pageLoads": 10,

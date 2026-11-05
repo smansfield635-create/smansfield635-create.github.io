@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-05T08:29:39Z",
+  "generatedAt": "2026-11-05T09:26:55Z",
   "window": {
-    "start": "2026-08-07T08:29:39Z",
-    "end": "2026-11-05T08:29:39Z"
+    "start": "2026-08-07T09:26:55Z",
+    "end": "2026-11-05T09:26:55Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,12 +17,12 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4050,
-    "visits": 1200,
+    "pageLoads": 4290,
+    "visits": 1280,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4050,
-        "visits": 1200
+        "pageLoads": 4290,
+        "visits": 1280
       }
     },
     "byPath": {
@@ -63,7 +63,7 @@
         "visits": 0
       },
       "/showroom/globe/h-earth/awards/": {
-        "pageLoads": 490,
+        "pageLoads": 480,
         "visits": 0
       },
       "/preview/compass-brain-v1/": {
@@ -195,7 +195,7 @@
         "visits": 0
       },
       "/campaigns/consider-the-energy/": {
-        "pageLoads": 220,
+        "pageLoads": 300,
         "visits": 20
       },
       "/door/": {
@@ -250,13 +250,13 @@
         "pageLoads": 10,
         "visits": 0
       },
-      "/products/on-your-side-ai/native-chat/": {
-        "pageLoads": 40,
-        "visits": 30
-      },
       "/campaigns/rob/": {
-        "pageLoads": 10,
+        "pageLoads": 100,
         "visits": 0
+      },
+      "/products/on-your-side-ai/native-chat/": {
+        "pageLoads": 120,
+        "visits": 110
       },
       "/products/on-your-side-ai/": {
         "pageLoads": 30,
@@ -317,12 +317,12 @@
         "visits": 650
       },
       "diamondgatebridge.com": {
-        "pageLoads": 2850,
+        "pageLoads": 3010,
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 540,
-        "visits": 540
+        "pageLoads": 620,
+        "visits": 620
       },
       "raw.githack.com": {
         "pageLoads": 10,

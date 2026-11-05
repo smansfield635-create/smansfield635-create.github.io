@@ -20,7 +20,7 @@ const checks = [];
 const check = (name, fn) => {try {fn();checks.push({name,result:'PASS'});}catch(error){checks.push({name,result:'FAIL',detail:error?.stack||String(error)});}};
 const digest = s => crypto.createHash('sha256').update(s, 'utf8').digest('hex');
 
-check('Entry redirects to actual course and retains accessible layout',()=>{assert.match(index,/http-equiv="refresh" content="0; url=course.html"/);assert.match(course,/name="viewport"/);assert.match(course,/prefers-reduced-motion/);assert.match(course,/focus-visible/);assert.match(course,/Script-first v12/);});
+check('Entry redirects to actual course and retains accessible layout',()=>{assert.match(index,/http-equiv="refresh" content="0; url=course.html"/);assert.match(course,/name="viewport"/);assert.match(course,/prefers-reduced-motion/);assert.match(course,/focus-visible/);assert.match(course,/Script-first v13/);});
 check('No external JS or CSS dependencies',()=>{assert.doesNotMatch(course,/<script[^>]+src=/i);assert.doesNotMatch(course,/<link[^>]+rel="stylesheet"/i);});
 check('No network tracking and v7 progress storage remains unchanged',()=>{assert.match(course,/everything-breaks-public-progress-v7/);assert.doesNotMatch(appCode,/\bfetch\s*\(|XMLHttpRequest|sendBeacon\s*\(/);});
 check('Original source and authored learning policy are separate',()=>{assert.ok(SOURCE&&LEARNING);assert.equal(SOURCE.practice,undefined);assert.equal(LEARNING.schema,'EVERYTHING_BREAKS_INSTRUCTIONAL_POLICY_V12');assert.equal(LEARNING.policyVersion,12);});
@@ -94,7 +94,7 @@ check('V13 separate original Memorization track and historical v7 progress are p
  x.evaluate("section='script';stage=1;phase=5;part=5;show=true;render()");
  assert.doesNotMatch(x.main.innerHTML,/data-action="stage-pass"/);x.act('stage-pass');assert.equal(x.evaluate('progress.stages[1].verifiedV12'),false);
  x.act('inspection-track','memorization');assert.equal(x.evaluate('practiceLine(1,5)'),SOURCE.script[1].segments[5]);
- assert.equal(x.evaluate('answer(1,5)'),SOURCE.practice.cloze[1][5]);
+ assert.equal(x.evaluate('answer(1,5)'),LEARNING.practice.cloze[1][5]);
  x.act('inspection-track','interaction');
  x.act('nav','mock');x.act('mock-start');x.act('mock-review-start');for(let i=0;i<6;i++){x.act('reveal');x.act('mock-grade-yes')}
  assert.equal(x.evaluate('progress.mockCalls[0].trainingVersion'),13);

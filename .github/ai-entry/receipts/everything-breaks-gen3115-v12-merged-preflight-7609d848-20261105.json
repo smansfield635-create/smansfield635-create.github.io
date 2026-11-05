@@ -1,0 +1,25 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "NATIVE_WORKFLOW_DISPATCH_ACCEPTED_AND_RUN_RESOLVED",
+  "requestId": "everything-breaks-gen3115-v12-merged-preflight-7609d848-20261105",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7215,
+  "requestBranch": "ai-dispatch-request-gen3115-v12-merged-main-preflight",
+  "requestCommit": "9028a2454862b75bb004fb38b7e986d48024f6fb",
+  "requestCommitParent": "7609d8487b8f08c94a5708e73ead16bb053d8221",
+  "requestParentWasCurrent": true,
+  "currentMainSha": "7609d8487b8f08c94a5708e73ead16bb053d8221",
+  "workflow": "publication-preflight-v1.yml",
+  "ref": "main",
+  "inputs": {
+    "target_sha": "7609d8487b8f08c94a5708e73ead16bb053d8221",
+    "surface_id": "personal-training-studio"
+  },
+  "bridgeRunId": "42069132111",
+  "dispatchedRunId": 42069170617,
+  "dispatchedRunUrl": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/42069170617",
+  "dispatchedRunHeadSha": "7609d8487b8f08c94a5708e73ead16bb053d8221",
+  "dispatchedAt": "2026-11-05T16:53:50.668Z",
+  "resolvedAt": "2026-11-05T16:53:59.572Z"
+}

@@ -20,7 +20,7 @@ const checks = [];
 const check = (name, fn) => {try {fn();checks.push({name,result:'PASS'});}catch(error){checks.push({name,result:'FAIL',detail:error?.stack||String(error)});}};
 const digest = s => crypto.createHash('sha256').update(s, 'utf8').digest('hex');
 
-check('Entry redirects to actual course and retains accessible layout',()=>{assert.match(index,/http-equiv="refresh" content="0; url=course.html"/);assert.match(course,/name="viewport"/);assert.match(course,/prefers-reduced-motion/);assert.match(course,/focus-visible/);assert.match(course,/Script-first v12/);});
+check('Entry redirects to actual course and retains accessible layout',()=>{assert.match(index,/http-equiv="refresh" content="0; url=course.html"/);assert.match(course,/name="viewport"/);assert.match(course,/prefers-reduced-motion/);assert.match(course,/focus-visible/);assert.match(course,/Script-first v13/);});
 check('No external JS or CSS dependencies',()=>{assert.doesNotMatch(course,/<script[^>]+src=/i);assert.doesNotMatch(course,/<link[^>]+rel="stylesheet"/i);});
 check('No network tracking and v7 progress storage remains unchanged',()=>{assert.match(course,/everything-breaks-public-progress-v7/);assert.doesNotMatch(appCode,/\bfetch\s*\(|XMLHttpRequest|sendBeacon\s*\(/);});
 check('Original source and authored learning policy are separate',()=>{assert.ok(SOURCE&&LEARNING);assert.equal(SOURCE.practice,undefined);assert.equal(LEARNING.schema,'EVERYTHING_BREAKS_INSTRUCTIONAL_POLICY_V12');assert.equal(LEARNING.policyVersion,12);});
@@ -48,20 +48,20 @@ function harness(initialState=null){
  return {evaluate,act,main,nav,store,downloads};
 }
 check('Source-only original display marks example mileage as variable',()=>{const x=harness();x.evaluate("section='script';stage=1;phase=0;part=0;render()");assert.match(x.main.innerHTML,/28013 miles/);assert.match(x.main.innerHTML,/class="variable"/);assert.match(x.main.innerHTML,/Memorize the mileage-confirmation sentence, not 28,013/);});
-check('All memorization exercises use source-exact passages; substitutions are annotations',()=>{const x=harness();for(let st=0;st<SOURCE.script.length;st++)for(let i=0;i<SOURCE.script[st].segments.length;i++)assert.equal(x.evaluate('practiceLine('+st+','+i+')'),SOURCE.script[st].segments[i]);assert.ok(x.evaluate('adaptationNote(1,0)').includes('[verified customer mileage]'));assert.match(x.evaluate('practiceLine(1,0)'),/28013 miles/);});
+check('All memorization exercises use source-exact passages; substitutions are annotations',()=>{const x=harness();x.evaluate("inspectionTrack='memorization'");for(let st=0;st<SOURCE.script.length;st++)for(let i=0;i<SOURCE.script[st].segments.length;i++)assert.equal(x.evaluate('practiceLine('+st+','+i+')'),SOURCE.script[st].segments[i]);assert.ok(x.evaluate('adaptationNote(1,0)').includes('[verified customer mileage]'));assert.match(x.evaluate('practiceLine(1,0)'),/28013 miles/);});
 check('All source highlights avoid slot and fixed-target overlap',()=>{const x=harness();x.evaluate('for(let i=0;i<DATA.script.length;i++)for(let j=0;j<DATA.script[i].segments.length;j++)sourceMarked(i,j)');});
 check('Long passages are segmented into source-order phrases without text loss',()=>{const x=harness();for(let st=0;st<SOURCE.script.length;st++)for(let i=0;i<SOURCE.script[st].segments.length;i++){const chunks=x.evaluate(`phraseList(${st},${i})`);const text=x.evaluate(`practiceLine(${st},${i})`);assert.equal(chunks.join(' '),text,`phrase mismatch ${st}:${i}`)}assert.ok(x.evaluate('phraseList(3,0).length')>=4);});
 check('Incorrect order receives feedback and can then be corrected',()=>{const x=harness();x.evaluate("section='script';stage=1;phase=4;part=0;render()");x.act('order-choice',1);assert.match(x.main.innerHTML,/belongs elsewhere/);x.act('order-choice',0);assert.equal(x.evaluate('part'),1);});
 check('Wrong fixed cloze answer cannot advance until correct reattempt',()=>{const x=harness();x.evaluate("section='script';stage=1;phase=3;part=0;render()");const wrong=x.evaluate("clozeOptions(1,0).findIndex(x=>x!==DATA.practice.cloze[1][0])");x.act('gap-choice',wrong);assert.match(x.main.innerHTML,/Try this phrase again/);assert.doesNotMatch(x.main.innerHTML,/data-action="part-next"/);x.act('gap-retry');assert.equal(x.evaluate('choiceResult'),null);const correct=x.evaluate("clozeOptions(1,0).indexOf(DATA.practice.cloze[1][0])");x.act('gap-choice',correct);assert.match(x.main.innerHTML,/Next question/);x.act('part-next');assert.equal(x.evaluate('part'),1);});
 check('Phrase miss requires retry and is tracked separately',()=>{const x=harness();x.evaluate("section='script';stage=3;phase=2;part=0;render()");x.act('reveal');x.act('phrase-miss');assert.equal(x.evaluate("progress.missedPhrases['3:0:0']"),1);assert.equal(x.evaluate('part'),0);x.act('reveal');x.act('phrase-pass');assert.equal(x.evaluate("progress.missedPhrases['3:0:0']"),undefined);assert.equal(x.evaluate('progress.stages[3].phraseIndex'),1);});
 check('Legacy missed passages remain reviewable',()=>{const x=harness();x.evaluate("section='script';stage=5;recordMiss(5,0);stage=-1;render()");assert.match(x.main.innerHTML,/Review missed passages and phrases/);x.act('review-miss','5:0');assert.equal(x.evaluate('stage'),5);assert.equal(x.evaluate('phase'),2);});
-check('Unresolved missed wording blocks section self-check',()=>{const x=harness();x.evaluate("section='script';stage=1;phase=5;part=0;show=true;recordMiss(1,0);progress.stages[1].rubric={wording:true,variables:true,delivery:true};render()");assert.equal(x.evaluate('gradeReady(1)'),false);assert.match(x.main.innerHTML,/disabled>Complete V12 section self-check/);});
-check('Section self-check requires all applicable rubric items',()=>{const x=harness();x.evaluate("section='script';stage=1;phase=5;part=0;show=true;render()");assert.equal(x.evaluate('gradeReady(1)'),false);x.act('rubric-toggle','wording');x.act('rubric-toggle','variables');x.act('rubric-toggle','delivery');assert.equal(x.evaluate('gradeReady(1)'),true);x.act('stage-pass');assert.equal(x.evaluate('progress.stages[1].verifiedV12'),true);});
+check('Unresolved missed wording blocks section self-check',()=>{const x=harness();x.evaluate("inspectionTrack='memorization';section='script';stage=1;phase=5;part=0;show=true;recordMiss(1,0);progress.stages[1].rubric={wording:true,variables:true,delivery:true};render()");assert.equal(x.evaluate('gradeReady(1)'),false);assert.match(x.main.innerHTML,/disabled>Complete V12 section self-check/);});
+check('Section self-check requires all applicable rubric items',()=>{const x=harness();x.evaluate("inspectionTrack='memorization';section='script';stage=1;phase=5;part=0;show=true;render()");assert.equal(x.evaluate('gradeReady(1)'),false);x.act('rubric-toggle','wording');x.act('rubric-toggle','variables');x.act('rubric-toggle','delivery');assert.equal(x.evaluate('gradeReady(1)'),true);x.act('stage-pass');assert.equal(x.evaluate('progress.stages[1].verifiedV12'),true);});
 check('Failed section restarts phrase practice and clears v11 verification',()=>{const x=harness();x.evaluate("section='script';stage=5;phase=5;show=true;progress.stages[5].verifiedV12=true;render()");x.act('stage-fail');assert.equal(x.evaluate('stage'),5);assert.equal(x.evaluate('phase'),2);assert.equal(x.evaluate('progress.stages[5].verifiedV12'),false);});
 check('V10 progress is preserved but cannot silently confer V12 readiness',()=>{const temp=harness();const legacy=JSON.parse(temp.store.get('everything-breaks-public-progress-v7')||'null')||temp.evaluate('initial()');for(const st of legacy.stages){st.complete=true;st.phase=5;st.part=0}legacy.mockCalls=[{at:'2026-11-04',passed:6,durationSeconds:200}];const x=harness(legacy);assert.equal(x.evaluate('tracking().scriptDone'),0);assert.equal(x.evaluate('tracking().mondayReady'),false);assert.ok(x.evaluate('progress.stages.every(p=>p.complete===true)'));assert.ok(x.evaluate('progress.stages.every(p=>p.phase===0)'));});
 check('Prior v7 record and current v11 fields survive export/import',()=>{const x=harness();x.evaluate("progress.stages[0].complete=true;progress.stages[0].verifiedV12=true;progress.stages[0].rubric={wording:true,variables:true,delivery:true};progress.missedPhrases={'0:0:0':2};save()");const backup=x.evaluate("parseProgressBackup({schema:'EVERYTHING_BREAKS_PROGRESS_BACKUP_v1',state:progress})");assert.equal(backup.version,7);assert.equal(backup.stages[0].verifiedV12,true);assert.equal(backup.missedPhrases['0:0:0'],2);x.act('nav','progress');x.act('progress-export');assert.ok(x.downloads.includes('everything-breaks-training-progress.json'));});
 check('Full mock remains truly continuous until retrospective stage review',()=>{const x=harness();x.act('nav','mock');x.act('mock-start');assert.match(x.main.innerHTML,/Speak the entire script without prompts/);assert.doesNotMatch(x.main.innerHTML,/Commitment &amp; Coverage/);assert.equal(x.evaluate('window.__mock.spokenAll'),false);x.act('mock-grade-yes');assert.equal(x.evaluate('window.__mock.index'),0);x.act('mock-review-start');assert.equal(x.evaluate('window.__mock.spokenAll'),true);});
-check('Only a six-section version-12 continuous mock supports deadline self-check',()=>{const x=harness();x.evaluate("for(const p of progress.stages)p.verifiedV12=true");assert.equal(x.evaluate('tracking().mondayReady'),false);x.act('nav','mock');x.act('mock-start');x.act('mock-review-start');for(let i=0;i<6;i++){x.act('reveal');x.act('mock-grade-yes')}assert.equal(x.evaluate('tracking().mondayReady'),true);x.evaluate('progress.known[0]=false;progress.reviewed["product:0"]=true');assert.equal(x.evaluate('tracking().mondayReady'),true);});
+check('Only a six-section version-12 continuous mock supports deadline self-check',()=>{const x=harness();x.evaluate("inspectionTrack='memorization'");x.evaluate("for(const p of progress.stages)p.verifiedV12=true");assert.equal(x.evaluate('tracking().mondayReady'),false);x.act('nav','mock');x.act('mock-start');x.act('mock-review-start');for(let i=0;i<6;i++){x.act('reveal');x.act('mock-grade-yes')}assert.equal(x.evaluate('tracking().mondayReady'),true);x.evaluate('progress.known[0]=false;progress.reviewed["product:0"]=true');assert.equal(x.evaluate('tracking().mondayReady'),true);});
 check('Unresolved misses disallow a nominal 6/6 mastery score',()=>{const x=harness();x.evaluate("for(const p of progress.stages)p.verifiedV12=true;progress.mockCalls.unshift({passed:6,mode:'continuous',trainingVersion:12});progress.missedParts['2:0']=1");assert.equal(x.evaluate('tracking().mondayReady'),false);});
 check('All script display functions and policy routes render without throwing',()=>{const x=harness();x.evaluate('for(let st=0;st<DATA.script.length;st++)for(let phase=0;phase<6;phase++){section="script";stage=st;window.phase=phase;this.phase=phase;render()}');});
 
@@ -73,7 +73,59 @@ check('Every exact source interaction turn is rendered with speaker provenance',
 check('Misassociated customer reply annotations removed from teaching',()=>{assert.ok(LEARNING.passages.every(p=>p.every(x=>!Object.hasOwn(x,'reply'))));const x=harness();x.evaluate("section='script';stage=1;phase=0;render()");assert.doesNotMatch(x.main.innerHTML,/Customer reply in supplied interaction example:/);});
 check('V11 section flags cannot certify V12 readiness',()=>{const x=harness();x.evaluate("for(const p of progress.stages){p.verifiedV11=true;p.verifiedV12=false}");assert.equal(x.evaluate('tracking().scriptDone'),0);assert.equal(x.evaluate('tracking().mondayReady'),false);});
 
+
+check('V13 Interaction example is the default active FOAM practice across exercise modes',()=>{
+ const x=harness(),turn=INTERACTION.turns.find(t=>t.speaker==='Representative'&&t.content.startsWith('Unlike a dealership,'));
+ assert.ok(turn);assert.equal(x.evaluate('inspectionTrack'),'interaction');assert.equal(x.evaluate('practiceLine(1,5)'),turn.content);
+ assert.equal(x.evaluate('answer(1,5)'),'do not require an upfront inspection fee');
+ x.evaluate("section='script';stage=1;part=5;phase=0;render()");
+ assert.match(x.main.innerHTML,/Unlike a dealership/);assert.match(x.main.innerHTML,/data-action="inspection-track"/);
+ x.evaluate("phase=1;render()");assert.match(x.main.innerHTML,/Unlike a dealership/);
+ x.evaluate("phase=2;show=true;render()");assert.equal(x.evaluate("phraseList(1,5).join(' ')"),turn.content);
+ x.evaluate("phase=3;show=false;render()");assert.match(x.main.innerHTML,/upfront inspection fee/);
+ const correct=x.evaluate("clozeOptions(1,5).findIndex(s=>s===answer(1,5))");
+ x.act('gap-choice',correct);assert.equal(x.evaluate('choiceResult.correct'),true);
+ x.evaluate("phase=4;choiceResult=null;render()");assert.match(x.main.innerHTML,/Unlike a dealership/);
+ x.evaluate("section='mock';window.__mock={index:1,grades:[],start:Date.now(),spokenAll:true};show=true;render()");
+ assert.match(x.main.innerHTML,/Unlike a dealership/);
+});
+check('V13 separate original Memorization track and historical v7 progress are preserved',()=>{
+ const x=harness();assert.equal(x.evaluate('progress.stages[1].verifiedV12'),false);
+ x.evaluate("section='script';stage=1;phase=5;part=5;show=true;render()");
+ assert.doesNotMatch(x.main.innerHTML,/data-action="stage-pass"/);x.act('stage-pass');assert.equal(x.evaluate('progress.stages[1].verifiedV12'),false);
+ x.act('inspection-track','memorization');assert.equal(x.evaluate('practiceLine(1,5)'),SOURCE.script[1].segments[5]);
+ assert.equal(x.evaluate('answer(1,5)'),LEARNING.practice.cloze[1][5]);
+ x.act('inspection-track','interaction');
+ x.act('nav','mock');x.act('mock-start');x.act('mock-review-start');for(let i=0;i<6;i++){x.act('reveal');x.act('mock-grade-yes')}
+ assert.equal(x.evaluate('progress.mockCalls[0].trainingVersion'),13);
+ assert.equal(x.evaluate('tracking().mondayReady'),false);
+});
+check('V13 Interaction mistakes remain separate from required Memorization mastery',()=>{
+ const x=harness();x.evaluate("section='script';stage=1;phase=2;part=5;show=true;render()");
+ x.act('phrase-miss');assert.equal(x.evaluate('tracking().outstanding'),0);
+ assert.ok(x.evaluate("Object.keys(progress.missedPhrases).some(k=>k.startsWith('interaction:1:5:'))"));
+ x.act('inspection-track','memorization');assert.equal(x.evaluate('pendingStageMisses(1)'),0);
+});
+
+
+check('V13 both source tracks have independent saved cursors and accurate listening provenance',()=>{
+ const x=harness();
+ x.evaluate("progress.stages[1].phase=2;progress.stages[1].part=5;section='script';stage=1;phase=2;part=5;render()");
+ x.act('phase-next');
+ assert.equal(x.evaluate('progress.stages[1].phase'),2);
+ assert.equal(x.evaluate('progress.interactionCursor.phase'),3);
+ x.act('inspection-track','memorization');
+ assert.equal(x.evaluate('phase'),2);assert.equal(x.evaluate('part'),5);
+ x.act('inspection-track','interaction');
+ assert.equal(x.evaluate('phase'),3);assert.equal(x.evaluate('part'),0);
+ x.evaluate("phase=1;part=5;render()");
+ assert.match(x.main.innerHTML,/Interaction example · Representative turn 15/);
+ assert.doesNotMatch(x.main.innerHTML,/Original Memorization track · verbatim source/);
+ const backup=x.evaluate("parseProgressBackup({schema:'EVERYTHING_BREAKS_PROGRESS_BACKUP_v1',state:progress})");
+ assert.equal(backup.stages[1].phase,2);assert.equal(backup.interactionCursor.phase,3);
+});
+
 const passed=checks.filter(x=>x.result==='PASS').length;
-const result={schema:'EVERYTHING_BREAKS_V12_TWO_TRACK_VERBATIM_VERIFICATION_v1',result:passed===checks.length?'PASS':'FAIL',passed,total:checks.length,checks};
+const result={schema:'EVERYTHING_BREAKS_V13_ACTIVE_INSPECTION_VERIFICATION_v1',result:passed===checks.length?'PASS':'FAIL',passed,total:checks.length,checks};
 console.log(JSON.stringify(result,null,2));
 if(result.result!=='PASS')process.exitCode=1;

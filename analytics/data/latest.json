@@ -1,15 +1,11 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-04T23:23:41Z",
+  "generatedAt": "2026-11-05T00:42:40Z",
   "window30d": {
-    "start": "2026-10-05T23:23:41Z",
-    "end": "2026-11-04T23:23:41Z"
+    "start": "2026-10-06T00:42:40Z",
+    "end": "2026-11-05T00:42:40Z"
   },
   "daily": [
-    {
-      "date": "2026-10-06",
-      "pageLoads": 210
-    },
     {
       "date": "2026-10-07",
       "pageLoads": 80
@@ -24,11 +20,11 @@
     },
     {
       "date": "2026-10-10",
-      "pageLoads": 80
+      "pageLoads": 30
     },
     {
       "date": "2026-10-11",
-      "pageLoads": 70
+      "pageLoads": 90
     },
     {
       "date": "2026-10-12",
@@ -44,7 +40,7 @@
     },
     {
       "date": "2026-10-15",
-      "pageLoads": 90
+      "pageLoads": 60
     },
     {
       "date": "2026-10-16",
@@ -92,7 +88,7 @@
     },
     {
       "date": "2026-10-27",
-      "pageLoads": 12
+      "pageLoads": 10
     },
     {
       "date": "2026-10-28",
@@ -124,19 +120,23 @@
     },
     {
       "date": "2026-11-04",
-      "pageLoads": 47
+      "pageLoads": 60
+    },
+    {
+      "date": "2026-11-05",
+      "pageLoads": 8
     }
   ],
   "summary": {
-    "pageLoads": 1741,
-    "botPageLoads": 909,
-    "nonBotPageLoads": 832
+    "pageLoads": 1750,
+    "botPageLoads": 910,
+    "nonBotPageLoads": 840
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1633,
-      "visits": 1633
+      "pageLoads": 1612,
+      "visits": 1612
     },
     {
       "host": "diamondgatebridge.com",
@@ -167,18 +167,18 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 643,
-      "visits": 643
+      "pageLoads": 633,
+      "visits": 633
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 636,
-      "visits": 593
+      "pageLoads": 626,
+      "visits": 563
     },
     {
       "path": "/",
-      "pageLoads": 84,
-      "visits": 74
+      "pageLoads": 104,
+      "visits": 94
     },
     {
       "path": "/nine-summits/universe/",

@@ -50,7 +50,9 @@ function occurrence(path) {
   const present = Object.hasOwn(BLOBS, path);
   return Object.freeze({
     repository: REPO, refType: 'COMMIT', refName: MAIN, commitSha: MAIN,
-    path, gitBlobSha: present ? BLOBS[path] : null,
+    // Do not publish additional per-file object IDs in this public candidate packet.
+    // The governing commit and truthful existence remain explicit.
+    path,
     contentSha256: null, byteCount: null,
     existenceStatus: present ? 'PRESENT' : 'ABSENT',
     fetchbackStatus: present ? 'VERIFIED_PRESENT_AT_GOVERNING_MAIN' :

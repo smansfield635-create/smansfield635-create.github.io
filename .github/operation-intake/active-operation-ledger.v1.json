@@ -3014,43 +3014,61 @@
     "1cccf00e76ba2486eb3ef3a4aa5552d46fb828093fcdac2bbd794615fe18d28a": {
       "authorityProvenance": {
         "authorityIdentity": {
-          "governingHead": "848fae321ee231910a765e565a11dec84d0dc376",
-          "lockGeneration": 3113,
+          "governingHead": "602c3da5f2e9f1eec1c19cdc73a4af19b8967088",
+          "lockGeneration": 3123,
           "lockScope": "H_EARTH:GEN3101:FIXED_EIGHT_PATH_QUALIFICATION_DESCRIPTOR:20261104:V1",
-          "operationId": "H_EARTH_GEN3101_EIGHT_PATH_QUALIFIER_REGISTRATION_20261104_001",
-          "procedureLocatorDigest": "c9d1964bc1c714ef23554f9099f490abcb782bae7edf26deea2f746986ebff4c",
-          "requestDigest": "9409b107552ebfccd55305f6d1b4dc47bac4c1ed1eb45936ba7b5c36889e54d5",
+          "operationId": "H_EARTH_GEN3101_EIGHT_PATH_QUALIFIER_REGISTRATION_20261105_002",
+          "procedureLocatorDigest": "e91e8e4548ee8b3e26034339bb84fa8cf3df733211801efed7bafb38376f5d3d",
+          "requestDigest": "1fb8b57175bdad91e7e5be99932745409f7c620e157ba56a74275b434def9353",
           "scopeHash": "1cccf00e76ba2486eb3ef3a4aa5552d46fb828093fcdac2bbd794615fe18d28a"
         },
-        "bindingDigest": "fbabe59f4c988aeced24a3ba03e71e590208183d449e4cdc3faa6b894dfb724f",
+        "bindingDigest": "b329ef085ec65909a4f8b2de8bb950474adf0450da9aa7e6fd59a2eec40e35e7",
         "invocation": {
           "commentAuthorAssociation": "OWNER",
           "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "11c3784bd779c342dde7073fe0f62e44056284c14c76332316acf733da9301e7",
-          "commentId": 6649051377,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
+          "commentBodySha256": "345cc3aa792c6fa0913fedc174a0c5d78d063760119987601017961d9516214e",
+          "commentId": 6665285461,
+          "eventAction": "created",
+          "eventName": "issue_comment",
           "issueNumber": 6911,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "marker": "REMOTE_OPERATION_SUCCESSOR_REQUEST_V1",
           "repository": "smansfield635-create/smansfield635-create.github.io",
           "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/remote-operation-successor-v1.yml@refs/heads/main",
           "workflowRunAttempt": 1,
-          "workflowRunId": 41963137205,
-          "workflowSha": "848fae321ee231910a765e565a11dec84d0dc376"
+          "workflowRunId": 42079570696,
+          "workflowSha": "602c3da5f2e9f1eec1c19cdc73a4af19b8967088"
         },
-        "lineageAnchorCommitSha": "4295be5c50a7277973686b37b819c453ea8a7469",
-        "origin": "CANONICAL_INTAKE",
+        "lineageAnchorCommitSha": "e5f6302e61823013ff5f7cb92730d9f00162349c",
+        "origin": "CANONICAL_SUCCESSOR",
         "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
       },
-      "governingHead": "848fae321ee231910a765e565a11dec84d0dc376",
-      "lockGeneration": 3113,
+      "governingHead": "602c3da5f2e9f1eec1c19cdc73a4af19b8967088",
+      "lockGeneration": 3123,
       "lockScope": "H_EARTH:GEN3101:FIXED_EIGHT_PATH_QUALIFICATION_DESCRIPTOR:20261104:V1",
-      "operationId": "H_EARTH_GEN3101_EIGHT_PATH_QUALIFIER_REGISTRATION_20261104_001",
-      "procedureLocatorDigest": "c9d1964bc1c714ef23554f9099f490abcb782bae7edf26deea2f746986ebff4c",
+      "operationId": "H_EARTH_GEN3101_EIGHT_PATH_QUALIFIER_REGISTRATION_20261105_002",
+      "predecessor": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "governingHead": "848fae321ee231910a765e565a11dec84d0dc376",
+        "lockGeneration": 3113,
+        "lockScope": "H_EARTH:GEN3101:FIXED_EIGHT_PATH_QUALIFICATION_DESCRIPTOR:20261104:V1",
+        "operationId": "H_EARTH_GEN3101_EIGHT_PATH_QUALIFIER_REGISTRATION_20261104_001",
+        "preservedEvidenceRefs": [
+          "issue:6911#issuecomment-6649051377",
+          "pr:7205@691de609eee43e6aa1cd36307c3c72b47ab2d863",
+          "pr:7217@602c3da5f2e9f1eec1c19cdc73a4af19b8967088",
+          "run:42070664501",
+          "issue:6911#issuecomment-6665184095",
+          "issue:6911#issuecomment-6665269644"
+        ],
+        "schema": "REPOSITORY_OPERATION_PREDECESSOR_LINK_v1",
+        "terminalDisposition": "SUPERSEDED",
+        "transitionId": "H_EARTH_GEN3113_STRICT_SUCCESSOR_REGISTRY_OVERLAP_20261105_003"
+      },
+      "procedureLocatorDigest": "e91e8e4548ee8b3e26034339bb84fa8cf3df733211801efed7bafb38376f5d3d",
       "released": false,
-      "requestDigest": "9409b107552ebfccd55305f6d1b4dc47bac4c1ed1eb45936ba7b5c36889e54d5",
+      "requestDigest": "1fb8b57175bdad91e7e5be99932745409f7c620e157ba56a74275b434def9353",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "1cccf00e76ba2486eb3ef3a4aa5552d46fb828093fcdac2bbd794615fe18d28a",
       "state": "ADMITTED_LOCKED"
@@ -26647,7 +26665,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3122,
+  "lockGeneration": 3123,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [
@@ -98410,6 +98428,70 @@
       "scopeHash": "8c39c39727e6daaceef3a9852c68eac4898496d42f49e3d049ba2ccfdee91ae8",
       "state": "TERMINAL",
       "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "848fae321ee231910a765e565a11dec84d0dc376",
+          "lockGeneration": 3113,
+          "lockScope": "H_EARTH:GEN3101:FIXED_EIGHT_PATH_QUALIFICATION_DESCRIPTOR:20261104:V1",
+          "operationId": "H_EARTH_GEN3101_EIGHT_PATH_QUALIFIER_REGISTRATION_20261104_001",
+          "procedureLocatorDigest": "c9d1964bc1c714ef23554f9099f490abcb782bae7edf26deea2f746986ebff4c",
+          "requestDigest": "9409b107552ebfccd55305f6d1b4dc47bac4c1ed1eb45936ba7b5c36889e54d5",
+          "scopeHash": "1cccf00e76ba2486eb3ef3a4aa5552d46fb828093fcdac2bbd794615fe18d28a"
+        },
+        "bindingDigest": "fbabe59f4c988aeced24a3ba03e71e590208183d449e4cdc3faa6b894dfb724f",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "11c3784bd779c342dde7073fe0f62e44056284c14c76332316acf733da9301e7",
+          "commentId": 6649051377,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 6911,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41963137205,
+          "workflowSha": "848fae321ee231910a765e565a11dec84d0dc376"
+        },
+        "lineageAnchorCommitSha": "4295be5c50a7277973686b37b819c453ea8a7469",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "848fae321ee231910a765e565a11dec84d0dc376",
+      "lockGeneration": 3113,
+      "lockScope": "H_EARTH:GEN3101:FIXED_EIGHT_PATH_QUALIFICATION_DESCRIPTOR:20261104:V1",
+      "operationId": "H_EARTH_GEN3101_EIGHT_PATH_QUALIFIER_REGISTRATION_20261104_001",
+      "procedureLocatorDigest": "c9d1964bc1c714ef23554f9099f490abcb782bae7edf26deea2f746986ebff4c",
+      "released": true,
+      "requestDigest": "9409b107552ebfccd55305f6d1b4dc47bac4c1ed1eb45936ba7b5c36889e54d5",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "1cccf00e76ba2486eb3ef3a4aa5552d46fb828093fcdac2bbd794615fe18d28a",
+      "state": "TERMINAL",
+      "supersession": {
+        "authorityInherited": false,
+        "exactHeadRevalidationRequired": true,
+        "preservedEvidenceRefs": [
+          "issue:6911#issuecomment-6649051377",
+          "pr:7205@691de609eee43e6aa1cd36307c3c72b47ab2d863",
+          "pr:7217@602c3da5f2e9f1eec1c19cdc73a4af19b8967088",
+          "run:42070664501",
+          "issue:6911#issuecomment-6665184095",
+          "issue:6911#issuecomment-6665269644"
+        ],
+        "reasonCode": "GOVERNING_HEAD_ADVANCED",
+        "schema": "REPOSITORY_OPERATION_SUPERSESSION_LINK_v1",
+        "successorGoverningHead": "602c3da5f2e9f1eec1c19cdc73a4af19b8967088",
+        "successorLockGeneration": 3123,
+        "successorLockScope": "H_EARTH:GEN3101:FIXED_EIGHT_PATH_QUALIFICATION_DESCRIPTOR:20261104:V1",
+        "successorOperationId": "H_EARTH_GEN3101_EIGHT_PATH_QUALIFIER_REGISTRATION_20261105_002",
+        "transitionId": "H_EARTH_GEN3113_STRICT_SUCCESSOR_REGISTRY_OVERLAP_20261105_003"
+      },
+      "terminalDisposition": "SUPERSEDED"
     }
   ]
 }

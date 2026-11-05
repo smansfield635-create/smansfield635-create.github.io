@@ -95,7 +95,8 @@ test('rooted candidates have truthful absent source occurrences, without prefix 
   assert.equal(r.resolved,true);
   const o=r.occurrences.find(x=>x.path===p);
   assert.equal(o.existenceStatus,'ABSENT');
-  assert.equal(o.gitBlobSha,null);
+  assert.equal(o.commitSha,HEAD);
+  assert.equal(o.fetchbackStatus,'NO_BLOB_AT_GOVERNING_MAIN');
   assert.notEqual(resolveHEarthRepositoryRegistryPath('/showroom/globe/h-earth/vegetation-prototype/unadmitted.js').resolved,true);
 });
 

@@ -22572,50 +22572,6 @@
       "scopeHash": "d613217a06172c17d6e6bfb987f9d69c1d3710954044c103581af575050d7b30",
       "state": "ADMITTED_LOCKED"
     },
-    "d61f0478a37de21c993dbd2a9bb751464351f9f985619dc2557b67eeaa4033fd": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "e122dae3e787121da663a86104f5a372835683f4",
-          "lockGeneration": 3127,
-          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_E10_GAIT_COORDINATOR_BOUNDED_CORRECTIVE_REPAIR_20261105",
-          "operationId": "DGB_E10_GAIT_COORDINATOR_BOUNDED_CORRECTIVE_REPAIR_20261105_001",
-          "procedureLocatorDigest": "06793d1c9ceb11f835695ee654d92681ad87fab729b554b527ae204553d58f0d",
-          "requestDigest": "296cf73c316744244471e5cc6b51e299f861b417acf9cd06d7bb1abdda187f2c",
-          "scopeHash": "d61f0478a37de21c993dbd2a9bb751464351f9f985619dc2557b67eeaa4033fd"
-        },
-        "bindingDigest": "a3969c44169501ebacf715bae0c83b409ef2126d4f451c5894bbecfdce38996e",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "b991bf28d7952bdfb200d88272bcd46ade865affd58fe3dfd3c1b0681ccd7c42",
-          "commentId": 6669980293,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 7108,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 42112760007,
-          "workflowSha": "e122dae3e787121da663a86104f5a372835683f4"
-        },
-        "lineageAnchorCommitSha": "d4d7dc4a46405529dd68fbaa3b91d5020f3ab098",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "e122dae3e787121da663a86104f5a372835683f4",
-      "lockGeneration": 3127,
-      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_E10_GAIT_COORDINATOR_BOUNDED_CORRECTIVE_REPAIR_20261105",
-      "operationId": "DGB_E10_GAIT_COORDINATOR_BOUNDED_CORRECTIVE_REPAIR_20261105_001",
-      "procedureLocatorDigest": "06793d1c9ceb11f835695ee654d92681ad87fab729b554b527ae204553d58f0d",
-      "released": false,
-      "requestDigest": "296cf73c316744244471e5cc6b51e299f861b417acf9cd06d7bb1abdda187f2c",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "d61f0478a37de21c993dbd2a9bb751464351f9f985619dc2557b67eeaa4033fd",
-      "state": "ADMITTED_LOCKED"
-    },
     "d637c80c947f6a4c3f6653d76220d8de0160a31e507a4471cad106a9c7b61450": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -98671,6 +98627,51 @@
       "scopeHash": "dd10e29086589b2296c6d48176aa985181774f4e044bea73d512a61c4018dbba",
       "state": "TERMINAL",
       "terminalDisposition": "FAIL_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "e122dae3e787121da663a86104f5a372835683f4",
+          "lockGeneration": 3127,
+          "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_E10_GAIT_COORDINATOR_BOUNDED_CORRECTIVE_REPAIR_20261105",
+          "operationId": "DGB_E10_GAIT_COORDINATOR_BOUNDED_CORRECTIVE_REPAIR_20261105_001",
+          "procedureLocatorDigest": "06793d1c9ceb11f835695ee654d92681ad87fab729b554b527ae204553d58f0d",
+          "requestDigest": "296cf73c316744244471e5cc6b51e299f861b417acf9cd06d7bb1abdda187f2c",
+          "scopeHash": "d61f0478a37de21c993dbd2a9bb751464351f9f985619dc2557b67eeaa4033fd"
+        },
+        "bindingDigest": "a3969c44169501ebacf715bae0c83b409ef2126d4f451c5894bbecfdce38996e",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "b991bf28d7952bdfb200d88272bcd46ade865affd58fe3dfd3c1b0681ccd7c42",
+          "commentId": 6669980293,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7108,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42112760007,
+          "workflowSha": "e122dae3e787121da663a86104f5a372835683f4"
+        },
+        "lineageAnchorCommitSha": "d4d7dc4a46405529dd68fbaa3b91d5020f3ab098",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "e122dae3e787121da663a86104f5a372835683f4",
+      "lockGeneration": 3127,
+      "lockScope": "REPOSITORY_AI_ROUTER_INFRASTRUCTURE:DGB_E10_GAIT_COORDINATOR_BOUNDED_CORRECTIVE_REPAIR_20261105",
+      "operationId": "DGB_E10_GAIT_COORDINATOR_BOUNDED_CORRECTIVE_REPAIR_20261105_001",
+      "procedureLocatorDigest": "06793d1c9ceb11f835695ee654d92681ad87fab729b554b527ae204553d58f0d",
+      "released": true,
+      "requestDigest": "296cf73c316744244471e5cc6b51e299f861b417acf9cd06d7bb1abdda187f2c",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "d61f0478a37de21c993dbd2a9bb751464351f9f985619dc2557b67eeaa4033fd",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
     }
   ]
 }

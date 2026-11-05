@@ -2312,7 +2312,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "BUILD_MATRIX_V2_FIXED_EXACT_HEAD_QUALIFICATION_ADAPTER_V1",
-      "exactToolingHead": "4f0f4012041d25cc380531d3dc1b1a7ef9a6f16b",
+      "exactToolingHead": "dba6d7da22f1a8777b981a833e38f80874aba69e",
       "commandSpecification": {
         "executable": "node",
         "scriptPath": "tools/ai-room-transport/build-matrix-v2-fixed-exact-head-qualification.v1.mjs",

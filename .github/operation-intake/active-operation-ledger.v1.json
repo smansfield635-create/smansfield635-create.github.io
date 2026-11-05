@@ -14583,6 +14583,50 @@
       "scopeHash": "91498847235a51be58ef771a735c58e11a5e9b4ae49e65b29a5f9fc377c830ee",
       "state": "ADMITTED_LOCKED"
     },
+    "915c973bb008d3f57b2ffa611beaf4320137afef64c67c96179fb09563aa0fef": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "07e7661b7d36f359a3bcf0113724eeeb229c456c",
+          "lockGeneration": 3117,
+          "lockScope": "CONTROL_PLANE:H_EARTH:LEGACY_DESCRIPTOR_PROVENANCE_ONLY:20261105:V1",
+          "operationId": "CONTROL_PLANE_H_EARTH_WOODLAND_DESCRIPTOR_PROVENANCE_REPAIR_20261105_001",
+          "procedureLocatorDigest": "8ac44f2e1573c6cdb2bfd2814ccadf9091d09da7c22994621fea2a83298055b9",
+          "requestDigest": "770b0e7e25329a5f0bbebf9b04a453906a5acc8dec386d08dc0208c442fbe1e0",
+          "scopeHash": "915c973bb008d3f57b2ffa611beaf4320137afef64c67c96179fb09563aa0fef"
+        },
+        "bindingDigest": "3f3889ed4bf86aba88500e873e16896db933d8f5e54e052a5b5a1135ba4c530d",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "19bdd49ffd53c40b2ce58d68816f11a04a6c604c2a1463f777ce02b58132dd13",
+          "commentId": 6662522456,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 5890,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42059479927,
+          "workflowSha": "07e7661b7d36f359a3bcf0113724eeeb229c456c"
+        },
+        "lineageAnchorCommitSha": "4eee87b2888c019da1535447e7da434db27b4ffd",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "07e7661b7d36f359a3bcf0113724eeeb229c456c",
+      "lockGeneration": 3117,
+      "lockScope": "CONTROL_PLANE:H_EARTH:LEGACY_DESCRIPTOR_PROVENANCE_ONLY:20261105:V1",
+      "operationId": "CONTROL_PLANE_H_EARTH_WOODLAND_DESCRIPTOR_PROVENANCE_REPAIR_20261105_001",
+      "procedureLocatorDigest": "8ac44f2e1573c6cdb2bfd2814ccadf9091d09da7c22994621fea2a83298055b9",
+      "released": false,
+      "requestDigest": "770b0e7e25329a5f0bbebf9b04a453906a5acc8dec386d08dc0208c442fbe1e0",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "915c973bb008d3f57b2ffa611beaf4320137afef64c67c96179fb09563aa0fef",
+      "state": "ADMITTED_LOCKED"
+    },
     "91684c5071256e3e17781b5339bbfec38f0843cc605bde557fe61b1b573f4760": {
       "governingHead": "adfebb0ac443dca6d18c4568a9faa95d38995bae",
       "lockGeneration": 1644,
@@ -26471,7 +26515,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3116,
+  "lockGeneration": 3117,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

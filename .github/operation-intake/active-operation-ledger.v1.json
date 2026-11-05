@@ -16423,50 +16423,6 @@
       "scopeHash": "a393543023cfa04a3cf37a2c5901e95d92c1e9ad906af64199eb6d282d8f7c81",
       "state": "ADMITTED_LOCKED"
     },
-    "a3c8d96f36fc4f9bfe537cf2d3eb1b60de609f647a30c397b88abb8a1ca5fa4c": {
-      "authorityProvenance": {
-        "authorityIdentity": {
-          "governingHead": "dc32a03dd11f524f16174431a93b8b321f8348d0",
-          "lockGeneration": 3110,
-          "lockScope": "EDUCATION:PERSONAL_TRAINING:LIVE_DIRECT_COURSE",
-          "operationId": "EDUCATION_PERSONAL_TRAINING_V10_FUNCTIONAL_REPAIR_20261104_001",
-          "procedureLocatorDigest": "e51a423a171d1551222c776eda85018f713ff15c657992485301261162ffdab0",
-          "requestDigest": "eb870081ae5cf0e3114bde455cf835cf1ace0263015bb43304b4bab616766d13",
-          "scopeHash": "a3c8d96f36fc4f9bfe537cf2d3eb1b60de609f647a30c397b88abb8a1ca5fa4c"
-        },
-        "bindingDigest": "1edfaba1685b92a00178219855f2b936d9b134ee47f32bd129c1585c49068e29",
-        "invocation": {
-          "commentAuthorAssociation": "OWNER",
-          "commentAuthorLogin": "smansfield635-create",
-          "commentBodySha256": "2b67da22a123edf48cbceacc98e7092993de8f725e14328ea5be4b415ef890ed",
-          "commentId": 6647374829,
-          "dispatchActorLogin": "github-actions[bot]",
-          "eventAction": "dispatched",
-          "eventName": "workflow_dispatch",
-          "issueNumber": 7164,
-          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
-          "repository": "smansfield635-create/smansfield635-create.github.io",
-          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
-          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
-          "workflowRunAttempt": 1,
-          "workflowRunId": 41950979051,
-          "workflowSha": "dc32a03dd11f524f16174431a93b8b321f8348d0"
-        },
-        "lineageAnchorCommitSha": "0c67bc6d19543fa89cf7308e56758b633917a2b6",
-        "origin": "CANONICAL_INTAKE",
-        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
-      },
-      "governingHead": "dc32a03dd11f524f16174431a93b8b321f8348d0",
-      "lockGeneration": 3110,
-      "lockScope": "EDUCATION:PERSONAL_TRAINING:LIVE_DIRECT_COURSE",
-      "operationId": "EDUCATION_PERSONAL_TRAINING_V10_FUNCTIONAL_REPAIR_20261104_001",
-      "procedureLocatorDigest": "e51a423a171d1551222c776eda85018f713ff15c657992485301261162ffdab0",
-      "released": false,
-      "requestDigest": "eb870081ae5cf0e3114bde455cf835cf1ace0263015bb43304b4bab616766d13",
-      "schema": "REPOSITORY_OPERATION_LOCK_v1",
-      "scopeHash": "a3c8d96f36fc4f9bfe537cf2d3eb1b60de609f647a30c397b88abb8a1ca5fa4c",
-      "state": "ADMITTED_LOCKED"
-    },
     "a3efca2fc5f7073a7384d3aa10783eb9da27aec041ae343237f2198f68067173": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -97871,6 +97827,51 @@
       "procedureLocatorDigest": "523ecf6f226c1b2305026dcc0a6aed1860da908bc4fa54d548f340f9a4462d5c",
       "released": true,
       "requestDigest": "b620bf2b69ecd8c8941848dca55ad3dd7e6d4e8f110e6c3fa58d75b1e717391d",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a3c8d96f36fc4f9bfe537cf2d3eb1b60de609f647a30c397b88abb8a1ca5fa4c",
+      "state": "TERMINAL",
+      "terminalDisposition": "PASS_CLOSED"
+    },
+    {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "dc32a03dd11f524f16174431a93b8b321f8348d0",
+          "lockGeneration": 3110,
+          "lockScope": "EDUCATION:PERSONAL_TRAINING:LIVE_DIRECT_COURSE",
+          "operationId": "EDUCATION_PERSONAL_TRAINING_V10_FUNCTIONAL_REPAIR_20261104_001",
+          "procedureLocatorDigest": "e51a423a171d1551222c776eda85018f713ff15c657992485301261162ffdab0",
+          "requestDigest": "eb870081ae5cf0e3114bde455cf835cf1ace0263015bb43304b4bab616766d13",
+          "scopeHash": "a3c8d96f36fc4f9bfe537cf2d3eb1b60de609f647a30c397b88abb8a1ca5fa4c"
+        },
+        "bindingDigest": "1edfaba1685b92a00178219855f2b936d9b134ee47f32bd129c1585c49068e29",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "2b67da22a123edf48cbceacc98e7092993de8f725e14328ea5be4b415ef890ed",
+          "commentId": 6647374829,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 7164,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 41950979051,
+          "workflowSha": "dc32a03dd11f524f16174431a93b8b321f8348d0"
+        },
+        "lineageAnchorCommitSha": "0c67bc6d19543fa89cf7308e56758b633917a2b6",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "dc32a03dd11f524f16174431a93b8b321f8348d0",
+      "lockGeneration": 3110,
+      "lockScope": "EDUCATION:PERSONAL_TRAINING:LIVE_DIRECT_COURSE",
+      "operationId": "EDUCATION_PERSONAL_TRAINING_V10_FUNCTIONAL_REPAIR_20261104_001",
+      "procedureLocatorDigest": "e51a423a171d1551222c776eda85018f713ff15c657992485301261162ffdab0",
+      "released": true,
+      "requestDigest": "eb870081ae5cf0e3114bde455cf835cf1ace0263015bb43304b4bab616766d13",
       "schema": "REPOSITORY_OPERATION_LOCK_v1",
       "scopeHash": "a3c8d96f36fc4f9bfe537cf2d3eb1b60de609f647a30c397b88abb8a1ca5fa4c",
       "state": "TERMINAL",

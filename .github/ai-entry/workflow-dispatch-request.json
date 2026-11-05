@@ -1,9 +1,9 @@
 {
   "schema": "AI_ENTRY_WORKFLOW_DISPATCH_REQUEST_v1",
-  "requestId": "compass-studio-copy-republish-9d9abd3f",
-  "capabilityId": "PAGES_EXACT_HEAD_DEPLOY",
+  "requestId": "eb-v8-internal-preflight-d7c62c56",
+  "capabilityId": "PUBLICATION_FAST_PREFLIGHT",
   "inputs": {
-    "target_sha": "9d9abd3fb3af5c8af1fedba6c16f70c75613e19e",
-    "surface_id": "compass-gen1862"
+    "target_sha": "d7c62c56fca13e23bfd8f9ff8d3118c83e12bf1b",
+    "surface_id": "personal-training-studio"
   }
 }

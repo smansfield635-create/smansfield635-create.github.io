@@ -51,20 +51,37 @@ export function parseArgs(argv) {
   return result;
 }
 export function assertNativeReceipt(receipt) {
-  if (receipt?.activationStatus !== 'ACTIVATED' || receipt.dependenciesVerified !== true ||
-      receipt.finalDisposition !== 'PASS' || receipt.mutationMayProceed !== false ||
+  // v33 intentionally preserves predecessor identityVerified=false. This
+  // historical flag is NOT the Gen3096 successor's positive evidence; the
+  // operation-scoped owner/lock proof and native validator PASS are mandatory.
+  if (receipt?.activationStatus !== 'ACTIVATED' || receipt.dependenciesVerified !== false ||
+      receipt.mutationIntentDetected !== true ||
+      receipt.finalDisposition !== 'PASS' || receipt.validatorReceipt?.finalDisposition !== 'PASS' ||
+      receipt.mutationMayProceed !== false ||
       receipt.operationScopedCandidateRecognition !== true ||
       receipt.admissionProvenance?.eligible !== true ||
       receipt.admissionProvenance?.operationId !== OP ||
-      !sameSet(receipt.pathClassification?.normalizedPaths,ORIGINAL_PATHS.map(p=>'/'+p))) stop('NATIVE_EIGHT_PATH_NOT_QUALIFIED');
-  if (receipt.boundaries?.readOnlyPreflight !== true || receipt.boundaries?.mutationAuthorityCreated !== false || receipt.boundaries?.mergeAuthorityCreated !== false) stop('NATIVE_AUTHORITY_BOUNDARY_INVALID');
+      !sameSet(receipt.pathClassification?.normalizedPaths,ORIGINAL_PATHS.map(p=>'/'+p)) ||
+      receipt.pathClassification?.classifications?.length !== ORIGINAL_PATHS.length ||
+      receipt.pathClassification.classifications.some(entry =>
+        entry.classification !== 'REGISTERED_H_EARTH_PATH' || entry.registered !== true))
+    stop('NATIVE_EIGHT_PATH_NOT_QUALIFIED');
+  if (receipt.boundaries?.readOnlyPreflight !== true ||
+      receipt.boundaries?.sourceAuthorityCreated !== false ||
+      receipt.boundaries?.mutationAuthorityCreated !== false ||
+      receipt.boundaries?.mergeAuthorityCreated !== false ||
+      receipt.boundaries?.canonicalizationAuthorityCreated !== false)
+    stop('NATIVE_AUTHORITY_BOUNDARY_INVALID');
   return true;
 }
 export function assertRouterReceipt(receipt) {
   const routes=receipt?.routes;
   if (receipt?.disposition !== 'PASS' || !sameSet(routes?.map(r=>r.path), ORIGINAL_PATHS) ||
-      routes.filter(r=>r.routeClass === 'AUTHENTIC_GEN3096_ADMITTED_TEST_PATH' && r.projectId === 'H_EARTH' && r.disposition === 'PASS').length !== 3 ||
-      receipt.gen3096AdmissionProvenance?.eligible !== true) stop('AI_ROUTER_EIGHT_PATH_NOT_QUALIFIED');
+      routes.some(r => r.projectId !== 'H_EARTH' || r.disposition !== 'PASS' ||
+        r.routeClass !== (r.path.startsWith('tools/')
+          ? 'AUTHENTIC_GEN3096_ADMITTED_TEST_PATH' : 'REGISTERED_PROJECT')) ||
+      receipt.gen3096AdmissionProvenance?.eligible !== true)
+    stop('AI_ROUTER_EIGHT_PATH_NOT_QUALIFIED');
   return true;
 }
 function exec(cmd,args,cwd) {

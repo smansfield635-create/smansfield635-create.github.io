@@ -91,7 +91,9 @@ jobs:
             tree_blob="$(git hash-object "$tree")"
             # Gen3010 retains the separately accepted Gen2854 A08 sector revision.
             # Exact candidate only; historical and unknown heads keep the old guard.
-            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ]; then
+            # Gen3143: the immutable Gen3142 material candidate retains the accepted Gen2854 A08 sector.
+            # Both exceptions are SHA-exact; historical and unknown heads retain the original guard.
+            if [ "$EXACT_TARGET_SHA" = '7e79679f69658e32ebf4c772cdc8ffa59b04fafe' ] || [ "$EXACT_TARGET_SHA" = '7610827598eaadf4fbb92e7ec8b9371c8cd08581' ]; then
               test "$sector_blob" = edd3c2047d3d062eb8d60325410af8ae8f3a6fa5
             else
               test "$sector_blob" = c26247dcb69cb52c968fcd3ef6c2626eaa577d03

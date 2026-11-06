@@ -1,20 +1,20 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-06T09:24:55Z",
+  "generatedAt": "2026-11-06T10:25:03Z",
   "window": {
-    "start": "2026-10-07T09:24:55Z",
-    "end": "2026-11-06T09:24:55Z"
+    "start": "2026-10-07T10:25:03Z",
+    "end": "2026-11-06T10:25:03Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 644,
-        "visits": 644
+        "pageLoads": 634,
+        "visits": 634
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 476,
+        "pageLoads": 466,
         "visits": 420
       },
       {
@@ -48,12 +48,12 @@
         "visits": 40
       },
       {
-        "value": "/release-proof/",
-        "pageLoads": 30,
-        "visits": 30
+        "value": "/instruments/operations-chamber/",
+        "pageLoads": 20,
+        "visits": 20
       },
       {
-        "value": "/instruments/operations-chamber/",
+        "value": "/release-proof/",
         "pageLoads": 20,
         "visits": 20
       },
@@ -74,6 +74,11 @@
       },
       {
         "value": "/lbs-resumes/",
+        "pageLoads": 10,
+        "visits": 10
+      },
+      {
+        "value": "/meet-sean-mansfield/",
         "pageLoads": 10,
         "visits": 10
       },
@@ -143,8 +148,8 @@
     "countryName": [
       {
         "value": "US",
-        "pageLoads": 1504,
-        "visits": 1457
+        "pageLoads": 1494,
+        "visits": 1447
       },
       {
         "value": "CN",
@@ -249,13 +254,13 @@
       },
       {
         "value": "Windows",
-        "pageLoads": 240,
-        "visits": 224
+        "pageLoads": 230,
+        "visits": 214
       },
       {
         "value": "Android",
-        "pageLoads": 217,
-        "visits": 196
+        "pageLoads": 197,
+        "visits": 176
       },
       {
         "value": "MacOSX",
@@ -269,20 +274,20 @@
       },
       {
         "value": "iOS",
-        "pageLoads": 26,
+        "pageLoads": 36,
         "visits": 26
       }
     ],
     "bot": [
       {
         "value": "1",
-        "pageLoads": 841,
-        "visits": 841
+        "pageLoads": 851,
+        "visits": 851
       },
       {
         "value": "0",
-        "pageLoads": 741,
-        "visits": 684
+        "pageLoads": 731,
+        "visits": 674
       }
     ],
     "navigationType": [
@@ -300,8 +305,8 @@
     "deliveryType": [
       {
         "value": "unknown",
-        "pageLoads": 1541,
-        "visits": 1514
+        "pageLoads": 1551,
+        "visits": 1524
       },
       {
         "value": "cache",

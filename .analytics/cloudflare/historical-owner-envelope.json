@@ -1,9 +1,9 @@
 {
   "schema": "DGB_HISTORICAL_OWNER_ENVELOPE_V1",
-  "generatedAt": "2026-11-06T09:24:55Z",
+  "generatedAt": "2026-11-06T10:25:03Z",
   "window": {
-    "start": "2026-08-08T09:24:55Z",
-    "end": "2026-11-06T09:24:55Z"
+    "start": "2026-08-08T10:25:03Z",
+    "end": "2026-11-06T10:25:03Z"
   },
   "knownOwnerFootprint": {
     "country": "US",
@@ -17,22 +17,22 @@
   },
   "interpretation": "Upper bound only: traffic outside this intersection is definitely not from the three known owner devices; traffic inside remains owner-compatible, not owner-proven.",
   "candidate": {
-    "pageLoads": 4030,
-    "visits": 1180,
+    "pageLoads": 4050,
+    "visits": 1200,
     "byDevice": {
       "tablet": {
-        "pageLoads": 4030,
-        "visits": 1180
+        "pageLoads": 4050,
+        "visits": 1200
       }
     },
     "byPath": {
       "/": {
-        "pageLoads": 970,
-        "visits": 710
+        "pageLoads": 960,
+        "visits": 700
       },
       "/showroom/globe/audralia/": {
-        "pageLoads": 170,
-        "visits": 20
+        "pageLoads": 160,
+        "visits": 10
       },
       "/governance/": {
         "pageLoads": 60,
@@ -94,11 +94,19 @@
         "pageLoads": 20,
         "visits": 0
       },
-      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/": {
+      "/compass-isolated-clone/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/preview/h-earth/c3/1d45379f81ea4089e9c5f3d7d9688e702be9add3/snapshot/showroom/globe/audralia/": {
         "pageLoads": 20,
         "visits": 20
       },
       "/compass-composite/": {
+        "pageLoads": 20,
+        "visits": 20
+      },
+      "/compass-isolated-clone-gen345/": {
         "pageLoads": 10,
         "visits": 10
       },
@@ -313,8 +321,8 @@
         "visits": 0
       },
       "(none)": {
-        "pageLoads": 520,
-        "visits": 520
+        "pageLoads": 540,
+        "visits": 540
       },
       "raw.githack.com": {
         "pageLoads": 10,

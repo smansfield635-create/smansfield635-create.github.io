@@ -59,3 +59,35 @@ test('selection overlay stays beneath the existing Copy report control and consu
  el.listeners.pointerup(event);await new Promise(resolve=>setImmediate(resolve));
  assert.equal(f.ui.getLastReceipt().selection.sampleCount,1);assert.equal(f.ui.isActive(),false);
 });
+
+test('contour pointer overflow fails closed without silently dropping bends or overwriting report',async()=>{
+ const f=fixture();f.ui.mount();f.ui.begin('point');await f.ui.complete([{clientX:225,clientY:140}]);const previous=f.ui.getLastReceipt();
+ f.ui.begin('contour');const overlay=f.doc.body.children.find(n=>n.attributes?.['data-h-earth-manual-selection-overlay']!==undefined&&!n.removed);
+ const ev=(clientX,clientY)=>({pointerId:14,clientX,clientY,stopPropagation(){},preventDefault(){}});
+ overlay.listeners.pointerdown(ev(35,50));
+ for(let i=0;i<80;i++)overlay.listeners.pointermove(ev(36+i,52+i%30));
+ overlay.listeners.pointerup(ev(125,65));
+ assert.equal(f.ui.isActive(),false);assert.deepEqual(f.ui.getLastReceipt(),previous);
+ assert.equal(overlay.removed,true);
+ const output=f.ui.mount().children.find(n=>n.attributes?.role==='status');
+ assert.match(output.textContent,/SELECTION_POINTS_LIMIT/);
+});
+test('keyboard-only point selection moves focusable cursor and captures same frame',async()=>{
+ const f=fixture();f.ui.mount();f.ui.begin('point');const overlay=f.doc.body.children.find(n=>n.attributes?.['data-h-earth-manual-selection-overlay']!==undefined);
+ assert.equal(overlay.tabIndex,0);assert.match(overlay.attributes['aria-label'],/Arrow keys/);
+ const key=k=>f.events.get('keydown')({key:k,preventDefault(){},stopPropagation(){}});
+ key('ArrowRight');key('Enter');await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(f.ui.isActive(),false);assert.equal(f.ui.getLastReceipt()?.selection.sampleCount,1);
+ assert.equal(f.ui.getLastReceipt()?.selection.samples[0].topLeftX,424);
+});
+test('keyboard-only rectangle and contour support bounded completion and cancellation',async()=>{
+ const f=fixture();f.ui.mount();
+ const key=k=>f.events.get('keydown')({key:k,preventDefault(){},stopPropagation(){}});
+ f.ui.begin('rectangle');key('Enter');key('ArrowRight');key('ArrowDown');key('Enter');
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(f.ui.getLastReceipt()?.selection.kind,'rectangle');assert.equal(f.ui.isActive(),false);
+ f.ui.begin('contour');key('Enter');key('ArrowRight');key('Enter');key('ArrowDown');key('Enter');key(' ');
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(f.ui.getLastReceipt()?.selection.kind,'contour');assert.equal(f.ui.isActive(),false);
+ f.ui.begin('point');key('Escape');assert.equal(f.ui.isActive(),false);
+});

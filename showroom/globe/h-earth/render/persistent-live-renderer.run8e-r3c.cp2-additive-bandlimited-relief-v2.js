@@ -1103,7 +1103,18 @@ void main(){
       );
       float identityWeight=inlandIdentity*
         (1.0-protectedGrove)*identityContrast;
-      palette=mix(palette,identityBase,identityWeight);
+      // A03/A04: the current textured earth remains the common substrate.
+      vec3 ecologicalSoilSubstrate=palette;
+      float ecologicalIdentityLuma=max(
+        dot(identityBase,vec3(0.2126,0.7152,0.0722)),0.001
+      );
+      vec3 ecologicalIdentityHue=clamp(
+        identityBase/ecologicalIdentityLuma,vec3(0.60),vec3(1.60)
+      );
+      vec3 ecologicalIdentityTint=clamp(
+        mix(vec3(1.0),ecologicalIdentityHue,0.24),
+        vec3(0.86),vec3(1.14)
+      );
       // H_EARTH_BROAD_GROUNDCOVER_V1_BEGIN
       // Low vegetation reads through the existing ground surface at every
       // distance. Reuse the resident habitat signals and texture grain;
@@ -1146,14 +1157,23 @@ void main(){
         (1.0-groundcoverMoisture)*(0.18+0.28*mesoField)+
         slopeResponse*0.20,0.0,0.65
       );
-      vec3 groundcoverTone=mix(
-        vec3(0.110,0.118,0.075),vec3(0.075,0.090,0.055),groundcoverMoisture
+      // Ecological pigment modifies local earth rather than painting olive.
+      vec3 ecologicalGroundcoverTint=mix(
+        vec3(0.965,0.975,0.945),vec3(0.890,0.960,0.900),groundcoverMoisture
       );
-      groundcoverTone=mix(
-        groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
+      ecologicalGroundcoverTint=mix(
+        ecologicalGroundcoverTint,vec3(1.015,0.990,0.965),groundcoverDry
       );
-      groundcoverTone*=0.88+0.24*materialVariation;
-      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      vec3 ecologicalIdentityTarget=ecologicalSoilSubstrate*ecologicalIdentityTint;
+      vec3 ecologicalGroundcoverTarget=ecologicalSoilSubstrate*ecologicalGroundcoverTint;
+      // Nonnegative partition of unity: positive substrate share at every
+      // eligible pixel, including overlap; original supports stay unchanged.
+      float ecologicalDenominator=1.0+identityWeight+groundcoverWeight;
+      palette=(
+        ecologicalSoilSubstrate+
+        identityWeight*ecologicalIdentityTarget+
+        groundcoverWeight*ecologicalGroundcoverTarget
+      )/ecologicalDenominator;
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END
@@ -1304,7 +1324,20 @@ void main(){
     float foothillDry=max(foothillDryAmount(vWorldPosition,uPlanetRadius),hillsideDry(vWorldPosition));
     vec3 habitatSoil=landscapeCoverPalette(vWorldPosition.xz,foothillDry)*.72;
     float habitatColorCoverage=clamp(habitatCoverage+habitatMaterialProtection(vWorldPosition.xz)*(habitatMaterialCoverage-habitatCoverage),0.0,1.0);
-    base=mix(base,habitatSoil,habitatColorCoverage*.68);
+    // A03/A04: retain the resident soil grain through later habitat pigment.
+    float ecologicalHabitatLuma=max(
+      dot(habitatSoil,vec3(0.2126,0.7152,0.0722)),0.001
+    );
+    vec3 ecologicalHabitatHue=clamp(
+      habitatSoil/ecologicalHabitatLuma,vec3(0.60),vec3(1.60)
+    );
+    vec3 ecologicalHabitatTint=clamp(
+      mix(vec3(1.0),ecologicalHabitatHue,0.20),
+      vec3(0.88),vec3(1.12)
+    );
+    float ecologicalHabitatWeight=clamp(habitatColorCoverage*0.68,0.0,1.0);
+    base=(base+ecologicalHabitatWeight*(base*ecologicalHabitatTint))
+      /(1.0+ecologicalHabitatWeight);
     terrainRoughnessForLighting=mix(terrainRoughnessForLighting,.94,habitatCoverage*.3);
     // Front-bank contrast follows the actual exposed-water contact field;
     // the geographic window fades well before the existing oasis bounds.

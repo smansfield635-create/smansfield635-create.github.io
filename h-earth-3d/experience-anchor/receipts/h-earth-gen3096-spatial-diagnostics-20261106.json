@@ -1,0 +1,187 @@
+{
+  "schema": "H_EARTH_EXPERIENCE_ANCHOR_ACCEPTANCE_RECEIPT_v1",
+  "operationId": "H_EARTH_GEN3096_INDEPENDENT_REVIEW_TWO_DEFECT_REPAIR_20261106_001",
+  "authorityGeneration": 3138,
+  "anchorId": "H_EARTH_GROUND_EXPERIENCE_VIDEO_20260814_001",
+  "anchorSha256": "7757fb4fe731456b3058ec595369133f5c2136c99b282eb6b4df108600bca573",
+  "reviewedAgainstAnchor": true,
+  "disposition": "PASS",
+  "comparisonBaseline": "da3519740ef8e5a90556cea5c163ffa2e75109c4",
+  "reviewMode": "BOUNDED_REVIEW_REPAIR_KEYBOARD_SELECTION_AND_EXPLICIT_CONTOUR_OVERFLOW_WITH_UNCHANGED_WORLD_CARRY_FORWARD",
+  "visualEvidence": [
+    "h-earth-3d/experience-anchor/H_EARTH_EXPERIENCE_ANCHOR_v1.contact-sheet.svg",
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json",
+    "h-earth-3d/experience-anchor/evidence/H_EARTH_ARRIVAL_LOADER_RESTORATION_20260920_001.json"
+  ],
+  "interactionEvidence": [
+    "tools/h-earth-spatial-selection-ui.test.mjs",
+    "tools/h-earth-spatial-evidence.test.mjs",
+    "h-earth-3d/experience-anchor/evidence/H_EARTH_ARRIVAL_LOADER_RESTORATION_20260920_001.json"
+  ],
+  "continuityEvidence": [
+    "h-earth-3d/experience-anchor/evidence/h-earth-full-environment-live-promotion-20261003.json",
+    "showroom/globe/h-earth/vegetation-prototype/route.js"
+  ],
+  "invariants": {
+    "SAME_CANONICAL_WORLD_IDENTITY": true,
+    "PLANETARY_TO_REGIONAL_TO_GROUND_CONTINUITY": true,
+    "CONTINUOUS_TERRAIN_AND_GEOGRAPHIC_SPACE": true,
+    "EMBODIED_LOCAL_GROUND_EXPERIENCE": true,
+    "DIRECT_LOOK_AND_TRAVEL_INTERACTION": true,
+    "MINIMAL_INTERFACE_INTRUSION_OVER_WORLD": true,
+    "TERRAIN_COAST_ELEVATION_AND_HORIZON_READ_AS_ONE_NAVIGABLE_SURFACE": true,
+    "NO_PARALLEL_OR_DUPLICATE_H_EARTH_PRODUCT": true,
+    "NO_DASHBOARD_MAP_APP_OR_CARD_UI_SUBSTITUTION_FOR_WORLD_EXPERIENCE": true,
+    "GLOBE_IS_HIGHER_ALTITUDE_EXPRESSION_OF_THE_SAME_WORLD": true,
+    "REGION_ENTRY_MUST_NOT_CREATE_A_VISUALLY_OR_INTERACTIONALLY_UNRELATED_PRODUCT": true
+  },
+  "experienceFiles": [
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/loading-screen.v1.js",
+      "sha256": "f044923bcad78e3b43932b2d41bdb38e97d185d57cdab4d6a55d36fa65ff30ec"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/route.js",
+      "sha256": "117f493aed00034a0141015e8db38f5fbdd68f7f23e12d73c975993895c61b64"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/spatial-evidence.v1.js",
+      "sha256": "9a6908f673d5d2dd1d100f3a3099e3d33979620f22fb119dd53696730cc83737"
+    },
+    {
+      "path": "showroom/globe/h-earth/vegetation-prototype/spatial-selection-ui.v1.js",
+      "sha256": "23b9639df69cb931cf0d6d3d129d6ef64080dc404ae2916b5ee224ad029ef7a5"
+    }
+  ],
+  "reviewBasis": {
+    "scope": "Existing product PR #7242 only; four experience-source files and two tests. This is a limited same-world interface extension, not a change to world, terrain, shader, renderer, navigation classifier, or globe.",
+    "newlyObserved": [
+      "Run 42244364134 qualified exact unchanged source 09967b1caa6401a91b392f4ad80f5d0d55a09806 with 41/41 native Node tests and real Chromium WebGL world entry; the runner completed SUCCESS.",
+      "Entered-world screenshot shows H-Earth terrain, horizon, vegetation and direct navigation preserved with an opt-in diagnostic toolbar; no replacement dashboard or separate world.",
+      "Copy loading report exposes exact CPU-submitted frame identity; point, contour and rectangle selections returned 1, 13 and 9 bounded samples tied to the same frame.",
+      "Escape and Cancel returned from selection; the corrected post-cancel drag produced 36 accepted navigation proposals and new submitted-frame evidence.",
+      "Exact four changed experience files were read from immutable candidate commit; SHA-256 digests are recorded above. The two accompanying test files are not experience-surface paths.",
+      "Gen3138 exactly two-file review repair commit e0bc1e8f6d0fb843d4a6f87900c78ad6d2ceef69 changes only the existing spatial-selection UI and focused tests; the original world, Copy report mounting, frame bridge, renderer and navigation source remain unchanged.",
+      "The two source-confirmed Copilot review findings are addressed: pointer contour overflow now rejects with SELECTION_POINTS_LIMIT rather than silently discarding bends; focusable keyboard cursor supports arrow movement, Enter point/corner selection, Space contour completion and Escape cancellation.",
+      "An isolated JavaScript V8 execution of exact fetched source and test bodies passed all 12 focused selection tests, including pointer-overflow and keyboard point/rectangle/contour cases. This is not native Node or new Chromium pixel qualification.",
+      "Following independent Copilot re-review #5805600006, document-wide keyboard handling was narrowed to the focused selection overlay, preserving native Enter on Cancel/report controls and global Escape. Focused JavaScript V8 execution of exact repaired source and 13 tests: 13/13 PASS; not a native Node or physical Android assertion."
+    ],
+    "inheritedUnchanged": [
+      "Previously accepted H-Earth Experience Anchor and full-environment evidence establish the unchanged world, landscape, route and continuity; the Gen3096 source diff does not modify those runtime assets.",
+      "The repository Experience Anchor visual proxy and original anchor video digest remain unchanged.",
+      "Earlier unchanged-world release evidence supports planetary, regional and ground continuity; Gen3096 adds bounded inspection controls to the same route rather than introducing a new environment."
+    ],
+    "limitations": [
+      "No physical Android device, touchscreen, GPU hardware or owner physical-device usability PASS is claimed for this candidate.",
+      "Chromium headless denied OS clipboard write: report text was presented and selectable for manual copy; real Android clipboard behavior is not established.",
+      "CPU-submitted frames are not GPU pixel-first-hit or original-owner-photo attribution; materials, primitives and first-hit remain UNKNOWN and GPU diagnostic passes were zero.",
+      "The final optional screenshot attempt timed out after mandatory navigation assertions passed; five prior screenshots and native TAP were retained.",
+      "No owner candidate KEEP, separate independent review approval, merge authorization, production deployment, or live exact-head verification is claimed by this evidence receipt.",
+      "The Gen3138 focus repair was not itself exercised by a physical Android browser; the prior full Chromium artifact is exact for the pre-repair source, not proof of the new keyboard controls on device.",
+      "Native Node execution and fresh independent Copilot review are separate release checks and are not established by the isolated V8 focused execution.",
+      "The focus-boundary follow-up has not been separately qualified by physical Android or a new full Chromium run; original browser evidence remains attached only to the prior unchanged instrument portion."
+    ],
+    "links": {
+      "productPR": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7242",
+      "qualificationPR": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7244",
+      "qualifierRun": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/42244364134",
+      "artifact": "https://github.com/smansfield635-create/smansfield635-create.github.io/actions/runs/42244364134/artifacts/13517742660",
+      "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6911#issuecomment-6691928466",
+      "priorAcceptedAnchorReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/h-earth-3d/experience-anchor/receipts/h-earth-bounded-loader-progress-20261004.json",
+      "repairReview": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7242#pullrequestreview-5805149612",
+      "repairAdmission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6911#issuecomment-6692865540",
+      "followUpKeyboardReview": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7242#discussion_r4496523806"
+    }
+  },
+  "qualification": {
+    "sourceCommit": "09967b1caa6401a91b392f4ad80f5d0d55a09806",
+    "toolingCommit": "a49a5f13a2582036f04b7fc63fc6504cd424c3f6",
+    "nativeTests": {
+      "passed": 41,
+      "total": 41,
+      "failed": 0
+    },
+    "browser": {
+      "chromium": true,
+      "worldEntry": true,
+      "copyReportGenerated": true,
+      "pointSamples": 1,
+      "contourSamples": 13,
+      "rectangleSamples": 9,
+      "selectionFrameId": "cpu-submit:8:nav:3",
+      "escapeAndCancel": true,
+      "postCancelNavigationProposals": 36,
+      "postCancelNavigation": true,
+      "javaScriptErrors": 0,
+      "requestFailures": 0,
+      "osClipboardWriteVerified": false,
+      "graphicsAttribution": "UNKNOWN"
+    },
+    "artifact": {
+      "id": 13517742660,
+      "sha256": "309f6fffd7b4029c21b66adf7b2b4821235846abe8ecb3c948ad9cfda612b1e5",
+      "bytes": 4500389
+    },
+    "screenshots": [
+      {
+        "file": "before-entry.png",
+        "sha256": "6559928e70ec7db574d6a67fe6773a574afbdd60252ff6ded9619f16b4ed2774"
+      },
+      {
+        "file": "entered-with-toolbar.png",
+        "sha256": "f85f90eda9265341de9c2d7df3e1d26d4dd74b2c9ebaeb60ecfa9ea9f5b8efe0"
+      },
+      {
+        "file": "after-point.png",
+        "sha256": "5e3f5397215c855469154b26531b470c976521b49151d1f8f2c4737d84ad2a04"
+      },
+      {
+        "file": "after-contour.png",
+        "sha256": "79a315140c60ab10202e3d6af378b3d1178f608c3625147e20ce080e5af8f6f7"
+      },
+      {
+        "file": "after-rectangle.png",
+        "sha256": "cd2a26d860e6f0b070c467967ab56ad682287757fb7f04cdc8d265e0646f7f3c"
+      }
+    ],
+    "postReviewRepair": {
+      "uiCommit": "8961622aaf8a4b0c4f8ca70f12448f361355f11c",
+      "uiSha256": "23b9639df69cb931cf0d6d3d129d6ef64080dc404ae2916b5ee224ad029ef7a5",
+      "sourceChangedOnly": [
+        "showroom/globe/h-earth/vegetation-prototype/spatial-selection-ui.v1.js",
+        "tools/h-earth-spatial-selection-ui.test.mjs"
+      ],
+      "testExecution": "EXACT_RETRIEVED_SOURCE_V8_FOCUSED_TESTS",
+      "focusedTests": {
+        "passed": 13,
+        "total": 13,
+        "failed": 0
+      },
+      "nativeNodeRetestVerified": false,
+      "newChromiumRetestVerified": false,
+      "physicalAndroidTested": false,
+      "copilotReviewIssuesAddressed": [
+        "PRRT_kwDORCB4Ms60pKDl",
+        "PRRT_kwDORCB4Ms60pKED"
+      ],
+      "pendingExactCommitIdentity": true
+    }
+  },
+  "physicalAcceptancePerformed": false,
+  "physicalAndroidQualified": false,
+  "ownerKeep": false,
+  "independentReviewApprovalGranted": false,
+  "releaseAuthorized": false,
+  "publicationChecksPassed": false,
+  "publicationAuthorityCreated": false,
+  "preRepairCandidateHead": "09967b1caa6401a91b392f4ad80f5d0d55a09806",
+  "repairedUISourceCommit": "e0bc1e8f6d0fb843d4a6f87900c78ad6d2ceef69",
+  "focusBoundaryFollowup": {
+    "preFollowupHead": "8961622aaf8a4b0c4f8ca70f12448f361355f11c",
+    "newUISha256": "23b9639df69cb931cf0d6d3d129d6ef64080dc404ae2916b5ee224ad029ef7a5",
+    "reviewId": 5805600006,
+    "regressionTests": 13,
+    "testEnvironment": "V8_SOURCE_AND_TEST_EXECUTION_NOT_NATIVE_NODE",
+    "physicalAndroidTested": false
+  }
+}

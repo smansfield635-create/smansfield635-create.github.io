@@ -6,6 +6,8 @@ import {installHEarthRun8ER3D2PointerTouchIntake,resolveHEarthNavigationBoundary
 
 import {createFramePresenter} from '../render/performance-scheduling.v1.js?rev=gen2795-performance-v1';
 import {createHEarthLoadingScreen} from './loading-screen.v1.js?rev=gen2815-fast-start-v1';
+import {createHEarthCopyReportFrameBridge} from './spatial-evidence.v1.js';
+import {createHEarthSpatialSelectionUI} from './spatial-selection-ui.v1.js';
 
 import {createLoadingMetrics,summarizeTransfers} from './loading-metrics.v2.js';
 
@@ -27,6 +29,8 @@ const delay=milliseconds=>new Promise(resolve=>setTimeout(resolve,milliseconds))
 const control=Object.freeze({x:-139.40267987050615,z:-194.5,radius:2});
 let renderer=null,intake=null,presenter=null,sequence=0,replay=null,preparation=null,interactiveReady=false;
 let diagnosticTourMoving=false,terminalFailure=null;
+const spatialFrameBridge=createHEarthCopyReportFrameBridge({sourceIdentity:{sourceBaseline,buildIdentifier:'gen2873-prepared-binding-repair-v1'}});
+let spatialSelection=null;
 const loadingMetrics=createLoadingMetrics({now:()=>performance.now()-started});
 let assetMetricsDirty=false,resourceBufferFullEvents=0;
 performance.addEventListener?.('resourcetimingbufferfull',()=>resourceBufferFullEvents++);
@@ -66,6 +70,7 @@ function presentObserved(state){
   const packet=packetFor(state),start=performance.now();
   renderer.renderFrame(packet);renderFrameCallCount++;
   renderer.presentColorFrame();gpuFramebufferPresentationCount++;
+  spatialFrameBridge.rememberSubmittedFrame({packet,navigationState:state});
   const frame={frameSequence:sequence,navigationSequence:state.sequence,cameraPosition:{...packet.camera.position},cpuSubmitMilliseconds:performance.now()-start};
   frames.push(frame);if(frames.length>64)frames.shift();
   if(timing.firstFrameMilliseconds===null)timing.firstFrameMilliseconds=performance.now()-started;
@@ -144,6 +149,8 @@ loader?.setReportProvider?.(()=>{
     routeTiming:{...timing},rendererStartupTiming:resource?.rendererStartupTiming??null,vegetationTiming:vegetation?.timing??null,
     startupDiagnostics:{rendererTimingAvailable:!!resource?.rendererStartupTiming,vegetationResidency:resource?.vegetationResidency?.timing??null},
     transferSummary:{matchedCount:transfers.length,displayedCount:Math.min(80,transfers.length),transferBytes:transfers.reduce((n,e)=>n+e.transferSize,0),encodedBytes:transfers.reduce((n,e)=>n+e.encodedBodySize,0),invalidTimingCount:transfers.filter(e=>e.duration<0).length,scope:'Matched resource entries only; duration includes network and scheduling, not CPU decode; zero transfer may indicate cache.'},
+    spatialFrameEvidence:spatialFrameBridge.getCopyReportFrameEvidence({canvas,rendererReceipt:resource}),
+    spatialManualSelection:spatialSelection?.getLastReceipt()??null,
     userAgent:navigator.userAgent,viewport:{width:canvas.clientWidth,height:canvas.clientHeight,pixelRatio:devicePixelRatio},
     resourceTransfers:transfers.map(e=>({
       path:new URL(e.name,location.href).pathname,startMilliseconds:e.startTime,durationMilliseconds:e.duration>=0?e.duration:null,timingValid:e.duration>=0,
@@ -163,11 +170,15 @@ function markReady(){
   if(terminalFailure)return;
   root.dataset.run8eReady='true';root.dataset.worldFirstFrameReady='true';root.dataset.singleOwnerPrototype=diagnosticReplay?'captured':'manual-ready';
   status.textContent=diagnosticReplay?'Isolated comparison captured · physical-device review remains separate.':'Ready · Drag to look · Two-finger slide or mouse wheel to move · Pinch to zoom';
+  if(!diagnosticReplay&&!spatialSelection&&loader?.attachReportControl){
+    spatialSelection=createHEarthSpatialSelectionUI({canvas,frameBridge:spatialFrameBridge,rendererReceipt:resources,enabled:()=>loader.getReceipt().mode==='entered'&&interactiveReady&&!terminalFailure});
+    loader.attachReportControl(spatialSelection.mount());
+  }
   window.dispatchEvent(new CustomEvent('h-earth-run8e-ready',{detail:{type:'H_EARTH_RUN8E_READY',prototype:'single-owner-v1',mode:diagnosticReplay?'diagnostic-replay':'manual-public',timestamp:new Date().toISOString()}}));
 }
-function failRoute(error){if(terminalFailure)return;terminalFailure=error;interactiveReady=false;presenter?.cancel();renderer?.disposeCorrectedMaterial();canvas.style.pointerEvents='none';loader?.fail(error);root.dataset.run8eReady='false';root.dataset.worldFirstFrameReady='false';root.dataset.run8eError='true';root.dataset.singleOwnerPrototype='failed';status.textContent=error.message;}
+function failRoute(error){if(terminalFailure)return;terminalFailure=error;interactiveReady=false;spatialSelection?.dispose();presenter?.cancel();renderer?.disposeCorrectedMaterial();canvas.style.pointerEvents='none';loader?.fail(error);root.dataset.run8eReady='false';root.dataset.worldFirstFrameReady='false';root.dataset.run8eError='true';root.dataset.singleOwnerPrototype='failed';status.textContent=error.message;}
 
-window.addEventListener('pagehide',event=>{if(!event.persisted){presenter?.cancel();renderer?.disposeCorrectedMaterial();}});
+window.addEventListener('pagehide',event=>{if(!event.persisted){spatialSelection?.dispose();presenter?.cancel();renderer?.disposeCorrectedMaterial();}});
 
 canvas.addEventListener('webglcontextlost',()=>failRoute(Error('GRAPHICS_CONTEXT_LOST:Reload to create a new graphics session.')));
 

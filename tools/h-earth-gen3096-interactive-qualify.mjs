@@ -187,7 +187,7 @@ try{
   const newBounds=await canvas.boundingBox();
   const nx=newBounds.x+newBounds.width*.35,ny=newBounds.y+newBounds.height*.4;
   const beforeResume=await navigationObservation('POST_CANCEL_BEFORE_DRAG');
-  await heldPointerLook(nx,ny,70,12);
+  await heldPointerLook(nx,ny,newBounds.width*.10,12);
   const afterResume=await navigationObservation('POST_CANCEL_AFTER_HELD_DRAG');
   assert(acceptedSince(beforeResume,afterResume)&&cameraChanged(beforeResume,afterResume),
     'POST_CANCEL_NAVIGATION_INPUT_NOT_ACCEPTED');

@@ -17596,6 +17596,50 @@
       "scopeHash": "a63f6d7c325358b61f4a8732d9e454a02b6c8479e93ccb4278870dfa655bca89",
       "state": "ADMITTED_LOCKED"
     },
+    "a70b3135ff3356257935e1a255707d44545da1e51cb68b35ca3eddec8436f040": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "624c220fcd6f0d7c016cd1edf872eb3102efa523",
+          "lockGeneration": 3141,
+          "lockScope": "SHOWROOM_GLOBE:ZIONTS:SEVERED_WORLD_HERO_FORMATION_20261106",
+          "operationId": "ZIONTS_SEVERED_WORLD_HERO_FORMATION_20261106_001",
+          "procedureLocatorDigest": "b28ef21f304508fe7eb2036e34b18cc30b3321dfacc20a8fe3659783abbb84c7",
+          "requestDigest": "17475e27c309325f781edcf1f442092ba41f4de2b7608647bf6d01ccb285e2e1",
+          "scopeHash": "a70b3135ff3356257935e1a255707d44545da1e51cb68b35ca3eddec8436f040"
+        },
+        "bindingDigest": "be4f56c0d92f2838b5416e96adee2d2bc15410803550face8bbecf7c442bcce0",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "8fe3099432bc6a8b1dac6767e9f1c9f8cbfb95a5e3129d68fd9c3fd42ff8b125",
+          "commentId": 6697237898,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 3461,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42303648586,
+          "workflowSha": "624c220fcd6f0d7c016cd1edf872eb3102efa523"
+        },
+        "lineageAnchorCommitSha": "dad3fb28397aa2b987582d6c61ec39b565057df0",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "624c220fcd6f0d7c016cd1edf872eb3102efa523",
+      "lockGeneration": 3141,
+      "lockScope": "SHOWROOM_GLOBE:ZIONTS:SEVERED_WORLD_HERO_FORMATION_20261106",
+      "operationId": "ZIONTS_SEVERED_WORLD_HERO_FORMATION_20261106_001",
+      "procedureLocatorDigest": "b28ef21f304508fe7eb2036e34b18cc30b3321dfacc20a8fe3659783abbb84c7",
+      "released": false,
+      "requestDigest": "17475e27c309325f781edcf1f442092ba41f4de2b7608647bf6d01ccb285e2e1",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "a70b3135ff3356257935e1a255707d44545da1e51cb68b35ca3eddec8436f040",
+      "state": "ADMITTED_LOCKED"
+    },
     "a726af44bc23c1627fa7bc24a626c3e71fbce9dde4cb835abd11e1a11e368112": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -27149,7 +27193,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3140,
+  "lockGeneration": 3141,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

@@ -35,6 +35,45 @@ async function report(){
   assert.equal(obj.schema,'GRATITUDE_LOADING_REPORT_v1');
   return obj;
 }
+// Observe genuine H-Earth input and framebuffer receipts, never synthetic PASS values.
+async function navigationObservation(stage){
+  const observed=await page.evaluate(()=>{
+    const api=window.H_EARTH_RUN8E_PUBLIC_ROUTE;
+    const intake=api?.getIntakeReceipt?.();
+    const gpu=api?.getLiveGpuReceipt?.();
+    const s=intake?.currentNavigationState;
+    return {
+      loaderMode:document.querySelector('#h-earth-loading-screen')?.dataset.mode??null,
+      counters:intake?.counters?{
+        pointerDownCount:intake.counters.pointerDownCount,
+        pointerMoveCount:intake.counters.pointerMoveCount,
+        pointerUpCount:intake.counters.pointerUpCount,
+        wheelEventCount:intake.counters.wheelEventCount,
+        navigationProposalCount:intake.counters.navigationProposalCount,
+        acceptedNavigationProposalCount:intake.counters.acceptedNavigationProposalCount,
+        activeIntentFrameCount:intake.counters.activeIntentFrameCount
+      }:null,
+      pose:s?{sequence:s.sequence,yaw:s.yawDegrees,pitch:s.pitchDegrees,
+        x:s.position?.x,z:s.position?.z}:null,
+      gpuFramebufferPresentationCount:gpu?.counters?.gpuFramebufferPresentationCount??null,
+      presentedInputFrame:gpu?.inputPresentationReadiness?.firstInputPresentedFrame??null
+    };
+  });
+  record(stage,observed);
+  assert(observed.counters&&observed.pose,'INPUT_RECEIPT_UNAVAILABLE');
+  return observed;
+}
+const cameraChanged=(a,b)=>a.pose.yaw!==b.pose.yaw||a.pose.pitch!==b.pose.pitch||
+  a.pose.x!==b.pose.x||a.pose.z!==b.pose.z;
+const acceptedSince=(a,b)=>b.counters.acceptedNavigationProposalCount>a.counters.acceptedNavigationProposalCount;
+const presentedSince=(a,b)=>b.gpuFramebufferPresentationCount>a.gpuFramebufferPresentationCount;
+async function heldPointerLook(x,y,distance,steps){
+  await page.mouse.move(x,y);
+  await page.mouse.down();
+  await page.mouse.move(x+distance,y,{steps});
+  await wait(650); // Real input held across requestAnimationFrame ticks.
+  await page.mouse.up();
+}
 async function select(kind){
   await page.locator('[data-selection-kind="'+kind+'"]').click({timeout:15000});
   const overlay=page.locator('[data-h-earth-manual-selection-overlay]');
@@ -90,9 +129,33 @@ try{
   const bounds=await canvas.boundingBox();
   assert(bounds&&bounds.width>100&&bounds.height>100,'WORLD_CANVAS_NOT_VISIBLE');
   await capture('before-entry');
+  const beforeReport=await report();
+  record('STAGE03_REPORT_BEFORE_GESTURE',{mode:beforeReport.mode,entryTiming:beforeReport.entryTiming,
+    frameId:beforeReport.details?.spatialFrameEvidence?.evidence?.frameId??null});
+  const beforeInput=await navigationObservation('INPUT_BEFORE_GESTURE');
   const x=bounds.x+bounds.width*.4,y=bounds.y+bounds.height*.42;
-  await page.mouse.move(x,y);await page.mouse.down();
-  await page.mouse.move(x+80,y,{steps:15});await page.mouse.up();
+  await heldPointerLook(x,y,80,15);
+  let afterInput=await navigationObservation('INPUT_AFTER_HELD_DRAG');
+  if(!cameraChanged(beforeInput,afterInput)||!acceptedSince(beforeInput,afterInput)){
+    record('NATIVE_WHEEL_FALLBACK_AFTER_NO_MOVEMENT',{reason:'HELD_DRAG_NO_ACCEPTED_CAMERA_CHANGE'});
+    await page.mouse.wheel(0,-210);await wait(650);
+    afterInput=await navigationObservation('INPUT_AFTER_NATIVE_WHEEL_FALLBACK');
+  }
+  assert(afterInput.counters.navigationProposalCount>beforeInput.counters.navigationProposalCount,
+    'NO_INPUT_PROPOSALS_RECORDED');
+  assert(acceptedSince(beforeInput,afterInput)&&cameraChanged(beforeInput,afterInput),
+    'NO_ACCEPTED_CAMERA_CHANGE');
+  await page.waitForFunction((initialCount)=>{
+    const gpu=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt?.();
+    return (gpu?.counters?.gpuFramebufferPresentationCount??0)>initialCount &&
+      gpu?.inputPresentationReadiness?.firstInputPoseRenderedMilliseconds!=null;
+  },beforeInput.gpuFramebufferPresentationCount??0,{timeout:45000});
+  const presentedInput=await navigationObservation('INPUT_AFTER_CHANGED_FRAME_PRESENTED');
+  const afterReport=await report();
+  record('STAGE03_REPORT_AFTER_GESTURE',{mode:afterReport.mode,entryTiming:afterReport.entryTiming,
+    frameId:afterReport.details?.spatialFrameEvidence?.evidence?.frameId??null});
+  assert(presentedSince(beforeInput,presentedInput)&&afterReport.entryTiming?.firstChangedViewSubmitted!=null,
+    'NO_FRAME_PRESENTATION_RECORDED');
   await page.waitForFunction(()=>{
     const b=document.querySelector('[data-enter]');
     return !!b&&!b.disabled;
@@ -123,7 +186,11 @@ try{
   record('BUTTON_CANCEL_RESTORES_NAVIGATION');
   const newBounds=await canvas.boundingBox();
   const nx=newBounds.x+newBounds.width*.35,ny=newBounds.y+newBounds.height*.4;
-  await page.mouse.move(nx,ny);await page.mouse.down();await page.mouse.move(nx+70,ny,{steps:12});await page.mouse.up();
+  const beforeResume=await navigationObservation('POST_CANCEL_BEFORE_DRAG');
+  await heldPointerLook(nx,ny,70,12);
+  const afterResume=await navigationObservation('POST_CANCEL_AFTER_HELD_DRAG');
+  assert(acceptedSince(beforeResume,afterResume)&&cameraChanged(beforeResume,afterResume),
+    'POST_CANCEL_NAVIGATION_INPUT_NOT_ACCEPTED');
   const moved=await report();
   const movedFrame=moved.details?.spatialFrameEvidence?.evidence?.frameId;
   assert(movedFrame&&movedFrame!==frame.evidence.frameId,'NAVIGATION_DID_NOT_ADVANCE_SUBMITTED_FRAME');

@@ -1422,3 +1422,71 @@ jobs:
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
           test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 10b5623b09c552930e54a1c1071c37535a831971
           (cd source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate && python3 -m unittest test_mesh_gate -v)
+
+  # Gen3134: source-bound one-candidate real-browser UI qualification.
+  # This job runs only on the admitted tooling branch; never replays historical
+  # woodland/seam test jobs or permits the product SHA to be overridden.
+  gen3096-exact-interactive:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.ref == 'h-earth/gen3096-exact-interactive-qualification-20261106' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout admitted qualifier from exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+          sparse-checkout: |
+            tools
+            .github/workflows
+
+      - name: Checkout immutable Gen3096 diagnostic candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 09967b1caa6401a91b392f4ad80f5d0d55a09806
+          path: candidate
+          fetch-depth: 1
+          sparse-checkout: |
+            showroom/globe/h-earth
+            h-earth-3d
+            tools
+
+      - name: Verify frozen candidate, source identities and run native tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/h-earth-gen3096-interactive
+          test "$(git -C candidate rev-parse HEAD)" = '09967b1caa6401a91b392f4ad80f5d0d55a09806'
+          test "$(git -C candidate rev-parse HEAD:showroom/globe/h-earth/render/geometry-landscape-sector.p2.js)" = 'edd3c2047d3d062eb8d60325410af8ae8f3a6fa5'
+          test "$(git -C candidate rev-parse HEAD:showroom/globe/h-earth/render/woodland-rock-presentation.v1.js)" = '77e7038d27862a39c31676d1d9a1ee9a84d5f267'
+          test "$(git -C candidate rev-parse HEAD:showroom/globe/h-earth/render/geometry-woodland-tree-trial.js)" = '3958513dec53aa27f4216388a190f772e71fb9b0'
+          test "$(git -C candidate rev-parse HEAD:showroom/globe/h-earth/vegetation-prototype/spatial-selection-ui.v1.js)" = '1af7ee52a5550f124b7d6b743bb2457cde2181ed'
+          test "$(git -C candidate rev-parse HEAD:showroom/globe/h-earth/vegetation-prototype/spatial-evidence.v1.js)" = '832587ec50658627653a85875853fc9c5640dd39'
+          node --check tools/h-earth-gen3096-interactive-qualify.mjs
+          node --check candidate/showroom/globe/h-earth/vegetation-prototype/spatial-selection-ui.v1.js
+          node --check candidate/showroom/globe/h-earth/vegetation-prototype/spatial-evidence.v1.js
+          node --test candidate/tools/h-earth-loading-report.test.mjs candidate/tools/h-earth-spatial-evidence.test.mjs candidate/tools/h-earth-spatial-selection-ui.test.mjs > /tmp/h-earth-gen3096-interactive/native-node22.tap
+
+      - name: Install pinned first-party Chromium qualification environment
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+
+      - name: Exercise real H-Earth Copy report and manual spatial selection
+        shell: bash
+        env:
+          H_EARTH_GEN3096_PRODUCT: candidate
+          H_EARTH_GEN3096_OUTPUT: /tmp/h-earth-gen3096-interactive
+        run: timeout 1200s node tools/h-earth-gen3096-interactive-qualify.mjs
+
+      - name: Preserve native, browser, pixels and first-failure evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3096-exact-interactive-${{ github.event.pull_request.head.sha }}
+          path: /tmp/h-earth-gen3096-interactive
+          retention-days: 30
+          if-no-files-found: warn

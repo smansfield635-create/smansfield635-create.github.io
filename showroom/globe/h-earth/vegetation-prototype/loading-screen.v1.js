@@ -166,5 +166,5 @@ export function createHEarthLoadingScreen({document=globalThis.document,now=()=>
     }
   }
   copyButton.addEventListener('click',()=>{void copyLoadingReport();});
-  return Object.freeze({getLoadingReport,copyLoadingReport,setReportProvider:provider=>{if(typeof provider==='function')reportProvider=provider;},beginStage,update,enableControls,observeInput,observePresentation,fail,getReceipt:()=>structuredClone({...receipt,mode,stage,stages,workUnits:[...work.values()]})});
+  return Object.freeze({getLoadingReport,copyLoadingReport,setReportProvider:provider=>{if(typeof provider==='function')reportProvider=provider;},attachReportControl:node=>{if(node)reportPanel.appendChild(node);},beginStage,update,enableControls,observeInput,observePresentation,fail,getReceipt:()=>structuredClone({...receipt,mode,stage,stages,workUnits:[...work.values()]})});
 }

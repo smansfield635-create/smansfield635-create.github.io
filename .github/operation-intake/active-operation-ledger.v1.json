@@ -26222,6 +26222,50 @@
       "scopeHash": "f2dfe8a94bfab64b5eeb0308e2fac1373a71abfcbcd5d505db3d5586630e484d",
       "state": "ADMITTED_LOCKED"
     },
+    "f2e292f994ded3715bdbe152f646a8e0709929927b560846d49b335ce1632646": {
+      "authorityProvenance": {
+        "authorityIdentity": {
+          "governingHead": "624c220fcd6f0d7c016cd1edf872eb3102efa523",
+          "lockGeneration": 3140,
+          "lockScope": "SHOWROOM_GLOBE:ZIONTS:FRACTURE_GEOMETRY_NEUTRAL_MATERIAL_20261106",
+          "operationId": "ZIONTS_FRACTURE_GEOMETRY_NEUTRAL_MATERIAL_20261106_001",
+          "procedureLocatorDigest": "0e65d347cf2327e3af126ff773e95b06c83e2a9972a3f12d6ed7df9f085a9f47",
+          "requestDigest": "fbf9e7cd0d4e7afbe3fc52f42ee45611e3e31dc613c5920a771b3e522244a198",
+          "scopeHash": "f2e292f994ded3715bdbe152f646a8e0709929927b560846d49b335ce1632646"
+        },
+        "bindingDigest": "9add8e1276abf2b8c2d5d3fcf75c5fd14e7616b89fa52cb3b44ca8c66ec54cce",
+        "invocation": {
+          "commentAuthorAssociation": "OWNER",
+          "commentAuthorLogin": "smansfield635-create",
+          "commentBodySha256": "1c6dd621956d7cc85a70973c6426218560c4646093d9384ace3bf4fa547fd98e",
+          "commentId": 6696242035,
+          "dispatchActorLogin": "github-actions[bot]",
+          "eventAction": "dispatched",
+          "eventName": "workflow_dispatch",
+          "issueNumber": 3461,
+          "marker": "CANONICAL_OPERATION_INTAKE_REQUEST_V1",
+          "repository": "smansfield635-create/smansfield635-create.github.io",
+          "schema": "REPOSITORY_OPERATION_AUTHORITY_INVOCATION_v1",
+          "workflowRef": "smansfield635-create/smansfield635-create.github.io/.github/workflows/canonical-operation-intake-transport-v1.yml@refs/heads/main",
+          "workflowRunAttempt": 1,
+          "workflowRunId": 42297905779,
+          "workflowSha": "624c220fcd6f0d7c016cd1edf872eb3102efa523"
+        },
+        "lineageAnchorCommitSha": "3096cb0ae5e8fcea8f48a50aaf45b8072246fc77",
+        "origin": "CANONICAL_INTAKE",
+        "schema": "REPOSITORY_OPERATION_AUTHORITY_PROVENANCE_v1"
+      },
+      "governingHead": "624c220fcd6f0d7c016cd1edf872eb3102efa523",
+      "lockGeneration": 3140,
+      "lockScope": "SHOWROOM_GLOBE:ZIONTS:FRACTURE_GEOMETRY_NEUTRAL_MATERIAL_20261106",
+      "operationId": "ZIONTS_FRACTURE_GEOMETRY_NEUTRAL_MATERIAL_20261106_001",
+      "procedureLocatorDigest": "0e65d347cf2327e3af126ff773e95b06c83e2a9972a3f12d6ed7df9f085a9f47",
+      "released": false,
+      "requestDigest": "fbf9e7cd0d4e7afbe3fc52f42ee45611e3e31dc613c5920a771b3e522244a198",
+      "schema": "REPOSITORY_OPERATION_LOCK_v1",
+      "scopeHash": "f2e292f994ded3715bdbe152f646a8e0709929927b560846d49b335ce1632646",
+      "state": "ADMITTED_LOCKED"
+    },
     "f31512fa962fb3d74eb2290d09407b27b7e7018a31e2a9a993bd33b590c6d7e1": {
       "authorityProvenance": {
         "authorityIdentity": {
@@ -27149,7 +27193,7 @@
   "allowedChangedPaths": [
     ".github/operation-intake/active-operation-ledger.v1.json"
   ],
-  "lockGeneration": 3139,
+  "lockGeneration": 3140,
   "lockRef": "refs/heads/operation-locks/repository-operation-intake-v1",
   "schema": "REPOSITORY_ACTIVE_OPERATION_LEDGER_v1",
   "terminalHistory": [

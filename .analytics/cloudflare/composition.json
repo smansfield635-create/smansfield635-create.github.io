@@ -1,21 +1,21 @@
 {
   "schema": "DGB_CLOUDFLARE_RUM_COMPOSITION_V2",
-  "generatedAt": "2026-11-06T03:26:04Z",
+  "generatedAt": "2026-11-06T04:25:34Z",
   "window": {
-    "start": "2026-10-07T03:26:04Z",
-    "end": "2026-11-06T03:26:04Z"
+    "start": "2026-10-07T04:25:34Z",
+    "end": "2026-11-06T04:25:34Z"
   },
   "dimensions": {
     "requestPath": [
       {
         "value": "/analytics/",
-        "pageLoads": 642,
-        "visits": 642
+        "pageLoads": 644,
+        "visits": 644
       },
       {
         "value": "/showroom/globe/h-earth/",
-        "pageLoads": 457,
-        "visits": 414
+        "pageLoads": 466,
+        "visits": 420
       },
       {
         "value": "/",
@@ -24,17 +24,17 @@
       },
       {
         "value": "/products/education/personal-training/",
-        "pageLoads": 72,
-        "visits": 72
-      },
-      {
-        "value": "/products/education/personal-training/course.html",
-        "pageLoads": 65,
-        "visits": 65
+        "pageLoads": 61,
+        "visits": 61
       },
       {
         "value": "/nine-summits/universe/",
         "pageLoads": 57,
+        "visits": 56
+      },
+      {
+        "value": "/products/education/personal-training/course.html",
+        "pageLoads": 56,
         "visits": 56
       },
       {

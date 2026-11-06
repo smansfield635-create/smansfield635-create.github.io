@@ -91,3 +91,19 @@ test('keyboard-only rectangle and contour support bounded completion and cancell
  assert.equal(f.ui.getLastReceipt()?.selection.kind,'contour');assert.equal(f.ui.isActive(),false);
  f.ui.begin('point');key('Escape');assert.equal(f.ui.isActive(),false);
 });
+
+test('document keyboard handler leaves native toolbar and report controls operable',async()=>{
+ const f=fixture();const bar=f.ui.mount();f.ui.begin('point');
+ const cancel=bar.children.find(n=>n.textContent==='Cancel selection');assert.ok(cancel);
+ let prevented=false;
+ f.events.get('keydown')({key:'Enter',target:cancel,preventDefault(){prevented=true;},stopPropagation(){}});
+ assert.equal(prevented,false);assert.equal(f.ui.isActive(),true);assert.equal(f.ui.getLastReceipt(),null);
+ cancel.listeners.click();assert.equal(f.ui.isActive(),false);
+ f.ui.begin('point');const textInput=f.doc.createElement('textarea');
+ let textPrevented=false;
+ f.events.get('keydown')({key:'ArrowLeft',target:textInput,preventDefault(){textPrevented=true;},stopPropagation(){}});
+ f.events.get('keydown')({key:'Enter',target:textInput,preventDefault(){textPrevented=true;},stopPropagation(){}});
+ assert.equal(textPrevented,false);assert.equal(f.ui.isActive(),true);
+ f.events.get('keydown')({key:'Escape',target:textInput,preventDefault(){},stopPropagation(){}});
+ assert.equal(f.ui.isActive(),false);
+});

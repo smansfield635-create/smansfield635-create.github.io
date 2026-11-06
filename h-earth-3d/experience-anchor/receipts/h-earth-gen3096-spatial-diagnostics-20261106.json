@@ -50,7 +50,7 @@
     },
     {
       "path": "showroom/globe/h-earth/vegetation-prototype/spatial-selection-ui.v1.js",
-      "sha256": "c72398fcd55223633c978310835bf3f2dea2c6ce5b34e591db273750c3cf40a5"
+      "sha256": "23b9639df69cb931cf0d6d3d129d6ef64080dc404ae2916b5ee224ad029ef7a5"
     }
   ],
   "reviewBasis": {
@@ -63,7 +63,8 @@
       "Exact four changed experience files were read from immutable candidate commit; SHA-256 digests are recorded above. The two accompanying test files are not experience-surface paths.",
       "Gen3138 exactly two-file review repair commit e0bc1e8f6d0fb843d4a6f87900c78ad6d2ceef69 changes only the existing spatial-selection UI and focused tests; the original world, Copy report mounting, frame bridge, renderer and navigation source remain unchanged.",
       "The two source-confirmed Copilot review findings are addressed: pointer contour overflow now rejects with SELECTION_POINTS_LIMIT rather than silently discarding bends; focusable keyboard cursor supports arrow movement, Enter point/corner selection, Space contour completion and Escape cancellation.",
-      "An isolated JavaScript V8 execution of exact fetched source and test bodies passed all 12 focused selection tests, including pointer-overflow and keyboard point/rectangle/contour cases. This is not native Node or new Chromium pixel qualification."
+      "An isolated JavaScript V8 execution of exact fetched source and test bodies passed all 12 focused selection tests, including pointer-overflow and keyboard point/rectangle/contour cases. This is not native Node or new Chromium pixel qualification.",
+      "Following independent Copilot re-review #5805600006, document-wide keyboard handling was narrowed to the focused selection overlay, preserving native Enter on Cancel/report controls and global Escape. Focused JavaScript V8 execution of exact repaired source and 13 tests: 13/13 PASS; not a native Node or physical Android assertion."
     ],
     "inheritedUnchanged": [
       "Previously accepted H-Earth Experience Anchor and full-environment evidence establish the unchanged world, landscape, route and continuity; the Gen3096 source diff does not modify those runtime assets.",
@@ -77,7 +78,8 @@
       "The final optional screenshot attempt timed out after mandatory navigation assertions passed; five prior screenshots and native TAP were retained.",
       "No owner candidate KEEP, separate independent review approval, merge authorization, production deployment, or live exact-head verification is claimed by this evidence receipt.",
       "The Gen3138 focus repair was not itself exercised by a physical Android browser; the prior full Chromium artifact is exact for the pre-repair source, not proof of the new keyboard controls on device.",
-      "Native Node execution and fresh independent Copilot review are separate release checks and are not established by the isolated V8 focused execution."
+      "Native Node execution and fresh independent Copilot review are separate release checks and are not established by the isolated V8 focused execution.",
+      "The focus-boundary follow-up has not been separately qualified by physical Android or a new full Chromium run; original browser evidence remains attached only to the prior unchanged instrument portion."
     ],
     "links": {
       "productPR": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7242",
@@ -87,7 +89,8 @@
       "admission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6911#issuecomment-6691928466",
       "priorAcceptedAnchorReceipt": "https://github.com/smansfield635-create/smansfield635-create.github.io/blob/main/h-earth-3d/experience-anchor/receipts/h-earth-bounded-loader-progress-20261004.json",
       "repairReview": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7242#pullrequestreview-5805149612",
-      "repairAdmission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6911#issuecomment-6692865540"
+      "repairAdmission": "https://github.com/smansfield635-create/smansfield635-create.github.io/issues/6911#issuecomment-6692865540",
+      "followUpKeyboardReview": "https://github.com/smansfield635-create/smansfield635-create.github.io/pull/7242#discussion_r4496523806"
     }
   },
   "qualification": {
@@ -142,16 +145,16 @@
       }
     ],
     "postReviewRepair": {
-      "uiCommit": "e0bc1e8f6d0fb843d4a6f87900c78ad6d2ceef69",
-      "uiSha256": "c72398fcd55223633c978310835bf3f2dea2c6ce5b34e591db273750c3cf40a5",
+      "uiCommit": "8961622aaf8a4b0c4f8ca70f12448f361355f11c",
+      "uiSha256": "23b9639df69cb931cf0d6d3d129d6ef64080dc404ae2916b5ee224ad029ef7a5",
       "sourceChangedOnly": [
         "showroom/globe/h-earth/vegetation-prototype/spatial-selection-ui.v1.js",
         "tools/h-earth-spatial-selection-ui.test.mjs"
       ],
       "testExecution": "EXACT_RETRIEVED_SOURCE_V8_FOCUSED_TESTS",
       "focusedTests": {
-        "passed": 12,
-        "total": 12,
+        "passed": 13,
+        "total": 13,
         "failed": 0
       },
       "nativeNodeRetestVerified": false,
@@ -160,7 +163,8 @@
       "copilotReviewIssuesAddressed": [
         "PRRT_kwDORCB4Ms60pKDl",
         "PRRT_kwDORCB4Ms60pKED"
-      ]
+      ],
+      "pendingExactCommitIdentity": true
     }
   },
   "physicalAcceptancePerformed": false,
@@ -171,5 +175,13 @@
   "publicationChecksPassed": false,
   "publicationAuthorityCreated": false,
   "preRepairCandidateHead": "09967b1caa6401a91b392f4ad80f5d0d55a09806",
-  "repairedUISourceCommit": "e0bc1e8f6d0fb843d4a6f87900c78ad6d2ceef69"
+  "repairedUISourceCommit": "e0bc1e8f6d0fb843d4a6f87900c78ad6d2ceef69",
+  "focusBoundaryFollowup": {
+    "preFollowupHead": "8961622aaf8a4b0c4f8ca70f12448f361355f11c",
+    "newUISha256": "23b9639df69cb931cf0d6d3d129d6ef64080dc404ae2916b5ee224ad029ef7a5",
+    "reviewId": 5805600006,
+    "regressionTests": 13,
+    "testEnvironment": "V8_SOURCE_AND_TEST_EXECUTION_NOT_NATIVE_NODE",
+    "physicalAndroidTested": false
+  }
 }

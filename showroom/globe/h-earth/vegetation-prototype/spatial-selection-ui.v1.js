@@ -89,6 +89,8 @@ export function createHEarthSpatialSelectionUI({canvas,frameBridge,document:doc=
   function onKeyDown(e){
     if(!active)return;
     if(e.key==='Escape'){stopEvent(e);cancel();return;}
+    // Escape is global during selection; all other shortcuts belong only to its focused overlay.
+    if(e.target&&e.target!==overlay&&!overlay?.contains?.(e.target))return;
     if(active.pointerId!==null||!active.keyboardCursor)return;
     const cursor=active.keyboardCursor;
     const moves={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};

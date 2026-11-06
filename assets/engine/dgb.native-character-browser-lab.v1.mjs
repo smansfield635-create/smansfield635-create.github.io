@@ -18,6 +18,12 @@ const identity = () => new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]);
 export const E10_BROWSER_LAB_ID = 'DGB_E10_OFF_PRODUCT_DIAGNOSTIC_QUADRUPED_GEN3128';
 export const E10_FRAME_LIMIT = 16;
 export const E10_DEFAULT_SAMPLES = Object.freeze([.04,.11,.22,.30,.41,.475,.55,.70,.77,.90,.96]);
+/** Check the actual E3 submit receipt, not E3 collect's different visible field. */
+export function assertLabFramePresented(spatial,frame){
+  if(spatial?.submitted!==1||frame?.executed!==1||frame?.presentation!=='DIRECT')
+    throw new Error('LAB_FRAME_NOT_PRESENTED');
+  return spatial.submitted;
+}
 
 /** Explicit E10 test-derived contact data, not a model asset or animal anatomy. */
 export function createDiagnosticFourLegFixture() {
@@ -196,12 +202,11 @@ export function createE10DiagnosticBrowserLab(canvas,{backend='WEBGL1',times=E10
         depthMode:'TEST_WRITE',cull:'NONE'});
       const spatial=scene.submit(pipeline,camera,{bindMatrices:binding.bindMatrices});
       const frame=pipeline.endFrame({presentToCanvas:true});
-      if(spatial.visible!==1||frame.executed!==1||frame.presentation!=='DIRECT')
-        throw new Error('LAB_FRAME_NOT_PRESENTED');
+      const submitted=assertLabFramePresented(spatial,frame);
       const glError=device.gl.getError?.();
       if(glError!==undefined&&glError!==device.gl.NO_ERROR)throw new Error('LAB_GL_ERROR_'+glError);
       last=Object.freeze({index,time:bank.frames[index].time,backend,drawn:frame.executed,
-        visible:spatial.visible,resourceMeshes:device.status().meshes});
+        visible:submitted,resourceMeshes:device.status().meshes});
       return last;
     }
     return Object.freeze({labId:E10_BROWSER_LAB_ID,backend,frameCount:meshes.length,renderIndex,

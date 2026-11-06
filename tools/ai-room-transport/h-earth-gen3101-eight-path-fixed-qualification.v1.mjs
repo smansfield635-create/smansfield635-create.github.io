@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 export const OP = 'H_EARTH_SPATIAL_FRAME_SELECTION_20261104_001';
 export const HEAD = '9e110af5ab0d3c43fdb2d9d5fae50f1eaef32dcf';
-export const BASE = 'dd24b1682ad7f891c85a9178b56a9f8ae48f072b';
+export const BASE = 'ae13548e8a7221672a35f593ab1bce2945ec370e';
 export const REPO = 'https://github.com/smansfield635-create/smansfield635-create.github.io.git';
 export const ORIGINAL_PATHS = Object.freeze([
   'showroom/globe/h-earth/vegetation-prototype/route.js',

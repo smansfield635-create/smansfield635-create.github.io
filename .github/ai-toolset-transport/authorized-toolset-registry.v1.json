@@ -2430,7 +2430,7 @@
       "authorityRouteIdentity": "RUNTIME_BOUND_VALIDATED_ROUTER_RECEIPT",
       "intakeAdmissionIdentity": "RUNTIME_BOUND_ADMITTED_AND_LOCKED_RECEIPT",
       "toolId": "H_EARTH_GEN3101_EIGHT_PATH_FIXED_QUALIFIER_V1",
-      "exactToolingHead": "de09af8706670e866aa2fb04bb222cb00837e05c",
+      "exactToolingHead": "d454a1983e1685affac097d797cfbea7d39565c0",
       "commandSpecification": {
         "executable": "node",
         "scriptPath": "tools/ai-room-transport/h-earth-gen3101-eight-path-fixed-qualification.v1.mjs",

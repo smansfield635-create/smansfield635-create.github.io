@@ -13,7 +13,8 @@ import {verifyHEarthAudraliaCloudGlobalizationExperienceReceiptPathRecognition} 
 import {verifyHEarthAudraliaTabletSingleContextRuntimePathRecognition} from './accepted-amendments/h-earth.repository-registry.audralia-tablet-single-context-runtime-path-recognition.js';
 import {verifyHEarthRun8ESparseAdmissionReceiptPathRecognition} from './accepted-amendments/h-earth.repository-registry.run8e-sparse-admission-receipt-path-recognition.js';
 import {verifyHEarthFd05DiagnosticPathRecognition} from './accepted-amendments/h-earth.repository-registry.fd05-diagnostic-path-recognition.js';
-import registryFacade,{verifyHEarthMountainTraversalPathRecognition} from './accepted-amendments/h-earth.repository-registry.mountain-traversal-20261006-path-recognition.js';
+import registryFacade from './accepted-amendments/h-earth.repository-registry.gen3096-admitted-candidate-scope.js';
+import {verifyHEarthMountainTraversalPathRecognition} from './accepted-amendments/h-earth.repository-registry.mountain-traversal-20261006-path-recognition.js';
 import { deepFreeze } from './h-earth.repository-registry.validator-engine.identity.js';
 
 export function loadHEarthRepositoryRegistryValidatorDependencies() {

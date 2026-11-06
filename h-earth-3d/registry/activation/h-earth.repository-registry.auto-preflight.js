@@ -8,6 +8,7 @@ import {
   loadHEarthRepositoryRegistryValidatorDependencies
 } from '../h-earth.repository-registry.validator-engine.loader.js';
 import { deepFreeze } from '../h-earth.repository-registry.validator-engine.identity.js';
+import { gen3096TestPathAuthorized } from '../accepted-amendments/h-earth.repository-registry.gen3096-admitted-candidate-scope.js';
 
 export const H_EARTH_AUTOMATIC_PREFLIGHT_ACTIVATION_ID =
   'H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_ACTIVATION_v1';
@@ -17,8 +18,6 @@ export const H_EARTH_AUTOMATIC_PREFLIGHT_SCOPE_ROOTS = Object.freeze([
   '/h-earth-3d/',
   '/showroom/globe/h-earth/'
 ]);
-
-const dependencies = loadHEarthRepositoryRegistryValidatorDependencies();
 
 function normalizedPath(value) {
   if (typeof value !== 'string') return null;
@@ -34,7 +33,7 @@ function stableUnique(values) {
 }
 
 function inHEarthScopeRoot(repositoryPath) {
-  return H_EARTH_AUTOMATIC_PREFLIGHT_SCOPE_ROOTS.some((root) =>
+  return gen3096TestPathAuthorized(repositoryPath) || H_EARTH_AUTOMATIC_PREFLIGHT_SCOPE_ROOTS.some((root) =>
     repositoryPath === root.slice(0, -1) || repositoryPath.startsWith(root)
   );
 }
@@ -44,6 +43,7 @@ function deterministicId(payload) {
 }
 
 export function classifyAutomaticHEarthPaths(paths = []) {
+  const dependencies = loadHEarthRepositoryRegistryValidatorDependencies();
   const normalizedPaths = stableUnique(paths.map(normalizedPath).filter(Boolean));
   const classifications = normalizedPaths.map((repositoryPath) => {
     const resolution = dependencies.registryFacade.resolveHEarthRepositoryRegistryPath(repositoryPath);
@@ -126,6 +126,7 @@ function continuationFor(disposition, mutationIntent) {
 }
 
 export function runAutomaticHEarthPreflight({ paths = [], taskText = '', mutationIntent = false } = {}) {
+  const dependencies = loadHEarthRepositoryRegistryValidatorDependencies();
   const pathClassification = classifyAutomaticHEarthPaths(paths);
   const requestIdentity = deterministicId({
     paths: pathClassification.normalizedPaths,

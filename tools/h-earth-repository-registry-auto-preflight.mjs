@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { runAutomaticHEarthPreflight } from '../h-earth-3d/registry/activation/h-earth.repository-registry.auto-preflight.js';
+import { GEN3096_OPERATION_ID, withGen3096VerifiedScope } from '../h-earth-3d/registry/accepted-amendments/h-earth.repository-registry.gen3096-admitted-candidate-scope.js';
 
 function parseArguments(argv) {
   const options = {
@@ -57,8 +58,8 @@ function helpText() {
     'H-Earth automatic repository-registry preflight',
     '',
     'Usage:',
-    '  node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs --path <path> [--path <path> ...]',
-    '  node --experimental-default-type=module tools/h-earth-repository-registry-auto-preflight.mjs --paths-file <file>',
+    '  node tools/h-earth-repository-registry-auto-preflight.mjs --path <path> [--path <path> ...]',
+    '  node tools/h-earth-repository-registry-auto-preflight.mjs --paths-file <file>',
     '',
     'Options:',
     '  --task <text>          Record the natural-language task context.',
@@ -83,11 +84,54 @@ if (options.help) {
 
 if (options.pathsFile) options.paths.push(...readPathsFile(options.pathsFile));
 
-const receipt = runAutomaticHEarthPreflight({
+const nativeRun = () => runAutomaticHEarthPreflight({
   paths: options.paths,
   taskText: options.taskText,
   mutationIntent: options.mutationIntent
 });
+let receipt;
+try {
+  if (options.taskText === GEN3096_OPERATION_ID && options.mutationIntent) {
+    const verified = await withGen3096VerifiedScope(
+      options.paths, options.taskText, options.mutationIntent, nativeRun);
+    receipt = {
+      ...verified.receipt,
+      admissionProvenance: verified.proof,
+      operationScopedCandidateRecognition: true
+    };
+  } else {
+    receipt = nativeRun();
+  }
+} catch (error) {
+  // An absent, mismatched or unreachable canonical owner/lock readback never
+  // turns an otherwise blocked native request into an authorized operation.
+  receipt = {
+    receiptId: 'H_EARTH_GEN3096_ADMISSION_VERIFICATION_STOP_v1',
+    activationId: 'H_EARTH_REPOSITORY_REGISTRY_AUTOMATIC_PREFLIGHT_ACTIVATION_v1',
+    activationStatus: 'ADMISSION_VERIFICATION_FAILED_CLOSED',
+    dependenciesVerified: false,
+    taskText: options.taskText,
+    mutationIntentDetected: options.mutationIntent,
+    pathClassification: {
+      normalizedPaths: [...new Set(options.paths)].sort().map(p =>
+        p.startsWith('/') ? p : '/' + p),
+      classifications: [],
+      hEarthPaths: [],
+      outsidePaths: []
+    },
+    failureCodes: [String(error.code ?? 'GEN3096_ADMISSION_PROOF_UNAVAILABLE')],
+    finalDisposition: 'STOP',
+    mutationMayProceed: false,
+    continuation: 'REVALIDATE_AUTHENTIC_CANONICAL_ADMISSION',
+    boundaries: {
+      readOnlyPreflight: true,
+      sourceAuthorityCreated: false,
+      mutationAuthorityCreated: false,
+      mergeAuthorityCreated: false,
+      canonicalizationAuthorityCreated: false
+    }
+  };
+}
 const serialized = `${JSON.stringify(receipt, null, 2)}\n`;
 
 if (options.output) {

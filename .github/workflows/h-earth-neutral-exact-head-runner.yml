@@ -1422,3 +1422,183 @@ jobs:
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
           test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 10b5623b09c552930e54a1c1071c37535a831971
           (cd source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate && python3 -m unittest test_mesh_gate -v)
+
+  # Gen3042: the existing first-party exact-head comparison runner; one PR-open
+  # attempt only, no product mutation and no W1 diagnostic replay.
+  # Gen3055 separately admitted diagnosed checkout replay: one new PR-reopen event only.
+  gen3042-soil-triad-gpu-once:
+    # Gen3055 one-shot replay exhausted by cancelled run 41368340561; rebind only under new authority.
+    if: ${{ false }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact Gen3042 tooling
+        shell: bash
+        env:
+          FROZEN_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p tooling
+          git -C tooling init -q
+          git -C tooling remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C tooling -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_SHA"
+          git -C tooling sparse-checkout init --cone --sparse-index
+          git -C tooling sparse-checkout set tools .github/workflows
+          git -C tooling checkout --detach FETCH_HEAD
+          test "$(git -C tooling rev-parse HEAD)" = "$FROZEN_SHA"
+          test -z "$(git -C tooling status --porcelain --untracked-files=no)"
+      - name: Checkout exact baseline
+        shell: bash
+        env:
+          FROZEN_SHA: 28da29ce01f26bf5eb73db2d75b09741b22ab40b
+        run: |
+          set -euo pipefail
+          mkdir -p baseline
+          git -C baseline init -q
+          git -C baseline remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C baseline -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_SHA"
+          git -C baseline sparse-checkout init --cone --sparse-index
+          git -C baseline sparse-checkout set showroom/globe/h-earth h-earth-3d
+          git -C baseline checkout --detach FETCH_HEAD
+          test "$(git -C baseline rev-parse HEAD)" = "$FROZEN_SHA"
+          test -z "$(git -C baseline status --porcelain --untracked-files=no)"
+      - name: Checkout exact Gen3037 groundcover candidate
+        shell: bash
+        env:
+          FROZEN_SHA: 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+        run: |
+          set -euo pipefail
+          mkdir -p candidate
+          git -C candidate init -q
+          git -C candidate remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C candidate -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_SHA"
+          git -C candidate sparse-checkout init --cone --sparse-index
+          git -C candidate sparse-checkout set showroom/globe/h-earth h-earth-3d
+          git -C candidate checkout --detach FETCH_HEAD
+          test "$(git -C candidate rev-parse HEAD)" = "$FROZEN_SHA"
+          test -z "$(git -C candidate status --porcelain --untracked-files=no)"
+      - name: Gen3042 pre-habitat resource evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          evidence="${{ runner.temp }}/h-earth-gen3042-checkout-evidence"
+          mkdir -p "$evidence"
+          {
+            printf 'schema=H_EARTH_GEN3042_PRE_HABITAT_CHECKOUT_RESOURCE_v1\n'
+            printf 'tooling_head=%s\n' "$(git -C tooling rev-parse HEAD)"
+            printf 'baseline_head=%s\n' "$(git -C baseline rev-parse HEAD)"
+            printf 'groundcover_head=%s\n' "$(git -C candidate rev-parse HEAD)"
+            date -u '+observed_utc=%Y-%m-%dT%H:%M:%SZ'
+            printf '\nfilesystem_available_bytes\n'
+            df -B1 "$GITHUB_WORKSPACE"
+            printf '\nfilesystem_human\n'
+            df -h "$GITHUB_WORKSPACE"
+            printf '\nsource_worktree_sizes\n'
+            du -sh tooling baseline candidate
+            printf '\nrunner_memory\n'
+            free -m
+            printf '\nsparse_checkout_paths\n'
+            for dir in tooling baseline candidate; do
+              printf "%s\n" "$dir"
+              git -C "$dir" sparse-checkout list
+            done
+            printf '\nsparse_tree_sizes_bytes\n'
+            du -sb tooling baseline candidate
+            max_tree_bytes=2147483648
+            for dir in tooling baseline candidate; do
+              bytes=$(du -sb "$dir" | cut -f1)
+              if (( bytes > max_tree_bytes )); then printf "SPARSE_WORKTREE_OVER_BUDGET tree=%s bytes=%s max=%s\n" "$dir" "$bytes" "$max_tree_bytes"; exit 42; fi
+            done
+            free_bytes=$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -n 1 | tr -d " ")
+            if (( free_bytes < 12884901888 )); then printf "INSUFFICIENT_FREE_BYTES_BEFORE_HABITAT=%s required=12884901888\n" "$free_bytes"; exit 43; fi
+            printf 'SPARSE_PRE_HABITAT_CAPACITY_OK\n'
+          } > "$evidence/pre-habitat.txt"
+      - name: Preserve Gen3042 pre-habitat resource evidence before fourth checkout
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3042-soil-triad-pre-habitat-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/h-earth-gen3042-checkout-evidence/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Checkout exact Gen3030 habitat candidate
+        shell: bash
+        env:
+          FROZEN_SHA: cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
+        run: |
+          set -euo pipefail
+          mkdir -p habitat
+          git -C habitat init -q
+          git -C habitat remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -C habitat -c protocol.version=2 fetch --no-tags --depth=1 --filter=blob:none origin "$FROZEN_SHA"
+          git -C habitat sparse-checkout init --cone --sparse-index
+          git -C habitat sparse-checkout set showroom/globe/h-earth h-earth-3d
+          git -C habitat checkout --detach FETCH_HEAD
+          test "$(git -C habitat rev-parse HEAD)" = "$FROZEN_SHA"
+          test -z "$(git -C habitat status --porcelain --untracked-files=no)"
+      - name: Require exact renderer blobs and clean source checkouts
+        shell: bash
+        run: |
+          set -euo pipefail
+          file=showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          test "$(git -C baseline rev-parse HEAD)" = 28da29ce01f26bf5eb73db2d75b09741b22ab40b
+          test "$(git -C candidate rev-parse HEAD)" = 724efeb1db3d3e8e5309a9aa779acefb7c53fed9
+          test "$(git -C habitat rev-parse HEAD)" = cb15de477f9b8e39b9dc688ecc452ba44e42e6c1
+          test "$(git -C baseline hash-object "$file")" = 85ee835060d5106a670077a5f4352b7ad202b49b
+          test "$(git -C candidate hash-object "$file")" = 40034a16c36a43cb02682564784328ddb7ac48a7
+          test "$(git -C habitat hash-object "$file")" = 03bc45e034e9894494d9120782c714ae78890ab8
+          test -z "$(git -C baseline status --porcelain --untracked-files=no)"
+          test -z "$(git -C candidate status --porcelain --untracked-files=no)"
+          test -z "$(git -C habitat status --porcelain --untracked-files=no)"
+          evidence="${{ runner.temp }}/h-earth-gen3042-checkout-evidence"
+          mkdir -p "$evidence"
+          {
+            date -u '+post_habitat_utc=%Y-%m-%dT%H:%M:%SZ'
+            df -B1 "$GITHUB_WORKSPACE"
+            du -sb tooling baseline candidate habitat
+          } > "$evidence/post-habitat.txt"
+          max_tree_bytes=2147483648
+          for dir in tooling baseline candidate habitat; do
+            bytes=$(du -sb "$dir" | cut -f1)
+            if (( bytes > max_tree_bytes )); then printf "SPARSE_WORKTREE_OVER_BUDGET tree=%s bytes=%s\n" "$dir" "$bytes" >> "$evidence/post-habitat.txt"; exit 44; fi
+          done
+          free_bytes=$(df -B1 --output=avail "$GITHUB_WORKSPACE" | tail -n 1 | tr -d " ")
+          if (( free_bytes < 8589934592 )); then printf "INSUFFICIENT_GPU_HEADROOM_BYTES=%s required=8589934592\n" "$free_bytes" >> "$evidence/post-habitat.txt"; exit 45; fi
+          printf "SPARSE_POST_HABITAT_CAPACITY_OK\n" >> "$evidence/post-habitat.txt"
+      - name: Node22 exact-head comparator and product-source regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Proven Gen3036 historical fixture is immutable, distinct from current soil products.
+          git -C tooling fetch --no-tags --depth=1 origin 39ed43d987d5f62c1368e7c309faa1a1b3d731b6
+          node --check tooling/tools/h-earth-ground-material-comparison.v1.mjs
+          (cd tooling && node --test tools/h-earth-ground-material-comparison.v1.test.mjs)
+          (cd candidate && node --test h-earth-3d/validation/h-earth.groundcover-soil-relative-endpoint-20261031.test.mjs)
+          (cd habitat && node --test h-earth-3d/validation/h-earth.habitat-soil-color-continuity-20261031.test.mjs)
+      - name: Install first-party Chromium driver
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture 36 real stage-aligned WebGL images from independent products
+        working-directory: tooling
+        env:
+          H_EARTH_COMPARISON_PROFILE: GEN3042_SOIL_TRIAD_AB_V1
+        run: |
+          timeout 3000s node tools/h-earth-ground-material-comparison.v1.mjs \
+            --baseline-dir ../baseline \
+            --candidate-dir ../candidate \
+            --habitat-dir ../habitat \
+            --output "${{ runner.temp }}/h-earth-gen3042-soil-triad"
+      - name: Preserve exact receipts and PNG images even on failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3042-soil-triad-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/h-earth-gen3042-soil-triad/
+            ${{ runner.temp }}/h-earth-gen3042-checkout-evidence/
+          if-no-files-found: warn
+          retention-days: 30

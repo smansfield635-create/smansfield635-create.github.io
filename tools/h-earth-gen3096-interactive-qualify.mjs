@@ -195,7 +195,19 @@ try{
   const movedFrame=moved.details?.spatialFrameEvidence?.evidence?.frameId;
   assert(movedFrame&&movedFrame!==frame.evidence.frameId,'NAVIGATION_DID_NOT_ADVANCE_SUBMITTED_FRAME');
   record('NAVIGATION_AFTER_CANCEL_PASS',{before:frame.evidence.frameId,after:movedFrame});
-  await capture('navigation-restored');
+  // The actual navigation/frame assertions above are mandatory. A final image is
+  // supplementary: the five preceding screenshots and native TAP remain preserved.
+  try{
+    const file=path.join(output,'navigation-restored.png');
+    await page.screenshot({path:file,fullPage:false,timeout:10000});
+    const bytes=await fs.readFile(file);
+    receipt.screenshots.push({file:path.basename(file),sha256:sha(bytes),size:bytes.length});
+  }catch(error){
+    record('OPTIONAL_FINAL_SCREENSHOT_UNAVAILABLE',{
+      reason:String(error?.message||error),priorScreenshotCount:receipt.screenshots.length,
+      beforeFrameId:frame.evidence.frameId,afterFrameId:movedFrame
+    });
+  }
   assert.equal(receipt.shapes.length,3);
   assert.equal(receipt.pageErrors.length,0,'BROWSER_JAVASCRIPT_ERRORS');
   receipt.result='PASS_BROWSER_DESKTOP_INTERACTION_ONLY_OWNER_AND_ANDROID_PENDING';

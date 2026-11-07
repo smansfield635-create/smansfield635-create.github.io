@@ -1,9 +1,9 @@
 {
   "schema": "DGB_PUBLIC_ANALYTICS_V1",
-  "generatedAt": "2026-11-07T02:26:28Z",
+  "generatedAt": "2026-11-07T03:25:38Z",
   "window30d": {
-    "start": "2026-10-08T02:26:28Z",
-    "end": "2026-11-07T02:26:28Z"
+    "start": "2026-10-08T03:25:38Z",
+    "end": "2026-11-07T03:25:38Z"
   },
   "daily": [
     {
@@ -92,7 +92,7 @@
     },
     {
       "date": "2026-10-30",
-      "pageLoads": 67
+      "pageLoads": 57
     },
     {
       "date": "2026-10-31",
@@ -124,23 +124,23 @@
     },
     {
       "date": "2026-11-07",
-      "pageLoads": 2
+      "pageLoads": 3
     }
   ],
   "summary": {
-    "pageLoads": 1546,
-    "botPageLoads": 809,
-    "nonBotPageLoads": 737
+    "pageLoads": 1527,
+    "botPageLoads": 798,
+    "nonBotPageLoads": 729
   },
   "referrers": [
     {
       "host": "(none)",
-      "pageLoads": 1447,
-      "visits": 1447
+      "pageLoads": 1429,
+      "visits": 1429
     },
     {
       "host": "diamondgatebridge.com",
-      "pageLoads": 69,
+      "pageLoads": 68,
       "visits": 0
     },
     {
@@ -167,18 +167,18 @@
   "topPages": [
     {
       "path": "/analytics/",
-      "pageLoads": 606,
-      "visits": 606
+      "pageLoads": 596,
+      "visits": 596
     },
     {
       "path": "/showroom/globe/h-earth/",
-      "pageLoads": 474,
-      "visits": 416
+      "pageLoads": 472,
+      "visits": 414
     },
     {
       "path": "/",
-      "pageLoads": 80,
-      "visits": 70
+      "pageLoads": 78,
+      "visits": 68
     },
     {
       "path": "/products/education/personal-training/",
@@ -192,8 +192,8 @@
     },
     {
       "path": "/nine-summits/universe/",
-      "pageLoads": 49,
-      "visits": 48
+      "pageLoads": 46,
+      "visits": 46
     },
     {
       "path": "/about/",

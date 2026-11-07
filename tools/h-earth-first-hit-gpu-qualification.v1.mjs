@@ -19,6 +19,19 @@ export const FIXED=Object.freeze({
   modes:Object.freeze([1,2,3,4,5,6,7])
 });
 const hash=s=>crypto.createHash('sha256').update(s).digest('hex');
+export function readinessDigest(fullSignature){
+  requireCondition(typeof fullSignature==='string'&&fullSignature.length>0,'GEN3150_ASSET_SIGNATURE_MISSING');
+  return hash(fullSignature);
+}
+const close=(a,b,tol=1e-5)=>Number.isFinite(a)&&Number.isFinite(b)&&Math.abs(a-b)<=tol;
+const sameVector=(a,b,tol=1e-5)=>Array.isArray(a)&&Array.isArray(b)&&a.length===b.length&&a.every((v,i)=>close(v,b[i],tol));
+export function verifyPng(bytes,viewport=FIXED.viewport){
+  const b=Buffer.isBuffer(bytes)?bytes:Buffer.from(bytes);
+  requireCondition(b.length>=1024&&b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))&&
+    b.toString('ascii',12,16)==='IHDR'&&b.readUInt32BE(16)===viewport[0]&&b.readUInt32BE(20)===viewport[1],
+    'GEN3150_VISUAL_PNG_INVALID');
+  return hash(b);
+}
 const requireCondition=(truth,error)=>{if(!truth)throw Error(error);};
 export function bottomPixel(top,viewport=FIXED.viewport){
   requireCondition(Array.isArray(top)&&top.length===2&&top.every(Number.isInteger)&&
@@ -35,7 +48,7 @@ export function parseArguments(args){
   requireCondition(allowed.every(k=>o[k])&&new Set(Object.values(o)).size===4,'GEN3150_ARGUMENT_SET');
   return o;
 }
-export function validateReadback(x,mode,viewport,pixel,expectedMode){
+export function validateReadback(x,mode,viewport,pixel,expectedMode,expected){
   requireCondition(FIXED.modes.includes(mode)&&mode===expectedMode,'GEN3150_MODE_MISMATCH');
   requireCondition(x&&x.webgl2===true&&x.contextLost===false&&x.glError===0,'GEN3150_WEBGL_INVALID');
   requireCondition(x.appliedMode===mode,'GEN3150_MODE_NOT_APPLIED');
@@ -45,6 +58,19 @@ export function validateReadback(x,mode,viewport,pixel,expectedMode){
   requireCondition(x.assetReady===true&&typeof x.assetSignature==='string'&&x.assetSignature.length>0,'GEN3150_ASSET_NOT_READY');
   requireCondition(x.camera&&Array.isArray(x.camera.matrix)&&x.camera.matrix.length===16&&x.camera.matrix.every(Number.isFinite),'GEN3150_CAMERA_INVALID');
   requireCondition(x.frame&&Number.isInteger(x.frame.frameSequence)&&x.frame.frameSequence>0,'GEN3150_FRAME_INVALID');
+  requireCondition(expected&&expected.state&&Number.isInteger(expected.state.sequence)&&expected.state.sequence>=1,
+    'GEN3150_REQUESTED_STATE_MISSING');
+  requireCondition(x.frame.navigationSequence===expected.state.sequence&&
+    Number.isInteger(expected.previousFrame)&&x.frame.frameSequence>expected.previousFrame&&
+    ['x','y','z'].every(k=>close(x.frame.cameraPosition?.[k],x.camera.position?.[k],1e-6)),
+    'GEN3150_SUBMITTED_FRAME_OR_CAMERA_MISMATCH');
+  if(expected.owner){
+    const witness=expected.ownerWitness;
+    requireCondition(witness&&['x','y','z'].every(k=>close(x.camera.position[k],witness.camera[k],1e-5))&&
+      sameVector(x.camera.matrix,witness.matrix,1e-4)&&
+      ['x','y','z'].every(k=>close(expected.state.position?.[k],witness.navigationPosition?.[k],1e-5)),
+      'GEN3150_OWNER_CAMERA_OR_PROJECTION_MISMATCH');
+  }
   return true;
 }
 export function classifySample(compound){
@@ -54,6 +80,8 @@ export function classifySample(compound){
 }
 function verifyCheckout(dir,head){
   requireCondition(execFileSync('git',['-C',dir,'rev-parse','HEAD'],{encoding:'utf8'}).trim()===head,'GEN3150_CHECKOUT_SHA_MISMATCH');
+  const trackedChanges=execFileSync('git',['-C',dir,'status','--porcelain','--untracked-files=no'],{encoding:'utf8'}).trim();
+  requireCondition(trackedChanges.length===0,'GEN3150_TRACKED_CHECKOUT_CHANGED');
 }
 function verifyObject(dir,rel,expected){
   const actual=execFileSync('git',['-C',dir,'hash-object',rel],{encoding:'utf8'}).trim();

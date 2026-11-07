@@ -24,7 +24,7 @@ let compiledShader='';
 function createShader(type,source,label){compiledShader=source;return source;}
 function init(){
   gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
-    resources.geometryFragmentShader = createShader(gl.FRAGMENT_SHADER, FS.replace('#version 300 es','#version 300 es\nflat in uint vCorrectedAtlas;'), 'GF');
+    resources.geometryFragmentShader = createShader(gl.FRAGMENT_SHADER, FS.replace('#version 300 es','#version 300 es\\nflat in uint vCorrectedAtlas;'), 'GF');
 }
 init();
 `;
@@ -46,7 +46,7 @@ test('injected diagnostic affects only compiled geometry shader, not authored FS
  assert.match(out.compiledShader,/vCorrectedAtlas/);
  assert.match(out.compiledShader,/hEarthProbeGCWeight/);
  assert.match(out.compiledShader,/outColor=vec4\(241\.0/);
- assert.ok(!out.compiledShader.includes('\n'));
+ assert.ok(!out.compiledShader.includes('\\n'));
 });
 
 test('uniform mode fails closed on out of range values',()=>{

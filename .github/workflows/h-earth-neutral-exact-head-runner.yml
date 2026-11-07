@@ -1700,7 +1700,7 @@ jobs:
       - name: Checkout immutable Gen3164 test-only original renderer
         uses: actions/checkout@v4
         with:
-          ref: e7fa22ae247cf706f224ead86e81b5946d064361
+          ref: d0e030b2026b76c04e4ed753257559e369cd3f28
           persist-credentials: false
           sparse-checkout: |
             h-earth-3d
@@ -1714,8 +1714,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = e7fa22ae247cf706f224ead86e81b5946d064361
-          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 9dedd3a297b54d9f9853c4f6f619644e766e8032
+          test "$(git rev-parse HEAD)" = d0e030b2026b76c04e4ed753257559e369cd3f28
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 932295ce26e66b2f450323b2ae7037ebe59037eb
           node --test h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs
       - name: Preserve original source-bound site census
         if: always()
@@ -1747,7 +1747,7 @@ jobs:
       - name: Checkout exact combined vegetation candidate
         uses: actions/checkout@v4
         with:
-          ref: e7fa22ae247cf706f224ead86e81b5946d064361
+          ref: d0e030b2026b76c04e4ed753257559e369cd3f28
           path: candidate
           persist-credentials: false
       - uses: actions/setup-node@v4
@@ -1758,6 +1758,38 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.56.1
           npx playwright install --with-deps chromium
+      - name: Compile exact activated global-cover vertex shader in WebGL2 before any capture
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import {chromium} from 'playwright';
+          const file='../candidate/showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+          const body=fs.readFileSync(file,'utf8');
+          const mark='const GLOBAL_COVER_VS = `';
+          const start=body.indexOf(mark),end=body.indexOf('`;',start+mark.length);
+          if(start<0||end<0)throw Error('EXACT_GLOBAL_COVER_VS_NOT_FOUND');
+          const shader=body.slice(start+mark.length,end);
+          if(shader.includes('${'))throw Error('GLOBAL_COVER_VS_DYNAMIC_NOT_CAPTURED');
+          const browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
+          try {
+           const page=await browser.newPage();
+           const check=await page.evaluate(source=>{
+            const gl=document.createElement('canvas').getContext('webgl2');
+            if(!gl)return {pass:false,info:'WEBGL2_UNAVAILABLE'};
+            const v=gl.createShader(gl.VERTEX_SHADER);
+            if(!v)return {pass:false,info:'VERTEX_SHADER_ALLOCATION_FAILED'};
+            gl.shaderSource(v,source);gl.compileShader(v);
+            const pass=Boolean(gl.getShaderParameter(v,gl.COMPILE_STATUS));
+            const info=gl.getShaderInfoLog(v)||'';
+            gl.deleteShader(v);return {pass,info};
+           },shader);
+           if(!check.pass)throw Error('EXACT_GLOBAL_COVER_VS_WEBGL2_COMPILE_FAILED:'+check.info);
+           console.log(JSON.stringify({schema:'H_EARTH_GEN3164_EXACT_GLOBAL_COVER_VS_COMPILE_v1',result:'PASS',candidate:'d0e030b2026b76c04e4ed753257559e369cd3f28',shaderBytes:shader.length}));
+          }finally{await browser.close()}
+          NODE
       - name: Capture read-only exact camera matched source pairs
         working-directory: tooling
         shell: bash
@@ -1772,7 +1804,7 @@ jobs:
           import {POSES,comparisonState,instrumentRoute,assetReadiness,validateFrame,decodeCanvasCapture,assertCheckout} from './tools/h-earth-ground-material-comparison.v1.mjs';
           const targets=[
            {label:'baseline',dir:'../baseline',head:'bcfb0650077323851f01f51d712c7f8b8ac39220',blob:'85ee835060d5106a670077a5f4352b7ad202b49b'},
-           {label:'candidate',dir:'../candidate',head:'e7fa22ae247cf706f224ead86e81b5946d064361',blob:'9dedd3a297b54d9f9853c4f6f619644e766e8032'}];
+           {label:'candidate',dir:'../candidate',head:'d0e030b2026b76c04e4ed753257559e369cd3f28',blob:'932295ce26e66b2f450323b2ae7037ebe59037eb'}];
           const positions=['inland-seam-near','inland-seam-far','coast-oblique'].map(n=>{const p=POSES.find(v=>v.name===n);if(!p)throw Error('POSE_MISSING:'+n);return p;});
           const shader='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
           const route='/showroom/globe/h-earth/';
@@ -1799,25 +1831,36 @@ jobs:
             page.on('console',m=>{if(m.type()==='error')record.errors.push('CONSOLE:'+m.text())});
             page.on('requestfailed',r=>record.errors.push('REQUEST:'+r.url()));
             page.on('response',r=>{if(r.status()>=400)record.errors.push('HTTP:'+r.status()+':'+r.url())});
+            const waitStartup=async (predicate,phase,timeoutMs)=>{
+             const start=Date.now();
+             for(;;){
+              const fatal=record.errors.find(e=>/R3C_SHADER_COMPILE_FAILED|SHADER_COMPILE_FAILED|WEBGL_CONTEXT_LOST/.test(e));
+              if(fatal)throw Error('BROWSER_STARTUP_FATAL:'+t.label+':'+phase+':'+fatal);
+              const left=timeoutMs-(Date.now()-start);
+              if(left<=0)throw Error('BROWSER_STARTUP_TIMEOUT:'+t.label+':'+phase+':'+record.errors.join('|'));
+              try{await page.waitForFunction(predicate,null,{timeout:Math.min(left,2000)});return}
+              catch(e){if(!String(e).includes('Timeout'))throw e}
+             }
+            };
             const routeSource=fs.readFileSync(path.join(t.dir,'showroom/globe/h-earth/vegetation-prototype/route.js'),'utf8');
             record.routeSha256=hash(routeSource);
             await page.route(u=>u.pathname===route+'vegetation-prototype/route.js',r=>r.fulfill({status:200,contentType:'text/javascript',body:instrumentRoute(routeSource)}));
             await page.goto(url+route+'?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:120000});
-            await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.geologicalFormation?.physicalNavigationInstalled,null,{timeout:600000});
+            await waitStartup(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.geologicalFormation?.physicalNavigationInstalled,'physical-navigation',600000);
             if(await page.evaluate(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'))throw Error('PRODUCT_STARTUP_FAIL:'+t.label);
-            await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:600000});
+            await waitStartup(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),'loader-ready',600000);
             await page.mouse.move(270,350);await page.mouse.down();await page.mouse.move(320,350,{steps:8});await page.mouse.up();
-            await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled,null,{timeout:600000});
+            await waitStartup(()=>!document.querySelector('[data-enter]')?.disabled,'enter-enabled',600000);
             await page.click('[data-enter]');
-            await page.waitForFunction(()=>{const root=document.querySelector('#h-earth-functional-landscape-route'),loader=document.querySelector('#h-earth-loading-screen');return root?.dataset.run8eReady==='true'&&loader?.hidden===true&&globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered';},null,{timeout:120000});
+            await waitStartup(()=>{const root=document.querySelector('#h-earth-functional-landscape-route'),loader=document.querySelector('#h-earth-loading-screen');return root?.dataset.run8eReady==='true'&&loader?.hidden===true&&globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered';},'entered',120000);
             record.entered=true;persist();
             if(t.label==='candidate'){
-             await page.waitForFunction(()=>{
+             await waitStartup(()=>{
               const r=window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources;
               return r?.combinedInlandVegetation?.resident===true&&
                r?.globalGroundCover?.prepared===true&&
                r?.singleOwnerVegetation?.originalRootCount===2858738;
-             },null,{timeout:600000});
+             },'combined-resident',600000);
              record.combinedReady=true;persist();
             }
             await page.evaluate(async()=>{

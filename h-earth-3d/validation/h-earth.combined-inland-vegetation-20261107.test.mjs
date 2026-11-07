@@ -106,3 +106,29 @@ test('same population and near/mid selection are camera stable under repeated se
   assert.ok(a.visibleInstanceCount<=4096&&a.draws.length<=64,'EXISTING_LOD_BUDGET');
  }
 });
+
+
+test('Gen3164 renderer actually prepares and draws BOTH existing populations under one shared resource contract',()=>{
+ const renderer=fs.readFileSync(path.join(root,'showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js'),'utf8');
+ for(const signature of [
+  "if(vegetationStrategy&&!deferVegetation)throw Error('PROTOTYPE_REQUIRES_DEFERRED_BASE')",
+  "resources.singleOwnerVegetation=await createSingleOwnerVegetation",
+  "const cover=await buildHEarthGlobalGroundCover(pilotPackage",
+  "visibleSurface:resources.vegetationVisibleSurface",
+  "placementExclusion:(x,z)=>z>=COMBINED_INLAND_GRASS.supplementalNorthernLimitZ",
+  "await uploadGlobalCover(cover);",
+  "const nativeOwnerDraw=resources.singleOwnerVegetation?.draw(packet);",
+  "drawGlobalCover(packet,nativeOwnerDraw);",
+  "nativeOwnerDraw.submittedTriangles+partition.triangles>COMBINED_INLAND_GRASS.maximumFrameTriangles",
+  "combinedInlandVegetation:combinedInlandVegetationReceipt?",
+  "maximumGpuBytes:55*1024*1024",
+  "maximumDrawCalls:2048",
+  "maximumFrameTriangles:24000000",
+  "nativeOwner.originalRootCount!==2858738",
+  "globalHabitatAndRouteAdmissionReused:true",
+  "palette=mix(palette,groundcoverTone,groundcoverWeight);"
+ ])assert.ok(renderer.includes(signature),'GEN3164_RENDER_SOURCE_MISSING:'+signature);
+ assert.ok(!renderer.includes('groundcoverMeadowMosaic')&&!renderer.includes('groundcoverSoilBridge'),'COLOR_ONLY_EXPERIMENT_NOT_ALLOWED');
+ assert.equal(renderer.split("drawGlobalCover(packet,nativeOwnerDraw);").length,2,'EXACT_ONE_COMBINED_DRAW');
+ assert.equal(renderer.split("await uploadGlobalCover(cover);").length,2,'EXACT_ONE_SUPPLEMENTAL_UPLOAD');
+});

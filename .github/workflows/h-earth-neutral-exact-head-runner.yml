@@ -1700,7 +1700,7 @@ jobs:
       - name: Checkout immutable Gen3164 test-only original renderer
         uses: actions/checkout@v4
         with:
-          ref: c6f4c60eae996f843f0c29c8763e2793677575eb
+          ref: 65beac983e2bca5dac0f7e2b26d7dba6dbd6c857
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -1709,7 +1709,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = c6f4c60eae996f843f0c29c8763e2793677575eb
+          test "$(git rev-parse HEAD)" = 65beac983e2bca5dac0f7e2b26d7dba6dbd6c857
           test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
           node --test h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs
       - name: Preserve original source-bound site census

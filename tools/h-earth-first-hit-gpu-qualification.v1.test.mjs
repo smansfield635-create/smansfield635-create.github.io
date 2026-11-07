@@ -44,7 +44,8 @@ function sample(overrides={}){
 
 test('native receipt validator requires measured WebGL2 RGBA8 and matching mode',()=>{
   assert.equal(validateReadback(sample(),1,[384,688],[201,350],1),true);
-  assert.throws(()=>validateReadback(sample(),2,[384,688],[201,350],2),/MODE_MISMATCH/);
+  assert.throws(()=>validateReadback(sample(),1,[384,688],[201,350],2),/MODE_MISMATCH/);
+  assert.throws(()=>validateReadback(sample(),2,[384,688],[201,350],2),/MODE_NOT_APPLIED/);
   assert.throws(()=>validateReadback(sample({appliedMode:3}),1,[384,688],[201,350],1),/MODE_NOT_APPLIED/);
   assert.throws(()=>validateReadback(sample({rgba:[241,1,49]}),1,[384,688],[201,350],1),/RGBA8_INVALID/);
   assert.throws(()=>validateReadback(sample({webgl2:false}),1,[384,688],[201,350],1),/WEBGL_INVALID/);

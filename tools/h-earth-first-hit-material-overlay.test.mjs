@@ -16,14 +16,18 @@ void main(){
  float outputAlpha=1.0;
   outColor=vec4(lit,outputAlpha);
 }\`;
-const resources={geometryProgram:{},vertexArray:{}};
+const resources={geometryProgram:{},vertexArray:{},treeCollection:null,collectionWoodlandSpans:[],uniforms:{clipBaseTerrain:0}};
+const probeUniforms=[];
 const gl={DEPTH_TEST:1,LEQUAL:2,CULL_FACE:3,FRAGMENT_SHADER:4,
   enable:()=>{},depthFunc:()=>{},disable:()=>{},useProgram:()=>{},bindVertexArray:()=>{},
-  getUniformLocation:()=>({}),uniform1i:()=>{}};
+  getUniformLocation:(_program,name)=>name,uniform1i:(location,value)=>probeUniforms.push({location,value})};
 let compiledShader='';
 function createShader(type,source,label){compiledShader=source;return source;}
 function init(){
   gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);
+  const range={transparencyClass:'OPAQUE'};
+      const exclusions=resources.treeCollection?resources.collectionWoodlandSpans:[];
+    if(resources.refinement?.created){gl.uniform1i(resources.uniforms.clipBaseTerrain,0);}
     resources.geometryFragmentShader = createShader(gl.FRAGMENT_SHADER, FS.replace('#version 300 es','#version 300 es\\nflat in uint vCorrectedAtlas;'), 'GF');
 }
 init();
@@ -46,6 +50,9 @@ test('injected diagnostic affects only compiled geometry shader, not authored FS
  assert.match(out.compiledShader,/vCorrectedAtlas/);
  assert.match(out.compiledShader,/hEarthProbeGCWeight/);
  assert.match(out.compiledShader,/outColor=vec4\(241\.0/);
+ assert.match(out.compiledShader,/uniform int uMaterialProbeTranslucentPass;/);
+ assert.match(out.compiledShader,/PIXEL_TRANSLUCENT_CONTRIBUTOR|249\.0/);
+ assert.doesNotMatch(out.compiledShader,/uint packed\b/);
  assert.ok(!out.compiledShader.includes('\\n'));
 });
 
@@ -192,3 +199,41 @@ test('pixel decoders reject malformed readbacks and mode values',()=>{
  for(const mode of [0,8,1.25])assert.throws(()=>decodeModePixel(mode,[241,1,2,255]),/READBACK_INVALID/);
  assert.equal(MODE_MAGIC[6],246);
 });
+
+
+test('GLSL ES 3.00 coordinate encoding uses no reserved packed declaration',()=>{
+  const transformed=transform();
+  const program=vm.runInNewContext(transformed.source+'\ncompiledShader', {globalThis:{__hEarthFirstHitMaterialMode:4},Number});
+  assert.match(program,/uint encodedCoordinate=/);
+  assert.doesNotMatch(program,/uint packed\b/);
+});
+
+test('inherited object keys cannot bypass source registration in transform or capture',()=>{
+  for(const forbidden of ['toString','constructor','__proto__','valueOf']){
+    assert.throws(()=>transformExactRenderer(template,{target:forbidden,allowFixture:true}),/FIRST_HIT_INPUT_OR_TARGET_INVALID/);
+    const forged=received().map((r,i)=>decodeModePixel(i+1,pixels[i+1],capture(i+1,{target:forbidden,sourceHead:undefined,rendererObjectId:undefined})));
+    assert.ok(forged.every(r=>r.provenance===null));
+    assert.equal(combinePixelReceipts(forged).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+  }
+});
+
+test('translucent render ranges set a transient diagnostic sentinel and restore normal pass',()=>{
+  const transparentFixture=template.replace("transparencyClass:'OPAQUE'","transparencyClass:'TRANSLUCENT'");
+  const candidate=transformExactRenderer(transparentFixture,{allowFixture:true});
+  const out=vm.runInNewContext(candidate.source+'\nprobeUniforms',{globalThis:{__hEarthFirstHitMaterialMode:4},Number});
+  const updates=Array.from(out).filter(r=>r.location==='uMaterialProbeTranslucentPass').map(r=>r.value);
+  assert.deepEqual(updates,[0,1,0]);
+  assert.equal(decodeModePixel(1,[249,0,0,255]).status,'PIXEL_TRANSLUCENT_CONTRIBUTOR');
+  assert.equal(decodeModePixel(7,new Uint8Array([249,0,0,255])).status,'PIXEL_TRANSLUCENT_CONTRIBUTOR');
+  const records=received();
+  records[2]=decodeModePixel(3,[249,0,0,255],capture(3));
+  assert.equal(combinePixelReceipts(records).status,'PIXEL_FIRST_HIT_UNRESOLVED');
+});
+
+test('opaque range leaves transparency flag zero and shader guards alpha below one',()=>{
+  const out=vm.runInNewContext(transform().source+'\n({probeUniforms,compiledShader})', {globalThis:{__hEarthFirstHitMaterialMode:1},Number});
+  const updates=Array.from(out.probeUniforms).filter(r=>r.location==='uMaterialProbeTranslucentPass').map(r=>r.value);
+  assert.deepEqual(updates,[0,0,0]);
+  assert.match(out.compiledShader,/uMaterialProbeTranslucentPass!=0 \|\| outputAlpha<1\.0/);
+});
+

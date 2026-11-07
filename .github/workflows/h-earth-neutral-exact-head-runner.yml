@@ -1688,3 +1688,35 @@ jobs:
           node --test tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
         env:
           PR_SHA: ${{ github.event.pull_request.head.sha }}
+
+
+  # Gen3165 stage 1: native exact inland eligibility, on immutable test-only
+  # Gen3164 product head. No renderer modification or GPU job until PASS.
+  combined-inland-site-native:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'h-earth/gen3165-combined-vegetation-native-gpu-20261107' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout immutable Gen3164 test-only original renderer
+        uses: actions/checkout@v4
+        with:
+          ref: c6f4c60eae996f843f0c29c8763e2793677575eb
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Exact original shader and real existing global-cover native population
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = c6f4c60eae996f843f0c29c8763e2793677575eb
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
+          node --test h-earth-3d/validation/h-earth.combined-inland-vegetation-20261107.test.mjs
+      - name: Preserve original source-bound site census
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3164-combined-site-preflight-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-combined-native-coverage-receipt.json
+          if-no-files-found: warn
+          retention-days: 30

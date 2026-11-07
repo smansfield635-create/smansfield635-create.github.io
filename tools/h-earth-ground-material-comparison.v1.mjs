@@ -12,6 +12,9 @@ export const SEARCH_PROVENANCE=Object.freeze({kind:'PUBLISHED_RENDERER_KNOWN_INL
 export const RENDERER_SHA256='7ac013645110fc91ac9d454916e30f3cc526b716b0c0ffad4c702e1e44b8bec2';
 export const MATERIAL_BASELINE_HEAD='60b3c07f0216645119a1b92b16dac82cae739145';
 const gen3155Capture=process.env.H_EARTH_COMPARISON_PROFILE==='GEN3155_INLAND_FACTOR_V1';
+const gen3155Phase=process.env.H_EARTH_GEN3155_PHASE||'REPRODUCTION_ONLY';
+if(gen3155Capture&&!['REPRODUCTION_ONLY','FACTOR_FULL'].includes(gen3155Phase))throw Error('GEN3155_PHASE_INVALID');
+const gen3155ReproOnly=gen3155Capture&&gen3155Phase==='REPRODUCTION_ONLY';
 const candidateCapture=process.env.H_EARTH_COMPARISON_PROFILE==='MAPWIDE_CANDIDATE_V1';
 const candidateHead=process.env.H_EARTH_COMPARISON_CANDIDATE_SHA||'';
 if(candidateCapture&&!/^[a-f0-9]{40}$/.test(candidateHead))throw Error('CANDIDATE_EXACT_SHA_REQUIRED');
@@ -31,7 +34,7 @@ export const SURVEY_POSES=Object.freeze(['inland-seam-near','inland-seam-far','c
 export const SURVEY_MODES=Object.freeze(['reference-lit','before-groundcover-unlit','after-groundcover-unlit','patch-weight-raw','groundcover-weight-raw']);
 export const GEN3155_INLAND_POSES=Object.freeze(['inland-seam-near','inland-seam-far'].map(name=>POSES.find(p=>p.name===name)));
 export function gen3155ModeId(mode){const id=GEN3155_INLAND_MODES.indexOf(mode);if(id<0)throw Error('GEN3155_MODE_NOT_REGISTERED:'+mode);return id;}
-export function gen3155ValidateSet(views){const labels=['baseline','candidate'];const expected=labels.length*GEN3155_INLAND_POSES.length*GEN3155_INLAND_MODES.length;if(views.length!==expected)throw Error('GEN3155_CAPTURE_INCOMPLETE');for(const label of labels)for(const pose of GEN3155_INLAND_POSES){const group=views.filter(v=>v.label===label&&v.pose?.name===pose.name);if(group.length!==GEN3155_INLAND_MODES.length)throw Error('GEN3155_MODE_SET_INCOMPLETE:'+label+':'+pose.name);const first=group[0];for(const mode of GEN3155_INLAND_MODES){const found=group.filter(v=>v.mode===mode);if(found.length!==1||found[0].diagnosticApplied!==gen3155ModeId(mode))throw Error('GEN3155_MODE_NOT_APPLIED:'+label+':'+pose.name+':'+mode);const v=found[0];if(v.sourceHead!==(label==='baseline'?'bcfb0650077323851f01f51d712c7f8b8ac39220':'7610827598eaadf4fbb92e7ec8b9371c8cd08581')||v.rendererBlob!==(label==='baseline'?'85ee835060d5106a670077a5f4352b7ad202b49b':'9fe90b5c0e58fb3a121c910cb0110a0846bf07bc')||v.sourceHead!==first.sourceHead||v.rendererHash!==first.rendererHash||v.assetSignature!==first.assetSignature||JSON.stringify(v.lastFrame?.cameraPosition)!==JSON.stringify(first.lastFrame?.cameraPosition)||v.imageWidth!==529||v.imageHeight!==980)throw Error('GEN3155_SOURCE_CAMERA_ASSET_PARITY_FAILED');}}return true;}
+export function gen3155ValidateSet(views,{reproductionOnly=false}={}){const labels=reproductionOnly?['baseline']:['baseline','candidate'];const selectedModes=reproductionOnly?['reference-lit','after-groundcover-unlit']:GEN3155_INLAND_MODES;const expected=labels.length*GEN3155_INLAND_POSES.length*selectedModes.length;if(views.length!==expected)throw Error('GEN3155_CAPTURE_INCOMPLETE');for(const label of labels)for(const pose of GEN3155_INLAND_POSES){const group=views.filter(v=>v.label===label&&v.pose?.name===pose.name);if(group.length!==selectedModes.length)throw Error('GEN3155_MODE_SET_INCOMPLETE:'+label+':'+pose.name);const first=group[0];for(const mode of selectedModes){const found=group.filter(v=>v.mode===mode);if(found.length!==1||found[0].diagnosticApplied!==gen3155ModeId(mode))throw Error('GEN3155_MODE_NOT_APPLIED:'+label+':'+pose.name+':'+mode);const v=found[0];if(v.sourceHead!==(label==='baseline'?'bcfb0650077323851f01f51d712c7f8b8ac39220':'7610827598eaadf4fbb92e7ec8b9371c8cd08581')||v.rendererBlob!==(label==='baseline'?'85ee835060d5106a670077a5f4352b7ad202b49b':'9fe90b5c0e58fb3a121c910cb0110a0846bf07bc')||v.sourceHead!==first.sourceHead||v.rendererHash!==first.rendererHash||v.assetSignature!==first.assetSignature||JSON.stringify(v.lastFrame?.cameraPosition)!==JSON.stringify(first.lastFrame?.cameraPosition)||v.imageWidth!==529||v.imageHeight!==980)throw Error('GEN3155_SOURCE_CAMERA_ASSET_PARITY_FAILED');}}return true;}
 export function comparisonState(nav,pose,sequence,action){
   if(pose.diagnosticObserver===true){
     if(!['x','y','z','yaw','pitch'].every(k=>Number.isFinite(pose[k])))throw Error('DIAGNOSTIC_POSE_INVALID');
@@ -321,19 +324,20 @@ export async function run(argv){
   const profile=process.env.H_EARTH_COMPARISON_PROFILE||'FACTOR_18_V1';
   if(!['FACTOR_18_V1','MAPWIDE_SCOUT_V1','MAPWIDE_CANDIDATE_V1','GEN3155_INLAND_FACTOR_V1'].includes(profile))throw Error('COMPARISON_PROFILE_NOT_REGISTERED');
   const poses=gen3155Capture?GEN3155_INLAND_POSES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_POSES:DIAGNOSTIC_POSES);
-  const modes=gen3155Capture?GEN3155_INLAND_MODES:(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES);
+  const modes=gen3155Capture?(gen3155ReproOnly?Object.freeze(['reference-lit','after-groundcover-unlit']):GEN3155_INLAND_MODES):(profile==='MAPWIDE_SCOUT_V1'||profile==='MAPWIDE_CANDIDATE_V1'?SURVEY_MODES:DIAGNOSTIC_MODES);
   if(poses.length*modes.length>20)throw Error('DIAGNOSTIC_FRAME_CAP_EXCEEDED');
-  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,poses,modes,repairOperationId:gen3155Capture?'H_EARTH_GEN3142_INLAND_FACTOR_COMPATIBILITY_ADAPTER_20261107_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:gen3155Capture?null:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:gen3155Capture?{kind:'IMMUTABLE_GEN3142_INLAND_CURVED_BOUNDARY_REPRODUCTION_ONLY',exactAndroidPixelMatchProven:false}:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
+  const captureLabels=gen3155ReproOnly?['baseline']:(gen3155Capture?['baseline','candidate']:['candidate']);
+  const receipt={schema:'H_EARTH_GROUND_MATERIAL_FIXED_COMPARISON_v1',result:'INCOMPLETE',heads:HEADS,profile,gen3155Phase:gen3155Capture?gen3155Phase:null,boundaryReproduction:gen3155Capture?'NOT_REVIEWED':null,gen3142Evaluation:gen3155Capture?'NOT_EXECUTED':null,poses,modes,repairOperationId:gen3155Capture?'H_EARTH_GEN3142_INLAND_FACTOR_COMPATIBILITY_ADAPTER_20261107_001':'H_EARTH_GROUNDCOVER_BAND_CONTINUITY_REPAIR_20261026_001',baselineProductSha256:gen3155Capture?null:RENDERER_SHA256,diagnosticOnly:true,searchProvenance:gen3155Capture?{kind:'IMMUTABLE_GEN3142_INLAND_CURVED_BOUNDARY_REPRODUCTION_ONLY',exactAndroidPixelMatchProven:false}:SEARCH_PROVENANCE,stageMeanings:DIAGNOSTIC_STAGE_MEANINGS,sourceProductSha256:RENDERER_SHA256,colorTransform:'ORIGINAL_EXPOSURE_1.12_AND_GAMMA_1_OVER_2.2_EXCEPT_RAW_COVERAGE_MODE',viewport:{cssWidth:540,cssHeight:1000,backingWidth:529,backingHeight:980,fov:56},evidenceScope:'READ_ONLY_DIAGNOSTIC_FIXED_VIEWS_SOFTWARE_GPU',physicalAndroidPerformanceProven:false,ownerVisualAcceptance:false,releaseAuthorized:false,productDiskMutation:false,views:[],runs:[],errors:[]};
   const persist=()=>{fs.writeFileSync(out+'/receipt.tmp',JSON.stringify(receipt,null,2)+'\n');fs.renameSync(out+'/receipt.tmp',out+'/receipt.json');};
   let browser=null,server=null;
   const interrupt=signal=>{receipt.result='INTERRUPTED';receipt.errors.push(signal);persist();server?.kill();process.exit(signal==='SIGTERM'?143:130);};
   const onTerm=()=>interrupt('SIGTERM'),onInt=()=>interrupt('SIGINT');
   process.once('SIGTERM',onTerm);process.once('SIGINT',onInt);persist();
   try{
-    for(const label of Object.keys(HEADS))assertCheckout(a['--'+label+'-dir'],HEADS[label]);
+    for(const label of captureLabels)assertCheckout(a['--'+label+'-dir'],HEADS[label]);
     const {chromium}=await import('playwright');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
-    for(const [index,label] of (gen3155Capture?['baseline','candidate']:['candidate']).entries()){
+    for(const [index,label] of captureLabels.entries()){
       const dir=a['--'+label+'-dir'],port=18767+index,base='http://127.0.0.1:'+port;
       const runRecord={label,head:HEADS[label],errors:[],instrumentation:[],startedAt:new Date().toISOString()};receipt.runs.push(runRecord);persist();
       server=spawn('python3',['-m','http.server',String(port),'--bind','127.0.0.1','--directory',dir],{stdio:['ignore','ignore','ignore']});
@@ -393,8 +397,8 @@ export async function run(argv){
       runRecord.transfers=await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>({name:x.name,transferSize:x.transferSize,duration:x.duration})));runRecord.completedAt=new Date().toISOString();persist();
       await context.close();server.kill();server=null;assertCheckout(dir,HEADS[label]);if(gen3155Capture)gen3142VerifyRenderer(dir,label);if(errors.length)throw Error('BROWSER_ERRORS:'+label);
     }
-    if(gen3155Capture)gen3155ValidateSet(receipt.views);else validateDiagnosticSet(receipt.views,poses,modes);
-    receipt.result='DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';
+    if(gen3155Capture)gen3155ValidateSet(receipt.views,{reproductionOnly:gen3155ReproOnly});else validateDiagnosticSet(receipt.views,poses,modes);
+    receipt.result=gen3155ReproOnly?'PRODUCTION_INLAND_IMAGES_CAPTURED_BOUNDARY_NOT_YET_REVIEWED':'DIAGNOSTIC_CAPTURE_COMPLETE_FACTOR_REVIEW_PENDING';
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack??e));throw e;}
   finally{persist();server?.kill();if(browser)await browser.close();process.removeListener('SIGTERM',onTerm);process.removeListener('SIGINT',onInt);}
   return receipt;

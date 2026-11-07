@@ -253,3 +253,13 @@ test('Gen3155 capture parity requires both exact heads, both inland poses and ev
  changed.find(x=>x.label==='candidate'&&x.mode==='patch-raw').assetSignature='different';
  assert.throws(()=>gen3155ValidateSet(changed),/PARITY_FAILED/);
 });
+
+
+test('Gen3155 production-only reproduction gate requires two poses and two image modes; no candidate allowed',()=>{
+ const reproModes=['reference-lit','after-groundcover-unlit'];
+ const views=GEN3155_INLAND_POSES.flatMap(pose=>reproModes.map(mode=>({label:'baseline',pose,mode,diagnosticApplied:gen3155ModeId(mode),sourceHead:'bcfb0650077323851f01f51d712c7f8b8ac39220',rendererBlob:GEN3155_INLAND_BLOBS.baseline,rendererHash:'source-baseline',assetSignature:'stable',lastFrame:{cameraPosition:{x:pose.x,y:pose.y,z:pose.z}},imageWidth:529,imageHeight:980})));
+ assert.equal(gen3155ValidateSet(views,{reproductionOnly:true}),true);
+ assert.throws(()=>gen3155ValidateSet(views),/CAPTURE_INCOMPLETE/);
+ assert.throws(()=>gen3155ValidateSet(views.concat({...views[0],label:'candidate'}),{reproductionOnly:true}),/CAPTURE_INCOMPLETE/);
+ assert.throws(()=>gen3155ValidateSet(views.slice(1),{reproductionOnly:true}),/CAPTURE_INCOMPLETE/);
+});

@@ -6,9 +6,9 @@
   "repository": "smansfield635-create/smansfield635-create.github.io",
   "transportPullRequest": 7259,
   "requestBranch": "ai-dispatch-request-h-earth-gen3147-owner-frame-gpu-20261106",
-  "requestCommit": "89e594fe223411db7055069a9dc0dea80d6239cc",
+  "requestCommit": "7ca324867f0de26cf00ad16d8233df440d3e6ebf",
   "currentMainSha": "14fc9d32f085bcf85f337836c98ccd1ee9ec90d1",
-  "bridgeRunId": "42328309376",
-  "error": "Undeclared input: apply_timing_shim",
-  "failedAt": "2026-11-07T02:15:32.418Z"
+  "bridgeRunId": "42328360997",
+  "error": "Stale dispatch request: parent 89e594fe223411db7055069a9dc0dea80d6239cc != current main 14fc9d32f085bcf85f337836c98ccd1ee9ec90d1",
+  "failedAt": "2026-11-07T02:16:04.355Z"
 }

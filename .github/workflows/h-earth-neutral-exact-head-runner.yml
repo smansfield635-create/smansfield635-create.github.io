@@ -1688,3 +1688,186 @@ jobs:
           node --test tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
         env:
           PR_SHA: ${{ github.event.pull_request.head.sha }}
+
+
+  # Gen3161: exact two-inland-pose plus existing coastal control matched A/B.
+  # PR-specific and independent of unmerged product draft PR #7277.
+  soil-bridge-native:
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'h-earth/soil-olive-bridge-gpu-20261107' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Checkout exact immutable soil-olive candidate source
+        uses: actions/checkout@v4
+        with:
+          ref: 4f019111f6721768dc54819b017ddf42d1cc1114
+          persist-credentials: false
+          sparse-checkout: |
+            h-earth-3d/validation/h-earth.groundcover-soil-bridge-20261107.test.mjs
+            showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Verify exact source and execute focused native repair tests
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 4f019111f6721768dc54819b017ddf42d1cc1114
+          test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = c73020913c18f6bd513dce7780974d5568e1dbe0
+          node --check showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js
+          node --test h-earth-3d/validation/h-earth.groundcover-soil-bridge-20261107.test.mjs
+
+  soil-bridge-matched-webgl2:
+    needs: [soil-bridge-native]
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'h-earth/soil-olive-bridge-gpu-20261107' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout preexisting audit camera and asset helpers
+        uses: actions/checkout@v4
+        with:
+          ref: 4bd8914a3ecd672f90bba0d8608ce48ff4116ee6
+          path: tooling
+          persist-credentials: false
+      - name: Checkout exact original baseline
+        uses: actions/checkout@v4
+        with:
+          ref: bcfb0650077323851f01f51d712c7f8b8ac39220
+          path: baseline
+          persist-credentials: false
+      - name: Checkout exact unmerged chromatic-bridge candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 4f019111f6721768dc54819b017ddf42d1cc1114
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install registered Chromium/Playwright browser environment
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture read-only exact camera matched source pairs
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          timeout 2400s node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import crypto from 'node:crypto';
+          import {spawn,execFileSync} from 'node:child_process';
+          import {chromium} from 'playwright';
+          import {POSES,comparisonState,instrumentRoute,assetReadiness,validateFrame,decodeCanvasCapture,assertCheckout} from './tools/h-earth-ground-material-comparison.v1.mjs';
+          const targets=[
+           {label:'baseline',dir:'../baseline',head:'bcfb0650077323851f01f51d712c7f8b8ac39220',blob:'85ee835060d5106a670077a5f4352b7ad202b49b'},
+           {label:'candidate',dir:'../candidate',head:'4f019111f6721768dc54819b017ddf42d1cc1114',blob:'c73020913c18f6bd513dce7780974d5568e1dbe0'}];
+          const positions=['inland-seam-near','inland-seam-far','coast-oblique'].map(n=>{const p=POSES.find(v=>v.name===n);if(!p)throw Error('POSE_MISSING:'+n);return p;});
+          const shader='showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js';
+          const route='/showroom/globe/h-earth/';
+          const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
+          const out=path.join(process.env.RUNNER_TEMP,'h-earth-soil-bridge-matched');
+          fs.mkdirSync(out,{recursive:true});
+          const receipt={schema:'H_EARTH_SOIL_BRIDGE_MATCHED_WEBGL2_v1',result:'INCOMPLETE',heads:targets.map(t=>t.head),poses:positions.map(p=>p.name),viewport:{width:529,height:980,cssWidth:540,cssHeight:1000},images:[],pairs:[],errors:[],originalAndroidRepairConfirmed:false};
+          const persist=()=>fs.writeFileSync(path.join(out,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+          let browser=null,server=null;persist();
+          try {
+           for(const t of targets){assertCheckout(t.dir,t.head);if(execFileSync('git',['-C',t.dir,'hash-object',shader],{encoding:'utf8'}).trim()!==t.blob)throw Error('SOURCE_BLOB_MISMATCH:'+t.label)}
+           browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
+           for(let ix=0;ix<targets.length;ix++){
+            const t=targets[ix],url='http://127.0.0.1:'+(18791+ix);
+            const record={label:t.label,head:t.head,rendererBlob:t.blob,sourceSha256:hash(fs.readFileSync(path.join(t.dir,shader))),entered:false,errors:[]};
+            receipt.sources??=[];receipt.sources.push(record);persist();
+            server=spawn('python3',['-m','http.server',String(18791+ix),'--bind','127.0.0.1','--directory',t.dir],{stdio:'ignore'});
+            let served=false;for(let j=0;j<60;j++){try{if((await fetch(url+route)).ok){served=true;break}}catch{}await new Promise(r=>setTimeout(r,100))}
+            if(!served)throw Error('SERVER_NOT_READY:'+t.label);
+            const context=await browser.newContext({viewport:{width:540,height:1000},deviceScaleFactor:1});
+            const page=await context.newPage();page.setDefaultTimeout(30000);
+            await page.addInitScript({content:'globalThis.__groundAssetReadiness='+assetReadiness.toString()+';globalThis.__groundComparisonState='+comparisonState.toString()+';'});
+            page.on('pageerror',e=>record.errors.push('PAGE:'+e.message));
+            page.on('console',m=>{if(m.type()==='error')record.errors.push('CONSOLE:'+m.text())});
+            page.on('requestfailed',r=>record.errors.push('REQUEST:'+r.url()));
+            page.on('response',r=>{if(r.status()>=400)record.errors.push('HTTP:'+r.status()+':'+r.url())});
+            const routeSource=fs.readFileSync(path.join(t.dir,'showroom/globe/h-earth/vegetation-prototype/route.js'),'utf8');
+            record.routeSha256=hash(routeSource);
+            await page.route(u=>u.pathname===route+'vegetation-prototype/route.js',r=>r.fulfill({status:200,contentType:'text/javascript',body:instrumentRoute(routeSource)}));
+            await page.goto(url+route+'?arrival=approved-four-trees',{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForFunction(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'||!!window.H_EARTH_RUN8E_PUBLIC_ROUTE?.getLiveGpuReceipt()?.resources?.geologicalFormation?.physicalNavigationInstalled,null,{timeout:600000});
+            if(await page.evaluate(()=>document.querySelector('#h-earth-functional-landscape-route')?.dataset.run8eError==='true'))throw Error('PRODUCT_STARTUP_FAIL:'+t.label);
+            await page.waitForFunction(()=>['test','ready'].includes(document.querySelector('#h-earth-loading-screen')?.dataset.mode),null,{timeout:180000});
+            await page.mouse.move(270,350);await page.mouse.down();await page.mouse.move(320,350,{steps:8});await page.mouse.up();
+            await page.waitForFunction(()=>!document.querySelector('[data-enter]')?.disabled,null,{timeout:180000});
+            await page.click('[data-enter]');
+            await page.waitForFunction(()=>{const root=document.querySelector('#h-earth-functional-landscape-route'),loader=document.querySelector('#h-earth-loading-screen');return root?.dataset.run8eReady==='true'&&loader?.hidden===true&&globalThis.H_EARTH_STARTUP_LOADER?.getReceipt?.().mode==='entered';},null,{timeout:120000});
+            record.entered=true;persist();
+            await page.evaluate(async()=>{
+             const urls=performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/\/navigation\.js\?/.test(x));
+             if(new Set(urls).size!==1)throw Error('NAV_MODULE_AMBIGUOUS');
+             const link=urls[0];let src=await(await fetch(link)).text();
+             src=src.replace(/from\s*(['"])(\.[^'"]+)\1/g,(_,q,p)=>'from '+JSON.stringify(new URL(p,link).href));
+             src+='\nexport {resolvePosition as auditResolvePosition,stateFrom as auditStateFrom};';
+             globalThis.__groundComparisonNav=await import(URL.createObjectURL(new Blob([src],{type:'text/javascript'})));
+            });
+            let seq=10000,previousFrame=0;
+            for(const pose of positions){
+             let stable=0,lastSignature=null;const deadline=Date.now()+180000;
+             while(stable<2){
+              const x=await page.evaluate(async({pose,seq})=>{
+               const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,seq,'SOIL_BRIDGE_SETTLE');
+               globalThis.__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
+               const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt();
+               const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:529,height:980,pixelRatio:1},frameSequence:seq});
+               return {asset:globalThis.__groundAssetReadiness(gpu.resources,packet.camera.position),frame:gpu.frameRecords.at(-1)};
+              },{pose,seq:seq+1});
+              stable=x.frame?.navigationSequence===seq+1&&x.asset.ready&&x.asset.signature===lastSignature?stable+1:0;
+              lastSignature=x.asset.signature;
+              if(Date.now()>deadline)throw Error('ASSET_SETTLE_FAIL:'+t.label+':'+pose.name);
+              if(stable<2)await new Promise(r=>setTimeout(r,250));
+             }
+             const view=await page.evaluate(async({pose,seq})=>{
+              const state=globalThis.__groundComparisonState(globalThis.__groundComparisonNav,pose,seq,'SOIL_BRIDGE_A_B');
+              globalThis.__HEarthAuditPresent(state);await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);
+              const times=[];for(let j=0;j<8;j++){const start=performance.now();globalThis.__HEarthAuditPresent(state);times.push(performance.now()-start);await new Promise(requestAnimationFrame)}
+              const gpu=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt(),cv=document.querySelector('#h-earth-functional-landscape-canvas');
+              const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,viewport:{width:cv.width,height:cv.height,pixelRatio:1},frameSequence:seq});
+              const gl=cv.getContext('webgl2');
+              if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)throw Error('WEBGL_CONTEXT_UNHEALTHY');
+              return {state,lastFrame:gpu.frameRecords.at(-1),expectedCameraPosition:packet.camera.position,viewProjectionMatrix:Array.from(packet.camera.viewProjectionMatrix),
+               canvas:{width:cv.width,height:cv.height,cssWidth:cv.clientWidth,cssHeight:cv.clientHeight},
+               asset:globalThis.__groundAssetReadiness(gpu.resources,packet.camera.position),glVersion:String(gl.getParameter(gl.VERSION)),glError:gl.getError(),submitMs:times,
+               framebufferPresentations:gpu.counters?.gpuFramebufferPresentationCount};
+             },{pose,seq:++seq});
+             validateFrame(view,pose,seq);
+             if(!view.asset.ready||view.asset.signature!==lastSignature||!view.glVersion.includes('WebGL 2.0')||view.glError!==0||view.lastFrame.frameSequence<=previousFrame)throw Error('INVALID_GPU_FRAME:'+t.label+':'+pose.name);
+             previousFrame=view.lastFrame.frameSequence;
+             const capture=await page.evaluate(()=>{const cv=document.querySelector('#h-earth-functional-landscape-canvas');const before=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1),dataUrl=cv.toDataURL('image/png'),after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);return {before,after,dataUrl}});
+             const data=decodeCanvasCapture(capture,view.lastFrame),image=t.label+'-'+pose.name+'.png';
+             fs.writeFileSync(path.join(out,image),data);
+             receipt.images.push({label:t.label,pose:pose.name,head:t.head,rendererBlob:t.blob,sourceSha256:record.sourceSha256,
+              state:view.state,actualCamera:view.expectedCameraPosition,viewProjectionMatrix:view.viewProjectionMatrix,
+              assetSignature:view.asset.signature,frameSequence:view.lastFrame.frameSequence,navigationSequence:view.lastFrame.navigationSequence,
+              glVersion:view.glVersion,glError:view.glError,framebufferPresentations:view.framebufferPresentations,
+              meanCpuSubmitMs:view.submitMs.reduce((a,b)=>a+b,0)/view.submitMs.length,image,imageSha256:hash(data),bytes:data.length});persist();
+            }
+            if(record.errors.length)throw Error('BROWSER_ERROR:'+t.label+':'+record.errors.join('|'));
+            await context.close();server.kill();server=null;assertCheckout(t.dir,t.head);
+           }
+           for(const pose of positions){
+            const pair=receipt.images.filter(x=>x.pose===pose.name);
+            if(pair.length!==2||pair[0].assetSignature!==pair[1].assetSignature||JSON.stringify(pair[0].actualCamera)!==JSON.stringify(pair[1].actualCamera)||JSON.stringify(pair[0].viewProjectionMatrix)!==JSON.stringify(pair[1].viewProjectionMatrix))throw Error('A_B_PARITY_FAIL:'+pose.name);
+            receipt.pairs.push({pose:pose.name,cameraMatched:true,assetsMatched:true,baseline:pair[0].image,candidate:pair[1].image});
+           }
+           receipt.result='EXACT_WEBGL2_MATCHED_IMAGES_CAPTURED_VISUAL_EVALUATION_PENDING';
+          }catch(e){receipt.result='FAIL_CLOSED';receipt.errors.push(String(e?.stack??e));throw e}
+          finally{persist();if(server)server.kill();if(browser)await browser.close()}
+          NODE
+      - name: Preserve exact GPU frame and PNG artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-soil-olive-bridge-matched-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-soil-bridge-matched
+          if-no-files-found: warn
+          retention-days: 30

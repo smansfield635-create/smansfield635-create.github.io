@@ -130,5 +130,5 @@ test('Gen3164 renderer actually prepares and draws BOTH existing populations und
  ])assert.ok(renderer.includes(signature),'GEN3164_RENDER_SOURCE_MISSING:'+signature);
  assert.ok(!renderer.includes('groundcoverMeadowMosaic')&&!renderer.includes('groundcoverSoilBridge'),'COLOR_ONLY_EXPERIMENT_NOT_ALLOWED');
  assert.equal(renderer.split("drawGlobalCover(packet,nativeOwnerDraw);").length,2,'EXACT_ONE_COMBINED_DRAW');
- assert.equal(renderer.split("await uploadGlobalCover(cover);").length,2,'EXACT_ONE_SUPPLEMENTAL_UPLOAD');
+ assert.equal(renderer.split("await uploadGlobalCover(cover);").length,3,'ONE_EXISTING_LEGACY_AND_ONE_NEW_SUPPLEMENTAL_UPLOAD');
 });

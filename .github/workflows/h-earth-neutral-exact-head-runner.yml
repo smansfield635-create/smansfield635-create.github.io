@@ -1627,8 +1627,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.mjs)" = 3e0dff81df87ecbc4416d90ec0064f0b9a89d841
-          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.test.mjs)" = 6dbbc01f457105e720edef5b66a6802ff8b24cb0
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.mjs)" = 8603c778437af2320f1523b9923b50b2f0591677
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.test.mjs)" = 804b12d965352f5bd822df80d4cfd87545a625cd
           test "$(git -C ../probe rev-parse HEAD)" = ba741660459180de632a03f826800548a40e325f
           test "$(git -C ../probe hash-object tools/h-earth-first-hit-material-overlay.mjs)" = d5d4dd0b7607b37b9b62cab54848d4cb059b396b
           test "$(git -C ../baseline rev-parse HEAD)" = bcfb0650077323851f01f51d712c7f8b8ac39220
@@ -1681,8 +1681,8 @@ jobs:
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$PR_SHA"
-          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.mjs)" = 3e0dff81df87ecbc4416d90ec0064f0b9a89d841
-          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.test.mjs)" = 6dbbc01f457105e720edef5b66a6802ff8b24cb0
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.mjs)" = 8603c778437af2320f1523b9923b50b2f0591677
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.test.mjs)" = 804b12d965352f5bd822df80d4cfd87545a625cd
           node --check tools/h-earth-first-hit-gpu-qualification.v1.mjs
           node --check tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
           node --test tools/h-earth-first-hit-gpu-qualification.v1.test.mjs

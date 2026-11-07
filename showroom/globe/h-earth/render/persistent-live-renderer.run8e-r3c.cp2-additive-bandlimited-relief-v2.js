@@ -1153,7 +1153,16 @@ void main(){
         groundcoverTone,vec3(0.175,0.150,0.095),groundcoverDry
       );
       groundcoverTone*=0.88+0.24*materialVariation;
-      palette=mix(palette,groundcoverTone,groundcoverWeight);
+      // One soil-side chromatic bridge: continuous, reversible and
+      // source-local. Keep existing patch, habitat and protection weights.
+      float groundcoverSoilBridge=0.30*
+        (groundcoverOrganic*0.78+mesoField*0.22)*
+        (1.0-groundcoverPatch)*
+        groundcoverSuitability*groundcoverProtection;
+      vec3 groundcoverBridgeSoil=mix(
+        palette,groundcoverTone,groundcoverSoilBridge
+      );
+      palette=mix(groundcoverBridgeSoil,groundcoverTone,groundcoverWeight);
       // H_EARTH_BROAD_GROUNDCOVER_V1_END
     }
     // H_EARTH_EAST_A_ENVIRONMENTAL_IDENTITY_GEN2823_STAGE_A_END

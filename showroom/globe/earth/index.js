@@ -26,32 +26,43 @@ const CRATERS=[[-.50,.25,.82,.16,.040],[.31,.62,.72,.10,.033],[.58,-.48,.65,.12,
 // Gen3148: bounded continuous scar, outward normals, nondegenerate single-body U16 mesh.
 function clamp(x,a=0,b=1){return Math.max(a,Math.min(b,x))}
 function smooth(a,b,x){const t=clamp((x-a)/(b-a));return t*t*(3-2*t)}
-const SCAR_U=norm3(.957,0,.291),SCAR_V=norm3(-.0145,.998,-.0478);
+const FOCUS=norm3(-.29,.05,.955),SCAR_U=norm3(.957,0,.291),SCAR_V=norm3(-.0145,.998,-.0478);
 function terrain(nx,ny,nz){
   const broad=Math.sin(nx*7.3+ny*2.1)*.009+Math.sin(ny*11.9-nz*4.7)*.007+Math.sin((nx+nz)*19.1)*.0038;
   const grain=Math.sin(nx*83+ny*37)*Math.cos(nz*91-ny*57)*.0018;
   let base=broad+grain;const n=[nx,ny,nz];
-  for(const q of CRATERS){const d=Math.acos(clamp(dot3(n,q.c),-1,1));if(d<q.r){const t=d/q.r;base+=-(1-t*t)*q.d+Math.exp(-Math.pow((t-.88)/.095,2))*q.d*.57}}
+  for(const q of CRATERS){const d=Math.acos(clamp(dot3(n,q.c),-1,1));if(d<q.r){const t=d/q.r,nearScar=dot3(q.c,FOCUS)>.90?.32:1;base+=nearScar*(-(1-t*t)*q.d+Math.exp(-Math.pow((t-.88)/.095,2))*q.d*.57)}}
   const u=dot3(n,SCAR_U),v=dot3(n,SCAR_V);
-  const path=.055*Math.sin(v*7.8+.25)+.025*Math.sin(v*15.4+1.2);
-  const x=u-path,a=Math.atan2(v/.36,x/.275);
-  const outline=1+.085*Math.sin(a*5+1.1)+.05*Math.cos(a*9-.4)+.035*Math.sin(a*13+v*3);
-  const rho=Math.sqrt((x/.275)**2+(v/.36)**2)/outline;
-  const mask=1-smooth(.94,1.21,rho);
-  const floor=1-smooth(.31,.40,rho),tier1=1-smooth(.51,.60,rho),tier2=1-smooth(.70,.80,rho);
-  const wall1=smooth(.31,.40,rho)*(1-smooth(.48,.56,rho));
-  const wall2=smooth(.51,.60,rho)*(1-smooth(.68,.77,rho));
-  const wall3=smooth(.70,.80,rho)*(1-smooth(.88,1.02,rho));
-  const rim=smooth(.80,.91,rho)*(1-smooth(1.03,1.18,rho));
-  const highland=(x<0?1:.25)*smooth(.87,1.02,rho)*(1-smooth(1.17,1.41,rho));
-  const strata=.5+.5*Math.sin(rho*95+v*33+x*17);
-  const talus=wall1*(.006*Math.sin(a*35+rho*22)+.003*Math.sin(a*67-rho*30));
-  const cracked=wall2*.005*Math.sin(a*52+rho*31)+wall3*.005*Math.cos(a*33-rho*21);
-  const brokenRim=1-.55*Math.exp(-Math.pow((a+1.7)/.35,2))-.32*Math.exp(-Math.pow((a-2.1)/.30,2));
-  const impact=-.042*floor-.029*tier1-.017*tier2+.031*rim*brokenRim+.023*highland+talus+cracked;
-  const h=clamp(base+mask*impact,-.095,.074);
-  const lowland=(floor+tier1)*.5,exposed=Math.max(wall1,wall2,wall3);
-  const tone=clamp((1-mask)*(.53+base*3.3)+mask*(.48-.17*lowland+.13*exposed+.20*rim+.16*highland+.06*strata*exposed)+.025*Math.sin(nx*25+ny*15+nz*7),0,1);
+  // Single meandering fault; its two walls share one continuous rocky substrate.
+  const path=.026*Math.sin(v*8.6+.35)+.012*Math.sin(v*18.4+1.4);
+  const x=u-path+.008*Math.sin(v*29.5+1.7);
+  const longitudinal=1-smooth(.32,.47,Math.abs(v)+.012*Math.sin(x*23+v*11));
+  const envelope=longitudinal*(1-smooth(.25,.34,Math.abs(x)));
+  const cliffShift=.009*Math.sin(v*24+1.4)+.006*Math.sin(v*47-1.2);
+  const c=x-cliffShift;
+  const leftShoulder=smooth(-.34,-.19,c);
+  const ledgeA=smooth(-.107,-.089,c);
+  const ledgeB=smooth(-.079,-.061,c);
+  const ledgeC=smooth(-.053,-.033,c);
+  const upperBank=.009*leftShoulder*(1-.22*ledgeA-.32*ledgeB-.46*ledgeC);
+  // Stepwise opposing fault face: three erosion-resistant rock benches.
+  const lowerFloor=-.040*smooth(-.066,-.029,c)+.011*smooth(.039,.055,c)+.014*smooth(.067,.085,c)+.015*smooth(.099,.124,c);
+  const outerBank=-.006*smooth(.137,.173,c)*(1-smooth(.20,.29,c));
+  const escarpment=Math.max(0,smooth(-.121,-.088,c)*(1-smooth(-.018,.002,c)));
+  const talusFan=.008*Math.exp(-Math.pow((c-.004)/.040,2))*(.40+.60*Math.sin(v*25+1.0)**2);
+  const slumped=.004*Math.exp(-Math.pow((c-.029)/.049,2))*(.45+.55*Math.sin(v*18+2.1)**2);
+  const transverseGullies=.003*Math.sin(v*51+c*32)*Math.sin(v*24-c*10)*escarpment;
+  const gullyGate=smooth(-.17,-.11,c)*(1-smooth(.012,.07,c));
+  const incisions=(-.011*Math.exp(-Math.pow((v+.24+.09*c)/.021,2))-.008*Math.exp(-Math.pow((v-.08-.22*c)/.021,2))-.011*Math.exp(-Math.pow((v-.23+.12*c)/.024,2)))*gullyGate;
+  const smallFracture=-.006*Math.exp(-Math.pow((c-(.135+.14*(v+.08)))/.012,2))*(1-smooth(.19,.34,Math.abs(v+.08)));
+  const stepBands=.004*Math.cos(v*17+c*55)*escarpment;
+  const impact=envelope*(upperBank+lowerFloor+outerBank+talusFan+slumped+transverseGullies+incisions+stepBands+smallFracture);
+  const h=clamp(base+impact,-.095,.074);
+  const floorMask=envelope*smooth(-.057,-.027,c)*(1-smooth(.057,.127,c));
+  const eastRock=smooth(.026,.051,c)*(1-smooth(.124,.156,c));
+  const bareRock=(escarpment+.7*eastRock)*envelope;
+  const stratum=.5+.5*Math.sin((c+.10)*240+v*27);
+  const tone=clamp(.48+base*3.3-.16*floorMask+.28*bareRock+.10*envelope*leftShoulder*(1-ledgeA)+.16*stratum*bareRock+.045*Math.sin(nx*25+ny*15+nz*7),0,1);
   return {h,tone};
 }
 function buildSphere(latSegments=192,lonSegments=224){
@@ -71,6 +82,31 @@ function buildSphere(latSegments=192,lonSegments=224){
   }
   const last=1+(latSegments-2)*ring;
   for(let x=0;x<lonSegments;x++)indices.push(south,last+x,last+(x+1)%ring);
+  // Conforming local fault-scar refinement: shared edge midpoints, no cracks or detached slabs.
+  const unsplit=indices.splice(0),edges=new Map();
+  function midpoint(i,j){
+    const a=Math.min(i,j),b=Math.max(i,j),key=a+":"+b;
+    if(edges.has(key))return edges.get(key);
+    const ia=i*3,ib=j*3;
+    const n=norm3(positions[ia]+positions[ib],positions[ia+1]+positions[ib+1],positions[ia+2]+positions[ib+2]);
+    const u=dot3(n,SCAR_U),v=dot3(n,SCAR_V);
+    const x=u-(.026*Math.sin(v*8.6+.35)+.012*Math.sin(v*18.4+1.4));
+    if(dot3(n,FOCUS)<.86||Math.abs(v)>.48||Math.abs(x)>.32){edges.set(key,-1);return -1}
+    const k=positions.length/3;
+    if(k>=65535)throw new Error("ZIONTS_FAULT_REFINEMENT_U16_LIMIT");
+    const q=terrain(...n),r=1+q.h;positions.push(n[0]*r,n[1]*r,n[2]*r);tones.push(q.tone);edges.set(key,k);return k;
+  }
+  for(let i=0;i<unsplit.length;i+=3){
+    const t=[unsplit[i],unsplit[i+1],unsplit[i+2]],m=[midpoint(t[0],t[1]),midpoint(t[1],t[2]),midpoint(t[2],t[0])],count=m.filter(x=>x>=0).length;
+    if(count===0){indices.push(...t);continue}
+    if(count===3){indices.push(t[0],m[0],m[2],m[0],t[1],m[1],m[2],m[1],t[2],m[0],m[1],m[2]);continue}
+    let r=0;
+    if(count===1)r=m.findIndex(x=>x>=0);
+    else r=[0,1,2].find(j=>m[j]>=0&&m[(j+1)%3]>=0);
+    const a=t[r],b=t[(r+1)%3],c=t[(r+2)%3],ab=m[r];
+    if(count===1)indices.push(a,ab,c,ab,b,c);
+    else{const bc=m[(r+1)%3];indices.push(a,ab,c,ab,bc,c,ab,b,bc)}
+  }
   const normals=new Float32Array(positions.length);
   for(let i=0;i<indices.length;i+=3){
     const ia=indices[i]*3,ib=indices[i+1]*3,ic=indices[i+2]*3;

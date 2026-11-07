@@ -40,7 +40,7 @@ permissions:
 
 jobs:
   exact-head:
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query != 'qualification=gen2711-grass-beach-fast-v1' && inputs.route_query != 'qualification=ground-material-gen2898-stage-c' && inputs.route_query != 'qualification=groundcover-factor-v1' && inputs.route_query != 'qualification=groundcover-mapwide-scout-v1' && inputs.route_query != 'qualification=h-earth-original-indexed-mesh-v1' && inputs.route_query != 'qualification=gen3142-owner-frame-v1' && inputs.route_query != 'qualification=gen3150-first-hit-v1' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -1566,3 +1566,125 @@ jobs:
           python3 source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/source-native-recovery/test_bootstrap.py
           test "$(git -C source-tooling hash-object h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate/mesh_domain_gate.py)" = 10b5623b09c552930e54a1c1071c37535a831971
           (cd source-tooling/h-earth-3d/evidence/world-position-diagnostic-20261028/cpu/mesh/next-gate && python3 -m unittest test_mesh_gate -v)
+
+
+  # Gen3150: additive profile in registered neutral exact-head runner.
+  # workflow_dispatch-only; no automatic PR GPU run or product modification.
+  gen3150-material-first-hit:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.route_query == 'qualification=gen3150-first-hit-v1' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    steps:
+      - name: Require exact source, route, and no extraneous exercise
+        env:
+          TARGET_SHA: ${{ inputs.target_sha }}
+          ROUTE_PATH: ${{ inputs.route_path }}
+          EXERCISE: ${{ inputs.exercise_vegetation_residency }}
+          TIMING_SHIM: ${{ inputs.apply_timing_shim }}
+        run: |
+          set -euo pipefail
+          test "$TARGET_SHA" = ba741660459180de632a03f826800548a40e325f
+          test "$ROUTE_PATH" = /showroom/globe/h-earth/
+          test "$EXERCISE" = false
+          test "$TIMING_SHIM" = false
+      - name: Checkout original registered runner plus additive profile
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: tooling
+          persist-credentials: false
+          sparse-checkout: |
+            tools/h-earth-first-hit-gpu-qualification.v1.mjs
+            tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+            tools/h-earth-ground-material-comparison.v1.mjs
+            tools/h-earth-groundcover-factor-overlay.mjs
+          sparse-checkout-cone-mode: false
+      - name: Checkout immutable Gen3149 diagnostic
+        uses: actions/checkout@v4
+        with:
+          ref: ba741660459180de632a03f826800548a40e325f
+          path: probe
+          persist-credentials: false
+          sparse-checkout: tools/h-earth-first-hit-material-overlay.mjs
+          sparse-checkout-cone-mode: false
+      - name: Checkout exact published baseline
+        uses: actions/checkout@v4
+        with:
+          ref: bcfb0650077323851f01f51d712c7f8b8ac39220
+          path: baseline
+          persist-credentials: false
+      - name: Checkout exact Gen3142 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 7610827598eaadf4fbb92e7ec8b9371c8cd08581
+          path: candidate
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Prove fixed source identities and native contracts
+        working-directory: tooling
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.mjs)" = 8603c778437af2320f1523b9923b50b2f0591677
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.test.mjs)" = 804b12d965352f5bd822df80d4cfd87545a625cd
+          test "$(git -C ../probe rev-parse HEAD)" = ba741660459180de632a03f826800548a40e325f
+          test "$(git -C ../probe hash-object tools/h-earth-first-hit-material-overlay.mjs)" = d5d4dd0b7607b37b9b62cab54848d4cb059b396b
+          test "$(git -C ../baseline rev-parse HEAD)" = bcfb0650077323851f01f51d712c7f8b8ac39220
+          test "$(git -C ../candidate rev-parse HEAD)" = 7610827598eaadf4fbb92e7ec8b9371c8cd08581
+          node --check tools/h-earth-first-hit-gpu-qualification.v1.mjs
+          node --check tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+          node --test tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+      - name: Install Chromium for actual WebGL2 pixels
+        working-directory: tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capture seven material-ID modes on owner and healthy control
+        working-directory: tooling
+        run: |
+          timeout 2800s node tools/h-earth-first-hit-gpu-qualification.v1.mjs \
+            --baseline-dir ../baseline --candidate-dir ../candidate \
+            --probe-dir ../probe \
+            --output "${{ runner.temp }}/h-earth-gen3150-first-hit"
+      - name: Preserve material-identification evidence on failure or success
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: h-earth-gen3150-first-hit-${{ github.run_id }}
+          path: ${{ runner.temp }}/h-earth-gen3150-first-hit
+          if-no-files-found: warn
+          retention-days: 30
+
+
+  # PR-triggered source-only check. This does NOT render pixels or run browsers.
+  gen3150-native-source-ci:
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3150-exact-webgl-first-hit-qualification-20261107' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR snapshot (read-only)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+          sparse-checkout: |
+            tools/h-earth-first-hit-gpu-qualification.v1.mjs
+            tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate Gen3150 bounded native contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PR_SHA"
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.mjs)" = 8603c778437af2320f1523b9923b50b2f0591677
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.test.mjs)" = 804b12d965352f5bd822df80d4cfd87545a625cd
+          node --check tools/h-earth-first-hit-gpu-qualification.v1.mjs
+          node --check tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+          node --test tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+        env:
+          PR_SHA: ${{ github.event.pull_request.head.sha }}

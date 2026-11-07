@@ -1,0 +1,14 @@
+{
+  "schema": "AI_ENTRY_WORKFLOW_DISPATCH_RECEIPT_v1",
+  "result": "WORKFLOW_DISPATCH_FAILED",
+  "requestId": "h-earth-gen3147-owner-frame-matched-gpu-20261106-r1",
+  "capabilityId": "H_EARTH_NEUTRAL_EXACT_HEAD_RUN",
+  "repository": "smansfield635-create/smansfield635-create.github.io",
+  "transportPullRequest": 7259,
+  "requestBranch": "ai-dispatch-request-h-earth-gen3147-owner-frame-gpu-20261106",
+  "requestCommit": "89e594fe223411db7055069a9dc0dea80d6239cc",
+  "currentMainSha": "14fc9d32f085bcf85f337836c98ccd1ee9ec90d1",
+  "bridgeRunId": "42328309376",
+  "error": "Undeclared input: apply_timing_shim",
+  "failedAt": "2026-11-07T02:15:32.418Z"
+}

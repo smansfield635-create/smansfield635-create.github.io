@@ -468,9 +468,9 @@ void main(){
   vec3 n=vec3(aNormal.x/(aTransform.w*widthScale),aNormal.y/leafHeight,aNormal.z/(aTransform.w*widthScale));
   vNormal=normalize(vec3(n.x*c-n.z*s,n.y,n.x*s+n.z*c));
   vec2 colorField=coverPaletteField(ownershipRoot);
-  float patch=colorField.x,dry=smoothstep(.35,.8,colorField.y);
-  vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),patch);
-  vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),patch);
+  float coverPatchFactor=colorField.x,dry=smoothstep(.35,.8,colorField.y);
+  vec3 forest=mix(vec3(.055,.105,.028),vec3(.125,.185,.048),coverPatchFactor);
+  vec3 olive=mix(vec3(.12,.15,.035),vec3(.24,.225,.075),coverPatchFactor);
   vec3 palette=mix(forest,olive,dry);
   vec3 lowPalette=mix(vec3(.075,.152,.064),vec3(.177,.146,.068),dry);
   vec3 midPalette=mix(vec3(.103,.19,.063),vec3(.25,.196,.078),dry);
@@ -478,9 +478,9 @@ void main(){
   vec3 ecologicalPalette=lowPalette*lowStratum+midPalette*midStratum+dunePalette*duneStratum;
   vec3 publishedColor=palette;
   vec3 ecoColor=mix(palette,ecologicalPalette,.84);
-  vec3 finePalette=mix(vec3(.039,.125,.028),vec3(.076,.202,.052),patch);
+  vec3 finePalette=mix(vec3(.039,.125,.028),vec3(.076,.202,.052),coverPatchFactor);
   finePalette=mix(finePalette,vec3(.16,.175,.05),dry*.42);
-  vBaseColor=vec4(mix(mix(publishedColor,ecoColor,ecoStratum),finePalette,legacyFine)*(0.92+0.16*patch)*(.88+.24*emergence),1.0);
+  vBaseColor=vec4(mix(mix(publishedColor,ecoColor,ecoStratum),finePalette,legacyFine)*(0.92+0.16*coverPatchFactor)*(.88+.24*emergence),1.0);
   vMaterialParameters=vec4(0.0,0.0,0.0,1.0);
   vMaterialModelCode=0u;vSurfaceClassCode=255u;vPrimitiveIndex=65535u;vRoleCode=3u;
   vCoastDistanceMeters=64.0;vContactDistanceMeters=64.0;

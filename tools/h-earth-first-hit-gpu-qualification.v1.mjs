@@ -172,6 +172,40 @@ export async function run(argv){
           signature=info.signature;await new Promise(r=>setTimeout(r,220));
         }
         requireCondition(ready,'GEN3150_ASSET_READINESS_UNRESOLVED:'+label+':'+pose.name);
+        // Required visual evidence: unchanged normal-color rendering, not a synthetic
+        // palette image. Inspect these pixels to decide if the Android edge reproduced.
+        const visual=await page.evaluate(state=>{
+          globalThis.__hEarthFirstHitMaterialMode=0;
+          globalThis.__HEarthAuditPresent(state);
+          const cv=document.querySelector('#h-earth-functional-landscape-canvas');
+          const gl=cv?.getContext('webgl2');
+          if(!gl||gl.isContextLost()||gl.getContextAttributes()?.preserveDrawingBuffer!==true)
+            throw Error('GEN3150_MODE0_WEBGL2_UNAVAILABLE');
+          const before=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
+          const dataUrl=cv.toDataURL('image/png');
+          const after=H_EARTH_RUN8E_PUBLIC_ROUTE.getLiveGpuReceipt().frameRecords.at(-1);
+          const packet=globalThis.__HEarthAuditPacket({deferVegetation:true,navigationState:state,
+            viewport:{width:cv.width,height:cv.height,pixelRatio:1},frameSequence:state.sequence});
+          return {dataUrl,before,after,
+            camera:{position:packet.camera.position,matrix:Array.from(packet.camera.viewProjectionMatrix)},
+            viewport:[cv.width,cv.height],glError:gl.getError()};
+        },state);
+        requireCondition(visual.dataUrl?.startsWith('data:image/png;base64,')&&
+          visual.before?.frameSequence===visual.after?.frameSequence&&
+          visual.before?.navigationSequence===state.sequence&&visual.after?.navigationSequence===state.sequence&&
+          visual.glError===0&&JSON.stringify(visual.viewport)===JSON.stringify(FIXED.viewport)&&
+          ['x','y','z'].every(k=>close(visual.before?.cameraPosition?.[k],visual.camera.position?.[k],1e-6)),
+          'GEN3150_MODE0_FRAME_OR_CAPTURE_INVALID');
+        if(pose.owner){
+          requireCondition(['x','y','z'].every(k=>close(visual.camera.position?.[k],comparison.GEN3142_MATCHED.camera[k],1e-5))&&
+            sameVector(visual.camera.matrix,comparison.GEN3142_MATCHED.matrix,1e-4),
+            'GEN3150_OWNER_MODE0_CAMERA_INVALID');
+        }
+        const pngBytes=Buffer.from(visual.dataUrl.slice('data:image/png;base64,'.length),'base64');
+        const imageDigest=verifyPng(pngBytes);
+        const imageName=label+'-'+pose.name+'-normal.png';
+        fs.writeFileSync(path.join(out,imageName),pngBytes);
+        let previousFrame=visual.after.frameSequence;
         const decoded=[];
         for(const mode of FIXED.modes){
           const raw=await page.evaluate(({state,mode,pixelBottom})=>{
@@ -189,11 +223,15 @@ export async function run(argv){
               camera:{position:packet.camera.position,matrix:Array.from(packet.camera.viewProjectionMatrix)},
               frame:gpu.frameRecords.at(-1),drawSignature:JSON.stringify({renderer:gpu.resources?.rendererId,package:gpu.resources?.package?.runtimeIdentity}),};
           },{state,mode,pixelBottom});
-          validateReadback(raw,mode,FIXED.viewport,pixelBottom,mode);
+          validateReadback(raw,mode,FIXED.viewport,pixelBottom,mode,{
+            state,previousFrame,owner:pose.owner===true,ownerWitness:comparison.GEN3142_MATCHED
+          });
+          previousFrame=raw.frame.frameSequence;
           requireCondition(raw.assetSignature===signature,'GEN3150_ASSETS_CHANGED_IN_MODE_SERIES');
           const capture={target,sourceHead:productHead,rendererObjectId:injected.sourceBlob,
             instrumentedSha256:injected.instrumentedSha256,webgl2:true,readbackClass:probe.PROBE_READBACK_CLASS,
-            appliedMode:mode,poseId:pose.name,assetSignature:raw.assetSignature,drawSignature:raw.drawSignature,
+            appliedMode:mode,poseId:pose.name,
+            assetSignature:readinessDigest(raw.assetSignature),drawSignature:hash(raw.drawSignature),
             cameraPosition:[raw.camera.position.x,raw.camera.position.y,raw.camera.position.z],
             viewProjectionMatrix:raw.camera.matrix,viewport:FIXED.viewport,pixel:pixelBottom,webglErrors:[]};
           decoded.push(probe.decodeModePixel(mode,new Uint8Array(raw.rgba),capture));
@@ -201,14 +239,21 @@ export async function run(argv){
         const compound=probe.combinePixelReceipts(decoded);
         const sample={label,pose:pose.name,owner:pose.owner===true,pixelTop,pixelBottom,
           sourceHead:productHead,rendererObjectId:injected.sourceBlob,instrumentedSha256:injected.instrumentedSha256,
+          normalImage:imageName,normalImageSha256:imageDigest,normalImageBytes:pngBytes.length,
+          normalFrame:visual.after.frameSequence,normalCamera:visual.camera,
+          completeAssetReadinessSignature:signature,assetReadinessSha256:readinessDigest(signature),
           sevenModeStatuses:decoded.map(x=>({mode:x.mode,status:x.status,rgba:x.rgba})),
           compound:classifySample(compound),decodedCompound:compound};
         receipt.views.push(sample);persist();
       }
       requireCondition(browserErrors.length===0,'GEN3150_BROWSER_ERRORS:'+browserErrors.join('|'));
       await context.close();server.child.kill();server=null;
+      verifyCheckout(dir,productHead);
     }
     requireCondition(receipt.views.length===4,'GEN3150_OWNER_AND_CONTROL_SET_INCOMPLETE');
+    verifyCheckout(opts['--probe-dir'],FIXED.probe);
+    verifyCheckout(opts['--baseline-dir'],FIXED.published);
+    verifyCheckout(opts['--candidate-dir'],FIXED.candidate);
     receipt.result='SOURCE_BOUND_WEBGL2_MODE_CAPTURED_OWNER_VISUAL_PARITY_UNVERIFIED';
   }catch(e){receipt.result='INCOMPLETE_OR_FAILED';receipt.errors.push(String(e?.stack||e));throw e}
   finally{persist();if(server)server.child.kill();if(browser)await browser.close()}

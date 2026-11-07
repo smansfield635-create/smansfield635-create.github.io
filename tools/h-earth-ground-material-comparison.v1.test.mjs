@@ -244,7 +244,7 @@ test('Gen3155 capture parity requires both exact heads, both inland poses and ev
  const views=['baseline','candidate'].flatMap(label=>GEN3155_INLAND_POSES.flatMap(pose=>GEN3155_INLAND_MODES.map(mode=>({
   label,pose,mode,diagnosticApplied:gen3155ModeId(mode),
   sourceHead:label==='baseline'?'bcfb0650077323851f01f51d712c7f8b8ac39220':'7610827598eaadf4fbb92e7ec8b9371c8cd08581',
-  rendererHash:label,assetSignature:'one-verified-state',
+  rendererHash:label,rendererBlob:GEN3155_INLAND_BLOBS[label],assetSignature:'one-verified-state',
   lastFrame:{cameraPosition:{x:pose.x,y:pose.y,z:pose.z}},imageWidth:529,imageHeight:980
  }))));
  assert.equal(gen3155ValidateSet(views),true);

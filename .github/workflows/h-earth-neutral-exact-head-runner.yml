@@ -1701,7 +1701,7 @@ jobs:
       - name: Check out exact immutable Gen3155 diagnostic adapter
         uses: actions/checkout@v4
         with:
-          ref: 4430c52a6d1d043cfeba70d63693d2fba9485952
+          ref: 4bd8914a3ecd672f90bba0d8608ce48ff4116ee6
           path: tooling
           persist-credentials: false
           sparse-checkout: |
@@ -1720,7 +1720,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 4430c52a6d1d043cfeba70d63693d2fba9485952
+          test "$(git rev-parse HEAD)" = 4bd8914a3ecd672f90bba0d8608ce48ff4116ee6
           test "$(git hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
           node --check tools/h-earth-ground-material-comparison.v1.mjs
           node --check tools/h-earth-groundcover-factor-overlay.mjs
@@ -1736,7 +1736,7 @@ jobs:
       - name: Check out exact immutable Gen3155 diagnostic adapter
         uses: actions/checkout@v4
         with:
-          ref: 4430c52a6d1d043cfeba70d63693d2fba9485952
+          ref: 4bd8914a3ecd672f90bba0d8608ce48ff4116ee6
           path: tooling
           persist-credentials: false
       - name: Check out exact production baseline
@@ -1752,7 +1752,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test "$(git -C tooling rev-parse HEAD)" = 4430c52a6d1d043cfeba70d63693d2fba9485952
+          test "$(git -C tooling rev-parse HEAD)" = 4bd8914a3ecd672f90bba0d8608ce48ff4116ee6
           test "$(git -C baseline rev-parse HEAD)" = bcfb0650077323851f01f51d712c7f8b8ac39220
           test "$(git -C baseline hash-object showroom/globe/h-earth/render/persistent-live-renderer.run8e-r3c.cp2-additive-bandlimited-relief-v2.js)" = 85ee835060d5106a670077a5f4352b7ad202b49b
       - name: Install existing Chromium and Playwright runner

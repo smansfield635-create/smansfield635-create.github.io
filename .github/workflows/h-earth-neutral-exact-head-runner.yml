@@ -1648,3 +1648,31 @@ jobs:
           path: ${{ runner.temp }}/h-earth-gen3150-first-hit
           if-no-files-found: warn
           retention-days: 30
+
+
+  # PR-triggered source-only check. This does NOT render pixels or run browsers.
+  gen3150-native-source-ci:
+    if: ${{ github.event_name == 'pull_request' && github.head_ref == 'h-earth/gen3150-exact-webgl-first-hit-qualification-20261107' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR snapshot (read-only)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate Gen3150 bounded native contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$PR_SHA"
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.mjs)" = 3e0dff81df87ecbc4416d90ec0064f0b9a89d841
+          test "$(git hash-object tools/h-earth-first-hit-gpu-qualification.v1.test.mjs)" = 5367a56096232d093677d277c310b527d7d9dfb0
+          node --check tools/h-earth-first-hit-gpu-qualification.v1.mjs
+          node --check tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+          node --test tools/h-earth-first-hit-gpu-qualification.v1.test.mjs
+        env:
+          PR_SHA: ${{ github.event.pull_request.head.sha }}

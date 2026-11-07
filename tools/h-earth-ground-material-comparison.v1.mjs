@@ -334,7 +334,7 @@ export async function run(argv){
   const onTerm=()=>interrupt('SIGTERM'),onInt=()=>interrupt('SIGINT');
   process.once('SIGTERM',onTerm);process.once('SIGINT',onInt);persist();
   try{
-    for(const label of captureLabels)assertCheckout(a['--'+label+'-dir'],HEADS[label]);
+    for(const label of (gen3155ReproOnly?['baseline']:Object.keys(HEADS)))assertCheckout(a['--'+label+'-dir'],HEADS[label]);
     const {chromium}=await import('playwright');
     browser=await chromium.launch({headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader','--use-angle=swiftshader','--disable-dev-shm-usage']});
     for(const [index,label] of captureLabels.entries()){

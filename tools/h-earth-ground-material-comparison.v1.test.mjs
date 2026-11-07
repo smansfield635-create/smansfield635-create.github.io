@@ -235,7 +235,8 @@ test('Gen3155 dual composition adapter preserves distinct weight meaning and unc
  assert.ok(c.source.includes('gen3155CompositeWeight=groundcoverCompositeWeight;'));
  assert.ok(c.source.includes('gen3155OriginalWeight=groundcoverWeight;'));
  assert.ok(c.source.includes('gen3155Before=groundcoverNativeSoil;'));
- assert.ok(c.source.includes(replacement));
+ assert.ok(c.source.includes('palette=mix(\n        groundcoverNativeSoil,groundcoverTonalCurve,\n        groundcoverCompositeWeight\n      );'));
+ assert.ok(c.source.includes('gen3155After=palette;'));
  assert.throws(()=>transformPinnedGen3155InlandRenderer(f,{variant:'candidate',verifiedBlob:GEN3155_INLAND_BLOBS.candidate,expectedSha256:digest(f)}),/NON_UNIQUE_SOURCE_ANCHOR/);
  assert.throws(()=>transformPinnedGen3155InlandRenderer(f,{variant:'baseline',verifiedBlob:GEN3155_INLAND_BLOBS.baseline,expectedSha256:'0'.repeat(64)}),/SOURCE_SHA256_MISMATCH/);
  assert.throws(()=>transformPinnedGen3155InlandRenderer(f,{variant:'baseline',verifiedBlob:GEN3155_INLAND_BLOBS.candidate,expectedSha256:digest(f)}),/GIT_BLOB_NOT_VERIFIED/);

@@ -1,4 +1,4 @@
 PASS
 schema=DGB_CLOUDFLARE_RUM_BRIDGE_V3
-generatedAt=2026-11-07T07:24:01Z
+generatedAt=2026-11-07T08:25:21Z
 accounts=1

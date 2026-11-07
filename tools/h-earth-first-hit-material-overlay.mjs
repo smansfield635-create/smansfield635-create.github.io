@@ -30,6 +30,11 @@ export function sourceObjectId(source){
 }
 
 const fragmentProbeOutput=String.raw`  if(uMaterialProbeMode>0){
+    // Sentinel replaces the alpha-blended contributor without falsely coding it as opaque geometry.
+    if(uMaterialProbeTranslucentPass!=0 || outputAlpha<1.0){
+      outColor=vec4(249.0,0.0,0.0,255.0)/255.0;
+      return;
+    }
     uint roleCode=vRoleCode,primitiveCode=vPrimitiveIndex;
     if(uMaterialProbeMode==1){outColor=vec4(241.0,float(roleCode),float(primitiveCode&255u),255.0)/255.0;return;}
     if(uMaterialProbeMode==2){outColor=vec4(242.0,float((primitiveCode>>8u)&255u),float(vSurfaceClassCode),255.0)/255.0;return;}
@@ -41,8 +46,8 @@ const fragmentProbeOutput=String.raw`  if(uMaterialProbeMode>0){
         return;
       }
       float normalized=(coord+1024.0)/2048.0;
-      uint packed=uint(floor(normalized*65535.0+0.5));
-      outColor=vec4(float(240+uMaterialProbeMode),float(packed&255u),float((packed>>8u)&255u),255.0)/255.0;
+      uint encodedCoordinate=uint(floor(normalized*65535.0+0.5));
+      outColor=vec4(float(240+uMaterialProbeMode),float(encodedCoordinate&255u),float((encodedCoordinate>>8u)&255u),255.0)/255.0;
       return;
     }
     if(uMaterialProbeMode==7){outColor=vec4(247.0,floor(clamp(hEarthProbeGCWeight,0.0,1.0)*255.0+0.5),hEarthProbeGCEntered*255.0,255.0)/255.0;return;}
@@ -55,7 +60,7 @@ const body=String.raw`function heMaterialFirstHitGeometrySource(shaderSource){
     return s.replace(needle,replacement);
   };
   let s=shaderSource;
-  s=probeOnce(s,'out vec4 outColor;','uniform int uMaterialProbeMode;\nout vec4 outColor;');
+  s=probeOnce(s,'out vec4 outColor;','uniform int uMaterialProbeMode;\nuniform int uMaterialProbeTranslucentPass;\nout vec4 outColor;');
   s=probeOnce(s,'float terrainRoughnessForLighting=0.72;',
     'float terrainRoughnessForLighting=0.72;\n  float hEarthProbeGCEntered=0.0, hEarthProbeGCWeight=0.0;');
   s=probeOnce(s,'      // H_EARTH_BROAD_GROUNDCOVER_V1_END',
@@ -69,19 +74,28 @@ const compilationEnd="), 'GF');";
 const drawAnchor='gl.enable(gl.DEPTH_TEST); gl.depthFunc(gl.LEQUAL); gl.disable(gl.CULL_FACE); gl.useProgram(resources.geometryProgram); gl.bindVertexArray(resources.vertexArray);';
 
 export function transformExactRenderer(original,{target='published',allowFixture=false}={}){
-  if(typeof original!=='string'||!TARGETS[target]) throw Error('FIRST_HIT_INPUT_OR_TARGET_INVALID');
+  if(typeof original!=='string'||!Object.hasOwn(TARGETS,target)) throw Error('FIRST_HIT_INPUT_OR_TARGET_INVALID');
   const sourceBlob=sourceObjectId(original);
   if(!allowFixture&&sourceBlob!==TARGETS[target].rendererBlob) throw Error(`FIRST_HIT_RENDERER_BLOB_MISMATCH:${target}:${sourceBlob}`);
   let modified=once(original,compilationAnchor,body+'\n'+
     '    resources.geometryFragmentShader = createShader(gl.FRAGMENT_SHADER, heMaterialFirstHitGeometrySource(FS.replace(');
   modified=once(modified,compilationEnd,")), 'GF');");
   modified=once(modified,drawAnchor,drawAnchor+String.raw`
-    {const firstHitMode=globalThis.__hEarthFirstHitMaterialMode??0;
-     if(!Number.isInteger(firstHitMode)||firstHitMode<0||firstHitMode>7)throw Error('FIRST_HIT_PROBE_MODE_INVALID');
-     const location=gl.getUniformLocation(resources.geometryProgram,'uMaterialProbeMode');
-     if(location===null)throw Error('FIRST_HIT_UNIFORM_UNAVAILABLE');
-     gl.uniform1i(location,firstHitMode);
-     globalThis.__hEarthFirstHitModeApplied=firstHitMode;}`);
+    const firstHitMode=globalThis.__hEarthFirstHitMaterialMode??0;
+    if(!Number.isInteger(firstHitMode)||firstHitMode<0||firstHitMode>7)throw Error('FIRST_HIT_PROBE_MODE_INVALID');
+    const location=gl.getUniformLocation(resources.geometryProgram,'uMaterialProbeMode');
+    const passLocation=gl.getUniformLocation(resources.geometryProgram,'uMaterialProbeTranslucentPass');
+    if(location===null||passLocation===null)throw Error('FIRST_HIT_UNIFORM_UNAVAILABLE');
+    gl.uniform1i(location,firstHitMode);
+    gl.uniform1i(passLocation,0);
+    globalThis.__hEarthFirstHitModeApplied=firstHitMode;`);
+  // The main transparent ranges are drawn with blending and disabled depth writes.
+  // Mark any sampled translucent fragment as unresolved, not as first-hit geometry.
+  const translucentRangeAnchor='      const exclusions=resources.treeCollection?resources.collectionWoodlandSpans:[];';
+  modified=once(modified,translucentRangeAnchor,
+    "      gl.uniform1i(passLocation,range.transparencyClass==='TRANSLUCENT'?1:0);\n"+translucentRangeAnchor);
+  const resetAnchor='    if(resources.refinement?.created){gl.uniform1i(resources.uniforms.clipBaseTerrain,0);';
+  modified=once(modified,resetAnchor,"    gl.uniform1i(passLocation,0);\n"+resetAnchor);
   return Object.freeze({source:modified,sourceBlob,instrumentedSha256:createHash('sha256').update(modified).digest('hex'),target,productDiskMutation:false});
 }
 
@@ -103,7 +117,7 @@ const stringId=(x)=>typeof x==='string'&&x.length>0&&x.length<=256;
 // The input is fail-closed when later combined. The decoder remains useful
 // for isolated readback inspection without artificially claiming capture provenance.
 function validateCapture(c,mode){
-  if(!c||typeof c!=='object'||Array.isArray(c)||!TARGETS[c.target]||
+  if(!c||typeof c!=='object'||Array.isArray(c)||!Object.hasOwn(TARGETS,c.target)||
      c.sourceHead!==TARGETS[c.target].head||c.rendererObjectId!==TARGETS[c.target].rendererBlob||
      !isHex(c.instrumentedSha256,64)||c.webgl2!==true||
      c.readbackClass!==PROBE_READBACK_CLASS||c.appliedMode!==mode||
@@ -130,6 +144,8 @@ export function decodeModePixel(mode,input,capture=null){
   const bytes=fourBytes(input);
   const provenance=validateCapture(capture,mode);
   const base={mode,rgba:bytes,provenance};
+  if(bytes[0]===249&&bytes[1]===0&&bytes[2]===0&&bytes[3]===255)
+    return Object.freeze({...base,status:'PIXEL_TRANSLUCENT_CONTRIBUTOR'});
   if(mode>=4&&mode<=6&&bytes[0]===248){
     return Object.freeze({...base,status:bytes[1]===mode&&bytes[2]===0&&bytes[3]===255?
       'PIXEL_COORDINATE_OUT_OF_RANGE':'UNATTRIBUTED_PIXEL_NOT_FROM_PROBED_GEOMETRY'});
